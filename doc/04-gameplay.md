@@ -792,7 +792,7 @@ Deux motifs de rejet portent tout le poids de l'équilibrage, et ils sont mesur�
 
 ### 13.5 La silhouette
 
-Le dessin est **déclaratif** : `Silhouette = { base, corps, modules, taille }` (`03-schemas.md` §3). Le code vectoriel existant compose `base` (chenilles, roues, pattes, coque, rotor, ailes, rail), puis `corps` (bloc, capsule, plateau), puis les `modules` — **trois au plus** — posés à des ancres fixes du corps. Le palette swap s'applique comme aux dix unités canon : une nation, une teinte, aucun dessin propre. Une unité nouvelle n'apporte donc **ni fichier, ni image** (`02-architecture.md` §3.4). La silhouette doit rester **lisible à 64 px** : c'est la raison des trois modules, pas une contrainte de fichier.
+Le dessin est **déclaratif** : `Silhouette = { base, corps, modules, taille }` (`03-schemas.md` §3). Les pièces de `render3d/pieces.ts` composent `base` (chenilles, roues, pattes, coque, rotor, ailes, rail), puis `corps` (bloc, capsule, plateau), puis les `modules` — **trois au plus** — posés à des ancres fixes du corps. Le palette swap s'applique comme aux dix unités canon : une nation, une teinte, aucun dessin propre. Une unité nouvelle n'apporte donc **ni fichier, ni image** (`02-architecture.md` §3.4). La silhouette doit rester **lisible à 64 px** : c'est la raison des trois modules, pas une contrainte de fichier.
 
 ### 13.6 Les quatre statuts
 

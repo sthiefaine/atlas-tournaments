@@ -17,6 +17,16 @@ Quatre changements d’interface, tous derrière l’interface `Rendu` commune, 
 
 Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` — rien ne le faisait —, et `e2e/fumee-3d.spec.ts` ouvre le Bulletin avant d’en lire les prévisions (il était devenu repliable, le test ne le savait pas).
 
+## Mise à jour — l’accueil ne clignote plus, et les documents sont alignés (6 septembre 2026)
+
+Trois choses, dont deux visibles.
+
+1. **Le fond de l’écran-titre ne change plus de nature en cours de route.** `vitrine.tsx` montrait le plateau SVG, puis l’attract mode par-dessus, en fondu. Un dessin à plat qui cède la place à un plateau en relief, ce sont deux jeux en une seconde et demie. Le choix se fait désormais **avant le premier pixel de fond** : animation réduite, réglage du joueur, WebGL 2 — les trois questions se posent au montage, et l’un **ou** l’autre s’affiche, jamais les deux. L’écran-titre reste lisible pendant ce temps, puisque le titre et le menu viennent du serveur.
+2. **L’attract ne cadre plus lui-même.** Il appelait `recentrer` puis trois ou quatre crans de `zoomer(-1)` — des paliers réglés pour la caméra 2D, qui n’avait pas les mêmes. Or `creerRendu3d` appelle déjà `vue3d.cadrerCarte()` au montage, qui prend la **distance exacte** faisant tenir la carte. D’où le va-et-vient d’échelle. Le cadrage est rendu à la peau, et la caméra ne bouge plus **du tout** pendant l’exhibition : elle suivait chaque unité, ce qui donne le mal de mer sur une page qu’on ne fait que regarder.
+3. **`next.config.ts` accepte `NEXT_DIST_DIR`.** `next build` et `next dev` écrivent tous les deux dans `.next` et se marchent dessus : construire pendant qu’un serveur de développement tourne le fait échouer, et oblige à couper le serveur qu’on est en train d’utiliser. `NEXT_DIST_DIR=.next-build npm run build` construit à côté. La valeur par défaut reste `.next` ; le `Dockerfile` et la production ne changent pas. `.next-build` est ignoré par git **et par eslint** — sans quoi le lint inspecte le bundle et rend dix mille avertissements.
+
+**Les documents de conception ont été repris** dans la foulée, et le retard était de deux générations, pas d’une : `02-architecture.md` §2 justifiait encore le choix du Canvas 2D contre PixiJS, et §3.4 décrivait un dossier `render/` avec un cache de sprites et un `atlas.ts` qui n’existaient plus depuis le passage à la 3D. Même chose pour `09-i18n.md` §7.2 et §7.3, qui mesuraient les textes du HUD au `measureText`. Corrigés, avec la mention datée de ce qui a changé plutôt qu’une réécriture qui effacerait l’histoire : `BRIEF.md`, `PLAN.md`, `README.md`, `doc/README.md`, `00-vision`, `02-architecture`, `03-schemas`, `04-gameplay`, `05-routines`, `09-i18n`, `10-rendu-3d`.
+
 ## Mise à jour — une seule peau, et un banc d’essai (5 septembre 2026, nuit)
 
 **Le rendu 2D vectoriel est supprimé.** `BRIEF.md` a été modifié en conséquence : le repli qu’il promettait n’existe plus, et un appareil sans WebGL 2 voit un écran qui le dit. Ont disparu : `rendu2d.ts`, `scene.ts`, `camera.ts`, `hidpi.ts`, `hud.ts` (le HUD dessiné au canvas), quatre des six fichiers de `sprites/`, deux fichiers de tests et `e2e/fumee.spec.ts`. Trois choses en sont sorties plutôt que d’être perdues :
@@ -123,7 +133,7 @@ scripts/          migrate.mjs, simuler.ts, controler-carte.ts, apercu-carte.ts,
                   generer-specs-assets.ts, extraire-chaines.ts.
 drizzle/          Les migrations SQL numérotées. Un fichier appliqué ne se modifie jamais.
 tests/            tsx --test, un dossier par couche, plus frontieres.test.ts.
-e2e/              Deux tests de fumée Playwright (2D et 3D), sur le port 3400.
+e2e/              Le test de fumée Playwright 3D, sur le port 3400.
 doc/              Les quinze documents de conception, plus doc/assets/ (démos de rendu).
 apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par git.
 ```

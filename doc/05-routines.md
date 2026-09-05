@@ -1409,7 +1409,7 @@ L'administration est le seul endroit où le contenu devient réel. Elle est con�
 
 **La Dépêche du jour** — une vue par journée, avec l'état de la chaîne (`Event` proposé, scénario produit, verdict rendu) et **le temps qui reste avant 17 h 00**. C'est la seule file où l'admin travaille contre une horloge ; elle est donc en tête d'écran de 11 h à 17 h et vide le reste du temps. Deux boutons : **valider pour 18 h 00** et **refuser** (motif obligatoire, il alimente le taux de rejet humain). Un historique des sept derniers jours montre lesquels ont eu une mission et lesquels ont été blancs, et pourquoi. Détail : §8.
 
-**Homologation** — les `UnitType` candidates certifiées, avec la comparaison avec/sans, l'efficacité par coût, la fréquence de production par l'IA, la silhouette rendue par le code vectoriel, et l'état du catalogue (13/24 actives, 10 `canon`). Trois actions : **mettre en essai**, **homologuer** une unité en essai depuis 30 jours dont les métriques tiennent, **retirer**. Chaque action incrémente `catalogueVersion`. Détail : §9.
+**Homologation** — les `UnitType` candidates certifiées, avec la comparaison avec/sans, l'efficacité par coût, la fréquence de production par l'IA, la silhouette montée par les pièces de `render3d/pieces.ts`, et l'état du catalogue (13/24 actives, 10 `canon`). Trois actions : **mettre en essai**, **homologuer** une unité en essai depuis 30 jours dont les métriques tiennent, **retirer**. Chaque action incrémente `catalogueVersion`. Détail : §9.
 
 **File de quarantaine** — les objets que les routines n'ont pas su interpréter, avec le code et le détail signalés. L'admin rend ou écarte.
 
@@ -1655,7 +1655,7 @@ Dans le monde, la **Commission d'homologation d'Atlas** autorise de nouveaux mat
 | `efficacite_par_cout` | dégâts + valeur capturée par point de coût, 1,0 = moyenne des `canon` | > 1,30 → `unite_dominante` ; < 0,60 → `unite_inutile` |
 | `frequence_production_ia` | l'IA la produit-elle spontanément ? | < 0,10 → `unite_inutile` |
 | Écart de taux de victoire avec/sans | l'unité change-t-elle quelque chose ? | < 0,02 → `unite_inutile` |
-| Silhouette | rendable par le code vectoriel existant | hors liste fermée → `silhouette_invalide` |
+| Silhouette | montable par les pièces de `render3d/pieces.ts` | hors liste fermée → `silhouette_invalide` |
 
 Une candidate rejetée rejoint `candidates_rejetees` et revient à la routine cerveau au run suivant, avec ses motifs et leurs mesures. C'est le même mécanisme que `apprise`, appliqué au catalogue.
 

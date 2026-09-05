@@ -27,3 +27,6 @@ npm-debug.log*
 
 # aperçus de cartes générés
 /apercus/
+
+# Construction lancée à côté du serveur de développement (next.config.ts)
+.next-build

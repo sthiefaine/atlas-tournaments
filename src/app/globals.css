@@ -165,14 +165,14 @@ body {
    des couleurs et une forme, pas un plan. */
 .accueil-vitrine{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
 .accueil-vitrine .atlas-plateau{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .5s ease-out}
-/* L'attract mode se pose par-dessus le plateau SVG et le relève en fondu quand
-   sa première image est prête : jamais de trou pendant le chargement. Il est
-   désaturé pour que le vert et le rouge du jeu ne disputent pas au signal le
-   rôle de « couleur qui appelle ». */
+/* L'attract monte en fondu quand sa première image est prête. Il ne se
+   superpose plus au plateau SVG : les deux ne coexistent jamais (`vitrine.tsx`),
+   parce qu'un dessin à plat qui cède la place à un plateau en relief se lit
+   comme deux jeux différents. Il est désaturé pour que le vert et le rouge du
+   jeu ne disputent pas au signal le rôle de « couleur qui appelle ». */
 .accueil-attract{position:absolute;inset:0;opacity:0;filter:saturate(.86) brightness(.82);transition:opacity .6s ease-out}
 .accueil-attract,.accueil-attract canvas{width:100%;height:100%}
 .accueil-attract[data-attract='pret']{opacity:1}
-.accueil-vitrine:has(.accueil-attract[data-attract='pret']) .atlas-plateau{opacity:0}
 .atlas-plateau-curseur{animation:accueil-curseur 2.4s ease-in-out infinite alternate}
 
 /* La nappe remplace le cadre supprimé : elle assombrit le haut et le bas, laisse

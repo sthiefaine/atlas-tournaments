@@ -415,7 +415,7 @@ export type Trait =
   | 'furtif_nuit' | 'vision_etendue' | 'ravitaillement' | 'tout_terrain' | 'capture';
 
 /**
- * Dessin déclaratif, composé par le code vectoriel existant : base + corps + modules,
+ * Dessin déclaratif, composé par les pièces de `render3d/pieces.ts` : base + corps + modules,
  * puis palette swap comme pour les dix unités canon (`02-architecture.md` §3.4).
  */
 export interface Silhouette {

@@ -2,43 +2,55 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import { webgl2Disponible } from '@/render/rendu';
 import { lirePreferences } from './preferences';
 
 /**
- * La **vitrine** de l'écran-titre : le plateau, en plein cadre, en deux temps.
+ * La **vitrine** de l'écran-titre : le plateau, en plein cadre.
  *
- * Le serveur rend le plateau SVG (`plateau-accueil.tsx`), qui est à l'écran dès
- * la première image et ne coûte que quelques kilo-octets de balisage. Après
- * l'hydratation, ce composant charge l'attract mode — le moteur, l'IA et le
- * rendu 3D — et fait jouer une vraie partie par-dessus. Le SVG s'efface
- * en fondu quand la première image du canvas est prête.
+ * Elle tranche entre deux fonds, et n'en montre **jamais qu'un**. Soit
+ * l'attract mode — une vraie partie jouée par l'IA, en 3D, chargée après
+ * l'hydratation —, soit le plateau SVG rendu par le serveur, qui ne coûte que
+ * quelques kilo-octets de balisage.
  *
- * C'est ce découpage qui rend le coût acceptable : le bundle de jeu n'entre
- * jamais dans le rendu initial, il arrive quand la page est déjà lisible et
- * utilisable. Si le visiteur demande à ne pas voir d'animation — par son
- * appareil ou par les réglages du jeu —, il n'arrive pas du tout, et le plateau
- * SVG reste seul, ce qui est très bien.
+ * Elle les montrait autrefois **l'un après l'autre** : le SVG d'abord, puis la
+ * 3D par-dessus en fondu. Cela se voyait, et mal — un dessin à plat qui
+ * apparaît puis cède la place à un plateau en relief, ce sont deux jeux
+ * différents en une seconde et demie. Le choix se fait donc **avant** le premier
+ * pixel de fond : les trois questions qui le décident — l'appareil demande-t-il
+ * moins d'animation, le joueur l'a-t-il demandé dans ses réglages, WebGL 2
+ * répond-il — se posent au montage, et rien ne s'affiche tant qu'elles n'ont pas
+ * de réponse. L'écran-titre reste lisible pendant ce temps : le titre et le menu
+ * sont rendus par le serveur, ils ne dépendent pas du fond.
  *
- * Le délai est plus long sur un appareil tactile : c'est là que le processeur
- * est le plus lent, et un écran-titre doit être **appuyable avant d'être joli**.
+ * Le coût de la 3D est assumé mais cantonné : `next/dynamic` avec `ssr: false`,
+ * jamais dans le rendu initial, et un délai plus long sur un appareil tactile —
+ * c'est là que le processeur est le plus lent, et un écran-titre doit être
+ * **appuyable avant d'être joli**.
  */
 
 const Attract = dynamic(() => import('./attract'), { ssr: false });
 
+/** Ce qu'on décide de montrer derrière le titre. */
+type Fond = 'indecis' | 'attract' | 'plateau';
+
 export function Vitrine({ children }: { children: React.ReactNode }) {
-  const [anime, setAnime] = useState(false);
+  const [fond, setFond] = useState<Fond>('indecis');
 
   useEffect(() => {
-    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)');
     // Le réglage de l'appareil est maître ; celui du jeu ne peut qu'ajouter.
-    if (reduit.matches || lirePreferences().animationsReduites) return undefined;
+    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduit || lirePreferences().animationsReduites || !webgl2Disponible()) {
+      setFond('plateau');
+      return undefined;
+    }
     const tactile = window.matchMedia('(pointer: coarse)').matches;
-    const jeton = setTimeout(() => setAnime(true), tactile ? 700 : 400);
+    const jeton = setTimeout(() => setFond('attract'), tactile ? 700 : 400);
     return () => clearTimeout(jeton);
   }, []);
 
   return <div className="accueil-vitrine" aria-hidden="true">
-    {children}
-    {anime ? <Attract /> : null}
+    {fond === 'plateau' ? children : null}
+    {fond === 'attract' ? <Attract /> : null}
   </div>;
 }

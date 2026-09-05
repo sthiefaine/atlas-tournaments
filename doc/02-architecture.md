@@ -28,7 +28,7 @@ Le principe structurant est une séparation stricte en trois anneaux :
    │                                                                            │
    │   content/ ──► engine/ ◄── ai/            mapgen/ ──► MapDef ──► engine/   │
    │                   │                                                        │
-   │                   └──► render/ (canvas 2D)   ·   Node headless (tests, IA) │
+   │                   └──► render/ + render3d/   ·   Node headless (tests, IA) │
    └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -38,18 +38,21 @@ Le principe structurant est une séparation stricte en trois anneaux :
 
 ---
 
-## 2. Pourquoi Canvas 2D « from scratch », sans PixiJS ni Phaser
+## 2. Pourquoi un rendu écrit à la main, sans moteur de jeu
 
-Le brief a tranché ; voici la justification qui doit tenir dans la durée. Un tactique au tour par tour n'a besoin ni de moteur physique, ni de boucle temps réel à 60 images par seconde en continu, ni de gestion de scène complexe : l'écran est statique la plupart du temps et ne bouge que pendant de courtes animations scriptées (un déplacement le long d'un chemin, un tir, un fondu de HUD). PixiJS apporterait un renderer WebGL et un graphe de scène dont on n'utiliserait que dix pour cent, au prix de plusieurs centaines de kilo-octets de JavaScript, d'une API à apprendre et d'une dépendance qui vieillit. Phaser irait plus loin encore dans la mauvaise direction : il impose sa propre boucle, ses scènes, son système d'entrées, sa notion de « game object », c'est-à-dire une architecture concurrente de la nôtre alors que le cœur du projet est justement un **moteur de règles pur, séparé du rendu**. À l'inverse, la direction artistique est déjà, littéralement, du code Canvas 2D : la démo `doc/assets/atlas-render-vector.html` dessine les tuiles, le décor, les bâtiments et les unités avec `arcTo`, `ellipse`, `createLinearGradient` et une palette `{main, dark, light}` par nation. Le palette-swap voulu par le brief est trivial en Canvas 2D (on redessine avec d'autres couleurs) alors qu'il demanderait des filtres ou des shaders en WebGL. Zéro dépendance runtime signifie aussi : pas de build magique, un moteur qui tourne tel quel sous Node pour les simulations IA contre IA, et un contrôle total sur le déterminisme.
+Cette section a été écrite pour justifier un rendu **Canvas 2D**. Elle a été révisée deux fois : le 5 septembre 2026 au matin, quand la direction artistique est passée à la 3D (`BRIEF.md`, direction artistique) ; puis le 5 septembre au soir, quand le rendu vectoriel a été **supprimé** au lieu de rester comme repli. Ce qui suit tient compte des deux.
 
-**Le point de vigilance est réel et il faut le budgéter comme du travail, pas comme un détail.** En refusant un framework, on s'engage à écrire nous-mêmes quatre briques que Pixi ou Phaser offriraient :
+Le raisonnement de fond n'a pas bougé, et c'est pour cela qu'il vaut la peine d'être relu. Un tactique au tour par tour n'a besoin ni de moteur physique, ni de boucle temps réel à 60 images par seconde en continu, ni de gestion de scène complexe : l'écran est statique la plupart du temps et ne bouge que pendant de courtes animations scriptées — un déplacement le long d'un chemin, un tir, un fondu de HUD. **Phaser** irait dans la mauvaise direction : il impose sa propre boucle, ses scènes, son système d'entrées, sa notion de « game object », c'est-à-dire une architecture concurrente de la nôtre alors que le cœur du projet est justement un **moteur de règles pur, séparé du rendu**.
 
-1. **La boucle de rendu.** Un `requestAnimationFrame` qui ne tourne que quand il y a quelque chose à animer (une file d'animations non vide, un survol qui a changé), et qui s'arrête sinon — sur mobile, une boucle qui tourne à vide pour redessiner une image identique vide la batterie. Il faut donc un système de « salissure » explicite : `scene.salir()` réveille la boucle, la boucle s'endort quand la file est vide.
-2. **Le cache des sprites vectoriels en canvas hors écran.** Redessiner trois arbres et une montagne à la main pour chacune des 192 tuiles à chaque image est un gaspillage. Chaque combinaison (type de sprite × nation × biome × échelle du zoom) est rendue **une fois** dans un `OffscreenCanvas`, puis blittée avec `drawImage`. Le cache est indexé par une clé textuelle — pour une unité, **par sa silhouette et non par sa clé** (`silhouette:chenilles-bloc-tourelle:2:bleu:2x`, §3.4), pour un terrain par son ambiance climatique (`terrain:foret:tempere:automne:2x`) — et purgé quand le zoom change de palier ou que l'ambiance change. C'est la seule optimisation vraiment nécessaire, et elle est simple.
-3. **Les entrées souris et tactile.** Pas de gestionnaire d'événements prêt à l'emploi : il faut convertir des coordonnées écran en coordonnées monde en tenant compte de la caméra et du ratio de pixels, distinguer un tap d'un glisser (seuil en pixels et en millisecondes), gérer le pincement à deux doigts pour le zoom, le déroulement inertiel, le clic droit et la touche Échap comme « annuler ». C'est la partie la plus fastidieuse et celle où l'on se trompe le plus souvent.
-4. **Le redimensionnement HiDPI.** La démo triche avec un `scale(2,2)` en dur. En production il faut lire `devicePixelRatio`, dimensionner le canvas en pixels physiques, le contraindre en CSS en pixels logiques, réappliquer la transformation à chaque `resize` et à chaque changement d'écran (un portable branché sur un écran externe change de ratio à chaud), et vider le cache de sprites au passage. Un `ResizeObserver` sur le conteneur, pas un `window.onresize`.
+Ce qui a changé, c'est la brique de dessin. **three.js** est une bibliothèque de rendu, pas un moteur de jeu : elle apporte la scène, les matériaux et le pipeline WebGL, et rien d'autre — pas de boucle imposée, pas d'entrées, pas de notion de partie. La séparation moteur/rendu tient donc exactement comme avant, et `engine/` ignore toujours qu'il existe un écran. Le prix payé est réel — plusieurs centaines de kilo-octets de JavaScript — et il est **assumé** : le relief, l'éclairage par saison et par heure, et les matières que la direction artistique demande ne se peignent pas au pinceau à la main.
 
-Ces quatre briques représentent, à l'estimation, **quelques centaines de lignes chacune**, écrites une fois et stables ensuite. C'est un coût acceptable ; il devient inacceptable si on les découvre en cours de route. Elles sont donc des tâches identifiées de l'étape 3 du plan de construction, pas des imprévus.
+**Le point de vigilance reste entier.** En refusant un framework de jeu, on s'engage à écrire soi-même trois briques que Phaser offrirait :
+
+1. **La boucle de rendu.** Un `requestAnimationFrame` qui ne tourne que quand il y a quelque chose à animer — une file d'animations non vide, une particule, l'eau, une transition d'ambiance — et qui s'arrête sinon. Sur mobile, une boucle qui redessine à vide une image identique vide la batterie. D'où un système de **salissure** explicite : `salir()` réveille la boucle, la boucle s'endort quand la file est vide. C'est `render/boucle.ts`, et il est resté commun aux deux peaux tant qu'il y en avait deux.
+2. **Les entrées souris et tactile.** Pas de gestionnaire prêt à l'emploi : il faut convertir des coordonnées écran en cases — par lancer de rayon sur le sol en 3D —, distinguer un tap d'un glisser (seuil en pixels et en millisecondes), gérer le pincement à deux doigts, le déroulement inertiel, le clic droit et la touche Échap comme « annuler ». C'est la partie la plus fastidieuse et celle où l'on se trompe le plus souvent : `render/entrees.ts` pour les gestes bruts, `render3d/gestes.ts` pour leur traduction en cases.
+3. **Le redimensionnement HiDPI.** Lire `devicePixelRatio`, dimensionner le tampon en pixels physiques, le contraindre en CSS en pixels logiques, et réagir à chaque changement d'écran — un portable branché sur un moniteur externe change de ratio à chaud. three.js en prend une partie à sa charge (`setPixelRatio`), la surveillance du conteneur reste à nous : un `ResizeObserver`, pas un `window.onresize`.
+
+La quatrième brique de la version d'origine — **le cache de sprites vectoriels en canvas hors écran** — a disparu avec le rendu vectoriel. Son équivalent 3D est le rendu **instancié** (`10-rendu-3d.md` §9) : un seul appel de dessin pour tous les troncs, un autre pour toutes les couronnes.
 
 ---
 
@@ -152,45 +155,39 @@ Pipeline en cinq passes, chacune testable seule :
 
 Le générateur **refuse plutôt que de rendre une carte douteuse**. Un refus est une information exploitable : il remonte en clair à la routine carte, qui corrige ses paramètres au run suivant.
 
-### 3.4 `render/` — le canvas
+### 3.4 `render/` — le socle de rendu, et `render3d/` — la peau
 
 ```
-render/
+render/                       le socle, sans une ligne de three.js
+├─ rendu.ts        l'interface `Rendu` : tout ce que le jeu attend d'une peau
+├─ jeu.ts          monte une partie : moteur, IA, peau, HUD, sauvegarde locale
 ├─ boucle.ts       rAF paresseux, horloge, file d'animations
-├─ camera.ts       position, zoom, conversions écran ↔ monde, limites
-├─ scene.ts        ordre de dessin en couches, culling par rectangle visible
-├─ atlas.ts        cache de sprites vectoriels en OffscreenCanvas
-├─ ambiance.ts     palette, calques et particules dérivés de (saison, phase, meteo)
-├─ sprites/        terrain.ts, batiments.ts, unites.ts, silhouettes.ts, effets.ts
-├─ hud.ts          panneau d'unité, fonds, jauge de pouvoir, fin de tour
-├─ entrees.ts      souris, tactile, clavier ; gestes ; sélection
-├─ animations.ts   déplacement le long d'un chemin, tir, capture, mise hors jeu
-└─ palettes.ts     palettes de nation et de biome
+├─ entrees.ts      souris, tactile, clavier ; gestes bruts
+├─ controleur.ts   la machine d'interaction : sélection, visée, ordres
+├─ hud-html.ts     le HUD, en DOM au-dessus du canvas
+├─ ambiance.ts     paramètres dérivés de (saison, phase, meteo)
+├─ surbrillance.ts le vocabulaire des cinq genres de case allumée
+├─ libelles.ts     noms d'unités, de terrains, de commandants, de saisons
+├─ chemin.ts       longueur d'un chemin et position le long de ce chemin
+├─ dialogues.ts    les scènes de commandant déclenchées par les événements
+├─ palettes.ts     palettes de nation et de camp
+├─ sprites/        formes et silhouettes — la vignette d'unité du HUD, rien de plus
+└─ apercu/         rastériseur PNG autonome, pour la relecture des cartes
+
+render3d/                     la seule peau (`10-rendu-3d.md`)
 ```
 
-Le rendu **consomme** un `EtatPartie` et une file d'`EvenementJeu` renvoyés par le moteur. Il n'a aucune autorité : quand le joueur clique, `entrees.ts` construit une `Action`, la passe à `appliquer`, reçoit un nouvel état et une liste d'événements, puis joue les animations correspondantes. Pendant qu'une animation joue, l'état logique est **déjà** le nouveau ; l'animation n'est qu'un rattrapage visuel. Cela évite toute la classe de bugs « l'état dépend de l'animation ».
+**Révision du 5 septembre 2026, nuit.** Ce dossier s'appelait « le canvas » et portait un rendu vectoriel complet — `scene.ts`, `camera.ts`, un cache de sprites, un HUD dessiné au canvas. Celui-ci a été **supprimé** ; il n'en reste que ce qui ne dépendait pas de la façon de peindre. Le nom de la couche s'entend donc désormais comme « ce que le jeu sait du rendu », par opposition à `render3d/`, qui sait comment on rend. La règle d'import n'a pas changé et c'est elle qui découpe : `render3d/` peut importer `render/`, **jamais l'inverse** (§5).
 
-Conventions reprises telles quelles de la démo :
+Le rendu **consomme** un `EtatPartie` et une file d'`EvenementJeu` renvoyés par le moteur. Il n'a aucune autorité : quand le joueur clique, le contrôleur construit une `Action`, la passe à `appliquer`, reçoit un nouvel état et une liste d'événements, puis joue les animations correspondantes. Pendant qu'une animation joue, l'état logique est **déjà** le nouveau ; l'animation n'est qu'un rattrapage visuel, et si on la coupe la partie reste juste. Cela évite toute la classe de bugs « l'état dépend de l'animation ».
 
-- Tuile de **64 px** en unités monde, `ROWS × COLS` de tuiles, origine en haut à gauche.
-- Palette de nation `{ main, dark, light }`, plus une palette `neutre` grise pour les bâtiments sans propriétaire.
-- Ordre de dessin : eau et vaguelettes → halo de sable → herbe → texture → routes → grille discrète → surbrillances de déplacement et d'attaque → décor (arbres, montagnes, bâtiments) → unités → curseur → étiquettes de PV → HUD.
-- Le décor est **dessiné par des fonctions vectorielles** (`arbre`, `montagne`, `batiment`, `dessinerUnite`), pas par des images. Ces fonctions sont reprises presque telles quelles ; on leur ajoute une signature de cache.
-- Ombres douces via `shadowColor`/`shadowBlur`/`shadowOffsetY`, activées et désactivées explicitement autour des groupes concernés.
+Corollaire appris à l'usage : **le rendu ne reconstruit jamais ce que le moteur sait**. L'événement `deplacement` a porté longtemps le seul couple départ/arrivée, et chaque peau s'inventait un trajet — en L d'un côté, en ligne droite de l'autre —, qui traversait allègrement les montagnes et les unités adverses. Il porte désormais le **chemin validé** (`03-schemas.md`, `EvenementJeu`).
 
-**L'ambiance.** `ambiance = f(saison, phase, meteo)` : une fonction **pure**, qui ne lit rien d'autre que `EtatPartie.climat` (`03-schemas.md` §13) et renvoie trois choses **[proposition de découpage]** —
+**L'ambiance.** `ambiance = f(saison, phase, meteo)` : une fonction **pure**, qui ne lit rien d'autre que `EtatPartie.climat` (`03-schemas.md` §13). Elle vit dans `render/` parce qu'elle ne dépend pas de la peau : c'est un jeu de paramètres — température de lumière, densité de particules, teinte du sol, écume — que `render3d/eclairage.ts` traduit en soleil, en brouillard de scène et en variantes de matières (`10-rendu-3d.md` §5). **L'ambiance est purement cosmétique** : aucune règle n'en dépend, et une partie jouée sans elle est exactement la même partie.
 
-1. une **palette** de substitution appliquée par-dessus celle du biome : feuillage roux en automne, blanc cassé et ombres bleues sous la neige, teinte nuit avec halos jaunes sur les villes, usines, aéroports et QG **éclairés** (les mêmes bâtiments qui gardent leur vision la nuit, `04-gameplay.md` §12.3) ;
-2. des **calques** dessinés au-dessus du terrain et sous les unités : voile de nuit, nappe de brume, flaques et reflets sous la pluie, halo de chaleur sous la canicule ;
-3. des **particules** : gouttes, flocons, poussière, dont la densité vient de la météo et la direction du vent régional s'il y en a un (le mistral reste une mécanique régionale, pas une météo).
+**Les silhouettes.** Une unité nouvelle (`03-schemas.md` §3) n'apporte **aucun dessin** : elle apporte une `Silhouette` déclarative, et `render3d/pieces.ts` la **compose** — `base` (chenilles, roues, pattes, coque, rotor, ailes, rail), puis `corps` (bloc, capsule, plateau), puis les `modules` (trois au plus) posés à des **ancres fixes** du corps, à l'échelle donnée par `taille`. Les unités canon sont elles-mêmes définies comme des silhouettes (`04-gameplay.md` §3), ce qui garantit que le composeur est exercé par le contenu existant et pas seulement par les nouveautés. Une unité homologuée est donc jouable le jour même, bien avant qu'un modèle ne soit livré.
 
-Le style vectoriel rend cela trivial : ce sont des couleurs et des calques, pas des images. **L'ambiance est purement cosmétique** — aucune règle n'en dépend, et une partie jouée calques désactivés est exactement la même partie. Conséquence pour le cache de sprites (§2, point 2) : sa clé inclut l'**ambiance courante** en plus du palier de zoom (`terrain:foret:tempere:automne:2x`), et il est purgé au changement de saison, de phase ou de météo — soit quelques fois par partie, ce qui est acceptable.
-
-**Les silhouettes.** Une unité nouvelle (`03-schemas.md` §3) n'apporte **aucun dessin** : elle apporte une `Silhouette` déclarative, et `sprites/silhouettes.ts` la **compose** — `base` (chenilles, roues, pattes, coque, rotor, ailes, rail), puis `corps` (bloc, capsule, plateau), puis les `modules` (trois au plus) posés à des **ancres fixes** du corps, à l'échelle donnée par `taille`. Ce sont les fonctions vectorielles de la démo, décomposées : les dix unités canon sont elles-mêmes redéfinies comme des silhouettes (`04-gameplay.md` §3), ce qui garantit que le composeur est exercé par le contenu existant et pas seulement par les nouveautés. Le palette swap s'applique comme aux autres.
-
-**Le cache de sprites indexe par silhouette, pas par clé d'unité** : deux unités de silhouette identique partagent le même canvas hors écran, et une unité homologuée n'ajoute ni fichier, ni image, ni entrée de cache si sa silhouette existe déjà. Clé : `silhouette:chenilles-bloc-tourelle:2:bleu:2x`.
-
-Deux corrections par rapport à la démo **[proposition]** : le `seed` de la texture d'herbe et des vaguelettes doit venir de la graine de la **carte** (sinon la texture bouge d'une image à l'autre au redimensionnement), et les jonctions de routes doivent être calculées sur les quatre voisins, pas seulement est et sud, sinon les extrémités de route restent des moignons.
+Le même composeur sert de **placeholder** tant qu'aucun `.glb` n'est arrivé, et le remplacement est un changement de fichier, jamais de code (`11-assets-spec.md`). Trois bases — `coque`, `ailes`, `rail` — sont écrites et **qu'aucune unité du canon ne porte** : elles ne se voient que depuis le banc d'essai de l'atelier.
 
 ### 3.5 `content/` — le canon versionné
 
@@ -309,7 +306,7 @@ atlas-tournaments/
 │  ├─ engine/                     # §3.1 — le moteur pur : état, actions, RNG, rejeu, règles, climat, mécaniques, déblocages
 │  ├─ ai/                         # §3.2 — l'IA de jeu : évaluation et trois stratégies (pondérée, agressive, défensive)
 │  ├─ mapgen/                     # §3.3 — le générateur de cartes : grille, relief, bâtiments, symétrie, vérification, aperçu texte
-│  ├─ render/                     # §3.4 — le socle de rendu commun : interface `Rendu`, boucle, caméra, entrées, HUD HTML, peau 2D vectorielle, rastérisation PNG d'aperçu
+│  ├─ render/                     # §3.4 — le socle : interface `Rendu`, boucle, entrées, contrôleur, HUD HTML, ambiance, libellés, rastérisation PNG d'aperçu
 │  ├─ render3d/                   # la peau 3D three.js : scène, terrain, éclairage, unités, décor, surbrillances, animations, textures
 │  ├─ assets/                     # le format `AssetSpec`, le catalogue de specs, les styles nationaux et les validateurs (spec + glTF)
 │  ├─ content/                    # §3.5 — chargeurs typés du canon JSON de `content/`
@@ -330,7 +327,7 @@ atlas-tournaments/
 ├─ scripts/                       # les outils en ligne de commande : migrate, simuler, controler-carte, apercu-carte, generer-specs-assets, extraire-chaines
 ├─ drizzle/                       # les migrations SQL numérotées, jamais modifiées après application
 ├─ tests/                         # `tsx --test` : un dossier par couche, plus `frontieres.test.ts` qui fait respecter le §5
-├─ e2e/                           # les deux tests de fumée Playwright (2D et 3D), sur le port 3400
+├─ e2e/                           # le test de fumée Playwright 3D, sur le port 3400
 ├─ doc/                           # les documents de conception 00 à 14 (`doc/README.md` donne l'ordre), plus `doc/assets/` (démos de rendu)
 ├─ apercus/                       # les PNG produits par `scripts/apercu-carte.ts` — ignoré par git
 ├─ public/                        # les fichiers servis tels quels par Next (vide aujourd'hui)
@@ -500,7 +497,7 @@ La matrice est réduite aux configurations **atteignables** par le climat de la 
 
 En intégration continue, la même simulation tourne sur les cartes canon avec une graine fixe et une **configuration climatique fixe** : une variation du résultat signale une régression d'équilibrage.
 
-**4. Test de fumée Playwright** (`e2e/fumee.spec.ts`). Un seul scénario, court, qui doit toujours passer : charger `/jeu/tutoriel-fr`, attendre que le canvas soit peint (comparaison de quelques pixels, pas d'instantané complet — la texture d'herbe est seedée mais le rendu de police varie d'une machine à l'autre), sélectionner une infanterie, la déplacer, capturer une ville, finir le tour, vérifier que le HUD affiche la journée 2. Complété par un contrôle d'absence d'erreur console et un contrôle de HiDPI (`devicePixelRatio` simulé à 2, le canvas doit avoir deux fois plus de pixels physiques que logiques).
+**4. Test de fumée Playwright** (`e2e/fumee-3d.spec.ts`). Un seul scénario, court, qui doit toujours passer : charger une mission, attendre que le plateau soit peint, sélectionner une unité, la déplacer, finir le tour, vérifier que le HUD a suivi. Il porte ses **propres drapeaux SwiftShader** — une machine d'intégration n'a pas de carte graphique, et sans eux WebGL 2 ne répond pas. Complété par un contrôle d'absence d'erreur console. Il y en avait deux jusqu'au 5 septembre au soir ; celui du rendu vectoriel est parti avec lui.
 
 **Test de frontières** (§5) et **test d'interdits de déterminisme** (§7) : deux tests qui lisent le code source et échouent sur un import ou un appel interdit. Grossier, mais c'est ce qui empêche l'architecture de se dissoudre en six mois.
 

@@ -15,6 +15,8 @@ const eslintConfig = [
     ignores: [
       "node_modules/**",
       ".next/**",
+      // Construction lancée à côté du serveur de développement (`next.config.ts`).
+      ".next-build/**",
       "out/**",
       "build/**",
       "next-env.d.ts",

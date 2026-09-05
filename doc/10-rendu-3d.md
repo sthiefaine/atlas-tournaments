@@ -9,7 +9,9 @@
 
 ## 1. Ce que la 3D change, et surtout ce qu'elle ne change pas
 
-Le pivot du 5 septembre remplace une peau, pas un jeu. Le moteur (`engine/`) ne sait toujours pas qu'il existe un écran ; il rend un `EtatPartie` sérialisable et une file d'`EvenementJeu`, et il en rendrait exactement autant si on l'affichait en texte. Le rendu vectoriel 2D (`render/`), terminé le 5 septembre, **reste** : repli pour les appareils sans WebGL 2, aperçu d'administration (`scripts/apercu-carte.ts`), et référence de lisibilité. Les deux peaux implémentent la **même interface** (§11) et partagent le contrôleur d'interaction (`render/controleur.ts`), le HUD HTML (`render/hud-html.ts`) et l'ambiance climatique (`render/ambiance.ts`).
+Le pivot du 5 septembre remplace une peau, pas un jeu. Le moteur (`engine/`) ne sait toujours pas qu'il existe un écran ; il rend un `EtatPartie` sérialisable et une file d'`EvenementJeu`, et il en rendrait exactement autant si on l'affichait en texte.
+
+**Révision du 5 septembre 2026, nuit : le rendu vectoriel 2D est supprimé.** Il devait rester comme repli ; il ne reste pas. Maintenir deux peaux revenait à prendre deux fois chaque décision d'affichage — la marée, la flèche de chemin, les surbrillances, la capture — et à découvrir chaque défaut deux fois. Un appareil sans WebGL 2 voit désormais un écran qui le lui dit, ce qui vaut mieux qu'une version dégradée du jeu ; `BRIEF.md` a été modifié en conséquence. L'aperçu d'administration n'a jamais été le rendu du jeu : c'est le rasteriseur PNG autonome de `render/apercu/`, qui reste. La peau 3D partage toujours avec `render/` le contrôleur d'interaction (`render/controleur.ts`), le HUD HTML (`render/hud-html.ts`), l'ambiance climatique (`render/ambiance.ts`) et le vocabulaire des surbrillances (`render/surbrillance.ts`), et l'interface `Rendu` (§11) subsiste — c'est elle qui interdit à `render/` d'importer `render3d/`.
 
 Quatre invariants survivent au passage en trois dimensions, et ce sont eux qui rendent le pivot possible :
 
@@ -56,7 +58,7 @@ Le zoom est une **distance caméra-cible**, prise dans une liste fermée : `5, 7
 
 À l'ouverture d'une carte, `distanceCadrage()` choisit la distance qui fait tenir la carte entière dans la fenêtre, avec une marge, puis **arrondit au palier le plus proche** en dessous — mieux vaut voir un peu moins et voir net.
 
-La **contrainte de lisibilité est chiffrée et non négociable** : au zoom par défaut, **une case occupe au moins 48 pixels CSS de côté à l'écran**. Si le cadrage automatique de la carte demande moins, on ne dézoome pas plus : on prend le palier qui tient les 48 px et on laisse la carte déborder, le joueur fera défiler. Une carte 24 × 16 sur un téléphone de 360 px de large ne peut pas tenir entière et rester jouable ; prétendre le contraire donne des unités de 12 pixels que personne ne distingue. Le rendu 2D applique la même règle avec `TUILE = 64` et ses paliers de zoom : les deux peaux sont donc lisibles au même seuil, ce qui est exactement le rôle du repli.
+La **contrainte de lisibilité est chiffrée et non négociable** : au zoom par défaut, **une case occupe au moins 48 pixels CSS de côté à l'écran**. Si le cadrage automatique de la carte demande moins, on ne dézoome pas plus : on prend le palier qui tient les 48 px et on laisse la carte déborder, le joueur fera défiler. Une carte 24 × 16 sur un téléphone de 360 px de large ne peut pas tenir entière et rester jouable ; prétendre le contraire donne des unités de 12 pixels que personne ne distingue. Le rendu vectoriel appliquait la même règle avec `TUILE = 64` et ses paliers de zoom ; il a été retiré, mais le seuil, lui, ne dépendait pas de la peau et reste la contrainte.
 
 Conséquence de vérification : un test de rendu calcule, pour chaque taille de carte du catalogue et trois tailles d'écran de référence (téléphone 360 × 640, tablette 820 × 1180, ordinateur 1440 × 900), la taille apparente d'une case au palier par défaut, et échoue sous 48 px **[proposition]**.
 
@@ -252,7 +254,7 @@ Trois conséquences qui valent d'être écrites :
 
 - Le jeu est **jouable de bout en bout sans un seul asset livré**. C'est ce qui autorise à mener l'étape 3 et l'étape « Assets 3D » en parallèle.
 - Le remplacement d'un placeholder par un modèle est un **changement de fichier**. Aucun `if` n'est ajouté, aucune clé n'est écrite en dur.
-- Les placeholders 3D et les silhouettes vectorielles 2D sont **le même contrat déclaratif**, ce qui garantit qu'une unité homologuée est jouable dans les deux peaux le jour de son homologation.
+- Le placeholder 3D est monté depuis **la `Silhouette` déclarative du canon**, sans une ligne de code propre à l'unité : c'est ce qui garantit qu'une unité homologuée est jouable le jour même de son homologation, avant qu'aucun modèle ne soit livré.
 
 ### 7.5 Orientation et pose
 
@@ -266,7 +268,7 @@ Cases de déplacement, portée d'attaque, chemin prévisualisé, curseur, case s
 
 Un décalque est un quadrilatère projeté sur le maillage de terrain, en mélange additif ou en transparence, dessiné **après** le terrain et **avant** les unités, sans écriture dans le tampon de profondeur. La règle est absolue : **une surbrillance ne cache jamais une unité**. Un cube bleu translucide posé sur une case cacherait l'infanterie qui s'y trouve, et c'est précisément l'information que le joueur cherche.
 
-Le vocabulaire visuel reprend celui de la 2D pour que le repli ne dépayse pas :
+Le vocabulaire visuel est celui du jeu, décrit dans `render/surbrillance.ts` et peint ici :
 
 | Surbrillance | Rendu |
 |---|---|
@@ -313,9 +315,9 @@ Les budgets par asset qui rendent ce total atteignable sont dans `11-assets-spec
 
 - **60 images par seconde** sur un ordinateur portable à circuit graphique intégré.
 - **30 images par seconde** sur un téléphone milieu de gamme.
-- La boucle reste **paresseuse**, comme en 2D : on ne dessine que quand quelque chose bouge — une animation en cours, une particule, l'eau, une transition d'ambiance. Un plateau immobile de nuit sans météo ne consomme rien.
-- **Détection de WebGL 2 et repli** : `choisirRendu()` (`render/rendu.ts`) tente un contexte `webgl2` ; s'il ne répond pas, la page monte le rendu vectoriel 2D. Le repli est aussi disponible à la demande (`?rendu=2d`), et il l'est parce que le brief l'exige : les deux peaux implémentent la même interface, donc le jeu ne sait pas laquelle il utilise.
-- Réglages dégradés avant de basculer : ombres désactivées, une cascade au lieu de deux, particules divisées par quatre, niveaux de détail forcés au palier suivant. Le repli 2D est le dernier recours, pas le premier.
+- La boucle reste **paresseuse** : on ne dessine que quand quelque chose bouge — une animation en cours, une particule, l'eau, une transition d'ambiance. Un plateau immobile de nuit sans météo ne consomme rien.
+- **Sans WebGL 2, il n'y a plus de repli** (révision du 5 septembre, nuit). `webgl2Disponible()` (`render/rendu.ts`) reste, mais ne sert plus qu'à décider si l'on monte le plateau ou l'écran qui explique qu'on ne peut pas. `monterJeu` **lève** si la fabrique de peau manque ou refuse : mieux vaut un message franc qu'un plateau vide.
+- Réglages dégradés quand la machine peine : ombres désactivées, une cascade au lieu de deux, particules divisées par quatre, niveaux de détail forcés au palier suivant. Il n'y a plus rien après.
 
 ---
 
@@ -325,19 +327,21 @@ Le HUD est une **surcouche HTML** positionnée au-dessus du canvas (`render/hud-
 
 1. **Les neuf langues.** L'allemand est long, le japonais est court, le chinois n'a pas les mêmes métriques ; le CSS gère les polices de repli, la coupure, l'ellipse et les largeurs souples, alors que `measureText` demandait de tout mesurer à la main.
 2. **L'accessibilité.** Un HUD en DOM est lisible par un lecteur d'écran, navigable au clavier, agrandissable par le navigateur. Un HUD en canvas n'est rien de tout cela.
-3. **Le partage entre les deux peaux.** Le même HUD couvre le rendu 2D et le rendu 3D, sans une ligne de différence.
+3. **L'indépendance vis-à-vis de la peau.** Le HUD ne sait pas ce qu'il recouvre : il lisait le rendu vectoriel comme il lit la 3D, sans une ligne de différence. C'est ce qui a permis de retirer l'un sans toucher à l'autre.
 
 Les règles d'i18n restent celles de `09-i18n.md` : **aucun texte en dur**, tout passe par `t()`, les nombres et les dates par `Intl`. Un rendu n'appelle jamais `t()` lui-même — les rares libellés qu'il peint (l'étiquette d'un QG) lui sont **donnés déjà traduits** par la vue d'interaction.
 
 ---
 
-## 11. L'interface `Rendu`, commune aux deux peaux
+## 11. L'interface `Rendu`
 
-Déclarée dans `render/rendu.ts`, implémentée par `render/rendu2d.ts` et par `render3d/`. `jeu.ts` et `controleur.ts` ne connaissent qu'elle.
+Déclarée dans `render/rendu.ts`, implémentée par `render3d/` — et par lui seul depuis le retrait du rendu vectoriel. `jeu.ts` et `controleur.ts` ne connaissent qu'elle.
+
+Elle n'a pas disparu avec la seconde peau, et ce n'est pas de la nostalgie : c'est la **couture** qui interdit à `render/` d'importer `render3d/` (`02-architecture.md` §5). Sans elle, le contrôleur, le HUD et la boucle de jeu dépendraient de three.js, et le moteur d'interaction ne serait plus testable sans WebGL. C'est l'appelant — la page — qui fabrique la peau et la passe à `monterJeu`.
 
 ```ts
 export interface Rendu {
-  readonly cle: CleRendu;                                   // '2d' | '3d'
+  readonly cle: CleRendu;                                   // '3d' — la seule
   readonly canvas: HTMLCanvasElement | null;
 
   monter(conteneur: HTMLElement): void;
@@ -366,7 +370,7 @@ Membre par membre :
 Deux règles complètent l'interface :
 
 - **Le rendu ne décide de rien.** Aucune méthode ne renvoie une `Action`.
-- **Le rendu ne parle qu'en cases.** Ni pixels, ni mètres, ni unités de scène ne franchissent l'interface — c'est ce qui rend le contrôleur rigoureusement commun aux deux peaux, et c'est ce qui a permis d'écrire le rendu 3D sans toucher au reste du jeu.
+- **Le rendu ne parle qu'en cases.** Ni pixels, ni mètres, ni unités de scène ne franchissent l'interface — c'est ce qui a permis d'écrire le rendu 3D sans toucher au reste du jeu, puis de retirer le rendu vectoriel sans y toucher davantage.
 
 ---
 

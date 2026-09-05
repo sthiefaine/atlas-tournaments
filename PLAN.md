@@ -1,6 +1,6 @@
 # Atlas Tournament — Plan d'étapes
 
-Tactique au tour par tour dans l'esprit d'Advance Wars, où un jeune commandant fait le tour du monde pour disputer le Tournoi Atlas. Web, TypeScript, **rendu 3D three.js avec repli vectoriel 2D**, contenu produit par cinq routines Claude — quatre de contenu, une de traduction — et validé par un serveur qui ne fait confiance à rien.
+Tactique au tour par tour dans l'esprit d'Advance Wars, où un jeune commandant fait le tour du monde pour disputer le Tournoi Atlas. Web, TypeScript, **rendu 3D three.js**, contenu produit par cinq routines Claude — quatre de contenu, une de traduction — et validé par un serveur qui ne fait confiance à rien.
 
 Le canon est dans `BRIEF.md`. Les documents de conception sont dans `doc/` (lire `doc/README.md` pour l'ordre de lecture). Ce plan dit **dans quel ordre on construit, ce que chaque étape livre, et comment on sait qu'elle est finie**.
 
@@ -13,7 +13,7 @@ Fil conducteur : **le moteur et le contrôle avant le contenu, le contenu avant 
 | 0 | Arbitrages et socle | Décisions prises, dépôt qui compile, CI verte | — |
 | 1 | Moteur de règles | Une partie jouable en ligne de commande, IA contre IA, 100 % déterministe | 0 |
 | 2 | Générateur de cartes + contrôle | Des cartes générées depuis des paramètres, certifiées jouables par simulation | 1 |
-| 3 | Rendu et jouabilité | Une partie complète au clavier et à la souris contre l'IA, en 3D dans le navigateur, avec repli 2D | 1 |
+| 3 | Rendu et jouabilité | Une partie complète au clavier et à la souris contre l'IA, en 3D dans le navigateur | 1 |
 | 4 | **Assets 3D** | Les specs partent au générateur externe, les modèles validés remplacent les placeholders un à un | 3 |
 | 5 | Serveur et administration | Base, API des routines, file de validation, prompts versionnés | 0 |
 | 6 | Routine map + routine contrôle en ligne | Les deux routines tournent en tâches planifiées et remplissent une réserve de cartes | 2, 5 |
@@ -62,21 +62,21 @@ Fini quand : sur 200 cartes générées depuis des paramètres aléatoires, le c
 
 ## Étape 3 — Rendu et jouabilité
 
-**Le rendu de production est la 3D** (`BRIEF.md`, direction artistique révisée du 5 septembre ; `doc/10-rendu-3d.md` fait foi). Le rendu vectoriel 2D, terminé le 5 septembre, **reste** : repli pour les appareils sans WebGL 2, aperçu d'administration, et étalon de lisibilité. Les deux peaux implémentent la même interface `Rendu` (`render/rendu.ts` : `monter`, `afficher`, `animer`, `versMonde`/`versEcran`, `brancher`, `cadrer`, `demonter`), et le contrôleur d'interaction comme le HUD ne savent pas laquelle tourne.
+**Le rendu de production est la 3D, et c'est le seul** (`BRIEF.md`, direction artistique ; `doc/10-rendu-3d.md` fait foi). Le rendu vectoriel 2D, terminé puis **supprimé** le 5 septembre, devait rester comme repli : maintenir deux peaux revenait à prendre deux fois chaque décision d'affichage et à découvrir chaque défaut deux fois. L'interface `Rendu` subsiste (`render/rendu.ts` : `monter`, `afficher`, `animer`, `versMonde`/`versEcran`, `brancher`, `cadrer`, `demonter`), parce que c'est elle qui interdit à `render/` d'importer `render3d/` : le contrôleur d'interaction et le HUD ne savent toujours pas ce qui tourne sous eux, et restent testables sans WebGL.
 
 `render/` — le socle commun, déjà écrit : boucle paresseuse, cache de sprites vectoriels en canvas hors écran, entrées souris, tactile et clavier, HiDPI, ambiance `f(saison, phase, météo)`, contrôleur, sauvegarde locale `{scénario, graine, actions}`.
 
 `render3d/` — la peau 3D avec three.js (une seule dépendance runtime, assumée) : caméra perspective (tangage 60–75°, lacet fixe avec quarts de tour, zoom par paliers, cadrage automatique et **une case ≥ 48 px au zoom par défaut**), maillage de terrain à relief léger avec jonctions adoucies et texturage par splat map à quatre canaux, eau à normales animées, routes en bandes décalées, décor et unités en `InstancedMesh`, surbrillances en décalques au sol qui ne cachent jamais une unité, éclairage complet (soleil directionnel avec ombres, hémisphère, température par saison, trajectoire sur le cycle jour/nuit, villes émissives la nuit, six météos), et les **placeholders d'unité composés depuis la `Silhouette`** — le jeu est jouable de bout en bout sans un seul asset livré.
 
-**HUD en HTML par-dessus le canvas**, partagé par les deux peaux : c'est ce qui règle les polices des neuf langues, les largeurs souples et l'accessibilité (`render/hud-html.ts`).
+**HUD en HTML par-dessus le canvas**, indépendant de la peau : c'est ce qui règle les polices des neuf langues, les largeurs souples et l'accessibilité (`render/hud-html.ts`), et c'est ce qui a permis de retirer le rendu vectoriel sans y toucher.
 
-**Détection et repli** : `choisirRendu()` tente un contexte WebGL 2 et retombe sur le vectoriel sinon ; `?rendu=2d` force le repli. Cibles de performance : 60 ips sur portable à circuit graphique intégré, 30 ips sur téléphone milieu de gamme, avec des réglages dégradés (ombres, cascades, particules, LOD) avant de basculer.
+**Sans WebGL 2, il n'y a plus de repli** : `webgl2Disponible()` décide si l'on monte le plateau ou l'écran qui explique qu'on ne peut pas, et `monterJeu` lève plutôt que d'afficher un plateau vide. Cibles de performance : 60 ips sur portable à circuit graphique intégré, 30 ips sur téléphone milieu de gamme, avec des réglages dégradés (ombres, cascades, particules, LOD) avant de basculer.
 
 Une page `jeu/[scenario]` qui charge un scénario et joue contre l'IA.
 
 **Tout texte affiché passe par une clé de chaîne dès maintenant** (`doc/09-i18n.md` §3.1 et §7) : `render/`, `render3d/` et `app/` n'écrivent **jamais** un libellé en dur, ils appellent `t('hud.fin_de_tour')`. Un rendu n'appelle même pas `t()` : les rares libellés qu'il peint lui sont donnés déjà traduits. Le fichier `content/i18n/ui.fr.json` est produit par le script d'extraction, un test d'intégration continue échoue sur tout littéral affichable trouvé hors d'un appel à `t()`. Une seule langue existe à ce stade — le français — mais elle passe déjà par le même chemin que les huit autres.
 
-Fini quand : une personne qui n'a jamais vu le projet gagne ou perd une partie complète contre l'IA sans explication orale, sur ordinateur et sur téléphone, **dans les deux rendus** ; le test de fumée Playwright la rejoue dans chacun ; la bascule 3D → 2D sur absence de WebGL 2 est testée ; le test d'extraction ne trouve aucun texte en dur ; et le test de lisibilité ne trouve aucune combinaison (taille de carte × écran de référence) sous 48 px par case au zoom par défaut.
+Fini quand : une personne qui n'a jamais vu le projet gagne ou perd une partie complète contre l'IA sans explication orale, sur ordinateur et sur téléphone ; le test de fumée Playwright la rejoue ; l'écran affiché en l'absence de WebGL 2 est testé ; le test d'extraction ne trouve aucun texte en dur ; et le test de lisibilité ne trouve aucune combinaison (taille de carte × écran de référence) sous 48 px par case au zoom par défaut.
 
 ## Étape 4 — Assets 3D
 
