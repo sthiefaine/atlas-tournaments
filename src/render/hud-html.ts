@@ -18,13 +18,14 @@
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { prevoirDuel, pvAffiches, terrainLogique, uniteParId } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
-import type { CampId, Case, CleUnite, Meteo, Silhouette } from '../schemas/types';
+import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
 import {
   libelleMeteo, libellePhase, libelleSaison, nomCommandant, nomTerrain, nomUnite,
   type OptionMenu,
 } from './libelles';
+import { ficheUnite, porte, type Duel } from './fiche-unite';
 import { paletteDe } from './palettes';
 import type { PointVue } from './rendu';
 import { dessinerUnite } from './sprites/index';
@@ -194,6 +195,30 @@ const STYLE = `
 .atlas-hud .liste button:hover{background:#d0d7cc}
 .atlas-hud .liste canvas{flex:0 0 auto;width:38px;height:38px}
 .atlas-hud .liste .cout{font-size:14px;color:#45606b}
+.atlas-hud .liste .cout.dur{color:#9a4a42;font-weight:750}
+/* L'appel à l'action : « Production » tant que la fiche est fermée, « Produire »
+   une fois qu'on a lu. Le même bouton, deux temps — on informe sans coûter un
+   geste à qui sait déjà ce qu'il achète. */
+.atlas-hud .liste .cta{margin-left:auto;flex:0 0 auto;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:#45606b}
+.atlas-hud .production button[aria-expanded='true']{background:#d0d7cc;border-left-color:var(--signal);margin-bottom:0}
+.atlas-hud .production button[aria-expanded='true'] .cta{color:#1d3a2a}
+/* La fiche : tout ce que le canon sait dire de l'unité, et rien d'inventé. */
+.atlas-hud .fiche{background:#eae6d5;border-left:3px solid var(--signal);padding:10px 12px 12px;margin-bottom:6px;font-size:12.5px;line-height:1.45;color:#1e3038}
+.atlas-hud .fiche p{margin:0 0 6px}
+.atlas-hud .fiche p:last-child{margin-bottom:0}
+.atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:4px 14px;font-weight:750;color:#39525c}
+.atlas-hud .fiche .fl{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.atlas-hud .fiche .fl>span{flex:0 0 106px;font-size:11px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;color:#5d7480}
+.atlas-hud .fiche b{font-weight:700}
+.atlas-hud .fiche b:not(:last-child)::after{content:'·';margin:0 2px 0 6px;color:#8fa2ab;font-weight:400}
+.atlas-hud .fiche i{font-style:normal;font-variant-numeric:tabular-nums;color:#5d7480}
+/* Un avertissement se lit avant les listes : le tir indirect change une partie. */
+.atlas-hud .fiche .avert{padding:5px 8px;background:#e3d2c6;border-left:3px solid #a86a4a;font-weight:700}
+.atlas-hud .fiche .avert.bon{background:#d3e0cd;border-left-color:#4e8f43}
+@media(max-width:480px){
+  .atlas-hud .fiche .fl>span{flex:0 0 100%}
+  .atlas-hud .liste button:not([aria-expanded='true']) .cta{display:none}
+}
 .atlas-hud .pied{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
 .atlas-hud .pied button{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;cursor:pointer;font-weight:750;background:var(--encre);color:var(--papier)}
 .atlas-hud .fin{text-align:center;padding:26px 24px 22px}
@@ -311,6 +336,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   conteneur.appendChild(racine);
 
   let vignettes: Vignette[] = [];
+  // L'unité dont la fiche est dépliée dans le menu de production. Un premier
+  // appui l'ouvre, un second produit : on informe sans coûter un geste à qui
+  // sait déjà ce qu'il achète.
+  let ficheOuverte: CleUnite | null = null;
   let tourAffiche = '';
   let derniereSelection: string | null = null;
   let minuterieTour: ReturnType<typeof setTimeout> | null = null;
@@ -594,19 +623,65 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   function modaleProduction(v: VueJeu): string {
     if (!v.production) return '';
     const fonds = v.etat.camps.find((c) => c.id === v.etat.campCourant)?.fonds ?? 0;
+    const nomDe = (cle: CleUnite): string => nomUnite(v.locale, v.catalogue, cle);
+    const nomT = (cle: CleTerrain): string => nomTerrain(v.locale, v.catalogue, cle);
+    const liste = (titre: string, corps: string): string => corps === ''
+      ? ''
+      : `<p class="fl"><span>${ech(api.t(titre))}</span>${corps}</p>`;
+
     const lignes = v.production.unites.map((cle) => {
       const type = v.catalogue.unites[cle];
       if (!type) return '';
       const abordable = type.cout <= fonds;
+      const ouverte = ficheOuverte === cle;
       const id = `vg${vignettes.length}`;
       vignettes.push({ id, silhouette: type.silhouette, camp: v.etat.campCourant, taille: 38 });
-      return `<button type="button" data-action="produire" data-valeur="${ech(cle)}"${abordable ? '' : ' disabled'}>`
+
+      // Le prix cède la place au motif du refus : « 6 500 » grisé ne dit pas
+      // pourquoi le bouton ne répond pas.
+      const prix = abordable
+        ? `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span>`
+        : `<span class="cout dur">${ech(api.t('fiche.trop_cher'))}</span>`;
+
+      const entete = `<button type="button" data-action="${ouverte && abordable ? 'produire' : 'apercu'}" `
+        + `data-valeur="${ech(cle)}" aria-expanded="${ouverte}"${!abordable && ouverte ? ' disabled' : ''}>`
         + `<canvas data-vignette="${id}" width="38" height="38"></canvas><span style="min-width:0">`
-        + `<span class="tt" style="display:block">${ech(nomUnite(v.locale, v.catalogue, cle))}</span>`
-        + `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span></span></button>`;
+        + `<span class="tt" style="display:block">${ech(nomDe(cle))}</span>${prix}</span>`
+        + `<span class="cta">${ech(api.t(ouverte ? 'fiche.produire' : 'menu.production'))}</span></button>`;
+
+      if (!ouverte) return entete;
+      const f = ficheUnite(v.catalogue, cle);
+      if (!f) return entete;
+      const duels = (l: readonly Duel[]): string => l
+        .map((d) => `<b>${ech(nomDe(d.unite))} <i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></b>`).join('');
+      const terrains = (l: readonly CleTerrain[]): string => l.map((t) => `<b>${ech(nomT(t))}</b>`).join('');
+
+      return entete + `<div class="fiche">`
+        + `<p class="chiffres">`
+        + `<span>${ech(api.t('hud.mouvement', { n: f.mouvement }))}</span>`
+        + `<span>${ech(api.t('hud.vision', { n: f.vision }))}</span>`
+        + `<span>${ech(api.t('hud.portee', { n: f.portee[0] === f.portee[1] ? f.portee[0] : `${f.portee[0]}–${f.portee[1]}` }))}</span>`
+        + `<span>${ech(f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))}</span>`
+        + `</p>`
+        + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
+        + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
+        + liste('fiche.forte', duels(f.forte))
+        + liste('fiche.craint', duels(f.craint))
+        + liste('fiche.rapide', terrains(f.terrainsRapides))
+        + (f.terrainsInterdits.length > 0
+          ? liste('fiche.interdit', terrains(f.terrainsInterdits))
+          : `<p class="fl"><span>${ech(api.t('fiche.partout'))}</span></p>`)
+        + (f.meteosGenantes.length > 0
+          ? f.meteosGenantes.map((g) => liste(
+            g.effet === 'bride' ? 'fiche.meteo_bride' : 'fiche.meteo_case',
+            `<b>${ech(libelleMeteo(api.t, g.meteo))}</b>`,
+          )).join('')
+          : `<p class="fl"><span>${ech(api.t('fiche.par_tous_temps'))}</span></p>`)
+        + `</div>`;
     }).join('');
+
     return `<div class="voile" data-action="fermer"><div class="modale" data-arret="1">`
-      + `<h2>${ech(api.t('menu.production'))}</h2><div class="liste">${lignes}</div>`
+      + `<h2>${ech(api.t('menu.production'))}</h2><div class="liste production">${lignes}</div>`
       + `<div class="pied"><button type="button" data-action="fermer">${ech(api.t('menu.retour'))}</button></div>`
       + `</div></div>`;
   }
@@ -684,9 +759,11 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     switch (bouton.dataset['action']) {
       case 'fin_tour': api.finTour(); break;
       case 'suite': api.choisirSuite(valeur); break;
-      case 'produire': api.choisirProduction(valeur); break;
+      case 'produire': ficheOuverte = null; api.choisirProduction(valeur); break;
+      // Déplier une fiche ne touche à rien du jeu : on redessine, c'est tout.
+      case 'apercu': ficheOuverte = valeur === ficheOuverte ? null : (valeur as CleUnite); rafraichir(); break;
       case 'pouvoir': api.jouerPouvoir('normal'); break;
-      case 'fermer': api.annuler(); break;
+      case 'fermer': ficheOuverte = null; api.annuler(); break;
       case 'rejouer': api.recommencer(); break;
       case 'zoom_plus': api.zoomer?.(1); break;
       case 'zoom_moins': api.zoomer?.(-1); break;

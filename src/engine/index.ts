@@ -116,8 +116,8 @@ export {
 } from './hooks';
 export {
   avancerClimat, brouillardActif, bulletin, cycleEffectif, effetsSaison,
-  effetsSaisonPartie, foretCache, initialiserClimat, MECANIQUE_CLIMAT, meteoDominante,
-  meteoPossible, phaseDe, saisonDe, saisonEffective, TABLE_CLIMAT_SAISON, TABLE_METEO,
+  effetsSaisonPartie, facteurMouvementMeteo, foretCache, initialiserClimat, MECANIQUE_CLIMAT, meteoDominante,
+  meteoPossible, phaseDe, saisonDe, saisonEffective, surcoutMeteo, TABLE_CLIMAT_SAISON, TABLE_METEO,
   tirerMeteo, unitesLourdes, unitesTerrestres, type EffetSaison,
 } from './climat/index';
 export {

@@ -1257,6 +1257,132 @@
       "longueurMax": 12
     },
     {
+      "cle": "fiche.capture",
+      "texte": "Peut capturer un bâtiment",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait `capture`, dit en clair."
+      },
+      "longueurMax": 34
+    },
+    {
+      "cle": "fiche.craint",
+      "texte": "En danger face à",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Titre de la liste de ce qui lui fait le plus de dégâts."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "fiche.degats",
+      "texte": "{n} %",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Dégâts de base d’un duel, en pourcentage de points de vie."
+      },
+      "longueurMax": 8
+    },
+    {
+      "cle": "fiche.forte",
+      "texte": "Redoutable contre",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Titre de la liste des cibles où l’unité fait le plus de dégâts."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "fiche.indirecte",
+      "texte": "Tire de loin, ne riposte pas au contact",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Avertissement pour une unité à tir indirect. C’est la lecture qui change le plus une partie."
+      },
+      "longueurMax": 52
+    },
+    {
+      "cle": "fiche.interdit",
+      "texte": "Ne franchit pas",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Titre de la liste des terrains infranchissables pour elle."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "fiche.meteo_bride",
+      "texte": "Bridée par",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Météos qui divisent son mouvement — la tempête pour ce qui vole."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "fiche.meteo_case",
+      "texte": "Ralentie par",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Météos qui renchérissent chaque case pour cette unité."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "fiche.munitions_illimitees",
+      "texte": "Munitions illimitées",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Pour une unité dont le champ `munitions` vaut null."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "fiche.par_tous_temps",
+      "texte": "Par tous les temps",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Se substitue à la liste des météos quand aucune ne la gêne."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "fiche.partout",
+      "texte": "Passe partout",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Se substitue à la liste des terrains interdits quand il n’y en a aucun."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "fiche.produire",
+      "texte": "Produire",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bouton de confirmation dans le menu de production."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.rapide",
+      "texte": "Avance vite sur",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Titre de la liste des terrains traversés au coût minimal."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "fiche.trop_cher",
+      "texte": "Fonds insuffisants",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Affiché à la place du prix quand le camp ne peut pas payer."
+      },
+      "longueurMax": 26
+    },
+    {
       "cle": "hud.action_refusee",
       "texte": "Ordre impossible",
       "contexte": {
@@ -1666,6 +1792,15 @@
       },
       "longueurMax": 22,
       "pluriel": true
+    },
+    {
+      "cle": "hud.vision",
+      "texte": "Vue {n}",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Portée de vision, dans la fiche d'unité. Même famille que hud.mouvement et hud.portee."
+      },
+      "longueurMax": 12
     },
     {
       "cle": "hud.votre_tour",
@@ -2119,6 +2254,96 @@
         "note": "Bulletin d’Atlas."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "trait.amphibie",
+      "texte": "Amphibie",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : franchit l’eau."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.anti_air",
+      "texte": "Anti-aérien",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : efficace contre ce qui vole."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.capture",
+      "texte": "Capture",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : peut prendre un bâtiment."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.furtif_nuit",
+      "texte": "Furtive la nuit",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : garde sa vision de nuit."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.ravitaillement",
+      "texte": "Ravitaillement",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : refait les pleins des unités voisines."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.tir_indirect",
+      "texte": "Tir indirect",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : frappe à distance, jamais au contact."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.tout_terrain",
+      "texte": "Tout-terrain",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : montagne et rivière au coût 1."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.transport",
+      "texte": "Transport",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : embarque une autre unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.vision_etendue",
+      "texte": "Longue vue",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : vision accrue en hauteur."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.vol",
+      "texte": "Vol",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Trait : ignore le terrain."
+      },
+      "longueurMax": 18
     }
   ]
 }

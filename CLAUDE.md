@@ -17,6 +17,18 @@ Quatre changements d’interface, tous derrière l’interface `Rendu` commune, 
 
 Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` — rien ne le faisait —, et `e2e/fumee-3d.spec.ts` ouvre le Bulletin avant d’en lire les prévisions (il était devenu repliable, le test ne le savait pas).
 
+## Mise à jour — la fiche d’unité (6 septembre 2026)
+
+Le menu de production ne montrait qu’une silhouette, un nom et un prix. Acheter un char sans savoir ce qu’il chasse ni ce qui le chasse, c’est jouer à pile ou face — et tout ce qu’il fallait pour le dire était déjà dans le canon et dans le moteur, simplement affiché nulle part.
+
+`src/render/fiche-unite.ts` (pur, testé) compose une **fiche** : ce qu’elle démolit et ce qui la démolit — la table de dégâts lue dans les deux sens, trois lignes de chaque côté —, les terrains qu’elle traverse au coût minimal, ceux qu’elle ne franchit pas, les météos qui la gênent, sa portée, sa vue, ses munitions, et un avertissement quand elle **tire de loin sans riposter au contact**, qui est la lecture qui change le plus une partie.
+
+**Rien n’y est recopié**, et c’est la seule chose à préserver : les dégâts viennent de `degatsBase`, les coûts de `coutBase` — donc les traits `vol` et `tout_terrain` s’appliquent sans que la fiche les connaisse —, les malus de météo de `surcoutMeteo` et `facteurMouvementMeteo`. Ces deux dernières sont **nouvelles** : la moitié « météo » de `surcoutClimat` a été isolée en fonction pure pour qu’on puisse poser la question à l’avance — « cette unité avance-t-elle mal sous la pluie ? » — sans fabriquer un état de partie. Une règle d’équilibrage qui change au moteur change dans la fiche le jour même.
+
+Dans le menu, un premier appui **déplie** la fiche et l’appel à l’action passe de « Production » à « Produire » ; le second achète. On informe sans coûter un geste à qui sait déjà ce qu’il veut. Au passage, un prix qu’on ne peut pas payer affiche « Fonds insuffisants » au lieu d’un nombre grisé — un bouton qui ne répond pas doit dire pourquoi —, et une unité trop chère reste **consultable** : on veut savoir pour quoi on économise.
+
+**Reste à faire** : le panneau d’inspection d’une unité déjà posée sur la carte ne dit toujours rien de tout cela. C’est la même fiche, au même endroit du raisonnement.
+
 ## Mise à jour — l’accueil ne clignote plus, et les documents sont alignés (6 septembre 2026)
 
 Trois choses, dont deux visibles.
@@ -166,7 +178,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm start` | migrations puis Next (c'est ce que lance le Dockerfile) |
 | `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
 | `npm run lint` | ESLint |
-| `npm test` | 637 tests `tsx --test` |
+| `npm test` | 643 tests `tsx --test` |
 | `npm run test:e2e` | le spec Playwright 3D, avec ses propres drapeaux SwiftShader |
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, copie de sécurité `pg_dump` avant |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA |

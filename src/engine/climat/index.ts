@@ -131,18 +131,36 @@ export function surcoutClimat(
   if (effets.includes('cols_fermes') && terrain === 'montagne'
     && (mouvement === 'pied' || mouvement === 'bottes')) surcout += 1;
 
-  if (meteo === 'pluie' && mouvement === 'roues' && horsRoute) surcout += 1;
-  if (meteo === 'neige' && (mouvement === 'bottes' || mouvement === 'roues')) surcout += 1;
   // `canicule` et `canicule_saison` ne se cumulent pas (§12.4) : le malus est un
   // point de mouvement, posé en modificateur par `debutTour`, pas un surcoût de case.
   void lourde;
-  return surcout;
+  return surcout + surcoutMeteo(meteo, terrain, mouvement);
+}
+
+/**
+ * Le surcoût de case dû à la **météo du jour**, sans rien savoir d'une partie.
+ *
+ * C'est la moitié de `surcoutClimat` qui ne dépend ni de la saison, ni du pays,
+ * ni de la région. Elle est isolée pour qu'on puisse **poser la question à
+ * l'avance** — « cette unité avance-t-elle mal sous la pluie ? » — sans
+ * fabriquer un état de partie. La fiche d'unité du HUD s'en sert : sans elle,
+ * elle réécrirait la règle, et les deux dériveraient au premier ajustement.
+ */
+export function surcoutMeteo(meteo: Meteo, terrain: CleTerrain, mouvement: string): number {
+  const horsRoute = terrain !== 'route';
+  if (meteo === 'pluie' && mouvement === 'roues' && horsRoute) return 1;
+  if (meteo === 'neige' && (mouvement === 'bottes' || mouvement === 'roues')) return 1;
+  return 0;
+}
+
+/** Facteur de mouvement dû à la météo seule : la tempête bride ce qui vole. */
+export function facteurMouvementMeteo(meteo: Meteo, domaine: string): number {
+  return meteo === 'tempete' && domaine === 'air' ? 0.5 : 1;
 }
 
 /** Facteur de mouvement dû à la tempête : les unités aériennes sont bridées. */
 export function facteurMouvementClimat(etat: EtatPartie, domaine: string): number {
-  if (etat.climat.meteo === 'tempete' && domaine === 'air') return 0.5;
-  return 1;
+  return facteurMouvementMeteo(etat.climat.meteo, domaine);
 }
 
 /** La couche climat, écrite comme n'importe quelle mécanique. */
