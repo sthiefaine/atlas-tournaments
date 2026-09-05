@@ -1,0 +1,57 @@
+{
+  "code": "au",
+  "nom": "Australie",
+  "ligneDirectrice": {
+    "fr": "Road train : châssis très longs, pare-buffles tubulaires, ocre de poussière rouge jusqu’au toit, et des bidons d’eau accrochés partout.",
+    "en": "Road train: very long chassis, tubular bull bars, red dust ochre up to the roof, and water cans hung everywhere."
+  },
+  "palette": {
+    "main": "#d4762a",
+    "dark": "#864111",
+    "light": "#ffd9ac",
+    "accents": [
+      "#2c3a4a",
+      "#f2e2c4"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "acier_peint",
+    "caoutchouc",
+    "toile",
+    "aluminium"
+  ],
+  "finitions": [
+    "poussieree",
+    "delavee"
+  ],
+  "ornements": [
+    "bidon",
+    "jerrican",
+    "antenne",
+    "roue_de_secours"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "c",
+    "recon": "c",
+    "char_leger": "c",
+    "char_lourd": "c",
+    "artillerie": "c",
+    "roquettes": "c",
+    "antiair": "c",
+    "helico": "c",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "bandes_pointillees",
+      "placement": "flanc",
+      "couleur": "#2c3a4a",
+      "note": "Deux bandes pointillées sombres, reprises du marquage de convoi exceptionnel."
+    }
+  ],
+  "motifDaltonien": "bandes_pointillees",
+  "priorite": 3,
+  "justification": "Marlee Kirkwood abrège tous les mots de plus de deux syllabes et son unité propre est un camion à trois remorques : l’Australie est le seul pays dont tous les gabarits sont allongés, parce que la distance y est une défense. L’antenne longue est l’ornement qui dit le vide autour."
+}

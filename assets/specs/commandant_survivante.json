@@ -1,0 +1,155 @@
+{
+  "id": "commandant_survivante",
+  "type": "commandant",
+  "cle": "survivante",
+  "priorite": 3,
+  "description": {
+    "en": "A three-quarter bust portrait for the \"La survivante\" commander archetype, shown from the waist up and posed as follows: compact and grounded, weight on the back foot, hands in pockets; a hooded technical jacket with the hood down, a thin scar-free weathered face, a whistle on a cord. Temperament to convey: Sobre, tenace, ne commente jamais le score. This bust is displayed large in the interface during briefings and power activations, so the face carries the whole asset: sculpt real bone structure, asymmetric features and a specific age. The archetype is worn by two or three different nations, so the face must stay culturally neutral and the outfit unbranded — the nation is expressed by the team-colour mask on the jacket and collar, nothing else.",
+    "fr": "Un buste de portrait aux trois quarts pour l’archétype de commandant « La survivante », montré à mi-corps et posé ainsi : compacte et ancrée, poids sur la jambe arrière, mains dans les poches ; veste technique à capuche rabattue, visage mince et tanné, sifflet au cordon. Tempérament à faire passer : Sobre, tenace, ne commente jamais le score. Ce buste est affiché en grand dans l’interface pendant les briefings et les activations de pouvoir : le visage porte tout l’asset, il faut sculpter une vraie ossature, des traits dissymétriques et un âge précis. L’archétype est porté par deux ou trois nations différentes : le visage reste culturellement neutre et la tenue sans marque — la nation s’exprime par le masque de couleur d’équipe sur la veste et le col, et par rien d’autre."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "character bust portrait",
+      "sports team apparel",
+      "expressive but restrained face"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no exaggerated caricature",
+      "no military uniform or rank insignia"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.55,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.9,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.45,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 14000,
+    "lod1": 4500,
+    "lod2": 1300,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 2048,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peau, cheveux et tissus ; le visage occupe la moitié de l’espace de carte."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Pores, rides, mailles de tricot et coutures."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peau contre tissu technique contre cuir : trois familles nettes."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Veste et col : les seules surfaces qui prennent la couleur de nation."
+    }
+  ],
+  "variantes": {
+    "saisons": [],
+    "biomes": [],
+    "nations": []
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2800,
+      "boucle": true,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "buste",
+      "tete"
+    ],
+    "materiauxAttendus": [
+      "mat_peau",
+      "mat_tenue",
+      "mat_cheveux"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "commandant_survivante_lod0.glb",
+      "commandant_survivante_lod1.glb",
+      "commandant_survivante_albedo.png",
+      "commandant_survivante_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "animations"
+    ],
+    "toleranceAabb": 0.1,
+    "lodRequis": [
+      0
+    ]
+  }
+}

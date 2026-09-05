@@ -1,0 +1,84 @@
+{
+  "cle": "pays_mx",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "mx",
+  "nom": "Mexique",
+  "nomCourt": "Mexique",
+  "gentile": "mexicaine",
+  "continent": "amerique_nord",
+  "climat": "tropical",
+  "hemisphere": "nord",
+  "biomes": [
+    "desert",
+    "volcanique",
+    "jungle",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_mx_prise",
+    "nom": "La prise",
+    "portee": "pays",
+    "famille": "infanterie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 1.2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Une fois par journée, une unité mexicaine déséquilibre une adverse plus légère et la cloue au sol ; tout part dans l’attaque, et la garde reste basse."
+  },
+  "archetypeCommandant": "showman",
+  "rivalNaturel": "ma",
+  "voisins": [],
+  "palette": {
+    "main": "#2f8f5f",
+    "dark": "#155c39",
+    "light": "#c9edd9"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#2f8f5f",
+      "#f7f7f5",
+      "#c0392f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.mx.visite",
+    "pays.mx.qualifie",
+    "pays.mx.rival_respecte",
+    "pays.mx.rival_humilie",
+    "pays.mx.allie_recrute",
+    "pays.mx.dette_envers_joueur",
+    "pays.mx.terrain_altere",
+    "pays.mx.ralliement_cinquieme",
+    "pays.mx.fete_partagee",
+    "pays.mx.entree_en_musique",
+    "pays.mx.coup_annonce_reussi",
+    "pays.mx.fanfare_doublee"
+  ],
+  "phare": false,
+  "accroche": "Désert au nord, volcans au centre, forêt au sud : le pays du spectacle, des entrées en musique et des coups annoncés à l’avance.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence à un cartel, à une frontière ou à un fait divers : la fête de rue est le seul registre.",
+    "Le masque du lutteur est un costume de spectacle, jamais une identité cachée inquiétante."
+  ]
+}

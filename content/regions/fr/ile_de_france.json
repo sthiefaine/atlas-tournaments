@@ -1,0 +1,54 @@
+{
+  "cle": "region_fr_ile_de_france",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_ile_de_france",
+  "paysCode": "fr",
+  "nom": "Île-de-France",
+  "type": "metropolitaine",
+  "ordreConseille": 18,
+  "biome": "plaine",
+  "climat": "tempere",
+  "specialiteLocale": {
+    "cle": "spec_fr_ile_de_france_reseau",
+    "nom": "Réseau",
+    "portee": "region",
+    "famille": "economie",
+    "contenu": {
+      "variant": "trait",
+      "trait": "ravitaillement_ville"
+    },
+    "description": "Tout est desservi : une ville amie ravitaille et répare même sans atelier. La téléportation, elle, reste dans la carte de terrain « Métro »."
+  },
+  "mecanique": {
+    "cle": "meca_metro",
+    "parametres": {
+      "stations": 8,
+      "attaques_pour_fermer": 2,
+      "tours_de_fermeture": 3,
+      "bonus_defense_urbaine": 1.25,
+      "cout_vehicule_urbain": 2
+    },
+    "description": "Huit stations reliées par un réseau partagé : qui termine son tour sur l’une ressort à n’importe quelle autre ouverte, en dépensant tout son mouvement."
+  },
+  "commandantCle": "cmd_nadia_belhadj",
+  "scenarios": [
+    "scen_fr_ile_de_france_etape",
+    "scen_fr_ile_de_france_defi"
+  ],
+  "accroche": "Une ville dense coupée par un fleuve en méandre, ceinturée de grandes forêts, et sous les pieds un réseau qui relie tout.",
+  "motsCles": [
+    "métro",
+    "stations",
+    "tissu urbain",
+    "forêt royale",
+    "tour de fer"
+  ],
+  "flagsPropres": [
+    "pays.fr.ile_de_france_finale_gagnee",
+    "pays.fr.ile_de_france_reseau_compris"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "cle": "pays_gr",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "gr",
+  "nom": "Grèce",
+  "nomCourt": "Grèce",
+  "gentile": "grecque",
+  "continent": "europe",
+  "climat": "mediterraneen",
+  "hemisphere": "nord",
+  "biomes": [
+    "archipel",
+    "cotier",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_gr_cabotage",
+    "nom": "Le cabotage à pied",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "trait",
+      "trait": "pied_marin"
+    },
+    "description": "Les môles et les passerelles de bois relient les îlots : on monte et on descend sans y perdre sa journée, et l’estran ne ralentit personne. Les blindés, eux, restent au port."
+  },
+  "archetypeCommandant": "veteran",
+  "rivalNaturel": "jp",
+  "voisins": [],
+  "palette": {
+    "main": "#2e78bf",
+    "dark": "#17456f",
+    "light": "#dcecf8"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#2e78bf",
+      "#f7f9fb"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.gr.visite",
+    "pays.gr.qualifie",
+    "pays.gr.rival_respecte",
+    "pays.gr.rival_humilie",
+    "pays.gr.allie_recrute",
+    "pays.gr.dette_envers_joueur",
+    "pays.gr.terrain_altere",
+    "pays.gr.ralliement_cinquieme",
+    "pays.gr.cafe_avant_match",
+    "pays.gr.chat_du_port_adopte",
+    "pays.gr.anecdote_corrigee"
+  ],
+  "phare": false,
+  "accroche": "Des centaines d’îlots, un café avant le coup d’envoi, et un vétéran qui raconte la même finale avec une fin différente.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence à l’Antiquité militaire : les colonnes du jeu tiennent des auvents de terrasse.",
+    "La mer est un terrain de manœuvre, jamais un naufrage."
+  ]
+}

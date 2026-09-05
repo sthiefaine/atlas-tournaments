@@ -1,0 +1,66 @@
+{
+  "cle": "region_fr_la_reunion",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_la_reunion",
+  "paysCode": "fr",
+  "nom": "La Réunion",
+  "type": "outre_mer",
+  "ordreConseille": 11,
+  "biome": "volcanique",
+  "climat": "tropical",
+  "specialiteLocale": {
+    "cle": "spec_fr_reunion_pied_sur",
+    "nom": "Pied sûr",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Un point de mouvement de plus en montagne : sur une île qui monte tout de suite, cela suffit à tout changer."
+  },
+  "mecanique": {
+    "cle": "meca_volcan_cirques",
+    "parametres": {
+      "periode_coulee": 4,
+      "cases_par_coulee": 2,
+      "journees_infranchissable": 2,
+      "cirques": 3,
+      "pv_rattrape": 3
+    },
+    "description": "Toutes les quatre journées, la coulée avance de deux cases le long d’une pente annoncée dès la première journée ; les trois cirques restent des forteresses à sentier unique."
+  },
+  "commandantCle": "cmd_marlene_payet",
+  "scenarios": [
+    "scen_fr_la_reunion_etape",
+    "scen_fr_la_reunion_defi"
+  ],
+  "accroche": "Une île qui monte tout de suite : du lagon à trois mille mètres, trois cuvettes fermées par des remparts, et un cratère qui fume.",
+  "motsCles": [
+    "volcan",
+    "cirques",
+    "remparts",
+    "cascade en voile",
+    "carry"
+  ],
+  "flagsPropres": [
+    "pays.fr.reunion_cirque_tenu"
+  ]
+}

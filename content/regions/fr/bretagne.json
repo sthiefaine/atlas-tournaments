@@ -1,0 +1,67 @@
+{
+  "cle": "region_fr_bretagne",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_bretagne",
+  "paysCode": "fr",
+  "nom": "Bretagne",
+  "type": "metropolitaine",
+  "ordreConseille": 1,
+  "biome": "cotier",
+  "climat": "oceanique",
+  "specialiteLocale": {
+    "cle": "spec_fr_bretagne_pied_marin",
+    "nom": "Pied marin",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plage",
+              "pont"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "On marche sur l’estran comme sur un quai : un point de mouvement de plus dès qu’on pose le pied sur une plage ou un pont."
+  },
+  "mecanique": {
+    "cle": "meca_marees",
+    "parametres": {
+      "cycle_journees": 2,
+      "part_estran": 0.15,
+      "pv_surprise": 3,
+      "preavis_journees": 2,
+      "gelable": false
+    },
+    "description": "Les cases d’estran basculent terre ↔ mer une journée sur deux, annoncées deux journées à l’avance ; qui s’y attarde perd 3 PV et recule sur la terre ferme."
+  },
+  "commandantCle": "cmd_maelle_kerdraon",
+  "scenarios": [
+    "scen_fr_bretagne_etape",
+    "scen_fr_bretagne_defi"
+  ],
+  "accroche": "Granit, ajoncs, embruns : une côte qui change de forme deux fois par jour et un ciel qui décide de tout.",
+  "motsCles": [
+    "marée",
+    "granit",
+    "estran",
+    "port de pêche",
+    "kouign-amann"
+  ],
+  "flagsPropres": [
+    "pays.fr.bretagne_maree_lue"
+  ]
+}

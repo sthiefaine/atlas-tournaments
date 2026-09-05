@@ -1,0 +1,166 @@
+{
+  "mecaniques": [
+    {
+      "cle": "meca_marees",
+      "nom": "Les marées",
+      "paysCode": "fr",
+      "regionCle": "region_fr_bretagne",
+      "hookPrincipal": "finTour",
+      "hookSecondaire": null,
+      "description": "Une journée sur deux, la mer se retire : les plages deviennent praticables, puis se referment."
+    },
+    {
+      "cle": "meca_bocage",
+      "nom": "Le bocage",
+      "paysCode": "fr",
+      "regionCle": "region_fr_normandie",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Les haies coupent les axes : franchir une limite de parcelle coûte une case de plus."
+    },
+    {
+      "cle": "meca_circuit",
+      "nom": "Le circuit",
+      "paysCode": "fr",
+      "regionCle": "region_fr_pays_de_la_loire",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Une boucle rapide traverse la carte : qui y reste roule plus loin, qui en sort perd son élan."
+    },
+    {
+      "cle": "meca_chateaux",
+      "nom": "Les châteaux",
+      "paysCode": "fr",
+      "regionCle": "region_fr_centre_val_de_loire",
+      "hookPrincipal": "modifTerrain",
+      "hookSecondaire": null,
+      "description": "Certaines villes se lisent comme des places fortes : leur défense monte tant qu'elles sont tenues."
+    },
+    {
+      "cle": "meca_brume_terrils",
+      "nom": "La brume et les terrils",
+      "paysCode": "fr",
+      "regionCle": "region_fr_hauts_de_france",
+      "hookPrincipal": "debutTour",
+      "hookSecondaire": null,
+      "description": "La brume tombe au matin et réduit la vision, sauf pour qui tient un terril."
+    },
+    {
+      "cle": "meca_fleuve_ponts",
+      "nom": "Le fleuve et ses ponts",
+      "paysCode": "fr",
+      "regionCle": "region_fr_grand_est",
+      "hookPrincipal": "modifTerrain",
+      "hookSecondaire": null,
+      "description": "Le fleuve ne gèle jamais : seuls les ponts le franchissent, quelle que soit la saison."
+    },
+    {
+      "cle": "meca_coteaux",
+      "nom": "Les coteaux",
+      "paysCode": "fr",
+      "regionCle": "region_fr_bourgogne_franche_comte",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Monter un coteau coûte une case de plus, le descendre en rend une."
+    },
+    {
+      "cle": "meca_allees",
+      "nom": "Les allées",
+      "paysCode": "fr",
+      "regionCle": "region_fr_nouvelle_aquitaine",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Les allées forestières rectilignes offrent des couloirs rapides à qui les emprunte en entier."
+    },
+    {
+      "cle": "meca_canal_cols",
+      "nom": "Le canal et les cols",
+      "paysCode": "fr",
+      "regionCle": "region_fr_occitanie",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Le canal double le sud de la carte, les cols en verrouillent le nord."
+    },
+    {
+      "cle": "meca_puys",
+      "nom": "Les puys",
+      "paysCode": "fr",
+      "regionCle": "region_fr_auvergne_rhone_alpes",
+      "hookPrincipal": "surAttaque",
+      "hookSecondaire": null,
+      "description": "Frapper depuis un puy ajoute au marquage : la hauteur se paie au tableau d'affichage."
+    },
+    {
+      "cle": "meca_mistral",
+      "nom": "Le mistral",
+      "paysCode": "fr",
+      "regionCle": "region_fr_provence_alpes_cote_azur",
+      "hookPrincipal": "finTour",
+      "hookSecondaire": null,
+      "description": "Le vent souffle dans un sens annoncé : il allonge les portées dans le sens du vent, les raccourcit contre."
+    },
+    {
+      "cle": "meca_maquis",
+      "nom": "Le maquis",
+      "paysCode": "fr",
+      "regionCle": "region_fr_corse",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Le maquis cache et ralentit : on y disparaît, on n'y avance pas."
+    },
+    {
+      "cle": "meca_alize_grain",
+      "nom": "L'alizé et le grain",
+      "paysCode": "fr",
+      "regionCle": "region_fr_guadeloupe",
+      "hookPrincipal": "debutTour",
+      "hookSecondaire": null,
+      "description": "Un grain traverse la carte chaque journée et détrempe la bande qu'il touche."
+    },
+    {
+      "cle": "meca_mornes",
+      "nom": "Les mornes",
+      "paysCode": "fr",
+      "regionCle": "region_fr_martinique",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Les mornes découpent la carte en poches : on les contourne ou on les grimpe lentement."
+    },
+    {
+      "cle": "meca_canopee_satellite",
+      "nom": "La canopée et le satellite",
+      "paysCode": "fr",
+      "regionCle": "region_fr_guyane",
+      "hookPrincipal": "debutTour",
+      "hookSecondaire": null,
+      "description": "La canopée masque tout, sauf au passage du satellite qui dévoile une bande une journée sur trois."
+    },
+    {
+      "cle": "meca_volcan_cirques",
+      "nom": "Le volcan et les cirques",
+      "paysCode": "fr",
+      "regionCle": "region_fr_la_reunion",
+      "hookPrincipal": "modifTerrain",
+      "hookSecondaire": null,
+      "description": "La coulée refroidie ouvre de la roche neuve praticable, les cirques restent des culs-de-sac."
+    },
+    {
+      "cle": "meca_lagon_recif",
+      "nom": "Le lagon et le récif",
+      "paysCode": "fr",
+      "regionCle": "region_fr_mayotte",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Le récif découvre un gué à marée basse ; le lagon reste infranchissable jusqu'au paquet naval."
+    },
+    {
+      "cle": "meca_metro",
+      "nom": "Le métro",
+      "paysCode": "fr",
+      "regionCle": "region_fr_ile_de_france",
+      "hookPrincipal": "surMouvement",
+      "hookSecondaire": null,
+      "description": "Deux stations tenues par le même camp se relient : une unité entre ici et ressort là."
+    }
+  ]
+}

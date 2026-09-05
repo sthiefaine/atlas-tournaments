@@ -1,0 +1,42 @@
+{
+  "cle": "fil_plume_regie",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_plume_regie",
+  "titre": "La plume de la Régie",
+  "accroche": "Une journaliste de la Régie décide d'écrire votre Ronde. Elle vous suivra, que vous le vouliez ou non.",
+  "arc": "Ismaë Rouvel écrit les portraits d'après-match de la Régie. Elle choisit le joueur comme sujet de la Ronde XIV et le suit sur trois étapes, caméra à l'épaule, en posant à chaque fois la même question sous une forme différente. Le joueur peut la laisser filmer, lui fermer le vestiaire, ou lui donner mieux que ce qu'elle demande. Le portrait sort quoi qu'il arrive, et il décide de la façon dont Vantour parlera du joueur jusqu'à la finale : le tacticien, la brute, ou celui dont on ne sait pas quoi dire.",
+  "acteMin": 1,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_plume_01", "gabarit": "capture_qg", "dureeVisee": 32, "titre": "Elle filme depuis le banc" },
+    { "ordre": 2, "scenarioCle": "scen_fil_plume_02", "gabarit": "course", "dureeVisee": 22, "titre": "La question d'après-match" },
+    { "ordre": 3, "scenarioCle": "scen_fil_plume_03", "gabarit": "tenir", "dureeVisee": 28, "titre": "Une manche sans commentaire" },
+    { "ordre": 4, "scenarioCle": "scen_fil_plume_04", "gabarit": "revanche", "dureeVisee": 40, "titre": "Le portrait sort demain" }
+  ],
+  "deblocage": {
+    "type": "et",
+    "conditions": [
+      { "type": "compteur", "cle": "monde.public.ferveur", "min": 3 },
+      {
+        "type": "ou",
+        "conditions": [
+          { "type": "compteur", "cle": "monde.regie.faveur", "min": 1 },
+          { "type": "compteur", "cle": "monde.tournoi.serie_propre", "min": 4 }
+        ]
+      }
+    ]
+  },
+  "consequences": [
+    { "type": "variante_dialogue", "scenarioCle": "scen_meridien_finale", "varianteCle": "var_portrait_de_ronde" },
+    { "type": "entree_carnet", "carnetCle": "carnet_portrait_ronde_xiv" }
+  ],
+  "flagsEcrits": [
+    "monde.regie.faveur",
+    "monde.public.ferveur",
+    "monde.atlas.credibilite",
+    "monde.tournoi.fils_termines"
+  ]
+}

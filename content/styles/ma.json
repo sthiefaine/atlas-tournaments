@@ -1,0 +1,63 @@
+{
+  "code": "ma",
+  "nom": "Maroc",
+  "ligneDirectrice": {
+    "fr": "Convoi bâché : toile épaisse aux losanges rouges et bleus, cuir cousu, laiton du service à thé, et du sable dans toutes les jointures.",
+    "en": "Tarpaulined convoy: thick canvas with red and blue diamonds, stitched leather, brass from the tea service, and sand in every joint."
+  },
+  "palette": {
+    "main": "#b0402f",
+    "dark": "#6b2117",
+    "light": "#f0cdc2",
+    "accents": [
+      "#2f7d4f",
+      "#e8c98a"
+    ]
+  },
+  "matieres": [
+    "toile",
+    "cuir",
+    "laiton",
+    "peinture_mate",
+    "bois"
+  ],
+  "finitions": [
+    "poussieree",
+    "mate"
+  ],
+  "ornements": [
+    "toit_toile",
+    "plaque_de_desensablement",
+    "bidon",
+    "tapis"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "b",
+    "recon": "c",
+    "char_leger": "b",
+    "char_lourd": "b",
+    "artillerie": "c",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "losanges",
+      "placement": "flanc",
+      "couleur": "#e8c98a",
+      "note": "Une bande de losanges ocre, motif de tapis de caravane, sans aucun signe."
+    },
+    {
+      "motif": "hachures",
+      "placement": "capot",
+      "couleur": "#2f7d4f",
+      "note": "Des hachures vertes courtes, reprises des sangles de bât."
+    }
+  ],
+  "motifDaltonien": "losanges",
+  "priorite": 3,
+  "justification": "Idir Benhaddou ne se déplace jamais sans son service à thé et son unité propre est un convoi bâché aux tapis rouges et bleus : le style tient dans la toile, le cuir et le laiton. Les plaques de désensablement sont l’ornement le plus honnête d’un pays où la dune ne coûte rien."
+}

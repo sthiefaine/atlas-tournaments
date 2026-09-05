@@ -1,0 +1,55 @@
+{
+  "code": "na",
+  "nom": "Namibie",
+  "ligneDirectrice": {
+    "fr": "Gris de brume sur ocre de dune : peinture sablée jusqu’au mat complet, surfaces basses, aucun reflet, rien qui accroche la lumière.",
+    "en": "Mist grey over dune ochre: paint sanded to a full matte, low surfaces, no reflection, nothing that catches the light."
+  },
+  "palette": {
+    "main": "#c98b3f",
+    "dark": "#7d4f14",
+    "light": "#f4dcb6",
+    "accents": [
+      "#8fa3ae",
+      "#2c3a4a"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "caoutchouc",
+    "toile",
+    "acier_peint"
+  ],
+  "finitions": [
+    "sablee",
+    "mate"
+  ],
+  "ornements": [
+    "plaque_de_desensablement",
+    "ancre_de_sable",
+    "gourde"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "b",
+    "recon": "c",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "dents_de_scie",
+      "placement": "capot",
+      "couleur": "#8fa3ae",
+      "note": "Une ligne de crête en dents de scie gris pâle, reprise du profil des dunes."
+    }
+  ],
+  "motifDaltonien": "dents_de_scie",
+  "priorite": 3,
+  "justification": "Tuli Shikongo économise tout, y compris ses phrases, et son avantage est de ne pas être vue : un style namibien brillant serait un contresens. Tout est donc mat, bas et sablé, et le seul accent est le gris de la brume côtière, qui est son terrain."
+}

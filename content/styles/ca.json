@@ -1,0 +1,57 @@
+{
+  "code": "ca",
+  "nom": "Canada",
+  "ligneDirectrice": {
+    "fr": "Matériel de grand froid : rouge et blanc mats, bâches épaisses sanglées, jerricans en série, et une couche de sel et de neige fondue sur le bas de caisse.",
+    "en": "Deep-cold equipment: matte red and white, thick strapped tarpaulins, jerrycans in a row, and a crust of salt and slush along the lower body."
+  },
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#742019",
+    "light": "#f4d2ce",
+    "accents": [
+      "#f2f0ea",
+      "#2c3a4a"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "toile",
+    "acier_peint",
+    "bois",
+    "caoutchouc"
+  ],
+  "finitions": [
+    "poudree_de_sel",
+    "mate"
+  ],
+  "ornements": [
+    "jerrican",
+    "bache_roulee",
+    "treuil",
+    "porte_skis"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "c",
+    "recon": "c",
+    "char_leger": "c",
+    "char_lourd": "c",
+    "artillerie": "c",
+    "roquettes": "c",
+    "antiair": "b",
+    "helico": "c",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "croisillons",
+      "placement": "toit",
+      "couleur": "#f2f0ea",
+      "note": "Un croisillon blanc de raquette à neige, tracé large sur les surfaces horizontales."
+    }
+  ],
+  "motifDaltonien": "croisillons",
+  "priorite": 3,
+  "justification": "Émile Tremblay prépare des provisions pour un match de six heures et son pays est celui des distances : le style canadien est un style de convoi long, chargé et prêt à passer l’hiver. Le croisillon sur le toit est ce qui reste visible quand la neige couvre les flancs."
+}

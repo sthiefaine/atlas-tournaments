@@ -1,0 +1,79 @@
+{
+  "cle": "pays_jp",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "jp",
+  "nom": "Japon",
+  "nomCourt": "Japon",
+  "gentile": "japonaise",
+  "continent": "asie",
+  "climat": "tempere",
+  "hemisphere": "nord",
+  "biomes": [
+    "cotier",
+    "montagne",
+    "foret",
+    "archipel"
+  ],
+  "specialite": {
+    "cle": "spec_jp_reseau",
+    "nom": "Le réseau",
+    "portee": "pays",
+    "famille": "economie",
+    "contenu": {
+      "variant": "trait",
+      "trait": "ravitaillement_ville"
+    },
+    "description": "Une ville amie ravitaille et répare même sans atelier : le réseau dessert tout. En échange, la place est chère et rien ne se produit hors d’une ville reliée au rail."
+  },
+  "archetypeCommandant": "stratege_prudent",
+  "rivalNaturel": "gr",
+  "voisins": [],
+  "palette": {
+    "main": "#d05a6e",
+    "dark": "#7d2b3c",
+    "light": "#f7dbe1"
+  },
+  "drapeau": {
+    "type": "embleme",
+    "couleurs": [
+      "#f7f7f5",
+      "#d05a6e"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.jp.visite",
+    "pays.jp.qualifie",
+    "pays.jp.rival_respecte",
+    "pays.jp.rival_humilie",
+    "pays.jp.allie_recrute",
+    "pays.jp.dette_envers_joueur",
+    "pays.jp.terrain_altere",
+    "pays.jp.ralliement_cinquieme",
+    "pays.jp.train_prete",
+    "pays.jp.duel_honore",
+    "pays.jp.horaire_tenu",
+    "pays.jp.bento_offert",
+    "pays.jp.voie_coupee"
+  ],
+  "phare": true,
+  "accroche": "Un archipel qui se joue au chronomètre : les gares font le tempo, et l’adversaire reçoit un bento même quand il perd.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucun code guerrier, aucun sabre, aucun clan : le Japon du jeu est celui des horaires tenus et des bentos partagés.",
+    "Le tremblement de terre n’est pas une mécanique : la tempête de fin d’été suffit."
+  ],
+  "regions": [
+    "region_jp_hokkaido",
+    "region_jp_tohoku",
+    "region_jp_kanto",
+    "region_jp_chubu",
+    "region_jp_kansai",
+    "region_jp_chugoku",
+    "region_jp_shikoku",
+    "region_jp_kyushu"
+  ]
+}

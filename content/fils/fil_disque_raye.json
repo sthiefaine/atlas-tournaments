@@ -1,0 +1,41 @@
+{
+  "cle": "fil_disque_raye",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_disque_raye",
+  "titre": "Le disque rayé",
+  "accroche": "Hadran Ost vous offre un café après chaque match et vous pose toujours la même question.",
+  "arc": "Hadran Ost détenait le record de matchs remportés d'affilée jusqu'à une disqualification qu'il juge encore injuste. Il travaille désormais au service du matériel et il est charmant. Sur six rencontres, il fait jouer au joueur les cartes de ses propres records, une par une, et raconte chaque fois ce qu'il aurait fallu faire. Il ne recrute pas : il donne raison. Le fil se termine sur le terrain où il a été disqualifié, avec le relevé d'époque sous les yeux — et le joueur découvre que la disqualification était juste, ce qui rend la suite pire et non meilleure.",
+  "acteMin": 1,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_disque_01", "gabarit": "capture_qg", "dureeVisee": 30, "titre": "Un café après la troisième manche" },
+    { "ordre": 2, "scenarioCle": "scen_fil_disque_02", "gabarit": "siege", "dureeVisee": 48, "titre": "La carte du douzième" },
+    { "ordre": 3, "scenarioCle": "scen_fil_disque_03", "gabarit": "survie", "dureeVisee": 26, "titre": "La nuit du quinzième" },
+    { "ordre": 4, "scenarioCle": "scen_fil_disque_04", "gabarit": "relais", "dureeVisee": 34, "titre": "Refaire son parcours" },
+    { "ordre": 5, "scenarioCle": "scen_fil_disque_05", "gabarit": "tenir", "dureeVisee": 30, "titre": "Le dix-huitième, à l'endroit" },
+    { "ordre": 6, "scenarioCle": "scen_fil_disque_06", "gabarit": "revanche", "dureeVisee": 50, "titre": "Le relevé d'époque" }
+  ],
+  "deblocage": {
+    "type": "ou",
+    "conditions": [
+      { "type": "flag", "cle": "monde.cinquieme.contact" },
+      { "type": "compteur", "cle": "cmd.hadran_ost.respect", "min": 2 }
+    ]
+  },
+  "consequences": [
+    { "type": "objectif_alternatif", "scenarioCle": "scen_meridien_acte_iii", "objectif": { "type": "survivre", "journees": 12 } },
+    { "type": "entree_carnet", "carnetCle": "carnet_le_record_casse" },
+    { "type": "deblocage", "deblocageCle": "deb_hadran_ost" }
+  ],
+  "flagsEcrits": [
+    "cmd.hadran_ost.respect",
+    "cmd.hadran_ost.grief",
+    "monde.cinquieme.contact",
+    "monde.atlas.soupcon",
+    "monde.atlas.dossier_truquage",
+    "monde.tournoi.fils_termines"
+  ]
+}

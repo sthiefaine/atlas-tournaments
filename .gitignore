@@ -1,0 +1,32 @@
+# deps
+/node_modules
+
+# next
+/.next/
+/out/
+next-env.d.ts
+
+# env
+.env
+.env*.local
+
+# misc
+.DS_Store
+*.tsbuildinfo
+npm-debug.log*
+
+# copies de sécurité avant migration
+.backups/
+
+# Playwright
+/playwright-report/
+/test-results/
+
+# fichiers déposés par l'application Claude
+/Claude outputs/
+
+# aperçus de cartes générés
+/apercus/
+
+# transfert temporaire
+/_to_delete/

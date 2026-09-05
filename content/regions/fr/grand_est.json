@@ -1,0 +1,53 @@
+{
+  "cle": "region_fr_grand_est",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_grand_est",
+  "paysCode": "fr",
+  "nom": "Grand Est",
+  "type": "metropolitaine",
+  "ordreConseille": 6,
+  "biome": "foret",
+  "climat": "continental",
+  "specialiteLocale": {
+    "cle": "spec_fr_grand_est_genie",
+    "nom": "Génie",
+    "portee": "region",
+    "famille": "ingenierie",
+    "contenu": {
+      "variant": "trait",
+      "trait": "franchissement_riviere"
+    },
+    "description": "Le geste du génie : les unités à pied et à bottes traversent une case de rivière au coût de deux, sans pont."
+  },
+  "mecanique": {
+    "cle": "meca_fleuve_ponts",
+    "parametres": {
+      "ponts": 3,
+      "attaques_pour_couper": 2,
+      "tours_de_reparation": 2,
+      "bonus_revenu": 1.1,
+      "gelable": false
+    },
+    "description": "Un grand fleuve coupe la carte et ne se franchit qu’à trois ponts, coupables en deux attaques ; tenir les trois majore le revenu. Le fleuve ne gèle jamais."
+  },
+  "commandantCle": "cmd_theo_ruhlmann",
+  "scenarios": [
+    "scen_fr_grand_est_etape",
+    "scen_fr_grand_est_defi"
+  ],
+  "accroche": "Un grand fleuve qui coupe le paysage en deux, des sapins sombres sur les crêtes et des cigognes qui traversent au ralenti.",
+  "motsCles": [
+    "fleuve",
+    "trois ponts",
+    "colombages",
+    "coteaux de vigne",
+    "cigognes"
+  ],
+  "flagsPropres": [
+    "pays.fr.grand_est_trois_ponts_tenus"
+  ]
+}

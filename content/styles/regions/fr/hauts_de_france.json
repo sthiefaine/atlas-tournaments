@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_hauts_de_france",
+  "paysCode": "fr",
+  "nom": "Hauts-de-France",
+  "ligneDirectrice": {
+    "fr": "Brique rouge sombre, huisseries peintes en vert bouteille, carreaux rouges d’estaminet : chaud dedans, bas dehors.",
+    "en": "Dark red brick, bottle-green joinery, red estaminet floor tiles: warm inside, low outside."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tuile",
+    "couleur": "#8f4b3c"
+  },
+  "murs": {
+    "matiere": "terre_cuite",
+    "couleur": "#a8503f",
+    "finition": "mate"
+  },
+  "vegetation": {
+    "dominante": "bouleaux de terril",
+    "secondaire": "herbes hautes de plaine",
+    "couleur": "#6f8a55"
+  },
+  "elementsDecor": [
+    "terril",
+    "panneau_de_bois",
+    "banc_de_pierre",
+    "haie_vive"
+  ],
+  "priorite": 1,
+  "justification": "La brique et le carreau rouge sont ce que la fiche donne à l’estaminet ; le terril, lui, entre dans le décor comme élément régional parce que c’est la seule chose qui dépasse de la brume."
+}

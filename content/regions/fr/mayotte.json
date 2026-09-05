@@ -1,0 +1,53 @@
+{
+  "cle": "region_fr_mayotte",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_mayotte",
+  "paysCode": "fr",
+  "nom": "Mayotte",
+  "type": "outre_mer",
+  "ordreConseille": 12,
+  "biome": "archipel",
+  "climat": "tropical",
+  "specialiteLocale": {
+    "cle": "spec_fr_mayotte_gue",
+    "nom": "Gué",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "trait",
+      "trait": "franchissement_riviere"
+    },
+    "description": "Les passes du lagon se lisent comme des rivières : les unités à pied et à bottes les franchissent au coût de deux, sans pont."
+  },
+  "mecanique": {
+    "cle": "meca_lagon_recif",
+    "parametres": {
+      "cout_lagon_infanterie": 2,
+      "passes": 3,
+      "periode_bancs": 3,
+      "bancs_emerges": 2,
+      "gelable": false
+    },
+    "description": "Un lagon fermé par une barrière de corail : l’infanterie le traverse à deux points par case, trois passes seulement le percent, et deux bancs de sable émergent une journée sur trois."
+  },
+  "commandantCle": "cmd_anli_soilihi",
+  "scenarios": [
+    "scen_fr_mayotte_etape",
+    "scen_fr_mayotte_defi"
+  ],
+  "accroche": "Un lagon immense fermé par un anneau de corail, des îlots, de la mangrove épaisse et des bancs de sable qui vont et viennent.",
+  "motsCles": [
+    "lagon",
+    "barrière de corail",
+    "passes",
+    "mangrove",
+    "marché aux poissons"
+  ],
+  "flagsPropres": [
+    "pays.fr.mayotte_passe_franchie"
+  ]
+}

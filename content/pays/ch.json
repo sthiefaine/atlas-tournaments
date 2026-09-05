@@ -1,0 +1,82 @@
+{
+  "cle": "pays_ch",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "ch",
+  "nom": "Suisse",
+  "nomCourt": "Suisse",
+  "gentile": "suisse",
+  "continent": "europe",
+  "climat": "montagnard",
+  "hemisphere": "nord",
+  "biomes": [
+    "montagne",
+    "foret",
+    "neige"
+  ],
+  "specialite": {
+    "cle": "spec_ch_retranchement",
+    "nom": "Le retranchement",
+    "portee": "pays",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 1.4
+          }
+        }
+      ]
+    },
+    "description": "Sur le relief, une équipe suisse tient une case comme une horloge tient l’heure ; le prix est une production limitée à une unité par journée."
+  },
+  "archetypeCommandant": "gardienne",
+  "rivalNaturel": "nl",
+  "voisins": [
+    "fr"
+  ],
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#7d2019",
+    "light": "#f0d2cd"
+  },
+  "drapeau": {
+    "type": "croix",
+    "couleurs": [
+      "#c0392f",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.ch.visite",
+    "pays.ch.qualifie",
+    "pays.ch.rival_respecte",
+    "pays.ch.rival_humilie",
+    "pays.ch.allie_recrute",
+    "pays.ch.dette_envers_joueur",
+    "pays.ch.terrain_altere",
+    "pays.ch.ralliement_cinquieme",
+    "pays.ch.col_scelle",
+    "pays.ch.diner_avant_finale",
+    "pays.ch.cable_tendu"
+  ],
+  "phare": false,
+  "accroche": "Trois vallées, des cols, des câbles, et un adversaire qui vous invite à dîner avant de vous rendre la montagne impossible.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Ni banque, ni coffre, ni secret bancaire : la Suisse du jeu est celle de la précision et de l’hospitalité.",
+    "La neutralité n’est jamais un sujet ; le retranchement est une manière de jouer, pas une doctrine."
+  ]
+}

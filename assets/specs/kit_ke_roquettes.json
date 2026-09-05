@@ -1,0 +1,162 @@
+{
+  "id": "kit_ke_roquettes",
+  "type": "kit",
+  "cle": "ke_roquettes",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Lance-roquettes\" in the colours and materials of Kenya. Guiding line: Racing kit: light equipment, bare aluminium, thin straps, taut canvas bibs, and nothing heavier than it needs to be. Paint the base mesh of unite_roquettes_base in shape template B (balanced: the reference proportion, neither long nor short). Base colour #2f7d4f, own shadow #164d2e, edge highlight #c6e8d2, accents #c0392f, #f2f0e6. Materials to read at a glance: bare aluminium, heavy canvas, flat matte paint and dusty rubber. Finish: fully matte and brushed in one direction. Add these ornaments as separate named nodes, and nothing else: a felt-covered flask, a stitched side pannier and a whip antenna on a base spring. Abstract decals only: vertical stripes in #c0392f on the flanc. For colour-blind readability the socle carries vertical stripes, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Lance-roquettes » aux couleurs et aux matières du style « Kenya ». Ligne directrice : Tenue de course : matériel léger, alu nu, sangles fines, dossards de toile tendue, et rien qui pèse plus que nécessaire. Peindre la géométrie de base unite_roquettes_base dans le gabarit B (équilibré : la proportion de référence, ni longue ni courte). Couleur de fond #2f7d4f, ombre propre #164d2e, liseré d’arête #c6e8d2, accents #c0392f, #f2f0e6. Matières à lire d’un coup d’œil : aluminium nu, toile épaisse, peinture mate et caoutchouc poussiéreux. Finition : entièrement mate et brossée dans un seul sens. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une gourde habillée de feutre, une sacoche cousue sur le flanc et une antenne fouet sur ressort. Décalcomanies abstraites seulement : rayures verticales en #c0392f sur la zone « flanc ». Pour la lisibilité sans couleur, le socle porte rayures verticales, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.7,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.58,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.95,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 10440,
+    "lod1": 3480,
+    "lod2": 1044,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "ke"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_gourde",
+      "ornement_sacoche",
+      "ornement_antenne"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_ke_roquettes_lod0.glb",
+      "kit_ke_roquettes_lod1.glb",
+      "kit_ke_roquettes_albedo.png",
+      "kit_ke_roquettes_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

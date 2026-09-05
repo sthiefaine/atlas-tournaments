@@ -1,0 +1,38 @@
+{
+  "cle": "fil_carnets_cartographe",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_carnets_cartographe",
+  "titre": "Les carnets du Cartographe",
+  "accroche": "Osmin Talvarec relève encore les terrains lui-même. Il vous demande de vérifier cinq d'entre eux.",
+  "arc": "Le directeur d'Atlas n'a jamais cessé de relever les terrains à la main, et ses carnets ne quittent pas son bureau. Il en confie cinq au joueur, avec pour consigne de rejouer chaque carte telle qu'elle est aujourd'hui et de noter ce qui a bougé. Trois écarts sont des erreurs de relevé, un est un affaissement de terrain, et le cinquième est une modification qui n'a jamais été déclarée. Talvarec choisit de classer l'affaire pour protéger la Ronde ; le joueur choisit de le suivre ou de sceller la page. C'est le fil qui explique pourquoi les traces persistantes existent, et pourquoi Atlas y tient.",
+  "acteMin": 1,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_carnets_01", "gabarit": "relais", "dureeVisee": 30, "titre": "Cinq points, un carnet" },
+    { "ordre": 2, "scenarioCle": "scen_fil_carnets_02", "gabarit": "capture_qg", "dureeVisee": 32, "titre": "Le terrain a vieilli" },
+    { "ordre": 3, "scenarioCle": "scen_fil_carnets_03", "gabarit": "escorte", "dureeVisee": 36, "titre": "Le géomètre et sa mallette" },
+    { "ordre": 4, "scenarioCle": "scen_fil_carnets_04", "gabarit": "survie", "dureeVisee": 28, "titre": "Relever de nuit" },
+    { "ordre": 5, "scenarioCle": "scen_fil_carnets_05", "gabarit": "siege", "dureeVisee": 44, "titre": "L'écart non déclaré" }
+  ],
+  "deblocage": {
+    "type": "et",
+    "conditions": [
+      { "type": "compteur", "cle": "monde.atlas.credibilite", "min": 4 },
+      { "type": "pays_visite", "pays": ["fr", "lu", "ch", "nl", "jp", "br"], "combien": 3 }
+    ]
+  },
+  "consequences": [
+    { "type": "trace_carte", "paysCode": "fr", "flagTrace": "pays.fr.barrage_rompu" },
+    { "type": "entree_carnet", "carnetCle": "carnet_ecart_non_declare" },
+    { "type": "deblocage", "deblocageCle": "deb_osmin_talvarec" }
+  ],
+  "flagsEcrits": [
+    "monde.atlas.credibilite",
+    "monde.atlas.dossier_truquage",
+    "monde.carnet.pages_scellees",
+    "monde.tournoi.fils_termines"
+  ]
+}

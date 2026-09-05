@@ -1,0 +1,63 @@
+{
+  "code": "id",
+  "nom": "Indonésie",
+  "ligneDirectrice": {
+    "fr": "Coques colorées de ferry : bandes larges peintes à la main, bois vernis, bambou sanglé et de la peinture qui vire au soleil équatorial.",
+    "en": "Colourful ferry hulls: wide hand-painted bands, varnished wood, strapped bamboo, and paint that turns under an equatorial sun."
+  },
+  "palette": {
+    "main": "#c8443c",
+    "dark": "#7a221d",
+    "light": "#f6d3d0",
+    "accents": [
+      "#2f8f7f",
+      "#f2e2b8"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "bois_verni",
+    "bambou",
+    "toile",
+    "rotin"
+  ],
+  "finitions": [
+    "brillante",
+    "delavee"
+  ],
+  "ornements": [
+    "toit_toile",
+    "filet",
+    "corde_lovee",
+    "lanterne"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "b",
+    "char_lourd": "b",
+    "artillerie": "b",
+    "roquettes": "c",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "ecailles",
+      "placement": "flanc",
+      "couleur": "#2f8f7f",
+      "note": "Un semis d’écailles vertes, motif de batik simplifié, sans aucun signe."
+    },
+    {
+      "motif": "bandes_pointillees",
+      "placement": "toit",
+      "couleur": "#f2e2b8",
+      "note": "Deux bandes pointillées claires reprises des coques de ferry."
+    }
+  ],
+  "motifDaltonien": "ecailles",
+  "priorite": 3,
+  "justification": "Ayu Prasetyo ne décide jamais seule et son unité propre est un ferry à coque colorée : le style est celui d’un matériel qui transporte, se prête et se repeint. Le bambou et le rotin sont les seules matières que le validateur autorise à dire « équatorial » sans caricature."
+}

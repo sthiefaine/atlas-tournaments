@@ -1,0 +1,57 @@
+{
+  "code": "nl",
+  "nom": "Pays-Bas",
+  "ligneDirectrice": {
+    "fr": "Génie civil de plein air : plateaux bas, orange de chantier, garde-corps tubulaires et tout ce qu’il faut pour travailler les pieds dans l’eau.",
+    "en": "Open-air civil engineering: low decks, works orange, tubular railings and everything needed to work with your feet in the water."
+  },
+  "palette": {
+    "main": "#e07b28",
+    "dark": "#8f4611",
+    "light": "#ffd9a8",
+    "accents": [
+      "#3f5fa8",
+      "#f4f6fb"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "acier_peint",
+    "aluminium",
+    "caoutchouc",
+    "verre"
+  ],
+  "finitions": [
+    "brillante",
+    "delavee"
+  ],
+  "ornements": [
+    "echelle",
+    "treuil",
+    "pelle",
+    "panneau"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "a",
+    "char_lourd": "b",
+    "artillerie": "c",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "grille",
+      "placement": "flanc",
+      "couleur": "#3f5fa8",
+      "note": "Un quadrillage bleu de polders, tracé comme une carte de digues."
+    }
+  ],
+  "motifDaltonien": "grille",
+  "priorite": 2,
+  "justification": "Wieke van Dijk est ingénieure et son pays modifie l’eau elle-même : le style est celui d’un chantier public, propre, voyant et outillé. L’orange brillant est ce qui reste le plus lisible sur un pays plat, où aucun relief ne fait d’ombre."
+}

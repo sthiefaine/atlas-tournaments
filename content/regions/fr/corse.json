@@ -1,0 +1,65 @@
+{
+  "cle": "region_fr_corse",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_corse",
+  "paysCode": "fr",
+  "nom": "Corse",
+  "type": "metropolitaine",
+  "ordreConseille": 17,
+  "biome": "montagne",
+  "climat": "mediterraneen",
+  "specialiteLocale": {
+    "cle": "spec_fr_corse_discretion",
+    "nom": "Discrétion",
+    "portee": "region",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "filtre": {
+            "surTerrain": [
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": -2
+          }
+        }
+      ]
+    },
+    "description": "On ne vous voit qu’à une case dans le maquis : la vision adverse tombe de deux cases sous le couvert, plancher d’une case."
+  },
+  "mecanique": {
+    "cle": "meca_maquis",
+    "parametres": {
+      "part_maquis": 0.4,
+      "cout_infanterie": 2,
+      "vehicules_interdits": true,
+      "revele_si_attaque": true
+    },
+    "description": "Le maquis couvre deux cases sur cinq : qui y entre disparaît de l’affichage adverse et ne réapparaît qu’en attaquant ou en sortant. Les véhicules n’y entrent pas."
+  },
+  "commandantCle": "cmd_petru_santucci",
+  "scenarios": [
+    "scen_fr_corse_etape",
+    "scen_fr_corse_defi"
+  ],
+  "accroche": "Une montagne posée dans la mer, sans transition, et partout un tapis d’arbustes odorants où l’on cesse d’exister.",
+  "motsCles": [
+    "maquis",
+    "tours rondes",
+    "sentier de crête",
+    "bergerie",
+    "polyphonies"
+  ],
+  "flagsPropres": [
+    "pays.fr.corse_maquis_traverse"
+  ]
+}

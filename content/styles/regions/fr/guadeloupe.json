@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_guadeloupe",
+  "paysCode": "fr",
+  "nom": "Guadeloupe",
+  "ligneDirectrice": {
+    "fr": "Case créole en bois clair à lambrequins découpés, tôle peinte en rouge sombre, persiennes ouvertes en permanence.",
+    "en": "Pale timber creole house with cut-out valances, dark red painted sheet roof, louvres permanently open."
+  },
+  "toits": {
+    "forme": "quatre_pans",
+    "matiere": "tole_ondulee",
+    "couleur": "#8f4a3f"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#f2e4c8",
+    "finition": "vernie"
+  },
+  "vegetation": {
+    "dominante": "mangrove aux racines emmêlées",
+    "secondaire": "cannes en bandes régulières",
+    "couleur": "#4f8a4a"
+  },
+  "elementsDecor": [
+    "cabane_sur_pilotis",
+    "mangrove",
+    "canne_a_sucre",
+    "ponton_de_bois"
+  ],
+  "priorite": 1,
+  "justification": "La case créole à lambrequins et la tôle peinte sont les matières de l’outre-mer atlantique ; la persienne ouverte dit le climat mieux qu’une couleur, et se lit à trente pixels."
+}

@@ -1,0 +1,61 @@
+{
+  "cle": "region_fr_guyane",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_guyane",
+  "paysCode": "fr",
+  "nom": "Guyane",
+  "type": "outre_mer",
+  "ordreConseille": 10,
+  "biome": "jungle",
+  "climat": "tropical",
+  "specialiteLocale": {
+    "cle": "spec_fr_guyane_vue_den_haut",
+    "nom": "Vue d’en haut",
+    "portee": "region",
+    "famille": "polyvalence",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Une case de vision de plus, partout, sans condition : la plus simple et la plus utile des dix-huit spécialités."
+  },
+  "mecanique": {
+    "cle": "meca_canopee_satellite",
+    "parametres": {
+      "part_canopee": 0.6,
+      "vision_canopee": 1,
+      "cout_canopee": 3,
+      "points_capture_base": 80,
+      "periode_satellite": 5
+    },
+    "description": "La canopée couvre trois cases sur cinq et ramène la vue à une case ; la base spatiale, prise en quatre-vingts points, révèle la carte entière une journée sur cinq."
+  },
+  "commandantCle": "cmd_yannick_abraham",
+  "scenarios": [
+    "scen_fr_guyane_etape",
+    "scen_fr_guyane_defi"
+  ],
+  "accroche": "Une forêt qui commence au bord de la piste et ne s’arrête plus, des fleuves larges pour seules routes, et une tour blanche au milieu.",
+  "motsCles": [
+    "canopée",
+    "base spatiale",
+    "fleuve",
+    "carbet",
+    "awara"
+  ],
+  "flagsPropres": [
+    "pays.fr.guyane_base_tenue"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "cle": "fil_maree_revanche",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_maree_revanche",
+  "titre": "La marée revient",
+  "accroche": "Maëlle Kerdraon a perdu chez elle et n'a pas dit un mot depuis. Elle vous suit d'étape en étape.",
+  "arc": "Battue sur son propre estran pendant la qualification française, Maëlle Kerdraon refuse le protêt, refuse l'interview et s'inscrit à toutes les étapes où le joueur est engagé. Elle ne cherche pas à nuire : elle cherche à comprendre comment on a lu sa marée avant elle. Quatre rencontres plus tard, elle a appris à jouer à contre-temps du terrain, et la cinquième se dispute sur une carte qu'elle a choisie exprès pour n'avantager personne. Selon la manière dont le joueur l'a traitée à la première rencontre, elle finit assistante déclarée sur sa feuille de match, ou rivale d'estime qui ne rejoindra jamais la Cinquième Manche.",
+  "paysCode": "fr",
+  "acteMin": 1,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_maree_01", "gabarit": "course", "dureeVisee": 22, "titre": "Elle est déjà sur le quai" },
+    { "ordre": 2, "scenarioCle": "scen_fil_maree_02", "gabarit": "tenir", "dureeVisee": 28, "titre": "Le banc de sable de midi" },
+    { "ordre": 3, "scenarioCle": "scen_fil_maree_03", "gabarit": "capture_qg", "dureeVisee": 34, "titre": "Elle a changé de manière" },
+    { "ordre": 4, "scenarioCle": "scen_fil_maree_04", "gabarit": "escorte", "dureeVisee": 36, "titre": "Ramener le matériel au dépôt" },
+    { "ordre": 5, "scenarioCle": "scen_fil_maree_05", "gabarit": "revanche", "dureeVisee": 44, "titre": "Une carte que personne ne connaît" }
+  ],
+  "deblocage": {
+    "type": "et",
+    "conditions": [
+      { "type": "compteur", "cle": "cmd.maelle_kerdraon.grief", "min": 3 },
+      { "type": "flag", "cle": "pays.fr.tour_complet" }
+    ]
+  },
+  "consequences": [
+    { "type": "co_commandant", "commandantCle": "cmd_maelle_kerdraon" },
+    { "type": "variante_dialogue", "scenarioCle": "scen_finale_europe", "varianteCle": "var_kerdraon_au_banc" },
+    { "type": "entree_carnet", "carnetCle": "carnet_maree_revient" }
+  ],
+  "flagsEcrits": [
+    "cmd.maelle_kerdraon.respect",
+    "cmd.maelle_kerdraon.co_commandant",
+    "monde.tournoi.serie_propre",
+    "monde.tournoi.fils_termines"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "cle": "carte_riviere_ponts",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "carte_riviere_ponts",
+  "nom": "Le fleuve et ses deux ponts",
+  "largeur": 16,
+  "hauteur": 12,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPFPPPPVVPPPPFPP",
+    "PPPPPPPVVPPPPPPP",
+    "PPCPPPPVVPPPPCPP",
+    "PPPRRRRNNRRRRPPP",
+    "PPHUPPPVVPPPUHPP",
+    "PPPPPFPVVPFPPPPP",
+    "PPPPPFPVVPFPPPPP",
+    "PPPPPPPVVPPPPPPP",
+    "PPPRRRRNNRRRRPPP",
+    "PPCPPPPVVPPPPCPP",
+    "PPPPPMPVVPMPPPPP",
+    "PPPPPPPVVPPPPPPP"
+  ],
+  "proprietaires": {
+    "2,4": 0,
+    "3,4": 0,
+    "2,2": 0,
+    "2,9": 0,
+    "13,4": 1,
+    "12,4": 1,
+    "13,2": 1,
+    "13,9": 1
+  },
+  "unitesDepart": [
+    { "camp": 0, "type": "infanterie", "x": 4, "y": 4 },
+    { "camp": 0, "type": "meca", "x": 4, "y": 3 },
+    { "camp": 0, "type": "char_leger", "x": 5, "y": 4 },
+    { "camp": 0, "type": "artillerie", "x": 4, "y": 5 },
+    { "camp": 1, "type": "infanterie", "x": 11, "y": 4 },
+    { "camp": 1, "type": "meca", "x": 11, "y": 3 },
+    { "camp": 1, "type": "char_leger", "x": 10, "y": 4 },
+    { "camp": 1, "type": "artillerie", "x": 11, "y": 5 }
+  ]
+}

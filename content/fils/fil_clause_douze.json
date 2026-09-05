@@ -1,0 +1,45 @@
+{
+  "cle": "fil_clause_douze",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_clause_douze",
+  "titre": "La clause douze",
+  "accroche": "Le Consortium Méridien paie tout. La clause douze dit seulement qu'il choisit vos adversaires.",
+  "arc": "Le contrat de sponsoring du Consortium Méridien tient en onze clauses lisibles et une douzième qui ne l'est pas : le sponsor désigne deux adversaires par acte, sans avoir à motiver son choix. Le joueur, signataire ou non, croise cinq équipes que quelqu'un a choisies pour lui, et finit par comprendre la logique — ce ne sont jamais les plus fortes, ce sont celles dont une défaite arrange le calendrier. Le fil ne dénonce personne : il montre qu'un commanditaire sans conviction et une faction qui veut des enjeux réels peuvent vouloir exactement la même chose pour des raisons différentes.",
+  "acteMin": 2,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_clause_01", "gabarit": "capture_qg", "dureeVisee": 32, "titre": "Un adversaire qu'on n'a pas choisi" },
+    { "ordre": 2, "scenarioCle": "scen_fil_clause_02", "gabarit": "siege", "dureeVisee": 46, "titre": "Le match que personne ne voulait" },
+    { "ordre": 3, "scenarioCle": "scen_fil_clause_03", "gabarit": "relais", "dureeVisee": 32, "titre": "Lire le calendrier à l'envers" },
+    { "ordre": 4, "scenarioCle": "scen_fil_clause_04", "gabarit": "tenir", "dureeVisee": 28, "titre": "Refuser une désignation" },
+    { "ordre": 5, "scenarioCle": "scen_fil_clause_05", "gabarit": "revanche", "dureeVisee": 42, "titre": "Douze" }
+  ],
+  "deblocage": {
+    "type": "et",
+    "conditions": [
+      {
+        "type": "ou",
+        "conditions": [
+          { "type": "flag", "cle": "pays.lu.sponsor_accepte" },
+          { "type": "flag", "cle": "pays.lu.archives_ouvertes" }
+        ]
+      },
+      { "type": "compteur", "cle": "monde.atlas.soupcon", "min": 3 }
+    ]
+  },
+  "consequences": [
+    { "type": "objectif_alternatif", "scenarioCle": "scen_finale_continentale_ii", "objectif": { "type": "points", "seuil": 60 } },
+    { "type": "variante_dialogue", "scenarioCle": "scen_meridien_acte_iii", "varianteCle": "var_clause_douze_lue" },
+    { "type": "entree_carnet", "carnetCle": "carnet_clause_douze" }
+  ],
+  "flagsEcrits": [
+    "monde.atlas.sponsor_meridien",
+    "monde.atlas.soupcon",
+    "monde.atlas.dossier_truquage",
+    "monde.atlas.reforme_deposee",
+    "monde.tournoi.fils_termines"
+  ]
+}

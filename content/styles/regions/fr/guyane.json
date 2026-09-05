@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_guyane",
+  "paysCode": "fr",
+  "nom": "Guyane",
+  "ligneDirectrice": {
+    "fr": "Carbet de bois brut sur pilotis, tôle mate couleur feuille morte, blanc technique éclatant pour la seule tour de la carte.",
+    "en": "Raw timber carbet on stilts, matte leaf-brown sheet roofing, brilliant technical white for the map’s only tower."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tole_ondulee",
+    "couleur": "#6b6f4a"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#c9a878",
+    "finition": "huilee"
+  },
+  "vegetation": {
+    "dominante": "canopée à contreforts",
+    "secondaire": "palmiers bâches de sous-bois",
+    "couleur": "#2f6b3a"
+  },
+  "elementsDecor": [
+    "cabane_sur_pilotis",
+    "ponton_de_bois",
+    "mangrove",
+    "panneau_de_bois"
+  ],
+  "priorite": 1,
+  "justification": "La fiche oppose une forêt qui avale tout et une tour blanche qui la perce : le style régional tient dans ce seul contraste, et c’est lui qui rend la case décisive visible sous la canopée."
+}

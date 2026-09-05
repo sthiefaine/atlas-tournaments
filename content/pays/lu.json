@@ -1,0 +1,95 @@
+{
+  "cle": "pays_lu",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "lu",
+  "nom": "Luxembourg",
+  "nomCourt": "Luxembourg",
+  "gentile": "luxembourgeoise",
+  "continent": "europe",
+  "climat": "tempere",
+  "hemisphere": "nord",
+  "biomes": [
+    "foret",
+    "plaine",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_lu_carrefour",
+    "nom": "Le carrefour",
+    "portee": "pays",
+    "famille": "economie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 1.1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "qg"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Le trésor tourne vite et les capitaux capturés rapportent tout de suite ; le quartier général, lui, se prend en dix points au lieu de vingt."
+  },
+  "archetypeCommandant": "diplomate",
+  "rivalNaturel": "fr",
+  "voisins": [
+    "fr"
+  ],
+  "palette": {
+    "main": "#3aa0c8",
+    "dark": "#1d5f7c",
+    "light": "#a8dcef"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#3aa0c8",
+      "#f4f6fb",
+      "#d4534f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.lu.visite",
+    "pays.lu.qualifie",
+    "pays.lu.rival_respecte",
+    "pays.lu.rival_humilie",
+    "pays.lu.allie_recrute",
+    "pays.lu.dette_envers_joueur",
+    "pays.lu.terrain_altere",
+    "pays.lu.ralliement_cinquieme",
+    "pays.lu.sponsor_accepte",
+    "pays.lu.archives_ouvertes",
+    "pays.lu.bastion_pose",
+    "pays.lu.carnet_dacier_lu",
+    "pays.lu.rire_du_petit"
+  ],
+  "phare": true,
+  "accroche": "Cinquante fois plus petit que son voisin, et toujours en avance d’un tour : le carrefour où tout le monde passe.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Jamais de plaisanterie sur la taille du pays qui ne vienne pas de Léa Wagener elle-même.",
+    "La finance du carrefour est une affaire de marché et de trois langues, jamais de coffres-forts."
+  ],
+  "regions": [
+    "region_lu_oesling",
+    "region_lu_ville_haute"
+  ]
+}

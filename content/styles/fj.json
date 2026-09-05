@@ -1,0 +1,56 @@
+{
+  "code": "fj",
+  "nom": "Fidji",
+  "ligneDirectrice": {
+    "fr": "Coque de catamaran : turquoise clair, bois de balancier huilé, cordages tressés, tissu imprimé tendu en pare-soleil et rien qui ne flotte pas.",
+    "en": "Catamaran hull: pale turquoise, oiled outrigger timber, braided ropes, printed cloth stretched as a sun shade, and nothing that does not float."
+  },
+  "palette": {
+    "main": "#2fa0b8",
+    "dark": "#12606f",
+    "light": "#c6eef5",
+    "accents": [
+      "#f2e2b8",
+      "#2f8f5f"
+    ]
+  },
+  "matieres": [
+    "bois",
+    "peinture_satinee",
+    "corde",
+    "toile",
+    "rotin"
+  ],
+  "finitions": [
+    "huilee",
+    "delavee"
+  ],
+  "ornements": [
+    "pare_soleil",
+    "corde_lovee",
+    "filet"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "b",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "a",
+    "roquettes": "b",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "demi_lunes",
+      "placement": "flanc",
+      "couleur": "#f2e2b8",
+      "note": "Une frise de demi-lunes claires, motif d’étoffe imprimée, sans aucun signe coutumier."
+    }
+  ],
+  "motifDaltonien": "demi_lunes",
+  "priorite": 3,
+  "justification": "Sitiveni Naicoro improvise tout et son unité propre est un catamaran à voile triangulaire : le style fidjien est léger, flottant et fait de matières qui sèchent vite. Le turquoise est celui du lagon, qui est pour ce pays un terrain et non de l’eau."
+}

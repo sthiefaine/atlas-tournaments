@@ -1,0 +1,57 @@
+{
+  "code": "nz",
+  "nom": "Nouvelle-Zélande",
+  "ligneDirectrice": {
+    "fr": "Vert de fougère mouillée : peinture sombre et satinée, surfaces courtes, filets de camouflage végétal et de l’eau qui perle sur tout en permanence.",
+    "en": "Wet-fern green: dark satin paint, short surfaces, plant camouflage netting, and water beading on everything all the time."
+  },
+  "palette": {
+    "main": "#2f5f4f",
+    "dark": "#153b30",
+    "light": "#c6e3d8",
+    "accents": [
+      "#f2f0e6",
+      "#2c3a4a"
+    ]
+  },
+  "matieres": [
+    "peinture_satinee",
+    "camouflage",
+    "toile",
+    "caoutchouc",
+    "bois"
+  ],
+  "finitions": [
+    "satinee",
+    "delavee"
+  ],
+  "ornements": [
+    "filet",
+    "brise_vent",
+    "corde_lovee",
+    "gourde"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "b",
+    "char_leger": "a",
+    "char_lourd": "b",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "fleche_repetee",
+      "placement": "capot",
+      "couleur": "#f2f0e6",
+      "note": "Une file de chevrons clairs, motif de balisage de sentier de vallée."
+    }
+  ],
+  "motifDaltonien": "fleche_repetee",
+  "priorite": 3,
+  "justification": "Hana Whitmore ne recule jamais d’une case et prépare le terrain trois journées à l’avance : le style néo-zélandais est celui d’un matériel qui se fond dans la fougère et attend. C’est le seul pays du jeu qui a droit au filet de camouflage végétal, parce que sa spécialité est littéralement de disparaître dans une forêt."
+}

@@ -1,0 +1,67 @@
+{
+  "cle": "region_fr_guadeloupe",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_guadeloupe",
+  "paysCode": "fr",
+  "nom": "Guadeloupe",
+  "type": "outre_mer",
+  "ordreConseille": 8,
+  "biome": "jungle",
+  "climat": "tropical",
+  "specialiteLocale": {
+    "cle": "spec_fr_guadeloupe_marin_dalize",
+    "nom": "Marin d’alizé",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plage",
+              "pont"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "L’alizé pousse sur le sable : un point de mouvement de plus sur une plage ou un pont, en attendant qu’il pousse aussi des voiles."
+  },
+  "mecanique": {
+    "cle": "meca_alize_grain",
+    "parametres": {
+      "cycle_journees": 3,
+      "malus_aerien_alize": -2,
+      "malus_mouvement_grain": -1,
+      "vision_grain": -2,
+      "portee_grain": 2
+    },
+    "description": "Le vent suit un cycle de trois journées affiché au HUD : brise, alizé, puis grain — les aériennes au sol, la vue à deux cases de moins, et tout le monde ralenti."
+  },
+  "commandantCle": "cmd_ludmilla_sainte_rose",
+  "scenarios": [
+    "scen_fr_guadeloupe_etape",
+    "scen_fr_guadeloupe_defi"
+  ],
+  "accroche": "Deux ailes de terre séparées par un bras de mer étroit : du sucre d’un côté, de la forêt humide de l’autre, et un vent d’est qui ne s’arrête jamais.",
+  "motsCles": [
+    "alizé",
+    "grain",
+    "mangrove",
+    "canne",
+    "gwoka"
+  ],
+  "flagsPropres": [
+    "pays.fr.guadeloupe_grain_traverse"
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "code": "sn",
+  "nom": "Sénégal",
+  "ligneDirectrice": {
+    "fr": "Pirogue peinte : bois clair couvert de motifs peints à main levée, jaune et vert francs, filets pliés sur le pont et une cloche pour rassembler.",
+    "en": "Painted pirogue: pale wood covered in freehand motifs, strong yellow and green, nets folded on the deck, and a bell to gather everyone."
+  },
+  "palette": {
+    "main": "#2f8f57",
+    "dark": "#155c33",
+    "light": "#c9ecd6",
+    "accents": [
+      "#e2c341",
+      "#c0392f"
+    ]
+  },
+  "matieres": [
+    "bois",
+    "peinture_brillante",
+    "toile",
+    "corde",
+    "acier_peint"
+  ],
+  "finitions": [
+    "brillante",
+    "delavee"
+  ],
+  "ornements": [
+    "filet",
+    "cloche",
+    "corde_lovee",
+    "toit_toile"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "b",
+    "char_lourd": "b",
+    "artillerie": "c",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "chevrons",
+      "placement": "flanc",
+      "couleur": "#e2c341",
+      "note": "Des chevrons jaunes peints à main levée, motif de pirogue, jamais deux fois identiques."
+    }
+  ],
+  "motifDaltonien": "chevrons",
+  "priorite": 3,
+  "justification": "Aïssatou Ndiaye ne supporte pas qu’une unité reste isolée, et l’unité propre du pays est une pirogue peinte à motifs : le style est collectif et fait main. La cloche est l’ornement qui dit « on avance ensemble » sans une ligne de texte."
+}

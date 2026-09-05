@@ -1,0 +1,54 @@
+{
+  "code": "lu",
+  "nom": "Luxembourg",
+  "ligneDirectrice": {
+    "fr": "Petit, dense et parfaitement fini : acier brossé, arêtes vives, tout tient dans un volume court, comme un carnet à couverture d’acier.",
+    "en": "Small, dense and perfectly finished: brushed steel, sharp edges, everything held in a short volume, like a steel-bound notebook."
+  },
+  "palette": {
+    "main": "#3aa0c8",
+    "dark": "#1d5f7c",
+    "light": "#a8dcef",
+    "accents": [
+      "#d4534f"
+    ]
+  },
+  "matieres": [
+    "acier_brosse",
+    "peinture_satinee",
+    "cuir",
+    "laiton"
+  ],
+  "finitions": [
+    "brossee",
+    "satinee"
+  ],
+  "ornements": [
+    "sacoche",
+    "antenne",
+    "panneau"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "a",
+    "char_leger": "b",
+    "char_lourd": "a",
+    "artillerie": "a",
+    "roquettes": "a",
+    "antiair": "b",
+    "helico": "a",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "carres_emboites",
+      "placement": "portiere",
+      "couleur": "#d4534f",
+      "note": "Trois carrés emboîtés, empruntés au motif du carnet de Léa Wagener."
+    }
+  ],
+  "motifDaltonien": "carres_emboites",
+  "priorite": 1,
+  "justification": "Le Luxembourg joue le carrefour et le trésor qui tourne vite : le style dit la densité et la finition, jamais la taille. L’acier brossé et le carnet d’acier viennent directement de la fiche du commandant."
+}

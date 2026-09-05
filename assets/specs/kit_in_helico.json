@@ -1,0 +1,163 @@
+{
+  "id": "kit_in_helico",
+  "type": "kit",
+  "cle": "in_helico",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Hélicoptère\" in the colours and materials of Inde. Guiding line: Painted lorry: every flat surface is a decorated panel, garlands hung everywhere, mirrors sewn onto the canvas, and nothing discreet anywhere. Paint the base mesh of unite_helico_base in shape template B (balanced: the reference proportion, neither long nor short). Base colour #e2842a, own shadow #8f4d0d, edge highlight #ffe0b8, accents #2f7d4f, #f2c4d8. Materials to read at a glance: high-gloss paint, heavy canvas, painted steel plate, planed timber and enamelled panel. Finish: glossy and lacquered. Add these ornaments as separate named nodes, and nothing else: a string of small hanging pennant lights, a stretched canvas roof, a blank instruction plate and a small mounted bell. Abstract decals only: dots in #f2c4d8 on the portiere; a repeated arrowhead in #2f7d4f on the arriere. For colour-blind readability the socle carries dots, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Hélicoptère » aux couleurs et aux matières du style « Inde ». Ligne directrice : Camion peint : chaque surface plane est un panneau décoré, guirlandes accrochées partout, miroirs cousus sur la toile, et rien de discret nulle part. Peindre la géométrie de base unite_helico_base dans le gabarit B (équilibré : la proportion de référence, ni longue ni courte). Couleur de fond #e2842a, ombre propre #8f4d0d, liseré d’arête #ffe0b8, accents #2f7d4f, #f2c4d8. Matières à lire d’un coup d’œil : peinture brillante, toile épaisse, tôle d’acier peinte, bois raboté et panneau émaillé. Finition : brillante et laquée. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une guirlande de fanions, un toit de toile tendue, un panneau d’instruction vierge et une petite cloche montée. Décalcomanies abstraites seulement : des pois en #f2c4d8 sur la zone « portiere » ; une pointe de flèche répétée en #2f7d4f sur la zone « arriere ». Pour la lisibilité sans couleur, le socle porte des pois, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.9,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.65,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.9,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": false
+  },
+  "budget": {
+    "lod0": 6960,
+    "lod1": 2320,
+    "lod2": 696,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "in"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_guirlande",
+      "ornement_toit_toile",
+      "ornement_panneau",
+      "ornement_cloche"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_in_helico_lod0.glb",
+      "kit_in_helico_lod1.glb",
+      "kit_in_helico_albedo.png",
+      "kit_in_helico_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

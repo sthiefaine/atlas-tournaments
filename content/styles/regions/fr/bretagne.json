@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_bretagne",
+  "paysCode": "fr",
+  "nom": "Bretagne",
+  "ligneDirectrice": {
+    "fr": "Ardoise bleue, granit clair, bois de barque repeint : tout ici est bas, trapu et posé contre le vent.",
+    "en": "Blue slate, pale granite, repainted boat timber: everything here is low, stocky and set against the wind."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "ardoise",
+    "couleur": "#4a5560"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#b9b2a6",
+    "finition": "mate"
+  },
+  "vegetation": {
+    "dominante": "ajoncs et bruyère rase",
+    "secondaire": "pins couchés par le vent",
+    "couleur": "#6f8a4a"
+  },
+  "elementsDecor": [
+    "muret_de_pierre",
+    "filets_de_peche",
+    "alignement_de_pierres",
+    "croix_de_chemin"
+  ],
+  "priorite": 1,
+  "justification": "Le granit et l’ardoise sont les deux matières que la fiche donne à la Bretagne, et la marée impose des bâtiments bas, sans débord, qui ne craignent ni le sel ni le paquet de mer."
+}

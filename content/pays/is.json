@@ -1,0 +1,94 @@
+{
+  "cle": "pays_is",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "is",
+  "nom": "Islande",
+  "nomCourt": "Islande",
+  "gentile": "islandaise",
+  "continent": "europe",
+  "climat": "oceanique",
+  "hemisphere": "nord",
+  "biomes": [
+    "volcanique",
+    "neige",
+    "cotier",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_is_roche_et_vapeur",
+    "nom": "La roche et la vapeur",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "plaine"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "ville"
+            ]
+          },
+          "modificateur": {
+            "quoi": "soin",
+            "valeur": 2
+          }
+        }
+      ]
+    },
+    "description": "Ni la neige ni le champ de lave ne coûtent quelque chose, et la vapeur des sources remet une équipe d’aplomb ; en revanche, aucun char lourd ne sort d’ici."
+  },
+  "archetypeCommandant": "meteorologue",
+  "rivalNaturel": "ca",
+  "voisins": [],
+  "palette": {
+    "main": "#5b6f86",
+    "dark": "#2c3a4a",
+    "light": "#c2d6e6"
+  },
+  "drapeau": {
+    "type": "croix",
+    "couleurs": [
+      "#5b6f86",
+      "#f2f5f8",
+      "#c04a52"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.is.visite",
+    "pays.is.qualifie",
+    "pays.is.rival_respecte",
+    "pays.is.rival_humilie",
+    "pays.is.allie_recrute",
+    "pays.is.dette_envers_joueur",
+    "pays.is.terrain_altere",
+    "pays.is.ralliement_cinquieme",
+    "pays.is.source_chaude_partagee",
+    "pays.is.brouillard_leve",
+    "pays.is.silence_de_hrefna"
+  ],
+  "phare": false,
+  "accroche": "Une île de roche noire où l’on regarde le ciel avant de jouer, et où l’hiver joue de nuit.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Le volcan s’allume pour le spectacle : jamais d’éruption traitée en catastrophe.",
+    "Ni elfes, ni sagas guerrières : le folklore islandais du jeu est celui des bains chauds et du silence."
+  ]
+}

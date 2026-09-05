@@ -1,0 +1,62 @@
+{
+  "code": "ch",
+  "nom": "Suisse",
+  "ligneDirectrice": {
+    "fr": "Précision horlogère : acier brossé, rouge et blanc, lignes nettes, aucune pièce qui dépasse et pas une vis qui manque.",
+    "en": "Watchmaking precision: brushed steel, red and white, clean lines, nothing protruding and not a single missing screw."
+  },
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#7d2019",
+    "light": "#f0d2cd",
+    "accents": [
+      "#e8e8e6",
+      "#c9a227"
+    ]
+  },
+  "matieres": [
+    "acier_brosse",
+    "peinture_mate",
+    "bois",
+    "cuir",
+    "laiton"
+  ],
+  "finitions": [
+    "brossee",
+    "mate"
+  ],
+  "ornements": [
+    "porte_skis",
+    "corde_lovee",
+    "panneau"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "a",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "a",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "a"
+  },
+  "decalcomanies": [
+    {
+      "motif": "croix_diagonale",
+      "placement": "toit",
+      "couleur": "#e8e8e6",
+      "note": "Une croix diagonale blanche, motif de balisage de col, jamais un emblème."
+    },
+    {
+      "motif": "dents_de_scie",
+      "placement": "jupe",
+      "couleur": "#c9a227",
+      "note": "Un profil de crête en dents de scie, repris des cartes de randonnée."
+    }
+  ],
+  "motifDaltonien": "croix_diagonale",
+  "priorite": 1,
+  "justification": "C’est la ligne directrice que le brief donne en exemple. Elle est juste : la Suisse joue le retranchement et la ponctualité, et son unité propre est un téléphérique. Le porte-skis et la corde lovée disent la montagne sans un mot, et le blanc suffit à contraster avec le rouge sur un fond de neige."
+}

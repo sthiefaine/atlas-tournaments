@@ -1,0 +1,83 @@
+{
+  "cle": "pays_sn",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "sn",
+  "nom": "Sénégal",
+  "nomCourt": "Sénégal",
+  "gentile": "sénégalaise",
+  "continent": "afrique",
+  "climat": "tropical",
+  "hemisphere": "nord",
+  "biomes": [
+    "plaine",
+    "cotier",
+    "marais",
+    "desert"
+  ],
+  "specialite": {
+    "cle": "spec_sn_ensemble",
+    "nom": "On avance ensemble",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Une équipe sénégalaise avance groupée et vite ; une unité qui joue seule garde la même vitesse mais baisse la garde, et le fleuve trie ceux qui se présentent sans personne à côté."
+  },
+  "archetypeCommandant": "fonceuse",
+  "rivalNaturel": "ke",
+  "voisins": [],
+  "palette": {
+    "main": "#2f8f57",
+    "dark": "#155c33",
+    "light": "#c9ecd6"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#2f8f57",
+      "#e2c341",
+      "#c0392f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.sn.visite",
+    "pays.sn.qualifie",
+    "pays.sn.rival_respecte",
+    "pays.sn.rival_humilie",
+    "pays.sn.allie_recrute",
+    "pays.sn.dette_envers_joueur",
+    "pays.sn.terrain_altere",
+    "pays.sn.ralliement_cinquieme",
+    "pays.sn.invitation_acceptee",
+    "pays.sn.tambour_lance",
+    "pays.sn.pari_avec_amani"
+  ],
+  "phare": false,
+  "accroche": "Un delta, une savane à baobabs, et une commandante qui vous accueille comme un invité avant de vous battre une demi-heure plus tard.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "La teranga est une hospitalité réelle, jamais un folklore de carte postale.",
+    "Le baobab est un couvert isolé, pas un totem."
+  ]
+}

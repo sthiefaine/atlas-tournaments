@@ -1,0 +1,63 @@
+{
+  "code": "mg",
+  "nom": "Madagascar",
+  "ligneDirectrice": {
+    "fr": "Taxi-brousse : galerie de toit chargée, autocollants peints, latérite rouge jusqu’aux vitres, et du bois de récupération partout où l’acier manque.",
+    "en": "Bush taxi: loaded roof rack, painted stickers, red laterite up to the windows, and salvaged timber wherever steel is missing."
+  },
+  "palette": {
+    "main": "#c14b2f",
+    "dark": "#742616",
+    "light": "#f3d0c4",
+    "accents": [
+      "#e2c341",
+      "#2f7d4f"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "bois",
+    "toile",
+    "acier_peint",
+    "rotin"
+  ],
+  "finitions": [
+    "poussieree",
+    "delavee"
+  ],
+  "ornements": [
+    "galerie_de_toit",
+    "bache_roulee",
+    "corde_lovee",
+    "jerrican"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "c",
+    "char_leger": "b",
+    "char_lourd": "a",
+    "artillerie": "c",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "hachures",
+      "placement": "flanc",
+      "couleur": "#e2c341",
+      "note": "Des hachures jaunes serrées, motif de lamba simplifié, sans aucun signe."
+    },
+    {
+      "motif": "croisillons",
+      "placement": "toit",
+      "couleur": "#2f7d4f",
+      "note": "Un croisillon vert, repris des filets qui tiennent les bagages sur la galerie."
+    }
+  ],
+  "motifDaltonien": "hachures",
+  "priorite": 3,
+  "justification": "Voahangy Rakotobe garde un carnet de croquis plus épais que son carnet de jeu, et son unité propre est un taxi-brousse couvert d’autocollants : le style malgache est celui de la débrouille soignée, où chaque véhicule est un peu différent. La latérite rouge relie visuellement toutes les pistes de l’île."
+}

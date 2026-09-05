@@ -1,0 +1,62 @@
+{
+  "cle": "region_fr_centre_val_de_loire",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_centre_val_de_loire",
+  "paysCode": "fr",
+  "nom": "Centre-Val de Loire",
+  "type": "metropolitaine",
+  "ordreConseille": 4,
+  "biome": "foret",
+  "climat": "tempere",
+  "specialiteLocale": {
+    "cle": "spec_fr_centre_val_de_loire_batisseur",
+    "nom": "Bâtisseur",
+    "portee": "region",
+    "famille": "ingenierie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "capture",
+            "valeur": 1.1
+          }
+        }
+      ]
+    },
+    "description": "On a appris à prendre une pierre proprement : la capture avance d’environ deux points de plus par journée."
+  },
+  "mecanique": {
+    "cle": "meca_chateaux",
+    "parametres": {
+      "chateaux": 4,
+      "points_capture": 60,
+      "defense": 1.35,
+      "soin": 2,
+      "vision": 5,
+      "usure_par_prise": 0.1
+    },
+    "description": "Quatre châteaux neutres se prennent en soixante points ; tenus, ils défendent, réparent et voient loin, mais perdent un dixième de leur défense à chaque changement de main."
+  },
+  "commandantCle": "cmd_aubin_loiseau",
+  "scenarios": [
+    "scen_fr_centre_val_de_loire_etape",
+    "scen_fr_centre_val_de_loire_defi"
+  ],
+  "accroche": "Un fleuve sablonneux qui refuse d’être canalisé, des bancs de sable qui bougent, et des châteaux posés là pour la photo.",
+  "motsCles": [
+    "châteaux",
+    "bancs de sable",
+    "forêt de chasse",
+    "cave troglodyte",
+    "montgolfière"
+  ],
+  "flagsPropres": [
+    "pays.fr.centre_val_de_loire_chateau_intact"
+  ]
+}

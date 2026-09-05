@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_occitanie",
+  "paysCode": "fr",
+  "nom": "Occitanie",
+  "ligneDirectrice": {
+    "fr": "Tuile canal orange, pierre blonde du causse, volets bleu lavande, et l’ombre des platanes peinte dans la rugosité.",
+    "en": "Orange barrel tile, blond causse stone, lavender-blue shutters, and plane-tree shade painted into the roughness."
+  },
+  "toits": {
+    "forme": "pente_douce",
+    "matiere": "tuile",
+    "couleur": "#c07a45"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#e3d3b4",
+    "finition": "sablee"
+  },
+  "vegetation": {
+    "dominante": "platanes du canal",
+    "secondaire": "chênes verts de garrigue",
+    "couleur": "#6f8a4f"
+  },
+  "elementsDecor": [
+    "muret_de_pierre",
+    "kiosque",
+    "banc_de_pierre",
+    "abri_de_berger"
+  ],
+  "priorite": 1,
+  "justification": "La tuile canal et la pierre blonde sont les matières de la fiche ; l’ombre des platanes est ce qui fait la différence entre un village méditerranéen et un village provençal, et elle se rend dans la carte de rugosité."
+}

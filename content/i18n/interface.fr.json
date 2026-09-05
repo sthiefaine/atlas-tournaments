@@ -1,0 +1,883 @@
+{
+  "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
+  "chaines": [
+    {
+      "cle": "app.titre",
+      "texte": "Atlas Tournament",
+      "contexte": {
+        "ecran": "global",
+        "note": "Titre du jeu. Nom propre : ne se traduit pas."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "app.baseline",
+      "texte": "Le tour du monde en une manche.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Accroche sous le titre, une ligne."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "app.chargement",
+      "texte": "Chargement…",
+      "contexte": {
+        "ecran": "global"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.fin_de_tour",
+      "texte": "Fin de tour",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bouton principal, en bas à droite. Court."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.journee",
+      "texte": "Journée {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Compteur de journées, en haut du HUD."
+      },
+      "longueurMax": 14,
+      "pluriel": true
+    },
+    {
+      "cle": "hud.fonds",
+      "texte": "Fonds : {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Trésorerie du camp actif. Le nombre passe par Intl.NumberFormat."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.previsions",
+      "texte": "Prévisions : {n} journées",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bandeau météo, sous la jauge de commandant."
+      },
+      "longueurMax": 26,
+      "pluriel": true
+    },
+    {
+      "cle": "hud.jauge_pouvoir",
+      "texte": "Pouvoir",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette de la jauge de commandant."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "hud.super_pouvoir",
+      "texte": "Super pouvoir",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.points_de_vie",
+      "texte": "PV {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette sous une unité. Très court."
+      },
+      "longueurMax": 8
+    },
+    {
+      "cle": "hud.capture",
+      "texte": "Capture {n} %",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.tour_adverse",
+      "texte": "Tour de l’adversaire",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Jamais « ennemi »."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "hud.saison",
+      "texte": "Saison",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "hud.nuit",
+      "texte": "Nuit",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 10
+    },
+    {
+      "cle": "hud.jour",
+      "texte": "Jour",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 10
+    },
+    {
+      "cle": "combat.hors_jeu",
+      "texte": "{unite} est mise hors jeu",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Jamais « détruite », jamais « tuée »."
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "combat.riposte",
+      "texte": "Riposte",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "combat.ville_capturee",
+      "texte": "Ville capturée",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "combat.manche_gagnee",
+      "texte": "Manche gagnée",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "« manche », jamais « bataille »."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "combat.manche_perdue",
+      "texte": "Manche perdue",
+      "contexte": {
+        "ecran": "fin_de_match"
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "menu.jouer",
+      "texte": "Jouer",
+      "contexte": {
+        "ecran": "menu"
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "menu.carnet",
+      "texte": "Carnet de voyage",
+      "contexte": {
+        "ecran": "menu"
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "menu.depeche",
+      "texte": "La Dépêche du jour",
+      "contexte": {
+        "ecran": "menu",
+        "note": "Nom propre du mode quotidien."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "menu.langue",
+      "texte": "Langue",
+      "contexte": {
+        "ecran": "menu"
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "menu.production",
+      "texte": "Production",
+      "contexte": {
+        "ecran": "menu_production"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "menu.retour",
+      "texte": "Retour",
+      "contexte": {
+        "ecran": "menu"
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "depeche.aucune",
+      "texte": "Pas de Dépêche aujourd’hui.",
+      "contexte": {
+        "ecran": "depeche",
+        "note": "Le vide vaut mieux qu'une erreur : c'est une décision, pas une panne."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "depeche.jours_restants",
+      "texte": "Encore {n} jours",
+      "contexte": {
+        "ecran": "depeche"
+      },
+      "longueurMax": 22,
+      "pluriel": true
+    },
+    {
+      "cle": "depeche.archives",
+      "texte": "Archives",
+      "contexte": {
+        "ecran": "depeche"
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "admin.titre",
+      "texte": "Administration",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "admin.connexion",
+      "texte": "Connexion",
+      "contexte": {
+        "ecran": "admin_login"
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "admin.mot_de_passe",
+      "texte": "Mot de passe",
+      "contexte": {
+        "ecran": "admin_login"
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "admin.deconnexion",
+      "texte": "Déconnexion",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "admin.identifiants_refuses",
+      "texte": "Mot de passe refusé.",
+      "contexte": {
+        "ecran": "admin_login"
+      },
+      "longueurMax": 34
+    },
+    {
+      "cle": "admin.tableau_de_bord",
+      "texte": "Tableau de bord",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "admin.file_validation",
+      "texte": "File de validation",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.file_rejets",
+      "texte": "File de rejets",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "admin.quarantaine",
+      "texte": "Quarantaine",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "admin.prompts",
+      "texte": "Prompts",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "admin.catalogue",
+      "texte": "Catalogue d’unités",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.missions_du_jour",
+      "texte": "Missions du jour",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "admin.traductions",
+      "texte": "Traductions",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "admin.mettre_en_ligne",
+      "texte": "Mettre en ligne",
+      "contexte": {
+        "ecran": "admin",
+        "note": "Le seul geste qui change le jeu pour les joueurs."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "admin.renvoyer",
+      "texte": "Renvoyer en brouillon",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "admin.ecarter",
+      "texte": "Écarter",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "admin.motif",
+      "texte": "Motif",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "admin.promouvoir",
+      "texte": "Promouvoir",
+      "contexte": {
+        "ecran": "admin_prompts"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "admin.retour_arriere",
+      "texte": "Revenir à cette version",
+      "contexte": {
+        "ecran": "admin_prompts"
+      },
+      "longueurMax": 32
+    },
+    {
+      "cle": "admin.sonde",
+      "texte": "Sonde des routines",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.sonde_ok",
+      "texte": "Toutes les routines répondent.",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "admin.sonde_muette",
+      "texte": "{n} routines silencieuses",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 34,
+      "pluriel": true
+    },
+    {
+      "cle": "admin.derniers_runs",
+      "texte": "Dernières exécutions",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "admin.couverture",
+      "texte": "Couverture",
+      "contexte": {
+        "ecran": "admin_traductions"
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "admin.activer_langue",
+      "texte": "Activer la langue",
+      "contexte": {
+        "ecran": "admin_traductions"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.echantillon",
+      "texte": "Échantillon humain",
+      "contexte": {
+        "ecran": "admin_traductions"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.conforme",
+      "texte": "Conforme",
+      "contexte": {
+        "ecran": "admin_traductions"
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "admin.a_corriger",
+      "texte": "À corriger",
+      "contexte": {
+        "ecran": "admin_traductions"
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "admin.rien_en_attente",
+      "texte": "Rien en attente.",
+      "contexte": {
+        "ecran": "admin"
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.base_absente",
+      "texte": "Base de données injoignable.",
+      "contexte": {
+        "ecran": "admin",
+        "note": "Affiché quand DATABASE_URL manque ou que la base est muette."
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "hud.qg",
+      "texte": "QG",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette dessinée sur le bâtiment QG. Deux ou trois lettres."
+      },
+      "longueurMax": 6
+    },
+    {
+      "cle": "hud.commandant",
+      "texte": "Commandant",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre du panneau de commandant, quand le nom manque."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.terrain",
+      "texte": "Terrain",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre du panneau de case, sans unité dessus."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.defense",
+      "texte": "Défense {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étoiles de défense du terrain, panneau de case."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.mouvement",
+      "texte": "Mouv. {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Points de mouvement, panneau d’unité. Abrégé."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.portee",
+      "texte": "Portée {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Portée de tir, panneau d’unité."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.munitions",
+      "texte": "Munitions {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Munitions restantes, panneau d’unité."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.carburant",
+      "texte": "Carburant {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Carburant restant, panneau d’unité."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.bulletin",
+      "texte": "Demain {j1}, ensuite {j2}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Le Bulletin d’Atlas : prévision à deux journées."
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "hud.attaquer",
+      "texte": "Attaquer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres, sous l’unité."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.capturer",
+      "texte": "Capturer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.fusionner",
+      "texte": "Fusionner",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : réunir deux unités du même type."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.embarquer",
+      "texte": "Embarquer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : monter dans un transport."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.debarquer",
+      "texte": "Débarquer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : poser un passager."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.ravitailler",
+      "texte": "Ravitailler",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : rendre munitions et carburant."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.attendre",
+      "texte": "Attendre",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : l’unité reste où elle est."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.rejouer",
+      "texte": "Rejouer",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "Bouton de l’écran de fin."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.match_nul",
+      "texte": "Match nul",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "Ni gagnée ni perdue : la manche est nulle."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.action_refusee",
+      "texte": "Ordre impossible",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce quand le moteur refuse un ordre. Jamais une alerte du navigateur."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "hud.reprendre",
+      "texte": "Reprendre",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Bouton de reprise d’une partie sauvegardée."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.nouvelle_partie",
+      "texte": "Nouvelle partie",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Bouton de départ, page de jeu."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "hud.scenario_introuvable",
+      "texte": "Scénario introuvable.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Page de jeu, code de scénario inconnu."
+      },
+      "longueurMax": 34
+    },
+    {
+      "cle": "saison.printemps",
+      "texte": "Printemps",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "saison.ete",
+      "texte": "Été",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "saison.automne",
+      "texte": "Automne",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "saison.hiver",
+      "texte": "Hiver",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "meteo.clair",
+      "texte": "Ciel clair",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "meteo.pluie",
+      "texte": "Pluie",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "meteo.neige",
+      "texte": "Neige",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "meteo.brouillard",
+      "texte": "Brouillard",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "meteo.tempete",
+      "texte": "Tempête",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "meteo.canicule",
+      "texte": "Canicule",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Bulletin d’Atlas."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "commandant.cmd_ariane_belloc.nom",
+      "texte": "Ariane Belloc",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Commandante du camp 0 du scénario de démonstration."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "commandant.cmd_ariane_belloc.pouvoir",
+      "texte": "Coup d’accélérateur",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Pouvoir de commandant, annoncé au déclenchement."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_ariane_belloc.super",
+      "texte": "Grande manœuvre",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Super pouvoir de commandant."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_tomas_reiner.nom",
+      "texte": "Tomas Reiner",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Commandant du camp 1 du scénario de démonstration."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "commandant.cmd_tomas_reiner.pouvoir",
+      "texte": "Ligne serrée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Pouvoir de commandant."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_tomas_reiner.super",
+      "texte": "Verrou de fer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Super pouvoir de commandant."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "hud.bulletin_titre",
+      "texte": "Bulletin d’Atlas",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre du panneau météo du HUD HTML. Lu par les lecteurs d’écran."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "hud.panneau_unite",
+      "texte": "Unité et terrain",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette du panneau d’inspection du HUD HTML."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "hud.menu_ordres",
+      "texte": "Ordres",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette du menu contextuel d’actions."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.pouvoir_pret",
+      "texte": "Pouvoir prêt",
+      "contexte": {
+        "ecran": "hud",
+        "note": "État de la jauge de commandant quand elle est pleine."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "hud.partie_en_cours",
+      "texte": "Partie en cours",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Étiquette du bandeau journée et fonds."
+      },
+      "longueurMax": 22
+    }
+  ]
+}

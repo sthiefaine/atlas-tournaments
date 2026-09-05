@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_pays_de_la_loire",
+  "paysCode": "fr",
+  "nom": "Pays de la Loire",
+  "ligneDirectrice": {
+    "fr": "Tuffeau clair, tuile chaude, bois de ponton gris, et le blanc cru des tas de sel comme seule couleur froide.",
+    "en": "Pale tuffeau, warm tile, grey pontoon timber, and the raw white of salt piles as the only cold colour."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tuile",
+    "couleur": "#8a6a52"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#ddd6c4",
+    "finition": "sablee"
+  },
+  "vegetation": {
+    "dominante": "saules d’estuaire",
+    "secondaire": "salicorne des marais",
+    "couleur": "#7d8f5a"
+  },
+  "elementsDecor": [
+    "sechoir",
+    "ponton_de_bois",
+    "haie_vive",
+    "panneau_de_bois"
+  ],
+  "priorite": 1,
+  "justification": "La fiche donne trois paysages à la région — bocage, marais salants, estuaire — et une seule couleur les tient ensemble : le blanc du sel, qu’on retrouve sur les séchoirs et les pontons du décor."
+}

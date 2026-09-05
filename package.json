@@ -1,0 +1,42 @@
+{
+  "name": "atlas-tournaments",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack -p 3400",
+    "build": "next build",
+    "start": "node scripts/migrate.mjs && next start -p ${PORT:-3000}",
+    "migrate": "node scripts/migrate.mjs",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test 'tests/**/*.test.ts'",
+    "test:e2e": "playwright test",
+    "simuler": "tsx scripts/simuler.ts",
+    "controler": "tsx scripts/controler-carte.ts",
+    "apercu": "tsx scripts/apercu-carte.ts",
+    "extraire-chaines": "tsx scripts/extraire-chaines.ts"
+  },
+  "dependencies": {
+    "@types/three": "^0.170.0",
+    "drizzle-orm": "^0.45.2",
+    "next": "15.5.25",
+    "pg": "^8.23.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.56.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/pg": "^8.21.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.25",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.0",
+    "typescript": "^5"
+  }
+}

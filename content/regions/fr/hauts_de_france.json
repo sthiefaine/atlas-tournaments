@@ -1,0 +1,66 @@
+{
+  "cle": "region_fr_hauts_de_france",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_hauts_de_france",
+  "paysCode": "fr",
+  "nom": "Hauts-de-France",
+  "type": "metropolitaine",
+  "ordreConseille": 5,
+  "biome": "plaine",
+  "climat": "oceanique",
+  "specialiteLocale": {
+    "cle": "spec_fr_hauts_de_france_vigie",
+    "nom": "Vigie",
+    "portee": "region",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "La hauteur vaut plus que la vitesse quand on n’y voit rien : une case de vision de plus depuis un point haut."
+  },
+  "mecanique": {
+    "cle": "meca_brume_terrils",
+    "parametres": {
+      "colonnes_brume": 6,
+      "vision_dans_brume": -2,
+      "terrils": 6,
+      "vision_au_sommet": 6,
+      "bonus_tir": 1.15
+    },
+    "description": "Une bande de brume de six colonnes se déplace chaque journée dans un ordre annoncé ; seuls les six terrils et les beffrois la percent."
+  },
+  "commandantCle": "cmd_sylvie_delcourt",
+  "scenarios": [
+    "scen_fr_hauts_de_france_etape",
+    "scen_fr_hauts_de_france_defi"
+  ],
+  "accroche": "Une plaine immense, un ciel bas qui traîne, des collines noires devenues belvédères et des beffrois qui dépassent de tout.",
+  "motsCles": [
+    "brume",
+    "terril",
+    "beffroi",
+    "estaminet",
+    "plage immense"
+  ],
+  "flagsPropres": [
+    "pays.fr.hauts_de_france_terril_gravi"
+  ]
+}

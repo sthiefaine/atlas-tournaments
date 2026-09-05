@@ -1,0 +1,68 @@
+{
+  "cle": "region_fr_normandie",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_normandie",
+  "paysCode": "fr",
+  "nom": "Normandie",
+  "type": "metropolitaine",
+  "ordreConseille": 2,
+  "biome": "plaine",
+  "climat": "oceanique",
+  "specialiteLocale": {
+    "cle": "spec_fr_normandie_couvert",
+    "nom": "Couvert",
+    "portee": "region",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "pied"
+            ],
+            "surTerrain": [
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 1.1
+          }
+        }
+      ]
+    },
+    "description": "Une infanterie qui a appris le bocage sait se tenir derrière une haie : un cran de défense de plus sous le couvert."
+  },
+  "mecanique": {
+    "cle": "meca_bocage",
+    "parametres": {
+      "part_bocage": 0.45,
+      "vision_dans_bocage": 1,
+      "cout_pied": 1,
+      "cout_vehicule": 2
+    },
+    "description": "Les haies ramènent la vision à une case et cachent qui entre dedans ; l’infanterie y passe à un point, les véhicules à deux et sans aucun bonus."
+  },
+  "commandantCle": "cmd_colin_lefebvre",
+  "scenarios": [
+    "scen_fr_normandie_etape",
+    "scen_fr_normandie_defi"
+  ],
+  "accroche": "Des haies vives partout, des pommiers en rang, et au bout une falaise blanche qui tombe dans la Manche.",
+  "motsCles": [
+    "bocage",
+    "pommeraie",
+    "falaise blanche",
+    "cidre",
+    "marché au beurre"
+  ],
+  "flagsPropres": [
+    "pays.fr.normandie_haie_franchie"
+  ]
+}

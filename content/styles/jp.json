@@ -1,0 +1,62 @@
+{
+  "code": "jp",
+  "nom": "Japon",
+  "ligneDirectrice": {
+    "fr": "Blanc de rame et gris de quai : surfaces lisses, joints réguliers, un liseré rose unique et une propreté qui se remarque avant la couleur.",
+    "en": "Trainset white and platform grey: smooth surfaces, even panel gaps, a single pink pinstripe, and a cleanliness you notice before the colour."
+  },
+  "palette": {
+    "main": "#d05a6e",
+    "dark": "#7d2b3c",
+    "light": "#f7dbe1",
+    "accents": [
+      "#f7f7f5",
+      "#2c3a4a"
+    ]
+  },
+  "matieres": [
+    "peinture_satinee",
+    "aluminium",
+    "verre",
+    "toile",
+    "ceramique"
+  ],
+  "finitions": [
+    "satinee",
+    "laquee"
+  ],
+  "ornements": [
+    "panneau",
+    "antenne",
+    "sacoche"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "a",
+    "recon": "b",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "c",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "anneaux",
+      "placement": "nez",
+      "couleur": "#d05a6e",
+      "note": "Trois anneaux concentriques, marque d’horaire des quais, sans un chiffre."
+    },
+    {
+      "motif": "rayures_horizontales",
+      "placement": "jupe",
+      "couleur": "#2c3a4a",
+      "note": "Deux bandes grises basses, reprises des livrées de rame."
+    }
+  ],
+  "motifDaltonien": "anneaux",
+  "priorite": 2,
+  "justification": "Le Japon du jeu est celui des horaires tenus, pas des clans : le style est donc emprunté au matériel ferroviaire, propre, lisse et sans une aspérité. Le rose vient de la saison qui ne change rien au jeu et tout au décor, ce que la fiche dit exactement."
+}

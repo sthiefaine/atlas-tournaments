@@ -1,0 +1,92 @@
+{
+  "cle": "pays_na",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "na",
+  "nom": "Namibie",
+  "nomCourt": "Namibie",
+  "gentile": "namibienne",
+  "continent": "afrique",
+  "climat": "aride",
+  "hemisphere": "sud",
+  "biomes": [
+    "desert",
+    "cotier",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_na_brume",
+    "nom": "La brume",
+    "portee": "pays",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "filtre": {
+            "surTerrain": [
+              "plage"
+            ]
+          },
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": -2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plaine"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.8
+          }
+        }
+      ]
+    },
+    "description": "Dans la bande de brume côtière, l’adversaire ne voit plus rien ; à découvert, sur la dune et le gravier, les Namibiennes n’ont aucun couvert et le paient."
+  },
+  "archetypeCommandant": "survivante",
+  "rivalNaturel": "mn",
+  "voisins": [],
+  "palette": {
+    "main": "#c98b3f",
+    "dark": "#7d4f14",
+    "light": "#f4dcb6"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#c98b3f",
+      "#2f6f8f",
+      "#2c3a4a"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.na.visite",
+    "pays.na.qualifie",
+    "pays.na.rival_respecte",
+    "pays.na.rival_humilie",
+    "pays.na.allie_recrute",
+    "pays.na.dette_envers_joueur",
+    "pays.na.terrain_altere",
+    "pays.na.ralliement_cinquieme",
+    "pays.na.brume_etendue",
+    "pays.na.repas_offert",
+    "pays.na.silence_impose"
+  ],
+  "phare": false,
+  "accroche": "Le seul terrain totalement découvert du tournoi, plus une brume côtière qui tombe tous les matins et efface tout.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Le désert n’affame ni ne tue : il se traverse ou l’on y disparaît, ce qui est une manière de jouer.",
+    "Aucune référence coloniale, ni dans les noms, ni dans le décor."
+  ]
+}

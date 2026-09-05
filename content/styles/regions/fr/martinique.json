@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_martinique",
+  "paysCode": "fr",
+  "nom": "Martinique",
+  "ligneDirectrice": {
+    "fr": "Bois peint en jaune paille et vert d’eau, tôle vert sombre, jardins de balisiers plantés à même la pente.",
+    "en": "Timber painted straw yellow and eau-de-nil, dark green sheet roofing, balisier gardens planted on the slope."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tole_ondulee",
+    "couleur": "#4f6b52"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#f5e0b8",
+    "finition": "vernie"
+  },
+  "vegetation": {
+    "dominante": "balisiers en terrasses",
+    "secondaire": "forêt humide de mornes",
+    "couleur": "#3f8a52"
+  },
+  "elementsDecor": [
+    "jardin_de_balisiers",
+    "terrasse_en_escalier",
+    "cabane_sur_pilotis",
+    "ponton_de_bois"
+  ],
+  "priorite": 1,
+  "justification": "La fiche décrit des jardins en terrasses et des distilleries au bord des rivières ; le bâti peint clair sur pente sombre est ce qui rend les angles morts lisibles, puisque c’est le contraste, et non la couleur, qui montre le relief."
+}

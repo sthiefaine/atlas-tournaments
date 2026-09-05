@@ -1,0 +1,40 @@
+{
+  "cle": "fil_seconde_ilva",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_seconde_ilva",
+  "titre": "La Seconde",
+  "accroche": "Deux finales mondiales, deux défaites, puis elle a rendu son drapeau. Elle entraîne aujourd'hui les arbitres.",
+  "arc": "Ilva Marecq a disputé deux finales mondiales et n'en a gagné aucune. Après la seconde, elle est entrée à Atlas et a rendu son drapeau, ce qui se fait mais ne se raconte pas. Elle forme désormais les juges de terrain, et elle accepte de préparer le joueur à la finale — à sa manière, en le faisant perdre quatre fois de suite dans quatre conditions différentes. Le fil est une école : chaque défaite est une leçon nommée, et la cinquième rencontre se joue sans qu'elle dise un mot. Ce qu'elle veut n'est pas une revanche par procuration ; c'est que quelqu'un finisse par gagner en jouant comme elle jouait.",
+  "acteMin": 2,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_seconde_01", "gabarit": "capture_qg", "dureeVisee": 30, "titre": "Première leçon : le tempo" },
+    { "ordre": 2, "scenarioCle": "scen_fil_seconde_02", "gabarit": "survie", "dureeVisee": 26, "titre": "Deuxième leçon : la nuit" },
+    { "ordre": 3, "scenarioCle": "scen_fil_seconde_03", "gabarit": "siege", "dureeVisee": 48, "titre": "Troisième leçon : la patience" },
+    { "ordre": 4, "scenarioCle": "scen_fil_seconde_04", "gabarit": "escorte", "dureeVisee": 36, "titre": "Quatrième leçon : ce qu'on protège" },
+    { "ordre": 5, "scenarioCle": "scen_fil_seconde_05", "gabarit": "revanche", "dureeVisee": 46, "titre": "Elle ne dit rien" }
+  ],
+  "deblocage": {
+    "type": "ou",
+    "conditions": [
+      { "type": "compteur", "cle": "monde.tournoi.fils_termines", "min": 2 },
+      { "type": "mode_fini", "mode": "normal" }
+    ]
+  },
+  "consequences": [
+    { "type": "co_commandant", "commandantCle": "cmd_ilva_marecq" },
+    { "type": "remise_production", "uniteCle": "artillerie", "remise": 0.85 },
+    { "type": "entree_carnet", "carnetCle": "carnet_deux_finales" },
+    { "type": "deblocage", "deblocageCle": "deb_ilva_marecq" }
+  ],
+  "flagsEcrits": [
+    "cmd.ilva_marecq.respect",
+    "cmd.ilva_marecq.co_commandant",
+    "monde.atlas.credibilite",
+    "monde.tournoi.serie_propre",
+    "monde.tournoi.fils_termines"
+  ]
+}

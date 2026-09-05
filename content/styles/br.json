@@ -1,0 +1,63 @@
+{
+  "code": "br",
+  "nom": "Brésil",
+  "ligneDirectrice": {
+    "fr": "Trio elétrico : grandes surfaces peintes vert et jaune, guirlandes, haut-parleurs sanglés, et une carrosserie faite pour être regardée d’une tribune.",
+    "en": "Trio elétrico: large green and yellow painted surfaces, garlands, strapped loudspeakers, and bodywork built to be looked at from a stand."
+  },
+  "palette": {
+    "main": "#2f9d5b",
+    "dark": "#146336",
+    "light": "#c9f0d8",
+    "accents": [
+      "#e2c341",
+      "#2c4a86"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "acier_peint",
+    "toile",
+    "aluminium",
+    "verre"
+  ],
+  "finitions": [
+    "brillante",
+    "laquee"
+  ],
+  "ornements": [
+    "guirlande",
+    "banniere",
+    "panneau",
+    "toit_toile"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "b",
+    "char_lourd": "c",
+    "artillerie": "c",
+    "roquettes": "c",
+    "antiair": "b",
+    "helico": "c",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "spirale",
+      "placement": "flanc",
+      "couleur": "#e2c341",
+      "note": "Une spirale jaune de char de carnaval, tracée large et sans texte."
+    },
+    {
+      "motif": "vagues",
+      "placement": "jupe",
+      "couleur": "#2c4a86",
+      "note": "Une frise de vagues bleues, reprise du dallage des promenades de bord de mer."
+    }
+  ],
+  "motifDaltonien": "spirale",
+  "priorite": 2,
+  "justification": "Dandara Alves joue mieux quand le stade fait du bruit et son unité propre est un camion-scène : le style brésilien est fait pour être vu de loin et de haut, en grandes surfaces plates. C’est aussi ce que réclame le compteur d’ambiance, qui doit se lire sur la carrosserie."
+}

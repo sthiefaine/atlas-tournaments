@@ -1,0 +1,93 @@
+{
+  "cle": "pays_nz",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "nz",
+  "nom": "Nouvelle-Zélande",
+  "nomCourt": "N.-Zélande",
+  "gentile": "néo-zélandaise",
+  "continent": "oceanie",
+  "climat": "oceanique",
+  "hemisphere": "sud",
+  "biomes": [
+    "montagne",
+    "foret",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_nz_fougere",
+    "nom": "La fougère répare",
+    "portee": "pays",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "soin",
+            "valeur": 2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        }
+      ]
+    },
+    "description": "Une unité qui termine sa journée dans la fougère se soigne et disparaît tant qu’elle n’attaque pas ; en échange, personne ne court ici, et le pays n’aligne aucune unité de reconnaissance."
+  },
+  "archetypeCommandant": "gardienne",
+  "rivalNaturel": "fj",
+  "voisins": [],
+  "palette": {
+    "main": "#2f5f4f",
+    "dark": "#153b30",
+    "light": "#c6e3d8"
+  },
+  "drapeau": {
+    "type": "canton",
+    "couleurs": [
+      "#2f5f4f",
+      "#f7f7f5",
+      "#2c4a86"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.nz.visite",
+    "pays.nz.qualifie",
+    "pays.nz.rival_respecte",
+    "pays.nz.rival_humilie",
+    "pays.nz.allie_recrute",
+    "pays.nz.dette_envers_joueur",
+    "pays.nz.terrain_altere",
+    "pays.nz.ralliement_cinquieme",
+    "pays.nz.ligne_tenue",
+    "pays.nz.eleve_devenu_rival",
+    "pays.nz.mur_de_brume_leve"
+  ],
+  "phare": false,
+  "accroche": "Deux îles étroites, une montagne au milieu, de la brume de vallée : la carte la plus défensive du tournoi.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence à la culture maorie : le haka n’apparaît jamais, la fougère est un terrain.",
+    "Les fjords sont un décor de bord de carte tant que la mer est infranchissable."
+  ]
+}

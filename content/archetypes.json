@@ -1,0 +1,84 @@
+{
+  "archetypes": [
+    {
+      "cle": "stratege_prudent",
+      "libelle": "Le stratège prudent",
+      "temperament": "Posé, avare de mots, joue trois coups plus loin",
+      "famillePouvoir": "Défense et prévoyance : bonus en terrain fortifié, réduction des dégâts subis, prévisualisation d'une intention adverse",
+      "courbe": "Lente, très forte en fin de match",
+      "contrePar": ["fonceuse", "showman"]
+    },
+    {
+      "cle": "fonceuse",
+      "libelle": "La fonceuse",
+      "temperament": "Impatiente, franche, allergique à l'attente",
+      "famillePouvoir": "Mouvement et initiative : mouvement supplémentaire, seconde action, charge qui ignore un malus de terrain",
+      "courbe": "Explosive tôt, s'essouffle",
+      "contrePar": ["gardienne", "survivante"]
+    },
+    {
+      "cle": "veteran",
+      "libelle": "Le vétéran",
+      "temperament": "Bourru, protecteur, plein d'anecdotes de Rondes passées",
+      "famillePouvoir": "Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité marquée, moral d'équipe",
+      "courbe": "Régulière, cumule sur la durée",
+      "contrePar": ["meteorologue", "prodige"]
+    },
+    {
+      "cle": "ingenieur",
+      "libelle": "L'ingénieur",
+      "temperament": "Méthodique, bricoleur, parle de la carte comme d'un chantier",
+      "famillePouvoir": "Terrain construit : ponts temporaires, remblais, réparation de villes, blocage d'un passage",
+      "courbe": "Moyenne, dépend de la carte",
+      "contrePar": ["fonceuse", "meteorologue"]
+    },
+    {
+      "cle": "diplomate",
+      "libelle": "La diplomate",
+      "temperament": "Chaleureuse, manœuvrière, connaît tout le monde dans le stade",
+      "famillePouvoir": "Capture et économie : capture accélérée, revenu majoré, ralliement d'une ville neutre, ravitaillement à distance",
+      "courbe": "Très lente, écrasante si le match dure",
+      "contrePar": ["fonceuse", "showman"]
+    },
+    {
+      "cle": "showman",
+      "libelle": "Le showman",
+      "temperament": "Théâtral, généreux, joue pour le public",
+      "famillePouvoir": "Élan : bonus qui monte avec les actions réussies et le public acquis, relance après une action spectaculaire",
+      "courbe": "En dents de scie, dépend du momentum",
+      "contrePar": ["stratege_prudent", "gardienne"]
+    },
+    {
+      "cle": "survivante",
+      "libelle": "La survivante",
+      "temperament": "Sobre, tenace, ne commente jamais le score",
+      "famillePouvoir": "Résilience : remise en état, résistance, effets qui montent à mesure que l'équipe est menée",
+      "courbe": "Inverse : discrète en tête, redoutable menée",
+      "contrePar": ["prodige", "diplomate"]
+    },
+    {
+      "cle": "meteorologue",
+      "libelle": "La météorologue",
+      "temperament": "Rêveuse, fataliste, toujours un œil sur le ciel",
+      "famillePouvoir": "Climat : brume qui tombe, pluie qui ralentit, gel qui fige une rivière, vent qui modifie les portées",
+      "courbe": "Irrégulière, très forte sur grandes cartes",
+      "contrePar": ["stratege_prudent", "diplomate"]
+    },
+    {
+      "cle": "prodige",
+      "libelle": "Le prodige",
+      "temperament": "Jeune, vif, un peu insolent, apprend en jouant",
+      "famillePouvoir": "Montée en puissance : gain d'expérience accéléré, déblocage progressif d'un second effet, unité fétiche qui grandit",
+      "courbe": "Nulle au début, la plus haute à la fin",
+      "contrePar": ["fonceuse", "showman"]
+    },
+    {
+      "cle": "gardienne",
+      "libelle": "La gardienne",
+      "temperament": "Immobile, patiente, presque ennuyeuse",
+      "famillePouvoir": "Résistance : zone de contrôle, fortification, riposte automatique, ralentissement de la capture adverse (capture ×0,5 sur unites_adverses)",
+      "courbe": "Plate et haute, faible en attaque",
+      "contrePar": ["ingenieur", "meteorologue"]
+    }
+  ]
+}

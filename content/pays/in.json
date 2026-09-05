@@ -1,0 +1,85 @@
+{
+  "cle": "pays_in",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "in",
+  "nom": "Inde",
+  "nomCourt": "Inde",
+  "gentile": "indienne",
+  "continent": "asie",
+  "climat": "tropical",
+  "hemisphere": "nord",
+  "biomes": [
+    "plaine",
+    "montagne",
+    "desert",
+    "jungle"
+  ],
+  "specialite": {
+    "cle": "spec_in_volume",
+    "nom": "Le volume",
+    "portee": "pays",
+    "famille": "polyvalence",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 1.2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Le quartier général produit deux unités par journée et le public paie la tournée ; les unités sorties de ces journées-là restent à peine entraînées."
+  },
+  "archetypeCommandant": "showman",
+  "rivalNaturel": "au",
+  "voisins": [
+    "np"
+  ],
+  "palette": {
+    "main": "#e2842a",
+    "dark": "#8f4d0d",
+    "light": "#ffe0b8"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#e2842a",
+      "#f7f7f5",
+      "#2f7d4f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.in.visite",
+    "pays.in.qualifie",
+    "pays.in.rival_respecte",
+    "pays.in.rival_humilie",
+    "pays.in.allie_recrute",
+    "pays.in.dette_envers_joueur",
+    "pays.in.terrain_altere",
+    "pays.in.ralliement_cinquieme",
+    "pays.in.public_conquis",
+    "pays.in.tenue_changee",
+    "pays.in.charriage_avec_marlee"
+  ],
+  "phare": false,
+  "accroche": "Le plus gros volume d’unités du tournoi, un commentateur qui commente ses propres coups, et des gradins pleins à toute heure.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence religieuse ni à une fête religieuse : les couleurs du camion peint sont décoratives.",
+    "La mousson est une saison annoncée, jamais une inondation dramatique."
+  ]
+}

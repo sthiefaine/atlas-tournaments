@@ -1,0 +1,57 @@
+{
+  "code": "np",
+  "nom": "Népal",
+  "ligneDirectrice": {
+    "fr": "Tout se porte : petits volumes, sangles partout, toile cirée cramoisie et bleu profond, et pas un gramme qui ne serve à quelque chose.",
+    "en": "Everything is carried: small volumes, straps everywhere, crimson and deep blue oilcloth, and not one useless gram."
+  },
+  "palette": {
+    "main": "#b8443f",
+    "dark": "#6d1f1d",
+    "light": "#f2cfcb",
+    "accents": [
+      "#2c4a86",
+      "#e8e2d0"
+    ]
+  },
+  "matieres": [
+    "toile_ciree",
+    "cuir",
+    "corde",
+    "bois",
+    "peinture_mate"
+  ],
+  "finitions": [
+    "mate",
+    "delavee"
+  ],
+  "ornements": [
+    "sacoche",
+    "corde_lovee",
+    "gourde",
+    "fanion"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "a",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "a",
+    "roquettes": "a",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "a"
+  },
+  "decalcomanies": [
+    {
+      "motif": "triangles",
+      "placement": "epaule",
+      "couleur": "#2c4a86",
+      "note": "Une file de triangles bleus, motif de balisage de sentier — jamais un drapeau de prière."
+    }
+  ],
+  "motifDaltonien": "triangles",
+  "priorite": 3,
+  "justification": "Pemba Gurung connaît le poids exact de tout ce qu’il porte : le style népalais est un style de charge, sanglé et compact, où rien ne dépasse parce que tout doit passer dans un col. Les triangles servent de balisage, ce qui évite toute lecture religieuse."
+}

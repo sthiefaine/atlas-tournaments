@@ -1,0 +1,65 @@
+{
+  "cle": "region_fr_provence_alpes_cote_azur",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_provence_alpes_cote_azur",
+  "paysCode": "fr",
+  "nom": "Provence-Alpes-Côte d’Azur",
+  "type": "metropolitaine",
+  "ordreConseille": 16,
+  "biome": "cotier",
+  "climat": "mediterraneen",
+  "specialiteLocale": {
+    "cle": "spec_fr_provence_vent_arriere",
+    "nom": "Vent arrière",
+    "portee": "region",
+    "famille": "aerien",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "air"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Quand on connaît le vent, on l’a dans le dos : un point de mouvement de plus pour tout ce qui vole."
+  },
+  "mecanique": {
+    "cle": "meca_mistral",
+    "parametres": {
+      "poussee_aerienne": 1,
+      "journee_de_vent_double": 3,
+      "pv_pose_forcee": 2,
+      "cases_brulees": 3
+    },
+    "description": "À chaque fin de tour, le mistral pousse toutes les unités aériennes d’une case vers le sud, deux une journée sur trois ; la garrigue brûlée ne redonne plus aucun couvert."
+  },
+  "commandantCle": "cmd_marius_ferrand",
+  "scenarios": [
+    "scen_fr_provence_alpes_cote_azur_etape",
+    "scen_fr_provence_alpes_cote_azur_defi"
+  ],
+  "accroche": "Du calcaire blanc qui plonge dans une eau très bleue, des bandes de lavande alignées, et un vent qui ne demande la permission à personne.",
+  "motsCles": [
+    "mistral",
+    "calanques",
+    "lavande",
+    "village perché",
+    "pétanque"
+  ],
+  "flagsPropres": [
+    "pays.fr.provence_vent_dompte"
+  ]
+}

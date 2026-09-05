@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_corse",
+  "paysCode": "fr",
+  "nom": "Corse",
+  "ligneDirectrice": {
+    "fr": "Granit brut appareillé à sec, lauzes irrégulières, bois gris non peint : un bâti qui se confond avec la roche.",
+    "en": "Raw granite laid dry, irregular lauze slabs, unpainted grey timber: building that merges into the rock."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "ardoise",
+    "couleur": "#5a5f58"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#a89e8c",
+    "finition": "martelee"
+  },
+  "vegetation": {
+    "dominante": "maquis dense et odorant",
+    "secondaire": "châtaigniers de montagne",
+    "couleur": "#4f6b3a"
+  },
+  "elementsDecor": [
+    "abri_de_berger",
+    "muret_de_pierre",
+    "croix_de_chemin",
+    "banc_de_pierre"
+  ],
+  "priorite": 1,
+  "justification": "La fiche décrit des tours rondes et des bergeries en pierre sèche ; un bâti qui se confond avec la roche est la version architecturale de la mécanique du maquis, où tout disparaît."
+}

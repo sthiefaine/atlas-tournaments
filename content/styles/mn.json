@@ -1,0 +1,57 @@
+{
+  "code": "mn",
+  "nom": "Mongolie",
+  "ligneDirectrice": {
+    "fr": "Feutre et poussière : châssis longs couverts de feutre écru sanglé, orange de deel sur les revers, et une couche de steppe sur le tiers bas.",
+    "en": "Felt and dust: long chassis wrapped in strapped raw felt, deel orange on the facings, and a layer of steppe over the lower third."
+  },
+  "palette": {
+    "main": "#e08a1e",
+    "dark": "#8c4d08",
+    "light": "#ffdda6",
+    "accents": [
+      "#c0392f",
+      "#f0e6d2"
+    ]
+  },
+  "matieres": [
+    "feutre",
+    "peinture_mate",
+    "cuir",
+    "bois",
+    "corde"
+  ],
+  "finitions": [
+    "poussieree",
+    "mate"
+  ],
+  "ornements": [
+    "sacoche",
+    "corde_lovee",
+    "gourde",
+    "bidon"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "c",
+    "recon": "c",
+    "char_leger": "b",
+    "char_lourd": "b",
+    "artillerie": "c",
+    "roquettes": "b",
+    "antiair": "c",
+    "helico": "c",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "arcs",
+      "placement": "flanc",
+      "couleur": "#c0392f",
+      "note": "Une suite d’arcs rouges, motif de bordure de tapis, répété au pochoir."
+    }
+  ],
+  "motifDaltonien": "arcs",
+  "priorite": 3,
+  "justification": "Naran Batbayar juge un adversaire à la façon dont il monte à cheval et déteste les petites cartes : son matériel est fait pour rouler loin, donc long, bâché et chargé. Le feutre est la matière de la yourte, et l’orange du deel est le seul accent vif d’une steppe entièrement beige."
+}

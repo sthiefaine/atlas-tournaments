@@ -1,0 +1,157 @@
+{
+  "gabarits": [
+    {
+      "cle": "capture_qg",
+      "nom": "Prise de quartier général",
+      "intention": "Le match de référence : deux QG, une symétrie de valeur, une montée en puissance lisible du premier ordre au dernier.",
+      "victoire": ["capture_qg", "hors_jeu_total"],
+      "defaite": ["qg_perdu", "limite_journees"],
+      "dureeVisee": { "min": 28, "max": 45 },
+      "journees": { "min": 14, "max": 22 },
+      "cote": { "min": 14, "max": 24 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "présenter un adversaire et sa manière en une rencontre",
+        "installer une rivalité qui reviendra",
+        "faire découvrir une mécanique régionale sans la commenter"
+      ],
+      "interdit": "Aucun objectif spécial en plus : c'est le gabarit qui apprend la grammaire, il ne l'encombre pas."
+    },
+    {
+      "cle": "tenir",
+      "nom": "Tenir la ligne",
+      "intention": "Le joueur tient deux à quatre points désignés pendant un nombre de journées annoncé, contre un adversaire qui produit plus que lui.",
+      "victoire": ["tenir", "hors_jeu_total"],
+      "defaite": ["case_perdue", "limite_journees", "toutes_unites_hors_jeu"],
+      "dureeVisee": { "min": 22, "max": 36 },
+      "journees": { "min": 10, "max": 16 },
+      "cote": { "min": 12, "max": 20 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "un renfort annoncé qui arrive à une journée précise",
+        "un allié qui demande qu'on lui laisse le temps",
+        "une décision d'arbitrage suspendue jusqu'au coup de sifflet"
+      ],
+      "interdit": "Le joueur ne doit jamais pouvoir gagner en capturant le QG adverse : ce gabarit se joue en défense ou il ne se joue pas."
+    },
+    {
+      "cle": "escorte",
+      "nom": "Escorte de matériel",
+      "intention": "Une unité nommée traverse la carte jusqu'à une case ; elle est lente, fragile, et tout le monde sait où elle va.",
+      "victoire": ["proteger", "capturer"],
+      "defaite": ["unite_perdue", "limite_journees"],
+      "dureeVisee": { "min": 30, "max": 48 },
+      "journees": { "min": 12, "max": 20 },
+      "cote": { "min": 16, "max": 28 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "un convoi de la Commission d'homologation à faire arriver entier",
+        "une pièce d'archive à sortir d'un bâtiment avant la fermeture",
+        "un commandant blessé dans son orgueil qu'on raccompagne au vestiaire"
+      ],
+      "interdit": "L'unité escortée n'attaque jamais et n'a jamais de pouvoir : c'est un objectif qui marche, pas une unité de plus."
+    },
+    {
+      "cle": "relais",
+      "nom": "Course de relais",
+      "intention": "Capturer des points dans un ordre imposé : chaque capture ouvre la suivante, et le chemin compte autant que le combat.",
+      "victoire": ["capturer", "points"],
+      "defaite": ["limite_journees", "toutes_unites_hors_jeu"],
+      "dureeVisee": { "min": 26, "max": 42 },
+      "journees": { "min": 12, "max": 18 },
+      "cote": { "min": 16, "max": 26 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "un tour de région en une seule journée de calendrier",
+        "un relevé de la Cartographie à refaire point par point",
+        "une épreuve d'orientation que l'hôte pratique depuis toujours"
+      ],
+      "interdit": "Jamais plus de cinq points de relais : au-delà, ce n'est plus un parcours, c'est une corvée."
+    },
+    {
+      "cle": "course",
+      "nom": "Course au même point",
+      "intention": "Deux camps courent au même objectif ; le premier arrivé gagne, et se battre coûte le temps qu'on n'a pas.",
+      "victoire": ["capturer", "capture_qg"],
+      "defaite": ["case_perdue", "limite_journees"],
+      "dureeVisee": { "min": 18, "max": 30 },
+      "journees": { "min": 8, "max": 14 },
+      "cote": { "min": 12, "max": 22 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "un pari lancé au vestiaire la veille",
+        "une rivalité sportive pure, sans rien d'autre en jeu",
+        "un public qui a choisi son camp avant le coup de sifflet"
+      ],
+      "interdit": "Aucune condition de victoire par mise hors jeu totale : ce serait la voie lente, et elle gagnerait quand même."
+    },
+    {
+      "cle": "survie",
+      "nom": "Tenir la nuit",
+      "intention": "Survivre un nombre de journées annoncé avec des fonds nuls ou une production coupée : on ne gagne pas, on reste.",
+      "victoire": ["survivre"],
+      "defaite": ["toutes_unites_hors_jeu", "qg_perdu"],
+      "dureeVisee": { "min": 22, "max": 34 },
+      "journees": { "min": 10, "max": 16 },
+      "cote": { "min": 12, "max": 20 },
+      "brouillardConseille": true,
+      "hooksNarratifs": [
+        "une nuit longue, un cycle jour/nuit déséquilibré",
+        "une tempête annoncée deux journées à l'avance par le Bulletin",
+        "une équipe privée de matériel par une décision administrative"
+      ],
+      "interdit": "Aucun renfort produit par le joueur : si la production reste ouverte, ce n'est plus de la survie, c'est de l'économie."
+    },
+    {
+      "cle": "siege",
+      "nom": "Siège",
+      "intention": "L'adversaire tient une position fortifiée, le joueur a l'avantage économique : le match le plus long du jeu, et le plus lisible.",
+      "victoire": ["capture_qg", "capturer", "points"],
+      "defaite": ["limite_journees", "toutes_unites_hors_jeu"],
+      "dureeVisee": { "min": 40, "max": 65 },
+      "journees": { "min": 18, "max": 28 },
+      "cote": { "min": 18, "max": 30 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "une finale continentale devant un stade plein",
+        "un point de bascule de la trame joué sur le terrain",
+        "un adversaire qui n'a plus rien à perdre et le dit"
+      ],
+      "interdit": "Jamais deux sièges d'affilée dans une même étape : c'est le gabarit le plus cher en temps de joueur."
+    },
+    {
+      "cle": "revanche",
+      "nom": "Revanche",
+      "intention": "Retour contre un commandant nommé, son équipe renforcée, son pouvoir amélioré et un objectif de match personnel contre le joueur.",
+      "victoire": ["capture_qg", "hors_jeu_total", "points"],
+      "defaite": ["qg_perdu", "limite_journees"],
+      "dureeVisee": { "min": 35, "max": 55 },
+      "journees": { "min": 16, "max": 24 },
+      "cote": { "min": 14, "max": 24 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "un rival juré qui revient plus fort qu'à la première rencontre",
+        "un rival d'estime qui refuse de rejoindre la faction et le prouve sur le terrain",
+        "une dette réclamée, ou une dette payée"
+      ],
+      "interdit": "Jamais contre un commandant que le joueur n'a pas déjà rencontré : une revanche sans première fois n'est qu'un match."
+    },
+    {
+      "cle": "exhibition",
+      "nom": "Exhibition",
+      "intention": "Manche courte hors classement, roster réduit ou imposé, une seule mécanique mise en avant. C'est le gabarit de la Dépêche du jour.",
+      "victoire": ["capture_qg", "capturer", "survivre", "points"],
+      "defaite": ["qg_perdu", "limite_journees"],
+      "dureeVisee": { "min": 12, "max": 22 },
+      "journees": { "min": 6, "max": 15 },
+      "cote": { "min": 8, "max": 16 },
+      "brouillardConseille": false,
+      "hooksNarratifs": [
+        "une fête locale que l'hôte tient à faire jouer",
+        "une pièce de matériel à l'essai, badge orange compris",
+        "un exploit sportif commenté par Vantour le matin même"
+      ],
+      "interdit": "N'écrit aucun flag de campagne, jamais : ni pays.*, ni monde.* hors monde.depeche.*, ni cmd.* (01-bible.md §8.6, règle 7)."
+    }
+  ]
+}

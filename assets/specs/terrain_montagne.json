@@ -1,0 +1,152 @@
+{
+  "id": "terrain_montagne",
+  "type": "terrain",
+  "cle": "montagne",
+  "priorite": 1,
+  "description": {
+    "en": "A rocky outcrop that the renderer drops on high tiles: a fractured stone mass with clear bedding planes, a flat walkable shelf on top wide enough to hold a unit, scree at the base, and lichen in the shaded cracks. It must read as the best perch on the board — high, defensible, and visibly reachable on foot from one side. Grid tile \"M\", defence 4 of 4. The patch is exactly one metre square in plan and tiles seamlessly with itself after a quarter turn, so the renderer can rotate it to break repetition. Deliver the mesh flat: the height relief comes from the terrain mesh, not from you.",
+    "fr": "Un éperon rocheux que le rendu pose sur les cases hautes : masse fracturée aux bancs nettement lisibles, replat praticable au sommet, assez large pour porter une unité, éboulis à la base, lichen dans les fissures à l’ombre. Il doit se lire comme le meilleur perchoir du plateau : haut, défendable, et visiblement accessible à pied par un côté. Caractère de grille « M », défense 4 sur 4. La plaque fait exactement un mètre carré en plan et se raccorde avec elle-même après un quart de tour, pour que le rendu la fasse tourner et casse la répétition. Livrer la maille à plat : le relief vient du maillage de terrain, pas de vous."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "tileable ground patch",
+      "photoscan-like surface detail",
+      "seasonal variants"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 1,
+      "tolerance": 0.04
+    },
+    "y": {
+      "cible": 0.95,
+      "tolerance": 0.04
+    },
+    "z": {
+      "cible": 1,
+      "tolerance": 0.04
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 2400,
+    "lod1": 700,
+    "lod2": 180,
+    "materiauxMax": 2
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Couleurs de surface, sans ombre peinte ni éclairage cuit."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Le grain qui fait la matière à faible incidence de lumière."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui montre le sol mouillé sous la pluie : prévoir du contraste."
+    },
+    {
+      "canal": "occlusion",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Facultative : creux et jointures, si la géométrie ne suffit pas."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "printemps",
+      "ete",
+      "automne",
+      "hiver"
+    ],
+    "biomes": [
+      "montagne",
+      "neige",
+      "volcanique",
+      "archipel"
+    ],
+    "nations": []
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "sol"
+    ],
+    "materiauxAttendus": [
+      "mat_sol"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "terrain_montagne_lod0.glb",
+      "terrain_montagne_lod1.glb",
+      "terrain_montagne_albedo.png",
+      "terrain_montagne_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget"
+    ],
+    "toleranceAabb": 0.1,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

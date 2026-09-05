@@ -1,0 +1,156 @@
+{
+  "id": "decor_arbre_cotier_jp",
+  "type": "decor",
+  "cle": "arbre_cotier_jp",
+  "priorite": 2,
+  "description": {
+    "en": "A single tree for the \"cotier\" biome as it grows in Japon: a salt-pruned maritime pine leaning inland, its canopy sheared flat on the seaward side. National style of Japon (Trainset white and platform grey: smooth surfaces, even panel gaps, a single pink pinstripe, and a cleanliness you notice before the colour.): materials are satin paint, bare aluminium, clear glazing, heavy canvas and glazed ceramic, finish satin and lacquered, base colour #d05a6e with accents #f7f7f5, #2c3a4a. Biomes on its maps: cotier, montagne, foret, archipel. It is instanced hundreds of times per map, so it must look good from every side and never show a face that identifies it as the same model. Model the trunk and the foliage as two separate named nodes; foliage uses alpha-tested cards clustered into three or four dense clumps, never a single flat billboard. Keep the crown clear of the tile edges so it does not overhang a neighbouring unit.",
+    "fr": "Un arbre isolé du biome « cotier », tel qu’il pousse en Japon : un pin maritime taillé par le sel, penché vers l’intérieur, houppier rasé du côté de la mer. Style national Japon (Blanc de rame et gris de quai : surfaces lisses, joints réguliers, un liseré rose unique et une propreté qui se remarque avant la couleur.) : matières en peinture satinée, aluminium nu, vitrage clair, toile épaisse et céramique émaillée, finition satinée et laquée, couleur de fond #d05a6e et accents #f7f7f5, #2c3a4a. Biomes de ses cartes : cotier, montagne, foret, archipel. Il est instancié des centaines de fois par carte : il doit tenir sous tous les angles et ne jamais montrer une face qui le trahisse comme le même modèle. Tronc et feuillage sont deux nœuds nommés distincts ; le feuillage est fait de cartes à découpe alpha groupées en trois ou quatre touffes denses, jamais un panneau plat unique. Garder la couronne à l’intérieur des bords de la case, pour ne pas déborder sur une unité voisine."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "instanced vegetation",
+      "alpha-tested foliage clusters",
+      "seasonal foliage variants",
+      "regional planting"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.62,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 2500,
+    "lod1": 700,
+    "lod2": 180,
+    "materiauxMax": 2
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Écorce et feuillage sur un seul atlas ; canal alpha net, sans halo."
+    },
+    {
+      "canal": "normale",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Nervures des feuilles et relief d’écorce."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Feuille cireuse contre écorce sèche : deux valeurs franchement séparées."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "printemps",
+      "ete",
+      "automne",
+      "hiver"
+    ],
+    "biomes": [
+      "cotier"
+    ],
+    "nations": [
+      "jp"
+    ]
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 3600,
+      "boucle": true,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "tronc",
+      "feuillage"
+    ],
+    "materiauxAttendus": [
+      "mat_ecorce",
+      "mat_feuillage"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "decor_arbre_cotier_jp_lod0.glb",
+      "decor_arbre_cotier_jp_lod1.glb",
+      "decor_arbre_cotier_jp_albedo.png",
+      "decor_arbre_cotier_jp_albedo_automne.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "animations"
+    ],
+    "toleranceAabb": 0.15,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}

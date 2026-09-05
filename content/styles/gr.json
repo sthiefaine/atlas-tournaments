@@ -1,0 +1,57 @@
+{
+  "code": "gr",
+  "nom": "Grèce",
+  "ligneDirectrice": {
+    "fr": "Bois peint de caïque : bleu franc sur bois clair, cordages lovés, bâches roulées, et de la peinture repassée tous les ans sur la même écaille.",
+    "en": "Painted caique timber: strong blue over pale wood, coiled ropes, rolled tarpaulins, and paint reapplied every year over the same flake."
+  },
+  "palette": {
+    "main": "#2e78bf",
+    "dark": "#17456f",
+    "light": "#dcecf8",
+    "accents": [
+      "#f7f9fb",
+      "#d8c9a0"
+    ]
+  },
+  "matieres": [
+    "bois",
+    "peinture_brillante",
+    "corde",
+    "toile",
+    "laiton"
+  ],
+  "finitions": [
+    "delavee",
+    "brillante"
+  ],
+  "ornements": [
+    "corde_lovee",
+    "bache_roulee",
+    "lanterne",
+    "filet"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "vagues",
+      "placement": "flanc",
+      "couleur": "#f7f9fb",
+      "note": "Une frise de vagues blanches, motif de bordure de barque, sans aucun symbole."
+    }
+  ],
+  "motifDaltonien": "vagues",
+  "priorite": 2,
+  "justification": "La fiche grecque est celle du vieux port, du bois peint et du café d’avant-match. Le bleu sur bois clair est le seul couple de couleurs qui tient au soleil de la garrigue, et la peinture qui s’écaille est ce qui donne son âge au matériel de Stavros."
+}

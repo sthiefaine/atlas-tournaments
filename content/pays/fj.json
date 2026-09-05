@@ -1,0 +1,88 @@
+{
+  "cle": "pays_fj",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fj",
+  "nom": "Fidji",
+  "nomCourt": "Fidji",
+  "gentile": "fidjienne",
+  "continent": "oceanie",
+  "climat": "tropical",
+  "hemisphere": "sud",
+  "biomes": [
+    "archipel",
+    "cotier",
+    "jungle"
+  ],
+  "specialite": {
+    "cle": "spec_fj_lagon",
+    "nom": "Le lagon est un terrain",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plage",
+              "riviere"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.7
+          }
+        }
+      ]
+    },
+    "description": "Les eaux peu profondes se traversent comme de la plaine, et par personne d’autre ; le budget est le plus petit du tournoi et aucune unité lourde n’en sort."
+  },
+  "archetypeCommandant": "prodige",
+  "rivalNaturel": "nz",
+  "voisins": [],
+  "palette": {
+    "main": "#2fa0b8",
+    "dark": "#12606f",
+    "light": "#c6eef5"
+  },
+  "drapeau": {
+    "type": "canton",
+    "couleurs": [
+      "#2fa0b8",
+      "#f7f7f5",
+      "#2f8f5f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.fj.visite",
+    "pays.fj.qualifie",
+    "pays.fj.rival_respecte",
+    "pays.fj.rival_humilie",
+    "pays.fj.allie_recrute",
+    "pays.fj.dette_envers_joueur",
+    "pays.fj.terrain_altere",
+    "pays.fj.ralliement_cinquieme",
+    "pays.fj.chaine_de_passes",
+    "pays.fj.salut_rendu",
+    "pays.fj.formateur_battu"
+  ],
+  "phare": false,
+  "accroche": "Un micro-archipel de lagon, une trentaine d’îlots, et le plus jeune commandant du tournoi qui improvise et s’en sort neuf fois sur dix.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence coutumière ou cérémonielle : le registre est celui du lagon, du rugby et de l’accueil.",
+    "Le cyclone est une tempête annoncée deux journées à l’avance, jamais un désastre."
+  ]
+}

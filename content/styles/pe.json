@@ -1,0 +1,63 @@
+{
+  "code": "pe",
+  "nom": "Pérou",
+  "ligneDirectrice": {
+    "fr": "Charge de bât : sangles tressées, pompons de laine aux angles, bois assemblé et peinture rouge posée à la brosse sur un métal qui a déjà servi.",
+    "en": "Pack load: braided straps, wool pompoms at the corners, jointed timber, and red paint brushed onto metal that has already served."
+  },
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#722018",
+    "light": "#f2cec9",
+    "accents": [
+      "#e2c341",
+      "#2f7d8f"
+    ]
+  },
+  "matieres": [
+    "corde",
+    "bois",
+    "peinture_mate",
+    "cuir",
+    "feutre"
+  ],
+  "finitions": [
+    "mate",
+    "patinee"
+  ],
+  "ornements": [
+    "sacoche",
+    "corde_lovee",
+    "gourde",
+    "fanion"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "a",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "a",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "damier",
+      "placement": "flanc",
+      "couleur": "#e2c341",
+      "note": "Un damier jaune et rouge à grosses cases, motif de sangle tissée."
+    },
+    {
+      "motif": "carres_emboites",
+      "placement": "capot",
+      "couleur": "#2f7d8f",
+      "note": "Des carrés emboîtés turquoise, repris des pompons de la caravane d’altitude."
+    }
+  ],
+  "motifDaltonien": "damier",
+  "priorite": 3,
+  "justification": "Nayra Quispe réfléchit en dessinant des marches et se méfie de toute solution qui n’a pas coûté d’effort : le style péruvien est celui du portage et du tissage, pas de l’usine. Les pompons colorés de la Caravane d’altitude donnent au pays son seul accent vif, sur un fond de roche et de désert."
+}

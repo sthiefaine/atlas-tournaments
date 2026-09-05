@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_mayotte",
+  "paysCode": "fr",
+  "nom": "Mayotte",
+  "ligneDirectrice": {
+    "fr": "Murs chaulés très clairs, tôle turquoise pâle, bois de ponton blanchi par le sel : tout est réglé sur la lumière du lagon.",
+    "en": "Very pale limewashed walls, pale turquoise sheet roofing, pontoon timber bleached by salt: everything is tuned to the lagoon light."
+  },
+  "toits": {
+    "forme": "quatre_pans",
+    "matiere": "tole_ondulee",
+    "couleur": "#4a7f8f"
+  },
+  "murs": {
+    "matiere": "beton",
+    "couleur": "#f2ead6",
+    "finition": "blanchie"
+  },
+  "vegetation": {
+    "dominante": "mangrove épaisse",
+    "secondaire": "cocotiers de bord de lagon",
+    "couleur": "#4f8a5f"
+  },
+  "elementsDecor": [
+    "mangrove",
+    "ponton_de_bois",
+    "cabane_sur_pilotis",
+    "filets_de_peche"
+  ],
+  "priorite": 1,
+  "justification": "La fiche fait du lagon presque toute la carte : le bâti doit donc renvoyer sa lumière plutôt que la contredire, et les seules ombres franches viennent de la mangrove et des pilotis."
+}

@@ -1,0 +1,93 @@
+{
+  "cle": "pays_nl",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "nl",
+  "nom": "Pays-Bas",
+  "nomCourt": "Pays-Bas",
+  "gentile": "néerlandaise",
+  "continent": "europe",
+  "climat": "oceanique",
+  "hemisphere": "nord",
+  "biomes": [
+    "plaine",
+    "marais",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_nl_maitrise_de_leau",
+    "nom": "La maîtrise de l’eau",
+    "portee": "pays",
+    "famille": "ingenierie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plaine",
+              "route"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plage"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 1.1
+          }
+        }
+      ]
+    },
+    "description": "Le pays le plus plat se traverse vite et se défend bien au ras de l’eau ; si une digue tombe, le polder s’inonde et repousse ceux qui s’y trouvaient."
+  },
+  "archetypeCommandant": "ingenieur",
+  "rivalNaturel": "ch",
+  "voisins": [],
+  "palette": {
+    "main": "#e07b28",
+    "dark": "#8f4611",
+    "light": "#ffd9a8"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#e07b28",
+      "#f4f6fb",
+      "#3f5fa8"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.nl.visite",
+    "pays.nl.qualifie",
+    "pays.nl.rival_respecte",
+    "pays.nl.rival_humilie",
+    "pays.nl.allie_recrute",
+    "pays.nl.dette_envers_joueur",
+    "pays.nl.terrain_altere",
+    "pays.nl.ralliement_cinquieme",
+    "pays.nl.digue_ouverte",
+    "pays.nl.velo_sur_le_terrain",
+    "pays.nl.pari_avec_gaudenz"
+  ],
+  "phare": false,
+  "accroche": "Le seul pays qui modifie l’eau elle-même : on y arrive à vélo et on y repart avec une carte différente.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "L’inondation est une manœuvre de terrain annoncée, jamais une catastrophe subie.",
+    "Pas de moulins de carte postale sans usage : ici, un moulin pompe."
+  ]
+}

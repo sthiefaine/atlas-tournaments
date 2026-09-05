@@ -1,0 +1,66 @@
+{
+  "cle": "region_fr_martinique",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_martinique",
+  "paysCode": "fr",
+  "nom": "Martinique",
+  "type": "outre_mer",
+  "ordreConseille": 9,
+  "biome": "jungle",
+  "climat": "tropical",
+  "specialiteLocale": {
+    "cle": "spec_fr_martinique_defile",
+    "nom": "Défilé",
+    "portee": "region",
+    "famille": "artillerie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "filtre": {
+            "types": [
+              "artillerie",
+              "roquettes"
+            ]
+          },
+          "modificateur": {
+            "quoi": "portee",
+            "valeur": -1
+          }
+        }
+      ]
+    },
+    "description": "Le relief raccourcit les trajectoires adverses : une case de portée de moins pour tout ce qui tire indirect."
+  },
+  "mecanique": {
+    "cle": "meca_mornes",
+    "parametres": {
+      "cout_morne": 2,
+      "bonus_defense": 1.2,
+      "bonus_vision": 1,
+      "coupe_ligne_de_tir": true
+    },
+    "description": "Les mornes sont des collines rondes très rapprochées : deux points par case, un cinquième de défense, une case de vue — et une ligne de tir coupée dès qu’un morne dépasse."
+  },
+  "commandantCle": "cmd_wilfried_dorival",
+  "scenarios": [
+    "scen_fr_martinique_etape",
+    "scen_fr_martinique_defi"
+  ],
+  "accroche": "Des collines rondes si nombreuses qu’on ne voit jamais loin, des jardins en terrasses et une baie où mouillent les yoles.",
+  "motsCles": [
+    "mornes",
+    "angles morts",
+    "yoles",
+    "distillerie",
+    "balisiers"
+  ],
+  "flagsPropres": [
+    "pays.fr.martinique_angle_mort_exploite"
+  ]
+}

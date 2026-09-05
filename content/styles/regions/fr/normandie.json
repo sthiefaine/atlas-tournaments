@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_normandie",
+  "paysCode": "fr",
+  "nom": "Normandie",
+  "ligneDirectrice": {
+    "fr": "Colombage sombre sur torchis clair, ardoise mate, et des haies qui font les murs autant que les murs.",
+    "en": "Dark half-timbering on pale cob, matte slate, and hedges that build the walls as much as the walls do."
+  },
+  "toits": {
+    "forme": "croupe",
+    "matiere": "ardoise",
+    "couleur": "#3f4a52"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#e8e2d4",
+    "finition": "blanchie"
+  },
+  "vegetation": {
+    "dominante": "haies vives d’aubépine",
+    "secondaire": "pommiers en rang",
+    "couleur": "#4f7a3f"
+  },
+  "elementsDecor": [
+    "haie_vive",
+    "four_a_pain",
+    "lavoir",
+    "banc_de_pierre"
+  ],
+  "priorite": 1,
+  "justification": "Le colombage et le torchis sont les matières de la fiche normande ; la haie, qui est la mécanique de la région, devient aussi son élément de décor dominant, pour que le terrain et le bâti disent la même chose."
+}

@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_la_reunion",
+  "paysCode": "fr",
+  "nom": "La Réunion",
+  "ligneDirectrice": {
+    "fr": "Case des hauts en bardeaux clairs, tôle bleu-gris, roche noire brute partout où la coulée est passée.",
+    "en": "Highland house in pale shingles, blue-grey sheet roofing, raw black rock wherever the flow has been."
+  },
+  "toits": {
+    "forme": "quatre_pans",
+    "matiere": "tole_ondulee",
+    "couleur": "#4a5f6b"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#f0e6cf",
+    "finition": "vernie"
+  },
+  "vegetation": {
+    "dominante": "cannes en escalier",
+    "secondaire": "tamarins des hauts",
+    "couleur": "#3f7a4a"
+  },
+  "elementsDecor": [
+    "terrasse_en_escalier",
+    "canne_a_sucre",
+    "cabane_sur_pilotis",
+    "banc_de_pierre"
+  ],
+  "priorite": 1,
+  "justification": "La coulée laisse derrière elle de la roche neuve : le style régional doit donc porter deux âges de terrain en même temps, le clair habité et le noir tout juste refroidi."
+}

@@ -1,0 +1,40 @@
+{
+  "cle": "fil_badge_orange",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_badge_orange",
+  "titre": "Le badge orange",
+  "accroche": "Une pièce à l'essai gagne trop souvent. La Commission d'homologation la retire la veille d'une étape.",
+  "arc": "Une pièce de matériel entrée en statut d'essai fait gagner trois équipes de suite. La Commission d'homologation la retire du catalogue la veille d'une étape, sans motiver par écrit — ce qui n'arrive jamais. Le joueur peut soutenir publiquement le matériel à l'essai, déposer un protêt d'homologation, ou laisser passer. Le fil remonte jusqu'à la séance à huis clos de Port-Méridien et découvre que le retrait n'était ni technique ni corrompu : quelqu'un avait besoin qu'on parle d'autre chose cette semaine-là. C'est la première fois que le joueur voit la Cinquième Manche se servir d'une procédure ordinaire comme d'un écran.",
+  "acteMin": 1,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_badge_01", "gabarit": "capture_qg", "dureeVisee": 30, "titre": "Trois victoires de suite" },
+    { "ordre": 2, "scenarioCle": "scen_fil_badge_02", "gabarit": "course", "dureeVisee": 20, "titre": "Le dossier ferme à dix-huit heures" },
+    { "ordre": 3, "scenarioCle": "scen_fil_badge_03", "gabarit": "escorte", "dureeVisee": 38, "titre": "Sortir la pièce du dépôt" },
+    { "ordre": 4, "scenarioCle": "scen_fil_badge_04", "gabarit": "tenir", "dureeVisee": 26, "titre": "Le temps que la séance s'ouvre" },
+    { "ordre": 5, "scenarioCle": "scen_fil_badge_05", "gabarit": "relais", "dureeVisee": 32, "titre": "Quatre bureaux, un tampon" },
+    { "ordre": 6, "scenarioCle": "scen_fil_badge_06", "gabarit": "siege", "dureeVisee": 46, "titre": "À huis clos" }
+  ],
+  "deblocage": {
+    "type": "ou",
+    "conditions": [
+      { "type": "flag", "cle": "monde.atlas.essai_soutenu" },
+      { "type": "flag", "cle": "monde.atlas.homologation_contestee" }
+    ]
+  },
+  "consequences": [
+    { "type": "remise_production", "uniteCle": "recon", "remise": 0.9 },
+    { "type": "entree_carnet", "carnetCle": "carnet_seance_huis_clos" },
+    { "type": "deblocage", "deblocageCle": "deb_wren_osoko" }
+  ],
+  "flagsEcrits": [
+    "monde.atlas.homologation_contestee",
+    "monde.atlas.essai_soutenu",
+    "monde.atlas.soupcon",
+    "monde.atlas.credibilite",
+    "monde.tournoi.fils_termines"
+  ]
+}

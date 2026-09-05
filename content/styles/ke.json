@@ -1,0 +1,55 @@
+{
+  "code": "ke",
+  "nom": "Kenya",
+  "ligneDirectrice": {
+    "fr": "Tenue de course : matériel léger, alu nu, sangles fines, dossards de toile tendue, et rien qui pèse plus que nécessaire.",
+    "en": "Racing kit: light equipment, bare aluminium, thin straps, taut canvas bibs, and nothing heavier than it needs to be."
+  },
+  "palette": {
+    "main": "#2f7d4f",
+    "dark": "#164d2e",
+    "light": "#c6e8d2",
+    "accents": [
+      "#c0392f",
+      "#f2f0e6"
+    ]
+  },
+  "matieres": [
+    "aluminium",
+    "toile",
+    "peinture_mate",
+    "caoutchouc"
+  ],
+  "finitions": [
+    "mate",
+    "brossee"
+  ],
+  "ornements": [
+    "gourde",
+    "sacoche",
+    "antenne"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "c",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "a",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "rayures_verticales",
+      "placement": "flanc",
+      "couleur": "#c0392f",
+      "note": "Deux bandes verticales rouges, reprises du maillot du Messager du Rift."
+    }
+  ],
+  "motifDaltonien": "rayures_verticales",
+  "priorite": 3,
+  "justification": "Amani Kiptoo règle son tempo sur sa respiration et son unité propre est un coureur en maillot : le style kényan est celui de l’équipement d’athlétisme, allégé jusqu’à l’os. C’est aussi la seule façon de rendre visible un malus de blindés sans écrire une ligne de règle."
+}

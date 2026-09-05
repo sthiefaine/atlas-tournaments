@@ -1,0 +1,93 @@
+{
+  "cle": "pays_ca",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "ca",
+  "nom": "Canada",
+  "nomCourt": "Canada",
+  "gentile": "canadienne",
+  "continent": "amerique_nord",
+  "climat": "continental",
+  "hemisphere": "nord",
+  "biomes": [
+    "foret",
+    "neige",
+    "plaine",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_ca_hiver",
+    "nom": "L’hiver ne compte pas",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plaine",
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "soin",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Le surcoût de la neige est annulé, jamais inversé, et la forêt boréale remet une équipe d’aplomb ; en échange, une ville capturée ne rapporte qu’à la journée suivante."
+  },
+  "archetypeCommandant": "meteorologue",
+  "rivalNaturel": "is",
+  "voisins": [],
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#742019",
+    "light": "#f4d2ce"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#c0392f",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.ca.visite",
+    "pays.ca.qualifie",
+    "pays.ca.rival_respecte",
+    "pays.ca.rival_humilie",
+    "pays.ca.allie_recrute",
+    "pays.ca.dette_envers_joueur",
+    "pays.ca.terrain_altere",
+    "pays.ca.ralliement_cinquieme",
+    "pays.ca.grand_gel_declenche",
+    "pays.ca.provisions_partagees",
+    "pays.ca.titre_du_froid_dispute"
+  ],
+  "phare": false,
+  "accroche": "Les plus grandes cartes du jeu, très peu de villes, et un hiver qui est la carte elle-même plutôt qu’une saison.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Le froid est un terrain, jamais une épreuve de survie dramatique.",
+    "Aucun cliché de trappeur : le Canada du jeu est celui des distances et de la patience."
+  ]
+}

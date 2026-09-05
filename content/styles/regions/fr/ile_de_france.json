@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_ile_de_france",
+  "paysCode": "fr",
+  "nom": "Île-de-France",
+  "ligneDirectrice": {
+    "fr": "Pierre de taille blonde, toitures mansardées en zinc et ardoise, ferronneries vert sombre : la finale se joue dans un décor réglé au cordeau.",
+    "en": "Blond ashlar, mansard roofs in zinc and slate, dark green ironwork: the final is played in a setting laid out by the ruler."
+  },
+  "toits": {
+    "forme": "mansarde",
+    "matiere": "ardoise",
+    "couleur": "#4a5058"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#d8cdb4",
+    "finition": "brossee"
+  },
+  "vegetation": {
+    "dominante": "marronniers d’alignement",
+    "secondaire": "forêt royale de chênes",
+    "couleur": "#4f7a46"
+  },
+  "elementsDecor": [
+    "kiosque",
+    "banc_de_pierre",
+    "panneau_de_bois",
+    "croix_de_chemin"
+  ],
+  "priorite": 1,
+  "justification": "La fiche fait de l’Île-de-France une ville dense où le terrain décisif est celui qu’on ne voit pas ; en surface, tout doit donc être régulier et haut, pour que les huit stations restent les seuls repères qui comptent."
+}

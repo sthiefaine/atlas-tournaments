@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_auvergne_rhone_alpes",
+  "paysCode": "fr",
+  "nom": "Auvergne-Rhône-Alpes",
+  "ligneDirectrice": {
+    "fr": "Pierre volcanique gris sombre, lauzes épaisses, bois d’alpage clair : un bâti lourd en bas, léger en haut.",
+    "en": "Dark grey volcanic stone, thick lauze slabs, pale alpine timber: heavy building below, light building above."
+  },
+  "toits": {
+    "forme": "quatre_pans",
+    "matiere": "ardoise",
+    "couleur": "#3a4048"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#5f5a58",
+    "finition": "martelee"
+  },
+  "vegetation": {
+    "dominante": "hêtres de pente",
+    "secondaire": "alpages rases",
+    "couleur": "#5a7f4a"
+  },
+  "elementsDecor": [
+    "pylone_de_telepherique",
+    "abri_de_berger",
+    "muret_de_pierre",
+    "banc_de_pierre"
+  ],
+  "priorite": 1,
+  "justification": "La pierre volcanique sombre est la matière que la fiche donne aux puys ; le contraste entre le bâti lourd des vallées et les chalets clairs des alpages redit visuellement ce que la mécanique demande — grimper."
+}

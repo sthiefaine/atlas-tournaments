@@ -1,0 +1,70 @@
+{
+  "cle": "region_fr_pays_de_la_loire",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_pays_de_la_loire",
+  "paysCode": "fr",
+  "nom": "Pays de la Loire",
+  "type": "metropolitaine",
+  "ordreConseille": 3,
+  "biome": "marais",
+  "climat": "oceanique",
+  "specialiteLocale": {
+    "cle": "spec_fr_pays_de_la_loire_mecanique",
+    "nom": "Mécanique",
+    "portee": "region",
+    "famille": "ingenierie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ],
+            "surTerrain": [
+              "ville",
+              "usine"
+            ]
+          },
+          "modificateur": {
+            "quoi": "soin",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Un passage aux stands se prend partout : tout ce qui roule ou chenille se répare d’un point de plus dans une ville ou un atelier."
+  },
+  "mecanique": {
+    "cle": "meca_circuit",
+    "parametres": {
+      "cases_boucle": 40,
+      "bonus_mouvement": 3,
+      "stands": 4,
+      "soin_au_stand": 3
+    },
+    "description": "Une boucle de route fermée traverse la carte : tout véhicule qui y reste gagne trois de mouvement, en sortir consomme le reste, et quatre stands réparent."
+  },
+  "commandantCle": "cmd_solene_rialland",
+  "scenarios": [
+    "scen_fr_pays_de_la_loire_etape",
+    "scen_fr_pays_de_la_loire_defi"
+  ],
+  "accroche": "Un estuaire large, des marais salants en miroirs blancs, et un circuit qui tourne jour et nuit une fois par an.",
+  "motsCles": [
+    "circuit",
+    "marais salants",
+    "estuaire",
+    "brioche",
+    "chronomètre"
+  ],
+  "flagsPropres": [
+    "pays.fr.pays_de_la_loire_boucle_bouclee"
+  ]
+}

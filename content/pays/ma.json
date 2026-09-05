@@ -1,0 +1,89 @@
+{
+  "cle": "pays_ma",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "ma",
+  "nom": "Maroc",
+  "nomCourt": "Maroc",
+  "gentile": "marocaine",
+  "continent": "afrique",
+  "climat": "mediterraneen",
+  "hemisphere": "nord",
+  "biomes": [
+    "desert",
+    "montagne",
+    "cotier",
+    "foret"
+  ],
+  "specialite": {
+    "cle": "spec_ma_caravane",
+    "nom": "La caravane",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plaine",
+              "plage"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Le sable et les dunes ne coûtent rien et l’on voit loin même dans la poussière ; en revanche, une journée passée sur un biome froid coûte un point de vie."
+  },
+  "archetypeCommandant": "veteran",
+  "rivalNaturel": "mx",
+  "voisins": [],
+  "palette": {
+    "main": "#b0402f",
+    "dark": "#6b2117",
+    "light": "#f0cdc2"
+  },
+  "drapeau": {
+    "type": "embleme",
+    "couleurs": [
+      "#b0402f",
+      "#2f7d4f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.ma.visite",
+    "pays.ma.qualifie",
+    "pays.ma.rival_respecte",
+    "pays.ma.rival_humilie",
+    "pays.ma.allie_recrute",
+    "pays.ma.dette_envers_joueur",
+    "pays.ma.terrain_altere",
+    "pays.ma.ralliement_cinquieme",
+    "pays.ma.oasis_preservee",
+    "pays.ma.the_verse_trois_fois",
+    "pays.ma.recette_falsifiee",
+    "pays.ma.tempete_declenchee"
+  ],
+  "phare": false,
+  "accroche": "Trois bandes, trois météos le même jour : la côte, la montagne et la dune, et un service à thé qui suit partout.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence religieuse : la médina du jeu est un marché, un lieu de capture et de repas.",
+    "Le désert est un terrain de course, jamais un lieu de perdition."
+  ]
+}

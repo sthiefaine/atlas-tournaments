@@ -1,0 +1,96 @@
+{
+  "cle": "pays_ar",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "ar",
+  "nom": "Argentine",
+  "nomCourt": "Argentine",
+  "gentile": "argentine",
+  "continent": "amerique_sud",
+  "climat": "tempere",
+  "hemisphere": "sud",
+  "biomes": [
+    "plaine",
+    "montagne",
+    "neige"
+  ],
+  "specialite": {
+    "cle": "spec_ar_plaine",
+    "nom": "La plaine",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "plaine",
+              "route"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "En terrain plat, la cavalerie argentine va plus loin et frappe plus fort ; dès que le relief ou la forêt dense commence, elle traîne et se défend mal."
+  },
+  "archetypeCommandant": "stratege_prudent",
+  "rivalNaturel": "br",
+  "voisins": [
+    "br"
+  ],
+  "palette": {
+    "main": "#5fa8d8",
+    "dark": "#28607f",
+    "light": "#dcf0fa"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#5fa8d8",
+      "#f7f7f5",
+      "#e2c341"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.ar.visite",
+    "pays.ar.qualifie",
+    "pays.ar.rival_respecte",
+    "pays.ar.rival_humilie",
+    "pays.ar.allie_recrute",
+    "pays.ar.dette_envers_joueur",
+    "pays.ar.terrain_altere",
+    "pays.ar.ralliement_cinquieme",
+    "pays.ar.tableau_montre",
+    "pays.ar.lecon_donnee",
+    "pays.ar.chenal_ouvert"
+  ],
+  "phare": false,
+  "accroche": "Une plaine immense, une cordillère en bordure, une pointe australe glacée, et un tableau noir que personne n’a le droit de voir.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune allusion territoriale : la pointe australe est un terrain de match, rien d’autre.",
+    "Le tango et l’asado sont des rituels d’après-match, pas des clichés de tribune."
+  ]
+}

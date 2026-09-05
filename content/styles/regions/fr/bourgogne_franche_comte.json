@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_bourgogne_franche_comte",
+  "paysCode": "fr",
+  "nom": "Bourgogne-Franche-Comté",
+  "ligneDirectrice": {
+    "fr": "Tuiles plates vernissées en losanges, pierre dorée, portes de cave en chêne : un bâti qui monte par paliers, comme la carte.",
+    "en": "Glazed flat tiles in diamond patterns, golden stone, oak cellar doors: a built landscape that climbs in steps, like the map."
+  },
+  "toits": {
+    "forme": "pente_douce",
+    "matiere": "tuile",
+    "couleur": "#9c6b3c"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#cfc4ab",
+    "finition": "mate"
+  },
+  "vegetation": {
+    "dominante": "vignes en clos",
+    "secondaire": "forêt froide de sapins",
+    "couleur": "#5a7d44"
+  },
+  "elementsDecor": [
+    "muret_de_pierre",
+    "rangee_de_vigne",
+    "abri_de_berger",
+    "lavoir"
+  ],
+  "priorite": 1,
+  "justification": "Les tuiles en losanges et la pierre dorée sont la signature bourguignonne ; les caves de la mécanique justifient à elles seules que les portes basses et les voûtes soient visibles depuis la caméra."
+}

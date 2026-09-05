@@ -1,0 +1,53 @@
+{
+  "cle": "region_fr_bourgogne_franche_comte",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_bourgogne_franche_comte",
+  "paysCode": "fr",
+  "nom": "Bourgogne-Franche-Comté",
+  "type": "metropolitaine",
+  "ordreConseille": 7,
+  "biome": "montagne",
+  "climat": "continental",
+  "specialiteLocale": {
+    "cle": "spec_fr_bourgogne_franche_comte_millesime",
+    "nom": "Millésime",
+    "portee": "region",
+    "famille": "polyvalence",
+    "contenu": {
+      "variant": "trait",
+      "trait": "experience_rapide"
+    },
+    "description": "Le goût du terrain se prend vite : une unité gagne son rang au bout d’une mise hors jeu de moins que la normale."
+  },
+  "mecanique": {
+    "cle": "meca_coteaux",
+    "parametres": {
+      "niveaux": 4,
+      "cout_montee": 1,
+      "bonus_surplomb": 1.2,
+      "malus_en_bas": 0.85,
+      "caves": 4
+    },
+    "description": "Quatre courbes de niveau : monter coûte un point, attaquer d’en haut rapporte un cinquième d’attaque, et quatre caves font disparaître une unité pendant un tour."
+  },
+  "commandantCle": "cmd_gaspard_millot",
+  "scenarios": [
+    "scen_fr_bourgogne_franche_comte_etape",
+    "scen_fr_bourgogne_franche_comte_defi"
+  ],
+  "accroche": "Des coteaux en escalier, des parcelles bordées de murets, des plateaux de forêt froide, et sous terre des kilomètres de caves.",
+  "motsCles": [
+    "coteaux",
+    "murets",
+    "cave voûtée",
+    "fruitière",
+    "escargots"
+  ],
+  "flagsPropres": [
+    "pays.fr.bourgogne_franche_comte_cave_utilisee"
+  ]
+}

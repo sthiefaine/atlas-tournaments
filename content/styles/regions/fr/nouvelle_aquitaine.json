@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_nouvelle_aquitaine",
+  "paysCode": "fr",
+  "nom": "Nouvelle-Aquitaine",
+  "ligneDirectrice": {
+    "fr": "Bardage de pin peint en rouge basque ou en vert d’huître, tuile canal, sable partout au pied des murs.",
+    "en": "Pine cladding painted Basque red or oyster green, barrel tile, sand everywhere at the foot of the walls."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tuile",
+    "couleur": "#b06a44"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#e5d9c2",
+    "finition": "delavee"
+  },
+  "vegetation": {
+    "dominante": "pins maritimes en damier",
+    "secondaire": "vignes en terrasses",
+    "couleur": "#4f7a4f"
+  },
+  "elementsDecor": [
+    "alignement_de_pins",
+    "cabane_sur_pilotis",
+    "rangee_de_vigne",
+    "ponton_de_bois"
+  ],
+  "priorite": 1,
+  "justification": "La cabane ostréicole et le bardage peint sont les deux images fortes de la fiche ; le sable au pied des murs relie visuellement la dune et la pinède, qui sont la même carte."
+}

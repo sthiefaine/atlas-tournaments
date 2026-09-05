@@ -1,0 +1,62 @@
+{
+  "code": "fr",
+  "nom": "France",
+  "ligneDirectrice": {
+    "fr": "L’école française : tôle bleue mate, liserés nets, matériel bien rangé et un peu trop verni pour son âge — l’élégance d’une équipe qui n’a encore rien gagné.",
+    "en": "The French school: matte blue panels, crisp piping, kit stowed a little too neatly and varnished a little too proudly — the elegance of a team that has not won anything yet."
+  },
+  "palette": {
+    "main": "#2f5fd0",
+    "dark": "#1b3a86",
+    "light": "#8fb2f2",
+    "accents": [
+      "#c8324a",
+      "#f4f6fb"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "acier_brosse",
+    "toile",
+    "cuir",
+    "bois_verni"
+  ],
+  "finitions": [
+    "mate",
+    "satinee"
+  ],
+  "ornements": [
+    "fanion",
+    "sacoche",
+    "antenne"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "b",
+    "char_lourd": "b",
+    "artillerie": "b",
+    "roquettes": "b",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "rayures_obliques",
+      "placement": "flanc",
+      "couleur": "#c8324a",
+      "note": "Trois obliques courtes reprises du maillot de la qualification nationale."
+    },
+    {
+      "motif": "carres_emboites",
+      "placement": "capot",
+      "couleur": "#f4f6fb",
+      "note": "Un damier blanc de ligne d’arrivée, réduit à quatre carrés."
+    }
+  ],
+  "motifDaltonien": "rayures_obliques",
+  "priorite": 1,
+  "justification": "La France est le pays de la polyvalence : son style ne peut pas être une signature de matière, ce serait mentir sur sa fiche. C’est donc une signature de soin — rien de spécial, tout impeccable — et le damier d’arrivée, qui vient de la course par étapes de sa qualification."
+}

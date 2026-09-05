@@ -1,0 +1,89 @@
+{
+  "cle": "pays_mg",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "mg",
+  "nom": "Madagascar",
+  "nomCourt": "Madagascar",
+  "gentile": "malgache",
+  "continent": "afrique",
+  "climat": "tropical",
+  "hemisphere": "sud",
+  "biomes": [
+    "jungle",
+    "montagne",
+    "cotier",
+    "foret"
+  ],
+  "specialite": {
+    "cle": "spec_mg_pistes",
+    "nom": "La connaissance des pistes",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "foret",
+              "route"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.75
+          }
+        }
+      ]
+    },
+    "description": "Forêt, brousse et piste rouge se traversent au même prix quand on connaît l’île ; le budget, lui, est le plus court du tournoi et le revenu par ville est plafonné."
+  },
+  "archetypeCommandant": "meteorologue",
+  "rivalNaturel": "id",
+  "voisins": [],
+  "palette": {
+    "main": "#c14b2f",
+    "dark": "#742616",
+    "light": "#f3d0c4"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#f7f7f5",
+      "#c14b2f",
+      "#2f7d4f"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.mg.visite",
+    "pays.mg.qualifie",
+    "pays.mg.rival_respecte",
+    "pays.mg.rival_humilie",
+    "pays.mg.allie_recrute",
+    "pays.mg.dette_envers_joueur",
+    "pays.mg.terrain_altere",
+    "pays.mg.ralliement_cinquieme",
+    "pays.mg.inventaire_complete",
+    "pays.mg.debat_pirogue",
+    "pays.mg.piste_quittee"
+  ],
+  "phare": false,
+  "accroche": "Une île à deux climats séparés par une arête, des pistes rouges qui relient tout, et une commandante qui nomme chaque espèce en pleine partie.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "La forêt est un terrain vivant, jamais un sujet de déforestation ou de misère.",
+    "Le lémurien passe dans le décor, il n’est ni une unité ni une mascotte."
+  ]
+}

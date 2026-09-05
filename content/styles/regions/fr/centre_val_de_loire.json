@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_centre_val_de_loire",
+  "paysCode": "fr",
+  "nom": "Centre-Val de Loire",
+  "ligneDirectrice": {
+    "fr": "Tuffeau presque blanc, ardoise bleue en toitures hautes, ferronnerie fine : le style le plus soigné de la qualification.",
+    "en": "Near-white tuffeau, blue slate on tall roofs, fine ironwork: the most groomed style of the qualification."
+  },
+  "toits": {
+    "forme": "quatre_pans",
+    "matiere": "ardoise",
+    "couleur": "#4d5866"
+  },
+  "murs": {
+    "matiere": "pierre_seche",
+    "couleur": "#efe9d8",
+    "finition": "vernie"
+  },
+  "vegetation": {
+    "dominante": "chênes de forêt de chasse",
+    "secondaire": "vignes en cordon",
+    "couleur": "#5f8a46"
+  },
+  "elementsDecor": [
+    "muret_de_pierre",
+    "rangee_de_vigne",
+    "pigeonnier",
+    "kiosque"
+  ],
+  "priorite": 1,
+  "justification": "Le tuffeau blanc et l’ardoise haute sont exactement ce que la fiche appelle « posés là pour la photo » ; la région est celle où le bâti se soigne, et c’est ce qu’on doit voir d’en haut."
+}

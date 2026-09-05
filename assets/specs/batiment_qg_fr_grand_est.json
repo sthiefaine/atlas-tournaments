@@ -1,0 +1,179 @@
+{
+  "id": "batiment_qg_fr_grand_est",
+  "type": "batiment",
+  "cle": "qg_fr_grand_est",
+  "priorite": 1,
+  "description": {
+    "en": "A team headquarters pavilion on a one-metre plot: a two-storey timber and glass building with a deep overhanging roof, an open first-floor balcony where the commander watches the field, a broad entrance canopy, and a tall bare flagpole with a plain unmarked pennant. It must be the most distinctive building on the board at a glance — taller, warmer, better lit. Roof edge, canopy and pennant are the team-colour zones. It yields 1000 funds per day. Regional style of Grand Est (Ochre and blue half-timbering on cream render, glazed tiles, timber everywhere: the most colourful style of the north-east.): roofs are a simple gable roof in clay tile, colour #a05a3a; walls are planed timber, colour #f2e6cf, limewashed; the planting around it is sapins de crête with vignes en rangs serrés, foliage #3f6b46. Dress the plot with a row of trained vines, a stone bread oven, a bandstand kiosk and a plain wayside marker cross, and with nothing else. It is a capturable point: it changes owner during a match, so every surface that carries the team colour must be readable from directly above as well as from the default camera angle. Leave a clear flat approach on at least one side so a unit standing on the tile is never hidden.",
+    "fr": "Un pavillon de quartier général sur une parcelle d’un mètre : bâtiment de deux niveaux en bois et verre, toit largement débordant, balcon ouvert à l’étage d’où le commandant regarde le terrain, auvent d’entrée généreux et mât nu portant un fanion uni sans marque. Ce doit être le bâtiment le plus reconnaissable du plateau d’un seul coup d’œil : plus haut, plus chaud, mieux éclairé. Rive de toit, auvent et fanion sont les zones de couleur d’équipe. Il rapporte 1000 fonds par journée. Style régional de Grand Est (Colombages peints en ocre et bleu sur enduit crème, tuiles vernissées, bois partout : le style le plus coloré du nord-est.) : toiture en un toit à deux pans de tuile de terre cuite, couleur #a05a3a ; murs en bois raboté, couleur #f2e6cf, finition blanchie à la chaux ; autour, sapins de crête et vignes en rangs serrés, feuillage #3f6b46. Habiller la parcelle avec une rangée de vigne palissée, un four à pain en pierre, un kiosque à musique et une croix de chemin sans inscription, et rien d’autre. C’est un point capturable : il change de propriétaire pendant un match, donc chaque surface qui porte la couleur d’équipe doit se lire aussi bien à la verticale que sous l’angle de caméra par défaut. Laisser un accès plat et dégagé sur au moins un côté, pour qu’une unité posée sur la case ne soit jamais cachée."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "host-town architecture",
+      "warm lived-in details",
+      "emissive windows at night",
+      "regional building vernacular"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.85,
+      "tolerance": 0.07
+    },
+    "y": {
+      "cible": 0.95,
+      "tolerance": 0.07
+    },
+    "z": {
+      "cible": 0.85,
+      "tolerance": 0.07
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 6500,
+    "lod1": 2100,
+    "lod2": 600,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Joints de maçonnerie, bardages, tuiles, encadrements."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Fenêtres et lanterneaux éclairés : c’est ce qui fait la nuit du jeu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Stores, rives de toit, fanion : les surfaces qui prennent la nation."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "ete",
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "fr"
+    ]
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 3200,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "capture",
+      "dureeMs": 1400,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 400,
+      "boucle": false,
+      "obligatoire": false
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "toit",
+      "enseigne"
+    ],
+    "materiauxAttendus": [
+      "mat_corps",
+      "mat_vitrage"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "batiment_qg_fr_grand_est_lod0.glb",
+      "batiment_qg_fr_grand_est_lod1.glb",
+      "batiment_qg_fr_grand_est_emission.png",
+      "batiment_qg_fr_grand_est_emission_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "animations"
+    ],
+    "toleranceAabb": 0.08,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

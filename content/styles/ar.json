@@ -1,0 +1,55 @@
+{
+  "code": "ar",
+  "nom": "Argentine",
+  "ligneDirectrice": {
+    "fr": "Bandes ciel et blanc, cuir cousu à la main, tôle sobre : un matériel de plaine, long, bas, tenu comme un tableau qu’on relit avant de jouer.",
+    "en": "Sky and white bands, hand-stitched leather, plain panels: plains equipment, long, low, kept like a blackboard reread before playing."
+  },
+  "palette": {
+    "main": "#5fa8d8",
+    "dark": "#28607f",
+    "light": "#dcf0fa",
+    "accents": [
+      "#f7f7f5",
+      "#2c3a4a"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "cuir",
+    "acier_brosse",
+    "toile"
+  ],
+  "finitions": [
+    "mate",
+    "ciree"
+  ],
+  "ornements": [
+    "sacoche",
+    "corde_lovee",
+    "antenne"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "c",
+    "recon": "b",
+    "char_leger": "c",
+    "char_lourd": "c",
+    "artillerie": "c",
+    "roquettes": "c",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "rayures_horizontales",
+      "placement": "flanc",
+      "couleur": "#f7f7f5",
+      "note": "Deux bandes horizontales blanches, larges et régulières, sans emblème au centre."
+    }
+  ],
+  "motifDaltonien": "rayures_horizontales",
+  "priorite": 3,
+  "justification": "Facundo Iriarte dessine des schémas sur n’importe quelle surface et refuse les victoires mal jouées : le style argentin est net, réglé et sans fantaisie. Le cuir cousu vient du travail de la plaine, et les longues bandes horizontales sont ce qui se lit le mieux sur un châssis long."
+}

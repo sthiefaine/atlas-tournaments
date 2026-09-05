@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_provence_alpes_cote_azur",
+  "paysCode": "fr",
+  "nom": "Provence-Alpes-Côte d’Azur",
+  "ligneDirectrice": {
+    "fr": "Tuiles rondes décolorées par le soleil, enduit ocre pâle, volets délavés, et des cyprès plantés en rideau contre le vent.",
+    "en": "Round tiles bleached by the sun, pale ochre render, faded shutters, and cypresses planted as a windbreak."
+  },
+  "toits": {
+    "forme": "pente_douce",
+    "matiere": "tuile",
+    "couleur": "#cf8a4a"
+  },
+  "murs": {
+    "matiere": "ceramique",
+    "couleur": "#f0dcbc",
+    "finition": "sablee"
+  },
+  "vegetation": {
+    "dominante": "lavande en bandes",
+    "secondaire": "pins parasols",
+    "couleur": "#7f8f4a"
+  },
+  "elementsDecor": [
+    "cypres_en_rideau",
+    "muret_de_pierre",
+    "kiosque",
+    "banc_de_pierre"
+  ],
+  "priorite": 1,
+  "justification": "Les tuiles rondes et l’enduit ocre sont ce que la fiche donne à la Provence ; le rideau de cyprès est l’élément de décor qui rend le mistral visible même quand il ne souffle pas."
+}

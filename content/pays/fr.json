@@ -1,0 +1,132 @@
+{
+  "cle": "pays_fr",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fr",
+  "nom": "France",
+  "nomCourt": "France",
+  "gentile": "française",
+  "continent": "europe",
+  "climat": "tempere",
+  "hemisphere": "nord",
+  "biomes": [
+    "plaine",
+    "foret",
+    "montagne",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_fr_polyvalence",
+    "nom": "La polyvalence",
+    "portee": "pays",
+    "famille": "polyvalence",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "ville"
+            ]
+          },
+          "modificateur": {
+            "quoi": "soin",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Toutes les catégories dès la première journée et des villes qui réparent ; en échange, l’école coûte cher et le trésor reste court."
+  },
+  "archetypeCommandant": "prodige",
+  "rivalNaturel": "lu",
+  "voisins": [
+    "lu",
+    "ch"
+  ],
+  "palette": {
+    "main": "#2f5fd0",
+    "dark": "#1b3a86",
+    "light": "#8fb2f2"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#2f5fd0",
+      "#f4f6fb",
+      "#c8324a"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.fr.visite",
+    "pays.fr.qualifie",
+    "pays.fr.rival_respecte",
+    "pays.fr.rival_humilie",
+    "pays.fr.allie_recrute",
+    "pays.fr.dette_envers_joueur",
+    "pays.fr.terrain_altere",
+    "pays.fr.ralliement_cinquieme",
+    "pays.fr.regions_visitees",
+    "pays.fr.tour_complet",
+    "pays.fr.barrage_rompu",
+    "pays.fr.roulante_offerte",
+    "pays.fr.jeunesse_assumee",
+    "pays.fr.bretagne_maree_lue",
+    "pays.fr.normandie_haie_franchie",
+    "pays.fr.pays_de_la_loire_boucle_bouclee",
+    "pays.fr.centre_val_de_loire_chateau_intact",
+    "pays.fr.hauts_de_france_terril_gravi",
+    "pays.fr.grand_est_trois_ponts_tenus",
+    "pays.fr.bourgogne_franche_comte_cave_utilisee",
+    "pays.fr.nouvelle_aquitaine_allee_empruntee",
+    "pays.fr.occitanie_ecluse_tenue",
+    "pays.fr.auvergne_rhone_alpes_sommet_tenu",
+    "pays.fr.provence_vent_dompte",
+    "pays.fr.corse_maquis_traverse",
+    "pays.fr.guadeloupe_grain_traverse",
+    "pays.fr.martinique_angle_mort_exploite",
+    "pays.fr.guyane_base_tenue",
+    "pays.fr.reunion_cirque_tenu",
+    "pays.fr.mayotte_passe_franchie",
+    "pays.fr.ile_de_france_reseau_compris",
+    "pays.fr.ile_de_france_finale_gagnee"
+  ],
+  "phare": true,
+  "accroche": "Le pays qui change le plus de visage : un fleuve, un relief, une côte et dix-huit manières de jouer la même carte.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Ne jamais faire de la France l’arbitre naturel des autres nations : elle reçoit, elle ne préside pas.",
+    "Le prologue régional est une course par étapes, jamais une conquête."
+  ],
+  "regions": [
+    "region_fr_bretagne",
+    "region_fr_normandie",
+    "region_fr_pays_de_la_loire",
+    "region_fr_centre_val_de_loire",
+    "region_fr_hauts_de_france",
+    "region_fr_grand_est",
+    "region_fr_bourgogne_franche_comte",
+    "region_fr_nouvelle_aquitaine",
+    "region_fr_occitanie",
+    "region_fr_auvergne_rhone_alpes",
+    "region_fr_provence_alpes_cote_azur",
+    "region_fr_corse",
+    "region_fr_guadeloupe",
+    "region_fr_martinique",
+    "region_fr_guyane",
+    "region_fr_la_reunion",
+    "region_fr_mayotte",
+    "region_fr_ile_de_france"
+  ]
+}

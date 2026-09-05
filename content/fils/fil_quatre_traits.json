@@ -1,0 +1,45 @@
+{
+  "cle": "fil_quatre_traits",
+  "version": 1,
+  "statut": "valide",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "fil_quatre_traits",
+  "titre": "Quatre traits à la craie",
+  "accroche": "Quelqu'un trace le même signe sur les murs de vestiaire, une étape avant votre arrivée.",
+  "arc": "Quatre traits et un cinquième barré, à la craie, sur un mur de vestiaire. Le signe apparaît toujours une étape avant que le joueur n'arrive, jamais après. Le fil consiste à remonter la ligne : celui qui trace n'est pas un cadre, ce n'est pas un commandant, c'est quelqu'un que personne ne regarde et qui entre partout. Le joueur finit par le rencontrer, et la conversation est décevante au meilleur sens du terme : il n'a aucun plan, il trouve seulement que le monde est devenu poli. Le fil ne démasque personne et n'avance la trame d'aucun acte ; il donne un visage à ce que la Cinquième Manche a de plus contagieux.",
+  "acteMin": 2,
+  "missions": [
+    { "ordre": 1, "scenarioCle": "scen_fil_traits_01", "gabarit": "course", "dureeVisee": 20, "titre": "Le mur du vestiaire" },
+    { "ordre": 2, "scenarioCle": "scen_fil_traits_02", "gabarit": "survie", "dureeVisee": 28, "titre": "Une manche sans arbitre central" },
+    { "ordre": 3, "scenarioCle": "scen_fil_traits_03", "gabarit": "capture_qg", "dureeVisee": 34, "titre": "L'étape d'avant" },
+    { "ordre": 4, "scenarioCle": "scen_fil_traits_04", "gabarit": "relais", "dureeVisee": 32, "titre": "Cinq vestiaires, cinq craies" },
+    { "ordre": 5, "scenarioCle": "scen_fil_traits_05", "gabarit": "escorte", "dureeVisee": 36, "titre": "Sortir le registre des accès" },
+    { "ordre": 6, "scenarioCle": "scen_fil_traits_06", "gabarit": "tenir", "dureeVisee": 30, "titre": "La conversation" }
+  ],
+  "deblocage": {
+    "type": "et",
+    "conditions": [
+      { "type": "compteur", "cle": "monde.atlas.soupcon", "min": 4 },
+      {
+        "type": "ou",
+        "conditions": [
+          { "type": "flag", "cle": "monde.cinquieme.contact" },
+          { "type": "secret", "cle": "mur_du_vestiaire" }
+        ]
+      }
+    ]
+  },
+  "consequences": [
+    { "type": "variante_dialogue", "scenarioCle": "scen_meridien_acte_iii", "varianteCle": "var_craie_reconnue" },
+    { "type": "entree_carnet", "carnetCle": "carnet_quatre_traits" },
+    { "type": "deblocage", "deblocageCle": "deb_craie" }
+  ],
+  "flagsEcrits": [
+    "monde.atlas.soupcon",
+    "monde.cinquieme.contact",
+    "monde.carnet.pages_scellees",
+    "monde.tournoi.fils_termines"
+  ]
+}

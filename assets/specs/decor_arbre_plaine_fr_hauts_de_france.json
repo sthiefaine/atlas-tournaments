@@ -1,0 +1,156 @@
+{
+  "id": "decor_arbre_plaine_fr_hauts_de_france",
+  "type": "decor",
+  "cle": "arbre_plaine_fr_hauts_de_france",
+  "priorite": 1,
+  "description": {
+    "en": "A single tree for the \"plaine\" biome as it grows in Hauts-de-France: a lone broad-crowned field oak with a short thick trunk, a wind-shaped asymmetric canopy and a ring of long grass at its foot. Regional style of Hauts-de-France (Dark red brick, bottle-green joinery, red estaminet floor tiles: warm inside, low outside.): roofs are a simple gable roof in clay tile, colour #8f4b3c; walls are fired earth, colour #a8503f, fully matte; the planting around it is bouleaux de terril with herbes hautes de plaine, foliage #6f8a55. Dress the plot with a dark spoil heap turned belvedere, a blank timber signboard, a worn stone bench and a thick living hedge, and with nothing else. It is instanced hundreds of times per map, so it must look good from every side and never show a face that identifies it as the same model. Model the trunk and the foliage as two separate named nodes; foliage uses alpha-tested cards clustered into three or four dense clumps, never a single flat billboard. Keep the crown clear of the tile edges so it does not overhang a neighbouring unit.",
+    "fr": "Un arbre isolé du biome « plaine », tel qu’il pousse en Hauts-de-France : un chêne de plein champ à couronne large, tronc court et épais, houppier dissymétrique formé par le vent et couronne d’herbes hautes au pied. Style régional de Hauts-de-France (Brique rouge sombre, huisseries peintes en vert bouteille, carreaux rouges d’estaminet : chaud dedans, bas dehors.) : toiture en un toit à deux pans de tuile de terre cuite, couleur #8f4b3c ; murs en terre cuite, couleur #a8503f, finition entièrement mate ; autour, bouleaux de terril et herbes hautes de plaine, feuillage #6f8a55. Habiller la parcelle avec un terril noir devenu belvédère, un panneau de bois vierge, un banc de pierre usé et une haie vive épaisse, et rien d’autre. Il est instancié des centaines de fois par carte : il doit tenir sous tous les angles et ne jamais montrer une face qui le trahisse comme le même modèle. Tronc et feuillage sont deux nœuds nommés distincts ; le feuillage est fait de cartes à découpe alpha groupées en trois ou quatre touffes denses, jamais un panneau plat unique. Garder la couronne à l’intérieur des bords de la case, pour ne pas déborder sur une unité voisine."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "instanced vegetation",
+      "alpha-tested foliage clusters",
+      "seasonal foliage variants",
+      "regional planting"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.62,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 2500,
+    "lod1": 700,
+    "lod2": 180,
+    "materiauxMax": 2
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Écorce et feuillage sur un seul atlas ; canal alpha net, sans halo."
+    },
+    {
+      "canal": "normale",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Nervures des feuilles et relief d’écorce."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Feuille cireuse contre écorce sèche : deux valeurs franchement séparées."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "printemps",
+      "ete",
+      "automne",
+      "hiver"
+    ],
+    "biomes": [
+      "plaine"
+    ],
+    "nations": [
+      "fr"
+    ]
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 3600,
+      "boucle": true,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "tronc",
+      "feuillage"
+    ],
+    "materiauxAttendus": [
+      "mat_ecorce",
+      "mat_feuillage"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "decor_arbre_plaine_fr_hauts_de_france_lod0.glb",
+      "decor_arbre_plaine_fr_hauts_de_france_lod1.glb",
+      "decor_arbre_plaine_fr_hauts_de_france_albedo.png",
+      "decor_arbre_plaine_fr_hauts_de_france_albedo_automne.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "animations"
+    ],
+    "toleranceAabb": 0.15,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}

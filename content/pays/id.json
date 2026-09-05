@@ -1,0 +1,89 @@
+{
+  "cle": "pays_id",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "id",
+  "nom": "Indonésie",
+  "nomCourt": "Indonésie",
+  "gentile": "indonésienne",
+  "continent": "asie",
+  "climat": "tropical",
+  "hemisphere": "equateur",
+  "biomes": [
+    "archipel",
+    "jungle",
+    "volcanique",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_id_gotong_royong",
+    "nom": "Gotong royong",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "route",
+              "pont",
+              "ville"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Les îles sont étroites et tout le monde y va au pas ; sur les pistes, les ponts et dans les villes, on se passe les charges de main en main et le pas revient."
+  },
+  "archetypeCommandant": "diplomate",
+  "rivalNaturel": "mg",
+  "voisins": [],
+  "palette": {
+    "main": "#c8443c",
+    "dark": "#7a221d",
+    "light": "#f6d3d0"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#c8443c",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.id.visite",
+    "pays.id.qualifie",
+    "pays.id.rival_respecte",
+    "pays.id.rival_humilie",
+    "pays.id.allie_recrute",
+    "pays.id.dette_envers_joueur",
+    "pays.id.terrain_altere",
+    "pays.id.ralliement_cinquieme",
+    "pays.id.ile_ralliee",
+    "pays.id.recette_echangee",
+    "pays.id.plan_en_ombres"
+  ],
+  "phare": false,
+  "accroche": "Des milliers d’îles, deux régimes de pluie, et une commandante qui ne décide jamais seule et le revendique.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Le volcan fait partie du paysage et du spectacle, jamais du drame.",
+    "Le jeu d’ombres sert à expliquer un plan, jamais à raconter une légende sacrée."
+  ]
+}

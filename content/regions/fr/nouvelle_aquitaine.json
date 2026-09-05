@@ -1,0 +1,65 @@
+{
+  "cle": "region_fr_nouvelle_aquitaine",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_nouvelle_aquitaine",
+  "paysCode": "fr",
+  "nom": "Nouvelle-Aquitaine",
+  "type": "metropolitaine",
+  "ordreConseille": 13,
+  "biome": "foret",
+  "climat": "oceanique",
+  "specialiteLocale": {
+    "cle": "spec_fr_nouvelle_aquitaine_ligne_droite",
+    "nom": "Ligne droite",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "route"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 2
+          }
+        }
+      ]
+    },
+    "description": "Deux points de mouvement de plus sur une route : la grande allée landaise se dit très bien avec un filtre de terrain."
+  },
+  "mecanique": {
+    "cle": "meca_allees",
+    "parametres": {
+      "cout_le_long": 0.5,
+      "cout_en_travers": 3,
+      "bonus_vignoble": 1.15,
+      "vision_vignoble": 2
+    },
+    "description": "La pinède est plantée en damier : une allée en ligne droite coûte un demi-point par case, la traverser en coûte trois. Le vignoble du nord défend et raccourcit la vue."
+  },
+  "commandantCle": "cmd_peyo_etchandy",
+  "scenarios": [
+    "scen_fr_nouvelle_aquitaine_etape",
+    "scen_fr_nouvelle_aquitaine_defi"
+  ],
+  "accroche": "La plus grande forêt plantée d’Europe, des pins alignés au cordeau, une dune géante et des cabanes sur pilotis.",
+  "motsCles": [
+    "pinède",
+    "allées",
+    "dune",
+    "cabanes ostréicoles",
+    "canelé"
+  ],
+  "flagsPropres": [
+    "pays.fr.nouvelle_aquitaine_allee_empruntee"
+  ]
+}

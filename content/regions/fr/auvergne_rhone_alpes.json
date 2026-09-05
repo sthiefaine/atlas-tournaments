@@ -1,0 +1,66 @@
+{
+  "cle": "region_fr_auvergne_rhone_alpes",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_auvergne_rhone_alpes",
+  "paysCode": "fr",
+  "nom": "Auvergne-Rhône-Alpes",
+  "type": "metropolitaine",
+  "ordreConseille": 15,
+  "biome": "volcanique",
+  "climat": "montagnard",
+  "specialiteLocale": {
+    "cle": "spec_fr_auvergne_rhone_alpes_grimpeur",
+    "nom": "Grimpeur",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "Une montée qui coûte un point de moins : c’est tout ce que réclame un bon grimpeur."
+  },
+  "mecanique": {
+    "cle": "meca_puys",
+    "parametres": {
+      "bonus_sommet": 1.25,
+      "vision_sommet": 2,
+      "portee_sommet": 1,
+      "cout_montee": 3,
+      "vision_brume_vallee": 2
+    },
+    "description": "Une chaîne de cônes traverse la carte : le sommet donne l’attaque, la vue et la portée, mais se paie d’un tour d’exposition. En bas, la brume de vallée ramène la vue à deux cases."
+  },
+  "commandantCle": "cmd_fanny_chabrier",
+  "scenarios": [
+    "scen_fr_auvergne_rhone_alpes_etape",
+    "scen_fr_auvergne_rhone_alpes_defi"
+  ],
+  "accroche": "Une file de cônes réguliers posés sur un plateau, des lacs ronds au fond des cratères, et la vraie haute montagne à l’est.",
+  "motsCles": [
+    "puys",
+    "lac de cratère",
+    "brume de vallée",
+    "téléphérique",
+    "aligot"
+  ],
+  "flagsPropres": [
+    "pays.fr.auvergne_rhone_alpes_sommet_tenu"
+  ]
+}

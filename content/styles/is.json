@@ -1,0 +1,56 @@
+{
+  "code": "is",
+  "nom": "Islande",
+  "ligneDirectrice": {
+    "fr": "Roche noire et vapeur : peinture gris basalte lessivée par le sel, projecteurs surdimensionnés, et un liseré rouge qu’on voit à un kilomètre dans la brume.",
+    "en": "Black rock and steam: basalt-grey paint scoured by salt, oversized lamps, and a red edge you can see a kilometre off in the mist."
+  },
+  "palette": {
+    "main": "#5b6f86",
+    "dark": "#2c3a4a",
+    "light": "#c2d6e6",
+    "accents": [
+      "#c04a52",
+      "#e8eef3"
+    ]
+  },
+  "matieres": [
+    "peinture_mate",
+    "acier_peint",
+    "caoutchouc",
+    "toile_ciree"
+  ],
+  "finitions": [
+    "poudree_de_sel",
+    "mate"
+  ],
+  "ornements": [
+    "antenne",
+    "jerrican",
+    "roue_de_secours",
+    "treuil"
+  ],
+  "gabarits": {
+    "infanterie": "a",
+    "meca": "a",
+    "recon": "c",
+    "char_leger": "a",
+    "char_lourd": "a",
+    "artillerie": "b",
+    "roquettes": "a",
+    "antiair": "b",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "zigzag",
+      "placement": "flanc",
+      "couleur": "#c04a52",
+      "note": "Une ligne brisée rouge, comme la trace d’une piste sur une carte de champ de lave."
+    }
+  ],
+  "motifDaltonien": "zigzag",
+  "priorite": 2,
+  "justification": "La fiche islandaise tient en deux choses : la roche et la vapeur, et une nuit qui dure tout l’hiver. D’où la peinture lessivée par le sel, le treuil et les phares du Super-Jeep, et un liseré rouge qui est la seule façon de rester lisible dans un brouillard permanent."
+}

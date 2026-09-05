@@ -1,0 +1,163 @@
+{
+  "id": "kit_mg_char_leger",
+  "type": "kit",
+  "cle": "mg_char_leger",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Char léger\" in the colours and materials of Madagascar. Guiding line: Bush taxi: loaded roof rack, painted stickers, red laterite up to the windows, and salvaged timber wherever steel is missing. Paint the base mesh of unite_char_leger_base in shape template B (balanced: the reference proportion, neither long nor short). Base colour #c14b2f, own shadow #742616, edge highlight #f3d0c4, accents #e2c341, #2f7d4f. Materials to read at a glance: high-gloss paint, planed timber, heavy canvas, painted steel plate and woven rattan. Finish: dust-laden on the lower third and sun-faded. Add these ornaments as separate named nodes, and nothing else: a loaded roof rack, a rolled tarpaulin along the fender, a coil of rope on a cleat and a row of strapped jerrycans. Abstract decals only: tight hatching in #e2c341 on the flanc; a cross-hatch in #2f7d4f on the toit. For colour-blind readability the socle carries tight hatching, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Char léger » aux couleurs et aux matières du style « Madagascar ». Ligne directrice : Taxi-brousse : galerie de toit chargée, autocollants peints, latérite rouge jusqu’aux vitres, et du bois de récupération partout où l’acier manque. Peindre la géométrie de base unite_char_leger_base dans le gabarit B (équilibré : la proportion de référence, ni longue ni courte). Couleur de fond #c14b2f, ombre propre #742616, liseré d’arête #f3d0c4, accents #e2c341, #2f7d4f. Matières à lire d’un coup d’œil : peinture brillante, bois raboté, toile épaisse, tôle d’acier peinte et rotin tressé. Finition : chargée de poussière sur le tiers bas et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une galerie de toit chargée, une bâche roulée le long du garde-boue, une corde lovée sur un taquet et une rangée de jerricans sanglés. Décalcomanies abstraites seulement : des hachures serrées en #e2c341 sur la zone « flanc » ; un croisillon en #2f7d4f sur la zone « toit ». Pour la lisibilité sans couleur, le socle porte des hachures serrées, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.62,
+      "tolerance": 0.07
+    },
+    "y": {
+      "cible": 0.5,
+      "tolerance": 0.07
+    },
+    "z": {
+      "cible": 0.85,
+      "tolerance": 0.07
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 6960,
+    "lod1": 2320,
+    "lod2": 696,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "mg"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_galerie_de_toit",
+      "ornement_bache_roulee",
+      "ornement_corde_lovee",
+      "ornement_jerrican"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_mg_char_leger_lod0.glb",
+      "kit_mg_char_leger_lod1.glb",
+      "kit_mg_char_leger_albedo.png",
+      "kit_mg_char_leger_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

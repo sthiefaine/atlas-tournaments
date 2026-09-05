@@ -1,0 +1,94 @@
+{
+  "cle": "pays_br",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "br",
+  "nom": "Brésil",
+  "nomCourt": "Brésil",
+  "gentile": "brésilienne",
+  "continent": "amerique_sud",
+  "climat": "tropical",
+  "hemisphere": "sud",
+  "biomes": [
+    "jungle",
+    "plaine",
+    "marais",
+    "cotier"
+  ],
+  "specialite": {
+    "cle": "spec_br_moral",
+    "nom": "Le moral",
+    "portee": "pays",
+    "famille": "polyvalence",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 1.15
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Le moral monte avec le bruit du stade et se voit tout de suite dans l’attaque ; il tombe aussi vite, et trois unités perdues d’affilée coûtent une journée entière d’élan."
+  },
+  "archetypeCommandant": "showman",
+  "rivalNaturel": "ar",
+  "voisins": [
+    "ar",
+    "pe"
+  ],
+  "palette": {
+    "main": "#2f9d5b",
+    "dark": "#146336",
+    "light": "#c9f0d8"
+  },
+  "drapeau": {
+    "type": "embleme",
+    "couleurs": [
+      "#2f9d5b",
+      "#e2c341",
+      "#2c4a86"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.br.visite",
+    "pays.br.qualifie",
+    "pays.br.rival_respecte",
+    "pays.br.rival_humilie",
+    "pays.br.allie_recrute",
+    "pays.br.dette_envers_joueur",
+    "pays.br.terrain_altere",
+    "pays.br.ralliement_cinquieme",
+    "pays.br.foule_conquise",
+    "pays.br.ambiance_au_maximum",
+    "pays.br.geste_tente",
+    "pays.br.diner_perdu"
+  ],
+  "phare": true,
+  "accroche": "Les plus grandes cartes des Amériques, un fleuve navigable qui traverse tout, et une commandante qui joue mieux quand le stade fait du bruit.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence à la pauvreté ni à la violence urbaine : le Brésil du jeu est celui du carnaval, du fleuve et du public.",
+    "La forêt n’est jamais un sujet de catastrophe : elle est un terrain à vision réduite."
+  ],
+  "regions": [
+    "region_br_nord",
+    "region_br_nordeste",
+    "region_br_centre_ouest",
+    "region_br_sud_est",
+    "region_br_sud"
+  ]
+}

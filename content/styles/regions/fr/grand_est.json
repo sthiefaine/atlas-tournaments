@@ -1,0 +1,32 @@
+{
+  "code": "region_fr_grand_est",
+  "paysCode": "fr",
+  "nom": "Grand Est",
+  "ligneDirectrice": {
+    "fr": "Colombages peints en ocre et bleu sur enduit crème, tuiles vernissées, bois partout : le style le plus coloré du nord-est.",
+    "en": "Ochre and blue half-timbering on cream render, glazed tiles, timber everywhere: the most colourful style of the north-east."
+  },
+  "toits": {
+    "forme": "deux_pans",
+    "matiere": "tuile",
+    "couleur": "#a05a3a"
+  },
+  "murs": {
+    "matiere": "bois",
+    "couleur": "#f2e6cf",
+    "finition": "blanchie"
+  },
+  "vegetation": {
+    "dominante": "sapins de crête",
+    "secondaire": "vignes en rangs serrés",
+    "couleur": "#3f6b46"
+  },
+  "elementsDecor": [
+    "rangee_de_vigne",
+    "four_a_pain",
+    "kiosque",
+    "croix_de_chemin"
+  ],
+  "priorite": 1,
+  "justification": "Les colombages et les tuiles vernissées sont ce que la fiche donne au Grand Est ; les couleurs peintes des poutres sont la seule fantaisie chromatique de la métropole et méritent d’être vues d’en haut."
+}

@@ -1,0 +1,83 @@
+{
+  "cle": "pays_au",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "au",
+  "nom": "Australie",
+  "nomCourt": "Australie",
+  "gentile": "australienne",
+  "continent": "oceanie",
+  "climat": "aride",
+  "hemisphere": "sud",
+  "biomes": [
+    "desert",
+    "plaine",
+    "cotier",
+    "foret"
+  ],
+  "specialite": {
+    "cle": "spec_au_distance",
+    "nom": "La distance protège",
+    "portee": "pays",
+    "famille": "defense",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "modificateur": {
+            "quoi": "degats_directs",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "Toute unité adverse qui termine sa journée loin d’une ville paie la distance d’un point de vie ; hors de leur territoire, les Australiennes frappent un cran plus bas."
+  },
+  "archetypeCommandant": "gardienne",
+  "rivalNaturel": "in",
+  "voisins": [],
+  "palette": {
+    "main": "#d4762a",
+    "dark": "#864111",
+    "light": "#ffd9ac"
+  },
+  "drapeau": {
+    "type": "canton",
+    "couleurs": [
+      "#d4762a",
+      "#2c3a4a",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.au.visite",
+    "pays.au.qualifie",
+    "pays.au.rival_respecte",
+    "pays.au.rival_humilie",
+    "pays.au.allie_recrute",
+    "pays.au.dette_envers_joueur",
+    "pays.au.terrain_altere",
+    "pays.au.ralliement_cinquieme",
+    "pays.au.centre_hostile_active",
+    "pays.au.statistique_avouee",
+    "pays.au.tribune_partagee"
+  ],
+  "phare": false,
+  "accroche": "Un continent-île au cœur vide, toutes les villes sur le pourtour, et une commandante que rien ne décontenance.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence aux cultures aborigènes : le registre est celui du bush, de la route et du sport.",
+    "Le feu de brousse n’est pas une mécanique : la canicule suffit."
+  ]
+}

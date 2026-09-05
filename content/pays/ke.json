@@ -1,0 +1,88 @@
+{
+  "cle": "pays_ke",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "ke",
+  "nom": "Kenya",
+  "nomCourt": "Kenya",
+  "gentile": "kényane",
+  "continent": "afrique",
+  "climat": "tropical",
+  "hemisphere": "equateur",
+  "biomes": [
+    "plaine",
+    "montagne",
+    "foret"
+  ],
+  "specialite": {
+    "cle": "spec_ke_fond",
+    "nom": "Le fond",
+    "portee": "pays",
+    "famille": "infanterie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "pied",
+              "bottes"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 2
+          }
+        },
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        }
+      ]
+    },
+    "description": "L’infanterie kényane court plus loin que tout le monde et ne souffre pas de la montée ; le blindé, lui, se paie ici plus cher qu’ailleurs et ne dépasse jamais trois en jeu."
+  },
+  "archetypeCommandant": "fonceuse",
+  "rivalNaturel": "sn",
+  "voisins": [],
+  "palette": {
+    "main": "#2f7d4f",
+    "dark": "#164d2e",
+    "light": "#c6e8d2"
+  },
+  "drapeau": {
+    "type": "bandes_horizontales",
+    "couleurs": [
+      "#2f7d4f",
+      "#c0392f",
+      "#2c3a4a"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.ke.visite",
+    "pays.ke.qualifie",
+    "pays.ke.rival_respecte",
+    "pays.ke.rival_humilie",
+    "pays.ke.allie_recrute",
+    "pays.ke.dette_envers_joueur",
+    "pays.ke.terrain_altere",
+    "pays.ke.ralliement_cinquieme",
+    "pays.ke.rythme_trouve",
+    "pays.ke.messager_arrive",
+    "pays.ke.match_de_trois_heures"
+  ],
+  "phare": false,
+  "accroche": "Des hauts plateaux frais, une grande vallée, et un commandant imbattable après la dixième journée.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Le safari n’existe pas : la savane du jeu est un terrain de course, pas un décor animalier.",
+    "L’endurance est un entraînement, jamais une qualité de naissance."
+  ]
+}

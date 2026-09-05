@@ -1,0 +1,98 @@
+{
+  "cle": "pays_np",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "np",
+  "nom": "Népal",
+  "nomCourt": "Népal",
+  "gentile": "népalaise",
+  "continent": "asie",
+  "climat": "montagnard",
+  "hemisphere": "nord",
+  "biomes": [
+    "montagne",
+    "neige",
+    "foret"
+  ],
+  "specialite": {
+    "cle": "spec_np_altitude",
+    "nom": "L’altitude",
+    "portee": "pays",
+    "famille": "infanterie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "pied",
+              "bottes"
+            ],
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": 2
+          }
+        }
+      ]
+    },
+    "description": "L’infanterie ne subit aucun malus de pente, monte plus vite et voit loin d’un point haut ; en échange, rien de lourd ne monte : ni char léger, ni char lourd."
+  },
+  "archetypeCommandant": "survivante",
+  "rivalNaturel": "pe",
+  "voisins": [
+    "in"
+  ],
+  "palette": {
+    "main": "#b8443f",
+    "dark": "#6d1f1d",
+    "light": "#f2cfcb"
+  },
+  "drapeau": {
+    "type": "embleme",
+    "couleurs": [
+      "#b8443f",
+      "#2c4a86",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.np.visite",
+    "pays.np.qualifie",
+    "pays.np.rival_respecte",
+    "pays.np.rival_humilie",
+    "pays.np.allie_recrute",
+    "pays.np.dette_envers_joueur",
+    "pays.np.terrain_altere",
+    "pays.np.ralliement_cinquieme",
+    "pays.np.pont_pose",
+    "pays.np.mesure_contestee",
+    "pays.np.sourire_en_difficulte"
+  ],
+  "phare": false,
+  "accroche": "Du subtropical au glacier en cent cinquante kilomètres : la carte la plus contrainte du tournoi, et la plus verticale.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence religieuse : les drapeaux de prière deviennent des fanions de balisage, sans signe.",
+    "Le sommet est une étape sportive, jamais une conquête."
+  ]
+}

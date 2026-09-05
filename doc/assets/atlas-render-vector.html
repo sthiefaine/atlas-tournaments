@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Atlas Tournament — rendu 2D vectoriel</title>
+<style>
+  body { margin:0; background:#1b1e26; color:#e8e8e8; font-family: system-ui, sans-serif; }
+  section { padding: 20px 24px; }
+  h2 { margin: 0 0 4px; font-size: 18px; }
+  p.sub { margin: 0 0 12px; color:#9aa3b5; font-size: 13px; }
+  canvas { display:block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+</style>
+</head>
+<body>
+<section id="secvec">
+  <h2>Rendu 2D — style vectoriel "cartoon" (lisse, sans pixels)</h2>
+  <p class="sub">Même carte 16×12, tuiles 64 px, formes vectorielles avec ombres douces. Bleu : Luxembourg · Rouge : Suisse</p>
+  <canvas id="cv" width="2048" height="1536" style="width:1024px;height:768px"></canvas>
+</section>
+<section id="secunits">
+  <h2>Planche d'unités — même style, recolorées par pays</h2>
+  <p class="sub">Char, infanterie, artillerie, hélicoptère — un seul dessin par unité, teinte par nation.</p>
+  <canvas id="cu" width="2048" height="520" style="width:1024px;height:260px"></canvas>
+</section>
+
+<script>
+const MAP = [
+"WWWWPPPPPPPPWWWW",
+"WWPPPFFPPMMPPPWW",
+"WPPCRRRRRRRRRCPW",
+"WPFPRPPFPPMPRPFW",
+"PPHPRPPPPPPPRPPP",
+"PPPPRPCPPCPPRPPP",
+"PPPPRPPPPPPPRHPP",
+"WPFPRPMPPFPPRPFW",
+"WPPCRRRRRRRRRCPW",
+"WWPPPMMPPFFPPPWW",
+"WWWWPPPPPPPPWWWW",
+"WWWWWWPPPPWWWWWW",
+];
+const ROWS=MAP.length, COLS=MAP[0].length, T=64;
+const OWNERS = { "3,2":"blue", "2,4":"blue", "13,2":"red", "13,6":"red", "6,5":"blue", "9,5":"red" };
+const UNITS = [
+  {x:4,y:4,t:"tank",a:"blue"}, {x:3,y:5,t:"inf",a:"blue"}, {x:5,y:6,t:"arty",a:"blue"}, {x:6,y:3,t:"inf",a:"blue"}, {x:2,y:7,t:"tank",a:"blue"}, {x:5,y:1,t:"heli",a:"blue"},
+  {x:11,y:6,t:"tank",a:"red"}, {x:12,y:5,t:"inf",a:"red"}, {x:10,y:4,t:"arty",a:"red"}, {x:9,y:7,t:"inf",a:"red"}, {x:13,y:8,t:"tank",a:"red"}, {x:10,y:9,t:"heli",a:"red"},
+];
+const ARMY = {
+  blue:{ main:"#3f86e0", dark:"#255a9e", light:"#8dbdf5" },
+  red: { main:"#e04b45", dark:"#96292a", light:"#f59a95" },
+  green:{ main:"#37b35a", dark:"#1f6f38", light:"#8ee0a4" },
+  gold:{ main:"#e9b93a", dark:"#9c7717", light:"#f7dd8c" },
+  neutral:{ main:"#b9bec7", dark:"#7c828c", light:"#e2e5ea" },
+};
+const cell=(x,y)=> (y<0||y>=ROWS||x<0||x>=COLS)?"W":MAP[y][x];
+const isLand=c=>c!=="W";
+const isRoad=c=>c==="R"||c==="C"||c==="H";
+
+function rr(g,x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+function ell(g,x,y,rx,ry,c){ g.beginPath(); g.ellipse(x,y,rx,ry,0,0,Math.PI*2); g.fillStyle=c; g.fill(); }
+function shadow(g,on){ if(on){ g.shadowColor="rgba(0,0,0,0.28)"; g.shadowBlur=8; g.shadowOffsetY=4; } else { g.shadowColor="transparent"; g.shadowBlur=0; g.shadowOffsetY=0; } }
+
+// ---------- Décor ----------
+function tree(g,x,y,s){
+  ell(g,x+2*s,y+14*s,11*s,4*s,"rgba(0,0,0,0.18)");
+  g.fillStyle="#7a5232"; rr(g,x-2*s,y+4*s,4*s,11*s,2*s); g.fill();
+  ell(g,x,y-1*s,11*s,10*s,"#2f9a48");
+  ell(g,x-3*s,y-4*s,8*s,7*s,"#49b862");
+  ell(g,x-5*s,y-6*s,3.5*s,3*s,"#8fdc9a");
+}
+function mountain(g,x,y,s){
+  ell(g,x,y+16*s,20*s,5*s,"rgba(0,0,0,0.18)");
+  g.beginPath(); g.moveTo(x-22*s,y+16*s); g.lineTo(x,y-18*s); g.lineTo(x+22*s,y+16*s); g.closePath(); g.fillStyle="#aab2bf"; g.fill();
+  g.beginPath(); g.moveTo(x,y-18*s); g.lineTo(x+22*s,y+16*s); g.lineTo(x+2*s,y+16*s); g.closePath(); g.fillStyle="#7b8494"; g.fill();
+  g.beginPath(); g.moveTo(x,y-18*s); g.lineTo(x-7*s,y-6*s); g.lineTo(x-3*s,y-4*s); g.lineTo(x+1*s,y-7*s); g.lineTo(x+4*s,y-4*s); g.lineTo(x+7*s,y-6*s); g.closePath(); g.fillStyle="#ffffff"; g.fill();
+}
+function building(g,x,y,w,h,d,col,windows=true){
+  // corps 3/4 : face avant + toit
+  g.fillStyle=col.dark; rr(g,x,y,w,h,3); g.fill();
+  g.fillStyle=col.main; rr(g,x,y-d,w,d+4,3); g.fill();
+  g.fillStyle=col.light; g.fillRect(x+3,y-d+3,w-6,2);
+  if(windows){ g.fillStyle="#ffe9a3"; for(let j=6;j<h-6;j+=9) for(let i=5;i<w-5;i+=9) g.fillRect(x+i,y+j,4,5); }
+}
+function drawMap(){
+  const cv=document.getElementById("cv"), g=cv.getContext("2d"); g.scale(2,2);
+  // eau
+  const wg=g.createLinearGradient(0,0,0,ROWS*T); wg.addColorStop(0,"#57b0ea"); wg.addColorStop(1,"#3b8fd4"); g.fillStyle=wg; g.fillRect(0,0,COLS*T,ROWS*T);
+  let seed=5; const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  g.strokeStyle="rgba(255,255,255,0.35)"; g.lineWidth=2; g.lineCap="round";
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(cell(x,y)==="W"){ for(let i=0;i<2;i++){ const wx=x*T+10+rnd()*40, wy=y*T+12+rnd()*40; g.beginPath(); g.moveTo(wx,wy); g.quadraticCurveTo(wx+6,wy-3,wx+12,wy); g.stroke(); } }
+  // sable puis herbe (formes fusionnées, côtes arrondies)
+  shadow(g,true); g.fillStyle="#efe0a4";
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(isLand(cell(x,y))){ rr(g,x*T-7,y*T-7,T+14,T+14,14); g.fill(); }
+  shadow(g,false);
+  g.fillStyle="#a3d96b";
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(isLand(cell(x,y))){ rr(g,x*T-1,y*T-1,T+2,T+2,10); g.fill(); }
+  // texture herbe légère
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(isLand(cell(x,y))){ for(let i=0;i<4;i++){ ell(g,x*T+8+rnd()*48,y*T+8+rnd()*48,5+rnd()*6,3+rnd()*3, rnd()<.5?"rgba(120,190,80,0.35)":"rgba(190,235,140,0.35)"); } }
+  // routes
+  g.strokeStyle="#dccb9f"; g.lineWidth=24; g.lineCap="round"; g.lineJoin="round";
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(isRoad(cell(x,y))){
+    const cx=x*T+T/2, cy=y*T+T/2; let any=false;
+    [[1,0],[0,1]].forEach(([dx,dy])=>{ if(isRoad(cell(x+dx,y+dy))){ g.beginPath(); g.moveTo(cx,cy); g.lineTo(cx+dx*T,cy+dy*T); g.stroke(); any=true; } });
+    if(!any){ g.beginPath(); g.moveTo(cx,cy); g.lineTo(cx,cy); g.stroke(); }
+  }
+  g.strokeStyle="rgba(255,255,255,0.5)"; g.lineWidth=2; g.setLineDash([6,8]);
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++) if(cell(x,y)==="R"){
+    const cx=x*T+T/2, cy=y*T+T/2;
+    [[1,0],[0,1]].forEach(([dx,dy])=>{ if(isRoad(cell(x+dx,y+dy))){ g.beginPath(); g.moveTo(cx,cy); g.lineTo(cx+dx*T,cy+dy*T); g.stroke(); } });
+  }
+  g.setLineDash([]);
+  // grille discrète
+  g.strokeStyle="rgba(0,0,0,0.07)"; g.lineWidth=1;
+  for(let x=0;x<=COLS;x++){ g.beginPath(); g.moveTo(x*T,0); g.lineTo(x*T,ROWS*T); g.stroke(); }
+  for(let y=0;y<=ROWS;y++){ g.beginPath(); g.moveTo(0,y*T); g.lineTo(COLS*T,y*T); g.stroke(); }
+  // cases de déplacement
+  [[3,4],[5,4],[4,3],[4,5],[2,4],[6,4],[4,6],[3,3],[5,3],[3,5]].forEach(([x,y])=>{ g.fillStyle="rgba(90,180,255,0.42)"; rr(g,x*T+3,y*T+3,T-6,T-6,8); g.fill(); g.strokeStyle="rgba(255,255,255,0.6)"; g.lineWidth=1.5; g.stroke(); });
+  // décor
+  for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
+    const c=cell(x,y), px=x*T, py=y*T;
+    if(c==="F"){ tree(g,px+18,py+22,1.1); tree(g,px+46,py+18,0.9); tree(g,px+30,py+44,1.2); }
+    if(c==="M"){ mountain(g,px+32,py+34,1.15); }
+    if(c==="C"){ const col=ARMY[OWNERS[x+","+y]||"neutral"]; shadow(g,true); building(g,px+8,py+30,18,26,10,col); building(g,px+28,py+22,20,34,14,col); building(g,px+50,py+34,10,22,8,col); shadow(g,false); }
+    if(c==="H"){ const col=ARMY[OWNERS[x+","+y]||"neutral"]; shadow(g,true); building(g,px+10,py+28,44,26,16,col,false); shadow(g,false);
+      g.fillStyle=col.light; rr(g,px+18,py+34,28,14,3); g.fill(); g.fillStyle=col.dark; g.font="bold 11px system-ui"; g.textAlign="center"; g.fillText("QG",px+32,py+45);
+      g.strokeStyle="#444"; g.lineWidth=2; g.beginPath(); g.moveTo(px+50,py+12); g.lineTo(px+50,py+4); g.lineTo(px+50,py+30); g.stroke();
+      g.fillStyle=col.main; g.beginPath(); g.moveTo(px+50,py+2); g.lineTo(px+64,py+7); g.lineTo(px+50,py+12); g.closePath(); g.fill(); }
+  }
+  // unités
+  UNITS.forEach(u=>drawUnit(g,u.x*T+T/2,u.y*T+T/2,u.t,ARMY[u.a],1));
+  // curseur
+  g.strokeStyle="#ffffff"; g.lineWidth=3; rr(g,4*T+2,4*T+2,T-4,T-4,8); g.stroke();
+  g.strokeStyle="rgba(255,255,255,0.4)"; g.lineWidth=7; rr(g,4*T+2,4*T+2,T-4,T-4,8); g.stroke();
+  // PV
+  UNITS.forEach(u=>{ if(u.t==="inf"&&u.a==="red"||u.t==="tank"&&u.a==="blue"&&u.x===2){ const px=u.x*T,py=u.y*T; g.fillStyle="rgba(0,0,0,0.6)"; rr(g,px+44,py+46,17,15,4); g.fill(); g.fillStyle="#fff"; g.font="bold 11px system-ui"; g.textAlign="center"; g.fillText(u.a==="red"?"6":"8",px+52.5,py+57); } });
+  // mini HUD
+  shadow(g,true); g.fillStyle="rgba(20,24,34,0.92)"; rr(g,12,ROWS*T-84,250,72,10); g.fill(); shadow(g,false);
+  g.fillStyle=ARMY.blue.main; rr(g,12,ROWS*T-84,6,72,3); g.fill();
+  drawUnit(g,44,ROWS*T-48,"tank",ARMY.blue,1.1);
+  g.fillStyle="#fff"; g.font="bold 15px system-ui"; g.textAlign="left"; g.fillText("Char léger",78,ROWS*T-60);
+  g.fillStyle="#9aa3b5"; g.font="12px system-ui"; g.fillText("Luxembourg · PV 10 · Mouv. 6",78,ROWS*T-42);
+  g.fillStyle="#9aa3b5"; g.fillText("Terrain : plaine (défense ★)",78,ROWS*T-26);
+}
+
+// ---------- Unités ----------
+function drawUnit(g,cx,cy,t,col,s){
+  g.save(); g.translate(cx,cy); g.scale(s,s);
+  ell(g,0,16,20,6,"rgba(0,0,0,0.25)");
+  if(t==="tank"){
+    g.fillStyle="#2e3238"; rr(g,-22,0,44,14,6); g.fill();
+    g.fillStyle="#555b63"; for(let i=-17;i<=13;i+=6) rr(g,i,3,4,8,2), g.fill();
+    const hg=g.createLinearGradient(0,-14,0,4); hg.addColorStop(0,col.light); hg.addColorStop(1,col.main);
+    g.fillStyle=hg; rr(g,-19,-10,38,16,6); g.fill();
+    g.fillStyle=col.dark; rr(g,-19,2,38,4,2); g.fill();
+    g.strokeStyle="#2e3238"; g.lineWidth=5; g.lineCap="round"; g.beginPath(); g.moveTo(4,-8); g.lineTo(26,-11); g.stroke();
+    g.fillStyle=col.main; g.beginPath(); g.arc(-2,-8,9,0,Math.PI*2); g.fill();
+    g.fillStyle=col.light; g.beginPath(); g.arc(-4,-10,4,0,Math.PI*2); g.fill();
+  } else if(t==="inf"){
+    const soldier=(dx,dy,sc)=>{ g.save(); g.translate(dx,dy); g.scale(sc,sc);
+      g.fillStyle=col.dark; rr(g,-6,8,5,10,2); g.fill(); rr(g,1,8,5,10,2); g.fill();
+      g.fillStyle=col.main; rr(g,-8,-6,16,16,5); g.fill();
+      g.fillStyle=col.light; rr(g,-4,-3,8,6,2); g.fill();
+      g.fillStyle="#f3c9a4"; g.beginPath(); g.arc(0,-12,7,0,Math.PI*2); g.fill();
+      g.fillStyle=col.main; g.beginPath(); g.arc(0,-14,7.5,Math.PI,0); g.fill(); rr(g,-8,-15,16,3,1.5); g.fill();
+      g.strokeStyle="#2e3238"; g.lineWidth=3; g.lineCap="round"; g.beginPath(); g.moveTo(6,-2); g.lineTo(14,-10); g.stroke();
+      g.restore(); };
+    soldier(-10,2,0.85); soldier(8,-4,0.85); soldier(0,10,0.85);
+  } else if(t==="arty"){
+    g.fillStyle="#2e3238"; rr(g,-20,2,40,12,6); g.fill();
+    g.fillStyle="#555b63"; for(let i=-15;i<=11;i+=6) rr(g,i,5,4,6,2), g.fill();
+    g.fillStyle=col.main; rr(g,-16,-6,26,12,5); g.fill(); g.fillStyle=col.light; rr(g,-13,-4,14,3,1.5); g.fill();
+    g.strokeStyle="#2e3238"; g.lineWidth=6; g.lineCap="round"; g.beginPath(); g.moveTo(0,-4); g.lineTo(20,-22); g.stroke();
+    g.strokeStyle=col.dark; g.lineWidth=2; g.beginPath(); g.moveTo(0,-4); g.lineTo(20,-22); g.stroke();
+  } else if(t==="heli"){
+    ell(g,0,22,18,5,"rgba(0,0,0,0.18)");
+    g.fillStyle=col.dark; rr(g,-4,-6,30,6,3); g.fill(); g.fillStyle=col.main; g.beginPath(); g.arc(26,-3,5,0,Math.PI*2); g.fill();
+    const bg=g.createLinearGradient(0,-16,0,8); bg.addColorStop(0,col.light); bg.addColorStop(1,col.main);
+    g.fillStyle=bg; rr(g,-22,-14,32,22,10); g.fill();
+    g.fillStyle="#cfe9ff"; rr(g,-20,-11,12,9,4); g.fill();
+    g.fillStyle="#2e3238"; rr(g,-16,8,24,3,1.5); g.fill(); rr(g,-12,3,3,6,1); g.fill(); rr(g,4,3,3,6,1); g.fill();
+    g.strokeStyle="rgba(40,44,50,0.85)"; g.lineWidth=3; g.lineCap="round"; g.beginPath(); g.moveTo(-32,-20); g.lineTo(20,-16); g.stroke(); g.beginPath(); g.moveTo(-8,-30); g.lineTo(0,-6); g.stroke();
+    g.fillStyle="#2e3238"; g.beginPath(); g.arc(-6,-18,3,0,Math.PI*2); g.fill();
+  }
+  g.restore();
+}
+
+function drawSheet(){
+  const g=document.getElementById("cu").getContext("2d"); g.scale(2,2);
+  g.fillStyle="#242835"; rr(g,0,0,1024,260,10); g.fill();
+  const nations=[["Luxembourg",ARMY.blue],["Suisse",ARMY.red],["Brésil",ARMY.green],["Suède",ARMY.gold]];
+  const types=[["Char","tank"],["Infanterie","inf"],["Artillerie","arty"],["Hélico","heli"]];
+  g.fillStyle="#9aa3b5"; g.font="13px system-ui"; g.textAlign="center";
+  types.forEach((t,i)=> g.fillText(t[0], 240+i*210, 26));
+  nations.forEach((n,j)=>{
+    g.fillStyle="#e8e8e8"; g.font="bold 13px system-ui"; g.textAlign="right"; g.fillText(n[0], 120, 70+j*55);
+    types.forEach((t,i)=> drawUnit(g,240+i*210,62+j*55,t[1],n[1],1.4));
+  });
+}
+drawMap(); drawSheet();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+{
+  "cle": "pays_mn",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "mn",
+  "nom": "Mongolie",
+  "nomCourt": "Mongolie",
+  "gentile": "mongole",
+  "continent": "asie",
+  "climat": "continental",
+  "hemisphere": "nord",
+  "biomes": [
+    "plaine",
+    "desert",
+    "montagne"
+  ],
+  "specialite": {
+    "cle": "spec_mn_steppe",
+    "nom": "La steppe",
+    "portee": "pays",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 2
+          }
+        }
+      ]
+    },
+    "description": "Sur la steppe et sur la neige, rien ne ralentit une équipe mongole ; en revanche, aucune unité n’embarque sur un transport allié."
+  },
+  "archetypeCommandant": "fonceuse",
+  "rivalNaturel": "na",
+  "voisins": [],
+  "palette": {
+    "main": "#e08a1e",
+    "dark": "#8c4d08",
+    "light": "#ffdda6"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#e08a1e",
+      "#c0392f",
+      "#2c3a4a"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.mn.visite",
+    "pays.mn.qualifie",
+    "pays.mn.rival_respecte",
+    "pays.mn.rival_humilie",
+    "pays.mn.allie_recrute",
+    "pays.mn.dette_envers_joueur",
+    "pays.mn.terrain_altere",
+    "pays.mn.ralliement_cinquieme",
+    "pays.mn.grand_galop_lance",
+    "pays.mn.carte_jugee_trop_petite",
+    "pays.mn.respect_du_cavalier"
+  ],
+  "phare": false,
+  "accroche": "Les plus grandes cartes du tournoi, presque sans obstacle : un espace vide est fait pour être traversé le plus vite possible.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence aux empires ni aux conquêtes : la Mongolie du jeu est celle du cheval, du feutre et de l’horizon.",
+    "La yourte est une maison qu’on démonte, jamais un décor exotique."
+  ]
+}

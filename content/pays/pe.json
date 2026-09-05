@@ -1,0 +1,94 @@
+{
+  "cle": "pays_pe",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "pe",
+  "nom": "Pérou",
+  "nomCourt": "Pérou",
+  "gentile": "péruvienne",
+  "continent": "amerique_sud",
+  "climat": "montagnard",
+  "hemisphere": "sud",
+  "biomes": [
+    "montagne",
+    "desert",
+    "jungle"
+  ],
+  "specialite": {
+    "cle": "spec_pe_batisseur",
+    "nom": "Bâtisseur",
+    "portee": "pays",
+    "famille": "ingenierie",
+    "contenu": {
+      "variant": "modificateur",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": 2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "route",
+              "pont"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ]
+    },
+    "description": "En altitude on voit venir, et tout ce qui roule sur une route ou un pont bâti va plus loin ; en plaine, tout se porte, et le trésor reste court."
+  },
+  "archetypeCommandant": "ingenieur",
+  "rivalNaturel": "np",
+  "voisins": [
+    "br"
+  ],
+  "palette": {
+    "main": "#c0392f",
+    "dark": "#722018",
+    "light": "#f2cec9"
+  },
+  "drapeau": {
+    "type": "bandes_verticales",
+    "couleurs": [
+      "#c0392f",
+      "#f7f7f5"
+    ]
+  },
+  "flagsDisponibles": [
+    "pays.pe.visite",
+    "pays.pe.qualifie",
+    "pays.pe.rival_respecte",
+    "pays.pe.rival_humilie",
+    "pays.pe.allie_recrute",
+    "pays.pe.dette_envers_joueur",
+    "pays.pe.terrain_altere",
+    "pays.pe.ralliement_cinquieme",
+    "pays.pe.reseau_relie",
+    "pays.pe.querelle_daltitude",
+    "pays.pe.marche_dessinee"
+  ],
+  "phare": false,
+  "accroche": "Trois étages en une carte — côte sèche, altiplano, versant amazonien — reliés par des routes et des ponts qu’il faut construire.",
+  "interdits": [
+    "Aucune référence à un conflit, à la politique, à la religion ou à un dirigeant.",
+    "Aucune référence à un site archéologique réel ni à une civilisation ancienne nommée.",
+    "L’altitude est une contrainte sportive, jamais un mal du pays."
+  ]
+}

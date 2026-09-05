@@ -1,0 +1,53 @@
+{
+  "cle": "region_fr_occitanie",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "region_fr_occitanie",
+  "paysCode": "fr",
+  "nom": "Occitanie",
+  "type": "metropolitaine",
+  "ordreConseille": 14,
+  "biome": "montagne",
+  "climat": "mediterraneen",
+  "specialiteLocale": {
+    "cle": "spec_fr_occitanie_ecluse",
+    "nom": "Écluse",
+    "portee": "region",
+    "famille": "mobilite",
+    "contenu": {
+      "variant": "trait",
+      "trait": "pied_marin"
+    },
+    "description": "L’aisance des mariniers : le malus des terrains côtiers et de plage disparaît, et l’on monte ou descend d’une péniche sans y perdre sa journée."
+  },
+  "mecanique": {
+    "cle": "meca_canal_cols",
+    "parametres": {
+      "ecluses": 6,
+      "vitesse_peniche": 6,
+      "cols": 3,
+      "cols_fermes_par_brouillard": 1,
+      "gelable": true
+    },
+    "description": "Un canal à six écluses traverse la carte : une péniche avance de six cases sans dépenser le mouvement de sa charge. Au sud, trois cols, dont un se ferme au brouillard."
+  },
+  "commandantCle": "cmd_mireille_bousquet",
+  "scenarios": [
+    "scen_fr_occitanie_etape",
+    "scen_fr_occitanie_defi"
+  ],
+  "accroche": "Une garrigue sèche et parfumée, un canal bordé de platanes, des causses caillouteux et trois trous dans la barrière du sud.",
+  "motsCles": [
+    "canal",
+    "écluses",
+    "causse",
+    "cité fortifiée",
+    "cassoulet"
+  ],
+  "flagsPropres": [
+    "pays.fr.occitanie_ecluse_tenue"
+  ]
+}

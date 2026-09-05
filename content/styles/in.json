@@ -1,0 +1,63 @@
+{
+  "code": "in",
+  "nom": "Inde",
+  "ligneDirectrice": {
+    "fr": "Camion peint : chaque surface plane est un panneau décoré, guirlandes accrochées partout, miroirs cousus sur la toile, et rien de discret nulle part.",
+    "en": "Painted lorry: every flat surface is a decorated panel, garlands hung everywhere, mirrors sewn onto the canvas, and nothing discreet anywhere."
+  },
+  "palette": {
+    "main": "#e2842a",
+    "dark": "#8f4d0d",
+    "light": "#ffe0b8",
+    "accents": [
+      "#2f7d4f",
+      "#f2c4d8"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "toile",
+    "acier_peint",
+    "bois",
+    "email"
+  ],
+  "finitions": [
+    "brillante",
+    "laquee"
+  ],
+  "ornements": [
+    "guirlande",
+    "toit_toile",
+    "panneau",
+    "cloche"
+  ],
+  "gabarits": {
+    "infanterie": "c",
+    "meca": "c",
+    "recon": "b",
+    "char_leger": "c",
+    "char_lourd": "c",
+    "artillerie": "c",
+    "roquettes": "c",
+    "antiair": "c",
+    "helico": "b",
+    "transport": "c"
+  },
+  "decalcomanies": [
+    {
+      "motif": "pois",
+      "placement": "portiere",
+      "couleur": "#f2c4d8",
+      "note": "Des pois roses en couronne, motif de camion peint, jamais un motif religieux."
+    },
+    {
+      "motif": "fleche_repetee",
+      "placement": "arriere",
+      "couleur": "#2f7d4f",
+      "note": "Une file de chevrons verts, reprise des marquages de hayon."
+    }
+  ],
+  "motifDaltonien": "pois",
+  "priorite": 3,
+  "justification": "Rohan Deshmukh est incapable d’un geste discret et son unité propre est un camion couvert de motifs : le style indien est celui du volume et de la décoration appliquée, panneau par panneau. Les motifs sont géométriques et floraux, jamais figuratifs, pour rester hors de tout registre religieux."
+}

@@ -1,0 +1,141 @@
+{
+  "id": "decor_rocher_montagne",
+  "type": "decor",
+  "cle": "rocher_montagne",
+  "priorite": 1,
+  "description": {
+    "en": "A single rock for the \"montagne\" biome: an angular limestone block with sharp fracture planes and a scree collar at its base. Low enough that a unit standing behind it is never hidden, and irregular enough that four copies rotated by ninety degrees read as four different rocks. Sculpt real fracture planes rather than noise; the silhouette matters more than the surface, because at the default zoom this asset is about thirty pixels tall.",
+    "fr": "Un rocher isolé pour le biome « montagne » : un bloc calcaire anguleux à plans de fracture nets, avec son collier d’éboulis à la base. Assez bas pour qu’une unité placée derrière ne soit jamais cachée, et assez irrégulier pour que quatre copies tournées d’un quart de tour se lisent comme quatre rochers différents. Sculpter de vrais plans de fracture plutôt que du bruit : la silhouette compte plus que la surface, parce qu’au zoom par défaut cet asset fait une trentaine de pixels de haut."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "instanced rock",
+      "real fracture planes",
+      "lichen and weathering"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.45,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.3,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.45,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 900,
+    "lod1": 260,
+    "lod2": 64,
+    "materiauxMax": 2
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Roche et lichen ; pas d’ombre peinte, l’éclairage vient de la scène."
+    },
+    {
+      "canal": "normale",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Grain minéral et arêtes de fracture."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Faces polies contre faces cassées : c’est le contraste qui fait la pierre."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "ete",
+      "hiver"
+    ],
+    "biomes": [
+      "montagne"
+    ],
+    "nations": []
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "bloc"
+    ],
+    "materiauxAttendus": [
+      "mat_roche"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "decor_rocher_montagne_lod0.glb",
+      "decor_rocher_montagne_lod1.glb",
+      "decor_rocher_montagne_albedo.png",
+      "decor_rocher_montagne_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget"
+    ],
+    "toleranceAabb": 0.15,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}

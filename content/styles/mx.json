@@ -1,0 +1,63 @@
+{
+  "code": "mx",
+  "nom": "Mexique",
+  "ligneDirectrice": {
+    "fr": "Entrée en musique : vert franc, liserés dorés cousus comme sur une cape, chromes voyants et un pare-soleil frangé au-dessus du pare-brise.",
+    "en": "Entrance with a brass band: strong green, gold piping stitched like a cape, loud chrome, and a fringed sun visor over the windscreen."
+  },
+  "palette": {
+    "main": "#2f8f5f",
+    "dark": "#155c39",
+    "light": "#c9edd9",
+    "accents": [
+      "#e2c341",
+      "#c0392f"
+    ]
+  },
+  "matieres": [
+    "peinture_brillante",
+    "laiton",
+    "cuir",
+    "toile",
+    "email"
+  ],
+  "finitions": [
+    "brillante",
+    "laquee"
+  ],
+  "ornements": [
+    "pare_soleil",
+    "guirlande",
+    "banniere",
+    "cloche"
+  ],
+  "gabarits": {
+    "infanterie": "b",
+    "meca": "b",
+    "recon": "b",
+    "char_leger": "b",
+    "char_lourd": "c",
+    "artillerie": "b",
+    "roquettes": "c",
+    "antiair": "b",
+    "helico": "c",
+    "transport": "b"
+  },
+  "decalcomanies": [
+    {
+      "motif": "etoiles_quatre_branches",
+      "placement": "capot",
+      "couleur": "#e2c341",
+      "note": "Des étoiles dorées à quatre branches, motif de cape de lutteur, sans aucun blason."
+    },
+    {
+      "motif": "zigzag",
+      "placement": "jupe",
+      "couleur": "#c0392f",
+      "note": "Un zigzag rouge repris des franges du pare-soleil."
+    }
+  ],
+  "motifDaltonien": "etoiles_quatre_branches",
+  "priorite": 3,
+  "justification": "Xóchitl Bravo entre sur le terrain en musique, masque compris, et son unité propre est un lutteur masqué à liserés dorés : le style mexicain est un costume de spectacle posé sur du matériel. Le doré est un liseré, jamais une surface, pour que le vert reste la couleur de la nation."
+}

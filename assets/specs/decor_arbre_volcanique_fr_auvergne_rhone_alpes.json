@@ -1,0 +1,156 @@
+{
+  "id": "decor_arbre_volcanique_fr_auvergne_rhone_alpes",
+  "type": "decor",
+  "cle": "arbre_volcanique_fr_auvergne_rhone_alpes",
+  "priorite": 1,
+  "description": {
+    "en": "A single tree for the \"volcanique\" biome as it grows in Auvergne-Rhône-Alpes: a hardy pioneer tree on ash soil, sparse foliage, a soot-grey trunk and a low windbreak of scrub at its foot. Regional style of Auvergne-Rhône-Alpes (Dark grey volcanic stone, thick lauze slabs, pale alpine timber: heavy building below, light building above.): roofs are a hipped roof on four sides in split slate, colour #3a4048; walls are dry-laid stone, colour #5f5a58, hammered; the planting around it is hêtres de pente with alpages rases, foliage #5a7f4a. Dress the plot with a cable-car pylon, a shepherd’s stone shelter, a dry stone wall and a worn stone bench, and with nothing else. It is instanced hundreds of times per map, so it must look good from every side and never show a face that identifies it as the same model. Model the trunk and the foliage as two separate named nodes; foliage uses alpha-tested cards clustered into three or four dense clumps, never a single flat billboard. Keep the crown clear of the tile edges so it does not overhang a neighbouring unit.",
+    "fr": "Un arbre isolé du biome « volcanique », tel qu’il pousse en Auvergne-Rhône-Alpes : un arbre pionnier résistant sur sol de cendre, feuillage clairsemé, tronc gris de suie, et un brise-vent bas de broussailles au pied. Style régional de Auvergne-Rhône-Alpes (Pierre volcanique gris sombre, lauzes épaisses, bois d’alpage clair : un bâti lourd en bas, léger en haut.) : toiture en un toit à quatre pans de ardoise fendue, couleur #3a4048 ; murs en pierre sèche, couleur #5f5a58, finition martelée ; autour, hêtres de pente et alpages rases, feuillage #5a7f4a. Habiller la parcelle avec un pylône de téléphérique, un abri de berger en pierre, un muret de pierre sèche et un banc de pierre usé, et rien d’autre. Il est instancié des centaines de fois par carte : il doit tenir sous tous les angles et ne jamais montrer une face qui le trahisse comme le même modèle. Tronc et feuillage sont deux nœuds nommés distincts ; le feuillage est fait de cartes à découpe alpha groupées en trois ou quatre touffes denses, jamais un panneau plat unique. Garder la couronne à l’intérieur des bords de la case, pour ne pas déborder sur une unité voisine."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "instanced vegetation",
+      "alpha-tested foliage clusters",
+      "seasonal foliage variants",
+      "regional planting"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.62,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.55,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 2500,
+    "lod1": 700,
+    "lod2": 180,
+    "materiauxMax": 2
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Écorce et feuillage sur un seul atlas ; canal alpha net, sans halo."
+    },
+    {
+      "canal": "normale",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Nervures des feuilles et relief d’écorce."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Feuille cireuse contre écorce sèche : deux valeurs franchement séparées."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "printemps",
+      "ete",
+      "automne",
+      "hiver"
+    ],
+    "biomes": [
+      "volcanique"
+    ],
+    "nations": [
+      "fr"
+    ]
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 3600,
+      "boucle": true,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "tronc",
+      "feuillage"
+    ],
+    "materiauxAttendus": [
+      "mat_ecorce",
+      "mat_feuillage"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "decor_arbre_volcanique_fr_auvergne_rhone_alpes_lod0.glb",
+      "decor_arbre_volcanique_fr_auvergne_rhone_alpes_lod1.glb",
+      "decor_arbre_volcanique_fr_auvergne_rhone_alpes_albedo.png",
+      "decor_arbre_volcanique_fr_auvergne_rhone_alpes_albedo_automne.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "animations"
+    ],
+    "toleranceAabb": 0.15,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}
