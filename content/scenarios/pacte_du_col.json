@@ -1,0 +1,127 @@
+{
+  "cle": "pacte_du_col",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "pacte_du_col",
+  "nom": "Qualification · Le pacte du col",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_pacte_du_col",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 4500,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "proteger",
+      "uniteRef": "u1",
+      "destination": {
+        "x": 8,
+        "y": 4
+      }
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "unite_perdue",
+      "uniteRef": "u1"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Votre formation est terminée : bienvenue à votre première qualification officielle. Tomas vous prête son équipe technique pour une épreuve de coopération. Le passage direct est fermé.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Qualification réussie. Vous partagez vos relevés avec Tomas : le Luxembourg devient votre allié. Il vous confie le commandement d’une exhibition sous ses couleurs.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match est perdu, mais personne ne quitte notre équipe. Reprenons le briefing et essayons un autre chemin.",
+      "emotion": "doute"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "col_genie",
+      "declencheur": {
+        "type": "production",
+        "unite": "genie"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Le génie est sorti d’usine. Il n’attaque pas, mais il pose un terrain là où il n’y en avait pas : c’est lui qui ouvre le col.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Amenez-le au bord de l’éboulement, puis choisissez Construire. Une escorte n’est pas un luxe.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "col_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "L’adversaire vise le char, pas vous. Perdre le char termine le match : mettez du blindage entre lui et leurs canons.",
+          "emotion": "colere"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "monde.tournoi.pacte_du_col"
+    ]
+  }
+}

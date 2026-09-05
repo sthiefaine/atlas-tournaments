@@ -1,5 +1,5 @@
 /**
- * Le composeur de **placeholders 3D**, en pièces déclaratives.
+ * Le composeur des figurines 3D, en pièces déclaratives.
  *
  * Même règle qu'en 2D et même raison : **aucune unité n'est modélisée par son
  * nom**. Une unité apporte une `Silhouette` — une `base`, un `corps`, trois
@@ -191,13 +191,119 @@ function piecesModule(module: ModuleSilhouette, y: number, rang: number): Piece[
   }
 }
 
-/** Une figurine d'infanterie : jambes, buste, casque. */
-function figurine(nom: string, x: number, z: number): Piece[] {
-  return [
-    { nom: `${nom}_jambes`, forme: 'cylindre', role: 'sombre', position: [x, 0.09, z], taille: [0.1, 0.18, 0.1] },
-    { nom: `${nom}_buste`, forme: 'capsule', role: 'principal', position: [x, 0.26, z], taille: [0.16, 0.26, 0.16] },
-    { nom: `${nom}_casque`, forme: 'sphere', role: 'clair', position: [x, 0.38, z], taille: [0.14, 0.12, 0.14] },
+/** Détails mécaniques larges : lisibles au zoom de jeu, sans texture de bruit. */
+function detailsBase(base: Silhouette['base']): Piece[] {
+  const pieces: Piece[] = [];
+  if (base === 'chenilles') {
+    for (const [cote, z] of [['gauche', -0.278], ['droite', 0.278]] as const) {
+      for (let i = 0; i < 5; i++) {
+        pieces.push({ nom: `galet_${cote}_${i}`, forme: 'cylindre', role: 'materiel', position: [-0.24 + i * 0.12, 0.075, z], taille: [0.105, 0.018, 0.105], rotation: [DEMI_PI, 0, 0] });
+      }
+      pieces.push({ nom: `garde_boue_${cote}`, forme: 'plaque', role: 'principal', position: [0, 0.155, z * 0.8], taille: [0.69, 0.035, 0.13] });
+      for (let i = 0; i < 5; i++) {
+        pieces.push({ nom: `patin_${cote}_${i}`, forme: 'plaque', role: 'sombre', position: [-0.25 + i * 0.125, 0.178, z * 0.8], taille: [0.018, 0.012, 0.13] });
+      }
+    }
+  } else if (base === 'roues') {
+    for (const [cote, z] of [['gauche', -0.242], ['droite', 0.242]] as const) {
+      for (const [bout, x] of [['avant', 0.2], ['arriere', -0.2]] as const) {
+        pieces.push({ nom: `moyeu_${bout}_${cote}`, forme: 'cylindre', role: 'clair', position: [x, 0.08, z], taille: [0.065, 0.012, 0.065], rotation: [DEMI_PI, 0, 0] });
+        pieces.push({ nom: `aile_roue_${bout}_${cote}`, forme: 'plaque', role: 'principal', position: [x, 0.17, z * 0.76], taille: [0.22, 0.025, 0.11] });
+      }
+    }
+  } else if (base === 'rotor') {
+    pieces.push(
+      { nom: 'poutre_queue', forme: 'cone', role: 'principal', position: [-0.31, 0.27, 0], taille: [0.12, 0.39, 0.12], rotation: [0, 0, DEMI_PI] },
+      { nom: 'stabilisateur_queue', forme: 'plaque', role: 'clair', position: [-0.43, 0.27, 0], taille: [0.13, 0.022, 0.28] },
+      { nom: 'moyeu_rotor', forme: 'cylindre', role: 'sombre', position: [0.02, 0.42, 0], taille: [0.1, 0.045, 0.1] },
+      { nom: 'turbine_gauche', forme: 'capsule', role: 'materiel', position: [-0.1, 0.33, -0.115], taille: [0.075, 0.22, 0.075], rotation: [0, 0, DEMI_PI] },
+      { nom: 'turbine_droite', forme: 'capsule', role: 'materiel', position: [-0.1, 0.33, 0.115], taille: [0.075, 0.22, 0.075], rotation: [0, 0, DEMI_PI] },
+    );
+  }
+  return pieces;
+}
+
+function detailsCorps(s: Silhouette, y: number): Piece[] {
+  const pieces: Piece[] = [];
+  if (s.base === 'chenilles' || s.base === 'roues') {
+    for (const [cote, z] of [['gauche', -0.12], ['droite', 0.12]] as const) {
+      pieces.push(
+        { nom: `phare_${cote}`, forme: 'boite', role: 'verre', position: [0.308, y + 0.07, z], taille: [0.035, 0.055, 0.065] },
+        { nom: `coffre_${cote}`, forme: 'boite', role: 'sombre', position: [-0.19, y + 0.125, z * 1.5], taille: [0.19, 0.07, 0.055] },
+      );
+    }
+    pieces.push({ nom: 'pare_chocs', forme: 'boite', role: 'materiel', position: [0.32, y + 0.008, 0], taille: [0.045, 0.045, 0.32] });
+    if (s.corps === 'bloc') {
+      pieces.push(
+        { nom: 'blindage_frontal', forme: 'plaque', role: 'principal', position: [0.24, y + 0.14, 0], taille: [0.18, 0.065, 0.31], rotation: [0, 0, -0.32] },
+        { nom: 'ecoutille_conducteur', forme: 'plaque', role: 'sombre', position: [0.15, y + 0.206, 0.08], taille: [0.085, 0.024, 0.07] },
+        { nom: 'echappement', forme: 'cylindre', role: 'materiel', position: [-0.29, y + 0.09, 0.115], taille: [0.04, 0.11, 0.04], rotation: [0, 0, DEMI_PI] },
+      );
+      for (let i = 0; i < 4; i++) pieces.push({ nom: `grille_moteur_${i}`, forme: 'plaque', role: 'materiel', position: [-0.21 + i * 0.035, y + 0.201, 0], taille: [0.018, 0.012, 0.19] });
+    } else if (s.corps === 'plateau') {
+      for (const z of [-0.156, 0.156]) pieces.push({ nom: `vitre_cabine_${z}`, forme: 'plaque', role: 'verre', position: [0.22, y + 0.16, z], taille: [0.13, 0.08, 0.012] });
+    }
+  }
+  return pieces;
+}
+
+function detailsModule(module: ModuleSilhouette, y: number, rang: number): Piece[] {
+  const recul = rang * -0.12;
+  if (module === 'tourelle') return [
+    { nom: 'couronne_tourelle', forme: 'cylindre', role: 'sombre', position: [recul, y + 0.006, 0], taille: [0.33, 0.03, 0.33] },
+    { nom: 'ecoutille_tourelle', forme: 'cylindre', role: 'clair', position: [recul - 0.045, y + 0.127, 0.055], taille: [0.10, 0.023, 0.10] },
+    { nom: 'viseur_tourelle', forme: 'boite', role: 'verre', position: [recul + 0.08, y + 0.123, -0.05], taille: [0.065, 0.035, 0.055] },
+    { nom: 'mantelet', forme: 'boite', role: 'principal', position: [recul + 0.13, y + 0.07, 0], taille: [0.09, 0.09, 0.12] },
+    { nom: 'bouche_canon', forme: 'cylindre', role: 'sombre', position: [recul + 0.49, y + 0.07, 0], taille: [0.07, 0.055, 0.07], rotation: [0, 0, DEMI_PI] },
   ];
+  if (module === 'canon_long') return [
+    { nom: 'culasse', forme: 'boite', role: 'principal', position: [recul - 0.025, y + 0.1, 0], taille: [0.14, 0.12, 0.2] },
+    { nom: 'frein_bouche', forme: 'boite', role: 'sombre', position: [recul + 0.66, y + 0.155, 0], taille: [0.085, 0.07, 0.09], rotation: [0, 0, 0.16] },
+  ];
+  if (module === 'lance_roquettes') {
+    return [-0.085, 0, 0.085].flatMap((z, i) => [
+      { nom: `ogive_${i}`, forme: 'cylindre' as const, role: 'clair' as const, position: [recul + 0.135, y + 0.17, z] as [number, number, number], taille: [0.045, 0.022, 0.045] as [number, number, number], rotation: [0, 0, DEMI_PI - 0.22] as [number, number, number] },
+      { nom: `event_roquette_${i}`, forme: 'cylindre' as const, role: 'roulant' as const, position: [recul + 0.146, y + 0.17, z] as [number, number, number], taille: [0.026, 0.023, 0.026] as [number, number, number], rotation: [0, 0, DEMI_PI - 0.22] as [number, number, number] },
+    ]);
+  }
+  if (module === 'grue') return [
+    { nom: 'verin_grue', forme: 'cylindre', role: 'clair', position: [recul, y + 0.13, 0.045], taille: [0.025, 0.24, 0.025], rotation: [0, 0, -0.45] },
+    { nom: 'cable_grue', forme: 'cylindre', role: 'roulant', position: [recul + 0.28, y + 0.2, 0], taille: [0.018, 0.16, 0.018] },
+    { nom: 'crochet_grue', forme: 'boite', role: 'materiel', position: [recul + 0.27, y + 0.12, 0], taille: [0.05, 0.025, 0.035] },
+  ];
+  return [];
+}
+
+/** Trois petites figurines équipées, avec une pose et un équipement lisibles. */
+function figurine(nom: string, x: number, z: number, technicien: boolean): Piece[] {
+  const pieces: Piece[] = [
+    { nom: `${nom}_jambes`, forme: 'boite', role: 'sombre', position: [x, 0.1, z], taille: [0.09, 0.15, 0.11] },
+    { nom: `${nom}_botte_gauche`, forme: 'boite', role: 'roulant', position: [x + 0.03, 0.035, z - 0.048], taille: [0.13, 0.06, 0.065] },
+    { nom: `${nom}_botte_droite`, forme: 'boite', role: 'roulant', position: [x - 0.015, 0.035, z + 0.048], taille: [0.13, 0.06, 0.065] },
+    { nom: `${nom}_buste`, forme: 'capsule', role: 'principal', position: [x, 0.245, z], taille: [0.17, 0.24, 0.17] },
+    { nom: `${nom}_gilet`, forme: 'boite', role: technicien ? 'clair' : 'sombre', position: [x + 0.071, 0.24, z], taille: [0.045, 0.15, 0.13] },
+    { nom: `${nom}_sac`, forme: 'boite', role: 'sombre', position: [x - 0.095, 0.26, z], taille: [0.08, 0.16, 0.13] },
+    { nom: `${nom}_casque`, forme: 'sphere', role: 'principal', position: [x, 0.385, z], taille: [0.21, 0.17, 0.20] },
+    { nom: `${nom}_rebord_casque`, forme: 'cylindre', role: 'clair', position: [x + 0.015, 0.364, z], taille: [0.218, 0.024, 0.205] },
+    { nom: `${nom}_visiere`, forme: 'boite', role: 'verre', position: [x + 0.092, 0.369, z], taille: [0.031, 0.052, 0.13] },
+    { nom: `${nom}_bras_gauche`, forme: 'capsule', role: 'principal', position: [x + 0.035, 0.24, z - 0.107], taille: [0.065, 0.16, 0.065], rotation: [0, 0, -0.65] },
+    { nom: `${nom}_bras_droit`, forme: 'capsule', role: 'principal', position: [x + 0.035, 0.24, z + 0.107], taille: [0.065, 0.16, 0.065], rotation: [0, 0, -0.65] },
+  ];
+  if (technicien) {
+    pieces.push(
+      { nom: `${nom}_outil_manche`, forme: 'cylindre', role: 'materiel', position: [x + 0.08, 0.18, z + 0.13], taille: [0.023, 0.28, 0.023], rotation: [0, 0, -0.25] },
+      { nom: `${nom}_outil_pelle`, forme: 'plaque', role: 'clair', position: [x + 0.11, 0.045, z + 0.13], taille: [0.07, 0.075, 0.025], rotation: [0, 0, -0.25] },
+      { nom: `${nom}_caisse_outils`, forme: 'boite', role: 'clair', position: [x + 0.04, 0.12, z - 0.15], taille: [0.15, 0.10, 0.07] },
+      { nom: `${nom}_poignee_caisse`, forme: 'boite', role: 'materiel', position: [x + 0.04, 0.18, z - 0.15], taille: [0.08, 0.023, 0.025] },
+    );
+  } else {
+    pieces.push(
+      { nom: `${nom}_fusil`, forme: 'boite', role: 'materiel', position: [x + 0.1, 0.22, z + 0.1], taille: [0.23, 0.045, 0.037] },
+      { nom: `${nom}_canon_fusil`, forme: 'cylindre', role: 'roulant', position: [x + 0.25, 0.223, z + 0.1], taille: [0.024, 0.08, 0.024], rotation: [0, 0, DEMI_PI] },
+      { nom: `${nom}_chargeur`, forme: 'boite', role: 'sombre', position: [x + 0.09, 0.175, z + 0.1], taille: [0.038, 0.065, 0.033], rotation: [0, 0, 0.18] },
+    );
+  }
+  return pieces;
 }
 
 /**
@@ -206,10 +312,11 @@ function figurine(nom: string, x: number, z: number): Piece[] {
  */
 export function composerSilhouette(s: Silhouette): Piece[] {
   if (s.base === 'pattes') {
+    const technicien = s.modules.includes('radar');
     const troupe = [
-      ...figurine('figurine_1', 0.13, -0.11),
-      ...figurine('figurine_2', -0.12, 0.02),
-      ...figurine('figurine_3', 0.05, 0.16),
+      ...figurine('figurine_1', 0.12, -0.20, technicien),
+      ...figurine('figurine_2', -0.19, 0.01, technicien),
+      ...figurine('figurine_3', 0.11, 0.20, technicien),
     ];
     let rang = 0;
     for (const m of s.modules.slice(0, 3)) {
@@ -222,11 +329,15 @@ export function composerSilhouette(s: Silhouette): Piece[] {
   }
 
   const yBase = hauteurBase(s.base);
-  const pieces = [...piecesBase(s.base), ...piecesCorps(s.corps, yBase)];
+  const pieces = [...piecesBase(s.base), ...detailsBase(s.base), ...piecesCorps(s.corps, yBase), ...detailsCorps(s, yBase)];
   const ySommet = hauteurCorps(s.corps, yBase);
   let rang = 0;
   for (const m of s.modules.slice(0, 3)) {
-    pieces.push(...piecesModule(m, ySommet, rang));
+    const canonEnTourelle = s.modules.includes('tourelle') && s.modules.includes('canon_long');
+    const hauteurModule = ySommet + (m === 'canon_long' && canonEnTourelle ? 0.06 : 0);
+    const ajout = [...piecesModule(m, hauteurModule, rang), ...detailsModule(m, hauteurModule, rang)];
+    // Le canon lourd remplace le canon court de la tourelle, sans deux tubes superposés.
+    pieces.push(...ajout.filter((p) => !(canonEnTourelle && (p.nom === 'canon' || p.nom === 'bouche_canon'))));
     rang += 1;
   }
   return pieces;

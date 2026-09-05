@@ -29,6 +29,7 @@
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 // On importe les deux modules précis plutôt que `assets/index` : le point
 // d'entrée tire aussi le catalogue de spécifications, dont le rendu n'a que
@@ -40,16 +41,16 @@ import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches } from '../engine/index';
 import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
-import { CASE } from './geometrie';
+import { CASE, NIVEAU_EAU } from './geometrie';
 import {
   composerSilhouette, echelleTaille, hauteurSilhouette, type Piece, type RolePiece,
 } from './pieces';
 
 /** Les matériaux neutres, partagés par toutes les nations. */
 const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant', number>> = {
-  materiel: 0x3b414a,
-  verre: 0xa9d8ff,
-  roulant: 0x24272c,
+  materiel: 0x515c65,
+  verre: 0x70bbd2,
+  roulant: 0x222b31,
 };
 
 /** Proportions d'un gabarit : longueur (X), hauteur (Y), largeur (Z). */
@@ -75,11 +76,11 @@ class Materiaux {
     const p: Palette = style ? style.palette : paletteDe(camp);
     const accent = style?.palette.accents[0] ?? p.light;
     const jeu: Record<RolePiece, THREE.MeshStandardMaterial> = {
-      principal: new THREE.MeshStandardMaterial({ color: p.main, roughness: 0.52, metalness: 0.18 }),
+      principal: new THREE.MeshStandardMaterial({ color: p.main, emissive: p.main, emissiveIntensity: 0.12, roughness: 0.42, metalness: 0.22 }),
       sombre: new THREE.MeshStandardMaterial({ color: p.dark, roughness: 0.6, metalness: 0.2 }),
-      clair: new THREE.MeshStandardMaterial({ color: accent, roughness: 0.46, metalness: 0.14 }),
+      clair: new THREE.MeshStandardMaterial({ color: accent, emissive: accent, emissiveIntensity: 0.08, roughness: 0.46, metalness: 0.14 }),
       materiel: new THREE.MeshStandardMaterial({ color: NEUTRES.materiel, roughness: 0.42, metalness: 0.62 }),
-      verre: new THREE.MeshStandardMaterial({ color: NEUTRES.verre, roughness: 0.12, metalness: 0.3 }),
+      verre: new THREE.MeshStandardMaterial({ color: NEUTRES.verre, roughness: 0.19, metalness: 0.42, emissive: 0x153748, emissiveIntensity: 0.24 }),
       roulant: new THREE.MeshStandardMaterial({ color: NEUTRES.roulant, roughness: 0.85, metalness: 0.12 }),
     };
     this.jeux.set(cle, jeu);
@@ -138,8 +139,8 @@ function boiteBiseautee(l: number, h: number, p: number, biseau: number): THREE.
     bevelEnabled: true,
     bevelThickness: b,
     bevelSize: b,
-    bevelSegments: 2,
-    curveSegments: 4,
+    bevelSegments: 1,
+    curveSegments: 2,
     steps: 1,
   });
   geo.rotateX(-Math.PI / 2);
@@ -159,13 +160,13 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
   let geo: THREE.BufferGeometry;
   switch (p.forme) {
     case 'cylindre':
-      geo = new THREE.CylinderGeometry(l / 2, la / 2, h, 16, 1);
+      geo = new THREE.CylinderGeometry(l / 2, la / 2, h, 12, 1);
       break;
     case 'capsule':
-      geo = new THREE.CapsuleGeometry(l / 2, Math.max(0.01, h - l), 4, 12);
+      geo = new THREE.CapsuleGeometry(l / 2, Math.max(0.01, h - l), 3, 10);
       break;
     case 'sphere':
-      geo = new THREE.SphereGeometry(0.5, 16, 12);
+      geo = new THREE.SphereGeometry(0.5, 12, 8);
       geo.scale(l, h, la);
       break;
     case 'cone':
@@ -178,6 +179,40 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
   }
   geometries.set(cle, geo);
   return geo;
+}
+
+const silhouettesFusionnees = new Map<string, ReadonlyMap<RolePiece, THREE.BufferGeometry>>();
+
+/** Six maillages au maximum, partagés entre unités identiques : le détail ne multiplie pas les draw calls. */
+export function geometriesSilhouette(s: Silhouette): ReadonlyMap<RolePiece, THREE.BufferGeometry> {
+  const cle = JSON.stringify(s);
+  const memo = silhouettesFusionnees.get(cle);
+  if (memo) return memo;
+  const parRole = new Map<RolePiece, THREE.BufferGeometry[]>();
+  const transformation = new THREE.Object3D();
+  for (const piece of composerSilhouette(s)) {
+    if (s.base === 'rotor' && piece.nom.startsWith('pale_')) continue;
+    transformation.position.set(...piece.position);
+    transformation.rotation.set(...(piece.rotation ?? [0, 0, 0]));
+    transformation.updateMatrix();
+    const source = geometriePiece(piece);
+    const geo = source.index ? source.toNonIndexed() : source.clone();
+    geo.applyMatrix4(transformation.matrix);
+    const liste = parRole.get(piece.role) ?? [];
+    liste.push(geo);
+    parRole.set(piece.role, liste);
+  }
+  const fusionnees = new Map<RolePiece, THREE.BufferGeometry>();
+  for (const [role, morceaux] of parRole) {
+    const fusion = mergeGeometries(morceaux, false);
+    if (fusion) {
+      fusion.computeBoundingSphere();
+      fusionnees.set(role, fusion);
+    }
+    for (const morceau of morceaux) morceau.dispose();
+  }
+  silhouettesFusionnees.set(cle, fusionnees);
+  return fusionnees;
 }
 
 /** Un disque plat, mémorisé par rayon et hauteur : socle et liseré. */
@@ -197,16 +232,26 @@ function disque(rayon: number, hauteur: number): THREE.BufferGeometry {
  * différence entre deux unités, toujours présent pour la lisibilité.
  */
 function piecesSocle(camp: CampId | null, materiaux: Materiaux, jeu: Record<RolePiece, THREE.MeshStandardMaterial>): THREE.Mesh[] {
-  const anneau = new THREE.Mesh(disque(0.34, 0.018), materiaux.lisere(camp));
+  const anneau = new THREE.Mesh(disque(0.39, 0.024), materiaux.lisere(camp));
   anneau.name = 'socle_lisere';
   anneau.position.set(0, 0.009, 0);
   anneau.receiveShadow = true;
-  const plateau = new THREE.Mesh(disque(0.29, 0.024), jeu.sombre);
+  const plateau = new THREE.Mesh(disque(0.30, 0.028), jeu.sombre);
   plateau.name = 'socle';
   plateau.position.set(0, 0.014, 0);
   plateau.castShadow = true;
   plateau.receiveShadow = true;
-  return [anneau, plateau];
+  // Les encoches claires identifient aussi le camp sans dépendre de la couleur.
+  const reperes: THREE.Mesh[] = [];
+  for (let i = 0; i < (camp === null ? 0 : camp + 1); i += 1) {
+    const repere = new THREE.Mesh(boiteBiseautee(0.06, 0.012, 0.09, 0.003), jeu.verre);
+    repere.name = `socle_repere_${i}`;
+    const angle = -Math.PI / 2 + (i - (camp ?? 0) / 2) * 0.28;
+    repere.position.set(Math.cos(angle) * 0.345, 0.03, Math.sin(angle) * 0.345);
+    repere.rotation.y = -angle;
+    reperes.push(repere);
+  }
+  return [anneau, plateau, ...reperes];
 }
 
 /**
@@ -250,14 +295,28 @@ export function construirePlaceholder(
   const groupe = new THREE.Group();
   const jeu = materiaux.jeu(camp, style);
   for (const m of piecesSocle(camp, materiaux, jeu)) groupe.add(m);
-  for (const piece of composerSilhouette(s)) {
-    const maille = new THREE.Mesh(geometriePiece(piece), jeu[piece.role]);
-    maille.name = piece.nom;
-    maille.position.set(piece.position[0], piece.position[1], piece.position[2]);
-    if (piece.rotation) maille.rotation.set(piece.rotation[0], piece.rotation[1], piece.rotation[2]);
+  const modele = new THREE.Group();
+  modele.name = 'figurine_modele';
+  groupe.add(modele);
+  for (const [role, geometrie] of geometriesSilhouette(s)) {
+    const maille = new THREE.Mesh(geometrie, jeu[role]);
+    maille.name = `silhouette_${role}`;
     maille.castShadow = true;
     maille.receiveShadow = true;
-    groupe.add(maille);
+    modele.add(maille);
+  }
+  if (s.base === 'rotor') {
+    const rotor = new THREE.Group();
+    rotor.name = 'rotor_anime';
+    rotor.position.set(0.02, 0.41, 0);
+    for (const piece of composerSilhouette(s).filter((p) => p.nom.startsWith('pale_'))) {
+      const maille = new THREE.Mesh(geometriePiece(piece), jeu[piece.role]);
+      maille.name = piece.nom;
+      maille.position.set(piece.position[0] - 0.02, piece.position[1] - 0.41, piece.position[2]);
+      maille.castShadow = true;
+      rotor.add(maille);
+    }
+    modele.add(rotor);
   }
   for (const m of piecesOrnements(style, hauteurSilhouette(s), jeu)) groupe.add(m);
   const e = echelleTaille(s.taille);
@@ -385,6 +444,8 @@ export interface OptionsUnites {
 /** Ce que `creerUnites` rend au rendu. */
 export interface CalqueUnites {
   readonly groupe: THREE.Group;
+  /** Avance les rotors et la respiration des figurines, sans déplacer les socles. */
+  avancer(ms: number): boolean;
   /** Synchronise les maillages avec l'état. */
   maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): void;
   /**
@@ -414,6 +475,8 @@ interface Entree {
   etiquette: THREE.Sprite | null;
   sommet: number;
   pv: number;
+  rotor: THREE.Object3D | null;
+  figurines: THREE.Object3D | null;
 }
 
 /** Texture d'étiquette de PV, mémorisée par (points de vie, camp). */
@@ -458,6 +521,7 @@ export function creerUnites(
   groupe.name = 'unites';
   const materiaux = new Materiaux();
   const entrees = new Map<string, Entree>();
+  let tempsAnimation = 0;
   const visuels = new Map<string, EtatVisuel>();
   const retenues = new Map<string, Unite>();
   const paysParCamp = new Map<CampId, CodePays>(
@@ -495,6 +559,8 @@ export function creerUnites(
       etiquette: null,
       sommet: hauteurSilhouette(type.silhouette),
       pv: -1,
+      rotor: corps.getObjectByName('rotor_anime') ?? null,
+      figurines: type.silhouette.base === 'pattes' ? corps.getObjectByName('figurine_modele') ?? null : null,
     };
     // Un vrai modèle prend la place du placeholder dès qu'il arrive, sans à-coup.
     void chargerModele(u.type, paysParCamp.get(u.camp) ?? null).then((modele) => {
@@ -504,6 +570,8 @@ export function creerUnites(
       g.remove(entree.corps);
       g.add(clone);
       entree.corps = clone as THREE.Group;
+      entree.rotor = null;
+      entree.figurines = null;
     });
     entrees.set(u.id, entree);
     return entree;
@@ -512,17 +580,64 @@ export function creerUnites(
   function poser(entree: Entree, u: Unite, v: EtatVisuel): void {
     const x = u.x * CASE + CASE / 2 + v.dx;
     const z = u.y * CASE + CASE / 2 + v.dz;
-    const solide = hauteurEn(x, z);
+    // Une unité ne coule pas. Le sol d'une case de mer est à −0,40, très en
+    // dessous du plan d'eau : quand une marée reprend une case, la pièce qui s'y
+    // trouve encore doit se lire comme en train de patauger, pas comme engloutie.
+    // (Le jour où des unités navales existeront, elles feront exception ici.)
+    const solide = Math.max(hauteurEn(x, z), NIVEAU_EAU + 0.01);
     const cap = v.cap;
     entree.groupe.position.set(
       x + Math.cos(cap) * v.recul + Math.sin(v.secousse * 40) * v.secousse * 0.05,
       solide + v.dy - v.affaissement * 0.16,
       z - Math.sin(cap) * v.recul,
     );
-    entree.groupe.rotation.set(v.affaissement * 0.5, cap, 0);
+    orienter(entree.groupe, x, z, cap, v.affaissement);
     entree.groupe.visible = v.opacite > 0.02;
     if (v.opacite < 1) entree.groupe.scale.setScalar(0.6 + v.opacite * 0.4);
     else entree.groupe.scale.setScalar(1);
+  }
+
+  /** Portée d'échantillonnage de la pente, en fraction de case. */
+  const PAS_PENTE = 0.34;
+  /** Part de la pente réellement suivie : au-delà, une pièce paraît culbuter. */
+  const SUIVI_PENTE = 0.55;
+  /** Inclinaison maximale, en radians (environ 13°). */
+  const PENTE_MAX = 0.23;
+
+  const HAUT = new THREE.Vector3(0, 1, 0);
+  const normale = new THREE.Vector3();
+  const quatSol = new THREE.Quaternion();
+  const quatCap = new THREE.Quaternion();
+  const quatChute = new THREE.Quaternion();
+  const AXE_X = new THREE.Vector3(1, 0, 0);
+
+  /**
+   * Oriente une pièce **sur le sol** plutôt qu'à plat.
+   *
+   * La pente est lue par différences finies autour du point, puis atténuée et
+   * bornée : suivre le relief au degré près ferait basculer un char sur une
+   * berge, alors qu'on veut seulement qu'il ne flotte pas. C'est ce qui manquait
+   * quand une marée creusait le sol sous une unité : elle restait horizontale,
+   * à moitié plantée dans la pente.
+   */
+  function orienter(
+    groupe: THREE.Object3D, x: number, z: number, cap: number, affaissement: number,
+  ): void {
+    const dx = hauteurEn(x + PAS_PENTE, z) - hauteurEn(x - PAS_PENTE, z);
+    const dz = hauteurEn(x, z + PAS_PENTE) - hauteurEn(x, z - PAS_PENTE);
+    const pente = Math.hypot(dx, dz);
+    const frein = pente > 1e-4
+      ? Math.min(1, PENTE_MAX / Math.atan(pente / (2 * PAS_PENTE))) * SUIVI_PENTE
+      : 0;
+    normale.set(-dx * frein, 2 * PAS_PENTE, -dz * frein).normalize();
+    quatSol.setFromUnitVectors(HAUT, normale);
+    quatCap.setFromAxisAngle(HAUT, cap);
+    groupe.quaternion.copy(quatSol).multiply(quatCap);
+    // La chute de fin de partie s'ajoute par-dessus, autour de l'axe de la pièce.
+    if (affaissement !== 0) {
+      quatChute.setFromAxisAngle(AXE_X, affaissement * 0.5);
+      groupe.quaternion.multiply(quatChute);
+    }
   }
 
   function majEtiquette(entree: Entree, pv: number): void {
@@ -555,6 +670,27 @@ export function creerUnites(
   return {
     groupe,
     visuel,
+
+    avancer(ms: number): boolean {
+      tempsAnimation += Math.min(100, Math.max(0, ms));
+      let anime = false;
+      let rang = 0;
+      for (const entree of entrees.values()) {
+        if (!entree.groupe.visible) continue;
+        if (entree.rotor) {
+          entree.rotor.rotation.y = (tempsAnimation * 0.018) % (Math.PI * 2);
+          anime = true;
+        }
+        if (entree.figurines) {
+          const phase = tempsAnimation * 0.0017 + rang * 1.7;
+          entree.figurines.position.y = Math.sin(phase) * 0.004;
+          entree.figurines.rotation.z = Math.sin(phase * 0.8) * 0.012;
+          anime = true;
+        }
+        rang++;
+      }
+      return anime;
+    },
 
     definirPays(camp: CampId, code: CodePays | null): void {
       const avant = paysParCamp.get(camp);
@@ -618,6 +754,10 @@ export function creerUnites(
         m.dispose();
       }
       etiquettes.clear();
+      for (const silhouette of silhouettesFusionnees.values()) {
+        for (const g of silhouette.values()) g.dispose();
+      }
+      silhouettesFusionnees.clear();
       for (const g of geometries.values()) g.dispose();
       geometries.clear();
     },

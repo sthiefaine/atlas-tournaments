@@ -22,7 +22,7 @@ import type {
 import { cleCase } from './types';
 
 /** Version du moteur : tout ce qui casse un rejeu l'incrémente. */
-export const VERSION_MOTEUR = 1;
+export const VERSION_MOTEUR = 2;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;
@@ -52,6 +52,7 @@ export function copierEtat(e: EtatPartie): EtatPartie {
     grille: e.grille,
     reglages: e.reglages,
     flux: { ...e.flux },
+    relais: { ...e.relais },
     proprietaires: { ...e.proprietaires },
     unites: e.unites.map((u) => (u.cargo.length === 0 ? { ...u } : { ...u, cargo: [...u.cargo] })),
     camps: e.camps.map((c) => ({ ...c })),

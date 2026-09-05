@@ -135,3 +135,8 @@ Deux choses arrivent **chaque jour réel, potentiellement**, sans jamais casser 
 ## Méthode de travail
 
 Un coordinateur (Claude Fable 5.1) et des agents (Claude Opus) autant que nécessaire, chacun sur un périmètre borné, avec relecture croisée. Les documents sont en français, en Markdown, écrits pour être lus par des humains **et** par les routines (la bible et les schémas seront servis aux routines).
+
+
+## Validation des cinq axes et de la formation — 5 septembre 2026
+
+Le joueur a validé : objectifs escorte/relais/survie corrigés ; six missions dans trois environnements et une alliance jouable ; biomes tactiquement distincts ; unité de génie ; 3D plus lisible aux textures moins chargées. Les **quatre premières manches sont des entraînements expliqués**, avant l’entrée dans les matchs officiels. Le parcours local sert de première réalisation ; le tour régional et mondial reste l’ambition de campagne. Périmètre livré et limites : `doc/15-premiers-matchs.md`.

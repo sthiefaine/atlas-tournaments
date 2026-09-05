@@ -741,6 +741,7 @@ export interface Scenario extends Enveloppe {
   dialogueOuverture: Dialogue[];  // 1 à 8
   dialogueVictoire: Dialogue[];   // 1 à 6
   dialogueDefaite: Dialogue[];    // 1 à 4
+  scenesDialogue?: SceneDialogue[]; // 0 à 12, jouées PENDANT le match
   choix: ChoixScenario[];         // 0 à 3
   flagsRequis: Cle[];             // conditions d'accès
   flagsInterdits: Cle[];
@@ -753,7 +754,29 @@ export interface Scenario extends Enveloppe {
 }
 ```
 
-**Validations serveur.** `date` est une `DateIso` valide, écrite **une seule fois** : une soumission qui modifie la `date` d'un scénario déjà validé est refusée (`motif: 'champ_calcule'`), sans quoi un rejeu changerait de saison. `cycleJourNuit` : deux entiers ≥ 0 dont la somme est comprise entre 1 et 12 ; `{ jour: 4, nuit: 2 }` à défaut. `climatFixe`, s'il est présent, ne contient que des valeurs des énumérations `Saison` et `Meteo` (§13) ; une météo forcée hors de la table de probabilités du climat du pays est acceptée mais signalée à la routine contrôle (c'est un scénario scripté, pas un tirage). `catalogueVersion` désigne une version de catalogue existante, et **toute** `CleUnite` citée par la carte, les unités de départ et les objectifs se résout dans **cette** version, avec un statut `canon` ou `homologuee` — une unité en `essai` n'est autorisée que dans le scénario d'une `MissionDuJour` (§14). `carteCle` existe et son statut est au moins `valide`. `commandants` : un par camp de la carte, exactement, pas deux fois le même `camp` ; le camp 0 sans `ia` est le joueur, tous les autres doivent avoir une `ia`. `victoire` et `defaite` : 1 à 3 entrées, non vides — un scénario sans condition de défaite est refusé. Toute `Case` citée dans un objectif est dans les bornes de la carte et sur une case pertinente (`capturer` et `tenir` exigent un terrain capturable). `uniteRef` référence une unité de `unitesDepart` (identifiée par son index ou une clé). `limiteJournees` cohérent avec `defaite` : si un objectif `survivre` existe, `limiteJournees` doit être ≥ ses journées ou nul. Tous les flags de `ecritFlags`, `flagsRequis`, `flagsInterdits` et `recompenses.flags` existent dans `flags.json` et respectent la convention de portée (§8) : un scénario de pays ne peut écrire que `pays.<son code>.*` et `monde.*`. **Un scénario d'`incarnation` est plus serré encore** : il n'écrit **aucun** flag de la trame principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de la **nation incarnée** — `pays.<incarnation.paysCode>.*` et `cmd.*`, et rien d'autre, ni en récompense ni dans une option de choix (§15.2 bis). Son `commandants[camp 0].commandantCle` est **exactement** `incarnation.commandantCle` : le joueur joue le général de la nation, pas le sien. Les dialogues passent le filtre de bible et de ton. `choix` : chaque `ChoixScenario` a 2 ou 3 options, chaque option écrit au moins un flag, et **deux options d'un même choix n'écrivent jamais le même ensemble de flags** (sinon le choix est décoratif — `motif: 'choix_sans_consequence'`).
+**Les scènes de dialogue** (`scenesDialogue`) sont ce qui manquait pour que les commandants parlent *pendant* un match, et pas seulement avant et après.
+
+```ts
+type DeclencheurScene =
+  | { type: 'ouverture' }                          // une fois la carte à l'écran
+  | { type: 'journee'; journee: number }           // au début du tour du joueur
+  | { type: 'premier_combat' }                     // à la première attaque
+  | { type: 'capture'; camp?: CampId }             // un bâtiment change de main
+  | { type: 'perte'; camp?: CampId }               // une unité sort du jeu
+  | { type: 'production'; unite?: CleUnite }       // une unité entre en jeu
+  | { type: 'pouvoir'; camp?: CampId }             // un commandant déclenche
+  | { type: 'etape'; etape: number };              // un relais franchit un jalon
+
+interface SceneDialogue {
+  cle: Cle;
+  declencheur: DeclencheurScene;
+  repliques: Dialogue[];          // 1 à 6
+}
+```
+
+Trois règles, et elles tiennent tout : un déclencheur se juge sur les **événements** que le moteur vient de rendre — jamais sur une horloge, jamais sur un sondage —, ce qui rend les dialogues rejouables à l'identique ; une scène ne se joue **qu'une fois** par partie, identifiée par sa `cle`, sans quoi une scène de capture reviendrait à chaque ville prise ; et l'ordre de sortie est celui du scénario, pas celui des événements, pour qu'un auteur entende ses scènes dans l'ordre où il les a écrites. La fin de match n'a **pas** de déclencheur : elle appartient à `dialogueVictoire` et `dialogueDefaite`, qui existaient avant et restent propriétaires du moment. Le champ est facultatif : un scénario sans scène se joue exactement comme avant.
+
+**Validations serveur.** `date` est une `DateIso` valide, écrite **une seule fois** : une soumission qui modifie la `date` d'un scénario déjà validé est refusée (`motif: 'champ_calcule'`), sans quoi un rejeu changerait de saison. `cycleJourNuit` : deux entiers ≥ 0 dont la somme est comprise entre 1 et 12 ; `{ jour: 4, nuit: 2 }` à défaut. `climatFixe`, s'il est présent, ne contient que des valeurs des énumérations `Saison` et `Meteo` (§13) ; une météo forcée hors de la table de probabilités du climat du pays est acceptée mais signalée à la routine contrôle (c'est un scénario scripté, pas un tirage). `catalogueVersion` désigne une version de catalogue existante, et **toute** `CleUnite` citée par la carte, les unités de départ et les objectifs se résout dans **cette** version, avec un statut `canon` ou `homologuee` — une unité en `essai` n'est autorisée que dans le scénario d'une `MissionDuJour` (§14). `carteCle` existe et son statut est au moins `valide`. `commandants` : un par camp de la carte, exactement, pas deux fois le même `camp` ; le camp 0 sans `ia` est le joueur, tous les autres doivent avoir une `ia`. `victoire` et `defaite` : 1 à 3 entrées, non vides — un scénario sans condition de défaite est refusé. Toute `Case` citée dans un objectif est dans les bornes de la carte et sur une case pertinente (`capturer` et `tenir` exigent un terrain capturable). `uniteRef` référence une unité de `unitesDepart` (identifiée par son index ou une clé). `limiteJournees` cohérent avec `defaite` : si un objectif `survivre` existe, `limiteJournees` doit être ≥ ses journées ou nul. Tous les flags de `ecritFlags`, `flagsRequis`, `flagsInterdits` et `recompenses.flags` existent dans `flags.json` et respectent la convention de portée (§8) : un scénario de pays ne peut écrire que `pays.<son code>.*` et `monde.*`. **Un scénario d'`incarnation` est plus serré encore** : il n'écrit **aucun** flag de la trame principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de la **nation incarnée** — `pays.<incarnation.paysCode>.*` et `cmd.*`, et rien d'autre, ni en récompense ni dans une option de choix (§15.2 bis). Son `commandants[camp 0].commandantCle` est **exactement** `incarnation.commandantCle` : le joueur joue le général de la nation, pas le sien. Les dialogues passent le filtre de bible et de ton. `scenesDialogue` : 0 à 12 scènes, **clés distinctes** (deux scènes de même clé ne se distingueraient plus, et la seconde ne se jouerait jamais), 1 à 6 répliques chacune ; un déclencheur `journee` porte une journée de 1 à 60, un déclencheur `etape` un jalon de 1 à 12, et chacun des deux est **obligatoire** — un `{ type: 'journee' }` sans journée passerait sinon, et la scène ne se jouerait jamais sans que personne ne sache pourquoi. `choix` : chaque `ChoixScenario` a 2 ou 3 options, chaque option écrit au moins un flag, et **deux options d'un même choix n'écrivent jamais le même ensemble de flags** (sinon le choix est décoratif — `motif: 'choix_sans_consequence'`).
 
 ```json
 {

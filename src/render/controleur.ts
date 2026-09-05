@@ -20,8 +20,8 @@ import type {
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
-  manhattan, porte, portee, produitesPar, terrainLogique, uniteParId, uniteSur,
-  verifierProduction,
+  depuisCle, manhattan, porte, portee, produitesPar, terrainLogique, uniteParId,
+  uniteSur, verifierProduction, constructionsPossibles,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
 import type { OptionMenu } from './hud';
@@ -33,7 +33,7 @@ export type Phase =
 
 /** Les suites proposables au joueur, dans l'ordre d'affichage du menu. */
 export const SUITES_MENU = [
-  'attaquer', 'capturer', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'attendre',
+  'attaquer', 'capturer', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
 ] as const;
 /** Identifiant d'une entrée du menu d'actions. */
 export type IdSuite = typeof SUITES_MENU[number];
@@ -47,6 +47,7 @@ const CLE_MENU: Record<IdSuite, string> = {
   debarquer: 'hud.debarquer',
   ravitailler: 'hud.ravitailler',
   attendre: 'hud.attendre',
+  construire: 'hud.construire',
 };
 
 /** Ce que le contrôleur expose au rendu : sa vue, jamais son état interne. */
@@ -58,6 +59,12 @@ export interface VueControleur {
   surbrillances: Surbrillance[];
   menu: { ancre: Case; options: OptionMenu[] } | null;
   production: { batiment: Case; unites: CleUnite[] } | null;
+  /**
+   * La visée en cours : l'unité qui tire, la case d'où elle tirerait et les
+   * cases visables. Le HUD s'en sert pour prévoir le duel avant confirmation ;
+   * `null` hors phase `cible`, ou quand la phase vise des travaux.
+   */
+  visee: { attaquantId: string; depuis: Case; cibles: Case[]; cible: Case | null } | null;
 }
 
 /** Ce que le contrôleur signale à son hôte. */
@@ -101,10 +108,23 @@ export class Controleur {
   private cheminCourant: Case[] = [];
 
   private cibles: Unite[] = [];
+  private travaux: Case[] = [];
 
   private options: IdSuite[] = [];
 
   private batimentProduction: Case | null = null;
+
+  /**
+   * La cible **pointée** en phase de visée. À la souris, le survol la pose, donc
+   * un clic confirme du premier coup. Au doigt il n'y a pas de survol : le
+   * premier appui vise et fait apparaître la prévision, le second confirme. Sans
+   * elle, une attaque au doigt partait toujours à l'aveugle.
+   */
+  private cibleVisee: Case | null = null;
+
+  private cacheAtteignables: {
+    etat: EtatPartie; uniteId: string; cases: ReadonlySet<string>;
+  } | null = null;
 
   constructor(o: OptionsControleur) {
     this.etatPartie = o.etat;
@@ -168,6 +188,14 @@ export class Controleur {
       production: this.phaseCourante === 'production' && this.batimentProduction
         ? { batiment: this.batimentProduction, unites: this.unitesProduisibles(this.batimentProduction) }
         : null,
+      visee: this.phaseCourante === 'cible' && this.cibles.length > 0 && this.selectionId !== null
+        ? {
+          attaquantId: this.selectionId,
+          depuis: this.arrivee(),
+          cibles: this.cibles.map((u) => ({ x: u.x, y: u.y })),
+          cible: this.cibleVisee,
+        }
+        : null,
     };
   }
 
@@ -192,6 +220,10 @@ export class Controleur {
     if (c.x === this.curseurCase.x && c.y === this.curseurCase.y) return;
     this.curseurCase = c;
     if (this.phaseCourante === 'selection') this.majChemin(c);
+    // Survoler une cible, c'est déjà la pointer : le clic qui suit confirme.
+    if (this.phaseCourante === 'cible' && this.cibles.some((u) => u.x === c.x && u.y === c.y)) {
+      this.cibleVisee = { x: c.x, y: c.y };
+    }
     this.ecouteur.surChangement?.();
   }
 
@@ -200,10 +232,25 @@ export class Controleur {
     if (!this.dansCarte(c) || this.phaseCourante === 'attente' || this.phaseCourante === 'fin') return;
     this.curseurCase = c;
 
+    if (this.phaseCourante === 'cible' && this.travaux.length > 0) {
+      if (this.travaux.some((v) => v.x === c.x && v.y === c.y)) this.jouerOrdre({ type: 'construire', cible: c });
+      else this.annuler();
+      return;
+    }
     if (this.phaseCourante === 'cible') {
       const cible = this.cibles.find((u) => u.x === c.x && u.y === c.y);
-      if (cible) this.jouerOrdre({ type: 'attaquer', cible: { x: cible.x, y: cible.y } });
-      else this.annuler();
+      if (!cible) {
+        this.annuler();
+        return;
+      }
+      // Deux temps : le premier appui pointe et montre la prévision, le second
+      // confirme. À la souris, le survol a déjà pointé, donc un clic suffit.
+      if (this.cibleVisee && this.cibleVisee.x === c.x && this.cibleVisee.y === c.y) {
+        this.jouerOrdre({ type: 'attaquer', cible: { x: cible.x, y: cible.y } });
+        return;
+      }
+      this.cibleVisee = { x: cible.x, y: cible.y };
+      this.ecouteur.surChangement?.();
       return;
     }
 
@@ -239,6 +286,8 @@ export class Controleur {
     if (this.phaseCourante === 'cible' || this.phaseCourante === 'action') {
       this.phaseCourante = 'selection';
       this.cibles = [];
+      this.cibleVisee = null;
+      this.travaux = [];
       this.options = [];
       const u = this.uniteSelectionnee();
       if (u) this.cheminCourant = [{ x: u.x, y: u.y }];
@@ -276,12 +325,13 @@ export class Controleur {
         return;
       case 'attaquer': {
         this.cibles = ciblesDepuis(this.etatPartie, this.cat, u, arrivee, this.aBouge());
-        if (this.cibles.length === 1) {
-          const seule = this.cibles[0];
-          if (seule) this.jouerOrdre({ type: 'attaquer', cible: { x: seule.x, y: seule.y } });
-          return;
-        }
+        if (this.cibles.length === 0) return;
+        // Même face à une cible unique, on passe par la phase de visée : c'est
+        // là que le HUD montre la prévision du duel, et une attaque qui part
+        // sans que le joueur ait vu ce qu'elle coûte est un pari, pas un ordre.
         this.phaseCourante = 'cible';
+        this.cibleVisee = { x: this.cibles[0]!.x, y: this.cibles[0]!.y };
+        this.curseurCase = { ...this.cibleVisee };
         this.ecouteur.surChangement?.();
         return;
       }
@@ -298,6 +348,13 @@ export class Controleur {
       case 'debarquer': {
         const vers = this.caseDebarquement(u, arrivee);
         if (vers) this.jouerOrdre({ type: 'debarquer', vers });
+        return;
+      }
+      case 'construire': {
+        this.cibles = [];
+        this.travaux = constructionsPossibles(this.etatPartie, this.cat, { ...u, ...arrivee });
+        this.phaseCourante = 'cible';
+        this.ecouteur.surChangement?.();
         return;
       }
       case 'ravitailler': {
@@ -350,6 +407,7 @@ export class Controleur {
   private surbrillances(): Surbrillance[] {
     const sortie: Surbrillance[] = [];
     if (this.phaseCourante === 'cible') {
+      for (const c of this.travaux) sortie.push({ case: c, genre: 'production' });
       for (const c of this.cibles) sortie.push({ case: { x: c.x, y: c.y }, genre: 'attaque' });
       return sortie;
     }
@@ -360,44 +418,76 @@ export class Controleur {
     if (this.phaseCourante !== 'selection' && this.phaseCourante !== 'action') return sortie;
     const u = this.uniteSelectionnee();
     if (!u) return sortie;
-    for (const k of this.atteignables()) {
-      const [x, y] = k.split(',');
-      sortie.push({ case: { x: Number(x), y: Number(y) }, genre: 'deplacement' });
+    const atteignables = this.atteignables();
+    for (const k of atteignables) {
+      sortie.push({ case: depuisCle(k), genre: 'deplacement' });
     }
-    for (const c of this.menacables(u)) {
-      sortie.push({ case: { x: c.x, y: c.y }, genre: 'attaque' });
+    // Le rouge dit « je peux frapper là », le vert « je peux aller là ». Une case
+    // qui est les deux reste verte : on la lit d'abord comme une destination.
+    for (const c of this.porteeAttaque(u, atteignables)) {
+      sortie.push({ case: c, genre: 'attaque' });
     }
     return sortie;
   }
 
-  /** Cases atteignables par l'unité sélectionnée, arrivée libre comprise. */
-  private atteignables(): Set<string> {
+  /**
+   * L'enveloppe de tir de l'unité sélectionnée : toutes les cases qu'elle
+   * pourrait frapper ce tour-ci, **privées** de celles où elle peut aller.
+   *
+   * Une pièce indirecte qui ne tire pas après mouvement ne menace que depuis sa
+   * case actuelle : afficher l'enveloppe de tous ses points de chute mentirait.
+   */
+  private porteeAttaque(u: Unite, atteignables: ReadonlySet<string>): Case[] {
+    const type = this.cat.unites[u.type];
+    if (!type) return [];
+    if (Object.keys(type.degats).length === 0) return [];
+    const [min, max] = type.portee;
+    if (max <= 0) return [];
+    const departs = type.peutTirerApresMouvement
+      ? [...atteignables].map(depuisCle)
+      : [{ x: u.x, y: u.y }];
+    // Garde-fou : une enveloppe se recalcule à chaque survol. Au-delà, on se
+    // rabat sur la case de départ, qui reste l'information la plus utile.
+    const trop = departs.length * (2 * max * (max + 1) + 1) > 6000;
+    const sources = trop ? [{ x: u.x, y: u.y }] : departs;
+    const vues = new Map<string, Case>();
+    for (const d of sources) {
+      for (let dx = -max; dx <= max; dx += 1) {
+        const reste = max - Math.abs(dx);
+        for (let dy = -reste; dy <= reste; dy += 1) {
+          const distance = Math.abs(dx) + Math.abs(dy);
+          if (distance < min || distance > max) continue;
+          const c = { x: d.x + dx, y: d.y + dy };
+          if (!this.dansCarte(c)) continue;
+          const k = cleCase(c);
+          if (atteignables.has(k)) continue;
+          vues.set(k, c);
+        }
+      }
+    }
+    return [...vues.values()];
+  }
+
+  /**
+   * Cases atteignables par l'unité sélectionnée, arrivée libre comprise.
+   *
+   * Mémoïsé sur (état, sélection) : la vue le demande à chaque survol, et
+   * l'enveloppe de tir le redemande derrière. Le cache tombe dès que l'état
+   * change — c'est une identité de référence, jamais une comparaison profonde.
+   */
+  private atteignables(): ReadonlySet<string> {
     const u = this.uniteSelectionnee();
+    if (!u) return new Set<string>();
+    const cache = this.cacheAtteignables;
+    if (cache && cache.etat === this.etatPartie && cache.uniteId === u.id) return cache.cases;
     const sortie = new Set<string>();
-    if (!u) return sortie;
     const p = portee(this.etatPartie, this.cat, u);
     for (const c of casesAtteignables(p)) {
       if (arriveeLibre(this.etatPartie, c, u.id)) sortie.add(cleCase(c));
     }
     sortie.add(cleCase({ x: u.x, y: u.y }));
+    this.cacheAtteignables = { etat: this.etatPartie, uniteId: u.id, cases: sortie };
     return sortie;
-  }
-
-  /** Adversaires que l'unité pourrait viser depuis au moins une case atteignable. */
-  private menacables(u: Unite): Unite[] {
-    const cases = [...this.atteignables()].map((k) => {
-      const [x, y] = k.split(',');
-      return { x: Number(x), y: Number(y) };
-    });
-    if (cases.length > 96) return [];
-    const vus = new Map<string, Unite>();
-    for (const depuis of cases) {
-      const aBouge = depuis.x !== u.x || depuis.y !== u.y;
-      for (const cible of ciblesDepuis(this.etatPartie, this.cat, u, depuis, aBouge)) {
-        vus.set(cible.id, cible);
-      }
-    }
-    return [...vus.values()];
   }
 
   /** L'unité sélectionnée, ou `undefined`. */
@@ -477,11 +567,14 @@ export class Controleur {
 
     if (this.voisinFusionnable(u, arrivee)) sortie.push('fusionner');
     if (this.transportVoisin(u, arrivee)) sortie.push('embarquer');
+    if (constructionsPossibles(this.etatPartie, this.cat, { ...u, ...arrivee }).length > 0) sortie.push('construire');
     if (u.cargo.length > 0 && this.caseDebarquement(u, arrivee)) sortie.push('debarquer');
     if (porte(type, 'ravitaillement') && this.voisinRavitaillable(u, arrivee)) sortie.push('ravitailler');
 
     sortie.push('attendre');
-    return sortie;
+    // Place fixe : un ordre est toujours au même rang, quelles que soient les
+    // options du moment. C'est ce qui rend le geste mécanique.
+    return SUITES_MENU.filter((id) => sortie.includes(id));
   }
 
   /** Une unité amie du même type, adjacente et abîmée : la fusion a un sens. */
@@ -585,6 +678,8 @@ export class Controleur {
     this.selectionId = null;
     this.cheminCourant = [];
     this.cibles = [];
+    this.cibleVisee = null;
+    this.travaux = [];
     this.options = [];
     this.batimentProduction = null;
     if (this.phaseCourante !== 'fin' && this.phaseCourante !== 'attente') {

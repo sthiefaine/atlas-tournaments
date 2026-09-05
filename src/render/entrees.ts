@@ -173,7 +173,7 @@ export function brancherEntrees(
     if (doigts.size === 1) ecartPincement = 0;
     if (!doigt) return;
     const p = { x: doigt.x, y: doigt.y };
-    if (!glisse) {
+    if (!glisse && e.type !== 'pointercancel') {
       if (e.button === 2) gestes.surTapSecondaire?.(p);
       else gestes.surTap?.(p);
     } else if (doigts.size === 0) {

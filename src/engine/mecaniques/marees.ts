@@ -11,6 +11,7 @@
 import type { Case, CleTerrain } from '../../schemas/index';
 import type { CtxMecanique, EffetMecanique, Mecanique } from '../types';
 import { cleCase } from '../types';
+import { coutBase } from '../catalogue';
 
 /** Paramètres de `meca_marees`. */
 export interface ParametresMarees {
@@ -81,7 +82,7 @@ export const MECANIQUE_MAREES: Mecanique<ParametresMarees> = {
         const brut = terrainBrut(ctx.etat.grille, ctx.catalogue.parCaractere, u);
         if (brut !== 'mer') continue;
         if (!decouvre(ctx.etat.grille, ctx.catalogue.parCaractere, u, amplitude)) continue;
-        const refuge = plusProcheTerre(ctx, u, occupees);
+        const refuge = plusProcheTerre(ctx, u, occupees, type);
         if (refuge) {
           occupees.delete(cleCase(u));
           occupees.add(cleCase(refuge));
@@ -97,7 +98,7 @@ export const MECANIQUE_MAREES: Mecanique<ParametresMarees> = {
 
 /** Case de terre libre la plus proche, en anneaux croissants, ordre déterministe. */
 function plusProcheTerre(
-  ctx: CtxMecanique<ParametresMarees>, depuis: Case, occupees: Set<string>,
+  ctx: CtxMecanique<ParametresMarees>, depuis: Case, occupees: Set<string>, type: import('../../schemas/index').UnitType,
 ): Case | null {
   for (let rayon = 1; rayon <= 4; rayon += 1) {
     const candidats: Case[] = [];
@@ -111,6 +112,7 @@ function plusProcheTerre(
     for (const c of candidats) {
       const brut = terrainBrut(ctx.etat.grille, ctx.catalogue.parCaractere, c);
       if (brut === null || brut === 'mer') continue;
+      if (coutBase(ctx.catalogue, brut, type.typeMouvement, type) === null) continue;
       if (occupees.has(cleCase(c))) continue;
       return c;
     }

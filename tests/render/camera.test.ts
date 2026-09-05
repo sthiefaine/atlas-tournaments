@@ -99,3 +99,11 @@ test('le rectangle visible borne le culling à la carte', () => {
   assert.ok(f.x0 >= 0 && f.y0 >= 0);
   assert.ok(f.x1 <= 15 && f.y1 <= 11);
 });
+
+
+test('le zoom minimal 2D garde des cases de 48 pixels sur mobile, même sur une grande carte', () => {
+  const cam = creerCamera({ largeur: 40, hauteur: 40 });
+  redimensionner(cam, 390, 844);
+  zoomerAutour(cam, 0.01, { x: 195, y: 422 });
+  assert.ok(cam.zoom * TUILE >= 48);
+});

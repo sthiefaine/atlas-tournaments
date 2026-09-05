@@ -818,7 +818,7 @@
     },
     {
       "cle": "commandant.cmd_tomas_reiner.pouvoir",
-      "texte": "Ligne serrée",
+      "texte": "Verrou du col",
       "contexte": {
         "ecran": "hud",
         "note": "Pouvoir de commandant."
@@ -827,7 +827,7 @@
     },
     {
       "cle": "commandant.cmd_tomas_reiner.super",
-      "texte": "Verrou de fer",
+      "texte": "Ligne inébranlable",
       "contexte": {
         "ecran": "hud",
         "note": "Super pouvoir de commandant."
@@ -878,6 +878,905 @@
         "note": "Étiquette du bandeau journée et fonds."
       },
       "longueurMax": 22
+    },
+    {
+      "cle": "campagne.jouer",
+      "texte": "Commencer la mission",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.titre",
+      "texte": "Le Pacte du Terrain",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.surtitre",
+      "texte": "Atlas Tournament · Première sélection",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.accroche",
+      "texte": "Gagnez votre place. Choisissez vos alliés.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.presentation",
+      "texte": "Quatre manches pour apprendre les Jeux Tactiques, puis vos premiers matchs officiels : une qualification au col et une alliance à jouer.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.retour",
+      "texte": "Carnet de campagne",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.objectif",
+      "texte": "Objectif",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.conseil",
+      "texte": "Conseil du terrain",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.briefing",
+      "texte": "Briefing",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.suivante",
+      "texte": "Mission suivante",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.terminee",
+      "texte": "Qualification terminée",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.rejouer",
+      "texte": "Rejouer la mission",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.progression",
+      "texte": "{n} / {total} missions remportées",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.disponible",
+      "texte": "À jouer",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.verrouillee",
+      "texte": "Remportez la mission précédente",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.gagnee",
+      "texte": "Remportée",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.alliance",
+      "texte": "Alliance luxembourgeoise acquise",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.incarnation",
+      "texte": "Vous commandez la délégation luxembourgeoise",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.controles",
+      "texte": "Sélectionnez une unité, choisissez une case puis un ordre. Entrée valide, Échap annule. Les cases vertes indiquent votre prochain objectif.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.erreur",
+      "texte": "Le jeu n’a pas pu démarrer. Vous pouvez réessayer en 2D.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.essayer_2d",
+      "texte": "Ouvrir en 2D",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.chargement",
+      "texte": "Préparation du terrain…",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.fin",
+      "texte": "Votre sélection a uni deux délégations. Mais le sceau découvert au col pose une nouvelle question : qui veut fausser la Ronde ?",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.sauvegarde",
+      "texte": "La progression est enregistrée dans ce navigateur.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.sauvegarde_indisponible",
+      "texte": "Le stockage de ce navigateur est indisponible. La progression sera conservée pour cette session seulement.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.mission",
+      "texte": "Mission {n}",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.defaite",
+      "texte": "La qualification continue : relisez l’objectif et retentez votre approche.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.demo",
+      "texte": "Exhibition libre",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.admin",
+      "texte": "Administration",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.regles",
+      "texte": "Les règles du terrain",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.dialogue",
+      "texte": "Vestiaire",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.capture_qg",
+      "texte": "Prenez le QG adverse.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.hors_jeu_total",
+      "texte": "Mettez toute l’équipe adverse hors jeu.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.capturer",
+      "texte": "Points contrôlés : {n} / {total}.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.proteger",
+      "texte": "Amenez {unite} sur la case ({x}, {y}).",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.relais",
+      "texte": "Relais validés : {n} / {total}. Prochain : ({x}, {y}).",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.tenir",
+      "texte": "Contrôlez les points jusqu’à la fin de la journée {n}.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.survivre",
+      "texte": "Tenez {total} journées complètes : {n} / {total}.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.points",
+      "texte": "Atteignez {n} points.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.limite",
+      "texte": "Limite : {n} journées.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "objectif.proteger_unite",
+      "texte": "Unité à préserver : {unite}.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "hud.construire",
+      "texte": "Ouvrir un passage · 1 500",
+      "contexte": {
+        "ecran": "jeu"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "refus.construction_impossible",
+      "texte": "Travaux impossibles : cible voisine libre, rivière ou montagne, et 1 500 fonds requis.",
+      "contexte": {
+        "ecran": "jeu"
+      },
+      "longueurMax": 120
+    },
+    {
+      "cle": "campagne.entrainement",
+      "texte": "Entraînement guidé",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.officiel",
+      "texte": "Qualification de la Ronde",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.tutoriel",
+      "texte": "Votre entraînement, pas à pas",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.biomes",
+      "texte": "Lire les terrains",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.introduction_tuto",
+      "texte": "Quatre manches pour apprendre les Jeux Tactiques, puis vos premiers matchs officiels : une qualification au col et une alliance à jouer.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.etape_suivante",
+      "texte": "Étape suivante",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.etape_precedente",
+      "texte": "Étape précédente",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "campagne.ancien_format",
+      "texte": "L’ancienne partie utilise des règles différentes. Commencez une nouvelle partie pour jouer avec cette version.",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.plaine",
+      "texte": "Bocage et plaines",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.foret",
+      "texte": "Forêt",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.montagne",
+      "texte": "Cols alpins",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.desert",
+      "texte": "Désert",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.jungle",
+      "texte": "Jungle",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.neige",
+      "texte": "Terres enneigées",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.volcanique",
+      "texte": "Plateaux volcaniques",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.cotier",
+      "texte": "Côte à marées",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.archipel",
+      "texte": "Archipel",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "biome.marais",
+      "texte": "Marais",
+      "contexte": {
+        "ecran": "campagne"
+      },
+      "longueurMax": null,
+      "pluriel": false
+    },
+    {
+      "cle": "hud.zoom_plus",
+      "texte": "Rapprocher",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Interface tactile mobile"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.zoom_moins",
+      "texte": "Éloigner",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Interface tactile mobile"
+      },
+      "longueurMax": 38
+    },
+    {
+      "cle": "hud.recentrer",
+      "texte": "Recentrer sur votre unité",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Interface tactile mobile"
+      },
+      "longueurMax": 55
+    },
+    {
+      "cle": "campagne.ouvrir_aide",
+      "texte": "Objectif et aide",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Interface tactile mobile"
+      },
+      "longueurMax": 46
+    },
+    {
+      "cle": "campagne.gestes_tactiles",
+      "texte": "Touchez une unité pour la sélectionner. Glissez pour déplacer la carte. Pincez pour zoomer. Le bouton ? explique chaque étape.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Interface tactile mobile"
+      },
+      "longueurMax": 156
+    },
+    {
+      "cle": "campagne.transmission",
+      "texte": "Liaison commandement",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Briefing radio avant déploiement"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "campagne.dialogue_suivant",
+      "texte": "Continuer",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Briefing radio avant déploiement"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.votre_tour",
+      "texte": "À vous de jouer",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bannière animée de début de tour"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "campagne.atelier",
+      "texte": "Atelier des mondes",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Aperçu interactif des décors et ambiances"
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "dialogue.suivant",
+      "texte": "Suite",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Indicateur clignotant en bas de la boîte de dialogue : la réplique est lue, un clic passe à la suivante."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "dialogue.passer",
+      "texte": "Passer",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Bouton qui saute le reste de la scène et rend la main au joueur."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "emotion.neutre",
+      "texte": "Calme",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant, affichée près de son nom. Un seul mot."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "emotion.joie",
+      "texte": "Ravi",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant. Accord au masculin par défaut : la langue source ne connaît pas le genre du locuteur."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "emotion.colere",
+      "texte": "Furieux",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "emotion.surprise",
+      "texte": "Surpris",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "emotion.doute",
+      "texte": "Perplexe",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "emotion.triomphe",
+      "texte": "Triomphant",
+      "contexte": {
+        "ecran": "dialogue",
+        "note": "Humeur du commandant."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "hud.duel",
+      "texte": "Prévision",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre du panneau qui annonce le résultat probable d'une attaque avant confirmation."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.duel_riposte",
+      "texte": "Riposte −{n} PV",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Coût prévu de la riposte pour l'attaquant, en points de vie affichés. {n} vaut 0 quand la cible ne riposte pas."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.duel_hors_jeu",
+      "texte": "Mise hors jeu",
+      "contexte": {
+        "ecran": "hud",
+        "note": "La cible ne survit pas à l'attaque prévue. Jamais « détruite » : les Jeux Tactiques mettent hors jeu."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "accueil.genre",
+      "texte": "Tactique au tour par tour · Gratuit, sans compte",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Surtitre de l'accueil. Répond aux deux questions qui décident du clic : quel genre, combien ça coûte."
+      },
+      "longueurMax": 56
+    },
+    {
+      "cle": "accueil.titre_haut",
+      "texte": "Les guerres sont finies.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Première ligne du titre, en réserve claire. Phrase complète : les deux lignes se traduisent séparément."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "accueil.titre_bas",
+      "texte": "Reste le tournoi.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Seconde ligne du titre. Phrase complète, voir accueil.titre_haut."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "accueil.pitch",
+      "texte": "Vous commandez l’équipe de France dans la Ronde, le tournoi qui a remplacé les guerres. Dix-huit régions, puis le monde — et chaque nation ralliée se joue ensuite avec son général et ses unités.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Le pitch, trois lignes au plus. Doit contenir le tournoi mondial et l'incarnation d'une nation alliée."
+      },
+      "longueurMax": 220
+    },
+    {
+      "cle": "accueil.entrer",
+      "texte": "Entrer dans la Ronde",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Bouton principal, joueur qui n'a rien disputé."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "accueil.reprendre",
+      "texte": "Reprendre la sélection",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Bouton principal, joueur en cours de qualification."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "accueil.rejouer",
+      "texte": "Rejouer une épreuve",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Bouton principal, joueur ayant remporté les six épreuves."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "accueil.carnet_titre",
+      "texte": "Votre carnet",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Titre du panneau de progression."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "accueil.prochaine",
+      "texte": "Prochaine épreuve",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Étiquette au-dessus du titre de la mission à jouer."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "accueil.sans_compte",
+      "texte": "Aucun compte, rien à installer : votre progression reste dans ce navigateur.",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Mention de pied. Retourne la fragilité de la sauvegarde locale en argument, sans faire peur."
+      },
+      "longueurMax": 96
+    },
+    {
+      "cle": "accueil.match_libre",
+      "texte": "Match libre",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Lien annexe vers la partie de démonstration. Nom court : un joueur ne connaît pas « exhibition »."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "accueil.frise_legende",
+      "texte": "24 nations · 18 régions · une manche",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Légende sous la frise des nations."
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "accueil.frise_titre",
+      "texte": "Le parcours de la Ronde, de la France aux vingt-quatre nations",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Titre du SVG de la frise : c'est ce que lit un lecteur d'écran."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "accueil.plateau_titre",
+      "texte": "Un plateau des Jeux Tactiques : portée de déplacement en vert, portée de tir en rouge",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Titre du SVG de fond : c'est ce que lit un lecteur d'écran."
+      },
+      "longueurMax": 110
+    },
+    {
+      "cle": "hud.unites_pretes",
+      "texte": "{n} unités prêtes",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Sous le bouton Fin de tour : combien d'unités du joueur n'ont pas encore agi."
+      },
+      "longueurMax": 22,
+      "pluriel": true
+    },
+    {
+      "cle": "hud.tout_joue",
+      "texte": "Tout est joué",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Même emplacement que hud.unites_pretes, quand il ne reste aucune unité prête."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "combat.usine_capturee",
+      "texte": "Usine capturée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce de prise. Une usine produit des unités : le dire par son nom, pas « ville »."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "combat.aeroport_capture",
+      "texte": "Aéroport capturé",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce de prise d'un aéroport."
+      },
+      "longueurMax": 22
+    },
+    {
+      "cle": "combat.qg_capture",
+      "texte": "QG capturé",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce de prise d'un quartier général : elle termine souvent le match."
+      },
+      "longueurMax": 18
     }
   ]
 }

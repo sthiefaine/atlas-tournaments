@@ -128,6 +128,11 @@ export function poserRelief(t: Toile, rng: Rng, p: ParametresNormalises): Float6
   const restantes = terres.filter((c) => lire(t, c) === 'plaine');
   poserParOrbites(t, restantes, (c) => -(relief[c] ?? 0), casesForet, 'foret');
 
+  // Les sables sont découverts et sans couverture : le désert ne produit pas
+  // des forêts tempérées. Le terrain plage partage ces propriétés physiques.
+  if (p.biome === 'desert') {
+    for (const c of terres) if (lire(t, c) === 'plaine') poser(t, c, 'plage');
+  }
   return altitude;
 }
 

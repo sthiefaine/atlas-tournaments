@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
   appliquer, calculerDegats, degatsBase, JAUGE_PAR_PV_INFLIGE, JAUGE_PAR_PV_SUBI,
-  peutViser, pvAffiches, resoudreAttaque, copierEtat,
+  peutViser, prevoirDuel, pvAffiches, resoudreAttaque, copierEtat, empreinte,
 } from '../../src/engine/index';
 import { CAT, partiePersonnalisee, rngFixe, u } from './aides';
 
@@ -162,4 +162,79 @@ test('une attaque passe par appliquer et laisse la cible sous ses PV de départ'
   assert.equal(u(r.etat, 'u1').etat, 'agi');
   // L'état d'entrée n'a pas bougé : le moteur est pur.
   assert.equal(u(etat, 'u2').pv, 100);
+});
+
+// ---------------------------------------------------------------------------
+// Prévision : ce que le HUD montre avant que le joueur ne confirme
+// ---------------------------------------------------------------------------
+
+test('la prévision ne touche ni à l’état ni au flux d’aléa', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+  ]);
+  const avant = empreinte(etat);
+  prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.equal(empreinte(etat), avant, 'une prévision est une lecture, pas un coup joué');
+});
+
+test('deux prévisions identiques donnent le même chiffre : c’est une information, pas un bruit', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+  ]);
+  const a = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  const b = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.deepEqual(a, b);
+});
+
+test('la prévision reste dans les 5 % du tirage réel, riposte comprise', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 1, type: 'char_leger', x: 5, y: 6 },
+  ]);
+  const prevu = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.ok(prevu.degats > 0 && prevu.riposte > 0, 'deux chars au contact s’échangent des coups');
+
+  const joue = copierEtat(etat);
+  resoudreAttaque(joue, CAT, u(joue, 'u1'), u(joue, 'u2'), rngFixe(0.5), []);
+  assert.ok(Math.abs(pvAffiches(u(joue, 'u2').pv) - prevu.pvCible) <= 1);
+  assert.ok(Math.abs(pvAffiches(u(joue, 'u1').pv) - prevu.pvAttaquant) <= 1);
+});
+
+test('une cible qui ne survit pas ne riposte pas, et la prévision le dit', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_lourd', x: 5, y: 5 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+  ]);
+  u(etat, 'u2').pv = 10;
+  const prevu = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.equal(prevu.cibleHorsJeu, true);
+  assert.equal(prevu.pvCible, 0);
+  assert.equal(prevu.riposte, 0);
+});
+
+test('une pièce indirecte hors contact ne subit aucune riposte', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'artillerie', x: 5, y: 5 },
+    { camp: 1, type: 'char_leger', x: 5, y: 7 },
+  ]);
+  const prevu = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.ok(prevu.degats > 0);
+  assert.equal(prevu.riposte, 0, 'la riposte n’existe qu’à distance 1');
+  assert.equal(prevu.pvAttaquant, pvAffiches(u(etat, 'u1').pv));
+});
+
+test('la prévision se fait depuis la case d’arrivée, pas depuis la case de départ', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 3 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+  ]);
+  // Depuis le départ, la cible est hors de portée : aucune riposte possible.
+  const loin = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 3 });
+  assert.equal(loin.riposte, 0);
+  // Une fois arrivé au contact, la riposte entre dans le calcul.
+  const contact = prevoirDuel(etat, CAT, u(etat, 'u1'), u(etat, 'u2'), { x: 5, y: 5 });
+  assert.ok(contact.riposte > 0);
 });

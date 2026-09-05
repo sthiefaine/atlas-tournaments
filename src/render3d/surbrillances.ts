@@ -17,23 +17,129 @@ import type { GenreSurbrillance, Surbrillance } from '../render/scene';
 import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
 
-/** Couleurs des décalques, reprises du rendu 2D pour ne pas réapprendre. */
+/**
+ * Couleurs des décalques, reprises du rendu 2D pour ne pas réapprendre en
+ * changeant de peau : **vert, j'y vais ; rouge, j'y tire** ; l'or pour un
+ * objectif, le bleu pour un chantier.
+ */
 const COULEURS: Readonly<Record<GenreSurbrillance, number>> = {
-  deplacement: 0x5ab4ff,
-  attaque: 0xff6054,
-  capture: 0x78e18c,
-  production: 0xf0c85a,
-  danger: 0xff4646,
+  deplacement: 0x28ec96,
+  attaque: 0xff2e48,
+  capture: 0xffc634,
+  production: 0x4eaaff,
+  danger: 0xff3c3c,
 };
 
 /** Opacité des décalques par genre. */
 const OPACITES: Readonly<Record<GenreSurbrillance, number>> = {
-  deplacement: 0.5,
-  attaque: 0.52,
-  capture: 0.5,
-  production: 0.5,
+  deplacement: 0.56,
+  attaque: 0.66,
+  capture: 0.56,
+  production: 0.56,
   danger: 0.3,
 };
+
+/** Largeur du corps de la flèche, en fraction de case. */
+const CORPS_FLECHE = 0.3;
+/** Longueur de la pointe, mesurée depuis le centre de la case d'arrivée. */
+const TETE_FLECHE = 0.34;
+/** Demi-largeur de la base de la pointe. */
+const AILE_FLECHE = 0.27;
+/** Pas d'échantillonnage du ruban : plus il est fin, mieux il colle au relief. */
+const PAS_RUBAN = 0.2;
+
+/**
+ * La **flèche de déplacement** : un ruban coudé qui suit les cases traversées et
+ * une pointe sur la case d'arrivée (`10-rendu-3d.md` §8).
+ *
+ * Le ruban est échantillonné tous les `PAS_RUBAN` le long de chaque segment, et
+ * chaque sommet lit sa propre altitude : c'est ce qui fait monter et descendre
+ * la flèche avec le terrain au lieu de la faire flotter au-dessus d'une côte.
+ * Les coudes sont bouchés par un carré posé sur l'articulation — la grille étant
+ * orthogonale, un carré aligné sur les axes recouvre exactement l'angle.
+ */
+function fleche(
+  cases: readonly Case[], hauteurEn: (x: number, z: number) => number, altitude: number,
+  echelle = 1,
+): THREE.BufferGeometry {
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const sommet = (x: number, z: number): number => {
+    const i = positions.length / 3;
+    positions.push(x, hauteurEn(x, z) + altitude, z);
+    return i;
+  };
+  const quadrilatere = (a: number, b: number, c: number, d: number): void => {
+    indices.push(a, b, c, a, c, d);
+  };
+
+  const centres = cases.map((c) => ({ x: (c.x + 0.5) * CASE, z: (c.y + 0.5) * CASE }));
+  const fin = centres[centres.length - 1];
+  const precedent = centres[centres.length - 2];
+  if (!fin || !precedent) return new THREE.BufferGeometry();
+  const dx = Math.sign(fin.x - precedent.x);
+  const dz = Math.sign(fin.z - precedent.z);
+
+  // Le corps s'arrête au ras de la pointe : sans ce retrait, la jonction gonfle.
+  const tete = TETE_FLECHE * CASE * echelle;
+  const corps = [
+    ...centres.slice(0, -1),
+    { x: fin.x - dx * tete, z: fin.z - dz * tete },
+  ];
+  const demi = (CORPS_FLECHE * CASE * echelle) / 2;
+
+  for (let i = 0; i < corps.length - 1; i += 1) {
+    const a = corps[i];
+    const b = corps[i + 1];
+    if (!a || !b) continue;
+    const lx = b.x - a.x;
+    const lz = b.z - a.z;
+    const longueur = Math.hypot(lx, lz);
+    if (longueur < 1e-4) continue;
+    // Normale au segment, dans le plan du sol.
+    const nx = (-lz / longueur) * demi;
+    const nz = (lx / longueur) * demi;
+    const pas = Math.max(1, Math.round(longueur / PAS_RUBAN));
+    let gaucheAvant = -1;
+    let droiteAvant = -1;
+    for (let k = 0; k <= pas; k += 1) {
+      const t = k / pas;
+      const px = a.x + lx * t;
+      const pz = a.z + lz * t;
+      const gauche = sommet(px + nx, pz + nz);
+      const droite = sommet(px - nx, pz - nz);
+      if (k > 0) quadrilatere(gaucheAvant, droiteAvant, droite, gauche);
+      gaucheAvant = gauche;
+      droiteAvant = droite;
+    }
+  }
+
+  // Bouchons de coude, sur les articulations intérieures du corps.
+  for (let i = 1; i < corps.length - 1; i += 1) {
+    const j = corps[i];
+    if (!j) continue;
+    quadrilatere(
+      sommet(j.x - demi, j.z - demi), sommet(j.x + demi, j.z - demi),
+      sommet(j.x + demi, j.z + demi), sommet(j.x - demi, j.z + demi),
+    );
+  }
+
+  // La pointe : un triangle dont la base est perpendiculaire au dernier pas.
+  const bx = fin.x - dx * tete;
+  const bz = fin.z - dz * tete;
+  const aile = AILE_FLECHE * CASE * echelle;
+  indices.push(
+    sommet(fin.x + dx * 0.06 * CASE, fin.z + dz * 0.06 * CASE),
+    sommet(bx - dz * aile, bz + dx * aile),
+    sommet(bx + dz * aile, bz - dx * aile),
+  );
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  geo.setIndex(indices);
+  geo.computeVertexNormals();
+  return geo;
+}
 
 /** Ce que le rendu attend de la couche. */
 export interface CoucheSurbrillances {
@@ -143,12 +249,21 @@ export function creerSurbrillances(
     groupe.add(maille);
   }
 
+  const matLisere = new THREE.MeshBasicMaterial({
+    color: 0x0d2419, transparent: true, opacity: 0.72, depthWrite: false,
+    side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -5, polygonOffsetUnits: -5,
+  });
+  const lisere = new THREE.Mesh(new THREE.BufferGeometry(), matLisere);
+  lisere.renderOrder = 4;
+  lisere.frustumCulled = false;
+  groupe.add(lisere);
+
   const matChemin = new THREE.MeshBasicMaterial({
-    color: 0xffffff, transparent: true, opacity: 0.5, depthWrite: false,
+    color: 0xf4fff6, transparent: true, opacity: 0.96, depthWrite: false,
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -6, polygonOffsetUnits: -6,
   });
   const chemin = new THREE.Mesh(new THREE.BufferGeometry(), matChemin);
-  chemin.renderOrder = 4;
+  chemin.renderOrder = 5;
   chemin.frustumCulled = false;
   groupe.add(chemin);
 
@@ -196,11 +311,12 @@ export function creerSurbrillances(
         maille.visible = cases.length > 0;
       }
       chemin.geometry.dispose();
+      lisere.geometry.dispose();
       const pas = cheminCases.length > 1 ? [...cheminCases] : [];
-      chemin.geometry = pas.length > 0
-        ? decalque(pas, hauteurEn, 0.3, 0.034)
-        : new THREE.BufferGeometry();
+      chemin.geometry = pas.length > 0 ? fleche(pas, hauteurEn, 0.036) : new THREE.BufferGeometry();
+      lisere.geometry = pas.length > 0 ? fleche(pas, hauteurEn, 0.032, 1.3) : new THREE.BufferGeometry();
       chemin.visible = pas.length > 0;
+      lisere.visible = pas.length > 0;
 
       curseurMaille.geometry.dispose();
       curseurMaille.geometry = curseur
@@ -229,6 +345,8 @@ export function creerSurbrillances(
       }
       chemin.geometry.dispose();
       matChemin.dispose();
+      lisere.geometry.dispose();
+      matLisere.dispose();
       curseurMaille.geometry.dispose();
       matCurseur.dispose();
       geoAnneau.dispose();

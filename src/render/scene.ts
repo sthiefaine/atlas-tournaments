@@ -14,7 +14,7 @@
  */
 
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
-import { cleCase, pvAffiches, terrainLogique } from '../engine/index';
+import { cleCase, fnv1a, pvAffiches, signatureTerrain, terrainLogique } from '../engine/index';
 import type { Case, CleTerrain } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import { alpha } from './ambiance';
@@ -36,14 +36,31 @@ export interface Surbrillance {
   genre: GenreSurbrillance;
 }
 
-/** Couleurs des surbrillances, reprises du bleu de déplacement de la démo. */
+/**
+ * Couleurs des surbrillances. Le vocabulaire est celui d'Advance Wars, et il
+ * tient en une phrase : **vert, j'y vais ; rouge, j'y tire**. Les deux autres
+ * genres s'en écartent volontairement — l'or pour un objectif, le bleu pour un
+ * chantier —, sans quoi le joueur lirait un ordre là où il n'y en a pas.
+ *
+ * Les teintes sont franches et froides à dessein. Un vert de prairie posé sur
+ * une prairie ne se voit pas : le vert du déplacement tire donc vers l'émeraude,
+ * et le rouge vers le carmin, pour rester lisibles sur l'herbe comme sur le
+ * sable — les deux fonds qui couvrent l'essentiel d'une carte.
+ */
 const COULEURS_SURBRILLANCE: Record<GenreSurbrillance, { fond: string; bord: string }> = {
-  deplacement: { fond: 'rgba(90,180,255,0.42)', bord: 'rgba(255,255,255,0.6)' },
-  attaque: { fond: 'rgba(255,96,84,0.45)', bord: 'rgba(255,225,220,0.7)' },
-  capture: { fond: 'rgba(120,225,140,0.45)', bord: 'rgba(240,255,240,0.7)' },
-  production: { fond: 'rgba(240,200,90,0.42)', bord: 'rgba(255,245,210,0.7)' },
-  danger: { fond: 'rgba(255,70,70,0.28)', bord: 'rgba(255,160,160,0.5)' },
+  deplacement: { fond: 'rgba(40,236,150,0.44)', bord: 'rgba(228,255,242,0.85)' },
+  attaque: { fond: 'rgba(255,38,64,0.62)', bord: 'rgba(255,222,224,0.9)' },
+  capture: { fond: 'rgba(255,198,52,0.46)', bord: 'rgba(255,246,214,0.85)' },
+  production: { fond: 'rgba(78,170,255,0.46)', bord: 'rgba(226,243,255,0.85)' },
+  danger: { fond: 'rgba(255,60,60,0.3)', bord: 'rgba(255,170,170,0.55)' },
 };
+
+/**
+ * Assombrissement passé **sous** la teinte. C'est lui qui fait la lisibilité :
+ * une case allumée s'enfonce d'un cran par rapport à ses voisines, et la teinte
+ * n'a plus qu'à dire laquelle des cinq lectures s'applique.
+ */
+const OMBRE_SURBRILLANCE = 'rgba(10,26,34,0.32)';
 
 /** Position de rendu d'une unité en cours d'animation, en unités monde. */
 export interface PositionAnimee { x: number; y: number; alpha: number }
@@ -117,7 +134,11 @@ function coucheCarte(
   }
   const cle = cleSprite({
     type,
-    cle: `${vue.etat.carteCle}-${vue.etat.terrainsPoses.length}`,
+    // La signature du moteur porte la journée, le climat, les terrains posés et
+    // l'état de la mécanique : c'est exactement ce qui peut changer l'image du
+    // terrain sans changer la carte. Sans elle, une marée se peignait une fois
+    // pour toutes au premier jour.
+    cle: `${vue.etat.carteCle}-${fnv1a(signatureTerrain(vue.etat)).toString(36)}`,
     nation: '-',
     ambiance: vue.ambiance.cle,
     zoom: palierZoom(vue.camera.zoom),
@@ -130,35 +151,86 @@ function coucheCarte(
 function dessinerSurbrillances(g: Pinceau, vue: VueScene): void {
   for (const s of vue.surbrillances) {
     const couleurs = COULEURS_SURBRILLANCE[s.genre];
-    g.fillStyle = couleurs.fond;
     rr(g, s.case.x * TUILE + 3, s.case.y * TUILE + 3, TUILE - 6, TUILE - 6, 8);
+    g.fillStyle = OMBRE_SURBRILLANCE;
+    g.fill();
+    g.fillStyle = couleurs.fond;
     g.fill();
     g.strokeStyle = couleurs.bord;
-    g.lineWidth = 1.5;
+    g.lineWidth = 2;
     g.stroke();
   }
 }
 
-/** Dessine le chemin proposé : une bande claire et une pointe à l'arrivée. */
+/** Épaisseur du corps de la flèche de déplacement, en pixels de tuile. */
+const CORPS_FLECHE = 11;
+/** Longueur de la pointe, mesurée depuis le centre de la case d'arrivée. */
+const TETE_FLECHE = 19;
+/** Demi-largeur de la base de la pointe. */
+const AILE_FLECHE = 15;
+
+/**
+ * Dessine le chemin proposé en **flèche**, à la manière d'Advance Wars : un
+ * corps coudé qui suit les cases traversées et une pointe sur la case
+ * d'arrivée.
+ *
+ * Deux détails font toute la lisibilité. Le corps s'arrête **avant** la pointe
+ * (`TETE_FLECHE`), sinon la jonction s'épaissit en bourrelet ; et tout est peint
+ * deux fois, un liseré sombre puis un cœur blanc, pour que la flèche tienne
+ * aussi bien sur le vert du déplacement que sur la neige.
+ */
 function dessinerChemin(g: Pinceau, vue: VueScene): void {
   if (vue.chemin.length < 2) return;
-  g.strokeStyle = 'rgba(255,255,255,0.85)';
-  g.lineWidth = 8;
+  const centre = (c: Case): { x: number; y: number } => ({
+    x: c.x * TUILE + TUILE / 2, y: c.y * TUILE + TUILE / 2,
+  });
+  const points = vue.chemin.map(centre);
+  const fin = points[points.length - 1];
+  const precedent = points[points.length - 2];
+  if (!fin || !precedent) return;
+
+  // Direction du dernier pas : le chemin est orthogonal, donc un seul axe bouge.
+  const dx = Math.sign(fin.x - precedent.x);
+  const dy = Math.sign(fin.y - precedent.y);
+  const corps = [...points.slice(0, -1), { x: fin.x - dx * TETE_FLECHE, y: fin.y - dy * TETE_FLECHE }];
+
+  const tracerCorps = (): void => {
+    g.beginPath();
+    corps.forEach((p, i) => (i === 0 ? g.moveTo(p.x, p.y) : g.lineTo(p.x, p.y)));
+  };
+  const tracerTete = (): void => {
+    const bx = fin.x - dx * TETE_FLECHE;
+    const by = fin.y - dy * TETE_FLECHE;
+    g.beginPath();
+    // Perpendiculaire au dernier pas : (dx, dy) → (−dy, dx).
+    g.moveTo(fin.x + dx * 4, fin.y + dy * 4);
+    g.lineTo(bx - dy * AILE_FLECHE, by + dx * AILE_FLECHE);
+    g.lineTo(bx + dy * AILE_FLECHE, by - dx * AILE_FLECHE);
+    g.closePath();
+  };
+
+  g.save();
   g.lineCap = 'round';
   g.lineJoin = 'round';
-  g.beginPath();
-  vue.chemin.forEach((c, i) => {
-    const x = c.x * TUILE + TUILE / 2;
-    const y = c.y * TUILE + TUILE / 2;
-    if (i === 0) g.moveTo(x, y);
-    else g.lineTo(x, y);
-  });
+  // Liseré sombre, corps et pointe d'un seul trait de contour.
+  g.strokeStyle = 'rgba(16,38,28,0.72)';
+  g.lineWidth = CORPS_FLECHE + 6;
+  tracerCorps();
   g.stroke();
-  g.strokeStyle = 'rgba(60,120,200,0.9)';
-  g.lineWidth = 4;
+  tracerTete();
+  g.lineWidth = 6;
   g.stroke();
-  const fin = vue.chemin[vue.chemin.length - 1];
-  if (fin) disque(g, fin.x * TUILE + TUILE / 2, fin.y * TUILE + TUILE / 2, 6, '#ffffff');
+  g.fillStyle = 'rgba(16,38,28,0.72)';
+  g.fill();
+  // Cœur clair.
+  g.strokeStyle = '#f4fff6';
+  g.lineWidth = CORPS_FLECHE;
+  tracerCorps();
+  g.stroke();
+  tracerTete();
+  g.fillStyle = '#f4fff6';
+  g.fill();
+  g.restore();
 }
 
 /** Dessine les bâtiments, chacun blitté depuis le cache par terrain et nation. */
@@ -249,10 +321,13 @@ function dessinerUnitePosee(g: Pinceau, vue: VueScene, u: Unite): void {
     g.textAlign = 'left';
   }
   if (u.pointsCapture > 0) {
+    // La jauge porte la couleur du camp **qui capture**. Elle était peinte en
+    // `#8ee0a4`, c'est-à-dire le clair du camp vert : une unité rouge affichait
+    // une progression verte.
     g.fillStyle = 'rgba(20,24,34,0.75)';
     rr(g, px + 4, py + 46, 20, 14, 4);
     g.fill();
-    g.fillStyle = '#8ee0a4';
+    g.fillStyle = paletteDe(u.camp).light;
     rr(g, px + 6, py + 48, Math.max(2, 16 * Math.min(1, u.pointsCapture / 20)), 10, 3);
     g.fill();
   }

@@ -78,15 +78,29 @@ export function vainqueurAuxPoints(etat: EtatPartie, cat: Catalogue): CampId | n
 
 /** Objectifs de scénario du camp 0, évalués après chaque action. */
 function objectifsCamp0(etat: EtatPartie, cat: Catalogue): string | null {
-  for (const v of etat.reglages.victoire) {
-    if (v.type === 'capturer') {
+  for (const [indice, v] of etat.reglages.victoire.entries()) {
+    if (v.type === 'capture_qg') {
+      const adversaires = etat.camps.filter((c) => c.id !== 0);
+      if (adversaires.length > 0 && adversaires.every((c) => c.qgCase !== null && etat.proprietaires[c.qgCase] === 0)) return 'objectif_capture_qg';
+    } else if (v.type === 'capturer') {
       const pris = v.cases.filter((c) => etat.proprietaires[cleCase(c)] === 0).length;
       if (pris >= v.combien) return 'objectif_capturer';
     } else if (v.type === 'survivre') {
-      if (etat.journee >= v.journees) return 'objectif_survivre';
+      if (etat.journee > v.journees) return 'objectif_survivre';
     } else if (v.type === 'tenir') {
       const tout = v.cases.every((c) => etat.proprietaires[cleCase(c)] === 0);
-      if (tout && etat.journee >= v.journees) return 'objectif_tenir';
+      if (tout && etat.journee > v.journees) return 'objectif_tenir';
+    } else if (v.type === 'proteger') {
+      const u = etat.unites.find((u) => u.camp === 0 && u.id === v.uniteRef && !u.dansTransport);
+      if (u && v.destination && cleCase(u) === cleCase(v.destination)) return 'objectif_proteger';
+    } else if (v.type === 'relais') {
+      etat.relais ??= {};
+      const prochain = etat.relais[String(indice)] ?? 0;
+      const cible = v.cases[prochain];
+      if (cible && etat.unites.some((u) => u.camp === 0 && !u.dansTransport && cleCase(u) === cleCase(cible))) {
+        etat.relais[String(indice)] = prochain + 1;
+      }
+      if ((etat.relais[String(indice)] ?? 0) >= v.cases.length) return 'objectif_relais';
     } else if (v.type === 'points') {
       if (score(etat, cat, 0) >= v.seuil) return 'objectif_points';
     }
@@ -123,9 +137,11 @@ export function evaluerFin(
     etat.partie = { terminee: true, vainqueur, nul, motif };
     evts.push({ type: 'fin_partie', vainqueur, nul, motif });
   };
-  if (restants.length <= 1) {
-    const seul = restants[0];
-    finir(seul ? seul.id : null, 'hors_jeu_total', seul === undefined);
+  // Une discipline ne se gagne pas en vidant le terrain : protéger le joueur
+  // reste impératif, mais les adversaires absents ne court-circuitent pas l'objectif.
+  const defaite = defaitesCamp0(etat);
+  if (defaite || etat.camps.find((c) => c.id === 0)?.elimine) {
+    finir(restants.find((c) => c.id !== 0)?.id ?? null, defaite ?? 'hors_jeu_total');
     return;
   }
   const objectif = objectifsCamp0(etat, cat);
@@ -133,15 +149,20 @@ export function evaluerFin(
     finir(0, objectif);
     return;
   }
-  const defaite = defaitesCamp0(etat);
-  if (defaite) {
-    const autre = restants.find((c) => c.id !== 0);
-    finir(autre ? autre.id : null, defaite);
+  if (restants.length <= 1 && etat.reglages.victoire.some((v) => v.type === 'hors_jeu_total')) {
+    const seul = restants[0];
+    finir(seul ? seul.id : null, 'hors_jeu_total', seul === undefined);
+    return;
+  }
+  const echeance = etat.reglages.defaite.find((d) => d.type === 'limite_journees' && etat.journee > d.journees);
+  if (echeance) {
+    finir(restants.find((c) => c.id !== 0)?.id ?? null, 'limite_journees');
     return;
   }
   const limite = etat.reglages.limiteJournees;
   if (limite !== null && etat.journee > limite) {
-    const vainqueur = vainqueurAuxPoints(etat, cat);
+    const discipline = etat.reglages.victoire.some((v) => ['proteger', 'relais', 'survivre', 'tenir', 'capturer'].includes(v.type));
+    const vainqueur = discipline ? (restants.find((c) => c.id !== 0)?.id ?? null) : vainqueurAuxPoints(etat, cat);
     finir(vainqueur, 'limite_journees', vainqueur === null);
   }
 }

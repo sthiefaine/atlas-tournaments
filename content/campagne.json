@@ -1,0 +1,104 @@
+{
+  "titre": "De l’entraînement à la Ronde",
+  "introduction": "Quatre exercices guidés au centre Atlas, puis vos premiers matchs officiels. Les coordonnées commencent à 1.",
+  "missions": [
+    {
+      "scenarioCle": "qualification_bocage",
+      "titre": "Entraînement 1 · Le premier fanion",
+      "biome": "plaine",
+      "objectif": "Occuper puis capturer la ville centrale (5, 4).",
+      "conseil": "Une capture demande deux actions à pleine force. Gardez votre infanterie derrière le char.",
+      "recit": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres : on met les unités hors jeu, personne ne meurt. Atlas organise la Ronde, le tournoi des nations. Moi, Ariane, je vais vous apprendre à commander avant votre première qualification.",
+      "conclusion": "Premier exercice réussi. Vous savez déplacer une unité et capturer un bâtiment. Gardons le temps d’apprendre : la Ronde peut attendre.",
+      "entrainement": true,
+      "tutoriel": [
+        "Cliquez sur une infanterie : les cases accessibles indiquent où elle peut aller pendant ce tour.",
+        "Cliquez sur la ville à la colonne 5, ligne 4, puis choisissez Capturer dans les ordres. Si elle est trop loin, avancez d’abord.",
+        "Une ville demande 20 points de capture : une infanterie intacte en gagne 10 par action. Restez sur place et capturez à nouveau au tour suivant.",
+        "Cliquez sur Fin de tour pour laisser jouer l’adversaire. Les unités redeviennent disponibles à votre prochain tour."
+      ]
+    },
+    {
+      "scenarioCle": "relais_des_haies",
+      "titre": "Entraînement 2 · Le relais des haies",
+      "biome": "plaine",
+      "objectif": "Activer les balises (3, 3), (6, 3), puis (6, 6), dans cet ordre.",
+      "conseil": "Une unité doit terminer son déplacement sur chaque balise. Les haies couvrent votre progression.",
+      "recit": "Voici Tomas, notre partenaire d’exercice. Dans la Ronde, gagner ne veut pas toujours dire battre toutes les unités. Aujourd’hui, vos unités doivent activer trois balises dans l’ordre. Les forêts offrent une meilleure protection, mais certains véhicules y progressent moins vite.",
+      "conclusion": "Vous avez suivi la discipline du match : un relais s’active en s’y arrêtant, une ville se capture avec l’ordre Capturer. Toujours lire l’objectif avant d’avancer.",
+      "entrainement": true,
+      "tutoriel": [
+        "Consultez l’objectif : la prochaine balise est indiquée par ses coordonnées, colonne puis ligne.",
+        "Déplacez une unité sur (3, 3) et choisissez Attendre pour terminer son ordre et activer la balise.",
+        "Passez ensuite par (6, 3), puis (6, 6). Une balise visitée trop tôt ne compte pas.",
+        "Les arbres protègent les unités. Vous pouvez utiliser plusieurs unités pour les étapes, mais devez respecter leur ordre."
+      ]
+    },
+    {
+      "scenarioCle": "passage_des_marees",
+      "titre": "Entraînement 3 · Le témoin des marées",
+      "biome": "cotier",
+      "objectif": "Escorter le véhicule de ravitaillement jusqu’à (10, 3).",
+      "conseil": "Le véhicule signalé doit arriver lui-même. Attendez la basse mer ou empruntez le pont au sud.",
+      "recit": "Le bassin du centre reproduit les marées de la côte. Ce véhicule de transport porte notre témoin d’exercice : il doit arriver intact. Regardez le Bulletin avant de traverser. Un véhicule hors jeu, c’est un exercice à recommencer, jamais un équipage perdu.",
+      "conclusion": "Le témoin est arrivé. Vous savez désormais que le terrain peut changer entre deux journées : un passage ouvert maintenant ne le sera pas forcément au retour.",
+      "entrainement": true,
+      "tutoriel": [
+        "Sélectionnez le transport signalé dans l’objectif : c’est ce véhicule précis qui doit atteindre (10, 3).",
+        "Déplacez vos autres unités pour couvrir son trajet. Le transport ne peut pas attaquer.",
+        "Consultez l’état de la marée : les cases de mer proches de la plage deviennent praticables à marée basse.",
+        "Quittez la grève avant la marée haute, ou prenez le pont plus au sud. Atteindre l’arrivée termine immédiatement l’exercice."
+      ]
+    },
+    {
+      "scenarioCle": "tenir_la_digue",
+      "titre": "Entraînement 4 · Tenir la digue",
+      "biome": "cotier",
+      "objectif": "Survivre quatre journées complètes.",
+      "conseil": "Protégez vos unités et le QG. Éliminer les patrouilles ne raccourcit pas l’épreuve.",
+      "recit": "Dernier exercice. Une journée comprend votre tour puis celui de l’adversaire. Il faut tenir quatre journées complètes, pas poursuivre toutes les patrouilles. Votre QG et vos unités doivent rester en jeu. Ensuite, nous pourrons vous inscrire à votre première qualification.",
+      "conclusion": "Formation terminée, commandant. Vous savez lire un objectif, déplacer, capturer et anticiper le terrain. Votre premier match officiel se jouera au col, avec Tomas à vos côtés.",
+      "entrainement": true,
+      "tutoriel": [
+        "Repérez votre QG et gardez des unités capables de le défendre.",
+        "Chaque unité disponible peut recevoir un ordre. Fin de tour donne ensuite la main à l’adversaire.",
+        "Surveillez le compteur de journée : vous devez terminer les journées 1 à 4. La réussite arrive au début de la journée 5.",
+        "Ne cherchez pas à éliminer tout le monde : pour cette discipline, la condition est de tenir jusqu’au terme."
+      ]
+    },
+    {
+      "scenarioCle": "pacte_du_col",
+      "titre": "Qualification · Le pacte du col",
+      "biome": "montagne",
+      "objectif": "Faire parvenir le char au col (9, 5).",
+      "conseil": "Le génie peut ouvrir une route sur la montagne adjacente pour 1 500 fonds. Un détour au sud reste possible.",
+      "recit": "Votre formation est terminée : bienvenue à votre première qualification officielle. Tomas vous prête son équipe technique pour une épreuve de coopération. Le passage direct est fermé. Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col.",
+      "conclusion": "Qualification réussie. Vous partagez vos relevés avec Tomas : le Luxembourg devient votre allié. Il vous confie le commandement d’une exhibition sous ses couleurs.",
+      "alliance": {
+        "paysCode": "lu",
+        "commandantCle": "cmd_tomas_reiner"
+      },
+      "entrainement": false,
+      "tutoriel": [
+        "Sélectionnez le génie près de la montagne. Son ordre Ouvrir un passage ouvre une route sur une case de montagne adjacente.",
+        "Cette intervention coûte 1 500 fonds et consomme l’action du génie. Le passage reste ouvert jusqu’à la fin de la mission.",
+        "Libérez le passage pour le char signalé dans l’objectif, puis conduisez-le jusqu’à (9, 5). Un détour au sud reste possible."
+      ]
+    },
+    {
+      "scenarioCle": "couleurs_alliees",
+      "titre": "Exhibition · Sous les couleurs alliées",
+      "biome": "montagne",
+      "objectif": "Sous les couleurs luxembourgeoises, activer les balises (4, 3), (7, 3), puis (7, 6).",
+      "conseil": "Profitez du commandant allié et ménagez vos unités dans les passages étroits.",
+      "recit": "Tomas vous confie son équipe du Luxembourg pour votre premier match sous les couleurs d’une nation alliée. Son style privilégie la défense. Les relais contiennent les relevés d’arbitrage : le tournoi continue, mais quelque chose semble anormal dans leur homologation.",
+      "conclusion": "Vous remportez votre première victoire commune. Le relevé mentionne une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
+      "entrainement": false,
+      "tutoriel": [
+        "Vous incarnez désormais Tomas : consultez ses capacités et utilisez son avantage défensif dans les passages étroits.",
+        "Activez les trois balises dans l’ordre. Vos unités partagent la progression du relais.",
+        "Une victoire sous les couleurs alliées renforce votre confiance avec ce commandant."
+      ]
+    }
+  ]
+}

@@ -15,8 +15,8 @@
  * Le HUD ne décide de rien : il appelle l'`ApiHud` que `jeu.ts` lui donne.
  */
 
-import type { Catalogue, EtatPartie } from '../engine/index';
-import { pvAffiches, terrainLogique } from '../engine/index';
+import type { Catalogue, EtatPartie, Unite } from '../engine/index';
+import { prevoirDuel, pvAffiches, terrainLogique, uniteParId } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type { CampId, Case, CleUnite, Meteo, Silhouette } from '../schemas/types';
 import type { Ambiance } from './ambiance';
@@ -42,9 +42,18 @@ export interface VueJeu {
   selection: string | null;
   menu: { ancre: Case; options: readonly OptionMenu[] } | null;
   production: { batiment: Case; unites: readonly CleUnite[] } | null;
+  /** La visée en cours : de quoi prévoir le duel avant de confirmer. */
+  visee: { attaquantId: string; depuis: Case; cibles: readonly Case[]; cible: Case | null } | null;
   attenteIa: boolean;
   /** Message éphémère, déjà traduit. */
   annonce: string | null;
+  masquerFin?: boolean;
+  /**
+   * Une scène de dialogue occupe l'écran : le HUD s'efface. Il ne se démonte pas
+   * — ses `data-*` et son état restent lisibles —, il cesse simplement de
+   * disputer l'attention à la réplique en cours.
+   */
+  sceneOuverte?: boolean;
 }
 
 /** Ce que le HUD peut demander au jeu. Aucun de ces appels ne mute un état. */
@@ -57,6 +66,8 @@ export interface ApiHud {
   jouerPouvoir(niveau: 'normal' | 'super'): void;
   annuler(): void;
   recommencer(): void;
+  zoomer?(sens: 1 | -1): void;
+  recentrer?(): void;
   /** Position d'écran du centre d'une case : sert à ancrer le menu d'ordres. */
   versEcran(c: Case): PointVue | null;
 }
@@ -77,47 +88,161 @@ function ech(texte: string): string {
 
 /** La feuille de style du HUD, injectée une seule fois par document. */
 const STYLE = `
-.atlas-hud{position:absolute;inset:0;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+.atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162}
 .atlas-hud *{box-sizing:border-box}
-.atlas-hud .p{position:absolute;pointer-events:auto;background:rgba(16,20,29,.86);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.09);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45);overflow:hidden}
+.atlas-hud[data-scene='ouverte']{visibility:hidden}
+.atlas-hud .p{position:absolute;pointer-events:auto;background:var(--encre);border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;overflow:hidden}
 .atlas-hud .p>.bord{position:absolute;left:0;top:0;bottom:0;width:4px}
-.atlas-hud .in{padding:10px 14px 11px 16px}
-.atlas-hud .tt{font-weight:650;font-size:15px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.atlas-hud .sb{font-size:12px;color:#9aa4b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
-.atlas-hud .partie{left:12px;top:12px;min-width:186px;max-width:320px}
-.atlas-hud .bulletin{right:12px;top:12px;min-width:216px;max-width:340px}
-.atlas-hud .bulletin .in{display:flex;gap:11px;align-items:flex-start;padding-left:14px}
-.atlas-hud .bulletin svg{flex:0 0 auto;margin-top:2px}
-.atlas-hud .jauge{right:12px;top:100px;width:224px}
-.atlas-hud .jauge button{all:unset;display:block;width:100%;cursor:pointer}
-.atlas-hud .barre{height:9px;border-radius:5px;background:rgba(255,255,255,.13);overflow:hidden;margin:7px 0 5px}
-.atlas-hud .barre i{display:block;height:100%;border-radius:5px;transition:width .25s ease}
-.atlas-hud .inspect{left:12px;bottom:12px;min-width:224px;max-width:390px}
-.atlas-hud .inspect .in{display:flex;gap:10px;align-items:center;padding:9px 14px 9px 16px}
-.atlas-hud .inspect canvas{flex:0 0 auto;width:46px;height:46px}
-.atlas-hud .stats{font-size:12px;color:#b8c0d0;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.atlas-hud .ordres{width:172px;padding:6px}
-.atlas-hud .ordres button{all:unset;display:block;box-sizing:border-box;width:100%;padding:8px 12px;border-radius:7px;cursor:pointer;font-size:14px}
-.atlas-hud .ordres button:hover{background:rgba(255,255,255,.10)}
-.atlas-hud .ordres button:focus-visible{outline:2px solid #7fb6ff;outline-offset:-2px}
-.atlas-hud .fintour{right:12px;bottom:12px}
-.atlas-hud .fintour button{all:unset;display:block;padding:12px 26px;border-radius:11px;font-weight:650;cursor:pointer;text-align:center;min-width:150px}
-.atlas-hud .fintour button[disabled]{background:rgba(74,80,95,.85)!important;color:rgba(255,255,255,.5);cursor:default}
-.atlas-hud .attente{left:50%;top:12px;transform:translateX(-50%);padding:0}
-.atlas-hud .annonce{left:50%;bottom:104px;transform:translateX(-50%);max-width:70%}
-.atlas-hud .voile{position:absolute;inset:0;pointer-events:auto;background:rgba(7,9,16,.72);display:flex;align-items:center;justify-content:center}
-.atlas-hud .modale{position:relative;pointer-events:auto;background:rgba(16,20,29,.95);border:1px solid rgba(255,255,255,.10);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.6);width:330px;max-height:82%;display:flex;flex-direction:column;overflow:hidden}
-.atlas-hud .modale h2{margin:0;padding:16px 18px 8px;font-size:17px;font-weight:650}
-.atlas-hud .liste{overflow:auto;padding:2px 12px 6px;flex:1 1 auto}
-.atlas-hud .liste button{all:unset;display:flex;box-sizing:border-box;width:100%;gap:10px;align-items:center;padding:7px 10px;border-radius:9px;cursor:pointer;margin-bottom:4px;background:rgba(255,255,255,.05)}
-.atlas-hud .liste button:hover{background:rgba(255,255,255,.12)}
-.atlas-hud .liste button[disabled]{opacity:.42;cursor:default}
+.atlas-hud .in{padding:10px 14px}
+.atlas-hud .tt{font-weight:800;font-size:15px;letter-spacing:.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.atlas-hud .sb{font-size:13px;color:#b9cbcb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.atlas-hud .symbole{width:24px;height:24px;flex:none;display:block}
+.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:center;height:44px;max-width:calc(100% - 144px);filter:drop-shadow(2px 3px 0 #111b2940)}
+.atlas-hud .jour{display:flex;align-items:center;gap:7px;height:44px;padding:0 16px 0 10px;background:var(--papier);color:var(--encre);font-size:14px;font-weight:850;text-transform:uppercase;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%);white-space:nowrap}
+.atlas-hud .jour .symbole{width:20px;height:20px}
+.atlas-hud .fonds{display:flex;align-items:center;gap:5px;margin-left:-8px;height:34px;padding:0 10px 0 14px;background:var(--encre);color:var(--signal);font-weight:850;font-size:14px;white-space:nowrap}
+.atlas-hud .fonds .symbole{width:18px;height:18px}
+.atlas-hud .bulletin{position:absolute;pointer-events:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:128px;color:var(--papier);filter:drop-shadow(2px 3px 0 #111b2940);z-index:2}
+.atlas-hud .bulletin summary{display:flex;gap:7px;align-items:center;padding:7px 9px;cursor:pointer;list-style:none;min-height:44px;background:var(--encre);border-bottom:3px solid var(--signal)}
+.atlas-hud .bulletin summary::-webkit-details-marker{display:none}
+.atlas-hud .bulletin summary::after{content:'⌄';margin-left:auto;font-size:16px;color:#c0ccd7}
+.atlas-hud .bulletin[open] summary::after{transform:rotate(180deg)}
+.atlas-hud .bulletin svg{flex:0 0 auto;width:23px;height:23px}
+.atlas-hud .bulletin .tt{font-size:13px}
+.atlas-hud .previsions{padding:7px 10px 12px;background:var(--encre);border-top:1px solid #ffffff16}
+.atlas-hud .previsions .sb{white-space:normal;font-size:13px}
+.atlas-hud .dock{position:absolute;pointer-events:auto;left:50%;bottom:var(--bas);transform:translateX(-50%);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;width:420px;max-width:calc(100% - 24px);height:var(--dock);filter:drop-shadow(3px 4px 0 #12233270)}
+.atlas-hud .dock .p{position:relative;box-shadow:none}
+.atlas-hud .jauge{border:0;border-top:3px solid #6d8fa5;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+.atlas-hud .jauge button{all:unset;display:flex;align-items:center;gap:9px;box-sizing:border-box;width:100%;height:100%;padding:8px 12px;cursor:pointer}
+.atlas-hud .insigne{display:flex;align-items:center;justify-content:center;width:42px;height:48px;flex:none;color:var(--signal);background:#284451;clip-path:polygon(0 0,100% 0,100% 77%,50% 100%,0 77%)}
+.atlas-hud .insigne .symbole{width:29px;height:29px;margin-top:-5px}
+.atlas-hud .commande{min-width:0;flex:1}
+.atlas-hud .commande .tt{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#d4dfe0}
+.atlas-hud .energie{display:flex;gap:3px;height:10px;margin:5px 0 3px;transform:skewX(-15deg)}
+.atlas-hud .energie>i{height:100%;flex:1;background:#536976;overflow:hidden}
+.atlas-hud .energie b{display:block;height:100%;background:var(--signal)}
+.atlas-hud .commande .sb{color:var(--signal);font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.05em}
+.atlas-hud .jauge[data-pret='oui'] .insigne{animation:atlas-pouvoir 1s ease-in-out infinite alternate}
+.atlas-hud .fintour button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:center;gap:9px;width:100%;height:100%;min-height:48px;padding:10px 14px;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);font-weight:900;font-size:15px;line-height:1.15;cursor:pointer;text-align:left;background:var(--signal);color:var(--encre);text-transform:uppercase;border-top:3px solid #fff0ac;border-bottom:4px solid #c4923a}
+.atlas-hud .fintour .symbole{width:26px;height:26px}
+.atlas-hud .fintour-texte{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.atlas-hud .fintour-texte .tt{font-size:14px;font-weight:900;letter-spacing:.05em}
+.atlas-hud .fintour-texte .sb{margin:0;font-size:11px;font-weight:800;letter-spacing:.06em;color:#6b5312;text-transform:none}
+.atlas-hud .fintour button[disabled] .fintour-texte .sb{color:#8d9ba1}
+.atlas-hud .fintour button[disabled]{background:#344653;color:#a8b9bb;border-color:#60707c}
+.atlas-hud .inspect{left:12px;bottom:calc(var(--bas) + var(--dock) + 10px);width:390px;max-width:calc(100% - 84px);border-left:0}
+.atlas-hud[data-selection-nouvelle='oui'] .inspect{animation:atlas-inspection .16s ease-out}
+.atlas-hud .inspect .in{display:flex;gap:10px;align-items:center;padding:10px 12px}
+.atlas-hud .inspect canvas{flex:0 0 auto;width:44px;height:44px;background:#ffffff0a;border-bottom:2px solid #d2b66e}
+.atlas-hud .stats{font-size:12px;color:#c0ccd7;margin-top:3px;white-space:normal}
+.atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;font-size:22px;border:1px solid #ffffff20}
+.atlas-hud .inspect .retour{margin-left:auto}
+/* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
+   devient un panneau posé à côté de l'unité dès que l'écran est assez large
+   (attribut data-ancre, position calculée par la fonction ancrer). */
+.atlas-hud .ordres{left:50%;bottom:calc(var(--bas) + var(--dock) + 10px);transform:translateX(-50%);width:340px;max-width:calc(100% - 24px);padding:10px;z-index:3;max-height:calc(100% - 160px);overflow-y:auto;background:var(--encre);color:var(--papier);border:1px solid #839798;border-top:4px solid var(--signal);animation:atlas-ordres .16s ease-out}
+.atlas-hud .ordres[data-ancre='oui'],.atlas-hud .duel[data-ancre='oui']{bottom:auto;right:auto;transform:none;width:190px;max-width:190px}
+.atlas-hud .duel[data-ancre='oui']{width:230px;max-width:230px}
+.atlas-hud .ordres-entete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 8px 4px}
+.atlas-hud .ordres-entete .tt{text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:.14em;color:#9fb6b8}
+.atlas-hud .ordres .retour{background:#ffffff10;border-color:#ffffff26}
+.atlas-hud .ordres-grille{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+/* Un bouton a une **épaisseur** qui s'écrase ; un panneau est plat. C'est
+   l'enfoncement qui dit « pressable », pas la couleur. */
+.atlas-hud .ordres-grille button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:flex-start;gap:10px;min-height:46px;padding:10px 12px;cursor:pointer;font-size:14px;font-weight:700;text-align:left;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;border-left:4px solid transparent;transition:background .1s,translate .08s,border-bottom-width .08s}
+.atlas-hud .ordres-grille button:hover{background:#2c5670}
+.atlas-hud .ordres-grille button:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
+/* Les couleurs du plateau ne se posent jamais en aplat sur un bouton : le bleu y
+   veut dire « chantier », le rouge « je tire ». Un ordre les **cite** par un
+   liseré de 4 px, et rien de plus. */
+.atlas-hud .ordres-grille button[data-valeur='attaquer']{border-left:4px solid #ff2e48}
+.atlas-hud .ordres-grille button[data-valeur='capturer']{border-left:4px solid #ffc634}
+.atlas-hud .ordres-grille button[data-valeur='construire']{border-left:4px solid #4eaaff}
+.atlas-hud .ordres-grille .symbole{width:21px;height:21px;color:#9fb6b8}
+.atlas-hud .ordres-grille button:hover .symbole{color:var(--signal)}
+.atlas-hud .camera{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(var(--bas) + var(--dock) + 10px);pointer-events:auto;display:grid;gap:5px}
+.atlas-hud .camera button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #91a1a3;border-bottom:3px solid #0c1923;background:var(--encre);box-shadow:2px 2px 0 #0002;font-size:25px;cursor:pointer}
+.atlas-hud .camera svg{width:21px;height:21px}
+.atlas-hud .duel{left:12px;bottom:calc(var(--bas) + var(--dock) + 10px);width:390px;max-width:calc(100% - 84px);border:0;border-top:4px solid #ff6a5e;background:var(--encre);box-shadow:4px 5px 0 #0d1b2470;animation:atlas-inspection .16s ease-out}
+.atlas-hud .duel-entete{display:flex;align-items:center;gap:8px;padding:7px 12px 5px;font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#ffb3aa}
+.atlas-hud .duel-entete .symbole{width:16px;height:16px}
+.atlas-hud .duel-entete .issue{margin-left:auto;color:var(--signal);letter-spacing:.08em}
+.atlas-hud .duel-camp{display:flex;align-items:center;gap:10px;padding:7px 12px}
+.atlas-hud .duel-camp+.duel-camp{border-top:1px solid #ffffff14}
+.atlas-hud .duel-camp canvas{flex:0 0 auto;width:36px;height:36px;background:#ffffff0a}
+.atlas-hud .duel-camp .tt{font-size:13px}
+.atlas-hud .duel-chiffres{margin-left:auto;display:flex;align-items:baseline;gap:6px;font-weight:900;font-size:17px;font-variant-numeric:tabular-nums}
+.atlas-hud .duel-chiffres em{font-style:normal;font-size:12px;color:#9fb3b6}
+.atlas-hud .duel-chiffres b{color:#ff8e83}
+.atlas-hud .duel-camp[data-perte='aucune'] .duel-chiffres b{color:#8ee0a4}
+.atlas-hud .pv{display:flex;gap:2px;height:6px;margin-top:5px;min-width:74px}
+.atlas-hud .pv i{flex:1;background:#ffffff1f}
+.atlas-hud .pv i.plein{background:#8ee0a4}
+.atlas-hud .pv i.perdu{background:#ff6a5e}
+.atlas-hud .etoiles{letter-spacing:.12em;color:var(--signal)}
+.atlas-hud .attente{left:50%;top:calc(var(--haut) + 56px);transform:translateX(-50%);max-width:calc(100% - 24px);z-index:2;border-color:#edac76}
+.atlas-hud .attente .in{display:flex;align-items:center;gap:9px;padding:7px 12px}
+.atlas-hud .attente .symbole{width:20px;height:20px;animation:atlas-attente 2s steps(4,end) infinite;color:#edac76}
+.atlas-hud .annonce{left:50%;bottom:calc(var(--bas) + var(--dock) + 108px);transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;z-index:4;border-left:4px solid var(--signal)}
+.atlas-hud .annonce .tt{white-space:normal;font-size:14px}
+.atlas-hud .voile{position:absolute;inset:0;pointer-events:auto;background:#07172499;display:flex;align-items:center;justify-content:center;z-index:5;padding:var(--haut) 12px var(--bas)}
+.atlas-hud .modale{position:relative;pointer-events:auto;background:var(--papier);color:var(--encre);border-top:5px solid var(--signal);box-shadow:6px 6px 0 #10212c80;width:420px;max-width:100%;max-height:100%;display:flex;flex-direction:column;overflow:hidden}
+.atlas-hud .modale h2{margin:0;padding:20px 20px 12px;font-size:20px;font-weight:850;text-transform:uppercase}
+.atlas-hud .liste{overflow:auto;overscroll-behavior:contain;padding:2px 12px 6px;flex:1 1 auto}
+.atlas-hud .liste button{all:unset;display:flex;box-sizing:border-box;width:100%;gap:12px;align-items:center;min-height:64px;padding:10px 12px;cursor:pointer;margin-bottom:6px;background:#e1ddca;border-left:3px solid #60737a}
+.atlas-hud .liste button:hover{background:#d0d7cc}
 .atlas-hud .liste canvas{flex:0 0 auto;width:38px;height:38px}
-.atlas-hud .liste .cout{font-size:12px;color:#9aa4b8}
-.atlas-hud .pied{display:flex;justify-content:flex-end;gap:8px;padding:10px 14px 14px}
-.atlas-hud .pied button{all:unset;padding:9px 18px;border-radius:9px;cursor:pointer;font-weight:600;background:rgba(255,255,255,.11)}
+.atlas-hud .liste .cout{font-size:14px;color:#45606b}
+.atlas-hud .pied{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
+.atlas-hud .pied button{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;cursor:pointer;font-weight:750;background:var(--encre);color:var(--papier)}
 .atlas-hud .fin{text-align:center;padding:26px 24px 22px}
-.atlas-hud .fin .grand{font-size:26px;font-weight:700;letter-spacing:-.01em}
+.atlas-hud .fin .grand{font-size:26px;font-weight:850;letter-spacing:-.01em}
+.atlas-hud .fin .sb{color:#536e78}
+.atlas-tour{position:absolute;left:0;right:0;top:38%;z-index:7;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:18px;padding:16px 24px;background:linear-gradient(110deg,transparent 3%,#152c3bf2 3%,#152c3bf2 97%,transparent 97%);color:#f4edda;border-block:3px solid var(--teinte,#ffd162);font-family:system-ui,sans-serif;animation:atlas-tour 1.15s ease both}
+.atlas-tour .symbole{width:42px;height:42px;color:var(--teinte,#ffd162)}
+.atlas-tour strong{display:block;font-size:26px;line-height:1.15;text-transform:uppercase;font-weight:900;letter-spacing:.03em}
+.atlas-tour span{display:block;margin-top:5px;font-size:13px;font-weight:750;text-transform:uppercase;letter-spacing:.14em;color:var(--teinte,#ffd162)}
+@keyframes atlas-tour{0%{opacity:0;transform:translateX(-15%)}15%,78%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(15%)}}
+@keyframes atlas-inspection{from{opacity:0;translate:0 5px}to{opacity:1;translate:0 0}}
+@keyframes atlas-ordres{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes atlas-pouvoir{from{color:#ffd162}to{color:white;filter:drop-shadow(0 0 5px #ffd162)}}
+@keyframes atlas-attente{to{transform:rotate(360deg)}}
+@container atlas-interface (max-width: 600px){
+  .atlas-hud .jour{padding:0 12px 0 8px;gap:5px;font-size:12px}
+  .atlas-hud .fonds{padding-right:8px;font-size:13px}
+  .atlas-hud .bulletin{width:116px}
+  .atlas-hud .partie{max-width:calc(100% - 132px)}
+  .atlas-hud .dock{width:calc(100% - 24px)}
+  .atlas-hud .jauge button{gap:7px;padding:7px 9px}
+  .atlas-hud .insigne{width:34px;height:43px}
+  .atlas-hud .fintour button{font-size:14px;padding:10px;gap:7px}
+  .atlas-hud .inspect .sb{font-size:12px}
+  .atlas-hud .inspect .in{padding:8px 10px;gap:8px}
+  .atlas-hud .inspect canvas{width:36px;height:36px}
+  .atlas-hud .inspect .tt{font-size:14px}
+  .atlas-hud .voile{align-items:flex-end}
+}
+@container atlas-interface (max-width: 360px){.atlas-hud .fonds .symbole{display:none}}
+@container atlas-interface (max-height: 500px){
+  .atlas-hud>*{--dock:60px;--bas:calc(8px + env(safe-area-inset-bottom,0px));--haut:calc(8px + env(safe-area-inset-top,0px))}
+  .atlas-hud .dock{left:auto;right:max(12px,env(safe-area-inset-right,0px));transform:none;width:340px;max-width:50%}
+  .atlas-hud .jauge button{padding:4px 9px}
+  .atlas-hud .energie{height:8px;margin:3px 0}
+  .atlas-hud .inspect{bottom:var(--bas);max-width:calc(50% - 30px);width:360px}
+  .atlas-hud .inspect .in{padding:6px 10px}
+  .atlas-hud .camera{bottom:calc(var(--bas) + var(--dock) + 8px);display:flex}
+  .atlas-hud .ordres:not([data-ancre='oui']){left:auto;right:max(12px,env(safe-area-inset-right,0px));transform:none;width:320px;max-width:52%;max-height:calc(100% - 94px)}
+  .atlas-hud .ordres-entete{padding-bottom:5px}
+  .atlas-hud .ordres-grille{gap:5px}
+  .atlas-hud .ordres-grille button{min-height:44px;padding:8px}
+  .atlas-hud .annonce{bottom:calc(var(--bas) + var(--dock) + 12px);max-width:45%;left:24%;z-index:4}
+}
+.atlas-hud button[data-action]{touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:filter .1s,translate .1s}
+.atlas-hud button[data-action]:active:not(:disabled){translate:0 2px;filter:brightness(1.13)}
+.atlas-hud button[data-action]:disabled{opacity:.45;cursor:default!important}
+.atlas-hud button:focus-visible,.atlas-hud summary:focus-visible{outline:3px solid #ffd162!important;outline-offset:-3px}
+@media(prefers-reduced-motion:reduce){.atlas-hud *,.atlas-tour{animation:none!important;transition:none!important}}
 `;
 
 /** Injecte la feuille de style du HUD si le document ne l'a pas encore. */
@@ -151,6 +276,25 @@ function iconeMeteo(m: Meteo): string {
   }
 }
 
+/** Pictogrammes de commandement, partagés entre ordres et barre de combat. */
+function iconeOrdre(type: string): string {
+  const chemins: Record<string, string> = {
+    jour: '<path d="M5 3v3m14-3v3M3 9h18M4 5h16v16H4z"/><path d="M8 13h2m4 0h2m-8 4h2m4 0h2"/>',
+    fonds: '<path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',
+    pouvoir: '<path d="m13 2-9 12h7l-1 8 10-13h-7z" fill="currentColor" stroke="none"/>',
+    capturer: '<path d="M5 22V3m0 1c5-4 8 4 14 0v10c-6 4-9-4-14 0"/>',
+    attaquer: '<circle cx="12" cy="12" r="7"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>',
+    attendre: '<path d="M6 3h12M6 21h12M7 3v5l10 8v5M17 3v5L7 16v5"/>',
+    construire: '<path d="m4 20 10-10M14 3a6 6 0 0 0-4 8l-8 8 3 3 8-8a6 6 0 0 0 8-5l-4 3-4-4 3-4z"/>',
+    ravitailler: '<path d="M4 7h13v14H4zM7 7V3h7v4M17 9l4 3v6h-4M8 14h5m-2.5-2.5v5"/>',
+    fusionner: '<path d="M4 4v5l8 6 8-6V4M12 15v7m-4-5 4 5 4-5"/>',
+    fin_de_tour: '<path d="M5 4l10 8-10 8z"/><path d="M19 4v16"/>',
+    embarquer: '<path d="M3 16h18v5H3zM12 2v11m-5-5 5 5 5-5"/>',
+    debarquer: '<path d="M3 16h18v5H3zM12 13V2M7 7l5-5 5 5"/>',
+  };
+  return `<svg class="symbole" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${chemins[type] ?? chemins['capturer']}</svg>`;
+}
+
 /** Une vignette d'unité à peindre après insertion : le sprite vectoriel partagé. */
 interface Vignette { id: string; silhouette: Silhouette; camp: CampId; taille: number }
 
@@ -167,19 +311,62 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   conteneur.appendChild(racine);
 
   let vignettes: Vignette[] = [];
+  let tourAffiche = '';
+  let derniereSelection: string | null = null;
+  let minuterieTour: ReturnType<typeof setTimeout> | null = null;
+  let banniereTour: HTMLDivElement | null = null;
+
+  /**
+   * Le bandeau de tour. Il **attend qu'un commandant ait fini de parler** : une
+   * scène de dialogue et un « à vous de jouer » lancés ensemble se disputent le
+   * même instant et le joueur ne lit ni l'un ni l'autre.
+   *
+   * L'annonce n'est pas perdue, elle est **réarmée** : on efface le tour déjà
+   * annoncé, de sorte que la première image après la dernière réplique la
+   * rejoue. Le joueur reçoit donc les deux, l'un après l'autre, dans l'ordre où
+   * ils veulent dire quelque chose.
+   */
+  function annoncerTour(v: VueJeu): void {
+    const cle = `${v.etat.journee}:${v.etat.campCourant}`;
+    if (v.sceneOuverte) {
+      banniereTour?.remove();
+      banniereTour = null;
+      if (minuterieTour) clearTimeout(minuterieTour);
+      minuterieTour = null;
+      tourAffiche = '';
+      return;
+    }
+    if (v.etat.partie.terminee || cle === tourAffiche) return;
+    tourAffiche = cle;
+    if (minuterieTour) clearTimeout(minuterieTour);
+    banniereTour?.remove();
+    banniereTour = doc.createElement('div');
+    banniereTour.className = 'atlas-tour';
+    banniereTour.setAttribute('role', 'status');
+    banniereTour.style.setProperty('--teinte', v.etat.campCourant === v.camp ? '#ffd162' : '#f59a95');
+    banniereTour.innerHTML = iconeOrdre('capturer')
+      + `<div><strong>${ech(api.t(v.etat.campCourant === v.camp ? 'hud.votre_tour' : 'hud.tour_adverse'))}</strong>`
+      + `<span>${ech(api.t('hud.journee', { n: Math.max(1, v.etat.journee) }))}</span></div>`;
+    conteneur.appendChild(banniereTour);
+    minuterieTour = setTimeout(() => { banniereTour?.remove(); banniereTour = null; }, 1150);
+  }
 
   // -------------------------------------------------------------------------
   // Panneaux
   // -------------------------------------------------------------------------
 
   function panneauPartie(v: VueJeu): string {
-    const camp = v.etat.camps.find((c) => c.id === v.etat.campCourant);
+    // Les fonds affichés sont **les miens**, pas ceux du camp qui joue : pendant
+    // le tour adverse, montrer sa trésorerie est une fuite d'information autant
+    // qu'une confusion.
+    const camp = v.etat.camps.find((c) => c.id === v.camp);
     const journee = api.t('hud.journee', { n: Math.max(1, v.etat.journee) });
     const fonds = api.t('hud.fonds', { n: nombreIntl(v.locale, camp?.fonds ?? 0) });
+    // Le liseré, lui, dit **qui joue** : c'est la seule chose qui change de camp.
     const bord = paletteDe(v.etat.campCourant).main;
-    return `<div class="p partie" role="group" aria-label="${ech(api.t('hud.partie_en_cours'))}">`
-      + `<span class="bord" style="background:${bord}"></span>`
-      + `<div class="in"><div class="tt">${ech(journee)}</div><div class="sb">${ech(fonds)}</div></div></div>`;
+    return `<div class="partie" role="group" aria-label="${ech(api.t('hud.partie_en_cours'))}">`
+      + `<div class="jour" style="border-left:4px solid ${bord}">${iconeOrdre('jour')}<span>${ech(journee)}</span></div>`
+      + `<div class="fonds" aria-label="${ech(fonds)}" title="${ech(fonds)}">${iconeOrdre('fonds')}<span>${ech(nombreIntl(v.locale, camp?.fonds ?? 0))}</span></div></div>`;
   }
 
   function panneauBulletin(v: VueJeu): string {
@@ -193,10 +380,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       j1: libelleMeteo(api.t, c.previsions[0]),
       j2: libelleMeteo(api.t, c.previsions[1]),
     });
-    return `<div class="p bulletin" role="group" aria-label="${ech(api.t('hud.bulletin_titre'))}">`
-      + `<div class="in">${iconeMeteo(a.meteo)}<div style="min-width:0">`
-      + `<div class="tt">${ech(ligne1)}</div><div class="sb">${ech(ligne2)}</div>`
-      + `<div class="sb">${ech(ligne3)}</div></div></div></div>`;
+    return `<details class="bulletin" aria-label="${ech(api.t('hud.bulletin_titre'))}">`
+      + `<summary>${iconeMeteo(a.meteo)}<span style="min-width:0">`
+      + `<span class="tt" style="display:block">${ech(ligne2)}</span></span></summary>`
+      + `<div class="previsions"><div class="sb">${ech(ligne1)}</div><div class="sb">${ech(ligne3)}</div></div></details>`;
   }
 
   function panneauJauge(v: VueJeu): string {
@@ -206,15 +393,24 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const nom = nomCommandant(v.locale, camp.commandantCle) || api.t('hud.commandant');
     const part = camp.jaugeMax > 0 ? Math.min(1, camp.jauge / camp.jaugeMax) : 0;
     const pleine = part >= 1;
-    return `<div class="p jauge"><span class="bord" style="background:${pal.main}"></span>`
-      + `<button type="button" data-action="pouvoir"><div class="in">`
-      + `<div class="tt">${ech(nom)}</div>`
-      + `<div class="barre"><i style="width:${Math.max(3, part * 100).toFixed(1)}%;background:${pleine ? '#ffd66b' : pal.light}"></i></div>`
-      + `<div class="sb">${ech(api.t(pleine ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir'))}</div>`
-      + `</div></button></div>`;
+    // Un bouton cliquable qui fait refuser l'action est un bouton qui ment : la
+    // jauge doit être pleine, sinon le pouvoir n'est pas disponible.
+    const actif = pleine && !v.attenteIa && !v.etat.partie.terminee
+      && v.etat.campCourant === v.camp;
+    const segments = Math.min(10, Math.max(1, Math.ceil(camp.jaugeMax / 100)));
+    const energie = Array.from({ length: segments }, (_, i) => `<i><b style="width:${Math.max(0, Math.min(1, part * segments - i)) * 100}%"></b></i>`).join('');
+    const libelle = api.t(pleine ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
+    return `<div class="p jauge" data-pret="${pleine ? 'oui' : 'non'}" style="border-color:${pal.light}">`
+      + `<button type="button" data-action="pouvoir" aria-label="${ech(nom)} · ${ech(libelle)}"${actif ? '' : ' disabled'}>`
+      + `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
+      + `<span class="tt" style="display:block">${ech(nom)}</span>`
+      + `<span class="energie" aria-hidden="true">${energie}</span>`
+      + `<span class="sb" style="display:block">${ech(libelle)}</span>`
+      + `</span></button></div>`;
   }
 
-  function panneauInspection(v: VueJeu): string {
+  function panneauInspection(v: VueJeu, duelOuvert: boolean): string {
+    if (v.menu || duelOuvert) return '';
     const c = v.curseur;
     if (!c) return '';
     const terrain = terrainLogique(v.etat, v.catalogue, c);
@@ -222,12 +418,14 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const unite = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
     const type = unite ? v.catalogue.unites[unite.type] : undefined;
     const fiche = v.catalogue.terrains[terrain];
-    const defense = api.t('hud.defense', { n: fiche?.defense ?? 0 });
+    const etoiles = Math.max(0, Math.min(4, fiche?.defense ?? 0));
+    const defense = `<span class="etoiles" aria-label="${ech(api.t('hud.defense', { n: etoiles }))}">`
+      + `${'\u2605'.repeat(etoiles)}${'\u2606'.repeat(4 - etoiles)}</span>`;
     const titre = unite && type
       ? nomUnite(v.locale, v.catalogue, unite.type)
       : nomTerrain(v.locale, v.catalogue, terrain);
     const sousTitre = unite
-      ? `${nomTerrain(v.locale, v.catalogue, terrain)} · ${defense}`
+      ? `${ech(nomTerrain(v.locale, v.catalogue, terrain))} · ${defense}`
       : defense;
     const lignes: string[] = [];
     if (unite && type) {
@@ -246,41 +444,146 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     return `<div class="p inspect" role="group" aria-label="${ech(api.t('hud.panneau_unite'))}">`
       + `<span class="bord" style="background:${bord}"></span>`
       + `<div class="in">${icone}<div style="min-width:0">`
-      + `<div class="tt">${ech(titre)}</div><div class="sb">${ech(sousTitre)}</div>`
+      + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
       + (lignes.length > 0 ? `<div class="stats">${ech(lignes.join(' · '))}</div>` : '')
-      + `</div></div></div>`;
+      + `</div>${v.selection && !v.attenteIa ? boutonRetour() : ''}</div></div>`;
+  }
+
+  /** Une jauge de PV en dix crans : pleine, perdue à l'échange, vide. */
+  function jaugePv(avant: number, apres: number): string {
+    const crans = Array.from({ length: 10 }, (_, i) => {
+      if (i < apres) return '<i class="plein"></i>';
+      if (i < avant) return '<i class="perdu"></i>';
+      return '<i></i>';
+    }).join('');
+    return `<span class="pv" aria-hidden="true">${crans}</span>`;
+  }
+
+  /** Une ligne de duel : vignette, nom, PV avant → après, jauge. */
+  function ligneDuel(v: VueJeu, unite: Unite, apres: number): string {
+    const type = v.catalogue.unites[unite.type];
+    if (!type) return '';
+    const avant = pvAffiches(unite.pv);
+    const id = `vg${vignettes.length}`;
+    vignettes.push({ id, silhouette: type.silhouette, camp: unite.camp, taille: 36 });
+    return `<div class="duel-camp" data-perte="${apres >= avant ? 'aucune' : 'oui'}">`
+      + `<canvas data-vignette="${id}" width="36" height="36"></canvas>`
+      + `<span style="min-width:0"><span class="tt" style="display:block">${ech(nomUnite(v.locale, v.catalogue, unite.type))}</span>`
+      + jaugePv(avant, apres)
+      + `</span><span class="duel-chiffres">${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
+  }
+
+  /**
+   * La **prévision de duel** : ce que l'échange coûterait aux deux camps, avant
+   * de confirmer. C'est l'information qu'Advance Wars met sous le curseur, et
+   * sans laquelle une attaque est un pari plutôt qu'une décision.
+   *
+   * La prévision est la valeur **nominale** (`prevoirDuel`) : le tirage réel
+   * s'en écarte de ±5 %, jamais davantage.
+   */
+  function panneauDuel(v: VueJeu): string {
+    const visee = v.visee;
+    // La prévision suit la cible **pointée**, pas le curseur : au doigt il n'y a
+    // pas de survol, et une prévision qui n'existe qu'à la souris ne sert à rien.
+    const c = visee?.cible ?? null;
+    if (!visee || !c) return '';
+    if (!visee.cibles.some((cible) => cible.x === c.x && cible.y === c.y)) return '';
+    const attaquant = uniteParId(v.etat, visee.attaquantId);
+    const cible = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
+    if (!attaquant || !cible) return '';
+    const p = prevoirDuel(v.etat, v.catalogue, attaquant, cible, visee.depuis);
+    const issue = api.t(p.cibleHorsJeu ? 'hud.duel_hors_jeu' : 'hud.duel_riposte', {
+      n: pvAffiches(attaquant.pv) - p.pvAttaquant,
+    });
+    return `<div class="p duel"${ancrer(c, 150)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
+      + `<div class="duel-entete">${iconeOrdre('attaquer')}<span>${ech(api.t('hud.duel'))}</span>`
+      + `<span class="issue">${ech(issue)}</span></div>`
+      + ligneDuel(v, cible, p.pvCible)
+      + ligneDuel(v, attaquant, p.pvAttaquant)
+      + '</div>';
   }
 
   function panneauOrdres(v: VueJeu): string {
     if (!v.menu || v.menu.options.length === 0) return '';
-    const ancre = api.versEcran(v.menu.ancre);
-    const largeur = racine.clientWidth || 800;
-    const hauteur = racine.clientHeight || 600;
-    const h = v.menu.options.length * 36 + 12;
-    const x = Math.max(12, Math.min(largeur - 184, (ancre?.x ?? largeur / 2) + 34));
-    const y = Math.max(12, Math.min(hauteur - h - 12, (ancre?.y ?? hauteur / 2) - h / 2));
     const boutons = v.menu.options.map((o) => (
       `<button type="button" data-action="suite" data-valeur="${ech(o.id)}"${o.disponible ? '' : ' disabled'}>`
-      + `${ech(api.t(o.cle))}</button>`
+      + `${iconeOrdre(o.id)}<span>${ech(api.t(o.cle))}</span></button>`
     )).join('');
-    return `<div class="p ordres" role="menu" aria-label="${ech(api.t('hud.menu_ordres'))}" `
-      + `style="left:${Math.round(x)}px;top:${Math.round(y)}px">${boutons}</div>`;
+    // Hauteur estimée du panneau : en-tête, lignes de 46 px, marges.
+    const hauteur = 44 + v.menu.options.length * 50 + 12;
+    return `<div class="p ordres"${ancrer(v.menu.ancre, hauteur)} role="group" aria-label="${ech(api.t('hud.menu_ordres'))}">`
+      + `<div class="ordres-entete"><div class="tt">${ech(api.t('hud.menu_ordres'))}</div>${boutonRetour()}</div>`
+      + `<div class="ordres-grille">${boutons}</div></div>`;
   }
 
+  /** Largeur d'un panneau ancré à une case, en pixels. */
+  const LARGEUR_ANCRE = 190;
+  /** Écart entre le centre de la case et le bord du panneau. */
+  const ECART_ANCRE = 36;
+  /** En deçà, l'écran est trop étroit pour poser un panneau à côté d'une case. */
+  const LARGEUR_MINIMALE_ANCRE = 680;
+
+  /**
+   * Pose un panneau **à côté** de la case qu'il commente.
+   *
+   * C'est la contrainte qui gouverne tout le HUD : ne jamais couvrir la case sur
+   * laquelle on joue. Le panneau se place à droite de la case, bascule à gauche
+   * s'il déborde, et se cale à douze pixels des bords. Sur un écran étroit, ou
+   * quand la case est hors champ, on rend une chaîne vide et le CSS reprend la
+   * main avec une feuille basse — c'est le bon comportement au doigt.
+   */
+  function ancrer(c: Case | null | undefined, hauteur: number): string {
+    const L = racine.clientWidth;
+    const H = racine.clientHeight;
+    if (!c || L < LARGEUR_MINIMALE_ANCRE) return '';
+    const p = api.versEcran(c);
+    if (!p) return '';
+    const droite = p.x + ECART_ANCRE + LARGEUR_ANCRE <= L - 12;
+    const x = droite ? p.x + ECART_ANCRE : p.x - ECART_ANCRE - LARGEUR_ANCRE;
+    const y = p.y - hauteur / 2;
+    const cx = Math.round(Math.max(12, Math.min(L - LARGEUR_ANCRE - 12, x)));
+    const cy = Math.round(Math.max(12, Math.min(Math.max(12, H - hauteur - 12), y)));
+    return ` data-ancre="oui" style="left:${cx}px;top:${cy}px"`;
+  }
+
+  function boutonRetour(): string {
+    const titre = ech(api.t('menu.retour'));
+    return `<button type="button" class="retour" data-action="fermer" aria-label="${titre}" title="${titre}"><span aria-hidden="true">↶</span></button>`;
+  }
+
+  function panneauCamera(): string {
+    if (!api.zoomer && !api.recentrer) return '';
+    const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
+    return '<div class="camera">'
+      + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', '+') + bouton('zoom_moins', 'hud.zoom_moins', '−') : '')
+      + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
+      + '</div>';
+  }
+
+  /**
+   * Fin de tour, et **ce qu'il reste à jouer**. Le compte se lit sur l'état, sans
+   * rien demander au moteur : une unité prête est une unité de mon camp qui n'a
+   * pas agi et qui n'est pas dans un transport. C'est l'information qui manquait
+   * pour ne pas terminer son tour par accident.
+   */
   function panneauFinTour(v: VueJeu): string {
     const actif = !v.attenteIa && !v.etat.partie.terminee && v.etat.campCourant === v.camp;
-    const pal = paletteDe(v.camp);
-    return `<div class="fintour" style="position:absolute;right:12px;bottom:12px;pointer-events:auto">`
+    const pretes = v.etat.unites.filter(
+      (u) => u.camp === v.camp && u.etat === 'prete' && !u.dansTransport,
+    ).length;
+    const reste = pretes > 0 ? api.t('hud.unites_pretes', { n: pretes }) : api.t('hud.tout_joue');
+    return `<div class="fintour">`
       + `<button type="button" data-action="fin_tour"${actif ? '' : ' disabled'} `
-      + `style="background:${pal.main};box-shadow:0 8px 22px rgba(0,0,0,.4)">`
-      + `${ech(api.t('hud.fin_de_tour'))}</button></div>`;
+      + `data-reste="${pretes > 0 ? 'oui' : 'non'}">${iconeOrdre('fin_de_tour')}`
+      + `<span class="fintour-texte"><span class="tt">${ech(api.t('hud.fin_de_tour'))}</span>`
+      + `<span class="sb">${ech(reste)}</span></span></button></div>`;
   }
 
   function panneauAttente(v: VueJeu): string {
     if (!v.attenteIa) return '';
     const pal = paletteDe(v.camp === 0 ? 1 : 0);
     return `<div class="p attente"><span class="bord" style="background:${pal.main}"></span>`
-      + `<div class="in"><div class="tt">${ech(api.t('hud.tour_adverse'))}</div></div></div>`;
+      + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t('hud.tour_adverse'))}</div></div></div>`;
   }
 
   function panneauAnnonce(v: VueJeu): string {
@@ -310,7 +613,7 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
 
   function ecranFin(v: VueJeu): string {
     const fin = v.etat.partie;
-    if (!fin.terminee) return '';
+    if (!fin.terminee || v.masquerFin) return '';
     const cle = fin.nul ? 'hud.match_nul'
       : fin.vainqueur === v.camp ? 'combat.manche_gagnee' : 'combat.manche_perdue';
     const pal = paletteDe(fin.vainqueur ?? null);
@@ -349,9 +652,21 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   function rafraichir(): void {
     const v = api.vue();
     vignettes = [];
-    racine.innerHTML = panneauPartie(v) + panneauBulletin(v) + panneauJauge(v)
-      + panneauInspection(v) + panneauOrdres(v) + panneauFinTour(v)
+    annoncerTour(v);
+    const bulletinOuvert = racine.querySelector<HTMLDetailsElement>('.bulletin')?.open ?? false;
+    racine.dataset['ordres'] = v.menu ? 'oui' : 'non';
+    racine.dataset['scene'] = v.sceneOuverte ? 'ouverte' : 'fermee';
+    racine.dataset['selectionNouvelle'] = v.selection !== derniereSelection ? 'oui' : 'non';
+    derniereSelection = v.selection;
+    // Le duel se calcule **une fois** : il pousse des vignettes, et deux appels
+    // en réclameraient deux fois plus qu'il n'y a de canvas à peindre.
+    const duel = panneauDuel(v);
+    racine.innerHTML = panneauPartie(v) + panneauBulletin(v)
+      + `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`
+      + duel + panneauInspection(v, duel !== '') + panneauOrdres(v) + panneauCamera()
       + panneauAttente(v) + panneauAnnonce(v) + modaleProduction(v) + ecranFin(v);
+    const bulletin = racine.querySelector<HTMLDetailsElement>('.bulletin');
+    if (bulletin) bulletin.open = bulletinOuvert;
     peindreVignettes();
   }
 
@@ -373,6 +688,9 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       case 'pouvoir': api.jouerPouvoir('normal'); break;
       case 'fermer': api.annuler(); break;
       case 'rejouer': api.recommencer(); break;
+      case 'zoom_plus': api.zoomer?.(1); break;
+      case 'zoom_moins': api.zoomer?.(-1); break;
+      case 'recentrer': api.recentrer?.(); break;
       default: break;
     }
   }
@@ -383,6 +701,8 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   return {
     rafraichir,
     demonter: () => {
+      if (minuterieTour) clearTimeout(minuterieTour);
+      banniereTour?.remove();
       racine.removeEventListener('click', surClic);
       racine.remove();
     },

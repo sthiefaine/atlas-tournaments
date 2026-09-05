@@ -17,7 +17,7 @@ import type { Case } from '../../schemas/index';
 import { degatsBase } from '../catalogue';
 import { surAttaqueHooks } from '../hooks';
 import type {
-  Catalogue, EtatPartie, EvenementJeu, MotifRefus, Rng, Unite,
+  Catalogue, EtatPartie, EtatRng, EvenementJeu, InstantaneRng, MotifRefus, Rng, Unite,
 } from '../types';
 import { manhattan, porte, pvAffiches } from '../types';
 import { terrainSous } from './mouvement';
@@ -137,4 +137,77 @@ export function resoudreAttaque(
 export function estIndirecte(cat: Catalogue, u: Unite): boolean {
   const t = cat.unites[u.type];
   return t !== undefined && porte(t, 'tir_indirect');
+}
+
+// ---------------------------------------------------------------------------
+// Prévision : ce que le joueur voit **avant** de confirmer une attaque
+// ---------------------------------------------------------------------------
+
+/**
+ * Flux médian : la prévision rejoue la formule de dégâts **sans consommer
+ * d'aléa**. Deux raisons, et la seconde est la vraie : un tirage avancerait le
+ * flux `combat` et casserait le déterminisme du rejeu, et une prévision qui
+ * bouge d'un survol à l'autre n'est pas une information mais un bruit. `0,5`
+ * place `A` exactement au centre de sa fourchette (`0,95` à `1,05`), donc à
+ * `1,00` : la prévision est la valeur nominale, à un demi-point près.
+ */
+const RNG_MEDIAN: Rng = {
+  chemin: 'median',
+  etat: [0, 0, 0, 0] as EtatRng,
+  suivant(): number { return 0.5; },
+  entier(borne: number): number { return Math.floor(borne / 2); },
+  branche(): Rng { return RNG_MEDIAN; },
+  instantane(): InstantaneRng { return {}; },
+  restaurer(): void { /* rien : ce flux n'a pas d'état */ },
+};
+
+/** Ce que la barre de duel affiche : les deux côtés du même échange. */
+export interface PrevisionDuel {
+  /** PV internes retirés à la cible. */
+  degats: number;
+  /** PV affichés de la cible après la frappe. */
+  pvCible: number;
+  /** PV internes rendus par la riposte, `0` s'il n'y en a pas. */
+  riposte: number;
+  /** PV affichés de l'attaquant après la riposte. */
+  pvAttaquant: number;
+  /** Vrai si la cible sort du jeu. */
+  cibleHorsJeu: boolean;
+}
+
+/**
+ * Prévoit l'échange complet — frappe puis riposte — depuis la case d'**arrivée**
+ * de l'attaquant, sans rien muter et sans tirer d'aléa.
+ *
+ * L'attaquant est cloné à sa case d'arrivée : le vent de `surAttaque` lit la
+ * direction du tir, et prévoir depuis la case de départ mentirait sur un
+ * déplacement qui change de cap.
+ */
+export function prevoirDuel(
+  etat: EtatPartie, cat: Catalogue, att: Unite, def: Unite, depuis: Case,
+): PrevisionDuel {
+  const arrive: Unite = { ...att, x: depuis.x, y: depuis.y };
+  const degats = Math.min(def.pv, calculerDegats(etat, cat, arrive, def, RNG_MEDIAN));
+  const restant = def.pv - degats;
+  const cibleHorsJeu = restant <= 0;
+
+  let riposte = 0;
+  const td = cat.unites[def.type];
+  if (!cibleHorsJeu && td) {
+    const peutRendre = td.peutRiposter
+      && manhattan(depuis, def) === 1
+      && (td.munitions === null || (def.munitions ?? 0) > 0)
+      && degatsBase(cat, def.type, att.type) > 0;
+    // La riposte se calcule sur les PV **d'après** la frappe : c'est ce qui rend
+    // rentable le fait de frapper en premier, et le joueur doit le voir.
+    if (peutRendre) riposte = calculerDegats(etat, cat, { ...def, pv: restant }, arrive, RNG_MEDIAN);
+  }
+
+  return {
+    degats,
+    pvCible: pvAffiches(Math.max(0, restant)),
+    riposte,
+    pvAttaquant: pvAffiches(Math.max(0, att.pv - riposte)),
+    cibleHorsJeu,
+  };
 }

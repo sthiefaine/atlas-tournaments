@@ -83,6 +83,10 @@ export interface Rendu {
   brancher(gestes: GestesRendu): () => void;
   /** Recentre la vue sur une case, sans animation. */
   cadrer(c: Case): void;
+  /** Centre une case explicitement, même si elle est déjà visible. */
+  recentrer?(c: Case): void;
+  /** Zoom tactile explicite : +1 rapproche, −1 éloigne. */
+  zoomer?(sens: number): void;
   /**
    * Une image PNG en `data:` de l'état courant, ou `null`. Le rendu 3D **redessine
    * de façon synchrone** avant de lire : sans cela, un tampon WebGL non préservé

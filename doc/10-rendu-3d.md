@@ -270,13 +270,18 @@ Le vocabulaire visuel reprend celui de la 2D pour que le repli ne dépayse pas :
 
 | Surbrillance | Rendu |
 |---|---|
-| déplacement possible | décalque bleu translucide, bord adouci |
-| portée d'attaque | décalque rouge translucide, hachures fines |
-| chemin prévisualisé | ruban continu suivant le relief, flèche à l'extrémité |
+| déplacement possible | décalque **vert émeraude** translucide, bord clair |
+| portée d'attaque | décalque **rouge carmin** translucide |
+| chemin prévisualisé | **flèche** coudée suivant le relief, pointe sur la case d'arrivée |
 | curseur | cadre lumineux d'une case, animé en pulsation lente |
-| case capturable | anneau clignotant discret aux couleurs de la nation |
+| objectif de match | décalque or, pour ne pas se confondre avec un ordre |
+| chantier du génie | décalque bleu, pour la même raison |
 
-Le chemin est le seul décalque **continu** : il suit l'altitude du terrain, ce qui le fait monter et descendre visiblement — une bonne façon de faire sentir qu'un détour par la plaine coûte moins qu'une montée.
+**Vert, j'y vais ; rouge, j'y tire.** C'est la seule phrase que le joueur ait à retenir, et elle est celle d'Advance Wars — à la couleur du déplacement près, choisie ici verte sur demande. Le vert tire volontairement vers l'émeraude et le rouge vers le carmin : un vert de prairie posé sur une prairie ne se voit pas. En 2D, chaque case allumée reçoit d'abord un **assombrissement** puis sa teinte, ce qui l'enfonce d'un cran par rapport à ses voisines ; en 3D, c'est l'opacité du décalque qui joue ce rôle.
+
+La **portée d'attaque** est l'enveloppe complète : toutes les cases que l'unité pourrait frapper ce tour-ci depuis n'importe laquelle de ses arrivées, **privées** de celles où elle peut aller — une case qui est les deux reste verte, parce qu'on la lit d'abord comme une destination. Une pièce indirecte qui ne tire pas après mouvement ne menace que depuis sa case actuelle : afficher l'enveloppe de tous ses points de chute mentirait.
+
+Le chemin est le seul décalque **continu** : un ruban échantillonné le long de chaque segment, chaque sommet lisant sa propre altitude, ce qui le fait monter et descendre visiblement — une bonne façon de faire sentir qu'un détour par la plaine coûte moins qu'une montée. Il porte une **pointe** sur la case d'arrivée et un liseré sombre sous le corps clair, faute de quoi il disparaîtrait sur la neige.
 
 ---
 

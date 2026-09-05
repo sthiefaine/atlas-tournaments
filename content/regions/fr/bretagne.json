@@ -40,13 +40,12 @@
   "mecanique": {
     "cle": "meca_marees",
     "parametres": {
-      "cycle_journees": 2,
-      "part_estran": 0.15,
-      "pv_surprise": 3,
-      "preavis_journees": 2,
+      "periodeJournees": 2,
+      "amplitudeCases": 1,
+      "phaseInitiale": 0,
       "gelable": false
     },
-    "description": "Les cases d’estran basculent terre ↔ mer une journée sur deux, annoncées deux journées à l’avance ; qui s’y attarde perd 3 PV et recule sur la terre ferme."
+    "description": "La grève découvre deux journées puis se recouvre deux journées. À la montée, les unités terrestres regagnent une case franchissable libre ; sans refuge elles perdent 3 PV affichés, sans être mises hors jeu."
   },
   "commandantCle": "cmd_maelle_kerdraon",
   "scenarios": [

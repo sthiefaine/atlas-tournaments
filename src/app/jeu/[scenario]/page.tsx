@@ -65,5 +65,5 @@ export default async function PageJeu(
   const rendu = Array.isArray(brut) ? brut[0] : brut;
   const charge = await charger(code);
   if (!charge) notFound();
-  return <Toile scenario={charge.scenario} carte={charge.carte} locale="fr" rendu={rendu} />;
+  return <Toile key={charge.scenario.code} scenario={charge.scenario} carte={charge.carte} locale="fr" rendu={rendu} />;
 }

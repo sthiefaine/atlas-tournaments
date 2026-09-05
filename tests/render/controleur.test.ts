@@ -10,7 +10,7 @@ import {
   chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte,
   type EtatPartie,
 } from '../../src/engine/index';
-import { Controleur } from '../../src/render/controleur';
+import { Controleur, SUITES_MENU } from '../../src/render/controleur';
 import { validerMapDef, type MapDef } from '../../src/schemas/index';
 
 const CAT = chargerCatalogue();
@@ -194,4 +194,141 @@ test('un refus est signalé à l’écouteur, jamais levé', () => {
   c.finTour(); // ce n'est plus notre tour : le contrôleur refuse de son côté
   assert.equal(refus.length, 0, 'le contrôleur ne demande rien d’illégal au moteur');
   assert.equal(c.etat.campCourant, 1);
+});
+
+test('la portée d’attaque s’allume en rouge, hors des cases de déplacement', () => {
+  const etat = partie();
+  const c = controleur(etat);
+  const unite = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(unite);
+  c.clicCase({ x: unite.x, y: unite.y });
+
+  const vert = new Set(c.vue.surbrillances
+    .filter((s) => s.genre === 'deplacement')
+    .map((s) => `${s.case.x},${s.case.y}`));
+  const rouge = c.vue.surbrillances.filter((s) => s.genre === 'attaque');
+  assert.ok(rouge.length > 0, 'un char au contact du front menace au moins une case');
+  // La règle de lecture : vert, j'y vais ; rouge, j'y tire. Jamais les deux.
+  for (const s of rouge) {
+    assert.ok(!vert.has(`${s.case.x},${s.case.y}`), 'une case atteignable reste verte');
+    assert.ok(
+      s.case.x >= 0 && s.case.y >= 0 && s.case.x < etat.largeur && s.case.y < etat.hauteur,
+      'la portée ne déborde jamais de la carte',
+    );
+  }
+});
+
+test('une pièce indirecte ne menace que depuis sa case, pas depuis ses arrivées', () => {
+  const etat = partie();
+  const artillerie = etat.unites.find((u) => u.camp === 0 && u.type === 'artillerie');
+  assert.ok(artillerie, 'la carte de test porte une artillerie au camp 0');
+  const c = controleur(etat);
+  c.clicCase({ x: artillerie.x, y: artillerie.y });
+
+  const type = CAT.unites['artillerie'];
+  assert.ok(type && !type.peutTirerApresMouvement, 'le cas testé suppose une pièce qui ne tire pas après mouvement');
+  const rouge = c.vue.surbrillances.filter((s) => s.genre === 'attaque');
+  for (const s of rouge) {
+    const distance = Math.abs(s.case.x - artillerie.x) + Math.abs(s.case.y - artillerie.y);
+    assert.ok(
+      distance >= type.portee[0] && distance <= type.portee[1],
+      `case rouge à ${distance} cases, hors de la portée [${type.portee.join(', ')}]`,
+    );
+  }
+});
+
+test('hors phase de visée, la vue ne propose aucune prévision de duel', () => {
+  const etat = partie();
+  const c = controleur(etat);
+  const unite = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(unite);
+  assert.equal(c.vue.visee, null);
+  c.clicCase({ x: unite.x, y: unite.y });
+  assert.equal(c.vue.visee, null, 'sélectionner n’est pas viser');
+});
+
+// ---------------------------------------------------------------------------
+// La visée en deux temps : pointer, puis confirmer
+// ---------------------------------------------------------------------------
+
+/** Une partie où le char du joueur a une infanterie adverse au contact. */
+function partieAuContact(): EtatPartie {
+  const etat = partie();
+  const char = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  const adverses = etat.unites.filter((u) => u.camp === 1);
+  assert.ok(char && adverses.length >= 2);
+  adverses[0]!.x = char.x + 1;
+  adverses[0]!.y = char.y;
+  adverses[1]!.x = char.x;
+  adverses[1]!.y = char.y + 1;
+  return etat;
+}
+
+/** Amène le contrôleur en phase de visée, sans avoir bougé l'unité. */
+function viser(etat: EtatPartie): Controleur {
+  const c = controleur(etat);
+  const char = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(char);
+  c.clicCase({ x: char.x, y: char.y });
+  c.clicCase({ x: char.x, y: char.y });
+  assert.equal(c.phase, 'action');
+  c.choisirSuite('attaquer');
+  assert.equal(c.phase, 'cible', 'deux adversaires au contact ouvrent la visée');
+  return c;
+}
+
+test('entrer en visée pointe déjà une cible : la prévision existe sans survol', () => {
+  const c = viser(partieAuContact());
+  assert.ok(c.vue.visee, 'la vue porte une visée');
+  assert.ok(c.vue.visee?.cible, 'et une cible pointée dès le premier instant');
+  assert.equal(c.vue.visee?.cibles.length, 2);
+});
+
+test('au doigt, le premier appui pointe et le second confirme', () => {
+  const etat = partieAuContact();
+  const c = viser(etat);
+  const premiere = c.vue.visee?.cible;
+  assert.ok(premiere);
+  const autre = c.vue.visee?.cibles.find((x) => x.x !== premiere.x || x.y !== premiere.y);
+  assert.ok(autre);
+
+  // Premier appui sur l'autre cible : on la pointe, on n'attaque pas.
+  c.clicCase(autre);
+  assert.equal(c.phase, 'cible', 'pointer n’est pas frapper');
+  assert.deepEqual(c.vue.visee?.cible, autre);
+
+  // Second appui au même endroit : l'ordre part.
+  c.clicCase(autre);
+  assert.notEqual(c.phase, 'cible', 'le second appui confirme');
+});
+
+test('à la souris, survoler une cible suffit : le clic suivant confirme', () => {
+  const c = viser(partieAuContact());
+  const premiere = c.vue.visee?.cible;
+  assert.ok(premiere);
+  const autre = c.vue.visee?.cibles.find((x) => x.x !== premiere.x || x.y !== premiere.y);
+  assert.ok(autre);
+  c.poserCurseur(autre);
+  assert.deepEqual(c.vue.visee?.cible, autre, 'le survol pointe');
+  c.clicCase(autre);
+  assert.notEqual(c.phase, 'cible', 'un seul clic après le survol');
+});
+
+test('cliquer hors des cibles annule la visée', () => {
+  const c = viser(partieAuContact());
+  c.clicCase({ x: 0, y: 0 });
+  assert.equal(c.vue.visee, null);
+});
+
+test('les ordres gardent une place fixe, quel que soit leur nombre', () => {
+  const etat = partieAuContact();
+  const c = controleur(etat);
+  const char = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(char);
+  c.clicCase({ x: char.x, y: char.y });
+  c.clicCase({ x: char.x, y: char.y });
+  const ids = c.vue.menu?.options.map((o) => o.id) ?? [];
+  const rangs = ids.map((id) => SUITES_MENU.indexOf(id as typeof SUITES_MENU[number]));
+  assert.deepEqual([...rangs].sort((a, b) => a - b), rangs, 'l’ordre suit SUITES_MENU');
+  assert.equal(ids[ids.length - 1], 'attendre', 'attendre ferme toujours la liste');
 });

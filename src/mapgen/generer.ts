@@ -26,7 +26,7 @@ import { creerRng, type Rng } from './rng';
 import { creerCadre } from './symetrie';
 
 /** Version du générateur : à incrémenter dès qu'une grille change à graine égale. */
-export const MAPGEN_VERSION = 1;
+export const MAPGEN_VERSION = 2;
 
 /**
  * Date portée par l'enveloppe d'une carte générée. Le générateur n'a pas d'horloge

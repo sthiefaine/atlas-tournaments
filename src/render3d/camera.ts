@@ -4,8 +4,8 @@
  * Le brief fixe le cadre et il ne bouge pas : tangage entre 60° et 75° au-dessus
  * de l'horizontale (68° par défaut), lacet fixe mais tournable **par quarts de
  * tour** (Q et E), zoom **par paliers** (molette, pincement, + et −), glisser au
- * bouton droit ou à deux doigts — le clic gauche reste au jeu. Au montage, la
- * carte est cadrée en entier ; ensuite, des bornes empêchent de la perdre.
+ * un doigt ou bouton droit. Un tap reste au jeu. Le cadrage conserve des cases
+ * lisibles sur téléphone, quitte à explorer la carte en glissant.
  *
  * Les fonctions du haut de fichier sont **pures** : elles ne connaissent ni le
  * DOM ni three.js et se testent directement (`tests/render3d/camera.test.ts`).
@@ -65,6 +65,13 @@ export function distanceCadrage(
   const parProfondeur = (hauteur * CASE * Math.sin(e)) / (2 * demiFov);
   const parLargeur = (largeur * CASE) / (2 * demiFov * Math.max(0.2, aspect));
   return Math.max(parProfondeur, parLargeur) * marge;
+}
+
+/** Distance maximale pour garder une case lisible au centre de la vue. */
+export function distanceLisible(hauteurVue: number, pixelsParCase = 48, tangage = TANGAGE_DEFAUT): number {
+  return Math.max(PALIERS_DISTANCE[0],
+    (Math.max(1, hauteurVue) * CASE * Math.sin((tangage * Math.PI) / 180))
+      / (2 * Math.tan((FOV * Math.PI) / 360) * pixelsParCase));
 }
 
 /** Le palier de distance le plus proche d'une valeur. */
@@ -135,13 +142,14 @@ export interface Vue3d {
   redimensionner(largeur: number, hauteur: number): void;
   /** Recopie l'état dans la caméra three.js. */
   appliquer(): void;
-  /** Cadre la carte entière. */
+  /** Cadre la carte dans la limite de lisibilité des cases. */
   cadrerCarte(): void;
   /** Amène une case dans le champ, sans brutalité. */
   cadrerCase(c: Case, hauteurSol: number): void;
+  centrerCase(c: Case): void;
   glisser(dx: number, dy: number): void;
   zoomer(sens: number): void;
-  facteurZoom(facteur: number): void;
+  facteurZoom(facteur: number, ancre?: { x: number; y: number }): void;
   tourner(sens: number): void;
   /** Point d'écran → case, par lancer de rayon sur le sol. */
   caseSous(x: number, y: number, sol: THREE.Object3D | null): Case | null;
@@ -166,6 +174,7 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
 
   function appliquer(): void {
     limiterCible(etat, carte);
+    etat.distance = Math.min(etat.distance, distanceLisible(hauteurVue));
     const p = positionCamera(etat);
     camera.position.set(p.x, p.y, p.z);
     cible.set(etat.cible.x, 0, etat.cible.z);
@@ -178,7 +187,10 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     etat.cible.z = (carte.hauteur * CASE) / 2;
     // On prend la distance exacte plutôt que le palier au-dessus : coller au
     // palier laisserait jusqu'à un tiers de l'écran vide autour du plateau.
-    etat.distance = distanceCadrage(carte.largeur, carte.hauteur, camera.aspect, etat.tangage);
+    etat.distance = Math.min(
+      distanceCadrage(carte.largeur, carte.hauteur, camera.aspect, etat.tangage),
+      distanceLisible(hauteurVue, 64),
+    );
     appliquer();
   }
 
@@ -197,6 +209,12 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
 
     appliquer,
     cadrerCarte,
+
+    centrerCase(c: Case): void {
+      etat.cible.x = c.x * CASE + CASE / 2;
+      etat.cible.z = c.y * CASE + CASE / 2;
+      appliquer();
+    },
 
     cadrerCase(c: Case, hauteurSol: number): void {
       const p = new THREE.Vector3(c.x * CASE + CASE / 2, hauteurSol, c.y * CASE + CASE / 2);
@@ -222,9 +240,24 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
       appliquer();
     },
 
-    facteurZoom(facteur: number): void {
+    facteurZoom(facteur: number, ancre?: { x: number; y: number }): void {
+      if (!Number.isFinite(facteur) || facteur <= 0) return;
+      const auSol = (): THREE.Vector3 | null => {
+        if (!ancre) return null;
+        rayon.setFromCamera(new THREE.Vector2(
+          (ancre.x / largeurVue) * 2 - 1, -(ancre.y / hauteurVue) * 2 + 1,
+        ), camera);
+        return rayon.ray.intersectPlane(plan, new THREE.Vector3());
+      };
+      const avant = auSol();
       etat.distance = etat.distance / Math.max(0.2, facteur);
       appliquer();
+      const apres = auSol();
+      if (avant && apres) {
+        etat.cible.x += avant.x - apres.x;
+        etat.cible.z += avant.z - apres.z;
+        appliquer();
+      }
     },
 
     tourner(sens: number): void {

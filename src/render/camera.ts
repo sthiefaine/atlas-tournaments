@@ -65,7 +65,7 @@ export function palierZoom(zoom: number): number {
 export function zoomMinimal(cam: Camera): number {
   const parLargeur = cam.vue.largeur / Math.max(1, cam.monde.largeur);
   const parHauteur = cam.vue.hauteur / Math.max(1, cam.monde.hauteur);
-  return Math.max(0.25, Math.min(1, Math.min(parLargeur, parHauteur) * 0.9));
+  return Math.max(0.75, Math.min(1, Math.min(parLargeur, parHauteur) * 0.9));
 }
 
 /**

@@ -76,6 +76,19 @@ export {
 } from './hud-html';
 
 export {
+  filerRepliques, scenesDeclenchees, sceneOuverture,
+  type ContexteScenes, type RepliqueEnAttente,
+} from './dialogues';
+
+export {
+  monterDialogue, type ApiDialogue, type DialogueHtml,
+} from './dialogue-html';
+
+export { casesObjectifs, textesObjectifs } from './objectifs';
+
+export { cheminEnL, longueurChemin, surChemin } from './chemin';
+
+export {
   ADVERSAIRE_PASSIF, cleSauvegarde, commandantsDuScenario, effacerSauvegarde,
   ecrireSauvegarde, lireSauvegarde, monterJeu, PREFIXE_SAUVEGARDE,
   type Adversaire, type Jeu, type OptionsJeu, type PontDebug,

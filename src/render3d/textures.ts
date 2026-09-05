@@ -1,12 +1,9 @@
 /**
  * Les textures **procédurales**, générées au chargement dans des `canvas`.
  *
- * Le brief prévoit des textures PBR produites par le générateur externe. Tant
- * qu'elles ne sont pas là, le jeu ne doit pas être gris : ce fichier fabrique
- * en quelques millisecondes un jeu d'albédos et de cartes de normales
- * approchées — herbe, terre, roche, sable, neige, eau — à partir d'un bruit de
- * valeur à plusieurs octaves. Le remplacement par les vraies cartes sera un
- * changement de source de texture, pas un changement de code.
+ * Albédos et normales sont peints au chargement, sans téléchargement : palettes
+ * des dix biomes, strates minérales, touffes et rides du sable. Les détails
+ * restent continus et déterministes pour une lecture nette en vue rapprochée.
  *
  * Toutes les fonctions prennent le `Document` en paramètre : rien ici ne suppose
  * un `window` global, ce qui garde le module montable dans un `iframe` ou un
@@ -14,6 +11,7 @@
  */
 
 import * as THREE from 'three';
+import type { Biome } from '../schemas/types';
 
 /** Les matières du terrain, dans l'ordre des canaux de la carte de mélange. */
 export type Matiere = 'herbe' | 'terre' | 'roche' | 'sable' | 'neige';
@@ -115,32 +113,69 @@ interface Recette {
 
 const RECETTES: Readonly<Record<Matiere, Recette>> = {
   herbe: {
-    sombre: [72, 106, 48], clair: [138, 176, 92], periode: 6, octaves: 4,
-    grain: 0.20, taches: 0.10, couleurTache: [96, 124, 56], graine: 11,
+    sombre: [110, 142, 84], clair: [130, 158, 102], periode: 6, octaves: 2,
+    grain: 0.025, taches: 0.01, couleurTache: [96, 124, 56], graine: 11,
   },
   terre: {
-    sombre: [92, 71, 48], clair: [156, 130, 96], periode: 5, octaves: 4,
-    grain: 0.17, taches: 0.13, couleurTache: [188, 172, 148], graine: 23,
+    sombre: [131, 111, 85], clair: [151, 131, 104], periode: 5, octaves: 2,
+    grain: 0.025, taches: 0.01, couleurTache: [188, 172, 148], graine: 23,
   },
   roche: {
-    sombre: [86, 90, 97], clair: [166, 172, 180], periode: 4, octaves: 5,
-    grain: 0.13, taches: 0.16, couleurTache: [60, 63, 69], graine: 37,
+    sombre: [133, 140, 150], clair: [153, 159, 169], periode: 4, octaves: 2,
+    grain: 0.025, taches: 0.01, couleurTache: [60, 63, 69], graine: 37,
   },
   sable: {
-    sombre: [196, 172, 118], clair: [238, 222, 176], periode: 6, octaves: 4,
-    grain: 0.10, taches: 0.05, couleurTache: [172, 150, 104], graine: 53,
+    sombre: [214, 192, 143], clair: [234, 214, 164], periode: 6, octaves: 2,
+    grain: 0.025, taches: 0.01, couleurTache: [172, 150, 104], graine: 53,
   },
   neige: {
-    sombre: [214, 226, 240], clair: [255, 255, 255], periode: 5, octaves: 4,
-    grain: 0.07, taches: 0.03, couleurTache: [232, 242, 252], graine: 67,
+    sombre: [214, 226, 240], clair: [255, 255, 255], periode: 5, octaves: 2,
+    grain: 0.025, taches: 0.01, couleurTache: [232, 242, 252], graine: 67,
   },
 };
 
+/** Palettes minérales et végétales : le biome reste reconnaissable sans décor. */
+const PALETTES: Readonly<Record<Biome, Partial<Record<Matiere, readonly [string, string]>>>> = {
+  plaine: { herbe: ['#6e934e', '#a2b879'], terre: ['#987d58', '#b19c76'] },
+  foret: { herbe: ['#426d48', '#7d995b'], terre: ['#6d6145', '#a18b63'] },
+  montagne: { herbe: ['#78835d', '#acb38b'], roche: ['#747e89', '#b8bdc0'] },
+  desert: { herbe: ['#bb995b', '#dcc38c'], terre: ['#ac764c', '#d5a270'], roche: ['#9b6a51', '#c29474'], sable: ['#d9af70', '#f1d59b'] },
+  jungle: { herbe: ['#32734b', '#79a56b'], terre: ['#805c42', '#ab8356'], roche: ['#6b8074', '#a3b2a1'] },
+  neige: { herbe: ['#bac6c7', '#e3e9e7'], terre: ['#9aabb2', '#c1cbd0'], roche: ['#8398aa', '#b7c9d5'] },
+  volcanique: { herbe: ['#666c54', '#8b8964'], terre: ['#574d48', '#827064'], roche: ['#494d56', '#7b7e88'], sable: ['#787574', '#a49b8c'] },
+  cotier: { herbe: ['#789563', '#afba84'], roche: ['#8e9392', '#b9b7a9'], sable: ['#d8c49c', '#f0e0b9'] },
+  archipel: { herbe: ['#4e9466', '#9ab978'], sable: ['#ddd2b1', '#f4e9cb'] },
+  marais: { herbe: ['#627a4e', '#96a16b'], terre: ['#686341', '#90865d'], roche: ['#758077', '#a1aa96'] },
+};
+
+function rgb(hex: string): [number, number, number] {
+  const n = Number.parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+/** Champs continus, répétables : strates rocheuses, rides du sable, touffes peintes. */
+function reliefPeint(matiere: Matiere, u: number, v: number, large: number, detail: number): number {
+  const tau = Math.PI * 2;
+  if (matiere === 'roche') {
+    const strate = Math.sin((u * 2 + v * 5) * tau + large * 4);
+    const fissure = Math.max(0, 1 - Math.abs(strate) * 9);
+    return large * 0.66 + detail * 0.20 - fissure * 0.14;
+  }
+  if (matiere === 'sable' || matiere === 'neige') {
+    const rides = Math.sin((u * 3 + v * 7) * tau + large * 3) * 0.5 + 0.5;
+    return large * 0.80 + rides * 0.16 + detail * 0.04;
+  }
+  const touffes = Math.pow(Math.max(0, (detail - 0.36) / 0.64), 1.7);
+  return large * 0.76 + touffes * 0.24;
+}
+
 /** Peint l'albédo d'une matière et rend en même temps son champ de hauteur. */
 export function albedoMatiere(
-  doc: Document, matiere: Matiere, taille = 256,
+  doc: Document, matiere: Matiere, taille = 256, biome: Biome = 'plaine',
 ): { canvas: HTMLCanvasElement; hauteur: Float32Array } {
-  const r = RECETTES[matiere];
+  const recette = RECETTES[matiere];
+  const palette = PALETTES[biome][matiere];
+  const r = palette ? { ...recette, sombre: rgb(palette[0]), clair: rgb(palette[1]) } : recette;
   const { c, g } = toile(doc, taille);
   const base = bruitFractal(taille, r.octaves, r.periode, r.graine);
   const detail = bruitFractal(taille, 3, taille / 8, r.graine + 101);
@@ -148,7 +183,7 @@ export function albedoMatiere(
   const image = g.createImageData(taille, taille);
   const hauteur = new Float32Array(taille * taille);
   for (let i = 0; i < taille * taille; i += 1) {
-    const n = (base[i] ?? 0.5) * (1 - r.grain) + (detail[i] ?? 0.5) * r.grain;
+    const n = reliefPeint(matiere, (i % taille) / taille, Math.floor(i / taille) / taille, base[i] ?? 0.5, detail[i] ?? 0.5);
     let couleur = mel(r.sombre, r.clair, n);
     const t = tache[i] ?? 0.5;
     if (t > 1 - r.taches) couleur = mel(couleur, r.couleurTache, (t - (1 - r.taches)) / r.taches);
@@ -157,7 +192,7 @@ export function albedoMatiere(
     image.data[j + 1] = couleur[1];
     image.data[j + 2] = couleur[2];
     image.data[j + 3] = 255;
-    hauteur[i] = n * 0.75 + (detail[i] ?? 0.5) * 0.25;
+    hauteur[i] = n;
   }
   g.putImageData(image, 0, 0);
   return { canvas: c, hauteur };
@@ -212,9 +247,9 @@ export interface JeuMatiere {
 }
 
 /** Fabrique le jeu de textures d'une matière. */
-export function jeuMatiere(doc: Document, matiere: Matiere, taille = 256): JeuMatiere {
-  const { canvas, hauteur } = albedoMatiere(doc, matiere, taille);
-  const normales = normalesDepuis(doc, hauteur, taille, matiere === 'roche' ? 3.4 : 2.2);
+export function jeuMatiere(doc: Document, matiere: Matiere, taille = 256, biome: Biome = 'plaine'): JeuMatiere {
+  const { canvas, hauteur } = albedoMatiere(doc, matiere, taille, biome);
+  const normales = normalesDepuis(doc, hauteur, taille, matiere === 'roche' ? 2.6 : 1.25);
   return { albedo: texture(canvas, true), normales: texture(normales, false) };
 }
 
@@ -231,8 +266,8 @@ export function normalesEau(doc: Document, taille = 256): THREE.CanvasTexture {
       const u = (x / taille) * Math.PI * 2;
       const v = (y / taille) * Math.PI * 2;
       hauteur[i] = 0.5
-        + Math.sin(u * 3 + v * 1.4) * 0.18
-        + Math.sin(u * 1.3 - v * 4.1) * 0.12
+        + Math.sin(u * 3 + v * 2) * 0.18
+        + Math.sin(u * 2 - v * 4) * 0.12
         + ((houle[i] ?? 0.5) - 0.5) * 0.5;
     }
   }
@@ -251,7 +286,14 @@ export function textureRoute(doc: Document, taille = 128): THREE.CanvasTexture {
   const image = g.createImageData(taille, taille);
   for (let i = 0; i < taille * taille; i += 1) {
     const n = grain[i] ?? 0.5;
-    let couleur = mel([48, 50, 55], [104, 107, 112], n);
+    const x = i % taille;
+    const bord = Math.min(x, taille - 1 - x) / taille;
+    let couleur = mel([72, 81, 89], [99, 108, 113], n);
+    // Accotements continus et deux traces de roues assourdies, sans fausse voie ferrée.
+    const accotement = 1 - Math.min(1, bord / 0.07);
+    couleur = mel(couleur, [168, 160, 139], accotement * 0.65);
+    const roue = Math.exp(-(((x / taille - 0.28) / 0.065) ** 2)) + Math.exp(-(((x / taille - 0.72) / 0.065) ** 2));
+    couleur = mel(couleur, [66, 76, 83], roue * 0.19);
     const t = gravier[i] ?? 0.5;
     if (t > 0.9) couleur = mel(couleur, [138, 141, 146], (t - 0.9) / 0.1);
     const j = i * 4;

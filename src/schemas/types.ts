@@ -376,7 +376,7 @@ export type StatutUnite = typeof STATUTS_UNITE[number];
 /** Liste fermée des dix traits d'unité (`04-gameplay.md` §13.2). */
 export const TRAITS = [
   'transport', 'tir_indirect', 'anti_air', 'amphibie', 'vol',
-  'furtif_nuit', 'vision_etendue', 'ravitaillement', 'tout_terrain', 'capture',
+  'furtif_nuit', 'vision_etendue', 'ravitaillement', 'tout_terrain', 'capture', 'genie',
 ] as const;
 /** Trait d'unité : un comportement implémenté une seule fois dans le moteur. */
 export type Trait = typeof TRAITS[number];
@@ -539,7 +539,7 @@ export interface MapDef extends Enveloppe {
 
 /** Types d'objectif de victoire. */
 export const TYPES_OBJECTIF_VICTOIRE = [
-  'capture_qg', 'hors_jeu_total', 'capturer', 'tenir', 'survivre', 'proteger', 'points',
+  'capture_qg', 'hors_jeu_total', 'capturer', 'tenir', 'survivre', 'proteger', 'relais', 'points',
 ] as const;
 /** Nom du type d'un objectif de victoire, sans ses paramètres. */
 export type TypeObjectifVictoire = typeof TYPES_OBJECTIF_VICTOIRE[number];
@@ -550,7 +550,8 @@ export type ObjectifVictoire =
   | { type: 'capturer'; cases: Case[]; combien: number }
   | { type: 'tenir'; cases: Case[]; journees: number }
   | { type: 'survivre'; journees: number }
-  | { type: 'proteger'; uniteRef: string }
+  | { type: 'proteger'; uniteRef: string; destination?: Case }
+  | { type: 'relais'; cases: Case[] }
   | { type: 'points'; seuil: number };
 
 /** Types d'objectif de défaite. */
@@ -577,6 +578,57 @@ export interface Dialogue {
   locuteur: Cle;
   texte: string;
   emotion?: Emotion;
+}
+
+/** Ce qui peut ouvrir une scène de dialogue pendant un match. */
+export const DECLENCHEURS_SCENE = [
+  'ouverture', 'journee', 'premier_combat', 'capture', 'perte', 'production',
+  'pouvoir', 'etape',
+] as const;
+/** Nom du type d'un déclencheur de scène, sans ses paramètres. */
+export type TypeDeclencheurScene = typeof DECLENCHEURS_SCENE[number];
+
+/**
+ * Déclencheur d'une scène de dialogue **en cours de match**.
+ *
+ * Tous se lisent sur les événements que le moteur vient de rendre, jamais sur
+ * une horloge ni sur un sondage : une scène se joue parce qu'une chose s'est
+ * produite dans la partie, et se rejoue à l'identique au rejeu.
+ */
+export type DeclencheurScene =
+  /** À l'ouverture, une fois la carte à l'écran. */
+  | { type: 'ouverture' }
+  /** Au début du tour du joueur, à partir de cette journée. */
+  | { type: 'journee'; journee: number }
+  /** À la première attaque de la partie, quel qu'en soit l'auteur. */
+  | { type: 'premier_combat' }
+  /** Quand un bâtiment change de main ; `camp` restreint au camp qui l'acquiert. */
+  | { type: 'capture'; camp?: CampId }
+  /** Quand une unité sort du jeu ; `camp` restreint au camp qui la perd. */
+  | { type: 'perte'; camp?: CampId }
+  /** Quand une unité est produite ; `unite` restreint à ce type. */
+  | { type: 'production'; unite?: CleUnite }
+  /** Quand un commandant déclenche un pouvoir. */
+  | { type: 'pouvoir'; camp?: CampId }
+  /** Quand un objectif à relais franchit son n-ième jalon. */
+  | { type: 'etape'; etape: number };
+
+/**
+ * Une **scène de dialogue** : quelques répliques et ce qui les fait venir.
+ *
+ * C'est la brique qui manquait pour tenir la promesse d'Advance Wars — les
+ * commandants parlent *pendant* le match, pas seulement avant. Une scène ne se
+ * joue **qu'une fois** par partie, identifiée par sa `cle` : un dialogue qui
+ * revient à chaque capture cesse d'être une scène et devient une gêne.
+ *
+ * La fin de match n'a pas de déclencheur : elle appartient à `dialogueVictoire`
+ * et `dialogueDefaite`, qui existaient avant et restent les propriétaires du
+ * moment. Deux façons de dire la même chose seraient une de trop.
+ */
+export interface SceneDialogue {
+  cle: Cle;
+  declencheur: DeclencheurScene;
+  repliques: Dialogue[];
 }
 
 /** Moments où un choix peut se présenter dans un match. */
@@ -672,6 +724,11 @@ export interface Scenario extends Enveloppe {
   dialogueOuverture: Dialogue[];
   dialogueVictoire: Dialogue[];
   dialogueDefaite: Dialogue[];
+  /**
+   * Les scènes jouées **pendant** le match. Facultatif pour ne pas invalider le
+   * contenu antérieur : un scénario sans scène se joue exactement comme avant.
+   */
+  scenesDialogue?: SceneDialogue[];
   choix: ChoixScenario[];
   flagsRequis: Cle[];
   flagsInterdits: Cle[];

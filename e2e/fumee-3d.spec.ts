@@ -150,6 +150,9 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
   // trois cents millisecondes, il faut laisser passer une dizaine d'images.
   await page.waitForTimeout(8000);
   await page.screenshot({ path: 'test-results/fumee-3d-04.png' });
+  // Le Bulletin est un panneau repliable : ses prévisions ne s'affichent qu'une
+  // fois ouvert. On l'ouvre comme le joueur, puis on lit ce qu'il annonce.
+  await page.locator('.atlas-hud .bulletin summary').click();
   await expect(page.getByText('Hiver · Nuit')).toBeVisible();
   await expect(page.getByText('Neige', { exact: true })).toBeVisible();
   expect(await richesse(page), 'la nuit reste lisible').toBeGreaterThan(25);

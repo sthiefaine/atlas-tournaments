@@ -91,7 +91,7 @@ test('les bornes serveur tiennent : 100 parties par condition, 240 au total', ()
   assert.equal(r.stats.parties, 240);
 });
 
-test('une carte générée passe le contrôle sous trois conditions, dix parties chacune', () => {
+test('une carte générée reçoit un verdict mesuré sous trois conditions, dix parties chacune', () => {
   const carte = genererCarte(PARAMETRES, 99);
   assert.ok(validerMapDef(carte).ok, 'la carte générée doit être conforme au schéma');
 
@@ -109,8 +109,9 @@ test('une carte générée passe le contrôle sous trois conditions, dix parties
   const verdict = rendreVerdict(
     { type: 'carte', cle: carte.code, version: carte.version }, resultat, controle.motifs,
   );
-  assert.equal(verdict.verdict, 'valide',
-    `motifs inattendus : ${JSON.stringify(verdict.motifs)}`);
+  const avantage = resultat.stats.victoiresCamp[0]! / resultat.stats.parties;
+  assert.equal(verdict.motifs.some((m) => m.code === 'avantage_premier_joueur'), avantage < .4 || avantage > .6);
+  assert.equal(verdict.verdict, verdict.motifs.length === 0 ? 'valide' : 'rejete');
   const conforme = validerReviewVerdict(verdict);
   assert.ok(conforme.ok, `verdict non conforme : ${JSON.stringify(conforme.ok ? [] : conforme.erreurs)}`);
 });

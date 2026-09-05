@@ -191,6 +191,8 @@ export interface EtatPartie {
   proprietaires: Record<string, CampId>;
   unites: Unite[];
   prochainId: number;
+  /** Prochaine balise à capturer, indexée par objectif. */
+  relais?: Record<string, number>;
   journee: number;
   campCourant: CampId;
   camps: EtatCamp[];
@@ -215,6 +217,7 @@ export type Suite =
   | { type: 'rien' }
   | { type: 'attaquer'; cible: Case }
   | { type: 'capturer' }
+  | { type: 'construire'; cible: Case }
   | { type: 'embarquer'; transport: string }
   | { type: 'debarquer'; vers: Case }
   | { type: 'fusionner'; avec: string }
@@ -235,7 +238,7 @@ export const MOTIFS_REFUS = [
   'cible_amie', 'sans_munitions', 'ne_peut_pas_viser', 'a_bouge', 'cible_invisible',
   'capture_impossible', 'batiment_non_capturable', 'batiment_deja_possede',
   'transport_impossible', 'transport_plein', 'debarquement_impossible',
-  'fusion_impossible', 'ravitaillement_impossible',
+  'fusion_impossible', 'ravitaillement_impossible', 'construction_impossible',
   'batiment_inconnu', 'batiment_adverse', 'batiment_occupe', 'unite_non_produite_ici',
   'fonds_insuffisants', 'catalogue_inconnu',
   'pas_de_commandant', 'jauge_insuffisante', 'pouvoir_deja_utilise', 'pose_invalide',
@@ -251,7 +254,16 @@ export type EvenementJeu =
   | { type: 'revenus'; camp: CampId; montant: number }
   | { type: 'reparation'; uniteId: string; pv: number; cout: number }
   | { type: 'panne_seche'; uniteId: string }
-  | { type: 'deplacement'; uniteId: string; de: Case; vers: Case; interrompu: boolean }
+  /**
+   * Un déplacement, **avec le chemin réellement emprunté** — celui que
+   * `verifierChemin` a validé, tronqué à la case d'arrêt en cas d'interruption.
+   *
+   * Le chemin fait partie de l'événement parce que le rendu ne doit rien
+   * inventer : sans lui, une peau ne connaît que le départ et l'arrivée et
+   * fabrique un trajet à elle, qui traverse allègrement les montagnes et les
+   * unités adverses.
+   */
+  | { type: 'deplacement'; uniteId: string; de: Case; vers: Case; chemin: Case[]; interrompu: boolean }
   | { type: 'attaque'; attaquantId: string; cibleId: string; degats: number; riposte: number }
   | { type: 'hors_jeu'; uniteId: string; camp: CampId; unite: CleUnite }
   | { type: 'capture'; uniteId: string; case: Case; points: number; acquis: boolean; camp: CampId }

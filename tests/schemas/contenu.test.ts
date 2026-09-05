@@ -17,9 +17,9 @@ import {
   validerCatalogueGabaritsComplet, validerCatalogueMecaniques,
   validerCatalogueTerrains, validerCatalogueUnites, validerFil, validerGlossaire,
   validerTableDegats,
-  type Resultat,
+  type Resultat, type Scenario,
 } from '../../src/schemas/index';
-import { validerCountry, validerRegion } from '../../src/schemas/valider';
+import { validerCountry, validerRegion, validerScenario } from '../../src/schemas/valider';
 import {
   chargerArchetypes, chargerDegats, chargerGlossaireFr, chargerMecaniques,
   chargerPays, chargerPaysDe, chargerRegions,
@@ -34,9 +34,10 @@ function exigerOk<T>(nom: string, r: Resultat<T>): T {
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 1);
-  assert.equal(catalogue.unites.length, 10);
-  for (const u of catalogue.unites) assert.equal(u.statut, 'canon');
+  assert.equal(catalogue.catalogueVersion, 2);
+  assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
+  assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
+
 });
 
 test('content/terrains.json passe son validateur', () => {
@@ -78,7 +79,7 @@ test('la table de dégâts est carrée et couvre les dix unités canon', () => {
 
 test('la ligne de chaque unité coïncide avec la table de dégâts', () => {
   const table = chargerDegats();
-  for (const unite of chargerUnites()) {
+  for (const unite of chargerUnites().filter((u) => u.statut === 'canon')) {
     for (const cible of table.unites) {
       const declare = unite.degats[cible] ?? 0;
       assert.equal(
@@ -113,7 +114,7 @@ test('les terrains capturables sont exactement les quatre bâtiments', () => {
 
 test('les producteurs couvrent les dix unités canon', () => {
   const produits = new Set(chargerTerrains().flatMap((t) => t.produit));
-  assert.deepEqual([...produits].sort(), [...CLES_UNITE_CANON].sort());
+  assert.deepEqual([...produits].sort(), chargerUnites().map((u) => u.cle).sort());
 });
 
 test('les caractères de grille sont uniques', () => {
@@ -386,4 +387,59 @@ test('le budget de fils de doc/13-campagne.md §2.2 correspond aux fichiers', ()
   }
   assert.equal(missions, 45, 'doc/13-campagne.md §2.2 annonce 45 missions de fil');
   assert.equal(minutes, 1492, 'doc/13-campagne.md §2.2 annonce 24 h 52 de fils');
+});
+
+// ---------------------------------------------------------------------------
+// Les scénarios du canon
+// ---------------------------------------------------------------------------
+
+const SCENARIOS = path.resolve(import.meta.dirname, '..', '..', 'content', 'scenarios');
+
+/** Les scénarios canon, lus une fois pour les trois vérifications qui suivent. */
+function scenarios(): { fichier: string; scenario: Scenario }[] {
+  return readdirSync(SCENARIOS)
+    .filter((f) => f.endsWith('.json'))
+    .map((fichier) => {
+      const brut: unknown = JSON.parse(readFileSync(path.join(SCENARIOS, fichier), 'utf8'));
+      return { fichier, scenario: exigerOk(fichier, validerScenario(brut)) };
+    });
+}
+
+test('chaque scénario de content/scenarios passe son validateur', () => {
+  const lus = scenarios();
+  assert.ok(lus.length >= 6, 'le canon porte au moins les six missions de campagne');
+  for (const { fichier, scenario } of lus) {
+    assert.equal(scenario.code, path.basename(fichier, '.json'), 'le code vaut le nom du fichier');
+  }
+});
+
+test('les scènes de dialogue nomment des locuteurs de la distribution', () => {
+  for (const { fichier, scenario } of scenarios()) {
+    const distribution = new Set(scenario.commandants.map((c) => c.commandantCle));
+    const repliques = [
+      ...scenario.dialogueOuverture, ...scenario.dialogueVictoire, ...scenario.dialogueDefaite,
+      ...(scenario.scenesDialogue ?? []).flatMap((s) => s.repliques),
+    ];
+    for (const r of repliques) {
+      assert.ok(
+        distribution.has(r.locuteur),
+        `${fichier} : ${r.locuteur} parle sans être au tableau des commandants`,
+      );
+    }
+  }
+});
+
+test('un déclencheur de production ne cite qu’une unité du catalogue', () => {
+  // Le catalogue complet, pas seulement les dix unités canon : le génie est une
+  // unité de catalogue 2, et une scène a le droit de le nommer.
+  const connues = new Set(chargerUnites().map((u) => u.cle));
+  for (const { fichier, scenario } of scenarios()) {
+    for (const scene of scenario.scenesDialogue ?? []) {
+      if (scene.declencheur.type !== 'production' || scene.declencheur.unite === undefined) continue;
+      assert.ok(
+        connues.has(scene.declencheur.unite),
+        `${fichier} : la scène ${scene.cle} attend une unité inconnue`,
+      );
+    }
+  }
 });

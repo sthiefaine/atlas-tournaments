@@ -22,17 +22,39 @@ export interface ReglagesBiome {
   echelle: number;
 }
 
+export interface ProfilBiome {
+  description: string;
+  ratioRelief: number;
+  ratioMer: number;
+  densiteRoutes: number;
+  villesParCamp: number;
+}
+
+/** Les valeurs servent de défauts : une mission peut préciser sa propre topologie. */
+export const PROFILS_BIOME: Record<Biome, ProfilBiome> = {
+  plaine: { description: 'Routes rapides, haies protectrices : choisir entre vitesse et couverture.', ratioRelief: .18, ratioMer: 0, densiteRoutes: .8, villesParCamp: 3 },
+  foret: { description: 'Les lisières cachent les unités sous brouillard ; la reconnaissance ouvre la marche.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .3, villesParCamp: 3 },
+  montagne: { description: 'Les hauteurs donnent +2 de vision. Les véhicules empruntent les cols ; le génie ouvre des routes.', ratioRelief: .4, ratioMer: 0, densiteRoutes: .25, villesParCamp: 2 },
+  desert: { description: 'Sables sans couverture et bases rares : protéger les transports de ravitaillement.', ratioRelief: .12, ratioMer: 0, densiteRoutes: .2, villesParCamp: 2 },
+  jungle: { description: 'Forêts denses et rivières : reconnaître les berges et sécuriser les ponts avant les blindés.', ratioRelief: .4, ratioMer: .1, densiteRoutes: .1, villesParCamp: 2 },
+  neige: { description: 'Reliefs et longs détours : conserver les routes et les bases de soutien. Le gel dépend de la saison.', ratioRelief: .3, ratioMer: .05, densiteRoutes: .15, villesParCamp: 2 },
+  volcanique: { description: 'Crêtes sans forêt : les couloirs exposés favorisent le contrôle des cols et le génie.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .1, villesParCamp: 2 },
+  cotier: { description: 'La grève ouvre à marée basse puis se referme : coordonner la traversée sur deux journées.', ratioRelief: .15, ratioMer: .35, densiteRoutes: .5, villesParCamp: 3 },
+  archipel: { description: 'Terres étroites reliées par passages : contrôler les accès et profiter des marées.', ratioRelief: .1, ratioMer: .55, densiteRoutes: .15, villesParCamp: 2 },
+  marais: { description: 'Rivières et couvert fragmenté canalisent les véhicules : construire les traversées utiles.', ratioRelief: .3, ratioMer: .25, densiteRoutes: .1, villesParCamp: 2 },
+};
+
 const REGLAGES: Record<Biome, ReglagesBiome> = {
-  plaine: { partMontagne: 0.30, rivieres: 1, echelle: 5 },
-  foret: { partMontagne: 0.20, rivieres: 1, echelle: 5 },
-  montagne: { partMontagne: 0.60, rivieres: 2, echelle: 4 },
-  desert: { partMontagne: 0.45, rivieres: 0, echelle: 6 },
-  jungle: { partMontagne: 0.15, rivieres: 2, echelle: 4 },
-  neige: { partMontagne: 0.45, rivieres: 1, echelle: 5 },
-  volcanique: { partMontagne: 0.65, rivieres: 0, echelle: 4 },
-  cotier: { partMontagne: 0.30, rivieres: 1, echelle: 5 },
-  archipel: { partMontagne: 0.25, rivieres: 0, echelle: 3 },
-  marais: { partMontagne: 0.15, rivieres: 2, echelle: 6 },
+  plaine: { partMontagne: .1, rivieres: 1, echelle: 5 },
+  foret: { partMontagne: .05, rivieres: 1, echelle: 3 },
+  montagne: { partMontagne: .8, rivieres: 1, echelle: 4 },
+  desert: { partMontagne: 1, rivieres: 0, echelle: 6 },
+  jungle: { partMontagne: .05, rivieres: 3, echelle: 3 },
+  neige: { partMontagne: .45, rivieres: 1, echelle: 5 },
+  volcanique: { partMontagne: 1, rivieres: 0, echelle: 3 },
+  cotier: { partMontagne: .3, rivieres: 1, echelle: 5 },
+  archipel: { partMontagne: .25, rivieres: 0, echelle: 2 },
+  marais: { partMontagne: .05, rivieres: 3, echelle: 3 },
 };
 
 /** Réglages de relief d'un biome. */
@@ -67,10 +89,11 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
   const camps = bornerEntier(p.camps, 2, 4, 2) as 2 | 3 | 4;
   const biome: Biome = (BIOMES as readonly string[]).includes(p.biome as string)
     ? p.biome : 'plaine';
+  const profil = PROFILS_BIOME[biome];
   const symetrie: Symetrie = (SYMETRIES as readonly string[]).includes(p.symetrie as string)
     ? p.symetrie : 'aucune';
 
-  let villesParCamp = bornerEntier(p.villesParCamp, 2, 10, 3);
+  let villesParCamp = bornerEntier(p.villesParCamp, 2, 10, profil.villesParCamp);
   let villesNeutres = bornerEntier(p.villesNeutres, 0, 12, 0);
   let usinesParCamp = bornerEntier(p.usinesParCamp, 1, 3, 1);
   let aeroportsParCamp = bornerEntier(p.aeroportsParCamp, 0, 2, 0);
@@ -90,7 +113,7 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
     else break;
   }
 
-  const ratioMer = borner(p.ratioMer, 0, 0.6, 0.2);
+  const ratioMer = borner(p.ratioMer, 0, 0.6, profil.ratioMer);
   const ratioMerMax = Math.max(0, 1 - place() / total);
   const parametres: ParametresNormalises = {
     largeur,
@@ -98,15 +121,16 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
     camps,
     biome,
     ratioMer,
-    ratioRelief: borner(p.ratioRelief, 0, 0.4, 0.15),
+    ratioRelief: borner(p.ratioRelief, 0, 0.4, profil.ratioRelief),
     villesParCamp,
     villesNeutres,
     usinesParCamp,
     aeroportsParCamp,
     symetrie,
-    densiteRoutes: borner(p.densiteRoutes, 0, 1, 0.5),
+    densiteRoutes: borner(p.densiteRoutes, 0, 1, profil.densiteRoutes),
     ratioMerEffectif: Math.min(ratioMer, ratioMerMax),
   };
+  if ((biome === 'cotier' || biome === 'archipel') && p.mecanique === undefined) parametres.mecanique = 'meca_marees';
   if (typeof p.mecanique === 'string' && p.mecanique !== '') parametres.mecanique = p.mecanique;
   return parametres;
 }

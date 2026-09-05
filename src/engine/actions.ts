@@ -15,6 +15,7 @@ import { copierEtat, JOURNAL_MAX, marquerVisite } from './etat';
 import { dansCarte, surMouvementHooks, terrainLogique } from './hooks';
 import { avancerCapture, peutCapturerIci } from './regles/capture';
 import { peutViser, resoudreAttaque } from './regles/combat';
+import { COUT_CONSTRUCTION, terrainConstruction } from './regles/genie';
 import { produire, verifierProduction } from './regles/economie';
 import {
   coutEntree, uniteParId, uniteSur, verifierChemin, voisines,
@@ -31,12 +32,13 @@ import type {
 } from './types';
 import { cleCase, manhattan, porte, pvAffiches } from './types';
 
-let catalogueMemo: Catalogue | null = null;
+const cataloguesMemo = new Map<number, Catalogue>();
 
 /** Catalogue canon, chargé une seule fois : le moteur n'a pas d'autre source. */
-export function catalogueParDefaut(): Catalogue {
-  if (!catalogueMemo) catalogueMemo = chargerCatalogue();
-  return catalogueMemo;
+export function catalogueParDefaut(version = 2): Catalogue {
+  let cat = cataloguesMemo.get(version);
+  if (!cat) { cat = chargerCatalogue(version); cataloguesMemo.set(version, cat); }
+  return cat;
 }
 
 /** Commandants d'une partie, fournis par l'appelant pour les pouvoirs. */
@@ -52,7 +54,7 @@ function refus(motif: MotifRefus, detail?: string): Resultat {
  */
 export function appliquer(
   etat: EtatPartie, action: Action,
-  cat: Catalogue = catalogueParDefaut(), commandants: Commandants = [],
+  cat: Catalogue = catalogueParDefaut(etat.catalogueVersion), commandants: Commandants = [],
 ): Resultat {
   if (etat.partie.terminee) return refus('partie_terminee');
   const e = copierEtat(etat);
@@ -150,7 +152,19 @@ function executerOrdre(
       return refus('case_occupee') as Verdict;
     }
   }
-  evts.push({ type: 'deplacement', uniteId: u.id, de: depart, vers: { x: u.x, y: u.y }, interrompu });
+  // Le chemin transmis au rendu est celui qui a été **parcouru** : on le tronque
+  // à la case d'arrêt, sinon une interruption sous brouillard ferait glisser la
+  // figurine jusqu'au bout d'un trajet qu'elle n'a pas fait.
+  const arret = chemin.findIndex((c) => c.x === u.x && c.y === u.y);
+  const parcouru = (arret < 0 ? chemin : chemin.slice(0, arret + 1)).map((c) => ({ x: c.x, y: c.y }));
+  evts.push({
+    type: 'deplacement',
+    uniteId: u.id,
+    de: depart,
+    vers: { x: u.x, y: u.y },
+    chemin: parcouru.length > 1 ? parcouru : [depart, { x: u.x, y: u.y }],
+    interrompu,
+  });
 
   const suite: Suite = interrompu ? { type: 'rien' } : action.suite;
   const resultat = executerSuite(e, cat, u, suite, aBouge, rng, evts);
@@ -263,6 +277,16 @@ function executerSuite(
     if (tc.munitions !== null) cible.munitions = tc.munitions;
     if (tc.carburant !== null) cible.carburant = tc.carburant.max;
     evts.push({ type: 'ravitaillement', uniteId: u.id, cibleId: cible.id });
+    return { ok: true };
+  }
+
+  if (suite.type === 'construire') {
+    const terrain = terrainConstruction(e, cat, u, suite.cible);
+    if (!terrain) return refus('construction_impossible') as Verdict;
+    const camp = e.camps.find((c) => c.id === u.camp)!;
+    camp.fonds -= COUT_CONSTRUCTION;
+    e.terrainsPoses.push({ case: cleCase(suite.cible), terrain, jusqu: null });
+    evts.push({ type: 'terrain_pose', case: suite.cible, terrain });
     return { ok: true };
   }
 

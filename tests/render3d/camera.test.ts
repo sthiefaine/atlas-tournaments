@@ -7,10 +7,10 @@ import assert from 'node:assert/strict';
 
 import {
   FOV, PALIERS_DISTANCE, TANGAGE_DEFAUT, TANGAGE_MAX, TANGAGE_MIN,
-  deplacerCible, distanceCadrage, limiterCible, palierDistance, palierSuivant, positionCamera,
+  creerVue3d, deplacerCible, distanceCadrage, distanceLisible, limiterCible, palierDistance, palierSuivant, positionCamera,
   type EtatCamera,
 } from '../../src/render3d/camera';
-import { cheminEnL, longueurChemin, surChemin } from '../../src/render3d/animations';
+import { cheminEnL, longueurChemin, surChemin } from '../../src/render/chemin';
 
 function etat(p: Partial<EtatCamera> = {}): EtatCamera {
   return {
@@ -118,4 +118,38 @@ test('le chemin d’animation suit la grille et s’oriente dans le bon sens', (
   assert.deepEqual(surChemin(surplace, 0.5), { x: 4, y: 4, cap: 0 });
   // La progression est bornée : au-delà de 1, on reste à l'arrivée.
   assert.equal(surChemin(pas, 4).x, 5);
+});
+
+
+test('sur téléphone, le cadrage initial conserve des cases proches et le recul reste borné', () => {
+  for (const [largeur, hauteur] of [[390, 844], [844, 390], [320, 568], [1280, 720]]) {
+    const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+    vue.redimensionner(largeur!, hauteur!);
+    vue.cadrerCarte();
+    assert.ok(vue.etat.distance <= distanceLisible(hauteur!, 64));
+    for (let i = 0; i < 20; i++) vue.zoomer(-1);
+    assert.ok(vue.etat.distance <= distanceLisible(hauteur!), 'le plateau ne devient pas miniature');
+    vue.facteurZoom(0.01);
+    assert.ok(vue.etat.distance <= distanceLisible(hauteur!), 'la borne vaut aussi pour le pincement');
+  }
+});
+
+test('un changement portrait/paysage recalcule la borne sans perdre la cible', () => {
+  const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+  vue.redimensionner(390, 844);
+  vue.cadrerCarte();
+  vue.centrerCase({ x: 5, y: 9 });
+  vue.redimensionner(844, 390);
+  assert.ok(vue.etat.distance <= distanceLisible(390));
+  assert.deepEqual(vue.etat.cible, { x: 5.5, z: 9.5 });
+});
+
+test('le pincement conserve le point du plateau sous son ancre', () => {
+  const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+  vue.redimensionner(390, 844);
+  vue.cadrerCarte();
+  const ancre = { x: 280, y: 460 };
+  const avant = vue.caseSous(ancre.x, ancre.y, null);
+  vue.facteurZoom(1.6, ancre);
+  assert.deepEqual(vue.caseSous(ancre.x, ancre.y, null), avant);
 });

@@ -55,7 +55,7 @@ test('chaque nation a un motif daltonien distinct', () => {
 });
 
 test('chaque nation retient un gabarit pour les dix unités de base', () => {
-  const unites = chargerUnites().map((u) => u.cle);
+  const unites = chargerUnites().filter((u) => u.statut === 'canon').map((u) => u.cle);
   for (const s of nations) {
     assert.deepEqual(Object.keys(s.gabarits).sort(), [...unites].sort(), s.code);
     for (const u of unites) assert.ok(['a', 'b', 'c'].includes(gabaritDe(s, u)), `${s.code} ${u}`);
@@ -63,6 +63,9 @@ test('chaque nation retient un gabarit pour les dix unités de base', () => {
   // Une unité homologuée demain n'a pas de gabarit : elle prend le gabarit `a`
   // plutôt que de faire échouer une génération de commandes.
   assert.equal(gabaritDe(nations[0]!, 'drone_solaire'), 'a');
+  for (const unite of chargerUnites().filter((u) => u.statut === 'homologuee')) {
+    for (const nation of nations) assert.equal(gabaritDe(nation, unite.cle), nation.gabarits[unite.cle] ?? 'a');
+  }
 });
 
 test('deux nations ne se ressemblent pas : ornements et matières diffèrent', () => {

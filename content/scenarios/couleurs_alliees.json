@@ -1,0 +1,132 @@
+{
+  "cle": "couleurs_alliees",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "couleurs_alliees",
+  "nom": "Exhibition · Sous les couleurs alliées",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_couleurs_alliees",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_tomas_reiner"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_ariane_belloc",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 4500,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "relais",
+      "cases": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 2
+        },
+        {
+          "x": 6,
+          "y": 5
+        }
+      ]
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Tomas vous confie son équipe du Luxembourg pour votre premier match sous les couleurs d’une nation alliée. Son style privilégie la défense.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Les relais contiennent les relevés d’arbitrage : le tournoi continue, mais quelque chose semble anormal dans leur homologation.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Vous remportez votre première victoire commune. Le relevé mentionne une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match est perdu, mais personne ne quitte notre équipe. Reprenons le briefing et essayons un autre chemin.",
+      "emotion": "doute"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "alliees_relais",
+      "declencheur": {
+        "type": "etape",
+        "etape": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Premier relevé récupéré. Vous commandez mon équipe aujourd’hui : sa spécialité est la défense, servez-vous-en pour tenir les relais plutôt que pour charger.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "alliees_anomalie",
+      "declencheur": {
+        "type": "etape",
+        "etape": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Deuxième relevé. Les chiffres d’arbitrage ne concordent pas avec ceux du Bureau. Terminez le relais, nous lirons le troisième ensemble.",
+          "emotion": "doute"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "pays.lu.exhibition_gagnee"
+    ]
+  },
+  "incarnation": {
+    "paysCode": "lu",
+    "commandantCle": "cmd_tomas_reiner"
+  }
+}

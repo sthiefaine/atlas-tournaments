@@ -175,3 +175,72 @@ test("l'hélicoptère ignore le terrain et la zone de contrôle", () => {
   ]);
   assert.equal(v.ok, true);
 });
+
+// ---------------------------------------------------------------------------
+// L'événement de déplacement porte le chemin réellement parcouru
+// ---------------------------------------------------------------------------
+
+test('un déplacement annonce le chemin validé, case par case', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 9, y: 9 },
+  ]);
+  // Un détour : la montagne en (3,0) est infranchissable à pied, on passe dessous.
+  const chemin: Case[] = [
+    { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 },
+  ];
+  const r = appliquer(etat, { type: 'ordre', uniteId: 'u1', chemin, suite: { type: 'rien' } }, CAT);
+  assert.equal(r.ok, true);
+  if (!r.ok) return;
+  const e = r.evenements.find((x) => x.type === 'deplacement');
+  assert.ok(e && e.type === 'deplacement');
+  if (!e || e.type !== 'deplacement') return;
+
+  assert.deepEqual(e.chemin, chemin, 'le rendu reçoit le trajet, pas seulement ses deux bouts');
+  // Un chemin de rendu doit rester une suite de pas orthogonaux : c'est ce qui
+  // empêche une figurine de couper à travers une montagne ou une unité adverse.
+  for (let i = 1; i < e.chemin.length; i += 1) {
+    const avant: Case = e.chemin[i - 1]!;
+    const apres: Case = e.chemin[i]!;
+    assert.equal(
+      Math.abs(avant.x - apres.x) + Math.abs(avant.y - apres.y), 1,
+      `pas ${i} : un seul cran à la fois`,
+    );
+  }
+  assert.deepEqual(e.chemin[0], e.de);
+  assert.deepEqual(e.chemin[e.chemin.length - 1], e.vers);
+});
+
+test('un déplacement immobile annonce un chemin d’une seule case, jamais vide', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 6, y: 6 },
+    { camp: 1, type: 'infanterie', x: 9, y: 9 },
+  ]);
+  const r = appliquer(etat, {
+    type: 'ordre', uniteId: 'u1', chemin: [{ x: 6, y: 6 }], suite: { type: 'rien' },
+  }, CAT);
+  assert.equal(r.ok, true);
+  if (!r.ok) return;
+  const e = r.evenements.find((x) => x.type === 'deplacement');
+  assert.ok(e && e.type === 'deplacement');
+  if (!e || e.type !== 'deplacement') return;
+  assert.ok(e.chemin.length >= 1, 'le rendu ne reçoit jamais de chemin vide');
+  assert.deepEqual(e.chemin[e.chemin.length - 1], e.vers);
+});
+
+test('aucun pas du chemin annoncé ne tombe sur une unité adverse', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 6, y: 6 },
+    { camp: 1, type: 'infanterie', x: 8, y: 6 },
+  ]);
+  const chemin: Case[] = [{ x: 6, y: 6 }, { x: 6, y: 7 }, { x: 7, y: 7 }, { x: 8, y: 7 }];
+  const r = appliquer(etat, { type: 'ordre', uniteId: 'u1', chemin, suite: { type: 'rien' } }, CAT);
+  assert.equal(r.ok, true);
+  if (!r.ok) return;
+  const e = r.evenements.find((x) => x.type === 'deplacement');
+  if (!e || e.type !== 'deplacement') return;
+  const adverses = new Set(etat.unites.filter((x) => x.camp === 1).map((x) => `${x.x},${x.y}`));
+  for (const c of e.chemin) {
+    assert.ok(!adverses.has(`${c.x},${c.y}`), `le chemin traverse une unité adverse en ${c.x},${c.y}`);
+  }
+});

@@ -46,8 +46,11 @@ export function catalogueDepuis(
 }
 
 /** Charge le catalogue canon embarqué (`content/*.json`). */
-export function chargerCatalogue(version = 1): Catalogue {
-  return catalogueDepuis(version, chargerUnites(), chargerTerrains(), chargerDegats());
+export function chargerCatalogue(version = 2): Catalogue {
+  const unites = chargerUnites().filter((u) => version >= 2 || u.statut === 'canon');
+  const cles = new Set(unites.map((u) => u.cle));
+  const terrains = chargerTerrains().map((t) => ({ ...t, produit: t.produit.filter((c) => cles.has(c)) }));
+  return catalogueDepuis(version, unites, terrains, chargerDegats());
 }
 
 /** Type d'unité, ou `undefined` si la clé est inconnue du catalogue. */

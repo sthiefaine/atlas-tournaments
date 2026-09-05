@@ -9,12 +9,13 @@
     "migrate": "node scripts/migrate.mjs",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test 'tests/**/*.test.ts'",
+    "test": "node scripts/test.mjs",
     "test:e2e": "playwright test",
     "simuler": "tsx scripts/simuler.ts",
     "controler": "tsx scripts/controler-carte.ts",
     "apercu": "tsx scripts/apercu-carte.ts",
-    "extraire-chaines": "tsx scripts/extraire-chaines.ts"
+    "extraire-chaines": "tsx scripts/extraire-chaines.ts",
+    "verifier:campagne": "tsx scripts/verifier-campagne.ts"
   },
   "dependencies": {
     "@types/three": "^0.170.0",

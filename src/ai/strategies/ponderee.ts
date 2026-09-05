@@ -15,6 +15,7 @@
 import type {
   Action, Catalogue, EtatPartie, Rng, Suite, Unite,
 } from '../../engine/index';
+import { constructionsPossibles } from '../../engine/regles/genie';
 import { degatsBase, produitesPar } from '../../engine/catalogue';
 import { terrainBrut, terrainLogique } from '../../engine/hooks';
 import { peutCapturerIci, pointsGagnes, SEUIL_CAPTURE } from '../../engine/regles/capture';
@@ -182,6 +183,17 @@ export function meilleureOption(
 
     // Attendre sur place ou se replacer.
     retenir(base, c, { type: 'rien' });
+
+    // Ouvrir un passage seulement si une unité amie mécanisée peut en profiter.
+    if (porte(type, 'genie')) {
+      const fictive: Unite = { ...u, ...c };
+      for (const cible of constructionsPossibles(etat, cat, fictive)) {
+        const utile = etat.unites.some((a) => a.camp === u.camp && a.id !== u.id
+          && ['roues', 'chenilles'].includes(cat.unites[a.type]?.typeMouvement ?? '')
+          && Math.abs(a.x - cible.x) + Math.abs(a.y - cible.y) <= 4);
+        if (utile) retenir(base + 2, c, { type: 'construire', cible });
+      }
+    }
 
     // Capturer.
     if (estCapteur) {

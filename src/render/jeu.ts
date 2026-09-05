@@ -21,14 +21,21 @@ import type {
 } from '../engine/index';
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue,
-  creerPartie, rejouer, sceneDepuis,
+  creerPartie, rejouer, sceneDepuis, terrainLogique, VERSION_MOTEUR,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
-  CampId, Case, CleUnite, MapDef, Meteo, PhaseJour, Saison, Sauvegarde, Scenario,
+  CampId, Case, CleUnite, Dialogue, MapDef, Meteo, PhaseJour, Saison, Sauvegarde,
+  Scenario,
 } from '../schemas/types';
 import { ambiance as construireAmbiance, ambianceDe, type Ambiance } from './ambiance';
 import { Controleur } from './controleur';
+import { monterDialogue, type ApiDialogue, type DialogueHtml } from './dialogue-html';
+import {
+  filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
+} from './dialogues';
+import { casesObjectifs } from './objectifs';
+import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
   choisirRendu, type CleRendu, type PreferenceRendu, type Rendu, type VueInteraction,
@@ -65,8 +72,20 @@ export interface OptionsJeu {
   fabriqueRendu?: (cle: CleRendu) => Rendu;
   /** Pose le HUD HTML par-dessus le canvas. Vrai par défaut. */
   hud?: boolean;
+  /**
+   * Joue les dialogues du scénario par-dessus la carte : ouverture, scènes en
+   * cours de match, fin. **Faux par défaut** — un scénario de démonstration ou
+   * un aperçu d'administration n'a rien à raconter, et un test de fumée n'a pas
+   * à cliquer une réplique avant de pouvoir jouer.
+   */
+  dialogues?: boolean;
+  /** Signale l'ouverture et la fermeture d'une scène de dialogue à la page hôte. */
+  surDialogue?: (actif: boolean) => void;
   /** Expose `window.__atlas` (tests de fumée et mise au point). */
   debug?: boolean;
+  /** Informe l'écran de campagne sans lui donner l'autorité sur les règles. */
+  surEtat?: (etat: EtatPartie) => void;
+  finPersonnalisee?: boolean;
 }
 
 /** Ce que rend `monterJeu` : de quoi observer, piloter et démonter. */
@@ -149,30 +168,7 @@ export function effacerSauvegarde(scenarioCle: string): void {
  * n'est pas encore écrit. Leur nom vient de `t()` comme tout le reste.
  */
 export function commandantsDuScenario(scenario: Scenario): (CommandantMoteur | null)[] {
-  const sortie: (CommandantMoteur | null)[] = [];
-  for (const c of scenario.commandants) {
-    sortie[c.camp] = {
-      cle: c.commandantCle,
-      nom: `commandant.${c.commandantCle}.nom`,
-      passif: null,
-      pouvoir: {
-        nom: `commandant.${c.commandantCle}.pouvoir`,
-        barres: 3,
-        effets: [{ cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.2 } }],
-        duree: 'tour_complet',
-      },
-      superPouvoir: {
-        nom: `commandant.${c.commandantCle}.super`,
-        barres: 6,
-        effets: [
-          { cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.4 } },
-          { cible: 'mes_unites', modificateur: { quoi: 'mouvement', valeur: 1 } },
-        ],
-        duree: 'tour_complet',
-      },
-    };
-  }
-  return sortie;
+  return resoudreCommandantsScenario(scenario);
 }
 
 /** Pause entre deux actions de l'adversaire : de quoi suivre sans s'ennuyer. */
@@ -192,6 +188,12 @@ export interface PontDebug {
   msParImage(): number;
   forcerAmbiance(saison: Saison | null, phase?: PhaseJour, meteo?: Meteo): void;
   etat(): { journee: number; camp: number; terminee: boolean };
+  /**
+   * Le terrain **tel que le rendu le lit** sur une case. Une mécanique régionale
+   * réinterprète la carte sans l'écrire : c'est la seule façon de vérifier de
+   * l'extérieur qu'une marée est bien arrivée jusqu'à l'image.
+   */
+  terrain(x: number, y: number): string | null;
 }
 
 /**
@@ -213,7 +215,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   let etat = creerPartie(scene, cat, graine);
   if (options.reprendre) {
     const sauvegarde = lireSauvegarde(options.scenario.code);
-    if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version) {
+    if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR) {
       const r = rejouer(scene, cat, { ...sauvegarde, actions: sauvegarde.actions }, commandants);
       etat = r.etat;
       actions = [...sauvegarde.actions];
@@ -246,7 +248,15 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   let vivant = true;
   let ambianceForcee: Ambiance | null = null;
   let hud: HudHtml | null = null;
+  let sceneHtml: DialogueHtml | null = null;
   const minuteries = new Set<ReturnType<typeof setTimeout>>();
+
+  // --- Dialogues : une file de répliques, et le registre des scènes déjà dites.
+  const avecDialogues = options.dialogues === true;
+  const scenesScenario = options.scenario.scenesDialogue ?? [];
+  const fileRepliques: RepliqueEnAttente[] = [];
+  const scenesJouees = new Set<string>();
+  let attentesDialogue: (() => void)[] = [];
 
   const controleur = new Controleur({
     etat,
@@ -263,15 +273,71 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         etat = apres;
         sauvegarder();
         annoncer(evenements);
-        void jouerAnimations(evenements, avant).then(() => {
+        void jouerAnimations(evenements, avant).then(async () => {
           if (!vivant) return;
+          ouvrirScenes(evenements);
           rafraichir();
+          await attendreDialogue();
+          if (!vivant) return;
           if (apres.partie.terminee) effacerSauvegarde(options.scenario.code);
           else if (apres.campCourant !== camp) void tourAdversaire();
         });
       },
     },
   });
+
+  // -------------------------------------------------------------------------
+  // Dialogues : la file, les déclencheurs, et l'attente de l'adversaire
+  // -------------------------------------------------------------------------
+
+  /** Camp d'un locuteur, lu sur la distribution du scénario. */
+  function campDe(locuteur: string): CampId | null {
+    return options.scenario.commandants.find((c) => c.commandantCle === locuteur)?.camp ?? null;
+  }
+
+  /** Vrai tant qu'une réplique est à l'écran : le jeu attend le joueur. */
+  function dialogueActif(): boolean {
+    return fileRepliques.length > 0;
+  }
+
+  /** Met une suite de répliques en file, sous une clé de scène jouée une fois. */
+  function enfiler(sceneCle: string, repliques: readonly Dialogue[]): void {
+    if (!avecDialogues || repliques.length === 0 || scenesJouees.has(sceneCle)) return;
+    scenesJouees.add(sceneCle);
+    fileRepliques.push(...filerRepliques(sceneCle, repliques, campDe));
+    options.surDialogue?.(true);
+  }
+
+  /** Vide les attentes quand la dernière réplique tombe. */
+  function libererAttentes(): void {
+    if (dialogueActif()) return;
+    const attentes = attentesDialogue;
+    attentesDialogue = [];
+    for (const resoudreAttente of attentes) resoudreAttente();
+    options.surDialogue?.(false);
+  }
+
+  /**
+   * Attend que la file se vide. L'adversaire s'en sert : une scène qui se
+   * déclenche sur son tour doit arrêter la partie, pas défiler pendant qu'un
+   * char avance derrière la boîte de dialogue.
+   */
+  function attendreDialogue(): Promise<void> {
+    if (!dialogueActif() || !vivant) return Promise.resolve();
+    return new Promise((resoudreAttente) => attentesDialogue.push(resoudreAttente));
+  }
+
+  /** Ouvre les scènes que la dernière action vient de déclencher. */
+  function ouvrirScenes(evenements: readonly EvenementJeu[]): void {
+    if (!avecDialogues) return;
+    for (const s of scenesDeclenchees(scenesScenario, scenesJouees, {
+      etat, evenements, camp,
+    })) enfiler(s.cle, s.repliques);
+    if (etat.partie.terminee) {
+      const gagne = etat.partie.vainqueur === camp && !etat.partie.nul;
+      enfiler('fin', gagne ? options.scenario.dialogueVictoire : options.scenario.dialogueDefaite);
+    }
+  }
 
   // -------------------------------------------------------------------------
   // Sauvegarde
@@ -305,14 +371,30 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     rafraichir();
   }
 
-  /** Les événements qui méritent un mot au joueur. */
+  /** Le nom du bâtiment pris : une usine n'est pas une ville, un QG encore moins. */
+  const CLE_PRISE: Readonly<Record<string, string>> = {
+    ville: 'combat.ville_capturee',
+    usine: 'combat.usine_capturee',
+    aeroport: 'combat.aeroport_capture',
+    qg: 'combat.qg_capture',
+  };
+
+  /**
+   * Les événements qui méritent un mot **éphémère** au joueur.
+   *
+   * La fin de match n'en fait pas partie, et c'est une correction : elle était
+   * annoncée ici, puis redite par le dialogue de victoire, puis une troisième
+   * fois par l'écran de fin. Le joueur voyait une bannière clignoter et
+   * disparaître au milieu de sa phrase — la scène de dialogue masque le HUD —
+   * avant de lire deux fois la même nouvelle. Une fin de partie est un **état**,
+   * pas une notification : elle a son dialogue et son écran, elle n'a pas
+   * besoin d'un troisième messager.
+   */
   function annoncer(evenements: readonly EvenementJeu[]): void {
     for (const e of evenements) {
-      if (e.type === 'capture' && e.acquis) poserAnnonce(t('combat.ville_capturee'));
-      else if (e.type === 'fin_partie') {
-        poserAnnonce(t(
-          e.nul ? 'hud.match_nul' : e.vainqueur === camp ? 'combat.manche_gagnee' : 'combat.manche_perdue',
-        ));
+      if (e.type === 'capture' && e.acquis) {
+        const terrain = terrainLogique(etat, cat, e.case);
+        poserAnnonce(t(CLE_PRISE[terrain ?? ''] ?? 'combat.ville_capturee'));
       }
     }
   }
@@ -358,7 +440,10 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         controleur.attendre(true);
         await jouerAnimations(r.evenements, avant);
         if (!vivant) return;
+        ouvrirScenes(r.evenements);
         rafraichir();
+        await attendreDialogue();
+        if (!vivant) return;
         await pause(MS_ENTRE_ACTIONS);
         if (!vivant) return;
       }
@@ -392,7 +477,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     return {
       catalogue: cat,
       ambiance: ambianceCourante(),
-      surbrillances: v.surbrillances,
+      surbrillances: [...casesObjectifs(etat), ...v.surbrillances],
       chemin: v.chemin,
       curseur: v.curseur,
       selection: v.selection,
@@ -415,8 +500,11 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       selection: v.selection,
       menu: v.menu,
       production: v.production,
+      visee: v.visee,
       attenteIa,
       annonce,
+      masquerFin: options.finPersonnalisee,
+      sceneOuverte: dialogueActif(),
     };
   }
 
@@ -433,6 +521,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     cible.dataset['camp'] = String(etat.campCourant);
     cible.dataset['journee'] = String(etat.journee);
     cible.dataset['partie'] = etat.partie.terminee ? 'terminee' : 'en_cours';
+    cible.dataset['dialogue'] = dialogueActif() ? 'ouvert' : 'ferme';
     conteneur.dataset['rendu'] = rendu.cle;
   }
 
@@ -440,7 +529,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     if (!vivant) return;
     rendu.afficher(etat, vueInteraction());
     hud?.rafraichir();
+    sceneHtml?.rafraichir();
     marquerEtat();
+    options.surEtat?.(etat);
   }
 
   // -------------------------------------------------------------------------
@@ -455,7 +546,11 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     effacerSauvegarde(options.scenario.code);
     attenteIa = false;
     annonce = null;
+    fileRepliques.length = 0;
+    scenesJouees.clear();
+    libererAttentes();
     controleur.poserEtat(etat);
+    ouvrirOuverture();
     rafraichir();
   }
 
@@ -470,10 +565,33 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     jouerPouvoir: (niveau) => controleur.jouerPouvoir(niveau),
     annuler: () => controleur.annuler(),
     recommencer,
+    zoomer: (sens) => rendu.zoomer?.(sens),
+    recentrer: () => {
+      const unite = etat.unites.find(u => u.id === controleur.vue.selection)
+        ?? etat.unites.find(u => u.camp === camp && !u.dansTransport);
+      if (unite) (rendu.recentrer ?? rendu.cadrer).call(rendu, { x: unite.x, y: unite.y });
+    },
     versEcran: (c: Case) => rendu.versEcran(c),
   };
 
   if (options.hud !== false) hud = monterHudHtml(conteneur, api);
+
+  const apiDialogue: ApiDialogue = {
+    replique: () => fileRepliques[0] ?? null,
+    nomLocuteur: (cle) => t(`commandant.${cle}.nom`) || t('hud.commandant'),
+    t,
+    suivante: () => {
+      fileRepliques.shift();
+      libererAttentes();
+      rafraichir();
+    },
+    passer: () => {
+      fileRepliques.length = 0;
+      libererAttentes();
+      rafraichir();
+    },
+  };
+  if (avecDialogues) sceneHtml = monterDialogue(conteneur, apiDialogue);
 
   const debrancher = rendu.brancher({
     surClicCase: (c) => controleur.clicCase(c),
@@ -497,11 +615,28 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     },
   });
 
+  /**
+   * L'ouverture se joue **une fois la carte cadrée**, jamais avant : le briefing
+   * d'Advance Wars se donne sur le terrain, pas sur un écran noir.
+   */
+  function ouvrirOuverture(): void {
+    if (!avecDialogues) return;
+    const declaree = sceneOuverture(scenesScenario);
+    if (declaree) enfiler(declaree.cle, declaree.repliques);
+    else enfiler('ouverture', options.scenario.dialogueOuverture);
+  }
+
   // --- Cadrage de départ : la première unité du joueur, comme en 2D.
   const depart = etat.unites.find((u) => u.camp === camp);
   rafraichir();
   if (depart) rendu.cadrer({ x: depart.x, y: depart.y });
-  if (etat.campCourant !== camp && !etat.partie.terminee) void tourAdversaire();
+  ouvrirOuverture();
+  rafraichir();
+  if (etat.campCourant !== camp && !etat.partie.terminee) {
+    void attendreDialogue().then(() => {
+      if (vivant) void tourAdversaire();
+    });
+  }
 
   function forcerAmbiance(saison: Saison | null, phase?: PhaseJour, meteo?: Meteo): void {
     ambianceForcee = saison === null
@@ -518,6 +653,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       msParImage: () => rendu.msParImage(),
       forcerAmbiance,
       etat: () => ({ journee: etat.journee, camp: etat.campCourant, terminee: etat.partie.terminee }),
+      terrain: (x, y) => terrainLogique(etat, cat, { x, y }),
     };
     (globalThis as unknown as { __atlas?: PontDebug }).__atlas = pont;
   }
@@ -537,6 +673,14 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       debrancher();
       hud?.demonter();
       hud = null;
+      sceneHtml?.demonter();
+      sceneHtml = null;
+      fileRepliques.length = 0;
+      // Une promesse d'attente laissée en suspens retiendrait le tour d'IA
+      // dans une continuation morte : on les libère toutes au démontage.
+      const restantes = attentesDialogue;
+      attentesDialogue = [];
+      for (const resoudreAttente of restantes) resoudreAttente();
       rendu.demonter();
       const g = globalThis as unknown as { __atlas?: PontDebug };
       if (g.__atlas) delete g.__atlas;

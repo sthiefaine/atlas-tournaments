@@ -1,0 +1,62 @@
+{
+  "cle": "carte_qualification_bocage",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "carte_qualification_bocage",
+  "nom": "Le premier fanion",
+  "largeur": 10,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPPPPPP",
+    "PHPPPPPPPP",
+    "PPPPPPPPPP",
+    "PPPPCPPPPP",
+    "PPPPPFFPPP",
+    "PPPPPPPPPP",
+    "PPPPFPPPPP",
+    "PPPPPFPPPP",
+    "PPPPPPPPHP",
+    "PPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,1": 0,
+    "8,8": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 7,
+      "y": 8
+    }
+  ]
+}

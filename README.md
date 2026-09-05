@@ -4,6 +4,12 @@ Un tactique au tour par tour dans l'esprit d'Advance Wars. Dans ce monde, les gu
 
 Web, TypeScript strict, Next.js 15. **Rendu 3D three.js avec repli vectoriel 2D**, moteur de règles déterministe sans dépendance, contenu produit par cinq routines Claude (quatre de contenu, une de traduction) et validé par un serveur qui ne fait confiance à rien.
 
+## Jouer les premiers matchs
+
+Ouvrir **`/campagne`** : quatre entraînements guidés, puis une qualification avec le génie et un match sous les couleurs du Luxembourg. Le carnet sauvegarde la progression dans le navigateur. `/jeu/demo` reste disponible ; `?rendu=2d` force le repli vectoriel.
+
+Les objectifs escorte, relais et survie sont jouables ; dix profils de biomes guident la génération. Le catalogue 2 ajoute le génie (passage adjacent pour 1 500 fonds), et les silhouettes 3D sont plus lisibles. Voir `doc/15-premiers-matchs.md` pour le périmètre exact et les versions. `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune des six missions.
+
 ## Les documents
 
 - `BRIEF.md` — le canon : toutes les décisions prises. Il a toujours raison.

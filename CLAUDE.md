@@ -2,6 +2,54 @@
 
 Document de passation pour Claude Code. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — cinq axes et entraînement (5 septembre 2026)
+
+L’état historique ci-dessous doit être lu avec `doc/15-premiers-matchs.md` : six missions sont désormais jouables via `/campagne`, dont quatre tutoriels avant les matchs officiels. Objectifs escorte/relais/survie, génie, dix profils de biomes, styles de l’alliance Luxembourg et HUD adaptatif sont implémentés. Moteur 2, catalogue 2 (compatibilité catalogue 1), générateur 2. Les marées et le raccordement mapgen existaient déjà ; les passages ci-dessous disant le contraire sont obsolètes. La progression est locale au navigateur ; les routines Claude et le parcours Postgres ne sont pas mis en service par cette livraison.
+
+## Mise à jour — grammaire Advance Wars (5 septembre 2026, soir)
+
+Quatre changements d’interface, tous derrière l’interface `Rendu` commune, donc valables en 2D comme en 3D.
+
+1. **Les commandants parlent sur la carte.** `Scenario.scenesDialogue` (`doc/03` §6) déclare des scènes déclenchées par les **événements** du moteur — première attaque, capture, perte, production d’un type d’unité, pouvoir, jalon de relais, journée. Les déclencheurs sont dans `src/render/dialogues.ts` (pur, testé), la boîte de dialogue dans `src/render/dialogue-html.ts` (buste vectoriel, frappe lettre à lettre, letterbox). `dialogueOuverture` se joue désormais **sur la carte une fois cadrée**, plus dans une modale ; la fiche de mission ne porte plus que le titre, l’objectif et le tutoriel. Le tour d’IA **attend** qu’une scène soit refermée. Option `dialogues` de `monterJeu`, **fausse par défaut** : la démo et les tests de fumée ne sont pas concernés.
+2. **Vert, j’y vais ; rouge, j’y tire** (`doc/10` §8). Le déplacement passe au vert émeraude, et le rouge devient l’**enveloppe de tir complète** — toutes les cases frappables depuis n’importe quelle arrivée, privées des cases atteignables. L’or reste aux objectifs, le bleu aux chantiers du génie.
+3. **Le chemin est une flèche**, coudée, avec pointe et liseré sombre, en 2D comme en 3D où elle épouse le relief.
+4. **La prévision de duel** (`doc/04` §5.2 bis) : `prevoirDuel()` rejoue la formule de combat sans tirer d’aléa et sans rien muter ; le HUD montre les deux camps avant confirmation. Conséquence : même face à une cible unique, l’ordre `attaquer` passe par la phase de visée.
+
+Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` — rien ne le faisait —, et `e2e/fumee-3d.spec.ts` ouvre le Bulletin avant d’en lire les prévisions (il était devenu repliable, le test ne le savait pas).
+
+## Mise à jour — l’accueil et l’entrée en jeu (5 septembre 2026, soir)
+
+`src/app/page.tsx` n’est plus une page d’attente : c’est un **écran-titre**. Trois décisions le tiennent, et elles valent aussi pour la suite du site.
+
+1. **On montre le jeu, on ne le décrit pas**, en deux temps. Le serveur rend `src/app/plateau-accueil.tsx` — un vrai bout de partie en SVG écrit à la main, avec la grammaire réelle du rendu : vert émeraude pour le déplacement, rouge carmin pour l’enveloppe de tir (**calculée** comme dans `render/controleur.ts`, jamais posée à la main), flèche coudée à liseré sombre. Puis `src/app/vitrine.tsx` charge après l’hydratation l’**attract mode** (`src/app/attract.tsx`) : une vraie partie d’exhibition, jouée par l’IA des deux côtés, en boucle, sur le rendu vectoriel — avec la portée qui s’allume et la flèche qui se pose avant chaque déplacement. Le SVG s’efface en fondu quand la première image est prête.
+
+   Le coût est **assumé et cantonné** : l’attract tire le moteur, l’IA et le rendu, donc il est chargé par `next/dynamic` avec `ssr: false`, jamais dans le rendu initial — la page reste à **2,4 ko / 109 ko de premier chargement**. Il ne se monte pas du tout sous `prefers-reduced-motion`, et sa boucle gèle quand l’onglet passe en arrière-plan (`visibilitychange`) : une page d’accueil n’a pas le droit de chauffer un appareil.
+2. **Un seul geste.** Un bouton, qui mène **droit à l’épreuve suivante** (`/jeu/<cle>`) et non au carnet. Le carnet, le match libre et l’atelier sont des liens de service ; le lien `/admin` a quitté la page publique. La progression se lit sur une jauge de six segments, jamais en pourcentage.
+3. **Le vocabulaire du HUD** — encre, papier, signal, biseaux au `clip-path`, ombres dures : entrer en jeu n’est plus un changement d’univers.
+
+## Mise à jour — le terrain qui bouge (5 septembre 2026, nuit)
+
+Les deux rendus **gelaient le terrain au premier jour**. En 3D, la grille était capturée dans une fermeture au montage de `batir()` ; en 2D, la couche de fond était mise en cache sous une clé qui ignorait la journée. Or une mécanique régionale — les marées — **réinterprète** la grille sans jamais l’écrire (`modifTerrain` est une lecture) : la marée changeait dans le moteur et jamais à l’écran. Le génie, qui pose et retire du terrain, souffrait du même gel.
+
+Trois corrections, et une leçon.
+
+1. `Plateau.majTerrain(grille)` remet en place altitudes, splat et routes **sans reconstruire** le plateau : rebâtir coûterait la repeinture des cinq jeux de matières et un recadrage de caméra à chaque journée.
+2. La clé du cache 2D et le témoin 3D utilisent `signatureTerrain` — la fonction **du moteur** (`src/engine/hooks.ts`), qui porte déjà journée, climat, terrains posés et état de la mécanique. Une signature réinventée côté rendu serait forcément plus pauvre.
+3. **Ce qui repose sur le sol doit se reposer avec lui.** Les unités relisent l’altitude à chaque `maj`, mais le décor était posé une fois pour toutes : `Decor.majRelief()` replace arbres et rochers après une mutation. Les unités s’**orientent** en plus sur la pente (bornée à 13°, suivie à 55 % — suivre le relief au degré près fait culbuter un char sur une berge) et ne descendent jamais sous le plan d’eau : une pièce reprise par la marée patauge, elle ne se noie pas.
+
+4. **Le centre de chaque case est enfin plat.** `10-rendu-3d.md` §4.2 l’exige depuis le début — « sinon une unité posée sur une pente penche et le décalque de surbrillance se déforme » — mais `hauteurEn` était une interpolation bilinéaire pure : la pente traversait le centre de la case. Une maison posée sur une montagne s’enfonçait d’un côté et flottait de l’autre. Une rampe plate sur ±0,28 case reporte le dénivelé **sur la jonction** entre cases ; le plateau y gagne des gradins de jeu plutôt qu’une dune. **Reste à faire** de la même règle : « les cases de bâtiment sont plates, elles et leur couronne immédiate » — la couronne n’est pas encore nivelée.
+5. Une mutation de terrain est devenue un **événement** de 1,4 s : fondu du mélange de matières, glissement des altitudes, écume qui enfle puis retombe. Les normales ne sont recalculées qu’à la fin — les rafraîchir à chaque image coûterait plus que tout le reste pour un gain invisible.
+
+6. **Le rendu n’invente plus le trajet d’un déplacement.** L’événement `deplacement` ne portait que `de` et `vers` : la peau 3D reconstruisait un chemin **en L** et la 2D glissait en **ligne droite**. Les deux traversaient montagnes et unités adverses. L’événement porte désormais `chemin`, celui que `verifierChemin` a validé, tronqué à la case d’arrêt en cas d’interruption sous brouillard. `cheminEnL`, `longueurChemin` et `surChemin` ont quitté `render3d/` pour `src/render/chemin.ts` : les deux peaux en avaient besoin, et `render/` n’a pas le droit d’importer `render3d/` (`02-architecture.md` §5).
+
+**La leçon, pour la suite** : toute donnée dérivée de la grille et calculée au montage est un gel en puissance. Le décor, l’éclairage et les surbrillances lisent `plateau.hauteurEn`, qui est désormais une fermeture **vivante** ; ne pas la remplacer par une valeur.
+
+**Le bandeau de tour attend la fin d’une scène.** Un « à vous de jouer » et une réplique de commandant lancés au même instant se disputent la même seconde ; `annoncerTour` efface le tour déjà annoncé quand une scène est ouverte, de sorte que l’annonce se rejoue juste après la dernière réplique. Les deux arrivent, l’un après l’autre.
+
+**L’entrée en mission est directe** (`src/app/jeu/[scenario]/toile.tsx`) : plus de fiche à valider avant de jouer. Le plateau se monte tout de suite, une partie en cours se reprend d’elle-même, et l’ouverture se joue en dialogue sur la carte. L’objectif est affiché en permanence dans le rappel de mission, en haut à gauche ; le tutoriel, le conseil et « nouvelle partie » sont derrière ce rappel.
+
+Seule `src/app/convocation.tsx` est cliente, parce qu’elle lit `localStorage` ; la page lui passe des **libellés déjà traduits**, comme on le fait pour les rendus. Le sens de l’hydratation est à sens unique : le serveur rend l’état neutre, le client l’enrichit — jamais l’inverse, une bascule « reprendre » → « entrer » se lirait comme une progression perdue.
+
 ## Le projet en cinq lignes
 
 Atlas Tournament est un tactique au tour par tour dans l'esprit d'Advance Wars, jouable dans un navigateur. Dans ce monde, les guerres ont été remplacées par des Jeux Tactiques : chaque pays a une équipe et un commandant, et un tournoi fait le tour de la planète tous les quatre ans. Le joueur part de France — tout le monde part de France —, traverse ses 18 régions puis le monde, et ses choix décident de la fin qu'il obtient et de l'état des 24 nations : alliée, rivale, retirée. Une nation alliée peut être **incarnée** — jouée entièrement, avec son général et son catalogue, le temps d'un match — et s'ouvre comme départ pour une Nouvelle Ronde. Techniquement : une seule application Next.js 15 en TypeScript strict, un moteur de règles pur et déterministe, un rendu 3D three.js avec repli vectoriel 2D, et cinq routines Claude qui produisent le contenu sous le contrôle d'un serveur qui ne fait confiance à rien. Rien de généré ne passe en ligne sans un verdict mesuré, et souvent sans un humain.
@@ -83,7 +131,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm start` | migrations puis Next (c'est ce que lance le Dockerfile) |
 | `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
 | `npm run lint` | ESLint |
-| `npm test` | 551 tests `tsx --test` |
+| `npm test` | 629 tests `tsx --test` |
 | `npm run test:e2e` | les deux specs Playwright ; le spec 3D porte ses propres drapeaux SwiftShader |
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, copie de sécurité `pg_dump` avant |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA |
@@ -114,7 +162,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 
 Ils sont listés ici parce qu'ils se voient mal dans le code, pas parce qu'ils sont graves.
 
-1. **Aucune base n'est branchée ni testée en réel.** Tout `src/db/` et une bonne partie de `src/serveur/` n'ont jamais parlé à un Postgres. Le test `tests/serveur/migrations.test.ts` est **sauté** faute de `DATABASE_URL` (c'est le seul des 551 qui l'est). `npm run migrate` sans base va proprement jusqu'à `ECONNREFUSED` et rend 1.
+1. **Aucune base n'est branchée ni testée en réel.** Tout `src/db/` et une bonne partie de `src/serveur/` n'ont jamais parlé à un Postgres. Le test `tests/serveur/migrations.test.ts` est **sauté** faute de `DATABASE_URL` (c'est le seul des 629 qui l'est). `npm run migrate` sans base va proprement jusqu'à `ECONNREFUSED` et rend 1.
 2. **`scripts/migrate.mjs` ne lit pas `.env`.** Il attend `DATABASE_URL` dans l'environnement, ce qui est juste en production (Coolify l'injecte) mais surprend en local : `npm run migrate` répondra `DATABASE_URL manquante` même avec un `.env` rempli. Lancer `node --env-file=.env scripts/migrate.mjs`, ou ajouter le drapeau au script — c'est une décision à prendre, pas un oubli à corriger en silence.
 3. **La mise en ligne de la Dépêche à 18 h n'est pas câblée.** `armer()` passe la dépêche en `valide` sur décision humaine, et la requête `enLigne()` ne sert que le statut `en_ligne` : **rien ne fait la transition à l'heure dite**. Il manque le déclencheur (huitième tâche planifiée, ou évaluation paresseuse à la lecture — à trancher).
 4. **Aucun bundle `en`.** `src/i18n/` ne connaît que `SOURCE_FR`. Les huit autres langues sont des lignes en base, sans glossaire ni traduction. Le repli `langue → en → fr` fonctionne, mais il tombe toujours sur `fr`.

@@ -76,19 +76,40 @@ export function hauteurCase(g: GrilleTerrain, x: number, y: number): number {
 }
 
 /**
- * Le champ d'altitude **continu** du plateau : une interpolation bilinéaire
- * entre les centres de cases. C'est ce qui donne à la fois les « sommets
- * partagés » (deux cases voisines ne peuvent pas se décoller) et les « jonctions
- * adoucies » : au centre d'une case on retrouve exactement sa hauteur, au bord
- * on est à mi-chemin de la voisine.
+ * Demi-largeur du **plateau plat** au centre de chaque case, en fraction de case.
+ * Un bâtiment tient dans un disque de ce rayon ; une figurine aussi.
+ */
+export const REPLI_CENTRE = 0.28;
+
+/**
+ * La rampe qui remplace l'interpolation linéaire entre deux centres de cases :
+ * plate aux deux extrémités, adoucie au milieu.
+ *
+ * C'est elle qui tient la règle de `10-rendu-3d.md` §4.2 — « le centre de chaque
+ * case reste plat sur un petit disque ». Sans elle, la pente traverse le centre
+ * de la case : une maison posée sur une montagne s'enfonce d'un côté et flotte
+ * de l'autre, et une figurine penche là où elle devrait être d'aplomb. Le
+ * dénivelé n'est pas supprimé, il est **reporté sur la jonction** entre cases —
+ * ce qui donne au passage les gradins d'un plateau de jeu plutôt qu'une dune.
+ */
+function rampe(t: number): number {
+  const u = Math.max(0, Math.min(1, (t - REPLI_CENTRE) / (1 - 2 * REPLI_CENTRE)));
+  return u * u * (3 - 2 * u);
+}
+
+/**
+ * Le champ d'altitude **continu** du plateau : une interpolation entre les
+ * centres de cases, plate au voisinage de chacun (voir `rampe`). C'est ce qui
+ * donne à la fois les « sommets partagés » — deux cases voisines ne peuvent pas
+ * se décoller — et les jonctions adoucies.
  */
 export function hauteurEn(g: GrilleTerrain, x: number, z: number): number {
   const fx = x / CASE - 0.5;
   const fz = z / CASE - 0.5;
   const x0 = Math.floor(fx);
   const z0 = Math.floor(fz);
-  const tx = fx - x0;
-  const tz = fz - z0;
+  const tx = rampe(fx - x0);
+  const tz = rampe(fz - z0);
   const h00 = hauteurCase(g, x0, z0);
   const h10 = hauteurCase(g, x0 + 1, z0);
   const h01 = hauteurCase(g, x0, z0 + 1);

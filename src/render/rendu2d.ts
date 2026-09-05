@@ -13,6 +13,7 @@ import type { EtatPartie, EvenementJeu } from '../engine/index';
 import { uniteParId } from '../engine/index';
 import type { Case } from '../schemas/types';
 import { animation, Boucle } from './boucle';
+import { longueurChemin, surChemin } from './chemin';
 import {
   avancerInertie, centreCase, centrerSur, couperInertie, creerCamera, ecranVersCase,
   glisser, lancerInertie, mondeVersEcran, palierZoom, redimensionner, TUILE, zoomerAutour,
@@ -134,18 +135,17 @@ export function creerRendu2d(): Rendu {
       const attentes: Promise<void>[] = [];
       for (const ev of evenements) {
         if (ev.type === 'deplacement') {
-          const cases = Math.abs(ev.de.x - ev.vers.x) + Math.abs(ev.de.y - ev.vers.y);
+          // Le chemin est celui du moteur : la figurine suit la route qu'elle a
+          // vraiment prise, au lieu de glisser en ligne droite à travers tout.
+          const pas = ev.chemin.length > 1 ? ev.chemin : [ev.de, ev.vers];
+          const cases = longueurChemin(pas);
           if (cases === 0) continue;
           const id = ev.uniteId;
-          const depart = centreCase(ev.de);
-          const fin = centreCase(ev.vers);
+          const points = pas.map(centreCase);
           attentes.push(new Promise<void>((resoudre) => {
             b.ajouter(animation(`deplacement:${id}`, cases * MS_PAR_CASE, (p) => {
-              animees.set(id, {
-                x: depart.x + (fin.x - depart.x) * p,
-                y: depart.y + (fin.y - depart.y) * p,
-                alpha: 1,
-              });
+              const point = surChemin(points, p);
+              animees.set(id, { x: point.x, y: point.y, alpha: 1 });
             }, () => {
               animees.delete(id);
               resoudre();
@@ -226,6 +226,16 @@ export function creerRendu2d(): Rendu {
           gestes.surTouche?.(touche);
         },
       });
+    },
+
+    zoomer(sens: number): void {
+      if (camera) zoomerPalier(camera, sens);
+      boucle?.salir();
+    },
+
+    recentrer(c: Case): void {
+      if (camera) centrerSur(camera, c);
+      boucle?.salir();
     },
 
     cadrer(c: Case): void {

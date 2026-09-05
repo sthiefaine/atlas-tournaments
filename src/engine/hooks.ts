@@ -132,7 +132,7 @@ export function signatureTerrain(etat: EtatPartie): string {
   const m = etat.mecanique;
   const poses = etat.terrainsPoses.map((p) => `${p.case}:${p.terrain}`).join(',');
   const meca = m === null ? '' : `${m.cle}|${JSON.stringify(m.parametres)}|${JSON.stringify(m.donnees)}|${m.gelable}`;
-  return `${etat.carteCle}|${etat.largeur}x${etat.hauteur}|${etat.journee}|${etat.climat.saison}`
+  return `${etat.carteCle}|${etat.grille.join("/")}|${etat.largeur}x${etat.hauteur}|${etat.journee}|${etat.climat.saison}`
     + `|${etat.climat.meteo}|${etat.climat.phase}|${etat.reglages.climatPays}|${poses}|${meca}`;
 }
 

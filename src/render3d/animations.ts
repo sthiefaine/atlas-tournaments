@@ -16,8 +16,8 @@ import * as THREE from 'three';
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import { uniteParId } from '../engine/index';
 import { animation, type Animation } from '../render/boucle';
+import { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 import { paletteDe } from '../render/palettes';
-import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
 import type { CalqueUnites } from './unites';
 
@@ -45,58 +45,6 @@ export interface ContexteAnimation {
   hauteurEn(x: number, z: number): number;
   /** Appelée quand une animation modifie la scène : le rendu se salit. */
   salir(): void;
-}
-
-/** Le chemin en L d'un déplacement : sur une grille, on ne coupe pas en diagonale. */
-export function cheminEnL(de: Case, vers: Case): Case[] {
-  const pas: Case[] = [de];
-  if (de.x !== vers.x) pas.push({ x: vers.x, y: de.y });
-  if (de.y !== vers.y) pas.push({ x: vers.x, y: vers.y });
-  if (pas.length === 1) pas.push(vers);
-  return pas;
-}
-
-/** Longueur d'un chemin, en cases. */
-export function longueurChemin(pas: readonly Case[]): number {
-  let total = 0;
-  for (let i = 1; i < pas.length; i += 1) {
-    const a = pas[i - 1];
-    const b = pas[i];
-    if (a && b) total += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-  }
-  return total;
-}
-
-/**
- * Position et cap le long d'un chemin, à la progression `p` (0 à 1). Fonction
- * pure : c'est elle que teste `tests/render3d/animations.test.ts`.
- */
-export function surChemin(
-  pas: readonly Case[], p: number,
-): { x: number; y: number; cap: number } {
-  const total = longueurChemin(pas);
-  const premier = pas[0] ?? { x: 0, y: 0 };
-  if (total === 0) return { x: premier.x, y: premier.y, cap: 0 };
-  let reste = Math.max(0, Math.min(1, p)) * total;
-  for (let i = 1; i < pas.length; i += 1) {
-    const a = pas[i - 1];
-    const b = pas[i];
-    if (!a || !b) continue;
-    const d = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-    if (d === 0) continue;
-    if (reste <= d) {
-      const k = reste / d;
-      return {
-        x: a.x + (b.x - a.x) * k,
-        y: a.y + (b.y - a.y) * k,
-        cap: Math.atan2(-(b.y - a.y), b.x - a.x),
-      };
-    }
-    reste -= d;
-  }
-  const fin = pas[pas.length - 1] ?? premier;
-  const avant = pas[pas.length - 2] ?? fin;
-  return { x: fin.x, y: fin.y, cap: Math.atan2(-(fin.y - avant.y), fin.x - avant.x) };
 }
 
 /** Texture d'éclair de bouche : un halo additif, dessiné une seule fois. */
@@ -148,7 +96,10 @@ export function construireAnimations(
 
   for (const e of evenements) {
     if (e.type === 'deplacement') {
-      const pas = cheminEnL(e.de, e.vers);
+      // Le chemin vient du moteur : c'est celui qu'il a validé. On ne le
+      // reconstruit plus — un trajet inventé traverse les montagnes et les
+      // unités adverses, et c'est exactement ce qu'on voyait.
+      const pas = e.chemin.length > 1 ? e.chemin : cheminEnL(e.de, e.vers);
       const cases = longueurChemin(pas);
       if (cases === 0) continue;
       const v = ctx.unites.visuel(e.uniteId);

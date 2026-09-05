@@ -1,26 +1,45 @@
 {
-  "catalogueVersion": 1,
+  "catalogueVersion": 2,
   "unites": [
     {
       "cle": "infanterie",
       "nom": "Infanterie",
       "nomCourt": "Infanterie",
       "statut": "canon",
-      "traits": ["capture"],
-      "silhouette": { "base": "pattes", "corps": "capsule", "modules": [], "taille": 1 },
+      "traits": [
+        "capture"
+      ],
+      "silhouette": {
+        "base": "pattes",
+        "corps": "capsule",
+        "modules": [],
+        "taille": 1
+      },
       "cout": 1000,
       "mouvement": 3,
       "typeMouvement": "pied",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 2,
       "munitions": null,
       "carburant": null,
       "capture": true,
       "transport": null,
       "degats": {
-        "infanterie": 55, "meca": 45, "recon": 70, "char_leger": 25, "char_lourd": 5,
-        "artillerie": 60, "roquettes": 65, "antiair": 55, "helico": 25, "transport": 70
+        "infanterie": 55,
+        "meca": 45,
+        "recon": 70,
+        "char_leger": 25,
+        "char_lourd": 5,
+        "artillerie": 60,
+        "roquettes": 65,
+        "antiair": 55,
+        "helico": 25,
+        "transport": 70,
+        "genie": 55
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -30,21 +49,43 @@
       "nom": "Méca",
       "nomCourt": "Méca",
       "statut": "canon",
-      "traits": ["capture", "tout_terrain"],
-      "silhouette": { "base": "pattes", "corps": "capsule", "modules": ["lance_roquettes"], "taille": 1 },
+      "traits": [
+        "capture",
+        "tout_terrain"
+      ],
+      "silhouette": {
+        "base": "pattes",
+        "corps": "capsule",
+        "modules": [
+          "lance_roquettes"
+        ],
+        "taille": 1
+      },
       "cout": 2800,
       "mouvement": 2,
       "typeMouvement": "bottes",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 2,
       "munitions": 6,
       "carburant": null,
       "capture": true,
       "transport": null,
       "degats": {
-        "infanterie": 65, "meca": 55, "recon": 85, "char_leger": 60, "char_lourd": 15,
-        "artillerie": 75, "roquettes": 80, "antiair": 70, "helico": 30, "transport": 85
+        "infanterie": 65,
+        "meca": 55,
+        "recon": 85,
+        "char_leger": 60,
+        "char_lourd": 15,
+        "artillerie": 75,
+        "roquettes": 80,
+        "antiair": 70,
+        "helico": 30,
+        "transport": 85,
+        "genie": 65
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -54,21 +95,46 @@
       "nom": "Recon",
       "nomCourt": "Recon",
       "statut": "canon",
-      "traits": ["vision_etendue"],
-      "silhouette": { "base": "roues", "corps": "capsule", "modules": ["radar"], "taille": 1 },
+      "traits": [
+        "vision_etendue"
+      ],
+      "silhouette": {
+        "base": "roues",
+        "corps": "capsule",
+        "modules": [
+          "radar"
+        ],
+        "taille": 1
+      },
       "cout": 3800,
       "mouvement": 8,
       "typeMouvement": "roues",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 5,
       "munitions": null,
-      "carburant": { "max": 80, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 80,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 70, "meca": 65, "recon": 60, "char_leger": 6, "char_lourd": 1,
-        "artillerie": 45, "roquettes": 55, "antiair": 12, "helico": 0, "transport": 70
+        "infanterie": 70,
+        "meca": 65,
+        "recon": 60,
+        "char_leger": 6,
+        "char_lourd": 1,
+        "artillerie": 45,
+        "roquettes": 55,
+        "antiair": 12,
+        "helico": 0,
+        "transport": 70,
+        "genie": 70
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -79,20 +145,43 @@
       "nomCourt": "Char lég.",
       "statut": "canon",
       "traits": [],
-      "silhouette": { "base": "chenilles", "corps": "bloc", "modules": ["tourelle"], "taille": 2 },
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "bloc",
+        "modules": [
+          "tourelle"
+        ],
+        "taille": 2
+      },
       "cout": 6500,
       "mouvement": 6,
       "typeMouvement": "chenilles",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 3,
       "munitions": 9,
-      "carburant": { "max": 70, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 70,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 75, "meca": 70, "recon": 85, "char_leger": 55, "char_lourd": 15,
-        "artillerie": 70, "roquettes": 85, "antiair": 75, "helico": 0, "transport": 90
+        "infanterie": 75,
+        "meca": 70,
+        "recon": 85,
+        "char_leger": 55,
+        "char_lourd": 15,
+        "artillerie": 70,
+        "roquettes": 85,
+        "antiair": 75,
+        "helico": 0,
+        "transport": 90,
+        "genie": 75
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -103,20 +192,44 @@
       "nomCourt": "Char lrd",
       "statut": "canon",
       "traits": [],
-      "silhouette": { "base": "chenilles", "corps": "bloc", "modules": ["tourelle", "canon_long"], "taille": 3 },
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "bloc",
+        "modules": [
+          "tourelle",
+          "canon_long"
+        ],
+        "taille": 3
+      },
       "cout": 15000,
       "mouvement": 4,
       "typeMouvement": "chenilles",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 1,
       "munitions": 6,
-      "carburant": { "max": 55, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 55,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 95, "meca": 90, "recon": 105, "char_leger": 85, "char_lourd": 55,
-        "artillerie": 105, "roquettes": 105, "antiair": 105, "helico": 0, "transport": 125
+        "infanterie": 95,
+        "meca": 90,
+        "recon": 105,
+        "char_leger": 85,
+        "char_lourd": 55,
+        "artillerie": 105,
+        "roquettes": 105,
+        "antiair": 105,
+        "helico": 0,
+        "transport": 125,
+        "genie": 95
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -126,21 +239,46 @@
       "nom": "Artillerie",
       "nomCourt": "Artillerie",
       "statut": "canon",
-      "traits": ["tir_indirect"],
-      "silhouette": { "base": "chenilles", "corps": "plateau", "modules": ["canon_long"], "taille": 2 },
+      "traits": [
+        "tir_indirect"
+      ],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "plateau",
+        "modules": [
+          "canon_long"
+        ],
+        "taille": 2
+      },
       "cout": 5500,
       "mouvement": 5,
       "typeMouvement": "chenilles",
       "domaine": "terre",
-      "portee": [2, 3],
+      "portee": [
+        2,
+        3
+      ],
       "vision": 1,
       "munitions": 8,
-      "carburant": { "max": 60, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 90, "meca": 85, "recon": 80, "char_leger": 70, "char_lourd": 45,
-        "artillerie": 75, "roquettes": 80, "antiair": 75, "helico": 0, "transport": 95
+        "infanterie": 90,
+        "meca": 85,
+        "recon": 80,
+        "char_leger": 70,
+        "char_lourd": 45,
+        "artillerie": 75,
+        "roquettes": 80,
+        "antiair": 75,
+        "helico": 0,
+        "transport": 95,
+        "genie": 90
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -150,21 +288,46 @@
       "nom": "Lance-roquettes",
       "nomCourt": "Roquettes",
       "statut": "canon",
-      "traits": ["tir_indirect"],
-      "silhouette": { "base": "roues", "corps": "plateau", "modules": ["lance_roquettes"], "taille": 3 },
+      "traits": [
+        "tir_indirect"
+      ],
+      "silhouette": {
+        "base": "roues",
+        "corps": "plateau",
+        "modules": [
+          "lance_roquettes"
+        ],
+        "taille": 3
+      },
       "cout": 14000,
       "mouvement": 5,
       "typeMouvement": "roues",
       "domaine": "terre",
-      "portee": [3, 5],
+      "portee": [
+        3,
+        5
+      ],
       "vision": 1,
       "munitions": 6,
-      "carburant": { "max": 55, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 55,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 95, "meca": 90, "recon": 90, "char_leger": 80, "char_lourd": 55,
-        "artillerie": 80, "roquettes": 85, "antiair": 85, "helico": 0, "transport": 105
+        "infanterie": 95,
+        "meca": 90,
+        "recon": 90,
+        "char_leger": 80,
+        "char_lourd": 55,
+        "artillerie": 80,
+        "roquettes": 85,
+        "antiair": 85,
+        "helico": 0,
+        "transport": 105,
+        "genie": 95
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -174,21 +337,47 @@
       "nom": "Anti-air",
       "nomCourt": "Anti-air",
       "statut": "canon",
-      "traits": ["anti_air"],
-      "silhouette": { "base": "chenilles", "corps": "bloc", "modules": ["tourelle", "radar"], "taille": 2 },
+      "traits": [
+        "anti_air"
+      ],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "bloc",
+        "modules": [
+          "tourelle",
+          "radar"
+        ],
+        "taille": 2
+      },
       "cout": 7500,
       "mouvement": 6,
       "typeMouvement": "chenilles",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 2,
       "munitions": 9,
-      "carburant": { "max": 60, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 105, "meca": 95, "recon": 60, "char_leger": 25, "char_lourd": 5,
-        "artillerie": 50, "roquettes": 55, "antiair": 45, "helico": 120, "transport": 50
+        "infanterie": 105,
+        "meca": 95,
+        "recon": 60,
+        "char_leger": 25,
+        "char_lourd": 5,
+        "artillerie": 50,
+        "roquettes": 55,
+        "antiair": 45,
+        "helico": 120,
+        "transport": 50,
+        "genie": 105
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -198,21 +387,46 @@
       "nom": "Hélicoptère",
       "nomCourt": "Hélico",
       "statut": "canon",
-      "traits": ["vol"],
-      "silhouette": { "base": "rotor", "corps": "capsule", "modules": ["nacelle"], "taille": 2 },
+      "traits": [
+        "vol"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "capsule",
+        "modules": [
+          "nacelle"
+        ],
+        "taille": 2
+      },
       "cout": 9000,
       "mouvement": 6,
       "typeMouvement": "air",
       "domaine": "air",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 3,
       "munitions": 6,
-      "carburant": { "max": 60, "parCase": 1, "parTour": 2 },
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 2
+      },
       "capture": false,
       "transport": null,
       "degats": {
-        "infanterie": 75, "meca": 70, "recon": 55, "char_leger": 55, "char_lourd": 25,
-        "artillerie": 65, "roquettes": 65, "antiair": 6, "helico": 65, "transport": 75
+        "infanterie": 75,
+        "meca": 70,
+        "recon": 55,
+        "char_leger": 55,
+        "char_lourd": 25,
+        "artillerie": 65,
+        "roquettes": 65,
+        "antiair": 6,
+        "helico": 65,
+        "transport": 75,
+        "genie": 75
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -222,24 +436,116 @@
       "nom": "Transport",
       "nomCourt": "Transport",
       "statut": "canon",
-      "traits": ["transport"],
-      "silhouette": { "base": "chenilles", "corps": "plateau", "modules": ["grue"], "taille": 2 },
+      "traits": [
+        "transport"
+      ],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "plateau",
+        "modules": [
+          "grue"
+        ],
+        "taille": 2
+      },
       "cout": 4500,
       "mouvement": 6,
       "typeMouvement": "chenilles",
       "domaine": "terre",
-      "portee": [1, 1],
+      "portee": [
+        1,
+        1
+      ],
       "vision": 1,
       "munitions": null,
-      "carburant": { "max": 70, "parCase": 1, "parTour": 0 },
+      "carburant": {
+        "max": 70,
+        "parCase": 1,
+        "parTour": 0
+      },
       "capture": false,
-      "transport": { "places": 1, "accepte": ["infanterie", "meca"] },
+      "transport": {
+        "places": 1,
+        "accepte": [
+          "infanterie",
+          "meca"
+        ]
+      },
       "degats": {
-        "infanterie": 0, "meca": 0, "recon": 0, "char_leger": 0, "char_lourd": 0,
-        "artillerie": 0, "roquettes": 0, "antiair": 0, "helico": 0, "transport": 0
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
+    },
+    {
+      "cle": "genie",
+      "nom": "Génie de terrain",
+      "nomCourt": "Génie",
+      "statut": "homologuee",
+      "traits": [
+        "genie"
+      ],
+      "silhouette": {
+        "base": "pattes",
+        "corps": "capsule",
+        "modules": [
+          "radar"
+        ],
+        "taille": 1
+      },
+      "cout": 3500,
+      "mouvement": 3,
+      "typeMouvement": "pied",
+      "domaine": "terre",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": null,
+      "carburant": null,
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 33,
+        "meca": 27,
+        "recon": 42,
+        "char_leger": 15,
+        "char_lourd": 3,
+        "artillerie": 36,
+        "roquettes": 39,
+        "antiair": 33,
+        "helico": 0,
+        "transport": 42,
+        "genie": 33
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-05"
+      },
+      "subitDegats": {
+        "infanterie": 55,
+        "meca": 65,
+        "recon": 70,
+        "char_leger": 75,
+        "char_lourd": 95,
+        "artillerie": 90,
+        "roquettes": 95,
+        "antiair": 105,
+        "helico": 75,
+        "transport": 0,
+        "genie": 33
+      }
     }
   ]
 }

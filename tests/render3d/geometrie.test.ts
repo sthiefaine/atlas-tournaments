@@ -134,3 +134,45 @@ test('la carte de mélange se construit case par case depuis la MapDef', () => {
   assert.deepEqual(texel(7, 1), splatTerrain('montagne').map((v) => Math.round(v * 255)));
   assert.deepEqual(texel(5, 2), splatTerrain('route').map((v) => Math.round(v * 255)));
 });
+
+// ---------------------------------------------------------------------------
+// Le centre de chaque case est plat (`10-rendu-3d.md` §4.2)
+// ---------------------------------------------------------------------------
+
+test('le centre d’une case reste plat, même au bord d’une montagne', () => {
+  // Une plaine et une montagne côte à côte : le dénivelé maximal du jeu.
+  const g: GrilleTerrain = {
+    largeur: 3,
+    hauteur: 1,
+    terrainDe: (x): CleTerrain => (x === 1 ? 'montagne' : 'plaine'),
+  };
+  const centre = CASE * 1.5;
+  const au = (dx: number): number => hauteurEn(g, centre + dx, CASE * 0.5);
+  const reference = au(0);
+
+  // Un bâtiment tient dans ce disque : il ne doit y voir aucune pente, sinon il
+  // s'enfonce d'un côté et flotte de l'autre.
+  for (const dx of [-0.26, -0.15, 0, 0.15, 0.26]) {
+    assert.ok(
+      Math.abs(au(dx * CASE) - reference) < 1e-9,
+      `pente au centre à ${dx} case : ${au(dx * CASE)} ≠ ${reference}`,
+    );
+  }
+  // Le dénivelé n'a pas disparu : il est reporté sur la jonction.
+  assert.ok(au(0.5 * CASE) < reference - 0.05, 'la jonction descend vers la plaine');
+  assert.ok(Math.abs(au(CASE) - hauteurEn(g, CASE * 2.5, CASE * 0.5)) < 1e-9, 'et retrouve le centre voisin');
+});
+
+test('deux cases voisines restent soudées : le champ d’altitude est continu', () => {
+  const g: GrilleTerrain = {
+    largeur: 2,
+    hauteur: 1,
+    terrainDe: (x): CleTerrain => (x === 0 ? 'montagne' : 'mer'),
+  };
+  let precedent = hauteurEn(g, 0, CASE * 0.5);
+  for (let x = 1; x <= 200; x += 1) {
+    const h = hauteurEn(g, (x / 200) * 2 * CASE, CASE * 0.5);
+    assert.ok(Math.abs(h - precedent) < 0.05, 'aucune marche dans le champ d’altitude');
+    precedent = h;
+  }
+});

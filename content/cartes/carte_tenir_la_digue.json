@@ -1,0 +1,63 @@
+{
+  "cle": "carte_tenir_la_digue",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "carte_tenir_la_digue",
+  "nom": "Quatre journées sur la digue",
+  "largeur": 10,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "PPPPSWSPPP",
+    "PHPPSWSPPP",
+    "PPFFSWSPPP",
+    "PPPPCWSPPP",
+    "PPPPSWSPPP",
+    "PPPPSWSPPP",
+    "PPPPSWSPPP",
+    "PPPPSNSPPP",
+    "PPPPSWSPHP",
+    "PPPPSWSPPP"
+  ],
+  "proprietaires": {
+    "1,1": 0,
+    "8,8": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 1,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 8,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 7,
+      "y": 8
+    }
+  ],
+  "mecanique": "meca_marees"
+}

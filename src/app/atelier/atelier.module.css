@@ -1,0 +1,18 @@
+.atelier { position: fixed; inset: 0; background: #0f1b25; color: #f4f1e8; overflow: hidden; }
+.monde { position: absolute; inset: 0; touch-action: none; }
+.entete { position: absolute; z-index: 2; top: max(20px, env(safe-area-inset-top)); left: 24px; right: 24px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; text-shadow: 0 2px 9px #172d30; }
+.entete span { font-size: 10px; letter-spacing: .2em; font-weight: 800; }
+.entete h1 { font-size: clamp(19px, 3vw, 30px); font-weight: 800; margin: 2px 0; }
+.entete a { pointer-events: auto; padding: 12px 16px; background: #172832e8; border-radius: 12px; font-weight: 700; font-size: 13px; }
+.panneau { position: absolute; z-index: 2; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); padding: 16px; background: #12222fec; border: 1px solid #8ba5aa42; border-radius: 20px; box-shadow: 0 14px 40px #07141d60; backdrop-filter: blur(14px); }
+.reglages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.reglages label { display: flex; flex-direction: column; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #aebfbe; }
+.reglages select { width: 100%; min-height: 44px; padding: 9px; color: #fff; background: #253c47; border: 1px solid #78909150; border-radius: 10px; font-size: 13px; letter-spacing: 0; }
+.actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
+.actions div { display: flex; gap: 6px; }
+.actions button, .actions a { min-height: 44px; padding: 10px 14px; border-radius: 9px; background: #35505b; font-size: 12px; font-weight: 800; }
+.actions a { display: flex; align-items: center; background: #c6d89f; color: #20372d; }
+.panneau p { color: #b0c2c5; font-size: 11px; margin: 10px 0 0; }
+.statut { position: absolute; z-index: 3; top: 42%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; padding: 18px; border-radius: 12px; background: #152c3a; text-align: center; }
+.atelier button:focus-visible, .atelier select:focus-visible, .atelier a:focus-visible { outline: 3px solid #e5e9b1; outline-offset: 3px; }
+@media (max-width: 600px) { .entete { left: 16px; right: 16px; } .panneau { padding: 12px; } .reglages { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; } .reglages label { grid-column: span 2; } .reglages label:nth-child(-n+2) { grid-column: span 3; } .actions button, .actions a { padding: 9px 11px; font-size: 11px; } .panneau p { font-size: 10px; } }

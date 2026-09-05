@@ -209,6 +209,18 @@ Si la cible survit (`pvInternes > 0`), qu'elle est à **distance 1** de l'attaqu
 
 Conséquence directe : attaquer une unité de valeur avec une unité entamée est mauvais, et attaquer une pièce indirecte au corps à corps est gratuit. C'est l'essentiel du jeu de placement.
 
+### 5.2 bis Prévision du duel
+
+Le joueur voit **avant de confirmer** ce que l'échange coûterait aux deux camps : PV de la cible après la frappe, PV de l'attaquant après la riposte. C'est `prevoirDuel(etat, cat, attaquant, cible, depuis)`, et c'est la même formule qu'au-dessus — pas une seconde table entretenue à côté, qui finirait par mentir.
+
+Trois bornes la rendent honnête :
+
+- elle **ne tire aucun aléa**. Un tirage avancerait le flux `combat` et casserait le déterminisme du rejeu ; une prévision qui bouge d'un survol à l'autre ne serait pas une information mais un bruit. `A` est donc pris au centre de sa fourchette, à `1,00` : le tirage réel s'écarte de ±5 %, jamais davantage ;
+- elle se calcule depuis la case d'**arrivée**, pas depuis la case de départ : le vent de `surAttaque` lit la direction du tir, et la riposte n'existe qu'à distance 1 ;
+- elle **ne mute rien**, ni l'état ni les unités.
+
+Conséquence d'interface : même face à une **cible unique**, l'ordre `attaquer` passe par la phase de visée. Une attaque qui part sans que le joueur ait vu ce qu'elle coûte est un pari, pas un ordre.
+
 ### 5.3 Munitions
 
 Une attaque ou une riposte consomme 1 munition. `munitions: null` signifie illimité (infanterie, recon). À 0 munition, l'unité ne peut ni attaquer ni riposter — le HUD l'affiche en rouge. Le ravitaillement (phase 3) remet au plein.

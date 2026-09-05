@@ -26,11 +26,11 @@
 
 import { strategie } from '../ai/index';
 import {
-  appliquer, catalogueDepuis, creerPartie, creerRng, fnv1a,
+  appliquer, catalogueDepuis, chargerCatalogue, creerPartie, creerRng, fnv1a,
   meteoDominante, meteoPossible, sceneDepuis,
   type Action, type Catalogue, type EtatPartie, type EvenementJeu, type Rng,
 } from '../engine/index';
-import { chargerDegats, chargerTerrains, chargerUnites } from '../content/index';
+import { chargerDegats, chargerUnites } from '../content/index';
 import { genererCarte } from '../mapgen/index';
 import { cartes as requetesCartes, unites as requetesUnites } from '../db/requetes/index';
 import type {
@@ -324,8 +324,9 @@ export function scenarioMinimal(carte: MapDef, catalogueVersion = 1, date = '202
 
 /** Le catalogue d'une campagne : le canon, plus l'unité candidate s'il y en a une. */
 export function catalogueAvec(candidat: UnitType | null, version = 1): Catalogue {
-  const unites = chargerUnites();
-  const terrains = chargerTerrains();
+  const base = chargerCatalogue(version);
+  const unites = base.cles.map((c) => base.unites[c]!);
+  const terrains = Object.values(base.terrains);
   if (candidat === null) return catalogueDepuis(version, unites, terrains, chargerDegats());
   // Une unité nouvelle doit pouvoir être produite quelque part, sinon la
   // campagne « avec » est identique à la campagne « sans » et ne mesure rien.

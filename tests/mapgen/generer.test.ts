@@ -164,7 +164,7 @@ test('mécanique : la carte recopie la mécanique régionale des paramètres', (
   assert.equal(carte.mecanique, 'meca_marees');
   assert.equal(carte.generation?.parametres.mecanique, 'meca_marees');
   const sansMecanique = genererCarte({ ...bretagne, mecanique: undefined }, 5);
-  assert.equal(sansMecanique.mecanique, undefined);
+  assert.equal(sansMecanique.mecanique, 'meca_marees');
 });
 
 test('robustesse : des paramètres hors bornes sont ramenés dans les bornes', () => {

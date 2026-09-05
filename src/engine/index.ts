@@ -85,7 +85,8 @@ export {
 } from './regles/mouvement';
 export {
   calculerDegats, crediterJauge, estIndirecte, JAUGE_PAR_PV_INFLIGE,
-  JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, resoudreAttaque,
+  JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
+  type PrevisionDuel,
 } from './regles/combat';
 export {
   avancerCapture, peutCapturerIci, pointsGagnes, reinitialiserCapture, SEUIL_CAPTURE,
@@ -110,8 +111,8 @@ export {
 
 // Hooks, climat, mécaniques
 export {
-  dansCarte, debutTourHooks, finTourHooks, mecaniqueDeLaPartie, surAttaqueHooks,
-  surcoutCase, surMouvementHooks, terrainBrut, terrainLogique,
+  dansCarte, debutTourHooks, finTourHooks, mecaniqueDeLaPartie, signatureTerrain,
+  surAttaqueHooks, surcoutCase, surMouvementHooks, terrainBrut, terrainLogique,
 } from './hooks';
 export {
   avancerClimat, brouillardActif, bulletin, cycleEffectif, effetsSaison,
@@ -134,3 +135,5 @@ export {
   canonique, empreinte, enregistrer as enregistrerPartie, rejouer,
   type ResultatRejeu, type SauvegardeMoteur,
 } from './rejeu';
+
+export { COUT_CONSTRUCTION, terrainConstruction, constructionsPossibles } from './regles/genie';

@@ -34,7 +34,7 @@ test('le lot complet est valide et sans identifiant en double', () => {
   assert.equal(r.ok, true, r.ok ? '' : JSON.stringify(r.erreurs.slice(0, 5), null, 2));
 });
 
-test('les dix unités canon ont chacune leur géométrie de base', () => {
+test('chaque unité du catalogue a sa géométrie de base', () => {
   const unites = chargerUnites();
   for (const u of unites) {
     const spec = specs.find((s) => s.type === 'unite' && s.cle === `${u.cle}_base`);
@@ -52,12 +52,11 @@ test('les dix unités canon ont chacune leur géométrie de base', () => {
   assert.equal(specs.filter((s) => s.type === 'unite').length, unites.length);
 });
 
-test('il y a un kit par couple (nation, unité) : 24 × 10', () => {
+test('il y a un kit par couple (nation, unité), homologations comprises', () => {
   const unites = chargerUnites();
   const pays = chargerPays();
   const kits = specs.filter((s) => s.type === 'kit');
   assert.equal(kits.length, pays.length * unites.length);
-  assert.equal(kits.length, 240);
   for (const p of pays) {
     for (const u of unites) {
       const kit = kits.find((s) => s.id === `kit_${p.code}_${u.cle}`);
@@ -189,7 +188,7 @@ test('le bilan compte toutes les spécifications', () => {
   const total = Object.values(bilan).reduce((a, b) => a + b, 0);
   assert.equal(total, specs.length);
   assert.equal(bilan.effet, 0, 'aucun effet n’est encore spécifié');
-  assert.equal(bilan.kit, 240);
+  assert.equal(bilan.kit, chargerPays().length * chargerUnites().length);
 });
 
 test('la génération est reproductible et triée par identifiant', () => {

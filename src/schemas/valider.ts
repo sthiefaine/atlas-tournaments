@@ -38,7 +38,8 @@ import {
   type CatalogueUnites, type ChaineSource, type ChoixScenario,
   type CleTerrain, type CodePays, type Commander, type Condition, type Consequence,
   type Country,
-  type Deblocage, type Dialogue,
+  DECLENCHEURS_SCENE,
+  type Deblocage, type Dialogue, type SceneDialogue,
   type EffetEvent, type EffetModificateur, type EffetPoserTerrain, type EffetPouvoir,
   type EtatClimat, type Event, type Fil, type Flag,
   type Glossaire, type Locale, type MapDef, type MemoryEntry, type MetriquesPrompt,
@@ -883,9 +884,16 @@ function objectifVictoire(ctx: Contexte, v: unknown, chemin: string): ObjectifVi
       return v as ObjectifVictoire;
     }
     case 'proteger': {
-      const o = objet(ctx, v, chemin, ['type', 'uniteRef']);
+      const o = objet(ctx, v, chemin, ['type', 'uniteRef', 'destination']);
       if (!o || !requis(ctx, o, chemin, ['uniteRef'])) return undefined;
       chaine(ctx, o['uniteRef'], sous(chemin, 'uniteRef'), { max: 48 });
+      if (o['destination'] !== undefined) caseGrille(ctx, o['destination'], sous(chemin, 'destination'));
+      return v as ObjectifVictoire;
+    }
+    case 'relais': {
+      const o = objet(ctx, v, chemin, ['type', 'cases']);
+      if (!o || !requis(ctx, o, chemin, ['cases'])) return undefined;
+      tableau(ctx, o['cases'], sous(chemin, 'cases'), { min: 2, max: 12 }, (e, c) => caseGrille(ctx, e, c));
       return v as ObjectifVictoire;
     }
     case 'points': {
@@ -944,6 +952,37 @@ function dialogue(ctx: Contexte, v: unknown, chemin: string): Dialogue | undefin
   chaine(ctx, o['texte'], sous(chemin, 'texte'), { max: 240 });
   if (presente(o, 'emotion')) enumeration(ctx, o['emotion'], sous(chemin, 'emotion'), EMOTIONS);
   return o as unknown as Dialogue;
+}
+
+/**
+ * Lit une **scène de dialogue** jouée pendant le match.
+ *
+ * Le déclencheur est validé paramètre par paramètre : `journee` doit être une
+ * journée plausible, `unite` une clé du catalogue, `etape` un jalon positif. Un
+ * déclencheur muet — un `journee` sans journée — passerait sinon, et la scène
+ * ne se jouerait jamais sans que personne ne sache pourquoi.
+ */
+function sceneDialogue(ctx: Contexte, v: unknown, chemin: string): SceneDialogue | undefined {
+  const o = objet(ctx, v, chemin, ['cle', 'declencheur', 'repliques']);
+  if (!o || !requis(ctx, o, chemin, ['cle', 'declencheur', 'repliques'])) return undefined;
+  cle(ctx, o['cle'], sous(chemin, 'cle'));
+  tableau(ctx, o['repliques'], sous(chemin, 'repliques'), { min: 1, max: 6 }, (e, c) => dialogue(ctx, e, c));
+
+  const cheminD = sous(chemin, 'declencheur');
+  const d = objet(ctx, o['declencheur'], cheminD, ['type', 'journee', 'camp', 'unite', 'etape']);
+  if (!d || !requis(ctx, d, cheminD, ['type'])) return undefined;
+  const type = enumeration(ctx, d['type'], sous(cheminD, 'type'), DECLENCHEURS_SCENE);
+  if (type === 'journee') {
+    requis(ctx, d, cheminD, ['journee']);
+    entier(ctx, d['journee'], sous(cheminD, 'journee'), { min: 1, max: 60 });
+  }
+  if (type === 'etape') {
+    requis(ctx, d, cheminD, ['etape']);
+    entier(ctx, d['etape'], sous(cheminD, 'etape'), { min: 1, max: 12 });
+  }
+  if (presente(d, 'camp')) entier(ctx, d['camp'], sous(cheminD, 'camp'), { min: 0, max: 3 });
+  if (presente(d, 'unite')) cle(ctx, d['unite'], sous(cheminD, 'unite'));
+  return o as unknown as SceneDialogue;
 }
 
 /** Lit une scène de choix et refuse un choix sans conséquence. */
@@ -1072,8 +1111,8 @@ const CLES_SCENARIO = [
   'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
   'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'fondsDepart',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
-  'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'choix', 'flagsRequis',
-  'flagsInterdits', 'recompenses',
+  'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
+  'choix', 'flagsRequis', 'flagsInterdits', 'recompenses',
 ] as const;
 
 /** Valide un scénario (`03-schemas.md` §6). */
@@ -1186,6 +1225,12 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   tableau(ctx, o['dialogueOuverture'], 'dialogueOuverture', { min: 1, max: 8 }, (e, c) => dialogue(ctx, e, c));
   tableau(ctx, o['dialogueVictoire'], 'dialogueVictoire', { min: 1, max: 6 }, (e, c) => dialogue(ctx, e, c));
   tableau(ctx, o['dialogueDefaite'], 'dialogueDefaite', { min: 1, max: 4 }, (e, c) => dialogue(ctx, e, c));
+  if (presente(o, 'scenesDialogue')) {
+    const scenes = tableau(ctx, o['scenesDialogue'], 'scenesDialogue', { max: 12 }, (e, c) => sceneDialogue(ctx, e, c));
+    // Deux scènes de même clé ne se distingueraient plus : la seconde ne se
+    // jouerait jamais, puisqu'une scène jouée l'est pour toute la partie.
+    sansDoublon(ctx, (scenes ?? []).map((sc) => sc.cle), 'scenesDialogue');
+  }
   // Portée des flags **écrits** — par une récompense comme par une option de choix.
   // Un scénario de pays n'écrit que `pays.<son code>.*` et `monde.*`. Un **match
   // d'incarnation** est plus serré encore : il n'écrit **aucun** flag de la trame

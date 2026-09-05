@@ -169,13 +169,13 @@ export function parametresAmbiance(
     : SOLEIL_SAISON[saison];
   const elevation = borner((nuit ? 40 : 58) + ELEVATION_SAISON[saison] * (nuit ? 0.5 : 1), 12, 82);
   const azimut = nuit ? 302 : 132;
-  const intensiteBase = nuit ? 1.05 : 3.15;
+  const intensiteBase = nuit ? 1.6 : 3.15;
 
   const cielBase = nuit ? '#121d33' : melanger('#b9d6f2', hemi.ciel, 0.45);
   const ciel = melanger(cielBase, m.voile, m.voileForce * (nuit ? 0.5 : 1));
 
   const teinteSol = melanger(
-    nuit ? melanger(SOL_SAISON[saison], '#5f7099', 0.45) : SOL_SAISON[saison],
+    nuit ? melanger(SOL_SAISON[saison], '#8ca5d1', 0.22) : SOL_SAISON[saison],
     m.voile,
     m.voileForce * 0.35,
   );
@@ -190,16 +190,16 @@ export function parametresAmbiance(
       azimut,
     },
     hemisphere: {
-      ciel: nuit ? melanger(hemi.ciel, '#22304f', 0.72) : hemi.ciel,
-      sol: nuit ? teinter(hemi.sol, 0.45) : hemi.sol,
-      intensite: borner((nuit ? 0.62 : 0.95) * (m.facteurIntensite * 0.5 + 0.5), 0, 3),
+      ciel: nuit ? melanger(hemi.ciel, '#6684b1', 0.45) : hemi.ciel,
+      sol: nuit ? teinter(hemi.sol, 0.8) : hemi.sol,
+      intensite: borner((nuit ? 1.1 : 0.95) * (m.facteurIntensite * 0.5 + 0.5), 0, 3),
     },
     ciel,
     brouillard: {
       couleur: melanger(ciel, m.voile, 0.35),
       densite: borner(m.densite + (nuit ? 0.002 : 0), 0, 0.2),
     },
-    exposition: borner((nuit ? 1.02 : 1) * m.facteurExposition, 0.4, 1.8),
+    exposition: borner((nuit ? 1.2 : 1) * m.facteurExposition, 0.4, 1.8),
     teinteSol,
     neigeSol: borner(Math.max(m.neige, saison === 'hiver' ? 0.55 : 0), 0, 1),
     mouille: borner(m.mouille, 0, 1),
@@ -292,7 +292,7 @@ export interface Eclairage {
 }
 
 /** Texture ronde et douce des flocons, poussières et nappes de brume. */
-function textureGrain(doc: Document): THREE.Texture {
+function textureGrain(doc: Document, flocon = false): THREE.Texture {
   const c = doc.createElement('canvas');
   c.width = 64;
   c.height = 64;
@@ -304,6 +304,14 @@ function textureGrain(doc: Document): THREE.Texture {
     grad.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 64);
+    if (flocon) {
+      g.strokeStyle = '#ffffff'; g.lineWidth = 2.5; g.lineCap = 'round';
+      g.translate(32, 32);
+      for (let i = 0; i < 6; i++) {
+        g.rotate(Math.PI / 3); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, 24);
+        g.moveTo(-6, 13); g.lineTo(0, 18); g.lineTo(6, 13); g.stroke();
+      }
+    }
   }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -320,6 +328,7 @@ const PARTICULES_MAX = 2600;
  */
 export function creerEclairage(
   scene: THREE.Scene, doc: Document, depart: ParametresAmbiance,
+  hauteurSol: (x: number, z: number) => number | null = () => 0,
 ): Eclairage {
   const groupe = new THREE.Group();
   groupe.name = 'eclairage';
@@ -351,6 +360,15 @@ export function creerEclairage(
   // --- Particules : des points pour la neige, la poussière et la brume, des
   //     segments pour la pluie et la tempête (une goutte est une traînée).
   const grain = textureGrain(doc);
+  const flocon = textureGrain(doc, true);
+  // Une seule passe instanciée pour les impacts : aucun objet par goutte.
+  const geoImpacts = new THREE.RingGeometry(0.78, 1, 12);
+  geoImpacts.rotateX(-Math.PI / 2);
+  const matImpacts = new THREE.MeshBasicMaterial({ color: '#b5deeb', transparent: true, opacity: 0.26, depthWrite: false, side: THREE.DoubleSide });
+  const impacts = new THREE.InstancedMesh(geoImpacts, matImpacts, 80);
+  impacts.frustumCulled = false; impacts.visible = false; groupe.add(impacts);
+  const matriceImpact = new THREE.Object3D();
+  let tempsImpacts = 0;
   const posPoints = new Float32Array(PARTICULES_MAX * 3);
   const geoPoints = new THREE.BufferGeometry();
   geoPoints.setAttribute('position', new THREE.BufferAttribute(posPoints, 3));
@@ -404,6 +422,7 @@ export function creerEclairage(
     brouillard.color.set(p.brouillard.couleur);
     brouillard.density = p.brouillard.densite;
     scene.background = new THREE.Color(p.ciel);
+    matPoints.map = p.particules.calque === 'neige' ? flocon : grain;
     matPoints.color.set(p.particules.couleur);
     matPoints.size = Math.max(0.01, p.particules.taille);
     matPoints.opacity = p.particules.opacite;
@@ -412,6 +431,7 @@ export function creerEclairage(
     const pluie = p.particules.calque === 'pluie';
     points.visible = p.particules.nombre > 0 && !pluie;
     traits.visible = p.particules.nombre > 0 && pluie;
+    impacts.visible = traits.visible;
   }
 
   appliquer(depart);
@@ -435,6 +455,20 @@ export function creerEclairage(
       const dt = Math.min(0.1, ms / 1000);
       const derive = p.inclinaison * p.vitesse;
       const pluie = p.calque === 'pluie';
+      if (pluie) {
+        tempsImpacts += dt;
+        for (let i = 0; i < 80; i++) {
+          const x = centre.x + ((i * 7.731) % 18) - 9;
+          const z = centre.z + ((i * 3.173) % 18) - 9;
+          const h = hauteurSol(x, z);
+          const age = (tempsImpacts * 1.35 + i * 0.618) % 1;
+          const taille = h === null ? 0 : 0.035 + age * 0.12;
+          matriceImpact.position.set(x, (h ?? 0) + 0.035, z);
+          matriceImpact.scale.setScalar(taille * (1 - age * age));
+          matriceImpact.updateMatrix(); impacts.setMatrixAt(i, matriceImpact.matrix);
+        }
+        impacts.instanceMatrix.needsUpdate = true;
+      }
       for (let i = 0; i < n; i += 1) {
         const b = i * 4;
         let y = (etats[b + 1] ?? 0) - p.vitesse * dt;
@@ -507,6 +541,10 @@ export function creerEclairage(
     avancer,
     dispose: () => {
       grain.dispose();
+      flocon.dispose();
+      geoImpacts.dispose();
+      matImpacts.dispose();
+      impacts.dispose();
       geoPoints.dispose();
       geoTraits.dispose();
       matPoints.dispose();
