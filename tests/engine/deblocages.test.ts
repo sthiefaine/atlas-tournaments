@@ -30,6 +30,8 @@ function profil(surcharge: Partial<ProfilCampagne> = {}): ProfilCampagne {
     secretsTrouves: ['mur_du_vestiaire'],
     paysVisites: ['fr', 'lu', 'ch'],
     modesFinis: ['normal'],
+    relations: { lu: 'alliee', ch: 'rivale', gr: 'retiree' },
+    confiance: { cmd_elsbeth_vonlanthen: 2, cmd_yann_reinert: 3 },
     serieDepeches: 3,
     catalogueVersion: 1,
     chainesVersion: 1,
@@ -86,6 +88,74 @@ test('pays_visite compte les pays de la liste effectivement visités', () => {
   assert.equal(evaluerCondition(trois, p, LE_JOUR), true);
   assert.equal(evaluerCondition({ ...trois, combien: 4 }, p, LE_JOUR), false);
   assert.equal(evaluerCondition({ type: 'pays_visite', pays: ['jp', 'br'], combien: 1 }, p, LE_JOUR), false);
+});
+
+test('relation lit l\'état d\'une nation, et une nation absente est neutre', () => {
+  const p = profil();
+  assert.equal(evaluerCondition({ type: 'relation', pays: ['lu'], relation: 'alliee', combien: 1 }, p, LE_JOUR), true);
+  assert.equal(evaluerCondition({ type: 'relation', pays: ['ch'], relation: 'alliee', combien: 1 }, p, LE_JOUR), false);
+  assert.equal(evaluerCondition({ type: 'relation', pays: ['gr'], relation: 'retiree', combien: 1 }, p, LE_JOUR), true);
+  // `jp` n'est pas dans `relations` : le Japon est neutre, il n'est pas indéfini.
+  assert.equal(evaluerCondition({ type: 'relation', pays: ['jp'], relation: 'neutre', combien: 1 }, p, LE_JOUR), true);
+  assert.equal(evaluerCondition({ type: 'relation', pays: ['jp'], relation: 'alliee', combien: 1 }, p, LE_JOUR), false);
+});
+
+test('la borne « au moins deux alliées » se lit comme une seule condition', () => {
+  const uneSeule = profil();
+  const deux = profil({ relations: { lu: 'alliee', jp: 'alliee', ch: 'rivale' } });
+  const borne: Condition = {
+    type: 'relation', pays: ['lu', 'ch', 'gr', 'jp', 'br'], relation: 'alliee', combien: 2,
+  };
+  assert.equal(evaluerCondition(borne, uneSeule, LE_JOUR), false);
+  assert.equal(evaluerCondition(borne, deux, LE_JOUR), true);
+});
+
+test('une nation alliée ouvre son départ de Nouvelle Ronde', () => {
+  const departJapon: Deblocage = {
+    cle: 'deb_depart_jp',
+    libelle: 'Le Japon comme pays de départ',
+    condition: { type: 'relation', pays: ['jp'], relation: 'alliee', combien: 1 },
+    recompense: { type: 'depart_nation', ref: 'jp' },
+    cache: false,
+  };
+  assert.deepEqual(deblocagesAcquis(profil(), [departJapon], LE_JOUR), []);
+  const allie = profil({ relations: { jp: 'alliee' } });
+  assert.deepEqual(deblocagesAcquis(allie, [departJapon], LE_JOUR), ['deb_depart_jp']);
+});
+
+test('la confiance d’un général absent vaut zéro, jamais indéfini', () => {
+  const p = profil();
+  assert.equal(evaluerCondition({ type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 2 }, p, LE_JOUR), true);
+  assert.equal(evaluerCondition({ type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 3 }, p, LE_JOUR), false);
+  // Un général jamais incarné : zéro, et aucun seuil franchi.
+  assert.equal(evaluerCondition({ type: 'confiance', commandantCle: 'cmd_maelle_kerdraon', min: 1 }, p, LE_JOUR), false);
+});
+
+test('un profil écrit avant l’incarnation reste lisible', () => {
+  // Le champ `confiance` peut manquer : la condition est fausse, pas une exception.
+  const ancien = profil();
+  delete (ancien as Partial<ProfilCampagne>).confiance;
+  assert.equal(evaluerCondition({ type: 'confiance', commandantCle: 'cmd_yann_reinert', min: 1 }, ancien, LE_JOUR), false);
+});
+
+test('une confiance de trois ouvre le départ de Nouvelle Ronde comme une alliance', () => {
+  // Rallier et incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
+  const departSuisse: Deblocage = {
+    cle: 'deb_depart_ch',
+    libelle: 'La Suisse comme pays de départ',
+    condition: {
+      type: 'ou',
+      conditions: [
+        { type: 'relation', pays: ['ch'], relation: 'alliee', combien: 1 },
+        { type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 3 },
+      ],
+    },
+    recompense: { type: 'depart_nation', ref: 'ch' },
+    cache: false,
+  };
+  assert.deepEqual(deblocagesAcquis(profil(), [departSuisse], LE_JOUR), []);
+  const confiant = profil({ confiance: { cmd_elsbeth_vonlanthen: 3 } });
+  assert.deepEqual(deblocagesAcquis(confiant, [departSuisse], LE_JOUR), ['deb_depart_ch']);
 });
 
 test('un secret trouvé satisfait sa condition', () => {

@@ -339,6 +339,16 @@ Le gabarit `exhibition` est **réservé à la Dépêche du jour** : une mission 
 | `trace_carte` | `flagTrace` ∈ `pays.<paysCode>.*`, dans le plafond de trois traces par pays |
 | toutes | 1 à 4 par fil, sans doublon, **jamais un type hors de la liste fermée** |
 
+**3. Des matchs d'incarnation.** La routine lore peut produire, pour une nation **alliée**, un scénario où le joueur la joue entièrement : `Scenario.incarnation = { paysCode, commandantCle }` (`03-schemas.md` §15.2 bis). Elle l'écrit **contre la fiche de cette nation** — son général, son catalogue, sa spécialité, son style, ses flags propres —, exactement comme elle écrit une étape ordinaire contre la fiche du pays hôte : c'est la même matière, lue depuis l'autre banc. Trois choses lui sont imposées, et le schéma les refuse d'office :
+
+| Ce que la routine doit écrire | Pourquoi |
+|---|---|
+| `commandants[camp 0].commandantCle` = `incarnation.commandantCle` | Le joueur joue le général de la nation, pas le sien : sans cela, l'incarnation serait annoncée et non jouée |
+| Des flags **uniquement** en `pays.<incarnation.paysCode>.*` et `cmd.*` | Un match d'incarnation n'écrit jamais un flag de la trame principale du joueur (`08-narration-choix.md` §4.5) — ni en `recompenses.flags`, ni dans une option de `choix` |
+| Un `paysCode` et une carte cohérents avec la nation incarnée | La fiche est celle qu'on joue ; une carte du pays hôte avec le banc d'une autre nation est un contresens de production |
+
+Le ton reste celui de la bible : la délégation **prête son banc** (`01-bible.md` §4.6), elle ne change pas de camp. Un dialogue qui parle d'alliance militaire, de trahison ou de changement de nationalité est un `ton_hors_bible`.
+
 **Trois refus d'office**, appliqués par le schéma avant même la routine contrôle : une conséquence hors liste ou hors bornes ; le gabarit `exhibition` dans un fil ; un flag `monde.depeche.*` ou `monde.secret.*` dans `flagsEcrits`. La routine ne connaît d'ailleurs aucun flag `monde.secret.*` — ils ne sont pas dans `content/flags.json`, donc pas dans ce que sert `GET /api/routines/bible/flags`.
 
 ### 2.4 Cadence et bornes
@@ -896,6 +906,8 @@ Depuis que `motifs` est structuré, la colonne **déclencheur** se lit aussi com
 | `silhouette_invalide` | unité | bloquant | `Silhouette` hors de la liste fermée : base, corps ou module inconnu, plus de 3 modules, `taille` hors de 1–3, ou combinaison impossible à rendre (`rail` sans module, `rotor` avec `chenilles`) |
 | `simulation_plantee` | système | bloquant | la campagne de simulation n'a pas abouti |
 | `objet_incomprehensible` | système | — | objet incompréhensible, renvoyé à un humain |
+
+**La borne des flags d'un match d'incarnation se vérifie deux fois.** Un scénario porteur d'`incarnation` qui écrit un flag `monde.*`, ou le flag d'une autre nation que celle qu'il fait jouer, est refusé **au schéma** (`validerScenario`) avant même d'atteindre un verdict — c'est la première barrière, et elle est mécanique. Le contrôle vérifie la seconde fois, sur le contenu déjà validé : que le général incarné est bien celui du camp du joueur, que la nation incarnée est `alliee` au point du parcours où le scénario s'ouvre, et qu'aucun dialogue ne fait franchir une bascule de la trame principale. Un manquement se rejette en **`contredit_canon`** (bloquant) : le catalogue de motifs ne bouge pas pour autant, une borne du brief n'ayant pas besoin d'un code à elle. **[Proposition]**
 
 Trois codes portent une **alerte humaine** : `sujet_interdit`, `personne_reelle`, `categorie_hors_liste_blanche`. Leur apparition notifie l'administration immédiatement et gèle la promotion de tout prompt candidat de la routine concernée jusqu'à revue.
 

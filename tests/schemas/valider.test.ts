@@ -18,7 +18,8 @@ import {
   flagRivalRespecte, glossaireJa, localeZh, memoireCartesCompactes, missionDuJour,
   parametresBretagne, paysFr, profilCampagneFr, promptMap, regionBretagne, reviewCarte,
   sauvegarde,
-  scenarioBretagne, terrainForet, traductionPouvoir, uniteCharLeger,
+  scenarioBretagne, scenarioIncarnationCh, terrainForet, traductionPouvoir,
+  uniteCharLeger,
 } from './exemples';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -134,6 +135,23 @@ const suites: Suite[] = [
       { titre: 'un brouillard levé en difficile', muter: (o) => { o['modes']['normal']['brouillard'] = true; o['modes']['difficile']['brouillard'] = false; }, chemin: 'modes.difficile.brouillard' },
       { titre: 'une limite de journées relâchée en difficile', muter: (o) => { o['modes']['difficile']['limiteJournees'] = 30; }, chemin: 'modes.difficile.limiteJournees' },
       { titre: 'un mode difficile absent', muter: (o) => { delete o['modes']['difficile']; }, chemin: 'modes.difficile' },
+      { titre: 'une option de choix qui écrit le flag d’un autre pays', muter: (o) => { o['choix'][0]['options'][0]['ecritFlags'][0]['cle'] = 'pays.lu.sponsor_accepte'; }, chemin: 'choix[0].options[0].ecritFlags[0].cle' },
+    ],
+  },
+  {
+    // Les bornes du match d'incarnation (`BRIEF.md`, « Le joueur et le départ ») :
+    // le général incarné au camp du joueur, et aucun flag de la trame principale.
+    nom: 'Scenario (incarnation)',
+    valider: validerScenario,
+    valide: scenarioIncarnationCh,
+    invalides: [
+      { titre: 'une récompense qui écrit un flag de la trame principale', muter: (o) => { o['recompenses']['flags'] = ['monde.tournoi.serie_propre']; }, chemin: 'recompenses.flags[0]' },
+      { titre: 'un choix qui écrit un flag de la trame principale', muter: (o) => { o['choix'][0]['options'][0]['ecritFlags'][0]['cle'] = 'monde.atlas.soupcon'; }, chemin: 'choix[0].options[0].ecritFlags[0].cle' },
+      { titre: 'un flag d’une nation autre que la nation incarnée', muter: (o) => { o['recompenses']['flags'] = ['pays.fr.tour_complet']; }, chemin: 'recompenses.flags[0]' },
+      { titre: 'le commandant du joueur au lieu du général incarné', muter: (o) => { o['commandants'][0]['commandantCle'] = 'cmd_camille_aubertin'; }, chemin: 'commandants[0].commandantCle' },
+      { titre: 'une incarnation sans général', muter: (o) => { delete o['incarnation']['commandantCle']; }, chemin: 'incarnation.commandantCle' },
+      { titre: 'une incarnation dont le général n’est pas un code de commandant', muter: (o) => { o['incarnation']['commandantCle'] = 'elsbeth'; }, chemin: 'incarnation.commandantCle' },
+      { titre: 'une incarnation sur un code pays mal formé', muter: (o) => { o['incarnation']['paysCode'] = 'SUI'; }, chemin: 'incarnation.paysCode' },
     ],
   },
   {
@@ -299,6 +317,8 @@ const suites: Suite[] = [
       { titre: 'une conséquence hors de la liste fermée', muter: (o) => { o['consequences'][0] = { type: 'nouvelle_regle', ref: 'x' }; }, chemin: 'consequences[0].type' },
       { titre: 'une remise à la production hors bornes', muter: (o) => { o['consequences'][0] = { type: 'remise_production', uniteCle: 'char_leger', remise: 0.4 }; }, chemin: 'consequences[0].remise' },
       { titre: 'trois unités offertes', muter: (o) => { o['consequences'][0] = { type: 'unite_offerte', uniteCle: 'char_lourd', combien: 3 }; }, chemin: 'consequences[0].combien' },
+      { titre: 'un fil qui retire une nation de la Ronde', muter: (o) => { o['consequences'][0] = { type: 'relation_nation', paysCode: 'gr', relation: 'retiree' }; }, chemin: 'consequences[0].relation' },
+      { titre: 'un fil qui remet une nation à neutre', muter: (o) => { o['consequences'][0] = { type: 'relation_nation', paysCode: 'gr', relation: 'neutre' }; }, chemin: 'consequences[0].relation' },
       { titre: 'un fil qui écrit un flag de Dépêche', muter: (o) => { o['flagsEcrits'][0] = 'monde.depeche.serie'; }, chemin: 'flagsEcrits[0]' },
       { titre: 'un fil qui pose un flag de secret', muter: (o) => { o['flagsEcrits'][0] = 'monde.secret.mur_du_vestiaire'; }, chemin: 'flagsEcrits[0]' },
       { titre: 'une condition trop imbriquée', muter: (o) => {
@@ -329,7 +349,12 @@ const suites: Suite[] = [
       { titre: 'un mode inconnu', muter: (o) => { o['condition'] = { type: 'mode_fini', mode: 'cauchemar' }; }, chemin: 'condition.mode' },
       { titre: 'un général secret référencé sans code de commandant', muter: (o) => { o['recompense']['ref'] = 'nera'; }, chemin: 'recompense.ref' },
       { titre: 'un type de récompense inconnu', muter: (o) => { o['recompense']['type'] = 'trophee'; }, chemin: 'recompense.type' },
+      { titre: 'un départ de Nouvelle Ronde qui ne référence pas un pays', muter: (o) => { o['recompense'] = { type: 'depart_nation', ref: 'japon' }; }, chemin: 'recompense.ref' },
+      { titre: 'une condition de relation inatteignable', muter: (o) => { o['condition'] = { type: 'relation', pays: ['jp'], relation: 'alliee', combien: 2 }; }, chemin: 'condition.combien' },
+      { titre: 'un état de relation inconnu en condition', muter: (o) => { o['condition'] = { type: 'relation', pays: ['jp'], relation: 'boudeuse', combien: 1 }; }, chemin: 'condition.relation' },
       { titre: 'un `ou` à une seule branche', muter: (o) => { o['condition'] = { type: 'ou', conditions: [{ type: 'flag', cle: 'monde.cinquieme.contact' }] }; }, chemin: 'condition.conditions' },
+      { titre: 'une confiance au-delà de trois', muter: (o) => { o['condition'] = { type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 4 }; }, chemin: 'condition.min' },
+      { titre: 'une confiance envers autre chose qu’un commandant', muter: (o) => { o['condition'] = { type: 'confiance', commandantCle: 'ch', min: 3 }; }, chemin: 'condition.commandantCle' },
     ],
   },
   {
@@ -343,6 +368,14 @@ const suites: Suite[] = [
       { titre: 'un fil à la fois en cours et fini', muter: (o) => { o['filsFinis'].push('fil_plume_regie'); }, chemin: 'filsEnCours' },
       { titre: 'une étape de fil au-delà de huit', muter: (o) => { o['filsEnCours'][0]['etape'] = 9; }, chemin: 'filsEnCours[0].etape' },
       { titre: 'un pays visité deux fois', muter: (o) => { o['paysVisites'].push('fr'); }, chemin: 'paysVisites[3]' },
+      { titre: 'six nations retirées', muter: (o) => { o['relations'] = { lu: 'retiree', ch: 'retiree', gr: 'retiree', jp: 'retiree', br: 'retiree', ma: 'retiree' }; }, chemin: 'relations' },
+      { titre: 'un état de relation inconnu', muter: (o) => { o['relations']['lu'] = 'fachee'; }, chemin: 'relations.lu' },
+      { titre: 'le pays de départ traité comme une relation', muter: (o) => { o['relations']['fr'] = 'alliee'; }, chemin: 'relations.fr' },
+      { titre: 'une relation sur un code pays mal formé', muter: (o) => { o['relations']['LUX'] = 'alliee'; }, chemin: 'relations.LUX' },
+      { titre: 'une confiance au-delà de trois', muter: (o) => { o['confiance']['cmd_yann_reinert'] = 4; }, chemin: 'confiance.cmd_yann_reinert' },
+      { titre: 'une confiance négative', muter: (o) => { o['confiance']['cmd_yann_reinert'] = -1; }, chemin: 'confiance.cmd_yann_reinert' },
+      { titre: 'une confiance rangée sous un pays plutôt qu’un général', muter: (o) => { o['confiance']['ch'] = 2; }, chemin: 'confiance.ch' },
+      { titre: 'une confiance absente', muter: (o) => { delete o['confiance']; }, chemin: 'confiance' },
       { titre: 'une version de chaînes absente', muter: (o) => { delete o['chainesVersion']; }, chemin: 'chainesVersion' },
       { titre: 'un champ inconnu dans la sauvegarde', muter: (o) => { o['heuresJouees'] = 80; }, chemin: 'heuresJouees' },
     ],
@@ -378,4 +411,28 @@ test('un validateur refuse une valeur qui n\'est même pas un objet', () => {
     assert.equal(r.ok, false);
     if (!r.ok) assert.equal(r.erreurs[0]?.chemin, '');
   }
+});
+
+test('un départ de Nouvelle Ronde s\'ouvre aussi sur une confiance de trois', () => {
+  // Rallier et incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
+  const r = validerDeblocage({
+    cle: 'deb_depart_ch',
+    libelle: 'La Suisse comme pays de départ',
+    condition: {
+      type: 'ou',
+      conditions: [
+        { type: 'relation', pays: ['ch'], relation: 'alliee', combien: 1 },
+        { type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 3 },
+      ],
+    },
+    recompense: { type: 'depart_nation', ref: 'ch' },
+    cache: false,
+  });
+  assert.equal(r.ok, true, r.ok ? '' : JSON.stringify(r.erreurs, null, 2));
+});
+
+test('un scénario ordinaire garde le droit d\'écrire un flag de monde', () => {
+  // La borne des flags est celle de l'incarnation, pas une restriction générale.
+  const r = validerScenario(scenarioBretagne);
+  assert.equal(r.ok, true, r.ok ? '' : JSON.stringify(r.erreurs, null, 2));
 });

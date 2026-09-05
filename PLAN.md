@@ -18,7 +18,7 @@ Fil conducteur : **le moteur et le contrôle avant le contenu, le contenu avant 
 | 5 | Serveur et administration | Base, API des routines, file de validation, prompts versionnés | 0 |
 | 6 | Routine map + routine contrôle en ligne | Les deux routines tournent en tâches planifiées et remplissent une réserve de cartes | 2, 5 |
 | 7 | La France : 18 régions | Le tour de France jouable de bout en bout, avec ses mécaniques régionales | 3, 6 |
-| 8 | Routine lore + 24 départs | Les 24 pays de départ ont un prologue, un commandant, un rival, des flags | 7 |
+| 8 | Routine lore + 24 nations | Le départ français a son prologue ; les 24 fiches ont un commandant, un rival, des flags, et de quoi tenir leur rôle de relation | 7 |
 | 9 | Voyage, choix et **campagne** | Carte du monde, carnet, conséquences, trois actes, fins, **modes, fils, déblocages, et un budget d'heures mesuré** | 8 |
 | 10 | Le cerveau et le jeu vivant | Routine amélioration / mémoire / prompts, la Dépêche du jour, l'Homologation | 6, 8 |
 | 11 | Paquet naval | Unités et terrains de mer, spécialités maritimes des pays et régions | 7, 10 |
@@ -112,15 +112,19 @@ Implémenter les mécaniques régionales de `doc/07-france-regions.md` sur les c
 
 Fini quand : le tour de France se joue de bout en bout, chaque mécanique régionale a un test unitaire et un test de simulation, et le contrôle certifie les 18 cartes principales.
 
-## Étape 8 — Routine lore et 24 pays de départ
+## Étape 8 — Routine lore et les 24 nations
 
-Les fiches `Country` des 24 pays de `doc/06-pays-de-depart.md` en JSON dans `content/`. La routine lore en tâche planifiée : commandant, prologue, rival, dialogues, flags, écrits contre la bible et validés par le contrôle (ton, sensibilité, cohérence). Écran de choix du pays de départ. Les quatre pays phares (France, Luxembourg, Japon, Brésil) reçoivent un prologue écrit à la main.
+Les fiches `Country` des 24 pays de `doc/06-pays-de-depart.md` en JSON dans `content/`. La routine lore en tâche planifiée : commandant, prologue, rival, dialogues, flags, écrits contre la bible et validés par le contrôle (ton, sensibilité, cohérence). Les quatre pays phares (France, Luxembourg, Japon, Brésil) reçoivent un prologue écrit à la main.
 
-Fini quand : les 24 départs se jouent, chacun avec un prologue différent, et aucun texte généré n'a franchi la charte de sensibilité sans être bloqué.
+**Il n'y a pas d'écran de choix du pays de départ à cette étape** (`BRIEF.md`, « Le joueur et le départ », révisé le 5 septembre 2026 au soir) : **tout le monde part de France**. Les 24 fiches servent d'abord de **relations** pendant la campagne (étape 9), puis de départs débloqués en Nouvelle Ronde. La priorité de cette étape est donc la France, puis ce que chaque fiche doit dire pour tenir son rôle de relation : ce qu'elle apporte alliée (commandant, unité spéciale, carte de terrain), ce qu'elle coûte rivale, ce qui s'éteint quand elle se retire.
+
+Fini quand : le départ français se joue avec son prologue écrit à la main, les 24 fiches passent leur validateur et portent ce qu'il faut pour être des relations jouables, et aucun texte généré n'a franchi la charte de sensibilité sans être bloqué.
 
 ## Étape 9 — Voyage, choix et campagne
 
 Carte du monde avec choix de la prochaine destination parmi deux ou trois, actes par continent, système de flags et carnet de voyage de `doc/08-narration-choix.md`, réputation par commandant, co-commandants, traces persistantes sur les cartes, la trame de la faction dissidente en trois actes, les fins.
+
+**Le voyage porte les relations de nation, et c'est le gros morceau nouveau de l'étape.** Tout le monde part de France ; les 24 nations sont des **relations** (`RelationNation = 'neutre' | 'alliee' | 'rivale' | 'retiree'`, `doc/03-schemas.md` §15.3 bis) calculées depuis les flags par le moteur ou le serveur, **jamais par le rendu**, et affichées sur la carte du monde. Une nation alliée prête son commandant en co-commandant, rend son unité spéciale produisible (quantité bornée par match), donne sa carte de terrain et son soutien à l'acte III ; une rivale revient avec un grief et peut fermer sa destination ; une retirée éteint la sienne et manque à l'acte III. Bornes tenues : **au plus cinq retirées** (refusé par `validerProfilCampagne`), **au moins deux alliées** avant l'acte III (garanti par la colonne vertébrale), **jamais de fin inaccessible**. Et une nation ralliée ouvre son départ de **Nouvelle Ronde** par un `Deblocage` de récompense `depart_nation` — c'est là, et seulement là, qu'un écran de choix du pays de départ a un sens.
 
 **La campagne est fusionnée dans cette étape, elle n'en est pas une de plus.** C'est délibéré : une campagne sans carte du monde, sans actes et sans fins n'a rien à quoi s'accrocher, et un voyage sans budget d'heures ne se mesure pas. `doc/13-campagne.md` fait foi. Ce que l'étape ajoute au voyage :
 
@@ -130,11 +134,11 @@ Carte du monde avec choix de la prochaine destination parmi deux ou trois, actes
 - **Le système de déblocage** (`src/engine/deblocages.ts`) : conditions composables évaluées par le moteur ou le serveur, **jamais par le rendu**, et sans jamais lire l'horloge — la date vient de l'appelant. Il ouvre les généraux secrets, les cartes, les skins, les fils et les modes.
 - **Dix généraux secrets**, équilibrés comme les autres et **jamais indispensables** : aucune fin, aucun fil, aucune destination n'en dépend.
 - **Les easter eggs** (`doc/14-secrets.md`), codés à la main, jamais générés, jamais servis aux routines.
-- **La sauvegarde de campagne** `ProfilCampagne` : pays de départ, mode, flags, déblocages, fils en cours, scénarios finis, `catalogueVersion` et `chainesVersion` figées.
+- **La sauvegarde de campagne** `ProfilCampagne` : pays de départ, mode, flags, déblocages, fils en cours, scénarios finis, **`relations`**, `catalogueVersion` et `chainesVersion` figées.
 
 **Le budget d'heures est un critère de fin, pas une intention.** Chaque scénario porte une `dureeVisee` en minutes ; la routine contrôle la confronte à la simulation ; l'addition de ces durées est le budget. La cible de campagne complète est **82 h en `normal`** sur 119 missions (`doc/13-campagne.md` §2.2), et la recommandation est de **lancer à ≈ 33 h** — 49 missions, **deux fins atteignables** — puis de croître de 12 à 15 h par mois. C'est cette recommandation, et pas les 82 h, qui est le critère de fin de l'étape.
 
-Fini quand : deux parties menées avec des choix opposés aboutissent à deux fins différentes et le carnet explique pourquoi ; le lot de lancement **totalise au moins 30 h mesurées** en `normal`, **toutes ses missions certifiées dans les deux modes** ; un joueur qui n'a débloqué aucun général secret et joué aucun fil atteint la même fin qu'un joueur qui les a tous faits, à choix de voyage identiques ; et aucune production de routine n'a posé un flag `monde.secret.*` ni franchi une borne de `Consequence`.
+Fini quand : deux parties menées avec des choix opposés aboutissent à deux fins différentes et le carnet explique pourquoi ; une partie jouée au pire finit avec cinq nations retirées, deux alliées et **une fin quand même** ; une nation ralliée ouvre bien son départ de Nouvelle Ronde ; le lot de lancement **totalise au moins 30 h mesurées** en `normal`, **toutes ses missions certifiées dans les deux modes** ; un joueur qui n'a débloqué aucun général secret et joué aucun fil atteint la même fin qu'un joueur qui les a tous faits, à choix de voyage identiques ; et aucune production de routine n'a posé un flag `monde.secret.*` ni franchi une borne de `Consequence`.
 
 ## Étape 10 — Le cerveau et le jeu vivant
 

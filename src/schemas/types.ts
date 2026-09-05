@@ -605,6 +605,32 @@ export const STRATEGIES_IA = ['gloutonne', 'ponderee', 'agressive', 'defensive']
 export type StrategieIa = typeof STRATEGIES_IA[number];
 
 /**
+ * Match d'**incarnation** : le joueur joue entièrement une nation alliée (`BRIEF.md`,
+ * « Le joueur et le départ »).
+ *
+ * Le camp du joueur prend **le général de cette nation** — ses pouvoirs et sa jauge —,
+ * **son catalogue** (unité spéciale comprise), sa spécialité et son style visuel ; le
+ * commandant d'origine du joueur reste au banc en **co-commandant passif**, de sorte
+ * que le lien avec sa campagne ne se perd jamais.
+ *
+ * Trois bornes, toutes tenues ailleurs qu'ici :
+ *
+ * 1. **Aucun flag de la trame principale.** Un scénario d'incarnation n'écrit que
+ *    `pays.<paysCode>.*` et `cmd.*` — jamais `monde.*`. C'est un invariant de schéma,
+ *    refusé par `validerScenario` (`08-narration-choix.md` §4.5).
+ * 2. **La nation incarnée ne se retire pas pendant qu'on la joue** : garantie de
+ *    contenu, portée par la colonne vertébrale (`13-campagne.md` §3.4).
+ * 3. **Incarner est toujours proposé, jamais imposé**, sauf à l'acte III où le joueur
+ *    choisit à chaque bataille parmi ses alliées.
+ */
+export interface Incarnation {
+  /** La nation jouée. Une nation `alliee` du profil, jamais celle du joueur. */
+  paysCode: CodePays;
+  /** Son général, celui que prend le camp du joueur. Forme `cmd_<prenom>_<nom>`. */
+  commandantCle: Cle;
+}
+
+/**
  * Scénario : une mission jouable, sa carte, son climat, ses objectifs et ses choix.
  *
  * Les champs de campagne (`doc/13-campagne.md`) sont facultatifs pour ne pas invalider
@@ -624,6 +650,11 @@ export interface Scenario extends Enveloppe {
   gabarit?: CleGabarit;
   dureeVisee?: number;
   modes?: ModesScenario;
+  /**
+   * Présent, ce scénario est un **match d'incarnation** : le joueur joue la nation
+   * désignée, avec son général au camp 0. Voir `Incarnation`.
+   */
+  incarnation?: Incarnation;
   paysCode: CodePays;
   regionCle?: Cle;
   carteCle: Cle;
@@ -1251,11 +1282,52 @@ export interface CatalogueGabarits {
   gabarits: GabaritMission[];
 }
 
+/**
+ * État de relation d'une nation avec le joueur (`BRIEF.md`, « Le joueur et le
+ * départ », révisé le 5 septembre 2026 au soir).
+ *
+ * Tout le monde part de France ; les vingt-quatre nations ne sont donc pas un menu
+ * de départ mais des **relations** qui évoluent au fil des choix, et qui se voient
+ * sur la carte du monde. Une nation `alliee` prête son commandant en co-commandant,
+ * rend son unité spéciale produisible (quantité bornée par match), donne sa carte de
+ * terrain et son soutien à l'acte III, et **se débloque comme départ de Nouvelle
+ * Ronde**. Une `rivale` revient avec un grief et peut fermer une destination. Une
+ * `retiree` a quitté la Ronde à cause du joueur : destination fermée, territoire
+ * grisé, absence ou passage à la Cinquième Manche à l'acte III.
+ */
+export const RELATIONS_NATION = ['neutre', 'alliee', 'rivale', 'retiree'] as const;
+/** L'un des quatre états de relation d'une nation. */
+export type RelationNation = typeof RELATIONS_NATION[number];
+
+/**
+ * Bornes anti-blocage des relations (`BRIEF.md`). `retireesMax` est un invariant de
+ * schéma, vérifié par `validerProfilCampagne` ; `allieesGaranties` est une garantie
+ * de **contenu** portée par la colonne vertébrale (`13-campagne.md` §3.4) — un profil
+ * au tout début d'une partie n'a légitimement aucune alliée, le schéma ne peut donc
+ * pas l'exiger.
+ */
+export const BORNES_RELATIONS = {
+  /** Au plus cinq nations retirées par partie : jamais de fin rendue inaccessible. */
+  retireesMax: 5,
+  /** Au moins deux alliées avant l'acte III, garanties par la colonne vertébrale. */
+  allieesGaranties: 2,
+} as const;
+
+/**
+ * Ce qu'une conséquence de fil a le droit de poser comme relation. Un fil rallie ou
+ * fâche ; il ne **retire** jamais une nation (un retrait vient des choix de la
+ * campagne principale) et ne remet jamais une relation à `neutre` — une conséquence
+ * qui ne change rien n'est pas une conséquence.
+ */
+export const RELATIONS_CONSEQUENCE = ['alliee', 'rivale'] as const;
+/** Relation qu'une conséquence de fil peut poser. */
+export type RelationConsequence = typeof RELATIONS_CONSEQUENCE[number];
+
 /** Union fermée des conséquences qu'un fil peut avoir sur la campagne (`BRIEF.md`). */
 export const TYPES_CONSEQUENCE = [
   'variante_dialogue', 'co_commandant', 'unite_offerte', 'trace_carte',
   'remise_production', 'objectif_alternatif', 'allie_acte_iii', 'entree_carnet',
-  'deblocage',
+  'deblocage', 'relation_nation',
 ] as const;
 /** Type d'une conséquence de fil. */
 export type TypeConsequence = typeof TYPES_CONSEQUENCE[number];
@@ -1281,11 +1353,23 @@ export type Consequence =
   | { type: 'objectif_alternatif'; scenarioCle: Cle; objectif: ObjectifVictoire }
   | { type: 'allie_acte_iii'; paysCode: CodePays }
   | { type: 'entree_carnet'; carnetCle: Cle }
-  | { type: 'deblocage'; deblocageCle: Cle };
+  | { type: 'deblocage'; deblocageCle: Cle }
+  | { type: 'relation_nation'; paysCode: CodePays; relation: RelationConsequence };
+
+/**
+ * La **confiance** d'un général envers le joueur, de 0 à 3 (`BRIEF.md`, « Le joueur
+ * et le départ »). Elle monte en incarnant sa nation, et elle est bornée : à 3, le
+ * général devient co-commandant **à jauge entière** et sa nation se débloque comme
+ * départ de Nouvelle Ronde (`13-campagne.md` §3.5).
+ */
+export const CONFIANCE_MAX = 3;
+/** Un des quatre niveaux de confiance d'un général. */
+export type NiveauConfiance = 0 | 1 | 2 | 3;
 
 /** Types de condition composables d'un `Deblocage` (`BRIEF.md`). Liste fermée. */
 export const TYPES_CONDITION = [
-  'flag', 'compteur', 'mode_fini', 'date', 'pays_visite', 'secret', 'et', 'ou',
+  'flag', 'compteur', 'mode_fini', 'date', 'pays_visite', 'secret', 'relation',
+  'confiance', 'et', 'ou',
 ] as const;
 /** Type d'une condition de déblocage. */
 export type TypeCondition = typeof TYPES_CONDITION[number];
@@ -1304,12 +1388,23 @@ export type Condition =
   | { type: 'date'; du?: DateIso; au?: DateIso }
   | { type: 'pays_visite'; pays: CodePays[]; combien: number }
   | { type: 'secret'; cle: Cle }
+  | { type: 'relation'; pays: CodePays[]; relation: RelationNation; combien: number }
+  | { type: 'confiance'; commandantCle: Cle; min: NiveauConfiance }
   | { type: 'et'; conditions: Condition[] }
   | { type: 'ou'; conditions: Condition[] };
 
-/** Ce qu'un déblocage ouvre. Liste fermée. */
+/**
+ * Ce qu'un déblocage ouvre. Liste fermée.
+ *
+ * `depart_nation` est la porte de la **Nouvelle Ronde** : une nation devenue alliée
+ * pendant une partie s'ouvre comme pays de départ pour la suivante. Sa `ref` est un
+ * `CodePays`, jamais une `Cle`. Elle s'ouvre indifféremment sur une `relation`
+ * `alliee` ou sur une `confiance` de `CONFIANCE_MAX` envers son général : rallier et
+ * incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
+ */
 export const TYPES_RECOMPENSE_DEBLOCAGE = [
-  'general_secret', 'carte', 'carte_terrain', 'skin_style', 'fil', 'mode', 'entree_carnet',
+  'general_secret', 'carte', 'carte_terrain', 'skin_style', 'fil', 'mode',
+  'entree_carnet', 'depart_nation',
 ] as const;
 /** Type de récompense d'un déblocage. */
 export type TypeRecompenseDeblocage = typeof TYPES_RECOMPENSE_DEBLOCAGE[number];
@@ -1338,7 +1433,7 @@ export interface EtapeFil {
  * condition d'ouverture et des conséquences bornées sur la campagne principale.
  *
  * Contrairement à la Dépêche du jour, **un fil écrit des flags de campagne**
- * (`01-bible.md` §4.6, `08-narration-choix.md` §4.4).
+ * (`01-bible.md` §4.7, `08-narration-choix.md` §4.4).
  */
 export interface Fil extends Enveloppe {
   code: Cle;
@@ -1387,6 +1482,24 @@ export interface ProfilCampagne {
   paysVisites: CodePays[];
   /** Modes dans lesquels ce profil a déjà mené une campagne à son terme. */
   modesFinis: Mode[];
+  /**
+   * L'état de relation de chaque nation avec le joueur, par code pays. Une nation
+   * absente est `neutre` : ne l'avoir jamais croisée et n'avoir rien décidé la
+   * concernant sont la même chose. Le champ est **calculé** par le moteur ou le
+   * serveur depuis les flags (respect, grief, choix), jamais par le rendu, et il ne
+   * contient jamais `paysDepart` — la nation du joueur n'est pas une relation.
+   * Invariant de schéma : au plus `BORNES_RELATIONS.retireesMax` nations `retiree`.
+   */
+  relations: Record<CodePays, RelationNation>;
+  /**
+   * La confiance de chaque général envers le joueur, par clé de commandant, de 0 à
+   * `CONFIANCE_MAX`. Elle monte en **incarnant** sa nation (`Scenario.incarnation`).
+   * Un général absent est à 0 : ne l'avoir jamais incarné et ne pas avoir sa
+   * confiance sont la même chose, comme un compteur absent vaut zéro. À
+   * `CONFIANCE_MAX`, il devient co-commandant à **jauge entière** et sa nation
+   * s'ouvre comme départ de Nouvelle Ronde.
+   */
+  confiance: Record<Cle, NiveauConfiance>;
   /** Compteur de Dépêches enchaînées : vit au profil, hors flags de campagne. */
   serieDepeches: number;
   catalogueVersion: number;

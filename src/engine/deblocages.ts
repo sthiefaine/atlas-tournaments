@@ -20,7 +20,7 @@
  */
 
 import type {
-  Cle, CodePays, Condition, DateIso, Deblocage, Mode, ProfilCampagne,
+  Cle, CodePays, Condition, DateIso, Deblocage, Mode, ProfilCampagne, RelationNation,
 } from '../schemas/types';
 
 /**
@@ -54,6 +54,30 @@ function visite(profil: ProfilCampagne, pays: CodePays): boolean {
   return profil.paysVisites.includes(pays);
 }
 
+/**
+ * L'état de relation d'une nation dans ce profil.
+ *
+ * Une nation absente de `relations` est `neutre` : ne l'avoir jamais croisée et
+ * n'avoir rien décidé la concernant sont la même chose, exactement comme un compteur
+ * absent vaut zéro (`08-narration-choix.md` §2.1).
+ */
+function relation(profil: ProfilCampagne, pays: CodePays): RelationNation {
+  return profil.relations[pays] ?? 'neutre';
+}
+
+/**
+ * La confiance d'un général envers le joueur, de 0 à `CONFIANCE_MAX`.
+ *
+ * Un général absent de `confiance` est à zéro : ne l'avoir jamais incarné et ne pas
+ * avoir sa confiance sont la même chose (`BRIEF.md`, « Le joueur et le départ »).
+ * Le champ lui-même peut manquer — un profil écrit par une version antérieure à
+ * l'incarnation reste lisible, il ouvre simplement moins de choses.
+ */
+function confiance(profil: ProfilCampagne, commandantCle: Cle): number {
+  const v = profil.confiance?.[commandantCle];
+  return typeof v === 'number' ? v : 0;
+}
+
 /** Vrai si le profil a mené une campagne à son terme dans ce mode. */
 function modeFini(profil: ProfilCampagne, mode: Mode): boolean {
   return profil.modesFinis.includes(mode);
@@ -62,8 +86,8 @@ function modeFini(profil: ProfilCampagne, mode: Mode): boolean {
 /**
  * Évalue une condition composable contre un profil de campagne.
  *
- * Les huit types sont ceux du brief : `flag`, `compteur`, `mode_fini`, `date`,
- * `pays_visite`, `secret`, `et`, `ou`. Un `et` vide est vrai (toutes ses conditions
+ * Les dix types sont ceux du brief : `flag`, `compteur`, `mode_fini`, `date`,
+ * `pays_visite`, `secret`, `relation`, `confiance`, `et`, `ou`. Un `et` vide est vrai (toutes ses conditions
  * sont satisfaites, il n'y en a aucune) ; un `ou` vide est faux (aucune ne l'est).
  * C'est la convention usuelle, et `validerCondition` interdit de toute façon les
  * listes de moins de deux entrées.
@@ -98,6 +122,22 @@ export function evaluerCondition(
     }
     case 'secret':
       return profil.secretsTrouves.includes(condition.cle);
+    case 'relation': {
+      // « Au moins `combien` de ces nations sont dans cet état. » C'est ainsi qu'une
+      // nation alliée ouvre son départ de Nouvelle Ronde (`13-campagne.md` §3.5) et
+      // que la borne « au moins deux alliées » se lit sans code particulier.
+      let n = 0;
+      for (const pays of condition.pays) {
+        if (relation(profil, pays) === condition.relation) n += 1;
+        if (n >= condition.combien) return true;
+      }
+      return n >= condition.combien;
+    }
+    case 'confiance':
+      // Incarner une nation fait monter la confiance de son général ; à
+      // `CONFIANCE_MAX`, elle ouvre le co-commandant à jauge entière et le départ de
+      // Nouvelle Ronde, exactement par où passe une relation `alliee`.
+      return confiance(profil, condition.commandantCle) >= condition.min;
     case 'et':
       return condition.conditions.every((c) => evaluerCondition(c, profil, contexte));
     case 'ou':

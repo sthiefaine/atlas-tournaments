@@ -8,7 +8,7 @@
 
 Dans ce monde, les nations ne se font plus la guerre : elles se rencontrent sur un terrain. Tous les quatre ans, l'organisation **Atlas** emmène le tournoi mondial de **Jeux Tactiques** autour de la planète, et chaque pays reçoit les autres chez lui, sur son sol, avec ses montagnes, ses fleuves, ses digues et ses trains.
 
-Vous êtes un jeune commandant. Vous choisissez le pays que vous représentez parmi vingt-quatre, vous gagnez votre place en sélection nationale, puis vous partez : un continent après l'autre, une destination choisie parmi deux ou trois à chaque étape, un match par étape, et un carnet de voyage qui se remplit de tout ce que vous avez décidé en chemin.
+Vous êtes un jeune commandant, et vous commencez par la France : vous gagnez votre place en sélection nationale sur les dix-huit régions, puis vous partez : un continent après l'autre, une destination choisie parmi deux ou trois à chaque étape, un match par étape, et un carnet de voyage qui se remplit de tout ce que vous avez décidé en chemin. Les vingt-trois autres nations ne sont pas un menu au départ : ce sont des **relations** que vous nouez en route — alliées, rivales, ou retirées de la Ronde par votre faute. Celles que vous ralliez s'ouvrent comme pays de départ pour votre **prochaine Ronde**.
 
 Parce qu'on ne traverse pas le monde sans rien laisser derrière soi. Le rival que vous avez écrasé revient avec une dent contre vous ; celui à qui vous avez laissé sauver la face revient s'asseoir à côté de vous comme co-commandant. Le barrage que vous avez fait sauter est encore ouvert quand vous repassez. Et pendant que vous jouez, quelque chose grince à l'intérieur d'Atlas : une faction — **la Cinquième Manche** (`01-bible.md` §3.4) — veut se servir du tournoi pour remettre en jeu ce que le tournoi avait justement retiré du jeu. Le jour où ça éclate, les pays qui vous suivent sont exactement ceux que vous avez su traiter correctement.
 
@@ -28,7 +28,9 @@ Un pays n'est pas un skin : c'est une règle. La Suisse se retranche dans ses co
 
 ### 2.3 Les choix laissent des traces
 
-Le voyage n'est pas un menu de niveaux : c'est une suite de décisions qui s'écrivent quelque part. Un système de **flags** — booléens, compteurs, relations — enregistre ce que le joueur a fait, à l'échelle d'un pays, d'un commandant ou du monde. Ces flags nourrissent trois choses visibles : le **carnet de voyage** (le joueur relit ses propres décisions), la **réputation** de chaque commandant croisé (respect ou grief, alliés recrutables ou rivaux jurés), et les **traces sur les cartes** (ce qui a été cassé reste cassé quand on repasse). Les fins multiples ne sont pas un embranchement de dernière minute : c'est l'addition de tout ce qui précède.
+Le voyage n'est pas un menu de niveaux : c'est une suite de décisions qui s'écrivent quelque part. Un système de **flags** — booléens, compteurs, relations — enregistre ce que le joueur a fait, à l'échelle d'un pays, d'un commandant ou du monde. Ces flags nourrissent quatre choses visibles : le **carnet de voyage** (le joueur relit ses propres décisions), la **réputation** de chaque commandant croisé (respect ou grief, alliés recrutables ou rivaux jurés), les **traces sur les cartes** (ce qui a été cassé reste cassé quand on repasse), et surtout l'**état de chaque nation sur la carte du monde** — `neutre`, `alliee`, `rivale`, `retiree`. C'est la conséquence la plus grosse et la plus lisible : une nation ralliée prête son commandant, son unité spéciale et son soutien à l'acte III ; une nation retirée éteint sa destination et laisse un trou dans la carte. Les fins multiples ne sont pas un embranchement de dernière minute : c'est l'addition de tout ce qui précède.
+
+**Et le jeu ne se referme jamais sur lui-même :** au plus cinq nations peuvent se retirer dans une partie, la trame en garantit au moins deux alliées avant l'acte III, et aucune fin ne devient inaccessible — un joueur qui joue mal obtient une fin d'une autre couleur, jamais un cul-de-sac.
 
 ### 2.4 Du sport, jamais de la guerre
 
@@ -85,9 +87,9 @@ La boucle tient en quatre temps, et chaque temps alimente le suivant. Elle se r�
 | Temps | Ce que fait le joueur | Ce que le jeu enregistre | Ce que ça change |
 |---|---|---|---|
 | **1. La partie** | Un match tactique sur une carte du pays hôte : capture du QG adverse, mise hors jeu de l'équipe, ou objectif spécial propre au terrain. **On joue sous le ciel du pays et à la date du jour** : la saison dépend de l'hémisphère de l'hôte, la nuit tombe sans interrompre le match, et le Bulletin de Célestin Vantour annonce la météo des deux journées à venir — annoncée, donc jouable, jamais une surprise. | Résultat, style de victoire (nette, serrée, propre), état final de la carte. | Qualification pour l'étape suivante, humeur du public, réputation sportive. |
-| **2. Le voyage** | Choisir la prochaine destination parmi 2 ou 3, sur la carte du monde. | Pays visités, itinéraire, pays laissés de côté. | Quels commandants on rencontre, quels rivaux on évite, quels flags de pays resteront vierges. |
-| **3. Le choix** | Une scène courte à l'arrivée ou après le match : écraser ou laisser sauver la face, dénoncer un tricheur ou en profiter, accepter un sponsor douteux, prêter main-forte à un adversaire. | Écriture de flags (pays, commandant, monde) et une entrée dans le carnet de voyage. | Alliés recrutables, rivaux jurés, soupçon envers Atlas, traces persistantes sur la carte. |
-| **4. La partie suivante** | Rejouer, avec ce qu'on a récolté : co-commandant, terrain modifié, adversaire remonté, public acquis ou hostile. | — | La boucle recommence, mais la carte et les gens ne sont plus les mêmes. |
+| **2. Le voyage** | Choisir la prochaine destination parmi 2 ou 3, sur la carte du monde — où chaque nation porte sa couleur de relation. | Pays visités, itinéraire, pays laissés de côté. | Quels commandants on rencontre, quels rivaux on évite, quels flags de pays resteront vierges. Une nation rivale peut fermer sa destination ; une nation retirée l'a déjà éteinte. |
+| **3. Le choix** | Une scène courte à l'arrivée ou après le match : écraser ou laisser sauver la face, dénoncer un tricheur ou en profiter, accepter un sponsor douteux, prêter main-forte à un adversaire. | Écriture de flags (pays, commandant, monde), le recalcul de la **relation** de la nation concernée, et une entrée dans le carnet de voyage. | Alliés recrutables, unités spéciales produisibles, rivaux jurés, nations retirées, soupçon envers Atlas, traces persistantes sur la carte. |
+| **4. La partie suivante** | Rejouer, avec ce qu'on a récolté : co-commandant, unité spéciale d'une nation alliée, terrain modifié, adversaire remonté, public acquis ou hostile. | — | La boucle recommence, mais la carte et les gens ne sont plus les mêmes. |
 
 ### 5.2 La boucle longue
 
@@ -96,8 +98,8 @@ Un **continent** est un acte, et une traversée en compte trois (`08-narration-c
 ### 5.3 Pourquoi la boucle tient
 
 - **La partie récompense la maîtrise**, le voyage récompense la curiosité, le choix récompense l'attention aux gens. Trois plaisirs différents qui se relaient toutes les vingt minutes.
-- **Rien n'est jetable** : un match gagné laisse une carte marquée, un choix laisse une page de carnet, un adversaire laisse une relation. Le joueur accumule un monde, pas un score.
-- **La rejouabilité est structurelle** : 24 départs possibles, un itinéraire différent à chaque partie, des flags qui ne peuvent pas tous être posés en une seule traversée. Le même terrain ne se joue d'ailleurs pas pareil en février et en août : la saison et la météo rejouent les cartes déjà connues.
+- **Rien n'est jetable** : un match gagné laisse une carte marquée, un choix laisse une page de carnet, un adversaire laisse une relation — et une nation entière change de couleur sur la carte du monde. Le joueur accumule un monde, pas un score.
+- **La rejouabilité est structurelle** : on part de France, on rallie des nations, et **chaque nation ralliée devient un départ possible pour la Ronde suivante** — jusqu'à 24 à force de jouer. À cela s'ajoutent un itinéraire différent à chaque partie et des flags qui ne peuvent pas tous être posés en une seule traversée. Le même terrain ne se joue d'ailleurs pas pareil en février et en août : la saison et la météo rejouent les cartes déjà connues.
 - **La Dépêche du jour est à côté de la boucle, pas dedans** (§2.6) : elle donne une raison de revenir sans jamais devenir une étape obligatoire du voyage.
 
 ---

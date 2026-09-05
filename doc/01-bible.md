@@ -8,7 +8,7 @@
 
 ### 0.1 Pour un humain
 
-Lisez dans l'ordre. Les sections 2 (histoire), 3 (Atlas), 4 (tournoi, dont le climat en §4.5 et la Dépêche du jour en §4.6) posent le monde ; la section 5 (ton) et la section 7 (sensibilité) sont les règles d'écriture ; la section 6 (archétypes) et la section 8 (flags) sont les boîtes à outils réutilisables.
+Lisez dans l'ordre. Les sections 2 (histoire), 3 (Atlas), 4 (tournoi, dont le climat en §4.5 et le Tableau des délégations en §4.6 et la Dépêche du jour en §4.7) posent le monde ; la section 5 (ton) et la section 7 (sensibilité) sont les règles d'écriture ; la section 6 (archétypes) et la section 8 (flags) sont les boîtes à outils réutilisables.
 
 ### 0.2 Pour une routine
 
@@ -247,7 +247,23 @@ Atlas ne joue pas en salle. Un match se dispute dehors, à la date à laquelle i
 
 **Règle d'écriture.** Le temps qu'il fait est un **fait de match**, jamais un drame : une tempête cloue les appareils au sol et fait un beau commentaire, elle ne dévaste rien, ne blesse personne et ne détruit aucune ville. Une canicule gêne le matériel lourd, elle ne fait pas souffrir un public. Aucun phénomène météorologique réel, daté ou localisé, n'est jamais évoqué (§7.3). Le vent nommé — le mistral, l'alizé — reste une **mécanique régionale** du pays hôte, pas une météo.
 
-### 4.6 La Dépêche du jour
+### 4.6 Le Tableau des délégations : comment Atlas annonce un ralliement, un grief, un retrait
+
+**[Proposition : la mise en fiction est une invention de cette bible ; le dispositif — quatre états de relation, cinq retraits au plus — est fixé par `BRIEF.md`.]**
+
+Dans le hall de l'Intendance, à Port-Méridien, il y a un panneau de bois clair où sont accrochées les plaques des délégations engagées dans la Ronde en cours. C'est le **Tableau des délégations**, et c'est là que le monde apprend qui joue avec qui. On le regarde beaucoup, on n'en parle pas fort.
+
+**Un ralliement s'annonce par une ligne dans le programme.** Quand une délégation décide d'accompagner un commandant sur la fin de sa Ronde — de lui prêter son matériel, un assistant déclaré, un terrain d'entraînement —, l'Intendance le note comme elle note un changement d'horaire : *« Suisse — engagée aux côtés de la délégation française à partir de la quatrième étape. »* Pas de communiqué, pas de cérémonie. Solveig Tamm accroche les deux plaques côte à côte, et ceux qui passent dans le hall le remarquent avant que Vantour n'en fasse un mot à l'antenne. Le ton du monde tient dans ce détail : un ralliement est une **ligne d'organisation**, pas un serment.
+
+**La délégation prête son banc.** Quand un engagement va plus loin qu'une ligne au programme, la délégation qui accompagne un commandant lui **prête son banc** pour une rencontre : son général dirige depuis les gradins, l'invité s'assoit à sa place, joue son matériel et ses consignes, et la plaque reste la même au Tableau. L'Intendance appelle cela un banc prêté ; les commentateurs disent « il joue leurs couleurs ce soir », et personne n'y voit un changement de camp — c'est un échange d'entraîneurs, à la manière d'une fédération, et l'on rend le banc au coup de sifflet final.
+
+**Un grief s'annonce par un silence poli.** Une délégation fâchée ne dénonce personne : elle demande simplement à ne plus être programmée en même temps, et elle joue plus dur quand le calendrier la remet en face. Vantour, qui sait tout, dit *« retrouvailles »* avec une virgule un peu longue avant le mot.
+
+**Un retrait s'annonce en trois phrases, et c'est le seul moment où la Régie ne commente pas.** Une délégation qui se retire de la Ronde le fait par une note affichée au Tableau, toujours de la même longueur : ce qu'elle retire (son équipe), à partir de quand (la prochaine étape), et une formule de politesse. Sa plaque est retournée, face bois. Personne ne la décroche — retourner suffit, et c'est plus dur à regarder qu'un trou. Nera Aldouin contresigne, parce que le Pacte l'exige ; Osmin Talvarec descend dans le hall et reste devant un moment ; Vantour ouvre son Bulletin suivant sur la météo, comme d'habitude, et ne dit rien du tout. **Un retrait n'est jamais un drame, jamais une rupture diplomatique, jamais une menace** : c'est une équipe qui rentre chez elle, et un sport qui compte une équipe de moins ce mois-ci. On ne montre pas de foule en colère, on ne cite pas de gouvernement, personne ne claque de porte. Ce qui rend la chose lourde, c'est précisément qu'elle soit si petite et si calme.
+
+**Ce qu'Atlas ne dit jamais, et ce que les routines n'écrivent donc jamais** : qu'un retrait est une rupture entre deux peuples, qu'une nation « quitte le camp du joueur », qu'un ralliement est une alliance militaire. Le vocabulaire est celui d'une fédération sportive et d'une organisation logistique : on **s'engage aux côtés de**, on **demande à ne plus être programmé avec**, on **retire son équipe**. Et quand une délégation revient — cela arrive, un grief se répare —, elle revient comme on revient : sa plaque est remise à l'endroit, sans commentaire.
+
+### 4.7 La Dépêche du jour
 
 **[Proposition : la mise en fiction de la mission du jour est une invention de cette bible ; le dispositif lui-même est fixé par `BRIEF.md`.]**
 
@@ -451,7 +467,7 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 | `monde.carnet.pages_scellees` | compteur 0–10 | choix | Pages du carnet remises officiellement au Collège |
 | `monde.atlas.homologation_contestee` | booléen **[Proposition]** | choix | Le joueur a déposé ou soutenu un protêt contre une décision de la Commission d'homologation (§3.2) |
 | `monde.atlas.essai_soutenu` | booléen **[Proposition]** | choix | Le joueur a défendu publiquement une pièce de matériel à l'essai, badge orange compris |
-| `monde.depeche.serie` | compteur **[Proposition]** | moteur | Dépêches du jour enchaînées. **Vit au profil du joueur, hors sauvegarde de campagne** : aucune bascule de trame ne le lit, aucune fin ne le teste (§4.6). Un seul mécanisme a le droit de le lire : un `Deblocage` (`13-campagne.md` §8.4) |
+| `monde.depeche.serie` | compteur **[Proposition]** | moteur | Dépêches du jour enchaînées. **Vit au profil du joueur, hors sauvegarde de campagne** : aucune bascule de trame ne le lit, aucune fin ne le teste (§4.7). Un seul mécanisme a le droit de le lire : un `Deblocage` (`13-campagne.md` §8.4) |
 | `monde.tournoi.fils_termines` | compteur 0–12 **[Proposition]** | moteur (dérivé) | Fils secondaires menés à leur dernière mission. Recalculé depuis `ProfilCampagne.filsFinis`, **jamais écrit à la main** |
 
 **Le domaine `monde.secret.*`** existe pour les easter eggs (`doc/14-secrets.md`) et n'apparaît dans **aucune** table de cette bible, volontairement. Ces flags ne sont ni listés ici, ni présents dans `content/flags.json`, ni servis par `GET /api/routines/bible/flags`. Une routine ne les connaît pas, donc ne peut pas les employer ; `validerFil` les refuse en écriture ; et `doc/14-secrets.md` n'est jamais servi. Voir la règle 8 du §8.6.
@@ -474,9 +490,9 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 4. **`pays.<xx>.rival_respecte` et `pays.<xx>.rival_humilie` sont exclusifs** : poser l'un interdit l'autre pour le même pays.
 5. **Les flags dérivés ne s'écrivent pas directement** : `monde.cinquieme.ralliements` est recalculé par le moteur à partir des `pays.<xx>.ralliement_cinquieme`.
 6. **Toute scène déclare ses flags** en lecture et en écriture dans son JSON ; la routine contrôle rejette une scène qui référence un flag inconnu.
-7. **La Dépêche du jour n'écrit aucun flag de campagne** (§4.6). Une scène rattachée à une mission du jour qui déclare un flag `pays.*`, `monde.*` (hors `monde.depeche.*`) ou `cmd.*` en écriture est rejetée d'office par la routine contrôle. **[Proposition]**
+7. **La Dépêche du jour n'écrit aucun flag de campagne** (§4.7). Une scène rattachée à une mission du jour qui déclare un flag `pays.*`, `monde.*` (hors `monde.depeche.*`) ou `cmd.*` en écriture est rejetée d'office par la routine contrôle. **[Proposition]**
 8. **Aucun contenu ne pose un flag `monde.secret.*`.** Ces flags sont posés par du code écrit à la main (`doc/14-secrets.md`), jamais par un scénario, un choix ou un fil. Une production qui en déclare un en écriture est refusée au schéma, pas à la relecture. **[Proposition]**
-9. **Un fil écrit des flags de campagne, contrairement à une Dépêche.** C'est sa différence de nature : un fil compte, une exhibition non (`13-campagne.md` §5.1, `08-narration-choix.md` §4.5). Ses flags restent pris dans cette liste, comme partout ailleurs. **[Proposition]**
+9. **Un fil écrit des flags de campagne, contrairement à une Dépêche.** C'est sa différence de nature : un fil compte, une exhibition non (`13-campagne.md` §5.1, `08-narration-choix.md` §4.6). Ses flags restent pris dans cette liste, comme partout ailleurs. **[Proposition]**
 
 ---
 

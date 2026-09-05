@@ -66,7 +66,8 @@ export {
 
 // État et création de partie
 export {
-  aVisite, copier, copierEtat, creerPartie, JAUGE_MAX_DEFAUT, JOURNAL_MAX,
+  aVisite, CAMP_JOUEUR, commandantsIncarnes, copier, copierEtat, creerPartie,
+  JAUGE_MAX_DEFAUT, JOURNAL_MAX,
   marquerVisite, proprietaire, reglagesParDefaut, sceneDeCarte, sceneDepuis,
   VERSION_MOTEUR,
 } from './etat';

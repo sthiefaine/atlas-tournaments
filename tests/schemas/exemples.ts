@@ -310,6 +310,76 @@ export const scenarioBretagne = {
   },
 };
 
+/**
+ * Un **match d'incarnation** (`BRIEF.md`, « Le joueur et le départ ») : le joueur
+ * joue la Suisse, avec Elsbeth Vonlanthen au camp 0 — son général, son catalogue, sa
+ * spécialité. Il n'écrit que des flags de la nation incarnée et de son général :
+ * aucun `monde.*`, donc rien de la trame principale du joueur.
+ */
+export const scenarioIncarnationCh = {
+  cle: 'scen_ch_incarnation_01',
+  version: 1,
+  statut: 'valide',
+  source: 'atlas_lore',
+  creeLe: '2026-09-05',
+  majLe: '2026-09-05',
+  code: 'scen_ch_incarnation_01',
+  nom: 'Suisse — La délégation prête son banc',
+  acte: 2,
+  gabarit: 'tenir',
+  incarnation: { paysCode: 'ch', commandantCle: 'cmd_elsbeth_vonlanthen' },
+  paysCode: 'ch',
+  carteCle: 'carte_ch_col_01',
+  date: '2026-10-02',
+  cycleJourNuit: { jour: 4, nuit: 2 },
+  catalogueVersion: 1,
+  commandants: [
+    { camp: 0, commandantCle: 'cmd_elsbeth_vonlanthen' },
+    { camp: 1, commandantCle: 'cmd_maelle_kerdraon', ia: 'agressive' },
+  ],
+  fondsDepart: 5000,
+  revenusParBatiment: 1000,
+  brouillard: false,
+  limiteJournees: 18,
+  victoire: [{ type: 'tenir', cases: [{ x: 5, y: 4 }], journees: 8 }],
+  defaite: [{ type: 'qg_perdu' }],
+  dialogueOuverture: [
+    { locuteur: 'cmd_elsbeth_vonlanthen', texte: 'Le banc est à vous pour un match. Les horaires, eux, restent les miens.', emotion: 'neutre' },
+  ],
+  dialogueVictoire: [
+    { locuteur: 'cmd_elsbeth_vonlanthen', texte: 'Vous avez tenu le col comme si vous y aviez grandi.', emotion: 'surprise' },
+  ],
+  dialogueDefaite: [
+    { locuteur: 'cmd_elsbeth_vonlanthen', texte: 'On reprendra la pente. Elle ne bouge pas, elle.', emotion: 'neutre' },
+  ],
+  choix: [
+    {
+      cle: 'choix_ch_incarnation_col',
+      question: 'Elsbeth vous laisse choisir : tenir la pente à sa manière, ou à la vôtre ?',
+      moment: 'mi_partie',
+      litFlags: ['cmd.elsbeth_vonlanthen.respect'],
+      options: [
+        {
+          cle: 'a_sa_maniere',
+          libelle: 'Tenir le col comme elle le tiendrait.',
+          ecritFlags: [{ cle: 'cmd.elsbeth_vonlanthen.confiance', valeur: 1 }],
+        },
+        {
+          cle: 'a_la_mienne',
+          libelle: 'Descendre chercher le match plus bas.',
+          ecritFlags: [{ cle: 'pays.ch.col_quitte', valeur: true }],
+        },
+      ],
+    },
+  ],
+  flagsRequis: [],
+  flagsInterdits: [],
+  recompenses: {
+    flags: ['pays.ch.col_tenu', 'cmd.elsbeth_vonlanthen.confiance'],
+    fonds: 1000,
+  },
+};
+
 export const regionBretagne = {
   cle: 'region_fr_bretagne',
   version: 2,
@@ -649,6 +719,8 @@ export const profilCampagneFr = {
   secretsTrouves: ['mur_du_vestiaire'],
   paysVisites: ['fr', 'lu', 'ch'],
   modesFinis: [],
+  relations: { lu: 'alliee', ch: 'rivale', gr: 'retiree' },
+  confiance: { cmd_yann_reinert: 2 },
   serieDepeches: 3,
   catalogueVersion: 1,
   chainesVersion: 7,

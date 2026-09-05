@@ -19,13 +19,14 @@
 ## 1. Ce que ce document décide
 
 1. Un **budget de contenu chiffré**, ligne par ligne, vérifiable, avec ce qui est écrit à la main et ce qui est produit.
-2. La **structure d'un parcours** : prologue → tour national → trois continents sur cinq → acte de la Cinquième Manche → finales → retours.
+2. La **structure d'un parcours** : prologue français → tour de France → trois continents sur cinq → acte de la Cinquième Manche → finales → retours. **Le premier parcours part toujours de France** ; les autres départs s'ouvrent en **Nouvelle Ronde** (§3.5).
 3. Neuf **gabarits de mission**, contrat entre la routine lore, la routine map et la routine contrôle.
 4. Le type **`Fil`** et ses conséquences bornées, avec neuf fils écrits en exemple.
 5. Les deux **modes** `normal` et `difficile`, et la table exacte de leurs paramètres.
 6. Dix **généraux secrets** et la doctrine « jamais indispensable ».
 7. Le système **`Deblocage`** et ses conditions composables.
 8. La **sauvegarde de campagne** `ProfilCampagne`.
+9. Les **relations de nation** dans la structure et dans le budget (§3.4), et la **Nouvelle Ronde** qu'une nation alliée ouvre (§3.5).
 
 Ce document ne décide **pas** : les règles du jeu (`04`), les noms de flags (`01` §8), les fins (`08` §7), les easter eggs (`14`).
 
@@ -57,6 +58,17 @@ Une heure de campagne ne se décrète pas, elle s'additionne. Chaque scénario p
 | **Total, un parcours, mode `normal`** | **119 missions** | — | **82 h 04** |
 | **Le même parcours en `difficile`** (durées mesurées +15 %, voir §6.4) | 119 | 43,2 min | **≈ 93 h** |
 
+**Les matchs d'incarnation comptent dans les heures, et voici combien.** Un match d'incarnation (`Scenario.incarnation`, `03-schemas.md` §15.2 bis) est une **mission de plus**, pas une relecture d'une mission déjà comptée : il a sa carte, ses dialogues, sa certification. Il est aussi **facultatif** — sauf à l'acte III, où il ne coûte rien de neuf. L'estimation, avec les mêmes durées moyennes que la table :
+
+| Bloc d'incarnation | Missions | Durée moyenne | Sous-total |
+|---|---:|---:|---:|
+| Un match d'incarnation proposé par nation alliée (2 garanties avant l'acte III, 4 au plus dans un parcours ordinaire) | 2 à 4 | 38 min | **1 h 16 à 2 h 32** |
+| Les missions du fil de la nation incarnée, jouées de son côté (un fil ancré chez une alliée) | 3 | 33 min | **1 h 39** |
+| **L'acte III joué à la place d'une alliée** — le choix, à chaque bataille, de la nation qu'on commande | **0** : ce sont les 10 étapes déjà comptées, jouées autrement | — | **0**, plus une variante de dialogue par étape |
+| **Total, un joueur qui incarne tout ce qu'il peut** | **5 à 7** | ≈ 36 min | **≈ 3 h 00 à 4 h 10** |
+
+Soit **environ quatre heures**, qui portent un parcours complet à **≈ 86 h** en `normal` (≈ 98 h en `difficile`). Le budget de 82 h reste celui d'un parcours qui décline chaque proposition d'incarnation — c'est le chiffre plancher, et c'est celui qu'on tient. **[Proposition]**
+
 **Ce que le total ne compte pas**, volontairement : les Dépêches du jour (hors campagne, `08` §4.4), les rejeux, les easter eggs, les parcours avec un autre pays de départ. Un joueur qui joue une Dépêche par jour pendant sa campagne ajoute 15 à 20 h — mais il ne les *doit* à personne, et la campagne reste complète sans en jouer une seule.
 
 ### 2.3 La comparaison avec un Advance Wars
@@ -78,7 +90,7 @@ Une heure de campagne ne se décrète pas, elle s'additionne. Chaque scénario p
 
 | Ce qui est écrit à la main | Missions |
 |---|---:|
-| Prologues des quatre pays phares (France, Luxembourg, Japon, Brésil) | 4 |
+| Prologues des quatre pays phares (France d'abord ; Luxembourg, Japon et Brésil ne s'ouvrent qu'en Nouvelle Ronde, §3.5) | 4 |
 | Régions françaises de signature — celles dont la mécanique *est* la leçon | 6 |
 | Trois finales de zone françaises + la finale nationale | 4 |
 | Les six points de bascule de la trame (I.a, I.b, II.a, II.b, II.c, III — `08` §6) | 6 |
@@ -89,6 +101,10 @@ Une heure de campagne ne se décrète pas, elle s'additionne. Chaque scénario p
 | **Total** | **40** |
 
 Le reste — **79 missions** — est produit par la routine lore contre un gabarit (§4), sa carte par la routine map, et certifié par la routine contrôle **dans les deux modes**, avec relecture humaine par échantillon (une sur cinq).
+
+**Les deux ralliements garantis (§3.4) sont dans ce total, pas en plus** : ce sont les bascules I.a et II.a, déjà comptées à la quatrième ligne. Écrire à la main les points de bascule, c'est exactement ce qui permet de garantir qu'un joueur arrive à l'acte III avec au moins deux nations alliées — une garantie de contenu ne tient que si le contenu qui la porte est écrit, pas généré.
+
+**Et les trois prologues non français ne bloquent plus le lancement.** Ils restent dans les 40 parce qu'ils s'écrivent à la main, mais aucun premier parcours ne les traverse : ils partent dans les 12 à 15 h par mois de §2.7 (§3.5).
 
 ### 2.5 Le débit réel des routines
 
@@ -114,7 +130,7 @@ Le reste — **79 missions** — est produit par la routine lore contre un gabar
 | 79 scénarios générés | 5 à 6 semaines de routines, **en parallèle** |
 | Relecture humaine par échantillon (16 relectures × 25 min) | ≈ 7 h, négligeable |
 | Neuf langues : ≈ 3 600 chaînes source × 8 langues cibles | le vrai coût de fin de projet, il vit à l'étape 12 (`09-i18n.md`) |
-| **Tout ce qui doit exister avant** : étapes 7 (18 régions), 8 (24 départs), 9 (voyage et fins) | **plusieurs mois**, et c'est la dépendance dure |
+| **Tout ce qui doit exister avant** : étapes 7 (18 régions), 8 (24 nations), 9 (voyage, relations et fins) | **plusieurs mois**, et c'est la dépendance dure |
 
 Autrement dit : le budget de 82 h n'est pas un problème de production de contenu, c'est un problème de **rang dans le plan**. Il ne devient atteignable qu'une fois l'étape 9 finie, parce qu'avant elle il n'y a ni carte du monde, ni actes, ni fins auxquels accrocher les 119 missions.
 
@@ -159,22 +175,28 @@ Ensuite : 82 − 33 = **49 heures à ajouter**. Le débit de mise en ligne n'est
 
 ```
 Prologue national  →  Tour du pays de départ  →  Acte I   →  Acte II  →  Acte III
-   (4 missions)         (France : 22 ; autres : 4 à 6)     (continent) (continent) (continent)
+   (4 missions)      (France : 22 ; Nouvelle Ronde : 4 à 6) (continent) (continent) (continent)
                                                      ↘  Arc de la Cinquième Manche  ↙
                                                               ↓
                                           Finales à Port-Méridien  →  Retours et revanches
+                                                              ↓
+                                   Nouvelle Ronde, au départ d'une nation ralliée (§3.5)
 ```
 
 | Étape | Ce qui s'y joue | Ce qui s'y écrit |
 |---|---|---|
-| **Prologue national** | La sélection : un match d'entrée, la présentation du rival naturel, la première scène de choix | `pays.<xx>.visite`, la première relation `cmd.<id>.*` |
-| **Tour du pays de départ** | La qualification. La France se qualifie sur ses 18 régions (`07-france-regions.md`) ; les autres pays sur 4 à 6 étapes construites depuis leur fiche | `pays.fr.regions_visitees`, `pays.<xx>.qualifie` |
-| **Actes I à III** | Trois continents sur cinq, choisis par le joueur sur la carte du monde. Un continent = un acte (`08` §6) | `pays.<xx>.*`, `monde.atlas.*`, `monde.cinquieme.*` |
+| **Prologue national** | La sélection : un match d'entrée, la présentation du rival naturel, la première scène de choix. **Au premier parcours, c'est le prologue français** | `pays.fr.visite`, la première relation `cmd.<id>.*` |
+| **Tour du pays de départ** | La qualification. La France se qualifie sur ses 18 régions (`07-france-regions.md`) ; en Nouvelle Ronde, les autres pays sur 4 à 6 étapes construites depuis leur fiche | `pays.fr.regions_visitees`, `pays.<xx>.qualifie` |
+| **Actes I à III** | Trois continents sur cinq, choisis par le joueur sur la carte du monde. Un continent = un acte (`08` §6) | `pays.<xx>.*`, `monde.atlas.*`, `monde.cinquieme.*`, et le recalcul de `relations` à chaque fin d'étape |
 | **Arc de la Cinquième Manche** | Les six points de bascule, joués sur le terrain plutôt que lus | `monde.cinquieme.contact`, `.infiltre`, `.demasquee`, `.chef_identifie` |
-| **Finales à Port-Méridien** | Demie, finale mondiale, et l'épilogue jouable de la fin obtenue | `monde.cinquieme.ralliements` (dérivé), la fin |
+| **Finales à Port-Méridien** | Demie, finale mondiale, et l'épilogue jouable de la fin obtenue. **Qui est là, et qui manque, se lit dans `relations`** | `monde.cinquieme.ralliements` (dérivé), la fin |
 | **Retours et revanches** | Revisites des pays marqués, rivaux jurés, cartes qui gardent leurs traces | `pays.<xx>.terrain_altere`, `cmd.<id>.rival_jure` |
+| **Matchs d'incarnation** | Une nation alliée prête son banc : le joueur la joue entièrement, avec son général et son catalogue (§3.4 bis). Proposés à partir de l'acte I, **obligatoirement choisis à l'acte III** — parmi les alliées | `pays.<nation incarnée>.*` et `cmd.<id>.*`, **jamais `monde.*`** ; la `confiance` du général monte |
+| **Nouvelle Ronde** | Un second parcours, au départ d'une nation ralliée pendant le premier (§3.5) | Un nouveau `ProfilCampagne` ; seuls `deblocages`, `secretsTrouves`, `modesFinis` et `serieDepeches` se transmettent (§9) |
 
 ### 3.2 Ce que change le pays de départ
+
+**Au premier parcours, rien : c'est la France, pour tout le monde** (`BRIEF.md`, « Le joueur et le départ », révisé le 5 septembre 2026 au soir). Ce paragraphe décrit donc ce que change un départ de **Nouvelle Ronde**, une fois qu'une nation a été ralliée (§3.5).
 
 Le brief est net : **le pays de départ change le prologue et l'ordre, pas la longueur**. Concrètement :
 
@@ -200,6 +222,87 @@ Le brief est net : **le pays de départ change le prologue et l'ordre, pas la lo
 5. Le choix pose `pays.<xx>.visite` et **rien d'autre** : c'est le voyage qui écrit ce flag, pas une scène (`08` §2.3).
 
 Le continent laissé de côté n'est pas perdu : ses pays « suivent la majorité de leur continent » au ralliement de l'acte III (`08` §6), et c'est ce qui rend un second parcours différent du premier.
+
+**Ce que la relation ajoute aux cinq règles.** Une nation `retiree` n'est **jamais proposée** : sa destination est éteinte, comme un pays dont `terrain_altere ≥ 3` (règle 3). Une nation `rivale` peut l'être aussi, si son grief a fermé sa porte — mais elle revient toujours par une revanche scénarisée, jamais par une case ordinaire. Une nation `alliee`, elle, propose **plus** : sa destination porte une scène de retrouvailles et l'accès à son unité spéciale. Conséquence de production à ne pas manquer : le générateur de destinations doit toujours pouvoir remplir deux cases, retirées comprises — c'est vérifié par simulation, comme le reste.
+
+### 3.4 Les relations dans la structure, et dans le budget
+
+Les vingt-quatre nations ne sont pas un menu de départ : ce sont des **relations** (`RelationNation`, `03-schemas.md` §15.3 bis ; les seuils et le calcul sont dans `08-narration-choix.md` §4.5). Ce paragraphe dit ce que cela **coûte** et ce que cela **place** dans la colonne.
+
+**Ce que la colonne vertébrale doit garantir, et qui ne se génère pas.**
+
+| Garantie | Où elle est placée | Coût en missions écrites à la main |
+|---|---|---|
+| **Au moins deux alliées avant l'acte III** | Deux occasions de ralliement plantées dans la colonne, une par acte (I et II), qui **ne dépendent pas du même registre de choix** — l'une se gagne par le fair-play en fin de match, l'autre par un service rendu hors match. Un joueur ne peut pas rater les deux sans le vouloir | **2** (déjà comptées dans les 40 de §2.4 : ce sont deux points de bascule, pas des missions neuves) |
+| **Au plus cinq retirées** | Rien à écrire : le schéma refuse la sixième (`BORNES_RELATIONS.retireesMax`), et la scène qui l'aurait provoquée se joue en version « il reste, mais il ne vous parle plus » | **0**, plus **1 variante de dialogue** par scène de retrait |
+| **Jamais de fin inaccessible** | Chaque fin (`08` §7) est évaluée sur des flags de monde, jamais sur la présence d'une nation donnée. Une retirée change **qui est dans la salle**, jamais **quelle salle s'ouvre** | **0**, vérifié par simulation |
+| **Une scène de retrait qui prévient** | Un retrait demande un double grief (`08` §4.5) ; la scène qui pose le second dit en toutes lettres ce qu'elle va coûter | **≤ 5 scènes**, une par retrait possible dans un parcours |
+
+**Ce que ça change au budget de §2.2 : rien, et c'est le point.** Les relations ne sont pas un bloc de missions supplémentaire — elles sont une **relecture** de missions déjà comptées. Les deux ralliements garantis sont des points de bascule de l'arc de la Cinquième Manche (8 missions déjà budgétées), les scènes de retrait sont du hors-match (les +10 %), et les variantes de dialogue sont ce que les fils produisent déjà. Le seul poste réellement nouveau est la **production d'unités spéciales alliées** : 24 unités spéciales qui doivent être équilibrées comme jouables par le joueur et plus seulement contre lui, ce qui est un coût de **simulation** (routine contrôle) et non d'écriture.
+
+**Le plafond par match.** Une nation alliée rend son unité spéciale **produisible en quantité bornée par match** — la borne exacte est une règle de jeu et appartient à `04-gameplay.md`. Ce document n'en retient qu'une conséquence de budget : la routine contrôle simule chaque scénario **avec et sans** les unités spéciales que le joueur peut légitimement avoir à ce point du parcours, exactement comme elle simule `normal` et `difficile`. Un scénario qui devient trivial parce que le joueur a rallié trois nations n'est pas mis en ligne. **[Proposition]**
+
+### 3.4 bis Les matchs d'incarnation
+
+**Une alliée ne se contente pas d'aider : on peut la jouer.** Un **match d'incarnation** (`Scenario.incarnation`, `03-schemas.md` §15.2 bis) donne au joueur le général de la nation, son catalogue — unité spéciale comprise —, sa spécialité et son style ; son propre commandant reste au banc en co-commandant passif (`04-gameplay.md` §7.5). C'est la même campagne, vue depuis l'autre banc.
+
+**Où ils se placent dans la colonne.**
+
+| Où | Ce qui est proposé | Imposé ? |
+|---|---|---|
+| **Actes I et II**, après un ralliement | Un match d'incarnation de la nation ralliée : sa propre étape de la Ronde, jouée par le joueur | **Non.** Une variante offerte de l'étape, jamais l'unique chemin |
+| **Fils secondaires ancrés chez une alliée** | Les missions du fil, jouées du côté de la nation | **Non.** Un fil est déjà facultatif |
+| **Acte III** | À **chaque bataille**, le choix de la nation qu'on commande, **parmi ses alliées** | **Le choix** est imposé, pas une nation en particulier : décliner, c'est jouer sa propre nation, ce qui reste une option de la liste |
+
+**Ce que ça coûte, et ce que ça ne coûte pas.** Cinq à sept missions neuves dans un parcours qui incarne tout, soit ≈ 4 h (§2.2). L'acte III ne coûte **aucune mission neuve** : ses dix étapes sont déjà budgétées, elles se jouent seulement avec un autre banc — le coût y est une **variante de dialogue** par étape et une **certification de plus** par nation jouable, la routine contrôle simulant l'étape avec le catalogue de chaque alliée possible comme elle la simule en `normal` et en `difficile`.
+
+**Les trois bornes, et où chacune est tenue.**
+
+| Borne | Tenue par |
+|---|---|
+| **Aucun flag de la trame principale.** Un match d'incarnation n'écrit que `pays.<nation incarnée>.*` et `cmd.*` | Le **schéma** : `validerScenario` refuse tout `monde.*` et tout `pays.*` étranger, en récompense comme dans une option de choix (`08` §4.5) |
+| **La nation incarnée ne se retire pas pendant qu'on la joue** | Conséquence de la borne précédente : un retrait demande deux griefs qui se rencontrent, et un match d'incarnation n'écrit aucun des flags qui les comptent. Rien à écrire de plus, rien à vérifier à la main |
+| **Toujours proposé, jamais imposé** — sauf le choix de l'acte III | Le **contenu** : la colonne vertébrale place un match d'incarnation en **variante** d'une étape, jamais en remplacement. Une colonne qui l'imposerait rendrait le parcours dépendant d'un ralliement, ce que §3.4 interdit |
+
+**La confiance, et son unique palier.** Incarner fait monter `ProfilCampagne.confiance[commandantCle]`, de 0 à 3 (`03-schemas.md` §15.9). À **3**, le général devient co-commandant à **jauge entière** et sa nation s'ouvre comme **départ de Nouvelle Ronde** (§3.5). Aux niveaux 1 et 2, elle ne donne que des dialogues : c'est délibéré, une échelle de puissance à quatre crans serait une seconde monnaie à équilibrer. **[Proposition]**
+
+### 3.5 La Nouvelle Ronde
+
+**Une nation alliée se débloque comme pays de départ.** C'est la seule porte : on ne choisit pas son départ dans un menu de vingt-quatre, on le **gagne** en ralliant la nation dans une partie précédente.
+
+Mécaniquement, c'est un `Deblocage` ordinaire, sans mécanisme nouveau (§8) :
+
+```json
+{
+  "cle": "deb_depart_jp",
+  "libelle": "Le Japon comme pays de départ",
+  "condition": { "type": "relation", "pays": ["jp"], "relation": "alliee", "combien": 1 },
+  "recompense": { "type": "depart_nation", "ref": "jp" },
+  "cache": false
+}
+```
+
+**Ou une confiance de trois, ce qui est la même porte.** Un joueur qui a **incarné** une nation jusqu'à la confiance 3 de son général ouvre son départ, même si la nation n'est pas passée `alliee` — c'est un `ou` dans la même condition, pas un second mécanisme :
+
+```json
+{
+  "condition": {
+    "type": "ou",
+    "conditions": [
+      { "type": "relation", "pays": ["ch"], "relation": "alliee", "combien": 1 },
+      { "type": "confiance", "commandantCle": "cmd_elsbeth_vonlanthen", "min": 3 }
+    ]
+  },
+  "recompense": { "type": "depart_nation", "ref": "ch" }
+}
+```
+
+Rallier une nation et gagner la confiance de son général sont deux gestes différents — l'un se fait par les choix qu'on prend chez elle, l'autre par les matchs qu'on joue pour elle — et ils ouvrent la même porte. **[Proposition]**
+
+- **`cache: false`**, toujours : le joueur doit voir qu'une nation ralliée ouvre un départ, sinon la mécanique n'existe pas pour lui. La carte du monde le dit pendant la partie, l'écran de fin le récapitule.
+- **Une Nouvelle Ronde est un nouveau parcours, pas une suite** : un nouveau `ProfilCampagne`, de nouveaux flags, un nouvel itinéraire. Ce qui se transmet est exactement ce que dit §9 — les déblocages acquis, les secrets, les modes finis, la série de Dépêches. **Les relations, elles, ne se transmettent pas** : on repart neutre partout, sauf que le départ, lui, a changé.
+- **Le budget ne bouge pas** : un tour national court (4 à 6 étapes) est compensé par une étape continentale de plus (§3.2). Une Nouvelle Ronde dure ce que dure un parcours.
+- **Ce que ça règle pour la production**, et c'est la vraie raison de la révision : les vingt-trois prologues non français quittent le chemin critique du lancement. Aucun joueur ne peut les rencontrer avant d'avoir fini une Ronde, donc ils s'écrivent **après** le lancement, dans les 12 à 15 h par mois de §2.7 — au lieu d'être vingt-trois portes d'entrée à ouvrir toutes ensemble.
 
 ---
 
@@ -239,7 +342,7 @@ Un fil se joue **sur la carte du monde**, en occupant une case de destination (�
 
 ### 5.2 La liste fermée des conséquences
 
-Le brief fixe neuf conséquences possibles. Elles sont petites — c'est délibéré : un fil ne doit jamais rendre la campagne principale plus facile au point qu'on le joue pour ça.
+Le brief fixe **dix** conséquences possibles. Elles sont petites — c'est délibéré : un fil ne doit jamais rendre la campagne principale plus facile au point qu'on le joue pour ça.
 
 | Conséquence | Paramètres et bornes | Ce que ça fait concrètement |
 |---|---|---|
@@ -252,6 +355,9 @@ Le brief fixe neuf conséquences possibles. Elles sont petites — c'est délib�
 | `allie_acte_iii` | `paysCode` | Ce pays reste avec le joueur au ralliement de l'acte III, quoi qu'il arrive |
 | `entree_carnet` | `carnetCle` | Une page de plus au carnet de voyage, lisible au générique |
 | `deblocage` | `deblocageCle` | Un `Deblocage` s'ouvre — c'est par là que les fils débloquent des généraux secrets |
+| `relation_nation` | `paysCode`, `relation` ∈ **{`alliee`, `rivale`}** | La nation change d'état sur la carte du monde (`08` §4.5) : ralliée, elle prête son commandant, son unité spéciale et son soutien à l'acte III, et **ouvre son départ de Nouvelle Ronde** (§3.5) ; fâchée, elle revient avec un grief |
+
+**Le brief fixait neuf conséquences ; la révision du 5 septembre au soir en ajoute une dixième**, `relation_nation`, et elle est la plus lourde de la liste — c'est pourquoi elle est la plus étroitement bornée. Deux valeurs seulement, `alliee` et `rivale` : **un fil ne retire jamais une nation de la Ronde** (un retrait vient d'un double grief de la campagne principale, `08` §4.5) et ne remet jamais une relation à `neutre`, ce qui serait une conséquence qui ne change rien. La borne est dans le type (`RELATIONS_CONSEQUENCE`), pas dans une consigne de prompt : la routine lore ne peut pas la franchir.
 
 **Bornes, et pourquoi elles sont là.** Deux unités et non trois, une remise de 20 % et non de 50 % : au-delà, un joueur qui fait tous les fils arrive à Port-Méridien avec une campagne différente de celle qu'on a équilibrée, et le mode `difficile` devient plus facile que le mode `normal`. Les bornes sont dans le schéma (`BORNES_CONSEQUENCE`), donc la routine lore ne peut pas les franchir, même en essayant.
 
@@ -447,9 +553,9 @@ interface Deblocage {
 }
 ```
 
-Un système unique pour tout ce qui s'ouvre : `general_secret`, `carte`, `carte_terrain`, `skin_style`, `fil`, `mode`, `entree_carnet`. Un seul mécanisme, donc un seul endroit à tester, un seul endroit à équilibrer, et aucune tentation d'en inventer un second.
+Un système unique pour tout ce qui s'ouvre : `general_secret`, `carte`, `carte_terrain`, `skin_style`, `fil`, `mode`, `entree_carnet`, **`depart_nation`**. Un seul mécanisme, donc un seul endroit à tester, un seul endroit à équilibrer, et aucune tentation d'en inventer un second — la **Nouvelle Ronde** (§3.5) passe par là comme le reste, et sa `ref` est un `CodePays` au lieu d'une `Cle`.
 
-### 8.2 Les huit conditions
+### 8.2 Les dix conditions
 
 | Type | Forme | Ce que ça lit dans le profil |
 |---|---|---|
@@ -459,6 +565,8 @@ Un système unique pour tout ce qui s'ouvre : `general_secret`, `carte`, `carte_
 | `date` | `{ du?, au? }` | La date du jour, **fournie par l'appelant** ; au moins une borne, bornes incluses |
 | `pays_visite` | `{ pays[], combien }` | Au moins `combien` des pays listés dans `paysVisites` |
 | `secret` | `{ cle }` | `secretsTrouves` — un easter egg de `doc/14-secrets.md` |
+| `relation` | `{ pays[], relation, combien }` | Au moins `combien` des nations listées sont dans cet état dans `relations` ; une nation absente est `neutre` |
+| `confiance` | `{ commandantCle, min }` | `confiance[commandantCle] ≥ min`, de 1 à 3 ; un général jamais incarné est à zéro |
 | `et` | `{ conditions[] }` | 2 à 4 sous-conditions, toutes vraies |
 | `ou` | `{ conditions[] }` | 2 à 4 sous-conditions, au moins une vraie |
 
@@ -495,6 +603,8 @@ interface ProfilCampagne {
   secretsTrouves: Cle[];         // easter eggs, noms courts
   paysVisites: CodePays[];
   modesFinis: Mode[];
+  relations: Record<CodePays, RelationNation>;  // absent = neutre ; ≤ 5 `retiree`
+  confiance: Record<Cle, NiveauConfiance>;      // par général incarné, 0 à 3 ; absent = 0
   serieDepeches: number;
   catalogueVersion; chainesVersion;
   creeLe; majLe;
@@ -510,10 +620,13 @@ interface ProfilCampagne {
 | Un fil n'est jamais à la fois en cours et fini | vérifié au schéma |
 | La Dépêche n'entre pas dans la campagne | `serieDepeches` est un champ à part, hors de `flags` |
 | Le carnet est le miroir des flags | `flags.journal` porte les décisions, pas l'interface |
+| Aucune fin ne devient inaccessible | `validerProfilCampagne` refuse un profil à plus de cinq nations `retiree` (`BORNES_RELATIONS.retireesMax`) |
+| Le joueur n'est pas sa propre relation | `relations` ne contient jamais `paysDepart` : c'est sa nation, pas un rapport avec elle |
+| La confiance reste bornée | `validerProfilCampagne` refuse une valeur hors de 0…3 et une clé qui n'est pas un code de commandant : la confiance se gagne auprès d'un général, pas d'une nation |
 
 **Ce qu'elle ne porte pas :** l'état d'une partie en cours. Une partie est ses actions plus les versions qu'elle a figées (`Sauvegarde`, `03-schemas.md` §14) ; le profil de campagne est ce qui reste entre deux matchs. Les deux ne se mélangent jamais : c'est ce qui permet d'abandonner un match sans perdre une campagne, et de rejouer un match sans réécrire un flag.
 
-**Plusieurs profils par joueur.** Un profil = un parcours = un pays de départ. Ce qui vit **au-dessus** des profils, et qui est donc dupliqué à leur création : `secretsTrouves`, `modesFinis`, `serieDepeches` et les `deblocages` déjà acquis — un général secret gagné dans une campagne reste jouable dans la suivante. Ce qui ne se transmet **jamais** : les flags, les fils, les scénarios finis, les pays visités du parcours en cours. **[Proposition]**
+**Plusieurs profils par joueur.** Un profil = un parcours = un pays de départ, et **le premier profil de tout le monde a `paysDepart: 'fr'`**. Ce qui vit **au-dessus** des profils, et qui est donc dupliqué à leur création : `secretsTrouves`, `modesFinis`, `serieDepeches` et les `deblocages` déjà acquis — un général secret gagné dans une campagne reste jouable dans la suivante, et **c'est aussi par là qu'un départ de Nouvelle Ronde traverse** (§3.5 : le déblocage `depart_nation` est acquis, donc il suit). Ce qui ne se transmet **jamais** : les flags, les fils, les scénarios finis, les pays visités, les `relations` **et la `confiance`** du parcours en cours — un général qui vous connaissait ne vous connaît plus, mais le départ qu'il a ouvert reste ouvert, parce que c'est un `deblocage`. On repart neutre partout : ce qu'on garde d'une Ronde, c'est le droit d'en commencer une ailleurs, pas les amitiés qu'on y avait nouées. **[Proposition]**
 
 ---
 
@@ -537,5 +650,8 @@ interface ProfilCampagne {
 7. Les **neuf fils** de `content/fils/`, leurs arcs, leurs déblocages et leurs conséquences.
 8. La **table des paramètres de mode** (§6.2) et les invariants de validation qui interdisent un `difficile` plus facile.
 9. Les **dix généraux secrets**, et le traitement de Barnab Estève qui touche aux Vieilles Manières sans jamais les illustrer.
-10. Le système **`Deblocage`** à huit conditions, sa profondeur bornée à trois, et l'évaluation pure sans horloge.
+10. Le système **`Deblocage`** à dix conditions — `confiance` comprise depuis l'incarnation —, sa profondeur bornée à trois, et l'évaluation pure sans horloge.
 11. `ProfilCampagne`, et la règle de ce qui se transmet d'un profil à l'autre (§9).
+12. Les **relations dans le budget** (§3.4) : deux ralliements garantis placés sur des registres de choix différents, cinq scènes de retrait qui préviennent, et le constat que les relations ne coûtent aucune mission neuve mais une passe de simulation de plus (unités spéciales alliées).
+13. Les **matchs d'incarnation** (§3.4 bis) : leurs trois places dans la colonne, leurs trois bornes — aucun flag de trame principale, pas de retrait pendant qu'on joue la nation, jamais imposés hors acte III —, la confiance à un seul palier, et leur coût de ≈ 4 h ajouté au budget (§2.2).
+14. La **Nouvelle Ronde** (§3.5) : un `Deblocage` de récompense `depart_nation`, `cache: false` toujours, les relations qui ne se transmettent pas d'un profil à l'autre, et les vingt-trois prologues non français sortis du chemin critique du lancement.

@@ -11,17 +11,20 @@
 
 import {
   ARCHETYPES, AUTEURS_PROMPT, AUTEURS_TRADUCTION, AXES_FAIBLESSE, BASES_SILHOUETTE,
-  BIOMES, BORNES_CONSEQUENCE, BORNES_MODIFICATEUR, CARACTERE_PAR_TERRAIN,
+  BIOMES, BORNES_CONSEQUENCE, BORNES_MODIFICATEUR, BORNES_RELATIONS,
+  CARACTERE_PAR_TERRAIN,
   CATEGORIES_EVENT,
   CATEGORIES_GLOSSAIRE, CIBLES_EFFET, CIBLES_REVIEW, CLES_GABARIT, CLES_PROMPT,
   CLES_TERRAIN,
-  CLES_UNITE_CANON, CLIMATS, CONTINENTS, CORPS_SILHOUETTE, DOMAINES, EMOTIONS,
+  CLES_UNITE_CANON, CLIMATS, CONFIANCE_MAX, CONTINENTS, CORPS_SILHOUETTE, DOMAINES,
+  EMOTIONS,
   FAMILLES_PAR_TRAIT_SPECIALITE, FAMILLES_SPECIALITE, FORMES_POSER_TERRAIN,
   HEMISPHERES, HOOKS_MECANIQUE, IMPACTS_FLAG, LOCALES_TRANSLITTEREES, METEOS, MODES,
   MODULES_SILHOUETTE, MOMENTS_CHOIX, MOTIFS_REJET, ORIGINES_CHAINE, PHASES_JOUR,
   PORTEES_FLAG, PORTEES_MEMOIRE, PORTEES_MEMOIRE_REFERENCEES, PORTEES_SPECIALITE,
   PROFONDEUR_CONDITION_MAX,
   QUOI_MODIFICATEUR, REGEX_CASE, REGEX_CLE_CHAINE, REGEX_CLE_MECANIQUE,
+  RELATIONS_CONSEQUENCE, RELATIONS_NATION,
   REGEX_CODE_COMMANDANT, REGEX_CODE_LOCALE, SAISONS, SCRIPTS_LOCALE, SENS_ECRITURE,
   SOURCES_ENVELOPPE, SOURCES_MEMOIRE, STATUTS, STATUTS_LOCALE, STATUTS_PROMPT,
   STATUTS_TRADUCTION, STATUTS_UNITE, STRATEGIES_IA, SUJETS_MEMOIRE, SYMETRIES,
@@ -33,7 +36,8 @@ import {
   type CatalogueArchetypes, type CatalogueGabarits, type CatalogueMecaniques,
   type CatalogueTerrains,
   type CatalogueUnites, type ChaineSource, type ChoixScenario,
-  type CleTerrain, type Commander, type Condition, type Consequence, type Country,
+  type CleTerrain, type CodePays, type Commander, type Condition, type Consequence,
+  type Country,
   type Deblocage, type Dialogue,
   type EffetEvent, type EffetModificateur, type EffetPoserTerrain, type EffetPouvoir,
   type EtatClimat, type Event, type Fil, type Flag,
@@ -1065,7 +1069,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
-  'paysCode', 'regionCle', 'carteCle', 'date',
+  'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
   'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'fondsDepart',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'choix', 'flagsRequis',
@@ -1098,6 +1102,19 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
       ctx.faute('dureeVisee', "la durée visée du scénario est celle du mode 'normal'");
     }
   }
+  // Match d'incarnation : le joueur joue une nation alliée, avec son général au
+  // camp 0 (`BRIEF.md`, « Le joueur et le départ » ; `03-schemas.md` §15.2).
+  let incarnePays: CodePays | undefined;
+  let incarneCmd: string | undefined;
+  if (presente(o, 'incarnation')) {
+    const inc = objet(ctx, o['incarnation'], 'incarnation', ['paysCode', 'commandantCle']);
+    if (inc && requis(ctx, inc, 'incarnation', ['paysCode', 'commandantCle'])) {
+      incarnePays = codePays(ctx, inc['paysCode'], 'incarnation.paysCode');
+      incarneCmd = chaine(ctx, inc['commandantCle'], 'incarnation.commandantCle',
+        { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
+    }
+  }
+
   const paysCode = codePays(ctx, o['paysCode'], 'paysCode');
   if (presente(o, 'regionCle')) cle(ctx, o['regionCle'], 'regionCle');
   cle(ctx, o['carteCle'], 'carteCle');
@@ -1121,11 +1138,17 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
 
   const camps: number[] = [];
   let joueurs = 0;
+  let cmdJoueur: string | undefined;
+  let cheminJoueur = 'commandants';
   tableau(ctx, o['commandants'], 'commandants', { min: 2, max: 4 }, (e, c) => {
     const cm = objet(ctx, e, c, ['camp', 'commandantCle', 'ia']);
     if (!cm || !requis(ctx, cm, c, ['camp', 'commandantCle'])) return undefined;
     const camp = entier(ctx, cm['camp'], sous(c, 'camp'), { min: 0, max: 3 });
-    cle(ctx, cm['commandantCle'], sous(c, 'commandantCle'));
+    const k = cle(ctx, cm['commandantCle'], sous(c, 'commandantCle'));
+    if (camp === 0) {
+      cmdJoueur = k;
+      cheminJoueur = sous(c, 'commandantCle');
+    }
     if (presente(cm, 'ia')) enumeration(ctx, cm['ia'], sous(c, 'ia'), STRATEGIES_IA);
     else joueurs += 1;
     if (camp !== undefined) camps.push(camp);
@@ -1136,6 +1159,12 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   });
   sansDoublon(ctx, camps, 'commandants');
   if (joueurs > 1) ctx.faute('commandants', 'un seul camp sans IA : le camp 0');
+  // Le camp du joueur porte le général de la nation incarnée : c'est ce que
+  // `sceneDepuis` lit, et ce qui rend l'incarnation vraie plutôt qu'annoncée.
+  if (incarneCmd !== undefined && cmdJoueur !== undefined && cmdJoueur !== incarneCmd) {
+    ctx.faute(cheminJoueur,
+      `un match d'incarnation se joue avec le général incarné au camp 0 : ${incarneCmd} attendu`);
+  }
 
   entier(ctx, o['fondsDepart'], 'fondsDepart', { min: 0, max: 30000, multiple: 100 });
   entier(ctx, o['revenusParBatiment'], 'revenusParBatiment', { min: 500, max: 2000, multiple: 100 });
@@ -1157,13 +1186,41 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   tableau(ctx, o['dialogueOuverture'], 'dialogueOuverture', { min: 1, max: 8 }, (e, c) => dialogue(ctx, e, c));
   tableau(ctx, o['dialogueVictoire'], 'dialogueVictoire', { min: 1, max: 6 }, (e, c) => dialogue(ctx, e, c));
   tableau(ctx, o['dialogueDefaite'], 'dialogueDefaite', { min: 1, max: 4 }, (e, c) => dialogue(ctx, e, c));
-  tableau(ctx, o['choix'], 'choix', { max: 3 }, (e, c) => choixScenario(ctx, e, c));
-
+  // Portée des flags **écrits** — par une récompense comme par une option de choix.
+  // Un scénario de pays n'écrit que `pays.<son code>.*` et `monde.*`. Un **match
+  // d'incarnation** est plus serré encore : il n'écrit **aucun** flag de la trame
+  // principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de
+  // la nation incarnée. Restent `cmd.*` : la relation avec le général, qui est
+  // précisément ce qu'un match d'incarnation fait bouger (`08` §4.5).
   const portee = (f: string, chemin: string): void => {
+    if (incarnePays !== undefined) {
+      if (f.startsWith('monde.')) {
+        ctx.faute(chemin,
+          "un match d'incarnation n'écrit aucun flag de la trame principale : pays.<nation incarnée>.* ou cmd.* seulement");
+      } else if (f.startsWith('pays.') && !f.startsWith(`pays.${incarnePays}.`)) {
+        ctx.faute(chemin, `un match d'incarnation de ${incarnePays} n'écrit que pays.${incarnePays}.* ou cmd.*`);
+      }
+      return;
+    }
     if (paysCode !== undefined && f.startsWith('pays.') && !f.startsWith(`pays.${paysCode}.`)) {
       ctx.faute(chemin, `un scénario de ${paysCode} n'écrit que pays.${paysCode}.* ou monde.*`);
     }
   };
+
+  const choix = tableau(ctx, o['choix'], 'choix', { max: 3 }, (e, c) => choixScenario(ctx, e, c));
+  for (const [i, sc] of (choix ?? []).entries()) {
+    const options = Array.isArray(sc.options) ? sc.options : [];
+    for (const [j, op] of options.entries()) {
+      const ecrits = Array.isArray(op?.ecritFlags) ? op.ecritFlags : [];
+      for (const [k, ecrit] of ecrits.entries()) {
+        const f = ecrit?.cle;
+        if (typeof f === 'string') {
+          const ou = sous(sous(sous(sous(sous(sous('choix', i), 'options'), j), 'ecritFlags'), k), 'cle');
+          portee(f, ou);
+        }
+      }
+    }
+  }
   tableau(ctx, o['flagsRequis'], 'flagsRequis', { max: 8 }, (e, c) => cleFlag(ctx, e, c));
   tableau(ctx, o['flagsInterdits'], 'flagsInterdits', { max: 8 }, (e, c) => cleFlag(ctx, e, c));
   const rec = objet(ctx, o['recompenses'], 'recompenses', ['flags', 'fonds', 'coCommandant', 'carteMonde']);
@@ -2074,7 +2131,7 @@ export function validerCatalogueGabarits(valeur: unknown): Resultat<CatalogueGab
       ctx.faute(sous(c, 'victoire'), "le gabarit 'escorte' porte l'objectif 'proteger'");
     }
     if (journees && k === 'exhibition' && journees.max > 15) {
-      ctx.faute(sous(c, 'journees'), "une exhibition tient en quinze journées au plus (01-bible.md §4.6)");
+      ctx.faute(sous(c, 'journees'), "une exhibition tient en quinze journées au plus (01-bible.md §4.7)");
     }
     return k;
   });
@@ -2144,6 +2201,34 @@ function condition(ctx: Contexte, v: unknown, chemin: string, profondeur = 1): C
       const o = objet(ctx, v, chemin, ['type', 'cle']);
       if (!o || !requis(ctx, o, chemin, ['cle'])) return undefined;
       cle(ctx, o['cle'], sous(chemin, 'cle'));
+      return o as unknown as Condition;
+    }
+    case 'relation': {
+      // Même forme que `pays_visite`, parce qu'elle répond à la même famille de
+      // questions : « au moins deux alliées », « le Japon est-il allié ». C'est par
+      // là qu'un départ de Nouvelle Ronde s'ouvre (`13-campagne.md` §3.5).
+      const o = objet(ctx, v, chemin, ['type', 'pays', 'relation', 'combien']);
+      if (!o || !requis(ctx, o, chemin, ['pays', 'relation', 'combien'])) return undefined;
+      const pays = tableau(ctx, o['pays'], sous(chemin, 'pays'), { min: 1, max: 24 },
+        (p, cp) => codePays(ctx, p, cp));
+      if (pays) sansDoublon(ctx, pays, sous(chemin, 'pays'));
+      enumeration(ctx, o['relation'], sous(chemin, 'relation'), RELATIONS_NATION);
+      const combien = entier(ctx, o['combien'], sous(chemin, 'combien'), { min: 1, max: 24 });
+      if (pays && combien !== undefined && combien > pays.length) {
+        ctx.faute(sous(chemin, 'combien'), 'condition inatteignable : plus de pays exigés que listés');
+      }
+      return o as unknown as Condition;
+    }
+    case 'confiance': {
+      // La confiance d'un général, montée en incarnant sa nation (`BRIEF.md`). Même
+      // forme que `compteur`, bornes comprises : elle vaut 0 à `CONFIANCE_MAX`, et un
+      // général absent du profil est à 0. À `CONFIANCE_MAX`, il devient co-commandant
+      // à jauge entière et sa nation s'ouvre en départ de Nouvelle Ronde.
+      const o = objet(ctx, v, chemin, ['type', 'commandantCle', 'min']);
+      if (!o || !requis(ctx, o, chemin, ['commandantCle', 'min'])) return undefined;
+      chaine(ctx, o['commandantCle'], sous(chemin, 'commandantCle'),
+        { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
+      entier(ctx, o['min'], sous(chemin, 'min'), { min: 1, max: CONFIANCE_MAX });
       return o as unknown as Condition;
     }
     case 'et':
@@ -2240,6 +2325,16 @@ function consequence(ctx: Contexte, v: unknown, chemin: string): Consequence | u
       cle(ctx, o['deblocageCle'], sous(chemin, 'deblocageCle'));
       return o as unknown as Consequence;
     }
+    case 'relation_nation': {
+      // Bornée : un fil rallie ou fâche une nation, il ne la retire jamais de la
+      // Ronde (le retrait vient de la campagne principale) et ne la remet jamais à
+      // `neutre`. `RELATIONS_CONSEQUENCE` fait foi, et le refus est mécanique.
+      const o = objet(ctx, v, chemin, ['type', 'paysCode', 'relation']);
+      if (!o || !requis(ctx, o, chemin, ['paysCode', 'relation'])) return undefined;
+      codePays(ctx, o['paysCode'], sous(chemin, 'paysCode'));
+      enumeration(ctx, o['relation'], sous(chemin, 'relation'), RELATIONS_CONSEQUENCE);
+      return o as unknown as Consequence;
+    }
   }
 }
 
@@ -2269,6 +2364,9 @@ export function validerDeblocage(valeur: unknown): Resultat<Deblocage> {
         { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
     } else if (type === 'mode') {
       enumeration(ctx, r['ref'], 'recompense.ref', MODES);
+    } else if (type === 'depart_nation') {
+      // La Nouvelle Ronde s'ouvre sur une nation, pas sur une clé de contenu.
+      codePays(ctx, r['ref'], 'recompense.ref');
     } else {
       cle(ctx, r['ref'], 'recompense.ref');
     }
@@ -2356,8 +2454,8 @@ export function validerCatalogueGabaritsComplet(valeur: unknown): Resultat<Catal
 
 const CLES_PROFIL = [
   'cle', 'paysDepart', 'mode', 'flags', 'deblocages', 'filsEnCours', 'filsFinis',
-  'scenariosFinis', 'secretsTrouves', 'paysVisites', 'modesFinis', 'serieDepeches',
-  'catalogueVersion', 'chainesVersion', 'creeLe', 'majLe',
+  'scenariosFinis', 'secretsTrouves', 'paysVisites', 'modesFinis', 'relations',
+  'confiance', 'serieDepeches', 'catalogueVersion', 'chainesVersion', 'creeLe', 'majLe',
 ] as const;
 
 /** Valide une sauvegarde de campagne (`13-campagne.md` §9). */
@@ -2406,6 +2504,39 @@ export function validerProfilCampagne(valeur: unknown): Resultat<ProfilCampagne>
   const modes = tableau(ctx, o['modesFinis'], 'modesFinis', { max: MODES.length },
     (e, c) => enumeration(ctx, e, c, MODES));
   if (modes) sansDoublon(ctx, modes, 'modesFinis');
+
+  // Les relations : un état par nation, et les deux bornes anti-blocage du brief.
+  // Une nation absente est `neutre` ; le pays du joueur n'est pas une relation.
+  const depart = typeof o['paysDepart'] === 'string' ? o['paysDepart'] : undefined;
+  if (estObjet(o['relations'])) {
+    const entrees = Object.entries(o['relations']);
+    if (entrees.length > 24) {
+      ctx.faute('relations', 'au plus vingt-quatre nations : la liste des relations est celle du canon');
+    }
+    let retirees = 0;
+    for (const [k, v] of entrees) {
+      const chemin = sous('relations', k);
+      codePays(ctx, k, chemin);
+      if (enumeration(ctx, v, chemin, RELATIONS_NATION) === 'retiree') retirees += 1;
+      if (depart !== undefined && k === depart) {
+        ctx.faute(chemin, "le pays de départ du joueur n'est pas une relation : c'est sa nation");
+      }
+    }
+    if (retirees > BORNES_RELATIONS.retireesMax) {
+      ctx.faute('relations',
+        `au plus ${BORNES_RELATIONS.retireesMax} nations retirées par partie : au-delà, une fin devient inaccessible`);
+    }
+  } else ctx.faute('relations', 'un objet est attendu');
+
+  // La confiance des généraux : 0 à trois, une entrée par général incarné. Un
+  // général absent est à 0 (`BRIEF.md`, « Le joueur et le départ »).
+  if (estObjet(o['confiance'])) {
+    for (const [k, v] of Object.entries(o['confiance'])) {
+      const chemin = sous('confiance', k);
+      chaine(ctx, k, chemin, { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
+      entier(ctx, v, chemin, { min: 0, max: CONFIANCE_MAX });
+    }
+  } else ctx.faute('confiance', 'un objet est attendu');
 
   const enCours = tableau(ctx, o['filsEnCours'], 'filsEnCours', { max: 8 }, (e, c) => {
     const fc = objet(ctx, e, c, ['filCle', 'etape']);

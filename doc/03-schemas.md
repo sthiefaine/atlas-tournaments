@@ -704,10 +704,18 @@ export interface ChoixScenario {
   }[];                            // 2 ou 3 options
 }
 
+export interface Incarnation {
+  paysCode: CodePays;             // la nation alliée que le joueur joue entièrement
+  commandantCle: Cle;             // son général, forme `cmd_<prenom>_<nom>`
+}
+
 export interface Scenario extends Enveloppe {
   code: Cle;
   nom: string;
   acte: number;                   // 0 = prologue (qualification nationale), 1 à 3 = les trois actes/continents (08-narration-choix §6)
+  /** Présent : **match d'incarnation** — le joueur joue cette nation, avec son
+   *  général au camp 0, son catalogue et sa spécialité (§15.2 bis). */
+  incarnation?: Incarnation;
   paysCode: CodePays;
   regionCle?: Cle;
   carteCle: Cle;
@@ -745,7 +753,7 @@ export interface Scenario extends Enveloppe {
 }
 ```
 
-**Validations serveur.** `date` est une `DateIso` valide, écrite **une seule fois** : une soumission qui modifie la `date` d'un scénario déjà validé est refusée (`motif: 'champ_calcule'`), sans quoi un rejeu changerait de saison. `cycleJourNuit` : deux entiers ≥ 0 dont la somme est comprise entre 1 et 12 ; `{ jour: 4, nuit: 2 }` à défaut. `climatFixe`, s'il est présent, ne contient que des valeurs des énumérations `Saison` et `Meteo` (§13) ; une météo forcée hors de la table de probabilités du climat du pays est acceptée mais signalée à la routine contrôle (c'est un scénario scripté, pas un tirage). `catalogueVersion` désigne une version de catalogue existante, et **toute** `CleUnite` citée par la carte, les unités de départ et les objectifs se résout dans **cette** version, avec un statut `canon` ou `homologuee` — une unité en `essai` n'est autorisée que dans le scénario d'une `MissionDuJour` (§14). `carteCle` existe et son statut est au moins `valide`. `commandants` : un par camp de la carte, exactement, pas deux fois le même `camp` ; le camp 0 sans `ia` est le joueur, tous les autres doivent avoir une `ia`. `victoire` et `defaite` : 1 à 3 entrées, non vides — un scénario sans condition de défaite est refusé. Toute `Case` citée dans un objectif est dans les bornes de la carte et sur une case pertinente (`capturer` et `tenir` exigent un terrain capturable). `uniteRef` référence une unité de `unitesDepart` (identifiée par son index ou une clé). `limiteJournees` cohérent avec `defaite` : si un objectif `survivre` existe, `limiteJournees` doit être ≥ ses journées ou nul. Tous les flags de `ecritFlags`, `flagsRequis`, `flagsInterdits` et `recompenses.flags` existent dans `flags.json` et respectent la convention de portée (§8) : un scénario de pays ne peut écrire que `pays.<son code>.*` et `monde.*`. Les dialogues passent le filtre de bible et de ton. `choix` : chaque `ChoixScenario` a 2 ou 3 options, chaque option écrit au moins un flag, et **deux options d'un même choix n'écrivent jamais le même ensemble de flags** (sinon le choix est décoratif — `motif: 'choix_sans_consequence'`).
+**Validations serveur.** `date` est une `DateIso` valide, écrite **une seule fois** : une soumission qui modifie la `date` d'un scénario déjà validé est refusée (`motif: 'champ_calcule'`), sans quoi un rejeu changerait de saison. `cycleJourNuit` : deux entiers ≥ 0 dont la somme est comprise entre 1 et 12 ; `{ jour: 4, nuit: 2 }` à défaut. `climatFixe`, s'il est présent, ne contient que des valeurs des énumérations `Saison` et `Meteo` (§13) ; une météo forcée hors de la table de probabilités du climat du pays est acceptée mais signalée à la routine contrôle (c'est un scénario scripté, pas un tirage). `catalogueVersion` désigne une version de catalogue existante, et **toute** `CleUnite` citée par la carte, les unités de départ et les objectifs se résout dans **cette** version, avec un statut `canon` ou `homologuee` — une unité en `essai` n'est autorisée que dans le scénario d'une `MissionDuJour` (§14). `carteCle` existe et son statut est au moins `valide`. `commandants` : un par camp de la carte, exactement, pas deux fois le même `camp` ; le camp 0 sans `ia` est le joueur, tous les autres doivent avoir une `ia`. `victoire` et `defaite` : 1 à 3 entrées, non vides — un scénario sans condition de défaite est refusé. Toute `Case` citée dans un objectif est dans les bornes de la carte et sur une case pertinente (`capturer` et `tenir` exigent un terrain capturable). `uniteRef` référence une unité de `unitesDepart` (identifiée par son index ou une clé). `limiteJournees` cohérent avec `defaite` : si un objectif `survivre` existe, `limiteJournees` doit être ≥ ses journées ou nul. Tous les flags de `ecritFlags`, `flagsRequis`, `flagsInterdits` et `recompenses.flags` existent dans `flags.json` et respectent la convention de portée (§8) : un scénario de pays ne peut écrire que `pays.<son code>.*` et `monde.*`. **Un scénario d'`incarnation` est plus serré encore** : il n'écrit **aucun** flag de la trame principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de la **nation incarnée** — `pays.<incarnation.paysCode>.*` et `cmd.*`, et rien d'autre, ni en récompense ni dans une option de choix (§15.2 bis). Son `commandants[camp 0].commandantCle` est **exactement** `incarnation.commandantCle` : le joueur joue le général de la nation, pas le sien. Les dialogues passent le filtre de bible et de ton. `choix` : chaque `ChoixScenario` a 2 ou 3 options, chaque option écrit au moins un flag, et **deux options d'un même choix n'écrivent jamais le même ensemble de flags** (sinon le choix est décoratif — `motif: 'choix_sans_consequence'`).
 
 ```json
 {
@@ -1446,6 +1454,43 @@ export interface Scenario extends Enveloppe {
 
 `dureeVisee`, quand `modes` est présent, doit **égaler** `modes.normal.dureeVisee` : une seule vérité, et elle est celle du mode par défaut.
 
+### 15.2 bis `Incarnation` — jouer une nation alliée
+
+Le brief (« Le joueur et le départ ») ajoute un quatrième champ facultatif : une nation alliée ne se contente pas d'aider, le joueur peut **la jouer entièrement**.
+
+```ts
+export interface Incarnation {
+  paysCode: CodePays;      // la nation jouée : une `alliee` du profil, jamais celle du joueur
+  commandantCle: Cle;      // son général, forme `cmd_<prenom>_<nom>`
+}
+
+export interface Scenario extends Enveloppe {
+  // …
+  incarnation?: Incarnation;   // présent : ce match est un match d'incarnation
+}
+```
+
+Le camp du joueur prend alors **le général de cette nation** (ses pouvoirs, sa jauge), **son catalogue** (unité spéciale comprise), sa **spécialité** et son **style visuel** ; le commandant d'origine du joueur reste au banc en **co-commandant passif** (`04-gameplay.md` §7.5), de sorte que le lien avec sa campagne ne se perd jamais.
+
+**Trois bornes, et où chacune est tenue.**
+
+| Borne | Tenue par |
+|---|---|
+| **Aucun flag de la trame principale.** Un match d'incarnation n'écrit que `pays.<nation incarnée>.*` et `cmd.*` — jamais `monde.*` | Le **schéma** : `validerScenario` refuse un `monde.*` et un `pays.*` étranger, en récompense comme dans une option de `choix` |
+| **La nation incarnée ne se retire pas pendant qu'on la joue** | Le **contenu** : un match d'incarnation ne peut pas poser le second grief d'un retrait, puisqu'il n'écrit rien qui le compte (`08-narration-choix.md` §4.5) — et la colonne vertébrale ne place aucune scène de retrait dans un fil d'incarnation (`13-campagne.md` §3.4) |
+| **Incarner est proposé, jamais imposé**, sauf à l'acte III où le joueur choisit parmi ses alliées | Le **contenu** : un scénario d'incarnation est toujours une variante offerte d'une étape, jamais l'unique chemin — sauf à l'acte III, où la variante *est* le choix |
+
+**Ce que l'incarnation fait monter.** La **confiance** du général incarné, rangée dans `ProfilCampagne.confiance` (§15.9) et lisible par une `Condition` (§15.5) :
+
+```ts
+export const CONFIANCE_MAX = 3;
+export type NiveauConfiance = 0 | 1 | 2 | 3;
+```
+
+Un seul palier compte, `CONFIANCE_MAX` : le général y devient co-commandant à jauge entière (`04-gameplay.md` §7.5) et sa nation s'ouvre comme départ de Nouvelle Ronde (§15.6). Les niveaux 1 et 2 n'ouvrent que des dialogues — une échelle de puissance à quatre crans serait une seconde monnaie à équilibrer.
+
+**Le catalogue n'est pas dans le scénario.** `catalogueVersion` fige la version, pas le contenu : c'est l'appelant — le serveur ou la page — qui passe à `creerPartie` le catalogue de la nation incarnée. Le moteur ne charge rien de lui-même (`02-architecture.md` §3.1), il compose le camp du joueur avec le général que `sceneDepuis` y place. **[Proposition]**
+
 ### 15.3 `GabaritMission`
 
 Neuf gabarits, liste fermée, publiés en `content/gabarits-missions.json`. C'est le contrat entre la routine lore (qui habille), la routine map (qui produit une carte dans les bornes) et la routine contrôle (qui vérifie la durée simulée).
@@ -1473,7 +1518,34 @@ export interface GabaritMission {
 export interface CatalogueGabarits { gabarits: GabaritMission[] }
 ```
 
-**Validations.** Toute fenêtre `{min, max}` est non vide. Le gabarit `survie` porte l'objectif `survivre`, `escorte` porte `proteger`, et `exhibition` ne dépasse pas quinze journées (`01-bible.md` §4.6). `validerCatalogueGabaritsComplet` exige en plus que les neuf clés canon soient toutes présentes.
+**Validations.** Toute fenêtre `{min, max}` est non vide. Le gabarit `survie` porte l'objectif `survivre`, `escorte` porte `proteger`, et `exhibition` ne dépasse pas quinze journées (`01-bible.md` §4.7). `validerCatalogueGabaritsComplet` exige en plus que les neuf clés canon soient toutes présentes.
+
+### 15.3 bis `RelationNation` — l'état d'une nation vis-à-vis du joueur
+
+Le brief révisé du 5 septembre 2026 au soir change la nature des vingt-quatre fiches pays : **tout le monde part de France**, et les nations ne sont plus un menu de départ mais des **relations** qui évoluent pendant la partie, puis des **départs débloqués** pour une Nouvelle Ronde.
+
+```ts
+export const RELATIONS_NATION = ['neutre', 'alliee', 'rivale', 'retiree'] as const;
+export type RelationNation = typeof RELATIONS_NATION[number];
+
+export const BORNES_RELATIONS = {
+  retireesMax: 5,        // invariant de schéma
+  allieesGaranties: 2,   // garantie de contenu, pas de schéma
+} as const;
+
+export const RELATIONS_CONSEQUENCE = ['alliee', 'rivale'] as const;  // ce qu'un fil peut poser
+```
+
+| État | Ce qu'il apporte au joueur |
+|---|---|
+| `neutre` | Rien. C'est l'état par défaut : une nation absente de `relations` est neutre, comme un compteur absent vaut zéro |
+| `alliee` | Son commandant recrutable en co-commandant, son **unité spéciale produisible** (quantité bornée par match), sa carte de terrain, son **soutien à l'acte III**, et son **déblocage comme pays de départ** de la prochaine Nouvelle Ronde |
+| `rivale` | Un grief : IA plus dure, dialogue de revanche, et la possibilité que sa destination se ferme |
+| `retiree` | Elle a quitté la Ronde à cause du joueur : destination fermée, territoire grisé, absence à l'acte III ou passage à la Cinquième Manche |
+
+**Les deux bornes, et où chacune est tenue.** `retireesMax: 5` est un **invariant de schéma**, refusé par `validerProfilCampagne` : au-delà, une fin devient inaccessible, et le brief l'interdit. `allieesGaranties: 2` est une garantie de **contenu**, portée par la colonne vertébrale (`13-campagne.md` §3.4) — un profil au premier match n'a légitimement aucune alliée, le schéma ne peut donc pas l'exiger sans refuser tous les débuts de partie. **[Proposition]**
+
+**Qui calcule.** La relation est **dérivée** des flags (respect, grief, choix de scène, sponsor, fair-play) par le moteur ou le serveur, et écrite dans `ProfilCampagne.relations` — **jamais par le rendu**, exactement comme un déblocage (§15.5).
 
 ### 15.4 `Consequence` — la liste fermée
 
@@ -1489,10 +1561,13 @@ export type Consequence =
   | { type: 'objectif_alternatif'; scenarioCle: Cle; objectif: ObjectifVictoire }
   | { type: 'allie_acte_iii'; paysCode: CodePays }
   | { type: 'entree_carnet'; carnetCle: Cle }
-  | { type: 'deblocage'; deblocageCle: Cle };
+  | { type: 'deblocage'; deblocageCle: Cle }
+  | { type: 'relation_nation'; paysCode: CodePays; relation: RelationConsequence };
 ```
 
 Les bornes numériques sont publiées comme données (`BORNES_CONSEQUENCE`), pour que le validateur et la documentation ne puissent pas diverger.
+
+**`relation_nation` est bornée par son type**, et c'est délibéré : `RelationConsequence` ne vaut que `alliee` ou `rivale`. Un fil **rallie ou fâche** ; il ne **retire** jamais une nation de la Ronde — un retrait est la conséquence d'un choix de la campagne principale, pas d'un contenu facultatif — et il ne remet jamais une relation à `neutre`, ce qui serait une conséquence qui ne change rien. Le validateur refuse les deux, et la routine lore ne peut donc pas produire un fil qui vide la carte du monde. **[Proposition]**
 
 ### 15.5 `Condition` — composable, évaluée par le moteur
 
@@ -1504,9 +1579,15 @@ export type Condition =
   | { type: 'date'; du?: DateIso; au?: DateIso }      // au moins une borne, bornes incluses
   | { type: 'pays_visite'; pays: CodePays[]; combien: number }
   | { type: 'secret'; cle: Cle }                      // un easter egg de `doc/14-secrets.md`
+  | { type: 'relation'; pays: CodePays[]; relation: RelationNation; combien: number }
+  | { type: 'confiance'; commandantCle: Cle; min: NiveauConfiance }  // 1 à 3 ; absent = 0
   | { type: 'et'; conditions: Condition[] }           // 2 à 4
   | { type: 'ou'; conditions: Condition[] };          // 2 à 4
 ```
+
+**`confiance` a exactement la forme de `compteur`**, parce qu'elle est un compteur : la confiance d'un général envers le joueur, de 0 à `CONFIANCE_MAX` (3), montée en **incarnant** sa nation (§15.2 bis). Un général absent de `ProfilCampagne.confiance` est à 0 — l'oubli et l'indifférence sont le même état. Le `min` vaut 1 à 3 : exiger 0 serait une condition toujours vraie, exiger 4 une condition inatteignable, et les deux sont refusées.
+
+**`relation` a exactement la forme de `pays_visite`**, parce qu'elle répond à la même famille de questions : « le Japon est-il allié » (`pays: ['jp'], combien: 1`) et « ai-je au moins deux alliées » (une liste, `combien: 2`) s'écrivent avec un seul type. Une nation absente de `ProfilCampagne.relations` est `neutre` — l'oubli et la neutralité sont le même état. Comme pour `pays_visite`, exiger plus de nations qu'on n'en liste est refusé : une condition inatteignable est un bug. **[Proposition]**
 
 **Profondeur bornée à trois** (`PROFONDEUR_CONDITION_MAX`). Une condition `date` sans borne, une fenêtre de dates vide, ou un `pays_visite` qui exige plus de pays qu'il n'en liste sont refusés : une condition inatteignable est un bug, pas une difficulté.
 
@@ -1516,7 +1597,8 @@ export type Condition =
 
 ```ts
 export const TYPES_RECOMPENSE_DEBLOCAGE = [
-  'general_secret', 'carte', 'carte_terrain', 'skin_style', 'fil', 'mode', 'entree_carnet',
+  'general_secret', 'carte', 'carte_terrain', 'skin_style', 'fil', 'mode',
+  'entree_carnet', 'depart_nation',
 ] as const;
 
 export interface Deblocage {
@@ -1528,7 +1610,9 @@ export interface Deblocage {
 }
 ```
 
-Une récompense `general_secret` référence un `Commander.code` (forme `cmd_<prenom>_<nom>`) ; une récompense `mode` référence un `Mode`. **[Proposition]**
+Une récompense `general_secret` référence un `Commander.code` (forme `cmd_<prenom>_<nom>`) ; une récompense `mode` référence un `Mode` ; une récompense **`depart_nation` référence un `CodePays`**, jamais une `Cle`. C'est la porte de la **Nouvelle Ronde** : une nation devenue alliée pendant une partie s'ouvre comme pays de départ de la suivante, et l'unique déblocage type s'écrit `{ condition: { type: 'relation', pays: ['jp'], relation: 'alliee', combien: 1 }, recompense: { type: 'depart_nation', ref: 'jp' } }`. **[Proposition]**
+
+**Une confiance de 3 ouvre la même porte.** Rallier et **incarner** sont deux chemins vers un départ, et un `ou` les réunit sans mécanisme nouveau : `{ type: 'ou', conditions: [{ type: 'relation', pays: ['ch'], relation: 'alliee', combien: 1 }, { type: 'confiance', commandantCle: 'cmd_elsbeth_vonlanthen', min: 3 }] }`. C'est la seule chose que la confiance débloque au niveau du schéma ; le co-commandant à jauge entière, lui, est une règle de jeu (`04-gameplay.md` §7.5). **[Proposition]**
 
 ### 15.7 `Commander` gagne `secret` et `deblocage`
 
@@ -1581,6 +1665,8 @@ export interface ProfilCampagne {
   secretsTrouves: Cle[];          // noms courts ; la forme longue est `monde.secret.<nom>`
   paysVisites: CodePays[];
   modesFinis: Mode[];
+  relations: Record<CodePays, RelationNation>;  // absent = neutre ; jamais `paysDepart`
+  confiance: Record<Cle, NiveauConfiance>;      // par général, 0 à 3 ; absent = 0
   serieDepeches: number;          // hors flags de campagne, par construction
   catalogueVersion: number;
   chainesVersion: number;
@@ -1590,6 +1676,10 @@ export interface ProfilCampagne {
 ```
 
 **Validations.** Un booléen posé vaut `true` et jamais `false` : on ne défait pas une décision (`08-narration-choix.md` §2.1). Un fil ne peut pas être à la fois dans `filsEnCours` et dans `filsFinis`. Les listes sont sans doublon. `serieDepeches` est un champ **à part**, hors de `flags` : c'est le type qui protège l'étanchéité de la Dépêche, pas la discipline.
+
+**Validations propres à `confiance`.** Une clé qui est un **code de commandant** (`cmd_<prenom>_<nom>`, jamais un code pays : la confiance se gagne auprès d'un général, pas d'une administration), une valeur entière de 0 à `CONFIANCE_MAX`. Un général absent est à 0, ce qui rend l'objet vide parfaitement valide au premier match. Le champ est **calculé** comme `relations` : il monte quand le joueur incarne la nation du général (§15.2 bis), jamais par une écriture du rendu. **[Proposition]**
+
+**Validations propres à `relations`.** Vingt-quatre entrées au plus, une clé qui est un `CodePays`, une valeur qui est une `RelationNation`, **au plus cinq `retiree`** (`BORNES_RELATIONS.retireesMax`) — la borne anti-blocage du brief, tenue par le type et non par la bonne volonté d'une routine — et **jamais `paysDepart`** : la nation que le joueur représente n'est pas une relation, c'est lui. Une nation absente est `neutre`, ce qui rend le champ vide parfaitement valide au premier match. **[Proposition]**
 
 Le profil ne porte **jamais** l'état d'une partie en cours : celui-ci est une `Sauvegarde` (§14), qui est ses actions et les versions qu'elle a figées. Les deux ne se mélangent pas — c'est ce qui permet d'abandonner un match sans perdre une campagne.
 
@@ -1630,3 +1720,10 @@ Le profil ne porte **jamais** l'état d'une partie en cours : celui-ci est une `
 | 27 | `Commander.secret` et `Commander.deblocage` obligatoirement solidaires | §15.7 |
 | 28 | `Fil` : gabarit `exhibition` interdit, flags de Dépêche et de secret interdits, au moins une conséquence | §15.8 |
 | 29 | `ProfilCampagne`, et `serieDepeches` en champ propre pour protéger l'étanchéité de la Dépêche par le type | §15.9 |
+| 30 | `RelationNation`, ses quatre états et le partage des deux bornes : `retireesMax` tenue par le schéma, `allieesGaranties` tenue par le contenu | §15.3 bis |
+| 31 | `relation_nation` bornée par son type à `alliee \| rivale` : un fil rallie ou fâche, il ne retire jamais une nation | §15.4 |
+| 32 | La condition `relation`, calquée sur `pays_visite`, et la récompense `depart_nation` qui ouvre une Nouvelle Ronde | §15.5, §15.6 |
+| 33 | `ProfilCampagne.relations` : au plus cinq `retiree`, jamais `paysDepart`, absent = `neutre` | §15.9 |
+| 34 | `Scenario.incarnation` : le général incarné au camp 0, et aucun flag de la trame principale — ni en récompense, ni dans un choix | §15.2 bis |
+| 35 | La condition `confiance`, calquée sur `compteur`, et le second chemin vers `depart_nation` | §15.5, §15.6 |
+| 36 | `ProfilCampagne.confiance` : 0 à `CONFIANCE_MAX` par général, clé de commandant, absent = 0 | §15.9 |

@@ -1,4 +1,4 @@
-# 06 — Les 24 pays de départ
+# 06 — Les 24 nations : relations, puis départs débloqués
 
 *Document de contenu. Source de vérité au-dessus de lui : `BRIEF.md`. Ce document ne le contredit jamais ; tout ce qui n'est pas dans le brief est une **proposition**, signalée comme telle.*
 
@@ -6,15 +6,24 @@
 
 ## 1. Ce que ce document décide
 
-Le joueur choisit son **pays de départ parmi 24**, comme un starter. Ce choix fixe :
+**Tout le monde commence par la France** (`BRIEF.md`, « Le joueur et le départ », révisé le 5 septembre 2026 au soir). Le premier parcours part de France, avec son prologue écrit à la main et son tour des 18 régions, parce que c'est le seul contenu entièrement maîtrisé au lancement et que le budget de 80 h vaut pour **un** parcours. Il n'y a donc **pas d'écran de sélection parmi 24 au premier parcours**.
 
-- son **commandant d'origine** (archétype, pouvoir, super-pouvoir) ;
+Les **24 fiches de ce document restent le canon**, mais leur rôle est double, et dans cet ordre :
+
+1. **Pendant la partie, une fiche décrit une relation.** Chaque nation porte un état visible sur la carte du monde — `neutre`, `alliee`, `rivale`, `retiree` (`RelationNation`, `03-schemas.md` §15.3 bis) — qui évolue selon les choix du joueur. C'est la fiche qui dit **ce que valent** ces états pour cette nation-là : son commandant est celui qu'on recrute en co-commandant quand elle est alliée, son **unité spéciale** est celle qu'on peut produire (quantité bornée par match), sa **carte de terrain** est celle qu'elle prête, son **rival naturel** est celui qui revient avec un grief quand elle est rivale, et sa **destination** est celle qui s'éteint quand elle se retire. **Alliée, elle devient jouable** : le joueur peut l'**incarner** le temps d'un match (`Scenario.incarnation`, `03-schemas.md` §15.2 bis) — son général, son catalogue, sa spécialité, son style —, ce qui fait monter la **confiance** de ce général (0 à 3 ; à 3, co-commandant à jauge entière et départ de Nouvelle Ronde).
+2. **Entre deux parties, une fiche redevient un départ.** Une nation devenue **alliée** se débloque comme pays de départ pour une **Nouvelle Ronde** (`Deblocage` de récompense `depart_nation`, `13-campagne.md` §3.5). C'est là — et seulement là — que le choix du pays de départ existe, parmi les nations débloquées.
+
+Ce que la fiche fixe, pour l'un et l'autre usage :
+
+- son **commandant** (archétype, pouvoir, super-pouvoir) : adversaire d'abord, co-commandant s'il est rallié, commandant d'origine s'il devient un départ ;
 - son **style de jeu** (un bonus et un malus clairs, jamais deux lignes de texte flou) ;
-- son **continent de départ**, donc les premières destinations proposées sur la carte du monde ;
+- son **continent**, donc sa place dans les destinations proposées — et le continent de départ, le jour où elle devient un départ ;
 - son **rival naturel**, qui revient plusieurs fois dans le voyage ;
-- ses **flags narratifs** propres, contre lesquels la routine lore écrit.
+- ses **flags narratifs** propres, contre lesquels la routine lore écrit, et **depuis lesquels sa relation est calculée** par le moteur ou le serveur, jamais par le rendu.
 
 Ce document fournit les 24 fiches dans un **gabarit strictement identique**, pour que la routine lore et la routine map puissent les lire mécaniquement.
+
+**Bornes anti-blocage, rappel du canon.** Au plus **cinq** nations retirées par partie ; **au moins deux alliées** avant l'acte III, garanties par la colonne vertébrale ; jamais de fin rendue inaccessible par un retrait — seulement une fin d'une autre couleur.
 
 ### Note de sensibilité (rappel du canon, non négociable)
 
@@ -56,11 +65,11 @@ Les **clés** de la colonne de gauche sont celles publiées par `01-bible.md` §
 
 ---
 
-## 3. Le choix des 24 pays
+## 3. Le choix des 24 nations
 
 **Imposés par le brief :** France, Luxembourg, Japon, Brésil.
 
-**Les 20 autres, proposés ici**, avec la raison d'équilibre de chacun en une phrase :
+**Les 20 autres, proposés ici**, avec la raison d'équilibre de chacun en une phrase. La colonne se lit sur les deux registres à la fois : ce que la nation apporte **alliée** (son unité spéciale, sa carte de terrain, sa manière de jouer) et la leçon que serait son **départ** de Nouvelle Ronde. « Le départ X » ci-dessous désigne donc une Nouvelle Ronde, jamais le premier parcours — qui part toujours de France.
 
 | Pays | Raison d'équilibre (une phrase) |
 |---|---|
@@ -569,18 +578,22 @@ La colonne **repli** indique les pays qui portent une **spécialité de repli te
 
 ## 7. Les pays phares
 
-Quatre pays reçoivent un **prologue écrit à la main**, en plus de leur fiche. Les vingt autres ont un début de partie construit par la routine lore à partir de la fiche seule.
+**Ce que la révision du 5 septembre au soir change ici, et rien d'autre : le calendrier.** Un prologue de pays phare n'est plus une des vingt-quatre portes d'entrée du jeu — c'est le prologue d'une **Nouvelle Ronde**, jouable le jour où cette nation a été ralliée dans une partie précédente. La France est la seule exception, et c'est sa raison d'être : elle est le premier parcours de tout le monde. Les fiches et les prologues ne changent pas ; ce qui change, c'est **quand** on les voit.
 
-| Pays | Ce que le prologue apporte | État |
-|---|---|---|
-| **France** | Le plus complet : la qualification nationale des 18 régions avant le mondial (voir `07-france-regions.md`). Sert de gabarit à tous les autres. | Spécifié |
-| **Luxembourg** | Le contrepoint : un pays minuscule, un prologue court et dense, tout entier construit sur « on est petits et on le sait ». Deux étapes seulement. | À écrire |
-| **Japon** | Le prologue « réseau » : une qualification qui se joue en enchaînant des étapes selon un horaire, où le joueur perd son avantage s'il traîne. | À écrire |
-| **Brésil** | Le prologue « ambiance » : une qualification en carnaval, où la progression se mesure au public gagné plutôt qu'aux victoires nettes. | À écrire |
+Quatre pays reçoivent un **prologue écrit à la main**, en plus de leur fiche. Les vingt autres ont un début de partie construit par la routine lore à partir de la fiche seule, le jour où ils s'ouvrent.
+
+| Pays | Ce que le prologue apporte | Quand on le voit | État |
+|---|---|---|---|
+| **France** | Le plus complet : la qualification nationale des 18 régions avant le mondial (voir `07-france-regions.md`). Sert de gabarit à tous les autres. | **Au premier parcours, pour tout le monde** | Spécifié |
+| **Luxembourg** | Le contrepoint : un pays minuscule, un prologue court et dense, tout entier construit sur « on est petits et on le sait ». Deux étapes seulement. | Nouvelle Ronde, si `lu` a été ralliée | À écrire |
+| **Japon** | Le prologue « réseau » : une qualification qui se joue en enchaînant des étapes selon un horaire, où le joueur perd son avantage s'il traîne. | Nouvelle Ronde, si `jp` a été ralliée | À écrire |
+| **Brésil** | Le prologue « ambiance » : une qualification en carnaval, où la progression se mesure au public gagné plutôt qu'aux victoires nettes. | Nouvelle Ronde, si `br` a été ralliée | À écrire |
 
 **Règle de cohérence** — Un prologue écrit à la main ne peut jamais contredire la fiche du pays : il **la met en scène**. Si le prologue a besoin d'un élément qui n'est pas dans la fiche, c'est la fiche qu'on modifie, ici, d'abord.
 
-**Priorité de production** — France (spécifiée), puis Luxembourg (le plus court, il valide le gabarit court), puis Japon, puis Brésil. Les vingt autres passent à la routine lore une fois ces quatre-là validés par la routine contrôle.
+**Priorité de production** — France (spécifiée) d'abord, et de loin : c'est le seul prologue dont un joueur a besoin pour jouer le jeu. Puis Luxembourg (le plus court, il valide le gabarit court), puis Japon, puis Brésil — trois prologues qui ne bloquent aucun lancement, puisqu'aucun premier parcours ne les traverse. Les vingt autres passent à la routine lore une fois ces quatre-là validés par la routine contrôle.
+
+**Ce que la révision libère.** Les vingt-trois prologues non français ne sont plus sur le chemin critique. Ce qui l'est, à leur place, c'est le **jeu des relations** : que chaque fiche dise précisément ce qu'elle apporte alliée, ce qu'elle coûte rivale, et ce qui s'éteint quand elle se retire.
 
 ---
 

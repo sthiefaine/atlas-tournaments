@@ -80,7 +80,46 @@ export function marquerVisite(camp: EtatCamp, indice: number): void {
   camp.visitees = `${camp.visitees.slice(0, indice)}1${camp.visitees.slice(indice + 1)}`;
 }
 
-/** Compose une scène jouable à partir d'un scénario, d'une carte et des commandants. */
+/** Le camp du joueur : le camp 0, le seul sans IA (`03-schemas.md` §6). */
+export const CAMP_JOUEUR: CampId = 0;
+
+/**
+ * Les commandants d'une scène, l'**incarnation** appliquée.
+ *
+ * Quand `scenario.incarnation` est présent, le joueur ne joue pas son commandant
+ * d'origine mais **le général de la nation incarnée** — ses pouvoirs, sa jauge
+ * (`BRIEF.md`, « Le joueur et le départ »). Le camp du joueur prend donc ce
+ * général : celui du scénario s'il y est déjà (`validerScenario` l'exige), sinon
+ * celui que l'appelant a fourni ailleurs dans la liste.
+ *
+ * Le **catalogue** de la nation incarnée — son unité spéciale comprise — n'est pas
+ * ici : le moteur ne charge rien, il reçoit. C'est l'appelant — le serveur ou la
+ * page — qui passe à `creerPartie` le catalogue de la nation jouée au lieu de celui
+ * du joueur (`02-architecture.md` §3.1, `13-campagne.md` §3.4).
+ *
+ * La fonction est **totale** : un général introuvable laisse la liste inchangée,
+ * elle ne lève jamais.
+ */
+export function commandantsIncarnes(
+  scenario: Scenario, commandants: (CommandantMoteur | null)[],
+): (CommandantMoteur | null)[] {
+  const incarnation = scenario.incarnation;
+  if (!incarnation) return commandants;
+  if (commandants[CAMP_JOUEUR]?.cle === incarnation.commandantCle) return commandants;
+  const general = commandants.find((c) => c?.cle === incarnation.commandantCle) ?? null;
+  if (general === null) return commandants;
+  const sortie = [...commandants];
+  sortie[CAMP_JOUEUR] = general;
+  return sortie;
+}
+
+/**
+ * Compose une scène jouable à partir d'un scénario, d'une carte et des commandants.
+ *
+ * Pour un **match d'incarnation**, le camp du joueur reçoit le général de la nation
+ * incarnée (`commandantsIncarnes`), et le catalogue passé plus tard à `creerPartie`
+ * est celui de cette nation — c'est l'appelant qui le fournit.
+ */
 export function sceneDepuis(
   scenario: Scenario, carte: MapDef, commandants: (CommandantMoteur | null)[],
   climatPays: ReglagesPartie['climatPays'] = 'tempere',
@@ -96,7 +135,7 @@ export function sceneDepuis(
     proprietaires: carte.proprietaires,
     unitesDepart: carte.unitesDepart,
     camps,
-    commandants,
+    commandants: commandantsIncarnes(scenario, commandants),
     mecanique: carte.mecanique ? { cle: carte.mecanique, parametres: {} } : null,
     reglages: {
       date: scenario.date,
@@ -163,6 +202,10 @@ export function reglagesParDefaut(partiel: Partial<ReglagesPartie> = {}): Reglag
 /**
  * Crée une partie prête à jouer : la journée 1 est ouverte (hooks, revenus,
  * réparation, réveil), c'est au camp 0 de donner ses ordres.
+ *
+ * Le catalogue est **toujours** fourni par l'appelant, jamais chargé ici. Pour un
+ * match d'incarnation, c'est donc le serveur ou la page qui passe le catalogue de la
+ * nation incarnée — celui qui porte son unité spéciale (`sceneDepuis`).
  */
 export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatPartie {
   const rng = creerRng(graine);

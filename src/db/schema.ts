@@ -123,7 +123,7 @@ export const routineMissions = pgTable('routine_missions', {
 // 4. countries / commanders
 // ---------------------------------------------------------------------------
 
-/** Les 24 pays de départ, copie miroir du canon pour que les routines lisent une seule source. */
+/** Les 24 nations, copie miroir du canon pour que les routines lisent une seule source. */
 export const countries = pgTable('countries', {
   id: text('id').primaryKey(),
   code: text('code').notNull().unique(),

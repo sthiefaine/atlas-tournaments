@@ -18,7 +18,7 @@ Advance Wars est un excellent jeu de 2001. Le copier serait déjà un travail ho
 | **L'homologation** — le catalogue d'unités est vivant, versionné, plafonné à 24 | le jeu change dans le temps sans qu'un rejeu bouge |
 | **La Dépêche du jour** — une mission quotidienne, sept jours de vie, puis les archives | un rendez-vous, sans abonnement ni serveur temps réel |
 | **Des choix à conséquences** — flags, carnet de voyage, réputation par commandant, quatre fins | une campagne qui se raconte, ce qu'Advance Wars ne fait presque pas |
-| **Le tour du monde, 24 départs, 18 régions françaises** | une profondeur de contenu que la structure sait produire |
+| **Le tour du monde, 24 nations en relations puis en départs débloqués, 18 régions françaises** | une profondeur de contenu que la structure sait produire |
 | **Cinq routines de contenu** | le jeu peut grossir sans que l'équipe grossisse |
 | **La 3D avec relief** (depuis le 5 septembre) | ce qui rend le relief **jouable** enfin lisible |
 

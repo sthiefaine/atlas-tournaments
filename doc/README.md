@@ -10,7 +10,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 | [03-schemas.md](03-schemas.md) | Types TypeScript et exemples JSON de tout ce qui circule | les schémas |
 | [04-gameplay.md](04-gameplay.md) | Règles : tour, unités, terrains, dégâts, capture, commandants, mécaniques régionales | les règles |
 | [05-routines.md](05-routines.md) | Les quatre routines de contenu, leurs prompts bootstrap, endpoints, bornes, administration ; le récapitulatif des sept tâches planifiées | le cerveau |
-| [06-pays-de-depart.md](06-pays-de-depart.md) | Les 24 pays de départ et leurs commandants | le contenu pays |
+| [06-pays-de-depart.md](06-pays-de-depart.md) | Les 24 nations, leurs commandants, leur rôle de relation puis de départ débloqué | le contenu pays |
 | [07-france-regions.md](07-france-regions.md) | Le tour des 18 régions de France et leurs mécaniques | le contenu régions |
 | [08-narration-choix.md](08-narration-choix.md) | Flags, carnet de voyage, réputation, trois actes, fins | la narration |
 | [09-i18n.md](09-i18n.md) | Les neuf langues, les chaînes et leur glossaire, le repli d'affichage, la routine `atlas_traduction` | l'i18n |

@@ -134,7 +134,7 @@ Diégétiquement, le plafond n'est pas arbitraire : la feuille de match d'Atlas 
 
 ### 4.4 La Dépêche du jour et la narration
 
-La **Dépêche du jour** (`01-bible.md` §4.6, `BRIEF.md`) est une manche d'exhibition quotidienne, inspirée d'un événement réel du registre autorisé. Elle touche à ce document par une seule règle, et cette règle est dure :
+La **Dépêche du jour** (`01-bible.md` §4.7, `BRIEF.md`) est une manche d'exhibition quotidienne, inspirée d'un événement réel du registre autorisé. Elle touche à ce document par une seule règle, et cette règle est dure :
 
 1. **Une mission du jour n'écrit aucun flag de campagne.** Ni `pays.*`, ni `monde.*` (à l'exception de `monde.depeche.*`), ni `cmd.*`. Elle ne pose pas `visite`, elle n'incrémente pas `terrain_altere`, elle ne fait monter aucun respect ni aucun grief, elle n'ouvre aucune bascule de trame et elle n'entre dans le calcul d'aucune fin (§6, §7). Une scène de Dépêche qui déclare un tel flag en écriture est rejetée d'office par la routine contrôle (`01-bible.md` §8.6, règle 7).
 2. **Ses récompenses sont cosmétiques, ou une carte de terrain au plus.** Un surnom de Vantour, une bannière, une teinte d'équipe, une page d'archives à lire — ou, au maximum, **une** carte de terrain à usage unique, la même monnaie que les commandants régionaux français (§4.2). Jamais un co-commandant, jamais une trace persistante, jamais un accès à une destination.
@@ -145,7 +145,46 @@ La **Dépêche du jour** (`01-bible.md` §4.6, `BRIEF.md`) est une manche d'exhi
 
 **Ce que le joueur peut quand même y gagner narrativement.** **[Proposition]** Deux flags de campagne existent *autour* de la Dépêche sans être écrits par elle : `monde.atlas.essai_soutenu` et `monde.atlas.homologation_contestee` (§9.4). Ils se posent dans une **scène de campagne** — un couloir de Port-Méridien, une conférence de presse d'après-match — où le joueur prend position sur une pièce de matériel à l'essai qu'il a croisée ailleurs. C'est la campagne qui écrit, jamais l'exhibition.
 
-### 4.5 Les fils secondaires
+### 4.5 Des flags à la relation de nation
+
+*Ce paragraphe est le plus important du document depuis la révision du brief du 5 septembre au soir : c'est là que les flags cessent d'être une comptabilité et deviennent une carte du monde qui change de couleur.*
+
+**Tout le monde part de France.** Les vingt-trois autres nations ne se choisissent pas : elles se **gagnent ou se perdent** en route. Chacune porte un état, `RelationNation` (`03-schemas.md` §15.3 bis), rangé dans `ProfilCampagne.relations` :
+
+| État | Comment on y arrive | Ce que ça donne au joueur |
+|---|---|---|
+| `neutre` | L'état par défaut. Une nation absente de `relations` est neutre : ne l'avoir jamais croisée et n'avoir rien décidé chez elle sont la même chose | Rien. Elle reçoit, elle joue, elle salue |
+| `alliee` | `pays.<xx>.allie_recrute`, ou `pays.<xx>.rival_respecte`, ou `pays.<xx>.dette_envers_joueur ≥ 2` — c'est-à-dire exactement la première ligne de la règle de ralliement du §6 | Son commandant recrutable en **co-commandant** ; son **unité spéciale produisible** dans les matchs du joueur, en quantité bornée par match ; sa **carte de terrain** ; son **soutien à l'acte III** ; et son **déblocage comme pays de départ** de la prochaine Ronde |
+| `rivale` | Un commandant du pays à `grief ≥ 3`, ou `pays.<xx>.rival_humilie` sans respect en face | Le grief : IA plus dure, dialogue de revanche, objectif de match personnel — et sa destination **peut se fermer** sur la carte du monde |
+| `retiree` | Le cumul, et lui seul : `pays.<xx>.rival_humilie` **et** `pays.<xx>.terrain_altere ≥ 2`, ou un commandant du pays à `grief ≥ 4` **et** `respect ≤ 1` | La nation quitte la Ronde à cause du joueur : **destination fermée**, territoire grisé, et à l'acte III elle est **absente** ou **passée à la Cinquième Manche** |
+
+**Trois règles dures.**
+
+1. **La relation est calculée, jamais écrite à la main.** Comme `monde.cinquieme.ralliements` (§6), c'est un état **dérivé** des flags, recalculé par le moteur ou le serveur à la fin de chaque étape, **jamais par le rendu**. Aucune scène ne « pose » une relation : elle pose des flags, et la relation suit.
+2. **On ne se retire pas d'un seul geste.** Un retrait demande **deux** griefs qui se rencontrent — une humiliation *et* une carte abîmée, un grief maximal *et* aucun respect. C'est ce qui empêche un joueur d'éteindre la carte du monde par distraction, et ce qui rend un retrait racontable : il y a toujours eu un avertissement.
+3. **Un fil peut rallier ou fâcher, jamais retirer.** La conséquence `relation_nation` d'un `Fil` est bornée à `alliee | rivale` par son type (`03-schemas.md` §15.4). Un retrait est une décision de la campagne principale ; un contenu facultatif n'a pas le droit de fermer une destination.
+
+**Les bornes anti-blocage, et où chacune vit.**
+
+| Borne | Valeur | Tenue par |
+|---|---|---|
+| Nations retirées par partie | **5 au plus** | Le **schéma** : `validerProfilCampagne` refuse un profil à six `retiree` (`BORNES_RELATIONS.retireesMax`). Au sixième retrait, la scène qui l'aurait provoqué se joue en version « il reste, mais il ne vous parle plus » — une nation `rivale` de plus, pas une de moins |
+| Nations alliées avant l'acte III | **2 au moins** | Le **contenu** : la colonne vertébrale (`13-campagne.md` §3.4) place deux occasions de ralliement que le joueur ne peut pas manquer toutes les deux, parce qu'elles ne dépendent pas du même registre de choix (l'une se gagne par le fair-play, l'autre par un service rendu) |
+| Fins accessibles | **les quatre, toujours** | Le **contenu** aussi : une nation retirée change la **couleur** d'une fin — qui est là au coup de sifflet, qui manque, ce que Vantour raconte —, jamais son accessibilité (§7) |
+
+**Incarner : jouer la relation au lieu de la lire.** Une nation `alliee` ne se contente pas de prêter son banc — le joueur peut **la jouer entièrement**, le temps d'un match d'incarnation (`Scenario.incarnation`, `03-schemas.md` §15.2 bis) : ses propres matchs de la Ronde, les missions de son fil secondaire, et à l'acte III le choix, à chaque bataille, de la nation qu'il commande. Il joue alors avec le général de cette nation, son catalogue, sa spécialité et son style ; son commandant d'origine reste au banc en **co-commandant passif** (`04-gameplay.md` §7.5). Narrativement, c'est le seul moment où le joueur voit la Ronde depuis l'autre côté du terrain — et c'est ce qui rend une alliée autre chose qu'une ligne de bonus.
+
+**La confiance, c'est-à-dire la relation vue par le général.** Incarner fait monter `ProfilCampagne.confiance[commandantCle]`, de 0 à 3. Une relation appartient à une **nation**, une confiance à un **général** : les deux montent par des gestes différents — l'une par les choix qu'on fait *chez* la nation, l'autre par les matchs qu'on joue *pour* elle — et elles se lisent séparément (`Condition` `relation` et `confiance`). À **3**, le général devient co-commandant à jauge entière et sa nation s'ouvre comme départ de Nouvelle Ronde : rallier et incarner sont deux chemins vers la même porte (`13-campagne.md` §3.5).
+
+**La borne des flags, et pourquoi elle est absolue.** *Un match d'incarnation n'écrit jamais un flag de la trame principale du joueur.* Il n'écrit que `pays.<nation incarnée>.*` et `cmd.*` — jamais `monde.*` —, en récompense comme dans une option de choix, et `validerScenario` le refuse mécaniquement. La raison est celle du §4.4 pour la Dépêche, un cran plus haut : le joueur qui prête ses mains à une autre délégation ne décide pas, pendant ce match, de sa propre histoire. Trois conséquences directes :
+
+1. **Aucune bascule** (§6) ni condition de fin (§7) ne peut être franchie dans un match d'incarnation — elles se lisent toutes sur des flags de monde.
+2. **La nation incarnée ne peut pas se retirer pendant qu'on la joue** : un retrait demande deux griefs qui se rencontrent, et un match d'incarnation n'en écrit aucun.
+3. **Incarner ne remplace jamais une étape** : c'est une variante proposée, jamais imposée — sauf à l'acte III, où le choix de la nation qu'on commande *est* le geste de l'acte, et se fait parmi les alliées.
+
+**Le rattrapage, et son honnêteté.** Certaines relations se rattrapent, d'autres non, et **c'est écrit dans la fiche du fil** qui les rattrape, jamais découvert après coup. La règle du document : un fil de rattrapage remonte `rivale` → `alliee`, mais **aucun fil ne fait revenir une nation `retiree`**. Un retrait est le seul état sans marche arrière du jeu, et c'est précisément ce qui lui donne son poids : le joueur qui en provoque un l'apprend au moment où il le fait, par une scène qui le dit en toutes lettres, pas par un écran de fin.
+
+### 4.6 Les fils secondaires
 
 *Document propriétaire du sujet : `13-campagne.md` §5, qui donne le type `Fil`, les neuf fils écrits et leurs bornes. Ce paragraphe dit leur place dans la narration.*
 
@@ -224,6 +263,17 @@ La finale mondiale doit se disputer à Port-Méridien. La faction pose son ultim
 | Pays non visité | Suit la majorité de son continent |
 
 `monde.cinquieme.ralliements` est la somme des `pays.<xx>.ralliement_cinquieme` — un flag **dérivé**, jamais écrit à la main.
+
+**C'est la même lecture que la relation de nation** (§4.5), et ce n'est pas une coïncidence : la relation *est* ce calcul, rendu visible sur la carte du monde pendant toute la partie au lieu d'être découvert au dernier acte. À l'acte III, chaque état donne sa scène :
+
+| Relation au coup de sifflet | Ce qui se joue |
+|---|---|
+| `alliee` | Elle est là, sur le banc ou sur le terrain : co-commandant disponible, unité spéciale produisible, **soutien déclaré** — et sa délégation prend la parole avant la finale |
+| `rivale` | Elle vient quand même, et elle joue contre. Un rival d'estime (`respect ≥ 4`, `grief ≥ 3`) refuse la faction quoi qu'il arrive : c'est la meilleure relation du jeu, et elle reste `rivale` |
+| `neutre` | Elle suit la majorité de son continent, comme un pays non visité |
+| `retiree` | **Elle n'est pas là.** Sa chaise est vide au Collège, sa destination est éteinte sur la carte — ou bien elle est passée à la Cinquième Manche, ce qui est pire et se voit plus |
+
+**Cinq chaises vides au maximum**, et c'est une règle, pas un réglage : au-delà, la salle de Port-Méridien n'aurait plus assez de monde pour qu'une des quatre fins ait un sens.
 
 - **Bascule III — le coup de sifflet.** La finale mondiale a lieu, ou n'a pas lieu. C'est ce qui détermine la fin. Le climax n'est pas une bataille : c'est une salle pleine, deux équipes sur le terrain, et l'attente d'un sifflet.
 
@@ -393,7 +443,8 @@ Exemples : `pays.fr.rival_respecte`, `monde.atlas.soupcon`, `cmd.mireille_bousqu
 6. Toute scène déclare ses flags en lecture et en écriture ; la routine contrôle rejette une scène référençant un flag inconnu.
 7. Une scène de **Dépêche du jour** n'écrit aucun flag de campagne (§4.4) ; seule `monde.depeche.*` lui est ouverte.
 8. Aucun contenu ne pose un flag `monde.secret.*` : les easter eggs sont codés à la main, et le schéma refuse une production qui en déclare un en écriture.
-9. Un **fil** écrit des flags de campagne (§4.5), et ses conséquences sont prises dans une liste fermée et bornée. C'est ce qui le distingue d'une exhibition.
+9. Un **fil** écrit des flags de campagne (§4.6), et ses conséquences sont prises dans une liste fermée et bornée. C'est ce qui le distingue d'une exhibition.
+10. La **relation d'une nation** (`neutre`, `alliee`, `rivale`, `retiree`) est **dérivée** des flags par le moteur ou le serveur, jamais posée par une scène ni calculée par le rendu (§4.5). Un fil peut la faire monter à `alliee` ou `rivale`, jamais à `retiree` : le retrait appartient à la campagne principale.
 
 ---
 
@@ -409,5 +460,7 @@ Exemples : `pays.fr.rival_respecte`, `monde.atlas.soupcon`, `cmd.mireille_bousqu
 8. **Quatre fins** (A Ronde continue, B Atlas d'Or, C Terrains fermés, D La manche que personne n'a jouée) avec ordre d'évaluation D → A → C → B, et la règle que la fin C ne montre aucune guerre, seulement des terrains fermés.
 9. **Carnet de voyage au générique** comme écran d'explication de la fin.
 10. **Étanchéité de la Dépêche du jour** (§4.4) : le carnet l'ignore, `monde.depeche.serie` vit hors de la sauvegarde de campagne, et les deux flags `monde.atlas.essai_soutenu` / `monde.atlas.homologation_contestee` se posent en scène de campagne, jamais en exhibition.
-11. **Les fils secondaires** (§4.5) : ils écrivent des flags de campagne — c'est ce qui les distingue d'une exhibition —, leurs conséquences sont une liste fermée et bornée, et ils ne touchent ni les bascules ni les conditions de fin. À choix de voyage identiques, deux joueurs obtiennent la même fin, qu'ils aient joué zéro ou neuf fils.
+11. **Les fils secondaires** (§4.6) : ils écrivent des flags de campagne — c'est ce qui les distingue d'une exhibition —, leurs conséquences sont une liste fermée et bornée, et ils ne touchent ni les bascules ni les conditions de fin. À choix de voyage identiques, deux joueurs obtiennent la même fin, qu'ils aient joué zéro ou neuf fils.
 12. **Aucun contenu ne pose un flag `monde.secret.*`** (§9.4, §9.6 règle 8) : un fil peut lire un easter egg comme condition d'ouverture, jamais en poser un.
+13. **L'incarnation** (§4.5) : une alliée se joue au lieu de se lire, la **confiance** d'un général monte séparément de la relation de sa nation, et un match d'incarnation n'écrit **jamais** un flag de la trame principale — d'où l'impossibilité d'y franchir une bascule ou d'y provoquer un retrait.
+14. **La relation de nation** (§4.5) : les seuils exacts qui font passer une nation de `neutre` à `alliee`, `rivale` ou `retiree` ; la règle du **double grief** pour un retrait (jamais un seul geste) ; le partage des deux bornes — cinq retirées tenues par le schéma, deux alliées tenues par la colonne vertébrale ; et la règle de rattrapage : un fil remonte `rivale` → `alliee`, **aucun fil ne fait revenir une `retiree`**.

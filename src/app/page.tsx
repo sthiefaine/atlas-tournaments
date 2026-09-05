@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 /**
- * Page d'accueil provisoire. Le choix du pays de départ et la carte du monde
+ * Page d'accueil provisoire. Le départ français, la carte du monde et ses relations
  * viendront avec le rendu (`src/app/jeu/`, hors de ce périmètre).
  */
 export default function Accueil() {
