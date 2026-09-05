@@ -22,13 +22,6 @@ export default function PageReglages(): React.ReactElement {
   return <Reglages libelles={{
     titre: t(locale, 'reglages.titre'),
     retour: t(locale, 'reglages.retour'),
-    affichage: t(locale, 'reglages.affichage'),
-    affichageNote: t(locale, 'reglages.affichage_note'),
-    rendus: [
-      { valeur: 'auto', libelle: t(locale, 'reglages.affichage_auto') },
-      { valeur: '3d', libelle: t(locale, 'reglages.affichage_3d') },
-      { valeur: '2d', libelle: t(locale, 'reglages.affichage_2d') },
-    ],
     dialogues: t(locale, 'reglages.dialogues'),
     dialoguesNote: t(locale, 'reglages.dialogues_note'),
     animations: t(locale, 'reglages.animations'),

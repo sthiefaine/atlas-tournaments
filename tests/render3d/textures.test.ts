@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { BIOMES } from '../../src/schemas/types';
+import { BIOMES, type CleTerrain } from '../../src/schemas/types';
 import { albedoMatiere, normalesDepuis } from '../../src/render3d/textures';
 import { creerPlateau } from '../../src/render3d/terrain';
+import type { GrilleTerrain } from '../../src/render3d/geometrie';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 
 /** Toile mémoire : les recettes restent vérifiables sans navigateur/WebGL. */
@@ -63,4 +64,36 @@ test('le plateau de chaque biome accepte les saisons et libère ses ressources',
     plateau.dispose();
     assert.equal(texturesLiberees, 1);
   }
+});
+
+// ---------------------------------------------------------------------------
+// `majTerrain` face à un changement de carte
+// ---------------------------------------------------------------------------
+
+test('le plateau accepte une carte d’une autre taille sans déborder sa splat', () => {
+  const doc = documentMemoire();
+  const grille = (largeur: number, hauteur: number, terrain: CleTerrain): GrilleTerrain => ({
+    largeur, hauteur, terrainDe: (): CleTerrain => terrain,
+  });
+  const plateau = creerPlateau(grille(16, 12, 'plaine'), doc);
+  const sommets = (): number => plateau.sol.geometry.getAttribute('position').count;
+  const depart = sommets();
+
+  // Même taille : le chemin habituel, celui d'une marée ou d'un chantier du
+  // génie. La géométrie est conservée, seules les altitudes glissent.
+  plateau.majTerrain(grille(16, 12, 'montagne'));
+  assert.equal(sommets(), depart);
+  assert.ok(plateau.hauteurEn(8.5, 6.5) > 0.5, 'la montagne doit lever le sol');
+
+  // Taille différente : c'est ce que fait l'atelier en changeant de monde sans
+  // démonter la scène. Écrire la nouvelle splat dans l'ancienne texture levait
+  // un RangeError qui blanchissait la page — elle doit être remplacée.
+  assert.doesNotThrow(() => plateau.majTerrain(grille(20, 12, 'mer')));
+  assert.ok(sommets() > depart, 'une carte plus large demande plus de sommets');
+  assert.ok(plateau.hauteurEn(10.5, 6.5) < 0, 'la mer doit creuser le sol');
+
+  // Et dans l'autre sens, une carte plus petite.
+  assert.doesNotThrow(() => plateau.majTerrain(grille(12, 10, 'plaine')));
+  assert.ok(sommets() < depart, 'une carte plus étroite en demande moins');
+  assert.equal(plateau.hauteurEn(6.5, 5.5), 0);
 });

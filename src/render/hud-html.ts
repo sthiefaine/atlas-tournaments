@@ -24,7 +24,7 @@ import type { Phase } from './controleur';
 import {
   libelleMeteo, libellePhase, libelleSaison, nomCommandant, nomTerrain, nomUnite,
   type OptionMenu,
-} from './hud';
+} from './libelles';
 import { paletteDe } from './palettes';
 import type { PointVue } from './rendu';
 import { dessinerUnite } from './sprites/index';

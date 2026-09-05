@@ -38,16 +38,15 @@ test('la clé des parties en cours ne peut pas diverger de celle du jeu', () => 
 test('des préférences absentes, illisibles ou corrompues restent jouables', () => {
   poserStockage();
   assert.deepEqual(lirePreferences(), PREFERENCES_PAR_DEFAUT);
-  for (const brut of [null, 42, 'oui', [], { rendu: 'holographique' }, { version: 9 }]) {
+  for (const brut of [null, 42, 'oui', [], { dialogues: 'peut-être' }, { version: 9 }]) {
     const p = normaliserPreferences(brut);
-    assert.ok(['auto', '3d', '2d'].includes(p.rendu), `rendu douteux : ${p.rendu}`);
     assert.equal(typeof p.dialogues, 'boolean');
     assert.equal(typeof p.animationsReduites, 'boolean');
     assert.equal(p.version, 1);
   }
-  // Un rendu inconnu retombe sur `auto`, jamais sur une peau imposée.
-  assert.equal(normaliserPreferences({ rendu: '4d' }).rendu, 'auto');
-  assert.equal(normaliserPreferences({ rendu: '2d' }).rendu, '2d');
+  // Une valeur douteuse retombe sur la valeur par défaut, jamais sur elle-même.
+  assert.equal(normaliserPreferences({ dialogues: 'oui' }).dialogues, PREFERENCES_PAR_DEFAUT.dialogues);
+  assert.equal(normaliserPreferences({ animationsReduites: 'oui' }).animationsReduites, false);
   // Les dialogues sont joués par défaut : c'est ce que raconte une mission.
   assert.equal(PREFERENCES_PAR_DEFAUT.dialogues, true);
   assert.equal(PREFERENCES_PAR_DEFAUT.animationsReduites, false);
@@ -55,7 +54,7 @@ test('des préférences absentes, illisibles ou corrompues restent jouables', ()
 
 test('un aller-retour par le stockage rend exactement ce qu’on a écrit', () => {
   poserStockage();
-  const voulu = { version: 1 as const, rendu: '2d' as const, dialogues: false, animationsReduites: true };
+  const voulu = { version: 1 as const, dialogues: false, animationsReduites: true };
   assert.equal(ecrirePreferences(voulu), true);
   assert.deepEqual(lirePreferences(), voulu);
   assert.equal(stockageDisponible(), true);
@@ -63,7 +62,7 @@ test('un aller-retour par le stockage rend exactement ce qu’on a écrit', () =
 
 test('un navigateur qui refuse d’écrire ne casse rien, il le dit', () => {
   poserStockage(true);
-  assert.equal(ecrirePreferences({ ...PREFERENCES_PAR_DEFAUT, rendu: '3d' }), false);
+  assert.equal(ecrirePreferences({ ...PREFERENCES_PAR_DEFAUT, dialogues: false }), false);
   assert.equal(stockageDisponible(), false);
   // Et la lecture reste possible : on joue avec les valeurs par défaut.
   assert.deepEqual(lirePreferences(), PREFERENCES_PAR_DEFAUT);
@@ -74,7 +73,7 @@ test('effacer la progression emporte aussi les parties en cours, et rien d’aut
   donnees.set(CLE_PROGRESSION, JSON.stringify({ version: 1, victoires: ['qualification_bocage'] }));
   donnees.set(`${PREFIXE_PARTIE}qualification_bocage`, '{}');
   donnees.set(`${PREFIXE_PARTIE}passage_des_marees`, '{}');
-  donnees.set('atlas:reglages:v1', '{"version":1,"rendu":"2d"}');
+  donnees.set('atlas:reglages:v1', '{"version":1,"dialogues":false}');
   donnees.set('autre-application', 'à ne pas toucher');
 
   assert.equal(effacerProgression(), true);
@@ -82,8 +81,8 @@ test('effacer la progression emporte aussi les parties en cours, et rien d’aut
   // n'avoir jamais commencée : les deux familles partent ensemble.
   assert.equal(donnees.has(CLE_PROGRESSION), false);
   assert.equal([...donnees.keys()].some((k) => k.startsWith(PREFIXE_PARTIE)), false);
-  // Les réglages survivent : personne ne demande à revenir en 3D en effaçant
-  // sa campagne. Et on ne touche pas à ce qui n'est pas à nous.
-  assert.equal(donnees.get('atlas:reglages:v1'), '{"version":1,"rendu":"2d"}');
+  // Les réglages survivent : personne ne demande à réactiver les dialogues en
+  // effaçant sa campagne. Et on ne touche pas à ce qui n'est pas à nous.
+  assert.equal(donnees.get('atlas:reglages:v1'), '{"version":1,"dialogues":false}');
   assert.equal(donnees.get('autre-application'), 'à ne pas toucher');
 });

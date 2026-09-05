@@ -17,6 +17,25 @@ Quatre changements d’interface, tous derrière l’interface `Rendu` commune, 
 
 Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` — rien ne le faisait —, et `e2e/fumee-3d.spec.ts` ouvre le Bulletin avant d’en lire les prévisions (il était devenu repliable, le test ne le savait pas).
 
+## Mise à jour — une seule peau, et un banc d’essai (5 septembre 2026, nuit)
+
+**Le rendu 2D vectoriel est supprimé.** `BRIEF.md` a été modifié en conséquence : le repli qu’il promettait n’existe plus, et un appareil sans WebGL 2 voit un écran qui le dit. Ont disparu : `rendu2d.ts`, `scene.ts`, `camera.ts`, `hidpi.ts`, `hud.ts` (le HUD dessiné au canvas), quatre des six fichiers de `sprites/`, deux fichiers de tests et `e2e/fumee.spec.ts`. Trois choses en sont sorties plutôt que d’être perdues :
+
+- `src/render/surbrillance.ts` — le **vocabulaire** des cinq genres (`deplacement`, `attaque`, `capture`, `production`, `danger`). Le contrôleur, les objectifs et la peau 3D en avaient besoin, mais aucun d’eux n’a à savoir comment on les peint.
+- `src/render/libelles.ts` — les noms d’unités, de terrains, de commandants, de saisons et de météos. C’est tout ce que le HUD HTML utilisait de l’ancien HUD canvas.
+- `src/render/sprites/` — réduit à `formes.ts` et `silhouettes.ts`, gardés pour la **vignette d’unité** du HUD. Ce n’est plus du rendu de carte, c’est de l’iconographie d’interface.
+
+L’interface `Rendu` **subsiste** : c’est elle qui empêche `render/` d’importer `render3d/` (`02-architecture.md` §5). `monterJeu` ne choisit plus, il exige une `fabriqueRendu` et **lève** si elle manque ou refuse de se monter. `?rendu=`, `choisirRendu`, `preferenceDe`, `PreferenceRendu` et le réglage « Affichage » ont disparu avec elle ; `CleRendu` ne vaut plus que `'3d'`. L’attract mode de l’accueil passe en 3D et ne se monte pas sans WebGL 2 — **il télécharge 384 ko de JS au lieu de 230**, à surveiller.
+
+**L’atelier est devenu un banc d’essai** (`src/app/atelier/banc.ts`, pur et testé). Il montrait trois cartes de mission en 3D, sans surbrillances ni animations : les défauts qu’on y cherche étaient précisément ceux qu’il ne pouvait pas montrer. Il porte désormais une **carte-catalogue** — les douze terrains côte à côte, les quatre bâtiments pris par chaque camp et neutres, les onze unités dans les deux camps, et les cas qui ont réellement cassé (un bâtiment encastré entre deux montagnes, une plage entre mer et plaine) —, les cinq surbrillances, la flèche, le brouillard, le pays de chaque camp parmi les vingt-quatre, six gestes rejouables (déplacer, tirer, capturer, mettre hors jeu, marée haute et basse) et un bouton qui fait apparaître les silhouettes **`coque`, `ailes` et `rail`**, écrites dans `pieces.ts` depuis le début et jamais vues à l’écran.
+
+Le banc a trouvé deux défauts dans l’heure qui a suivi, et c’est son intérêt :
+
+1. **`majTerrain` débordait sur un changement de taille de carte.** `(splat.image.data).set(donnees)` levait un `RangeError` qui blanchissait la page dès qu’on passait d’une carte 16×12 à une 20×12. Le commentaire disait « les dimensions ne changent jamais en cours de partie » — c’est vrai d’une partie, faux d’un plateau qui survit à un changement de carte. La texture est maintenant **remplacée** quand la taille change, au lieu d’être remplie.
+2. **Le banc perdait le génie en silence.** Le scénario de démonstration est en **catalogue 1**, qui ne compte que dix unités. Le banc force désormais le catalogue 2, et un test échoue si la version choisie ne porte pas toutes les unités qu’il pose.
+
+**Reste à faire, trouvé au passage** : `construireBatiments` (`render3d/decor.ts`) lit la grille **capturée au montage**, pas celle de l’état courant. Une marée qui noierait une ville laisserait la ville flotter. C’est la même faute que le terrain gelé au premier jour, au même endroit du raisonnement — toute donnée dérivée de la grille et calculée au montage est un gel en puissance.
+
 ## Mise à jour — l’écran-titre et les réglages (5 septembre 2026, nuit)
 
 `src/app/page.tsx` n’est plus une page de présentation : c’est un **écran-titre de jeu, pensé en portrait d’abord**. La version précédente mesurée sur 390 px plaçait son seul bouton à 711 px du haut et le plateau — la seule chose qui montre le jeu — à 805 px : deux écrans plus bas. Quatre décisions le tiennent, et elles valent pour la suite du site.
@@ -26,7 +45,7 @@ Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` �
 3. **Campagne porte l’état, et le geste unique survit.** Le bouton mène droit à la prochaine épreuve non remportée et affiche sur lui-même la jauge de six segments et le titre de l’épreuve ; la carte de progression entière est absorbée dedans. Une seconde cible, « Carnet », mène au choix libre — sans elle, rejouer une mission depuis l’accueil devient impossible. Le serveur rend l’état neutre (jauge vide, aucun chiffre, destination `/campagne`, vraie dans tous les cas), le client l’enrichit : afficher « 0 sur 6 » deux cents millisecondes à quelqu’un qui a tout gagné serait une affirmation fausse.
 4. **Un écran, pas de défilement** — vérifié à 390 × 844, 375 × 667 et 1280 × 800. Ce qui ne tenait pas a été **supprimé**, pas repoussé : le bandeau de marque, le pitch de 190 caractères, les trois liens soulignés, le pied et la frise des vingt-quatre nations. Mais `overflow:hidden` a disparu de `.atlas-accueil`, et `100dvh` est devenu `100svh` : la page ne défile pas parce qu’elle ne dépasse pas, jamais parce qu’on le lui interdit — à 200 % de zoom texte, l’interdit coupait le bas sans recours.
 
-**`/reglages` existe** (`src/app/reglages/`, plus `src/app/preferences.ts`), et ne porte que les trois réglages qui existent réellement dans le code : la peau (`Automatique` / `Relief 3D` / `Plan 2D`, qui n’était accessible que par `?rendu=`), les dialogues des commandants, et la réduction des animations. Pas d’interrupteur inerte : il n’y a pas d’audio dans le jeu, il n’y a donc pas de réglage de son. Deux règles s’y appliquent. Le réglage système reste **maître** sur les animations — l’interrupteur ne peut qu’ajouter la réduction. Et `?rendu=` garde la priorité sur la préférence : une URL est un ordre explicite. « Effacer ma progression » emporte `atlas:qualification:v1` **et** tous les `atlas:partie:*` — n’effacer que le premier laisserait des parties fantômes reprenant au milieu d’une épreuve qu’on croit n’avoir jamais commencée. `preferences.ts` **recopie** `PREFIXE_SAUVEGARDE` plutôt que d’importer `render/jeu.ts`, qui ferait entrer le moteur et les deux rendus dans la page ; `tests/campagne/preferences.test.ts` échoue si les deux divergent, et c’est ce qui rend la copie acceptable — la page pèse 1,34 ko.
+**`/reglages` existe** (`src/app/reglages/`, plus `src/app/preferences.ts`), et ne porte que les réglages qui existent réellement dans le code : les dialogues des commandants et la réduction des animations. Il portait aussi le choix de la peau ; celui-ci a disparu avec le rendu 2D, quelques heures plus tard. Pas d’interrupteur inerte : il n’y a pas d’audio dans le jeu, il n’y a donc pas de réglage de son. Le réglage système reste **maître** sur les animations — l’interrupteur ne peut qu’ajouter la réduction. « Effacer ma progression » emporte `atlas:qualification:v1` **et** tous les `atlas:partie:*` — n’effacer que le premier laisserait des parties fantômes reprenant au milieu d’une épreuve qu’on croit n’avoir jamais commencée. `preferences.ts` **recopie** `PREFIXE_SAUVEGARDE` plutôt que d’importer `render/jeu.ts`, qui ferait entrer le moteur et le rendu dans la page ; `tests/campagne/preferences.test.ts` échoue si les deux divergent, et c’est ce qui rend la copie acceptable — la page pèse 1,2 ko.
 
 L’attract mode a été repris au passage : cadrage serré au lieu de la carte entière, rythme accéléré (330 ms d’intention, 190 ms entre deux actions), caméra qui **suit l’action** par `cadrer()` — qui ne recentre que si la case sort du champ —, et une graine tirée parmi cinq à chaque visite. Chaque partie reste déterministe, c’est le moteur ; mais un écran-titre qui repasse le même match coup pour coup se remarque dès la deuxième ouverture.
 
@@ -58,7 +77,7 @@ Seule `src/app/convocation.tsx` est cliente, parce qu’elle lit `localStorage` 
 
 ## Le projet en cinq lignes
 
-Atlas Tournament est un tactique au tour par tour dans l'esprit d'Advance Wars, jouable dans un navigateur. Dans ce monde, les guerres ont été remplacées par des Jeux Tactiques : chaque pays a une équipe et un commandant, et un tournoi fait le tour de la planète tous les quatre ans. Le joueur part de France — tout le monde part de France —, traverse ses 18 régions puis le monde, et ses choix décident de la fin qu'il obtient et de l'état des 24 nations : alliée, rivale, retirée. Une nation alliée peut être **incarnée** — jouée entièrement, avec son général et son catalogue, le temps d'un match — et s'ouvre comme départ pour une Nouvelle Ronde. Techniquement : une seule application Next.js 15 en TypeScript strict, un moteur de règles pur et déterministe, un rendu 3D three.js avec repli vectoriel 2D, et cinq routines Claude qui produisent le contenu sous le contrôle d'un serveur qui ne fait confiance à rien. Rien de généré ne passe en ligne sans un verdict mesuré, et souvent sans un humain.
+Atlas Tournament est un tactique au tour par tour dans l'esprit d'Advance Wars, jouable dans un navigateur. Dans ce monde, les guerres ont été remplacées par des Jeux Tactiques : chaque pays a une équipe et un commandant, et un tournoi fait le tour de la planète tous les quatre ans. Le joueur part de France — tout le monde part de France —, traverse ses 18 régions puis le monde, et ses choix décident de la fin qu'il obtient et de l'état des 24 nations : alliée, rivale, retirée. Une nation alliée peut être **incarnée** — jouée entièrement, avec son général et son catalogue, le temps d'un match — et s'ouvre comme départ pour une Nouvelle Ronde. Techniquement : une seule application Next.js 15 en TypeScript strict, un moteur de règles pur et déterministe, un rendu 3D three.js, et cinq routines Claude qui produisent le contenu sous le contrôle d'un serveur qui ne fait confiance à rien. Rien de généré ne passe en ligne sans un verdict mesuré, et souvent sans un humain.
 
 ## À lire d'abord, dans cet ordre
 
@@ -82,8 +101,8 @@ src/ai/           L'IA de jeu : une fonction d'évaluation et trois stratégies 
                   agressive, défensive). C'est elle qui certifie les cartes.
 src/mapgen/       Le générateur : ParametresCarte + graine → MapDef, symétrie, vérifications,
                   aperçu texte. Deux appels avec la même graine donnent la même carte.
-src/render/       Le socle de rendu commun aux deux peaux : interface `Rendu`, boucle paresseuse,
-                  caméra, entrées, HUD HTML, ambiance, sauvegarde locale, et la peau 2D vectorielle.
+src/render/       Le socle de rendu, sans une ligne de three.js : interface `Rendu`, boucle
+                  paresseuse, entrées, HUD HTML, ambiance, libellés, surbrillances, sauvegarde.
 src/render3d/     La peau 3D three.js : scène, terrain, éclairage par saison/phase/météo, unités
                   et décor instanciés, surbrillances, animations, textures.
 src/assets/       Le format `AssetSpec`, le catalogue qui le compose depuis le canon, les styles
@@ -114,7 +133,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 `tests/frontieres.test.ts` les fait respecter mécaniquement : il lit les imports de chaque fichier de `src/` et échoue sur la moindre violation. La table des couches autorisées est **dans le test**, et c'est elle qui fait foi.
 
 - `engine`, `ai`, `mapgen` ne connaissent que `schemas` et `content`. Jamais `render`, jamais `db`, jamais `app`.
-- `render` peut importer `engine`, `schemas`, `content`, `i18n`. `render3d` ajoute `render` et `assets` — jamais l'inverse.
+- `render` peut importer `engine`, `schemas`, `content`, `i18n`. `render3d` ajoute `render` et `assets` — jamais l'inverse. C'est cette règle, et elle seule, qui justifie que l'interface `Rendu` survive à la disparition de la seconde peau.
 - `serveur` peut importer le jeu et `db` ; `app` peut tout importer ; `schemas` n'importe rien.
 
 **Les interdits dans les couches pures** (`engine`, `ai`, `mapgen`, `schemas`, `content`) sont vérifiés par le même test, par simple recherche de motif : `window`, `document`, `fetch(`, `Date.now(`, `Math.random(`. Le moteur ne lit jamais l'horloge — pas même pour évaluer un déblocage : la date lui est **donnée** par l'appelant, et c'est le serveur qui la fixe. Le hasard passe exclusivement par le RNG seedé de `src/engine/rng.ts` et ses flux dérivés. `render/` et `render3d/` ont le droit d'appeler `Date.now()`, et seulement pour cadencer une animation.
@@ -137,8 +156,8 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm start` | migrations puis Next (c'est ce que lance le Dockerfile) |
 | `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
 | `npm run lint` | ESLint |
-| `npm test` | 639 tests `tsx --test` |
-| `npm run test:e2e` | les deux specs Playwright ; le spec 3D porte ses propres drapeaux SwiftShader |
+| `npm test` | 637 tests `tsx --test` |
+| `npm run test:e2e` | le spec Playwright 3D, avec ses propres drapeaux SwiftShader |
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, copie de sécurité `pg_dump` avant |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA |
 | `npm run controler -- --carte <fichier>` | le verdict exact de la routine contrôle, hors ligne |
@@ -153,7 +172,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | 0 — Socle | **fait** | Next 15, TS strict, `tsx --test`, Playwright, Drizzle, `migrate.mjs`, `.env.example`, CI. La CI ne lance **ni `lint` ni Playwright**. |
 | 1 — Moteur | **fait** | Règles, RNG, rejeu, climat, hooks de mécaniques, IA à trois stratégies, `simuler.ts`. |
 | 2 — Générateur + contrôle | **fait** | `mapgen/`, vérifications, campagne multi-climats, `ReviewVerdict` motivé, `controler-carte.ts`, `apercu-carte.ts`. La campagne des 200 cartes aléatoires du critère de fin n'a pas été relue à l'œil. |
-| 3 — Rendu | **fait** | Interface `Rendu` commune, peau 2D, peau 3D, HUD HTML, repli WebGL, `?rendu=2d`, deux specs de fumée. Le seuil de 48 px par case n'est pas exercé sur tous les couples (carte × écran). |
+| 3 — Rendu | **fait** | Interface `Rendu`, peau 3D, HUD HTML, un spec de fumée. La peau 2D et le repli WebGL ont été **retirés** (voir ci-dessus). Le seuil de 48 px par case n'est pas exercé sur tous les couples (carte × écran). |
 | 4 — Assets 3D | **partiel** | 540 specs générées et valides, validateur glTF écrit. **Aucun `.glb` réel n'existe** : tout est placeholder. La boucle avec le générateur externe n'a jamais été parcourue. |
 | 5 — Serveur et admin | **partiel** | Toutes les routes, le cycle, les prompts versionnés, la file, l'admin, la sonde — **écrits et testés hors base**. Aucune base n'a jamais été branchée. |
 | 6 — Routines en ligne + i18n | **à faire** | Aucune tâche planifiée Claude n'existe. Côté i18n, seul `fr` a un bundle ; `en` est déclaré en base par la migration mais **aucun bundle `en` n'existe**. |

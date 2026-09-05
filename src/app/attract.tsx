@@ -10,10 +10,11 @@ import {
 } from '@/engine/index';
 import { t } from '@/i18n/index';
 import {
-  ambianceDe, casesObjectifs, commandantsDuScenario, creerRendu2d,
+  ambianceDe, casesObjectifs, commandantsDuScenario, webgl2Disponible,
   type Surbrillance, type VueInteraction,
 } from '@/render/index';
-import { validerMapDef, validerScenario } from '@/schemas/index';
+import { creerRendu3d } from '@/render3d/index';
+import { validerMapDef, validerScenario, type Biome } from '@/schemas/index';
 
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
 import scenarioDemo from '../../content/scenarios/demo.json';
@@ -24,8 +25,8 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  *
  * C'est ce qu'un écran-titre doit faire — montrer le jeu plutôt que le décrire —
  * et c'est ici possible sans un octet d'illustration : le moteur, l'IA et le
- * rendu vectoriel existent déjà, et la partie est **déterministe**, donc la même
- * à chaque visite.
+ * rendu existent déjà, et chaque partie est **déterministe** — c'est le moteur,
+ * on n'y touche pas ; seule la graine change d'une visite à l'autre.
  *
  * Ce que ça coûte est assumé : ce module tire le moteur, l'IA et le rendu, soit
  * une bonne part du bundle de jeu. Il est donc **chargé après l'hydratation**
@@ -35,8 +36,8 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  *
  * Trois économies, parce qu'une page d'accueil n'a pas le droit de chauffer un
  * appareil : la boucle s'arrête quand l'onglet passe en arrière-plan, aucune IA
- * ne tourne tant qu'on ne la regarde pas, et le rendu vectoriel est choisi
- * exprès plutôt que la 3D.
+ * ne tourne tant qu'on ne la regarde pas, et rien ne se monte sans WebGL 2 ni
+ * sous `prefers-reduced-motion`.
  *
  * On montre en plus la **grammaire du jeu** : avant chaque déplacement, la
  * portée de l'unité s'allume en vert et la flèche trace son chemin. C'est
@@ -72,7 +73,10 @@ const MS_AVANT_REPRISE = 2600;
 const ACTIONS_MAX = 900;
 
 /** Le scénario d'exhibition et sa carte, validés comme tout contenu du canon. */
-function chargerExhibition(): { catalogue: Catalogue; etatNeuf: () => EtatPartie; commandants: (CommandantMoteur | null)[] } | null {
+function chargerExhibition(): {
+  catalogue: Catalogue; etatNeuf: () => EtatPartie;
+  commandants: (CommandantMoteur | null)[]; biome: Biome;
+} | null {
   const s = validerScenario(scenarioDemo);
   const c = validerMapDef(carteDemo);
   if (!s.ok || !c.ok) return null;
@@ -80,7 +84,7 @@ function chargerExhibition(): { catalogue: Catalogue; etatNeuf: () => EtatPartie
   const commandants = commandantsDuScenario(s.valeur);
   const scene = sceneDepuis(s.valeur, c.valeur, commandants);
   return {
-    catalogue, commandants,
+    catalogue, commandants, biome: c.valeur.biome,
     etatNeuf: (): EtatPartie => creerPartie(
       scene, catalogue, GRAINES[Math.floor(Math.random() * GRAINES.length)] ?? GRAINES[0],
     ),
@@ -109,7 +113,14 @@ export default function Attract() {
     if (!conteneur || !exhibition) return undefined;
     const { catalogue: cat, commandants, etatNeuf } = exhibition;
 
-    const rendu = creerRendu2d();
+    // Le rendu vectoriel n'existe plus : l'attract se joue en 3D comme le jeu,
+    // et ne se monte pas du tout sans WebGL 2 — le plateau SVG du serveur reste
+    // alors seul à l'écran, ce qui est très bien.
+    if (!webgl2Disponible()) return undefined;
+    const rendu = creerRendu3d({
+      biome: exhibition.biome,
+      paysParCamp: { 0: 'fr', 1: 'lu' },
+    });
     let vivant = true;
     let etat = etatNeuf();
     let minuterie: ReturnType<typeof setTimeout> | null = null;

@@ -2,7 +2,7 @@
 import type { Catalogue, EtatPartie } from '../engine/index';
 import { cleCase } from '../engine/types';
 import type { Case } from '../schemas/types';
-import type { Surbrillance } from './scene';
+import type { Surbrillance } from './surbrillance';
 
 type Traduire = (cle: string, params?: Record<string, string | number>) => string;
 

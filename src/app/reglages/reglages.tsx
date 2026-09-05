@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
   PREFERENCES_PAR_DEFAUT, effacerProgression, ecrirePreferences, lirePreferences,
-  stockageDisponible, type PreferenceRendu, type Preferences,
+  stockageDisponible, type Preferences,
 } from '../preferences';
 
 /**
@@ -14,16 +14,13 @@ import {
  *
  * Le même sens unique que sur l'accueil : avant montage, on affiche les valeurs
  * par défaut ; après, celles du navigateur. Tant que `pret` est faux, les
- * commandes sont désactivées — cocher « Plan 2D » sur un état qu'on n'a pas
- * encore lu écraserait le choix précédent.
+ * commandes sont désactivées — basculer un interrupteur sur un état qu'on n'a
+ * pas encore lu écraserait le choix précédent.
  */
 
 export interface LibellesReglages {
   titre: string;
   retour: string;
-  affichage: string;
-  affichageNote: string;
-  rendus: readonly { valeur: PreferenceRendu; libelle: string }[];
   dialogues: string;
   dialoguesNote: string;
   animations: string;
@@ -84,21 +81,6 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
       <h1>{libelles.titre}</h1>
       <Link className="reglages-retour" href="/">{libelles.retour}</Link>
     </header>
-
-    <section className="reglages-groupe" aria-labelledby="reglage-affichage">
-      <h2 id="reglage-affichage">{libelles.affichage}</h2>
-      <div className="reglage-choix" role="radiogroup" aria-labelledby="reglage-affichage">
-        {libelles.rendus.map((r) => (
-          <button
-            key={r.valeur} type="button" role="radio" disabled={!pret}
-            aria-checked={preferences.rendu === r.valeur}
-            className={preferences.rendu === r.valeur ? 'choisi' : ''}
-            onClick={() => changer({ rendu: r.valeur })}
-          >{r.libelle}</button>
-        ))}
-      </div>
-      <p className="reglage-note">{libelles.affichageNote}</p>
-    </section>
 
     <section className="reglages-groupe">
       {interrupteur('dialogues', libelles.dialogues, libelles.dialoguesNote)}

@@ -5,7 +5,7 @@
  * Le jeu ne connaît qu'un `Rendu` : une peau qui sait se monter dans un élément,
  * afficher un `EtatPartie` accompagné de la vue d'interaction, rejouer une file
  * d'événements en animations, convertir un point d'écran en case, et se démonter.
- * Le rendu vectoriel 2D (`rendu2d.ts`) et le rendu 3D (`render3d/`) l'implémentent
+ * Le rendu 3D (`render3d/`) l'implémente
  * tous les deux, et `controleur.ts` comme `jeu.ts` ne dépendent d'aucun des deux.
  *
  * Trois règles tiennent l'ensemble :
@@ -21,13 +21,15 @@ import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
 import type { Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
-import type { Surbrillance } from './scene';
+import type { Surbrillance } from './surbrillance';
 
-/** Les deux peaux disponibles. */
-export type CleRendu = '2d' | '3d';
-
-/** Ce que la page demande : une peau précise, ou le meilleur disponible. */
-export type PreferenceRendu = CleRendu | 'auto';
+/**
+ * La peau. Il n'y en a plus qu'une : le rendu vectoriel a été retiré, et un
+ * appareil sans WebGL 2 n'affiche pas le jeu plutôt que d'en afficher une
+ * version dégradée. Le type reste un littéral pour que `data-rendu` et les
+ * tests de fumée continuent de nommer ce qu'ils regardent.
+ */
+export type CleRendu = '3d';
 
 /** Un point en pixels logiques dans l'élément du rendu. */
 export interface PointVue { x: number; y: number }
@@ -115,19 +117,4 @@ export function webgl2Disponible(): boolean {
   }
 }
 
-/**
- * Résout la préférence de la page en peau réelle : `auto` prend la 3D quand
- * WebGL 2 répond, et retombe sur le vectoriel sinon — c'est la promesse de repli
- * du brief, et elle vaut aussi pour les navigateurs sans canvas accéléré.
- */
-export function choisirRendu(preference: PreferenceRendu = 'auto'): CleRendu {
-  if (preference === '2d') return '2d';
-  if (preference === '3d') return '3d';
-  return webgl2Disponible() ? '3d' : '2d';
-}
 
-/** Lit une préférence de rendu depuis une chaîne (`?rendu=…`). */
-export function preferenceDe(valeur: string | null | undefined): PreferenceRendu {
-  if (valeur === '2d' || valeur === '3d' || valeur === 'auto') return valeur;
-  return 'auto';
-}

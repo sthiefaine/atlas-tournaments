@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { t } from '@/i18n/index';
 import { chargerCatalogue, VERSION_MOTEUR, type EtatPartie } from '@/engine/index';
-import { commandantsDuScenario, lireSauvegarde, monterJeu, preferenceDe, type Jeu } from '@/render/index';
+import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
 import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
 import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
@@ -18,11 +18,10 @@ export interface ProprietesToile {
   scenario: Scenario;
   carte: MapDef;
   locale: string;
-  rendu?: string;
 }
 type Depart = 'neuf' | 'reprise';
 
-export default function Toile({ scenario, carte, locale, rendu }: ProprietesToile): React.ReactElement {
+export default function Toile({ scenario, carte, locale }: ProprietesToile): React.ReactElement {
   const conteneurRef = useRef<HTMLDivElement>(null);
   const index = campagne.missions.findIndex(m => m.scenarioCle === scenario.code);
   const mission = campagne.missions[index];
@@ -36,8 +35,7 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
   const [etapeTutoriel, setEtapeTutoriel] = useState(0);
   const [ancienFormat, setAncienFormat] = useState(false);
   const [voirBriefing, setVoirBriefing] = useState(false);
-  // Les réglages du joueur, lus une fois avant le montage du plateau. `?rendu=`
-  // garde la priorité : une URL est un ordre explicite, pas une préférence.
+  // Les réglages du joueur, lus une fois avant le montage du plateau.
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   const [voirAide, setVoirAide] = useState(false);
   // Une scène de dialogue est ouverte sur la carte : aucune modale ne doit
@@ -71,7 +69,6 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
         scenario, carte, locale, commandants,
         adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants),
         reprendre: depart === 'reprise',
-        rendu: rendu ? preferenceDe(rendu) : preferences.rendu,
         fabriqueRendu: () => creerRendu3d({ biome: carte.biome, paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' } }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
@@ -93,14 +90,13 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
       setErreur(true);
     }
     return () => jeu?.demonter();
-  }, [depart, scenario, carte, locale, rendu, tentative, mission, preferences]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };
   const fin = Boolean(mission && etat?.partie.terminee);
   const gagne = etat?.partie.vainqueur === 0;
   const modal = Boolean(mission && !enScene && (fin || voirBriefing || voirAide));
-  const liensRendu = rendu ? `?rendu=${encodeURIComponent(rendu)}` : '';
   const commandantContact = scenario.commandants[0]?.commandantCle;
 
   const plateauPret = Boolean(etat);
@@ -112,7 +108,7 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || undefined} />
     {!initialise || (depart !== null && !etat && !erreur) ? <div className="atlas-chargement" role="status">{t(locale, 'campagne.chargement')}</div> : null}
-    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.erreur')}</h1><a className="atlas-bouton" href={`/jeu/${scenario.code}?rendu=2d`}>{t(locale, 'campagne.essayer_2d')}</a><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></section></div> : null}
+    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {mission && etat && !fin && !modal && !enScene ? <aside className="atlas-mission-bar">
       <button type="button" className="atlas-mission-objectif" onClick={() => setVoirAide(true)}>
         <span className="atlas-mission-label"><span>⚑ {t(locale, 'campagne.mission', { n: index + 1 })}</span><span>{t(locale, 'campagne.objectif')}</span></span>
@@ -145,7 +141,7 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
         <div className="campagne-actions">
           {fin ? <>
-            {gagne && suivante ? <Link className="atlas-bouton" href={`/jeu/${suivante.scenarioCle}${liensRendu}`}>{t(locale, 'campagne.suivante')}</Link> : null}
+            {gagne && suivante ? <Link className="atlas-bouton" href={`/jeu/${suivante.scenarioCle}`}>{t(locale, 'campagne.suivante')}</Link> : null}
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button>
           </> : <>
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>

@@ -11,13 +11,9 @@
  * est toujours un état jouable.
  */
 
-/** Peau demandée. `auto` prend la 3D si l'appareil suit, le plan 2D sinon. */
-export type PreferenceRendu = 'auto' | '3d' | '2d';
-
 /** Ce que le joueur peut régler aujourd'hui. */
 export interface Preferences {
   version: 1;
-  rendu: PreferenceRendu;
   /** Jouer les scènes de commandement pendant les missions. */
   dialogues: boolean;
   /**
@@ -33,10 +29,10 @@ const CLE = 'atlas:reglages:v1';
 /**
  * Le préfixe des parties en cours, **recopié** de `render/jeu.ts`.
  *
- * L'importer ferait entrer le moteur, l'IA et les deux rendus dans le bundle de
- * la page des réglages, pour une seule chaîne de caractères.
- * `tests/app/preferences.test.ts` échoue si les deux divergent : c'est ce qui
- * rend la copie acceptable.
+ * L'importer ferait entrer le moteur, l'IA et le rendu dans le bundle de la
+ * page des réglages, pour une seule chaîne de caractères.
+ * `tests/campagne/preferences.test.ts` échoue si les deux divergent : c'est ce
+ * qui rend la copie acceptable.
  */
 export const PREFIXE_PARTIE = 'atlas:partie:';
 
@@ -46,7 +42,6 @@ export const CLE_PROGRESSION = 'atlas:qualification:v1';
 /** Les valeurs par défaut : celles que rend le serveur. */
 export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   version: 1,
-  rendu: 'auto',
   dialogues: true,
   animationsReduites: false,
 });
@@ -55,10 +50,8 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
 export function normaliserPreferences(brut: unknown): Preferences {
   if (!brut || typeof brut !== 'object') return { ...PREFERENCES_PAR_DEFAUT };
   const p = brut as Partial<Preferences>;
-  const rendu: PreferenceRendu = p.rendu === '2d' || p.rendu === '3d' ? p.rendu : 'auto';
   return {
     version: 1,
-    rendu,
     dialogues: typeof p.dialogues === 'boolean' ? p.dialogues : PREFERENCES_PAR_DEFAUT.dialogues,
     animationsReduites: p.animationsReduites === true,
   };
@@ -102,7 +95,7 @@ export function stockageDisponible(): boolean {
  * Les deux, toujours : n'effacer que la liste des victoires laisserait des
  * parties fantômes qui reprendraient au milieu d'une épreuve que le joueur
  * croit n'avoir jamais commencée. Les préférences, elles, survivent — personne
- * ne demande à réafficher la 3D en effaçant sa campagne.
+ * ne demande à réactiver les dialogues en effaçant sa campagne.
  */
 export function effacerProgression(): boolean {
   try {

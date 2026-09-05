@@ -461,6 +461,20 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     mutation = null;
   }
 
+  /** Recoud le ruban de bitume sur une grille donnée, ou le cache s'il n'y a
+   * plus de route. */
+  function majRoutes(suivante: GrilleTerrain): void {
+    const geoRoutes = geometrieRoutes(suivante);
+    if (routes && geoRoutes) {
+      routes.geometry.dispose();
+      routes.geometry = geoRoutes;
+      routes.visible = true;
+    } else if (routes) {
+      routes.visible = false;
+      geoRoutes?.dispose();
+    }
+  }
+
   return {
     groupe,
     sol,
@@ -475,10 +489,25 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       const posNeuve = neuve.getAttribute('position') as THREE.BufferAttribute;
       for (let i = 0; i < yApres.length; i += 1) yApres[i] = posNeuve.getY(i);
 
-      // Les dimensions ne changent jamais en cours de partie : on garde la
-      // géométrie et on ne fait glisser que les altitudes.
+      // Les dimensions ne changent jamais **en cours de partie** : tant qu'elles
+      // tiennent, on garde la géométrie et on ne fait glisser que les altitudes.
+      // Mais le plateau survit à un changement de carte — l'atelier en change
+      // sans démonter la scène —, et une splat écrite au chausse-pied dans une
+      // texture d'une autre taille lève un `RangeError` qui blanchit la page.
       const posCourante = sol.geometry.getAttribute('position') as THREE.BufferAttribute;
       const memeMaillage = posCourante.count === yApres.length;
+      const memeTaille = splat.image.width === suivante.largeur
+        && splat.image.height === suivante.hauteur;
+      if (!memeTaille) {
+        // Une nouvelle image plutôt qu'une écriture : three.js la renvoie
+        // entière à la carte graphique au prochain rendu.
+        splat.image = { data: donnees, width: suivante.largeur, height: suivante.hauteur };
+        splat.needsUpdate = true;
+        sol.geometry.dispose();
+        sol.geometry = neuve;
+        majRoutes(suivante);
+        return;
+      }
       if (duree > 0 && memeMaillage) {
         const yAvant = new Float32Array(yApres.length);
         for (let i = 0; i < yAvant.length; i += 1) yAvant[i] = posCourante.getY(i);
@@ -497,15 +526,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         (splat.image.data as Uint8Array).set(donnees);
         splat.needsUpdate = true;
       }
-      const geoRoutes = geometrieRoutes(suivante);
-      if (routes && geoRoutes) {
-        routes.geometry.dispose();
-        routes.geometry = geoRoutes;
-        routes.visible = true;
-      } else if (routes) {
-        routes.visible = false;
-        geoRoutes?.dispose();
-      }
+      majRoutes(suivante);
     },
 
     appliquerAmbiance(p: ParametresAmbiance): void {

@@ -24,8 +24,8 @@ import {
   uniteSur, verifierProduction, constructionsPossibles,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
-import type { OptionMenu } from './hud';
-import type { Surbrillance } from './scene';
+import type { OptionMenu } from './libelles';
+import type { Surbrillance } from './surbrillance';
 
 /** Les phases de l'interaction. */
 export type Phase =

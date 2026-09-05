@@ -2,7 +2,7 @@
  * Encodeur PNG minimal, sans dépendance native : `zlib` de Node pour la
  * compression, une table CRC-32 pour les segments. Il ne sert qu'à l'aperçu de
  * relecture des cartes (`scripts/apercu-carte.ts`) — le rendu du jeu, lui, est
- * du Canvas 2D vectoriel (`02-architecture.md` §3.4).
+ * la peau 3D de `render3d/`.
  *
  * Format produit : PNG truecolor 8 bits (type 2, RVB), une image sans canal
  * alpha, filtre 0 sur chaque ligne. C'est le plus court chemin entre un tableau

@@ -210,7 +210,7 @@
     },
     {
       "cle": "accueil.reglages_note",
-      "texte": "Affichage et dialogues",
+      "texte": "Dialogues et progression",
       "contexte": {
         "ecran": "accueil",
         "note": "Sous-ligne du bouton Réglages."
@@ -935,6 +935,24 @@
       },
       "longueurMax": null,
       "pluriel": false
+    },
+    {
+      "cle": "campagne.sans_webgl",
+      "texte": "Le jeu n’a pas pu démarrer : cet appareil n’a pas de WebGL 2.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Écran d'échec de montage. Le rendu vectoriel de repli n'existe plus : on le dit franchement plutôt que de laisser un plateau vide."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "campagne.sans_webgl_aide",
+      "texte": "Essayez un autre navigateur, ou vérifiez que l’accélération matérielle est activée.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Seule piste utile qu'on puisse donner au joueur."
+      },
+      "longueurMax": 110
     },
     {
       "cle": "campagne.sauvegarde",

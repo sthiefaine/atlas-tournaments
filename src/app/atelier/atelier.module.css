@@ -4,7 +4,20 @@
 .entete span { font-size: 10px; letter-spacing: .2em; font-weight: 800; }
 .entete h1 { font-size: clamp(19px, 3vw, 30px); font-weight: 800; margin: 2px 0; }
 .entete a { pointer-events: auto; padding: 12px 16px; background: #172832e8; border-radius: 12px; font-weight: 700; font-size: 13px; }
-.panneau { position: absolute; z-index: 2; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); padding: 16px; background: #12222fec; border: 1px solid #8ba5aa42; border-radius: 20px; box-shadow: 0 14px 40px #07141d60; backdrop-filter: blur(14px); }
+.panneau { position: absolute; z-index: 2; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); max-height: 72vh; overflow: auto; padding: 16px; background: #12222fec; border: 1px solid #8ba5aa42; border-radius: 20px; box-shadow: 0 14px 40px #07141d60; backdrop-filter: blur(14px); }
+/* Le bouton de repli reste toujours atteignable, panneau ouvert ou non : c'est
+   la seule commande dont on a besoin quand on veut juste voir la carte. */
+.replier { position: absolute; z-index: 3; right: 24px; bottom: max(16px, env(safe-area-inset-bottom)); min-height: 44px; padding: 11px 16px; background: #172832e8; border: 1px solid #8ba5aa42; border-radius: 12px; color: #f4f1e8; font-size: 12px; font-weight: 800; letter-spacing: .04em; }
+.replier:hover { background: #1f3644f0; }
+
+/* Sur un écran large, le panneau descend le long du bord gauche : la carte
+   garde tout le reste, ce qui est le seul agencement acceptable pour un banc —
+   on ne peut pas juger un rendu qu'on ne voit qu'autour des commandes. */
+@media (min-width: 1100px) {
+  .panneau { left: 20px; right: auto; top: 96px; bottom: max(76px, env(safe-area-inset-bottom)); transform: none; width: 360px; max-height: none; }
+  .reglages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .replier { right: auto; left: 20px; }
+}
 .reglages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
 .reglages label { display: flex; flex-direction: column; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #aebfbe; }
 .reglages select { width: 100%; min-height: 44px; padding: 9px; color: #fff; background: #253c47; border: 1px solid #78909150; border-radius: 10px; font-size: 13px; letter-spacing: 0; }
@@ -15,4 +28,13 @@
 .panneau p { color: #b0c2c5; font-size: 11px; margin: 10px 0 0; }
 .statut { position: absolute; z-index: 3; top: 42%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; padding: 18px; border-radius: 12px; background: #152c3a; text-align: center; }
 .atelier button:focus-visible, .atelier select:focus-visible, .atelier a:focus-visible { outline: 3px solid #e5e9b1; outline-offset: 3px; }
+/* Les trois groupes de bascules : surbrillances, gestes, cas limites. Un bouton
+   enfoncé se lit à sa peinture, pas seulement à son ombre — le banc se pilote
+   d'un coup d'œil, souvent d'une main, l'autre tenant la souris sur la carte. */
+.groupe { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; padding: 8px 10px 10px; border: 1px solid #8ba5aa2e; border-radius: 12px; }
+.groupe legend { padding: 0 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #aebfbe; }
+.groupe button { min-height: 40px; padding: 8px 12px; background: #25404b; border: 1px solid #78909140; border-radius: 9px; color: #f4f1e8; font-size: 12px; font-weight: 700; }
+.groupe button:hover { background: #2f4f5c; }
+.actif { background: #c6d89f !important; border-color: #c6d89f !important; color: #20372d !important; }
+@media (max-width: 600px) { .groupe { padding: 6px 8px 8px; gap: 5px; } .groupe button { min-height: 38px; padding: 7px 9px; font-size: 11px; } }
 @media (max-width: 600px) { .entete { left: 16px; right: 16px; } .panneau { padding: 12px; } .reglages { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; } .reglages label { grid-column: span 2; } .reglages label:nth-child(-n+2) { grid-column: span 3; } .actions button, .actions a { padding: 9px 11px; font-size: 11px; } .panneau p { font-size: 10px; } }

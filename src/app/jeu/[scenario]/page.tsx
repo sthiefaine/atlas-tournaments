@@ -48,22 +48,15 @@ async function charger(code: string): Promise<{ scenario: Scenario; carte: MapDe
 }
 
 /**
- * `?rendu=2d|3d|auto` force la peau. `auto` (défaut) prend la 3D quand WebGL 2
- * répond et retombe sur le rendu vectoriel sinon — c'est le repli du brief.
+ * La page d'une mission. Il n'y a plus qu'une peau — le rendu vectoriel a été
+ * retiré —, donc plus de `?rendu=` : un appareil sans WebGL 2 voit un écran qui
+ * le lui dit, ce qui vaut mieux qu'une version dégradée du jeu.
  */
 export default async function PageJeu(
-  {
-    params, searchParams,
-  }: {
-    params: Promise<{ scenario: string }>;
-    searchParams?: Promise<Record<string, string | string[] | undefined>>;
-  },
+  { params }: { params: Promise<{ scenario: string }> },
 ): Promise<React.ReactElement> {
   const { scenario: code } = await params;
-  const requete = (await searchParams) ?? {};
-  const brut = requete['rendu'];
-  const rendu = Array.isArray(brut) ? brut[0] : brut;
   const charge = await charger(code);
   if (!charge) notFound();
-  return <Toile key={charge.scenario.code} scenario={charge.scenario} carte={charge.carte} locale="fr" rendu={rendu} />;
+  return <Toile key={charge.scenario.code} scenario={charge.scenario} carte={charge.carte} locale="fr" />;
 }

@@ -4,7 +4,7 @@
  * Il tient cinq promesses :
  *
  * - le rendu est une **peau interchangeable** : `Rendu` (`rendu.ts`) est la seule
- *   chose que ce fichier connaisse ; 2D vectoriel et 3D three.js s'y branchent
+ *   chose que ce fichier connaisse ; la peau three.js s'y branche
  *   sans que rien ici ne change. `render/` n'a pas le droit d'importer
  *   `render3d/` (`02-architecture.md` §5), c'est donc la page de jeu qui fournit
  *   la fabrique 3D, exactement comme elle fournit l'adversaire ;
@@ -38,9 +38,8 @@ import { casesObjectifs } from './objectifs';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
-  choisirRendu, type CleRendu, type PreferenceRendu, type Rendu, type VueInteraction,
+  type CleRendu, type Rendu, type VueInteraction,
 } from './rendu';
-import { creerRendu2d } from './rendu2d';
 
 /**
  * L'adversaire, vu du rendu : une fonction qui rend la suite d'actions du camp
@@ -66,8 +65,6 @@ export interface OptionsJeu {
   reprendre?: boolean;
   /** Camp du joueur humain. Toujours 0 dans un scénario canon. */
   camp?: CampId;
-  /** Peau demandée : `auto` prend la 3D si WebGL 2 répond. */
-  rendu?: PreferenceRendu;
   /** Fabrique des peaux que `render/` ne peut pas importer (la 3D). */
   fabriqueRendu?: (cle: CleRendu) => Rendu;
   /** Pose le HUD HTML par-dessus le canvas. Vrai par défaut. */
@@ -222,23 +219,14 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     }
   }
 
-  // --- La peau. `auto` prend la 3D quand WebGL 2 répond, et retombe sur le 2D
-  //     au moindre échec de montage : une carte graphique capricieuse ne doit
-  //     jamais empêcher de jouer.
-  const voulue = choisirRendu(options.rendu ?? 'auto');
-  let rendu: Rendu = creerRendu2d();
-  if (voulue === '3d' && options.fabriqueRendu) {
-    try {
-      const candidat = options.fabriqueRendu('3d');
-      candidat.monter(conteneur);
-      rendu = candidat;
-    } catch {
-      rendu = creerRendu2d();
-      rendu.monter(conteneur);
-    }
-  } else {
-    rendu.monter(conteneur);
-  }
+  // --- La peau. Il n'y en a plus qu'une, et `render/` n'a pas le droit
+  //     d'importer `render3d/` (`02-architecture.md` §5) : c'est donc l'appelant
+  //     qui la fabrique. S'il n'en fournit pas, ou si elle refuse de se monter,
+  //     on **lève** — un appareil sans WebGL 2 doit l'apprendre par un écran qui
+  //     le dit, pas par un plateau vide.
+  if (!options.fabriqueRendu) throw new Error('aucune fabrique de rendu fournie');
+  const rendu: Rendu = options.fabriqueRendu('3d');
+  rendu.monter(conteneur);
 
   if (conteneur.style.position === '') conteneur.style.position = 'relative';
 
@@ -626,7 +614,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     else enfiler('ouverture', options.scenario.dialogueOuverture);
   }
 
-  // --- Cadrage de départ : la première unité du joueur, comme en 2D.
+  // --- Cadrage de départ : la première unité du joueur.
   const depart = etat.unites.find((u) => u.camp === camp);
   rafraichir();
   if (depart) rendu.cadrer({ x: depart.x, y: depart.y });

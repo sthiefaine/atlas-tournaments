@@ -13,7 +13,7 @@
 
 import * as THREE from 'three';
 
-import type { GenreSurbrillance, Surbrillance } from '../render/scene';
+import type { GenreSurbrillance, Surbrillance } from '../render/surbrillance';
 import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
 
