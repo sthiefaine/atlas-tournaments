@@ -86,25 +86,82 @@ function semerArbres(g: GrilleTerrain, biome: Biome): Arbre[] {
   return arbres;
 }
 
-/** Tire les rochers : un à trois par case de montagne, jamais au sommet exact. */
-function semerRochers(g: GrilleTerrain): Arbre[] {
-  const rochers: Arbre[] = [];
+/**
+ * Une pierre, tirée de l'aléa de case.
+ *
+ * Trois silhouettes plutôt qu'une : un bloc anguleux qui domine la case, des
+ * éclats plus petits autour, et de loin en loin une **dalle** couchée. Un seul
+ * volume répété — c'était un dodécaèdre régulier — donne une caillasse de dés
+ * qu'on reconnaît au premier coup d'œil.
+ */
+interface Rocher {
+  x: number;
+  z: number;
+  echelle: number;
+  /** Silhouette : 0 bloc, 1 éclat, 2 dalle. */
+  variante: number;
+  /** Rotation autour de la verticale : c'est la seule qui soit libre. */
+  angle: number;
+  /** Assise, en radians. Bornée : une pierre s'incline, elle ne bascule pas. */
+  penche: number;
+  /** Multiplicateur de teinte, autour de 1 : deux pierres voisines diffèrent. */
+  teinte: number;
+}
+
+/**
+ * Tire les pierres : trois à cinq par case de montagne, **en couronne**, jamais
+ * au centre exact — c'est là que se pose une unité.
+ */
+function semerRochers(g: GrilleTerrain): Rocher[] {
+  const pierres: Rocher[] = [];
   for (let y = 0; y < g.hauteur; y += 1) {
     for (let x = 0; x < g.largeur; x += 1) {
       if (g.terrainDe(x, y) !== 'montagne') continue;
-      const nombre = 2 + Math.floor(alea(x, y, 3) * 3);
+      const nombre = 3 + Math.floor(alea(x, y, 3) * 3);
       for (let i = 0; i < nombre; i += 1) {
-        rochers.push({
-          x: x * CASE + 0.14 + alea(x, y, 200 + i) * 0.72,
-          z: y * CASE + 0.14 + alea(x, y, 230 + i) * 0.72,
-          echelle: 0.5 + alea(x, y, 260 + i) * 0.75,
-          conifere: false,
+        const angle = (i / nombre) * Math.PI * 2 + alea(x, y, 200 + i) * 1.2;
+        const rayon = 0.19 + alea(x, y, 230 + i) * 0.21;
+        // Une seule grosse pierre par case ; le reste est de la caillasse, et
+        // une case sur quatre porte une dalle à la place de son bloc.
+        const gros = i === 0;
+        const variante = gros ? (alea(x, y, 5) < 0.26 ? 2 : 0) : 1;
+        const brut = alea(x, y, 260 + i);
+        pierres.push({
+          x: x * CASE + 0.5 + Math.cos(angle) * rayon,
+          z: y * CASE + 0.5 + Math.sin(angle) * rayon,
+          echelle: gros ? 0.78 + brut * 0.42 : 0.3 + brut * 0.3,
+          variante,
           angle: alea(x, y, 290 + i) * Math.PI * 2,
+          penche: (alea(x, y, 320 + i) - 0.5) * 0.34,
+          teinte: 0.82 + alea(x, y, 350 + i) * 0.34,
         });
       }
     }
   }
-  return rochers;
+  return pierres;
+}
+
+/**
+ * Déforme un polyèdre pour qu'il cesse d'être régulier : chaque sommet est
+ * poussé le long de sa normale d'un bruit tiré de sa **position arrondie**, de
+ * sorte que deux sommets confondus bougent ensemble — sinon les facettes se
+ * décousent, la géométrie d'un icosaèdre n'étant pas indexée.
+ *
+ * La base est ensuite aplatie : une pierre pose sur le sol, elle n'y pointe pas.
+ */
+function eroder(geo: THREE.BufferGeometry, sel: number, aplatir: number): THREE.BufferGeometry {
+  const pos = geo.getAttribute('position') as THREE.BufferAttribute;
+  for (let i = 0; i < pos.count; i += 1) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const bruit = alea(Math.round(x * 512), Math.round(z * 512) + Math.round(y * 97), sel);
+    const facteur = 0.74 + bruit * 0.52;
+    pos.setXYZ(i, x * facteur, Math.max(y * facteur, -aplatir), z * facteur);
+  }
+  pos.needsUpdate = true;
+  geo.computeVertexNormals();
+  return geo;
 }
 
 /** Monte le décor complet. */
@@ -200,27 +257,54 @@ export function creerDecor(
 
   // --- Rochers
   const rochers = semerRochers(g);
-  const geoRocher = new THREE.DodecahedronGeometry(0.16, 0);
-  const matRocher = new THREE.MeshStandardMaterial({ color: 0x8c929b, roughness: 0.95, flatShading: true });
-  const blocs = new THREE.InstancedMesh(geoRocher, matRocher, Math.max(1, rochers.length));
-  blocs.castShadow = true;
-  blocs.receiveShadow = true;
-  blocs.frustumCulled = false;
-  blocs.count = rochers.length;
+  // Trois lots : un appel de dessin par silhouette, et non un par pierre.
+  const geosRocher = [
+    eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085),
+    eroder(new THREE.IcosahedronGeometry(0.15, 0), 901, 0.06),
+    eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05),
+  ];
+  const matRocher = new THREE.MeshStandardMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
+  const lotsRocher = geosRocher.map((geo, v) => {
+    const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
+    const lot = new THREE.InstancedMesh(geo, matRocher, total);
+    lot.name = `rochers-${v}`;
+    lot.castShadow = true;
+    lot.receiveShadow = true;
+    lot.frustumCulled = false;
+    lot.count = 0;
+    groupe.add(lot);
+    return lot;
+  });
+  const teinteRocher = new THREE.Color();
 
   function poserRochers(): void {
-    rochers.forEach((r, i) => {
-      quat.setFromEuler(new THREE.Euler(r.angle * 0.3, r.angle, r.angle * 0.2));
-      pos.set(r.x, hauteurEn(r.x, r.z) + 0.06 * r.echelle, r.z);
-      ech.set(r.echelle, r.echelle * 0.8, r.echelle * 1.1);
+    const rangs = [0, 0, 0];
+    for (const r of rochers) {
+      const lot = lotsRocher[r.variante];
+      if (!lot) continue;
+      const i = rangs[r.variante]!;
+      rangs[r.variante] = i + 1;
+      // La pierre tourne librement autour de la verticale mais s'incline à
+      // peine : une roche couchée sur le flanc se lit comme un débris tombé du
+      // ciel. Et elle **s'enfonce** au lieu de se poser — sans quoi elle flotte
+      // sur son unique facette d'appui, ce que faisait le dodécaèdre.
+      quat.setFromEuler(new THREE.Euler(r.penche, r.angle, r.penche * 0.7));
+      pos.set(r.x, hauteurEn(r.x, r.z) - 0.05 * r.echelle, r.z);
+      ech.set(r.echelle, r.echelle * (0.72 + r.teinte * 0.2), r.echelle);
       mat4.compose(pos, quat, ech);
-      blocs.setMatrixAt(i, mat4);
+      lot.setMatrixAt(i, mat4);
+      // Une teinte par pierre : la roche d'un massif n'est jamais d'un gris.
+      teinteRocher.setRGB(r.teinte, r.teinte * 0.995, r.teinte * 0.96);
+      lot.setColorAt(i, teinteRocher);
+    }
+    lotsRocher.forEach((lot, v) => {
+      lot.count = rangs[v]!;
+      lot.instanceMatrix.needsUpdate = true;
+      if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
     });
-    blocs.instanceMatrix.needsUpdate = true;
   }
 
   poserRochers();
-  groupe.add(blocs);
 
   // --- Bâtiments
   const batiments = new THREE.Group();
@@ -476,7 +560,7 @@ export function creerDecor(
       geoTronc.dispose();
       geoConifere.dispose();
       geoFeuillu.dispose();
-      geoRocher.dispose();
+      for (const geo of geosRocher) geo.dispose();
       for (const g2 of geosBatiment) g2.dispose();
       for (const g2 of primitives.values()) g2.dispose();
       matTronc.dispose();

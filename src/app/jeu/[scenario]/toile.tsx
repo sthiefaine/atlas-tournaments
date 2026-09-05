@@ -9,6 +9,7 @@ import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
 import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
+import { PREFERENCES_PAR_DEFAUT, lirePreferences, type Preferences } from '../../preferences';
 import { enregistrerVictoire } from '../../campagne/progression';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
@@ -35,6 +36,9 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
   const [etapeTutoriel, setEtapeTutoriel] = useState(0);
   const [ancienFormat, setAncienFormat] = useState(false);
   const [voirBriefing, setVoirBriefing] = useState(false);
+  // Les réglages du joueur, lus une fois avant le montage du plateau. `?rendu=`
+  // garde la priorité : une URL est un ordre explicite, pas une préférence.
+  const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   const [voirAide, setVoirAide] = useState(false);
   // Une scène de dialogue est ouverte sur la carte : aucune modale ne doit
   // passer devant, pas même l'écran de fin.
@@ -50,6 +54,7 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
     const compatible = sauvegarde?.engineVersion === VERSION_MOTEUR && sauvegarde.catalogueVersion === scenario.catalogueVersion;
     const enCours = Boolean(compatible && sauvegarde && sauvegarde.actions.length > 0);
     setAncienFormat(Boolean(sauvegarde && sauvegarde.actions.length > 0 && !compatible));
+    setPreferences(lirePreferences());
     setInitialise(true);
     setDepart(enCours ? 'reprise' : 'neuf');
   }, [scenario.code, scenario.catalogueVersion]);
@@ -66,12 +71,13 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
         scenario, carte, locale, commandants,
         adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants),
         reprendre: depart === 'reprise',
-        rendu: preferenceDe(rendu),
+        rendu: rendu ? preferenceDe(rendu) : preferences.rendu,
         fabriqueRendu: () => creerRendu3d({ biome: carte.biome, paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' } }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
-        // grammaire d'Advance Wars, et elle ne vaut que pour une mission.
-        dialogues: Boolean(mission),
+        // grammaire d'Advance Wars, et elle ne vaut que pour une mission — et
+        // seulement si le joueur n'a pas coupé les dialogues dans ses réglages.
+        dialogues: Boolean(mission) && preferences.dialogues,
         surDialogue: setEnScene,
         surEtat: courant => {
           setEtat(courant);
@@ -87,7 +93,7 @@ export default function Toile({ scenario, carte, locale, rendu }: ProprietesToil
       setErreur(true);
     }
     return () => jeu?.demonter();
-  }, [depart, scenario, carte, locale, rendu, tentative, mission]);
+  }, [depart, scenario, carte, locale, rendu, tentative, mission, preferences]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };

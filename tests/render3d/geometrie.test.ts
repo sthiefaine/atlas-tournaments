@@ -8,8 +8,9 @@ import path from 'node:path';
 
 import { chargerCatalogue } from '../../src/engine/index';
 import {
-  CASE, HAUTEURS, NIVEAU_EAU, caseVersMonde, construireSplat, hauteurCase, hauteurEn,
-  hauteurTerrain, mondeVersCase, solDeCase, splatCase, splatTerrain, type GrilleTerrain,
+  CASE, HAUTEURS, NIVEAU_EAU, REPLI_CENTRE, TERRAINS_BATIS, caseVersMonde, construireSplat,
+  hauteurCase, hauteurEn, hauteurTerrain, mondeVersCase, repliCase, solDeCase, splatCase,
+  splatTerrain, type GrilleTerrain,
 } from '../../src/render3d/geometrie';
 import { CLES_TERRAIN, validerMapDef, type CleTerrain, type MapDef } from '../../src/schemas/index';
 
@@ -175,4 +176,69 @@ test('deux cases voisines restent soudées : le champ d’altitude est continu',
     assert.ok(Math.abs(h - precedent) < 0.05, 'aucune marche dans le champ d’altitude');
     precedent = h;
   }
+});
+
+// ---------------------------------------------------------------------------
+// Les cases de bâtiment sont plates d'un bord à l'autre (`10-rendu-3d.md` §4.2)
+// ---------------------------------------------------------------------------
+
+test('une case bâtie est plate sur toute sa surface, pas seulement en son centre', () => {
+  // Le pire cas du jeu : une ville collée à une montagne, et une montagne en
+  // diagonale — c'est le coin du socle qui se faisait couper.
+  const g: GrilleTerrain = {
+    largeur: 3,
+    hauteur: 3,
+    terrainDe: (x, y): CleTerrain => (x === 0 && y === 0 ? 'ville' : 'montagne'),
+  };
+  const sol = hauteurTerrain('ville');
+  assert.equal(solDeCase(g, { x: 0, y: 0 }), sol);
+
+  // Le socle fait 0,83 de côté et le liseré de camp va à ±0,4575 : on vérifie
+  // au-delà, jusqu'au bord exact de la case.
+  for (const dx of [-0.5, -0.4575, -0.28, 0, 0.28, 0.4575, 0.5]) {
+    for (const dz of [-0.5, -0.4575, -0.28, 0, 0.28, 0.4575, 0.5]) {
+      const h = hauteurEn(g, 0.5 + dx * CASE, 0.5 + dz * CASE);
+      assert.ok(
+        Math.abs(h - sol) < 1e-9,
+        `la case bâtie penche en (${dx}, ${dz}) : ${h} au lieu de ${sol}`,
+      );
+    }
+  }
+});
+
+test('le dénivelé est reporté sur la jonction, la montagne garde sa hauteur', () => {
+  const g: GrilleTerrain = {
+    largeur: 2,
+    hauteur: 1,
+    terrainDe: (x): CleTerrain => (x === 0 ? 'qg' : 'montagne'),
+  };
+  // Le QG est plat jusqu'à sa frontière…
+  assert.ok(Math.abs(hauteurEn(g, 0.999, 0.5) - hauteurTerrain('qg')) < 1e-9);
+  // …et la montagne retrouve toute sa hauteur au centre de sa propre case :
+  // aplanir la voisine effacerait un relief qui coûte du mouvement et donne
+  // de la défense, donc mentirait sur les règles.
+  assert.equal(hauteurEn(g, 1.5, 0.5), hauteurTerrain('montagne'));
+
+  // Le champ reste continu : une marche franche déchirerait le maillage.
+  let precedent = hauteurEn(g, 0, 0.5);
+  for (let i = 1; i <= 400; i += 1) {
+    const h = hauteurEn(g, (i / 400) * 2 * CASE, 0.5);
+    assert.ok(h >= precedent - 1e-9, 'le profil ne redescend pas');
+    assert.ok(h - precedent < 0.2, `marche trop franche : ${h - precedent}`);
+    precedent = h;
+  }
+});
+
+test('le repli d’une case dit si elle est bâtie, et les quatre terrains bâtis y sont', () => {
+  const g: GrilleTerrain = {
+    largeur: 6,
+    hauteur: 1,
+    terrainDe: (x): CleTerrain => (['ville', 'qg', 'usine', 'aeroport', 'plaine', 'montagne'] as const)[x] ?? 'plaine',
+  };
+  for (let x = 0; x < 4; x += 1) assert.equal(repliCase(g, x, 0), 0.5, `case ${x} bâtie`);
+  assert.equal(repliCase(g, 4, 0), REPLI_CENTRE);
+  assert.equal(repliCase(g, 5, 0), REPLI_CENTRE);
+  // Les quatre terrains capturables du jeu, et eux seuls : un pont ou une route
+  // n'a pas de socle à protéger.
+  assert.deepEqual([...TERRAINS_BATIS].sort(), ['aeroport', 'qg', 'usine', 'ville']);
 });

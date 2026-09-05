@@ -77,45 +77,94 @@ export function hauteurCase(g: GrilleTerrain, x: number, y: number): number {
 
 /**
  * Demi-largeur du **plateau plat** au centre de chaque case, en fraction de case.
- * Un bâtiment tient dans un disque de ce rayon ; une figurine aussi.
+ * Une figurine y tient d'aplomb, et le décalque de surbrillance ne s'y déforme pas.
  */
 export const REPLI_CENTRE = 0.28;
 
 /**
- * La rampe qui remplace l'interpolation linéaire entre deux centres de cases :
- * plate aux deux extrémités, adoucie au milieu.
+ * Les terrains qui portent une construction : leur case est plate **d'un bord à
+ * l'autre**, et non plus seulement en son centre.
  *
- * C'est elle qui tient la règle de `10-rendu-3d.md` §4.2 — « le centre de chaque
- * case reste plat sur un petit disque ». Sans elle, la pente traverse le centre
- * de la case : une maison posée sur une montagne s'enfonce d'un côté et flotte
- * de l'autre, et une figurine penche là où elle devrait être d'aplomb. Le
- * dénivelé n'est pas supprimé, il est **reporté sur la jonction** entre cases —
- * ce qui donne au passage les gradins d'un plateau de jeu plutôt qu'une dune.
+ * Le socle d'un bâtiment fait 0,83 case de côté et son liseré de camp va jusqu'à
+ * ±0,46 : il déborde largement du disque de `REPLI_CENTRE`. Sans cette exception,
+ * une ville voisine d'une montagne s'enfonce d'un côté et flotte de l'autre —
+ * exactement ce que `10-rendu-3d.md` §4.2 interdit : « on ne pose pas un QG sur
+ * un talus ».
  */
-function rampe(t: number): number {
-  const u = Math.max(0, Math.min(1, (t - REPLI_CENTRE) / (1 - 2 * REPLI_CENTRE)));
+export const TERRAINS_BATIS: ReadonlySet<CleTerrain> = new Set<CleTerrain>([
+  'ville', 'qg', 'usine', 'aeroport',
+]);
+
+/** Demi-largeur plate d'une case : la case entière quand elle est bâtie. */
+export function repliCase(g: GrilleTerrain, x: number, y: number): number {
+  return TERRAINS_BATIS.has(terrainBorne(g, x, y)) ? 0.5 : REPLI_CENTRE;
+}
+
+/**
+ * La rampe qui remplace l'interpolation linéaire entre deux centres de cases :
+ * plate au départ sur `repliA`, plate à l'arrivée sur `repliB`, adoucie entre
+ * les deux.
+ *
+ * C'est elle qui tient les deux garde-fous de `10-rendu-3d.md` §4.2. Sans elle,
+ * la pente traverse le centre de la case : une figurine penche là où elle
+ * devrait être d'aplomb, et un bâtiment se fait couper. Le dénivelé n'est pas
+ * supprimé, il est **reporté sur la jonction** entre cases — ce qui donne au
+ * passage les gradins d'un plateau de jeu plutôt qu'une dune.
+ *
+ * Les deux replis peuvent différer, et c'est tout l'intérêt : une case bâtie
+ * impose son plateau jusqu'à sa propre frontière sans écraser le relief de sa
+ * voisine, qui garde sa hauteur dès son côté de la jonction. Deux cases bâties
+ * jointives ne laissent aucune place à la rampe ; on tranche alors au milieu,
+ * ce qui ne se voit pas puisqu'elles sont à la même altitude.
+ */
+function rampeEntre(t: number, repliA: number, repliB: number): number {
+  const large = 1 - repliA - repliB;
+  if (large <= 0) return t < 0.5 ? 0 : 1;
+  const u = Math.max(0, Math.min(1, (t - repliA) / large));
   return u * u * (3 - 2 * u);
 }
 
 /**
  * Le champ d'altitude **continu** du plateau : une interpolation entre les
- * centres de cases, plate au voisinage de chacun (voir `rampe`). C'est ce qui
- * donne à la fois les « sommets partagés » — deux cases voisines ne peuvent pas
- * se décoller — et les jonctions adoucies.
+ * centres de cases, plate au voisinage de chacun (voir `rampeEntre`). C'est ce
+ * qui donne à la fois les « sommets partagés » — deux cases voisines ne peuvent
+ * pas se décoller — et les jonctions adoucies.
+ *
+ * Les quatre terrains d'angle ne sont lus **qu'une fois** : cette fonction est
+ * appelée pour chaque sommet du maillage, pour chaque arbre, pour chaque rocher,
+ * et à chaque image pour chaque unité.
  */
 export function hauteurEn(g: GrilleTerrain, x: number, z: number): number {
   const fx = x / CASE - 0.5;
   const fz = z / CASE - 0.5;
   const x0 = Math.floor(fx);
   const z0 = Math.floor(fz);
-  const tx = rampe(fx - x0);
-  const tz = rampe(fz - z0);
-  const h00 = hauteurCase(g, x0, z0);
-  const h10 = hauteurCase(g, x0 + 1, z0);
-  const h01 = hauteurCase(g, x0, z0 + 1);
-  const h11 = hauteurCase(g, x0 + 1, z0 + 1);
-  const haut = h00 + (h10 - h00) * tx;
-  const bas = h01 + (h11 - h01) * tx;
+  const u = fx - x0;
+  const v = fz - z0;
+
+  const t00 = terrainBorne(g, x0, z0);
+  const t10 = terrainBorne(g, x0 + 1, z0);
+  const t01 = terrainBorne(g, x0, z0 + 1);
+  const t11 = terrainBorne(g, x0 + 1, z0 + 1);
+  const h00 = hauteurTerrain(t00);
+  const h10 = hauteurTerrain(t10);
+  const h01 = hauteurTerrain(t01);
+  const h11 = hauteurTerrain(t11);
+  const r00 = TERRAINS_BATIS.has(t00) ? 0.5 : REPLI_CENTRE;
+  const r10 = TERRAINS_BATIS.has(t10) ? 0.5 : REPLI_CENTRE;
+  const r01 = TERRAINS_BATIS.has(t01) ? 0.5 : REPLI_CENTRE;
+  const r11 = TERRAINS_BATIS.has(t11) ? 0.5 : REPLI_CENTRE;
+
+  // Une rampe par arête : les deux rangées n'ont pas forcément le même repli.
+  const haut = h00 + (h10 - h00) * rampeEntre(u, r00, r10);
+  const bas = h01 + (h11 - h01) * rampeEntre(u, r01, r11);
+  const tzGauche = rampeEntre(v, r00, r01);
+  const tzDroite = rampeEntre(v, r10, r11);
+  // Le passage d'une colonne à l'autre prend le repli **le plus large** des deux :
+  // sinon le coin d'un socle mordrait la diagonale d'une montagne, seul endroit
+  // où la platitude des bords ne suffit pas.
+  const versDroite = rampeEntre(u, Math.max(r00, r01), Math.max(r10, r11));
+  const tz = tzGauche + (tzDroite - tzGauche) * versDroite;
   return haut + (bas - haut) * tz;
 }
 

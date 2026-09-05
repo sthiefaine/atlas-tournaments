@@ -1,104 +1,111 @@
 import Link from 'next/link';
 import { t } from '@/i18n/index';
 import campagne from '../../content/campagne.json';
-import { Convocation, type Epreuve } from './convocation';
+import { MenuCampagne, type Epreuve } from './menu-campagne';
 import { PlateauAccueil } from './plateau-accueil';
 import { Vitrine } from './vitrine';
 
 /**
- * L'accueil : **l'écran-titre**, pas une page de présentation.
+ * L'accueil : **un écran-titre de jeu**, pensé en portrait d'abord.
  *
- * Trois décisions le tiennent :
+ * La version précédente était une page de présentation — bandeau de marque,
+ * titre-slogan, pitch de deux cents caractères, trois liens soulignés, pied avec
+ * frise et mentions. Sur un téléphone de 390 px, le seul bouton arrivait à
+ * 711 px du haut et le plateau, qui est la seule chose qui montre le jeu, à
+ * 805 px : deux écrans plus bas. Personne ne fait défiler un écran-titre.
  *
- * 1. **on montre le jeu** — le plateau est le fond, avec sa grammaire réelle
- *    (vert, j'y vais ; rouge, j'y tire), parce qu'un écran-titre qui décrit un
- *    jeu au lieu de le montrer ne convainc personne ;
- * 2. **un seul geste** — un bouton, qui mène droit à l'épreuve suivante et non
- *    à une seconde page de choix. Le carnet, le match libre et l'atelier sont
- *    des liens de service ; l'administration n'est pas sur la page publique ;
- * 3. **le vocabulaire du HUD** — encre, papier, signal, biseaux et ombres
- *    dures : entrer en jeu ne doit pas être un changement d'univers.
+ * Quatre décisions la tiennent :
  *
- * La page est un composant serveur. Seule la convocation est cliente, parce
- * qu'elle lit `localStorage` ; on lui passe des libellés déjà traduits.
+ * 1. **Le jeu est le fond, en plein cadre.** Une vraie partie jouée par l'IA
+ *    tourne derrière le menu (`vitrine.tsx`, `attract.tsx`), assombrie aux bords
+ *    par une nappe en dégradé plutôt qu'enfermée dans un cadre : on n'encadre
+ *    pas une capture d'écran de son propre jeu sur son écran-titre.
+ * 2. **Quatre boutons, ancrés en bas.** Sur un téléphone tenu à une main, tout
+ *    ce qui est au-dessus de 560 px du bas est hors de portée du pouce. Le titre
+ *    y va, le menu non. Campagne domine : c'est le seul geste qu'on répète.
+ * 3. **Un écran, pas de défilement.** Ce qui ne tient pas est supprimé, pas
+ *    repoussé sous la ligne de flottaison. Le pitch et la frise des vingt-quatre
+ *    nations ne sont pas perdus : ils appartiennent au carnet, où ils disent
+ *    quelque chose à quelqu'un qui a déjà joué.
+ * 4. **Le vocabulaire du HUD** — encre, papier, signal, biseaux au `clip-path`,
+ *    ombres dures : entrer en jeu ne doit pas être un changement d'univers.
+ *
+ * La page est un composant serveur. Seul le bouton Campagne est client, parce
+ * qu'il lit `localStorage` ; on lui passe des libellés déjà traduits.
  */
-
-/** La France dans la frise des vingt-quatre : c'est d'elle que tout part. */
-const RANG_FRANCE = 7;
-
-/** Nombre de nations de la Ronde (`content/pays/`, `BRIEF.md`). */
-const NATIONS = 24;
 
 export default function Accueil() {
   const locale = 'fr';
-  const epreuves: Epreuve[] = campagne.missions.map((m) => ({
-    cle: m.scenarioCle,
-    titre: m.titre,
-    biome: t(locale, `biome.${m.biome}`),
-  }));
+  const epreuves: Epreuve[] = campagne.missions.map((m) => ({ cle: m.scenarioCle, titre: m.titre }));
+  const total = epreuves.length;
 
   return <main className="atlas-accueil">
-    <header className="accueil-bandeau">
-      <span className="accueil-marque">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 7-7 7-7-7z" fill="currentColor" /></svg>
-        {t(locale, 'app.titre')}
-      </span>
-      <span className="accueil-baseline">{t(locale, 'app.baseline')}</span>
+    <Vitrine><PlateauAccueil locale={locale} /></Vitrine>
+
+    <div className="accueil-nappe" aria-hidden="true" />
+
+    <header className="accueil-titre">
+      <p className="atlas-etiquette">{t(locale, 'accueil.genre_court')}</p>
+      <h1>
+        <span className="titre-haut">{t(locale, 'accueil.nom_haut')}</span>
+        <span className="titre-filet" aria-hidden="true" />
+        <span className="titre-bas">{t(locale, 'accueil.nom_bas')}</span>
+      </h1>
+      <p className="accueil-accroche">{t(locale, 'accueil.accroche')}</p>
     </header>
 
-    <div className="accueil-corps">
-      <section className="accueil-identite">
-        <p className="atlas-etiquette accueil-genre">{t(locale, 'accueil.genre')}</p>
-        <h1>
-          <span className="accueil-reserve">{t(locale, 'accueil.titre_haut')}</span>
-          <span className="accueil-libre">{t(locale, 'accueil.titre_bas')}</span>
-        </h1>
-        <p className="accueil-pitch">{t(locale, 'accueil.pitch')}</p>
-        <nav className="accueil-annexes">
-          <Link href="/campagne">{t(locale, 'campagne.retour')}</Link>
-          <Link href="/jeu/demo">{t(locale, 'accueil.match_libre')}</Link>
-          <Link href="/atelier">{t(locale, 'campagne.atelier')}</Link>
-        </nav>
-      </section>
+    <nav className="accueil-menu" aria-label={t(locale, 'accueil.menu')}>
+      <MenuCampagne
+        epreuves={epreuves}
+        libelles={{
+          campagne: t(locale, 'accueil.menu_campagne'),
+          carnet: t(locale, 'accueil.carnet'),
+          neuf: t(locale, 'accueil.campagne_neuf'),
+          fini: t(locale, 'accueil.campagne_fini'),
+          etat: epreuves.map((_, n) => t(locale, 'accueil.campagne_etat', {
+            n, total, epreuve: epreuves[n]?.titre ?? '',
+          })),
+        }}
+      />
 
-      <div className="accueil-colonne">
-        <Vitrine><PlateauAccueil locale={locale} /></Vitrine>
-        <Convocation
-          epreuves={epreuves}
-          libelles={{
-            carnet: t(locale, 'accueil.carnet_titre'),
-            prochaine: t(locale, 'accueil.prochaine'),
-            terminee: t(locale, 'campagne.fin'),
-            entrer: t(locale, 'accueil.entrer'),
-            reprendre: t(locale, 'accueil.reprendre'),
-            rejouer: t(locale, 'accueil.rejouer'),
-            progression: Array.from(
-              { length: epreuves.length + 1 },
-              (_, n) => t(locale, 'campagne.progression', { n, total: epreuves.length }),
-            ),
-          }}
-        />
+      <Link className="menu-bouton" href="/jeu/demo">
+        <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 8h5v8H4zM15 8h5v8h-5z" fill="currentColor" />
+          <path d="M10.5 12h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+        <span className="menu-texte">
+          <strong>{t(locale, 'accueil.menu_jeu_libre')}</strong>
+          <span className="menu-note">{t(locale, 'accueil.jeu_libre_note')}</span>
+        </span>
+      </Link>
+
+      <div className="accueil-menu-rang">
+        <Link className="menu-bouton menu-petit" href="/atelier">
+          <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3l9 9-9 9-9-9z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="2.4" fill="currentColor" />
+          </svg>
+          <span className="menu-texte">
+            <strong>{t(locale, 'campagne.atelier')}</strong>
+            <span className="menu-note">{t(locale, 'accueil.atelier_note')}</span>
+          </span>
+        </Link>
+
+        <Link className="menu-bouton menu-petit" href="/reglages">
+          <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
+            <g fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </g>
+            <g fill="currentColor">
+              <circle cx="9" cy="7" r="2.2" /><circle cx="15" cy="12" r="2.2" /><circle cx="8" cy="17" r="2.2" />
+            </g>
+          </svg>
+          <span className="menu-texte">
+            <strong>{t(locale, 'accueil.menu_reglages')}</strong>
+            <span className="menu-note">{t(locale, 'accueil.reglages_note')}</span>
+          </span>
+        </Link>
       </div>
-    </div>
-
-    <footer className="accueil-pied">
-      <svg className="accueil-frise" viewBox="0 0 700 26" role="img" aria-labelledby="frise-titre">
-        <title id="frise-titre">{t(locale, 'accueil.frise_titre')}</title>
-        <g aria-hidden="true">
-          <path d="M4 13h692" stroke="#f4edda" strokeOpacity=".14" strokeWidth="1" />
-          {Array.from({ length: NATIONS }, (_, i) => {
-            const x = 14 + i * ((700 - 28) / (NATIONS - 1));
-            return i === RANG_FRANCE
-              ? <g key={i}>
-                <circle cx={x} cy={13} r={9} fill="none" stroke="#ffd162" strokeWidth="2" />
-                <circle cx={x} cy={13} r={5} fill="#ffd162" />
-              </g>
-              : <circle key={i} cx={x} cy={13} r={4} fill="#f4edda" fillOpacity=".24" />;
-          })}
-        </g>
-      </svg>
-      <p className="accueil-legende">{t(locale, 'accueil.frise_legende')}</p>
-      <p className="accueil-mention">{t(locale, 'accueil.sans_compte')}</p>
-    </footer>
+    </nav>
   </main>;
 }

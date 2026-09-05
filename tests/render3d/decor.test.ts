@@ -64,3 +64,77 @@ test('la réduction hivernale des couronnes conserve leurs positions sur le plat
   assert.ok(Math.abs(apres.elements[0]!) < Math.abs(avant.elements[0]!));
   decor.dispose();
 });
+
+test('les pierres se posent en couronne, enfoncées dans le sol et jamais identiques', () => {
+  const etat = partie('plaine');
+  // Une seule case, tout en montagne : on inspecte exactement une case.
+  const grille = { largeur: 1, hauteur: 1, terrainDe: (): 'montagne' => 'montagne' };
+  const solide = 0.4;
+  const decor = creerDecor(grille, etat, () => solide);
+  const lots = [0, 1, 2].map((v) => decor.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh);
+
+  for (const lot of lots) assert.ok(lot instanceof THREE.InstancedMesh, 'trois silhouettes, trois lots');
+  // Trois volumes distincts : c'est tout l'objet de la reprise. Un seul
+  // polyèdre régulier répété donnait une caillasse de dés.
+  const sommets = lots.map((l) => l.geometry.getAttribute('position').count);
+  assert.equal(new Set(lots.map((l) => l.geometry.uuid)).size, 3);
+  assert.ok(sommets.every((n) => n > 0));
+
+  const total = lots.reduce((n, l) => n + l.count, 0);
+  assert.ok(total >= 3 && total <= 5, `trois à cinq pierres par case, vu ${total}`);
+  assert.ok(lots[0]!.count + lots[2]!.count === 1, 'un seul gros bloc, ou une seule dalle');
+
+  const mat = new THREE.Matrix4();
+  const position = new THREE.Vector3();
+  const echelle = new THREE.Vector3();
+  const rotation = new THREE.Quaternion();
+  const couleur = new THREE.Color();
+  const teintes = new Set<string>();
+  for (const lot of lots) {
+    for (let i = 0; i < lot.count; i += 1) {
+      lot.getMatrixAt(i, mat);
+      mat.decompose(position, rotation, echelle);
+      // Le centre de la case reste dégagé : c'est là que se pose une unité.
+      const ecart = Math.hypot(position.x - 0.5, position.z - 0.5);
+      assert.ok(ecart > 0.15, `pierre trop au centre : ${ecart}`);
+      assert.ok(ecart < 0.45, `pierre débordant de sa case : ${ecart}`);
+      // Elle s'enfonce au lieu de se poser : une pierre posée flotte sur sa
+      // facette d'appui, ce que faisait l'ancien dodécaèdre relevé de 0,06.
+      assert.ok(position.y < solide, `pierre flottante à ${position.y} sur un sol à ${solide}`);
+      assert.ok(position.y > solide - 0.12, 'mais pas engloutie');
+      lot.getColorAt(i, couleur);
+      teintes.add(couleur.getHexString());
+    }
+  }
+  assert.ok(teintes.size > 1, 'deux pierres voisines n’ont pas le même gris');
+
+  // Déterminisme : deux montages rendent exactement le même éboulis.
+  const bis = creerDecor(grille, etat, () => solide);
+  for (let v = 0; v < 3; v += 1) {
+    const a = decor.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh;
+    const b = bis.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh;
+    assert.equal(a.count, b.count);
+    assert.deepEqual([...a.instanceMatrix.array], [...b.instanceMatrix.array]);
+  }
+  bis.dispose();
+  decor.dispose();
+});
+
+test('les pierres se reposent quand le terrain bouge', () => {
+  const etat = partie('plaine');
+  let sol = 0.4;
+  const decor = creerDecor(
+    { largeur: 1, hauteur: 1, terrainDe: (): 'montagne' => 'montagne' }, etat, () => sol,
+  );
+  const lot = decor.groupe.getObjectByName('rochers-1') as THREE.InstancedMesh;
+  const mat = new THREE.Matrix4();
+  lot.getMatrixAt(0, mat);
+  const avant = mat.elements[13]!;
+  // Une marée ou un chantier du génie fait descendre le sol : les pierres
+  // doivent suivre, sinon elles restent suspendues au-dessus du vide.
+  sol = -0.1;
+  decor.majRelief();
+  lot.getMatrixAt(0, mat);
+  assert.ok(mat.elements[13]! < avant - 0.4, 'la pierre a suivi le sol qui descend');
+  decor.dispose();
+});

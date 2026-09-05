@@ -183,7 +183,12 @@ export function PlateauAccueil({ locale }: { locale: string }) {
     }
   }
 
-  return <svg className="atlas-plateau" viewBox={`0 0 ${L * C} ${H * C}`} role="img" aria-labelledby="plateau-titre">
+  // `slice` cadre le plateau comme l'attract mode, qui remplit lui aussi tout
+  // l'écran : sans lui, le fondu entre les deux ferait sauter l'échelle.
+  return <svg
+    className="atlas-plateau" viewBox={`0 0 ${L * C} ${H * C}`}
+    preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="plateau-titre"
+  >
     <title id="plateau-titre">{t(locale, 'accueil.plateau_titre')}</title>
     <g aria-hidden="true">
       {cases}

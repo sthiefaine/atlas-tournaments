@@ -44,13 +44,28 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  * regardant.
  */
 
-/** Graine de la partie d'exhibition. Fixe : deux visites, la même partie. */
-const GRAINE = 'accueil:1';
+/**
+ * Les graines d'exhibition. Chaque partie reste **déterministe** — c'est le
+ * moteur, on ne touche pas à ça —, mais on ne rejoue pas la même à chaque
+ * visite : un écran-titre qui repasse le même match coup pour coup se remarque
+ * dès la deuxième ouverture.
+ */
+const GRAINES = ['accueil:1', 'accueil:2', 'accueil:3', 'accueil:4', 'accueil:5'] as const;
 
 /** Pause entre deux actions de l'IA, en millisecondes. */
-const MS_ENTRE_ACTIONS = 300;
+const MS_ENTRE_ACTIONS = 190;
 /** Durée d'affichage de la portée avant qu'une unité ne s'élance. */
-const MS_INTENTION = 460;
+const MS_INTENTION = 330;
+/**
+ * Crans de dézoom au cadrage. Trois sur un grand écran, quatre sur un écran
+ * étroit — jamais six : la carte entière tenue dans la largeur d'un téléphone
+ * donne des cases de vingt pixels, où l'on ne distingue ni une unité, ni le
+ * vert, ni le rouge. À l'autre bout, un cadrage trop serré en portrait remplit
+ * l'écran d'une seule portée. On montre une **manœuvre**, pas un plan.
+ */
+function cransDezoom(): number {
+  return window.innerWidth < 720 ? 4 : 3;
+}
 /** Pause sur l'écran de fin avant de relancer la partie. */
 const MS_AVANT_REPRISE = 2600;
 /** Garde-fou : au-delà, on repart d'une partie neuve plutôt que de boucler. */
@@ -64,7 +79,12 @@ function chargerExhibition(): { catalogue: Catalogue; etatNeuf: () => EtatPartie
   const catalogue = chargerCatalogue(s.valeur.catalogueVersion);
   const commandants = commandantsDuScenario(s.valeur);
   const scene = sceneDepuis(s.valeur, c.valeur, commandants);
-  return { catalogue, commandants, etatNeuf: () => creerPartie(scene, catalogue, GRAINE) };
+  return {
+    catalogue, commandants,
+    etatNeuf: (): EtatPartie => creerPartie(
+      scene, catalogue, GRAINES[Math.floor(Math.random() * GRAINES.length)] ?? GRAINES[0],
+    ),
+  };
 }
 
 /** Les cases où l'unité peut se poser : le vert que le joueur verra en jouant. */
@@ -138,7 +158,8 @@ export default function Attract() {
       rendu.recentrer?.({ x: Math.floor(etat.largeur / 2), y: Math.floor(etat.hauteur / 2) });
       // `limiter()` borne le zoom au minimum qui fait tenir la carte : quelques
       // crans en arrière suffisent à la cadrer entière, quelle que soit sa taille.
-      for (let i = 0; i < 6; i += 1) rendu.zoomer?.(-1);
+      const crans = cransDezoom();
+      for (let i = 0; i < crans; i += 1) rendu.zoomer?.(-1);
     }
 
     async function boucler(hoteRendu: HTMLDivElement): Promise<void> {
@@ -181,6 +202,10 @@ export default function Attract() {
           // L'intention avant le geste : la portée s'allume, la flèche se pose,
           // puis l'unité part. C'est la lecture que le joueur devra faire.
           if (action.type === 'ordre' && action.chemin.length > 1) {
+            // `cadrer` ne recentre que si la case sort du champ : la caméra
+            // suit l'action sans sauter à chaque coup.
+            const depart = action.chemin[0];
+            if (depart) rendu.cadrer?.(depart);
             afficher(porteeVerte(etat, cat, action.uniteId), action.chemin, action.uniteId);
             await pause(MS_INTENTION);
             if (!vivant) return;
