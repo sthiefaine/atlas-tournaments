@@ -9,6 +9,7 @@ const ONGLETS: { href: string; libelle: string }[] = [
   { href: '/admin/file', libelle: 'File de validation' },
   { href: '/admin/prompts', libelle: 'Prompts' },
   { href: '/admin/catalogue', libelle: 'Catalogue d’unités' },
+  { href: '/admin/assets', libelle: 'Assets' },
   { href: '/admin/depeche', libelle: 'Missions du jour' },
   { href: '/admin/traductions', libelle: 'Traductions' },
 ];

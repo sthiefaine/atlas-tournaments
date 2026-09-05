@@ -279,6 +279,69 @@
       "longueurMax": 26
     },
     {
+      "cle": "admin.assets",
+      "texte": "Assets",
+      "contexte": {
+        "ecran": "admin",
+        "note": "Onglet de navigation vers la liste des spécifications d'assets 3D."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "admin.assets_aucun_livre",
+      "texte": "Aucun asset livré : tout est placeholder.",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "Bandeau honnête tant qu'aucun .glb réel n'existe. Ne pas inventer un statut « livré »."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "admin.assets_conforme_canon",
+      "texte": "Conforme au canon",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "État d'un fichier de assets/specs/ identique à ce que le canon produit."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.assets_derive_canon",
+      "texte": "A dérivé du canon",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "État d'un fichier de assets/specs/ qui diffère du canon : relancer le script de génération."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "admin.assets_filtrer",
+      "texte": "Filtrer",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "Bouton du formulaire de filtres par famille, priorité et nation."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "admin.assets_partage",
+      "texte": "partagé",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "Territoire d'un asset qui n'appartient à aucune nation : géométrie de base, terrain, rocher, buste."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "admin.assets_placeholder",
+      "texte": "placeholder",
+      "contexte": {
+        "ecran": "admin_assets",
+        "note": "Statut de livraison de toute spécification aujourd'hui."
+      },
+      "longueurMax": 16
+    },
+    {
       "cle": "admin.base_absente",
       "texte": "Base de données injoignable.",
       "contexte": {
@@ -1045,6 +1108,15 @@
       "longueurMax": 22
     },
     {
+      "cle": "combat.batiment_remis",
+      "texte": "Bâtiment remis en service",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce : un bâtiment désaffecté vient d’être remis en service et rapporte à nouveau."
+      },
+      "longueurMax": 26
+    },
+    {
       "cle": "combat.hors_jeu",
       "texte": "{unite} est mise hors jeu",
       "contexte": {
@@ -1595,6 +1667,15 @@
         "note": "Bouton de l’écran de fin."
       },
       "longueurMax": 14
+    },
+    {
+      "cle": "hud.remettre",
+      "texte": "Remettre en service",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres : chantier de remise en service d’un bâtiment désaffecté (génie en deux tours, infanterie en quatre)."
+      },
+      "longueurMax": 20
     },
     {
       "cle": "hud.reprendre",

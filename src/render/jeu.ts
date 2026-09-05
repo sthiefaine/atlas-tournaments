@@ -380,7 +380,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
    */
   function annoncer(evenements: readonly EvenementJeu[]): void {
     for (const e of evenements) {
-      if (e.type === 'capture' && e.acquis) {
+      if (e.type === 'remise_en_service') {
+        poserAnnonce(t('combat.batiment_remis'));
+      } else if (e.type === 'capture' && e.acquis) {
         const terrain = terrainLogique(etat, cat, e.case);
         poserAnnonce(t(CLE_PRISE[terrain ?? ''] ?? 'combat.ville_capturee'));
       }

@@ -113,6 +113,7 @@ const suites: Suite[] = [
       { titre: 'propriétaire sur une case non capturable', muter: (o) => { o['proprietaires']['0,4'] = 0; }, chemin: 'proprietaires.0,4' },
       { titre: 'nombre de QG différent du nombre de camps', muter: (o) => { o['camps'] = 3; }, chemin: 'grille' },
       { titre: 'deux unités sur la même case', muter: (o) => { o['unitesDepart'][1] = { camp: 0, type: 'char_leger', x: 3, y: 5 }; }, chemin: 'unitesDepart[1]' },
+      { titre: 'bâtiment désaffecté sur une case non capturable', muter: (o) => { o['desaffectes'] = [{ x: 0, y: 4 }]; }, chemin: 'desaffectes[0]' },
     ],
   },
   {

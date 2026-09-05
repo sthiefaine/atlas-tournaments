@@ -1,0 +1,167 @@
+{
+  "cle": "chantier_des_usines",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "chantier_des_usines",
+  "nom": "Entraînement 3 · Le chantier des usines",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_chantier_des_usines",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "defensive"
+    }
+  ],
+  "fondsDepart": 4000,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 5,
+          "y": 4
+        },
+        {
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "combien": 2
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le terrain sec du centre. Deux usines désaffectées à remettre en service : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Votre génie le fait en deux tours ; une infanterie en met quatre, et celles de Tomas aussi.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Une usine produit des véhicules : chars, artillerie, transports. Cliquez sur la vôtre pour recruter. Votre QG, lui, ne produit que de l’infanterie et du génie.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une unité pour une cible, et remettre un bâtiment en service. Demain, la marée.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "chantier_remise",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Bâtiment sous vos couleurs. S’il produit, il produit pour vous dès la prochaine journée. Une usine en plus, c’est une unité de plus par jour.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "chantier_artillerie",
+      "declencheur": {
+        "type": "production",
+        "unite": "artillerie"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "De l’artillerie. Elle tire à deux ou trois cases sans riposte, mais jamais après avoir bougé et jamais au contact. Posez-la derrière votre infanterie.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "chantier_char",
+      "declencheur": {
+        "type": "production",
+        "unite": "char_leger"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. Chaque unité a sa cible.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "chantier_tomas",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une ville de plus pour moi, et donc cinq cents fonds par jour. Ne me laissez pas creuser l’écart.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "chantier_journee_5",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Cinquième journée. L’usine de l’est est à qui la remettra en service le premier : mon infanterie y travaille déjà. Écartez-la, puis posez votre génie ou une infanterie dessus.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "monde.tournoi.chantier_des_usines"
+    ]
+  }
+}

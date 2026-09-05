@@ -1,0 +1,79 @@
+{
+  "cle": "carte_chantier_des_usines",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "carte_chantier_des_usines",
+  "nom": "Le chantier des usines",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "desert",
+  "grille": [
+    "PPPPMMPPPPPP",
+    "PPCPPMPPRRHP",
+    "PPPPPPPRRPPP",
+    "MPPPPPPPRPPP",
+    "MMPPPURRRPPM",
+    "PPPRRRPPPMMM",
+    "PPPRPPPPUPPP",
+    "PUPRPPPPPPPP",
+    "PHRRPPMPPPCP",
+    "PPPPPMMPPPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "1,7": 0,
+    "10,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "genie",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 10,
+      "y": 0
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 11,
+      "y": 1
+    }
+  ],
+  "desaffectes": [
+    {
+      "x": 5,
+      "y": 4
+    },
+    {
+      "x": 8,
+      "y": 6
+    }
+  ]
+}

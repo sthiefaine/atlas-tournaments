@@ -8,16 +8,21 @@
  *
  * Cinq gestes suffisent à raconter un tour : le déplacement le long du chemin,
  * le tir (recul et éclair court), le coup encaissé (secousse), la mise hors jeu
- * (affaissement et fondu) et la capture (un drapeau qui monte).
+ * (affaissement et fondu) et la capture — on amène les couleurs de l'ancien
+ * propriétaire, on hisse les nôtres. Le bâtiment, lui, ne bouge jamais : ce
+ * qu'on prend, c'est le mât.
  */
 
 import * as THREE from 'three';
 
 import type { EtatPartie, EvenementJeu } from '../engine/index';
-import { uniteParId } from '../engine/index';
+import { cleCase, uniteParId } from '../engine/index';
 import { animation, type Animation } from '../render/boucle';
 import { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 import { paletteDe } from '../render/palettes';
+import {
+  COULEUR_PLANCHE, PIECES_PALISSADE, poseDrapeau, RAYON_PALISSADE, type PriseChantier, type PriseDrapeau,
+} from './decor';
 import { CASE } from './geometrie';
 import type { CalqueUnites } from './unites';
 
@@ -33,8 +38,17 @@ const MS_TOUCHE = 300;
 /** Durée de la mise hors jeu. */
 const MS_HORS_JEU = 420;
 
-/** Durée de la montée d'un drapeau de capture. */
-const MS_CAPTURE = 620;
+/** Durée d'une capture acquise : amener l'ancien drapeau, hisser le nouveau. */
+const MS_CAPTURE = 1100;
+
+/** Part de la capture passée à amener l'ancien drapeau, quand il y en a un. */
+const PART_AMENER = 0.38;
+
+/** Durée du retour visuel d'une capture qui avance sans aboutir. */
+const MS_CAPTURE_EN_COURS = 460;
+
+/** Durée d'une remise en service : la palissade tombe, les vitrages se rallument. */
+const MS_REMISE = 1200;
 
 /** Ce dont les animations ont besoin pour agir sur la scène. */
 export interface ContexteAnimation {
@@ -43,8 +57,20 @@ export interface ContexteAnimation {
   effets: THREE.Group;
   document: Document;
   hauteurEn(x: number, z: number): number;
+  /** La prise du drapeau d'une case bâtie, `null` si la case n'en porte pas. */
+  drapeau(cle: string): PriseDrapeau | null;
+  /** La prise des vitrages d'une case bâtie, `null` si la case n'en porte pas. */
+  chantier(cle: string): PriseChantier | null;
   /** Appelée quand une animation modifie la scène : le rendu se salit. */
   salir(): void;
+}
+
+/** Un halo tinté aux couleurs d'un camp, éteint : l'animation l'allume. */
+function halo(doc: Document, couleur: string): THREE.Sprite {
+  return new THREE.Sprite(new THREE.SpriteMaterial({
+    map: eclair(doc), color: couleur, blending: THREE.AdditiveBlending,
+    transparent: true, depthWrite: false, opacity: 0,
+  }));
 }
 
 /** Texture d'éclair de bouche : un halo additif, dessiné une seule fois. */
@@ -79,12 +105,18 @@ export function construireAnimations(
   const animations: Animation[] = [];
   const attentes: Promise<void>[] = [];
 
+  // Les cases remises en service dans cette salve : la capture qui suit sur la
+  // même case attend que la palissade soit tombée avant de hisser le drapeau.
+  const remises = new Set<string>();
+
   const ajouter = (
-    nom: string, duree: number, avancer: (p: number) => void, terminer?: () => void,
+    nom: string, duree: number, avancer: (p: number) => void, terminer?: () => void, retard = 0,
   ): void => {
     attentes.push(new Promise<void>((resoudre) => {
-      animations.push(animation(nom, duree, (p) => {
-        avancer(p);
+      animations.push(animation(nom, duree + retard, (p) => {
+        // Toutes les animations d'une salve partent ensemble : le retard tient
+        // celle-ci à son départ le temps voulu.
+        avancer(retard > 0 ? Math.max(0, (p * (duree + retard) - retard) / duree) : p);
         ctx.salir();
       }, () => {
         terminer?.();
@@ -170,33 +202,119 @@ export function construireAnimations(
       }, () => {
         ctx.unites.liberer(e.uniteId);
       });
-    } else if (e.type === 'capture' && e.acquis) {
-      const camp = e.camp;
-      const mat = new THREE.MeshStandardMaterial({ color: paletteDe(camp).main, roughness: 0.6 });
-      const drapeau = new THREE.Mesh(new THREE.PlaneGeometry(0.26, 0.16), mat);
-      const mât = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.012, 0.012, 0.5, 6),
-        new THREE.MeshStandardMaterial({ color: 0xdedede, roughness: 0.5 }),
+    } else if (e.type === 'capture') {
+      const cle = cleCase(e.case);
+      const prise = ctx.drapeau(cle);
+      if (!prise) continue;
+      // Le drapeau tel qu'il était **avant** le geste : l'état est déjà en
+      // avance, le décor montre déjà l'arrivée. On repart du départ pour que
+      // le mouvement se voie.
+      const proprio = avant.proprietaires[cle] ?? null;
+      const u = uniteParId(avant, e.uniteId);
+      const depart = poseDrapeau(
+        proprio, u && u.pointsCapture > 0 ? { camp: u.camp, points: u.pointsCapture } : null, prise.seuil,
       );
+      if (e.acquis) {
+        // On n'amène que le drapeau d'un autre : sur un bâtiment neutre, nos
+        // couleurs continuent simplement de monter.
+        const amener = depart.camp !== null && depart.camp !== e.camp;
+        const partAmener = amener ? PART_AMENER : 0;
+        const bas = amener ? 0 : depart.niveau;
+        const eclat = halo(ctx.document, paletteDe(e.camp).light);
+        eclat.position.copy(prise.sommet);
+        eclat.scale.setScalar(0.3);
+        ctx.effets.add(eclat);
+        ajouter(`capture:${cle}`, MS_CAPTURE, (p) => {
+          if (p < partAmener) {
+            prise.forcer(depart.camp, depart.niveau * (1 - p / partAmener));
+            return;
+          }
+          const t = (p - partAmener) / (1 - partAmener);
+          // Une montée qui freine en haut : le drapeau arrive, il ne cogne pas le pommeau.
+          const monte = 1 - (1 - t) ** 3;
+          prise.forcer(e.camp, bas + (1 - bas) * monte);
+          const lueur = Math.max(0, (t - 0.68) / 0.32);
+          eclat.material.opacity = Math.sin(lueur * Math.PI) * 0.9;
+          eclat.scale.setScalar(0.3 + lueur * 0.55);
+        }, () => {
+          prise.relacher();
+          ctx.effets.remove(eclat);
+          eclat.material.dispose();
+        }, remises.has(cle) ? MS_REMISE : 0);
+      } else {
+        // La capture avance : le drapeau glisse d'un cran, et le pied du mât
+        // s'allume brièvement aux couleurs de qui la mène.
+        const arrivee = poseDrapeau(proprio, { camp: e.camp, points: e.points }, prise.seuil);
+        const camp = arrivee.camp ?? depart.camp;
+        const pied = halo(ctx.document, paletteDe(e.camp).main);
+        pied.position.copy(prise.pied).add(new THREE.Vector3(0, 0.04, 0));
+        pied.scale.setScalar(0.25);
+        ctx.effets.add(pied);
+        ajouter(`capture:${cle}`, MS_CAPTURE_EN_COURS, (p) => {
+          const t = 1 - (1 - p) ** 2;
+          prise.forcer(camp, depart.niveau + (arrivee.niveau - depart.niveau) * t);
+          pied.material.opacity = Math.sin(p * Math.PI) * 0.7;
+          pied.scale.setScalar(0.25 + p * 0.3);
+        }, () => {
+          prise.relacher();
+          ctx.effets.remove(pied);
+          pied.material.dispose();
+        });
+      }
+    } else if (e.type === 'remise_en_service') {
+      const cle = cleCase(e.case);
+      const chantier = ctx.chantier(cle);
+      if (!chantier) continue;
+      remises.add(cle);
+      // L'état est déjà en avance : le décor montre le bâtiment en service. On
+      // rejoue la palissade en éphémère et on la fait tomber vers l'extérieur,
+      // pan par pan ; les vitrages luisent une fois, puis rendent l'ambiance.
       const cx = e.case.x * CASE + CASE / 2;
       const cz = e.case.y * CASE + CASE / 2;
-      const sol = ctx.hauteurEn(cx, cz);
-      mât.position.set(cx, sol + 0.25, cz);
-      drapeau.position.set(cx + 0.13, sol + 0.4, cz);
-      drapeau.castShadow = true;
-      ctx.effets.add(mât);
-      ctx.effets.add(drapeau);
-      ajouter(`capture:${e.case.x},${e.case.y}`, MS_CAPTURE, (p) => {
-        const monte = Math.min(1, p * 1.3);
-        drapeau.position.y = sol + 0.14 + monte * 0.3;
-        mat.opacity = 1;
-        drapeau.scale.setScalar(0.6 + monte * 0.4);
+      const sol = ctx.hauteurEn(cx, cz) + 0.03;
+      const mat = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96, transparent: true });
+      const geo = new THREE.BoxGeometry(1, 1, 1);
+      const pans = [0, 1, 2, 3].map((k) => {
+        const a = k * Math.PI / 2;
+        const pan = new THREE.Group();
+        pan.position.set(cx + Math.sin(a) * RAYON_PALISSADE, sol, cz + Math.cos(a) * RAYON_PALISSADE);
+        pan.rotation.y = a;
+        for (const piece of PIECES_PALISSADE) {
+          const m = new THREE.Mesh(geo, mat);
+          m.scale.set(piece.l, piece.h, piece.p);
+          m.position.set(piece.x, piece.y, 0);
+          m.castShadow = true;
+          pan.add(m);
+        }
+        ctx.effets.add(pan);
+        return pan;
+      });
+      const poussiere = halo(ctx.document, '#f1e6cf');
+      poussiere.position.set(cx, sol + 0.08, cz);
+      poussiere.scale.setScalar(0.9);
+      ctx.effets.add(poussiere);
+      ajouter(`remise:${cle}`, MS_REMISE, (p) => {
+        pans.forEach((pan, k) => {
+          // Chaque pan part un peu après le précédent et tombe comme on tombe :
+          // en accélérant, avec un petit rebond au sol.
+          const t = Math.min(1, Math.max(0, (p - k * 0.06) / 0.5));
+          const chute = t * t;
+          const rebond = t >= 1 ? 0 : Math.max(0, Math.sin(Math.min(1, (t - 0.85) / 0.15) * Math.PI)) * 0.05;
+          pan.rotation.x = (Math.PI / 2) * 0.94 * chute - rebond;
+        });
+        mat.opacity = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
+        const souleve = Math.max(0, Math.min(1, (p - 0.3) / 0.35));
+        poussiere.material.opacity = Math.sin(souleve * Math.PI) * 0.55;
+        poussiere.scale.setScalar(0.7 + souleve * 0.5);
+        // Les vitrages se rallument quand la palissade est à terre.
+        const lueur = Math.max(0, Math.min(1, (p - 0.55) / 0.25));
+        chantier.eclairer(Math.sin(lueur * Math.PI * 0.5));
       }, () => {
-        ctx.effets.remove(mât);
-        ctx.effets.remove(drapeau);
-        mât.geometry.dispose();
-        (mât.material as THREE.Material).dispose();
-        drapeau.geometry.dispose();
+        chantier.relacher();
+        for (const pan of pans) ctx.effets.remove(pan);
+        ctx.effets.remove(poussiere);
+        poussiere.material.dispose();
+        geo.dispose();
         mat.dispose();
       });
     }

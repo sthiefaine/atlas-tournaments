@@ -18,7 +18,7 @@
     "jour": 4,
     "nuit": 2
   },
-  "catalogueVersion": 2,
+  "catalogueVersion": 3,
   "commandants": [
     {
       "camp": 0,
@@ -30,27 +30,28 @@
       "ia": "ponderee"
     }
   ],
-  "fondsDepart": 4500,
+  "fondsDepart": 3000,
   "revenusParBatiment": 500,
-  "brouillard": false,
+  "brouillard": true,
   "limiteJournees": 18,
   "victoire": [
     {
-      "type": "relais",
+      "type": "capturer",
       "cases": [
         {
-          "x": 3,
-          "y": 2
+          "x": 7,
+          "y": 1
         },
         {
-          "x": 6,
-          "y": 2
-        },
-        {
-          "x": 6,
+          "x": 5,
           "y": 5
+        },
+        {
+          "x": 5,
+          "y": 8
         }
-      ]
+      ],
+      "combien": 3
     }
   ],
   "defaite": [
@@ -64,19 +65,19 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tomas vous confie son équipe du Luxembourg pour votre premier match sous les couleurs d’une nation alliée. Son style privilégie la défense.",
+      "texte": "Mon équipe est à vous pour ce match d’exhibition. Son style privilégie la défense : mes unités encaissent mieux, et mon pouvoir renforce encore leur garde.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les relais contiennent les relevés d’arbitrage : le tournoi continue, mais quelque chose semble anormal dans leur homologation.",
+      "texte": "Les trois postes d’arbitrage de la vallée gardent les relevés du tournoi. Tenez-les tous les trois sous nos couleurs en même temps : Ariane fera tout pour en garder un.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Vous remportez votre première victoire commune. Le relevé mentionne une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
+      "texte": "Les trois postes sont à nous. Les relevés mentionnent une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
       "emotion": "joie"
     }
   ],
@@ -89,29 +90,76 @@
   ],
   "scenesDialogue": [
     {
-      "cle": "alliees_relais",
+      "cle": "alliees_brouillard",
       "declencheur": {
-        "type": "etape",
-        "etape": 1
+        "type": "journee",
+        "journee": 1
       },
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Premier relevé récupéré. Vous commandez mon équipe aujourd’hui : sa spécialité est la défense, servez-vous-en pour tenir les relais plutôt que pour charger.",
+          "texte": "Le brouillard couvre la vallée : on ne voit que ce que nos unités voient. Votre drone porte à cinq cases, mais la station radar d’Ariane, au nord-est, le brouille à douze cases : à sa portée, il n’y voit plus qu’à une case.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Prenez la station, et c’est nous qui verrons à cinq cases autour d’elle. Son brouilleur mobile, lui, ne se prend pas : il se met hors jeu.",
           "emotion": "neutre"
         }
       ]
     },
     {
-      "cle": "alliees_anomalie",
+      "cle": "alliees_premier_poste",
       "declencheur": {
-        "type": "etape",
-        "etape": 2
+        "type": "capture",
+        "camp": 0
       },
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Deuxième relevé. Les chiffres d’arbitrage ne concordent pas avec ceux du Bureau. Terminez le relais, nous lirons le troisième ensemble.",
+          "texte": "Premier poste sous nos couleurs. Servez-vous de ma défense pour tenir plutôt que pour charger : une unité postée sur un bâtiment y gagne trois étoiles.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "alliees_ariane",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Un poste pour moi. Les trois en même temps, commandant : c’est la règle. Venez me le reprendre.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "alliees_pouvoir",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Pouvoir déclenché : mes unités tiennent comme des murs cette journée. C’est le moment de rester sur les postes.",
+          "emotion": "triomphe"
+        }
+      ]
+    },
+    {
+      "cle": "alliees_journee_6",
+      "declencheur": {
+        "type": "journee",
+        "journee": 6
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau. Finissons ce match, nous lirons le troisième ensemble.",
           "emotion": "doute"
         }
       ]

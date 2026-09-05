@@ -189,6 +189,11 @@ export interface EtatPartie {
   /** Grille de la carte, jamais réécrite (`04-gameplay.md` §11.1). */
   grille: string[];
   proprietaires: Record<string, CampId>;
+  /**
+   * Bâtiments **désaffectés**, clés de case : neutres, sans revenu ni production
+   * tant qu'une unité ne les a pas remis en service (`04-gameplay.md` §6 bis).
+   */
+  desaffectes: string[];
   unites: Unite[];
   prochainId: number;
   /** Prochaine balise à capturer, indexée par objectif. */
@@ -267,6 +272,8 @@ export type EvenementJeu =
   | { type: 'attaque'; attaquantId: string; cibleId: string; degats: number; riposte: number }
   | { type: 'hors_jeu'; uniteId: string; camp: CampId; unite: CleUnite }
   | { type: 'capture'; uniteId: string; case: Case; points: number; acquis: boolean; camp: CampId }
+  /** Un bâtiment désaffecté vient d'être remis en service par ce camp. */
+  | { type: 'remise_en_service'; uniteId: string; case: Case; camp: CampId }
   | { type: 'production'; camp: CampId; unite: CleUnite; case: Case; cout: number }
   | { type: 'embarquement'; uniteId: string; transportId: string }
   | { type: 'debarquement'; uniteId: string; transportId: string; vers: Case }
@@ -364,6 +371,8 @@ export interface Scene {
   hauteur: number;
   grille: string[];
   proprietaires: Record<string, CampId>;
+  /** Bâtiments désaffectés au départ, clés de case. */
+  desaffectes?: string[];
   unitesDepart: { camp: CampId; type: CleUnite; x: number; y: number; pv?: number }[];
   camps: CampId[];
   commandants: (CommandantMoteur | null)[];

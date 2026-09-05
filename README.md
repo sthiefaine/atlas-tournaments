@@ -8,7 +8,7 @@ Web, TypeScript strict, Next.js 15. **Rendu 3D three.js avec repli vectoriel 2D*
 
 Ouvrir **`/campagne`** : quatre entraînements guidés, puis une qualification avec le génie et un match sous les couleurs du Luxembourg. Le carnet sauvegarde la progression dans le navigateur. `/jeu/demo` reste disponible ; `?rendu=2d` force le repli vectoriel.
 
-Les objectifs escorte, relais et survie sont jouables ; dix profils de biomes guident la génération. Le catalogue 2 ajoute le génie (passage adjacent pour 1 500 fonds), et les silhouettes 3D sont plus lisibles. Voir `doc/15-premiers-matchs.md` pour le périmètre exact et les versions. `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune des six missions.
+Quatre entraînements sur quatre cartes distinctes : se battre, prendre des villes, remettre des usines en service avec le génie, prendre le QG à marée basse. Le QG se prend en quarante points ; les bâtiments désaffectés se remettent en service ; le catalogue 3 ajoute drones, brouilleur et station radar pour le brouillard de guerre. Voir `doc/15-premiers-matchs.md` pour le périmètre exact et les versions. `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune des six missions.
 
 ## Les documents
 
@@ -28,7 +28,7 @@ Les objectifs escorte, relais et survie sont jouables ; dix profils de biomes gu
 | Contrôle (`src/serveur/controle/`) | vérifications structurelles, campagne de simulation multi-climats, `ReviewVerdict` motivé |
 | Rendu (`src/render/`, `src/render3d/`) | interface `Rendu` commune, peau 2D vectorielle et peau 3D three.js avec placeholders composés depuis la `Silhouette` |
 | Serveur et admin (`src/app/`, `src/serveur/`, `src/db/`) | les routes `/api/routines/*`, la file de validation, les prompts versionnés, la dépêche, l'i18n |
-| Assets (`src/assets/`, `assets/specs/`) | le format `AssetSpec`, 540 spécifications générées depuis le canon, le validateur glTF |
+| Assets (`src/assets/`, `assets/specs/`) | le format `AssetSpec`, 681 spécifications générées depuis le canon, le validateur glTF |
 | Contenu (`content/`) | 24 pays, 18 régions françaises, 42 styles, 9 fils, le catalogue d'unités et de terrains, un scénario de démonstration |
 
 Aucune base de données n'est encore branchée, aucun modèle 3D réel n'est livré, et aucune tâche planifiée Claude ne tourne. `CLAUDE.md` détaille l'état exact de chaque étape et ce qui manque.

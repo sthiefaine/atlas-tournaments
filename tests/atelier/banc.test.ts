@@ -7,13 +7,13 @@ import assert from 'node:assert/strict';
 import { chargerCatalogue, cleCase, creerPartie, sceneDepuis, type EtatPartie } from '../../src/engine/index';
 import { validerMapDef, validerScenario, CARACTERE_PAR_TERRAIN, CLES_TERRAIN, BASES_SILHOUETTE, type CleTerrain } from '../../src/schemas/index';
 import {
-  BASES_JAMAIS_VUES, CHEMIN_BANC, GENRES_SURBRILLANCE, GESTES_BANC, HAUTEUR_BANC,
+  BASES_JAMAIS_VUES, CHEMIN_BANC, GENRES_SURBRILLANCE, GESTES_BANC, HAUTEUR_BANC, VILLE_DESAFFECTEE_BANC,
   LARGEUR_BANC, RANGS, UNITES_BANC, VERSION_CATALOGUE_BANC, carteBanc, catalogueSilhouettes,
   rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc,
 } from '../../src/app/atelier/banc';
 import scenarioDemo from '../../content/scenarios/demo.json';
 
-const CAT = chargerCatalogue();
+const CAT = chargerCatalogue(VERSION_CATALOGUE_BANC);
 
 function etatBanc(): EtatPartie {
   const s = validerScenario(scenarioDemo);
@@ -36,7 +36,7 @@ test('le banc force le catalogue qui porte toutes ses unités', () => {
   for (const u of UNITES_BANC) assert.ok(complet.unites[u], `unité absente du catalogue du banc : ${u}`);
 });
 
-test('l’état du banc porte bien les vingt-deux unités posées', () => {
+test('l’état du banc porte bien les vingt-huit unités posées', () => {
   const e = etatBanc();
   assert.equal(e.unites.length, UNITES_BANC.length * 2, 'une unité perdue au montage');
   for (const camp of [0, 1] as const) {
@@ -66,7 +66,7 @@ test('elle pose les douze terrains du canon, aucun oublié', () => {
   }
 });
 
-test('elle pose les onze unités, dans les deux camps, sur des cases distinctes', () => {
+test('elle pose les quatorze unités, dans les deux camps, sur des cases distinctes', () => {
   const carte = carteBanc();
   assert.deepEqual([...UNITES_BANC].sort(), Object.keys(CAT.unites).sort());
   for (const camp of [0, 1] as const) {
@@ -184,13 +184,53 @@ test('chaque geste rend un état d’après cohérent avec ses événements', ()
 
   const prise = rejouer(depart, 'capture')!;
   const ville = prise.evenements[0]!;
+  assert.equal(ville.type, 'capture');
   if (ville.type === 'capture') {
-    assert.equal(depart.proprietaires[cleCase(ville.case)], undefined, 'la ville doit partir neutre');
+    // La ville part tenue par l'autre camp : c'est ce qui fait voir l'ancien
+    // drapeau qu'on amène avant de hisser le nouveau.
+    assert.equal(depart.proprietaires[cleCase(ville.case)], 1, 'la ville doit partir tenue par le camp 1');
+    assert.equal(ville.camp, 0);
+    assert.ok(ville.acquis);
     assert.equal(prise.apres.proprietaires[cleCase(ville.case)], 0);
+    const capteur = prise.apres.unites.find((u) => u.id === ville.uniteId)!;
+    assert.deepEqual({ x: capteur.x, y: capteur.y }, ville.case, 'le capteur est posé sur la ville');
+    // Rejoué depuis l'état d'après, le geste rend la ville au camp 1 : il se rejoue sans fin.
+    const reprise = rejouer(prise.apres, 'capture')!;
+    assert.equal(reprise.apres.proprietaires[cleCase(ville.case)], 1);
+  }
+
+  const entamee = rejouer(depart, 'capture_en_cours')!;
+  const debut = entamee.evenements[0]!;
+  if (debut.type === 'capture') {
+    assert.ok(!debut.acquis);
+    assert.ok(debut.points > 0 && debut.points < 20, 'une capture entamée est entre zéro et le seuil');
+    assert.equal(entamee.apres.proprietaires[cleCase(debut.case)], 1, 'la ville ne change pas encore de mains');
+    const capteur = entamee.apres.unites.find((u) => u.id === debut.uniteId)!;
+    assert.equal(capteur.pointsCapture, debut.points, 'l’état porte la progression, le drapeau la lit');
+    // Achever la capture entamée : le capteur déjà posé est celui qui la finit.
+    const finie = rejouer(entamee.apres, 'capture')!;
+    const fin = finie.evenements[0]!;
+    if (fin.type === 'capture') assert.equal(fin.uniteId, debut.uniteId);
   }
 
   const perdue = rejouer(depart, 'hors_jeu')!;
   assert.equal(perdue.apres.unites.length, depart.unites.length - 1);
+
+  // La remise en service : la carte porte une ville désaffectée, le moteur
+  // émet la remise **puis** la capture, et le geste se rejoue en refermant.
+  const cleDesaffectee = cleCase(VILLE_DESAFFECTEE_BANC);
+  assert.ok(depart.desaffectes.includes(cleDesaffectee), 'le banc part avec une ville désaffectée');
+  assert.equal(depart.proprietaires[cleDesaffectee], undefined, 'désaffectée, donc neutre');
+  const remise = rejouer(depart, 'remise_en_service')!;
+  assert.deepEqual(remise.evenements.map((e) => e.type), ['remise_en_service', 'capture']);
+  assert.ok(!remise.apres.desaffectes.includes(cleDesaffectee));
+  assert.equal(remise.apres.proprietaires[cleDesaffectee], 0);
+  const capture = remise.evenements[1]!;
+  if (capture.type === 'capture') assert.equal(capture.points, 40, 'un bâtiment désaffecté se prend à quarante');
+  const refermee = rejouer(remise.apres, 'remise_en_service')!;
+  assert.ok(refermee.apres.desaffectes.includes(cleDesaffectee), 'rejoué, le geste referme la ville');
+  assert.equal(refermee.apres.proprietaires[cleDesaffectee], undefined);
+  assert.equal(refermee.evenements.length, 0);
 });
 
 test('la marée réécrit le sol, et la marée basse défait la haute', () => {

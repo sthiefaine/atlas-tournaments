@@ -89,7 +89,7 @@ export {
   type PrevisionDuel,
 } from './regles/combat';
 export {
-  avancerCapture, peutCapturerIci, pointsGagnes, reinitialiserCapture, SEUIL_CAPTURE,
+  avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
 } from './regles/capture';
 export {
   batimentsDe, consommerCarburant, estRavitailleur, producteursDe, produire,
@@ -106,7 +106,8 @@ export {
 } from './regles/victoire';
 export { appliquerEffets, campSuivant, fermerTour, ouvrirTour } from './regles/tour';
 export {
-  cacheeAuContact, casesVisibles, filtrerPourCamp, unitesVues, visionUnite, voitCase,
+  brouilleParCamp, cacheeAuContact, casesVisibles, estBrouillee, filtrerPourCamp, PART_VISION_BROUILLEE,
+  RAYON_BROUILLEUR_MOBILE, RAYON_STATION_RADAR, unitesVues, VISION_STATION_RADAR, visionUnite, voitCase,
 } from './regles/vision';
 
 // Hooks, climat, mécaniques

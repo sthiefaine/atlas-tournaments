@@ -232,7 +232,8 @@
         "roquettes",
         "antiair",
         "transport",
-        "genie"
+        "genie",
+        "brouilleur"
       ],
       "ravitaille": true,
       "soigne": 2,
@@ -258,7 +259,9 @@
       "capturable": true,
       "revenus": 1000,
       "produit": [
-        "helico"
+        "helico",
+        "drone",
+        "drone_filaire"
       ],
       "ravitaille": true,
       "soigne": 2,
@@ -295,6 +298,30 @@
         "main": "#e0b23f",
         "dark": "#a37a1c",
         "light": "#f7dfa0"
+      }
+    },
+    {
+      "cle": "radar",
+      "car": "T",
+      "nom": "Station radar",
+      "defense": 3,
+      "couts": {
+        "pied": 1,
+        "bottes": 1,
+        "roues": 1,
+        "chenilles": 1,
+        "air": 1
+      },
+      "capturable": true,
+      "revenus": 500,
+      "produit": [],
+      "ravitaille": false,
+      "soigne": 0,
+      "cacheEnBrouillard": false,
+      "palette": {
+        "main": "#b7a9d6",
+        "dark": "#7d6fa3",
+        "light": "#e2daf2"
       }
     }
   ]

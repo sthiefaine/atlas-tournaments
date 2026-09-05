@@ -1,0 +1,163 @@
+{
+  "id": "kit_au_drone_filaire",
+  "type": "kit",
+  "cle": "au_drone_filaire",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Drone filaire\" in the colours and materials of Australie. Guiding line: Road train: very long chassis, tubular bull bars, red dust ochre up to the roof, and water cans hung everywhere. Paint the base mesh of unite_drone_filaire_base in shape template A (short and compact: stubby volumes, sharp angles, everything pulled in). Base colour #d4762a, own shadow #864111, edge highlight #ffd9ac, accents #2c3a4a, #f2e2c4. Materials to read at a glance: flat matte paint, painted steel plate, dusty rubber, heavy canvas and bare aluminium. Finish: dust-laden on the lower third and sun-faded. Add these ornaments as separate named nodes, and nothing else: a hanging water can, a row of strapped jerrycans, a whip antenna on a base spring and a spare wheel on the flank. Abstract decals only: dashed bands in #2c3a4a on the flanc. For colour-blind readability the socle carries dashed bands, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Drone filaire » aux couleurs et aux matières du style « Australie ». Ligne directrice : Road train : châssis très longs, pare-buffles tubulaires, ocre de poussière rouge jusqu’au toit, et des bidons d’eau accrochés partout. Peindre la géométrie de base unite_drone_filaire_base dans le gabarit A (court et ramassé : volumes trapus, angles francs, rien qui dépasse). Couleur de fond #d4762a, ombre propre #864111, liseré d’arête #ffd9ac, accents #2c3a4a, #f2e2c4. Matières à lire d’un coup d’œil : peinture mate, tôle d’acier peinte, caoutchouc poussiéreux, toile épaisse et aluminium nu. Finition : chargée de poussière sur le tiers bas et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un bidon d’eau accroché, une rangée de jerricans sanglés, une antenne fouet sur ressort et une roue de secours sur le flanc. Décalcomanies abstraites seulement : des bandes pointillées en #2c3a4a sur la zone « flanc ». Pour la lisibilité sans couleur, le socle porte des bandes pointillées, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.9,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.65,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.9,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": false
+  },
+  "budget": {
+    "lod0": 4060,
+    "lod1": 1392,
+    "lod2": 406,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "au"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_bidon",
+      "ornement_jerrican",
+      "ornement_antenne",
+      "ornement_roue_de_secours"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_au_drone_filaire_lod0.glb",
+      "kit_au_drone_filaire_lod1.glb",
+      "kit_au_drone_filaire_albedo.png",
+      "kit_au_drone_filaire_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

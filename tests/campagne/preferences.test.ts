@@ -70,9 +70,9 @@ test('un navigateur qui refuse d’écrire ne casse rien, il le dit', () => {
 
 test('effacer la progression emporte aussi les parties en cours, et rien d’autre', () => {
   const donnees = poserStockage();
-  donnees.set(CLE_PROGRESSION, JSON.stringify({ version: 1, victoires: ['qualification_bocage'] }));
-  donnees.set(`${PREFIXE_PARTIE}qualification_bocage`, '{}');
-  donnees.set(`${PREFIXE_PARTIE}passage_des_marees`, '{}');
+  donnees.set(CLE_PROGRESSION, JSON.stringify({ version: 1, victoires: ['premier_contact'] }));
+  donnees.set(`${PREFIXE_PARTIE}premier_contact`, '{}');
+  donnees.set(`${PREFIXE_PARTIE}qg_de_la_presquile`, '{}');
   donnees.set('atlas:reglages:v1', '{"version":1,"dialogues":false}');
   donnees.set('autre-application', 'à ne pas toucher');
 

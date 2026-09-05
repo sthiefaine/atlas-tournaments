@@ -43,8 +43,9 @@ const SAISONS: [Saison, string][] = [['printemps', 'Printemps'], ['ete', 'Été'
 const METEOS: [Meteo, string][] = [['clair', 'Ciel clair'], ['pluie', 'Pluie'], ['neige', 'Neige'], ['brouillard', 'Brouillard'], ['tempete', 'Tempête'], ['canicule', 'Canicule']];
 const GENRES: [GenreBanc, string][] = [['deplacement', 'Déplacement'], ['attaque', 'Tir'], ['capture', 'Objectif'], ['production', 'Chantier'], ['danger', 'Danger']];
 const GESTES: Record<GesteBanc, string> = {
-  deplacement: 'Déplacer', attaque: 'Tirer', capture: 'Capturer',
-  hors_jeu: 'Mettre hors jeu', maree_haute: 'Marée haute', maree_basse: 'Marée basse',
+  deplacement: 'Déplacer', attaque: 'Tirer', capture_en_cours: 'Entamer la capture', capture: 'Capturer',
+  remise_en_service: 'Remettre en service', hors_jeu: 'Mettre hors jeu',
+  maree_haute: 'Marée haute', maree_basse: 'Marée basse',
 };
 
 /** Les vingt-quatre nations de la Ronde : chacune a ses couleurs. */

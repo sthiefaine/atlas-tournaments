@@ -21,7 +21,7 @@
  * une capture ou une mise hors jeu à la demande, dans n'importe quel ordre.
  */
 
-import { cleCase, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
+import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
 import type { Surbrillance } from '@/render/index';
 import { CARACTERE_PAR_TERRAIN, type BaseSilhouette, type Case, type CampId, type CleTerrain, type CleUnite, type MapDef } from '@/schemas/types';
 
@@ -33,6 +33,12 @@ const DATE_BANC = '2026-09-05';
 
 /** Largeur de la carte-catalogue. Le validateur exige entre 10 et 40. */
 export const LARGEUR_BANC = 20;
+
+/** La ville que les gestes de capture se disputent : celle du camp 1 au départ. */
+export const VILLE_BANC: Case = { x: 1, y: 3 };
+
+/** La ville désaffectée, à l'écart du rang : une palissade, pas de liseré, mât nu. */
+export const VILLE_DESAFFECTEE_BANC: Case = { x: 15, y: 3 };
 /** Hauteur de la carte-catalogue. */
 export const HAUTEUR_BANC = 12;
 
@@ -61,20 +67,25 @@ export const RANGS = {
  * avec la plaine. Le rang 9 est le cas qui a cassé — des bâtiments encastrés
  * entre des montagnes —, et les deux derniers rangs portent la mer, la plage,
  * la rivière et son pont, c'est-à-dire tout ce qui bouge quand la marée monte.
+ *
+ * À droite des rangs 8 à 11, le **réseau de voies** : un bout, une longue
+ * droite, une croix, deux T et un virage, et un pont qui franchit une rivière
+ * nord-sud — de quoi voir chaque pièce et le raccord d'une voie au bord de la
+ * carte. Une carte de mission n'aligne jamais les six pièces côte à côte.
  */
 const GRILLE_BANC: readonly string[] = [
-  'PFMRSVNWCUAPPPPPPPPP',
-  'PFMRSVNWCUAPPPPPPPPP',
+  'PFMRSVNWCUATPPPPPPPP',
+  'PFMRSVNWCUATPPPPPPPP',
   'PPPPPPPPPPPPPPPPPPPP',
-  'CCCUUUAAAHHPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
+  'CCCUUUAAAHHTTTPCPPPP',
   'PPPPPPPPPPPPPPPPPPPP',
   'PPPPPPPPPPPPPPPPPPPP',
   'PPPPPPPPPPPPPPPPPPPP',
-  'MCMUMAMCMPPPPPPPPPPP',
-  'WWWSPPRRRNVVPPPPPPPP',
-  'WWWSPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPRPPPPPP',
+  'MCMUMAMCMPPPPRPPVPRR',
+  'WWWSPPPPRRRRRRRRNRRR',
+  'WWWSPPPPPPPPPRPPVPPP',
 ];
 
 /**
@@ -82,8 +93,8 @@ const GRILLE_BANC: readonly string[] = [
  * puis les roues, puis les chenilles, puis ce qui vole.
  */
 export const UNITES_BANC: readonly CleUnite[] = [
-  'infanterie', 'meca', 'genie', 'recon', 'roquettes', 'char_leger',
-  'char_lourd', 'antiair', 'artillerie', 'transport', 'helico',
+  'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'char_leger',
+  'char_lourd', 'antiair', 'artillerie', 'transport', 'helico', 'drone', 'drone_filaire',
 ];
 
 /**
@@ -100,13 +111,13 @@ export const BASES_JAMAIS_VUES: Readonly<Record<string, BaseSilhouette>> = Objec
   roquettes: 'rail',
 });
 
-/** La carte-catalogue : douze terrains, quatre bâtiments, onze unités par camp. */
+/** La carte-catalogue : treize terrains, cinq bâtiments, quatorze unités par camp. */
 export function carteBanc(): MapDef {
   const proprietaires: Record<string, CampId> = {};
   // Chaque famille de bâtiment est montrée trois fois : camp 0, camp 1, neutre.
   // Un bâtiment neutre ne se peint pas comme un bâtiment pris, et c'est
   // précisément ce qu'on vient vérifier.
-  for (const x of [0, 3, 6]) {
+  for (const x of [0, 3, 6, 11]) {
     proprietaires[cleCase({ x, y: RANGS.batiments })] = 0;
     proprietaires[cleCase({ x: x + 1, y: RANGS.batiments })] = 1;
   }
@@ -136,6 +147,7 @@ export function carteBanc(): MapDef {
     biome: 'plaine',
     grille: [...GRILLE_BANC],
     proprietaires,
+    desaffectes: [VILLE_DESAFFECTEE_BANC],
     unitesDepart,
   } as MapDef;
 }
@@ -149,7 +161,7 @@ export function carteBanc(): MapDef {
  * n'était simplement pas là. C'est le genre d'absence qu'un banc d'essai est
  * censé rendre impossible.
  */
-export const VERSION_CATALOGUE_BANC = 2;
+export const VERSION_CATALOGUE_BANC = 3;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui
@@ -231,7 +243,8 @@ export function visiblesBanc(): Set<string> {
 
 /** Les gestes que le banc sait rejouer. */
 export const GESTES_BANC = [
-  'deplacement', 'attaque', 'capture', 'hors_jeu', 'maree_haute', 'maree_basse',
+  'deplacement', 'attaque', 'capture_en_cours', 'capture', 'remise_en_service', 'hors_jeu',
+  'maree_haute', 'maree_basse',
 ] as const;
 export type GesteBanc = typeof GESTES_BANC[number];
 
@@ -299,13 +312,68 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
     };
   }
 
-  if (geste === 'capture') {
-    if (!mien) return null;
-    // La ville neutre du rang des bâtiments : elle passe au camp 0 sous nos yeux.
-    const cible: Case = { x: 2, y: RANGS.batiments };
+  if (geste === 'capture' || geste === 'capture_en_cours') {
+    // La ville prise du rang des bâtiments change de mains **à chaque geste** :
+    // c'est le seul moyen de voir les deux temps de l'animation — l'ancien
+    // drapeau qu'on amène, le nouveau qu'on hisse — et de la rejouer sans fin.
+    const cible: Case = VILLE_BANC;
+    const tenue = etat.proprietaires[cleCase(cible)] ?? null;
+    const camp: CampId = tenue === 0 ? 1 : 0;
+    // L'unité qui capture est celle déjà posée sur la ville si elle y est,
+    // sinon la première du camp, qu'on y amène.
+    const posee = etat.unites.find((u) => u.camp === camp && u.x === cible.x && u.y === cible.y);
+    const capteur = posee ?? premiere(etat, camp);
+    if (!capteur) return null;
+    const acquis = geste === 'capture';
+    const points = acquis ? SEUIL_CAPTURE : Math.floor(SEUIL_CAPTURE / 2);
+    const unites = etat.unites.map((u) => (u.id === capteur.id
+      ? { ...u, x: cible.x, y: cible.y, pointsCapture: acquis ? 0 : points }
+      : u));
     return {
-      apres: { ...etat, proprietaires: { ...etat.proprietaires, [cleCase(cible)]: 0 } },
-      evenements: [{ type: 'capture', uniteId: mien.id, case: cible, points: 20, acquis: true, camp: 0 }],
+      apres: {
+        ...etat,
+        unites,
+        proprietaires: acquis ? { ...etat.proprietaires, [cleCase(cible)]: camp } : etat.proprietaires,
+      },
+      evenements: [{ type: 'capture', uniteId: capteur.id, case: cible, points, acquis, camp }],
+    };
+  }
+
+  if (geste === 'remise_en_service') {
+    const cible = VILLE_DESAFFECTEE_BANC;
+    const cle = cleCase(cible);
+    if (!etat.desaffectes.includes(cle)) {
+      // Déjà en service : on la referme, sans événement — c'est ce qui rend le
+      // geste rejouable. Le moteur, lui, ne désaffecte jamais rien en partie.
+      const proprietaires = { ...etat.proprietaires };
+      delete proprietaires[cle];
+      return {
+        apres: {
+          ...etat,
+          proprietaires,
+          desaffectes: [...etat.desaffectes, cle],
+          unites: etat.unites.map((u) => (u.x === cible.x && u.y === cible.y ? { ...u, pointsCapture: 0 } : u)),
+        },
+        evenements: [],
+      };
+    }
+    // Le génie remet en service ; à défaut, la première unité du camp 0.
+    const camp: CampId = 0;
+    const capteur = etat.unites.find((u) => u.camp === camp && u.type === 'genie') ?? premiere(etat, camp);
+    if (!capteur) return null;
+    return {
+      apres: {
+        ...etat,
+        proprietaires: { ...etat.proprietaires, [cle]: camp },
+        desaffectes: etat.desaffectes.filter((d) => d !== cle),
+        unites: etat.unites.map((u) => (u.id === capteur.id ? { ...u, x: cible.x, y: cible.y, pointsCapture: 0 } : u)),
+      },
+      // Le moteur émet la remise en service **puis** la capture acquise : le
+      // rendu fait tomber la palissade, et seulement ensuite hisse le drapeau.
+      evenements: [
+        { type: 'remise_en_service', uniteId: capteur.id, case: cible, camp },
+        { type: 'capture', uniteId: capteur.id, case: cible, points: SEUIL_CAPTURE * 2, acquis: true, camp },
+      ],
     };
   }
 

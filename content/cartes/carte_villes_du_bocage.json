@@ -1,0 +1,80 @@
+{
+  "cle": "carte_villes_du_bocage",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "carte_villes_du_bocage",
+  "nom": "Les quatre villes du bocage",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "foret",
+  "grille": [
+    "PPFPPPPFPPPP",
+    "PFPPFPPPRRHP",
+    "PFPCPFPPCPPF",
+    "PPPRFPPFRPFP",
+    "FPPRPPPPRPPP",
+    "VVVNVVVVNVVV",
+    "PPPRPPFPRPPF",
+    "PPPCFPPPCFPP",
+    "PHRRPPFPPPPP",
+    "PPPFPPPPFPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "10,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "meca",
+      "x": 0,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 9,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 9,
+      "y": 1
+    }
+  ],
+  "desaffectes": [
+    {
+      "x": 8,
+      "y": 7
+    }
+  ]
+}

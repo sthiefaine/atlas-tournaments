@@ -20,7 +20,7 @@ import type {
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
-  depuisCle, manhattan, porte, portee, produitesPar, terrainLogique, uniteParId,
+  depuisCle, estDesaffecte, manhattan, peutCapturerIci, porte, portee, produitesPar, terrainLogique, uniteParId,
   uniteSur, verifierProduction, constructionsPossibles,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
@@ -33,7 +33,7 @@ export type Phase =
 
 /** Les suites proposables au joueur, dans l'ordre d'affichage du menu. */
 export const SUITES_MENU = [
-  'attaquer', 'capturer', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
+  'attaquer', 'capturer', 'remettre', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
 ] as const;
 /** Identifiant d'une entrée du menu d'actions. */
 export type IdSuite = typeof SUITES_MENU[number];
@@ -42,6 +42,7 @@ export type IdSuite = typeof SUITES_MENU[number];
 const CLE_MENU: Record<IdSuite, string> = {
   attaquer: 'hud.attaquer',
   capturer: 'hud.capturer',
+  remettre: 'hud.remettre',
   fusionner: 'hud.fusionner',
   embarquer: 'hud.embarquer',
   debarquer: 'hud.debarquer',
@@ -321,6 +322,10 @@ export class Controleur {
         this.jouerOrdre({ type: 'rien' });
         return;
       case 'capturer':
+      case 'remettre':
+        // Remettre en service est une capture pour le moteur : même suite, mêmes
+        // points. Seul le libellé change, parce que le joueur ne « capture » pas
+        // un bâtiment qui n'appartient à personne.
         this.jouerOrdre({ type: 'capturer' });
         return;
       case 'attaquer': {
@@ -558,12 +563,9 @@ export class Controleur {
 
     if (ciblesDepuis(this.etatPartie, this.cat, u, arrivee, aBouge).length > 0) sortie.push('attaquer');
 
-    const terrain = terrainLogique(this.etatPartie, this.cat, arrivee);
-    const fiche = terrain === null ? undefined : this.cat.terrains[terrain];
-    if (
-      fiche?.capturable && porte(type, 'capture')
-      && this.etatPartie.proprietaires[cleCase(arrivee)] !== this.camp
-    ) sortie.push('capturer');
+    if (peutCapturerIci(this.etatPartie, this.cat, { ...u, ...arrivee })) {
+      sortie.push(estDesaffecte(this.etatPartie, arrivee) ? 'remettre' : 'capturer');
+    }
 
     if (this.voisinFusionnable(u, arrivee)) sortie.push('fusionner');
     if (this.transportVoisin(u, arrivee)) sortie.push('embarquer');

@@ -50,12 +50,14 @@ test('capturer le QG exige le QG et ne gagne pas par simple élimination',()=>{
  const e=terrain();e.reglages.victoire=[{type:'capture_qg'}];e.camps[1]!.qgCase=null;e.unites=e.unites.filter(u=>u.camp===0);delete e.proprietaires['4,0'];evaluerFin(e,CAT,[]);assert.equal(e.partie.terminee,false);
 });
 
-test('capture_qg seul gagne après une capture réelle en deux actions',()=>{
+test('capture_qg seul gagne après une capture réelle en quatre actions',()=>{
  let e=partiePersonnalisee(['HPPPH'],{'0,0':0,'4,0':1},[{camp:0,type:'infanterie',x:3,y:0},{camp:1,type:'infanterie',x:2,y:0}],{victoire:[{type:'capture_qg'}]});
+ const reprise={type:'ordre',uniteId:'u1',chemin:[{x:4,y:0}],suite:{type:'capturer'}};
  const actions=[
   {type:'ordre',uniteId:'u1',chemin:[{x:3,y:0},{x:4,y:0}],suite:{type:'capturer'}},
-  {type:'finTour'}, {type:'finTour'},
-  {type:'ordre',uniteId:'u1',chemin:[{x:4,y:0}],suite:{type:'capturer'}},
+  {type:'finTour'}, {type:'finTour'}, reprise,
+  {type:'finTour'}, {type:'finTour'}, reprise,
+  {type:'finTour'}, {type:'finTour'}, reprise,
  ] as const;
  for(const action of actions){const r=appliquer(e,JSON.parse(JSON.stringify(action)),CAT);assert.equal(r.ok,true);if(r.ok)e=r.etat;}
  assert.equal(e.partie.vainqueur,0);assert.equal(e.partie.motif,'objectif_capture_qg');

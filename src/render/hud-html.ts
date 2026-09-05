@@ -158,6 +158,7 @@ const STYLE = `
    liseré de 4 px, et rien de plus. */
 .atlas-hud .ordres-grille button[data-valeur='attaquer']{border-left:4px solid #ff2e48}
 .atlas-hud .ordres-grille button[data-valeur='capturer']{border-left:4px solid #ffc634}
+.atlas-hud .ordres-grille button[data-valeur='remettre']{border-left:4px solid #ffc634}
 .atlas-hud .ordres-grille button[data-valeur='construire']{border-left:4px solid #4eaaff}
 .atlas-hud .ordres-grille .symbole{width:21px;height:21px;color:#9fb6b8}
 .atlas-hud .ordres-grille button:hover .symbole{color:var(--signal)}
@@ -283,6 +284,7 @@ function iconeOrdre(type: string): string {
     fonds: '<path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',
     pouvoir: '<path d="m13 2-9 12h7l-1 8 10-13h-7z" fill="currentColor" stroke="none"/>',
     capturer: '<path d="M5 22V3m0 1c5-4 8 4 14 0v10c-6 4-9-4-14 0"/>',
+    remettre: '<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/><path d="M12 4v3"/>',
     attaquer: '<circle cx="12" cy="12" r="7"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>',
     attendre: '<path d="M6 3h12M6 21h12M7 3v5l10 8v5M17 3v5L7 16v5"/>',
     construire: '<path d="m4 20 10-10M14 3a6 6 0 0 0-4 8l-8 8 3 3 8-8a6 6 0 0 0 8-5l-4 3-4-4 3-4z"/>',

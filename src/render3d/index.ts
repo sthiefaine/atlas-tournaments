@@ -158,8 +158,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) m.decor.majRelief();
     encore = mutation || encore;
-    encore = m.decor.avancer(ecoule) || encore;
-    if (!mouvementReduit?.matches) encore = m.unites.avancer(ecoule) || encore;
+    const reduit = mouvementReduit?.matches ?? false;
+    encore = m.decor.avancer(ecoule, reduit) || encore;
+    if (!reduit) encore = m.unites.avancer(ecoule) || encore;
     encore = m.surbrillances.avancer(ecoule) || encore;
     const p = m.eclairage.courant;
     m.plateau.appliquerAmbiance(p);
@@ -184,7 +185,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // lui, était posé une fois pour toutes.
       m.decor.majRelief();
     }
-    m.decor.majProprietaires(etat, vue.visibles);
+    m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
     m.unites.maj(etat, vue.catalogue, vue.visibles);
     const position = vue.selection ? m.unites.positionDe(vue.selection) : null;
     m.surbrillances.maj(vue.surbrillances, vue.chemin, vue.curseur, position);
@@ -234,6 +235,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         effets: m.effets,
         document: conteneurRef.ownerDocument,
         hauteurEn: m.plateau.hauteurEn,
+        drapeau: (cle) => m.decor.drapeau(cle),
+        chantier: (cle) => m.decor.chantier(cle),
         salir: () => {
           majMonde();
           salir();
