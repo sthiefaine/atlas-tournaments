@@ -98,6 +98,16 @@ export const PIECES_PALISSADE: readonly PiecePalissade[] = [
 /** Pleine lueur des vitrages qui se rallument, au-dessus de l'ambiance la plus nocturne. */
 const LUEUR_PLEINE = 1.1;
 
+/** Vitesse de balayage d'une parabole de station radar, en radians par seconde : lent, on doit le remarquer sans le regarder. */
+const BALAYAGE_RADAR = 0.45;
+
+/** Une parabole de station : le pivot qu'on fait tourner, et si elle balaie. */
+interface Parabole {
+  pivot: THREE.Group;
+  /** Une station tenue balaie ; neutre ou désaffectée, elle est à l'arrêt. */
+  active: boolean;
+}
+
 /** Ce qu'un pavillon montre : des couleurs, et une hauteur sur le mât. */
 export interface PoseDrapeau {
   camp: CampId | null;
@@ -477,6 +487,10 @@ export function creerDecor(
   const matToitTerni = new THREE.MeshStandardMaterial({ color: couleurToit, roughness: 0.95 });
   const matVitresEteintes = new THREE.MeshStandardMaterial({ color: 0x1f242c, roughness: 0.7 });
   const matPlanche = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96 });
+  // La parabole est une calotte creuse : vue de l'ouverture, une face simple
+  // disparaîtrait à chaque demi-tour de balayage.
+  const matParabole = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide });
+  const paraboles: Parabole[] = [];
   const matsCamp = new Map<string, THREE.MeshStandardMaterial>();
   const geosBatiment = new Set<THREE.BufferGeometry>();
   const primitives = new Map<string, THREE.BufferGeometry>();
@@ -514,7 +528,11 @@ export function creerDecor(
       lot.push(geo);
       lots.set(enfant.material, lot);
     }
+    // Ce qui n'est pas une maille — la parabole d'une station, qui doit
+    // pouvoir tourner seule — survit à la fusion tel quel.
+    const gardes = caseDecor.children.filter((c) => !(c instanceof THREE.Mesh));
     caseDecor.clear();
+    for (const garde of gardes) caseDecor.add(garde);
     for (const [mat, lot] of lots) {
       const geo = mergeGeometries(lot)!;
       lot.forEach((g2) => g2.dispose());
@@ -534,6 +552,7 @@ export function creerDecor(
     batiments.clear();
     for (const geo of geosBatiment) geo.dispose();
     geosBatiment.clear();
+    paraboles.length = 0;
     for (let y = 0; y < g.hauteur; y += 1) {
       for (let x = 0; x < g.largeur; x += 1) {
         const terrain = g.terrainDe(x, y);
@@ -677,6 +696,68 @@ export function creerDecor(
           cylindre(0.064, 0.055, teinte, -0.26, 0.54, -0.22);
           cylindre(0.064, 0.024, matMetal, -0.26, 0.643, -0.22);
           cylindre(0.066, 0.17, matMetal, 0.3, 0.12, -0.23);
+        } else if (terrain === 'radar') {
+          // Une station : un local technique bas à gauche, une tour en treillis
+          // à droite portant la parabole, et le centre libre pour l'unité.
+          poser(0.32, 0.2, 0.26, mur, -0.22, 0.12, -0.22);
+          poser(0.28, 0.05, 0.016, vitre, -0.22, 0.15, -0.085);
+          poser(0.32, 0.03, 0.27, toit, -0.22, 0.235, -0.225);
+          poser(0.28, 0.02, 0.05, teinte, -0.22, 0.26, -0.11);
+          poser(0.065, 0.11, 0.014, matMetal, -0.22, 0.075, -0.082);
+          if (desaffecte) condamner(-0.22, 0.085, -0.07);
+          // La petite antenne du local, coiffée aux couleurs du camp.
+          cylindre(0.006, 0.22, matMetal, -0.3, 0.36, -0.28);
+          cylindre(0.016, 0.02, teinte, -0.3, 0.475, -0.28);
+          // La tour : quatre montants, trois ceintures, une plate-forme.
+          const tx = 0.24;
+          const tz = -0.22;
+          for (const dx of [-0.07, 0.07]) {
+            for (const dz of [-0.07, 0.07]) cylindre(0.011, 0.44, matMetal, tx + dx, 0.24, tz + dz);
+          }
+          for (const niveau of [0.14, 0.28, 0.42]) {
+            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz - 0.07);
+            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz + 0.07);
+            poser(0.012, 0.012, 0.16, matMetal, tx - 0.07, niveau, tz);
+            poser(0.012, 0.012, 0.16, matMetal, tx + 0.07, niveau, tz);
+          }
+          poser(0.22, 0.02, 0.22, matMetal, tx, 0.465, tz);
+          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz - 0.115);
+          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz + 0.115);
+          poser(0.045, 0.06, 0.045, matIvoire, tx, 0.5, tz);
+          // La parabole, sur son pivot : elle n'est pas fondue avec le reste,
+          // c'est elle qui balaie.
+          const pivot = new THREE.Group();
+          pivot.name = 'parabole';
+          pivot.position.set(tx, 0.56, tz);
+          pivot.rotation.y = alea(x, y, 400) * Math.PI * 2;
+          const calotte = new THREE.Mesh(
+            primitive('calotte', () => new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 3)),
+            matParabole,
+          );
+          calotte.scale.setScalar(0.17);
+          // Le creux regarde l'horizon, un peu vers le ciel.
+          calotte.rotation.x = Math.PI / 2 - 0.35;
+          calotte.position.set(0, 0.04, -0.06);
+          const bras = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
+          bras.scale.set(0.008, 0.16, 0.008);
+          bras.rotation.x = -0.4;
+          bras.position.set(0, 0.06, 0.05);
+          const cornet = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), teinte);
+          cornet.scale.set(0.03, 0.03, 0.03);
+          cornet.position.set(0, 0.13, 0.11);
+          for (const m of [calotte, bras, cornet]) {
+            m.castShadow = true;
+            m.userData['opaque'] = m.material;
+            pivot.add(m);
+          }
+          if (desaffecte) {
+            // Désaffectée, la parabole a basculé et pend de travers : elle
+            // n'est pas tombée du haut de la tour, elle attend qu'on la règle.
+            pivot.rotation.x = 0.85;
+            pivot.rotation.z = 0.3;
+          }
+          groupeCase.add(pivot);
+          paraboles.push({ pivot, active: proprio !== null && !desaffecte });
         } else {
           poser(0.21, 0.39, 0.21, mur, -0.26, 0.22, -0.21);
           poser(0.29, 0.1, 0.28, vitre, -0.26, 0.43, -0.21);
@@ -847,6 +928,16 @@ export function creerDecor(
     return entree.mat;
   }
 
+  /** Les mailles d'un bâtiment : ses lots fondus, et celles de sa parabole. */
+  function maillesDe(batiment: THREE.Object3D): THREE.Mesh[] {
+    const mailles: THREE.Mesh[] = [];
+    for (const c of batiment.children) {
+      if (c instanceof THREE.Mesh) mailles.push(c);
+      else for (const m of c.children) if (m instanceof THREE.Mesh) mailles.push(m);
+    }
+    return mailles;
+  }
+
   function majProprietaires(
     e: EtatPartie, visibles: ReadonlySet<string> | null = null, cat: Catalogue | null = null,
   ): void {
@@ -868,8 +959,7 @@ export function creerDecor(
       const cleBat = String(batiment.userData['case']);
       const fantome = occupants.has(cleBat);
       const lueur = lueurs.get(cleBat);
-      for (const m of batiment.children) {
-        if (!(m instanceof THREE.Mesh)) continue;
+      for (const m of maillesDe(batiment)) {
         const opaque = m.userData['opaque'] as THREE.MeshStandardMaterial;
         if (opaque === matFenetres && lueur !== undefined) m.material = materiauLueur(cleBat, fantome, lueur);
         else m.material = fantome ? materiauFantome(opaque) : opaque;
@@ -947,6 +1037,13 @@ export function creerDecor(
         flotter();
         encore = true;
       }
+      if (!mouvementReduit) {
+        for (const p of paraboles) {
+          if (!p.active) continue;
+          p.pivot.rotation.y += (ms / 1000) * BALAYAGE_RADAR;
+          encore = true;
+        }
+      }
       // Roseaux, ailes de moulin, fumerolles : le paysage a son propre souffle.
       if (paysage.avancer(ms, mouvementReduit)) encore = true;
       return encore;
@@ -999,6 +1096,7 @@ export function creerDecor(
       matToitTerni.dispose();
       matVitresEteintes.dispose();
       matPlanche.dispose();
+      matParabole.dispose();
       geoTronc.dispose();
       geoConifere.dispose();
       geoFeuillu.dispose();

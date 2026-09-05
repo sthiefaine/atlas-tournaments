@@ -5,6 +5,10 @@ import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { creerDecor, poseDrapeau } from '../../src/render3d/decor';
 import { SEUIL_CAPTURE } from '../../src/engine/index';
 import { CAT, partie } from '../engine/aides';
+import { carteBanc, scenarioBanc } from '../../src/app/atelier/banc';
+import { creerPartie, sceneDepuis } from '../../src/engine/index';
+import { validerScenario } from '../../src/schemas/index';
+import scenarioDemo from '../../content/scenarios/demo.json';
 
 /** Les matériaux d'un bâtiment, pour lire s'il est effacé ou plein. */
 function materiaux(batiment: THREE.Object3D): THREE.MeshStandardMaterial[] {
@@ -129,6 +133,65 @@ test('la prise de chantier rallume les vitrages d’une seule case, puis rend l�
   prise.relacher();
   decor.majProprietaires(e);
   assert.equal(vitrage(0).emissiveIntensity, jour, 'relâchée, la case rend l’ambiance');
+  decor.dispose();
+});
+
+test('la station radar balaie quand elle est tenue, jamais neutre, désaffectée ou en mouvement réduit', () => {
+  const etat = partie('plaine');
+  const grille = { largeur: 3, hauteur: 1, terrainDe: () => 'radar' as const };
+  const e = { ...etat, proprietaires: { '0,0': 0 as const }, desaffectes: ['2,0'], unites: [] };
+  const decor = creerDecor(grille, e, () => 0);
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  const paraboles = batiments.children.map((b) => b.getObjectByName('parabole') as THREE.Group);
+  assert.ok(paraboles.every(Boolean), 'chaque station porte sa parabole');
+  batiments.children.forEach((b) => {
+    assert.ok(b.children.filter((c) => c instanceof THREE.Mesh).length <= 7, 'la station tient dans les lots des autres');
+    // Le centre de la case reste libre pour l'unité : au-dessus du socle,
+    // aucun sommet ne s'approche du centre.
+    for (const m of b.children) {
+      if (!(m instanceof THREE.Mesh)) continue;
+      const pos = m.geometry.getAttribute('position');
+      for (let i = 0; i < pos.count; i += 1) {
+        if (pos.getY(i) > 0.06) assert.ok(Math.hypot(pos.getX(i), pos.getZ(i)) > 0.1, `${m.name} occupe le centre`);
+      }
+    }
+  });
+  const angles = paraboles.map((p) => p.rotation.y);
+  assert.ok(decor.avancer(500), 'une station tenue demande à redessiner');
+  assert.notEqual(paraboles[0]!.rotation.y, angles[0], 'tenue, elle balaie');
+  assert.equal(paraboles[1]!.rotation.y, angles[1], 'neutre, à l’arrêt');
+  assert.equal(paraboles[2]!.rotation.y, angles[2], 'désaffectée, à l’arrêt');
+  assert.ok(paraboles[2]!.rotation.x > 0.5, 'désaffectée, la parabole a basculé');
+  assert.equal(paraboles[0]!.rotation.x, 0);
+  const apres = paraboles[0]!.rotation.y;
+  decor.avancer(500, true);
+  assert.equal(paraboles[0]!.rotation.y, apres, 'mouvement réduit : rien ne tourne');
+  // La parabole s'efface avec le reste quand une unité occupe la station.
+  decor.majProprietaires({ ...e, unites: [{ ...etat.unites[0]!, x: 0, y: 0 }] });
+  const calotte = paraboles[0]!.children[0] as THREE.Mesh;
+  assert.ok((calotte.material as THREE.MeshStandardMaterial).transparent, 'la parabole devient translucide aussi');
+  decor.majProprietaires(e);
+  assert.ok(!(calotte.material as THREE.MeshStandardMaterial).transparent);
+  decor.dispose();
+});
+
+test('la carte-catalogue du banc se monte entière, stations radar comprises', () => {
+  const carte = carteBanc();
+  const s = validerScenario(scenarioDemo);
+  if (!s.ok) throw new Error('scénario de démonstration invalide');
+  const etat = creerPartie(sceneDepuis(scenarioBanc(s.valeur), carte, []), CAT, 'banc:decor');
+  const grille = {
+    largeur: carte.largeur, hauteur: carte.hauteur,
+    terrainDe: (x: number, y: number) => CAT.parCaractere[carte.grille[y]![x]!] ?? 'plaine',
+  };
+  const decor = creerDecor(grille, etat, () => 0);
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  const radars = batiments.children.filter((b) => b.userData['type'] === 'radar');
+  const attendues = carte.grille.join('').split('T').length - 1;
+  assert.ok(attendues >= 3, 'le banc pose au moins les trois stations du rang des bâtiments');
+  assert.equal(radars.length, attendues, 'chaque T de la grille monte une station');
+  assert.ok(radars.every((b) => b.getObjectByName('parabole')));
+  assert.ok(decor.avancer(200));
   decor.dispose();
 });
 
