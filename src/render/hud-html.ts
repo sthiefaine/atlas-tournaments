@@ -578,11 +578,23 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const unite = sousCurseur ?? selectionnee ?? retenue;
     if (unite) {
       derniereInspectee = unite.id;
-      vueA = Date.now();
+      // Le sursis court depuis la dernière fois que le panneau a montré une
+      // unité **pour une raison directe** — curseur ou sélection. Une unité
+      // seulement retenue ne le prolonge pas, sans quoi il ne finirait jamais.
+      if (sousCurseur || selectionnee) vueA = Date.now();
       // Le sursis expire tout seul : sans ce rappel, le panneau garderait son
       // unité jusqu'au prochain mouvement, c'est-à-dire parfois indéfiniment.
-      if (graceInspection) clearTimeout(graceInspection);
-      graceInspection = setTimeout(rafraichir, MS_SURSIS_INSPECTION + 40);
+      // Mais le rappel ne s'arme que lorsque le sursis est la **seule** raison
+      // de retenir l'unité : armé à chaque rendu, il reconstruisait tout le
+      // HUD toutes les 1,5 s tant qu'une unité était sous le curseur — ce qui
+      // rendait chaque clic incertain sous un rendu lent.
+      if (graceInspection) {
+        clearTimeout(graceInspection);
+        graceInspection = null;
+      }
+      if (!sousCurseur && !selectionnee && !ficheInspection && !pointeurSurHud) {
+        graceInspection = setTimeout(rafraichir, MS_SURSIS_INSPECTION + 40);
+      }
     }
 
     // Le terrain est celui de l'unité montrée : un panneau qui titre « Char
