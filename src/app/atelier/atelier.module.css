@@ -1,40 +1,159 @@
-.atelier { position: fixed; inset: 0; background: #0f1b25; color: #f4f1e8; overflow: hidden; }
-.monde { position: absolute; inset: 0; touch-action: none; }
-.entete { position: absolute; z-index: 2; top: max(20px, env(safe-area-inset-top)); left: 24px; right: 24px; display: flex; justify-content: space-between; align-items: center; pointer-events: none; text-shadow: 0 2px 9px #172d30; }
-.entete span { font-size: 10px; letter-spacing: .2em; font-weight: 800; }
-.entete h1 { font-size: clamp(19px, 3vw, 30px); font-weight: 800; margin: 2px 0; }
-.entete a { pointer-events: auto; padding: 12px 16px; background: #172832e8; border-radius: 12px; font-weight: 700; font-size: 13px; }
-.panneau { position: absolute; z-index: 2; bottom: max(16px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: min(820px, calc(100% - 32px)); max-height: 72vh; overflow: auto; padding: 16px; background: #12222fec; border: 1px solid #8ba5aa42; border-radius: 20px; box-shadow: 0 14px 40px #07141d60; backdrop-filter: blur(14px); }
-/* Le bouton de repli reste toujours atteignable, panneau ouvert ou non : c'est
-   la seule commande dont on a besoin quand on veut juste voir la carte. */
-.replier { position: absolute; z-index: 3; right: 24px; bottom: max(16px, env(safe-area-inset-bottom)); min-height: 44px; padding: 11px 16px; background: #172832e8; border: 1px solid #8ba5aa42; border-radius: 12px; color: #f4f1e8; font-size: 12px; font-weight: 800; letter-spacing: .04em; }
-.replier:hover { background: #1f3644f0; }
+/* L'atelier reprend le vocabulaire du HUD (`src/render/hud-html.ts`) et de
+   l'écran-titre : encre, papier, signal, ombres dures. Il n'a pas de mode clair,
+   comme le jeu. Le cadre fait `100svh` et rien n'y est en `position:fixed` :
+   le dock et la feuille sont des enfants en flux, la toile seule est absolue
+   derrière eux. */
+.atelier { --encre: #152c3b; --encre-haute: #0c1b21; --encre-douce: #1e3f52; --papier: #f4edda; --papier-doux: #f4eddac2; --sourdine: #9fb6b8; --liseré: #4d6a78; --signal: #ffd162; --signal-appui: #c4923a; --vert: #4fc27c; --rouge: #ff2e48; --or: #ffc634; --bleu: #4eaaff; --danger: #ff6a5e; --dock: 320px; --dock-replie: 56px; --poignee: 48px;
+  position: relative; isolation: isolate; display: flex; flex-direction: column; height: 100svh; overflow: hidden; background: var(--encre-haute); color: var(--papier); font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
+.atelier * { box-sizing: border-box; }
+.atelier button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.atelier button:focus-visible, .atelier select:focus-visible, .atelier a:focus-visible { outline: 3px solid var(--signal); outline-offset: -3px; }
 
-/* Sur un écran large, le panneau descend le long du bord gauche : la carte
-   garde tout le reste, ce qui est le seul agencement acceptable pour un banc —
-   on ne peut pas juger un rendu qu'on ne voit qu'autour des commandes. */
-@media (min-width: 1100px) {
-  .panneau { left: 20px; right: auto; top: 96px; bottom: max(76px, env(safe-area-inset-bottom)); transform: none; width: 360px; max-height: none; }
-  .reglages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .replier { right: auto; left: 20px; }
+/* La toile : derrière tout, en plein cadre. Sur téléphone, elle s'arrête au
+   bord de la feuille et suit sa hauteur : le plateau se cadre alors dans ce
+   qu'on voit, pas dans un écran dont le tiers est couvert. La peau observe son
+   conteneur et se redimensionne d'elle-même — **sans transition** ici : chaque
+   taille intermédiaire réallouerait le tampon WebGL et redessinerait la scène,
+   quinze fois par glissement. La feuille seule glisse ; la toile saute d'un cran. */
+.monde { position: absolute; inset: 0; z-index: 0; touch-action: none; }
+.atelier[data-agencement='mobile'][data-niveau='0'] .monde { bottom: calc(var(--poignee) + env(safe-area-inset-bottom, 0px)); }
+.atelier[data-agencement='mobile'][data-niveau='1'] .monde { bottom: 36svh; }
+.atelier[data-agencement='mobile'][data-niveau='2'] .monde { bottom: 68svh; }
+
+/* Le statut est un toast en haut de la toile : il ne prend jamais la place des
+   commandes, et un geste sans effet ne laisse pas de trace. */
+.toast { position: absolute; z-index: 3; top: calc(64px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); pointer-events: none; display: flex; justify-content: center; width: min(92%, 520px); }
+.toast span { display: block; max-width: 100%; padding: 10px 16px; background: var(--encre); color: var(--papier); border: 1px solid #839798; border-top: 3px solid var(--signal); box-shadow: 3px 3px 0 #101d2860; font-size: 13px; font-weight: 700; text-align: center; animation: atelier-toast .18s ease-out both; }
+
+/* La barre : fil d'Ariane et titre à gauche, deux actions à droite. Elle est en
+   flux, sur la toile, et transparente entre ses cibles pour qu'un glisser qui
+   commence sous elle atteigne quand même la carte. */
+.barre { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; min-height: 60px; padding: max(8px, env(safe-area-inset-top, 0px)) max(14px, env(safe-area-inset-right, 0px)) 8px max(14px, env(safe-area-inset-left, 0px)); pointer-events: none; text-shadow: 0 2px 8px #07141d; }
+.barre > * { pointer-events: auto; }
+.titre { flex: 1; min-width: 0; }
+.ariane { display: flex; gap: 6px; font-size: 10px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; color: var(--sourdine); }
+.ariane a { color: inherit; text-decoration: none; padding: 15px 0; margin: -15px 0; }
+.ariane a:hover { color: var(--papier); }
+.titre h1 { margin: 1px 0 0; font-size: 17px; font-weight: 900; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.accueil, .jouerLien { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; text-decoration: none; font-size: 13px; font-weight: 800; text-shadow: none; box-shadow: 3px 3px 0 #101d2860; }
+.accueil { background: var(--encre); color: var(--papier); border: 1px solid #839798; }
+.accueil:hover { background: var(--encre-douce); }
+.jouerLien { background: var(--signal); color: var(--encre); border-top: 3px solid #fff0ac; border-bottom: 4px solid var(--signal-appui); text-transform: uppercase; letter-spacing: .04em; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%); }
+.jouerLien:hover { filter: brightness(1.08); }
+.jouerLien:active { translate: 0 2px; }
+
+/* --- Le dock (écran large) -------------------------------------------- */
+.dock { position: relative; z-index: 2; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; width: var(--dock); margin-left: max(14px, env(safe-area-inset-left, 0px)); margin-bottom: max(14px, env(safe-area-inset-bottom, 0px)); background: #0f2129f0; border: 1px solid var(--liseré); box-shadow: 6px 6px 0 #06131899; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%); backdrop-filter: blur(8px); }
+.atelier[data-dock='replie'] .dock { width: var(--dock-replie); }
+.replier { display: flex; align-items: center; gap: 10px; flex: none; min-height: 44px; padding: 0 14px; background: var(--encre); border: 0; border-bottom: 1px solid var(--liseré); font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); }
+.replier:hover { color: var(--papier); background: var(--encre-douce); }
+.replier > span:first-child { font-size: 18px; line-height: 1; }
+.atelier[data-dock='replie'] .replier { justify-content: center; padding: 0; }
+.icones { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0; }
+.icones button { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: transparent; border: 1px solid transparent; color: var(--sourdine); }
+.icones button:hover { color: var(--papier); background: var(--encre-douce); border-color: var(--liseré); }
+.sections { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 0 20px; scrollbar-width: thin; scrollbar-color: var(--liseré) transparent; }
+.section { border-bottom: 1px solid #ffffff12; }
+.section h2 { margin: 0; font-size: inherit; }
+.section h2 button { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 46px; padding: 0 14px; background: transparent; border: 0; text-align: left; font-size: 12px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--papier); }
+.section h2 button:hover { background: #ffffff08; }
+.section h2 button svg { color: var(--signal); flex: none; }
+.section h2 button span { flex: 1; }
+.section h2 button i { width: 8px; height: 8px; border-right: 2px solid var(--sourdine); border-bottom: 2px solid var(--sourdine); transform: rotate(-45deg); transition: transform .15s; margin-right: 2px; }
+.section h2 button[aria-expanded='true'] i { transform: rotate(45deg); margin-bottom: 4px; }
+.corps { display: flex; flex-direction: column; gap: 12px; padding: 2px 14px 16px; }
+
+/* --- Les champs, communs au dock et à la feuille ------------------------ */
+.champ { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.etiquette { font-size: 10px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); }
+.grille2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; }
+.champ select { width: 100%; min-height: 44px; padding: 8px 32px 8px 10px; color: var(--papier); background: var(--encre) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fb6b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center / 16px; border: 1px solid #839798; border-bottom-width: 3px; border-radius: 0; font-size: 14px; font-weight: 700; appearance: none; -webkit-appearance: none; }
+.champ select:hover { background-color: var(--encre-douce); }
+
+/* Le contrôle segmenté : des boutons radio côte à côte. Le choix se lit à sa
+   peinture — signal sur encre —, jamais à sa seule bordure. */
+.segmente { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 2px; background: var(--encre-haute); border: 1px solid var(--liseré); }
+.segmente button { min-height: 44px; padding: 6px 4px; background: transparent; border: 0; font-size: 12.5px; font-weight: 750; color: var(--papier-doux); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.segmente button:hover { background: #ffffff0d; color: var(--papier); }
+.segmente button[aria-checked='true'] { background: var(--signal); color: var(--encre); box-shadow: inset 0 -3px 0 var(--signal-appui); }
+
+/* Les bascules : surbrillances et cas limites. Chaque surbrillance porte la
+   couleur qu'elle a sur la carte, en liseré gauche, comme les ordres du HUD. */
+.bascules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.bascule { min-height: 44px; padding: 8px 10px 8px 12px; background: var(--encre); border: 1px solid #839798; border-left: 4px solid var(--liseré); border-bottom-width: 3px; text-align: left; font-size: 13px; font-weight: 750; color: var(--papier); }
+.bascule:hover { background: var(--encre-douce); }
+.bascule[aria-pressed='true'] { background: var(--papier); color: var(--encre); border-color: var(--papier); }
+.bascule[data-genre='deplacement'] { border-left-color: var(--vert); }
+.bascule[data-genre='attaque'] { border-left-color: var(--rouge); }
+.bascule[data-genre='capture'] { border-left-color: var(--or); }
+.bascule[data-genre='production'] { border-left-color: var(--bleu); }
+.bascule[data-genre='danger'] { border-left-color: var(--danger); }
+.bascule[data-genre='chemin'] { border-left-color: var(--papier-doux); }
+
+/* Les puces : les scènes prêtes, et les gestes sur mobile. Une ligne qui
+   défile horizontalement, sans retour : rien ne dépasse, rien n'empile. */
+.rangPuces { display: flex; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 2px 0 4px; margin: -2px 0 -4px; scroll-snap-type: x proximity; }
+.rangPuces::-webkit-scrollbar { display: none; }
+.puce { flex: none; min-height: 40px; padding: 8px 12px; background: var(--encre); border: 1px solid #839798; border-bottom-width: 3px; font-size: 12.5px; font-weight: 750; white-space: nowrap; scroll-snap-align: start; }
+.puce:hover { background: var(--encre-douce); }
+.puce[aria-pressed='true'] { background: var(--signal); color: var(--encre); border-color: var(--signal); border-bottom-color: var(--signal-appui); }
+
+/* Les gestes : dans le dock, une ligne par geste avec son aide en dessous ;
+   dans la feuille, des puces sur une ligne (`data-gestes`), l'aide en `title`. */
+.listeGestes { display: flex; flex-direction: column; gap: 5px; }
+.geste { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-height: 48px; padding: 7px 12px; background: var(--encre-douce); border: 0; border-bottom: 3px solid #060f17; border-left: 4px solid var(--signal); text-align: left; color: var(--papier); transition: background .1s, translate .08s; }
+.geste:hover { background: #2c5670; }
+.geste:active { translate: 0 2px; border-bottom-width: 1px; }
+.geste strong { font-size: 13.5px; font-weight: 800; }
+.geste small { font-size: 11.5px; line-height: 1.3; color: var(--sourdine); }
+.geste[data-neuf='oui'] { border-left-color: var(--sourdine); background: var(--encre); }
+.rangPuces[data-gestes='oui'] .geste { flex: none; min-height: 44px; justify-content: center; padding: 6px 12px; white-space: nowrap; scroll-snap-align: start; }
+.rangPuces[data-gestes='oui'] .geste small { display: none; }
+
+.camera { display: flex; gap: 6px; }
+.camera button { min-width: 44px; min-height: 44px; padding: 0 14px; background: var(--encre); border: 1px solid #91a1a3; border-bottom: 3px solid var(--encre-haute); font-size: 20px; font-weight: 800; }
+.camera button:last-child { flex: 1; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+.camera button:hover { background: var(--encre-douce); }
+
+.note { margin: 12px 14px 0; font-size: 11.5px; line-height: 1.5; color: var(--sourdine); }
+.note strong { color: var(--papier-doux); }
+
+/* --- La feuille (téléphone) ------------------------------------------- */
+/* Trois hauteurs, en `svh` pour ne pas sauter avec la barre d'adresse. La
+   feuille est un enfant en flux calé en bas par `margin-top:auto`, jamais fixe. */
+.feuille { position: relative; z-index: 2; display: flex; flex-direction: column; flex: none; margin-top: auto; width: 100%; height: calc(var(--poignee) + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: var(--encre); border-top: 3px solid var(--signal); box-shadow: 0 -8px 24px #06131866; transition: height .24s cubic-bezier(.2, .7, .3, 1); }
+.feuille[data-niveau='1'] { height: 36svh; }
+.feuille[data-niveau='2'] { height: 68svh; }
+.poignee { display: flex; align-items: center; gap: 10px; flex: none; width: 100%; height: var(--poignee); padding: 0 16px; background: transparent; border: 0; font-size: 12px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--papier); touch-action: none; }
+.poignee i { width: 36px; height: 4px; background: var(--sourdine); border-radius: 2px; }
+.niveauBouton { margin-left: auto; font-size: 18px; color: var(--sourdine); }
+.onglets { display: flex; flex: none; border-top: 1px solid #ffffff12; border-bottom: 1px solid #ffffff12; background: var(--encre-haute); }
+.onglets button { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; padding: 6px 2px; background: transparent; border: 0; border-bottom: 3px solid transparent; font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--sourdine); white-space: nowrap; overflow: hidden; }
+.onglets button span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.onglets button[aria-selected='true'] { color: var(--signal); border-bottom-color: var(--signal); }
+.panneau { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 12px; padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px)); }
+.panneau .note { margin: 4px 0 0; }
+
+/* Téléphone : la barre se resserre — le titre garde sa ligne, les deux actions
+   deviennent des cibles carrées avec leur seul glyphe. */
+.atelier[data-agencement='mobile'] .barre { min-height: 56px; padding-top: max(6px, env(safe-area-inset-top, 0px)); padding-bottom: 6px; }
+.atelier[data-agencement='mobile'] .titre h1 { font-size: 15px; }
+.atelier[data-agencement='mobile'] .accueil, .atelier[data-agencement='mobile'] .jouerLien { width: 44px; padding: 0; justify-content: center; }
+.atelier[data-agencement='mobile'] .accueil span, .atelier[data-agencement='mobile'] .jouerLien span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.atelier[data-agencement='mobile'] .toast { top: calc(66px + env(safe-area-inset-top, 0px)); }
+
+/* Paysage court : la feuille ne monte pas au-delà de la moitié, sinon la carte
+   disparaît sous elle. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .feuille[data-niveau='1'] { height: 44svh; }
+  .feuille[data-niveau='2'] { height: 58svh; }
+  .atelier[data-agencement='mobile'][data-niveau='1'] .monde { bottom: 44svh; }
+  .atelier[data-agencement='mobile'][data-niveau='2'] .monde { bottom: 58svh; }
 }
-.reglages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-.reglages label { display: flex; flex-direction: column; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #aebfbe; }
-.reglages select { width: 100%; min-height: 44px; padding: 9px; color: #fff; background: #253c47; border: 1px solid #78909150; border-radius: 10px; font-size: 13px; letter-spacing: 0; }
-.actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 12px; }
-.actions div { display: flex; gap: 6px; }
-.actions button, .actions a { min-height: 44px; padding: 10px 14px; border-radius: 9px; background: #35505b; font-size: 12px; font-weight: 800; }
-.actions a { display: flex; align-items: center; background: #c6d89f; color: #20372d; }
-.panneau p { color: #b0c2c5; font-size: 11px; margin: 10px 0 0; }
-.statut { position: absolute; z-index: 3; top: 42%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; padding: 18px; border-radius: 12px; background: #152c3a; text-align: center; }
-.atelier button:focus-visible, .atelier select:focus-visible, .atelier a:focus-visible { outline: 3px solid #e5e9b1; outline-offset: 3px; }
-/* Les trois groupes de bascules : surbrillances, gestes, cas limites. Un bouton
-   enfoncé se lit à sa peinture, pas seulement à son ombre — le banc se pilote
-   d'un coup d'œil, souvent d'une main, l'autre tenant la souris sur la carte. */
-.groupe { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; padding: 8px 10px 10px; border: 1px solid #8ba5aa2e; border-radius: 12px; }
-.groupe legend { padding: 0 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #aebfbe; }
-.groupe button { min-height: 40px; padding: 8px 12px; background: #25404b; border: 1px solid #78909140; border-radius: 9px; color: #f4f1e8; font-size: 12px; font-weight: 700; }
-.groupe button:hover { background: #2f4f5c; }
-.actif { background: #c6d89f !important; border-color: #c6d89f !important; color: #20372d !important; }
-@media (max-width: 600px) { .groupe { padding: 6px 8px 8px; gap: 5px; } .groupe button { min-height: 38px; padding: 7px 9px; font-size: 11px; } }
-@media (max-width: 600px) { .entete { left: 16px; right: 16px; } .panneau { padding: 12px; } .reglages { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; } .reglages label { grid-column: span 2; } .reglages label:nth-child(-n+2) { grid-column: span 3; } .actions button, .actions a { padding: 9px 11px; font-size: 11px; } .panneau p { font-size: 10px; } }
+
+@keyframes atelier-toast { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .feuille { transition: none; }
+  .toast span { animation: none; }
+  .section h2 button i { transition: none; }
+}
