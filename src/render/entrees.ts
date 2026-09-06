@@ -18,7 +18,8 @@ export interface PointEcran { x: number; y: number }
 export type ToucheJeu =
   | 'haut' | 'bas' | 'gauche' | 'droite'
   | 'valider' | 'annuler' | 'fin_tour'
-  | 'zoom_plus' | 'zoom_moins';
+  | 'zoom_plus' | 'zoom_moins'
+  | 'tourner_gauche' | 'tourner_droite';
 
 /** Ce que le contrôleur reçoit des entrées. */
 export interface Gestes {
@@ -72,13 +73,18 @@ export function toucheDe(code: string): ToucheJeu | null {
   switch (code) {
     case 'ArrowUp': case 'KeyW': case 'KeyZ': return 'haut';
     case 'ArrowDown': case 'KeyS': return 'bas';
-    case 'ArrowLeft': case 'KeyA': case 'KeyQ': return 'gauche';
+    case 'ArrowLeft': case 'KeyA': return 'gauche';
     case 'ArrowRight': case 'KeyD': return 'droite';
     case 'Enter': case 'NumpadEnter': case 'Space': return 'valider';
     case 'Escape': case 'Backspace': return 'annuler';
-    case 'KeyT': case 'KeyE': return 'fin_tour';
+    case 'KeyT': return 'fin_tour';
     case 'Equal': case 'NumpadAdd': return 'zoom_plus';
     case 'Minus': case 'NumpadSubtract': return 'zoom_moins';
+    // Q et E tournent la caméra d'un quart de tour, comme dans tout jeu de
+    // stratégie : le brief les réserve, ils ne servent donc ni à se déplacer ni à
+    // finir le tour.
+    case 'KeyQ': return 'tourner_gauche';
+    case 'KeyE': return 'tourner_droite';
     default: return null;
   }
 }

@@ -13,6 +13,7 @@ test('les clés de flags acceptées suivent les trois portées', () => {
     'pays.fr.rival_respecte',
     'pays.lu.sponsor_accepte',
     'pays.fr.bretagne_maree_lue',
+    'pays.atl.finale_suspendue',   // camp sans drapeau : code à trois lettres
     'monde.atlas.soupcon',
     'monde.cinquieme.contact',
     'monde.regie.faveur',
@@ -30,7 +31,8 @@ test('les clés de flags hors convention sont refusées', () => {
   const invalides = [
     'region.bretagne.maree_lue',   // pas de portée région
     'pays.FR.rival_respecte',      // majuscules
-    'pays.fra.rival_respecte',     // code pays à trois lettres
+    'pays.fraa.rival_respecte',    // code de camp à quatre lettres
+    'pays.f.rival_respecte',       // code de camp à une lettre
     'monde.sponsors.faveur',       // domaine hors liste
     'monde.atlas.X',               // nom trop court et majuscule
     'cmd_maelle_kerdraon.respect', // séparateur de portée manquant
@@ -47,8 +49,10 @@ test('les identifiants, codes et couleurs suivent leurs formes', () => {
   assert.doesNotMatch('a', REGEX_CLE);
 
   assert.match('fr', REGEX_CODE_PAYS);
+  assert.match('atl', REGEX_CODE_PAYS);     // une équipe sans drapeau, pas un pays
   assert.doesNotMatch('FR', REGEX_CODE_PAYS);
-  assert.doesNotMatch('fra', REGEX_CODE_PAYS);
+  assert.doesNotMatch('fraa', REGEX_CODE_PAYS);
+  assert.doesNotMatch('f', REGEX_CODE_PAYS);
 
   assert.match('cmd_camille_aubertin', REGEX_CODE_COMMANDANT);
   assert.doesNotMatch('camille_aubertin', REGEX_CODE_COMMANDANT);

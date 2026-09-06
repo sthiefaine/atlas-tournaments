@@ -95,6 +95,8 @@ export interface Rendu {
   recentrer?(c: Case): void;
   /** Zoom tactile explicite : +1 rapproche, −1 éloigne. */
   zoomer?(sens: number): void;
+  /** Un quart de tour autour de la carte : +1 vers la droite, −1 vers la gauche. */
+  tourner?(sens: number): void;
   /**
    * Une image PNG en `data:` de l'état courant, ou `null`. Le rendu 3D **redessine
    * de façon synchrone** avant de lire : sans cela, un tampon WebGL non préservé

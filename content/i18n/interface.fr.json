@@ -2748,6 +2748,24 @@
         "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
       },
       "longueurMax": 18
+    },
+    {
+      "cle": "hud.tourner_gauche",
+      "texte": "Tourner vers la gauche",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bouton de caméra : un quart de tour autour de la carte. Interface tactile mobile."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.tourner_droite",
+      "texte": "Tourner vers la droite",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bouton de caméra : un quart de tour autour de la carte. Interface tactile mobile."
+      },
+      "longueurMax": 40
     }
   ]
 }

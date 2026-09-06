@@ -50,7 +50,7 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres : on met les unités hors jeu, personne ne meurt. Atlas organise la Ronde, le tournoi des nations.",
+      "texte": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres. Atlas organise la Ronde, le tournoi des nations.",
       "emotion": "neutre"
     },
     {

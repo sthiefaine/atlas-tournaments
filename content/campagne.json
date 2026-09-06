@@ -8,7 +8,7 @@
       "biome": "plaine",
       "objectif": "Mettre hors jeu les trois unités de la patrouille de Tomas.",
       "conseil": "Votre char passe par le pont (8, 4) et frappe le premier. L’infanterie traverse la rivière à pied, plus lentement.",
-      "recit": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres : on met les unités hors jeu, personne ne meurt. Une rivière, un pont, une patrouille en face : votre premier contact.",
+      "recit": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres. Une rivière, un pont, une patrouille en face : votre premier contact.",
       "conclusion": "Premier contact réussi. Vous savez déplacer une unité, frapper en premier et lire le terrain. Le reste, c’est de l’économie : on la voit demain.",
       "entrainement": true,
       "tutoriel": [

@@ -222,9 +222,9 @@ export function cle(ctx: Contexte, v: unknown, chemin: string): Cle | undefined 
   return chaine(ctx, v, chemin, { regex: REGEX_CLE, forme: 'identifiant en minuscules (^[a-z][a-z0-9_]{1,47}$)' });
 }
 
-/** Lit un `CodePays` : deux lettres minuscules. */
+/** Lit un `CodePays` : deux lettres minuscules (nation) ou trois (équipe sans drapeau). */
 export function codePays(ctx: Contexte, v: unknown, chemin: string): CodePays | undefined {
-  return chaine(ctx, v, chemin, { regex: REGEX_CODE_PAYS, forme: 'code ISO 3166-1 alpha-2 en minuscules' });
+  return chaine(ctx, v, chemin, { regex: REGEX_CODE_PAYS, forme: 'code de camp en minuscules (ISO 3166-1 alpha-2, ou trois lettres pour une équipe sans drapeau)' });
 }
 
 /** Lit une `DateIso` et vérifie qu'elle désigne un jour réel. */

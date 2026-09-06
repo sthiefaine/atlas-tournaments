@@ -47,10 +47,12 @@ import {
 } from './pieces';
 
 /** Les matériaux neutres, partagés par toutes les nations. */
-const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant', number>> = {
+const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant' | 'peau', number>> = {
   materiel: 0x515c65,
   verre: 0x70bbd2,
   roulant: 0x222b31,
+  // Un seul ton de peau pour toutes les nations, mat : celui d'une figurine peinte.
+  peau: 0xc9946c,
 };
 
 /** Proportions d'un gabarit : longueur (X), hauteur (Y), largeur (Z). */
@@ -64,7 +66,7 @@ const PROPORTIONS: Readonly<Record<Gabarit, [number, number, number]>> = {
 const ORNEMENTS_PLACEHOLDER = ['antenne', 'fanion'] as const;
 
 /** Un jeu de matériaux par camp et par style : c'est là que vit la couleur. */
-class Materiaux {
+export class Materiaux {
   private readonly jeux = new Map<string, Record<RolePiece, THREE.MeshStandardMaterial>>();
   private readonly liseres = new Map<string, THREE.MeshStandardMaterial>();
   private readonly ternis = new Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial>();
@@ -83,6 +85,7 @@ class Materiaux {
       materiel: new THREE.MeshStandardMaterial({ color: NEUTRES.materiel, roughness: 0.42, metalness: 0.62 }),
       verre: new THREE.MeshStandardMaterial({ color: NEUTRES.verre, roughness: 0.19, metalness: 0.42, emissive: 0x153748, emissiveIntensity: 0.24 }),
       roulant: new THREE.MeshStandardMaterial({ color: NEUTRES.roulant, roughness: 0.85, metalness: 0.12 }),
+      peau: new THREE.MeshStandardMaterial({ color: NEUTRES.peau, roughness: 0.78, metalness: 0 }),
     };
     this.jeux.set(cle, jeu);
     return jeu;
@@ -193,23 +196,44 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
   if (memo) return memo;
   let geo: THREE.BufferGeometry;
   switch (p.forme) {
+    // Les petites pièces — un œil, un doigt de canon, un avant-bras — prennent
+    // moins de méridiens : à leur taille, la différence ne se voit pas, et une
+    // figurine détaillée en compte trente.
     case 'cylindre':
-      geo = new THREE.CylinderGeometry(l / 2, la / 2, h, 12, 1);
+      geo = new THREE.CylinderGeometry(l / 2, la / 2, h, Math.max(l, la) < 0.04 ? 8 : 12, 1);
       break;
     case 'capsule':
-      geo = new THREE.CapsuleGeometry(l / 2, Math.max(0.01, h - l), 3, 10);
+      // Un membre de figurine fait cinq centièmes de case de diamètre : sept
+      // méridiens et une calotte d'un segment suffisent, et c'est quatre fois moins
+      // de triangles qu'une capsule lisse.
+      geo = l < 0.08
+        ? new THREE.CapsuleGeometry(l / 2, Math.max(0.01, h - l), 1, 7)
+        : new THREE.CapsuleGeometry(l / 2, Math.max(0.01, h - l), 3, 10);
       break;
-    case 'sphere':
-      geo = new THREE.SphereGeometry(0.5, 12, 8);
+    case 'sphere': {
+      const d = Math.max(l, h, la);
+      geo = d < 0.05 ? new THREE.SphereGeometry(0.5, 6, 4)
+        : d < 0.07 ? new THREE.SphereGeometry(0.5, 8, 5)
+          : d < 0.12 ? new THREE.SphereGeometry(0.5, 10, 6)
+            : new THREE.SphereGeometry(0.5, 12, 8);
       geo.scale(l, h, la);
       break;
+    }
     case 'cone':
       geo = new THREE.ConeGeometry(Math.max(l, la) / 2, h, 4, 1);
       break;
     case 'plaque':
+      if (Math.min(l, h, la) <= 0.022) { geo = new THREE.BoxGeometry(l, h, la); break; }
       return boiteBiseautee(l, h, la, Math.min(l, h, la) * 0.3);
-    default:
+    default: {
+      // Un biseau de deux centièmes ne se voit ni sur une sacoche ni sur un
+      // chargeur : une pièce mince — ses deux plus petites cotes sous quatre
+      // centièmes — est une boîte nue à douze triangles, huit fois moins qu'une
+      // boîte biseautée. Le biseau reste aux masses : tronc, bassin, sac, bottes.
+      const cotes = [l, h, la].sort((a, b) => a - b);
+      if (cotes[1]! <= 0.04) { geo = new THREE.BoxGeometry(l, h, la); break; }
       return boiteBiseautee(l, h, la, Math.min(l, h, la) * 0.22);
+    }
   }
   geometries.set(cle, geo);
   return geo;
@@ -217,7 +241,7 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
 
 const silhouettesFusionnees = new Map<string, ReadonlyMap<RolePiece, THREE.BufferGeometry>>();
 
-/** Six maillages au maximum, partagés entre unités identiques : le détail ne multiplie pas les draw calls. */
+/** Sept maillages au maximum — un par rôle —, partagés entre unités identiques : le détail ne multiplie pas les draw calls. */
 export function geometriesSilhouette(s: Silhouette): ReadonlyMap<RolePiece, THREE.BufferGeometry> {
   const cle = JSON.stringify(s);
   const memo = silhouettesFusionnees.get(cle);
@@ -352,7 +376,10 @@ export function construirePlaceholder(
     }
     modele.add(rotor);
   }
-  for (const m of piecesOrnements(style, hauteurSilhouette(s), jeu)) groupe.add(m);
+  // Une troupe à pied ne porte pas de mât : l'antenne et le fanion du style
+  // flotteraient entre les têtes. Sa nation se lit sur le bandeau du casque et
+  // le rouleau de couchage, qui prennent déjà la couleur d'accent.
+  if (s.base !== 'pattes') for (const m of piecesOrnements(style, hauteurSilhouette(s), jeu)) groupe.add(m);
   const e = echelleTaille(s.taille);
   const g = style && cleUnite !== '' ? gabaritDe(style, cleUnite) : 'b';
   const [gx, gy, gz] = PROPORTIONS[g];

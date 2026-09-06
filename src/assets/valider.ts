@@ -209,7 +209,7 @@ function variantes(ctx: Contexte, v: unknown, chemin: string): Variantes | undef
   else {
     for (let i = 0; i < brutNations.length; i += 1) {
       const n = chaine(ctx, brutNations[i], sous(cNations, i), {
-        regex: REGEX_CODE_PAYS, forme: 'code ISO 3166-1 alpha-2 en minuscules',
+        regex: REGEX_CODE_PAYS, forme: 'code de camp en minuscules (ISO 3166-1 alpha-2, ou trois lettres pour une équipe sans drapeau)',
       });
       if (n !== undefined) nations.push(n);
     }
@@ -560,7 +560,7 @@ export function validerStyleNation(valeur: unknown): Resultat<StyleNation> {
   if (!o) return conclure(ctx, valeur as StyleNation);
   requis(ctx, o, '', CLES_STYLE_NATION);
 
-  chaine(ctx, o['code'], 'code', { regex: REGEX_CODE_PAYS, forme: 'code ISO 3166-1 alpha-2 en minuscules' });
+  chaine(ctx, o['code'], 'code', { regex: REGEX_CODE_PAYS, forme: 'code de camp en minuscules (ISO 3166-1 alpha-2, ou trois lettres pour une équipe sans drapeau)' });
   chaine(ctx, o['nom'], 'nom', { max: 64 });
   ligneDirectrice(ctx, o['ligneDirectrice'], 'ligneDirectrice');
   paletteStyle(ctx, o['palette'], 'palette');
@@ -592,7 +592,7 @@ export function validerStyleRegion(valeur: unknown): Resultat<StyleRegion> {
   requis(ctx, o, '', CLES_STYLE_REGION);
 
   lireCle(ctx, o['code'], 'code');
-  chaine(ctx, o['paysCode'], 'paysCode', { regex: REGEX_CODE_PAYS, forme: 'code ISO 3166-1 alpha-2 en minuscules' });
+  chaine(ctx, o['paysCode'], 'paysCode', { regex: REGEX_CODE_PAYS, forme: 'code de camp en minuscules (ISO 3166-1 alpha-2, ou trois lettres pour une équipe sans drapeau)' });
   chaine(ctx, o['nom'], 'nom', { max: 48 });
   ligneDirectrice(ctx, o['ligneDirectrice'], 'ligneDirectrice');
 

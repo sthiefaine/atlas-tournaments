@@ -572,6 +572,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     annuler: () => controleur.annuler(),
     recommencer,
     zoomer: (sens) => rendu.zoomer?.(sens),
+    tourner: rendu.tourner ? (sens) => rendu.tourner?.(sens) : undefined,
     recentrer: () => {
       const unite = etat.unites.find(u => u.id === controleur.vue.selection)
         ?? etat.unites.find(u => u.camp === camp && !u.dansTransport);

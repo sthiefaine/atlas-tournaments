@@ -9,12 +9,13 @@ import { partiePersonnalisee } from '../engine/aides';
 
 const cat = chargerCatalogue();
 
-test('les figurines détaillées partagent leur géométrie avec six matériaux au maximum', () => {
+test('les figurines détaillées partagent leur géométrie avec sept matériaux au maximum', () => {
   for (const cle of cat.cles) {
     const silhouette = cat.unites[cle]!.silhouette;
     const geometries = geometriesSilhouette(silhouette);
     assert.equal(geometriesSilhouette(silhouette), geometries, `${cle} : cache partagé`);
-    assert.ok(geometries.size <= 6 && geometries.size >= 3, `${cle} : draw calls bornés`);
+    // Sept rôles, dont la peau des figurines : c'est la borne des draw calls d'une unité.
+    assert.ok(geometries.size <= 7 && geometries.size >= 3, `${cle} : draw calls bornés`);
     let triangles = 0;
     for (const geo of geometries.values()) {
       triangles += geo.getAttribute('position').count / 3;

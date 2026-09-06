@@ -232,7 +232,7 @@ Un acte = un continent (brief). Une traversée en compte **trois** : le joueur v
 
 ### Acte I — « Le bruit de fond »
 
-Le joueur découvre le tournoi. Trois anomalies passent au second plan : un match qui se termine trop vite, un relevé de terrain corrigé après coup, un commandant qui déclare forfait sans explication. Hadran Ost apparaît comme un vétéran sympathique du service matériel, qui vous offre un café et pose de bonnes questions.
+Le joueur découvre le tournoi. Trois anomalies passent au second plan : un match qui se termine trop vite, un relevé de terrain corrigé après coup, un commandant qui déclare forfait sans explication. Hadran Ost apparaît comme un vétéran sympathique du service matériel, qui vous offre un café et pose de bonnes questions. La **Sélection Méridienne**, l'équipe d'exhibition d'Atlas qu'il dirige (`01-bible.md` §3.4), est un adversaire de Dépêche parmi d'autres : elle joue proprement et perd souvent.
 
 - **Écrit :** `monde.atlas.soupcon`, `monde.atlas.dossier_truquage`, `cmd.hadran_ost.respect`.
 - **Bascule I.a — le contact.** À la fin de l'acte, si `monde.atlas.soupcon ≥ 2` **ou** `cmd.hadran_ost.respect ≥ 2` : Ost parle à visage découvert et propose au joueur de « rendre au tournoi ce qu'il a perdu ». → `monde.cinquieme.contact = true`.
@@ -241,7 +241,7 @@ Le joueur découvre le tournoi. Trois anomalies passent au second plan : un matc
 
 ### Acte II — « Le carton »
 
-La faction agit. Un terrain est saboté avant homologation, une commandante est disqualifiée sur un dossier fabriqué, du matériel non homologué est retrouvé dans un dépôt — le scandale absolu de ce monde. Nera Aldouin enquête seule et se fait retirer l'affaire par le Bureau ; Talvarec choisit de protéger la Ronde. Vantour, lui, sent la meilleure histoire de sa carrière.
+La faction agit. Un terrain est saboté avant homologation, une commandante est disqualifiée sur un dossier fabriqué, du matériel non homologué est retrouvé dans un dépôt de la Sélection Méridienne — le scandale absolu de ce monde, classé par le Bureau au motif qu'un dépôt d'essai contient forcément des pièces sans badge. Nera Aldouin enquête seule et se fait retirer l'affaire par le Bureau ; Talvarec choisit de protéger la Ronde. Vantour, lui, sent la meilleure histoire de sa carrière.
 
 - **Écrit :** `monde.atlas.dossier_truquage`, `monde.atlas.arbitre_alliee`, `monde.regie.faveur`, `monde.atlas.sponsor_meridien`, `pays.<xx>.dette_envers_joueur`.
 - **Bascule II.a — l'alliance.** Si `monde.atlas.credibilite ≥ 4` **et** le joueur a défendu un commandant injustement sanctionné : Aldouin ouvre ses archives. → `monde.atlas.arbitre_alliee = true`.
@@ -251,7 +251,7 @@ La faction agit. Un terrain est saboté avant homologation, une commandante est 
 
 ### Acte III — « La cinquième manche »
 
-La finale mondiale doit se disputer à Port-Méridien. La faction pose son ultimatum : elle exige la suspension de la Ronde et l'ouverture d'une manche « à enjeux réels ». Chaque nation choisit son camp — et ce choix est **calculé, pas écrit** : pour chaque pays visité, le moteur lit les flags posés chez lui.
+La finale mondiale doit se disputer à Port-Méridien. La faction pose son ultimatum : elle exige la suspension de la Ronde et l'ouverture d'une manche « à enjeux réels ». Sur le terrain, elle a une équipe : la **Sélection Méridienne**, en gris, avec des pièces non homologuées, et à ses côtés les nations retirées passées à la faction. C'est elle que le joueur affronte à Port-Méridien, même quand aucune nation n'a basculé. Chaque nation choisit son camp — et ce choix est **calculé, pas écrit** : pour chaque pays visité, le moteur lit les flags posés chez lui.
 
 **Règle de ralliement (par pays) :**
 

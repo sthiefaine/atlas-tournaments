@@ -245,18 +245,18 @@ export function brancherGestes3d(
 
   const surKey = (e: KeyboardEvent): void => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    // Q et E tournent la caméra d'un quart de tour : le brief les réserve.
-    if (e.code === 'KeyQ' || e.code === 'KeyE') {
-      e.preventDefault();
-      vue()?.tourner(e.code === 'KeyQ' ? -1 : 1);
-      salir();
-      return;
-    }
     const touche = toucheDe(e.code);
     if (!touche) return;
     e.preventDefault();
+    // Les touches de caméra ne remontent pas au contrôleur : elles ne changent
+    // rien au jeu, seulement au point de vue.
     if (touche === 'zoom_plus' || touche === 'zoom_moins') {
       vue()?.zoomer(touche === 'zoom_plus' ? 1 : -1);
+      salir();
+      return;
+    }
+    if (touche === 'tourner_gauche' || touche === 'tourner_droite') {
+      vue()?.tourner(touche === 'tourner_gauche' ? -1 : 1);
       salir();
       return;
     }

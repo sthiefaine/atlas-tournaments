@@ -297,6 +297,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       salir();
     },
 
+    tourner(sens: number): void {
+      monde?.vue3d.tourner(sens);
+      salir();
+    },
+
     recentrer(c: Case): void {
       monde?.vue3d.centrerCase(c);
       salir();

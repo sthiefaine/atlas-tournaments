@@ -13,7 +13,7 @@
 **Types de base partagés**, définis une fois dans `src/schemas/types.ts` :
 
 ```ts
-/** Code pays ISO 3166-1 alpha-2 en minuscules : 'fr', 'lu', 'jp'. */
+/** Code de camp : ISO 3166-1 alpha-2 en minuscules pour une nation ('fr', 'lu', 'jp'), trois lettres pour une équipe sans drapeau ('atl'). Regex : ^[a-z]{2,3}$ */
 export type CodePays = string;
 
 /** Identifiant stable, minuscules, chiffres et tirets bas. Regex : ^[a-z][a-z0-9_]{1,47}$ */

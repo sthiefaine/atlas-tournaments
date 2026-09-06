@@ -191,6 +191,18 @@ Diégétiquement, ils ne descendent pas sur le terrain par caprice : chacun a un
 
 **Ce que la Cinquième Manche n'est jamais :** un pays, une armée, une religion, une idéologie réelle, un groupe ethnique, une organisation réelle transposée. Jamais.
 
+#### **[Proposition]** L'équipe d'Atlas : la Sélection Méridienne, dite « les Gris »
+
+Atlas aligne officiellement sa propre équipe. Elle existe pour deux raisons que personne ne conteste : les **matchs d'exhibition** — une Dépêche a besoin d'un adversaire quand aucune délégation n'est disponible — et les **essais d'homologation**, où une pièce à l'essai (§3.2) doit être jouée par quelqu'un avant d'entrer au catalogue. Elle est financée par le Consortium Méridien, dont elle porte le nom sur le maillot. Que le sponsor de la Ronde ait son nom sur l'équipe de l'organisation n'a jamais paru étrange à personne, et c'est le premier indice.
+
+Ses commandants sont des sans-drapeau (§3.1) ; **Hadran Ost** la dirige. Ses couleurs : le gris, et le **badge orange** du matériel à l'essai, qu'elle est la seule à porter en permanence. Le public l'appelle « les Gris ». Elle n'a ni pays, ni continent, ni climat, ni rival naturel, ni région ; elle n'est jamais une destination. On ne la visite pas, elle vient à vous.
+
+**Ce qu'elle est dans la trame** (`08-narration-choix.md` §6). À l'acte I, un adversaire anodin : on la croise en exhibition, elle joue proprement, elle perd souvent. À l'acte II, c'est dans **son** dépôt que le matériel non homologué est retrouvé, et le Bureau classe l'affaire en disant qu'un dépôt d'essai contient forcément des pièces sans badge — exactement la confusion entre essai et non-homologué que la faction exploite (§3.2). À l'acte III, elle est **la faction sur le terrain** : l'équipe qui vient disputer la manche « à enjeux réels » à Port-Méridien, avec à ses côtés les nations retirées passées à la faction. C'est la forme sportive que prend une menace institutionnelle : la faction ne lève pas de troupes, elle a une équipe, et cette équipe joue avec des pièces qui trichent.
+
+**Ce que ça apporte, et ce que ça ne change pas.** Le joueur a un adversaire à l'acte III même s'il a bien joué et qu'aucune nation ne s'est retirée — sans elle, le dernier acte d'un bon parcours n'aurait personne à affronter. Le point culminant reste le coup de sifflet qui ne vient pas : la Sélection n'envahit rien, elle dispute un match, et le scandale est qu'elle le dispute avec du matériel non homologué. Les règles dures de ce paragraphe tiennent entièrement : l'équipe n'est pas un pays, n'a pas de culture, et ses commandants sont des sans-drapeau aux noms inventés. Elle rend le Consortium plus crédible comme tête cachée, sans trancher : un cadre du Bureau peut tout aussi bien l'avoir montée.
+
+**Dans les données.** Ce n'est pas une `Country` : une fiche pays porte un continent, un climat, un rival naturel et des voisins, et aucun n'a de sens ici. C'est un **code de camp à trois lettres**, `atl` — les nations gardent leur code ISO à deux lettres ; les trois lettres sont réservées aux camps sans drapeau —, un style de camp (`content/styles/atl.json`, gris et orange), des commandants dont Ost, et des scénarios qui lui donnent le catalogue à l'essai puis, à l'acte III, des pièces non homologuées. Le même code sert de **code de terrain à Port-Méridien**, qui n'appartient à aucune nation et n'en avait pas : la finale mondiale est un scénario `paysCode: 'atl'`, et ce qui s'y passe s'écrit sous `pays.atl.*`.
+
 ---
 
 ## 4. Le format du tournoi
@@ -406,7 +418,7 @@ Le doute n'est jamais tranché par la routine dans le sens de la production. La 
 
 | Portée | Forme | Domaine | Exemple |
 |---|---|---|---|
-| Pays | `pays.<iso2>.<nom>` | code ISO 3166-1 alpha-2 en minuscules | `pays.fr.rival_respecte` |
+| Pays | `pays.<code>.<nom>` | code ISO 3166-1 alpha-2 en minuscules, ou trois lettres pour un camp sans drapeau (`atl`, §3.4) | `pays.fr.rival_respecte` |
 | Monde | `monde.<domaine>.<nom>` | `atlas`, `cinquieme`, `regie`, `public`, `tournoi`, `carnet`, `depeche`, `secret` **[Proposition]** | `monde.atlas.soupcon` |
 | Commandant **[Proposition]** | `cmd.<id>.<nom>` | `<id>` = le `Commander.code` de sa fiche, privé de son préfixe `cmd_` (`03-schemas.md` §2) | `cmd.mireille_bousquet.respect` |
 
@@ -515,3 +527,4 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 15. **Barnab Estève**, le seul commandant en activité qui a connu les Vieilles Manières, et sa réplique unique — la limite absolue du hors-champ (§2.1).
 16. Les **généraux secrets** comme figures d'Atlas jouables (§3.5), leur statut de sans-drapeau, et la doctrine **« jamais indispensable »**.
 17. Le domaine `monde.secret.*` **absent de cette bible et de `content/flags.json` par construction**, le flag dérivé `monde.tournoi.fils_termines`, et les règles 8 et 9 du §8.6.
+18. **La Sélection Méridienne**, dite « les Gris » (§3.4) : l'équipe d'exhibition et d'essai d'Atlas, financée par le Consortium, dirigée par Ost, qui devient à l'acte III la faction sur le terrain — un adversaire sans être un pays. Son code de camp à trois lettres, `atl`, sert aussi de code de terrain à Port-Méridien.

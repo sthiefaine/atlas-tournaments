@@ -60,6 +60,7 @@ interface PontBanc {
   choisirMonde(n: number): void;
   recentrer(x: number, y: number): void;
   zoomer(sens: number): void;
+  tourner(sens: number): void;
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
   pret(): boolean;
@@ -323,6 +324,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       choisirMonde: (n) => setIndex(Math.max(0, Math.min(tous.length - 1, n))),
       recentrer: (x, y) => rendu.current?.recentrer?.({ x, y }),
       zoomer: (sens) => rendu.current?.zoomer?.(sens),
+      tourner: (sens) => rendu.current?.tourner?.(sens),
       silhouettes: (v) => setSilhouettes(v),
       replier: (v) => setDockReplie(v),
       pret: () => rendu.current !== null,
@@ -461,13 +463,15 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   </div>;
 
   const blocCamera = <div className={styles.camera}>
+    <button type="button" aria-label="Tourner la caméra vers la gauche" onClick={() => rendu.current?.tourner?.(-1)}>↺</button>
     <button type="button" aria-label="Éloigner la caméra" onClick={() => rendu.current?.zoomer?.(-1)}>−</button>
     <button type="button" aria-label="Rapprocher la caméra" onClick={() => rendu.current?.zoomer?.(1)}>+</button>
+    <button type="button" aria-label="Tourner la caméra vers la droite" onClick={() => rendu.current?.tourner?.(1)}>↻</button>
     <button type="button" onClick={recentrer}>Recentrer</button>
   </div>;
 
   const note = <p className={styles.note}>
-    Glissez la carte · Pincez pour zoomer. Le banc rejoue des <strong>événements</strong>,
+    Glissez la carte · Pincez pour zoomer · Q et E pour tourner. Le banc rejoue des <strong>événements</strong>,
     pas des règles : rien ici n’est une partie légale, et rien n’est enregistré.
   </p>;
 
@@ -486,6 +490,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
         <h1>Atelier des mondes</h1>
       </div>
       <Link href="/" className={styles.accueil}><Glyphe cle="accueil" /><span>Accueil</span></Link>
+      <Link href="/atelier/unites" className={styles.accueil}><span>Vitrine des unités</span></Link>
       <Link href={`/jeu/${monde.scenario.code}`} className={styles.jouerLien}><Glyphe cle="jouer" /><span>Jouer cette mission</span></Link>
     </header>
 

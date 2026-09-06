@@ -3,7 +3,7 @@
 // appui long — remonte l'intention voulue, et rien de plus.
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { brancherEntrees, type Gestes } from '../../src/render/entrees';
+import { brancherEntrees, toucheDe, type Gestes } from '../../src/render/entrees';
 
 function montage(gestes: Gestes, pointerType = 'mouse') {
   const cible = new EventTarget();
@@ -91,4 +91,14 @@ test('un appui long qui inspecte n’annule pas ; un appui long ailleurs annule'
   } finally {
     mock.timers.reset();
   }
+});
+
+test('Q et E sont les touches de rotation, et ne servent à rien d’autre', () => {
+  assert.equal(toucheDe('KeyQ'), 'tourner_gauche');
+  assert.equal(toucheDe('KeyE'), 'tourner_droite');
+  // Elles ne doublent plus le déplacement du curseur ni la fin de tour.
+  assert.equal(toucheDe('KeyA'), 'gauche');
+  assert.equal(toucheDe('KeyT'), 'fin_tour');
+  assert.equal(toucheDe('Equal'), 'zoom_plus');
+  assert.equal(toucheDe('KeyX'), null);
 });

@@ -12,7 +12,11 @@
 // 0. Conventions communes
 // ---------------------------------------------------------------------------
 
-/** Code pays ISO 3166-1 alpha-2 en minuscules : 'fr', 'lu', 'jp'. */
+/**
+ * Code de camp. Deux lettres pour une nation — ISO 3166-1 alpha-2 en minuscules :
+ * 'fr', 'lu', 'jp' —, trois lettres pour une équipe sans drapeau, qui n'est pas un
+ * pays et n'a pas de code ISO : 'atl', la Sélection Méridienne (`01-bible.md` §3.4).
+ */
 export type CodePays = string;
 
 /** Identifiant stable, minuscules, chiffres et tirets bas. */
@@ -27,8 +31,8 @@ export type Couleur = string;
 /** Forme d'une `Cle` : minuscule initiale, 2 à 48 caractères. */
 export const REGEX_CLE = /^[a-z][a-z0-9_]{1,47}$/;
 
-/** Forme d'un `CodePays` : deux lettres minuscules. */
-export const REGEX_CODE_PAYS = /^[a-z]{2}$/;
+/** Forme d'un `CodePays` : deux lettres minuscules (nation) ou trois (équipe sans drapeau). */
+export const REGEX_CODE_PAYS = /^[a-z]{2,3}$/;
 
 /** Forme d'une `DateIso` : année-mois-jour. */
 export const REGEX_DATE_ISO = /^\d{4}-\d{2}-\d{2}$/;
@@ -43,7 +47,7 @@ export const REGEX_COULEUR = /^#[0-9a-f]{6}$/;
  * ni n'est servi aux routines.
  */
 export const REGEX_FLAG =
-  /^(pays\.[a-z]{2}|monde\.(atlas|cinquieme|regie|public|tournoi|carnet|depeche|secret)|cmd\.[a-z][a-z0-9_]{1,31})\.[a-z][a-z0-9_]{2,47}$/;
+  /^(pays\.[a-z]{2,3}|monde\.(atlas|cinquieme|regie|public|tournoi|carnet|depeche|secret)|cmd\.[a-z][a-z0-9_]{1,31})\.[a-z][a-z0-9_]{2,47}$/;
 
 /** Forme du `Commander.code` : `cmd_<prenom>_<nom>`. */
 export const REGEX_CODE_COMMANDANT = /^cmd_[a-z][a-z0-9_]{1,43}$/;

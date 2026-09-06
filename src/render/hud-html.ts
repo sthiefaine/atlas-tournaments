@@ -68,6 +68,8 @@ export interface ApiHud {
   annuler(): void;
   recommencer(): void;
   zoomer?(sens: 1 | -1): void;
+  /** Un quart de tour de la caméra : absent quand le rendu ne sait pas tourner. */
+  tourner?(sens: 1 | -1): void;
   recentrer?(): void;
   /** Position d'écran du centre d'une case : sert à ancrer le menu d'ordres. */
   versEcran(c: Case): PointVue | null;
@@ -737,10 +739,14 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   }
 
   function panneauCamera(): string {
-    if (!api.zoomer && !api.recentrer) return '';
+    if (!api.zoomer && !api.recentrer && !api.tourner) return '';
     const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
+    // Une flèche qui tourne autour d'un point : c'est la carte qui pivote, pas la pièce.
+    const fleche = (sens: 1 | -1): string => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"${sens === -1 ? ' style="transform:scaleX(-1)"' : ''}><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M17 3v4.5h-4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>`;
     return '<div class="camera">'
+      + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')
       + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', '+') + bouton('zoom_moins', 'hud.zoom_moins', '−') : '')
+      + (api.tourner ? bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
       + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
       + '</div>';
   }
@@ -1057,6 +1063,8 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       case 'rejouer': api.recommencer(); break;
       case 'zoom_plus': api.zoomer?.(1); break;
       case 'zoom_moins': api.zoomer?.(-1); break;
+      case 'tourner_gauche': api.tourner?.(-1); break;
+      case 'tourner_droite': api.tourner?.(1); break;
       case 'recentrer': api.recentrer?.(); break;
       default: break;
     }

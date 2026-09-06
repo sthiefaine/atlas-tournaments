@@ -35,6 +35,8 @@ La formule est celle du brief, et elle se décide surface par surface :
 
 Références conservées : `doc/assets/render-vector.png` pour la lisibilité (c'est l'étalon : si la 3D est moins lisible que le vectoriel, la 3D a tort), `doc/assets/render-3d.png` pour l'esprit diorama, à dépasser en qualité de matières.
 
+**Arbitrage du 6 septembre 2026 : « plutôt réaliste, mais un ton léger et cartoon ».** Il confirme cette section et la précise : le réalisme se joue dans la lumière et la matière (environnement, ombres de contact, occlusion, textures PBR livrées), les formes restent simples et les couleurs franches. Le plan d'exécution est `16-realisme.md`.
+
 ---
 
 ## 3. La caméra
@@ -47,7 +49,7 @@ Caméra **perspective**, champ de vision vertical de **42°** (`render3d/camera.
 
 - **Tangage** (inclinaison au-dessus de l'horizontale) : **60° à 75°**, défaut **68°**. En dessous de 60° les unités du fond se cachent les unes derrière les autres et la grille cesse d'être lisible ; au-dessus de 75° on retombe sur une vue de dessus qui écrase le relief et annule l'intérêt de la 3D.
 - **Lacet fixe** par défaut : le nord de la carte est en haut, comme en 2D, parce qu'une carte tactique se mémorise. La rotation libre est refusée : elle désoriente et rend les scénarios impossibles à commenter (« la ville au nord-est » doit vouloir dire quelque chose).
-- **Quarts de tour optionnels** : le joueur peut faire pivoter la scène de 90° dans un sens ou dans l'autre, avec une interpolation courte (250 ms **[proposition]**). C'est la réponse au seul vrai problème de la 3D isométrique : une unité cachée derrière une montagne. Quatre orientations, jamais un continuum.
+- **Quarts de tour optionnels** : le joueur peut faire pivoter la scène de 90° dans un sens ou dans l'autre, avec une interpolation courte (250 ms **[proposition]**). C'est la réponse au seul vrai problème de la 3D isométrique : une unité cachée derrière une montagne. Quatre orientations, jamais un continuum. **Depuis le 6 septembre 2026**, ils sont exposés : `Rendu.tourner(sens)` (§11), deux boutons du panneau caméra du HUD de part et d'autre du zoom, et les touches **Q** et **E** — qui, pour cette raison, ne doublent plus ni le déplacement du curseur ni la fin de tour. Le banc de l'atelier a les mêmes boutons.
 - **Le HUD ne tourne jamais.** Il est en HTML par-dessus (§10) ; les quarts de tour ne le touchent pas.
 
 ### 3.3 Zoom par paliers
@@ -257,6 +259,8 @@ Trois conséquences qui valent d'être écrites :
 - Le jeu est **jouable de bout en bout sans un seul asset livré**. C'est ce qui autorise à mener l'étape 3 et l'étape « Assets 3D » en parallèle.
 - Le remplacement d'un placeholder par un modèle est un **changement de fichier**. Aucun `if` n'est ajouté, aucune clé n'est écrite en dur.
 - Le placeholder 3D est monté depuis **la `Silhouette` déclarative du canon**, sans une ligne de code propre à l'unité : c'est ce qui garantit qu'une unité homologuée est jouable le jour même de son homologation, avant qu'aucun modèle ne soit livré.
+
+**La troupe à pied (révision du 6 septembre 2026).** Une base `pattes` n'est pas un véhicule : elle est composée en **figurines** — trois fusiliers, deux grenadiers ou trois sapeurs, décidés par les modules et jamais par le nom de l'unité. Depuis cette révision, une figurine est un corps à cinq têtes et demie, avec des membres en deux segments dont le coude et le genou se placent par la géométrie (une main va à son fusil, un pied va au sol), des mains et un **visage** dans un septième rôle de matériau, `peau` — un seul ton pour toutes les nations, celui d'une miniature peinte —, un casque repoussé sur l'arrière de la tête pour que le visage dépasse devant lui sous une caméra qui regarde d'en haut, et de l'équipement qui dit le métier : sac et rouleau de couchage à la couleur d'accent, sacoches, plastron, tube à l'épaule, gilet haute visibilité. Trois allures par escouade — en tête et visant, en marche et regardant le flanc, à genou — pour que trois figurines ne soient pas trois jumeaux. Le coût est tenu au niveau d'avant (5 800 triangles l'escouade, sous la borne de 6 000 du test) en donnant aux petites pièces moins de méridiens et aux pièces minces une boîte nue au lieu d'une boîte biseautée — ce qui a fait perdre au passage un tiers de ses triangles au char léger sans qu'on le voie. **Ce que cela ne change pas** : `principal`, `sombre` et `clair` restent les trois rôles qui prennent la palette de la nation, et c'est cela le « squelette qui change de couleur », le repli de toute unité tant que son kit national (`11-assets-spec.md` §5.2 bis) n'est pas livré. **Où l'on juge une figurine** : la vitrine des unités (`/atelier/unites`), qui montre une unité sous six angles — les quatre élévations et le dessus en orthographique, l'angle du jeu en perspective — pour une nation et un camp donnés ; le banc d'essai reste l'endroit où l'on juge un plateau.
 
 ### 7.5 Orientation et pose
 
