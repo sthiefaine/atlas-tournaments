@@ -203,30 +203,42 @@ const STYLE = `
 .atlas-hud .production button[aria-expanded='true']{background:#d0d7cc;border-left-color:var(--signal);margin-bottom:0}
 .atlas-hud .production button[aria-expanded='true'] .cta{color:#1d3a2a}
 /* La fiche : tout ce que le canon sait dire de l'unité, et rien d'inventé. */
-/* La fiche : un seul jeu de règles de mise en page, deux teintes selon la
-   surface. Chaque bloc pose son titre sur **toute la largeur** puis ses valeurs
-   en pastilles, qui reviennent à la ligne sans jamais glisser sous le titre. */
-.atlas-hud .fiche{--fiche-encre:#dbe4ea;--fiche-doux:#8ba2ae;--fiche-puce:#ffffff12;--fiche-puce-bord:#ffffff1c;--fiche-fort:#8fd39a;--fiche-danger:#f2a48c;border-left:3px solid var(--signal);padding:10px 12px 12px;font-size:12.5px;line-height:1.4;color:var(--fiche-encre)}
-.atlas-hud .production .fiche{--fiche-encre:#1e3038;--fiche-doux:#5d7480;--fiche-puce:#ffffff8c;--fiche-puce-bord:#0000001a;--fiche-fort:#2f7a3d;--fiche-danger:#a4402f;background:#eae6d5;margin-bottom:6px}
-.atlas-hud .inspect .fiche{background:#0d1a22;border-top:1px solid #ffffff1a;max-height:46vh;overflow:auto;overscroll-behavior:contain}
+/* La fiche, à la manière d'Advance Wars : un cadre à biseau, des titres en
+   rubans, des statistiques dites par un signe, et la table de dégâts en rangée
+   de figurines avec le chiffre sous chacune. Une seule feuille de règles pour le
+   menu de production et le panneau d'inspection ; deux jeux de couleurs. */
+.atlas-hud .fiche{--f-encre:#e8eef2;--f-doux:#9db3bf;--f-fond:#0f1e27;--f-cadre:#3c5563;--f-biseau:#ffffff1f;--f-ruban:#233a46;--f-ruban-texte:#e6dcc0;--f-plaque:#ffffff0d;--f-plaque-bord:#ffffff1a;--f-fort:#8fe0a0;--f-danger:#ffab8e;background:var(--f-fond);color:var(--f-encre);border:2px solid var(--f-cadre);box-shadow:inset 0 0 0 1px var(--f-biseau);padding:9px 10px 10px;font-size:12.5px;line-height:1.35}
+.atlas-hud .production .fiche{--f-encre:#1e3038;--f-doux:#5d7480;--f-fond:#f1ede0;--f-cadre:#2d3f48;--f-biseau:#ffffffb0;--f-ruban:#2d3f48;--f-ruban-texte:#f4edda;--f-plaque:#ffffff99;--f-plaque-bord:#00000018;--f-fort:#2f7a3d;--f-danger:#b0402e;margin:0 0 8px}
+.atlas-hud .inspect .fiche{border-top-width:2px;max-height:46vh;overflow:auto;overscroll-behavior:contain}
 .atlas-hud .fiche p{margin:0}
-.atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:3px 12px;margin-bottom:8px;font-weight:750;color:var(--fiche-doux)}
+/* Les statistiques : le signe, puis le chiffre. Pas de mot. */
+.atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:4px 6px;margin-bottom:8px}
+.atlas-hud .fiche .stat{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);color:var(--f-doux)}
+.atlas-hud .fiche .stat .symbole{width:15px;height:15px;flex:0 0 auto}
+.atlas-hud .fiche .stat b{font-size:13.5px;font-weight:850;font-variant-numeric:tabular-nums;color:var(--f-encre)}
 .atlas-hud .fiche .avert{margin:0 0 8px;padding:5px 8px;background:#3a2620;border-left:3px solid #c07a55;color:#f0d9cc;font-weight:700}
 .atlas-hud .fiche .avert.bon{background:#1e3325;border-left-color:#5aa84c;color:#d6ecd2}
 .atlas-hud .production .fiche .avert{background:#e3d2c6;border-left-color:#a86a4a;color:#1e3038}
 .atlas-hud .production .fiche .avert.bon{background:#d3e0cd;border-left-color:#4e8f43}
 .atlas-hud .fiche .bloc{margin:0 0 9px}
 .atlas-hud .fiche .bloc:last-child{margin-bottom:0}
-.atlas-hud .fiche h4{margin:0 0 4px;font-size:10.5px;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--fiche-doux)}
-.atlas-hud .fiche .puces{display:flex;flex-wrap:wrap;gap:5px}
-.atlas-hud .fiche .puce{display:inline-flex;align-items:baseline;gap:5px;padding:3px 8px;background:var(--fiche-puce);border:1px solid var(--fiche-puce-bord);font-weight:700;white-space:nowrap}
-.atlas-hud .fiche .puce i{font-style:normal;font-variant-numeric:tabular-nums;font-weight:850;color:var(--fiche-doux)}
-/* Le chiffre prend la couleur de ce qu'il signifie : vert quand c'est nous qui
-   frappons, rouge quand c'est nous qui encaissons. Ça se lit sans lire. */
-.atlas-hud .fiche .fort .puce i{color:var(--fiche-fort)}
-.atlas-hud .fiche .danger .puce i{color:var(--fiche-danger)}
-.atlas-hud .fiche .deux{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
-.atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--fiche-doux)}
+/* Le titre est un ruban : une bande pleine, coupée en biseau, comme les
+   fenêtres du jeu d'origine. */
+.atlas-hud .fiche h4{margin:0 0 5px;font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;line-height:1}
+.atlas-hud .fiche h4 span{display:inline-block;padding:4px 10px 4px 7px;background:var(--f-ruban);color:var(--f-ruban-texte);clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
+.atlas-hud .fiche .corps{display:flex;flex-wrap:wrap;gap:5px}
+/* La table de dégâts : une figurine, le chiffre dessous, le nom en tout petit.
+   Le chiffre prend la couleur de ce qu'il signifie — vert quand c'est nous qui
+   frappons, rouge quand c'est nous qui encaissons. */
+.atlas-hud .fiche .duel{display:inline-flex;flex-direction:column;align-items:center;width:58px;padding:4px 2px 3px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);text-align:center}
+.atlas-hud .fiche .duel canvas{width:34px;height:34px;display:block}
+.atlas-hud .fiche .duel i{font-style:normal;font-size:12.5px;font-weight:850;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:1px}
+.atlas-hud .fiche .duel small{display:block;max-width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;font-weight:700;letter-spacing:.02em;color:var(--f-doux);margin-top:1px}
+.atlas-hud .fiche .fort .duel i{color:var(--f-fort)}
+.atlas-hud .fiche .danger .duel i{color:var(--f-danger)}
+.atlas-hud .fiche .puce{display:inline-flex;align-items:center;padding:3px 8px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);font-weight:700;white-space:nowrap}
+.atlas-hud .fiche .deux{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--f-doux)}
 @media(max-width:360px){.atlas-hud .fiche .deux{grid-template-columns:1fr}}
 .atlas-hud .detail{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:auto;background:#ffffff10;border:1px solid #ffffff20;font-size:15px;font-weight:850;font-style:italic;color:#d6e2ea}
 .atlas-hud .detail[aria-expanded='true']{background:var(--signal);border-color:var(--signal);color:#10222b;font-style:normal}
@@ -331,6 +343,13 @@ function iconeOrdre(type: string): string {
     fin_de_tour: '<path d="M5 4l10 8-10 8z"/><path d="M19 4v16"/>',
     embarquer: '<path d="M3 16h18v5H3zM12 2v11m-5-5 5 5 5-5"/>',
     debarquer: '<path d="M3 16h18v5H3zM12 13V2M7 7l5-5 5 5"/>',
+    // Les statistiques d'une unité, dites par un signe et non par un mot — c'est
+    // la grammaire d'Advance Wars : une botte, un œil, une cible, une balle.
+    mouvement: '<path d="M6 20V9l4-5 2 4h5v6h-3l-2 6zM6 20h12"/>',
+    vue: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>',
+    portee: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4M1 12h4m14 0h4"/>',
+    munitions: '<path d="M9 21V9a3 3 0 0 1 6 0v12zM9 17h6M12 6V3"/>',
+    carburant: '<path d="M5 21V4h9v17zM5 9h9M14 8l3 2v8a2 2 0 0 0 4 0V9l-3-3"/>',
   };
   return `<svg class="symbole" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${chemins[type] ?? chemins['capturer']}</svg>`;
 }
@@ -711,19 +730,32 @@ const MS_SURSIS_INSPECTION = 1500;
     if (!f || !type) return '';
     const nomDe = (c: CleUnite): string => nomUnite(v.locale, v.catalogue, c);
     const nomT = (t: CleTerrain): string => nomTerrain(v.locale, v.catalogue, t);
-    // Un bloc = un titre sur toute la largeur, puis des pastilles qui reviennent
-    // à la ligne proprement. L'ancienne mise en page posait le titre en colonne
-    // de 106 px à gauche des valeurs : le titre passait sur deux lignes et, dès
-    // que les valeurs débordaient, elles retombaient **sous le titre**.
-    const bloc = (titre: string, pastilles: string, ton = ''): string => pastilles === ''
-      ? ''
-      : `<section class="bloc ${ton}"><h4>${ech(api.t(titre))}</h4><div class="puces">${pastilles}</div></section>`;
-    const duels = (l: readonly Duel[]): string => l
-      .map((d) => `<span class="puce">${ech(nomDe(d.unite))}<i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></span>`).join('');
+    // Advance Wars ne décrit pas, il **montre** : une botte plutôt que « Mouv. »,
+    // et la table de dégâts en rangée de figurines avec le chiffre dessous.
+    // Les vignettes portent les couleurs de l'adversaire : ce sont ses unités
+    // qu'on frappe, et ce sont les siennes qu'on craint.
+    const adversaire: CampId = v.etat.camps.find((c) => c.id !== v.camp)?.id ?? 1;
+    const stat = (icone: string, valeur: string | number, titre: string): string =>
+      `<span class="stat" title="${ech(titre)}" aria-label="${ech(titre)}">${iconeOrdre(icone)}<b>${ech(String(valeur))}</b></span>`;
+    const figurine = (cle: CleUnite, taille: number): string => {
+      const t = v.catalogue.unites[cle];
+      if (!t) return '';
+      const id = `vg${vignettes.length}`;
+      vignettes.push({ id, silhouette: t.silhouette, camp: adversaire, taille });
+      return `<canvas data-vignette="${id}" width="${taille}" height="${taille}"></canvas>`;
+    };
+    const duels = (l: readonly Duel[]): string => l.map((d) =>
+      `<span class="duel" title="${ech(nomDe(d.unite))}">${figurine(d.unite, 34)}`
+      + `<i>${ech(api.t('fiche.degats', { n: d.degats }))}</i>`
+      + `<small>${ech(nomDe(d.unite))}</small></span>`).join('');
     const terrains = (l: readonly CleTerrain[]): string => l
       .map((t) => `<span class="puce">${ech(nomT(t))}</span>`).join('');
+    const bloc = (titre: string, corps: string, ton = ''): string => corps === ''
+      ? ''
+      : `<section class="bloc ${ton}"><h4><span>${ech(api.t(titre))}</span></h4><div class="corps">${corps}</div></section>`;
     const note = (cle: string): string => `<p class="note">${ech(api.t(cle))}</p>`;
-    const portee = f.portee[0] === f.portee[1] ? f.portee[0] : `${f.portee[0]}–${f.portee[1]}`;
+    const portee = f.portee[0] === f.portee[1] ? String(f.portee[0]) : `${f.portee[0]}–${f.portee[1]}`;
+    const munitions = f.munitions === null ? '∞' : f.munitions;
 
     const meteo = f.meteosGenantes.length === 0
       ? note('fiche.par_tous_temps')
@@ -735,22 +767,20 @@ const MS_SURSIS_INSPECTION = 1500;
 
     return `<div class="fiche">`
       + `<p class="chiffres">`
-      + `<span>${ech(api.t('hud.mouvement', { n: f.mouvement }))}</span>`
-      + `<span>${ech(api.t('hud.vision', { n: f.vision }))}</span>`
-      + `<span>${ech(api.t('hud.portee', { n: portee }))}</span>`
-      + `<span>${ech(f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))}</span>`
+      + stat('mouvement', f.mouvement, api.t('hud.mouvement', { n: f.mouvement }))
+      + stat('vue', f.vision, api.t('hud.vision', { n: f.vision }))
+      + stat('portee', portee, api.t('hud.portee', { n: portee }))
+      + stat('munitions', munitions, f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))
       + `</p>`
       + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
       + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
       + bloc('fiche.forte', duels(f.forte), 'fort')
       + bloc('fiche.craint', duels(f.craint), 'danger')
-      // Les deux listes de terrain sont courtes : côte à côte, elles se lisent
-      // d'un coup d'œil comme un « oui / non ».
       + `<div class="deux">`
       + bloc('fiche.rapide', terrains(f.terrainsRapides))
       + (f.terrainsInterdits.length > 0
         ? bloc('fiche.interdit', terrains(f.terrainsInterdits))
-        : `<section class="bloc"><h4>${ech(api.t('fiche.interdit'))}</h4>${note('fiche.partout')}</section>`)
+        : `<section class="bloc"><h4><span>${ech(api.t('fiche.interdit'))}</span></h4>${note('fiche.partout')}</section>`)
       + `</div>`
       + meteo
       + `</div>`;

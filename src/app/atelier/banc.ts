@@ -21,7 +21,7 @@
  * une capture ou une mise hors jeu à la demande, dans n'importe quel ordre.
  */
 
-import { cleCase, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
+import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
 import type { Surbrillance } from '@/render/index';
 import { CARACTERE_PAR_TERRAIN, type BaseSilhouette, type Case, type CampId, type CleTerrain, type CleUnite, type MapDef } from '@/schemas/types';
 
@@ -301,11 +301,33 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
 
   if (geste === 'capture') {
     if (!mien) return null;
-    // La ville neutre du rang des bâtiments : elle passe au camp 0 sous nos yeux.
+    // La ville neutre du rang des bâtiments, en **deux temps** : au premier
+    // appui l'unité monte dessus avec ses points à mi-chemin — on doit voir le
+    // bâtiment s'effacer et le fanion à mi-mât —, au second elle l'emporte et le
+    // pavillon du camp se dresse. C'est toute l'histoire d'une capture, et c'est
+    // ce qu'un banc doit permettre de regarder sans jouer deux tours.
     const cible: Case = { x: 2, y: RANGS.batiments };
+    const dessus = mien.x === cible.x && mien.y === cible.y;
+    if (!dessus) {
+      return {
+        apres: {
+          ...etat,
+          unites: etat.unites.map((u) => (u.id === mien.id
+            ? { ...u, x: cible.x, y: cible.y, pointsCapture: SEUIL_CAPTURE / 2 }
+            : u)),
+        },
+        evenements: [{
+          type: 'capture', uniteId: mien.id, case: cible, points: SEUIL_CAPTURE / 2, acquis: false, camp: 0,
+        }],
+      };
+    }
     return {
-      apres: { ...etat, proprietaires: { ...etat.proprietaires, [cleCase(cible)]: 0 } },
-      evenements: [{ type: 'capture', uniteId: mien.id, case: cible, points: 20, acquis: true, camp: 0 }],
+      apres: {
+        ...etat,
+        proprietaires: { ...etat.proprietaires, [cleCase(cible)]: 0 },
+        unites: etat.unites.map((u) => (u.id === mien.id ? { ...u, pointsCapture: 0 } : u)),
+      },
+      evenements: [{ type: 'capture', uniteId: mien.id, case: cible, points: SEUIL_CAPTURE, acquis: true, camp: 0 }],
     };
   }
 

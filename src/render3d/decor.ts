@@ -20,11 +20,17 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { type StyleRegion } from '../assets/spec';
 import { styleRegionParMecanique } from '../assets/styles';
 import type { EtatPartie } from '../engine/index';
-import { cleCase } from '../engine/index';
+import { cleCase, SEUIL_CAPTURE } from '../engine/index';
 import { paletteDe } from '../render/palettes';
 import type { Biome, CampId, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
+
+/** Opacité d'un bâtiment occupé : assez pour rester une ville, pas assez pour cacher la figurine. */
+const OPACITE_OCCUPE = 0.32;
+
+/** Les terrains qui portent un pavillon quand ils ont un propriétaire. */
+const TERRAINS_A_DRAPEAU: ReadonlySet<string> = new Set(['ville', 'usine', 'aeroport', 'qg']);
 
 /** Couleurs de feuillage par saison : c'est la saison qu'on voit d'abord. */
 const FEUILLAGE: Readonly<Record<Saison, { conifere: number; feuillu: number }>> = {
@@ -49,6 +55,14 @@ export interface Decor {
    * vide. À appeler après toute mutation du terrain.
    */
   majRelief(): void;
+  /**
+   * Change de grille. Arbres, rochers et bâtiments sont **dérivés de la grille**
+   * — d'où ils tirent leurs places —, et ils l'étaient une fois pour toutes au
+   * montage : un chantier du génie qui rase une forêt laissait ses arbres, et
+   * l'atelier, qui change de carte sans démonter la scène, gardait les
+   * bâtiments de la carte précédente. Tout est ressemé et rebâti ici.
+   */
+  majGrille(grille: GrilleTerrain): void;
   dispose(): void;
 }
 
@@ -173,7 +187,10 @@ export function creerDecor(
   groupe.name = 'decor';
 
   // --- Arbres
-  const arbres = semerArbres(g, biome);
+  // La grille courante : `majGrille` la remplace, et tout ce qui en dérive
+  // repart d'elle. Aucune fermeture ne doit retenir `g`.
+  let grille: GrilleTerrain = g;
+  let arbres = semerArbres(grille, biome);
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
   const geoTronc = new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6);
@@ -196,23 +213,37 @@ export function creerDecor(
   const matConifere = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
   const matFeuillu = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
 
-  const troncs = new THREE.InstancedMesh(geoTronc, matTronc, Math.max(1, arbres.length));
-  const coniferes = new THREE.InstancedMesh(
-    geoConifere, matConifere, Math.max(1, arbres.filter((a) => a.conifere).length),
-  );
-  const feuillus = new THREE.InstancedMesh(
-    geoFeuillu, matFeuillu, Math.max(1, arbres.filter((a) => !a.conifere).length),
-  );
-  troncs.name = 'troncs';
-  coniferes.name = 'coniferes';
-  feuillus.name = tropical ? 'palmes' : 'feuillus';
-  for (const m of [troncs, coniferes, feuillus]) {
-    m.castShadow = true;
-    m.receiveShadow = true;
-    m.count = 0;
-    m.frustumCulled = false;
-    groupe.add(m);
+  // Un maillage instancié a une capacité fixe : quand la grille change, on le
+  // rebâtit à la taille du nouveau semis plutôt que de surdimensionner à
+  // l'aveugle. C'est rare — une mutation de terrain, un changement de carte.
+  let troncs!: THREE.InstancedMesh;
+  let coniferes!: THREE.InstancedMesh;
+  let feuillus!: THREE.InstancedMesh;
+  function batirArbres(): void {
+    for (const m of [troncs, coniferes, feuillus]) {
+      if (!m) continue;
+      groupe.remove(m);
+      m.dispose();
+    }
+    troncs = new THREE.InstancedMesh(geoTronc, matTronc, Math.max(1, arbres.length));
+    coniferes = new THREE.InstancedMesh(
+      geoConifere, matConifere, Math.max(1, arbres.filter((a) => a.conifere).length),
+    );
+    feuillus = new THREE.InstancedMesh(
+      geoFeuillu, matFeuillu, Math.max(1, arbres.filter((a) => !a.conifere).length),
+    );
+    troncs.name = 'troncs';
+    coniferes.name = 'coniferes';
+    feuillus.name = tropical ? 'palmes' : 'feuillus';
+    for (const m of [troncs, coniferes, feuillus]) {
+      m.castShadow = true;
+      m.receiveShadow = true;
+      m.count = 0;
+      m.frustumCulled = false;
+      groupe.add(m);
+    }
   }
+  batirArbres();
 
   const mat4 = new THREE.Matrix4();
   const quat = new THREE.Quaternion();
@@ -256,7 +287,7 @@ export function creerDecor(
   }
 
   // --- Rochers
-  const rochers = semerRochers(g);
+  let rochers = semerRochers(grille);
   // Trois lots : un appel de dessin par silhouette, et non un par pierre.
   const geosRocher = [
     eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085),
@@ -264,17 +295,25 @@ export function creerDecor(
     eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05),
   ];
   const matRocher = new THREE.MeshStandardMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
-  const lotsRocher = geosRocher.map((geo, v) => {
-    const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
-    const lot = new THREE.InstancedMesh(geo, matRocher, total);
-    lot.name = `rochers-${v}`;
-    lot.castShadow = true;
-    lot.receiveShadow = true;
-    lot.frustumCulled = false;
-    lot.count = 0;
-    groupe.add(lot);
-    return lot;
-  });
+  let lotsRocher: THREE.InstancedMesh[] = [];
+  function batirRochers(): void {
+    for (const lot of lotsRocher) {
+      groupe.remove(lot);
+      lot.dispose();
+    }
+    lotsRocher = geosRocher.map((geo, v) => {
+      const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
+      const lot = new THREE.InstancedMesh(geo, matRocher, total);
+      lot.name = `rochers-${v}`;
+      lot.castShadow = true;
+      lot.receiveShadow = true;
+      lot.frustumCulled = false;
+      lot.count = 0;
+      groupe.add(lot);
+      return lot;
+    });
+  }
+  batirRochers();
   const teinteRocher = new THREE.Color();
 
   function poserRochers(): void {
@@ -368,6 +407,9 @@ export function creerDecor(
       geosBatiment.add(geo);
       const mesh = new THREE.Mesh(geo, mat);
       mesh.name = mat === matFenetres ? 'vitrages' : 'architecture';
+      // L'occupation troque le matériau contre son fantôme translucide, puis le
+      // rend : il faut savoir lequel rendre.
+      mesh.userData['matOrigine'] = mat;
       mesh.castShadow = mat !== matFenetres;
       mesh.receiveShadow = true;
       caseDecor.add(mesh);
@@ -378,9 +420,9 @@ export function creerDecor(
     batiments.clear();
     for (const geo of geosBatiment) geo.dispose();
     geosBatiment.clear();
-    for (let y = 0; y < g.hauteur; y += 1) {
-      for (let x = 0; x < g.largeur; x += 1) {
-        const terrain = g.terrainDe(x, y);
+    for (let y = 0; y < grille.hauteur; y += 1) {
+      for (let x = 0; x < grille.largeur; x += 1) {
+        const terrain = grille.terrainDe(x, y);
         if (!['ville', 'qg', 'usine', 'aeroport'].includes(terrain)) continue;
         const proprio = e.proprietaires[cleCase({ x, y })] ?? null;
         const cx = x * CASE + CASE / 2;
@@ -422,6 +464,15 @@ export function creerDecor(
         for (const cote of [-1, 1]) {
           poser(0.9, 0.018, 0.035, teinte, 0, 0.028, cote * 0.44);
           poser(0.035, 0.018, 0.9, teinte, cote * 0.44, 0.028, 0);
+        }
+        // Le pavillon du propriétaire, au coin du socle. Le QG en portait un, les
+        // autres bâtiments se contentaient d'un liseré au ras du sol — et après
+        // une capture, le joueur cherchait **son drapeau** sans le trouver. Un
+        // bâtiment neutre n'en a pas : c'est précisément ce qui le dit neutre.
+        if (terrain !== 'qg' && proprio !== null) {
+          cylindre(0.011, 0.44, matMetal, 0.36, 0.25, -0.36);
+          poser(0.2, 0.12, 0.012, teinte, 0.26, 0.4, -0.36);
+          cylindre(0.024, 0.02, matIvoire, 0.36, 0.48, -0.36);
         }
 
         if (terrain === 'ville') {
@@ -500,19 +551,79 @@ export function creerDecor(
   let oscillation = 0.12;
   let souffle = 0;
 
+  // Les fantômes : un clone translucide par matériau, créé à la demande. Un
+  // bâtiment occupé les prend le temps de l'occupation et rend les originaux
+  // ensuite — jamais de matériau créé par bâtiment ni par image.
+  const fantomes = new Map<THREE.Material, THREE.Material>();
+  function fantomeDe(mat: THREE.Material): THREE.Material {
+    let f = fantomes.get(mat);
+    if (!f) {
+      f = mat.clone();
+      f.transparent = true;
+      f.opacity = OPACITE_OCCUPE;
+      f.depthWrite = false;
+      fantomes.set(mat, f);
+    }
+    return f;
+  }
+
+  // Les chantiers de capture : un mât et un fanion par unité en train de
+  // capturer, le fanion **hissé à hauteur des points** accumulés. Rebâtis à
+  // chaque mise à jour — ils sont rares et faits de primitives partagées.
+  const chantiers = new THREE.Group();
+  chantiers.name = 'chantiers';
+  groupe.add(chantiers);
+
   function majProprietaires(e: EtatPartie, visibles: ReadonlySet<string> | null = null): void {
     const cle = JSON.stringify(e.proprietaires);
     if (cle !== signature) {
       signature = cle;
       construireBatiments(e);
     }
-    // En occupation, le bâtiment devient une maquette basse : ses toits et son
-    // périmètre restent reconnaissables, mais la figurine dépasse clairement.
-    // Une unité cachée ne doit jamais être révélée par le décor qui s'abaisse.
-    const occupees = new Set(e.unites.filter((u) => !u.dansTransport
-      && (!visibles || visibles.has(cleCase(u)))).map((u) => cleCase(u)));
+    // En occupation, le bâtiment ne s'écrase plus : il devient **translucide**.
+    // Une maquette à douze pour cent de sa hauteur ne se lisait plus comme une
+    // ville, et c'est ce qui a été reproché. Le fantôme laisse la figurine
+    // dominer tout en gardant la silhouette entière. Une unité cachée ne doit
+    // jamais être révélée par le décor qui s'efface.
+    const visible = (u: EtatPartie['unites'][number]): boolean => !u.dansTransport
+      && (!visibles || visibles.has(cleCase(u)));
+    const occupees = new Set(e.unites.filter(visible).map((u) => cleCase(u)));
     for (const batiment of batiments.children) {
-      batiment.scale.y = occupees.has(String(batiment.userData['case'])) ? 0.12 : 1;
+      const occupe = occupees.has(String(batiment.userData['case']));
+      batiment.scale.y = 1;
+      for (const enfant of batiment.children) {
+        if (!(enfant instanceof THREE.Mesh)) continue;
+        const origine = enfant.userData['matOrigine'] as THREE.Material | undefined;
+        if (!origine) continue;
+        // Les marques du camp — liseré du socle, auvent, pavillon — restent
+        // pleines : c'est ce qu'on cherche des yeux après une capture, et un
+        // drapeau fantôme sur une ville fantôme ne se lit plus du tout.
+        const marque = [...matsCamp.values()].includes(origine as THREE.MeshStandardMaterial);
+        const efface = occupe && !marque;
+        enfant.material = efface ? fantomeDe(origine) : origine;
+        // Un fantôme qui projette une ombre pleine trahit sa masse.
+        enfant.castShadow = !efface && origine !== matFenetres;
+      }
+    }
+
+    chantiers.clear();
+    for (const u of e.unites) {
+      if (u.pointsCapture <= 0 || !visible(u)) continue;
+      if (!TERRAINS_A_DRAPEAU.has(grille.terrainDe(u.x, u.y))) continue;
+      const part = Math.min(1, u.pointsCapture / SEUIL_CAPTURE);
+      const cx = u.x * CASE + CASE / 2 + 0.36;
+      const cz = u.y * CASE + CASE / 2 - 0.36;
+      const sol = hauteurEn(cx, cz);
+      const mat = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
+      mat.name = 'mat';
+      mat.scale.set(0.011, 0.44, 0.011);
+      mat.position.set(cx, sol + 0.25, cz);
+      const fanion = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), matCamp(u.camp));
+      fanion.name = 'fanion';
+      fanion.scale.set(0.2, 0.12, 0.012);
+      fanion.position.set(cx - 0.1, sol + 0.1 + part * 0.3, cz);
+      fanion.castShadow = true;
+      chantiers.add(mat, fanion);
     }
   }
 
@@ -549,6 +660,19 @@ export function creerDecor(
       poserRochers();
     },
 
+    majGrille(suivante: GrilleTerrain): void {
+      grille = suivante;
+      arbres = semerArbres(grille, biome);
+      batirArbres();
+      rochers = semerRochers(grille);
+      batirRochers();
+      // Les bâtiments se rebâtissent au prochain `majProprietaires` : on efface
+      // la signature qui lui fait croire que rien n'a changé.
+      signature = '';
+      poserArbres(souffle);
+      poserRochers();
+    },
+
     avancer(ms: number): boolean {
       if (oscillation < 0.3) return false;
       souffle += ms / 320;
@@ -561,6 +685,7 @@ export function creerDecor(
       geoConifere.dispose();
       geoFeuillu.dispose();
       for (const geo of geosRocher) geo.dispose();
+      for (const m of [troncs, coniferes, feuillus, ...lotsRocher]) m.dispose();
       for (const g2 of geosBatiment) g2.dispose();
       for (const g2 of primitives.values()) g2.dispose();
       matTronc.dispose();
@@ -574,6 +699,7 @@ export function creerDecor(
       matMetal.dispose();
       matIvoire.dispose();
       for (const m of matsCamp.values()) m.dispose();
+      for (const f of fantomes.values()) f.dispose();
     },
   };
 }

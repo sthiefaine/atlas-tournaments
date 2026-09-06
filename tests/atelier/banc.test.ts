@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { chargerCatalogue, cleCase, creerPartie, sceneDepuis, type EtatPartie } from '../../src/engine/index';
+import { chargerCatalogue, cleCase, creerPartie, sceneDepuis, SEUIL_CAPTURE, type EtatPartie } from '../../src/engine/index';
 import { validerMapDef, validerScenario, CARACTERE_PAR_TERRAIN, CLES_TERRAIN, BASES_SILHOUETTE, type CleTerrain } from '../../src/schemas/index';
 import {
   BASES_JAMAIS_VUES, CHEMIN_BANC, GENRES_SURBRILLANCE, GESTES_BANC, HAUTEUR_BANC,
@@ -182,11 +182,25 @@ test('chaque geste rend un état d’après cohérent avec ses événements', ()
     assert.ok(tir.apres.unites.find((u) => u.id === cible.attaquantId)!.pv > 0);
   }
 
-  const prise = rejouer(depart, 'capture')!;
+  // La capture se joue en deux temps : d'abord l'unité sur la ville, points à
+  // mi-chemin et ville encore neutre ; ensuite la prise.
+  const montee = rejouer(depart, 'capture')!;
+  const enCours = montee.evenements[0]!;
+  assert.equal(enCours.type, 'capture');
+  if (enCours.type === 'capture') {
+    assert.equal(enCours.acquis, false, 'au premier appui, rien n’est encore pris');
+    assert.equal(depart.proprietaires[cleCase(enCours.case)], undefined, 'la ville doit partir neutre');
+    assert.equal(montee.apres.proprietaires[cleCase(enCours.case)], undefined, 'et le rester au premier temps');
+    const dessus = montee.apres.unites.find((u) => u.id === enCours.uniteId)!;
+    assert.deepEqual({ x: dessus.x, y: dessus.y }, enCours.case, 'l’unité est montée sur la ville');
+    assert.ok(dessus.pointsCapture > 0 && dessus.pointsCapture < SEUIL_CAPTURE, 'les points sont à mi-chemin');
+  }
+  const prise = rejouer(montee.apres, 'capture')!;
   const ville = prise.evenements[0]!;
   if (ville.type === 'capture') {
-    assert.equal(depart.proprietaires[cleCase(ville.case)], undefined, 'la ville doit partir neutre');
+    assert.equal(ville.acquis, true, 'au second appui, la ville est prise');
     assert.equal(prise.apres.proprietaires[cleCase(ville.case)], 0);
+    assert.equal(prise.apres.unites.find((u) => u.id === ville.uniteId)!.pointsCapture, 0, 'les points retombent');
   }
 
   const perdue = rejouer(depart, 'hors_jeu')!;

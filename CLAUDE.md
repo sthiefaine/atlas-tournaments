@@ -17,6 +17,17 @@ Quatre changements d’interface, tous derrière l’interface `Rendu` commune, 
 
 Au passage, `tests/schemas/contenu.test.ts` valide enfin `content/scenarios/` — rien ne le faisait —, et `e2e/fumee-3d.spec.ts` ouvre le Bulletin avant d’en lire les prévisions (il était devenu repliable, le test ne le savait pas).
 
+## Mise à jour — drapeaux, villes entières et grille vivante (6 septembre 2026)
+
+Trois retours dans la foulée de la fiche, et un gel qui a fini par mordre.
+
+1. **La fiche parle comme Advance Wars.** Plus de mots là où un signe suffit : une botte, un œil, une cible, une balle pour les quatre statistiques (`iconeOrdre` a gagné cinq glyphes). La table de dégâts est une **rangée de figurines** — les vignettes du HUD, aux couleurs de l’adversaire —, le pourcentage sous chacune, vert quand c’est nous qui frappons, rouge quand c’est nous qui encaissons. Cadre à biseau, titres en rubans coupés en biais. Une seule feuille de règles, deux jeux de variables selon la surface.
+2. **Les villes ne s’écrasent plus.** `majProprietaires` ramenait un bâtiment occupé à douze pour cent de sa hauteur pour laisser voir la figurine — une maquette qui ne se lisait plus comme une ville, et signalée comme telle. Le bâtiment devient **translucide** (`OPACITE_OCCUPE`, un clone de matériau par matériau, jamais par bâtiment ni par image ; chaque mesh fusionné garde `userData.matOrigine` pour le rendre ensuite) et cesse de porter ombre, sans quoi sa masse trahit sa transparence. La règle du brouillard tient : une unité cachée ne révèle rien.
+3. **Le drapeau.** Le QG portait un mât et un pavillon ; ville, usine et aéroport n’avaient qu’un liseré au ras du sol, et après une capture le joueur cherchait **son drapeau** sans le trouver. Tout bâtiment possédé porte désormais le pavillon de son camp au coin du socle ; un bâtiment neutre n’en a pas, et c’est précisément ce qui le dit neutre. Pendant la capture, un groupe `chantiers` rebâti à chaque mise à jour pose un mât et un **fanion hissé à hauteur des points** (`pointsCapture / SEUIL_CAPTURE`) — la capture se regarde se faire, ce qui n’existait pas. Le geste « Capturer » du banc se joue en **deux temps** pour la montrer : l’unité monte sur la ville avec ses points à mi-chemin, puis l’emporte.
+4. **Le décor repart de la grille courante.** Le gel noté plus haut — `construireBatiments` lisant la grille capturée au montage — a fini par mordre : sur le banc, un seul bâtiment sur onze, et l’infanterie montait sur de l’herbe nue. Arbres et rochers avaient le même défaut, avec en plus des maillages instanciés à capacité fixe. `Decor.majGrille(grille)` ressème les arbres et les pierres, **rebâtit** leurs maillages à la taille du nouveau semis, efface la signature des bâtiments pour qu’ils se rebâtissent au prochain `majProprietaires`, et repose le tout. `render3d/index.ts` l’appelle là où il appelait `majRelief` sur changement de terrain ; `majRelief` reste pour les images d’une mutation. Deuxième cause, dans l’atelier : `etatCourant` était mis à jour dans un effet qui court **après** celui du montage, lequel posait donc la scène avec l’état du monde précédent. Les références sont tenues à jour au rendu.
+
+**Reste à surveiller** : `majGrille` recrée trois `InstancedMesh` d’arbres et trois de pierres à chaque changement de terrain, donc à chaque marée. C’est correct et c’est rare, mais sur une carte de soixante cases de côté cela vaudra une mesure.
+
 ## Mise à jour — la fiche d’unité (6 septembre 2026)
 
 Le menu de production ne montrait qu’une silhouette, un nom et un prix. Acheter un char sans savoir ce qu’il chasse ni ce qui le chasse, c’est jouer à pile ou face — et tout ce qu’il fallait pour le dire était déjà dans le canon et dans le moteur, simplement affiché nulle part.
@@ -184,7 +195,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm start` | migrations puis Next (c'est ce que lance le Dockerfile) |
 | `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
 | `npm run lint` | ESLint |
-| `npm test` | 643 tests `tsx --test` |
+| `npm test` | 646 tests `tsx --test` |
 | `npm run test:e2e` | le spec Playwright 3D, avec ses propres drapeaux SwiftShader |
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, copie de sécurité `pg_dump` avant |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA |

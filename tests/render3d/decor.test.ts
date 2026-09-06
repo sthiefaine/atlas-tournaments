@@ -5,18 +5,66 @@ import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { creerDecor } from '../../src/render3d/decor';
 import { partie } from '../engine/aides';
 
-test('un bâtiment occupé dégage la silhouette sans révéler une unité hors vision', () => {
+test('un bâtiment occupé devient translucide — jamais écrasé — sans révéler une unité hors vision', () => {
   const etat = partie('plaine');
   const unite = etat.unites[0]!;
   const cle = `${unite.x},${unite.y}`;
   const decor = creerDecor({ largeur: etat.largeur, hauteur: etat.hauteur, terrainDe: () => 'ville' }, etat, () => 0);
   const batiment = decor.groupe.getObjectByName('batiments')!.children.find((b) => b.userData['case'] === cle)!;
+  const opacite = (): number => {
+    const m = batiment.children.find((c) => c.name === 'architecture') as THREE.Mesh;
+    const mat = m.material as THREE.Material;
+    return mat.transparent ? mat.opacity : 1;
+  };
   decor.majProprietaires(etat, new Set([cle]));
-  assert.equal(batiment.scale.y, 0.12);
+  // Une maquette à douze pour cent ne se lisait plus comme une ville : la
+  // silhouette reste entière, c'est la matière qui s'efface.
+  assert.equal(batiment.scale.y, 1, 'on n’écrase plus');
+  assert.ok(opacite() < 0.5, `bâtiment occupé opaque (${opacite()})`);
   decor.majProprietaires(etat, new Set());
-  assert.equal(batiment.scale.y, 1, 'le bâtiment ne révèle pas l’occupation cachée');
+  assert.equal(opacite(), 1, 'le bâtiment ne révèle pas l’occupation cachée');
   decor.majProprietaires({ ...etat, unites: [] }, null);
-  assert.equal(batiment.scale.y, 1, 'la hauteur revient après le départ sans changer le propriétaire');
+  assert.equal(opacite(), 1, 'la matière revient après le départ sans changer le propriétaire');
+  decor.dispose();
+});
+
+test('un bâtiment possédé porte un pavillon, un bâtiment neutre non', () => {
+  const etat = partie('plaine');
+  const sommets = (proprietaires: Record<string, 0 | 1>): number => {
+    const decor = creerDecor({ largeur: 1, hauteur: 1, terrainDe: () => 'ville' }, { ...etat, proprietaires }, () => 0);
+    const b = decor.groupe.getObjectByName('batiments')!.children[0]!;
+    const n = b.children.reduce((t, c) => t + ((c as THREE.Mesh).geometry?.getAttribute('position')?.count ?? 0), 0);
+    decor.dispose();
+    return n;
+  };
+  // Le drapeau est de la géométrie en plus : un mât, un fanion, une pomme.
+  // C'est ce que le joueur cherche après une capture, et c'est ce qui manquait.
+  assert.ok(sommets({ '0,0': 0 }) > sommets({}), 'le pavillon du propriétaire manque');
+  assert.equal(sommets({ '0,0': 0 }), sommets({ '0,0': 1 }), 'même pavillon quel que soit le camp');
+});
+
+test('la capture se voit se faire : un fanion hissé à hauteur des points', () => {
+  const etat = partie('plaine');
+  const u = etat.unites[0]!;
+  const grille = { largeur: etat.largeur, hauteur: etat.hauteur, terrainDe: (): 'ville' => 'ville' };
+  const decor = creerDecor(grille, etat, () => 0);
+  const chantiers = decor.groupe.getObjectByName('chantiers')!;
+  const fanionY = (): number | null => (chantiers.getObjectByName('fanion')?.position.y ?? null);
+
+  decor.majProprietaires(etat);
+  assert.equal(chantiers.children.length, 0, 'sans capture en cours, pas de chantier');
+
+  const avec = (points: number) => ({ ...etat, unites: etat.unites.map((x) => (x.id === u.id ? { ...x, pointsCapture: points } : x)) });
+  decor.majProprietaires(avec(5));
+  const bas = fanionY();
+  assert.ok(bas !== null, 'un fanion doit apparaître dès le premier point');
+  decor.majProprietaires(avec(15));
+  const haut = fanionY();
+  assert.ok(haut !== null && haut > bas!, 'le fanion monte avec les points');
+
+  // Sous le brouillard, une capture qu'on ne voit pas ne se montre pas.
+  decor.majProprietaires(avec(15), new Set());
+  assert.equal(chantiers.children.length, 0, 'un chantier caché ne doit pas se voir');
   decor.dispose();
 });
 
@@ -136,5 +184,37 @@ test('les pierres se reposent quand le terrain bouge', () => {
   decor.majRelief();
   lot.getMatrixAt(0, mat);
   assert.ok(mat.elements[13]! < avant - 0.4, 'la pierre a suivi le sol qui descend');
+  decor.dispose();
+});
+
+test('changer de grille ressème les arbres, les rochers et rebâtit les bâtiments', () => {
+  const etat = partie('plaine');
+  const nue = { largeur: 4, hauteur: 2, terrainDe: (): 'plaine' => 'plaine' };
+  const decor = creerDecor(nue, etat, () => 0);
+  const compter = (nom: string): number => (decor.groupe.getObjectByName(nom) as THREE.InstancedMesh | null)?.count ?? 0;
+  const batiments = (): number => decor.groupe.getObjectByName('batiments')!.children.length;
+  assert.equal(compter('troncs'), 0);
+  assert.equal(compter('rochers-1'), 0);
+  assert.equal(batiments(), 0);
+
+  // Une forêt, une montagne, une ville : tout ce qui dérive de la grille doit
+  // apparaître, alors que la scène n'a pas été démontée. C'est le cas du génie
+  // qui pose du terrain, et celui de l'atelier qui change de carte.
+  const peuplee = {
+    largeur: 4, hauteur: 2,
+    terrainDe: (x: number): 'foret' | 'montagne' | 'ville' | 'plaine' =>
+      x === 0 ? 'foret' : x === 1 ? 'montagne' : x === 2 ? 'ville' : 'plaine',
+  };
+  decor.majGrille(peuplee);
+  decor.majProprietaires(etat);
+  assert.ok(compter('troncs') > 0, 'les arbres de la forêt manquent');
+  assert.ok(compter('rochers-1') > 0, 'les pierres de la montagne manquent');
+  assert.equal(batiments(), 2, 'les villes des deux lignes manquent');
+
+  // Et dans l'autre sens : raser la forêt retire ses arbres.
+  decor.majGrille(nue);
+  decor.majProprietaires(etat);
+  assert.equal(compter('troncs'), 0, 'les arbres d’une forêt rasée doivent partir');
+  assert.equal(batiments(), 0);
   decor.dispose();
 });
