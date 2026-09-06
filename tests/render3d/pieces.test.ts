@@ -42,19 +42,19 @@ test('l’artillerie pose son canon long sur un plateau à chenilles', () => {
 test('l’infanterie est un groupe de trois figurines, jamais un bloc', () => {
   const noms = nomsPieces(silhouette({ base: 'pattes', corps: 'capsule', modules: [], taille: 1 }));
   for (const nom of [
-    'figurine_1_jambes', 'figurine_1_buste', 'figurine_1_casque',
-    'figurine_2_jambes', 'figurine_2_buste', 'figurine_2_casque',
-    'figurine_3_jambes', 'figurine_3_buste', 'figurine_3_casque',
-    'figurine_1_sac', 'figurine_1_visiere', 'figurine_1_fusil',
+    'figurine_1_jambe_gauche', 'figurine_1_tronc', 'figurine_1_casque',
+    'figurine_2_jambe_gauche', 'figurine_2_tronc', 'figurine_2_casque',
+    'figurine_3_jambe_gauche', 'figurine_3_tronc', 'figurine_3_casque',
+    'figurine_1_sac', 'figurine_1_rebord_casque', 'figurine_1_fusil',
   ]) assert.ok(noms.includes(nom), nom);
   // Les trois figurines occupent trois places différentes dans la case.
   const places = composerSilhouette(silhouette({ base: 'pattes', corps: 'capsule' }))
-    .filter((p) => p.nom.endsWith('_buste'))
+    .filter((p) => p.nom.endsWith('_tronc'))
     .map((p) => `${p.position[0]},${p.position[2]}`);
   assert.equal(new Set(places).size, 3);
   // Et une infanterie mécanisée porte quand même son module.
   const meca = nomsPieces(silhouette({ base: 'pattes', corps: 'capsule', modules: ['lance_roquettes'] }));
-  assert.ok(meca.includes('rampe'), 'le module suit la troupe');
+  assert.ok(meca.includes('figurine_1_tube_lance') && meca.includes('figurine_2_ogive'), 'le module suit la troupe : chaque grenadier porte son tube');
 });
 
 test('chaque base, chaque corps et chaque module produit des pièces', () => {
