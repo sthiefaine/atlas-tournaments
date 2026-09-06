@@ -23,11 +23,12 @@
 
 import { chargerPays } from '@/content/index';
 import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
+import { genererCarte } from '@/mapgen/index';
 import type { Surbrillance } from '@/render/index';
 import {
   BIOMES, CARACTERE_PAR_TERRAIN, METEOS, PHASES_JOUR, SAISONS,
   type BaseSilhouette, type Biome, type Case, type CampId, type CleTerrain, type CleUnite, type CodePays,
-  type MapDef, type Meteo, type PhaseJour, type Saison,
+  type MapDef, type Meteo, type ParametresCarte, type PhaseJour, type Saison, type UniteDepart,
 } from '@/schemas/types';
 
 /**
@@ -163,6 +164,113 @@ export function carteBanc(): MapDef {
     desaffectes: [VILLE_DESAFFECTEE_BANC],
     unitesDepart,
   } as MapDef;
+}
+
+// ---------------------------------------------------------------------------
+// La grande carte : celle du budget
+// ---------------------------------------------------------------------------
+
+/**
+ * La taille sur laquelle le budget de `10-rendu-3d.md` §9.2 est écrit : ≈ 30 %
+ * de forêt, un peu de relief et d'eau, une vingtaine de bâtiments possédés,
+ * une trentaine d'unités. Aucune carte du dépôt ne la fait — les missions vont
+ * de 10 × 10 à 16 × 12, la carte-catalogue fait 20 × 12 —, et c'est pourtant
+ * la seule sur laquelle des chiffres se comparent au budget.
+ */
+export const LARGEUR_GRANDE = 24;
+export const HAUTEUR_GRANDE = 16;
+
+/**
+ * La graine : choisie parmi une poignée pour la part de forêt la plus proche
+ * des 30 % du budget, avec de la montagne et de l'eau. Fixe, comme tout le banc.
+ */
+export const GRAINE_GRANDE = 24;
+
+/**
+ * Ce qu'on demande au générateur. Le relief est la **borne haute** que
+ * `normaliser` accepte — au-delà, la même carte sort — et c'est ce qui donne
+ * ≈ 30 % de forêt en plaine ; les six villes, trois usines et un aéroport par
+ * camp font, avec le QG, vingt-deux bâtiments possédés.
+ */
+export const PARAMETRES_GRANDE: ParametresCarte = Object.freeze({
+  largeur: LARGEUR_GRANDE,
+  hauteur: HAUTEUR_GRANDE,
+  camps: 2,
+  biome: 'plaine',
+  ratioMer: 0.08,
+  ratioRelief: 0.4,
+  villesParCamp: 6,
+  villesNeutres: 4,
+  usinesParCamp: 3,
+  aeroportsParCamp: 1,
+  symetrie: 'axe_vertical',
+  densiteRoutes: 0.5,
+}) as ParametresCarte;
+
+/**
+ * Quinze unités par camp — les quatorze du catalogue 3 et une infanterie de
+ * plus —, trente en tout. Le générateur n'en pose que deux par camp ; on
+ * complète soi-même, l'infanterie en tête pour que « Déplacer » et « Tirer »
+ * jouent sur elle comme sur la carte-catalogue.
+ */
+export const UNITES_GRANDE: readonly CleUnite[] = ['infanterie', ...UNITES_BANC];
+
+/** Les terrains sur lesquels on pose une unité : de la terre nue, ni bâtie, ni noyée. */
+const TERRAINS_DE_POSE: ReadonlySet<string> = new Set([
+  CARACTERE_PAR_TERRAIN.plaine, CARACTERE_PAR_TERRAIN.foret, CARACTERE_PAR_TERRAIN.route, CARACTERE_PAR_TERRAIN.plage,
+]);
+
+/** Le QG d'un camp : la case `qg` que la carte lui attribue. */
+function qgDe(carte: MapDef, camp: CampId): Case | null {
+  for (let y = 0; y < carte.hauteur; y += 1) {
+    for (let x = 0; x < carte.largeur; x += 1) {
+      if (carte.grille[y]?.[x] === CARACTERE_PAR_TERRAIN.qg && carte.proprietaires[cleCase({ x, y })] === camp) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * La grande carte : générée avec sa graine fixe, puis garnie de ses trente
+ * unités, posées sur la terre nue la plus proche du QG de chaque camp — par
+ * distance, puis par rang et colonne, pour que deux constructions donnent le
+ * même état. Elle sert la **mesure** (`16-realisme.md` A6), pas le catalogue :
+ * les gestes d'unités — « Déplacer », « Tirer », « Mettre hors jeu »,
+ * « Brouiller » — et « Fin de tour » y ont un sens ; les captures, la remise en
+ * service, le drone abattu et la marée visent les cases de la carte-catalogue
+ * et n'y montrent rien de sensé.
+ */
+export function carteGrande(): MapDef {
+  const generee = genererCarte(PARAMETRES_GRANDE, GRAINE_GRANDE);
+  const occupees = new Set<string>();
+  const unitesDepart: UniteDepart[] = [];
+  for (const camp of [0, 1] as const) {
+    const qg = qgDe(generee, camp);
+    if (!qg) throw new Error(`grande carte : aucun QG pour le camp ${camp}`);
+    const candidates: Case[] = [];
+    for (let y = 0; y < generee.hauteur; y += 1) {
+      for (let x = 0; x < generee.largeur; x += 1) {
+        if (TERRAINS_DE_POSE.has(generee.grille[y]?.[x] ?? '') && !occupees.has(cleCase({ x, y }))) candidates.push({ x, y });
+      }
+    }
+    const distance = (c: Case): number => Math.abs(c.x - qg.x) + Math.abs(c.y - qg.y);
+    candidates.sort((a, b) => distance(a) - distance(b) || a.y - b.y || a.x - b.x);
+    UNITES_GRANDE.forEach((type, i) => {
+      const c = candidates[i];
+      if (!c) throw new Error('grande carte : pas assez de terre nue autour du QG');
+      occupees.add(cleCase(c));
+      unitesDepart.push({ camp, type, x: c.x, y: c.y });
+    });
+  }
+  return {
+    ...generee,
+    cle: 'carte_banc_grande',
+    code: 'carte_banc_grande',
+    nom: 'Grande carte 24 × 16',
+    unitesDepart,
+  };
 }
 
 /**

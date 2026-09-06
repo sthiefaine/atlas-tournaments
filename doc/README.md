@@ -24,7 +24,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 
 **Un document ne se lit pas comme les autres :** `14-secrets.md` est le seul du dossier qui ne doit **jamais** être servi à une routine. `GET /api/canon` ne sert que `content/`, donc `doc/` lui est inaccessible par construction ; la route refuse en plus tout chemin `content/secrets*`, et aucun flag `monde.secret.*` n'entre dans `content/flags.json`.
 
-`doc/assets/` contient la démo de rendu (`atlas-render-vector.html`, `render-vector.png`, `render-units.png`) qui fixe la lisibilité de référence, et `render-3d.png` qui fixe l'esprit « diorama » de la direction 3D. Ce dossier n'a rien à voir avec `../assets/`, à la racine du dépôt.
+`doc/assets/` contient la démo de rendu (`atlas-render-vector.html`, `render-vector.png`, `render-units.png`) qui fixe la lisibilité de référence, et `render-3d.jpg` qui fixe l'esprit « diorama » de la direction 3D — depuis le 6 septembre 2026, une capture du banc d'essai lui-même, ambiance « clair, été, jour », accompagnée de `banc-ete-clair.jpg`, `banc-automne-pluie.jpg` et `banc-hiver-nuit.jpg`, les trois captures de référence du jalon J1 de `16-realisme.md`. Ce dossier n'a rien à voir avec `../assets/`, à la racine du dépôt.
 
 Les spécifications d'assets produites depuis le canon vivent à la racine du dépôt, dans `../assets/specs/` — 540 fichiers JSON, un par asset, versionnés, régénérés par `npx tsx scripts/generer-specs-assets.ts` et vérifiés par `--verifier`.
 

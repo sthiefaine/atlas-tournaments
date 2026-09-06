@@ -56,6 +56,7 @@ export {
   type CadreOmbre, type RectangleSol,
 } from './ombres';
 export { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
+export { compterFamilles } from './mesures';
 export {
   chargerModele, conformerModele, forcerLod, RACINE_MODELES, teinterModele,
   type ModeleCharge, type NomClip,

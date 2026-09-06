@@ -36,6 +36,22 @@ export type CleRendu = '3d';
 export interface PointVue { x: number; y: number }
 
 /**
+ * Le coût d'une **famille** de la scène — terrain, décor, unités, surbrillances,
+ * effets — : ses triangles, et ce qu'elle demande à dessiner.
+ */
+export interface MesureFamille {
+  triangles: number;
+  /**
+   * Le nombre d'objets dessinés — mailles, une maille instanciée comptée une
+   * fois, sprites, nuages de points. C'est une **approximation des appels de
+   * dessin** de la famille sur la seule passe de couleur : la passe d'ombres
+   * redemande chacun de ceux qui portent ombre, et la chaîne de post-traitement
+   * les redessine une seconde fois pour les normales.
+   */
+  mailles: number;
+}
+
+/**
  * Ce qu'une image a coûté (`16-realisme.md` A6). Les compteurs portent sur la
  * **dernière image dessinée, en entier** : la passe d'ombres est comptée, et,
  * quand la chaîne de post-traitement est active, la seconde passe de scène
@@ -57,6 +73,13 @@ export interface MesuresRendu {
    * `auto`. C'est la seule durée ici qui attende vraiment le dessin.
    */
   msCalibration: number | null;
+  /**
+   * Le détail par famille, sous le nom du groupe de premier niveau de la
+   * scène qui la porte. Compté sur la scène **entière**, pas sur le seul champ
+   * de la caméra : les deux coïncident carte cadrée en entier, et s'écartent
+   * en gros plan. Absent d'une peau qui ne sait pas le dire.
+   */
+  familles?: Record<string, MesureFamille>;
 }
 
 /**
