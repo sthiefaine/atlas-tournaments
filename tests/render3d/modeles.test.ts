@@ -12,7 +12,8 @@ import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
   analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, conformerModele, couleurMasquee, couleurPour,
   couleurTernie, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque, lodForce, masqueDe,
-  NOM_FIGURINE, NOM_NIVEAUX, nomFichierModele, nomsClips, PROPORTIONS, ROTATION_AVANT, SEUILS_LOD, teinterModele,
+  NOM_FIGURINE, NOM_NIVEAUX, NOM_ORIENTATION, nomFichierModele, nomsClips, PROPORTIONS, ROTATION_AVANT, SEUILS_LOD,
+  teinterModele,
 } from '../../src/render3d/modeles';
 import { Materiaux } from '../../src/render3d/unites';
 import { binTriangle, construireGlb, documentTest } from '../assets/glb';
@@ -59,6 +60,13 @@ test('l’avant livré en +Z regarde +X une fois conformé, et c’est +π/2 qui
   assert.ok(inverse.localToWorld(new THREE.Vector3(0, 0, 1)).x < 0);
 });
 
+/** L'emprise monde d'un modèle conformé : ce que le joueur verra, pas ce que dit un `scale`. */
+function emprise(objet: THREE.Object3D): { x: number; y: number; z: number } {
+  objet.updateMatrixWorld(true);
+  const taille = new THREE.Box3().setFromObject(objet).getSize(new THREE.Vector3());
+  return { x: Number(taille.x.toFixed(6)), y: Number(taille.y.toFixed(6)), z: Number(taille.z.toFixed(6)) };
+}
+
 test('aucune échelle de taille sur un modèle livré, mais le gabarit de la nation s’applique', () => {
   const b = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false }, 'b');
   assert.deepEqual(b.objet.scale.toArray(), [1, 1, 1]);
@@ -69,10 +77,29 @@ test('aucune échelle de taille sur un modèle livré, mais le gabarit de la nat
   assert.ok(Math.abs(c.hauteur - 0.5 * PROPORTIONS.c[1]) < 1e-6, 'la hauteur suit le gabarit');
   const a = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false }, 'a');
   assert.deepEqual(a.objet.scale.toArray(), PROPORTIONS.a);
-  // Le gabarit et la rotation vont sur l'enveloppe, jamais sur le nœud livré :
+  // Le gabarit et la rotation vont sur des enveloppes, jamais sur le nœud livré :
   // les clips l'animeraient par-dessus.
   assert.deepEqual(a.objet.getObjectByName('lod0')!.scale.toArray(), [1, 1, 1]);
   assert.equal(a.objet.getObjectByName('lod0')!.rotation.y, 0);
+  assert.equal(a.objet.getObjectByName(NOM_ORIENTATION)!.rotation.y, ROTATION_AVANT);
+});
+
+test('le gabarit s’applique dans le repère du rendu : la longueur en X, la largeur en Z', () => {
+  // Un modèle livré large de 1 (X du fichier) et long de 2 (Z du fichier, l'avant).
+  const livre = (): THREE.Group => sceneLivree('corps', [1, 0.5, 2]);
+  // Sans gabarit, la rotation seule : la longueur du fichier devient le X du rendu.
+  assert.deepEqual(emprise(conformerModele({ niveaux: [livre()], clips: [], kit: false }, 'b').objet), { x: 2, y: 0.5, z: 1 });
+  // En `c`, allongé : 2 × 1,14 de long en X, 1 × 0,95 de large en Z — comme le
+  // placeholder. Sur un seul nœud, three composerait T·R·S et l'échelle
+  // s'appliquerait dans le repère du fichier : 1,90 de long et 1,14 de large.
+  assert.deepEqual(
+    emprise(conformerModele({ niveaux: [livre()], clips: [], kit: false }, 'c').objet),
+    { x: Number((2 * PROPORTIONS.c[0]).toFixed(6)), y: Number((0.5 * PROPORTIONS.c[1]).toFixed(6)), z: Number((1 * PROPORTIONS.c[2]).toFixed(6)) },
+  );
+  assert.deepEqual(
+    emprise(conformerModele({ niveaux: [livre()], clips: [], kit: false }, 'a').objet),
+    { x: Number((2 * PROPORTIONS.a[0]).toFixed(6)), y: Number((0.5 * PROPORTIONS.a[1]).toFixed(6)), z: Number((1 * PROPORTIONS.a[2]).toFixed(6)) },
+  );
 });
 
 test('les niveaux livrés sont clonés, jamais volés à la lecture partagée', () => {
@@ -117,7 +144,7 @@ test('trois niveaux font un THREE.LOD aux seuils, un seul niveau se pose sans se
   const un = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false });
   assert.equal(un.lods, 1);
   assert.equal(un.objet.getObjectByName(NOM_NIVEAUX), undefined, 'un seul niveau : pas de LOD');
-  assert.equal(un.objet.children[0]?.name, 'lod0');
+  assert.equal(un.objet.getObjectByName(NOM_ORIENTATION)!.children[0]?.name, 'lod0');
   assert.throws(() => conformerModele({ niveaux: [], clips: [], kit: false }), /lod0/);
 });
 
@@ -161,7 +188,9 @@ test('la règle de couleur par nom de matériau : tout le corps sur une base, le
 
 test('teinter une base recolore des clones et laisse l’original neutre', () => {
   const scene = sceneLivree();
-  scene.add(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshStandardMaterial({ name: 'mat_details' })));
+  const detailsLivres = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshStandardMaterial({ name: 'mat_details' }));
+  detailsLivres.name = 'details';
+  scene.add(detailsLivres);
   const original = (scene.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const { objet } = conformerModele({ niveaux: [scene], clips: [], kit: false });
   teinterModele(objet, 0, { style: { palette } as never });
@@ -171,7 +200,7 @@ test('teinter une base recolore des clones et laisse l’original neutre', () =>
   assert.equal(`#${mat.color.getHexString()}`, palette.main);
   assert.equal(original.color.getHexString(), 'ffffff', 'l’original n’a pas bougé');
   assert.equal(corps.castShadow, true);
-  const details = objet.children[0]!.children[1] as THREE.Mesh;
+  const details = objet.getObjectByName('details') as THREE.Mesh;
   assert.equal(`#${(details.material as THREE.MeshStandardMaterial).color.getHexString()}`, palette.dark);
 
   // Sans style, la palette du camp : le bleu du camp 0.
@@ -352,6 +381,33 @@ test('sans repos, un clip fini s’arrête et le lecteur le dit', () => {
   assert.equal(lecteur.courant, 'hors_jeu');
   lecteur.dispose();
   assert.equal(creerLecteurClips(objet, []), null, 'aucun clip connu : pas de lecteur');
+});
+
+test('la première image s’applique dès `jouer`, et sans fondu on saute à celle du clip demandé', () => {
+  // Un repos qui ne pose pas le nœud là où le laisse la pose de liaison (0) :
+  // c'est ce qui distingue « la première image » de « rien ».
+  const clips = [clipPosition('repos', 'noeud', 0.2, 0.2), clipPosition('deplacement', 'noeud', 0.5, 1)];
+  const { objet } = conformerModele({ niveaux: [sceneLivree('noeud')], clips, kit: false });
+  const noeud = objet.getObjectByName('noeud')!;
+  const lecteur = creerLecteurClips(objet, clips)!;
+  assert.equal(noeud.position.x, 0, 'pose de liaison avant tout');
+  lecteur.jouer('repos');
+  assert.ok(Math.abs(noeud.position.x - 0.2) < 1e-6, `la première image du repos, sans avancer : ${noeud.position.x}`);
+  assert.equal(lecteur.enTransition, false, 'un premier clip n’a rien d’où fondre');
+
+  lecteur.jouer('deplacement', 0, false);
+  assert.ok(Math.abs(noeud.position.x - 0.5) < 1e-6, `sans fondu, la première image de la marche : ${noeud.position.x}`);
+  assert.equal(lecteur.enTransition, false);
+
+  // Avec fondu : en transition le temps du fondu, puis plus.
+  lecteur.jouer('repos');
+  assert.equal(lecteur.enTransition, true);
+  lecteur.avancer(0.1);
+  assert.equal(lecteur.enTransition, true, 'à 100 ms, le fondu de 150 ms n’est pas fini');
+  lecteur.avancer(0.1);
+  assert.equal(lecteur.enTransition, false);
+  assert.ok(Math.abs(noeud.position.x - 0.2) < 1e-6, `le repos a tout le poids : ${noeud.position.x}`);
+  lecteur.dispose();
 });
 
 test('chaque niveau de détail reçoit sa propre action, avancée en même temps', () => {

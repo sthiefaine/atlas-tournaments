@@ -117,17 +117,39 @@ export function construireAnimations(
   // même case attend que la palissade soit tombée avant de hisser le drapeau.
   const remises = new Set<string>();
 
+  // La fin du dernier geste de chaque unité dans la salve, en millisecondes
+  // depuis son départ. Toutes les animations d'une salve partent ensemble ; or
+  // un ordre produit une seule salve — avancer puis tirer, avancer puis
+  // capturer, tirer puis encaisser la riposte —, et deux gestes d'une même
+  // unité joués en même temps écriraient le même clip : la figurine tirerait
+  // en marchant. Un geste attend donc la fin du précédent de la même unité.
+  const fins = new Map<string, number>();
+
+  interface OptionsGeste {
+    terminer?: () => void;
+    /** Un départ imposé, en millisecondes depuis celui de la salve. */
+    retard?: number;
+    /** L'unité dont c'est le geste : il attend la fin de son geste précédent. */
+    unite?: string;
+    /** Ce que l'animation fait pendant qu'elle attend son départ : rien, par défaut. */
+    attente?: () => void;
+  }
+
   const ajouter = (
-    nom: string, duree: number, avancer: (p: number) => void, terminer?: () => void, retard = 0,
+    nom: string, duree: number, avancer: (p: number) => void, options: OptionsGeste = {},
   ): void => {
+    const retard = Math.max(options.retard ?? 0, options.unite === undefined ? 0 : fins.get(options.unite) ?? 0);
+    if (options.unite !== undefined) fins.set(options.unite, retard + duree);
     attentes.push(new Promise<void>((resoudre) => {
       animations.push(animation(nom, duree + retard, (p) => {
-        // Toutes les animations d'une salve partent ensemble : le retard tient
-        // celle-ci à son départ le temps voulu.
-        avancer(retard > 0 ? Math.max(0, (p * (duree + retard) - retard) / duree) : p);
+        // Un geste qui n'a pas commencé ne touche à rien : à `p = 0`, un recul
+        // vaut zéro, mais une secousse ou un éclair sont à leur maximum.
+        const local = retard > 0 ? (p * (duree + retard) - retard) / duree : p;
+        if (local < 0) options.attente?.();
+        else avancer(Math.min(1, local));
         ctx.salir();
       }, () => {
-        terminer?.();
+        options.terminer?.();
         ctx.salir();
         resoudre();
       }));
@@ -153,17 +175,23 @@ export function construireAnimations(
         // Le clip de marche boucle à sa cadence propre, quel que soit le trajet.
         v.clip = 'deplacement';
         v.clipDuree = 0;
-      }, () => {
-        v.dx = 0;
-        v.dz = 0;
-        v.dy = 0;
-        v.clip = 'repos';
-        v.clipDuree = 0;
+      }, {
+        unite: e.uniteId,
+        terminer: () => {
+          v.dx = 0;
+          v.dz = 0;
+          v.dy = 0;
+          v.clip = 'repos';
+          v.clipDuree = 0;
+        },
       });
     } else if (e.type === 'attaque') {
       const att = uniteParId(avant, e.attaquantId);
       const def = uniteParId(avant, e.cibleId);
       const v = ctx.unites.visuel(e.attaquantId);
+      // Le coup part quand le tir part : après le déplacement de l'attaquant
+      // s'il vient d'en faire un, et la cible l'encaisse au même instant.
+      const departTir = fins.get(e.attaquantId) ?? 0;
       if (att && def) {
         const cap = Math.atan2(-(def.y - att.y), def.x - att.x);
         const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
@@ -183,12 +211,15 @@ export function construireAnimations(
           const eclat = Math.max(0, 1 - p * 4);
           sprite.material.opacity = eclat;
           sprite.scale.setScalar(0.34 + eclat * 0.4);
-        }, () => {
-          v.recul = 0;
-          v.clip = 'repos';
-          v.clipDuree = 0;
-          ctx.effets.remove(sprite);
-          sprite.material.dispose();
+        }, {
+          unite: e.attaquantId,
+          terminer: () => {
+            v.recul = 0;
+            v.clip = 'repos';
+            v.clipDuree = 0;
+            ctx.effets.remove(sprite);
+            sprite.material.dispose();
+          },
         });
       }
       if (e.degats > 0) {
@@ -197,27 +228,31 @@ export function construireAnimations(
           vc.secousse = Math.max(0, 1 - p) * 0.08;
           vc.clip = 'touche';
           vc.clipDuree = MS_TOUCHE;
-        }, () => {
-          vc.secousse = 0;
-          vc.clip = 'repos';
-          vc.clipDuree = 0;
+        }, {
+          retard: departTir,
+          unite: e.cibleId,
+          terminer: () => {
+            vc.secousse = 0;
+            vc.clip = 'repos';
+            vc.clipDuree = 0;
+          },
         });
       }
       if (e.riposte > 0) {
         const va = ctx.unites.visuel(e.attaquantId);
         // La riposte n'arrive qu'une fois le tir parti : l'attaquant tire, puis
-        // encaisse. Une seule animation porte les deux temps, sans le retard de
-        // `ajouter`, qui tiendrait la secousse à son maximum pendant l'attente.
-        ajouter(`riposte:${e.attaquantId}`, MS_TIR + MS_TOUCHE, (p) => {
-          const t = (p * (MS_TIR + MS_TOUCHE) - MS_TIR) / MS_TOUCHE;
-          if (t < 0) return;
-          va.secousse = Math.max(0, 1 - t) * 0.06;
+        // encaisse — c'est son geste suivant, il attend la fin du tir.
+        ajouter(`riposte:${e.attaquantId}`, MS_TOUCHE, (p) => {
+          va.secousse = Math.max(0, 1 - p) * 0.06;
           va.clip = 'touche';
           va.clipDuree = MS_TOUCHE;
-        }, () => {
-          va.secousse = 0;
-          va.clip = 'repos';
-          va.clipDuree = 0;
+        }, {
+          unite: e.attaquantId,
+          terminer: () => {
+            va.secousse = 0;
+            va.clip = 'repos';
+            va.clipDuree = 0;
+          },
         });
       }
     } else if (e.type === 'hors_jeu') {
@@ -231,10 +266,13 @@ export function construireAnimations(
         v.dy = -p * 0.05;
         v.clip = 'hors_jeu';
         v.clipDuree = MS_HORS_JEU;
-      }, () => {
-        v.clip = 'repos';
-        v.clipDuree = 0;
-        ctx.unites.liberer(e.uniteId);
+      }, {
+        unite: e.uniteId,
+        terminer: () => {
+          v.clip = 'repos';
+          v.clipDuree = 0;
+          ctx.unites.liberer(e.uniteId);
+        },
       });
     } else if (e.type === 'capture') {
       const cle = cleCase(e.case);
@@ -267,8 +305,10 @@ export function construireAnimations(
         eclat.position.copy(prise.sommet);
         eclat.scale.setScalar(0.3);
         ctx.effets.add(eclat);
-        ajouter(`capture:${cle}`, MS_CAPTURE, (p) => {
-          capturer(MS_CAPTURE);
+        // Le drapeau seul : le clip de l'unité est posé par le geste, pas
+        // pendant son attente — sinon une capture qui suit un déplacement
+        // écraserait la marche.
+        const hisser = (p: number): void => {
           if (p < partAmener) {
             prise.forcer(depart.camp, depart.niveau * (1 - p / partAmener));
             return;
@@ -280,12 +320,24 @@ export function construireAnimations(
           const lueur = Math.max(0, (t - 0.68) / 0.32);
           eclat.material.opacity = Math.sin(lueur * Math.PI) * 0.9;
           eclat.scale.setScalar(0.3 + lueur * 0.55);
-        }, () => {
-          reposer();
-          prise.relacher();
-          ctx.effets.remove(eclat);
-          eclat.material.dispose();
-        }, remises.has(cle) ? MS_REMISE : 0);
+        };
+        ajouter(`capture:${cle}`, MS_CAPTURE, (p) => {
+          capturer(MS_CAPTURE);
+          hisser(p);
+        }, {
+          retard: remises.has(cle) ? MS_REMISE : 0,
+          unite: e.uniteId,
+          // Tant que la capture attend — la palissade tombe, ou l'unité arrive
+          // encore —, le drapeau reste tel qu'il était : le décor, lui, montre
+          // déjà l'arrivée.
+          attente: () => hisser(0),
+          terminer: () => {
+            reposer();
+            prise.relacher();
+            ctx.effets.remove(eclat);
+            eclat.material.dispose();
+          },
+        });
       } else {
         // La capture avance : le drapeau glisse d'un cran, et le pied du mât
         // s'allume brièvement aux couleurs de qui la mène.
@@ -295,17 +347,24 @@ export function construireAnimations(
         pied.position.copy(prise.pied).add(new THREE.Vector3(0, 0.04, 0));
         pied.scale.setScalar(0.25);
         ctx.effets.add(pied);
-        ajouter(`capture:${cle}`, MS_CAPTURE_EN_COURS, (p) => {
-          capturer(MS_CAPTURE_EN_COURS);
+        const glisser = (p: number): void => {
           const t = 1 - (1 - p) ** 2;
           prise.forcer(camp, depart.niveau + (arrivee.niveau - depart.niveau) * t);
           pied.material.opacity = Math.sin(p * Math.PI) * 0.7;
           pied.scale.setScalar(0.25 + p * 0.3);
-        }, () => {
-          reposer();
-          prise.relacher();
-          ctx.effets.remove(pied);
-          pied.material.dispose();
+        };
+        ajouter(`capture:${cle}`, MS_CAPTURE_EN_COURS, (p) => {
+          capturer(MS_CAPTURE_EN_COURS);
+          glisser(p);
+        }, {
+          unite: e.uniteId,
+          attente: () => glisser(0),
+          terminer: () => {
+            reposer();
+            prise.relacher();
+            ctx.effets.remove(pied);
+            pied.material.dispose();
+          },
         });
       }
     } else if (e.type === 'remise_en_service') {
@@ -360,15 +419,18 @@ export function construireAnimations(
         // Les vitrages se rallument quand la palissade est à terre.
         const lueur = Math.max(0, Math.min(1, (p - 0.55) / 0.25));
         chantier.eclairer(Math.sin(lueur * Math.PI * 0.5));
-      }, () => {
-        vu.clip = 'repos';
-        vu.clipDuree = 0;
-        chantier.relacher();
-        for (const pan of pans) ctx.effets.remove(pan);
-        ctx.effets.remove(poussiere);
-        poussiere.material.dispose();
-        geo.dispose();
-        mat.dispose();
+      }, {
+        unite: e.uniteId,
+        terminer: () => {
+          vu.clip = 'repos';
+          vu.clipDuree = 0;
+          chantier.relacher();
+          for (const pan of pans) ctx.effets.remove(pan);
+          ctx.effets.remove(poussiere);
+          poussiere.material.dispose();
+          geo.dispose();
+          mat.dispose();
+        },
       });
     }
   }
