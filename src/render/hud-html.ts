@@ -349,6 +349,9 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   racine.setAttribute('data-hud', 'html');
   conteneur.appendChild(racine);
 
+/** Sursis du panneau d'inspection : le temps d'atteindre son bouton. */
+const MS_SURSIS_INSPECTION = 1500;
+
   let vignettes: Vignette[] = [];
   // L'unité dont la fiche est dépliée dans le menu de production. Un premier
   // appui l'ouvre, un second produit : on informe sans coûter un geste à qui
@@ -358,6 +361,13 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   // l'autre : c'est une façon de jouer, pas un choix par unité. Qui apprend la
   // laisse dépliée, qui connaît la referme une fois.
   let ficheInspection = false;
+  /** La dernière unité montrée par le panneau. Voir `panneauInspection`. */
+  let derniereInspectee: string | null = null;
+  /** Le pointeur est sur un panneau du HUD : il vient chercher une commande. */
+  let pointeurSurHud = false;
+  /** Quand le panneau a montré une unité pour la dernière fois. */
+  let vueA = 0;
+  let graceInspection: ReturnType<typeof setTimeout> | null = null;
   let tourAffiche = '';
   let derniereSelection: string | null = null;
   let minuterieTour: ReturnType<typeof setTimeout> | null = null;
@@ -458,11 +468,49 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
 
   function panneauInspection(v: VueJeu, duelOuvert: boolean): string {
     if (v.menu || duelOuvert) return '';
-    const c = v.curseur;
+    const sousCurseur = v.curseur
+      ? v.etat.unites.find((u) => !u.dansTransport && u.x === v.curseur!.x && u.y === v.curseur!.y)
+      : undefined;
+
+    // Quelle unité le panneau montre, dans cet ordre :
+    //
+    // 1. **celle sous le curseur**, s'il y en a une : inspecter l'adversaire
+    //    qu'on s'apprête à frapper doit rester possible même en pleine visée ;
+    // 2. **celle qu'on a sélectionnée**. Cliquer une unité doit afficher son
+    //    détail — c'est l'attente évidente, et le panneau l'ignorait. C'est
+    //    aussi le seul chemin au doigt, où le survol n'existe pas ;
+    // 3. **la dernière montrée**, tant qu'on lit sa fiche ou que le pointeur
+    //    est sur le HUD. Le bouton vit dans le panneau, en bas à gauche : pour
+    //    l'atteindre, la souris quitte l'unité et traverse des cases vides, ce
+    //    qui faisait disparaître le bouton avant qu'on l'ait touché. Hors de ces
+    //    deux cas, le panneau suit le curseur comme avant — une case vide doit
+    //    pouvoir montrer son terrain et sa défense.
+    const selectionnee = v.selection
+      ? v.etat.unites.find((u) => u.id === v.selection)
+      : undefined;
+    // Le sursis : entre l'unité et le bouton il y a des cases vides, et la
+    // souris les traverse forcément. Une seconde et demie suffit à faire le
+    // trajet, et ne suffit pas à donner l'impression que le panneau est collé.
+    const enSursis = Date.now() - vueA < MS_SURSIS_INSPECTION;
+    const retenue = (ficheInspection || pointeurSurHud || enSursis) && derniereInspectee
+      ? v.etat.unites.find((u) => u.id === derniereInspectee)
+      : undefined;
+    const unite = sousCurseur ?? selectionnee ?? retenue;
+    if (unite) {
+      derniereInspectee = unite.id;
+      vueA = Date.now();
+      // Le sursis expire tout seul : sans ce rappel, le panneau garderait son
+      // unité jusqu'au prochain mouvement, c'est-à-dire parfois indéfiniment.
+      if (graceInspection) clearTimeout(graceInspection);
+      graceInspection = setTimeout(rafraichir, MS_SURSIS_INSPECTION + 40);
+    }
+
+    // Le terrain est celui de l'unité montrée : un panneau qui titre « Char
+    // léger » et sous-titre le terrain d'une case vide se contredit.
+    const c = unite ? { x: unite.x, y: unite.y } : v.curseur;
     if (!c) return '';
     const terrain = terrainLogique(v.etat, v.catalogue, c);
     if (terrain === null) return '';
-    const unite = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
     const type = unite ? v.catalogue.unites[unite.type] : undefined;
     const fiche = v.catalogue.terrains[terrain];
     const etoiles = Math.max(0, Math.min(4, fiche?.defense ?? 0));
@@ -816,14 +864,29 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   }
 
   racine.addEventListener('click', surClic);
+  // Entrer sur un panneau du HUD, c'est venir chercher une commande : le
+  // panneau d'inspection cesse alors de suivre le curseur de jeu, sans quoi le
+  // bouton qu'on vise disparaît sous le doigt qui l'approche.
+  const surPointeur = (e: Event): void => {
+    const sur = (e.target as Element | null)?.closest?.('.atlas-hud .p') != null;
+    if (sur === pointeurSurHud) return;
+    pointeurSurHud = sur;
+    rafraichir();
+  };
+  // L'écoute est posée sur le **conteneur**, qui porte la toile et le HUD : la
+  // racine du HUD couvre tout l'écran, donc son `pointerleave` ne part jamais et
+  // le drapeau resterait vrai pour toujours.
+  conteneur.addEventListener('pointerover', surPointeur);
   rafraichir();
 
   return {
     rafraichir,
     demonter: () => {
       if (minuterieTour) clearTimeout(minuterieTour);
+      if (graceInspection) clearTimeout(graceInspection);
       banniereTour?.remove();
       racine.removeEventListener('click', surClic);
+      conteneur.removeEventListener('pointerover', surPointeur);
       racine.remove();
     },
   };
