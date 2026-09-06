@@ -185,10 +185,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // marée ou un chantier se **regarde** arriver.
       m.plateau.majTerrain(grilleDe(etat, vue), premierTerrain ? 0 : MS_MUTATION);
       premierTerrain = false;
-      // Le sol a bougé : tout ce qui repose dessus doit se reposer avec lui.
-      // Les unités le font au `maj` ci-dessous, qui relit l'altitude ; le décor,
-      // lui, était posé une fois pour toutes.
-      m.decor.majRelief();
+      // Le sol a bougé, et parfois la grille elle-même : tout ce qui en dérive
+      // doit repartir d'elle. Les unités relisent l'altitude au `maj` ci-dessous ;
+      // le décor ressème arbres et rochers, rebâtit les bâtiments, et se repose.
+      m.decor.majGrille(grilleDe(etat, vue));
     }
     m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
     m.unites.maj(etat, vue.catalogue, vue.visibles);

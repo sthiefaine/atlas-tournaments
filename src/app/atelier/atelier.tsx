@@ -221,6 +221,11 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   }), [catalogue, saison, phase, meteo, genres, flecheVisible, brouillard]);
   const vueCourante = useRef(vue);
   const etatCourant = useRef(etat);
+  // Tenus à jour **au rendu**, pas dans un effet : l'effet de montage s'exécute
+  // avant celui de l'affichage, et il posait la scène avec l'état du monde
+  // précédent — une carte 16 × 12 pour un banc de 20 × 12.
+  vueCourante.current = vue;
+  etatCourant.current = etat;
 
   /** L'état, recouvert du climat choisi : les réglages doivent se voir. */
   const habille = useCallback((e: EtatPartie, v: VueInteraction): EtatPartie => ({

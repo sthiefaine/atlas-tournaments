@@ -414,3 +414,41 @@ test('les pierres se reposent quand le terrain bouge', () => {
   assert.ok(mat.elements[13]! < avant - 0.4, 'la pierre a suivi le sol qui descend');
   decor.dispose();
 });
+
+test('changer de grille ressème les arbres, les rochers, les mâts, et rebâtit les bâtiments', () => {
+  const etat = partie('plaine');
+  const nue = { largeur: 4, hauteur: 2, terrainDe: (): 'plaine' => 'plaine' };
+  const decor = creerDecor(nue, etat, () => 0);
+  const compter = (nom: string): number => (decor.groupe.getObjectByName(nom) as THREE.InstancedMesh | null)?.count ?? 0;
+  const batiments = (): number => decor.groupe.getObjectByName('batiments')!.children.length;
+  assert.equal(compter('troncs'), 0);
+  assert.equal(compter('rochers-1'), 0);
+  assert.equal(compter('mats'), 0);
+  assert.equal(batiments(), 0);
+
+  // Une forêt, une montagne, une ville : tout ce qui dérive de la grille doit
+  // apparaître, alors que la scène n'a pas été démontée. C'est le cas du génie
+  // qui pose du terrain, et celui de l'atelier qui change de carte.
+  const peuplee = {
+    largeur: 4, hauteur: 2,
+    terrainDe: (x: number): 'foret' | 'montagne' | 'ville' | 'plaine' =>
+      x === 0 ? 'foret' : x === 1 ? 'montagne' : x === 2 ? 'ville' : 'plaine',
+  };
+  decor.majGrille(peuplee);
+  decor.majProprietaires(etat);
+  assert.ok(compter('troncs') > 0, 'les arbres de la forêt manquent');
+  assert.ok(compter('rochers-1') > 0, 'les pierres de la montagne manquent');
+  assert.equal(compter('mats'), 2, 'chaque ville doit avoir son mât');
+  assert.equal(batiments(), 2, 'les villes des deux lignes manquent');
+  // Une prise de drapeau se trouve sur la nouvelle grille, pas sur l'ancienne.
+  assert.ok(decor.drapeau('2,0'), 'la ville replantée doit avoir un drapeau');
+  assert.equal(decor.drapeau('3,0'), null);
+
+  // Et dans l'autre sens : raser la forêt retire ses arbres.
+  decor.majGrille(nue);
+  decor.majProprietaires(etat);
+  assert.equal(compter('troncs'), 0, 'les arbres d’une forêt rasée doivent partir');
+  assert.equal(compter('mats'), 0);
+  assert.equal(batiments(), 0);
+  decor.dispose();
+});

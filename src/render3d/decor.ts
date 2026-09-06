@@ -200,6 +200,14 @@ export interface Decor {
    * vide. À appeler après toute mutation du terrain.
    */
   majRelief(): void;
+  /**
+   * Change de grille : ressème arbres et rochers, replante les mâts, refait le
+   * paysage et rebâtit les bâtiments au prochain `majProprietaires`. C'est le cas
+   * du génie qui pose du terrain, d'une marée qui découvre une berge, et de
+   * l'atelier qui change de carte. Le décor lisait la grille capturée au
+   * montage — le gel noté dans `CLAUDE.md` avait fini par mordre.
+   */
+  majGrille(grille: GrilleTerrain): void;
   dispose(): void;
 }
 
@@ -322,9 +330,12 @@ export function creerDecor(
 ): Decor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
+  // La grille courante : `majGrille` la remplace, et tout ce qui en dérive —
+  // semis, mâts, bâtiments — repart d'elle. Rien ne lit `g` après cette ligne.
+  let grille: GrilleTerrain = g;
 
   // --- Arbres
-  const arbres = semerArbres(g, biome);
+  let arbres = semerArbres(grille, biome);
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
   const geoTronc = new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6);
@@ -347,23 +358,37 @@ export function creerDecor(
   const matConifere = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
   const matFeuillu = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
 
-  const troncs = new THREE.InstancedMesh(geoTronc, matTronc, Math.max(1, arbres.length));
-  const coniferes = new THREE.InstancedMesh(
-    geoConifere, matConifere, Math.max(1, arbres.filter((a) => a.conifere).length),
-  );
-  const feuillus = new THREE.InstancedMesh(
-    geoFeuillu, matFeuillu, Math.max(1, arbres.filter((a) => !a.conifere).length),
-  );
-  troncs.name = 'troncs';
-  coniferes.name = 'coniferes';
-  feuillus.name = tropical ? 'palmes' : 'feuillus';
-  for (const m of [troncs, coniferes, feuillus]) {
-    m.castShadow = true;
-    m.receiveShadow = true;
-    m.count = 0;
-    m.frustumCulled = false;
-    groupe.add(m);
+  // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
+  // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.
+  let troncs!: THREE.InstancedMesh;
+  let coniferes!: THREE.InstancedMesh;
+  let feuillus!: THREE.InstancedMesh;
+
+  function batirArbres(): void {
+    for (const m of [troncs, coniferes, feuillus]) {
+      if (!m) continue;
+      groupe.remove(m);
+      m.dispose();
+    }
+    troncs = new THREE.InstancedMesh(geoTronc, matTronc, Math.max(1, arbres.length));
+    coniferes = new THREE.InstancedMesh(
+      geoConifere, matConifere, Math.max(1, arbres.filter((a) => a.conifere).length),
+    );
+    feuillus = new THREE.InstancedMesh(
+      geoFeuillu, matFeuillu, Math.max(1, arbres.filter((a) => !a.conifere).length),
+    );
+    troncs.name = 'troncs';
+    coniferes.name = 'coniferes';
+    feuillus.name = tropical ? 'palmes' : 'feuillus';
+    for (const m of [troncs, coniferes, feuillus]) {
+      m.castShadow = true;
+      m.receiveShadow = true;
+      m.count = 0;
+      m.frustumCulled = false;
+      groupe.add(m);
+    }
   }
+  batirArbres();
 
   const mat4 = new THREE.Matrix4();
   const quat = new THREE.Quaternion();
@@ -407,7 +432,7 @@ export function creerDecor(
   }
 
   // --- Rochers
-  const rochers = semerRochers(g);
+  let rochers = semerRochers(grille);
   // Trois lots : un appel de dessin par silhouette, et non un par pierre.
   const geosRocher = [
     eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085),
@@ -415,17 +440,26 @@ export function creerDecor(
     eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05),
   ];
   const matRocher = new THREE.MeshStandardMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
-  const lotsRocher = geosRocher.map((geo, v) => {
-    const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
-    const lot = new THREE.InstancedMesh(geo, matRocher, total);
-    lot.name = `rochers-${v}`;
-    lot.castShadow = true;
-    lot.receiveShadow = true;
-    lot.frustumCulled = false;
-    lot.count = 0;
-    groupe.add(lot);
-    return lot;
-  });
+  let lotsRocher: THREE.InstancedMesh[] = [];
+
+  function batirRochers(): void {
+    for (const lot of lotsRocher) {
+      groupe.remove(lot);
+      lot.dispose();
+    }
+    lotsRocher = geosRocher.map((geo, v) => {
+      const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
+      const lot = new THREE.InstancedMesh(geo, matRocher, total);
+      lot.name = `rochers-${v}`;
+      lot.castShadow = true;
+      lot.receiveShadow = true;
+      lot.frustumCulled = false;
+      lot.count = 0;
+      groupe.add(lot);
+      return lot;
+    });
+  }
+  batirRochers();
   const teinteRocher = new THREE.Color();
 
   function poserRochers(): void {
@@ -459,8 +493,10 @@ export function creerDecor(
 
   // --- Paysage : les accessoires du biome et la ligne de rivage (`paysage.ts`).
   //     Il lit `hauteurEn` à chaque pose, comme les arbres : rien n'y est gelé.
-  const paysage = creerPaysage(g, hauteurEn, biome);
+  let paysage = creerPaysage(grille, hauteurEn, biome);
   groupe.add(paysage.groupe);
+  /** La dernière ambiance appliquée, pour la redonner à un paysage refait. */
+  let ambianceCourante: { p: ParametresAmbiance; saison: Saison } | null = null;
 
   // --- Bâtiments
   const batiments = new THREE.Group();
@@ -553,9 +589,9 @@ export function creerDecor(
     for (const geo of geosBatiment) geo.dispose();
     geosBatiment.clear();
     paraboles.length = 0;
-    for (let y = 0; y < g.hauteur; y += 1) {
-      for (let x = 0; x < g.largeur; x += 1) {
-        const terrain = g.terrainDe(x, y);
+    for (let y = 0; y < grille.hauteur; y += 1) {
+      for (let x = 0; x < grille.largeur; x += 1) {
+        const terrain = grille.terrainDe(x, y);
         if (!TERRAINS_BATIS.includes(terrain)) continue;
         const proprio = e.proprietaires[cleCase({ x, y })] ?? null;
         const desaffecte = e.desaffectes.includes(cleCase({ x, y }));
@@ -808,24 +844,30 @@ export function creerDecor(
   const pavillons = new THREE.Group();
   pavillons.name = 'pavillons';
   groupe.add(pavillons);
+  // Le tableau est stable : les prises rendues par `drapeau()` le cherchent par
+  // clé, et une grille changée le vide et le remplit sur place.
   const places: Pavillon[] = [];
-  for (let y = 0; y < g.hauteur; y += 1) {
-    for (let x = 0; x < g.largeur; x += 1) {
-      const terrain = g.terrainDe(x, y);
-      if (!TERRAINS_BATIS.includes(terrain)) continue;
-      places.push({
-        cle: cleCase({ x, y }),
-        case: { x, y },
-        cx: x * CASE + CASE / 2,
-        cz: y * CASE + CASE / 2,
-        hauteurMat: terrain === 'qg' ? HAUT_MAT_QG : HAUT_MAT,
-        seuil: SEUIL_CAPTURE,
-        pose: { camp: null, niveau: 0 },
-        force: null,
-      });
+
+  function semerPavillons(): void {
+    places.length = 0;
+    for (let y = 0; y < grille.hauteur; y += 1) {
+      for (let x = 0; x < grille.largeur; x += 1) {
+        const terrain = grille.terrainDe(x, y);
+        if (!TERRAINS_BATIS.includes(terrain)) continue;
+        places.push({
+          cle: cleCase({ x, y }),
+          case: { x, y },
+          cx: x * CASE + CASE / 2,
+          cz: y * CASE + CASE / 2,
+          hauteurMat: terrain === 'qg' ? HAUT_MAT_QG : HAUT_MAT,
+          seuil: SEUIL_CAPTURE,
+          pose: { camp: null, niveau: 0 },
+          force: null,
+        });
+      }
     }
   }
-  const totalPavillons = Math.max(1, places.length);
+  semerPavillons();
   // Le mât part de son pied : sa hauteur est une échelle, pas une géométrie.
   const geoMat = new THREE.CylinderGeometry(0.011, 0.015, 1, 6).translate(0, 0.5, 0);
   const geoPommeau = new THREE.SphereGeometry(0.022, 8, 6);
@@ -834,18 +876,31 @@ export function creerDecor(
     .translate(LARG_DRAPEAU / 2, 0, 0);
   const drapeauPlat = Float32Array.from(geoDrapeau.getAttribute('position').array);
   const matDrapeau = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
-  const mats = new THREE.InstancedMesh(geoMat, matMetal, totalPavillons);
-  const pommeaux = new THREE.InstancedMesh(geoPommeau, matIvoire, totalPavillons);
-  const drapeaux = new THREE.InstancedMesh(geoDrapeau, matDrapeau, totalPavillons);
-  mats.name = 'mats';
-  pommeaux.name = 'pommeaux';
-  drapeaux.name = 'drapeaux';
-  for (const lot of [mats, pommeaux, drapeaux]) {
-    lot.castShadow = true;
-    lot.frustumCulled = false;
-    lot.count = places.length;
-    pavillons.add(lot);
+  let mats!: THREE.InstancedMesh;
+  let pommeaux!: THREE.InstancedMesh;
+  let drapeaux!: THREE.InstancedMesh;
+
+  function batirPavillons(): void {
+    for (const lot of [mats, pommeaux, drapeaux]) {
+      if (!lot) continue;
+      pavillons.remove(lot);
+      lot.dispose();
+    }
+    const totalPavillons = Math.max(1, places.length);
+    mats = new THREE.InstancedMesh(geoMat, matMetal, totalPavillons);
+    pommeaux = new THREE.InstancedMesh(geoPommeau, matIvoire, totalPavillons);
+    drapeaux = new THREE.InstancedMesh(geoDrapeau, matDrapeau, totalPavillons);
+    mats.name = 'mats';
+    pommeaux.name = 'pommeaux';
+    drapeaux.name = 'drapeaux';
+    for (const lot of [mats, pommeaux, drapeaux]) {
+      lot.castShadow = true;
+      lot.frustumCulled = false;
+      lot.count = places.length;
+      pavillons.add(lot);
+    }
   }
+  batirPavillons();
   const couleurDrapeau = new THREE.Color();
 
   /** Le pied d'un mât : le sol est relu à chaque pose, une marée le déplace. */
@@ -1010,6 +1065,7 @@ export function creerDecor(
         f.emissiveIntensity = source.emissiveIntensity;
       }
       oscillation = p.oscillation;
+      ambianceCourante = { p, saison };
       paysage.appliquerAmbiance(p, saison);
       // L'hiver dénude les feuillus : on les rétrécit plutôt que de les cacher.
       if (saison !== saisonCourante) {
@@ -1023,6 +1079,30 @@ export function creerDecor(
       poserRochers();
       poserPavillons();
       paysage.majRelief();
+    },
+
+    majGrille(suivante: GrilleTerrain): void {
+      grille = suivante;
+      arbres = semerArbres(grille, biome);
+      batirArbres();
+      rochers = semerRochers(grille);
+      batirRochers();
+      semerPavillons();
+      batirPavillons();
+      // Le paysage est semé sur la grille comme les arbres : on le refait plutôt
+      // que d'apprendre à chacun de ses lots à se ressemer. Il reprend
+      // l'ambiance en cours, sans quoi il repartirait en plein été à midi.
+      groupe.remove(paysage.groupe);
+      paysage.dispose();
+      paysage = creerPaysage(grille, hauteurEn, biome);
+      groupe.add(paysage.groupe);
+      if (ambianceCourante) paysage.appliquerAmbiance(ambianceCourante.p, ambianceCourante.saison);
+      // Les bâtiments se rebâtissent au prochain `majProprietaires` : on efface
+      // la signature qui lui fait croire que rien n'a changé.
+      signature = '';
+      poserArbres(souffle);
+      poserRochers();
+      poserPavillons();
     },
 
     avancer(ms: number, mouvementReduit = false): boolean {
