@@ -143,8 +143,8 @@ const STYLE = `
    devient un panneau posé à côté de l'unité dès que l'écran est assez large
    (attribut data-ancre, position calculée par la fonction ancrer). */
 .atlas-hud .ordres{left:50%;bottom:calc(var(--bas) + var(--dock) + 10px);transform:translateX(-50%);width:340px;max-width:calc(100% - 24px);padding:10px;z-index:3;max-height:calc(100% - 160px);overflow-y:auto;background:var(--encre);color:var(--papier);border:1px solid #839798;border-top:4px solid var(--signal);animation:atlas-ordres .16s ease-out}
-.atlas-hud .ordres[data-ancre='oui'],.atlas-hud .duel[data-ancre='oui']{bottom:auto;right:auto;transform:none;width:190px;max-width:190px}
-.atlas-hud .duel[data-ancre='oui']{width:230px;max-width:230px}
+.atlas-hud .ordres[data-ancre='oui'],.atlas-hud .p.duel[data-ancre='oui']{bottom:auto;right:auto;transform:none;width:190px;max-width:190px}
+.atlas-hud .p.duel[data-ancre='oui']{width:230px;max-width:230px}
 .atlas-hud .ordres-entete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 8px 4px}
 .atlas-hud .ordres-entete .tt{text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:.14em;color:#9fb6b8}
 .atlas-hud .ordres .retour{background:#ffffff10;border-color:#ffffff26}
@@ -165,7 +165,8 @@ const STYLE = `
 .atlas-hud .camera{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(var(--bas) + var(--dock) + 10px);pointer-events:auto;display:grid;gap:5px}
 .atlas-hud .camera button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #91a1a3;border-bottom:3px solid #0c1923;background:var(--encre);box-shadow:2px 2px 0 #0002;font-size:25px;cursor:pointer}
 .atlas-hud .camera svg{width:21px;height:21px}
-.atlas-hud .duel{left:12px;bottom:calc(var(--bas) + var(--dock) + 10px);width:390px;max-width:calc(100% - 84px);border:0;border-top:4px solid #ff6a5e;background:var(--encre);box-shadow:4px 5px 0 #0d1b2470;animation:atlas-inspection .16s ease-out}
+/* « .p.duel » et non « .duel » : la rangée de figurines de la fiche porte aussi la classe « duel », et héritait du panneau entier, animation comprise, à chaque rafraîchissement du DOM. */
+.atlas-hud .p.duel{left:12px;bottom:calc(var(--bas) + var(--dock) + 10px);width:390px;max-width:calc(100% - 84px);border:0;border-top:4px solid #ff6a5e;background:var(--encre);box-shadow:4px 5px 0 #0d1b2470;animation:atlas-inspection .16s ease-out}
 .atlas-hud .duel-entete{display:flex;align-items:center;gap:8px;padding:7px 12px 5px;font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#ffb3aa}
 .atlas-hud .duel-entete .symbole{width:16px;height:16px}
 .atlas-hud .duel-entete .issue{margin-left:auto;color:var(--signal);letter-spacing:.08em}
