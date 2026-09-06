@@ -7,7 +7,7 @@ import { resoudreCommandantsScenario } from '@/content/commandants-jeu';
 import { ambiance } from '@/render/ambiance';
 import type { Rendu, VueInteraction } from '@/render/rendu';
 import {
-  BIOMES, type Biome, type CodePays, type MapDef, type Meteo, type PhaseJour,
+  BIOMES, PHASES_JOUR, type Biome, type CodePays, type MapDef, type Meteo, type PhaseJour,
   type Saison, type Scenario,
 } from '@/schemas/types';
 import {
@@ -184,6 +184,49 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     etatCourant.current = etat;
     rendu.current?.afficher(habille(etat, vue), vue);
   }, [etat, vue, habille]);
+
+  // L'URL porte les réglages du banc, dans les deux sens : on arrive sur
+  // `?monde=3&rouge=jp` et l'on y est ; on change un réglage et le lien se met
+  // à jour, prêt à être copié. Lu au montage seulement, et déclaré **avant**
+  // l'effet qui écrit, sans quoi celui-ci effacerait l'URL avant qu'on l'ait
+  // lue. Une valeur inconnue est ignorée : le banc ne se monte jamais sur un
+  // réglage qui n'existe pas.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const lire = <T extends string>(cle: string, admis: readonly T[], poser: (v: T) => void): void => {
+      const v = q.get(cle);
+      if (v !== null && (admis as readonly string[]).includes(v)) poser(v as T);
+    };
+    const m = Number(q.get('monde'));
+    if (q.has('monde') && Number.isInteger(m) && m >= 0 && m < tous.length) setIndex(m);
+    lire('biome', BIOMES, setBiome);
+    lire('saison', SAISONS.map(([cle]) => cle), setSaison);
+    lire('phase', PHASES_JOUR, setPhase);
+    lire('meteo', METEOS.map(([cle]) => cle), setMeteo);
+    lire('bleu', PAYS, setPaysAllie);
+    lire('rouge', PAYS, setPaysAdverse);
+    const g = q.get('genres');
+    if (g !== null) setGenres(g.split(',').filter((x): x is GenreBanc => GENRES.some(([cle]) => cle === x)));
+    if (q.get('fleche') === '1') setFleche(true);
+    if (q.get('brouillard') === '1') setBrouillard(true);
+    if (q.get('silhouettes') === '1') setSilhouettes(true);
+  }, [tous]);
+
+  useEffect(() => {
+    const q = new URLSearchParams();
+    q.set('monde', String(index));
+    q.set('biome', biome);
+    q.set('saison', saison);
+    q.set('phase', phase);
+    q.set('meteo', meteo);
+    q.set('bleu', paysAllie);
+    q.set('rouge', paysAdverse);
+    q.set('genres', genres.join(','));
+    if (flecheVisible) q.set('fleche', '1');
+    if (brouillard) q.set('brouillard', '1');
+    if (silhouettes) q.set('silhouettes', '1');
+    window.history.replaceState(null, '', `?${q.toString()}`);
+  }, [index, biome, saison, phase, meteo, paysAllie, paysAdverse, genres, flecheVisible, brouillard, silhouettes]);
 
   // Le pont de mise au point du banc, hors production : c'est par lui qu'un
   // pilotage Playwright choisit un monde, cadre une case et rapproche la caméra
