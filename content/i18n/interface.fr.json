@@ -1451,7 +1451,7 @@
         "ecran": "menu_production",
         "note": "Portée de tir quand elle va d’une distance à une autre (artillerie)."
       },
-      "longueurMax": 12
+      "longueurMax": 16
     },
     {
       "cle": "fiche.recruter",
