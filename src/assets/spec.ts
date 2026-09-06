@@ -536,6 +536,40 @@ export function nomModele(spec: AssetSpec, lod: NiveauLod): string {
 }
 
 /**
+ * L'inverse du gabarit `{id}_lod{lod}.glb` : ce qu'un fichier livré désigne,
+ * ou `null` si son nom n'est pas celui d'un modèle — un `.txt`, un nom sans
+ * suffixe, une majuscule. C'est ce qui permet de dresser l'inventaire d'un
+ * dossier de livraison sans ouvrir un seul fichier.
+ */
+export function decomposerNomModele(nom: string): { id: Cle; lod: NiveauLod } | null {
+  const m = /^(.+)_lod([012])\.glb$/.exec(nom);
+  if (!m || !REGEX_ID_ASSET.test(m[1]!)) return null;
+  return { id: m[1]!, lod: Number(m[2]) as NiveauLod };
+}
+
+/**
+ * L'inventaire des modèles livrés : l'identifiant sans suffixe vers la liste
+ * triée des niveaux de détail présents. C'est ce que la route `/api/modeles`
+ * sert et ce que le rendu consulte avant de demander un fichier, pour ne
+ * jamais sonder ce qui n'existe pas.
+ */
+export interface InventaireModeles {
+  modeles: Record<Cle, NiveauLod[]>;
+}
+
+/** Vrai si `valeur` a la forme d'un inventaire : ce que le rendu vérifie d'une réponse réseau. */
+export function estInventaireModeles(valeur: unknown): valeur is InventaireModeles {
+  if (valeur === null || typeof valeur !== 'object' || Array.isArray(valeur)) return false;
+  const modeles = (valeur as { modeles?: unknown }).modeles;
+  if (modeles === null || typeof modeles !== 'object' || Array.isArray(modeles)) return false;
+  return Object.entries(modeles as Record<string, unknown>).every(([id, niveaux]) => (
+    REGEX_ID_ASSET.test(id)
+    && Array.isArray(niveaux)
+    && niveaux.every((n) => (NIVEAUX_LOD as readonly number[]).includes(n as number))
+  ));
+}
+
+/**
  * Le nom de fichier d'une texture, gabarit appliqué. Une variante vide retire le
  * segment `_{variante}` au lieu de laisser un double tiret bas.
  */

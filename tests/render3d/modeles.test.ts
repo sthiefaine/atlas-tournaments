@@ -11,9 +11,9 @@ import { genererSpecs, nomModele } from '../../src/assets/index';
 import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
   analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, conformerModele, couleurMasquee, couleurPour,
-  couleurTernie, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque, lodForce, masqueDe,
-  NOM_FIGURINE, NOM_NIVEAUX, NOM_ORIENTATION, nomFichierModele, nomsClips, PROPORTIONS, ROTATION_AVANT, SEUILS_LOD,
-  teinterModele,
+  couleurTernie, creerChargeurModeles, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque,
+  lireInventaireReseau, lodForce, masqueDe, NOM_FIGURINE, NOM_NIVEAUX, NOM_ORIENTATION, nomFichierModele, nomsClips,
+  PROPORTIONS, ROTATION_AVANT, ROUTE_INVENTAIRE, SEUILS_LOD, teinterModele, type LectureFichier,
 } from '../../src/render3d/modeles';
 import { Materiaux } from '../../src/render3d/unites';
 import { binTriangle, construireGlb, documentTest } from '../assets/glb';
@@ -310,6 +310,94 @@ test('un GLB fabriqué en mémoire s’analyse sous Node, et ses clips traversen
   assert.deepEqual(nomsClips(modele.clips), ['repos', 'deplacement'], 'seuls les six noms comptent');
   assert.ok(modele.objet.getObjectByName('module_tourelle'), 'les nœuds imposés se retrouvent par leur nom');
   assert.equal(await analyserGlb(new Uint8Array(8).buffer), null, 'un conteneur cassé rend null, jamais une exception');
+});
+
+// ---------------------------------------------------------------------------
+// Le chargeur : l'inventaire décide de ce qui est demandé
+// ---------------------------------------------------------------------------
+
+/** Un lecteur de test : il sert les noms qu'on lui donne, et note tout ce qu'on lui demande. */
+function lecteurFactice(servis: readonly string[]): { lire(nom: string): Promise<LectureFichier | null>; demandes: string[] } {
+  const demandes: string[] = [];
+  return {
+    demandes,
+    lire: async (nom) => {
+      demandes.push(nom);
+      return servis.includes(nom) ? { scene: sceneLivree(), clips: [] } : null;
+    },
+  };
+}
+
+test('un inventaire vide ne coûte aucune requête : le placeholder reste, sans une sonde', async () => {
+  const lecteur = lecteurFactice(['unite_x_base_lod0.glb']);
+  const charger = creerChargeurModeles({ inventaire: async () => ({ modeles: {} }), lecteur: lecteur.lire });
+  assert.equal(await charger('x', 'fr'), null);
+  assert.equal(await charger('x', null), null);
+  assert.deepEqual(lecteur.demandes, [], 'rien n’est listé, rien n’est demandé — même si le fichier existait');
+});
+
+test('un inventaire connu ne fait demander que ce qu’il liste, aux niveaux listés, dans l’ordre', async () => {
+  const lecteur = lecteurFactice(['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb', 'unite_x_base_lod2.glb']);
+  const charger = creerChargeurModeles({
+    inventaire: async () => ({ modeles: { unite_x_base: [0, 1] } }),
+    lecteur: lecteur.lire,
+  });
+  const modele = await charger('x', 'fr');
+  assert.ok(modele);
+  assert.equal(modele.lods, 2);
+  assert.equal(modele.kit, false);
+  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb'],
+    'le kit fr n’est pas listé : pas demandé ; le lod2 n’est pas listé : pas demandé');
+
+  // Le résultat est mémorisé par couple, la lecture par nom : une seconde
+  // nation qui retombe sur la même base ne relit rien.
+  await charger('x', 'fr');
+  const autre = await charger('x', 'lu');
+  assert.ok(autre);
+  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb']);
+});
+
+test('un lod2 listé sans lod1 n’est pas un jeu de niveaux : on s’arrête au lod0', async () => {
+  const lecteur = lecteurFactice(['unite_x_base_lod0.glb', 'unite_x_base_lod2.glb']);
+  const charger = creerChargeurModeles({
+    inventaire: async () => ({ modeles: { unite_x_base: [0, 2], kit_fr_x: [1] } }),
+    lecteur: lecteur.lire,
+  });
+  const modele = await charger('x', 'fr');
+  assert.ok(modele);
+  assert.equal(modele.lods, 1);
+  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb'], 'un kit sans lod0 n’est même pas essayé');
+});
+
+test('sans inventaire, le chargeur sonde chaque candidat comme avant, un 404 par nom au plus', async () => {
+  const lecteur = lecteurFactice(['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb']);
+  const charger = creerChargeurModeles({ inventaire: async () => null, lecteur: lecteur.lire });
+  const modele = await charger('x', 'fr');
+  assert.ok(modele);
+  assert.equal(modele.lods, 2);
+  assert.deepEqual(lecteur.demandes, [
+    'kit_fr_x_lod0.glb', 'unite_x_base_lod0.glb', 'unite_x_base_lod1.glb', 'unite_x_base_lod2.glb',
+  ]);
+  await charger('x', 'lu');
+  assert.deepEqual(lecteur.demandes.slice(4), ['kit_lu_x_lod0.glb'], 'la base déjà lue n’est pas relue');
+  assert.equal(await charger('y', null), null);
+  assert.deepEqual(lecteur.demandes.slice(5), ['unite_y_base_lod0.glb']);
+  // Un inventaire qui échoue vaut « inconnu », pas une exception.
+  const casse = creerChargeurModeles({ inventaire: async () => { throw new Error('hors ligne'); }, lecteur: lecteur.lire });
+  assert.ok(await casse('x', null));
+});
+
+test('l’inventaire réseau rend null sur tout ce qui n’est pas une réponse valide', async () => {
+  const reponse = (statut: number, corps: unknown): Promise<Response> => Promise.resolve(
+    new Response(JSON.stringify(corps), { status: statut, headers: { 'content-type': 'application/json' } }),
+  );
+  let url = '';
+  assert.deepEqual(await lireInventaireReseau((u) => { url = u; return reponse(200, { modeles: { unite_x_base: [0] } }); }), { modeles: { unite_x_base: [0] } });
+  assert.equal(url, ROUTE_INVENTAIRE);
+  assert.equal(await lireInventaireReseau(() => reponse(404, { error: 'introuvable' })), null, 'route absente');
+  assert.equal(await lireInventaireReseau(() => reponse(200, { autre: 1 })), null, 'une autre forme');
+  assert.equal(await lireInventaireReseau(() => Promise.resolve(new Response('pas du json', { status: 200 }))), null);
+  assert.equal(await lireInventaireReseau(() => Promise.reject(new Error('hors ligne'))), null);
 });
 
 // ---------------------------------------------------------------------------
