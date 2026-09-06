@@ -11,6 +11,14 @@
  * (affaissement et fondu) et la capture — on amène les couleurs de l'ancien
  * propriétaire, on hisse les nôtres. Le bâtiment, lui, ne bouge jamais : ce
  * qu'on prend, c'est le mât.
+ *
+ * Chaque geste pose aussi le **clip logique** de l'unité (`EtatVisuel.clip`,
+ * `doc/10` §7.3) : `deplacement` tant qu'elle glisse, `tir` pour qui tire,
+ * `touche` pour qui encaisse — riposte comprise, après le tir —, `hors_jeu`,
+ * `capture` pendant les deux temps d'une prise, et `repos` dès que le geste
+ * finit ou qu'on le coupe. Un placeholder l'ignore ; un modèle livré le joue
+ * dans son mixer. Rien ici ne sait si un modèle existe : c'est ce qui permet à
+ * un fichier d'arriver sans qu'une ligne change.
  */
 
 import * as THREE from 'three';
@@ -142,10 +150,15 @@ export function construireAnimations(
         v.cap = point.cap;
         // Un léger tangage : l'unité s'enfonce dans ses suspensions au départ.
         v.dy = Math.sin(p * Math.PI) * 0.012;
+        // Le clip de marche boucle à sa cadence propre, quel que soit le trajet.
+        v.clip = 'deplacement';
+        v.clipDuree = 0;
       }, () => {
         v.dx = 0;
         v.dz = 0;
         v.dy = 0;
+        v.clip = 'repos';
+        v.clipDuree = 0;
       });
     } else if (e.type === 'attaque') {
       const att = uniteParId(avant, e.attaquantId);
@@ -165,11 +178,15 @@ export function construireAnimations(
         ajouter(`tir:${e.attaquantId}`, MS_TIR, (p) => {
           v.cap = cap;
           v.recul = Math.sin(Math.min(1, p * 3) * Math.PI) * -0.09;
+          v.clip = 'tir';
+          v.clipDuree = MS_TIR;
           const eclat = Math.max(0, 1 - p * 4);
           sprite.material.opacity = eclat;
           sprite.scale.setScalar(0.34 + eclat * 0.4);
         }, () => {
           v.recul = 0;
+          v.clip = 'repos';
+          v.clipDuree = 0;
           ctx.effets.remove(sprite);
           sprite.material.dispose();
         });
@@ -178,16 +195,29 @@ export function construireAnimations(
         const vc = ctx.unites.visuel(e.cibleId);
         ajouter(`touche:${e.cibleId}`, MS_TOUCHE, (p) => {
           vc.secousse = Math.max(0, 1 - p) * 0.08;
+          vc.clip = 'touche';
+          vc.clipDuree = MS_TOUCHE;
         }, () => {
           vc.secousse = 0;
+          vc.clip = 'repos';
+          vc.clipDuree = 0;
         });
       }
       if (e.riposte > 0) {
         const va = ctx.unites.visuel(e.attaquantId);
-        ajouter(`riposte:${e.attaquantId}`, MS_TOUCHE, (p) => {
-          va.secousse = Math.max(0, 1 - p) * 0.06;
+        // La riposte n'arrive qu'une fois le tir parti : l'attaquant tire, puis
+        // encaisse. Une seule animation porte les deux temps, sans le retard de
+        // `ajouter`, qui tiendrait la secousse à son maximum pendant l'attente.
+        ajouter(`riposte:${e.attaquantId}`, MS_TIR + MS_TOUCHE, (p) => {
+          const t = (p * (MS_TIR + MS_TOUCHE) - MS_TIR) / MS_TOUCHE;
+          if (t < 0) return;
+          va.secousse = Math.max(0, 1 - t) * 0.06;
+          va.clip = 'touche';
+          va.clipDuree = MS_TOUCHE;
         }, () => {
           va.secousse = 0;
+          va.clip = 'repos';
+          va.clipDuree = 0;
         });
       }
     } else if (e.type === 'hors_jeu') {
@@ -199,13 +229,26 @@ export function construireAnimations(
         v.affaissement = p;
         v.opacite = 1 - p;
         v.dy = -p * 0.05;
+        v.clip = 'hors_jeu';
+        v.clipDuree = MS_HORS_JEU;
       }, () => {
+        v.clip = 'repos';
+        v.clipDuree = 0;
         ctx.unites.liberer(e.uniteId);
       });
     } else if (e.type === 'capture') {
       const cle = cleCase(e.case);
       const prise = ctx.drapeau(cle);
       if (!prise) continue;
+      const vu = ctx.unites.visuel(e.uniteId);
+      const capturer = (duree: number): void => {
+        vu.clip = 'capture';
+        vu.clipDuree = duree;
+      };
+      const reposer = (): void => {
+        vu.clip = 'repos';
+        vu.clipDuree = 0;
+      };
       // Le drapeau tel qu'il était **avant** le geste : l'état est déjà en
       // avance, le décor montre déjà l'arrivée. On repart du départ pour que
       // le mouvement se voie.
@@ -225,6 +268,7 @@ export function construireAnimations(
         eclat.scale.setScalar(0.3);
         ctx.effets.add(eclat);
         ajouter(`capture:${cle}`, MS_CAPTURE, (p) => {
+          capturer(MS_CAPTURE);
           if (p < partAmener) {
             prise.forcer(depart.camp, depart.niveau * (1 - p / partAmener));
             return;
@@ -237,6 +281,7 @@ export function construireAnimations(
           eclat.material.opacity = Math.sin(lueur * Math.PI) * 0.9;
           eclat.scale.setScalar(0.3 + lueur * 0.55);
         }, () => {
+          reposer();
           prise.relacher();
           ctx.effets.remove(eclat);
           eclat.material.dispose();
@@ -251,11 +296,13 @@ export function construireAnimations(
         pied.scale.setScalar(0.25);
         ctx.effets.add(pied);
         ajouter(`capture:${cle}`, MS_CAPTURE_EN_COURS, (p) => {
+          capturer(MS_CAPTURE_EN_COURS);
           const t = 1 - (1 - p) ** 2;
           prise.forcer(camp, depart.niveau + (arrivee.niveau - depart.niveau) * t);
           pied.material.opacity = Math.sin(p * Math.PI) * 0.7;
           pied.scale.setScalar(0.25 + p * 0.3);
         }, () => {
+          reposer();
           prise.relacher();
           ctx.effets.remove(pied);
           pied.material.dispose();
@@ -266,6 +313,8 @@ export function construireAnimations(
       const chantier = ctx.chantier(cle);
       if (!chantier) continue;
       remises.add(cle);
+      // Une remise en service est une capture pour le moteur : même geste.
+      const vu = ctx.unites.visuel(e.uniteId);
       // L'état est déjà en avance : le décor montre le bâtiment en service. On
       // rejoue la palissade en éphémère et on la fait tomber vers l'extérieur,
       // pan par pan ; les vitrages luisent une fois, puis rendent l'ambiance.
@@ -294,6 +343,8 @@ export function construireAnimations(
       poussiere.scale.setScalar(0.9);
       ctx.effets.add(poussiere);
       ajouter(`remise:${cle}`, MS_REMISE, (p) => {
+        vu.clip = 'capture';
+        vu.clipDuree = MS_REMISE;
         pans.forEach((pan, k) => {
           // Chaque pan part un peu après le précédent et tombe comme on tombe :
           // en accélérant, avec un petit rebond au sol.
@@ -310,6 +361,8 @@ export function construireAnimations(
         const lueur = Math.max(0, Math.min(1, (p - 0.55) / 0.25));
         chantier.eclairer(Math.sin(lueur * Math.PI * 0.5));
       }, () => {
+        vu.clip = 'repos';
+        vu.clipDuree = 0;
         chantier.relacher();
         for (const pan of pans) ctx.effets.remove(pan);
         ctx.effets.remove(poussiere);

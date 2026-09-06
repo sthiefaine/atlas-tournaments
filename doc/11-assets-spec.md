@@ -427,6 +427,19 @@ Le verdict a exactement la forme de `ReviewVerdict.motifs` (`03-schemas.md`) : `
 
 Il faut l'écrire pour que personne ne s'y trompe. Le validateur ne juge **ni la beauté, ni la ressemblance, ni le respect du ton, ni les interdits**. Il vérifie qu'un fichier est *utilisable* : bonne taille, bon pivot, bons noms, budget tenu, masque présent, clips présents. Le reste est une relecture humaine, une fois par livraison, à l'œil, sur un rendu de trois quarts et un rendu à 68° de tangage.
 
+### 7.4 La commande de contrôle, hors ligne (6 septembre 2026)
+
+Le même verdict, sans passer par l'API — c'est ce qu'on renvoie au générateur, tel quel :
+
+```
+npm run controler:asset -- --spec assets/specs/unite_char_leger_base.json --glb livraison/unite_char_leger_base_lod0.glb
+npm run controler:asset -- --spec … --glb … --fichiers livraison/    # les textures livrées à côté (§7.2)
+npm run controler:asset -- --spec … --glb … --lod 1                  # sinon déduit du suffixe _lodN du fichier
+npm run controler:asset -- --spec … --glb … --json                   # le verdict { ok, motifs } brut
+```
+
+`scripts/controler-asset.ts` lit et valide la spécification (`validerAssetSpec`), lit le fichier, appelle `validerGlb` et imprime le verdict — asset, fichier, niveau de détail, motifs avec leurs mesures. Code de sortie **1** si le fichier est refusé ou illisible (spécification comprise), **2** si la commande est mal appelée. Le niveau de détail contrôlé se lit dans le nom du fichier (`…_lod2.glb` relit le budget du lod2), `--lod` l'emporte. Un fichier dont le nom n'est pas celui du gabarit §4.5 est **accepté mais prévenu** : le validateur ne juge pas les noms de modèle, mais le rendu ne charge que `nomModele()` — un fichier bien contrôlé sous un mauvais nom resterait invisible. La fonction `executer(argv)` est exportée et testée (`tests/assets/controler-asset.test.ts`) contre un GLB fabriqué en mémoire et la vraie spécification du char léger : un cas accepté, un cas refusé, un kit avec ses textures à côté.
+
 ---
 
 ## 8. Le générateur de spécifications

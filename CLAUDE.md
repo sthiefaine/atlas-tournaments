@@ -246,6 +246,7 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, copie de sécurité `pg_dump` avant |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA |
 | `npm run controler -- --carte <fichier>` | le verdict exact de la routine contrôle, hors ligne |
+| `npm run controler:asset -- --spec assets/specs/<id>.json --glb <fichier.glb> [--fichiers <dossier>] [--json]` | le verdict `{ ok, motifs }` d'un asset livré, celui que la routine contrôle rendrait, hors ligne ; code 1 sur refus |
 | `npm run apercu -- --params '{"largeur":16,"hauteur":12}' --graine 7 --sortie apercus/c.png` | une carte en PNG et en texte |
 | `npx tsx scripts/generer-specs-assets.ts --verifier` | vérifie que `assets/specs/` n'a pas dérivé du canon |
 | `npm run extraire-chaines` | extrait les chaînes ; marche à blanc sans `DATABASE_URL` |
