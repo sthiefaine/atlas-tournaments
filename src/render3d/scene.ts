@@ -218,6 +218,26 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
 
   const horloge = doc.defaultView?.performance ?? { now: (): number => Date.now() };
 
+  /**
+   * Attend que le processeur graphique ait **fini** l'image mesurée. Sans cela
+   * on mesurerait l'envoi des commandes, pas le dessin, et un appareil lent
+   * passerait pour rapide. `finish()` ne suffit pas : Chrome le traite comme un
+   * `flush()` et rend la main aussitôt — sous SwiftShader, une image d'une
+   * seconde se mesurait à zéro et la chaîne s'allumait sur l'appareil le plus
+   * lent qui soit. Lire un pixel, lui, ne peut pas rendre avant que le dessin
+   * soit terminé : c'est la seule barrière synchrone dont WebGL dispose, et
+   * elle ne coûte que sur ces quelques images.
+   */
+  const pixel = new Uint8Array(4);
+  function attendreDessin(): void {
+    try {
+      const gl = renderer.getContext();
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+    } catch {
+      // Un contexte perdu ne se mesure pas ; on gardera le temps d'envoi.
+    }
+  }
+
   return {
     renderer,
     scene,
@@ -235,16 +255,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       renderer.info.reset();
       if (composeur) composeur.rendre(camera);
       else renderer.render(scene, camera);
-      if (mesure) {
-        // Sans attendre le processeur graphique, on mesurerait l'envoi des
-        // commandes, pas le dessin : un appareil lent passerait pour rapide.
-        // `finish()` ne coûte que sur ces quelques images.
-        try {
-          renderer.getContext().finish();
-        } catch {
-          // Un contexte perdu ne se mesure pas ; on gardera le temps d'envoi.
-        }
-      }
+      if (mesure) attendreDessin();
       const duree = horloge.now() - debut;
       msParImage = msParImage === 0 ? duree : msParImage * 0.85 + duree * 0.15;
       if (mesure) {
@@ -263,6 +274,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         appels: renderer.info.render.calls,
         msParImage,
         composeur: composeur !== null,
+        msCalibration: msMesurees,
       };
     },
 

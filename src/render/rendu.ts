@@ -50,6 +50,12 @@ export interface MesuresRendu {
   msParImage: number;
   /** Vrai si l'image passe par la chaîne de post-traitement. */
   composeur: boolean;
+  /**
+   * La médiane des images de calibration, processeur graphique compris, en
+   * millisecondes ; `null` tant qu'elle n'est pas mesurée ou hors qualité
+   * `auto`. C'est la seule durée ici qui attende vraiment le dessin.
+   */
+  msCalibration: number | null;
 }
 
 /**

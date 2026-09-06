@@ -311,7 +311,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     mesurer(): MesuresRendu {
-      return scene3d?.mesures() ?? { triangles: 0, appels: 0, msParImage: 0, composeur: false };
+      return scene3d?.mesures() ?? { triangles: 0, appels: 0, msParImage: 0, composeur: false, msCalibration: null };
     },
 
     capturer(): string | null {
