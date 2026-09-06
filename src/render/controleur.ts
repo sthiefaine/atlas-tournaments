@@ -3,6 +3,10 @@
  *
  *     inactif → sélection → chemin → action → (cible) → confirmation
  *
+ * À côté de ces phases, l'**inspection** : un double-clic ou un appui long sur
+ * une unité adverse visible allume ses déplacements et son enveloppe de tir,
+ * sans toucher à la partie. Elle se referme au clic suivant ou à Échap.
+ *
  * Deux règles fermes, qui font tenir toute l'architecture (`02-architecture.md`
  * §3.4) :
  *
@@ -20,8 +24,8 @@ import type {
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
-  depuisCle, manhattan, porte, portee, produitesPar, terrainLogique, uniteParId,
-  uniteSur, verifierProduction, constructionsPossibles,
+  depuisCle, estDesaffecte, manhattan, peutCapturerIci, porte, portee, produitesPar, terrainLogique, uniteParId,
+  uniteSur, unitesVues, verifierProduction, constructionsPossibles,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
 import type { OptionMenu } from './libelles';
@@ -33,7 +37,7 @@ export type Phase =
 
 /** Les suites proposables au joueur, dans l'ordre d'affichage du menu. */
 export const SUITES_MENU = [
-  'attaquer', 'capturer', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
+  'attaquer', 'capturer', 'remettre', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
 ] as const;
 /** Identifiant d'une entrée du menu d'actions. */
 export type IdSuite = typeof SUITES_MENU[number];
@@ -42,6 +46,7 @@ export type IdSuite = typeof SUITES_MENU[number];
 const CLE_MENU: Record<IdSuite, string> = {
   attaquer: 'hud.attaquer',
   capturer: 'hud.capturer',
+  remettre: 'hud.remettre',
   fusionner: 'hud.fusionner',
   embarquer: 'hud.embarquer',
   debarquer: 'hud.debarquer',
@@ -65,6 +70,13 @@ export interface VueControleur {
    * `null` hors phase `cible`, ou quand la phase vise des travaux.
    */
   visee: { attaquantId: string; depuis: Case; cibles: Case[]; cible: Case | null } | null;
+  /**
+   * L'unité adverse **inspectée** — double-clic ou appui long sur elle. Ses
+   * déplacements et son enveloppe de tir sont dans `surbrillances`, en `danger`
+   * et `attaque` ; le curseur reste posé dessus tant qu'elle est inspectée, de
+   * sorte que le panneau d'unité continue de la montrer.
+   */
+  inspection: string | null;
 }
 
 /** Ce que le contrôleur signale à son hôte. */
@@ -121,6 +133,17 @@ export class Controleur {
    * elle, une attaque au doigt partait toujours à l'aveugle.
    */
   private cibleVisee: Case | null = null;
+
+  /** L'unité adverse inspectée, hors de toute phase : l'inspection ne joue rien. */
+  private inspectionId: string | null = null;
+
+  /**
+   * Vrai juste après qu'un clic a joué un ordre. Un double-clic qui **confirme**
+   * une attaque arrive au contrôleur comme deux clics puis une demande
+   * d'inspection : sans ce témoin, confirmer un tir ouvrirait l'inspection de
+   * la cible qui vient d'être frappée.
+   */
+  private venaitDeJouer = false;
 
   private cacheAtteignables: {
     etat: EtatPartie; uniteId: string; cases: ReadonlySet<string>;
@@ -196,6 +219,7 @@ export class Controleur {
           cible: this.cibleVisee,
         }
         : null,
+      inspection: this.inspectionId,
     };
   }
 
@@ -205,6 +229,8 @@ export class Controleur {
 
   /** Déplace le curseur d'une case, sans rien choisir. */
   bougerCurseur(dx: number, dy: number): void {
+    // Quitter l'unité inspectée au clavier, c'est cesser de l'inspecter.
+    this.inspectionId = null;
     const c = {
       x: Math.max(0, Math.min(this.etatPartie.largeur - 1, this.curseurCase.x + dx)),
       y: Math.max(0, Math.min(this.etatPartie.hauteur - 1, this.curseurCase.y + dy)),
@@ -217,6 +243,9 @@ export class Controleur {
   /** Pose le curseur sur une case (souris, survol). */
   poserCurseur(c: Case): void {
     if (!this.dansCarte(c)) return;
+    // Pendant une inspection, le survol ne déplace pas le curseur : c'est lui qui
+    // dit au HUD quelle unité montrer, et la fiche doit rester celle qu'on inspecte.
+    if (this.inspectionId !== null) return;
     if (c.x === this.curseurCase.x && c.y === this.curseurCase.y) return;
     this.curseurCase = c;
     if (this.phaseCourante === 'selection') this.majChemin(c);
@@ -230,6 +259,9 @@ export class Controleur {
   /** Le geste principal sur une case : sélectionner, viser, valider. */
   clicCase(c: Case): void {
     if (!this.dansCarte(c) || this.phaseCourante === 'attente' || this.phaseCourante === 'fin') return;
+    this.venaitDeJouer = false;
+    // Un clic n'importe où referme l'inspection, puis fait son travail habituel.
+    this.inspectionId = null;
     this.curseurCase = c;
 
     if (this.phaseCourante === 'cible' && this.travaux.length > 0) {
@@ -281,8 +313,37 @@ export class Controleur {
     this.selectionnerSous(c);
   }
 
+  /**
+   * Inspecte l'unité adverse sous une case : double-clic à la souris, appui long
+   * au doigt. Rend vrai si une inspection s'est ouverte — l'hôte s'en sert pour
+   * qu'un appui long qui inspecte n'annule pas en plus. Sur une unité amie ou
+   * une case vide, rien ne change : les clics qui précédaient ont déjà agi.
+   */
+  inspecter(c: Case): boolean {
+    if (this.venaitDeJouer) {
+      this.venaitDeJouer = false;
+      return false;
+    }
+    if (!this.dansCarte(c) || this.phaseCourante === 'attente' || this.phaseCourante === 'fin') return false;
+    const u = uniteSur(this.etatPartie, c);
+    if (!u || u.camp === this.camp) return false;
+    // Sous brouillard, on n'inspecte que ce qu'on voit : `uniteSur` lit l'état
+    // entier, et la portée d'une unité cachée dirait où elle est.
+    if (!unitesVues(this.etatPartie, this.cat, this.camp).some((v) => v.id === u.id)) return false;
+    this.reinitialiserSelection();
+    this.inspectionId = u.id;
+    this.curseurCase = { x: u.x, y: u.y };
+    this.ecouteur.surChangement?.();
+    return true;
+  }
+
   /** Le geste secondaire (clic droit, appui long, Échap) : annuler d'un cran. */
   annuler(): void {
+    if (this.inspectionId !== null) {
+      this.inspectionId = null;
+      this.ecouteur.surChangement?.();
+      return;
+    }
     if (this.phaseCourante === 'cible' || this.phaseCourante === 'action') {
       this.phaseCourante = 'selection';
       this.cibles = [];
@@ -321,6 +382,10 @@ export class Controleur {
         this.jouerOrdre({ type: 'rien' });
         return;
       case 'capturer':
+      case 'remettre':
+        // Remettre en service est une capture pour le moteur : même suite, mêmes
+        // points. Seul le libellé change, parce que le joueur ne « capture » pas
+        // un bâtiment qui n'appartient à personne.
         this.jouerOrdre({ type: 'capturer' });
         return;
       case 'attaquer': {
@@ -415,6 +480,16 @@ export class Controleur {
       sortie.push({ case: this.batimentProduction, genre: 'production' });
       return sortie;
     }
+    const inspectee = this.inspectionId === null ? undefined : uniteParId(this.etatPartie, this.inspectionId);
+    if (inspectee) {
+      // L'inspection d'Advance Wars : où l'adversaire peut aller, et d'où il peut
+      // frapper. Ses arrivées sont un danger, pas une destination — le vert
+      // resterait lu comme « j'y vais ».
+      const atteignables = this.atteignablesDe(inspectee);
+      for (const k of atteignables) sortie.push({ case: depuisCle(k), genre: 'danger' });
+      for (const c of this.porteeAttaque(inspectee, atteignables)) sortie.push({ case: c, genre: 'attaque' });
+      return sortie;
+    }
     if (this.phaseCourante !== 'selection' && this.phaseCourante !== 'action') return sortie;
     const u = this.uniteSelectionnee();
     if (!u) return sortie;
@@ -468,16 +543,22 @@ export class Controleur {
     return [...vues.values()];
   }
 
+  /** Cases atteignables par l'unité sélectionnée, arrivée libre comprise. */
+  private atteignables(): ReadonlySet<string> {
+    const u = this.uniteSelectionnee();
+    return u ? this.atteignablesDe(u) : new Set<string>();
+  }
+
   /**
-   * Cases atteignables par l'unité sélectionnée, arrivée libre comprise.
+   * Cases atteignables par une unité, arrivée libre comprise. Elle peut avoir
+   * déjà agi : une inspection montre ce qu'elle pourra faire, pas ce qu'il lui
+   * reste à faire ce tour-ci.
    *
-   * Mémoïsé sur (état, sélection) : la vue le demande à chaque survol, et
+   * Mémoïsé sur (état, unité) : la vue le demande à chaque survol, et
    * l'enveloppe de tir le redemande derrière. Le cache tombe dès que l'état
    * change — c'est une identité de référence, jamais une comparaison profonde.
    */
-  private atteignables(): ReadonlySet<string> {
-    const u = this.uniteSelectionnee();
-    if (!u) return new Set<string>();
+  private atteignablesDe(u: Unite): ReadonlySet<string> {
     const cache = this.cacheAtteignables;
     if (cache && cache.etat === this.etatPartie && cache.uniteId === u.id) return cache.cases;
     const sortie = new Set<string>();
@@ -558,12 +639,9 @@ export class Controleur {
 
     if (ciblesDepuis(this.etatPartie, this.cat, u, arrivee, aBouge).length > 0) sortie.push('attaquer');
 
-    const terrain = terrainLogique(this.etatPartie, this.cat, arrivee);
-    const fiche = terrain === null ? undefined : this.cat.terrains[terrain];
-    if (
-      fiche?.capturable && porte(type, 'capture')
-      && this.etatPartie.proprietaires[cleCase(arrivee)] !== this.camp
-    ) sortie.push('capturer');
+    if (peutCapturerIci(this.etatPartie, this.cat, { ...u, ...arrivee })) {
+      sortie.push(estDesaffecte(this.etatPartie, arrivee) ? 'remettre' : 'capturer');
+    }
 
     if (this.voisinFusionnable(u, arrivee)) sortie.push('fusionner');
     if (this.transportVoisin(u, arrivee)) sortie.push('embarquer');
@@ -667,6 +745,7 @@ export class Controleur {
       return;
     }
     this.etatPartie = r.etat;
+    this.venaitDeJouer = true;
     this.reinitialiserSelection();
     if (r.etat.partie.terminee) this.phaseCourante = 'fin';
     this.ecouteur.surAction?.(action, r.evenements, avant, r.etat);
@@ -676,6 +755,7 @@ export class Controleur {
   /** Revient à l'état neutre sans toucher au curseur. */
   private reinitialiserSelection(): void {
     this.selectionId = null;
+    this.inspectionId = null;
     this.cheminCourant = [];
     this.cibles = [];
     this.cibleVisee = null;

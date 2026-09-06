@@ -9,7 +9,7 @@ import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
 import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
-import { PREFERENCES_PAR_DEFAUT, lirePreferences, type Preferences } from '../../preferences';
+import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lirePreferences, profilActif, type Preferences } from '../../preferences';
 import { enregistrerVictoire } from '../../campagne/progression';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
@@ -37,6 +37,9 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
   const [voirBriefing, setVoirBriefing] = useState(false);
   // Les réglages du joueur, lus une fois avant le montage du plateau.
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
+  // La clé de sauvegarde dépend du profil actif de l'appareil ; c'est la page
+  // qui la compose et la donne au rendu, qui ne connaît pas les profils.
+  const [cleSauvegarde, setCleSauvegarde] = useState<string | null>(null);
   const [voirAide, setVoirAide] = useState(false);
   // Une scène de dialogue est ouverte sur la carte : aucune modale ne doit
   // passer devant, pas même l'écran de fin.
@@ -48,18 +51,20 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
   // d'elle-même ; l'objectif, le tutoriel et « recommencer » restent à un clic,
   // derrière le fanion de mission.
   useEffect(() => {
-    const sauvegarde = lireSauvegarde(scenario.code);
+    const cle = cleSauvegardeDe(profilActif(), scenario.code);
+    const sauvegarde = lireSauvegarde(scenario.code, cle);
     const compatible = sauvegarde?.engineVersion === VERSION_MOTEUR && sauvegarde.catalogueVersion === scenario.catalogueVersion;
     const enCours = Boolean(compatible && sauvegarde && sauvegarde.actions.length > 0);
     setAncienFormat(Boolean(sauvegarde && sauvegarde.actions.length > 0 && !compatible));
     setPreferences(lirePreferences());
+    setCleSauvegarde(cle);
     setInitialise(true);
     setDepart(enCours ? 'reprise' : 'neuf');
   }, [scenario.code, scenario.catalogueVersion]);
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
-    if (!conteneur || depart === null) return undefined;
+    if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
     const ia = scenario.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
     const commandants = commandantsDuScenario(scenario);
     let jeu: Jeu | null = null;
@@ -69,6 +74,7 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
         scenario, carte, locale, commandants,
         adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants),
         reprendre: depart === 'reprise',
+        cleSauvegarde,
         fabriqueRendu: () => creerRendu3d({ biome: carte.biome, paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' } }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
@@ -90,7 +96,7 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
       setErreur(true);
     }
     return () => jeu?.demonter();
-  }, [depart, scenario, carte, locale, tentative, mission, preferences]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };

@@ -57,6 +57,20 @@ const GRAINES = ['accueil:1', 'accueil:2', 'accueil:3', 'accueil:4', 'accueil:5'
 const MS_ENTRE_ACTIONS = 190;
 /** Durée d'affichage de la portée avant qu'une unité ne s'élance. */
 const MS_INTENTION = 330;
+/**
+ * Crans de dézoom au cadrage, depuis le cadrage de la carte entière que le rendu
+ * fait à son montage — qui borne déjà les cases à 64 px, donc ne montre qu'un
+ * tiers de la carte sur un téléphone. Quatre crans sur un écran étroit ramènent
+ * la case à 48 px, la limite de lisibilité du rendu, et l'écran voit huit
+ * colonnes : l'île, ses deux ponts et une rive. Jamais six : la carte entière
+ * tenue dans la largeur d'un téléphone donne des cases de vingt pixels, où l'on
+ * ne distingue ni une unité, ni le vert, ni le rouge. Sur un grand écran, la
+ * carte entière tient à 80 px la case : dézoomer ne ferait que la rétrécir dans
+ * le vide. On montre une **manœuvre**, pas un plan.
+ */
+function cransDezoom(): number {
+  return window.innerWidth < 720 ? 4 : 0;
+}
 /** Pause sur l'écran de fin avant de relancer la partie. */
 const MS_AVANT_REPRISE = 2600;
 /** Garde-fou : au-delà, on repart d'une partie neuve plutôt que de boucler. */
@@ -155,13 +169,26 @@ export default function Attract() {
       });
     }
 
+    /**
+     * Cadre le centre de la carte — sur la carte d'exhibition, l'île, ses villes
+     * neutres et ses ponts : là où les deux camps vont se rencontrer. Le monde 3D
+     * n'existe qu'après le premier `afficher()` : appelé avant, ce cadrage ne
+     * faisait rien, et la caméra restait sur la carte entière jusqu'à la
+     * première reprise. On passe par `cadrer` et non `recentrer`, parce que le
+     * rendu réserve son premier `cadrer` à un centrage franc : le consommer ici
+     * garantit que l'action suivante ne recadre que si elle sort du champ.
+     */
+    function cadrerCarte(): void {
+      rendu.cadrer?.({ x: Math.floor(etat.largeur / 2), y: Math.floor(etat.hauteur / 2) });
+      // `limiter()` borne le dézoom à la distance qui garde une case lisible :
+      // on ne peut pas reculer trop loin, quelle que soit la taille de l'écran.
+      const crans = cransDezoom();
+      for (let i = 0; i < crans; i += 1) rendu.zoomer?.(-1);
+    }
+
     async function boucler(hoteRendu: HTMLDivElement): Promise<void> {
-      // Aucun cadrage ici : `creerRendu3d` appelle déjà `cadrerCarte()` au
-      // montage, qui prend la **distance exacte** faisant tenir la carte
-      // entière. Le refaire à coups de crans de zoom — réglés pour l'ancienne
-      // caméra 2D, qui n'avait pas les mêmes paliers — donnait un va-et-vient
-      // d'échelle à chaque reprise.
       afficher();
+      cadrerCarte();
       hoteRendu.dataset['attract'] = 'pret';
       let jouees = 0;
 
@@ -175,6 +202,7 @@ export default function Attract() {
           etat = etatNeuf();
           jouees = 0;
           afficher();
+          cadrerCarte();
           continue;
         }
 
@@ -198,9 +226,10 @@ export default function Attract() {
           // L'intention avant le geste : la portée s'allume, la flèche se pose,
           // puis l'unité part. C'est la lecture que le joueur devra faire.
           if (action.type === 'ordre' && action.chemin.length > 1) {
-            // La caméra ne bouge **jamais** : la carte tient entière à l'écran,
-            // et une caméra qui court après chaque unité donne le mal de mer sur
-            // une page qu'on ne fait que regarder.
+            // `cadrer` ne recentre que si la case sort du champ : la caméra
+            // suit l'action sans sauter à chaque coup.
+            const depart = action.chemin[0];
+            if (depart) rendu.cadrer?.(depart);
             afficher(porteeVerte(etat, cat, action.uniteId), action.chemin, action.uniteId);
             await pause(MS_INTENTION);
             if (!vivant) return;

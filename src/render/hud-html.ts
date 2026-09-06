@@ -22,8 +22,8 @@ import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../s
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
 import {
-  libelleMeteo, libellePhase, libelleSaison, nomCommandant, nomTerrain, nomUnite,
-  type OptionMenu,
+  libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, nomCommandant,
+  nomTerrain, nomUnite, type OptionMenu,
 } from './libelles';
 import { ficheUnite, porte, type Duel } from './fiche-unite';
 import { paletteDe } from './palettes';
@@ -159,6 +159,7 @@ const STYLE = `
    liseré de 4 px, et rien de plus. */
 .atlas-hud .ordres-grille button[data-valeur='attaquer']{border-left:4px solid #ff2e48}
 .atlas-hud .ordres-grille button[data-valeur='capturer']{border-left:4px solid #ffc634}
+.atlas-hud .ordres-grille button[data-valeur='remettre']{border-left:4px solid #ffc634}
 .atlas-hud .ordres-grille button[data-valeur='construire']{border-left:4px solid #4eaaff}
 .atlas-hud .ordres-grille .symbole{width:21px;height:21px;color:#9fb6b8}
 .atlas-hud .ordres-grille button:hover .symbole{color:var(--signal)}
@@ -191,18 +192,45 @@ const STYLE = `
 .atlas-hud .voile{position:absolute;inset:0;pointer-events:auto;background:#07172499;display:flex;align-items:center;justify-content:center;z-index:5;padding:var(--haut) 12px var(--bas)}
 .atlas-hud .modale{position:relative;pointer-events:auto;background:var(--papier);color:var(--encre);border-top:5px solid var(--signal);box-shadow:6px 6px 0 #10212c80;width:420px;max-width:100%;max-height:100%;display:flex;flex-direction:column;overflow:hidden}
 .atlas-hud .modale h2{margin:0;padding:20px 20px 12px;font-size:20px;font-weight:850;text-transform:uppercase}
-.atlas-hud .liste{overflow:auto;overscroll-behavior:contain;padding:2px 12px 6px;flex:1 1 auto}
-.atlas-hud .liste button{all:unset;display:flex;box-sizing:border-box;width:100%;gap:12px;align-items:center;min-height:64px;padding:10px 12px;cursor:pointer;margin-bottom:6px;background:#e1ddca;border-left:3px solid #60737a}
+.atlas-hud .modale:focus{outline:none}
+/* Le menu de production : la liste à gauche, la fiche à droite. Une grille de
+   vignettes sans détail obligeait à recruter à l'aveugle ; ici on lit avant de
+   payer. */
+.atlas-hud .modale.production{width:760px}
+.atlas-hud .production-entete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-right:14px}
+.atlas-hud .production-entete h2{padding:16px 20px 12px}
+.atlas-hud .production-entete .retour{background:#15243b12;border-color:#15243b30;color:var(--encre)}
+.atlas-hud .production-corps{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);flex:1 1 auto;min-height:0}
+.atlas-hud .liste{overflow:auto;overscroll-behavior:contain;padding:2px 10px 10px 12px;min-height:0;background:#15243b0a}
+.atlas-hud .liste button{all:unset;display:flex;box-sizing:border-box;width:100%;gap:10px;align-items:center;min-height:56px;padding:6px 10px;cursor:pointer;margin-bottom:5px;background:#e1ddca;border-left:4px solid #60737a}
 .atlas-hud .liste button:hover{background:#d0d7cc}
+/* La ligne mise en avant s'inverse : encre sur papier devient papier sur encre.
+   C'est le seul contraste qui se lit d'un coup d'œil dans une liste de dix. */
+.atlas-hud .liste button[data-actif='oui']{background:var(--encre);color:var(--papier);border-left-color:var(--signal)}
+.atlas-hud .liste button[data-actif='oui'] .cout{color:var(--signal)}
+/* Trop chère : grisée, mais toujours cliquable. Lire la fiche d'une unité qu'on
+   ne peut pas encore payer, c'est savoir pour quoi l'on économise. */
+.atlas-hud .liste button[data-abordable='non']{opacity:.55}
 .atlas-hud .liste canvas{flex:0 0 auto;width:38px;height:38px}
-.atlas-hud .liste .cout{font-size:14px;color:#45606b}
-.atlas-hud .liste .cout.dur{color:#9a4a42;font-weight:750}
-/* L'appel à l'action : « Production » tant que la fiche est fermée, « Produire »
-   une fois qu'on a lu. Le même bouton, deux temps — on informe sans coûter un
-   geste à qui sait déjà ce qu'il achète. */
-.atlas-hud .liste .cta{margin-left:auto;flex:0 0 auto;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:#45606b}
-.atlas-hud .production button[aria-expanded='true']{background:#d0d7cc;border-left-color:var(--signal);margin-bottom:0}
-.atlas-hud .production button[aria-expanded='true'] .cta{color:#1d3a2a}
+.atlas-hud .liste .tt{flex:1;min-width:0;font-size:14px}
+.atlas-hud .liste .cout{flex:none;font-size:13px;font-weight:750;color:#45606b;font-variant-numeric:tabular-nums}
+.atlas-hud .panneau-fiche{display:flex;flex-direction:column;min-height:0;border-left:1px solid #15243b22}
+.atlas-hud .fiche-corps{overflow:auto;overscroll-behavior:contain;flex:1 1 auto;min-height:0;padding:4px 20px 12px 18px}
+.atlas-hud .fiche-entete{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.atlas-hud .fiche-entete canvas{flex:0 0 auto;width:72px;height:72px;background:#15243b0d;border-bottom:3px solid #d2b66e}
+.atlas-hud .fiche-nom{font-size:21px;font-weight:850;line-height:1.1}
+.atlas-hud .fiche-cout{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:15px;font-weight:850;color:#45606b;font-variant-numeric:tabular-nums}
+.atlas-hud .fiche-cout .symbole{width:16px;height:16px}
+.atlas-hud .panneau-fiche dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px 14px;margin:0 0 12px}
+.atlas-hud .panneau-fiche dt{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#5f7680}
+.atlas-hud .panneau-fiche dd{margin:2px 0 0;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.atlas-hud .panneau-fiche .vide{color:#7a8b93;font-weight:600}
+.atlas-hud .fiche-traits{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.atlas-hud .fiche-traits span{padding:3px 8px;background:#15243b14;font-size:12px;font-weight:750}
+.atlas-hud .fiche-action{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:10px 20px 16px 18px;border-top:1px solid #15243b22}
+.atlas-hud .fiche-action .note{font-size:12px;font-weight:750;color:#8a5a1e}
+.atlas-hud .fiche-action .recruter{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 22px;cursor:pointer;font-weight:900;font-size:15px;text-transform:uppercase;letter-spacing:.04em;background:var(--signal);color:var(--encre);border-bottom:4px solid #c4923a;font-variant-numeric:tabular-nums}
+.atlas-hud .fiche-action .recruter:disabled{background:#c9c4b2;color:#5f6d73;border-bottom-color:#a8a392}
 /* La fiche : tout ce que le canon sait dire de l'unité, et rien d'inventé. */
 /* La fiche, à la manière d'Advance Wars : un cadre à biseau, des titres en
    rubans, des statistiques dites par un signe, et la table de dégâts en rangée
@@ -242,11 +270,7 @@ const STYLE = `
 .atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--f-doux)}
 @media(max-width:360px){.atlas-hud .fiche .deux{grid-template-columns:1fr}}
 .atlas-hud .detail{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:auto;background:#ffffff10;border:1px solid #ffffff20;font-size:15px;font-weight:850;font-style:italic;color:#d6e2ea}
-.atlas-hud .detail[aria-expanded='true']{background:var(--signal);border-color:var(--signal);color:#10222b;font-style:normal}
 .atlas-hud .inspect .detail+.retour{margin-left:6px}
-@media(max-width:480px){
-  .atlas-hud .liste button:not([aria-expanded='true']) .cta{display:none}
-}
 .atlas-hud .pied{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
 .atlas-hud .pied button{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 20px;cursor:pointer;font-weight:750;background:var(--encre);color:var(--papier)}
 .atlas-hud .fin{text-align:center;padding:26px 24px 22px}
@@ -275,6 +299,24 @@ const STYLE = `
   .atlas-hud .inspect canvas{width:36px;height:36px}
   .atlas-hud .inspect .tt{font-size:14px}
   .atlas-hud .voile{align-items:flex-end}
+}
+/* Sous 640 px, les deux colonnes se superposent : la liste en haut, bornée en
+   hauteur de conteneur (cqh) pour que la fiche garde toujours sa part d'écran,
+   la fiche en bas. La modale ne dépasse jamais : elle est bornée à 100 % du
+   voile et chacune de ses parties défile pour elle-même. */
+@container atlas-interface (max-width: 640px){
+  .atlas-hud .production-corps{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .atlas-hud .liste{max-height:32cqh;padding:2px 10px 6px;border-bottom:1px solid #15243b22}
+  .atlas-hud .liste button{min-height:44px;padding:4px 8px;gap:9px;margin-bottom:4px}
+  .atlas-hud .liste canvas{width:30px;height:30px}
+  .atlas-hud .fiche{border-left:0}
+  .atlas-hud .fiche-corps{padding:8px 14px}
+  .atlas-hud .fiche-entete{margin-bottom:8px}
+  .atlas-hud .fiche-entete canvas{width:54px;height:54px}
+  .atlas-hud .fiche-nom{font-size:17px}
+  .atlas-hud .fiche dl{gap:6px 10px;margin-bottom:8px}
+  .atlas-hud .fiche-action{padding:8px 14px 12px}
+  .atlas-hud .production-entete h2{padding:12px 14px 8px;font-size:17px}
 }
 @container atlas-interface (max-width: 360px){.atlas-hud .fonds .symbole{display:none}}
 @container atlas-interface (max-height: 500px){
@@ -336,6 +378,7 @@ function iconeOrdre(type: string): string {
     fonds: '<path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',
     pouvoir: '<path d="m13 2-9 12h7l-1 8 10-13h-7z" fill="currentColor" stroke="none"/>',
     capturer: '<path d="M5 22V3m0 1c5-4 8 4 14 0v10c-6 4-9-4-14 0"/>',
+    remettre: '<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/><path d="M12 4v3"/>',
     attaquer: '<circle cx="12" cy="12" r="7"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>',
     attendre: '<path d="M6 3h12M6 21h12M7 3v5l10 8v5M17 3v5L7 16v5"/>',
     construire: '<path d="m4 20 10-10M14 3a6 6 0 0 0-4 8l-8 8 3 3 8-8a6 6 0 0 0 8-5l-4 3-4-4 3-4z"/>',
@@ -355,8 +398,21 @@ function iconeOrdre(type: string): string {
   return `<svg class="symbole" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">${chemins[type] ?? chemins['capturer']}</svg>`;
 }
 
+/** Sursis du panneau d'inspection : le temps d'atteindre son bouton. */
+const MS_SURSIS_INSPECTION = 1500;
+
 /** Une vignette d'unité à peindre après insertion : le sprite vectoriel partagé. */
 interface Vignette { id: string; silhouette: Silhouette; camp: CampId; taille: number }
+
+/**
+ * L'unité mise en avant à l'ouverture du menu : la première que les fonds
+ * permettent, sinon la première tout court — une fiche vide n'apprend rien.
+ */
+export function premiereAbordable(
+  cat: Catalogue, unites: readonly CleUnite[], fonds: number,
+): CleUnite | null {
+  return unites.find((c) => (cat.unites[c]?.cout ?? Infinity) <= fonds) ?? unites[0] ?? null;
+}
 
 /**
  * Monte le HUD HTML dans un conteneur (le même que le canvas, en position
@@ -370,14 +426,7 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   racine.setAttribute('data-hud', 'html');
   conteneur.appendChild(racine);
 
-/** Sursis du panneau d'inspection : le temps d'atteindre son bouton. */
-const MS_SURSIS_INSPECTION = 1500;
-
   let vignettes: Vignette[] = [];
-  // L'unité dont la fiche est dépliée dans le menu de production. Un premier
-  // appui l'ouvre, un second produit : on informe sans coûter un geste à qui
-  // sait déjà ce qu'il achète.
-  let ficheOuverte: CleUnite | null = null;
   // La fiche du panneau d'inspection, elle, **reste ouverte** d'une case à
   // l'autre : c'est une façon de jouer, pas un choix par unité. Qui apprend la
   // laisse dépliée, qui connaît la referme une fois.
@@ -393,6 +442,14 @@ const MS_SURSIS_INSPECTION = 1500;
   let derniereSelection: string | null = null;
   let minuterieTour: ReturnType<typeof setTimeout> | null = null;
   let banniereTour: HTMLDivElement | null = null;
+  /**
+   * Le menu de production a un état à lui : l'unité dont on lit la fiche. Il
+   * reste dans le HUD — le contrôleur sait ce qui est produisible, pas ce que le
+   * joueur est en train de regarder. `productionOuverte` retient le bâtiment,
+   * pour remettre la fiche sur la première unité abordable à chaque ouverture.
+   */
+  let productionOuverte: string | null = null;
+  let uniteMiseEnAvant: CleUnite | null = null;
 
   /**
    * Le bandeau de tour. Il **attend qu'un commandant ait fini de parler** : une
@@ -547,6 +604,9 @@ const MS_SURSIS_INSPECTION = 1500;
     if (unite && type) {
       lignes.push(api.t('hud.points_de_vie', { n: pvAffiches(unite.pv) }));
       lignes.push(api.t('hud.mouvement', { n: type.mouvement }));
+      // Même ordre que la fiche de production : mouvement, portée, munitions,
+      // carburant. La portée ne se dit que si elle apprend quelque chose.
+      if (type.portee[1] > 1) lignes.push(api.t('hud.portee', { n: portee(type.portee) }));
       if (unite.munitions !== null) lignes.push(api.t('hud.munitions', { n: unite.munitions }));
       if (unite.carburant !== null) lignes.push(api.t('hud.carburant', { n: unite.carburant }));
     }
@@ -723,9 +783,11 @@ const MS_SURSIS_INSPECTION = 1500;
    * Le même balisage sert au menu de production — avant l'achat — et au panneau
    * d'inspection — une fois l'unité sur la carte. Ce sont les mêmes questions,
    * et il serait absurde qu'elles reçoivent deux réponses. Seules les couleurs
-   * changent, par le CSS : papier dans la modale, encre sous le curseur.
+   * changent, par le CSS : papier dans la modale, encre sous le curseur. La
+   * ligne de chiffres est facultative : le menu de production les affiche déjà
+   * dans sa grille d'étiquettes, on ne les dit pas deux fois.
    */
-  function blocFiche(v: VueJeu, cle: CleUnite): string {
+  function blocFiche(v: VueJeu, cle: CleUnite, avecChiffres = true): string {
     const f = ficheUnite(v.catalogue, cle);
     const type = v.catalogue.unites[cle];
     if (!f || !type) return '';
@@ -766,13 +828,15 @@ const MS_SURSIS_INSPECTION = 1500;
           .map((g) => `<span class="puce">${ech(libelleMeteo(api.t, g.meteo))}</span>`).join(''),
       )).join('');
 
-    return `<div class="fiche">`
-      + `<p class="chiffres">`
+    const chiffres = !avecChiffres ? '' : `<p class="chiffres">`
       + stat('mouvement', f.mouvement, api.t('hud.mouvement', { n: f.mouvement }))
       + stat('vue', f.vision, api.t('hud.vision', { n: f.vision }))
       + stat('portee', portee, api.t('hud.portee', { n: portee }))
       + stat('munitions', munitions, f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))
-      + `</p>`
+      + `</p>`;
+
+    return `<div class="fiche">`
+      + chiffres
       + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
       + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
       + bloc('fiche.forte', duels(f.forte), 'fort')
@@ -787,37 +851,95 @@ const MS_SURSIS_INSPECTION = 1500;
       + `</div>`;
   }
 
+  /** Les fonds du camp qui joue — le menu ne s'ouvre qu'à son tour. */
+  function fondsCourants(v: VueJeu): number {
+    return v.etat.camps.find((c) => c.id === v.etat.campCourant)?.fonds ?? 0;
+  }
+
+  /** Une portée de tir en clair : « 1 », ou « 2 à 3 ». */
+  function portee([min, max]: readonly [number, number]): string {
+    return min === max ? String(max) : api.t('fiche.portee_plage', { min, max });
+  }
+
+  /**
+   * L'unité dont la fiche est ouverte. À l'ouverture d'un bâtiment — ou si la
+   * liste a changé sous nos pieds —, on repart de la première abordable.
+   */
+  function uniteEnAvant(v: VueJeu, p: NonNullable<VueJeu['production']>): CleUnite | null {
+    const cle = `${p.batiment.x},${p.batiment.y}`;
+    if (productionOuverte !== cle || !uniteMiseEnAvant || !p.unites.includes(uniteMiseEnAvant)) {
+      productionOuverte = cle;
+      uniteMiseEnAvant = premiereAbordable(v.catalogue, p.unites, fondsCourants(v));
+    }
+    return uniteMiseEnAvant;
+  }
+
+  /**
+   * La colonne de droite du menu de production : ce que l'unité coûte, comment
+   * elle bouge, ce qu'elle voit, ce qu'elle porte — puis la fiche commune à
+   * l'inspection, `blocFiche`, qui dit ce qu'elle démolit et ce qui la démolit.
+   */
+  function ficheProduction(v: VueJeu, cle: CleUnite): string {
+    const type = v.catalogue.unites[cle];
+    if (!type) return '';
+    const fonds = fondsCourants(v);
+    const abordable = type.cout <= fonds;
+    const id = `vg${vignettes.length}`;
+    vignettes.push({ id, silhouette: type.silhouette, camp: v.etat.campCourant, taille: 72 });
+    const illimite = api.t('fiche.illimite');
+    const stats: [string, string][] = [
+      [api.t('fiche.mouvement'), `${nombreIntl(v.locale, type.mouvement)} · ${libelleMouvement(api.t, type.typeMouvement)}`],
+      [api.t('fiche.vision'), nombreIntl(v.locale, type.vision)],
+      [api.t('fiche.portee'), portee(type.portee)],
+      [api.t('fiche.munitions'), type.munitions === null ? illimite : nombreIntl(v.locale, type.munitions)],
+      [api.t('fiche.carburant'), type.carburant === null ? illimite : nombreIntl(v.locale, type.carburant.max)],
+    ];
+    const traits = type.traits.length > 0
+      ? type.traits.map((tr) => `<span>${ech(libelleTrait(api.t, tr))}</span>`).join('')
+      : `<span class="vide">${ech(api.t('fiche.sans_trait'))}</span>`;
+    const cout = nombreIntl(v.locale, type.cout);
+    return `<div class="panneau-fiche" role="group" aria-label="${ech(api.t('fiche.titre'))}"><div class="fiche-corps">`
+      + `<div class="fiche-entete"><canvas data-vignette="${id}" width="72" height="72"></canvas><div style="min-width:0">`
+      + `<div class="fiche-nom">${ech(nomUnite(v.locale, v.catalogue, cle))}</div>`
+      + `<div class="fiche-cout">${iconeOrdre('fonds')}<span>${ech(cout)}</span></div></div></div>`
+      + `<dl>${stats.map(([k, val]) => `<div><dt>${ech(k)}</dt><dd>${ech(val)}</dd></div>`).join('')}</dl>`
+      + `<div><dt>${ech(api.t('fiche.traits'))}</dt>`
+      + `<div class="fiche-traits">${traits}</div></div>`
+      + blocFiche(v, cle, false)
+      + `</div><div class="fiche-action">`
+      + (abordable ? '' : `<span class="note">${ech(api.t('fiche.fonds_insuffisants'))}</span>`)
+      + `<button type="button" class="recruter" data-action="produire" data-valeur="${ech(cle)}"${abordable ? '' : ' disabled'}>`
+      + `${ech(api.t('fiche.recruter'))}<span aria-hidden="true">·</span><span>${ech(cout)}</span></button></div></div>`;
+  }
+
+  /**
+   * Le menu de production, en deux colonnes : à gauche la liste de ce que le
+   * bâtiment produit, à droite la fiche de l'unité mise en avant. Un clic dans
+   * la liste change la fiche sans rien fermer ; seul « Recruter » engage.
+   */
   function modaleProduction(v: VueJeu): string {
-    if (!v.production) return '';
-    const fonds = v.etat.camps.find((c) => c.id === v.etat.campCourant)?.fonds ?? 0;
-    const nomDe = (cle: CleUnite): string => nomUnite(v.locale, v.catalogue, cle);
-    const lignes = v.production.unites.map((cle) => {
+    const p = v.production;
+    if (!p) return '';
+    const fonds = fondsCourants(v);
+    const enAvant = uniteEnAvant(v, p);
+    const lignes = p.unites.map((cle) => {
       const type = v.catalogue.unites[cle];
       if (!type) return '';
       const abordable = type.cout <= fonds;
-      const ouverte = ficheOuverte === cle;
+      const actif = cle === enAvant;
       const id = `vg${vignettes.length}`;
       vignettes.push({ id, silhouette: type.silhouette, camp: v.etat.campCourant, taille: 38 });
-
-      // Le prix cède la place au motif du refus : « 6 500 » grisé ne dit pas
-      // pourquoi le bouton ne répond pas.
-      const prix = abordable
-        ? `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span>`
-        : `<span class="cout dur">${ech(api.t('fiche.trop_cher'))}</span>`;
-
-      const entete = `<button type="button" data-action="${ouverte && abordable ? 'produire' : 'apercu'}" `
-        + `data-valeur="${ech(cle)}" aria-expanded="${ouverte}"${!abordable && ouverte ? ' disabled' : ''}>`
-        + `<canvas data-vignette="${id}" width="38" height="38"></canvas><span style="min-width:0">`
-        + `<span class="tt" style="display:block">${ech(nomDe(cle))}</span>${prix}</span>`
-        + `<span class="cta">${ech(api.t(ouverte ? 'fiche.produire' : 'menu.production'))}</span></button>`;
-
-      return ouverte ? entete + blocFiche(v, cle) : entete;
+      return `<button type="button" data-action="mettre_en_avant" data-valeur="${ech(cle)}"`
+        + ` data-actif="${actif ? 'oui' : 'non'}" data-abordable="${abordable ? 'oui' : 'non'}" aria-pressed="${actif ? 'true' : 'false'}">`
+        + `<canvas data-vignette="${id}" width="38" height="38"></canvas>`
+        + `<span class="tt">${ech(nomUnite(v.locale, v.catalogue, cle))}</span>`
+        + `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span></button>`;
     }).join('');
-
-    return `<div class="voile" data-action="fermer"><div class="modale" data-arret="1">`
-      + `<h2>${ech(api.t('menu.production'))}</h2><div class="liste production">${lignes}</div>`
-      + `<div class="pied"><button type="button" data-action="fermer">${ech(api.t('menu.retour'))}</button></div>`
-      + `</div></div>`;
+    return `<div class="voile" data-action="fermer"><div class="modale production" data-arret="1" tabindex="-1" role="dialog" aria-label="${ech(api.t('menu.production'))}">`
+      + `<div class="production-entete"><h2>${ech(api.t('menu.production'))}</h2>${boutonRetour()}</div>`
+      + `<div class="production-corps"><div class="liste" role="group" aria-label="${ech(api.t('fiche.liste'))}">${lignes}</div>`
+      + (enAvant ? ficheProduction(v, enAvant) : '')
+      + `</div></div></div>`;
   }
 
   function ecranFin(v: VueJeu): string {
@@ -870,6 +992,8 @@ const MS_SURSIS_INSPECTION = 1500;
     // Le duel se calcule **une fois** : il pousse des vignettes, et deux appels
     // en réclameraient deux fois plus qu'il n'y a de canvas à peindre.
     const duel = panneauDuel(v);
+    const actif = doc.activeElement;
+    const focusAvant = actif instanceof HTMLElement && racine.contains(actif) ? actif.dataset : null;
     racine.innerHTML = panneauPartie(v) + panneauBulletin(v)
       + `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`
       + duel + panneauInspection(v, duel !== '') + panneauOrdres(v) + panneauCamera()
@@ -877,6 +1001,36 @@ const MS_SURSIS_INSPECTION = 1500;
     const bulletin = racine.querySelector<HTMLDetailsElement>('.bulletin');
     if (bulletin) bulletin.open = bulletinOuvert;
     peindreVignettes();
+    replacerFocus(v, focusAvant);
+  }
+
+  /**
+   * La modale de production se reconstruit à chaque rafraîchissement, et le
+   * focus meurt avec elle. On le remet là où il était — sur le même bouton —,
+   * sinon sur la modale elle-même : c'est ce qui fait qu'Entrée, Espace et Échap
+   * lui parviennent au lieu d'aller au plateau. Dans la liste, le focus suit la
+   * ligne mise en avant, pour que les flèches et la fiche disent la même chose.
+   * À la fermeture, le clavier revient au plateau.
+   */
+  function replacerFocus(v: VueJeu, avant: DOMStringMap | null): void {
+    if (v.production) {
+      const modale = racine.querySelector<HTMLElement>('.modale.production');
+      let cible: HTMLElement | null = null;
+      if (avant?.['action'] === 'mettre_en_avant') {
+        cible = racine.querySelector<HTMLElement>('.liste button[data-actif="oui"]');
+      } else if (avant?.['action']) {
+        const valeur = avant['valeur'] ? `[data-valeur="${avant['valeur']}"]` : '';
+        cible = racine.querySelector<HTMLElement>(`.modale.production [data-action="${avant['action']}"]${valeur}`);
+      }
+      (cible ?? modale)?.focus({ preventScroll: true });
+      racine.querySelector('.liste button[data-actif="oui"]')?.scrollIntoView({ block: 'nearest' });
+      return;
+    }
+    if (productionOuverte !== null) {
+      productionOuverte = null;
+      uniteMiseEnAvant = null;
+      conteneur.querySelector<HTMLElement>('canvas[tabindex]')?.focus({ preventScroll: true });
+    }
   }
 
   function surClic(e: Event): void {
@@ -885,26 +1039,66 @@ const MS_SURSIS_INSPECTION = 1500;
     const bouton = cible.closest('[data-action]');
     if (!(bouton instanceof HTMLElement)) return;
     if (bouton.hasAttribute('disabled')) return;
-    // Un clic dans la modale ne la ferme pas : seul le voile ferme.
-    if (bouton.dataset['action'] === 'fermer' && cible.closest('[data-arret]') && cible !== bouton) return;
+    // Un clic dans la modale ne la ferme pas : seul le voile lui-même ferme.
+    if (bouton.classList.contains('voile') && cible.closest('[data-arret]')) return;
     e.preventDefault();
     e.stopPropagation();
     const valeur = bouton.dataset['valeur'] ?? '';
     switch (bouton.dataset['action']) {
       case 'fin_tour': api.finTour(); break;
       case 'suite': api.choisirSuite(valeur); break;
-      case 'produire': ficheOuverte = null; api.choisirProduction(valeur); break;
-      // Déplier une fiche ne touche à rien du jeu : on redessine, c'est tout.
-      case 'apercu': ficheOuverte = valeur === ficheOuverte ? null : (valeur as CleUnite); rafraichir(); break;
+      case 'produire': api.choisirProduction(valeur); break;
+      // Changer l'unité mise en avant ne touche à rien du jeu : on redessine, c'est tout.
+      case 'mettre_en_avant': uniteMiseEnAvant = valeur; rafraichir(); break;
       // Déplier la fiche sous le curseur ne touche à rien du jeu non plus.
       case 'fiche': ficheInspection = !ficheInspection; rafraichir(); break;
       case 'pouvoir': api.jouerPouvoir('normal'); break;
-      case 'fermer': ficheOuverte = null; api.annuler(); break;
+      case 'fermer': api.annuler(); break;
       case 'rejouer': api.recommencer(); break;
       case 'zoom_plus': api.zoomer?.(1); break;
       case 'zoom_moins': api.zoomer?.(-1); break;
       case 'recentrer': api.recentrer?.(); break;
       default: break;
+    }
+  }
+
+  /** Recrute l'unité mise en avant, si les fonds le permettent. */
+  function recruter(v: VueJeu): void {
+    const cle = uniteMiseEnAvant;
+    const type = cle ? v.catalogue.unites[cle] : undefined;
+    if (!cle || !type || type.cout > fondsCourants(v)) return;
+    api.choisirProduction(cle);
+  }
+
+  /**
+   * Le clavier dans le menu de production : Entrée et Espace recrutent, Échap
+   * ferme, les flèches parcourent la liste. Sur un bouton, Entrée et Espace
+   * valent déjà un clic pour le navigateur — on ne double pas.
+   */
+  function surTouche(e: KeyboardEvent): void {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const v = api.vue();
+    const p = v.production;
+    if (!p) return;
+    switch (e.code) {
+      case 'Escape':
+        e.preventDefault(); e.stopPropagation();
+        api.annuler();
+        return;
+      case 'Enter': case 'NumpadEnter': case 'Space':
+        if (e.target instanceof Element && e.target.closest('[data-action]')) return;
+        e.preventDefault(); e.stopPropagation();
+        recruter(v);
+        return;
+      case 'ArrowUp': case 'ArrowDown': {
+        e.preventDefault(); e.stopPropagation();
+        const n = p.unites.length;
+        const i = uniteMiseEnAvant ? p.unites.indexOf(uniteMiseEnAvant) : -1;
+        const suivant = i < 0 ? p.unites[0] : p.unites[(i + (e.code === 'ArrowDown' ? 1 : n - 1)) % n];
+        if (suivant && suivant !== uniteMiseEnAvant) { uniteMiseEnAvant = suivant; rafraichir(); }
+        return;
+      }
+      default: return;
     }
   }
 
@@ -922,6 +1116,7 @@ const MS_SURSIS_INSPECTION = 1500;
   // racine du HUD couvre tout l'écran, donc son `pointerleave` ne part jamais et
   // le drapeau resterait vrai pour toujours.
   conteneur.addEventListener('pointerover', surPointeur);
+  racine.addEventListener('keydown', surTouche);
   rafraichir();
 
   return {
@@ -932,6 +1127,7 @@ const MS_SURSIS_INSPECTION = 1500;
       banniereTour?.remove();
       racine.removeEventListener('click', surClic);
       conteneur.removeEventListener('pointerover', surPointeur);
+      racine.removeEventListener('keydown', surTouche);
       racine.remove();
     },
   };

@@ -1,8 +1,8 @@
 import { validerMapDef, validerScenario } from '@/schemas/index';
-import scenarioBocage from '../../../content/scenarios/qualification_bocage.json';
-import carteBocage from '../../../content/cartes/carte_qualification_bocage.json';
-import scenarioCote from '../../../content/scenarios/passage_des_marees.json';
-import carteCote from '../../../content/cartes/carte_passage_des_marees.json';
+import scenarioBocage from '../../../content/scenarios/villes_du_bocage.json';
+import carteBocage from '../../../content/cartes/carte_villes_du_bocage.json';
+import scenarioCote from '../../../content/scenarios/qg_de_la_presquile.json';
+import carteCote from '../../../content/cartes/carte_qg_de_la_presquile.json';
 import scenarioCol from '../../../content/scenarios/pacte_du_col.json';
 import carteCol from '../../../content/cartes/carte_pacte_du_col.json';
 import Atelier from './atelier';

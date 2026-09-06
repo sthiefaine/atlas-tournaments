@@ -6,10 +6,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  appliquer, batimentsDe, cleCase, POINTS_PAR_BARRE, score, SEUIL_CAPTURE,
+  appliquer, batimentsDe, cleCase, creerPartie, peutCapturerIci, POINTS_PAR_BARRE, PRIME_REMISE_EN_SERVICE, score, SEUIL_CAPTURE,
   valeurArmee, type Action, type CommandantMoteur, type EtatPartie,
 } from '../../src/engine/index';
-import { CAT, partiePersonnalisee, u } from './aides';
+import { CAT, partiePersonnalisee, scenePersonnalisee, u } from './aides';
 
 //         0123456789
 const GRILLE = [
@@ -230,18 +230,61 @@ test('le super pouvoir de capture double les points gagnés', () => {
   assert.equal(SEUIL_CAPTURE, 20);
 });
 
-test('capturer le QG adverse termine la partie', () => {
+test('capturer le QG adverse demande quatre tours et termine la partie', () => {
+  // Le QG vaut le double d'une ville (`04-gameplay.md` §6) : une infanterie
+  // intacte y passe quatre tours, pas deux.
   const etat = partiePersonnalisee(GRILLE, { '0,0': 1, '9,9': 0 }, [
     { camp: 0, type: 'infanterie', x: 0, y: 1, pv: 100 },
     { camp: 1, type: 'infanterie', x: 5, y: 5 },
   ]);
-  const apres = suite(etat, [
+  const reprise: Action = { type: 'ordre', uniteId: 'u1', chemin: [{ x: 0, y: 0 }], suite: { type: 'capturer' } };
+  const troisTours = suite(etat, [
     { type: 'ordre', uniteId: 'u1', chemin: [{ x: 0, y: 1 }, { x: 0, y: 0 }], suite: { type: 'capturer' } },
-    { type: 'finTour' }, { type: 'finTour' },
-    { type: 'ordre', uniteId: 'u1', chemin: [{ x: 0, y: 0 }], suite: { type: 'capturer' } },
+    { type: 'finTour' }, { type: 'finTour' }, reprise,
+    { type: 'finTour' }, { type: 'finTour' }, reprise,
   ]);
+  assert.equal(troisTours.partie.terminee, false);
+  assert.equal(troisTours.unites.find((u) => u.id === 'u1')?.pointsCapture, 30);
+  const apres = suite(troisTours, [{ type: 'finTour' }, { type: 'finTour' }, reprise]);
   assert.equal(apres.partie.terminee, true);
   assert.equal(apres.partie.vainqueur, 0);
+});
+
+test('un bâtiment désaffecté se remet en service : génie en deux tours, infanterie en quatre', () => {
+  const scene = scenePersonnalisee(['HPCPH', 'PPCPP'], { '0,0': 0, '4,0': 1 }, [
+    { camp: 0, type: 'genie', x: 2, y: 0 },
+    { camp: 0, type: 'infanterie', x: 2, y: 1 },
+    { camp: 1, type: 'infanterie', x: 4, y: 1 },
+  ]);
+  scene.desaffectes = ['2,0', '2,1'];
+  const etat = creerPartie(scene, CAT, 'test');
+  assert.deepEqual(etat.desaffectes, ['2,0', '2,1']);
+  // Le génie ne capture jamais une ville en service : il n'est pas un capteur.
+  const intacte = { ...etat, desaffectes: [] };
+  assert.equal(peutCapturerIci(intacte, CAT, etat.unites[0]!), false);
+  assert.equal(peutCapturerIci(etat, CAT, etat.unites[0]!), true);
+
+  const chantier = (id: string, x: number, y: number): Action =>
+    ({ type: 'ordre', uniteId: id, chemin: [{ x, y }], suite: { type: 'capturer' } });
+  const unTour = suite(etat, [chantier('u1', 2, 0), chantier('u2', 2, 1)]);
+  assert.equal(unTour.unites[0]!.pointsCapture, 20, 'un génie intact gagne vingt points par tour');
+  assert.equal(unTour.unites[1]!.pointsCapture, 10);
+  const deuxTours = suite(unTour, [{ type: 'finTour' }, { type: 'finTour' }, chantier('u1', 2, 0), chantier('u2', 2, 1)]);
+  assert.equal(deuxTours.proprietaires['2,0'], 0, 'le génie a remis la ville en service');
+  // La prime est doublée pour le génie ; le reste de l'écart, ce sont les revenus des journées.
+  const primeVersee = deuxTours.journal.find((ev) => ev.type === 'remise_en_service');
+  assert.ok(primeVersee && primeVersee.type === 'remise_en_service');
+  assert.equal(primeVersee.prime, 2 * PRIME_REMISE_EN_SERVICE);
+  assert.ok(deuxTours.camps[0]!.fonds >= etat.camps[0]!.fonds + 2 * PRIME_REMISE_EN_SERVICE, 'la prime est dans la caisse');
+  assert.deepEqual(deuxTours.desaffectes, ['2,1'], 'la case quitte la liste des désaffectés');
+  assert.ok(deuxTours.journal.some((e) => e.type === 'remise_en_service' && e.camp === 0));
+  assert.equal(deuxTours.proprietaires['2,1'], undefined, 'l’infanterie n’en est qu’à vingt points sur quarante');
+  const quatreTours = suite(deuxTours, [
+    { type: 'finTour' }, { type: 'finTour' }, chantier('u2', 2, 1),
+    { type: 'finTour' }, { type: 'finTour' }, chantier('u2', 2, 1),
+  ]);
+  assert.equal(quatreTours.proprietaires['2,1'], 0);
+  assert.deepEqual(quatreTours.desaffectes, []);
 });
 
 test('un camp sans unité ni producteur est mis hors jeu', () => {

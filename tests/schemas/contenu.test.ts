@@ -34,9 +34,13 @@ function exigerOk<T>(nom: string, r: Resultat<T>): T {
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 2);
+  assert.equal(catalogue.catalogueVersion, 3);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
+  // Les drones et le brouilleur entrent au catalogue 3, jamais au 2.
+  for (const cle of ['drone', 'drone_filaire', 'brouilleur']) {
+    assert.equal(catalogue.unites.find((u) => u.cle === cle)?.homologation?.catalogue, 3, cle);
+  }
 
 });
 
@@ -107,9 +111,9 @@ test("seules quatre unités peuvent viser l'air", () => {
   assert.deepEqual(viseurs.sort(), ['antiair', 'helico', 'infanterie', 'meca']);
 });
 
-test('les terrains capturables sont exactement les quatre bâtiments', () => {
+test('les terrains capturables sont exactement les cinq bâtiments', () => {
   const capturables = chargerTerrains().filter((t) => t.capturable).map((t) => t.cle);
-  assert.deepEqual(capturables.sort(), ['aeroport', 'qg', 'usine', 'ville']);
+  assert.deepEqual(capturables.sort(), ['aeroport', 'qg', 'radar', 'usine', 'ville']);
 });
 
 test('les producteurs couvrent les dix unités canon', () => {
@@ -135,12 +139,12 @@ test('les dix archétypes canon sont présents une seule fois', () => {
   assert.equal(new Set(cles).size, 10);
 });
 
-test('le glossaire français nomme les dix unités et les douze terrains', () => {
+test('le glossaire français nomme les dix unités et les treize terrains', () => {
   const glossaire = chargerGlossaireFr();
   const unites = glossaire.entrees.filter((e) => e.categorie === 'unite');
   const terrains = glossaire.entrees.filter((e) => e.categorie === 'terrain');
   assert.equal(unites.length, 10);
-  assert.equal(terrains.length, 12);
+  assert.equal(terrains.length, 13);
 });
 
 // ---------------------------------------------------------------------------

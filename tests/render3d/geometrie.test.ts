@@ -240,5 +240,5 @@ test('le repli d’une case dit si elle est bâtie, et les quatre terrains bâti
   assert.equal(repliCase(g, 5, 0), REPLI_CENTRE);
   // Les quatre terrains capturables du jeu, et eux seuls : un pont ou une route
   // n'a pas de socle à protéger.
-  assert.deepEqual([...TERRAINS_BATIS].sort(), ['aeroport', 'qg', 'usine', 'ville']);
+  assert.deepEqual([...TERRAINS_BATIS].sort(), ['aeroport', 'qg', 'radar', 'usine', 'ville']);
 });

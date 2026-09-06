@@ -1,21 +1,43 @@
 import { t } from '@/i18n/index';
+import { paletteDe } from '@/render/palettes';
+
+import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
+import terrainsJson from '../../content/terrains.json';
 
 /**
- * Le **plateau de fond** de l'accueil : un vrai bout de partie, dessiné à la
- * main en SVG.
+ * Le **plateau de fond** de l'accueil : un vrai bout de partie, dessiné en SVG.
  *
  * Le principe est celui des écrans-titres qui tiennent : **on montre le jeu, on
  * ne le décrit pas**. Faute d'illustration et de police maison (`BRIEF.md`,
  * direction artistique ; `09-i18n.md` §7.2), l'illustration, c'est le plateau —
  * et il coûte quelques kilo-octets de balisage, là où monter le moteur sur la
- * page d'accueil coûterait les 230 ko du bundle de jeu.
+ * page d'accueil coûterait le bundle de jeu entier.
  *
- * Les couleurs ne sont pas décoratives : ce sont **exactement** celles du rendu
- * (`render/scene.ts`, `render/palettes.ts`). Vert émeraude pour les cases où
- * l'on peut aller, rouge carmin pour celles que l'on peut frapper, flèche
- * blanche à liseré sombre vers la case d'arrivée. Quelqu'un qui a joué
- * reconnaît son écran ; quelqu'un qui arrive apprend la grammaire avant même
- * d'avoir cliqué.
+ * Ce n'est pas un décor inventé : c'est **la carte d'exhibition elle-même**
+ * (`content/cartes/carte_plaine_symetrique.json`), la fenêtre de douze cases sur
+ * huit qui entoure l'île — celle que l'attract mode cadre quand il se monte
+ * par-dessus. Le fondu de l'un vers l'autre passe donc d'une vue de la carte à
+ * une autre vue de la même carte, pas d'une image à un jeu qui ne lui
+ * ressemble pas. Si la carte change, le plateau suit ; seule la manœuvre
+ * (unités, chemin) est posée à la main, en coordonnées de fenêtre.
+ *
+ * Les couleurs ne sont pas décoratives, elles sont **celles du jeu**, et chacune
+ * dit d'où elle vient :
+ * - terrains, eau, forêt, montagne : la palette de chaque terrain dans
+ *   `content/terrains.json`, lue ici directement ;
+ * - unités et bâtiments : `render/palettes.ts`, importé ;
+ * - chaussée, tirets et tablier de pont : l'apparence `BITUME` de la plaine dans
+ *   `render3d/textures-voies.ts` (recopiée : ce module tire three.js) ;
+ * - vert de déplacement, rouge de tir, flèche à liseré sombre :
+ *   `render3d/surbrillances.ts` (même raison).
+ * Vert émeraude pour les cases où l'on peut aller, rouge carmin pour celles que
+ * l'on peut frapper : quelqu'un qui a joué reconnaît son écran ; quelqu'un qui
+ * arrive apprend la grammaire avant même d'avoir cliqué.
+ *
+ * Le balisage est tenu court parce qu'il part dans le HTML de la première
+ * image : l'herbe est un motif répété, chaque couche (eau, rides, vert, rouge)
+ * un seul tracé, et ce qui se répète — arbres, montagnes, ponts, bâtiments —
+ * est défini une fois et posé par `<use>`.
  *
  * Décoratif au sens strict : `aria-hidden` sur les formes, un `<title>` pour le
  * lecteur d'écran, et jamais un pixel d'interaction.
@@ -24,33 +46,112 @@ import { t } from '@/i18n/index';
 /** Côté d'une case, en unités de la `viewBox`. */
 const C = 40;
 
-/** Colonnes et rangées du plateau. Sept rangées : de quoi lire une manœuvre
- * complète sans pousser le pied de page sous la ligne de flottaison. */
-const L = 11;
-const H = 7;
-
-/** Cases d'herbe claire : la trame irrégulière évite l'effet damier. */
-const CLAIRES = new Set([2, 6, 9, 14, 19, 23, 27, 34, 38, 43, 49, 55, 60, 64, 70, 74]);
-
-/** L'unité sélectionnée : c'est d'elle que partent les deux portées. */
-const ORIGINE = { x: 3, y: 3 };
-
 /**
- * Les cases où le char peut se poser. Elles sont **écrites à la main** et non
- * calculées en losange : une portée de déplacement réelle n'est jamais un
- * losange parfait — les forêts coûtent cher, les routes ne coûtent rien —, et
- * un losange se lit comme une figure de géométrie, pas comme un tour de jeu.
+ * La fenêtre sur la carte : douze colonnes sur huit rangées, centrées sur le
+ * centre exact de la carte (entre les cases 7,5 et 8,6), donc sur l'île et ses
+ * deux villes neutres. Un écran en portrait, qui recadre en `slice`, ne garde
+ * que les quatre colonnes du milieu : ce sont les ponts et l'île, pas la plaine.
  */
-const DEPLACEMENT: readonly [number, number][] = [
-  [2, 1], [3, 1], [4, 1], [5, 1],
-  [1, 2], [2, 2], [3, 2], [4, 2], [5, 2], [6, 2],
-  [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3],
-  [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4],
-  [2, 5], [3, 5], [4, 5], [5, 5],
-];
+const FENETRE = { x: 2, y: 2, largeur: 12, hauteur: 8 } as const;
+const L = FENETRE.largeur;
+const H = FENETRE.hauteur;
+
+/** Les lignes de la carte, restreintes à la fenêtre. */
+const GRILLE: readonly string[] = carteDemo.grille
+  .slice(FENETRE.y, FENETRE.y + H)
+  .map((ligne) => ligne.slice(FENETRE.x, FENETRE.x + L));
+
+/** Le caractère de terrain d'une case, lu sur la carte entière au-delà de la fenêtre. */
+function car(x: number, y: number): string {
+  return carteDemo.grille[y + FENETRE.y]?.[x + FENETRE.x] ?? 'P';
+}
+
+/** Les fiches de terrain du canon, par caractère de grille. */
+const TERRAINS = new Map(terrainsJson.terrains.map((f) => [f.car, f] as const));
+
+function palette(c: string): { main: string; dark: string; light: string } {
+  return (TERRAINS.get(c) ?? TERRAINS.get('P'))?.palette ?? { main: '#7cc36a', dark: '#4e8f43', light: '#b5e3a4' };
+}
+
+/** Le coût d'entrée à pied sur un terrain : la colonne `pied` du canon. */
+function coutPied(c: string): number {
+  const couts = TERRAINS.get(c)?.couts as Partial<Record<string, number>> | undefined;
+  return couts?.['pied'] ?? Number.POSITIVE_INFINITY;
+}
+
+const PROPRIETAIRES: Readonly<Record<string, number>> = carteDemo.proprietaires;
+
+/** Le camp qui tient un bâtiment de la fenêtre, `null` s'il est neutre. */
+function campDe(x: number, y: number): 0 | 1 | null {
+  const camp = PROPRIETAIRES[`${x + FENETRE.x},${y + FENETRE.y}`];
+  return camp === 0 || camp === 1 ? camp : null;
+}
+
+/** Les terrains qui prolongent une voie : voies et bâtiments (`geometrie.ts`, `relieVoie`). */
+const RELIE_VOIE = new Set(['R', 'N', 'C', 'U', 'A', 'H', 'T']);
+const VOIES = new Set(['R', 'N']);
+const BATIS = new Set(['C', 'U', 'A', 'H', 'T']);
+const EAU = new Set(['V', 'W']);
+
+/** L'apparence des voies en plaine : `textures-voies.ts`, `BITUME`. */
+const CHAUSSEE = 'rgb(104,110,114)';
+const TIRETS = 'rgb(214,208,178)';
+const TABLIER = '#8f8d86';
+/** L'encre des ombres et du liseré de flèche : `surbrillances.ts`. */
+const ENCRE = '#0d2419';
+
+/** Cases d'herbe plus claire : la trame irrégulière évite l'effet damier. */
+const CLAIRES = [2, 6, 9, 14, 19, 23, 27, 34, 38, 43, 49, 55, 60, 64, 70, 74, 81, 87, 93];
 
 /**
- * L'enveloppe de tir, **calculée** exactement comme le fait le contrôleur
+ * L'unité sélectionnée : une infanterie au pied du pont. Pas le char — sa
+ * portée de six cases sur route recouvrirait toute la rive, et c'est justement
+ * la rive, ses routes et ses ponts, que ce plateau doit montrer.
+ */
+const ORIGINE = { x: 3, y: 3 };
+/** Sa mobilité : celle de l'`infanterie` au catalogue. */
+const MOBILITE = 3;
+/** Le char du joueur, sur la route derrière elle : traversable, pas une arrivée. */
+const ALLIES: readonly [number, number][] = [[2, 3]];
+/** Les adversaires : une infanterie qui capture la ville de l'île, un char sur l'autre pont. */
+const ADVERSAIRES = [[6, 4], [7, 3]] as const;
+
+const VOISINS = [[0, -1], [1, 0], [0, 1], [-1, 0]] as const;
+
+/**
+ * Les cases où l'infanterie peut se poser, **calculées** avec les coûts du canon,
+ * comme le fait le moteur : à pied, la rivière et la montagne coûtent double, un
+ * adversaire barre le passage, un allié se traverse. Une portée écrite à la main
+ * pouvait mentir sur le terrain qu'elle recouvre ; celle-ci ne le peut pas.
+ */
+function porteeDeplacement(): [number, number][] {
+  const bloquees = new Set(ADVERSAIRES.map(([x, y]) => `${x},${y}`));
+  const occupees = new Set(ALLIES.map(([x, y]) => `${x},${y}`));
+  const meilleur = new Map<string, number>([[`${ORIGINE.x},${ORIGINE.y}`, 0]]);
+  const file: [number, number, number][] = [[ORIGINE.x, ORIGINE.y, 0]];
+  while (file.length > 0) {
+    file.sort((a, b) => b[2] - a[2]);
+    const [x, y, cout] = file.pop()!;
+    for (const [dx, dy] of VOISINS) {
+      const nx = x + dx;
+      const ny = y + dy;
+      if (nx < 0 || ny < 0 || nx >= L || ny >= H) continue;
+      const k = `${nx},${ny}`;
+      const total = cout + coutPied(car(nx, ny));
+      if (total > MOBILITE || bloquees.has(k) || (meilleur.get(k) ?? Number.POSITIVE_INFINITY) <= total) continue;
+      meilleur.set(k, total);
+      file.push([nx, ny, total]);
+    }
+  }
+  return [...meilleur.keys()]
+    .filter((k) => !occupees.has(k))
+    .map((k) => k.split(',').map(Number) as [number, number]);
+}
+
+const DEPLACEMENT = porteeDeplacement();
+
+/**
+ * L'enveloppe de tir, calculée exactement comme le fait le contrôleur
  * (`render/controleur.ts`, `porteeAttaque`) : les cases à portée d'une arrivée
  * possible, privées de celles où l'on peut aller. Une case n'est donc jamais des
  * deux couleurs, et le dessin ne peut pas mentir sur la règle qu'il illustre.
@@ -59,7 +160,7 @@ function enveloppeDeTir(): [number, number][] {
   const vertes = new Set(DEPLACEMENT.map(([x, y]) => `${x},${y}`));
   const rouges = new Map<string, [number, number]>();
   for (const [x, y] of DEPLACEMENT) {
-    for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]] as const) {
+    for (const [dx, dy] of VOISINS) {
       const c: [number, number] = [x + dx, y + dy];
       const k = `${c[0]},${c[1]}`;
       if (c[0] < 0 || c[1] < 0 || c[0] >= L || c[1] >= H || vertes.has(k)) continue;
@@ -72,76 +173,141 @@ function enveloppeDeTir(): [number, number][] {
 const ATTAQUE = enveloppeDeTir();
 
 /**
- * Le chemin prévisualisé : le char contourne par le nord pour arriver au contact
- * du char adverse. Deux coudes, parce que c'est là que la flèche dit quelque
- * chose — un trait droit ne montre pas qu'un déplacement se négocie.
+ * Le chemin prévisualisé : l'infanterie franchit le pont, traverse la ville de
+ * l'île et vient au contact de celle qui capture l'autre. Un coude, parce que
+ * c'est là que la flèche dit quelque chose — un trait droit ne montre pas
+ * qu'un déplacement se négocie.
  */
-const CHEMIN: readonly [number, number][] = [[3, 3], [3, 2], [4, 2], [5, 2], [6, 2], [6, 3]];
+const CHEMIN: readonly [number, number][] = [[3, 3], [4, 3], [5, 3], [5, 4]];
 
-/** Une case pleine, arrondie comme dans le rendu 2D. */
-function Case({ x, y, fill, opacity }: { x: number; y: number; fill: string; opacity?: number }) {
-  return <rect x={x * C + 2} y={y * C + 2} width={C - 4} height={C - 4} rx={5} fill={fill} opacity={opacity} />;
+/** Un tracé fait de carrés, un par case, rentrés de `marge` : une couche entière en un élément. */
+function carres(cases: readonly (readonly [number, number])[], marge: number): string {
+  const cote = C - 2 * marge;
+  return cases.map(([x, y]) => `M${x * C + marge} ${y * C + marge}h${cote}v${cote}h${-cote}z`).join('');
 }
 
-/** Un bouquet d'arbres : trois disques et un tronc, comme la forêt du rendu. */
-function Foret({ x, y }: { x: number; y: number }) {
-  const cx = x * C + C / 2;
-  const cy = y * C + C / 2;
-  return <g>
-    <ellipse cx={cx} cy={cy + 13} rx={13} ry={4} fill="#0d2a18" opacity=".28" />
-    <circle cx={cx - 7} cy={cy + 2} r={7} fill="#e07a2f" />
-    <circle cx={cx + 6} cy={cy + 4} r={6} fill="#c9631f" />
-    <circle cx={cx} cy={cy - 6} r={8} fill="#f08c3a" />
-  </g>;
+/** Les cases de la fenêtre dont le terrain passe le filtre. */
+function casesOu(filtre: (c: string) => boolean): [number, number][] {
+  const r: [number, number][] = [];
+  for (let y = 0; y < H; y += 1) {
+    for (let x = 0; x < L; x += 1) if (filtre(GRILLE[y]?.[x] ?? 'P')) r.push([x, y]);
+  }
+  return r;
 }
 
-/** Un bâtiment capturable, aux couleurs d'un camp. */
-function Batiment({ x, y, main, dark }: { x: number; y: number; main: string; dark: string }) {
-  const px = x * C + 8;
-  const py = y * C + 6;
-  return <g>
-    <ellipse cx={px + 12} cy={py + 28} rx={14} ry={4} fill="#0d2a18" opacity=".3" />
-    <rect x={px} y={py + 6} width={24} height={22} rx={2} fill={main} />
-    <rect x={px} y={py + 6} width={24} height={5} fill={dark} />
-    <g fill="#f4edda" opacity=".85">
-      <rect x={px + 4} y={py + 14} width={5} height={5} />
-      <rect x={px + 13} y={py + 14} width={5} height={5} />
-      <rect x={px + 4} y={py + 22} width={5} height={4} />
-      <rect x={px + 13} y={py + 22} width={5} height={4} />
+/**
+ * Le tracé des voies : un segment du centre de chaque case de voie vers chaque
+ * voisine qui la prolonge — voie ou bâtiment, comme `relieVoie`. C'est ce qui
+ * donne des routes **continues** qui entrent dans les villes au lieu de
+ * rectangles bout à bout. Vers une voisine de voie, un seul des deux segments
+ * est tracé (est ou sud) ; vers un bâtiment ou hors de la fenêtre, toujours.
+ */
+function voiesEnD(): string {
+  const parts: string[] = [];
+  for (const [x, y] of casesOu((c) => VOIES.has(c))) {
+    for (const [dx, dy] of VOISINS) {
+      const nx = x + dx;
+      const ny = y + dy;
+      const voisine = car(nx, ny);
+      if (!RELIE_VOIE.has(voisine)) continue;
+      const dedans = nx >= 0 && ny >= 0 && nx < L && ny < H;
+      if (dedans && VOIES.has(voisine) && (dx < 0 || dy < 0)) continue;
+      parts.push(`M${x * C + C / 2} ${y * C + C / 2}l${dx * C} ${dy * C}`);
+    }
+  }
+  return parts.join('');
+}
+
+/**
+ * Une ride d'eau par case, décalée par la position : c'est déterministe et ça
+ * suffit à ce que la rivière ne se lise pas comme un aplat.
+ */
+function ridesEnD(): string {
+  return casesOu((c) => EAU.has(c))
+    .map(([x, y]) => `M${x * C + 6 + ((x * 7 + y * 13) % 5) * 3} ${y * C + 13 + ((x + y) % 3) * 8}h14`)
+    .join('');
+}
+
+/**
+ * L'axe d'un pont, lu sur ses voisines comme `axePont` : les voies qu'il relie
+ * comptent double, l'eau qu'il franchit compte simple, puisqu'elle est à ses
+ * côtés et non dans son axe.
+ */
+function pontEstOuest(x: number, y: number): boolean {
+  const v = (dx: number, dy: number): string => car(x + dx, y + dy);
+  const versNs = (RELIE_VOIE.has(v(0, -1)) ? 2 : 0) + (RELIE_VOIE.has(v(0, 1)) ? 2 : 0)
+    + (EAU.has(v(1, 0)) ? 1 : 0) + (EAU.has(v(-1, 0)) ? 1 : 0);
+  const versEo = (RELIE_VOIE.has(v(1, 0)) ? 2 : 0) + (RELIE_VOIE.has(v(-1, 0)) ? 2 : 0)
+    + (EAU.has(v(0, 1)) ? 1 : 0) + (EAU.has(v(0, -1)) ? 1 : 0);
+  return versEo > versNs;
+}
+
+/**
+ * Les formes réutilisées, définies une fois, centrées sur l'origine de leur
+ * case : un `<use x y>` les pose. Tablier de pont et parapets ; bouquet
+ * d'arbres ; montagne à deux versants et crête claire ; bâtiment aux couleurs
+ * d'un camp (un par camp et un neutre : les teintes restent exactement celles
+ * de la palette, pas des dérivées par transparence).
+ */
+function Definitions() {
+  const f = palette('F');
+  const m = palette('M');
+  const large = C * 0.64;
+  return <defs>
+    <pattern id="h" width={C} height={C} patternUnits="userSpaceOnUse">
+      <rect x={2} y={2} width={C - 4} height={C - 4} rx={5} fill={palette('P').main} />
+    </pattern>
+    <g id="n">
+      <rect x={-large / 2} y={-C / 2} width={large} height={C} fill={TABLIER} />
+      <path d={`M${-large / 2 + 1.5} ${-C / 2}v${C}M${large / 2 - 1.5} ${-C / 2}v${C}`} stroke={ENCRE} strokeOpacity=".45" strokeWidth={3} />
     </g>
-  </g>;
+    <g id="f">
+      <ellipse cy={13} rx={13} ry={4} fill={ENCRE} opacity=".28" />
+      <circle cx={-7} cy={2} r={7} fill={f.main} />
+      <circle cx={6} cy={4} r={6} fill={f.dark} />
+      <circle cy={-6} r={8} fill={f.light} />
+    </g>
+    <g id="m">
+      <ellipse cy={14} rx={15} ry={4} fill={ENCRE} opacity=".28" />
+      <path d="M-16 14L-2-14L4 14z" fill={m.main} />
+      <path d="M-2-14L16 14L4 14z" fill={m.dark} />
+      <path d="M-6-5L-2-14L3-5L0-3L-3-6z" fill={m.light} />
+    </g>
+    {([0, 1, null] as const).map((camp) => {
+      const p = paletteDe(camp);
+      return <g id={`b${camp ?? 'n'}`} key={String(camp)}>
+        <ellipse cy={14} rx={14} ry={4} fill={ENCRE} opacity=".3" />
+        <rect x={-12} y={-8} width={24} height={22} rx={2} fill={p.main} />
+        <rect x={-12} y={-8} width={24} height={5} fill={p.dark} />
+        <path d="M-8 0h5v5h-5zM1 0h5v5h-5zM-8 8h5v4h-5zM1 8h5v4h-5z" fill="#f4edda" opacity=".85" />
+      </g>;
+    })}
+  </defs>;
 }
 
 /** Un char, silhouette trapue : coque, chenilles, tourelle, canon. */
-function Char({ x, y, main, dark, light, sens = 1 }: {
-  x: number; y: number; main: string; dark: string; light: string; sens?: 1 | -1;
-}) {
-  const cx = x * C + C / 2;
-  const cy = y * C + C / 2;
-  return <g transform={`translate(${cx} ${cy})`}>
-    <ellipse cy={11} rx={15} ry={4.5} fill="#0d2a18" opacity=".32" />
-    <rect x={-15} y={-2} width={30} height={11} rx={3} fill={dark} />
-    <rect x={-14} y={-9} width={28} height={11} rx={3} fill={main} />
-    <rect x={-14} y={-9} width={28} height={3.5} rx={1.5} fill={light} opacity=".7" />
-    <rect x={-7} y={-15} width={14} height={9} rx={3} fill={main} />
-    <rect x={sens > 0 ? 6 : -18} y={-12} width={12} height={3} rx={1.5} fill={dark} />
+function Char({ x, y, camp, sens = 1 }: { x: number; y: number; camp: 0 | 1; sens?: 1 | -1 }) {
+  const p = paletteDe(camp);
+  return <g transform={`translate(${x * C + C / 2} ${y * C + C / 2})`}>
+    <ellipse cy={11} rx={15} ry={4.5} fill={ENCRE} opacity=".32" />
+    <rect x={-15} y={-2} width={30} height={11} rx={3} fill={p.dark} />
+    <rect x={-14} y={-9} width={28} height={11} rx={3} fill={p.main} />
+    <rect x={-14} y={-9} width={28} height={3.5} rx={1.5} fill={p.light} opacity=".7" />
+    <rect x={-7} y={-15} width={14} height={9} rx={3} fill={p.main} />
+    <rect x={sens > 0 ? 6 : -18} y={-12} width={12} height={3} rx={1.5} fill={p.dark} />
   </g>;
 }
 
 /** Une infanterie : casque, buste, deux jambes. Assez pour la lire à 40 px. */
-function Infanterie({ x, y, main, dark, light }: {
-  x: number; y: number; main: string; dark: string; light: string;
-}) {
-  const cx = x * C + C / 2;
-  const cy = y * C + C / 2;
-  return <g transform={`translate(${cx} ${cy})`}>
-    <ellipse cy={12} rx={11} ry={4} fill="#0d2a18" opacity=".32" />
-    <rect x={-7} y={2} width={5} height={9} rx={2} fill={dark} />
-    <rect x={2} y={2} width={5} height={9} rx={2} fill={dark} />
-    <rect x={-9} y={-7} width={18} height={11} rx={4} fill={main} />
-    <rect x={-9} y={-7} width={18} height={3.5} rx={1.75} fill={light} opacity=".6" />
-    <circle cy={-12} r={6.5} fill={main} />
-    <path d="M-7-13a7 7 0 0 1 14 0z" fill={dark} />
+function Infanterie({ x, y, camp }: { x: number; y: number; camp: 0 | 1 }) {
+  const p = paletteDe(camp);
+  return <g transform={`translate(${x * C + C / 2} ${y * C + C / 2})`}>
+    <ellipse cy={12} rx={11} ry={4} fill={ENCRE} opacity=".32" />
+    <path d="M-7 2h5v9h-5zM2 2h5v9h-5z" fill={p.dark} />
+    <rect x={-9} y={-7} width={18} height={11} rx={4} fill={p.main} />
+    <rect x={-9} y={-7} width={18} height={3.5} rx={1.75} fill={p.light} opacity=".6" />
+    <circle cy={-12} r={6.5} fill={p.main} />
+    <path d="M-7-13a7 7 0 0 1 14 0z" fill={p.dark} />
   </g>;
 }
 
@@ -173,15 +339,20 @@ function pointeEnD(): string {
     + `L${bx + dy * aile} ${by - dx * aile}Z`;
 }
 
+/** Le centre d'une case, pour poser une forme définie à l'origine. */
+function centre([x, y]: readonly [number, number]): { x: number; y: number } {
+  return { x: x * C + C / 2, y: y * C + C / 2 };
+}
+
 /** Le plateau complet. Aucune interaction : c'est un décor, pas une carte. */
 export function PlateauAccueil({ locale }: { locale: string }) {
-  const cases: React.ReactElement[] = [];
-  for (let y = 0; y < H; y += 1) {
-    for (let x = 0; x < L; x += 1) {
-      const i = y * L + x;
-      cases.push(<Case key={`h${i}`} x={x} y={y} fill={CLAIRES.has(i) ? '#8fce5c' : '#7ec04e'} />);
-    }
-  }
+  const herbe = palette('P');
+  const eau = palette('V');
+  const claires = CLAIRES.map((i) => [i % L, Math.floor(i / L)] as const).filter(([x, y]) => !EAU.has(car(x, y)) && car(x, y) !== 'N');
+  const ponts = casesOu((c) => c === 'N');
+  const batis = casesOu((c) => BATIS.has(c));
+  const [inf, char] = ADVERSAIRES;
+  const curseur = centre(inf);
 
   // `slice` cadre le plateau comme l'attract mode, qui remplit lui aussi tout
   // l'écran : sans lui, le fondu entre les deux ferait sauter l'échelle.
@@ -190,41 +361,57 @@ export function PlateauAccueil({ locale }: { locale: string }) {
     preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="plateau-titre"
   >
     <title id="plateau-titre">{t(locale, 'accueil.plateau_titre')}</title>
+    <Definitions />
     <g aria-hidden="true">
-      {cases}
+      <rect width={L * C} height={H * C} fill="url(#h)" />
+      <path d={carres(claires, 4)} fill={herbe.light} opacity=".26" />
+      {/* L'eau est pleine jusqu'aux bords : la rivière coule d'une case à l'autre. */}
+      <path d={carres(casesOu((c) => EAU.has(c) || c === 'N'), 0)} fill={eau.main} />
+      <path d={ridesEnD()} stroke={eau.light} strokeOpacity=".7" strokeWidth={2} strokeLinecap="round" />
 
-      <Foret x={10} y={0} />
-      <Foret x={9} y={1} />
-      <Foret x={0} y={0} />
-      <Foret x={10} y={5} />
-      <Foret x={9} y={6} />
-      <Batiment x={8} y={5} main="#b9bec7" dark="#7c828c" />
-      <Batiment x={10} y={3} main="#e04b45" dark="#96292a" />
-      <Batiment x={0} y={5} main="#3f86e0" dark="#255a9e" />
+      {/* Les ponts passent sous la chaussée, qui les traverse sans rupture. */}
+      {ponts.map((c) => {
+        const p = centre(c);
+        return <use key={`n${c[0]}-${c[1]}`} href="#n" transform={`translate(${p.x} ${p.y})${pontEstOuest(c[0], c[1]) ? ' rotate(90)' : ''}`} />;
+      })}
+      <path id="v" d={voiesEnD()} fill="none" stroke={CHAUSSEE} strokeWidth={C * 0.4} />
+      <use href="#v" stroke={TIRETS} strokeWidth={2} strokeDasharray="6 7" />
 
-      {/* Les surbrillances : le vocabulaire exact du rendu (`scene.ts`). */}
-      <g>
-        {DEPLACEMENT.map(([x, y]) => <Case key={`d${x}-${y}`} x={x} y={y} fill="#08161d" opacity={0.42} />)}
-        {DEPLACEMENT.map(([x, y]) => <Case key={`v${x}-${y}`} x={x} y={y} fill="#28ec96" opacity={0.64} />)}
-        {ATTAQUE.map(([x, y]) => <Case key={`o${x}-${y}`} x={x} y={y} fill="#08161d" opacity={0.42} />)}
-        {ATTAQUE.map(([x, y]) => <Case key={`r${x}-${y}`} x={x} y={y} fill="#ff2640" opacity={0.76} />)}
-      </g>
+      {/* Les surbrillances sont des décalques au sol, comme dans le rendu : le
+          vocabulaire exact de `surbrillances.ts`, une assise sombre puis la
+          couleur, en un tracé par couche — et ce qui se dresse sur le sol,
+          arbres, montagnes, bâtiments, vient par-dessus. */}
+      <path d={carres([...DEPLACEMENT, ...ATTAQUE], 2)} fill="#08161d" opacity=".42" />
+      <path d={carres(DEPLACEMENT, 2)} fill="#28ec96" opacity=".64" />
+      <path d={carres(ATTAQUE, 2)} fill="#ff2e48" opacity=".76" />
+
+      {casesOu((c) => c === 'F').map((c) => <use key={`f${c[0]}-${c[1]}`} href="#f" {...centre(c)} />)}
+      {casesOu((c) => c === 'M').map((c) => <use key={`m${c[0]}-${c[1]}`} href="#m" {...centre(c)} />)}
+      {batis.map((c) => {
+        const p = centre(c);
+        const camp = campDe(c[0], c[1]);
+        return <g key={`b${c[0]}-${c[1]}`}>
+          {/* L'usine se reconnaît à sa cheminée, plantée derrière le toit. */}
+          {car(c[0], c[1]) === 'U' ? <rect x={p.x + 5} y={p.y - 16} width={5} height={12} fill={paletteDe(camp).dark} /> : null}
+          <use href={`#b${camp ?? 'n'}`} x={p.x} y={p.y} />
+        </g>;
+      })}
 
       {/* La flèche, liseré sombre puis cœur clair : elle doit tenir sur le vert. */}
-      <path d={cheminEnD()} fill="none" stroke="#102a1c" strokeOpacity=".72" strokeWidth={17} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={pointeEnD()} fill="#102a1c" fillOpacity=".72" stroke="#102a1c" strokeOpacity=".72" strokeWidth={6} strokeLinejoin="round" />
+      <path d={cheminEnD()} fill="none" stroke={ENCRE} strokeOpacity=".72" strokeWidth={17} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={pointeEnD()} fill={ENCRE} fillOpacity=".72" stroke={ENCRE} strokeOpacity=".72" strokeWidth={6} strokeLinejoin="round" />
       <path d={cheminEnD()} fill="none" stroke="#f4fff6" strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" />
       <path d={pointeEnD()} fill="#f4fff6" />
 
-      <Char x={ORIGINE.x} y={ORIGINE.y} main="#3f86e0" dark="#255a9e" light="#8dbdf5" />
-      <Infanterie x={2} y={4} main="#3f86e0" dark="#255a9e" light="#8dbdf5" />
+      <Infanterie x={ORIGINE.x} y={ORIGINE.y} camp={0} />
+      {ALLIES.map(([x, y]) => <Char key={`a${x}-${y}`} x={x} y={y} camp={0} />)}
       {/* Les adversaires se tiennent **sur** l'anneau rouge : c'est ce qui donne
           sa raison d'être à la couleur, au lieu d'un halo décoratif. */}
-      <Infanterie x={7} y={2} main="#e04b45" dark="#96292a" light="#f59a95" />
-      <Char x={7} y={3} main="#e04b45" dark="#96292a" light="#f59a95" sens={-1} />
+      <Infanterie x={inf[0]} y={inf[1]} camp={1} />
+      <Char x={char[0]} y={char[1]} camp={1} sens={-1} />
 
-      {/* Le curseur : le liseré blanc, comme dans les deux rendus. */}
-      <rect className="atlas-plateau-curseur" x={7 * C + 3} y={3 * C + 3} width={C - 6} height={C - 6} rx={5} fill="none" stroke="#ffffff" strokeWidth={3} />
+      {/* Le curseur : le liseré blanc, comme dans le rendu. */}
+      <rect className="atlas-plateau-curseur" x={curseur.x - C / 2 + 3} y={curseur.y - C / 2 + 3} width={C - 6} height={C - 6} rx={5} fill="none" stroke="#ffffff" strokeWidth={3} />
     </g>
   </svg>;
 }

@@ -12,6 +12,10 @@
  * Les variantes saisonnières passent par la couleur des matériaux (feuillage
  * vert, doré, nu et enneigé, fleurs au printemps) plutôt que par des maillages
  * différents : c'est instantané au changement de journée.
+ *
+ * Chaque bâtiment porte un **mât**. C'est là, et nulle part ailleurs, que les
+ * couleurs d'un camp se hissent et s'amènent : une capture se lit au drapeau,
+ * jamais sur la ville elle-même, qui ne se déforme ni ne s'aplatit.
  */
 
 import * as THREE from 'three';
@@ -19,18 +23,13 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 import { type StyleRegion } from '../assets/spec';
 import { styleRegionParMecanique } from '../assets/styles';
-import type { EtatPartie } from '../engine/index';
-import { cleCase, SEUIL_CAPTURE } from '../engine/index';
+import type { Catalogue, EtatPartie, Unite } from '../engine/index';
+import { cleCase, SEUIL_CAPTURE, seuilCapture } from '../engine/index';
 import { paletteDe } from '../render/palettes';
-import type { Biome, CampId, Saison } from '../schemas/types';
+import type { Biome, CampId, Case, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
-
-/** Opacité d'un bâtiment occupé : assez pour rester une ville, pas assez pour cacher la figurine. */
-const OPACITE_OCCUPE = 0.32;
-
-/** Les terrains qui portent un pavillon quand ils ont un propriétaire. */
-const TERRAINS_A_DRAPEAU: ReadonlySet<string> = new Set(['ville', 'usine', 'aeroport', 'qg']);
+import { creerPaysage } from './paysage';
 
 /** Couleurs de feuillage par saison : c'est la saison qu'on voit d'abord. */
 const FEUILLAGE: Readonly<Record<Saison, { conifere: number; feuillu: number }>> = {
@@ -40,14 +39,160 @@ const FEUILLAGE: Readonly<Record<Saison, { conifere: number; feuillu: number }>>
   hiver: { conifere: 0x4c6a58, feuillu: 0x9aa79c },
 };
 
+/** Les terrains qui portent un bâtiment, donc un mât. */
+const TERRAINS_BATIS: readonly CleTerrain[] = ['ville', 'qg', 'usine', 'aeroport', 'radar'];
+
+/** Hauteur du mât d'un bâtiment ordinaire, en cases. */
+const HAUT_MAT = 0.5;
+
+/** Le QG hisse plus haut : c'est le drapeau qu'on doit lire de loin. */
+const HAUT_MAT_QG = 0.7;
+
+/** Largeur et hauteur du drapeau : une douzaine de pixels à 48 px la case. */
+const LARG_DRAPEAU = 0.24;
+const HAUT_DRAPEAU = 0.15;
+
+/** Hauteur du centre du drapeau amené, juste au-dessus du socle. */
+const PIED_DRAPEAU = 0.1;
+
+/** Épaisseur du socle et de son liseré : le mât se plante dessus, pas dedans. */
+const SOCLE = 0.03;
+
+/**
+ * Où le mât se plante dans la case : l'angle avant gauche, seul coin qu'aucune
+ * des quatre silhouettes n'occupe, et devant le bâtiment vu de la caméra.
+ */
+const DECALAGE_MAT = { x: -0.36, z: 0.37 } as const;
+
+/** Opacité d'un bâtiment occupé : on voit la figurine au travers, et la ville entière. */
+const OPACITE_FANTOME = 0.4;
+
+/** Couleur des planches d'un chantier : bois brut, ni peint ni brûlé. */
+export const COULEUR_PLANCHE = 0x9a7a52;
+
+/** Distance du centre de la case à la palissade : là où passait le liseré de camp. */
+export const RAYON_PALISSADE = 0.43;
+
+/** Une planche ou un poteau de palissade, dans le repère d'un côté : x le long, y en haut, z vers l'extérieur. */
+export interface PiecePalissade {
+  l: number;
+  h: number;
+  p: number;
+  x: number;
+  y: number;
+}
+
+/**
+ * Un côté de palissade : trois poteaux, deux lisses. Les quatre côtés sont ce
+ * qui dit « chantier » de loin — un bâtiment désaffecté n'est pas détruit, il
+ * est fermé en attendant qu'on le remette en service.
+ */
+export const PIECES_PALISSADE: readonly PiecePalissade[] = [
+  { l: 0.03, h: 0.2, p: 0.03, x: -0.33, y: 0.1 },
+  { l: 0.03, h: 0.2, p: 0.03, x: 0, y: 0.1 },
+  { l: 0.03, h: 0.2, p: 0.03, x: 0.33, y: 0.1 },
+  { l: 0.86, h: 0.045, p: 0.012, x: 0, y: 0.075 },
+  { l: 0.86, h: 0.045, p: 0.012, x: 0, y: 0.155 },
+];
+
+/** Pleine lueur des vitrages qui se rallument, au-dessus de l'ambiance la plus nocturne. */
+const LUEUR_PLEINE = 1.1;
+
+/** Vitesse de balayage d'une parabole de station radar, en radians par seconde : lent, on doit le remarquer sans le regarder. */
+const BALAYAGE_RADAR = 0.45;
+
+/** Une parabole de station : le pivot qu'on fait tourner, et si elle balaie. */
+interface Parabole {
+  pivot: THREE.Group;
+  /** Une station tenue balaie ; neutre ou désaffectée, elle est à l'arrêt. */
+  active: boolean;
+}
+
+/** Ce qu'un pavillon montre : des couleurs, et une hauteur sur le mât. */
+export interface PoseDrapeau {
+  camp: CampId | null;
+  /** 0 au pied du mât, 1 au sommet. */
+  niveau: number;
+}
+
+/**
+ * La pose d'un pavillon d'après l'état. Une capture en cours **amène** les
+ * couleurs du propriétaire à proportion des points pris ; sur un bâtiment
+ * neutre, elle **hisse** celles du camp qui capture. Un mât neutre et tranquille
+ * reste nu : un drapeau gris se disputerait l'œil avec les couleurs de camp.
+ */
+export function poseDrapeau(
+  proprio: CampId | null, capture: { camp: CampId; points: number } | null, seuil: number,
+): PoseDrapeau {
+  const part = capture && capture.camp !== proprio
+    ? Math.min(1, Math.max(0, capture.points / seuil)) : 0;
+  if (proprio === null) {
+    return capture && part > 0 ? { camp: capture.camp, niveau: part } : { camp: null, niveau: 0 };
+  }
+  return { camp: proprio, niveau: 1 - part };
+}
+
+/** La prise d'un drapeau : ce qu'une animation peut en faire, le temps d'un geste. */
+export interface PriseDrapeau {
+  /** Le seuil de capture du bâtiment : ce qui fait un drapeau entier. */
+  readonly seuil: number;
+  /** Le sommet du mât en coordonnées monde, lu sur le relief du moment. */
+  readonly sommet: THREE.Vector3;
+  /** Le pied du mât, là où se pose un anneau de progression. */
+  readonly pied: THREE.Vector3;
+  /** Impose au drapeau un camp et une hauteur, par-dessus ce que dit l'état. */
+  forcer(camp: CampId | null, niveau: number): void;
+  /** Rend le drapeau à ce que dit l'état. */
+  relacher(): void;
+}
+
+/** Ce qu'une animation de remise en service peut faire d'un bâtiment. */
+export interface PriseChantier {
+  /** Fait luire les vitrages par-dessus l'ambiance : 0 éteint, 1 pleine lueur. */
+  eclairer(lueur: number): void;
+  /** Rend les vitrages à l'ambiance. */
+  relacher(): void;
+}
+
+/** Un mât et son drapeau, sur une case bâtie. */
+interface Pavillon {
+  cle: string;
+  case: Case;
+  cx: number;
+  cz: number;
+  hauteurMat: number;
+  /**
+   * Le seuil du moment : un QG ou un bâtiment désaffecté en demande le double,
+   * et un bâtiment peut se désaffecter en cours de partie. Relu à chaque `maj`
+   * quand le catalogue est fourni ; sinon le seuil de base.
+   */
+  seuil: number;
+  /** Ce que dit l'état. */
+  pose: PoseDrapeau;
+  /** Ce qu'impose une animation en cours, s'il y en a une. */
+  force: PoseDrapeau | null;
+}
+
 /** Ce que `creerDecor` rend au rendu. */
 export interface Decor {
   readonly groupe: THREE.Group;
-  /** Reconstruit les bâtiments quand un propriétaire change. */
-  majProprietaires(etat: EtatPartie, visibles?: ReadonlySet<string> | null): void;
+  /**
+   * Reconstruit les bâtiments quand un propriétaire change, efface en
+   * transparence ceux qu'une unité occupe, et règle les pavillons : une capture
+   * en cours se lit à la hauteur du drapeau.
+   */
+  majProprietaires(etat: EtatPartie, visibles?: ReadonlySet<string> | null, cat?: Catalogue | null): void;
   appliquerAmbiance(p: ParametresAmbiance, saison: Saison): void;
-  /** Fait osciller les arbres. Rend vrai tant qu'il faut redessiner. */
-  avancer(ms: number): boolean;
+  /**
+   * Fait osciller les arbres et flotter les drapeaux. Rend vrai tant qu'il faut
+   * redessiner. Le flottement s'arrête si le système demande moins de mouvement,
+   * comme la respiration des figurines.
+   */
+  avancer(ms: number, mouvementReduit?: boolean): boolean;
+  /** La prise du drapeau d'une case bâtie, `null` si la case n'en porte pas. */
+  drapeau(cle: string): PriseDrapeau | null;
+  /** La prise des vitrages d'une case bâtie, pour les rallumer à la remise en service. */
+  chantier(cle: string): PriseChantier | null;
   /**
    * Repose le décor sur le relief. Arbres et rochers sont placés une fois pour
    * toutes au montage, et les arbres ne se replacent ensuite que par grand vent :
@@ -56,11 +201,11 @@ export interface Decor {
    */
   majRelief(): void;
   /**
-   * Change de grille. Arbres, rochers et bâtiments sont **dérivés de la grille**
-   * — d'où ils tirent leurs places —, et ils l'étaient une fois pour toutes au
-   * montage : un chantier du génie qui rase une forêt laissait ses arbres, et
-   * l'atelier, qui change de carte sans démonter la scène, gardait les
-   * bâtiments de la carte précédente. Tout est ressemé et rebâti ici.
+   * Change de grille : ressème arbres et rochers, replante les mâts, refait le
+   * paysage et rebâtit les bâtiments au prochain `majProprietaires`. C'est le cas
+   * du génie qui pose du terrain, d'une marée qui découvre une berge, et de
+   * l'atelier qui change de carte. Le décor lisait la grille capturée au
+   * montage — le gel noté dans `CLAUDE.md` avait fini par mordre.
    */
   majGrille(grille: GrilleTerrain): void;
   dispose(): void;
@@ -185,11 +330,11 @@ export function creerDecor(
 ): Decor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
+  // La grille courante : `majGrille` la remplace, et tout ce qui en dérive —
+  // semis, mâts, bâtiments — repart d'elle. Rien ne lit `g` après cette ligne.
+  let grille: GrilleTerrain = g;
 
   // --- Arbres
-  // La grille courante : `majGrille` la remplace, et tout ce qui en dérive
-  // repart d'elle. Aucune fermeture ne doit retenir `g`.
-  let grille: GrilleTerrain = g;
   let arbres = semerArbres(grille, biome);
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
@@ -213,12 +358,12 @@ export function creerDecor(
   const matConifere = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
   const matFeuillu = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
 
-  // Un maillage instancié a une capacité fixe : quand la grille change, on le
-  // rebâtit à la taille du nouveau semis plutôt que de surdimensionner à
-  // l'aveugle. C'est rare — une mutation de terrain, un changement de carte.
+  // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
+  // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.
   let troncs!: THREE.InstancedMesh;
   let coniferes!: THREE.InstancedMesh;
   let feuillus!: THREE.InstancedMesh;
+
   function batirArbres(): void {
     for (const m of [troncs, coniferes, feuillus]) {
       if (!m) continue;
@@ -296,6 +441,7 @@ export function creerDecor(
   ];
   const matRocher = new THREE.MeshStandardMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
   let lotsRocher: THREE.InstancedMesh[] = [];
+
   function batirRochers(): void {
     for (const lot of lotsRocher) {
       groupe.remove(lot);
@@ -345,6 +491,13 @@ export function creerDecor(
 
   poserRochers();
 
+  // --- Paysage : les accessoires du biome et la ligne de rivage (`paysage.ts`).
+  //     Il lit `hauteurEn` à chaque pose, comme les arbres : rien n'y est gelé.
+  let paysage = creerPaysage(grille, hauteurEn, biome);
+  groupe.add(paysage.groupe);
+  /** La dernière ambiance appliquée, pour la redonner à un paysage refait. */
+  let ambianceCourante: { p: ParametresAmbiance; saison: Saison } | null = null;
+
   // --- Bâtiments
   const batiments = new THREE.Group();
   batiments.name = 'batiments';
@@ -363,6 +516,17 @@ export function creerDecor(
   const matPierre = new THREE.MeshStandardMaterial({ color: 0xbbb9aa, roughness: 0.92 });
   const matMetal = new THREE.MeshStandardMaterial({ color: 0x465560, roughness: 0.52, metalness: 0.38 });
   const matIvoire = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.82 });
+  // Un bâtiment désaffecté garde ses murs et ses toits, ternis ; ses vitrages
+  // ne s'allument jamais, et une palissade de chantier le ferme. Rien n'y est
+  // noirci ni effondré : il est hors service, pas détruit.
+  const matBetonTerni = new THREE.MeshStandardMaterial({ color: couleurMur, roughness: 0.97 });
+  const matToitTerni = new THREE.MeshStandardMaterial({ color: couleurToit, roughness: 0.95 });
+  const matVitresEteintes = new THREE.MeshStandardMaterial({ color: 0x1f242c, roughness: 0.7 });
+  const matPlanche = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96 });
+  // La parabole est une calotte creuse : vue de l'ouverture, une face simple
+  // disparaîtrait à chaque demi-tour de balayage.
+  const matParabole = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide });
+  const paraboles: Parabole[] = [];
   const matsCamp = new Map<string, THREE.MeshStandardMaterial>();
   const geosBatiment = new Set<THREE.BufferGeometry>();
   const primitives = new Map<string, THREE.BufferGeometry>();
@@ -400,18 +564,22 @@ export function creerDecor(
       lot.push(geo);
       lots.set(enfant.material, lot);
     }
+    // Ce qui n'est pas une maille — la parabole d'une station, qui doit
+    // pouvoir tourner seule — survit à la fusion tel quel.
+    const gardes = caseDecor.children.filter((c) => !(c instanceof THREE.Mesh));
     caseDecor.clear();
+    for (const garde of gardes) caseDecor.add(garde);
     for (const [mat, lot] of lots) {
       const geo = mergeGeometries(lot)!;
       lot.forEach((g2) => g2.dispose());
       geosBatiment.add(geo);
       const mesh = new THREE.Mesh(geo, mat);
       mesh.name = mat === matFenetres ? 'vitrages' : 'architecture';
-      // L'occupation troque le matériau contre son fantôme translucide, puis le
-      // rend : il faut savoir lequel rendre.
-      mesh.userData['matOrigine'] = mat;
       mesh.castShadow = mat !== matFenetres;
       mesh.receiveShadow = true;
+      // L'occupation échange le matériau contre son jumeau translucide ; il faut
+      // pouvoir retrouver l'original quand l'unité repart.
+      mesh.userData['opaque'] = mat;
       caseDecor.add(mesh);
     }
   }
@@ -420,18 +588,26 @@ export function creerDecor(
     batiments.clear();
     for (const geo of geosBatiment) geo.dispose();
     geosBatiment.clear();
+    paraboles.length = 0;
     for (let y = 0; y < grille.hauteur; y += 1) {
       for (let x = 0; x < grille.largeur; x += 1) {
         const terrain = grille.terrainDe(x, y);
-        if (!['ville', 'qg', 'usine', 'aeroport'].includes(terrain)) continue;
+        if (!TERRAINS_BATIS.includes(terrain)) continue;
         const proprio = e.proprietaires[cleCase({ x, y })] ?? null;
+        const desaffecte = e.desaffectes.includes(cleCase({ x, y }));
         const cx = x * CASE + CASE / 2;
         const cz = y * CASE + CASE / 2;
         const groupeCase = new THREE.Group();
         groupeCase.position.set(cx, hauteurEn(cx, cz), cz);
         groupeCase.userData['case'] = cleCase({ x, y });
         groupeCase.userData['type'] = terrain;
-        const teinte = matCamp(proprio);
+        groupeCase.userData['desaffecte'] = desaffecte;
+        // Désaffecté : pas de couleur de camp, il n'a pas de camp. La pierre
+        // reprend les accents plutôt qu'un gris de plus, qui coûterait un lot.
+        const teinte = desaffecte ? matPierre : matCamp(proprio);
+        const mur = desaffecte ? matBetonTerni : matBeton;
+        const toit = desaffecte ? matToitTerni : matToit;
+        const vitre = desaffecte ? matVitresEteintes : matFenetres;
         const poser = (l: number, h: number, p: number, mat: THREE.Material,
           px: number, py: number, pz: number, rz = 0): THREE.Mesh => {
           const m = bloc(l, h, p, mat);
@@ -444,9 +620,35 @@ export function creerDecor(
           m.scale.set(rayon, h, rayon); m.position.set(px, py, pz); groupeCase.add(m); return m;
         };
         const toiture = (px: number, py: number, pz: number, l: number, p: number): void => {
-          for (const cote of [-1, 1]) poser(l * 0.57, 0.032, p * 1.12, matToit,
+          for (const cote of [-1, 1]) poser(l * 0.57, 0.032, p * 1.12, toit,
             px + cote * l * 0.24, py + l * 0.12, pz, -cote * 0.43);
           poser(0.032, 0.032, p * 1.15, matMetal, px, py + l * 0.24, pz);
+        };
+        // Une toiture manquante : la charpente à nu, en attente de couverture.
+        const charpente = (px: number, py: number, pz: number, l: number, p: number): void => {
+          for (const k of [-0.36, -0.12, 0.12, 0.36]) {
+            poser(0.02, 0.018, p * 1.05, matPlanche, px + k * l, py + l * 0.24 - Math.abs(k) * l * 0.5, pz);
+          }
+          poser(0.02, 0.02, p * 1.1, matPlanche, px, py + l * 0.25, pz);
+        };
+        // Les planches clouées en croix sur une porte : c'est fermé.
+        const condamner = (px: number, py: number, pz: number): void => {
+          for (const rz of [0.55, -0.55]) poser(0.19, 0.028, 0.012, matPlanche, px, py, pz, rz);
+        };
+        const palissade = (): void => {
+          for (let k = 0; k < 4; k += 1) {
+            const a = k * Math.PI / 2;
+            for (const piece of PIECES_PALISSADE) {
+              const m = bloc(piece.l, piece.h, piece.p, matPlanche);
+              // Le repère du côté tourne avec lui : x reste le long de la lisse.
+              m.position.set(
+                Math.cos(a) * piece.x + Math.sin(a) * RAYON_PALISSADE, piece.y,
+                -Math.sin(a) * piece.x + Math.cos(a) * RAYON_PALISSADE,
+              );
+              m.rotation.y = a;
+              groupeCase.add(m);
+            }
+          }
         };
         const fenetres = (px: number, pz: number, l: number, h: number): void => {
           for (const cote of [-1, 1]) {
@@ -454,25 +656,20 @@ export function creerDecor(
               // Deux fenêtres distinctes par façade, enchâssées dans une pierre claire.
               for (const decalage of [-0.23, 0.23]) {
                 poser(l * 0.2, 0.064, 0.014, matIvoire, px + l * decalage, h * rang, pz + cote * l * 0.505);
-                poser(l * 0.135, 0.047, 0.018, matFenetres, px + l * decalage, h * rang + 0.003, pz + cote * l * 0.51);
+                poser(l * 0.135, 0.047, 0.018, vitre, px + l * decalage, h * rang + 0.003, pz + cote * l * 0.51);
               }
-              poser(0.018, 0.058, l * 0.38, matFenetres, px + cote * l * 0.51, h * rang, pz);
+              poser(0.018, 0.058, l * 0.38, vitre, px + cote * l * 0.51, h * rang, pz);
             }
           }
         };
         poser(0.83, 0.025, 0.83, matPierre, 0, 0.015, 0);
-        for (const cote of [-1, 1]) {
-          poser(0.9, 0.018, 0.035, teinte, 0, 0.028, cote * 0.44);
-          poser(0.035, 0.018, 0.9, teinte, cote * 0.44, 0.028, 0);
-        }
-        // Le pavillon du propriétaire, au coin du socle. Le QG en portait un, les
-        // autres bâtiments se contentaient d'un liseré au ras du sol — et après
-        // une capture, le joueur cherchait **son drapeau** sans le trouver. Un
-        // bâtiment neutre n'en a pas : c'est précisément ce qui le dit neutre.
-        if (terrain !== 'qg' && proprio !== null) {
-          cylindre(0.011, 0.44, matMetal, 0.36, 0.25, -0.36);
-          poser(0.2, 0.12, 0.012, teinte, 0.26, 0.4, -0.36);
-          cylindre(0.024, 0.02, matIvoire, 0.36, 0.48, -0.36);
+        if (desaffecte) {
+          palissade();
+        } else {
+          for (const cote of [-1, 1]) {
+            poser(0.9, 0.018, 0.035, teinte, 0, 0.028, cote * 0.44);
+            poser(0.035, 0.018, 0.9, teinte, cote * 0.44, 0.028, 0);
+          }
         }
 
         if (terrain === 'ville') {
@@ -480,19 +677,22 @@ export function creerDecor(
           const places: [number, number, number][] = [[-0.2, -0.12, 0.31], [0.19, 0.12, 0.27]];
           places.forEach(([px, pz, l], i) => {
             const h = 0.32 + alea(x, y, 300 + i) * 0.16;
-            poser(l, h, l, matBeton, px, h / 2 + 0.02, pz);
+            poser(l, h, l, mur, px, h / 2 + 0.02, pz);
             poser(l * 1.05, 0.045, l * 1.05, matPierre, px, 0.045, pz);
             fenetres(px, pz, l, h);
-            toiture(px, h + 0.035, pz, l, l);
+            // Désaffectée, la seconde maison a perdu sa couverture.
+            if (desaffecte && i === 1) charpente(px, h + 0.035, pz, l, l);
+            else toiture(px, h + 0.035, pz, l, l);
             // Porche, auvent de nation et cheminée coiffée.
             poser(0.065, 0.11, 0.014, matMetal, px, 0.078, pz + l / 2 + 0.008);
+            if (desaffecte) condamner(px, 0.085, pz + l / 2 + 0.02);
             poser(0.15, 0.028, 0.09, teinte, px, 0.16, pz + l / 2 + 0.035);
             poser(0.12, 0.025, 0.07, matIvoire, px, 0.035, pz + l / 2 + 0.035);
             poser(0.045, 0.13, 0.05, matPierre, px + l * 0.23, h + 0.1, pz - l * 0.15);
-            poser(0.06, 0.018, 0.064, matToit, px + l * 0.23, h + 0.17, pz - l * 0.15);
+            poser(0.06, 0.018, 0.064, toit, px + l * 0.23, h + 0.17, pz - l * 0.15);
           });
           // Jardin / banquette laisse libre le centre occupable.
-          poser(0.17, 0.055, 0.075, matToit, -0.18, 0.05, 0.3);
+          poser(0.17, 0.055, 0.075, toit, -0.18, 0.05, 0.3);
           poser(0.16, 0.018, 0.03, teinte, -0.18, 0.09, 0.33);
         } else if (terrain === 'qg') {
           poser(0.68, 0.075, 0.66, matPierre, 0, 0.055, 0);
@@ -508,19 +708,22 @@ export function creerDecor(
           }
           poser(0.105, 0.18, 0.02, matMetal, 0, 0.17, 0.282);
           poser(0.2, 0.032, 0.12, teinte, 0, 0.315, 0.3);
-          // Pavillon lisible à distance, mât et hampe en métal.
-          cylindre(0.012, 0.39, matMetal, 0.15, 0.825, -0.1);
-          poser(0.23, 0.13, 0.012, teinte, 0.26, 0.94, -0.1);
-          poser(0.06, 0.035, 0.016, matIvoire, 0.23, 0.94, -0.1);
-          cylindre(0.027, 0.022, matIvoire, 0.15, 1.03, -0.1);
+          // Le QG n'a plus son pavillon fusionné sur le toit : tous les
+          // bâtiments portent un mât vivant, le sien est simplement plus haut.
         } else if (terrain === 'usine') {
-          poser(0.66, 0.28, 0.52, matBeton, 0, 0.17, 0.025);
+          poser(0.66, 0.28, 0.52, mur, 0, 0.17, 0.025);
           // Toit industriel à deux sheds, bandeaux de lumière et poutres.
           for (const cote of [-1, 1]) {
-            poser(0.36, 0.035, 0.58, matToit, cote * 0.16, 0.35, 0.025, -0.23);
-            poser(0.026, 0.065, 0.48, matFenetres, cote * 0.16 + 0.165, 0.34, 0.025);
+            // Désaffectée, l'usine a perdu un shed : il n'en reste que les pannes.
+            if (desaffecte && cote === 1) {
+              for (const k of [-0.12, 0, 0.12]) poser(0.02, 0.02, 0.56, matPlanche, cote * 0.16 + k, 0.35 - k * 0.23, 0.025);
+            } else {
+              poser(0.36, 0.035, 0.58, toit, cote * 0.16, 0.35, 0.025, -0.23);
+            }
+            poser(0.026, 0.065, 0.48, vitre, cote * 0.16 + 0.165, 0.34, 0.025);
             poser(0.045, 0.29, 0.03, teinte, cote * 0.28, 0.17, 0.3);
           }
+          if (desaffecte) condamner(0, 0.15, 0.315);
           poser(0.39, 0.21, 0.022, matMetal, 0, 0.15, 0.3);
           for (let i = 0; i < 4; i += 1) poser(0.36, 0.01, 0.025, matPierre, 0, 0.065 + i * 0.048, 0.316);
           poser(0.5, 0.045, 0.075, teinte, 0, 0.285, 0.31);
@@ -529,14 +732,82 @@ export function creerDecor(
           cylindre(0.064, 0.055, teinte, -0.26, 0.54, -0.22);
           cylindre(0.064, 0.024, matMetal, -0.26, 0.643, -0.22);
           cylindre(0.066, 0.17, matMetal, 0.3, 0.12, -0.23);
+        } else if (terrain === 'radar') {
+          // Une station : un local technique bas à gauche, une tour en treillis
+          // à droite portant la parabole, et le centre libre pour l'unité.
+          poser(0.32, 0.2, 0.26, mur, -0.22, 0.12, -0.22);
+          poser(0.28, 0.05, 0.016, vitre, -0.22, 0.15, -0.085);
+          poser(0.32, 0.03, 0.27, toit, -0.22, 0.235, -0.225);
+          poser(0.28, 0.02, 0.05, teinte, -0.22, 0.26, -0.11);
+          poser(0.065, 0.11, 0.014, matMetal, -0.22, 0.075, -0.082);
+          if (desaffecte) condamner(-0.22, 0.085, -0.07);
+          // La petite antenne du local, coiffée aux couleurs du camp.
+          cylindre(0.006, 0.22, matMetal, -0.3, 0.36, -0.28);
+          cylindre(0.016, 0.02, teinte, -0.3, 0.475, -0.28);
+          // La tour : quatre montants, trois ceintures, une plate-forme.
+          const tx = 0.24;
+          const tz = -0.22;
+          for (const dx of [-0.07, 0.07]) {
+            for (const dz of [-0.07, 0.07]) cylindre(0.011, 0.44, matMetal, tx + dx, 0.24, tz + dz);
+          }
+          for (const niveau of [0.14, 0.28, 0.42]) {
+            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz - 0.07);
+            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz + 0.07);
+            poser(0.012, 0.012, 0.16, matMetal, tx - 0.07, niveau, tz);
+            poser(0.012, 0.012, 0.16, matMetal, tx + 0.07, niveau, tz);
+          }
+          poser(0.22, 0.02, 0.22, matMetal, tx, 0.465, tz);
+          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz - 0.115);
+          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz + 0.115);
+          poser(0.045, 0.06, 0.045, matIvoire, tx, 0.5, tz);
+          // La parabole, sur son pivot : elle n'est pas fondue avec le reste,
+          // c'est elle qui balaie.
+          const pivot = new THREE.Group();
+          pivot.name = 'parabole';
+          pivot.position.set(tx, 0.56, tz);
+          pivot.rotation.y = alea(x, y, 400) * Math.PI * 2;
+          const calotte = new THREE.Mesh(
+            primitive('calotte', () => new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 3)),
+            matParabole,
+          );
+          calotte.scale.setScalar(0.17);
+          // Le creux regarde l'horizon, un peu vers le ciel.
+          calotte.rotation.x = Math.PI / 2 - 0.35;
+          calotte.position.set(0, 0.04, -0.06);
+          const bras = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
+          bras.scale.set(0.008, 0.16, 0.008);
+          bras.rotation.x = -0.4;
+          bras.position.set(0, 0.06, 0.05);
+          const cornet = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), teinte);
+          cornet.scale.set(0.03, 0.03, 0.03);
+          cornet.position.set(0, 0.13, 0.11);
+          for (const m of [calotte, bras, cornet]) {
+            m.castShadow = true;
+            m.userData['opaque'] = m.material;
+            pivot.add(m);
+          }
+          if (desaffecte) {
+            // Désaffectée, la parabole a basculé et pend de travers : elle
+            // n'est pas tombée du haut de la tour, elle attend qu'on la règle.
+            pivot.rotation.x = 0.85;
+            pivot.rotation.z = 0.3;
+          }
+          groupeCase.add(pivot);
+          paraboles.push({ pivot, active: proprio !== null && !desaffecte });
         } else {
-          poser(0.21, 0.39, 0.21, matBeton, -0.26, 0.22, -0.21);
-          poser(0.29, 0.1, 0.28, matFenetres, -0.26, 0.43, -0.21);
-          poser(0.33, 0.035, 0.32, teinte, -0.26, 0.505, -0.21);
-          cylindre(0.008, 0.18, matMetal, -0.26, 0.6, -0.21);
-          poser(0.14, 0.025, 0.025, matIvoire, -0.26, 0.65, -0.21);
-          poser(0.5, 0.17, 0.25, matBeton, 0.09, 0.11, 0.17);
-          poser(0.45, 0.075, 0.02, matFenetres, 0.09, 0.135, 0.302);
+          poser(0.21, 0.39, 0.21, mur, -0.26, 0.22, -0.21);
+          poser(0.29, 0.1, 0.28, vitre, -0.26, 0.43, -0.21);
+          // Désaffectée, la tour a perdu sa coiffe et son antenne.
+          if (desaffecte) {
+            for (const k of [-0.1, 0.1]) poser(0.02, 0.02, 0.3, matPlanche, -0.26 + k, 0.505, -0.21);
+          } else {
+            poser(0.33, 0.035, 0.32, teinte, -0.26, 0.505, -0.21);
+            cylindre(0.008, 0.18, matMetal, -0.26, 0.6, -0.21);
+            poser(0.14, 0.025, 0.025, matIvoire, -0.26, 0.65, -0.21);
+          }
+          poser(0.5, 0.17, 0.25, mur, 0.09, 0.11, 0.17);
+          poser(0.45, 0.075, 0.02, vitre, 0.09, 0.135, 0.302);
+          if (desaffecte) condamner(0.09, 0.1, 0.31);
           poser(0.56, 0.035, 0.31, teinte, 0.09, 0.215, 0.17);
           poser(0.53, 0.013, 0.14, matMetal, 0.12, 0.037, -0.19);
           for (let i = 0; i < 4; i += 1) poser(0.065, 0.004, 0.015, matIvoire, -0.07 + i * 0.12, 0.046, -0.19);
@@ -547,84 +818,221 @@ export function creerDecor(
     }
   }
 
-  let signature = '';
-  let oscillation = 0.12;
-  let souffle = 0;
+  // --- Fantômes
+  // Un bâtiment occupé s'efface en transparence : sa silhouette reste entière
+  // et la figurine se lit au travers. L'aplatir en maquette basse — ce qu'on
+  // faisait — se lisait comme une ville écrasée par l'unité qui la prend.
+  const matsFantome = new Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial>();
 
-  // Les fantômes : un clone translucide par matériau, créé à la demande. Un
-  // bâtiment occupé les prend le temps de l'occupation et rend les originaux
-  // ensuite — jamais de matériau créé par bâtiment ni par image.
-  const fantomes = new Map<THREE.Material, THREE.Material>();
-  function fantomeDe(mat: THREE.Material): THREE.Material {
-    let f = fantomes.get(mat);
+  function materiauFantome(source: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+    let f = matsFantome.get(source);
     if (!f) {
-      f = mat.clone();
+      f = source.clone();
       f.transparent = true;
-      f.opacity = OPACITE_OCCUPE;
+      f.opacity = OPACITE_FANTOME;
+      // Sans écriture de profondeur, l'unité à l'intérieur reste nette : c'est
+      // elle qu'on regarde, le bâtiment n'est plus qu'un repère.
       f.depthWrite = false;
-      fantomes.set(mat, f);
+      matsFantome.set(source, f);
     }
     return f;
   }
 
-  // Les chantiers de capture : un mât et un fanion par unité en train de
-  // capturer, le fanion **hissé à hauteur des points** accumulés. Rebâtis à
-  // chaque mise à jour — ils sont rares et faits de primitives partagées.
-  const chantiers = new THREE.Group();
-  chantiers.name = 'chantiers';
-  groupe.add(chantiers);
+  // --- Pavillons
+  // Trois lots instanciés — mâts, pommeaux, drapeaux — quel que soit le nombre
+  // de bâtiments : trois appels de dessin, et la couleur par instance.
+  const pavillons = new THREE.Group();
+  pavillons.name = 'pavillons';
+  groupe.add(pavillons);
+  // Le tableau est stable : les prises rendues par `drapeau()` le cherchent par
+  // clé, et une grille changée le vide et le remplit sur place.
+  const places: Pavillon[] = [];
 
-  function majProprietaires(e: EtatPartie, visibles: ReadonlySet<string> | null = null): void {
-    const cle = JSON.stringify(e.proprietaires);
+  function semerPavillons(): void {
+    places.length = 0;
+    for (let y = 0; y < grille.hauteur; y += 1) {
+      for (let x = 0; x < grille.largeur; x += 1) {
+        const terrain = grille.terrainDe(x, y);
+        if (!TERRAINS_BATIS.includes(terrain)) continue;
+        places.push({
+          cle: cleCase({ x, y }),
+          case: { x, y },
+          cx: x * CASE + CASE / 2,
+          cz: y * CASE + CASE / 2,
+          hauteurMat: terrain === 'qg' ? HAUT_MAT_QG : HAUT_MAT,
+          seuil: SEUIL_CAPTURE,
+          pose: { camp: null, niveau: 0 },
+          force: null,
+        });
+      }
+    }
+  }
+  semerPavillons();
+  // Le mât part de son pied : sa hauteur est une échelle, pas une géométrie.
+  const geoMat = new THREE.CylinderGeometry(0.011, 0.015, 1, 6).translate(0, 0.5, 0);
+  const geoPommeau = new THREE.SphereGeometry(0.022, 8, 6);
+  // Le drapeau tient au mât par son bord gauche : c'est l'axe de son onde.
+  const geoDrapeau = new THREE.PlaneGeometry(LARG_DRAPEAU, HAUT_DRAPEAU, 6, 2)
+    .translate(LARG_DRAPEAU / 2, 0, 0);
+  const drapeauPlat = Float32Array.from(geoDrapeau.getAttribute('position').array);
+  const matDrapeau = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
+  let mats!: THREE.InstancedMesh;
+  let pommeaux!: THREE.InstancedMesh;
+  let drapeaux!: THREE.InstancedMesh;
+
+  function batirPavillons(): void {
+    for (const lot of [mats, pommeaux, drapeaux]) {
+      if (!lot) continue;
+      pavillons.remove(lot);
+      lot.dispose();
+    }
+    const totalPavillons = Math.max(1, places.length);
+    mats = new THREE.InstancedMesh(geoMat, matMetal, totalPavillons);
+    pommeaux = new THREE.InstancedMesh(geoPommeau, matIvoire, totalPavillons);
+    drapeaux = new THREE.InstancedMesh(geoDrapeau, matDrapeau, totalPavillons);
+    mats.name = 'mats';
+    pommeaux.name = 'pommeaux';
+    drapeaux.name = 'drapeaux';
+    for (const lot of [mats, pommeaux, drapeaux]) {
+      lot.castShadow = true;
+      lot.frustumCulled = false;
+      lot.count = places.length;
+      pavillons.add(lot);
+    }
+  }
+  batirPavillons();
+  const couleurDrapeau = new THREE.Color();
+
+  /** Le pied d'un mât : le sol est relu à chaque pose, une marée le déplace. */
+  function piedDe(p: Pavillon): THREE.Vector3 {
+    return new THREE.Vector3(p.cx + DECALAGE_MAT.x, hauteurEn(p.cx, p.cz) + SOCLE, p.cz + DECALAGE_MAT.z);
+  }
+
+  function poserPavillons(): void {
+    quat.identity();
+    places.forEach((p, i) => {
+      const pied = piedDe(p);
+      pos.copy(pied);
+      ech.set(1, p.hauteurMat, 1);
+      mat4.compose(pos, quat, ech);
+      mats.setMatrixAt(i, mat4);
+      pos.set(pied.x, pied.y + p.hauteurMat, pied.z);
+      ech.set(1, 1, 1);
+      mat4.compose(pos, quat, ech);
+      pommeaux.setMatrixAt(i, mat4);
+      const { camp, niveau } = p.force ?? p.pose;
+      // Un drapeau sans camp n'est pas dessiné : une échelle nulle le retire
+      // sans changer la taille du lot.
+      const e = camp === null ? 0 : 1;
+      const course = p.hauteurMat - PIED_DRAPEAU - HAUT_DRAPEAU / 2 - 0.02;
+      pos.set(pied.x, pied.y + PIED_DRAPEAU + Math.min(1, Math.max(0, niveau)) * course, pied.z);
+      ech.set(e, e, e);
+      mat4.compose(pos, quat, ech);
+      drapeaux.setMatrixAt(i, mat4);
+      couleurDrapeau.set(paletteDe(camp).main);
+      drapeaux.setColorAt(i, couleurDrapeau);
+    });
+    mats.instanceMatrix.needsUpdate = true;
+    pommeaux.instanceMatrix.needsUpdate = true;
+    drapeaux.instanceMatrix.needsUpdate = true;
+    if (drapeaux.instanceColor) drapeaux.instanceColor.needsUpdate = true;
+  }
+
+  let vent = 0.7;
+
+  /**
+   * Fait onduler la toile : une onde qui part du mât, nulle à la hampe et
+   * pleine au bord libre, dont l'ampleur suit le vent de l'ambiance. Par temps
+   * calme, un drapeau pend et frémit à peine ; par tempête il claque.
+   */
+  function flotter(): void {
+    const attr = geoDrapeau.getAttribute('position') as THREE.BufferAttribute;
+    const ampleur = 0.012 + oscillation * 0.05;
+    for (let i = 0; i < attr.count; i += 1) {
+      const x0 = drapeauPlat[i * 3]!;
+      const y0 = drapeauPlat[i * 3 + 1]!;
+      const u = x0 / LARG_DRAPEAU;
+      const onde = Math.sin(u * 5.2 - vent * 6.4) * u;
+      attr.setXYZ(i, x0, y0 + onde * ampleur * 0.35 - u * u * 0.012, onde * ampleur);
+    }
+    attr.needsUpdate = true;
+    geoDrapeau.computeVertexNormals();
+  }
+
+  let signature = '';
+  let oscillation = 0.12;
+  let souffle = 0;
+  // Une première onde figée : même sans mouvement, un drapeau n'est pas une plaque.
+  flotter();
+
+  // --- Vitrages qui se rallument
+  // La lueur imposée par une remise en service, par case, et le matériau qui
+  // la porte : le vitrage partage son matériau avec toute la carte, on ne peut
+  // pas l'allumer pour une seule ville sans lui en donner un à elle.
+  const lueurs = new Map<string, number>();
+  const matsLueur = new Map<string, { fantome: boolean; mat: THREE.MeshStandardMaterial }>();
+
+  function materiauLueur(cle: string, fantome: boolean, lueur: number): THREE.MeshStandardMaterial {
+    let entree = matsLueur.get(cle);
+    if (!entree || entree.fantome !== fantome) {
+      entree?.mat.dispose();
+      entree = { fantome, mat: (fantome ? materiauFantome(matFenetres) : matFenetres).clone() };
+      matsLueur.set(cle, entree);
+    }
+    entree.mat.emissiveIntensity = Math.max(matFenetres.emissiveIntensity, lueur * LUEUR_PLEINE);
+    return entree.mat;
+  }
+
+  /** Les mailles d'un bâtiment : ses lots fondus, et celles de sa parabole. */
+  function maillesDe(batiment: THREE.Object3D): THREE.Mesh[] {
+    const mailles: THREE.Mesh[] = [];
+    for (const c of batiment.children) {
+      if (c instanceof THREE.Mesh) mailles.push(c);
+      else for (const m of c.children) if (m instanceof THREE.Mesh) mailles.push(m);
+    }
+    return mailles;
+  }
+
+  function majProprietaires(
+    e: EtatPartie, visibles: ReadonlySet<string> | null = null, cat: Catalogue | null = null,
+  ): void {
+    // La remise en service change l'aspect sans changer de propriétaire dans
+    // le même événement : sans la liste des désaffectés dans la clé, la
+    // palissade resterait à l'écran.
+    const cle = JSON.stringify([e.proprietaires, e.desaffectes]);
     if (cle !== signature) {
       signature = cle;
       construireBatiments(e);
     }
-    // En occupation, le bâtiment ne s'écrase plus : il devient **translucide**.
-    // Une maquette à douze pour cent de sa hauteur ne se lisait plus comme une
-    // ville, et c'est ce qui a été reproché. Le fantôme laisse la figurine
-    // dominer tout en gardant la silhouette entière. Une unité cachée ne doit
-    // jamais être révélée par le décor qui s'efface.
-    const visible = (u: EtatPartie['unites'][number]): boolean => !u.dansTransport
-      && (!visibles || visibles.has(cleCase(u)));
-    const occupees = new Set(e.unites.filter(visible).map((u) => cleCase(u)));
+    // Une unité cachée ne doit jamais être révélée par le décor : ni par un
+    // bâtiment qui s'efface, ni par un drapeau qui descend.
+    const occupants = new Map<string, Unite>();
+    for (const u of e.unites) {
+      if (!u.dansTransport && (!visibles || visibles.has(cleCase(u)))) occupants.set(cleCase(u), u);
+    }
     for (const batiment of batiments.children) {
-      const occupe = occupees.has(String(batiment.userData['case']));
-      batiment.scale.y = 1;
-      for (const enfant of batiment.children) {
-        if (!(enfant instanceof THREE.Mesh)) continue;
-        const origine = enfant.userData['matOrigine'] as THREE.Material | undefined;
-        if (!origine) continue;
-        // Les marques du camp — liseré du socle, auvent, pavillon — restent
-        // pleines : c'est ce qu'on cherche des yeux après une capture, et un
-        // drapeau fantôme sur une ville fantôme ne se lit plus du tout.
-        const marque = [...matsCamp.values()].includes(origine as THREE.MeshStandardMaterial);
-        const efface = occupe && !marque;
-        enfant.material = efface ? fantomeDe(origine) : origine;
-        // Un fantôme qui projette une ombre pleine trahit sa masse.
-        enfant.castShadow = !efface && origine !== matFenetres;
+      const cleBat = String(batiment.userData['case']);
+      const fantome = occupants.has(cleBat);
+      const lueur = lueurs.get(cleBat);
+      for (const m of maillesDe(batiment)) {
+        const opaque = m.userData['opaque'] as THREE.MeshStandardMaterial;
+        if (opaque === matFenetres && lueur !== undefined) m.material = materiauLueur(cleBat, fantome, lueur);
+        else m.material = fantome ? materiauFantome(opaque) : opaque;
+        // Un bâtiment qu'on voit au travers ne projette pas une ombre pleine
+        // sur la figurine qu'il abrite.
+        m.castShadow = !fantome && opaque !== matFenetres;
       }
     }
-
-    chantiers.clear();
-    for (const u of e.unites) {
-      if (u.pointsCapture <= 0 || !visible(u)) continue;
-      if (!TERRAINS_A_DRAPEAU.has(grille.terrainDe(u.x, u.y))) continue;
-      const part = Math.min(1, u.pointsCapture / SEUIL_CAPTURE);
-      const cx = u.x * CASE + CASE / 2 + 0.36;
-      const cz = u.y * CASE + CASE / 2 - 0.36;
-      const sol = hauteurEn(cx, cz);
-      const mat = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
-      mat.name = 'mat';
-      mat.scale.set(0.011, 0.44, 0.011);
-      mat.position.set(cx, sol + 0.25, cz);
-      const fanion = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), matCamp(u.camp));
-      fanion.name = 'fanion';
-      fanion.scale.set(0.2, 0.12, 0.012);
-      fanion.position.set(cx - 0.1, sol + 0.1 + part * 0.3, cz);
-      fanion.castShadow = true;
-      chantiers.add(mat, fanion);
+    for (const p of places) {
+      const u = occupants.get(p.cle);
+      if (cat) p.seuil = seuilCapture(e, cat, p.case);
+      p.pose = poseDrapeau(
+        e.proprietaires[p.cle] ?? null,
+        u && u.pointsCapture > 0 ? { camp: u.camp, points: u.pointsCapture } : null,
+        p.seuil,
+      );
     }
+    poserPavillons();
   }
 
   majProprietaires(etat);
@@ -647,7 +1055,18 @@ export function creerDecor(
       // Un toit d'ardoise ou de tôle blanchit sous la neige comme le reste.
       matToit.color.set(couleurToit).lerp(new THREE.Color(0xffffff), neige * 0.45);
       matFenetres.emissiveIntensity = p.fenetres;
+      // Le terni suit l'original, en plus gris : la neige le blanchit aussi.
+      matBetonTerni.color.copy(matBeton.color).lerp(new THREE.Color(0x8a8a84), 0.5);
+      matToitTerni.color.copy(matToit.color).lerp(new THREE.Color(0x77756f), 0.5);
+      // Les jumeaux translucides suivent leurs originaux : un bâtiment occupé
+      // blanchit sous la neige et allume ses fenêtres comme les autres.
+      for (const [source, f] of matsFantome) {
+        f.color.copy(source.color);
+        f.emissiveIntensity = source.emissiveIntensity;
+      }
       oscillation = p.oscillation;
+      ambianceCourante = { p, saison };
+      paysage.appliquerAmbiance(p, saison);
       // L'hiver dénude les feuillus : on les rétrécit plutôt que de les cacher.
       if (saison !== saisonCourante) {
         saisonCourante = saison;
@@ -658,6 +1077,8 @@ export function creerDecor(
     majRelief(): void {
       poserArbres(souffle);
       poserRochers();
+      poserPavillons();
+      paysage.majRelief();
     },
 
     majGrille(suivante: GrilleTerrain): void {
@@ -666,26 +1087,100 @@ export function creerDecor(
       batirArbres();
       rochers = semerRochers(grille);
       batirRochers();
+      semerPavillons();
+      batirPavillons();
+      // Le paysage est semé sur la grille comme les arbres : on le refait plutôt
+      // que d'apprendre à chacun de ses lots à se ressemer. Il reprend
+      // l'ambiance en cours, sans quoi il repartirait en plein été à midi.
+      groupe.remove(paysage.groupe);
+      paysage.dispose();
+      paysage = creerPaysage(grille, hauteurEn, biome);
+      groupe.add(paysage.groupe);
+      if (ambianceCourante) paysage.appliquerAmbiance(ambianceCourante.p, ambianceCourante.saison);
       // Les bâtiments se rebâtissent au prochain `majProprietaires` : on efface
       // la signature qui lui fait croire que rien n'a changé.
       signature = '';
       poserArbres(souffle);
       poserRochers();
+      poserPavillons();
     },
 
-    avancer(ms: number): boolean {
-      if (oscillation < 0.3) return false;
-      souffle += ms / 320;
-      poserArbres(souffle);
-      return true;
+    avancer(ms: number, mouvementReduit = false): boolean {
+      let encore = false;
+      if (oscillation >= 0.3) {
+        souffle += ms / 320;
+        poserArbres(souffle);
+        encore = true;
+      }
+      if (!mouvementReduit && places.some((p) => (p.force ?? p.pose).camp !== null)) {
+        vent += ms / 1000;
+        flotter();
+        encore = true;
+      }
+      if (!mouvementReduit) {
+        for (const p of paraboles) {
+          if (!p.active) continue;
+          p.pivot.rotation.y += (ms / 1000) * BALAYAGE_RADAR;
+          encore = true;
+        }
+      }
+      // Roseaux, ailes de moulin, fumerolles : le paysage a son propre souffle.
+      if (paysage.avancer(ms, mouvementReduit)) encore = true;
+      return encore;
+    },
+
+    chantier(cle: string): PriseChantier | null {
+      if (!places.some((q) => q.cle === cle)) return null;
+      return {
+        eclairer(lueur): void {
+          lueurs.set(cle, Math.min(1, Math.max(0, lueur)));
+        },
+        relacher(): void {
+          lueurs.delete(cle);
+          matsLueur.get(cle)?.mat.dispose();
+          matsLueur.delete(cle);
+        },
+      };
+    },
+
+    drapeau(cle: string): PriseDrapeau | null {
+      const p = places.find((q) => q.cle === cle);
+      if (!p) return null;
+      return {
+        seuil: p.seuil,
+        get sommet(): THREE.Vector3 {
+          return piedDe(p).add(new THREE.Vector3(0, p.hauteurMat, 0));
+        },
+        get pied(): THREE.Vector3 {
+          return piedDe(p);
+        },
+        forcer(camp, niveau): void {
+          p.force = { camp, niveau };
+          poserPavillons();
+        },
+        relacher(): void {
+          p.force = null;
+          poserPavillons();
+        },
+      };
     },
 
     dispose(): void {
+      geoMat.dispose();
+      geoPommeau.dispose();
+      geoDrapeau.dispose();
+      matDrapeau.dispose();
+      for (const f of matsFantome.values()) f.dispose();
+      for (const l of matsLueur.values()) l.mat.dispose();
+      matBetonTerni.dispose();
+      matToitTerni.dispose();
+      matVitresEteintes.dispose();
+      matPlanche.dispose();
+      matParabole.dispose();
       geoTronc.dispose();
       geoConifere.dispose();
       geoFeuillu.dispose();
       for (const geo of geosRocher) geo.dispose();
-      for (const m of [troncs, coniferes, feuillus, ...lotsRocher]) m.dispose();
       for (const g2 of geosBatiment) g2.dispose();
       for (const g2 of primitives.values()) g2.dispose();
       matTronc.dispose();
@@ -699,7 +1194,7 @@ export function creerDecor(
       matMetal.dispose();
       matIvoire.dispose();
       for (const m of matsCamp.values()) m.dispose();
-      for (const f of fantomes.values()) f.dispose();
+      paysage.dispose();
     },
   };
 }

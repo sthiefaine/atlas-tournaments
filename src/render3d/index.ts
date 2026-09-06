@@ -154,12 +154,18 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const m = monde;
     if (!s || !m) return;
     let encore = false;
+    const reduit = mouvementReduit?.matches ?? false;
+    // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
+    // la boucle comme les autres animations, et l'image qui suit les voit.
+    encore = m.vue3d.avancer(ecoule, reduit) || encore;
     encore = m.eclairage.avancer(ecoule, m.vue3d.cible) || encore;
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) m.decor.majRelief();
     encore = mutation || encore;
-    encore = m.decor.avancer(ecoule) || encore;
-    if (!mouvementReduit?.matches) encore = m.unites.avancer(ecoule) || encore;
+    encore = m.decor.avancer(ecoule, reduit) || encore;
+    // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, le
+    // tassement d'une unité qui a joué doit encore s'appliquer — d'un coup.
+    encore = m.unites.avancer(ecoule, reduit) || encore;
     encore = m.surbrillances.avancer(ecoule) || encore;
     const p = m.eclairage.courant;
     m.plateau.appliquerAmbiance(p);
@@ -184,7 +190,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // le décor ressème arbres et rochers, rebâtit les bâtiments, et se repose.
       m.decor.majGrille(grilleDe(etat, vue));
     }
-    m.decor.majProprietaires(etat, vue.visibles);
+    m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
     m.unites.maj(etat, vue.catalogue, vue.visibles);
     const position = vue.selection ? m.unites.positionDe(vue.selection) : null;
     m.surbrillances.maj(vue.surbrillances, vue.chemin, vue.curseur, position);
@@ -234,6 +240,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         effets: m.effets,
         document: conteneurRef.ownerDocument,
         hauteurEn: m.plateau.hauteurEn,
+        drapeau: (cle) => m.decor.drapeau(cle),
+        chantier: (cle) => m.decor.chantier(cle),
         salir: () => {
           majMonde();
           salir();
@@ -249,7 +257,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     versMonde(x: number, y: number): Case | null {
       const m = monde;
       if (!m) return null;
-      return m.vue3d.caseSous(x, y, m.plateau.sol);
+      return m.vue3d.caseSous(x, y, [m.plateau.ponts, m.plateau.sol]);
     },
 
     versEcran(c: Case): PointVue | null {
@@ -263,7 +271,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const canvas = scene3d?.canvas;
       if (!canvas) return () => undefined;
       return brancherGestes3d(canvas, () => monde?.vue3d ?? null,
-        () => monde?.plateau.sol ?? null, gestes, salir);
+        () => (monde ? [monde.plateau.ponts, monde.plateau.sol] : null), gestes, salir);
     },
 
     msParImage(): number {
@@ -298,8 +306,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const m = monde;
       if (!m) return;
       if (!cadree) {
+        // Le premier cadrage est celui de l'ouverture : la carte entière si
+        // elle tient, sinon la largeur en portrait et la vue portée vers
+        // l'action — la première unité du joueur — sans montrer de vide.
         cadree = true;
-        m.vue3d.centrerCase(c);
+        m.vue3d.cadrerCarte(c);
         salir();
         return;
       }

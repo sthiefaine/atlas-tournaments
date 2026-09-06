@@ -6,40 +6,29 @@
   "creeLe": "2026-09-05",
   "majLe": "2026-09-05",
   "code": "carte_couleurs_alliees",
-  "nom": "Sous les couleurs alliées",
-  "largeur": 10,
+  "nom": "Les postes d’arbitrage",
+  "largeur": 12,
   "hauteur": 10,
   "camps": 2,
   "biome": "montagne",
   "grille": [
-    "PPPPPMPPPP",
-    "PHPPPMPPPP",
-    "PPPPPMPPPP",
-    "PPPPCMPPPP",
-    "PPPPPMMPPP",
-    "PPPPPMPPPP",
-    "PPPPMMPPPP",
-    "PPPPPRPPPP",
-    "PPPPPPPPHP",
-    "PPPPPPPPPP"
+    "MMPPMMPPPMMM",
+    "MHRPPMPCPPMM",
+    "PPRPMMPPPPPM",
+    "PPRRMPPMMPPP",
+    "MPPRPPRRMPTP",
+    "MMPRPCRPMMPP",
+    "PPPRPPRPPPPP",
+    "PPMMPPRPPPRP",
+    "PPPMPCRRRRHM",
+    "PPPMMPPPMMMM"
   ],
   "proprietaires": {
     "1,1": 0,
-    "8,8": 1
+    "10,8": 1,
+    "10,4": 1
   },
   "unitesDepart": [
-    {
-      "camp": 0,
-      "type": "infanterie",
-      "x": 2,
-      "y": 3
-    },
-    {
-      "camp": 0,
-      "type": "char_leger",
-      "x": 2,
-      "y": 4
-    },
     {
       "camp": 0,
       "type": "infanterie",
@@ -47,16 +36,52 @@
       "y": 2
     },
     {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "camp": 0,
+      "type": "drone",
+      "x": 3,
+      "y": 2
+    },
+    {
       "camp": 1,
       "type": "infanterie",
-      "x": 8,
+      "x": 9,
       "y": 7
     },
     {
       "camp": 1,
-      "type": "recon",
-      "x": 7,
+      "type": "infanterie",
+      "x": 9,
       "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "brouilleur",
+      "x": 9,
+      "y": 6
     }
   ]
 }

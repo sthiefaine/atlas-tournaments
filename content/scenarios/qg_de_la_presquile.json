@@ -1,0 +1,156 @@
+{
+  "cle": "qg_de_la_presquile",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "qg_de_la_presquile",
+  "nom": "Entraînement 4 · Le QG de la presqu’île",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_qg_de_la_presquile",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "defensive"
+    }
+  ],
+  "fondsDepart": 4000,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Dernier exercice, et le plus vrai : prenez le QG de Tomas. Un QG demande quarante points de capture, quatre tours d’infanterie intacte, sous le feu. Couvrez-la.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le bassin reproduit les marées de la côte. Marée basse, la grève entre les deux plages s’ouvre et le trajet est court. Marée haute, il reste le pont au sud. Le Bulletin, en haut à droite, annonce la marée deux journées à l’avance.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le QG est à vous : la partie s’arrête sur-le-champ. Formation terminée, commandant. Votre premier match officiel se jouera au col, avec Tomas à vos côtés.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "presquile_maree",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La marée monte. Une unité restée sur la grève est repoussée vers la terre. Le passage rouvre à la quatrième journée : préparez vos troupes sur la plage, ou passez par le pont.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "presquile_retour",
+      "declencheur": {
+        "type": "journee",
+        "journee": 4
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Marée basse pour deux journées. C’est maintenant que ça traverse.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "presquile_pouvoir",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Votre jauge de commandement était pleine : vous venez de déclencher votre pouvoir. Il ne dure qu’une journée, alors gardez-le pour un moment qui compte, l’assaut du QG par exemple.",
+          "emotion": "triomphe"
+        }
+      ]
+    },
+    {
+      "cle": "presquile_capture",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Je prends une de vos villes. Pendant que vous regardez mon QG, surveillez le vôtre : le perdre, c’est perdre le match.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "presquile_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une unité hors jeu. Mon équipe défend, elle n’attaque pas : c’est mon style. À vous de forcer la porte.",
+          "emotion": "doute"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "monde.tournoi.qg_de_la_presquile"
+    ]
+  }
+}

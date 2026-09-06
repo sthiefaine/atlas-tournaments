@@ -22,7 +22,7 @@ const PAR_CLE = ((): Record<string, Terrain> => {
 })();
 
 /** Terrains portant un propriétaire (`03-schemas.md` §4). */
-export const CAPTURABLES: readonly CleTerrain[] = ['ville', 'usine', 'aeroport', 'qg'];
+export const CAPTURABLES: readonly CleTerrain[] = ['ville', 'usine', 'aeroport', 'qg', 'radar'];
 
 /** Terrains sur lesquels le générateur pose un bâtiment. */
 export const CONSTRUCTIBLES: readonly CleTerrain[] = ['plaine', 'foret', 'plage', 'route'];

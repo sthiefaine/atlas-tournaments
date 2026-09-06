@@ -4,6 +4,7 @@ import { baseConfiguree } from '@/db/client';
 import { missions, runs } from '@/db/requetes/index';
 import { sonder } from '@/serveur/sonde';
 
+import { ResumeAssets } from './assets/resume';
 import { sessionCourante } from './session';
 import { BaseAbsente, Bloc, Etat, Ligne, Message, Vide } from './ui';
 
@@ -19,7 +20,8 @@ export default async function TableauDeBord({
   const { message } = await searchParams;
 
   if (!baseConfiguree()) {
-    return (<main><Message texte={message} /><BaseAbsente /></main>);
+    // Les assets viennent du canon : ils se comptent même sans base.
+    return (<main><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
   }
 
   let sonde;
@@ -30,12 +32,15 @@ export default async function TableauDeBord({
     derniers = await runs.derniersRuns(12);
     file = await missions.profondeurFile();
   } catch {
-    return (<main><Message texte={message} /><BaseAbsente /></main>);
+    // Les assets viennent du canon : ils se comptent même sans base.
+    return (<main><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
   }
 
   return (
     <main>
       <Message texte={message} />
+
+      <ResumeAssets />
 
       <Bloc
         titre="Sonde des routines"

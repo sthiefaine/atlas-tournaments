@@ -258,7 +258,7 @@ function coutRoute(terrain: CleTerrain): number | null {
   switch (terrain) {
     case 'mer': return null;
     case 'route': case 'pont': return 1;
-    case 'ville': case 'usine': case 'aeroport': case 'qg': return 1;
+    case 'ville': case 'usine': case 'aeroport': case 'qg': case 'radar': return 1;
     case 'plaine': return 2;
     case 'plage': return 3;
     case 'foret': return 4;

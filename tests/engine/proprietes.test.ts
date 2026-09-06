@@ -169,7 +169,7 @@ test("l'empreinte change dès qu'un PV change", () => {
 test('le catalogue est la seule source des unités et des terrains', () => {
   const cat = chargerCatalogue();
   assert.equal(cat.cles.length, 11);
-  assert.equal(Object.keys(cat.terrains).length, 12);
+  assert.equal(Object.keys(cat.terrains).length, 13);
   assert.equal(cat.degats.matrice.length, 10);
   for (const ligne of cat.degats.matrice) assert.equal(ligne.length, 10);
 });
