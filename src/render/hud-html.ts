@@ -138,7 +138,7 @@ const STYLE = `
 .atlas-hud .inspect canvas{flex:0 0 auto;width:44px;height:44px;background:#ffffff0a;border-bottom:2px solid #d2b66e}
 .atlas-hud .stats{font-size:12px;color:#c0ccd7;margin-top:3px;white-space:normal}
 .atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;font-size:22px;border:1px solid #ffffff20}
-.atlas-hud .inspect .retour{margin-left:auto}
+.atlas-hud .inspect .in>.retour:first-of-type{margin-left:auto}
 /* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
    devient un panneau posé à côté de l'unité dès que l'écran est assez large
    (attribut data-ancre, position calculée par la fonction ancrer). */
@@ -203,7 +203,21 @@ const STYLE = `
 .atlas-hud .production button[aria-expanded='true']{background:#d0d7cc;border-left-color:var(--signal);margin-bottom:0}
 .atlas-hud .production button[aria-expanded='true'] .cta{color:#1d3a2a}
 /* La fiche : tout ce que le canon sait dire de l'unité, et rien d'inventé. */
-.atlas-hud .fiche{background:#eae6d5;border-left:3px solid var(--signal);padding:10px 12px 12px;margin-bottom:6px;font-size:12.5px;line-height:1.45;color:#1e3038}
+.atlas-hud .fiche{border-left:3px solid var(--signal);padding:10px 12px 12px;font-size:12.5px;line-height:1.45}
+.atlas-hud .production .fiche{background:#eae6d5;color:#1e3038;margin-bottom:6px}
+/* Sous le curseur, la fiche se pose dans l'encre du HUD et non sur du papier :
+   c'est le même contenu, ce n'est pas la même surface. */
+.atlas-hud .inspect .fiche{background:#0d1a22;color:#dbe4ea;border-top:1px solid #ffffff1a;max-height:44vh;overflow:auto;overscroll-behavior:contain}
+.atlas-hud .inspect .fiche .fl>span{color:#8ba2ae}
+.atlas-hud .inspect .fiche .chiffres{color:#a9bcc6}
+.atlas-hud .inspect .fiche i{color:#8ba2ae}
+.atlas-hud .inspect .fiche b:not(:last-child)::after{color:#5f7683}
+.atlas-hud .inspect .fiche .avert{background:#3a2620;border-left-color:#c07a55;color:#f0d9cc}
+.atlas-hud .inspect .fiche .avert.bon{background:#1e3325;border-left-color:#5aa84c;color:#d6ecd2}
+/* Le bouton qui déplie : même gabarit que « retour », posé juste avant lui. */
+.atlas-hud .detail{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:auto;background:#ffffff10;border:1px solid #ffffff20;font-size:15px;font-weight:850;font-style:italic;color:#d6e2ea}
+.atlas-hud .detail[aria-expanded='true']{background:var(--signal);border-color:var(--signal);color:#10222b;font-style:normal}
+.atlas-hud .inspect .detail+.retour{margin-left:6px}
 .atlas-hud .fiche p{margin:0 0 6px}
 .atlas-hud .fiche p:last-child{margin-bottom:0}
 .atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:4px 14px;font-weight:750;color:#39525c}
@@ -340,6 +354,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   // appui l'ouvre, un second produit : on informe sans coûter un geste à qui
   // sait déjà ce qu'il achète.
   let ficheOuverte: CleUnite | null = null;
+  // La fiche du panneau d'inspection, elle, **reste ouverte** d'une case à
+  // l'autre : c'est une façon de jouer, pas un choix par unité. Qui apprend la
+  // laisse dépliée, qui connaît la referme une fois.
+  let ficheInspection = false;
   let tourAffiche = '';
   let derniereSelection: string | null = null;
   let minuterieTour: ReturnType<typeof setTimeout> | null = null;
@@ -470,12 +488,21 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       icone = `<canvas data-vignette="${id}" width="46" height="46"></canvas>`;
     }
     const bord = unite ? paletteDe(unite.camp).main : paletteDe(null).main;
+    // Le bouton n'apparaît que sur une unité : un terrain n'a pas de fiche, et
+    // une case vide ne doit pas offrir une commande qui ne ferait rien.
+    const detail = unite
+      ? `<button type="button" class="detail" data-action="fiche" aria-expanded="${ficheInspection}" `
+        + `aria-label="${ech(api.t('fiche.detail'))}" title="${ech(api.t('fiche.detail'))}">`
+        + `<span aria-hidden="true">${ficheInspection ? '\u25B2' : 'i'}</span></button>`
+      : '';
     return `<div class="p inspect" role="group" aria-label="${ech(api.t('hud.panneau_unite'))}">`
       + `<span class="bord" style="background:${bord}"></span>`
       + `<div class="in">${icone}<div style="min-width:0">`
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
       + (lignes.length > 0 ? `<div class="stats">${ech(lignes.join(' · '))}</div>` : '')
-      + `</div>${v.selection && !v.attenteIa ? boutonRetour() : ''}</div></div>`;
+      + `</div>${detail}${v.selection && !v.attenteIa ? boutonRetour() : ''}</div>`
+      + (unite && ficheInspection ? blocFiche(v, unite.type) : '')
+      + `</div>`;
   }
 
   /** Une jauge de PV en dix crans : pleine, perdue à l'échange, vide. */
@@ -620,15 +647,57 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     return `<div class="p annonce"><div class="in"><div class="tt">${ech(v.annonce)}</div></div></div>`;
   }
 
+  /**
+   * Le corps d'une fiche d'unité : ce qu'elle démolit, ce qui la démolit, où
+   * elle passe et ce qui la ralentit.
+   *
+   * Le même balisage sert au menu de production — avant l'achat — et au panneau
+   * d'inspection — une fois l'unité sur la carte. Ce sont les mêmes questions,
+   * et il serait absurde qu'elles reçoivent deux réponses. Seules les couleurs
+   * changent, par le CSS : papier dans la modale, encre sous le curseur.
+   */
+  function blocFiche(v: VueJeu, cle: CleUnite): string {
+    const f = ficheUnite(v.catalogue, cle);
+    const type = v.catalogue.unites[cle];
+    if (!f || !type) return '';
+    const nomDe = (c: CleUnite): string => nomUnite(v.locale, v.catalogue, c);
+    const nomT = (t: CleTerrain): string => nomTerrain(v.locale, v.catalogue, t);
+    const liste = (titre: string, corps: string): string => corps === ''
+      ? ''
+      : `<p class="fl"><span>${ech(api.t(titre))}</span>${corps}</p>`;
+    const duels = (l: readonly Duel[]): string => l
+      .map((d) => `<b>${ech(nomDe(d.unite))} <i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></b>`).join('');
+    const terrains = (l: readonly CleTerrain[]): string => l.map((t) => `<b>${ech(nomT(t))}</b>`).join('');
+    const portee = f.portee[0] === f.portee[1] ? f.portee[0] : `${f.portee[0]}–${f.portee[1]}`;
+
+    return `<div class="fiche">`
+      + `<p class="chiffres">`
+      + `<span>${ech(api.t('hud.mouvement', { n: f.mouvement }))}</span>`
+      + `<span>${ech(api.t('hud.vision', { n: f.vision }))}</span>`
+      + `<span>${ech(api.t('hud.portee', { n: portee }))}</span>`
+      + `<span>${ech(f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))}</span>`
+      + `</p>`
+      + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
+      + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
+      + liste('fiche.forte', duels(f.forte))
+      + liste('fiche.craint', duels(f.craint))
+      + liste('fiche.rapide', terrains(f.terrainsRapides))
+      + (f.terrainsInterdits.length > 0
+        ? liste('fiche.interdit', terrains(f.terrainsInterdits))
+        : `<p class="fl"><span>${ech(api.t('fiche.partout'))}</span></p>`)
+      + (f.meteosGenantes.length > 0
+        ? f.meteosGenantes.map((g) => liste(
+          g.effet === 'bride' ? 'fiche.meteo_bride' : 'fiche.meteo_case',
+          `<b>${ech(libelleMeteo(api.t, g.meteo))}</b>`,
+        )).join('')
+        : `<p class="fl"><span>${ech(api.t('fiche.par_tous_temps'))}</span></p>`)
+      + `</div>`;
+  }
+
   function modaleProduction(v: VueJeu): string {
     if (!v.production) return '';
     const fonds = v.etat.camps.find((c) => c.id === v.etat.campCourant)?.fonds ?? 0;
     const nomDe = (cle: CleUnite): string => nomUnite(v.locale, v.catalogue, cle);
-    const nomT = (cle: CleTerrain): string => nomTerrain(v.locale, v.catalogue, cle);
-    const liste = (titre: string, corps: string): string => corps === ''
-      ? ''
-      : `<p class="fl"><span>${ech(api.t(titre))}</span>${corps}</p>`;
-
     const lignes = v.production.unites.map((cle) => {
       const type = v.catalogue.unites[cle];
       if (!type) return '';
@@ -649,35 +718,7 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
         + `<span class="tt" style="display:block">${ech(nomDe(cle))}</span>${prix}</span>`
         + `<span class="cta">${ech(api.t(ouverte ? 'fiche.produire' : 'menu.production'))}</span></button>`;
 
-      if (!ouverte) return entete;
-      const f = ficheUnite(v.catalogue, cle);
-      if (!f) return entete;
-      const duels = (l: readonly Duel[]): string => l
-        .map((d) => `<b>${ech(nomDe(d.unite))} <i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></b>`).join('');
-      const terrains = (l: readonly CleTerrain[]): string => l.map((t) => `<b>${ech(nomT(t))}</b>`).join('');
-
-      return entete + `<div class="fiche">`
-        + `<p class="chiffres">`
-        + `<span>${ech(api.t('hud.mouvement', { n: f.mouvement }))}</span>`
-        + `<span>${ech(api.t('hud.vision', { n: f.vision }))}</span>`
-        + `<span>${ech(api.t('hud.portee', { n: f.portee[0] === f.portee[1] ? f.portee[0] : `${f.portee[0]}–${f.portee[1]}` }))}</span>`
-        + `<span>${ech(f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))}</span>`
-        + `</p>`
-        + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
-        + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
-        + liste('fiche.forte', duels(f.forte))
-        + liste('fiche.craint', duels(f.craint))
-        + liste('fiche.rapide', terrains(f.terrainsRapides))
-        + (f.terrainsInterdits.length > 0
-          ? liste('fiche.interdit', terrains(f.terrainsInterdits))
-          : `<p class="fl"><span>${ech(api.t('fiche.partout'))}</span></p>`)
-        + (f.meteosGenantes.length > 0
-          ? f.meteosGenantes.map((g) => liste(
-            g.effet === 'bride' ? 'fiche.meteo_bride' : 'fiche.meteo_case',
-            `<b>${ech(libelleMeteo(api.t, g.meteo))}</b>`,
-          )).join('')
-          : `<p class="fl"><span>${ech(api.t('fiche.par_tous_temps'))}</span></p>`)
-        + `</div>`;
+      return ouverte ? entete + blocFiche(v, cle) : entete;
     }).join('');
 
     return `<div class="voile" data-action="fermer"><div class="modale" data-arret="1">`
@@ -762,6 +803,8 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       case 'produire': ficheOuverte = null; api.choisirProduction(valeur); break;
       // Déplier une fiche ne touche à rien du jeu : on redessine, c'est tout.
       case 'apercu': ficheOuverte = valeur === ficheOuverte ? null : (valeur as CleUnite); rafraichir(); break;
+      // Déplier la fiche sous le curseur ne touche à rien du jeu non plus.
+      case 'fiche': ficheInspection = !ficheInspection; rafraichir(); break;
       case 'pouvoir': api.jouerPouvoir('normal'); break;
       case 'fermer': ficheOuverte = null; api.annuler(); break;
       case 'rejouer': api.recommencer(); break;

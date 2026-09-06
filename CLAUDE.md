@@ -27,7 +27,7 @@ Le menu de production ne montrait qu’une silhouette, un nom et un prix. Achete
 
 Dans le menu, un premier appui **déplie** la fiche et l’appel à l’action passe de « Production » à « Produire » ; le second achète. On informe sans coûter un geste à qui sait déjà ce qu’il veut. Au passage, un prix qu’on ne peut pas payer affiche « Fonds insuffisants » au lieu d’un nombre grisé — un bouton qui ne répond pas doit dire pourquoi —, et une unité trop chère reste **consultable** : on veut savoir pour quoi on économise.
 
-**Reste à faire** : le panneau d’inspection d’une unité déjà posée sur la carte ne dit toujours rien de tout cela. C’est la même fiche, au même endroit du raisonnement.
+**La même fiche est sous le curseur.** Le panneau d’inspection porte un bouton qui la déplie ; `blocFiche` est partagé entre les deux endroits, parce que ce sont les mêmes questions et qu’il serait absurde qu’elles reçoivent deux réponses. Seules les couleurs changent, par le CSS : papier dans la modale de production, encre sous le curseur. Deux différences de comportement, et elles sont voulues. Le bouton **n’apparaît que sur une unité** — un terrain n’a pas de fiche, et une case vide ne doit pas offrir une commande qui ne ferait rien. Et la fiche **reste ouverte quand on change de case** : c’est une façon de jouer, pas un choix par unité. Qui apprend la laisse dépliée, qui connaît la referme une fois.
 
 ## Mise à jour — l’accueil ne clignote plus, et les documents sont alignés (6 septembre 2026)
 

@@ -1284,6 +1284,15 @@
       "longueurMax": 8
     },
     {
+      "cle": "fiche.detail",
+      "texte": "Détail de l’unité",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bouton du panneau d'inspection qui déplie la fiche. Lu par un lecteur d'écran et en infobulle."
+      },
+      "longueurMax": 26
+    },
+    {
       "cle": "fiche.forte",
       "texte": "Redoutable contre",
       "contexte": {
