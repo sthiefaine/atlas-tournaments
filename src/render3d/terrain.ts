@@ -46,6 +46,11 @@ export interface Plateau {
   readonly groupe: THREE.Group;
   /** Le maillage du sol : c'est lui que le lancer de rayon interroge. */
   readonly sol: THREE.Mesh;
+  /**
+   * Les tabliers de pont, interrogés **avant** le sol : sous un pont le sol se
+   * creuse jusqu'au lit, et un clic sur le tablier tombait dans l'eau d'à côté.
+   */
+  readonly ponts: THREE.Mesh;
   /** Altitude du sol en un point du monde. */
   hauteurEn(x: number, z: number): number;
   /** Applique une ambiance (teinte, neige, humidité, couleur de l'eau). */
@@ -561,6 +566,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   return {
     groupe,
     sol,
+    ponts,
     hauteurEn: (x, z) => hauteurEn(terrain, x, z),
 
     majTerrain(suivante: GrilleTerrain, duree = 0): void {

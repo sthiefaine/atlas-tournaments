@@ -152,7 +152,8 @@ export interface Vue3d {
   facteurZoom(facteur: number, ancre?: { x: number; y: number }): void;
   tourner(sens: number): void;
   /** Point d'écran → case, par lancer de rayon sur le sol. */
-  caseSous(x: number, y: number, sol: THREE.Object3D | null): Case | null;
+  /** Les cibles sont interrogées ensemble ; la plus proche de la caméra l'emporte. */
+  caseSous(x: number, y: number, sol: THREE.Object3D | readonly THREE.Object3D[] | null): Case | null;
   /** Point du monde → point d'écran en pixels logiques, ou `null` si derrière. */
   versEcran(point: THREE.Vector3): { x: number; y: number } | null;
 }
@@ -265,14 +266,14 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
       appliquer();
     },
 
-    caseSous(x: number, y: number, sol: THREE.Object3D | null): Case | null {
+    caseSous(x: number, y: number, sol: THREE.Object3D | readonly THREE.Object3D[] | null): Case | null {
       const ndc = new THREE.Vector2(
         (x / largeurVue) * 2 - 1,
         -(y / hauteurVue) * 2 + 1,
       );
       rayon.setFromCamera(ndc, camera);
       if (sol) {
-        const touches = rayon.intersectObject(sol, false);
+        const touches = rayon.intersectObjects(Array.isArray(sol) ? [...sol] : [sol as THREE.Object3D], false);
         const premiere = touches[0];
         if (premiere) {
           const c = mondeVersCase(premiere.point.x, premiere.point.z);

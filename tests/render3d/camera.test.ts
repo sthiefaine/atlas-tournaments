@@ -4,6 +4,7 @@
 // c'est exactement ce que ce fichier surveille.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import * as THREE from 'three';
 
 import {
   FOV, PALIERS_DISTANCE, TANGAGE_DEFAUT, TANGAGE_MAX, TANGAGE_MIN,
@@ -152,4 +153,21 @@ test('le pincement conserve le point du plateau sous son ancre', () => {
   const avant = vue.caseSous(ancre.x, ancre.y, null);
   vue.facteurZoom(1.6, ancre);
   assert.deepEqual(vue.caseSous(ancre.x, ancre.y, null), avant);
+});
+
+test('le tablier d’un pont est interrogé avant le sol : le clic tombe sur le pont, pas dans le lit', () => {
+  // Deux cibles : un « sol » creusé sous la case (2, 2) et un « tablier » plus
+  // haut au même endroit. Vu de biais, le rayon qui vise le tablier traverserait
+  // le lit une case plus loin : c'est le décalage de clic qu'on corrige.
+  const vue = creerVue3d({ largeur: 6, hauteur: 6 });
+  vue.redimensionner(800, 600);
+  vue.cadrerCarte();
+  vue.centrerCase({ x: 2, y: 2 });
+  const sol = new THREE.Mesh(new THREE.PlaneGeometry(6, 6).rotateX(-Math.PI / 2).translate(3, -0.25, 3));
+  const tablier = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2).translate(2.5, 0.05, 2.5));
+  const ecran = vue.versEcran(new THREE.Vector3(2.5, 0.05, 2.5));
+  assert.ok(ecran);
+  assert.deepEqual(vue.caseSous(ecran.x, ecran.y, [tablier, sol]), { x: 2, y: 2 });
+  assert.deepEqual(vue.caseSous(ecran.x, ecran.y, [sol, tablier]), { x: 2, y: 2 }, 'l’ordre des cibles ne compte pas');
+  assert.deepEqual(vue.caseSous(ecran.x, ecran.y, tablier), { x: 2, y: 2 });
 });

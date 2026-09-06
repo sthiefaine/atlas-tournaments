@@ -18,6 +18,13 @@ import { multiplicateur } from './modificateurs';
 /** Le seuil de capture : l'unité de compte de tout le projet. */
 export const SEUIL_CAPTURE = 20;
 
+/**
+ * Prime versée au camp qui remet un bâtiment en service (`04-gameplay.md` §6 bis).
+ * Doublée quand c'est le génie : quatre tours d'infanterie immobile coûtent
+ * déjà assez cher pour que la prime récompense d'abord le bâtisseur.
+ */
+export const PRIME_REMISE_EN_SERVICE = 1000;
+
 /** Vrai si la case de cette unité porte un bâtiment désaffecté. */
 export function estDesaffecte(etat: EtatPartie, c: { x: number; y: number }): boolean {
   return etat.desaffectes.includes(cleCase(c));
@@ -74,7 +81,11 @@ export function avancerCapture(
   etat.proprietaires[k] = u.camp;
   if (estDesaffecte(etat, u)) {
     etat.desaffectes = etat.desaffectes.filter((d) => d !== k);
-    evts.push({ type: 'remise_en_service', uniteId: u.id, case: { x: u.x, y: u.y }, camp: u.camp });
+    const type = cat.unites[u.type];
+    const prime = PRIME_REMISE_EN_SERVICE * (type && porte(type, 'genie') ? 2 : 1);
+    const caisse = etat.camps.find((c) => c.id === u.camp);
+    if (caisse) caisse.fonds += prime;
+    evts.push({ type: 'remise_en_service', uniteId: u.id, case: { x: u.x, y: u.y }, camp: u.camp, prime });
   }
   evts.push({
     type: 'capture', uniteId: u.id, case: { x: u.x, y: u.y },

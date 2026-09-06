@@ -371,7 +371,7 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
       // Le moteur émet la remise en service **puis** la capture acquise : le
       // rendu fait tomber la palissade, et seulement ensuite hisse le drapeau.
       evenements: [
-        { type: 'remise_en_service', uniteId: capteur.id, case: cible, camp },
+        { type: 'remise_en_service', prime: 2000, uniteId: capteur.id, case: cible, camp },
         { type: 'capture', uniteId: capteur.id, case: cible, points: SEUIL_CAPTURE * 2, acquis: true, camp },
       ],
     };

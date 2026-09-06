@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  casesVisibles, chargerCatalogue, cleCase, creerPartie, estBrouillee, RAYON_BROUILLEUR_MOBILE,
+  appliquer, casesVisibles, chargerCatalogue, cleCase, creerPartie, estBrouillee, RAYON_BROUILLEUR_MOBILE,
   RAYON_STATION_RADAR, VISION_STATION_RADAR, visionUnite,
 } from '../../src/engine/index';
 import { scenePersonnalisee } from './aides';
@@ -48,4 +48,37 @@ test('une station radar adverse brouille à douze cases et voit à cinq pour son
   assert.ok(!vues.has(cleCase({ x: VISION_STATION_RADAR + 1, y: 0 })));
   const neutre = { ...e, proprietaires: {} };
   assert.equal(estBrouillee(neutre, CAT3, e.unites[0]!), false, 'une station neutre ne brouille personne');
+});
+
+test('un drone mis hors jeu au-dessus d’un bâtiment adverse révèle la production de ce camp', () => {
+  // L'antiaérien du camp 1 abat le drone du camp 0 posé sur la ville du camp 1.
+  const scene = scenePersonnalisee(['HPPPH', 'PPCPP'], { '0,0': 0, '4,0': 1, '2,1': 1 }, [
+    { camp: 0, type: 'drone', x: 2, y: 1 },
+    { camp: 1, type: 'antiair', x: 3, y: 1 },
+  ]);
+  let e = creerPartie(scene, CAT3, 'test');
+  e.produites = { '1:infanterie': 3, '1:char_leger': 1, '0:recon': 2 };
+  let r = appliquer(e, { type: 'finTour' }, CAT3);
+  assert.ok(r.ok); e = r.etat;
+  r = appliquer(e, { type: 'ordre', uniteId: 'u2', chemin: [{ x: 3, y: 1 }], suite: { type: 'attaquer', cible: { x: 2, y: 1 } } }, CAT3);
+  assert.ok(r.ok); e = r.etat;
+  assert.ok(!e.unites.some((u) => u.id === 'u1'), 'le drone est hors jeu');
+  const revelation = e.journal.find((ev) => ev.type === 'production_revelee');
+  assert.ok(revelation && revelation.type === 'production_revelee');
+  assert.equal(revelation.camp, 0);
+  assert.equal(revelation.proprietaire, 1);
+  assert.deepEqual(revelation.produites, { infanterie: 3, char_leger: 1 }, 'seule la production du propriétaire est lue');
+});
+
+test('un drone abattu sur une case sans bâtiment adverse ne révèle rien', () => {
+  const scene = scenePersonnalisee(['HPPPH', 'PPPPP'], { '0,0': 0, '4,0': 1 }, [
+    { camp: 0, type: 'drone', x: 2, y: 1 },
+    { camp: 1, type: 'antiair', x: 3, y: 1 },
+  ]);
+  let e = creerPartie(scene, CAT3, 'test');
+  let r = appliquer(e, { type: 'finTour' }, CAT3);
+  assert.ok(r.ok); e = r.etat;
+  r = appliquer(e, { type: 'ordre', uniteId: 'u2', chemin: [{ x: 3, y: 1 }], suite: { type: 'attaquer', cible: { x: 2, y: 1 } } }, CAT3);
+  assert.ok(r.ok); e = r.etat;
+  assert.ok(!e.journal.some((ev) => ev.type === 'production_revelee'));
 });

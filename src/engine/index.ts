@@ -89,7 +89,7 @@ export {
   type PrevisionDuel,
 } from './regles/combat';
 export {
-  avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
+  avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, PRIME_REMISE_EN_SERVICE, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
 } from './regles/capture';
 export {
   batimentsDe, consommerCarburant, estRavitailleur, producteursDe, produire,

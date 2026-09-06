@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  appliquer, batimentsDe, cleCase, creerPartie, peutCapturerIci, POINTS_PAR_BARRE, score, SEUIL_CAPTURE,
+  appliquer, batimentsDe, cleCase, creerPartie, peutCapturerIci, POINTS_PAR_BARRE, PRIME_REMISE_EN_SERVICE, score, SEUIL_CAPTURE,
   valeurArmee, type Action, type CommandantMoteur, type EtatPartie,
 } from '../../src/engine/index';
 import { CAT, partiePersonnalisee, scenePersonnalisee, u } from './aides';
@@ -271,6 +271,11 @@ test('un bâtiment désaffecté se remet en service : génie en deux tours, infa
   assert.equal(unTour.unites[1]!.pointsCapture, 10);
   const deuxTours = suite(unTour, [{ type: 'finTour' }, { type: 'finTour' }, chantier('u1', 2, 0), chantier('u2', 2, 1)]);
   assert.equal(deuxTours.proprietaires['2,0'], 0, 'le génie a remis la ville en service');
+  // La prime est doublée pour le génie ; le reste de l'écart, ce sont les revenus des journées.
+  const primeVersee = deuxTours.journal.find((ev) => ev.type === 'remise_en_service');
+  assert.ok(primeVersee && primeVersee.type === 'remise_en_service');
+  assert.equal(primeVersee.prime, 2 * PRIME_REMISE_EN_SERVICE);
+  assert.ok(deuxTours.camps[0]!.fonds >= etat.camps[0]!.fonds + 2 * PRIME_REMISE_EN_SERVICE, 'la prime est dans la caisse');
   assert.deepEqual(deuxTours.desaffectes, ['2,1'], 'la case quitte la liste des désaffectés');
   assert.ok(deuxTours.journal.some((e) => e.type === 'remise_en_service' && e.camp === 0));
   assert.equal(deuxTours.proprietaires['2,1'], undefined, 'l’infanterie n’en est qu’à vingt points sur quarante');

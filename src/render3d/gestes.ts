@@ -9,7 +9,7 @@ import type { Vue3d } from './camera';
 export function brancherGestes3d(
   canvas: HTMLCanvasElement,
   vue: () => Vue3d | null,
-  sol: () => THREE.Object3D | null,
+  sol: () => THREE.Object3D | readonly THREE.Object3D[] | null,
   gestes: GestesRendu,
   salir: () => void,
 ): () => void {

@@ -1117,6 +1117,15 @@
       "longueurMax": 26
     },
     {
+      "cle": "combat.batiment_remis_prime",
+      "texte": "Bâtiment remis en service · prime {n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce : remise en service et prime versée au camp (1 000 fonds, 2 000 pour le génie)."
+      },
+      "longueurMax": 40
+    },
+    {
       "cle": "combat.hors_jeu",
       "texte": "{unite} est mise hors jeu",
       "contexte": {
@@ -1141,6 +1150,23 @@
         "ecran": "fin_de_match"
       },
       "longueurMax": 22
+    },
+    {
+      "cle": "combat.production_revelee",
+      "texte": "Le drone a lu la production adverse : {liste}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce : un drone mis hors jeu au-dessus d’un bâtiment adverse révèle tout ce que ce camp a produit."
+      },
+      "longueurMax": null
+    },
+    {
+      "cle": "combat.production_revelee_vide",
+      "texte": "Le drone a lu la production adverse : rien encore",
+      "contexte": {
+        "ecran": "hud"
+      },
+      "longueurMax": null
     },
     {
       "cle": "combat.qg_capture",

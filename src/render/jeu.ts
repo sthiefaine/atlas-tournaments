@@ -35,6 +35,7 @@ import {
   filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
 import { casesObjectifs } from './objectifs';
+import { nomCourtUnite } from './libelles';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
@@ -381,7 +382,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   function annoncer(evenements: readonly EvenementJeu[]): void {
     for (const e of evenements) {
       if (e.type === 'remise_en_service') {
-        poserAnnonce(t('combat.batiment_remis'));
+        poserAnnonce(t('combat.batiment_remis_prime', { n: e.prime }));
+      }
+      if (e.type === 'production_revelee' && e.camp === 0) {
+        const liste = Object.entries(e.produites)
+          .map(([cle, n]) => `${n} ${nomCourtUnite(locale, cat, cle)}`)
+          .join(', ');
+        poserAnnonce(liste ? t('combat.production_revelee', { liste }) : t('combat.production_revelee_vide'));
       } else if (e.type === 'capture' && e.acquis) {
         const terrain = terrainLogique(etat, cat, e.case);
         poserAnnonce(t(CLE_PRISE[terrain ?? ''] ?? 'combat.ville_capturee'));

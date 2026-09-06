@@ -13,13 +13,13 @@
  * en a déjà fait une copie, l'état d'entrée n'est jamais touché.
  */
 
-import type { Case } from '../../schemas/index';
+import type { Case, CleUnite } from '../../schemas/index';
 import { degatsBase } from '../catalogue';
 import { surAttaqueHooks } from '../hooks';
 import type {
   Catalogue, EtatPartie, EtatRng, EvenementJeu, InstantaneRng, MotifRefus, Rng, Unite,
 } from '../types';
-import { manhattan, porte, pvAffiches } from '../types';
+import { cleCase, manhattan, porte, pvAffiches } from '../types';
 import { terrainSous } from './mouvement';
 import { multiplicateur } from './modificateurs';
 
@@ -69,7 +69,7 @@ export function crediterJauge(etat: EtatPartie, camp: number, points: number): v
 }
 
 /** Retire une unité de la carte : mise hors jeu, jamais destruction. */
-export function mettreHorsJeu(etat: EtatPartie, id: string, evts: EvenementJeu[]): void {
+export function mettreHorsJeu(etat: EtatPartie, cat: Catalogue, id: string, evts: EvenementJeu[]): void {
   const u = etat.unites.find((e) => e.id === id);
   if (!u) return;
   for (const passagerId of u.cargo) {
@@ -79,6 +79,26 @@ export function mettreHorsJeu(etat: EtatPartie, id: string, evts: EvenementJeu[]
   const partants = new Set([id, ...u.cargo]);
   etat.unites = etat.unites.filter((e) => !partants.has(e.id));
   evts.push({ type: 'hors_jeu', uniteId: u.id, camp: u.camp, unite: u.type });
+  revelerProduction(etat, cat, u, evts);
+}
+
+/**
+ * Un drone qui tombe au-dessus d'un bâtiment adverse a eu le temps de lire ce
+ * qui en sort (`04-gameplay.md` §10 bis) : son camp apprend tout ce que le
+ * propriétaire a produit depuis le début du match. Seule consolation d'un œil
+ * perdu, et une raison de le risquer au-dessus d'une usine.
+ */
+function revelerProduction(etat: EtatPartie, cat: Catalogue, u: Unite, evts: EvenementJeu[]): void {
+  const type = cat.unites[u.type];
+  if (!type || !porte(type, 'drone')) return;
+  const proprietaire = etat.proprietaires[cleCase(u)];
+  if (proprietaire === undefined || proprietaire === u.camp) return;
+  const produites: Record<CleUnite, number> = {};
+  const prefixe = `${proprietaire}:`;
+  for (const [k, n] of Object.entries(etat.produites)) {
+    if (k.startsWith(prefixe) && n > 0) produites[k.slice(prefixe.length)] = n;
+  }
+  evts.push({ type: 'production_revelee', camp: u.camp, proprietaire, case: { x: u.x, y: u.y }, produites });
 }
 
 /** Issue d'une attaque résolue. */
@@ -128,8 +148,8 @@ export function resoudreAttaque(
     type: 'attaque', attaquantId: att.id, cibleId: def.id, degats, riposte,
   });
   const attaquantHorsJeu = att.pv <= 0;
-  if (cibleHorsJeu) mettreHorsJeu(etat, def.id, evts);
-  if (attaquantHorsJeu) mettreHorsJeu(etat, att.id, evts);
+  if (cibleHorsJeu) mettreHorsJeu(etat, cat, def.id, evts);
+  if (attaquantHorsJeu) mettreHorsJeu(etat, cat, att.id, evts);
   return { degats, riposte, cibleHorsJeu, attaquantHorsJeu };
 }
 

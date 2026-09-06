@@ -31,7 +31,7 @@
         "Déplacez une infanterie sur la ville (4, 8) et choisissez Capturer. Une ville demande 20 points : une infanterie intacte en gagne 10 par tour.",
         "Restez sur place au tour suivant et capturez à nouveau : vos couleurs montent sur la ville. Si l’unité bouge, la capture repart de zéro.",
         "Chaque ville rapporte 500 fonds par journée. Cliquez sur votre QG quand la caisse dépasse 1 000 pour recruter une infanterie.",
-        "La ville (9, 8) est désaffectée : l’ordre s’appelle Remettre en service et demande 40 points. Tomas capture aussi : reprenez-lui ce qu’il prend."
+        "La ville (9, 8) est désaffectée : l’ordre s’appelle Remettre en service et demande 40 points, mais Atlas verse une prime de 1 000 fonds à qui la relance. Tomas capture aussi : reprenez-lui ce qu’il prend."
       ]
     },
     {
@@ -44,7 +44,7 @@
       "conclusion": "Deux usines sous vos couleurs. Vous savez recruter, choisir une unité pour une cible, et remettre un bâtiment en service.",
       "entrainement": true,
       "tutoriel": [
-        "Sélectionnez le génie et menez-le sur l’usine (6, 5) par la route. Sur place, choisissez Remettre en service : deux tours, et l’usine est à vous.",
+        "Sélectionnez le génie et menez-le sur l’usine (6, 5) par la route. Sur place, choisissez Remettre en service : deux tours, l’usine est à vous et la prime est doublée pour le génie (2 000 fonds).",
         "Cliquez sur votre usine (2, 8) : le menu de production liste les véhicules et leur prix. L’artillerie tire à deux ou trois cases sans riposte, mais pas après avoir bougé.",
         "Le char léger écrase l’infanterie ; l’artillerie et le char lourd le blessent. Chaque unité a sa cible : lisez la prévision de duel avant de confirmer.",
         "L’usine (9, 7) est à qui la remet en service le premier : Tomas y envoie son infanterie. Écartez-la avec le char, puis posez votre génie ou une infanterie dessus et tenez."

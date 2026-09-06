@@ -272,8 +272,10 @@ export type EvenementJeu =
   | { type: 'attaque'; attaquantId: string; cibleId: string; degats: number; riposte: number }
   | { type: 'hors_jeu'; uniteId: string; camp: CampId; unite: CleUnite }
   | { type: 'capture'; uniteId: string; case: Case; points: number; acquis: boolean; camp: CampId }
-  /** Un bâtiment désaffecté vient d'être remis en service par ce camp. */
-  | { type: 'remise_en_service'; uniteId: string; case: Case; camp: CampId }
+  /** Un bâtiment désaffecté vient d'être remis en service par ce camp, prime versée comprise. */
+  | { type: 'remise_en_service'; uniteId: string; case: Case; camp: CampId; prime: number }
+  /** Un drone mis hors jeu au-dessus d'un bâtiment adverse a lu ce que ce camp a produit. */
+  | { type: 'production_revelee'; camp: CampId; proprietaire: CampId; case: Case; produites: Record<CleUnite, number> }
   | { type: 'production'; camp: CampId; unite: CleUnite; case: Case; cout: number }
   | { type: 'embarquement'; uniteId: string; transportId: string }
   | { type: 'debarquement'; uniteId: string; transportId: string; vers: Case }

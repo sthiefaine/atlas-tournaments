@@ -252,7 +252,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     versMonde(x: number, y: number): Case | null {
       const m = monde;
       if (!m) return null;
-      return m.vue3d.caseSous(x, y, m.plateau.sol);
+      return m.vue3d.caseSous(x, y, [m.plateau.ponts, m.plateau.sol]);
     },
 
     versEcran(c: Case): PointVue | null {
@@ -266,7 +266,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const canvas = scene3d?.canvas;
       if (!canvas) return () => undefined;
       return brancherGestes3d(canvas, () => monde?.vue3d ?? null,
-        () => monde?.plateau.sol ?? null, gestes, salir);
+        () => (monde ? [monde.plateau.ponts, monde.plateau.sol] : null), gestes, salir);
     },
 
     msParImage(): number {

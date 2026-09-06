@@ -275,7 +275,7 @@ Un bâtiment **désaffecté** (`MapDef.desaffectes`, jamais un QG) n'appartient 
 - l'**infanterie** et la **méca**, au rythme habituel de leurs PV affichés — **quatre tours** à pleine force ;
 - le **génie**, seule unité bâtisseuse, qui gagne **le double** de ses PV affichés — **deux tours** à pleine force. Le génie ne capture rien d'autre : un bâtiment en service ne se prend qu'avec un capteur.
 
-À 40 points, le bâtiment sort de la liste des désaffectés, prend les couleurs du camp, et le moteur émet `remise_en_service` puis l'événement `capture` acquis habituel. Il rapporte et produit dès la journée suivante. Un bâtiment en service ne redevient jamais désaffecté : il n'existe aucun système de destruction (`doc/15`). Dans l'interface, l'ordre s'appelle « Remettre en service », jamais « capturer » — on ne capture pas ce qui n'appartient à personne — et le mot « ruine » est banni par la charte (`content/i18n/glossaire.fr.json`) : rien n'est détruit dans les Jeux Tactiques, seulement hors service.
+À 40 points, le bâtiment sort de la liste des désaffectés, prend les couleurs du camp, et le moteur émet `remise_en_service` puis l'événement `capture` acquis habituel. **Atlas verse une prime de remise en service** au camp qui relance le bâtiment : `PRIME_REMISE_EN_SERVICE` = 1 000 fonds, **doublée (2 000) quand c'est le génie** — quatre tours d'infanterie immobile coûtent déjà assez cher, la prime récompense d'abord le bâtisseur. L'événement porte la `prime`. Il rapporte et produit dès la journée suivante. Un bâtiment en service ne redevient jamais désaffecté : il n'existe aucun système de destruction (`doc/15`). Dans l'interface, l'ordre s'appelle « Remettre en service », jamais « capturer » — on ne capture pas ce qui n'appartient à personne — et le mot « ruine » est banni par la charte (`content/i18n/glossaire.fr.json`) : rien n'est détruit dans les Jeux Tactiques, seulement hors service.
 
 ---
 
@@ -459,6 +459,8 @@ Le brouillard a ses yeux et ses aveugles (5 septembre 2026, `src/engine/regles/v
 | `radar` — Station radar | Bâtiment capturable : son propriétaire **voit à 5 cases** autour (2 pour un autre bâtiment) et brouille tout drone adverse à **12 cases**. | terrain |
 
 **Brouillage.** Un drone brouillé garde **un dixième** de sa vision, arrondi, jamais moins d'une case : à cinq de vision, il ne voit plus que la case d'à côté. Le brouillage se lit à chaque calcul de vision, sans état : entrer et sortir du rayon suffit. Une station neutre ne brouille personne. Les rayons sont des constantes du moteur (`RAYON_BROUILLEUR_MOBILE`, `RAYON_STATION_RADAR`) : sur une carte de douze cases de large, une station couvre toute la carte — c'est une arme de grande carte, et la routine map devra en tenir compte avant d'en poser sur un 12 × 10.
+
+**Le drone abattu lit la production.** Un drone (trait `drone`) mis hors jeu **au-dessus d'un bâtiment adverse** — capturé par un antiaérien, tombé en panne sèche — a eu le temps de voir ce qui en sortait : son camp reçoit `production_revelee`, avec tout ce que le propriétaire du bâtiment a produit depuis le début du match, type par type. C'est la seule consolation d'un œil perdu, et une raison de le risquer au-dessus d'une usine plutôt qu'au-dessus d'une plaine.
 
 **Ce que cela ne fait pas.** Le brouillage n'agit que sur le trait `drone` : recon, hélicoptère, infanterie sur une montagne voient comme avant. Il ne touche ni l'attaque, ni le mouvement, ni la capture.
 
