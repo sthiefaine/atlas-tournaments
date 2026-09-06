@@ -2552,6 +2552,51 @@
       "longueurMax": 100
     },
     {
+      "cle": "reglages.qualite",
+      "texte": "Qualité d’affichage",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du groupe : la chaîne de post-traitement du rendu (occlusion ambiante, vignettage, grain)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "reglages.qualite_auto",
+      "texte": "Automatique",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Choix de qualité : le rendu mesure ses premières images et allume le post-traitement si l’appareil suit."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "reglages.qualite_haute",
+      "texte": "Haute",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Choix de qualité : post-traitement toujours allumé."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "reglages.qualite_basse",
+      "texte": "Basse",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Choix de qualité : post-traitement jamais allumé. Le rendu 3D reste le même."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "reglages.qualite_note",
+      "texte": "Haute ajoute l’occlusion ambiante et le grain de photo ; automatique ne les allume que si l’appareil suit.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Aide sous le choix de qualité."
+      },
+      "longueurMax": 120
+    },
+    {
       "cle": "reglages.retour",
       "texte": "Retour à l’accueil",
       "contexte": {

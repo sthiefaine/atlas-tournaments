@@ -22,6 +22,7 @@ import * as THREE from 'three';
 import { chargerCatalogue } from '@/engine/index';
 import { chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
+import { creerEnvironnement } from '@/render3d/environnement';
 import { Materiaux, chargerModele, construirePlaceholder, teinterModele } from '@/render3d/unites';
 import { webgl2Disponible } from '@/render/rendu';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
@@ -195,6 +196,12 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x1e3f52);
+  // La même pièce de studio que le jeu (`render3d/environnement.ts`), à
+  // intensité fixe : c'est elle que la tôle et le verre d'une figurine
+  // reflètent, et la vitrine doit montrer ce que le plateau montrera.
+  const environnement = creerEnvironnement(renderer);
+  scene.environment = environnement.texture;
+  scene.environmentIntensity = 0.35;
 
   // Trois lumières de studio : le ciel, une clé qui porte l'ombre, un débouchage froid.
   scene.add(new THREE.HemisphereLight(0xe8f0f8, 0x55643f, 0.85));
@@ -287,6 +294,8 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     poser,
     dessiner,
     dispose: () => {
+      scene.environment = null;
+      environnement.dispose();
       renderer.dispose();
       sol.geometry.dispose();
       (sol.material as THREE.Material).dispose();

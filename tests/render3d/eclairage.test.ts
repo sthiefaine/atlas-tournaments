@@ -68,7 +68,50 @@ test('tous les paramètres restent dans des bornes utilisables', () => {
     }
     assert.ok(p.particules.nombre >= 0 && p.particules.nombre <= 4000, `${cle} : particules`);
     assert.ok(p.particules.inclinaison >= 0 && p.particules.inclinaison <= 1, `${cle} : vent`);
+    // L'environnement : une intensité qui ne dépasse jamais la lumière réelle,
+    // et une teinte qui est une couleur.
+    assert.ok(p.environnement.intensite > 0 && p.environnement.intensite <= 1, `${cle} : environnement (${p.environnement.intensite})`);
+    assert.match(p.environnement.teinte, hex, `${cle} : teinte d'environnement`);
   }
+});
+
+/** Le bleu moins le rouge d'une couleur hexadécimale : positif, elle est froide. */
+function froideur(couleur: string): number {
+  return parseInt(couleur.slice(5, 7), 16) - parseInt(couleur.slice(1, 3), 16);
+}
+
+test('l’environnement suit l’ambiance : plus faible la nuit, plus terne l’hiver, bouché par la météo', () => {
+  for (const saison of SAISONS) {
+    for (const meteo of METEOS) {
+      const jour = parametresAmbiance(saison, 'jour', meteo).environnement;
+      const nuit = parametresAmbiance(saison, 'nuit', meteo).environnement;
+      assert.ok(nuit.intensite < jour.intensite / 2, `la nuit éteint la pièce (${saison}, ${meteo})`);
+      assert.notEqual(nuit.teinte, jour.teinte, `la nuit refroidit la teinte (${saison}, ${meteo})`);
+    }
+  }
+  for (const phase of PHASES_JOUR) {
+    for (const meteo of METEOS) {
+      const ete = parametresAmbiance('ete', phase, meteo).environnement;
+      const hiver = parametresAmbiance('hiver', phase, meteo).environnement;
+      assert.ok(hiver.intensite < ete.intensite, `l'hiver réfléchit moins (${phase}, ${meteo})`);
+      assert.ok(froideur(hiver.teinte) > froideur(ete.teinte), `l'hiver est plus froid (${phase}, ${meteo})`);
+    }
+    // Tout ce qui bouche le ciel atténue ; la canicule, elle, blanchit le ciel et renvoie plus.
+    const clair = parametresAmbiance('printemps', phase, 'clair').environnement.intensite;
+    for (const meteo of ['pluie', 'neige', 'brouillard', 'tempete'] as const) {
+      assert.ok(parametresAmbiance('printemps', phase, meteo).environnement.intensite < clair, `${meteo} atténue (${phase})`);
+    }
+    assert.ok(parametresAmbiance('printemps', phase, 'canicule').environnement.intensite > clair, `la canicule renvoie plus (${phase})`);
+    assert.ok(
+      parametresAmbiance('printemps', phase, 'tempete').environnement.intensite
+      < parametresAmbiance('printemps', phase, 'pluie').environnement.intensite,
+      `la tempête bouche plus que la pluie (${phase})`,
+    );
+  }
+  // L'ordre de grandeur de jour : un tiers de la pièce, pas la pièce entière —
+  // à un, les ombres seraient aussi claires que les faces au soleil.
+  const reference = parametresAmbiance('ete', 'jour', 'clair').environnement.intensite;
+  assert.ok(reference >= 0.2 && reference <= 0.45, `référence de jour : ${reference}`);
 });
 
 test('la saison, la phase et la météo se lisent chacune dans les paramètres', () => {
@@ -134,7 +177,19 @@ test('la transition d’ambiance interpole sans jamais sortir des bornes', () =>
     assert.ok(m.soleil.intensite >= bas - 1e-9 && m.soleil.intensite <= haut + 1e-9);
     assert.ok(m.neigeSol >= 0 && m.neigeSol <= 1);
     assert.match(m.ciel, /^#[0-9a-f]{6}$/);
+    // L'environnement s'interpole comme le reste : jamais hors des deux bornes.
+    const basEnv = Math.min(a.environnement.intensite, b.environnement.intensite);
+    const hautEnv = Math.max(a.environnement.intensite, b.environnement.intensite);
+    assert.ok(m.environnement.intensite >= basEnv - 1e-9 && m.environnement.intensite <= hautEnv + 1e-9);
+    assert.match(m.environnement.teinte, /^#[0-9a-f]{6}$/);
   }
+  // Aux extrémités, l'environnement est exactement celui des bornes ; au milieu, la moyenne.
+  assert.ok(Math.abs(debut.environnement.intensite - a.environnement.intensite) < 1e-9);
+  assert.equal(debut.environnement.teinte, a.environnement.teinte);
+  assert.ok(Math.abs(fin.environnement.intensite - b.environnement.intensite) < 1e-9);
+  assert.equal(fin.environnement.teinte, b.environnement.teinte);
+  const milieu = melangerParametres(a, b, 0.5).environnement.intensite;
+  assert.ok(Math.abs(milieu - (a.environnement.intensite + b.environnement.intensite) / 2) < 1e-9);
   // À mi-chemin, le calque de particules a déjà basculé sur la cible.
   assert.equal(melangerParametres(a, b, 0.6).particules.calque, 'neige');
 });

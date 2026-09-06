@@ -75,7 +75,15 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
         adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants),
         reprendre: depart === 'reprise',
         cleSauvegarde,
-        fabriqueRendu: () => creerRendu3d({ biome: carte.biome, paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' } }),
+        // La qualité d'affichage et la réduction des animations sont des
+        // réglages du joueur : la page les lit et les donne à la peau, qui ne
+        // connaît pas `localStorage`.
+        fabriqueRendu: () => creerRendu3d({
+          biome: carte.biome,
+          paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' },
+          qualite: preferences.qualite,
+          animationsReduites: preferences.animationsReduites,
+        }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
         // grammaire d'Advance Wars, et elle ne vaut que pour une mission — et

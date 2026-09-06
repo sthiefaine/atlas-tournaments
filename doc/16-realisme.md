@@ -40,6 +40,14 @@ Trois faits de départ à garder en tête. Le budget par carte (`10-rendu-3d.md`
 
 **Ce que le lot A ne fait pas** : il ne rend pas un placeholder beau. Il rend la lumière juste, pour que les vrais modèles du lot B arrivent dans une scène qui leur fait honneur, et pour que le terrain, qui couvre l'écran, cesse d'être plat.
 
+**État au 6 septembre 2026 (soir)** — A1 à A4 sont **faits** ; le détail est dans `10-rendu-3d.md` §6.5 et §9.3.
+
+- **A1, fait.** `RoomEnvironment` préfiltrée une fois au montage (`render3d/environnement.ts`), `environnement: { intensite, teinte }` dans les 48 ambiances, interpolé, l'intensité appliquée par `scene.environmentIntensity` ; la vitrine reçoit la même pièce. *Reste* : la teinte est calculée mais pas appliquée — r170 n'a pas de prise pour teinter une carte préfiltrée sans la recuire — et l'intensité (un tiers de jour) est un ordre de grandeur raisonné, pas jugé à l'œil ; la HDRI par phase du jour n'est pas commencée.
+- **A2, fait.** 2048² à la souris, 1024² au doigt, caméra d'ombre resserrée sur le champ visible par une fonction pure (`render3d/ombres.ts`) vérifiée contre la vraie caméra d'ombre de three, biais en multiples du texel. *Reste* : le type d'ombre est resté `PCFSoftShadowMap`, qui ignore `radius` — les bords sont adoucis par son noyau sur un texel devenu dix à cent fois plus fin, pas par un rayon ; le critère de fin (l'ombre de contact sous les bottes) n'a pas été regardé.
+- **A3, fait.** `EffectComposer` (`RenderPass` → `GTAOPass` → `OutputPass` → grain) dans `scene.ts`, chargé par `import()` à l'activation, boucle paresseuse conservée, `capturer()` lit l'image composée, réglage « Qualité d'affichage » à trois choix dans `/reglages`, `auto` mesuré sur les dix premières images (seuil 8 ms, GPU compris), jamais sous le rasteriseur logiciel. *Reste* : le seuil et les paramètres de l'occlusion (rayon 0,35 case, résolution logique) sont raisonnés, pas mesurés ; la fumée Playwright doit être relancée après fusion.
+- **A4, fait.** Vignette 12 %, grain 2 % par hachage du pixel et du compteur d'images, saturation +8 %, en espace d'affichage après l'`OutputPass`, mêmes conditions d'activation qu'A3. *Reste* : la comparaison avant/après sur les trois photos du banc, à l'œil, n'a pas été faite.
+- **La mesure d'A6** est en place : `Rendu.mesurer()`, `window.__atlas.mesurer()`, `window.__atlasBanc.mesurer()` et `qualite(v)`, et la section « Rendu » du banc. A5 et A6 restent à faire.
+
 ## 3. Lot B — Les vrais modèles : parcourir la boucle qui n'a jamais tourné
 
 **But** : remplacer les placeholders par des modèles texturés, un fichier à la fois, dans l'ordre de priorité déjà écrit. **C'est le lot qui change le jeu**, et il a un préalable de code d'une journée avant la première livraison.

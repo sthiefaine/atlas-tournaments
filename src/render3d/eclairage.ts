@@ -19,6 +19,10 @@ import * as THREE from 'three';
 
 import { melanger, teinter } from '../render/ambiance';
 import type { Meteo, PhaseJour, Saison } from '../schemas/types';
+import type { EtatCamera } from './camera';
+import {
+  cadreOmbre, champVisibleAuSol, DISTANCE_SOLEIL, tailleCarteOmbre, type CadreOmbre,
+} from './ombres';
 
 /** Les cinq calques de particules possibles. */
 export type CalqueParticules = 'aucune' | 'pluie' | 'neige' | 'brume' | 'poussiere';
@@ -58,6 +62,14 @@ export interface ParametresAmbiance {
   fenetres: number;
   eau: { couleur: string; opacite: number; agitation: number };
   particules: ParticulesAmbiance;
+  /**
+   * La carte d'environnement (`environnement.ts`) : son intensité, appliquée
+   * par `scene.environmentIntensity` — plus faible la nuit, atténuée par tout
+   * ce qui bouche le ciel —, et sa teinte, calculée et interpolée mais **pas
+   * appliquée** : r170 n'offre aucune prise pour teinter une carte préfiltrée
+   * sans la recuire. Elle attend une HDRI par phase du jour.
+   */
+  environnement: { intensite: number; teinte: string };
 }
 
 // ---------------------------------------------------------------------------
@@ -93,11 +105,29 @@ const HEMI_SAISON: Readonly<Record<Saison, { ciel: string; sol: string }>> = {
   hiver: { ciel: '#dbe7f5', sol: '#8c99a8' },
 };
 
+/**
+ * L'intensité de la carte d'environnement, de jour par ciel clair. Elle
+ * s'ajoute à la lumière hémisphérique comme lumière d'ambiance et donne aux
+ * matières leurs reflets ; à un, elle éclairerait les ombres autant que le
+ * soleil éclaire les faces au soleil. Un tiers, c'est le studio du brief : les
+ * ombres restent des ombres, mais on y lit la matière.
+ */
+const ENVIRONNEMENT_JOUR = 0.3;
+/** La nuit, la pièce s'éteint presque : il reste de quoi faire luire un métal sous la lune. */
+const ENVIRONNEMENT_NUIT = 0.08;
+
+/** Facteur d'environnement par saison : l'hiver réfléchit un ciel plus terne. */
+const ENVIRONNEMENT_SAISON: Readonly<Record<Saison, number>> = {
+  printemps: 1, ete: 1.05, automne: 0.9, hiver: 0.82,
+};
+
 /** Ce que la météo fait au reste : densités, facteurs et particules. */
 interface EffetMeteo {
   densite: number;
   facteurIntensite: number;
   facteurExposition: number;
+  /** Ce que la météo laisse de la carte d'environnement : un ciel bouché ne se reflète pas. */
+  facteurEnvironnement: number;
   mouille: number;
   neige: number;
   oscillation: number;
@@ -108,32 +138,32 @@ interface EffetMeteo {
 
 const METEO: Readonly<Record<Meteo, EffetMeteo>> = {
   clair: {
-    densite: 0.004, facteurIntensite: 1, facteurExposition: 1, mouille: 0, neige: 0,
+    densite: 0.004, facteurIntensite: 1, facteurExposition: 1, facteurEnvironnement: 1, mouille: 0, neige: 0,
     oscillation: 0.12, voile: '#ffffff', voileForce: 0,
     particules: { calque: 'aucune', nombre: 0, vitesse: 0, inclinaison: 0, taille: 0, couleur: '#ffffff', opacite: 0 },
   },
   pluie: {
-    densite: 0.020, facteurIntensite: 0.55, facteurExposition: 0.78, mouille: 0.75, neige: 0,
+    densite: 0.020, facteurIntensite: 0.55, facteurExposition: 0.78, facteurEnvironnement: 0.6, mouille: 0.75, neige: 0,
     oscillation: 0.35, voile: '#33455e', voileForce: 0.28,
     particules: { calque: 'pluie', nombre: 1400, vitesse: 17, inclinaison: 0.22, taille: 0.42, couleur: '#a8c8ee', opacite: 0.45 },
   },
   neige: {
-    densite: 0.014, facteurIntensite: 0.72, facteurExposition: 0.94, mouille: 0.18, neige: 1,
+    densite: 0.014, facteurIntensite: 0.72, facteurExposition: 0.94, facteurEnvironnement: 0.75, mouille: 0.18, neige: 1,
     oscillation: 0.2, voile: '#dfe9f4', voileForce: 0.2,
     particules: { calque: 'neige', nombre: 1300, vitesse: 1.6, inclinaison: 0.14, taille: 0.13, couleur: '#ffffff', opacite: 0.95 },
   },
   brouillard: {
-    densite: 0.075, facteurIntensite: 0.4, facteurExposition: 0.86, mouille: 0.35, neige: 0,
+    densite: 0.075, facteurIntensite: 0.4, facteurExposition: 0.86, facteurEnvironnement: 0.5, mouille: 0.35, neige: 0,
     oscillation: 0.08, voile: '#d5e0e8', voileForce: 0.4,
     particules: { calque: 'brume', nombre: 420, vitesse: 0.25, inclinaison: 0.9, taille: 0.55, couleur: '#e4ecf2', opacite: 0.16 },
   },
   tempete: {
-    densite: 0.030, facteurIntensite: 0.4, facteurExposition: 0.66, mouille: 0.92, neige: 0,
+    densite: 0.030, facteurIntensite: 0.4, facteurExposition: 0.66, facteurEnvironnement: 0.45, mouille: 0.92, neige: 0,
     oscillation: 1, voile: '#2b3646', voileForce: 0.4,
     particules: { calque: 'pluie', nombre: 2600, vitesse: 26, inclinaison: 0.62, taille: 0.6, couleur: '#c2d6ee', opacite: 0.5 },
   },
   canicule: {
-    densite: 0.010, facteurIntensite: 1.12, facteurExposition: 1.14, mouille: 0, neige: 0,
+    densite: 0.010, facteurIntensite: 1.12, facteurExposition: 1.14, facteurEnvironnement: 1.1, mouille: 0, neige: 0,
     oscillation: 0.05, voile: '#ffb547', voileForce: 0.14,
     particules: { calque: 'poussiere', nombre: 560, vitesse: 0.5, inclinaison: 0.75, taille: 0.14, couleur: '#e8cf9a', opacite: 0.3 },
   },
@@ -182,6 +212,17 @@ export function parametresAmbiance(
 
   const eauBase = nuit ? '#101f33' : melanger('#2a6ea8', hemi.ciel, 0.14);
 
+  // L'environnement : ce que le studio renvoie. Sa teinte tient du soleil de la
+  // saison et du ciel — chaude l'été, froide l'hiver —, refroidie la nuit et
+  // voilée par la météo comme le ciel l'est ; son intensité tombe la nuit et
+  // sous tout ce qui bouche le ciel.
+  const teinteJour = melanger(SOLEIL_SAISON[saison], hemi.ciel, 0.5);
+  const teinteEnvironnement = melanger(
+    nuit ? melanger(teinteJour, '#7f97c8', 0.6) : teinteJour,
+    m.voile,
+    m.voileForce * 0.5,
+  );
+
   const valeur: ParametresAmbiance = {
     soleil: {
       couleur: couleurSoleil,
@@ -211,6 +252,13 @@ export function parametresAmbiance(
       agitation: borner(0.3 + m.oscillation * 0.7, 0, 1),
     },
     particules: { ...m.particules },
+    environnement: {
+      intensite: borner(
+        (nuit ? ENVIRONNEMENT_NUIT : ENVIRONNEMENT_JOUR) * ENVIRONNEMENT_SAISON[saison] * m.facteurEnvironnement,
+        0, 1,
+      ),
+      teinte: teinteEnvironnement,
+    },
   };
   MEMOIRE.set(cle, valeur);
   return valeur;
@@ -257,6 +305,10 @@ export function melangerParametres(
       ...(k < 0.5 ? a.particules : b.particules),
       nombre: Math.round(n(a.particules.nombre, b.particules.nombre)),
     },
+    environnement: {
+      intensite: n(a.environnement.intensite, b.environnement.intensite),
+      teinte: c(a.environnement.teinte, b.environnement.teinte),
+    },
   };
 }
 
@@ -288,7 +340,19 @@ export interface Eclairage {
   viser(p: ParametresAmbiance, immediat?: boolean): void;
   /** Fait avancer transition et particules. Rend vrai s'il faut redessiner. */
   avancer(ms: number, centre: THREE.Vector3): boolean;
+  /**
+   * Resserre la caméra d'ombre sur ce que la caméra du jeu voit (`ombres.ts`).
+   * À appeler à chaque image, **après** `avancer` : le calcul n'est refait que
+   * si la caméra ou le soleil ont bougé. Rend le cadre appliqué.
+   */
+  cadrerOmbre(etat: EtatCamera, aspect: number, carte: { largeur: number; hauteur: number }): CadreOmbre;
   dispose(): void;
+}
+
+/** Réglages de montage de l'éclairage. */
+export interface OptionsEclairage {
+  /** Côté de la carte d'ombre, en texels : `tailleCarteOmbre()` sait le choisir. */
+  tailleOmbre?: number;
 }
 
 /** Texture ronde et douce des flocons, poussières et nappes de brume. */
@@ -329,22 +393,26 @@ const PARTICULES_MAX = 2600;
 export function creerEclairage(
   scene: THREE.Scene, doc: Document, depart: ParametresAmbiance,
   hauteurSol: (x: number, z: number) => number | null = () => 0,
+  options: OptionsEclairage = {},
 ): Eclairage {
   const groupe = new THREE.Group();
   groupe.name = 'eclairage';
 
   const soleil = new THREE.DirectionalLight(0xffffff, 1);
   soleil.castShadow = true;
-  // 1024² suffit pour un plateau : la carte d'ombre couvre la carte entière et
-  // quatre fois plus de texels coûtent quatre fois plus cher pour un liseré.
-  soleil.shadow.mapSize.set(1024, 1024);
-  soleil.shadow.bias = -0.0009;
-  soleil.shadow.normalBias = 0.03;
+  // La carte d'ombre ne couvre plus la carte entière mais le champ visible
+  // (`cadrerOmbre`) : 2048² sur un ordinateur, 1024² au doigt. Ses biais sont
+  // des multiples du texel et se posent avec le cadre, à la première image.
+  const taille = options.tailleOmbre ?? tailleCarteOmbre(false);
+  soleil.shadow.mapSize.set(taille, taille);
   const cam = soleil.shadow.camera;
   cam.near = 0.5;
   cam.far = 120;
   groupe.add(soleil);
   groupe.add(soleil.target);
+  /** Les entrées du dernier cadre calculé : on ne recalcule que si l'une bouge. */
+  let empreinteCadre = '';
+  let dernierCadre: CadreOmbre | null = null;
 
   const hemisphere = new THREE.HemisphereLight(0xffffff, 0x404040, 1);
   groupe.add(hemisphere);
@@ -411,7 +479,7 @@ export function creerEclairage(
     courant = p;
     soleil.color.set(p.soleil.couleur);
     soleil.intensity = p.soleil.intensite;
-    const d = directionSoleil(p.soleil.elevation, p.soleil.azimut, 40);
+    const d = directionSoleil(p.soleil.elevation, p.soleil.azimut, DISTANCE_SOLEIL);
     soleil.position.copy(d);
     appoint.color.set(p.hemisphere.ciel);
     appoint.intensity = p.soleil.intensite * 0.09 + 0.12;
@@ -422,6 +490,9 @@ export function creerEclairage(
     brouillard.color.set(p.brouillard.couleur);
     brouillard.density = p.brouillard.densite;
     scene.background = new THREE.Color(p.ciel);
+    // La teinte de l'environnement n'a pas de prise en r170 (`environnement.ts`) :
+    // seule l'intensité passe.
+    scene.environmentIntensity = p.environnement.intensite;
     matPoints.map = p.particules.calque === 'neige' ? flocon : grain;
     matPoints.color.set(p.particules.couleur);
     matPoints.size = Math.max(0.01, p.particules.taille);
@@ -445,7 +516,7 @@ export function creerEclairage(
     }
     soleil.target.position.copy(centre);
     soleil.target.updateMatrixWorld();
-    soleil.position.copy(centre).add(directionSoleil(courant.soleil.elevation, courant.soleil.azimut, 40));
+    soleil.position.copy(centre).add(directionSoleil(courant.soleil.elevation, courant.soleil.azimut, DISTANCE_SOLEIL));
     soleil.updateMatrixWorld();
 
     const p = courant.particules;
@@ -522,10 +593,40 @@ export function creerEclairage(
     return encore;
   }
 
+  function cadrerOmbre(
+    etat: EtatCamera, aspect: number, carte: { largeur: number; hauteur: number },
+  ): CadreOmbre {
+    const s = courant.soleil;
+    // Une empreinte des entrées plutôt qu'un calcul par image : le cadre ne
+    // bouge que si la caméra, le soleil ou la carte ont bougé.
+    const empreinte = [
+      etat.cible.x.toFixed(3), etat.cible.z.toFixed(3), etat.distance.toFixed(3), etat.tangage, etat.lacet,
+      aspect.toFixed(4), s.elevation.toFixed(2), s.azimut.toFixed(2), carte.largeur, carte.hauteur,
+    ].join('|');
+    if (dernierCadre && empreinte === empreinteCadre) return dernierCadre;
+    const cadre = cadreOmbre(
+      champVisibleAuSol(etat, aspect), carte, { elevation: s.elevation, azimut: s.azimut },
+      { x: etat.cible.x, z: etat.cible.z }, taille,
+    );
+    cam.left = cadre.gauche;
+    cam.right = cadre.droite;
+    cam.top = cadre.haut;
+    cam.bottom = cadre.bas;
+    cam.near = cadre.near;
+    cam.far = cadre.far;
+    cam.updateProjectionMatrix();
+    soleil.shadow.bias = cadre.bias;
+    soleil.shadow.normalBias = cadre.normalBias;
+    empreinteCadre = empreinte;
+    dernierCadre = cadre;
+    return cadre;
+  }
+
   return {
     groupe,
     soleil,
     get courant() { return courant; },
+    cadrerOmbre,
     viser: (p, immediat = false) => {
       if (immediat) {
         source = p;
