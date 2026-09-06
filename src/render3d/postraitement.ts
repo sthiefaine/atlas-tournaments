@@ -154,10 +154,26 @@ export function creerComposeur(
   composeur.addPass(grain);
 
   let compteur = 0;
+  // Ce que le composeur croit savoir de sa taille. Le ratio est celui du rendu
+  // à sa création ; les dimensions sont laissées inconnues, parce qu'avec une
+  // cible fournie le constructeur prend la taille **physique** de la cible
+  // pour taille logique : le premier `setSize` ci-dessous le remet d'aplomb.
+  let ratioConnu = ratio;
+  let largeurConnue = -1;
+  let hauteurConnue = -1;
 
   function redimensionner(l: number, h: number, r: number): void {
-    composeur.setPixelRatio(r);
-    composeur.setSize(l, h);
+    // `setPixelRatio` appelle `setSize` de lui-même : on ne redimensionne
+    // qu'une fois par changement. Le ratio ne bouge qu'en changeant d'écran.
+    if (r !== ratioConnu) {
+      ratioConnu = r;
+      composeur.setPixelRatio(r);
+    }
+    if (l !== largeurConnue || h !== hauteurConnue) {
+      largeurConnue = l;
+      hauteurConnue = h;
+      composeur.setSize(l, h);
+    }
     // L'occlusion se calcule en **pixels logiques**, pas physiques : sur un
     // écran à ratio 2, c'est quatre fois moins de prélèvements pour un flou que
     // le débruitage lisse de toute façon. Le composeur vient de lui donner la

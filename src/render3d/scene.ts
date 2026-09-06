@@ -27,7 +27,7 @@
 import * as THREE from 'three';
 
 import {
-  decisionComposeur, msCalibration, QUALITE_PAR_DEFAUT, type QualiteRendu,
+  composeurPossible, decisionComposeur, msCalibration, QUALITE_PAR_DEFAUT, type QualiteRendu,
 } from '../render/qualite';
 import type { MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
@@ -114,6 +114,13 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   renderer.toneMappingExposure = 1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // La carte d'ombre se calcule **une fois par image**, pas une fois par
+  // `render()` : la chaîne de post-traitement dessine la scène deux fois (la
+  // couleur, puis les normales et la profondeur pour l'occlusion), et sans ce
+  // réglage la seconde passe recalculait 2048² d'ombres dont elle ne se sert
+  // pas. `dessiner()` lève `needsUpdate` à chaque image, donc l'ombre suit la
+  // caméra comme avant, dès la première image.
+  renderer.shadowMap.autoUpdate = false;
   renderer.setPixelRatio(ratioPixels(doc.defaultView, options.ratioMax ?? 2));
   // Les compteurs ne se remettent plus à zéro à chaque `render()` : une image
   // composée en fait plusieurs, et c'est l'image entière qu'on veut mesurer.
@@ -170,6 +177,14 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       return;
     }
     if (composeur) return;
+    // three ne lève pas quand une cible flottante n'est pas dessinable : sans
+    // l'extension, la chaîne rendrait un écran noir en silence. On le sait
+    // avant de charger quoi que ce soit, et on reste sur le rendu direct.
+    if (!composeurPossible((nom) => renderer.extensions.has(nom))) {
+      echec = true;
+      console.warn('Chaîne de post-traitement indisponible', 'aucune cible flottante dessinable (EXT_color_buffer_float)');
+      return;
+    }
     if (fabrique) {
       if (!camera) return;
       try {
@@ -253,6 +268,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       const mesure = calibration();
       const debut = horloge.now();
       renderer.info.reset();
+      // Le premier `render()` de l'image — le rendu direct, ou la passe de
+      // couleur de la chaîne — calcule les ombres et rabaisse le drapeau ; la
+      // passe des normales, qui vient après, les trouve faites.
+      renderer.shadowMap.needsUpdate = true;
       if (composeur) composeur.rendre(camera);
       else renderer.render(scene, camera);
       if (mesure) attendreDessin();

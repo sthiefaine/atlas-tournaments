@@ -32,14 +32,28 @@ export function normaliserQualite(brut: unknown): QualiteRendu {
  * Le seuil de la qualité `auto`, en millisecondes par image **sans** la chaîne.
  *
  * La chaîne redessine la scène une seconde fois (normales et profondeur pour
- * l'occlusion) et ajoute trois passes plein écran : une image composée coûte
- * environ deux fois et demie l'image nue. Sous huit millisecondes, l'image
- * composée tient sous les vingt, donc une animation reste fluide sur un
- * portable à circuit graphique intégré (cinq millisecondes l'image nue, mesuré
- * à la main) ; un rasteriseur logiciel, à trois cents millisecondes l'image, ne
- * l'atteint jamais, et c'est voulu — le test de fumée tourne dessus.
+ * l'occlusion, sans lumières ni ombres : la carte d'ombre n'est calculée
+ * qu'une fois par image) et ajoute cinq passes plein écran : une image
+ * composée coûte environ deux fois l'image nue. Sous huit millisecondes,
+ * l'image composée tient sous les vingt, donc une animation reste fluide sur
+ * un portable à circuit graphique intégré (cinq millisecondes l'image nue,
+ * mesuré à la main) ; un rasteriseur logiciel, à cinq cents millisecondes et
+ * plus l'image, ne l'atteint jamais, et c'est voulu — le test de fumée tourne
+ * dessus.
  */
 export const SEUIL_MS_COMPOSEUR = 8;
+
+/**
+ * La chaîne peut-elle se monter sur ce contexte ? Elle dessine dans une cible
+ * en demi-flottants, multi-échantillons ; sans `EXT_color_buffer_float` (ou sa
+ * version demi-flottante seule), une telle cible n'est pas dessinable, et
+ * three.js **ne lève pas** : l'écran serait noir, en silence. La question se
+ * pose au contexte par `renderer.extensions.has`, qu'on reçoit ici en fonction
+ * pour rester sans three.js.
+ */
+export function composeurPossible(extensions: (nom: string) => boolean): boolean {
+  return extensions('EXT_color_buffer_float') || extensions('EXT_color_buffer_half_float');
+}
 
 /**
  * Le nombre d'images mesurées avant de décider. La toute première image d'une
