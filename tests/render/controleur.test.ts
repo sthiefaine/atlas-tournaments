@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
-  chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte,
+  chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte, uniteSur, unitesVues,
   type EtatPartie,
 } from '../../src/engine/index';
 import { Controleur, SUITES_MENU } from '../../src/render/controleur';
@@ -331,4 +331,137 @@ test('les ordres gardent une place fixe, quel que soit leur nombre', () => {
   const rangs = ids.map((id) => SUITES_MENU.indexOf(id as typeof SUITES_MENU[number]));
   assert.deepEqual([...rangs].sort((a, b) => a - b), rangs, 'l’ordre suit SUITES_MENU');
   assert.equal(ids[ids.length - 1], 'attendre', 'attendre ferme toujours la liste');
+});
+
+// ---------------------------------------------------------------------------
+// L'inspection : double-clic ou appui long sur une unité adverse
+// ---------------------------------------------------------------------------
+
+test('inspecter une unité adverse allume ses arrivées en danger et son enveloppe de tir en attaque', () => {
+  const etat = partieAuContact();
+  const c = controleur(etat);
+  const adverse = etat.unites.find((u) => u.camp === 1 && u.type === 'char_leger')
+    ?? etat.unites.find((u) => u.camp === 1);
+  assert.ok(adverse);
+  assert.equal(c.inspecter({ x: adverse.x, y: adverse.y }), true);
+  assert.equal(c.vue.inspection, adverse.id);
+  assert.equal(c.phase, 'inactif', 'l’inspection n’est pas une phase : elle ne joue rien');
+  assert.equal(c.vue.selection, null, 'une unité adverse n’est jamais sélectionnée');
+  assert.deepEqual(c.vue.curseur, { x: adverse.x, y: adverse.y }, 'le curseur reste sur l’unité montrée');
+
+  const danger = new Set(c.vue.surbrillances
+    .filter((s) => s.genre === 'danger')
+    .map((s) => `${s.case.x},${s.case.y}`));
+  assert.ok(danger.size > 1, 'l’adversaire peut aller quelque part');
+  assert.ok(danger.has(`${adverse.x},${adverse.y}`), 'sa propre case fait partie de ses arrivées');
+  assert.equal(c.vue.surbrillances.some((s) => s.genre === 'deplacement'), false,
+    'le vert reste au joueur : les arrivées adverses ne sont pas des destinations');
+
+  const type = CAT.unites[adverse.type];
+  assert.ok(type);
+  const rouge = c.vue.surbrillances.filter((s) => s.genre === 'attaque');
+  assert.ok(rouge.length > 0, 'une unité armée menace au moins une case hors de ses arrivées');
+  for (const s of rouge) {
+    assert.ok(!danger.has(`${s.case.x},${s.case.y}`), 'une case d’arrivée n’est pas en plus une case de tir');
+    assert.ok(
+      s.case.x >= 0 && s.case.y >= 0 && s.case.x < etat.largeur && s.case.y < etat.hauteur,
+      'l’enveloppe ne déborde jamais de la carte',
+    );
+    const sources = type.peutTirerApresMouvement ? [...danger] : [`${adverse.x},${adverse.y}`];
+    const portable = sources.some((k) => {
+      const [x, y] = k.split(',').map(Number) as [number, number];
+      const d = Math.abs(s.case.x - x) + Math.abs(s.case.y - y);
+      return d >= type.portee[0] && d <= type.portee[1];
+    });
+    assert.ok(portable, 'chaque case rouge est à portée depuis une arrivée possible');
+  }
+  assert.equal(empreinte(c.etat), empreinte(etat), 'inspecter ne touche pas à la partie');
+});
+
+test('l’inspection se referme au clic suivant, à Échap, ou en sélectionnant une unité amie', () => {
+  const etat = partieAuContact();
+  const adverse = etat.unites.find((u) => u.camp === 1);
+  const amie = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(adverse && amie);
+
+  const c = controleur(etat);
+  assert.equal(c.inspecter({ x: adverse.x, y: adverse.y }), true);
+  c.clicCase({ x: 0, y: 0 });
+  assert.equal(c.vue.inspection, null, 'un clic n’importe où referme');
+  assert.equal(c.vue.surbrillances.length, 0);
+
+  assert.equal(c.inspecter({ x: adverse.x, y: adverse.y }), true);
+  c.annuler();
+  assert.equal(c.vue.inspection, null, 'Échap referme');
+  assert.equal(c.phase, 'inactif');
+
+  assert.equal(c.inspecter({ x: adverse.x, y: adverse.y }), true);
+  c.poserCurseur({ x: 0, y: 0 });
+  assert.deepEqual(c.vue.curseur, { x: adverse.x, y: adverse.y }, 'le survol ne décroche pas la fiche inspectée');
+  c.clicCase({ x: amie.x, y: amie.y });
+  assert.equal(c.vue.inspection, null, 'sélectionner une unité amie referme');
+  assert.equal(c.vue.selection, amie.id);
+  assert.equal(c.phase, 'selection');
+  assert.ok(c.vue.surbrillances.some((s) => s.genre === 'deplacement'));
+  assert.equal(c.vue.surbrillances.some((s) => s.genre === 'danger'), false);
+});
+
+test('sous brouillard, une unité adverse invisible ne s’inspecte pas ; une unité vue, si', () => {
+  const etat = creerPartie(
+    sceneDeCarte(carte(), reglagesParDefaut({ meteoForcee: 'clair', brouillard: true })), CAT, 'rendu',
+  );
+  const vues = new Set(unitesVues(etat, CAT, 0).map((u) => u.id));
+  const cachee = etat.unites.find((u) => u.camp === 1 && !vues.has(u.id));
+  assert.ok(cachee, 'la carte de plaine laisse au moins une unité adverse hors de vue au premier jour');
+  const c = controleur(etat);
+  assert.equal(c.inspecter({ x: cachee.x, y: cachee.y }), false);
+  assert.equal(c.vue.inspection, null);
+  assert.equal(c.vue.surbrillances.length, 0, 'rien n’est allumé : la portée dirait où elle est');
+
+  // La même unité amenée au contact devient visible, donc inspectable.
+  const char = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(char);
+  cachee.x = char.x + 1;
+  cachee.y = char.y;
+  const c2 = controleur(etat);
+  assert.equal(c2.inspecter({ x: cachee.x, y: cachee.y }), true);
+  assert.equal(c2.vue.inspection, cachee.id);
+});
+
+test('inspecter une unité amie ou une case vide ne change rien à l’existant', () => {
+  const etat = partie();
+  const c = controleur(etat);
+  const amie = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(amie);
+  // Le double-clic arrive comme deux clics puis une demande d'inspection.
+  c.clicCase({ x: amie.x, y: amie.y });
+  c.clicCase({ x: amie.x, y: amie.y });
+  assert.equal(c.phase, 'action', 'deux clics sur une unité amie ouvrent son menu');
+  assert.equal(c.inspecter({ x: amie.x, y: amie.y }), false);
+  assert.equal(c.phase, 'action', 'la demande d’inspection n’a rien défait');
+  assert.equal(c.vue.selection, amie.id);
+  assert.equal(c.vue.inspection, null);
+  assert.equal(c.inspecter({ x: 0, y: 0 }), false, 'une case vide n’a rien à montrer');
+  assert.equal(c.phase, 'action');
+});
+
+test('un double-clic qui confirme une attaque n’ouvre pas l’inspection de la cible', () => {
+  const etat = partieAuContact();
+  const c = viser(etat);
+  const premiere = c.vue.visee?.cible;
+  assert.ok(premiere);
+  const autre = c.vue.visee?.cibles.find((x) => x.x !== premiere.x || x.y !== premiere.y);
+  assert.ok(autre);
+  c.clicCase(autre);
+  c.clicCase(autre);
+  assert.notEqual(c.phase, 'cible', 'le second appui a confirmé');
+  assert.equal(c.inspecter(autre), false);
+  assert.equal(c.vue.inspection, null);
+  // Le témoin ne survit pas au clic suivant : le double-clic d'après inspecte.
+  const restante = c.etat.unites.find((u) => u.camp === 1 && uniteSur(c.etat, u)?.id === u.id);
+  assert.ok(restante, 'il reste une unité adverse sur le plateau');
+  c.clicCase(restante);
+  c.clicCase(restante);
+  assert.equal(c.inspecter(restante), true);
+  assert.equal(c.vue.inspection, restante.id);
 });

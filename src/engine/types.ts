@@ -189,6 +189,11 @@ export interface EtatPartie {
   /** Grille de la carte, jamais réécrite (`04-gameplay.md` §11.1). */
   grille: string[];
   proprietaires: Record<string, CampId>;
+  /**
+   * Bâtiments **désaffectés**, clés de case : neutres, sans revenu ni production
+   * tant qu'une unité ne les a pas remis en service (`04-gameplay.md` §6 bis).
+   */
+  desaffectes: string[];
   unites: Unite[];
   prochainId: number;
   /** Prochaine balise à capturer, indexée par objectif. */
@@ -267,6 +272,10 @@ export type EvenementJeu =
   | { type: 'attaque'; attaquantId: string; cibleId: string; degats: number; riposte: number }
   | { type: 'hors_jeu'; uniteId: string; camp: CampId; unite: CleUnite }
   | { type: 'capture'; uniteId: string; case: Case; points: number; acquis: boolean; camp: CampId }
+  /** Un bâtiment désaffecté vient d'être remis en service par ce camp, prime versée comprise. */
+  | { type: 'remise_en_service'; uniteId: string; case: Case; camp: CampId; prime: number }
+  /** Un drone mis hors jeu au-dessus d'un bâtiment adverse a lu ce que ce camp a produit. */
+  | { type: 'production_revelee'; camp: CampId; proprietaire: CampId; case: Case; produites: Record<CleUnite, number> }
   | { type: 'production'; camp: CampId; unite: CleUnite; case: Case; cout: number }
   | { type: 'embarquement'; uniteId: string; transportId: string }
   | { type: 'debarquement'; uniteId: string; transportId: string; vers: Case }
@@ -364,6 +373,8 @@ export interface Scene {
   hauteur: number;
   grille: string[];
   proprietaires: Record<string, CampId>;
+  /** Bâtiments désaffectés au départ, clés de case. */
+  desaffectes?: string[];
   unitesDepart: { camp: CampId; type: CleUnite; x: number; y: number; pv?: number }[];
   camps: CampId[];
   commandants: (CommandantMoteur | null)[];

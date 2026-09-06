@@ -505,10 +505,11 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
   }
   if (presente(o, 'homologation')) {
     if (statut === 'canon') ctx.faute('homologation', "une unité 'canon' n'a pas d'homologation");
-    const h = objet(ctx, o['homologation'], 'homologation', ['date', 'sourceEventCode']);
+    const h = objet(ctx, o['homologation'], 'homologation', ['date', 'sourceEventCode', 'catalogue']);
     if (h && requis(ctx, h, 'homologation', ['date'])) {
       dateIso(ctx, h['date'], 'homologation.date');
       if (presente(h, 'sourceEventCode')) cle(ctx, h['sourceEventCode'], 'homologation.sourceEventCode');
+      if (presente(h, 'catalogue')) entier(ctx, h['catalogue'], 'homologation.catalogue', { min: 2, max: 99 });
     }
   } else if (statut !== undefined && statut !== 'canon') {
     ctx.faute('homologation', "une unité non 'canon' déclare son homologation");
@@ -609,6 +610,13 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       ctx.faute('traits', "le trait 'ravitaillement' exige une ligne de dégâts entièrement à 0");
     }
     if (a('vol') && a('tout_terrain')) ctx.faute('traits', "traits contradictoires : 'vol' et 'tout_terrain'");
+    // Un drone est un œil volant qu'on peut brouiller ; un brouilleur n'est qu'un
+    // radar sur roues : ni l'un ni l'autre ne tire (`04-gameplay.md` §10 bis).
+    if (a('drone') && !a('vol')) ctx.faute('traits', "le trait 'drone' exige le trait 'vol'");
+    if ((a('drone') || a('brouilleur')) && degats && Object.values(degats).some((n) => n > 0)) {
+      ctx.faute('traits', "un drone ou un brouilleur ne porte pas d'arme (dégâts à 0)");
+    }
+    if (a('brouilleur') && a('drone')) ctx.faute('traits', "traits contradictoires : 'drone' et 'brouilleur'");
     if (a('tir_indirect') && a('capture')) ctx.faute('traits', "traits contradictoires : 'tir_indirect' et 'capture'");
   }
   const taille = estObjet(o['silhouette']) ? o['silhouette']['taille'] : undefined;
@@ -724,7 +732,7 @@ export function validerParametresCarte(valeur: unknown): Resultat<ParametresCart
 
 const CLES_MAPDEF = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'largeur', 'hauteur', 'camps', 'biome', 'grille',
-  'proprietaires', 'unitesDepart', 'mecanique', 'generation', 'diagnostic',
+  'proprietaires', 'unitesDepart', 'desaffectes', 'mecanique', 'generation', 'diagnostic',
 ] as const;
 
 /** Valide une définition de carte (`03-schemas.md` §5). */
@@ -765,7 +773,7 @@ export function validerMapDef(valeur: unknown): Resultat<MapDef> {
           continue;
         }
         if (car === 'H') qgParCamp += 1;
-        if (['C', 'U', 'A', 'H'].includes(car)) capturables.add(`${x},${y}`);
+        if (['C', 'U', 'A', 'H', 'T'].includes(car)) capturables.add(`${x},${y}`);
       }
     }
     if (camps !== undefined && qgParCamp !== camps) {
@@ -795,6 +803,25 @@ export function validerMapDef(valeur: unknown): Resultat<MapDef> {
       if (camp !== undefined && camps !== undefined && camp >= camps) {
         ctx.faute(cheminProp, `camp inconnu : ${camps} camps sur cette carte`);
       }
+    }
+  }
+
+  if (presente(o, 'desaffectes')) {
+    // Un bâtiment désaffecté est neutre par construction : c'est la remise en
+    // service qui lui donne un propriétaire. Le QG n'est jamais désaffecté, sinon
+    // le camp partirait sans base et sans condition de défaite lisible.
+    const desaffectes = tableau(ctx, o['desaffectes'], 'desaffectes', { max: 12 },
+      (e, c) => caseGrille(ctx, e, c));
+    if (desaffectes && grille) {
+      desaffectes.forEach((d, i) => {
+        const k = `${d.x},${d.y}`;
+        const car = grille[d.y]?.[d.x];
+        if (!capturables.has(k) || car === 'H') {
+          ctx.faute(sous('desaffectes', i), 'un bâtiment désaffecté est une ville, une usine ou un aéroport');
+        }
+        if (props && k in props) ctx.faute(sous('desaffectes', i), 'un bâtiment désaffecté n\'a pas de propriétaire');
+      });
+      sansDoublon(ctx, desaffectes.map((d) => `${d.x},${d.y}`), 'desaffectes');
     }
   }
 

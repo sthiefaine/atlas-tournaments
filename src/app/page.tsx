@@ -65,6 +65,9 @@ export default function Accueil() {
           etat: epreuves.map((_, n) => t(locale, 'accueil.campagne_etat', {
             n, total, epreuve: epreuves[n]?.titre ?? '',
           })),
+          profilA: t(locale, 'reglages.profil_a'),
+          profilB: t(locale, 'reglages.profil_b'),
+          profilActif: t(locale, 'accueil.profil_actif'),
         }}
       />
 

@@ -1,0 +1,234 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+import Link from 'next/link';
+import { notFound, redirect } from 'next/navigation';
+
+import {
+  chargerStyleNation, chargerStyleRegion, nomModele, nomTexture, validerAssetSpec, type AssetSpec,
+} from '@/assets/index';
+import { REGEX_CLE } from '@/schemas/index';
+
+import { sessionCourante } from '../../session';
+import { Bloc, Etat, Ligne } from '../../ui';
+
+import { chargerCatalogueAssets, DOSSIER_SPECS } from '../donnees';
+import { LIBELLES_PRIORITE, LIBELLES_TYPE, STATUT_LIVRAISON, territoireDe, urlListe } from '../tri';
+
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+/** Une paire libellé / valeur, la brique de toute la fiche. */
+function Champ({ nom, children }: { nom: string; children: React.ReactNode }) {
+  return (
+    <Ligne>
+      <span className="w-40 shrink-0 text-xs opacity-60">{nom}</span>
+      <span className="min-w-0 flex-1 text-sm">{children}</span>
+    </Ligne>
+  );
+}
+
+/** Une liste fermée, affichée telle quelle : ce sont des clés, pas des phrases. */
+function Cles({ valeurs }: { valeurs: readonly string[] }) {
+  if (valeurs.length === 0) return <span className="opacity-50">aucune</span>;
+  return <span className="font-mono text-xs">{valeurs.join(', ')}</span>;
+}
+
+/**
+ * Lit le fichier versionné et dit s'il est encore celui que le canon produit,
+ * avec la sérialisation exacte de `generer-specs-assets.ts` : deux espaces et un
+ * saut de ligne final. Comparer autrement ferait passer pour périmé un fichier
+ * que le script tient pour à jour.
+ */
+async function etatDuFichier(spec: AssetSpec): Promise<'conforme' | 'perime' | 'absent'> {
+  try {
+    const lu = await readFile(path.resolve(process.cwd(), DOSSIER_SPECS, `${spec.id}.json`), 'utf8');
+    return lu === `${JSON.stringify(spec, null, 2)}\n` ? 'conforme' : 'perime';
+  } catch {
+    return 'absent';
+  }
+}
+
+/**
+ * La fiche d'une spécification : chaque champ du contrat, lisible sans ouvrir
+ * le JSON, plus le verdict de `validerAssetSpec` et l'état du fichier versionné.
+ * Le paramètre d'URL est l'identifiant de l'asset, celui qui nomme le fichier.
+ */
+export default async function FicheAsset({ params }: { params: Promise<{ cle: string }> }) {
+  if (!await sessionCourante()) redirect('/admin/login');
+  const { cle } = await params;
+  if (!REGEX_CLE.test(cle)) notFound();
+
+  const { specs, paysParCode, regionsParPays, codesPays } = chargerCatalogueAssets();
+  const spec = specs.find((s) => s.id === cle);
+  if (!spec) notFound();
+
+  const verdict = validerAssetSpec(spec);
+  const fichier = await etatDuFichier(spec);
+  const territoire = territoireDe(spec, codesPays);
+  const pays = territoire.pays ? paysParCode.get(territoire.pays) : undefined;
+  const region = territoire.pays && territoire.region
+    ? regionsParPays.get(territoire.pays)?.get(territoire.region)
+    : undefined;
+  const styleNation = territoire.pays ? chargerStyleNation(territoire.pays) : null;
+  const styleRegion = territoire.pays && region ? chargerStyleRegion(territoire.pays, region.code) : null;
+
+  return (
+    <main>
+      <p className="mb-2 text-xs">
+        <Link href="/admin/assets" className="underline underline-offset-4 opacity-70">← tous les assets</Link>
+      </p>
+      <h2 className="mb-1 font-mono text-lg">{spec.id}</h2>
+      <p className="mb-6 flex flex-wrap items-center gap-2 text-sm opacity-80">
+        <Link href={urlListe({ type: spec.type })} className="underline-offset-4 hover:underline">{LIBELLES_TYPE[spec.type]}</Link>
+        <Etat valeur={`priorité ${spec.priorite}`} />
+        <span className="text-xs opacity-60">{LIBELLES_PRIORITE[spec.priorite]}</span>
+        <Etat valeur={STATUT_LIVRAISON} />
+      </p>
+
+      <Bloc titre="Verdict et fichier" aide="Le validateur est celui du dépôt ; le fichier est celui de assets/specs/, s’il est sur ce disque.">
+        <Champ nom="validerAssetSpec">
+          <Etat valeur={verdict.ok ? 'valide' : `${verdict.erreurs.length} erreur(s)`} ok={verdict.ok} />
+          {!verdict.ok ? (
+            <ul className="mt-2 font-mono text-xs">
+              {verdict.erreurs.map((e, i) => <li key={i}>{e.chemin || '(racine)'} — {e.message}</li>)}
+            </ul>
+          ) : null}
+        </Champ>
+        <Champ nom={`${DOSSIER_SPECS}/${spec.id}.json`}>
+          {fichier === 'conforme' ? <Etat valeur="conforme au canon" ok /> : null}
+          {fichier === 'perime' ? <Etat valeur="a dérivé du canon" ok={false} /> : null}
+          {fichier === 'absent' ? <Etat valeur="absent de ce disque" /> : null}
+        </Champ>
+        <Champ nom="livraison">
+          <Etat valeur={STATUT_LIVRAISON} />
+          <span className="ml-2 text-xs opacity-60">Aucun fichier livré n’est enregistré : le rendu compose un placeholder depuis la silhouette.</span>
+        </Champ>
+      </Bloc>
+
+      <Bloc titre="Identité">
+        <Champ nom="type"><span className="font-mono text-xs">{spec.type}</span> · {LIBELLES_TYPE[spec.type]}</Champ>
+        <Champ nom="clé canon"><span className="font-mono text-xs">{spec.cle}</span></Champ>
+        <Champ nom="territoire">
+          {pays ? `${pays.nom} (${pays.code})` : <span className="opacity-50">partagé — aucune nation</span>}
+          {region ? ` · ${region.nom}` : territoire.region ? ` · ${territoire.region}` : ''}
+        </Champ>
+        <Champ nom="priorité">{spec.priorite} — {LIBELLES_PRIORITE[spec.priorite]}</Champ>
+      </Bloc>
+
+      <Bloc titre="Description" aide="L’anglais est ce que le générateur lit ; le français fait foi en cas de désaccord.">
+        <Champ nom="français"><span className="whitespace-pre-wrap">{spec.description.fr}</span></Champ>
+        <Champ nom="anglais"><span className="whitespace-pre-wrap opacity-80">{spec.description.en}</span></Champ>
+      </Bloc>
+
+      <Bloc titre="Style">
+        <Champ nom="référence">{spec.style.reference}</Champ>
+        <Champ nom="devise">{spec.style.devise}</Champ>
+        <Champ nom="matières">{spec.style.matieres}</Champ>
+        <Champ nom="mots-clés (en)"><Cles valeurs={spec.style.motsCles} /></Champ>
+        <Champ nom="à éviter (en)"><Cles valeurs={spec.style.aEviter} /></Champ>
+      </Bloc>
+
+      {styleNation ? (
+        <Bloc titre={`Style national — ${styleNation.nom}`} aide="content/styles/<code>.json : d’où viennent les matières, les ornements et le gabarit du kit.">
+          <Champ nom="ligne directrice">{styleNation.ligneDirectrice.fr}</Champ>
+          <Champ nom="palette">
+            <Cles valeurs={[styleNation.palette.main, styleNation.palette.dark, styleNation.palette.light, ...styleNation.palette.accents]} />
+          </Champ>
+          <Champ nom="matières"><Cles valeurs={styleNation.matieres} /></Champ>
+          <Champ nom="finitions"><Cles valeurs={styleNation.finitions} /></Champ>
+          <Champ nom="ornements"><Cles valeurs={styleNation.ornements} /></Champ>
+          <Champ nom="motif daltonien"><span className="font-mono text-xs">{styleNation.motifDaltonien}</span></Champ>
+          <Champ nom="décalcomanies">
+            {styleNation.decalcomanies.length === 0 ? <span className="opacity-50">aucune</span> : (
+              <ul className="text-xs">
+                {styleNation.decalcomanies.map((d, i) => (
+                  <li key={i}><span className="font-mono">{d.motif}</span> · {d.placement} · {d.couleur} — {d.note}</li>
+                ))}
+              </ul>
+            )}
+          </Champ>
+        </Bloc>
+      ) : null}
+
+      {styleRegion ? (
+        <Bloc titre={`Style régional — ${styleRegion.nom}`} aide="content/styles/regions/<pays>/<region>.json : toits, murs et végétation du bâti et du décor.">
+          <Champ nom="ligne directrice">{styleRegion.ligneDirectrice.fr}</Champ>
+          <Champ nom="toits"><Cles valeurs={[styleRegion.toits.forme, styleRegion.toits.matiere, styleRegion.toits.couleur]} /></Champ>
+          <Champ nom="murs"><Cles valeurs={[styleRegion.murs.matiere, styleRegion.murs.finition, styleRegion.murs.couleur]} /></Champ>
+          <Champ nom="végétation">{styleRegion.vegetation.dominante}, {styleRegion.vegetation.secondaire} · <span className="font-mono text-xs">{styleRegion.vegetation.couleur}</span></Champ>
+          <Champ nom="éléments de décor"><Cles valeurs={styleRegion.elementsDecor} /></Champ>
+        </Bloc>
+      ) : null}
+
+      <Bloc titre="Échelle et pivot" aide="Une case vaut un mètre de scène. Les axes sont ceux de glTF : x latéral, y vertical, z vers l’avant.">
+        <Champ nom="case en mètres">{spec.echelle.caseEnMetres}</Champ>
+        {(['x', 'y', 'z'] as const).map((axe) => (
+          <Champ key={axe} nom={`dimension ${axe}`}>
+            {spec.echelle[axe].cible} m ± {spec.echelle[axe].tolerance}
+          </Champ>
+        ))}
+        <Champ nom="pivot"><Cles valeurs={[spec.pivot.origine, `avant ${spec.pivot.avant}`, `haut ${spec.pivot.haut}`]} /></Champ>
+        <Champ nom="posé au sol">{spec.pivot.poseAuSol ? 'oui' : 'non — modélisé à sa hauteur de vol'}</Champ>
+      </Bloc>
+
+      <Bloc titre="Budget" aide="Triangles par niveau de détail, et nombre de matériaux admis.">
+        <Champ nom="lod 0 / 1 / 2">{spec.budget.lod0} / {spec.budget.lod1} / {spec.budget.lod2} triangles</Champ>
+        <Champ nom="matériaux max">{spec.budget.materiauxMax}</Champ>
+        <Champ nom="lod requis"><Cles valeurs={spec.verification.lodRequis.map(String)} /></Champ>
+        <Champ nom="modèles attendus"><Cles valeurs={spec.verification.lodRequis.map((lod) => nomModele(spec, lod))} /></Champ>
+      </Bloc>
+
+      <Bloc titre={`Textures — ${spec.textures.length} carte(s)`} aide="Le masque d’équipe est binaire et réduit au liseré de socle (doc/11 §5.2).">
+        {spec.textures.map((t) => (
+          <Ligne key={t.canal}>
+            <span className="w-40 font-mono text-xs">{t.canal}</span>
+            <span className="w-24 text-xs">{t.resolution} px</span>
+            <span className="w-12 font-mono text-xs">{t.format}</span>
+            <Etat valeur={t.obligatoire ? 'obligatoire' : 'facultative'} ok={t.obligatoire ? true : undefined} />
+            <span className="basis-full text-xs opacity-70">{t.note}</span>
+            <span className="basis-full font-mono text-xs opacity-50">{nomTexture(spec, t.canal)}</span>
+          </Ligne>
+        ))}
+      </Bloc>
+
+      <Bloc titre="Variantes">
+        <Champ nom="saisons"><Cles valeurs={spec.variantes.saisons} /></Champ>
+        <Champ nom="biomes"><Cles valeurs={spec.variantes.biomes} /></Champ>
+        <Champ nom="nations"><Cles valeurs={spec.variantes.nations} /></Champ>
+      </Bloc>
+
+      <Bloc titre={`Animations — ${spec.animations.length} clip(s)`}>
+        {spec.animations.length === 0 ? <Champ nom="clips"><span className="opacity-50">aucun : l’asset est immobile</span></Champ> : spec.animations.map((a) => (
+          <Ligne key={a.nom}>
+            <span className="w-40 font-mono text-xs">{a.nom}</span>
+            <span className="w-24 text-xs">{a.dureeMs} ms</span>
+            <span className="w-24 text-xs">{a.boucle ? 'en boucle' : 'une fois'}</span>
+            <Etat valeur={a.obligatoire ? 'obligatoire' : 'souhaitable'} ok={a.obligatoire ? true : undefined} />
+          </Ligne>
+        ))}
+      </Bloc>
+
+      <Bloc titre="Format et nommage" aide="Le rendu cherche les nœuds et les matériaux par leur nom, jamais par leur index.">
+        <Champ nom="conteneur"><Cles valeurs={[spec.format.conteneur, `glTF ${spec.format.versionGltf}`, `haut ${spec.format.axeHaut}`, spec.format.unite, spec.format.materiaux]} /></Champ>
+        <Champ nom="nœud racine"><span className="font-mono text-xs">{spec.format.noeudRacine}</span></Champ>
+        <Champ nom="nœuds imposés"><Cles valeurs={spec.format.noeuds} /></Champ>
+        <Champ nom="matériaux imposés"><Cles valeurs={spec.format.materiauxAttendus} /></Champ>
+        <Champ nom="gabarit modèle"><span className="font-mono text-xs">{spec.nommage.modele}</span></Champ>
+        <Champ nom="gabarit texture"><span className="font-mono text-xs">{spec.nommage.texture}</span></Champ>
+        <Champ nom="exemples"><Cles valeurs={spec.nommage.exemples} /></Champ>
+      </Bloc>
+
+      <Bloc titre="Interdits et vérification" aide="Les quatre premiers interdits sont obligatoires sur toute spécification.">
+        <Champ nom="interdits"><Cles valeurs={spec.interdits} /></Champ>
+        <Champ nom="contrôles"><Cles valeurs={spec.verification.controles} /></Champ>
+        <Champ nom="tolérance AABB">{spec.verification.toleranceAabb}</Champ>
+      </Bloc>
+
+      <details className="mb-8 text-xs">
+        <summary className="cursor-pointer opacity-70">Le JSON tel qu’il part au générateur</summary>
+        <pre className="mt-2 overflow-x-auto rounded-lg border border-current/10 p-4 font-mono">{JSON.stringify(spec, null, 2)}</pre>
+      </details>
+    </main>
+  );
+}

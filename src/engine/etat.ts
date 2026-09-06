@@ -22,7 +22,7 @@ import type {
 import { cleCase } from './types';
 
 /** Version du moteur : tout ce qui casse un rejeu l'incrémente. */
-export const VERSION_MOTEUR = 2;
+export const VERSION_MOTEUR = 3;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;
@@ -54,6 +54,7 @@ export function copierEtat(e: EtatPartie): EtatPartie {
     flux: { ...e.flux },
     relais: { ...e.relais },
     proprietaires: { ...e.proprietaires },
+    desaffectes: [...e.desaffectes],
     unites: e.unites.map((u) => (u.cargo.length === 0 ? { ...u } : { ...u, cargo: [...u.cargo] })),
     camps: e.camps.map((c) => ({ ...c })),
     climat: { ...e.climat, previsions: [e.climat.previsions[0], e.climat.previsions[1]] },
@@ -134,6 +135,7 @@ export function sceneDepuis(
     hauteur: carte.hauteur,
     grille: carte.grille,
     proprietaires: carte.proprietaires,
+    desaffectes: (carte.desaffectes ?? []).map(cleCase),
     unitesDepart: carte.unitesDepart,
     camps,
     commandants: commandantsIncarnes(scenario, commandants),
@@ -173,6 +175,7 @@ export function sceneDeCarte(
     hauteur: carte.hauteur,
     grille: carte.grille,
     proprietaires: carte.proprietaires,
+    desaffectes: (carte.desaffectes ?? []).map(cleCase),
     unitesDepart: carte.unitesDepart,
     camps,
     commandants,
@@ -268,6 +271,7 @@ export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatP
     hauteur: scene.hauteur,
     grille: [...scene.grille],
     proprietaires: { ...scene.proprietaires },
+    desaffectes: [...(scene.desaffectes ?? [])],
     unites,
     prochainId,
     journee: 0,

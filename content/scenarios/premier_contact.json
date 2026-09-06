@@ -1,0 +1,146 @@
+{
+  "cle": "premier_contact",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "premier_contact",
+  "nom": "Entraînement 1 · Premier contact",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_premier_contact",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "agressive"
+    }
+  ],
+  "fondsDepart": 0,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 10,
+  "victoire": [
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres : on met les unités hors jeu, personne ne meurt. Atlas organise la Ronde, le tournoi des nations.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Moi, Ariane, je vais vous apprendre à commander. Tomas et sa patrouille attendent de l’autre côté de la rivière : mettez-les hors jeu, toute la patrouille.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Premier contact réussi. Vous savez déplacer une unité, frapper en premier et lire le terrain. Le reste, c’est de l’économie : on la voit demain.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "contact_riposte",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Premier échange. Retenez ceci : une unité attaquée à bout portant riposte aussitôt, avec les points de vie qu’il lui reste. Frapper en premier coûte donc moins cher.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le terrain compte aussi : les étoiles de défense du panneau réduisent les dégâts. Une forêt vaut deux étoiles, un pont zéro.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "contact_premiere_prise",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une de mes unités sort du jeu. Bien joué : votre char passe par le pont, mon infanterie peut traverser la rivière à pied. Pas votre char.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "contact_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Unité hors jeu. Personne n’est blessé, mais elle ne reviendra pas de la journée. Concentrez vos tirs : deux unités sur une seule cible valent mieux qu’une sur chaque.",
+          "emotion": "doute"
+        }
+      ]
+    },
+    {
+      "cle": "contact_journee_3",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Votre QG rapporte des fonds à chaque journée. Cliquez dessus : quand la caisse le permet, il recrute une infanterie.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "monde.tournoi.premier_contact"
+    ]
+  }
+}

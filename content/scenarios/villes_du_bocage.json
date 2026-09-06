@@ -1,0 +1,165 @@
+{
+  "cle": "villes_du_bocage",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-05",
+  "majLe": "2026-09-05",
+  "code": "villes_du_bocage",
+  "nom": "Entraînement 2 · Les quatre villes",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_villes_du_bocage",
+  "date": "2026-09-05",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 2,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 1000,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 16,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 8,
+          "y": 2
+        },
+        {
+          "x": 3,
+          "y": 7
+        },
+        {
+          "x": 8,
+          "y": 7
+        }
+      ],
+      "combien": 3
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Quatre villes, deux ponts, et Tomas en face qui veut les mêmes. Une ville capturée rapporte des fonds à chaque journée et soigne ce qui s’y repose : tenez-en trois, le match est à vous.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Attention à celle du sud-est : elle est désaffectée. Votre infanterie mettra quatre tours à la remettre en service. Un génie le ferait en deux, mais vous n’en avez pas encore.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Trois villes sur quatre : vous avez compris ce qui gagne les matchs longs. Capturer, encaisser, recruter. Demain, on ouvre l’usine.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "villes_premiere",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Vos couleurs flottent sur la ville. Dès la prochaine journée, elle rapporte. Regardez la caisse : avec mille fonds, votre QG recrute une infanterie.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une capture demande vingt points : une infanterie intacte en gagne dix par tour. Blessée, elle est plus lente. Si elle bouge, tout repart de zéro.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "villes_tomas",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une ville pour moi. Le compte est serré, commandant : il faudra venir la reprendre, ou m’en prendre une autre.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "villes_production",
+      "declencheur": {
+        "type": "production"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une recrue sort du QG. Elle jouera au prochain tour : une unité produite ne bouge jamais le jour même.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "villes_journee_4",
+      "declencheur": {
+        "type": "journee",
+        "journee": 4
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Les haies coûtent du mouvement aux véhicules et protègent l’infanterie. Passez par les ponts avec le char, par les bois avec les fantassins.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": [
+      "monde.tournoi.villes_du_bocage"
+    ]
+  }
+}

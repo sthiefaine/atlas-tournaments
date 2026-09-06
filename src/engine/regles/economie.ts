@@ -96,7 +96,7 @@ export function consommerCarburant(
   }
   for (const id of aRetirer) {
     evts.push({ type: 'panne_seche', uniteId: id });
-    mettreHorsJeu(etat, id, evts);
+    mettreHorsJeu(etat, cat, id, evts);
   }
 }
 

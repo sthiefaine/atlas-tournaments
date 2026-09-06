@@ -26,6 +26,13 @@ export interface Gestes {
   surTap?(p: PointEcran): void;
   /** Un clic droit ou un appui long : le geste « annuler » au pointeur. */
   surTapSecondaire?(p: PointEcran): void;
+  /**
+   * Un double-clic, ou un appui long : demander l'inspection de ce qui est
+   * sous le pointeur. Rend vrai si une inspection s'est ouverte ; sinon un appui
+   * long retombe sur `surTapSecondaire`. Le double-clic arrive **après** les
+   * deux taps, qui ont déjà été remontés : il n'en remplace aucun.
+   */
+  surInspecter?(p: PointEcran): boolean;
   /** Le pointeur a bougé sans bouton : survol. */
   surSurvol?(p: PointEcran | null): void;
   /** Un glisser, en delta d'écran depuis la dernière image. */
@@ -44,12 +51,20 @@ export interface OptionsEntrees {
   seuilGlisserPx?: number;
   /** Au-delà, un appui devient un appui long (tap secondaire). */
   seuilAppuiLongMs?: number;
+  /** En deçà, deux taps au même endroit font un double-clic. */
+  seuilDoubleClicMs?: number;
   /** Molette : facteur de zoom par cran. */
   pasMolette?: number;
 }
 
 const SEUIL_GLISSER = 6;
 const SEUIL_APPUI_LONG = 520;
+const SEUIL_DOUBLE_CLIC = 350;
+/**
+ * Deux clics « au même endroit » : une souris bouge toujours d'un ou deux
+ * pixels entre les deux, et une case fait au moins 48 px de côté.
+ */
+const SEUIL_DOUBLE_CLIC_PX = 12;
 const PAS_MOLETTE = 1.12;
 
 /** Traduit un code de touche en intention de jeu, ou `null` si elle ne nous concerne pas. */
@@ -83,6 +98,7 @@ export function brancherEntrees(
 ): () => void {
   const seuilGlisser = options.seuilGlisserPx ?? SEUIL_GLISSER;
   const seuilLong = options.seuilAppuiLongMs ?? SEUIL_APPUI_LONG;
+  const seuilDouble = options.seuilDoubleClicMs ?? SEUIL_DOUBLE_CLIC;
   const pasMolette = options.pasMolette ?? PAS_MOLETTE;
 
   interface Doigt { x: number; y: number; debutX: number; debutY: number; temps: number }
@@ -93,6 +109,8 @@ export function brancherEntrees(
   let vitesseX = 0;
   let vitesseY = 0;
   let appuiLong: ReturnType<typeof setTimeout> | null = null;
+  /** Le dernier tap principal, pour reconnaître un double-clic. */
+  let dernierTap: { x: number; y: number; temps: number } | null = null;
 
   const annulerAppuiLong = (): void => {
     if (appuiLong !== null) clearTimeout(appuiLong);
@@ -120,7 +138,9 @@ export function brancherEntrees(
           appuiLong = null;
           if (!glisse) {
             glisse = true;
-            gestes.surTapSecondaire?.(p);
+            // Un appui long qui inspecte n'annule pas en plus : les deux gestes
+            // se partagent le même doigt, pas le même sens.
+            if (gestes.surInspecter?.(p) !== true) gestes.surTapSecondaire?.(p);
           }
         }, seuilLong);
       }
@@ -174,8 +194,18 @@ export function brancherEntrees(
     if (!doigt) return;
     const p = { x: doigt.x, y: doigt.y };
     if (!glisse && e.type !== 'pointercancel') {
-      if (e.button === 2) gestes.surTapSecondaire?.(p);
-      else gestes.surTap?.(p);
+      if (e.button === 2) {
+        gestes.surTapSecondaire?.(p);
+        dernierTap = null;
+      } else {
+        gestes.surTap?.(p);
+        const double = dernierTap !== null
+          && e.timeStamp - dernierTap.temps <= seuilDouble
+          && Math.hypot(p.x - dernierTap.x, p.y - dernierTap.y) <= SEUIL_DOUBLE_CLIC_PX;
+        // Le double-clic consomme ses deux taps : un troisième repart de zéro.
+        dernierTap = double ? null : { x: p.x, y: p.y, temps: e.timeStamp };
+        if (double) gestes.surInspecter?.(p);
+      }
     } else if (doigts.size === 0) {
       gestes.surLacher?.(vitesseX, vitesseY);
     }

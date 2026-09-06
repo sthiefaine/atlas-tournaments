@@ -35,6 +35,7 @@ import {
   filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
 import { casesObjectifs } from './objectifs';
+import { nomCourtUnite } from './libelles';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
@@ -63,6 +64,13 @@ export interface OptionsJeu {
   commandants?: (CommandantMoteur | null)[];
   /** Reprend la sauvegarde locale si elle correspond au scénario et à la graine. */
   reprendre?: boolean;
+  /**
+   * La clé de sauvegarde locale, **déjà composée par l'appelant** ; par défaut
+   * `cleSauvegarde(scenario.code)`. Le rendu ne sait pas qu'un appareil porte
+   * plusieurs profils de joueur, pas plus qu'il ne sait traduire : la page lui
+   * donne la clé comme elle lui donne des libellés.
+   */
+  cleSauvegarde?: string;
   /** Camp du joueur humain. Toujours 0 dans un scénario canon. */
   camp?: CampId;
   /** Fabrique des peaux que `render/` ne peut pas importer (la 3D). */
@@ -104,9 +112,9 @@ export interface Jeu {
 /** Préfixe des clés de sauvegarde locale. */
 export const PREFIXE_SAUVEGARDE = 'atlas:partie:';
 
-/** La clé de sauvegarde d'un scénario. */
-export function cleSauvegarde(scenarioCle: string): string {
-  return `${PREFIXE_SAUVEGARDE}${scenarioCle}`;
+/** La clé de sauvegarde d'un scénario, sous le préfixe par défaut ou celui de l'appelant. */
+export function cleSauvegarde(scenarioCle: string, prefixe: string = PREFIXE_SAUVEGARDE): string {
+  return `${prefixe}${scenarioCle}`;
 }
 
 /** Le stockage local, ou `null` s'il est indisponible (navigation privée, refus). */
@@ -123,12 +131,12 @@ function stockage(): Storage | null {
   }
 }
 
-/** Lit la sauvegarde d'un scénario, ou `null`. */
-export function lireSauvegarde(scenarioCle: string): (Sauvegarde & { actions: Action[] }) | null {
+/** Lit la sauvegarde d'un scénario, ou `null`. `cle` remplace la clé par défaut. */
+export function lireSauvegarde(scenarioCle: string, cle: string = cleSauvegarde(scenarioCle)): (Sauvegarde & { actions: Action[] }) | null {
   const s = stockage();
   if (!s) return null;
   try {
-    const brut = s.getItem(cleSauvegarde(scenarioCle));
+    const brut = s.getItem(cle);
     if (!brut) return null;
     const valeur = JSON.parse(brut) as Sauvegarde & { actions: Action[] };
     if (typeof valeur?.scenarioCle !== 'string' || !Array.isArray(valeur.actions)) return null;
@@ -139,22 +147,22 @@ export function lireSauvegarde(scenarioCle: string): (Sauvegarde & { actions: Ac
 }
 
 /** Écrit la sauvegarde d'un scénario. Un échec est silencieux : on joue quand même. */
-export function ecrireSauvegarde(sauvegarde: Sauvegarde): void {
+export function ecrireSauvegarde(sauvegarde: Sauvegarde, cle: string = cleSauvegarde(sauvegarde.scenarioCle)): void {
   const s = stockage();
   if (!s) return;
   try {
-    s.setItem(cleSauvegarde(sauvegarde.scenarioCle), JSON.stringify(sauvegarde));
+    s.setItem(cle, JSON.stringify(sauvegarde));
   } catch {
     // Quota plein ou stockage refusé : la partie continue, sans reprise.
   }
 }
 
 /** Efface la sauvegarde d'un scénario. */
-export function effacerSauvegarde(scenarioCle: string): void {
+export function effacerSauvegarde(scenarioCle: string, cle: string = cleSauvegarde(scenarioCle)): void {
   const s = stockage();
   if (!s) return;
   try {
-    s.removeItem(cleSauvegarde(scenarioCle));
+    s.removeItem(cle);
   } catch {
     // Rien à faire : l'absence de sauvegarde est un état valide.
   }
@@ -206,12 +214,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   const commandants = options.commandants ?? commandantsDuScenario(options.scenario);
   const scene = sceneDepuis(options.scenario, options.carte, commandants);
   const adversaire: Adversaire = options.adversaire ?? ADVERSAIRE_PASSIF;
+  const cleLocale = options.cleSauvegarde ?? cleSauvegarde(options.scenario.code);
 
   // --- État initial : partie neuve, ou reprise de la sauvegarde locale.
   let actions: Action[] = [];
   let etat = creerPartie(scene, cat, graine);
   if (options.reprendre) {
-    const sauvegarde = lireSauvegarde(options.scenario.code);
+    const sauvegarde = lireSauvegarde(options.scenario.code, cleLocale);
     if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR) {
       const r = rejouer(scene, cat, { ...sauvegarde, actions: sauvegarde.actions }, commandants);
       etat = r.etat;
@@ -267,7 +276,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
           rafraichir();
           await attendreDialogue();
           if (!vivant) return;
-          if (apres.partie.terminee) effacerSauvegarde(options.scenario.code);
+          if (apres.partie.terminee) effacerSauvegarde(options.scenario.code, cleLocale);
           else if (apres.campCourant !== camp) void tourAdversaire();
         });
       },
@@ -340,7 +349,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       mapgenVersion: etat.mapgenVersion,
       contentVersion: etat.contentVersion,
       actions,
-    });
+    }, cleLocale);
   }
 
   // -------------------------------------------------------------------------
@@ -380,7 +389,15 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
    */
   function annoncer(evenements: readonly EvenementJeu[]): void {
     for (const e of evenements) {
-      if (e.type === 'capture' && e.acquis) {
+      if (e.type === 'remise_en_service') {
+        poserAnnonce(t('combat.batiment_remis_prime', { n: e.prime }));
+      }
+      if (e.type === 'production_revelee' && e.camp === 0) {
+        const liste = Object.entries(e.produites)
+          .map(([cle, n]) => `${n} ${nomCourtUnite(locale, cat, cle)}`)
+          .join(', ');
+        poserAnnonce(liste ? t('combat.production_revelee', { liste }) : t('combat.production_revelee_vide'));
+      } else if (e.type === 'capture' && e.acquis) {
         const terrain = terrainLogique(etat, cat, e.case);
         poserAnnonce(t(CLE_PRISE[terrain ?? ''] ?? 'combat.ville_capturee'));
       }
@@ -443,7 +460,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     attenteIa = false;
     controleur.poserEtat(etat);
     controleur.attendre(false);
-    if (etat.partie.terminee) effacerSauvegarde(options.scenario.code);
+    if (etat.partie.terminee) effacerSauvegarde(options.scenario.code, cleLocale);
     rafraichir();
   }
 
@@ -506,6 +523,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     cible.dataset['etat'] = v.phase;
     cible.dataset['surbrillances'] = String(v.surbrillances.length);
     cible.dataset['selection'] = v.selection ?? '';
+    cible.dataset['inspection'] = v.inspection ?? '';
     cible.dataset['camp'] = String(etat.campCourant);
     cible.dataset['journee'] = String(etat.journee);
     cible.dataset['partie'] = etat.partie.terminee ? 'terminee' : 'en_cours';
@@ -531,7 +549,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     minuteries.clear();
     actions = [];
     etat = creerPartie(scene, cat, graine);
-    effacerSauvegarde(options.scenario.code);
+    effacerSauvegarde(options.scenario.code, cleLocale);
     attenteIa = false;
     annonce = null;
     fileRepliques.length = 0;
@@ -587,6 +605,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       if (c) controleur.poserCurseur(c);
     },
     surAnnuler: () => controleur.annuler(),
+    surInspecter: (c) => controleur.inspecter(c),
     surTouche: (touche) => {
       switch (touche) {
         case 'haut': controleur.bougerCurseur(0, -1); break;
@@ -650,7 +669,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     get etat() { return etat; },
     rendu: rendu.cle,
     salir: () => rafraichir(),
-    oublierSauvegarde: () => effacerSauvegarde(options.scenario.code),
+    oublierSauvegarde: () => effacerSauvegarde(options.scenario.code, cleLocale),
     forcerAmbiance,
     demonter: () => {
       vivant = false;

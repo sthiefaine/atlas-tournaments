@@ -159,6 +159,7 @@ On produit sur un bâtiment **possédé et libre**, en payant le coût comptant.
 | `usine` | `U` | Usine | 3 | 1 | 1 | 1 | 1 | 1 | **oui** | 1 000 | non |
 | `aeroport` | `A` | Aéroport | 3 | 1 | 1 | 1 | 1 | 1 | **oui** | 1 000 | non |
 | `qg` | `H` | QG | 4 | 1 | 1 | 1 | 1 | 1 | **oui** | 1 000 | non |
+| `radar` | `T` | Station radar | 3 | 1 | 1 | 1 | 1 | 1 | **oui** | 500 | non |
 
 `—` signifie infranchissable pour ce type de mouvement (convention de `03-schemas.md` §4 : il n'existe pas de coût infini, seulement une entrée absente).
 
@@ -170,6 +171,8 @@ Notes de conception :
 - **Forêt et montagne cachent** : en brouillard, une unité dessus n'est vue qu'à distance 1.
 - **La rivière est franchissable à pied et en bottes**, pas en roues ni en chenilles. Le pont est donc un point de passage obligé pour les blindés — et un excellent objectif de scénario.
 - Le QG a 4 étoiles : le prendre coûte cher, et c'est voulu.
+- **La station radar** (catalogue 3, 5 septembre 2026) ne produit rien et rapporte moitié moins qu'une ville, mais elle **voit à cinq cases** pour son propriétaire et **brouille les drones adverses à douze cases** (§10 bis). Elle se capture comme une ville.
+- **Un bâtiment peut être désaffecté** (`MapDef.desaffectes`) : ville, usine, aéroport ou station, jamais le QG. Il est neutre, ne rapporte rien, ne produit rien et ne soigne pas tant qu'une unité ne l'a pas **remis en service** (§6 bis).
 
 ---
 
@@ -247,7 +250,7 @@ Le char passe de 100 à 90, soit **9 PV affichés**. L'échange est favorable au
 
 ## 6. La capture
 
-Un bâtiment capturable (`ville`, `usine`, `aeroport`, `qg`) se prend en accumulant **20 points de capture**.
+Un bâtiment capturable (`ville`, `usine`, `aeroport`, `radar`) se prend en accumulant **20 points de capture** ; le **QG en demande 40** (5 septembre 2026) : une infanterie intacte y passe **quatre tours**, sous le feu, et c'est voulu — on ne finit pas un match en deux actions sous le nez du propriétaire.
 
 ```
 pointsCapture += pvAffiches de l'unité qui capture       (1 à 10 par tour)
@@ -264,6 +267,15 @@ Règles :
 - **Le seuil de 20 points est l'unité de compte de tout le projet.** Une fiche pays ou région qui parle d'une capture « plus rapide » ou « plus lente » (Luxembourg, Centre-Val de Loire, Guyane…) exprime un **seuil en points**, jamais un nombre de tours : 10 points = deux fois plus vite, 40 points = deux fois plus lent. Un « cran de capture » n'existe pas ; on dit « point de capture ».
 - **Un pouvoir ou une spécialité peut multiplier les points gagnés par tour**, dans la borne `[0,5 ; 3,0]` (§7.2) — la seule borne multiplicative du jeu qui monte au-dessus de 2,0, et la seule qui descende sous 1,0 pour viser l'adversaire.
 - **Capturer un QG met fin à la partie** : le camp qui le perd est éliminé, et tous ses bâtiments deviennent neutres **[proposition]** (ce qui compte pour les parties à 3 ou 4 camps).
+
+### 6 bis. La remise en service
+
+Un bâtiment **désaffecté** (`MapDef.desaffectes`, jamais un QG) n'appartient à personne et ne sert à rien tant qu'il n'est pas remis en service. La remise en service est une capture à **40 points**, ouverte à deux familles d'unités :
+
+- l'**infanterie** et la **méca**, au rythme habituel de leurs PV affichés — **quatre tours** à pleine force ;
+- le **génie**, seule unité bâtisseuse, qui gagne **le double** de ses PV affichés — **deux tours** à pleine force. Le génie ne capture rien d'autre : un bâtiment en service ne se prend qu'avec un capteur.
+
+À 40 points, le bâtiment sort de la liste des désaffectés, prend les couleurs du camp, et le moteur émet `remise_en_service` puis l'événement `capture` acquis habituel. **Atlas verse une prime de remise en service** au camp qui relance le bâtiment : `PRIME_REMISE_EN_SERVICE` = 1 000 fonds, **doublée (2 000) quand c'est le génie** — quatre tours d'infanterie immobile coûtent déjà assez cher, la prime récompense d'abord le bâtisseur. L'événement porte la `prime`. Il rapporte et produit dès la journée suivante. Un bâtiment en service ne redevient jamais désaffecté : il n'existe aucun système de destruction (`doc/15`). Dans l'interface, l'ordre s'appelle « Remettre en service », jamais « capturer » — on ne capture pas ce qui n'appartient à personne — et le mot « ruine » est banni par la charte (`content/i18n/glossaire.fr.json`) : rien n'est détruit dans les Jeux Tactiques, seulement hors service.
 
 ---
 
@@ -434,6 +446,23 @@ Activé par `Scenario.brouillard`. Quand il est actif, chaque camp ne voit qu'un
 - Une unité indirecte ne peut tirer que sur une case **actuellement visible** par son camp. On ne bombarde pas au jugé.
 - Un ordre de déplacement peut être **interrompu** : si une unité adverse est révélée sur le chemin ou à côté, l'unité s'arrête à la case précédente et son ordre s'achève là, sans suite. Le moteur renvoie l'événement correspondant pour que le rendu joue l'arrêt.
 - **L'état filtré est calculé dans le moteur**, pas dans le rendu (`engine/brouillard.ts`). Le client d'un camp ne reçoit jamais les unités qu'il ne voit pas : c'est une règle d'anti-triche, testée explicitement (`02-architecture.md` §8).
+
+### 10 bis. Drones, brouilleur et station radar (catalogue 3)
+
+Le brouillard a ses yeux et ses aveugles (5 septembre 2026, `src/engine/regles/vision.ts`).
+
+| Unité ou bâtiment | Ce qu'elle fait | Coût |
+|---|---|---:|
+| `drone` — Drone d'observation | Vole, voit à 5, ne tire pas, ne riposte pas. Trait `drone` : **brouillable**. Produit à l'aéroport. | 3 000 |
+| `drone_filaire` — Drone filaire | Vole à 3 cases par tour, voit à 5 (+1 sur montagne), ne tire pas. **Pas** de trait `drone` : sa liaison ne se brouille pas, c'est ce qu'on paie quatre fois plus cher. | 12 000 |
+| `brouilleur` — Brouilleur mobile | Roule à 6, ne tire pas. Trait `brouilleur` : brouille tout drone adverse à **10 cases** de Manhattan. Produit à l'usine. | 5 000 |
+| `radar` — Station radar | Bâtiment capturable : son propriétaire **voit à 5 cases** autour (2 pour un autre bâtiment) et brouille tout drone adverse à **12 cases**. | terrain |
+
+**Brouillage.** Un drone brouillé garde **un dixième** de sa vision, arrondi, jamais moins d'une case : à cinq de vision, il ne voit plus que la case d'à côté. Le brouillage se lit à chaque calcul de vision, sans état : entrer et sortir du rayon suffit. Une station neutre ne brouille personne. Les rayons sont des constantes du moteur (`RAYON_BROUILLEUR_MOBILE`, `RAYON_STATION_RADAR`) : sur une carte de douze cases de large, une station couvre toute la carte — c'est une arme de grande carte, et la routine map devra en tenir compte avant d'en poser sur un 12 × 10.
+
+**Le drone abattu lit la production.** Un drone (trait `drone`) mis hors jeu **au-dessus d'un bâtiment adverse** — capturé par un antiaérien, tombé en panne sèche — a eu le temps de voir ce qui en sortait : son camp reçoit `production_revelee`, avec tout ce que le propriétaire du bâtiment a produit depuis le début du match, type par type. C'est la seule consolation d'un œil perdu, et une raison de le risquer au-dessus d'une usine plutôt qu'au-dessus d'une plaine.
+
+**Ce que cela ne fait pas.** Le brouillage n'agit que sur le trait `drone` : recon, hélicoptère, infanterie sur une montagne voient comme avant. Il ne touche ni l'attaque, ni le mouvement, ni la capture.
 
 ---
 
@@ -743,7 +772,7 @@ La **Commission d'homologation d'Atlas** autorise de nouveaux matériels au fil 
 
 **Une unité nouvelle n'ajoute pas une ligne de code.** Elle se décrit entièrement par un objet `UnitType` (`03-schemas.md` §3) : type de mouvement, coût, mouvement, portée, vision, munitions, carburant, ligne et colonne de la table de dégâts, **au plus deux traits** pris dans une liste fermée, et une **silhouette** déclarative. Les dix traits sont implémentés **une seule fois** dans le moteur, et les dix unités de base les portent déjà (§3) : c'est ce qui rend la promesse tenable. Une candidate qui demanderait un comportement hors de cette liste est refusée — pas ajournée, refusée. Le catalogue s'enrichit, le moteur ne bouge pas.
 
-### 13.2 Les dix traits, précisément
+### 13.2 Les treize traits, précisément
 
 | Trait | Ce qu'il fait exactement | Ce qu'il impose au reste de la fiche | Qui le porte aujourd'hui |
 |---|---|---|---|
@@ -757,6 +786,9 @@ La **Commission d'homologation d'Atlas** autorise de nouveaux matériels au fil 
 | `vision_etendue` | Voit loin, et **+1 de vision supplémentaire sur `montagne`**, cumulé avec le +2 du §10. | `vision ≥ 5` | `recon` |
 | `ravitaillement` | En guise de suite d'ordre, remet munitions et carburant au plein d'**une** unité amie adjacente, une fois par tour. Ne soigne pas. | toutes les valeurs de `degats` à 0, `munitions === null` | personne |
 | `tout_terrain` | Coût 1 sur `montagne` et sur `riviere`, quel que soit le `typeMouvement`. | — | `meca` |
+| `genie` | Construit (pont sur rivière, route en montagne, 1 500 fonds) et **remet en service** un bâtiment désaffecté deux fois plus vite qu'un capteur (§6 bis). Ne capture rien d'autre. | — | `genie` |
+| `drone` | Œil volant **brouillable** : à portée d'un `brouilleur` ou d'une station `radar` adverse, sa vision tombe à un dixième (§10 bis). | `vol`, toutes les valeurs de `degats` à 0 | `drone` |
+| `brouilleur` | Brouille tout `drone` adverse à dix cases. | toutes les valeurs de `degats` à 0, jamais avec `drone` | `brouilleur` |
 
 Trois traits ne sont portés par personne aujourd'hui — `amphibie`, `furtif_nuit`, `ravitaillement`. Ce sont des **places réservées** : ils existent pour que le paquet naval, le climat et la logistique aient un vocabulaire prêt le jour où une candidate les demande.
 

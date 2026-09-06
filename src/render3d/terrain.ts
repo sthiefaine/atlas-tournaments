@@ -1,5 +1,5 @@
 /**
- * Le plateau : maillage de la grille, mélange de matières, eau, routes, grille.
+ * Le plateau : maillage de la grille, mélange de matières, eau, voies, grille.
  *
  * Le maillage vient directement de `geometrie.ts` : trois subdivisions par case,
  * altitude prise dans le champ continu `hauteurEn`, **sommets partagés** — deux
@@ -17,16 +17,23 @@
  * L'eau est un plan séparé, sous le niveau des lits de rivière et des fonds
  * marins : partout où le terrain remonte au-dessus d'elle, le tampon de
  * profondeur la cache tout seul.
+ *
+ * Le maillage lit `hauteurSol`, la **surface** lit `hauteurEn` : les deux ne
+ * diffèrent que sous les ponts, où le sol se creuse au niveau du lit pendant
+ * que le tablier — et tout ce qui roule dessus — reste à hauteur de berge.
  */
 
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 import type { Biome } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import {
-  CASE, construireSplat, hauteurEn, NIVEAU_EAU, type GrilleTerrain,
+  axePont, CASE, construireSplat, hauteurEn, hauteurSol, NIVEAU_EAU, pieceDeCase,
+  terrainBorne, type GrilleTerrain,
 } from './geometrie';
-import { jeuMatiere, normalesEau, textureRoute } from './textures';
+import { jeuMatiere, normalesEau } from './textures';
+import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
 
 /** Subdivisions par case : trois suffisent à arrondir un col de montagne. */
 const SUBDIVISIONS = 3;
@@ -39,6 +46,11 @@ export interface Plateau {
   readonly groupe: THREE.Group;
   /** Le maillage du sol : c'est lui que le lancer de rayon interroge. */
   readonly sol: THREE.Mesh;
+  /**
+   * Les tabliers de pont, interrogés **avant** le sol : sous un pont le sol se
+   * creuse jusqu'au lit, et un clic sur le tablier tombait dans l'eau d'à côté.
+   */
+  readonly ponts: THREE.Mesh;
   /** Altitude du sol en un point du monde. */
   hauteurEn(x: number, z: number): number;
   /** Applique une ambiance (teinte, neige, humidité, couleur de l'eau). */
@@ -47,7 +59,7 @@ export interface Plateau {
   avancer(ms: number): boolean;
   /**
    * Relit la grille et remet le sol à jour : altitudes, mélange de matières,
-   * routes.
+   * voies et ponts.
    *
    * Sans cela, le plateau reste celui du **premier jour**. C'est ce qui rendait
    * les marées invisibles : `modifTerrain` fait lire une case `mer` comme
@@ -133,7 +145,7 @@ function geometrieSol(g: GrilleTerrain): THREE.BufferGeometry {
       const x = i * pas;
       const z = j * pas;
       positions[k * 3] = x;
-      positions[k * 3 + 1] = hauteurEn(g, x, z);
+      positions[k * 3 + 1] = hauteurSol(g, x, z);
       positions[k * 3 + 2] = z;
       uvs[k * 2] = x / (g.largeur * CASE);
       uvs[k * 2 + 1] = z / (g.hauteur * CASE);
@@ -170,8 +182,8 @@ function geometrieSocle(g: GrilleTerrain): THREE.BufferGeometry {
   const mur = (
     x0: number, z0: number, x1: number, z1: number, nx: number, nz: number,
   ): void => {
-    const y0 = hauteurEn(g, x0, z0) + 0.001;
-    const y1 = hauteurEn(g, x1, z1) + 0.001;
+    const y0 = hauteurSol(g, x0, z0) + 0.001;
+    const y1 = hauteurSol(g, x1, z1) + 0.001;
     positions.push(x0, y0, z0, x0, bas, z0, x1, bas, z1);
     positions.push(x0, y0, z0, x1, bas, z1, x1, y1, z1);
     for (let i = 0; i < 6; i += 1) normales.push(nx, 0, nz);
@@ -195,42 +207,45 @@ function geometrieSocle(g: GrilleTerrain): THREE.BufferGeometry {
   return geo;
 }
 
-/** Les bandes de route : un carré central par case, et un raccord par voisine. */
-function geometrieRoutes(g: GrilleTerrain): THREE.BufferGeometry | null {
+/** Hauteur du décalque de voie au-dessus de la surface. */
+const HAUT_VOIE = 0.022;
+
+/**
+ * Le décalque des voies : pour chaque case de route ou de pont, une nappe de
+ * `SUBDIVISIONS × SUBDIVISIONS` quads **aux mêmes sommets que le sol**, donc
+ * exactement parallèle à lui — échantillonnée plus fin, elle passerait sous les
+ * facettes du maillage entre deux sommets —, et des UV tournés vers la tuile
+ * de l'atlas que `pieceDeCase` a choisie. Une seule géométrie, un seul appel.
+ */
+function geometrieVoies(g: GrilleTerrain): THREE.BufferGeometry | null {
   const positions: number[] = [];
   const uvs: number[] = [];
   const indices: number[] = [];
-  const estRoute = (x: number, y: number): boolean => {
-    if (x < 0 || y < 0 || x >= g.largeur || y >= g.hauteur) return false;
-    const t = g.terrainDe(x, y);
-    return t === 'route' || t === 'pont';
-  };
-  const HAUT = 0.022;
-  const DEMI = 0.29;
-
-  const quad = (
-    x0: number, z0: number, x1: number, z1: number, vertical: boolean,
-  ): void => {
-    const base = positions.length / 3;
-    const coins: [number, number][] = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]];
-    for (const [x, z] of coins) {
-      positions.push(x, hauteurEn(g, x, z) + HAUT, z);
-    }
-    if (vertical) uvs.push(0, 0, 1, 0, 1, 1, 0, 1);
-    else uvs.push(0, 0, 0, 1, 1, 1, 1, 0);
-    indices.push(base, base + 2, base + 1, base, base + 3, base + 2);
-  };
-
+  const pas = CASE / SUBDIVISIONS;
   for (let y = 0; y < g.hauteur; y += 1) {
     for (let x = 0; x < g.largeur; x += 1) {
-      if (!estRoute(x, y)) continue;
-      const cx = x * CASE + CASE / 2;
-      const cz = y * CASE + CASE / 2;
-      quad(cx - DEMI, cz - DEMI, cx + DEMI, cz + DEMI, true);
-      if (estRoute(x, y - 1)) quad(cx - DEMI, cz - CASE / 2, cx + DEMI, cz - DEMI, true);
-      if (estRoute(x, y + 1)) quad(cx - DEMI, cz + DEMI, cx + DEMI, cz + CASE / 2, true);
-      if (estRoute(x - 1, y)) quad(cx - CASE / 2, cz - DEMI, cx - DEMI, cz + DEMI, false);
-      if (estRoute(x + 1, y)) quad(cx + DEMI, cz - DEMI, cx + CASE / 2, cz + DEMI, false);
+      const piece = pieceDeCase(g, x, y);
+      if (!piece) continue;
+      const base = positions.length / 3;
+      for (let j = 0; j <= SUBDIVISIONS; j += 1) {
+        for (let i = 0; i <= SUBDIVISIONS; i += 1) {
+          const px = x * CASE + i * pas;
+          const pz = y * CASE + j * pas;
+          positions.push(px, hauteurEn(g, px, pz) + HAUT_VOIE, pz);
+          const [u, v] = uvAtlas(piece.forme, piece.rotation, i / SUBDIVISIONS, j / SUBDIVISIONS);
+          uvs.push(u, v);
+        }
+      }
+      for (let j = 0; j < SUBDIVISIONS; j += 1) {
+        for (let i = 0; i < SUBDIVISIONS; i += 1) {
+          const a = base + j * (SUBDIVISIONS + 1) + i;
+          const b = a + 1;
+          const c = a + (SUBDIVISIONS + 1);
+          const d = c + 1;
+          // Même diagonale que le sol : les deux nappes restent parallèles.
+          indices.push(a, c, b, b, c, d);
+        }
+      }
     }
   }
   if (positions.length === 0) return null;
@@ -242,13 +257,68 @@ function geometrieRoutes(g: GrilleTerrain): THREE.BufferGeometry | null {
   return geo;
 }
 
+/** Les cotes d'un pont, en cases : tablier, parapets, piles. */
+const PONT = {
+  /** Largeur hors tout du tablier : un peu plus que la chaussée et ses accotements. */
+  largeur: 0.64,
+  epaisseurTablier: 0.07,
+  /** Le dessus du tablier, juste sous le décalque de voie. */
+  dessus: -0.006,
+  parapet: { largeur: 0.05, hauteur: 0.11 },
+  pile: { cote: 0.1, long: 0.33, travers: 0.2, fond: -0.36 },
+} as const;
+
+/**
+ * Les ponts : un tablier, deux parapets et quatre piles par case, dans l'axe
+ * que `axePont` a lu sur les voisines, le tout **fusionné** en une géométrie.
+ * Les piles descendent sous le lit : elles ne flottent pas quand la marée
+ * baisse. Le tablier est plat à la hauteur du terrain `pont`, c'est-à-dire là
+ * où `hauteurEn` pose les unités qui le traversent.
+ */
+function geometriePonts(g: GrilleTerrain): THREE.BufferGeometry | null {
+  const morceaux: THREE.BufferGeometry[] = [];
+  const boite = (l: number, h: number, p: number, x: number, y: number, z: number): THREE.BufferGeometry =>
+    new THREE.BoxGeometry(l, h, p).translate(x, y, z);
+  for (let y = 0; y < g.hauteur; y += 1) {
+    for (let x = 0; x < g.largeur; x += 1) {
+      if (terrainBorne(g, x, y) !== 'pont') continue;
+      const axe = axePont(g, x, y);
+      // Composé dans l'axe nord-sud (le long de Z), puis tourné s'il le faut.
+      const parts = [
+        boite(PONT.largeur, PONT.epaisseurTablier, CASE, 0, PONT.dessus - PONT.epaisseurTablier / 2, 0),
+      ];
+      for (const cote of [-1, 1]) {
+        const bord = (PONT.largeur - PONT.parapet.largeur) / 2 * cote;
+        parts.push(boite(PONT.parapet.largeur, PONT.parapet.hauteur, CASE, bord, PONT.dessus + PONT.parapet.hauteur / 2, 0));
+        for (const bout of [-1, 1]) {
+          const haut = PONT.dessus - PONT.epaisseurTablier;
+          parts.push(boite(
+            PONT.pile.cote, haut - PONT.pile.fond, PONT.pile.cote,
+            PONT.pile.travers * cote, (haut + PONT.pile.fond) / 2, PONT.pile.long * bout,
+          ));
+        }
+      }
+      const pont = mergeGeometries(parts);
+      parts.forEach((p) => p.dispose());
+      if (!pont) continue;
+      if (axe === 'eo') pont.rotateY(Math.PI / 2);
+      pont.translate(x * CASE + CASE / 2, 0, y * CASE + CASE / 2);
+      morceaux.push(pont);
+    }
+  }
+  if (morceaux.length === 0) return null;
+  const geo = mergeGeometries(morceaux);
+  morceaux.forEach((m) => m.dispose());
+  return geo;
+}
+
 /** La grille au sol : des lignes fines, posées juste au-dessus du terrain. */
 function geometrieGrille(g: GrilleTerrain): THREE.BufferGeometry {
   const positions: number[] = [];
   const pas = CASE / SUBDIVISIONS;
   const HAUT = 0.012;
   const ligne = (x0: number, z0: number, x1: number, z1: number): void => {
-    positions.push(x0, hauteurEn(g, x0, z0) + HAUT, z0, x1, hauteurEn(g, x1, z1) + HAUT, z1);
+    positions.push(x0, hauteurSol(g, x0, z0) + HAUT, z0, x1, hauteurSol(g, x1, z1) + HAUT, z1);
   };
   for (let x = 0; x <= g.largeur; x += 1) {
     for (let j = 0; j < g.hauteur * SUBDIVISIONS; j += 1) {
@@ -332,22 +402,51 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   socle.receiveShadow = true;
   groupe.add(socle);
 
-  const geoRoutes = geometrieRoutes(g);
-  const texRoute = textureRoute(doc);
-  let routes: THREE.Mesh | null = null;
-  const matRoute = new THREE.MeshStandardMaterial({
-    map: texRoute,
-    roughness: 0.86,
+  // --- Les voies : un décalque par case de route ou de pont, tous dans une
+  //     seule géométrie. Le décalque écrit la profondeur malgré sa
+  //     transparence : sans cela, le plan d'eau — dessiné après lui — repeindrait
+  //     la chaussée d'un pont, puisque le sol sous le tablier est un lit de
+  //     rivière. `alphaTest` jette les pixels vides pour qu'ils ne le fassent pas.
+  const apparence = APPARENCES[biome];
+  const texVoies = textureVoies(doc, biome);
+  const matVoie = new THREE.MeshStandardMaterial({
+    map: texVoies,
+    roughness: 0.88,
     metalness: 0,
+    transparent: true,
+    alphaTest: 0.03,
     polygonOffset: true,
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -2,
   });
-  if (geoRoutes) {
-    routes = new THREE.Mesh(geoRoutes, matRoute);
-    routes.receiveShadow = true;
-    groupe.add(routes);
+  const voies = new THREE.Mesh(new THREE.BufferGeometry(), matVoie);
+  voies.name = 'voies';
+  voies.receiveShadow = true;
+  voies.visible = false;
+  groupe.add(voies);
+
+  const matPont = new THREE.MeshStandardMaterial({
+    color: apparence.pont,
+    roughness: 0.82,
+    metalness: 0,
+  });
+  const ponts = new THREE.Mesh(new THREE.BufferGeometry(), matPont);
+  ponts.name = 'ponts';
+  ponts.castShadow = true;
+  ponts.receiveShadow = true;
+  ponts.visible = false;
+  groupe.add(ponts);
+
+  /** Recoud voies et ponts sur une grille, ou les cache s'il n'y en a plus. */
+  function majVoies(suivante: GrilleTerrain): void {
+    for (const [maille, batir] of [[voies, geometrieVoies], [ponts, geometriePonts]] as const) {
+      const geo = batir(suivante);
+      maille.geometry.dispose();
+      maille.geometry = geo ?? new THREE.BufferGeometry();
+      maille.visible = geo !== null;
+    }
   }
+  majVoies(g);
 
   const matGrille = new THREE.LineBasicMaterial({
     color: 0x0a1220, transparent: true, opacity: 0.17, depthWrite: false,
@@ -377,7 +476,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   for (let y = 0; y < g.hauteur; y += 1) {
     for (let x = 0; x < g.largeur; x += 1) {
       const i = (y * g.largeur + x) * 4;
-      fonds[i] = Math.round((hauteurEn(g, x + 0.5, y + 0.5) + 0.4) / 1.4 * 255);
+      fonds[i] = Math.round((hauteurSol(g, x + 0.5, y + 0.5) + 0.4) / 1.4 * 255);
       fonds[i + 3] = 255;
     }
   }
@@ -427,6 +526,9 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   const eau = new THREE.Mesh(new THREE.PlaneGeometry(debord, debord, 1, 1), matEau);
   eau.rotation.x = -Math.PI / 2;
   eau.position.set((g.largeur * CASE) / 2, NIVEAU_EAU, (g.hauteur * CASE) / 2);
+  // Un pont porte son ombre sur l'eau qu'il franchit : c'est elle qui dit
+  // qu'il est au-dessus, et non posé dessus.
+  eau.receiveShadow = true;
   eau.renderOrder = 2;
   groupe.add(eau);
 
@@ -461,23 +563,10 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     mutation = null;
   }
 
-  /** Recoud le ruban de bitume sur une grille donnée, ou le cache s'il n'y a
-   * plus de route. */
-  function majRoutes(suivante: GrilleTerrain): void {
-    const geoRoutes = geometrieRoutes(suivante);
-    if (routes && geoRoutes) {
-      routes.geometry.dispose();
-      routes.geometry = geoRoutes;
-      routes.visible = true;
-    } else if (routes) {
-      routes.visible = false;
-      geoRoutes?.dispose();
-    }
-  }
-
   return {
     groupe,
     sol,
+    ponts,
     hauteurEn: (x, z) => hauteurEn(terrain, x, z),
 
     majTerrain(suivante: GrilleTerrain, duree = 0): void {
@@ -505,7 +594,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         splat.needsUpdate = true;
         sol.geometry.dispose();
         sol.geometry = neuve;
-        majRoutes(suivante);
+        majVoies(suivante);
         return;
       }
       if (duree > 0 && memeMaillage) {
@@ -526,15 +615,20 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         (splat.image.data as Uint8Array).set(donnees);
         splat.needsUpdate = true;
       }
-      majRoutes(suivante);
+      majVoies(suivante);
     },
 
     appliquerAmbiance(p: ParametresAmbiance): void {
       matSol.color.set(p.teinteSol);
       matSocle.color.set(p.teinteSol).multiplyScalar(0.55);
-      // Le bitume ne prend qu'un soupçon de la teinte de saison : une route qui
-      // vire au sable en automne se lit comme un chemin de terre.
-      matRoute.color.set(0xffffff).lerp(new THREE.Color(p.teinteSol), 0.1);
+      // Le revêtement ne prend qu'un soupçon de la teinte de saison : une route
+      // qui vire au sable en automne se lit comme un chemin de terre. La neige
+      // qui tombe, elle, le blanchit à moitié — jamais tout à fait, une voie
+      // déneigée reste lisible, c'est même ce qui la rend utile.
+      matVoie.color.set(0xffffff).lerp(new THREE.Color(p.teinteSol), 0.1)
+        .lerp(new THREE.Color(0xf2f5f8), p.neigeSol * 0.5);
+      matPont.color.set(apparence.pont).lerp(new THREE.Color(0xf2f5f8), p.neigeSol * 0.35);
+      matVoie.roughness = 0.88 - p.mouille * 0.45;
       uniformes.uNeige.value = Math.max(p.neigeSol, biome === 'neige' ? 0.78 : 0);
       uniformes.uMouille.value = p.mouille;
       matEau.color.set(p.eau.couleur);
@@ -588,16 +682,18 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       sol.geometry.dispose();
       socle.geometry.dispose();
       geoGrille.dispose();
-      routes?.geometry.dispose();
+      voies.geometry.dispose();
+      ponts.geometry.dispose();
       eau.geometry.dispose();
       matSol.dispose();
       matSocle.dispose();
-      matRoute.dispose();
+      matVoie.dispose();
+      matPont.dispose();
       matGrille.dispose();
       matEau.dispose();
       splat.dispose();
       tFonds.dispose();
-      texRoute.dispose();
+      texVoies.dispose();
       nEau.dispose();
       for (const j of [herbe, terre, roche, sable, neige]) {
         j.albedo.dispose();

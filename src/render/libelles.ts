@@ -14,7 +14,9 @@
 
 import type { Catalogue } from '../engine/index';
 import { resoudre } from '../i18n/index';
-import type { CleTerrain, CleUnite, Meteo, PhaseJour, Saison } from '../schemas/types';
+import type {
+  CleTerrain, CleUnite, Meteo, PhaseJour, Saison, Trait, TypeMouvement,
+} from '../schemas/types';
 
 /** Un `t()` déjà lié à la langue. */
 export type Traduire = (cle: string, params?: Record<string, string | number>) => string;
@@ -61,4 +63,14 @@ export function libelleMeteo(t: Traduire, m: Meteo): string {
 /** Libellé d'une phase du jour. */
 export function libellePhase(t: Traduire, p: PhaseJour): string {
   return t(p === 'nuit' ? 'hud.nuit' : 'hud.jour');
+}
+
+/** Libellé d'un type de mouvement (à pied, chenilles, aérien…). */
+export function libelleMouvement(t: Traduire, m: TypeMouvement): string {
+  return t(`mouvement.${m}`);
+}
+
+/** Libellé d'un trait d'unité : la liste fermée de `04-gameplay.md` §13.2. */
+export function libelleTrait(t: Traduire, tr: Trait): string {
+  return t(`trait.${tr}`);
 }

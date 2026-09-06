@@ -1,5 +1,5 @@
 {
-  "catalogueVersion": 2,
+  "catalogueVersion": 3,
   "unites": [
     {
       "cle": "infanterie",
@@ -39,7 +39,10 @@
         "antiair": 55,
         "helico": 25,
         "transport": 70,
-        "genie": 55
+        "genie": 55,
+        "drone": 35,
+        "drone_filaire": 35,
+        "brouilleur": 70
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -85,7 +88,10 @@
         "antiair": 70,
         "helico": 30,
         "transport": 85,
-        "genie": 65
+        "genie": 65,
+        "drone": 40,
+        "drone_filaire": 40,
+        "brouilleur": 85
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -134,7 +140,10 @@
         "antiair": 12,
         "helico": 0,
         "transport": 70,
-        "genie": 70
+        "genie": 70,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 60
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -181,7 +190,10 @@
         "antiair": 75,
         "helico": 0,
         "transport": 90,
-        "genie": 75
+        "genie": 75,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 85
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -229,7 +241,10 @@
         "antiair": 105,
         "helico": 0,
         "transport": 125,
-        "genie": 95
+        "genie": 95,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 105
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -278,7 +293,10 @@
         "antiair": 75,
         "helico": 0,
         "transport": 95,
-        "genie": 90
+        "genie": 90,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 80
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -327,7 +345,10 @@
         "antiair": 85,
         "helico": 0,
         "transport": 105,
-        "genie": 95
+        "genie": 95,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 90
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -377,7 +398,10 @@
         "antiair": 45,
         "helico": 120,
         "transport": 50,
-        "genie": 105
+        "genie": 105,
+        "drone": 125,
+        "drone_filaire": 125,
+        "brouilleur": 60
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -426,7 +450,10 @@
         "antiair": 6,
         "helico": 65,
         "transport": 75,
-        "genie": 75
+        "genie": 75,
+        "drone": 85,
+        "drone_filaire": 85,
+        "brouilleur": 55
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -481,7 +508,10 @@
         "antiair": 0,
         "helico": 0,
         "transport": 0,
-        "genie": 0
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -526,7 +556,10 @@
         "antiair": 33,
         "helico": 0,
         "transport": 42,
-        "genie": 33
+        "genie": 33,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 42
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -544,7 +577,230 @@
         "antiair": 105,
         "helico": 75,
         "transport": 0,
-        "genie": 33
+        "genie": 33,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      }
+    },
+    {
+      "cle": "drone",
+      "nom": "Drone d’observation",
+      "nomCourt": "Drone",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "drone"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "plateau",
+        "modules": [
+          "antenne"
+        ],
+        "taille": 1
+      },
+      "cout": 3000,
+      "mouvement": 6,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 5,
+      "munitions": null,
+      "carburant": {
+        "max": 40,
+        "parCase": 1,
+        "parTour": 2
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-05",
+        "catalogue": 3
+      },
+      "subitDegats": {
+        "infanterie": 35,
+        "meca": 40,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 125,
+        "helico": 85,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      }
+    },
+    {
+      "cle": "drone_filaire",
+      "nom": "Drone filaire",
+      "nomCourt": "Filaire",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "vision_etendue"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "plateau",
+        "modules": [
+          "antenne",
+          "panneaux_solaires"
+        ],
+        "taille": 1
+      },
+      "cout": 12000,
+      "mouvement": 3,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 5,
+      "munitions": null,
+      "carburant": {
+        "max": 30,
+        "parCase": 1,
+        "parTour": 1
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-05",
+        "catalogue": 3
+      },
+      "subitDegats": {
+        "infanterie": 35,
+        "meca": 40,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 125,
+        "helico": 85,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      }
+    },
+    {
+      "cle": "brouilleur",
+      "nom": "Brouilleur mobile",
+      "nomCourt": "Brouilleur",
+      "statut": "homologuee",
+      "traits": [
+        "brouilleur"
+      ],
+      "silhouette": {
+        "base": "roues",
+        "corps": "plateau",
+        "modules": [
+          "radar",
+          "antenne"
+        ],
+        "taille": 2
+      },
+      "cout": 5000,
+      "mouvement": 6,
+      "typeMouvement": "roues",
+      "domaine": "terre",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": null,
+      "carburant": {
+        "max": 80,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-05",
+        "catalogue": 3
+      },
+      "subitDegats": {
+        "infanterie": 70,
+        "meca": 85,
+        "recon": 60,
+        "char_leger": 85,
+        "char_lourd": 105,
+        "artillerie": 80,
+        "roquettes": 90,
+        "antiair": 60,
+        "helico": 55,
+        "transport": 0,
+        "genie": 42,
+        "drone": 0,
+        "drone_filaire": 0,
+        "brouilleur": 0
       }
     }
   ]

@@ -18,11 +18,11 @@ import type {
 import { constructionsPossibles } from '../../engine/regles/genie';
 import { degatsBase, produitesPar } from '../../engine/catalogue';
 import { terrainBrut, terrainLogique } from '../../engine/hooks';
-import { peutCapturerIci, pointsGagnes, SEUIL_CAPTURE } from '../../engine/regles/capture';
+import { peutCapturerIci, pointsGagnes, seuilCapture } from '../../engine/regles/capture';
 import { peutViser } from '../../engine/regles/combat';
 import { verifierProduction } from '../../engine/regles/economie';
 import { cheminVers, pointsMouvement, portee } from '../../engine/regles/mouvement';
-import { porte, pvAffiches } from '../../engine/types';
+import { cleCase, porte, pvAffiches } from '../../engine/types';
 import type { Case, CampId } from '../../schemas/index';
 import {
   armeeParType, capteur, compterCapteurs, degatsAttendus, distances, memoire,
@@ -202,8 +202,9 @@ export function meilleureOption(
         const points = pointsGagnes(etat, cat, fictive);
         const terrain = terrainBrut(etat, cat, c);
         const facteur = terrain === 'qg' ? poids.qg : 1;
-        const acheve = points >= SEUIL_CAPTURE ? 1.5 : 1;
-        retenir(base + poids.capture * (points / SEUIL_CAPTURE) * facteur * acheve, c, { type: 'capturer' });
+        const seuil = seuilCapture(etat, cat, fictive);
+        const acheve = points >= seuil ? 1.5 : 1;
+        retenir(base + poids.capture * (points / seuil) * facteur * acheve, c, { type: 'capturer' });
       }
     }
 
@@ -242,6 +243,9 @@ export function meilleureOption(
   };
 }
 
+/** Distance à laquelle un capteur adverse justifie de boucher le QG d'une recrue. */
+const RAYON_MENACE_QG = 8;
+
 /** Achat : d'abord de quoi capturer, ensuite ce qui contre le mix adverse. */
 export function meilleureProduction(
   etat: EtatPartie, cat: Catalogue, camp: CampId, poids: Poids,
@@ -253,7 +257,20 @@ export function meilleureProduction(
   const mienne = armeeParType(etat, camp);
   const budget = Math.max(0, caisse.fonds * poids.engagement);
   let meilleur: { score: number; action: Action } | null = null;
-  for (const usine of usinesLibres(etat, cat, camp)) {
+  // Le QG ne sert de chaîne de montage qu'en dernier recours : une recrue posée
+  // dessus chaque journée le rend imprenable par occupation, et un QG qu'on ne
+  // peut jamais prendre vide la condition de victoire `capture_qg` de son sens.
+  // Sauf quand un capteur adverse est déjà à portée : là, boucher le QG d'une
+  // recrue est la seule défense qui ne coûte pas un tour.
+  const caisseQg = caisse.qgCase;
+  const menace = caisseQg !== null && etat.unites.some((u) => {
+    if (u.camp === camp || u.dansTransport || !capteur(cat, u)) return false;
+    const [x, y] = caisseQg.split(',');
+    return Math.abs(u.x - Number(x)) + Math.abs(u.y - Number(y)) <= RAYON_MENACE_QG;
+  });
+  const libres = usinesLibres(etat, cat, camp);
+  const horsQg = menace ? libres : libres.filter((c) => cleCase(c) !== caisseQg);
+  for (const usine of horsQg.length > 0 ? horsQg : libres) {
     const terrain = terrainLogique(etat, cat, usine);
     if (terrain === null) continue;
     for (const cle of produitesPar(cat, terrain)) {

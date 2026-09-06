@@ -10,8 +10,44 @@ import type { Case, CampId } from '../../schemas/index';
 import { brouillardActif, foretCache } from '../climat/index';
 import { dansCarte, terrainLogique } from '../hooks';
 import type { Catalogue, EtatPartie, Unite } from '../types';
-import { cleCase, manhattan, porte } from '../types';
+import { cleCase, depuisCle, manhattan, porte } from '../types';
 import { additif } from './modificateurs';
+
+/**
+ * Brouillage (`04-gameplay.md` §10 bis). Un drone est un œil qu'on peut
+ * aveugler : à portée d'un brouilleur mobile adverse ou d'une station radar
+ * adverse, il perd 90 % de sa vision. Les rayons sont en cases de Manhattan.
+ * Un drone filaire n'est pas un `drone` au sens du trait : sa liaison ne se
+ * brouille pas, c'est ce qu'on paie quatre fois plus cher.
+ */
+export const RAYON_BROUILLEUR_MOBILE = 10;
+export const RAYON_STATION_RADAR = 12;
+/** Ce qu'il reste à un drone brouillé : un dixième, jamais moins d'une case. */
+export const PART_VISION_BROUILLEE = 0.1;
+/** Une station radar possédée voit à cinq cases, contre deux pour tout autre bâtiment. */
+export const VISION_STATION_RADAR = 5;
+
+/** Vrai si un drone adverse posé sur cette case serait brouillé par ce camp. */
+export function brouilleParCamp(etat: EtatPartie, cat: Catalogue, camp: CampId, c: Case): boolean {
+  for (const z of etat.unites) {
+    if (z.camp !== camp || z.dansTransport) continue;
+    const t = cat.unites[z.type];
+    if (t && porte(t, 'brouilleur') && manhattan(z, c) <= RAYON_BROUILLEUR_MOBILE) return true;
+  }
+  for (const [k, proprio] of Object.entries(etat.proprietaires)) {
+    if (proprio !== camp) continue;
+    const station = depuisCle(k);
+    if (terrainLogique(etat, cat, station) === 'radar' && manhattan(station, c) <= RAYON_STATION_RADAR) return true;
+  }
+  return false;
+}
+
+/** Vrai si cette unité est un drone actuellement brouillé par un adversaire. */
+export function estBrouillee(etat: EtatPartie, cat: Catalogue, u: Unite): boolean {
+  const type = cat.unites[u.type];
+  if (!type || !porte(type, 'drone')) return false;
+  return etat.camps.some((c) => c.id !== u.camp && !c.elimine && brouilleParCamp(etat, cat, c.id, u));
+}
 
 /** Portée de vision d'une unité, climat compris. */
 export function visionUnite(etat: EtatPartie, cat: Catalogue, u: Unite): number {
@@ -29,6 +65,7 @@ export function visionUnite(etat: EtatPartie, cat: Catalogue, u: Unite): number 
     v += 2;
     if (porte(type, 'vision_etendue')) v += 1;
   }
+  if (estBrouillee(etat, cat, u)) v = Math.round(v * PART_VISION_BROUILLEE);
   return Math.max(1, v);
 }
 
@@ -97,8 +134,8 @@ export function casesVisibles(etat: EtatPartie, cat: Catalogue, camp: CampId): S
   }
   for (const [k, proprio] of Object.entries(etat.proprietaires)) {
     if (proprio !== camp) continue;
-    const [x, y] = k.split(',');
-    ajouter({ x: Number(x), y: Number(y) }, 2);
+    const c = depuisCle(k);
+    ajouter(c, terrainLogique(etat, cat, c) === 'radar' ? VISION_STATION_RADAR : 2);
   }
   memo.set(`cases|${camp}`, vues);
   return vues;

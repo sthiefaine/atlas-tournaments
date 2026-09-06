@@ -373,10 +373,11 @@ export const STATUTS_UNITE = ['canon', 'essai', 'homologuee', 'retiree'] as cons
 /** Statut d'homologation d'une unité. */
 export type StatutUnite = typeof STATUTS_UNITE[number];
 
-/** Liste fermée des dix traits d'unité (`04-gameplay.md` §13.2). */
+/** Liste fermée des treize traits d'unité (`04-gameplay.md` §13.2). */
 export const TRAITS = [
   'transport', 'tir_indirect', 'anti_air', 'amphibie', 'vol',
   'furtif_nuit', 'vision_etendue', 'ravitaillement', 'tout_terrain', 'capture', 'genie',
+  'drone', 'brouilleur',
 ] as const;
 /** Trait d'unité : un comportement implémenté une seule fois dans le moteur. */
 export type Trait = typeof TRAITS[number];
@@ -418,7 +419,8 @@ export interface UnitType {
   nom: string;
   nomCourt: string;
   statut: StatutUnite;
-  homologation?: { date: DateIso; sourceEventCode?: Cle };
+  /** `catalogue` : la version de catalogue qui accueille l'unité (2 à défaut). */
+  homologation?: { date: DateIso; sourceEventCode?: Cle; catalogue?: number };
   traits: Trait[];
   silhouette: Silhouette;
   cout: number;
@@ -444,7 +446,7 @@ export interface UnitType {
 /** Les douze terrains du jeu. */
 export const CLES_TERRAIN = [
   'plaine', 'foret', 'montagne', 'route', 'ville', 'qg',
-  'usine', 'aeroport', 'mer', 'riviere', 'pont', 'plage',
+  'usine', 'aeroport', 'mer', 'riviere', 'pont', 'plage', 'radar',
 ] as const;
 /** Clé d'un terrain. */
 export type CleTerrain = typeof CLES_TERRAIN[number];
@@ -452,14 +454,14 @@ export type CleTerrain = typeof CLES_TERRAIN[number];
 /** Caractère de grille de chaque terrain (`04-gameplay.md` §4). */
 export const CARACTERE_PAR_TERRAIN: Record<CleTerrain, string> = {
   plaine: 'P', foret: 'F', montagne: 'M', route: 'R', ville: 'C', qg: 'H',
-  usine: 'U', aeroport: 'A', mer: 'W', riviere: 'V', pont: 'N', plage: 'S',
+  usine: 'U', aeroport: 'A', mer: 'W', riviere: 'V', pont: 'N', plage: 'S', radar: 'T',
 };
 
 /** Caractères de grille connus, dans l'ordre des terrains. */
-export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S'] as const;
+export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S', 'T'] as const;
 
 /** Terrains capturables : les seuls à pouvoir porter un propriétaire. */
-export const TERRAINS_CAPTURABLES = ['ville', 'usine', 'aeroport', 'qg'] as const;
+export const TERRAINS_CAPTURABLES = ['ville', 'usine', 'aeroport', 'qg', 'radar'] as const;
 
 /** Terrain : coûts par type de mouvement, défense, revenu, rendu. */
 export interface Terrain {
@@ -523,6 +525,11 @@ export interface MapDef extends Enveloppe {
   grille: string[];
   proprietaires: Record<string, CampId>;
   unitesDepart: UniteDepart[];
+  /**
+   * Bâtiments désaffectés au départ : capturables, jamais le QG, sans
+   * propriétaire. Ils ne rapportent rien tant qu'on ne les a pas remis en service.
+   */
+  desaffectes?: Case[];
   mecanique?: Cle;
   generation?: { graine: string; parametres: ParametresCarte; mapgenVersion: number };
   diagnostic?: {

@@ -62,6 +62,12 @@ export interface GestesRendu {
   surClicCase?(c: Case): void;
   surSurvolCase?(c: Case | null): void;
   surAnnuler?(): void;
+  /**
+   * Un double-clic ou un appui long sur une case : demander l'inspection de
+   * l'unité qui s'y trouve. Rend vrai si une inspection s'est ouverte ; sinon
+   * un appui long retombe sur `surAnnuler`, comme ailleurs sur la carte.
+   */
+  surInspecter?(c: Case): boolean;
   surTouche?(touche: ToucheJeu): void;
 }
 
