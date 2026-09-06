@@ -38,6 +38,17 @@ import styles from './atelier.module.css';
 
 interface Monde { nom: string; scenario: Scenario; carte: MapDef }
 
+/** Ce que `window.__atlasBanc` expose en développement (pilotage du banc). */
+interface PontBanc {
+  mondes: number;
+  choisirMonde(n: number): void;
+  recentrer(x: number, y: number): void;
+  zoomer(sens: number): void;
+  silhouettes(v: boolean): void;
+  replier(v: boolean): void;
+  pret(): boolean;
+}
+
 const NOMS_BIOMES: Record<Biome, string> = { plaine: 'Bocage', foret: 'Forêt', montagne: 'Montagne', desert: 'Désert', jungle: 'Jungle', neige: 'Terres gelées', volcanique: 'Volcanique', cotier: 'Littoral', archipel: 'Archipel', marais: 'Marais' };
 const SAISONS: [Saison, string][] = [['printemps', 'Printemps'], ['ete', 'Été'], ['automne', 'Automne'], ['hiver', 'Hiver']];
 const METEOS: [Meteo, string][] = [['clair', 'Ciel clair'], ['pluie', 'Pluie'], ['neige', 'Neige'], ['brouillard', 'Brouillard'], ['tempete', 'Tempête'], ['canicule', 'Canicule']];
@@ -173,6 +184,25 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     etatCourant.current = etat;
     rendu.current?.afficher(habille(etat, vue), vue);
   }, [etat, vue, habille]);
+
+  // Le pont de mise au point du banc, hors production : c'est par lui qu'un
+  // pilotage Playwright choisit un monde, cadre une case et rapproche la caméra
+  // pour photographier une figurine de près. Le HUD et le panneau remplacent
+  // leur DOM à chaque rendu, ce qui rend le pilotage « au bouton » fragile.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') return undefined;
+    const g = globalThis as unknown as { __atlasBanc?: PontBanc };
+    g.__atlasBanc = {
+      mondes: tous.length,
+      choisirMonde: (n) => setIndex(Math.max(0, Math.min(tous.length - 1, n))),
+      recentrer: (x, y) => rendu.current?.recentrer?.({ x, y }),
+      zoomer: (sens) => rendu.current?.zoomer?.(sens),
+      silhouettes: (v) => setSilhouettes(v),
+      replier: (v) => setReplie(v),
+      pret: () => rendu.current !== null,
+    };
+    return () => { delete g.__atlasBanc; };
+  }, [tous]);
 
   /** Rejoue un geste : l'état d'abord, l'animation ensuite — comme le jeu. */
   const jouer = (geste: GesteBanc): void => {
