@@ -7,6 +7,7 @@ import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { conformerModele, NOM_FIGURINE, type ModeleCharge } from '../../src/render3d/modeles';
 import {
   Materiaux, OPACITE_VERRE, TASSEMENT, construirePlaceholder, creerUnites, geometriesSilhouette,
+  materiauxPropresDe,
 } from '../../src/render3d/unites';
 
 import { partiePersonnalisee } from '../engine/aides';
@@ -20,10 +21,13 @@ function tick(): Promise<void> {
 
 /**
  * Un modèle de test construit en mémoire : un nœud `corps` (une boîte de 0,5 de
- * haut, l'avant en +Z), un nœud `module_tourelle`, et deux clips qui font
- * tourner la tourelle — `repos` à peine, `deplacement` franchement.
+ * haut, l'avant en +Z), un nœud `module_tourelle`, et des clips d'une seconde
+ * qui font tourner la tourelle d'un angle à un autre — par défaut `repos` à
+ * peine, `deplacement` franchement.
  */
-function modeleTest(clips: string[] = ['repos', 'deplacement']): ModeleCharge {
+function modeleTest(
+  clips: Record<string, [number, number]> = { repos: [0, 0.1], deplacement: [0, 1] },
+): ModeleCharge {
   const scene = new THREE.Group();
   const geo = new THREE.BoxGeometry(0.6, 0.5, 0.8);
   geo.translate(0, 0.25, 0);
@@ -33,11 +37,10 @@ function modeleTest(clips: string[] = ['repos', 'deplacement']): ModeleCharge {
   tourelle.name = 'module_tourelle';
   tourelle.position.y = 0.5;
   scene.add(corps, tourelle);
-  const amplitude: Record<string, number> = { repos: 0.1, deplacement: 1 };
   return conformerModele({
     niveaux: [scene],
-    clips: clips.map((nom) => new THREE.AnimationClip(nom, 1, [
-      new THREE.NumberKeyframeTrack('module_tourelle.rotation[y]', [0, 1], [0, amplitude[nom] ?? 0.5]),
+    clips: Object.entries(clips).map(([nom, [de, vers]]) => new THREE.AnimationClip(nom, 1, [
+      new THREE.NumberKeyframeTrack('module_tourelle.rotation[y]', [0, 1], [de, vers]),
     ])),
     kit: false,
   });
@@ -298,7 +301,7 @@ test('l’étiquette d’une unité qui a joué porte un cadenas dessiné, jamai
 test('un modèle livré prend la place du placeholder, sur le même socle à liseré, à sa hauteur', async () => {
   const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
   const id = etat.unites[0]!.id;
-  const modele = modeleTest([]);
+  const modele = modeleTest({});
   const calque = creerUnites({} as Document, () => 0, { chargeur: async () => modele });
   calque.maj(etat, cat, null);
   const piece = calque.groupe.children[0]!;
@@ -345,23 +348,23 @@ test('le mixer joue repos par défaut, suit le clip demandé, retombe sur repos 
   assert.equal(calque.avancer(100), false);
 });
 
-test('sous réduction des animations, le mixer n’avance pas ; une unité qui a joué se fige au repos', async () => {
+test('sous réduction des animations, le mixer n’avance pas mais saute à la première image du clip demandé', async () => {
   const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
   const id = etat.unites[0]!.id;
   const { doc } = documentFactice();
-  const calque = creerUnites(doc, () => 0, { chargeur: async () => modeleTest() });
+  const calque = creerUnites(doc, () => 0, { chargeur: async () => modeleTest({ repos: [0, 0.1], deplacement: [0.3, 1] }) });
   calque.maj(etat, cat, null);
   await tick();
   const tourelle = calque.groupe.getObjectByName('module_tourelle')!;
-  calque.avancer(200);
+  calque.avancer(100);
   const angle = tourelle.rotation.y;
   assert.notEqual(angle, 0);
   assert.equal(calque.avancer(200, true), false, 'rien n’anime sous réduction');
   assert.equal(tourelle.rotation.y, angle, 'la pose ne bouge pas');
   calque.visuel(id).clip = 'deplacement';
-  calque.avancer(200, true);
+  assert.equal(calque.avancer(200, true), false);
   assert.equal(calque.clipJoue(id), 'deplacement', 'la demande est tenue à jour : l’état reste juste');
-  assert.equal(tourelle.rotation.y, angle);
+  assert.ok(Math.abs(tourelle.rotation.y - 0.3) < 1e-6, `et la pose est la première image de la marche : ${tourelle.rotation.y}`);
 
   // Une unité qui a joué ne respire plus, même avec un modèle livré ; mais un
   // geste demandé se joue encore.
@@ -375,6 +378,93 @@ test('sous réduction des animations, le mixer n’avance pas ; une unité qui a
   calque.visuel(id).clip = 'deplacement';
   assert.equal(calque.avancer(100), true, 'un geste demandé se joue même sur une unité qui a joué');
   calque.dispose();
+});
+
+test('un rig sous réduction dès la première image prend la pose du repos, pas celle de liaison', async () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
+  const calque = creerUnites({} as Document, () => 0, { chargeur: async () => modeleTest({ repos: [0.2, 0.2] }) });
+  calque.maj(etat, cat, null);
+  await tick();
+  const tourelle = calque.groupe.getObjectByName('module_tourelle')!;
+  for (let i = 0; i < 30; i += 1) calque.avancer(16, true);
+  assert.ok(Math.abs(tourelle.rotation.y - 0.2) < 1e-6, `la première image du repos (${tourelle.rotation.y}), jamais la pose de liaison (0)`);
+  calque.dispose();
+});
+
+test('une unité qui a joué finit son fondu vers le repos avant de se figer', async () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
+  const id = etat.unites[0]!.id;
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0, { chargeur: async () => modeleTest({ repos: [0.2, 0.2], tir: [0, 1] }) });
+  // L'état est en avance : l'attaquant a déjà joué quand son tir s'anime.
+  const agie = { ...etat, unites: etat.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
+  calque.maj(agie, cat, null);
+  await tick();
+  const tourelle = calque.groupe.getObjectByName('module_tourelle')!;
+  assert.ok(Math.abs(tourelle.rotation.y - 0.2) < 1e-6, 'au repos, figée sur sa première image');
+  assert.equal(calque.avancer(100), false, 'figée : rien à animer');
+
+  const v = calque.visuel(id);
+  v.clip = 'tir';
+  v.clipDuree = 260;
+  assert.equal(calque.avancer(100), true, 'le tir se joue même sur une unité qui a joué');
+  for (let i = 0; i < 2; i += 1) calque.avancer(100);
+  assert.equal(calque.clipJoue(id), 'repos', 'le tir fini rend la main au repos');
+  assert.ok(tourelle.rotation.y > 0.5, `au début du fondu, la dernière image du tir pèse encore (${tourelle.rotation.y})`);
+  // Le geste est fini côté animations : repos demandé. Le fondu doit aller au bout.
+  v.clip = 'repos';
+  v.clipDuree = 0;
+  for (let i = 0; i < 10; i += 1) calque.avancer(100);
+  assert.ok(Math.abs(tourelle.rotation.y - 0.2) < 1e-6, `figée au repos (${tourelle.rotation.y}), pas sur la dernière image du tir`);
+  assert.equal(calque.avancer(100), false, 'et plus rien à animer');
+  calque.dispose();
+});
+
+test('retirer une unité à modèle livré libère ses matériaux teintés et leurs doubles ternis', async () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0, { chargeur: async () => modeleTest({}) });
+  calque.maj(etat, cat, null);
+  await tick();
+  const piece = calque.groupe.children[0]!;
+  const corps = piece.getObjectByName(NOM_FIGURINE)!.parent!;
+  const propres = materiauxPropresDe(corps);
+  assert.equal(propres.length, 2, 'mat_corps et mat_details ont été clonés pour cette unité');
+  // L'unité joue : ses clones reçoivent un double terni.
+  const agie = { ...etat, unites: etat.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
+  calque.maj(agie, cat, null);
+  const maille = piece.getObjectByName('corps') as THREE.Mesh;
+  const terni = maille.material as THREE.Material;
+  assert.ok(propres.includes(maille.userData['repos'] as THREE.MeshStandardMaterial), 'le matériau de repos est le clone');
+  assert.notEqual(terni, maille.userData['repos'], 'le matériau porté est le terni');
+  const liberes: string[] = [];
+  for (const m of [...propres, terni]) {
+    const original = m.dispose.bind(m);
+    m.dispose = () => { liberes.push(m.uuid); original(); };
+  }
+
+  calque.maj({ ...etat, unites: [] }, cat, null);
+  assert.equal(calque.groupe.children.length, 0);
+  for (const m of propres) assert.ok(liberes.includes(m.uuid), 'chaque clone teinté est libéré');
+  assert.ok(liberes.includes(terni.uuid), 'et son double terni avec lui');
+  assert.equal(materiauxPropresDe(corps).length, 0);
+  calque.dispose();
+});
+
+test('Materiaux.oublier rend un terni et retire son entrée ; un placeholder n’en a pas à rendre', () => {
+  const materiaux = new Materiaux();
+  const origine = new THREE.MeshStandardMaterial({ color: 0x2f5fd0 });
+  const terni = materiaux.terni(origine);
+  assert.equal(materiaux.terni(origine), terni, 'mémorisé');
+  assert.equal(materiaux.oublier(origine), true);
+  assert.notEqual(materiaux.terni(origine), terni, 'l’entrée a disparu : un nouveau double');
+  assert.equal(materiaux.oublier(new THREE.MeshStandardMaterial()), false, 'rien à oublier');
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
+  const calque = creerUnites({} as Document, () => 0);
+  calque.maj(etat, cat, null);
+  assert.equal(materiauxPropresDe(calque.groupe.children[0]!.children[0]!).length, 0, 'un placeholder ne possède aucun matériau');
+  calque.dispose();
+  materiaux.dispose();
 });
 
 test('un modèle arrivé après le retrait de l’unité ne s’installe pas', async () => {

@@ -12,12 +12,12 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { construireAnimations, MS_PAR_CASE, type ContexteAnimation } from '../../src/render3d/animations';
 import type { CalqueUnites, EtatVisuel } from '../../src/render3d/unites';
-import type { PriseDrapeau } from '../../src/render3d/decor';
+import type { PriseChantier, PriseDrapeau } from '../../src/render3d/decor';
 import type { EvenementJeu } from '../../src/engine/index';
 import { partiePersonnalisee } from '../engine/aides';
 
 /** Un calque d'unités réduit à ce que les animations touchent. */
-function contexte(prise: PriseDrapeau | null = null): {
+function contexte(prise: PriseDrapeau | null = null, chantier: PriseChantier | null = null): {
   ctx: ContexteAnimation; visuel(id: string): EtatVisuel; retenues: string[]; liberees: string[];
 } {
   const visuels = new Map<string, EtatVisuel>();
@@ -42,7 +42,7 @@ function contexte(prise: PriseDrapeau | null = null): {
   return {
     ctx: {
       unites, effets: new THREE.Group(), document, hauteurEn: () => 0,
-      drapeau: () => prise, chantier: () => null, salir: () => undefined,
+      drapeau: () => prise, chantier: () => chantier, salir: () => undefined,
     },
     visuel, retenues, liberees,
   };
@@ -151,6 +151,115 @@ test('une capture pose capture pendant ses deux temps, acquise ou non', () => {
   acquise.avancer(0.9);
   assert.equal(visuel(mienne).clip, 'capture');
   acquise.terminer?.();
+  assert.equal(visuel(mienne).clip, 'repos');
+});
+
+test('dans une même salve, le tir d’une unité attend la fin de son déplacement', () => {
+  const { ctx, visuel } = contexte();
+  // Un ordre « avancer puis tirer » : une seule salve, deux gestes de la même unité.
+  const { animations } = construireAnimations([
+    {
+      type: 'deplacement', uniteId: mienne, de: { x: 0, y: 0 }, vers: { x: 0, y: 2 },
+      chemin: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }], interrompu: false,
+    },
+    { type: 'attaque', attaquantId: mienne, cibleId: sienne, degats: 30, riposte: 10 },
+  ], etat, ctx);
+  const marche = animations.find((a) => a.nom === `deplacement:${mienne}`)!;
+  const tir = animations.find((a) => a.nom === `tir:${mienne}`)!;
+  const touche = animations.find((a) => a.nom === `touche:${sienne}`)!;
+  const riposte = animations.find((a) => a.nom === `riposte:${mienne}`)!;
+  const dureeMarche = 2 * MS_PAR_CASE;
+  assert.equal(marche.duree, dureeMarche);
+  assert.equal(tir.duree, dureeMarche + 260, 'le tir est retenu le temps de la marche');
+  assert.equal(touche.duree, dureeMarche + 300, 'la cible encaisse quand le tir part, pas avant');
+  assert.equal(riposte.duree, dureeMarche + 260 + 300, 'la riposte, après le tir');
+
+  // À mi-marche, toutes les animations de la salve ont avancé du même temps :
+  // seule la marche s'exprime, dans l'ordre où la boucle les appelle.
+  const t = dureeMarche / 2;
+  marche.avancer(t / marche.duree);
+  tir.avancer(t / tir.duree);
+  touche.avancer(t / touche.duree);
+  riposte.avancer(t / riposte.duree);
+  assert.equal(visuel(mienne).clip, 'deplacement', 'on marche, on ne tire pas encore');
+  assert.equal(visuel(mienne).recul, 0);
+  assert.equal(visuel(sienne).clip, 'repos', 'la cible n’a encore rien reçu');
+
+  // La marche finit ; le tir commence juste après, et la cible encaisse.
+  marche.avancer(1);
+  marche.terminer?.();
+  const t2 = dureeMarche + 100;
+  tir.avancer(t2 / tir.duree);
+  touche.avancer(t2 / touche.duree);
+  riposte.avancer(t2 / riposte.duree);
+  assert.equal(visuel(mienne).clip, 'tir');
+  assert.equal(visuel(mienne).clipDuree, 260, 'la durée du geste, pas celle de l’attente');
+  assert.equal(visuel(sienne).clip, 'touche');
+  assert.equal(visuel(mienne).secousse, 0, 'pas encore de riposte');
+
+  // Le tir finit ; la riposte se fait sentir.
+  tir.avancer(1);
+  tir.terminer?.();
+  const t3 = dureeMarche + 260 + 100;
+  riposte.avancer(t3 / riposte.duree);
+  assert.equal(visuel(mienne).clip, 'touche');
+  assert.ok(visuel(mienne).secousse > 0);
+});
+
+test('une capture qui suit un déplacement attend, et tient le drapeau où il était pendant l’attente', () => {
+  const forces: [number | null, number][] = [];
+  const prise: PriseDrapeau = {
+    seuil: 20, sommet: new THREE.Vector3(0, 1, 0), pied: new THREE.Vector3(),
+    forcer: (camp, niveau) => { forces.push([camp, niveau]); }, relacher: () => undefined,
+  };
+  const { ctx, visuel } = contexte(prise);
+  const { animations } = construireAnimations([
+    {
+      type: 'deplacement', uniteId: mienne, de: { x: 0, y: 0 }, vers: { x: 0, y: 1 },
+      chemin: [{ x: 0, y: 0 }, { x: 0, y: 1 }], interrompu: false,
+    },
+    { type: 'capture', uniteId: mienne, case: { x: 0, y: 1 }, points: 10, acquis: false, camp: 0 },
+  ], etat, ctx);
+  const marche = animations.find((a) => a.nom === `deplacement:${mienne}`)!;
+  const capture = animations.find((a) => a.nom === 'capture:0,1')!;
+  assert.equal(capture.duree, MS_PAR_CASE + 460, 'la capture est retenue le temps de la marche');
+  marche.avancer(0.5);
+  capture.avancer((MS_PAR_CASE / 2) / capture.duree);
+  assert.equal(visuel(mienne).clip, 'deplacement', 'pendant l’attente, la capture ne pose pas son clip');
+  assert.ok(forces.length > 0, 'mais elle tient déjà le drapeau à son départ');
+  assert.equal(forces[forces.length - 1]![1], 0, 'au niveau d’avant : rien encore');
+  marche.avancer(1);
+  marche.terminer?.();
+  capture.avancer((MS_PAR_CASE + 230) / capture.duree);
+  assert.equal(visuel(mienne).clip, 'capture');
+  assert.ok(forces[forces.length - 1]![1] > 0, 'le drapeau monte');
+  capture.terminer?.();
+  assert.equal(visuel(mienne).clip, 'repos');
+});
+
+test('une remise en service puis la capture de la même case s’enchaînent pour la même unité', () => {
+  const prise: PriseDrapeau = {
+    seuil: 40, sommet: new THREE.Vector3(0, 1, 0), pied: new THREE.Vector3(),
+    forcer: () => undefined, relacher: () => undefined,
+  };
+  const chantier: PriseChantier = { eclairer: () => undefined, relacher: () => undefined };
+  const { ctx, visuel } = contexte(prise, chantier);
+  const { animations } = construireAnimations([
+    { type: 'remise_en_service', uniteId: mienne, case: { x: 0, y: 0 }, camp: 0, prime: 1000 },
+    { type: 'capture', uniteId: mienne, case: { x: 0, y: 0 }, points: 40, acquis: true, camp: 0 },
+  ], etat, ctx);
+  const remise = animations.find((a) => a.nom === 'remise:0,0')!;
+  const capture = animations.find((a) => a.nom === 'capture:0,0')!;
+  assert.equal(remise.duree, 1200);
+  assert.equal(capture.duree, 1200 + 1100, 'la palissade tombe, puis le drapeau monte');
+  remise.avancer(0.5);
+  capture.avancer(600 / capture.duree);
+  assert.equal(visuel(mienne).clip, 'capture');
+  remise.avancer(1);
+  remise.terminer?.();
+  capture.avancer(1300 / capture.duree);
+  assert.equal(visuel(mienne).clip, 'capture');
+  capture.terminer?.();
   assert.equal(visuel(mienne).clip, 'repos');
 });
 

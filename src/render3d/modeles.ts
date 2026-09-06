@@ -107,6 +107,9 @@ const HYSTERESIS_LOD = 0.05;
 /** Nom du groupe qui porte la figurine, celui que le calque enfonce et anime. */
 export const NOM_FIGURINE = 'figurine_modele';
 
+/** Nom du groupe intérieur qui ramène l'avant du fichier (`+Z`) sur celui du rendu (`+X`). */
+export const NOM_ORIENTATION = 'orientation';
+
 /** Nom de l'objet `THREE.LOD` dans une figurine à plusieurs niveaux. */
 export const NOM_NIVEAUX = 'niveaux_de_detail';
 
@@ -233,10 +236,15 @@ export function couleurPour(
  * Un matériau qui porte le masque d'équipe garde son albédo et mélange la
  * couleur dans le shader ; les autres prennent la couleur dans `color`.
  */
-export function teinterModele(objet: THREE.Object3D, camp: CampId | null, options: OptionsTeinte = {}): void {
+export function teinterModele(
+  objet: THREE.Object3D, camp: CampId | null, options: OptionsTeinte = {},
+): THREE.MeshStandardMaterial[] {
   const kit = options.kit ?? false;
   const palette = options.style?.palette ?? paletteDe(camp);
   const lisere = paletteDe(camp).main;
+  // Les clones créés ici n'appartiennent qu'à cet objet : c'est à qui le retire
+  // de la scène de les libérer, et il faut pour cela savoir lesquels.
+  const clones: THREE.MeshStandardMaterial[] = [];
   objet.traverse((n) => {
     if (!(n instanceof THREE.Mesh)) return;
     n.castShadow = true;
@@ -255,10 +263,12 @@ export function teinterModele(objet: THREE.Object3D, camp: CampId | null, option
       } else {
         teinte.color.set(couleur);
       }
+      clones.push(teinte);
       return teinte;
     });
     n.material = Array.isArray(n.material) ? teintes : teintes[0]!;
   });
+  return clones;
 }
 
 // ---------------------------------------------------------------------------
@@ -317,14 +327,22 @@ export interface LecteurClips {
   /** Les clips connus que le modèle porte, dans l'ordre de la spécification. */
   readonly clips: readonly NomClip[];
   /**
+   * Vrai tant que le fondu du dernier `jouer` n'a pas fini de porter le poids
+   * sur le clip courant : un appelant qui cesse d'avancer le mixer avant la fin
+   * du fondu figerait la pièce sur la dernière image du clip précédent.
+   */
+  readonly enTransition: boolean;
+  /**
    * Fait jouer un clip, avec un fondu depuis celui qui joue. Un clip absent
    * retombe sur `repos` sans erreur — le validateur l'a déjà signalé à la
    * livraison (`doc/10` §7.3) — et `repos` absent laisse la pose telle quelle.
    * `duree`, en millisecondes, ajuste un clip qui ne boucle pas au geste qu'il
    * accompagne ; `0` garde la durée naturelle. Un clip qui boucle garde toujours
-   * sa cadence propre.
+   * sa cadence propre. `fondu` à faux coupe net et saute à la première image
+   * du clip demandé — c'est ce qu'il faut sous réduction des animations. La
+   * première image du clip est appliquée tout de suite, sans attendre `avancer`.
    */
-  jouer(nom: NomClip, duree?: number): void;
+  jouer(nom: NomClip, duree?: number, fondu?: boolean): void;
   /** Avance le mixer de `dt` secondes ; vrai tant qu'un clip joue encore. */
   avancer(dt: number): boolean;
   dispose(): void;
@@ -365,8 +383,14 @@ export function creerLecteurClips(
     }));
   }
   let courant: NomClip | null = null;
+  /** Le temps du mixer, en secondes : la somme de ce que `avancer` lui a donné. */
+  let tempsMixer = 0;
+  /** L'instant du mixer où le fondu en cours aura fini ; `-1` sans fondu. */
+  let finFondu = -1;
+  /** Le clip qu'un `update` vient de terminer, à traiter une fois sorti du mixer. */
+  let termine: NomClip | null = null;
 
-  function jouer(nom: NomClip, duree = 0): void {
+  function jouer(nom: NomClip, duree = 0, fondu = true): void {
     const cible: NomClip = actions.has(nom) ? nom : 'repos';
     const liste = actions.get(cible);
     if (!liste || cible === courant) return;
@@ -379,26 +403,43 @@ export function creerLecteurClips(
       action.setEffectiveWeight(1);
       action.play();
       const ancienne = anciennes[i];
-      if (ancienne) action.crossFadeFrom(ancienne, FONDU_CLIPS, false);
+      if (!ancienne) return;
+      if (fondu) action.crossFadeFrom(ancienne, FONDU_CLIPS, false);
+      else ancienne.stop();
     });
     courant = cible;
+    finFondu = fondu && anciennes.length > 0 ? tempsMixer + FONDU_CLIPS : -1;
+    // La première image du clip s'applique tout de suite. Sans cela, un rig
+    // dont le mixer n'avance pas — animations réduites, unité qui a joué —
+    // resterait dans sa pose de liaison, bras en croix. Un pas de zéro ne fait
+    // ni avancer ni finir un clip : three le court-circuite.
+    mixer.update(0);
   }
 
-  // Un clip qui ne boucle pas rend la main au repos de lui-même. La demande
-  // des animations, elle, n'est pas touchée ici : c'est à l'appelant de ne pas
-  // relancer un tir déjà joué.
+  // Un clip qui ne boucle pas rend la main au repos de lui-même. L'événement
+  // part du milieu d'un `update` : on le note et on agit une fois sorti, parce
+  // que `jouer` appelle lui-même le mixer et qu'un mixer ne se rentre pas. La
+  // demande des animations, elle, n'est pas touchée : c'est à l'appelant de ne
+  // pas relancer un tir déjà joué.
   mixer.addEventListener('finished', (e) => {
-    const termine = [...actions].find(([, liste]) => liste.includes(e.action))?.[0];
-    if (termine !== undefined && termine === courant && !clipEnBoucle(termine)) jouer('repos');
+    const nom = [...actions].find(([, liste]) => liste.includes(e.action))?.[0];
+    if (nom !== undefined && nom === courant && !clipEnBoucle(nom)) termine = nom;
   });
 
   return {
     get courant(): NomClip | null { return courant; },
+    get enTransition(): boolean { return tempsMixer < finFondu; },
     clips: noms,
     jouer,
     avancer(dt: number): boolean {
       if (courant === null) return false;
+      tempsMixer += dt;
       mixer.update(dt);
+      if (termine !== null) {
+        const fini = termine;
+        termine = null;
+        if (fini === courant) jouer('repos');
+      }
       return clipEnBoucle(courant) || (actions.get(courant) ?? []).some((a) => a.isRunning());
     },
     dispose(): void {
@@ -406,6 +447,7 @@ export function creerLecteurClips(
       for (const clip of clips) mixer.uncacheClip(clip);
       actions.clear();
       courant = null;
+      finFondu = -1;
     },
   };
 }
@@ -416,18 +458,28 @@ export function creerLecteurClips(
  * Les niveaux sont **clonés** (squelettes compris) plutôt que déplacés : une
  * lecture de fichier est partagée par toutes les nations qui retombent sur la
  * même géométrie de base, et l'ajouter à deux `LOD` la volerait à l'un des deux.
- * La rotation et le gabarit vont sur un groupe enveloppant, jamais sur les nœuds
- * du modèle : les clips animent ces nœuds par leur nom, et une transformation
- * posée dessus serait écrasée à la première image.
+ * La rotation et le gabarit vont sur des groupes enveloppants, jamais sur les
+ * nœuds du modèle : les clips animent ces nœuds par leur nom, et une
+ * transformation posée dessus serait écrasée à la première image.
+ *
+ * Deux groupes, et non un : three compose une transformation en `T·R·S`,
+ * l'échelle avant la rotation, donc une échelle posée sur le même nœud que la
+ * rotation s'appliquerait dans le repère **du fichier** — la longueur du
+ * gabarit tomberait sur la largeur du modèle. Le gabarit se lit dans le repère
+ * du rendu (longueur en X, largeur en Z) : il va sur l'enveloppe, et la
+ * rotation sur un groupe intérieur qu'il enveloppe.
  */
 export function conformerModele(lu: ModeleLu, gabarit: Gabarit = 'b'): ModeleCharge {
   const premier = lu.niveaux[0];
   if (!premier) throw new Error('un modèle lu doit porter au moins son lod0');
   const objet = new THREE.Group();
   objet.name = NOM_FIGURINE;
-  objet.rotation.y = ROTATION_AVANT;
   const [gx, gy, gz] = PROPORTIONS[gabarit];
   objet.scale.set(gx, gy, gz);
+  const orientation = new THREE.Group();
+  orientation.name = NOM_ORIENTATION;
+  orientation.rotation.y = ROTATION_AVANT;
+  objet.add(orientation);
 
   const niveaux = lu.niveaux.slice(0, 3).map((n, i) => {
     const copie = clonerSquelette(n);
@@ -435,14 +487,14 @@ export function conformerModele(lu: ModeleLu, gabarit: Gabarit = 'b'): ModeleCha
     return copie;
   });
   if (niveaux.length === 1) {
-    objet.add(niveaux[0]!);
+    orientation.add(niveaux[0]!);
   } else {
     // Un seul LOD sans seuil serait un objet de plus pour rien ; à partir de
     // deux niveaux, c'est three qui choisit à chaque image selon la caméra.
     const lod = new THREE.LOD();
     lod.name = NOM_NIVEAUX;
     niveaux.forEach((n, i) => lod.addLevel(n, i === 0 ? 0 : SEUILS_LOD[i - 1] ?? 0, i === 0 ? 0 : HYSTERESIS_LOD));
-    objet.add(lod);
+    orientation.add(lod);
   }
 
   objet.updateMatrixWorld(true);

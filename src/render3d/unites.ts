@@ -54,10 +54,11 @@ import {
 } from './pieces';
 
 // Le chargement et la conformation vivent dans `modeles.ts` ; on les réexporte
-// d'ici parce que la vitrine et `index.ts` les ont toujours pris à cette porte.
+// d'ici parce que la vitrine et `index.ts` les ont toujours pris à cette porte,
+// et qu'une seule porte suffit à qui monte une unité.
 export {
-  chargerModele, conformerModele, forcerLod, RACINE_MODELES, teinterModele,
-  type ModeleCharge, type NomClip,
+  chargerModele, conformerModele, creerLecteurClips, forcerLod, NOM_FIGURINE, NOMS_CLIPS, RACINE_MODELES,
+  teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
 } from './modeles';
 
 /** Les matériaux neutres, partagés par toutes les nations. */
@@ -256,6 +257,21 @@ export class Materiaux {
     m.metalness = origine.metalness * 0.5;
     this.ternis.set(origine, m);
     return m;
+  }
+
+  /**
+   * Oublie le double terni d'un matériau qui quitte la scène, et le libère.
+   * Les matériaux partagés des placeholders vivent aussi longtemps que le
+   * calque ; ceux d'un modèle livré appartiennent à une seule unité, et leur
+   * terni s'accumulerait ici à chaque unité retirée. Rend vrai s'il y avait
+   * une entrée.
+   */
+  oublier(origine: THREE.MeshStandardMaterial): boolean {
+    const terni = this.ternis.get(origine);
+    if (!terni) return false;
+    terni.dispose();
+    this.ternis.delete(origine);
+    return true;
   }
 
   dispose(): void {
@@ -537,9 +553,21 @@ export function monterModele(
   const jeu = materiaux.jeu(camp, style);
   for (const m of piecesSocle(camp, materiaux, jeu)) groupe.add(m);
   const figurine = clonerFigurine(modele.objet);
-  teinterModele(figurine, camp, { style, kit: modele.kit });
+  materiauxPropres.set(groupe, teinterModele(figurine, camp, { style, kit: modele.kit }));
   groupe.add(figurine);
   return groupe;
+}
+
+/**
+ * Les matériaux qui n'appartiennent qu'à un corps monté par `monterModele` —
+ * les clones teintés —, à libérer avec lui. Ceux d'un placeholder sont
+ * partagés par `Materiaux` et n'y figurent pas.
+ */
+const materiauxPropres = new WeakMap<THREE.Object3D, THREE.MeshStandardMaterial[]>();
+
+/** Les matériaux propres d'un corps monté, vides pour un placeholder. */
+export function materiauxPropresDe(corps: THREE.Object3D): readonly THREE.MeshStandardMaterial[] {
+  return materiauxPropres.get(corps) ?? [];
 }
 
 // ---------------------------------------------------------------------------
@@ -965,6 +993,14 @@ export function creerUnites(
     if (!e) return;
     e.lecteur?.dispose();
     e.lecteur = null;
+    // Un modèle livré a des matériaux à lui — les clones teintés — et, s'il a
+    // joué, leurs doubles ternis dans la table : on rend les deux. Un
+    // placeholder ne possède rien, ses matériaux sont ceux du calque.
+    for (const m of materiauxPropresDe(e.corps)) {
+      materiaux.oublier(m);
+      m.dispose();
+    }
+    materiauxPropres.delete(e.corps);
     groupe.remove(e.groupe);
     entrees.delete(id);
     visuels.delete(id);
@@ -997,18 +1033,21 @@ export function creerUnites(
           if (entree.tassement !== cible) anime = true;
         }
         // Le modèle livré joue le clip que les animations demandent. Sous
-        // réduction des animations, rien n'avance : la pose reste celle du
-        // premier instant, et l'état — position, cap — est tenu par `poser`.
+        // réduction des animations, rien n'avance : la pièce saute à la
+        // première image du clip demandé, et l'état — position, cap — est
+        // tenu par `poser`.
         if (entree.lecteur) {
           const v = visuels.get(entree.id);
           const demande = v?.clip ?? 'repos';
           if (demande !== entree.clipDemande) {
             entree.clipDemande = demande;
-            entree.lecteur.jouer(demande, v?.clipDuree ?? 0);
+            entree.lecteur.jouer(demande, v?.clipDuree ?? 0, !mouvementReduit);
           }
           // Une unité qui a joué se fige dans son repos — l'immobilité fait
-          // partie du signal — mais encaisse encore un coup ou tire encore.
-          const figee = entree.agie === true && entree.lecteur.courant === 'repos';
+          // partie du signal — mais encaisse encore un coup ou tire encore, et
+          // le fondu qui la ramène au repos va jusqu'au bout : figer pendant
+          // le fondu la laisserait sur la dernière image du geste.
+          const figee = entree.agie === true && entree.lecteur.courant === 'repos' && !entree.lecteur.enTransition;
           if (!mouvementReduit && !figee && entree.lecteur.avancer(pas / 1000)) anime = true;
         }
         // Une unité qui a joué ne respire plus et ses rotors sont arrêtés :

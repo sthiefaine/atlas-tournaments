@@ -31,11 +31,9 @@ import { chargerStyleNation } from '@/assets/styles';
 import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
 import {
-  Materiaux, chargerModele, construirePlaceholder, monterModele,
+  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, forcerLod, monterModele,
+  NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
 } from '@/render3d/unites';
-import {
-  creerLecteurClips, forcerLod, NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
-} from '@/render3d/modeles';
 import { webgl2Disponible } from '@/render/rendu';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
