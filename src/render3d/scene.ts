@@ -31,6 +31,7 @@ import {
 } from '../render/qualite';
 import type { MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
+import { compterFamilles } from './mesures';
 import type { Composeur, creerComposeur } from './postraitement';
 
 /** Ce que `creerScene3d` rend à l'appelant. */
@@ -294,6 +295,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         msParImage,
         composeur: composeur !== null,
         msCalibration: msMesurees,
+        // Le détail par famille se lit sur la scène, pas sur `info` : c'est un
+        // parcours de quelques centaines d'objets, et on ne le demande qu'à la
+        // mesure, jamais à l'image.
+        familles: compterFamilles(scene),
       };
     },
 

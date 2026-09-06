@@ -9,14 +9,16 @@ import {
 } from '../../src/engine/index';
 import {
   validerMapDef, validerScenario, BIOMES, CARACTERE_PAR_TERRAIN, CLES_TERRAIN, CLIMATS, BASES_SILHOUETTE, PHASES_JOUR,
-  type Case, type CleTerrain,
+  type Case, type CleTerrain, type CleUnite,
 } from '../../src/schemas/index';
 import {
-  BASES_JAMAIS_VUES, CHEMIN_BANC, DESCRIPTIONS_GESTES, GENRES_SURBRILLANCE, GESTES_BANC, HAUTEUR_BANC,
-  PRESETS_AMBIANCE, STATION_ADVERSE_BANC, VILLE_DESAFFECTEE_BANC,
-  LARGEUR_BANC, RANGS, UNITES_BANC, VERSION_CATALOGUE_BANC, carteBanc, catalogueSilhouettes, decoderVue, encoderVue,
-  rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc, type VueBanc,
+  BASES_JAMAIS_VUES, CHEMIN_BANC, DESCRIPTIONS_GESTES, GENRES_SURBRILLANCE, GESTES_BANC, GRAINE_GRANDE, HAUTEUR_BANC,
+  HAUTEUR_GRANDE, LARGEUR_GRANDE, PARAMETRES_GRANDE, PRESETS_AMBIANCE, STATION_ADVERSE_BANC, UNITES_GRANDE,
+  VILLE_DESAFFECTEE_BANC,
+  LARGEUR_BANC, RANGS, UNITES_BANC, VERSION_CATALOGUE_BANC, carteBanc, carteGrande, catalogueSilhouettes, decoderVue,
+  encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc, type VueBanc,
 } from '../../src/app/atelier/banc';
+import { genererCarte } from '../../src/mapgen/index';
 import scenarioDemo from '../../content/scenarios/demo.json';
 
 const CAT = chargerCatalogue(VERSION_CATALOGUE_BANC);
@@ -412,4 +414,76 @@ test('« Abattre le drone » le fait tomber sur la station adverse et révèle l
   const produit: EtatPartie = { ...depart, produites: { '1:infanterie': 2, '1:char_leger': 1, '0:recon': 5, '1:genie': 0 } };
   const lu = rejouer(produit, 'drone_abattu')!.evenements.find((e) => e.type === 'production_revelee');
   if (lu?.type === 'production_revelee') assert.deepEqual(lu.produites, { infanterie: 2, char_leger: 1 });
+});
+
+// ---------------------------------------------------------------------------
+// La grande carte : celle du budget de `doc/10` §9.2
+// ---------------------------------------------------------------------------
+
+test('la grande carte fait 24 × 16, est valide, et deux constructions donnent le même état', () => {
+  const carte = carteGrande();
+  assert.equal(carte.largeur, LARGEUR_GRANDE);
+  assert.equal(carte.hauteur, HAUTEUR_GRANDE);
+  assert.equal(carte.largeur, 24);
+  assert.equal(carte.hauteur, 16);
+  const r = validerMapDef(carte);
+  assert.ok(r.ok, `grande carte invalide : ${JSON.stringify(r.ok ? [] : r.erreurs)}`);
+  // Déterminisme : la graine est fixe, la pose des unités aussi.
+  assert.equal(JSON.stringify(carteGrande()), JSON.stringify(carte));
+  // Et c'est bien la carte du générateur, pas une copie figée qui dériverait de lui.
+  const generee = genererCarte(PARAMETRES_GRANDE, GRAINE_GRANDE);
+  assert.deepEqual(carte.grille, generee.grille);
+  assert.deepEqual(carte.proprietaires, generee.proprietaires);
+  // L'état de partie la porte telle quelle : trente unités, rien de perdu.
+  const s = validerScenario(scenarioDemo);
+  if (!s.ok) throw new Error('scénario de démonstration invalide');
+  const a = creerPartie(sceneDepuis(scenarioBanc(s.valeur), carte, []), CAT, 'banc:1');
+  const b = creerPartie(sceneDepuis(scenarioBanc(s.valeur), carteGrande(), []), CAT, 'banc:1');
+  assert.equal(a.unites.length, 30);
+  assert.deepEqual(a, b);
+});
+
+test('elle approche les hypothèses du budget : ≈ 30 % de forêt, du relief, de l’eau, ≈ 20 bâtiments possédés', () => {
+  const carte = carteGrande();
+  const total = carte.largeur * carte.hauteur;
+  const compte: Record<string, number> = {};
+  for (const ligne of carte.grille) for (const car of ligne) compte[car] = (compte[car] ?? 0) + 1;
+  const part = (t: CleTerrain): number => (compte[CARACTERE_PAR_TERRAIN[t]] ?? 0) / total;
+  assert.ok(part('foret') >= 0.25 && part('foret') <= 0.35, `forêt : ${(part('foret') * 100).toFixed(1)} %`);
+  assert.ok(part('montagne') > 0, 'un peu de relief');
+  assert.ok(part('mer') > 0 && part('mer') <= 0.15, `un peu d’eau : ${(part('mer') * 100).toFixed(1)} %`);
+  const possedes = Object.keys(carte.proprietaires).length;
+  assert.ok(possedes >= 18 && possedes <= 26, `${possedes} bâtiments possédés, une vingtaine attendue`);
+  // Les deux QG : un par camp, et le générateur les a placés.
+  for (const camp of [0, 1] as const) {
+    const qg = Object.entries(carte.proprietaires)
+      .filter(([cle, c]) => c === camp && carte.grille[Number(cle.split(',')[1])]?.[Number(cle.split(',')[0])] === CARACTERE_PAR_TERRAIN.qg);
+    assert.equal(qg.length, 1, `camp ${camp} : un QG`);
+  }
+});
+
+test('elle porte trente unités, quinze par camp, tous les types du catalogue, sur de la terre nue', () => {
+  const carte = carteGrande();
+  assert.equal(UNITES_GRANDE.length, 15);
+  assert.equal(carte.unitesDepart.length, 30);
+  for (const camp of [0, 1] as const) {
+    const duCamp = carte.unitesDepart.filter((u) => u.camp === camp);
+    assert.equal(duCamp.length, 15, `camp ${camp}`);
+    const types = new Set<CleUnite>(duCamp.map((u) => u.type));
+    for (const u of Object.keys(CAT.unites) as CleUnite[]) assert.ok(types.has(u), `camp ${camp} : ${u} absente`);
+    // L'infanterie ouvre la liste : « Déplacer » et « Tirer » jouent sur elle.
+    assert.equal(duCamp[0]!.type, 'infanterie');
+  }
+  const cases = carte.unitesDepart.map((u) => cleCase(u));
+  assert.equal(new Set(cases).size, cases.length, 'deux unités sur la même case');
+  const nue = new Set(['plaine', 'foret', 'route', 'plage'].map((t) => CARACTERE_PAR_TERRAIN[t as CleTerrain]));
+  for (const u of carte.unitesDepart) {
+    assert.ok(nue.has(carte.grille[u.y]?.[u.x] ?? ''), `${u.type} du camp ${u.camp} posée sur ${carte.grille[u.y]?.[u.x]} en ${u.x},${u.y}`);
+  }
+  // Les gestes de mesure ont un sens ici : une unité bleue à déplacer, une rouge à frapper.
+  const s = validerScenario(scenarioDemo);
+  if (!s.ok) throw new Error('scénario de démonstration invalide');
+  const etat = creerPartie(sceneDepuis(scenarioBanc(s.valeur), carte, []), CAT, 'banc:1');
+  assert.ok(rejouer(etat, 'deplacement'), 'Déplacer joue sur la grande carte');
+  assert.ok(rejouer(etat, 'attaque'), 'Tirer joue sur la grande carte');
 });

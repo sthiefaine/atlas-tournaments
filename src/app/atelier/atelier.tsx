@@ -12,8 +12,8 @@ import {
   type Saison, type Scenario,
 } from '@/schemas/types';
 import {
-  CHEMIN_BANC, DESCRIPTIONS_GESTES, PAYS_BANC, PRESETS_AMBIANCE, carteBanc, catalogueSilhouettes, decoderVue,
-  encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc,
+  CHEMIN_BANC, DESCRIPTIONS_GESTES, PAYS_BANC, PRESETS_AMBIANCE, carteBanc, carteGrande, catalogueSilhouettes,
+  decoderVue, encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc,
   type DescriptionGeste, type GenreBanc, type GesteBanc, type VueBanc,
 } from './banc';
 import styles from './atelier.module.css';
@@ -64,11 +64,30 @@ interface PontBanc {
   tourner(sens: number): void;
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
+  /** La hauteur de la feuille mobile : 0 poignée seule, 1 un tiers, 2 deux tiers. Sans effet sur PC. */
+  feuille(niveau: 0 | 1 | 2): void;
   pret(): boolean;
   /** Change la qualité d'affichage sans recharger ni remonter : la chaîne bascule à l'image suivante, caméra immobile. */
   qualite(v: QualiteRendu): void;
   /** Le coût de la dernière image (`16-realisme.md` A6), ou `null` avant la première. */
   mesurer(): MesuresRendu | null;
+  /**
+   * Rejoue un geste du dock, comme son bouton. La promesse tient jusqu'à la
+   * dernière image de l'animation — c'est ce qui permet de mesurer la cadence
+   * **pendant** qu'un geste joue — et rend faux si le geste n'avait rien à montrer.
+   */
+  jouer(cle: GesteBanc): Promise<boolean>;
+  /** Revient à l'état de départ du monde, sans animation : de quoi rejouer un geste en boucle. */
+  neuf(): void;
+  /** Une image PNG en `data:` de la toile seule — ni dock, ni barre — : les captures de référence. */
+  capturer(): string | null;
+}
+
+/** Deux relevés identiques à l'affichage près : on ne repeint pas le dock pour rien. */
+function memesMesures(a: MesuresRendu, b: MesuresRendu): boolean {
+  return a.triangles === b.triangles && a.appels === b.appels && a.composeur === b.composeur
+    && a.msCalibration === b.msCalibration && Math.abs(a.msParImage - b.msParImage) < 0.05
+    && JSON.stringify(a.familles ?? null) === JSON.stringify(b.familles ?? null);
 }
 
 const QUALITES: readonly (readonly [QualiteRendu, string])[] = [['auto', 'Auto'], ['haute', 'Haute'], ['basse', 'Basse']];
@@ -206,7 +225,8 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     return () => clearTimeout(minuterie);
   }, [toast]);
 
-  // Le banc est un monde comme les autres, ajouté après les trois missions.
+  // Le banc est un monde comme les autres, ajouté après les trois missions ;
+  // la grande carte, celle du budget de `doc/10` §9.2, vient en dernier.
   const catalogue0 = useMemo(() => mondes.map((m) => m), [mondes]);
   // Le scénario est forcé sur le catalogue 2 : celui des missions de démonstration
   // est en catalogue 1, qui n'a pas le génie, et le banc l'aurait perdu en silence.
@@ -215,7 +235,12 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     scenario: scenarioBanc(catalogue0[0]!.scenario),
     carte: carteBanc(),
   }), [catalogue0]);
-  const tous = useMemo(() => [...catalogue0, banc], [catalogue0, banc]);
+  const grande = useMemo<Monde>(() => ({
+    nom: 'Grande carte 24 × 16 (mesure)',
+    scenario: scenarioBanc(catalogue0[0]!.scenario),
+    carte: carteGrande(),
+  }), [catalogue0]);
+  const tous = useMemo(() => [...catalogue0, banc, grande], [catalogue0, banc, grande]);
   // L'URL peut porter un index au-delà de la liste : on le borne à l'usage plutôt
   // qu'à la lecture, pour que le `<select>` montre toujours un monde réel.
   const indexSur = Math.min(index, tous.length - 1);
@@ -310,12 +335,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   useEffect(() => {
     const minuterie = setInterval(() => {
       const m = rendu.current?.mesurer?.() ?? null;
-      setMesures((avant) => (
-        avant && m && avant.triangles === m.triangles && avant.appels === m.appels
-          && avant.composeur === m.composeur && Math.abs(avant.msParImage - m.msParImage) < 0.05
-          ? avant
-          : m
-      ));
+      setMesures((avant) => (avant && m && memesMesures(avant, m) ? avant : m));
     }, 1000);
     return () => clearInterval(minuterie);
   }, []);
@@ -352,10 +372,17 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     urlLue.current = true;
   }, []);
 
+  // Les gestes lisent l'état du rendu courant ; le pont, posé une fois par
+  // liste de mondes, passe par ces références pour ne jamais rejouer un état
+  // périmé.
+  const jouerRef = useRef<(geste: GesteBanc) => Promise<boolean>>(() => Promise.resolve(false));
+  const neufRef = useRef<() => void>(() => undefined);
+
   // Le pont de mise au point du banc, hors production : c'est par lui qu'un
   // pilotage Playwright choisit un monde, cadre une case et rapproche la caméra
-  // pour photographier une figurine de près. Le HUD et le panneau remplacent
-  // leur DOM à chaque rendu, ce qui rend le pilotage « au bouton » fragile.
+  // pour photographier une figurine de près, ou rejoue un geste en boucle pour
+  // mesurer la cadence. Le HUD et le panneau remplacent leur DOM à chaque
+  // rendu, ce qui rend le pilotage « au bouton » fragile.
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') return undefined;
     const g = globalThis as unknown as { __atlasBanc?: PontBanc };
@@ -367,28 +394,38 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       tourner: (sens) => rendu.current?.tourner?.(sens),
       silhouettes: (v) => setSilhouettes(v),
       replier: (v) => setDockReplie(v),
+      feuille: (n) => setNiveau(n),
       pret: () => rendu.current !== null,
       qualite: (v) => setQualite(normaliserQualite(v)),
       mesurer: () => rendu.current?.mesurer?.() ?? null,
+      jouer: (cle) => jouerRef.current(cle),
+      neuf: () => neufRef.current(),
+      capturer: () => rendu.current?.capturer() ?? null,
     };
     return () => { delete g.__atlasBanc; };
   }, [tous]);
 
-  /** Rejoue un geste : l'état d'abord, l'animation ensuite — comme le jeu. */
-  const jouer = (geste: GesteBanc): void => {
+  /**
+   * Rejoue un geste : l'état d'abord, l'animation ensuite — comme le jeu. La
+   * promesse tient jusqu'à la dernière image, et rend faux si l'état ne
+   * permettait rien.
+   */
+  const jouer = (geste: GesteBanc): Promise<boolean> => {
     const r = rejouer(etat, geste);
     if (!r) {
       const nom = DESCRIPTIONS_GESTES.find((d) => d.cle === geste)?.nom ?? geste;
       annoncer(`Rien à montrer pour « ${nom} » dans cet état.`);
-      return;
+      return Promise.resolve(false);
     }
     annoncer('');
     const avant = etat;
     setEtat(r.apres);
     const v = vueCourante.current;
     rendu.current?.afficher(habille(r.apres, v), v);
-    void rendu.current?.animer(r.evenements, habille(avant, v)).catch(() => undefined);
+    const animation = rendu.current?.animer(r.evenements, habille(avant, v)) ?? Promise.resolve();
+    return animation.then(() => true, () => true);
   };
+  jouerRef.current = jouer;
 
   const basculer = (g: GenreBanc): void => setGenres(
     (liste) => (liste.includes(g) ? liste.filter((x) => x !== g) : [...liste, g]),
@@ -406,6 +443,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   };
   const recentrer = (): void => rendu.current?.recentrer?.({ x: Math.floor(etat.largeur / 2), y: Math.floor(etat.hauteur / 2) });
   const remettreANeuf = (): void => { setEtat(etatNeuf); annoncer(''); };
+  neufRef.current = remettreANeuf;
 
   const sectionOuverte = (cle: CleSection): boolean => ouvertes.includes(cle);
   const basculerSection = (cle: CleSection): void => setOuvertes(
@@ -475,7 +513,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   </div>;
 
   const boutonGeste = (d: DescriptionGeste): React.ReactElement => (
-    <button key={d.cle} type="button" className={styles.geste} title={d.aide} onClick={() => jouer(d.cle)}>
+    <button key={d.cle} type="button" className={styles.geste} title={d.aide} onClick={() => { void jouer(d.cle); }}>
       <strong>{d.nom}</strong><small>{d.aide}</small>
     </button>
   );
@@ -530,6 +568,15 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
           ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement`
           : 'Pas encore d’image.'}
       </p>
+      {/* Par famille, sur la scène entière : les appels sont approchés par les
+          mailles, la passe d'ombres n'y est pas. */}
+      {mesures?.familles
+        ? <p className={styles.note} data-familles="oui">
+          {Object.entries(mesures.familles)
+            .map(([nom, f]) => `${nom} ${f.triangles.toLocaleString('fr-FR')} tri / ${f.mailles} mailles`)
+            .join(' · ')}
+        </p>
+        : null}
     </div>
   </>;
 
