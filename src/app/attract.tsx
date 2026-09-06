@@ -124,6 +124,9 @@ export default function Attract() {
     const rendu = creerRendu3d({
       biome: exhibition.biome,
       paysParCamp: { 0: 'fr', 1: 'lu' },
+      // Un écran-titre n'a pas besoin d'occlusion ni de grain, et `basse` lui
+      // épargne le téléchargement des modules de post-traitement.
+      qualite: 'basse',
     });
     let vivant = true;
     let etat = etatNeuf();

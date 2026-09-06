@@ -52,8 +52,13 @@ export {
 
 export {
   webgl2Disponible,
-  type CleRendu, type GestesRendu, type PointVue, type Rendu, type VueInteraction,
+  type CleRendu, type GestesRendu, type MesuresRendu, type PointVue, type Rendu, type VueInteraction,
 } from './rendu';
+
+export {
+  decisionComposeur, IMAGES_CALIBRATION, msCalibration, normaliserQualite, QUALITE_PAR_DEFAUT,
+  QUALITES_RENDU, SEUIL_MS_COMPOSEUR, type QualiteRendu,
+} from './qualite';
 
 export {
   monterHudHtml, type ApiHud, type HudHtml, type VueJeu,

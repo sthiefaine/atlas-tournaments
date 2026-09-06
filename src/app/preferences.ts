@@ -32,6 +32,8 @@
  * l'autre par simple `startsWith`.
  */
 
+import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
+
 /** Ce que le joueur peut régler aujourd'hui. */
 export interface Preferences {
   version: 1;
@@ -43,6 +45,11 @@ export interface Preferences {
    * quelqu'un qui l'a demandée à son appareil.
    */
   animationsReduites: boolean;
+  /**
+   * La qualité d'affichage (`render/qualite.ts`) : `auto` mesure et décide,
+   * `haute` allume la chaîne de post-traitement, `basse` ne l'allume jamais.
+   */
+  qualite: QualiteRendu;
 }
 
 /** Les deux profils d'un appareil. La liste est fermée : deux, pas « n ». */
@@ -179,6 +186,7 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   version: 1,
   dialogues: true,
   animationsReduites: false,
+  qualite: QUALITE_PAR_DEFAUT,
 });
 
 /** Ramène n'importe quoi à des préférences valides. */
@@ -189,6 +197,7 @@ export function normaliserPreferences(brut: unknown): Preferences {
     version: 1,
     dialogues: typeof p.dialogues === 'boolean' ? p.dialogues : PREFERENCES_PAR_DEFAUT.dialogues,
     animationsReduites: p.animationsReduites === true,
+    qualite: normaliserQualite(p.qualite),
   };
 }
 

@@ -21,8 +21,9 @@ import * as THREE from 'three';
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import { signatureTerrain, terrainLogique } from '../engine/index';
 import { Boucle } from '../render/boucle';
+import { QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
 import type {
-  GestesRendu, PointVue, Rendu, VueInteraction,
+  GestesRendu, MesuresRendu, PointVue, Rendu, VueInteraction,
 } from '../render/rendu';
 import type { Biome, CampId, CodePays, Case, CleTerrain } from '../schemas/types';
 import { construireAnimations } from './animations';
@@ -30,7 +31,8 @@ import { creerVue3d, type Vue3d } from './camera';
 import { brancherGestes3d } from './gestes';
 import { creerDecor, type Decor } from './decor';
 import { creerEclairage, parametresAmbiance, type Eclairage } from './eclairage';
-import { CASE, caseVersMonde, type GrilleTerrain } from './geometrie';
+import { caseVersMonde, type GrilleTerrain } from './geometrie';
+import { tailleCarteOmbre } from './ombres';
 import { creerScene3d, type Scene3d } from './scene';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
 import { creerPlateau, type Plateau } from './terrain';
@@ -49,6 +51,10 @@ export {
   distanceCadrage, palierDistance, palierSuivant, positionCamera, TANGAGE_DEFAUT,
   TANGAGE_MAX, TANGAGE_MIN, type EtatCamera,
 } from './camera';
+export {
+  cadreOmbre, champVisibleAuSol, DISTANCE_SOLEIL, HAUTEURS_OMBRE, tailleCarteOmbre,
+  type CadreOmbre, type RectangleSol,
+} from './ombres';
 export { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 export { chargerModele, RACINE_MODELES } from './unites';
 
@@ -73,6 +79,17 @@ interface Monde {
 export interface OptionsRendu3d {
   biome?: Biome;
   paysParCamp?: Partial<Record<CampId, CodePays>>;
+  /**
+   * La qualité d'affichage (`render/qualite.ts`) : décide de la chaîne de
+   * post-traitement. `auto` par défaut — le rendu mesure ses premières images.
+   */
+  qualite?: QualiteRendu;
+  /**
+   * La préférence « animations réduites » du joueur. Le réglage de l'appareil
+   * (`prefers-reduced-motion`) est lu ici même et reste maître : celui-ci ne
+   * peut qu'ajouter la réduction. Elle éteint aussi la chaîne de post-traitement.
+   */
+  animationsReduites?: boolean;
 }
 
 /** Crée le rendu 3D, avec les styles des nations participant au scénario. */
@@ -89,9 +106,16 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let premierTerrain = true;
   let cadree = false;
   let mouvementReduit: MediaQueryList | undefined;
+  /** Vrai quand le pointeur principal est un doigt : la carte d'ombre passe à 1024². */
+  let pointeurGrossier = false;
 
   function salir(): void {
     boucle?.salir();
+  }
+
+  /** Moins de mouvement : l'appareil le demande, ou le joueur dans ses réglages. */
+  function reduit(): boolean {
+    return (mouvementReduit?.matches ?? false) || (options.animationsReduites ?? false);
   }
 
   /**
@@ -123,23 +147,20 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const effets = new THREE.Group();
     effets.name = 'effets';
     const depart = parametresAmbiance(e.climat.saison, e.climat.phase, e.climat.meteo);
-    const eclairage = creerEclairage(s.scene, doc, depart, (x, z) => x >= 0 && z >= 0 && x < e.largeur && z < e.hauteur ? plateau.hauteurEn(x, z) : null);
+    const eclairage = creerEclairage(
+      s.scene, doc, depart,
+      (x, z) => x >= 0 && z >= 0 && x < e.largeur && z < e.hauteur ? plateau.hauteurEn(x, z) : null,
+      { tailleOmbre: tailleCarteOmbre(pointeurGrossier) },
+    );
     const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
 
     s.scene.add(plateau.groupe, decor.groupe, unites.groupe, surbrillances.groupe, effets, eclairage.groupe);
     vue3d.redimensionner(s.largeur, s.hauteur);
     vue3d.cadrerCarte();
 
-    // Les ombres couvrent la carte entière : une seule carte d'ombre suffit
-    // pour un plateau, inutile de la déplacer avec la caméra.
-    const rayon = Math.max(e.largeur, e.hauteur) * CASE * 0.75 + 4;
-    const cam = eclairage.soleil.shadow.camera;
-    cam.left = -rayon;
-    cam.right = rayon;
-    cam.top = rayon;
-    cam.bottom = -rayon;
-    cam.far = rayon * 4 + 60;
-    cam.updateProjectionMatrix();
+    // La caméra d'ombre suit le champ visible, image après image (`dessiner`) :
+    // elle n'a plus de cadre fixe. Le premier se pose ici, avant l'image.
+    eclairage.cadrerOmbre(vue3d.etat, vue3d.camera.aspect, grille);
 
     plateau.appliquerAmbiance(depart);
     decor.appliquerAmbiance(depart, e.climat.saison);
@@ -154,18 +175,21 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const m = monde;
     if (!s || !m) return;
     let encore = false;
-    const reduit = mouvementReduit?.matches ?? false;
+    const calme = reduit();
     // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
     // la boucle comme les autres animations, et l'image qui suit les voit.
-    encore = m.vue3d.avancer(ecoule, reduit) || encore;
+    encore = m.vue3d.avancer(ecoule, calme) || encore;
     encore = m.eclairage.avancer(ecoule, m.vue3d.cible) || encore;
+    // Puis l'ombre suit la caméra et le soleil ; le calcul ne se refait que
+    // s'ils ont bougé.
+    m.eclairage.cadrerOmbre(m.vue3d.etat, m.vue3d.camera.aspect, m.grille);
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) m.decor.majRelief();
     encore = mutation || encore;
-    encore = m.decor.avancer(ecoule, reduit) || encore;
+    encore = m.decor.avancer(ecoule, calme) || encore;
     // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, le
     // tassement d'une unité qui a joué doit encore s'appliquer — d'un coup.
-    encore = m.unites.avancer(ecoule, reduit) || encore;
+    encore = m.unites.avancer(ecoule, calme) || encore;
     encore = m.surbrillances.avancer(ecoule) || encore;
     const p = m.eclairage.courant;
     m.plateau.appliquerAmbiance(p);
@@ -211,12 +235,17 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     monter(conteneur: HTMLElement): void {
       conteneurRef = conteneur;
-      mouvementReduit = conteneur.ownerDocument.defaultView?.matchMedia('(prefers-reduced-motion: reduce)');
+      const fenetre = conteneur.ownerDocument.defaultView;
+      mouvementReduit = fenetre?.matchMedia('(prefers-reduced-motion: reduce)');
+      pointeurGrossier = fenetre?.matchMedia('(pointer: coarse)').matches ?? false;
       scene3d = creerScene3d(conteneur, {
         surRedimension: (l, h) => {
           monde?.vue3d.redimensionner(l, h);
           salir();
         },
+        qualite: options.qualite ?? QUALITE_PAR_DEFAUT,
+        reduit,
+        surChangement: salir,
       });
       boucle = new Boucle(dessiner);
       repos = setInterval(() => salir(), MS_REPOS);
@@ -278,13 +307,18 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       return scene3d?.msParImage ?? 0;
     },
 
+    mesurer(): MesuresRendu {
+      return scene3d?.mesures() ?? { triangles: 0, appels: 0, msParImage: 0, composeur: false };
+    },
+
     capturer(): string | null {
       const s = scene3d;
       const m = monde;
       if (!s || !m) return null;
       try {
         // Le tampon WebGL n'est pas préservé entre deux compositions : on
-        // redessine juste avant de lire, dans la même tâche.
+        // redessine juste avant de lire, dans la même tâche — par la chaîne de
+        // post-traitement si elle est active, donc ce que l'écran montre.
         s.dessiner(m.vue3d.camera);
         return s.canvas.toDataURL('image/png');
       } catch {

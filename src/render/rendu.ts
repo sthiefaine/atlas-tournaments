@@ -35,6 +35,24 @@ export type CleRendu = '3d';
 export interface PointVue { x: number; y: number }
 
 /**
+ * Ce qu'une image a coûté (`16-realisme.md` A6). Les compteurs portent sur la
+ * **dernière image dessinée, en entier** : la passe d'ombres est comptée, et,
+ * quand la chaîne de post-traitement est active, la seconde passe de scène
+ * (normales et profondeur) et les passes plein écran le sont aussi — c'est le
+ * coût réel de l'image, pas celui de la seule géométrie. `composeur` dit
+ * laquelle des deux on a mesurée.
+ */
+export interface MesuresRendu {
+  triangles: number;
+  /** Appels de dessin (*draw calls*). */
+  appels: number;
+  /** Durée moyenne glissante d'une image, en millisecondes. */
+  msParImage: number;
+  /** Vrai si l'image passe par la chaîne de post-traitement. */
+  composeur: boolean;
+}
+
+/**
  * Ce que le contrôleur donne à peindre par-dessus l'état : la sélection, les
  * cases allumées, le chemin, le curseur, le brouillard et l'ambiance.
  */
@@ -105,6 +123,8 @@ export interface Rendu {
   capturer(): string | null;
   /** Durée moyenne d'une image, en millisecondes. Sert aux mesures et au réglage. */
   msParImage(): number;
+  /** Le coût de la dernière image : triangles, appels, durée, chaîne active ou non. */
+  mesurer?(): MesuresRendu;
   /** Retire tout : écouteurs, boucle, contextes, mémoire graphique. */
   demonter(): void;
 }

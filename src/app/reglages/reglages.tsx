@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { QUALITES_RENDU, type QualiteRendu } from '../../render/qualite';
 import {
   NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
   compterProgression, effacerProgression, ecrirePreferences, lirePreferences,
@@ -35,6 +36,11 @@ export interface LibellesReglages {
   dialoguesNote: string;
   animations: string;
   animationsNote: string;
+  qualite: string;
+  qualiteNote: string;
+  qualiteAuto: string;
+  qualiteHaute: string;
+  qualiteBasse: string;
   actif: string;
   inactif: string;
   profils: string;
@@ -91,6 +97,9 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
   }, []);
 
   const nomDe = (profil: Profil): string => profils.noms[profil] || (profil === 'a' ? libelles.profilA : libelles.profilB);
+  const libelleQualite: Record<QualiteRendu, string> = {
+    auto: libelles.qualiteAuto, haute: libelles.qualiteHaute, basse: libelles.qualiteBasse,
+  };
 
   const changer = (partiel: Partial<Preferences>): void => {
     const suivant = { ...preferences, ...partiel };
@@ -154,6 +163,24 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     <section className="reglages-groupe">
       {interrupteur('dialogues', libelles.dialogues, libelles.dialoguesNote)}
       {interrupteur('animationsReduites', libelles.animations, libelles.animationsNote)}
+    </section>
+
+    <section className="reglages-groupe" aria-labelledby="reglage-qualite">
+      <h2 id="reglage-qualite">{libelles.qualite}</h2>
+      {/* Trois choix, un rang : le réglage pilote réellement la chaîne de
+          post-traitement du rendu, lue par la page de jeu au montage. */}
+      <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
+        {QUALITES_RENDU.map((q) => {
+          const choisi = preferences.qualite === q;
+          return <button
+            key={q} type="button" role="radio" aria-checked={choisi}
+            className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => changer({ qualite: q })}
+          >
+            {libelleQualite[q]}
+          </button>;
+        })}
+      </div>
+      <p className="reglage-note">{libelles.qualiteNote}</p>
     </section>
 
     <section className="reglages-groupe" aria-labelledby="reglage-profils">

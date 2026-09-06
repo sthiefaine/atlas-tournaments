@@ -39,7 +39,7 @@ import { nomCourtUnite } from './libelles';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
-  type CleRendu, type Rendu, type VueInteraction,
+  type CleRendu, type MesuresRendu, type Rendu, type VueInteraction,
 } from './rendu';
 
 /**
@@ -191,6 +191,12 @@ export interface PontDebug {
   capturer(): string | null;
   /** Durée moyenne d'une image, en millisecondes. */
   msParImage(): number;
+  /**
+   * Le coût de la dernière image — triangles, appels, durée, chaîne de
+   * post-traitement active ou non —, ou `null` si la peau ne sait pas mesurer.
+   * C'est la mesure de `16-realisme.md` A6, lisible depuis la console.
+   */
+  mesurer(): MesuresRendu | null;
   forcerAmbiance(saison: Saison | null, phase?: PhaseJour, meteo?: Meteo): void;
   etat(): { journee: number; camp: number; terminee: boolean };
   /**
@@ -659,6 +665,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       positionCase: (x, y) => rendu.versEcran({ x, y }),
       capturer: () => rendu.capturer(),
       msParImage: () => rendu.msParImage(),
+      mesurer: () => rendu.mesurer?.() ?? null,
       forcerAmbiance,
       etat: () => ({ journee: etat.journee, camp: etat.campCourant, terminee: etat.partie.terminee }),
       terrain: (x, y) => terrainLogique(etat, cat, { x, y }),

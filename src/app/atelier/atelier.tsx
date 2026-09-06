@@ -5,7 +5,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { chargerCatalogue, creerPartie, sceneDepuis, type EtatPartie } from '@/engine/index';
 import { resoudreCommandantsScenario } from '@/content/commandants-jeu';
 import { ambiance } from '@/render/ambiance';
-import type { Rendu, VueInteraction } from '@/render/rendu';
+import { normaliserQualite, type QualiteRendu } from '@/render/qualite';
+import type { MesuresRendu, Rendu, VueInteraction } from '@/render/rendu';
 import {
   BIOMES, type Biome, type CodePays, type MapDef, type Meteo, type PhaseJour,
   type Saison, type Scenario,
@@ -64,7 +65,13 @@ interface PontBanc {
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
   pret(): boolean;
+  /** Change la qualité d'affichage sans recharger : la peau se remonte, même vue par défaut. */
+  qualite(v: QualiteRendu): void;
+  /** Le coût de la dernière image (`16-realisme.md` A6), ou `null` avant la première. */
+  mesurer(): MesuresRendu | null;
 }
+
+const QUALITES: readonly (readonly [QualiteRendu, string])[] = [['auto', 'Auto'], ['haute', 'Haute'], ['basse', 'Basse']];
 
 const NOMS_BIOMES: Record<Biome, string> = { plaine: 'Bocage', foret: 'Forêt', montagne: 'Montagne', desert: 'Désert', jungle: 'Jungle', neige: 'Terres gelées', volcanique: 'Volcanique', cotier: 'Littoral', archipel: 'Archipel', marais: 'Marais' };
 const SAISONS: readonly (readonly [Saison, string])[] = [['printemps', 'Printemps'], ['ete', 'Été'], ['automne', 'Automne'], ['hiver', 'Hiver']];
@@ -80,12 +87,13 @@ const VUE_DEFAUT: VueBanc = {
   paysAllie: 'fr', paysAdverse: 'lu', brouillard: false, genres: [],
 };
 
-/** Les six sections du dock, et les cinq onglets de la feuille (le sixième est « Plus »). */
-type CleSection = 'monde' | 'ambiance' | 'surbrillances' | 'gestes' | 'limites' | 'camera';
+/** Les sept sections du dock, et les cinq onglets de la feuille (le sixième est « Plus »). */
+type CleSection = 'monde' | 'ambiance' | 'surbrillances' | 'gestes' | 'limites' | 'camera' | 'rendu';
 type CleOnglet = 'monde' | 'ambiance' | 'surbrillances' | 'gestes' | 'plus';
 const SECTIONS: readonly { cle: CleSection; nom: string }[] = [
   { cle: 'monde', nom: 'Monde' }, { cle: 'ambiance', nom: 'Ambiance' }, { cle: 'surbrillances', nom: 'Surbrillances' },
   { cle: 'gestes', nom: 'Gestes' }, { cle: 'limites', nom: 'Cas limites' }, { cle: 'camera', nom: 'Caméra' },
+  { cle: 'rendu', nom: 'Rendu' },
 ];
 const ONGLETS: readonly { cle: CleOnglet; nom: string }[] = [
   { cle: 'monde', nom: 'Monde' }, { cle: 'ambiance', nom: 'Ambiance' }, { cle: 'surbrillances', nom: 'Surbrillances' },
@@ -100,6 +108,7 @@ const GLYPHES: Record<CleSection | 'plus' | 'accueil' | 'jouer', string> = {
   gestes: 'M7 4.5v15l12-7.5z',
   limites: 'M12 3.5L2.5 20h19zM12 10v4.5M12 17.2v.6',
   camera: 'M10 4h4l1.5 2.5H20a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7.5a1 1 0 0 1 1-1h4.5zM12 9.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7z',
+  rendu: 'M3 4h18v12H3zM8 20h8M12 16v4M6 13l3-4 3 3 3-5 3 6',
   plus: 'M12 5v14M5 12h14',
   accueil: 'M3.5 11.5L12 4l8.5 7.5M6 10v10h12V10',
   jouer: 'M6 4.5v15l13-7.5z',
@@ -163,6 +172,13 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   const [flecheVisible, setFleche] = useState(false);
   const [brouillard, setBrouillard] = useState(VUE_DEFAUT.brouillard);
   const [silhouettes, setSilhouettes] = useState(false);
+  // La qualité d'affichage du banc, `auto` par défaut comme en jeu. En changer
+  // remonte la peau : c'est le prix d'une interface `Rendu` qui reste minimale,
+  // et le banc revient de toute façon à sa vue par défaut, ce qui rend la
+  // comparaison « avec et sans occlusion » équitable.
+  const [qualite, setQualite] = useState<QualiteRendu>('auto');
+  // Le coût de la dernière image, relevé une fois par seconde pour A6.
+  const [mesures, setMesures] = useState<MesuresRendu | null>(null);
   // Le statut est un toast en haut de la toile. Il est **fixe** tant que la peau
   // se prépare ou qu'elle a échoué ; un geste sans effet, lui, s'efface seul.
   const [toast, setToast] = useState<Toast | null>({ texte: 'Préparation du monde…', fixe: true });
@@ -267,7 +283,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     };
 
     void import('@/render3d/index').then(({ creerRendu3d }) => {
-      poser(() => creerRendu3d({ biome, paysParCamp: { 0: paysAllie, 1: paysAdverse } }));
+      poser(() => creerRendu3d({ biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite }));
     }).catch(() => {
       if (annule) return;
       courant?.demonter();
@@ -278,7 +294,22 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     // état par `etatCourant`. Le mettre ici rebâtirait la scène à chaque geste,
     // donc rejouerait le cadrage de caméra et effacerait l'animation qu'on vient
     // tout juste de déclencher.
-  }, [biome, paysAllie, paysAdverse, monde, habille, annoncer]);
+  }, [biome, paysAllie, paysAdverse, monde, habille, annoncer, qualite]);
+
+  // Le relevé de performance : une lecture par seconde, et seulement si elle
+  // a changé, pour ne pas faire repeindre le dock à chaque image immobile.
+  useEffect(() => {
+    const minuterie = setInterval(() => {
+      const m = rendu.current?.mesurer?.() ?? null;
+      setMesures((avant) => (
+        avant && m && avant.triangles === m.triangles && avant.appels === m.appels
+          && avant.composeur === m.composeur && Math.abs(avant.msParImage - m.msParImage) < 0.05
+          ? avant
+          : m
+      ));
+    }, 1000);
+    return () => clearInterval(minuterie);
+  }, []);
 
   // Cet effet vient **après** celui qui monte la peau, et ce n'est pas un
   // hasard : React les exécute dans l'ordre de déclaration. Sur un changement
@@ -328,6 +359,8 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       silhouettes: (v) => setSilhouettes(v),
       replier: (v) => setDockReplie(v),
       pret: () => rendu.current !== null,
+      qualite: (v) => setQualite(normaliserQualite(v)),
+      mesurer: () => rendu.current?.mesurer?.() ?? null,
     };
     return () => { delete g.__atlasBanc; };
   }, [tous]);
@@ -475,9 +508,25 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     pas des règles : rien ici n’est une partie légale, et rien n’est enregistré.
   </p>;
 
+  // La qualité et le relevé de la dernière image : c'est ici qu'on compare
+  // « avec » et « sans » post-traitement (`16-realisme.md` A6). Les compteurs
+  // couvrent l'image entière, ombres comprises ; avec le post-traitement, la
+  // scène y est dessinée deux fois (couleur, puis normales et profondeur).
+  const blocRendu = <>
+    <Segmente nom="Qualité" valeur={qualite} options={QUALITES} surChoix={setQualite} colonnes={3} />
+    <div className={styles.champ}>
+      <span className={styles.etiquette}>Dernière image</span>
+      <p className={styles.note} data-mesures="oui">
+        {mesures
+          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement`
+          : 'Pas encore d’image.'}
+      </p>
+    </div>
+  </>;
+
   const contenuSection: Record<CleSection, React.ReactElement> = {
     monde: blocMonde, ambiance: blocAmbiance, surbrillances: blocSurbrillances,
-    gestes: blocGestesGroupes, limites: blocLimites, camera: blocCamera,
+    gestes: blocGestesGroupes, limites: blocLimites, camera: blocCamera, rendu: blocRendu,
   };
 
   return <main className={styles.atelier} data-agencement={agencement} data-dock={dockReplie ? 'replie' : 'ouvert'} data-niveau={niveau}>
@@ -537,6 +586,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
           {onglet === 'plus' ? <>
             <div className={styles.champ}><span className={styles.etiquette}>Cas limites</span>{blocLimites}</div>
             <div className={styles.champ}><span className={styles.etiquette}>Caméra</span>{blocCamera}</div>
+            {blocRendu}
             {note}
           </> : null}
         </div>
