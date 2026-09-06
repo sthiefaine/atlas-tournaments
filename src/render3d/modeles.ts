@@ -38,7 +38,8 @@ import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { clone as clonerSquelette } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
 import {
-  CLIPS_ANIMATION, gabaritDe, type ClipAnimation, type Gabarit, type NiveauLod, type StyleNation,
+  CLIPS_ANIMATION, estInventaireModeles, gabaritDe, NIVEAUX_LOD,
+  type ClipAnimation, type Gabarit, type InventaireModeles, type NiveauLod, type StyleNation,
 } from '../assets/spec';
 import { chargerStyleNation } from '../assets/styles';
 import { paletteDe } from '../render/palettes';
@@ -623,19 +624,11 @@ export function analyserGlb(donnees: ArrayBuffer, chargeur = new GLTFLoader()): 
   });
 }
 
-const lectures = new Map<string, Promise<LectureFichier | null>>();
-const modeles = new Map<string, Promise<ModeleCharge | null>>();
 let chargeur: GLTFLoader | null = null;
 
-/**
- * Lit un seul fichier. Rend `null` — jamais une exception — s'il n'existe pas,
- * et mémorise par nom : un 404 n'est demandé qu'une fois, et une géométrie de
- * base sur laquelle retombent vingt-trois nations n'est lue qu'une fois.
- */
-function lireFichier(nom: string): Promise<LectureFichier | null> {
-  const memo = lectures.get(nom);
-  if (memo) return memo;
-  const promesse = new Promise<LectureFichier | null>((resoudre) => {
+/** Lit un seul fichier par le réseau. Rend `null` — jamais une exception — s'il n'existe pas. */
+function lireFichierReseau(nom: string): Promise<LectureFichier | null> {
+  return new Promise<LectureFichier | null>((resoudre) => {
     try {
       chargeur = chargeur ?? new GLTFLoader();
       chargeur.load(
@@ -648,13 +641,62 @@ function lireFichier(nom: string): Promise<LectureFichier | null> {
       resoudre(null);
     }
   }).catch(() => null);
-  lectures.set(nom, promesse);
-  return promesse;
 }
 
+// ---------------------------------------------------------------------------
+// 6. L'inventaire : savoir d'avance ce qui existe, au lieu de sonder
+// ---------------------------------------------------------------------------
+
+/** La route qui sert l'inventaire des fichiers livrés (`src/app/api/modeles/route.ts`). */
+export const ROUTE_INVENTAIRE = '/api/modeles';
+
 /**
- * Charge et conforme le modèle d'une unité **pour une nation donnée**, dans
- * l'ordre de repli de `doc/10-rendu-3d.md` §7.1 :
+ * Demande l'inventaire des modèles livrés. Toute erreur — pas de réseau, route
+ * absente, réponse d'une autre forme — rend `null`, jamais une exception : le
+ * chargeur retombe alors sur le sondage fichier par fichier. `requete` est
+ * injectable pour les tests, qui n'ont pas de serveur.
+ */
+export async function lireInventaireReseau(
+  requete: (url: string) => Promise<Response> = (url) => fetch(url, { cache: 'no-store' }),
+): Promise<InventaireModeles | null> {
+  try {
+    const reponse = await requete(ROUTE_INVENTAIRE);
+    if (!reponse.ok) return null;
+    const corps: unknown = await reponse.json();
+    return estInventaireModeles(corps) ? corps : null;
+  } catch {
+    return null;
+  }
+}
+
+let inventairePartage: Promise<InventaireModeles | null> | null = null;
+
+/**
+ * L'inventaire de la page, demandé une fois : c'est ce qui remplace la
+ * quarantaine de sondes en 404 qu'une page coûtait tant que rien n'est livré.
+ * Un fichier déposé est vu au prochain chargement de page, pas avant — c'est
+ * le prix d'une seule requête, et c'est un prix de développement.
+ */
+export function chargerInventaire(): Promise<InventaireModeles | null> {
+  inventairePartage = inventairePartage ?? lireInventaireReseau();
+  return inventairePartage;
+}
+
+/** Ce qu'un chargeur de modèles se laisse injecter : les tests n'ont ni réseau ni fichier. */
+export interface OptionsChargeur {
+  /** L'inventaire des fichiers livrés, ou `null` pour sonder ; par défaut, la route `/api/modeles`. */
+  inventaire?: () => Promise<InventaireModeles | null>;
+  /** Ce qui lit un fichier par son nom ; par défaut `GLTFLoader` sous `RACINE_MODELES`. */
+  lecteur?: (nom: string) => Promise<LectureFichier | null>;
+}
+
+/** Ce qui charge et conforme le modèle d'un couple (unité, nation). */
+export type ChargeurModeles = (cle: CleUnite, pays?: CodePays | null) => Promise<ModeleCharge | null>;
+
+/**
+ * Fabrique un chargeur, avec ses propres mémos. Il charge et conforme le
+ * modèle d'une unité **pour une nation donnée**, dans l'ordre de repli de
+ * `doc/10-rendu-3d.md` §7.1 :
  *
  * ```
  * 1. kit national      kit_<pays>_<unite>_lod0.glb   (+ _lod1, _lod2 s'ils existent)
@@ -662,30 +704,60 @@ function lireFichier(nom: string): Promise<LectureFichier | null> {
  * 3. rien              → le placeholder reste en place
  * ```
  *
- * Le lod0 est obligatoire ; les niveaux suivants sont demandés dans l'ordre et
- * l'on s'arrête au premier absent — un lod2 sans lod1 ne serait pas un jeu de
- * niveaux. Rend `null` — jamais une exception — quand rien n'existe encore, ce
- * qui est l'état normal du projet. Le résultat est mémorisé par couple.
+ * L'inventaire décide de ce qui est demandé. S'il est connu, seuls les
+ * fichiers qu'il liste sont lus, aux niveaux qu'il liste, et un couple sans
+ * fichier ne coûte **aucune** requête. S'il vaut `null` — route absente, hors
+ * ligne —, chaque candidat est sondé comme avant, et un 404 n'est demandé
+ * qu'une fois. Dans les deux cas le lod0 est obligatoire, les niveaux suivants
+ * sont pris dans l'ordre et l'on s'arrête au premier absent — un lod2 sans
+ * lod1 ne serait pas un jeu de niveaux. Une lecture est mémorisée par nom (une
+ * base sur laquelle retombent vingt-trois nations n'est lue qu'une fois), le
+ * résultat conformé par couple. Rend `null` — jamais une exception — quand rien
+ * n'existe, ce qui est l'état normal du projet.
  */
-export function chargerModele(cle: CleUnite, pays: CodePays | null = null): Promise<ModeleCharge | null> {
-  const memoCle = `${pays ?? ''}:${cle}`;
-  const memo = modeles.get(memoCle);
-  if (memo) return memo;
-  const promesse = (async (): Promise<ModeleCharge | null> => {
-    for (const { id, kit } of candidatsModele(cle, pays)) {
-      const lod0 = await lireFichier(nomFichierModele(id, 0));
-      if (!lod0) continue;
-      const niveaux: THREE.Object3D[] = [lod0.scene];
-      for (const lod of [1, 2] as const) {
-        const suivant = await lireFichier(nomFichierModele(id, lod));
-        if (!suivant) break;
-        niveaux.push(suivant.scene);
+export function creerChargeurModeles(options: OptionsChargeur = {}): ChargeurModeles {
+  const lectures = new Map<string, Promise<LectureFichier | null>>();
+  const modeles = new Map<string, Promise<ModeleCharge | null>>();
+  const lireUn = options.lecteur ?? lireFichierReseau;
+  let inventaire: Promise<InventaireModeles | null> | null = null;
+
+  const lire = (nom: string): Promise<LectureFichier | null> => {
+    const memo = lectures.get(nom);
+    if (memo) return memo;
+    const promesse = lireUn(nom).catch(() => null);
+    lectures.set(nom, promesse);
+    return promesse;
+  };
+
+  return (cle, pays = null) => {
+    const memoCle = `${pays ?? ''}:${cle}`;
+    const memo = modeles.get(memoCle);
+    if (memo) return memo;
+    const promesse = (async (): Promise<ModeleCharge | null> => {
+      inventaire = inventaire ?? (options.inventaire ?? chargerInventaire)().catch(() => null);
+      const connu = await inventaire;
+      for (const { id, kit } of candidatsModele(cle, pays)) {
+        // Inventaire connu : ce qu'il liste, et rien d'autre ; inconnu : on sonde tout.
+        const listes: readonly NiveauLod[] = connu ? connu.modeles[id] ?? [] : NIVEAUX_LOD;
+        if (!listes.includes(0)) continue;
+        const lod0 = await lire(nomFichierModele(id, 0));
+        if (!lod0) continue;
+        const niveaux: THREE.Object3D[] = [lod0.scene];
+        for (const lod of [1, 2] as const) {
+          if (!listes.includes(lod)) break;
+          const suivant = await lire(nomFichierModele(id, lod));
+          if (!suivant) break;
+          niveaux.push(suivant.scene);
+        }
+        const style = pays === null ? null : chargerStyleNation(pays);
+        return conformerModele({ niveaux, clips: lod0.clips, kit }, style ? gabaritDe(style, cle) : 'b');
       }
-      const style = pays === null ? null : chargerStyleNation(pays);
-      return conformerModele({ niveaux, clips: lod0.clips, kit }, style ? gabaritDe(style, cle) : 'b');
-    }
-    return null;
-  })();
-  modeles.set(memoCle, promesse);
-  return promesse;
+      return null;
+    })();
+    modeles.set(memoCle, promesse);
+    return promesse;
+  };
 }
+
+/** Le chargeur de la page : l'inventaire de la route, les fichiers par le réseau. */
+export const chargerModele: ChargeurModeles = creerChargeurModeles();

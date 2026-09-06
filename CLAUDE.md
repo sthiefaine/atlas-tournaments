@@ -194,7 +194,8 @@ Un document ne se lit **jamais** comme les autres : `doc/14-secrets.md`. Il n'es
 ```
 src/app/          Next.js App Router. La seule couche qui a le droit de tout importer.
                   Pages : `/` (accueil provisoire), `/jeu/[scenario]`, `/admin/*`.
-                  API : /api/health, /api/canon, /api/i18n, /api/admin, /api/routines/*.
+                  API : /api/health, /api/canon, /api/i18n, /api/admin, /api/routines/*,
+                  /api/modeles (l'inventaire des .glb livrés, lu une fois par page par le rendu).
 src/engine/       Le moteur, pur et déterministe : (état, action) → état. Règles, RNG seedé,
                   rejeu, climat, mécaniques régionales par hooks, déblocages. Zéro dépendance.
 src/ai/           L'IA de jeu : une fonction d'évaluation et trois stratégies (pondérée,
