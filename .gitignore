@@ -30,3 +30,6 @@ npm-debug.log*
 
 # Construction lancée à côté du serveur de développement (next.config.ts)
 .next-build
+
+# Les worktrees des agents (isolation des chantiers parallèles)
+.claude/worktrees/

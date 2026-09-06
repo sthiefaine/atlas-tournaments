@@ -17,6 +17,8 @@ const eslintConfig = [
       ".next/**",
       // Construction lancée à côté du serveur de développement (`next.config.ts`).
       ".next-build/**",
+      // Les worktrees des agents portent leurs propres bundles : rien à y inspecter.
+      ".claude/**",
       "out/**",
       "build/**",
       "next-env.d.ts",
