@@ -316,6 +316,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       return scene3d?.mesures() ?? { triangles: 0, appels: 0, msParImage: 0, composeur: false, msCalibration: null };
     },
 
+    qualite(q: QualiteRendu): void {
+      scene3d?.reglerQualite(q);
+    },
+
     capturer(): string | null {
       const s = scene3d;
       const m = monde;

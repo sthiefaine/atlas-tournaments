@@ -65,7 +65,7 @@ interface PontBanc {
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
   pret(): boolean;
-  /** Change la qualité d'affichage sans recharger : la peau se remonte, même vue par défaut. */
+  /** Change la qualité d'affichage sans recharger ni remonter : la chaîne bascule à l'image suivante, caméra immobile. */
   qualite(v: QualiteRendu): void;
   /** Le coût de la dernière image (`16-realisme.md` A6), ou `null` avant la première. */
   mesurer(): MesuresRendu | null;
@@ -173,10 +173,13 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   const [brouillard, setBrouillard] = useState(VUE_DEFAUT.brouillard);
   const [silhouettes, setSilhouettes] = useState(false);
   // La qualité d'affichage du banc, `auto` par défaut comme en jeu. En changer
-  // remonte la peau : c'est le prix d'une interface `Rendu` qui reste minimale,
-  // et le banc revient de toute façon à sa vue par défaut, ce qui rend la
-  // comparaison « avec et sans occlusion » équitable.
+  // ne remonte pas la peau : `Rendu.qualite()` monte ou démonte la chaîne à
+  // l'image suivante, caméra immobile — c'est ce qui rend la comparaison
+  // « avec et sans occlusion » équitable. La référence sert au montage, qui
+  // ne doit pas dépendre de la qualité.
   const [qualite, setQualite] = useState<QualiteRendu>('auto');
+  const qualiteCourante = useRef(qualite);
+  qualiteCourante.current = qualite;
   // Le coût de la dernière image, relevé une fois par seconde pour A6.
   const [mesures, setMesures] = useState<MesuresRendu | null>(null);
   // Le statut est un toast en haut de la toile. Il est **fixe** tant que la peau
@@ -283,7 +286,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     };
 
     void import('@/render3d/index').then(({ creerRendu3d }) => {
-      poser(() => creerRendu3d({ biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite }));
+      poser(() => creerRendu3d({ biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current }));
     }).catch(() => {
       if (annule) return;
       courant?.demonter();
@@ -294,7 +297,13 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     // état par `etatCourant`. Le mettre ici rebâtirait la scène à chaque geste,
     // donc rejouerait le cadrage de caméra et effacerait l'animation qu'on vient
     // tout juste de déclencher.
-  }, [biome, paysAllie, paysAdverse, monde, habille, annoncer, qualite]);
+  }, [biome, paysAllie, paysAdverse, monde, habille, annoncer]);
+
+  // La qualité change sans remonter : la peau monte ou démonte sa chaîne à
+  // l'image suivante. Avant que la peau soit là, c'est le montage qui la lit.
+  useEffect(() => {
+    rendu.current?.qualite?.(qualite);
+  }, [qualite]);
 
   // Le relevé de performance : une lecture par seconde, et seulement si elle
   // a changé, pour ne pas faire repeindre le dock à chaque image immobile.

@@ -7,8 +7,23 @@ import assert from 'node:assert/strict';
 
 import {
   IMAGES_CALIBRATION, QUALITE_PAR_DEFAUT, QUALITES_RENDU, SEUIL_MS_COMPOSEUR,
-  decisionComposeur, msCalibration, normaliserQualite,
+  composeurPossible, decisionComposeur, msCalibration, normaliserQualite,
 } from '../../src/render/qualite';
+
+test('la chaîne ne se monte que si une cible flottante est dessinable', () => {
+  // Sans extension, three ne lèverait pas et l'écran serait noir : on refuse avant.
+  assert.equal(composeurPossible(() => false), false);
+  assert.equal(composeurPossible((nom) => nom === 'OES_texture_float'), false);
+  assert.equal(composeurPossible((nom) => nom === 'WEBGL_color_buffer_float'), false);
+  // L'extension complète, ou sa version demi-flottante seule, suffit.
+  assert.equal(composeurPossible((nom) => nom === 'EXT_color_buffer_float'), true);
+  assert.equal(composeurPossible((nom) => nom === 'EXT_color_buffer_half_float'), true);
+  assert.equal(composeurPossible(() => true), true);
+  // Et la question est posée au contexte, pas devinée : les deux noms sont demandés.
+  const demandes: string[] = [];
+  composeurPossible((nom) => { demandes.push(nom); return false; });
+  assert.deepEqual(demandes, ['EXT_color_buffer_float', 'EXT_color_buffer_half_float']);
+});
 
 test('la liste des qualités est fermée, et l’inconnu retombe sur `auto`', () => {
   assert.deepEqual([...QUALITES_RENDU], ['auto', 'haute', 'basse']);

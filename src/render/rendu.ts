@@ -21,6 +21,7 @@ import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
 import type { Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
+import type { QualiteRendu } from './qualite';
 import type { Surbrillance } from './surbrillance';
 
 /**
@@ -131,6 +132,12 @@ export interface Rendu {
   msParImage(): number;
   /** Le coût de la dernière image : triangles, appels, durée, chaîne active ou non. */
   mesurer?(): MesuresRendu;
+  /**
+   * Change la qualité d'affichage sans remonter : la chaîne de post-traitement
+   * se monte ou se démonte à l'image suivante, la caméra ne bouge pas. C'est
+   * ce qui permet de comparer avec et sans occlusion sur la même vue.
+   */
+  qualite?(qualite: QualiteRendu): void;
   /** Retire tout : écouteurs, boucle, contextes, mémoire graphique. */
   demonter(): void;
 }
