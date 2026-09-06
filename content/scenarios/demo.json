@@ -4,7 +4,7 @@
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-06",
   "code": "demo",
   "nom": "Match d’exhibition",
   "acte": 0,
@@ -53,12 +53,12 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Terrain plat, ciel dégagé : pas d’excuse aujourd’hui.",
+      "texte": "Une rivière, deux ponts, ciel dégagé : pas d’excuse aujourd’hui.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Ne va pas trop vite. La plaine punit les impatients.",
+      "texte": "Ne va pas trop vite. Les ponts punissent les impatients.",
       "emotion": "doute"
     }
   ],
