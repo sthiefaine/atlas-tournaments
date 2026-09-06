@@ -67,39 +67,16 @@ function roues(g: Pinceau): void {
   }
 }
 
-/** Pattes : la base d'un groupe d'infanterie, jamais d'un véhicule. */
-function pattes(g: Pinceau, col: Palette, lourd: boolean): void {
-  const soldat = (dx: number, dy: number, sc: number): void => {
-    g.save();
-    g.translate(dx, dy);
-    g.scale(sc, sc);
-    g.fillStyle = col.dark;
-    rr(g, -6, 8, 5, 10, 2);
-    g.fill();
-    rr(g, 1, 8, 5, 10, 2);
-    g.fill();
-    g.fillStyle = col.main;
-    rr(g, -8, -6, 16, 16, lourd ? 3 : 5);
-    g.fill();
-    g.fillStyle = col.light;
-    rr(g, -4, -3, 8, 6, 2);
-    g.fill();
-    g.fillStyle = PEAU;
-    g.beginPath();
-    g.arc(0, -12, 7, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = col.main;
-    g.beginPath();
-    g.arc(0, -14, 7.5, Math.PI, 0);
-    g.fill();
-    rr(g, -8, -15, 16, 3, 1.5);
-    g.fill();
-    trait(g, 6, -2, 14, -10, ACIER, 3);
-    g.restore();
-  };
-  soldat(-10, 2, 0.85);
-  soldat(8, -4, 0.85);
-  soldat(0, 10, 0.85);
+/**
+ * Pattes : la base d'un groupe d'infanterie, jamais d'un véhicule. Le dessin
+ * est délégué aux figurines (plus bas) : ce que portent les hommes vient des
+ * modules, et c'est la **masse** du groupe — nombre, carrure, posture — qui
+ * doit distinguer une troupe d'une autre à 36 pixels, pas un accessoire.
+ */
+function pattes(g: Pinceau, col: Palette, equipement: Equipement): void {
+  if (equipement === 'lance_missiles') sectionAntichar(g, col);
+  else if (equipement === 'chantier') equipeDeChantier(g, col);
+  else patrouille(g, col);
 }
 
 /** Coque : la base des unités de mer. */
@@ -187,6 +164,262 @@ function plateau(g: Pinceau, col: Palette): void {
   g.fillStyle = col.light;
   rr(g, -13, -4, 14, 3, 1.5);
   g.fill();
+}
+
+// ---------------------------------------------------------------------------
+// Figurines à pied
+// ---------------------------------------------------------------------------
+
+/**
+ * Ce qu'une troupe à pied porte. Sur une base `pattes`, il n'y a pas de caisse
+ * où poser un module : il dit l'équipement des hommes. `lance_roquettes`
+ * devient un tube d'épaule ; `radar` désigne **par convention** le technicien
+ * — la même lecture que `composerSilhouette` côté 3D — donc une équipe de
+ * chantier casquée et outillée, sans fusil. Tout autre module reste un fusil.
+ */
+export type Equipement = 'fusil' | 'lance_missiles' | 'chantier';
+
+/** L'équipement d'une troupe à pied, lu dans ses modules. */
+export function equipementDe(modules: readonly ModuleSilhouette[]): Equipement {
+  if (modules.includes('lance_roquettes')) return 'lance_missiles';
+  if (modules.includes('radar')) return 'chantier';
+  return 'fusil';
+}
+
+/** Les modules qu'une base `pattes` a déjà traduits en équipement : on ne les pose pas une seconde fois. */
+const MODULES_PORTES: readonly ModuleSilhouette[] = ['lance_roquettes', 'radar'];
+
+/** Bois des manches d'outils, commun à toutes les nations. */
+const BOIS = '#8a6a45';
+/** Reflet sur un métal cylindrique : le trait de lumière qui fait lire un tube. */
+const ACIER_REFLET = '#7c838c';
+/** Bande réfléchissante d'un gilet haute visibilité. */
+const REFLET = '#f6f5ee';
+
+type Casque = 'rebord' | 'lourd' | 'chantier';
+
+/** Une figurine : où elle pose les pieds et de quoi elle a l'air. */
+interface Figurine {
+  x: number;
+  y: number;
+  /** Grandit tout ; la carrure n'élargit que le torse. */
+  echelle: number;
+  carrure: number;
+  /** À genou : jambes repliées, et tout le haut descend d'autant. */
+  genou: boolean;
+  casque: Casque;
+  /** Sombre : un porte-plaques. Haute visibilité : l'accent, barré de bandes. */
+  gilet: 'sombre' | 'haute_visibilite';
+}
+
+/**
+ * Le corps d'une figurine, pieds en `(0, 0)` du repère local et tête vers le
+ * haut, puis `enMain` par-dessus : l'équipement se tient devant le torse, il
+ * doit donc se dessiner après lui. Le geste `save`/`translate`/`scale` est
+ * ici, et une seule fois, pour que chaque formation ne parle qu'en positions.
+ */
+function figurine(g: Pinceau, col: Palette, f: Figurine, enMain: (dy: number) => void): void {
+  g.save();
+  g.translate(f.x, f.y);
+  g.scale(f.echelle, f.echelle);
+  // La descente du haut du corps quand la figurine met un genou à terre.
+  const dy = f.genou ? 4 : 0;
+
+  g.fillStyle = col.dark;
+  if (f.genou) {
+    rr(g, -9, -5, 9, 5, 2);
+    g.fill();
+    rr(g, 1, -8.5, 5.5, 8.5, 2);
+    g.fill();
+    g.fillStyle = ACIER;
+    rr(g, -10, -3, 5, 3.2, 1);
+    g.fill();
+    rr(g, 0.5, -2.6, 6.5, 3, 1);
+    g.fill();
+  } else {
+    rr(g, -5.8, -10, 5.2, 10, 2);
+    g.fill();
+    rr(g, 0.6, -10, 5.2, 10, 2);
+    g.fill();
+    // Les bottes ferment la silhouette par le bas : sans elles, les jambes se
+    // perdent dans l'ombre au sol.
+    g.fillStyle = ACIER;
+    rr(g, -6.4, -2.6, 6.2, 3, 1);
+    g.fill();
+    rr(g, 0.2, -2.6, 6.2, 3, 1);
+    g.fill();
+  }
+
+  const l = 14 * f.carrure;
+  g.fillStyle = col.main;
+  rr(g, -l / 2, -22 + dy, l, 13, 3.5);
+  g.fill();
+  if (f.gilet === 'sombre') {
+    g.fillStyle = col.dark;
+    rr(g, -3.6, -20.5 + dy, 7.2, 9.5, 2);
+    g.fill();
+  } else {
+    g.fillStyle = col.light;
+    rr(g, -l / 2 + 1.5, -21 + dy, l - 3, 11, 2.5);
+    g.fill();
+    g.fillStyle = REFLET;
+    rr(g, -l / 2 + 1.5, -18 + dy, l - 3, 1.6, 0.8);
+    g.fill();
+    rr(g, -l / 2 + 1.5, -14 + dy, l - 3, 1.6, 0.8);
+    g.fill();
+  }
+
+  disque(g, 0, -27 + dy, 5.2, PEAU);
+  if (f.casque === 'rebord') {
+    g.fillStyle = col.main;
+    g.beginPath();
+    g.arc(0, -28 + dy, 6.2, Math.PI, 0);
+    g.fill();
+    g.fillStyle = col.dark;
+    rr(g, -8, -29.2 + dy, 16, 2.4, 1.2);
+    g.fill();
+    g.fillStyle = col.light;
+    rr(g, -3.5, -33 + dy, 4, 1.5, 0.75);
+    g.fill();
+  } else if (f.casque === 'lourd') {
+    // Le casque lourd descend sur les joues : il ne laisse qu'une fente de visage.
+    g.fillStyle = col.main;
+    g.beginPath();
+    g.arc(0, -27.5 + dy, 7.2, Math.PI, 0);
+    g.fill();
+    rr(g, -7.2, -27.5 + dy, 14.4, 5, 1.5);
+    g.fill();
+    g.fillStyle = ACIER;
+    rr(g, -6, -27 + dy, 12, 1.8, 0.9);
+    g.fill();
+    g.fillStyle = col.light;
+    rr(g, -4, -33.5 + dy, 5, 1.6, 0.8);
+    g.fill();
+  } else {
+    // Casque de chantier : calotte à l'accent, visière plate vers l'avant.
+    g.fillStyle = col.light;
+    g.beginPath();
+    g.arc(0, -28 + dy, 6.4, Math.PI, 0);
+    g.fill();
+    rr(g, -1, -29.6 + dy, 10.5, 2.2, 1.1);
+    g.fill();
+    g.fillStyle = ACIER;
+    rr(g, -6.4, -29.2 + dy, 12.8, 1.4, 0.7);
+    g.fill();
+  }
+
+  enMain(dy);
+  g.restore();
+}
+
+/** Un fusil d'assaut tenu en travers de la poitrine, deux mains dessus. */
+function fusil(g: Pinceau, col: Palette, dy: number): void {
+  // Le métal est clair et ses arêtes sombres : sur l'encre du panneau
+  // d'inspection, un fusil tout en `ACIER` disparaît.
+  trait(g, -8.5, -12.5 + dy, 10.5, -23 + dy, ACIER, 4);
+  trait(g, -8.5, -12.5 + dy, 10.5, -23 + dy, ACIER_CLAIR, 2.2);
+  trait(g, -8.5, -12.5 + dy, -12, -10 + dy, col.dark, 3.6);
+  trait(g, -0.5, -17.5 + dy, 1, -13 + dy, ACIER, 2.6);
+  disque(g, -5.5, -14.5 + dy, 1.9, PEAU);
+  disque(g, 4.5, -20.5 + dy, 1.9, PEAU);
+}
+
+/**
+ * Un lance-missiles porté à l'épaule : gros tube, ogive en avant, tuyère en
+ * arrière. Le tube passe devant le menton comme sur un Mech d'Advance Wars —
+ * c'est lui qu'on doit voir en premier, pas le visage.
+ */
+function lanceMissiles(g: Pinceau, col: Palette, dy: number): void {
+  const ax = -13; const ay = -9 + dy;
+  const bx = 17; const by = -31 + dy;
+  // Direction du tube et sa normale, pour poser l'ogive et la tuyère.
+  const dx = bx - ax; const dyy = by - ay;
+  const n = Math.hypot(dx, dyy);
+  const ux = dx / n; const uy = dyy / n;
+  const px = -uy; const py = ux;
+  polygone(g, [
+    [ax + px * 4.5, ay + py * 4.5], [ax - px * 4.5, ay - py * 4.5],
+    [ax - ux * 5 - px * 3, ay - uy * 5 - py * 3], [ax - ux * 5 + px * 3, ay - uy * 5 + py * 3],
+  ], ACIER);
+  trait(g, ax, ay, bx, by, ACIER, 7.5);
+  trait(g, ax, ay, bx, by, ACIER_CLAIR, 5);
+  trait(g, ax + 2, ay - 1.8, bx - 2, by - 1.8, ACIER_REFLET, 1.4);
+  polygone(g, [
+    [bx + px * 3.8, by + py * 3.8], [bx - px * 3.8, by - py * 3.8], [bx + ux * 7, by + uy * 7],
+  ], col.light);
+  disque(g, bx + ux * 4.5, by + uy * 4.5, 1.6, col.dark);
+  // Poignée sous le tube, et les deux mains.
+  trait(g, -1, -17 + dy, -1, -13 + dy, ACIER, 2.4);
+  disque(g, -1, -13.5 + dy, 2, PEAU);
+  disque(g, 6, -23.5 + dy, 2, PEAU);
+}
+
+/** Une pelle sur l'épaule, fer en l'air. */
+function pelle(g: Pinceau, dy: number): void {
+  trait(g, -3, -13 + dy, 13, -35 + dy, BOIS, 2.4);
+  g.save();
+  g.translate(13, -35 + dy);
+  // Le fer prolonge le manche : même angle, pointe en avant.
+  g.rotate(Math.atan2(-22, 16));
+  polygone(g, [[-1, -4.2], [5.5, -4], [9.5, 0], [5.5, 4], [-1, 4.2]], ACIER);
+  polygone(g, [[0, -2.8], [5, -2.6], [7.8, 0], [5, 2.6], [0, 2.8]], ACIER_CLAIR);
+  g.restore();
+  disque(g, -2, -14 + dy, 2, PEAU);
+  disque(g, 5, -24 + dy, 2, PEAU);
+}
+
+/** Un marteau-piqueur tenu devant soi, poignée en T et fleuret au sol. */
+function marteauPiqueur(g: Pinceau, dy: number): void {
+  g.fillStyle = ACIER;
+  rr(g, 5, -19 + dy, 6.5, 13, 2);
+  g.fill();
+  g.fillStyle = ACIER_CLAIR;
+  rr(g, 6.2, -17.8 + dy, 4.1, 9, 1.4);
+  g.fill();
+  trait(g, 8.2, -6 + dy, 8.2, 1.5, ACIER_CLAIR, 2.2);
+  g.fillStyle = ACIER;
+  rr(g, 1, -21.8 + dy, 14.5, 3, 1.5);
+  g.fill();
+  g.fillStyle = ACIER_CLAIR;
+  rr(g, 2, -21 + dy, 12.5, 1.5, 0.75);
+  g.fill();
+  disque(g, 2.5, -20 + dy, 2, PEAU);
+  disque(g, 14, -20 + dy, 2, PEAU);
+}
+
+/** Une caisse à outils posée au sol, poignée relevée. */
+function caisseAOutils(g: Pinceau, col: Palette, x: number, y: number): void {
+  trait(g, x - 3, y - 7.5, x + 3, y - 7.5, ACIER_CLAIR, 1.8);
+  rrPlein(g, x - 6.5, y - 6.5, 13, 6.5, 1.4, col.main);
+  g.fillStyle = col.dark;
+  rr(g, x - 6.5, y - 6.5, 13, 2.6, 1.2);
+  g.fill();
+  g.fillStyle = col.light;
+  rr(g, x - 1.4, y - 4.4, 2.8, 1.8, 0.6);
+  g.fill();
+}
+
+/** Infanterie : trois fantassins légers en file, fusil en travers. */
+function patrouille(g: Pinceau, col: Palette): void {
+  const leger = { echelle: 0.86, carrure: 1, genou: false, casque: 'rebord', gilet: 'sombre' } as const;
+  for (const [x, y] of [[-13, 3], [0, 8], [12, 13]] as const) {
+    figurine(g, col, { ...leger, x, y }, (dy) => fusil(g, col, dy));
+  }
+}
+
+/** Méca : deux gaillards trapus, l'un debout, l'autre à genou, tube à l'épaule. */
+function sectionAntichar(g: Pinceau, col: Palette): void {
+  const trapu = { echelle: 1.02, carrure: 1.32, casque: 'lourd', gilet: 'sombre' } as const;
+  figurine(g, col, { ...trapu, x: -10, y: 3, genou: false }, (dy) => lanceMissiles(g, col, dy));
+  figurine(g, col, { ...trapu, x: 10, y: 13, genou: true }, (dy) => lanceMissiles(g, col, dy));
+}
+
+/** Génie : une équipe de chantier, casques à visière, gilets à bandes, outils et caisse. */
+function equipeDeChantier(g: Pinceau, col: Palette): void {
+  const ouvrier = { echelle: 0.92, carrure: 1.1, casque: 'chantier', gilet: 'haute_visibilite' } as const;
+  caisseAOutils(g, col, -15, 13);
+  figurine(g, col, { ...ouvrier, x: -7, y: 2, genou: false }, (dy) => pelle(g, dy));
+  figurine(g, col, { ...ouvrier, x: 9, y: 12, genou: true }, (dy) => marteauPiqueur(g, dy));
 }
 
 // ---------------------------------------------------------------------------
@@ -321,11 +554,10 @@ export function dessinerSilhouette(
   g.scale(s, s);
   ell(g, 0, 16, 20, 6, 'rgba(0,0,0,0.25)');
 
-  const lourd = corps === 'bloc';
   switch (base) {
     case 'chenilles': chenilles(g); break;
     case 'roues': roues(g); break;
-    case 'pattes': pattes(g, palette, lourd); break;
+    case 'pattes': pattes(g, palette, equipementDe(modules)); break;
     case 'coque': coque(g, palette); break;
     case 'rotor': rotor(g, palette); break;
     case 'ailes': ailes(g, palette); break;
@@ -343,7 +575,11 @@ export function dessinerSilhouette(
   const ancres = base === 'pattes'
     ? { haut: { x: 8, y: -12 }, avant: { x: 14, y: -6 }, arriere: { x: -14, y: -4 } }
     : ancresDe(corps);
-  for (const piece of modules.slice(0, MODULES_MAX)) {
+  // Une troupe à pied a déjà mis son équipement en main : les modules qu'il
+  // traduit ne se posent pas une seconde fois, les autres gardent leur ancre.
+  const poses = modules.slice(0, MODULES_MAX)
+    .filter((piece) => base !== 'pattes' || !MODULES_PORTES.includes(piece));
+  for (const piece of poses) {
     dessinerModule(g, piece, palette, ancres);
   }
 
