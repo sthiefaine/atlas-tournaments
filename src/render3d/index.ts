@@ -154,11 +154,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const m = monde;
     if (!s || !m) return;
     let encore = false;
+    const reduit = mouvementReduit?.matches ?? false;
+    // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
+    // la boucle comme les autres animations, et l'image qui suit les voit.
+    encore = m.vue3d.avancer(ecoule, reduit) || encore;
     encore = m.eclairage.avancer(ecoule, m.vue3d.cible) || encore;
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) m.decor.majRelief();
     encore = mutation || encore;
-    const reduit = mouvementReduit?.matches ?? false;
     encore = m.decor.avancer(ecoule, reduit) || encore;
     // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, le
     // tassement d'une unité qui a joué doit encore s'appliquer — d'un coup.
@@ -303,8 +306,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const m = monde;
       if (!m) return;
       if (!cadree) {
+        // Le premier cadrage est celui de l'ouverture : la carte entière si
+        // elle tient, sinon la largeur en portrait et la vue portée vers
+        // l'action — la première unité du joueur — sans montrer de vide.
         cadree = true;
-        m.vue3d.centrerCase(c);
+        m.vue3d.cadrerCarte(c);
         salir();
         return;
       }

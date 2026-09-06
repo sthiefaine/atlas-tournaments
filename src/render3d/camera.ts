@@ -3,9 +3,14 @@
  *
  * Le brief fixe le cadre et il ne bouge pas : tangage entre 60° et 75° au-dessus
  * de l'horizontale (68° par défaut), lacet fixe mais tournable **par quarts de
- * tour** (Q et E), zoom **par paliers** (molette, pincement, + et −), glisser au
- * un doigt ou bouton droit. Un tap reste au jeu. Le cadrage conserve des cases
- * lisibles sur téléphone, quitte à explorer la carte en glissant.
+ * tour** (Q et E), zoom borné (molette, pincement, + et −), glisser au un doigt
+ * ou bouton droit. Un tap reste au jeu. Le cadrage conserve des cases lisibles
+ * sur téléphone, quitte à explorer la carte en glissant.
+ *
+ * Tout ce qui **dure** — l'inertie d'un glisser lâché, l'interpolation d'un pas
+ * de zoom, le recentrage d'un double-tap — passe par `avancer(ms)`, que la
+ * boucle paresseuse appelle à chaque image comme pour les autres animations.
+ * Les gestes ne portent donc aucune horloge, et la caméra se rejoue à sec.
  *
  * Les fonctions du haut de fichier sont **pures** : elles ne connaissent ni le
  * DOM ni three.js et se testent directement (`tests/render3d/camera.test.ts`).
@@ -26,8 +31,40 @@ export const TANGAGE_DEFAUT = 68;
 /** Champ de vision vertical, en degrés. */
 export const FOV = 42;
 
-/** Les paliers de zoom, en distance caméra-cible. */
+/**
+ * Les paliers de zoom historiques, en distance caméra-cible. `zoomer()` n'y
+ * colle plus — il avance par pas de `PAS_ZOOM` entre les deux bornes de
+ * lisibilité —, mais `palierDistance` et `palierSuivant` restent exposés.
+ */
 export const PALIERS_DISTANCE = [5, 7, 9.5, 13, 17.5, 24, 33, 45] as const;
+
+/** Bornes absolues de la distance, quelle que soit la vue. */
+export const DISTANCE_MIN = 2;
+export const DISTANCE_MAX = 60;
+
+/**
+ * Le seuil de lisibilité (`10-rendu-3d.md` §3.4) : sous 48 px de côté on ne
+ * distingue plus une unité. C'est la borne de recul, jamais dépassée.
+ */
+export const PIXELS_LISIBLES = 48;
+/** Le cadrage d'ouverture vise plus confortable que le seuil, quand la carte tient. */
+export const PIXELS_CADRAGE = 64;
+/** Le rapprochement maximal : une case grande comme un pouce et demi. */
+export const PIXELS_PROCHES = 200;
+/** Le zoom d'un double-tap : de quoi lire une unité et ses voisines. */
+export const PIXELS_DOUBLE_TAP = 96;
+
+/** Un pas de zoom : assez pour se voir, pas assez pour perdre ses repères. */
+export const PAS_ZOOM = 1.25;
+/** Durée d'un pas de zoom ou d'un recentrage. */
+export const MS_TRANSITION = 180;
+/**
+ * Amortissement de l'inertie par image de 60 Hz : le glisser s'éteint en un
+ * tiers de seconde, ce qui se lit comme un coup de pouce et non comme une glace.
+ */
+export const AMORTISSEMENT = 0.9;
+/** En deçà de cette vitesse, en pixels par milliseconde, l'inertie s'arrête. */
+const VITESSE_REPOS = 0.02;
 
 /** L'état de la caméra : une cible au sol, une distance, deux angles. */
 export interface EtatCamera {
@@ -67,11 +104,66 @@ export function distanceCadrage(
   return Math.max(parProfondeur, parLargeur) * marge;
 }
 
+/**
+ * La distance qui fait tenir la **largeur** de la carte, sans regarder sa
+ * hauteur. C'est le cadrage d'un écran en portrait : la largeur y est la
+ * dimension rare, et faire tenir la hauteur aussi donnerait des cases de vingt
+ * pixels. On laisse le haut et le bas dépasser, le joueur fera défiler.
+ */
+export function distanceCadrageLargeur(
+  largeur: number, aspect: number, marge = 1.06,
+): number {
+  const demiFov = Math.tan((FOV * Math.PI) / 360);
+  return ((largeur * CASE) / (2 * demiFov * Math.max(0.2, aspect))) * marge;
+}
+
 /** Distance maximale pour garder une case lisible au centre de la vue. */
-export function distanceLisible(hauteurVue: number, pixelsParCase = 48, tangage = TANGAGE_DEFAUT): number {
-  return Math.max(PALIERS_DISTANCE[0],
+export function distanceLisible(hauteurVue: number, pixelsParCase = PIXELS_LISIBLES, tangage = TANGAGE_DEFAUT): number {
+  return Math.max(DISTANCE_MIN,
     (Math.max(1, hauteurVue) * CASE * Math.sin((tangage * Math.PI) / 180))
       / (2 * Math.tan((FOV * Math.PI) / 360) * pixelsParCase));
+}
+
+/**
+ * Le champ couvert au sol par une vue, en cases, mesuré au plan de la cible :
+ * `largeur` le long de l'axe horizontal de l'écran, `profondeur` le long de
+ * l'axe vertical. Une approximation — la perspective en montre un peu plus au
+ * fond et un peu moins devant — mais c'est celle qu'il faut pour cadrer.
+ */
+export function champAuSol(
+  distance: number, aspect: number, tangage = TANGAGE_DEFAUT,
+): { largeur: number; profondeur: number } {
+  const demiFov = Math.tan((FOV * Math.PI) / 360);
+  return {
+    largeur: (2 * distance * demiFov * aspect) / CASE,
+    profondeur: (2 * distance * demiFov) / (Math.sin((tangage * Math.PI) / 180) * CASE),
+  };
+}
+
+/**
+ * Où poser la cible pour regarder `centre` **sans montrer de vide** : sur
+ * chaque axe, si la carte tient dans le champ on la centre, sinon on approche
+ * la cible du centre demandé sans que le bord de l'écran ne quitte le plateau.
+ * Le lacet échange les deux axes : à 90° la largeur de l'écran suit Z.
+ */
+export function cibleCadrage(
+  carte: { largeur: number; hauteur: number },
+  champ: { largeur: number; profondeur: number },
+  centre: { x: number; z: number },
+  lacet = 0,
+): { x: number; z: number } {
+  const tourne = ((Math.round(lacet / 90) % 2) + 2) % 2 === 1;
+  const champX = (tourne ? champ.profondeur : champ.largeur) * CASE;
+  const champZ = (tourne ? champ.largeur : champ.profondeur) * CASE;
+  const borner = (valeur: number, etendue: number, visible: number): number => (
+    visible >= etendue
+      ? etendue / 2
+      : Math.max(visible / 2, Math.min(etendue - visible / 2, valeur))
+  );
+  return {
+    x: borner(centre.x, carte.largeur * CASE, champX),
+    z: borner(centre.z, carte.hauteur * CASE, champZ),
+  };
 }
 
 /** Le palier de distance le plus proche d'une valeur. */
@@ -104,10 +196,7 @@ export function limiterCible(
   etat.cible.x = Math.max(-marge, Math.min(carte.largeur * CASE + marge, etat.cible.x));
   etat.cible.z = Math.max(-marge, Math.min(carte.hauteur * CASE + marge, etat.cible.z));
   etat.tangage = Math.max(TANGAGE_MIN, Math.min(TANGAGE_MAX, etat.tangage));
-  etat.distance = Math.max(
-    PALIERS_DISTANCE[0],
-    Math.min(PALIERS_DISTANCE[PALIERS_DISTANCE.length - 1] ?? 45, etat.distance),
-  );
+  etat.distance = Math.max(DISTANCE_MIN, Math.min(DISTANCE_MAX, etat.distance));
   etat.lacet = ((Math.round(etat.lacet / 90) * 90) % 360 + 360) % 360;
   return etat;
 }
@@ -129,28 +218,71 @@ export function deplacerCible(
   return etat;
 }
 
+/**
+ * Une vitesse d'inertie après `ms` d'amortissement, et le chemin parcouru
+ * pendant ce temps. L'amortissement est défini par image de 60 Hz et
+ * ramené à la durée réelle : une image longue ne doit pas freiner moins.
+ */
+export function amortir(
+  vitesse: { x: number; y: number }, ms: number, amortissement = AMORTISSEMENT,
+): { vitesse: { x: number; y: number }; parcours: { x: number; y: number } } {
+  const facteur = Math.pow(amortissement, ms / (1000 / 60));
+  const apres = { x: vitesse.x * facteur, y: vitesse.y * facteur };
+  // Le parcours est l'intégrale de la vitesse sur l'intervalle : avec un
+  // amortissement exponentiel, c'est la vitesse moyenne fois la durée.
+  const moyenne = facteur === 1 ? 1 : (facteur - 1) / Math.log(facteur);
+  const parcours = { x: vitesse.x * moyenne * ms, y: vitesse.y * moyenne * ms };
+  return {
+    vitesse: Math.hypot(apres.x, apres.y) < VITESSE_REPOS ? { x: 0, y: 0 } : apres,
+    parcours,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // La caméra three.js
 // ---------------------------------------------------------------------------
+
+/** Ce que visent une transition ou un cadrage : la cible au sol et la distance. */
+interface Visee { x: number; z: number; distance: number }
 
 /** La caméra montée, avec ses commandes et son picking. */
 export interface Vue3d {
   readonly camera: THREE.PerspectiveCamera;
   readonly etat: EtatCamera;
   readonly cible: THREE.Vector3;
-  /** Déclare la taille de la vue et recalcule la projection. */
+  /**
+   * Déclare la taille de la vue et recalcule la projection. Un changement de
+   * hauteur conserve la **taille des cases à l'écran** : tourner le téléphone
+   * ou rétracter la barre d'adresse ne zoome pas, il montre plus ou moins.
+   */
   redimensionner(largeur: number, hauteur: number): void;
   /** Recopie l'état dans la caméra three.js. */
   appliquer(): void;
-  /** Cadre la carte dans la limite de lisibilité des cases. */
-  cadrerCarte(): void;
+  /**
+   * Cadre la carte dans la limite de lisibilité des cases. En portrait, c'est
+   * la largeur qui est cadrée ; quand la carte déborde malgré tout, la vue se
+   * porte vers `centre` — le centre de l'action — sans montrer de vide.
+   */
+  cadrerCarte(centre?: Case): void;
   /** Amène une case dans le champ, sans brutalité. */
   cadrerCase(c: Case, hauteurSol: number): void;
   centrerCase(c: Case): void;
+  /** Recentre sur une case à un zoom lisible, en une courte transition. */
+  viser(c: Case): void;
   glisser(dx: number, dy: number): void;
+  /** Un pas de zoom (`+1` rapproche), joué en transition ; les pas s'enchaînent. */
   zoomer(sens: number): void;
   facteurZoom(facteur: number, ancre?: { x: number; y: number }): void;
   tourner(sens: number): void;
+  /** Lance l'inertie d'un glisser lâché : une vitesse d'écran en pixels par milliseconde. */
+  lancer(vx: number, vy: number): void;
+  /** Coupe inertie et transition. Rend vrai si quelque chose bougeait. */
+  arreter(): boolean;
+  /**
+   * Fait avancer inertie et transition de `ms`. Rend vrai tant que la caméra
+   * bouge encore. Sous mouvement réduit, tout arrive d'un coup.
+   */
+  avancer(ms: number, mouvementReduit?: boolean): boolean;
   /** Point d'écran → case, par lancer de rayon sur le sol. */
   /** Les cibles sont interrogées ensemble ; la plus proche de la caméra l'emporte. */
   caseSous(x: number, y: number, sol: THREE.Object3D | readonly THREE.Object3D[] | null): Case | null;
@@ -172,10 +304,20 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
   const plan = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   let largeurVue = 1;
   let hauteurVue = 1;
+  /** Faux tant que la vue n'a jamais été mesurée : la première mesure ne remet pas à l'échelle. */
+  let mesuree = false;
+  /** L'inertie en cours, en pixels d'écran par milliseconde. */
+  const vitesse = { x: 0, y: 0 };
+  /** La transition en cours, s'il y en a une. */
+  let transition: { depuis: Visee; vers: Visee; ecoule: number } | null = null;
+
+  const distanceMin = (): number => distanceLisible(hauteurVue, PIXELS_PROCHES);
+  const distanceMax = (): number => distanceLisible(hauteurVue, PIXELS_LISIBLES);
+  const borner = (d: number): number => Math.max(distanceMin(), Math.min(distanceMax(), d));
 
   function appliquer(): void {
     limiterCible(etat, carte);
-    etat.distance = Math.min(etat.distance, distanceLisible(hauteurVue));
+    etat.distance = borner(etat.distance);
     const p = positionCamera(etat);
     camera.position.set(p.x, p.y, p.z);
     cible.set(etat.cible.x, 0, etat.cible.z);
@@ -183,15 +325,83 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     camera.updateMatrixWorld();
   }
 
-  function cadrerCarte(): void {
-    etat.cible.x = (carte.largeur * CASE) / 2;
-    etat.cible.z = (carte.hauteur * CASE) / 2;
-    // On prend la distance exacte plutôt que le palier au-dessus : coller au
-    // palier laisserait jusqu'à un tiers de l'écran vide autour du plateau.
+  /** Ce que la caméra vise en ce moment : la fin de la transition, sinon l'état. */
+  function viseeCourante(): Visee {
+    return transition
+      ? { ...transition.vers }
+      : { x: etat.cible.x, z: etat.cible.z, distance: etat.distance };
+  }
+
+  /**
+   * Repart de l'état courant vers une nouvelle visée. Une transition relancée
+   * en cours de route ne saute pas : elle repart d'où la caméra en est.
+   */
+  function lancerTransition(vers: Partial<Visee>): void {
+    transition = {
+      depuis: { x: etat.cible.x, z: etat.cible.z, distance: etat.distance },
+      vers: { ...viseeCourante(), ...vers },
+      ecoule: 0,
+    };
+  }
+
+  /** Une manipulation directe de la distance reprend la main : la transition s'efface. */
+  function interrompre(): void {
+    transition = null;
+  }
+
+  /**
+   * Pose la cible sans toucher à la distance : un pas de zoom en cours
+   * continue, il arrive simplement ailleurs. Couper la transition laisserait
+   * le zoom à mi-chemin dès qu'on glisse pendant un coup de molette.
+   */
+  function poserCible(x: number, z: number): void {
+    etat.cible.x = x;
+    etat.cible.z = z;
+    if (transition) {
+      transition.depuis.x = x;
+      transition.depuis.z = z;
+      transition.vers.x = x;
+      transition.vers.z = z;
+    }
+  }
+
+  /** Glisse la cible d'un mouvement d'écran, transition comprise. */
+  function glisserCible(dxEcran: number, dyEcran: number): void {
+    const { x, z } = etat.cible;
+    deplacerCible(etat, dxEcran, dyEcran, hauteurVue);
+    if (transition) {
+      const dx = etat.cible.x - x;
+      const dz = etat.cible.z - z;
+      transition.depuis.x += dx;
+      transition.depuis.z += dz;
+      transition.vers.x += dx;
+      transition.vers.z += dz;
+    }
+  }
+
+  function cadrerCarte(centre?: Case): void {
+    interrompre();
+    vitesse.x = 0;
+    vitesse.y = 0;
+    const portrait = camera.aspect < 1;
+    // On prend la distance exacte plutôt qu'un palier : coller au palier
+    // laisserait jusqu'à un tiers de l'écran vide autour du plateau. En
+    // portrait la largeur est cadrée et le recul va jusqu'au seuil de
+    // lisibilité : six colonnes à 64 px sur un téléphone, c'est trop peu pour
+    // voir une manœuvre ; huit à 48 px, ça se joue.
     etat.distance = Math.min(
-      distanceCadrage(carte.largeur, carte.hauteur, camera.aspect, etat.tangage),
-      distanceLisible(hauteurVue, 64),
+      portrait
+        ? distanceCadrageLargeur(carte.largeur, camera.aspect)
+        : distanceCadrage(carte.largeur, carte.hauteur, camera.aspect, etat.tangage),
+      distanceLisible(hauteurVue, portrait ? PIXELS_LISIBLES : PIXELS_CADRAGE),
     );
+    etat.distance = borner(etat.distance);
+    const demande = centre
+      ? { x: centre.x * CASE + CASE / 2, z: centre.y * CASE + CASE / 2 }
+      : { x: (carte.largeur * CASE) / 2, z: (carte.hauteur * CASE) / 2 };
+    const c = cibleCadrage(carte, champAuSol(etat.distance, camera.aspect, etat.tangage), demande, etat.lacet);
+    etat.cible.x = c.x;
+    etat.cible.z = c.z;
     appliquer();
   }
 
@@ -201,8 +411,20 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     cible,
 
     redimensionner(l: number, h: number): void {
+      const nouvelleHauteur = Math.max(1, h);
+      if (mesuree && nouvelleHauteur !== hauteurVue) {
+        // Les pixels par case ne dépendent que de la hauteur de vue et de la
+        // distance : garder leur rapport, c'est garder la même échelle.
+        const rapport = nouvelleHauteur / hauteurVue;
+        etat.distance *= rapport;
+        if (transition) {
+          transition.depuis.distance *= rapport;
+          transition.vers.distance *= rapport;
+        }
+      }
+      mesuree = true;
       largeurVue = Math.max(1, l);
-      hauteurVue = Math.max(1, h);
+      hauteurVue = nouvelleHauteur;
       camera.aspect = largeurVue / hauteurVue;
       camera.updateProjectionMatrix();
       appliquer();
@@ -212,9 +434,17 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     cadrerCarte,
 
     centrerCase(c: Case): void {
-      etat.cible.x = c.x * CASE + CASE / 2;
-      etat.cible.z = c.y * CASE + CASE / 2;
+      poserCible(c.x * CASE + CASE / 2, c.y * CASE + CASE / 2);
       appliquer();
+    },
+
+    viser(c: Case): void {
+      const distance = Math.min(viseeCourante().distance, distanceLisible(hauteurVue, PIXELS_DOUBLE_TAP));
+      const p = cibleCadrage(
+        carte, champAuSol(distance, camera.aspect, etat.tangage),
+        { x: c.x * CASE + CASE / 2, z: c.y * CASE + CASE / 2 }, etat.lacet,
+      );
+      lancerTransition({ x: p.x, z: p.z, distance: borner(distance) });
     },
 
     cadrerCase(c: Case, hauteurSol: number): void {
@@ -226,23 +456,26 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
         && ecran.x > largeurVue * marge && ecran.x < largeurVue * (1 - marge)
         && ecran.y > hauteurVue * marge && ecran.y < hauteurVue * (1 - marge)
       ) return;
-      etat.cible.x = p.x;
-      etat.cible.z = p.z;
+      poserCible(p.x, p.z);
       appliquer();
     },
 
     glisser(dx: number, dy: number): void {
-      deplacerCible(etat, dx, dy, hauteurVue);
+      glisserCible(dx, dy);
       appliquer();
     },
 
     zoomer(sens: number): void {
-      etat.distance = palierSuivant(etat.distance, sens);
-      appliquer();
+      if (sens === 0) return;
+      // On part de la visée, pas de l'état : quatre pas donnés d'un coup font
+      // quatre pas, et non un seul relancé quatre fois.
+      const depuis = viseeCourante().distance;
+      lancerTransition({ distance: borner(sens > 0 ? depuis / PAS_ZOOM : depuis * PAS_ZOOM) });
     },
 
     facteurZoom(facteur: number, ancre?: { x: number; y: number }): void {
       if (!Number.isFinite(facteur) || facteur <= 0) return;
+      interrompre();
       const auSol = (): THREE.Vector3 | null => {
         if (!ancre) return null;
         rayon.setFromCamera(new THREE.Vector2(
@@ -262,8 +495,58 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     },
 
     tourner(sens: number): void {
+      interrompre();
       etat.lacet += Math.sign(sens) * 90;
       appliquer();
+    },
+
+    lancer(vx: number, vy: number): void {
+      vitesse.x = Number.isFinite(vx) ? vx : 0;
+      vitesse.y = Number.isFinite(vy) ? vy : 0;
+    },
+
+    arreter(): boolean {
+      const bougeait = transition !== null || vitesse.x !== 0 || vitesse.y !== 0;
+      interrompre();
+      vitesse.x = 0;
+      vitesse.y = 0;
+      return bougeait;
+    },
+
+    avancer(ms: number, mouvementReduit = false): boolean {
+      let bouge = false;
+      if (vitesse.x !== 0 || vitesse.y !== 0) {
+        if (mouvementReduit) {
+          // Pas de glissade sous réduction : la carte s'arrête où le doigt l'a laissée.
+          vitesse.x = 0;
+          vitesse.y = 0;
+        } else {
+          const { vitesse: apres, parcours } = amortir(vitesse, ms);
+          glisserCible(parcours.x, parcours.y);
+          const { x, z } = etat.cible;
+          limiterCible(etat, carte);
+          // Butée : une carte qui a touché son bord ne « pousse » pas contre
+          // lui, elle s'arrête, comme un plateau qu'on aurait glissé au mur.
+          const butee = etat.cible.x !== x || etat.cible.z !== z;
+          vitesse.x = butee ? 0 : apres.x;
+          vitesse.y = butee ? 0 : apres.y;
+          bouge = true;
+        }
+      }
+      if (transition) {
+        transition.ecoule += ms;
+        const p = mouvementReduit ? 1 : Math.min(1, transition.ecoule / MS_TRANSITION);
+        // Sortie en douceur : le gros du chemin d'abord, l'arrivée se pose.
+        const t = 1 - Math.pow(1 - p, 3);
+        const { depuis, vers } = transition;
+        etat.cible.x = depuis.x + (vers.x - depuis.x) * t;
+        etat.cible.z = depuis.z + (vers.z - depuis.z) * t;
+        etat.distance = depuis.distance + (vers.distance - depuis.distance) * t;
+        if (p >= 1) transition = null;
+        bouge = true;
+      }
+      if (bouge) appliquer();
+      return transition !== null || vitesse.x !== 0 || vitesse.y !== 0;
     },
 
     caseSous(x: number, y: number, sol: THREE.Object3D | readonly THREE.Object3D[] | null): Case | null {
