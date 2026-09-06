@@ -14,6 +14,7 @@
     "simuler": "tsx scripts/simuler.ts",
     "controler": "tsx scripts/controler-carte.ts",
     "controler:asset": "tsx scripts/controler-asset.ts",
+    "generer:infanterie": "tsx scripts/generer-infanterie.ts",
     "apercu": "tsx scripts/apercu-carte.ts",
     "extraire-chaines": "tsx scripts/extraire-chaines.ts",
     "verifier:campagne": "tsx scripts/verifier-campagne.ts"

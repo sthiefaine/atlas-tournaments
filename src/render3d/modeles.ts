@@ -613,8 +613,20 @@ export async function lectureDepuisGltf(gltf: GLTF): Promise<LectureFichier> {
   return { scene: gltf.scene, clips: gltf.animations };
 }
 
-/** Analyse un GLB déjà en mémoire : le chemin des tests, sans réseau. */
+/**
+ * Analyse un GLB déjà en mémoire : le chemin des tests, sans réseau.
+ *
+ * Dès qu'un fichier porte une image, `GLTFLoader` lit `self.URL` pour la
+ * charger, et `self` n'existe pas hors d'un navigateur : sous Node, un modèle
+ * texturé ne s'analysait pas du tout — le premier fichier livré l'a montré. On
+ * pose donc `self` sur `globalThis` quand il manque, ce qui est ce qu'il vaut
+ * dans un navigateur. Les images elles-mêmes ne se décodent pas sous Node : une
+ * carte vaut alors `null` et le modèle passe sans elle, sauf si le
+ * gestionnaire de chargement du `chargeur` fourni sait la produire.
+ */
 export function analyserGlb(donnees: ArrayBuffer, chargeur = new GLTFLoader()): Promise<LectureFichier | null> {
+  const global = globalThis as { self?: unknown };
+  if (typeof global.self === 'undefined') global.self = globalThis;
   return new Promise<LectureFichier | null>((resoudre) => {
     try {
       chargeur.parse(donnees, '', (gltf) => { void lectureDepuisGltf(gltf).then(resoudre, () => resoudre(null)); }, () => resoudre(null));
