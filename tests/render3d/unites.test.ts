@@ -3,8 +3,11 @@ import assert from 'node:assert/strict';
 import { chargerCatalogue } from '../../src/engine/index';
 import { NIVEAU_EAU } from '../../src/render3d/geometrie';
 import * as THREE from 'three';
+import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { conformerModele, NOM_FIGURINE, type ModeleCharge } from '../../src/render3d/modeles';
-import { TASSEMENT, creerUnites, geometriesSilhouette } from '../../src/render3d/unites';
+import {
+  Materiaux, OPACITE_VERRE, TASSEMENT, construirePlaceholder, creerUnites, geometriesSilhouette,
+} from '../../src/render3d/unites';
 
 import { partiePersonnalisee } from '../engine/aides';
 
@@ -388,5 +391,126 @@ test('un modèle arrivé après le retrait de l’unité ne s’installe pas', a
   await tick();
   assert.ok(piece.getObjectByName('silhouette_principal'), 'la pièce retirée garde son placeholder, rien n’a été monté');
   assert.equal(calque.groupe.children.length, 0);
+  calque.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Les matières par rôle : chaque pièce est en quelque chose
+// ---------------------------------------------------------------------------
+
+const ROLES = ['principal', 'sombre', 'clair', 'materiel', 'verre', 'roulant', 'peau'] as const;
+
+test('les sept rôles sont des matières : tôle peinte, acier, verre translucide, caoutchouc, peau mate', () => {
+  const materiaux = new Materiaux();
+  const jeu = materiaux.jeu(0, null);
+  for (const role of ROLES) assert.ok(jeu[role] instanceof THREE.MeshStandardMaterial, role);
+  // La tôle peinte : un métal faible mais non nul, une rugosité moyenne.
+  for (const role of ['principal', 'sombre', 'clair'] as const) {
+    assert.ok(jeu[role].metalness >= 0.05 && jeu[role].metalness <= 0.35, `${role} : métal de tôle peinte (${jeu[role].metalness})`);
+    assert.ok(jeu[role].roughness >= 0.35 && jeu[role].roughness <= 0.7, `${role} : rugosité de tôle peinte (${jeu[role].roughness})`);
+  }
+  // L'émission compensait l'absence d'environnement : il n'en reste qu'un
+  // souffle, hors verre — et tout ce qui n'est pas verre est opaque.
+  for (const role of ROLES) {
+    if (role === 'verre') continue;
+    assert.ok(jeu[role].emissiveIntensity <= 0.05, `${role} émet ${jeu[role].emissiveIntensity}`);
+    assert.equal(jeu[role].transparent, false, `${role} est opaque`);
+  }
+  assert.ok(jeu.principal.emissiveIntensity > 0, 'un souffle de sa couleur, pour la nuit');
+  assert.equal(jeu.principal.emissive.getHex(), jeu.principal.color.getHex(), 'de sa propre couleur');
+  assert.ok(jeu.materiel.metalness >= 0.6, 'l’acier est un métal');
+  const verre = jeu.verre;
+  assert.equal(verre.transparent, true, 'le verre est translucide');
+  assert.ok(verre.opacity > 0.3 && verre.opacity < 0.8, `verre à ${verre.opacity}`);
+  assert.equal(verre.opacity, OPACITE_VERRE);
+  assert.ok(verre.roughness < 0.2, 'le verre est presque lisse');
+  assert.ok(verre.metalness < 0.2, 'et diélectrique');
+  assert.equal(verre.depthWrite, true, 'une cabine écrit sa profondeur');
+  assert.ok(verre.emissiveIntensity <= 0.25, 'une lueur de cabine, pas un néon');
+  assert.ok(jeu.roulant.roughness >= 0.8, 'du caoutchouc, mat');
+  assert.equal(jeu.roulant.metalness, 0);
+  assert.equal(jeu.peau.metalness, 0, 'une peau sans métal');
+  assert.ok(jeu.peau.roughness >= 0.6, 'et mate');
+  // Le jeu est mémorisé : même camp, mêmes objets.
+  assert.equal(materiaux.jeu(0, null), jeu);
+  materiaux.dispose();
+});
+
+test('la pluie mouille la tôle, l’acier et le caoutchouc par jeu de matériaux, et sèche à l’identique', () => {
+  const materiaux = new Materiaux();
+  const jeu = materiaux.jeu(1, null);
+  const terni = materiaux.terni(jeu.principal);
+  const sec = Object.fromEntries(ROLES.map((r) => [r, jeu[r].roughness])) as Record<typeof ROLES[number], number>;
+  const terniSec = terni.roughness;
+  assert.ok(terniSec > sec.principal, 'une pièce ternie est plus mate que sa vive');
+
+  materiaux.mouiller(1);
+  for (const role of ['principal', 'sombre', 'clair', 'materiel', 'roulant'] as const) {
+    assert.ok(jeu[role].roughness < sec[role] - 0.2, `${role} luit sous la pluie (${jeu[role].roughness} contre ${sec[role]})`);
+    assert.ok(jeu[role].roughness > 0, `${role} ne devient pas un miroir`);
+  }
+  assert.equal(jeu.verre.roughness, sec.verre, 'le verre est déjà lisse');
+  assert.equal(jeu.peau.roughness, sec.peau, 'une figurine peinte ne brille pas sous l’eau');
+  assert.ok(terni.roughness < terniSec, 'le double terni suit son original');
+  assert.ok(terni.roughness > jeu.principal.roughness, 'et reste plus mat que lui');
+  // Un jeu créé sous la pluie naît mouillé : l'humidité est celle de la scène, pas du moment de la création.
+  const autre = materiaux.jeu(0, null);
+  assert.ok(autre.principal.roughness < sec.principal - 0.2);
+  assert.equal(autre.principal.roughness, jeu.principal.roughness);
+
+  // Le retour au sec rend exactement les nombres de départ, sur les mêmes objets.
+  materiaux.mouiller(0);
+  for (const role of ROLES) assert.equal(jeu[role].roughness, sec[role], `${role} sèche à l’identique`);
+  assert.equal(terni.roughness, terniSec);
+  assert.equal(materiaux.jeu(1, null), jeu, 'mouiller ne recrée rien');
+  assert.equal(materiaux.terni(jeu.principal), terni);
+  // Hors bornes, l'humidité est bornée : une pluie à 200 % est une pluie.
+  materiaux.mouiller(2);
+  const plein = jeu.principal.roughness;
+  materiaux.mouiller(1);
+  assert.equal(jeu.principal.roughness, plein);
+  materiaux.dispose();
+});
+
+test('le verre d’un placeholder ne projette pas d’ombre pleine, et les repères du socle restent opaques', () => {
+  const materiaux = new Materiaux();
+  let vues = 0;
+  for (const cle of cat.cles) {
+    const s = cat.unites[cle]!.silhouette;
+    if (!geometriesSilhouette(s).has('verre')) continue;
+    vues += 1;
+    const piece = construirePlaceholder(s, 1, materiaux, null, cle);
+    const verre = piece.getObjectByName('silhouette_verre') as THREE.Mesh;
+    assert.equal(verre.castShadow, false, `${cle} : une ombre pleine sous une cabine trahirait sa transparence`);
+    assert.equal(verre.receiveShadow, true);
+    assert.equal((piece.getObjectByName('silhouette_principal') as THREE.Mesh).castShadow, true, 'la caisse porte son ombre');
+    // Deux encoches pour le camp 1 : un marquage opaque, pas un vitrage qui
+    // prendrait la couleur de l'anneau sous lui.
+    for (let i = 0; i < 2; i += 1) {
+      const repere = piece.getObjectByName(`socle_repere_${i}`) as THREE.Mesh;
+      assert.ok(repere, `${cle} : repère ${i}`);
+      const m = repere.material as THREE.MeshStandardMaterial;
+      assert.equal(m.transparent, false, 'un marquage, pas un vitrage');
+      assert.notEqual(m, materiaux.jeu(1, null).verre);
+      assert.equal(m, materiaux.repere(), 'la même pastille pour tous');
+    }
+  }
+  assert.ok(vues > 0, 'au moins une silhouette du catalogue porte du verre');
+  materiaux.dispose();
+});
+
+test('le calque des unités reçoit l’ambiance : sous la pluie, ses tôles luisent, puis sèchent', () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 0, y: 0 }]);
+  const calque = creerUnites({} as Document, () => 0);
+  calque.maj(etat, cat, null);
+  const principal = calque.groupe.getObjectByName('silhouette_principal') as THREE.Mesh;
+  const m = principal.material as THREE.MeshStandardMaterial;
+  calque.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'));
+  const sec = m.roughness;
+  calque.appliquerAmbiance(parametresAmbiance('automne', 'jour', 'pluie'));
+  assert.ok(m.roughness < sec, 'la pluie mouille la tôle');
+  assert.equal(principal.material, m, 'sur le même matériau : rien n’est recréé par unité');
+  calque.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'));
+  assert.equal(m.roughness, sec, 'le beau temps sèche à l’identique');
   calque.dispose();
 });
