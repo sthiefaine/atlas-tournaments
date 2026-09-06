@@ -14,16 +14,28 @@
  * Six vues, un seul canevas : chaque tuile de la grille est un rectangle de
  * ciseaux du même contexte WebGL. Six contextes coûteraient six fois la
  * géométrie et les textures pour la même image.
+ *
+ * Depuis le préalable B0 de `doc/16-realisme.md` §3.1, la vitrine dit aussi
+ * **ce qu'elle montre** — un modèle livré ou le placeholder —, laisse forcer un
+ * niveau de détail, et joue les clips d'un modèle livré dans le même lecteur
+ * que le jeu. La seule boucle est celle du lecteur : un
+ * `requestAnimationFrame` tant qu'un clip joue, plus rien dès qu'on le fige.
  */
 
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { chargerCatalogue } from '@/engine/index';
 import { chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
+import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
-import { Materiaux, chargerModele, construirePlaceholder, teinterModele } from '@/render3d/unites';
+import {
+  Materiaux, chargerModele, construirePlaceholder, monterModele,
+} from '@/render3d/unites';
+import {
+  creerLecteurClips, forcerLod, NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
+} from '@/render3d/modeles';
 import { webgl2Disponible } from '@/render/rendu';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
@@ -40,10 +52,24 @@ const VUES = [
 
 type CleVue = (typeof VUES)[number]['cle'];
 
+/** Ce que la vitrine sait de la pièce posée : livrée ou non, combien de niveaux, quels clips. */
+interface EtatModele {
+  livre: boolean;
+  lods: number;
+  /** Les clips connus que le fichier porte. */
+  clips: NomClip[];
+  /** Tous les noms de clips du fichier, connus ou non : on veut voir ce qu'on a reçu. */
+  nomsFichier: string[];
+}
+
+const PLACEHOLDER: EtatModele = { livre: false, lods: 0, clips: [], nomsFichier: [] };
+
 /** Ce que `window.__atlasVitrine` expose en développement, pour un pilotage Playwright. */
 interface PontVitrine {
   choisir(unite: string, pays: string | null, camp: number): void;
   pret(): boolean;
+  /** Ce qui est posé : un modèle livré ou le placeholder, ses niveaux, ses clips. */
+  modele(): { livre: boolean; lods: number; clips: string[] };
 }
 
 const VERSIONS_CATALOGUE = [1, 2, 3] as const;
@@ -55,10 +81,19 @@ export default function Vitrine(): React.ReactElement {
   const [camp, setCamp] = useState<CampId>(0);
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [rendues, setRendues] = useState(0);
+  const [etatModele, setEtatModele] = useState<EtatModele>(PLACEHOLDER);
+  const [lod, setLod] = useState<NiveauLod | null>(null);
+  const [clip, setClip] = useState<NomClip | null>(null);
+  const [fige, setFige] = useState(false);
   const grille = useRef<HTMLDivElement | null>(null);
   const canevas = useRef<HTMLCanvasElement | null>(null);
   const tuiles = useRef<Map<CleVue, HTMLDivElement>>(new Map());
   const studio = useRef<Studio | null>(null);
+  const piece = useRef<THREE.Object3D | null>(null);
+  const lecteur = useRef<LecteurClips | null>(null);
+  const image = useRef<number | null>(null);
+  const dernier = useRef(0);
+  const figeRef = useRef(false);
 
   const catalogue = useMemo(() => chargerCatalogue(version), [version]);
   const nations = useMemo(() => chargerPays().map((p) => ({ code: p.code, nom: p.nom })), []);
@@ -75,6 +110,31 @@ export default function Vitrine(): React.ReactElement {
     return () => { s.dispose(); studio.current = null; };
   }, [webgl]);
 
+  const arreterBoucle = useCallback((): void => {
+    if (image.current !== null) cancelAnimationFrame(image.current);
+    image.current = null;
+    dernier.current = 0;
+  }, []);
+
+  /** Fait tourner le lecteur tant qu'un clip joue, et plus une image au-delà. */
+  const lancerBoucle = useCallback((): void => {
+    if (image.current !== null) return;
+    const pas = (t: number): void => {
+      image.current = null;
+      const l = lecteur.current;
+      const s = studio.current;
+      if (!l || !s) return;
+      const dt = dernier.current === 0 ? 1 / 60 : Math.min(0.1, (t - dernier.current) / 1000);
+      dernier.current = t;
+      const encore = l.avancer(dt);
+      s.dessiner(tuiles.current, grille.current);
+      setClip((c) => (c === l.courant ? c : l.courant));
+      if (encore && !figeRef.current) image.current = requestAnimationFrame(pas);
+      else dernier.current = 0;
+    };
+    image.current = requestAnimationFrame(pas);
+  }, []);
+
   useEffect(() => {
     const s = studio.current;
     if (!s) return undefined;
@@ -83,19 +143,52 @@ export default function Vitrine(): React.ReactElement {
     const silhouette = catalogue.unites[uniteSure]!.silhouette;
     const placeholder = construirePlaceholder(silhouette, camp, s.materiaux, style, uniteSure);
     s.poser(placeholder);
+    piece.current = placeholder;
+    setEtatModele(PLACEHOLDER);
+    setClip(null);
     s.dessiner(tuiles.current, grille.current);
     setRendues((n) => n + 1);
-    // Un modèle livré remplace le placeholder, comme en jeu ; un 404 laisse tout en place.
+    // Un modèle livré remplace le placeholder, monté comme en jeu — même socle,
+    // même teinte, même lecteur de clips ; un 404 laisse tout en place.
     void chargerModele(uniteSure, pays === '' ? null : (pays as CodePays)).then((modele) => {
       if (!vivant || !modele) return;
-      teinterModele(modele, camp);
-      s.poser(modele);
+      const monte = monterModele(modele, camp, s.materiaux, style);
+      s.poser(monte);
+      piece.current = monte;
+      const figurine = monte.getObjectByName(NOM_FIGURINE);
+      const l = figurine ? creerLecteurClips(figurine, modele.clips) : null;
+      lecteur.current = l;
+      setEtatModele({
+        livre: true, lods: modele.lods, clips: l ? [...l.clips] : [], nomsFichier: modele.clips.map((c) => c.name),
+      });
       s.dessiner(tuiles.current, grille.current);
+      if (l) {
+        l.jouer('repos');
+        setClip(l.courant);
+        figeRef.current = false;
+        setFige(false);
+        lancerBoucle();
+      }
     });
-    return () => { vivant = false; };
+    return () => {
+      vivant = false;
+      arreterBoucle();
+      lecteur.current?.dispose();
+      lecteur.current = null;
+    };
     // `webgl` est dans les dépendances parce que le studio n'existe qu'une fois
     // WebGL détecté, dans un effet qui court après celui-ci au premier rendu.
-  }, [catalogue, uniteSure, pays, camp, webgl]);
+  }, [catalogue, uniteSure, pays, camp, webgl, arreterBoucle, lancerBoucle]);
+
+  // Le niveau forcé s'applique à la pièce posée, quelle qu'elle soit : sans
+  // `THREE.LOD` dedans, il n'y a rien à forcer et rien ne change.
+  useEffect(() => {
+    const p = piece.current;
+    const s = studio.current;
+    if (!p || !s) return;
+    forcerLod(p, lod);
+    s.dessiner(tuiles.current, grille.current);
+  }, [lod, etatModele]);
 
   useEffect(() => {
     const g = grille.current;
@@ -111,12 +204,31 @@ export default function Vitrine(): React.ReactElement {
     g.__atlasVitrine = {
       choisir: (u, p, c) => { setUnite(u); setPays(p ?? ''); setCamp((c === 1 ? 1 : 0) as CampId); },
       pret: () => rendues > 0,
+      modele: () => ({ livre: etatModele.livre, lods: etatModele.lods, clips: [...etatModele.clips] }),
     };
     return () => { delete g.__atlasVitrine; };
-  }, [rendues]);
+  }, [rendues, etatModele]);
+
+  function jouerClip(nom: NomClip): void {
+    const l = lecteur.current;
+    if (!l) return;
+    l.jouer(nom);
+    setClip(l.courant);
+    figeRef.current = false;
+    setFige(false);
+    lancerBoucle();
+  }
+
+  function basculerFige(): void {
+    const prochain = !figeRef.current;
+    figeRef.current = prochain;
+    setFige(prochain);
+    if (!prochain) lancerBoucle();
+  }
 
   const fiche = catalogue.unites[uniteSure]!;
   const nation = nations.find((n) => n.code === pays);
+  const sansClips = !etatModele.livre || etatModele.clips.length === 0;
 
   return <div className={styles.vitrine}>
     <header className={styles.barre}>
@@ -153,6 +265,31 @@ export default function Vitrine(): React.ReactElement {
         Silhouette : {fiche.silhouette.base} · {fiche.silhouette.corps}
         {fiche.silhouette.modules.length > 0 ? ` · ${fiche.silhouette.modules.join(', ')}` : ''} · taille {fiche.silhouette.taille}
       </p>
+    </div>
+
+    <div className={styles.modele} data-livre={etatModele.livre ? 'oui' : 'non'}>
+      <span className={styles.badge}>{etatModele.livre ? 'Modèle livré' : 'Placeholder'}</span>
+      <label>Niveau de détail
+        <select
+          value={lod === null ? 'auto' : String(lod)}
+          disabled={!etatModele.livre || etatModele.lods <= 1}
+          onChange={(e) => setLod(e.target.value === 'auto' ? null : (Number(e.target.value) as NiveauLod))}
+        >
+          <option value="auto">Automatique</option>
+          {[0, 1, 2].filter((i) => i < etatModele.lods).map((i) => <option key={i} value={i}>lod{i}</option>)}
+        </select>
+      </label>
+      <fieldset className={styles.clips} disabled={sansClips}>
+        <legend>Clips{etatModele.livre && etatModele.nomsFichier.length > 0 ? ` · fichier : ${etatModele.nomsFichier.join(', ')}` : ''}</legend>
+        {NOMS_CLIPS.map((nom) => <button
+          key={nom}
+          type="button"
+          disabled={!etatModele.clips.includes(nom)}
+          aria-pressed={clip === nom}
+          onClick={() => jouerClip(nom)}
+        >{nom}</button>)}
+        <button type="button" aria-pressed={fige} onClick={basculerFige}>{fige ? 'Figé' : 'Figer'}</button>
+      </fieldset>
     </div>
 
     {webgl === false && <p className={styles.sansWebgl}>Ce navigateur n’a pas WebGL 2 : la vitrine ne peut pas se monter.</p>}

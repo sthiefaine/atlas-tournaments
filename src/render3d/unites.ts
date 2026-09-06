@@ -21,21 +21,23 @@
  * manque : on retombe sur la palette de camp, le gabarit `b` et un socle sans
  * ornement. Le placeholder n'a jamais besoin du canon pour fonctionner.
  *
- * `chargerModele()` tente le **kit national** puis la **géométrie de base**, et
- * **retombe silencieusement sur le placeholder** si aucun des deux n'existe : le
- * jeu tourne pendant que les assets se font attendre, exactement comme le brief
- * l'exige (`doc/10-rendu-3d.md` §7.1).
+ * `chargerModele()` (`modeles.ts`) tente le **kit national** puis la **géométrie
+ * de base**, et **retombe silencieusement sur le placeholder** si aucun des deux
+ * n'existe : le jeu tourne pendant que les assets se font attendre, exactement
+ * comme le brief l'exige (`doc/10-rendu-3d.md` §7.1). Un modèle qui arrive est
+ * déjà conformé — orienté, au gabarit, en niveaux de détail — et ce calque lui
+ * pose le même socle à liseré qu'au placeholder, puis joue ses clips dans un
+ * `AnimationMixer` que les animations pilotent par `EtatVisuel.clip`.
  */
 
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 // On importe les deux modules précis plutôt que `assets/index` : le point
 // d'entrée tire aussi le catalogue de spécifications, dont le rendu n'a que
 // faire, et avec lui les 24 fiches pays. Ce qui n'est pas importé n'est pas
 // embarqué dans le bundle du jeu.
-import { gabaritDe, type Gabarit, type StyleNation } from '../assets/spec';
+import { gabaritDe, type StyleNation } from '../assets/spec';
 import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches } from '../engine/index';
@@ -43,8 +45,19 @@ import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import { CASE, NIVEAU_EAU } from './geometrie';
 import {
+  appliquerMasque, chargerModele, clonerFigurine, couleurMasquee, couleurTernie, creerLecteurClips,
+  masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
+} from './modeles';
+import {
   composerSilhouette, echelleTaille, hauteurSilhouette, type Piece, type RolePiece,
 } from './pieces';
+
+// Le chargement et la conformation vivent dans `modeles.ts` ; on les réexporte
+// d'ici parce que la vitrine et `index.ts` les ont toujours pris à cette porte.
+export {
+  chargerModele, conformerModele, forcerLod, RACINE_MODELES, teinterModele,
+  type ModeleCharge, type NomClip,
+} from './modeles';
 
 /** Les matériaux neutres, partagés par toutes les nations. */
 const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant' | 'peau', number>> = {
@@ -53,13 +66,6 @@ const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant' | 'peau', number
   roulant: 0x222b31,
   // Un seul ton de peau pour toutes les nations, mat : celui d'une figurine peinte.
   peau: 0xc9946c,
-};
-
-/** Proportions d'un gabarit : longueur (X), hauteur (Y), largeur (Z). */
-const PROPORTIONS: Readonly<Record<Gabarit, [number, number, number]>> = {
-  a: [0.9, 0.98, 1.06],
-  b: [1, 1, 1],
-  c: [1.14, 1.06, 0.95],
 };
 
 /** Les ornements que le placeholder sait poser lui-même. Le reste vient du kit. */
@@ -354,7 +360,7 @@ export function construirePlaceholder(
   const jeu = materiaux.jeu(camp, style);
   for (const m of piecesSocle(camp, materiaux, jeu)) groupe.add(m);
   const modele = new THREE.Group();
-  modele.name = 'figurine_modele';
+  modele.name = NOM_FIGURINE;
   groupe.add(modele);
   for (const [role, geometrie] of geometriesSilhouette(s)) {
     const maille = new THREE.Mesh(geometrie, jeu[role]);
@@ -388,83 +394,27 @@ export function construirePlaceholder(
 }
 
 // ---------------------------------------------------------------------------
-// Modèles glTF : l'échappatoire vers les vrais assets
+// Un modèle livré, monté comme un placeholder
 // ---------------------------------------------------------------------------
 
-const modeles = new Map<string, Promise<THREE.Group | null>>();
-let chargeur: GLTFLoader | null = null;
-
-/** Racine des modèles livrés par le générateur externe. */
-export const RACINE_MODELES = '/assets/modeles';
-
-/** Tente un seul fichier. Rend `null` — jamais une exception — s'il n'existe pas. */
-function chargerFichier(id: string): Promise<THREE.Group | null> {
-  return new Promise<THREE.Group | null>((resoudre) => {
-    try {
-      chargeur = chargeur ?? new GLTFLoader();
-      chargeur.load(
-        `${RACINE_MODELES}/${id}.glb`,
-        (gltf) => resoudre(gltf.scene),
-        undefined,
-        () => resoudre(null),
-      );
-    } catch {
-      resoudre(null);
-    }
-  }).catch(() => null);
-}
-
 /**
- * Charge le modèle d'une unité **pour une nation donnée**, dans l'ordre de repli
- * de `doc/10-rendu-3d.md` §7.1 :
- *
- * ```
- * 1. kit national      kit_<pays>_<unite>.glb
- * 2. géométrie de base unite_<cle>_base.glb
- * 3. rien              → le placeholder reste en place
- * ```
- *
- * Rend `null` — jamais une exception — quand aucun des deux n'existe encore, ce
- * qui est l'état normal du projet tant que le générateur n'a rien livré. Le
- * résultat est mémorisé par couple : un 404 n'est demandé qu'une fois.
+ * Monte un modèle conformé pour un camp, exactement comme `construirePlaceholder`
+ * monte une silhouette : le **même socle à liseré d'équipe** dessous — base
+ * comme kit, c'est le rendu qui le dessine, jamais le fichier —, puis la
+ * figurine clonée et teintée. Le socle reste à sa taille nominale : le gabarit
+ * est déjà dans la figurine, et une case vaut un mètre, donc aucune échelle de
+ * taille ne s'applique à un modèle livré.
  */
-export function chargerModele(cle: CleUnite, pays: CodePays | null = null): Promise<THREE.Group | null> {
-  const memoCle = `${pays ?? ''}:${cle}`;
-  const memo = modeles.get(memoCle);
-  if (memo) return memo;
-  const candidats = pays === null
-    ? [`unite_${cle}_base`, cle]
-    : [`kit_${pays}_${cle}`, `unite_${cle}_base`, cle];
-  const promesse = (async (): Promise<THREE.Group | null> => {
-    for (const id of candidats) {
-      const lu = await chargerFichier(id);
-      if (lu) return lu;
-    }
-    return null;
-  })();
-  modeles.set(memoCle, promesse);
-  return promesse;
-}
-
-/**
- * Teinte un modèle chargé. Un kit national arrive déjà peint : seuls ses
- * matériaux `equipe*` — le liseré de socle — prennent la couleur du camp, et ses
- * matériaux `accent*` le premier accent du style. Une géométrie de base, elle,
- * est entièrement neutre : c'est le même geste qui la colore en entier.
- */
-export function teinterModele(objet: THREE.Object3D, camp: CampId | null): void {
-  const p = paletteDe(camp);
-  objet.traverse((n) => {
-    if (!(n instanceof THREE.Mesh)) return;
-    n.castShadow = true;
-    n.receiveShadow = true;
-    const materiaux = Array.isArray(n.material) ? n.material : [n.material];
-    for (const m of materiaux) {
-      if (!(m instanceof THREE.MeshStandardMaterial)) continue;
-      if (m.name.startsWith('equipe')) m.color.set(p.main);
-      else if (m.name.startsWith('accent')) m.color.set(p.light);
-    }
-  });
+export function monterModele(
+  modele: ModeleCharge, camp: CampId | null, materiaux: Materiaux, style: StyleNation | null = null,
+): THREE.Group {
+  const groupe = new THREE.Group();
+  const jeu = materiaux.jeu(camp, style);
+  for (const m of piecesSocle(camp, materiaux, jeu)) groupe.add(m);
+  const figurine = clonerFigurine(modele.objet);
+  teinterModele(figurine, camp, { style, kit: modele.kit });
+  groupe.add(figurine);
+  return groupe;
 }
 
 // ---------------------------------------------------------------------------
@@ -485,12 +435,29 @@ export interface EtatVisuel {
   secousse: number;
   opacite: number;
   affaissement: number;
+  /**
+   * Le clip logique demandé (`doc/10` §7.3) : `repos` par défaut. Une unité dont
+   * le modèle porte des clips le joue dans son mixer ; un placeholder l'ignore.
+   */
+  clip: NomClip;
+  /**
+   * La durée du geste que le clip accompagne, en millisecondes, `0` pour la
+   * durée naturelle du clip. Un clip qui ne boucle pas y est **ajusté** : le
+   * geste — tir, coup encaissé, mise hors jeu — a la durée que l'animation lui
+   * donne, et le clip se joue en entier dans ce temps au lieu d'être coupé.
+   */
+  clipDuree: number;
 }
 
 /** Un état visuel neutre. */
 function etatNeutre(): EtatVisuel {
-  return { dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0 };
+  return {
+    dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0, clip: 'repos', clipDuree: 0,
+  };
 }
+
+/** Ce qui va chercher le modèle d'un couple (unité, nation) : `chargerModele`, ou un double de test. */
+export type ChargeurModele = (cle: CleUnite, pays: CodePays | null) => Promise<ModeleCharge | null>;
 
 /** Réglages du calque des unités. */
 export interface OptionsUnites {
@@ -500,6 +467,11 @@ export interface OptionsUnites {
    * sa seule couleur d'équipe, ce qui reste un état parfaitement valide.
    */
   paysParCamp?: Partial<Record<CampId, CodePays>>;
+  /**
+   * Remplace `chargerModele` : c'est la porte des tests, qui n'ont ni réseau ni
+   * fichier et posent un modèle construit en mémoire.
+   */
+  chargeur?: ChargeurModele;
 }
 
 /** Ce que `creerUnites` rend au rendu. */
@@ -528,6 +500,8 @@ export interface CalqueUnites {
   positionDe(id: string): THREE.Vector3 | null;
   /** Hauteur d'accroche de l'étiquette de PV. */
   sommetDe(id: string): number;
+  /** Le clip que joue le mixer d'une unité, `null` pour un placeholder ou un modèle sans clip. */
+  clipJoue(id: string): NomClip | null;
   dispose(): void;
 }
 
@@ -550,6 +524,10 @@ interface Entree {
   agie: boolean | null;
   /** Enfoncement courant de la figurine, en unités de scène ; tend vers `TASSEMENT` ou 0. */
   tassement: number;
+  /** Le lecteur de clips du modèle livré, `null` pour un placeholder ou un modèle sans clip. */
+  lecteur: LecteurClips | null;
+  /** Le dernier clip demandé par les animations — distinct de celui qui joue, qui peut être revenu au repos. */
+  clipDemande: NomClip;
 }
 
 /**
@@ -646,6 +624,7 @@ export function creerUnites(
     Object.entries(options.paysParCamp ?? {})
       .map(([camp, code]) => [Number(camp) as CampId, code as CodePays]),
   );
+  const charger: ChargeurModele = options.chargeur ?? chargerModele;
 
   /** Le style de la nation d'un camp, ou `null` si on ne la connaît pas. */
   function styleDe(camp: CampId): StyleNation | null {
@@ -678,28 +657,47 @@ export function creerUnites(
       sommet: hauteurSilhouette(type.silhouette),
       pv: -1,
       rotor: corps.getObjectByName('rotor_anime') ?? null,
-      figurines: type.silhouette.base === 'pattes' ? corps.getObjectByName('figurine_modele') ?? null : null,
+      figurines: type.silhouette.base === 'pattes' ? corps.getObjectByName(NOM_FIGURINE) ?? null : null,
       agie: null,
       tassement: 0,
+      lecteur: null,
+      clipDemande: 'repos',
     };
     // Un vrai modèle prend la place du placeholder dès qu'il arrive, sans à-coup.
-    void chargerModele(u.type, paysParCamp.get(u.camp) ?? null).then((modele) => {
-      if (!modele || !entrees.has(u.id)) return;
-      const clone = modele.clone(true);
-      teinterModele(clone, u.camp);
-      g.remove(entree.corps);
-      g.add(clone);
-      entree.corps = clone as THREE.Group;
-      entree.rotor = null;
-      entree.figurines = null;
-      // Le modèle arrive avec ses propres matériaux : s'il remplace une pièce
-      // déjà ternie, il doit l'être aussi, sinon l'unité « se réveille » à
-      // l'instant où l'asset se charge.
-      if (entree.agie) ternir(entree, true);
-      enfoncer(entree);
+    void charger(u.type, paysParCamp.get(u.camp) ?? null).then((modele) => {
+      if (!modele || entrees.get(u.id) !== entree) return;
+      installerModele(entree, modele);
     });
     entrees.set(u.id, entree);
     return entree;
+  }
+
+  /** Remplace le placeholder d'une entrée par son modèle livré, et lui prépare ses clips. */
+  function installerModele(entree: Entree, modele: ModeleCharge): void {
+    const corps = monterModele(modele, entree.camp, materiaux, styleDe(entree.camp));
+    entree.groupe.remove(entree.corps);
+    entree.groupe.add(corps);
+    entree.corps = corps;
+    entree.rotor = null;
+    entree.figurines = null;
+    // L'étiquette s'accroche au sommet du modèle, pas à celui de la silhouette
+    // qu'il remplace ; si elle existe déjà, on la remonte sans la redessiner.
+    entree.sommet = modele.hauteur > 0 ? modele.hauteur : entree.sommet;
+    if (entree.etiquette) entree.etiquette.position.y = entree.sommet + 0.16;
+    // Le modèle arrive avec ses propres matériaux : s'il remplace une pièce
+    // déjà ternie, il doit l'être aussi, sinon l'unité « se réveille » à
+    // l'instant où l'asset se charge.
+    if (entree.agie) ternir(entree, true);
+    enfoncer(entree);
+
+    const figurine = corps.getObjectByName(NOM_FIGURINE);
+    if (!figurine) return;
+    entree.lecteur = creerLecteurClips(figurine, modele.clips);
+    // Le modèle arrive peut-être au milieu d'un geste : il reprend le clip
+    // demandé, à sa durée naturelle — on ne sait plus où en est le geste.
+    const v = visuels.get(entree.id);
+    entree.clipDemande = v?.clip ?? 'repos';
+    entree.lecteur?.jouer(entree.clipDemande);
   }
 
   function poser(entree: Entree, u: Unite, v: EtatVisuel): void {
@@ -810,15 +808,23 @@ export function creerUnites(
         n.material = repos;
         return;
       }
-      const ternirUn = (m: THREE.Material): THREE.Material => (
-        m instanceof THREE.MeshStandardMaterial ? materiaux.terni(m) : m);
+      const ternirUn = (m: THREE.Material): THREE.Material => {
+        if (!(m instanceof THREE.MeshStandardMaterial)) return m;
+        const terni = materiaux.terni(m);
+        // Le double terni est un clone, qui perd le shader du masque d'équipe :
+        // on le lui rend, avec la couleur d'équipe ternie des mêmes nombres.
+        const masque = masqueDe(m);
+        const couleur = couleurMasquee(m);
+        if (masque && couleur && !masqueDe(terni)) appliquerMasque(terni, masque, couleurTernie(couleur));
+        return terni;
+      };
       n.material = Array.isArray(repos) ? repos.map(ternirUn) : ternirUn(repos);
     });
   }
 
   /** Applique l'enfoncement courant à la figurine, sans toucher au socle. */
   function enfoncer(entree: Entree): void {
-    const modele = entree.corps.getObjectByName('figurine_modele') ?? entree.corps;
+    const modele = entree.corps.getObjectByName(NOM_FIGURINE) ?? entree.corps;
     // `> 0` plutôt qu'une simple négation : `-0` se compare mal dans les tests.
     modele.position.y = entree.tassement > 0 ? -entree.tassement : 0;
   }
@@ -826,6 +832,8 @@ export function creerUnites(
   function retirer(id: string): void {
     const e = entrees.get(id);
     if (!e) return;
+    e.lecteur?.dispose();
+    e.lecteur = null;
     groupe.remove(e.groupe);
     entrees.delete(id);
     visuels.delete(id);
@@ -852,6 +860,21 @@ export function creerUnites(
             : Math.max(cible, entree.tassement - marche);
           enfoncer(entree);
           if (entree.tassement !== cible) anime = true;
+        }
+        // Le modèle livré joue le clip que les animations demandent. Sous
+        // réduction des animations, rien n'avance : la pose reste celle du
+        // premier instant, et l'état — position, cap — est tenu par `poser`.
+        if (entree.lecteur) {
+          const v = visuels.get(entree.id);
+          const demande = v?.clip ?? 'repos';
+          if (demande !== entree.clipDemande) {
+            entree.clipDemande = demande;
+            entree.lecteur.jouer(demande, v?.clipDuree ?? 0);
+          }
+          // Une unité qui a joué se fige dans son repos — l'immobilité fait
+          // partie du signal — mais encaisse encore un coup ou tire encore.
+          const figee = entree.agie === true && entree.lecteur.courant === 'repos';
+          if (!mouvementReduit && !figee && entree.lecteur.avancer(pas / 1000)) anime = true;
         }
         // Une unité qui a joué ne respire plus et ses rotors sont arrêtés :
         // l'immobilité est la moitié du signal, le gris n'est que l'autre.
@@ -934,6 +957,10 @@ export function creerUnites(
 
     sommetDe(id: string): number {
       return entrees.get(id)?.sommet ?? 0.3;
+    },
+
+    clipJoue(id: string): NomClip | null {
+      return entrees.get(id)?.lecteur?.courant ?? null;
     },
 
     dispose(): void {

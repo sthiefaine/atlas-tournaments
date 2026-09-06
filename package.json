@@ -13,6 +13,7 @@
     "test:e2e": "playwright test",
     "simuler": "tsx scripts/simuler.ts",
     "controler": "tsx scripts/controler-carte.ts",
+    "controler:asset": "tsx scripts/controler-asset.ts",
     "apercu": "tsx scripts/apercu-carte.ts",
     "extraire-chaines": "tsx scripts/extraire-chaines.ts",
     "verifier:campagne": "tsx scripts/verifier-campagne.ts"

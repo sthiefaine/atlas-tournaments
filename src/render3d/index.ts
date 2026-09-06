@@ -56,7 +56,10 @@ export {
   type CadreOmbre, type RectangleSol,
 } from './ombres';
 export { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
-export { chargerModele, RACINE_MODELES } from './unites';
+export {
+  chargerModele, conformerModele, forcerLod, RACINE_MODELES, teinterModele,
+  type ModeleCharge, type NomClip,
+} from './unites';
 
 /** Millisecondes entre deux images au repos : de quoi faire vivre l'eau. */
 const MS_REPOS = 1000;

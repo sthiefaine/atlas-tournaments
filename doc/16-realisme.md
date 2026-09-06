@@ -64,6 +64,16 @@ Aujourd'hui, un `.glb` posé dans `public/assets/modeles/` s'afficherait, mais m
 
 Et sur la vitrine : un badge « modèle livré / placeholder », le choix du LOD, et un lecteur de clips (repos, déplacement, tir…) pour le lot C.
 
+**Fait le 6 septembre 2026, point par point** (`render3d/modeles.ts`, testé sous Node avec des groupes construits en mémoire et un GLB fabriqué par `tests/assets/glb.ts` ; `10-rendu-3d.md` §7.1, §7.3, §7.5 portent le détail).
+
+1. **Orientation** : `conformerModele` tourne le modèle de **+π/2** autour de Y — et non −π/2 comme écrit ci-dessus : c'est le signe que three impose pour envoyer `+Z` sur `+X`, vérifié par un test sur un point —, et la spécification reste ce qu'elle est.
+2. **Échelle et gabarit** : aucune échelle de taille sur un modèle livré ; `PROPORTIONS` a quitté `unites.ts` pour `modeles.ts` et s'applique au modèle comme au placeholder, sur un groupe enveloppant.
+3. **Socle et liseré** : `monterModele` pose sous le modèle le même `piecesSocle` que sous le placeholder, base comme kit ; `teinterModele(objet, camp, { style, kit })` colore `mat_corps` et `mat_details` d'une base avec la palette de la nation (ou du camp), ne touche à rien du corps d'un kit — seuls ses matériaux `equipe*` prennent la couleur du camp —, et mélange dans le shader (`onBeforeCompile`) quand le matériau porte l'image `masque_equipe` du fichier.
+4. **Niveaux de détail** : le chargeur demande `_lod0`, `_lod1`, `_lod2` et se contente de ce qui existe (le lod0 obligatoire, arrêt au premier absent) ; `THREE.LOD` aux seuils déduits des paliers de zoom (`SEUILS_LOD`, à mi-chemin entre deux paliers) ; un seul niveau est posé sans seuil ; la vitrine sait forcer un niveau.
+5. **La commande de contrôle** : `scripts/controler-asset.ts` (`npm run controler:asset -- --spec … --glb … [--lod n] [--fichiers dossier] [--json]`), testée contre un GLB fabriqué en mémoire et la vraie spécification du char léger, code de sortie 1 sur refus ou fichier illisible, et un avertissement — pas un refus — quand le nom du fichier n'est pas celui du gabarit.
+
+La vitrine porte le badge « Modèle livré / Placeholder », le choix du niveau et le lecteur de clips, et `window.__atlasVitrine.modele()` les expose au pilotage. **Rien de tout cela n'a vu un vrai fichier** : aucun `.glb` n'existe, et c'est le pilote B1 qui le fera.
+
 ### 3.2 B1 — Un pilote de bout en bout, une seule unité
 
 Une seule pièce traverse toute la boucle avant qu'on en commande cent : **le char léger**, parce qu'il est rigide (pas de squelette), d'encombrement 1, et que sa spec est la plus simple. Étapes :
@@ -108,6 +118,8 @@ Un kit est un jeu de textures **monté sur la géométrie de base** (`11` §5.2 
 3. **La règle d'or tient** : l'état logique est en avance, l'animation rattrape ; un clic pendant un clip coupe le clip.
 4. **Le coût** : un `SkinnedMesh` ne s'instancie pas. Trente unités à pied, c'est trente draw calls de plus, ce qui reste dans le budget de 27 par carte **seulement si** les autres familles sont instanciées (B2). À mesurer en A6, et à trancher : squelette pour tous, ou animation par transformation de nœuds (roues, tourelles, rotors) pour les véhicules et squelette pour les seules figurines. La seconde voie est la proposition.
 5. **La production des clips** : un générateur ne les fournit pas. C'est un passage Blender avec un rig d'humanoïde simple et six actions exportées dans le GLB ; les figurines partagent le même squelette, donc les six clips se font **une fois** et se réappliquent aux trois modèles à pied.
+
+**État au 6 septembre 2026.** Les points 1 à 3 sont **faits**, côté code : `creerLecteurClips` (`render3d/modeles.ts`) tient un `AnimationMixer` par unité chargée, avancé par `avancer()` du calque ; `animations.ts` pose le clip logique de chaque geste dans `EtatVisuel.clip` — `deplacement`, `tir`, `touche` (riposte comprise, après le tir), `hors_jeu`, `capture` sur les deux temps et sur une remise en service —, le calque fond d'un clip à l'autre en 150 ms, un clip absent retombe sur `repos` sans erreur, et la règle d'or tient : `terminer` remet `repos`, un clic qui coupe un geste laisse l'état juste. Les clips qui ne bouclent pas sont ajustés à la durée du geste (`10` §7.3). Le point 4 est **tranché** : un seul mécanisme, le mixer joue aussi bien un squelette qu'une transformation de nœuds nommés — une tourelle, un rotor, une roue sont des pistes comme les autres — ; le coût des `SkinnedMesh` se mesure en A6. Le point 5 reste entier : aucun clip n'existe, et ce code n'a joué que ceux des tests.
 
 ## 5. Ordre, jalons et critères de fin
 
