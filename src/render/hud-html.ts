@@ -203,34 +203,35 @@ const STYLE = `
 .atlas-hud .production button[aria-expanded='true']{background:#d0d7cc;border-left-color:var(--signal);margin-bottom:0}
 .atlas-hud .production button[aria-expanded='true'] .cta{color:#1d3a2a}
 /* La fiche : tout ce que le canon sait dire de l'unité, et rien d'inventé. */
-.atlas-hud .fiche{border-left:3px solid var(--signal);padding:10px 12px 12px;font-size:12.5px;line-height:1.45}
-.atlas-hud .production .fiche{background:#eae6d5;color:#1e3038;margin-bottom:6px}
-/* Sous le curseur, la fiche se pose dans l'encre du HUD et non sur du papier :
-   c'est le même contenu, ce n'est pas la même surface. */
-.atlas-hud .inspect .fiche{background:#0d1a22;color:#dbe4ea;border-top:1px solid #ffffff1a;max-height:44vh;overflow:auto;overscroll-behavior:contain}
-.atlas-hud .inspect .fiche .fl>span{color:#8ba2ae}
-.atlas-hud .inspect .fiche .chiffres{color:#a9bcc6}
-.atlas-hud .inspect .fiche i{color:#8ba2ae}
-.atlas-hud .inspect .fiche b:not(:last-child)::after{color:#5f7683}
-.atlas-hud .inspect .fiche .avert{background:#3a2620;border-left-color:#c07a55;color:#f0d9cc}
-.atlas-hud .inspect .fiche .avert.bon{background:#1e3325;border-left-color:#5aa84c;color:#d6ecd2}
-/* Le bouton qui déplie : même gabarit que « retour », posé juste avant lui. */
+/* La fiche : un seul jeu de règles de mise en page, deux teintes selon la
+   surface. Chaque bloc pose son titre sur **toute la largeur** puis ses valeurs
+   en pastilles, qui reviennent à la ligne sans jamais glisser sous le titre. */
+.atlas-hud .fiche{--fiche-encre:#dbe4ea;--fiche-doux:#8ba2ae;--fiche-puce:#ffffff12;--fiche-puce-bord:#ffffff1c;--fiche-fort:#8fd39a;--fiche-danger:#f2a48c;border-left:3px solid var(--signal);padding:10px 12px 12px;font-size:12.5px;line-height:1.4;color:var(--fiche-encre)}
+.atlas-hud .production .fiche{--fiche-encre:#1e3038;--fiche-doux:#5d7480;--fiche-puce:#ffffff8c;--fiche-puce-bord:#0000001a;--fiche-fort:#2f7a3d;--fiche-danger:#a4402f;background:#eae6d5;margin-bottom:6px}
+.atlas-hud .inspect .fiche{background:#0d1a22;border-top:1px solid #ffffff1a;max-height:46vh;overflow:auto;overscroll-behavior:contain}
+.atlas-hud .fiche p{margin:0}
+.atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:3px 12px;margin-bottom:8px;font-weight:750;color:var(--fiche-doux)}
+.atlas-hud .fiche .avert{margin:0 0 8px;padding:5px 8px;background:#3a2620;border-left:3px solid #c07a55;color:#f0d9cc;font-weight:700}
+.atlas-hud .fiche .avert.bon{background:#1e3325;border-left-color:#5aa84c;color:#d6ecd2}
+.atlas-hud .production .fiche .avert{background:#e3d2c6;border-left-color:#a86a4a;color:#1e3038}
+.atlas-hud .production .fiche .avert.bon{background:#d3e0cd;border-left-color:#4e8f43}
+.atlas-hud .fiche .bloc{margin:0 0 9px}
+.atlas-hud .fiche .bloc:last-child{margin-bottom:0}
+.atlas-hud .fiche h4{margin:0 0 4px;font-size:10.5px;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--fiche-doux)}
+.atlas-hud .fiche .puces{display:flex;flex-wrap:wrap;gap:5px}
+.atlas-hud .fiche .puce{display:inline-flex;align-items:baseline;gap:5px;padding:3px 8px;background:var(--fiche-puce);border:1px solid var(--fiche-puce-bord);font-weight:700;white-space:nowrap}
+.atlas-hud .fiche .puce i{font-style:normal;font-variant-numeric:tabular-nums;font-weight:850;color:var(--fiche-doux)}
+/* Le chiffre prend la couleur de ce qu'il signifie : vert quand c'est nous qui
+   frappons, rouge quand c'est nous qui encaissons. Ça se lit sans lire. */
+.atlas-hud .fiche .fort .puce i{color:var(--fiche-fort)}
+.atlas-hud .fiche .danger .puce i{color:var(--fiche-danger)}
+.atlas-hud .fiche .deux{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--fiche-doux)}
+@media(max-width:360px){.atlas-hud .fiche .deux{grid-template-columns:1fr}}
 .atlas-hud .detail{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:auto;background:#ffffff10;border:1px solid #ffffff20;font-size:15px;font-weight:850;font-style:italic;color:#d6e2ea}
 .atlas-hud .detail[aria-expanded='true']{background:var(--signal);border-color:var(--signal);color:#10222b;font-style:normal}
 .atlas-hud .inspect .detail+.retour{margin-left:6px}
-.atlas-hud .fiche p{margin:0 0 6px}
-.atlas-hud .fiche p:last-child{margin-bottom:0}
-.atlas-hud .fiche .chiffres{display:flex;flex-wrap:wrap;gap:4px 14px;font-weight:750;color:#39525c}
-.atlas-hud .fiche .fl{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
-.atlas-hud .fiche .fl>span{flex:0 0 106px;font-size:11px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;color:#5d7480}
-.atlas-hud .fiche b{font-weight:700}
-.atlas-hud .fiche b:not(:last-child)::after{content:'·';margin:0 2px 0 6px;color:#8fa2ab;font-weight:400}
-.atlas-hud .fiche i{font-style:normal;font-variant-numeric:tabular-nums;color:#5d7480}
-/* Un avertissement se lit avant les listes : le tir indirect change une partie. */
-.atlas-hud .fiche .avert{padding:5px 8px;background:#e3d2c6;border-left:3px solid #a86a4a;font-weight:700}
-.atlas-hud .fiche .avert.bon{background:#d3e0cd;border-left-color:#4e8f43}
 @media(max-width:480px){
-  .atlas-hud .fiche .fl>span{flex:0 0 100%}
   .atlas-hud .liste button:not([aria-expanded='true']) .cta{display:none}
 }
 .atlas-hud .pied{display:flex;justify-content:flex-end;gap:8px;padding:12px 16px 16px}
@@ -710,13 +711,27 @@ const MS_SURSIS_INSPECTION = 1500;
     if (!f || !type) return '';
     const nomDe = (c: CleUnite): string => nomUnite(v.locale, v.catalogue, c);
     const nomT = (t: CleTerrain): string => nomTerrain(v.locale, v.catalogue, t);
-    const liste = (titre: string, corps: string): string => corps === ''
+    // Un bloc = un titre sur toute la largeur, puis des pastilles qui reviennent
+    // à la ligne proprement. L'ancienne mise en page posait le titre en colonne
+    // de 106 px à gauche des valeurs : le titre passait sur deux lignes et, dès
+    // que les valeurs débordaient, elles retombaient **sous le titre**.
+    const bloc = (titre: string, pastilles: string, ton = ''): string => pastilles === ''
       ? ''
-      : `<p class="fl"><span>${ech(api.t(titre))}</span>${corps}</p>`;
+      : `<section class="bloc ${ton}"><h4>${ech(api.t(titre))}</h4><div class="puces">${pastilles}</div></section>`;
     const duels = (l: readonly Duel[]): string => l
-      .map((d) => `<b>${ech(nomDe(d.unite))} <i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></b>`).join('');
-    const terrains = (l: readonly CleTerrain[]): string => l.map((t) => `<b>${ech(nomT(t))}</b>`).join('');
+      .map((d) => `<span class="puce">${ech(nomDe(d.unite))}<i>${ech(api.t('fiche.degats', { n: d.degats }))}</i></span>`).join('');
+    const terrains = (l: readonly CleTerrain[]): string => l
+      .map((t) => `<span class="puce">${ech(nomT(t))}</span>`).join('');
+    const note = (cle: string): string => `<p class="note">${ech(api.t(cle))}</p>`;
     const portee = f.portee[0] === f.portee[1] ? f.portee[0] : `${f.portee[0]}–${f.portee[1]}`;
+
+    const meteo = f.meteosGenantes.length === 0
+      ? note('fiche.par_tous_temps')
+      : ['case', 'bride'].map((effet) => bloc(
+        effet === 'bride' ? 'fiche.meteo_bride' : 'fiche.meteo_case',
+        f.meteosGenantes.filter((g) => g.effet === effet)
+          .map((g) => `<span class="puce">${ech(libelleMeteo(api.t, g.meteo))}</span>`).join(''),
+      )).join('');
 
     return `<div class="fiche">`
       + `<p class="chiffres">`
@@ -727,18 +742,17 @@ const MS_SURSIS_INSPECTION = 1500;
       + `</p>`
       + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
       + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
-      + liste('fiche.forte', duels(f.forte))
-      + liste('fiche.craint', duels(f.craint))
-      + liste('fiche.rapide', terrains(f.terrainsRapides))
+      + bloc('fiche.forte', duels(f.forte), 'fort')
+      + bloc('fiche.craint', duels(f.craint), 'danger')
+      // Les deux listes de terrain sont courtes : côte à côte, elles se lisent
+      // d'un coup d'œil comme un « oui / non ».
+      + `<div class="deux">`
+      + bloc('fiche.rapide', terrains(f.terrainsRapides))
       + (f.terrainsInterdits.length > 0
-        ? liste('fiche.interdit', terrains(f.terrainsInterdits))
-        : `<p class="fl"><span>${ech(api.t('fiche.partout'))}</span></p>`)
-      + (f.meteosGenantes.length > 0
-        ? f.meteosGenantes.map((g) => liste(
-          g.effet === 'bride' ? 'fiche.meteo_bride' : 'fiche.meteo_case',
-          `<b>${ech(libelleMeteo(api.t, g.meteo))}</b>`,
-        )).join('')
-        : `<p class="fl"><span>${ech(api.t('fiche.par_tous_temps'))}</span></p>`)
+        ? bloc('fiche.interdit', terrains(f.terrainsInterdits))
+        : `<section class="bloc"><h4>${ech(api.t('fiche.interdit'))}</h4>${note('fiche.partout')}</section>`)
+      + `</div>`
+      + meteo
       + `</div>`;
   }
 
