@@ -43,6 +43,7 @@ import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches } from '../engine/index';
 import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
+import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
 import {
   appliquerMasque, chargerModele, clonerFigurine, couleurMasquee, couleurTernie, creerLecteurClips,
@@ -60,22 +61,95 @@ export {
 } from './modeles';
 
 /** Les matériaux neutres, partagés par toutes les nations. */
-const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant' | 'peau', number>> = {
-  materiel: 0x515c65,
-  verre: 0x70bbd2,
-  roulant: 0x222b31,
+const NEUTRES: Readonly<Record<'materiel' | 'verre' | 'roulant' | 'peau' | 'repere', number>> = {
+  // Un gris d'acier clair : la couleur d'un métal est son reflet, et un acier
+  // sombre ne renvoie du studio qu'un reflet sombre.
+  materiel: 0x6c757d,
+  // Un verre teinté de froid ; sa transparence fait le reste.
+  verre: 0x8fcbe6,
+  roulant: 0x252b30,
   // Un seul ton de peau pour toutes les nations, mat : celui d'une figurine peinte.
   peau: 0xc9946c,
+  // Les repères de socle : une pastille d'ivoire, un marquage et non un vitrage.
+  repere: 0xf1eee4,
 };
 
 /** Les ornements que le placeholder sait poser lui-même. Le reste vient du kit. */
 const ORNEMENTS_PLACEHOLDER = ['antenne', 'fanion'] as const;
+
+/** Ce en quoi un rôle est fait : rugosité, métal, et ce qu'il émet de lui-même. */
+interface MatierePiece {
+  rugosite: number;
+  metal: number;
+  /** Intensité émissive, de la couleur propre de la pièce — ou de `LUEUR_VERRE` pour le verre. */
+  emission: number;
+}
+
+/**
+ * Ce en quoi chaque rôle est fait, en PBR *metallic-roughness*, réglé avec la
+ * carte d'environnement en place (`16-realisme.md`, A5). Les valeurs d'avant
+ * dataient d'une scène qui ne réfléchissait rien : l'émission y compensait
+ * l'absence de lumière renvoyée, et le verre opaque cachait qu'il n'y avait
+ * rien à refléter. Avec le studio à un tiers le jour, la même émission rendait
+ * la tôle plate et lumineuse comme du plastique.
+ *
+ * - `principal`, `sombre`, `clair` : de la **tôle peinte**. La peinture est un
+ *   diélectrique, mais une peinture satinée sur de l'acier accroche un reflet
+ *   que le zéro strict refuse : un métal faible et non nul, une rugosité
+ *   moyenne. L'émission tombe à un souffle de la couleur propre — il en reste
+ *   juste assez pour qu'une nation sombre ne devienne pas un trou noir sous la
+ *   lune, où l'environnement vaut moins d'un dixième du jour.
+ * - `materiel` : de l'**acier** nu — canons, chenilles, mâts. La lumière y vient
+ *   du reflet, pas du diffus, d'où un métal franc.
+ * - `verre` : du **verre teinté**, translucide (`OPACITE_VERRE`), presque lisse,
+ *   qui reflète le studio ; il garde une lueur propre, celle d'une cabine
+ *   allumée, pour rester lisible la nuit.
+ * - `roulant` : du **caoutchouc** poussiéreux, mat et sans métal.
+ * - `peau` : mate, sans métal.
+ */
+const MATIERES: Readonly<Record<RolePiece, MatierePiece>> = {
+  principal: { rugosite: 0.5, metal: 0.16, emission: 0.045 },
+  sombre: { rugosite: 0.58, metal: 0.14, emission: 0 },
+  clair: { rugosite: 0.46, metal: 0.12, emission: 0.03 },
+  materiel: { rugosite: 0.4, metal: 0.78, emission: 0 },
+  verre: { rugosite: 0.1, metal: 0.06, emission: 0.16 },
+  roulant: { rugosite: 0.92, metal: 0, emission: 0 },
+  peau: { rugosite: 0.72, metal: 0, emission: 0 },
+};
+
+/** Les sept rôles, dans l'ordre de la table. */
+const ROLES = Object.keys(MATIERES) as RolePiece[];
+
+/** L'opacité du verre : on voit la caisse au travers de la cabine, teintée, sans que la cabine disparaisse. */
+export const OPACITE_VERRE = 0.58;
+
+/** La lueur propre du verre : un bleu-vert de cabine allumée, froid comme sa teinte. */
+const LUEUR_VERRE = 0x1d4a60;
+
+/**
+ * Les rôles que la pluie fait luire : la tôle, l'acier et le caoutchouc. Ni le
+ * verre, déjà lisse, ni la peau — une figurine peinte ne brille pas sous l'eau.
+ */
+const ROLES_MOUILLABLES: ReadonlySet<RolePiece> = new Set<RolePiece>(['principal', 'sombre', 'clair', 'materiel', 'roulant']);
+
+/** De combien la pluie abaisse la rugosité d'une matière mouillable, à mouillé plein. */
+const MOUILLAGE = 0.3;
+
+/** Le surcroît de rugosité d'une pièce ternie : une unité qui a joué n'accroche plus la lumière. */
+const SURCROIT_TERNI = 0.3;
+
+/** La lueur neutre d'une pièce ternie : de quoi ne pas être un trou noir de nuit, sans briller de jour. */
+const LUEUR_TERNIE = 0x4a4c50;
+const EMISSION_TERNIE = 0.05;
 
 /** Un jeu de matériaux par camp et par style : c'est là que vit la couleur. */
 export class Materiaux {
   private readonly jeux = new Map<string, Record<RolePiece, THREE.MeshStandardMaterial>>();
   private readonly liseres = new Map<string, THREE.MeshStandardMaterial>();
   private readonly ternis = new Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial>();
+  private materiauRepere: THREE.MeshStandardMaterial | null = null;
+  /** L'humidité en cours, 0 à 1 : elle s'applique à tout jeu, existant ou à venir. */
+  private mouille = 0;
 
   jeu(camp: CampId | null, style: StyleNation | null): Record<RolePiece, THREE.MeshStandardMaterial> {
     const cle = `${String(camp)}:${style?.code ?? ''}`;
@@ -84,15 +158,26 @@ export class Materiaux {
     // La nation donne la couleur ; le camp ne la donne que faute de nation.
     const p: Palette = style ? style.palette : paletteDe(camp);
     const accent = style?.palette.accents[0] ?? p.light;
+    const matiere = (role: RolePiece): { roughness: number; metalness: number; emissiveIntensity: number } => ({
+      roughness: MATIERES[role].rugosite, metalness: MATIERES[role].metal, emissiveIntensity: MATIERES[role].emission,
+    });
     const jeu: Record<RolePiece, THREE.MeshStandardMaterial> = {
-      principal: new THREE.MeshStandardMaterial({ color: p.main, emissive: p.main, emissiveIntensity: 0.12, roughness: 0.42, metalness: 0.22 }),
-      sombre: new THREE.MeshStandardMaterial({ color: p.dark, roughness: 0.6, metalness: 0.2 }),
-      clair: new THREE.MeshStandardMaterial({ color: accent, emissive: accent, emissiveIntensity: 0.08, roughness: 0.46, metalness: 0.14 }),
-      materiel: new THREE.MeshStandardMaterial({ color: NEUTRES.materiel, roughness: 0.42, metalness: 0.62 }),
-      verre: new THREE.MeshStandardMaterial({ color: NEUTRES.verre, roughness: 0.19, metalness: 0.42, emissive: 0x153748, emissiveIntensity: 0.24 }),
-      roulant: new THREE.MeshStandardMaterial({ color: NEUTRES.roulant, roughness: 0.85, metalness: 0.12 }),
-      peau: new THREE.MeshStandardMaterial({ color: NEUTRES.peau, roughness: 0.78, metalness: 0 }),
+      principal: new THREE.MeshStandardMaterial({ color: p.main, emissive: p.main, ...matiere('principal') }),
+      sombre: new THREE.MeshStandardMaterial({ color: p.dark, ...matiere('sombre') }),
+      clair: new THREE.MeshStandardMaterial({ color: accent, emissive: accent, ...matiere('clair') }),
+      materiel: new THREE.MeshStandardMaterial({ color: NEUTRES.materiel, ...matiere('materiel') }),
+      // Le verre écrit sa profondeur : une cabine est un volume convexe posé sur
+      // une caisse, et sans écriture un décalque au sol ou un bâtiment effacé
+      // dessiné après elle se peindrait par-dessus. Il ne projette pas d'ombre
+      // (`construirePlaceholder`) : une ombre pleine trahirait sa transparence.
+      verre: new THREE.MeshStandardMaterial({
+        color: NEUTRES.verre, emissive: LUEUR_VERRE, transparent: true, opacity: OPACITE_VERRE, depthWrite: true,
+        ...matiere('verre'),
+      }),
+      roulant: new THREE.MeshStandardMaterial({ color: NEUTRES.roulant, ...matiere('roulant') }),
+      peau: new THREE.MeshStandardMaterial({ color: NEUTRES.peau, ...matiere('peau') }),
     };
+    this.rugosites(jeu);
     this.jeux.set(cle, jeu);
     return jeu;
   }
@@ -110,6 +195,41 @@ export class Materiaux {
   }
 
   /**
+   * Le matériau des repères de socle — les encoches qui comptent le camp sans
+   * dépendre de sa couleur. Une pastille d'ivoire opaque, la même pour tous :
+   * c'est un marquage, et un verre translucide posé sur l'anneau de camp en
+   * prendrait la couleur, ce qui est précisément ce que les encoches évitent.
+   */
+  repere(): THREE.MeshStandardMaterial {
+    if (!this.materiauRepere) {
+      this.materiauRepere = new THREE.MeshStandardMaterial({ color: NEUTRES.repere, roughness: 0.5, metalness: 0.02 });
+    }
+    return this.materiauRepere;
+  }
+
+  /**
+   * Mouille — ou sèche — tous les jeux : la pluie abaisse la rugosité de la
+   * tôle, de l'acier et du caoutchouc, comme le plateau le fait déjà pour ses
+   * voies. C'est un réglage **par jeu de matériaux**, une douzaine d'objets au
+   * plus, jamais par unité ni par image : l'appel est gratuit quand rien ne
+   * change, et les doubles ternis suivent leur original de la même marche.
+   */
+  mouiller(mouille: number): void {
+    const m = Math.min(1, Math.max(0, mouille));
+    if (m === this.mouille) return;
+    this.mouille = m;
+    for (const jeu of this.jeux.values()) this.rugosites(jeu);
+    for (const [origine, terni] of this.ternis) terni.roughness = Math.min(1, origine.roughness + SURCROIT_TERNI);
+  }
+
+  /** La rugosité de chaque rôle d'un jeu : la sèche, moins ce que la pluie en ôte. */
+  private rugosites(jeu: Record<RolePiece, THREE.MeshStandardMaterial>): void {
+    for (const role of ROLES) {
+      jeu[role].roughness = MATIERES[role].rugosite - (ROLES_MOUILLABLES.has(role) ? this.mouille * MOUILLAGE : 0);
+    }
+  }
+
+  /**
    * Le double **terni** d'un matériau : celui qu'une unité porte quand elle a
    * déjà joué. Mémorisé par matériau d'origine, donc créé une fois par couple
    * (camp, style) et jamais par image ; l'original n'est **jamais** modifié,
@@ -117,11 +237,12 @@ export class Materiaux {
    * près — on lui rend l'objet même, pas une reconstruction.
    *
    * La désaturation est franche (un quart de la saturation, des deux tiers de la
-   * clarté) parce qu'un gris timide ne se lit pas à 48 px par case ; l'émission
-   * colorée disparaît — c'est elle qui fait « vivre » une pièce — au profit
-   * d'une lueur neutre très faible, qui empêche la pièce de devenir un trou
-   * noir de nuit sans la faire briller de jour. La rugosité monte : une pièce
-   * qui a joué est mate, elle n'accroche plus la lumière.
+   * clarté — les nombres de `couleurTernie`, `modeles.ts`, qu'un test compare)
+   * parce qu'un gris timide ne se lit pas à 48 px par case ; l'émission propre
+   * disparaît — la lueur d'une cabine, le souffle d'une tôle — au profit d'une
+   * lueur neutre très faible, qui empêche la pièce de devenir un trou noir de
+   * nuit sans la faire briller de jour. La rugosité monte : une pièce qui a
+   * joué est mate, elle n'accroche plus la lumière, même sous la pluie.
    */
   terni(origine: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
     const memo = this.ternis.get(origine);
@@ -129,9 +250,9 @@ export class Materiaux {
     const m = origine.clone();
     origine.color.getHSL(hsl, THREE.SRGBColorSpace);
     m.color.setHSL(hsl.h, hsl.s * 0.25, hsl.l * 0.62, THREE.SRGBColorSpace);
-    m.emissive.set(0x1c1d20);
-    m.emissiveIntensity = 0.35;
-    m.roughness = Math.min(1, origine.roughness + 0.3);
+    m.emissive.set(LUEUR_TERNIE);
+    m.emissiveIntensity = EMISSION_TERNIE;
+    m.roughness = Math.min(1, origine.roughness + SURCROIT_TERNI);
     m.metalness = origine.metalness * 0.5;
     this.ternis.set(origine, m);
     return m;
@@ -146,6 +267,8 @@ export class Materiaux {
     this.liseres.clear();
     for (const m of this.ternis.values()) m.dispose();
     this.ternis.clear();
+    this.materiauRepere?.dispose();
+    this.materiauRepere = null;
   }
 }
 
@@ -308,7 +431,7 @@ function piecesSocle(camp: CampId | null, materiaux: Materiaux, jeu: Record<Role
   // Les encoches claires identifient aussi le camp sans dépendre de la couleur.
   const reperes: THREE.Mesh[] = [];
   for (let i = 0; i < (camp === null ? 0 : camp + 1); i += 1) {
-    const repere = new THREE.Mesh(boiteBiseautee(0.06, 0.012, 0.09, 0.003), jeu.verre);
+    const repere = new THREE.Mesh(boiteBiseautee(0.06, 0.012, 0.09, 0.003), materiaux.repere());
     repere.name = `socle_repere_${i}`;
     const angle = -Math.PI / 2 + (i - (camp ?? 0) / 2) * 0.28;
     repere.position.set(Math.cos(angle) * 0.345, 0.03, Math.sin(angle) * 0.345);
@@ -365,7 +488,9 @@ export function construirePlaceholder(
   for (const [role, geometrie] of geometriesSilhouette(s)) {
     const maille = new THREE.Mesh(geometrie, jeu[role]);
     maille.name = `silhouette_${role}`;
-    maille.castShadow = true;
+    // Le verre est translucide : une ombre pleine sous une cabine trahirait sa
+    // transparence, et la caisse qu'elle coiffe porte déjà la sienne.
+    maille.castShadow = role !== 'verre';
     maille.receiveShadow = true;
     modele.add(maille);
   }
@@ -483,6 +608,12 @@ export interface CalqueUnites {
    * rien ne tourne ni ne respire, et le tassement s'applique d'un coup.
    */
   avancer(ms: number, mouvementReduit?: boolean): boolean;
+  /**
+   * Reçoit l'ambiance : la pluie mouille les tôles. C'est un réglage par jeu
+   * de matériaux (`Materiaux.mouiller`), gratuit quand rien ne change, donc
+   * appelable à chaque image comme pour le plateau et le décor.
+   */
+  appliquerAmbiance(p: ParametresAmbiance): void;
   /** Synchronise les maillages avec l'état. */
   maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): void;
   /**
@@ -842,6 +973,10 @@ export function creerUnites(
   return {
     groupe,
     visuel,
+
+    appliquerAmbiance(p: ParametresAmbiance): void {
+      materiaux.mouiller(p.mouille);
+    },
 
     avancer(ms: number, mouvementReduit = false): boolean {
       const pas = Math.min(100, Math.max(0, ms));

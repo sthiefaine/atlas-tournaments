@@ -30,6 +30,7 @@ import type { Biome, CampId, Case, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
 import { creerPaysage } from './paysage';
+import { jeuToit, sorteToit, type SorteToit } from './textures';
 
 /** Couleurs de feuillage par saison : c'est la saison qu'on voit d'abord. */
 const FEUILLAGE: Readonly<Record<Saison, { conifere: number; feuillu: number }>> = {
@@ -94,6 +95,54 @@ export const PIECES_PALISSADE: readonly PiecePalissade[] = [
   { l: 0.86, h: 0.045, p: 0.012, x: 0, y: 0.075 },
   { l: 0.86, h: 0.045, p: 0.012, x: 0, y: 0.155 },
 ];
+
+/**
+ * Répétitions du motif de couverture par case : six rangs de tuiles par motif,
+ * donc vingt-quatre rangs la case — deux pixels le rang à 48 px par case, où
+ * seul le grain se lit ; un rang se distingue dès le premier palier de zoom.
+ */
+export const REPETITIONS_TOIT = 4;
+
+/**
+ * Ce en quoi une couverture est faite, par sorte : la tuile est rêche, l'ardoise
+ * un peu moins, la tôle peinte accroche la lumière et garde un rien de métal.
+ */
+const APPARENCE_TOIT: Readonly<Record<SorteToit, { rugosite: number; metal: number }>> = {
+  tuile: { rugosite: 0.86, metal: 0 },
+  ardoise: { rugosite: 0.72, metal: 0.02 },
+  tole: { rugosite: 0.55, metal: 0.25 },
+};
+
+/**
+ * Cartographie un pan de toit **à l'échelle du monde** plutôt qu'à celle de sa
+ * face. Une boîte porte des UV de 0 à 1 par face : la couverture d'un pan de
+ * maison (0,18 case) y serait deux fois plus serrée que sur un shed d'usine
+ * (0,36), et une tranche de trois centièmes en porterait autant qu'un pan
+ * entier. La projection se fait par boîte, sur l'axe dominant de la normale :
+ * pour un pan, `u` court en x et `v` en z. Le motif descend la pente le long de
+ * `u` — les rangs se recouvrent vers l'égout —, donc un pan qui regarde −X est
+ * retourné en `u`, sans quoi ses tuiles se recouvriraient à l'envers. Les
+ * tranches, minces, prennent ce qui vient.
+ */
+export function cartographierToit(geo: THREE.BufferGeometry, repetitions = REPETITIONS_TOIT): THREE.BufferGeometry {
+  const position = geo.getAttribute('position');
+  const normale = geo.getAttribute('normal');
+  const uv = geo.getAttribute('uv');
+  for (let i = 0; i < position.count; i += 1) {
+    const nx = normale.getX(i);
+    const ax = Math.abs(nx);
+    const ay = Math.abs(normale.getY(i));
+    const az = Math.abs(normale.getZ(i));
+    const x = position.getX(i);
+    const y = position.getY(i);
+    const z = position.getZ(i);
+    if (ay >= ax && ay >= az) uv.setXY(i, (nx < -1e-6 ? -x : x) * repetitions, z * repetitions);
+    else if (ax >= az) uv.setXY(i, y * repetitions, z * repetitions);
+    else uv.setXY(i, x * repetitions, y * repetitions);
+  }
+  uv.needsUpdate = true;
+  return geo;
+}
 
 /** Pleine lueur des vitrages qui se rallument, au-dessus de l'ambiance la plus nocturne. */
 const LUEUR_PLEINE = 1.1;
@@ -511,8 +560,17 @@ export function creerDecor(
   const styleRegion: StyleRegion | null = styleRegionParMecanique(etat.mecanique?.cle ?? null);
   const couleurMur = styleRegion ? styleRegion.murs.couleur : '#d9d3c6';
   const couleurToit = styleRegion ? styleRegion.toits.couleur : '#6d6a66';
+  // La couverture : un micro-relief synthétisé comme celui du sol, choisi
+  // d'après la matière du style régional — tuile, ardoise, tôle ondulée —, un
+  // seul jeu de textures pour toute la carte. L'albédo est un facteur discret
+  // de la couleur du style : elle reste au matériau, qui la blanchit sous la neige.
+  const toitures = jeuToit(sorteToit(styleRegion?.toits.matiere));
+  const apparenceToit = APPARENCE_TOIT[toitures.sorte];
   const matBeton = new THREE.MeshStandardMaterial({ color: couleurMur, roughness: 0.9 });
-  const matToit = new THREE.MeshStandardMaterial({ color: couleurToit, roughness: 0.85 });
+  const matToit = new THREE.MeshStandardMaterial({
+    color: couleurToit, roughness: apparenceToit.rugosite, metalness: apparenceToit.metal,
+    map: toitures.albedo, normalMap: toitures.normales,
+  });
   const matPierre = new THREE.MeshStandardMaterial({ color: 0xbbb9aa, roughness: 0.92 });
   const matMetal = new THREE.MeshStandardMaterial({ color: 0x465560, roughness: 0.52, metalness: 0.38 });
   const matIvoire = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.82 });
@@ -520,7 +578,10 @@ export function creerDecor(
   // ne s'allument jamais, et une palissade de chantier le ferme. Rien n'y est
   // noirci ni effondré : il est hors service, pas détruit.
   const matBetonTerni = new THREE.MeshStandardMaterial({ color: couleurMur, roughness: 0.97 });
-  const matToitTerni = new THREE.MeshStandardMaterial({ color: couleurToit, roughness: 0.95 });
+  const matToitTerni = new THREE.MeshStandardMaterial({
+    color: couleurToit, roughness: Math.min(1, apparenceToit.rugosite + 0.12), metalness: apparenceToit.metal * 0.5,
+    map: toitures.albedo, normalMap: toitures.normales,
+  });
   const matVitresEteintes = new THREE.MeshStandardMaterial({ color: 0x1f242c, roughness: 0.7 });
   const matPlanche = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96 });
   // La parabole est une calotte creuse : vue de l'ouverture, une face simple
@@ -560,6 +621,9 @@ export function creerDecor(
       if (!(enfant instanceof THREE.Mesh) || Array.isArray(enfant.material)) continue;
       enfant.updateMatrix();
       const geo = enfant.geometry.clone().applyMatrix4(enfant.matrix);
+      // Un pan de toit prend sa couverture à l'échelle du monde, le motif
+      // descendant la pente, quelle que soit la taille du pan.
+      if (enfant.material === matToit || enfant.material === matToitTerni) cartographierToit(geo);
       const lot = lots.get(enfant.material) ?? [];
       lot.push(geo);
       lots.set(enfant.material, lot);
@@ -574,7 +638,7 @@ export function creerDecor(
       lot.forEach((g2) => g2.dispose());
       geosBatiment.add(geo);
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.name = mat === matFenetres ? 'vitrages' : 'architecture';
+      mesh.name = mat === matFenetres ? 'vitrages' : mat === matToit || mat === matToitTerni ? 'toiture' : 'architecture';
       mesh.castShadow = mat !== matFenetres;
       mesh.receiveShadow = true;
       // L'occupation échange le matériau contre son jumeau translucide ; il faut
@@ -1189,6 +1253,7 @@ export function creerDecor(
       matRocher.dispose();
       matBeton.dispose();
       matToit.dispose();
+      toitures.dispose();
       matFenetres.dispose();
       matPierre.dispose();
       matMetal.dispose();

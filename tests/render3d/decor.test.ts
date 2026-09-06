@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
-import { creerDecor, poseDrapeau } from '../../src/render3d/decor';
+import { cartographierToit, creerDecor, poseDrapeau, REPETITIONS_TOIT } from '../../src/render3d/decor';
 import { SEUIL_CAPTURE } from '../../src/engine/index';
 import { CAT, partie } from '../engine/aides';
 import { carteBanc, scenarioBanc } from '../../src/app/atelier/banc';
@@ -451,4 +451,116 @@ test('changer de grille ressème les arbres, les rochers, les mâts, et rebâtit
   assert.equal(compter('mats'), 0);
   assert.equal(batiments(), 0);
   decor.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Le relief des toits
+// ---------------------------------------------------------------------------
+
+test('les toits portent un micro-relief partagé, blanchi par la neige, libéré avec le décor', () => {
+  const etat = partie('plaine');
+  // Une ville, une usine désaffectée, une station : tout ce qui a un toit, en
+  // service ou non. Le QG et l'aéroport n'en composent pas.
+  const types = ['ville', 'usine', 'radar'] as const;
+  const grille = { largeur: 3, hauteur: 1, terrainDe: (x: number) => types[x]! };
+  const decor = creerDecor(grille, { ...etat, proprietaires: {}, desaffectes: ['1,0'], unites: [] }, () => 0);
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  const normales = new Set<string>();
+  const albedos = new Set<string>();
+  for (const b of batiments.children) {
+    const toiture = b.getObjectByName('toiture') as THREE.Mesh | undefined;
+    assert.ok(toiture, `${String(b.userData['type'])} : un toit fusionné, et nommé`);
+    const m = toiture.material as THREE.MeshStandardMaterial;
+    assert.ok(m.normalMap, 'le toit a des normales');
+    assert.ok(m.map, 'et un albédo discret');
+    assert.equal(m.map.colorSpace, THREE.SRGBColorSpace);
+    assert.equal(m.normalMap.colorSpace, THREE.NoColorSpace);
+    normales.add(m.normalMap.uuid);
+    albedos.add(m.map.uuid);
+    // Les UV du toit sont à l'échelle du monde : leur étendue en u suit celle
+    // du pan en x, et non la face de 0 à 1 d'une boîte.
+    const uv = toiture.geometry.getAttribute('uv');
+    const pos = toiture.geometry.getAttribute('position');
+    const nor = toiture.geometry.getAttribute('normal');
+    let dessus = 0;
+    for (let i = 0; i < uv.count; i += 1) {
+      if (nor.getY(i) < 0.8) continue;
+      dessus += 1;
+      assert.ok(Math.abs(Math.abs(uv.getX(i)) - Math.abs(pos.getX(i)) * REPETITIONS_TOIT) < 1e-5, 'u à l’échelle du monde');
+      assert.ok(Math.abs(uv.getY(i) - pos.getZ(i) * REPETITIONS_TOIT) < 1e-5, 'v à l’échelle du monde');
+    }
+    assert.ok(dessus >= 4, 'au moins un dessus de pan');
+  }
+  assert.equal(normales.size, 1, 'un seul jeu de normales pour toute la carte, désaffectés compris');
+  assert.equal(albedos.size, 1);
+  assert.ok(batiments.children[1]!.userData['desaffecte'], 'l’usine est bien désaffectée');
+
+  // La neige blanchit le toit comme avant : la couleur reste au matériau.
+  const toit = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const ete = toit.color.clone();
+  decor.appliquerAmbiance(parametresAmbiance('hiver', 'jour', 'neige'), 'hiver');
+  assert.ok(toit.color.r > ete.r && toit.color.g > ete.g && toit.color.b > ete.b, 'le toit blanchit sous la neige');
+  assert.ok(toit.map, 'sans perdre sa couverture');
+
+  // Un bâtiment occupé garde sa couverture sur son jumeau translucide.
+  decor.majProprietaires({ ...etat, proprietaires: {}, desaffectes: ['1,0'], unites: [{ ...etat.unites[0]!, x: 0, y: 0 }] });
+  const fantome = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  assert.ok(fantome.transparent && fantome.normalMap === toit.normalMap);
+
+  let liberees = 0;
+  toit.normalMap!.addEventListener('dispose', () => { liberees += 1; });
+  toit.map!.addEventListener('dispose', () => { liberees += 1; });
+  decor.dispose();
+  assert.equal(liberees, 2, 'les deux textures de toit sont libérées avec le décor');
+});
+
+test('un pan de toit est cartographié à l’échelle du monde, ses rangs descendant la pente', () => {
+  const f = REPETITIONS_TOIT;
+  const dessus = (geo: THREE.BufferGeometry): number[] => {
+    const nor = geo.getAttribute('normal');
+    const indices: number[] = [];
+    for (let i = 0; i < nor.count; i += 1) if (nor.getY(i) > 0.8) indices.push(i);
+    return indices;
+  };
+  // Le pan droit d'une maison : il regarde +X, son égout est en +X, u suit x.
+  const droit = new THREE.BoxGeometry(0.2, 0.03, 0.35).rotateZ(-0.43).translate(0.1, 0.5, 0.2);
+  cartographierToit(droit);
+  const hautsDroit = dessus(droit);
+  assert.equal(hautsDroit.length, 4, 'les quatre sommets du dessus');
+  for (const i of hautsDroit) {
+    assert.ok(Math.abs(droit.getAttribute('uv').getX(i) - droit.getAttribute('position').getX(i) * f) < 1e-9, 'u suit x');
+    assert.ok(Math.abs(droit.getAttribute('uv').getY(i) - droit.getAttribute('position').getZ(i) * f) < 1e-9, 'v suit z');
+  }
+  // Le pan gauche regarde −X : u est retourné, pour que ses tuiles se recouvrent vers son égout.
+  const gauche = new THREE.BoxGeometry(0.2, 0.03, 0.35).rotateZ(0.43).translate(-0.1, 0.5, 0.2);
+  cartographierToit(gauche);
+  const hautsGauche = dessus(gauche);
+  assert.equal(hautsGauche.length, 4);
+  for (const i of hautsGauche) {
+    assert.ok(Math.abs(gauche.getAttribute('uv').getX(i) + gauche.getAttribute('position').getX(i) * f) < 1e-9, 'u suit −x');
+    assert.ok(Math.abs(gauche.getAttribute('uv').getY(i) - gauche.getAttribute('position').getZ(i) * f) < 1e-9, 'v suit z');
+  }
+  // Deux pans de largeurs différentes portent la même densité : l'étendue en u
+  // est proportionnelle à la largeur, ce que la face de 0 à 1 d'une boîte ne
+  // donnait pas.
+  const etendue = (geo: THREE.BufferGeometry): number => {
+    const uv = geo.getAttribute('uv');
+    const us = dessus(geo).map((i) => uv.getX(i));
+    return Math.max(...us) - Math.min(...us);
+  };
+  // Les positions sont en float32 : la tolérance est celle de ce format, pas du double.
+  const petit = cartographierToit(new THREE.BoxGeometry(0.18, 0.03, 0.35));
+  const grand = cartographierToit(new THREE.BoxGeometry(0.36, 0.03, 0.58));
+  assert.ok(Math.abs(etendue(petit) - 0.18 * f) < 1e-6, `étendue ${etendue(petit)} pour un pan de 0,18`);
+  assert.ok(Math.abs(etendue(grand) - 0.36 * f) < 1e-6, `étendue ${etendue(grand)} pour un pan de 0,36`);
+  // Une tranche prend les deux autres axes : elle n'est jamais laissée à ses UV de face.
+  const tranche = dessus(petit);
+  const uv = petit.getAttribute('uv');
+  const pos = petit.getAttribute('position');
+  for (let i = 0; i < uv.count; i += 1) {
+    if (tranche.includes(i)) continue;
+    const n = petit.getAttribute('normal');
+    if (Math.abs(n.getX(i)) > 0.8) assert.ok(Math.abs(uv.getX(i) - pos.getY(i) * f) < 1e-9, 'tranche en x : u suit y');
+    if (Math.abs(n.getZ(i)) > 0.8) assert.ok(Math.abs(uv.getY(i) - pos.getY(i) * f) < 1e-9, 'tranche en z : v suit y');
+  }
 });

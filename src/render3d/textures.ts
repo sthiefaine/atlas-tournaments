@@ -11,6 +11,7 @@
  */
 
 import * as THREE from 'three';
+import type { MatiereStyle } from '../assets/spec';
 import type { Biome } from '../schemas/types';
 
 /** Les matières du terrain, dans l'ordre des canaux de la carte de mélange. */
@@ -199,15 +200,13 @@ export function albedoMatiere(
 }
 
 /**
- * Carte de normales approximative, dérivée du champ de hauteur par différences
- * centrées (un Sobel allégé). Ce n'est pas une normale mesurée, mais elle suffit
- * à accrocher la lumière rasante — c'est exactement ce qu'on lui demande ici.
+ * Les octets d'une carte de normales approximative, dérivée du champ de hauteur
+ * par différences centrées (un Sobel allégé). Ce n'est pas une normale mesurée,
+ * mais elle suffit à accrocher la lumière rasante — c'est exactement ce qu'on
+ * lui demande ici. Le champ boucle : les bords se lisent modulo la taille.
  */
-export function normalesDepuis(
-  doc: Document, hauteur: Float32Array, taille: number, force = 2.4,
-): HTMLCanvasElement {
-  const { c, g } = toile(doc, taille);
-  const image = g.createImageData(taille, taille);
+export function normalesDonnees(hauteur: Float32Array, taille: number, force = 2.4): Uint8ClampedArray {
+  const donnees = new Uint8ClampedArray(taille * taille * 4);
   const h = (x: number, y: number): number => {
     const xi = ((x % taille) + taille) % taille;
     const yi = ((y % taille) + taille) % taille;
@@ -219,12 +218,22 @@ export function normalesDepuis(
       const dy = (h(x, y + 1) - h(x, y - 1)) * force;
       const l = Math.hypot(dx, dy, 1);
       const j = (y * taille + x) * 4;
-      image.data[j] = Math.round(((-dx / l) * 0.5 + 0.5) * 255);
-      image.data[j + 1] = Math.round(((-dy / l) * 0.5 + 0.5) * 255);
-      image.data[j + 2] = Math.round((1 / l) * 0.5 * 255 + 127);
-      image.data[j + 3] = 255;
+      donnees[j] = Math.round(((-dx / l) * 0.5 + 0.5) * 255);
+      donnees[j + 1] = Math.round(((-dy / l) * 0.5 + 0.5) * 255);
+      donnees[j + 2] = Math.round((1 / l) * 0.5 * 255 + 127);
+      donnees[j + 3] = 255;
     }
   }
+  return donnees;
+}
+
+/** La carte de normales d'un champ de hauteur, peinte dans un canvas. */
+export function normalesDepuis(
+  doc: Document, hauteur: Float32Array, taille: number, force = 2.4,
+): HTMLCanvasElement {
+  const { c, g } = toile(doc, taille);
+  const image = g.createImageData(taille, taille);
+  image.data.set(normalesDonnees(hauteur, taille, force));
   g.putImageData(image, 0, 0);
   return c;
 }
@@ -304,4 +313,202 @@ export function textureRoute(doc: Document, taille = 128): THREE.CanvasTexture {
   }
   g.putImageData(image, 0, 0);
   return texture(c, true);
+}
+
+// ---------------------------------------------------------------------------
+// Les couvertures : tuile, ardoise, tôle ondulée
+// ---------------------------------------------------------------------------
+//
+// Les toits des bâtiments composés par le code étaient des boîtes de couleur
+// unie, alors que le sol a un micro-relief depuis le premier jour. Un toit ne
+// montre pas chaque tuile — à 48 px par case, un rang fait deux pixels —, il
+// montre qu'il est **couvert** : la lumière rasante y accroche des rangs, et la
+// couleur du style régional y varie d'une pièce à l'autre. Trois motifs
+// suffisent : ce qui se cuit, ce qui se fend, ce qui se plie.
+//
+// Le repère de la texture : `u` (les colonnes) descend la pente, du faîte vers
+// l'égout ; `v` (les lignes) court le long du faîte. Le décor projette ses pans
+// dans ce repère (`decor.ts`, `cartographierToit`).
+
+/** Les couvertures que le code sait synthétiser : trois motifs, pas un par région. */
+export type SorteToit = 'tuile' | 'ardoise' | 'tole';
+
+/**
+ * La sorte de couverture d'une matière de style (`StyleRegion.toits.matiere`).
+ * Les dix-huit régions n'en déclarent que trois — tuile, ardoise, tôle ondulée —,
+ * mais la liste fermée des matières en admet trente : ce qui se cuit va à la
+ * tuile, ce qui se plie à la tôle, et tout ce qui se pose en plaques — ardoise,
+ * pierre, bois, béton — à l'ardoise. Sans style, l'ardoise : c'est le motif le
+ * plus discret, et le gris neutre du toit par défaut est un gris d'ardoise.
+ */
+export function sorteToit(matiere: MatiereStyle | null | undefined): SorteToit {
+  switch (matiere) {
+    case 'tuile': case 'terre_cuite': case 'ceramique': case 'email':
+      return 'tuile';
+    case 'tole_ondulee': case 'acier_brosse': case 'acier_peint': case 'aluminium':
+    case 'laiton': case 'cuivre': case 'fonte':
+      return 'tole';
+    default:
+      return 'ardoise';
+  }
+}
+
+/** Un aléa déterministe par case entière : deux tuiles voisines diffèrent, deux montages non. */
+function hache(i: number, j: number, graine: number): number {
+  let e = (Math.imul(i, 0x9e3779b1) ^ Math.imul(j, 0x85ebca77) ^ Math.imul(graine, 0xc2b2ae3d)) >>> 0;
+  e = (e + 0x6d2b79f5) >>> 0;
+  let t = Math.imul(e ^ (e >>> 15), 1 | e);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
+}
+
+/** La graine de chaque couverture : trois motifs, trois tirages. */
+const GRAINES_TOIT: Readonly<Record<SorteToit, number>> = { tuile: 2203, ardoise: 2251, tole: 2287 };
+
+/**
+ * La force des normales par couverture : une tuile est épaisse et bombée, une
+ * ardoise mince, une tôle entre les deux.
+ */
+const FORCE_TOIT: Readonly<Record<SorteToit, number>> = { tuile: 2.2, ardoise: 1.6, tole: 1.8 };
+
+/** Un texel de couverture : son relief, et son albédo en facteur de la couleur du style. */
+interface TexelToit {
+  hauteur: number;
+  /** Clarté, dans [0, 1] : 1 laisse la couleur du style intacte. */
+  clarte: number;
+  /** Écart de teinte, dans [−1, 1] : un rien de chaud ou de froid par pièce. */
+  teinte: number;
+}
+
+/**
+ * Un rang de pièces qui se **recouvrent** — tuiles ou ardoises. Chaque pièce
+ * repose sur celle du dessous, donc se soulève vers l'égout par rapport au plan
+ * du toit et retombe d'un coup à son bord libre ; les rangs sont décalés d'une
+ * demi-pièce. `bombe` donne la courbure en travers d'une tuile canal.
+ */
+function pieceRecouvrante(
+  x: number, y: number, taille: number, rangs: number, colonnes: number,
+  epaisseur: number, bombe: number, joint: number, graine: number,
+): TexelToit {
+  const pasRang = taille / rangs;
+  const rang = Math.floor(x / pasRang);
+  const fx = (x - rang * pasRang) / pasRang;
+  const pasCol = taille / colonnes;
+  const glisse = y / pasCol - (rang % 2 === 1 ? 0.5 : 0);
+  const col = Math.floor(glisse);
+  const fy = glisse - col;
+  // La colonne se lit modulo le nombre de pièces : la pièce à cheval sur le
+  // bord de la texture est la même des deux côtés, sinon la couture se voit.
+  const colonne = ((col % colonnes) + colonnes) % colonnes;
+  const j = hache(rang, colonne, graine);
+  const bord = Math.min(fy, 1 - fy);
+  let hauteur = 0.28 + epaisseur * fx + bombe * Math.sin(Math.PI * fy) + (j - 0.5) * 0.12;
+  let clarte = 0.9 + (j - 0.5) * 0.14;
+  // Le joint entre deux pièces d'un rang : un creux étroit, un peu plus sombre.
+  if (bord < joint) {
+    const creux = 1 - bord / joint;
+    hauteur -= creux * 0.2;
+    clarte -= creux * 0.14;
+  }
+  // L'ombre du rang du dessus, à la naissance de la pièce.
+  if (fx < 0.08) clarte -= (1 - fx / 0.08) * 0.12;
+  return { hauteur, clarte, teinte: hache(rang, colonne + 1000, graine) * 2 - 1 };
+}
+
+/**
+ * De la tôle ondulée : des ondes qui **descendent** la pente — l'eau s'y
+ * écoule —, en feuilles qui se recouvrent le long de la pente comme des tuiles
+ * géantes. Pas de rouille : le matériel des Jeux est entretenu.
+ */
+function toleOndulee(x: number, y: number, taille: number): TexelToit {
+  const ONDES = 8;
+  const FEUILLES = 2;
+  const onde = Math.sin((y / taille) * Math.PI * 2 * ONDES) * 0.5 + 0.5;
+  const fx = ((x * FEUILLES) / taille) % 1;
+  let hauteur = 0.12 + onde * 0.7 + fx * 0.1;
+  let clarte = 0.9 + onde * 0.08;
+  // Le recouvrement de deux feuilles : une marche et un liseré d'ombre.
+  if (fx < 0.05) {
+    hauteur -= 0.1;
+    clarte -= 0.1;
+  }
+  return { hauteur, clarte, teinte: 0 };
+}
+
+/**
+ * Le relief d'une couverture : un champ de hauteur dans [0, 1] et un albédo
+ * **discret** — un gris entre 0,7 et 1 en facteur de la couleur du style, avec
+ * un rien de teinte par pièce. La couleur elle-même reste au matériau, qui la
+ * tient du style régional et la blanchit sous la neige.
+ */
+export function reliefToit(sorte: SorteToit, taille = 128): { hauteur: Float32Array; albedo: Uint8ClampedArray } {
+  const hauteur = new Float32Array(taille * taille);
+  const albedo = new Uint8ClampedArray(taille * taille * 4);
+  const graine = GRAINES_TOIT[sorte];
+  for (let y = 0; y < taille; y += 1) {
+    for (let x = 0; x < taille; x += 1) {
+      const t = sorte === 'tuile'
+        ? pieceRecouvrante(x, y, taille, 6, 6, 0.42, 0.22, 0.06, graine)
+        : sorte === 'ardoise'
+          ? pieceRecouvrante(x, y, taille, 8, 5, 0.18, 0, 0.05, graine)
+          : toleOndulee(x, y, taille);
+      const i = y * taille + x;
+      hauteur[i] = Math.max(0, Math.min(1, t.hauteur));
+      const clarte = Math.max(0.7, Math.min(1, t.clarte)) * 255;
+      const j = i * 4;
+      albedo[j] = Math.round(clarte * (1 + t.teinte * 0.025));
+      albedo[j + 1] = Math.round(clarte);
+      albedo[j + 2] = Math.round(clarte * (1 - t.teinte * 0.025));
+      albedo[j + 3] = 255;
+    }
+  }
+  return { hauteur, albedo };
+}
+
+/** Le jeu de textures d'une couverture : albédo et normales, et de quoi les libérer. */
+export interface JeuToit {
+  readonly sorte: SorteToit;
+  readonly albedo: THREE.DataTexture;
+  readonly normales: THREE.DataTexture;
+  dispose(): void;
+}
+
+/**
+ * Une texture répétable depuis des octets. Une `DataTexture` plutôt qu'un
+ * canvas : le décor n'a pas de `Document`, et un tableau d'octets n'en a pas
+ * besoin. Elle a ses mipmaps — sans eux, un motif répété quatre fois par case
+ * scintille dès qu'on s'éloigne — et, contrairement à un canvas, elle n'est
+ * pas retournée à l'envoi : sa première ligne est bien `v = 0`.
+ */
+function textureDonnees(donnees: Uint8ClampedArray, taille: number, srgb: boolean): THREE.DataTexture {
+  // Une copie plutôt qu'une vue sur le même tampon : three veut un `ArrayBuffer`
+  // franc, et soixante-quatre kilo-octets copiés une fois au montage ne comptent pas.
+  const octets = new Uint8Array(donnees.length);
+  octets.set(donnees);
+  const t = new THREE.DataTexture(octets, taille, taille, THREE.RGBAFormat, THREE.UnsignedByteType);
+  t.wrapS = THREE.RepeatWrapping;
+  t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+  t.magFilter = THREE.LinearFilter;
+  t.minFilter = THREE.LinearMipmapLinearFilter;
+  t.generateMipmaps = true;
+  t.anisotropy = 8;
+  t.needsUpdate = true;
+  return t;
+}
+
+/** Fabrique le jeu de textures d'une couverture. Un seul par sorte suffit à toute une carte. */
+export function jeuToit(sorte: SorteToit, taille = 128): JeuToit {
+  const { hauteur, albedo } = reliefToit(sorte, taille);
+  const albedoTexture = textureDonnees(albedo, taille, true);
+  const normales = textureDonnees(normalesDonnees(hauteur, taille, FORCE_TOIT[sorte]), taille, false);
+  return {
+    sorte,
+    albedo: albedoTexture,
+    normales,
+    dispose(): void {
+      albedoTexture.dispose();
+      normales.dispose();
+    },
+  };
 }

@@ -167,6 +167,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     plateau.appliquerAmbiance(depart);
     decor.appliquerAmbiance(depart, e.climat.saison);
+    unites.appliquerAmbiance(depart);
     cleAmbiance = v.ambiance.cle;
     return {
       grille, plateau, decor, unites, surbrillances, eclairage, effets, vue3d,
@@ -197,6 +198,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const p = m.eclairage.courant;
     m.plateau.appliquerAmbiance(p);
     if (vue) m.decor.appliquerAmbiance(p, vue.ambiance.saison);
+    m.unites.appliquerAmbiance(p);
     s.renderer.toneMappingExposure = p.exposition;
     s.dessiner(m.vue3d.camera);
     if (encore) salir();
