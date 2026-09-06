@@ -45,7 +45,7 @@ const GENRES: [GenreBanc, string][] = [['deplacement', 'Déplacement'], ['attaqu
 const GESTES: Record<GesteBanc, string> = {
   deplacement: 'Déplacer', attaque: 'Tirer', capture_en_cours: 'Entamer la capture', capture: 'Capturer',
   remise_en_service: 'Remettre en service', hors_jeu: 'Mettre hors jeu',
-  maree_haute: 'Marée haute', maree_basse: 'Marée basse',
+  maree_haute: 'Marée haute', maree_basse: 'Marée basse', fin_de_tour: 'Fin de tour',
 };
 
 /** Les vingt-quatre nations de la Ronde : chacune a ses couleurs. */

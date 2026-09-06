@@ -244,7 +244,7 @@ export function visiblesBanc(): Set<string> {
 /** Les gestes que le banc sait rejouer. */
 export const GESTES_BANC = [
   'deplacement', 'attaque', 'capture_en_cours', 'capture', 'remise_en_service', 'hors_jeu',
-  'maree_haute', 'maree_basse',
+  'maree_haute', 'maree_basse', 'fin_de_tour',
 ] as const;
 export type GesteBanc = typeof GESTES_BANC[number];
 
@@ -286,8 +286,10 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
       { x: mien.x + 3, y: mien.y - 1 },
     ];
     const arrivee = chemin[chemin.length - 1]!;
+    // Une unité qui bouge a joué : c'est ce que le rendu doit montrer — gris,
+    // immobile, cadenas — et ce qu'on vient regarder sur le banc.
     return {
-      apres: { ...etat, unites: etat.unites.map((u) => (u.id === mien.id ? { ...u, x: arrivee.x, y: arrivee.y } : u)) },
+      apres: { ...etat, unites: etat.unites.map((u) => (u.id === mien.id ? { ...u, x: arrivee.x, y: arrivee.y, etat: 'agi' } : u)) },
       evenements: [{
         type: 'deplacement', uniteId: mien.id,
         de: { x: mien.x, y: mien.y }, vers: arrivee, chemin, interrompu: false,
@@ -304,7 +306,7 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
         ...etat,
         unites: etat.unites.map((u) => {
           if (u.id === sien.id) return { ...u, pv: sien.pv - degats };
-          if (u.id === mien.id) return { ...u, pv: mien.pv - riposte };
+          if (u.id === mien.id) return { ...u, pv: mien.pv - riposte, etat: 'agi' };
           return u;
         }),
       },
@@ -374,6 +376,18 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
         { type: 'remise_en_service', prime: 2000, uniteId: capteur.id, case: cible, camp },
         { type: 'capture', uniteId: capteur.id, case: cible, points: SEUIL_CAPTURE * 2, acquis: true, camp },
       ],
+    };
+  }
+
+  if (geste === 'fin_de_tour') {
+    // Le seul geste qui **réveille** : sans lui, une unité grisée par « Déplacer »
+    // le reste jusqu'à la remise à neuf, et le retour à l'aspect d'origine —
+    // le point délicat — ne se verrait jamais. Le camp courant ne change pas :
+    // on veut revoir les mêmes pièces prêtes, pas passer la main à l'autre.
+    const camp = etat.campCourant;
+    return {
+      apres: { ...etat, unites: etat.unites.map((u) => (u.camp === camp && u.etat !== 'prete' ? { ...u, etat: 'prete' } : u)) },
+      evenements: [{ type: 'fin_tour', camp }],
     };
   }
 

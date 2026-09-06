@@ -209,6 +209,15 @@
       "longueurMax": 24
     },
     {
+      "cle": "accueil.profil_actif",
+      "texte": "Profil actif : {nom}",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Pastille discrète sur l'écran-titre, seulement quand le profil B est actif ou qu'un profil est nommé."
+      },
+      "longueurMax": 30
+    },
+    {
       "cle": "accueil.reglages_note",
       "texte": "Dialogues et progression",
       "contexte": {
@@ -1355,6 +1364,150 @@
       "longueurMax": 12
     },
     {
+      "cle": "fiche.bonne_contre",
+      "texte": "Bonne contre",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Ligne de la fiche d’unité : les trois cibles qu’elle frappe le mieux."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.carburant",
+      "texte": "Carburant",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité. Même mot que hud.carburant."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "fiche.faible_contre",
+      "texte": "Faible contre",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Ligne de la fiche d’unité : les trois cibles qu’elle frappe le moins."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.fonds_insuffisants",
+      "texte": "Fonds insuffisants",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Sous le bouton Recruter quand il est désactivé."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "fiche.illimite",
+      "texte": "Illimité",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Valeur de munitions ou de carburant quand l’unité n’en consomme pas."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "fiche.liste",
+      "texte": "Unités produisibles ici",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Nom de la colonne de gauche du menu de production, pour les lecteurs d’écran."
+      },
+      "longueurMax": 32
+    },
+    {
+      "cle": "fiche.mouvement",
+      "texte": "Mouvement",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité. Même ordre que le panneau d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "fiche.munitions",
+      "texte": "Munitions",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité. Même mot que hud.munitions."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "fiche.portee",
+      "texte": "Portée",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité : portée de tir."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "fiche.portee_plage",
+      "texte": "{min} à {max}",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Portée de tir quand elle va d’une distance à une autre (artillerie)."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "fiche.recruter",
+      "texte": "Recruter",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Bouton principal de la fiche d’unité. Le coût est affiché à côté."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "fiche.sans_arme",
+      "texte": "Sans arme",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Remplace « bonne contre / faible contre » pour une unité qui ne tire pas."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.sans_trait",
+      "texte": "Aucun trait",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Fiche d’unité, quand la liste des traits est vide."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.titre",
+      "texte": "Fiche de l’unité",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Nom de la colonne de droite du menu de production, pour les lecteurs d’écran."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "fiche.traits",
+      "texte": "Traits",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité : la liste des traits."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "fiche.vision",
+      "texte": "Vision",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Étiquette de la fiche d’unité : portée de vue sous brouillard."
+      },
+      "longueurMax": 12
+    },
+    {
       "cle": "hud.action_refusee",
       "texte": "Ordre impossible",
       "contexte": {
@@ -1905,6 +2058,69 @@
       "longueurMax": 18
     },
     {
+      "cle": "mouvement.air",
+      "texte": "Aérien",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.amphibie",
+      "texte": "Amphibie",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.bottes",
+      "texte": "Bottes",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.chenilles",
+      "texte": "Chenilles",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.mer",
+      "texte": "Naval",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.pied",
+      "texte": "À pied",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "mouvement.roues",
+      "texte": "Roues",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Type de mouvement, fiche d’unité."
+      },
+      "longueurMax": 14
+    },
+    {
       "cle": "objectif.capture_qg",
       "texte": "Prenez le QG adverse.",
       "contexte": {
@@ -2103,12 +2319,30 @@
     },
     {
       "cle": "reglages.efface",
-      "texte": "Progression effacée.",
+      "texte": "Progression effacée pour « {nom} ».",
       "contexte": {
         "ecran": "reglages",
-        "note": "Message après effacement."
+        "note": "Titre du bandeau de succès après effacement. {nom} est le nom du profil actif."
       },
-      "longueurMax": 30
+      "longueurMax": 44
+    },
+    {
+      "cle": "reglages.efface_bilan",
+      "texte": "Victoires effacées : {victoires} · Parties en cours effacées : {parties}",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Détail du bandeau de succès. Les chiffres sont lus avant l'effacement."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "reglages.efface_ko",
+      "texte": "L’effacement a échoué : ce navigateur refuse de modifier son stockage.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Bandeau d'échec quand localStorage refuse."
+      },
+      "longueurMax": 90
     },
     {
       "cle": "reglages.effacer",
@@ -2138,6 +2372,15 @@
       "longueurMax": 80
     },
     {
+      "cle": "reglages.effacer_profil",
+      "texte": "Seul le profil actif, « {nom} », est concerné ; l’autre profil est conservé.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Sous la confirmation d'effacement. {nom} est le nom du profil actif."
+      },
+      "longueurMax": 100
+    },
+    {
       "cle": "reglages.inactif",
       "texte": "Désactivé",
       "contexte": {
@@ -2145,6 +2388,69 @@
         "note": "État d'un interrupteur."
       },
       "longueurMax": 14
+    },
+    {
+      "cle": "reglages.profil_a",
+      "texte": "Profil A",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Libellé par défaut du premier profil, tant qu'il n'est pas nommé."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "reglages.profil_actif",
+      "texte": "Profil actif",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Marque le profil sélectionné dans le choix des profils."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "reglages.profil_b",
+      "texte": "Profil B",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Libellé par défaut du second profil, tant qu'il n'est pas nommé."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "reglages.profil_nom",
+      "texte": "Nom du profil actif",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Étiquette du champ de renommage."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "reglages.profil_nom_note",
+      "texte": "De 1 à 16 caractères, gardé sur cet appareil.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Aide sous le champ de renommage."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "reglages.profils",
+      "texte": "Profils",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du groupe : deux profils par appareil."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "reglages.profils_note",
+      "texte": "Deux profils sur cet appareil, chacun avec sa progression et ses parties en cours.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Aide sous le choix des profils."
+      },
+      "longueurMax": 100
     },
     {
       "cle": "reglages.retour",
@@ -2226,6 +2532,123 @@
         "note": "Bulletin d’Atlas."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "trait.amphibie",
+      "texte": "Amphibie",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.anti_air",
+      "texte": "Anti-aérien",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.brouilleur",
+      "texte": "Brouilleur",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.capture",
+      "texte": "Capture",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.drone",
+      "texte": "Drone",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.furtif_nuit",
+      "texte": "Furtif la nuit",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.genie",
+      "texte": "Génie",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.ravitaillement",
+      "texte": "Ravitaillement",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.tir_indirect",
+      "texte": "Tir indirect",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.tout_terrain",
+      "texte": "Tout-terrain",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.transport",
+      "texte": "Transport",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.vision_etendue",
+      "texte": "Vision étendue",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.vol",
+      "texte": "Vol",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
     }
   ]
 }

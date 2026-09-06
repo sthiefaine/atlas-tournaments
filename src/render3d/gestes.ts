@@ -1,9 +1,25 @@
-/** Gestes de caméra tactiles : un tap joue, un glisser ou pincement déplace la vue. */
+/**
+ * Gestes de caméra tactiles : un tap joue, un glisser ou pincement déplace la
+ * vue. Un double-clic ou un appui long demandent l'**inspection** de la case ;
+ * un appui long qui n'inspecte rien annule, comme le clic droit.
+ */
 import type * as THREE from 'three';
 import { toucheDe } from '../render/entrees';
 import type { GestesRendu } from '../render/rendu';
 import type { Case } from '../schemas/types';
 import type { Vue3d } from './camera';
+
+/** Seuils de temps des gestes composés, réglables pour les tests. */
+export interface OptionsGestes3d {
+  /** Au-delà, un doigt immobile fait un appui long. */
+  seuilAppuiLongMs?: number;
+  /** En deçà, deux taps sur la même case font un double-clic. */
+  seuilDoubleClicMs?: number;
+}
+
+const SEUIL_APPUI_LONG = 520;
+const SEUIL_DOUBLE_CLIC = 350;
+const SEUIL_BOUGE = 6;
 
 /** Séparé du montage WebGL pour tester les gestes réels et leur annulation. */
 export function brancherGestes3d(
@@ -12,11 +28,22 @@ export function brancherGestes3d(
   sol: () => THREE.Object3D | readonly THREE.Object3D[] | null,
   gestes: GestesRendu,
   salir: () => void,
+  options: OptionsGestes3d = {},
 ): () => void {
+  const seuilLong = options.seuilAppuiLongMs ?? SEUIL_APPUI_LONG;
+  const seuilDouble = options.seuilDoubleClicMs ?? SEUIL_DOUBLE_CLIC;
   const doigts = new Map<number, { x: number; y: number; debutX: number; debutY: number }>();
   let glisse = false;
   let ecart = 0;
   let annule = false;
+  let appuiLong: ReturnType<typeof setTimeout> | null = null;
+  /** Le dernier tap, en case et en temps : c'est la case qui fait le double-clic. */
+  let dernierTap: { c: Case; temps: number } | null = null;
+
+  const annulerAppuiLong = (): void => {
+    if (appuiLong !== null) clearTimeout(appuiLong);
+    appuiLong = null;
+  };
 
   const local = (e: PointerEvent): { x: number; y: number } => {
     const boite = canvas.getBoundingClientRect();
@@ -32,6 +59,7 @@ export function brancherGestes3d(
     if (doigts.size === 0) annule = false;
     canvas.setPointerCapture?.(e.pointerId);
     doigts.set(e.pointerId, { x: p.x, y: p.y, debutX: p.x, debutY: p.y });
+    annulerAppuiLong();
     if (doigts.size >= 2) {
       annule = true;
       const [a, b] = [...doigts.values()];
@@ -40,6 +68,17 @@ export function brancherGestes3d(
     } else {
       // Droit/milieu glissent immédiatement ; gauche et toucher attendent le seuil.
       glisse = e.button === 2 || e.button === 1;
+      // La souris a le double-clic ; le doigt, qui n'en a pas de fiable, a
+      // l'appui long. Le relâchement qui suit ne compte plus comme un tap.
+      if (e.pointerType !== 'mouse') {
+        appuiLong = setTimeout(() => {
+          appuiLong = null;
+          if (glisse || annule) return;
+          annule = true;
+          const c = caseSous(p.x, p.y);
+          if (!(c && gestes.surInspecter?.(c) === true)) gestes.surAnnuler?.();
+        }, seuilLong);
+      }
     }
   };
 
@@ -68,9 +107,12 @@ export function brancherGestes3d(
       salir();
       return;
     }
-    if (Math.hypot(p.x - doigt.debutX, p.y - doigt.debutY) >= 6) annule = true;
+    if (Math.hypot(p.x - doigt.debutX, p.y - doigt.debutY) >= SEUIL_BOUGE) {
+      annule = true;
+      annulerAppuiLong();
+    }
     if (!glisse) {
-      if (Math.hypot(p.x - doigt.debutX, p.y - doigt.debutY) < 6) return;
+      if (Math.hypot(p.x - doigt.debutX, p.y - doigt.debutY) < SEUIL_BOUGE) return;
       glisse = true;
       annule = true;
     }
@@ -83,14 +125,25 @@ export function brancherGestes3d(
     const doigt = doigts.get(e.pointerId);
     doigts.delete(e.pointerId);
     canvas.releasePointerCapture?.(e.pointerId);
+    annulerAppuiLong();
     if (doigts.size < 2) ecart = 0;
     if (!doigt) return;
-    const bouge = Math.hypot(doigt.x - doigt.debutX, doigt.y - doigt.debutY) > 6;
+    const bouge = Math.hypot(doigt.x - doigt.debutX, doigt.y - doigt.debutY) > SEUIL_BOUGE;
     if (!bouge && !annule && e.type !== 'pointercancel') {
-      if (e.button === 2) gestes.surAnnuler?.();
-      else if (e.button === 0) {
+      if (e.button === 2) {
+        gestes.surAnnuler?.();
+        dernierTap = null;
+      } else if (e.button === 0) {
         const c = caseSous(doigt.x, doigt.y);
-        if (c) gestes.surClicCase?.(c);
+        if (c) {
+          gestes.surClicCase?.(c);
+          const double = dernierTap !== null
+            && dernierTap.c.x === c.x && dernierTap.c.y === c.y
+            && e.timeStamp - dernierTap.temps <= seuilDouble;
+          // Le double-clic consomme ses deux taps : un troisième repart de zéro.
+          dernierTap = double ? null : { c, temps: e.timeStamp };
+          if (double) gestes.surInspecter?.(c);
+        }
       }
     }
     if (doigts.size === 0) {
@@ -136,6 +189,7 @@ export function brancherGestes3d(
   canvas.addEventListener('keydown', surKey);
 
   return (): void => {
+    annulerAppuiLong();
     canvas.removeEventListener('pointerdown', surDown);
     canvas.removeEventListener('pointermove', surMove);
     canvas.removeEventListener('pointerup', surUp);

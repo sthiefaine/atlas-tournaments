@@ -1,29 +1,41 @@
 /** Progression de la qualification locale : aucune autorité sur un classement en ligne. */
+import { cleProgression, profilActif, type Profil } from '../preferences';
+
 export interface Progression {
   version: 1;
   victoires: string[];
 }
-const CLE = 'atlas:qualification:v1';
-let session: Progression = { version: 1, victoires: [] };
+const vide = (): Progression => ({ version: 1, victoires: [] });
+
+// La mémoire de session ne vaut que pour **un** profil : basculer de A à B
+// doit rendre la progression de B, même quand le stockage refuse de répondre.
+let session: Progression = vide();
+let sessionProfil: Profil | null = null;
 
 export function normaliserProgression(brut: unknown): Progression {
-  if (!brut || typeof brut !== 'object') return { version: 1, victoires: [] };
+  if (!brut || typeof brut !== 'object') return vide();
   const p = brut as Partial<Progression>;
-  if (p.version !== 1 || !Array.isArray(p.victoires)) return { version: 1, victoires: [] };
+  if (p.version !== 1 || !Array.isArray(p.victoires)) return vide();
   return { version: 1, victoires: [...new Set(p.victoires.filter((x): x is string => typeof x === 'string' && /^[a-z][a-z0-9_]{1,47}$/.test(x)))] };
 }
 
+/** La progression du profil actif. La clé dépend du profil (`preferences.ts`). */
 export function lireProgression(): Progression {
+  const profil = profilActif();
+  if (profil !== sessionProfil) { session = vide(); sessionProfil = profil; }
   try {
-    const texte = localStorage.getItem(CLE);
-    if (texte) session = normaliserProgression(JSON.parse(texte));
+    const texte = localStorage.getItem(cleProgression(profil));
+    // Une clé absente est une progression vide, pas « la dernière lue » : sinon
+    // un profil neuf hériterait en mémoire des victoires de l'autre.
+    session = texte ? normaliserProgression(JSON.parse(texte)) : vide();
   } catch { /* Le carnet reste utilisable en mémoire si le stockage est refusé. */ }
   return session;
 }
 
 export function enregistrerVictoire(code: string): boolean {
+  const profil = profilActif();
   session = normaliserProgression({ version: 1, victoires: [...lireProgression().victoires, code] });
-  try { localStorage.setItem(CLE, JSON.stringify(session)); return true; }
+  try { localStorage.setItem(cleProgression(profil), JSON.stringify(session)); return true; }
   catch { return false; }
 }
 

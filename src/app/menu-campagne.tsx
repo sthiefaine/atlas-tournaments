@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { lireProgression } from './campagne/progression';
+import { lireProfils, type EtatProfils } from './preferences';
 
 /**
  * Le **bouton Campagne** : le seul îlot client de l'écran-titre.
@@ -28,6 +29,12 @@ import { lireProgression } from './campagne/progression';
  * Afficher « 0 sur 6 » pendant deux cents millisecondes à quelqu'un qui a tout
  * gagné serait une affirmation fausse, et une bascule « reprendre » → « entrer »
  * se lirait comme une progression perdue.
+ *
+ * **La pastille de profil** suit la même règle, et une de plus : elle n'apparaît
+ * que si l'appareil a réellement deux joueurs — profil B actif, ou un profil
+ * nommé. À quelqu'un qui n'a jamais ouvert les réglages, « Profil A » ne dirait
+ * rien. Elle est posée en absolu dans le coin du bouton Campagne : aucune
+ * hauteur ajoutée, l'écran-titre tient toujours en un écran à 390 × 844.
  */
 
 /** Une épreuve, réduite à ce que le bouton affiche. */
@@ -50,6 +57,11 @@ export interface LibellesCampagne {
    * les états sont énumérables, autant les énumérer.
    */
   etat: readonly string[];
+  /** Noms par défaut des profils, tant qu'ils ne sont pas nommés. */
+  profilA: string;
+  profilB: string;
+  /** Contient `{nom}` : l'intitulé accessible de la pastille. */
+  profilActif: string;
 }
 
 export function MenuCampagne({ epreuves, libelles }: {
@@ -57,12 +69,15 @@ export function MenuCampagne({ epreuves, libelles }: {
   libelles: LibellesCampagne;
 }) {
   const [victoires, setVictoires] = useState<readonly string[]>([]);
+  const [profils, setProfils] = useState<EtatProfils | null>(null);
   const [pret, setPret] = useState(false);
 
   useEffect(() => {
-    // `pageshow` et `storage` : le retour depuis une mission passe souvent par
-    // le cache de navigation, qui ne rejoue pas le montage.
+    // `pageshow` et `storage` : le retour depuis une mission ou les réglages
+    // passe souvent par le cache de navigation, qui ne rejoue pas le montage.
+    // Les profils se lisent d'abord : la progression dépend du profil actif.
     const lire = (): void => {
+      setProfils(lireProfils());
       setVictoires(lireProgression().victoires);
       setPret(true);
     };
@@ -85,8 +100,15 @@ export function MenuCampagne({ epreuves, libelles }: {
     ? libelles.neuf
     : complet ? libelles.fini : libelles.etat[gagnees] ?? libelles.neuf;
 
+  const nomProfil = profils && (profils.actif === 'b' || profils.noms[profils.actif] !== '')
+    ? profils.noms[profils.actif] || (profils.actif === 'a' ? libelles.profilA : libelles.profilB)
+    : null;
+
   return <div className="menu-campagne" data-pret={pret ? 'oui' : 'non'}>
     <Link className="menu-bouton menu-principal" href={destination}>
+      {nomProfil !== null
+        ? <span className="menu-profil" aria-label={libelles.profilActif.replace('{nom}', nomProfil)}>{nomProfil}</span>
+        : null}
       <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M8 5l11 7-11 7z" fill="currentColor" />
       </svg>

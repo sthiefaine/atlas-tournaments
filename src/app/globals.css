@@ -218,11 +218,15 @@ body {
    et le seul bouton qui porte de l'état. La carte de progression entière est
    absorbée dedans. */
 .menu-campagne{position:relative;display:flex;align-items:stretch;gap:0;box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
-.menu-principal{flex:1;min-height:76px;flex-wrap:wrap;background:var(--signal);color:#10222b;border:none;border-top:3px solid #fff0ac;border-bottom:4px solid var(--signal-appui);box-shadow:none;clip-path:none}
+.menu-principal{position:relative;flex:1;min-height:76px;flex-wrap:wrap;background:var(--signal);color:#10222b;border:none;border-top:3px solid #fff0ac;border-bottom:4px solid var(--signal-appui);box-shadow:none;clip-path:none}
 .menu-principal .menu-note{color:#10222bd6;opacity:1;font-weight:650}
 .menu-jauge{display:flex;gap:3px;width:100%;height:3px;transform:skewX(-15deg)}
 .menu-jauge i{flex:1;background:#10222b33;transition:background-color .26s ease-out}
 .menu-jauge i.faite{background:#10222b}
+/* La pastille de profil : posée en absolu dans le coin du bouton, elle n'ajoute
+   aucune hauteur — l'écran-titre tient toujours en un écran. Le client ne la
+   rend que si l'appareil a deux joueurs (`menu-campagne.tsx`). */
+.menu-profil{position:absolute;top:0;right:0;max-width:46%;padding:3px 8px 3px 10px;background:#10222b;color:var(--signal);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%)}
 /* Seconde cible : sans elle, choisir soi-même son épreuve devient impossible
    depuis l'accueil. Séparée par un filet, ≥ 44 px de large. */
 .menu-carnet{display:flex;align-items:center;justify-content:center;width:64px;flex:none;padding:0 6px;background:var(--panneau);border:1px solid var(--liseré);border-left:none;color:var(--papier-doux);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -278,6 +282,20 @@ body {
 .reglage-choix button{min-height:48px;padding:8px;background:#13232900;border:1px solid var(--liseré);color:var(--papier);font-size:13px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .reglage-choix button.choisi{background:var(--signal);border-color:var(--signal);color:#10222b}
 .reglage-choix button:disabled{opacity:.5}
+/* Les deux profils : un seul rang, chaque bouton porte le nom et « profil actif ». */
+.reglage-profils{grid-template-columns:repeat(2,1fr)}
+.reglage-profils button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-height:56px;padding:9px 12px;text-align:left}
+.reglage-profil-nom{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.reglage-profil-etat{min-height:1em;font-size:10px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.reglage-champ{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.reglage-champ input{min-height:48px;padding:8px 12px;background:var(--encre);border:1px solid var(--liseré);color:var(--papier);font:inherit;font-size:15px;font-weight:700}
+.reglage-champ input:focus-visible{outline:3px solid var(--signal);outline-offset:2px;border-color:var(--signal)}
+.reglage-champ input::placeholder{color:#f4edda66;font-weight:600}
+/* Le bilan d'effacement : un bandeau, pas une ligne de douze pixels. Il reste
+   affiché tant qu'on n'a pas quitté la page — c'est ce qu'on appelle durable. */
+.reglage-bilan{display:flex;flex-direction:column;gap:4px;margin-top:12px;padding:12px 14px;border:1px solid var(--signal);border-left-width:5px;background:#ffd16214;font-size:13px;line-height:1.45}
+.reglage-bilan strong{color:var(--signal);font-size:14px;font-weight:850}
+.reglage-bilan.echec{border-color:#a1524a;background:#a1524a1f;color:#f0b6ae;font-weight:700}
 .reglage-ligne{display:flex;align-items:center;gap:12px}
 .reglage-ligne+.reglage-ligne{margin-top:8px;padding-top:14px;border-top:1px solid #f4edda1a}
 .reglage-interrupteur{flex:1;display:flex;align-items:center;gap:14px;min-height:56px;padding:6px 0;background:none;border:none;color:inherit;text-align:left;touch-action:manipulation;-webkit-tap-highlight-color:transparent}

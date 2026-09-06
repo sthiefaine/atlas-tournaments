@@ -233,6 +233,23 @@ test('chaque geste rend un état d’après cohérent avec ses événements', ()
   assert.equal(refermee.evenements.length, 0);
 });
 
+test('« Déplacer » fait jouer l’unité, et « Fin de tour » la réveille', () => {
+  const depart = etatBanc();
+  const bouge = rejouer(depart, 'deplacement')!;
+  const evt = bouge.evenements[0]!;
+  assert.equal(evt.type, 'deplacement');
+  if (evt.type !== 'deplacement') return;
+  const deplacee = bouge.apres.unites.find((u) => u.id === evt.uniteId)!;
+  assert.equal(deplacee.camp, bouge.apres.campCourant, 'c’est une unité du camp qui joue : elle se ternira');
+  assert.equal(deplacee.etat, 'agi', 'elle se lit comme « a joué »');
+  assert.ok(bouge.apres.unites.filter((u) => u.id !== evt.uniteId).every((u) => u.etat === 'prete'), 'les autres restent prêtes');
+
+  const fin = rejouer(bouge.apres, 'fin_de_tour')!;
+  assert.deepEqual(fin.evenements, [{ type: 'fin_tour', camp: bouge.apres.campCourant }]);
+  assert.equal(fin.apres.campCourant, bouge.apres.campCourant, 'le camp ne change pas : on veut revoir les mêmes pièces');
+  assert.ok(fin.apres.unites.every((u) => u.etat === 'prete'), 'toutes réveillées');
+});
+
 test('la marée réécrit le sol, et la marée basse défait la haute', () => {
   const depart = etatBanc();
   const haute = rejouer(depart, 'maree_haute')!;

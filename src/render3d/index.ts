@@ -160,7 +160,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     encore = mutation || encore;
     const reduit = mouvementReduit?.matches ?? false;
     encore = m.decor.avancer(ecoule, reduit) || encore;
-    if (!reduit) encore = m.unites.avancer(ecoule) || encore;
+    // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, le
+    // tassement d'une unité qui a joué doit encore s'appliquer — d'un coup.
+    encore = m.unites.avancer(ecoule, reduit) || encore;
     encore = m.surbrillances.avancer(ecoule) || encore;
     const p = m.eclairage.courant;
     m.plateau.appliquerAmbiance(p);
