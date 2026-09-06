@@ -50,6 +50,8 @@ Caméra **perspective**, champ de vision vertical de **42°** (`render3d/camera.
 
 ### 3.3 Zoom par paliers
 
+> **Révisé le 6 septembre 2026.** Le zoom n'est plus une liste fermée : `zoomer()` fait un pas de ×1,25 en 180 ms entre deux bornes de lisibilité — 48 px la case au plus loin, environ 200 px au plus près — et le pincement reste une manipulation directe. `PALIERS_DISTANCE` subsiste pour les tests et le cadrage initial. En **portrait**, le cadrage vise la largeur de la carte et l'action du joueur, jamais le centre géométrique d'une carte qui déborde ; tourner l'appareil conserve l'échelle et la case au centre. Le glisser a une inertie amortie avec butée au bord ; un double-tap recentre. Le texte historique suit.
+
 Le zoom est une **distance caméra-cible**, prise dans une liste fermée : `5, 7, 9.5, 13, 17.5, 24, 33, 45` unités de scène (`PALIERS_DISTANCE`). Le palier par défaut dépend de la carte (§3.4). Les paliers, plutôt qu'un zoom continu, pour trois raisons : les niveaux de détail basculent à des seuils prévisibles, les captures d'écran d'une même carte sont comparables, et le pincement sur téléphone devient un geste qui *arrive quelque part* au lieu de flotter.
 
 ### 3.4 Cadrage automatique et contrainte de lisibilité

@@ -49,6 +49,8 @@ La production de nouvelles missions par les routines Claude et leur publication 
 
 ## Interface et rendu mobile
 
+Refonte du 6 septembre 2026, six demandes du propriétaire : l'écran-titre montre une vraie carte (rivière, ponts jumeaux, routes) en 3D comme en SVG de repli ; `/reglages` confirme l'effacement avec les chiffres effacés et porte **deux profils locaux** A et B, nommables, à progression et parties séparées (clés `atlas:p2:*` pour le second, A garde les clés historiques) ; le **menu de production** est en deux colonnes, liste à gauche, fiche à droite (stats, traits, bonne contre / faible contre depuis la table de dégâts), superposées sous 640 px ; **double-clic ou appui long** sur une unité adverse visible montre ses déplacements (danger) et son enveloppe de tir (rouge) ; une unité qui **a joué** est ternie, immobile, tassée, avec un cadenas sur son étiquette. `/atelier` a été refait : dock repliable à gauche sur PC, feuille à onglets en bas sur mobile, scènes prêtes par biome, aides des gestes, vue reflétée dans l'URL.
+
 Le briefing avance par répliques avant le déploiement. L’objectif et l’aide restent accessibles via le bouton mission, sans panneau persistant sur la carte. Les ordres tactiles se présentent en bas de l’écran ; le pouvoir utilise une jauge segmentée et le changement de tour une bannière temporaire. L’ordre « Remettre en service » apparaît à la place de « Capturer » sur un bâtiment désaffecté.
 
 La carte se parcourt par glissement (un doigt ou souris gauche), avec pincement et boutons de zoom. Le cadrage initial vise environ 64 pixels par case au centre, le recul est limité pour conserver environ 48 pixels. Les cartes peuvent dépasser le champ. Le bouton cible recentre sur l’unité sélectionnée ou la première unité alliée.
