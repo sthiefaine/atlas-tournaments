@@ -21,9 +21,14 @@
  * une capture ou une mise hors jeu à la demande, dans n'importe quel ordre.
  */
 
+import { chargerPays } from '@/content/index';
 import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
 import type { Surbrillance } from '@/render/index';
-import { CARACTERE_PAR_TERRAIN, type BaseSilhouette, type Case, type CampId, type CleTerrain, type CleUnite, type MapDef } from '@/schemas/types';
+import {
+  BIOMES, CARACTERE_PAR_TERRAIN, METEOS, PHASES_JOUR, SAISONS,
+  type BaseSilhouette, type Biome, type Case, type CampId, type CleTerrain, type CleUnite, type CodePays,
+  type MapDef, type Meteo, type PhaseJour, type Saison,
+} from '@/schemas/types';
 
 /**
  * La date portée par l'enveloppe de la carte. **Fixe** : le banc doit être
@@ -39,6 +44,14 @@ export const VILLE_BANC: Case = { x: 1, y: 3 };
 
 /** La ville désaffectée, à l'écart du rang : une palissade, pas de liseré, mât nu. */
 export const VILLE_DESAFFECTEE_BANC: Case = { x: 15, y: 3 };
+
+/**
+ * La station radar du camp 1, au rang des bâtiments : c'est au-dessus d'elle
+ * que le drone du joueur se fait abattre. Un drone qui tombe sur un bâtiment
+ * adverse lit ce que ce camp a produit (`doc/04` §10 bis) ; au-dessus de la
+ * plaine, il ne lirait rien et le geste ne montrerait qu'une mise hors jeu.
+ */
+export const STATION_ADVERSE_BANC: Case = { x: 12, y: 3 };
 /** Hauteur de la carte-catalogue. */
 export const HAUTEUR_BANC = 12;
 
@@ -244,9 +257,48 @@ export function visiblesBanc(): Set<string> {
 /** Les gestes que le banc sait rejouer. */
 export const GESTES_BANC = [
   'deplacement', 'attaque', 'capture_en_cours', 'capture', 'remise_en_service', 'hors_jeu',
-  'maree_haute', 'maree_basse', 'fin_de_tour',
+  'brouillage', 'drone_abattu', 'maree_haute', 'maree_basse', 'fin_de_tour',
 ] as const;
 export type GesteBanc = typeof GESTES_BANC[number];
+
+/** Ce qu'un bouton du banc dit de lui-même : son nom, et ce qu'on doit voir. */
+export interface DescriptionGeste {
+  cle: GesteBanc;
+  nom: string;
+  /** Une phrase qui dit ce qui doit se passer à l'écran : c'est le critère de relecture. */
+  aide: string;
+  groupe: 'unites' | 'batiments' | 'terrain' | 'tour';
+}
+
+/**
+ * Les gestes, décrits pour l'interface. L'aide ne dit pas ce que fait le
+ * moteur mais ce qu'on doit **voir** : un banc sert à comparer l'écran à une
+ * attente écrite, et sans elle un défaut passe pour une intention.
+ */
+export const DESCRIPTIONS_GESTES: readonly DescriptionGeste[] = [
+  { cle: 'deplacement', nom: 'Déplacer', groupe: 'unites',
+    aide: 'La première unité bleue suit une flèche coudée deux fois, puis se grise et se cadenasse : elle a joué.' },
+  { cle: 'attaque', nom: 'Tirer', groupe: 'unites',
+    aide: 'La première unité bleue frappe la première rouge, qui riposte : les deux barres de vie baissent, la bleue se grise.' },
+  { cle: 'hors_jeu', nom: 'Mettre hors jeu', groupe: 'unites',
+    aide: 'La première unité rouge quitte la carte, avec son animation de sortie ; rien ne se casse ni ne brûle.' },
+  { cle: 'brouillage', nom: 'Brouiller', groupe: 'unites',
+    aide: 'Le brouilleur rouge traverse la carte et se colle sous le drone bleu : sa silhouette doit se lire comme un brouilleur, pas comme un transport.' },
+  { cle: 'drone_abattu', nom: 'Abattre le drone', groupe: 'unites',
+    aide: 'Le drone bleu survole la station radar rouge, l’antiaérien le met hors jeu, et le HUD annonce ce que le camp rouge a produit (rien, sur le banc).' },
+  { cle: 'capture_en_cours', nom: 'Entamer la capture', groupe: 'batiments',
+    aide: 'Une unité se pose sur la ville du rang des bâtiments et le drapeau descend à mi-mât : la ville reste aux couleurs de l’autre camp.' },
+  { cle: 'capture', nom: 'Capturer', groupe: 'batiments',
+    aide: 'La ville prend les couleurs du camp : le drapeau descend puis remonte aux nouvelles couleurs ; rejoué, elle change de mains dans l’autre sens.' },
+  { cle: 'remise_en_service', nom: 'Remettre en service', groupe: 'batiments',
+    aide: 'La palissade de la ville désaffectée tombe, puis le drapeau bleu se hisse et une prime s’annonce ; rejoué, la palissade revient.' },
+  { cle: 'maree_haute', nom: 'Marée haute', groupe: 'terrain',
+    aide: 'À gauche des deux derniers rangs, la plage devient mer et la plaine devient plage : le sol glisse, l’écume enfle puis retombe.' },
+  { cle: 'maree_basse', nom: 'Marée basse', groupe: 'terrain',
+    aide: 'Le mouvement inverse : la mer découvre une plage, la plage redevient plaine, et les pièces reprises par l’eau pataugent sans se noyer.' },
+  { cle: 'fin_de_tour', nom: 'Fin de tour', groupe: 'tour',
+    aide: 'Le bandeau de tour passe, et toute unité grisée par un geste retrouve ses couleurs et son cadenas ouvert.' },
+];
 
 /** Un geste rejoué : ce qu'on affiche après, et ce qu'on anime. */
 export interface RejouerBanc {
@@ -263,6 +315,35 @@ const CAT_TERRAIN: Readonly<Record<string, CleTerrain>> = Object.fromEntries(
 /** La première unité d'un camp, dans l'ordre de la carte-catalogue. */
 function premiere(etat: EtatPartie, camp: CampId): EtatPartie['unites'][number] | undefined {
   return etat.unites.find((u) => u.camp === camp);
+}
+
+/**
+ * Un chemin en équerre : d'abord vertical, puis horizontal. Les rangs de
+ * surbrillance et le rang du chemin sont vides d'unités, les rangs d'unités ne
+ * le sont pas : on quitte le rang par le plus court, et on voyage sur un rang
+ * libre. Un banc ne vérifie pas le chemin, mais une flèche qui traverse une
+ * pièce ferait douter d'un rendu qui n'a rien fait de mal.
+ */
+function cheminEnEquerre(de: Case, vers: Case): Case[] {
+  const chemin: Case[] = [{ x: de.x, y: de.y }];
+  let { x, y } = de;
+  while (y !== vers.y) { y += Math.sign(vers.y - y); chemin.push({ x, y }); }
+  while (x !== vers.x) { x += Math.sign(vers.x - x); chemin.push({ x, y }); }
+  return chemin;
+}
+
+/**
+ * Ce qu'un camp a produit, lu comme `revelerProduction` le lit (`combat.ts`) :
+ * les compteurs `camp:type` de l'état. Sur le banc, personne n'a rien produit
+ * et la liste est vide — c'est ce que le moteur dirait, on ne l'embellit pas.
+ */
+function produitesPar(etat: EtatPartie, camp: CampId): Record<CleUnite, number> {
+  const produites: Record<CleUnite, number> = {};
+  const prefixe = `${camp}:`;
+  for (const [k, n] of Object.entries(etat.produites)) {
+    if (k.startsWith(prefixe) && n > 0) produites[k.slice(prefixe.length)] = n;
+  }
+  return produites;
 }
 
 /**
@@ -399,6 +480,60 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
     };
   }
 
+  if (geste === 'brouillage') {
+    // Le brouilleur adverse vient se poster sous le drone du joueur. Sur le
+    // banc, le drone est déjà brouillé par la station radar du camp 1 — douze
+    // cases de rayon, la carte en fait vingt — : ce geste ne montre pas la
+    // vision qui tombe, il montre la pièce en mouvement et arrêtée à portée.
+    const drone = etat.unites.find((u) => u.camp === 0 && u.type === 'drone');
+    const brouilleur = etat.unites.find((u) => u.camp === 1 && u.type === 'brouilleur');
+    if (!drone || !brouilleur) return null;
+    const poste: Case = { x: drone.x, y: drone.y + 1 };
+    // Déjà en poste : rien à rejouer, la pièce est là où le geste la met.
+    if (brouilleur.x === poste.x && brouilleur.y === poste.y) return null;
+    const chemin = cheminEnEquerre(brouilleur, poste);
+    return {
+      apres: { ...etat, unites: etat.unites.map((u) => (u.id === brouilleur.id ? { ...u, x: poste.x, y: poste.y, etat: 'agi' } : u)) },
+      evenements: [{
+        type: 'deplacement', uniteId: brouilleur.id,
+        de: { x: brouilleur.x, y: brouilleur.y }, vers: poste, chemin, interrompu: false,
+      }],
+    };
+  }
+
+  if (geste === 'drone_abattu') {
+    // Le drone du joueur survole la station adverse, l'antiaérien le descend :
+    // le moteur émet l'attaque, la mise hors jeu, **puis** la révélation de
+    // production (`combat.ts`, `mettreHorsJeu`). C'est le seul événement du
+    // catalogue 3 que le HUD annonce, et il ne s'annonce que pour le camp 0.
+    const drone = etat.unites.find((u) => u.camp === 0 && u.type === 'drone');
+    const tireur = etat.unites.find((u) => u.camp === 1 && u.type === 'antiair') ?? sien;
+    if (!drone || !tireur) return null;
+    const station = STATION_ADVERSE_BANC;
+    const proprietaire = etat.proprietaires[cleCase(station)];
+    if (proprietaire === undefined || proprietaire === drone.camp) return null;
+    const chemin = cheminEnEquerre(drone, station);
+    const evenements: EvenementJeu[] = [];
+    if (chemin.length > 1) {
+      evenements.push({ type: 'deplacement', uniteId: drone.id, de: { x: drone.x, y: drone.y }, vers: station, chemin, interrompu: false });
+    }
+    // Un drone ne riposte pas : c'est un œil, pas une pièce de combat.
+    evenements.push(
+      { type: 'attaque', attaquantId: tireur.id, cibleId: drone.id, degats: drone.pv, riposte: 0 },
+      { type: 'hors_jeu', uniteId: drone.id, camp: drone.camp, unite: drone.type },
+      { type: 'production_revelee', camp: drone.camp, proprietaire, case: station, produites: produitesPar(etat, proprietaire) },
+    );
+    return {
+      apres: {
+        ...etat,
+        unites: etat.unites
+          .filter((u) => u.id !== drone.id)
+          .map((u) => (u.id === tireur.id ? { ...u, etat: 'agi' } : u)),
+      },
+      evenements,
+    };
+  }
+
   // La marée : on **réécrit la grille**, ce que le génie fait aussi. La mécanique
   // régionale, elle, la réinterprète sans jamais l'écrire — mais côté rendu les
   // deux arrivent au même endroit : `signatureTerrain` change, et le sol doit
@@ -427,5 +562,122 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
     evenements: touchees.map((c) => (haute
       ? { type: 'terrain_pose' as const, case: c, terrain: CAT_TERRAIN[grille[c.y]?.[c.x] ?? 'P'] ?? 'mer' }
       : { type: 'terrain_retire' as const, case: c })),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Ambiances prêtes
+// ---------------------------------------------------------------------------
+
+/** Une scène prête : un biome, une saison, une heure et une météo qui vont ensemble. */
+export interface PresetAmbiance {
+  cle: string;
+  nom: string;
+  biome: Biome;
+  saison: Saison;
+  phase: PhaseJour;
+  meteo: Meteo;
+}
+
+/**
+ * Dix scènes, une par biome, parce que la carte-catalogue ne change pas et que
+ * c'est l'ambiance qui fait voir ce que le sol, l'eau et les silhouettes
+ * deviennent sous un autre ciel. Chaque couple (saison, météo) existe dans la
+ * table du climat (`engine/climat/meteo.ts`) pour au moins un climat de pays :
+ * une neige d'été ou une canicule d'hiver n'apprendrait rien, aucune partie ne
+ * la montrera. Les deux phases y sont, et les six météos.
+ */
+export const PRESETS_AMBIANCE: readonly PresetAmbiance[] = [
+  { cle: 'matin_de_plaine', nom: 'Matin de plaine', biome: 'plaine', saison: 'printemps', phase: 'jour', meteo: 'clair' },
+  { cle: 'lisiere_d_automne', nom: 'Lisière d’automne', biome: 'foret', saison: 'automne', phase: 'jour', meteo: 'brouillard' },
+  { cle: 'nuit_de_pluie_en_montagne', nom: 'Nuit de pluie en montagne', biome: 'montagne', saison: 'automne', phase: 'nuit', meteo: 'pluie' },
+  { cle: 'canicule_du_desert', nom: 'Canicule du désert', biome: 'desert', saison: 'ete', phase: 'jour', meteo: 'canicule' },
+  { cle: 'mousson_de_jungle', nom: 'Mousson de jungle', biome: 'jungle', saison: 'ete', phase: 'nuit', meteo: 'pluie' },
+  { cle: 'neige_au_crepuscule', nom: 'Neige au crépuscule', biome: 'neige', saison: 'hiver', phase: 'nuit', meteo: 'neige' },
+  { cle: 'nuit_volcanique', nom: 'Nuit volcanique', biome: 'volcanique', saison: 'ete', phase: 'nuit', meteo: 'clair' },
+  { cle: 'brouillard_sur_la_cote', nom: 'Brouillard sur la côte', biome: 'cotier', saison: 'automne', phase: 'jour', meteo: 'brouillard' },
+  { cle: 'tempete_d_archipel', nom: 'Tempête d’archipel', biome: 'archipel', saison: 'automne', phase: 'jour', meteo: 'tempete' },
+  { cle: 'hiver_des_marais', nom: 'Hiver des marais', biome: 'marais', saison: 'hiver', phase: 'jour', meteo: 'neige' },
+];
+
+// ---------------------------------------------------------------------------
+// La vue du banc dans l'adresse
+// ---------------------------------------------------------------------------
+
+/** Tout ce qui fait une vue du banc : de quoi la retrouver depuis un lien. */
+export interface VueBanc {
+  monde: number;
+  biome: Biome;
+  saison: Saison;
+  phase: PhaseJour;
+  meteo: Meteo;
+  paysAllie: CodePays;
+  paysAdverse: CodePays;
+  brouillard: boolean;
+  genres: GenreBanc[];
+}
+
+/** Les vingt-quatre codes de pays du canon : ce que `decoderVue` accepte. */
+export const PAYS_BANC: readonly CodePays[] = chargerPays().map((p) => p.code);
+
+/**
+ * La vue en chaîne de requête, sans `?`. Les clés sont courtes et **dans un
+ * ordre fixe** : un lien copié deux fois donne deux fois le même texte, et
+ * c'est ce qui permet de le comparer. `brouillard` n'apparaît que vrai ;
+ * `genres` apparaît toujours, même vide, sinon « aucune surbrillance » se
+ * confondrait avec « je n'ai rien dit » et reprendrait le défaut.
+ */
+export function encoderVue(v: VueBanc): string {
+  const paires: [string, string][] = [
+    ['monde', String(v.monde)],
+    ['biome', v.biome],
+    ['saison', v.saison],
+    ['phase', v.phase],
+    ['meteo', v.meteo],
+    ['bleu', v.paysAllie],
+    ['rouge', v.paysAdverse],
+  ];
+  if (v.brouillard) paires.push(['brouillard', '1']);
+  paires.push(['genres', v.genres.join(',')]);
+  return paires.map(([k, val]) => `${k}=${val}`).join('&');
+}
+
+/** Garde la valeur si elle est dans l'énumération, sinon le défaut. */
+function parmi<T extends string>(valeurs: readonly T[], texte: string | null, defaut: T): T {
+  return texte !== null && (valeurs as readonly string[]).includes(texte) ? (texte as T) : defaut;
+}
+
+/**
+ * Relit une vue depuis une chaîne de requête, avec ou sans `?`. Tolérante :
+ * une clé absente, vide ou hors de son énumération garde le défaut, clé par
+ * clé — un lien vieilli d'une saison retrouve tout le reste. Le monde est
+ * borné à un entier positif ; la borne haute est à l'interface, qui seule
+ * sait combien de mondes elle porte. Le brouillard fait exception : il n'est
+ * écrit que vrai, donc absent vaut faux.
+ */
+export function decoderVue(texte: string, defaut: VueBanc): VueBanc {
+  const params = new URLSearchParams(texte.startsWith('?') ? texte.slice(1) : texte);
+  // `Number(null)` et `Number('')` valent zéro : une clé absente doit garder le
+  // défaut, pas ramener au premier monde.
+  const mondeTexte = params.get('monde');
+  const monde = mondeTexte ? Number(mondeTexte) : Number.NaN;
+  const genresTexte = params.get('genres');
+  const genres = genresTexte === null
+    ? [...defaut.genres]
+    : genresTexte.split(',').filter((g, i, tous): g is GenreBanc => (
+      (GENRES_SURBRILLANCE as readonly string[]).includes(g) && tous.indexOf(g) === i
+    ));
+  return {
+    monde: Number.isFinite(monde) ? Math.max(0, Math.floor(monde)) : defaut.monde,
+    biome: parmi(BIOMES, params.get('biome'), defaut.biome),
+    saison: parmi(SAISONS, params.get('saison'), defaut.saison),
+    phase: parmi(PHASES_JOUR, params.get('phase'), defaut.phase),
+    meteo: parmi(METEOS, params.get('meteo'), defaut.meteo),
+    paysAllie: parmi(PAYS_BANC, params.get('bleu'), defaut.paysAllie),
+    paysAdverse: parmi(PAYS_BANC, params.get('rouge'), defaut.paysAdverse),
+    // Le brouillard n'est écrit que vrai : absent veut dire faux, pas « défaut »,
+    // sinon une vue sans brouillard ne survivrait pas à l'aller-retour.
+    brouillard: params.get('brouillard') === '1',
+    genres,
   };
 }
