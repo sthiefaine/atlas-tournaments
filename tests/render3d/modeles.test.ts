@@ -7,6 +7,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { genererSpecs, nomModele } from '../../src/assets/index';
 import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
@@ -310,6 +311,40 @@ test('un GLB fabriqué en mémoire s’analyse sous Node, et ses clips traversen
   assert.deepEqual(nomsClips(modele.clips), ['repos', 'deplacement'], 'seuls les six noms comptent');
   assert.ok(modele.objet.getObjectByName('module_tourelle'), 'les nœuds imposés se retrouvent par leur nom');
   assert.equal(await analyserGlb(new Uint8Array(8).buffer), null, 'un conteneur cassé rend null, jamais une exception');
+});
+
+test('un GLB qui porte des images s’analyse sous Node, et un masque référencé par uri s’attache aux matériaux', async () => {
+  // Le premier fichier livré l'a montré : dès qu'un GLB porte une image,
+  // `GLTFLoader` lit `self.URL`, que Node n'a pas, et l'analyse rendait null.
+  const doc = documentTest({ images: ['x_albedo', 'x_masque_equipe'], animations: ['repos'] });
+  for (const image of doc['images'] as { name: string; uri?: string; bufferView?: number }[]) {
+    image.uri = `${image.name}.png`;
+    delete image.bufferView;
+  }
+  const octets = construireGlb(doc, binTriangle(0.62, 0.5, 0.85));
+  const tampon = (): ArrayBuffer => octets.buffer.slice(octets.byteOffset, octets.byteOffset + octets.byteLength) as ArrayBuffer;
+  const materiau = (scene: THREE.Group): THREE.MeshStandardMaterial => (scene.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+
+  // Sans lecteur d'image — Node n'en a pas —, le modèle passe et ses cartes valent null.
+  const nu = await analyserGlb(tampon());
+  assert.ok(nu, 'un fichier à images se lit sous Node');
+  assert.equal(masqueDe(materiau(nu.scene)), null, 'sans image décodée, pas de masque');
+
+  // Avec un lecteur injecté par le gestionnaire de chargement, le masque se retrouve par son nom.
+  const manager = new THREE.LoadingManager();
+  manager.addHandler(/\.png$/i, {
+    load(_url: string, onLoad: (t: THREE.Texture) => void): THREE.Texture {
+      const t = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+      t.needsUpdate = true;
+      onLoad(t);
+      return t;
+    },
+  } as unknown as THREE.Loader);
+  const lu = await analyserGlb(tampon(), new GLTFLoader(manager));
+  assert.ok(lu);
+  const masque = masqueDe(materiau(lu.scene));
+  assert.ok(masque, 'le masque est attaché au matériau standard');
+  assert.equal(masque.colorSpace, THREE.NoColorSpace, 'un masque est une donnée, pas une couleur');
 });
 
 // ---------------------------------------------------------------------------
