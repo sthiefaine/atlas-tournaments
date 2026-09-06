@@ -29,19 +29,26 @@ export function normaliserQualite(brut: unknown): QualiteRendu {
 }
 
 /**
- * Le seuil de la qualité `auto`, en millisecondes par image **sans** la chaîne.
+ * Le seuil de la qualité `auto`, en millisecondes par image **sans** la chaîne,
+ * processeur graphique compris (`msCalibration`, mesurée par `readPixels`).
  *
  * La chaîne redessine la scène une seconde fois (normales et profondeur pour
  * l'occlusion, sans lumières ni ombres : la carte d'ombre n'est calculée
  * qu'une fois par image) et ajoute cinq passes plein écran : une image
- * composée coûte environ deux fois l'image nue. Sous huit millisecondes,
- * l'image composée tient sous les vingt, donc une animation reste fluide sur
- * un portable à circuit graphique intégré (cinq millisecondes l'image nue,
- * mesuré à la main) ; un rasteriseur logiciel, à cinq cents millisecondes et
- * plus l'image, ne l'atteint jamais, et c'est voulu — le test de fumée tourne
- * dessus.
+ * composée coûte environ deux fois l'image nue — mesuré ×2,3 sur un M1.
+ *
+ * Vingt millisecondes, et non huit comme le premier réglage le raisonnait sans
+ * mesure : la campagne du 6 septembre 2026 (`doc/10` §9.2) donne 12 à 18 ms
+ * l'image nue sur un Apple M1 à 1280 × 800 selon la carte, et 25 à 36 images
+ * par seconde pendant une animation une fois la chaîne allumée. À huit, la
+ * chaîne ne s'allumait sur aucune carte de la machine de référence ; à vingt,
+ * elle s'allume sur toutes, et un appareil qui mesure plus — un rasteriseur
+ * logiciel à mille millisecondes, un téléphone qui peine — reste sans elle.
+ * La boucle est paresseuse : hors animation, l'écran est immobile et le coût
+ * nul. Ce qui ramènera la cadence à soixante, c'est la baisse des appels de
+ * dessin (`doc/10` §9.1), pas un seuil plus bas.
  */
-export const SEUIL_MS_COMPOSEUR = 8;
+export const SEUIL_MS_COMPOSEUR = 20;
 
 /**
  * La chaîne peut-elle se monter sur ce contexte ? Elle dessine dans une cible

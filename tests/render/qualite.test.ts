@@ -53,7 +53,9 @@ test('la calibration attend une image de plus que le compte, et ignore la premi�
 });
 
 test('la décision : réduction d’abord, puis la qualité, puis la mesure', () => {
-  assert.ok(SEUIL_MS_COMPOSEUR > 0 && SEUIL_MS_COMPOSEUR < 16.7, 'sous une image à 60 Hz');
+  // Le M1 de référence mesure 12 à 18 ms l'image nue : le seuil doit les couvrir
+  // sans dépasser 25, faute de quoi l'image composée passerait sous vingt par seconde.
+  assert.ok(SEUIL_MS_COMPOSEUR >= 18 && SEUIL_MS_COMPOSEUR <= 25, 'couvre la machine de référence, pas au-delà');
   // La réduction de mouvement éteint tout, même `haute`.
   for (const q of QUALITES_RENDU) assert.equal(decisionComposeur(q, 1, true), false);
   // `basse` : jamais ; `haute` : toujours, mesure ou pas.
