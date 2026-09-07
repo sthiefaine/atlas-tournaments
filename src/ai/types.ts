@@ -47,6 +47,13 @@ export interface Poids {
   embarquement: number;
   /** Valeur de débarquer un passager là où il peut agir au tour suivant. */
   debarquement: number;
+  /**
+   * Poids, à l'achat, de ce qu'une unité **contre** : la part des menaces
+   * adverses — présentes ou que leurs bâtiments peuvent produire — que l'armée
+   * ne couvre pas encore (`contreAchat`). C'est lui qui achète l'anti-air face
+   * à un aéroport adverse et le sous-marin face à un cuirassé.
+   */
+  contre: number;
 }
 
 /** Une stratégie d'IA : le contrat de `02-architecture.md` §3.2. */

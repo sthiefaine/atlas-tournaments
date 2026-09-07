@@ -8,7 +8,7 @@ import {
   apercuTexte, creerRng, genererCarte, mesurer, verifierCarte,
 } from '../../src/mapgen/index';
 import { validerMapDef, validerParametresCarte } from '../../src/schemas/index';
-import { BIOMES, SYMETRIES, type ParametresCarte } from '../../src/schemas/types';
+import { BIOMES, CARACTERES_CAPTURABLES, SYMETRIES, type ParametresCarte } from '../../src/schemas/types';
 
 /** Paramètres d'exemple, ceux de `doc/03-schemas.md` §5. */
 const bretagne: ParametresCarte = {
@@ -42,6 +42,10 @@ function parametresAuHasard(rng: ReturnType<typeof creerRng>): ParametresCarte {
     aeroportsParCamp: rng.entre(0, 2),
     symetrie: rng.choisir(SYMETRIES),
     densiteRoutes: rng.suivant(),
+    // Ports et radars (7 septembre 2026), tirés en dernier : les champs
+    // précédents gardent les valeurs qu'ils avaient avant leur arrivée.
+    portsParCamp: rng.entre(0, 2),
+    radarsParCamp: rng.entre(0, 2),
   };
 }
 
@@ -144,7 +148,7 @@ test('structure : un QG par camp, propriétaires sur des cases capturables, unit
     for (const [clef, camp] of Object.entries(carte.proprietaires)) {
       const [x, y] = clef.split(',').map(Number) as [number, number];
       const car = (carte.grille[y] ?? '')[x];
-      assert.ok(['C', 'U', 'A', 'H'].includes(car ?? ''), `propriétaire sur ${car ?? '?'} en ${clef}`);
+      assert.ok(CARACTERES_CAPTURABLES.includes(car ?? ''), `propriétaire sur ${car ?? '?'} en ${clef}`);
       assert.ok(camp < carte.camps, 'camp hors des camps de la carte');
     }
 

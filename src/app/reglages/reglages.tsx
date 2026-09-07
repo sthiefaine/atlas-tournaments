@@ -57,6 +57,8 @@ export interface LibellesReglages {
   stockageKo: string;
   effacer: string;
   effacerNote: string;
+  /** La mention de version, déjà composée ; vide quand le build n'a rien laissé. */
+  version?: string;
   /** Contient `{nom}`, le nom du profil actif. */
   effacerProfil: string;
   effacerConfirmer: string;
@@ -242,5 +244,6 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
           {libelles.effacer}
         </button>}
     </section>
+    {libelles.version ? <p className="reglages-version">{libelles.version}</p> : null}
   </main>;
 }

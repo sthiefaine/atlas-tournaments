@@ -26,7 +26,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { chargerCatalogue } from '@/engine/index';
-import { chargerPays } from '@/content/index';
+import { chargerCatalogueUnites, chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
 import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
@@ -73,12 +73,15 @@ interface PontVitrine {
 /**
  * Les versions de catalogue qu'on peut regarder. La dernière est le défaut :
  * une unité homologuée ce matin doit être visible ici sans changer de menu, et
- * les anciennes restent pour comparer une silhouette à ce qu'elle était.
+ * les anciennes restent pour comparer une silhouette à ce qu'elle était. La
+ * liste se **déduit** de `content/unites.json` : écrite à la main, elle s'était
+ * arrêtée au 5 pendant que le canon passait au 6, et le furtif n'y était pas.
  */
-const VERSIONS_CATALOGUE = [1, 2, 3, 4, 5] as const;
+const VERSION_CANON = chargerCatalogueUnites().catalogueVersion;
+const VERSIONS_CATALOGUE: readonly number[] = Array.from({ length: VERSION_CANON }, (_, i) => i + 1);
 
 export default function Vitrine(): React.ReactElement {
-  const [version, setVersion] = useState<number>(5);
+  const [version, setVersion] = useState<number>(VERSION_CANON);
   const [unite, setUnite] = useState<string>('infanterie');
   const [pays, setPays] = useState<string>('fr');
   const [camp, setCamp] = useState<CampId>(0);

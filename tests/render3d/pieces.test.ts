@@ -1,21 +1,26 @@
 // Le composeur de placeholders 3D. La règle du brief est absolue : **aucune
-// unité n'est modélisée par son nom**. Ce test l'exerce sur les dix unités canon
-// du catalogue, puis sur des silhouettes construites à la main, et vérifie que
-// chaque brique déclarée se retrouve bien dans la liste de pièces.
+// unité n'est modélisée par son nom**. Ce test l'exerce sur toutes les unités
+// du dernier catalogue, puis sur des silhouettes construites à la main, et
+// vérifie que chaque brique déclarée se retrouve bien dans la liste de pièces.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { Euler, Vector3 } from 'three';
 
+import { chargerCatalogueUnites } from '../../src/content/index';
 import { chargerCatalogue } from '../../src/engine/index';
 import {
   composerSilhouette, echelleTaille, hauteurSilhouette, nomsPieces,
 } from '../../src/render3d/pieces';
+import { geometriesSilhouette } from '../../src/render3d/unites';
 import {
   BASES_SILHOUETTE, CORPS_SILHOUETTE, MODULES_SILHOUETTE, TAILLES_SILHOUETTE,
   type ModuleSilhouette, type Silhouette,
 } from '../../src/schemas/index';
 
-const CAT = chargerCatalogue();
+// Le **dernier** catalogue, pas celui par défaut de `chargerCatalogue` (le 2) :
+// une unité homologuée ce matin doit passer les bornes de la case le jour même,
+// et le furtif du catalogue 6 ne serait exercé par rien d'autre ici.
+const CAT = chargerCatalogue(chargerCatalogueUnites().catalogueVersion);
 
 function silhouette(p: Partial<Silhouette>): Silhouette {
   return { base: 'chenilles', corps: 'bloc', modules: [], taille: 2, ...p };
@@ -122,6 +127,63 @@ test('des ailes sont un aéronef entier, fuselage compris, et ce qu’il emporte
   const ventre = pieces.find((p) => p.nom === 'soute')!;
   const nacelle = pieces.find((p) => p.nom === 'nacelle')!;
   assert.ok(nacelle.position[1] < ventre.position[1], 'la nacelle est sous la soute');
+});
+
+test('des ailes à corps de plateau font une aile volante : un chevron sans dérive ni queue', () => {
+  const avion = (corps: Silhouette['corps'], modules: ModuleSilhouette[] = []): string[] => nomsPieces(
+    silhouette({ base: 'ailes', corps, modules, taille: 3 }),
+  );
+  const aileVolante = avion('plateau', ['antenne']);
+  const chasseur = avion('capsule');
+  for (const nom of [
+    'aile_gauche', 'bord_fuite_droite', 'saumon_gauche', 'elevon_droite', 'tuyere_gauche',
+    'corps_fondu', 'verriere', 'entree_air_gauche', 'cocarde_droite', 'feu_gauche',
+    'antenne', 'embase_antenne',
+  ]) assert.ok(aileVolante.includes(nom), `aile volante : ${nom}`);
+  // Ni dérive, ni empennage, ni fuselage, ni réacteur en nacelle, ni missile
+  // sous voilure : c'est leur absence qui fait la silhouette.
+  for (const nom of [
+    'derive', 'gouverne_derive', 'stabilisateur_gauche', 'corps_capsule', 'corps_bloc', 'nez',
+    'reacteur_gauche', 'reacteur_tuyere_droite', 'missile_gauche', 'pylone_droite', 'poutre_queue',
+  ]) assert.ok(!aileVolante.includes(nom), `une aile volante n’a pas de ${nom}`);
+  // Et elle se distingue du chasseur dans les deux sens : au moins une pièce à
+  // elle, au moins une pièce du chasseur qu'elle n'a pas.
+  assert.ok(aileVolante.some((n) => !chasseur.includes(n)), 'rien ne distingue l’aile volante du chasseur');
+  assert.ok(chasseur.some((n) => !aileVolante.includes(n)), 'le chasseur n’a rien que l’aile volante n’ait');
+
+  const pieces = composerSilhouette(silhouette({ base: 'ailes', corps: 'plateau', modules: ['antenne'], taille: 3 }));
+  // Plate : hormis l'antenne, rien ne monte au tiers de case — le chasseur y
+  // dresse sa dérive, le bombardier sa tourelle de queue.
+  for (const p of pieces) {
+    if (p.nom.includes('antenne')) continue;
+    assert.ok(p.position[1] + p.taille[1] / 2 < 0.3, `${p.nom} dépasse du plan de l’aile`);
+  }
+  // Large : les saumons portent l'envergure au-delà de la mi-case de chaque côté.
+  for (const s of pieces.filter((p) => p.nom.startsWith('saumon_'))) {
+    assert.ok(Math.abs(s.position[2]) >= 0.35, `${s.nom} : envergure trop courte`);
+  }
+  // Le module se pose sur le dos de la bosse, pas dans le vide ni dans l'aile :
+  // le bas de l'embase affleure l'ellipsoïde à l'aplomb de l'antenne.
+  const bosse = pieces.find((p) => p.nom === 'corps_fondu')!;
+  const embase = pieces.find((p) => p.nom === 'embase_antenne')!;
+  const dx = (embase.position[0] - bosse.position[0]) / (bosse.taille[0] / 2);
+  const dz = (embase.position[2] - bosse.position[2]) / (bosse.taille[2] / 2);
+  const dosBosse = bosse.position[1] + (bosse.taille[1] / 2) * Math.sqrt(Math.max(0, 1 - dx * dx - dz * dz));
+  const basEmbase = embase.position[1] - embase.taille[1] / 2;
+  assert.ok(basEmbase >= dosBosse - 0.01 && basEmbase <= dosBosse + 0.02, `embase à ${basEmbase}, dos de la bosse à ${dosBosse}`);
+});
+
+test('chaque unité du dernier catalogue tient dans sept matériaux et sous six mille triangles', () => {
+  // `tests/render3d/unites.test.ts` fait la même mesure sur le catalogue 2 ;
+  // ici, c'est le dernier catalogue, donc les silhouettes que ce test-là ne
+  // voit pas — coques, ailes, aile volante.
+  for (const cle of CAT.cles) {
+    const geometries = geometriesSilhouette(CAT.unites[cle]!.silhouette);
+    assert.ok(geometries.size <= 7 && geometries.size >= 3, `${cle} : ${geometries.size} matériaux`);
+    let triangles = 0;
+    for (const geo of geometries.values()) triangles += geo.getAttribute('position').count / 3;
+    assert.ok(triangles < 6000, `${cle} : ${triangles} triangles dépassent le budget mobile`);
+  }
 });
 
 test('chaque base, chaque corps et chaque module produit des pièces', () => {

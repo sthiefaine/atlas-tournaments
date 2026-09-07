@@ -286,7 +286,17 @@ export function verifierChemin(
     }
   }
   const arrivee = chemin[chemin.length - 1]!;
-  if (!arriveeLibre(etat, arrivee, u.id)) return { ok: false, motif: 'case_occupee' };
+  if (!arriveeLibre(etat, arrivee, u.id)) {
+    // Une unité adverse **cachée** sur l'arrivée n'est pas un motif de refus :
+    // refuser, ce serait dire au joueur qu'elle est là. Le déplacement part, et
+    // l'interruption (`executerOrdre`) l'arrête sur la dernière case libre —
+    // comme une embuscade, jamais comme une information. Un allié ou un adverse
+    // vu restent des refus : on ne planifie pas une arrivée sur quelqu'un.
+    const occupant = uniteSur(etat, arrivee);
+    const cachee = occupant !== undefined && occupant.camp !== u.camp
+      && !adverses.some((a) => a.id === occupant.id);
+    if (!cachee) return { ok: false, motif: 'case_occupee' };
+  }
   return { ok: true, cout, arrivee };
 }
 

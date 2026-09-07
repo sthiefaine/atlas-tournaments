@@ -10,7 +10,7 @@
  * Deux principes le tiennent.
  *
  * **On montre le catalogue, pas une partie.** Une carte de mission ne pose
- * jamais les quatorze terrains ni les vingt-trois unités : on attend qu'ils
+ * jamais les quatorze terrains ni les vingt-quatre unités : on attend qu'ils
  * apparaissent,
  * et un défaut de rendu se découvre en jouant, tard. La carte-catalogue les
  * range côte à côte, y compris les cas qui ont réellement cassé — un bâtiment
@@ -41,10 +41,11 @@ const DATE_BANC = '2026-09-05';
 /**
  * Largeur de la carte-catalogue. Le validateur exige entre 10 et 40.
  *
- * Vingt colonnes suffisaient à quatorze unités ; le catalogue 5 en compte
- * vingt-trois, dont quatre qui flottent. Vingt-quatre colonnes laissent
- * dix-neuf pièces terrestres et aériennes sur un rang, et rendent à la flèche
- * de chemin les colonnes de droite, qu'une quinzième unité lui prenait.
+ * Vingt colonnes suffisaient à quatorze unités ; le catalogue 6 en compte
+ * vingt-quatre, dont quatre qui flottent. Vingt-quatre colonnes laissent les
+ * vingt pièces terrestres et aériennes sur un rang (colonnes 0 à 19), et
+ * rendent à la flèche de chemin les colonnes de droite, qu'une quinzième unité
+ * lui prenait ; le rang des unités n'est croisé par la flèche qu'en colonne 21.
  */
 export const LARGEUR_BANC = 24;
 
@@ -127,7 +128,7 @@ const GRILLE_BANC: readonly string[] = [
 ];
 
 /**
- * Les vingt-trois unités du catalogue 5, dans l'ordre où elles se lisent : la
+ * Les vingt-quatre unités du catalogue 6, dans l'ordre où elles se lisent : la
  * piétaille, puis les roues, puis les chenilles, puis ce qui vole, puis ce qui
  * flotte. Le test exige que cette liste **soit** le catalogue, à la clé près :
  * une unité homologuée qu'on oublierait ici ne serait jamais regardée.
@@ -135,7 +136,7 @@ const GRILLE_BANC: readonly string[] = [
 export const UNITES_BANC: readonly CleUnite[] = [
   'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'missiles_air', 'missiles_sol',
   'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'transport',
-  'helico', 'transport_air', 'drone', 'chasseur', 'bombardier',
+  'helico', 'transport_air', 'drone', 'chasseur', 'bombardier', 'furtif',
   'barge', 'sous_marin', 'cuirasse', 'porte_avions',
 ];
 
@@ -162,8 +163,9 @@ export const PORTS_BANC: readonly Case[] = [
  *
  * Elles étaient trois — `rail`, `ailes` et `coque` — écrites dans
  * `render3d/pieces.ts` depuis le début et jamais vues à l'écran. Le catalogue 5
- * a donné des porteurs à `ailes` (chasseur, bombardier) et à `coque` (barge,
- * porte-avions, cuirassé, sous-marin) ; il ne reste que `rail`, qu'on fait
+ * a donné des porteurs à `ailes` (chasseur, bombardier, puis le furtif du 6 en
+ * aile volante) et à `coque` (barge, porte-avions, cuirassé, sous-marin) ; il
+ * ne reste que `rail`, qu'on fait
  * apparaître en échangeant la base d'une unité dans une **copie** du catalogue
  * — jamais dans le canon, qui reste la vérité.
  */
@@ -171,7 +173,7 @@ export const BASES_JAMAIS_VUES: Readonly<Record<string, BaseSilhouette>> = Objec
   roquettes: 'rail',
 });
 
-/** La carte-catalogue : quatorze terrains, six bâtiments, vingt-trois unités par camp. */
+/** La carte-catalogue : quatorze terrains, six bâtiments, vingt-quatre unités par camp. */
 export function carteBanc(): MapDef {
   const proprietaires: Record<string, CampId> = {};
   // Chaque famille de bâtiment est montrée trois fois : camp 0, camp 1, neutre.
@@ -352,9 +354,11 @@ export function carteGrande(): MapDef {
  * génie y manque. Un banc monté sur le scénario de démonstration, qui est en
  * catalogue 1, perdait le génie **sans rien dire** — la carte se montait, il
  * n'était simplement pas là. C'est le genre d'absence qu'un banc d'essai est
- * censé rendre impossible, et c'est pourquoi ce nombre suit le catalogue.
+ * censé rendre impossible, et c'est pourquoi ce nombre suit le catalogue — le
+ * test le confronte à la version de `content/unites.json`, pour qu'il ne
+ * reste pas en arrière d'une homologation.
  */
-export const VERSION_CATALOGUE_BANC = 5;
+export const VERSION_CATALOGUE_BANC = 6;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui
@@ -412,8 +416,9 @@ export function surbrillancesBanc(genres: readonly GenreBanc[]): Surbrillance[] 
  * Il passe par le rang des unités du camp 0, et c'est le piège de ce banc : au
  * catalogue 4, dix-neuf unités par rang auraient posé la quinzième pièce sur la
  * case de la flèche. La carte s'est élargie à vingt-quatre colonnes et le chemin
- * s'est décalé d'autant — dix-neuf pièces terrestres tiennent en 0…18, le chemin
- * vit en 19…23.
+ * s'est décalé d'autant — les vingt pièces terrestres et aériennes du
+ * catalogue 6 tiennent en 0…19, le chemin vit en 19…23 et ne croise le rang des
+ * unités qu'en colonne 21, qui reste libre.
  */
 export const CHEMIN_BANC: readonly Case[] = [
   { x: 19, y: RANGS.surbrillancesHautes },

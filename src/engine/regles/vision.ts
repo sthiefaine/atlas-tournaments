@@ -76,6 +76,9 @@ export function cacheeAuContact(etat: EtatPartie, cat: Catalogue, u: Unite): boo
   // se cache d'elle-même, sans terrain et par tout temps. Qui peut la frapper
   // reste une affaire de données — sa colonne de dégâts —, jamais de règle.
   if (type && porte(type, 'plongee')) return true;
+  // `furtif` (catalogue 6) : la furtivité demandée par l'ordre `furtivite` cache
+  // l'unité au-delà du contact, par tout temps, jusqu'à l'ordre inverse.
+  if (u.furtive === true) return true;
   if (type && porte(type, 'furtif_nuit') && etat.climat.phase === 'nuit') return true;
   const terrain = terrainLogique(etat, cat, u);
   if (terrain === null) return false;
@@ -92,11 +95,14 @@ export function cacheeAuContact(etat: EtatPartie, cat: Catalogue, u: Unite): boo
  */
 const VUES = new WeakMap<EtatPartie, { signature: number; table: Map<string, unknown> }>();
 
-/** Signature de ce dont la vision dépend : positions, propriétaires, climat. */
+/** Signature de ce dont la vision dépend : positions, propriétaires, climat, furtivité. */
 export function signatureVue(etat: EtatPartie): number {
   let h = (etat.unites.length * 7919 + etat.journee * 131 + etat.modificateurs.length * 17) | 0;
   for (const u of etat.unites) {
-    h = (h * 31 + u.x * 97 + u.y * 7 + u.camp + (u.dansTransport === null ? 0 : 1)) | 0;
+    // La furtivité (catalogue 6) bascule **sans** que l'unité bouge : sans ce
+    // terme, la vue mémoïsée par `verifierChemin` avant la suite `furtivite`
+    // survivrait à la bascule sur le même état de travail.
+    h = (h * 31 + u.x * 97 + u.y * 7 + u.camp + (u.dansTransport === null ? 0 : 1) + (u.furtive === true ? 3 : 0)) | 0;
   }
   // Somme commutative : l'ordre des clés d'un objet n'entre jamais dans un calcul.
   let bat = 0;

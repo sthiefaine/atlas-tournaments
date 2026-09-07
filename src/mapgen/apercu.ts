@@ -8,12 +8,32 @@
  */
 
 import { chargerTerrains } from '../content/index';
-import type { CampId, MapDef } from '../schemas/types';
+import { CARACTERE_PAR_TERRAIN, TERRAINS_CAPTURABLES, type CampId, type MapDef } from '../schemas/types';
 import { mesurer } from './verifier';
+
+/** Un sigle reste en capitales (« QG ») ; tout autre nom passe en minuscules. */
+function nomCourant(nom: string): string {
+  return nom === nom.toUpperCase() ? nom : nom.toLowerCase();
+}
 
 const NOMS_TERRAIN = ((): Record<string, string> => {
   const table: Record<string, string> = {};
-  for (const t of chargerTerrains()) table[t.car] = t.nom.toLowerCase();
+  for (const t of chargerTerrains()) table[t.car] = nomCourant(t.nom);
+  return table;
+})();
+
+/**
+ * Noms des bâtiments listés sous « Propriétaires », par caractère de grille.
+ * Dérivés des terrains capturables du schéma, jamais recopiés : la liste écrite
+ * à la main ignorait le port et la station radar, et l'aperçu taisait leurs
+ * propriétaires.
+ */
+const NOMS_PROPRIETES = ((): Record<string, string> => {
+  const table: Record<string, string> = {};
+  for (const terrain of TERRAINS_CAPTURABLES) {
+    const car = CARACTERE_PAR_TERRAIN[terrain];
+    table[car] = NOMS_TERRAIN[car] ?? terrain;
+  }
   return table;
 })();
 
@@ -29,13 +49,12 @@ function regle(largeur: number, marge: number): string {
 
 /** Liste « type (x,y) » des propriétés d'un camp, ou des neutres. */
 function proprietesDe(map: MapDef, camp: CampId | null): string {
-  const noms: Record<string, string> = { C: 'ville', U: 'usine', A: 'aéroport', H: 'QG' };
   const sortie: string[] = [];
   for (let y = 0; y < map.hauteur; y += 1) {
     const ligne = map.grille[y] ?? '';
     for (let x = 0; x < map.largeur; x += 1) {
       const car = ligne[x] ?? '';
-      const nom = noms[car];
+      const nom = NOMS_PROPRIETES[car];
       if (nom === undefined) continue;
       const proprietaire = map.proprietaires[`${x},${y}`];
       const cible = proprietaire === undefined ? null : proprietaire;

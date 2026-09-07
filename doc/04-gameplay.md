@@ -35,21 +35,23 @@ La journée s'incrémente si le camp est le camp 0. Les hooks `debutTour` s'exé
 fonds += Scenario.revenusParBatiment × (nombre de bâtiments capturables possédés)
 ```
 
-Comptent : ville, usine, aéroport, QG. Le QG rapporte comme une ville. Valeur par défaut : **1000 fonds par bâtiment et par tour**.
+Comptent : ville, usine, aéroport, QG. Le QG rapporte comme une ville. Valeur par défaut : **1000 fonds par bâtiment et par tour**. *Depuis les catalogues 3 et 5, la station radar et le port comptent aussi : tout bâtiment capturable possédé rapporte (`batimentsDe`), c'est la même ligne de code.*
 
 ### Phase 3 — Réparation, ravitaillement
 
-Toute unité stationnée sur un **bâtiment ami dont le terrain a `ravitaille: true`** (ville, usine, aéroport, QG) et **compatible avec son domaine** :
+Toute unité stationnée sur un **bâtiment ami dont le terrain a `ravitaille: true`** (ville, usine, aéroport, QG — et le port depuis le catalogue 5, §10 quater) et **compatible avec son domaine** :
 
 - munitions et carburant remis au maximum, gratuitement ;
 - PV rendus : `+2 PV affichés` (soit +20 PV internes), plafonné à 100 ;
 - **la réparation est payante** : elle coûte `(PV affichés rendus / 10) × coût de l'unité`, prélevé sur les fonds. Si les fonds ne suffisent pas, le soin est réduit à ce que le camp peut payer, éventuellement à zéro. **[proposition]** — sans cela, une ville tenue rend n'importe quelle armée increvable.
 
-Compatibilité de domaine : les unités **terre** se réparent sur ville, usine et QG ; les unités **air** uniquement sur aéroport et ville **[proposition]** ; une unité air sur une usine ne se répare pas et ne se ravitaille pas.
+Compatibilité de domaine : les unités **terre** se réparent sur ville, usine et QG ; les unités **air** uniquement sur aéroport et ville **[proposition]** ; une unité air sur une usine ne se répare pas et ne se ravitaille pas ; les unités **mer** ne se servent qu'au **port** (catalogue 5, §10 quater — `ravitailleCetteUnite`).
+
+**La cale ravitaillée (7 septembre 2026, catalogue 6).** Une unité **à bord** d'un transport dont `transport.ravitaille` vaut `true` — le porte-avions, le camion de ravitaillement — a ses munitions et son carburant remis au plein à cette phase, **jamais ses PV** : on ne répare pas en mer. À bord d'une barge ou d'un transport d'assaut, rien. Le porteur, lui, ne se sert qu'à son propre bâtiment : un porte-avions à sec en pleine mer fait le plein de ses avions et reste à sec jusqu'au port. Une unité embarquée ne consomme toujours pas de carburant (phase 4).
 
 ### Phase 4 — Carburant
 
-Chaque unité dont `carburant.parTour > 0` (aujourd'hui : l'hélicoptère seul) consomme cette quantité, même immobile. **Une unité aérienne à 0 carburant est mise hors jeu à la fin de la phase.** Le HUD signale en orange toute unité aérienne à moins de 2 tours d'autonomie : la panne sèche ne doit jamais être une surprise.
+Chaque unité dont `carburant.parTour > 0` consomme cette quantité, même immobile — « l'hélicoptère seul » au premier jour ; depuis les catalogues 3, 5 et 6, le drone, le chasseur, le bombardier, le transport d'assaut et le chasseur furtif aussi : tout ce qui vole. **Une unité furtive (catalogue 6, §10 quinquies) paie `SURCOUT_CARBURANT_FURTIF` = 3 de plus par tour** (`consommationParTour`, `src/engine/regles/economie.ts`), soit 8 au lieu de 5 pour le chasseur furtif : sa panne sèche tombe à la journée 8 au lieu de la 12 s'il ne se pose jamais. Une unité **embarquée** ne consomme rien. **Une unité aérienne à 0 carburant est mise hors jeu à la fin de la phase.** Le HUD signale en orange toute unité aérienne à moins de 2 tours d'autonomie : la panne sèche ne doit jamais être une surprise.
 
 ### Phase 5 — Réveil
 
@@ -71,9 +73,17 @@ export type Suite =
   | { type: 'attaquer'; cible: Case }
   | { type: 'capturer' }
   | { type: 'embarquer'; transport: string }
-  | { type: 'debarquer'; vers: Case }
-  | { type: 'fusionner'; avec: string };
+  | { type: 'debarquer'; vers: Case; passager?: string; autres?: Debarquement[] } // catalogue 6 : toute la cale en un ordre
+  | { type: 'fusionner'; avec: string }
+  | { type: 'ravitailler'; cible: Case }   // trait `ravitaillement`
+  | { type: 'construire'; cible: Case }    // trait `genie` (§6 bis)
+  | { type: 'furtivite' };                 // catalogue 6 : bascule visible ↔ furtive (trait `furtif`)
+
+/** Un débarquement : quel passager (`passager`, sinon le premier de la cale) et où. */
+export interface Debarquement { vers: Case; passager?: string }
 ```
+
+*Le bloc ci-dessus est celui du 7 septembre 2026 (`src/engine/types.ts`) : `ravitailler` et `construire` datent des catalogues 2 et 3, `passager`, `autres` et `furtivite` du catalogue 6. La forme `{ type: 'debarquer', vers }` reste valide.*
 
 Un ordre est **atomique** : déplacement et suite forment une seule action, donc une seule entrée dans le rejeu et un seul point de tirage aléatoire. Le `chemin` est explicite (la liste des cases traversées) et non recalculé : le moteur le **vérifie** — contiguïté, coût total ≤ mouvement restant, aucune case occupée par un adversaire, aucune case infranchissable pour le `typeMouvement`. Un chemin invalide est un refus, pas une correction silencieuse.
 
@@ -85,7 +95,11 @@ Un ordre est **atomique** : déplacement et suite forment une seule action, donc
 
 **Capture.** Voir §6.
 
-**Embarquement / débarquement.** Un transport peut charger une unité `pied` ou `bottes` amie ; l'unité chargée ne joue plus ce tour. Le débarquement se fait sur une case adjacente franchissable ; l'unité débarquée peut agir mais pas se déplacer, et le transport ne peut plus bouger après avoir débarqué.
+**Embarquement / débarquement.** Un transport peut charger une unité amie de sa liste `transport.accepte` — `pied` ou `bottes` au premier jour ; du sol à roues et à chenilles pour la barge, de l'air pour le porte-avions depuis le catalogue 5 — ; l'unité chargée ne joue plus ce tour. Le débarquement se fait sur une case adjacente franchissable **par le passager** ; l'unité débarquée peut agir mais pas se déplacer, et le transport ne peut plus bouger après avoir débarqué. *Constat du 7 septembre 2026 : dans le moteur, l'unité débarquée passe `agi` — elle ne fait plus rien ce tour, pas même tirer. C'est un écart entre cette phrase et `debarquerUn` (`src/engine/actions.ts`), à trancher ; les tests décrivent le code.*
+
+**Depuis le 7 septembre 2026 (catalogue 6), `debarquer` vide la cale en un ordre.** `vers` et `passager` pour le premier débarquement, `autres` pour les suivants ; chaque demande est validée l'une après l'autre — passager nommé présent dans la cale, ou le premier de la cale si aucun n'est nommé ; case adjacente au transport **après** son déplacement ; libre ; franchissable par **ce** passager — et **un refus annule tout** : le premier n'a pas débarqué non plus, puisque `appliquer` travaille sur une copie. Un événement `debarquement` par passager, dans l'ordre des demandes ; le transport et ses passagers ont joué.
+
+**Furtivité (7 septembre 2026, catalogue 6).** Une unité au trait `furtif` émet la suite `{ type: 'furtivite' }`, après son déplacement comme toute suite : elle **bascule** `Unite.furtive` (absent = visible). Furtive, elle n'est repérée qu'au contact (§10 quinquies) et paie 3 de carburant de plus par tour (phase 4) ; elle attaque, riposte et fusionne normalement, et **tirer ne la dévoile pas**. Refus `furtivite_impossible` sans le trait ; une unité qui a déjà agi ne bascule plus. Une fusion garde l'état de la cible.
 
 **Fusion.** Deux unités amies de même type sur une case adjacente fusionnent : PV additionnés, plafonnés à 100, et le camp reçoit en fonds la valeur du dépassement (`surplus/100 × coût`). Munitions et carburant prennent le maximum des deux.
 
@@ -508,7 +522,7 @@ Sa ligne : infanterie 85, méca 80, recon 95, char léger 70, char moyen 55, cha
 
 ### 10 quater. Catalogue 5 : l'air, la mer et les missiles (7 septembre 2026)
 
-`content/unites.json` passe en `catalogueVersion: 5`. Les **six missions de campagne restent en catalogue 4** : rien de ce qui suit n'entre dans un parcours déjà écrit, et `verifier:campagne` reste à 6/6. Neuf unités entrent, toutes `homologuee`, `homologation: { date: '2026-09-07', catalogue: 5 }` — le catalogue actif compte désormais **23 unités sur les 24 du plafond** (§13.7), il reste **une place**.
+`content/unites.json` passe en `catalogueVersion: 5`. Les **six missions de campagne restent en catalogue 4** : rien de ce qui suit n'entre dans un parcours déjà écrit, et `verifier:campagne` reste à 6/6. Neuf unités entrent, toutes `homologuee`, `homologation: { date: '2026-09-07', catalogue: 5 }` — le catalogue actif compte désormais **23 unités sur les 24 du plafond** (§13.7), il reste **une place**. *Elle a été prise le jour même par le chasseur furtif du catalogue 6 (§10 quinquies) : le plafond est atteint.*
 
 | Clé | Nom | Coût | Mouv. | Type mouv. | Portée | Vision | Mun. | Carb. | Traits | Silhouette |
 |---|---|---:|---:|---|---|---:|---:|---|---|---|
@@ -551,6 +565,30 @@ Sa ligne : infanterie 85, méca 80, recon 95, char léger 70, char moyen 55, cha
 - Sur `tests/engine/cartes/plaine.json` — sans mer, sans port, sans aéroport — le catalogue 5 donne **exactement le même taux que le 4** (35/65) et le même achat à quelques unités près : aucune des neuf n'est achetée, faute de bâtiment pour les produire. C'est le contrôle qui compte : le catalogue 5 ne change rien à une carte terrestre.
 - Sur `carte_bras_de_mer` (deux ports, deux aéroports) : 30/70, et l'IA achète 125 transports d'assaut, 112 barges, 11 sous-marins et 4 bombardiers. Sur `carte_archipel_des_deux_rades` : 90/10 avec 18 parties sur 20 à la limite de journées — un résultat de **carte**, pas d'unité —, avec 200 transports d'assaut, 175 barges, 3 sous-marins et 2 cuirassés.
 - **Aucune des neuf n'écrase les autres, et aucune n'est invisible.** Mais les paliers à 18 000 et 20 000 — chasseur, porte-avions — ne sont jamais atteints par l'IA, exactement comme le lance-roquettes canon à 14 000 : ce n'est pas une mesure d'équilibrage, c'est une limite connue de son score d'achat. Un rejet `unite_inutile` de la routine contrôle (§13.4) serait aujourd'hui prononcé sur ces deux-là ; la question se tranchera avec un joueur humain ou une IA qui sait tenir une mer.
+
+### 10 quinquies. Catalogue 6 : le chasseur furtif, la cale ravitaillée, le débarquement en un ordre (7 septembre 2026)
+
+`content/unites.json` passe en `catalogueVersion: 6`. Les **six missions de campagne restent en catalogue 4** ; les deux cartes de jeu libre (`archipel_des_deux_rades`, `bras_de_mer`) passent en 6. Une seule unité entre, `homologuee`, `homologation: { date: '2026-09-07', catalogue: 6 }` — la **vingt-quatrième** : le plafond du §13.7 est **atteint**.
+
+| Clé | Nom | Coût | Mouv. | Type mouv. | Portée | Vision | Mun. | Carb. | Traits | Silhouette |
+|---|---|---:|---:|---|---|---:|---:|---|---|---|
+| `furtif` | Chasseur furtif | 20 000 | 6 | air | 1 | 3 | 6 | 60 / 1 / **5** (+3 furtive) | `vol`, `furtif` | ailes · plateau · `antenne` · 3 |
+
+**Ce qu'il est, en une phrase.** Un chasseur-bombardier qu'on ne voit pas venir : 85 sur l'infanterie, le recon, l'hélicoptère, le transport, le génie, le brouilleur et le lance-missiles sol-air, 100 sur le drone, 95 sur le transport d'assaut, 80 sur la méca, les roquettes et le lance-missiles sol-sol, 75 sur l'artillerie, 70 sur le bombardier, 65 sur le char léger — mais **20 sur le char lourd**, 30 sur l'antiaérien, 45 sur le chasseur, le char moyen, le porte-avions et le cuirassé, 40 sur la barge, 55 sur son semblable, et **0 sur le sous-marin** : un avion furtif ne traque pas les coques, le sous-marin garde ses cinq chasseurs (§10 quater) et le furtif n'en devient pas un sixième. Il vole moins vite que le chasseur (6 contre 9), voit plus loin (3 contre 2), porte moins (6 munitions, 60 de carburant) et coûte autant : ce qu'il achète, c'est la surprise.
+
+**Sa colonne.** Sept viseurs, et personne d'autre : infanterie 5, méca 8, antiaérien 75, lance-missiles sol-air **100**, chasseur 85, furtif 55, et le porte-avions à **25** — l'exception nommée du §13.3, règle 4, qui s'étend à lui comme aux quatre autres voilures. La règle des quatre viseurs de l'air tient. Les dix lignes `canon` n'ont **pas** reçu de clé `furtif` : `degatsBase` lit la colonne de la cible avant la ligne de l'attaquant, et une homologation ne modifie jamais le canon (§13.3).
+
+**Le trait `furtif`, quinzième de la liste fermée (§13.2) : une furtivité à la demande.** La suite d'ordre `{ type: 'furtivite' }` bascule `Unite.furtive` (champ optionnel ; absent, l'unité est visible, et les états du moteur 3 restent lisibles tels quels). Furtive, l'unité n'est repérée qu'**au contact** — distance 1 exactement — par tout temps et sur tout terrain : c'est le même `cacheeAuContact` que `plongee`, étendu d'une ligne ; comme pour la plongée, **sans brouillard actif tout est vu**, la furtivité ne cache rien de plus. Elle attaque et riposte normalement, **reste furtive après un tir**, et une fusion garde l'état de la cible. **Son prix** : `SURCOUT_CARBURANT_FURTIF` = 3 de carburant de plus par tour (`consommationParTour`, phase 4) — 8 au lieu de 5 pour le chasseur furtif, une panne sèche à la journée 8 au lieu de la 12 s'il ne se pose jamais. Sans ce prix, rien ne ferait jamais réapparaître un chasseur. Refus `furtivite_impossible` sans le trait ; le validateur exige `vol` avec `furtif`, et les deux font le plafond de deux traits. Événement `{ type: 'furtivite', uniteId, furtive }`. La signature de la mémoire des vues (`signatureVue`) porte le champ : une bascule sur place, sans déplacement, invalide la vue mémoïsée.
+
+**La cale ravitaillée.** `transport.ravitaille?: boolean` (schéma) : le `porte_avions` et le `transport` (le camion) le portent. À la phase 3, une unité **à bord** d'un tel transport a munitions et carburant remis au plein, **jamais de PV** ; à bord d'une barge ou d'un transport d'assaut, rien. Le porteur, lui, ne se sert qu'à son propre bâtiment — le port pour une coque. Le porte-avions devient ce qu'il prétendait être : une base flottante, et sa liste `accepte` compte le furtif depuis le même jour — il embarque tout ce qui vole : chasseur, bombardier, transport d'assaut, hélicoptère, drone, furtif.
+
+**Le débarquement en un ordre.** `{ type: 'debarquer'; vers; passager?; autres?: Debarquement[] }` — la phase 6 dit la règle. Une barge à deux places vide sa cale en une fois ; un seul refus annule tout, puisque `appliquer` travaille sur une copie.
+
+**Ce qui n'a pas bougé.** La table 10 × 10 du §8 : pas une valeur. Les treize homologuées antérieures ont reçu la clé `furtif` dans leur ligne et leur colonne, à valeurs miroir. Sur `tests/engine/cartes/plaine.json` — sans aéroport —, une partie IA contre IA en catalogue 6 rend **exactement** les mêmes actions et le même état final qu'en 5, au numéro de catalogue près (`tests/engine/catalogue6.test.ts`).
+
+**Le plafond.** 24 unités actives sur 24. La prochaine homologation exige de **retirer une `homologuee`** (§13.7) — jamais une `canon` —, et les 24 unités spéciales par nation de `doc/11` §10.3 n'y tiendront jamais.
+
+**Mesures.** À compléter par le chantier IA.
 
 ---
 
@@ -862,15 +900,17 @@ La **Commission d'homologation d'Atlas** autorise de nouveaux matériels au fil 
 
 **Une unité nouvelle n'ajoute pas une ligne de code.** Elle se décrit entièrement par un objet `UnitType` (`03-schemas.md` §3) : type de mouvement, coût, mouvement, portée, vision, munitions, carburant, ligne et colonne de la table de dégâts, **au plus deux traits** pris dans une liste fermée, et une **silhouette** déclarative. Les dix traits sont implémentés **une seule fois** dans le moteur, et les dix unités de base les portent déjà (§3) : c'est ce qui rend la promesse tenable. Une candidate qui demanderait un comportement hors de cette liste est refusée — pas ajournée, refusée. Le catalogue s'enrichit, le moteur ne bouge pas.
 
-### 13.2 Les quatorze traits, précisément
+### 13.2 Les quinze traits, précisément
+
+*Quatorze jusqu'au 7 septembre 2026 ; `furtif` est le quinzième (catalogue 6, §10 quinquies).*
 
 | Trait | Ce qu'il fait exactement | Ce qu'il impose au reste de la fiche | Qui le porte aujourd'hui |
 |---|---|---|---|
 | `capture` | L'unité peut émettre la suite `{ type: 'capturer' }` et accumule ses PV affichés en points de capture (§6). | `capture === true`, `typeMouvement ∈ {pied, bottes}` | `infanterie`, `meca` |
-| `transport` | Charge une unité amie `pied` ou `bottes` et la débarque (§2). L'unité chargée ne joue plus ce tour. | `transport !== null`, `places` 1 à 2, jamais un transport dans un transport | `transport` (deux places depuis le 6 septembre 2026) |
-| `tir_indirect` | Tire à distance, **ne riposte jamais**, **ne tire pas après avoir bougé**, et ne vise qu'une case visible par son camp (§10). | `portee[0] ≥ 2`, `peutRiposter === false`, `peutTirerApresMouvement === false` | `artillerie`, `roquettes` |
-| `anti_air` | Contre dédié de l'air : dégâts ≥ 100 contre au moins une unité `vol`, et ≤ 30 contre toute unité `terre` de coût ≥ 10 000. | ligne de la table de dégâts | `antiair` |
-| `vol` | `domaine === 'air'` : coût de terrain 1 partout, ignore la zone de contrôle, n'est visée que par les unités portant `anti_air` ou `vol` et par l'infanterie et la méca ; consomme du carburant même immobile. | `typeMouvement === 'air'`, `carburant !== null` avec `parTour ≥ 1` | `helico` |
+| `transport` | Charge une unité amie de sa liste `accepte` — `pied` ou `bottes` au premier jour ; la barge porte aussi du sol à roues et à chenilles, le porte-avions de l'air (catalogue 5) — et la débarque (§2), toute la cale en un ordre depuis le catalogue 6. L'unité chargée ne joue plus ce tour. Avec `ravitaille: true` (catalogue 6), la cale fait le plein de munitions et de carburant à chaque début de tour, jamais de PV. | `transport !== null`, `places` 1 à 2, jamais un transport dans un transport, `ravitaille` booléen ou absent | `transport` (deux places depuis le 6 septembre 2026 ; `ravitaille`), `transport_air`, `barge`, `porte_avions` (`ravitaille`) |
+| `tir_indirect` | Tire à distance, **ne riposte jamais**, **ne tire pas après avoir bougé**, et ne vise qu'une case visible par son camp (§10). | `portee[0] ≥ 2`, `peutRiposter === false`, `peutTirerApresMouvement === false` | `artillerie`, `roquettes` ; `missiles_air`, `missiles_sol`, `cuirasse` (catalogue 5) |
+| `anti_air` | Contre dédié de l'air : dégâts ≥ 100 contre au moins une unité `vol`, et ≤ 30 contre toute unité `terre` de coût ≥ 10 000. | ligne de la table de dégâts | `antiair` ; `missiles_air` (catalogue 5) |
+| `vol` | `domaine === 'air'` : coût de terrain 1 partout, ignore la zone de contrôle, n'est visée que par les unités portant `anti_air` ou `vol` et par l'infanterie et la méca ; consomme du carburant même immobile. | `typeMouvement === 'air'`, `carburant !== null` avec `parTour ≥ 1` | `helico` ; `drone` (catalogue 3), `chasseur`, `bombardier`, `transport_air` (5), `furtif` (6) |
 | `amphibie` | Franchit `mer` et `riviere` au coût 2. **Réservé au paquet naval** (§3) : refusé tant que la mer n'est pas ouverte. | `typeMouvement === 'amphibie'` | personne |
 | `furtif_nuit` | Ignore les malus de vision de la nuit (§12.3). | — | personne |
 | `vision_etendue` | Voit loin, et **+1 de vision supplémentaire sur `montagne`**, cumulé avec le +2 du §10. | `vision ≥ 5` | `recon` |
@@ -880,8 +920,9 @@ La **Commission d'homologation d'Atlas** autorise de nouveaux matériels au fil 
 | `drone` | Œil volant **brouillable** : à portée d'un `brouilleur` ou d'une station `radar` adverse, sa vision tombe à un dixième (§10 bis). | `vol`, toutes les valeurs de `degats` à 0 | `drone` |
 | `brouilleur` | Brouille tout `drone` adverse à dix cases. | toutes les valeurs de `degats` à 0, jamais avec `drone` | `brouilleur` |
 | `plongee` | L'unité n'est repérée qu'**au contact** (distance 1), comme une unité en forêt sous brouillard — mais sans terrain et par tout temps (§10 quater). Ne change **rien** au combat : qui peut la frapper se lit dans sa colonne `subitDegats`. | `domaine === 'mer'`, jamais avec `vol` | `sous_marin` |
+| `furtif` | Furtivité **à la demande** (catalogue 6, §10 quinquies) : la suite `{ type: 'furtivite' }` bascule `Unite.furtive`. Furtive, l'unité n'est repérée qu'au contact, par tout temps et sur tout terrain — le même `cacheeAuContact` que `plongee` —, et consomme `SURCOUT_CARBURANT_FURTIF` = 3 de carburant de plus par tour. Tirer ne la dévoile pas. | `vol` obligatoire — donc le plafond de deux traits | `furtif` |
 
-Deux traits ne sont portés par personne aujourd'hui — `amphibie`, `furtif_nuit` ; `ravitaillement` en était le troisième jusqu'au 6 septembre 2026, où le transport l'a pris (§10 ter). Ce sont des **places réservées** : ils existent pour que le paquet naval et le climat aient un vocabulaire prêt le jour où une candidate les demande.
+Deux traits ne sont portés par personne aujourd'hui — `amphibie`, `furtif_nuit` ; `ravitaillement` en était le troisième jusqu'au 6 septembre 2026, où le transport l'a pris (§10 ter). Ce sont des **places réservées** : ils existent pour que le paquet naval et le climat aient un vocabulaire prêt le jour où une candidate les demande. Sur les quinze traits du 7 septembre 2026, treize sont donc portés.
 
 ### 13.3 La ligne et la colonne à fournir
 
@@ -905,9 +946,9 @@ Quatre contraintes de forme, vérifiées par la routine contrôle :
 |---|---|---|
 | `cout` | multiple de 100, 1 000 à 20 000 | efficacité par coût dans **[0,8 ; 1,2]** fois la médiane du catalogue ; au-dessus → `unite_dominante`, en dessous de 0,7 → `unite_inutile` |
 | `mouvement` | 1 à 9 | ≤ 6 si `cout ≥ 10 000` — **sauf `domaine: 'air'`**, exception nommée au §10 quater ; ≤ 4 si `terre` **et** `portee[1] ≥ 3` — une longue portée mobile est le déséquilibre classique |
-| `portee` | `portee[0] ≤ portee[1]` | `[1,1]` (direct) ou `portee[1] ≤ 5` et `portee[1] − portee[0] ≤ 3` — le cuirassé (2–6) et le lance-missiles sol-sol (3–6) dépassent la première moitié de la borne, sciemment (§10 quater) |
-| `vision` | 0 à 6 | ≥ 5 exige le trait `vision_etendue` |
-| `traits` | 0 à 2, liste fermée de **quatorze** | deux traits qui se contredisent (`vol` + `tout_terrain`, `tir_indirect` + `capture`, `plongee` + `vol`) sont refusés ; `plongee` exige `domaine: 'mer'` |
+| `portee` | `portee[0] ≤ portee[1]` | `[1,1]` (direct) ou `portee[1] ≤ 5` et `portee[1] − portee[0] ≤ 3` — le cuirassé (2–6) et le lance-missiles sol-sol (3–6) dépassent la première moitié de la borne, sciemment (§10 quater), et la fenêtre du cuirassé fait 4 ; depuis le 7 septembre 2026, `tests/schemas/contenu.test.ts` tient le **registre exact** de ces écarts — un écart neuf y échoue, un écart résorbé s'en retire |
+| `vision` | 0 à 6 | ≥ 5 exige le trait `vision_etendue` — sauf le drone (catalogue 3), dont les deux traits sont déjà `vol` et `drone` : écart au registre |
+| `traits` | 0 à 2, liste fermée de **quinze** (quatorze jusqu'au 7 septembre 2026) | deux traits qui se contredisent (`vol` + `tout_terrain`, `tir_indirect` + `capture`, `plongee` + `vol`) sont refusés ; `plongee` exige `domaine: 'mer'` ; `furtif` exige `vol` (catalogue 6) |
 | `degats` | 0 à 130 par case | contraintes du §13.3 |
 | `silhouette` | 3 modules au plus | strictement différente de toute silhouette active (`silhouette_invalide`) |
 | `armeSecondaire` | `null` ou liste de clés d'unités **du catalogue** ; interdit si `munitions === null` ; chaque cible à dégâts > 0 dans la ligne ; jamais la ligne entière | un compteur qu'on ne décrémente pas, jamais un bonus de dégâts (§5.3) |
@@ -934,7 +975,7 @@ Les transitions sont à sens unique — `essai → homologuee` ou `essai → ret
 
 - **Une candidate par semaine au plus.** La routine cerveau ne propose pas davantage, le serveur refuse au-delà.
 - **Une homologation par mois au plus.** Passer d'`essai` à `homologuee` est un événement rare.
-- **Catalogue plafonné à 24 unités actives** — `canon` + `essai` + `homologuee`. Les dix `canon` occupent dix places de façon permanente : il reste **quatorze** places. Quand le plafond est atteint, homologuer exige de **retirer une `homologuee`** — la moins jouée sur les 90 derniers jours — et **jamais une `canon`**.
+- **Catalogue plafonné à 24 unités actives** — `canon` + `essai` + `homologuee`. Les dix `canon` occupent dix places de façon permanente : il reste **quatorze** places. Quand le plafond est atteint, homologuer exige de **retirer une `homologuee`** — la moins jouée sur les 90 derniers jours — et **jamais une `canon`**. **Le plafond est atteint depuis le 7 septembre 2026** (catalogue 6, §10 quinquies) : quatorze homologuées occupent les quatorze places, et la prochaine homologation commence par un retrait.
 - **Une unité en `essai` compte dans le plafond.** Sinon on empile les essais et on livre un jeu de trente unités par la petite porte.
 
 **Ce que l'essai suppose : la Dépêche du jour.** Une `MissionDuJour` (`03-schemas.md` §14) est une mission courte — **10 à 15 journées** — indépendante de la campagne : elle n'écrit aucun flag, sa récompense est cosmétique ou une carte de terrain, au plus une. C'est le seul terrain de jeu d'une unité en `essai`, et c'est délibéré : une unité mal réglée y gâche une partie de quinze journées, pas une campagne de quarante heures.

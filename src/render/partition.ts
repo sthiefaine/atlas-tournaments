@@ -59,6 +59,12 @@ export const DUREES = Object.freeze({
   duel: 1900,
   /** Un chiffre flottant : monte et s'efface. */
   chiffre: 900,
+  /**
+   * Se cacher ou se montrer (trait `furtif`) : le voile qui tombe sur la
+   * figurine, ou qui s'en lève. Assez lent pour qu'on voie la pièce s'effacer
+   * plutôt que disparaître d'un coup.
+   */
+  voiler: 480,
 });
 
 /**
@@ -98,7 +104,15 @@ export type Geste =
   /** Un chiffre qui flotte au-dessus d'une case : `perte` en rouge, `gain` en vert. Lu par le HUD. */
   | { genre: 'chiffre'; case: Case; valeur: number; teinte: 'perte' | 'gain'; debut: number; duree: number }
   /** La caméra montre cette case si elle est hors champ. Instantané. */
-  | { genre: 'cadrer'; case: Case; debut: number; duree: 0 };
+  | { genre: 'cadrer'; case: Case; debut: number; duree: 0 }
+  /**
+   * L'unité se cache (trait `furtif`, catalogue 6) : le voile tombe sur elle,
+   * là où elle est. Pour son camp, elle devient translucide ; pour l'adversaire
+   * qui la voit encore au contact, rien ne change — elle est vue.
+   */
+  | { genre: 'voiler'; unite: string; case: Case; debut: number; duree: number }
+  /** L'unité se montre de nouveau : le voile se lève. */
+  | { genre: 'devoiler'; unite: string; case: Case; debut: number; duree: number };
 
 export type GenreGeste = Geste['genre'];
 
@@ -443,6 +457,17 @@ export function ecrirePartition(
         gestes.push({ genre: 'encaisser', unite: e.uniteId, case: c, degats: e.pv, depuis: c, debut, duree });
         occuper(e.uniteId, debut, duree);
         chiffre(c, dixiemes(e.pv), teinteDe(campDe(e.uniteId)), debut);
+        break;
+      }
+      case 'furtivite': {
+        // La bascule vient après le déplacement, comme toute suite : le voile
+        // tombe — ou se lève — à l'arrivée, une fois la marche finie.
+        const c = caseDe(e.uniteId);
+        if (!c) break;
+        const debut = depart(e.uniteId);
+        const duree = d(DUREES.voiler);
+        gestes.push({ genre: e.furtive ? 'voiler' : 'devoiler', unite: e.uniteId, case: c, debut, duree });
+        occuper(e.uniteId, debut, duree);
         break;
       }
       // La panne sèche est suivie d'un `hors_jeu`, qui fait le geste ; les

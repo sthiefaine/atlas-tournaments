@@ -3,7 +3,7 @@
  * et production (`doc/04-gameplay.md` §2, phases 2 à 5, et §3).
  */
 
-import type { Case, CampId, CleTerrain, CleUnite } from '../../schemas/index';
+import type { Case, CampId, CleTerrain, CleUnite, UnitType } from '../../schemas/index';
 import { coutBase, produitesPar } from '../catalogue';
 import { terrainLogique } from '../hooks';
 import type {
@@ -53,6 +53,18 @@ export function ravitailleCetteUnite(cat: Catalogue, terrain: CleTerrain, domain
   return terrain === 'ville' || terrain === 'usine' || terrain === 'qg';
 }
 
+/**
+ * Surcoût de carburant par tour d'une unité furtive (trait `furtif`, catalogue
+ * 6) : se cacher coûte, sans quoi rien ne ferait jamais réapparaître un chasseur.
+ */
+export const SURCOUT_CARBURANT_FURTIF = 3;
+
+/** Carburant consommé par tour par cette unité, immobile : la furtivité s'ajoute. */
+export function consommationParTour(type: UnitType, u: Pick<Unite, 'furtive'>): number {
+  if (type.carburant === null) return 0;
+  return type.carburant.parTour + (u.furtive === true ? SURCOUT_CARBURANT_FURTIF : 0);
+}
+
 /** Phase 3 — réparation payante et ravitaillement gratuit. */
 export function reparerEtRavitailler(
   etat: EtatPartie, cat: Catalogue, camp: CampId, evts: EvenementJeu[],
@@ -60,9 +72,20 @@ export function reparerEtRavitailler(
   const caisse = etat.camps.find((e) => e.id === camp);
   if (!caisse) return;
   for (const u of etat.unites) {
-    if (u.camp !== camp || u.dansTransport) continue;
+    if (u.camp !== camp) continue;
     const type = cat.unites[u.type];
     if (!type) continue;
+    if (u.dansTransport !== null) {
+      // À bord d'un transport qui ravitaille (`transport.ravitaille`, catalogue 6),
+      // le plein se fait en cale : munitions et carburant, jamais les PV — on ne
+      // répare pas en mer. Les autres transports ne font que porter.
+      const porteur = etat.unites.find((t) => t.id === u.dansTransport);
+      const tp = porteur ? cat.unites[porteur.type] : undefined;
+      if (tp?.transport?.ravitaille !== true) continue;
+      if (type.munitions !== null) u.munitions = type.munitions;
+      if (type.carburant !== null) u.carburant = type.carburant.max;
+      continue;
+    }
     const terrain = terrainLogique(etat, cat, u);
     if (terrain === null) continue;
     if (etat.proprietaires[cleCase(u)] !== camp) continue;
@@ -93,8 +116,9 @@ export function consommerCarburant(
     if (u.camp !== camp || u.dansTransport) continue;
     const type = cat.unites[u.type];
     if (!type || type.carburant === null || u.carburant === null) continue;
-    if (type.carburant.parTour <= 0) continue;
-    u.carburant = Math.max(0, u.carburant - type.carburant.parTour);
+    const conso = consommationParTour(type, u);
+    if (conso <= 0) continue;
+    u.carburant = Math.max(0, u.carburant - conso);
     if (u.carburant <= 0 && type.domaine === 'air') aRetirer.push(u.id);
   }
   for (const id of aRetirer) {

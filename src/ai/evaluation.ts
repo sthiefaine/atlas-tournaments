@@ -4,7 +4,9 @@
  * d'achat. Tout est pur et déterministe.
  *
  * L'IA lit le climat **comme le joueur** (`doc/04-gameplay.md` §12.7) : la saison,
- * la phase, la météo du jour et deux journées de prévision, jamais plus.
+ * la phase, la météo du jour et deux journées de prévision, jamais plus. Depuis
+ * le 7 septembre 2026 elle lit aussi les adversaires **comme le joueur** : sous
+ * brouillard, seulement ceux que le moteur lui montre (`adversairesConnus`).
  */
 
 import type {
@@ -15,13 +17,31 @@ import type {
 import { degatsBase, produitesPar } from '../engine/catalogue';
 import { brouillardActif } from '../engine/climat/index';
 import { degatsArme } from '../engine/regles/combat';
-import { terrainBrut, terrainLogique } from '../engine/hooks';
-import { batimentsDe } from '../engine/regles/economie';
-import { multiplicateur } from '../engine/regles/modificateurs';
-import { pointsMouvement, tableCouts, uniteSur } from '../engine/regles/mouvement';
+import { dansCarte, terrainBrut, terrainLogique } from '../engine/hooks';
+import { batimentsDe, producteursDe } from '../engine/regles/economie';
+import { multiplicateur, multiplicateurFonds } from '../engine/regles/modificateurs';
+import {
+  adversesVisibles, pointsMouvement, tableCouts, uniteSur,
+} from '../engine/regles/mouvement';
 import { cleCase, depuisCle, manhattan, porte, pvAffiches } from '../engine/types';
 import type { Case, CampId, CleUnite, UnitType } from '../schemas/index';
-import { batimentsRavitaillant, estSoutien, peutTirerSur } from './logistique';
+import {
+  aBesoin, batimentsRavitaillant, casesDepose, COUVERTURE_MIN, estSoutien, peutTirerSur,
+} from './logistique';
+
+/**
+ * Brouillard honnête (7 septembre 2026) : les stratégies ne lisent que les
+ * adversaires que le moteur montre à leur camp. Mis à `false`, l'IA relit tout
+ * `etat.unites` comme avant — c'est le seul point sur lequel revenir si le
+ * vérificateur de campagne tombait, et il se revient d'un mot.
+ */
+export const BROUILLARD_HONNETE = true;
+
+/** Adversaires que ce camp connaît : ceux qu'il voit, ou tous si l'on triche. */
+export function adversairesConnus(etat: EtatPartie, cat: Catalogue, camp: CampId): Unite[] {
+  if (BROUILLARD_HONNETE) return adversesVisibles(etat, cat, camp);
+  return etat.unites.filter((u) => u.camp !== camp && !u.dansTransport);
+}
 
 /**
  * Dégâts attendus d'une frappe, aléa neutre (A = 1) : sert au tri, pas au jeu.
@@ -126,17 +146,43 @@ export function objectifsCapture(etat: EtatPartie, cat: Catalogue, camp: CampId)
   return cases;
 }
 
-/** Cases des unités adverses : l'objectif des unités qui ne capturent pas. */
-export function objectifsCombat(etat: EtatPartie, camp: CampId): Case[] {
-  return etat.unites
-    .filter((u) => u.camp !== camp && !u.dansTransport)
-    .map((u) => ({ x: u.x, y: u.y }));
+/** Cases des unités adverses connues : l'objectif des unités qui ne capturent pas. */
+export function objectifsCombat(etat: EtatPartie, cat: Catalogue, camp: CampId): Case[] {
+  return adversairesConnus(etat, cat, camp).map((u) => ({ x: u.x, y: u.y }));
+}
+
+/**
+ * Cases d'où une pièce à tir indirect frappe ses cibles : la couronne entre sa
+ * portée minimale et maximale autour de chacune. C'est ce qui donne un sens à
+ * une pièce qui ne va pas **sur** sa cible — une artillerie s'arrête à trois
+ * cases, un cuirassé bombarde la côte depuis le large sans jamais y accoster.
+ */
+export function casesDeTir(etat: EtatPartie, type: UnitType, cibles: Case[]): Case[] {
+  const [min, max] = type.portee;
+  const vues = new Set<string>();
+  const sortie: Case[] = [];
+  for (const cible of cibles) {
+    for (let dy = -max; dy <= max; dy += 1) {
+      const reste = max - Math.abs(dy);
+      for (let dx = -reste; dx <= reste; dx += 1) {
+        if (Math.abs(dx) + Math.abs(dy) < min) continue;
+        const c = { x: cible.x + dx, y: cible.y + dy };
+        if (!dansCarte(etat, c)) continue;
+        const k = cleCase(c);
+        if (vues.has(k)) continue;
+        vues.add(k);
+        sortie.push(c);
+      }
+    }
+  }
+  return sortie;
 }
 
 /**
  * Objectifs d'une unité : ce vers quoi elle marche. Les capteurs vont aux
- * bâtiments à prendre, le génie à ce qui est désaffecté, les autres aux unités
- * adverses et aux bâtiments. `cle` identifie l'ensemble pour la mémoire.
+ * bâtiments à prendre, le génie à ce qui est désaffecté, les pièces à tir
+ * indirect à portée de tir des adversaires, les autres aux unités adverses et
+ * aux bâtiments. `cle` identifie l'ensemble pour la mémoire.
  */
 export function objectifsDe(
   etat: EtatPartie, cat: Catalogue, u: Unite,
@@ -146,8 +192,14 @@ export function objectifsDe(
   if (type && porte(type, 'genie') && etat.desaffectes.length > 0) {
     return { cibles: etat.desaffectes.map(depuisCle), cle: 'g' };
   }
+  if (type && porte(type, 'tir_indirect')) {
+    return {
+      cibles: [...casesDeTir(etat, type, objectifsCombat(etat, cat, u.camp)), ...objectifsCapture(etat, cat, u.camp)],
+      cle: `i${type.portee[0]}-${type.portee[1]}`,
+    };
+  }
   return {
-    cibles: [...objectifsCombat(etat, u.camp), ...objectifsCapture(etat, cat, u.camp)],
+    cibles: [...objectifsCombat(etat, cat, u.camp), ...objectifsCapture(etat, cat, u.camp)],
     cle: 'x',
   };
 }
@@ -163,8 +215,7 @@ export function menaceSur(
 ): number {
   const fictive: Unite = { ...u, x: c.x, y: c.y };
   let total = 0;
-  for (const a of etat.unites) {
-    if (a.camp === u.camp || a.dansTransport) continue;
+  for (const a of adversairesConnus(etat, cat, u.camp)) {
     const ta = cat.unites[a.type];
     if (!ta) continue;
     if (!peutTirerSur(cat, a, u.type)) continue;
@@ -190,14 +241,51 @@ export function compterCapteurs(etat: EtatPartie, cat: Catalogue, camp: CampId):
   return etat.unites.filter((u) => u.camp === camp && capteur(cat, u)).length;
 }
 
-/** Répartition des unités adverses par clé : sert à choisir un achat. */
-export function menaceParType(etat: EtatPartie, camp: CampId): Record<CleUnite, number> {
+/** Répartition des unités adverses connues par clé : sert à choisir un achat. */
+export function menaceParType(etat: EtatPartie, cat: Catalogue, camp: CampId): Record<CleUnite, number> {
   const compte: Record<CleUnite, number> = {};
-  for (const u of etat.unites) {
-    if (u.camp === camp || u.dansTransport) continue;
+  for (const u of adversairesConnus(etat, cat, camp)) {
     compte[u.type] = (compte[u.type] ?? 0) + 1;
   }
   return compte;
+}
+
+/**
+ * Poids total, par bâtiment producteur adverse, des unités qu'il **pourrait**
+ * produire : une menace en puissance vaut la moitié d'une unité présente,
+ * répartie entre ce que le bâtiment sait faire, et au prorata de ce que
+ * l'adversaire peut se payer d'ici `TOURS_POTENTIEL` journées de revenus.
+ */
+export const POIDS_POTENTIEL = 0.5;
+/** Journées de revenus adverses comptées dans l'accessibilité d'un achat potentiel. */
+export const TOURS_POTENTIEL = 2;
+
+/**
+ * Ce que l'adversaire peut produire mais n'a pas encore : un aéroport adverse
+ * est une menace aérienne en puissance, un port une menace navale. Le poids
+ * croît avec ses fonds. Les pièces qui ne tirent pas (transports, drones) n'y
+ * entrent pas : elles ne sont une menace pour personne.
+ */
+export function mixPotentiel(etat: EtatPartie, cat: Catalogue, camp: CampId): Record<CleUnite, number> {
+  const mix: Record<CleUnite, number> = {};
+  for (const adverse of etat.camps) {
+    if (adverse.id === camp || adverse.elimine) continue;
+    const revenus = batimentsDe(etat, adverse.id).length * etat.reglages.revenusParBatiment
+      * multiplicateurFonds(etat, adverse.id);
+    const portee = adverse.fonds + TOURS_POTENTIEL * revenus;
+    for (const k of producteursDe(etat, cat, adverse.id)) {
+      const terrain = terrainLogique(etat, cat, depuisCle(k));
+      if (terrain === null) continue;
+      const armees = produitesPar(cat, terrain).filter((cle) => estArmee(cat, cle));
+      if (armees.length === 0) continue;
+      for (const cle of armees) {
+        const t = cat.unites[cle]!;
+        const accessible = Math.min(1, portee / Math.max(1, t.cout));
+        mix[cle] = (mix[cle] ?? 0) + (POIDS_POTENTIEL / armees.length) * accessible;
+      }
+    }
+  }
+  return mix;
 }
 
 /** Bâtiments producteurs libres d'un camp, ordre déterministe. */
@@ -253,52 +341,104 @@ export const VALEUR_SOUTIEN = 0.12;
 const RAYON_COMBAT_IMMINENT = 8;
 
 /**
- * Vrai si un capteur ami accepté par ce transport est à plus de deux tours de
- * son objectif : un transport neuf l'y mènerait plus vite que ses jambes. C'est
- * le cas rare où un transport s'achète sans armée derrière lui.
+ * Unités de ce type déjà **perdues** par le camp : produites moins en jeu. Une
+ * pièce de soutien qu'on a déjà perdue vaut moins la prochaine fois — c'est la
+ * seule mémoire dont l'IA dispose, et elle est dans l'état.
  */
-function capteurLoin(etat: EtatPartie, cat: Catalogue, t: UnitType, camp: CampId): boolean {
-  if (!porte(t, 'transport') || t.transport === null) return false;
-  for (const a of etat.unites) {
-    if (a.camp !== camp || a.dansTransport || !t.transport.accepte.includes(a.type) || !capteur(cat, a)) continue;
-    const obj = objectifsDe(etat, cat, a);
-    const dist = distances(etat, cat, a, obj.cibles, `${a.camp}|${a.type}|${obj.cle}`);
-    const d = dist[a.y * etat.largeur + a.x] ?? -1;
-    if (d > 2 * pointsMouvement(etat, cat, a)) return true;
-  }
-  return false;
+export function pertes(etat: EtatPartie, camp: CampId, cle: CleUnite): number {
+  const produites = etat.produites[`${camp}:${cle}`] ?? 0;
+  const enJeu = etat.unites.filter((u) => u.camp === camp && u.type === cle).length;
+  return Math.max(0, produites - enJeu);
 }
 
-/** Vrai si une unité aérienne amie est à plus d'un tour du bâtiment qui la ravitaille. */
-function aerienneIsolee(etat: EtatPartie, cat: Catalogue, camp: CampId): boolean {
+/** Vrai si un adversaire connu est assez près d'une de nos unités pour qu'il faille recruter du feu demain. */
+function combatImminent(etat: EtatPartie, cat: Catalogue, camp: CampId): boolean {
+  const miennes = etat.unites.filter((m) => m.camp === camp && !m.dansTransport);
+  return adversairesConnus(etat, cat, camp)
+    .some((a) => miennes.some((m) => manhattan(a, m) <= RAYON_COMBAT_IMMINENT));
+}
+
+/** Unité fictive d'un type, posée sur une case : de quoi interroger le moteur sur un achat qui n'existe pas encore. */
+function fictive(cat: Catalogue, cle: CleUnite, camp: CampId, c: Case): Unite {
+  const t = cat.unites[cle]!;
+  return {
+    id: `fictive:${cle}`, camp, type: cle, x: c.x, y: c.y, pv: 100,
+    munitions: t.munitions, carburant: t.carburant ? t.carburant.max : null,
+    etat: 'prete', pointsCapture: 0, cargo: [], dansTransport: null,
+  };
+}
+
+/** Ce qu'un transport d'un type donné aurait à faire : ses clients, et les places déjà offertes. */
+export interface BesoinTransport {
+  /** Unités que ce transport accepte et qui en ont réellement besoin. */
+  clients: number;
+  /** Places qu'offrent déjà les transports du camp acceptant les mêmes passagers. */
+  places: number;
+}
+
+/**
+ * Le besoin réel de transport d'un camp, pour un type de transport : ses
+ * clients sont les unités qu'il accepte et dont l'objectif est **hors de
+ * portée à pied** — une île — ou à plus de deux tours de marche, pourvu qu'un
+ * transport neuf, produit là où le camp le produit, puisse accoster près de
+ * cet objectif ; et, si le transport ravitaille sa cale, celles qui sont à
+ * court. Les places déjà offertes par les transports en jeu qui acceptent les
+ * mêmes passagers se retranchent : on n'achète pas une seconde barge pour
+ * deux fantassins.
+ */
+export function besoinTransport(
+  etat: EtatPartie, cat: Catalogue, cle: CleUnite, camp: CampId,
+): BesoinTransport {
+  const t = cat.unites[cle];
+  if (!t || !porte(t, 'transport') || t.transport === null) return { clients: 0, places: 0 };
+  const accepte = t.transport.accepte;
+  let places = 0;
   for (const a of etat.unites) {
+    if (a.camp !== camp) continue;
     const ta = cat.unites[a.type];
-    if (a.camp !== camp || a.dansTransport || !ta || ta.domaine !== 'air' || ta.carburant === null) continue;
-    const bases = batimentsRavitaillant(etat, cat, camp, ta.domaine);
-    const dist = distances(etat, cat, a, bases, `${a.camp}|${a.type}|retour`);
-    const d = dist[a.y * etat.largeur + a.x] ?? -1;
-    if (d < 0 || d > pointsMouvement(etat, cat, a)) return true;
+    if (!ta || !porte(ta, 'transport') || ta.transport === null) continue;
+    if (ta.transport.accepte.some((x) => accepte.includes(x))) places += ta.transport.places;
   }
-  return false;
-}
-
-/** Vrai si un adversaire est assez près d'une de nos unités pour qu'il faille recruter du feu demain. */
-function combatImminent(etat: EtatPartie, camp: CampId): boolean {
-  return etat.unites.some((a) => a.camp !== camp && !a.dansTransport
-    && etat.unites.some((m) => m.camp === camp && !m.dansTransport && manhattan(a, m) <= RAYON_COMBAT_IMMINENT));
+  // D'où partirait un transport neuf : le premier bâtiment du camp qui le produit.
+  const chantier = producteursDe(etat, cat, camp)
+    .map(depuisCle)
+    .find((c) => {
+      const terrain = terrainLogique(etat, cat, c);
+      return terrain !== null && produitesPar(cat, terrain).includes(cle);
+    });
+  let clients = 0;
+  for (const a of etat.unites) {
+    if (a.camp !== camp || a.dansTransport !== null || !accepte.includes(a.type)) continue;
+    const ta = cat.unites[a.type];
+    if (!ta || estSoutien(ta)) continue;
+    if (t.transport.ravitaille === true && aBesoin(etat, cat, a)) { clients += 1; continue; }
+    const obj = objectifsDe(etat, cat, a);
+    if (obj.cibles.length === 0) continue;
+    const distA = distances(etat, cat, a, obj.cibles, `${a.camp}|${a.type}|${obj.cle}`);
+    const d = distA[a.y * etat.largeur + a.x] ?? -1;
+    if (d >= 0 && d <= 2 * pointsMouvement(etat, cat, a)) continue;
+    if (!chantier) continue;
+    const neuf = fictive(cat, cle, camp, chantier);
+    const depose = casesDepose(etat, cat, neuf, a, distA);
+    const distT = distances(etat, cat, neuf, depose, `${camp}|${cle}|depose|${a.type}|${obj.cle}`);
+    if ((distT[chantier.y * etat.largeur + chantier.x] ?? -1) >= 0) clients += 1;
+  }
+  return { clients, places };
 }
 
 /**
  * Valeur d'une unité qui ne tire pas (`04-gameplay.md` §10 bis, §10 ter) : le
  * soutien — transport, ravitailleur — vaut par les unités qu'il sert, l'œil —
  * drone, brouilleur — par le brouillard qu'il perce ou impose. Toujours modérée :
- * une armée de transports ne prend rien. Avec une armée (trois unités armées),
- * un soutien par tranche de `ARMEES_PAR_SOUTIEN`. Sans armée, c'est **possible
- * mais rare** : un capteur à plus de deux tours de son objectif, ou une unité
- * aérienne loin de tout ravitaillement, justifient un premier transport à demi-
- * valeur. On n'achète jamais ce qui empêche de recruter une unité armée au tour
- * suivant — sauf si le transport est le seul besoin réel, c'est-à-dire qu'aucun
- * adversaire n'est à `RAYON_COMBAT_IMMINENT` d'une de nos unités.
+ * une armée de transports ne prend rien. Un transport vaut par ses **clients**
+ * réels moins les places déjà offertes (`besoinTransport`), un ravitailleur par
+ * les unités à munitions ou à carburant, un soutien par tranche de
+ * `ARMEES_PAR_SOUTIEN` armées ; chaque exemplaire déjà perdu divise la valeur.
+ * Sans armée (trois unités armées), c'est **possible mais rare** : seul un
+ * besoin réel justifie un premier transport, à demi-valeur. On n'achète jamais
+ * ce qui empêche de recruter une unité armée au tour suivant — sauf si le
+ * transport est le seul besoin réel, c'est-à-dire qu'aucun adversaire connu
+ * n'est à `RAYON_COMBAT_IMMINENT` d'une de nos unités.
  */
 export function valeurSoutien(
   etat: EtatPartie, cat: Catalogue, cle: CleUnite, camp: CampId,
@@ -309,68 +449,122 @@ export function valeurSoutien(
   const oeil = porte(t, 'drone') || porte(t, 'brouilleur');
   if (!soutien && !oeil) return 0;
   let armees = 0;
-  let soutiens = 0;
+  let ravitailleurs = 0;
   let dependantes = 0;
-  let passagers = 0;
   let yeux = 0;
   let brouilleurs = 0;
   for (const u of etat.unites) {
     if (u.camp !== camp) continue;
     const tu = cat.unites[u.type];
     if (!tu) continue;
-    if (estSoutien(tu)) soutiens += 1;
-    else if (porte(tu, 'drone')) yeux += 1;
+    if (estSoutien(tu)) {
+      if (porte(tu, 'ravitaillement')) ravitailleurs += 1;
+    } else if (porte(tu, 'drone')) yeux += 1;
     else if (porte(tu, 'brouilleur')) brouilleurs += 1;
     else if (estArmee(cat, u.type)) {
       armees += 1;
       if (tu.munitions !== null || tu.carburant !== null) dependantes += 1;
-      if (t.transport && t.transport.accepte.includes(u.type)) passagers += 1;
     }
   }
-  // Sans armée, seul un besoin de transport réel justifie une pièce qui ne tire pas.
+  const perdus = pertes(etat, camp, cle);
+  if (!soutien) {
+    if (armees < 3) return 0;
+    if (porte(t, 'drone')) {
+      if (!brouillardActif(etat)) return 0;
+      return 0.12 / (1 + 3 * yeux) / (1 + perdus);
+    }
+    const dronesAdverses = adversairesConnus(etat, cat, camp).filter((u) => {
+      const tu = cat.unites[u.type];
+      return tu !== undefined && porte(tu, 'drone');
+    }).length;
+    return dronesAdverses > 0 && brouilleurs === 0 ? 0.12 / (1 + perdus) : 0;
+  }
+  // Le transport vaut par ses clients ; le ravitailleur par les unités à réserves.
+  let valeurTransport = 0;
+  let besoinReel = false;
+  if (porte(t, 'transport') && t.transport !== null) {
+    const b = besoinTransport(etat, cat, cle, camp);
+    const manquantes = b.clients - b.places;
+    if (manquantes > 0) {
+      besoinReel = true;
+      valeurTransport = VALEUR_SOUTIEN * Math.min(1, manquantes / t.transport.places);
+    }
+  }
+  let valeurRavitailleur = 0;
+  if (porte(t, 'ravitaillement') && ravitailleurs * ARMEES_PAR_SOUTIEN < armees) {
+    valeurRavitailleur = (VALEUR_SOUTIEN * Math.min(1, dependantes / ARMEES_PAR_SOUTIEN)) / (1 + 2 * ravitailleurs);
+  }
   const sansArmee = armees < 3;
-  const besoinReel = soutien && soutiens === 0
-    && (capteurLoin(etat, cat, t, camp) || (porte(t, 'ravitaillement') && aerienneIsolee(etat, cat, camp)));
   if (sansArmee && !besoinReel) return 0;
   // Jamais si l'on ne peut plus recruter une unité armée au tour suivant — sauf
   // si le transport est le seul besoin réel, personne n'étant à portée de combat.
   const caisse = etat.camps.find((c) => c.id === camp);
   const revenus = batimentsDe(etat, camp).length * etat.reglages.revenusParBatiment;
   const bloqueArmee = caisse !== undefined && caisse.fonds - t.cout + revenus < coutArmeeMinimal(cat);
-  if (bloqueArmee && !(besoinReel && !combatImminent(etat, camp))) return 0;
-  if (soutien) {
-    if (sansArmee) return VALEUR_SOUTIEN / 2;
-    if (soutiens * ARMEES_PAR_SOUTIEN >= armees) return 0;
-    const besoin = Math.min(1, (dependantes + passagers / 2) / ARMEES_PAR_SOUTIEN);
-    return (VALEUR_SOUTIEN * besoin) / (1 + 2 * soutiens);
-  }
-  if (porte(t, 'drone')) {
-    if (!brouillardActif(etat)) return 0;
-    return 0.12 / (1 + 3 * yeux);
-  }
-  const dronesAdverses = etat.unites.filter((u) => {
-    const tu = cat.unites[u.type];
-    return u.camp !== camp && tu !== undefined && porte(tu, 'drone');
-  }).length;
-  return dronesAdverses > 0 && brouilleurs === 0 ? 0.12 : 0;
+  if (bloqueArmee && !(besoinReel && !combatImminent(etat, cat, camp))) return 0;
+  const brute = Math.max(sansArmee ? valeurTransport / 2 : valeurTransport, sansArmee ? 0 : valeurRavitailleur);
+  return brute / (1 + perdus);
 }
 
 /**
- * Score d'achat d'un type d'unité : ce qu'il inflige au mix adverse, multiplié
- * par ce qu'il encaisse de ce même mix, rapporté au millier de fonds — puis
- * corrigé par la météo annoncée (§12.7) et par ce que le camp possède déjà.
- * C'est ce dernier terme qui empêche une armée d'un seul modèle. Une unité qui
- * ne tire pas vaut par `valeurSoutien`, si l'on sait pour quel camp on achète.
+ * Ce qu'un achat **contre** : la part des menaces adverses — présentes et en
+ * puissance — que l'armée du camp ne couvre pas encore et que ce type
+ * couvrirait. Une menace est couverte quand l'armée aligne, en unités qui la
+ * frappent à `COUVERTURE_MIN` ou plus, de quoi la mettre hors jeu une fois par
+ * exemplaire ; en deçà, la lacune se paie au prix de la menace. Rendu en
+ * milliers de fonds de menace nouvellement couverte : un bombardier adverse à
+ * 18 000 que rien ne touche vaut 18 à qui le frappe à 100.
+ */
+export function contreAchat(
+  cat: Catalogue, cle: CleUnite, menaces: Record<CleUnite, number>, mienne: Record<CleUnite, number>,
+): number {
+  let total = 0;
+  for (const [adverse, poids] of Object.entries(menaces)) {
+    if (poids <= 0 || !estArmee(cat, adverse)) continue;
+    const apport = degatsBase(cat, cle, adverse);
+    if (apport < COUVERTURE_MIN) continue;
+    let capacite = 0;
+    for (const [mien, n] of Object.entries(mienne)) {
+      const d = degatsBase(cat, mien, adverse);
+      if (d >= COUVERTURE_MIN) capacite += (n * d) / 100;
+    }
+    const lacune = Math.max(0, 1 - capacite / poids);
+    if (lacune <= 0) continue;
+    total += (apport / 100) * lacune * poids * ((cat.unites[adverse]?.cout ?? 0) / 1000);
+  }
+  return total;
+}
+
+/** Ce que `scoreAchat` reçoit pour compter ce qu'un achat contre. */
+export interface Contre {
+  /** Menaces à couvrir : adversaires connus **et** ce qu'ils peuvent produire. */
+  menaces: Record<CleUnite, number>;
+  /** Poids du terme (`Poids.contre`). */
+  poids: number;
+}
+
+/**
+ * Score d'achat d'un type d'unité : ce qu'il inflige au mix adverse connu,
+ * multiplié par ce qu'il encaisse de ce même mix, rapporté au millier de fonds —
+ * puis corrigé par la météo annoncée (§12.7) et par ce que le camp possède déjà.
+ * C'est ce dernier terme qui empêche une armée d'un seul modèle. S'y ajoute,
+ * quand on le lui donne, ce que l'achat **contre** (`contreAchat`) : c'est lui
+ * qui rend achetable un chasseur ou un lance-missiles face à un aéroport
+ * adverse, quand la moyenne sur le mix ne les verrait jamais. Sans adversaire
+ * connu, le mix est ce que l'adversaire peut produire, puis tout le catalogue.
+ * Une unité qui ne tire pas vaut par `valeurSoutien`, si l'on sait pour quel
+ * camp on achète.
  */
 export function scoreAchat(
   etat: EtatPartie, cat: Catalogue, cle: CleUnite,
   mix: Record<CleUnite, number>, mienne: Record<CleUnite, number>,
-  manqueCapteurs: boolean, camp?: CampId,
+  manqueCapteurs: boolean, camp?: CampId, contre?: Contre,
 ): number {
   const t = cat.unites[cle];
   if (!t || t.statut === 'retiree') return -1;
   if (!estArmee(cat, cle)) return camp === undefined ? 0 : valeurSoutien(etat, cat, cle, camp);
-  const adverses = Object.entries(mix);
+  let adverses = Object.entries(mix).filter(([, n]) => n > 0);
+  if (adverses.length === 0 && contre) adverses = Object.entries(contre.menaces).filter(([, n]) => n > 0);
   let offensif = 0;
   let subi = 0;
   let poids = 0;
@@ -390,7 +584,9 @@ export function scoreAchat(
   offensif /= Math.max(1, poids);
   subi /= Math.max(1, poids);
   const survie = 100 / Math.max(20, subi);
-  let score = (offensif * survie) / 100 / (Math.max(100, t.cout) / 1000);
+  const parMillier = Math.max(100, t.cout) / 1000;
+  let score = (offensif * survie) / 100 / parMillier;
+  if (contre) score += (contre.poids * contreAchat(cat, cle, contre.menaces, mienne)) / parMillier;
   // Diversité : chaque exemplaire déjà en jeu rend le suivant moins intéressant.
   score /= 1 + (mienne[cle] ?? 0) / 2;
   if (manqueCapteurs && porte(t, 'capture')) score *= 3;
@@ -402,3 +598,6 @@ export function scoreAchat(
   if (annonces.includes('canicule') && t.domaine === 'terre' && t.cout >= 7000) score *= 0.8;
   return score;
 }
+
+/** Bâtiments qui ravitaillent un domaine, réexporté pour les stratégies. */
+export { batimentsRavitaillant };

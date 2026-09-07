@@ -19,6 +19,7 @@ import {
   encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc, type VueBanc,
 } from '../../src/app/atelier/banc';
 import { genererCarte } from '../../src/mapgen/index';
+import { chargerCatalogueUnites } from '../../src/content/index';
 import scenarioDemo from '../../content/scenarios/demo.json';
 
 const CAT = chargerCatalogue(VERSION_CATALOGUE_BANC);
@@ -42,9 +43,12 @@ test('le banc force le catalogue qui porte toutes ses unités', () => {
   // Et le catalogue forcé, lui, les porte toutes.
   const complet = chargerCatalogue(VERSION_CATALOGUE_BANC);
   for (const u of UNITES_BANC) assert.ok(complet.unites[u], `unité absente du catalogue du banc : ${u}`);
+  // Le banc suit le **dernier** catalogue, celui de `content/unites.json` : une
+  // homologation qui le laisserait en arrière ne serait jamais regardée.
+  assert.equal(VERSION_CATALOGUE_BANC, chargerCatalogueUnites().catalogueVersion, 'le banc est en retard sur le canon');
 });
 
-test('l’état du banc porte bien les quarante-six unités posées', () => {
+test('l’état du banc porte bien les quarante-huit unités posées', () => {
   const e = etatBanc();
   assert.equal(e.unites.length, UNITES_BANC.length * 2, 'une unité perdue au montage');
   for (const camp of [0, 1] as const) {
@@ -53,11 +57,10 @@ test('l’état du banc porte bien les quarante-six unités posées', () => {
   }
 });
 
-// Au catalogue 5, la carte-catalogue pose vingt-trois unités par camp, soit
-// quarante-six. `validerMapDef` plafonne `unitesDepart` à quarante
-// (`src/schemas/valider.ts`, `doc/03-schemas.md` §5) : ce plafond a été écrit
-// pour une carte de mission, pas pour un catalogue, et il doit monter à soixante
-// — c'est la seule chose qui manque pour que ce test repasse.
+// Au catalogue 6, la carte-catalogue pose vingt-quatre unités par camp, soit
+// quarante-huit. `validerMapDef` plafonne `unitesDepart` à soixante
+// (`src/schemas/valider.ts`, `doc/03-schemas.md` §5) — il était à quarante,
+// écrit pour une carte de mission, et c'est ce test qui l'a fait monter.
 test('la carte-catalogue est une carte valide, pas un objet bricolé', () => {
   const r = validerMapDef(carteBanc());
   assert.ok(r.ok, `carte du banc invalide : ${JSON.stringify(r.ok ? [] : r.erreurs)}`);

@@ -154,6 +154,8 @@ Les unités de mer (transport, patrouilleur, croiseur, sous-marin au minimum), l
 
 Fini quand : les huit pays maritimes et les six régions concernées jouent leur spécialité complète, et aucune carte certifiée avant le paquet n'a changé de verdict.
 
+> **Entamée le 7 septembre 2026.** Le catalogue 5 a ouvert la mer (`04-gameplay.md` §10 quater) : barge, porte-avions, cuirassé, sous-marin, le terrain `port` (caractère `O`), le trait `plongee`, deux cartes de jeu libre. Le catalogue 6 (§10 quinquies) ajoute le chasseur furtif, la cale ravitaillée du porte-avions et le débarquement en un ordre, et le générateur sait poser des ports (`portsParCamp`). Restent le récif et la haute mer, les mécaniques régionales maritimes, et les spécialités des pays et régions.
+
 ## Étape 12 — Finition et lancement
 
 Son et musique, animations de pouvoirs, second passage tactile, accessibilité (clavier complet, contrastes, taille de texte), performance sur téléphone d'entrée de gamme, sauvegarde robuste, pages publiques, SEO, sauvegardes de base et restauration testée une fois.

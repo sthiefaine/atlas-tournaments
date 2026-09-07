@@ -150,7 +150,7 @@
       "texte": "Jeu libre",
       "contexte": {
         "ecran": "accueil",
-        "note": "Deuxième bouton : une manche de démonstration, hors campagne."
+        "note": "Deuxième bouton : la liste des parties libres (la démo et les cartes navales), hors campagne."
       },
       "longueurMax": 20
     },
@@ -2955,6 +2955,268 @@
       "contexte": {
         "ecran": "jeu",
         "note": "Bouton de caméra : un quart de tour autour de la carte. Interface tactile mobile."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.se_cacher",
+      "texte": "Se cacher",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres, unité au trait `furtif` visible : passe en furtivité — repérée au contact seulement, surcoût de carburant par tour (04 §13.2, catalogue 6)."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.se_montrer",
+      "texte": "Se montrer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres, unité au trait `furtif` déjà furtive : lève la furtivité."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.furtive",
+      "texte": "Furtive",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d’unité : l’unité est en furtivité, repérée au contact seulement. « Unité » est féminin en français ; accorder au genre du mot dans la langue cible."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.furtivite_activee",
+      "texte": "{unite} se cache : repérée au contact seulement",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce éphémère après l’ordre Se cacher. Nom court de l’unité."
+      },
+      "longueurMax": 56
+    },
+    {
+      "cle": "hud.furtivite_levee",
+      "texte": "{unite} se montre de nouveau",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce éphémère après l’ordre Se montrer. Nom court de l’unité."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.debarquer_unite",
+      "texte": "Débarquer {unite}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres d’un transport : poser ce passager sur une case voisine. Une entrée par passager ; nom de l’unité."
+      },
+      "longueurMax": 32
+    },
+    {
+      "cle": "hud.debarquer_aussi",
+      "texte": "Débarquer aussi {unite}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres après un premier débarquement : poser aussi ce passager dans le même ordre. Nom de l’unité."
+      },
+      "longueurMax": 36
+    },
+    {
+      "cle": "hud.terminer",
+      "texte": "Terminer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Menu d’ordres après un premier débarquement : l’ordre part tel qu’il est composé, le passager restant reste à bord."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.transport",
+      "texte": "Cale",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Titre du bloc de la fiche d’un transport : places, unités acceptées, ravitaillement de la cale."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "fiche.places",
+      "texte": "{\"one\":\"{n} place\",\"other\":\"{n} places\"}",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Fiche d’un transport : le nombre de places de la cale. Catégories de pluriel ; « 1 place », « 2 places »."
+      },
+      "longueurMax": 48,
+      "pluriel": true
+    },
+    {
+      "cle": "fiche.ravitaille_cale",
+      "texte": "Ravitaille sa cale à chaque tour",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Fiche d’un transport dont `transport.ravitaille` est vrai : ce qu’il porte est remis au plein à chaque début de tour."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "fiche.par_tour",
+      "texte": "{n} par tour",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Fiche d’unité : carburant brûlé par tour, immobile (unité aérienne). Précédé du signe du carburant."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "fiche.par_tour_furtif",
+      "texte": "{n} par tour, furtive",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Fiche d’une unité au trait `furtif` : ce qu’elle brûle par tour une fois cachée. « Unité » est féminin en français."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "trait.furtif",
+      "texte": "Furtif",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2, catalogue 6), fiche d’unité : peut se cacher, repérée au contact seulement."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "refus.furtivite_impossible",
+      "texte": "Cette unité ne sait pas se cacher",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce après un refus du moteur : l’unité n’a pas le trait `furtif`."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "refus.debarquement_impossible",
+      "texte": "Débarquement impossible : case occupée ou infranchissable",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce après un refus du moteur : la case de débarquement n’est pas voisine, libre et franchissable par le passager."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "jeu_libre.surtitre",
+      "texte": "Atlas Tournament · Parties libres",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Surtitre de la page /jeu, au-dessus du titre « Jeu libre »."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "jeu_libre.liste",
+      "texte": "Parties libres",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Nom de la liste des parties pour un lecteur d'écran. Jamais affiché."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "jeu_libre.taille",
+      "texte": "{largeur} × {hauteur}",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Taille de la carte, en cases. Pastille de la fiche d'une partie."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "jeu_libre.catalogue",
+      "texte": "Catalogue {n}",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Version du catalogue d'unités jouée. Surtitre de la fiche d'une partie, avec le biome."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "jeu_libre.camps",
+      "texte": "{n} camps",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Nombre de camps de la carte, toujours deux au moins. Pastille de la fiche d'une partie."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "jeu_libre.adversaire",
+      "texte": "Face à {nom}",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Le commandant adverse, par son nom. Pastille de la fiche d'une partie."
+      },
+      "longueurMax": 36
+    },
+    {
+      "cle": "jeu_libre.journees",
+      "texte": "{n} journées au plus",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Limite de journées du scénario. Pastille de la fiche d'une partie."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "jeu_libre.en_cours",
+      "texte": "Partie en cours",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Badge sur la fiche d'une partie dont ce navigateur garde une sauvegarde reprenable. Rendu par le client seulement."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "jeu_libre.sauvegarde",
+      "texte": "Une partie commencée se reprend depuis ce navigateur, sur le profil actif.",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Note de pied de la page /jeu : le jeu libre n'a pas de progression, mais une partie en cours est gardée."
+      },
+      "longueurMax": 90
+    },
+    {
+      "cle": "accueil.version",
+      "texte": "{date} · {commit}",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Mention de version en bas à droite : date et heure de la mise en ligne (heure de Paris), puis le début du commit. Discrète, jamais un mot de plus — tranché le 7 septembre 2026."
+      },
+      "longueurMax": 32
+    },
+    {
+      "cle": "accueil.version_sans_commit",
+      "texte": "{date}",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "La même mention quand le build ne connaît pas son commit."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "reglages.version",
+      "texte": "Mise en ligne du {date} · {commit}",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "En pied des réglages : la version complète, pour la citer dans un signalement."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "reglages.version_sans_commit",
+      "texte": "Mise en ligne du {date}",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "La même, sans commit connu."
       },
       "longueurMax": 40
     }

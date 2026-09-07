@@ -28,20 +28,30 @@ export interface ProfilBiome {
   ratioMer: number;
   densiteRoutes: number;
   villesParCamp: number;
+  /**
+   * Ports par camp que le biome **recommande** (7 septembre 2026) : un sur les
+   * biomes côtier et insulaire, zéro ailleurs. C'est un preset pour qui compose
+   * des paramètres à partir d'un biome (atelier, routine) ; `normaliser` ne
+   * l'applique **pas** à un champ absent, parce que le schéma dit « absent = 0 »
+   * et qu'une carte enregistrée sans le champ doit se régénérer à l'identique.
+   */
+  portsParCamp: number;
+  /** Stations radar par camp recommandées : aucun biome n'en réclame par défaut. */
+  radarsParCamp: number;
 }
 
 /** Les valeurs servent de défauts : une mission peut préciser sa propre topologie. */
 export const PROFILS_BIOME: Record<Biome, ProfilBiome> = {
-  plaine: { description: 'Routes rapides, haies protectrices : choisir entre vitesse et couverture.', ratioRelief: .18, ratioMer: 0, densiteRoutes: .8, villesParCamp: 3 },
-  foret: { description: 'Les lisières cachent les unités sous brouillard ; la reconnaissance ouvre la marche.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .3, villesParCamp: 3 },
-  montagne: { description: 'Les hauteurs donnent +2 de vision. Les véhicules empruntent les cols ; le génie ouvre des routes.', ratioRelief: .4, ratioMer: 0, densiteRoutes: .25, villesParCamp: 2 },
-  desert: { description: 'Sables sans couverture et bases rares : protéger les transports de ravitaillement.', ratioRelief: .12, ratioMer: 0, densiteRoutes: .2, villesParCamp: 2 },
-  jungle: { description: 'Forêts denses et rivières : reconnaître les berges et sécuriser les ponts avant les blindés.', ratioRelief: .4, ratioMer: .1, densiteRoutes: .1, villesParCamp: 2 },
-  neige: { description: 'Reliefs et longs détours : conserver les routes et les bases de soutien. Le gel dépend de la saison.', ratioRelief: .3, ratioMer: .05, densiteRoutes: .15, villesParCamp: 2 },
-  volcanique: { description: 'Crêtes sans forêt : les couloirs exposés favorisent le contrôle des cols et le génie.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .1, villesParCamp: 2 },
-  cotier: { description: 'La grève ouvre à marée basse puis se referme : coordonner la traversée sur deux journées.', ratioRelief: .15, ratioMer: .35, densiteRoutes: .5, villesParCamp: 3 },
-  archipel: { description: 'Terres étroites reliées par passages : contrôler les accès et profiter des marées.', ratioRelief: .1, ratioMer: .55, densiteRoutes: .15, villesParCamp: 2 },
-  marais: { description: 'Rivières et couvert fragmenté canalisent les véhicules : construire les traversées utiles.', ratioRelief: .3, ratioMer: .25, densiteRoutes: .1, villesParCamp: 2 },
+  plaine: { description: 'Routes rapides, haies protectrices : choisir entre vitesse et couverture.', ratioRelief: .18, ratioMer: 0, densiteRoutes: .8, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0 },
+  foret: { description: 'Les lisières cachent les unités sous brouillard ; la reconnaissance ouvre la marche.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .3, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0 },
+  montagne: { description: 'Les hauteurs donnent +2 de vision. Les véhicules empruntent les cols ; le génie ouvre des routes.', ratioRelief: .4, ratioMer: 0, densiteRoutes: .25, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  desert: { description: 'Sables sans couverture et bases rares : protéger les transports de ravitaillement.', ratioRelief: .12, ratioMer: 0, densiteRoutes: .2, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  jungle: { description: 'Forêts denses et rivières : reconnaître les berges et sécuriser les ponts avant les blindés.', ratioRelief: .4, ratioMer: .1, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  neige: { description: 'Reliefs et longs détours : conserver les routes et les bases de soutien. Le gel dépend de la saison.', ratioRelief: .3, ratioMer: .05, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  volcanique: { description: 'Crêtes sans forêt : les couloirs exposés favorisent le contrôle des cols et le génie.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  cotier: { description: 'La grève ouvre à marée basse puis se referme : coordonner la traversée sur deux journées.', ratioRelief: .15, ratioMer: .35, densiteRoutes: .5, villesParCamp: 3, portsParCamp: 1, radarsParCamp: 0 },
+  archipel: { description: 'Terres étroites reliées par passages : contrôler les accès et profiter des marées.', ratioRelief: .1, ratioMer: .55, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 1, radarsParCamp: 0 },
+  marais: { description: 'Rivières et couvert fragmenté canalisent les véhicules : construire les traversées utiles.', ratioRelief: .3, ratioMer: .25, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
 };
 
 const REGLAGES: Record<Biome, ReglagesBiome> = {
@@ -66,6 +76,9 @@ export function reglagesDe(biome: Biome): ReglagesBiome {
 export interface ParametresNormalises extends ParametresCarte {
   biome: Biome;
   symetrie: Symetrie;
+  /** Toujours présents une fois normalisés : le générateur ne relit jamais un champ absent. */
+  portsParCamp: number;
+  radarsParCamp: number;
   /** Ratio de mer réellement applicable après réservation de la place au bâti. */
   ratioMerEffectif: number;
 }
@@ -97,23 +110,40 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
   let villesNeutres = bornerEntier(p.villesNeutres, 0, 12, 0);
   let usinesParCamp = bornerEntier(p.usinesParCamp, 1, 3, 1);
   let aeroportsParCamp = bornerEntier(p.aeroportsParCamp, 0, 2, 0);
+  // Ports et radars (7 septembre 2026) : facultatifs, absents = 0 — c'est le
+  // contrat du schéma, et ce qui garde identiques les cartes générées avant eux.
+  let portsParCamp = bornerEntier(p.portsParCamp, 0, 2, 0);
+  let radarsParCamp = bornerEntier(p.radarsParCamp, 0, 2, 0);
+
+  const ratioMer = borner(p.ratioMer, 0, 0.6, profil.ratioMer);
+  // Un port sans mer n'est pas un port : sur un biome sans mer, on ramène les
+  // ports à zéro plutôt que de refuser. La correction est visible dans les
+  // paramètres recopiés sur la carte (`generation.parametres.portsParCamp`),
+  // et `mesurer` publie `ports_par_camp` — il n'existe pas d'autre mécanisme
+  // d'avertissement dans une `MapDef`.
+  if (ratioMer <= 0) portsParCamp = 0;
 
   // Le groupe de symétrie duplique le bâti d'un camp autant de fois qu'il a
   // d'éléments : à trois camps, le quatrième quadrant existe quand même, neutre.
   const orbites = camps >= 3 ? 4 : 2;
   const total = largeur * hauteur;
   const place = (): number =>
-    orbites * (1 + villesParCamp + usinesParCamp + aeroportsParCamp) * 3 + villesNeutres * 3 + 8;
+    orbites * (1 + villesParCamp + usinesParCamp + aeroportsParCamp + portsParCamp + radarsParCamp) * 3
+    + villesNeutres * 3 + 8;
+  // Une carte à ports met la mer en ceinture (`relief.ts`) : le pourtour n'est
+  // plus constructible, la surface qui reste au bâti est celle de l'intérieur.
+  const surface = (): number => total - (portsParCamp > 0 ? 2 * (largeur + hauteur) - 4 : 0);
 
-  while (place() > total) {
+  while (place() > surface()) {
     if (villesParCamp > 2) villesParCamp -= 1;
     else if (villesNeutres > 0) villesNeutres -= 1;
+    else if (radarsParCamp > 0) radarsParCamp -= 1;
+    else if (portsParCamp > 0) portsParCamp -= 1;
     else if (aeroportsParCamp > 0) aeroportsParCamp -= 1;
     else if (usinesParCamp > 1) usinesParCamp -= 1;
     else break;
   }
 
-  const ratioMer = borner(p.ratioMer, 0, 0.6, profil.ratioMer);
   const ratioMerMax = Math.max(0, 1 - place() / total);
   const parametres: ParametresNormalises = {
     largeur,
@@ -126,6 +156,8 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
     villesNeutres,
     usinesParCamp,
     aeroportsParCamp,
+    portsParCamp,
+    radarsParCamp,
     symetrie,
     densiteRoutes: borner(p.densiteRoutes, 0, 1, profil.densiteRoutes),
     ratioMerEffectif: Math.min(ratioMer, ratioMerMax),
@@ -148,6 +180,8 @@ export function versParametresCarte(p: ParametresNormalises): ParametresCarte {
     villesNeutres: p.villesNeutres,
     usinesParCamp: p.usinesParCamp,
     aeroportsParCamp: p.aeroportsParCamp,
+    portsParCamp: p.portsParCamp,
+    radarsParCamp: p.radarsParCamp,
     symetrie: p.symetrie,
     densiteRoutes: p.densiteRoutes,
   };

@@ -24,7 +24,7 @@ import type {
 } from '../engine/index';
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
-  creerPartie, rejouer, sceneDepuis, terrainLogique, uniteParId, VERSION_MOTEUR,
+  creerPartie, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues, VERSION_MOTEUR,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
@@ -471,6 +471,15 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         const cible = uniteParId(etat, e.cibleId);
         if (cible && seVoit(cible)) poserAnnonce(t('hud.ravitaillement', { unite: nomCourtUnite(locale, cat, cible.type) }));
       }
+      // Se cacher, se montrer : le voile se voit à peine, et ce qu'il change —
+      // repérée au contact seulement, un surcoût de carburant — ne se voit pas
+      // du tout. Une furtive adverse hors contact n'est pas racontée.
+      if (e.type === 'furtivite') {
+        const u = uniteParId(etat, e.uniteId);
+        if (u && seVoit(u)) {
+          poserAnnonce(t(e.furtive ? 'hud.furtivite_activee' : 'hud.furtivite_levee', { unite: nomCourtUnite(locale, cat, u.type) }));
+        }
+      }
       if (e.type === 'production_revelee' && e.camp === 0) {
         const liste = Object.entries(e.produites)
           .map(([cle, n]) => `${n} ${nomCourtUnite(locale, cat, cle)}`)
@@ -598,6 +607,17 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   }
 
   /**
+   * Les unités que le joueur voit, par identifiant : la règle du moteur
+   * (`unitesVues`, mémoïsée par état), pas une lecture par case — une furtive
+   * hors contact ou une unité tapie en forêt sont sur une case éclairée et
+   * pourtant cachées. `null` sans brouillard.
+   */
+  function unitesVuesIds(): ReadonlySet<string> | null {
+    if (!brouillardActif(etat)) return null;
+    return new Set(unitesVues(etat, cat, camp).map((u) => u.id));
+  }
+
+  /**
    * La vue du contrôleur est un getter qui recompose surbrillances et enveloppe
    * de tir à chaque lecture, et trois lecteurs la demandent par rafraîchissement.
    * Pendant `rafraichir`, elle est calculée une fois et partagée.
@@ -617,6 +637,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       curseur: v.curseur,
       selection: v.selection,
       visibles: visibles(),
+      camp,
+      unitesVues: unitesVuesIds(),
       attenteIa,
       etiquetteQg: t('hud.qg'),
     };
@@ -636,6 +658,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       menu: v.menu,
       production: v.production,
       visee: v.visee,
+      unitesVues: unitesVuesIds(),
       attenteIa,
       annonce,
       masquerFin: options.finPersonnalisee,
@@ -703,7 +726,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     finTour: () => {
       if (!attenteIa) controleur.finTour();
     },
-    choisirSuite: (id) => controleur.choisirSuite(id),
+    choisirSuite: (id, passager) => controleur.choisirSuite(id, passager),
     choisirProduction: (cle: CleUnite) => controleur.choisirProduction(cle),
     jouerPouvoir: (niveau) => controleur.jouerPouvoir(niveau),
     annuler: () => controleur.annuler(),

@@ -147,6 +147,32 @@ function ailes(g: Pinceau, col: Palette): void {
   disque(g, -13.5, 6, 2.6, '#1b1e22');
 }
 
+/**
+ * Aile delta : la voilure d'un appareil sans queue ni dérive (`ailes` + `plateau`,
+ * catalogue 6). Le corps est fondu dans l'aile — une bosse basse, une verrière
+ * couchée —, les saumons prennent l'accent, et rien ne dépasse vers l'arrière :
+ * vu d'en haut, c'est un triangle, pas une croix, et c'est ce qui le distingue
+ * du chasseur à 64 px.
+ */
+function aileDelta(g: Pinceau, col: Palette): void {
+  ell(g, -3, 22, 19, 4, 'rgba(0,0,0,0.18)');
+  // La voilure : un delta, le nez à droite, le bord de fuite droit à gauche.
+  polygone(g, [[24, 2], [-20, -12], [-24, -4], [-24, 10], [-20, 16]], col.dark);
+  polygone(g, [[24, 2], [-20, 16], [-24, 10], [2, 6]], col.main);
+  // Les saumons, à l'accent : la seule marque de nation lisible d'en haut.
+  polygone(g, [[-20, -12], [-24, -4], [-16, -6]], col.light);
+  polygone(g, [[-20, 16], [-24, 10], [-16, 12]], col.light);
+  // Les élevons, sombres, sur le bord de fuite.
+  rrPlein(g, -24, -2, 3, 5, 1, '#2c3136');
+  rrPlein(g, -24, 8, 3, 5, 1, '#2c3136');
+  // La bosse du fuselage, fondue, et la verrière couchée juste derrière le nez.
+  ell(g, -2, 2, 16, 5, col.main);
+  ell(g, 9, 1, 5, 2.6, '#9ed6ff');
+  // Deux tuyères plates, enterrées dans le bord de fuite.
+  disque(g, -20, 0, 1.8, '#1b1e22');
+  disque(g, -20, 5, 1.8, '#1b1e22');
+}
+
 /** Rail : deux files et des traverses. */
 function rail(g: Pinceau): void {
   g.fillStyle = '#6b5a45';
@@ -595,13 +621,15 @@ export function dessinerSilhouette(
     case 'pattes': pattes(g, palette, equipementDe(modules)); break;
     case 'coque': coque(g, palette); break;
     case 'rotor': rotor(g, palette); break;
-    case 'ailes': ailes(g, palette); break;
+    // Une voilure au corps « plateau » est une aile delta : le corps y est fondu.
+    case 'ailes': if (corps === 'plateau') aileDelta(g, palette); else ailes(g, palette); break;
     case 'rail': rail(g); break;
     default: break;
   }
 
-  // Les pattes *sont* le corps : un groupe d'infanterie n'a pas de caisse.
-  if (base !== 'pattes') {
+  // Les pattes *sont* le corps : un groupe d'infanterie n'a pas de caisse ;
+  // l'aile delta a déjà dessiné le sien.
+  if (base !== 'pattes' && !(base === 'ailes' && corps === 'plateau')) {
     if (corps === 'bloc') bloc(g, palette);
     else if (corps === 'capsule') capsule(g, palette);
     else plateau(g, palette);

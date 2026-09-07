@@ -10,7 +10,7 @@
  * Ce sous-dossier n'importe que `schemas/` et `content/`, et ne touche pas au DOM.
  */
 
-import type { CampId, MapDef } from '../../schemas/types';
+import { CARACTERES_CAPTURABLES, type CampId, type MapDef } from '../../schemas/types';
 import {
   couleurHex, creerImage, disque, pixel, rectangle, triangle,
   type Image, type Rvb,
@@ -146,6 +146,21 @@ function batiment(image: Image, car: string, px: number, py: number, camp: CampI
       rectangle(image, px + 12, py + 1, 1, 4, COULEURS.trait);
       rectangle(image, px + 9, py + 1, 3, 2, couleur.main);
       break;
+    case 'O': // port : un quai sur l'eau, deux bittes, une grue
+      rectangle(image, px, py, t, t, COULEURS.eau);
+      rectangle(image, px + 1, py + 7, 14, 7, couleur.dark);
+      rectangle(image, px + 1, py + 6, 14, 2, couleur.main);
+      rectangle(image, px + 3, py + 9, 2, 2, couleur.light);
+      rectangle(image, px + 11, py + 9, 2, 2, couleur.light);
+      rectangle(image, px + 7, py + 2, 1, 5, COULEURS.trait);
+      rectangle(image, px + 7, py + 2, 5, 1, COULEURS.trait);
+      break;
+    case 'T': // station radar : un abri bas, un mât, une parabole
+      rectangle(image, px + 3, py + 9, 10, 5, couleur.dark);
+      rectangle(image, px + 3, py + 8, 10, 2, couleur.main);
+      rectangle(image, px + 7, py + 3, 2, 6, COULEURS.trait);
+      disque(image, px + 8, py + 4, 3, couleur.light);
+      break;
     default:
       break;
   }
@@ -178,7 +193,8 @@ export function rasteriserCarte(map: MapDef, options: OptionsRendu = {}): Image 
       const car = ligne[x] ?? 'W';
       const px = x * t;
       const py = y * t;
-      if (car === 'C' || car === 'U' || car === 'A' || car === 'H') {
+      // Dérivé du canon, jamais recopié : la liste à la main taisait le port et le radar.
+      if (CARACTERES_CAPTURABLES.includes(car)) {
         const proprietaire = map.proprietaires[`${x},${y}`];
         batiment(image, car, px, py, proprietaire === undefined ? null : proprietaire);
       } else {

@@ -18,7 +18,7 @@
  */
 
 import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
-import type { Case } from '../schemas/types';
+import type { CampId, Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
 import type { Partition } from './partition';
@@ -97,6 +97,19 @@ export interface VueInteraction {
   selection: string | null;
   /** Cases vues par le camp du joueur, ou `null` sans brouillard. */
   visibles: ReadonlySet<string> | null;
+  /**
+   * Le camp du joueur, s'il y en a un : c'est pour lui que ses unités furtives
+   * se voilent — l'adversaire qui en tient une au contact la voit entière.
+   * Absent — le banc, la vitrine —, toute furtive se voile.
+   */
+  camp?: CampId;
+  /**
+   * Les identifiants des unités que le joueur voit (`unitesVues` du moteur),
+   * `null` sans brouillard, absent : toutes. Une furtive adverse hors contact
+   * ou une unité tapie en forêt sont sur une case éclairée et pourtant
+   * cachées : la case ne suffit pas à dire ce qu'on dessine.
+   */
+  unitesVues?: ReadonlySet<string> | null;
   /** Vrai pendant que l'adversaire joue : les rendus se calment. */
   attenteIa: boolean;
   /** Étiquette du QG, déjà traduite : un rendu n'appelle jamais `t()`. */

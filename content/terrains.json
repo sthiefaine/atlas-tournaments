@@ -267,7 +267,8 @@
         "drone",
         "chasseur",
         "bombardier",
-        "transport_air"
+        "transport_air",
+        "furtif"
       ],
       "ravitaille": true,
       "soigne": 2,

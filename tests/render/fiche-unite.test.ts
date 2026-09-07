@@ -6,7 +6,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  chargerCatalogue, coutBase, degatsBase, surcoutMeteo, tireSansMunitions,
+  chargerCatalogue, consommationParTour, coutBase, degatsArme, degatsBase, porte, SURCOUT_CARBURANT_FURTIF,
+  surcoutMeteo, tireSansMunitions, type Unite,
 } from '../../src/engine/index';
 import {
   alerteCarburant, alerteMunitions, CITES, ficheUnite, PART_CARBURANT_FAIBLE, traitsLisibles,
@@ -212,4 +213,110 @@ test('l’alerte munitions : rouge à zéro, orange à la dernière, rien pour u
   const infanterie = CAT.unites['infanterie']!;
   assert.equal(infanterie.munitions, null);
   assert.equal(alerteMunitions(infanterie, null), null);
+});
+
+// ---------------------------------------------------------------------------
+// Catalogue 6 : la cale, la consommation, la furtivité, les dégâts effectifs
+// ---------------------------------------------------------------------------
+
+const CAT6 = chargerCatalogue(6);
+
+/** Une unité en jeu de ce type, au plein, telle que `creerPartie` la poserait. */
+function enJeu(cle: CleUnite, extra: Partial<Unite> = {}): Unite {
+  const type = CAT6.unites[cle]!;
+  return {
+    id: `u_${cle}`, camp: 0, type: cle, x: 0, y: 0, pv: 100, munitions: type.munitions,
+    carburant: type.carburant ? type.carburant.max : null, etat: 'prete', pointsCapture: 0, cargo: [],
+    dansTransport: null, ...extra,
+  };
+}
+
+test('la fiche dit la cale d’un transport — places, unités acceptées, ravitaillement — et rien pour les autres', () => {
+  for (const cle of Object.keys(CAT6.unites) as CleUnite[]) {
+    const u = CAT6.unites[cle]!;
+    const f = ficheUnite(CAT6, cle)!;
+    if (u.transport === null) {
+      assert.equal(f.transport, null, `${cle} n’a pas de cale`);
+      continue;
+    }
+    assert.ok(f.transport, `${cle} porte une cale`);
+    assert.equal(f.transport.places, u.transport.places);
+    assert.deepEqual([...f.transport.accepte], u.transport.accepte, `${cle} : les types acceptés sont ceux du canon`);
+    assert.equal(f.transport.ravitaille, u.transport.ravitaille === true);
+  }
+  // Ce que le canon dit aujourd'hui : le camion refait le plein de sa cale, la
+  // barge ne fait que porter. Si le canon change, la fiche suit — c'est le test
+  // qui le dira.
+  assert.equal(ficheUnite(CAT6, 'transport')!.transport?.ravitaille, true);
+  assert.equal(ficheUnite(CAT6, 'barge')!.transport?.ravitaille, false);
+  assert.ok((ficheUnite(CAT6, 'transport')!.transport?.places ?? 0) >= 1);
+});
+
+test('la consommation par tour vient du moteur : celle du type, celle de l’unité en jeu, celle de la furtivité', () => {
+  const furtif = CAT6.unites['furtif']!;
+  assert.ok(furtif.carburant && furtif.carburant.parTour > 0 && porte(furtif, 'furtif'), 'le chasseur furtif consomme par tour et sait se cacher');
+  const f = ficheUnite(CAT6, 'furtif')!;
+  assert.equal(f.consommationParTour, furtif.carburant!.parTour, 'au catalogue, le chiffre du type');
+  assert.equal(f.consommationFurtive, furtif.carburant!.parTour + SURCOUT_CARBURANT_FURTIF, 'et ce que coûte de se cacher');
+  assert.ok(traitsLisibles(furtif.traits).includes('furtif'), 'le trait est dit en clair');
+
+  // En jeu et furtive : la consommation effective est la sienne, lue au moteur.
+  const cachee = enJeu('furtif', { furtive: true });
+  const g = ficheUnite(CAT6, 'furtif', cachee)!;
+  assert.equal(g.consommationParTour, consommationParTour(furtif, cachee));
+  assert.ok(g.consommationParTour > f.consommationParTour, 'une furtive brûle davantage');
+  assert.equal(g.consommationFurtive, f.consommationFurtive);
+
+  // Une unité d'un autre type passée par erreur ne change rien à la fiche.
+  const autre = ficheUnite(CAT6, 'furtif', enJeu('helico'))!;
+  assert.equal(autre.consommationParTour, f.consommationParTour);
+
+  // Ce qui ne consomme pas par tour dit 0, et n'a pas de coût de furtivité.
+  for (const cle of ['char_leger', 'infanterie'] as const) {
+    const h = ficheUnite(CAT6, cle)!;
+    assert.equal(h.consommationParTour, 0, `${cle} ne brûle rien immobile`);
+    assert.equal(h.consommationFurtive, null);
+  }
+  const chasseur = ficheUnite(CAT6, 'chasseur')!;
+  assert.equal(chasseur.consommationParTour, CAT6.unites['chasseur']!.carburant!.parTour);
+  assert.equal(chasseur.consommationFurtive, null, 'un chasseur ordinaire ne sait pas se cacher');
+});
+
+test('une unité en jeu à sec frappe avec sa mitrailleuse : la fiche lit degatsArme, le catalogue la valeur pleine', () => {
+  const char = CAT6.unites['char_leger']!;
+  assert.ok(char.munitions !== null && (char.degatsSecondaire ?? 0) > 0, 'le char léger a une mitrailleuse à sec');
+  const aSec = enJeu('char_leger', { munitions: 0 });
+  const pleine = ficheUnite(CAT6, 'char_leger')!;
+  const effective = ficheUnite(CAT6, 'char_leger', aSec)!;
+  for (const d of effective.forte) {
+    assert.equal(d.degats, degatsArme(CAT6, aSec, d.unite), `${d.unite} : la valeur effective`);
+    assert.equal(d.sansMunitions, tireSansMunitions(char, d.unite), 'la pastille dit toujours l’arme, pas le chiffre');
+  }
+  for (const d of pleine.forte) assert.equal(d.degats, degatsBase(CAT6, 'char_leger', d.unite));
+  // Contre un blindé, non listé à l'arme secondaire, le chiffre tombe à la mitrailleuse.
+  assert.ok(degatsArme(CAT6, aSec, 'char_leger') < degatsBase(CAT6, 'char_leger', 'char_leger'));
+  const contreChar = effective.forte.find((d) => d.unite === 'char_leger');
+  if (contreChar) assert.equal(contreChar.degats, char.degatsSecondaire);
+  // Ce qui la frappe ne dépend pas de ses munitions à elle.
+  assert.deepEqual(effective.craint, pleine.craint);
+  // Au plein, la fiche en jeu dit la même chose que le catalogue.
+  assert.deepEqual(ficheUnite(CAT6, 'char_leger', enJeu('char_leger'))!.forte, pleine.forte);
+});
+
+test('l’alerte carburant se juge sur la consommation effective : une furtive a un tour de moins', () => {
+  const furtif = CAT6.unites['furtif']!;
+  const parTour = furtif.carburant!.parTour;
+  const furtive = consommationParTour(furtif, enJeu('furtif', { furtive: true }));
+  assert.ok(furtive > parTour);
+  // Sans consommation donnée, c'est celle du type : deux tours pleins, rien à dire.
+  assert.equal(alerteCarburant(furtif, 2 * parTour), null);
+  assert.equal(alerteCarburant(furtif, 2 * parTour, parTour), null);
+  // Le même carburant, furtive : il ne couvre plus deux tours.
+  assert.equal(alerteCarburant(furtif, 2 * parTour, furtive), 'orange');
+  assert.equal(alerteCarburant(furtif, furtive, furtive), 'rouge', 'panne au prochain début de tour');
+  assert.equal(alerteCarburant(furtif, furtive, parTour), 'orange', 'visible, le même chiffre tient encore un tour');
+  // Une unité qui ne consomme qu'en roulant ignore l'argument : la règle du plein reste.
+  const char = CAT6.unites['char_leger']!;
+  assert.equal(alerteCarburant(char, char.carburant!.max, 0), null);
+  assert.equal(alerteCarburant(char, 0, 0), 'rouge');
 });

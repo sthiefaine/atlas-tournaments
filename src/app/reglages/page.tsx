@@ -1,4 +1,5 @@
 import { t } from '@/i18n/index';
+import { libelleVersion, versionBuild } from '../version';
 import Reglages from './reglages';
 
 /**
@@ -56,5 +57,6 @@ export default function PageReglages(): React.ReactElement {
     efface: t(locale, 'reglages.efface'),
     effaceBilan: t(locale, 'reglages.efface_bilan'),
     effaceKo: t(locale, 'reglages.efface_ko'),
+    version: libelleVersion(locale, 'reglages', versionBuild()),
   }} />;
 }

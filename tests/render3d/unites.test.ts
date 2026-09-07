@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { chargerCatalogue } from '../../src/engine/index';
+import { chargerCatalogue, creerPartie } from '../../src/engine/index';
 import { NIVEAU_EAU } from '../../src/render3d/geometrie';
 import * as THREE from 'three';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
@@ -8,11 +8,11 @@ import {
   conformerModele, couleurMasquee, definirMasque, masqueDe, NOM_FIGURINE, type ModeleCharge,
 } from '../../src/render3d/modeles';
 import {
-  Materiaux, OPACITE_JOUEE, OPACITE_VERRE, construirePlaceholder, creerUnites, geometriesSilhouette,
-  materiauxPropresDe,
+  Materiaux, OPACITE_FURTIVE, OPACITE_JOUEE, OPACITE_VERRE, construirePlaceholder, creerUnites, geometriesSilhouette,
+  materiauxPropresDe, type VisionRendu,
 } from '../../src/render3d/unites';
 
-import { partiePersonnalisee } from '../engine/aides';
+import { partiePersonnalisee, scenePersonnalisee } from '../engine/aides';
 
 const cat = chargerCatalogue();
 
@@ -735,5 +735,145 @@ test('ce qui repose sur le sol se repose avec lui : une mutation de terrain repo
   calque.visuel(etat.unites[0]!.id).dx = 0.1;
   calque.maj(etat, cat, null);
   assert.ok(Math.abs(soldat.position.y - 0.9) < 1e-9);
+  calque.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Catalogue 6 : le voile de la furtivité, et ce que le joueur voit
+// ---------------------------------------------------------------------------
+
+const cat6 = chargerCatalogue(6);
+
+/** Deux chasseurs furtifs au contact, un par camp, sur une plaine. */
+function partieFurtive(): ReturnType<typeof partiePersonnalisee> {
+  return creerPartie(scenePersonnalisee(['PPPP', 'PPPP'], {}, [
+    { camp: 0, type: 'furtif', x: 0, y: 0 },
+    { camp: 1, type: 'furtif', x: 1, y: 0 },
+  ]), cat6, 'test');
+}
+
+/** Le matériau principal d'une pièce, et l'ombre de son maillage. */
+function principale(piece: THREE.Object3D): { materiau: THREE.MeshStandardMaterial; ombre: boolean } {
+  const maille = piece.getObjectByName('silhouette_principal') as THREE.Mesh;
+  assert.ok(maille, 'la silhouette a une pièce principale');
+  return { materiau: maille.material as THREE.MeshStandardMaterial, ombre: maille.castShadow };
+}
+
+test('une furtive du joueur se voile sans ombre, jouée en plus elle prend la plus faible opacité, et l’adversaire au contact la voit entière', () => {
+  const prete = partieFurtive();
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0);
+  const vision: VisionRendu = { camp: 0, unites: null };
+  assert.equal(calque.maj(prete, cat6, null, vision), true);
+  const [mien, sien] = calque.groupe.children as [THREE.Group, THREE.Group];
+  const corpsMien = mien.children[0]!;
+  const corpsSien = sien.children[0]!;
+  const reposMien = principale(corpsMien);
+  const reposSien = principale(corpsSien);
+  assert.equal(reposMien.ombre, true);
+  assert.equal(reposMien.materiau.transparent, false);
+
+  // Les deux se cachent : seule la mienne se voile — l'autre, je la tiens au contact.
+  const cachees = { ...prete, unites: prete.unites.map((u) => ({ ...u, furtive: true })) };
+  assert.equal(calque.maj(cachees, cat6, null, vision), true, 'l’ombre a changé : la scène est à redessiner');
+  const voilee = principale(corpsMien);
+  assert.notEqual(voilee.materiau, reposMien.materiau, 'un double, jamais l’original');
+  assert.equal(voilee.materiau.transparent, true);
+  assert.equal(voilee.materiau.opacity, OPACITE_FURTIVE);
+  assert.equal(voilee.materiau.depthWrite, true);
+  assert.equal(voilee.materiau.color.getHex(), reposMien.materiau.color.getHex(), 'même teinte : seule l’opacité parle');
+  assert.equal(voilee.ombre, false, 'la masse trahirait la transparence');
+  assert.equal(mien.userData['agie'], false, 'se cacher n’est pas avoir joué');
+  const vue = principale(corpsSien);
+  assert.equal(vue.materiau, reposSien.materiau, 'la furtive adverse vue au contact est entière');
+  assert.equal(vue.ombre, true);
+  assert.equal(calque.maj(cachees, cat6, null, vision), false, 'rien à refaire au second passage');
+  assert.equal(principale(corpsMien).materiau, voilee.materiau, 'le double est mémorisé');
+
+  // Jouée et furtive : la plus faible des deux opacités, et le cadenas de l'état joué.
+  const jouees = { ...cachees, unites: cachees.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
+  calque.maj(jouees, cat6, null, vision);
+  assert.equal(principale(corpsMien).materiau.opacity, Math.min(OPACITE_JOUEE, OPACITE_FURTIVE));
+  assert.equal(mien.userData['agie'], true);
+  assert.equal(principale(corpsSien).materiau, reposSien.materiau, 'l’adversaire qui a joué n’est pas du camp courant : rien');
+
+  // Jouée sans être furtive : l'opacité de l'état joué, comme avant.
+  const seulementJouees = { ...prete, unites: prete.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
+  calque.maj(seulementJouees, cat6, null, vision);
+  assert.equal(principale(corpsMien).materiau.opacity, OPACITE_JOUEE);
+
+  // Le retour : l'objet même, l'ombre rendue.
+  assert.equal(calque.maj(prete, cat6, null, vision), true);
+  assert.equal(principale(corpsMien).materiau, reposMien.materiau, 'retour à l’identique');
+  assert.equal(principale(corpsMien).ombre, true);
+
+  // Sans vision — le banc, la vitrine —, toute furtive se voile.
+  calque.maj(cachees, cat6, null);
+  assert.equal(principale(corpsMien).materiau.opacity, OPACITE_FURTIVE);
+  assert.equal(principale(corpsSien).materiau.opacity, OPACITE_FURTIVE);
+  calque.dispose();
+});
+
+test('le fondu du voile règle des doubles propres à l’unité, puis rend les doubles partagés', () => {
+  const prete = partieFurtive();
+  const cachee = { ...prete, unites: prete.unites.map((u) => (u.camp === 0 ? { ...u, furtive: true } : u)) };
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0);
+  const vision: VisionRendu = { camp: 0, unites: null };
+  calque.maj(cachee, cat6, null, vision);
+  const mien = calque.groupe.children[0]!;
+  const corps = mien.children[0]!;
+  const partage = principale(corps).materiau;
+  assert.equal(partage.opacity, OPACITE_FURTIVE);
+
+  // L'état dit furtive ; le geste retient le voile d'avant, puis le fait tomber.
+  const id = cachee.unites[0]!.id;
+  const v = calque.visuel(id);
+  v.voile = 0;
+  assert.equal(calque.maj(cachee, cat6, null, vision), true, 'entière de nouveau : l’ombre revient');
+  assert.equal(principale(corps).materiau.transparent, false, 'à voile nul, les matériaux de repos');
+  v.voile = 0.5;
+  assert.equal(calque.maj(cachee, cat6, null, vision), true, 'translucide : l’ombre s’éteint');
+  const fondu = principale(corps).materiau;
+  assert.notEqual(fondu, partage, 'un double à l’unité, pas celui du calque');
+  assert.ok(Math.abs(fondu.opacity - (1 - 0.5 * (1 - OPACITE_FURTIVE))) < 1e-9);
+  assert.equal(principale(corps).ombre, false);
+  v.voile = 0.75;
+  assert.equal(calque.maj(cachee, cat6, null, vision), false, 'régler l’opacité ne vaut pas une carte d’ombre');
+  assert.equal(principale(corps).materiau, fondu, 'le même double, réglé');
+  assert.ok(Math.abs(fondu.opacity - (1 - 0.75 * (1 - OPACITE_FURTIVE))) < 1e-9);
+
+  // Fini : l'état parle, et c'est le double partagé qui revient.
+  v.voile = null;
+  calque.maj(cachee, cat6, null, vision);
+  assert.equal(principale(corps).materiau, partage);
+
+  // Un voile poussé sur une furtive adverse ne change rien : elle est vue.
+  const sien = calque.groupe.children[1]!;
+  const reposSien = principale(sien.children[0]!).materiau;
+  calque.visuel(cachee.unites[1]!.id).voile = 0.5;
+  calque.maj(cachee, cat6, null, vision);
+  assert.equal(principale(sien.children[0]!).materiau, reposSien);
+  calque.dispose();
+});
+
+test('ce que le joueur ne voit pas n’est pas dessiné, même sur une case éclairée', () => {
+  const etat = partieFurtive();
+  const [mienne, sienne] = etat.unites.map((u) => u.id) as [string, string];
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0);
+  // Toutes les cases sont vues, mais la furtive adverse hors contact ne l'est pas.
+  const cases = new Set(['0,0', '1,0', '2,0', '3,0', '0,1', '1,1', '2,1', '3,1']);
+  calque.maj(etat, cat6, cases, { camp: 0, unites: new Set([mienne]) });
+  assert.equal(calque.groupe.children.length, 1, 'la mienne seule');
+  assert.equal(calque.positionDe(sienne), null);
+  // Elle revient dès qu'elle est vue, et disparaît de nouveau.
+  assert.equal(calque.maj(etat, cat6, cases, { camp: 0, unites: new Set([mienne, sienne]) }), true);
+  assert.equal(calque.groupe.children.length, 2);
+  assert.equal(calque.maj(etat, cat6, cases, { camp: 0, unites: new Set([mienne]) }), true);
+  assert.equal(calque.groupe.children.length, 1);
+  // `null` : tout est vu.
+  calque.maj(etat, cat6, cases, { camp: 0, unites: null });
+  assert.equal(calque.groupe.children.length, 2);
   calque.dispose();
 });

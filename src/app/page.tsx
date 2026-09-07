@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { t } from '@/i18n/index';
 import campagne from '../../content/campagne.json';
+import { libelleVersion, versionBuild } from './version';
 import { MenuCampagne, type Epreuve } from './menu-campagne';
 import { PlateauAccueil } from './plateau-accueil';
 import { Vitrine } from './vitrine';
@@ -38,6 +39,9 @@ export default function Accueil() {
   const locale = 'fr';
   const epreuves: Epreuve[] = campagne.missions.map((m) => ({ cle: m.scenarioCle, titre: m.titre }));
   const total = epreuves.length;
+  // La mention de version : calculée au build, vide si le build n'a rien laissé.
+  const version = versionBuild();
+  const mention = libelleVersion(locale, 'accueil', version);
 
   return <main className="atlas-accueil">
     <Vitrine><PlateauAccueil locale={locale} /></Vitrine>
@@ -71,7 +75,7 @@ export default function Accueil() {
         }}
       />
 
-      <Link className="menu-bouton" href="/jeu/demo">
+      <Link className="menu-bouton" href="/jeu">
         <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M4 8h5v8H4zM15 8h5v8h-5z" fill="currentColor" />
           <path d="M10.5 12h3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -110,5 +114,9 @@ export default function Accueil() {
         </Link>
       </div>
     </nav>
+
+    {mention !== '' && (
+      <p className="accueil-version" title={version.date ?? undefined}>{mention}</p>
+    )}
   </main>;
 }

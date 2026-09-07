@@ -27,6 +27,12 @@ export interface OptionMenu {
   /** Clé de chaîne, jamais un texte. */
   cle: string;
   disponible: boolean;
+  /**
+   * Pour un débarquement, l'unité de la cale que l'entrée pose : le HUD la
+   * nomme dans le libellé (`{unite}`) et la dessine, et la renvoie avec le
+   * choix. Absent pour tout autre ordre.
+   */
+  passager?: string;
 }
 
 /** Nom d'une unité : la clé i18n d'abord, le canon en dernier repli. */

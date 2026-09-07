@@ -98,7 +98,32 @@ function poserParOrbites(
   }
 }
 
-/** Passes 1 et 2 : mer, plages, montagnes, forêts. Renvoie l'altitude utilisée. */
+/** Distance d'une case au bord de la carte : 0 sur le pourtour. */
+function distanceAuBord(t: Toile, c: number): number {
+  const x = abscisse(t, c);
+  const y = ordonnee(t, c);
+  return Math.min(x, t.largeur - 1 - x, y, t.hauteur - 1 - y);
+}
+
+/** Les cases du pourtour de la carte, dans l'ordre de lecture. */
+export function anneauDuBord(t: Toile): number[] {
+  const total = t.largeur * t.hauteur;
+  const sortie: number[] = [];
+  for (let c = 0; c < total; c += 1) if (distanceAuBord(t, c) === 0) sortie.push(c);
+  return sortie;
+}
+
+/**
+ * Passes 1 et 2 : mer, plages, montagnes, forêts. Renvoie l'altitude utilisée.
+ *
+ * Des ports demandés (7 septembre 2026) changent la forme de la mer : elle
+ * **ceinture** la carte. Sans cela, le bruit seuillé laisse deux mers en miroir
+ * séparées par une terre qui touche les deux bords, et les chaussées qui
+ * relient les îles découpent le reste : les ports de deux camps ne partagent
+ * alors aucune mer, et une flotte ne rencontre jamais l'adversaire. Le pourtour
+ * est une composante unique, invariante par toute symétrie, à portée de tout
+ * QG — il est **imputé au budget** de mer, le bruit ne choisit que le reste.
+ */
 export function poserRelief(t: Toile, rng: Rng, p: ParametresNormalises): Float64Array {
   const reglages = reglagesDe(p.biome);
   const altitude = altitudes(t, rng.branche('altitude'), reglages.echelle);
@@ -107,8 +132,15 @@ export function poserRelief(t: Toile, rng: Rng, p: ParametresNormalises): Float6
   for (let c = 0; c < total; c += 1) toutes.push(c);
 
   // Mer : les altitudes les plus basses.
-  poserParOrbites(t, toutes, (c) => altitude[c] ?? 0,
-    Math.round(p.ratioMerEffectif * total), 'mer');
+  const budget = Math.round(p.ratioMerEffectif * total);
+  if (p.portsParCamp > 0) {
+    const anneau = anneauDuBord(t);
+    for (const c of anneau) poser(t, c, 'mer');
+    poserParOrbites(t, toutes.filter((c) => distanceAuBord(t, c) > 0), (c) => altitude[c] ?? 0,
+      Math.max(0, budget - anneau.length), 'mer');
+  } else {
+    poserParOrbites(t, toutes, (c) => altitude[c] ?? 0, budget, 'mer');
+  }
 
   const terres = toutes.filter((c) => lire(t, c) !== 'mer');
   const relief = bruitValeur(t, rng.branche('relief'), Math.max(2, reglages.echelle - 1));
@@ -210,8 +242,11 @@ export function lisserCotes(t: Toile): void {
  * Creuse à travers la mer jusqu'à ce que toutes les terres soient d'un seul tenant.
  * C'est la garantie « aucune zone morte » prise à la racine : une carte dont la
  * terre est connexe n'a pas d'île inatteignable à réparer plus tard.
+ *
+ * `murs` : des cases qu'aucune chaussée ne traverse — la ceinture de mer d'une
+ * carte à ports, qu'une langue de plage couperait en deux.
  */
-export function relierTerres(t: Toile): void {
+export function relierTerres(t: Toile, murs?: Uint8Array): void {
   const total = t.largeur * t.hauteur;
   for (let essai = 0; essai < 6; essai += 1) {
     const { etiquettes, tailles } = composantes(t, 'pied');
@@ -227,13 +262,13 @@ export function relierTerres(t: Toile): void {
       if (numero === principale) continue;
       const departs: number[] = [];
       for (let c = 0; c < total; c += 1) if (etiquettes[c] === numero) departs.push(c);
-      creuserVers(t, departs, cible);
+      creuserVers(t, departs, cible, murs);
     }
   }
 }
 
 /** Trace une langue de plage à travers la mer, du groupe de départ vers la cible. */
-function creuserVers(t: Toile, departs: readonly number[], cible: Uint8Array): void {
+function creuserVers(t: Toile, departs: readonly number[], cible: Uint8Array, murs?: Uint8Array): void {
   const total = t.largeur * t.hauteur;
   const parent = new Int32Array(total).fill(-2);
   const file: number[] = [];
@@ -243,6 +278,7 @@ function creuserVers(t: Toile, departs: readonly number[], cible: Uint8Array): v
     const c = file[tete] as number;
     for (const v of voisins4(t, c)) {
       if (parent[v] !== -2) continue;
+      if (murs !== undefined && murs[v] === 1) continue;
       parent[v] = c;
       if (cible[v] === 1) { arrivee = v; break; }
       file.push(v);

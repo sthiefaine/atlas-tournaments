@@ -7,11 +7,12 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
-  chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte, uniteSur, unitesVues,
-  type EtatPartie,
+  appliquer, chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte, uniteParId, uniteSur,
+  unitesVues, type Catalogue, type EtatPartie, type Unite,
 } from '../../src/engine/index';
 import { Controleur, SUITES_MENU } from '../../src/render/controleur';
 import { validerMapDef, type MapDef } from '../../src/schemas/index';
+import { scenePersonnalisee } from '../engine/aides';
 
 const CAT = chargerCatalogue();
 
@@ -513,4 +514,244 @@ test('dix survols en phase de sélection ne rejouent ni le Dijkstra ni l’envel
   }
   assert.equal(lectures(), apresSelection, 'aucun nouveau calcul de portée');
   assert.ok(c.vue.chemin.length >= 1, 'le chemin, lui, suit le curseur');
+});
+
+// ---------------------------------------------------------------------------
+// Catalogue 6 : la furtivité, et le débarquement choisi
+// ---------------------------------------------------------------------------
+
+/**
+ * Une partie en catalogue 6 sur une plaine de cinq sur trois : un chasseur
+ * furtif, un transport et deux fantassins du joueur, un fantassin adverse loin
+ * de tout — assez pour que la partie ne soit pas finie d'avance.
+ */
+function partieCatalogue6(): { etat: EtatPartie; cat: Catalogue } {
+  const cat = chargerCatalogue(6);
+  // `P` : la plaine du catalogue — un point n'est pas un terrain, et une case
+  // sans terrain n'est ni franchissable ni débarquable.
+  const scene = scenePersonnalisee(['PPPPP', 'PPPPP', 'PPPPP'], {}, [
+    { camp: 0, type: 'furtif', x: 0, y: 0 },
+    { camp: 0, type: 'transport', x: 2, y: 1 },
+    { camp: 0, type: 'infanterie', x: 0, y: 2 },
+    { camp: 0, type: 'meca', x: 1, y: 2 },
+    { camp: 1, type: 'infanterie', x: 4, y: 2 },
+  ]);
+  return { etat: creerPartie(scene, cat, 'test'), cat };
+}
+
+/** Met un passager dans la cale, comme le moteur l'aurait fait. */
+function embarquer(transport: Unite, passager: Unite): void {
+  transport.cargo.push(passager.id);
+  passager.dansTransport = transport.id;
+  passager.x = transport.x;
+  passager.y = transport.y;
+}
+
+/** Sélectionne l'unité et ouvre son menu sur sa propre case, sans déplacement. */
+function ouvrirMenuSurPlace(c: Controleur, u: Unite): void {
+  c.clicCase({ x: u.x, y: u.y });
+  c.clicCase({ x: u.x, y: u.y });
+  assert.equal(c.phase, 'action');
+}
+
+test('une unité au trait furtif offre « se cacher », joue l’ordre, puis offre « se montrer » ; les autres n’ont rien', () => {
+  const { etat, cat } = partieCatalogue6();
+  const c = new Controleur({ etat, catalogue: cat, camp: 0 });
+  const furtif = etat.unites.find((u) => u.type === 'furtif');
+  assert.ok(furtif);
+  ouvrirMenuSurPlace(c, furtif);
+  const entree = c.vue.menu?.options.find((o) => o.id === 'furtivite');
+  assert.ok(entree, 'offerte sans déplacement');
+  assert.equal(entree.cle, 'hud.se_cacher', 'visible : le menu propose de se cacher');
+  assert.ok(SUITES_MENU.indexOf('furtivite') < SUITES_MENU.indexOf('attendre'), 'avant « attendre », qui ferme');
+  c.choisirSuite('furtivite');
+  assert.equal(c.phase, 'inactif');
+  const cachee = uniteParId(c.etat, furtif.id);
+  assert.equal(cachee?.furtive, true);
+  assert.equal(cachee?.etat, 'agi');
+
+  // Le tour suivant, après un déplacement : « se montrer ».
+  c.finTour();
+  const r = appliquer(c.etat, { type: 'finTour' }, cat);
+  assert.ok(r.ok);
+  c.poserEtat(r.etat);
+  assert.equal(c.monTour, true);
+  c.clicCase({ x: furtif.x, y: furtif.y });
+  c.clicCase({ x: 1, y: 0 });
+  assert.equal(c.phase, 'action');
+  const retour = c.vue.menu?.options.find((o) => o.id === 'furtivite');
+  assert.equal(retour?.cle, 'hud.se_montrer', 'furtive : le menu propose de se montrer, après un déplacement aussi');
+  c.choisirSuite('furtivite');
+  const montree = uniteParId(c.etat, furtif.id);
+  assert.equal(montree?.furtive, false);
+  assert.deepEqual({ x: montree?.x, y: montree?.y }, { x: 1, y: 0 }, 'le déplacement a eu lieu avant la bascule');
+
+  // Un fantassin n'a pas l'ordre.
+  const infanterie = c.etat.unites.find((u) => u.camp === 0 && u.type === 'infanterie');
+  assert.ok(infanterie);
+  ouvrirMenuSurPlace(c, infanterie);
+  assert.ok(!c.vue.menu?.options.some((o) => o.id === 'furtivite'));
+});
+
+test('« débarquer » ouvre le choix de la case, en vert, sur les cases que le passager peut fouler', () => {
+  const { etat, cat } = partieCatalogue6();
+  const transport = etat.unites.find((u) => u.type === 'transport');
+  const passager = etat.unites.find((u) => u.type === 'infanterie' && u.camp === 0);
+  assert.ok(transport && passager);
+  embarquer(transport, passager);
+  const c = new Controleur({ etat, catalogue: cat, camp: 0 });
+  ouvrirMenuSurPlace(c, transport);
+  const entree = c.vue.menu?.options.find((o) => o.id === 'debarquer');
+  assert.ok(entree);
+  assert.equal(entree.cle, 'hud.debarquer_unite', 'l’entrée nomme son passager');
+  assert.equal(entree.passager, passager.id);
+
+  c.choisirSuite('debarquer', passager.id);
+  assert.equal(c.phase, 'cible');
+  const d = c.vue.debarquement;
+  assert.ok(d);
+  assert.equal(d.transportId, transport.id);
+  assert.equal(d.passager, passager.id);
+  assert.equal(d.cases.length, 4, 'quatre voisines libres en plaine');
+  assert.ok(d.case, 'la première case est pointée d’office : Entrée suffit');
+  assert.deepEqual(d.choisis, []);
+  const vertes = c.vue.surbrillances.filter((s) => s.genre === 'deplacement');
+  assert.equal(vertes.length, 4, 'là où il va : le vert du déplacement');
+  assert.equal(c.vue.surbrillances.filter((s) => s.genre === 'attaque').length, 0);
+  assert.equal(c.vue.visee, null, 'ce n’est pas une visée de tir');
+
+  // Une autre case : le premier appui pointe, le second confirme.
+  const cible = d.cases[3]!;
+  c.clicCase(cible);
+  assert.equal(c.phase, 'cible', 'pointer n’est pas poser');
+  assert.deepEqual(c.vue.debarquement?.case, cible);
+  c.clicCase(cible);
+  assert.equal(c.phase, 'inactif', 'un seul passager : l’ordre part');
+  const pose = uniteParId(c.etat, passager.id);
+  assert.ok(pose);
+  assert.deepEqual({ x: pose.x, y: pose.y }, cible);
+  assert.equal(pose.dansTransport, null);
+  assert.equal(uniteParId(c.etat, transport.id)?.cargo.length, 0);
+});
+
+test('deux passagers : on choisit qui, puis où, puis « débarquer aussi » ou « terminer » — et un seul ordre part', () => {
+  const { etat, cat } = partieCatalogue6();
+  const transport = etat.unites.find((u) => u.type === 'transport');
+  const inf = etat.unites.find((u) => u.type === 'infanterie' && u.camp === 0);
+  const meca = etat.unites.find((u) => u.type === 'meca');
+  assert.ok(transport && inf && meca);
+  embarquer(transport, inf);
+  embarquer(transport, meca);
+  const c = new Controleur({ etat, catalogue: cat, camp: 0 });
+  // Le transport avance d'une case vers l'est, puis vide sa cale.
+  c.clicCase({ x: transport.x, y: transport.y });
+  c.clicCase({ x: 3, y: 1 });
+  assert.equal(c.phase, 'action');
+  const entrees = c.vue.menu?.options.filter((o) => o.id === 'debarquer') ?? [];
+  assert.deepEqual(entrees.map((o) => o.passager), [inf.id, meca.id], 'une entrée par passager, dans l’ordre de la cale');
+  const rangs = (c.vue.menu?.options ?? []).map((o) => SUITES_MENU.indexOf(o.id as typeof SUITES_MENU[number]));
+  assert.deepEqual([...rangs].sort((a, b) => a - b), rangs, 'les deux entrées tiennent la place fixe de « débarquer »');
+
+  // Le méca d'abord : c'est le joueur qui choisit qui descend.
+  c.choisirSuite('debarquer', meca.id);
+  assert.equal(c.phase, 'cible');
+  assert.equal(c.vue.debarquement?.passager, meca.id);
+  const premiere = c.vue.debarquement?.case;
+  assert.ok(premiere);
+  assert.ok(c.vue.debarquement?.cases.some((v) => v.x === 2 && v.y === 1), 'la case que le transport quitte est offerte');
+  c.clicCase(premiere);
+  assert.equal(c.phase, 'action', 'il reste un passager et une case : le menu revient');
+  assert.deepEqual(c.vue.menu?.options.map((o) => o.id), ['debarquer', 'terminer']);
+  assert.equal(c.vue.menu?.options[0]?.cle, 'hud.debarquer_aussi');
+  assert.equal(c.vue.menu?.options[0]?.passager, inf.id);
+  assert.deepEqual(c.vue.debarquement?.choisis, [{ vers: premiere, passager: meca.id }]);
+  assert.equal(c.vue.debarquement?.passager, null);
+  assert.equal(empreinte(c.etat), empreinte(etat), 'rien n’est encore parti');
+
+  c.choisirSuite('debarquer', inf.id);
+  assert.equal(c.phase, 'cible');
+  const cases = c.vue.debarquement?.cases ?? [];
+  assert.equal(cases.length, 3, 'la case du premier n’est plus offerte');
+  assert.ok(!cases.some((v) => v.x === premiere.x && v.y === premiere.y));
+  const seconde = cases[1]!;
+  c.poserCurseur(seconde);
+  assert.deepEqual(c.vue.debarquement?.case, seconde, 'le survol pointe');
+  c.clicCase(seconde);
+  assert.equal(c.phase, 'inactif');
+
+  // Un seul ordre : le transport a bougé, la cale est vide, chacun sur sa case.
+  const t = uniteParId(c.etat, transport.id);
+  assert.ok(t);
+  assert.deepEqual({ x: t.x, y: t.y }, { x: 3, y: 1 });
+  assert.deepEqual(t.cargo, []);
+  assert.equal(t.etat, 'agi');
+  const m = uniteParId(c.etat, meca.id);
+  const i = uniteParId(c.etat, inf.id);
+  assert.ok(m && i);
+  assert.deepEqual({ x: m.x, y: m.y }, premiere);
+  assert.deepEqual({ x: i.x, y: i.y }, seconde);
+  assert.equal(m.dansTransport, null);
+  assert.equal(i.dansTransport, null);
+  assert.equal(m.etat, 'agi');
+  assert.equal(i.etat, 'agi');
+});
+
+test('« terminer » après un premier passager pose celui-là seul ; annuler à chaque étape ne pose rien', () => {
+  const { etat, cat } = partieCatalogue6();
+  const transport = etat.unites.find((u) => u.type === 'transport');
+  const inf = etat.unites.find((u) => u.type === 'infanterie' && u.camp === 0);
+  const meca = etat.unites.find((u) => u.type === 'meca');
+  assert.ok(transport && inf && meca);
+  embarquer(transport, inf);
+  embarquer(transport, meca);
+  const c = new Controleur({ etat, catalogue: cat, camp: 0 });
+
+  // Annuler depuis le choix de la case : retour au choix de destination, rien de choisi.
+  ouvrirMenuSurPlace(c, transport);
+  c.choisirSuite('debarquer');
+  assert.equal(c.phase, 'cible');
+  assert.equal(c.vue.debarquement?.passager, inf.id, 'sans passager nommé, le premier de la cale');
+  c.annuler();
+  assert.equal(c.phase, 'selection');
+  assert.equal(c.vue.debarquement, null);
+  assert.ok(c.vue.surbrillances.some((s) => s.genre === 'deplacement'), 'les arrivées du transport reviennent');
+
+  // Un clic hors des cases offertes annule aussi.
+  c.clicCase({ x: transport.x, y: transport.y });
+  c.choisirSuite('debarquer', meca.id);
+  assert.equal(c.phase, 'cible');
+  c.clicCase({ x: 4, y: 0 });
+  assert.equal(c.phase, 'selection');
+  assert.equal(c.vue.debarquement, null);
+
+  // Après une première case, Échap oublie ce qui était composé.
+  c.clicCase({ x: transport.x, y: transport.y });
+  c.choisirSuite('debarquer', meca.id);
+  // Une vue fraîche à chaque lecture : TypeScript a rétréci `c.vue.debarquement`
+  // à `null` sur l'assertion d'au-dessus, et ne sait pas qu'un clic l'a rouvert.
+  const vue1 = c.vue;
+  const case1 = vue1.debarquement?.case;
+  assert.ok(case1);
+  c.clicCase(case1);
+  assert.equal(c.phase, 'action');
+  c.annuler();
+  assert.equal(c.phase, 'selection');
+  assert.equal(c.vue.debarquement, null);
+  assert.equal(empreinte(c.etat), empreinte(etat), 'rien n’est parti');
+
+  // « Terminer » : le premier passager descend, le second reste à bord.
+  c.clicCase({ x: transport.x, y: transport.y });
+  c.choisirSuite('debarquer', meca.id);
+  const vue2 = c.vue;
+  const case2 = vue2.debarquement?.case;
+  assert.ok(case2);
+  c.clicCase(case2);
+  assert.equal(c.phase, 'action');
+  c.choisirSuite('terminer');
+  assert.equal(c.phase, 'inactif');
+  const t = uniteParId(c.etat, transport.id);
+  assert.deepEqual(t?.cargo, [inf.id], 'le fantassin est resté à bord');
+  const m = uniteParId(c.etat, meca.id);
+  assert.deepEqual({ x: m?.x, y: m?.y }, case2);
+  assert.equal(uniteParId(c.etat, inf.id)?.dansTransport, transport.id);
 });

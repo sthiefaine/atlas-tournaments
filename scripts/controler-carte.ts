@@ -6,6 +6,7 @@
  * ```
  * npx tsx scripts/controler-carte.ts --carte tests/engine/cartes/plaine.json
  * npx tsx scripts/controler-carte.ts --generer 16x12 --biome plaine --graine 4242
+ * npx tsx scripts/controler-carte.ts --generer 20x14 --biome cotier --mer 0.35 --ports 1 --radars 1
  * npx tsx scripts/controler-carte.ts --carte … --conditions ete/clair/jour,hiver/neige/nuit --parties 10
  * npx tsx scripts/controler-carte.ts --carte … --json     # le ReviewVerdict brut
  * ```
@@ -61,6 +62,9 @@ export function carteGeneree(o: Record<string, string | boolean>): MapDef {
     aeroportsParCamp: 0,
     symetrie: (typeof o['symetrie'] === 'string' ? o['symetrie'] : 'point') as Symetrie,
     densiteRoutes: 0.45,
+    // Ports et stations radar (7 septembre 2026) : facultatifs, absents = 0.
+    ...(typeof o['ports'] === 'string' ? { portsParCamp: Number(o['ports']) } : {}),
+    ...(typeof o['radars'] === 'string' ? { radarsParCamp: Number(o['radars']) } : {}),
   };
   const graine = typeof o['graine'] === 'string' ? o['graine'] : 'controle';
   const n = Number(graine);

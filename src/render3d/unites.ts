@@ -145,11 +145,30 @@ const MOUILLAGE = 0.3;
  */
 export const OPACITE_JOUEE = 0.6;
 
+/**
+ * L'opacité d'une unité **furtive** du joueur (trait `furtif`, catalogue 6) :
+ * repérée au contact seulement, elle se lit comme un fantôme, plus effacée
+ * qu'une unité qui a joué — la furtivité cache, l'état joué ne fait
+ * qu'attendre. Une furtive qui a joué prend la plus faible des deux. Une
+ * furtive **adverse** vue au contact se dessine entière : elle est vue. À
+ * régler à l'œil, comme `OPACITE_JOUEE`.
+ */
+export const OPACITE_FURTIVE = 0.45;
+
+/**
+ * L'opacité d'un double translucide : celle demandée, sauf pour un matériau
+ * déjà transparent — le verre — qui garde la sienne si elle est plus basse.
+ */
+function opaciteTranslucide(origine: THREE.MeshStandardMaterial, opacite: number): number {
+  return origine.transparent ? Math.min(origine.opacity, opacite) : opacite;
+}
+
 /** Un jeu de matériaux par camp et par style : c'est là que vit la couleur. */
 export class Materiaux {
   private readonly jeux = new Map<string, Record<RolePiece, THREE.MeshStandardMaterial>>();
   private readonly liseres = new Map<string, THREE.MeshStandardMaterial>();
-  private readonly ternis = new Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial>();
+  /** Les doubles translucides, par matériau d'origine puis par opacité. */
+  private readonly doubles = new Map<THREE.MeshStandardMaterial, Map<number, THREE.MeshStandardMaterial>>();
   private materiauRepere: THREE.MeshStandardMaterial | null = null;
   /** L'humidité en cours, 0 à 1 : elle s'applique à tout jeu, existant ou à venir. */
   private mouille = 0;
@@ -222,7 +241,9 @@ export class Materiaux {
     if (m === this.mouille) return;
     this.mouille = m;
     for (const jeu of this.jeux.values()) this.rugosites(jeu);
-    for (const [origine, terni] of this.ternis) terni.roughness = origine.roughness;
+    for (const [origine, parOpacite] of this.doubles) {
+      for (const double of parOpacite.values()) double.roughness = origine.roughness;
+    }
   }
 
   /** La rugosité de chaque rôle d'un jeu : la sèche, moins ce que la pluie en ôte. */
@@ -234,10 +255,20 @@ export class Materiaux {
 
   /**
    * Le double **terni** d'un matériau : celui qu'une unité porte quand elle a
-   * déjà joué. Mémorisé par matériau d'origine, donc créé une fois par couple
-   * (camp, style) et jamais par image ; l'original n'est **jamais** modifié,
-   * c'est ce qui garantit qu'une unité réveillée retrouve ses couleurs au bit
-   * près — on lui rend l'objet même, pas une reconstruction.
+   * déjà joué. C'est le double translucide à `OPACITE_JOUEE`, et rien d'autre.
+   */
+  terni(origine: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+    return this.translucide(origine, OPACITE_JOUEE);
+  }
+
+  /**
+   * Le double **translucide** d'un matériau, à une opacité donnée : celui
+   * qu'une unité porte quand elle a joué (`OPACITE_JOUEE`) ou quand elle est
+   * furtive (`OPACITE_FURTIVE`). Mémorisé par matériau d'origine et par
+   * opacité, donc créé une fois par couple (camp, style) et par niveau, jamais
+   * par image ; l'original n'est **jamais** modifié, c'est ce qui garantit
+   * qu'une unité réveillée retrouve ses couleurs au bit près — on lui rend
+   * l'objet même, pas une reconstruction.
    *
    * Depuis le 6 septembre 2026, le double ne change **que l'opacité** : même
    * teinte, même saturation, même matière — le gris et le noir d'avant
@@ -247,29 +278,34 @@ export class Materiaux {
    * travers de ses avants. Le verre, plus translucide que le seuil, reste à sa
    * propre opacité.
    */
-  terni(origine: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
-    const memo = this.ternis.get(origine);
+  translucide(origine: THREE.MeshStandardMaterial, opacite: number): THREE.MeshStandardMaterial {
+    let parOpacite = this.doubles.get(origine);
+    if (!parOpacite) {
+      parOpacite = new Map();
+      this.doubles.set(origine, parOpacite);
+    }
+    const memo = parOpacite.get(opacite);
     if (memo) return memo;
     const m = origine.clone();
     m.transparent = true;
-    m.opacity = origine.transparent ? Math.min(origine.opacity, OPACITE_JOUEE) : OPACITE_JOUEE;
+    m.opacity = opaciteTranslucide(origine, opacite);
     m.depthWrite = true;
-    this.ternis.set(origine, m);
+    parOpacite.set(opacite, m);
     return m;
   }
 
   /**
-   * Oublie le double terni d'un matériau qui quitte la scène, et le libère.
+   * Oublie les doubles d'un matériau qui quitte la scène, et les libère.
    * Les matériaux partagés des placeholders vivent aussi longtemps que le
-   * calque ; ceux d'un modèle livré appartiennent à une seule unité, et leur
-   * terni s'accumulerait ici à chaque unité retirée. Rend vrai s'il y avait
-   * une entrée.
+   * calque ; ceux d'un modèle livré appartiennent à une seule unité, et leurs
+   * doubles s'accumuleraient ici à chaque unité retirée. Rend vrai s'il y
+   * avait une entrée.
    */
   oublier(origine: THREE.MeshStandardMaterial): boolean {
-    const terni = this.ternis.get(origine);
-    if (!terni) return false;
-    terni.dispose();
-    this.ternis.delete(origine);
+    const parOpacite = this.doubles.get(origine);
+    if (!parOpacite) return false;
+    for (const m of parOpacite.values()) m.dispose();
+    this.doubles.delete(origine);
     return true;
   }
 
@@ -280,8 +316,10 @@ export class Materiaux {
     this.jeux.clear();
     for (const m of this.liseres.values()) m.dispose();
     this.liseres.clear();
-    for (const m of this.ternis.values()) m.dispose();
-    this.ternis.clear();
+    for (const parOpacite of this.doubles.values()) {
+      for (const m of parOpacite.values()) m.dispose();
+    }
+    this.doubles.clear();
     this.materiauRepere?.dispose();
     this.materiauRepere = null;
   }
@@ -603,13 +641,32 @@ export interface EtatVisuel {
    * les points d'avant et les relâche en finissant.
    */
   pv: number | null;
+  /**
+   * Le **voile** de la furtivité pendant un fondu : `0` à `1`, `1` étant
+   * `OPACITE_FURTIVE` ; `null` hors fondu — l'état dit alors si l'unité est
+   * furtive. Les gestes `voiler` et `devoiler` le poussent, le calque décide
+   * pour qui il compte (le camp du joueur) et l'applique.
+   */
+  voile: number | null;
 }
 
 /** Un état visuel neutre. */
 function etatNeutre(): EtatVisuel {
   return {
     dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0, clip: 'repos', clipDuree: 0, pv: null,
+    voile: null,
   };
+}
+
+/**
+ * Ce que le calque sait de la vision du joueur : son camp — c'est pour lui que
+ * ses furtives se voilent — et les unités qu'il voit (`unitesVues` du moteur),
+ * `null` pour toutes. Sans vision — le banc, la vitrine, les tests —, on
+ * dessine tout et toute furtive se voile.
+ */
+export interface VisionRendu {
+  camp: CampId | null;
+  unites: ReadonlySet<string> | null;
 }
 
 /** Ce qui va chercher le modèle d'un couple (unité, nation) : `chargerModele`, ou un double de test. */
@@ -649,8 +706,9 @@ export interface CalqueUnites {
    * Synchronise les maillages avec l'état. Rend **vrai** si une unité a été
    * posée, est apparue ou a disparu — ce qui change la scène telle que l'ombre
    * la voit —, faux si tout était déjà en place : c'est le cas d'un survol.
+   * `vision` dit ce que le joueur voit et pour qui les furtives se voilent.
    */
-  maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): boolean;
+  maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null, vision?: VisionRendu): boolean;
   /**
    * Repose toutes les unités sur le relief courant, à l'état près : ce qui
    * repose sur le sol doit se reposer avec lui. Une pose ne se refait sinon que
@@ -706,6 +764,16 @@ interface Entree {
   clipDemande: NomClip;
   /** Ce sur quoi la dernière pose a été faite, `null` avant la première. */
   pose: PoseUnite | null;
+  /** L'opacité dont la pièce est habillée : `1`, ses matériaux de repos. */
+  opacite: number;
+  /** Vrai si les doubles portés sont ceux du calque (`Materiaux.translucide`), faux pendant un fondu. */
+  partage: boolean;
+  /**
+   * Les doubles **propres** à l'unité le temps d'un fondu, par matériau
+   * d'origine : leur opacité se règle à chaque image sans rien recréer. Libérés
+   * dès que le fondu finit ou que l'unité s'en va.
+   */
+  fondu: Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial> | null;
 }
 
 /**
@@ -856,6 +924,9 @@ export function creerUnites(
       lecteur: null,
       clipDemande: 'repos',
       pose: null,
+      opacite: 1,
+      partage: true,
+      fondu: null,
     };
     // Un vrai modèle prend la place du placeholder dès qu'il arrive, sans à-coup.
     void charger(u.type, paysParCamp.get(u.camp) ?? null).then((modele) => {
@@ -879,9 +950,11 @@ export function creerUnites(
     entree.sommet = modele.hauteur > 0 ? modele.hauteur : entree.sommet;
     if (entree.etiquette) entree.etiquette.position.y = entree.sommet + 0.16;
     // Le modèle arrive avec ses propres matériaux : s'il remplace une pièce
-    // déjà ternie, il doit l'être aussi, sinon l'unité « se réveille » à
-    // l'instant où l'asset se charge.
-    if (entree.agie) ternir(entree, true);
+    // déjà translucide — jouée, furtive —, il doit l'être aussi, sinon l'unité
+    // « se réveille » à l'instant où l'asset se charge. Les doubles d'un fondu
+    // appartenaient à l'ancien corps : on repart des matériaux du nouveau.
+    libererFondu(entree);
+    if (entree.opacite < 1) habiller(entree, entree.opacite, entree.partage);
 
     const figurine = corps.getObjectByName(NOM_FIGURINE);
     if (!figurine) return;
@@ -989,44 +1062,82 @@ export function creerUnites(
     entree.pv = pv;
   }
 
+  /** Le double propre à une unité pour un fondu, créé une fois par matériau d'origine puis réglé. */
+  function fonduDe(entree: Entree, origine: THREE.MeshStandardMaterial, opacite: number): THREE.MeshStandardMaterial {
+    entree.fondu ??= new Map();
+    const memo = entree.fondu.get(origine);
+    if (memo) {
+      memo.opacity = opaciteTranslucide(origine, opacite);
+      return memo;
+    }
+    const m = origine.clone();
+    m.transparent = true;
+    m.opacity = opaciteTranslucide(origine, opacite);
+    m.depthWrite = true;
+    entree.fondu.set(origine, m);
+    return m;
+  }
+
+  /** Libère les doubles d'un fondu : ils n'ont vécu que le temps du geste. */
+  function libererFondu(entree: Entree): void {
+    if (!entree.fondu) return;
+    for (const m of entree.fondu.values()) m.dispose();
+    entree.fondu = null;
+  }
+
   /**
-   * Échange les matériaux d'une pièce contre leurs doubles ternis, ou les rend.
-   * Chaque maillage garde son matériau de repos dans `userData` : au réveil, on
-   * lui rend **l'objet même**, pas une copie recolorée. Le liseré de socle est
-   * épargné — la couleur d'équipe doit rester lisible sur une unité qui a joué,
-   * c'est encore une unité à défendre.
+   * Habille une pièce à une opacité : ses matériaux de repos à `1`, sinon des
+   * doubles translucides — **partagés** (`Materiaux.translucide`, un par
+   * matériau et par niveau : l'état joué, l'état furtif) ou **propres** à
+   * l'unité le temps d'un fondu (`fondu`), dont l'opacité se règle à chaque
+   * image sans rien recréer ni parcourir. Chaque maillage garde son matériau de
+   * repos et son ombre dans `userData` : au retour à `1`, on lui rend
+   * **l'objet même**, pas une copie recolorée. Le liseré de socle est épargné
+   * — la couleur d'équipe doit rester lisible sur une unité qui a joué ou qui
+   * se cache, c'est encore une unité à défendre.
    *
-   * Une pièce ternie est translucide, donc **sans ombre portée** : la leçon du
-   * verre et des bâtiments effacés — une ombre pleine sous une pièce qu'on voit
-   * au travers trahit sa transparence. L'ombre d'avant est gardée dans
-   * `userData` et rendue au réveil, telle quelle.
+   * Une pièce translucide est **sans ombre portée** : la leçon du verre et des
+   * bâtiments effacés — une ombre pleine sous une pièce qu'on voit au travers
+   * trahit sa transparence. L'ombre d'avant est gardée dans `userData` et
+   * rendue au retour, telle quelle. Rend vrai si le port d'ombre a changé, ce
+   * qui vaut une carte d'ombre ; un fondu qui ne fait que régler ses doubles ne
+   * vaut rien.
    */
-  function ternir(entree: Entree, agie: boolean): void {
+  function habiller(entree: Entree, opacite: number, partage: boolean): boolean {
+    const avant = entree.opacite;
+    entree.opacite = opacite;
+    entree.partage = partage;
+    if (opacite < 1 && !partage && entree.fondu) {
+      for (const [origine, double] of entree.fondu) double.opacity = opaciteTranslucide(origine, opacite);
+      return false;
+    }
+    if (opacite >= 1 || partage) libererFondu(entree);
     entree.corps.traverse((n) => {
       if (!(n instanceof THREE.Mesh) || n.name === 'socle_lisere') return;
       const repos = (n.userData['repos'] as THREE.Material | THREE.Material[] | undefined) ?? n.material;
       n.userData['repos'] = repos;
       const ombre = (n.userData['ombre'] as boolean | undefined) ?? n.castShadow;
       n.userData['ombre'] = ombre;
-      if (!agie) {
+      if (opacite >= 1) {
         n.material = repos;
         n.castShadow = ombre;
         return;
       }
       n.castShadow = false;
-      const ternirUn = (m: THREE.Material): THREE.Material => {
+      const doubler = (m: THREE.Material): THREE.Material => {
         if (!(m instanceof THREE.MeshStandardMaterial)) return m;
-        const terni = materiaux.terni(m);
-        // Le double terni est un clone, qui perd le shader du masque d'équipe :
-        // on le lui rend, avec la couleur d'équipe **inchangée** — seule
-        // l'opacité dit qu'elle a joué.
+        const double = partage ? materiaux.translucide(m, opacite) : fonduDe(entree, m, opacite);
+        // Le double est un clone, qui perd le shader du masque d'équipe : on le
+        // lui rend, avec la couleur d'équipe **inchangée** — seule l'opacité
+        // dit qu'elle a joué, ou qu'elle se cache.
         const masque = masqueDe(m);
         const couleur = couleurMasquee(m);
-        if (masque && couleur && !masqueDe(terni)) appliquerMasque(terni, masque, couleur);
-        return terni;
+        if (masque && couleur && !masqueDe(double)) appliquerMasque(double, masque, couleur);
+        return double;
       };
-      n.material = Array.isArray(repos) ? repos.map(ternirUn) : ternirUn(repos);
+      n.material = Array.isArray(repos) ? repos.map(doubler) : doubler(repos);
     });
+    return (avant >= 1) !== (opacite >= 1);
   }
 
   /** Repose chaque unité déjà posée, là où elle est, sur le sol tel qu'il est maintenant. */
@@ -1045,8 +1156,9 @@ export function creerUnites(
     if (!e) return;
     e.lecteur?.dispose();
     e.lecteur = null;
+    libererFondu(e);
     // Un modèle livré a des matériaux à lui — les clones teintés — et, s'il a
-    // joué, leurs doubles ternis dans la table : on rend les deux. Un
+    // joué ou s'est caché, leurs doubles dans la table : on rend les deux. Un
     // placeholder ne possède rien, ses matériaux sont ceux du calque.
     for (const m of materiauxPropresDe(e.corps)) {
       materiaux.oublier(m);
@@ -1129,12 +1241,16 @@ export function creerUnites(
       for (const [id, e] of [...entrees]) if (e.camp === camp) retirer(id);
     },
 
-    maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): boolean {
+    maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null, vision?: VisionRendu): boolean {
       const vus = new Set<string>();
       let change = false;
       const toutes: Unite[] = [...etat.unites.filter((u) => !u.dansTransport), ...retenues.values()];
       for (const u of toutes) {
         if (visibles && !visibles.has(cleCase({ x: u.x, y: u.y })) && !retenues.has(u.id)) continue;
+        // Ce que le joueur ne voit pas — une furtive hors contact, une unité
+        // tapie en forêt — n'est pas dessiné, même sur une case éclairée : la
+        // règle est celle du moteur (`unitesVues`), le calque ne fait que la lire.
+        if (vision?.unites && !vision.unites.has(u.id) && !retenues.has(u.id)) continue;
         vus.add(u.id);
         let entree = entrees.get(u.id);
         if (entree && entree.type !== u.type) {
@@ -1160,12 +1276,27 @@ export function creerUnites(
         if (entree.agie !== agie) {
           entree.agie = agie;
           entree.groupe.userData['agie'] = agie;
-          ternir(entree, agie);
           // Figée au repos : la respiration s'arrête là où elle en était, à plat.
           if (agie && entree.figurines) {
             entree.figurines.rotation.z = 0;
             entree.figurines.position.y = 0;
           }
+        }
+        // Le voile de la furtivité ne vaut que pour le camp du joueur : une
+        // furtive adverse qu'on tient au contact est vue, donc entière. Sans
+        // camp connu, toute furtive se voile. Pendant un fondu, `voile` dit où
+        // en est le geste ; sinon l'état dit tout. Jouée **et** furtive, la
+        // pièce prend la plus faible des deux opacités.
+        const voilable = !vision || vision.camp === null || u.camp === vision.camp;
+        const part = voilable ? (v.voile ?? (u.furtive === true ? 1 : 0)) : 0;
+        // Aux deux bouts, la constante elle-même : un `1 − 1 × (1 − 0,45)` ne
+        // vaut pas 0,45 en flottant, et c'est sur cette valeur que les doubles
+        // partagés sont mémorisés.
+        const opaciteVoile = part <= 0 ? 1 : part >= 1 ? OPACITE_FURTIVE : 1 - part * (1 - OPACITE_FURTIVE);
+        const opacite = Math.min(agie ? OPACITE_JOUEE : 1, opaciteVoile);
+        const partage = opacite >= 1 || v.voile === null;
+        if (entree.opacite !== opacite || entree.partage !== partage) {
+          if (habiller(entree, opacite, partage)) change = true;
         }
       }
       for (const id of [...entrees.keys()]) {

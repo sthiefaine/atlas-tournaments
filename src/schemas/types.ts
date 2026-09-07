@@ -377,11 +377,15 @@ export const STATUTS_UNITE = ['canon', 'essai', 'homologuee', 'retiree'] as cons
 /** Statut d'homologation d'une unité. */
 export type StatutUnite = typeof STATUTS_UNITE[number];
 
-/** Liste fermée des quatorze traits d'unité (`04-gameplay.md` §13.2). */
+/**
+ * Liste fermée des quinze traits d'unité (`04-gameplay.md` §13.2). Le
+ * quinzième, `furtif`, est entré le 7 septembre 2026 avec le catalogue 6 : une
+ * furtivité **à la demande**, basculée par la suite d'ordre `furtivite`.
+ */
 export const TRAITS = [
   'transport', 'tir_indirect', 'anti_air', 'amphibie', 'vol',
   'furtif_nuit', 'vision_etendue', 'ravitaillement', 'tout_terrain', 'capture', 'genie',
-  'drone', 'brouilleur', 'plongee',
+  'drone', 'brouilleur', 'plongee', 'furtif',
 ] as const;
 /** Trait d'unité : un comportement implémenté une seule fois dans le moteur. */
 export type Trait = typeof TRAITS[number];
@@ -436,7 +440,13 @@ export interface UnitType {
   munitions: number | null;
   carburant: { max: number; parCase: number; parTour: number } | null;
   capture: boolean;
-  transport: { places: number; accepte: CleUnite[] } | null;
+  /**
+   * `ravitaille` (catalogue 6) : le transport remet munitions et carburant au
+   * plein de ce qu'il porte à chaque début de tour — le porte-avions est une
+   * base flottante, le camion de ravitaillement aussi ; la barge et le
+   * transport d'assaut ne font que porter. Absent : faux.
+   */
+  transport: { places: number; accepte: CleUnite[]; ravitaille?: boolean } | null;
   degats: Partial<Record<CleUnite, number>>;
   subitDegats?: Partial<Record<CleUnite, number>>;
   /**
@@ -527,6 +537,10 @@ export interface ParametresCarte {
   villesNeutres: number;
   usinesParCamp: number;
   aeroportsParCamp: number;
+  /** Ports par camp (0 à 2), posés sur une côte ; absent : 0. Sans port, aucun navire ne se produit. */
+  portsParCamp?: number;
+  /** Stations radar par camp (0 à 2) ; absent : 0. */
+  radarsParCamp?: number;
   symetrie: Symetrie;
   densiteRoutes: number;
   mecanique?: Cle;
@@ -1001,6 +1015,8 @@ export type CibleReview = typeof CIBLES_REVIEW[number];
 export const MOTIFS_REJET = [
   'schema_invalide', 'reference_inconnue', 'champ_inconnu', 'flag_inconnu',
   'qg_inaccessible', 'zone_morte', 'usine_trop_loin', 'depart_bloque',
+  // Motifs navals (7 septembre 2026) : un port sans mer voisine, des ports que la mer ne relie pas.
+  'port_sans_mer', 'ports_isoles',
   'grille_non_reproductible', 'qg_menace_trop_tot', 'economie_insuffisante',
   'avantage_premier_joueur', 'desequilibre_fonds', 'desequilibre_villes',
   'partie_trop_courte', 'partie_trop_longue', 'trop_de_parties_non_terminees',

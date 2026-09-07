@@ -16,7 +16,7 @@
  */
 
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
-import { prevoirDuel, pvAffiches, terrainLogique, uniteParId } from '../engine/index';
+import { consommationParTour, prevoirDuel, pvAffiches, terrainLogique, uniteParId } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../schemas/types';
 import type { Ambiance } from './ambiance';
@@ -49,6 +49,13 @@ export interface VueJeu {
   production: { batiment: Case; unites: readonly CleUnite[] } | null;
   /** La visée en cours : de quoi prévoir le duel avant de confirmer. */
   visee: { attaquantId: string; depuis: Case; cibles: readonly Case[]; cible: Case | null } | null;
+  /**
+   * Les identifiants des unités que le joueur **voit** — les siennes, et les
+   * adverses que le brouillard, une forêt ou la furtivité ne cachent pas ;
+   * `null` sans brouillard, absent : toutes. Le panneau d'unité ne nomme
+   * jamais ce que la carte cache.
+   */
+  unitesVues?: ReadonlySet<string> | null;
   attenteIa: boolean;
   /** Message éphémère, déjà traduit. */
   annonce: string | null;
@@ -72,7 +79,8 @@ export interface ApiHud {
   vue(): VueJeu;
   t(cle: string, params?: Record<string, string | number>): string;
   finTour(): void;
-  choisirSuite(id: string): void;
+  /** `passager` : pour « débarquer », l'unité de la cale que l'entrée pose. */
+  choisirSuite(id: string, passager?: string): void;
   choisirProduction(cle: CleUnite): void;
   jouerPouvoir(niveau: 'normal' | 'super'): void;
   annuler(): void;
@@ -170,6 +178,8 @@ const STYLE = `
 .atlas-hud .stats [data-alerte='orange']{color:var(--alerte)}
 .atlas-hud .stats [data-alerte='rouge']{color:var(--alerte-grave)}
 .atlas-hud .stats .embarquees{display:block;margin-top:2px;color:#d6e2ea}
+/* Furtive : un état, dit en clair, dans la couleur du signal — c'est le seul mot du panneau qui n'est pas un chiffre. */
+.atlas-hud .stats .furtive{color:var(--signal);font-weight:800}
 .atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;font-size:22px;border:1px solid #ffffff20}
 .atlas-hud .inspect .in>.retour:first-of-type{margin-left:auto}
 /* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
@@ -195,6 +205,8 @@ const STYLE = `
 .atlas-hud .ordres-grille button[data-valeur='remettre']{border-left:4px solid #ffc634}
 .atlas-hud .ordres-grille button[data-valeur='construire']{border-left:4px solid #4eaaff}
 .atlas-hud .ordres-grille .symbole{width:21px;height:21px;color:#9fb6b8}
+/* « Débarquer <nom> » montre la figurine qu'il pose : on choisit qui descend en la voyant. */
+.atlas-hud .ordres-grille canvas{flex:none;width:24px;height:24px;background:#ffffff0a}
 .atlas-hud .ordres-grille button:hover .symbole{color:var(--signal)}
 .atlas-hud .camera{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(var(--bas) + var(--dock) + 10px);pointer-events:auto;display:grid;gap:5px}
 .atlas-hud .camera button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #91a1a3;border-bottom:3px solid #0c1923;background:var(--encre);box-shadow:2px 2px 0 #0002;font-size:25px;cursor:pointer}
@@ -306,6 +318,11 @@ const STYLE = `
 .atlas-hud .fiche .puce{display:inline-flex;align-items:center;padding:3px 8px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);font-weight:700;white-space:nowrap}
 .atlas-hud .fiche .deux{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--f-doux)}
+/* La consommation par tour : le signe du carburant, puis le chiffre, sur sa ligne. */
+.atlas-hud .fiche .conso{display:flex;align-items:center;gap:5px;margin:0 0 8px;font-size:12px;font-weight:750;color:var(--f-doux)}
+.atlas-hud .fiche .conso .symbole{width:14px;height:14px;flex:0 0 auto}
+.atlas-hud .fiche .conso b{color:var(--f-encre);font-variant-numeric:tabular-nums}
+.atlas-hud .fiche .cale .avert{margin:6px 0 0}
 @media(max-width:360px){.atlas-hud .fiche .deux{grid-template-columns:1fr}}
 .atlas-hud .detail{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin-left:auto;background:#ffffff10;border:1px solid #ffffff20;font-size:15px;font-weight:850;font-style:italic;color:#d6e2ea}
 .atlas-hud .inspect .detail+.retour{margin-left:6px}
@@ -425,6 +442,11 @@ function iconeOrdre(type: string): string {
     fin_de_tour: '<path d="M5 4l10 8-10 8z"/><path d="M19 4v16"/>',
     embarquer: '<path d="M3 16h18v5H3zM12 2v11m-5-5 5 5 5-5"/>',
     debarquer: '<path d="M3 16h18v5H3zM12 13V2M7 7l5-5 5 5"/>',
+    // Se cacher ou se montrer : l'œil barré. Le même signe dans les deux sens,
+    // c'est le libellé qui dit lequel.
+    furtivite: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20 20 4"/>',
+    // Terminer : la coche, l'ordre part tel qu'il est composé.
+    terminer: '<path d="m4 12 5 5L20 6"/>',
     // Les statistiques d'une unité, dites par un signe et non par un mot — c'est
     // la grammaire d'Advance Wars : une botte, un œil, une cible, une balle.
     mouvement: '<path d="M6 20V9l4-5 2 4h5v6h-3l-2 6zM6 20h12"/>',
@@ -657,8 +679,11 @@ export function monterHudHtml(
 
   function panneauInspection(v: VueJeu, duelOuvert: boolean): string {
     if (v.menu || duelOuvert) return '';
+    // Une unité que la carte cache — brouillard, forêt, furtivité — n'est pas
+    // sous le curseur : l'état la porte, le joueur ne la voit pas.
+    const vue = (u: Unite): boolean => !v.unitesVues || v.unitesVues.has(u.id);
     const sousCurseur = v.curseur
-      ? v.etat.unites.find((u) => !u.dansTransport && u.x === v.curseur!.x && u.y === v.curseur!.y)
+      ? v.etat.unites.find((u) => !u.dansTransport && u.x === v.curseur!.x && u.y === v.curseur!.y && vue(u))
       : undefined;
 
     // Quelle unité le panneau montre, dans cet ordre :
@@ -745,10 +770,15 @@ export function monterHudHtml(
           a === 'rouge' ? 'hud.munitions_vides' : 'hud.munitions_faible'));
       }
       if (unite.carburant !== null) {
-        const a = alerteCarburant(type, unite.carburant);
+        // L'alerte se juge sur ce que l'unité brûle **vraiment** par tour : une
+        // furtive paie un surcoût, et le chiffre du catalogue lui mentirait.
+        const a = alerteCarburant(type, unite.carburant, consommationParTour(type, unite));
         lignes.push(stat(api.t('hud.carburant', { n: unite.carburant }), a,
           a === 'rouge' ? 'hud.carburant_critique' : 'hud.carburant_faible'));
       }
+      // Furtive : repérée au contact seulement. Dit en clair, parce qu'une
+      // figurine translucide ne se lit pas au doigt.
+      if (unite.furtive === true) lignes.push(`<span class="furtive">${ech(api.t('hud.furtive'))}</span>`);
       // Ce qu'un transport porte : sans cette ligne, deux unités embarquées
       // n'existent nulle part à l'écran.
       if (unite.cargo.length > 0) {
@@ -775,7 +805,7 @@ export function monterHudHtml(
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
       + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}</div>` : '')
       + `</div>${detail}${v.selection && !v.attenteIa ? boutonRetour() : ''}</div>`
-      + (unite && ficheInspection ? blocFiche(v, unite.type) : '')
+      + (unite && ficheInspection ? blocFiche(v, unite.type, true, unite) : '')
       + `</div>`;
   }
 
@@ -823,10 +853,19 @@ export function monterHudHtml(
 
   function panneauOrdres(v: VueJeu): string {
     if (!v.menu || v.menu.options.length === 0) return '';
-    const boutons = v.menu.options.map((o) => (
-      `<button type="button" data-action="suite" data-valeur="${ech(o.id)}"${o.disponible ? '' : ' disabled'}>`
-      + `${iconeOrdre(o.id)}<span>${ech(api.t(o.cle))}</span></button>`
-    )).join('');
+    const boutons = v.menu.options.map((o) => {
+      // « Débarquer <nom> » : l'entrée nomme et dessine le passager qu'elle pose,
+      // et le renvoie avec le choix — deux passagers, deux entrées.
+      const passager = o.passager ? v.etat.unites.find((u) => u.id === o.passager) : undefined;
+      const tp = passager ? v.catalogue.unites[passager.type] : undefined;
+      const libelle = passager && tp
+        ? api.t(o.cle, { unite: nomUnite(v.locale, v.catalogue, passager.type) })
+        : api.t(o.cle);
+      const figurine = passager && tp ? vignette(tp.silhouette, passager.camp, 24) : '';
+      const attribut = o.passager ? ` data-passager="${ech(o.passager)}"` : '';
+      return `<button type="button" data-action="suite" data-valeur="${ech(o.id)}"${attribut}${o.disponible ? '' : ' disabled'}>`
+        + `${iconeOrdre(o.id)}${figurine}<span>${ech(libelle)}</span></button>`;
+    }).join('');
     // Hauteur estimée du panneau : en-tête, lignes de 46 px, marges.
     const hauteur = 44 + v.menu.options.length * 50 + 12;
     return `<div class="p ordres"${ancrer(v.menu.ancre, hauteur)} role="group" aria-label="${ech(api.t('hud.menu_ordres'))}">`
@@ -924,8 +963,10 @@ export function monterHudHtml(
    * ligne de chiffres est facultative : le menu de production les affiche déjà
    * dans sa grille d'étiquettes, on ne les dit pas deux fois.
    */
-  function blocFiche(v: VueJeu, cle: CleUnite, avecChiffres = true): string {
-    const f = ficheUnite(v.catalogue, cle);
+  function blocFiche(v: VueJeu, cle: CleUnite, avecChiffres = true, enJeu?: Unite): string {
+    // Avec l'unité en jeu, la fiche dit ce qu'elle frappe **aujourd'hui** — à
+    // zéro munition, sa mitrailleuse — et ce qu'elle brûle vraiment par tour.
+    const f = ficheUnite(v.catalogue, cle, enJeu);
     const type = v.catalogue.unites[cle];
     if (!f || !type) return '';
     const nomDe = (c: CleUnite): string => nomUnite(v.locale, v.catalogue, c);
@@ -974,10 +1015,33 @@ export function monterHudHtml(
       + stat('munitions', munitions, f.munitions === null ? api.t('fiche.munitions_illimitees') : api.t('hud.munitions', { n: f.munitions }))
       + `</p>`;
 
+    // Ce que l'unité brûle par tour, immobile — et ce que lui coûterait la
+    // furtivité, si elle en est capable : un chasseur brûle cinq, huit caché.
+    const conso = (cleTexte: string, n: number): string => `<p class="conso" data-conso="${n}">${iconeOrdre('carburant')}`
+      + `<span>${ech(api.t(cleTexte, { n: nombreIntl(v.locale, n) }))}</span></p>`;
+    const consommation = (f.consommationParTour > 0 ? conso('fiche.par_tour', f.consommationParTour) : '')
+      + (f.consommationFurtive !== null && f.consommationFurtive !== f.consommationParTour
+        ? conso('fiche.par_tour_furtif', f.consommationFurtive)
+        : '');
+
+    // La cale d'un transport : combien de places, qui y monte, et si elle
+    // refait le plein de ce qu'elle porte. Sans ce bloc, acheter une barge se
+    // faisait sans savoir ce qu'elle emporte.
+    const cale = f.transport === null
+      ? ''
+      : `<section class="bloc cale"><h4><span>${ech(api.t('fiche.transport'))}</span></h4><div class="corps">`
+        + `<span class="puce places" data-places="${f.transport.places}">${ech(api.t('fiche.places', { n: f.transport.places }))}</span>`
+        + f.transport.accepte.map((c) => `<span class="puce">${ech(nomDe(c))}</span>`).join('')
+        + `</div>`
+        + (f.transport.ravitaille ? `<p class="avert bon">${ech(api.t('fiche.ravitaille_cale'))}</p>` : '')
+        + `</section>`;
+
     return `<div class="fiche">`
       + chiffres
+      + consommation
       + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
       + (porte(type, 'capture') ? `<p class="avert bon">${ech(api.t('fiche.capture'))}</p>` : '')
+      + cale
       + bloc('fiche.forte', duels(f.forte), 'fort')
       + bloc('fiche.craint', duels(f.craint), 'danger')
       + `<div class="deux">`
@@ -1204,7 +1268,7 @@ export function monterHudHtml(
     const valeur = bouton.dataset['valeur'] ?? '';
     switch (bouton.dataset['action']) {
       case 'fin_tour': api.finTour(); break;
-      case 'suite': api.choisirSuite(valeur); break;
+      case 'suite': api.choisirSuite(valeur, bouton.dataset['passager']); break;
       case 'produire': api.choisirProduction(valeur); break;
       // Changer l'unité mise en avant ne touche à rien du jeu : on redessine, c'est tout.
       case 'mettre_en_avant': uniteMiseEnAvant = valeur; rafraichir(); break;

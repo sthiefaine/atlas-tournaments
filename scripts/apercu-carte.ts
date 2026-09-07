@@ -5,6 +5,8 @@
  * ```
  * tsx scripts/apercu-carte.ts --params '{"largeur":16,"hauteur":12,"camps":2}' \
  *     --graine 7 --sortie apercus/carte.png
+ * tsx scripts/apercu-carte.ts --params '{"biome":"cotier","ratioMer":0.35,"portsParCamp":1,"radarsParCamp":1}' \
+ *     --graine 3
  * tsx scripts/apercu-carte.ts --mapdef carte.json --sortie apercus/carte.png
  * ```
  *
@@ -35,6 +37,8 @@ const DEFAUTS: ParametresCarte = {
   villesNeutres: 2,
   usinesParCamp: 1,
   aeroportsParCamp: 0,
+  portsParCamp: 0,
+  radarsParCamp: 0,
   symetrie: 'aucune',
   densiteRoutes: 0.5,
 };

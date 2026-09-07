@@ -87,6 +87,8 @@ const suites: Suite[] = [
       { titre: 'tir à sec sur une unité sans munitions', muter: (o) => { o['munitions'] = null; o['armeSecondaire'] = ['infanterie']; o['degatsSecondaire'] = 15; }, chemin: 'degatsSecondaire' },
       { titre: 'trait plongee hors du domaine mer', muter: (o) => { o['traits'] = ['plongee']; }, chemin: 'traits' },
       { titre: 'trait plongee avec le vol', muter: (o) => { o['traits'] = ['plongee', 'vol']; o['domaine'] = 'mer'; }, chemin: 'traits' },
+      { titre: 'trait furtif sans le vol', muter: (o) => { o['traits'] = ['furtif']; }, chemin: 'traits' },
+      { titre: 'ravitaillement en cale qui n’est pas un booléen', muter: (o) => { o['traits'] = ['transport']; o['transport'] = { places: 1, accepte: ['infanterie'], ravitaille: 'oui' }; }, chemin: 'transport.ravitaille' },
     ],
   },
   {

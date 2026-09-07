@@ -10,7 +10,7 @@ import {
   strategie,
 } from '../../src/ai/index';
 import {
-  appliquer, creerPartie, creerRng, empreinte, reglagesParDefaut, sceneDeCarte,
+  appliquer, brouillardActif, creerPartie, creerRng, empreinte, reglagesParDefaut, sceneDeCarte,
   type EtatPartie,
 } from '../../src/engine/index';
 import { CAT, carte } from '../engine/aides';
@@ -49,6 +49,16 @@ test("l'IA n'utilise que l'API publique : chaque action passe par appliquer", ()
   for (let i = 0; i < 40; i += 1) {
     const action = PONDEREE.choisirAction(courant, courant.campCourant, creerRng('ia'), CAT);
     const r = appliquer(courant, action, CAT);
+    if (!r.ok && action.type === 'ordre' && r.motif === 'case_occupee' && brouillardActif(courant)) {
+      // Une seule tolérance, et elle n'est pas une faute de stratégie : sous
+      // brouillard, l'IA ne lit que ce qu'elle voit, et le moteur refuse une
+      // arrivée occupée par une unité **cachée** au lieu d'interrompre le
+      // déplacement. `jouerTour` fait alors attendre l'unité sur place.
+      const attente = appliquer(courant, { type: 'ordre', uniteId: action.uniteId, chemin: [action.chemin[0]!], suite: { type: 'rien' } }, CAT);
+      assert.equal(attente.ok, true);
+      if (attente.ok) courant = attente.etat;
+      continue;
+    }
     assert.equal(r.ok, true, `action refusée : ${JSON.stringify(action)}`);
     if (!r.ok) return;
     courant = r.etat;

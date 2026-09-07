@@ -19,8 +19,8 @@
  */
 
 import {
-  coutBase, degatsBase, facteurMouvementMeteo, porte, surcoutMeteo, tireSansMunitions,
-  type Catalogue,
+  consommationParTour, coutBase, degatsArme, degatsBase, facteurMouvementMeteo, porte, surcoutMeteo,
+  tireSansMunitions, type Catalogue, type Unite,
 } from '../engine/index';
 import {
   CLES_TERRAIN, METEOS, type CleTerrain, type CleUnite, type Meteo, type Trait, type UnitType,
@@ -42,6 +42,15 @@ export interface Duel {
   sansMunitions: boolean;
 }
 
+/** Ce qu'un transport porte : combien, qui, et s'il refait le plein de sa cale. */
+export interface CaleFiche {
+  places: number;
+  /** Les types acceptés, dans l'ordre du canon. */
+  accepte: readonly CleUnite[];
+  /** Vrai si la cale est remise au plein à chaque début de tour (`transport.ravitaille`). */
+  ravitaille: boolean;
+}
+
 /** Ce qui gêne une unité un jour donné. */
 export interface GeneMeteo {
   meteo: Meteo;
@@ -59,6 +68,20 @@ export interface FicheUnite {
   /** Elle frappe de loin et **jamais** au contact : elle a besoin d'être couverte. */
   indirecte: boolean;
   munitions: number | null;
+  /**
+   * Le carburant brûlé par tour, immobile — `0` pour ce qui ne consomme qu'en
+   * roulant ou ne consomme pas. Pour une unité **en jeu**, c'est sa consommation
+   * effective, furtivité comprise ; pour le catalogue, celle du type.
+   */
+  consommationParTour: number;
+  /**
+   * Ce que coûterait la furtivité par tour, pour une unité qui en est capable
+   * (trait `furtif`) ; `null` sinon. Le joueur doit savoir qu'un chasseur brûle
+   * cinq par tour, et huit une fois caché.
+   */
+  consommationFurtive: number | null;
+  /** La cale, pour un transport ; `null` pour tout le reste. */
+  transport: CaleFiche | null;
   traits: readonly Trait[];
   /** Ce qu'elle démolit, du plus au moins. */
   forte: readonly Duel[];
@@ -78,12 +101,30 @@ const TERRAINS_CITES: readonly CleTerrain[] = [
 ];
 
 /**
+ * La consommation par tour d'un type, lue au moteur — jamais recopiée : le
+ * surcoût de la furtivité est sa règle, pas la nôtre. `enJeu` donne l'unité
+ * telle qu'elle est ; `furtive` force l'état, pour dire ce que coûterait de se
+ * cacher avant même d'avoir donné l'ordre. Le moteur ne lit de l'unité que ce
+ * champ, et un témoin réduit à lui suffit quand il n'y a pas d'unité.
+ */
+function consommation(type: UnitType, enJeu: Unite | undefined, furtive?: boolean): number {
+  if (enJeu && furtive === undefined) return consommationParTour(type, enJeu);
+  const temoin: Pick<Unite, 'furtive'> = { furtive: furtive ?? false };
+  return consommationParTour(type, temoin);
+}
+
+/**
  * Compose la fiche d'une unité depuis le catalogue actif.
  *
  * Rend `null` pour une clé inconnue plutôt que d'inventer : un catalogue peut
  * retirer une unité, et le HUD doit alors ne rien afficher, pas une fiche vide.
+ *
+ * `enJeu`, facultatif, est **cette** unité sur la carte : la rangée « redoutable
+ * contre » dit alors ce qu'elle frappe **aujourd'hui** (`degatsArme` : à zéro
+ * munition, la mitrailleuse), et la consommation par tour est la sienne. Sans
+ * elle — le menu de production —, la fiche dit la valeur pleine du catalogue.
  */
-export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
+export function ficheUnite(cat: Catalogue, cle: CleUnite, enJeu?: Unite): FicheUnite | null {
   const u = cat.unites[cle];
   if (!u) return null;
   const adversaires = Object.keys(cat.unites) as CleUnite[];
@@ -97,9 +138,14 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
     .slice(0, CITES);
 
   // L'arme secondaire est lue par `tireSansMunitions`, la fonction du moteur :
-  // la fiche ne sait pas ce qu'est une mitrailleuse, elle demande.
+  // la fiche ne sait pas ce qu'est une mitrailleuse, elle demande. Une unité en
+  // jeu frappe avec ce qui lui reste — `degatsArme`, la seule source du chiffre
+  // effectif —, le catalogue avec sa valeur pleine.
+  const frappe = (cible: CleUnite): number => (enJeu && enJeu.type === cle
+    ? degatsArme(cat, enJeu, cible)
+    : degatsBase(cat, cle, cible));
   const forte = trier(adversaires.map((cible) => ({
-    unite: cible, degats: degatsBase(cat, cle, cible), sansMunitions: tireSansMunitions(u, cible),
+    unite: cible, degats: frappe(cible), sansMunitions: tireSansMunitions(u, cible),
   })));
   const craint = trier(adversaires.map((par) => {
     const tireur = cat.unites[par];
@@ -143,6 +189,11 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
     // Portée minimale au-delà de 1 : elle ne peut pas riposter au contact.
     indirecte: u.portee[0] > 1,
     munitions: u.munitions,
+    consommationParTour: consommation(u, enJeu && enJeu.type === cle ? enJeu : undefined),
+    consommationFurtive: porte(u, 'furtif') ? consommation(u, undefined, true) : null,
+    transport: u.transport === null
+      ? null
+      : { places: u.transport.places, accepte: u.transport.accepte, ravitaille: u.transport.ravitaille === true },
     traits: u.traits,
     forte,
     craint,
@@ -155,7 +206,7 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
 /** Les traits qui méritent d'être dits en clair au joueur, dans cet ordre. */
 export const TRAITS_CITES: readonly Trait[] = [
   'capture', 'transport', 'tir_indirect', 'anti_air', 'vol', 'amphibie',
-  'plongee', 'tout_terrain', 'ravitaillement', 'vision_etendue', 'furtif_nuit',
+  'plongee', 'furtif', 'tout_terrain', 'ravitaillement', 'vision_etendue', 'furtif_nuit',
 ];
 
 /** Les traits d'une unité, dans l'ordre de lecture et sans les inconnus. */
@@ -184,18 +235,25 @@ export const PART_CARBURANT_FAIBLE = 0.2;
  * jamais être une surprise »).
  *
  * Une unité qui consomme **par tour** tombe en panne au début du tour où son
- * carburant ne couvre plus la consommation : à `carburant ≤ parTour` elle ne
- * passera pas le prochain début de tour (rouge), à moins de deux tours elle
+ * carburant ne couvre plus la consommation : à `carburant ≤ consommation` elle
+ * ne passera pas le prochain début de tour (rouge), à moins de deux tours elle
  * est orange. Une unité qui ne consomme qu'en roulant ne tombe jamais en
  * panne, elle s'arrête : orange sous un cinquième du plein, rouge à zéro,
  * quand elle ne bouge plus du tout.
+ *
+ * `consommation` est ce que l'unité brûle **réellement** par tour — pour une
+ * unité en jeu, `consommationParTour(type, unite)` du moteur, qui compte la
+ * furtivité ; à défaut, celle du type. Juger une furtive sur le chiffre du
+ * catalogue lui promettrait un tour qu'elle n'a pas.
  */
-export function alerteCarburant(type: UnitType, carburant: number | null): Alerte {
+export function alerteCarburant(
+  type: UnitType, carburant: number | null, consommation = type.carburant?.parTour ?? 0,
+): Alerte {
   if (type.carburant === null || carburant === null) return null;
-  const { parTour, max } = type.carburant;
-  if (parTour > 0) {
-    if (carburant <= parTour) return 'rouge';
-    if (carburant < 2 * parTour) return 'orange';
+  const { max } = type.carburant;
+  if (consommation > 0) {
+    if (carburant <= consommation) return 'rouge';
+    if (carburant < 2 * consommation) return 'orange';
     return null;
   }
   if (carburant <= 0) return 'rouge';

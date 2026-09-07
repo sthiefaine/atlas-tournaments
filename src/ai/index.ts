@@ -17,7 +17,7 @@
 import type {
   Action, Catalogue, Commandants, EtatPartie, MotifRefus,
 } from '../engine/index';
-import { appliquer, catalogueParDefaut } from '../engine/index';
+import { appliquer, brouillardActif, catalogueParDefaut } from '../engine/index';
 import type { Rng } from '../engine/index';
 import type { StrategieIa } from '../schemas/index';
 import { AGRESSIVE } from './strategies/agressive';
@@ -31,6 +31,7 @@ export {
 } from './strategies/ponderee';
 export { AGRESSIVE, POIDS_AGRESSIVE } from './strategies/agressive';
 export { DEFENSIVE, POIDS_DEFENSIVE } from './strategies/defensive';
+export * from './deplacement';
 export * from './evaluation';
 export * from './logistique';
 
@@ -72,7 +73,13 @@ export function strategie(id: StrategieIa | 'passive'): Strategie {
 export interface ResultatTour {
   etat: EtatPartie;
   actions: Action[];
+  /** Refus qui ont fermé le tour : un bogue de stratégie, jamais une fatalité du jeu. */
   refus: { action: Action; motif: MotifRefus }[];
+  /**
+   * Ordres refusés sous brouillard parce qu'une unité cachée occupait l'arrivée
+   * (`case_occupee`), remplacés par une attente sur place : le tour a continué.
+   */
+  contournes: { action: Action; motif: MotifRefus }[];
 }
 
 /** Garde-fou : au-delà, on considère que la stratégie tourne en rond. */
@@ -81,7 +88,14 @@ export const ACTIONS_MAX_PAR_TOUR = 200;
 /**
  * Joue le tour du camp courant : suite d'actions jusqu'à `finTour` compris.
  * Une action refusée n'est jamais rejouée : la stratégie perd la main et le tour
- * se ferme, ce qui garantit qu'une partie se termine toujours.
+ * se ferme, ce qui garantit qu'une partie se termine toujours. Une seule
+ * exception, qui n'est pas une faute de stratégie : sous brouillard, un ordre
+ * refusé `case_occupee` dont l'arrivée est occupée par une unité **cachée** —
+ * que l'IA, qui ne lit que ce qu'elle voit, ne pouvait pas connaître. L'unité
+ * attend alors sur place et le tour continue, comme le ferait un joueur devant
+ * le même refus. Depuis le 7 septembre 2026 au soir, le moteur n'émet plus ce
+ * refus — il interrompt la marche sur la dernière case libre —, et ce garde-fou
+ * ne sert plus qu'à un refus qu'on n'aurait pas prévu.
  */
 export function jouerTour(
   etat: EtatPartie, strat: Strategie, rng: Rng,
@@ -90,6 +104,7 @@ export function jouerTour(
   const flux = rng.branche('ia');
   const actions: Action[] = [];
   const refus: { action: Action; motif: MotifRefus }[] = [];
+  const contournes: { action: Action; motif: MotifRefus }[] = [];
   let courant = etat;
   const campDepart = courant.campCourant;
   for (let i = 0; i < ACTIONS_MAX_PAR_TOUR; i += 1) {
@@ -97,6 +112,17 @@ export function jouerTour(
     const action = strat.choisirAction(courant, courant.campCourant, flux, cat);
     const r = appliquer(courant, action, cat, commandants);
     if (!r.ok) {
+      const depart = action.type === 'ordre' ? action.chemin[0] : undefined;
+      if (action.type === 'ordre' && depart && r.motif === 'case_occupee' && brouillardActif(courant)) {
+        const attente: Action = { type: 'ordre', uniteId: action.uniteId, chemin: [depart], suite: { type: 'rien' } };
+        const ra = appliquer(courant, attente, cat, commandants);
+        if (ra.ok) {
+          contournes.push({ action, motif: r.motif });
+          courant = ra.etat;
+          actions.push(attente);
+          continue;
+        }
+      }
       refus.push({ action, motif: r.motif });
       if (action.type === 'finTour') break;
       const fin = appliquer(courant, { type: 'finTour' }, cat, commandants);
@@ -111,7 +137,7 @@ export function jouerTour(
     if (action.type === 'finTour') break;
     if (courant.campCourant !== campDepart) break;
   }
-  return { etat: courant, actions, refus };
+  return { etat: courant, actions, refus, contournes };
 }
 
 /** Joue une partie entière, un camp par stratégie. Utile aux simulations. */

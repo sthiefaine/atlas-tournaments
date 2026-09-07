@@ -322,3 +322,30 @@ test('déterminisme : même entrée, même partition', () => {
   const options = { ...OPTIONS, ecranCombat: true, cadrer: true };
   assert.deepEqual(ecrirePartition(evts, etat, apres, options), ecrirePartition(evts, etat, apres, options));
 });
+
+test('se cacher après une marche : le voile tombe à l’arrivée, une fois la marche finie ; se montrer le lève', () => {
+  const apres = structuredClone(etat);
+  const u = uniteParId(apres, mienne);
+  assert.ok(u);
+  u.x = 0;
+  u.y = 2;
+  u.furtive = true;
+  const p = ecrirePartition([marche, { type: 'furtivite', uniteId: mienne, furtive: true }], etat, apres, OPTIONS);
+  assert.deepEqual(genres(p), ['glisser', 'voiler']);
+  const g = seul(p, 'voiler');
+  assert.equal(g.unite, mienne);
+  assert.deepEqual(g.case, { x: 0, y: 2 }, 'là où elle est arrivée, pas d’où elle est partie');
+  assert.equal(g.debut, 2 * DUREES.parCase, 'après la marche : une unité ne fait qu’un geste à la fois');
+  assert.equal(g.duree, DUREES.voiler);
+  assert.equal(p.duree, 2 * DUREES.parCase + DUREES.voiler);
+
+  const montre = ecrirePartition([{ type: 'furtivite', uniteId: mienne, furtive: false }], apres, etat, OPTIONS);
+  assert.deepEqual(genres(montre), ['devoiler']);
+  assert.equal(seul(montre, 'devoiler').debut, 0);
+  assert.deepEqual(seul(montre, 'devoiler').case, { x: 0, y: 2 });
+
+  // Réduit : le geste est là, sans durée.
+  const reduit = ecrirePartition([{ type: 'furtivite', uniteId: mienne, furtive: true }], etat, apres, { ...OPTIONS, reduit: true });
+  assert.equal(seul(reduit, 'voiler').duree, 0);
+  assert.equal(reduit.duree, 0);
+});

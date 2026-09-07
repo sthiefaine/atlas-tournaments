@@ -815,6 +815,25 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
       }, ctx);
     }
 
+    case 'voiler':
+    case 'devoiler': {
+      // Le voile tombe — ou se lève — sur place : rien ne bouge, l'opacité seule
+      // change, et c'est le calque qui décide pour qui (`EtatVisuel.voile`) : le
+      // camp du joueur voit sa figurine s'effacer, l'adversaire qui la tient au
+      // contact la voit entière. L'ombre suit l'opacité dans le calque, qui le
+      // signale lui-même : le geste n'en déplace aucun porteur.
+      const v = ctx.unites.visuel(g.unite);
+      const vers = g.genre === 'voiler' ? 1 : 0;
+      return animationDatee(`${g.genre}:${g.unite}`, g.debut, g.duree, {
+        ombre: false,
+        // L'état est en avance : tant que le geste attend son tour, la pièce
+        // garde le voile d'avant, sans quoi elle basculerait avant sa marche.
+        attente: () => { v.voile = 1 - vers; },
+        avancer: (p) => { v.voile = vers === 1 ? p : 1 - p; },
+        terminer: () => { v.voile = null; },
+      }, ctx);
+    }
+
     case 'duel':
     case 'chiffre':
       // Lus par le HUD : la peau n'a rien à en faire.
@@ -979,6 +998,11 @@ export function partitionProvisoire(
       gestes.push({ genre: 'repousser', unite: e.uniteId, de, vers: e.vers, debut: placer(e.uniteId, duree), duree });
     } else if (e.type === 'pouvoir') {
       gestes.push({ genre: 'pouvoir', camp: e.camp, niveau: e.niveau, nom: e.nom, debut: 0, duree: d(DUREES.pouvoir) });
+    } else if (e.type === 'furtivite') {
+      const c = positionDe(e.uniteId);
+      if (!c) continue;
+      const duree = d(DUREES.voiler);
+      gestes.push({ genre: e.furtive ? 'voiler' : 'devoiler', unite: e.uniteId, case: c, debut: placer(e.uniteId, duree), duree });
     } else if (e.type === 'terrain_pose' || e.type === 'terrain_retire') {
       const duree = d(DUREES.batir);
       gestes.push({

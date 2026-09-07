@@ -7,14 +7,15 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
-  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, type EtatPartie,
+  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, type Catalogue, type EtatPartie,
 } from '../../src/engine/index';
 import { ambiance } from '../../src/render/ambiance';
 import { monterHudHtml, poserEmplacements, type VueJeu } from '../../src/render/hud-html';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
 import { DUREES, type Partition } from '../../src/render/partition';
 import { chiffreSigne, MS_FIXE } from '../../src/render/scenes-html';
-import { validerMapDef } from '../../src/schemas/index';
+import { validerMapDef, type CleUnite } from '../../src/schemas/index';
+import { scenePersonnalisee } from '../engine/aides';
 
 class FauxElement {
   children: FauxElement[] = [];
@@ -445,4 +446,133 @@ test('une partition sans geste pour le HUD se résout aussitôt, sans rien crée
   });
   assert.equal(scenes(conteneur).children.length, 0);
   hud.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// Catalogue 6 : la furtivité, la cale, le passager nommé
+// ---------------------------------------------------------------------------
+
+/** Monte un HUD sur cette vue et rend ses emplacements, avec de quoi démonter. */
+function hudSur(vue: () => VueJeu): { slots: Map<string, FauxElement>; demonter(): void } {
+  const { conteneur } = document();
+  const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
+    vue,
+    t: (cle, params) => (params ? `${cle} ${JSON.stringify(params)}` : cle),
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => null,
+  });
+  return { slots: emplacements(conteneur), demonter: () => hud.demonter() };
+}
+
+/** Une partie en catalogue 6 : un chasseur furtif du joueur, un fantassin adverse. */
+function partieCatalogue6(): { etat: EtatPartie; cat: Catalogue } {
+  const cat = chargerCatalogue(6);
+  const etat = creerPartie(scenePersonnalisee(['PPPPP', 'PPPPP'], {}, [
+    { camp: 0, type: 'furtif', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 4, y: 1 },
+  ]), cat, 'hud');
+  return { etat, cat };
+}
+
+test('le panneau d’unité dit « furtive », juge le carburant à la consommation effective, et tait ce que la carte cache', () => {
+  const { etat, cat } = partieCatalogue6();
+  const furtif = etat.unites.find((u) => u.type === 'furtif');
+  assert.ok(furtif);
+  const type = cat.unites['furtif']!;
+  const parTour = type.carburant!.parTour;
+  const vueSur = (curseur: { x: number; y: number }, unitesVues?: ReadonlySet<string> | null) => (): VueJeu => ({
+    ...vueDe(etat, curseur), catalogue: cat, ...(unitesVues === undefined ? {} : { unitesVues }),
+  });
+
+  // Visible, deux tours pleins au chiffre du type : rien à signaler, pas d'état.
+  furtif.carburant = 2 * parTour;
+  let h = hudSur(vueSur({ x: 0, y: 0 }));
+  let html = h.slots.get('inspection')!.innerHTML;
+  assert.doesNotMatch(html, /class="furtive"/);
+  assert.doesNotMatch(html, /data-alerte=/);
+  h.demonter();
+
+  // Furtive : l'état est dit, et le même carburant ne couvre plus deux tours
+  // de ce qu'elle brûle vraiment.
+  furtif.furtive = true;
+  h = hudSur(vueSur({ x: 0, y: 0 }));
+  html = h.slots.get('inspection')!.innerHTML;
+  assert.match(html, /class="furtive">hud\.furtive</);
+  assert.match(html, /data-alerte="orange"[^>]*title="hud\.carburant_faible"/);
+  h.demonter();
+
+  // Une unité que le joueur ne voit pas n'est pas sous le curseur : le panneau
+  // montre le terrain de la case, pas l'unité que l'état porte.
+  const adverse = etat.unites.find((u) => u.camp === 1);
+  assert.ok(adverse);
+  h = hudSur(vueSur({ x: adverse.x, y: adverse.y }, new Set([furtif.id])));
+  html = h.slots.get('inspection')!.innerHTML;
+  assert.doesNotMatch(html, /Infanterie|unite\.infanterie\.nom/);
+  assert.match(html, /Plaine|terrain\.plaine\.nom/, 'le terrain, lui, se voit');
+  h.demonter();
+  // Vue au contact, elle se montre.
+  h = hudSur(vueSur({ x: adverse.x, y: adverse.y }, new Set([furtif.id, adverse.id])));
+  assert.match(h.slots.get('inspection')!.innerHTML, /Infanterie|unite\.infanterie\.nom/);
+  h.demonter();
+});
+
+test('la fiche du menu de production dit la cale d’un transport et ce qu’une unité brûle par tour', () => {
+  const { etat, cat } = partieCatalogue6();
+  const production = (unites: readonly CleUnite[]) => (): VueJeu => ({
+    ...vueDe(etat, { x: 0, y: 0 }), catalogue: cat, phase: 'production',
+    production: { batiment: { x: 0, y: 0 }, unites },
+  });
+  const camion = cat.unites['transport']!;
+  assert.ok(camion.transport && camion.transport.ravitaille === true);
+  let h = hudSur(production(['transport']));
+  let html = h.slots.get('production')!.innerHTML;
+  assert.match(html, /class="bloc cale"/);
+  assert.match(html, new RegExp(`class="puce places" data-places="${camion.transport.places}">fiche\\.places \\{&quot;n&quot;:${camion.transport.places}\\}`));
+  assert.match(html, /fiche\.ravitaille_cale/);
+  for (const c of camion.transport.accepte) {
+    assert.match(html, new RegExp(`unite\\.${c}\\.nom|${cat.unites[c]!.nom}`), `${c} est nommée`);
+  }
+  assert.doesNotMatch(html, /class="conso"/, 'un camion ne brûle rien immobile');
+  h.demonter();
+
+  // La barge porte sans ravitailler ; le chasseur furtif brûle cinq, huit caché.
+  h = hudSur(production(['barge']));
+  html = h.slots.get('production')!.innerHTML;
+  assert.match(html, /class="bloc cale"/);
+  assert.doesNotMatch(html, /fiche\.ravitaille_cale/);
+  h.demonter();
+  const furtif = cat.unites['furtif']!;
+  h = hudSur(production(['furtif']));
+  html = h.slots.get('production')!.innerHTML;
+  assert.doesNotMatch(html, /class="bloc cale"/);
+  assert.match(html, new RegExp(`data-conso="${furtif.carburant!.parTour}">[^<]*<svg[^>]*>.*?</svg><span>fiche\\.par_tour `));
+  assert.match(html, /fiche\.par_tour_furtif \{&quot;n&quot;:&quot;8&quot;\}/);
+  h.demonter();
+});
+
+test('le menu d’ordres nomme et dessine le passager d’un débarquement, et garde le passager dans le bouton', () => {
+  const etat = partie();
+  const [porteur, passager] = etat.unites.filter((u) => u.camp === 0);
+  assert.ok(porteur && passager);
+  porteur.cargo = [passager.id];
+  passager.dansTransport = porteur.id;
+  passager.x = porteur.x;
+  passager.y = porteur.y;
+  const h = hudSur(() => ({
+    ...vueDe(etat, { x: porteur.x, y: porteur.y }), phase: 'action', selection: porteur.id,
+    menu: {
+      ancre: { x: porteur.x, y: porteur.y },
+      options: [
+        { id: 'debarquer', cle: 'hud.debarquer_unite', disponible: true, passager: passager.id },
+        { id: 'attendre', cle: 'hud.attendre', disponible: true },
+      ],
+    },
+  }));
+  const html = h.slots.get('ordres')!.innerHTML;
+  assert.match(html, new RegExp(`data-valeur="debarquer" data-passager="${passager.id}"`));
+  assert.match(html, new RegExp(`hud\\.debarquer_unite \\{&quot;unite&quot;:&quot;(unite\\.${passager.type}\\.nom|${CAT.unites[passager.type]!.nom})&quot;\\}`));
+  assert.match(html, /data-vignette="vg_ordres_0"/, 'la figurine du passager');
+  assert.match(html, /data-valeur="attendre"(?! data-passager)/);
+  h.demonter();
 });

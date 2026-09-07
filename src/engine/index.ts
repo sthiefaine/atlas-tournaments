@@ -47,7 +47,7 @@
 
 // Types du moteur
 export type {
-  Action, Catalogue, CommandantMoteur, CtxMecanique, EffetMecanique, EtatCamp,
+  Action, Catalogue, CommandantMoteur, CtxMecanique, Debarquement, EffetMecanique, EtatCamp,
   EtatMecanique, EtatPartie, EtatRng, EvenementJeu, ExpirationModificateur,
   FinPartie, InstantaneRng, Mecanique, ModificateurActif, MotifRefus, ReglagesPartie,
   Resultat, Rng, Scene, SourceModificateur, Suite, TerrainPose, Unite, EtatUnite,
@@ -92,8 +92,8 @@ export {
   avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, PRIME_REMISE_EN_SERVICE, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
 } from './regles/capture';
 export {
-  batimentsDe, consommerCarburant, estRavitailleur, producteursDe, produire,
-  ravitailleCetteUnite, reparerEtRavitailler, reveiller, valeurArmee,
+  batimentsDe, consommationParTour, consommerCarburant, estRavitailleur, producteursDe, produire,
+  ravitailleCetteUnite, reparerEtRavitailler, reveiller, SURCOUT_CARBURANT_FURTIF, valeurArmee,
   verifierProduction, verserRevenus,
 } from './regles/economie';
 export {

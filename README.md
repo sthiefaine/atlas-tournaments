@@ -6,7 +6,7 @@ Web, TypeScript strict, Next.js 15. **Rendu 3D three.js**, moteur de règles dé
 
 ## Jouer les premiers matchs
 
-Ouvrir **`/campagne`** : quatre entraînements guidés, puis une qualification avec le génie et un match sous les couleurs du Luxembourg. Le carnet sauvegarde la progression dans le navigateur. `/jeu/demo` reste disponible, et `/atelier` est le banc d'essai des rendus.
+Ouvrir **`/campagne`** : quatre entraînements guidés, puis une qualification avec le génie et un match sous les couleurs du Luxembourg. Le carnet sauvegarde la progression dans le navigateur. `/jeu` liste les parties libres (la démo et les cartes navales, depuis le 7 septembre 2026), et `/atelier` est le banc d'essai des rendus.
 
 Quatre entraînements sur quatre cartes distinctes : se battre, prendre des villes, remettre des usines en service avec le génie, prendre le QG à marée basse. Le QG se prend en quarante points ; les bâtiments désaffectés se remettent en service ; le catalogue 3 ajoute drones, brouilleur et station radar pour le brouillard de guerre. Voir `doc/15-premiers-matchs.md` pour le périmètre exact et les versions. `npm run verifier:campagne` vérifie une solution et son rejeu pour chacune des six missions.
 
@@ -28,8 +28,8 @@ Quatre entraînements sur quatre cartes distinctes : se battre, prendre des vill
 | Contrôle (`src/serveur/controle/`) | vérifications structurelles, campagne de simulation multi-climats, `ReviewVerdict` motivé |
 | Rendu (`src/render/`, `src/render3d/`) | le socle indépendant de three.js — interface `Rendu`, contrôleur, HUD HTML — et la peau 3D, avec des placeholders composés depuis la `Silhouette` |
 | Serveur et admin (`src/app/`, `src/serveur/`, `src/db/`) | les routes `/api/routines/*`, la file de validation, les prompts versionnés, la dépêche, l'i18n |
-| Assets (`src/assets/`, `assets/specs/`) | le format `AssetSpec`, 681 spécifications générées depuis le canon, le validateur glTF |
-| Contenu (`content/`) | 24 pays, 18 régions françaises, 42 styles, 9 fils, le catalogue d'unités et de terrains, un scénario de démonstration |
+| Assets (`src/assets/`, `assets/specs/`) | le format `AssetSpec`, 972 spécifications générées depuis le canon (catalogue 6), le validateur glTF |
+| Contenu (`content/`) | 24 pays, 18 régions françaises, 42 styles, 9 fils, le catalogue d'unités (24, catalogue 6) et de terrains, six missions, une démo et deux cartes navales de jeu libre |
 
 Aucune base de données n'est encore branchée, aucun modèle 3D réel n'est livré, et aucune tâche planifiée Claude ne tourne. `CLAUDE.md` détaille l'état exact de chaque étape et ce qui manque.
 
@@ -40,7 +40,7 @@ npm install
 npm run dev            # http://localhost:3400
 ```
 
-L'administration est sur `/admin` (mot de passe `ADMIN_PASSWORD`), et `/jeu/demo` ouvre une partie contre l'IA. Sans base, l'administration reste lisible et affiche un bandeau ; le jeu, lui, n'a besoin de rien.
+L'administration est sur `/admin` (mot de passe `ADMIN_PASSWORD`), et `/jeu` ouvre une partie libre contre l'IA. Sans base, l'administration reste lisible et affiche un bandeau ; le jeu, lui, n'a besoin de rien.
 
 Pour la base : copier `.env.example` en `.env`, y mettre la vraie `DATABASE_URL` (jamais commitée), puis `npm run migrate`.
 
@@ -53,7 +53,7 @@ Pour la base : copier `.env.example` en `.env`, y mettre la vraie `DATABASE_URL`
 | `npm start` | migrations puis Next, en production (c'est ce que lance le Dockerfile) |
 | `npm run typecheck` | `tsc --noEmit`, TypeScript strict |
 | `npm run lint` | ESLint |
-| `npm test` | les 514 tests `tsx --test` de `tests/` |
+| `npm test` | les tests `tsx --test` de `tests/` (près d'un millier) |
 | `npm run test:e2e` | le test de fumée Playwright, avec ses drapeaux SwiftShader |
 | `npm run migrate` | applique `drizzle/*.sql` une fois chacun, avec copie de sécurité |
 | `npm run simuler -- --carte tests/engine/cartes/plaine.json --parties 50 --graine 1` | N parties IA contre IA, statistiques imprimées |
@@ -64,6 +64,6 @@ Pour la base : copier `.env.example` en `.env`, y mettre la vraie `DATABASE_URL`
 
 ## Déploiement
 
-Coolify, image construite depuis le `Dockerfile`. `npm start` applique les migrations puis démarre Next ; `/api/health` répond `200` quand la base répond. Les variables à poser sont celles de `.env.example`.
+Coolify, image construite depuis le `Dockerfile`. `npm start` applique les migrations puis démarre Next ; `/api/health` répond `200` quand la base répond. Les variables à poser sont celles de `.env.example`. La mention de version en bas à droite de l'écran-titre est calculée **au build** (`next.config.ts`) : l'heure de la mise en ligne, à Paris, et le commit court que Coolify fournit par `SOURCE_COMMIT` (à défaut, lu dans `.git`) — elle change à chaque push, sans action GitHub.
 
 Licence : voir `LICENSE`.

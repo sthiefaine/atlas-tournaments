@@ -228,8 +228,9 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   // Le banc est un monde comme les autres, ajouté après les trois missions ;
   // la grande carte, celle du budget de `doc/10` §9.2, vient en dernier.
   const catalogue0 = useMemo(() => mondes.map((m) => m), [mondes]);
-  // Le scénario est forcé sur le catalogue 2 : celui des missions de démonstration
-  // est en catalogue 1, qui n'a pas le génie, et le banc l'aurait perdu en silence.
+  // Le scénario est forcé sur le dernier catalogue (`VERSION_CATALOGUE_BANC`) :
+  // celui des missions de démonstration est en catalogue 1, qui n'a pas le
+  // génie, et le banc l'aurait perdu en silence.
   const banc = useMemo<Monde>(() => ({
     nom: 'Banc d’essai (catalogue)',
     scenario: scenarioBanc(catalogue0[0]!.scenario),

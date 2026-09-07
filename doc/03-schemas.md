@@ -412,7 +412,9 @@ export type StatutUnite = 'canon' | 'essai' | 'homologuee' | 'retiree';
  */
 export type Trait =
   | 'transport' | 'tir_indirect' | 'anti_air' | 'amphibie' | 'vol'
-  | 'furtif_nuit' | 'vision_etendue' | 'ravitaillement' | 'tout_terrain' | 'capture';
+  | 'furtif_nuit' | 'vision_etendue' | 'ravitaillement' | 'tout_terrain' | 'capture'
+  | 'genie' | 'drone' | 'brouilleur' | 'plongee'   // catalogues 2 à 5
+  | 'furtif';                                            // catalogue 6 (7 septembre 2026) : furtivité à la demande
 
 /**
  * Dessin déclaratif, composé par les pièces de `render3d/pieces.ts` : base + corps + modules,
@@ -452,6 +454,7 @@ export interface UnitType {
   transport: {                    // null = ne transporte rien
     places: number;               // 1 à 2
     accepte: CleUnite[];
+    ravitaille?: boolean;         // catalogue 6 : le plein de la cale à chaque début de tour (porte-avions, camion) ; absent = false
   } | null;
   /** **Ligne** de la table de dégâts : ce que cette unité inflige. 0 à 130, base en points. */
   degats: Partial<Record<CleUnite, number>>;
@@ -466,7 +469,7 @@ export interface UnitType {
 }
 ```
 
-**Validations serveur.** `cle` : une des dix `CleUniteCanon`, ou une clé neuve non déjà prise (toutes versions de catalogue confondues — une clé n'est **jamais** réutilisée). `cout` multiple de 100 dans [1000, 20000]. `portee[0] ≤ portee[1]` ; si `portee[1] > 1` alors `peutRiposter === false` et `peutTirerApresMouvement === false` (invariant : une pièce indirecte ne riposte pas et ne tire pas après avoir bougé). `degats` : toute valeur est un entier de 0 à 130 ; toute clé absente vaut 0 ; **si toutes les valeurs sont 0, alors `munitions === null`** (une unité sans arme ne porte pas de munitions). `subitDegats` : **obligatoire et complète** dès que `statut !== 'canon'` (une entrée par unité active, elle-même comprise), refusée si `statut === 'canon'` ; mêmes bornes que `degats`, et les quatre contraintes de forme de `04-gameplay.md` §13.3 (diagonale < 100, au moins un contre à ≥ 70, au plus universelle, règle des quatre viseurs si `vol`) sont vérifiées par la routine contrôle. Une case manquante est un refus, jamais un zéro implicite : oublier une colonne, c'est livrer une unité invulnérable. `transport.accepte` ne contient que des unités de `domaine === 'terre'` et n'inclut pas de transport (pas de poupées russes). `capture === true` implique `typeMouvement ∈ {pied, bottes}`. Une unité de `domaine === 'air'` a obligatoirement un `carburant` non nul avec `parTour ≥ 1` — sans quoi rien ne limite le camping aérien.
+**Validations serveur.** `cle` : une des dix `CleUniteCanon`, ou une clé neuve non déjà prise (toutes versions de catalogue confondues — une clé n'est **jamais** réutilisée). `cout` multiple de 100 dans [1000, 20000]. `portee[0] ≤ portee[1]` ; si `portee[1] > 1` alors `peutRiposter === false` et `peutTirerApresMouvement === false` (invariant : une pièce indirecte ne riposte pas et ne tire pas après avoir bougé). `degats` : toute valeur est un entier de 0 à 130 ; toute clé absente vaut 0 ; **si toutes les valeurs sont 0, alors `munitions === null`** (une unité sans arme ne porte pas de munitions). `subitDegats` : **obligatoire et complète** dès que `statut !== 'canon'` (une entrée par unité active, elle-même comprise), refusée si `statut === 'canon'` ; mêmes bornes que `degats`, et les quatre contraintes de forme de `04-gameplay.md` §13.3 (diagonale < 100, au moins un contre à ≥ 70, au plus universelle, règle des quatre viseurs si `vol`) sont vérifiées par la routine contrôle. Une case manquante est un refus, jamais un zéro implicite : oublier une colonne, c'est livrer une unité invulnérable. `transport.accepte` n'inclut pas de transport (pas de poupées russes) — depuis le catalogue 5, le domaine des passagers est celui que le transport déclare : une barge porte du sol, un porte-avions de l'air. `capture === true` implique `typeMouvement ∈ {pied, bottes}`. Une unité de `domaine === 'air'` a obligatoirement un `carburant` non nul avec `parTour ≥ 1` — sans quoi rien ne limite le camping aérien.
 
 **Validations propres au catalogue vivant.** `statut === 'canon'` **implique** `cle ∈ CleUniteCanon` et l'absence d'`homologation` ; réciproquement une des dix clés canon ne peut pas prendre un autre statut (`motif: 'schema_invalide'`) — les dix ne se retirent jamais. `traits` : 0 à 2 valeurs de la liste fermée, sans doublon, **cohérentes avec les champs chiffrés** — `capture` ⟺ `capture === true` et `typeMouvement ∈ {pied, bottes}` ; `transport` ⟺ `transport !== null` ; `tir_indirect` ⟺ `portee[0] ≥ 2` ; `vol` ⟺ `domaine === 'air'` ; `vision_etendue` implique `vision ≥ 5` ; `amphibie` implique `typeMouvement === 'amphibie'` et est **refusé tant que le paquet naval n'est pas ouvert** (`04-gameplay.md` §3) ; `ravitaillement` implique que toutes les valeurs de `degats` sont à 0. Une incohérence est un refus, pas une correction. `silhouette` : `modules` de 0 à 3 sans doublon, `taille` cohérente avec le coût (**1** sous 5 000 fonds, **3** au-dessus de 12 000) **[proposition]** ; une silhouette invalide ou strictement identique à celle d'une autre unité active est refusée (`motif: 'silhouette_invalide'`). Le **catalogue actif** (`canon` + `essai` + `homologuee`) est plafonné à **24 unités** : une insertion qui ferait dépasser est refusée tant qu'une `homologuee` n'est pas passée `retiree`. Une unité `retiree` reste en base et reste résolvable par les `catalogueVersion` antérieures — c'est ce qui garde les rejeux valides.
 
@@ -566,6 +569,8 @@ export interface ParametresCarte {
   villesNeutres: number;          // 0 à 12 — minimum de villes neutres sur la carte
   usinesParCamp: number;          // 1 à 3
   aeroportsParCamp: number;       // 0 à 2
+  portsParCamp?: number;          // 0 à 2, facultatif (absent = 0) — 7 septembre 2026 : un port par camp sur une côte, relié par la mer
+  radarsParCamp?: number;         // 0 à 2, facultatif (absent = 0) — une station radar dans l’orbite du camp
   symetrie: Symetrie;
   densiteRoutes: number;          // 0.0 à 1.0
   mecanique?: Cle;                // clé de mécanique régionale

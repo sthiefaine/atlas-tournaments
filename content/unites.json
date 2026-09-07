@@ -1,5 +1,5 @@
 {
-  "catalogueVersion": 5,
+  "catalogueVersion": 6,
   "unites": [
     {
       "cle": "infanterie",
@@ -525,7 +525,8 @@
           "infanterie",
           "meca",
           "genie"
-        ]
+        ],
+        "ravitaille": true
       },
       "degats": {
         "infanterie": 0,
@@ -598,7 +599,8 @@
         "barge": 12,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 55,
@@ -623,7 +625,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 30,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 85
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -688,7 +691,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 35,
@@ -713,7 +717,8 @@
         "barge": 0,
         "porte_avions": 100,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 100
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -779,7 +784,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 70,
@@ -804,7 +810,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 90,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 85
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -868,7 +875,8 @@
         "barge": 75,
         "porte_avions": 45,
         "cuirasse": 30,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 7,
@@ -893,7 +901,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 80,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 45
       },
       "armeSecondaire": [
         "infanterie",
@@ -966,7 +975,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 100
       },
       "subitDegats": {
         "infanterie": 65,
@@ -991,7 +1001,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 90,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 85
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1057,7 +1068,8 @@
         "barge": 95,
         "porte_avions": 70,
         "cuirasse": 55,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 60,
@@ -1082,7 +1094,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 85,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 80
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1145,7 +1158,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 85
       },
       "subitDegats": {
         "infanterie": 5,
@@ -1170,7 +1184,8 @@
         "barge": 0,
         "porte_avions": 25,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 45
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1235,7 +1250,8 @@
         "barge": 105,
         "porte_avions": 90,
         "cuirasse": 75,
-        "sous_marin": 60
+        "sous_marin": 60,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 8,
@@ -1260,7 +1276,8 @@
         "barge": 0,
         "porte_avions": 35,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 70
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1333,7 +1350,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 30,
@@ -1358,7 +1376,8 @@
         "barge": 0,
         "porte_avions": 60,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 95
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1432,7 +1451,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 0
+        "sous_marin": 0,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 25,
@@ -1457,7 +1477,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 105,
-        "sous_marin": 95
+        "sous_marin": 95,
+        "furtif": 40
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1506,8 +1527,10 @@
           "bombardier",
           "transport_air",
           "helico",
-          "drone"
-        ]
+          "drone",
+          "furtif"
+        ],
+        "ravitaille": true
       },
       "degats": {
         "infanterie": 0,
@@ -1532,7 +1555,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 0,
-        "sous_marin": 70
+        "sous_marin": 70,
+        "furtif": 25
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1557,7 +1581,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 90,
-        "sous_marin": 95
+        "sous_marin": 95,
+        "furtif": 45
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1623,7 +1648,8 @@
         "barge": 105,
         "porte_avions": 90,
         "cuirasse": 60,
-        "sous_marin": 55
+        "sous_marin": 55,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1648,7 +1674,8 @@
         "barge": 0,
         "porte_avions": 0,
         "cuirasse": 60,
-        "sous_marin": 85
+        "sous_marin": 85,
+        "furtif": 45
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1713,7 +1740,8 @@
         "barge": 95,
         "porte_avions": 95,
         "cuirasse": 85,
-        "sous_marin": 55
+        "sous_marin": 55,
+        "furtif": 0
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1738,13 +1766,107 @@
         "barge": 0,
         "porte_avions": 70,
         "cuirasse": 55,
-        "sous_marin": 55
+        "sous_marin": 55,
+        "furtif": 0
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
         "catalogue": 5
+      }
+    },
+    {
+      "cle": "furtif",
+      "nom": "Chasseur furtif",
+      "nomCourt": "Furtif",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "furtif"
+      ],
+      "silhouette": {
+        "base": "ailes",
+        "corps": "plateau",
+        "modules": [
+          "antenne"
+        ],
+        "taille": 3
+      },
+      "cout": 20000,
+      "mouvement": 6,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 3,
+      "munitions": 6,
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 5
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 85,
+        "meca": 80,
+        "recon": 85,
+        "char_leger": 65,
+        "char_lourd": 20,
+        "artillerie": 75,
+        "roquettes": 80,
+        "antiair": 30,
+        "helico": 85,
+        "transport": 85,
+        "genie": 85,
+        "drone": 100,
+        "brouilleur": 85,
+        "char_moyen": 45,
+        "missiles_air": 85,
+        "missiles_sol": 80,
+        "chasseur": 45,
+        "bombardier": 70,
+        "transport_air": 95,
+        "barge": 40,
+        "porte_avions": 45,
+        "cuirasse": 45,
+        "sous_marin": 0,
+        "furtif": 55
+      },
+      "subitDegats": {
+        "infanterie": 5,
+        "meca": 8,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 75,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 100,
+        "missiles_sol": 0,
+        "chasseur": 85,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 25,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 55
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 6
       }
     }
   ]

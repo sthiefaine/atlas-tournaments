@@ -61,6 +61,50 @@ function submersible(corps: Silhouette['corps']): boolean {
 }
 
 /**
+ * Une aile volante est une **voilure à corps de plateau** : la seule
+ * combinaison du vocabulaire fermé qui dise « pas de fuselage ». Elle n'a ni
+ * dérive, ni empennage, ni réacteur en nacelle, ni rien sous les ailes — d'où
+ * cette question, posée par la base et par les détails avant de dessiner une
+ * queue que le chasseur (`capsule`) et le bombardier (`bloc`) portent tous deux.
+ */
+function aileVolante(corps: Silhouette['corps']): boolean {
+  return corps === 'plateau';
+}
+
+/** La flèche du bord d'attaque d'une aile volante : 34°, celle d'un delta. */
+const FLECHE_DELTA = 0.6;
+
+/**
+ * La voilure d'une aile volante : un **chevron**. Deux panneaux en flèche qui
+ * se rejoignent au nez, un bord de fuite droit qui en fait un delta plutôt
+ * qu'une aile en flèche, un saumon à l'accent dans le prolongement du bord
+ * d'attaque — la cocarde d'aile de chaque nation, comme sur le chasseur —, des
+ * élevons sombres au bord de fuite (une aile volante n'a que ça pour
+ * gouverner) et deux tuyères plates enterrées dedans. Rien ne dépasse du plan
+ * de l'aile : vu d'en haut, c'est l'absence de dérive et de queue qui la
+ * distingue, et vu de profil, c'est sa platitude.
+ *
+ * Les panneaux sont des plaques de 0,022 : l'épaisseur au-dessous de laquelle
+ * `geometriePiece` rend une boîte nue à douze triangles.
+ */
+function voilureDelta(): Piece[] {
+  const pieces: Piece[] = [];
+  for (const cote of [-1, 1]) {
+    const nom = (racine: string): string => `${racine}_${cote < 0 ? 'gauche' : 'droite'}`;
+    pieces.push(
+      { nom: nom('aile'), forme: 'plaque', role: 'principal', position: [-0.04, 0.2, cote * 0.2], taille: [0.3, 0.022, 0.34], rotation: [0, -cote * FLECHE_DELTA, 0] },
+      // Le bord de fuite est posé un rien plus bas que le panneau avant : deux
+      // dessus coplanaires scintilleraient là où les plaques se recouvrent.
+      { nom: nom('bord_fuite'), forme: 'plaque', role: 'principal', position: [-0.2, 0.197, cote * 0.15], taille: [0.18, 0.02, 0.28] },
+      { nom: nom('saumon'), forme: 'plaque', role: 'clair', position: [-0.08, 0.203, cote * 0.4], taille: [0.14, 0.018, 0.12], rotation: [0, -cote * FLECHE_DELTA, 0] },
+      { nom: nom('elevon'), forme: 'plaque', role: 'sombre', position: [-0.31, 0.196, cote * 0.2], taille: [0.06, 0.014, 0.2] },
+      { nom: nom('tuyere'), forme: 'boite', role: 'materiel', position: [-0.27, 0.205, cote * 0.06], taille: [0.06, 0.028, 0.08] },
+    );
+  }
+  return pieces;
+}
+
+/**
  * La coque d'un bâtiment de surface : carène sombre sous la flottaison, muraille
  * à la couleur du camp, étrave en pointe avec ses deux joues, tableau arrière
  * plat, et surtout un **pont** — c'est lui qu'on voit d'une caméra à 68°, et
@@ -111,9 +155,11 @@ function coqueSubmersible(): Piece[] {
  * La voilure : deux panneaux en flèche par côté — le panneau d'emplanture à la
  * couleur du camp, le saumon à l'accent, ce qui donne une **cocarde d'aile** à
  * chaque nation sans texture —, un empennage, une dérive et des réacteurs. Un
- * bombardier (corps `bloc`) en porte quatre, un chasseur deux.
+ * bombardier (corps `bloc`) en porte quatre, un chasseur deux. Une aile volante
+ * (corps `plateau`) n'a rien de tout cela : voir `voilureDelta`.
  */
 function voilure(corps: Silhouette['corps']): Piece[] {
+  if (aileVolante(corps)) return voilureDelta();
   const bombardier = corps === 'bloc';
   const pieces: Piece[] = [
     { nom: 'derive', forme: 'plaque', role: 'clair', position: [-0.32, 0.335, 0], taille: [0.18, 0.18, 0.022], rotation: [0, 0, 0.4] },
@@ -139,7 +185,7 @@ function voilure(corps: Silhouette['corps']): Piece[] {
   return pieces;
 }
 
-/** Les pièces d'une base de silhouette. Le corps compte : une coque à capsule plonge, une aile à bloc emporte. */
+/** Les pièces d'une base de silhouette. Le corps compte : une coque à capsule plonge, une aile à bloc emporte, une aile à plateau vole sans queue. */
 function piecesBase(base: Silhouette['base'], corps: Silhouette['corps']): Piece[] {
   switch (base) {
     case 'chenilles':
@@ -253,8 +299,23 @@ function kiosque(y: number): Piece[] {
  * sa soute sous le ventre. Dans les deux cas la longueur court en X, comme la
  * voilure : c'est ce qui manquait le plus à l'ancienne base, qui posait deux
  * plaques et un train sans rien pour les tenir.
+ *
+ * Une aile volante (`plateau`) **n'a pas de fuselage** : une bosse fondue dans
+ * la voilure — un ellipsoïde aplati, qui déborde à peine des panneaux et
+ * arrondit le nez du chevron —, une verrière basse à fleur de dos, et deux
+ * entrées d'air sur le dos pour dire où sont les réacteurs qu'on ne voit pas.
+ * L'ellipsoïde est la seule forme du composeur qui s'aplatisse sur ses trois
+ * axes ; un cône ou une capsule garderait sa section ronde.
  */
 function fuselage(corps: Silhouette['corps'], y: number): Piece[] {
+  if (aileVolante(corps)) {
+    return [
+      { nom: 'corps_fondu', forme: 'sphere', role: 'principal', position: [0.04, y + 0.075, 0], taille: [0.7, 0.13, 0.34] },
+      { nom: 'verriere', forme: 'sphere', role: 'verre', position: [0.17, y + 0.125, 0], taille: [0.16, 0.05, 0.12] },
+      { nom: 'entree_air_gauche', forme: 'boite', role: 'sombre', position: [0, y + 0.13, -0.11], taille: [0.12, 0.035, 0.07] },
+      { nom: 'entree_air_droite', forme: 'boite', role: 'sombre', position: [0, y + 0.13, 0.11], taille: [0.12, 0.035, 0.07] },
+    ];
+  }
   if (corps === 'bloc') {
     return [
       { nom: 'corps_bloc', forme: 'boite', role: 'principal', position: [-0.04, y + 0.1, 0], taille: [0.7, 0.19, 0.24] },
@@ -304,8 +365,13 @@ function hauteurCorps(corps: Silhouette['corps'], y: number, base: Silhouette['b
     return corps === 'plateau' ? y + 0.05 : y + 0.1;
   }
   // Ce qu'un aéronef emporte pend **sous** lui : une nacelle sur le dos d'un
-  // bombardier se lirait comme une tourelle, et un avion n'en porte pas.
-  if (base === 'ailes') return corps === 'bloc' ? y - 0.02 : y + 0.19;
+  // bombardier se lirait comme une tourelle, et un avion n'en porte pas. Sur
+  // une aile volante, le module se plante sur le dos de la bosse, là où
+  // l'ellipsoïde passe sous l'embase d'une antenne (x = −0,1, z = 0,1).
+  if (base === 'ailes') {
+    if (aileVolante(corps)) return y + 0.12;
+    return corps === 'bloc' ? y - 0.02 : y + 0.19;
+  }
   if (corps === 'capsule') return y + 0.24;
   if (corps === 'plateau') return y + 0.1;
   return y + 0.2;
@@ -404,6 +470,16 @@ function detailsBase(base: Silhouette['base'], corps: Silhouette['corps']): Piec
   if (base === 'ailes') {
     for (const cote of [-1, 1]) {
       const nom = (racine: string): string => `${racine}_${cote < 0 ? 'gauche' : 'droite'}`;
+      if (aileVolante(corps)) {
+        // Une aile volante n'emporte rien sous ses ailes : ce qu'elle porte
+        // est en soute. Il lui reste la cocarde, à plat sur chaque panneau, et
+        // un feu de position au bout de chaque saumon.
+        pieces.push(
+          { nom: nom('cocarde'), forme: 'cylindre', role: 'clair', position: [-0.09, 0.214, cote * 0.26], taille: [0.1, 0.012, 0.1] },
+          { nom: nom('feu'), forme: 'sphere', role: 'verre', position: [-0.07, 0.208, cote * 0.46], taille: [0.03, 0.02, 0.03] },
+        );
+        continue;
+      }
       // La cocarde : un disque d'accent à plat sur l'aile. C'est le seul signe
       // qui distingue deux nations d'un aéronef vu de dessus, où le fuselage
       // n'offre qu'une arête.
@@ -516,6 +592,8 @@ function detailsCorps(s: Silhouette, y: number): Piece[] {
     return pieces;
   }
   if (s.base === 'ailes') {
+    // Pas de dérive sur une aile volante : la gouverne irait avec.
+    if (aileVolante(s.corps)) return pieces;
     pieces.push({ nom: 'gouverne_derive', forme: 'plaque', role: 'principal', position: [-0.39, 0.36, 0], taille: [0.06, 0.13, 0.018], rotation: [0, 0, 0.4] });
     if (s.corps === 'bloc') {
       // Un bombardier a une queue longue et une tourelle de queue vitrée.

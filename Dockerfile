@@ -11,7 +11,12 @@ FROM node:22-alpine AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ENV NEXT_TELEMETRY_DISABLED=1
+# Le commit de la mise en ligne, fourni par Coolify au build : la mention de
+# version de l'écran-titre le lit (`next.config.ts`) ; sans lui, `.git` copié
+# ci-dessus suffit.
+ARG SOURCE_COMMIT
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    SOURCE_COMMIT=$SOURCE_COMMIT
 RUN npm run build
 
 FROM node:22-alpine AS run

@@ -14,8 +14,8 @@ import { chargerUnites } from '../content/index';
 import { validerMapDef } from '../schemas/valider';
 import type { CleTerrain, MapDef, MotifRejet, TypeMouvement } from '../schemas/types';
 import {
-  CAPTURABLES, distances, franchissable, lire, poserBrut, terrainDeCaractere,
-  creerToile, type Toile,
+  CAPTURABLES, composantes, distances, franchissable, lire, poserBrut, terrainDeCaractere,
+  creerToile, voisins4, type Toile,
 } from './grille';
 import { creerCadreTrivial } from './symetrie';
 
@@ -40,8 +40,12 @@ export const ECART_VALEUR_MAX = 0.05;
 /** Distance maximale acceptée entre un QG et l'usine la plus proche. */
 export const DISTANCE_USINE_MAX = 18;
 
-/** Poids économique d'une propriété. Ville et QG pèsent pareil : voir `analyser`. */
-const POIDS: Record<string, number> = { ville: 1, usine: 1.5, aeroport: 1.25, qg: 1 };
+/**
+ * Poids économique d'une propriété. Ville et QG pèsent pareil : voir `analyser`.
+ * Le port produit comme un aéroport ; la station radar rapporte la moitié d'une
+ * ville et ne produit rien.
+ */
+const POIDS: Record<string, number> = { ville: 1, usine: 1.5, aeroport: 1.25, qg: 1, port: 1.25, radar: 0.5 };
 
 /** Reconstruit une grille de travail à partir d'une `MapDef` déjà écrite. */
 export function toileDepuisMapDef(map: MapDef): Toile {
@@ -79,6 +83,10 @@ interface Analyse {
   casesJouables: number;
   distanceQgQg: number;
   distanceQgUsine: number[];
+  /** Ports sans une seule case de mer voisine : rien de ce qu'ils produisent n'en sort. */
+  portsSansMer: number;
+  /** Paires de ports de camps différents sans chemin par la mer. */
+  portsIsoles: number;
 }
 
 /**
@@ -145,6 +153,8 @@ function analyser(map: MapDef): Analyse {
     if (depuisQg[c] === -1 && franchissable(lire(toile, c), 'pied')) zonesMortes += 1;
   }
 
+  const naval = analyserPorts(toile, proprietes);
+
   const max = Math.max(...valeurs);
   const min = Math.min(...valeurs);
   return {
@@ -160,7 +170,42 @@ function analyser(map: MapDef): Analyse {
     casesJouables,
     distanceQgQg,
     distanceQgUsine,
+    portsSansMer: naval.sansMer,
+    portsIsoles: naval.isoles,
   };
+}
+
+/**
+ * Les ports (7 septembre 2026) : chacun touche la mer, et ceux de deux camps
+ * différents se rejoignent par elle. Le graphe est celui du mouvement `mer`,
+ * lu dans `terrains.json` : un port y est une case franchissable, donc deux
+ * ports reliés sont simplement dans la même composante. Les ports neutres ne
+ * comptent pas dans les paires : personne n'y produit.
+ */
+function analyserPorts(
+  toile: Toile,
+  proprietes: readonly { cellule: number; terrain: CleTerrain }[],
+): { sansMer: number; isoles: number } {
+  const ports = proprietes.filter((b) => b.terrain === 'port').map((b) => b.cellule);
+  if (ports.length === 0) return { sansMer: 0, isoles: 0 };
+  let sansMer = 0;
+  for (const c of ports) {
+    if (!voisins4(toile, c).some((v) => lire(toile, v) === 'mer')) sansMer += 1;
+  }
+  const { etiquettes } = composantes(toile, 'mer');
+  let isoles = 0;
+  for (let i = 0; i < ports.length; i += 1) {
+    const a = ports[i] as number;
+    const campA = toile.proprietaires[a] ?? -1;
+    if (campA < 0) continue;
+    for (let j = i + 1; j < ports.length; j += 1) {
+      const b = ports[j] as number;
+      const campB = toile.proprietaires[b] ?? -1;
+      if (campB < 0 || campB === campA) continue;
+      if (etiquettes[a] !== etiquettes[b]) isoles += 1;
+    }
+  }
+  return { sansMer, isoles };
 }
 
 /** Type de mouvement d'une unité du catalogue, `pied` par défaut. */
@@ -205,6 +250,24 @@ export function verifierCarte(map: MapDef): RapportVerification {
       code: 'zone_morte',
       detail: `${a.zonesMortes} case(s) terrestre(s) hors d'atteinte de tout QG`,
       mesure: { zones_mortes: a.zonesMortes },
+    });
+  }
+  // Zones mortes navales (7 septembre 2026) : un port sans mer, ou sans chemin
+  // vers l'adversaire, produit une flotte que rien ne peut employer. Deux codes
+  // dédiés (`MotifRejet`), sans quoi le verdict, qui dédoublonne par code, les
+  // aurait cachés derrière une zone morte terrestre.
+  if (a.portsSansMer > 0) {
+    motifs.push({
+      code: 'port_sans_mer',
+      detail: `${a.portsSansMer} port(s) sans case de mer voisine : rien de ce qu'ils produisent n'en sort`,
+      mesure: { ports_sans_mer: a.portsSansMer },
+    });
+  }
+  if (a.portsIsoles > 0) {
+    motifs.push({
+      code: 'ports_isoles',
+      detail: `${a.portsIsoles} paire(s) de ports de camps différents sans chemin par la mer`,
+      mesure: { ports_isoles: a.portsIsoles },
     });
   }
   if (a.asymetrie > ECART_VALEUR_MAX) {
@@ -275,5 +338,12 @@ function mesurerCarte(map: MapDef, a: Analyse): Record<string, number> {
     villes_neutres: a.neutres,
     zones_mortes: a.zonesMortes,
     asymetrie_de_valeur: Number(a.asymetrie.toFixed(4)),
+    // Ports et radars (7 septembre 2026) : comparés à `generation.parametres`,
+    // ils disent si le générateur a posé moins que demandé — c'est là que se
+    // lit la correction, une `MapDef` n'ayant pas d'avertissements.
+    ports_par_camp: Math.round(compter('port') / Math.max(1, map.camps)),
+    radars_par_camp: Math.round(compter('radar') / Math.max(1, map.camps)),
+    ports_sans_mer: a.portsSansMer,
+    ports_relies: a.portsIsoles === 0 ? 1 : 0,
   };
 }

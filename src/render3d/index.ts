@@ -289,7 +289,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
     // `maj` rend vrai quand une unité a bougé, est apparue ou a disparu — et
     // seulement alors : un survol ne repose rien. C'est l'ombre qui en dépend.
-    if (m.unites.maj(etat, vue.catalogue, vue.visibles)) ombreSale = true;
+    if (m.unites.maj(etat, vue.catalogue, vue.visibles, { camp: vue.camp ?? null, unites: vue.unitesVues ?? null })) {
+      ombreSale = true;
+    }
     const position = vue.selection ? m.unites.positionDe(vue.selection) : null;
     // Les décalques posés hors de la vue du joueur se mettent à plat : une
     // nappe qui épouse un relief invisible le dessine.

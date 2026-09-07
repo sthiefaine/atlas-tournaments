@@ -420,7 +420,7 @@ Termine par UNE seule ligne : « ok : N fiches de lore soumises » (+ mention br
 
 ### 3.1 Rôle
 
-Apporter **l'intention de conception** d'une carte ; le code apporte la validité. Le modèle ne dessine pas la grille, il ne place pas une tuile, il n'écrit jamais un tableau de terrain. Il envoie un `ParametresCarte` (`03-schemas.md` §5) : largeur, hauteur, camps, biome, `ratioMer`, `ratioRelief`, symétrie, villes et usines par camp, mécanique régionale, plus un bloc d'intention (objectifs, contraintes de départ). Un **générateur déterministe** côté serveur construit la carte à partir de ces paramètres et d'une graine, puis renvoie un **aperçu texte**. La routine peut commenter cet aperçu **une seule fois** ; le générateur régénère avec les ajustements, et c'est terminé.
+Apporter **l'intention de conception** d'une carte ; le code apporte la validité. Le modèle ne dessine pas la grille, il ne place pas une tuile, il n'écrit jamais un tableau de terrain. Il envoie un `ParametresCarte` (`03-schemas.md` §5) : largeur, hauteur, camps, biome, `ratioMer`, `ratioRelief`, symétrie, villes, usines et aéroports par camp — et, depuis le 7 septembre 2026, **ports et stations radar par camp** (`portsParCamp`, `radarsParCamp`, facultatifs, 0 à 2 ; absents, zéro) —, mécanique régionale, plus un bloc d'intention (objectifs, contraintes de départ). Un port se pose sur une côte et les ports des camps sont reliés par la même mer : sans mer (`ratioMer` nul) le générateur ramène les ports à zéro, et sans côte commune il en pose moins ; dans les deux cas la mesure `ports_par_camp` de l'aperçu le dit, comparée au paramètre demandé. Un **générateur déterministe** côté serveur construit la carte à partir de ces paramètres et d'une graine, puis renvoie un **aperçu texte**. La routine peut commenter cet aperçu **une seule fois** ; le générateur régénère avec les ajustements, et c'est terminé.
 
 Cette contrainte est le cœur du dispositif : elle rend impossible la classe entière des bugs « le modèle a produit une grille invalide », et elle rend toute carte reproductible à partir de `(paramètres, graine, version_generateur)`.
 
@@ -444,7 +444,7 @@ Corollaire de conception : puisque la routine contrôle simulera la carte **sous
 |---|---|
 | `GET /api/routines/missions?routine=atlas_map` | missions + prompt métier |
 | `GET /api/routines/map/missions?priorite=depeche&limite=<n>` | **file prioritaire quotidienne** de La Dépêche du jour (§8), même enveloppe, plus une `echeance` |
-| `GET /api/routines/missions/{id}` | intention de niveau, biome imposé, mécanique régionale disponible, catalogue de terrains (les 12 de `03-schemas.md` §4) et d'unités actives (avec `catalogueVersion`, §9), état de climat, `apprise` |
+| `GET /api/routines/missions/{id}` | intention de niveau, biome imposé, mécanique régionale disponible, catalogue de terrains (les 14 de `03-schemas.md` §4 — station radar et port compris depuis les catalogues 3 et 5) et d'unités actives (avec `catalogueVersion`, §9), état de climat, `apprise` |
 | `GET /api/routines/map/mecaniques` | catalogue des mécaniques régionales déclarées (lecture seule) |
 | `GET /api/routines/catalogue/unites?statut=<statut>` | catalogue d'unités et `catalogueVersion` courante (lecture seule, §9) |
 
@@ -471,7 +471,7 @@ Corollaire de conception : puisque la routine contrôle simulera la carte **sous
   },
   "catalogue": {
     "biomes": ["plaine","foret","montagne","desert","jungle","neige","volcanique","cotier","archipel","marais"],
-    "terrains": ["plaine","foret","montagne","route","ville","qg","usine","aeroport","mer","riviere","pont","plage"],
+    "terrains": ["plaine","foret","montagne","route","ville","qg","usine","aeroport","mer","riviere","pont","plage","radar","port"],
     "mecaniques_regionales": ["meca_marees","meca_mistral","meca_inondation","meca_canal_cols"],
     "symetries": ["aucune","axe_vertical","axe_horizontal","point","rotation_90"],
     "catalogueVersion": 12,
@@ -505,6 +505,8 @@ POST /api/routines/missions/{id}/soumission
     "villesNeutres": 4,
     "usinesParCamp": 2,
     "aeroportsParCamp": 1,
+    "portsParCamp": 0,
+    "radarsParCamp": 1,
     "symetrie": "point",
     "densiteRoutes": 0.5,
     "mecanique": "meca_canal_cols",
@@ -526,6 +528,8 @@ POST /api/routines/missions/{id}/soumission
   }
 }
 ```
+
+`portsParCamp` et `radarsParCamp` (7 septembre 2026) sont **facultatifs** : absents, ils valent zéro, et les cartes paramétrées avant leur arrivée se régénèrent à l'identique. Un port est un bâtiment de côte qui produit les navires du catalogue 5 : il exige `ratioMer > 0`, une case de terre bordant la mer à la distance d'un aéroport du QG, et une **mer commune** aux ports de tous les camps — le générateur ne pose jamais un port dont la flotte ne pourrait pas rencontrer l'adversaire. Pour que cette mer existe, **une carte à ports a la mer en ceinture** : le pourtour de la carte est de la mer, imputé au budget `ratioMer` (un `ratioMer` plus petit que le pourtour est relevé jusqu'à lui), et les chaussées qui relient les îles ne le traversent pas ; sans ceinture, le relief laisse deux mers en miroir que rien ne relie, et une routine qui veut un littoral d'un seul côté ne demande pas de port. Le générateur borne sans refuser : ports ramenés à zéro sans mer, posés en moins sans côte commune ; l'aperçu publie `ports_par_camp`, `ports_relies` et `radars_par_camp`, à comparer aux paramètres demandés. Une station radar se pose dans l'orbite du camp, jamais collée au QG.
 
 Le bloc `climat` de la soumission est la **réponse** au bloc `climat` de la mission :
 
@@ -553,6 +557,9 @@ Le bloc `climat` de la soumission est la **réponse** au bloc `climat` de la mis
       "chemin_qg_qg": true,
       "zones_mortes": 0,
       "asymetrie_de_valeur": 0.02,
+      "ports_par_camp": 0,
+      "ports_relies": 1,
+      "radars_par_camp": 1,
       "cols_effectifs": 3
     },
     "commentUrl": "https://<domaine>/api/routines/map/cartes/map_4dTz…"
@@ -639,7 +646,7 @@ puis passe à la mission suivante.
 
 ÉTAPE B — PARAMÈTRES (borne : UN SEUL POST par mission, DEUX au maximum si le premier renvoie {"error":...} et que tu corriges exactement ce qui est signalé) :
 TU NE DESSINES PAS LA CARTE. Tu n'envoies JAMAIS de grille, de tableau de tuiles ni de coordonnées.
-Tu envoies uniquement l'objet "parametres" décrit par body — c'est un ParametresCarte de 03-schemas §5 : largeur, hauteur, camps, biome, ratioMer, ratioRelief, villesParCamp, villesNeutres, usinesParCamp, aeroportsParCamp, symetrie, densiteRoutes, mecanique, plus un bloc "intention" (objectifs, contraintes, note).
+Tu envoies uniquement l'objet "parametres" décrit par body — c'est un ParametresCarte de 03-schemas §5 : largeur, hauteur, camps, biome, ratioMer, ratioRelief, villesParCamp, villesNeutres, usinesParCamp, aeroportsParCamp, portsParCamp, radarsParCamp, symetrie, densiteRoutes, mecanique, plus un bloc "intention" (objectifs, contraintes, note). portsParCamp et radarsParCamp sont facultatifs (0 à 2, absents = 0) ; un port n'a de sens qu'avec ratioMer > 0 — le serveur en pose moins s'il n'y a pas de côte commune aux camps, et l'aperçu te le dit par ports_par_camp.
 Tu envoies aussi un bloc "climat" :
 - "date" et "saison" : RECOPIÉES du bloc "climat" de la mission, à l'identique. TU NE CHOISIS JAMAIS LA DATE. Le serveur la fixe et refuse toute divergence.
 - "climatFixe" : null, ou un OBJET {"saison": "printemps"|"ete"|"automne"|"hiver"} (et éventuellement "meteo") — et alors "justification" est OBLIGATOIRE.
@@ -880,6 +887,8 @@ Depuis que `motifs` est structuré, la colonne **déclencheur** se lit aussi com
 |---|---|---|---|
 | `qg_inaccessible` | carte | bloquant | pas de chemin QG↔QG pour les unités terrestres |
 | `zone_morte` | carte | mineur | cases jouables jamais visitées en simulation |
+| `port_sans_mer` | carte | bloquant | un port sans case de mer voisine (7 septembre 2026, `mesure.ports_sans_mer`) |
+| `ports_isoles` | carte | majeur | des ports de camps différents sans chemin par la mer (7 septembre 2026, `mesure.ports_isoles`) |
 | `avantage_premier_joueur` | carte | bloquant | taux de victoire du camp qui commence hors de [0,40 ; 0,60] — seuil recalculé côté serveur (`03-schemas.md` §12, `02-architecture.md` §8) |
 | `desequilibre_fonds` | carte | bloquant | écart de valeur économique entre camps > 0,05 |
 | `partie_trop_courte` / `partie_trop_longue` | carte | majeur | durée moyenne hors de `duree_visee_journees` |

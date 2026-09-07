@@ -28,7 +28,7 @@ import { brouillardActif } from './climat/index';
 import { restaurerRng } from './rng';
 import type {
   Action, Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, MotifRefus,
-  Resultat, Suite, Unite,
+  Debarquement, Resultat, Suite, Unite,
 } from './types';
 import { cleCase, manhattan, porte, pvAffiches } from './types';
 
@@ -124,7 +124,18 @@ function executerOrdre(
         (a) => a.camp !== u.camp && !a.dansTransport && !vues.has(a.id) && manhattan(a, c) <= 1,
       );
       if (surprise) {
-        arrivee = c;
+        // On s'arrête sur la **dernière case libre** du trajet parcouru : ni sur
+        // la surprise elle-même (elle peut occuper la case), ni sur un allié
+        // traversé — en reculant jusqu'au départ s'il le faut. Avant le
+        // 7 septembre 2026, l'arrêt tombait sur la case et l'ordre était
+        // refusé `case_occupee`, ce qui trahissait la présence cachée.
+        let j = i;
+        while (j > 0) {
+          const occupant = uniteSur(e, chemin[j]!);
+          if (occupant === undefined || occupant.id === u.id) break;
+          j -= 1;
+        }
+        arrivee = chemin[j]!;
         interrompu = true;
         break;
       }
@@ -170,6 +181,34 @@ function executerOrdre(
   const resultat = executerSuite(e, cat, u, suite, aBouge, rng, evts);
   if (!resultat.ok) return resultat;
   if (e.unites.some((x) => x.id === u.id)) u.etat = 'agi';
+  return { ok: true };
+}
+
+/** Pose un passager sur une case adjacente ; refuse sans rien poser sinon. */
+function debarquerUn(
+  e: EtatPartie, cat: Catalogue, u: Unite, demande: Debarquement, evts: EvenementJeu[],
+): Verdict {
+  const passagerId = demande.passager ?? u.cargo[0];
+  if (passagerId === undefined) return refus('debarquement_impossible', 'aucun passager') as Verdict;
+  if (!u.cargo.includes(passagerId)) return refus('debarquement_impossible', 'passager absent de la cale') as Verdict;
+  const passager = uniteParId(e, passagerId);
+  if (!passager) return refus('debarquement_impossible') as Verdict;
+  if (!dansCarte(e, demande.vers) || manhattan(u, demande.vers) !== 1) {
+    return refus('debarquement_impossible', 'case non adjacente') as Verdict;
+  }
+  if (uniteSur(e, demande.vers)) return refus('case_occupee') as Verdict;
+  const tp = cat.unites[passager.type];
+  const terrain = terrainLogique(e, cat, demande.vers);
+  if (!tp || terrain === null || cat.terrains[terrain]?.couts[tp.typeMouvement] === undefined) {
+    return refus('debarquement_impossible', 'terrain infranchissable') as Verdict;
+  }
+  u.cargo = u.cargo.filter((id) => id !== passagerId);
+  passager.dansTransport = null;
+  passager.x = demande.vers.x;
+  passager.y = demande.vers.y;
+  // Le débarqué ne se déplace plus ce tour (§2, phase 6).
+  passager.etat = 'agi';
+  evts.push({ type: 'debarquement', uniteId: passager.id, transportId: u.id, vers: demande.vers });
   return { ok: true };
 }
 
@@ -219,26 +258,26 @@ function executerSuite(
   }
 
   if (suite.type === 'debarquer') {
-    const passagerId = u.cargo[0];
-    if (passagerId === undefined) return refus('debarquement_impossible', 'aucun passager') as Verdict;
-    const passager = uniteParId(e, passagerId);
-    if (!passager) return refus('debarquement_impossible') as Verdict;
-    if (!dansCarte(e, suite.vers) || manhattan(u, suite.vers) !== 1) {
-      return refus('debarquement_impossible', 'case non adjacente') as Verdict;
+    // Un ordre, plusieurs débarquements (catalogue 6) : une barge à deux places
+    // vide sa cale en une fois, chaque passager sur sa case. Le premier est
+    // porté par `vers`/`passager`, les suivants par `autres` ; un seul refus
+    // annule tout, `appliquer` ayant travaillé sur une copie.
+    const demandes: Debarquement[] = [{ vers: suite.vers, passager: suite.passager }, ...(suite.autres ?? [])];
+    for (const demande of demandes) {
+      const verdict = debarquerUn(e, cat, u, demande, evts);
+      if (!verdict.ok) return verdict;
     }
-    if (uniteSur(e, suite.vers)) return refus('case_occupee') as Verdict;
-    const tp = cat.unites[passager.type];
-    const terrain = terrainLogique(e, cat, suite.vers);
-    if (!tp || terrain === null || cat.terrains[terrain]?.couts[tp.typeMouvement] === undefined) {
-      return refus('debarquement_impossible', 'terrain infranchissable') as Verdict;
-    }
-    u.cargo = u.cargo.filter((id) => id !== passagerId);
-    passager.dansTransport = null;
-    passager.x = suite.vers.x;
-    passager.y = suite.vers.y;
-    // Le débarqué ne se déplace plus ce tour (§2, phase 6).
-    passager.etat = 'agi';
-    evts.push({ type: 'debarquement', uniteId: passager.id, transportId: u.id, vers: suite.vers });
+    return { ok: true };
+  }
+
+  if (suite.type === 'furtivite') {
+    // Se cacher ou se montrer (trait `furtif`, catalogue 6) : une bascule, après
+    // le déplacement comme toute suite. Cachée, l'unité n'est repérée qu'au
+    // contact (`cacheeAuContact`) et paie un surcoût de carburant par tour.
+    const type = cat.unites[u.type];
+    if (!type || !porte(type, 'furtif')) return refus('furtivite_impossible') as Verdict;
+    u.furtive = u.furtive !== true;
+    evts.push({ type: 'furtivite', uniteId: u.id, furtive: u.furtive });
     return { ok: true };
   }
 

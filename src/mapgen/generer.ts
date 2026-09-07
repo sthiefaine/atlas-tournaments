@@ -3,7 +3,8 @@
  *
  * Pipeline en cinq passes (`02-architecture.md` §3.3) :
  *   1. relief — bruit de valeur seedé, seuillé en mer, montagnes et forêts ;
- *   2. côtes et hydrographie — plages, rivières, lissage, terres reliées ;
+ *   2. côtes et hydrographie — plages, rivières, lissage, terres reliées (une
+ *      carte à ports garde sa ceinture de mer intacte, 7 septembre 2026) ;
  *   3. bâtiments — QG à distance maximale, usines, aéroports, villes, villes neutres ;
  *   4. réseau — routes du QG vers ses bâtiments et vers l'axe central ;
  *   5. réparation — accès blindé entre QG, zones mortes, propriétés mal orientées.
@@ -21,7 +22,7 @@ import {
   type Toile,
 } from './grille';
 import { normaliser, reglagesDe, versParametresCarte, type ParametresNormalises } from './parametres';
-import { lisserCotes, poserPlages, poserRelief, relierTerres, tracerRivieres } from './relief';
+import { anneauDuBord, lisserCotes, poserPlages, poserRelief, relierTerres, tracerRivieres } from './relief';
 import { creerRng, type Rng } from './rng';
 import { creerCadre } from './symetrie';
 
@@ -57,11 +58,21 @@ function fabriquer(p: ParametresNormalises, rng: Rng): Fabrication | null {
   const altitude = poserRelief(toile, rng.branche('relief'), p);
   tracerRivieres(toile, rng.branche('rivieres'), altitude, reglages.rivieres);
   lisserCotes(toile);
-  relierTerres(toile);
+  // Des ports demandés ont mis la mer en ceinture (`poserRelief`) : aucune
+  // chaussée ne la coupe. Sans port, rien ne change — c'est ce qui garde
+  // identiques les cartes générées avant eux.
+  relierTerres(toile, p.portsParCamp > 0 ? mursDe(toile, anneauDuBord(toile)) : undefined);
   poserPlages(toile);
 
   const bati = construire(toile, rng.branche('bati'), p);
   return bati === null ? null : { toile, unites: bati.unites };
+}
+
+/** Masque de cases infranchissables pour les chaussées, à partir d'une liste. */
+function mursDe(t: Toile, cases: readonly number[]): Uint8Array {
+  const murs = new Uint8Array(t.largeur * t.hauteur);
+  for (const c of cases) murs[c] = 1;
+  return murs;
 }
 
 /**
@@ -175,7 +186,8 @@ export function genererCarte(params: ParametresCarte, graine: number): MapDef {
   }
   if (faite === null) {
     // Dernier recours : une carte sans mer et sans relief se construit toujours.
-    const p = { ...base, ratioMerEffectif: 0, ratioRelief: Math.min(base.ratioRelief, 0.1) };
+    // Sans mer, pas de port : la ceinture d'une carte à ports mangerait la place.
+    const p = { ...base, ratioMerEffectif: 0, ratioRelief: Math.min(base.ratioRelief, 0.1), portsParCamp: 0 };
     faite = fabriquer(p, creerRng(hacherEssai(graine, 9)));
   }
   if (faite === null) throw new Error('mapgen : aucune carte constructible pour ces paramètres');

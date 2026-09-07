@@ -87,6 +87,12 @@ export interface Unite {
   cargo: string[];
   /** Identifiant du transport qui la porte, ou null. */
   dansTransport: string | null;
+  /**
+   * Furtivité en cours (trait `furtif`, catalogue 6) : l'unité n'est repérée
+   * qu'au contact et consomme davantage de carburant. Absent : visible — les
+   * états du moteur 3 ne portent pas le champ et restent lisibles tels quels.
+   */
+  furtive?: boolean;
 }
 
 /** Ce qu'un camp possède hors de la carte. */
@@ -217,16 +223,28 @@ export interface EtatPartie {
 // 4. Actions et résultats
 // ---------------------------------------------------------------------------
 
-/** Suite d'un ordre : ce que l'unité fait une fois arrivée (`04-gameplay.md` §2). */
+/**
+ * Un débarquement : quel passager (`passager`, ou le premier de la cale) et où
+ * (`vers`, adjacente au transport et franchissable par le passager).
+ */
+export interface Debarquement { vers: Case; passager?: string }
+
+/**
+ * Suite d'un ordre : ce que l'unité fait une fois arrivée (`04-gameplay.md` §2).
+ * `debarquer` vide la cale en un ordre depuis le catalogue 6 : le premier
+ * débarquement est porté par `vers`/`passager`, les suivants par `autres`.
+ * `furtivite` bascule une unité au trait `furtif` entre visible et furtive.
+ */
 export type Suite =
   | { type: 'rien' }
   | { type: 'attaquer'; cible: Case }
   | { type: 'capturer' }
   | { type: 'construire'; cible: Case }
   | { type: 'embarquer'; transport: string }
-  | { type: 'debarquer'; vers: Case }
+  | { type: 'debarquer'; vers: Case; passager?: string; autres?: Debarquement[] }
   | { type: 'fusionner'; avec: string }
-  | { type: 'ravitailler'; cible: Case };
+  | { type: 'ravitailler'; cible: Case }
+  | { type: 'furtivite' };
 
 /** Les quatre actions du moteur (`04-gameplay.md` §2, qui fait foi). */
 export type Action =
@@ -243,7 +261,7 @@ export const MOTIFS_REFUS = [
   'cible_amie', 'sans_munitions', 'ne_peut_pas_viser', 'a_bouge', 'cible_invisible',
   'capture_impossible', 'batiment_non_capturable', 'batiment_deja_possede',
   'transport_impossible', 'transport_plein', 'debarquement_impossible',
-  'fusion_impossible', 'ravitaillement_impossible', 'construction_impossible',
+  'fusion_impossible', 'ravitaillement_impossible', 'furtivite_impossible', 'construction_impossible',
   'batiment_inconnu', 'batiment_adverse', 'batiment_occupe', 'unite_non_produite_ici',
   'fonds_insuffisants', 'catalogue_inconnu',
   'pas_de_commandant', 'jauge_insuffisante', 'pouvoir_deja_utilise', 'pose_invalide',
@@ -281,6 +299,7 @@ export type EvenementJeu =
   | { type: 'debarquement'; uniteId: string; transportId: string; vers: Case }
   | { type: 'fusion'; uniteId: string; avecId: string; rembourse: number }
   | { type: 'ravitaillement'; uniteId: string; cibleId: string }
+  | { type: 'furtivite'; uniteId: string; furtive: boolean }
   | { type: 'pouvoir'; camp: CampId; niveau: 'normal' | 'super'; nom: string }
   | { type: 'terrain_pose'; case: Case; terrain: CleTerrain }
   | { type: 'terrain_retire'; case: Case }

@@ -1,6 +1,6 @@
 /**
- * Passe 4 du pipeline : QG, usines, aéroports, villes, villes neutres, routes,
- * unités de départ — puis la passe de réparation.
+ * Passe 4 du pipeline : QG, usines, aéroports, ports, stations radar, villes,
+ * villes neutres, routes, unités de départ — puis la passe de réparation.
  *
  * Tout est choisi **dans le domaine fondamental** et recopié par le groupe de
  * symétrie : le camp 0 décide, les autres reçoivent la même chose à l'isométrie
@@ -12,7 +12,7 @@ import { chargerUnites } from '../content/index';
 import type { CampId, CleTerrain, CleUnite, UniteDepart } from '../schemas/types';
 import {
   CAPTURABLES, abscisse, cellule, cheminMoinsCher, composantes, coutDe, distanceCases,
-  distances, franchissable, lire, ordonnee, poser, poserBrut, type Toile,
+  distances, franchissable, lire, ordonnee, poser, poserBrut, voisins4, type Toile,
 } from './grille';
 import type { ParametresNormalises } from './parametres';
 import type { Rng } from './rng';
@@ -42,6 +42,22 @@ function batissable(t: Toile, c: number): boolean {
 /** Cases du domaine fondamental dont l'orbite couvre tout le groupe. */
 function basePropre(t: Toile): number[] {
   return t.cadre.base.filter((c) => t.cadre.orbite(c).length === t.cadre.ordre);
+}
+
+/**
+ * Toutes les cases dont l'orbite couvre tout le groupe, représentantes ou non.
+ * Le représentant d'une orbite est un choix arbitraire (sa case d'indice
+ * minimal), et sous une rotation la frontière du domaine fondamental passe
+ * près du QG : la côte à portée du camp 0 appartient souvent au représentant
+ * d'un autre quadrant. Un port ou une station radar se choisit donc parmi
+ * toutes les cases d'orbite pleine ; l'orbite se pose depuis la case retenue
+ * (`poserOrbiteBatie`), le représentant n'y est pour rien.
+ */
+function orbitesPleines(t: Toile): number[] {
+  const total = t.largeur * t.hauteur;
+  const sortie: number[] = [];
+  for (let c = 0; c < total; c += 1) if (t.cadre.orbite(c).length === t.cadre.ordre) sortie.push(c);
+  return sortie;
 }
 
 // ---------------------------------------------------------------------------
@@ -95,7 +111,12 @@ interface Demande {
   max: number;
 }
 
-/** Ordonne les bâtiments d'un camp : usines proches, aéroports ensuite, villes en éventail. */
+/**
+ * Ordonne les bâtiments d'un camp : usines proches, aéroports ensuite, puis les
+ * ports et les stations radar (7 septembre 2026), villes en éventail. Les ports
+ * passent avant les villes parce qu'ils sont les plus contraints — une côte,
+ * une mer commune — et que les villes se contentent de ce qui reste.
+ */
 function demandes(p: ParametresNormalises): Demande[] {
   const liste: Demande[] = [];
   for (let k = 0; k < p.usinesParCamp; k += 1) {
@@ -104,10 +125,66 @@ function demandes(p: ParametresNormalises): Demande[] {
   for (let k = 0; k < p.aeroportsParCamp; k += 1) {
     liste.push({ terrain: 'aeroport', cible: 5 + k, min: 3, max: 11 });
   }
+  // Un port se tient à la distance d'un aéroport : une base de production
+  // avancée, pas un bâtiment de cour de QG.
+  for (let k = 0; k < p.portsParCamp; k += 1) {
+    liste.push({ terrain: 'port', cible: 5 + k, min: 3, max: 11 });
+  }
+  // Une station radar est dans l'orbite du camp, jamais collée au QG (`min: 2`,
+  // et l'écart de deux cases de `espaceLibre` interdit même la diagonale).
+  for (let k = 0; k < p.radarsParCamp; k += 1) {
+    liste.push({ terrain: 'radar', cible: 4 + k, min: 2, max: 10 });
+  }
   for (let k = 0; k < p.villesParCamp; k += 1) {
     liste.push({ terrain: 'ville', cible: 2 + 2 * k, min: 1, max: 8 + 2 * k });
   }
   return liste;
+}
+
+// ---------------------------------------------------------------------------
+// Ports
+// ---------------------------------------------------------------------------
+
+/**
+ * Taille minimale de la mer qu'un port dessert. Deux cases d'eau partagées par
+ * deux ports en miroir sont une mare, pas une mer : un navire n'y manœuvre pas.
+ */
+const MER_MIN_PORT = 4;
+
+/** Étiquettes des cases de mer voisines d'une case, sans doublon. */
+function mersVoisines(t: Toile, c: number, etiquettes: Int32Array): number[] {
+  const sortie: number[] = [];
+  for (const v of voisins4(t, c)) {
+    if (lire(t, v) !== 'mer') continue;
+    const e = etiquettes[v] ?? -1;
+    if (e >= 0 && !sortie.includes(e)) sortie.push(e);
+  }
+  return sortie;
+}
+
+/**
+ * La mer commune à toute l'orbite d'une case, ou `null`. Un port n'a de sens
+ * que si l'image de chaque camp touche la **même** composante de mer : sinon le
+ * navire d'un camp ne rencontre jamais celui de l'autre. Chaque image est
+ * vérifiée pour elle-même — on ne déduit pas la côte du miroir, on la lit.
+ */
+function merCommune(
+  t: Toile,
+  base: number,
+  mer: { etiquettes: Int32Array; tailles: number[] },
+): number | null {
+  let communes: number[] | null = null;
+  for (const image of t.cadre.orbite(base)) {
+    const voisines = mersVoisines(t, image, mer.etiquettes);
+    if (voisines.length === 0) return null;
+    communes = communes === null ? voisines : communes.filter((e) => voisines.includes(e));
+    if (communes.length === 0) return null;
+  }
+  if (communes === null) return null;
+  const assezGrandes = communes.filter((e) => (mer.tailles[e] ?? 0) >= MER_MIN_PORT);
+  if (assezGrandes.length === 0) return null;
+  // La plus vaste : c'est celle où une flotte a le plus de chances de servir.
+  return assezGrandes.reduce((a, b) => ((mer.tailles[b] ?? 0) > (mer.tailles[a] ?? 0) ? b : a));
 }
 
 /** Vrai si aucune propriété n'est déjà posée à moins de `ecart` cases. */
@@ -169,11 +246,22 @@ export function construire(t: Toile, rng: Rng, p: ParametresNormalises): Bati | 
   const occupees = bati.proprietes.map((b) => b.cellule);
 
   // Propriétés de camp : choisies près du QG 0, jamais plus près d'un QG adverse.
+  // Les bâtiments d'origine se choisissent dans le domaine fondamental, les
+  // ports et radars parmi toutes les orbites pleines (voir `orbitesPleines`) —
+  // élargir le bassin des premiers changerait les cartes générées avant eux.
+  // La mer est étiquetée une fois, avant toute pose : aucun bâtiment ne la
+  // modifie, et un port posé ne fait que la rejoindre.
   const pool = basePropre(t).filter((c) => batissable(t, c));
+  const poolLarge = p.portsParCamp > 0 || p.radarsParCamp > 0
+    ? orbitesPleines(t).filter((c) => batissable(t, c))
+    : pool;
+  const mer = p.portsParCamp > 0 ? composantes(t, 'mer') : null;
+  let merDesPorts: number | null = null;
   for (const demande of demandes(p)) {
     let choisie: number | null = null;
     let meilleur = Infinity;
-    for (const c of pool) {
+    const bassin = demande.terrain === 'port' || demande.terrain === 'radar' ? poolLarge : pool;
+    for (const c of bassin) {
       const d = depuisQg0[c] ?? -1;
       if (d < demande.min || d > demande.max) continue;
       if (!espaceLibre(t, c, occupees)) continue;
@@ -183,10 +271,25 @@ export function construire(t: Toile, rng: Rng, p: ParametresNormalises): Bati | 
         if (autre >= 0 && autre <= d) { propre = false; break; }
       }
       if (!propre) continue;
-      const score = Math.abs(d - demande.cible) * 4 + rng.suivant();
+      let score = Math.abs(d - demande.cible) * 4 + rng.suivant();
+      if (demande.terrain === 'port') {
+        if (mer === null) continue;
+        const commune = merCommune(t, c, mer);
+        if (commune === null) continue;
+        // Tous les ports d'une carte desservent la même mer : le second port
+        // d'un camp ne va pas ouvrir une flotte sur un lac où personne ne vient.
+        if (merDesPorts !== null && commune !== merDesPorts) continue;
+        // Une grève d'abord — c'est une plaine qui bordait la mer —, la forêt
+        // seulement à défaut, et une petite mer se paie en distance.
+        if (lire(t, c) === 'foret') score += 2;
+        score += Math.max(0, 16 - (mer.tailles[commune] ?? 0)) / 4;
+      }
       if (score < meilleur) { meilleur = score; choisie = c; }
     }
+    // Aucun candidat : on pose moins de ce bâtiment. La carte le dit par ses
+    // mesures (`ports_par_camp`, `radars_par_camp` contre les paramètres).
     if (choisie === null) continue;
+    if (demande.terrain === 'port' && mer !== null) merDesPorts = merCommune(t, choisie, mer);
     poserOrbiteBatie(t, bati, choisie, demande.terrain, p.camps);
     occupees.push(...t.cadre.orbite(choisie));
   }
@@ -278,11 +381,15 @@ function ecrireChemin(t: Toile, chemin: readonly number[]): void {
   }
 }
 
+/** Bâtiments raccordés dès que le réseau est un peu dense : aéroports, ports, radars. */
+const RACCORDES_SI_DENSE: readonly CleTerrain[] = ['aeroport', 'port', 'radar'];
+
 /**
- * Routes : elles relient le QG à ses usines, à ses aéroports et à une part de
- * ses villes fixée par `densiteRoutes`, plus un axe vers le centre de la carte.
- * L'axe central est ce qui met les QG en relation les uns avec les autres :
- * mirroir compris, il forme la route qui traverse la carte de part en part.
+ * Routes : elles relient le QG à ses usines, à ses aéroports — ports et
+ * stations radar suivent la même règle — et à une part de ses villes fixée par
+ * `densiteRoutes`, plus un axe vers le centre de la carte. L'axe central est ce
+ * qui met les QG en relation les uns avec les autres : mirroir compris, il
+ * forme la route qui traverse la carte de part en part.
  */
 export function tracerRoutes(t: Toile, p: ParametresNormalises, bati: Bati): void {
   const qg0 = bati.qg[0];
@@ -294,7 +401,7 @@ export function tracerRoutes(t: Toile, p: ParametresNormalises, bati: Bati): voi
   const villes = trie.filter((b) => b.terrain === 'ville');
   const aRelier: number[] = [
     ...trie.filter((b) => b.terrain === 'usine').map((b) => b.cellule),
-    ...(p.densiteRoutes >= 0.3 ? trie.filter((b) => b.terrain === 'aeroport').map((b) => b.cellule) : []),
+    ...(p.densiteRoutes >= 0.3 ? trie.filter((b) => RACCORDES_SI_DENSE.includes(b.terrain)).map((b) => b.cellule) : []),
     ...villes.slice(0, Math.ceil(p.densiteRoutes * villes.length)).map((b) => b.cellule),
   ];
 

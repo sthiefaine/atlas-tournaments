@@ -543,9 +543,9 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       }
     }
   }
-  let transport: { places: number; accepte: string[] } | null = null;
+  let transport: { places: number; accepte: string[]; ravitaille?: boolean } | null = null;
   if (o['transport'] !== null) {
-    const tr = objet(ctx, o['transport'], 'transport', ['places', 'accepte']);
+    const tr = objet(ctx, o['transport'], 'transport', ['places', 'accepte', 'ravitaille']);
     if (tr && requis(ctx, tr, 'transport', ['places', 'accepte'])) {
       const places = entier(ctx, tr['places'], 'transport.places', { min: 1, max: 2 });
       const accepte = tableau(ctx, tr['accepte'], 'transport.accepte', { min: 1, max: 8 },
@@ -553,7 +553,15 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       if (accepte && accepte.includes('transport')) {
         ctx.faute('transport.accepte', 'un transport ne transporte jamais un transport');
       }
-      if (places !== undefined && accepte !== undefined) transport = { places, accepte };
+      // `ravitaille` (catalogue 6) : un booléen, rien d'autre — « oui » n'est pas vrai.
+      let ravitaille: boolean | undefined;
+      if (presente(tr, 'ravitaille')) {
+        if (typeof tr['ravitaille'] !== 'boolean') ctx.faute('transport.ravitaille', 'booléen attendu');
+        else ravitaille = tr['ravitaille'];
+      }
+      if (places !== undefined && accepte !== undefined) {
+        transport = ravitaille === undefined ? { places, accepte } : { places, accepte, ravitaille };
+      }
     }
   }
 
@@ -658,6 +666,10 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       ctx.faute('traits', "le trait 'plongee' exige le domaine 'mer'");
     }
     if (a('plongee') && a('vol')) ctx.faute('traits', "traits contradictoires : 'plongee' et 'vol'");
+    // `furtif` (`04-gameplay.md` §13.2, catalogue 6) : une furtivité à la demande,
+    // réservée aux voilures — un char qui disparaît n'est pas un char. Avec
+    // `vol`, le plafond de deux traits est atteint : rien d'autre ne s'y ajoute.
+    if (a('furtif') && !a('vol')) ctx.faute('traits', "le trait 'furtif' exige le trait 'vol'");
   }
   const taille = estObjet(o['silhouette']) ? o['silhouette']['taille'] : undefined;
   if (cout !== undefined && typeof taille === 'number') {
@@ -738,13 +750,17 @@ export function validerTerrain(valeur: unknown): Resultat<Terrain> {
 const CLES_PARAMETRES = [
   'largeur', 'hauteur', 'camps', 'biome', 'ratioMer', 'ratioRelief', 'villesParCamp',
   'villesNeutres', 'usinesParCamp', 'aeroportsParCamp', 'symetrie', 'densiteRoutes', 'mecanique',
+  'portsParCamp', 'radarsParCamp',
 ] as const;
+
+/** Paramètres facultatifs : absents, le générateur les borne à zéro. */
+const PARAMETRES_FACULTATIFS: readonly string[] = ['mecanique', 'portsParCamp', 'radarsParCamp'];
 
 /** Lit les paramètres de génération d'une carte. */
 function parametresCarte(ctx: Contexte, v: unknown, chemin: string): void {
   const o = objet(ctx, v, chemin, CLES_PARAMETRES);
   if (!o) return;
-  requis(ctx, o, chemin, CLES_PARAMETRES.filter((k) => k !== 'mecanique'));
+  requis(ctx, o, chemin, CLES_PARAMETRES.filter((k) => !PARAMETRES_FACULTATIFS.includes(k)));
   entier(ctx, o['largeur'], sous(chemin, 'largeur'), { min: 10, max: 40 });
   entier(ctx, o['hauteur'], sous(chemin, 'hauteur'), { min: 10, max: 30 });
   entier(ctx, o['camps'], sous(chemin, 'camps'), { min: 2, max: 4 });
@@ -755,6 +771,9 @@ function parametresCarte(ctx: Contexte, v: unknown, chemin: string): void {
   entier(ctx, o['villesNeutres'], sous(chemin, 'villesNeutres'), { min: 0, max: 12 });
   entier(ctx, o['usinesParCamp'], sous(chemin, 'usinesParCamp'), { min: 1, max: 3 });
   entier(ctx, o['aeroportsParCamp'], sous(chemin, 'aeroportsParCamp'), { min: 0, max: 2 });
+  // Ports et radars (catalogue 5 et 3) : facultatifs, et bornés comme les aéroports.
+  if (presente(o, 'portsParCamp')) entier(ctx, o['portsParCamp'], sous(chemin, 'portsParCamp'), { min: 0, max: 2 });
+  if (presente(o, 'radarsParCamp')) entier(ctx, o['radarsParCamp'], sous(chemin, 'radarsParCamp'), { min: 0, max: 2 });
   enumeration(ctx, o['symetrie'], sous(chemin, 'symetrie'), SYMETRIES);
   nombre(ctx, o['densiteRoutes'], sous(chemin, 'densiteRoutes'), { min: 0, max: 1 });
   if (presente(o, 'mecanique')) {

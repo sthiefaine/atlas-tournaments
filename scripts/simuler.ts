@@ -143,9 +143,12 @@ export function simuler(c: Campagne): Bilan {
     const partie = jouerPartie(etat, strategies, creerRng(`${graine}:ia`), cat);
     const fin: EtatPartie = partie.etat;
     journees.push(fin.journee);
-    // « Non terminée » au sens de la routine contrôle : la limite de journées est
-    // tombée avant qu'une condition de victoire ne se déclenche (§8, seuil 20 %).
-    if (!fin.partie.terminee || fin.partie.motif === 'limite_journees') nonTerminees += 1;
+    // « Non terminée » au sens de la routine contrôle (`serveur/controle/verdict.ts`,
+    // la définition canonique) : une partie **sans vainqueur** — limite tombée
+    // sans décision, ou match nul. Une partie décidée aux points à la limite est
+    // terminée ; elle se lit dans les motifs (`limite_journees`), pas ici. Le
+    // script comptait aussi les décisions aux points (aligné le 7 septembre 2026).
+    if (fin.partie.vainqueur === null) nonTerminees += 1;
     if (fin.partie.nul) nuls += 1;
     if (fin.partie.vainqueur !== null) {
       // Le vainqueur est ramené à l'ordre des stratégies passées en argument.
@@ -312,7 +315,7 @@ function principal(): void {
   lignes.push('');
   lignes.push(`Durée moyenne      : ${(bilan.journees.reduce((a, b) => a + b, 0) / Math.max(1, s.parties)).toFixed(1)} journées`);
   lignes.push(`Durée médiane      : ${s.journeesMediane} journées (écart-type ${s.journeesEcartType})`);
-  lignes.push(`Parties non terminées : ${s.nonTerminees}`);
+  lignes.push(`Parties sans vainqueur : ${s.nonTerminees}`);
   lignes.push(`Cases jamais visitées : ${s.casesJamaisVisitees}`);
   lignes.push(`Fonds moyens        : ${s.fondsMoyenParCamp.join(' / ')}`);
   lignes.push(`Mécanique déclenchée : ${s.mecaniqueDeclenchee ?? '—'}`);

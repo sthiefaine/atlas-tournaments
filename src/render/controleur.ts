@@ -20,7 +20,7 @@
  */
 
 import type {
-  Action, Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, MotifRefus, Portee, Suite, Unite,
+  Action, Catalogue, CommandantMoteur, Debarquement, EtatPartie, EvenementJeu, MotifRefus, Portee, Suite, Unite,
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
@@ -35,25 +35,52 @@ import type { Surbrillance } from './surbrillance';
 export type Phase =
   | 'inactif' | 'selection' | 'action' | 'cible' | 'production' | 'attente' | 'fin';
 
-/** Les suites proposables au joueur, dans l'ordre d'affichage du menu. */
+/**
+ * Les suites proposables au joueur, dans l'ordre d'affichage du menu.
+ * `furtivite` (catalogue 6) bascule une unité au trait `furtif` ; `terminer`
+ * n'existe qu'après un premier débarquement, quand il reste un passager à
+ * poser et qu'on choisit de ne pas le faire.
+ */
 export const SUITES_MENU = [
-  'attaquer', 'capturer', 'remettre', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire', 'attendre',
+  'attaquer', 'capturer', 'remettre', 'fusionner', 'embarquer', 'debarquer', 'ravitailler', 'construire',
+  'furtivite', 'terminer', 'attendre',
 ] as const;
 /** Identifiant d'une entrée du menu d'actions. */
 export type IdSuite = typeof SUITES_MENU[number];
 
-/** Clé de chaîne d'une entrée de menu : jamais un texte, toujours une clé. */
-const CLE_MENU: Record<IdSuite, string> = {
+/**
+ * Clé de chaîne d'une entrée de menu : jamais un texte, toujours une clé. Deux
+ * entrées n'y sont pas, parce que leur libellé dépend du moment : `furtivite`
+ * dit « se cacher » ou « se montrer » selon l'état de l'unité (`cleFurtivite`),
+ * et `debarquer` nomme son passager (`suitesPossibles`, `poserPassager`).
+ */
+const CLE_MENU: Record<Exclude<IdSuite, 'furtivite' | 'debarquer'>, string> = {
   attaquer: 'hud.attaquer',
   capturer: 'hud.capturer',
   remettre: 'hud.remettre',
   fusionner: 'hud.fusionner',
   embarquer: 'hud.embarquer',
-  debarquer: 'hud.debarquer',
   ravitailler: 'hud.ravitailler',
   attendre: 'hud.attendre',
   construire: 'hud.construire',
+  terminer: 'hud.terminer',
 };
+
+/** La clé de l'entrée `furtivite` : elle dit ce que l'ordre **fera**, pas ce que l'unité est. */
+function cleFurtivite(u: Unite): string {
+  return u.furtive === true ? 'hud.se_montrer' : 'hud.se_cacher';
+}
+
+/**
+ * Une entrée du menu telle que le contrôleur la tient : la suite, sa clé, et
+ * pour un débarquement le passager qu'elle pose — il y a une entrée par
+ * passager, à la place fixe de `debarquer`, pour que le geste reste mécanique.
+ */
+interface EntreeMenu {
+  id: IdSuite;
+  cle: string;
+  passager?: string;
+}
 
 /** Ce que le contrôleur expose au rendu : sa vue, jamais son état interne. */
 export interface VueControleur {
@@ -70,6 +97,15 @@ export interface VueControleur {
    * `null` hors phase `cible`, ou quand la phase vise des travaux.
    */
   visee: { attaquantId: string; depuis: Case; cibles: Case[]; cible: Case | null } | null;
+  /**
+   * Le débarquement en cours : le transport, le passager qu'on pose, les cases
+   * où il peut être posé, celle qu'on pointe, et les débarquements **déjà
+   * choisis** dans le même ordre — une barge à deux places vide sa cale en un
+   * seul ordre. `null` hors d'un débarquement.
+   */
+  debarquement: {
+    transportId: string; passager: string | null; cases: Case[]; case: Case | null; choisis: Debarquement[];
+  } | null;
   /**
    * L'unité adverse **inspectée** — double-clic ou appui long sur elle. Ses
    * déplacements et son enveloppe de tir sont dans `surbrillances`, en `danger`
@@ -122,7 +158,16 @@ export class Controleur {
   private cibles: Unite[] = [];
   private travaux: Case[] = [];
 
-  private options: IdSuite[] = [];
+  /**
+   * Le débarquement en train de se composer. En phase `cible`, `passager` est
+   * celui dont on choisit la case parmi `cases` ; en phase `action` — après
+   * une première case —, `passager` est `null` et le menu propose de poser le
+   * suivant ou de terminer. `choisis` s'allonge à chaque case ; l'ordre part
+   * une seule fois, avec tout.
+   */
+  private debarquement: { passager: string | null; cases: Case[]; choisis: Debarquement[] } | null = null;
+
+  private options: EntreeMenu[] = [];
 
   private batimentProduction: Case | null = null;
 
@@ -210,7 +255,9 @@ export class Controleur {
       menu: this.phaseCourante === 'action' && this.options.length > 0
         ? {
           ancre: this.arrivee(),
-          options: this.options.map((id): OptionMenu => ({ id, cle: CLE_MENU[id], disponible: true })),
+          options: this.options.map((o): OptionMenu => (o.passager === undefined
+            ? { id: o.id, cle: o.cle, disponible: true }
+            : { id: o.id, cle: o.cle, disponible: true, passager: o.passager })),
         }
         : null,
       production: this.phaseCourante === 'production' && this.batimentProduction
@@ -222,6 +269,16 @@ export class Controleur {
           depuis: this.arrivee(),
           cibles: this.cibles.map((u) => ({ x: u.x, y: u.y })),
           cible: this.cibleVisee,
+        }
+        : null,
+      debarquement: this.debarquement && this.selectionId !== null
+        && (this.phaseCourante === 'cible' || this.phaseCourante === 'action')
+        ? {
+          transportId: this.selectionId,
+          passager: this.debarquement.passager,
+          cases: [...this.debarquement.cases],
+          case: this.phaseCourante === 'cible' ? this.cibleVisee : null,
+          choisis: [...this.debarquement.choisis],
         }
         : null,
       inspection: this.inspectionId,
@@ -255,7 +312,11 @@ export class Controleur {
     this.curseurCase = c;
     if (this.phaseCourante === 'selection') this.majChemin(c);
     // Survoler une cible, c'est déjà la pointer : le clic qui suit confirme.
+    // Une case de débarquement se pointe de la même façon.
     if (this.phaseCourante === 'cible' && this.cibles.some((u) => u.x === c.x && u.y === c.y)) {
+      this.cibleVisee = { x: c.x, y: c.y };
+    }
+    if (this.phaseCourante === 'cible' && this.debarquement?.cases.some((v) => v.x === c.x && v.y === c.y)) {
       this.cibleVisee = { x: c.x, y: c.y };
     }
     this.ecouteur.surChangement?.();
@@ -272,6 +333,22 @@ export class Controleur {
     if (this.phaseCourante === 'cible' && this.travaux.length > 0) {
       if (this.travaux.some((v) => v.x === c.x && v.y === c.y)) this.jouerOrdre({ type: 'construire', cible: c });
       else this.annuler();
+      return;
+    }
+    if (this.phaseCourante === 'cible' && this.debarquement) {
+      if (!this.debarquement.cases.some((v) => v.x === c.x && v.y === c.y)) {
+        this.annuler();
+        return;
+      }
+      // Les mêmes deux temps que la visée : pointer, puis confirmer. À la
+      // souris le survol a pointé ; au clavier, la première case est pointée
+      // d'office et Entrée suffit.
+      if (this.cibleVisee && this.cibleVisee.x === c.x && this.cibleVisee.y === c.y) {
+        this.poserPassager(c);
+        return;
+      }
+      this.cibleVisee = { x: c.x, y: c.y };
+      this.ecouteur.surChangement?.();
       return;
     }
     if (this.phaseCourante === 'cible') {
@@ -297,8 +374,10 @@ export class Controleur {
     }
 
     if (this.phaseCourante === 'action') {
-      // Un clic hors du menu revient au choix de destination.
+      // Un clic hors du menu revient au choix de destination — et oublie un
+      // débarquement à moitié composé : rien n'est parti, rien n'est à défaire.
       this.phaseCourante = 'selection';
+      this.debarquement = null;
       this.majChemin(c);
       this.ecouteur.surChangement?.();
       return;
@@ -354,6 +433,7 @@ export class Controleur {
       this.cibles = [];
       this.cibleVisee = null;
       this.travaux = [];
+      this.debarquement = null;
       this.options = [];
       const u = this.uniteSelectionnee();
       if (u) this.cheminCourant = [{ x: u.x, y: u.y }];
@@ -368,14 +448,18 @@ export class Controleur {
   valider(): void {
     if (this.phaseCourante === 'action') {
       const premiere = this.options[0];
-      if (premiere) this.choisirSuite(premiere);
+      if (premiere) this.choisirSuite(premiere.id, premiere.passager);
       return;
     }
     this.clicCase(this.curseurCase);
   }
 
-  /** Choisit une entrée du menu d'actions. */
-  choisirSuite(id: string): void {
+  /**
+   * Choisit une entrée du menu d'actions. `passager` n'a de sens que pour
+   * `debarquer` : c'est l'unité de la cale que l'entrée pose ; sans lui, le
+   * premier passager qu'une case peut accueillir.
+   */
+  choisirSuite(id: string, passager?: string): void {
     const suite = SUITES_MENU.find((s) => s === id);
     if (!suite || this.phaseCourante !== 'action') return;
     const u = this.uniteSelectionnee();
@@ -386,6 +470,18 @@ export class Controleur {
       case 'attendre':
         this.jouerOrdre({ type: 'rien' });
         return;
+      case 'furtivite':
+        // Une bascule : le moteur dit lui-même dans quel sens, le libellé du
+        // menu l'a déjà dit au joueur (`cleFurtivite`).
+        this.jouerOrdre({ type: 'furtivite' });
+        return;
+      case 'terminer': {
+        // Il reste un passager et une case pour lui, et le joueur s'en tient
+        // là : l'ordre part avec ce qui est choisi.
+        const choisis = this.debarquement?.choisis ?? [];
+        if (choisis.length > 0) this.jouerDebarquement(choisis);
+        return;
+      }
       case 'capturer':
       case 'remettre':
         // Remettre en service est une capture pour le moteur : même suite, mêmes
@@ -416,8 +512,7 @@ export class Controleur {
         return;
       }
       case 'debarquer': {
-        const vers = this.caseDebarquement(u, arrivee);
-        if (vers) this.jouerOrdre({ type: 'debarquer', vers });
+        this.ouvrirDebarquement(u, arrivee, passager);
         return;
       }
       case 'construire': {
@@ -479,6 +574,9 @@ export class Controleur {
     if (this.phaseCourante === 'cible') {
       for (const c of this.travaux) sortie.push({ case: c, genre: 'production' });
       for (const c of this.cibles) sortie.push({ case: { x: c.x, y: c.y }, genre: 'attaque' });
+      // Les cases où le passager peut être posé : c'est là qu'il **va**, et le
+      // vert dit exactement cela — « j'y vais » —, sans nouveau genre à apprendre.
+      for (const c of this.debarquement?.cases ?? []) sortie.push({ case: c, genre: 'deplacement' });
       return sortie;
     }
     if (this.phaseCourante === 'production' && this.batimentProduction) {
@@ -656,28 +754,113 @@ export class Controleur {
   }
 
   /** Les suites que le joueur peut légalement demander depuis l'arrivée. */
-  private suitesPossibles(u: Unite, arrivee: Case): IdSuite[] {
-    const sortie: IdSuite[] = [];
+  private suitesPossibles(u: Unite, arrivee: Case): EntreeMenu[] {
+    const sortie: EntreeMenu[] = [];
+    const simple = (id: Exclude<IdSuite, 'furtivite' | 'debarquer'>): void => { sortie.push({ id, cle: CLE_MENU[id] }); };
     const type = this.cat.unites[u.type];
-    if (!type) return ['attendre'];
+    if (!type) return [{ id: 'attendre', cle: CLE_MENU.attendre }];
     const aBouge = arrivee.x !== u.x || arrivee.y !== u.y;
 
-    if (ciblesDepuis(this.etatPartie, this.cat, u, arrivee, aBouge).length > 0) sortie.push('attaquer');
+    if (ciblesDepuis(this.etatPartie, this.cat, u, arrivee, aBouge).length > 0) simple('attaquer');
 
     if (peutCapturerIci(this.etatPartie, this.cat, { ...u, ...arrivee })) {
-      sortie.push(estDesaffecte(this.etatPartie, arrivee) ? 'remettre' : 'capturer');
+      simple(estDesaffecte(this.etatPartie, arrivee) ? 'remettre' : 'capturer');
     }
 
-    if (this.voisinFusionnable(u, arrivee)) sortie.push('fusionner');
-    if (this.transportVoisin(u, arrivee)) sortie.push('embarquer');
-    if (constructionsPossibles(this.etatPartie, this.cat, { ...u, ...arrivee }).length > 0) sortie.push('construire');
-    if (u.cargo.length > 0 && this.caseDebarquement(u, arrivee)) sortie.push('debarquer');
-    if (porte(type, 'ravitaillement') && this.voisinRavitaillable(u, arrivee)) sortie.push('ravitailler');
+    if (this.voisinFusionnable(u, arrivee)) simple('fusionner');
+    if (this.transportVoisin(u, arrivee)) simple('embarquer');
+    if (constructionsPossibles(this.etatPartie, this.cat, { ...u, ...arrivee }).length > 0) simple('construire');
+    // Une entrée par passager qu'une case voisine peut accueillir : le joueur
+    // choisit **qui** descend avant de choisir où.
+    for (const passager of this.passagersDebarquables(u, arrivee, [])) {
+      sortie.push({ id: 'debarquer', cle: 'hud.debarquer_unite', passager: passager.id });
+    }
+    if (porte(type, 'ravitaillement') && this.voisinRavitaillable(u, arrivee)) simple('ravitailler');
+    // Se cacher ou se montrer : offert partout où l'unité peut s'arrêter, avec
+    // ou sans déplacement — c'est le moteur qui borne, pas le menu.
+    if (porte(type, 'furtif')) sortie.push({ id: 'furtivite', cle: cleFurtivite(u) });
 
-    sortie.push('attendre');
+    simple('attendre');
     // Place fixe : un ordre est toujours au même rang, quelles que soient les
     // options du moment. C'est ce qui rend le geste mécanique.
-    return SUITES_MENU.filter((id) => sortie.includes(id));
+    return SUITES_MENU.flatMap((id) => sortie.filter((e) => e.id === id));
+  }
+
+  /**
+   * Les passagers de la cale qu'une case voisine de l'arrivée peut accueillir,
+   * dans l'ordre de la cale, `exclus` mis à part — ceux déjà posés dans
+   * l'ordre en cours, et les cases qu'ils occupent.
+   */
+  private passagersDebarquables(u: Unite, arrivee: Case, choisis: readonly Debarquement[]): Unite[] {
+    const occupees = choisis.map((d) => d.vers);
+    const poses = new Set(choisis.map((d) => d.passager));
+    const sortie: Unite[] = [];
+    for (const id of u.cargo) {
+      if (poses.has(id)) continue;
+      const passager = uniteParId(this.etatPartie, id);
+      if (!passager) continue;
+      if (this.casesDebarquement(passager, arrivee, occupees).length > 0) sortie.push(passager);
+    }
+    return sortie;
+  }
+
+  /**
+   * Ouvre le choix de la case pour un passager : la phase de visée, sur les
+   * cases voisines libres et franchissables par **lui** — un char ne débarque
+   * pas sur une montagne où l'infanterie serait allée. La première case est
+   * pointée d'office, pour qu'Entrée suffise.
+   */
+  private ouvrirDebarquement(u: Unite, arrivee: Case, passagerId: string | undefined): void {
+    const choisis = this.debarquement?.choisis ?? [];
+    const candidats = this.passagersDebarquables(u, arrivee, choisis);
+    const passager = passagerId === undefined ? candidats[0] : candidats.find((p) => p.id === passagerId);
+    if (!passager) return;
+    const cases = this.casesDebarquement(passager, arrivee, choisis.map((d) => d.vers));
+    const premiere = cases[0];
+    if (!premiere) return;
+    this.cibles = [];
+    this.travaux = [];
+    this.options = [];
+    this.debarquement = { passager: passager.id, cases, choisis };
+    this.phaseCourante = 'cible';
+    this.cibleVisee = { ...premiere };
+    this.curseurCase = { ...premiere };
+    this.ecouteur.surChangement?.();
+  }
+
+  /**
+   * La case du passager est choisie. S'il reste un passager et une case pour
+   * lui, le menu revient avec « débarquer aussi » et « terminer » ; sinon
+   * l'ordre part, avec tout ce qui a été choisi.
+   */
+  private poserPassager(c: Case): void {
+    const d = this.debarquement;
+    const u = this.uniteSelectionnee();
+    if (!d || !u || d.passager === null) return;
+    const choisis: Debarquement[] = [...d.choisis, { vers: { x: c.x, y: c.y }, passager: d.passager }];
+    const restants = this.passagersDebarquables(u, this.arrivee(), choisis);
+    if (restants.length === 0) {
+      this.jouerDebarquement(choisis);
+      return;
+    }
+    this.debarquement = { passager: null, cases: [], choisis };
+    this.cibleVisee = null;
+    this.options = [
+      ...restants.map((p): EntreeMenu => ({ id: 'debarquer', cle: 'hud.debarquer_aussi', passager: p.id })),
+      { id: 'terminer', cle: CLE_MENU.terminer },
+    ];
+    this.phaseCourante = 'action';
+    this.curseurCase = { ...this.arrivee() };
+    this.ecouteur.surChangement?.();
+  }
+
+  /** L'ordre de débarquement, une fois : le premier par `vers`/`passager`, les suivants par `autres`. */
+  private jouerDebarquement(choisis: readonly Debarquement[]): void {
+    const [premier, ...autres] = choisis;
+    if (!premier) return;
+    this.jouerOrdre(autres.length > 0
+      ? { type: 'debarquer', vers: premier.vers, passager: premier.passager, autres }
+      : { type: 'debarquer', vers: premier.vers, passager: premier.passager });
   }
 
   /** Une unité amie du même type, adjacente et abîmée : la fusion a un sens. */
@@ -702,20 +885,26 @@ export class Controleur {
     });
   }
 
-  /** Une case libre et franchissable où poser le premier passager. */
-  private caseDebarquement(u: Unite, arrivee: Case): Case | undefined {
-    const passagerId = u.cargo[0];
-    if (passagerId === undefined) return undefined;
-    const passager = uniteParId(this.etatPartie, passagerId);
-    if (!passager) return undefined;
+  /**
+   * Les cases voisines de l'arrivée, libres et franchissables par ce passager,
+   * dans l'ordre nord, ouest, est, sud ; `occupees` sont celles qu'un
+   * passager posé dans le même ordre prendra déjà. La règle est celle du
+   * moteur (`debarquerUn`) : adjacente, libre, un coût de terrain pour son
+   * type de mouvement. La case que le transport **quitte** est libre : l'état
+   * lu est celui d'avant l'ordre, où il s'y trouve encore.
+   */
+  private casesDebarquement(passager: Unite, arrivee: Case, occupees: readonly Case[]): Case[] {
     const tp = this.cat.unites[passager.type];
-    if (!tp) return undefined;
+    if (!tp) return [];
     const autour: Case[] = [
       { x: arrivee.x, y: arrivee.y - 1 }, { x: arrivee.x - 1, y: arrivee.y },
       { x: arrivee.x + 1, y: arrivee.y }, { x: arrivee.x, y: arrivee.y + 1 },
     ];
-    return autour.find((c) => {
-      if (!this.dansCarte(c) || uniteSur(this.etatPartie, c)) return false;
+    return autour.filter((c) => {
+      if (!this.dansCarte(c)) return false;
+      const occupant = uniteSur(this.etatPartie, c);
+      if (occupant && occupant.id !== this.selectionId) return false;
+      if (occupees.some((o) => o.x === c.x && o.y === c.y)) return false;
       const t = terrainLogique(this.etatPartie, this.cat, c);
       return t !== null && this.cat.terrains[t]?.couts[tp.typeMouvement] !== undefined;
     });
@@ -785,6 +974,7 @@ export class Controleur {
     this.cibles = [];
     this.cibleVisee = null;
     this.travaux = [];
+    this.debarquement = null;
     this.options = [];
     this.batimentProduction = null;
     if (this.phaseCourante !== 'fin' && this.phaseCourante !== 'attente') {

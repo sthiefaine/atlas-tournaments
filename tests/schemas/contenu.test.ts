@@ -40,7 +40,7 @@ const CATALOGUE_5 = [
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 5);
+  assert.equal(catalogue.catalogueVersion, 6);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
   // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
@@ -50,7 +50,9 @@ test('content/unites.json passe son validateur', () => {
   }
   assert.equal(catalogue.unites.find((u) => u.cle === 'char_moyen')?.homologation?.catalogue, 4);
   assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
-  assert.equal(catalogue.unites.length, 23);
+  // Le chasseur furtif entre au 6 : vingt-quatre unités, le plafond du §13.7.
+  assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 6);
+  assert.equal(catalogue.unites.length, 24);
 });
 
 test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
@@ -62,8 +64,9 @@ test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', ()
     assert.equal(u.homologation?.date, '2026-09-07', u.cle);
     assert.ok(u.nomCourt.length <= 12, `${u.cle} : nom court de ${u.nomCourt.length} signes`);
   }
-  // Le plafond de vingt-quatre unités actives (§13.7) : il reste une place.
-  assert.equal(unites.length, 23);
+  // Le plafond de vingt-quatre unités actives (§13.7) est atteint depuis le
+  // catalogue 6 : la prochaine homologuée en retire une.
+  assert.equal(unites.length, 24);
 });
 
 test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3', () => {
@@ -113,6 +116,51 @@ test('le sous-marin ne se laisse trouver que par cinq types', () => {
   assert.deepEqual(chasseurs, ['bombardier', 'cuirasse', 'helico', 'porte_avions', 'sous_marin']);
 });
 
+test('le chasseur furtif entre au catalogue 6, seul, et le plafond de vingt-quatre est atteint', () => {
+  const unites = chargerUnites();
+  const sixieme = unites.filter((u) => u.homologation?.catalogue === 6).map((u) => u.cle);
+  assert.deepEqual(sixieme, ['furtif']);
+  const furtif = unites.find((u) => u.cle === 'furtif');
+  assert.ok(furtif && furtif.subitDegats);
+  assert.equal(furtif.statut, 'homologuee');
+  assert.deepEqual(furtif.homologation, { date: '2026-09-07', catalogue: 6 });
+  assert.deepEqual(furtif.traits, ['vol', 'furtif']);
+  assert.equal(furtif.domaine, 'air');
+  assert.ok(furtif.carburant && furtif.carburant.parTour >= 1, 'une voilure consomme immobile');
+  assert.ok(furtif.nomCourt.length <= 12);
+  const canon = unites.filter((u) => u.statut === 'canon').map((u) => u.cle);
+  const colonne = furtif.subitDegats;
+  // §13.3 : diagonale sous cent, un contre canon, deux canon qu'il ne perce pas.
+  assert.ok((furtif.degats.furtif ?? 0) < 100);
+  assert.equal(furtif.degats.furtif, colonne.furtif);
+  assert.ok(canon.some((c) => (colonne[c] ?? 0) >= 70), 'unité sans contre');
+  assert.ok(canon.filter((c) => (furtif.degats[c] ?? 0) <= 30).length >= 2, 'unité universelle');
+  // Règle des quatre viseurs de l'air, et la seule exception écrite : le porte-avions.
+  for (const [v, d] of Object.entries(colonne)) {
+    if ((d ?? 0) <= 0) continue;
+    const t = unites.find((u) => u.cle === v);
+    assert.ok(t, v);
+    const autorise = t.traits.includes('anti_air') || t.traits.includes('vol')
+      || v === 'infanterie' || v === 'meca' || v === 'porte_avions';
+    assert.ok(autorise, `${v} vise le furtif sans en avoir le droit`);
+  }
+  // Le sous-marin garde ses cinq chasseurs : un avion furtif ne traque pas les coques.
+  assert.equal(furtif.degats.sous_marin, 0);
+  // Ligne et colonne complètes, sur les vingt-quatre.
+  for (const autre of unites) {
+    assert.ok(autre.cle in furtif.degats, `ligne : ${autre.cle} manque`);
+    assert.ok(autre.cle in colonne, `colonne : ${autre.cle} manque`);
+  }
+});
+
+test('le porte-avions et le camion ravitaillent leur cale, la barge et le transport d’assaut non', () => {
+  const par = Object.fromEntries(chargerUnites().map((u) => [u.cle, u]));
+  assert.equal(par['porte_avions']?.transport?.ravitaille, true);
+  assert.equal(par['transport']?.transport?.ravitaille, true);
+  assert.notEqual(par['barge']?.transport?.ravitaille, true);
+  assert.notEqual(par['transport_air']?.transport?.ravitaille, true);
+});
+
 test('les transports du catalogue 5 ne tirent sur rien', () => {
   for (const cle of ['transport_air', 'barge']) {
     const u = chargerUnites().find((x) => x.cle === cle);
@@ -149,7 +197,8 @@ test('le transport est un ravitailleur à deux places qui accepte le génie', ()
   const t = chargerUnites().find((u) => u.cle === 'transport');
   assert.ok(t);
   assert.deepEqual([...t.traits].sort(), ['ravitaillement', 'transport']);
-  assert.deepEqual(t.transport, { places: 2, accepte: ['infanterie', 'meca', 'genie'] });
+  // `ravitaille` (catalogue 6) : le camion fait aussi le plein de sa cale.
+  assert.deepEqual(t.transport, { places: 2, accepte: ['infanterie', 'meca', 'genie'], ravitaille: true });
   assert.equal(t.cout, 5000);
   assert.equal(t.munitions, null);
 });
@@ -597,4 +646,28 @@ test('un déclencheur de production ne cite qu’une unité du catalogue', () =>
       );
     }
   }
+});
+
+test('les bornes de conception du §13.4 ne dérivent pas sans être nommées', () => {
+  // Les bornes de la routine contrôle ne sont vérifiées par aucun validateur :
+  // ce test tient le registre des écarts assumés (`04-gameplay.md` §10 quater,
+  // §13.4). Un écart neuf échoue ici ; un écart résorbé doit être retiré d'ici.
+  const ECARTS_ASSUMES: Record<string, string[]> = {
+    drone: ['vision 5 sans vision_etendue'],
+    missiles_sol: ['portée 6 > 5'],
+    chasseur: ['mouvement 9 > 6 au-dessus de 10 000'],
+    bombardier: ['mouvement 7 > 6 au-dessus de 10 000'],
+    cuirasse: ['portée 6 > 5', 'fenêtre 4 > 3'],
+  };
+  const constates: Record<string, string[]> = {};
+  for (const u of chargerUnites().filter((x) => x.statut !== 'canon')) {
+    const ecarts: string[] = [];
+    if (u.cout >= 10000 && u.mouvement > 6) ecarts.push(`mouvement ${u.mouvement} > 6 au-dessus de 10 000`);
+    if (u.domaine === 'terre' && u.portee[1] >= 3 && u.mouvement > 4) ecarts.push('longue portée mobile');
+    if (u.portee[1] > 1 && u.portee[1] > 5) ecarts.push(`portée ${u.portee[1]} > 5`);
+    if (u.portee[1] > 1 && u.portee[1] - u.portee[0] > 3) ecarts.push(`fenêtre ${u.portee[1] - u.portee[0]} > 3`);
+    if (u.vision >= 5 && !u.traits.includes('vision_etendue')) ecarts.push(`vision ${u.vision} sans vision_etendue`);
+    if (ecarts.length > 0) constates[u.cle] = ecarts;
+  }
+  assert.deepEqual(constates, ECARTS_ASSUMES);
 });

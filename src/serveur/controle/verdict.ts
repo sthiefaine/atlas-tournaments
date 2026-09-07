@@ -45,6 +45,11 @@ export const GRAVITE_MOTIF: Record<MotifRejet, Gravite> = {
   zone_morte: 'mineur',
   usine_trop_loin: 'majeur',
   depart_bloque: 'bloquant',
+  // Un port sans mer produit une flotte qui ne sort jamais ; deux ports que la
+  // mer ne relie pas font une mer où l'on ne se rencontre pas — jouable, mais
+  // la mer n'y sert à rien.
+  port_sans_mer: 'bloquant',
+  ports_isoles: 'majeur',
   grille_non_reproductible: 'bloquant',
   qg_menace_trop_tot: 'bloquant',
   economie_insuffisante: 'majeur',
@@ -155,6 +160,8 @@ const SUGGESTIONS: Partial<Record<MotifRejet, string>> = {
   unite_inutile:
     'Baisser son coût ou lui donner un rôle qu’aucune unité canon ne remplit déjà.',
   qg_inaccessible: 'Ouvrir un chemin terrestre entre les QG : c’est une condition de jouabilité.',
+  port_sans_mer: 'Poser le port sur une côte : un navire produit à sec ne sort jamais.',
+  ports_isoles: 'Relier les mers des deux camps, ou retirer un port : une flotte doit pouvoir rencontrer l’autre.',
   grille_non_reproductible:
     'La grille stockée ne correspond plus à sa graine : régénérer, ou incrémenter mapgenVersion.',
 };

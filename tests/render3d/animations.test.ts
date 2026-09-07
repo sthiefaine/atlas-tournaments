@@ -59,7 +59,7 @@ function banc(options: {
     if (memo) return memo;
     const neuf: EtatVisuel = {
       dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0,
-      clip: 'repos', clipDuree: 0, pv: null,
+      clip: 'repos', clipDuree: 0, pv: null, voile: null,
     };
     visuels.set(id, neuf);
     return neuf;
@@ -336,4 +336,50 @@ test('la partition provisoire enchaîne les gestes d’une même unité : elle n
   assert.equal(court.duree, 0);
   assert.ok(court.gestes.every((g) => g.duree === 0 && g.debut === 0), 'tout se pose d’un coup');
   assert.equal(court.gestes.length, p.gestes.length, 'aucun geste perdu');
+});
+
+test('se cacher voile la pièce sur place, se montrer la dévoile, et la fin rend la parole à l’état', () => {
+  const b = banc();
+  const voiler: Geste = { genre: 'voiler', unite: mienne, case: { x: 0, y: 0 }, debut: 100, duree: DUREES.voiler };
+  const a = gesteVersAnimation(voiler, b.ctx);
+  assert.ok(a);
+  assert.equal(a.animation.duree, 100 + DUREES.voiler, 'le début est encodé dans la durée');
+  const v = b.visuel(mienne);
+  // Avant son tour, la pièce garde le voile d'avant : aucun. L'état, lui, la
+  // dit déjà furtive — c'est le geste qui retient la bascule.
+  a.animation.avancer(0.05);
+  assert.equal(v.voile, 0);
+  a.animation.avancer((100 + DUREES.voiler / 2) / (100 + DUREES.voiler));
+  assert.ok(v.voile !== null && Math.abs(v.voile - 0.5) < 1e-6, 'à mi-geste, la moitié du voile');
+  assert.deepEqual([v.dx, v.dz, v.dy, v.opacite], [0, 0, 0, 1], 'rien ne bouge ni ne rétrécit : seule l’opacité du calque change');
+  a.animation.terminer?.();
+  assert.equal(v.voile, null, 'fini, c’est l’état qui dit si elle est furtive');
+
+  const devoiler: Geste = { genre: 'devoiler', unite: mienne, case: { x: 0, y: 0 }, debut: 0, duree: DUREES.voiler };
+  const d = gesteVersAnimation(devoiler, b.ctx);
+  assert.ok(d);
+  d.animation.avancer(0.25);
+  assert.ok(v.voile !== null && Math.abs(v.voile - 0.75) < 1e-6, 'le voile se lève');
+  d.animation.terminer?.();
+  assert.equal(v.voile, null);
+  // Le geste ne déplace aucun porteur d'ombre : c'est le calque qui signale le
+  // changement d'ombre quand il habille la pièce.
+  assert.ok(b.images > 0);
+  b.effets.dispose();
+});
+
+test('la partition provisoire écrit le voile après la marche de la même unité', () => {
+  const evenements: EvenementJeu[] = [
+    {
+      type: 'deplacement', uniteId: mienne, de: { x: 0, y: 0 }, vers: { x: 2, y: 0 },
+      chemin: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }], interrompu: false,
+    },
+    { type: 'furtivite', uniteId: mienne, furtive: true },
+  ];
+  const p = partitionProvisoire(evenements, etat);
+  const g = gesteDe(p, 'voiler', mienne);
+  assert.ok(g);
+  assert.equal(g.debut, 2 * DUREES.parCase, 'après deux cases de marche');
+  assert.deepEqual(g.case, { x: 2, y: 0 }, 'à l’arrivée');
+  assert.equal(partitionProvisoire(evenements, etat, true).duree, 0, 'réduit : rien ne dure');
 });

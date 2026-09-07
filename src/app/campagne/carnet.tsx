@@ -45,6 +45,6 @@ export default function Carnet() {
       })}
     </ol>
     <details className="campagne-biomes"><summary>{t('fr', 'campagne.biomes')}</summary><dl>{Object.entries(PROFILS_BIOME).map(([cle, profil]) => <div key={cle}><dt>{t('fr', `biome.${cle}`)}</dt><dd>{profil.description}</dd></div>)}</dl></details>
-    <footer className="campagne-pied"><p>{t('fr', 'campagne.sauvegarde')}</p><Link href="/jeu/demo">{t('fr', 'campagne.demo')}</Link></footer>
+    <footer className="campagne-pied"><p>{t('fr', 'campagne.sauvegarde')}</p><Link href="/jeu">{t('fr', 'campagne.demo')}</Link></footer>
   </main>;
 }
