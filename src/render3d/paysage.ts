@@ -27,8 +27,9 @@
  * bouge »).
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { attribute, materialColor, materialOpacity } from 'three/tsl';
 
 import type { Biome, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
@@ -53,7 +54,7 @@ export function memesVisibles(a: ReadonlySet<string> | null, b: ReadonlySet<stri
 /** Les genres d'accessoires, tous biomes confondus. */
 export const GENRES_PAYSAGE = [
   // Plaine — le bocage.
-  'haie', 'botte', 'champ', 'cloture', 'moulin', 'ailes_moulin', 'herbe_haute',
+  'haie', 'botte', 'champ', 'cloture', 'moulin', 'ailes_moulin', 'herbe_haute', 'herbes_hautes',
   // Forêt — le sous-bois.
   'souche', 'fougere', 'champignon', 'tronc', 'buisson',
   // Montagne — l'alpage.
@@ -155,6 +156,11 @@ export const ESPECES: Readonly<Record<GenrePaysage, Espece>> = {
   moulin: { forme: 'moulin', couleur: 0xd9cfb8, matiere: 'mineral', regle: { sur: ['plaine'], chance: 0.025, nombre: [1, 1], rayon: [0.3, 0.36], pose: 'anneau', echelle: [0.95, 1.05], jumeau: 'ailes_moulin' } },
   ailes_moulin: { forme: 'ailes', couleur: 0xe8e2d2, matiere: 'bois', decalage: { y: 0.3, z: 0.15 }, regle: { sur: [], chance: 0, nombre: [0, 0], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [1, 1] } },
   herbe_haute: { forme: 'touffe', couleur: 0x7fa04a, matiere: 'vegetal', balance: true, regle: { sur: ['plaine'], chance: 0.22, nombre: [1, 2], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [0.7, 1] } },
+  // Le terrain `herbe_haute` (7 septembre 2026 au soir) : les mêmes touffes, mais
+  // partout et hautes — c'est ce qui doit dire « ça cache un fantassin » sans
+  // qu'on lise la fiche. Le sol reste celui de la plaine ; ce sont les touffes
+  // qui font le terrain.
+  herbes_hautes: { forme: 'touffe', couleur: 0x6f9a3e, matiere: 'vegetal', balance: true, regle: { sur: ['herbe_haute'], chance: 1, nombre: [5, 7], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [1.1, 1.45] } },
   // --- Forêt
   souche: { forme: 'souche', couleur: 0x6f5136, matiere: 'bois', regle: { sur: ['foret'], chance: 0.3, nombre: [1, 1], rayon: RAYON_SOUS_BOIS, pose: 'sous_bois', echelle: [0.8, 1.1] } },
   fougere: { forme: 'fougere', couleur: 0x4f8a3c, matiere: 'vegetal', balance: true, regle: { sur: ['foret', 'plaine'], pres: 'foret', chance: 0.4, nombre: [1, 2], rayon: RAYON_SOUS_BOIS, pose: 'sous_bois', echelle: [0.7, 1] } },
@@ -771,8 +777,9 @@ export interface Paysage {
   /** Repose tout sur le relief courant. À appeler après une mutation du terrain. */
   majRelief(): void;
   /**
-   * Le brouillard de guerre : les accessoires et le rivage d'une case hors de
-   * refait rien si l'ensemble n'a pas changé.
+   * Libère géométries et matériaux. Le brouillard de guerre ne passe pas par
+   * ici : les lots et le rivage lisent le masque du sol par leur `outputNode`
+   * (`grefferBrouillardSur`, `terrain.ts`), rien n'est teint dans le paysage.
    */
   dispose(): void;
 }
@@ -783,7 +790,7 @@ interface Lot {
   espece: Espece;
   mesh: THREE.InstancedMesh;
   geo: THREE.BufferGeometry;
-  mat: THREE.MeshStandardMaterial;
+  mat: THREE.MeshStandardNodeMaterial;
   instances: Accessoire[];
 }
 
@@ -821,7 +828,7 @@ export function creerPaysage(
   for (const [genre, instances] of parGenre) {
     const espece = ESPECES[genre];
     const geo = construireForme(espece.forme, espece.couleur);
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new THREE.MeshStandardNodeMaterial({
       vertexColors: true,
       roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
       metalness: espece.matiere === 'glace' ? 0.1 : 0,
@@ -974,13 +981,23 @@ export function creerPaysage(
   geoRivage.setAttribute('normal', new THREE.BufferAttribute(normales, 3));
   geoRivage.setAttribute('color', new THREE.BufferAttribute(couleurs, 4));
   geoRivage.setIndex(indices);
-  const matRivage = new THREE.MeshStandardMaterial({
-    vertexColors: true,
+  // Les couleurs de sommet du rivage ont **quatre** composantes : l'écume se
+  // fond par leur alpha. Le matériau à nœuds ne lit les couleurs de sommet
+  // qu'en `vec3` et jette l'alpha — pire, une seconde lecture en `vec4` du
+  // même attribut se rabat sur la première et rend un alpha de 1. On lit donc
+  // l'attribut une fois, à quatre composantes, et on le donne aux deux nœuds,
+  // `vertexColors` éteint : couleur × rgb, opacité × alpha, comme le faisait
+  // `color_fragment` en WebGL.
+  const teinteSommet = attribute('color', 'vec4');
+  const matRivage = new THREE.MeshStandardNodeMaterial({
+    vertexColors: false,
     transparent: true,
     depthWrite: false,
     roughness: genre === 'ecume' ? 1 : 0.9,
     flatShading: genre === 'galets',
   });
+  matRivage.colorNode = materialColor.mul(teinteSommet.xyz);
+  matRivage.opacityNode = materialOpacity.mul(teinteSommet.w);
   const rivage = new THREE.Mesh(geoRivage, matRivage);
   rivage.name = 'rivage';
   rivage.receiveShadow = genre === 'galets';

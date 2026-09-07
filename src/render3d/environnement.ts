@@ -11,16 +11,23 @@
  * matériaux d'un coup sans en toucher un seul.
  *
  * L'intensité, elle, suit l'ambiance (`eclairage.ts`, `environnement.intensite`)
- * par `scene.environmentIntensity`, qui existe depuis r163. La **teinte** que
- * l'ambiance calcule aussi n'a pas de prise propre en r170 : il n'existe ni
- * `environmentColor` ni multiplicateur par couleur, et la seule voie serait de
- * recuire la pièce teintée à chaque changement d'ambiance. Elle est donc
- * calculée, interpolée et gardée pour le jour où une HDRI par phase du jour
- * remplacera la pièce (le plan la prévoit), sans être appliquée aujourd'hui.
+ * par `scene.environmentIntensity`, qui existe depuis r163 et que le moteur
+ * WebGPU lit aussi (`EnvironmentNode`). La **teinte** que l'ambiance calcule
+ * aussi n'a pas de prise propre en r170 : il n'existe ni `environmentColor` ni
+ * multiplicateur par couleur, et la seule voie serait de recuire la pièce
+ * teintée à chaque changement d'ambiance. Elle est donc calculée, interpolée
+ * et gardée pour le jour où une HDRI par phase du jour remplacera la pièce (le
+ * plan la prévoit), sans être appliquée aujourd'hui.
+ *
+ * Depuis le moteur WebGPU (7 septembre 2026), le générateur est celui de
+ * `three/webgpu` (`renderers/common/extras/PMREMGenerator`), et il **rend** :
+ * il exige un moteur initialisé (`await renderer.init()`). Appelé avant, le
+ * moteur avertit, bascule en asynchrone et la carte reviendrait vide — c'est
+ * `scene.ts` qui cuit la pièce, une fois `init()` tenu.
  */
 
-import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import * as THREE from 'three/webgpu';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 /** La carte préfiltrée, et de quoi la libérer. */
 export interface Environnement {
@@ -36,10 +43,11 @@ const SIGMA = 0.04;
 
 /**
  * Préfiltre la pièce de studio en carte d'environnement. À appeler **une fois**
- * par contexte : le générateur et la pièce sont libérés aussitôt, seule la
- * texture reste, et c'est elle qu'on libère au démontage.
+ * par moteur, et **après** son `init()` : le générateur et la pièce sont
+ * libérés aussitôt, seule la texture reste, et c'est elle qu'on libère au
+ * démontage.
  */
-export function creerEnvironnement(renderer: THREE.WebGLRenderer): Environnement {
+export function creerEnvironnement(renderer: THREE.WebGPURenderer): Environnement {
   const generateur = new THREE.PMREMGenerator(renderer);
   const piece = new RoomEnvironment();
   const cible = generateur.fromScene(piece, SIGMA);

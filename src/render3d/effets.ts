@@ -22,7 +22,7 @@
  * lumière — jamais de sang, de débris organiques ni de fumée noire.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 /** Les genres d'effets : un genre, une texture, un défaut de taille et de couleur. */
 export type GenreEffet = 'eclair' | 'etincelle' | 'halo' | 'poussiere' | 'anneau' | 'caisse';
@@ -164,7 +164,7 @@ function dessinerTexture(doc: Document, genre: GenreEffet): THREE.CanvasTexture 
 /** Une place du pool : l'objet, sa matière, et ce qui le fait vivre. */
 interface Place {
   objet: THREE.Sprite | THREE.Mesh;
-  materiau: THREE.SpriteMaterial | THREE.MeshBasicMaterial;
+  materiau: THREE.SpriteNodeMaterial | THREE.MeshBasicNodeMaterial;
   plat: boolean;
   vivant: boolean;
   /** Incrémenté à chaque naissance : une poignée périmée ne libère pas le suivant. */
@@ -205,16 +205,18 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
   const attaches = new Set<THREE.Object3D>();
   let compteur = 0;
 
+  // Des matériaux à nœuds (`WebGPURenderer`), aux réglages des classiques :
+  // mélange additif, sans écriture de profondeur, opacité réglée par image.
   function creerPlace(plat: boolean): Place {
     let objet: THREE.Sprite | THREE.Mesh;
-    let materiau: THREE.SpriteMaterial | THREE.MeshBasicMaterial;
+    let materiau: THREE.SpriteNodeMaterial | THREE.MeshBasicNodeMaterial;
     if (plat) {
-      materiau = new THREE.MeshBasicMaterial({
+      materiau = new THREE.MeshBasicNodeMaterial({
         transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0,
       });
       objet = new THREE.Mesh(geoPlat, materiau);
     } else {
-      materiau = new THREE.SpriteMaterial({
+      materiau = new THREE.SpriteNodeMaterial({
         transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0,
       });
       objet = new THREE.Sprite(materiau);
@@ -279,9 +281,15 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
     p.gravite = spec.gravite ?? 0;
     if (spec.vitesse) p.vitesse.set(spec.vitesse.x, spec.vitesse.y, spec.vitesse.z);
     else p.vitesse.set(0, 0, 0);
-    p.materiau.map = textureDe(spec.genre);
+    // La texture fait partie du programme d'un matériau à nœuds — `materialColor`
+    // lit `map` à la compilation — : ne le prévenir que si elle change, et une
+    // place qui reçoit toujours le même genre ne recompile jamais.
+    const texture = textureDe(spec.genre);
+    if (p.materiau.map !== texture) {
+      p.materiau.map = texture;
+      p.materiau.needsUpdate = true;
+    }
     p.materiau.color.set(spec.couleur ?? defaut.couleur);
-    p.materiau.needsUpdate = true;
     p.objet.position.set(spec.position.x, spec.position.y, spec.position.z);
     p.objet.visible = true;
     poser(p, 0);

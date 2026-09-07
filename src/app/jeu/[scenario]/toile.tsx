@@ -83,6 +83,10 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
           paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' },
           qualite: preferences.qualite,
           animationsReduites: preferences.animationsReduites,
+          // Le moteur s'initialise après le montage : s'il ne démarre pas —
+          // ni WebGPU ni WebGL 2 n'ont voulu du canevas —, c'est le même écran
+          // que pour un montage qui lève, au lieu d'un plateau noir.
+          surEchec: () => setErreur(true),
         }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la

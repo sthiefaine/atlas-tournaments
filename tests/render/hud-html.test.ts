@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
-  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, type Catalogue, type EtatPartie,
+  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, type Catalogue, type EtatPartie, type Unite,
 } from '../../src/engine/index';
 import { ambiance } from '../../src/render/ambiance';
 import { monterHudHtml, poserEmplacements, type VueJeu } from '../../src/render/hud-html';
@@ -204,6 +204,51 @@ test('le panneau d’un transport nomme ce qu’il a à bord', () => {
   r.demonter();
 });
 
+test('le panneau d’unité dit « a bougé, suite à donner », et le compte des unités à jouer l’inclut', () => {
+  const etat = partie();
+  const miennes = etat.unites.filter((u) => u.camp === 0 && !u.dansTransport);
+  assert.ok(miennes.length >= 4, 'la carte de plaine donne au moins quatre unités au joueur');
+  const [prete, deplacee, agie, produite] = miennes as [Unite, Unite, Unite, Unite];
+  deplacee.etat = 'deplacee';
+  agie.etat = 'agi';
+  produite.etat = 'produite';
+
+  // Le compte : les prêtes et la déplacée — sa suite reste à donner —, jamais
+  // celle qui a agi ni celle produite ce tour, qui ne peut rien faire.
+  const h = hudSur(() => vueDe(etat, { x: prete.x, y: prete.y }));
+  const dock = h.slots.get('dock')!.innerHTML;
+  assert.match(dock, new RegExp(`hud\\.unites_pretes \\{&quot;n&quot;:${miennes.length - 2}\\}`));
+  assert.match(dock, /data-reste="oui"/);
+  assert.doesNotMatch(h.slots.get('inspection')!.innerHTML, /hud\.deplacee/, 'une prête n’a pas l’état');
+  h.demonter();
+
+  // L'état, dit en clair sur la déplacée.
+  const r = inspection(etat, { x: deplacee.x, y: deplacee.y });
+  assert.match(r.html, /class="deplacee">hud\.deplacee</);
+  r.demonter();
+
+  // Tout joué : la déplacée qui donne sa suite passe `agi`, et le compte tombe.
+  for (const u of miennes) u.etat = 'agi';
+  const fini = hudSur(() => vueDe(etat, { x: 0, y: 0 }));
+  assert.match(fini.slots.get('dock')!.innerHTML, /hud\.tout_joue/);
+  assert.match(fini.slots.get('dock')!.innerHTML, /data-reste="non"/);
+  fini.demonter();
+});
+
+test('le panneau d’unité prévient quand le chemin pointé sort de la vue', () => {
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0);
+  assert.ok(unite);
+  let aveugle = true;
+  const h = hudSur(() => ({ ...vueDe(etat, { x: unite.x, y: unite.y }), phase: 'selection', selection: unite.id, cheminAveugle: aveugle }));
+  assert.match(h.slots.get('inspection')!.innerHTML, /class="aveugle" role="status">.*hud\.chemin_aveugle</);
+  h.demonter();
+  aveugle = false;
+  const sans = hudSur(() => ({ ...vueDe(etat, { x: unite.x, y: unite.y }), phase: 'selection', selection: unite.id, cheminAveugle: aveugle }));
+  assert.doesNotMatch(sans.slots.get('inspection')!.innerHTML, /hud\.chemin_aveugle/);
+  sans.demonter();
+});
+
 test('l’écran de fin ne se rend ni pendant une scène ni quand la fin attend son dialogue, puis une fois', () => {
   const etat = partie();
   etat.partie = { ...etat.partie, terminee: true, vainqueur: 0, nul: false };
@@ -304,6 +349,58 @@ test('un chiffre de la partition crée un nœud frère ancré sur la case, retir
   await fin;
   assert.equal(racine.children.length, 0, 'retiré à la fin de la partition');
   hud.demonter();
+});
+
+test('le « ! » d’embuscade : ancré au-dessus de la case, retiré à la fin, jamais posé sur une unité que le joueur ne voit pas', async () => {
+  const etat = partie();
+  const [a] = etat.unites;
+  assert.ok(a);
+  const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 40, y: 60 }));
+  const partition: Partition = {
+    gestes: [{ genre: 'surprise', unite: a.id, case: { x: a.x, y: a.y }, debut: 0, duree: 70 }],
+    duree: 70,
+  };
+  const fin = hud.jouer(partition);
+  horloge.avancer(10);
+  const racine = scenes(conteneur);
+  const signe = racine.children.find((e) => e.className === 'atlas-surprise');
+  assert.ok(signe, 'le signe est créé dès le début du geste');
+  assert.equal(signe.textContent, '!');
+  assert.equal(signe.attributs.get('aria-hidden'), 'true', 'un signe, pas un texte : l’annonce porte les mots');
+  assert.equal(signe.style['left'], '40px');
+  assert.equal(signe.style['top'], '38px', 'plus haut qu’un chiffre : au-dessus de la tête');
+  assert.equal(signe.dataset['fixe'], undefined);
+  horloge.avancer(FIN_DES_SCENES);
+  await fin;
+  assert.equal(racine.children.length, 0, 'retiré à la fin');
+  hud.demonter();
+
+  // Sans durée : fixe, à l'état final, le temps de le lire.
+  const reduit = hudAvecScenes(etat, () => ({ x: 40, y: 60 }));
+  const finReduite = reduit.hud.jouer({ gestes: [{ ...partition.gestes[0]!, duree: 0 }], duree: 0 });
+  reduit.horloge.avancer(10);
+  const fixe = scenes(reduit.conteneur).children.find((e) => e.className === 'atlas-surprise');
+  assert.equal(fixe?.dataset['fixe'], 'oui');
+  reduit.horloge.avancer(FIN_DES_SCENES);
+  await finReduite;
+  reduit.hud.demonter();
+
+  // Une unité que la carte cache ne reçoit pas de « ! » : il dirait où elle s'est arrêtée.
+  const { conteneur: cache } = document();
+  const horlogeCachee = horlogeFactice();
+  const hudCache = monterHudHtml(cache as unknown as HTMLElement, {
+    vue: () => ({ ...vueDe(etat, { x: 0, y: 0 }), unitesVues: new Set<string>() }),
+    t: (cle) => cle,
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => ({ x: 40, y: 60 }),
+  }, horlogeCachee);
+  const finCachee = hudCache.jouer(partition);
+  horlogeCachee.avancer(10);
+  assert.equal(scenes(cache).children.length, 0, 'rien à l’écran');
+  horlogeCachee.avancer(FIN_DES_SCENES);
+  await finCachee;
+  hudCache.demonter();
 });
 
 test('sans position d’écran (case hors champ), aucun chiffre n’est créé et la promesse se résout', async () => {

@@ -86,6 +86,7 @@ interface PontBanc {
 /** Deux relevés identiques à l'affichage près : on ne repeint pas le dock pour rien. */
 function memesMesures(a: MesuresRendu, b: MesuresRendu): boolean {
   return a.triangles === b.triangles && a.appels === b.appels && a.composeur === b.composeur
+    && a.backend === b.backend
     && a.msCalibration === b.msCalibration && Math.abs(a.msParImage - b.msParImage) < 0.05
     && JSON.stringify(a.familles ?? null) === JSON.stringify(b.familles ?? null);
 }
@@ -312,11 +313,15 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     };
 
     void import('@/render3d/index').then(({ creerRendu3d }) => {
-      poser(() => creerRendu3d({ biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current }));
+      poser(() => creerRendu3d({
+        biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current,
+        // Le moteur s'initialise après le montage : un échec là se dit aussi.
+        surEchec: () => { if (!annule) annoncer('La 3D n’a pas pu démarrer : ni WebGPU ni WebGL 2 n’a voulu du canevas.', true); },
+      }));
     }).catch(() => {
       if (annule) return;
       courant?.demonter();
-      annoncer('La 3D n’a pas pu démarrer : cet appareil n’a pas de WebGL 2.', true);
+      annoncer('La 3D n’a pas pu démarrer : cet appareil n’a ni WebGPU ni WebGL 2.', true);
     });
     return () => { annule = true; debrancher?.(); courant?.demonter(); rendu.current = null; };
     // `etat` n'est pas une dépendance, et c'est voulu : la peau lit le dernier
@@ -559,14 +564,16 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   // La qualité et le relevé de la dernière image : c'est ici qu'on compare
   // « avec » et « sans » post-traitement (`16-realisme.md` A6). Les compteurs
   // couvrent l'image entière, ombres comprises ; avec le post-traitement, la
-  // scène y est dessinée deux fois (couleur, puis normales et profondeur).
+  // scène n'y est dessinée qu'une fois (couleur et normales par cibles
+  // multiples), plus les quads d'occlusion et de sortie. Le dos — WebGPU ou
+  // son repli WebGL 2 — est celui que le moteur a réellement pris.
   const blocRendu = <>
     <Segmente nom="Qualité" valeur={qualite} options={QUALITES} surChoix={setQualite} colonnes={3} />
     <div className={styles.champ}>
       <span className={styles.etiquette}>Dernière image</span>
       <p className={styles.note} data-mesures="oui">
         {mesures
-          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement`
+          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement · ${mesures.backend === 'webgpu' ? 'WebGPU' : mesures.backend === 'webgl' ? 'WebGL 2' : 'moteur en attente'}`
           : 'Pas encore d’image.'}
       </p>
       {/* Par famille, sur la scène entière : les appels sont approchés par les

@@ -11,7 +11,7 @@
  * en permanence dans cette couche, et elle suffit à dire « c'est celle-ci ».
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { GenreSurbrillance, Surbrillance } from '../render/surbrillance';
 import { cleCase } from '../engine/index';
@@ -256,8 +256,13 @@ export function creerSurbrillances(
   const nappes = new Map<GenreSurbrillance, THREE.Mesh>();
   /** Les mêmes nappes, à plat, pour les cases hors de vue. */
   const nappesBrouillard = new Map<GenreSurbrillance, THREE.Mesh>();
+  // Des matériaux à nœuds (`WebGPURenderer`), aux réglages des classiques. Le
+  // décalage de polygone n'est honoré que par le repli WebGL du moteur — la
+  // chaîne WebGPU de r170 ne le connaît pas — ; c'est l'altitude posée sur
+  // chaque sommet (deux à quatre centimètres de scène) qui tient les décalques
+  // au-dessus du sol, le décalage n'a jamais été qu'une ceinture de plus.
   for (const genre of genres) {
-    const mat = new THREE.MeshBasicMaterial({
+    const reglages = {
       color: COULEURS[genre],
       transparent: true,
       opacity: OPACITES[genre],
@@ -266,7 +271,8 @@ export function creerSurbrillances(
       polygonOffset: true,
       polygonOffsetFactor: -4,
       polygonOffsetUnits: -4,
-    });
+    };
+    const mat = new THREE.MeshBasicNodeMaterial(reglages);
     const maille = new THREE.Mesh(new THREE.BufferGeometry(), mat);
     maille.renderOrder = 3;
     maille.frustumCulled = false;
@@ -275,9 +281,10 @@ export function creerSurbrillances(
 
     // La même couleur, à plat et sans test de profondeur, pour les cases hors
     // de vue. Rien de visible ne peut la masquer : dans le brouillard, il n'y a
-    // ni unité dessinée ni bâtiment éclairé à recouvrir.
-    const matPlat = mat.clone();
-    matPlat.depthTest = false;
+    // ni unité dessinée ni bâtiment éclairé à recouvrir. Construite des mêmes
+    // réglages, pas clonée : en r170, `clone()` d'un matériau à nœuds ne
+    // recopie pas sa couleur, et la nappe de brouillard serait blanche.
+    const matPlat = new THREE.MeshBasicNodeMaterial({ ...reglages, depthTest: false });
     const plate = new THREE.Mesh(new THREE.BufferGeometry(), matPlat);
     plate.renderOrder = 4;
     plate.frustumCulled = false;
@@ -285,7 +292,7 @@ export function creerSurbrillances(
     groupe.add(plate);
   }
 
-  const matLisere = new THREE.MeshBasicMaterial({
+  const matLisere = new THREE.MeshBasicNodeMaterial({
     color: 0x0d2419, transparent: true, opacity: 0.72, depthWrite: false,
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -5, polygonOffsetUnits: -5,
   });
@@ -294,7 +301,7 @@ export function creerSurbrillances(
   lisere.frustumCulled = false;
   groupe.add(lisere);
 
-  const matChemin = new THREE.MeshBasicMaterial({
+  const matChemin = new THREE.MeshBasicNodeMaterial({
     color: 0xf4fff6, transparent: true, opacity: 0.96, depthWrite: false,
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -6, polygonOffsetUnits: -6,
   });
@@ -303,7 +310,7 @@ export function creerSurbrillances(
   chemin.frustumCulled = false;
   groupe.add(chemin);
 
-  const matCurseur = new THREE.MeshBasicMaterial({
+  const matCurseur = new THREE.MeshBasicNodeMaterial({
     color: 0xffffff, transparent: true, opacity: 0.8, depthWrite: false,
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -8, polygonOffsetUnits: -8,
   });
@@ -313,7 +320,7 @@ export function creerSurbrillances(
   groupe.add(curseurMaille);
 
   const geoAnneau = new THREE.TorusGeometry(0.4, 0.055, 8, 30);
-  const matAnneau = new THREE.MeshBasicMaterial({
+  const matAnneau = new THREE.MeshBasicNodeMaterial({
     // `depthTest` reste vrai : un décalque ne passe jamais devant une unité.
     color: 0xffe27a, transparent: true, opacity: 0.95, depthWrite: false,
   });

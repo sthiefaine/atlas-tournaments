@@ -40,6 +40,21 @@ const nextConfig: NextConfig = {
    */
   distDir: process.env['NEXT_DIST_DIR'] || '.next',
   /**
+   * Un seul three, le moteur WebGPU (7 septembre 2026). Le rendu importe
+   * `three/webgpu` ; les compléments de three (`three/addons/*`) importent
+   * `three`, qui désignerait sinon le moteur WebGL et une **seconde copie** du
+   * cœur — deux classes `Mesh`, et `instanceof` qui ment. Les deux chemins
+   * pointent donc vers le même fichier, pour webpack (`next build`) comme pour
+   * Turbopack (`next dev`). Les tests font pareil : `tests/aides/resoudre-three.mjs`.
+   */
+  turbopack: {
+    resolveAlias: { three: 'three/webgpu' },
+  },
+  webpack: (config) => {
+    config.resolve.alias = { ...(config.resolve.alias ?? {}), three$: 'three/webgpu' };
+    return config;
+  },
+  /**
    * La mention de version (`src/app/version.ts`) : l'instant du build et le
    * commit, inscrits dans les bundles. Elle change à chaque `next build`, donc à
    * chaque push que Coolify déploie — aucune action GitHub, aucun fichier généré.

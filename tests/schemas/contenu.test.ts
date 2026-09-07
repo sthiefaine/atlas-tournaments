@@ -336,15 +336,15 @@ test('les dix archétypes canon sont présents une seule fois', () => {
   assert.equal(new Set(cles).size, 10);
 });
 
-test('le glossaire français nomme les dix unités canon et les treize terrains d’avant le port', () => {
+test('le glossaire français nomme les dix unités canon et les quinze terrains', () => {
   // Le glossaire couvre le vocabulaire **imposé** aux traductions, pas le
-  // catalogue vivant : il s'arrête aux dix unités canon. Le port (catalogue 5)
-  // n'y est pas encore entré — c'est un manque connu, pas une règle.
+  // catalogue vivant : il s'arrête aux dix unités canon. Les terrains, eux, y
+  // sont tous : le port et les hautes herbes y sont entrés le 7 septembre 2026.
   const glossaire = chargerGlossaireFr();
   const unites = glossaire.entrees.filter((e) => e.categorie === 'unite');
   const terrains = glossaire.entrees.filter((e) => e.categorie === 'terrain');
   assert.equal(unites.length, 10);
-  assert.equal(terrains.length, 13);
+  assert.equal(terrains.length, CLES_TERRAIN.length);
 });
 
 // ---------------------------------------------------------------------------

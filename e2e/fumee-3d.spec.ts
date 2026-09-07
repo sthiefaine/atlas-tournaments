@@ -4,12 +4,22 @@
  * surbrillances s'allumer, on termine le tour, on laisse l'adversaire jouer,
  * puis on force une nuit d'hiver sous la neige.
  *
- * Deux choses valent d'être dites sur ce fichier :
+ * Trois choses valent d'être dites sur ce fichier :
  *
  * - **WebGL en headless** demande d'ouvrir explicitement le rendu logiciel
  *   (`--use-angle=swiftshader`), sans quoi Chromium refuse le contexte sur une
  *   machine sans GPU. Les images sortent donc d'un rasteriseur logiciel : elles
  *   sont justes, mais plus lentes que sur une vraie carte ;
+ * - **le moteur est `WebGPURenderer`** (7 septembre 2026), qui tourne sur WebGPU
+ *   si `navigator.gpu` rend un adaptateur et sur son dos WebGL 2 sinon. Chromium
+ *   headless expose `navigator.gpu` mais ne rend **pas** d'adaptateur sans carte :
+ *   le rendu retomberait de lui-même sur WebGL, après une demande d'adaptateur
+ *   qui ne mène à rien. `--disable-blink-features=WebGPU` retire `navigator.gpu`
+ *   et rend la fumée **déterministe** : c'est le dos WebGL 2, sous SwiftShader,
+ *   celui des captures de référence et des mesures de `doc/10` §9.2. Pour
+ *   essayer WebGPU sur le rasteriseur logiciel à la place, remplacer ce drapeau
+ *   par `--enable-unsafe-webgpu --use-webgpu-adapter=swiftshader` — non essayé,
+ *   et rien ne dit que Vulkan logiciel soit présent sur la machine de test ;
  * - **on ne clique pas une case « au pixel »** : le rendu expose en développement
  *   `window.__atlas.positionCase(x, y)`, qui projette le centre d'une case à
  *   l'écran. Le test clique donc une case du jeu, pas une coordonnée devinée —
@@ -27,6 +37,8 @@ test.use({
       '--use-angle=swiftshader',
       '--enable-unsafe-swiftshader',
       '--ignore-gpu-blocklist',
+      // Le dos WebGL 2 du moteur, à coup sûr : voir l'en-tête.
+      '--disable-blink-features=WebGPU',
     ],
   },
 });
@@ -69,8 +81,11 @@ async function cliquerCase(page: Page, x: number, y: number): Promise<void> {
 /**
  * Nombre de couleurs distinctes dans l'image courante. On passe par
  * `window.__atlas.capturer()`, qui **redessine de façon synchrone** avant de lire
- * le canvas : un tampon WebGL non préservé est vidé dès la composition suivante,
- * et le lire directement rendrait une image noire alors que l'écran est correct.
+ * le canvas : un tampon non préservé est vidé dès la composition suivante, et
+ * le lire directement rendrait une image noire alors que l'écran est correct.
+ * Tant que le moteur n'est pas initialisé — il l'est de façon asynchrone —,
+ * `capturer()` rend `null` et la richesse vaut zéro : une attente trop courte
+ * se lit comme un aplat, pas comme un succès.
  */
 async function richesse(page: Page): Promise<number> {
   return page.evaluate(async () => {

@@ -6,7 +6,7 @@
 // sans qu'aucun test purement numérique ne le voie.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { TANGAGE_DEFAUT, champAuSol, type EtatCamera } from '../../src/render3d/camera';
 import { directionSoleil } from '../../src/render3d/eclairage';

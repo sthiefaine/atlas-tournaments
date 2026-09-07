@@ -126,12 +126,20 @@ test('le brouillard météo fixe la vision à 1, la pluie en retire 1', () => {
   assert.equal(visionUnite(pluie, CAT, u(pluie, 'u1')), 4);
 });
 
-test('la montagne donne +2 de vision, +1 de plus avec `vision_etendue`', () => {
+test('la montagne est le mirador du fantassin : +3 à pied, rien aux roues (7 septembre 2026)', () => {
+  // Avant : +2 pour tout ce qui se posait dessus, +1 de plus avec `vision_etendue`.
+  // Un recon n'y monte pas en jeu (les roues ne passent pas la montagne) ; posé
+  // là par le test, il n'y gagne plus rien. Voir `vision-terrain.test.ts`.
   const etat = partiePersonnalisee(GRILLE, {}, [
     { camp: 0, type: 'recon', x: 4, y: 0 },
     { camp: 1, type: 'infanterie', x: 8, y: 8 },
   ]);
-  assert.equal(visionUnite(etat, CAT, u(etat, 'u1')), 5 + 2 + 1);
+  assert.equal(visionUnite(etat, CAT, u(etat, 'u1')), 5);
+  const grimpee = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 4, y: 0 },
+    { camp: 1, type: 'infanterie', x: 8, y: 8 },
+  ]);
+  assert.equal(visionUnite(grimpee, CAT, u(grimpee, 'u1')), 2 + 3);
 });
 
 test("l'hiver tempéré gèle les rivières et enneige les plaines", () => {

@@ -25,17 +25,23 @@
  *    palette de la nation (ou du camp) ; un kit arrive peint et ne prend que la
  *    couleur de camp sur son liseré. Quand un matériau porte le masque d'équipe,
  *    le mélange `albédo × (1 − masque) + palette × masque` se fait dans le
- *    shader ; sans masque, on teinte `color`.
+ *    nuanceur, par un **nœud de couleur** TSL partagé ; sans masque, on teinte
+ *    `color`.
  * 4. **Les niveaux de détail.** Un `THREE.LOD` aux distances des paliers de zoom ;
  *    un seul niveau livré est posé tel quel, sans seuil.
+ * 5. **Les matériaux.** `GLTFLoader` fabrique des `MeshStandardMaterial`
+ *    classiques ; depuis le passage à `WebGPURenderer` (7 septembre 2026), la
+ *    lecture et la conformation les remplacent par leurs **jumeaux à nœuds**
+ *    (`versMateriauNoeud`), les seuls sur lesquels un nœud de couleur se pose.
  *
  * Le remplacement d'un placeholder reste **un changement de fichier** : aucune
  * unité n'est connue ici par son nom, seulement par ce que ses fichiers disent.
  */
 
-import * as THREE from 'three';
-import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { clone as clonerSquelette } from 'three/examples/jsm/utils/SkeletonUtils.js';
+import * as THREE from 'three/webgpu';
+import { materialColor, materialReference, mix, vec4 } from 'three/tsl';
+import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
+import { clone as clonerSquelette } from 'three/addons/utils/SkeletonUtils.js';
 
 import {
   CLIPS_ANIMATION, estInventaireModeles, gabaritDe, NIVEAUX_LOD,
@@ -115,15 +121,24 @@ export const NOM_ORIENTATION = 'orientation';
 export const NOM_NIVEAUX = 'niveaux_de_detail';
 
 // ---------------------------------------------------------------------------
-// 2. Le masque d'équipe dans le shader
+// 2. Le masque d'équipe : un nœud de couleur, partagé par tous
 // ---------------------------------------------------------------------------
 
 /**
  * Le masque d'un matériau, tenu **à côté** de lui plutôt que dans `userData` :
  * `Material.clone()` sérialise `userData` en JSON, ce qui ferait d'une texture
- * une description de texture. Une `WeakMap` suit les clones sans rien retenir.
+ * une description de texture. Une `WeakMap` ne suit **pas** les clones : c'est
+ * voulu, un clone qui n'y figure pas est un clone à qui le masque est à rendre
+ * (`unites.ts`, `doublerMateriau`).
  */
 const masques = new WeakMap<THREE.Material, THREE.Texture>();
+
+/**
+ * La couleur d'équipe que chaque matériau masqué mélange, pour la redonner à
+ * un double terni ou voilé avec la même couleur — depuis le 6 septembre 2026,
+ * une unité qui a joué ne change que d'opacité.
+ */
+const couleursMasquees = new WeakMap<THREE.Material, THREE.Color>();
 
 /** Vrai si un nom d'image ou d'URI désigne la carte de masque d'équipe — la règle du validateur. */
 export function estNomDeMasque(nom: string): boolean {
@@ -141,53 +156,152 @@ export function masqueDe(materiau: THREE.Material): THREE.Texture | null {
   return masques.get(materiau) ?? null;
 }
 
-/** La clé de programme partagée par tous les matériaux masqués : un seul shader compilé. */
-const CLE_PROGRAMME_MASQUE = 'atlas_masque_equipe';
-
-/**
- * Fait mélanger la couleur d'équipe par le masque, dans le shader standard :
- * `albédo × (1 − masque) + couleur × masque`, juste après la lecture de la carte
- * d'albédo. `USE_UV` est défini par nous, parce que three ne déclare `vUv` que
- * si un matériau a une raison de le faire — et un modèle de base sans carte
- * d'albédo n'en aurait aucune. La couleur reste un uniforme : deux unités d'un
- * même modèle partagent le programme et diffèrent par leur uniforme.
- */
-export function appliquerMasque(
-  materiau: THREE.MeshStandardMaterial, masque: THREE.Texture, couleur: THREE.Color,
-): void {
-  materiau.defines = { ...(materiau.defines ?? {}), USE_UV: '' };
-  const uniformes = {
-    atlasMasqueEquipe: { value: masque },
-    atlasCouleurEquipe: { value: couleur },
-  };
-  materiau.onBeforeCompile = (shader): void => {
-    Object.assign(shader.uniforms, uniformes);
-    shader.fragmentShader = shader.fragmentShader
-      .replace(
-        '#include <common>',
-        '#include <common>\nuniform sampler2D atlasMasqueEquipe;\nuniform vec3 atlasCouleurEquipe;',
-      )
-      .replace(
-        '#include <map_fragment>',
-        '#include <map_fragment>\n\tdiffuseColor.rgb = mix( diffuseColor.rgb, atlasCouleurEquipe, texture2D( atlasMasqueEquipe, vUv ).r );',
-      );
-  };
-  materiau.customProgramCacheKey = (): string => CLE_PROGRAMME_MASQUE;
-  masques.set(materiau, masque);
-  materiau.needsUpdate = true;
-}
-
-/**
- * La couleur d'équipe que chaque matériau masqué mélange, pour la redonner au
- * double terni : le clone d'un matériau perd son `onBeforeCompile`, et le
- * calque des unités lui rend le masque avec la même couleur — depuis le
- * 6 septembre 2026, une unité qui a joué ne change que d'opacité.
- */
-const couleursMasquees = new WeakMap<THREE.Material, THREE.Color>();
-
 /** La couleur d'équipe mélangée par le masque d'un matériau, ou `null` s'il n'en a pas. */
 export function couleurMasquee(materiau: THREE.Material): THREE.Color | null {
   return couleursMasquees.get(materiau) ?? null;
+}
+
+/** Le nom, **sur le matériau**, de la texture de masque que le nœud partagé lit. */
+export const PROP_MASQUE_EQUIPE = 'atlasMasqueEquipe';
+
+/** Le nom, sur le matériau, de la couleur d'équipe que le nœud partagé mélange. */
+export const PROP_COULEUR_EQUIPE = 'atlasCouleurEquipe';
+
+/** Un matériau à nœuds qui porte le masque : les deux propriétés que `NOEUD_MASQUE_EQUIPE` lit. */
+export interface MateriauMasque extends THREE.MeshStandardNodeMaterial {
+  [PROP_MASQUE_EQUIPE]?: THREE.Texture;
+  [PROP_COULEUR_EQUIPE]?: THREE.Color;
+}
+
+/**
+ * Le nœud de couleur des matériaux masqués — **un seul objet**, partagé par
+ * tous : `albédo × (1 − masque) + couleur × masque`, l'alpha de l'albédo
+ * conservé.
+ *
+ * C'est le remplaçant du `onBeforeCompile` d'avant, que `WebGPURenderer`
+ * ignore, et il en garde la propriété qui comptait : **un seul programme
+ * compilé** pour tous les matériaux masqués. La clé de programme d'un matériau
+ * à nœuds est faite des identités de ses nœuds — deux graphes distincts, même
+ * identiques, font deux programmes. Le graphe est donc unique, et ce qui
+ * change d'un matériau à l'autre — la couleur, la texture — n'y entre pas
+ * comme valeur mais comme **référence** (`materialReference`) lue **sur le
+ * matériau** au moment de dessiner : exactement le mécanisme par lequel three
+ * lit `color` et `map`. `materialColor` vaut déjà `color × carte d'albédo`, et
+ * `uv` s'ajoute au vertex de lui-même dès qu'une texture le lit : le `USE_UV`
+ * forcé d'avant n'a plus d'objet.
+ */
+export const NOEUD_MASQUE_EQUIPE: THREE.Node = ((): THREE.Node => {
+  // `vec4` d'un vec3 le complète par un alpha de 1 : sans carte d'albédo,
+  // `materialColor` n'a que trois composantes.
+  const albedo = vec4(materialColor);
+  const couleur = materialReference(PROP_COULEUR_EQUIPE, 'color');
+  const masque = materialReference(PROP_MASQUE_EQUIPE, 'texture');
+  return vec4(mix(albedo.rgb, couleur, masque.r), albedo.a);
+})();
+
+/**
+ * Fait mélanger la couleur d'équipe par le masque : pose le nœud partagé en
+ * `colorNode` et, sur le matériau, la texture et la couleur qu'il lit. La
+ * couleur reste un objet vivant : la changer repeint sans rien recompiler.
+ *
+ * Un `clone()` du matériau **garde** le nœud — `NodeMaterial.copy` recopie
+ * `colorNode` — mais **pas** les deux propriétés, que `Material.copy` ne
+ * connaît pas : un clone rendu tel quel lirait `undefined` à sa première
+ * image. Qui clone un matériau masqué rappelle donc cette fonction sur le
+ * clone (`unites.ts`, `doublerMateriau`) ; `masqueDe(clone)` vaut `null` tant
+ * que ce n'est pas fait, et c'est le signal.
+ */
+export function appliquerMasque(
+  materiau: THREE.MeshStandardNodeMaterial, masque: THREE.Texture, couleur: THREE.Color,
+): void {
+  const porteur = materiau as MateriauMasque;
+  porteur[PROP_MASQUE_EQUIPE] = masque;
+  porteur[PROP_COULEUR_EQUIPE] = couleur;
+  materiau.colorNode = NOEUD_MASQUE_EQUIPE;
+  masques.set(materiau, masque);
+  couleursMasquees.set(materiau, couleur);
+  materiau.needsUpdate = true;
+}
+
+// ---------------------------------------------------------------------------
+// 2 bis. Les matériaux d'un fichier deviennent des matériaux à nœuds
+// ---------------------------------------------------------------------------
+
+/** Vrai pour un matériau standard, classique ou à nœuds — `MeshPhysical*` compris. */
+export function estMateriauStandard(m: THREE.Material): boolean {
+  return (m as { isMeshStandardMaterial?: boolean }).isMeshStandardMaterial === true;
+}
+
+/**
+ * Le jumeau à nœuds d'un matériau classique : `MeshStandardMaterial` →
+ * `MeshStandardNodeMaterial`, physique → physique, basique → basique ; un
+ * matériau déjà à nœuds est rendu tel quel, tout autre aussi.
+ *
+ * `WebGPURenderer` sait dessiner un matériau classique — il le convertit
+ * lui-même à la compilation —, mais ce jumeau-là ne se voit pas et n'accepte
+ * pas de nœud : le masque d'équipe a besoin du vrai. La copie des champs est
+ * faite par **`copy` de three lui-même**, appelée sur le jumeau : c'est la
+ * seule liste qui ne peut pas oublier une carte, et elle suit les versions.
+ * Le jumeau est un objet neuf, avec son propre `uuid` ; le masque tenu à côté
+ * du classique le suit.
+ */
+export function versMateriauNoeud(m: THREE.Material): THREE.Material {
+  if ((m as { isNodeMaterial?: boolean }).isNodeMaterial === true) return m;
+  let jumeau: THREE.Material;
+  if (m instanceof THREE.MeshPhysicalMaterial) {
+    jumeau = new THREE.MeshPhysicalNodeMaterial();
+    THREE.MeshPhysicalMaterial.prototype.copy.call(jumeau as unknown as THREE.MeshPhysicalMaterial, m);
+  } else if (m instanceof THREE.MeshStandardMaterial) {
+    jumeau = new THREE.MeshStandardNodeMaterial();
+    THREE.MeshStandardMaterial.prototype.copy.call(jumeau as unknown as THREE.MeshStandardMaterial, m);
+  } else if (m instanceof THREE.MeshBasicMaterial) {
+    jumeau = new THREE.MeshBasicNodeMaterial();
+    THREE.MeshBasicMaterial.prototype.copy.call(jumeau as unknown as THREE.MeshBasicMaterial, m);
+  } else {
+    return m;
+  }
+  const masque = masques.get(m);
+  if (masque) masques.set(jumeau, masque);
+  return jumeau;
+}
+
+/**
+ * Le clone **complet** d'un matériau standard à nœuds. En r170, `clone()`
+ * d'un `NodeMaterial` recopie ses nœuds et les champs de `Material` — opacité,
+ * mélange, profondeur, faces — mais **pas** ceux du matériau standard qu'il
+ * remplace : couleur, rugosité, métal, émission, cartes. Un double cloné nu
+ * serait blanc, rugueux et sans texture. On repasse donc au clone le `copy`
+ * du classique de sa famille, qui connaît la liste entière et ne touche pas
+ * aux nœuds. Physique → physique, pour ses champs en plus.
+ */
+export function clonerMateriauNoeud<T extends THREE.MeshStandardNodeMaterial>(origine: T): T {
+  const clone = origine.clone();
+  const copie = origine instanceof THREE.MeshPhysicalNodeMaterial
+    ? THREE.MeshPhysicalMaterial.prototype.copy
+    : THREE.MeshStandardMaterial.prototype.copy;
+  copie.call(clone as unknown as THREE.MeshStandardMaterial, origine as unknown as THREE.MeshStandardMaterial);
+  return clone;
+}
+
+/**
+ * Remplace, en place, chaque matériau classique d'un objet par son jumeau à
+ * nœuds. Un matériau partagé par plusieurs maillages n'a qu'un jumeau, partagé
+ * de même. Rend les jumeaux créés — ceux qui n'existaient pas avant l'appel.
+ */
+export function convertirMateriaux(objet: THREE.Object3D): THREE.Material[] {
+  const jumeaux = new Map<THREE.Material, THREE.Material>();
+  const convertir = (m: THREE.Material): THREE.Material => {
+    const memo = jumeaux.get(m);
+    if (memo) return memo;
+    const jumeau = versMateriauNoeud(m);
+    jumeaux.set(m, jumeau);
+    return jumeau;
+  };
+  objet.traverse((n) => {
+    if (!(n instanceof THREE.Mesh)) return;
+    n.material = Array.isArray(n.material) ? n.material.map(convertir) : convertir(n.material);
+  });
+  return [...jumeaux].filter(([m, jumeau]) => m !== jumeau).map(([, jumeau]) => jumeau);
 }
 
 // ---------------------------------------------------------------------------
@@ -228,36 +342,39 @@ export function couleurPour(
  * **clonés** avant de l'être : un clone d'objet partage ses matériaux avec
  * l'original, et teinter en place repeindrait toutes les unités du même type.
  * Un matériau qui porte le masque d'équipe garde son albédo et mélange la
- * couleur dans le shader ; les autres prennent la couleur dans `color`.
+ * couleur dans le nuanceur ; les autres prennent la couleur dans `color`.
+ *
+ * Un matériau classique qui aurait échappé à la conformation est remplacé par
+ * son jumeau à nœuds, propre à cet objet : il compte parmi les matériaux à
+ * libérer avec lui, teinté ou non.
  */
 export function teinterModele(
   objet: THREE.Object3D, camp: CampId | null, options: OptionsTeinte = {},
-): THREE.MeshStandardMaterial[] {
+): THREE.Material[] {
   const kit = options.kit ?? false;
   const palette = options.style?.palette ?? paletteDe(camp);
   const lisere = paletteDe(camp).main;
   // Les clones créés ici n'appartiennent qu'à cet objet : c'est à qui le retire
   // de la scène de les libérer, et il faut pour cela savoir lesquels.
-  const clones: THREE.MeshStandardMaterial[] = [];
+  const clones: THREE.Material[] = [];
   objet.traverse((n) => {
     if (!(n instanceof THREE.Mesh)) return;
     n.castShadow = true;
     n.receiveShadow = true;
     const liste: THREE.Material[] = Array.isArray(n.material) ? n.material : [n.material];
     const teintes = liste.map((m) => {
-      if (!(m instanceof THREE.MeshStandardMaterial)) return m;
-      const couleur = couleurPour(m.name, kit, palette, lisere);
-      if (couleur === null) return m;
-      const teinte = m.clone();
-      const masque = masqueDe(m);
-      if (masque) {
-        const c = new THREE.Color(couleur);
-        appliquerMasque(teinte, masque, c);
-        couleursMasquees.set(teinte, c);
-      } else {
-        teinte.color.set(couleur);
-      }
-      clones.push(teinte);
+      const noeud = versMateriauNoeud(m);
+      if (noeud !== m) clones.push(noeud);
+      if (!(noeud instanceof THREE.MeshStandardNodeMaterial)) return noeud;
+      const couleur = couleurPour(noeud.name, kit, palette, lisere);
+      if (couleur === null) return noeud;
+      // Un jumeau né ici n'appartient déjà qu'à cet objet : on le teinte
+      // lui-même ; un matériau partagé est cloné d'abord — complètement.
+      const teinte = noeud === m ? clonerMateriauNoeud(noeud) : noeud;
+      const masque = masqueDe(noeud);
+      if (masque) appliquerMasque(teinte, masque, new THREE.Color(couleur));
+      else teinte.color.set(couleur);
+      if (teinte !== noeud) clones.push(teinte);
       return teinte;
     });
     n.material = Array.isArray(n.material) ? teintes : teintes[0]!;
@@ -478,6 +595,11 @@ export function conformerModele(lu: ModeleLu, gabarit: Gabarit = 'b'): ModeleCha
   const niveaux = lu.niveaux.slice(0, 3).map((n, i) => {
     const copie = clonerSquelette(n);
     copie.name = `lod${i}`;
+    // Un modèle conformé ne porte que des matériaux à nœuds : la lecture les a
+    // déjà convertis pour un fichier, et un modèle construit en mémoire — les
+    // tests, la vitrine — passe par ici. Le clone partage ses matériaux avec
+    // la source, qui n'est pas touchée.
+    convertirMateriaux(copie);
     return copie;
   });
   if (niveaux.length === 1) {
@@ -574,13 +696,17 @@ export function indexTextureMasque(document: DocumentGltfParseur | undefined): n
 }
 
 /**
- * Tire d'un `GLTF` analysé la lecture qui nous sert, et attache le masque
- * d'équipe aux matériaux standard du modèle quand le fichier en porte un —
- * une image nommée `masque_equipe` (ou `team_mask`), la convention du
- * validateur, référencée par une texture du document. Un masque qui ne se
- * charge pas ne bloque jamais le modèle : il se teindra dans `color`.
+ * Tire d'un `GLTF` analysé la lecture qui nous sert : ses matériaux classiques
+ * remplacés par leurs jumeaux à nœuds — une lecture est partagée par toutes
+ * les nations qui retombent sur la même base, on convertit donc **une fois
+ * ici** et la conformation n'a plus rien à faire —, et le masque d'équipe
+ * attaché aux matériaux standard quand le fichier en porte un : une image
+ * nommée `masque_equipe` (ou `team_mask`), la convention du validateur,
+ * référencée par une texture du document. Un masque qui ne se charge pas ne
+ * bloque jamais le modèle : il se teindra dans `color`.
  */
 export async function lectureDepuisGltf(gltf: GLTF): Promise<LectureFichier> {
+  convertirMateriaux(gltf.scene);
   const parseur = gltf.parser as unknown as {
     json?: DocumentGltfParseur;
     getDependency?: (type: string, index: number) => Promise<unknown>;
@@ -596,7 +722,7 @@ export async function lectureDepuisGltf(gltf: GLTF): Promise<LectureFichier> {
         gltf.scene.traverse((n) => {
           if (!(n instanceof THREE.Mesh)) return;
           const liste: THREE.Material[] = Array.isArray(n.material) ? n.material : [n.material];
-          for (const m of liste) if (m instanceof THREE.MeshStandardMaterial) definirMasque(m, texture);
+          for (const m of liste) if (estMateriauStandard(m)) definirMasque(m, texture);
         });
       }
     } catch {

@@ -77,13 +77,16 @@ export type Suite =
   | { type: 'fusionner'; avec: string }
   | { type: 'ravitailler'; cible: Case }   // trait `ravitaillement`
   | { type: 'construire'; cible: Case }    // trait `genie` (§6 bis)
-  | { type: 'furtivite' };                 // catalogue 6 : bascule visible ↔ furtive (trait `furtif`)
+  | { type: 'furtivite' }                  // catalogue 6 : bascule visible ↔ furtive (trait `furtif`)
+  | { type: 'puis' };                      // 7 septembre 2026 au soir : on bouge, on décide ensuite (état `deplacee`)
 
 /** Un débarquement : quel passager (`passager`, sinon le premier de la cale) et où. */
 export interface Debarquement { vers: Case; passager?: string }
 ```
 
 *Le bloc ci-dessus est celui du 7 septembre 2026 (`src/engine/types.ts`) : `ravitailler` et `construire` datent des catalogues 2 et 3, `passager`, `autres` et `furtivite` du catalogue 6. La forme `{ type: 'debarquer', vers }` reste valide.*
+
+**L'ordre en deux temps (7 septembre 2026 au soir).** Sous brouillard, on ne sait pas ce qu'il y a sur la case où l'on va : proposer « Capturer » avant d'être arrivé, c'est promettre ce qu'on ne peut pas tenir. La suite `{ type: 'puis' }` **déplace d'abord** : sans embuscade, l'unité passe à l'état `deplacee` et donne sa suite par un **second ordre sans chemin** (`chemin: [sa case]`), qui la traite comme ayant bougé (tir après mouvement, tir indirect) ; avec une embuscade, elle s'arrête sur la dernière case libre, **son tour est fini** (`agi`), et le rendu joue un « ! ». Une unité `deplacee` qui redonnerait un chemin ou un second `puis` est refusée (`deja_deplacee`) ; à la fermeture du tour, une suite jamais donnée est perdue et l'unité passe `agi`. L'IA n'en a pas besoin : ses ordres restent atomiques.
 
 Un ordre est **atomique** : déplacement et suite forment une seule action, donc une seule entrée dans le rejeu et un seul point de tirage aléatoire. Le `chemin` est explicite (la liste des cases traversées) et non recalculé : le moteur le **vérifie** — contiguïté, coût total ≤ mouvement restant, aucune case occupée par un adversaire, aucune case infranchissable pour le `typeMouvement`. Un chemin invalide est un refus, pas une correction silencieuse.
 
@@ -167,6 +170,7 @@ On produit sur un bâtiment **possédé et libre**, en payant le coût comptant.
 | Clé | Car. | Nom | Déf. ★ | pied | bottes | roues | chenilles | air | Capturable | Revenus | Cache |
 |---|:-:|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|---:|:-:|
 | `plaine` | `P` | Plaine | 1 | 1 | 1 | 2 | 1 | 1 | non | 0 | non |
+| `herbe_haute` | `G` | Hautes herbes | 1 | 1 | 1 | 2 | 1 | 1 | non | 0 | **pied, bottes** |
 | `foret` | `F` | Forêt | 2 | 1 | 1 | 3 | 2 | 1 | non | 0 | **oui** |
 | `montagne` | `M` | Montagne | 4 | 2 | 1 | — | — | 1 | non | 0 | **oui** |
 | `route` | `R` | Route | 0 | 1 | 1 | 1 | 1 | 1 | non | 0 | non |
@@ -473,10 +477,12 @@ Activé par `Scenario.brouillard`. Quand il est actif, chaque camp ne voit qu'un
 
 | Source | Portée |
 |---|---|
-| Une unité du camp | `UnitType.vision`, **+2** si elle est sur une montagne **[proposition]** |
-| Un bâtiment capturable possédé | 2 |
+| Une unité du camp | `UnitType.vision`, **+3** sur une montagne pour une unité `pied` ou `bottes` (rien pour ce qui vole : un hélicoptère posé sur un caillou ne gagne rien), **−1** en forêt (plancher 1 : les arbres bouchent la vue) — depuis le 7 septembre 2026 au soir ; c'était +2 pour tout ce qui se posait sur une montagne |
+| Un bâtiment capturable possédé | **1** depuis le 7 septembre 2026 au soir (`VISION_BATIMENT`) ; c'était 2, et dix villes éclairaient la moitié d'une carte 12 × 10 sans qu'une unité ait bougé — la station radar garde 5 |
 
-**Cachettes.** Une unité adverse située sur un terrain `cacheEnBrouillard` (forêt, montagne) n'est visible que si une unité du camp est à **distance 1** exactement. Elle peut donc être révélée « au contact » : une unité qui entre dans la zone de contrôle d'une unité cachée s'arrête (règle §2) et la découvre.
+**La montagne coupe la ligne de vue** (7 septembre 2026, nuit). Une case n'est visible depuis une source que si aucune montagne ne se dresse **entre** les deux, sur la ligne qui les joint (Bresenham, extrémités exclues, `ligneCoupee`) ; la case de la montagne elle-même se voit, c'est ce qui est derrière qui est caché. Deux sources voient par-dessus : une unité **posée sur une montagne** (à pied, elle y gagne aussi ses +3) et une unité **qui vole**. Un bâtiment ne voit jamais par-dessus.
+
+**Cachettes.** Une unité adverse située sur un terrain `cacheEnBrouillard` (forêt, montagne, et depuis le 7 septembre 2026 au soir les **hautes herbes**, qui ne cachent que `pied` et `bottes` — `cacheSeulement` — : « l'herbe cache ce qui est plus bas qu'un char ») n'est visible que si une unité du camp est à **distance 1** exactement. Elle peut donc être révélée « au contact » : une unité qui entre dans la zone de contrôle d'une unité cachée s'arrête (règle §2) et la découvre.
 
 **Règles de jeu associées :**
 
@@ -788,8 +794,8 @@ La phase est donc **la même pour les deux camps** d'une journée : personne ne 
 **Ce que fait la nuit, exactement :**
 
 - **Le brouillard de guerre est imposé**, même si `Scenario.brouillard === false`. Il redevient ce qu'il était au lever du jour.
-- **Vision −2, minimum 1**, pour toutes les unités. Un recon voit 3, une infanterie 1, un char lourd 1.
-- **Les villes, usines, aéroports et QG sont éclairés** : leur vision de bâtiment (2, §10) est **inchangée**. Tenir un bâtiment, c'est tenir un phare — la nuit renforce la valeur des positions plutôt que de tout noircir.
+- **Vision −2, minimum 1**, pour toutes les unités. Un recon voit 3, une infanterie 1, un char lourd 1. **Depuis le 7 septembre 2026 au soir**, une unité posée sur un bâtiment capturable **de son camp** garde sa vision entière : la ville est éclairée, tenir une ville la nuit sert à voir.
+- **Les villes, usines, aéroports et QG sont éclairés** : leur vision de bâtiment (1 depuis le 7 septembre 2026, §10) est **inchangée**. Tenir un bâtiment, c'est tenir un phare — la nuit renforce la valeur des positions plutôt que de tout noircir.
 - **L'infanterie en forêt est invisible sauf adjacence** : la règle de cachette du §10 s'applique, et elle s'applique désormais même sur une carte sans brouillard déclaré. C'est l'embuscade de nuit.
 - **Le trait `furtif_nuit` ignore les malus** : l'unité qui le porte garde sa vision pleine. **[proposition]** elle n'est elle-même repérée qu'à distance 1, quel que soit son terrain.
 - **Les pouvoirs ne sont pas affectés.** Ni leur coût, ni leur effet, ni leur durée. La nuit change ce qu'on voit, pas ce qu'on peut faire.

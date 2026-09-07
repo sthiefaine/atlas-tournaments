@@ -7,6 +7,15 @@
  * une unité adverse visible allume ses déplacements et son enveloppe de tir,
  * sans toucher à la partie. Elle se referme au clic suivant ou à Échap.
  *
+ * Sous brouillard, un chemin qui **sort de la vue** court-circuite l'ordre :
+ * choisir l'arrivée joue l'ordre en deux temps du moteur (`04-gameplay.md`
+ * §2, suite `puis`) — on bouge d'abord, on décide ensuite. Sans embuscade,
+ * l'unité ressort `deplacee` et le contrôleur rouvre aussitôt son menu de
+ * suites, calculé sur ce qu'il y a **vraiment** à l'arrivée ; avec une
+ * embuscade, elle ressort `agi` et la sélection tombe. Une unité `deplacee`
+ * qu'on resélectionne plus tard rouvre directement son menu, sans phase de
+ * chemin : elle ne bougera plus.
+ *
  * Deux règles fermes, qui font tenir toute l'architecture (`02-architecture.md`
  * §3.4) :
  *
@@ -23,7 +32,7 @@ import type {
   Action, Catalogue, CommandantMoteur, Debarquement, EtatPartie, EvenementJeu, MotifRefus, Portee, Suite, Unite,
 } from '../engine/index';
 import {
-  appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
+  appliquer, arriveeLibre, brouillardActif, casesAtteignables, casesVisibles, cheminVers, ciblesDepuis, cleCase,
   depuisCle, estDesaffecte, manhattan, peutCapturerIci, porte, portee, produitesPar, terrainLogique, uniteParId,
   uniteSur, unitesVues, verifierProduction, constructionsPossibles,
 } from '../engine/index';
@@ -88,6 +97,12 @@ export interface VueControleur {
   curseur: Case;
   selection: string | null;
   chemin: Case[];
+  /**
+   * Le chemin pointé traverse une case que le joueur ne voit pas : choisir
+   * cette arrivée jouera l'ordre en deux temps, sans menu avant. Vrai en phase
+   * `selection` seulement — ailleurs il n'y a pas de chemin à pointer.
+   */
+  cheminAveugle: boolean;
   surbrillances: Surbrillance[];
   menu: { ancre: Case; options: OptionMenu[] } | null;
   production: { batiment: Case; unites: CleUnite[] } | null;
@@ -251,6 +266,7 @@ export class Controleur {
       curseur: this.curseurCase,
       selection: this.selectionId,
       chemin: this.cheminCourant,
+      cheminAveugle: this.phaseCourante === 'selection' && this.cheminSortDeLaVue(this.cheminCourant),
       surbrillances: this.surbrillances(),
       menu: this.phaseCourante === 'action' && this.options.length > 0
         ? {
@@ -374,6 +390,14 @@ export class Controleur {
     }
 
     if (this.phaseCourante === 'action') {
+      if (this.uniteSelectionnee()?.etat === 'deplacee') {
+        // Une unité déplacée n'a pas de choix de destination où revenir : le
+        // menu se ferme, elle reste `deplacee`, et le clic fait son travail
+        // habituel — sur elle, il rouvre le menu ; ailleurs, il sélectionne.
+        this.reinitialiserSelection();
+        this.selectionnerSous(c);
+        return;
+      }
       // Un clic hors du menu revient au choix de destination — et oublie un
       // débarquement à moitié composé : rien n'est parti, rien n'est à défaire.
       this.phaseCourante = 'selection';
@@ -387,7 +411,9 @@ export class Controleur {
       const atteignables = this.atteignables();
       if (atteignables.has(cleCase(c))) {
         this.majChemin(c);
-        this.ouvrirMenu();
+        // Un chemin qui sort de la vue ne promet rien : on avance, on verra.
+        if (this.cheminSortDeLaVue(this.cheminCourant)) this.jouerDeuxTemps();
+        else this.ouvrirMenu();
         return;
       }
       this.annuler();
@@ -429,6 +455,19 @@ export class Controleur {
       return;
     }
     if (this.phaseCourante === 'cible' || this.phaseCourante === 'action') {
+      const deplacee = this.uniteSelectionnee();
+      if (deplacee?.etat === 'deplacee') {
+        // Pas de phase de chemin derrière le menu d'une déplacée : depuis la
+        // visée, Échap revient au menu ; depuis le menu, il le ferme sans rien
+        // jouer — la suite reste à donner, jusqu'à la fin du tour.
+        if (this.phaseCourante === 'cible') {
+          this.reprendreDeplacee(deplacee);
+          return;
+        }
+        this.reinitialiserSelection();
+        this.ecouteur.surChangement?.();
+        return;
+      }
       this.phaseCourante = 'selection';
       this.cibles = [];
       this.cibleVisee = null;
@@ -596,6 +635,9 @@ export class Controleur {
     if (this.phaseCourante !== 'selection' && this.phaseCourante !== 'action') return sortie;
     const u = this.uniteSelectionnee();
     if (!u) return sortie;
+    // Une déplacée n'ira nulle part : allumer ses arrivées mentirait, et son
+    // enveloppe de tir se lit dans le menu — « attaquer » y est, ou n'y est pas.
+    if (u.etat === 'deplacee') return sortie;
     const atteignables = this.atteignables();
     for (const k of atteignables) {
       sortie.push({ case: depuisCle(k), genre: 'deplacement' });
@@ -707,12 +749,31 @@ export class Controleur {
     return u ? { x: u.x, y: u.y } : this.curseurCase;
   }
 
-  /** Vrai si le chemin courant fait effectivement bouger l'unité. */
+  /**
+   * Vrai si le chemin courant fait effectivement bouger l'unité — ou si elle a
+   * déjà bougé par un ordre en deux temps : le moteur la traite comme telle
+   * (tir indirect refusé, tir après mouvement), le menu doit dire pareil.
+   */
   private aBouge(): boolean {
     const u = this.uniteSelectionnee();
     if (!u) return false;
+    if (u.etat === 'deplacee') return true;
     const a = this.arrivee();
     return a.x !== u.x || a.y !== u.y;
+  }
+
+  /**
+   * Vrai si le chemin traverse, hors sa case de départ, une case que le joueur
+   * ne voit pas. Sans brouillard, jamais. La vision est celle du moteur
+   * (`casesVisibles`, mémoïsée par état) : rien n'est réinventé ici.
+   */
+  private cheminSortDeLaVue(chemin: readonly Case[]): boolean {
+    if (chemin.length < 2 || !brouillardActif(this.etatPartie)) return false;
+    const vues = casesVisibles(this.etatPartie, this.cat, this.camp);
+    for (let i = 1; i < chemin.length; i += 1) {
+      if (!vues.has(cleCase(chemin[i]!))) return true;
+    }
+    return false;
   }
 
   private dansCarte(c: Case): boolean {
@@ -722,6 +783,10 @@ export class Controleur {
   /** Sélectionne l'unité sous une case, ou ouvre la production d'un bâtiment. */
   private selectionnerSous(c: Case): void {
     const u = uniteSur(this.etatPartie, c);
+    if (u && u.camp === this.camp && u.etat === 'deplacee' && this.monTour) {
+      this.reprendreDeplacee(u);
+      return;
+    }
     if (u && u.camp === this.camp && u.etat === 'prete' && this.monTour) {
       this.selectionId = u.id;
       this.cheminCourant = [{ x: u.x, y: u.y }];
@@ -759,7 +824,10 @@ export class Controleur {
     const simple = (id: Exclude<IdSuite, 'furtivite' | 'debarquer'>): void => { sortie.push({ id, cle: CLE_MENU[id] }); };
     const type = this.cat.unites[u.type];
     if (!type) return [{ id: 'attendre', cle: CLE_MENU.attendre }];
-    const aBouge = arrivee.x !== u.x || arrivee.y !== u.y;
+    // Une déplacée a déjà bougé : les règles « après mouvement » s'appliquent
+    // depuis la case où elle est, et le menu ne propose que ce que le moteur
+    // acceptera.
+    const aBouge = u.etat === 'deplacee' || arrivee.x !== u.x || arrivee.y !== u.y;
 
     if (ciblesDepuis(this.etatPartie, this.cat, u, arrivee, aBouge).length > 0) simple('attaquer');
 
@@ -948,15 +1016,51 @@ export class Controleur {
     this.jouer({ type: 'ordre', uniteId: u.id, chemin, suite });
   }
 
-  /** Le **seul** point d'écriture : `appliquer`, jamais une mutation. */
-  private jouer(action: Action): void {
+  /**
+   * L'ordre en deux temps : le chemin part avec la suite `puis`, et le moteur
+   * dit ce qu'il en est. Sans embuscade, l'unité ressort `deplacee` et son
+   * menu s'ouvre sur sa case, calculé sur l'état réel — c'est tout l'intérêt :
+   * « capturer » n'y est que si la ville est vraiment là, et vraiment libre.
+   * Avec une embuscade, elle ressort `agi`, son tour est fini, et la sélection
+   * est déjà tombée avec l'ordre.
+   */
+  private jouerDeuxTemps(): void {
+    const u = this.uniteSelectionnee();
+    if (!u) return;
+    const chemin = this.cheminCourant.length > 0 ? this.cheminCourant : [{ x: u.x, y: u.y }];
+    if (!this.jouer({ type: 'ordre', uniteId: u.id, chemin, suite: { type: 'puis' } })) return;
+    const arrivee = uniteParId(this.etatPartie, u.id);
+    if (!arrivee || arrivee.etat !== 'deplacee' || this.phaseCourante === 'fin') return;
+    this.reprendreDeplacee(arrivee);
+  }
+
+  /**
+   * Rouvre le menu d'une unité déplacée, sur sa case, sans phase de chemin :
+   * elle ne bougera plus, et l'ordre qu'elle donnera partira « sur place »
+   * (`chemin: [sa case]`), comme le moteur l'attend.
+   */
+  private reprendreDeplacee(u: Unite): void {
+    const ici = { x: u.x, y: u.y };
+    this.selectionId = u.id;
+    this.cheminCourant = [ici];
+    this.cibles = [];
+    this.cibleVisee = null;
+    this.travaux = [];
+    this.debarquement = null;
+    this.options = this.suitesPossibles(u, ici);
+    this.phaseCourante = 'action';
+    this.ecouteur.surChangement?.();
+  }
+
+  /** Le **seul** point d'écriture : `appliquer`, jamais une mutation. Rend vrai si l'action est passée. */
+  private jouer(action: Action): boolean {
     const avant = this.etatPartie;
     const r = appliquer(avant, action, this.cat, this.commandants);
     if (!r.ok) {
       this.ecouteur.surRefus?.(action, r.motif);
       this.reinitialiserSelection();
       this.ecouteur.surChangement?.();
-      return;
+      return false;
     }
     this.etatPartie = r.etat;
     this.venaitDeJouer = true;
@@ -964,6 +1068,7 @@ export class Controleur {
     if (r.etat.partie.terminee) this.phaseCourante = 'fin';
     this.ecouteur.surAction?.(action, r.evenements, avant, r.etat);
     this.ecouteur.surChangement?.();
+    return true;
   }
 
   /** Revient à l'état neutre sans toucher au curseur. */

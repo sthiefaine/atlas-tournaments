@@ -110,6 +110,12 @@ function decor(image: Image, car: string, px: number, py: number): void {
       rectangle(image, px + 3, py + 11, 3, 1, COULEURS.herbeSombre);
       rectangle(image, px + 10, py + 4, 3, 1, COULEURS.herbeSombre);
       break;
+    case 'G': // hautes herbes : des touffes hautes, serrées, qui lisent « ça cache »
+      for (let x = 2; x < t - 2; x += 4) {
+        rectangle(image, px + x, py + 4, 1, 9, COULEURS.herbeSombre);
+        rectangle(image, px + x + 1, py + 6, 1, 7, COULEURS.foretClaire);
+      }
+      break;
     default:
       break;
   }

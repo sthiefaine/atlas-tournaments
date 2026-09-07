@@ -59,7 +59,7 @@ test('les seize configurations de voisines se ramènent aux six pièces, et à u
 
 test('une route se raccorde aux routes, aux ponts et aux bâtiments, à rien d’autre', () => {
   const attendu: Record<CleTerrain, boolean> = {
-    plaine: false, foret: false, montagne: false, route: true, ville: true, qg: true,
+    plaine: false, herbe_haute: false, foret: false, montagne: false, route: true, ville: true, qg: true,
     usine: true, aeroport: true, mer: false, riviere: false, pont: true, plage: false, radar: true,
     // Un port est un bâtiment : la route y arrive, sinon un quai serait desservi
     // par rien et la voie s'arrêterait une case avant lui.

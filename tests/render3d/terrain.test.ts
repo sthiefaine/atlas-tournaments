@@ -3,15 +3,17 @@
 // three.js construit ses géométries et ses matériaux en mémoire.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { CleTerrain } from '../../src/schemas/types';
 import { CASE, NIVEAU_EAU, type GrilleTerrain } from '../../src/render3d/geometrie';
 import {
-  creerPlateau, DEBORD_EAU, donneesVisibles, FACTEUR_BROUILLARD, TEINTE_BROUILLARD,
+  creerPlateau, creerUniformesBrouillard, DEBORD_EAU, donneesVisibles, FACTEUR_BROUILLARD,
+  grefferBrouillard, TEINTE_BROUILLARD,
 } from '../../src/render3d/terrain';
 import { melangerParametres, parametresAmbiance } from '../../src/render3d/eclairage';
 import { HAUTEUR_BANC, LARGEUR_BANC, visiblesBanc } from '../../src/app/atelier/banc';
+import { construireNuanceur, ligneDe } from './nuanceur';
 
 /** Toile mémoire : les recettes de textures se peignent sans navigateur. */
 function documentMemoire(): Document {
@@ -82,17 +84,13 @@ test('un changement de taille de carte redimensionne l’eau, le socle et la gri
 test('après une marée, la grille et la profondeur lue par l’eau se reposent sur le sol', () => {
   const plateau = creerPlateau(grille(4, 4, 'plaine'), documentMemoire());
   const lignes = plateau.groupe.getObjectByName('grille') as THREE.LineSegments;
-  const eau = plateau.groupe.getObjectByName('eau') as THREE.Mesh;
   const yGrille = (): number => {
     lignes.geometry.computeBoundingBox();
     return lignes.geometry.boundingBox!.max.y;
   };
-  const fonds = (): Uint8Array => {
-    const mat = eau.material as THREE.MeshStandardMaterial;
-    const shader = { uniforms: {} as Record<string, { value: unknown }>, vertexShader: '', fragmentShader: '' };
-    mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
-    return (shader.uniforms['tFonds']!.value as THREE.DataTexture).image.data as Uint8Array;
-  };
+  // La texture des fonds telle que le nuanceur de l'eau la lit : la carte garde
+  // sa taille, c'est donc la même texture d'un bout à l'autre de la marée.
+  const fonds = (): Uint8Array => (plateau.uniformesEau.tFonds.value as THREE.DataTexture).image.data as Uint8Array;
   const avant = yGrille();
   const fondsAvant = fonds()[0]!;
 
@@ -109,7 +107,7 @@ test('après une marée, la grille et la profondeur lue par l’eau se reposent 
 
 test('appliquerAmbiance ne refait rien pour la même ambiance, et tout pour une autre', () => {
   const plateau = creerPlateau(grille(2, 2, 'plaine'), documentMemoire());
-  const matSol = plateau.sol.material as THREE.MeshStandardMaterial;
+  const matSol = plateau.sol.material as THREE.MeshStandardNodeMaterial;
   const jour = parametresAmbiance('ete', 'jour', 'clair');
   const nuit = parametresAmbiance('hiver', 'nuit', 'neige');
 
@@ -138,13 +136,7 @@ test('appliquerAmbiance ne refait rien pour la même ambiance, et tout pour une 
 
 test('l’écume revient à son repos à la fin d’une marée', () => {
   const plateau = creerPlateau(grille(3, 3, 'plage'), documentMemoire());
-  const eau = plateau.groupe.getObjectByName('eau') as THREE.Mesh;
-  const ecume = (): number => {
-    const mat = eau.material as THREE.MeshStandardMaterial;
-    const shader = { uniforms: {} as Record<string, { value: number }>, vertexShader: '', fragmentShader: '' };
-    mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
-    return shader.uniforms['uEcume']!.value;
-  };
+  const ecume = (): number => plateau.uniformesEau.uEcume.value;
   plateau.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'));
   const repos = ecume();
   plateau.majTerrain(grille(3, 3, 'mer'), 1000);
@@ -159,23 +151,9 @@ test('l’écume revient à son repos à la fin d’une marée', () => {
 // Le brouillard de guerre : un masque d'un octet par case, lu par tout le plateau
 // ---------------------------------------------------------------------------
 
-/** Ce qu'un matériau du plateau fait du nuanceur au moment de compiler : un squelette des chunks qu'il remplace. */
-function compiler(mat: THREE.Material): { uniforms: Record<string, { value: unknown }>; vertexShader: string; fragmentShader: string } {
-  const shader = {
-    uniforms: {} as Record<string, { value: unknown }>,
-    vertexShader: '#include <project_vertex>',
-    fragmentShader: [
-      '#include <map_fragment>', '#include <color_fragment>', '#include <roughnessmap_fragment>',
-      '#include <normal_fragment_maps>', '#include <opaque_fragment>', '#include <fog_fragment>',
-    ].join('\n'),
-  };
-  (mat as THREE.MeshStandardMaterial).onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
-  return shader;
-}
-
-/** La texture de visibilité telle que le sol la lit. */
+/** La texture de visibilité telle que tout le plateau la lit, à l'instant où on la demande. */
 function masqueDe(plateau: ReturnType<typeof creerPlateau>): THREE.DataTexture {
-  return compiler(plateau.sol.material as THREE.Material).uniforms['tVisibles']!.value as THREE.DataTexture;
+  return plateau.uniformesBrouillard.tVisibles.value as THREE.DataTexture;
 }
 
 test('donneesVisibles : 0 sur une case cachée, 255 sur une case vue, tout à 255 sans brouillard', () => {
@@ -227,57 +205,133 @@ test('le masque de visibilité du plateau vaut 0 hors de vue et 255 en vue, et n
 test('le masque suit un changement de taille de carte, avec le dernier ensemble connu', () => {
   const plateau = creerPlateau(grille(4, 4, 'plaine'), documentMemoire());
   plateau.majVisibles(new Set(['0,0']));
+  // Une texture WebGPU ne change pas de taille : à une autre carte, une autre
+  // texture, et l'ancienne est libérée. Le nœud qui la lit reste le même.
+  const ancienne = masqueDe(plateau);
+  let liberee = false;
+  ancienne.addEventListener('dispose', () => { liberee = true; });
+  const noeud = plateau.uniformesBrouillard.tVisibles;
   plateau.majTerrain(grille(6, 3, 'mer'));
-  const shader = compiler(plateau.sol.material as THREE.Material);
-  const tex = shader.uniforms['tVisibles']!.value as THREE.DataTexture;
+  const tex = masqueDe(plateau);
+  assert.notEqual(tex, ancienne, 'une texture neuve à la taille de la carte');
+  assert.ok(liberee, 'l’ancienne est libérée');
+  assert.equal(plateau.uniformesBrouillard.tVisibles, noeud, 'le nœud du masque ne change pas, seule sa valeur');
   assert.equal(tex.image.width, 6);
   assert.equal(tex.image.height, 3);
   const octets = tex.image.data as Uint8Array;
   assert.equal(octets.length, 18);
   assert.equal(octets[0], 255, 'la case vue le reste');
   assert.equal(octets.filter((v) => v === 255).length, 1, 'le reste est dans le noir');
-  const carte = shader.uniforms['uCarteBrouillard']!.value as THREE.Vector2;
+  const carte = plateau.uniformesBrouillard.uCarteBrouillard.value;
   assert.deepEqual([carte.x, carte.y], [6 * CASE, 3 * CASE], 'les coordonnées monde se rapportent à la nouvelle carte');
+  // La splat et les fonds sont remplacés de la même façon.
+  const matSol = plateau.sol.material as THREE.MeshStandardNodeMaterial;
+  assert.ok(matSol.colorNode, 'le sol garde son mélange');
+  const fonds = plateau.uniformesEau.tFonds.value as THREE.DataTexture;
+  assert.equal(fonds.image.width, 6);
+  assert.equal(fonds.image.height, 3);
   plateau.dispose();
 });
 
-test('le sol, le socle, les voies, les ponts et l’eau lisent le masque après l’éclairage, chacun avec sa clé de programme', () => {
+test('le sol, le socle, les voies, les ponts et l’eau portent la même greffe de brouillard, lue après l’éclairage', () => {
   const g = grille(3, 2, (x) => (x === 1 ? 'route' : x === 2 ? 'pont' : 'plaine'));
   const plateau = creerPlateau(g, documentMemoire());
-  const tex = masqueDe(plateau);
-  const cles = new Set<string>();
+  const { sortie, tVisibles, uFacteurBrouillard, uTeinteBrouillard } = plateau.uniformesBrouillard;
+  assert.equal(tVisibles.value, masqueDe(plateau));
+  assert.equal(uFacteurBrouillard.value, FACTEUR_BROUILLARD);
+  assert.equal(uTeinteBrouillard.value.getHex(), TEINTE_BROUILLARD);
   for (const nom of ['sol', 'socle', 'voies', 'ponts', 'eau']) {
     const maille = plateau.groupe.getObjectByName(nom) as THREE.Mesh;
     assert.ok(maille, nom);
-    const mat = maille.material as THREE.MeshStandardMaterial;
-    const shader = compiler(mat);
-    assert.equal(shader.uniforms['tVisibles']!.value, tex, `${nom} lit la même texture que le sol`);
-    assert.equal(shader.uniforms['uFacteurBrouillard']!.value, FACTEUR_BROUILLARD);
-    assert.equal((shader.uniforms['uTeinteBrouillard']!.value as THREE.Color).getHex(), TEINTE_BROUILLARD);
-    const fs = shader.fragmentShader;
-    const lecture = fs.indexOf('texture2D( tVisibles');
-    assert.ok(lecture > 0, `${nom} : le nuanceur lit le masque`);
-    // Après l'éclairage — sinon le reflet du ciel rallumerait la case — et
-    // avant le brouillard de scène, qui est une autre chose.
-    assert.ok(fs.indexOf('#include <opaque_fragment>') < lecture, `${nom} : après l’éclairage`);
-    assert.ok(lecture < fs.indexOf('#include <fog_fragment>'), `${nom} : avant le brouillard de scène`);
-    assert.match(fs, /gl_FragColor\.rgb \* uFacteurBrouillard \+ uTeinteBrouillard/, `${nom} : multiplie, puis pose le plancher`);
-    assert.match(shader.vertexShader, /vAtlasMonde = \( modelMatrix/, `${nom} : la case se lit sur la position monde`);
-    cles.add(mat.customProgramCacheKey());
+    const mat = maille.material as THREE.MeshStandardNodeMaterial;
+    assert.ok(mat.isNodeMaterial, `${nom} : un matériau du moteur à nœuds, le seul qui sache lire une greffe`);
+    // Un seul nœud de sortie pour les cinq : la clé de programme d'un matériau à
+    // nœuds compose avec l'identité de ses nœuds, et cinq greffes bâties à part
+    // seraient cinq programmes d'extinction à compiler pour la même formule.
+    assert.equal(mat.outputNode, sortie, `${nom} : la greffe partagée`);
   }
-  assert.equal(cles.size, 5, 'cinq matériaux greffés, cinq programmes : aucun ne peut voler celui d’un autre');
-  // Ce que chacun faisait déjà survit à la greffe.
-  assert.match(compiler(plateau.sol.material as THREE.Material).fragmentShader, /tSplat/, 'le sol mélange toujours ses matières');
+  // Ce que chacun faisait déjà survit à la greffe : d'autres nœuds.
+  const matSol = plateau.sol.material as THREE.MeshStandardNodeMaterial;
+  assert.ok(matSol.colorNode && matSol.roughnessNode && matSol.normalNode, 'le sol mélange ses matières en couleur, rugosité et normales');
   const eau = plateau.groupe.getObjectByName('eau') as THREE.Mesh;
-  assert.match(compiler(eau.material as THREE.Material).fragmentShader, /tFonds/, 'l’eau garde ses rives');
+  const matEau = eau.material as THREE.MeshStandardNodeMaterial;
+  assert.ok(matEau.colorNode, 'l’eau garde ses rives');
+  assert.ok(matEau.transparent && matEau.opacity < 1 && !matEau.depthWrite);
+
+  // Le WGSL du sol, tel que le navigateur le recevrait, avec des lumières et
+  // une brume de scène : le masque vient **après** la couleur éclairée (sinon
+  // le reflet du ciel rallumerait la case) et après la brume.
+  const { vertex, fragment } = construireNuanceur(plateau.sol);
+  const lecture = ligneDe(fragment, /textureSample\( tVisibles, tVisibles_sampler, /);
+  assert.ok(lecture >= 0, 'le fragment lit le masque');
+  assert.match(fragment.split('\n')[lecture]!, /v_positionWorld\.xz/, 'à la position monde du fragment');
+  const eclaire = ligneDe(fragment, /^\s*Output = /);
+  const lumiere = ligneDe(fragment, /^\s*outgoingLight = \( totalDiffuse \+ totalSpecular \)/);
+  assert.ok(lumiere >= 0 && lumiere < eclaire && eclaire < lecture, 'lumière, couleur finie, puis lecture du masque');
+  const resultat = ligneDe(fragment, /^\s*output\.color = /);
+  assert.ok(resultat > lecture, 'la sortie vient en dernier');
+  const ligneSortie = fragment.split('\n')[resultat]!;
+  assert.match(ligneSortie, /mix\( \( \( Output\.xyz \* vec3<f32>\( object\.uFacteurBrouillard \) \) \+ object\.uTeinteBrouillard \), Output\.xyz, smoothstep\( 0\.3, 0\.7, /,
+    'multiplie, pose le plancher, puis fond sur un demi-texel');
+  // La position monde est une sortie du sommet : le fragment ne la recalcule pas.
+  assert.match(vertex, /varyings\.v_positionWorld = \( object\.\w+ \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  // Le mélange du sol est bien dans le nuanceur : ses textures et ses réglages, par leur nom.
+  for (const nom of ['tSplat', 'tHerbe', 'tTerre', 'tRoche', 'tSable', 'tNeige', 'nHerbe', 'nTerre', 'nRoche', 'nSable']) {
+    assert.match(fragment, new RegExp(`textureSample\\( ${nom}, ${nom}_sampler, `), `le sol lit ${nom}`);
+  }
+  for (const nom of ['uTiling', 'uNeige', 'uMouille']) assert.match(fragment, new RegExp(`object\\.${nom}\\b`), `le sol lit ${nom}`);
+  assert.equal((fragment.match(/textureSample\( tSplat,/g) ?? []).length, 1, 'la splat est lue une fois, partagée par les trois nœuds');
+  assert.ok(fragment.includes('isFront'), 'les normales passent par le repère tangent dérivé de l’écran');
+  // L'eau : ses fonds, son temps, son écume et sa rive, et le même masque.
+  const nuanceurEau = construireNuanceur(eau);
+  // La coordonnée de carte est lue deux fois — les fonds et le bord de carte — :
+  // le constructeur la met en variable, et c'est elle que `clamp` borne.
+  const coordonnee = nuanceurEau.fragment.match(/(\w+) = \( v_positionWorld\.xz \/ object\.uCarte \);/);
+  assert.ok(coordonnee, 'la position monde, rapportée à la carte');
+  assert.match(nuanceurEau.fragment, new RegExp(`textureSample\\( tFonds, tFonds_sampler, clamp\\( ${coordonnee![1]}, `), 'les fonds se lisent à cette coordonnée');
+  for (const nom of ['uTemps', 'uEcume', 'uRive']) assert.match(nuanceurEau.fragment, new RegExp(`object\\.${nom}\\b`), `l’eau lit ${nom}`);
+  assert.match(nuanceurEau.fragment, /textureSample\( tVisibles, tVisibles_sampler, /);
+
   // La grille au sol n'a pas de greffe : c'est déjà un trait sombre et presque
   // transparent, qui ne peut pas dessiner la carte en clair dans le noir.
   const lignes = plateau.groupe.getObjectByName('grille') as THREE.LineSegments;
-  const matGrille = lignes.material as THREE.LineBasicMaterial;
+  const matGrille = lignes.material as THREE.LineBasicNodeMaterial;
+  assert.ok(matGrille.isNodeMaterial && matGrille.outputNode === null);
   assert.ok(matGrille.color.r < 0.02 && matGrille.color.g < 0.02 && matGrille.color.b < 0.03, 'la grille est un bleu de nuit');
   assert.ok(matGrille.opacity < 0.25);
   // Décision du propriétaire du 7 septembre 2026 : « noir noir, 100 % ».
   assert.equal(FACTEUR_BROUILLARD, 0, 'noir complet, rien du terrain ne se lit');
   assert.equal(TEINTE_BROUILLARD, 0x000000);
   plateau.dispose();
+});
+
+test('le temps de l’eau avance avec le plateau, et son nuanceur le lit', () => {
+  const plateau = creerPlateau(grille(2, 2, 'mer'), documentMemoire());
+  const { uTemps } = plateau.uniformesEau;
+  assert.equal(uTemps.value, 0);
+  plateau.avancer(250);
+  assert.equal(uTemps.value, 0.25, 'en secondes');
+  plateau.avancer(250);
+  assert.equal(uTemps.value, 0.5);
+  plateau.dispose();
+});
+
+test('une greffe ne se pose qu’une fois, jamais par-dessus un autre nœud de sortie', () => {
+  const masque = new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat);
+  const uniformes = creerUniformesBrouillard(masque, 1, 1);
+  const mat = new THREE.MeshStandardNodeMaterial({ color: 0x336699 });
+  grefferBrouillard(mat, uniformes, 'atlas-test');
+  assert.equal(mat.outputNode, uniformes.sortie);
+  grefferBrouillard(mat, uniformes, 'atlas-test');
+  assert.equal(mat.outputNode, uniformes.sortie, 'deux greffes : un nœud');
+  // Un clone garde ses nœuds : il naît greffé, et une nouvelle greffe le voit.
+  const clone = mat.clone();
+  assert.equal(clone.outputNode, uniformes.sortie);
+  grefferBrouillard(clone, uniformes, 'atlas-test');
+  assert.equal(clone.outputNode, uniformes.sortie);
+  // Un matériau qui porte déjà un autre nœud de sortie n'est pas écrasé en silence.
+  const autre = new THREE.MeshStandardNodeMaterial();
+  autre.outputNode = creerUniformesBrouillard(masque, 2, 2).sortie;
+  assert.throws(() => grefferBrouillard(autre, uniformes, 'atlas-test'), /outputNode/);
+  masque.dispose();
 });

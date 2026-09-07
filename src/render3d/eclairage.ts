@@ -15,7 +15,8 @@
  * avec une interpolation douce d'environ 600 ms au changement de journée.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
+import { attribute, cameraProjectionMatrix, cameraWorldMatrix, positionGeometry, uniform } from 'three/tsl';
 
 import { melanger, teinter } from '../render/ambiance';
 import type { Meteo, PhaseJour, Saison } from '../schemas/types';
@@ -445,26 +446,49 @@ export function creerEclairage(
   const brouillard = new THREE.FogExp2(0xffffff, 0.01);
   scene.fog = brouillard;
 
-  // --- Particules : des points pour la neige, la poussière et la brume, des
-  //     segments pour la pluie et la tempête (une goutte est une traînée).
+  // --- Particules : des quads instanciés face à la caméra pour la neige, la
+  //     poussière et la brume, des segments pour la pluie et la tempête (une
+  //     goutte est une traînée). Les flocons étaient des `Points` : sous r170,
+  //     le moteur WebGPU n'a **pas de taille de point** — un point y fait un
+  //     pixel, et son repli WebGL écrit `gl_PointSize = 1.0` —, et un flocon de
+  //     treize centièmes de case disparaissait. Un seul maillage porte donc une
+  //     position par instance, et son nœud de position pose chaque sommet du
+  //     quad dans le plan de la caméra : `taille / P[1][1]` est, au pixel, le
+  //     diamètre qu'un point atténué par la perspective avait, sans que
+  //     l'éclairage ait à connaître la caméra.
   const grain = textureGrain(doc);
   const flocon = textureGrain(doc, true);
   // Une seule passe instanciée pour les impacts : aucun objet par goutte.
   const geoImpacts = new THREE.RingGeometry(0.78, 1, 12);
   geoImpacts.rotateX(-Math.PI / 2);
-  const matImpacts = new THREE.MeshBasicMaterial({ color: '#b5deeb', transparent: true, opacity: 0.26, depthWrite: false, side: THREE.DoubleSide });
+  const matImpacts = new THREE.MeshBasicNodeMaterial({ color: '#b5deeb', transparent: true, opacity: 0.26, depthWrite: false, side: THREE.DoubleSide });
   const impacts = new THREE.InstancedMesh(geoImpacts, matImpacts, 80);
+  impacts.name = 'impacts';
   impacts.frustumCulled = false; impacts.visible = false; groupe.add(impacts);
   const matriceImpact = new THREE.Object3D();
   let tempsImpacts = 0;
   const posPoints = new Float32Array(PARTICULES_MAX * 3);
-  const geoPoints = new THREE.BufferGeometry();
-  geoPoints.setAttribute('position', new THREE.BufferAttribute(posPoints, 3));
-  const matPoints = new THREE.PointsMaterial({
-    map: grain, transparent: true, depthWrite: false, sizeAttenuation: true,
-    size: 0.1, opacity: 0.8, blending: THREE.NormalBlending,
+  const attrPoints = new THREE.InstancedBufferAttribute(posPoints, 3);
+  attrPoints.setUsage(THREE.DynamicDrawUsage);
+  const quad = new THREE.PlaneGeometry(1, 1);
+  const geoPoints = new THREE.InstancedBufferGeometry();
+  geoPoints.setIndex(quad.getIndex());
+  for (const nom of ['position', 'normal', 'uv'] as const) geoPoints.setAttribute(nom, quad.getAttribute(nom));
+  geoPoints.setAttribute('instancePosition', attrPoints);
+  geoPoints.instanceCount = 0;
+  /** La taille d'une particule, en unités de scène : l'ancien `size` des points. */
+  const taillePoints = uniform(0.1);
+  const matPoints = new THREE.MeshBasicNodeMaterial({
+    map: grain, transparent: true, depthWrite: false, opacity: 0.8, blending: THREE.NormalBlending,
   });
-  const points = new THREE.Points(geoPoints, matPoints);
+  // Le quad s'étend le long des axes de la caméra, lus dans sa matrice monde
+  // (première et deuxième colonnes) : un panneau qui lui fait toujours face.
+  const echellePoints = taillePoints.div(cameraProjectionMatrix.element(1).element(1));
+  matPoints.positionNode = attribute('instancePosition', 'vec3')
+    .add(cameraWorldMatrix.element(0).xyz.mul(positionGeometry.x.mul(echellePoints)))
+    .add(cameraWorldMatrix.element(1).xyz.mul(positionGeometry.y.mul(echellePoints)));
+  const points = new THREE.Mesh(geoPoints, matPoints);
+  points.name = 'particules';
   points.frustumCulled = false;
   points.visible = false;
   groupe.add(points);
@@ -472,10 +496,11 @@ export function creerEclairage(
   const posTraits = new Float32Array(PARTICULES_MAX * 6);
   const geoTraits = new THREE.BufferGeometry();
   geoTraits.setAttribute('position', new THREE.BufferAttribute(posTraits, 3));
-  const matTraits = new THREE.LineBasicMaterial({
+  const matTraits = new THREE.LineBasicNodeMaterial({
     transparent: true, depthWrite: false, opacity: 0.45,
   });
   const traits = new THREE.LineSegments(geoTraits, matTraits);
+  traits.name = 'gouttes';
   traits.frustumCulled = false;
   traits.visible = false;
   groupe.add(traits);
@@ -531,9 +556,15 @@ export function creerEclairage(
     // La teinte de l'environnement n'a pas de prise en r170 (`environnement.ts`) :
     // seule l'intensité passe.
     scene.environmentIntensity = p.environnement.intensite;
-    matPoints.map = p.particules.calque === 'neige' ? flocon : grain;
+    // La texture fait partie du programme d'un matériau à nœuds : on ne le
+    // prévient que si elle change, c'est-à-dire au changement de météo.
+    const carte = p.particules.calque === 'neige' ? flocon : grain;
+    if (matPoints.map !== carte) {
+      matPoints.map = carte;
+      matPoints.needsUpdate = true;
+    }
     matPoints.color.set(p.particules.couleur);
-    matPoints.size = Math.max(0.01, p.particules.taille);
+    taillePoints.value = Math.max(0.01, p.particules.taille);
     matPoints.opacity = p.particules.opacite;
     matTraits.color.set(p.particules.couleur);
     matTraits.opacity = p.particules.opacite;
@@ -627,9 +658,9 @@ export function creerEclairage(
         const attr = geoTraits.attributes['position'];
         if (attr) attr.needsUpdate = true;
       } else {
-        geoPoints.setDrawRange(0, n);
-        const attr = geoPoints.attributes['position'];
-        if (attr) attr.needsUpdate = true;
+        // Le nombre d'instances tient lieu de plage de dessin.
+        geoPoints.instanceCount = n;
+        attrPoints.needsUpdate = true;
       }
     }
     return encore;

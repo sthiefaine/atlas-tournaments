@@ -67,7 +67,12 @@ export interface Catalogue {
 // ---------------------------------------------------------------------------
 
 /** États d'ordre d'une unité pendant un tour. */
-export type EtatUnite = 'prete' | 'agi' | 'produite';
+/**
+ * `deplacee` (7 septembre 2026 au soir) : l'unité a bougé par un ordre en
+ * deux temps (`puis`) et sa suite reste à donner, depuis la case où elle est.
+ * Elle redevient `agi` avec sa suite, ou à la fermeture du tour.
+ */
+export type EtatUnite = 'prete' | 'agi' | 'produite' | 'deplacee';
 
 /** Une unité en jeu. PV internes sur 100, affichés sur 10. */
 export interface Unite {
@@ -244,7 +249,14 @@ export type Suite =
   | { type: 'debarquer'; vers: Case; passager?: string; autres?: Debarquement[] }
   | { type: 'fusionner'; avec: string }
   | { type: 'ravitailler'; cible: Case }
-  | { type: 'furtivite' };
+  | { type: 'furtivite' }
+  /**
+   * L'ordre en deux temps (7 septembre 2026 au soir) : on bouge d'abord, on
+   * décide ensuite, une fois arrivé et une fois qu'on voit ce qu'il y a. Sans
+   * embuscade, l'unité passe `deplacee` et donne sa suite par un second ordre
+   * sans chemin ; avec, elle s'arrête et son tour est fini.
+   */
+  | { type: 'puis' };
 
 /** Les quatre actions du moteur (`04-gameplay.md` §2, qui fait foi). */
 export type Action =
@@ -261,7 +273,7 @@ export const MOTIFS_REFUS = [
   'cible_amie', 'sans_munitions', 'ne_peut_pas_viser', 'a_bouge', 'cible_invisible',
   'capture_impossible', 'batiment_non_capturable', 'batiment_deja_possede',
   'transport_impossible', 'transport_plein', 'debarquement_impossible',
-  'fusion_impossible', 'ravitaillement_impossible', 'furtivite_impossible', 'construction_impossible',
+  'fusion_impossible', 'ravitaillement_impossible', 'furtivite_impossible', 'deja_deplacee', 'construction_impossible',
   'batiment_inconnu', 'batiment_adverse', 'batiment_occupe', 'unite_non_produite_ici',
   'fonds_insuffisants', 'catalogue_inconnu',
   'pas_de_commandant', 'jauge_insuffisante', 'pouvoir_deja_utilise', 'pose_invalide',

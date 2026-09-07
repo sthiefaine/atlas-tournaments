@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { TANGAGE_DEFAUT, type EtatCamera } from '../../src/render3d/camera';
 import {
@@ -306,5 +306,49 @@ test('le soleil suit la cible et la direction de l’ambiance courante, transiti
   assert.equal(e.avancer(16, centre), false, 'ciel clair : plus rien ne réclame d’image');
   assert.equal(e.courant, ete);
   assert.equal(e.cadrerOmbre(etatCamera(), 1.6, CARTE), fige);
+  e.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Les particules sous WebGPU : des quads instanciés, jamais des points
+// ---------------------------------------------------------------------------
+
+test('la neige tombe en quads instanciés face à la caméra : r170 ne dessine un point qu’à un pixel', () => {
+  const scene = new THREE.Scene();
+  const neige = parametresAmbiance('hiver', 'jour', 'neige');
+  const e = creerEclairage(scene, documentSansToile(), neige, () => 0, { tailleOmbre: 1024 });
+  let points = 0;
+  e.groupe.traverse((o) => { if ((o as THREE.Points).isPoints) points += 1; });
+  assert.equal(points, 0, 'aucun `Points` : le moteur WebGPU n’a pas de taille de point');
+  const particules = e.groupe.getObjectByName('particules') as THREE.Mesh;
+  assert.ok(particules instanceof THREE.Mesh, 'un seul maillage pour toutes les particules');
+  const geo = particules.geometry as THREE.InstancedBufferGeometry;
+  assert.ok(geo.isInstancedBufferGeometry, 'une position par instance');
+  assert.ok(geo.getAttribute('instancePosition'), 'l’attribut que le nœud de position lit');
+  const mat = particules.material as THREE.MeshBasicNodeMaterial;
+  assert.ok(mat instanceof THREE.MeshBasicNodeMaterial);
+  assert.ok(mat.positionNode, 'le quad se pose dans le plan de la caméra par un nœud de position');
+  assert.equal(mat.depthWrite, false);
+  assert.equal(mat.transparent, true);
+  assert.equal(`#${mat.color.getHexString()}`, neige.particules.couleur);
+  assert.equal(mat.opacity, neige.particules.opacite);
+
+  // Le nombre d'instances tient lieu de plage de dessin, et suit l'ambiance.
+  const centre = new THREE.Vector3(5, 0, 4);
+  assert.equal(e.avancer(16, centre), true, 'la neige réclame une image');
+  assert.equal(particules.visible, true);
+  assert.equal(geo.instanceCount, neige.particules.nombre);
+  const gouttes = e.groupe.getObjectByName('gouttes') as THREE.LineSegments;
+  assert.equal(gouttes.visible, false, 'la pluie est un autre calque');
+
+  // Par ciel clair, plus rien ; sous la pluie, ce sont les traînées qui vivent.
+  e.viser(parametresAmbiance('ete', 'jour', 'clair'), true);
+  assert.equal(particules.visible, false);
+  e.viser(parametresAmbiance('automne', 'jour', 'tempete'), true);
+  e.avancer(16, centre);
+  assert.equal(particules.visible, false);
+  assert.equal(gouttes.visible, true);
+  assert.ok(gouttes.material instanceof THREE.LineBasicNodeMaterial, 'une traînée est une ligne à nœuds');
+  assert.equal(gouttes.geometry.drawRange.count, parametresAmbiance('automne', 'jour', 'tempete').particules.nombre * 2);
   e.dispose();
 });

@@ -471,10 +471,15 @@ export interface UnitType {
 // 4. Terrain
 // ---------------------------------------------------------------------------
 
-/** Les quatorze terrains du jeu. */
+/**
+ * Les quinze terrains du jeu. `herbe_haute` (7 septembre 2026 au soir) est le
+ * quinzième : une plaine qui cache les fantassins au-delà du contact et laisse
+ * voir les véhicules — « l'herbe cache ce qui est plus bas qu'un char ».
+ */
 export const CLES_TERRAIN = [
   'plaine', 'foret', 'montagne', 'route', 'ville', 'qg',
   'usine', 'aeroport', 'mer', 'riviere', 'pont', 'plage', 'radar', 'port',
+  'herbe_haute',
 ] as const;
 /** Clé d'un terrain. */
 export type CleTerrain = typeof CLES_TERRAIN[number];
@@ -483,11 +488,11 @@ export type CleTerrain = typeof CLES_TERRAIN[number];
 export const CARACTERE_PAR_TERRAIN: Record<CleTerrain, string> = {
   plaine: 'P', foret: 'F', montagne: 'M', route: 'R', ville: 'C', qg: 'H',
   usine: 'U', aeroport: 'A', mer: 'W', riviere: 'V', pont: 'N', plage: 'S', radar: 'T',
-  port: 'O',
+  port: 'O', herbe_haute: 'G',
 };
 
 /** Caractères de grille connus, dans l'ordre des terrains. */
-export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S', 'T', 'O'] as const;
+export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S', 'T', 'O', 'G'] as const;
 
 /** Terrains capturables : les seuls à pouvoir porter un propriétaire. */
 export const TERRAINS_CAPTURABLES = ['ville', 'usine', 'aeroport', 'qg', 'radar', 'port'] as const;
@@ -513,6 +518,12 @@ export interface Terrain {
   ravitaille: boolean;
   soigne: number;
   cacheEnBrouillard: boolean;
+  /**
+   * La cachette ne vaut que pour ces types de mouvement (7 septembre 2026) :
+   * l'herbe haute cache `pied` et `bottes`, un char y reste vu. Absent : la
+   * cachette vaut pour tous (forêt, montagne). Exige `cacheEnBrouillard`.
+   */
+  cacheSeulement?: TypeMouvement[];
   palette: Palette;
 }
 
@@ -541,6 +552,8 @@ export interface ParametresCarte {
   portsParCamp?: number;
   /** Stations radar par camp (0 à 2) ; absent : 0. */
   radarsParCamp?: number;
+  /** Part de la plaine semée d'herbe haute (0 à 0,5) ; absent : 0 — 7 septembre 2026. */
+  ratioHerbesHautes?: number;
   symetrie: Symetrie;
   densiteRoutes: number;
   mecanique?: Cle;

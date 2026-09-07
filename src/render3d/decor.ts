@@ -18,16 +18,24 @@
  * jamais sur la ville elle-même, qui ne se déforme ni ne s'aplatit.
  *
  * Sous le **brouillard de guerre** (révision du 6 septembre 2026), une case hors
- * de vue est presque noire (`FACTEUR_BROUILLARD`, `terrain.ts`) : ses bâtiments
- * prennent un double sombre de leurs matériaux, ses arbres, pierres et
- * accessoires une couleur d'instance éteinte, son mât et son pavillon aussi. Le
- * pavillon reste : le propriétaire d'un bâtiment n'est pas une information que
- * le brouillard cache (`doc/04` §10, et `filtrerPourCamp` garde
- * `proprietaires`), seule l'unité qui le capture le serait — et elle n'est pas
- * dessinée. Tout cela se fait au changement de l'ensemble vu, jamais par image.
+ * de vue est noire (`FACTEUR_BROUILLARD`, `terrain.ts`). Le décor n'en fait
+ * rien lui-même : tous ses matériaux lisent le même masque que le sol, greffé
+ * en `outputNode` par `grefferBrouillardSur` (`terrain.ts`), après l'éclairage
+ * et par instance. Le pavillon reste hissé, noir comme sa case : le
+ * propriétaire d'un bâtiment n'est pas une information que le brouillard cache
+ * (`doc/04` §10, et `filtrerPourCamp` garde `proprietaires`), seule l'unité qui
+ * le capture le serait — et elle n'est pas dessinée. Ce que le décor doit au
+ * brouillard tient en une règle : une unité cachée ne rend pas son bâtiment
+ * translucide.
+ *
+ * Tous les matériaux sont ceux du **moteur à nœuds** (portage WebGPU du
+ * 7 septembre 2026), et une chose s'y fait à la main : `clone()` d'un matériau
+ * à nœuds recopie ses nœuds — la greffe du brouillard voyage donc avec les
+ * jumeaux translucides — mais **pas** sa couleur, ses cartes ni sa rugosité ;
+ * `clonerMateriau` les recopie.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 import { type StyleRegion } from '../assets/spec';
@@ -151,6 +159,30 @@ export function cartographierToit(geo: THREE.BufferGeometry, repetitions = REPET
   }
   uv.needsUpdate = true;
   return geo;
+}
+
+/**
+ * Un jumeau d'un matériau standard à nœuds, réglages compris.
+ *
+ * Dans three r170, `NodeMaterial.clone()` ne recopie que les nœuds et les
+ * champs de `Material` — transparence, opacité, face, profondeur — : couleur,
+ * émission, rugosité, métal, cartes et normales repartent à leurs valeurs par
+ * défaut. Un jumeau translucide qui perdrait sa couverture ou sa couleur de
+ * camp ne serait plus un jumeau ; on recopie donc ce que le décor règle.
+ */
+export function clonerMateriau(source: THREE.MeshStandardNodeMaterial): THREE.MeshStandardNodeMaterial {
+  const jumeau = source.clone();
+  jumeau.color.copy(source.color);
+  jumeau.emissive.copy(source.emissive);
+  jumeau.emissiveIntensity = source.emissiveIntensity;
+  jumeau.roughness = source.roughness;
+  jumeau.metalness = source.metalness;
+  jumeau.map = source.map;
+  jumeau.normalMap = source.normalMap;
+  jumeau.normalScale.copy(source.normalScale);
+  jumeau.flatShading = source.flatShading;
+  jumeau.envMapIntensity = source.envMapIntensity;
+  return jumeau;
 }
 
 /** Pleine lueur des vitrages qui se rallument, au-dessus de l'ambiance la plus nocturne. */
@@ -400,7 +432,7 @@ export function creerDecor(
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
   const geoTronc = new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6);
-  const matTronc = new THREE.MeshStandardMaterial({ color: 0x6b4a2f, roughness: 0.92 });
+  const matTronc = new THREE.MeshStandardNodeMaterial({ color: 0x6b4a2f, roughness: 0.92 });
   // Plusieurs volumes dans une seule géométrie : silhouettes travaillées sans
   // appel de dessin supplémentaire par arbre.
   const etages = [0, 1, 2].map((i) => {
@@ -416,8 +448,8 @@ export function creerDecor(
       new THREE.IcosahedronGeometry(0.13, 1).translate(x!, y!, z!));
   const geoFeuillu = mergeGeometries(couronnes)!;
   couronnes.forEach((geo) => geo.dispose());
-  const matConifere = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
-  const matFeuillu = new THREE.MeshStandardMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
+  const matConifere = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
+  const matFeuillu = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
 
   // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
   // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.
@@ -504,7 +536,7 @@ export function creerDecor(
     eroder(new THREE.IcosahedronGeometry(0.15, 0), 901, 0.06),
     eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05),
   ];
-  const matRocher = new THREE.MeshStandardMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
+  const matRocher = new THREE.MeshStandardNodeMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
   let lotsRocher: THREE.InstancedMesh[] = [];
 
   function batirRochers(): void {
@@ -586,7 +618,7 @@ export function creerDecor(
   const batiments = new THREE.Group();
   batiments.name = 'batiments';
   groupe.add(batiments);
-  const matFenetres = new THREE.MeshStandardMaterial({
+  const matFenetres = new THREE.MeshStandardNodeMaterial({
     color: 0x2a3242, emissive: 0xffd98a, emissiveIntensity: 0.05, roughness: 0.25, metalness: 0.1,
   });
   // Le style régional, quand la carte en porte un : la mécanique de la carte dit
@@ -601,42 +633,42 @@ export function creerDecor(
   // de la couleur du style : elle reste au matériau, qui la blanchit sous la neige.
   const toitures = jeuToit(sorteToit(styleRegion?.toits.matiere));
   const apparenceToit = APPARENCE_TOIT[toitures.sorte];
-  const matBeton = new THREE.MeshStandardMaterial({ color: couleurMur, roughness: 0.9 });
-  const matToit = new THREE.MeshStandardMaterial({
+  const matBeton = new THREE.MeshStandardNodeMaterial({ color: couleurMur, roughness: 0.9 });
+  const matToit = new THREE.MeshStandardNodeMaterial({
     color: couleurToit, roughness: apparenceToit.rugosite, metalness: apparenceToit.metal,
     map: toitures.albedo, normalMap: toitures.normales,
   });
-  const matPierre = new THREE.MeshStandardMaterial({ color: 0xbbb9aa, roughness: 0.92 });
-  const matMetal = new THREE.MeshStandardMaterial({ color: 0x465560, roughness: 0.52, metalness: 0.38 });
-  const matIvoire = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.82 });
+  const matPierre = new THREE.MeshStandardNodeMaterial({ color: 0xbbb9aa, roughness: 0.92 });
+  const matMetal = new THREE.MeshStandardNodeMaterial({ color: 0x465560, roughness: 0.52, metalness: 0.38 });
+  const matIvoire = new THREE.MeshStandardNodeMaterial({ color: 0xeae5d4, roughness: 0.82 });
   // Un bâtiment désaffecté garde ses murs et ses toits, ternis ; ses vitrages
   // ne s'allument jamais, et une palissade de chantier le ferme. Rien n'y est
   // noirci ni effondré : il est hors service, pas détruit.
-  const matBetonTerni = new THREE.MeshStandardMaterial({ color: couleurMur, roughness: 0.97 });
-  const matToitTerni = new THREE.MeshStandardMaterial({
+  const matBetonTerni = new THREE.MeshStandardNodeMaterial({ color: couleurMur, roughness: 0.97 });
+  const matToitTerni = new THREE.MeshStandardNodeMaterial({
     color: couleurToit, roughness: Math.min(1, apparenceToit.rugosite + 0.12), metalness: apparenceToit.metal * 0.5,
     map: toitures.albedo, normalMap: toitures.normales,
   });
-  const matVitresEteintes = new THREE.MeshStandardMaterial({ color: 0x1f242c, roughness: 0.7 });
-  const matPlanche = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96 });
+  const matVitresEteintes = new THREE.MeshStandardNodeMaterial({ color: 0x1f242c, roughness: 0.7 });
+  const matPlanche = new THREE.MeshStandardNodeMaterial({ color: COULEUR_PLANCHE, roughness: 0.96 });
   // La parabole est une calotte creuse : vue de l'ouverture, une face simple
   // disparaîtrait à chaque demi-tour de balayage.
-  const matParabole = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide });
+  const matParabole = new THREE.MeshStandardNodeMaterial({ color: 0xeae5d4, roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide });
   // L'eau **du bassin d'un port**, et elle seule : le plan d'eau de la carte est
   // au terrain, qui l'anime. Ici il ne s'agit que de la darse enfermée dans la
   // case bâtie, en contrebas du quai — une lame lisse et sombre, plus foncée que
   // la mer, parce qu'elle est à l'ombre des môles.
-  const matBassin = new THREE.MeshStandardMaterial({ color: 0x22434e, roughness: 0.28, metalness: 0.12 });
+  const matBassin = new THREE.MeshStandardNodeMaterial({ color: 0x22434e, roughness: 0.28, metalness: 0.12 });
   const paraboles: Parabole[] = [];
-  const matsCamp = new Map<string, THREE.MeshStandardMaterial>();
+  const matsCamp = new Map<string, THREE.MeshStandardNodeMaterial>();
   const geosBatiment = new Set<THREE.BufferGeometry>();
   const primitives = new Map<string, THREE.BufferGeometry>();
 
-  function matCamp(camp: CampId | null): THREE.MeshStandardMaterial {
+  function matCamp(camp: CampId | null): THREE.MeshStandardNodeMaterial {
     const cle = String(camp);
     const memo = matsCamp.get(cle);
     if (memo) return memo;
-    const m = new THREE.MeshStandardMaterial({ color: paletteDe(camp).main, roughness: 0.62, metalness: 0.1 });
+    const m = new THREE.MeshStandardNodeMaterial({ color: paletteDe(camp).main, roughness: 0.62, metalness: 0.1 });
     matsCamp.set(cle, m);
     return m;
   }
@@ -973,12 +1005,14 @@ export function creerDecor(
   // Un bâtiment occupé s'efface en transparence : sa silhouette reste entière
   // et la figurine se lit au travers. L'aplatir en maquette basse — ce qu'on
   // faisait — se lisait comme une ville écrasée par l'unité qui la prend.
-  const matsFantome = new Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial>();
+  const matsFantome = new Map<THREE.MeshStandardNodeMaterial, THREE.MeshStandardNodeMaterial>();
 
-  function materiauFantome(source: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+  function materiauFantome(source: THREE.MeshStandardNodeMaterial): THREE.MeshStandardNodeMaterial {
     let f = matsFantome.get(source);
     if (!f) {
-      f = source.clone();
+      // Le jumeau naît avec la greffe du brouillard de son original — les nœuds
+      // voyagent avec le clone —, ses réglages sont recopiés par la main.
+      f = clonerMateriau(source);
       f.transparent = true;
       f.opacity = OPACITE_FANTOME;
       // Sans écriture de profondeur, l'unité à l'intérieur reste nette : c'est
@@ -1035,7 +1069,7 @@ export function creerDecor(
   const uToile = Float32Array.from(
     { length: drapeauPlat.length / 3 }, (_, i) => drapeauPlat[i * 3]! / LARG_DRAPEAU,
   );
-  const matDrapeau = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
+  const matDrapeau = new THREE.MeshStandardNodeMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
   let mats!: THREE.InstancedMesh;
   let pommeaux!: THREE.InstancedMesh;
   let drapeaux!: THREE.InstancedMesh;
@@ -1154,13 +1188,13 @@ export function creerDecor(
   // la porte : le vitrage partage son matériau avec toute la carte, on ne peut
   // pas l'allumer pour une seule ville sans lui en donner un à elle.
   const lueurs = new Map<string, number>();
-  const matsLueur = new Map<string, { fantome: boolean; mat: THREE.MeshStandardMaterial }>();
+  const matsLueur = new Map<string, { fantome: boolean; mat: THREE.MeshStandardNodeMaterial }>();
 
-  function materiauLueur(cle: string, fantome: boolean, lueur: number): THREE.MeshStandardMaterial {
+  function materiauLueur(cle: string, fantome: boolean, lueur: number): THREE.MeshStandardNodeMaterial {
     let entree = matsLueur.get(cle);
     if (!entree || entree.fantome !== fantome) {
       entree?.mat.dispose();
-      entree = { fantome, mat: (fantome ? materiauFantome(matFenetres) : matFenetres).clone() };
+      entree = { fantome, mat: clonerMateriau(fantome ? materiauFantome(matFenetres) : matFenetres) };
       matsLueur.set(cle, entree);
     }
     entree.mat.emissiveIntensity = Math.max(matFenetres.emissiveIntensity, lueur * LUEUR_PLEINE);
@@ -1220,7 +1254,7 @@ export function creerDecor(
       const fantome = occupants.has(cleBat);
       const lueur = lueurs.get(cleBat);
       for (const m of maillesDe(batiment)) {
-        const opaque = m.userData['opaque'] as THREE.MeshStandardMaterial;
+        const opaque = m.userData['opaque'] as THREE.MeshStandardNodeMaterial;
         if (opaque === matFenetres && lueur !== undefined) m.material = materiauLueur(cleBat, fantome, lueur);
         else m.material = fantome ? materiauFantome(opaque) : opaque;
         // Un bâtiment qu'on voit au travers ne projette pas une ombre pleine

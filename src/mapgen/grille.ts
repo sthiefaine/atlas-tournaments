@@ -30,8 +30,8 @@ const PAR_CLE = ((): Record<string, Terrain> => {
  */
 export const CAPTURABLES: readonly CleTerrain[] = TERRAINS_CAPTURABLES;
 
-/** Terrains sur lesquels le générateur pose un bâtiment. */
-export const CONSTRUCTIBLES: readonly CleTerrain[] = ['plaine', 'foret', 'plage', 'route'];
+/** Terrains sur lesquels le générateur pose un bâtiment (l'herbe haute comme la plaine, 7 septembre 2026). */
+export const CONSTRUCTIBLES: readonly CleTerrain[] = ['plaine', 'herbe_haute', 'foret', 'plage', 'route'];
 
 /** Coût d'entrée d'un terrain, ou `null` si infranchissable pour ce mouvement. */
 export function coutDe(terrain: CleTerrain, mouvement: TypeMouvement): number | null {

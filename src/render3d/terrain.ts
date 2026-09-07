@@ -9,10 +9,13 @@
  * Les matières sont mélangées par une **carte de mélange** (`splat map`)
  * construite depuis la `MapDef` : un texel par case, quatre canaux (herbe,
  * terre et route, roche, sable), lu en filtrage linéaire, donc des lisières
- * fondues sans un seul flou fait main. Le mélange lui-même est greffé dans un
- * `MeshStandardMaterial` par `onBeforeCompile` : on garde ainsi l'éclairage PBR
- * complet de three.js — ombres, lumière hémisphérique, brouillard — au lieu de
- * réécrire un `ShaderMaterial` qui les perdrait tous.
+ * fondues sans un seul flou fait main. Le mélange lui-même est écrit en
+ * **nœuds TSL** sur un `MeshStandardNodeMaterial` — `colorNode`,
+ * `roughnessNode`, `normalNode` — : on garde ainsi l'éclairage PBR complet de
+ * three.js — ombres, lumière hémisphérique, brouillard — au lieu de réécrire un
+ * matériau de nuanceur qui les perdrait tous. (Portage WebGPU du 7 septembre
+ * 2026 : c'était du GLSL greffé par `onBeforeCompile`, que le moteur à nœuds
+ * ignore ; chaque formule a gardé sa valeur, seule l'écriture a changé.)
  *
  * L'eau est un plan séparé, sous le niveau des lits de rivière et des fonds
  * marins : partout où le terrain remonte au-dessus d'elle, le tampon de
@@ -33,10 +36,21 @@
  * un effet d'atmosphère : le `FogExp2` de `eclairage.ts` est une autre chose,
  * et `doc/10` §6.4 interdit de les confondre. Le masque n'est réécrit que
  * quand l'ensemble des cases vues change, jamais par image.
+ *
+ * Une texture WebGPU a une **taille fixe** : quand la carte change de
+ * dimensions (l'atelier change de carte sans démonter la scène), la splat, les
+ * fonds et le masque sont **remplacés** par des textures neuves, et les nœuds
+ * qui les lisent changent de valeur — le moteur relie ses textures tout seul.
+ * En WebGL on réécrivait `image` ; ici cela écrirait hors de la texture.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import {
+  clamp, float, materialReference, max, mix, normalize, normalMap, output, positionWorld,
+  sin, smoothstep, step, texture, uniform, uv, vec3, vec4,
+  type Node, type ShaderNodeObject, type TextureNode, type UniformNode,
+} from 'three/tsl';
 
 import type { Biome } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
@@ -44,7 +58,7 @@ import {
   axePont, CASE, construireSplat, hauteurEn, hauteurSol, NIVEAU_EAU, pieceDeCase,
   terrainBorne, type GrilleTerrain,
 } from './geometrie';
-import { jeuMatiere, normalesEau } from './textures';
+import { jeuMatiere, normalesEau, type JeuMatiere } from './textures';
 import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
 
 /** Subdivisions par case : trois suffisent à arrondir un col de montagne. */
@@ -102,6 +116,12 @@ export interface Plateau {
    * comme pour ce qui le couvre.
    */
   readonly uniformesBrouillard: UniformesBrouillard;
+  /**
+   * Les réglages de l'eau — fonds, temps, écume, rive. Le plateau les tient
+   * lui-même ; ils sont exposés pour que les tests lisent ce que le nuanceur
+   * lit, sans passer par une compilation.
+   */
+  readonly uniformesEau: UniformesEau;
   /** Altitude du sol en un point du monde. */
   hauteurEn(x: number, z: number): number;
   /** Applique une ambiance (teinte, neige, humidité, couleur de l'eau). */
@@ -148,91 +168,108 @@ export function donneesVisibles(g: GrilleTerrain, visibles: ReadonlySet<string> 
   return donnees;
 }
 
-/** Déclarations du brouillard de guerre, en tête des deux nuanceurs. */
-const BROUILLARD_DECL_VERTEX = 'varying vec2 vAtlasMonde;\n';
-const BROUILLARD_DECL_FRAGMENT = `
-varying vec2 vAtlasMonde;
-uniform sampler2D tVisibles;
-uniform vec2 uCarteBrouillard;
-uniform float uFacteurBrouillard;
-uniform vec3 uTeinteBrouillard;
-`;
-
 /**
- * La position au sol du fragment, dans le monde : c'est elle qui dit sa case.
- * `instanceMatrix` d'abord — arbres, pierres et accessoires sont des lots
- * instanciés, et `modelMatrix` seule les ramènerait tous à l'origine du lot,
- * donc tous à la même case.
+ * Les uniformes du brouillard, partagés par tout ce qui se pose sur la carte,
+ * et le **nœud de sortie** qui les lit. Un seul nœud pour tous les matériaux,
+ * et pas un par greffe : le moteur à nœuds compose la clé de programme d'un
+ * matériau avec l'**identité** de ses nœuds, et deux greffes bâties séparément
+ * — même à formule égale — coûteraient deux programmes.
  */
-const BROUILLARD_VERTEX = `#include <project_vertex>
-	{
-		vec4 atlasMonde = vec4( transformed, 1.0 );
-		#ifdef USE_INSTANCING
-			atlasMonde = instanceMatrix * atlasMonde;
-		#endif
-		vAtlasMonde = ( modelMatrix * atlasMonde ).xz;
-	}`;
-
-/**
- * L'assombrissement, **après** l'éclairage : appliqué au diffus, le reflet du
- * studio et la lumière du ciel ramèneraient de la clarté sur une case censée
- * être dans le noir. Le masque est lu en filtrage linéaire — un texel par
- * case — et resserré par `smoothstep` : la transition tient dans un demi-texel
- * autour de la frontière, au lieu de courir d'un centre de case à l'autre.
- * Le brouillard de scène (`fog_fragment`) vient ensuite : une case hors de vue
- * sous la brume se fond dans la brume, comme le reste.
- */
-const BROUILLARD_FRAGMENT = `#include <opaque_fragment>
-	{
-		vec2 uvVisibles = clamp( vAtlasMonde / uCarteBrouillard, 0.0, 1.0 );
-		float vu = smoothstep( 0.3, 0.7, texture2D( tVisibles, uvVisibles ).r );
-		gl_FragColor.rgb = mix( gl_FragColor.rgb * uFacteurBrouillard + uTeinteBrouillard, gl_FragColor.rgb, vu );
-	}`;
-
-/** Les uniformes du brouillard, partagés par tout ce qui se pose sur la carte. */
 export interface UniformesBrouillard {
-  tVisibles: { value: THREE.DataTexture };
-  uCarteBrouillard: { value: THREE.Vector2 };
-  uFacteurBrouillard: { value: number };
-  uTeinteBrouillard: { value: THREE.Color };
+  /**
+   * Le masque, un octet par case, lu à la position monde du fragment. `.value`
+   * est la texture du moment : elle est remplacée quand la carte change de
+   * taille, et c'est ici qu'on la relit.
+   */
+  readonly tVisibles: ShaderNodeObject<TextureNode>;
+  readonly uCarteBrouillard: ShaderNodeObject<UniformNode<THREE.Vector2>>;
+  readonly uFacteurBrouillard: ShaderNodeObject<UniformNode<number>>;
+  readonly uTeinteBrouillard: ShaderNodeObject<UniformNode<THREE.Color>>;
+  /** La couleur finale d'un fragment, brouillard compris : posée telle quelle en `outputNode`. */
+  readonly sortie: Node;
 }
 
 /**
- * Greffe la lecture du masque sur un matériau, **par-dessus** ce que son
- * `onBeforeCompile` fait déjà : le sol garde son mélange de matières, l'eau ses
- * rives. La clé de programme doit être propre à chaque matériau greffé —
- * deux matériaux aux mêmes réglages et à la même clé partageraient un programme.
+ * Bâtit les uniformes du brouillard et leur nœud de sortie, pour un masque et
+ * une carte donnés.
+ *
+ * L'assombrissement s'applique **après** l'éclairage : appliqué au diffus, le
+ * reflet du studio et la lumière du ciel ramèneraient de la clarté sur une case
+ * censée être dans le noir. `output` est la couleur que le matériau a finie
+ * d'éclairer — et déjà passée au brouillard de scène : une case hors de vue
+ * est noire même sous la brume, où le GLSL la fondait dans la brume. À facteur
+ * nul et teinte noire, c'est la même chose ; c'est dit, pas caché.
+ *
+ * Le masque est lu en filtrage linéaire — un texel par case — et resserré par
+ * `smoothstep` : la transition tient dans un demi-texel autour de la frontière,
+ * au lieu de courir d'un centre de case à l'autre.
+ *
+ * La case se lit sur la **position monde** du fragment, `positionWorld` : le
+ * sommet la calcule après `instanceMatrix`, donc arbres, pierres et accessoires
+ * instanciés lisent chacun leur case sans qu'une ligne le dise ici. Le piège du
+ * GLSL — « `instanceMatrix` avant `modelMatrix`, sinon tout le lot lit la case
+ * de son origine » — n'existe plus.
+ */
+export function creerUniformesBrouillard(
+  masque: THREE.DataTexture, largeur: number, hauteur: number,
+): UniformesBrouillard {
+  const uCarteBrouillard = uniform(new THREE.Vector2(largeur * CASE, hauteur * CASE)).label('uCarteBrouillard');
+  const uFacteurBrouillard = uniform(FACTEUR_BROUILLARD).label('uFacteurBrouillard');
+  const uTeinteBrouillard = uniform(new THREE.Color(TEINTE_BROUILLARD)).label('uTeinteBrouillard');
+  const uvVisibles = clamp(positionWorld.xz.div(uCarteBrouillard), 0, 1);
+  const tVisibles = texture(masque, uvVisibles).label('tVisibles');
+  const vu = smoothstep(0.3, 0.7, tVisibles.r);
+  const eteinte = output.rgb.mul(uFacteurBrouillard).add(uTeinteBrouillard);
+  const sortie = vec4(mix(eteinte, output.rgb, vu), output.a);
+  return { tVisibles, uCarteBrouillard, uFacteurBrouillard, uTeinteBrouillard, sortie };
+}
+
+/** La clé d'une greffe posée sans en donner : le plateau lui-même. */
+const CLE_BROUILLARD = 'atlas-plateau';
+
+/**
+ * Les matériaux déjà greffés, et sous quelle clé. La clé ne fait plus rien au
+ * programme — c'était un piège du WebGL, où deux matériaux greffés du même code
+ * sous la même clé se volaient leur programme ; le moteur à nœuds compose la
+ * sienne avec ses nœuds — mais elle dit, au débogage, d'où vient une greffe.
+ */
+const greffes = new WeakMap<THREE.Material, string>();
+
+/**
+ * Greffe la lecture du masque sur un matériau à nœuds : son `outputNode` devient
+ * le nœud de sortie partagé. Le sol garde son mélange de matières et l'eau ses
+ * rives — ce sont d'autres nœuds, `colorNode` et les siens.
+ *
+ * Un clone de matériau à nœuds **garde** son `outputNode` (à l'inverse du WebGL,
+ * où un clone perdait son `onBeforeCompile`) : le jumeau translucide d'un
+ * bâtiment naît greffé, et on ne lui repose pas la même greffe. Un matériau qui
+ * porterait déjà un autre `outputNode` le perdrait : aucun n'en a, et plutôt
+ * que d'écraser en silence, on refuse.
  */
 export function grefferBrouillard(
-  materiau: THREE.MeshStandardMaterial, uniformes: UniformesBrouillard, cle: string,
+  materiau: THREE.NodeMaterial, uniformes: UniformesBrouillard, cle: string = CLE_BROUILLARD,
 ): void {
-  if (greffes.has(materiau)) return;
-  greffes.add(materiau);
-  const avant = materiau.onBeforeCompile;
-  const avantCle = materiau.customProgramCacheKey;
-  materiau.onBeforeCompile = (shader, renderer): void => {
-    avant.call(materiau, shader, renderer);
-    Object.assign(shader.uniforms, uniformes);
-    shader.vertexShader = BROUILLARD_DECL_VERTEX + shader.vertexShader
-      .replace('#include <project_vertex>', BROUILLARD_VERTEX);
-    shader.fragmentShader = BROUILLARD_DECL_FRAGMENT + shader.fragmentShader
-      .replace('#include <opaque_fragment>', BROUILLARD_FRAGMENT);
-  };
-  // La clé **compose** : un matériau qui avait déjà la sienne — le sol, l'eau —
-  // ne la perd pas, et deux matériaux greffés du même code la partagent sans
-  // se voler leur programme, three distinguant déjà leurs propres réglages.
-  materiau.customProgramCacheKey = (): string => `${avantCle.call(materiau)}|${cle}`;
+  if (greffes.has(materiau) || materiau.outputNode === uniformes.sortie) return;
+  if (materiau.outputNode !== null) {
+    throw new Error(`grefferBrouillard : le matériau « ${materiau.name || materiau.type} » a déjà un outputNode`);
+  }
+  greffes.set(materiau, cle);
+  materiau.outputNode = uniformes.sortie;
 }
 
-/** Les matériaux déjà greffés : on ne greffe jamais deux fois le même. */
-const greffes = new WeakSet<THREE.Material>();
+/** Vrai pour un matériau du moteur à nœuds — le seul qui sache lire une greffe. */
+function estMateriauNoeuds(m: THREE.Material): m is THREE.NodeMaterial {
+  return (m as { isNodeMaterial?: boolean }).isNodeMaterial === true;
+}
 
 /**
  * Greffe le brouillard sur **tout** ce qui pend d'un objet. C'est ainsi que
  * bâtiments, arbres, pierres et accessoires s'éteignent hors de vue : teindre
  * leur couleur en noir ne suffisait pas — un matériau noir garde le reflet du
  * studio et l'éclat du soleil, et c'est ce gris qu'on voyait dans le noir.
- * Le masque, lui, s'applique **après** l'éclairage.
+ * Le masque, lui, s'applique **après** l'éclairage. Un matériau qui n'est pas
+ * à nœuds — une étiquette, un sprite — est laissé tel quel, comme l'étaient
+ * les matériaux non standard.
  */
 export function grefferBrouillardSur(
   racine: THREE.Object3D, uniformes: UniformesBrouillard, cle: string,
@@ -241,67 +278,155 @@ export function grefferBrouillardSur(
     const m = (o as THREE.Mesh).material;
     if (!m) return;
     for (const mat of Array.isArray(m) ? m : [m]) {
-      if (mat instanceof THREE.MeshStandardMaterial) grefferBrouillard(mat, uniformes, cle);
+      if (estMateriauNoeuds(mat)) grefferBrouillard(mat, uniformes, cle);
     }
   });
 }
 
-/** Déclarations injectées en tête du nuanceur de fragments. */
-const UNIFORMES_GLSL = `
-uniform sampler2D tSplat;
-uniform sampler2D tTerre;
-uniform sampler2D tRoche;
-uniform sampler2D tSable;
-uniform sampler2D tNeige;
-uniform sampler2D nTerre;
-uniform sampler2D nRoche;
-uniform sampler2D nSable;
-uniform vec2 uTiling;
-uniform float uNeige;
-uniform float uMouille;
-`;
+/** Les jeux de textures du sol, dans l'ordre des canaux de la splat, plus la neige. */
+interface JeuxSol {
+  herbe: JeuMatiere;
+  terre: JeuMatiere;
+  roche: JeuMatiere;
+  sable: JeuMatiere;
+  neige: JeuMatiere;
+}
 
-/** Le mélange de matières : remplace `map_fragment`. */
-const MELANGE_GLSL = `
-vec4 splatBrut = texture2D( tSplat, vMapUv );
-float sommeSplat = max( splatBrut.r + splatBrut.g + splatBrut.b + splatBrut.a, 0.001 );
-vec4 splat = splatBrut / sommeSplat;
-vec2 uvD = vMapUv * uTiling;
-vec3 cHerbe = texture2D( map, uvD ).rgb;
-vec3 cTerre = texture2D( tTerre, uvD ).rgb;
-vec3 cRoche = texture2D( tRoche, uvD * 0.6 ).rgb;
-vec3 cSable = texture2D( tSable, uvD ).rgb;
-vec3 matiere = cHerbe * splat.r + cTerre * splat.g + cRoche * splat.b + cSable * splat.a;
-// Les congères interrompues laissent apparaître pierre et terre sous la neige.
-float reliefFin = texture2D( tRoche, uvD * 0.6 ).g;
-float depot = smoothstep( 0.04, 0.55, uNeige - reliefFin * 0.32 );
-float couverture = clamp( depot * ( 0.62 + 0.38 * ( splat.r + splat.b ) ), 0.0, 1.0 );
-matiere = mix( matiere, texture2D( tNeige, uvD * 0.8 ).rgb, couverture );
-// La teinte de saison colore surtout la végétation : appliquée telle quelle,
-// elle rendrait la roche brune en automne et le sable bleu en hiver.
-vec3 teinteSaison = mix( vec3( 1.0 ), diffuse, clamp( splat.r * 0.8 + 0.2, 0.0, 1.0 ) );
-// La pluie assombrit surtout la terre et forme des zones humides irrégulières.
-float humiditeLocale = uMouille * ( 0.50 + 0.50 * smoothstep( 0.12, 0.45, reliefFin ) );
-diffuseColor.rgb = teinteSaison * matiere * ( 1.0 - humiditeLocale * 0.17 );
-`;
+/** Les réglages du sol que l'ambiance fait varier. */
+interface UniformesSol {
+  uTiling: ShaderNodeObject<UniformNode<THREE.Vector2>>;
+  uNeige: ShaderNodeObject<UniformNode<number>>;
+  uMouille: ShaderNodeObject<UniformNode<number>>;
+}
 
-/** La rugosité par matière : remplace `roughnessmap_fragment`. */
-const RUGOSITE_GLSL = `
-float roughnessFactor = 0.95 * splat.r + 0.92 * splat.g + 0.78 * splat.b + 0.97 * splat.a;
-roughnessFactor = mix( roughnessFactor, 0.24, humiditeLocale );
-roughnessFactor = mix( roughnessFactor, 0.68, couverture * 0.7 );
-`;
+/** Ce que le nuanceur du sol rend au plateau : ses trois nœuds, et la lecture de la splat. */
+interface NoeudsSol {
+  /** La splat telle que le sol la lit : c'est ici qu'on la remplace. */
+  tSplat: ShaderNodeObject<TextureNode>;
+  colorNode: Node;
+  roughnessNode: Node;
+  normalNode: Node;
+}
 
-/** Les normales mélangées : remplace `normal_fragment_maps`. */
-const NORMALES_GLSL = `
-vec3 nHerbe = texture2D( normalMap, uvD ).xyz * 2.0 - 1.0;
-vec3 nTerreV = texture2D( nTerre, uvD ).xyz * 2.0 - 1.0;
-vec3 nRocheV = texture2D( nRoche, uvD * 0.6 ).xyz * 2.0 - 1.0;
-vec3 nSableV = texture2D( nSable, uvD ).xyz * 2.0 - 1.0;
-vec3 mapN = normalize( nHerbe * splat.r + nTerreV * splat.g + nRocheV * splat.b + nSableV * splat.a );
-mapN.xy *= normalScale * ( 1.0 - couverture * 0.6 );
-normal = normalize( tbn * mapN );
-`;
+/**
+ * Le nuanceur du sol : mélange de cinq matières par la carte de répartition,
+ * neige, humidité, rugosité et normales par matière. C'était du GLSL greffé
+ * dans `map_fragment`, `roughnessmap_fragment` et `normal_fragment_maps` ; ce
+ * sont trois nœuds — couleur, rugosité, normale — qui **partagent** leurs
+ * lectures : la splat, le relief de la roche et la couverture de neige ne se
+ * calculent qu'une fois par fragment, le constructeur de nœuds mettant en
+ * variable tout ce qui est lu deux fois.
+ */
+function nuanceurSol(jeux: JeuxSol, u: UniformesSol, splat: THREE.DataTexture): NoeudsSol {
+  const uvSol = uv();
+  const tSplat = texture(splat, uvSol).label('tSplat');
+  // Les quatre canaux se normalisent : une case n'est jamais « moins que pleine ».
+  const somme = max(tSplat.r.add(tSplat.g).add(tSplat.b).add(tSplat.a), 0.001);
+  const part = tSplat.div(somme);
+  const uvD = uvSol.mul(u.uTiling);
+  const echRoche = texture(jeux.roche.albedo, uvD.mul(0.6)).label('tRoche');
+  // Le `map` du matériau est l'herbe, mais il se lit ici à son propre tuilage,
+  // pas par `materialColor` : c'est pour cela que le nœud le rééchantillonne.
+  const cHerbe = texture(jeux.herbe.albedo, uvD).label('tHerbe').rgb;
+  const cTerre = texture(jeux.terre.albedo, uvD).label('tTerre').rgb;
+  const cSable = texture(jeux.sable.albedo, uvD).label('tSable').rgb;
+  const matiereNue = cHerbe.mul(part.r).add(cTerre.mul(part.g)).add(echRoche.rgb.mul(part.b)).add(cSable.mul(part.a));
+  // Les congères interrompues laissent apparaître pierre et terre sous la neige.
+  const reliefFin = echRoche.g;
+  const depot = smoothstep(0.04, 0.55, u.uNeige.sub(reliefFin.mul(0.32)));
+  const couverture = clamp(depot.mul(part.r.add(part.b).mul(0.38).add(0.62)), 0, 1);
+  const matiere = mix(matiereNue, texture(jeux.neige.albedo, uvD.mul(0.8)).label('tNeige').rgb, couverture);
+  // La teinte de saison colore surtout la végétation : appliquée telle quelle,
+  // elle rendrait la roche brune en automne et le sable bleu en hiver.
+  const teinteSaison = mix(vec3(1), materialReference('color', 'color'), clamp(part.r.mul(0.8).add(0.2), 0, 1));
+  // La pluie assombrit surtout la terre et forme des zones humides irrégulières.
+  const humiditeLocale = u.uMouille.mul(smoothstep(0.12, 0.45, reliefFin).mul(0.5).add(0.5));
+  const colorNode = teinteSaison.mul(matiere).mul(humiditeLocale.mul(0.17).oneMinus());
+
+  const rugositeMatiere = part.r.mul(0.95).add(part.g.mul(0.92)).add(part.b.mul(0.78)).add(part.a.mul(0.97));
+  const roughnessNode = mix(mix(rugositeMatiere, 0.24, humiditeLocale), 0.68, couverture.mul(0.7));
+
+  const decoder = (t: THREE.Texture, uvN: ShaderNodeObject<Node>, nom: string): ShaderNodeObject<Node> =>
+    texture(t, uvN).label(nom).xyz.mul(2).sub(1);
+  const nHerbe = decoder(jeux.herbe.normales, uvD, 'nHerbe');
+  const nTerre = decoder(jeux.terre.normales, uvD, 'nTerre');
+  const nRoche = decoder(jeux.roche.normales, uvD.mul(0.6), 'nRoche');
+  const nSable = decoder(jeux.sable.normales, uvD, 'nSable');
+  const mapN = normalize(nHerbe.mul(part.r).add(nTerre.mul(part.g)).add(nRoche.mul(part.b)).add(nSable.mul(part.a)));
+  const echelle = materialReference('normalScale', 'vec2').mul(couverture.mul(0.6).oneMinus());
+  // `normalMap` attend une carte **encodée** — il la décode lui-même, applique
+  // l'échelle à `xy` et passe en espace de vue par le repère tangent que three
+  // dérive de l'écran, faute de tangentes sur le sol. On lui rend donc le
+  // mélange normalisé sous sa forme encodée : c'est exactement `tbn * mapN`.
+  const normalNode = normalMap(mapN.mul(0.5).add(0.5), echelle);
+  return { tSplat, colorNode, roughnessNode, normalNode };
+}
+
+/** Les réglages de l'eau, tenus par le plateau et lus par son nuanceur. */
+export interface UniformesEau {
+  /** La profondeur sous l'eau, un texel par case ; `.value` est la texture du moment. */
+  readonly tFonds: ShaderNodeObject<TextureNode>;
+  readonly uCarte: ShaderNodeObject<UniformNode<THREE.Vector2>>;
+  /** Le temps, en secondes : `avancer` le fait courir, c'est lui qui anime l'écume. */
+  readonly uTemps: ShaderNodeObject<UniformNode<number>>;
+  readonly uEcume: ShaderNodeObject<UniformNode<number>>;
+  readonly uRive: ShaderNodeObject<UniformNode<THREE.Color>>;
+}
+
+/**
+ * Le nuanceur de l'eau : hauts-fonds teintés et écume au bord, d'après la
+ * profondeur lue à la position monde. C'était du GLSL après `color_fragment` ;
+ * la formule est la même, `positionWorld.xz` remplaçant `vMondeEau`.
+ */
+function nuanceurEau(fonds: THREE.DataTexture, largeur: number, hauteur: number, rive: number): {
+  uniformes: UniformesEau; colorNode: Node;
+} {
+  const uCarte = uniform(new THREE.Vector2(largeur * CASE, hauteur * CASE)).label('uCarte');
+  const uTemps = uniform(0).label('uTemps');
+  const uEcume = uniform(0.3).label('uEcume');
+  const uRive = uniform(new THREE.Color(rive)).label('uRive');
+  const uvCarte = positionWorld.xz.div(uCarte);
+  const tFonds = texture(fonds, clamp(uvCarte, 0, 1)).label('tFonds');
+  const dansCarte = step(0, uvCarte.x).mul(step(0, uvCarte.y)).mul(step(uvCarte.x, 1)).mul(step(uvCarte.y, 1));
+  const fond = tFonds.r.mul(1.4).sub(0.4);
+  const profondeur = max(0, float(-0.12).sub(fond));
+  const peuProfond = smoothstep(0.025, 0.27, profondeur).oneMinus().mul(dansCarte);
+  const teinteFonds = mix(materialReference('color', 'color'), uRive, peuProfond.mul(0.65));
+  const vague = sin(profondeur.mul(100).sub(uTemps.mul(1.6)).add(sin(positionWorld.x.mul(5).add(positionWorld.z.mul(3)))));
+  const bord = smoothstep(0.005, 0.09, profondeur).oneMinus().mul(dansCarte);
+  const ecume = smoothstep(0.42, 0.95, vague).mul(bord).mul(uEcume);
+  const colorNode = mix(teinteFonds, vec3(0.82, 0.91, 0.86), ecume);
+  return { uniformes: { tFonds, uCarte, uTemps, uEcume, uRive }, colorNode };
+}
+
+/**
+ * Une texture d'un texel par case, lue en linéaire et bornée : la splat, les
+ * fonds et le masque de visibilité sont tous faits ainsi.
+ */
+function textureCases(
+  donnees: Uint8Array<ArrayBuffer>, largeur: number, hauteur: number, format: THREE.PixelFormat,
+): THREE.DataTexture {
+  const t = new THREE.DataTexture(donnees, largeur, hauteur, format, THREE.UnsignedByteType);
+  t.minFilter = THREE.LinearFilter;
+  t.magFilter = THREE.LinearFilter;
+  t.wrapS = THREE.ClampToEdgeWrapping;
+  t.wrapT = THREE.ClampToEdgeWrapping;
+  t.needsUpdate = true;
+  return t;
+}
+
+/**
+ * Remplace la texture que lit un nœud, et libère l'ancienne. Une texture
+ * WebGPU ne change pas de taille : à une carte d'autres dimensions, une autre
+ * texture — le nœud garde son nom et sa place dans le nuanceur, seule la
+ * ressource liée change.
+ */
+function remplacer(noeud: ShaderNodeObject<TextureNode>, neuve: THREE.DataTexture): THREE.DataTexture {
+  const ancienne = noeud.value;
+  noeud.value = neuve;
+  ancienne.dispose();
+  return neuve;
+}
 
 /** Construit la géométrie du sol, altitudes comprises. */
 function geometrieSol(g: GrilleTerrain): THREE.BufferGeometry {
@@ -541,62 +666,37 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   const sable = jeuMatiere(doc, 'sable', 256, biome);
   const neige = jeuMatiere(doc, 'neige', 128);
 
-  const splat = new THREE.DataTexture(
-    construireSplat(g), g.largeur, g.hauteur, THREE.RGBAFormat,
-  );
-  splat.minFilter = THREE.LinearFilter;
-  splat.magFilter = THREE.LinearFilter;
-  splat.wrapS = THREE.ClampToEdgeWrapping;
-  splat.wrapT = THREE.ClampToEdgeWrapping;
-  splat.needsUpdate = true;
+  // Les textures d'un texel par case sont **remplacées** quand la carte change
+  // de taille : ces trois-là sont les textures du moment, jamais gelées.
+  let splat = textureCases(construireSplat(g), g.largeur, g.hauteur, THREE.RGBAFormat);
 
   // --- Le brouillard de guerre : un octet par case, lu par tout le plateau.
   //     `null` au départ : un plateau naît tout vu, `majVisibles` le voile.
   let visiblesCourants: ReadonlySet<string> | null = null;
-  const tVisibles = new THREE.DataTexture(
-    donneesVisibles(g, null), g.largeur, g.hauteur, THREE.RedFormat, THREE.UnsignedByteType,
-  );
-  tVisibles.minFilter = THREE.LinearFilter;
-  tVisibles.magFilter = THREE.LinearFilter;
-  tVisibles.wrapS = THREE.ClampToEdgeWrapping;
-  tVisibles.wrapT = THREE.ClampToEdgeWrapping;
-  tVisibles.needsUpdate = true;
-  const uBrouillard: UniformesBrouillard = {
-    tVisibles: { value: tVisibles },
-    uCarteBrouillard: { value: new THREE.Vector2(g.largeur * CASE, g.hauteur * CASE) },
-    uFacteurBrouillard: { value: FACTEUR_BROUILLARD },
-    uTeinteBrouillard: { value: new THREE.Color(TEINTE_BROUILLARD) },
-  };
+  let tVisibles = textureCases(donneesVisibles(g, null), g.largeur, g.hauteur, THREE.RedFormat);
+  const uBrouillard = creerUniformesBrouillard(tVisibles, g.largeur, g.hauteur);
 
-  const uniformes = {
-    tSplat: { value: splat },
-    tTerre: { value: terre.albedo },
-    tRoche: { value: roche.albedo },
-    tSable: { value: sable.albedo },
-    tNeige: { value: neige.albedo },
-    nTerre: { value: terre.normales },
-    nRoche: { value: roche.normales },
-    nSable: { value: sable.normales },
-    uTiling: { value: new THREE.Vector2(g.largeur * TUILAGE, g.hauteur * TUILAGE) },
-    uNeige: { value: 0 },
-    uMouille: { value: 0 },
+  const uSol: UniformesSol = {
+    uTiling: uniform(new THREE.Vector2(g.largeur * TUILAGE, g.hauteur * TUILAGE)).label('uTiling'),
+    uNeige: uniform(0).label('uNeige'),
+    uMouille: uniform(0).label('uMouille'),
   };
+  const noeudsSol = nuanceurSol({ herbe, terre, roche, sable, neige }, uSol, splat);
 
-  const matSol = new THREE.MeshStandardMaterial({
+  // `map` et `normalMap` restent au matériau : c'est là qu'on libère l'herbe,
+  // et c'est ce qui dit de quelle matière le sol est fait par défaut. Les
+  // nœuds les rééchantillonnent à leur tuilage, ils ne passent pas par eux.
+  const matSol = new THREE.MeshStandardNodeMaterial({
     map: herbe.albedo,
     normalMap: herbe.normales,
     normalScale: new THREE.Vector2(0.58, 0.58),
     roughness: 0.95,
     metalness: 0,
   });
-  matSol.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniformes);
-    shader.fragmentShader = UNIFORMES_GLSL + shader.fragmentShader
-      .replace('#include <map_fragment>', MELANGE_GLSL)
-      .replace('#include <roughnessmap_fragment>', RUGOSITE_GLSL)
-      .replace('#include <normal_fragment_maps>', NORMALES_GLSL);
-  };
-  grefferBrouillard(matSol, uBrouillard, 'atlas-terrain-peint-v3');
+  matSol.colorNode = noeudsSol.colorNode;
+  matSol.roughnessNode = noeudsSol.roughnessNode;
+  matSol.normalNode = noeudsSol.normalNode;
+  grefferBrouillard(matSol, uBrouillard, 'atlas-sol');
 
   const sol = new THREE.Mesh(geometrieSol(g), matSol);
   sol.name = 'sol';
@@ -604,14 +704,14 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   sol.castShadow = true;
   groupe.add(sol);
 
-  const matSocle = new THREE.MeshStandardMaterial({
+  const matSocle = new THREE.MeshStandardNodeMaterial({
     map: terre.albedo,
     normalMap: terre.normales,
     roughness: 0.98,
     metalness: 0,
     color: 0x7d6c56,
   });
-  grefferBrouillard(matSocle, uBrouillard, 'atlas-socle-brouillard-v1');
+  grefferBrouillard(matSocle, uBrouillard, 'atlas-socle');
   const socle = new THREE.Mesh(geometrieSocle(g), matSocle);
   socle.name = 'socle';
   socle.receiveShadow = true;
@@ -622,9 +722,11 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   //     transparence : sans cela, le plan d'eau — dessiné après lui — repeindrait
   //     la chaussée d'un pont, puisque le sol sous le tablier est un lit de
   //     rivière. `alphaTest` jette les pixels vides pour qu'ils ne le fassent pas.
+  //     Le décalage de polygone est gardé mais **inerte** : le moteur WebGPU de
+  //     r170 ne le traduit pas ; c'est `HAUT_VOIE` qui tient le décalque hors du sol.
   const apparence = APPARENCES[biome];
   const texVoies = textureVoies(doc, biome);
-  const matVoie = new THREE.MeshStandardMaterial({
+  const matVoie = new THREE.MeshStandardNodeMaterial({
     map: texVoies,
     roughness: 0.88,
     metalness: 0,
@@ -636,19 +738,19 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   // Les voies et les ponts ont leurs propres matériaux : sans la greffe, une
   // route claire traverserait le noir comme un trait de craie.
-  grefferBrouillard(matVoie, uBrouillard, 'atlas-voie-brouillard-v1');
+  grefferBrouillard(matVoie, uBrouillard, 'atlas-voie');
   const voies = new THREE.Mesh(new THREE.BufferGeometry(), matVoie);
   voies.name = 'voies';
   voies.receiveShadow = true;
   voies.visible = false;
   groupe.add(voies);
 
-  const matPont = new THREE.MeshStandardMaterial({
+  const matPont = new THREE.MeshStandardNodeMaterial({
     color: apparence.pont,
     roughness: 0.82,
     metalness: 0,
   });
-  grefferBrouillard(matPont, uBrouillard, 'atlas-pont-brouillard-v1');
+  grefferBrouillard(matPont, uBrouillard, 'atlas-pont');
   const ponts = new THREE.Mesh(new THREE.BufferGeometry(), matPont);
   ponts.name = 'ponts';
   ponts.castShadow = true;
@@ -667,7 +769,9 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   }
   majVoies(g);
 
-  const matGrille = new THREE.LineBasicMaterial({
+  // La grille au sol n'a pas de greffe : c'est déjà un trait sombre et presque
+  // transparent, qui ne peut pas dessiner la carte en clair dans le noir.
+  const matGrille = new THREE.LineBasicNodeMaterial({
     color: 0x0a1220, transparent: true, opacity: 0.17, depthWrite: false,
   });
   const grille = new THREE.LineSegments(geometrieGrille(g), matGrille);
@@ -679,7 +783,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   //     se lise comme posé sur l'eau ; le reste de l'écran est au ciel.
   const nEau = normalesEau(doc);
   nEau.repeat.set(6, 6);
-  const matEau = new THREE.MeshStandardMaterial({
+  const matEau = new THREE.MeshStandardNodeMaterial({
     color: 0x2a6ea8,
     normalMap: nEau,
     normalScale: new THREE.Vector2(0.5, 0.5),
@@ -691,49 +795,16 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   // Un champ d'altitude partagé avec le sol donne une profondeur réelle à l'eau.
   // Une seule texture basse résolution, aucune géométrie par vague ou par rive.
-  const tFonds = new THREE.DataTexture(donneesFonds(g), g.largeur, g.hauteur, THREE.RGBAFormat);
-  tFonds.minFilter = THREE.LinearFilter;
-  tFonds.magFilter = THREE.LinearFilter;
-  tFonds.needsUpdate = true;
+  let tFonds = textureCases(donneesFonds(g), g.largeur, g.hauteur, THREE.RGBAFormat);
   const teintesRive: Partial<Record<Biome, number>> = {
     archipel: 0x66c9b3, cotier: 0x80b9b0, marais: 0x929b68,
     volcanique: 0x7d979a, neige: 0xb7d6da,
   };
-  const uEau = {
-    tFonds: { value: tFonds },
-    uCarte: { value: new THREE.Vector2(g.largeur * CASE, g.hauteur * CASE) },
-    uTemps: { value: 0 },
-    uEcume: { value: 0.3 },
-    uRive: { value: new THREE.Color(teintesRive[biome] ?? 0x91b9ad) },
-  };
-  matEau.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uEau);
-    shader.vertexShader = 'varying vec2 vMondeEau;\n' + shader.vertexShader
-      .replace('#include <project_vertex>', `#include <project_vertex>
-        vMondeEau = ( modelMatrix * vec4( transformed, 1.0 ) ).xz;`);
-    shader.fragmentShader = `
-      varying vec2 vMondeEau;
-      uniform sampler2D tFonds;
-      uniform vec2 uCarte;
-      uniform float uTemps;
-      uniform float uEcume;
-      uniform vec3 uRive;
-    ` + shader.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
-      vec2 uvCarte = vMondeEau / uCarte;
-      float dansCarte = step(0.0, uvCarte.x) * step(0.0, uvCarte.y)
-        * step(uvCarte.x, 1.0) * step(uvCarte.y, 1.0);
-      float fond = texture2D(tFonds, clamp(uvCarte, 0.0, 1.0)).r * 1.4 - 0.4;
-      float profondeur = max(0.0, -0.12 - fond);
-      float peuProfond = (1.0 - smoothstep(0.025, 0.27, profondeur)) * dansCarte;
-      diffuseColor.rgb = mix(diffuseColor.rgb, uRive, peuProfond * 0.65);
-      float vague = sin(profondeur * 100.0 - uTemps * 1.6 + sin(vMondeEau.x * 5.0 + vMondeEau.y * 3.0));
-      float bord = (1.0 - smoothstep(0.005, 0.09, profondeur)) * dansCarte;
-      float ecume = smoothstep(0.42, 0.95, vague) * bord * uEcume;
-      diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.82, 0.91, 0.86), ecume);
-    `);
-  };
+  const noeudsEau = nuanceurEau(tFonds, g.largeur, g.hauteur, teintesRive[biome] ?? 0x91b9ad);
+  const uEau = noeudsEau.uniformes;
+  matEau.colorNode = noeudsEau.colorNode;
   // L'eau aussi : une mer claire dans le noir dessinerait la carte en négatif.
-  grefferBrouillard(matEau, uBrouillard, 'atlas-eau-rives-v3');
+  grefferBrouillard(matEau, uBrouillard, 'atlas-eau');
   const eau = new THREE.Mesh(geometrieEau(g), matEau);
   eau.name = 'eau';
   eau.rotation.x = -Math.PI / 2;
@@ -777,19 +848,23 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     const donnees = donneesFonds(g2);
     if (tFonds.image.width === g2.largeur && tFonds.image.height === g2.hauteur) {
       (tFonds.image.data as Uint8Array).set(donnees);
+      tFonds.needsUpdate = true;
     } else {
-      tFonds.image = { data: donnees, width: g2.largeur, height: g2.hauteur };
+      // Une autre taille, une autre texture : le nœud qui lit les fonds change
+      // de valeur, et le moteur relie la nouvelle au prochain rendu.
+      tFonds = remplacer(uEau.tFonds, textureCases(donnees, g2.largeur, g2.hauteur, THREE.RGBAFormat));
       uEau.uCarte.value.set(g2.largeur * CASE, g2.hauteur * CASE);
       eau.geometry.dispose();
       eau.geometry = geometrieEau(g2);
       eau.position.set((g2.largeur * CASE) / 2, NIVEAU_EAU, (g2.hauteur * CASE) / 2);
       // Le masque de visibilité a la taille de la carte : il suit, avec le
       // dernier ensemble connu — la texture des fonds fait exactement cela.
-      tVisibles.image = { data: donneesVisibles(g2, visiblesCourants), width: g2.largeur, height: g2.hauteur };
-      tVisibles.needsUpdate = true;
+      tVisibles = remplacer(
+        uBrouillard.tVisibles,
+        textureCases(donneesVisibles(g2, visiblesCourants), g2.largeur, g2.hauteur, THREE.RedFormat),
+      );
       uBrouillard.uCarteBrouillard.value.set(g2.largeur * CASE, g2.hauteur * CASE);
     }
-    tFonds.needsUpdate = true;
   }
 
   /** Termine une mutation : on pose l'état d'arrivée, exactement. */
@@ -818,6 +893,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     sol,
     ponts,
     uniformesBrouillard: uBrouillard,
+    uniformesEau: uEau,
     hauteurEn: (x, z) => hauteurEn(terrain, x, z),
 
     majTerrain(suivante: GrilleTerrain, duree = 0): void {
@@ -839,10 +915,9 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       const memeTaille = splat.image.width === suivante.largeur
         && splat.image.height === suivante.hauteur;
       if (!memeTaille) {
-        // Une nouvelle image plutôt qu'une écriture : three.js la renvoie
-        // entière à la carte graphique au prochain rendu.
-        splat.image = { data: donnees, width: suivante.largeur, height: suivante.hauteur };
-        splat.needsUpdate = true;
+        // Une nouvelle texture plutôt qu'une écriture : sous WebGPU une texture
+        // ne change pas de taille, le nœud du sol lit désormais celle-ci.
+        splat = remplacer(noeudsSol.tSplat, textureCases(donnees, suivante.largeur, suivante.hauteur, THREE.RGBAFormat));
         sol.geometry.dispose();
         sol.geometry = neuve;
         majVoies(suivante);
@@ -902,8 +977,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         .lerp(NEIGE_VOIE, p.neigeSol * 0.5);
       matPont.color.set(apparence.pont).lerp(NEIGE_VOIE, p.neigeSol * 0.35);
       matVoie.roughness = 0.88 - p.mouille * 0.45;
-      uniformes.uNeige.value = Math.max(p.neigeSol, biome === 'neige' ? 0.78 : 0);
-      uniformes.uMouille.value = p.mouille;
+      uSol.uNeige.value = Math.max(p.neigeSol, biome === 'neige' ? 0.78 : 0);
+      uSol.uMouille.value = p.mouille;
       matEau.color.set(p.eau.couleur);
       matEau.opacity = p.eau.opacite;
       matEau.roughness = 0.26 + p.mouille * 0.08;
@@ -965,6 +1040,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       matPont.dispose();
       matGrille.dispose();
       matEau.dispose();
+      // Les textures du moment : celles d'avant un changement de taille ont
+      // été libérées en étant remplacées.
       splat.dispose();
       tFonds.dispose();
       tVisibles.dispose();

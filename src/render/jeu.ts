@@ -459,6 +459,15 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       if (e.type === 'remise_en_service') {
         poserAnnonce(t('combat.batiment_remis_prime', { n: e.prime }));
       }
+      // L'embuscade (`04-gameplay.md` §2) : la marche s'arrête net, la suite
+      // tombe, le tour de l'unité est fini. Le « ! » de la partition le montre,
+      // l'annonce le dit — sans nommer ce qui a été heurté : vue d'ici, une
+      // unité adverse s'arrête « pour rien », et c'est exactement ce qu'on sait.
+      // L'unité se lit dans l'état d'après : c'est là qu'elle s'est arrêtée.
+      if (e.type === 'deplacement' && e.interrompu) {
+        const u = uniteParId(etat, e.uniteId);
+        if (u && seVoit(u)) poserAnnonce(t('hud.embuscade', { unite: nomCourtUnite(locale, cat, u.type) }));
+      }
       // La panne sèche mérite un mot : l'unité sort du jeu sans qu'on l'ait
       // frappée, et le geste `hors_jeu` seul ressemble à un tir venu de nulle part.
       if (e.type === 'panne_seche') {
@@ -634,6 +643,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       ambiance: ambianceCourante(),
       surbrillances: [...casesObjectifs(etat), ...v.surbrillances],
       chemin: v.chemin,
+      cheminAveugle: v.cheminAveugle,
       curseur: v.curseur,
       selection: v.selection,
       visibles: visibles(),
@@ -655,6 +665,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       phase: v.phase,
       curseur: v.curseur,
       selection: v.selection,
+      cheminAveugle: v.cheminAveugle,
       menu: v.menu,
       production: v.production,
       visee: v.visee,

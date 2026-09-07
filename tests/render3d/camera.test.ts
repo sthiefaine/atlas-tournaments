@@ -4,7 +4,7 @@
 // c'est exactement ce que ce fichier surveille.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import {
   AMORTISSEMENT, DISTANCE_MAX, FOV, PALIERS_DISTANCE, PAS_ZOOM, PIXELS_CADRAGE, PIXELS_DOUBLE_TAP, PIXELS_LISIBLES,

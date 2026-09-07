@@ -25,6 +25,34 @@
       }
     },
     {
+      "cle": "herbe_haute",
+      "car": "G",
+      "nom": "Hautes herbes",
+      "defense": 1,
+      "couts": {
+        "pied": 1,
+        "bottes": 1,
+        "roues": 2,
+        "chenilles": 1,
+        "air": 1
+      },
+      "capturable": false,
+      "revenus": 0,
+      "produit": [],
+      "ravitaille": false,
+      "soigne": 0,
+      "cacheEnBrouillard": true,
+      "cacheSeulement": [
+        "pied",
+        "bottes"
+      ],
+      "palette": {
+        "main": "#7cc36a",
+        "dark": "#4e8f43",
+        "light": "#b5e3a4"
+      }
+    },
+    {
       "cle": "foret",
       "car": "F",
       "nom": "Forêt",

@@ -1,4 +1,4 @@
-import Vitrine from './vitrine';
+import Vitrine from './vitrine-client';
 
 export const metadata = { title: 'Vitrine des unités · Atlas' };
 

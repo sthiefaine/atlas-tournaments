@@ -24,8 +24,21 @@ export const RAYON_BROUILLEUR_MOBILE = 10;
 export const RAYON_STATION_RADAR = 12;
 /** Ce qu'il reste à un drone brouillé : un dixième, jamais moins d'une case. */
 export const PART_VISION_BROUILLEE = 0.1;
-/** Une station radar possédée voit à cinq cases, contre deux pour tout autre bâtiment. */
+/** Une station radar possédée voit à cinq cases, contre une pour tout autre bâtiment. */
 export const VISION_STATION_RADAR = 5;
+/**
+ * Vision d'un bâtiment possédé (7 septembre 2026 au soir) : une case, plus deux.
+ * À deux, dix villes éclairaient la moitié d'une carte 12 × 10 sans qu'une
+ * unité ait bougé ; à une, un bâtiment sent qu'on vient le prendre, et le
+ * brouillard redevient un jeu d'éclaireurs. Tranché par deux personas.
+ */
+export const VISION_BATIMENT = 1;
+/** La montagne : le mirador du fantassin, +3 — et rien pour ce qui vole au-dessus. */
+export const BONUS_VISION_MONTAGNE = 3;
+/** La forêt bouche la vue de qui s'y trouve : −1, plancher 1. */
+export const MALUS_VISION_FORET = 1;
+/** La nuit ôte deux cases de vue, sauf sur un bâtiment possédé : la ville est éclairée. */
+export const MALUS_VISION_NUIT = 2;
 
 /** Vrai si un drone adverse posé sur cette case serait brouillé par ce camp. */
 export function brouilleParCamp(etat: EtatPartie, cat: Catalogue, camp: CampId, c: Case): boolean {
@@ -54,17 +67,25 @@ export function visionUnite(etat: EtatPartie, cat: Catalogue, u: Unite): number 
   const type = cat.unites[u.type];
   if (!type) return 0;
   const furtif = porte(type, 'furtif_nuit');
+  const terrain = terrainLogique(etat, cat, u);
+  const aPied = type.typeMouvement === 'pied' || type.typeMouvement === 'bottes';
+  // Un bâtiment à soi est éclairé : la nuit n'y ôte rien (`04-gameplay.md` §12.3).
+  const eclairee = terrain !== null && cat.terrains[terrain]?.capturable === true
+    && etat.proprietaires[cleCase(u)] === u.camp;
   let v = type.vision + additif(etat, cat, u, 'vision');
   if (etat.climat.meteo === 'brouillard') v = 1;
   else {
-    if (etat.climat.phase === 'nuit' && !furtif) v = Math.max(1, v - 2);
+    if (etat.climat.phase === 'nuit' && !furtif && !eclairee) v = Math.max(1, v - MALUS_VISION_NUIT);
     if (etat.climat.meteo === 'pluie') v = Math.max(1, v - 1);
   }
-  const terrain = terrainLogique(etat, cat, u);
-  if (terrain === 'montagne') {
-    v += 2;
+  // Le terrain (7 septembre 2026 au soir) : la montagne est le mirador du
+  // fantassin — seul ce qui y a grimpé voit plus loin, un hélicoptère posé sur
+  // un caillou ne gagne rien — ; la forêt cache et bouche la vue à la fois.
+  if (terrain === 'montagne' && aPied) {
+    v += BONUS_VISION_MONTAGNE;
     if (porte(type, 'vision_etendue')) v += 1;
   }
+  if (terrain === 'foret') v = Math.max(1, v - MALUS_VISION_FORET);
   if (estBrouillee(etat, cat, u)) v = Math.round(v * PART_VISION_BROUILLEE);
   return Math.max(1, v);
 }
@@ -85,6 +106,9 @@ export function cacheeAuContact(etat: EtatPartie, cat: Catalogue, u: Unite): boo
   const t = cat.terrains[terrain];
   if (!t || !t.cacheEnBrouillard) return false;
   if (terrain === 'foret' && !foretCache(etat)) return false;
+  // Une cachette réservée (`cacheSeulement`, l'herbe haute) ne vaut que pour
+  // les types de mouvement qu'elle nomme : un char dans l'herbe se voit.
+  if (t.cacheSeulement && type && !t.cacheSeulement.includes(type.typeMouvement)) return false;
   return true;
 }
 
@@ -129,26 +153,58 @@ export function casesVisibles(etat: EtatPartie, cat: Catalogue, camp: CampId): S
   const connue = memo.get(`cases|${camp}`) as Set<string> | undefined;
   if (connue) return connue;
   const vues = new Set<string>();
-  const ajouter = (centre: Case, portee: number): void => {
+  // La montagne coupe la ligne de vue (7 septembre 2026, nuit) : ce qui est
+  // derrière elle ne se voit pas — sauf pour qui est lui-même sur une montagne,
+  // ou qui vole. La case de la montagne, elle, se voit : c'est ce qu'il y a
+  // derrière qui est caché.
+  const ajouter = (centre: Case, portee: number, parDessus: boolean): void => {
     for (let dy = -portee; dy <= portee; dy += 1) {
       const reste = portee - Math.abs(dy);
       for (let dx = -reste; dx <= reste; dx += 1) {
         const c = { x: centre.x + dx, y: centre.y + dy };
-        if (dansCarte(etat, c)) vues.add(cleCase(c));
+        if (!dansCarte(etat, c)) continue;
+        if (!parDessus && ligneCoupee(etat, cat, centre, c)) continue;
+        vues.add(cleCase(c));
       }
     }
   };
   for (const u of etat.unites) {
     if (u.camp !== camp || u.dansTransport) continue;
-    ajouter(u, visionUnite(etat, cat, u));
+    const type = cat.unites[u.type];
+    const parDessus = type?.domaine === 'air' || terrainLogique(etat, cat, u) === 'montagne';
+    ajouter(u, visionUnite(etat, cat, u), parDessus);
   }
   for (const [k, proprio] of Object.entries(etat.proprietaires)) {
     if (proprio !== camp) continue;
     const c = depuisCle(k);
-    ajouter(c, terrainLogique(etat, cat, c) === 'radar' ? VISION_STATION_RADAR : 2);
+    ajouter(c, terrainLogique(etat, cat, c) === 'radar' ? VISION_STATION_RADAR : VISION_BATIMENT, false);
   }
   memo.set(`cases|${camp}`, vues);
   return vues;
+}
+
+/**
+ * Vrai si une montagne se dresse **entre** deux cases, sur la ligne qui les
+ * joint (Bresenham, extrémités exclues). Deux cases voisines ne sont jamais
+ * coupées ; une ligne en diagonale passe par une case sur deux, ce qui suffit à
+ * un jeu de cases — on ne trace pas des rayons, on lit une carte.
+ */
+export function ligneCoupee(etat: EtatPartie, cat: Catalogue, de: Case, vers: Case): boolean {
+  const dx = Math.abs(vers.x - de.x);
+  const dy = Math.abs(vers.y - de.y);
+  if (dx + dy <= 1) return false;
+  const sx = de.x < vers.x ? 1 : -1;
+  const sy = de.y < vers.y ? 1 : -1;
+  let erreur = dx - dy;
+  let x = de.x;
+  let y = de.y;
+  for (;;) {
+    const e2 = 2 * erreur;
+    if (e2 > -dy) { erreur -= dy; x += sx; }
+    if (e2 < dx) { erreur += dx; y += sy; }
+    if (x === vers.x && y === vers.y) return false;
+    if (terrainLogique(etat, cat, { x, y }) === 'montagne') return true;
+  }
 }
 
 /** Unités qu'un camp voit réellement, cachettes comprises. */

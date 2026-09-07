@@ -11,7 +11,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import {
   animationsDePartition, ECLAT_MAX, gesteVersAnimation, MS_ECLAT, partitionProvisoire,

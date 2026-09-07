@@ -4,7 +4,7 @@
 // vérifie que chaque brique déclarée se retrouve bien dans la liste de pièces.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Euler, Vector3 } from 'three';
+import { Euler, Vector3 } from 'three/webgpu';
 
 import { chargerCatalogueUnites } from '../../src/content/index';
 import { chargerCatalogue } from '../../src/engine/index';

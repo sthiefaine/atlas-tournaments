@@ -1,21 +1,22 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import {
-  cartographierToit, creerDecor, poseDrapeau, REPETITIONS_TOIT,
+  cartographierToit, clonerMateriau, creerDecor, poseDrapeau, REPETITIONS_TOIT,
 } from '../../src/render3d/decor';
-import { grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
+import { creerUniformesBrouillard, grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
 import { SEUIL_CAPTURE } from '../../src/engine/index';
 import { CAT, partie } from '../engine/aides';
 import { carteBanc, scenarioBanc } from '../../src/app/atelier/banc';
 import { creerPartie, sceneDepuis } from '../../src/engine/index';
 import { validerScenario } from '../../src/schemas/index';
 import scenarioDemo from '../../content/scenarios/demo.json';
+import { construireNuanceur, ligneDe } from './nuanceur';
 
 /** Les matériaux d'un bâtiment, pour lire s'il est effacé ou plein. */
-function materiaux(batiment: THREE.Object3D): THREE.MeshStandardMaterial[] {
-  return batiment.children.map((m) => (m as THREE.Mesh).material as THREE.MeshStandardMaterial);
+function materiaux(batiment: THREE.Object3D): THREE.MeshStandardNodeMaterial[] {
+  return batiment.children.map((m) => (m as THREE.Mesh).material as THREE.MeshStandardNodeMaterial);
 }
 
 /** La matrice d'instance d'un lot de pavillons, décomposée. */
@@ -90,16 +91,13 @@ test('le port est un bâtiment comme les autres : quai, bassin, grue, mât et pa
   // lots que de matières, sinon un quai coûterait plus qu'une ville.
   assert.ok(port.children.length >= 4 && port.children.length <= 8, `${port.children.length} lots`);
   assert.ok(port.children.every((m) => m instanceof THREE.Mesh));
-  // Toutes ses matières sont des `MeshStandardMaterial` du groupe du décor :
-  // c'est la seule condition pour que `grefferBrouillardSur` les éteigne comme
-  // le reste, sans qu'une ligne soit écrite pour le port.
-  assert.ok(port.children.every((m) => (m as THREE.Mesh).material instanceof THREE.MeshStandardMaterial));
+  // Toutes ses matières sont des matériaux à nœuds du groupe du décor : c'est
+  // la seule condition pour que `grefferBrouillardSur` les éteigne comme le
+  // reste, sans qu'une ligne soit écrite pour le port.
+  assert.ok(port.children.every((m) => (m as THREE.Mesh).material instanceof THREE.MeshStandardNodeMaterial));
   const uniformes = uniformesTemoins();
   grefferBrouillardSur(decor.groupe, uniformes, 'atlas-test-port');
-  for (const m of materiaux(port)) {
-    const shader = compiler(m);
-    assert.ok(shader.fragmentShader.includes('tVisibles'), 'le port lit le masque de brouillard');
-  }
+  for (const m of materiaux(port)) assert.equal(m.outputNode, uniformes.sortie, 'le port lit le masque de brouillard');
   // Le bassin : une matière à part, sombre et lisse, qu'aucun autre bâtiment
   // n'emploie — c'est elle qui fait lire une darse plutôt qu'une cour.
   const couleurs = materiaux(port).map((m) => m.color.getHexString());
@@ -169,7 +167,7 @@ test('la prise de chantier rallume les vitrages d’une seule case, puis rend l�
   const decor = creerDecor(grille, e, () => 0);
   decor.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'), 'ete');
   const batiments = decor.groupe.getObjectByName('batiments')!;
-  const vitrage = (i: number): THREE.MeshStandardMaterial => materiaux(batiments.children[i]!)
+  const vitrage = (i: number): THREE.MeshStandardNodeMaterial => materiaux(batiments.children[i]!)
     .find((m) => m.emissive.getHex() !== 0)!;
   const jour = vitrage(0).emissiveIntensity;
   assert.equal(decor.chantier('5,5'), null);
@@ -220,9 +218,9 @@ test('la station radar balaie quand elle est tenue, jamais neutre, désaffectée
   // La parabole s'efface avec le reste quand une unité occupe la station.
   decor.majProprietaires({ ...e, unites: [{ ...etat.unites[0]!, x: 0, y: 0 }] });
   const calotte = paraboles[0]!.children[0] as THREE.Mesh;
-  assert.ok((calotte.material as THREE.MeshStandardMaterial).transparent, 'la parabole devient translucide aussi');
+  assert.ok((calotte.material as THREE.MeshStandardNodeMaterial).transparent, 'la parabole devient translucide aussi');
   decor.majProprietaires(e);
-  assert.ok(!(calotte.material as THREE.MeshStandardMaterial).transparent);
+  assert.ok(!(calotte.material as THREE.MeshStandardNodeMaterial).transparent);
   decor.dispose();
 });
 
@@ -521,7 +519,7 @@ test('les toits portent un micro-relief partagé, blanchi par la neige, libéré
   for (const b of batiments.children) {
     const toiture = b.getObjectByName('toiture') as THREE.Mesh | undefined;
     assert.ok(toiture, `${String(b.userData['type'])} : un toit fusionné, et nommé`);
-    const m = toiture.material as THREE.MeshStandardMaterial;
+    const m = toiture.material as THREE.MeshStandardNodeMaterial;
     assert.ok(m.normalMap, 'le toit a des normales');
     assert.ok(m.map, 'et un albédo discret');
     assert.equal(m.map.colorSpace, THREE.SRGBColorSpace);
@@ -547,7 +545,7 @@ test('les toits portent un micro-relief partagé, blanchi par la neige, libéré
   assert.ok(batiments.children[1]!.userData['desaffecte'], 'l’usine est bien désaffectée');
 
   // La neige blanchit le toit comme avant : la couleur reste au matériau.
-  const toit = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const toit = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   const ete = toit.color.clone();
   decor.appliquerAmbiance(parametresAmbiance('hiver', 'jour', 'neige'), 'hiver');
   assert.ok(toit.color.r > ete.r && toit.color.g > ete.g && toit.color.b > ete.b, 'le toit blanchit sous la neige');
@@ -555,7 +553,7 @@ test('les toits portent un micro-relief partagé, blanchi par la neige, libéré
 
   // Un bâtiment occupé garde sa couverture sur son jumeau translucide.
   decor.majProprietaires({ ...etat, proprietaires: {}, desaffectes: ['1,0'], unites: [{ ...etat.unites[0]!, x: 0, y: 0 }] });
-  const fantome = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const fantome = (batiments.children[0]!.getObjectByName('toiture') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   assert.ok(fantome.transparent && fantome.normalMap === toit.normalMap);
 
   let liberees = 0;
@@ -679,7 +677,7 @@ test('l’ambiance n’est repeinte que si ses paramètres ou la saison changent
   const batiment = decor.groupe.getObjectByName('batiments')!.children[0]!;
   const mats = materiaux(batiment);
   const arbres = decor.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
-  const tous = [...mats, ...arbres.map((a) => a.material as THREE.MeshStandardMaterial)];
+  const tous = [...mats, ...arbres.map((a) => a.material as THREE.MeshStandardNodeMaterial)];
   // On noircit tout : si l'ambiance repasse, elle repeint.
   for (const m of tous) m.color.setHex(0x000000);
   decor.appliquerAmbiance(p, 'ete');
@@ -713,28 +711,9 @@ test('la toile des drapeaux bat trente fois par seconde au plus, sans cesser de 
 // Le brouillard de guerre : ce qui est hors de vue est dans le noir
 // ---------------------------------------------------------------------------
 
-/** La case d'une instance, lue dans sa matrice. */
-/** Compile un matériau comme le ferait three, pour lire ce qui a été injecté. */
-function compiler(mat: THREE.MeshStandardMaterial): {
-  uniforms: Record<string, { value: unknown }>; vertexShader: string; fragmentShader: string;
-} {
-  const shader = {
-    uniforms: {} as Record<string, { value: unknown }>,
-    vertexShader: 'void main() {\n#include <project_vertex>\n}',
-    fragmentShader: 'void main() {\n#include <opaque_fragment>\n#include <fog_fragment>\n}',
-  };
-  mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
-  return shader;
-}
-
 /** Les uniformes du brouillard, tels que le plateau les partage. */
 function uniformesTemoins(): UniformesBrouillard {
-  return {
-    tVisibles: { value: new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat) },
-    uCarteBrouillard: { value: new THREE.Vector2(2, 1) },
-    uFacteurBrouillard: { value: 0 },
-    uTeinteBrouillard: { value: new THREE.Color(0x000000) },
-  };
+  return creerUniformesBrouillard(new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat), 2, 1);
 }
 
 test('tout le décor lit le masque de brouillard, après l’éclairage et par instance', () => {
@@ -753,29 +732,74 @@ test('tout le décor lit le masque de brouillard, après l’éclairage et par i
   let instancies = 0;
   decor.groupe.traverse((o) => {
     const mat = (o as THREE.Mesh).material;
-    if (!(mat instanceof THREE.MeshStandardMaterial)) return;
+    if (!(mat instanceof THREE.MeshStandardNodeMaterial)) return;
     greffes += 1;
-    const shader = compiler(mat);
-    assert.ok(shader.fragmentShader.includes('tVisibles'), `${o.name} lit le masque`);
-    assert.ok(
-      shader.fragmentShader.indexOf('uvVisibles') > shader.fragmentShader.indexOf('#include <opaque_fragment>'),
-      `${o.name} l’applique après l’éclairage, pas sur le diffus`,
-    );
-    // Arbres, pierres et pavillons sont des lots instanciés : sans la matrice
-    // d'instance, toutes leurs copies liraient la case de l'origine du lot.
-    assert.ok(shader.vertexShader.includes('instanceMatrix'), `${o.name} place ses instances`);
-    assert.equal(shader.uniforms['tVisibles'], uniformes.tVisibles, 'le même masque que le sol');
+    // Le même nœud de sortie pour tout le décor : le masque, après l'éclairage.
+    assert.equal(mat.outputNode, uniformes.sortie, `${o.name} lit le masque`);
     if (o instanceof THREE.InstancedMesh) instancies += 1;
   });
   assert.ok(greffes > 5, `tout le décor est greffé (${greffes} matériaux)`);
   assert.ok(instancies > 0, 'dont des lots instanciés');
 
-  // Greffer deux fois n'injecte pas deux fois.
-  const premier = materiaux(decor.groupe.getObjectByName('batiments')!.children[0]!)[0]!;
+  // Le WGSL d'un lot instancié — les drapeaux, qui ont aussi une couleur par
+  // instance — : la position monde que lit le masque est calculée par le
+  // sommet **après** la matrice d'instance. Sans cela, toutes les copies d'un
+  // lot liraient la case de l'origine du lot ; le moteur à nœuds l'assure de
+  // lui-même, là où le GLSL exigeait de l'écrire.
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const { vertex, fragment } = construireNuanceur(drapeaux);
+  const instance = ligneDe(vertex, /varyings\.positionLocal = \( NodeBuffer_\d+\.\w+\[ instanceIndex \] \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  const monde = ligneDe(vertex, /varyings\.v_positionWorld = \( object\.\w+ \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  assert.ok(instance >= 0 && monde > instance, 'la matrice d’instance, puis la position monde');
+  assert.match(vertex, /varyings\.vInstanceColor = /, 'la couleur par instance passe au fragment');
+  const lecture = ligneDe(fragment, /textureSample\( tVisibles, tVisibles_sampler, clamp\( \( v_positionWorld\.xz \/ object\.uCarteBrouillard \)/);
+  const eclaire = ligneDe(fragment, /^\s*Output = /);
+  assert.ok(eclaire >= 0 && lecture > eclaire, 'le masque se lit après la couleur éclairée');
+  assert.match(fragment, /DiffuseColor = vec4<f32>\( \( vInstanceColor \* object\.\w+ \), 1\.0 \);/, 'la couleur d’instance teinte le diffus');
+
+  // Greffer deux fois ne change rien, et un jumeau translucide — un clone —
+  // naît greffé : le moteur à nœuds recopie les nœuds d'un matériau cloné.
   grefferBrouillardSur(decor.groupe, uniformes, 'atlas-test');
-  const injections = compiler(premier).fragmentShader.split('uvVisibles').length - 1;
-  assert.equal(injections, 2, 'une seule injection : la coordonnée posée puis lue');
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  const opaque = materiaux(batiments.children[0]!)[0]!;
+  assert.equal(opaque.outputNode, uniformes.sortie);
+  decor.majProprietaires({ ...e, unites: [{ ...etat.unites[0]!, x: 0, y: 0 }] }, null);
+  const fantome = materiaux(batiments.children[0]!)[0]!;
+  assert.notEqual(fantome, opaque);
+  assert.ok(fantome.transparent);
+  assert.equal(fantome.outputNode, uniformes.sortie, 'le jumeau porte la greffe de son original');
+  assert.equal(fantome.color.getHex(), opaque.color.getHex(), 'et sa couleur');
+  assert.equal(fantome.roughness, opaque.roughness, 'et sa rugosité');
   decor.dispose();
+});
+
+test('clonerMateriau rend un jumeau complet : nœuds, réglages, cartes', () => {
+  // `NodeMaterial.clone()` (three r170) ne recopie que les nœuds et les champs
+  // de `Material` : couleur, cartes et rugosité repartent aux valeurs par
+  // défaut. C'est ce que le jumeau translucide d'un bâtiment ne peut pas perdre.
+  const carte = new THREE.DataTexture(new Uint8Array(4), 1, 1);
+  const source = new THREE.MeshStandardNodeMaterial({
+    color: 0x8844aa, emissive: 0x112233, emissiveIntensity: 0.7, roughness: 0.3, metalness: 0.2,
+    map: carte, normalMap: carte, normalScale: new THREE.Vector2(0.4, 0.4), flatShading: true, side: THREE.DoubleSide,
+  });
+  source.outputNode = uniformesTemoins().sortie;
+  const nu = source.clone();
+  assert.equal(nu.color.getHex(), 0xffffff, 'three : un clone perd sa couleur');
+  assert.equal(nu.map, null, 'et ses cartes');
+  const jumeau = clonerMateriau(source);
+  assert.equal(jumeau.color.getHex(), 0x8844aa);
+  assert.equal(jumeau.emissive.getHex(), 0x112233);
+  assert.equal(jumeau.emissiveIntensity, 0.7);
+  assert.equal(jumeau.roughness, 0.3);
+  assert.equal(jumeau.metalness, 0.2);
+  assert.equal(jumeau.map, carte);
+  assert.equal(jumeau.normalMap, carte);
+  assert.deepEqual([jumeau.normalScale.x, jumeau.normalScale.y], [0.4, 0.4]);
+  assert.equal(jumeau.flatShading, true);
+  assert.equal(jumeau.side, THREE.DoubleSide);
+  assert.equal(jumeau.outputNode, source.outputNode, 'les nœuds voyagent avec le clone');
+  assert.notEqual(jumeau.color, source.color, 'une couleur à lui : le jumeau se teinte sans teindre l’original');
+  carte.dispose();
 });
 
 test('une unité cachée ne rend pas son bâtiment translucide', () => {

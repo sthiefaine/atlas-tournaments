@@ -7,7 +7,9 @@
  *      carte à ports garde sa ceinture de mer intacte, 7 septembre 2026) ;
  *   3. bâtiments — QG à distance maximale, usines, aéroports, villes, villes neutres ;
  *   4. réseau — routes du QG vers ses bâtiments et vers l'axe central ;
- *   5. réparation — accès blindé entre QG, zones mortes, propriétés mal orientées.
+ *   5. réparation — accès blindé entre QG, zones mortes, propriétés mal orientées ;
+ *   6. hautes herbes — des taches sur la plaine que le bâti a laissée
+ *      (`herbes.ts`, 7 septembre 2026), invisibles pour tout ce qui précède.
  *
  * La symétrie n'est pas une passe finale : le cadre (`symetrie.ts`) propage chaque
  * écriture sur toute l'orbite de la case, donc la carte est symétrique du premier
@@ -21,6 +23,7 @@ import {
   CAPTURABLES, caractereDe, creerToile, distances, franchissable, lire, poserBrut,
   type Toile,
 } from './grille';
+import { semerHerbes } from './herbes';
 import { normaliser, reglagesDe, versParametresCarte, type ParametresNormalises } from './parametres';
 import { anneauDuBord, lisserCotes, poserPlages, poserRelief, relierTerres, tracerRivieres } from './relief';
 import { creerRng, type Rng } from './rng';
@@ -65,7 +68,12 @@ function fabriquer(p: ParametresNormalises, rng: Rng): Fabrication | null {
   poserPlages(toile);
 
   const bati = construire(toile, rng.branche('bati'), p);
-  return bati === null ? null : { toile, unites: bati.unites };
+  if (bati === null) return null;
+  // Les hautes herbes viennent en dernier, sur la plaine que le bâti a laissée
+  // et hors de la cour des QG : semées avant, routes et bâtiments en écrasaient
+  // jusqu'aux deux tiers (`herbes.ts`). Sans le paramètre, rien n'est tiré.
+  semerHerbes(toile, rng.branche('herbes'), p.ratioHerbesHautes, bati.qg);
+  return { toile, unites: bati.unites };
 }
 
 /** Masque de cases infranchissables pour les chaussées, à partir d'une liste. */
@@ -80,6 +88,8 @@ function mursDe(t: Toile, cases: readonly number[]): Uint8Array {
  * symétrique — donc l'équité aussi — mais la carte ne se lit plus comme un miroir.
  * L'échange plaine ↔ forêt ne change ni la franchissabilité ni le nombre de pas
  * entre deux cases : il est invisible pour toutes les mesures d'équilibre.
+ * L'herbe haute reste hors du brouillage : ses taches sont voulues, les
+ * éparpiller case par case les déferait.
  */
 function brouillerDecor(t: Toile, rng: Rng): void {
   const total = t.largeur * t.hauteur;

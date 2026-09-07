@@ -3031,6 +3031,33 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.deplacee",
+      "texte": "A bougé, suite à donner",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d’unité : l’unité a été déplacée par un ordre en deux temps (04 §2, sous brouillard) et n’a pas encore donné sa suite — attaquer, capturer, attendre. La sélectionner rouvre son menu."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "hud.chemin_aveugle",
+      "texte": "Hors de vue : l’unité avance, puis décide",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d’unité, pendant le choix de la destination sous brouillard : le chemin pointé traverse des cases que le joueur ne voit pas. L’unité se déplacera d’abord, le menu d’ordres viendra une fois arrivée."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "hud.embuscade",
+      "texte": "Embuscade : {unite} s’arrête",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce éphémère : une marche sous brouillard s’arrête net sur une unité adverse cachée, la suite de l’ordre tombe et le tour de l’unité est fini. Nom court de l’unité. Ne nomme jamais ce qui a été heurté."
+      },
+      "longueurMax": 44
+    },
+    {
       "cle": "fiche.transport",
       "texte": "Cale",
       "contexte": {

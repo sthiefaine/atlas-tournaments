@@ -18,7 +18,7 @@
  * les tuiles se vérifient en mémoire, sans navigateur.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { Biome } from '../schemas/types';
 import { LIAISONS_CANON, type FormeVoie } from './geometrie';

@@ -16,7 +16,7 @@
  * DOM ni three.js et se testent directement (`tests/render3d/camera.test.ts`).
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { Case } from '../schemas/types';
 import { CASE, mondeVersCase } from './geometrie';

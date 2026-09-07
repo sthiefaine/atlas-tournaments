@@ -129,6 +129,9 @@ export function fermerTour(
   etat.modificateurs = etat.modificateurs.filter(
     (m) => !(m.expire.type === 'ce_tour' && m.camp === camp),
   );
+  // Une unité déplacée qui n'a pas donné sa suite (ordre `puis`) la perd :
+  // le tour se ferme, elle a joué.
+  for (const u of etat.unites) if (u.camp === camp && u.etat === 'deplacee') u.etat = 'agi';
   evts.push({ type: 'fin_tour', camp });
   evaluerFin(etat, cat, evts);
   if (etat.partie.terminee) return;

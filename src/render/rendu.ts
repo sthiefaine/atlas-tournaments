@@ -22,7 +22,7 @@ import type { CampId, Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
 import type { Partition } from './partition';
-import type { QualiteRendu } from './qualite';
+import type { BackendRendu, QualiteRendu } from './qualite';
 import type { Surbrillance } from './surbrillance';
 
 /**
@@ -74,6 +74,8 @@ export interface MesuresRendu {
    * `auto`. C'est la seule durée ici qui attende vraiment le dessin.
    */
   msCalibration: number | null;
+  /** Le dos du moteur qui dessine — WebGPU, ou son repli WebGL 2 — ; `null` tant qu'il n'est pas initialisé. */
+  backend: BackendRendu | null;
   /**
    * Le détail par famille, sous le nom du groupe de premier niveau de la
    * scène qui la porte. Compté sur la scène **entière**, pas sur le seul champ
@@ -95,6 +97,13 @@ export interface VueInteraction {
   curseur: Case | null;
   /** Identifiant de l'unité sélectionnée. */
   selection: string | null;
+  /**
+   * Le chemin pointé **sort de la vue** (brouillard, `04-gameplay.md` §2) :
+   * l'unité avancera d'abord et décidera une fois arrivée, le menu d'ordres ne
+   * s'ouvrira pas avant. Une peau peut le dire sur la flèche — pointillés,
+   * autre teinte ; absent ou faux, la flèche est celle d'un chemin ordinaire.
+   */
+  cheminAveugle?: boolean;
   /** Cases vues par le camp du joueur, ou `null` sans brouillard. */
   visibles: ReadonlySet<string> | null;
   /**

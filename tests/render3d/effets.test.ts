@@ -6,7 +6,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { CAPACITE, creerEffets } from '../../src/render3d/effets';
 
@@ -24,6 +24,9 @@ test('un effet naît visible à sa position, vit sa durée, puis rend sa place',
   assert.equal(effets.vivants, 1);
   const sprite = effets.groupe.children.find((o) => o.visible);
   assert.ok(sprite instanceof THREE.Sprite, 'une étincelle est un sprite face à la caméra');
+  assert.ok(sprite.material instanceof THREE.SpriteNodeMaterial, 'en matériau à nœuds, mélange additif sans écriture de profondeur');
+  assert.equal(sprite.material.blending, THREE.AdditiveBlending);
+  assert.equal(sprite.material.depthWrite, false);
   assert.deepEqual([sprite.position.x, sprite.position.y, sprite.position.z], [1, 0.3, 2]);
 
   assert.equal(effets.avancer(100), true, 'il reste un effet : il faut redessiner');
@@ -56,7 +59,7 @@ test('la courbe d’opacité monte puis descend, et l’échelle va de la taille
   const effets = creerEffets(documentSansToile());
   effets.emettre({ genre: 'halo', position: { x: 0, y: 0, z: 0 }, duree: 1000, montee: 0.5, opacite: 0.8, taille: 1, tailleFin: 3 });
   const quad = effets.groupe.children.find((o) => o.visible) as THREE.Mesh;
-  const mat = quad.material as THREE.MeshBasicMaterial;
+  const mat = quad.material as THREE.MeshBasicNodeMaterial;
   assert.equal(mat.opacity, 0, 'à la naissance, une montée à 0,5 part de zéro');
   assert.equal(quad.scale.x, 1);
   effets.avancer(500);

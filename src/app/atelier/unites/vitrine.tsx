@@ -12,8 +12,12 @@
  * que lorsqu'un choix change ou que la fenêtre bouge.
  *
  * Six vues, un seul canevas : chaque tuile de la grille est un rectangle de
- * ciseaux du même contexte WebGL. Six contextes coûteraient six fois la
- * géométrie et les textures pour la même image.
+ * ciseaux du même moteur. Six contextes coûteraient six fois la géométrie et
+ * les textures pour la même image. Le moteur est celui du jeu —
+ * `WebGPURenderer`, WebGPU ou son dos WebGL 2, décidé avant de le construire
+ * (`render3d/scene.ts`, `choisirBackend`) — et il s'initialise de façon
+ * asynchrone : le studio expose `prete`, ne dessine rien avant, et redessine
+ * de lui-même dès que le moteur est là.
  *
  * Depuis le préalable B0 de `doc/16-realisme.md` §3.1, la vitrine dit aussi
  * **ce qu'elle montre** — un modèle livré ou le placeholder —, laisse forcer un
@@ -24,17 +28,17 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { chargerCatalogue } from '@/engine/index';
 import { chargerCatalogueUnites, chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
 import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
+import { choisirBackend, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
 import {
   Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, forcerLod, monterModele,
   NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
 } from '@/render3d/unites';
-import { webgl2Disponible } from '@/render/rendu';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
 
@@ -85,7 +89,7 @@ export default function Vitrine(): React.ReactElement {
   const [unite, setUnite] = useState<string>('infanterie');
   const [pays, setPays] = useState<string>('fr');
   const [camp, setCamp] = useState<CampId>(0);
-  const [webgl, setWebgl] = useState<boolean | null>(null);
+  const [moteur, setMoteur] = useState<boolean | null>(null);
   const [rendues, setRendues] = useState(0);
   const [etatModele, setEtatModele] = useState<EtatModele>(PLACEHOLDER);
   const [lod, setLod] = useState<NiveauLod | null>(null);
@@ -105,16 +109,26 @@ export default function Vitrine(): React.ReactElement {
   const nations = useMemo(() => chargerPays().map((p) => ({ code: p.code, nom: p.nom })), []);
   const uniteSure: CleUnite = catalogue.cles.includes(unite as CleUnite) ? (unite as CleUnite) : catalogue.cles[0]!;
 
-  useEffect(() => { setWebgl(webgl2Disponible()); }, []);
+  useEffect(() => { setMoteur(moteur3dDisponible()); }, []);
 
-  // Le studio vit aussi longtemps que le canevas ; la pièce, elle, change.
+  // Le studio vit aussi longtemps que le canevas ; la pièce, elle, change. Le
+  // moteur arrive après : la première planche se dessine quand il est prêt,
+  // et c'est cette image-là que `pret()` compte.
   useEffect(() => {
     const c = canevas.current;
-    if (!c || webgl !== true) return undefined;
+    if (!c || moteur !== true) return undefined;
     const s = creerStudio(c);
     studio.current = s;
+    s.prete.then(() => {
+      if (studio.current !== s) return;
+      if (s.dessiner(tuiles.current, grille.current)) setRendues((n) => n + 1);
+    }).catch((cause: unknown) => {
+      if (studio.current !== s) return;
+      console.error('Moteur 3D indisponible', cause);
+      setMoteur(false);
+    });
     return () => { s.dispose(); studio.current = null; };
-  }, [webgl]);
+  }, [moteur]);
 
   const arreterBoucle = useCallback((): void => {
     if (image.current !== null) cancelAnimationFrame(image.current);
@@ -152,8 +166,7 @@ export default function Vitrine(): React.ReactElement {
     piece.current = placeholder;
     setEtatModele(PLACEHOLDER);
     setClip(null);
-    s.dessiner(tuiles.current, grille.current);
-    setRendues((n) => n + 1);
+    if (s.dessiner(tuiles.current, grille.current)) setRendues((n) => n + 1);
     // Un modèle livré remplace le placeholder, monté comme en jeu — même socle,
     // même teinte, même lecteur de clips ; un 404 laisse tout en place.
     void chargerModele(uniteSure, pays === '' ? null : (pays as CodePays)).then((modele) => {
@@ -182,9 +195,9 @@ export default function Vitrine(): React.ReactElement {
       lecteur.current?.dispose();
       lecteur.current = null;
     };
-    // `webgl` est dans les dépendances parce que le studio n'existe qu'une fois
-    // WebGL détecté, dans un effet qui court après celui-ci au premier rendu.
-  }, [catalogue, uniteSure, pays, camp, webgl, arreterBoucle, lancerBoucle]);
+    // `moteur` est dans les dépendances parce que le studio n'existe qu'une fois
+    // le moteur détecté, dans un effet qui court après celui-ci au premier rendu.
+  }, [catalogue, uniteSure, pays, camp, moteur, arreterBoucle, lancerBoucle]);
 
   // Le niveau forcé s'applique à la pièce posée, quelle qu'elle soit : sans
   // `THREE.LOD` dedans, il n'y a rien à forcer et rien ne change.
@@ -202,7 +215,7 @@ export default function Vitrine(): React.ReactElement {
     const obs = new ResizeObserver(() => studio.current?.dessiner(tuiles.current, g));
     obs.observe(g);
     return () => obs.disconnect();
-  }, [webgl]);
+  }, [moteur]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'production') return undefined;
@@ -298,7 +311,7 @@ export default function Vitrine(): React.ReactElement {
       </fieldset>
     </div>
 
-    {webgl === false && <p className={styles.sansWebgl}>Ce navigateur n’a pas WebGL 2 : la vitrine ne peut pas se monter.</p>}
+    {moteur === false && <p className={styles.sansWebgl}>Ce navigateur n’a ni WebGPU ni WebGL 2 : la vitrine ne peut pas se monter.</p>}
 
     <div className={styles.planche} ref={grille}>
       <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
@@ -320,8 +333,11 @@ export default function Vitrine(): React.ReactElement {
 
 interface Studio {
   readonly materiaux: Materiaux;
+  /** Tenue quand le moteur est initialisé ; rejetée s'il ne démarre pas. */
+  readonly prete: Promise<void>;
   poser(piece: THREE.Object3D): void;
-  dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): void;
+  /** Dessine la planche ; rend faux — et ne fait rien — tant que le moteur n'est pas prêt. */
+  dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean;
   dispose(): void;
 }
 
@@ -329,22 +345,43 @@ interface Studio {
 const MARGE = 1.18;
 
 function creerStudio(canvas: HTMLCanvasElement): Studio {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.setScissorTest(true);
+  let renderer: THREE.WebGPURenderer | null = null;
+  let environnement: ReturnType<typeof creerEnvironnement> | null = null;
+  let vivant = true;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x1e3f52);
   // La même pièce de studio que le jeu (`render3d/environnement.ts`), à
   // intensité fixe : c'est elle que la tôle et le verre d'une figurine
-  // reflètent, et la vitrine doit montrer ce que le plateau montrera.
-  const environnement = creerEnvironnement(renderer);
-  scene.environment = environnement.texture;
+  // reflètent, et la vitrine doit montrer ce que le plateau montrera. La carte
+  // se cuit avec le moteur, plus bas ; l'intensité est une propriété de la scène.
   scene.environmentIntensity = 0.35;
+
+  // Le moteur, comme en jeu : le dos décidé avant de construire, `init()`
+  // attendu, l'environnement cuit après. Le test de ciseaux ne se pose
+  // qu'ensuite : sur le dos WebGL, il touche un contexte qui n'existe pas avant.
+  const prete: Promise<void> = (async () => {
+    const dos = await choisirBackend(globalThis.navigator as NavigateurGpu | undefined);
+    if (!vivant) throw new Error('Studio démonté avant que le moteur soit prêt.');
+    const r = new THREE.WebGPURenderer({
+      canvas, antialias: true, alpha: false, powerPreference: 'high-performance', forceWebGL: dos === 'webgl',
+    });
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    r.toneMapping = THREE.ACESFilmicToneMapping;
+    r.toneMappingExposure = 1;
+    r.shadowMap.enabled = true;
+    r.shadowMap.type = THREE.PCFSoftShadowMap;
+    await r.init();
+    if (!vivant) {
+      r.dispose();
+      throw new Error('Studio démonté avant que le moteur soit prêt.');
+    }
+    r.setScissorTest(true);
+    environnement = creerEnvironnement(r);
+    scene.environment = environnement.texture;
+    renderer = r;
+  })();
+  prete.catch(() => undefined);
 
   // Trois lumières de studio : le ciel, une clé qui porte l'ombre, un débouchage froid.
   scene.add(new THREE.HemisphereLight(0xe8f0f8, 0x55643f, 0.85));
@@ -373,6 +410,8 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
   const support = new THREE.Group();
   scene.add(support);
   const materiaux = new Materiaux();
+  // Le fond entre les tuiles : le moteur veut une `Color`, pas un entier.
+  const fond = new THREE.Color(0x0c1b21);
   const boite = new THREE.Box3();
   const centre = new THREE.Vector3();
   const taille = new THREE.Vector3();
@@ -386,15 +425,15 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     boite.getSize(taille);
   }
 
-  function dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): void {
-    if (!cadre || support.children.length === 0) return;
+  function dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean {
+    if (!renderer || !cadre || support.children.length === 0) return false;
     const rectCadre = cadre.getBoundingClientRect();
     const largeur = Math.max(1, Math.round(rectCadre.width));
     const hauteur = Math.max(1, Math.round(rectCadre.height));
     renderer.setPixelRatio(Math.min(2, globalThis.devicePixelRatio || 1));
     renderer.setSize(largeur, hauteur, false);
     renderer.setScissorTest(false);
-    renderer.setClearColor(0x0c1b21, 1);
+    renderer.setClearColor(fond, 1);
     renderer.clear();
     renderer.setScissorTest(true);
     const rayon = Math.max(taille.x, taille.y, taille.z) / 2 * MARGE;
@@ -430,16 +469,23 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
       }
       renderer.render(scene, camera);
     }
+    return true;
   }
 
   return {
     materiaux,
+    prete,
     poser,
     dessiner,
     dispose: () => {
+      vivant = false;
       scene.environment = null;
-      environnement.dispose();
-      renderer.dispose();
+      environnement?.dispose();
+      environnement = null;
+      // Un moteur non initialisé ne se libère pas ici : la chaîne
+      // d'initialisation le jette elle-même en trouvant le studio démonté.
+      renderer?.dispose();
+      renderer = null;
       sol.geometry.dispose();
       (sol.material as THREE.Material).dispose();
     },

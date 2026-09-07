@@ -512,7 +512,9 @@ export interface UnitType {
 ```ts
 export type CleTerrain =
   | 'plaine' | 'foret' | 'montagne' | 'route' | 'ville' | 'qg'
-  | 'usine' | 'aeroport' | 'mer' | 'riviere' | 'pont' | 'plage';
+  | 'usine' | 'aeroport' | 'mer' | 'riviere' | 'pont' | 'plage'
+  | 'radar' | 'port'          // catalogues 3 et 5
+  | 'herbe_haute';             // 7 septembre 2026 au soir : cache les fantassins, laisse voir les chars (`G`)
 
 export interface Terrain {
   cle: CleTerrain;
@@ -526,6 +528,7 @@ export interface Terrain {
   ravitaille: boolean;            // remet munitions et carburant au plein en début de tour
   soigne: number;                 // PV affichés rendus par tour au propriétaire, 0 à 2
   cacheEnBrouillard: boolean;     // une unité dessus n'est vue qu'à distance 1
+  cacheSeulement?: TypeMouvement[]; // 7 septembre 2026 : la cachette ne vaut que pour ces types (herbe haute : pied, bottes) ; exige cacheEnBrouillard
   palette: Palette;
 }
 ```
@@ -571,6 +574,7 @@ export interface ParametresCarte {
   aeroportsParCamp: number;       // 0 à 2
   portsParCamp?: number;          // 0 à 2, facultatif (absent = 0) — 7 septembre 2026 : un port par camp sur une côte, relié par la mer
   radarsParCamp?: number;         // 0 à 2, facultatif (absent = 0) — une station radar dans l’orbite du camp
+  ratioHerbesHautes?: number;     // 0 à 0,5, facultatif (absent = 0) — part de la plaine semée d’herbe haute (7 septembre 2026)
   symetrie: Symetrie;
   densiteRoutes: number;          // 0.0 à 1.0
   mecanique?: Cle;                // clé de mécanique régionale

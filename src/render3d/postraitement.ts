@@ -1,15 +1,21 @@
 /**
  * La **chaîne de post-traitement** (`16-realisme.md` A3 et A4) : occlusion
- * ambiante d'écran, puis vignettage, grain et saturation.
+ * ambiante d'écran, puis vignettage, grain et saturation — écrite en **TSL**
+ * pour le moteur WebGPU (7 septembre 2026).
  *
- * Quatre passes, dans cet ordre : `RenderPass` (la scène, en linéaire et en
- * demi-flottants, avec l'anticrénelage à quatre échantillons que le tampon
- * d'écran avait déjà — sans lui, la chaîne rendrait des bords en escalier),
- * `GTAOPass` (les creux s'assombrissent : jonctions bâtiment-sol, entre les
- * figurines), `OutputPass` (la cartographie tonale ACES et le passage en sRGB,
- * que le rendu direct faisait dans chaque matériau), puis le **grain**.
+ * Une passe de scène et un quad. La passe de scène (`pass`) écrit **en une
+ * fois**, par cibles multiples (`mrt`), la couleur en demi-flottants et les
+ * normales de vue, et garde sa profondeur : l'ancienne chaîne (`EffectComposer`,
+ * `GTAOPass`) redessinait la scène une seconde fois pour les normales, celle-ci
+ * ne la dessine qu'une. L'occlusion (`GTAONode`) se calcule dans sa propre
+ * cible à partir de la profondeur et des normales ; le quad final la
+ * **débruite** (`DenoiseNode`, seize prélèvements en disque de Poisson, ce que
+ * `GTAOPass` faisait aussi), la fond dans la couleur, applique la sortie —
+ * cartographie tonale ACES et passage en sRGB, exactement ce que le rendu
+ * direct fait sur son propre tampon —, puis la saturation, la vignette et le
+ * grain.
  *
- * Le grain vient **après** l'`OutputPass`, donc en espace d'affichage, et c'est
+ * Le grain vient **après** la sortie, donc en espace d'affichage, et c'est
  * réfléchi. Un grain ajouté avant la cartographie tonale, en linéaire, serait
  * écrasé dans les hautes lumières et **décuplé dans les ombres** par la courbe
  * de codage sRGB, qui dilate les petites valeurs : le bruit serait invisible
@@ -19,25 +25,36 @@
  * banding** des dégradés du ciel et du brouillard, qui est le défaut le plus
  * visible d'une scène en aplats lisses. La vignette et la saturation suivent
  * pour la même raison : ce sont des retouches de tirage, pas des faits de
- * lumière.
+ * lumière. `PostProcessing` appliquerait la sortie lui-même, en tout dernier
+ * (`outputColorTransform`) ; on la lui retire pour la poser à la main **avant**
+ * le grain, ce qui est toute la raison de cette chaîne.
  *
- * Ce module importe les modules complémentaires de three.js de façon
- * **statique** ; c'est `scene.ts` qui l'importe, lui, dynamiquement, au moment
- * d'activer la chaîne. L'écran-titre, en qualité `basse`, ne le télécharge
- * jamais.
+ * Multi-échantillonnage : sur WebGPU, la passe de scène prend les quatre
+ * échantillons du moteur (`antialias: true`, `renderer.samples`). Sur le dos
+ * WebGL, three r170 les **refuse** aux cibles d'une passe (`PassNode.setup`,
+ * « for now ») : sans rien, la chaîne rendrait des bords en escalier. Un
+ * `FXAANode` s'insère alors après la sortie — en espace d'affichage, où il
+ * mesure sa luminance —, au prix d'un quad de plus sur ce dos seulement.
+ *
+ * Ce module importe les compléments de three.js de façon **statique** ; c'est
+ * `scene.ts` qui l'importe, lui, dynamiquement, au moment d'activer la chaîne.
+ * L'écran-titre, en qualité `basse`, ne le télécharge jamais.
  */
 
-import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
-import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+import * as THREE from 'three/webgpu';
+import {
+  Fn, clamp, convertToTexture, dot, float, floor, fract, min, mix, mrt, normalView, output, pass,
+  renderOutput, screenCoordinate, uniform, uv, vec3, vec4,
+  type Node, type ShaderNodeObject,
+} from 'three/tsl';
+import { ao } from 'three/addons/tsl/display/GTAONode.js';
+import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
+import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 
 /** Ce que la scène pilote : dessiner, redimensionner, libérer. */
 export interface Composeur {
   rendre(camera: THREE.Camera): void;
-  /** Taille en pixels logiques et ratio de pixels, comme `WebGLRenderer.setSize`. */
+  /** Taille en pixels logiques et ratio de pixels, comme `renderer.setSize`. */
   redimensionner(largeur: number, hauteur: number, ratio: number): void;
   dispose(): void;
 }
@@ -60,146 +77,119 @@ const RAYON_OCCLUSION = 0.35;
 /** Le fondu de l'occlusion sur l'image : un, c'est le calcul brut. */
 const INTENSITE_OCCLUSION = 0.85;
 
-/**
- * Le grain et la vignette, en un seul programme. Le bruit est un **hachage
- * entier** des coordonnées du pixel et du compteur d'images : le même pixel de
- * la même image rend toujours la même valeur, sans texture ni horloge, et deux
- * pixels voisins ne se ressemblent pas — c'est ce qui le distingue d'un motif.
- */
-const SHADER_GRAIN = {
-  name: 'atlas-grain',
-  uniforms: {
-    tDiffuse: { value: null as THREE.Texture | null },
-    vignette: { value: VIGNETTE },
-    grain: { value: GRAIN },
-    saturation: { value: SATURATION },
-    image: { value: 0 },
-  },
-  vertexShader: /* glsl */ `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-    }
-  `,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D tDiffuse;
-    uniform float vignette;
-    uniform float grain;
-    uniform float saturation;
-    uniform float image;
-    varying vec2 vUv;
-
-    // Hachage à trois composantes (Dave Hoskins), sur des entiers de pixel :
-    // déterministe, sans corrélation visible entre voisins ni entre images.
-    float hachage( vec2 pixel, float compteur ) {
-      vec3 p = fract( vec3( pixel.x, pixel.y, pixel.x + compteur ) * 0.1031 );
-      p += dot( p, p.yzx + 33.33 );
-      return fract( ( p.x + p.y ) * p.z );
-    }
-
-    void main() {
-      vec4 texel = texture2D( tDiffuse, vUv );
-      vec3 c = texel.rgb;
-      // La saturation autour de la luminance perçue (Rec. 709).
-      float luma = dot( c, vec3( 0.2126, 0.7152, 0.0722 ) );
-      c = mix( vec3( luma ), c, saturation );
-      // La vignette : nulle au centre, pleine dans les coins, en carré de la
-      // distance — le profil d'un objectif, pas un cache posé sur l'image.
-      vec2 d = vUv - 0.5;
-      c *= 1.0 - vignette * min( 1.0, dot( d, d ) * 2.0 );
-      // Le grain, centré : il éclaircit autant qu'il assombrit.
-      float g = hachage( floor( gl_FragCoord.xy ), image ) - 0.5;
-      c += g * grain * 2.0;
-      gl_FragColor = vec4( clamp( c, 0.0, 1.0 ), texel.a );
-    }
-  `,
-};
+/** Les prélèvements de l'occlusion : seize, comme la passe d'avant. */
+const PRELEVEMENTS_OCCLUSION = 16;
 
 /**
- * Monte la chaîne sur un rendu et une scène. La caméra est celle du premier
- * appel ; `rendre()` la remplace si elle change, ce qui n'arrive qu'au
- * remontage d'un monde.
+ * Le débruitage de l'occlusion, tel que `GTAOPass.updatePdMaterial` le
+ * recevait : tolérances de luminance, de profondeur et de normale, et rayon en
+ * pixels. Les seize prélèvements sur deux anneaux sont ceux du nœud lui-même.
  */
-export function creerComposeur(
-  renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
-  largeur: number, hauteur: number, ratio: number,
-): Composeur {
-  const cible = new THREE.WebGLRenderTarget(
-    Math.max(1, Math.round(largeur * ratio)), Math.max(1, Math.round(hauteur * ratio)),
-    { type: THREE.HalfFloatType, samples: 4 },
-  );
-  const composeur = new EffectComposer(renderer, cible);
-  const passeScene = new RenderPass(scene, camera);
-  const occlusion = new GTAOPass(scene, camera, largeur, hauteur);
-  occlusion.output = GTAOPass.OUTPUT.Default;
-  occlusion.blendIntensity = INTENSITE_OCCLUSION;
-  occlusion.updateGtaoMaterial({
-    radius: RAYON_OCCLUSION,
-    distanceExponent: 1,
-    thickness: 1,
-    distanceFallOff: 1,
-    scale: 1,
-    samples: 16,
-    screenSpaceRadius: false,
-  });
-  occlusion.updatePdMaterial({
-    lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, radiusExponent: 1, rings: 2, samples: 16,
-  });
-  const sortie = new OutputPass();
-  const grain = new ShaderPass(SHADER_GRAIN);
-  composeur.addPass(passeScene);
-  composeur.addPass(occlusion);
-  composeur.addPass(sortie);
-  composeur.addPass(grain);
+const DEBRUITAGE = { lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4 };
 
-  let compteur = 0;
-  // Ce que le composeur croit savoir de sa taille. Le ratio est celui du rendu
-  // à sa création ; les dimensions sont laissées inconnues, parce qu'avec une
-  // cible fournie le constructeur prend la taille **physique** de la cible
-  // pour taille logique : le premier `setSize` ci-dessous le remet d'aplomb.
-  let ratioConnu = ratio;
-  let largeurConnue = -1;
-  let hauteurConnue = -1;
+/**
+ * Hachage à trois composantes (Dave Hoskins), sur des entiers de pixel et le
+ * compteur d'images : le même pixel de la même image rend toujours la même
+ * valeur, sans texture ni horloge, et deux pixels voisins ne se ressemblent
+ * pas — c'est ce qui le distingue d'un motif.
+ */
+const hachage = Fn(([pixel, compteur]: [ShaderNodeObject<Node>, ShaderNodeObject<Node>]) => {
+  const p = fract(vec3(pixel.x, pixel.y, pixel.x.add(compteur)).mul(0.1031)).toVar();
+  p.addAssign(dot(p, p.yzx.add(33.33)));
+  return fract(p.x.add(p.y).mul(p.z));
+});
 
-  function redimensionner(l: number, h: number, r: number): void {
-    // `setPixelRatio` appelle `setSize` de lui-même : on ne redimensionne
-    // qu'une fois par changement. Le ratio ne bouge qu'en changeant d'écran.
-    if (r !== ratioConnu) {
-      ratioConnu = r;
-      composeur.setPixelRatio(r);
-    }
-    if (l !== largeurConnue || h !== hauteurConnue) {
-      largeurConnue = l;
-      hauteurConnue = h;
-      composeur.setSize(l, h);
-    }
-    // L'occlusion se calcule en **pixels logiques**, pas physiques : sur un
-    // écran à ratio 2, c'est quatre fois moins de prélèvements pour un flou que
-    // le débruitage lisse de toute façon. Le composeur vient de lui donner la
-    // taille physique ; on la reprend.
-    occlusion.setSize(Math.max(1, Math.round(l)), Math.max(1, Math.round(h)));
-  }
-  redimensionner(largeur, hauteur, ratio);
+/**
+ * Monte la chaîne sur un moteur initialisé et une scène. La caméra est celle
+ * du premier appel ; `rendre()` la remplace si elle change, ce qui n'arrive
+ * qu'au remontage d'un monde.
+ *
+ * Les tailles ne se règlent pas ici : la passe de scène relit la taille et le
+ * ratio du moteur à chaque image, l'occlusion relit le tampon de dessin, le
+ * débruitage lit la cible de l'occlusion. `redimensionner` reste dans le
+ * contrat et n'a rien à faire.
+ */
+export function creerComposeur(renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.Camera): Composeur {
+  const surWebgl = (renderer.backend as { isWebGLBackend?: boolean }).isWebGLBackend === true;
+  const post = new THREE.PostProcessing(renderer);
+  // La sortie se pose à la main, avant le grain : voir l'en-tête.
+  post.outputColorTransform = false;
+
+  const passeScene = pass(scene, camera);
+  passeScene.setMRT(mrt({ output, normal: normalView }));
+  const couleur = passeScene.getTextureNode('output');
+  const normales = passeScene.getTextureNode('normal');
+  const profondeur = passeScene.getTextureNode('depth');
+
+  const occlusion = ao(profondeur, normales, camera);
+  occlusion.radius.value = RAYON_OCCLUSION;
+  occlusion.thickness.value = 1;
+  occlusion.distanceExponent.value = 1;
+  occlusion.distanceFallOff.value = 1;
+  occlusion.scale.value = 1;
+  occlusion.SAMPLES.value = PRELEVEMENTS_OCCLUSION;
+  // Le débruitage tourne ses prélèvements par le bruit de l'occlusion elle-même
+  // (un carré magique 5 × 5, répété) : pas de texture à charger.
+  const debruitee = denoise(occlusion.getTextureNode(), profondeur, normales, occlusion.noiseNode, camera);
+  debruitee.lumaPhi.value = DEBRUITAGE.lumaPhi;
+  debruitee.depthPhi.value = DEBRUITAGE.depthPhi;
+  debruitee.normalPhi.value = DEBRUITAGE.normalPhi;
+  debruitee.radius.value = DEBRUITAGE.radius;
+
+  const compteur = uniform(0);
+  const vignette = uniform(VIGNETTE);
+  const grain = uniform(GRAIN);
+  const saturation = uniform(SATURATION);
+
+  // La couleur occultée, en linéaire ; puis la sortie, avec la cartographie
+  // tonale et l'espace de couleur du moteur — passés en clair plutôt que lus
+  // dans le contexte du quad, que le quad de l'anticrénelage ne partagerait
+  // pas. L'exposition, elle, est une référence au moteur, relue à chaque image.
+  const facteur = mix(float(1), debruitee.r, INTENSITE_OCCLUSION);
+  const lineaire = vec4(couleur.rgb.mul(facteur), couleur.a);
+  const sortie = renderOutput(lineaire, renderer.toneMapping, renderer.outputColorSpace);
+  // Sur le dos WebGL, la passe de scène n'a pas d'échantillons : l'anticrénelage
+  // se fait sur l'image affichée, qui passe alors par une cible de plus.
+  const intermediaire = surWebgl ? convertToTexture(sortie) : null;
+  const affichee = intermediaire ? fxaa(intermediaire) : sortie;
+
+  const tirage = Fn(() => {
+    const c = affichee.rgb.toVar();
+    // La saturation autour de la luminance perçue (Rec. 709).
+    const luma = dot(c, vec3(0.2126, 0.7152, 0.0722));
+    c.assign(mix(vec3(luma), c, saturation));
+    // La vignette : nulle au centre, pleine dans les coins, en carré de la
+    // distance — le profil d'un objectif, pas un cache posé sur l'image.
+    const d = uv().sub(0.5);
+    c.mulAssign(float(1).sub(vignette.mul(min(dot(d, d).mul(2), 1))));
+    // Le grain, centré : il éclaircit autant qu'il assombrit.
+    const g = hachage(floor(screenCoordinate), compteur).sub(0.5);
+    c.addAssign(g.mul(grain).mul(2));
+    return vec4(clamp(c, 0, 1), affichee.a);
+  });
+  post.outputNode = tirage();
 
   return {
     rendre(cam: THREE.Camera): void {
       if (passeScene.camera !== cam) {
         passeScene.camera = cam;
-        occlusion.camera = cam;
+        // Les matrices de projection sont des références aux objets de la
+        // caméra : une caméra neuve, ce sont des objets neufs.
+        occlusion.cameraProjectionMatrix.value = cam.projectionMatrix;
+        occlusion.cameraProjectionMatrixInverse.value = cam.projectionMatrixInverse;
+        (debruitee as unknown as { cameraProjectionMatrixInverse: { value: THREE.Matrix4 } })
+          .cameraProjectionMatrixInverse.value = cam.projectionMatrixInverse;
       }
-      compteur = (compteur + 1) % 4096;
-      grain.uniforms['image']!.value = compteur;
-      composeur.render();
+      compteur.value = (compteur.value + 1) % 4096;
+      post.render();
     },
-    redimensionner,
+    redimensionner(): void {
+      // Rien : voir l'en-tête de `creerComposeur`.
+    },
     dispose(): void {
-      occlusion.dispose();
-      sortie.dispose();
-      grain.dispose();
       passeScene.dispose();
-      composeur.dispose();
-      cible.dispose();
+      occlusion.dispose();
+      intermediaire?.renderTarget?.dispose();
     },
   };
 }

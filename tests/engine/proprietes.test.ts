@@ -169,9 +169,10 @@ test("l'empreinte change dès qu'un PV change", () => {
 test('le catalogue est la seule source des unités et des terrains', () => {
   const cat = chargerCatalogue();
   // Le catalogue par défaut reste le 2 : dix canon plus le génie. Les terrains,
-  // eux, ne sont pas versionnés — le port du catalogue 5 est le quatorzième.
+  // eux, ne sont pas versionnés — le port du catalogue 5 est le quatorzième,
+  // les hautes herbes du 7 septembre 2026 au soir le quinzième.
   assert.equal(cat.cles.length, 11);
-  assert.equal(Object.keys(cat.terrains).length, 14);
+  assert.equal(Object.keys(cat.terrains).length, 15);
   assert.equal(cat.degats.matrice.length, 10);
   for (const ligne of cat.degats.matrice) assert.equal(ligne.length, 10);
 });

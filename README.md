@@ -2,7 +2,7 @@
 
 Un tactique au tour par tour dans l'esprit d'Advance Wars. Dans ce monde, les guerres ont été remplacées par des Jeux Tactiques : chaque pays a une équipe et un commandant, et tous les quatre ans un tournoi fait le tour de la planète. Vous êtes un jeune commandant, vous partez de France, et vos choix décident qui vous suit quand une faction d'Atlas tente de rallumer les vraies guerres : chacune des 24 nations devient alliée, rivale ou se retire de la Ronde. Celles que vous ralliez s'ouvrent comme pays de départ pour une Nouvelle Ronde.
 
-Web, TypeScript strict, Next.js 15. **Rendu 3D three.js**, moteur de règles déterministe sans dépendance, contenu produit par cinq routines Claude (quatre de contenu, une de traduction) et validé par un serveur qui ne fait confiance à rien.
+Web, TypeScript strict, Next.js 15. **Rendu 3D three.js sur WebGPU** (WebGL 2 en repli), moteur de règles déterministe sans dépendance, contenu produit par cinq routines Claude (quatre de contenu, une de traduction) et validé par un serveur qui ne fait confiance à rien.
 
 ## Jouer les premiers matchs
 

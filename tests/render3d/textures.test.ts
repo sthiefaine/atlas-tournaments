@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { BIOMES, type CleTerrain } from '../../src/schemas/types';
 import {
   albedoMatiere, jeuToit, normalesDepuis, normalesDonnees, reliefToit, sorteToit,
@@ -61,7 +61,7 @@ test('le plateau de chaque biome accepte les saisons et libère ses ressources',
     plateau.appliquerAmbiance(parametresAmbiance('hiver', 'nuit', 'neige'));
     assert.equal(plateau.avancer(16), false);
     let texturesLiberees = 0;
-    const material = plateau.sol.material as THREE.MeshStandardMaterial;
+    const material = plateau.sol.material as THREE.MeshStandardNodeMaterial;
     material.map?.addEventListener('dispose', () => { texturesLiberees += 1; });
     plateau.dispose();
     assert.equal(texturesLiberees, 1);

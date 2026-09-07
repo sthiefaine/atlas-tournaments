@@ -15,18 +15,25 @@ import {
 } from '../../src/render/qualite';
 
 test('la chaîne ne se monte que si une cible flottante est dessinable', () => {
-  // Sans extension, three ne lèverait pas et l'écran serait noir : on refuse avant.
-  assert.equal(composeurPossible(() => false), false);
-  assert.equal(composeurPossible((nom) => nom === 'OES_texture_float'), false);
-  assert.equal(composeurPossible((nom) => nom === 'WEBGL_color_buffer_float'), false);
+  // Sur le dos WebGL, sans extension, three ne lèverait pas et l'écran serait
+  // noir : on refuse avant.
+  assert.equal(composeurPossible('webgl', () => false), false);
+  assert.equal(composeurPossible('webgl', (nom) => nom === 'OES_texture_float'), false);
+  assert.equal(composeurPossible('webgl', (nom) => nom === 'WEBGL_color_buffer_float'), false);
   // L'extension complète, ou sa version demi-flottante seule, suffit.
-  assert.equal(composeurPossible((nom) => nom === 'EXT_color_buffer_float'), true);
-  assert.equal(composeurPossible((nom) => nom === 'EXT_color_buffer_half_float'), true);
-  assert.equal(composeurPossible(() => true), true);
+  assert.equal(composeurPossible('webgl', (nom) => nom === 'EXT_color_buffer_float'), true);
+  assert.equal(composeurPossible('webgl', (nom) => nom === 'EXT_color_buffer_half_float'), true);
+  assert.equal(composeurPossible('webgl', () => true), true);
   // Et la question est posée au contexte, pas devinée : les deux noms sont demandés.
   const demandes: string[] = [];
-  composeurPossible((nom) => { demandes.push(nom); return false; });
+  composeurPossible('webgl', (nom) => { demandes.push(nom); return false; });
   assert.deepEqual(demandes, ['EXT_color_buffer_float', 'EXT_color_buffer_half_float']);
+  // Sur WebGPU, `rgba16float` est dessinable par le cœur de l'API : oui, sans
+  // rien demander — une question posée là serait posée à un dos qui n'a pas
+  // d'extensions WebGL.
+  const posees: string[] = [];
+  assert.equal(composeurPossible('webgpu', (nom) => { posees.push(nom); return false; }), true);
+  assert.deepEqual(posees, []);
 });
 
 test('la liste des qualités est fermée, et l’inconnu retombe sur `auto`', () => {

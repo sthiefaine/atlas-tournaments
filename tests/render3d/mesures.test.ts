@@ -1,14 +1,14 @@
 /**
  * La mesure par famille (`src/render3d/mesures.ts`) : des groupes three.js
- * construits en mémoire, sans WebGL, comptés comme `renderBufferDirect` les
- * dessinerait.
+ * construits en mémoire, sans moteur, comptés comme `renderer.info` du moteur
+ * WebGPU (`Info.update`) les compterait — et la lecture de ces compteurs-là.
  */
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 
-import { compterFamilles } from '../../src/render3d/mesures';
+import { compterFamilles, depuisInfo } from '../../src/render3d/mesures';
 
 /** Un quad indexé : quatre sommets, six indices, donc deux triangles — l'index compte, pas les positions. */
 function quad(): THREE.BufferGeometry {
@@ -108,4 +108,31 @@ test('drawRange, groupes de matériaux et instances à zéro se comptent comme l
   // 2 (plage) + 3 + 2 (les deux groupes visibles) ; trois tirages, rien pour
   // le lot instancié sans instance ni pour la maille au matériau invisible.
   assert.deepEqual(compterFamilles(scene), { decor: { triangles: 7, mailles: 3 } });
+});
+
+test('les compteurs de l’image se lisent sur `drawCalls` et `triangles`, jamais sur `calls`', () => {
+  // La forme d'`Info` du moteur WebGPU : `render.calls` y compte les passes
+  // (`render()`), et c'est ce que `WebGLRenderer` appelait les appels de
+  // dessin. Lire `calls` compterait trois passes au lieu de trois cents tirages.
+  const info = { render: { calls: 3, drawCalls: 336, triangles: 41_000 } };
+  assert.deepEqual(depuisInfo(info), { triangles: 41_000, appels: 336 });
+  // `Info.update` cumule `instances × sommets / 3` sans arrondir : une fraction
+  // de triangle n'existe pas à l'affichage.
+  assert.deepEqual(depuisInfo({ render: { drawCalls: 1, triangles: 2 * (4 / 3) } }), { triangles: 3, appels: 1 });
+  // Sans moteur — avant `init()` —, rien n'a été dessiné.
+  assert.deepEqual(depuisInfo(null), { triangles: 0, appels: 0 });
+  assert.deepEqual(depuisInfo(undefined), { triangles: 0, appels: 0 });
+});
+
+test('la mesure par famille imite le compte du moteur : un tirage, puis instances × sommets / 3', () => {
+  // Le même lot instancié, compté par la scène et tel que le moteur le
+  // compterait par `Info.update(objet, sommets, instances)` : quatre triangles
+  // de trois sommets, trois instances, un tirage.
+  const scene = new THREE.Scene();
+  scene.add(groupe('decor', new THREE.InstancedMesh(soupe(4), MAT, 3)));
+  const famille = compterFamilles(scene)['decor'];
+  const compteurs = { render: { drawCalls: 0, triangles: 0 } };
+  compteurs.render.drawCalls += 1;
+  compteurs.render.triangles += 3 * (12 / 3);
+  assert.deepEqual(famille, { triangles: depuisInfo(compteurs).triangles, mailles: depuisInfo(compteurs).appels });
 });

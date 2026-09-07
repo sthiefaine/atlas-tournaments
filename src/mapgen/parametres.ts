@@ -38,20 +38,28 @@ export interface ProfilBiome {
   portsParCamp: number;
   /** Stations radar par camp recommandées : aucun biome n'en réclame par défaut. */
   radarsParCamp: number;
+  /**
+   * Part de la plaine semée d'herbe haute que le biome **recommande** (7 septembre
+   * 2026) : là où l'herbe pousse — prairie, roseaux du marais, herbes de la
+   * jungle, oyats du littoral, clairières — et zéro sur le sable, la neige et
+   * la roche. Même contrat que les ports : un preset pour qui compose des
+   * paramètres, jamais appliqué par `normaliser` à un champ absent.
+   */
+  ratioHerbesHautes: number;
 }
 
 /** Les valeurs servent de défauts : une mission peut préciser sa propre topologie. */
 export const PROFILS_BIOME: Record<Biome, ProfilBiome> = {
-  plaine: { description: 'Routes rapides, haies protectrices : choisir entre vitesse et couverture.', ratioRelief: .18, ratioMer: 0, densiteRoutes: .8, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0 },
-  foret: { description: 'Les lisières cachent les unités sous brouillard ; la reconnaissance ouvre la marche.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .3, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0 },
-  montagne: { description: 'Les hauteurs donnent +2 de vision. Les véhicules empruntent les cols ; le génie ouvre des routes.', ratioRelief: .4, ratioMer: 0, densiteRoutes: .25, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
-  desert: { description: 'Sables sans couverture et bases rares : protéger les transports de ravitaillement.', ratioRelief: .12, ratioMer: 0, densiteRoutes: .2, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
-  jungle: { description: 'Forêts denses et rivières : reconnaître les berges et sécuriser les ponts avant les blindés.', ratioRelief: .4, ratioMer: .1, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
-  neige: { description: 'Reliefs et longs détours : conserver les routes et les bases de soutien. Le gel dépend de la saison.', ratioRelief: .3, ratioMer: .05, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
-  volcanique: { description: 'Crêtes sans forêt : les couloirs exposés favorisent le contrôle des cols et le génie.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
-  cotier: { description: 'La grève ouvre à marée basse puis se referme : coordonner la traversée sur deux journées.', ratioRelief: .15, ratioMer: .35, densiteRoutes: .5, villesParCamp: 3, portsParCamp: 1, radarsParCamp: 0 },
-  archipel: { description: 'Terres étroites reliées par passages : contrôler les accès et profiter des marées.', ratioRelief: .1, ratioMer: .55, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 1, radarsParCamp: 0 },
-  marais: { description: 'Rivières et couvert fragmenté canalisent les véhicules : construire les traversées utiles.', ratioRelief: .3, ratioMer: .25, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0 },
+  plaine: { description: 'Routes rapides, haies protectrices : choisir entre vitesse et couverture.', ratioRelief: .18, ratioMer: 0, densiteRoutes: .8, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: .06 },
+  foret: { description: 'Les lisières cachent les unités sous brouillard ; la reconnaissance ouvre la marche.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .3, villesParCamp: 3, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: .04 },
+  montagne: { description: 'Les hauteurs coupent la vue et donnent +3 à qui y grimpe à pied. Les véhicules empruntent les cols ; le génie ouvre des routes.', ratioRelief: .4, ratioMer: 0, densiteRoutes: .25, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: 0 },
+  desert: { description: 'Sables sans couverture et bases rares : protéger les transports de ravitaillement.', ratioRelief: .12, ratioMer: 0, densiteRoutes: .2, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: 0 },
+  jungle: { description: 'Forêts denses et rivières : reconnaître les berges et sécuriser les ponts avant les blindés.', ratioRelief: .4, ratioMer: .1, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: .08 },
+  neige: { description: 'Reliefs et longs détours : conserver les routes et les bases de soutien. Le gel dépend de la saison.', ratioRelief: .3, ratioMer: .05, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: 0 },
+  volcanique: { description: 'Crêtes sans forêt : les couloirs exposés favorisent le contrôle des cols et le génie.', ratioRelief: .4, ratioMer: .05, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: 0 },
+  cotier: { description: 'La grève ouvre à marée basse puis se referme : coordonner la traversée sur deux journées.', ratioRelief: .15, ratioMer: .35, densiteRoutes: .5, villesParCamp: 3, portsParCamp: 1, radarsParCamp: 0, ratioHerbesHautes: .05 },
+  archipel: { description: 'Terres étroites reliées par passages : contrôler les accès et profiter des marées.', ratioRelief: .1, ratioMer: .55, densiteRoutes: .15, villesParCamp: 2, portsParCamp: 1, radarsParCamp: 0, ratioHerbesHautes: 0 },
+  marais: { description: 'Rivières et couvert fragmenté canalisent les véhicules : construire les traversées utiles.', ratioRelief: .3, ratioMer: .25, densiteRoutes: .1, villesParCamp: 2, portsParCamp: 0, radarsParCamp: 0, ratioHerbesHautes: .25 },
 };
 
 const REGLAGES: Record<Biome, ReglagesBiome> = {
@@ -79,6 +87,7 @@ export interface ParametresNormalises extends ParametresCarte {
   /** Toujours présents une fois normalisés : le générateur ne relit jamais un champ absent. */
   portsParCamp: number;
   radarsParCamp: number;
+  ratioHerbesHautes: number;
   /** Ratio de mer réellement applicable après réservation de la place au bâti. */
   ratioMerEffectif: number;
 }
@@ -114,6 +123,9 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
   // contrat du schéma, et ce qui garde identiques les cartes générées avant eux.
   let portsParCamp = bornerEntier(p.portsParCamp, 0, 2, 0);
   let radarsParCamp = bornerEntier(p.radarsParCamp, 0, 2, 0);
+  // L'herbe haute suit le même contrat : absente, aucune tache n'est semée et
+  // aucun aléa n'est tiré (`herbes.ts`) — le preset du biome n'est pas relu ici.
+  const ratioHerbesHautes = borner(p.ratioHerbesHautes, 0, 0.5, 0);
 
   const ratioMer = borner(p.ratioMer, 0, 0.6, profil.ratioMer);
   // Un port sans mer n'est pas un port : sur un biome sans mer, on ramène les
@@ -158,6 +170,7 @@ export function normaliser(p: ParametresCarte): ParametresNormalises {
     aeroportsParCamp,
     portsParCamp,
     radarsParCamp,
+    ratioHerbesHautes,
     symetrie,
     densiteRoutes: borner(p.densiteRoutes, 0, 1, profil.densiteRoutes),
     ratioMerEffectif: Math.min(ratioMer, ratioMerMax),
@@ -182,6 +195,7 @@ export function versParametresCarte(p: ParametresNormalises): ParametresCarte {
     aeroportsParCamp: p.aeroportsParCamp,
     portsParCamp: p.portsParCamp,
     radarsParCamp: p.radarsParCamp,
+    ratioHerbesHautes: p.ratioHerbesHautes,
     symetrie: p.symetrie,
     densiteRoutes: p.densiteRoutes,
   };

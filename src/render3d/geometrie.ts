@@ -24,7 +24,7 @@ export const CASE = 1;
  * une chaîne fait une crête.
  */
 export const HAUTEURS: Readonly<Record<CleTerrain, number>> = {
-  plaine: 0,
+  herbe_haute: 0, plaine: 0,
   foret: 0.05,
   montagne: 1,
   route: 0,

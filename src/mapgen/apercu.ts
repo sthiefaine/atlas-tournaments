@@ -37,8 +37,8 @@ const NOMS_PROPRIETES = ((): Record<string, string> => {
   return table;
 })();
 
-/** Ordre d'affichage des caractères dans la légende. */
-const ORDRE = ['W', 'S', 'V', 'N', 'P', 'F', 'M', 'R', 'C', 'U', 'A', 'T', 'O', 'H'];
+/** Ordre d'affichage des caractères dans la légende : l'herbe haute juste après la plaine qu'elle était. */
+const ORDRE = ['W', 'S', 'V', 'N', 'P', 'G', 'F', 'M', 'R', 'C', 'U', 'A', 'T', 'O', 'H'];
 
 /** Règle de colonnes : le chiffre des unités, suffisant jusqu'à 40 de large. */
 function regle(largeur: number, marge: number): string {

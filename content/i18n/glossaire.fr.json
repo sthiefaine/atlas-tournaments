@@ -330,6 +330,16 @@
       "categorie": "terrain",
       "traduction": "Station radar",
       "note": "Bâtiment capturable : voit à cinq cases pour son propriétaire et brouille les drones adverses à douze cases. Ne produit rien."
+    },
+    {
+      "terme": "Port",
+      "categorie": "terrain",
+      "traduction": "Port"
+    },
+    {
+      "terme": "Hautes herbes",
+      "categorie": "terrain",
+      "traduction": "Hautes herbes"
     }
   ],
   "majLe": "2026-09-05"

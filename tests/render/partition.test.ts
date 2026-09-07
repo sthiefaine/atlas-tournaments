@@ -349,3 +349,37 @@ test('se cacher après une marche : le voile tombe à l’arrivée, une fois la 
   assert.equal(seul(reduit, 'voiler').duree, 0);
   assert.equal(reduit.duree, 0);
 });
+
+test('une marche interrompue — l’embuscade — se termine par un « ! » sur la case d’arrêt', () => {
+  const interrompue: EvenementJeu = {
+    type: 'deplacement', uniteId: mienne, de: { x: 0, y: 0 }, vers: { x: 0, y: 1 },
+    chemin: [{ x: 0, y: 0 }, { x: 0, y: 1 }], interrompu: true,
+  };
+  const p = ecrirePartition([interrompue], etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), ['glisser', 'surprise']);
+  const s = seul(p, 'surprise');
+  assert.equal(s.unite, mienne);
+  assert.deepEqual(s.case, { x: 0, y: 1 }, 'sur la case d’arrêt, pas sur la case visée');
+  assert.equal(s.debut, DUREES.parCase, 'une fois la figurine arrivée');
+  assert.equal(s.duree, DUREES.surprise);
+  assert.equal(p.duree, DUREES.parCase + DUREES.surprise);
+
+  // Surprise au premier pas : pas un pas de fait, le « ! » quand même, tout de suite.
+  const surPlace = ecrirePartition([
+    { ...interrompue, vers: { x: 0, y: 0 }, chemin: [{ x: 0, y: 0 }, { x: 0, y: 0 }] },
+  ], etat, etat, OPTIONS);
+  assert.deepEqual(genres(surPlace), ['surprise']);
+  assert.equal(seul(surPlace, 'surprise').debut, 0);
+  assert.deepEqual(seul(surPlace, 'surprise').case, { x: 0, y: 0 });
+
+  // Réduit : le geste est là, sans durée ni début.
+  const reduit = ecrirePartition([interrompue], etat, etat, { ...OPTIONS, reduit: true });
+  assert.deepEqual(genres(reduit), ['glisser', 'surprise']);
+  assert.equal(seul(reduit, 'surprise').debut, 0);
+  assert.equal(seul(reduit, 'surprise').duree, 0);
+  assert.equal(reduit.duree, 0);
+
+  // Une marche ordinaire n'en a pas, et le moteur a déjà laissé tomber la suite :
+  // rien ne vient après le « ! » pour cette unité.
+  assert.equal(ecrirePartition([marche], etat, etat, OPTIONS).gestes.some((g) => g.genre === 'surprise'), false);
+});

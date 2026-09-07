@@ -2,10 +2,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { chargerCatalogue, creerPartie } from '../../src/engine/index';
 import { NIVEAU_EAU } from '../../src/render3d/geometrie';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import {
-  conformerModele, couleurMasquee, definirMasque, masqueDe, NOM_FIGURINE, type ModeleCharge,
+  conformerModele, couleurMasquee, definirMasque, masqueDe, NOEUD_MASQUE_EQUIPE, NOM_FIGURINE,
+  PROP_COULEUR_EQUIPE, PROP_MASQUE_EQUIPE, type MateriauMasque, type ModeleCharge,
 } from '../../src/render3d/modeles';
 import {
   Materiaux, OPACITE_FURTIVE, OPACITE_JOUEE, OPACITE_VERRE, construirePlaceholder, creerUnites, geometriesSilhouette,
@@ -203,20 +204,20 @@ test('une unité qui a joué s’efface en transparence, sans ombre, puis retrou
   const [teinteRepos, uuidRepos] = reposMien['silhouette_principal']!.split('@');
   assert.equal(teinte, teinteRepos, 'la teinte ne change pas : ni gris, ni noir');
   assert.notEqual(uuidTerni, uuidRepos, 'mais le matériau porté est un double');
-  const terni = principale.material as THREE.MeshStandardMaterial;
-  const vif = principale.userData['repos'] as THREE.MeshStandardMaterial;
+  const terni = principale.material as THREE.MeshStandardNodeMaterial;
+  const vif = principale.userData['repos'] as THREE.MeshStandardNodeMaterial;
   assert.equal(terni.transparent, true);
   assert.equal(terni.opacity, OPACITE_JOUEE, 'six dixièmes');
   assert.equal(terni.depthWrite, true, 'une figurine convexe écrit sa profondeur, comme le verre');
   assert.equal(terni.roughness, vif.roughness, 'même matière');
   assert.equal(terni.metalness, vif.metalness);
   assert.equal(terni.emissiveIntensity, vif.emissiveIntensity);
-  assert.equal((verre.material as THREE.MeshStandardMaterial).opacity, OPACITE_VERRE, 'le verre garde son opacité propre, déjà plus basse');
+  assert.equal((verre.material as THREE.MeshStandardNodeMaterial).opacity, OPACITE_VERRE, 'le verre garde son opacité propre, déjà plus basse');
   corpsMien.traverse((o) => {
     if (o instanceof THREE.Mesh && o.name !== 'socle_lisere') assert.equal(o.castShadow, false, `${o.name} : la masse trahirait la transparence`);
   });
   assert.equal(ternies['socle_lisere'], reposMien['socle_lisere'], 'le liseré d’équipe reste');
-  const lisere = (corpsMien.getObjectByName('socle_lisere') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const lisere = (corpsMien.getObjectByName('socle_lisere') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   assert.equal(lisere.transparent, false, 'et reste opaque');
   // Les originaux n'ont pas été touchés : c'est un échange, pas une recoloration.
   assert.equal(vif.transparent, false);
@@ -282,21 +283,24 @@ test('le double terni d’un modèle masqué garde le masque, la couleur d’éq
   calque.maj(etat, cat, null);
   await tick();
   const maille = calque.groupe.getObjectByName('corps') as THREE.Mesh;
-  const vif = maille.material as THREE.MeshStandardMaterial;
+  const vif = maille.material as THREE.MeshStandardNodeMaterial;
+  assert.ok(vif instanceof THREE.MeshStandardNodeMaterial, 'le matériau classique du modèle est devenu un matériau à nœuds');
   const couleur = couleurMasquee(vif);
   assert.ok(couleur, 'le clone teinté mélange la couleur d’équipe par son masque');
   assert.equal(maille.castShadow, true);
 
   const agie = { ...etat, unites: etat.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
   calque.maj(agie, cat, null);
-  const terni = maille.material as THREE.MeshStandardMaterial;
+  const terni = maille.material as MateriauMasque;
   assert.notEqual(terni, vif);
   assert.equal(terni.opacity, OPACITE_JOUEE);
   assert.equal(masqueDe(terni), masque, 'le masque est rendu au double');
-  const shader = { uniforms: {} as Record<string, { value: unknown }>, vertexShader: '', fragmentShader: '#include <common>\n#include <map_fragment>' };
-  terni.onBeforeCompile(shader as never, {} as never);
+  // Le clone d'un matériau à nœuds garde son nœud de couleur, mais pas ce que
+  // le nœud lit sur le matériau : le double doit les avoir reçus tous les deux.
+  assert.equal(terni.colorNode, NOEUD_MASQUE_EQUIPE, 'le nœud partagé du masque suit le double');
+  assert.equal(terni[PROP_MASQUE_EQUIPE], masque, 'et la texture qu’il lit est reposée sur le double');
   assert.equal(
-    (shader.uniforms['atlasCouleurEquipe']?.value as THREE.Color).getHexString(), couleur.getHexString(),
+    terni[PROP_COULEUR_EQUIPE]?.getHexString(), couleur.getHexString(),
     'la couleur d’équipe n’est pas ternie : seule l’opacité dit qu’elle a joué',
   );
   assert.equal(maille.castShadow, false);
@@ -328,6 +332,8 @@ test('l’étiquette d’une unité qui a joué porte un cadenas dessiné, jamai
   const spriteBlessee = blessee.children.find((o) => o instanceof THREE.Sprite) as THREE.Sprite;
   assert.ok(spriteIntacte, 'intacte mais a joué : une étiquette au seul cadenas');
   assert.ok(spriteBlessee);
+  assert.ok(spriteBlessee.material instanceof THREE.SpriteNodeMaterial, 'une étiquette est un sprite à nœuds, texture de toile comprise');
+  assert.ok(spriteBlessee.material.map, 'sa toile est sa texture');
   assert.ok(traces.includes('fillRect'), 'le corps du cadenas est un rectangle plein');
   assert.equal(traces.filter((t) => t.startsWith('fillText')).length, 1, 'un seul chiffre, celui des PV');
   assert.ok(traces.includes('fillText:5'));
@@ -484,7 +490,7 @@ test('retirer une unité à modèle livré libère ses matériaux teintés et le
   calque.maj(agie, cat, null);
   const maille = piece.getObjectByName('corps') as THREE.Mesh;
   const terni = maille.material as THREE.Material;
-  assert.ok(propres.includes(maille.userData['repos'] as THREE.MeshStandardMaterial), 'le matériau de repos est le clone');
+  assert.ok(propres.includes(maille.userData['repos'] as THREE.MeshStandardNodeMaterial), 'le matériau de repos est le clone');
   assert.notEqual(terni, maille.userData['repos'], 'le matériau porté est le terni');
   const liberes: string[] = [];
   for (const m of [...propres, terni]) {
@@ -502,12 +508,13 @@ test('retirer une unité à modèle livré libère ses matériaux teintés et le
 
 test('Materiaux.oublier rend un terni et retire son entrée ; un placeholder n’en a pas à rendre', () => {
   const materiaux = new Materiaux();
-  const origine = new THREE.MeshStandardMaterial({ color: 0x2f5fd0 });
+  const origine = new THREE.MeshStandardNodeMaterial({ color: 0x2f5fd0 });
   const terni = materiaux.terni(origine);
   assert.equal(materiaux.terni(origine), terni, 'mémorisé');
   assert.equal(materiaux.oublier(origine), true);
   assert.notEqual(materiaux.terni(origine), terni, 'l’entrée a disparu : un nouveau double');
-  assert.equal(materiaux.oublier(new THREE.MeshStandardMaterial()), false, 'rien à oublier');
+  assert.equal(materiaux.oublier(new THREE.MeshStandardNodeMaterial()), false, 'rien à oublier');
+  assert.equal(materiaux.oublier(new THREE.MeshStandardMaterial()), false, 'un matériau classique n’a jamais eu de double');
   const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
   const calque = creerUnites({} as Document, () => 0);
   calque.maj(etat, cat, null);
@@ -542,7 +549,7 @@ const ROLES = ['principal', 'sombre', 'clair', 'materiel', 'verre', 'roulant', '
 test('les sept rôles sont des matières : tôle peinte, acier, verre translucide, caoutchouc, peau mate', () => {
   const materiaux = new Materiaux();
   const jeu = materiaux.jeu(0, null);
-  for (const role of ROLES) assert.ok(jeu[role] instanceof THREE.MeshStandardMaterial, role);
+  for (const role of ROLES) assert.ok(jeu[role] instanceof THREE.MeshStandardNodeMaterial, role);
   // La tôle peinte : un métal faible mais non nul, une rugosité moyenne.
   for (const role of ['principal', 'sombre', 'clair'] as const) {
     assert.ok(jeu[role].metalness >= 0.05 && jeu[role].metalness <= 0.35, `${role} : métal de tôle peinte (${jeu[role].metalness})`);
@@ -628,7 +635,7 @@ test('le verre d’un placeholder ne projette pas d’ombre pleine, et les repè
     for (let i = 0; i < 2; i += 1) {
       const repere = piece.getObjectByName(`socle_repere_${i}`) as THREE.Mesh;
       assert.ok(repere, `${cle} : repère ${i}`);
-      const m = repere.material as THREE.MeshStandardMaterial;
+      const m = repere.material as THREE.MeshStandardNodeMaterial;
       assert.equal(m.transparent, false, 'un marquage, pas un vitrage');
       assert.notEqual(m, materiaux.jeu(1, null).verre);
       assert.equal(m, materiaux.repere(), 'la même pastille pour tous');
@@ -643,7 +650,7 @@ test('le calque des unités reçoit l’ambiance : sous la pluie, ses tôles lui
   const calque = creerUnites({} as Document, () => 0);
   calque.maj(etat, cat, null);
   const principal = calque.groupe.getObjectByName('silhouette_principal') as THREE.Mesh;
-  const m = principal.material as THREE.MeshStandardMaterial;
+  const m = principal.material as THREE.MeshStandardNodeMaterial;
   calque.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'));
   const sec = m.roughness;
   calque.appliquerAmbiance(parametresAmbiance('automne', 'jour', 'pluie'));
@@ -753,10 +760,10 @@ function partieFurtive(): ReturnType<typeof partiePersonnalisee> {
 }
 
 /** Le matériau principal d'une pièce, et l'ombre de son maillage. */
-function principale(piece: THREE.Object3D): { materiau: THREE.MeshStandardMaterial; ombre: boolean } {
+function principale(piece: THREE.Object3D): { materiau: THREE.MeshStandardNodeMaterial; ombre: boolean } {
   const maille = piece.getObjectByName('silhouette_principal') as THREE.Mesh;
   assert.ok(maille, 'la silhouette a une pièce principale');
-  return { materiau: maille.material as THREE.MeshStandardMaterial, ombre: maille.castShadow };
+  return { materiau: maille.material as THREE.MeshStandardNodeMaterial, ombre: maille.castShadow };
 }
 
 test('une furtive du joueur se voile sans ombre, jouée en plus elle prend la plus faible opacité, et l’adversaire au contact la voit entière', () => {

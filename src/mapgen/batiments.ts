@@ -32,7 +32,12 @@ export interface Bati {
   unites: UniteDepart[];
 }
 
-const CONSTRUCTIBLE: readonly CleTerrain[] = ['plaine', 'foret', 'plage'];
+/**
+ * L'herbe haute (7 septembre 2026) se bâtit comme la plaine qu'elle était : le
+ * générateur la sème après le bâti (`herbes.ts`), mais si une toile en porte
+ * déjà, le bâti garde la priorité sur les taches — comme sur la forêt.
+ */
+const CONSTRUCTIBLE: readonly CleTerrain[] = ['plaine', 'foret', 'plage', 'herbe_haute'];
 
 /** Vrai si le générateur accepte de bâtir sur cette case. */
 function batissable(t: Toile, c: number): boolean {
@@ -362,7 +367,7 @@ function coutRoute(terrain: CleTerrain): number | null {
     case 'mer': return null;
     case 'route': case 'pont': return 1;
     case 'ville': case 'usine': case 'aeroport': case 'qg': case 'radar': case 'port': return 1;
-    case 'plaine': return 2;
+    case 'plaine': case 'herbe_haute': return 2;
     case 'plage': return 3;
     case 'foret': return 4;
     case 'riviere': return 6;
@@ -370,14 +375,15 @@ function coutRoute(terrain: CleTerrain): number | null {
   }
 }
 
+/** Terrains qu'une route recouvre : l'herbe haute comme la plaine, sans trou dans le ruban. */
+const SOUS_ROUTE: readonly CleTerrain[] = ['plaine', 'herbe_haute', 'foret', 'plage', 'montagne'];
+
 /** Écrit un chemin sur la carte : route sur la terre, pont sur la rivière. */
 function ecrireChemin(t: Toile, chemin: readonly number[]): void {
   for (const c of chemin) {
     const terrain = lire(t, c);
     if (terrain === 'riviere') poser(t, c, 'pont');
-    else if (terrain === 'plaine' || terrain === 'foret' || terrain === 'plage' || terrain === 'montagne') {
-      poser(t, c, 'route');
-    }
+    else if (SOUS_ROUTE.includes(terrain)) poser(t, c, 'route');
   }
 }
 

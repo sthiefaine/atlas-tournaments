@@ -1,11 +1,23 @@
 /**
- * Le contexte WebGL et sa **boucle paresseuse**.
+ * Le moteur graphique et sa **boucle paresseuse**.
  *
  * Un tactique au tour par tour est immobile la plupart du temps : faire tourner
  * une boucle 3D à soixante images par seconde pour redessiner deux fois la même
  * chose vide une batterie en une heure. Le rendu ne dessine donc que lorsque
  * quelque chose a changé, qu'une animation court ou que des particules tombent —
  * et, au repos, **une image par seconde** suffit à faire vivre l'eau.
+ *
+ * Le moteur est `WebGPURenderer` (three r170, `three/webgpu`, depuis le
+ * 7 septembre 2026) : il tourne sur **WebGPU** quand le navigateur donne un
+ * adaptateur, et sur son **dos WebGL 2** sinon — mêmes nuanceurs, compilés en
+ * GLSL au lieu de WGSL. Le choix se fait **avant** de construire le moteur
+ * (`choisirBackend`) : `navigator.gpu` absent, ou `requestAdapter()` qui rend
+ * `null` (Chromium sans carte, SwiftShader…), et c'est `forceWebGL`. Le
+ * moteur s'initialise ensuite de façon **asynchrone** (`renderer.init()`), et
+ * rien ne se dessine avant : `creerScene3d` reste synchrone — il crée le
+ * canevas et l'objet —, expose la promesse `prete`, et `dessiner()` ne fait
+ * rien tant qu'elle n'est pas tenue. L'environnement (`environnement.ts`) se
+ * cuit juste après `init()`, parce que son générateur **rend**.
  *
  * Le reste est de l'hygiène : espace de couleur sRGB en sortie, cartographie
  * tonale filmique (c'est elle qui empêche un soleil d'été de brûler les blancs),
@@ -14,45 +26,73 @@
  * fenêtre, pour suivre aussi les changements de mise en page.
  *
  * Depuis le lot A de `16-realisme.md` (6 septembre 2026), la scène porte aussi
- * la **carte d'environnement** (`environnement.ts`) et, selon la qualité
- * choisie, la **chaîne de post-traitement** (`postraitement.ts`), qui remplace
- * `renderer.render` dans `dessiner()`. La chaîne ne tourne jamais seule : elle
- * ne dessine que quand la boucle le demande, exactement comme le rendu direct.
- * En qualité `auto`, les premières images sont **mesurées** sans elle, GPU
+ * la **carte d'environnement** et, selon la qualité choisie, la **chaîne de
+ * post-traitement** (`postraitement.ts`), qui remplace `renderer.render` dans
+ * `dessiner()`. La chaîne ne tourne jamais seule : elle ne dessine que quand
+ * la boucle le demande, exactement comme le rendu direct. En qualité `auto`,
+ * les premières images sont **mesurées** sans elle, processeur graphique
  * compris, et elle ne s'allume que si l'appareil suit (`render/qualite.ts`) ;
  * une fois allumée, la **cadence** entre deux images consécutives est suivie,
  * et la chaîne s'éteint pour la session si elle fait manquer une image sur
  * deux. Ses modules sont chargés par `import()` au moment de s'allumer :
  * l'accueil, en `basse`, ne les télécharge pas.
  *
+ * La **calibration** attend une barrière du processeur graphique, et WebGPU
+ * n'en a **aucune de synchrone** : la mesure est donc asynchrone. Une image
+ * mesurée part, et sa durée n'est retenue que lorsque le processeur graphique
+ * a fini (`renderer.waitForGPU()`, c'est-à-dire `onSubmittedWorkDone` ; sur le
+ * dos WebGL, `readPixels` d'un pixel, la seule barrière que WebGL ait — la
+ * fence de `waitForGPU` y est scrutée à chaque image d'écran, ce qui arrondit
+ * toute mesure à seize millisecondes). Une seule mesure court à la fois ; si la
+ * boucle dessine d'autres images pendant qu'elle attend, la durée retenue les
+ * englobe — elle **surestime**, jamais l'inverse, et une surestimation ne peut
+ * qu'éteindre une chaîne, pas l'allumer sur un appareil qui ne suit pas.
+ *
  * La **carte d'ombre** n'est recalculée que quand l'appelant le dit
  * (`dessiner(camera, { ombre })`) : en partie, la boucle ne dort jamais —
  * drapeaux, respiration des figurines — et redessiner 2048² d'ombres soixante
  * fois par seconde pour des porteurs immobiles était le premier coût de
- * l'image de base. Ce qui vaut une ombre se décide dans `index.ts`.
+ * l'image de base. Ce qui vaut une ombre se décide dans `index.ts`. Le moteur
+ * WebGPU n'a plus de `shadowMap.autoUpdate` global : la règle est portée par
+ * chaque lumière (`light.shadow.autoUpdate`, `needsUpdate`, lues par
+ * `ShadowNode.updateBefore`), et c'est ici qu'on la pose sur toutes celles de
+ * la scène, à chaque image.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import {
   cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, msCadence, msCalibration,
-  QUALITE_PAR_DEFAUT, type QualiteRendu,
+  QUALITE_PAR_DEFAUT, type BackendRendu, type QualiteRendu,
 } from '../render/qualite';
-import type { MesuresRendu } from '../render/rendu';
+import { webgl2Disponible, type MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
-import { compterFamilles } from './mesures';
+import { compterFamilles, depuisInfo } from './mesures';
 import type { Composeur, creerComposeur } from './postraitement';
 
 /** Ce que `creerScene3d` rend à l'appelant. */
 export interface Scene3d {
-  readonly renderer: THREE.WebGLRenderer;
   readonly scene: THREE.Scene;
   readonly canvas: HTMLCanvasElement;
   readonly largeur: number;
   readonly hauteur: number;
-  /** Dessine une image — par la chaîne si elle est active — et rend sa durée en millisecondes. */
+  /**
+   * Tenue quand le moteur est initialisé et l'environnement cuit : rien ne se
+   * dessine avant, et `surChangement` est appelée à ce moment-là. Rejetée si
+   * aucun dos ne se monte — ni WebGPU, ni WebGL 2 —, ou si la scène est
+   * démontée avant.
+   */
+  readonly prete: Promise<void>;
+  /** Vrai une fois `prete` tenue. */
+  readonly pret: boolean;
+  /** Le dos qui tourne réellement, ou `null` tant que le moteur n'est pas prêt. */
+  readonly backend: BackendRendu | null;
+  /**
+   * Dessine une image — par la chaîne si elle est active — et rend le temps
+   * d'envoi en millisecondes ; zéro, et rien, tant que le moteur n'est pas prêt.
+   */
   dessiner(camera: THREE.Camera, options?: OptionsImage): number;
-  /** Durée moyenne des dernières images, en millisecondes. */
+  /** Durée moyenne d'envoi des dernières images, en millisecondes. */
   readonly msParImage: number;
   /**
    * La médiane des dernières images consécutives dessinées par la chaîne, en
@@ -87,6 +127,11 @@ export interface OptionsImage {
    * personne n'a bougé.
    */
   continu?: boolean;
+  /**
+   * L'exposition de la cartographie tonale pour cette image : celle de
+   * l'ambiance, multipliée par l'éclat d'un pouvoir. Inchangée si absente.
+   */
+  exposition?: number;
 }
 
 /** Réglages du contexte. */
@@ -104,7 +149,7 @@ export interface OptionsScene3d {
   reduit?(): boolean;
   /**
    * Appelée quand la chaîne a changé d'état, ou qu'il faut une image de plus
-   * (calibration en cours, module arrivé) : l'appelant salit sa boucle.
+   * (moteur prêt, calibration en cours, module arrivé) : l'appelant salit sa boucle.
    */
   surChangement?(): void;
   /** Faux pour se passer de la carte d'environnement. Vrai par défaut. */
@@ -118,15 +163,107 @@ export function ratioPixels(fenetre: Window | null, max = 2): number {
   return Math.max(1, Math.min(max, valeur));
 }
 
+/** Ce qu'on regarde du navigateur pour choisir le dos : `navigator.gpu`, s'il existe. */
+export interface NavigateurGpu {
+  gpu?: {
+    requestAdapter(options?: { powerPreference?: 'high-performance' | 'low-power' }): Promise<unknown>;
+  } | undefined;
+}
+
+/**
+ * Sur quel dos le moteur va-t-il tourner ? WebGPU si le navigateur expose
+ * `navigator.gpu` **et** rend un adaptateur ; WebGL 2 sinon. La question de
+ * l'adaptateur doit être posée : Chromium expose `navigator.gpu` sur des
+ * machines où `requestAdapter()` rend `null` — sans carte, sous SwiftShader —,
+ * et three r170 ne retombe pas de lui-même sur WebGL dans tous ces cas, il
+ * lève. Une demande qui lève vaut un refus. Pur : reçoit le navigateur.
+ */
+export async function choisirBackend(navigateur: NavigateurGpu | null | undefined): Promise<BackendRendu> {
+  const gpu = navigateur?.gpu;
+  if (!gpu || typeof gpu.requestAdapter !== 'function') return 'webgl';
+  try {
+    const adaptateur = await gpu.requestAdapter({ powerPreference: 'high-performance' });
+    return adaptateur ? 'webgpu' : 'webgl';
+  } catch {
+    return 'webgl';
+  }
+}
+
+/**
+ * Vrai si le navigateur courant peut faire tourner le moteur : WebGPU
+ * (`navigator.gpu`, sans garantie d'adaptateur — c'est `choisirBackend` qui la
+ * demande, et le repli prend alors) ou, à défaut, un contexte WebGL 2.
+ */
+export function moteur3dDisponible(): boolean {
+  try {
+    const g = globalThis as { navigator?: NavigateurGpu };
+    if (g.navigator?.gpu) return true;
+  } catch {
+    // Un `navigator` qui refuse de se laisser lire n'a pas de WebGPU.
+  }
+  return webgl2Disponible();
+}
+
 /**
  * L'intensité d'environnement avant que l'éclairage n'ait parlé : celle d'un
  * jour clair. `eclairage.ts` la remplace dès la première ambiance appliquée.
  */
 const INTENSITE_ENVIRONNEMENT_DEPART = 0.3;
 
-/** Monte le contexte WebGL dans un conteneur. Lève si WebGL 2 est indisponible. */
+/** Le dos qui tourne réellement : c'est le moteur qui le dit, pas la décision. */
+function backendDe(renderer: THREE.WebGPURenderer): BackendRendu {
+  return (renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true ? 'webgpu' : 'webgl';
+}
+
+/**
+ * Pose la règle des ombres sur toutes les lumières de la scène : jamais
+ * automatiques, recalculées seulement quand l'image le demande. Un parcours de
+ * la scène par image — quelques centaines d'objets, une fraction de ce que le
+ * moteur parcourt lui-même pour trier ce qu'il dessine.
+ */
+function poserOmbres(scene: THREE.Scene, recalculer: boolean): void {
+  scene.traverse((o) => {
+    const l = o as THREE.Light;
+    if (l.isLight !== true || l.castShadow !== true || !l.shadow) return;
+    l.shadow.autoUpdate = false;
+    if (recalculer) l.shadow.needsUpdate = true;
+  });
+}
+
+/**
+ * Attend que le processeur graphique ait **fini** l'image mesurée. Sans cela
+ * on mesurerait l'envoi des commandes, pas le dessin, et un appareil lent
+ * passerait pour rapide. Sur WebGPU, `waitForGPU()` est `onSubmittedWorkDone`,
+ * la barrière de l'API. Sur le dos WebGL, `finish()` ne suffit pas — Chrome le
+ * traite comme un `flush()` et rend la main aussitôt ; sous SwiftShader, une
+ * image d'une seconde se mesurait à zéro et la chaîne s'allumait sur
+ * l'appareil le plus lent qui soit — et la fence de `waitForGPU()` y est
+ * scrutée à chaque image d'écran, ce qui arrondit la mesure à seize
+ * millisecondes : lire un pixel, lui, ne peut pas rendre avant que le dessin
+ * soit terminé, et ne coûte que sur ces quelques images.
+ */
+const pixel = new Uint8Array(4);
+function attendreDessin(renderer: THREE.WebGPURenderer, backend: BackendRendu): Promise<void> {
+  if (backend === 'webgpu') return renderer.waitForGPU();
+  try {
+    const gl = renderer.getContext() as unknown as WebGL2RenderingContext | null;
+    gl?.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+  } catch {
+    // Un contexte perdu ne se mesure pas ; on gardera le temps d'envoi.
+  }
+  return Promise.resolve();
+}
+
+/**
+ * Monte le moteur dans un conteneur. Lève tout de suite si ni WebGPU ni WebGL 2
+ * n'est disponible ; sinon `prete` dit quand — ou si — le moteur a démarré.
+ */
 export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {}): Scene3d {
+  if (!moteur3dDisponible()) {
+    throw new Error('Rendu 3D indisponible : ni WebGPU ni WebGL 2.');
+  }
   const doc = conteneur.ownerDocument;
+  const fenetre = doc.defaultView;
   const canvas = doc.createElement('canvas');
   canvas.className = 'atlas-toile';
   canvas.style.display = 'block';
@@ -137,42 +274,19 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   canvas.setAttribute('tabindex', '0');
   conteneur.appendChild(canvas);
 
-  const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-    alpha: false,
-    powerPreference: 'high-performance',
-  });
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  // La carte d'ombre se calcule **une fois par image**, pas une fois par
-  // `render()` : la chaîne de post-traitement dessine la scène deux fois (la
-  // couleur, puis les normales et la profondeur pour l'occlusion), et sans ce
-  // réglage la seconde passe recalculait 2048² d'ombres dont elle ne se sert
-  // pas. Et elle ne se calcule que quand l'appelant lève `ombre` : un plateau
-  // dont rien ne porte d'ombre différente garde sa carte d'une image à l'autre.
-  renderer.shadowMap.autoUpdate = false;
-  renderer.setPixelRatio(ratioPixels(doc.defaultView, options.ratioMax ?? 2));
-  // Les compteurs ne se remettent plus à zéro à chaque `render()` : une image
-  // composée en fait plusieurs, et c'est l'image entière qu'on veut mesurer.
-  // `dessiner()` les remet à zéro lui-même, une fois par image.
-  renderer.info.autoReset = false;
-
   const scene = new THREE.Scene();
+  // L'intensité se pose sur la scène avant même que la carte existe : c'est
+  // une propriété de la scène, que l'éclairage remplace quand il veut, et la
+  // carte, elle, arrive avec le moteur.
+  if (options.environnement !== false) scene.environmentIntensity = INTENSITE_ENVIRONNEMENT_DEPART;
 
+  let renderer: THREE.WebGPURenderer | null = null;
+  let backend: BackendRendu | null = null;
   let environnement: Environnement | null = null;
-  if (options.environnement !== false) {
-    environnement = creerEnvironnement(renderer);
-    scene.environment = environnement.texture;
-    scene.environmentIntensity = INTENSITE_ENVIRONNEMENT_DEPART;
-  }
-
   let largeur = 1;
   let hauteur = 1;
   let msParImage = 0;
+  let exposition = 1;
   let vivante = true;
 
   // --- La chaîne de post-traitement et sa décision.
@@ -180,10 +294,12 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let composeur: Composeur | null = null;
   let fabrique: typeof creerComposeur | null = null;
   let chargement: Promise<void> | null = null;
-  /** La chaîne a refusé de se monter (tampon flottant multi-échantillons absent, par exemple) : on n'insiste pas. */
+  /** La chaîne a refusé de se monter (cible flottante non dessinable, par exemple) : on n'insiste pas. */
   let echec = false;
   const durees: number[] = [];
   let msMesurees: number | null = null;
+  /** Une image mesurée attend sa barrière : on n'en mesure pas deux à la fois. */
+  let mesureEnCours = false;
   // --- La rétroaction : les intervalles entre images consécutives, chaîne
   //     allumée. Une cadence refusée le reste pour la session.
   const intervalles: number[] = [];
@@ -191,7 +307,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let cadenceRefusee = false;
   let derniereImage: number | null = null;
 
-  const ratio = (): number => ratioPixels(doc.defaultView, options.ratioMax ?? 2);
+  const ratio = (): number => ratioPixels(fenetre, options.ratioMax ?? 2);
   const reduit = (): boolean => options.reduit?.() ?? false;
   const voulu = (): boolean => !echec && decisionComposeur(qualite, msMesurees, reduit(), cadenceRefusee);
   /** Mesure-t-on encore ? Seulement en `auto`, sans chaîne, tant que la médiane manque. */
@@ -207,8 +323,8 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   /**
    * Aligne la chaîne sur la décision du moment : la monte si elle est voulue
    * et que son module est là, lance le chargement du module sinon, la démonte
-   * si elle ne l'est plus. Sans caméra, on ne peut que charger ou démonter ;
-   * l'image suivante fera le reste.
+   * si elle ne l'est plus. Sans caméra, ou sans moteur prêt, on ne peut que
+   * charger ou démonter ; l'image suivante fera le reste.
    */
   function aligner(camera: THREE.Camera | null): void {
     if (!vivante) return;
@@ -217,10 +333,17 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       return;
     }
     if (composeur) return;
+    const r = renderer;
+    const dos = backend;
+    if (!r || !dos) return;
     // three ne lève pas quand une cible flottante n'est pas dessinable : sans
     // l'extension, la chaîne rendrait un écran noir en silence. On le sait
-    // avant de charger quoi que ce soit, et on reste sur le rendu direct.
-    if (!composeurPossible((nom) => renderer.extensions.has(nom))) {
+    // avant de charger quoi que ce soit, et on reste sur le rendu direct. La
+    // question se pose aux extensions du dos WebGL, pas à `renderer.hasFeature`,
+    // qui ne connaît que la poignée de noms de sa table (`GLFeatureName`) et
+    // répondrait non à `EXT_color_buffer_float` sans même regarder.
+    const extensions = (r.backend as { extensions?: { has(nom: string): boolean } }).extensions;
+    if (!composeurPossible(dos, (nom) => extensions?.has(nom) === true)) {
       echec = true;
       console.warn('Chaîne de post-traitement indisponible', 'aucune cible flottante dessinable (EXT_color_buffer_float)');
       return;
@@ -228,7 +351,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     if (fabrique) {
       if (!camera) return;
       try {
-        composeur = fabrique(renderer, scene, camera, largeur, hauteur, ratio());
+        composeur = fabrique(r, scene, camera);
         // La chaîne repart mesurée de zéro : sa première image compile ses
         // programmes, la médiane des trente suivantes l'absorbe.
         intervalles.length = 0;
@@ -262,8 +385,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     largeur = l;
     hauteur = h;
     const r = ratio();
-    renderer.setPixelRatio(r);
-    renderer.setSize(l, h, false);
+    if (renderer) {
+      renderer.setPixelRatio(r);
+      renderer.setSize(l, h, false);
+    }
     composeur?.redimensionner(l, h, r);
     options.surRedimension?.(l, h);
   }
@@ -273,34 +398,58 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     : null;
   observateur?.observe(conteneur);
   mesurer();
-  aligner(null);
 
-  const horloge = doc.defaultView?.performance ?? { now: (): number => Date.now() };
+  const horloge = fenetre?.performance ?? { now: (): number => Date.now() };
 
   /**
-   * Attend que le processeur graphique ait **fini** l'image mesurée. Sans cela
-   * on mesurerait l'envoi des commandes, pas le dessin, et un appareil lent
-   * passerait pour rapide. `finish()` ne suffit pas : Chrome le traite comme un
-   * `flush()` et rend la main aussitôt — sous SwiftShader, une image d'une
-   * seconde se mesurait à zéro et la chaîne s'allumait sur l'appareil le plus
-   * lent qui soit. Lire un pixel, lui, ne peut pas rendre avant que le dessin
-   * soit terminé : c'est la seule barrière synchrone dont WebGL dispose, et
-   * elle ne coûte que sur ces quelques images.
+   * Le moteur : le dos décidé, l'objet construit, `init()` attendu, puis
+   * l'environnement cuit. Une scène démontée entre-temps jette ce qu'elle a
+   * commencé et rejette — sans que personne n'attende forcément : le rejet est
+   * tenu pour traité ici, et reste visible à qui attend `prete`.
    */
-  const pixel = new Uint8Array(4);
-  function attendreDessin(): void {
-    try {
-      const gl = renderer.getContext();
-      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-    } catch {
-      // Un contexte perdu ne se mesure pas ; on gardera le temps d'envoi.
+  const prete: Promise<void> = (async () => {
+    const dos = await choisirBackend(fenetre?.navigator as NavigateurGpu | undefined);
+    if (!vivante) throw new Error('Scène démontée avant que le moteur soit prêt.');
+    const r = new THREE.WebGPURenderer({
+      canvas,
+      antialias: true,
+      alpha: false,
+      powerPreference: 'high-performance',
+      forceWebGL: dos === 'webgl',
+    });
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    r.toneMapping = THREE.ACESFilmicToneMapping;
+    r.toneMappingExposure = exposition;
+    r.shadowMap.enabled = true;
+    r.shadowMap.type = THREE.PCFSoftShadowMap;
+    // Les compteurs ne se remettent pas à zéro à chaque passe : une image en
+    // fait plusieurs — ombres, scène, quads —, et c'est l'image entière qu'on
+    // veut mesurer. `dessiner()` les remet à zéro lui-même, une fois par image.
+    r.info.autoReset = false;
+    r.setPixelRatio(ratio());
+    r.setSize(largeur, hauteur, false);
+    await r.init();
+    if (!vivante) {
+      r.dispose();
+      throw new Error('Scène démontée avant que le moteur soit prêt.');
     }
-  }
+    renderer = r;
+    backend = backendDe(r);
+    if (options.environnement !== false) {
+      environnement = creerEnvironnement(r);
+      scene.environment = environnement.texture;
+    }
+    aligner(null);
+    options.surChangement?.();
+  })();
+  prete.catch(() => undefined);
 
   return {
-    renderer,
     scene,
     canvas,
+    prete,
+    get pret() { return renderer !== null; },
+    get backend() { return backend; },
     get largeur() { return largeur; },
     get hauteur() { return hauteur; },
     get msParImage() { return msParImage; },
@@ -309,6 +458,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     get calibration() { return calibration(); },
 
     dessiner(camera: THREE.Camera, image: OptionsImage = {}): number {
+      const r = renderer;
+      const dos = backend;
+      if (image.exposition !== undefined) exposition = image.exposition;
+      if (!r || !dos) return 0;
       const debut = horloge.now();
       // L'intervalle depuis l'image précédente est ce qu'elle a coûté, chaîne
       // comprise, si la boucle n'a pas dormi entre-temps. Il se lit **avant**
@@ -322,35 +475,39 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       }
       derniereImage = debut;
       aligner(camera);
-      const mesure = calibration();
-      renderer.info.reset();
-      // Le premier `render()` de l'image — le rendu direct, ou la passe de
-      // couleur de la chaîne — calcule les ombres et rabaisse le drapeau ; la
-      // passe des normales, qui vient après, les trouve faites. Et si rien qui
-      // porte ombre n'a bougé, la carte de l'image précédente sert encore.
-      renderer.shadowMap.needsUpdate = image.ombre !== false || mesure;
+      const mesure = calibration() && !mesureEnCours;
+      r.info.reset();
+      r.toneMappingExposure = exposition;
+      // La première passe de l'image qui trouve `needsUpdate` levé calcule les
+      // ombres et le rabaisse ; les suivantes les trouvent faites. Et si rien
+      // qui porte ombre n'a bougé, la carte de l'image précédente sert encore.
+      poserOmbres(scene, image.ombre !== false || mesure);
       if (composeur) composeur.rendre(camera);
-      else renderer.render(scene, camera);
-      if (mesure) attendreDessin();
-      const duree = horloge.now() - debut;
-      msParImage = msParImage === 0 ? duree : msParImage * 0.85 + duree * 0.15;
+      else r.render(scene, camera);
+      const envoi = horloge.now() - debut;
+      msParImage = msParImage === 0 ? envoi : msParImage * 0.85 + envoi * 0.15;
       if (mesure) {
-        durees.push(duree);
-        msMesurees = msCalibration(durees);
-        // Une image de plus, tout de suite : la mesure ne doit pas attendre
-        // qu'une animation veuille bien réveiller la boucle.
-        options.surChangement?.();
+        mesureEnCours = true;
+        void attendreDessin(r, dos).then(() => {
+          mesureEnCours = false;
+          if (!vivante) return;
+          durees.push(horloge.now() - debut);
+          msMesurees = msCalibration(durees);
+          // Une image de plus, tout de suite : la mesure ne doit pas attendre
+          // qu'une animation veuille bien réveiller la boucle.
+          options.surChangement?.();
+        });
       }
-      return duree;
+      return envoi;
     },
 
     mesures(): MesuresRendu {
       return {
-        triangles: renderer.info.render.triangles,
-        appels: renderer.info.render.calls,
+        ...depuisInfo(renderer?.info),
         msParImage,
         composeur: composeur !== null,
         msCalibration: msMesurees,
+        backend,
         // Le détail par famille se lit sur la scène, pas sur `info` : c'est un
         // parcours de quelques centaines d'objets, et on ne le demande qu'à la
         // mesure, jamais à l'image.
@@ -375,7 +532,12 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         environnement.dispose();
         environnement = null;
       }
-      renderer.dispose();
+      // Un moteur non initialisé ne se libère pas — `dispose()` y déréférence
+      // ce qu'`init()` n'a pas encore créé — : c'est la chaîne d'initialisation
+      // qui le jette elle-même en trouvant la scène démontée.
+      renderer?.dispose();
+      renderer = null;
+      backend = null;
       canvas.remove();
     },
   };

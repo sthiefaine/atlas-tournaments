@@ -40,6 +40,7 @@ export { normaliser, versParametresCarte, reglagesDe } from './parametres';
 export type { ParametresNormalises, ReglagesBiome } from './parametres';
 export { choisirMotif, creerCadre, creerCadreTrivial } from './symetrie';
 export type { Cadre, MotifSymetrie } from './symetrie';
+export { semerHerbes, TAILLE_TACHE_MIN, TAILLE_TACHE_MAX, DEGAGEMENT_QG } from './herbes';
 
 export { PROFILS_BIOME } from './parametres';
 export type { ProfilBiome } from './parametres';

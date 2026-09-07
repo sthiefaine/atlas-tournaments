@@ -106,8 +106,9 @@ export {
 } from './regles/victoire';
 export { appliquerEffets, campSuivant, fermerTour, ouvrirTour } from './regles/tour';
 export {
-  brouilleParCamp, cacheeAuContact, casesVisibles, estBrouillee, filtrerPourCamp, PART_VISION_BROUILLEE,
-  RAYON_BROUILLEUR_MOBILE, RAYON_STATION_RADAR, unitesVues, VISION_STATION_RADAR, visionUnite, voitCase,
+  BONUS_VISION_MONTAGNE, brouilleParCamp, cacheeAuContact, casesVisibles, estBrouillee, filtrerPourCamp,
+  ligneCoupee, MALUS_VISION_FORET, MALUS_VISION_NUIT, PART_VISION_BROUILLEE,
+  RAYON_BROUILLEUR_MOBILE, RAYON_STATION_RADAR, unitesVues, VISION_BATIMENT, VISION_STATION_RADAR, visionUnite, voitCase,
 } from './regles/vision';
 
 // Hooks, climat, mécaniques

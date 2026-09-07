@@ -96,8 +96,17 @@ function executerOrdre(
   const u = uniteParId(e, action.uniteId);
   if (!u) return refus('unite_inconnue') as Verdict;
   if (u.camp !== e.campCourant) return refus('pas_mon_unite') as Verdict;
-  if (u.etat !== 'prete') return refus('unite_deja_agi') as Verdict;
+  // Une unité `deplacee` (ordre en deux temps) ne donne plus que sa suite, sur
+  // place : un chemin ou un nouveau `puis` seraient un second déplacement.
+  const dejaDeplacee = u.etat === 'deplacee';
+  if (u.etat !== 'prete' && !dejaDeplacee) return refus('unite_deja_agi') as Verdict;
   if (u.dansTransport !== null) return refus('unite_deja_agi', 'unité embarquée') as Verdict;
+  if (dejaDeplacee) {
+    const surPlace = action.chemin.length <= 1
+      && (action.chemin[0] === undefined || (action.chemin[0].x === u.x && action.chemin[0].y === u.y));
+    if (!surPlace) return refus('deja_deplacee', 'une unité déjà déplacée donne sa suite sans bouger') as Verdict;
+    if (action.suite.type === 'puis') return refus('deja_deplacee', 'un seul déplacement par tour') as Verdict;
+  }
   const type = cat.unites[u.type];
   if (!type) return refus('catalogue_inconnu') as Verdict;
 
@@ -143,7 +152,9 @@ function executerOrdre(
   }
 
   const depart = { x: u.x, y: u.y };
-  const aBouge = arrivee.x !== u.x || arrivee.y !== u.y;
+  // Déjà déplacée : elle a bougé ce tour, et les règles « après mouvement »
+  // (tir indirect, tir après déplacement) la traitent comme telle.
+  const aBouge = dejaDeplacee || arrivee.x !== u.x || arrivee.y !== u.y;
   if (aBouge) {
     if (!uniteSur(e, arrivee) || uniteSur(e, arrivee)?.id === u.id) {
       let cout = 0;
@@ -180,7 +191,11 @@ function executerOrdre(
   const suite: Suite = interrompu ? { type: 'rien' } : action.suite;
   const resultat = executerSuite(e, cat, u, suite, aBouge, rng, evts);
   if (!resultat.ok) return resultat;
-  if (e.unites.some((x) => x.id === u.id)) u.etat = 'agi';
+  if (e.unites.some((x) => x.id === u.id)) {
+    // `puis` sans embuscade : la suite reste à donner. Une embuscade, elle,
+    // clôt le tour — on s'est fait surprendre, on ne joue plus.
+    u.etat = suite.type === 'puis' ? 'deplacee' : 'agi';
+  }
   return { ok: true };
 }
 
@@ -269,6 +284,9 @@ function executerSuite(
     }
     return { ok: true };
   }
+
+  // `puis` : rien à faire ici, la suite viendra par un second ordre.
+  if (suite.type === 'puis') return { ok: true };
 
   if (suite.type === 'furtivite') {
     // Se cacher ou se montrer (trait `furtif`, catalogue 6) : une bascule, après

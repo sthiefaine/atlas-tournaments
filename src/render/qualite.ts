@@ -28,6 +28,15 @@ export const QUALITES_RENDU: readonly QualiteRendu[] = Object.freeze(['auto', 'b
 /** La qualité par défaut : le rendu mesure et décide. */
 export const QUALITE_PAR_DEFAUT: QualiteRendu = 'auto';
 
+/**
+ * Le **dos** du moteur (7 septembre 2026) : un seul moteur, `WebGPURenderer`,
+ * qui tourne sur WebGPU quand le navigateur offre un adaptateur, et sur son
+ * dos WebGL 2 sinon — le même code, les mêmes nuanceurs compilés en GLSL au
+ * lieu de WGSL. La décision se prend **avant** de construire le moteur
+ * (`render3d/scene.ts`, `choisirBackend`) ; ce type dit laquelle a été prise.
+ */
+export type BackendRendu = 'webgpu' | 'webgl';
+
 /** Ramène n'importe quoi à une qualité valide. */
 export function normaliserQualite(brut: unknown): QualiteRendu {
   return brut === 'basse' ? brut : QUALITE_PAR_DEFAUT;
@@ -51,7 +60,9 @@ export const FACTEUR_COMPOSEUR = 2.3;
 
 /**
  * Le seuil de la qualité `auto`, en millisecondes par image **sans** la chaîne,
- * processeur graphique compris (`msCalibration`, mesurée par `readPixels`).
+ * processeur graphique compris (`msCalibration`, mesurée derrière une barrière
+ * du processeur graphique : `onSubmittedWorkDone` sur WebGPU, `readPixels` sur
+ * le dos WebGL).
  *
  * La règle est celle du budget : on n'allume la chaîne que si l'image
  * **composée** tiendra encore dans une image d'écran, c'est-à-dire si l'image
@@ -88,14 +99,17 @@ export const IMAGES_CADENCE = 30;
 export const SEUIL_MS_CADENCE = 24;
 
 /**
- * La chaîne peut-elle se monter sur ce contexte ? Elle dessine dans une cible
- * en demi-flottants, multi-échantillons ; sans `EXT_color_buffer_float` (ou sa
- * version demi-flottante seule), une telle cible n'est pas dessinable, et
- * three.js **ne lève pas** : l'écran serait noir, en silence. La question se
- * pose au contexte par `renderer.extensions.has`, qu'on reçoit ici en fonction
- * pour rester sans three.js.
+ * La chaîne peut-elle se monter sur ce moteur ? Elle dessine dans une cible en
+ * demi-flottants. Sur **WebGPU**, `rgba16float` est dessinable par le cœur de
+ * l'API : la réponse est oui, sans rien demander. Sur le dos **WebGL**, sans
+ * `EXT_color_buffer_float` (ou sa version demi-flottante seule), une telle
+ * cible n'est pas dessinable, et three.js **ne lève pas** : l'écran serait
+ * noir, en silence. La question se pose alors aux extensions du dos
+ * (`backend.extensions.has`), qu'on reçoit ici en fonction pour rester sans
+ * three.js.
  */
-export function composeurPossible(extensions: (nom: string) => boolean): boolean {
+export function composeurPossible(backend: BackendRendu, extensions: (nom: string) => boolean): boolean {
+  if (backend === 'webgpu') return true;
   return extensions('EXT_color_buffer_float') || extensions('EXT_color_buffer_half_float');
 }
 
@@ -127,7 +141,7 @@ export function msCalibration(durees: readonly number[], images = IMAGES_CALIBRA
  * La cadence représentative des dernières images consécutives, ou `null` tant
  * qu'il n'y en a pas assez : la **médiane** des `images` dernières durées entre
  * deux images. C'est la seule mesure qui compte le processeur graphique une
- * fois la chaîne allumée — la lecture d'un pixel n'est acceptable que pendant
+ * fois la chaîne allumée — attendre une barrière n'est acceptable que pendant
  * la calibration, jamais en jeu —, parce que le navigateur retarde l'image
  * suivante tant que la précédente n'est pas présentée. Elle n'a de sens que
  * sur des images consécutives : après un sommeil de la boucle, l'intervalle

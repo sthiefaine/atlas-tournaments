@@ -9,15 +9,23 @@
  * en premier.
  *
  * Tout est **pur** : un parcours d'objets three.js en mémoire, sans contexte
- * WebGL, testé avec des groupes construits à la main. On imite le compte de
- * `WebGLRenderer.renderBufferDirect` — index ou positions, `drawRange`, un
+ * graphique, testé avec des groupes construits à la main. On imite le compte
+ * que le moteur tient dans `renderer.info` (`Info.update` : un tirage, puis
+ * `instances × sommets / 3` triangles) — index ou positions, `drawRange`, un
  * tirage par groupe de matériau, instances multipliées, le seul niveau courant
  * d'un `LOD` — sans imiter le tri par frustum : une famille est comptée
  * **entière**, là où le rendu ne dessine que ce que la caméra voit. Les deux
  * chiffres coïncident carte cadrée en entier, et s'écartent en gros plan.
+ *
+ * Les compteurs de l'image entière, eux, se lisent sur `renderer.info`
+ * (`depuisInfo`). Depuis le moteur WebGPU (7 septembre 2026), `render.calls` y
+ * compte les **passes** — chaque `render()`, ombres et quads compris — et
+ * c'est `render.drawCalls` qui compte les tirages ; `WebGLRenderer` appelait
+ * `calls` ce que celui-ci appelle `drawCalls`, d'où cette fonction plutôt
+ * qu'une lecture directe qu'on aurait mal recopiée.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { MesureFamille } from '../render/rendu';
 
@@ -113,4 +121,22 @@ export function compterFamilles(racine: THREE.Object3D): Record<string, MesureFa
     if (enfant.name || total.mailles > 0) familles[nom] = total;
   }
   return familles;
+}
+
+/** La forme de `renderer.info` dont on a besoin : celle d'`Info`, sans en dépendre. */
+export interface CompteursInfo {
+  render: { drawCalls: number; triangles: number };
+}
+
+/**
+ * Les compteurs de l'image entière : triangles et appels de dessin, tels que
+ * le moteur les a comptés depuis la dernière remise à zéro — que `scene.ts`
+ * fait une fois par image, pas une fois par passe (`info.autoReset` éteint).
+ * Sans moteur initialisé, des zéros : rien n'a été dessiné.
+ */
+export function depuisInfo(info: CompteursInfo | null | undefined): { triangles: number; appels: number } {
+  if (!info) return { triangles: 0, appels: 0 };
+  // `Info.update` cumule `instances × (sommets / 3)` sans arrondir : une
+  // géométrie à sommets orphelins laisserait une fraction de triangle.
+  return { triangles: Math.round(info.render.triangles), appels: info.render.drawCalls };
 }

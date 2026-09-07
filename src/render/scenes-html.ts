@@ -1,8 +1,8 @@
 /**
  * Les **scènes transitoires** du HUD : ce que la partition (`partition.ts`) lui
  * donne à jouer par-dessus la carte — les chiffres de dégâts qui flottent,
- * l'écran de combat, le splash de pouvoir. Tout le reste de la partition est
- * l'affaire de la peau 3D ; le HUD l'ignore.
+ * l'écran de combat, le splash de pouvoir, le « ! » d'une embuscade. Tout le
+ * reste de la partition est l'affaire de la peau 3D ; le HUD l'ignore.
  *
  * Pourquoi un fichier à part de `hud-html.ts` : le HUD remplace le DOM de ses
  * onze emplacements à chaque rafraîchissement, et une scène qui y vivrait
@@ -32,12 +32,18 @@ import { type Geste, MISE_EN_SCENE, type Partition } from './partition';
 import type { PointVue } from './rendu';
 import { dessinerUnite } from './sprites/index';
 
-/** Ce que les scènes lisent du jeu : l'état, le catalogue, la langue, le camp. */
+/** Ce que les scènes lisent du jeu : l'état, le catalogue, la langue, le camp, ce qui se voit. */
 export interface VueScenes {
   etat: EtatPartie;
   catalogue: Catalogue;
   locale: string;
   camp: CampId;
+  /**
+   * Les identifiants des unités que le joueur voit ; `null` sans brouillard,
+   * absent : toutes. Une scène ancrée sur une unité que la carte cache ne se
+   * joue pas — un « ! » sur du noir dirait où l'adversaire s'est arrêté.
+   */
+  unitesVues?: ReadonlySet<string> | null;
 }
 
 /** Ce que les scènes peuvent demander au jeu. Aucun de ces appels ne mute un état. */
@@ -75,6 +81,19 @@ export const MS_FIXE = 600;
 
 /** De combien un chiffre monte avant de s'effacer, en pixels. */
 const MONTEE_CHIFFRE = 28;
+
+/** De combien le « ! » monte avant de s'effacer, en pixels. */
+const MONTEE_SURPRISE = 32;
+
+/**
+ * Le signe de l'embuscade. C'est une **ponctuation**, pas un libellé : il ne
+ * passe pas par `t()` pour la même raison que le « − » d'un chiffre ou le « ∞ »
+ * d'une pastille — il n'a rien à traduire, et une langue qui l'écrirait
+ * autrement (« ¡ », ou un signe sans point) changerait de grammaire, pas de
+ * mot. Les mots, eux, sont dans l'annonce `hud.embuscade`, qui passe par `t()`.
+ * Le nœud est `aria-hidden` : un lecteur d'écran lit l'annonce, pas le signe.
+ */
+const SIGNE_SURPRISE = '!';
 
 /** La taille des vignettes de l'écran de combat, en pixels logiques. */
 const TAILLE_VIGNETTE_COMBAT = 96;
@@ -115,6 +134,11 @@ const STYLE = `
 .atlas-chiffre[data-teinte='gain']{color:var(--gain)}
 .atlas-chiffre[data-fixe='oui']{animation:none;translate:0 -${MONTEE_CHIFFRE / 2}px}
 @keyframes atlas-chiffre{0%{opacity:0;translate:0 6px;scale:.7}14%{opacity:1;translate:0 0;scale:1.08}30%{scale:1}72%{opacity:1}100%{opacity:0;translate:0 -${MONTEE_CHIFFRE}px}}
+/* Le « ! » d'embuscade : ancré sur la case comme un chiffre, plus gros, dans la
+   couleur du signal ; il bondit, tient, puis monte et s'efface. */
+.atlas-surprise{position:absolute;transform:translate(-50%,-100%);font-size:30px;line-height:1;font-weight:900;color:var(--signal);text-shadow:0 2px 0 #0b1a22,0 0 8px #0b1a22cc;animation:atlas-surprise var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
+.atlas-surprise[data-fixe='oui']{animation:none;translate:0 -${MONTEE_SURPRISE / 2}px}
+@keyframes atlas-surprise{0%{opacity:0;translate:0 10px;scale:.5}12%{opacity:1;translate:0 -4px;scale:1.3}26%{scale:1;translate:0 0}68%{opacity:1;translate:0 -6px}100%{opacity:0;translate:0 -${MONTEE_SURPRISE}px}}
 /* Les bandes noires : la carte reste visible entre elles, comme sur une scène de dialogue. */
 .atlas-scenes .bandes{position:absolute;left:0;right:0;height:8vh;min-height:34px;background:#060d12;pointer-events:none}
 .atlas-scenes .bandes.haut{top:0;border-bottom:2px solid #ffffff14;animation:atlas-bande-haut .28s ease-out both}
@@ -320,7 +344,7 @@ export function monterScenes(
   }
 
   // -------------------------------------------------------------------------
-  // Les trois scènes
+  // Les quatre scènes
   // -------------------------------------------------------------------------
 
   function chiffre(g: Extract<Geste, { genre: 'chiffre' }>): Effet {
@@ -348,6 +372,43 @@ export function monterScenes(
         noeud.style.setProperty('--duree', `${g.duree}ms`);
         noeud.setAttribute('aria-hidden', 'true');
         noeud.textContent = chiffreSigne(g.valeur, g.teinte);
+        placer();
+        return noeud;
+      },
+      avancer: placer,
+    };
+  }
+
+  /**
+   * Le « ! » d'embuscade : au-dessus de l'unité qui s'est arrêtée net, relu à
+   * chaque image comme un chiffre. Une unité que le joueur ne voit pas n'en
+   * reçoit pas : le signe dirait où l'adversaire s'est arrêté.
+   */
+  function surprise(g: Extract<Geste, { genre: 'surprise' }>): Effet {
+    const fixe = g.duree === 0;
+    let noeud: HTMLElement | null = null;
+    const placer = (): void => {
+      if (!noeud) return;
+      const p = api.versEcran(g.case);
+      noeud.hidden = p === null;
+      if (p) {
+        noeud.style.left = `${Math.round(p.x)}px`;
+        // Plus haut qu'un chiffre : au-dessus de la tête, pas sur la poitrine.
+        noeud.style.top = `${Math.round(p.y - 22)}px`;
+      }
+    };
+    return {
+      debut: g.debut, fin: g.debut + (fixe ? MS_FIXE : g.duree), tente: false, fini: false, noeud: null,
+      creer: () => {
+        const v = api.vue();
+        if (v.unitesVues && !v.unitesVues.has(g.unite)) return null;
+        if (api.versEcran(g.case) === null) return null;
+        noeud = doc.createElement('div');
+        noeud.className = 'atlas-surprise';
+        if (fixe) noeud.dataset['fixe'] = 'oui';
+        noeud.style.setProperty('--duree', `${g.duree}ms`);
+        noeud.setAttribute('aria-hidden', 'true');
+        noeud.textContent = SIGNE_SURPRISE;
         placer();
         return noeud;
       },
@@ -500,6 +561,7 @@ export function monterScenes(
     terminer();
     for (const g of partition.gestes) {
       if (g.genre === 'chiffre') effets.push(chiffre(g));
+      else if (g.genre === 'surprise') effets.push(surprise(g));
       else if (g.genre === 'duel') effets.push(duel(g));
       else if (g.genre === 'pouvoir') effets.push(pouvoir(g));
     }

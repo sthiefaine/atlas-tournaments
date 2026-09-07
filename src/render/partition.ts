@@ -65,6 +65,11 @@ export const DUREES = Object.freeze({
    * plutôt que disparaître d'un coup.
    */
   voiler: 480,
+  /**
+   * Le « ! » d'embuscade (`04-gameplay.md` §2, ordre en deux temps) : la marche
+   * s'est arrêtée net sur une unité cachée. Bref — un signe, pas une scène.
+   */
+  surprise: 700,
 });
 
 /**
@@ -112,7 +117,15 @@ export type Geste =
    */
   | { genre: 'voiler'; unite: string; case: Case; debut: number; duree: number }
   /** L'unité se montre de nouveau : le voile se lève. */
-  | { genre: 'devoiler'; unite: string; case: Case; debut: number; duree: number };
+  | { genre: 'devoiler'; unite: string; case: Case; debut: number; duree: number }
+  /**
+   * L'embuscade : la marche s'est arrêtée sur `case` — la dernière case libre
+   * du trajet — parce qu'une unité adverse cachée s'y trouvait au contact. Le
+   * HUD pose un « ! » au-dessus de l'unité ; la peau peut y ajouter un sursaut.
+   * Écrit juste après le `glisser` d'un `deplacement` interrompu, ou seul si
+   * l'unité n'a pas fait un pas.
+   */
+  | { genre: 'surprise'; unite: string; case: Case; debut: number; duree: number };
 
 export type GenreGeste = Geste['genre'];
 
@@ -266,15 +279,26 @@ export function ecrirePartition(
         const cases = longueurChemin(chemin);
         // Même sans glissement, c'est là que l'unité est pour la suite de la salve.
         positions.set(e.uniteId, e.vers);
-        if (cases === 0) break;
-        const debut = depart(e.uniteId);
-        const duree = d(cases * DUREES.parCase);
         const camp = campDe(e.uniteId);
-        cadrer(e.uniteId, camp, e.de, debut);
-        gestes.push({ genre: 'glisser', unite: e.uniteId, chemin, debut, duree });
-        // Une longue marche sort du champ : la caméra rattrape l'arrivée.
-        if (cases >= MISE_EN_SCENE.casesCadrageArrivee) cadrer(`${e.uniteId}:arrivee`, camp, e.vers, debut + duree);
-        occuper(e.uniteId, debut, duree);
+        if (cases > 0) {
+          const debut = depart(e.uniteId);
+          const duree = d(cases * DUREES.parCase);
+          cadrer(e.uniteId, camp, e.de, debut);
+          gestes.push({ genre: 'glisser', unite: e.uniteId, chemin, debut, duree });
+          // Une longue marche sort du champ : la caméra rattrape l'arrivée.
+          if (cases >= MISE_EN_SCENE.casesCadrageArrivee) cadrer(`${e.uniteId}:arrivee`, camp, e.vers, debut + duree);
+          occuper(e.uniteId, debut, duree);
+        }
+        // L'embuscade : le « ! » tombe sur la case d'arrêt, une fois la figurine
+        // arrivée — et même si elle n'a pas fait un pas, une surprise au premier
+        // contact reste une surprise. Le moteur a déjà laissé tomber la suite :
+        // rien d'autre ne suivra pour cette unité dans la salve.
+        if (e.interrompu) {
+          const debut = depart(e.uniteId);
+          const duree = d(DUREES.surprise);
+          gestes.push({ genre: 'surprise', unite: e.uniteId, case: e.vers, debut, duree });
+          occuper(e.uniteId, debut, duree);
+        }
         break;
       }
       case 'attaque': {

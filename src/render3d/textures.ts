@@ -10,7 +10,7 @@
  * canvas hors écran.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import type { MatiereStyle } from '../assets/spec';
 import type { Biome } from '../schemas/types';
 

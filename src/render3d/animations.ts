@@ -34,7 +34,7 @@
  * pas arrivé. Il disparaîtra avec lui.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { EtatPartie, EvenementJeu, Unite } from '../engine/index';
 import { cleCase, depuisCle, pvAffiches, uniteParId, uniteSur } from '../engine/index';
@@ -191,10 +191,10 @@ function etatAvantCapture(ctx: ContexteAnimation, g: Extract<Geste, { genre: 'hi
 
 /** Les pans d'une palissade éphémère, posés autour d'une case et attachés aux effets. */
 function palissade(ctx: ContexteAnimation, c: Case, sol: number): {
-  pans: THREE.Group[]; mat: THREE.MeshStandardMaterial; liberer(): void;
+  pans: THREE.Group[]; mat: THREE.MeshStandardNodeMaterial; liberer(): void;
 } {
   const { x: cx, z: cz } = centre(c);
-  const mat = new THREE.MeshStandardMaterial({ color: COULEUR_PLANCHE, roughness: 0.96, transparent: true });
+  const mat = new THREE.MeshStandardNodeMaterial({ color: COULEUR_PLANCHE, roughness: 0.96, transparent: true });
   const geo = new THREE.BoxGeometry(1, 1, 1);
   const pans = [0, 1, 2, 3].map((k) => {
     const a = k * Math.PI / 2;

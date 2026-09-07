@@ -6,15 +6,16 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { genererSpecs, nomModele } from '../../src/assets/index';
 import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
-  analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, conformerModele, couleurMasquee, couleurPour,
-  creerChargeurModeles, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque,
-  lireInventaireReseau, lodForce, masqueDe, NOM_FIGURINE, NOM_NIVEAUX, NOM_ORIENTATION, nomFichierModele, nomsClips,
-  PROPORTIONS, ROTATION_AVANT, ROUTE_INVENTAIRE, SEUILS_LOD, teinterModele, type LectureFichier,
+  analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, clonerMateriauNoeud, conformerModele, convertirMateriaux,
+  couleurMasquee, couleurPour, creerChargeurModeles, creerLecteurClips, definirMasque, estMateriauStandard, estNomClip, forcerLod,
+  indexTextureMasque, lireInventaireReseau, lodForce, masqueDe, NOEUD_MASQUE_EQUIPE, NOM_FIGURINE, NOM_NIVEAUX,
+  NOM_ORIENTATION, nomFichierModele, nomsClips, PROP_COULEUR_EQUIPE, PROP_MASQUE_EQUIPE, PROPORTIONS, ROTATION_AVANT,
+  ROUTE_INVENTAIRE, SEUILS_LOD, teinterModele, versMateriauNoeud, type LectureFichier, type MateriauMasque,
 } from '../../src/render3d/modeles';
 import { Materiaux } from '../../src/render3d/unites';
 import { binTriangle, construireGlb, documentTest } from '../assets/glb';
@@ -196,18 +197,19 @@ test('teinter une base recolore des clones et laisse l’original neutre', () =>
   const { objet } = conformerModele({ niveaux: [scene], clips: [], kit: false });
   teinterModele(objet, 0, { style: { palette } as never });
   const corps = objet.getObjectByName('corps') as THREE.Mesh;
-  const mat = corps.material as THREE.MeshStandardMaterial;
+  const mat = corps.material as THREE.MeshStandardNodeMaterial;
   assert.notEqual(mat, original, 'le matériau teinté est un clone');
+  assert.ok(mat instanceof THREE.MeshStandardNodeMaterial, 'à nœuds : le classique du fichier a été converti à la conformation');
   assert.equal(`#${mat.color.getHexString()}`, palette.main);
   assert.equal(original.color.getHexString(), 'ffffff', 'l’original n’a pas bougé');
   assert.equal(corps.castShadow, true);
   const details = objet.getObjectByName('details') as THREE.Mesh;
-  assert.equal(`#${(details.material as THREE.MeshStandardMaterial).color.getHexString()}`, palette.dark);
+  assert.equal(`#${(details.material as THREE.MeshStandardNodeMaterial).color.getHexString()}`, palette.dark);
 
   // Sans style, la palette du camp : le bleu du camp 0.
   const sansStyle = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false });
   teinterModele(sansStyle.objet, 0);
-  const bleu = (sansStyle.objet.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const bleu = (sansStyle.objet.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   assert.equal(`#${bleu.color.getHexString()}`, '#3f86e0');
 });
 
@@ -220,13 +222,13 @@ test('teinter un kit ne touche pas le corps : seul le liseré prend la couleur d
   scene.add(corps, socle);
   const { objet } = conformerModele({ niveaux: [scene], clips: [], kit: true });
   teinterModele(objet, 1, { style: { palette } as never, kit: true });
-  const kit = (objet.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const kit = (objet.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   assert.equal(kit.color.getHex(), 0x123456, 'la livrée du kit reste sienne');
-  const lisere = (objet.getObjectByName('socle') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const lisere = (objet.getObjectByName('socle') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
   assert.equal(`#${lisere.color.getHexString()}`, '#e04b45', 'le rouge du camp 1, pas la palette de la nation');
 });
 
-test('un matériau masqué mélange la couleur dans le shader et garde son albédo', () => {
+test('un matériau masqué mélange la couleur par un nœud partagé et garde son albédo', () => {
   const scene = sceneLivree();
   const original = (scene.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const masque = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
@@ -234,40 +236,177 @@ test('un matériau masqué mélange la couleur dans le shader et garde son albé
   assert.equal(masqueDe(original), masque);
   const { objet } = conformerModele({ niveaux: [scene], clips: [], kit: false });
   teinterModele(objet, 0, { style: { palette } as never });
-  const teinte = (objet.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const teinte = (objet.getObjectByName('corps') as THREE.Mesh).material as MateriauMasque;
   assert.notEqual(teinte, original);
+  assert.ok(teinte instanceof THREE.MeshStandardNodeMaterial, 'un nœud ne se pose que sur un matériau à nœuds');
   assert.equal(teinte.color.getHexString(), 'ffffff', 'l’albédo n’est pas teinté : c’est le masque qui mélange');
   assert.equal(masqueDe(teinte), masque, 'le masque suit le clone');
   assert.equal(`#${couleurMasquee(teinte)!.getHexString()}`, palette.main);
-  assert.equal(teinte.defines?.['USE_UV'], '', 'vUv doit exister même sans carte d’albédo');
-  assert.equal(teinte.customProgramCacheKey(), 'atlas_masque_equipe', 'un seul programme pour tous les masques');
 
-  // Le shader injecté : uniformes posés, mélange après la lecture de l'albédo.
-  const shader = {
-    uniforms: {} as Record<string, { value: unknown }>,
-    vertexShader: '',
-    fragmentShader: '#include <common>\nvoid main() {\n#include <map_fragment>\n}',
-  };
-  teinte.onBeforeCompile(shader as never, {} as never);
-  assert.equal(shader.uniforms['atlasMasqueEquipe']?.value, masque);
-  assert.equal((shader.uniforms['atlasCouleurEquipe']?.value as THREE.Color).getHexString(), couleurMasquee(teinte)!.getHexString());
-  assert.match(shader.fragmentShader, /uniform sampler2D atlasMasqueEquipe;/);
-  assert.match(shader.fragmentShader, /#include <map_fragment>\n\tdiffuseColor\.rgb = mix\( diffuseColor\.rgb, atlasCouleurEquipe, texture2D\( atlasMasqueEquipe, vUv \)\.r \);/);
+  // Le nœud de couleur est **l'objet partagé** : la clé de programme d'un
+  // matériau à nœuds est faite des identités de ses nœuds, un graphe unique
+  // fait donc un seul programme pour tous les masques. Ce qui varie — la
+  // texture, la couleur — est lu sur le matériau, où le nœud le trouve.
+  assert.equal(teinte.colorNode, NOEUD_MASQUE_EQUIPE, 'un seul programme pour tous les masques');
+  assert.ok(NOEUD_MASQUE_EQUIPE.isNode, 'le nœud est un nœud TSL');
+  assert.equal(teinte[PROP_MASQUE_EQUIPE], masque, 'la texture que le nœud lit');
+  assert.equal(teinte[PROP_COULEUR_EQUIPE], couleurMasquee(teinte), 'et la couleur, le même objet vivant');
+  assert.equal((original as unknown as { colorNode?: unknown }).colorNode, undefined, 'l’original classique n’a rien reçu');
+
+  // Un second modèle masqué, d'un autre camp : même nœud, autre couleur.
+  const autre = sceneLivree();
+  definirMasque((autre.children[0] as THREE.Mesh).material as THREE.Material, masque);
+  const second = conformerModele({ niveaux: [autre], clips: [], kit: false });
+  teinterModele(second.objet, 1);
+  const rouge = (second.objet.getObjectByName('corps') as THREE.Mesh).material as MateriauMasque;
+  assert.equal(rouge.colorNode, NOEUD_MASQUE_EQUIPE);
+  assert.equal(`#${rouge[PROP_COULEUR_EQUIPE]!.getHexString()}`, '#e04b45', 'le rouge du camp 1');
+  assert.notEqual(rouge[PROP_COULEUR_EQUIPE], teinte[PROP_COULEUR_EQUIPE], 'chacun sa couleur, sur lui-même');
 });
 
-test('le double terni d’un matériau masqué reçoit le masque avec la couleur d’équipe inchangée', () => {
+test('le double terni d’un matériau masqué garde le nœud et reçoit texture et couleur d’équipe inchangées', () => {
   // Depuis le 6 septembre 2026, une unité qui a joué ne change que d'opacité :
-  // le clone terni garde la teinte de l'original, et le masque qu'on lui
-  // rend mélange la même couleur d'équipe.
+  // le clone terni garde la teinte de l'original et mélange la même couleur
+  // d'équipe. Le clone d'un matériau à nœuds garde `colorNode` de lui-même ;
+  // ce que le nœud lit sur le matériau, `Materiaux.translucide` le lui rend.
   const materiaux = new Materiaux();
-  const origine = new THREE.MeshStandardMaterial({ color: palette.main });
-  const terni = materiaux.terni(origine);
+  const origine = new THREE.MeshStandardNodeMaterial({ color: palette.main });
+  const masque = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+  const couleur = new THREE.Color(palette.main);
+  appliquerMasque(origine, masque, couleur);
+  const terni = materiaux.terni(origine) as MateriauMasque;
   assert.equal(terni.color.getHexString(), origine.color.getHexString(), 'même teinte');
   assert.equal(terni.transparent, true);
-  const masque = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
-  appliquerMasque(terni, masque, new THREE.Color(palette.main));
-  assert.equal(masqueDe(terni), masque);
+  assert.equal(terni.colorNode, NOEUD_MASQUE_EQUIPE, 'le nœud a suivi le clone');
+  assert.equal(masqueDe(terni), masque, 'le masque est rendu au double');
+  assert.equal(terni[PROP_MASQUE_EQUIPE], masque);
+  assert.equal(terni[PROP_COULEUR_EQUIPE], couleur, 'la couleur d’équipe même, pas une copie ternie');
+  // Un clone nu, lui, garde le nœud sans ce qu'il lit : c'est le cas que le double corrige.
+  const nu = origine.clone() as MateriauMasque;
+  assert.equal(nu.colorNode, NOEUD_MASQUE_EQUIPE);
+  assert.equal(nu[PROP_MASQUE_EQUIPE], undefined, 'Material.copy ne connaît pas nos propriétés');
+  assert.equal(masqueDe(nu), null, 'et masqueDe le dit : le masque est à rendre');
   materiaux.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Les matériaux classiques d'un fichier deviennent des matériaux à nœuds
+// ---------------------------------------------------------------------------
+
+test('un matériau classique devient son jumeau à nœuds, tous champs copiés, masque compris', () => {
+  const carte = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+  const normales = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1);
+  const masque = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+  const classique = new THREE.MeshStandardMaterial({
+    name: 'mat_corps', color: 0x123456, roughness: 0.3, metalness: 0.7, map: carte, normalMap: normales,
+    emissive: 0x00ff00, emissiveIntensity: 0.5, transparent: true, opacity: 0.4, side: THREE.DoubleSide,
+    alphaTest: 0.2, envMapIntensity: 2,
+  });
+  classique.normalScale.set(0.5, 0.25);
+  classique.userData['gltfExtensions'] = { x: 1 };
+  definirMasque(classique, masque);
+
+  const jumeau = versMateriauNoeud(classique) as THREE.MeshStandardNodeMaterial;
+  assert.ok(jumeau instanceof THREE.MeshStandardNodeMaterial);
+  assert.notEqual(jumeau, classique);
+  assert.notEqual(jumeau.uuid, classique.uuid, 'un objet neuf');
+  assert.equal(jumeau.name, 'mat_corps');
+  assert.equal(jumeau.color.getHex(), 0x123456);
+  assert.equal(jumeau.roughness, 0.3);
+  assert.equal(jumeau.metalness, 0.7);
+  assert.equal(jumeau.map, carte);
+  assert.equal(jumeau.normalMap, normales);
+  assert.deepEqual([jumeau.normalScale.x, jumeau.normalScale.y], [0.5, 0.25]);
+  assert.equal(jumeau.emissive.getHex(), 0x00ff00);
+  assert.equal(jumeau.emissiveIntensity, 0.5);
+  assert.equal(jumeau.transparent, true);
+  assert.equal(jumeau.opacity, 0.4);
+  assert.equal(jumeau.side, THREE.DoubleSide);
+  assert.equal(jumeau.alphaTest, 0.2);
+  assert.equal(jumeau.envMapIntensity, 2);
+  assert.deepEqual(jumeau.userData, { gltfExtensions: { x: 1 } });
+  assert.equal(masqueDe(jumeau), masque, 'le masque tenu à côté du classique suit le jumeau');
+  assert.ok(estMateriauStandard(jumeau) && estMateriauStandard(classique), 'standard, l’un et l’autre');
+  assert.equal(versMateriauNoeud(jumeau), jumeau, 'un matériau à nœuds est rendu tel quel');
+
+  // Physique → physique, basique → basique ; tout autre reste ce qu'il est.
+  const physique = versMateriauNoeud(new THREE.MeshPhysicalMaterial({ clearcoat: 0.6, transmission: 0.2 }));
+  assert.ok(physique instanceof THREE.MeshPhysicalNodeMaterial);
+  assert.equal((physique as THREE.MeshPhysicalNodeMaterial).clearcoat, 0.6);
+  assert.equal((physique as THREE.MeshPhysicalNodeMaterial).transmission, 0.2);
+  const basique = versMateriauNoeud(new THREE.MeshBasicMaterial({ color: 0xabcdef }));
+  assert.ok(basique instanceof THREE.MeshBasicNodeMaterial);
+  assert.equal((basique as THREE.MeshBasicNodeMaterial).color.getHex(), 0xabcdef);
+  const ligne = new THREE.LineBasicMaterial();
+  assert.equal(versMateriauNoeud(ligne), ligne, 'pas de jumeau connu : tel quel');
+});
+
+test('convertir un objet partage le jumeau entre les maillages qui partageaient le matériau, et la conformation ne laisse aucun classique', () => {
+  const scene = sceneLivree();
+  const partage = (scene.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const second = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), partage);
+  second.name = 'second';
+  const tableau = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), [partage, new THREE.MeshStandardMaterial({ name: 'mat_details' })]);
+  tableau.name = 'tableau';
+  scene.add(second, tableau);
+
+  const copie = scene.clone();
+  const crees = convertirMateriaux(copie);
+  assert.equal(crees.length, 2, 'deux classiques distincts, deux jumeaux');
+  const a = (copie.getObjectByName('corps') as THREE.Mesh).material;
+  const b = (copie.getObjectByName('second') as THREE.Mesh).material;
+  const c = (copie.getObjectByName('tableau') as THREE.Mesh).material as THREE.Material[];
+  assert.ok(a instanceof THREE.MeshStandardNodeMaterial);
+  assert.equal(a, b, 'un matériau partagé n’a qu’un jumeau, partagé de même');
+  assert.equal(c[0], a, 'jusque dans un tableau de matériaux');
+  assert.ok(c[1] instanceof THREE.MeshStandardNodeMaterial);
+  assert.equal((scene.children[0] as THREE.Mesh).material, partage, 'la source n’est pas touchée');
+  assert.deepEqual(convertirMateriaux(copie), [], 'convertir deux fois ne crée rien');
+
+  // La conformation convertit ses clones et laisse la scène lue intacte.
+  const { objet } = conformerModele({ niveaux: [scene], clips: [], kit: false });
+  objet.traverse((o) => {
+    if (!(o instanceof THREE.Mesh)) return;
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      assert.ok((m as { isNodeMaterial?: boolean }).isNodeMaterial, `${o.name} : un matériau à nœuds`);
+    }
+  });
+  assert.equal(((scene.getObjectByName('tableau') as THREE.Mesh).material as THREE.Material[])[0], partage);
+});
+
+test('le clone complet d’un matériau à nœuds garde couleur, matière et cartes, que `clone()` perd en r170', () => {
+  const carte = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+  const origine = new THREE.MeshStandardNodeMaterial({
+    name: 'mat_corps', color: 0x2f5fd0, roughness: 0.3, metalness: 0.7, map: carte, emissive: 0x2f5fd0,
+    emissiveIntensity: 0.045, transparent: true, opacity: 0.6, side: THREE.DoubleSide,
+  });
+  origine.colorNode = NOEUD_MASQUE_EQUIPE;
+  // Le constat, d'abord : sans quoi la fonction n'aurait pas de raison d'être.
+  const nu = origine.clone();
+  assert.equal(nu.colorNode, NOEUD_MASQUE_EQUIPE, 'clone() garde les nœuds');
+  assert.equal(nu.opacity, 0.6, 'et les champs de Material');
+  assert.equal(nu.color.getHex(), 0xffffff, 'mais pas la couleur du standard : blanc');
+  assert.equal(nu.map, null, 'ni ses cartes');
+
+  const clone = clonerMateriauNoeud(origine);
+  assert.notEqual(clone, origine);
+  assert.equal(clone.colorNode, NOEUD_MASQUE_EQUIPE, 'les nœuds suivent');
+  assert.equal(clone.name, 'mat_corps');
+  assert.equal(clone.color.getHex(), 0x2f5fd0, 'la couleur aussi');
+  assert.equal(clone.roughness, 0.3);
+  assert.equal(clone.metalness, 0.7);
+  assert.equal(clone.map, carte);
+  assert.equal(clone.emissive.getHex(), 0x2f5fd0);
+  assert.equal(clone.emissiveIntensity, 0.045);
+  assert.equal(clone.transparent, true);
+  assert.equal(clone.opacity, 0.6);
+  assert.equal(clone.side, THREE.DoubleSide);
+  // L'original n'a pas bougé, et un physique reste physique, ses champs avec lui.
+  assert.equal(origine.color.getHex(), 0x2f5fd0);
+  const physique = clonerMateriauNoeud(new THREE.MeshPhysicalNodeMaterial({ color: 0x123456, clearcoat: 0.4 }));
+  assert.ok(physique instanceof THREE.MeshPhysicalNodeMaterial);
+  assert.equal(physique.color.getHex(), 0x123456);
+  assert.equal(physique.clearcoat, 0.4);
 });
 
 // ---------------------------------------------------------------------------
@@ -326,12 +465,13 @@ test('un GLB qui porte des images s’analyse sous Node, et un masque référenc
   }
   const octets = construireGlb(doc, binTriangle(0.62, 0.5, 0.85));
   const tampon = (): ArrayBuffer => octets.buffer.slice(octets.byteOffset, octets.byteOffset + octets.byteLength) as ArrayBuffer;
-  const materiau = (scene: THREE.Group): THREE.MeshStandardMaterial => (scene.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const materiau = (scene: THREE.Group): THREE.MeshStandardNodeMaterial => (scene.getObjectByName('corps') as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
 
   // Sans lecteur d'image — Node n'en a pas —, le modèle passe et ses cartes valent null.
   const nu = await analyserGlb(tampon());
   assert.ok(nu, 'un fichier à images se lit sous Node');
   assert.equal(masqueDe(materiau(nu.scene)), null, 'sans image décodée, pas de masque');
+  assert.ok(materiau(nu.scene) instanceof THREE.MeshStandardNodeMaterial, 'la lecture rend des matériaux à nœuds, une fois pour toutes les nations');
 
   // Avec un lecteur injecté par le gestionnaire de chargement, le masque se retrouve par son nom.
   const manager = new THREE.LoadingManager();

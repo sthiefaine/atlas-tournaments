@@ -28,10 +28,18 @@
  * déjà conformé — orienté, au gabarit, en niveaux de détail — et ce calque lui
  * pose le même socle à liseré qu'au placeholder, puis joue ses clips dans un
  * `AnimationMixer` que les animations pilotent par `EtatVisuel.clip`.
+ *
+ * Depuis le passage à `WebGPURenderer` (7 septembre 2026), tout matériau
+ * d'ici est un **matériau à nœuds** — `MeshStandardNodeMaterial` pour les sept
+ * rôles et leurs doubles, `SpriteNodeMaterial` pour les étiquettes —, aux
+ * mêmes paramètres que les classiques qu'ils remplacent. Ce qui change pour
+ * ce calque tient en une règle : le clone d'un matériau à nœuds **garde ses
+ * nœuds** (le masque d'équipe d'un modèle livré suit donc le double terni) mais
+ * pas ce que le nœud lit sur le matériau — `doublerMateriau` le lui rend.
  */
 
-import * as THREE from 'three';
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import * as THREE from 'three/webgpu';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 // On importe les deux modules précis plutôt que `assets/index` : le point
 // d'entrée tire aussi le catalogue de spécifications, dont le rendu n'a que
@@ -46,7 +54,7 @@ import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
 import {
-  appliquerMasque, chargerModele, clonerFigurine, couleurMasquee, creerLecteurClips,
+  appliquerMasque, chargerModele, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips,
   masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
 } from './modeles';
 import {
@@ -159,21 +167,47 @@ export const OPACITE_FURTIVE = 0.45;
  * L'opacité d'un double translucide : celle demandée, sauf pour un matériau
  * déjà transparent — le verre — qui garde la sienne si elle est plus basse.
  */
-function opaciteTranslucide(origine: THREE.MeshStandardMaterial, opacite: number): number {
+function opaciteTranslucide(origine: THREE.MeshStandardNodeMaterial, opacite: number): number {
   return origine.transparent ? Math.min(origine.opacity, opacite) : opacite;
+}
+
+/**
+ * Le double translucide d'un matériau : son clone, à l'opacité demandée, qui
+ * écrit sa profondeur — même teinte, même matière, seule l'opacité parle.
+ *
+ * Le clone d'un matériau à nœuds **garde ses nœuds** : `NodeMaterial.copy`
+ * recopie `colorNode`, donc le nœud du masque d'équipe d'un modèle livré suit
+ * le double de lui-même. Ce qu'il ne garde pas, ce sont la texture et la
+ * couleur que ce nœud lit **sur le matériau** (`Material.copy` ne connaît que
+ * ses propres champs) : on les rend ici, avec la couleur d'équipe
+ * **inchangée** — un double qui a joué ou qui se cache n'est pas d'un autre
+ * camp. Sous WebGL, c'était `onBeforeCompile` que le clone perdait ; le geste
+ * est le même, la raison a changé.
+ */
+function doublerMateriau(origine: THREE.MeshStandardNodeMaterial, opacite: number): THREE.MeshStandardNodeMaterial {
+  // Le clone complet, pas `clone()` : en r170 celui-ci perd couleur, matière et
+  // cartes d'un matériau à nœuds (`clonerMateriauNoeud`).
+  const m = clonerMateriauNoeud(origine);
+  m.transparent = true;
+  m.opacity = opaciteTranslucide(origine, opacite);
+  m.depthWrite = true;
+  const masque = masqueDe(origine);
+  const couleur = couleurMasquee(origine);
+  if (masque && couleur) appliquerMasque(m, masque, couleur);
+  return m;
 }
 
 /** Un jeu de matériaux par camp et par style : c'est là que vit la couleur. */
 export class Materiaux {
-  private readonly jeux = new Map<string, Record<RolePiece, THREE.MeshStandardMaterial>>();
-  private readonly liseres = new Map<string, THREE.MeshStandardMaterial>();
+  private readonly jeux = new Map<string, Record<RolePiece, THREE.MeshStandardNodeMaterial>>();
+  private readonly liseres = new Map<string, THREE.MeshStandardNodeMaterial>();
   /** Les doubles translucides, par matériau d'origine puis par opacité. */
-  private readonly doubles = new Map<THREE.MeshStandardMaterial, Map<number, THREE.MeshStandardMaterial>>();
-  private materiauRepere: THREE.MeshStandardMaterial | null = null;
+  private readonly doubles = new Map<THREE.MeshStandardNodeMaterial, Map<number, THREE.MeshStandardNodeMaterial>>();
+  private materiauRepere: THREE.MeshStandardNodeMaterial | null = null;
   /** L'humidité en cours, 0 à 1 : elle s'applique à tout jeu, existant ou à venir. */
   private mouille = 0;
 
-  jeu(camp: CampId | null, style: StyleNation | null): Record<RolePiece, THREE.MeshStandardMaterial> {
+  jeu(camp: CampId | null, style: StyleNation | null): Record<RolePiece, THREE.MeshStandardNodeMaterial> {
     const cle = `${String(camp)}:${style?.code ?? ''}`;
     const memo = this.jeux.get(cle);
     if (memo) return memo;
@@ -183,21 +217,25 @@ export class Materiaux {
     const matiere = (role: RolePiece): { roughness: number; metalness: number; emissiveIntensity: number } => ({
       roughness: MATIERES[role].rugosite, metalness: MATIERES[role].metal, emissiveIntensity: MATIERES[role].emission,
     });
-    const jeu: Record<RolePiece, THREE.MeshStandardMaterial> = {
-      principal: new THREE.MeshStandardMaterial({ color: p.main, emissive: p.main, ...matiere('principal') }),
-      sombre: new THREE.MeshStandardMaterial({ color: p.dark, ...matiere('sombre') }),
-      clair: new THREE.MeshStandardMaterial({ color: accent, emissive: accent, ...matiere('clair') }),
-      materiel: new THREE.MeshStandardMaterial({ color: NEUTRES.materiel, ...matiere('materiel') }),
+    // Des matériaux à nœuds, aux paramètres des classiques qu'ils remplacent :
+    // le constructeur accepte le même objet, et `color`, `roughness`,
+    // `opacity` se règlent de la même main — c'est `WebGPURenderer` qui exige
+    // la famille, pas le calque.
+    const jeu: Record<RolePiece, THREE.MeshStandardNodeMaterial> = {
+      principal: new THREE.MeshStandardNodeMaterial({ color: p.main, emissive: p.main, ...matiere('principal') }),
+      sombre: new THREE.MeshStandardNodeMaterial({ color: p.dark, ...matiere('sombre') }),
+      clair: new THREE.MeshStandardNodeMaterial({ color: accent, emissive: accent, ...matiere('clair') }),
+      materiel: new THREE.MeshStandardNodeMaterial({ color: NEUTRES.materiel, ...matiere('materiel') }),
       // Le verre écrit sa profondeur : une cabine est un volume convexe posé sur
       // une caisse, et sans écriture un décalque au sol ou un bâtiment effacé
       // dessiné après elle se peindrait par-dessus. Il ne projette pas d'ombre
       // (`construirePlaceholder`) : une ombre pleine trahirait sa transparence.
-      verre: new THREE.MeshStandardMaterial({
+      verre: new THREE.MeshStandardNodeMaterial({
         color: NEUTRES.verre, emissive: LUEUR_VERRE, transparent: true, opacity: OPACITE_VERRE, depthWrite: true,
         ...matiere('verre'),
       }),
-      roulant: new THREE.MeshStandardMaterial({ color: NEUTRES.roulant, ...matiere('roulant') }),
-      peau: new THREE.MeshStandardMaterial({ color: NEUTRES.peau, ...matiere('peau') }),
+      roulant: new THREE.MeshStandardNodeMaterial({ color: NEUTRES.roulant, ...matiere('roulant') }),
+      peau: new THREE.MeshStandardNodeMaterial({ color: NEUTRES.peau, ...matiere('peau') }),
     };
     this.rugosites(jeu);
     this.jeux.set(cle, jeu);
@@ -205,11 +243,11 @@ export class Materiaux {
   }
 
   /** Le matériau du liseré de socle : la couleur d'équipe, et rien d'autre. */
-  lisere(camp: CampId | null): THREE.MeshStandardMaterial {
+  lisere(camp: CampId | null): THREE.MeshStandardNodeMaterial {
     const cle = String(camp);
     const memo = this.liseres.get(cle);
     if (memo) return memo;
-    const m = new THREE.MeshStandardMaterial({
+    const m = new THREE.MeshStandardNodeMaterial({
       color: paletteDe(camp).main, roughness: 0.4, metalness: 0.1,
     });
     this.liseres.set(cle, m);
@@ -222,9 +260,9 @@ export class Materiaux {
    * c'est un marquage, et un verre translucide posé sur l'anneau de camp en
    * prendrait la couleur, ce qui est précisément ce que les encoches évitent.
    */
-  repere(): THREE.MeshStandardMaterial {
+  repere(): THREE.MeshStandardNodeMaterial {
     if (!this.materiauRepere) {
-      this.materiauRepere = new THREE.MeshStandardMaterial({ color: NEUTRES.repere, roughness: 0.5, metalness: 0.02 });
+      this.materiauRepere = new THREE.MeshStandardNodeMaterial({ color: NEUTRES.repere, roughness: 0.5, metalness: 0.02 });
     }
     return this.materiauRepere;
   }
@@ -247,7 +285,7 @@ export class Materiaux {
   }
 
   /** La rugosité de chaque rôle d'un jeu : la sèche, moins ce que la pluie en ôte. */
-  private rugosites(jeu: Record<RolePiece, THREE.MeshStandardMaterial>): void {
+  private rugosites(jeu: Record<RolePiece, THREE.MeshStandardNodeMaterial>): void {
     for (const role of ROLES) {
       jeu[role].roughness = MATIERES[role].rugosite - (ROLES_MOUILLABLES.has(role) ? this.mouille * MOUILLAGE : 0);
     }
@@ -257,7 +295,7 @@ export class Materiaux {
    * Le double **terni** d'un matériau : celui qu'une unité porte quand elle a
    * déjà joué. C'est le double translucide à `OPACITE_JOUEE`, et rien d'autre.
    */
-  terni(origine: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
+  terni(origine: THREE.MeshStandardNodeMaterial): THREE.MeshStandardNodeMaterial {
     return this.translucide(origine, OPACITE_JOUEE);
   }
 
@@ -278,7 +316,7 @@ export class Materiaux {
    * travers de ses avants. Le verre, plus translucide que le seuil, reste à sa
    * propre opacité.
    */
-  translucide(origine: THREE.MeshStandardMaterial, opacite: number): THREE.MeshStandardMaterial {
+  translucide(origine: THREE.MeshStandardNodeMaterial, opacite: number): THREE.MeshStandardNodeMaterial {
     let parOpacite = this.doubles.get(origine);
     if (!parOpacite) {
       parOpacite = new Map();
@@ -286,10 +324,7 @@ export class Materiaux {
     }
     const memo = parOpacite.get(opacite);
     if (memo) return memo;
-    const m = origine.clone();
-    m.transparent = true;
-    m.opacity = opaciteTranslucide(origine, opacite);
-    m.depthWrite = true;
+    const m = doublerMateriau(origine, opacite);
     parOpacite.set(opacite, m);
     return m;
   }
@@ -301,7 +336,9 @@ export class Materiaux {
    * doubles s'accumuleraient ici à chaque unité retirée. Rend vrai s'il y
    * avait une entrée.
    */
-  oublier(origine: THREE.MeshStandardMaterial): boolean {
+  oublier(origine: THREE.Material): boolean {
+    // Seul un matériau standard à nœuds a pu recevoir un double.
+    if (!(origine instanceof THREE.MeshStandardNodeMaterial)) return false;
     const parOpacite = this.doubles.get(origine);
     if (!parOpacite) return false;
     for (const m of parOpacite.values()) m.dispose();
@@ -468,7 +505,7 @@ function disque(rayon: number, hauteur: number): THREE.BufferGeometry {
  * seul reste du masque de couleur d'équipe (`BRIEF.md`) : jamais la seule
  * différence entre deux unités, toujours présent pour la lisibilité.
  */
-function piecesSocle(camp: CampId | null, materiaux: Materiaux, jeu: Record<RolePiece, THREE.MeshStandardMaterial>): THREE.Mesh[] {
+function piecesSocle(camp: CampId | null, materiaux: Materiaux, jeu: Record<RolePiece, THREE.MeshStandardNodeMaterial>): THREE.Mesh[] {
   const anneau = new THREE.Mesh(disque(0.39, 0.024), materiaux.lisere(camp));
   anneau.name = 'socle_lisere';
   anneau.position.set(0, 0.009, 0);
@@ -497,7 +534,7 @@ function piecesSocle(camp: CampId | null, materiaux: Materiaux, jeu: Record<Role
  * silhouette se brouille, et c'est le travail du kit livré, pas du placeholder.
  */
 function piecesOrnements(
-  style: StyleNation | null, hauteur: number, jeu: Record<RolePiece, THREE.MeshStandardMaterial>,
+  style: StyleNation | null, hauteur: number, jeu: Record<RolePiece, THREE.MeshStandardNodeMaterial>,
 ): THREE.Mesh[] {
   if (!style) return [];
   const poses: THREE.Mesh[] = [];
@@ -597,10 +634,10 @@ export function monterModele(
  * les clones teintés —, à libérer avec lui. Ceux d'un placeholder sont
  * partagés par `Materiaux` et n'y figurent pas.
  */
-const materiauxPropres = new WeakMap<THREE.Object3D, THREE.MeshStandardMaterial[]>();
+const materiauxPropres = new WeakMap<THREE.Object3D, THREE.Material[]>();
 
 /** Les matériaux propres d'un corps monté, vides pour un placeholder. */
-export function materiauxPropresDe(corps: THREE.Object3D): readonly THREE.MeshStandardMaterial[] {
+export function materiauxPropresDe(corps: THREE.Object3D): readonly THREE.Material[] {
   return materiauxPropres.get(corps) ?? [];
 }
 
@@ -773,7 +810,7 @@ interface Entree {
    * d'origine : leur opacité se règle à chaque image sans rien recréer. Libérés
    * dès que le fondu finit ou que l'unité s'en va.
    */
-  fondu: Map<THREE.MeshStandardMaterial, THREE.MeshStandardMaterial> | null;
+  fondu: Map<THREE.MeshStandardNodeMaterial, THREE.MeshStandardNodeMaterial> | null;
 }
 
 /**
@@ -802,7 +839,7 @@ function memePose(p: PoseUnite | null, x: number, y: number, v: EtatVisuel): boo
 }
 
 /** Texture d'étiquette de PV, mémorisée par (points de vie, camp, a joué). */
-const etiquettes = new Map<string, THREE.SpriteMaterial>();
+const etiquettes = new Map<string, THREE.SpriteNodeMaterial>();
 
 /** Côté du canevas d'étiquette, en pixels ; une pastille de PV le remplit. */
 const COTE_ETIQUETTE = 64;
@@ -829,7 +866,7 @@ function dessinerCadenas(g: CanvasRenderingContext2D, cx: number, cy: number, h:
   g.fillRect(cx - corpsL / 2, cy - corpsH / 2 + h * 0.06, corpsL, corpsH);
 }
 
-function materiauEtiquette(doc: Document, pv: number, camp: CampId, agie: boolean): THREE.SpriteMaterial {
+function materiauEtiquette(doc: Document, pv: number, camp: CampId, agie: boolean): THREE.SpriteNodeMaterial {
   const cle = `${pv}:${camp}:${agie ? 'a' : 'p'}`;
   const memo = etiquettes.get(cle);
   if (memo) return memo;
@@ -866,7 +903,7 @@ function materiauEtiquette(doc: Document, pv: number, camp: CampId, agie: boolea
   }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
-  const mat = new THREE.SpriteMaterial({ map: tex, depthTest: true, transparent: true });
+  const mat = new THREE.SpriteNodeMaterial({ map: tex, depthTest: true, transparent: true });
   etiquettes.set(cle, mat);
   return mat;
 }
@@ -1063,17 +1100,14 @@ export function creerUnites(
   }
 
   /** Le double propre à une unité pour un fondu, créé une fois par matériau d'origine puis réglé. */
-  function fonduDe(entree: Entree, origine: THREE.MeshStandardMaterial, opacite: number): THREE.MeshStandardMaterial {
+  function fonduDe(entree: Entree, origine: THREE.MeshStandardNodeMaterial, opacite: number): THREE.MeshStandardNodeMaterial {
     entree.fondu ??= new Map();
     const memo = entree.fondu.get(origine);
     if (memo) {
       memo.opacity = opaciteTranslucide(origine, opacite);
       return memo;
     }
-    const m = origine.clone();
-    m.transparent = true;
-    m.opacity = opaciteTranslucide(origine, opacite);
-    m.depthWrite = true;
+    const m = doublerMateriau(origine, opacite);
     entree.fondu.set(origine, m);
     return m;
   }
@@ -1124,16 +1158,13 @@ export function creerUnites(
         return;
       }
       n.castShadow = false;
+      // Un double — partagé ou propre au fondu — est un clone complet : même
+      // matière, et le masque d'équipe rendu avec sa couleur (`doublerMateriau`).
+      // Seul un matériau standard à nœuds se double ; un modèle conformé n'en
+      // porte pas d'autre.
       const doubler = (m: THREE.Material): THREE.Material => {
-        if (!(m instanceof THREE.MeshStandardMaterial)) return m;
-        const double = partage ? materiaux.translucide(m, opacite) : fonduDe(entree, m, opacite);
-        // Le double est un clone, qui perd le shader du masque d'équipe : on le
-        // lui rend, avec la couleur d'équipe **inchangée** — seule l'opacité
-        // dit qu'elle a joué, ou qu'elle se cache.
-        const masque = masqueDe(m);
-        const couleur = couleurMasquee(m);
-        if (masque && couleur && !masqueDe(double)) appliquerMasque(double, masque, couleur);
-        return double;
+        if (!(m instanceof THREE.MeshStandardNodeMaterial)) return m;
+        return partage ? materiaux.translucide(m, opacite) : fonduDe(entree, m, opacite);
       };
       n.material = Array.isArray(repos) ? repos.map(doubler) : doubler(repos);
     });
@@ -1269,7 +1300,9 @@ export function creerUnites(
         }
         // Seul le camp qui joue voit ses unités se ternir : une unité adverse
         // « non prête » n'est qu'un reste du tour précédent, pas une information.
-        const agie = u.etat !== 'prete' && u.camp === etat.campCourant;
+        // Une unité `deplacee` (ordre en deux temps, 7 septembre 2026) a encore sa
+        // suite à donner : elle ne s'éteint pas. Seules `agi` et `produite` ont joué.
+        const agie = (u.etat === 'agi' || u.etat === 'produite') && u.camp === etat.campCourant;
         // Les points retenus par un geste en cours l'emportent : l'étiquette
         // ne devance pas le coup (`animations.ts`, `encaisser`).
         majEtiquette(entree, visuel(u.id).pv ?? pvAffiches(u.pv), agie);

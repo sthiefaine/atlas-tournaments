@@ -3,7 +3,7 @@
 // bougent. Testé sur l'identité des géométries, avec un relief plat.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { creerSurbrillances } from '../../src/render3d/surbrillances';
 import type { Surbrillance } from '../../src/render/surbrillance';
@@ -39,6 +39,14 @@ test('deux vues identiques gardent les mêmes géométries', () => {
   assert.equal(m['chemin']!.geometry, avant.chemin);
   assert.equal(m['curseur']!.geometry, avant.curseur);
   assert.ok(m['deplacement']!.visible);
+  // Des décalques en matériau à nœuds, qui testent la profondeur sans l'écrire.
+  for (const nom of ['deplacement', 'chemin', 'lisere', 'curseur'] as const) {
+    const mat = m[nom]!.material;
+    assert.ok(mat instanceof THREE.MeshBasicNodeMaterial, `${nom} : un matériau à nœuds`);
+    assert.equal(mat.depthWrite, false, `${nom} : sans écriture de profondeur`);
+    assert.equal(mat.depthTest, true, `${nom} : un décalque ne passe jamais devant une unité`);
+    assert.equal(mat.transparent, true);
+  }
   couche.dispose();
 });
 
@@ -103,6 +111,14 @@ test('sous brouillard, une case hors de vue reçoit un décalque plat qui ne tra
   assert.equal(hauteurs.size, 1, 'tous ses sommets sont à la même altitude : aucun relief');
   assert.equal((plate.material as THREE.Material & { depthTest: boolean }).depthTest, false,
     'et rien ne peut y découper un trou en forme de montagne');
+  // La même couleur et la même opacité que la nappe vue : en r170, un matériau
+  // à nœuds cloné perd sa couleur, la nappe de brouillard est donc construite.
+  const vueMat = m['attaque']!.material as THREE.MeshBasicNodeMaterial;
+  const plateMat = plate.material as THREE.MeshBasicNodeMaterial;
+  assert.ok(plateMat instanceof THREE.MeshBasicNodeMaterial);
+  assert.equal(plateMat.color.getHex(), vueMat.color.getHex(), 'le rouge de l’enveloppe de tir, pas du blanc');
+  assert.equal(plateMat.opacity, vueMat.opacity);
+  assert.equal(plateMat.depthWrite, false);
 
   // Tout redevient visible : plus rien à plat.
   couche.majVisibles(null);

@@ -345,5 +345,16 @@ function mesurerCarte(map: MapDef, a: Analyse): Record<string, number> {
     radars_par_camp: Math.round(compter('radar') / Math.max(1, map.camps)),
     ports_sans_mer: a.portsSansMer,
     ports_relies: a.portsIsoles === 0 ? 1 : 0,
+    // Hautes herbes (7 septembre 2026) : la part de la plaine — plaine et
+    // herbe confondues — réellement semée, à comparer à `ratioHerbesHautes`.
+    // Elle est en dessous quand la séparation des taches ne permet plus de tout
+    // caser (vers 0,5), et nulle sur un biome sans plaine (le désert, tout en sable).
+    herbe_haute_part: partHerbe(compter('plaine'), compter('herbe_haute')),
   };
+}
+
+/** Part d'herbe parmi les cases qui étaient de la plaine, à quatre décimales. */
+function partHerbe(plaines: number, herbes: number): number {
+  const anciennes = plaines + herbes;
+  return anciennes === 0 ? 0 : Number((herbes / anciennes).toFixed(4));
 }

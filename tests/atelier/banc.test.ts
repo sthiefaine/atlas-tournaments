@@ -66,7 +66,7 @@ test('la carte-catalogue est une carte valide, pas un objet bricolé', () => {
   assert.ok(r.ok, `carte du banc invalide : ${JSON.stringify(r.ok ? [] : r.erreurs)}`);
 });
 
-test('elle pose les quatorze terrains du canon, aucun oublié', () => {
+test('elle pose les quinze terrains du canon, aucun oublié', () => {
   const carte = carteBanc();
   const vus = new Set<CleTerrain>();
   for (const ligne of carte.grille) {

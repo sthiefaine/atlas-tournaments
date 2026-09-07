@@ -10,10 +10,10 @@ import {
 } from '@/engine/index';
 import { t } from '@/i18n/index';
 import {
-  ambianceDe, casesObjectifs, commandantsDuScenario, webgl2Disponible,
+  ambianceDe, casesObjectifs, commandantsDuScenario,
   type Surbrillance, type VueInteraction,
 } from '@/render/index';
-import { creerRendu3d } from '@/render3d/index';
+import { creerRendu3d, rendu3dDisponible } from '@/render3d/index';
 import { validerMapDef, validerScenario, type Biome } from '@/schemas/index';
 
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
@@ -36,8 +36,8 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  *
  * Trois économies, parce qu'une page d'accueil n'a pas le droit de chauffer un
  * appareil : la boucle s'arrête quand l'onglet passe en arrière-plan, aucune IA
- * ne tourne tant qu'on ne la regarde pas, et rien ne se monte sans WebGL 2 ni
- * sous `prefers-reduced-motion`.
+ * ne tourne tant qu'on ne la regarde pas, et rien ne se monte sans moteur —
+ * WebGPU ou WebGL 2 — ni sous `prefers-reduced-motion`.
  *
  * On montre en plus la **grammaire du jeu** : avant chaque déplacement, la
  * portée de l'unité s'allume en vert et la flèche trace son chemin. C'est
@@ -118,9 +118,9 @@ export default function Attract() {
     const { catalogue: cat, commandants, etatNeuf } = exhibition;
 
     // Le rendu vectoriel n'existe plus : l'attract se joue en 3D comme le jeu,
-    // et ne se monte pas du tout sans WebGL 2 — le plateau SVG du serveur reste
-    // alors seul à l'écran, ce qui est très bien.
-    if (!webgl2Disponible()) return undefined;
+    // et ne se monte pas du tout sans moteur — WebGPU, ou son repli WebGL 2 :
+    // le plateau SVG du serveur reste alors seul à l'écran, ce qui est très bien.
+    if (!rendu3dDisponible()) return undefined;
     const rendu = creerRendu3d({
       biome: exhibition.biome,
       paysParCamp: { 0: 'fr', 1: 'lu' },

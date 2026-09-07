@@ -45,6 +45,11 @@ export interface VueJeu {
   phase: Phase;
   curseur: Case | null;
   selection: string | null;
+  /**
+   * Le chemin pointé sort de la vue (brouillard) : l'unité avancera d'abord et
+   * décidera une fois arrivée, sans menu avant. Le panneau d'unité le dit.
+   */
+  cheminAveugle?: boolean;
   menu: { ancre: Case; options: readonly OptionMenu[] } | null;
   production: { batiment: Case; unites: readonly CleUnite[] } | null;
   /** La visée en cours : de quoi prévoir le duel avant de confirmer. */
@@ -178,8 +183,11 @@ const STYLE = `
 .atlas-hud .stats [data-alerte='orange']{color:var(--alerte)}
 .atlas-hud .stats [data-alerte='rouge']{color:var(--alerte-grave)}
 .atlas-hud .stats .embarquees{display:block;margin-top:2px;color:#d6e2ea}
-/* Furtive : un état, dit en clair, dans la couleur du signal — c'est le seul mot du panneau qui n'est pas un chiffre. */
-.atlas-hud .stats .furtive{color:var(--signal);font-weight:800}
+/* Furtive, déplacée : un état, dit en clair, dans la couleur du signal — les seuls mots du panneau qui ne sont pas des chiffres. */
+.atlas-hud .stats .furtive,.atlas-hud .stats .deplacee{color:var(--signal);font-weight:800}
+/* Le chemin pointé sort de la vue : une ligne sous le panneau, dans la couleur du signal, l'œil pour signe. */
+.atlas-hud .inspect .aveugle{display:flex;align-items:center;gap:8px;padding:7px 12px 9px;border-top:1px solid #ffffff14;font-size:12px;font-weight:800;color:var(--signal)}
+.atlas-hud .inspect .aveugle .symbole{width:18px;height:18px}
 .atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;font-size:22px;border:1px solid #ffffff20}
 .atlas-hud .inspect .in>.retour:first-of-type{margin-left:auto}
 /* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
@@ -779,6 +787,10 @@ export function monterHudHtml(
       // Furtive : repérée au contact seulement. Dit en clair, parce qu'une
       // figurine translucide ne se lit pas au doigt.
       if (unite.furtive === true) lignes.push(`<span class="furtive">${ech(api.t('hud.furtive'))}</span>`);
+      // Déplacée par un ordre en deux temps : elle a bougé, sa suite reste à
+      // donner, et la sélectionner rouvre son menu. Dit en clair aussi — une
+      // unité qui ne bouge plus sans avoir joué n'a pas d'autre signe.
+      if (unite.etat === 'deplacee') lignes.push(`<span class="deplacee">${ech(api.t('hud.deplacee'))}</span>`);
       // Ce qu'un transport porte : sans cette ligne, deux unités embarquées
       // n'existent nulle part à l'écran.
       if (unite.cargo.length > 0) {
@@ -805,6 +817,11 @@ export function monterHudHtml(
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
       + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}</div>` : '')
       + `</div>${detail}${v.selection && !v.attenteIa ? boutonRetour() : ''}</div>`
+      // Le chemin pointé traverse du noir : on prévient que le menu viendra
+      // après la marche, pas avant. L'œil est le signe de la vision partout ailleurs.
+      + (v.cheminAveugle === true
+        ? `<div class="aveugle" role="status">${iconeOrdre('vue')}<span>${ech(api.t('hud.chemin_aveugle'))}</span></div>`
+        : '')
       + (unite && ficheInspection ? blocFiche(v, unite.type, true, unite) : '')
       + `</div>`;
   }
@@ -923,14 +940,17 @@ export function monterHudHtml(
 
   /**
    * Fin de tour, et **ce qu'il reste à jouer**. Le compte se lit sur l'état, sans
-   * rien demander au moteur : une unité prête est une unité de mon camp qui n'a
-   * pas agi et qui n'est pas dans un transport. C'est l'information qui manquait
-   * pour ne pas terminer son tour par accident.
+   * rien demander au moteur : une unité de mon camp, hors transport, qui peut
+   * encore recevoir un ordre — prête, ou déplacée par un ordre en deux temps et
+   * dont la suite reste à donner. Une unité produite ce tour ne compte pas :
+   * elle ne peut rien faire avant la journée suivante, et la compter ferait
+   * hésiter devant un bouton qui n'a plus rien à attendre. C'est l'information
+   * qui manquait pour ne pas terminer son tour par accident.
    */
   function panneauFinTour(v: VueJeu): string {
     const actif = !v.attenteIa && !v.etat.partie.terminee && v.etat.campCourant === v.camp;
     const pretes = v.etat.unites.filter(
-      (u) => u.camp === v.camp && u.etat === 'prete' && !u.dansTransport,
+      (u) => u.camp === v.camp && (u.etat === 'prete' || u.etat === 'deplacee') && !u.dansTransport,
     ).length;
     const reste = pretes > 0 ? api.t('hud.unites_pretes', { n: pretes }) : api.t('hud.tout_joue');
     return `<div class="fintour">`

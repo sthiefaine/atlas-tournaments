@@ -10,7 +10,7 @@
  * Deux principes le tiennent.
  *
  * **On montre le catalogue, pas une partie.** Une carte de mission ne pose
- * jamais les quatorze terrains ni les vingt-quatre unités : on attend qu'ils
+ * jamais les quinze terrains ni les vingt-quatre unités : on attend qu'ils
  * apparaissent,
  * et un défaut de rendu se découvre en jouant, tard. La carte-catalogue les
  * range côte à côte, y compris les cas qui ont réellement cassé — un bâtiment
@@ -110,8 +110,8 @@ export const RANGS = {
  * carte. Une carte de mission n'aligne jamais les six pièces côte à côte.
  */
 const GRILLE_BANC: readonly string[] = [
-  'PFMRSVNWCUATOPPPPPPPPPPP',
-  'PFMRSVNWCUATOPPPPPPPPPPP',
+  'PFMRSVNWCUATOGPPPPPPPPPP',
+  'PFMRSVNWCUATOGPPPPPPPPPP',
   'PPPPPPPPPPPPPPPPPPPPPPPP',
   'CCCUUUAAAHHTTTPCPPPPPPPP',
   'PPPPPPPPPPPPPPPPPPPPPPPP',
@@ -173,7 +173,7 @@ export const BASES_JAMAIS_VUES: Readonly<Record<string, BaseSilhouette>> = Objec
   roquettes: 'rail',
 });
 
-/** La carte-catalogue : quatorze terrains, six bâtiments, vingt-quatre unités par camp. */
+/** La carte-catalogue : quinze terrains, six bâtiments, vingt-quatre unités par camp. */
 export function carteBanc(): MapDef {
   const proprietaires: Record<string, CampId> = {};
   // Chaque famille de bâtiment est montrée trois fois : camp 0, camp 1, neutre.

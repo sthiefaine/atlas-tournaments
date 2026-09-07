@@ -689,7 +689,7 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
 
 const CLES_TERRAIN_OBJET = [
   'cle', 'car', 'nom', 'defense', 'couts', 'capturable', 'revenus', 'produit',
-  'ravitaille', 'soigne', 'cacheEnBrouillard', 'palette',
+  'ravitaille', 'soigne', 'cacheEnBrouillard', 'cacheSeulement', 'palette',
 ] as const;
 
 /** Valide un terrain (`03-schemas.md` §4, `04-gameplay.md` §4). */
@@ -697,7 +697,7 @@ export function validerTerrain(valeur: unknown): Resultat<Terrain> {
   const ctx = new Contexte();
   const o = objet(ctx, valeur, '', CLES_TERRAIN_OBJET);
   if (!o) return conclure(ctx, valeur as Terrain);
-  requis(ctx, o, '', CLES_TERRAIN_OBJET);
+  requis(ctx, o, '', CLES_TERRAIN_OBJET.filter((k) => k !== 'cacheSeulement'));
 
   const c = enumeration(ctx, o['cle'], 'cle', CLES_TERRAIN);
   const car = chaine(ctx, o['car'], 'car', { min: 1, max: 1 });
@@ -722,7 +722,15 @@ export function validerTerrain(valeur: unknown): Resultat<Terrain> {
   const produit = tableau(ctx, o['produit'], 'produit', { max: 24 }, (e, cc) => cle(ctx, e, cc));
   const ravitaille = booleen(ctx, o['ravitaille'], 'ravitaille');
   entier(ctx, o['soigne'], 'soigne', { min: 0, max: 2 });
-  booleen(ctx, o['cacheEnBrouillard'], 'cacheEnBrouillard');
+  const cache = booleen(ctx, o['cacheEnBrouillard'], 'cacheEnBrouillard');
+  // `cacheSeulement` (7 septembre 2026) : une cachette réservée à des types de
+  // mouvement — l'herbe haute. Sans cachette, la liste n'aurait aucun sens.
+  if (presente(o, 'cacheSeulement')) {
+    const seuls = tableau(ctx, o['cacheSeulement'], 'cacheSeulement', { min: 1, max: TYPES_MOUVEMENT.length },
+      (e, cc) => enumeration(ctx, e, cc, TYPES_MOUVEMENT));
+    if (seuls) sansDoublon(ctx, seuls, 'cacheSeulement');
+    if (cache === false) ctx.faute('cacheSeulement', "une cachette réservée suppose cacheEnBrouillard: true");
+  }
   palette(ctx, o['palette'], 'palette');
 
   if (capturable === true && revenus !== undefined && produit !== undefined
@@ -750,11 +758,11 @@ export function validerTerrain(valeur: unknown): Resultat<Terrain> {
 const CLES_PARAMETRES = [
   'largeur', 'hauteur', 'camps', 'biome', 'ratioMer', 'ratioRelief', 'villesParCamp',
   'villesNeutres', 'usinesParCamp', 'aeroportsParCamp', 'symetrie', 'densiteRoutes', 'mecanique',
-  'portsParCamp', 'radarsParCamp',
+  'portsParCamp', 'radarsParCamp', 'ratioHerbesHautes',
 ] as const;
 
 /** Paramètres facultatifs : absents, le générateur les borne à zéro. */
-const PARAMETRES_FACULTATIFS: readonly string[] = ['mecanique', 'portsParCamp', 'radarsParCamp'];
+const PARAMETRES_FACULTATIFS: readonly string[] = ['mecanique', 'portsParCamp', 'radarsParCamp', 'ratioHerbesHautes'];
 
 /** Lit les paramètres de génération d'une carte. */
 function parametresCarte(ctx: Contexte, v: unknown, chemin: string): void {
@@ -774,6 +782,7 @@ function parametresCarte(ctx: Contexte, v: unknown, chemin: string): void {
   // Ports et radars (catalogue 5 et 3) : facultatifs, et bornés comme les aéroports.
   if (presente(o, 'portsParCamp')) entier(ctx, o['portsParCamp'], sous(chemin, 'portsParCamp'), { min: 0, max: 2 });
   if (presente(o, 'radarsParCamp')) entier(ctx, o['radarsParCamp'], sous(chemin, 'radarsParCamp'), { min: 0, max: 2 });
+  if (presente(o, 'ratioHerbesHautes')) nombre(ctx, o['ratioHerbesHautes'], sous(chemin, 'ratioHerbesHautes'), { min: 0, max: 0.5 });
   enumeration(ctx, o['symetrie'], sous(chemin, 'symetrie'), SYMETRIES);
   nombre(ctx, o['densiteRoutes'], sous(chemin, 'densiteRoutes'), { min: 0, max: 1 });
   if (presente(o, 'mecanique')) {

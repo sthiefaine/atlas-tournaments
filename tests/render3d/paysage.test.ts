@@ -5,7 +5,7 @@
 // quoi semer.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { carteBanc } from '../../src/app/atelier/banc';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
@@ -14,8 +14,9 @@ import {
   creerPaysage, ESPECES, GENRES_PAYSAGE, genreRivage, memesVisibles, PAYSAGES, segmentsRivage, semerPaysage,
   type Accessoire,
 } from '../../src/render3d/paysage';
-import { grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
+import { creerUniformesBrouillard, grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
 import { BIOMES, CARACTERE_PAR_TERRAIN, type CleTerrain } from '../../src/schemas/types';
+import { construireNuanceur, ligneDe } from './nuanceur';
 
 const TERRAIN_PAR_CARACTERE: Readonly<Record<string, CleTerrain>> = Object.fromEntries(
   Object.entries(CARACTERE_PAR_TERRAIN).map(([cle, car]) => [car, cle as CleTerrain]),
@@ -31,27 +32,9 @@ function grilleTemoin(): GrilleTerrain {
   };
 }
 
-/** Compile un matériau comme le ferait three, pour lire ce qui a été injecté. */
-function compiler(mat: THREE.MeshStandardMaterial): {
-  uniforms: Record<string, { value: unknown }>; vertexShader: string; fragmentShader: string;
-} {
-  const shader = {
-    uniforms: {} as Record<string, { value: unknown }>,
-    vertexShader: 'void main() {\n#include <project_vertex>\n}',
-    fragmentShader: 'void main() {\n#include <opaque_fragment>\n#include <fog_fragment>\n}',
-  };
-  mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
-  return shader;
-}
-
 /** Les uniformes du brouillard, tels que le plateau les partage. */
 function uniformesTemoins(): UniformesBrouillard {
-  return {
-    tVisibles: { value: new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat) },
-    uCarteBrouillard: { value: new THREE.Vector2(12, 12) },
-    uFacteurBrouillard: { value: 0 },
-    uTeinteBrouillard: { value: new THREE.Color(0x000000) },
-  };
+  return creerUniformesBrouillard(new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat), 12, 12);
 }
 
 const INTERDITS: ReadonlySet<CleTerrain> = new Set<CleTerrain>(['ville', 'qg', 'usine', 'aeroport', 'route', 'pont']);
@@ -191,7 +174,7 @@ test('les fumerolles fument même sans vent, et respectent la préférence de mo
 test('l’ambiance du paysage n’est repeinte que si ses paramètres ou la saison changent', () => {
   const paysage = creerPaysage(grilleTemoin(), () => 0, 'marais');
   const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
-  const mats = lots.map((l) => l.material as THREE.MeshStandardMaterial);
+  const mats = lots.map((l) => l.material as THREE.MeshStandardNodeMaterial);
   const p = parametresAmbiance('ete', 'jour', 'clair');
   paysage.appliquerAmbiance(p, 'ete');
   for (const m of mats) m.color.setHex(0x000000);
@@ -230,16 +213,43 @@ test('les accessoires du paysage lisent le masque de brouillard, après l’écl
 
   const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
   assert.ok(lots.length > 0, 'la carte-témoin a des accessoires');
-  for (const lot of [...lots, paysage.groupe.getObjectByName('rivage') as THREE.Mesh]) {
-    const mat = lot.material as THREE.MeshStandardMaterial;
-    const shader = compiler(mat);
-    assert.ok(shader.fragmentShader.includes('tVisibles'), `${lot.name} lit le masque`);
-    assert.ok(
-      shader.fragmentShader.indexOf('uvVisibles') > shader.fragmentShader.indexOf('#include <opaque_fragment>'),
-      `${lot.name} l’applique après l’éclairage, pas sur le diffus`,
-    );
-    assert.ok(shader.vertexShader.includes('instanceMatrix'), `${lot.name} place ses instances`);
-    assert.equal(shader.uniforms['tVisibles'], uniformes.tVisibles, 'les uniformes sont partagés avec le sol');
+  const rivage = paysage.groupe.getObjectByName('rivage') as THREE.Mesh;
+  for (const lot of [...lots, rivage]) {
+    const mat = lot.material as THREE.MeshStandardNodeMaterial;
+    assert.ok(mat.isNodeMaterial, `${lot.name} : un matériau à nœuds`);
+    assert.equal(mat.outputNode, uniformes.sortie, `${lot.name} lit le masque, le même que le sol`);
   }
+
+  // Le WGSL d'un lot : couleurs de sommet et couleur d'instance teintent le
+  // diffus, la position monde suit la matrice d'instance, le masque vient après
+  // la couleur éclairée.
+  const lot = lots.find((l) => l.name === 'paysage-roseau') ?? lots[0]!;
+  const { vertex, fragment } = construireNuanceur(lot);
+  const instance = ligneDe(vertex, /varyings\.positionLocal = \( NodeBuffer_\d+\.\w+\[ instanceIndex \] \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  const monde = ligneDe(vertex, /varyings\.v_positionWorld = /);
+  assert.ok(instance >= 0 && monde > instance, `${lot.name} : la matrice d’instance, puis la position monde`);
+  assert.match(fragment, /DiffuseColor = \( vec4<f32>\( vInstanceColor, 1\.0 \) \* vec4<f32>\( \( object\.\w+ \* nodeVarying\d+ \), /,
+    'couleur d’instance × couleur de sommet');
+  const lecture = ligneDe(fragment, /textureSample\( tVisibles, tVisibles_sampler, clamp\( \( v_positionWorld\.xz/);
+  assert.ok(lecture > ligneDe(fragment, /^\s*Output = /), `${lot.name} : le masque après la couleur éclairée`);
+  paysage.dispose();
+});
+
+test('le rivage se fond par l’alpha de ses couleurs de sommet, que le matériau à nœuds lit à quatre composantes', () => {
+  // Le matériau à nœuds ne lit les couleurs de sommet qu'en `vec3` et jette
+  // l'alpha ; une seconde lecture du même attribut en `vec4` se rabat sur la
+  // première et rend un alpha de 1. Le rivage lit donc l'attribut une fois, à
+  // quatre composantes, `vertexColors` éteint, et le donne à ses deux nœuds.
+  const paysage = creerPaysage(grilleTemoin(), () => 0, 'cotier');
+  const rivage = paysage.groupe.getObjectByName('rivage') as THREE.Mesh;
+  const mat = rivage.material as THREE.MeshStandardNodeMaterial;
+  assert.equal(mat.vertexColors, false);
+  assert.ok(mat.colorNode && mat.opacityNode, 'couleur et opacité par nœud');
+  assert.equal(rivage.geometry.getAttribute('color').itemSize, 4);
+  const { fragment } = construireNuanceur(rivage);
+  const alpha = fragment.match(/DiffuseColor\.w = \( DiffuseColor\.w \* \( object\.\w+ \* (nodeVarying\d+)\.w \) \);/);
+  assert.ok(alpha, 'l’opacité se multiplie par l’alpha de sommet');
+  assert.match(fragment, new RegExp(`${alpha![1]} : vec4<f32>`), 'l’attribut est lu à quatre composantes');
+  assert.match(fragment, new RegExp(`\\* ${alpha![1]}\\.xyz \\)`), 'et sa couleur teinte le diffus');
   paysage.dispose();
 });

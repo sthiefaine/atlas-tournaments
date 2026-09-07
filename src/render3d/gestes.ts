@@ -10,7 +10,7 @@
  * l'inspection — elle n'a pas d'appui long fiable, le doigt n'a pas de
  * double-clic fiable, chacun son geste.
  */
-import type * as THREE from 'three';
+import type * as THREE from 'three/webgpu';
 import { toucheDe } from '../render/entrees';
 import type { GestesRendu } from '../render/rendu';
 import type { Case } from '../schemas/types';

@@ -13,10 +13,18 @@
  * promise-based (`animations.ts`), le tout dans une boucle paresseuse
  * (`scene.ts`).
  *
+ * Le moteur (`WebGPURenderer`, depuis le 7 septembre 2026) s'initialise de
+ * façon **asynchrone** ; `monter()` reste synchrone, comme l'interface
+ * l'exige. Le monde, lui, se bâtit dès le premier `afficher` — géométries,
+ * textures et lumières sont des objets en mémoire, qui n'ont pas besoin du
+ * moteur —, de sorte que `versEcran`, `versMonde` et le cadrage répondent tout
+ * de suite ; seul le **dessin** attend `prete`, et la scène réveille la boucle
+ * quand le moteur est là. `mesurer()` rend des zéros avant, `capturer()` rien.
+ *
  * three.js n'est importé que dans ce dossier ; le reste du dépôt ne le voit pas.
  */
 
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import { signatureTerrain, terrainLogique } from '../engine/index';
@@ -35,7 +43,7 @@ import { creerEclairage, parametresAmbiance, type Eclairage, type ParametresAmbi
 import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
 import { tailleCarteOmbre, type CadreOmbre } from './ombres';
-import { creerScene3d, type Scene3d } from './scene';
+import { creerScene3d, moteur3dDisponible, type Scene3d } from './scene';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
 import { creerPlateau, grefferBrouillardSur, type Plateau } from './terrain';
 import { creerUnites, type CalqueUnites } from './unites';
@@ -100,6 +108,13 @@ export interface OptionsRendu3d {
    * peut qu'ajouter la réduction. Elle éteint aussi la chaîne de post-traitement.
    */
   animationsReduites?: boolean;
+  /**
+   * Appelée si le moteur, une fois monté, **ne démarre pas** — ni WebGPU ni
+   * WebGL 2 n'a voulu de ce canevas. `monter()` lève tout de suite quand aucun
+   * des deux n'existe ; ceci couvre l'échec qui n'arrive qu'à l'initialisation,
+   * asynchrone, et que la page doit encore pouvoir dire au joueur.
+   */
+  surEchec?(cause: unknown): void;
 }
 
 /** Crée le rendu 3D, avec les styles des nations participant au scénario. */
@@ -247,8 +262,6 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       m.unites.appliquerAmbiance(p);
       ambianceAppliquee = { p, saison };
     }
-    // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
-    s.renderer.toneMappingExposure = p.exposition * eclat;
     // Une animation de la file qui déplace une pièce — glissement, tir,
     // capture, palissade — a levé `ombreSale` par `salir(true)` sur ce pas,
     // son dernier compris ; un éclat, un cadrage ou des sprites ne le font pas,
@@ -256,7 +269,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // pas une non plus.
     const animations = boucle?.animations ?? 0;
     const ombre = ombreSale || mutation || cadre !== cadrePrecedent;
-    s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant });
+    // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
+    s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
     ombreSale = false;
     cadrePrecedent = cadre;
     continuSuivant = encore || animations > 0;
@@ -347,7 +361,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const fenetre = conteneur.ownerDocument.defaultView;
       mouvementReduit = fenetre?.matchMedia('(prefers-reduced-motion: reduce)');
       pointeurGrossier = fenetre?.matchMedia('(pointer: coarse)').matches ?? false;
-      scene3d = creerScene3d(conteneur, {
+      const s = creerScene3d(conteneur, {
         surRedimension: (l, h) => {
           monde?.vue3d.redimensionner(l, h);
           salir();
@@ -355,6 +369,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         qualite: options.qualite ?? QUALITE_PAR_DEFAUT,
         reduit,
         surChangement: salir,
+      });
+      scene3d = s;
+      // Le moteur qui ne démarre pas se dit à la page ; une scène démontée
+      // entre-temps rejette aussi, et cela ne regarde personne.
+      s.prete.catch((cause: unknown) => {
+        if (scene3d !== s) return;
+        console.error('Moteur 3D indisponible', cause);
+        options.surEchec?.(cause);
       });
       boucle = new Boucle(dessiner);
       repos = setInterval(() => salir(), MS_REPOS);
@@ -434,7 +456,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     mesurer(): MesuresRendu {
-      return scene3d?.mesures() ?? { triangles: 0, appels: 0, msParImage: 0, composeur: false, msCalibration: null };
+      return scene3d?.mesures() ?? {
+        triangles: 0, appels: 0, msParImage: 0, composeur: false, msCalibration: null, backend: null,
+      };
     },
 
     qualite(q: QualiteRendu): void {
@@ -444,10 +468,12 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     capturer(): string | null {
       const s = scene3d;
       const m = monde;
-      if (!s || !m) return null;
+      // Avant le moteur, le canevas est vide : `null` plutôt qu'une image noire
+      // qu'un test prendrait pour un plateau.
+      if (!s || !m || !s.pret) return null;
       try {
-        // Le tampon WebGL n'est pas préservé entre deux compositions : on
-        // redessine juste avant de lire, dans la même tâche — par la chaîne de
+        // Le tampon n'est pas préservé entre deux compositions : on redessine
+        // juste avant de lire, dans la même tâche — par la chaîne de
         // post-traitement si elle est active, donc ce que l'écran montre.
         s.dessiner(m.vue3d.camera);
         return s.canvas.toDataURL('image/png');
@@ -526,13 +552,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   };
 }
 
-/** Vrai si le navigateur courant peut faire tourner ce rendu. */
+/**
+ * Vrai si le navigateur courant peut faire tourner ce rendu : WebGPU, ou son
+ * repli WebGL 2 (`scene.ts`, `moteur3dDisponible`).
+ */
 export function rendu3dDisponible(): boolean {
-  try {
-    const d = (globalThis as { document?: Document }).document;
-    if (!d) return false;
-    return Boolean(d.createElement('canvas').getContext('webgl2'));
-  } catch {
-    return false;
-  }
+  return moteur3dDisponible();
 }
