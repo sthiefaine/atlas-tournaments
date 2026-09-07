@@ -19,7 +19,7 @@
 
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import type {
-  CampId, DeclencheurScene, Dialogue, Emotion, SceneDialogue,
+  CampId, DeclencheurScene, Dialogue, Emotion, Scenario, SceneDialogue,
 } from '../schemas/types';
 
 /** Une réplique prête à peindre : tout ce dont le HUD a besoin, et rien de plus. */
@@ -63,6 +63,11 @@ function declenche(d: DeclencheurScene, ctx: ContexteScenes): boolean {
       return evts.some((e) => e.type === 'capture' && e.acquis && (d.camp === undefined || e.camp === d.camp));
     case 'perte':
       return evts.some((e) => e.type === 'hors_jeu' && (d.camp === undefined || e.camp === d.camp));
+    // L'événement `panne_seche` ne porte que l'identifiant : le camp se lit
+    // sur le `hors_jeu` que le moteur émet juste après pour la même unité.
+    case 'panne_seche':
+      return evts.some((e) => e.type === 'panne_seche' && (d.camp === undefined
+        || evts.some((h) => h.type === 'hors_jeu' && h.uniteId === e.uniteId && h.camp === d.camp)));
     case 'production':
       return evts.some((e) => e.type === 'production' && (d.unite === undefined || e.unite === d.unite));
     case 'pouvoir':
@@ -87,6 +92,35 @@ export function scenesDeclenchees(
   ctx: ContexteScenes,
 ): SceneDialogue[] {
   return scenes.filter((s) => !jouees.has(s.cle) && declenche(s.declencheur, ctx));
+}
+
+/**
+ * Le dialogue de **fin de match** : celui du scénario, sinon un mot de repli
+ * dit par le commandant du joueur — félicitations ou encouragement, par clé
+ * i18n. Une fin de partie a **toujours** un visage : l'écran de résultat ne
+ * vient qu'après, et un scénario qui n'a rien écrit ne laisse pas un silence.
+ *
+ * `t` est le traducteur de l'hôte ; le texte rendu est déjà traduit, comme le
+ * sont les répliques écrites dans un scénario.
+ */
+export function dialogueFin(
+  scenario: Pick<Scenario, 'commandants' | 'dialogueVictoire' | 'dialogueDefaite'>,
+  camp: CampId,
+  gagne: boolean,
+  t: (cle: string) => string,
+): Dialogue[] {
+  const declare = gagne ? scenario.dialogueVictoire : scenario.dialogueDefaite;
+  if (declare.length > 0) return declare;
+  // Le commandant du joueur — celui qui a incarné le camp, s'il y a incarnation —,
+  // sinon le premier de la distribution : une réplique a besoin d'une bouche.
+  const locuteur = scenario.commandants.find((c) => c.camp === camp)?.commandantCle
+    ?? scenario.commandants[0]?.commandantCle;
+  if (!locuteur) return [];
+  return [{
+    locuteur,
+    texte: t(gagne ? 'dialogue.victoire_defaut' : 'dialogue.defaite_defaut'),
+    emotion: gagne ? 'joie' : 'neutre',
+  }];
 }
 
 /** La scène d'ouverture d'un scénario, s'il en déclare une. */

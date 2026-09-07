@@ -254,3 +254,46 @@ test('un appui long au doigt inspecte sans annuler, annule s’il n’y a rien �
     mock.timers.reset();
   }
 });
+
+// ---------------------------------------------------------------------------
+// Le survol est coalescé sur l'image
+// ---------------------------------------------------------------------------
+
+test('cent positions de souris ne lancent qu’un rayon, à l’image suivante, sur la dernière position', () => {
+  const cible = new EventTarget();
+  const canvas = Object.assign(cible, {
+    getBoundingClientRect: () => ({ left: 0, top: 0 }),
+    focus: () => undefined,
+    setPointerCapture: () => undefined,
+    releasePointerCapture: () => undefined,
+  }) as unknown as HTMLCanvasElement;
+  const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+  vue.redimensionner(390, 844);
+  vue.cadrerCarte();
+  const survols: { x: number; y: number }[] = [];
+  const planifiees: (() => void)[] = [];
+  let annulees = 0;
+  const demonter = brancherGestes3d(canvas, () => vue, () => null,
+    { surSurvolCase: (c) => { if (c) survols.push(c); } }, () => undefined, {
+      planifierImage: (f) => { planifiees.push(f); return planifiees.length; },
+      annulerImage: () => { annulees += 1; },
+    });
+  const bouger = (x: number, y: number): void => {
+    cible.dispatchEvent(Object.assign(new Event('pointermove'), {
+      pointerId: 1, clientX: x, clientY: y, pointerType: 'mouse', button: 0,
+    }));
+  };
+  for (let i = 0; i < 100; i += 1) bouger(60 + i, 200 + i);
+  assert.equal(survols.length, 0, 'rien avant l’image');
+  assert.equal(planifiees.length, 1, 'une seule image demandée');
+  planifiees[0]!();
+  assert.equal(survols.length, 1);
+  assert.deepEqual(survols[0], vue.caseSous(159, 299, null), 'la dernière position, pas la première');
+  // La suivante repart de zéro, et un démontage avec une image en attente l'annule.
+  bouger(195, 422);
+  assert.equal(planifiees.length, 2);
+  demonter();
+  assert.equal(annulees, 1);
+  planifiees[1]!();
+  assert.equal(survols.length, 1, 'une image annulée ne survole plus rien');
+});

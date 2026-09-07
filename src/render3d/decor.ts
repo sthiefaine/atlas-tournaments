@@ -16,6 +16,15 @@
  * Chaque bâtiment porte un **mât**. C'est là, et nulle part ailleurs, que les
  * couleurs d'un camp se hissent et s'amènent : une capture se lit au drapeau,
  * jamais sur la ville elle-même, qui ne se déforme ni ne s'aplatit.
+ *
+ * Sous le **brouillard de guerre** (révision du 6 septembre 2026), une case hors
+ * de vue est presque noire (`FACTEUR_BROUILLARD`, `terrain.ts`) : ses bâtiments
+ * prennent un double sombre de leurs matériaux, ses arbres, pierres et
+ * accessoires une couleur d'instance éteinte, son mât et son pavillon aussi. Le
+ * pavillon reste : le propriétaire d'un bâtiment n'est pas une information que
+ * le brouillard cache (`doc/04` §10, et `filtrerPourCamp` garde
+ * `proprietaires`), seule l'unité qui le capture le serait — et elle n'est pas
+ * dessinée. Tout cela se fait au changement de l'ensemble vu, jamais par image.
  */
 
 import * as THREE from 'three';
@@ -29,7 +38,7 @@ import { paletteDe } from '../render/palettes';
 import type { Biome, CampId, Case, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
-import { creerPaysage } from './paysage';
+import { creerPaysage, memesVisibles } from './paysage';
 import { jeuToit, sorteToit, type SorteToit } from './textures';
 
 /** Couleurs de feuillage par saison : c'est la saison qu'on voit d'abord. */
@@ -41,7 +50,7 @@ const FEUILLAGE: Readonly<Record<Saison, { conifere: number; feuillu: number }>>
 };
 
 /** Les terrains qui portent un bâtiment, donc un mât. */
-const TERRAINS_BATIS: readonly CleTerrain[] = ['ville', 'qg', 'usine', 'aeroport', 'radar'];
+const TERRAINS_BATIS: readonly CleTerrain[] = ['ville', 'qg', 'usine', 'aeroport', 'radar', 'port'];
 
 /** Hauteur du mât d'un bâtiment ordinaire, en cases. */
 const HAUT_MAT = 0.5;
@@ -220,6 +229,7 @@ interface Pavillon {
   pose: PoseDrapeau;
   /** Ce qu'impose une animation en cours, s'il y en a une. */
   force: PoseDrapeau | null;
+  /** Vrai quand la case est hors de vue : mât et pavillon s'éteignent. */
 }
 
 /** Ce que `creerDecor` rend au rendu. */
@@ -228,7 +238,9 @@ export interface Decor {
   /**
    * Reconstruit les bâtiments quand un propriétaire change, efface en
    * transparence ceux qu'une unité occupe, et règle les pavillons : une capture
-   * en cours se lit à la hauteur du drapeau.
+   * en cours se lit à la hauteur du drapeau. Reçoit aussi les cases vues :
+   * quand l'ensemble change, tout le décor hors de vue s'éteint — bâtiments,
+   * pavillons, arbres, pierres, paysage — et se rallume au retour de la vue.
    */
   majProprietaires(etat: EtatPartie, visibles?: ReadonlySet<string> | null, cat?: Catalogue | null): void;
   appliquerAmbiance(p: ParametresAmbiance, saison: Saison): void;
@@ -445,6 +457,10 @@ export function creerDecor(
   const ech = new THREE.Vector3();
   const axe = new THREE.Vector3(0, 1, 0);
 
+  // --- Le brouillard de guerre : les cases vues, telles que la dernière vue
+  //     les a données. `null` : tout est vu.
+  let visiblesCourants: ReadonlySet<string> | null = null;
+
   function poserArbres(souffle: number): void {
     let iTronc = 0;
     let iCon = 0;
@@ -527,15 +543,26 @@ export function creerDecor(
       ech.set(r.echelle, r.echelle * (0.72 + r.teinte * 0.2), r.echelle);
       mat4.compose(pos, quat, ech);
       lot.setMatrixAt(i, mat4);
-      // Une teinte par pierre : la roche d'un massif n'est jamais d'un gris.
-      teinteRocher.setRGB(r.teinte, r.teinte * 0.995, r.teinte * 0.96);
-      lot.setColorAt(i, teinteRocher);
     }
     lotsRocher.forEach((lot, v) => {
       lot.count = rangs[v]!;
       lot.instanceMatrix.needsUpdate = true;
-      if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
     });
+    teinterRochers();
+  }
+
+  /** Une teinte par pierre — la roche d'un massif n'est jamais d'un gris —, éteinte hors de vue. */
+  function teinterRochers(): void {
+    const rangs = [0, 0, 0];
+    for (const r of rochers) {
+      const lot = lotsRocher[r.variante];
+      if (!lot) continue;
+      const i = rangs[r.variante]!;
+      rangs[r.variante] = i + 1;
+      teinteRocher.setRGB(r.teinte, r.teinte * 0.995, r.teinte * 0.96);
+      lot.setColorAt(i, teinteRocher);
+    }
+    for (const lot of lotsRocher) if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
   }
 
   poserRochers();
@@ -546,6 +573,14 @@ export function creerDecor(
   groupe.add(paysage.groupe);
   /** La dernière ambiance appliquée, pour la redonner à un paysage refait. */
   let ambianceCourante: { p: ParametresAmbiance; saison: Saison } | null = null;
+  // Les teintes fixes de l'ambiance, allouées une fois : elles servaient à
+  // chaque image, neuf couleurs par appel.
+  const BLANC = new THREE.Color(0xffffff);
+  const ROSE_FLORAISON = new THREE.Color(0xf3c6d8);
+  const GIVRE_TRONC = new THREE.Color(0xd8dde4);
+  const GRIS_BETON_TERNI = new THREE.Color(0x8a8a84);
+  const GRIS_TOIT_TERNI = new THREE.Color(0x77756f);
+  const teinteSolAmbiance = new THREE.Color();
 
   // --- Bâtiments
   const batiments = new THREE.Group();
@@ -587,6 +622,11 @@ export function creerDecor(
   // La parabole est une calotte creuse : vue de l'ouverture, une face simple
   // disparaîtrait à chaque demi-tour de balayage.
   const matParabole = new THREE.MeshStandardMaterial({ color: 0xeae5d4, roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide });
+  // L'eau **du bassin d'un port**, et elle seule : le plan d'eau de la carte est
+  // au terrain, qui l'anime. Ici il ne s'agit que de la darse enfermée dans la
+  // case bâtie, en contrebas du quai — une lame lisse et sombre, plus foncée que
+  // la mer, parce qu'elle est à l'ombre des môles.
+  const matBassin = new THREE.MeshStandardMaterial({ color: 0x22434e, roughness: 0.28, metalness: 0.12 });
   const paraboles: Parabole[] = [];
   const matsCamp = new Map<string, THREE.MeshStandardMaterial>();
   const geosBatiment = new Set<THREE.BufferGeometry>();
@@ -858,6 +898,53 @@ export function creerDecor(
           }
           groupeCase.add(pivot);
           paraboles.push({ pivot, active: proprio !== null && !desaffecte });
+        } else if (terrain === 'port') {
+          // Un port : un quai en L au nord et à l'ouest, un **bassin** en
+          // contrebas au sud-est, un hangar à quai, une grue et le feu du môle.
+          // Le centre de la case reste libre, comme partout ailleurs : c'est là
+          // que se pose la pièce qui tient le port.
+          poser(0.86, 0.05, 0.58, mur, 0, 0.045, -0.14);
+          // Le retour de quai qui garde au sec l'angle avant gauche : c'est là
+          // que tous les bâtiments plantent leur mât de pavillon.
+          poser(0.22, 0.05, 0.32, mur, -0.32, 0.045, 0.27);
+          poser(0.64, 0.022, 0.3, matBassin, 0.11, 0.026, 0.28);
+          // La margelle borde l'eau aux couleurs du camp : c'est elle qui dit à
+          // qui est le port quand la grue est loin du regard.
+          poser(0.64, 0.02, 0.03, teinte, 0.11, 0.08, 0.14);
+          poser(0.03, 0.02, 0.3, teinte, -0.205, 0.08, 0.28);
+          // Les bittes d'amarrage, sur le bord du quai.
+          for (const px of [-0.08, 0.14, 0.36]) {
+            cylindre(0.021, 0.055, matMetal, px, 0.098, 0.08);
+            cylindre(0.028, 0.014, matIvoire, px, 0.132, 0.08);
+          }
+          // Le hangar à quai, porte tournée vers l'eau.
+          poser(0.34, 0.22, 0.24, mur, -0.24, 0.18, -0.26);
+          poser(0.28, 0.05, 0.016, vitre, -0.24, 0.225, -0.146);
+          poser(0.075, 0.13, 0.014, matMetal, -0.24, 0.135, -0.146);
+          if (desaffecte) {
+            condamner(-0.24, 0.14, -0.132);
+            charpente(-0.24, 0.325, -0.26, 0.34, 0.24);
+          } else {
+            toiture(-0.24, 0.325, -0.26, 0.34, 0.24);
+          }
+          // La grue de quai : un fût sur le quai, une flèche au-dessus du bassin.
+          cylindre(0.028, 0.4, matMetal, 0.3, 0.24, -0.06);
+          if (desaffecte) {
+            // Désaffectée, la grue est démontée : sa flèche est descendue et
+            // deux étais la remplacent. Elle n'est pas tombée, elle attend.
+            for (const rz of [0.5, -0.5]) poser(0.24, 0.024, 0.024, matPlanche, 0.3, 0.34, -0.06, rz);
+          } else {
+            cylindre(0.05, 0.04, teinte, 0.3, 0.46, -0.06);
+            poser(0.05, 0.035, 0.44, matMetal, 0.3, 0.485, 0.07);
+            poser(0.07, 0.05, 0.14, teinte, 0.3, 0.485, -0.19);
+            cylindre(0.006, 0.16, matMetal, 0.3, 0.385, 0.25);
+            poser(0.07, 0.05, 0.06, teinte, 0.3, 0.28, 0.25);
+          }
+          // Le môle et son feu : la seule chose d'un port qui se voie de nuit.
+          poser(0.26, 0.045, 0.09, matPierre, 0.29, 0.048, 0.385);
+          cylindre(0.024, 0.11, matIvoire, 0.36, 0.125, 0.385);
+          cylindre(0.028, 0.04, vitre, 0.36, 0.2, 0.385);
+          cylindre(0.032, 0.014, teinte, 0.36, 0.227, 0.385);
         } else {
           poser(0.21, 0.39, 0.21, mur, -0.26, 0.22, -0.21);
           poser(0.29, 0.1, 0.28, vitre, -0.26, 0.43, -0.21);
@@ -911,13 +998,18 @@ export function creerDecor(
   // Le tableau est stable : les prises rendues par `drapeau()` le cherchent par
   // clé, et une grille changée le vide et le remplit sur place.
   const places: Pavillon[] = [];
+  // Les cases bâties, pour ne regarder que les unités qui comptent : une unité
+  // en plaine ne change ni un bâtiment ni un drapeau.
+  const casesBaties = new Set<string>();
 
   function semerPavillons(): void {
     places.length = 0;
+    casesBaties.clear();
     for (let y = 0; y < grille.hauteur; y += 1) {
       for (let x = 0; x < grille.largeur; x += 1) {
         const terrain = grille.terrainDe(x, y);
         if (!TERRAINS_BATIS.includes(terrain)) continue;
+        casesBaties.add(cleCase({ x, y }));
         places.push({
           cle: cleCase({ x, y }),
           case: { x, y },
@@ -939,6 +1031,10 @@ export function creerDecor(
   const geoDrapeau = new THREE.PlaneGeometry(LARG_DRAPEAU, HAUT_DRAPEAU, 6, 2)
     .translate(LARG_DRAPEAU / 2, 0, 0);
   const drapeauPlat = Float32Array.from(geoDrapeau.getAttribute('position').array);
+  // La part de chaque sommet le long de la toile ne change jamais : lue une fois.
+  const uToile = Float32Array.from(
+    { length: drapeauPlat.length / 3 }, (_, i) => drapeauPlat[i * 3]! / LARG_DRAPEAU,
+  );
   const matDrapeau = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
   let mats!: THREE.InstancedMesh;
   let pommeaux!: THREE.InstancedMesh;
@@ -993,13 +1089,15 @@ export function creerDecor(
       ech.set(e, e, e);
       mat4.compose(pos, quat, ech);
       drapeaux.setMatrixAt(i, mat4);
+      // Hors de vue, la toile garde une teinte lisible (le propriétaire est
+      // public) mais éteinte ; le mât et son pommeau s'éteignent comme la case.
       couleurDrapeau.set(paletteDe(camp).main);
       drapeaux.setColorAt(i, couleurDrapeau);
     });
-    mats.instanceMatrix.needsUpdate = true;
-    pommeaux.instanceMatrix.needsUpdate = true;
-    drapeaux.instanceMatrix.needsUpdate = true;
-    if (drapeaux.instanceColor) drapeaux.instanceColor.needsUpdate = true;
+    for (const lot of [mats, pommeaux, drapeaux]) {
+      lot.instanceMatrix.needsUpdate = true;
+      if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
+    }
   }
 
   let vent = 0.7;
@@ -1015,7 +1113,7 @@ export function creerDecor(
     for (let i = 0; i < attr.count; i += 1) {
       const x0 = drapeauPlat[i * 3]!;
       const y0 = drapeauPlat[i * 3 + 1]!;
-      const u = x0 / LARG_DRAPEAU;
+      const u = uToile[i]!;
       const onde = Math.sin(u * 5.2 - vent * 6.4) * u;
       attr.setXYZ(i, x0, y0 + onde * ampleur * 0.35 - u * u * 0.012, onde * ampleur);
     }
@@ -1023,7 +1121,29 @@ export function creerDecor(
     geoDrapeau.computeVertexNormals();
   }
 
+  /**
+   * La toile bat à trente images par seconde au plus : à soixante, l'onde
+   * avance d'un centième de sa période entre deux images — invisible —, et
+   * chaque battement réécrit les sommets, recalcule les normales et renvoie la
+   * géométrie au processeur graphique.
+   */
+  const MS_TOILE = 1000 / 30;
+  let attenteToile = 0;
+
+  /** Signature des bâtiments : propriétaires et désaffectés. */
   let signature = '';
+  /**
+   * Signature de l'aspect : qui occupe une case bâtie, avec ses points de
+   * capture. Le reste de `majProprietaires` — fantômes, drapeaux, pavillons —
+   * ne dépend que d'elle et des lueurs de chantier, et il tourne à chaque vue,
+   * donc à chaque case survolée : sans elle, chaque survol renvoyait trois lots
+   * d'instances au processeur graphique.
+   */
+  let signatureAspect = '';
+  /** Vrai quand une lueur de chantier ou une grille neuve rendent l'aspect à refaire. */
+  let aspectSale = true;
+  /** Le catalogue qui a servi aux seuils de capture : ils ne bougent qu'avec lui ou les bâtiments. */
+  let catSeuils: Catalogue | null = null;
   let oscillation = 0.12;
   let souffle = 0;
   // Une première onde figée : même sans mouvement, un drapeau n'est pas une plaque.
@@ -1064,16 +1184,37 @@ export function creerDecor(
     // le même événement : sans la liste des désaffectés dans la clé, la
     // palissade resterait à l'écran.
     const cle = JSON.stringify([e.proprietaires, e.desaffectes]);
-    if (cle !== signature) {
+    const rebatir = cle !== signature;
+    if (rebatir) {
       signature = cle;
       construireBatiments(e);
     }
     // Une unité cachée ne doit jamais être révélée par le décor : ni par un
     // bâtiment qui s'efface, ni par un drapeau qui descend.
     const occupants = new Map<string, Unite>();
+    let cleAspect = '';
     for (const u of e.unites) {
-      if (!u.dansTransport && (!visibles || visibles.has(cleCase(u)))) occupants.set(cleCase(u), u);
+      if (u.dansTransport) continue;
+      const c = cleCase(u);
+      if (!casesBaties.has(c) || (visibles && !visibles.has(c))) continue;
+      occupants.set(c, u);
+      cleAspect += `${c}:${u.camp}:${u.pointsCapture};`;
     }
+    if (cat && (rebatir || cat !== catSeuils)) {
+      catSeuils = cat;
+      for (const p of places) p.seuil = seuilCapture(e, cat, p.case);
+    }
+    // L'ensemble des cases vues : quand il change — un tour, un déplacement,
+    // jamais un survol —, l'aspect des bâtiments est à refaire, parce qu'une
+    // unité cachée ne doit pas rendre son bâtiment translucide. Ce qui s'éteint
+    // à l'écran, lui, est l'affaire du nuanceur (`grefferBrouillardSur`).
+    if (!memesVisibles(visiblesCourants, visibles)) {
+      visiblesCourants = visibles;
+      aspectSale = true;
+    }
+    if (!rebatir && !aspectSale && cleAspect === signatureAspect) return;
+    signatureAspect = cleAspect;
+    aspectSale = false;
     for (const batiment of batiments.children) {
       const cleBat = String(batiment.userData['case']);
       const fantome = occupants.has(cleBat);
@@ -1089,7 +1230,6 @@ export function creerDecor(
     }
     for (const p of places) {
       const u = occupants.get(p.cle);
-      if (cat) p.seuil = seuilCapture(e, cat, p.case);
       p.pose = poseDrapeau(
         e.proprietaires[p.cle] ?? null,
         u && u.pointsCapture > 0 ? { camp: u.camp, points: u.pointsCapture } : null,
@@ -1107,27 +1247,32 @@ export function creerDecor(
     majProprietaires,
 
     appliquerAmbiance(p: ParametresAmbiance, saison: Saison): void {
+      // L'ambiance arrive à chaque image, et ses paramètres ne changent d'objet
+      // que pendant une transition : même objet, même saison, rien à repeindre.
+      if (ambianceCourante && ambianceCourante.p === p && ambianceCourante.saison === saison) return;
       const f = FEUILLAGE[saison];
       const neige = p.neigeSol;
-      matConifere.color.set(biome === 'neige' ? 0x47695f : f.conifere).lerp(new THREE.Color(0xffffff), neige * 0.55);
-      matFeuillu.color.set(tropical ? 0x3e995c : f.feuillu).lerp(new THREE.Color(0xffffff), neige * 0.6);
+      matConifere.color.set(biome === 'neige' ? 0x47695f : f.conifere).lerp(BLANC, neige * 0.55);
+      matFeuillu.color.set(tropical ? 0x3e995c : f.feuillu).lerp(BLANC, neige * 0.6);
       // Au printemps, les feuillus fleurissent : un soupçon de rose sur le vert.
-      if (saison === 'printemps') matFeuillu.color.lerp(new THREE.Color(0xf3c6d8), 0.16);
-      matTronc.color.set(0x6b4a2f).lerp(new THREE.Color(0xd8dde4), neige * 0.25);
-      matRocher.color.set(0x8c929b).lerp(new THREE.Color(0xffffff), neige * 0.5);
-      matBeton.color.set(couleurMur).lerp(new THREE.Color(p.teinteSol), 0.25);
+      if (saison === 'printemps') matFeuillu.color.lerp(ROSE_FLORAISON, 0.16);
+      matTronc.color.set(0x6b4a2f).lerp(GIVRE_TRONC, neige * 0.25);
+      matRocher.color.set(0x8c929b).lerp(BLANC, neige * 0.5);
+      matBeton.color.set(couleurMur).lerp(teinteSolAmbiance.set(p.teinteSol), 0.25);
       // Un toit d'ardoise ou de tôle blanchit sous la neige comme le reste.
-      matToit.color.set(couleurToit).lerp(new THREE.Color(0xffffff), neige * 0.45);
+      matToit.color.set(couleurToit).lerp(BLANC, neige * 0.45);
       matFenetres.emissiveIntensity = p.fenetres;
       // Le terni suit l'original, en plus gris : la neige le blanchit aussi.
-      matBetonTerni.color.copy(matBeton.color).lerp(new THREE.Color(0x8a8a84), 0.5);
-      matToitTerni.color.copy(matToit.color).lerp(new THREE.Color(0x77756f), 0.5);
+      matBetonTerni.color.copy(matBeton.color).lerp(GRIS_BETON_TERNI, 0.5);
+      matToitTerni.color.copy(matToit.color).lerp(GRIS_TOIT_TERNI, 0.5);
       // Les jumeaux translucides suivent leurs originaux : un bâtiment occupé
       // blanchit sous la neige et allume ses fenêtres comme les autres.
       for (const [source, f] of matsFantome) {
         f.color.copy(source.color);
         f.emissiveIntensity = source.emissiveIntensity;
       }
+      // Les doubles sombres suivent aussi, éteints : la neige d'une case hors
+      // de vue est de la neige dans le noir.
       oscillation = p.oscillation;
       ambianceCourante = { p, saison };
       paysage.appliquerAmbiance(p, saison);
@@ -1164,6 +1309,7 @@ export function creerDecor(
       // Les bâtiments se rebâtissent au prochain `majProprietaires` : on efface
       // la signature qui lui fait croire que rien n'a changé.
       signature = '';
+      aspectSale = true;
       poserArbres(souffle);
       poserRochers();
       poserPavillons();
@@ -1177,8 +1323,12 @@ export function creerDecor(
         encore = true;
       }
       if (!mouvementReduit && places.some((p) => (p.force ?? p.pose).camp !== null)) {
-        vent += ms / 1000;
-        flotter();
+        attenteToile += ms;
+        if (attenteToile >= MS_TOILE) {
+          vent += attenteToile / 1000;
+          attenteToile = 0;
+          flotter();
+        }
         encore = true;
       }
       if (!mouvementReduit) {
@@ -1198,11 +1348,13 @@ export function creerDecor(
       return {
         eclairer(lueur): void {
           lueurs.set(cle, Math.min(1, Math.max(0, lueur)));
+          aspectSale = true;
         },
         relacher(): void {
           lueurs.delete(cle);
           matsLueur.get(cle)?.mat.dispose();
           matsLueur.delete(cle);
+          aspectSale = true;
         },
       };
     },
@@ -1241,6 +1393,7 @@ export function creerDecor(
       matVitresEteintes.dispose();
       matPlanche.dispose();
       matParabole.dispose();
+      matBassin.dispose();
       geoTronc.dispose();
       geoConifere.dispose();
       geoFeuillu.dispose();

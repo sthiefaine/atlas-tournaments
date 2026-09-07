@@ -5,9 +5,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
+import * as THREE from 'three';
+
+import { TANGAGE_DEFAUT, type EtatCamera } from '../../src/render3d/camera';
 import {
-  MS_TRANSITION, melangerParametres, parametresAmbiance, type ParametresAmbiance,
+  MS_TRANSITION, creerEclairage, directionSoleil, melangerParametres, parametresAmbiance, type ParametresAmbiance,
 } from '../../src/render3d/eclairage';
+import { DISTANCE_SOLEIL } from '../../src/render3d/ombres';
 import { METEOS, PHASES_JOUR, SAISONS } from '../../src/schemas/index';
 
 /** Les 48 combinaisons, avec leur clé lisible. */
@@ -51,6 +55,9 @@ test('tous les paramètres restent dans des bornes utilisables', () => {
     assert.match(p.hemisphere.sol, hex, `${cle} : sol hémisphérique`);
     assert.match(p.ciel, hex, `${cle} : fond`);
     assert.match(p.brouillard.couleur, hex, `${cle} : brouillard`);
+    // Le ciel est visible autour du plateau : un brouillard d'une autre teinte
+    // que le fond dessinerait une couture au bord de la carte.
+    assert.equal(p.brouillard.couleur, p.ciel, `${cle} : le brouillard fond vers le fond`);
     assert.match(p.teinteSol, hex, `${cle} : teinte du sol`);
     assert.match(p.eau.couleur, hex, `${cle} : eau`);
 
@@ -192,4 +199,112 @@ test('la transition d’ambiance interpole sans jamais sortir des bornes', () =>
   assert.ok(Math.abs(milieu - (a.environnement.intensite + b.environnement.intensite) / 2) < 1e-9);
   // À mi-chemin, le calque de particules a déjà basculé sur la cible.
   assert.equal(melangerParametres(a, b, 0.6).particules.calque, 'neige');
+});
+
+// ---------------------------------------------------------------------------
+// La plomberie : ce que la boucle appelle à chaque image ne doit rien allouer
+// ni rien recalculer quand rien n'a bougé — et `index.ts` s'appuie sur
+// l'**identité** de ce qu'elle rend pour savoir si la carte d'ombre est à refaire.
+// ---------------------------------------------------------------------------
+
+/** Un document dont la toile n'a pas de contexte : `textureGrain` s'en passe. */
+function documentSansToile(): Document {
+  return {
+    createElement: () => ({ width: 0, height: 0, getContext: () => null }),
+  } as unknown as Document;
+}
+
+function etatCamera(p: Partial<EtatCamera> = {}): EtatCamera {
+  return { cible: { x: 8, z: 6 }, distance: 18, tangage: TANGAGE_DEFAUT, lacet: 0, ...p };
+}
+
+const CARTE = { largeur: 16, hauteur: 12 };
+
+test('le cadre d’ombre est le même objet tant que ni la caméra ni le soleil n’ont bougé', () => {
+  const scene = new THREE.Scene();
+  const e = creerEclairage(scene, documentSansToile(), parametresAmbiance('ete', 'jour', 'clair'), () => 0, { tailleOmbre: 1024 });
+  const a = e.cadrerOmbre(etatCamera(), 1.6, CARTE);
+  // Soixante images de suite sans rien bouger : le même objet, pas une copie égale.
+  for (let i = 0; i < 60; i++) assert.equal(e.cadrerOmbre(etatCamera(), 1.6, CARTE), a);
+  // La caméra glisse d'un centième : nouveau cadre.
+  const b = e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 } }), 1.6, CARTE);
+  assert.notEqual(b, a);
+  // Un quart de tour, un zoom, un autre écran : nouveau cadre à chaque fois.
+  const c = e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 }, lacet: 1 }), 1.6, CARTE);
+  assert.notEqual(c, b);
+  const d = e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 }, lacet: 1, distance: 9 }), 1.6, CARTE);
+  assert.notEqual(d, c);
+  const f = e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 }, lacet: 1, distance: 9 }), 0.5, CARTE);
+  assert.notEqual(f, d);
+  // Et le soleil qui change — une autre ambiance, appliquée sans transition — aussi.
+  e.viser(parametresAmbiance('hiver', 'nuit', 'clair'), true);
+  const g = e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 }, lacet: 1, distance: 9 }), 0.5, CARTE);
+  assert.notEqual(g, f);
+  assert.equal(e.cadrerOmbre(etatCamera({ cible: { x: 8.01, z: 6 }, lacet: 1, distance: 9 }), 0.5, CARTE), g);
+  e.dispose();
+});
+
+test('hors transition, `avancer` garde l’ambiance courante et ne repeint pas le fond', () => {
+  const scene = new THREE.Scene();
+  const depart = parametresAmbiance('printemps', 'jour', 'pluie');
+  const e = creerEclairage(scene, documentSansToile(), depart, () => 0, { tailleOmbre: 1024 });
+  const fond = scene.background;
+  assert.ok(fond instanceof THREE.Color, 'le fond est une couleur');
+  assert.equal(`#${fond.getHexString()}`, depart.ciel);
+  const centre = new THREE.Vector3(5, 0, 4);
+  // Les particules de pluie réclament une image à chaque fois, mais `courant`
+  // reste le même objet : c'est sur cette identité que les matières décident
+  // de ne pas se repeindre.
+  for (let i = 0; i < 30; i++) {
+    assert.equal(e.avancer(16, centre), true);
+    assert.equal(e.courant, depart);
+  }
+  assert.equal(scene.background, fond, 'le fond est repeint, jamais remplacé');
+  // Un changement d'ambiance sans transition : même objet de fond, autre couleur.
+  const nuit = parametresAmbiance('hiver', 'nuit', 'neige');
+  e.viser(nuit, true);
+  assert.equal(scene.background, fond);
+  assert.equal(`#${fond.getHexString()}`, nuit.ciel);
+  assert.equal(e.courant, nuit);
+  e.dispose();
+});
+
+test('le soleil suit la cible et la direction de l’ambiance courante, transition comprise', () => {
+  const scene = new THREE.Scene();
+  const ete = parametresAmbiance('ete', 'jour', 'clair');
+  const e = creerEclairage(scene, documentSansToile(), ete, () => 0, { tailleOmbre: 1024 });
+  const centre = new THREE.Vector3(3, 0, 7);
+  e.avancer(16, centre);
+  const attendu = centre.clone().add(directionSoleil(ete.soleil.elevation, ete.soleil.azimut, DISTANCE_SOLEIL));
+  assert.ok(e.soleil.position.distanceTo(attendu) < 1e-9, 'la direction mise en cache est celle du départ');
+  // Sans transition : la direction est rafraîchie tout de suite.
+  const nuit = parametresAmbiance('hiver', 'nuit', 'clair');
+  e.viser(nuit, true);
+  e.avancer(16, centre);
+  const attenduNuit = centre.clone().add(directionSoleil(nuit.soleil.elevation, nuit.soleil.azimut, DISTANCE_SOLEIL));
+  assert.ok(e.soleil.position.distanceTo(attenduNuit) < 1e-9, 'la direction est celle de la nouvelle ambiance');
+  // Avec transition : `courant` change d'objet à chaque image, le soleil bouge,
+  // et le cadre d'ombre suit — c'est ce qui refait l'ombre pendant la transition.
+  e.viser(ete);
+  let precedent = e.courant;
+  let cadre = e.cadrerOmbre(etatCamera(), 1.6, CARTE);
+  const pas = MS_TRANSITION / 6;
+  for (let i = 0; i < 5; i++) {
+    assert.equal(e.avancer(pas, centre), true);
+    assert.notEqual(e.courant, precedent);
+    precedent = e.courant;
+    const suivant = e.cadrerOmbre(etatCamera(), 1.6, CARTE);
+    assert.notEqual(suivant, cadre, `image ${i} : le soleil a bougé, le cadre aussi`);
+    cadre = suivant;
+    const d = directionSoleil(e.courant.soleil.elevation, e.courant.soleil.azimut, DISTANCE_SOLEIL);
+    assert.ok(e.soleil.position.distanceTo(centre.clone().add(d)) < 1e-9);
+  }
+  // La transition finie, tout se fige : même objet, même cadre.
+  e.avancer(MS_TRANSITION, centre);
+  assert.equal(e.courant, ete);
+  const fige = e.cadrerOmbre(etatCamera(), 1.6, CARTE);
+  assert.equal(e.avancer(16, centre), false, 'ciel clair : plus rien ne réclame d’image');
+  assert.equal(e.courant, ete);
+  assert.equal(e.cadrerOmbre(etatCamera(), 1.6, CARTE), fige);
+  e.dispose();
 });

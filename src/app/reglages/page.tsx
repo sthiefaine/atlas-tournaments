@@ -10,7 +10,7 @@ import Reglages from './reglages';
  * îlot client — celui-ci l'est parce qu'il lit et écrit `localStorage`.
  *
  * Quatre groupes, et ce sont ceux qui existent réellement dans le code : les
- * deux interrupteurs, la qualité d'affichage (elle pilote la chaîne de
+ * trois interrupteurs (dialogues, animations réduites, écran de combat), la qualité d'affichage (elle pilote la chaîne de
  * post-traitement du rendu, `render/qualite.ts`), les deux profils de
  * l'appareil, la progression. On n'affiche pas d'interrupteur inerte : il n'y a
  * pas d'audio dans le jeu, il n'y a donc pas de réglage de son, même si c'est le
@@ -28,10 +28,11 @@ export default function PageReglages(): React.ReactElement {
     dialoguesNote: t(locale, 'reglages.dialogues_note'),
     animations: t(locale, 'reglages.animations'),
     animationsNote: t(locale, 'reglages.animations_note'),
+    ecranCombat: t(locale, 'reglages.ecran_combat'),
+    ecranCombatNote: t(locale, 'reglages.ecran_combat_note'),
     qualite: t(locale, 'reglages.qualite'),
     qualiteNote: t(locale, 'reglages.qualite_note'),
     qualiteAuto: t(locale, 'reglages.qualite_auto'),
-    qualiteHaute: t(locale, 'reglages.qualite_haute'),
     qualiteBasse: t(locale, 'reglages.qualite_basse'),
     actif: t(locale, 'reglages.actif'),
     inactif: t(locale, 'reglages.inactif'),

@@ -26,6 +26,6 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 
 `doc/assets/` contient la démo de rendu (`atlas-render-vector.html`, `render-vector.png`, `render-units.png`) qui fixe la lisibilité de référence, et `render-3d.jpg` qui fixe l'esprit « diorama » de la direction 3D — depuis le 6 septembre 2026, une capture du banc d'essai lui-même, ambiance « clair, été, jour », accompagnée de `banc-ete-clair.jpg`, `banc-automne-pluie.jpg` et `banc-hiver-nuit.jpg`, les trois captures de référence du jalon J1 de `16-realisme.md`. Ce dossier n'a rien à voir avec `../assets/`, à la racine du dépôt.
 
-Les spécifications d'assets produites depuis le canon vivent à la racine du dépôt, dans `../assets/specs/` — 540 fichiers JSON, un par asset, versionnés, régénérés par `npx tsx scripts/generer-specs-assets.ts` et vérifiés par `--verifier`.
+Les spécifications d'assets produites depuis le canon vivent à la racine du dépôt, dans `../assets/specs/` — 540 fichiers JSON à l'origine, **681** depuis le catalogue 4 du 6 septembre 2026 (14 unités, 336 kits, 205 bâtiments ; `11-assets-spec.md` §8), un par asset, versionnés, régénérés par `npx tsx scripts/generer-specs-assets.ts` et vérifiés par `--verifier`.
 
 Le plan d'étapes est dans `../PLAN.md`, et l'état réel du dépôt — ce qui est fait, ce qui manque, par quoi continuer — dans `../CLAUDE.md`.

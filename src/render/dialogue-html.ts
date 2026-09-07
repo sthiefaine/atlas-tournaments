@@ -110,7 +110,7 @@ function poserStyle(doc: Document): void {
 }
 
 /** Traits du visage par émotion : sourcils et bouche, rien de plus. */
-const VISAGES: Readonly<Record<Emotion, { sourcils: string; bouche: string }>> = {
+export const VISAGES: Readonly<Record<Emotion, { sourcils: string; bouche: string }>> = {
   neutre: { sourcils: 'M58 76h14m18 0h14', bouche: 'M72 114h16' },
   joie: { sourcils: 'M58 74l14-4m18 0l14 4', bouche: 'M70 111q10 10 20 0' },
   colere: { sourcils: 'M58 70l14 7m18 0l14-7', bouche: 'M70 116q10-8 20 0' },
@@ -123,9 +123,10 @@ const VISAGES: Readonly<Record<Emotion, { sourcils: string; bouche: string }>> =
  * Le buste d'un commandant, en SVG vectoriel : net à toute taille, sans une
  * seule requête réseau, et teinté par la palette de son camp. Les modèles réels
  * sont des `AssetSpec` de type `buste` non encore livrées (`11-assets-spec.md`
- * §10.3) ; celui-ci tient la place, et il la tient debout.
+ * §10.3) ; celui-ci tient la place, et il la tient debout. Exporté pour le
+ * splash de pouvoir (`scenes-html.ts`), qui montre le même visage en triomphe.
  */
-function buste(camp: CampId | null, emotion: Emotion): string {
+export function buste(camp: CampId | null, emotion: Emotion): string {
   const pal = paletteDe(camp);
   const visage = VISAGES[emotion] ?? VISAGES.neutre;
   return `<svg viewBox="0 0 160 190" aria-hidden="true">`

@@ -12,7 +12,7 @@ import {
   type EtatPartie, type EvenementJeu,
 } from '../../src/engine/index';
 import {
-  filerRepliques, scenesDeclenchees, sceneOuverture,
+  dialogueFin, filerRepliques, scenesDeclenchees, sceneOuverture,
 } from '../../src/render/dialogues';
 import { validerMapDef, type MapDef, type SceneDialogue } from '../../src/schemas/index';
 
@@ -135,4 +135,50 @@ test('les répliques se déplient en file numérotée, avec le camp du locuteur'
     [2, 2, 1, 'neutre'],
   ]);
   assert.ok(file.every((r) => r.sceneCle === 'sc'));
+});
+
+test('la panne sèche a son déclencheur, et lit le camp sur le hors-jeu qui la suit', () => {
+  const etat = partie();
+  // Le moteur émet `panne_seche` puis `hors_jeu` pour la même unité : le premier
+  // ne porte que l'identifiant, le second dit le camp.
+  const evenements: EvenementJeu[] = [
+    { type: 'debut_tour', journee: 3, camp: 1 },
+    { type: 'panne_seche', uniteId: 'h1' },
+    { type: 'hors_jeu', uniteId: 'h1', camp: 1, unite: 'helico' },
+  ];
+  const libre = [scene('p', { type: 'panne_seche' })];
+  const sienne = [scene('p', { type: 'panne_seche', camp: 1 })];
+  const mienne = [scene('p', { type: 'panne_seche', camp: 0 })];
+  assert.equal(scenesDeclenchees(libre, new Set(), { etat, evenements, camp: 0 }).length, 1);
+  assert.equal(scenesDeclenchees(sienne, new Set(), { etat, evenements, camp: 0 }).length, 1);
+  assert.equal(scenesDeclenchees(mienne, new Set(), { etat, evenements, camp: 0 }).length, 0);
+  // Une perte au combat n'est pas une panne sèche : le déclencheur ne se confond pas avec `perte`.
+  const combat: EvenementJeu[] = [
+    { type: 'attaque', attaquantId: 'a', cibleId: 'h1', degats: 99, riposte: 0 },
+    { type: 'hors_jeu', uniteId: 'h1', camp: 1, unite: 'helico' },
+  ];
+  assert.equal(scenesDeclenchees(libre, new Set(), { etat, evenements: combat, camp: 0 }).length, 0);
+  assert.equal(scenesDeclenchees(libre, new Set(), { etat, evenements: AUCUN, camp: 0 }).length, 0);
+});
+
+test('la fin de match a toujours un dialogue : celui du scénario, sinon le repli dit par le commandant du joueur', () => {
+  const t = (cle: string): string => `[${cle}]`;
+  const distribution = [
+    { camp: 1 as const, commandantCle: 'cmd_tomas_reiner' },
+    { camp: 0 as const, commandantCle: 'cmd_ariane_belloc' },
+  ];
+  const declare = [{ locuteur: 'cmd_tomas_reiner', texte: 'Bien joué.' }];
+  // Le scénario a écrit sa victoire : elle passe telle quelle.
+  assert.deepEqual(dialogueFin({ commandants: distribution, dialogueVictoire: declare, dialogueDefaite: [] }, 0, true, t), declare);
+  // Il n'a rien écrit pour la défaite : le repli, dit par le commandant du camp du joueur.
+  const defaite = dialogueFin({ commandants: distribution, dialogueVictoire: declare, dialogueDefaite: [] }, 0, false, t);
+  assert.deepEqual(defaite, [{ locuteur: 'cmd_ariane_belloc', texte: '[dialogue.defaite_defaut]', emotion: 'neutre' }]);
+  const victoire = dialogueFin({ commandants: distribution, dialogueVictoire: [], dialogueDefaite: [] }, 0, true, t);
+  assert.equal(victoire[0]?.locuteur, 'cmd_ariane_belloc');
+  assert.equal(victoire[0]?.texte, '[dialogue.victoire_defaut]');
+  assert.equal(victoire[0]?.emotion, 'joie');
+  // Sans commandant pour le camp du joueur, le premier de la distribution parle ; sans personne, rien.
+  const seul = [{ camp: 1 as const, commandantCle: 'cmd_tomas_reiner' }];
+  assert.equal(dialogueFin({ commandants: seul, dialogueVictoire: [], dialogueDefaite: [] }, 0, true, t)[0]?.locuteur, 'cmd_tomas_reiner');
+  assert.deepEqual(dialogueFin({ commandants: [], dialogueVictoire: [], dialogueDefaite: [] }, 0, true, t), []);
 });

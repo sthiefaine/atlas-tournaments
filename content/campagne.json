@@ -1,19 +1,19 @@
 {
   "titre": "De l’entraînement à la Ronde",
-  "introduction": "Quatre exercices au centre Atlas, chacun sur son propre terrain, puis vos premiers matchs officiels. Les coordonnées commencent à 1 : colonne, puis ligne.",
+  "introduction": "Quatre exercices au centre Atlas, chacun sur son propre terrain, puis vos premiers matchs officiels. Ce que vise un objectif est signalé en or sur le terrain.",
   "missions": [
     {
       "scenarioCle": "premier_contact",
       "titre": "Entraînement 1 · Premier contact",
       "biome": "plaine",
       "objectif": "Mettre hors jeu les trois unités de la patrouille de Tomas.",
-      "conseil": "Votre char passe par le pont (8, 4) et frappe le premier. L’infanterie traverse la rivière à pied, plus lentement.",
+      "conseil": "Votre char passe par le pont du nord et frappe le premier. L’infanterie traverse la rivière à pied, plus lentement.",
       "recit": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres. Une rivière, un pont, une patrouille en face : votre premier contact.",
       "conclusion": "Premier contact réussi. Vous savez déplacer une unité, frapper en premier et lire le terrain. Le reste, c’est de l’économie : on la voit demain.",
       "entrainement": true,
       "tutoriel": [
         "Cliquez sur votre char : les cases vertes sont celles où il peut aller, les rouges celles qu’il peut frapper après s’être déplacé.",
-        "Amenez le char sur la route au-delà du pont (9, 4) et choisissez Attaquer sur l’infanterie voisine. Le HUD montre le duel avant de confirmer.",
+        "Amenez le char sur la route juste après le pont et choisissez Attaquer sur l’infanterie voisine. Le HUD montre le duel avant de confirmer.",
         "Une unité attaquée riposte avec ce qui lui reste : frappez en premier, et à deux sur une même cible.",
         "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : une unité y reçoit moins de dégâts."
       ]
@@ -22,55 +22,56 @@
       "scenarioCle": "villes_du_bocage",
       "titre": "Entraînement 2 · Les quatre villes",
       "biome": "foret",
-      "objectif": "Capturer trois villes sur les quatre : (4, 3), (9, 3), (4, 8) et (9, 8).",
-      "conseil": "La ville (9, 8) est désaffectée : quatre tours d’infanterie pour la remettre en service. Prenez (4, 8) tout de suite, puis traversez par un pont.",
+      "objectif": "Capturer trois des quatre villes, signalées en or.",
+      "conseil": "La ville du sud-est est désaffectée : quatre tours d’infanterie pour la remettre en service. Prenez celle du sud-ouest tout de suite, puis traversez par un pont.",
       "recit": "Quatre villes, deux ponts, et Tomas en face qui veut les mêmes. Une ville rapporte des fonds à chaque journée et soigne ce qui s’y repose. Tenez-en trois en même temps.",
       "conclusion": "Trois villes sur quatre : vous avez compris ce qui gagne les matchs longs. Capturer, encaisser, recruter.",
       "entrainement": true,
       "tutoriel": [
-        "Déplacez une infanterie sur la ville (4, 8) et choisissez Capturer. Une ville demande 20 points : une infanterie intacte en gagne 10 par tour.",
+        "Déplacez une infanterie sur la ville du sud-ouest, la plus proche de votre QG, et choisissez Capturer. Une ville demande 20 points : une infanterie intacte en gagne 10 par tour.",
         "Restez sur place au tour suivant et capturez à nouveau : vos couleurs montent sur la ville. Si l’unité bouge, la capture repart de zéro.",
         "Chaque ville rapporte 500 fonds par journée. Cliquez sur votre QG quand la caisse dépasse 1 000 pour recruter une infanterie.",
-        "La ville (9, 8) est désaffectée : l’ordre s’appelle Remettre en service et demande 40 points, mais Atlas verse une prime de 1 000 fonds à qui la relance. Tomas capture aussi : reprenez-lui ce qu’il prend."
+        "La ville du sud-est est désaffectée : l’ordre s’appelle Remettre en service et demande 40 points, mais Atlas verse une prime de 1 000 fonds à qui la relance. Tomas capture aussi : reprenez-lui ce qu’il prend."
       ]
     },
     {
       "scenarioCle": "chantier_des_usines",
       "titre": "Entraînement 3 · Le chantier des usines",
       "biome": "desert",
-      "objectif": "Remettre en service les deux usines désaffectées : (6, 5) au centre, puis (9, 7) à l’est.",
+      "objectif": "Remettre en service les deux usines désaffectées, au centre puis à l’est.",
       "conseil": "Le génie remet une usine en service en deux tours, l’infanterie en quatre. Recrutez de l’artillerie à votre usine : elle frappe à distance sans riposte.",
       "recit": "Le terrain sec du centre Atlas. Deux usines désaffectées, au milieu et à l’est, plus près de Tomas que de vous. Votre génie est un bâtisseur : il ne capture pas, il remet en service. Votre usine, elle, produit des véhicules.",
       "conclusion": "Deux usines sous vos couleurs. Vous savez recruter, choisir une unité pour une cible, et remettre un bâtiment en service.",
       "entrainement": true,
       "tutoriel": [
-        "Sélectionnez le génie et menez-le sur l’usine (6, 5) par la route. Sur place, choisissez Remettre en service : deux tours, l’usine est à vous et la prime est doublée pour le génie (2 000 fonds).",
-        "Cliquez sur votre usine (2, 8) : le menu de production liste les véhicules et leur prix. L’artillerie tire à deux ou trois cases sans riposte, mais pas après avoir bougé.",
+        "Le brouillard couvre le chantier : on ne voit que ce que voient vos unités, et Tomas ne voit pas davantage. Approchez pour savoir ce qui vous attend.",
+        "Sélectionnez le génie et menez-le sur l’usine du centre par la route. Sur place, choisissez Remettre en service : deux tours, l’usine est à vous et la prime est doublée pour le génie (2 000 fonds).",
+        "Cliquez sur votre usine, près de votre QG : le menu de production liste les véhicules et leur prix. L’artillerie tire à deux ou trois cases sans riposte, mais pas après avoir bougé.",
         "Le char léger écrase l’infanterie ; l’artillerie et le char lourd le blessent. Chaque unité a sa cible : lisez la prévision de duel avant de confirmer.",
-        "L’usine (9, 7) est à qui la remet en service le premier : Tomas y envoie son infanterie. Écartez-la avec le char, puis posez votre génie ou une infanterie dessus et tenez."
+        "L’usine de l’est est à qui la remet en service le premier : Tomas y envoie son infanterie. Écartez-la avec le char, puis posez votre génie ou une infanterie dessus et tenez."
       ]
     },
     {
       "scenarioCle": "qg_de_la_presquile",
       "titre": "Entraînement 4 · Le QG de la presqu’île",
       "biome": "cotier",
-      "objectif": "Capturer le QG de Tomas (11, 2).",
-      "conseil": "Un QG demande 40 points : quatre tours d’une infanterie intacte. Traversez la grève à marée basse (journées 1, 4, 5, 8…), sinon par le pont (6, 8).",
+      "objectif": "Capturer le QG de Tomas, au nord-est.",
+      "conseil": "Un QG demande 40 points : quatre tours d’une infanterie intacte. Traversez la grève à marée basse (journées 1, 4, 5, 8…), sinon par le pont du sud.",
       "recit": "Dernier exercice, et le plus vrai : prendre le QG adverse termine la partie sur-le-champ. Le bassin reproduit les marées de la côte : la grève s’ouvre une journée sur deux.",
       "conclusion": "Formation terminée, commandant. Vous savez lire un objectif, capturer, recruter et anticiper le terrain. Votre premier match officiel se jouera au col, avec Tomas à vos côtés.",
       "entrainement": true,
       "tutoriel": [
         "Ouvrez le Bulletin, en haut à droite : il annonce la marée deux journées à l’avance. Marée basse, les cases de mer entre les deux plages deviennent praticables.",
         "Journée 1 : marée basse. Journées 2 et 3 : haute, une unité restée sur la grève est repoussée à terre. Journées 4 et 5 : basse à nouveau.",
-        "Le pont (6, 8) passe toujours. Un recon y met une journée, une infanterie trois : recrutez un transport à l’usine (2, 6) pour l’emmener.",
-        "Posez une infanterie sur le QG (11, 2) et capturez quatre tours de suite. Couvrez-la : le char devant, l’artillerie derrière. Votre pouvoir est là pour l’assaut."
+        "Le pont du sud passe toujours. Un recon y met une journée, une infanterie trois : recrutez un transport à votre usine pour l’emmener.",
+        "Posez une infanterie sur le QG de Tomas et capturez quatre tours de suite. Couvrez-la : le char devant, l’artillerie derrière. Votre pouvoir est là pour l’assaut."
       ]
     },
     {
       "scenarioCle": "pacte_du_col",
       "titre": "Qualification · Le pacte du col",
       "biome": "montagne",
-      "objectif": "Faire parvenir le char au col (9, 5).",
+      "objectif": "Faire parvenir le char au-delà du col, sur la case signalée en or.",
       "conseil": "Le génie peut ouvrir une route sur la montagne adjacente pour 1 500 fonds. Un détour au sud reste possible.",
       "recit": "Votre formation est terminée : bienvenue à votre première qualification officielle. Tomas vous prête son équipe technique pour une épreuve de coopération. Le passage direct est fermé. Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col.",
       "conclusion": "Qualification réussie. Vous partagez vos relevés avec Tomas : le Luxembourg devient votre allié. Il vous confie le commandement d’une exhibition sous ses couleurs.",
@@ -82,23 +83,23 @@
       "tutoriel": [
         "Sélectionnez le génie près de la montagne. Son ordre Ouvrir un passage ouvre une route sur une case de montagne adjacente.",
         "Cette intervention coûte 1 500 fonds et consomme l’action du génie. Le passage reste ouvert jusqu’à la fin de la mission.",
-        "Libérez le passage pour le char signalé dans l’objectif, puis conduisez-le jusqu’à (9, 5). Un détour au sud reste possible."
+        "Libérez le passage pour le char signalé dans l’objectif, puis conduisez-le jusqu’à la case en or. Un détour au sud reste possible."
       ]
     },
     {
       "scenarioCle": "couleurs_alliees",
       "titre": "Exhibition · Sous les couleurs alliées",
       "biome": "montagne",
-      "objectif": "Sous les couleurs luxembourgeoises, tenir en même temps les trois postes d’arbitrage (8, 2), (6, 6) et (6, 9).",
-      "conseil": "Brouillard de guerre : votre drone éclaire à cinq cases, sauf près de la station radar d’Ariane (11, 5), qui le brouille à douze cases. Prenez-la. Ariane prendra le poste du sud le plus vite possible : gardez un char et l’artillerie pour le reprendre.",
+      "objectif": "Sous les couleurs luxembourgeoises, tenir en même temps les trois postes d’arbitrage : au nord, au centre et au sud.",
+      "conseil": "Brouillard de guerre : votre drone éclaire à cinq cases, sauf près de la station radar d’Ariane, à l’est, qui le brouille à douze cases. Prenez-la. Ariane prendra le poste du sud le plus vite possible : gardez un char et l’artillerie pour le reprendre.",
       "recit": "Tomas vous confie son équipe du Luxembourg pour votre premier match sous les couleurs d’une nation alliée. Son style privilégie la défense. Les trois postes d’arbitrage de la vallée gardent les relevés du tournoi, et quelque chose cloche dans leur homologation.",
       "conclusion": "Vous remportez votre première victoire commune. Les relevés mentionnent une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
       "entrainement": false,
       "tutoriel": [
         "Vous incarnez Tomas : ses unités encaissent mieux, et son pouvoir renforce encore leur défense pendant une journée.",
         "Les trois postes sont des villes : capturez-les avec l’infanterie et gardez-les. La victoire exige les trois sous vos couleurs au même moment.",
-        "Le brouillard cache les unités adverses hors de votre vision. Le drone (3 000 à l’aéroport) voit à cinq cases ; brouillé par un brouilleur ou une station radar adverse, il ne voit plus qu’à une. Le drone filaire, quatre fois plus cher, ne se brouille pas.",
-        "Le col (5, 2) ne laisse passer que l’infanterie ; les véhicules contournent par la route. Une victoire sous les couleurs alliées renforce votre confiance avec ce commandant."
+        "Le brouillard cache les unités adverses hors de votre vision. Le drone (3 000 à l’aéroport) voit à cinq cases ; brouillé par un brouilleur ou une station radar adverse, il ne voit plus qu’à une.",
+        "Le passage du nord-ouest ne laisse passer que l’infanterie ; les véhicules contournent par la route. Une victoire sous les couleurs alliées renforce votre confiance avec ce commandant."
       ]
     }
   ]

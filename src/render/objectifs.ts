@@ -19,6 +19,12 @@ export function casesObjectifs(etat: EtatPartie): Surbrillance[] {
   return [...new Map(cases.map(c => [cleCase(c), c])).values()].map(c => ({ case: c, genre: 'capture' }));
 }
 
+/**
+ * Les objectifs en toutes lettres. **Aucune coordonnée** (7 septembre 2026,
+ * demande du propriétaire) : les cases visées sont déjà peintes en or sur le
+ * terrain (`casesObjectifs`), les répéter en chiffres encombre l'écran et
+ * demande au joueur de compter des colonnes au lieu de regarder la carte.
+ */
 export function textesObjectifs(etat: EtatPartie, cat: Catalogue, t: Traduire): string[] {
   const lignes: string[] = [];
   for (const [i, o] of etat.reglages.victoire.entries()) {
@@ -30,12 +36,12 @@ export function textesObjectifs(etat: EtatPartie, cat: Catalogue, t: Traduire): 
     if (o.type === 'proteger') {
       const unite = etat.unites.find(u => u.id === o.uniteRef);
       const nom = unite ? cat.unites[unite.type]?.nom ?? o.uniteRef : o.uniteRef;
-      lignes.push(o.destination ? t('objectif.proteger', { unite: nom, x: o.destination.x + 1, y: o.destination.y + 1 }) : t('objectif.proteger_unite', { unite: nom }));
+      lignes.push(o.destination ? t('objectif.proteger', { unite: nom }) : t('objectif.proteger_unite', { unite: nom }));
     }
     if (o.type === 'relais') {
       const n = etat.relais?.[String(i)] ?? 0;
       const c = o.cases[Math.min(n, o.cases.length - 1)];
-      if (c) lignes.push(t('objectif.relais', { n, total: o.cases.length, x: c.x + 1, y: c.y + 1 }));
+      if (c) lignes.push(t('objectif.relais', { n, total: o.cases.length }));
     }
   }
   if (etat.reglages.limiteJournees !== null) lignes.push(t('objectif.limite', { n: etat.reglages.limiteJournees }));

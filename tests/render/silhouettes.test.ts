@@ -36,7 +36,7 @@ function pinceauFactice(): { g: Pinceau; journal: string[] } {
   return { g: g as unknown as Pinceau, journal };
 }
 
-const CAT = chargerCatalogue(2);
+const CAT = chargerCatalogue(5);
 const BLEU = PALETTES.bleu;
 
 test('toute silhouette du catalogue se dessine, et chaque save a son restore', () => {
@@ -87,6 +87,38 @@ test('infanterie, méca et génie ne sont pas le même dessin à un accessoire p
   // Le génie porte l'accent sur la tête et le gilet ; l'infanterie, non.
   const accents = (j: string[]): number => j.filter((l) => l === `fillStyle=${BLEU.light}`).length;
   assert.ok(accents(genie) > accents(infanterie), 'le génie est plus clair que l’infanterie');
+});
+
+test('une coque et des ailes se lisent, et disent de quel côté est l’avant', () => {
+  const dessin = (base: 'coque' | 'ailes', corps: 'bloc' | 'capsule' | 'plateau'): string[] => {
+    const { g, journal } = pinceauFactice();
+    dessinerSilhouette(g, base, corps, [], 3, BLEU);
+    return journal;
+  };
+  // Ces deux bases étaient les plus pauvres du composeur — un trapèze symétrique
+  // et deux triangles — et personne ne les portait, donc personne ne le voyait.
+  // Elles doivent au moins être aussi fournies que le reste, et **asymétriques** :
+  // une coque symétrique ne dit pas où est la proue.
+  const coque = dessin('coque', 'bloc');
+  const ailes = dessin('ailes', 'capsule');
+  const chenilles = (() => {
+    const { g, journal } = pinceauFactice();
+    dessinerSilhouette(g, 'chenilles', 'bloc', [], 3, BLEU);
+    return journal;
+  })();
+  assert.ok(coque.length >= chenilles.length, `coque : ${coque.length} appels contre ${chenilles.length}`);
+  assert.ok(ailes.length > 12, `ailes : ${ailes.length} appels`);
+  for (const journal of [coque, ailes]) {
+    assert.equal(journal.filter((l) => l === 'save()').length, journal.filter((l) => l === 'restore()').length);
+    // La palette de la nation s'y retrouve : sans elle, un navire ou un avion
+    // serait gris et deux camps ne se distingueraient pas.
+    assert.ok(journal.includes(`fillStyle=${BLEU.main}`) || journal.includes(`fillStyle=${BLEU.dark}`));
+    assert.ok(journal.includes(`fillStyle=${BLEU.light}`), 'l’accent du camp doit apparaître');
+  }
+  // Le corps se pose par-dessus la base, pas à sa place : trois corps sur une
+  // même coque donnent trois dessins différents.
+  const trois = ['bloc', 'capsule', 'plateau'].map((c) => dessin('coque', c as 'bloc').join('|'));
+  assert.equal(new Set(trois).size, 3, 'un corps doit changer le dessin d’une coque');
 });
 
 test('un module déjà porté par les pattes ne se pose pas une seconde fois', () => {

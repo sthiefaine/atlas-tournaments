@@ -28,6 +28,13 @@ export interface OptionsGestes3d {
    * glisser de huit pixels est le défaut le plus agaçant d'un jeu tactile.
    */
   seuilGlisserPx?: number;
+  /**
+   * Planifie le traitement du survol à la prochaine image, et l'annule. Par
+   * défaut `requestAnimationFrame` ; sans lui (les tests), le survol est traité
+   * sur-le-champ.
+   */
+  planifierImage?: (f: () => void) => number;
+  annulerImage?: (id: number) => void;
 }
 
 const SEUIL_APPUI_LONG = 520;
@@ -72,6 +79,29 @@ export function brancherGestes3d(
   let appuiLong: ReturnType<typeof setTimeout> | null = null;
   /** Le dernier tap, en case et en temps : c'est la case qui fait le double-clic. */
   let dernierTap: { c: Case; temps: number } | null = null;
+
+  // Le survol est **coalescé sur l'image** : une souris envoie plusieurs
+  // centaines de positions par seconde, et chacune lançait un rayon sur tout
+  // le maillage du sol. On garde la dernière et on la traite une fois par image.
+  const g = globalThis as {
+    requestAnimationFrame?: (f: (t: number) => void) => number;
+    cancelAnimationFrame?: (id: number) => void;
+  };
+  const planifier = options.planifierImage
+    ?? (g.requestAnimationFrame
+      ? (f: () => void): number => g.requestAnimationFrame!(() => f())
+      : (f: () => void): number => { f(); return 0; });
+  const annulerImage = options.annulerImage ?? g.cancelAnimationFrame ?? ((): void => undefined);
+  let survol: { x: number; y: number } | null = null;
+  let imageSurvol: number | null = null;
+  const traiterSurvol = (): void => {
+    imageSurvol = null;
+    const p = survol;
+    survol = null;
+    if (!p) return;
+    const c = caseSous(p.x, p.y);
+    if (c) gestes.surSurvolCase?.(c);
+  };
 
   const annulerAppuiLong = (): void => {
     if (appuiLong !== null) clearTimeout(appuiLong);
@@ -151,8 +181,8 @@ export function brancherGestes3d(
     const p = local(e);
     const doigt = doigts.get(e.pointerId);
     if (!doigt) {
-      const c = caseSous(p.x, p.y);
-      if (c) gestes.surSurvolCase?.(c);
+      survol = p;
+      if (imageSurvol === null) imageSurvol = planifier(traiterSurvol);
       return;
     }
     const dx = p.x - doigt.x;
@@ -273,6 +303,9 @@ export function brancherGestes3d(
 
   return (): void => {
     annulerAppuiLong();
+    if (imageSurvol !== null) annulerImage(imageSurvol);
+    imageSurvol = null;
+    survol = null;
     canvas.removeEventListener('pointerdown', surDown);
     canvas.removeEventListener('pointermove', surMove);
     canvas.removeEventListener('pointerup', surUp);

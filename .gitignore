@@ -25,6 +25,9 @@ npm-debug.log*
 # fichiers déposés par l'application Claude
 /Claude outputs/
 
+# Brouillons de travail : rien de ce qui est ici ne fait partie du dépôt.
+/tmp/
+
 # aperçus de cartes générés
 /apercus/
 

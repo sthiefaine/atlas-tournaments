@@ -32,16 +32,141 @@ function exigerOk<T>(nom: string, r: Resultat<T>): T {
   return r.valeur;
 }
 
+/** Les neuf unités du catalogue 5 : air, mer et missiles (`04-gameplay.md` §10 quater). */
+const CATALOGUE_5 = [
+  'barge', 'bombardier', 'chasseur', 'cuirasse', 'missiles_air', 'missiles_sol',
+  'porte_avions', 'sous_marin', 'transport_air',
+];
+
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 3);
+  assert.equal(catalogue.catalogueVersion, 5);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
-  // Les drones et le brouilleur entrent au catalogue 3, jamais au 2.
-  for (const cle of ['drone', 'drone_filaire', 'brouilleur']) {
+  // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
+  // le brouilleur au 3, le char moyen au 4. Le drone filaire a été retiré du canon.
+  for (const cle of ['drone', 'brouilleur']) {
     assert.equal(catalogue.unites.find((u) => u.cle === cle)?.homologation?.catalogue, 3, cle);
   }
+  assert.equal(catalogue.unites.find((u) => u.cle === 'char_moyen')?.homologation?.catalogue, 4);
+  assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
+  assert.equal(catalogue.unites.length, 23);
+});
 
+test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
+  const unites = chargerUnites();
+  const nouvelles = unites.filter((u) => u.homologation?.catalogue === 5).map((u) => u.cle).sort();
+  assert.deepEqual(nouvelles, CATALOGUE_5);
+  for (const u of unites.filter((x) => CATALOGUE_5.includes(x.cle))) {
+    assert.equal(u.statut, 'homologuee', u.cle);
+    assert.equal(u.homologation?.date, '2026-09-07', u.cle);
+    assert.ok(u.nomCourt.length <= 12, `${u.cle} : nom court de ${u.nomCourt.length} signes`);
+  }
+  // Le plafond de vingt-quatre unités actives (§13.7) : il reste une place.
+  assert.equal(unites.length, 23);
+});
+
+test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3', () => {
+  const unites = chargerUnites();
+  const canon = unites.filter((u) => u.statut === 'canon').map((u) => u.cle);
+  for (const u of unites.filter((x) => CATALOGUE_5.includes(x.cle))) {
+    assert.ok(u.subitDegats, `${u.cle} : colonne absente`);
+    const colonne = u.subitDegats ?? {};
+    // 1. La diagonale reste sous cent — zéro quand l'unité ne se vise pas.
+    assert.ok((u.degats[u.cle] ?? 0) < 100, `${u.cle} : diagonale ≥ 100`);
+    assert.equal(u.degats[u.cle], colonne[u.cle], `${u.cle} : diagonale incohérente`);
+    // 2. Un contre au moins parmi les dix canon. 3. Deux canon qu'elle ne perce pas.
+    assert.ok(canon.some((c) => (colonne[c] ?? 0) >= 70), `${u.cle} : unité sans contre`);
+    assert.ok(canon.filter((c) => (u.degats[c] ?? 0) <= 30).length >= 2, `${u.cle} : unité universelle`);
+    // Ligne et colonne complètes : une entrée par unité active.
+    for (const autre of unites) {
+      assert.ok(autre.cle in u.degats, `${u.cle} : ligne, ${autre.cle} manque`);
+      assert.ok(autre.cle in colonne, `${u.cle} : colonne, ${autre.cle} manque`);
+    }
+  }
+});
+
+test('la ligne d’une homologuée et la colonne de sa cible disent la même chose', () => {
+  // `degatsBase` lit la colonne de la cible **avant** la ligne de l'attaquant : si
+  // les deux divergent, la ligne ment sans qu'aucune partie ne le montre.
+  const unites = chargerUnites();
+  const declarantes = unites.filter((u) => u.subitDegats);
+  for (const att of declarantes) {
+    for (const def of declarantes) {
+      assert.equal(
+        att.degats[def.cle], def.subitDegats?.[att.cle],
+        `${att.cle} → ${def.cle} : la ligne et la colonne divergent`,
+      );
+    }
+  }
+});
+
+test('le sous-marin ne se laisse trouver que par cinq types', () => {
+  // Le trait `plongee` cache la coque ; ce qui peut la frapper est une donnée,
+  // jamais une exception de combat (`04-gameplay.md` §10 quater).
+  const sm = chargerUnites().find((u) => u.cle === 'sous_marin');
+  assert.ok(sm?.subitDegats);
+  assert.deepEqual(sm.traits, ['plongee']);
+  assert.equal(sm.domaine, 'mer');
+  const chasseurs = Object.entries(sm.subitDegats)
+    .filter(([, d]) => (d ?? 0) > 0).map(([c]) => c).sort();
+  assert.deepEqual(chasseurs, ['bombardier', 'cuirasse', 'helico', 'porte_avions', 'sous_marin']);
+});
+
+test('les transports du catalogue 5 ne tirent sur rien', () => {
+  for (const cle of ['transport_air', 'barge']) {
+    const u = chargerUnites().find((x) => x.cle === cle);
+    assert.ok(u);
+    assert.equal(u.munitions, null, cle);
+    assert.ok(Object.values(u.degats).every((d) => d === 0), cle);
+    assert.ok(u.transport && u.transport.places === 2, cle);
+  }
+});
+
+test('le char moyen respecte les contraintes de forme du §13.3', () => {
+  const unites = chargerUnites();
+  const moyen = unites.find((u) => u.cle === 'char_moyen');
+  assert.ok(moyen && moyen.subitDegats);
+  const canon = unites.filter((u) => u.statut === 'canon').map((u) => u.cle);
+  // Diagonale sous 100, un contre parmi les canon, deux canon qu'il ne perce pas.
+  assert.ok((moyen.degats['char_moyen'] ?? 0) < 100);
+  assert.equal(moyen.degats['char_moyen'], moyen.subitDegats['char_moyen'], 'ligne et colonne coïncident sur la diagonale');
+  assert.ok(canon.some((c) => (moyen.subitDegats?.[c] ?? 0) >= 70), 'pas d’unité sans contre');
+  assert.ok(canon.filter((c) => (moyen.degats[c] ?? 0) <= 30).length >= 2, 'pas d’unité universelle');
+  // Ligne et colonne complètes : une entrée par unité active, lui-même compris.
+  for (const u of unites) {
+    assert.ok(u.cle in moyen.degats, `ligne : ${u.cle} manque`);
+    assert.ok(u.cle in moyen.subitDegats, `colonne : ${u.cle} manque`);
+    // La colonne du char moyen et les lignes des autres disent la même chose.
+    assert.equal(u.degats['char_moyen'], moyen.subitDegats[u.cle], `${u.cle} → char_moyen`);
+    if (u.subitDegats) assert.equal(u.subitDegats['char_moyen'], moyen.degats[u.cle], `char_moyen → ${u.cle}`);
+  }
+  // Un char : il fait l'air à zéro, comme les deux autres.
+  assert.equal(moyen.degats['helico'], 0);
+});
+
+test('le transport est un ravitailleur à deux places qui accepte le génie', () => {
+  const t = chargerUnites().find((u) => u.cle === 'transport');
+  assert.ok(t);
+  assert.deepEqual([...t.traits].sort(), ['ravitaillement', 'transport']);
+  assert.deepEqual(t.transport, { places: 2, accepte: ['infanterie', 'meca', 'genie'] });
+  assert.equal(t.cout, 5000);
+  assert.equal(t.munitions, null);
+});
+
+test('les armes secondaires visent des unités du catalogue à dégâts non nuls', () => {
+  const unites = chargerUnites();
+  const cles = new Set(unites.map((u) => u.cle));
+  const armees = unites.filter((u) => u.armeSecondaire);
+  assert.deepEqual(armees.map((u) => u.cle).sort(), ['char_leger', 'char_lourd', 'char_moyen', 'helico', 'meca']);
+  for (const u of armees) {
+    assert.notEqual(u.munitions, null, `${u.cle} : une arme secondaire suppose une arme principale qui compte`);
+    assert.ok((u.degatsSecondaire ?? 0) >= 1 && (u.degatsSecondaire ?? 0) <= 30, `${u.cle} : tir à sec hors liste borné`);
+    for (const cible of u.armeSecondaire ?? []) {
+      assert.ok(cles.has(cible), `${u.cle} : ${cible} inconnue`);
+      assert.ok((u.degats[cible] ?? 0) > 0, `${u.cle} → ${cible} : à 0, rien ne se vise`);
+    }
+  }
 });
 
 test('content/terrains.json passe son validateur', () => {
@@ -105,18 +230,41 @@ test('la diagonale reste sous 100 et le transport ne vise personne', () => {
   }
 });
 
-test("seules quatre unités peuvent viser l'air", () => {
+test("seules quatre unités canon peuvent viser l'air", () => {
+  // La règle des quatre viseurs porte sur la table 10 × 10 du §8, que nul
+  // catalogue ultérieur ne réécrit : les viseurs venus des catalogues 3 à 5
+  // (`missiles_air`, `chasseur`, le pont d'envol du porte-avions) déclarent leur
+  // ligne dans `content/unites.json`, jamais ici.
   const table = chargerDegats();
   const viseurs = table.unites.filter((u) => degatsDe(table, u, 'helico') > 0);
   assert.deepEqual(viseurs.sort(), ['antiair', 'helico', 'infanterie', 'meca']);
 });
 
-test('les terrains capturables sont exactement les cinq bâtiments', () => {
+test('les terrains capturables sont exactement les six bâtiments', () => {
   const capturables = chargerTerrains().filter((t) => t.capturable).map((t) => t.cle);
-  assert.deepEqual(capturables.sort(), ['aeroport', 'qg', 'radar', 'usine', 'ville']);
+  assert.deepEqual(capturables.sort(), ['aeroport', 'port', 'qg', 'radar', 'usine', 'ville']);
 });
 
-test('les producteurs couvrent les dix unités canon', () => {
+test('le port est le seul terrain qu’une coque franchisse avec la mer', () => {
+  const terrains = chargerTerrains();
+  const navigables = terrains.filter((t) => t.couts.mer !== undefined).map((t) => t.cle);
+  assert.deepEqual(navigables.sort(), ['mer', 'port']);
+  const port = terrains.find((t) => t.cle === 'port');
+  assert.ok(port);
+  // Il se capture, il rapporte comme une ville, il ravitaille et il soigne.
+  assert.equal(port.car, 'O');
+  assert.equal(port.capturable, true);
+  assert.equal(port.revenus, 1000);
+  assert.equal(port.defense, 3);
+  assert.equal(port.ravitaille, true);
+  assert.deepEqual([...port.produit].sort(), ['barge', 'cuirasse', 'porte_avions', 'sous_marin']);
+  // La plage et la rivière restent terrestres : le naval ne remonte pas les fleuves.
+  for (const cle of ['plage', 'riviere', 'pont']) {
+    assert.equal(terrains.find((t) => t.cle === cle)?.couts.mer, undefined, cle);
+  }
+});
+
+test('les producteurs couvrent toutes les unités du catalogue', () => {
   const produits = new Set(chargerTerrains().flatMap((t) => t.produit));
   assert.deepEqual([...produits].sort(), chargerUnites().map((u) => u.cle).sort());
 });
@@ -139,7 +287,10 @@ test('les dix archétypes canon sont présents une seule fois', () => {
   assert.equal(new Set(cles).size, 10);
 });
 
-test('le glossaire français nomme les dix unités et les treize terrains', () => {
+test('le glossaire français nomme les dix unités canon et les treize terrains d’avant le port', () => {
+  // Le glossaire couvre le vocabulaire **imposé** aux traductions, pas le
+  // catalogue vivant : il s'arrête aux dix unités canon. Le port (catalogue 5)
+  // n'y est pas encore entré — c'est un manque connu, pas une règle.
   const glossaire = chargerGlossaireFr();
   const unites = glossaire.entrees.filter((e) => e.categorie === 'unite');
   const terrains = glossaire.entrees.filter((e) => e.categorie === 'terrain');

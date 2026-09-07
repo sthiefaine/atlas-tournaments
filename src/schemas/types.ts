@@ -377,11 +377,11 @@ export const STATUTS_UNITE = ['canon', 'essai', 'homologuee', 'retiree'] as cons
 /** Statut d'homologation d'une unité. */
 export type StatutUnite = typeof STATUTS_UNITE[number];
 
-/** Liste fermée des treize traits d'unité (`04-gameplay.md` §13.2). */
+/** Liste fermée des quatorze traits d'unité (`04-gameplay.md` §13.2). */
 export const TRAITS = [
   'transport', 'tir_indirect', 'anti_air', 'amphibie', 'vol',
   'furtif_nuit', 'vision_etendue', 'ravitaillement', 'tout_terrain', 'capture', 'genie',
-  'drone', 'brouilleur',
+  'drone', 'brouilleur', 'plongee',
 ] as const;
 /** Trait d'unité : un comportement implémenté une seule fois dans le moteur. */
 export type Trait = typeof TRAITS[number];
@@ -439,6 +439,20 @@ export interface UnitType {
   transport: { places: number; accepte: CleUnite[] } | null;
   degats: Partial<Record<CleUnite, number>>;
   subitDegats?: Partial<Record<CleUnite, number>>;
+  /**
+   * Arme secondaire (`04-gameplay.md` §5.3) : contre ces cibles, l'unité tire à
+   * la mitrailleuse — aucune munition consommée, tir permis à zéro munition,
+   * attaque comme riposte. Interdite à une unité sans munitions, qui n'en a
+   * pas besoin. Absente ou `null` : tout tir consomme.
+   */
+  armeSecondaire?: CleUnite[] | null;
+  /**
+   * Base de dégâts de l'arme secondaire contre une cible **non listée**, quand
+   * l'arme principale est vide (§5.3, 7 septembre 2026) : un char à sec
+   * mitraille encore un char, pour peu. `null` ou absent : hors liste, pas de
+   * tir à sec. Exige `armeSecondaire` et `munitions` non nuls.
+   */
+  degatsSecondaire?: number | null;
   peutRiposter: boolean;
   peutTirerApresMouvement: boolean;
 }
@@ -447,10 +461,10 @@ export interface UnitType {
 // 4. Terrain
 // ---------------------------------------------------------------------------
 
-/** Les douze terrains du jeu. */
+/** Les quatorze terrains du jeu. */
 export const CLES_TERRAIN = [
   'plaine', 'foret', 'montagne', 'route', 'ville', 'qg',
-  'usine', 'aeroport', 'mer', 'riviere', 'pont', 'plage', 'radar',
+  'usine', 'aeroport', 'mer', 'riviere', 'pont', 'plage', 'radar', 'port',
 ] as const;
 /** Clé d'un terrain. */
 export type CleTerrain = typeof CLES_TERRAIN[number];
@@ -459,13 +473,22 @@ export type CleTerrain = typeof CLES_TERRAIN[number];
 export const CARACTERE_PAR_TERRAIN: Record<CleTerrain, string> = {
   plaine: 'P', foret: 'F', montagne: 'M', route: 'R', ville: 'C', qg: 'H',
   usine: 'U', aeroport: 'A', mer: 'W', riviere: 'V', pont: 'N', plage: 'S', radar: 'T',
+  port: 'O',
 };
 
 /** Caractères de grille connus, dans l'ordre des terrains. */
-export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S', 'T'] as const;
+export const CARACTERES_GRILLE = ['P', 'F', 'M', 'R', 'C', 'H', 'U', 'A', 'W', 'V', 'N', 'S', 'T', 'O'] as const;
 
 /** Terrains capturables : les seuls à pouvoir porter un propriétaire. */
-export const TERRAINS_CAPTURABLES = ['ville', 'usine', 'aeroport', 'qg', 'radar'] as const;
+export const TERRAINS_CAPTURABLES = ['ville', 'usine', 'aeroport', 'qg', 'radar', 'port'] as const;
+
+/**
+ * Caractères de grille des terrains capturables : les seuls à pouvoir porter un
+ * propriétaire dans une `MapDef`. Dérivé, jamais recopié — une liste écrite à la
+ * main aurait oublié le port le jour où il est entré au canon.
+ */
+export const CARACTERES_CAPTURABLES: readonly string[] = TERRAINS_CAPTURABLES
+  .map((t) => CARACTERE_PAR_TERRAIN[t]);
 
 /** Terrain : coûts par type de mouvement, défense, revenu, rendu. */
 export interface Terrain {
@@ -593,7 +616,7 @@ export interface Dialogue {
 
 /** Ce qui peut ouvrir une scène de dialogue pendant un match. */
 export const DECLENCHEURS_SCENE = [
-  'ouverture', 'journee', 'premier_combat', 'capture', 'perte', 'production',
+  'ouverture', 'journee', 'premier_combat', 'capture', 'perte', 'panne_seche', 'production',
   'pouvoir', 'etape',
 ] as const;
 /** Nom du type d'un déclencheur de scène, sans ses paramètres. */
@@ -617,6 +640,12 @@ export type DeclencheurScene =
   | { type: 'capture'; camp?: CampId }
   /** Quand une unité sort du jeu ; `camp` restreint au camp qui la perd. */
   | { type: 'perte'; camp?: CampId }
+  /**
+   * Quand une unité aérienne tombe en panne sèche (`04-gameplay.md` §2) ;
+   * `camp` restreint au camp qui la perd. C'est une perte sans combat, et un
+   * commandant a autre chose à en dire qu'après un tir.
+   */
+  | { type: 'panne_seche'; camp?: CampId }
   /** Quand une unité est produite ; `unite` restreint à ce type. */
   | { type: 'production'; unite?: CleUnite }
   /** Quand un commandant déclenche un pouvoir. */
@@ -1208,7 +1237,7 @@ export interface CatalogueUnites {
   unites: UnitType[];
 }
 
-/** Catalogue de terrains embarqué : les douze terrains. */
+/** Catalogue de terrains embarqué : les quatorze terrains. */
 export interface CatalogueTerrains {
   terrains: Terrain[];
 }

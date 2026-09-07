@@ -70,10 +70,15 @@ interface PontVitrine {
   modele(): { livre: boolean; lods: number; clips: string[] };
 }
 
-const VERSIONS_CATALOGUE = [1, 2, 3] as const;
+/**
+ * Les versions de catalogue qu'on peut regarder. La dernière est le défaut :
+ * une unité homologuée ce matin doit être visible ici sans changer de menu, et
+ * les anciennes restent pour comparer une silhouette à ce qu'elle était.
+ */
+const VERSIONS_CATALOGUE = [1, 2, 3, 4, 5] as const;
 
 export default function Vitrine(): React.ReactElement {
-  const [version, setVersion] = useState<number>(3);
+  const [version, setVersion] = useState<number>(5);
   const [unite, setUnite] = useState<string>('infanterie');
   const [pays, setPays] = useState<string>('fr');
   const [camp, setCamp] = useState<CampId>(0);

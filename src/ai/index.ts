@@ -32,6 +32,7 @@ export {
 export { AGRESSIVE, POIDS_AGRESSIVE } from './strategies/agressive';
 export { DEFENSIVE, POIDS_DEFENSIVE } from './strategies/defensive';
 export * from './evaluation';
+export * from './logistique';
 
 /**
  * `gloutonne` : la stratégie pondérée privée de tout ce qui n'est pas immédiat.

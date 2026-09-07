@@ -9,7 +9,8 @@
  * ```
  *
  * Options : `--carte`, `--parties`, `--graine`, `--strategies a,b`, `--journees`,
- * `--climat`, `--saison`, `--meteo`, `--brouillard`, `--json`, plus deux options
+ * `--climat`, `--saison`, `--meteo`, `--brouillard`, `--catalogue N` (la version
+ * de catalogue jouée, celle du moteur par défaut), `--json`, plus deux options
  * de contrôle :
  *
  * - `--conditions ete/clair/jour,hiver/neige/nuit` — passe par la **campagne du
@@ -96,6 +97,8 @@ export interface Campagne {
   saison: Saison | null;
   meteo: Meteo | null;
   brouillard: boolean;
+  /** Version de catalogue jouée ; `undefined` laisse le moteur choisir la sienne. */
+  catalogue?: number;
 }
 
 /** Ce que rend une campagne : les statistiques du contrat, plus le détail. */
@@ -108,7 +111,7 @@ export interface Bilan {
 
 /** Joue N parties IA contre IA sur une carte et rend les statistiques. */
 export function simuler(c: Campagne): Bilan {
-  const cat = chargerCatalogue();
+  const cat = chargerCatalogue(c.catalogue);
   const victoires = new Array<number>(c.carte.camps).fill(0);
   const fonds = new Array<number>(c.carte.camps).fill(0);
   const produites: Record<string, number> = {};
@@ -286,6 +289,7 @@ function principal(): void {
     saison: typeof o['saison'] === 'string' ? (o['saison'] as Saison) : null,
     meteo: typeof o['meteo'] === 'string' ? (o['meteo'] as Meteo) : null,
     brouillard: o['brouillard'] === true,
+    ...(typeof o['catalogue'] === 'string' ? { catalogue: Number(o['catalogue']) } : {}),
   });
 
   if (o['json'] === true) {

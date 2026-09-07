@@ -16,11 +16,23 @@
  *
  * L'eau est un plan séparé, sous le niveau des lits de rivière et des fonds
  * marins : partout où le terrain remonte au-dessus d'elle, le tampon de
- * profondeur la cache tout seul.
+ * profondeur la cache tout seul. Il ne déborde de la carte que d'une case
+ * (`DEBORD_EAU`, révision du 6 septembre 2026) : la nappe qui couvrait tout
+ * l'écran au-delà était le poste de remplissage le plus cher de l'image, en
+ * matériau éclairé qui lisait la carte d'ombre, pour montrer du bleu que la
+ * couleur de fond du ciel donne gratuitement.
  *
  * Le maillage lit `hauteurSol`, la **surface** lit `hauteurEn` : les deux ne
  * diffèrent que sous les ponts, où le sol se creuse au niveau du lit pendant
  * que le tablier — et tout ce qui roule dessus — reste à hauteur de berge.
+ *
+ * Le **brouillard de guerre** (révision du 6 septembre 2026) est un masque de
+ * visibilité : une `DataTexture` d'un octet par case, échantillonnée par tout
+ * ce que le plateau dessine — sol, socle, voies, ponts, eau — pour ramener une
+ * case hors de vue presque au noir. C'est une règle du jeu rendue visible, pas
+ * un effet d'atmosphère : le `FogExp2` de `eclairage.ts` est une autre chose,
+ * et `doc/10` §6.4 interdit de les confondre. Le masque n'est réécrit que
+ * quand l'ensemble des cases vues change, jamais par image.
  */
 
 import * as THREE from 'three';
@@ -41,6 +53,38 @@ const SUBDIVISIONS = 3;
 /** Répétitions de texture de détail, par case. */
 const TUILAGE = 0.65;
 
+/**
+ * De combien le plan d'eau déborde de la carte, en unités de scène. Une case
+ * suffit à ce que le bord du plateau se lise comme une berge sur l'eau, socle
+ * compris, et non comme une tranche coupée ; au-delà, on voit la couleur du
+ * ciel. Le débord précédent — 1,6 fois la carte plus trente unités — remplissait
+ * presque tout l'écran dès qu'on dézoomait.
+ */
+export const DEBORD_EAU = CASE;
+
+/** Le blanc bleuté de la neige sur les voies et les ponts. */
+const NEIGE_VOIE = new THREE.Color(0xf2f5f8);
+
+/**
+ * Ce qui reste de la lumière d'une case hors de vue. **Zéro** : « noir noir,
+ * 100 % », décision du propriétaire du 7 septembre 2026, qui remplace le
+ * « très sombre » de la veille — rien du terrain ne se lit, comme dans Advance
+ * Wars. La constante reste pour pouvoir revenir en arrière d'un chiffre.
+ */
+export const FACTEUR_BROUILLARD = 0;
+
+/**
+ * Le plancher d'une case hors de vue, ajouté après l'éclairage. Noir pur avec un
+ * facteur nul : le brouillard est un aplat, pas une pénombre.
+ */
+export const TEINTE_BROUILLARD = 0x000000;
+
+/** Le sol, la grille, les voies et l'eau sont tous vus : la valeur d'un texel du masque. */
+const VU = 255;
+
+/** Une couleur de travail pour les mélanges d'ambiance : rien n'est alloué par image. */
+const TAMPON = new THREE.Color();
+
 /** Le plateau monté : son groupe, son sol cliquable et ses réglages d'ambiance. */
 export interface Plateau {
   readonly groupe: THREE.Group;
@@ -51,6 +95,13 @@ export interface Plateau {
    * creuse jusqu'au lit, et un clic sur le tablier tombait dans l'eau d'à côté.
    */
   readonly ponts: THREE.Mesh;
+  /**
+   * Les uniformes du brouillard. Tout ce qui se pose sur la carte — bâtiments,
+   * arbres, pierres, accessoires — se greffe dessus (`grefferBrouillardSur`) :
+   * une seule règle d'extinction, appliquée après l'éclairage, pour le sol
+   * comme pour ce qui le couvre.
+   */
+  readonly uniformesBrouillard: UniformesBrouillard;
   /** Altitude du sol en un point du monde. */
   hauteurEn(x: number, z: number): number;
   /** Applique une ambiance (teinte, neige, humidité, couleur de l'eau). */
@@ -72,7 +123,127 @@ export interface Plateau {
    * une mer qui monte se lit comme une marée.
    */
   majTerrain(g: GrilleTerrain, duree?: number): void;
+  /**
+   * Pose le brouillard de guerre : les cases hors de `visibles` s'assombrissent,
+   * `null` rend tout visible. Le masque n'est réécrit que si l'ensemble a
+   * changé — le survol repasse ici à chaque case, avec le même ensemble.
+   */
+  majVisibles(visibles: ReadonlySet<string> | null): void;
   dispose(): void;
+}
+
+/**
+ * Le masque de visibilité : un octet par case, `VU` ou zéro. Écrit dans
+ * l'ordre des texels de la splat map, pour que les deux se lisent aux mêmes
+ * coordonnées. `null` — pas de brouillard — donne une carte toute vue.
+ */
+export function donneesVisibles(g: GrilleTerrain, visibles: ReadonlySet<string> | null): Uint8Array<ArrayBuffer> {
+  const donnees = new Uint8Array(g.largeur * g.hauteur);
+  if (visibles === null) return donnees.fill(VU);
+  for (let y = 0; y < g.hauteur; y += 1) {
+    for (let x = 0; x < g.largeur; x += 1) {
+      if (visibles.has(`${x},${y}`)) donnees[y * g.largeur + x] = VU;
+    }
+  }
+  return donnees;
+}
+
+/** Déclarations du brouillard de guerre, en tête des deux nuanceurs. */
+const BROUILLARD_DECL_VERTEX = 'varying vec2 vAtlasMonde;\n';
+const BROUILLARD_DECL_FRAGMENT = `
+varying vec2 vAtlasMonde;
+uniform sampler2D tVisibles;
+uniform vec2 uCarteBrouillard;
+uniform float uFacteurBrouillard;
+uniform vec3 uTeinteBrouillard;
+`;
+
+/**
+ * La position au sol du fragment, dans le monde : c'est elle qui dit sa case.
+ * `instanceMatrix` d'abord — arbres, pierres et accessoires sont des lots
+ * instanciés, et `modelMatrix` seule les ramènerait tous à l'origine du lot,
+ * donc tous à la même case.
+ */
+const BROUILLARD_VERTEX = `#include <project_vertex>
+	{
+		vec4 atlasMonde = vec4( transformed, 1.0 );
+		#ifdef USE_INSTANCING
+			atlasMonde = instanceMatrix * atlasMonde;
+		#endif
+		vAtlasMonde = ( modelMatrix * atlasMonde ).xz;
+	}`;
+
+/**
+ * L'assombrissement, **après** l'éclairage : appliqué au diffus, le reflet du
+ * studio et la lumière du ciel ramèneraient de la clarté sur une case censée
+ * être dans le noir. Le masque est lu en filtrage linéaire — un texel par
+ * case — et resserré par `smoothstep` : la transition tient dans un demi-texel
+ * autour de la frontière, au lieu de courir d'un centre de case à l'autre.
+ * Le brouillard de scène (`fog_fragment`) vient ensuite : une case hors de vue
+ * sous la brume se fond dans la brume, comme le reste.
+ */
+const BROUILLARD_FRAGMENT = `#include <opaque_fragment>
+	{
+		vec2 uvVisibles = clamp( vAtlasMonde / uCarteBrouillard, 0.0, 1.0 );
+		float vu = smoothstep( 0.3, 0.7, texture2D( tVisibles, uvVisibles ).r );
+		gl_FragColor.rgb = mix( gl_FragColor.rgb * uFacteurBrouillard + uTeinteBrouillard, gl_FragColor.rgb, vu );
+	}`;
+
+/** Les uniformes du brouillard, partagés par tout ce qui se pose sur la carte. */
+export interface UniformesBrouillard {
+  tVisibles: { value: THREE.DataTexture };
+  uCarteBrouillard: { value: THREE.Vector2 };
+  uFacteurBrouillard: { value: number };
+  uTeinteBrouillard: { value: THREE.Color };
+}
+
+/**
+ * Greffe la lecture du masque sur un matériau, **par-dessus** ce que son
+ * `onBeforeCompile` fait déjà : le sol garde son mélange de matières, l'eau ses
+ * rives. La clé de programme doit être propre à chaque matériau greffé —
+ * deux matériaux aux mêmes réglages et à la même clé partageraient un programme.
+ */
+export function grefferBrouillard(
+  materiau: THREE.MeshStandardMaterial, uniformes: UniformesBrouillard, cle: string,
+): void {
+  if (greffes.has(materiau)) return;
+  greffes.add(materiau);
+  const avant = materiau.onBeforeCompile;
+  const avantCle = materiau.customProgramCacheKey;
+  materiau.onBeforeCompile = (shader, renderer): void => {
+    avant.call(materiau, shader, renderer);
+    Object.assign(shader.uniforms, uniformes);
+    shader.vertexShader = BROUILLARD_DECL_VERTEX + shader.vertexShader
+      .replace('#include <project_vertex>', BROUILLARD_VERTEX);
+    shader.fragmentShader = BROUILLARD_DECL_FRAGMENT + shader.fragmentShader
+      .replace('#include <opaque_fragment>', BROUILLARD_FRAGMENT);
+  };
+  // La clé **compose** : un matériau qui avait déjà la sienne — le sol, l'eau —
+  // ne la perd pas, et deux matériaux greffés du même code la partagent sans
+  // se voler leur programme, three distinguant déjà leurs propres réglages.
+  materiau.customProgramCacheKey = (): string => `${avantCle.call(materiau)}|${cle}`;
+}
+
+/** Les matériaux déjà greffés : on ne greffe jamais deux fois le même. */
+const greffes = new WeakSet<THREE.Material>();
+
+/**
+ * Greffe le brouillard sur **tout** ce qui pend d'un objet. C'est ainsi que
+ * bâtiments, arbres, pierres et accessoires s'éteignent hors de vue : teindre
+ * leur couleur en noir ne suffisait pas — un matériau noir garde le reflet du
+ * studio et l'éclat du soleil, et c'est ce gris qu'on voyait dans le noir.
+ * Le masque, lui, s'applique **après** l'éclairage.
+ */
+export function grefferBrouillardSur(
+  racine: THREE.Object3D, uniformes: UniformesBrouillard, cle: string,
+): void {
+  racine.traverse((o) => {
+    const m = (o as THREE.Mesh).material;
+    if (!m) return;
+    for (const mat of Array.isArray(m) ? m : [m]) {
+      if (mat instanceof THREE.MeshStandardMaterial) grefferBrouillard(mat, uniformes, cle);
+    }
+  });
 }
 
 /** Déclarations injectées en tête du nuanceur de fragments. */
@@ -312,6 +483,30 @@ function geometriePonts(g: GrilleTerrain): THREE.BufferGeometry | null {
   return geo;
 }
 
+/** Le plan d'eau : la carte, plus `DEBORD_EAU` de chaque côté. */
+function geometrieEau(g: GrilleTerrain): THREE.BufferGeometry {
+  return new THREE.PlaneGeometry(
+    g.largeur * CASE + 2 * DEBORD_EAU, g.hauteur * CASE + 2 * DEBORD_EAU, 1, 1,
+  );
+}
+
+/**
+ * La profondeur sous l'eau, un texel par case : c'est elle qui teinte les
+ * hauts-fonds et pose l'écume. Elle se relit à chaque changement de sol, sans
+ * quoi une marée déplacerait la berge et laisserait l'écume sur l'ancienne.
+ */
+function donneesFonds(g: GrilleTerrain): Uint8Array<ArrayBuffer> {
+  const fonds = new Uint8Array(g.largeur * g.hauteur * 4);
+  for (let y = 0; y < g.hauteur; y += 1) {
+    for (let x = 0; x < g.largeur; x += 1) {
+      const i = (y * g.largeur + x) * 4;
+      fonds[i] = Math.round((hauteurSol(g, x + 0.5, y + 0.5) + 0.4) / 1.4 * 255);
+      fonds[i + 3] = 255;
+    }
+  }
+  return fonds;
+}
+
 /** La grille au sol : des lignes fines, posées juste au-dessus du terrain. */
 function geometrieGrille(g: GrilleTerrain): THREE.BufferGeometry {
   const positions: number[] = [];
@@ -355,6 +550,24 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   splat.wrapT = THREE.ClampToEdgeWrapping;
   splat.needsUpdate = true;
 
+  // --- Le brouillard de guerre : un octet par case, lu par tout le plateau.
+  //     `null` au départ : un plateau naît tout vu, `majVisibles` le voile.
+  let visiblesCourants: ReadonlySet<string> | null = null;
+  const tVisibles = new THREE.DataTexture(
+    donneesVisibles(g, null), g.largeur, g.hauteur, THREE.RedFormat, THREE.UnsignedByteType,
+  );
+  tVisibles.minFilter = THREE.LinearFilter;
+  tVisibles.magFilter = THREE.LinearFilter;
+  tVisibles.wrapS = THREE.ClampToEdgeWrapping;
+  tVisibles.wrapT = THREE.ClampToEdgeWrapping;
+  tVisibles.needsUpdate = true;
+  const uBrouillard: UniformesBrouillard = {
+    tVisibles: { value: tVisibles },
+    uCarteBrouillard: { value: new THREE.Vector2(g.largeur * CASE, g.hauteur * CASE) },
+    uFacteurBrouillard: { value: FACTEUR_BROUILLARD },
+    uTeinteBrouillard: { value: new THREE.Color(TEINTE_BROUILLARD) },
+  };
+
   const uniformes = {
     tSplat: { value: splat },
     tTerre: { value: terre.albedo },
@@ -383,7 +596,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       .replace('#include <roughnessmap_fragment>', RUGOSITE_GLSL)
       .replace('#include <normal_fragment_maps>', NORMALES_GLSL);
   };
-  matSol.customProgramCacheKey = (): string => 'atlas-terrain-peint-v2';
+  grefferBrouillard(matSol, uBrouillard, 'atlas-terrain-peint-v3');
 
   const sol = new THREE.Mesh(geometrieSol(g), matSol);
   sol.name = 'sol';
@@ -398,7 +611,9 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     metalness: 0,
     color: 0x7d6c56,
   });
+  grefferBrouillard(matSocle, uBrouillard, 'atlas-socle-brouillard-v1');
   const socle = new THREE.Mesh(geometrieSocle(g), matSocle);
+  socle.name = 'socle';
   socle.receiveShadow = true;
   groupe.add(socle);
 
@@ -419,6 +634,9 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     polygonOffsetFactor: -2,
     polygonOffsetUnits: -2,
   });
+  // Les voies et les ponts ont leurs propres matériaux : sans la greffe, une
+  // route claire traverserait le noir comme un trait de craie.
+  grefferBrouillard(matVoie, uBrouillard, 'atlas-voie-brouillard-v1');
   const voies = new THREE.Mesh(new THREE.BufferGeometry(), matVoie);
   voies.name = 'voies';
   voies.receiveShadow = true;
@@ -430,6 +648,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     roughness: 0.82,
     metalness: 0,
   });
+  grefferBrouillard(matPont, uBrouillard, 'atlas-pont-brouillard-v1');
   const ponts = new THREE.Mesh(new THREE.BufferGeometry(), matPont);
   ponts.name = 'ponts';
   ponts.castShadow = true;
@@ -451,13 +670,13 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   const matGrille = new THREE.LineBasicMaterial({
     color: 0x0a1220, transparent: true, opacity: 0.17, depthWrite: false,
   });
-  const geoGrille = geometrieGrille(g);
-  const grille = new THREE.LineSegments(geoGrille, matGrille);
+  const grille = new THREE.LineSegments(geometrieGrille(g), matGrille);
+  grille.name = 'grille';
   grille.renderOrder = 1;
   groupe.add(grille);
 
-  // --- L'eau : un plan large, qui déborde de la carte pour poser le diorama
-  //     sur une mer plutôt que sur du vide.
+  // --- L'eau : un plan qui déborde de la carte d'une case, pour que le socle
+  //     se lise comme posé sur l'eau ; le reste de l'écran est au ciel.
   const nEau = normalesEau(doc);
   nEau.repeat.set(6, 6);
   const matEau = new THREE.MeshStandardMaterial({
@@ -472,15 +691,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   // Un champ d'altitude partagé avec le sol donne une profondeur réelle à l'eau.
   // Une seule texture basse résolution, aucune géométrie par vague ou par rive.
-  const fonds = new Uint8Array(g.largeur * g.hauteur * 4);
-  for (let y = 0; y < g.hauteur; y += 1) {
-    for (let x = 0; x < g.largeur; x += 1) {
-      const i = (y * g.largeur + x) * 4;
-      fonds[i] = Math.round((hauteurSol(g, x + 0.5, y + 0.5) + 0.4) / 1.4 * 255);
-      fonds[i + 3] = 255;
-    }
-  }
-  const tFonds = new THREE.DataTexture(fonds, g.largeur, g.hauteur, THREE.RGBAFormat);
+  const tFonds = new THREE.DataTexture(donneesFonds(g), g.largeur, g.hauteur, THREE.RGBAFormat);
   tFonds.minFilter = THREE.LinearFilter;
   tFonds.magFilter = THREE.LinearFilter;
   tFonds.needsUpdate = true;
@@ -521,9 +732,10 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.82, 0.91, 0.86), ecume);
     `);
   };
-  matEau.customProgramCacheKey = (): string => 'atlas-eau-rives-v2';
-  const debord = Math.max(g.largeur, g.hauteur) * CASE * 1.6 + 30;
-  const eau = new THREE.Mesh(new THREE.PlaneGeometry(debord, debord, 1, 1), matEau);
+  // L'eau aussi : une mer claire dans le noir dessinerait la carte en négatif.
+  grefferBrouillard(matEau, uBrouillard, 'atlas-eau-rives-v3');
+  const eau = new THREE.Mesh(geometrieEau(g), matEau);
+  eau.name = 'eau';
   eau.rotation.x = -Math.PI / 2;
   eau.position.set((g.largeur * CASE) / 2, NIVEAU_EAU, (g.hauteur * CASE) / 2);
   // Un pont porte son ombre sur l'eau qu'il franchit : c'est elle qui dit
@@ -547,6 +759,39 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     yApres: Float32Array;
   } | null = null;
 
+  /** L'écume au repos, pour l'agitation courante. */
+  const ecumeRepos = (): number => 0.32 + agitation * 0.36;
+
+  /**
+   * Repose sur le sol courant ce qui en dérive sans être le maillage : le
+   * socle, la grille et la profondeur lue par l'eau. Ils étaient bâtis une
+   * fois au montage — le gel déjà rencontré pour le terrain lui-même : après
+   * une marée, la grille flottait ou s'enterrait et l'écume restait sur
+   * l'ancienne berge. Le plan d'eau, lui, ne dépend que des dimensions.
+   */
+  function reposer(g2: GrilleTerrain): void {
+    socle.geometry.dispose();
+    socle.geometry = geometrieSocle(g2);
+    grille.geometry.dispose();
+    grille.geometry = geometrieGrille(g2);
+    const donnees = donneesFonds(g2);
+    if (tFonds.image.width === g2.largeur && tFonds.image.height === g2.hauteur) {
+      (tFonds.image.data as Uint8Array).set(donnees);
+    } else {
+      tFonds.image = { data: donnees, width: g2.largeur, height: g2.hauteur };
+      uEau.uCarte.value.set(g2.largeur * CASE, g2.hauteur * CASE);
+      eau.geometry.dispose();
+      eau.geometry = geometrieEau(g2);
+      eau.position.set((g2.largeur * CASE) / 2, NIVEAU_EAU, (g2.hauteur * CASE) / 2);
+      // Le masque de visibilité a la taille de la carte : il suit, avec le
+      // dernier ensemble connu — la texture des fonds fait exactement cela.
+      tVisibles.image = { data: donneesVisibles(g2, visiblesCourants), width: g2.largeur, height: g2.hauteur };
+      tVisibles.needsUpdate = true;
+      uBrouillard.uCarteBrouillard.value.set(g2.largeur * CASE, g2.hauteur * CASE);
+    }
+    tFonds.needsUpdate = true;
+  }
+
   /** Termine une mutation : on pose l'état d'arrivée, exactement. */
   function acheverMutation(): void {
     const m = mutation;
@@ -561,12 +806,18 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     // pendant une seconde de mouvement.
     sol.geometry.computeVertexNormals();
     mutation = null;
+    reposer(terrain);
+    uEau.uEcume.value = ecumeRepos();
   }
+
+  /** La dernière ambiance appliquée : la même identité ne se réapplique pas. */
+  let ambiance: ParametresAmbiance | null = null;
 
   return {
     groupe,
     sol,
     ponts,
+    uniformesBrouillard: uBrouillard,
     hauteurEn: (x, z) => hauteurEn(terrain, x, z),
 
     majTerrain(suivante: GrilleTerrain, duree = 0): void {
@@ -595,6 +846,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         sol.geometry.dispose();
         sol.geometry = neuve;
         majVoies(suivante);
+        reposer(suivante);
         return;
       }
       if (duree > 0 && memeMaillage) {
@@ -614,30 +866,52 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         sol.geometry = neuve;
         (splat.image.data as Uint8Array).set(donnees);
         splat.needsUpdate = true;
+        reposer(suivante);
       }
       majVoies(suivante);
     },
 
+    majVisibles(visibles: ReadonlySet<string> | null): void {
+      // La vue arrive à chaque survol avec un ensemble **neuf** mais égal :
+      // on compare les octets, et l'on ne renvoie la texture au processeur
+      // graphique que si une case a changé de camp. Le masque a la taille de
+      // la carte courante — `reposer` l'y a mis si elle a changé.
+      const donnees = donneesVisibles(terrain, visibles);
+      const courant = tVisibles.image.data as Uint8Array;
+      let identique = courant.length === donnees.length;
+      for (let i = 0; identique && i < donnees.length; i += 1) identique = courant[i] === donnees[i];
+      visiblesCourants = visibles;
+      if (identique) return;
+      courant.set(donnees);
+      tVisibles.needsUpdate = true;
+    },
+
+    // `eclairage.courant` rend le **même** objet d'une image à l'autre tant
+    // qu'aucune transition ne joue, et un objet neuf par image pendant l'une
+    // d'elles : l'identité suffit à ne travailler que quand la lumière bouge.
     appliquerAmbiance(p: ParametresAmbiance): void {
+      if (p === ambiance) return;
+      ambiance = p;
       matSol.color.set(p.teinteSol);
       matSocle.color.set(p.teinteSol).multiplyScalar(0.55);
       // Le revêtement ne prend qu'un soupçon de la teinte de saison : une route
       // qui vire au sable en automne se lit comme un chemin de terre. La neige
       // qui tombe, elle, le blanchit à moitié — jamais tout à fait, une voie
       // déneigée reste lisible, c'est même ce qui la rend utile.
-      matVoie.color.set(0xffffff).lerp(new THREE.Color(p.teinteSol), 0.1)
-        .lerp(new THREE.Color(0xf2f5f8), p.neigeSol * 0.5);
-      matPont.color.set(apparence.pont).lerp(new THREE.Color(0xf2f5f8), p.neigeSol * 0.35);
+      matVoie.color.set(0xffffff).lerp(TAMPON.set(p.teinteSol), 0.1)
+        .lerp(NEIGE_VOIE, p.neigeSol * 0.5);
+      matPont.color.set(apparence.pont).lerp(NEIGE_VOIE, p.neigeSol * 0.35);
       matVoie.roughness = 0.88 - p.mouille * 0.45;
       uniformes.uNeige.value = Math.max(p.neigeSol, biome === 'neige' ? 0.78 : 0);
       uniformes.uMouille.value = p.mouille;
       matEau.color.set(p.eau.couleur);
       matEau.opacity = p.eau.opacite;
       matEau.roughness = 0.26 + p.mouille * 0.08;
-      uEau.uEcume.value = 0.32 + p.eau.agitation * 0.36;
-      uEau.uRive.value.set(teintesRive[biome] ?? 0x91b9ad).multiply(new THREE.Color(p.teinteSol));
-      matGrille.opacity = 0.16 + p.neigeSol * 0.06;
       agitation = p.eau.agitation;
+      // Pendant une marée, `avancer` module l'écume : on ne lui reprend pas la main.
+      if (!mutation) uEau.uEcume.value = ecumeRepos();
+      uEau.uRive.value.set(teintesRive[biome] ?? 0x91b9ad).multiply(TAMPON.set(p.teinteSol));
+      matGrille.opacity = 0.16 + p.neigeSol * 0.06;
     },
 
     // L'eau avance à chaque image mais ne **réclame** jamais d'image : au repos,
@@ -667,7 +941,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
           pos.needsUpdate = true;
           // L'écume enfle au passage du front, puis retombe : c'est elle qui
           // raconte le mouvement, plus que le niveau lui-même.
-          uEau.uEcume.value = (0.32 + agitation * 0.36) * (1 + Math.sin(brut * Math.PI) * 1.1);
+          uEau.uEcume.value = ecumeRepos() * (1 + Math.sin(brut * Math.PI) * 1.1);
           encore = true;
         }
       }
@@ -681,7 +955,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     dispose(): void {
       sol.geometry.dispose();
       socle.geometry.dispose();
-      geoGrille.dispose();
+      grille.geometry.dispose();
       voies.geometry.dispose();
       ponts.geometry.dispose();
       eau.geometry.dispose();
@@ -693,6 +967,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       matEau.dispose();
       splat.dispose();
       tFonds.dispose();
+      tVisibles.dispose();
       texVoies.dispose();
       nEau.dispose();
       for (const j of [herbe, terre, roche, sable, neige]) {

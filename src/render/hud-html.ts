@@ -23,11 +23,15 @@ import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
 import {
   libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, nomCommandant,
-  nomTerrain, nomUnite, type OptionMenu,
+  nomCourtUnite, nomTerrain, nomUnite, type OptionMenu,
 } from './libelles';
-import { ficheUnite, porte, type Duel } from './fiche-unite';
+import {
+  alerteCarburant, alerteMunitions, ficheUnite, porte, type Alerte, type Duel,
+} from './fiche-unite';
 import { paletteDe } from './palettes';
+import type { Partition } from './partition';
 import type { PointVue } from './rendu';
+import { jaugePv, monterScenes, type HorlogeScenes } from './scenes-html';
 import { dessinerUnite } from './sprites/index';
 
 /** Tout ce que le HUD lit : l'état, la vue d'interaction et la langue. */
@@ -55,6 +59,12 @@ export interface VueJeu {
    * disputer l'attention à la réplique en cours.
    */
   sceneOuverte?: boolean;
+  /**
+   * La partie est finie mais son dialogue de fin attend encore la fin de
+   * l'animation : l'écran de résultat ne se montre pas, il viendrait avant le
+   * commandant et reviendrait après lui — deux fois pour une seule fin.
+   */
+  finEnAttente?: boolean;
 }
 
 /** Ce que le HUD peut demander au jeu. Aucun de ces appels ne mute un état. */
@@ -73,12 +83,26 @@ export interface ApiHud {
   recentrer?(): void;
   /** Position d'écran du centre d'une case : sert à ancrer le menu d'ordres. */
   versEcran(c: Case): PointVue | null;
+  /**
+   * Coupe la partition en cours, peau 3D comprise : c'est ce qu'un clic sur
+   * l'écran de combat ou le splash demande. Absent, le HUD ne coupe que ses
+   * propres scènes.
+   */
+  couper?(): void;
 }
 
 /** Ce que `monterHudHtml` rend à son hôte. */
 export interface HudHtml {
   /** Reconstruit le HUD depuis la vue courante. */
   rafraichir(): void;
+  /**
+   * Joue ce qu'une partition (`partition.ts`) demande au HUD — chiffres de
+   * dégâts, écran de combat, splash de pouvoir — dans un conteneur frère des
+   * onze emplacements ; la promesse tient jusqu'au dernier effet.
+   */
+  jouer(partition: Partition): Promise<void>;
+  /** Retire les scènes en cours et résout la promesse de `jouer`. */
+  couper(): void;
   demonter(): void;
 }
 
@@ -91,7 +115,7 @@ function ech(texte: string): string {
 
 /** La feuille de style du HUD, injectée une seule fois par document. */
 const STYLE = `
-.atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162}
+.atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f}
 .atlas-hud *{box-sizing:border-box}
 .atlas-hud[data-scene='ouverte']{visibility:hidden}
 .atlas-hud .p{position:absolute;pointer-events:auto;background:var(--encre);border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;overflow:hidden}
@@ -139,6 +163,13 @@ const STYLE = `
 .atlas-hud .inspect .in{display:flex;gap:10px;align-items:center;padding:10px 12px}
 .atlas-hud .inspect canvas{flex:0 0 auto;width:44px;height:44px;background:#ffffff0a;border-bottom:2px solid #d2b66e}
 .atlas-hud .stats{font-size:12px;color:#c0ccd7;margin-top:3px;white-space:normal}
+/* Une statistique en alerte change de couleur, jamais de mot : orange quand il
+   faut y penser au prochain tour, rouge quand la règle mord déjà. Les mêmes deux
+   couleurs partout où le HUD prévient. */
+.atlas-hud .stats [data-alerte]{font-weight:800}
+.atlas-hud .stats [data-alerte='orange']{color:var(--alerte)}
+.atlas-hud .stats [data-alerte='rouge']{color:var(--alerte-grave)}
+.atlas-hud .stats .embarquees{display:block;margin-top:2px;color:#d6e2ea}
 .atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;font-size:22px;border:1px solid #ffffff20}
 .atlas-hud .inspect .in>.retour:first-of-type{margin-left:auto}
 /* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
@@ -265,6 +296,11 @@ const STYLE = `
 .atlas-hud .fiche .duel canvas{width:34px;height:34px;display:block}
 .atlas-hud .fiche .duel i{font-style:normal;font-size:12.5px;font-weight:850;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:1px}
 .atlas-hud .fiche .duel small{display:block;max-width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;font-weight:700;letter-spacing:.02em;color:var(--f-doux);margin-top:1px}
+/* La pastille « ∞ » au coin d'une figurine : ce duel se tire à l'arme
+   secondaire, sans compter les munitions. Le même signe que la fiche emploie
+   pour des munitions illimitées, parce que c'est la même promesse. */
+.atlas-hud .fiche .duel{position:relative}
+.atlas-hud .fiche .duel .sans{position:absolute;top:2px;right:2px;font-style:normal;font-size:10px;line-height:1;font-weight:900;padding:1px 3px;background:var(--f-ruban);color:var(--f-ruban-texte);border:1px solid var(--f-plaque-bord)}
 .atlas-hud .fiche .fort .duel i{color:var(--f-fort)}
 .atlas-hud .fiche .danger .duel i{color:var(--f-danger)}
 .atlas-hud .fiche .puce{display:inline-flex;align-items:center;padding:3px 8px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);font-weight:700;white-space:nowrap}
@@ -404,7 +440,39 @@ function iconeOrdre(type: string): string {
 const MS_SURSIS_INSPECTION = 1500;
 
 /** Une vignette d'unité à peindre après insertion : le sprite vectoriel partagé. */
-interface Vignette { id: string; silhouette: Silhouette; camp: CampId; taille: number }
+interface Vignette { id: string; emplacement: string; silhouette: Silhouette; camp: CampId; taille: number }
+
+/**
+ * Les emplacements du HUD, dans l'ordre du DOM. Chaque panneau vit dans le
+ * sien et n'est réécrit que si son HTML a changé : le survol d'une case ne
+ * touche que le panneau d'inspection, jamais les dix autres.
+ */
+const EMPLACEMENTS = [
+  'partie', 'bulletin', 'dock', 'duel', 'inspection', 'ordres', 'camera', 'attente', 'annonce', 'production', 'fin',
+] as const;
+type Emplacement = typeof EMPLACEMENTS[number];
+
+/**
+ * Pose chaque HTML dans son emplacement **s'il a changé**, et rend les noms de
+ * ceux qui ont été réécrits. `precedent` est mis à jour en place. Pure vis-à-vis
+ * du DOM : elle n'écrit que `innerHTML`, ce qui la rend testable sans document.
+ */
+export function poserEmplacements(
+  cibles: ReadonlyMap<string, { innerHTML: string }>,
+  precedent: Map<string, string>,
+  nouveau: ReadonlyMap<string, string>,
+): string[] {
+  const reecrits: string[] = [];
+  for (const [nom, html] of nouveau) {
+    if (precedent.get(nom) === html) continue;
+    const cible = cibles.get(nom);
+    if (!cible) continue;
+    cible.innerHTML = html;
+    precedent.set(nom, html);
+    reecrits.push(nom);
+  }
+  return reecrits;
+}
 
 /**
  * L'unité mise en avant à l'ouverture du menu : la première que les fonds
@@ -420,7 +488,9 @@ export function premiereAbordable(
  * Monte le HUD HTML dans un conteneur (le même que le canvas, en position
  * relative). Rend `rafraichir()` et `demonter()`.
  */
-export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
+export function monterHudHtml(
+  conteneur: HTMLElement, api: ApiHud, horloge?: HorlogeScenes,
+): HudHtml {
   const doc = conteneur.ownerDocument;
   poserStyle(doc);
   const racine = doc.createElement('div');
@@ -428,7 +498,46 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   racine.setAttribute('data-hud', 'html');
   conteneur.appendChild(racine);
 
+  // Un enfant par emplacement, en `display:contents` : il n'existe pas pour la
+  // mise en page, et la règle `.atlas-hud>*` continue de poser ses variables,
+  // que les panneaux héritent. Le HTML posé la dernière fois est retenu par
+  // emplacement : c'est la comparaison de chaînes qui épargne le DOM.
+  const emplacements = new Map<Emplacement, HTMLElement>();
+  const htmlPose = new Map<string, string>();
+  for (const nom of EMPLACEMENTS) {
+    const el = doc.createElement('div');
+    el.className = 'emplacement';
+    el.setAttribute('data-emplacement', nom);
+    el.style.display = 'contents';
+    racine.appendChild(el);
+    emplacements.set(nom, el);
+  }
+
+  // Les scènes transitoires — chiffres, écran de combat, splash — vivent dans
+  // un conteneur frère : le HUD remplace le DOM de ses emplacements, et une
+  // scène qui y vivrait serait réécrite en plein vol.
+  const scenes = monterScenes(conteneur, {
+    vue: () => api.vue(),
+    t: api.t,
+    versEcran: (c) => api.versEcran(c),
+    couper: api.couper ? () => api.couper?.() : undefined,
+  }, horloge);
+
   let vignettes: Vignette[] = [];
+  /** L'emplacement dont on compose le HTML : les vignettes s'y rattachent. */
+  let emplacementCourant: Emplacement = 'partie';
+  /**
+   * Une vignette d'unité : le canvas, et la promesse de le peindre. Son
+   * identifiant est **propre à l'emplacement** — numéroté sur tout le HUD, une
+   * vignette qui disparaît d'un panneau renumérotait celles du suivant, dont le
+   * HTML changeait donc sans raison.
+   */
+  function vignette(silhouette: Silhouette, camp: CampId, taille: number): string {
+    const rang = vignettes.filter((vg) => vg.emplacement === emplacementCourant).length;
+    const id = `vg_${emplacementCourant}_${rang}`;
+    vignettes.push({ id, emplacement: emplacementCourant, silhouette, camp, taille });
+    return `<canvas data-vignette="${id}" width="${taille}" height="${taille}"></canvas>`;
+  }
   // La fiche du panneau d'inspection, elle, **reste ouverte** d'une case à
   // l'autre : c'est une façon de jouer, pas un choix par unité. Qui apprend la
   // laisse dépliée, qui connaît la referme une fois.
@@ -614,22 +723,44 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const sousTitre = unite
       ? `${ech(nomTerrain(v.locale, v.catalogue, terrain))} · ${defense}`
       : defense;
+    // Chaque statistique est un `span` : celle qui est en alerte porte
+    // `data-alerte`, que le CSS colore, et un libellé lisible par un lecteur
+    // d'écran. Le texte lui-même ne change pas — un chiffre reste un chiffre.
+    const stat = (texte: string, alerte: Alerte = null, cleAlerte?: string): string => {
+      if (!alerte || !cleAlerte) return `<span>${ech(texte)}</span>`;
+      const libelle = api.t(cleAlerte);
+      return `<span data-alerte="${alerte}" title="${ech(libelle)}" aria-label="${ech(`${texte} · ${libelle}`)}">${ech(texte)}</span>`;
+    };
     const lignes: string[] = [];
+    let embarquees = '';
     if (unite && type) {
-      lignes.push(api.t('hud.points_de_vie', { n: pvAffiches(unite.pv) }));
-      lignes.push(api.t('hud.mouvement', { n: type.mouvement }));
+      lignes.push(stat(api.t('hud.points_de_vie', { n: pvAffiches(unite.pv) })));
+      lignes.push(stat(api.t('hud.mouvement', { n: type.mouvement })));
       // Même ordre que la fiche de production : mouvement, portée, munitions,
       // carburant. La portée ne se dit que si elle apprend quelque chose.
-      if (type.portee[1] > 1) lignes.push(api.t('hud.portee', { n: portee(type.portee) }));
-      if (unite.munitions !== null) lignes.push(api.t('hud.munitions', { n: unite.munitions }));
-      if (unite.carburant !== null) lignes.push(api.t('hud.carburant', { n: unite.carburant }));
+      if (type.portee[1] > 1) lignes.push(stat(api.t('hud.portee', { n: portee(type.portee) })));
+      if (unite.munitions !== null) {
+        const a = alerteMunitions(type, unite.munitions);
+        lignes.push(stat(api.t('hud.munitions', { n: unite.munitions }), a,
+          a === 'rouge' ? 'hud.munitions_vides' : 'hud.munitions_faible'));
+      }
+      if (unite.carburant !== null) {
+        const a = alerteCarburant(type, unite.carburant);
+        lignes.push(stat(api.t('hud.carburant', { n: unite.carburant }), a,
+          a === 'rouge' ? 'hud.carburant_critique' : 'hud.carburant_faible'));
+      }
+      // Ce qu'un transport porte : sans cette ligne, deux unités embarquées
+      // n'existent nulle part à l'écran.
+      if (unite.cargo.length > 0) {
+        const liste = unite.cargo
+          .map((id) => v.etat.unites.find((a) => a.id === id))
+          .filter((a): a is Unite => a !== undefined)
+          .map((a) => nomCourtUnite(v.locale, v.catalogue, a.type))
+          .join(', ');
+        if (liste) embarquees = `<span class="embarquees">${ech(api.t('hud.embarquees', { liste }))}</span>`;
+      }
     }
-    let icone = '';
-    if (unite && type) {
-      const id = `vg${vignettes.length}`;
-      vignettes.push({ id, silhouette: type.silhouette, camp: unite.camp, taille: 46 });
-      icone = `<canvas data-vignette="${id}" width="46" height="46"></canvas>`;
-    }
+    const icone = unite && type ? vignette(type.silhouette, unite.camp, 46) : '';
     const bord = unite ? paletteDe(unite.camp).main : paletteDe(null).main;
     // Le bouton n'apparaît que sur une unité : un terrain n'a pas de fiche, et
     // une case vide ne doit pas offrir une commande qui ne ferait rien.
@@ -642,20 +773,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       + `<span class="bord" style="background:${bord}"></span>`
       + `<div class="in">${icone}<div style="min-width:0">`
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
-      + (lignes.length > 0 ? `<div class="stats">${ech(lignes.join(' · '))}</div>` : '')
+      + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}</div>` : '')
       + `</div>${detail}${v.selection && !v.attenteIa ? boutonRetour() : ''}</div>`
       + (unite && ficheInspection ? blocFiche(v, unite.type) : '')
       + `</div>`;
-  }
-
-  /** Une jauge de PV en dix crans : pleine, perdue à l'échange, vide. */
-  function jaugePv(avant: number, apres: number): string {
-    const crans = Array.from({ length: 10 }, (_, i) => {
-      if (i < apres) return '<i class="plein"></i>';
-      if (i < avant) return '<i class="perdu"></i>';
-      return '<i></i>';
-    }).join('');
-    return `<span class="pv" aria-hidden="true">${crans}</span>`;
   }
 
   /** Une ligne de duel : vignette, nom, PV avant → après, jauge. */
@@ -663,10 +784,8 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const type = v.catalogue.unites[unite.type];
     if (!type) return '';
     const avant = pvAffiches(unite.pv);
-    const id = `vg${vignettes.length}`;
-    vignettes.push({ id, silhouette: type.silhouette, camp: unite.camp, taille: 36 });
     return `<div class="duel-camp" data-perte="${apres >= avant ? 'aucune' : 'oui'}">`
-      + `<canvas data-vignette="${id}" width="36" height="36"></canvas>`
+      + vignette(type.silhouette, unite.camp, 36)
       + `<span style="min-width:0"><span class="tt" style="display:block">${ech(nomUnite(v.locale, v.catalogue, unite.type))}</span>`
       + jaugePv(avant, apres)
       + `</span><span class="duel-chiffres">${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
@@ -821,12 +940,14 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     const figurine = (cle: CleUnite, taille: number): string => {
       const t = v.catalogue.unites[cle];
       if (!t) return '';
-      const id = `vg${vignettes.length}`;
-      vignettes.push({ id, silhouette: t.silhouette, camp: adversaire, taille });
-      return `<canvas data-vignette="${id}" width="${taille}" height="${taille}"></canvas>`;
+      return vignette(t.silhouette, adversaire, taille);
     };
+    // Un duel tiré à l'arme secondaire porte une pastille « ∞ » : il ne coûte
+    // aucune munition et reste possible le chargeur vide.
+    const sansMunitions = api.t('fiche.sans_munitions');
     const duels = (l: readonly Duel[]): string => l.map((d) =>
-      `<span class="duel" title="${ech(nomDe(d.unite))}">${figurine(d.unite, 34)}`
+      `<span class="duel" title="${ech(d.sansMunitions ? `${nomDe(d.unite)} · ${sansMunitions}` : nomDe(d.unite))}">${figurine(d.unite, 34)}`
+      + (d.sansMunitions ? `<em class="sans" role="img" aria-label="${ech(sansMunitions)}">∞</em>` : '')
       + `<i>${ech(api.t('fiche.degats', { n: d.degats }))}</i>`
       + `<small>${ech(nomDe(d.unite))}</small></span>`).join('');
     const terrains = (l: readonly CleTerrain[]): string => l
@@ -902,8 +1023,6 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     if (!type) return '';
     const fonds = fondsCourants(v);
     const abordable = type.cout <= fonds;
-    const id = `vg${vignettes.length}`;
-    vignettes.push({ id, silhouette: type.silhouette, camp: v.etat.campCourant, taille: 72 });
     const illimite = api.t('fiche.illimite');
     const stats: [string, string][] = [
       [api.t('fiche.mouvement'), `${nombreIntl(v.locale, type.mouvement)} · ${libelleMouvement(api.t, type.typeMouvement)}`],
@@ -917,7 +1036,7 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       : `<span class="vide">${ech(api.t('fiche.sans_trait'))}</span>`;
     const cout = nombreIntl(v.locale, type.cout);
     return `<div class="panneau-fiche" role="group" aria-label="${ech(api.t('fiche.titre'))}"><div class="fiche-corps">`
-      + `<div class="fiche-entete"><canvas data-vignette="${id}" width="72" height="72"></canvas><div style="min-width:0">`
+      + `<div class="fiche-entete">${vignette(type.silhouette, v.etat.campCourant, 72)}<div style="min-width:0">`
       + `<div class="fiche-nom">${ech(nomUnite(v.locale, v.catalogue, cle))}</div>`
       + `<div class="fiche-cout">${iconeOrdre('fonds')}<span>${ech(cout)}</span></div></div></div>`
       + `<dl>${stats.map(([k, val]) => `<div><dt>${ech(k)}</dt><dd>${ech(val)}</dd></div>`).join('')}</dl>`
@@ -945,11 +1064,9 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
       if (!type) return '';
       const abordable = type.cout <= fonds;
       const actif = cle === enAvant;
-      const id = `vg${vignettes.length}`;
-      vignettes.push({ id, silhouette: type.silhouette, camp: v.etat.campCourant, taille: 38 });
       return `<button type="button" data-action="mettre_en_avant" data-valeur="${ech(cle)}"`
         + ` data-actif="${actif ? 'oui' : 'non'}" data-abordable="${abordable ? 'oui' : 'non'}" aria-pressed="${actif ? 'true' : 'false'}">`
-        + `<canvas data-vignette="${id}" width="38" height="38"></canvas>`
+        + `${vignette(type.silhouette, v.etat.campCourant, 38)}`
         + `<span class="tt">${ech(nomUnite(v.locale, v.catalogue, cle))}</span>`
         + `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span></button>`;
     }).join('');
@@ -962,7 +1079,9 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
 
   function ecranFin(v: VueJeu): string {
     const fin = v.etat.partie;
-    if (!fin.terminee || v.masquerFin) return '';
+    // Une fin se rend **une fois**, après le dernier mot du commandant : ni
+    // pendant la scène, ni dans l'intervalle où elle attend d'être enfilée.
+    if (!fin.terminee || v.masquerFin || v.sceneOuverte || v.finEnAttente) return '';
     const cle = fin.nul ? 'hud.match_nul'
       : fin.vainqueur === v.camp ? 'combat.manche_gagnee' : 'combat.manche_perdue';
     const pal = paletteDe(fin.vainqueur ?? null);
@@ -978,8 +1097,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
   // Rendu et interaction
   // -------------------------------------------------------------------------
 
-  function peindreVignettes(): void {
+  /** Peint les vignettes des emplacements réécrits : les autres sont déjà peintes. */
+  function peindreVignettes(reecrits: ReadonlySet<string>): void {
     for (const vg of vignettes) {
+      if (!reecrits.has(vg.emplacement)) continue;
       const el = racine.querySelector(`canvas[data-vignette="${vg.id}"]`);
       if (!(el instanceof HTMLCanvasElement)) continue;
       const ratio = Math.min(2, doc.defaultView?.devicePixelRatio ?? 1);
@@ -1009,17 +1130,36 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
     derniereSelection = v.selection;
     // Le duel se calcule **une fois** : il pousse des vignettes, et deux appels
     // en réclameraient deux fois plus qu'il n'y a de canvas à peindre.
-    const duel = panneauDuel(v);
     const actif = doc.activeElement;
     const focusAvant = actif instanceof HTMLElement && racine.contains(actif) ? actif.dataset : null;
-    racine.innerHTML = panneauPartie(v) + panneauBulletin(v)
-      + `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`
-      + duel + panneauInspection(v, duel !== '') + panneauOrdres(v) + panneauCamera()
-      + panneauAttente(v) + panneauAnnonce(v) + modaleProduction(v) + ecranFin(v);
-    const bulletin = racine.querySelector<HTMLDetailsElement>('.bulletin');
-    if (bulletin) bulletin.open = bulletinOuvert;
-    peindreVignettes();
-    replacerFocus(v, focusAvant);
+    // Chaque panneau se compose dans son emplacement ; l'ordre est celui du DOM,
+    // et le duel vient avant l'inspection, qui s'efface devant lui.
+    const html = new Map<Emplacement, string>();
+    const composer = (nom: Emplacement, contenu: () => string): void => {
+      emplacementCourant = nom;
+      html.set(nom, contenu());
+    };
+    composer('partie', () => panneauPartie(v));
+    composer('bulletin', () => panneauBulletin(v));
+    composer('dock', () => `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`);
+    composer('duel', () => panneauDuel(v));
+    const duelOuvert = (html.get('duel') ?? '') !== '';
+    composer('inspection', () => panneauInspection(v, duelOuvert));
+    composer('ordres', () => panneauOrdres(v));
+    composer('camera', () => panneauCamera());
+    composer('attente', () => panneauAttente(v));
+    composer('annonce', () => panneauAnnonce(v));
+    composer('production', () => modaleProduction(v));
+    composer('fin', () => ecranFin(v));
+    const reecrits = new Set(poserEmplacements(emplacements, htmlPose, html));
+    if (reecrits.has('bulletin')) {
+      const bulletin = racine.querySelector<HTMLDetailsElement>('.bulletin');
+      if (bulletin) bulletin.open = bulletinOuvert;
+    }
+    peindreVignettes(reecrits);
+    // Le focus ne meurt qu'avec la modale : tant qu'elle n'est pas réécrite,
+    // il est toujours là où le joueur l'a mis.
+    if (reecrits.has('production')) replacerFocus(v, focusAvant);
   }
 
   /**
@@ -1141,7 +1281,10 @@ export function monterHudHtml(conteneur: HTMLElement, api: ApiHud): HudHtml {
 
   return {
     rafraichir,
+    jouer: (partition) => scenes.jouer(partition),
+    couper: () => scenes.couper(),
     demonter: () => {
+      scenes.demonter();
       if (minuterieTour) clearTimeout(minuterieTour);
       if (graceInspection) clearTimeout(graceInspection);
       banniereTour?.remove();

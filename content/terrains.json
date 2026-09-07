@@ -170,7 +170,8 @@
       "nom": "Mer",
       "defense": 0,
       "couts": {
-        "air": 1
+        "air": 1,
+        "mer": 1
       },
       "capturable": false,
       "revenus": 0,
@@ -227,13 +228,16 @@
         "meca",
         "recon",
         "char_leger",
+        "char_moyen",
         "char_lourd",
         "artillerie",
         "roquettes",
         "antiair",
         "transport",
         "genie",
-        "brouilleur"
+        "brouilleur",
+        "missiles_air",
+        "missiles_sol"
       ],
       "ravitaille": true,
       "soigne": 2,
@@ -261,7 +265,9 @@
       "produit": [
         "helico",
         "drone",
-        "drone_filaire"
+        "chasseur",
+        "bombardier",
+        "transport_air"
       ],
       "ravitaille": true,
       "soigne": 2,
@@ -322,6 +328,36 @@
         "main": "#b7a9d6",
         "dark": "#7d6fa3",
         "light": "#e2daf2"
+      }
+    },
+    {
+      "cle": "port",
+      "car": "O",
+      "nom": "Port",
+      "defense": 3,
+      "couts": {
+        "pied": 1,
+        "bottes": 1,
+        "roues": 1,
+        "chenilles": 1,
+        "air": 1,
+        "mer": 1
+      },
+      "capturable": true,
+      "revenus": 1000,
+      "produit": [
+        "barge",
+        "porte_avions",
+        "cuirasse",
+        "sous_marin"
+      ],
+      "ravitaille": true,
+      "soigne": 2,
+      "cacheEnBrouillard": false,
+      "palette": {
+        "main": "#8fb0bd",
+        "dark": "#5c7a86",
+        "light": "#cfe2ea"
       }
     }
   ]

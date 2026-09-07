@@ -1,0 +1,96 @@
+{
+  "cle": "carte_bras_de_mer",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-07",
+  "majLe": "2026-09-07",
+  "code": "carte_bras_de_mer",
+  "nom": "Le bras de mer",
+  "largeur": 20,
+  "hauteur": 14,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "WWSSPPSSWWWWSSPPSSWW",
+    "SPPCPPPSWWWWSPPPCPPS",
+    "PPUPPPPOWWWWOPPPPUPP",
+    "PPPRRPPSWWWWSPPRRPPP",
+    "PPHRPPPSWWWWSPPPRHPP",
+    "PPPRPPFPSSSSPFPPRPPP",
+    "PPPRRRPPPMMPPPRRRPPP",
+    "PCPRPPFPPVVPPFPPRPCP",
+    "PPPRRRPPCVVCPPRRRPPP",
+    "PPAPPPMPPVVPPMPPPAPP",
+    "PPPPPCPPPNNPPPCPPPPP",
+    "PFPPPPMPCVVCPMPPPPFP",
+    "PPPPPPPPPVVPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "2,5": 0,
+    "17,5": 1,
+    "2,3": 0,
+    "17,3": 1,
+    "7,3": 0,
+    "12,3": 1,
+    "2,10": 0,
+    "17,10": 1,
+    "3,2": 0,
+    "16,2": 1,
+    "1,8": 0,
+    "18,8": 1,
+    "5,11": 0,
+    "14,11": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 17,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 16,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 17,
+      "y": 4
+    }
+  ]
+}

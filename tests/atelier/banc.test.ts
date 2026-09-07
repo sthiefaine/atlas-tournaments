@@ -13,8 +13,8 @@ import {
 } from '../../src/schemas/index';
 import {
   BASES_JAMAIS_VUES, CHEMIN_BANC, DESCRIPTIONS_GESTES, GENRES_SURBRILLANCE, GESTES_BANC, GRAINE_GRANDE, HAUTEUR_BANC,
-  HAUTEUR_GRANDE, LARGEUR_GRANDE, PARAMETRES_GRANDE, PRESETS_AMBIANCE, STATION_ADVERSE_BANC, UNITES_GRANDE,
-  VILLE_DESAFFECTEE_BANC,
+  HAUTEUR_GRANDE, LARGEUR_GRANDE, PARAMETRES_GRANDE, PORTS_BANC, PRESETS_AMBIANCE, STATION_ADVERSE_BANC,
+  UNITES_GRANDE, UNITES_NAVALES_BANC, VILLE_DESAFFECTEE_BANC,
   LARGEUR_BANC, RANGS, UNITES_BANC, VERSION_CATALOGUE_BANC, carteBanc, carteGrande, catalogueSilhouettes, decoderVue,
   encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc, type VueBanc,
 } from '../../src/app/atelier/banc';
@@ -44,7 +44,7 @@ test('le banc force le catalogue qui porte toutes ses unités', () => {
   for (const u of UNITES_BANC) assert.ok(complet.unites[u], `unité absente du catalogue du banc : ${u}`);
 });
 
-test('l’état du banc porte bien les vingt-huit unités posées', () => {
+test('l’état du banc porte bien les quarante-six unités posées', () => {
   const e = etatBanc();
   assert.equal(e.unites.length, UNITES_BANC.length * 2, 'une unité perdue au montage');
   for (const camp of [0, 1] as const) {
@@ -53,12 +53,17 @@ test('l’état du banc porte bien les vingt-huit unités posées', () => {
   }
 });
 
+// Au catalogue 5, la carte-catalogue pose vingt-trois unités par camp, soit
+// quarante-six. `validerMapDef` plafonne `unitesDepart` à quarante
+// (`src/schemas/valider.ts`, `doc/03-schemas.md` §5) : ce plafond a été écrit
+// pour une carte de mission, pas pour un catalogue, et il doit monter à soixante
+// — c'est la seule chose qui manque pour que ce test repasse.
 test('la carte-catalogue est une carte valide, pas un objet bricolé', () => {
   const r = validerMapDef(carteBanc());
   assert.ok(r.ok, `carte du banc invalide : ${JSON.stringify(r.ok ? [] : r.erreurs)}`);
 });
 
-test('elle pose les douze terrains du canon, aucun oublié', () => {
+test('elle pose les quatorze terrains du canon, aucun oublié', () => {
   const carte = carteBanc();
   const vus = new Set<CleTerrain>();
   for (const ligne of carte.grille) {
@@ -67,14 +72,14 @@ test('elle pose les douze terrains du canon, aucun oublié', () => {
       if (cle) vus.add(cle);
     }
   }
-  // C'est tout l'objet du banc : une carte de mission ne montre jamais les
-  // douze, on attend qu'ils apparaissent et un défaut se découvre en jouant.
+  // C'est tout l'objet du banc : une carte de mission ne les montre jamais
+  // tous, on attend qu'ils apparaissent et un défaut se découvre en jouant.
   for (const t of CLES_TERRAIN) {
     assert.ok(vus.has(t), `terrain jamais montré par le banc : ${t} (${CARACTERE_PAR_TERRAIN[t]})`);
   }
 });
 
-test('elle pose les quatorze unités, dans les deux camps, sur des cases distinctes', () => {
+test('elle pose toutes les unités du catalogue, dans les deux camps, sur des cases distinctes', () => {
   const carte = carteBanc();
   assert.deepEqual([...UNITES_BANC].sort(), Object.keys(CAT.unites).sort());
   for (const camp of [0, 1] as const) {
@@ -84,14 +89,21 @@ test('elle pose les quatorze unités, dans les deux camps, sur des cases distinc
   }
   const cases = carte.unitesDepart.map((u) => cleCase(u));
   assert.equal(new Set(cases).size, cases.length, 'deux unités sur la même case');
-  // Elles se posent sur de la plaine : une carte de banc n'a pas à être jouable,
-  // mais un char au fond de la mer ne dit rien de son rendu.
+  // Chacune se pose sur un sol qui lui va : la terre nue pour ce qui roule et
+  // ce qui vole, la mer pour ce qui flotte. Une carte de banc n'a pas à être
+  // jouable, mais un cuirassé posé sur de l'herbe ne dit rien de son rendu.
   for (const u of carte.unitesDepart) {
-    assert.equal(carte.grille[u.y]?.[u.x], 'P', `unité ${u.type} hors plaine`);
+    const car = carte.grille[u.y]?.[u.x];
+    const attendu = UNITES_NAVALES_BANC.has(u.type) ? 'W' : 'P';
+    assert.equal(car, attendu, `unité ${u.type} posée sur '${car}'`);
   }
+  // La liste des navires du banc doit être exactement le domaine « mer » du
+  // catalogue : une unité navale oubliée ici finirait plantée dans un pré.
+  const enMer = (Object.keys(CAT.unites) as CleUnite[]).filter((u) => CAT.unites[u]!.domaine === 'mer');
+  assert.deepEqual([...UNITES_NAVALES_BANC].sort(), enMer.sort());
 });
 
-test('les quatre bâtiments sont montrés pris par chaque camp et neutres', () => {
+test('les six bâtiments capturables sont montrés pris par chaque camp et neutres', () => {
   const carte = carteBanc();
   const rang = carte.grille[RANGS.batiments]!;
   for (const [x, attendu] of [[0, 0], [1, 1], [3, 0], [4, 1], [6, 0], [7, 1], [9, 0], [10, 1]] as const) {
@@ -102,6 +114,15 @@ test('les quatre bâtiments sont montrés pris par chaque camp et neutres', () =
     assert.equal(carte.proprietaires[cleCase({ x, y: RANGS.batiments })], undefined, `case ${x} devrait être neutre`);
     assert.ok(['C', 'U', 'A'].includes(rang[x]!), `case ${x} devrait être capturable`);
   }
+  // Les trois ports de la rive, à la même règle : pris, pris, neutre — et tous
+  // trois sur le bord de l'eau, sinon un quai donnerait sur un pré.
+  assert.equal(PORTS_BANC.length, 3);
+  const proprios = [0, 1, undefined];
+  PORTS_BANC.forEach((port, i) => {
+    assert.equal(carte.grille[port.y]?.[port.x], CARACTERE_PAR_TERRAIN.port, `port ${i}`);
+    assert.equal(carte.proprietaires[cleCase(port)], proprios[i], `propriétaire du port ${i}`);
+    assert.equal(carte.grille[port.y + 1]?.[port.x], 'W', `le port ${i} doit donner sur la mer`);
+  });
   // Et le cas qui a réellement cassé : un bâtiment encastré entre deux montagnes.
   const encastres = carte.grille[RANGS.batimentsEnMontagne]!;
   assert.ok(['C', 'U', 'A'].some((c, i) => encastres[1 + i * 2] === c), 'le rang des bâtiments en montagne a bougé');
@@ -109,7 +130,7 @@ test('les quatre bâtiments sont montrés pris par chaque camp et neutres', () =
   assert.equal(encastres[2], 'M');
 });
 
-test('les silhouettes jamais vues apparaissent, sans toucher au canon', () => {
+test('la dernière silhouette jamais vue apparaît, sans toucher au canon', () => {
   const truque = catalogueSilhouettes(CAT);
   for (const [cle, base] of Object.entries(BASES_JAMAIS_VUES)) {
     assert.ok(BASES_SILHOUETTE.includes(base), `${base} n’est pas une base connue`);
@@ -462,15 +483,20 @@ test('elle approche les hypothèses du budget : ≈ 30 % de forêt, du relief, d
   }
 });
 
-test('elle porte trente unités, quinze par camp, tous les types du catalogue, sur de la terre nue', () => {
+test('elle porte trente unités, quinze par camp, un mélange de partie, sur de la terre nue', () => {
   const carte = carteGrande();
+  // Quinze, et non le catalogue entier : le budget de `doc/10` §9.2 est écrit
+  // sur une trentaine d'unités, et le faire enfler avec le catalogue rendrait
+  // incomparables toutes les campagnes de mesure passées. La couverture est
+  // l'affaire de la carte-catalogue.
   assert.equal(UNITES_GRANDE.length, 15);
   assert.equal(carte.unitesDepart.length, 30);
   for (const camp of [0, 1] as const) {
     const duCamp = carte.unitesDepart.filter((u) => u.camp === camp);
     assert.equal(duCamp.length, 15, `camp ${camp}`);
-    const types = new Set<CleUnite>(duCamp.map((u) => u.type));
-    for (const u of Object.keys(CAT.unites) as CleUnite[]) assert.ok(types.has(u), `camp ${camp} : ${u} absente`);
+    // Toutes existent au catalogue : une clé mal orthographiée ici poserait une
+    // unité fantôme, que `creerPartie` laisserait tomber sans rien dire.
+    for (const u of duCamp) assert.ok(CAT.unites[u.type], `${u.type} absente du catalogue`);
     // L'infanterie ouvre la liste : « Déplacer » et « Tirer » jouent sur elle.
     assert.equal(duCamp[0]!.type, 'infanterie');
   }

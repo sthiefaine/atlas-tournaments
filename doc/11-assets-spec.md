@@ -465,6 +465,8 @@ Il produit aujourd'hui **540 spécifications** :
 | `commandant` | 10 | `content/archetypes.json` | 3 |
 | **Total** | **540** | | **165** |
 
+**Mise à jour du 6 septembre 2026.** Le tableau ci-dessus est celui du canon d'origine : dix unités, quatre bâtiments capturables. Avec la station `radar`, le `genie`, le `drone`, le `brouilleur` et le `char_moyen` (catalogue 4 ; le `drone_filaire` a été retiré le même jour et ses 25 fichiers avec lui), le générateur produit **681 spécifications** : 14 `unite`, **336 kits** (24 × 14), 8 terrains, **205 bâtiments** (5 capturables × 41 territoires), 108 décors, 10 commandants — **201** en priorité 1, 118 en 2, 362 en 3. `--verifier` fait foi sur ces chiffres, pas ce tableau, gardé pour l'histoire.
+
 **Le budget en clair.** Le brief l'annonce : 24 nations × 10 unités = 240 kits de textures, géométrie partagée. À cela s'ajoutent les 164 bâtiments et les 98 décors de territoire, qui sont le prix du style régional. C'est beaucoup, et c'est précisément pourquoi la priorité existe : **165 spécifications** suffisent à jouer toute la qualification française et ses premiers adversaires, soit moins d'un tiers du total. Le reste se commande au fil des routines. Côté dépôt, `assets/specs/` pèse environ 4 Mo de JSON versionné — le prix d'une commande relisible en revue de code, assumé.
 
 La génération est **pure et triée par identifiant** : deux appels donnent le même tableau, donc `assets/specs/` est reproductible et relisible en diff. Le script repart d'un dossier propre à chaque écriture, pour qu'un asset retiré du canon disparaisse aussi des commandes.

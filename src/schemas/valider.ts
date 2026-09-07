@@ -12,7 +12,7 @@
 import {
   ARCHETYPES, AUTEURS_PROMPT, AUTEURS_TRADUCTION, AXES_FAIBLESSE, BASES_SILHOUETTE,
   BIOMES, BORNES_CONSEQUENCE, BORNES_MODIFICATEUR, BORNES_RELATIONS,
-  CARACTERE_PAR_TERRAIN,
+  CARACTERE_PAR_TERRAIN, CARACTERES_CAPTURABLES,
   CATEGORIES_EVENT,
   CATEGORIES_GLOSSAIRE, CIBLES_EFFET, CIBLES_REVIEW, CLES_GABARIT, CLES_PROMPT,
   CLES_TERRAIN,
@@ -480,7 +480,7 @@ function tableDegats(ctx: Contexte, v: unknown, chemin: string): Record<string, 
 const CLES_UNIT_TYPE = [
   'cle', 'nom', 'nomCourt', 'statut', 'homologation', 'traits', 'silhouette', 'cout',
   'mouvement', 'typeMouvement', 'domaine', 'portee', 'vision', 'munitions', 'carburant',
-  'capture', 'transport', 'degats', 'subitDegats', 'peutRiposter', 'peutTirerApresMouvement',
+  'capture', 'transport', 'degats', 'subitDegats', 'armeSecondaire', 'degatsSecondaire', 'peutRiposter', 'peutTirerApresMouvement',
 ] as const;
 
 /** Valide un type d'unité (`03-schemas.md` §3, `04-gameplay.md` §13). */
@@ -566,6 +566,37 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
   } else if (statut !== undefined && statut !== 'canon') {
     ctx.faute('subitDegats', "une unité non 'canon' fournit sa colonne de dégâts, complète");
   }
+  // L'arme secondaire (`04-gameplay.md` §5.3) : une mitrailleuse qui ne compte
+  // pas ses balles. Elle n'a de sens que si l'arme principale, elle, les compte,
+  // et elle ne rend pas visable ce que la ligne de dégâts dit ne pas l'être.
+  let armeSecondaire: string[] | null = null;
+  if (presente(o, 'armeSecondaire') && o['armeSecondaire'] !== null) {
+    const cibles = tableau(ctx, o['armeSecondaire'], 'armeSecondaire', { min: 1, max: 24 },
+      (e, cc) => cle(ctx, e, cc));
+    if (cibles) {
+      sansDoublon(ctx, cibles, 'armeSecondaire');
+      if (munitions === null) {
+        ctx.faute('armeSecondaire', "une unité sans munitions n'a pas d'arme secondaire : tout son tir est déjà illimité");
+      }
+      for (const cible of cibles) {
+        if (degats && !((degats[cible] ?? 0) > 0)) {
+          ctx.faute('armeSecondaire', `${cible} : une arme secondaire ne vise que ce que la ligne de dégâts vise (dégâts > 0)`);
+        }
+      }
+      armeSecondaire = cibles;
+    }
+  }
+  // Le tir à sec hors liste : une mitrailleuse contre un blindé, bornée bas —
+  // au-delà de 30, ce n'est plus une arme secondaire, c'est une seconde ligne.
+  if (presente(o, 'degatsSecondaire') && o['degatsSecondaire'] !== null) {
+    entier(ctx, o['degatsSecondaire'], 'degatsSecondaire', { min: 1, max: 30 });
+    if (armeSecondaire === null) {
+      ctx.faute('degatsSecondaire', "le tir à sec suppose une arme secondaire déclarée (armeSecondaire)");
+    }
+    if (munitions === null) {
+      ctx.faute('degatsSecondaire', "une unité sans munitions n'a pas de tir à sec : tout son tir est déjà illimité");
+    }
+  }
 
   // Invariants croisés.
   const min = portee?.[0];
@@ -576,6 +607,9 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       if (peutRiposter === true) ctx.faute('peutRiposter', 'une pièce indirecte ne riposte jamais');
       if (peutTirer === true) ctx.faute('peutTirerApresMouvement', 'une pièce indirecte ne tire pas après avoir bougé');
     }
+  }
+  if (armeSecondaire && degats && Object.keys(degats).every((k) => armeSecondaire.includes(k))) {
+    ctx.faute('armeSecondaire', "une arme secondaire qui couvre toute la ligne n'est pas secondaire : munitions: null attendu");
   }
   if (degats && Object.values(degats).every((n) => n === 0) && munitions !== null) {
     ctx.faute('munitions', 'une unité sans arme ne porte pas de munitions (munitions: null attendu)');
@@ -618,6 +652,12 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
     }
     if (a('brouilleur') && a('drone')) ctx.faute('traits', "traits contradictoires : 'drone' et 'brouilleur'");
     if (a('tir_indirect') && a('capture')) ctx.faute('traits', "traits contradictoires : 'tir_indirect' et 'capture'");
+    // `plongee` (`04-gameplay.md` §13.2, catalogue 5) : une coque qui disparaît
+    // sous la surface. Elle n'existe qu'en mer, et rien ne plonge en volant.
+    if (a('plongee') && domaine !== undefined && domaine !== 'mer') {
+      ctx.faute('traits', "le trait 'plongee' exige le domaine 'mer'");
+    }
+    if (a('plongee') && a('vol')) ctx.faute('traits', "traits contradictoires : 'plongee' et 'vol'");
   }
   const taille = estObjet(o['silhouette']) ? o['silhouette']['taille'] : undefined;
   if (cout !== undefined && typeof taille === 'number') {
@@ -773,7 +813,7 @@ export function validerMapDef(valeur: unknown): Resultat<MapDef> {
           continue;
         }
         if (car === 'H') qgParCamp += 1;
-        if (['C', 'U', 'A', 'H', 'T'].includes(car)) capturables.add(`${x},${y}`);
+        if (CARACTERES_CAPTURABLES.includes(car)) capturables.add(`${x},${y}`);
       }
     }
     if (camps !== undefined && qgParCamp !== camps) {
@@ -825,7 +865,10 @@ export function validerMapDef(valeur: unknown): Resultat<MapDef> {
     }
   }
 
-  tableau(ctx, o['unitesDepart'], 'unitesDepart', { max: 40 }, (e, c) => {
+  // Soixante et non quarante depuis le 7 septembre 2026 : le plafond visait une
+  // carte de mission, et la carte-catalogue du banc pose **tout** le catalogue
+  // dans les deux camps — vingt-trois unités par camp aujourd'hui.
+  tableau(ctx, o['unitesDepart'], 'unitesDepart', { max: 60 }, (e, c) => {
     const u = objet(ctx, e, c, ['camp', 'type', 'x', 'y', 'pv']);
     if (!u || !requis(ctx, u, c, ['camp', 'type', 'x', 'y'])) return undefined;
     const camp = entier(ctx, u['camp'], sous(c, 'camp'), { min: 0, max: 3 });
@@ -2024,6 +2067,17 @@ export function validerCatalogueUnites(valeur: unknown): Resultat<CatalogueUnite
   }
   sansDoublon(ctx, cles, 'unites');
   sansDoublon(ctx, silhouettes, 'unites');
+  // Une cible d'arme secondaire est une unité du catalogue, pas seulement une
+  // clé bien formée : une faute de frappe y serait une arme qui ne tire jamais.
+  for (let i = 0; i < brutes.length; i += 1) {
+    const brut = brutes[i];
+    if (!estObjet(brut) || !Array.isArray(brut['armeSecondaire'])) continue;
+    for (const cible of brut['armeSecondaire'] as unknown[]) {
+      if (typeof cible === 'string' && !cles.includes(cible)) {
+        ctx.faute(sous(sous('unites', i), 'armeSecondaire'), `cible inconnue du catalogue : ${cible}`);
+      }
+    }
+  }
   for (const canon of CLES_UNITE_CANON) {
     if (!cles.includes(canon)) ctx.faute('unites', `unité canon absente du catalogue : ${canon}`);
   }

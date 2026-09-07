@@ -352,3 +352,66 @@ test('l’inertie s’amortit et s’éteint, et se coupe sous mouvement réduit
   while (vue.avancer(16) && contre < 200) contre += 1;
   assert.ok(contre < 6, `la butée coupe l’inertie, pas l’amortissement (${contre} images)`);
 });
+
+// ---------------------------------------------------------------------------
+// La vue retenue le temps du tour adverse
+// ---------------------------------------------------------------------------
+
+/** Une vue montée et cadrée, comme en partie. */
+function vueMontee(): ReturnType<typeof creerVue3d> {
+  const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+  vue.redimensionner(1280, 800);
+  vue.cadrerCarte();
+  return vue;
+}
+
+test('la caméra revient d’elle-même là où le joueur regardait avant le tour adverse', () => {
+  const vue = vueMontee();
+  vue.centrerCase({ x: 4, y: 4 });
+  const depart = { ...vue.etat.cible };
+
+  vue.retenirVue();
+  // L'adversaire joue à l'autre bout : un cadrage automatique amène sa case.
+  vue.cadrerCase({ x: 20, y: 20 }, 0);
+  assert.notDeepEqual({ ...vue.etat.cible }, depart, 'la caméra est bien partie voir ailleurs');
+
+  assert.equal(vue.revenirVue(), true, 'elle a de quoi revenir');
+  // Le retour se joue en transition, comme un zoom : quelques images suffisent.
+  let images = 0;
+  while (vue.avancer(16) && images < 60) images += 1;
+  assert.ok(Math.abs(vue.etat.cible.x - depart.x) < 1e-6);
+  assert.ok(Math.abs(vue.etat.cible.z - depart.z) < 1e-6);
+});
+
+test('un mouvement de caméra voulu par le joueur annule le retour', () => {
+  for (const geste of ['glisser', 'zoomer', 'tourner', 'centrer'] as const) {
+    const vue = vueMontee();
+    vue.centrerCase({ x: 4, y: 4 });
+    vue.retenirVue();
+    vue.cadrerCase({ x: 20, y: 20 }, 0);
+    // Le joueur reprend la main pendant que l'adversaire joue.
+    if (geste === 'glisser') vue.glisser(40, 0);
+    if (geste === 'zoomer') vue.zoomer(1);
+    if (geste === 'tourner') vue.tourner(1);
+    if (geste === 'centrer') vue.centrerCase({ x: 12, y: 2 });
+    const choisie = { ...vue.etat.cible };
+    assert.equal(vue.revenirVue(), false, `${geste} : on ne ramène pas le joueur de force`);
+    let images = 0;
+    while (vue.avancer(16) && images < 60) images += 1;
+    if (geste !== 'zoomer' && geste !== 'tourner') {
+      assert.deepEqual({ ...vue.etat.cible }, choisie, `${geste} : la vue choisie est gardée`);
+    }
+  }
+});
+
+test('sans rien à défaire, revenir ne coûte rien — et la mémoire ne sert qu’une fois', () => {
+  const vue = vueMontee();
+  vue.centrerCase({ x: 6, y: 6 });
+  vue.retenirVue();
+  // L'adversaire a joué dans le champ : aucun cadrage n'a bougé la caméra.
+  vue.cadrerCase({ x: 6, y: 7 }, 0);
+  assert.equal(vue.revenirVue(), false, 'rien n’a bougé, rien à défaire');
+  // La mémoire est consommée : un second appel ne ressuscite pas la vue.
+  vue.cadrerCase({ x: 22, y: 22 }, 0);
+  assert.equal(vue.revenirVue(), false, 'la mémoire ne sert qu’une fois');
+});

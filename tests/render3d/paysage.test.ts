@@ -11,9 +11,10 @@ import { carteBanc } from '../../src/app/atelier/banc';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { alea, NIVEAU_EAU, type GrilleTerrain } from '../../src/render3d/geometrie';
 import {
-  creerPaysage, ESPECES, GENRES_PAYSAGE, genreRivage, PAYSAGES, segmentsRivage, semerPaysage,
+  creerPaysage, ESPECES, GENRES_PAYSAGE, genreRivage, memesVisibles, PAYSAGES, segmentsRivage, semerPaysage,
   type Accessoire,
 } from '../../src/render3d/paysage';
+import { grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
 import { BIOMES, CARACTERE_PAR_TERRAIN, type CleTerrain } from '../../src/schemas/types';
 
 const TERRAIN_PAR_CARACTERE: Readonly<Record<string, CleTerrain>> = Object.fromEntries(
@@ -27,6 +28,29 @@ function grilleTemoin(): GrilleTerrain {
     largeur: carte.largeur,
     hauteur: carte.hauteur,
     terrainDe: (x, y) => TERRAIN_PAR_CARACTERE[carte.grille[y]?.[x] ?? 'P'] ?? 'plaine',
+  };
+}
+
+/** Compile un matériau comme le ferait three, pour lire ce qui a été injecté. */
+function compiler(mat: THREE.MeshStandardMaterial): {
+  uniforms: Record<string, { value: unknown }>; vertexShader: string; fragmentShader: string;
+} {
+  const shader = {
+    uniforms: {} as Record<string, { value: unknown }>,
+    vertexShader: 'void main() {\n#include <project_vertex>\n}',
+    fragmentShader: 'void main() {\n#include <opaque_fragment>\n#include <fog_fragment>\n}',
+  };
+  mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
+  return shader;
+}
+
+/** Les uniformes du brouillard, tels que le plateau les partage. */
+function uniformesTemoins(): UniformesBrouillard {
+  return {
+    tVisibles: { value: new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat) },
+    uCarteBrouillard: { value: new THREE.Vector2(12, 12) },
+    uFacteurBrouillard: { value: 0 },
+    uTeinteBrouillard: { value: new THREE.Color(0x000000) },
   };
 }
 
@@ -161,5 +185,61 @@ test('les fumerolles fument même sans vent, et respectent la préférence de mo
   paysage.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'), 'ete');
   assert.equal(paysage.avancer(16, true), false);
   assert.equal(paysage.avancer(16, false), true);
+  paysage.dispose();
+});
+
+test('l’ambiance du paysage n’est repeinte que si ses paramètres ou la saison changent', () => {
+  const paysage = creerPaysage(grilleTemoin(), () => 0, 'marais');
+  const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const mats = lots.map((l) => l.material as THREE.MeshStandardMaterial);
+  const p = parametresAmbiance('ete', 'jour', 'clair');
+  paysage.appliquerAmbiance(p, 'ete');
+  for (const m of mats) m.color.setHex(0x000000);
+  paysage.appliquerAmbiance(p, 'ete');
+  assert.ok(mats.every((m) => m.color.getHex() === 0), 'même objet, même saison : rien repeint');
+  paysage.appliquerAmbiance(p, 'hiver');
+  assert.ok(mats.some((m) => m.color.getHex() !== 0), 'une autre saison repeint');
+  for (const m of mats) m.color.setHex(0x000000);
+  paysage.appliquerAmbiance({ ...p }, 'hiver');
+  assert.ok(mats.some((m) => m.color.getHex() !== 0), 'un objet neuf — une transition — repeint');
+  paysage.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Le brouillard de guerre : les accessoires et le rivage d'une case hors de vue
+// ---------------------------------------------------------------------------
+
+test('memesVisibles compare des contenus, pas des objets', () => {
+  assert.equal(memesVisibles(null, null), true);
+  assert.equal(memesVisibles(new Set(['0,0']), new Set(['0,0'])), true, 'un ensemble neuf mais égal');
+  assert.equal(memesVisibles(new Set(['0,0']), new Set(['0,1'])), false);
+  assert.equal(memesVisibles(new Set(['0,0']), new Set(['0,0', '0,1'])), false);
+  assert.equal(memesVisibles(null, new Set()), false, 'sans brouillard et tout caché ne sont pas la même chose');
+  assert.equal(memesVisibles(new Set(), null), false);
+});
+
+test('les accessoires du paysage lisent le masque de brouillard, après l’éclairage', () => {
+  // Le brouillard ne se peint plus dans les couleurs d'instance : un matériau
+  // noirci garde le reflet du studio et l'éclat du soleil, et c'est ce gris
+  // qu'on voyait dans le noir. Il se lit désormais dans le nuanceur, comme au
+  // sol, et il doit tenir compte de l'instanciation — un lot d'accessoires est
+  // un seul objet, ses instances sont ailleurs sur la carte.
+  const paysage = creerPaysage(grilleTemoin(), () => 0, 'marais');
+  const uniformes = uniformesTemoins();
+  grefferBrouillardSur(paysage.groupe, uniformes, 'atlas-test');
+
+  const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  assert.ok(lots.length > 0, 'la carte-témoin a des accessoires');
+  for (const lot of [...lots, paysage.groupe.getObjectByName('rivage') as THREE.Mesh]) {
+    const mat = lot.material as THREE.MeshStandardMaterial;
+    const shader = compiler(mat);
+    assert.ok(shader.fragmentShader.includes('tVisibles'), `${lot.name} lit le masque`);
+    assert.ok(
+      shader.fragmentShader.indexOf('uvVisibles') > shader.fragmentShader.indexOf('#include <opaque_fragment>'),
+      `${lot.name} l’applique après l’éclairage, pas sur le diffus`,
+    );
+    assert.ok(shader.vertexShader.includes('instanceMatrix'), `${lot.name} place ses instances`);
+    assert.equal(shader.uniforms['tVisibles'], uniformes.tVisibles, 'les uniformes sont partagés avec le sol');
+  }
   paysage.dispose();
 });

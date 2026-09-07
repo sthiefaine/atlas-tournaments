@@ -765,6 +765,7 @@ type DeclencheurScene =
   | { type: 'premier_combat' }                     // à la première attaque
   | { type: 'capture'; camp?: CampId }             // un bâtiment change de main
   | { type: 'perte'; camp?: CampId }               // une unité sort du jeu
+  | { type: 'panne_seche'; camp?: CampId }         // une unité aérienne tombe à sec (ajouté le 6 septembre 2026)
   | { type: 'production'; unite?: CleUnite }       // une unité entre en jeu
   | { type: 'pouvoir'; camp?: CampId }             // un commandant déclenche
   | { type: 'etape'; etape: number };              // un relais franchit un jalon

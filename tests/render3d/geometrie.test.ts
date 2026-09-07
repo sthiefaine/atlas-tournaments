@@ -229,16 +229,18 @@ test('le dénivelé est reporté sur la jonction, la montagne garde sa hauteur',
   }
 });
 
-test('le repli d’une case dit si elle est bâtie, et les quatre terrains bâtis y sont', () => {
+test('le repli d’une case dit si elle est bâtie, et les six terrains bâtis y sont', () => {
   const g: GrilleTerrain = {
-    largeur: 6,
+    largeur: 8,
     hauteur: 1,
-    terrainDe: (x): CleTerrain => (['ville', 'qg', 'usine', 'aeroport', 'plaine', 'montagne'] as const)[x] ?? 'plaine',
+    terrainDe: (x): CleTerrain => (
+      ['ville', 'qg', 'usine', 'aeroport', 'radar', 'port', 'plaine', 'montagne'] as const)[x] ?? 'plaine',
   };
-  for (let x = 0; x < 4; x += 1) assert.equal(repliCase(g, x, 0), 0.5, `case ${x} bâtie`);
-  assert.equal(repliCase(g, 4, 0), REPLI_CENTRE);
-  assert.equal(repliCase(g, 5, 0), REPLI_CENTRE);
-  // Les quatre terrains capturables du jeu, et eux seuls : un pont ou une route
-  // n'a pas de socle à protéger.
-  assert.deepEqual([...TERRAINS_BATIS].sort(), ['aeroport', 'qg', 'radar', 'usine', 'ville']);
+  for (let x = 0; x < 6; x += 1) assert.equal(repliCase(g, x, 0), 0.5, `case ${x} bâtie`);
+  assert.equal(repliCase(g, 6, 0), REPLI_CENTRE);
+  assert.equal(repliCase(g, 7, 0), REPLI_CENTRE);
+  // Les six terrains capturables du jeu, et eux seuls : un pont ou une route
+  // n'a pas de socle à protéger. Le port en est un : son quai fait 0,86 case de
+  // côté, il déborde du disque plat du centre comme les autres.
+  assert.deepEqual([...TERRAINS_BATIS].sort(), ['aeroport', 'port', 'qg', 'radar', 'usine', 'ville']);
 });

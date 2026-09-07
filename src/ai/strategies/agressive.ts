@@ -16,6 +16,12 @@ export const POIDS_AGRESSIVE: Poids = {
   terrain: 0.6,
   capteursVises: 3,
   qg: 4,
+  // Elle rentre plus tard et ravitaille moins : la marche en avant d'abord.
+  carburant: 8,
+  reserve: 0.5,
+  ravitaillement: 8,
+  embarquement: 24,
+  debarquement: 18,
 };
 
 /** La stratégie agressive. */

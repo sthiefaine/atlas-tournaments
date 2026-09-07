@@ -10,7 +10,8 @@
  * Deux principes le tiennent.
  *
  * **On montre le catalogue, pas une partie.** Une carte de mission ne pose
- * jamais les douze terrains ni les onze unités : on attend qu'ils apparaissent,
+ * jamais les quatorze terrains ni les vingt-trois unités : on attend qu'ils
+ * apparaissent,
  * et un défaut de rendu se découvre en jouant, tard. La carte-catalogue les
  * range côte à côte, y compris les cas qui ont réellement cassé — un bâtiment
  * encastré dans la montagne, une plage entre mer et plaine.
@@ -37,8 +38,15 @@ import {
  */
 const DATE_BANC = '2026-09-05';
 
-/** Largeur de la carte-catalogue. Le validateur exige entre 10 et 40. */
-export const LARGEUR_BANC = 20;
+/**
+ * Largeur de la carte-catalogue. Le validateur exige entre 10 et 40.
+ *
+ * Vingt colonnes suffisaient à quatorze unités ; le catalogue 5 en compte
+ * vingt-trois, dont quatre qui flottent. Vingt-quatre colonnes laissent
+ * dix-neuf pièces terrestres et aériennes sur un rang, et rendent à la flèche
+ * de chemin les colonnes de droite, qu'une quinzième unité lui prenait.
+ */
+export const LARGEUR_BANC = 24;
 
 /** La ville que les gestes de capture se disputent : celle du camp 1 au départ. */
 export const VILLE_BANC: Case = { x: 1, y: 3 };
@@ -53,8 +61,11 @@ export const VILLE_DESAFFECTEE_BANC: Case = { x: 15, y: 3 };
  * plaine, il ne lirait rien et le geste ne montrerait qu'une mise hors jeu.
  */
 export const STATION_ADVERSE_BANC: Case = { x: 12, y: 3 };
-/** Hauteur de la carte-catalogue. */
-export const HAUTEUR_BANC = 12;
+/**
+ * Hauteur de la carte-catalogue : douze rangs de terre, plus la rive et ses
+ * deux rangs de mer, où se tiennent les navires du catalogue 5.
+ */
+export const HAUTEUR_BANC = 15;
 
 /**
  * Les rangs de la carte-catalogue. Chacun montre une famille, et les rangs
@@ -71,6 +82,10 @@ export const RANGS = {
   chemin: 8,
   batimentsEnMontagne: 9,
   eau: 10,
+  /** La rive : c'est là que les trois ports se tiennent, quai contre l'eau. */
+  rive: 12,
+  naviresCamp0: 13,
+  naviresCamp1: 14,
 } as const;
 
 /**
@@ -79,8 +94,14 @@ export const RANGS = {
  * Les deux rangs de terrains sont **identiques**, ce qui montre d'un coup les
  * deux jonctions qui comptent : celle entre deux cases du même terrain et celle
  * avec la plaine. Le rang 9 est le cas qui a cassé — des bâtiments encastrés
- * entre des montagnes —, et les deux derniers rangs portent la mer, la plage,
- * la rivière et son pont, c'est-à-dire tout ce qui bouge quand la marée monte.
+ * entre des montagnes —, les rangs 10 et 11 portent la mer, la plage, la
+ * rivière et son pont, c'est-à-dire tout ce qui bouge quand la marée monte.
+ *
+ * Les trois derniers rangs sont neufs (7 septembre 2026) : une **rive** qui
+ * porte les trois ports — pris par chaque camp, et neutre — et deux rangs de
+ * **mer** où se tiennent les navires du catalogue 5. Un cuirassé posé sur de
+ * l'herbe ne dit rien de son rendu, et c'est justement ce qu'un banc doit
+ * rendre impossible.
  *
  * À droite des rangs 8 à 11, le **réseau de voies** : un bout, une longue
  * droite, une croix, deux T et un virage, et un pont qui franchit une rivière
@@ -88,44 +109,69 @@ export const RANGS = {
  * carte. Une carte de mission n'aligne jamais les six pièces côte à côte.
  */
 const GRILLE_BANC: readonly string[] = [
-  'PFMRSVNWCUATPPPPPPPP',
-  'PFMRSVNWCUATPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'CCCUUUAAAHHTTTPCPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPRPPPPPP',
-  'MCMUMAMCMPPPPRPPVPRR',
-  'WWWSPPPPRRRRRRRRNRRR',
-  'WWWSPPPPPPPPPRPPVPPP',
+  'PFMRSVNWCUATOPPPPPPPPPPP',
+  'PFMRSVNWCUATOPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPP',
+  'CCCUUUAAAHHTTTPCPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPRPPPPPPPPPP',
+  'MCMUMAMCMPPPPRPPVPRRPPPP',
+  'WWWSPPPPRRRRRRRRNRRRPPPP',
+  'WWWSPPPPPPPPPRPPVPPPPPPP',
+  'WWWSSSOSSSOSSSOSSSSSSSSS',
+  'WWWWWWWWWWWWWWWWWWWWWWWW',
+  'WWWWWWWWWWWWWWWWWWWWWWWW',
 ];
 
 /**
- * Les onze unités du catalogue, dans l'ordre où elles se lisent : la piétaille,
- * puis les roues, puis les chenilles, puis ce qui vole.
+ * Les vingt-trois unités du catalogue 5, dans l'ordre où elles se lisent : la
+ * piétaille, puis les roues, puis les chenilles, puis ce qui vole, puis ce qui
+ * flotte. Le test exige que cette liste **soit** le catalogue, à la clé près :
+ * une unité homologuée qu'on oublierait ici ne serait jamais regardée.
  */
 export const UNITES_BANC: readonly CleUnite[] = [
-  'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'char_leger',
-  'char_lourd', 'antiair', 'artillerie', 'transport', 'helico', 'drone', 'drone_filaire',
+  'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'missiles_air', 'missiles_sol',
+  'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'transport',
+  'helico', 'transport_air', 'drone', 'chasseur', 'bombardier',
+  'barge', 'sous_marin', 'cuirasse', 'porte_avions',
+];
+
+/**
+ * Celles qui flottent : elles se posent sur les rangs de mer, pas sur le rang
+ * de terre. Le domaine est au canon (`content/unites.json`), mais le banc n'a
+ * pas de catalogue sous la main quand il construit sa carte — il en dresse donc
+ * la liste, et un test la confronte au domaine `mer` du catalogue.
+ */
+export const UNITES_NAVALES_BANC: ReadonlySet<CleUnite> = new Set<CleUnite>([
+  'barge', 'sous_marin', 'cuirasse', 'porte_avions',
+]);
+
+/** Les colonnes où les navires mouillent, une par unité navale. */
+export const COLONNES_NAVIRES: readonly number[] = [5, 8, 11, 14];
+
+/** Les trois ports de la rive : au camp 0, au camp 1, et neutre. */
+export const PORTS_BANC: readonly Case[] = [
+  { x: 6, y: RANGS.rive }, { x: 10, y: RANGS.rive }, { x: 14, y: RANGS.rive },
 ];
 
 /**
  * Les bases de silhouette **qu'aucune unité du canon n'utilise**.
  *
- * `rail`, `ailes` et `coque` sont écrites dans `render3d/pieces.ts` depuis le
- * début et n'ont jamais été vues à l'écran (`CLAUDE.md`, manque n° 5) : rien ne
- * les porte. On les fait apparaître en échangeant la base de trois unités dans
- * une **copie** du catalogue — jamais dans le canon, qui reste la vérité.
+ * Elles étaient trois — `rail`, `ailes` et `coque` — écrites dans
+ * `render3d/pieces.ts` depuis le début et jamais vues à l'écran. Le catalogue 5
+ * a donné des porteurs à `ailes` (chasseur, bombardier) et à `coque` (barge,
+ * porte-avions, cuirassé, sous-marin) ; il ne reste que `rail`, qu'on fait
+ * apparaître en échangeant la base d'une unité dans une **copie** du catalogue
+ * — jamais dans le canon, qui reste la vérité.
  */
 export const BASES_JAMAIS_VUES: Readonly<Record<string, BaseSilhouette>> = Object.freeze({
-  transport: 'coque',
-  artillerie: 'ailes',
   roquettes: 'rail',
 });
 
-/** La carte-catalogue : treize terrains, cinq bâtiments, quatorze unités par camp. */
+/** La carte-catalogue : quatorze terrains, six bâtiments, vingt-trois unités par camp. */
 export function carteBanc(): MapDef {
   const proprietaires: Record<string, CampId> = {};
   // Chaque famille de bâtiment est montrée trois fois : camp 0, camp 1, neutre.
@@ -138,13 +184,28 @@ export function carteBanc(): MapDef {
   // Les deux QG : le validateur en exige exactement un par camp.
   proprietaires[cleCase({ x: 9, y: RANGS.batiments })] = 0;
   proprietaires[cleCase({ x: 10, y: RANGS.batiments })] = 1;
+  // Les ports de la rive suivent la même règle : pris, pris, neutre.
+  proprietaires[cleCase(PORTS_BANC[0]!)] = 0;
+  proprietaires[cleCase(PORTS_BANC[1]!)] = 1;
 
-  const unitesDepart = ([0, 1] as const).flatMap((camp) => UNITES_BANC.map((type, x) => ({
-    camp: camp as CampId,
-    type,
-    x,
-    y: camp === 0 ? RANGS.unitesCamp0 : RANGS.unitesCamp1,
-  })));
+  const unitesDepart: UniteDepart[] = [];
+  for (const camp of [0, 1] as const) {
+    const rangTerre = camp === 0 ? RANGS.unitesCamp0 : RANGS.unitesCamp1;
+    const rangMer = camp === 0 ? RANGS.naviresCamp0 : RANGS.naviresCamp1;
+    let terre = 0;
+    let mer = 0;
+    for (const type of UNITES_BANC) {
+      if (UNITES_NAVALES_BANC.has(type)) {
+        const x = COLONNES_NAVIRES[mer];
+        if (x === undefined) throw new Error('banc : plus de navires que de mouillages');
+        unitesDepart.push({ camp, type, x, y: rangMer });
+        mer += 1;
+      } else {
+        unitesDepart.push({ camp, type, x: terre, y: rangTerre });
+        terre += 1;
+      }
+    }
+  }
 
   return {
     cle: 'carte_banc_atelier',
@@ -208,12 +269,23 @@ export const PARAMETRES_GRANDE: ParametresCarte = Object.freeze({
 }) as ParametresCarte;
 
 /**
- * Quinze unités par camp — les quatorze du catalogue 3 et une infanterie de
- * plus —, trente en tout. Le générateur n'en pose que deux par camp ; on
- * complète soi-même, l'infanterie en tête pour que « Déplacer » et « Tirer »
- * jouent sur elle comme sur la carte-catalogue.
+ * Quinze unités par camp, trente en tout — et **pas le catalogue entier**.
+ *
+ * C'est la seule liste du banc qui ne suive pas le catalogue, et c'est voulu :
+ * cette carte-là sert la **mesure** (`10-rendu-3d.md` §9.2), pas la couverture.
+ * Le budget est écrit sur « une trentaine d'unités » ; le faire enfler à
+ * quarante-six parce que le catalogue a grandi rendrait incomparables toutes les
+ * campagnes de mesure passées. C'est la carte-catalogue qui garantit qu'aucune
+ * unité n'est oubliée. L'infanterie ouvre la liste pour que « Déplacer » et
+ * « Tirer » jouent sur elle comme sur la carte-catalogue ; le reste est un
+ * mélange représentatif d'une partie — de la piétaille, du blindé, de l'appui,
+ * un peu de vol.
  */
-export const UNITES_GRANDE: readonly CleUnite[] = ['infanterie', ...UNITES_BANC];
+export const UNITES_GRANDE: readonly CleUnite[] = [
+  'infanterie', 'infanterie', 'meca', 'genie', 'recon', 'roquettes',
+  'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'missiles_sol',
+  'transport', 'helico', 'drone',
+];
 
 /** Les terrains sur lesquels on pose une unité : de la terre nue, ni bâtie, ni noyée. */
 const TERRAINS_DE_POSE: ReadonlySet<string> = new Set([
@@ -276,13 +348,13 @@ export function carteGrande(): MapDef {
 /**
  * La version de catalogue du banc.
  *
- * **Deux, obligatoirement** : le catalogue 1 ne compte que dix unités, le génie
- * y manque. Un banc monté sur le scénario de démonstration, qui est en
+ * **Le dernier, obligatoirement** : le catalogue 1 ne compte que dix unités, le
+ * génie y manque. Un banc monté sur le scénario de démonstration, qui est en
  * catalogue 1, perdait le génie **sans rien dire** — la carte se montait, il
  * n'était simplement pas là. C'est le genre d'absence qu'un banc d'essai est
- * censé rendre impossible.
+ * censé rendre impossible, et c'est pourquoi ce nombre suit le catalogue.
  */
-export const VERSION_CATALOGUE_BANC = 3;
+export const VERSION_CATALOGUE_BANC = 5;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui
@@ -293,7 +365,7 @@ export function scenarioBanc<T extends { catalogueVersion: number }>(base: T): T
 }
 
 /**
- * Une copie du catalogue où trois unités portent une base jamais vue.
+ * Une copie du catalogue où une unité porte la base que rien ne porte.
  *
  * On ne touche pas au canon : `chargerCatalogue` rend toujours la vérité, et
  * c'est cette copie qu'on passe au rendu le temps du coup d'œil.
@@ -336,15 +408,21 @@ export function surbrillancesBanc(genres: readonly GenreBanc[]): Surbrillance[] 
 /**
  * Un chemin coudé **deux fois**, sur les rangs libres à droite des unités : un
  * coude unique ne dit pas si la flèche sait tourner deux fois dans le même sens.
+ *
+ * Il passe par le rang des unités du camp 0, et c'est le piège de ce banc : au
+ * catalogue 4, dix-neuf unités par rang auraient posé la quinzième pièce sur la
+ * case de la flèche. La carte s'est élargie à vingt-quatre colonnes et le chemin
+ * s'est décalé d'autant — dix-neuf pièces terrestres tiennent en 0…18, le chemin
+ * vit en 19…23.
  */
 export const CHEMIN_BANC: readonly Case[] = [
-  { x: 13, y: RANGS.surbrillancesHautes },
-  { x: 14, y: RANGS.surbrillancesHautes },
-  { x: 15, y: RANGS.surbrillancesHautes },
-  { x: 15, y: RANGS.unitesCamp0 },
-  { x: 15, y: RANGS.surbrillancesBasses },
-  { x: 16, y: RANGS.surbrillancesBasses },
-  { x: 17, y: RANGS.surbrillancesBasses },
+  { x: 19, y: RANGS.surbrillancesHautes },
+  { x: 20, y: RANGS.surbrillancesHautes },
+  { x: 21, y: RANGS.surbrillancesHautes },
+  { x: 21, y: RANGS.unitesCamp0 },
+  { x: 21, y: RANGS.surbrillancesBasses },
+  { x: 22, y: RANGS.surbrillancesBasses },
+  { x: 23, y: RANGS.surbrillancesBasses },
 ];
 
 /**

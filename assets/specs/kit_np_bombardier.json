@@ -1,0 +1,163 @@
+{
+  "id": "kit_np_bombardier",
+  "type": "kit",
+  "cle": "np_bombardier",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Bombardier\" in the colours and materials of Népal. Guiding line: Everything is carried: small volumes, straps everywhere, crimson and deep blue oilcloth, and not one useless gram. Paint the base mesh of unite_bombardier_base in shape template A (short and compact: stubby volumes, sharp angles, everything pulled in). Base colour #b8443f, own shadow #6d1f1d, edge highlight #f2cfcb, accents #2c4a86, #e8e2d0. Materials to read at a glance: oilcloth, stitched leather, braided rope, planed timber and flat matte paint. Finish: fully matte and sun-faded. Add these ornaments as separate named nodes, and nothing else: a stitched side pannier, a coil of rope on a cleat, a felt-covered flask and a small plain pennant. Abstract decals only: a row of triangles in #2c4a86 on the epaule. For colour-blind readability the socle carries a row of triangles, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Bombardier » aux couleurs et aux matières du style « Népal ». Ligne directrice : Tout se porte : petits volumes, sangles partout, toile cirée cramoisie et bleu profond, et pas un gramme qui ne serve à quelque chose. Peindre la géométrie de base unite_bombardier_base dans le gabarit A (court et ramassé : volumes trapus, angles francs, rien qui dépasse). Couleur de fond #b8443f, ombre propre #6d1f1d, liseré d’arête #f2cfcb, accents #2c4a86, #e8e2d0. Matières à lire d’un coup d’œil : toile cirée, cuir cousu, cordage tressé, bois raboté et peinture mate. Finition : entièrement mate et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une sacoche cousue sur le flanc, une corde lovée sur un taquet, une gourde habillée de feutre et un fanion uni. Décalcomanies abstraites seulement : une file de triangles en #2c4a86 sur la zone « epaule ». Pour la lisibilité sans couleur, le socle porte une file de triangles, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.95,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.45,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.85,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": false
+  },
+  "budget": {
+    "lod0": 10440,
+    "lod1": 3480,
+    "lod2": 1044,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "np"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_sacoche",
+      "ornement_corde_lovee",
+      "ornement_gourde",
+      "ornement_fanion"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_np_bombardier_lod0.glb",
+      "kit_np_bombardier_lod1.glb",
+      "kit_np_bombardier_albedo.png",
+      "kit_np_bombardier_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

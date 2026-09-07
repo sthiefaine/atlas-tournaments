@@ -19,15 +19,24 @@
  * `renderer.render` dans `dessiner()`. La chaîne ne tourne jamais seule : elle
  * ne dessine que quand la boucle le demande, exactement comme le rendu direct.
  * En qualité `auto`, les premières images sont **mesurées** sans elle, GPU
- * compris, et elle ne s'allume que si l'appareil suit (`render/qualite.ts`).
- * Ses modules sont chargés par `import()` au moment de s'allumer : l'accueil,
- * en `basse`, ne les télécharge pas.
+ * compris, et elle ne s'allume que si l'appareil suit (`render/qualite.ts`) ;
+ * une fois allumée, la **cadence** entre deux images consécutives est suivie,
+ * et la chaîne s'éteint pour la session si elle fait manquer une image sur
+ * deux. Ses modules sont chargés par `import()` au moment de s'allumer :
+ * l'accueil, en `basse`, ne les télécharge pas.
+ *
+ * La **carte d'ombre** n'est recalculée que quand l'appelant le dit
+ * (`dessiner(camera, { ombre })`) : en partie, la boucle ne dort jamais —
+ * drapeaux, respiration des figurines — et redessiner 2048² d'ombres soixante
+ * fois par seconde pour des porteurs immobiles était le premier coût de
+ * l'image de base. Ce qui vaut une ombre se décide dans `index.ts`.
  */
 
 import * as THREE from 'three';
 
 import {
-  composeurPossible, decisionComposeur, msCalibration, QUALITE_PAR_DEFAUT, type QualiteRendu,
+  cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, msCadence, msCalibration,
+  QUALITE_PAR_DEFAUT, type QualiteRendu,
 } from '../render/qualite';
 import type { MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
@@ -42,9 +51,14 @@ export interface Scene3d {
   readonly largeur: number;
   readonly hauteur: number;
   /** Dessine une image — par la chaîne si elle est active — et rend sa durée en millisecondes. */
-  dessiner(camera: THREE.Camera): number;
+  dessiner(camera: THREE.Camera, options?: OptionsImage): number;
   /** Durée moyenne des dernières images, en millisecondes. */
   readonly msParImage: number;
+  /**
+   * La médiane des dernières images consécutives dessinées par la chaîne, en
+   * millisecondes entre deux images ; `null` sans chaîne ou sans assez d'images.
+   */
+  readonly msCadence: number | null;
   /** Vrai quand la chaîne de post-traitement dessine l'image. */
   readonly composeurActif: boolean;
   /** Vrai tant que les premières images sont mesurées pour la qualité `auto`. */
@@ -54,6 +68,25 @@ export interface Scene3d {
   /** Change la qualité sans remonter : la chaîne se monte ou se démonte à l'image suivante. */
   reglerQualite(qualite: QualiteRendu): void;
   dispose(): void;
+}
+
+/** Ce que l'appelant sait d'une image et que la scène ne peut pas deviner. */
+export interface OptionsImage {
+  /**
+   * Recalculer la carte d'ombre. Vrai par défaut ; l'appelant le met à faux
+   * quand aucun porteur d'ombre, ni le soleil, ni la caméra n'ont bougé — la
+   * respiration d'une figurine ou un drapeau qui flotte n'en valent pas une.
+   * Pendant la calibration, l'ombre est recalculée quoi qu'il en soit : c'est
+   * l'image d'une animation qu'on veut mesurer, pas celle d'un plateau figé.
+   */
+  ombre?: boolean;
+  /**
+   * Vrai si l'image précédente a été dessinée à l'image d'écran juste avant
+   * celle-ci — la boucle n'a pas dormi entre les deux. C'est la condition pour
+   * que l'intervalle mesuré dise ce que l'image coûte, et non depuis quand
+   * personne n'a bougé.
+   */
+  continu?: boolean;
 }
 
 /** Réglages du contexte. */
@@ -119,8 +152,8 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   // `render()` : la chaîne de post-traitement dessine la scène deux fois (la
   // couleur, puis les normales et la profondeur pour l'occlusion), et sans ce
   // réglage la seconde passe recalculait 2048² d'ombres dont elle ne se sert
-  // pas. `dessiner()` lève `needsUpdate` à chaque image, donc l'ombre suit la
-  // caméra comme avant, dès la première image.
+  // pas. Et elle ne se calcule que quand l'appelant lève `ombre` : un plateau
+  // dont rien ne porte d'ombre différente garde sa carte d'une image à l'autre.
   renderer.shadowMap.autoUpdate = false;
   renderer.setPixelRatio(ratioPixels(doc.defaultView, options.ratioMax ?? 2));
   // Les compteurs ne se remettent plus à zéro à chaque `render()` : une image
@@ -151,10 +184,16 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let echec = false;
   const durees: number[] = [];
   let msMesurees: number | null = null;
+  // --- La rétroaction : les intervalles entre images consécutives, chaîne
+  //     allumée. Une cadence refusée le reste pour la session.
+  const intervalles: number[] = [];
+  let msCadenceMesuree: number | null = null;
+  let cadenceRefusee = false;
+  let derniereImage: number | null = null;
 
   const ratio = (): number => ratioPixels(doc.defaultView, options.ratioMax ?? 2);
   const reduit = (): boolean => options.reduit?.() ?? false;
-  const voulu = (): boolean => !echec && decisionComposeur(qualite, msMesurees, reduit());
+  const voulu = (): boolean => !echec && decisionComposeur(qualite, msMesurees, reduit(), cadenceRefusee);
   /** Mesure-t-on encore ? Seulement en `auto`, sans chaîne, tant que la médiane manque. */
   const calibration = (): boolean => qualite === 'auto' && msMesurees === null && composeur === null && !reduit();
 
@@ -190,6 +229,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       if (!camera) return;
       try {
         composeur = fabrique(renderer, scene, camera, largeur, hauteur, ratio());
+        // La chaîne repart mesurée de zéro : sa première image compile ses
+        // programmes, la médiane des trente suivantes l'absorbe.
+        intervalles.length = 0;
+        msCadenceMesuree = null;
       } catch (cause) {
         echec = true;
         console.warn('Chaîne de post-traitement indisponible', cause);
@@ -261,18 +304,31 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     get largeur() { return largeur; },
     get hauteur() { return hauteur; },
     get msParImage() { return msParImage; },
+    get msCadence() { return msCadenceMesuree; },
     get composeurActif() { return composeur !== null; },
     get calibration() { return calibration(); },
 
-    dessiner(camera: THREE.Camera): number {
+    dessiner(camera: THREE.Camera, image: OptionsImage = {}): number {
+      const debut = horloge.now();
+      // L'intervalle depuis l'image précédente est ce qu'elle a coûté, chaîne
+      // comprise, si la boucle n'a pas dormi entre-temps. Il se lit **avant**
+      // `aligner` : `composeur` dit encore si cette image précédente était de
+      // la chaîne, et un refus démonte la chaîne dès cette image-ci.
+      if (composeur && qualite === 'auto' && image.continu && derniereImage !== null) {
+        intervalles.push(debut - derniereImage);
+        if (intervalles.length > IMAGES_CADENCE) intervalles.shift();
+        msCadenceMesuree = msCadence(intervalles);
+        if (cadenceInsuffisante(msCadenceMesuree)) cadenceRefusee = true;
+      }
+      derniereImage = debut;
       aligner(camera);
       const mesure = calibration();
-      const debut = horloge.now();
       renderer.info.reset();
       // Le premier `render()` de l'image — le rendu direct, ou la passe de
       // couleur de la chaîne — calcule les ombres et rabaisse le drapeau ; la
-      // passe des normales, qui vient après, les trouve faites.
-      renderer.shadowMap.needsUpdate = true;
+      // passe des normales, qui vient après, les trouve faites. Et si rien qui
+      // porte ombre n'a bougé, la carte de l'image précédente sert encore.
+      renderer.shadowMap.needsUpdate = image.ombre !== false || mesure;
       if (composeur) composeur.rendre(camera);
       else renderer.render(scene, camera);
       if (mesure) attendreDessin();

@@ -1,12 +1,17 @@
 /**
  * `ponderee` — l'adversaire par défaut (`doc/02-architecture.md` §3.2).
  *
- * Quatre termes, et quatre seulement : la **capture** (c'est elle qui gagne les
+ * Quatre termes portent la décision : la **capture** (c'est elle qui gagne les
  * matchs), la **valeur d'échange** (les fonds pris à l'adversaire moins les
  * fonds risqués), la **sécurité** (la menace subie sur la case d'arrivée) et la
- * **progression** vers l'objectif atteignable le plus proche. La production
- * équilibre l'armée : d'abord de quoi capturer, ensuite ce qui contre le mix
- * adverse, sans jamais engager plus que sa part de fonds.
+ * **progression** vers l'objectif atteignable le plus proche. Depuis le
+ * 7 septembre 2026, la **logistique** s'y ajoute (`../logistique.ts`) : l'arme
+ * secondaire d'une unité à sec, le carburant qu'une unité aérienne garde pour
+ * rentrer se poser, le ravitaillement d'un voisin à court, et le transport qui
+ * embarque un capteur quand il le rapproche plus vite que ses jambes. La
+ * production équilibre l'armée : d'abord de quoi capturer, ensuite ce qui
+ * contre le mix adverse, une pièce de soutien quand l'armée le justifie, sans
+ * jamais engager plus que sa part de fonds.
  *
  * L'IA ne fait que ce qu'un joueur peut faire : elle passe par `appliquer`, lit
  * le climat comme lui, et ne tire ses aléas que du flux qu'on lui donne.
@@ -16,18 +21,27 @@ import type {
   Action, Catalogue, EtatPartie, Rng, Suite, Unite,
 } from '../../engine/index';
 import { constructionsPossibles } from '../../engine/regles/genie';
-import { degatsBase, produitesPar } from '../../engine/catalogue';
+import { produitesPar } from '../../engine/catalogue';
 import { terrainBrut, terrainLogique } from '../../engine/hooks';
 import { peutCapturerIci, pointsGagnes, seuilCapture } from '../../engine/regles/capture';
-import { peutViser } from '../../engine/regles/combat';
+import { brouillardActif } from '../../engine/climat/index';
+import { degatsArme, peutViser, tireSansMunitions } from '../../engine/regles/combat';
 import { verifierProduction } from '../../engine/regles/economie';
-import { cheminVers, pointsMouvement, portee } from '../../engine/regles/mouvement';
-import { cleCase, porte, pvAffiches } from '../../engine/types';
+import {
+  cheminVers, coutEntree, pointsMouvement, portee, voisines,
+} from '../../engine/regles/mouvement';
+import { casesVisibles } from '../../engine/regles/vision';
+import { cleCase, manhattan, porte, pvAffiches } from '../../engine/types';
 import type { Case, CampId } from '../../schemas/index';
 import {
   armeeParType, capteur, compterCapteurs, degatsAttendus, distances, memoire,
-  menaceParType, objectifsCapture, objectifsCombat, scoreAchat, usinesLibres,
+  menaceParType, objectifsDe, scoreAchat, usinesLibres,
 } from '../evaluation';
+import {
+  aBesoin, autonomieSecurite, batimentsRavitaillant, carburantFaible, estSoutien,
+  estTransport, manque, munitionsFaibles, peutEmbarquer, peutTirerSur,
+  sourcesRavitaillement, toursPour, valeurEmbarquee,
+} from '../logistique';
 import type { Poids, Strategie } from '../types';
 
 /** Poids de la stratégie pondérée : l'étalon dont dérivent les personnalités. */
@@ -41,6 +55,12 @@ export const POIDS_PONDEREE: Poids = {
   capteursVises: 4,
   engagement: 1,
   seuil: -1e9,
+  munitions: 1,
+  carburant: 12,
+  reserve: 1,
+  ravitaillement: 12,
+  embarquement: 20,
+  debarquement: 15,
 };
 
 /** Étoiles de défense de chaque case, mémorisées par état. */
@@ -57,6 +77,31 @@ function defenses(etat: EtatPartie, cat: Catalogue): Int8Array {
   }
   memo.set('defenses', table);
   return table;
+}
+
+/** Cases capturables, mémorisées par état : 1 là où un bâtiment se prend. */
+function capturables(etat: EtatPartie, cat: Catalogue): Uint8Array {
+  const memo = memoire(etat);
+  const connue = memo.get('capturables') as Uint8Array | undefined;
+  if (connue) return connue;
+  const table = new Uint8Array(etat.largeur * etat.hauteur);
+  for (let y = 0; y < etat.hauteur; y += 1) {
+    for (let x = 0; x < etat.largeur; x += 1) {
+      const terrain = terrainBrut(etat, cat, { x, y });
+      if (terrain !== null && cat.terrains[terrain]?.capturable) table[y * etat.largeur + x] = 1;
+    }
+  }
+  memo.set('capturables', table);
+  return table;
+}
+
+/** Rayon dans lequel un capteur ami rend un bâtiment « à lui » : le laisser libre. */
+const RAYON_CAPTEUR_PROCHE = 3;
+
+/** Vrai si un capteur ami, autre que `u`, peut venir prendre cette case sous peu. */
+function capteursProches(etat: EtatPartie, cat: Catalogue, u: Unite, c: Case): boolean {
+  return etat.unites.some((a) => a.camp === u.camp && a.id !== u.id && !a.dansTransport
+    && capteur(cat, a) && manhattan(a, c) <= RAYON_CAPTEUR_PROCHE);
 }
 
 /** Adversaires qui peuvent frapper une case, avec leur base de dégâts. */
@@ -79,7 +124,9 @@ function frappeurs(etat: EtatPartie, cat: Catalogue, u: Unite): Frappeur[] {
     if (a.camp === u.camp || a.dansTransport) continue;
     const ta = cat.unites[a.type];
     if (!ta) continue;
-    const base = degatsBase(cat, a.type, u.type);
+    // La base de l'arme que l'adversaire peut servir : réduite s'il est à sec
+    // hors de ses cibles secondaires, nulle s'il ne tire pas (§5.3).
+    const base = degatsArme(cat, a, u.type);
     if (base <= 0) continue;
     sortie.push({
       base,
@@ -109,20 +156,89 @@ function menace(
   return total;
 }
 
+/**
+ * Cases que le camp voit, ou `null` hors brouillard. Une attaque sur une case
+ * invisible est refusée par le moteur, et un refus ferme le tour de l'IA : il
+ * faut donc ne jamais la proposer (§10).
+ */
+function visibles(etat: EtatPartie, cat: Catalogue, camp: CampId): Set<string> | null {
+  if (!brouillardActif(etat)) return null;
+  const memo = memoire(etat);
+  const cle = `visibles|${camp}`;
+  const connues = memo.get(cle) as Set<string> | undefined;
+  if (connues) return connues;
+  const ensemble = casesVisibles(etat, cat, camp);
+  memo.set(cle, ensemble);
+  return ensemble;
+}
+
 /** Une option évaluée : où aller, quoi faire, et ce que ça vaut. */
 interface Option {
   score: number;
   action: Action;
 }
 
-/** Ordre de jeu des unités : finir les captures, frapper, puis avancer. */
+/**
+ * Ordre de jeu des unités : finir les captures, frapper, avancer, et le soutien
+ * en dernier — un transport qui joue après ses passagers peut les embarquer et
+ * les porter dans le même tour, un ravitailleur sert ceux qui viennent de tirer.
+ */
 function prioriteUnite(etat: EtatPartie, cat: Catalogue, u: Unite): number {
   const t = cat.unites[u.type];
   if (!t) return 9;
+  if (estSoutien(t)) return 4;
   if (capteur(cat, u) && peutCapturerIci(etat, cat, u)) return 0;
   if (porte(t, 'tir_indirect')) return 1;
   if (!capteur(cat, u)) return 2;
   return 3;
+}
+
+/** Ce qu'un transport ou un ravitailleur cherche quand il n'a rien à bord. */
+function objectifsSoutien(etat: EtatPartie, cat: Catalogue, u: Unite): Case[] {
+  const cibles: Case[] = [];
+  for (const a of etat.unites) {
+    if (a.camp !== u.camp || a.id === u.id || a.dansTransport) continue;
+    const ta = cat.unites[a.type];
+    if (!ta || estSoutien(ta)) continue;
+    // Une unité à court est une cliente ; un capteur loin de son objectif un passager.
+    if (aBesoin(etat, cat, a)) { cibles.push({ x: a.x, y: a.y }); continue; }
+    if (!estTransport(cat, u) || !peutEmbarquer(cat, u, a)) continue;
+    const obj = objectifsDe(etat, cat, a);
+    const dist = distances(etat, cat, a, obj.cibles, `${a.camp}|${a.type}|${obj.cle}`);
+    const d = dist[a.y * etat.largeur + a.x] ?? -1;
+    if (d > 2 * pointsMouvement(etat, cat, a)) cibles.push({ x: a.x, y: a.y });
+  }
+  return cibles;
+}
+
+/** Un transport allié dans lequel monter, et les tours que cela ferait gagner. */
+interface Embarquement { transport: Unite; gain: number }
+
+/**
+ * Transports alliés qui rapprochent l'unité de son objectif plus vite que ses
+ * jambes : on compare les tours à pied aux tours embarqué — monter ce tour-ci,
+ * rouler jusqu'à la voisine de l'objectif, débarquer, et agir seulement le tour
+ * suivant, puisqu'un débarqué ne joue plus (§2, phase 6).
+ */
+function embarquementsUtiles(
+  etat: EtatPartie, cat: Catalogue, u: Unite, cibles: Case[], cleCibles: string, distDepart: number,
+): Embarquement[] {
+  if (distDepart <= 0) return [];
+  const type = cat.unites[u.type]!;
+  if (estSoutien(type)) return [];
+  const toursPied = toursPour(distDepart, pointsMouvement(etat, cat, u));
+  const sortie: Embarquement[] = [];
+  for (const t of etat.unites) {
+    if (t.camp !== u.camp || t.dansTransport || !peutEmbarquer(cat, t, u)) continue;
+    const dist = distances(etat, cat, t, cibles, `${t.camp}|${t.type}|vers|${cleCibles}`);
+    const d = dist[t.y * etat.largeur + t.x] ?? -1;
+    if (d < 0) continue;
+    const attente = t.etat === 'prete' ? 0 : 1;
+    const tours = attente + toursPour(Math.max(0, d - 1), pointsMouvement(etat, cat, t)) + 1;
+    const gain = toursPied - tours;
+    if (gain >= 1) sortie.push({ transport: t, gain });
+  }
+  return sortie;
 }
 
 /** Meilleure action pour une unité donnée, tous déplacements et suites confondus. */
@@ -134,14 +250,38 @@ export function meilleureOption(
   const etoiles = defenses(etat, cat);
   const liste = frappeurs(etat, cat, u);
   const estCapteur = capteur(cat, u);
-  const cibles = estCapteur
-    ? objectifsCapture(etat, cat, u.camp)
-    : [...objectifsCombat(etat, u.camp), ...objectifsCapture(etat, cat, u.camp)];
-  const dist = distances(etat, cat, u, cibles, `${u.camp}|${u.type}|${estCapteur ? 'c' : 'x'}`);
-  const depart = u.y * etat.largeur + u.x;
+  const soutien = estSoutien(type);
+  const passagerId = u.cargo[0];
+  const passager = passagerId === undefined
+    ? undefined
+    : etat.unites.find((x) => x.id === passagerId);
+  const typePassager = passager ? cat.unites[passager.type] : undefined;
+
+  // Vers quoi marcher : un transport chargé suit l'objectif de son passager, un
+  // soutien vide cherche ses clients, les autres leurs objectifs propres.
+  let cibles: Case[];
+  let cleCibles: string;
+  if (soutien && passager) {
+    const obj = objectifsDe(etat, cat, passager);
+    cibles = obj.cibles;
+    cleCibles = `t|${passager.type}|${obj.cle}`;
+  } else if (soutien) {
+    cibles = objectifsSoutien(etat, cat, u);
+    cleCibles = `t|${u.id}|soutien`;
+  } else {
+    const obj = objectifsDe(etat, cat, u);
+    cibles = obj.cibles;
+    cleCibles = obj.cle;
+  }
+  const dist = distances(etat, cat, u, cibles, `${u.camp}|${u.type}|${cleCibles}`);
+  const largeur = etat.largeur;
+  const depart = u.y * largeur + u.x;
   const distDepart = dist[depart] ?? -1;
   const coutMoi = type.cout;
   const pvMoi = pvAffiches(u.pv);
+  const mouvement = pointsMouvement(etat, cat, u);
+  // Un transport plein risque aussi ce qu'il porte.
+  const coutMenace = coutMoi + valeurEmbarquee(etat, cat, u);
 
   // On retient la case et la suite, jamais le chemin : il ne se reconstruit
   // qu'une fois, pour l'option gagnante.
@@ -155,31 +295,81 @@ export function meilleureOption(
     meilleureSuite = suite;
   };
 
-  // Occupation et adversaires, lus une fois pour toute la décision.
-  const occupees = new Uint8Array(etat.largeur * etat.hauteur);
+  // Occupation, adversaires et alliés, lus une fois pour toute la décision.
+  const occupees = new Uint8Array(largeur * etat.hauteur);
   const adversaires: Unite[] = [];
+  const allies: Unite[] = [];
   for (const autre of etat.unites) {
     if (autre.dansTransport) continue;
-    if (autre.id !== u.id) occupees[autre.y * etat.largeur + autre.x] = 1;
+    if (autre.id !== u.id) occupees[autre.y * largeur + autre.x] = 1;
     if (autre.camp !== u.camp) adversaires.push(autre);
+    else if (autre.id !== u.id) allies.push(autre);
   }
-  const aDesMunitions = type.munitions === null || (u.munitions ?? 0) > 0;
+
+  // Logistique : ce dont cette unité a besoin, et où elle le trouve.
+  const aerienne = type.domaine === 'air' && type.carburant !== null && u.carburant !== null;
+  const distRetour = aerienne
+    ? distances(etat, cat, u, batimentsRavitaillant(etat, cat, u.camp, type.domaine), `${u.camp}|${u.type}|retour`)
+    : null;
+  const enManque = !soutien && (munitionsFaibles(type, u) || carburantFaible(etat, cat, type, u));
+  const distSources = enManque
+    ? distances(etat, cat, u, sourcesRavitaillement(etat, cat, u), `${u.camp}|${u.type}|sources`)
+    : null;
+  const distSourcesDepart = distSources ? (distSources[depart] ?? -1) : -1;
+  const embarquements = embarquementsUtiles(etat, cat, u, cibles, cleCibles, distDepart);
+  const distPassager = passager && typePassager
+    ? distances(etat, cat, passager, cibles, `${passager.camp}|${passager.type}|${cleCibles}`)
+    : null;
+  const listePassager = passager ? frappeurs(etat, cat, passager) : [];
+  const vues = visibles(etat, cat, u.camp);
+  const capturable = capturables(etat, cat);
 
   for (let indice = 0; indice < p.couts.length; indice += 1) {
-    if ((p.couts[indice] ?? -1) < 0) continue;
+    const coutChemin = p.couts[indice] ?? -1;
+    if (coutChemin < 0) continue;
     if (occupees[indice] === 1) continue;
-    const x = indice % etat.largeur;
-    const c: Case = { x, y: (indice - x) / etat.largeur };
+    const x = indice % largeur;
+    const c: Case = { x, y: (indice - x) / largeur };
     const etoilesIci = etoiles[indice] ?? 0;
     const aBouge = c.x !== u.x || c.y !== u.y;
 
     // À valeur égale, une unité bouge le moins possible : c'est ce qui garde
     // les groupes soudés et rend les choix reproductibles.
-    let base = poids.terrain * etoilesIci - 0.01 * (p.couts[indice] ?? 0);
+    let base = poids.terrain * etoilesIci - 0.01 * coutChemin;
     const d = dist[indice] ?? -1;
     if (d >= 0 && distDepart >= 0) base += poids.progression * (distDepart - d);
     else if (d >= 0) base += poids.progression;
-    base -= (poids.securite * menace(liste, c, etoilesIci, pvMoi, coutMoi)) / 1000;
+    const menaceIci = menace(liste, c, etoilesIci, pvMoi, coutMenace);
+    base -= (poids.securite * menaceIci) / 1000;
+
+    // Carburant : une unité aérienne garde de quoi rentrer se poser, avec la
+    // réserve de sa personnalité ; à sec au prochain réveil, elle est perdue.
+    if (aerienne && distRetour && type.carburant) {
+      const restant = u.carburant! - coutChemin * type.carburant.parCase;
+      const dRetour = distRetour[indice] ?? -1;
+      if (dRetour >= 0) {
+        const autonomie = autonomieSecurite(type, restant, dRetour, mouvement, poids.reserve);
+        if (autonomie < 0) base -= poids.carburant * -autonomie;
+      }
+      if (dRetour !== 0 && restant - type.carburant.parTour <= 0) {
+        base -= (poids.echange * coutMoi) / 1000;
+      }
+    }
+
+    // À court de munitions ou de carburant : chaque pas vers une source compte.
+    if (distSources && distSourcesDepart >= 0) {
+      const dS = distSources[indice] ?? -1;
+      if (dS >= 0) base += poids.ravitaillement * (distSourcesDepart - dS);
+    }
+
+    // Une unité qui ne capture pas ne campe pas sur un bâtiment à prendre quand
+    // un capteur ami est tout près : elle bloquerait sa propre capture. Loin de
+    // tout capteur, occuper une usine adverse reste une façon de la boucher.
+    if (!estCapteur && capturable[indice] === 1 && etat.proprietaires[cleCase(c)] !== u.camp
+      && !(porte(type, 'genie') && peutCapturerIci(etat, cat, { ...u, x: c.x, y: c.y }))
+      && capteursProches(etat, cat, u, c)) {
+      base -= poids.capture * 0.5;
+    }
 
     // Attendre sur place ou se replacer.
     retenir(base, c, { type: 'rien' });
@@ -195,8 +385,8 @@ export function meilleureOption(
       }
     }
 
-    // Capturer.
-    if (estCapteur) {
+    // Capturer, ou remettre en service pour le génie : `peutCapturerIci` sait lequel.
+    if (estCapteur || porte(type, 'genie')) {
       const fictive: Unite = { ...u, x: c.x, y: c.y };
       if (peutCapturerIci(etat, cat, fictive)) {
         const points = pointsGagnes(etat, cat, fictive);
@@ -208,30 +398,78 @@ export function meilleureOption(
       }
     }
 
-    // Attaquer : valeur d'échange, riposte comprise.
-    if (aDesMunitions) {
-      for (const cible of adversaires) {
-        const portee = Math.abs(cible.x - c.x) + Math.abs(cible.y - c.y);
-        if (portee < type.portee[0] || portee > type.portee[1]) continue;
-        const fictive: Unite = { ...u, x: c.x, y: c.y };
-        if (!peutViser(etat, cat, fictive, cible, c, aBouge).ok) continue;
-        const degats = degatsAttendus(etat, cat, fictive, cible, c);
-        const coutCible = cat.unites[cible.type]?.cout ?? 0;
-        const gain = (degats / 100) * coutCible;
-        let perte = 0;
-        const tc = cat.unites[cible.type];
-        const survivant = cible.pv - degats;
-        if (tc && tc.peutRiposter && portee === 1 && survivant > 0) {
-          const riposteur: Unite = { ...cible, pv: survivant };
-          perte = (degatsAttendus(etat, cat, riposteur, fictive, cible) / 100) * coutMoi;
-        }
-        const acheve = survivant <= 0 ? coutCible * 0.25 : 0;
-        retenir(
-          base + (poids.echange * (gain - perte + acheve)) / 1000,
-          c,
-          { type: 'attaquer', cible: { x: cible.x, y: cible.y } },
-        );
+    // Embarquer : la voisine d'un transport qui fait gagner des tours.
+    for (const { transport, gain } of embarquements) {
+      if (manhattan(c, transport) !== 1) continue;
+      retenir(base + poids.embarquement * gain, c, { type: 'embarquer', transport: transport.id });
+    }
+
+    // Ravitailler un voisin à court : gratuit, et d'autant plus utile qu'il manque.
+    if (porte(type, 'ravitaillement')) {
+      for (const a of allies) {
+        if (manhattan(a, c) !== 1) continue;
+        const m = manque(cat, a);
+        if (m <= 0) continue;
+        retenir(base + (poids.ravitaillement * m) / 1000, c, { type: 'ravitailler', cible: { x: a.x, y: a.y } });
       }
+    }
+
+    // Débarquer : là où le passager agit au tour suivant, ou dès que le transport
+    // est menacé — un transport plein qui tombe perd deux unités.
+    if (passager && typePassager && distPassager) {
+      const coutPassager = typePassager.cout;
+      const pvPassager = pvAffiches(passager.pv);
+      for (const v of voisines(c)) {
+        if (v.x < 0 || v.y < 0 || v.x >= largeur || v.y >= etat.hauteur) continue;
+        const iv = v.y * largeur + v.x;
+        if (occupees[iv] === 1 || iv === depart) continue;
+        if (coutEntree(etat, cat, passager, v) === null) continue;
+        const dv = distPassager[iv] ?? -1;
+        const pose: Unite = { ...passager, x: v.x, y: v.y, dansTransport: null };
+        let valeur = 0;
+        if (dv === 0 && peutCapturerIci(etat, cat, pose)) valeur = 3;
+        else if (dv >= 0 && dv <= pointsMouvement(etat, cat, passager)) valeur = 2;
+        else if (dv >= 0 && dv <= 2 * pointsMouvement(etat, cat, passager)) valeur = 0.5;
+        const etoilesV = etoiles[iv] ?? 0;
+        const risqueGarde = menace(liste, c, etoilesIci, pvMoi, coutPassager);
+        const risquePose = menace(listePassager, v, etoilesV, pvPassager, coutPassager);
+        const securite = (poids.securite * (risqueGarde - risquePose)) / 1000;
+        if (valeur <= 0 && securite <= 0) continue;
+        retenir(base + poids.debarquement * valeur + securite, c, { type: 'debarquer', vers: v });
+      }
+    }
+
+    // Attaquer : valeur d'échange, riposte comprise. Une unité à sec tire avec
+    // ce qui lui reste (`degatsArme`), et la dernière munition a un prix.
+    for (const cible of adversaires) {
+      const distance = Math.abs(cible.x - c.x) + Math.abs(cible.y - c.y);
+      if (distance < type.portee[0] || distance > type.portee[1]) continue;
+      if (!peutTirerSur(cat, u, cible.type)) continue;
+      if (vues && !vues.has(cleCase(cible))) continue;
+      const fictive: Unite = { ...u, x: c.x, y: c.y };
+      if (!peutViser(etat, cat, fictive, cible, c, aBouge).ok) continue;
+      const degats = degatsAttendus(etat, cat, fictive, cible, c);
+      const coutCible = cat.unites[cible.type]?.cout ?? 0;
+      const gain = (degats / 100) * coutCible;
+      let perte = 0;
+      const tc = cat.unites[cible.type];
+      const survivant = cible.pv - degats;
+      if (tc && tc.peutRiposter && distance === 1 && survivant > 0
+        && peutTirerSur(cat, { ...cible, pv: survivant }, u.type)) {
+        const riposteur: Unite = { ...cible, pv: survivant };
+        perte = (degatsAttendus(etat, cat, riposteur, fictive, cible) / 100) * coutMoi;
+      }
+      const acheve = survivant <= 0 ? coutCible * 0.25 : 0;
+      // Une munition ne part que si l'unité en a et que la cible n'est pas secondaire.
+      let prixMunition = 0;
+      if (type.munitions !== null && (u.munitions ?? 0) > 0 && !tireSansMunitions(type, cible.type)) {
+        prixMunition = (poids.munitions * coutMoi) / 1000 / Math.max(1, u.munitions ?? 1);
+      }
+      retenir(
+        base + (poids.echange * (gain - perte + acheve)) / 1000 - prixMunition,
+        c,
+        { type: 'attaquer', cible: { x: cible.x, y: cible.y } },
+      );
     }
   }
 
@@ -277,7 +515,7 @@ export function meilleureProduction(
       const t = cat.unites[cle];
       if (!t || t.cout > budget) continue;
       if (!verifierProduction(etat, cat, camp, usine, cle).ok) continue;
-      const score = scoreAchat(etat, cat, cle, mix, mienne, manque);
+      const score = scoreAchat(etat, cat, cle, mix, mienne, manque, camp);
       if (!meilleur || score > meilleur.score) {
         meilleur = { score, action: { type: 'produire', batiment: usine, unite: cle } };
       }

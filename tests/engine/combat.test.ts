@@ -6,8 +6,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
-  appliquer, calculerDegats, degatsBase, JAUGE_PAR_PV_INFLIGE, JAUGE_PAR_PV_SUBI,
-  peutViser, prevoirDuel, pvAffiches, resoudreAttaque, copierEtat, empreinte,
+  appliquer, calculerDegats, chargerCatalogue, degatsBase, JAUGE_PAR_PV_INFLIGE, JAUGE_PAR_PV_SUBI,
+  degatsArme, peutViser, prevoirDuel, pvAffiches, resoudreAttaque, copierEtat, empreinte, tireSansMunitions,
 } from '../../src/engine/index';
 import { CAT, partiePersonnalisee, rngFixe, u } from './aides';
 
@@ -32,7 +32,7 @@ test("la table de dégâts est bien celle du document 04 §8", () => {
   assert.equal(degatsBase(CAT, 'transport', 'infanterie'), 0);
 });
 
-test("l'exemple travaillé du §5.4 donne exactement 68 puis 10 PV", () => {
+test("l'exemple travaillé du §5.4 donne exactement 68 puis 4 PV", () => {
   // Char léger 10 PV sur route (1,0 → route), infanterie 10 PV en forêt (E = 2).
   const etat = partiePersonnalisee(GRILLE, {}, [
     { camp: 0, type: 'char_leger', x: 2, y: 0 },
@@ -47,8 +47,8 @@ test("l'exemple travaillé du §5.4 donne exactement 68 puis 10 PV", () => {
   inf.pv -= degats;
   assert.equal(inf.pv, 32);
   assert.equal(pvAffiches(inf.pv), 4);
-  // Riposte : 25 × (4/10) × 1,00 (le char est sur une route, E = 0) = 10.
-  assert.equal(calculerDegats(travail, CAT, inf, char, rngFixe(0.5)), 10);
+  // Riposte : 10 × (4/10) × 1,00 (le char est sur une route, E = 0) = 4.
+  assert.equal(calculerDegats(travail, CAT, inf, char, rngFixe(0.5)), 4);
 });
 
 test("l'aléa reste borné à ±5 %", () => {
@@ -124,9 +124,9 @@ test('la riposte consomme une munition et rend de la jauge aux deux camps', () =
   );
 });
 
-test("une unité sans munition ne peut plus viser", () => {
+test("une unité sans munition ni arme secondaire ne peut plus viser", () => {
   const etat = partiePersonnalisee(GRILLE, {}, [
-    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 0, type: 'antiair', x: 5, y: 5 },
     { camp: 1, type: 'infanterie', x: 5, y: 6 },
   ]);
   const travail = copierEtat(etat);
@@ -135,6 +135,125 @@ test("une unité sans munition ne peut plus viser", () => {
   const v = peutViser(travail, CAT, att, u(travail, 'u2'), { x: 5, y: 5 }, false);
   assert.equal(v.ok, false);
   assert.equal(v.ok === false && v.motif, 'sans_munitions');
+});
+
+// ---------------------------------------------------------------------------
+// L'arme secondaire (§5.3) : une mitrailleuse qui ne compte pas ses balles
+// ---------------------------------------------------------------------------
+
+test('tireSansMunitions lit la donnée du catalogue, jamais un nom', () => {
+  const char = CAT.unites['char_leger']!;
+  assert.equal(tireSansMunitions(char, 'infanterie'), true);
+  assert.equal(tireSansMunitions(char, 'char_leger'), false);
+  assert.equal(tireSansMunitions(char, 'helico'), false, 'à 0 dans la ligne, l’hélico n’est pas une cible secondaire');
+  assert.equal(tireSansMunitions(CAT.unites['infanterie']!, 'infanterie'), false, 'sans munitions, pas de secondaire');
+  assert.equal(tireSansMunitions({ ...char, armeSecondaire: null }, 'infanterie'), false);
+});
+
+test('un char à zéro munition tire encore : plein sur l’infanterie, à la mitrailleuse sur un char, jamais sur l’hélico', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+    { camp: 1, type: 'char_leger', x: 6, y: 5 },
+    { camp: 1, type: 'helico', x: 4, y: 5 },
+  ]);
+  const travail = copierEtat(etat);
+  const att = u(travail, 'u1');
+  assert.equal(degatsArme(CAT, att, 'char_leger'), 55, 'chargé : la base pleine');
+  att.munitions = 0;
+  assert.equal(peutViser(travail, CAT, att, u(travail, 'u2'), { x: 5, y: 5 }, false).ok, true);
+  assert.equal(peutViser(travail, CAT, att, u(travail, 'u3'), { x: 5, y: 5 }, false).ok, true);
+  const v = peutViser(travail, CAT, att, u(travail, 'u4'), { x: 5, y: 5 }, false);
+  assert.equal(v.ok === false && v.motif, 'ne_peut_pas_viser', 'à 0 dans la ligne, le tir à sec n’invente rien');
+  assert.equal(degatsArme(CAT, att, 'infanterie'), 75, 'cible listée : dégâts pleins');
+  assert.equal(degatsArme(CAT, att, 'char_leger'), 15, 'hors liste : degatsSecondaire');
+  assert.equal(degatsArme(CAT, att, 'helico'), 0);
+  const aa = { ...u(travail, 'u1'), type: 'antiair', munitions: 0 };
+  assert.equal(degatsArme(CAT, aa, 'infanterie'), 0, 'sans arme secondaire, à sec, rien');
+  assert.equal(degatsArme(CAT, u(travail, 'u2'), 'char_leger'), 10, 'tir illimité : la base');
+});
+
+test('un char à sec frappe un char sur 15, sans consommer, et un char à sec riposte à un char', () => {
+  // Deux chars sur la route (E = 0) : D = 15 × 1 × 1 × 1 = 15 PV internes.
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 1, y: 0 },
+    { camp: 1, type: 'char_leger', x: 2, y: 0 },
+  ]);
+  const travail = copierEtat(etat);
+  const att = u(travail, 'u1');
+  const def = u(travail, 'u2');
+  att.munitions = 0;
+  def.munitions = 0;
+  const p = prevoirDuel(travail, CAT, att, def, { x: 1, y: 0 });
+  const issue = resoudreAttaque(travail, CAT, att, def, rngFixe(0.5), []);
+  assert.equal(issue.degats, 15);
+  assert.equal(att.munitions, 0);
+  // Riposte à sec, sur les PV d'après la frappe : 15 × (9/10) = 13,5 → 14.
+  assert.equal(issue.riposte, 14);
+  assert.equal(def.munitions, 0);
+  assert.equal(p.degats, issue.degats);
+  assert.equal(p.riposte, issue.riposte, 'la prévision lit la même base effective');
+});
+
+test('le tir secondaire ne consomme rien, le tir principal consomme une munition', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'char_leger', x: 5, y: 5 },
+    { camp: 1, type: 'infanterie', x: 5, y: 6 },
+    { camp: 1, type: 'char_leger', x: 6, y: 5 },
+  ]);
+  const travail = copierEtat(etat);
+  const att = u(travail, 'u1');
+  const avant = att.munitions ?? 0;
+  resoudreAttaque(travail, CAT, att, u(travail, 'u2'), rngFixe(0.5), []);
+  assert.equal(att.munitions, avant, 'la mitrailleuse ne compte pas ses balles');
+  resoudreAttaque(travail, CAT, att, u(travail, 'u3'), rngFixe(0.5), []);
+  assert.equal(att.munitions, avant - 1, 'le canon, lui, compte');
+});
+
+test('la riposte à zéro munition existe contre une cible secondaire, et pas contre les autres', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 5, y: 5 },
+    { camp: 1, type: 'char_leger', x: 5, y: 6, pv: 30 },
+    { camp: 0, type: 'char_leger', x: 4, y: 6 },
+  ]);
+  const travail = copierEtat(etat);
+  const char = u(travail, 'u2');
+  char.munitions = 0;
+  // L'infanterie frappe un char à sec : il riposte à la mitrailleuse, sans munition.
+  const issue = resoudreAttaque(travail, CAT, u(travail, 'u1'), char, rngFixe(0.5), []);
+  assert.ok(issue.riposte > 0, 'la riposte secondaire a lieu');
+  assert.equal(char.munitions, 0, 'et ne consomme rien');
+  // Le même char à sec, frappé par un char : rien à rendre.
+  const encore = resoudreAttaque(travail, CAT, u(travail, 'u3'), char, rngFixe(0.5), []);
+  assert.equal(encore.riposte, 0);
+});
+
+test('la prévision annonce la riposte secondaire à zéro munition', () => {
+  const etat = partiePersonnalisee(GRILLE, {}, [
+    { camp: 0, type: 'infanterie', x: 5, y: 5 },
+    { camp: 1, type: 'char_leger', x: 5, y: 6, pv: 30 },
+  ]);
+  const travail = copierEtat(etat);
+  u(travail, 'u2').munitions = 0;
+  const p = prevoirDuel(travail, CAT, u(travail, 'u1'), u(travail, 'u2'), { x: 5, y: 5 });
+  assert.ok(p.riposte > 0);
+  const copie = copierEtat(travail);
+  const reel = resoudreAttaque(copie, CAT, u(copie, 'u1'), u(copie, 'u2'), rngFixe(0.5), []);
+  assert.equal(p.riposte, reel.riposte, 'la prévision est la formule, pas une seconde table');
+});
+
+test('le char moyen du catalogue 4 se joue comme les autres chars', () => {
+  const cat4 = chargerCatalogue(4);
+  const moyen = cat4.unites['char_moyen']!;
+  assert.equal(moyen.cout, 10000);
+  assert.deepEqual(moyen.armeSecondaire, ['infanterie', 'meca', 'genie']);
+  assert.ok(degatsBase(cat4, 'char_leger', 'char_moyen') > degatsBase(cat4, 'char_leger', 'char_lourd'));
+  assert.ok(degatsBase(cat4, 'char_moyen', 'infanterie') > degatsBase(cat4, 'char_leger', 'infanterie'));
+  assert.ok(degatsBase(cat4, 'char_moyen', 'infanterie') < degatsBase(cat4, 'char_lourd', 'infanterie'));
+  // Sa colonne est lue partout, y compris par les homologuées qui la portent aussi.
+  assert.equal(degatsBase(cat4, 'genie', 'char_moyen'), 8);
+  assert.equal(degatsBase(cat4, 'char_moyen', 'brouilleur'), 95);
+  assert.equal(degatsBase(cat4, 'char_moyen', 'helico'), 0);
 });
 
 test("le transport ne peut viser personne", () => {

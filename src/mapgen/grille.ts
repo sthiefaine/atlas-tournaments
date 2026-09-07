@@ -10,7 +10,9 @@
  */
 
 import { chargerTerrains } from '../content/index';
-import { CARACTERE_PAR_TERRAIN, type CleTerrain, type Terrain, type TypeMouvement } from '../schemas/types';
+import {
+  CARACTERE_PAR_TERRAIN, TERRAINS_CAPTURABLES, type CleTerrain, type Terrain, type TypeMouvement,
+} from '../schemas/types';
 import type { Cadre } from './symetrie';
 
 const TERRAINS: Terrain[] = chargerTerrains();
@@ -21,8 +23,12 @@ const PAR_CLE = ((): Record<string, Terrain> => {
   return table;
 })();
 
-/** Terrains portant un propriétaire (`03-schemas.md` §4). */
-export const CAPTURABLES: readonly CleTerrain[] = ['ville', 'usine', 'aeroport', 'qg', 'radar'];
+/**
+ * Terrains portant un propriétaire (`03-schemas.md` §4). **Lu** des schémas, non
+ * recopié : la copie avait divergé quand le port est arrivé, et le générateur
+ * cessait en silence de compter les ports dans la valeur d'une carte.
+ */
+export const CAPTURABLES: readonly CleTerrain[] = TERRAINS_CAPTURABLES;
 
 /** Terrains sur lesquels le générateur pose un bâtiment. */
 export const CONSTRUCTIBLES: readonly CleTerrain[] = ['plaine', 'foret', 'plage', 'route'];

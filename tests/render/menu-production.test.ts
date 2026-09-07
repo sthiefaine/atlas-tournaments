@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import { chargerCatalogue } from '../../src/engine/index';
 import { premiereAbordable } from '../../src/render/hud-html';
 
-const CAT = chargerCatalogue(3);
+const CAT = chargerCatalogue(4);
 
 test('la première unité abordable est mise en avant, sinon la première', () => {
   const unites = ['char_lourd', 'char_leger', 'infanterie'] as const;

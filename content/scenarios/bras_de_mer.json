@@ -1,0 +1,114 @@
+{
+  "cle": "bras_de_mer",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-07",
+  "majLe": "2026-09-07",
+  "code": "bras_de_mer",
+  "nom": "Jeu libre · Le bras de mer",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_bras_de_mer",
+  "date": "2026-09-07",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 5,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "agressive"
+    }
+  ],
+  "fondsDepart": 8000,
+  "revenusParBatiment": 1000,
+  "brouillard": false,
+  "limiteJournees": 30,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un seul continent : on peut faire tout le match sans mouiller une roue. Mais le bras de mer coupe au plus court, et la côte du nord est en plage sur toute sa longueur.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Les routes du sud sont à moi. Amuse-toi avec ton port, je t’attends au carrefour.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le carrefour occupait tout le monde, et la plage était vide. Bien joué à l’équipe.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Tu as chargé une barge pendant que je prenais les villes du centre. Le compte des points ne pardonne pas.",
+      "emotion": "triomphe"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "bras_premier_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Voilà le carrefour. Tout le monde y passe, c’est bien le problème.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "bras_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une propriété de plus, donc une barge de plus la journée prochaine. La mer se paye avec les villes.",
+          "emotion": "joie"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  }
+}

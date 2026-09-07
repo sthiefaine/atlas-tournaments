@@ -17,8 +17,8 @@ import { additif } from './modificateurs';
  * Brouillage (`04-gameplay.md` §10 bis). Un drone est un œil qu'on peut
  * aveugler : à portée d'un brouilleur mobile adverse ou d'une station radar
  * adverse, il perd 90 % de sa vision. Les rayons sont en cases de Manhattan.
- * Un drone filaire n'est pas un `drone` au sens du trait : sa liaison ne se
- * brouille pas, c'est ce qu'on paie quatre fois plus cher.
+ * Seul le trait compte : un œil volant sans le trait `drone` (l'hélicoptère)
+ * voit comme avant.
  */
 export const RAYON_BROUILLEUR_MOBILE = 10;
 export const RAYON_STATION_RADAR = 12;
@@ -72,6 +72,10 @@ export function visionUnite(etat: EtatPartie, cat: Catalogue, u: Unite): number 
 /** Vrai si une unité posée là n'est repérée qu'au contact (distance 1). */
 export function cacheeAuContact(etat: EtatPartie, cat: Catalogue, u: Unite): boolean {
   const type = cat.unites[u.type];
+  // `plongee` (`04-gameplay.md` §13.2, catalogue 5) : une coque sous la surface
+  // se cache d'elle-même, sans terrain et par tout temps. Qui peut la frapper
+  // reste une affaire de données — sa colonne de dégâts —, jamais de règle.
+  if (type && porte(type, 'plongee')) return true;
   if (type && porte(type, 'furtif_nuit') && etat.climat.phase === 'nuit') return true;
   const terrain = terrainLogique(etat, cat, u);
   if (terrain === null) return false;

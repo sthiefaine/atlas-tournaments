@@ -46,7 +46,7 @@ import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
 import {
-  appliquerMasque, chargerModele, clonerFigurine, couleurMasquee, couleurTernie, creerLecteurClips,
+  appliquerMasque, chargerModele, clonerFigurine, couleurMasquee, creerLecteurClips,
   masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
 } from './modeles';
 import {
@@ -136,12 +136,14 @@ const ROLES_MOUILLABLES: ReadonlySet<RolePiece> = new Set<RolePiece>(['principal
 /** De combien la pluie abaisse la rugosité d'une matière mouillable, à mouillé plein. */
 const MOUILLAGE = 0.3;
 
-/** Le surcroît de rugosité d'une pièce ternie : une unité qui a joué n'accroche plus la lumière. */
-const SURCROIT_TERNI = 0.3;
-
-/** La lueur neutre d'une pièce ternie : de quoi ne pas être un trou noir de nuit, sans briller de jour. */
-const LUEUR_TERNIE = 0x4a4c50;
-const EMISSION_TERNIE = 0.05;
+/**
+ * L'opacité d'une unité qui a joué (décision du propriétaire, 6 septembre 2026 :
+ * « je voudrais juste réduire l'opacité »). Elle ne change plus ni de teinte
+ * ni de matière : elle s'efface aux six dixièmes, ne porte plus d'ombre, ne
+ * respire plus, et son étiquette porte le cadenas. Le verre, déjà plus
+ * translucide, garde son opacité propre.
+ */
+export const OPACITE_JOUEE = 0.6;
 
 /** Un jeu de matériaux par camp et par style : c'est là que vit la couleur. */
 export class Materiaux {
@@ -220,7 +222,7 @@ export class Materiaux {
     if (m === this.mouille) return;
     this.mouille = m;
     for (const jeu of this.jeux.values()) this.rugosites(jeu);
-    for (const [origine, terni] of this.ternis) terni.roughness = Math.min(1, origine.roughness + SURCROIT_TERNI);
+    for (const [origine, terni] of this.ternis) terni.roughness = origine.roughness;
   }
 
   /** La rugosité de chaque rôle d'un jeu : la sèche, moins ce que la pluie en ôte. */
@@ -237,24 +239,21 @@ export class Materiaux {
    * c'est ce qui garantit qu'une unité réveillée retrouve ses couleurs au bit
    * près — on lui rend l'objet même, pas une reconstruction.
    *
-   * La désaturation est franche (un quart de la saturation, des deux tiers de la
-   * clarté — les nombres de `couleurTernie`, `modeles.ts`, qu'un test compare)
-   * parce qu'un gris timide ne se lit pas à 48 px par case ; l'émission propre
-   * disparaît — la lueur d'une cabine, le souffle d'une tôle — au profit d'une
-   * lueur neutre très faible, qui empêche la pièce de devenir un trou noir de
-   * nuit sans la faire briller de jour. La rugosité monte : une pièce qui a
-   * joué est mate, elle n'accroche plus la lumière, même sous la pluie.
+   * Depuis le 6 septembre 2026, le double ne change **que l'opacité** : même
+   * teinte, même saturation, même matière — le gris et le noir d'avant
+   * faisaient lire une unité fatiguée comme une unité adverse ou hors service.
+   * Il écrit sa profondeur, comme le verre : une figurine convexe en sept
+   * mailles sans écriture de profondeur se trie mal et montre ses arrières au
+   * travers de ses avants. Le verre, plus translucide que le seuil, reste à sa
+   * propre opacité.
    */
   terni(origine: THREE.MeshStandardMaterial): THREE.MeshStandardMaterial {
     const memo = this.ternis.get(origine);
     if (memo) return memo;
     const m = origine.clone();
-    origine.color.getHSL(hsl, THREE.SRGBColorSpace);
-    m.color.setHSL(hsl.h, hsl.s * 0.25, hsl.l * 0.62, THREE.SRGBColorSpace);
-    m.emissive.set(LUEUR_TERNIE);
-    m.emissiveIntensity = EMISSION_TERNIE;
-    m.roughness = Math.min(1, origine.roughness + SURCROIT_TERNI);
-    m.metalness = origine.metalness * 0.5;
+    m.transparent = true;
+    m.opacity = origine.transparent ? Math.min(origine.opacity, OPACITE_JOUEE) : OPACITE_JOUEE;
+    m.depthWrite = true;
     this.ternis.set(origine, m);
     return m;
   }
@@ -287,9 +286,6 @@ export class Materiaux {
     this.materiauRepere = null;
   }
 }
-
-/** Tampon de conversion HSL, partagé : `terni` n'alloue rien par appel. */
-const hsl = { h: 0, s: 0, l: 0 };
 
 const geometries = new Map<string, THREE.BufferGeometry>();
 
@@ -600,12 +596,19 @@ export interface EtatVisuel {
    * donne, et le clip se joue en entier dans ce temps au lieu d'être coupé.
    */
   clipDuree: number;
+  /**
+   * Les points de vie **retenus** le temps d'un geste, ou `null` pour ceux de
+   * l'état. L'état logique est en avance sur l'image : sans cela, l'étiquette
+   * annonce la perte avant que le coup soit parti. Le geste qui encaisse retient
+   * les points d'avant et les relâche en finissant.
+   */
+  pv: number | null;
 }
 
 /** Un état visuel neutre. */
 function etatNeutre(): EtatVisuel {
   return {
-    dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0, clip: 'repos', clipDuree: 0,
+    dx: 0, dz: 0, dy: 0, cap: 0, recul: 0, secousse: 0, opacite: 1, affaissement: 0, clip: 'repos', clipDuree: 0, pv: null,
   };
 }
 
@@ -631,9 +634,9 @@ export interface OptionsUnites {
 export interface CalqueUnites {
   readonly groupe: THREE.Group;
   /**
-   * Avance les rotors, la respiration des figurines et le tassement des unités
-   * qui ont joué, sans déplacer les socles. Sous réduction des animations,
-   * rien ne tourne ni ne respire, et le tassement s'applique d'un coup.
+   * Avance les rotors, la respiration des figurines et les mixers des modèles
+   * livrés, sans déplacer les socles. Sous réduction des animations, rien ne
+   * tourne ni ne respire.
    */
   avancer(ms: number, mouvementReduit?: boolean): boolean;
   /**
@@ -642,8 +645,25 @@ export interface CalqueUnites {
    * appelable à chaque image comme pour le plateau et le décor.
    */
   appliquerAmbiance(p: ParametresAmbiance): void;
-  /** Synchronise les maillages avec l'état. */
-  maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): void;
+  /**
+   * Synchronise les maillages avec l'état. Rend **vrai** si une unité a été
+   * posée, est apparue ou a disparu — ce qui change la scène telle que l'ombre
+   * la voit —, faux si tout était déjà en place : c'est le cas d'un survol.
+   */
+  maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): boolean;
+  /**
+   * Repose toutes les unités sur le relief courant, à l'état près : ce qui
+   * repose sur le sol doit se reposer avec lui. Une pose ne se refait sinon que
+   * si l'unité ou son état visuel ont changé — pas quand le sol seul a bougé,
+   * ce qu'une unité ne peut pas savoir. À appeler après une mutation du terrain.
+   */
+  majRelief(): void;
+  /**
+   * Annonce que le sol va glisser pendant `ms` : les unités se reposent à
+   * chaque image de `avancer` jusqu'au bout, puis une dernière fois. C'est ce
+   * qui les fait suivre une marée au lieu d'attendre la prochaine vue.
+   */
+  suivreSol(ms: number): void;
   /**
    * Déclare la nation d'un camp après coup — le scénario la connaît, le rendu
    * l'apprend. Les unités déjà posées sont reconstruites au prochain `maj`.
@@ -676,27 +696,42 @@ interface Entree {
   rotor: THREE.Object3D | null;
   figurines: THREE.Object3D | null;
   /**
-   * `null` tant que l'unité n'a pas été posée : la première pose applique
-   * l'aspect d'un coup, sans transition — une pièce qui apparaît déjà tassée
-   * n'a rien à « rejouer ».
+   * `null` tant que l'unité n'a pas été posée : c'est ce qui distingue une
+   * première pose d'un changement d'état.
    */
   agie: boolean | null;
-  /** Enfoncement courant de la figurine, en unités de scène ; tend vers `TASSEMENT` ou 0. */
-  tassement: number;
   /** Le lecteur de clips du modèle livré, `null` pour un placeholder ou un modèle sans clip. */
   lecteur: LecteurClips | null;
   /** Le dernier clip demandé par les animations — distinct de celui qui joue, qui peut être revenu au repos. */
   clipDemande: NomClip;
+  /** Ce sur quoi la dernière pose a été faite, `null` avant la première. */
+  pose: PoseUnite | null;
 }
 
 /**
- * De combien une unité qui a joué **s'affaisse** : trois centimètres et demi
- * de scène. Assez pour que la figurine s'enfonce visiblement dans son socle,
- * pas assez pour que le liseré d'équipe disparaisse sous le sol.
+ * Tout ce dont une pose dépend, hormis le sol : la case et l'état visuel. Une
+ * unité dont rien de cela n'a changé n'est pas reposée — cinq lectures du
+ * relief et trois quaternions par unité, à chaque case survolée, pour retrouver
+ * exactement la même position.
  */
-export const TASSEMENT = 0.035;
-/** Vitesse du tassement, en unités de scène par seconde : un quart de seconde environ. */
-const VITESSE_TASSEMENT = 0.16;
+interface PoseUnite {
+  x: number;
+  y: number;
+  dx: number;
+  dz: number;
+  dy: number;
+  cap: number;
+  recul: number;
+  secousse: number;
+  opacite: number;
+  affaissement: number;
+}
+
+function memePose(p: PoseUnite | null, x: number, y: number, v: EtatVisuel): boolean {
+  return p !== null && p.x === x && p.y === y && p.dx === v.dx && p.dz === v.dz && p.dy === v.dy
+    && p.cap === v.cap && p.recul === v.recul && p.secousse === v.secousse
+    && p.opacite === v.opacite && p.affaissement === v.affaissement;
+}
 
 /** Texture d'étiquette de PV, mémorisée par (points de vie, camp, a joué). */
 const etiquettes = new Map<string, THREE.SpriteMaterial>();
@@ -818,9 +853,9 @@ export function creerUnites(
       rotor: corps.getObjectByName('rotor_anime') ?? null,
       figurines: type.silhouette.base === 'pattes' ? corps.getObjectByName(NOM_FIGURINE) ?? null : null,
       agie: null,
-      tassement: 0,
       lecteur: null,
       clipDemande: 'repos',
+      pose: null,
     };
     // Un vrai modèle prend la place du placeholder dès qu'il arrive, sans à-coup.
     void charger(u.type, paysParCamp.get(u.camp) ?? null).then((modele) => {
@@ -847,7 +882,6 @@ export function creerUnites(
     // déjà ternie, il doit l'être aussi, sinon l'unité « se réveille » à
     // l'instant où l'asset se charge.
     if (entree.agie) ternir(entree, true);
-    enfoncer(entree);
 
     const figurine = corps.getObjectByName(NOM_FIGURINE);
     if (!figurine) return;
@@ -859,9 +893,13 @@ export function creerUnites(
     entree.lecteur?.jouer(entree.clipDemande);
   }
 
-  function poser(entree: Entree, u: Unite, v: EtatVisuel): void {
-    const x = u.x * CASE + CASE / 2 + v.dx;
-    const z = u.y * CASE + CASE / 2 + v.dz;
+  function poser(entree: Entree, cx: number, cy: number, v: EtatVisuel): void {
+    entree.pose = {
+      x: cx, y: cy, dx: v.dx, dz: v.dz, dy: v.dy, cap: v.cap, recul: v.recul,
+      secousse: v.secousse, opacite: v.opacite, affaissement: v.affaissement,
+    };
+    const x = cx * CASE + CASE / 2 + v.dx;
+    const z = cy * CASE + CASE / 2 + v.dz;
     // Une unité ne coule pas. Le sol d'une case de mer est à −0,40, très en
     // dessous du plan d'eau : quand une marée reprend une case, la pièce qui s'y
     // trouve encore doit se lire comme en train de patauger, pas comme engloutie.
@@ -957,36 +995,50 @@ export function creerUnites(
    * lui rend **l'objet même**, pas une copie recolorée. Le liseré de socle est
    * épargné — la couleur d'équipe doit rester lisible sur une unité qui a joué,
    * c'est encore une unité à défendre.
+   *
+   * Une pièce ternie est translucide, donc **sans ombre portée** : la leçon du
+   * verre et des bâtiments effacés — une ombre pleine sous une pièce qu'on voit
+   * au travers trahit sa transparence. L'ombre d'avant est gardée dans
+   * `userData` et rendue au réveil, telle quelle.
    */
   function ternir(entree: Entree, agie: boolean): void {
     entree.corps.traverse((n) => {
       if (!(n instanceof THREE.Mesh) || n.name === 'socle_lisere') return;
       const repos = (n.userData['repos'] as THREE.Material | THREE.Material[] | undefined) ?? n.material;
       n.userData['repos'] = repos;
+      const ombre = (n.userData['ombre'] as boolean | undefined) ?? n.castShadow;
+      n.userData['ombre'] = ombre;
       if (!agie) {
         n.material = repos;
+        n.castShadow = ombre;
         return;
       }
+      n.castShadow = false;
       const ternirUn = (m: THREE.Material): THREE.Material => {
         if (!(m instanceof THREE.MeshStandardMaterial)) return m;
         const terni = materiaux.terni(m);
         // Le double terni est un clone, qui perd le shader du masque d'équipe :
-        // on le lui rend, avec la couleur d'équipe ternie des mêmes nombres.
+        // on le lui rend, avec la couleur d'équipe **inchangée** — seule
+        // l'opacité dit qu'elle a joué.
         const masque = masqueDe(m);
         const couleur = couleurMasquee(m);
-        if (masque && couleur && !masqueDe(terni)) appliquerMasque(terni, masque, couleurTernie(couleur));
+        if (masque && couleur && !masqueDe(terni)) appliquerMasque(terni, masque, couleur);
         return terni;
       };
       n.material = Array.isArray(repos) ? repos.map(ternirUn) : ternirUn(repos);
     });
   }
 
-  /** Applique l'enfoncement courant à la figurine, sans toucher au socle. */
-  function enfoncer(entree: Entree): void {
-    const modele = entree.corps.getObjectByName(NOM_FIGURINE) ?? entree.corps;
-    // `> 0` plutôt qu'une simple négation : `-0` se compare mal dans les tests.
-    modele.position.y = entree.tassement > 0 ? -entree.tassement : 0;
+  /** Repose chaque unité déjà posée, là où elle est, sur le sol tel qu'il est maintenant. */
+  function reposerTout(): void {
+    for (const entree of entrees.values()) {
+      const p = entree.pose;
+      if (p) poser(entree, p.x, p.y, visuel(entree.id));
+    }
   }
+
+  /** Temps restant pendant lequel le sol glisse sous les unités, en millisecondes. */
+  let solEnMouvement = 0;
 
   function retirer(id: string): void {
     const e = entrees.get(id);
@@ -1018,20 +1070,16 @@ export function creerUnites(
       const pas = Math.min(100, Math.max(0, ms));
       tempsAnimation += pas;
       let anime = false;
+      // Le sol glisse : les unités le suivent image par image, et une fois de
+      // plus quand il s'arrête, pour se poser sur sa position finale exacte.
+      if (solEnMouvement > 0) {
+        solEnMouvement = Math.max(0, solEnMouvement - pas);
+        reposerTout();
+        anime = true;
+      }
       let rang = 0;
       for (const entree of entrees.values()) {
         if (!entree.groupe.visible) continue;
-        // Le tassement glisse vers sa cible ; sous réduction des animations
-        // il y saute, ce qui reste un état final exact et non une omission.
-        const cible = entree.agie ? TASSEMENT : 0;
-        if (entree.tassement !== cible) {
-          const marche = mouvementReduit ? Infinity : VITESSE_TASSEMENT * pas / 1000;
-          entree.tassement = entree.tassement < cible
-            ? Math.min(cible, entree.tassement + marche)
-            : Math.max(cible, entree.tassement - marche);
-          enfoncer(entree);
-          if (entree.tassement !== cible) anime = true;
-        }
         // Le modèle livré joue le clip que les animations demandent. Sous
         // réduction des animations, rien n'avance : la pièce saute à la
         // première image du clip demandé, et l'état — position, cap — est
@@ -1051,7 +1099,7 @@ export function creerUnites(
           if (!mouvementReduit && !figee && entree.lecteur.avancer(pas / 1000)) anime = true;
         }
         // Une unité qui a joué ne respire plus et ses rotors sont arrêtés :
-        // l'immobilité est la moitié du signal, le gris n'est que l'autre.
+        // l'immobilité est la moitié du signal, la transparence n'est que l'autre.
         if (entree.agie || mouvementReduit) {
           rang++;
           continue;
@@ -1062,7 +1110,7 @@ export function creerUnites(
         }
         if (entree.figurines) {
           const phase = tempsAnimation * 0.0017 + rang * 1.7;
-          entree.figurines.position.y = Math.sin(phase) * 0.004 - entree.tassement;
+          entree.figurines.position.y = Math.sin(phase) * 0.004;
           entree.figurines.rotation.z = Math.sin(phase * 0.8) * 0.012;
           anime = true;
         }
@@ -1081,8 +1129,9 @@ export function creerUnites(
       for (const [id, e] of [...entrees]) if (e.camp === camp) retirer(id);
     },
 
-    maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): void {
+    maj(etat: EtatPartie, cat: Catalogue, visibles: ReadonlySet<string> | null): boolean {
       const vus = new Set<string>();
+      let change = false;
       const toutes: Unite[] = [...etat.unites.filter((u) => !u.dansTransport), ...retenues.values()];
       for (const u of toutes) {
         if (visibles && !visibles.has(cleCase({ x: u.x, y: u.y })) && !retenues.has(u.id)) continue;
@@ -1092,27 +1141,47 @@ export function creerUnites(
           retirer(u.id);
           entree = undefined;
         }
-        if (!entree) entree = creerEntree(u, cat) ?? undefined;
+        if (!entree) {
+          entree = creerEntree(u, cat) ?? undefined;
+          change = true;
+        }
         if (!entree) continue;
         const v = visuel(u.id);
-        poser(entree, u, v);
+        if (!memePose(entree.pose, u.x, u.y, v)) {
+          poser(entree, u.x, u.y, v);
+          change = true;
+        }
         // Seul le camp qui joue voit ses unités se ternir : une unité adverse
         // « non prête » n'est qu'un reste du tour précédent, pas une information.
         const agie = u.etat !== 'prete' && u.camp === etat.campCourant;
-        majEtiquette(entree, pvAffiches(u.pv), agie);
+        // Les points retenus par un geste en cours l'emportent : l'étiquette
+        // ne devance pas le coup (`animations.ts`, `encaisser`).
+        majEtiquette(entree, visuel(u.id).pv ?? pvAffiches(u.pv), agie);
         if (entree.agie !== agie) {
-          const premierePose = entree.agie === null;
           entree.agie = agie;
           entree.groupe.userData['agie'] = agie;
           ternir(entree, agie);
-          if (agie && entree.figurines) entree.figurines.rotation.z = 0;
-          if (premierePose) {
-            entree.tassement = agie ? TASSEMENT : 0;
-            enfoncer(entree);
+          // Figée au repos : la respiration s'arrête là où elle en était, à plat.
+          if (agie && entree.figurines) {
+            entree.figurines.rotation.z = 0;
+            entree.figurines.position.y = 0;
           }
         }
       }
-      for (const id of [...entrees.keys()]) if (!vus.has(id)) retirer(id);
+      for (const id of [...entrees.keys()]) {
+        if (vus.has(id)) continue;
+        retirer(id);
+        change = true;
+      }
+      return change;
+    },
+
+    majRelief(): void {
+      reposerTout();
+    },
+
+    suivreSol(ms: number): void {
+      solEnMouvement = Math.max(solEnMouvement, ms);
     },
 
     retenir(u: Unite): void {

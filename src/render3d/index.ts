@@ -21,21 +21,23 @@ import * as THREE from 'three';
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import { signatureTerrain, terrainLogique } from '../engine/index';
 import { Boucle } from '../render/boucle';
+import type { Partition } from '../render/partition';
 import { QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
 import type {
   GestesRendu, MesuresRendu, PointVue, Rendu, VueInteraction,
 } from '../render/rendu';
-import type { Biome, CampId, CodePays, Case, CleTerrain } from '../schemas/types';
-import { construireAnimations } from './animations';
+import type { Biome, CampId, CodePays, Case, CleTerrain, Saison } from '../schemas/types';
+import { animationsDePartition, partitionProvisoire, type ContexteAnimation } from './animations';
 import { creerVue3d, type Vue3d } from './camera';
 import { brancherGestes3d } from './gestes';
 import { creerDecor, type Decor } from './decor';
-import { creerEclairage, parametresAmbiance, type Eclairage } from './eclairage';
+import { creerEclairage, parametresAmbiance, type Eclairage, type ParametresAmbiance } from './eclairage';
+import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
-import { tailleCarteOmbre } from './ombres';
+import { tailleCarteOmbre, type CadreOmbre } from './ombres';
 import { creerScene3d, type Scene3d } from './scene';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
-import { creerPlateau, type Plateau } from './terrain';
+import { creerPlateau, grefferBrouillardSur, type Plateau } from './terrain';
 import { creerUnites, type CalqueUnites } from './unites';
 
 export { parametresAmbiance, melangerParametres, type ParametresAmbiance } from './eclairage';
@@ -69,6 +71,9 @@ const MS_REPOS = 1000;
 const MS_MUTATION = 1400;
 
 /** Le monde monté : tout ce qui dépend de la carte, donc du premier état. */
+/** La clé de programme du décor greffé : une seule injection, un seul programme. */
+const CLE_BROUILLARD_DECOR = 'atlas-brouillard-decor-v1';
+
 interface Monde {
   grille: GrilleTerrain;
   plateau: Plateau;
@@ -76,7 +81,8 @@ interface Monde {
   unites: CalqueUnites;
   surbrillances: CoucheSurbrillances;
   eclairage: Eclairage;
-  effets: THREE.Group;
+  /** Le pool d'effets transitoires (`effets.ts`) : son groupe est dans la scène. */
+  effets: Effets;
   vue3d: Vue3d;
 }
 
@@ -104,7 +110,15 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let boucle: Boucle | null = null;
   let repos: ReturnType<typeof setInterval> | null = null;
   let etat: EtatPartie | null = null;
+  /**
+   * L'état affiché juste avant `etat`. C'est ce qui permet à une partition de
+   * retrouver ce qu'elle raconte : une unité qui vient de sortir, un drapeau
+   * tel qu'il était — l'état logique est en avance, la salve rattrape.
+   */
+  let etatPrecedent: EtatPartie | null = null;
   let vue: VueInteraction | null = null;
+  /** L'éclat d'un pouvoir : un multiplicateur d'exposition, 1 au repos. */
+  let eclat = 1;
   let cleAmbiance = '';
   let cleTerrain = '';
   let premierTerrain = true;
@@ -112,6 +126,20 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let mouvementReduit: MediaQueryList | undefined;
   /** Vrai quand le pointeur principal est un doigt : la carte d'ombre passe à 1024². */
   let pointeurGrossier = false;
+  /**
+   * Ce qui **vaut une ombre**. La boucle ne dort jamais en partie — drapeaux,
+   * respiration des figurines —, mais ces mouvements-là ne déplacent pas une
+   * ombre d'un texel visible ; la carte d'ombre n'est donc recalculée que si
+   * le monde a changé (`afficher` avec un nouvel état), si une animation de la
+   * file a bougé une pièce, si le terrain mute, ou si la caméra ou le soleil
+   * ont bougé (le cadre d'ombre change alors d'objet).
+   */
+  let ombreSale = true;
+  let cadrePrecedent: CadreOmbre | null = null;
+  /** L'image précédente a réclamé la suivante : les deux sont consécutives, l'intervalle est une cadence. */
+  let continuSuivant = false;
+  /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
+  let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
 
   function salir(): void {
     boucle?.salir();
@@ -146,10 +174,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     cleTerrain = signatureTerrain(e);
     const plateau = creerPlateau(grille, doc, options.biome);
     const decor = creerDecor(grille, e, plateau.hauteurEn, options.biome);
+    // Le brouillard s'applique au décor par le **nuanceur**, comme au sol :
+    // teindre un matériau en noir lui laisse le reflet du studio et l'éclat du
+    // soleil, et c'est ce gris qu'on voyait dans le noir.
+    grefferBrouillardSur(decor.groupe, plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
     const unites = creerUnites(doc, plateau.hauteurEn, options);
     const surbrillances = creerSurbrillances(plateau.hauteurEn);
-    const effets = new THREE.Group();
-    effets.name = 'effets';
+    const effets = creerEffets(doc);
     const depart = parametresAmbiance(e.climat.saison, e.climat.phase, e.climat.meteo);
     const eclairage = creerEclairage(
       s.scene, doc, depart,
@@ -158,7 +189,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     );
     const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
 
-    s.scene.add(plateau.groupe, decor.groupe, unites.groupe, surbrillances.groupe, effets, eclairage.groupe);
+    s.scene.add(plateau.groupe, decor.groupe, unites.groupe, surbrillances.groupe, effets.groupe, eclairage.groupe);
     vue3d.redimensionner(s.largeur, s.hauteur);
     vue3d.cadrerCarte();
 
@@ -186,22 +217,49 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     encore = m.vue3d.avancer(ecoule, calme) || encore;
     encore = m.eclairage.avancer(ecoule, m.vue3d.cible) || encore;
     // Puis l'ombre suit la caméra et le soleil ; le calcul ne se refait que
-    // s'ils ont bougé.
-    m.eclairage.cadrerOmbre(m.vue3d.etat, m.vue3d.camera.aspect, m.grille);
+    // s'ils ont bougé — et c'est le cadre qui change d'objet qui le dit.
+    const cadre = m.eclairage.cadrerOmbre(m.vue3d.etat, m.vue3d.camera.aspect, m.grille);
     const mutation = m.plateau.avancer(ecoule);
-    if (mutation) m.decor.majRelief();
+    if (mutation) {
+      m.decor.majRelief();
+      // Les décalques suivent le sol qui glisse, au lieu d'attendre la
+      // prochaine vue pour se reposer dessus.
+      m.surbrillances.invalider();
+    }
     encore = mutation || encore;
     encore = m.decor.avancer(ecoule, calme) || encore;
-    // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, le
-    // tassement d'une unité qui a joué doit encore s'appliquer — d'un coup.
+    // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, un
+    // clip ou une respiration s'arrêtent net au lieu de glisser.
     encore = m.unites.avancer(ecoule, calme) || encore;
     encore = m.surbrillances.avancer(ecoule) || encore;
+    // Les effets vivent ici et nulle part ailleurs : étincelles qui retombent,
+    // anneaux qui s'élargissent, halos qui s'éteignent. Des sprites, sans ombre.
+    encore = m.effets.avancer(ecoule) || encore;
     const p = m.eclairage.courant;
-    m.plateau.appliquerAmbiance(p);
-    if (vue) m.decor.appliquerAmbiance(p, vue.ambiance.saison);
-    m.unites.appliquerAmbiance(p);
-    s.renderer.toneMappingExposure = p.exposition;
-    s.dessiner(m.vue3d.camera);
+    const saison = vue?.ambiance.saison;
+    // Les matières ne reçoivent l'ambiance que quand elle change : `courant`
+    // ne change d'objet que pendant une transition, et le plateau comme le
+    // décor allouaient une douzaine de couleurs par image pour repeindre à
+    // l'identique. Un matériau créé entre-temps naît avec l'ambiance courante.
+    if (!ambianceAppliquee || ambianceAppliquee.p !== p || ambianceAppliquee.saison !== saison) {
+      m.plateau.appliquerAmbiance(p);
+      if (vue) m.decor.appliquerAmbiance(p, vue.ambiance.saison);
+      m.unites.appliquerAmbiance(p);
+      ambianceAppliquee = { p, saison };
+    }
+    // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
+    s.renderer.toneMappingExposure = p.exposition * eclat;
+    // Une animation de la file qui déplace une pièce — glissement, tir,
+    // capture, palissade — a levé `ombreSale` par `salir(true)` sur ce pas,
+    // son dernier compris ; un éclat, un cadrage ou des sprites ne le font pas,
+    // et le reste de `encore` — respiration, vent, particules, eau — n'en vaut
+    // pas une non plus.
+    const animations = boucle?.animations ?? 0;
+    const ombre = ombreSale || mutation || cadre !== cadrePrecedent;
+    s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant });
+    ombreSale = false;
+    cadrePrecedent = cadre;
+    continuSuivant = encore || animations > 0;
     if (encore) salir();
   }
 
@@ -214,15 +272,32 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // Au premier montage on pose le terrain sans transition ; ensuite, une
       // marée ou un chantier se **regarde** arriver.
       m.plateau.majTerrain(grilleDe(etat, vue), premierTerrain ? 0 : MS_MUTATION);
+      // Le sol va glisser pendant la mutation : les unités le suivent image
+      // par image, puis se posent sur sa position finale. Une pose ne se refait
+      // sinon que si l'unité a changé, pas quand le sol seul a bougé.
+      if (!premierTerrain) m.unites.suivreSol(MS_MUTATION);
       premierTerrain = false;
       // Le sol a bougé, et parfois la grille elle-même : tout ce qui en dérive
       // doit repartir d'elle. Les unités relisent l'altitude au `maj` ci-dessous ;
       // le décor ressème arbres et rochers, rebâtit les bâtiments, et se repose.
       m.decor.majGrille(grilleDe(etat, vue));
     }
+    // Le brouillard de guerre : le plateau assombrit les cases hors de vue, le
+    // décor éteint ce qu'il y sème. L'un et l'autre comparent l'ensemble reçu
+    // à celui d'avant — un survol n'écrit rien.
+    m.plateau.majVisibles(vue.visibles);
     m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
-    m.unites.maj(etat, vue.catalogue, vue.visibles);
+    // `maj` rend vrai quand une unité a bougé, est apparue ou a disparu — et
+    // seulement alors : un survol ne repose rien. C'est l'ombre qui en dépend.
+    if (m.unites.maj(etat, vue.catalogue, vue.visibles)) ombreSale = true;
     const position = vue.selection ? m.unites.positionDe(vue.selection) : null;
+    // Les décalques posés hors de la vue du joueur se mettent à plat : une
+    // nappe qui épouse un relief invisible le dessine.
+    // Un bâtiment rebâti, un lot ressemé ou un clone translucide arrivent avec
+    // des matériaux neufs : ils reçoivent la greffe à leur tour. `grefferBrouillard`
+    // ignore ce qu'il a déjà greffé.
+    grefferBrouillardSur(m.decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
+    m.surbrillances.majVisibles(vue.visibles);
     m.surbrillances.maj(vue.surbrillances, vue.chemin, vue.curseur, position);
     if (vue.ambiance.cle !== cleAmbiance) {
       cleAmbiance = vue.ambiance.cle;
@@ -230,6 +305,32 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         vue.ambiance.saison, vue.ambiance.phase, vue.ambiance.meteo,
       ));
     }
+  }
+
+  /** Ce que les animations d'une partition ont le droit de toucher. */
+  function contexte(m: Monde): ContexteAnimation {
+    return {
+      unites: m.unites,
+      effets: m.effets,
+      hauteurEn: m.plateau.hauteurEn,
+      drapeau: (cle) => m.decor.drapeau(cle),
+      chantier: (cle) => m.decor.chantier(cle),
+      etats: () => ({ courant: etat, precedent: etatPrecedent }),
+      cadrer: (c) => {
+        const p = caseVersMonde(c);
+        m.vue3d.cadrerCase(c, m.plateau.hauteurEn(p.x, p.z));
+      },
+      eclat: (facteur, teinte) => {
+        eclat = facteur;
+        // La lumière du ciel prend la couleur du camp à mesure que l'éclat monte.
+        m.eclairage.teinter(teinte, Math.max(0, Math.min(1, facteur - 1)) * 0.5);
+      },
+      salir: (ombre) => {
+        if (ombre) ombreSale = true;
+        majMonde();
+        salir();
+      },
+    };
   }
 
   return {
@@ -255,9 +356,20 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       });
       boucle = new Boucle(dessiner);
       repos = setInterval(() => salir(), MS_REPOS);
+      ombreSale = true;
+      cadrePrecedent = null;
+      continuSuivant = false;
+      eclat = 1;
+      ambianceAppliquee = null;
     },
 
     afficher(e: EtatPartie, v: VueInteraction): void {
+      // Un nouvel état déplace des pièces ; une nouvelle vue sur le même état
+      // (un survol) ne touche que des décalques, qui ne portent pas d'ombre.
+      if (e !== etat) {
+        ombreSale = true;
+        etatPrecedent = etat;
+      }
       etat = e;
       vue = v;
       if (!monde) monde = batir(e, v);
@@ -265,28 +377,34 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       salir();
     },
 
-    animer(evenements: readonly EvenementJeu[], avant: EtatPartie): Promise<void> {
+    jouer(partition: Partition): Promise<void> {
       const m = monde;
       const s = scene3d;
       const b = boucle;
-      if (!m || !s || !b || !conteneurRef) return Promise.resolve();
-      const { animations, attentes } = construireAnimations(evenements, avant, {
-        unites: m.unites,
-        effets: m.effets,
-        document: conteneurRef.ownerDocument,
-        hauteurEn: m.plateau.hauteurEn,
-        drapeau: (cle) => m.decor.drapeau(cle),
-        chantier: (cle) => m.decor.chantier(cle),
-        salir: () => {
-          majMonde();
-          salir();
-        },
-      });
+      if (!m || !s || !b) return Promise.resolve();
+      const { animations, attentes } = animationsDePartition(partition, contexte(m));
       for (const a of animations) b.ajouter(a);
       salir();
       return attentes.length === 0
         ? Promise.resolve()
         : Promise.all(attentes).then(() => undefined);
+    },
+
+    couper(): void {
+      // Tout saute à l'état final : chaque `terminer` pose le sien et libère
+      // ses effets ; ce qui vivrait encore dans le pool est retiré avec.
+      boucle?.viderFile(true);
+      monde?.effets.couper();
+      eclat = 1;
+      monde?.eclairage.teinter(null, 0);
+      salir();
+    },
+
+    animer(evenements: readonly EvenementJeu[], avant: EtatPartie): Promise<void> {
+      // Provisoire : la peau écrit elle-même la partition depuis les
+      // événements, avec la mise en scène d'avant, tant que le réalisateur pur
+      // (`ecrirePartition`, `render/`) n'existe pas. `jeu.ts` appellera `jouer`.
+      return this.jouer?.(partitionProvisoire(evenements, avant, reduit())) ?? Promise.resolve();
     },
 
     versMonde(x: number, y: number): Case | null {
@@ -346,6 +464,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       salir();
     },
 
+    retenirVue(): void {
+      monde?.vue3d.retenirVue();
+    },
+
+    revenirVue(): void {
+      if (monde?.vue3d.revenirVue() === true) salir();
+    },
+
     recentrer(c: Case): void {
       monde?.vue3d.centrerCase(c);
       salir();
@@ -379,6 +505,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         monde.decor.dispose();
         monde.plateau.dispose();
         monde.eclairage.dispose();
+        monde.effets.dispose();
         scene3d?.scene.clear();
         monde = null;
       }
@@ -386,7 +513,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       scene3d = null;
       conteneurRef = null;
       etat = null;
+      etatPrecedent = null;
       vue = null;
+      eclat = 1;
       cadree = false;
       cleAmbiance = '';
       cleTerrain = '';

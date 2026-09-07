@@ -177,24 +177,17 @@ export function appliquerMasque(
   materiau.needsUpdate = true;
 }
 
-/** La couleur d'équipe que chaque matériau masqué mélange, pour la retrouver au ternissement. */
+/**
+ * La couleur d'équipe que chaque matériau masqué mélange, pour la redonner au
+ * double terni : le clone d'un matériau perd son `onBeforeCompile`, et le
+ * calque des unités lui rend le masque avec la même couleur — depuis le
+ * 6 septembre 2026, une unité qui a joué ne change que d'opacité.
+ */
 const couleursMasquees = new WeakMap<THREE.Material, THREE.Color>();
 
 /** La couleur d'équipe mélangée par le masque d'un matériau, ou `null` s'il n'en a pas. */
 export function couleurMasquee(materiau: THREE.Material): THREE.Color | null {
   return couleursMasquees.get(materiau) ?? null;
-}
-
-/**
- * Le double terni d'une couleur d'équipe : les mêmes nombres que
- * `Materiaux.terni()` (un quart de la saturation, les deux tiers de la clarté),
- * pour qu'une zone masquée ternisse comme le reste de la pièce. Un test vérifie
- * que les deux calculs restent alignés.
- */
-export function couleurTernie(couleur: THREE.Color): THREE.Color {
-  const hsl = { h: 0, s: 0, l: 0 };
-  couleur.getHSL(hsl, THREE.SRGBColorSpace);
-  return new THREE.Color().setHSL(hsl.h, hsl.s * 0.25, hsl.l * 0.62, THREE.SRGBColorSpace);
 }
 
 // ---------------------------------------------------------------------------

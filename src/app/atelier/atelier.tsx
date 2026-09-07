@@ -90,7 +90,7 @@ function memesMesures(a: MesuresRendu, b: MesuresRendu): boolean {
     && JSON.stringify(a.familles ?? null) === JSON.stringify(b.familles ?? null);
 }
 
-const QUALITES: readonly (readonly [QualiteRendu, string])[] = [['auto', 'Auto'], ['haute', 'Haute'], ['basse', 'Basse']];
+const QUALITES: readonly (readonly [QualiteRendu, string])[] = [['auto', 'Auto'], ['basse', 'Basse']];
 
 const NOMS_BIOMES: Record<Biome, string> = { plaine: 'Bocage', foret: 'Forêt', montagne: 'Montagne', desert: 'Désert', jungle: 'Jungle', neige: 'Terres gelées', volcanique: 'Volcanique', cotier: 'Littoral', archipel: 'Archipel', marais: 'Marais' };
 const SAISONS: readonly (readonly [Saison, string])[] = [['printemps', 'Printemps'], ['ete', 'Été'], ['automne', 'Automne'], ['hiver', 'Hiver']];

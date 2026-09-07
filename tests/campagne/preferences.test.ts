@@ -64,25 +64,32 @@ test('des préférences absentes, illisibles ou corrompues restent jouables', ()
     const p = normaliserPreferences(brut);
     assert.equal(typeof p.dialogues, 'boolean');
     assert.equal(typeof p.animationsReduites, 'boolean');
+    assert.equal(typeof p.ecranCombat, 'boolean');
     assert.equal(p.qualite, 'auto');
     assert.equal(p.version, 1);
   }
   // Une valeur douteuse retombe sur la valeur par défaut, jamais sur elle-même.
   assert.equal(normaliserPreferences({ dialogues: 'oui' }).dialogues, PREFERENCES_PAR_DEFAUT.dialogues);
   assert.equal(normaliserPreferences({ animationsReduites: 'oui' }).animationsReduites, false);
-  // La qualité d'affichage : les trois valeurs passent, tout le reste redevient `auto`.
-  for (const q of ['auto', 'haute', 'basse'] as const) assert.equal(normaliserPreferences({ qualite: q }).qualite, q);
-  for (const q of ['HAUTE', 'moyenne', 1, true, null, undefined]) assert.equal(normaliserPreferences({ qualite: q }).qualite, 'auto');
+  // L'écran de combat est allumé par défaut, et un stockage d'avant lui ne l'éteint pas.
+  assert.equal(normaliserPreferences({ ecranCombat: 'non' }).ecranCombat, true);
+  assert.equal(normaliserPreferences({ version: 1, dialogues: true }).ecranCombat, true);
+  assert.equal(normaliserPreferences({ ecranCombat: false }).ecranCombat, false);
+  // La qualité d'affichage : les deux valeurs passent, tout le reste redevient
+  // `auto` — dont `haute`, retirée, qu'un stockage ancien peut encore porter.
+  for (const q of ['auto', 'basse'] as const) assert.equal(normaliserPreferences({ qualite: q }).qualite, q);
+  for (const q of ['haute', 'HAUTE', 'moyenne', 1, true, null, undefined]) assert.equal(normaliserPreferences({ qualite: q }).qualite, 'auto');
   // Les dialogues sont joués par défaut : c'est ce que raconte une mission.
   assert.equal(PREFERENCES_PAR_DEFAUT.dialogues, true);
   assert.equal(PREFERENCES_PAR_DEFAUT.animationsReduites, false);
+  assert.equal(PREFERENCES_PAR_DEFAUT.ecranCombat, true);
   // Et le rendu mesure avant de décider : c'est ce que `auto` veut dire.
   assert.equal(PREFERENCES_PAR_DEFAUT.qualite, 'auto');
 });
 
 test('un aller-retour par le stockage rend exactement ce qu’on a écrit', () => {
   poserStockage();
-  const voulu = { version: 1 as const, dialogues: false, animationsReduites: true, qualite: 'haute' as const };
+  const voulu = { version: 1 as const, dialogues: false, animationsReduites: true, qualite: 'basse' as const, ecranCombat: false };
   assert.equal(ecrirePreferences(voulu), true);
   assert.deepEqual(lirePreferences(), voulu);
   assert.equal(stockageDisponible(), true);

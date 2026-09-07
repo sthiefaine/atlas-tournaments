@@ -47,6 +47,9 @@ export function ravitailleCetteUnite(cat: Catalogue, terrain: CleTerrain, domain
   const t = cat.terrains[terrain];
   if (!t || !t.ravitaille) return false;
   if (domaine === 'air') return terrain === 'aeroport' || terrain === 'ville';
+  // Une coque ne se ravitaille qu'à quai : le port est le seul bâtiment qu'elle
+  // atteigne, et c'est ce qui donne son prix à une carte côtière (§10 quater).
+  if (domaine === 'mer') return terrain === 'port';
   return terrain === 'ville' || terrain === 'usine' || terrain === 'qg';
 }
 

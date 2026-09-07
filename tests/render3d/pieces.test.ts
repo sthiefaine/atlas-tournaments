@@ -12,7 +12,7 @@ import {
 } from '../../src/render3d/pieces';
 import {
   BASES_SILHOUETTE, CORPS_SILHOUETTE, MODULES_SILHOUETTE, TAILLES_SILHOUETTE,
-  type Silhouette,
+  type ModuleSilhouette, type Silhouette,
 } from '../../src/schemas/index';
 
 const CAT = chargerCatalogue();
@@ -55,6 +55,73 @@ test('l’infanterie est un groupe de trois figurines, jamais un bloc', () => {
   // Et une infanterie mécanisée porte quand même son module.
   const meca = nomsPieces(silhouette({ base: 'pattes', corps: 'capsule', modules: ['lance_roquettes'] }));
   assert.ok(meca.includes('figurine_1_tube_lance') && meca.includes('figurine_2_ogive'), 'le module suit la troupe : chaque grenadier porte son tube');
+});
+
+test('une coque est un navire, et son corps dit lequel', () => {
+  const navire = (corps: Silhouette['corps'], modules: ModuleSilhouette[] = []): string[] => nomsPieces(
+    silhouette({ base: 'coque', corps, modules, taille: 3 }),
+  );
+  // Un bâtiment de surface : carène, muraille, étrave à joues, pont, et tout
+  // l'accastillage sans lequel une coque n'est qu'une caisse pointue.
+  const cuirasse = navire('bloc', ['tourelle', 'canon_long']);
+  for (const nom of [
+    'carene', 'coque', 'etrave', 'joue_gauche', 'joue_droite', 'tableau_arriere', 'pont',
+    'ligne_flottaison', 'pavois_gauche', 'lisse_droite', 'chandelier_0_gauche', 'bitte_avant_droite',
+    'ancre_gauche', 'helice_droite', 'gouvernail', 'cabestan',
+    'passerelle', 'cheminee', 'mat_veille', 'tourelle', 'canon_long',
+  ]) assert.ok(cuirasse.includes(nom), `cuirassé : ${nom}`);
+
+  // Un pont plat : la barge et le porte-avions ont la même base et le même
+  // corps ; seuls leurs modules les distinguent, et c'est là que ça se joue.
+  const porteAvions = navire('plateau', ['antenne', 'radar']);
+  const barge = navire('plateau', ['grue']);
+  for (const nom of ['pont_plat', 'rouf']) {
+    assert.ok(porteAvions.includes(nom) && barge.includes(nom), nom);
+  }
+  assert.ok(porteAvions.includes('ilot') && porteAvions.includes('axe_piste_0'),
+    'un porte-avions a un îlot et un axe de piste');
+  assert.ok(!barge.includes('ilot'), 'une barge n’a pas d’îlot');
+  assert.ok(barge.includes('porte_etrave') && barge.includes('cale'),
+    'une barge a une porte d’étrave et une cale');
+  assert.ok(!porteAvions.includes('porte_etrave'));
+
+  // Un submersible : ni pavois, ni bastingage, ni tableau — un kiosque.
+  const sousMarin = navire('capsule', ['antenne']);
+  for (const nom of ['coque_pression', 'kiosque', 'barre_plongee_gauche', 'safran', 'helice']) {
+    assert.ok(sousMarin.includes(nom), `sous-marin : ${nom}`);
+  }
+  for (const nom of ['pavois_gauche', 'lisse_gauche', 'tableau_arriere', 'pont']) {
+    assert.ok(!sousMarin.includes(nom), `un sous-marin n’a pas de ${nom}`);
+  }
+});
+
+test('des ailes sont un aéronef entier, fuselage compris, et ce qu’il emporte pend sous lui', () => {
+  const avion = (corps: Silhouette['corps'], modules: ModuleSilhouette[] = []): string[] => nomsPieces(
+    silhouette({ base: 'ailes', corps, modules, taille: 3 }),
+  );
+  const chasseur = avion('capsule');
+  for (const nom of [
+    'aile_gauche', 'saumon_droite', 'stabilisateur_gauche', 'derive', 'gouverne_derive',
+    'reacteur_gauche', 'reacteur_tuyere_droite', 'cocarde_gauche', 'missile_droite', 'ogive_missile_gauche',
+    'corps_capsule', 'nez', 'verriere',
+  ]) assert.ok(chasseur.includes(nom), `chasseur : ${nom}`);
+  // L'ancienne base posait deux plaques, une dérive et un train, sans rien pour
+  // les tenir : un avion sans fuselage ne se lit pas, même de loin.
+  assert.ok(!chasseur.includes('train'));
+
+  const bombardier = avion('bloc', ['nacelle']);
+  for (const nom of [
+    'corps_bloc', 'nez', 'poste', 'soute', 'poutre_queue', 'tourelle_queue',
+    'reacteur_interne_gauche', 'reacteur_externe_droite', 'nacelle',
+  ]) assert.ok(bombardier.includes(nom), `bombardier : ${nom}`);
+  assert.ok(!bombardier.includes('missile_gauche'), 'un bombardier garde ses bombes en soute');
+
+  // Ce qu'un bombardier emporte pend **sous** le fuselage : une nacelle posée
+  // sur son dos se lirait comme une tourelle, et un avion n'en porte pas.
+  const pieces = composerSilhouette(silhouette({ base: 'ailes', corps: 'bloc', modules: ['nacelle'], taille: 3 }));
+  const ventre = pieces.find((p) => p.nom === 'soute')!;
+  const nacelle = pieces.find((p) => p.nom === 'nacelle')!;
+  assert.ok(nacelle.position[1] < ventre.position[1], 'la nacelle est sous la soute');
 });
 
 test('chaque base, chaque corps et chaque module produit des pièces', () => {

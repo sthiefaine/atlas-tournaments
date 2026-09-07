@@ -14,7 +14,9 @@ const LARGE = 'P'.repeat(30);
 test('le catalogue 2 ignore les drones, le catalogue 3 les porte', () => {
   assert.equal(chargerCatalogue(2).unites['drone'], undefined);
   assert.equal(chargerCatalogue(3).unites['drone']?.cout, 3000);
-  assert.equal(chargerCatalogue(3).unites['drone_filaire']?.cout, 12000, 'quatre fois le prix du drone');
+  // Le char moyen entre au 4 : le catalogue 3 ne le voit pas plus que le 2 ne voit le drone.
+  assert.equal(chargerCatalogue(3).unites['char_moyen'], undefined);
+  assert.equal(chargerCatalogue(4).unites['char_moyen']?.cout, 10000);
 });
 
 test('un brouilleur mobile adverse aveugle un drone à dix cases, pas à onze', () => {
@@ -36,13 +38,14 @@ test('une station radar adverse brouille à douze cases et voit à cinq pour son
   const grille = Array.from({ length: 12 }, (_, y) => (y === 0 ? 'T' + 'P'.repeat(29) : LARGE));
   const scene = scenePersonnalisee(grille, { '0,0': 1 }, [
     { camp: 0, type: 'drone', x: RAYON_STATION_RADAR, y: 0 },
-    { camp: 0, type: 'drone_filaire', x: RAYON_STATION_RADAR - 1, y: 1 },
+    { camp: 0, type: 'helico', x: RAYON_STATION_RADAR - 1, y: 1 },
     { camp: 1, type: 'infanterie', x: 5, y: 5 },
   ], { brouillard: true });
   const e = creerPartie(scene, CAT3, 'radar');
   assert.equal(estBrouillee(e, CAT3, e.unites[0]!), true);
-  assert.equal(estBrouillee(e, CAT3, e.unites[1]!), false, 'la liaison filaire ne se brouille pas');
-  assert.equal(visionUnite(e, CAT3, e.unites[1]!), 5);
+  // Le brouillage n'agit que sur le trait `drone` : un autre œil volant voit comme avant.
+  assert.equal(estBrouillee(e, CAT3, e.unites[1]!), false, 'sans le trait drone, rien ne se brouille');
+  assert.equal(visionUnite(e, CAT3, e.unites[1]!), CAT3.unites['helico']!.vision);
   const vues = casesVisibles(e, CAT3, 1);
   assert.ok(vues.has(cleCase({ x: VISION_STATION_RADAR, y: 0 })));
   assert.ok(!vues.has(cleCase({ x: VISION_STATION_RADAR + 1, y: 0 })));

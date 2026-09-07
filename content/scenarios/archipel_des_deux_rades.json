@@ -1,0 +1,114 @@
+{
+  "cle": "archipel_des_deux_rades",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "humain",
+  "creeLe": "2026-09-07",
+  "majLe": "2026-09-07",
+  "code": "archipel_des_deux_rades",
+  "nom": "Jeu libre · L’archipel des Deux Rades",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_archipel_des_deux_rades",
+  "date": "2026-09-07",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 5,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 12000,
+  "revenusParBatiment": 1000,
+  "brouillard": false,
+  "limiteJournees": 35,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux rades, une chaussée d’un pavé de large, et tout le reste est de l’eau. Le port produit et ravitaille : c’est lui qui décide de la largeur du terrain.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Passe par la chaussée si tu veux te faire compter. Moi, je débarque là où tu ne regardes pas.",
+      "emotion": "doute"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Barge, plage, quatre journées de capture. Le match se gagnait par la mer, et il s’est gagné par la mer.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Tu as passé le match à défendre un pont pendant que mes barges tournaient autour. Reviens avec une rade tenue.",
+      "emotion": "triomphe"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "rades_premier_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Sur la chaussée, une seule unité passe à la fois. Ce qui la couvre depuis la rive compte autant qu’elle.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "rades_capture_adverse",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Un îlot de plus. Les villes du large rapportent comme les autres, et personne ne les surveille.",
+          "emotion": "joie"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  }
+}

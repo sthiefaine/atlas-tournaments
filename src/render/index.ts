@@ -65,6 +65,15 @@ export {
 } from './hud-html';
 
 export {
+  DUREES, dixiemes, dureePartition, ecrirePartition, MISE_EN_SCENE, partitionVide,
+  type Geste, type GenreGeste, type OptionsPartition, type Partition,
+} from './partition';
+
+export {
+  jaugePv, monterScenes, MS_FIXE, type ApiScenes, type ScenesHtml, type VueScenes,
+} from './scenes-html';
+
+export {
   filerRepliques, scenesDeclenchees, sceneOuverture,
   type ContexteScenes, type RepliqueEnAttente,
 } from './dialogues';

@@ -4,9 +4,11 @@ import { chargerCatalogue } from '../../src/engine/index';
 import { NIVEAU_EAU } from '../../src/render3d/geometrie';
 import * as THREE from 'three';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
-import { conformerModele, NOM_FIGURINE, type ModeleCharge } from '../../src/render3d/modeles';
 import {
-  Materiaux, OPACITE_VERRE, TASSEMENT, construirePlaceholder, creerUnites, geometriesSilhouette,
+  conformerModele, couleurMasquee, definirMasque, masqueDe, NOM_FIGURINE, type ModeleCharge,
+} from '../../src/render3d/modeles';
+import {
+  Materiaux, OPACITE_JOUEE, OPACITE_VERRE, construirePlaceholder, creerUnites, geometriesSilhouette,
   materiauxPropresDe,
 } from '../../src/render3d/unites';
 
@@ -131,7 +133,7 @@ test('une pièce ne coule pas sous le plan d’eau', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Une unité qui a joué se lit : gris, immobile, tassée, cadenas
+// Une unité qui a joué se lit : translucide, sans ombre, immobile, cadenas
 // ---------------------------------------------------------------------------
 
 /**
@@ -164,22 +166,7 @@ function couleursDe(corps: { traverse(f: (o: unknown) => void): void }): Record<
   return couleurs;
 }
 
-function canaux(hex: string): [number, number, number] {
-  return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
-}
-
-function saturation(hex: string): number {
-  const max = Math.max(...canaux(hex));
-  const min = Math.min(...canaux(hex));
-  return max === 0 ? 0 : (max - min) / max;
-}
-
-function luminance(hex: string): number {
-  const [r, g, b] = canaux(hex);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-test('une unité qui a joué est ternie, puis retrouve exactement ses matériaux au réveil', () => {
+test('une unité qui a joué s’efface en transparence, sans ombre, puis retrouve exactement ses matériaux au réveil', () => {
   const prete = partiePersonnalisee(['....', '....'], {}, [
     { camp: 0, type: 'char_leger', x: 0, y: 0 },
     { camp: 1, type: 'char_leger', x: 3, y: 0 },
@@ -192,9 +179,16 @@ test('une unité qui a joué est ternie, puis retrouve exactement ses matériaux
   const corpsSien = sien.getObjectByName('figurine_modele')!.parent!;
   const reposMien = couleursDe(corpsMien);
   const reposSien = couleursDe(corpsSien);
+  const principale = corpsMien.getObjectByName('silhouette_principal') as THREE.Mesh;
+  const verre = corpsMien.getObjectByName('silhouette_verre') as THREE.Mesh;
+  assert.ok(verre, 'le char léger a une cabine : c’est le cas qui compte pour le tri de profondeur');
+  const ombres = new Map<string, boolean>();
+  corpsMien.traverse((o) => { if (o instanceof THREE.Mesh) ombres.set(o.name, o.castShadow); });
+  assert.equal(ombres.get('silhouette_principal'), true);
+  assert.equal(ombres.get('silhouette_verre'), false, 'le verre ne portait déjà pas d’ombre');
   assert.equal(mien.userData['agie'], false);
 
-  // Les deux unités ont agi ; seule celle du camp courant (0) doit se ternir.
+  // Les deux unités ont agi ; seule celle du camp courant (0) doit s'effacer.
   const agies = {
     ...prete,
     unites: prete.unites.map((u) => ({ ...u, etat: 'agi' as const })),
@@ -205,27 +199,44 @@ test('une unité qui a joué est ternie, puis retrouve exactement ses matériaux
   assert.deepEqual(couleursDe(corpsSien), reposSien, 'l’adversaire garde ses matériaux');
 
   const ternies = couleursDe(corpsMien);
-  const principal = ternies['silhouette_principal']!.split('@')[0]!;
-  const reposPrincipal = reposMien['silhouette_principal']!.split('@')[0]!;
-  assert.notEqual(principal, reposPrincipal, 'la teinte principale change');
-  assert.ok(saturation(principal) < saturation(reposPrincipal) * 0.5, `désaturée (${principal} vs ${reposPrincipal})`);
-  assert.ok(luminance(principal) < luminance(reposPrincipal) * 0.75, 'et nettement plus sombre');
+  const [teinte, uuidTerni] = ternies['silhouette_principal']!.split('@');
+  const [teinteRepos, uuidRepos] = reposMien['silhouette_principal']!.split('@');
+  assert.equal(teinte, teinteRepos, 'la teinte ne change pas : ni gris, ni noir');
+  assert.notEqual(uuidTerni, uuidRepos, 'mais le matériau porté est un double');
+  const terni = principale.material as THREE.MeshStandardMaterial;
+  const vif = principale.userData['repos'] as THREE.MeshStandardMaterial;
+  assert.equal(terni.transparent, true);
+  assert.equal(terni.opacity, OPACITE_JOUEE, 'six dixièmes');
+  assert.equal(terni.depthWrite, true, 'une figurine convexe écrit sa profondeur, comme le verre');
+  assert.equal(terni.roughness, vif.roughness, 'même matière');
+  assert.equal(terni.metalness, vif.metalness);
+  assert.equal(terni.emissiveIntensity, vif.emissiveIntensity);
+  assert.equal((verre.material as THREE.MeshStandardMaterial).opacity, OPACITE_VERRE, 'le verre garde son opacité propre, déjà plus basse');
+  corpsMien.traverse((o) => {
+    if (o instanceof THREE.Mesh && o.name !== 'socle_lisere') assert.equal(o.castShadow, false, `${o.name} : la masse trahirait la transparence`);
+  });
   assert.equal(ternies['socle_lisere'], reposMien['socle_lisere'], 'le liseré d’équipe reste');
+  const lisere = (corpsMien.getObjectByName('socle_lisere') as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  assert.equal(lisere.transparent, false, 'et reste opaque');
   // Les originaux n'ont pas été touchés : c'est un échange, pas une recoloration.
-  assert.equal(reposMien['silhouette_principal']!.split('@')[0], reposPrincipal);
+  assert.equal(vif.transparent, false);
+  assert.equal(reposMien['silhouette_principal']!.split('@')[0], teinteRepos);
 
   // Un second passage ne recrée rien : même objet terni.
   calque.maj(agies, cat, null);
   assert.deepEqual(couleursDe(corpsMien), ternies);
 
-  // Le réveil rend les objets mêmes, uuid compris.
+  // Le réveil rend les objets mêmes, uuid compris, et leur ombre telle qu'elle était.
   calque.maj(prete, cat, null);
   assert.equal(mien.userData['agie'], false);
   assert.deepEqual(couleursDe(corpsMien), reposMien, 'retour à l’identique');
+  corpsMien.traverse((o) => {
+    if (o instanceof THREE.Mesh) assert.equal(o.castShadow, ombres.get(o.name), `${o.name} : ombre rendue`);
+  });
   calque.dispose();
 });
 
-test('une unité qui a joué ne respire plus, ne tourne plus, et se tasse de quelques centièmes', () => {
+test('une unité qui a joué ne respire plus, ne tourne plus, et ne se tasse pas', () => {
   const prete = partiePersonnalisee(['....', '....'], {}, [
     { camp: 0, type: 'infanterie', x: 0, y: 0 },
     { camp: 0, type: 'helico', x: 1, y: 0 },
@@ -238,23 +249,61 @@ test('une unité qui a joué ne respire plus, ne tourne plus, et se tasse de que
   calque.avancer(100);
   const angle = rotor.rotation.y;
   assert.notEqual(angle, 0);
+  assert.notEqual(modele.rotation.z, 0, 'au repos, la figurine respire');
 
   const agies = { ...prete, unites: prete.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
   calque.maj(agies, cat, null);
-  // Le tassement glisse : il continue d'animer tant qu'il n'est pas arrivé.
-  assert.equal(calque.avancer(50), true);
-  assert.ok(modele.position.y < 0 && modele.position.y > -TASSEMENT, 'en cours de tassement');
-  assert.equal(rotor.rotation.y, angle, 'le rotor est arrêté');
   assert.equal(modele.rotation.z, 0, 'plus de respiration');
-  for (let i = 0; i < 20; i += 1) calque.avancer(100);
-  assert.equal(modele.position.y, -TASSEMENT, 'tassée, et pas plus');
-  assert.equal(calque.avancer(100), false, 'plus rien à animer');
+  assert.equal(modele.position.y, 0, 'la figurine reste posée sur son socle : plus de tassement');
+  assert.equal(calque.avancer(100), false, 'plus rien à animer, tout de suite');
+  assert.equal(rotor.rotation.y, angle, 'le rotor est arrêté');
+  assert.equal(modele.position.y, 0);
 
-  // Sous réduction des animations, le réveil se fait d'un coup et rien ne bouge.
+  // Le réveil, sous réduction des animations : rien ne bouge non plus.
   calque.maj(prete, cat, null);
   assert.equal(calque.avancer(1, true), false);
   assert.equal(modele.position.y, 0);
   assert.equal(rotor.rotation.y, angle, 'le rotor ne tourne pas sous réduction');
+  calque.dispose();
+});
+
+test('le double terni d’un modèle masqué garde le masque, la couleur d’équipe telle quelle, et perd son ombre', async () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [{ camp: 0, type: 'char_leger', x: 1, y: 0 }]);
+  const masque = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+  const scene = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ name: 'mat_corps' });
+  definirMasque(mat, masque);
+  const corps = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.8), mat);
+  corps.name = 'corps';
+  scene.add(corps);
+  const modele = conformerModele({ niveaux: [scene], clips: [], kit: false });
+  const { doc } = documentFactice();
+  const calque = creerUnites(doc, () => 0, { chargeur: async () => modele });
+  calque.maj(etat, cat, null);
+  await tick();
+  const maille = calque.groupe.getObjectByName('corps') as THREE.Mesh;
+  const vif = maille.material as THREE.MeshStandardMaterial;
+  const couleur = couleurMasquee(vif);
+  assert.ok(couleur, 'le clone teinté mélange la couleur d’équipe par son masque');
+  assert.equal(maille.castShadow, true);
+
+  const agie = { ...etat, unites: etat.unites.map((u) => ({ ...u, etat: 'agi' as const })) };
+  calque.maj(agie, cat, null);
+  const terni = maille.material as THREE.MeshStandardMaterial;
+  assert.notEqual(terni, vif);
+  assert.equal(terni.opacity, OPACITE_JOUEE);
+  assert.equal(masqueDe(terni), masque, 'le masque est rendu au double');
+  const shader = { uniforms: {} as Record<string, { value: unknown }>, vertexShader: '', fragmentShader: '#include <common>\n#include <map_fragment>' };
+  terni.onBeforeCompile(shader as never, {} as never);
+  assert.equal(
+    (shader.uniforms['atlasCouleurEquipe']?.value as THREE.Color).getHexString(), couleur.getHexString(),
+    'la couleur d’équipe n’est pas ternie : seule l’opacité dit qu’elle a joué',
+  );
+  assert.equal(maille.castShadow, false);
+
+  calque.maj(etat, cat, null);
+  assert.equal(maille.material, vif, 'au réveil, l’objet même');
+  assert.equal(maille.castShadow, true);
   calque.dispose();
 });
 
@@ -532,7 +581,7 @@ test('la pluie mouille la tôle, l’acier et le caoutchouc par jeu de matériau
   const terni = materiaux.terni(jeu.principal);
   const sec = Object.fromEntries(ROLES.map((r) => [r, jeu[r].roughness])) as Record<typeof ROLES[number], number>;
   const terniSec = terni.roughness;
-  assert.ok(terniSec > sec.principal, 'une pièce ternie est plus mate que sa vive');
+  assert.equal(terniSec, sec.principal, 'une pièce ternie garde la matière de sa vive : seule l’opacité change');
 
   materiaux.mouiller(1);
   for (const role of ['principal', 'sombre', 'clair', 'materiel', 'roulant'] as const) {
@@ -542,7 +591,7 @@ test('la pluie mouille la tôle, l’acier et le caoutchouc par jeu de matériau
   assert.equal(jeu.verre.roughness, sec.verre, 'le verre est déjà lisse');
   assert.equal(jeu.peau.roughness, sec.peau, 'une figurine peinte ne brille pas sous l’eau');
   assert.ok(terni.roughness < terniSec, 'le double terni suit son original');
-  assert.ok(terni.roughness > jeu.principal.roughness, 'et reste plus mat que lui');
+  assert.equal(terni.roughness, jeu.principal.roughness, 'à l’identique');
   // Un jeu créé sous la pluie naît mouillé : l'humidité est celle de la scène, pas du moment de la création.
   const autre = materiaux.jeu(0, null);
   assert.ok(autre.principal.roughness < sec.principal - 0.2);
@@ -602,5 +651,89 @@ test('le calque des unités reçoit l’ambiance : sous la pluie, ses tôles lui
   assert.equal(principal.material, m, 'sur le même matériau : rien n’est recréé par unité');
   calque.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'));
   assert.equal(m.roughness, sec, 'le beau temps sèche à l’identique');
+  calque.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Une vue qui ne change rien ne repose rien ; le sol qui bouge repose tout
+// ---------------------------------------------------------------------------
+
+test('deux maj sur le même état ne reposent pas les unités, et le disent', () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'char_leger', x: 2, y: 1 },
+  ]);
+  let lectures = 0;
+  const calque = creerUnites({} as Document, () => { lectures += 1; return 0.1; });
+  assert.equal(calque.maj(etat, cat, null), true, 'la première pose change la scène');
+  assert.ok(lectures > 0);
+  lectures = 0;
+  // Un survol : même état, même vue des unités. Pas une lecture du relief.
+  assert.equal(calque.maj(etat, cat, null), false);
+  assert.equal(calque.maj(etat, cat, new Set(['0,0', '2,1'])), false, 'une visibilité neuve mais égale ne change rien');
+  assert.equal(lectures, 0, 'aucune unité reposée');
+
+  // Une unité qui change de case dans l'état est reposée, elle seule.
+  const bougee = { ...etat, unites: etat.unites.map((u) => (u.id === etat.unites[0]!.id ? { ...u, x: 1 } : u)) };
+  assert.equal(calque.maj(bougee, cat, null), true);
+  assert.equal(lectures, 5, 'cinq lectures du relief : une seule pose');
+  assert.ok(Math.abs(calque.positionDe(etat.unites[0]!.id)!.x - 1.5) < 1e-9);
+
+  // L'état visuel — la prise des animations — compte autant que l'état.
+  lectures = 0;
+  const v = calque.visuel(etat.unites[1]!.id);
+  v.dx = 0.3;
+  assert.equal(calque.maj(bougee, cat, null), true, 'un glissement d’animation repose l’unité');
+  assert.equal(lectures, 5);
+  assert.ok(Math.abs(calque.positionDe(etat.unites[1]!.id)!.x - 2.8) < 1e-9);
+
+  // Une unité qui disparaît ou qui entre dans la vue change la scène aussi.
+  assert.equal(calque.maj(bougee, cat, new Set(['1,0'])), true, 'le char sort du brouillard');
+  assert.equal(calque.groupe.children.length, 1);
+  assert.equal(calque.maj(bougee, cat, new Set(['1,0'])), false);
+  assert.equal(calque.maj(bougee, cat, null), true, 'il y rentre');
+  calque.dispose();
+});
+
+test('ce qui repose sur le sol se repose avec lui : une mutation de terrain repose les unités', () => {
+  const etat = partiePersonnalisee(['....', '....'], {}, [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'char_leger', x: 2, y: 1 },
+  ]);
+  let sol = 0.3;
+  const calque = creerUnites({} as Document, () => sol);
+  calque.maj(etat, cat, null);
+  const [soldat, char] = calque.groupe.children as [THREE.Object3D, THREE.Object3D];
+  assert.ok(Math.abs(soldat.position.y - 0.3) < 1e-9);
+
+  // La marée descend. Une vue de plus ne suffit pas : l'état n'a pas changé,
+  // et une unité ne sait pas que le sol a bougé sous elle…
+  sol = -0.05;
+  calque.maj(etat, cat, null);
+  assert.ok(Math.abs(soldat.position.y - 0.3) < 1e-9, 'un survol ne repose pas');
+  // …c'est le relief qui le lui dit.
+  calque.majRelief();
+  assert.ok(Math.abs(soldat.position.y + 0.05) < 1e-9, 'reposée sur le sol descendu');
+  assert.ok(Math.abs(char.position.y + 0.05) < 1e-9);
+
+  // Pendant une mutation annoncée, les unités suivent le sol image par image,
+  // puis se posent une dernière fois sur sa position finale.
+  calque.suivreSol(100);
+  sol = 0.1;
+  assert.equal(calque.avancer(40), true);
+  assert.ok(Math.abs(soldat.position.y - 0.1) < 1e-9, 'suit le sol à la première image');
+  sol = 0.2;
+  calque.avancer(40);
+  assert.ok(Math.abs(soldat.position.y - 0.2) < 1e-9);
+  sol = 0.25;
+  calque.avancer(40);
+  assert.ok(Math.abs(soldat.position.y - 0.25) < 1e-9, 'la dernière image pose sur la position finale');
+  sol = 0.9;
+  calque.avancer(40);
+  assert.ok(Math.abs(soldat.position.y - 0.25) < 1e-9, 'le sol s’est arrêté : plus de repose par image');
+  // Une pose d'animation reprend le sol courant, comme toujours.
+  calque.visuel(etat.unites[0]!.id).dx = 0.1;
+  calque.maj(etat, cat, null);
+  assert.ok(Math.abs(soldat.position.y - 0.9) < 1e-9);
   calque.dispose();
 });

@@ -1,5 +1,5 @@
 {
-  "catalogueVersion": 3,
+  "catalogueVersion": 5,
   "unites": [
     {
       "cle": "infanterie",
@@ -32,7 +32,7 @@
         "infanterie": 55,
         "meca": 45,
         "recon": 70,
-        "char_leger": 25,
+        "char_leger": 10,
         "char_lourd": 5,
         "artillerie": 60,
         "roquettes": 65,
@@ -41,8 +41,8 @@
         "transport": 70,
         "genie": 55,
         "drone": 35,
-        "drone_filaire": 35,
-        "brouilleur": 70
+        "brouilleur": 70,
+        "char_moyen": 7
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -90,9 +90,17 @@
         "transport": 85,
         "genie": 65,
         "drone": 40,
-        "drone_filaire": 40,
-        "brouilleur": 85
+        "brouilleur": 85,
+        "char_moyen": 35
       },
+      "armeSecondaire": [
+        "infanterie",
+        "meca",
+        "genie",
+        "helico",
+        "drone"
+      ],
+      "degatsSecondaire": 10,
       "peutRiposter": true,
       "peutTirerApresMouvement": true
     },
@@ -142,8 +150,8 @@
         "transport": 70,
         "genie": 70,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 60
+        "brouilleur": 60,
+        "char_moyen": 3
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -192,9 +200,15 @@
         "transport": 90,
         "genie": 75,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 85
+        "brouilleur": 85,
+        "char_moyen": 35
       },
+      "armeSecondaire": [
+        "infanterie",
+        "meca",
+        "genie"
+      ],
+      "degatsSecondaire": 15,
       "peutRiposter": true,
       "peutTirerApresMouvement": true
     },
@@ -243,9 +257,15 @@
         "transport": 125,
         "genie": 95,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 105
+        "brouilleur": 105,
+        "char_moyen": 70
       },
+      "armeSecondaire": [
+        "infanterie",
+        "meca",
+        "genie"
+      ],
+      "degatsSecondaire": 15,
       "peutRiposter": true,
       "peutTirerApresMouvement": true
     },
@@ -295,8 +315,8 @@
         "transport": 95,
         "genie": 90,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 80
+        "brouilleur": 80,
+        "char_moyen": 55
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -347,8 +367,8 @@
         "transport": 105,
         "genie": 95,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 90
+        "brouilleur": 90,
+        "char_moyen": 70
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -400,8 +420,8 @@
         "transport": 50,
         "genie": 105,
         "drone": 125,
-        "drone_filaire": 125,
-        "brouilleur": 60
+        "brouilleur": 60,
+        "char_moyen": 15
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -452,9 +472,17 @@
         "transport": 75,
         "genie": 75,
         "drone": 85,
-        "drone_filaire": 85,
-        "brouilleur": 55
+        "brouilleur": 55,
+        "char_moyen": 40
       },
+      "armeSecondaire": [
+        "infanterie",
+        "meca",
+        "genie",
+        "helico",
+        "drone"
+      ],
+      "degatsSecondaire": 10,
       "peutRiposter": true,
       "peutTirerApresMouvement": true
     },
@@ -464,7 +492,8 @@
       "nomCourt": "Transport",
       "statut": "canon",
       "traits": [
-        "transport"
+        "transport",
+        "ravitaillement"
       ],
       "silhouette": {
         "base": "chenilles",
@@ -474,7 +503,7 @@
         ],
         "taille": 2
       },
-      "cout": 4500,
+      "cout": 5000,
       "mouvement": 6,
       "typeMouvement": "chenilles",
       "domaine": "terre",
@@ -491,10 +520,11 @@
       },
       "capture": false,
       "transport": {
-        "places": 1,
+        "places": 2,
         "accepte": [
           "infanterie",
-          "meca"
+          "meca",
+          "genie"
         ]
       },
       "degats": {
@@ -510,8 +540,8 @@
         "transport": 0,
         "genie": 0,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
+        "brouilleur": 0,
+        "char_moyen": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -558,13 +588,17 @@
         "transport": 42,
         "genie": 33,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 42
-      },
-      "peutRiposter": true,
-      "peutTirerApresMouvement": true,
-      "homologation": {
-        "date": "2026-09-05"
+        "brouilleur": 42,
+        "char_moyen": 8,
+        "missiles_air": 39,
+        "missiles_sol": 36,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 12,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
       },
       "subitDegats": {
         "infanterie": 55,
@@ -579,8 +613,22 @@
         "transport": 0,
         "genie": 33,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
+        "brouilleur": 0,
+        "char_moyen": 85,
+        "missiles_air": 0,
+        "missiles_sol": 95,
+        "chasseur": 0,
+        "bombardier": 30,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 30,
+        "sous_marin": 0
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-05"
       }
     },
     {
@@ -630,88 +678,17 @@
         "transport": 0,
         "genie": 0,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
-      },
-      "peutRiposter": false,
-      "peutTirerApresMouvement": false,
-      "homologation": {
-        "date": "2026-09-05",
-        "catalogue": 3
-      },
-      "subitDegats": {
-        "infanterie": 35,
-        "meca": 40,
-        "recon": 0,
-        "char_leger": 0,
-        "char_lourd": 0,
-        "artillerie": 0,
-        "roquettes": 0,
-        "antiair": 125,
-        "helico": 85,
-        "transport": 0,
-        "genie": 0,
-        "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
-      }
-    },
-    {
-      "cle": "drone_filaire",
-      "nom": "Drone filaire",
-      "nomCourt": "Filaire",
-      "statut": "homologuee",
-      "traits": [
-        "vol",
-        "vision_etendue"
-      ],
-      "silhouette": {
-        "base": "rotor",
-        "corps": "plateau",
-        "modules": [
-          "antenne",
-          "panneaux_solaires"
-        ],
-        "taille": 1
-      },
-      "cout": 12000,
-      "mouvement": 3,
-      "typeMouvement": "air",
-      "domaine": "air",
-      "portee": [
-        1,
-        1
-      ],
-      "vision": 5,
-      "munitions": null,
-      "carburant": {
-        "max": 30,
-        "parCase": 1,
-        "parTour": 1
-      },
-      "capture": false,
-      "transport": null,
-      "degats": {
-        "infanterie": 0,
-        "meca": 0,
-        "recon": 0,
-        "char_leger": 0,
-        "char_lourd": 0,
-        "artillerie": 0,
-        "roquettes": 0,
-        "antiair": 0,
-        "helico": 0,
-        "transport": 0,
-        "genie": 0,
-        "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
-      },
-      "peutRiposter": false,
-      "peutTirerApresMouvement": false,
-      "homologation": {
-        "date": "2026-09-05",
-        "catalogue": 3
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
       },
       "subitDegats": {
         "infanterie": 35,
@@ -726,8 +703,23 @@
         "transport": 0,
         "genie": 0,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 125,
+        "missiles_sol": 0,
+        "chasseur": 120,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 100,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-05",
+        "catalogue": 3
       }
     },
     {
@@ -777,14 +769,17 @@
         "transport": 0,
         "genie": 0,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
-      },
-      "peutRiposter": false,
-      "peutTirerApresMouvement": false,
-      "homologation": {
-        "date": "2026-09-05",
-        "catalogue": 3
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
       },
       "subitDegats": {
         "infanterie": 70,
@@ -799,8 +794,957 @@
         "transport": 0,
         "genie": 42,
         "drone": 0,
-        "drone_filaire": 0,
-        "brouilleur": 0
+        "brouilleur": 0,
+        "char_moyen": 95,
+        "missiles_air": 0,
+        "missiles_sol": 95,
+        "chasseur": 0,
+        "bombardier": 110,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 90,
+        "sous_marin": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-05",
+        "catalogue": 3
+      }
+    },
+    {
+      "cle": "char_moyen",
+      "nom": "Char moyen",
+      "nomCourt": "Char moyen",
+      "statut": "homologuee",
+      "traits": [],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "bloc",
+        "modules": [
+          "tourelle",
+          "canon_long"
+        ],
+        "taille": 2
+      },
+      "cout": 10000,
+      "mouvement": 5,
+      "typeMouvement": "chenilles",
+      "domaine": "terre",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": 8,
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 85,
+        "meca": 80,
+        "recon": 95,
+        "char_leger": 70,
+        "char_lourd": 30,
+        "artillerie": 85,
+        "roquettes": 95,
+        "antiair": 90,
+        "helico": 0,
+        "transport": 105,
+        "genie": 85,
+        "drone": 0,
+        "brouilleur": 95,
+        "char_moyen": 55,
+        "missiles_air": 95,
+        "missiles_sol": 90,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 75,
+        "porte_avions": 45,
+        "cuirasse": 30,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 7,
+        "meca": 35,
+        "recon": 3,
+        "char_leger": 35,
+        "char_lourd": 70,
+        "artillerie": 55,
+        "roquettes": 70,
+        "antiair": 15,
+        "helico": 40,
+        "transport": 0,
+        "genie": 8,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 55,
+        "missiles_air": 0,
+        "missiles_sol": 80,
+        "chasseur": 0,
+        "bombardier": 110,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 80,
+        "sous_marin": 0
+      },
+      "armeSecondaire": [
+        "infanterie",
+        "meca",
+        "genie"
+      ],
+      "degatsSecondaire": 15,
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-06",
+        "catalogue": 4
+      }
+    },
+    {
+      "cle": "missiles_air",
+      "nom": "Lance-missiles sol-air",
+      "nomCourt": "Missiles AA",
+      "statut": "homologuee",
+      "traits": [
+        "anti_air",
+        "tir_indirect"
+      ],
+      "silhouette": {
+        "base": "roues",
+        "corps": "plateau",
+        "modules": [
+          "lance_roquettes",
+          "radar"
+        ],
+        "taille": 3
+      },
+      "cout": 12000,
+      "mouvement": 4,
+      "typeMouvement": "roues",
+      "domaine": "terre",
+      "portee": [
+        2,
+        5
+      ],
+      "vision": 3,
+      "munitions": 5,
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 120,
+        "transport": 0,
+        "genie": 0,
+        "drone": 125,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 100,
+        "bombardier": 105,
+        "transport_air": 115,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 65,
+        "meca": 80,
+        "recon": 55,
+        "char_leger": 85,
+        "char_lourd": 105,
+        "artillerie": 80,
+        "roquettes": 90,
+        "antiair": 55,
+        "helico": 65,
+        "transport": 0,
+        "genie": 39,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 95,
+        "missiles_air": 0,
+        "missiles_sol": 95,
+        "chasseur": 0,
+        "bombardier": 105,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 90,
+        "sous_marin": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "missiles_sol",
+      "nom": "Lance-missiles sol-sol",
+      "nomCourt": "Missiles sol",
+      "statut": "homologuee",
+      "traits": [
+        "tir_indirect"
+      ],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "plateau",
+        "modules": [
+          "lance_roquettes",
+          "antenne"
+        ],
+        "taille": 3
+      },
+      "cout": 16000,
+      "mouvement": 4,
+      "typeMouvement": "chenilles",
+      "domaine": "terre",
+      "portee": [
+        3,
+        6
+      ],
+      "vision": 2,
+      "munitions": 5,
+      "carburant": {
+        "max": 55,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 95,
+        "meca": 90,
+        "recon": 90,
+        "char_leger": 85,
+        "char_lourd": 30,
+        "artillerie": 90,
+        "roquettes": 90,
+        "antiair": 90,
+        "helico": 0,
+        "transport": 110,
+        "genie": 95,
+        "drone": 0,
+        "brouilleur": 95,
+        "char_moyen": 80,
+        "missiles_air": 95,
+        "missiles_sol": 85,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 95,
+        "porte_avions": 70,
+        "cuirasse": 55,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 60,
+        "meca": 75,
+        "recon": 50,
+        "char_leger": 80,
+        "char_lourd": 100,
+        "artillerie": 75,
+        "roquettes": 85,
+        "antiair": 50,
+        "helico": 60,
+        "transport": 0,
+        "genie": 36,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 90,
+        "missiles_air": 0,
+        "missiles_sol": 85,
+        "chasseur": 0,
+        "bombardier": 105,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 85,
+        "sous_marin": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "chasseur",
+      "nom": "Chasseur",
+      "nomCourt": "Chasseur",
+      "statut": "homologuee",
+      "traits": [
+        "vol"
+      ],
+      "silhouette": {
+        "base": "ailes",
+        "corps": "capsule",
+        "modules": [],
+        "taille": 3
+      },
+      "cout": 20000,
+      "mouvement": 9,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": 9,
+      "carburant": {
+        "max": 99,
+        "parCase": 1,
+        "parTour": 5
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 115,
+        "transport": 0,
+        "genie": 0,
+        "drone": 120,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 55,
+        "bombardier": 110,
+        "transport_air": 120,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 5,
+        "meca": 8,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 100,
+        "helico": 12,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 100,
+        "missiles_sol": 0,
+        "chasseur": 55,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 25,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "bombardier",
+      "nom": "Bombardier",
+      "nomCourt": "Bombardier",
+      "statut": "homologuee",
+      "traits": [
+        "vol"
+      ],
+      "silhouette": {
+        "base": "ailes",
+        "corps": "bloc",
+        "modules": [
+          "nacelle"
+        ],
+        "taille": 3
+      },
+      "cout": 18000,
+      "mouvement": 7,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": 9,
+      "carburant": {
+        "max": 99,
+        "parCase": 1,
+        "parTour": 5
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 30,
+        "meca": 40,
+        "recon": 105,
+        "char_leger": 110,
+        "char_lourd": 105,
+        "artillerie": 110,
+        "roquettes": 110,
+        "antiair": 95,
+        "helico": 0,
+        "transport": 115,
+        "genie": 30,
+        "drone": 0,
+        "brouilleur": 110,
+        "char_moyen": 110,
+        "missiles_air": 105,
+        "missiles_sol": 105,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 105,
+        "porte_avions": 90,
+        "cuirasse": 75,
+        "sous_marin": 60
+      },
+      "subitDegats": {
+        "infanterie": 8,
+        "meca": 12,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 110,
+        "helico": 40,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 105,
+        "missiles_sol": 0,
+        "chasseur": 110,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 35,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "transport_air",
+      "nom": "Transport d’assaut",
+      "nomCourt": "Transp. air",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "transport"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "plateau",
+        "modules": [
+          "grue"
+        ],
+        "taille": 2
+      },
+      "cout": 6000,
+      "mouvement": 6,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": null,
+      "carburant": {
+        "max": 60,
+        "parCase": 1,
+        "parTour": 2
+      },
+      "capture": false,
+      "transport": {
+        "places": 2,
+        "accepte": [
+          "infanterie",
+          "meca",
+          "genie"
+        ]
+      },
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 30,
+        "meca": 35,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 120,
+        "helico": 70,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 115,
+        "missiles_sol": 0,
+        "chasseur": 120,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 60,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "barge",
+      "nom": "Barge de débarquement",
+      "nomCourt": "Barge",
+      "statut": "homologuee",
+      "traits": [
+        "transport"
+      ],
+      "silhouette": {
+        "base": "coque",
+        "corps": "plateau",
+        "modules": [
+          "grue"
+        ],
+        "taille": 2
+      },
+      "cout": 6000,
+      "mouvement": 6,
+      "typeMouvement": "mer",
+      "domaine": "mer",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": null,
+      "carburant": {
+        "max": 70,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": {
+        "places": 2,
+        "accepte": [
+          "infanterie",
+          "meca",
+          "genie",
+          "recon",
+          "char_leger"
+        ]
+      },
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0
+      },
+      "subitDegats": {
+        "infanterie": 25,
+        "meca": 35,
+        "recon": 20,
+        "char_leger": 60,
+        "char_lourd": 85,
+        "artillerie": 90,
+        "roquettes": 95,
+        "antiair": 30,
+        "helico": 70,
+        "transport": 0,
+        "genie": 12,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 75,
+        "missiles_air": 0,
+        "missiles_sol": 95,
+        "chasseur": 0,
+        "bombardier": 105,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 105,
+        "sous_marin": 95
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "porte_avions",
+      "nom": "Porte-avions",
+      "nomCourt": "Porte-avions",
+      "statut": "homologuee",
+      "traits": [
+        "transport"
+      ],
+      "silhouette": {
+        "base": "coque",
+        "corps": "plateau",
+        "modules": [
+          "antenne",
+          "radar"
+        ],
+        "taille": 3
+      },
+      "cout": 20000,
+      "mouvement": 5,
+      "typeMouvement": "mer",
+      "domaine": "mer",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 4,
+      "munitions": 9,
+      "carburant": {
+        "max": 99,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": {
+        "places": 2,
+        "accepte": [
+          "chasseur",
+          "bombardier",
+          "transport_air",
+          "helico",
+          "drone"
+        ]
+      },
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 45,
+        "transport": 0,
+        "genie": 0,
+        "drone": 100,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 25,
+        "bombardier": 35,
+        "transport_air": 60,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 70
+      },
+      "subitDegats": {
+        "infanterie": 0,
+        "meca": 15,
+        "recon": 0,
+        "char_leger": 30,
+        "char_lourd": 60,
+        "artillerie": 55,
+        "roquettes": 75,
+        "antiair": 0,
+        "helico": 45,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 45,
+        "missiles_air": 0,
+        "missiles_sol": 70,
+        "chasseur": 0,
+        "bombardier": 90,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 90,
+        "sous_marin": 95
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "cuirasse",
+      "nom": "Cuirassé",
+      "nomCourt": "Cuirassé",
+      "statut": "homologuee",
+      "traits": [
+        "tir_indirect"
+      ],
+      "silhouette": {
+        "base": "coque",
+        "corps": "bloc",
+        "modules": [
+          "tourelle",
+          "canon_long"
+        ],
+        "taille": 3
+      },
+      "cout": 19000,
+      "mouvement": 5,
+      "typeMouvement": "mer",
+      "domaine": "mer",
+      "portee": [
+        2,
+        6
+      ],
+      "vision": 2,
+      "munitions": 9,
+      "carburant": {
+        "max": 99,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 30,
+        "meca": 45,
+        "recon": 30,
+        "char_leger": 85,
+        "char_lourd": 60,
+        "artillerie": 90,
+        "roquettes": 90,
+        "antiair": 85,
+        "helico": 0,
+        "transport": 105,
+        "genie": 30,
+        "drone": 0,
+        "brouilleur": 90,
+        "char_moyen": 80,
+        "missiles_air": 90,
+        "missiles_sol": 85,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 105,
+        "porte_avions": 90,
+        "cuirasse": 60,
+        "sous_marin": 55
+      },
+      "subitDegats": {
+        "infanterie": 0,
+        "meca": 8,
+        "recon": 0,
+        "char_leger": 20,
+        "char_lourd": 40,
+        "artillerie": 45,
+        "roquettes": 70,
+        "antiair": 0,
+        "helico": 40,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 30,
+        "missiles_air": 0,
+        "missiles_sol": 55,
+        "chasseur": 0,
+        "bombardier": 75,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 60,
+        "sous_marin": 85
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
+      }
+    },
+    {
+      "cle": "sous_marin",
+      "nom": "Sous-marin",
+      "nomCourt": "Sous-marin",
+      "statut": "homologuee",
+      "traits": [
+        "plongee"
+      ],
+      "silhouette": {
+        "base": "coque",
+        "corps": "capsule",
+        "modules": [
+          "antenne"
+        ],
+        "taille": 2
+      },
+      "cout": 12000,
+      "mouvement": 5,
+      "typeMouvement": "mer",
+      "domaine": "mer",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 3,
+      "munitions": 6,
+      "carburant": {
+        "max": 70,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 95,
+        "porte_avions": 95,
+        "cuirasse": 85,
+        "sous_marin": 55
+      },
+      "subitDegats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 75,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 60,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 70,
+        "cuirasse": 55,
+        "sous_marin": 55
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-07",
+        "catalogue": 5
       }
     }
   ]

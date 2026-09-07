@@ -237,7 +237,13 @@ export function parametresAmbiance(
     },
     ciel,
     brouillard: {
-      couleur: melanger(ciel, m.voile, 0.35),
+      // La même valeur que le fond, exactement : le plan d'eau ne déborde plus
+      // que d'une case, le ciel est visible autour du plateau, et un bord de
+      // carte qui fondrait vers une autre teinte que celle du fond derrière lui
+      // dessinerait une couture — par brouillard, à 89 % de fondu à vingt
+      // unités, elle se verrait de loin. Le voile de la météo est déjà dans le
+      // ciel.
+      couleur: ciel,
       densite: borner(m.densite + (nuit ? 0.002 : 0), 0, 0.2),
     },
     exposition: borner((nuit ? 1.2 : 1) * m.facteurExposition, 0.4, 1.8),
@@ -341,9 +347,18 @@ export interface Eclairage {
   /** Fait avancer transition et particules. Rend vrai s'il faut redessiner. */
   avancer(ms: number, centre: THREE.Vector3): boolean;
   /**
+   * Mêle une teinte à la lumière du ciel, à `part` (0 → rien, 1 → la teinte
+   * seule) : c'est l'éclat d'un pouvoir, aux couleurs du camp, le temps d'un
+   * geste. `null` ou 0 rend le ciel de l'ambiance. Ne touche pas à `courant` :
+   * les matières n'ont pas à se repeindre pour une lueur.
+   */
+  teinter(couleur: string | null, part: number): void;
+  /**
    * Resserre la caméra d'ombre sur ce que la caméra du jeu voit (`ombres.ts`).
    * À appeler à chaque image, **après** `avancer` : le calcul n'est refait que
-   * si la caméra ou le soleil ont bougé. Rend le cadre appliqué.
+   * si la caméra ou le soleil ont bougé. Rend le cadre appliqué — le **même
+   * objet** tant que rien n'a bougé, ce qui permet à l'appelant de savoir, sans
+   * autre comparaison, si la carte d'ombre est à refaire.
    */
   cadrerOmbre(etat: EtatCamera, aspect: number, carte: { largeur: number; hauteur: number }): CadreOmbre;
   dispose(): void;
@@ -410,8 +425,13 @@ export function creerEclairage(
   cam.far = 120;
   groupe.add(soleil);
   groupe.add(soleil.target);
-  /** Les entrées du dernier cadre calculé : on ne recalcule que si l'une bouge. */
-  let empreinteCadre = '';
+  /**
+   * Les entrées du dernier cadre calculé : on ne recalcule que si l'une bouge.
+   * Des nombres comparés un à un, pas une empreinte en chaîne : `cadrerOmbre`
+   * court à chaque image, et six `toFixed` plus un `join` par image sont une
+   * allocation dont le ramasse-miettes finit par présenter la note.
+   */
+  const entreesCadre = { x: NaN, z: NaN, distance: NaN, tangage: NaN, lacet: NaN, aspect: NaN, elevation: NaN, azimut: NaN, largeur: NaN, hauteur: NaN };
   let dernierCadre: CadreOmbre | null = null;
 
   const hemisphere = new THREE.HemisphereLight(0xffffff, 0x404040, 1);
@@ -474,22 +494,40 @@ export function creerEclairage(
   let source = depart;
   let cible = depart;
   let progression = 1;
+  /** La teinte transitoire mêlée au ciel, et sa part ; `null` sans éclat. */
+  let teinte: THREE.Color | null = null;
+  let partTeinte = 0;
+  const cielTeinte = new THREE.Color();
+
+  /** La couleur du ciel telle que l'hémisphère la reçoit, éclat compris. */
+  function cielDe(p: ParametresAmbiance): THREE.Color {
+    cielTeinte.set(p.hemisphere.ciel);
+    if (teinte && partTeinte > 0) cielTeinte.lerp(teinte, Math.min(1, partTeinte));
+    return cielTeinte;
+  }
+
+  // Ce qui se réutilise d'une image à l'autre : la direction du soleil ne change
+  // qu'avec l'ambiance, et le fond de scène est une couleur qu'on repeint, pas
+  // qu'on remplace — `appliquer` court à chaque image d'une transition.
+  const d = new THREE.Vector3();
+  const fond = new THREE.Color();
+  scene.background = fond;
 
   function appliquer(p: ParametresAmbiance): void {
     courant = p;
     soleil.color.set(p.soleil.couleur);
     soleil.intensity = p.soleil.intensite;
-    const d = directionSoleil(p.soleil.elevation, p.soleil.azimut, DISTANCE_SOLEIL);
+    d.copy(directionSoleil(p.soleil.elevation, p.soleil.azimut, DISTANCE_SOLEIL));
     soleil.position.copy(d);
     appoint.color.set(p.hemisphere.ciel);
     appoint.intensity = p.soleil.intensite * 0.09 + 0.12;
     appoint.position.set(-d.x * 0.6, Math.abs(d.y) * 0.5, -d.z * 0.6);
-    hemisphere.color.set(p.hemisphere.ciel);
+    hemisphere.color.copy(cielDe(p));
     hemisphere.groundColor.set(p.hemisphere.sol);
     hemisphere.intensity = p.hemisphere.intensite;
     brouillard.color.set(p.brouillard.couleur);
     brouillard.density = p.brouillard.densite;
-    scene.background = new THREE.Color(p.ciel);
+    fond.set(p.ciel);
     // La teinte de l'environnement n'a pas de prise en r170 (`environnement.ts`) :
     // seule l'intensité passe.
     scene.environmentIntensity = p.environnement.intensite;
@@ -511,12 +549,16 @@ export function creerEclairage(
     let encore = false;
     if (progression < 1) {
       progression = Math.min(1, progression + ms / MS_TRANSITION);
-      appliquer(melangerParametres(source, cible, progression));
+      // Le dernier pas applique la cible **elle-même**, pas un mélange à 1 :
+      // les valeurs sont exactes, et `courant` retrouve l'objet mémorisé de
+      // `parametresAmbiance`, sur lequel les matières décident de ne plus se
+      // repeindre.
+      appliquer(progression >= 1 ? cible : melangerParametres(source, cible, progression));
       encore = true;
     }
     soleil.target.position.copy(centre);
     soleil.target.updateMatrixWorld();
-    soleil.position.copy(centre).add(directionSoleil(courant.soleil.elevation, courant.soleil.azimut, DISTANCE_SOLEIL));
+    soleil.position.copy(centre).add(d);
     soleil.updateMatrixWorld();
 
     const p = courant.particules;
@@ -526,6 +568,7 @@ export function creerEclairage(
       const dt = Math.min(0.1, ms / 1000);
       const derive = p.inclinaison * p.vitesse;
       const pluie = p.calque === 'pluie';
+      const flotte = p.calque === 'neige' || p.calque === 'brume' || p.calque === 'poussiere';
       if (pluie) {
         tempsImpacts += dt;
         for (let i = 0; i < 80; i++) {
@@ -545,7 +588,6 @@ export function creerEclairage(
         let y = (etats[b + 1] ?? 0) - p.vitesse * dt;
         let x = (etats[b] ?? 0) + derive * dt;
         let z = (etats[b + 2] ?? 0) + derive * dt * 0.4;
-        const flotte = p.calque === 'neige' || p.calque === 'brume' || p.calque === 'poussiere';
         if (flotte) {
           const phi = (etats[b + 3] ?? 0) + dt * 1.4;
           etats[b + 3] = phi;
@@ -597,13 +639,16 @@ export function creerEclairage(
     etat: EtatCamera, aspect: number, carte: { largeur: number; hauteur: number },
   ): CadreOmbre {
     const s = courant.soleil;
-    // Une empreinte des entrées plutôt qu'un calcul par image : le cadre ne
-    // bouge que si la caméra, le soleil ou la carte ont bougé.
-    const empreinte = [
-      etat.cible.x.toFixed(3), etat.cible.z.toFixed(3), etat.distance.toFixed(3), etat.tangage, etat.lacet,
-      aspect.toFixed(4), s.elevation.toFixed(2), s.azimut.toFixed(2), carte.largeur, carte.hauteur,
-    ].join('|');
-    if (dernierCadre && empreinte === empreinteCadre) return dernierCadre;
+    const e = entreesCadre;
+    // Le cadre ne bouge que si la caméra, le soleil ou la carte ont bougé : on
+    // compare les entrées, on ne recalcule pas.
+    if (dernierCadre
+      && e.x === etat.cible.x && e.z === etat.cible.z && e.distance === etat.distance
+      && e.tangage === etat.tangage && e.lacet === etat.lacet && e.aspect === aspect
+      && e.elevation === s.elevation && e.azimut === s.azimut
+      && e.largeur === carte.largeur && e.hauteur === carte.hauteur) {
+      return dernierCadre;
+    }
     const cadre = cadreOmbre(
       champVisibleAuSol(etat, aspect), carte, { elevation: s.elevation, azimut: s.azimut },
       { x: etat.cible.x, z: etat.cible.z }, taille,
@@ -617,7 +662,8 @@ export function creerEclairage(
     cam.updateProjectionMatrix();
     soleil.shadow.bias = cadre.bias;
     soleil.shadow.normalBias = cadre.normalBias;
-    empreinteCadre = empreinte;
+    e.x = etat.cible.x; e.z = etat.cible.z; e.distance = etat.distance; e.tangage = etat.tangage; e.lacet = etat.lacet;
+    e.aspect = aspect; e.elevation = s.elevation; e.azimut = s.azimut; e.largeur = carte.largeur; e.hauteur = carte.hauteur;
     dernierCadre = cadre;
     return cadre;
   }
@@ -640,6 +686,16 @@ export function creerEclairage(
       progression = 0;
     },
     avancer,
+    teinter: (couleur, part) => {
+      if (couleur === null || part <= 0) {
+        teinte = null;
+        partTeinte = 0;
+      } else {
+        teinte = (teinte ?? new THREE.Color()).set(couleur);
+        partTeinte = part;
+      }
+      hemisphere.color.copy(cielDe(courant));
+    },
     dispose: () => {
       grain.dispose();
       flocon.dispose();

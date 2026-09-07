@@ -1,0 +1,197 @@
+{
+  "id": "unite_porte_avions_base",
+  "type": "unite",
+  "cle": "porte_avions_base",
+  "priorite": 1,
+  "description": {
+    "en": "Tournament equipment \"Porte-avions\", homologated for the Atlas Games: a ground vehicle built on a floating hull with a waterline strake carrying a low flat deck with a raised front cab and a whip antenna with a base spring, a rotating radar dish. Clean panels, purposeful details, no markings. Silhouette contract (must be recognisable from a 65-degree top-down camera): a floating hull with a waterline strake, a low flat deck with a raised front cab, a whip antenna with a base spring, a rotating radar dish, bulk class 3 of 3. Game role: 20000 funds, 5 movement on mer, range 1-1, vision 4, traits transport. This is the SHARED BASE GEOMETRY: it carries no national livery and no ornament. Deliver it in three shape templates sharing one skeleton, one UV layout and one node naming, so a national kit can pick one of them: template A is short and compact: stubby volumes, sharp angles, everything pulled in; template B is balanced: the reference proportion, neither long nor short; template C is long and tall: extended chassis, raised superstructure, room for load. Bulk stays roughly one half to two thirds of a tile in all three so that two adjacent units never touch.",
+    "fr": "Matériel homologué « Porte-avions » des Jeux Tactiques : un engin bâti sur une coque flottante avec sa ligne de flottaison marquée portant un plateau bas surmonté d’une cabine avancée et une antenne fouet sur ressort, une antenne radar tournante. Tôles nettes, détails utiles, aucune marque. Contrat de silhouette (reconnaissable à 65° au-dessus de l’horizontale) : une coque flottante avec sa ligne de flottaison marquée, un plateau bas surmonté d’une cabine avancée, une antenne fouet sur ressort, une antenne radar tournante, encombrement 3 sur 3. Rôle de jeu : 20000 fonds, 5 de mouvement en mer, portée 1-1, vision 4, traits transport. C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale ni ornement. La livrer en trois gabarits de forme partageant un même squelette, un même dépliage et les mêmes noms de nœuds, pour qu’un kit national en retienne un : le gabarit A est court et ramassé : volumes trapus, angles francs, rien qui dépasse ; le gabarit B est équilibré : la proportion de référence, ni longue ni courte ; le gabarit C est allongé et haut : châssis étiré, superstructure dégagée, de la place pour la charge. L’encombrement reste dans les trois cas d’environ la moitié aux deux tiers d’une case, pour que deux unités voisines ne se touchent jamais."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "tournament vehicle",
+      "crisp panel lines",
+      "neutral undressed base mesh"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.7,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.58,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.95,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Contraste métal poli / peinture mate / caoutchouc : c’est elle qui vend la matière."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si des pièces nues subsistent ; une valeur uniforme sinon."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": []
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "module_antenne",
+      "module_radar"
+    ],
+    "materiauxAttendus": [
+      "mat_corps",
+      "mat_details"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "unite_porte_avions_base_lod0.glb",
+      "unite_porte_avions_base_lod1.glb",
+      "unite_porte_avions_base_albedo.png",
+      "unite_porte_avions_base_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "animations"
+    ],
+    "toleranceAabb": 0.12,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}

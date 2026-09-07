@@ -2,7 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
-import { cartographierToit, creerDecor, poseDrapeau, REPETITIONS_TOIT } from '../../src/render3d/decor';
+import {
+  cartographierToit, creerDecor, poseDrapeau, REPETITIONS_TOIT,
+} from '../../src/render3d/decor';
+import { grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
 import { SEUIL_CAPTURE } from '../../src/engine/index';
 import { CAT, partie } from '../engine/aides';
 import { carteBanc, scenarioBanc } from '../../src/app/atelier/banc';
@@ -71,6 +74,54 @@ test('chaque bâtiment porte un mât, et seul un bâtiment tenu hisse un drapeau
   // Le QG n'a plus de pavillon fusionné : le mât vivant le remplace.
   const qg = decor.groupe.getObjectByName('batiments')!.children[1]!;
   assert.ok(qg.children.length <= 7);
+  decor.dispose();
+});
+
+test('le port est un bâtiment comme les autres : quai, bassin, grue, mât et palissade', () => {
+  const etat = partie('plaine');
+  const grille = { largeur: 2, hauteur: 1, terrainDe: () => 'port' as const };
+  const enService = { ...etat, proprietaires: { '0,0': 0 as const }, desaffectes: [], unites: [] };
+  const decor = creerDecor(grille, enService, () => 0.2);
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  assert.equal(batiments.children.length, 2, 'un port par case de port');
+  const port = batiments.children[0]!;
+  assert.equal(port.userData['type'], 'port');
+  // Il se fusionne par matériau comme les autres bâtiments : jamais plus de
+  // lots que de matières, sinon un quai coûterait plus qu'une ville.
+  assert.ok(port.children.length >= 4 && port.children.length <= 8, `${port.children.length} lots`);
+  assert.ok(port.children.every((m) => m instanceof THREE.Mesh));
+  // Toutes ses matières sont des `MeshStandardMaterial` du groupe du décor :
+  // c'est la seule condition pour que `grefferBrouillardSur` les éteigne comme
+  // le reste, sans qu'une ligne soit écrite pour le port.
+  assert.ok(port.children.every((m) => (m as THREE.Mesh).material instanceof THREE.MeshStandardMaterial));
+  const uniformes = uniformesTemoins();
+  grefferBrouillardSur(decor.groupe, uniformes, 'atlas-test-port');
+  for (const m of materiaux(port)) {
+    const shader = compiler(m);
+    assert.ok(shader.fragmentShader.includes('tVisibles'), 'le port lit le masque de brouillard');
+  }
+  // Le bassin : une matière à part, sombre et lisse, qu'aucun autre bâtiment
+  // n'emploie — c'est elle qui fait lire une darse plutôt qu'une cour.
+  const couleurs = materiaux(port).map((m) => m.color.getHexString());
+  assert.ok(couleurs.includes('22434e'), `le bassin manque (${couleurs.join(' ')})`);
+  // En service, les vitrages du hangar et le feu du môle s'allument la nuit.
+  assert.ok(materiaux(port).some((m) => m.emissive.getHex() !== 0), 'le feu du môle doit pouvoir s’allumer');
+  // Et il porte un mât, comme tout bâtiment : c'est là que se lit la capture.
+  const mats = decor.groupe.getObjectByName('mats') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  assert.equal(mats.count, 2, 'un mât par port');
+  assert.equal(instance(drapeaux, 0).echelle.x, 1, 'le port tenu hisse ses couleurs');
+  assert.equal(instance(drapeaux, 1).echelle.x, 0, 'le port neutre garde le mât nu');
+
+  // Désaffecté : la palissade le ferme, la grue est démontée, rien n'est rasé.
+  const sommets = (b: THREE.Object3D): number => b.children
+    .reduce((n, m) => n + (m as THREE.Mesh).geometry.getAttribute('position').count, 0);
+  const avant = sommets(port);
+  decor.majProprietaires({ ...enService, proprietaires: {}, desaffectes: ['0,0'] });
+  const ferme = batiments.children.find((b) => b.userData['case'] === '0,0')!;
+  assert.equal(ferme.userData['desaffecte'], true);
+  assert.ok(sommets(ferme) > avant, 'la palissade s’ajoute, rien ne s’effondre');
+  assert.ok(!materiaux(ferme).some((m) => m.emissive.getHex() !== 0), 'un port fermé n’allume rien');
   decor.dispose();
 });
 
@@ -563,4 +614,186 @@ test('un pan de toit est cartographié à l’échelle du monde, ses rangs desce
     if (Math.abs(n.getX(i)) > 0.8) assert.ok(Math.abs(uv.getX(i) - pos.getY(i) * f) < 1e-9, 'tranche en x : u suit y');
     if (Math.abs(n.getZ(i)) > 0.8) assert.ok(Math.abs(uv.getY(i) - pos.getY(i) * f) < 1e-9, 'tranche en z : v suit y');
   }
+});
+
+// ---------------------------------------------------------------------------
+// Ce qui ne change pas ne se refait pas : survol, image, ambiance
+// ---------------------------------------------------------------------------
+
+test('majProprietaires ne rebalaye rien tant que bâtiments, occupants et lueurs n’ont pas changé', () => {
+  const etat = partie('plaine');
+  const soldat = etat.unites[0]!;
+  const grille = { largeur: 3, hauteur: 1, terrainDe: () => 'ville' as const };
+  const e = { ...etat, proprietaires: { '0,0': 0 as const, '1,0': 1 as const }, desaffectes: [], unites: [{ ...soldat, x: 5, y: 5 }] };
+  const decor = creerDecor(grille, e, () => 0);
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const batiments = decor.groupe.getObjectByName('batiments')!;
+  decor.majProprietaires(e, null, CAT);
+  const version = drapeaux.instanceMatrix.version;
+  const mailles = batiments.children.flatMap((b) => b.children as THREE.Mesh[]);
+  const avant = mailles.map((m) => m.material);
+
+  // Un survol : même état, ou un état égal, mêmes cases vues. Les pavillons ne
+  // repartent pas au processeur graphique, les matériaux ne sont pas
+  // réassignés. (Passer d'aucun brouillard à un ensemble de cases vues n'est
+  // pas un survol : c'est un changement d'aspect, testé plus bas.)
+  decor.majProprietaires(e, null, CAT);
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 6, y: 6 }] }, null, CAT);
+  assert.equal(drapeaux.instanceMatrix.version, version, 'rien renvoyé au GPU');
+  assert.deepEqual(mailles.map((m) => m.material), avant);
+
+  // Une unité qui monte sur une ville change l'aspect ; une unité en plaine, non.
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 0, y: 0 }] }, null, CAT);
+  assert.ok(drapeaux.instanceMatrix.version > version, 'le fantôme et le drapeau sont refaits');
+  const v2 = drapeaux.instanceMatrix.version;
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 0, y: 0 }] }, null, CAT);
+  assert.equal(drapeaux.instanceMatrix.version, v2);
+  // Ses points de capture aussi : le drapeau descend avec eux.
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 0, y: 0, pointsCapture: 10 }] }, null, CAT);
+  assert.ok(drapeaux.instanceMatrix.version > v2, 'la capture qui avance se voit');
+  const v3 = drapeaux.instanceMatrix.version;
+  // La même unité cachée par le brouillard : c'est un autre aspect, sans rien révéler.
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 0, y: 0, pointsCapture: 10 }] }, new Set(), CAT);
+  assert.ok(drapeaux.instanceMatrix.version > v3);
+  assert.equal(instance(drapeaux, 0).echelle.x, 1, 'le drapeau du camp reste hissé');
+
+  // Une lueur de chantier salit l'aspect sans changer l'état.
+  const v4 = drapeaux.instanceMatrix.version;
+  decor.chantier('1,0')!.eclairer(0.8);
+  decor.majProprietaires({ ...e, unites: [{ ...soldat, x: 0, y: 0, pointsCapture: 10 }] }, new Set(), CAT);
+  assert.ok(drapeaux.instanceMatrix.version > v4, 'la lueur est appliquée à la vue suivante');
+  // Un propriétaire qui change rebâtit, comme avant.
+  const v5 = drapeaux.instanceMatrix.version;
+  decor.majProprietaires({ ...e, proprietaires: { '0,0': 1 as const } }, null, CAT);
+  assert.ok(drapeaux.instanceMatrix.version > v5);
+  assert.equal(instance(drapeaux, 1).echelle.x, 0, 'la ville rendue neutre baisse pavillon');
+  decor.dispose();
+});
+
+test('l’ambiance n’est repeinte que si ses paramètres ou la saison changent', () => {
+  const etat = partie('plaine');
+  const grille = { largeur: 2, hauteur: 1, terrainDe: (x: number) => (x === 0 ? 'ville' as const : 'foret' as const) };
+  const decor = creerDecor(grille, { ...etat, proprietaires: { '0,0': 0 }, unites: [] }, () => 0);
+  const p = parametresAmbiance('ete', 'jour', 'clair');
+  decor.appliquerAmbiance(p, 'ete');
+  const batiment = decor.groupe.getObjectByName('batiments')!.children[0]!;
+  const mats = materiaux(batiment);
+  const arbres = decor.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const tous = [...mats, ...arbres.map((a) => a.material as THREE.MeshStandardMaterial)];
+  // On noircit tout : si l'ambiance repasse, elle repeint.
+  for (const m of tous) m.color.setHex(0x000000);
+  decor.appliquerAmbiance(p, 'ete');
+  assert.ok(tous.every((m) => m.color.getHex() === 0), 'même objet, même saison : rien repeint');
+  decor.appliquerAmbiance(p, 'automne');
+  assert.ok(tous.some((m) => m.color.getHex() !== 0), 'une autre saison repeint');
+  for (const m of tous) m.color.setHex(0x000000);
+  // `parametresAmbiance` rend le même objet pour le même triplet ; une transition,
+  // elle, mélange deux ambiances dans un objet neuf à chaque image.
+  decor.appliquerAmbiance({ ...p }, 'automne');
+  assert.ok(tous.some((m) => m.color.getHex() !== 0), 'un objet neuf — une transition — repeint');
+  decor.dispose();
+});
+
+test('la toile des drapeaux bat trente fois par seconde au plus, sans cesser de demander l’image', () => {
+  const etat = partie('plaine');
+  const grille = { largeur: 1, hauteur: 1, terrainDe: () => 'ville' as const };
+  const decor = creerDecor(grille, { ...etat, proprietaires: { '0,0': 0 }, unites: [] }, () => 0);
+  const pos = (decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh).geometry.getAttribute('position');
+  const avant = [...pos.array];
+  assert.ok(decor.avancer(16), 'la boucle doit continuer');
+  assert.deepEqual([...pos.array], avant, 'à soixante images par seconde, une image sur deux ne réécrit pas la toile');
+  assert.ok(decor.avancer(16));
+  assert.deepEqual([...pos.array], avant);
+  assert.ok(decor.avancer(16));
+  assert.notDeepEqual([...pos.array], avant, 'le battement est arrivé, au tiers de la période');
+  decor.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Le brouillard de guerre : ce qui est hors de vue est dans le noir
+// ---------------------------------------------------------------------------
+
+/** La case d'une instance, lue dans sa matrice. */
+/** Compile un matériau comme le ferait three, pour lire ce qui a été injecté. */
+function compiler(mat: THREE.MeshStandardMaterial): {
+  uniforms: Record<string, { value: unknown }>; vertexShader: string; fragmentShader: string;
+} {
+  const shader = {
+    uniforms: {} as Record<string, { value: unknown }>,
+    vertexShader: 'void main() {\n#include <project_vertex>\n}',
+    fragmentShader: 'void main() {\n#include <opaque_fragment>\n#include <fog_fragment>\n}',
+  };
+  mat.onBeforeCompile(shader as unknown as THREE.WebGLProgramParametersWithUniforms, {} as THREE.WebGLRenderer);
+  return shader;
+}
+
+/** Les uniformes du brouillard, tels que le plateau les partage. */
+function uniformesTemoins(): UniformesBrouillard {
+  return {
+    tVisibles: { value: new THREE.DataTexture(new Uint8Array([255]), 1, 1, THREE.RedFormat) },
+    uCarteBrouillard: { value: new THREE.Vector2(2, 1) },
+    uFacteurBrouillard: { value: 0 },
+    uTeinteBrouillard: { value: new THREE.Color(0x000000) },
+  };
+}
+
+test('tout le décor lit le masque de brouillard, après l’éclairage et par instance', () => {
+  // Le brouillard ne se peint plus en noircissant les couleurs : un matériau
+  // noir garde le reflet du studio et l'éclat du soleil, et c'est ce gris qu'on
+  // voyait à travers le noir. Bâtiments, arbres, pierres et pavillons lisent
+  // désormais le même masque que le sol, dans le nuanceur, après l'éclairage.
+  const etat = partie('plaine');
+  const grille = { largeur: 2, hauteur: 1, terrainDe: () => 'ville' as const };
+  const e = { ...etat, proprietaires: { '0,0': 0 as const, '1,0': 1 as const }, desaffectes: [], unites: [] };
+  const decor = creerDecor(grille, e, () => 0);
+  const uniformes = uniformesTemoins();
+  grefferBrouillardSur(decor.groupe, uniformes, 'atlas-test');
+
+  let greffes = 0;
+  let instancies = 0;
+  decor.groupe.traverse((o) => {
+    const mat = (o as THREE.Mesh).material;
+    if (!(mat instanceof THREE.MeshStandardMaterial)) return;
+    greffes += 1;
+    const shader = compiler(mat);
+    assert.ok(shader.fragmentShader.includes('tVisibles'), `${o.name} lit le masque`);
+    assert.ok(
+      shader.fragmentShader.indexOf('uvVisibles') > shader.fragmentShader.indexOf('#include <opaque_fragment>'),
+      `${o.name} l’applique après l’éclairage, pas sur le diffus`,
+    );
+    // Arbres, pierres et pavillons sont des lots instanciés : sans la matrice
+    // d'instance, toutes leurs copies liraient la case de l'origine du lot.
+    assert.ok(shader.vertexShader.includes('instanceMatrix'), `${o.name} place ses instances`);
+    assert.equal(shader.uniforms['tVisibles'], uniformes.tVisibles, 'le même masque que le sol');
+    if (o instanceof THREE.InstancedMesh) instancies += 1;
+  });
+  assert.ok(greffes > 5, `tout le décor est greffé (${greffes} matériaux)`);
+  assert.ok(instancies > 0, 'dont des lots instanciés');
+
+  // Greffer deux fois n'injecte pas deux fois.
+  const premier = materiaux(decor.groupe.getObjectByName('batiments')!.children[0]!)[0]!;
+  grefferBrouillardSur(decor.groupe, uniformes, 'atlas-test');
+  const injections = compiler(premier).fragmentShader.split('uvVisibles').length - 1;
+  assert.equal(injections, 2, 'une seule injection : la coordonnée posée puis lue');
+  decor.dispose();
+});
+
+test('une unité cachée ne rend pas son bâtiment translucide', () => {
+  const etat = partie('plaine');
+  const grille = { largeur: 2, hauteur: 1, terrainDe: () => 'ville' as const };
+  const u = { ...etat.unites[0]!, x: 1, y: 0, camp: 1 as const };
+  const e = { ...etat, proprietaires: { '0,0': 0 as const, '1,0': 1 as const }, desaffectes: [], unites: [u] };
+  const decor = creerDecor(grille, e, () => 0);
+  const cachee = decor.groupe.getObjectByName('batiments')!.children[1]!;
+
+  decor.majProprietaires(e, null);
+  const occupe = materiaux(cachee).some((m) => m.transparent);
+  assert.ok(occupe, 'sans brouillard, la ville occupée se laisse voir au travers');
+
+  decor.majProprietaires(e, new Set(['0,0']));
+  assert.ok(
+    !materiaux(cachee).some((m) => m.transparent),
+    'la case étant hors de vue, rien ne dit qu’une unité s’y trouve',
+  );
+  decor.dispose();
 });

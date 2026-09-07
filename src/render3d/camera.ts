@@ -279,6 +279,18 @@ export interface Vue3d {
   /** Coupe inertie et transition. Rend vrai si quelque chose bougeait. */
   arreter(): boolean;
   /**
+   * Retient la vue courante pour y revenir : le point visé et la distance.
+   * Sert au tour de l'adversaire, pendant lequel la caméra va voir ce qui se
+   * joue ailleurs sur la carte.
+   */
+  retenirVue(): void;
+  /**
+   * Revient à la vue retenue, en transition, et oublie la mémoire. **Ne fait
+   * rien si le joueur a lui-même bougé la caméra depuis** : on le ramènerait
+   * de force là où il a choisi de ne plus être. Rend vrai si la vue revient.
+   */
+  revenirVue(): boolean;
+  /**
    * Fait avancer inertie et transition de `ms`. Rend vrai tant que la caméra
    * bouge encore. Sous mouvement réduit, tout arrive d'un coup.
    */
@@ -302,6 +314,10 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
   const cible = new THREE.Vector3();
   const rayon = new THREE.Raycaster();
   const plan = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  // Réutilisés d'un lancer à l'autre : `caseSous` part à chaque image de survol.
+  const ndcRayon = new THREE.Vector2();
+  const pointRayon = new THREE.Vector3();
+  const ciblesRayon: THREE.Object3D[] = [];
   let largeurVue = 1;
   let hauteurVue = 1;
   /** Faux tant que la vue n'a jamais été mesurée : la première mesure ne remet pas à l'échelle. */
@@ -348,6 +364,14 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
   function interrompre(): void {
     transition = null;
   }
+
+  /**
+   * La vue retenue le temps du tour adverse, ou `null`. Elle est **oubliée dès
+   * que le joueur touche à la caméra** : un cadrage automatique se défait, un
+   * geste voulu ne se défait jamais.
+   */
+  let vueRetenue: { x: number; z: number; distance: number } | null = null;
+  const oublierVue = (): void => { vueRetenue = null; };
 
   /**
    * Pose la cible sans toucher à la distance : un pas de zoom en cours
@@ -434,11 +458,13 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     cadrerCarte,
 
     centrerCase(c: Case): void {
+      oublierVue();
       poserCible(c.x * CASE + CASE / 2, c.y * CASE + CASE / 2);
       appliquer();
     },
 
     viser(c: Case): void {
+      oublierVue();
       const distance = Math.min(viseeCourante().distance, distanceLisible(hauteurVue, PIXELS_DOUBLE_TAP));
       const p = cibleCadrage(
         carte, champAuSol(distance, camera.aspect, etat.tangage),
@@ -461,12 +487,14 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     },
 
     glisser(dx: number, dy: number): void {
+      oublierVue();
       glisserCible(dx, dy);
       appliquer();
     },
 
     zoomer(sens: number): void {
       if (sens === 0) return;
+      oublierVue();
       // On part de la visée, pas de l'état : quatre pas donnés d'un coup font
       // quatre pas, et non un seul relancé quatre fois.
       const depuis = viseeCourante().distance;
@@ -475,6 +503,7 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
 
     facteurZoom(facteur: number, ancre?: { x: number; y: number }): void {
       if (!Number.isFinite(facteur) || facteur <= 0) return;
+      oublierVue();
       interrompre();
       const auSol = (): THREE.Vector3 | null => {
         if (!ancre) return null;
@@ -495,12 +524,14 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     },
 
     tourner(sens: number): void {
+      oublierVue();
       interrompre();
       etat.lacet += Math.sign(sens) * 90;
       appliquer();
     },
 
     lancer(vx: number, vy: number): void {
+      oublierVue();
       vitesse.x = Number.isFinite(vx) ? vx : 0;
       vitesse.y = Number.isFinite(vy) ? vy : 0;
     },
@@ -511,6 +542,27 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
       vitesse.x = 0;
       vitesse.y = 0;
       return bougeait;
+    },
+
+    retenirVue(): void {
+      // La visée, pas l'état : si un zoom est en cours, c'est là qu'il allait.
+      const v = viseeCourante();
+      vueRetenue = { x: v.x, z: v.z, distance: v.distance };
+    },
+
+    revenirVue(): boolean {
+      const vue = vueRetenue;
+      vueRetenue = null;
+      if (!vue) return false;
+      const v = viseeCourante();
+      // Rien à défaire si la caméra n'a pas bougé d'un demi-dixième de case.
+      const seuil = CASE / 20;
+      if (
+        Math.abs(v.x - vue.x) < seuil && Math.abs(v.z - vue.z) < seuil
+        && Math.abs(v.distance - vue.distance) < seuil
+      ) return false;
+      lancerTransition({ x: vue.x, z: vue.z, distance: vue.distance });
+      return true;
     },
 
     avancer(ms: number, mouvementReduit = false): boolean {
@@ -550,22 +602,21 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
     },
 
     caseSous(x: number, y: number, sol: THREE.Object3D | readonly THREE.Object3D[] | null): Case | null {
-      const ndc = new THREE.Vector2(
-        (x / largeurVue) * 2 - 1,
-        -(y / hauteurVue) * 2 + 1,
-      );
-      rayon.setFromCamera(ndc, camera);
+      ndcRayon.set((x / largeurVue) * 2 - 1, -(y / hauteurVue) * 2 + 1);
+      rayon.setFromCamera(ndcRayon, camera);
       if (sol) {
-        const touches = rayon.intersectObjects(Array.isArray(sol) ? [...sol] : [sol as THREE.Object3D], false);
+        ciblesRayon.length = 0;
+        if (Array.isArray(sol)) ciblesRayon.push(...(sol as readonly THREE.Object3D[]));
+        else ciblesRayon.push(sol as THREE.Object3D);
+        const touches = rayon.intersectObjects(ciblesRayon, false);
         const premiere = touches[0];
         if (premiere) {
           const c = mondeVersCase(premiere.point.x, premiere.point.z);
           if (c.x >= 0 && c.y >= 0 && c.x < carte.largeur && c.y < carte.hauteur) return c;
         }
       }
-      const point = new THREE.Vector3();
-      if (!rayon.ray.intersectPlane(plan, point)) return null;
-      const c = mondeVersCase(point.x, point.z);
+      if (!rayon.ray.intersectPlane(plan, pointRayon)) return null;
+      const c = mondeVersCase(pointRayon.x, pointRayon.z);
       if (c.x < 0 || c.y < 0 || c.x >= carte.largeur || c.y >= carte.hauteur) return null;
       return c;
     },

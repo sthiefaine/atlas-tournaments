@@ -18,7 +18,7 @@ const NOMS_TERRAIN = ((): Record<string, string> => {
 })();
 
 /** Ordre d'affichage des caractères dans la légende. */
-const ORDRE = ['W', 'S', 'V', 'N', 'P', 'F', 'M', 'R', 'C', 'U', 'A', 'T', 'H'];
+const ORDRE = ['W', 'S', 'V', 'N', 'P', 'F', 'M', 'R', 'C', 'U', 'A', 'T', 'O', 'H'];
 
 /** Règle de colonnes : le chiffre des unités, suffisant jusqu'à 40 de large. */
 function regle(largeur: number, marge: number): string {

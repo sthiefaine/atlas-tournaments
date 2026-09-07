@@ -9,7 +9,10 @@
  *   `render3d/` (`02-architecture.md` §5), c'est donc la page de jeu qui fournit
  *   la fabrique 3D, exactement comme elle fournit l'adversaire ;
  * - l'**état logique est toujours en avance** sur l'animation : une animation
- *   n'est qu'un rattrapage visuel, et `rendu.animer()` rend une promesse ;
+ *   n'est qu'un rattrapage visuel. Les événements d'une action passent par le
+ *   réalisateur (`partition.ts`), qui écrit une **partition** jouée par deux
+ *   exécutants — la peau (`rendu.jouer`) et le HUD (`hud.jouer`) —, et **un
+ *   clic la coupe** : tout saute à l'état final, le clic ne vaut pas un ordre ;
  * - l'**adversaire joue par le même moteur** que le joueur, action par action ;
  * - la **sauvegarde est une liste d'actions** (`03-schemas.md` §14), dans
  *   `localStorage`, sous `try`/`catch` ;
@@ -20,8 +23,8 @@ import type {
   Action, Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, MotifRefus,
 } from '../engine/index';
 import {
-  appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue,
-  creerPartie, rejouer, sceneDepuis, terrainLogique, VERSION_MOTEUR,
+  appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
+  creerPartie, rejouer, sceneDepuis, terrainLogique, uniteParId, VERSION_MOTEUR,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
@@ -29,13 +32,14 @@ import type {
   Scenario,
 } from '../schemas/types';
 import { ambiance as construireAmbiance, ambianceDe, type Ambiance } from './ambiance';
-import { Controleur } from './controleur';
+import { Controleur, type VueControleur } from './controleur';
 import { monterDialogue, type ApiDialogue, type DialogueHtml } from './dialogue-html';
 import {
-  filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
+  dialogueFin, filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
 import { casesObjectifs } from './objectifs';
 import { nomCourtUnite } from './libelles';
+import { ecrirePartition } from './partition';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
@@ -86,6 +90,16 @@ export interface OptionsJeu {
   dialogues?: boolean;
   /** Signale l'ouverture et la fermeture d'une scène de dialogue à la page hôte. */
   surDialogue?: (actif: boolean) => void;
+  /**
+   * Force la réduction des animations : la partition ne dure pas, les gestes
+   * restent. Le réglage système (`prefers-reduced-motion`) s'ajoute toujours.
+   */
+  animationsReduites?: boolean;
+  /**
+   * L'écran de combat par-dessus la carte à chaque attaque (`Preferences.ecranCombat`).
+   * **Vrai par défaut** ; un clic le coupe de toute façon.
+   */
+  ecranCombat?: boolean;
   /** Expose `window.__atlas` (tests de fumée et mise au point). */
   debug?: boolean;
   /** Informe l'écran de campagne sans lui donner l'autorité sur les règles. */
@@ -253,6 +267,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   let hud: HudHtml | null = null;
   let sceneHtml: DialogueHtml | null = null;
   const minuteries = new Set<ReturnType<typeof setTimeout>>();
+  /** Une partition se joue : le prochain clic la coupe au lieu de donner un ordre. */
+  let partitionEnCours = false;
+  const mouvementReduit = conteneur.ownerDocument.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)');
 
   // --- Dialogues : une file de répliques, et le registre des scènes déjà dites.
   const avecDialogues = options.dialogues === true;
@@ -260,6 +277,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   const fileRepliques: RepliqueEnAttente[] = [];
   const scenesJouees = new Set<string>();
   let attentesDialogue: (() => void)[] = [];
+  /**
+   * La partie vient de se terminer et son dialogue de fin **n'est pas encore
+   * en file** : il attend la fin de l'animation du dernier coup. Pendant ce
+   * temps, l'écran de résultat ne doit pas se montrer — ni celui du HUD, ni
+   * celui de la page hôte, prévenue par `surDialogue`.
+   */
+  let finEnAttente = false;
 
   const controleur = new Controleur({
     etat,
@@ -274,9 +298,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       surAction: (action, evenements, avant, apres) => {
         actions.push(action);
         etat = apres;
+        // Avant tout rafraîchissement : le contrôleur appelle `surChangement`
+        // juste après, et l'écran de fin se rendrait avant que le commandant
+        // ait pu ouvrir la bouche.
+        retenirFin();
         sauvegarder();
-        annoncer(evenements);
-        void jouerAnimations(evenements, avant).then(async () => {
+        annoncer(evenements, avant);
+        void jouerPartition(evenements, avant, apres).then(async () => {
           if (!vivant) return;
           ouvrirScenes(evenements);
           rafraichir();
@@ -330,6 +358,19 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     return new Promise((resoudreAttente) => attentesDialogue.push(resoudreAttente));
   }
 
+  /**
+   * La partie vient de se terminer : on **retient** l'écran de résultat jusqu'à
+   * ce que le dialogue de fin soit en file. C'est la correction du double
+   * affichage : la fin était connue de l'état — donc du HUD et de la page —
+   * dès l'action, mais le dialogue n'était enfilé qu'après l'animation ; entre
+   * les deux, « Manche gagnée » passait une première fois.
+   */
+  function retenirFin(): void {
+    if (!avecDialogues || !etat.partie.terminee || finEnAttente || scenesJouees.has('fin')) return;
+    finEnAttente = true;
+    options.surDialogue?.(true);
+  }
+
   /** Ouvre les scènes que la dernière action vient de déclencher. */
   function ouvrirScenes(evenements: readonly EvenementJeu[]): void {
     if (!avecDialogues) return;
@@ -338,7 +379,12 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     })) enfiler(s.cle, s.repliques);
     if (etat.partie.terminee) {
       const gagne = etat.partie.vainqueur === camp && !etat.partie.nul;
-      enfiler('fin', gagne ? options.scenario.dialogueVictoire : options.scenario.dialogueDefaite);
+      // Toujours un visage en fin de match : le scénario, sinon le repli.
+      enfiler('fin', dialogueFin(options.scenario, camp, gagne, t));
+      finEnAttente = false;
+      // Rien n'a pu s'ouvrir (fin déjà dite, distribution vide) : on rend
+      // l'écran de résultat au lieu de le retenir pour toujours.
+      if (!dialogueActif()) options.surDialogue?.(false);
     }
   }
 
@@ -380,6 +426,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     usine: 'combat.usine_capturee',
     aeroport: 'combat.aeroport_capture',
     qg: 'combat.qg_capture',
+    radar: 'combat.radar_capture',
+    port: 'combat.port_capture',
   };
 
   /**
@@ -392,11 +440,36 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
    * avant de lire deux fois la même nouvelle. Une fin de partie est un **état**,
    * pas une notification : elle a son dialogue et son écran, elle n'a pas
    * besoin d'un troisième messager.
+   *
+   * `avant` est l'état d'où l'action est partie : une **panne sèche** retire
+   * l'unité de l'état d'après, et son nom ne se lit plus que là.
    */
-  function annoncer(evenements: readonly EvenementJeu[]): void {
+  function annoncer(evenements: readonly EvenementJeu[], avant: EtatPartie): void {
+    // Sous brouillard, une unité adverse hors de vue ne se raconte pas : l'annonce
+    // dirait ce que la carte cache.
+    // La vision ne se calcule que si un événement le demande : la plupart des
+    // actions n'annoncent rien.
+    let vues: ReadonlySet<string> | null | undefined;
+    const seVoit = (u: { camp: CampId; x: number; y: number }): boolean => {
+      if (u.camp === camp) return true;
+      if (vues === undefined) vues = visibles();
+      return vues === null || vues.has(cleCase(u));
+    };
     for (const e of evenements) {
       if (e.type === 'remise_en_service') {
         poserAnnonce(t('combat.batiment_remis_prime', { n: e.prime }));
+      }
+      // La panne sèche mérite un mot : l'unité sort du jeu sans qu'on l'ait
+      // frappée, et le geste `hors_jeu` seul ressemble à un tir venu de nulle part.
+      if (e.type === 'panne_seche') {
+        const u = uniteParId(avant, e.uniteId);
+        if (u && seVoit(u)) poserAnnonce(t('hud.panne_seche', { unite: nomCourtUnite(locale, cat, u.type) }));
+      }
+      // Le ravitaillement ne se voit pas sur la carte : rien ne bouge, rien ne
+      // tombe. L'annonce est son seul retour.
+      if (e.type === 'ravitaillement') {
+        const cible = uniteParId(etat, e.cibleId);
+        if (cible && seVoit(cible)) poserAnnonce(t('hud.ravitaillement', { unite: nomCourtUnite(locale, cat, cible.type) }));
       }
       if (e.type === 'production_revelee' && e.camp === 0) {
         const liste = Object.entries(e.produites)
@@ -410,9 +483,44 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     }
   }
 
-  function jouerAnimations(evenements: readonly EvenementJeu[], avant: EtatPartie): Promise<void> {
+  /** Vrai si le joueur ou son appareil demande des animations réduites. */
+  function reduit(): boolean {
+    return (mouvementReduit?.matches ?? false) || options.animationsReduites === true;
+  }
+
+  /**
+   * Joue une action : le réalisateur écrit la partition depuis les événements,
+   * la peau et le HUD la jouent ensemble, et la promesse tient jusqu'au dernier
+   * des deux. Une peau qui ne sait pas encore `jouer` retombe sur `animer`, qui
+   * met en scène elle-même : `jeu.ts` marche avec les deux. La caméra n'a le
+   * droit de recadrer que pendant le tour de l'adversaire.
+   */
+  function jouerPartition(evenements: readonly EvenementJeu[], avant: EtatPartie, apres: EtatPartie): Promise<void> {
     if (!vivant) return Promise.resolve();
-    return rendu.animer(evenements, avant).catch(() => undefined);
+    const partition = ecrirePartition(evenements, avant, apres, {
+      camp, reduit: reduit(), cadrer: attenteIa, ecranCombat: options.ecranCombat !== false,
+    });
+    partitionEnCours = true;
+    const peau = rendu.jouer ? rendu.jouer(partition) : rendu.animer(evenements, avant);
+    return Promise.all([
+      peau.catch(() => undefined),
+      hud?.jouer(partition).catch(() => undefined) ?? Promise.resolve(),
+    ]).then(() => {
+      partitionEnCours = false;
+    });
+  }
+
+  /**
+   * Un clic pendant une partition la **coupe** (`doc/10` §7.3) : la peau et le
+   * HUD sautent à l'état final, les promesses se résolvent, et la suite —
+   * scènes, rafraîchissement, tour de l'adversaire — continue. Rend vrai si un
+   * clic a servi à couper : il ne vaut alors pas un ordre.
+   */
+  function couperPartition(): boolean {
+    if (!partitionEnCours) return false;
+    rendu.couper?.();
+    hud?.couper();
+    return true;
   }
 
   function pause(ms: number): Promise<void> {
@@ -433,6 +541,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     if (!vivant || etat.partie.terminee || etat.campCourant === camp) return;
     attenteIa = true;
     controleur.attendre(true);
+    // La caméra va aller voir ce qui se joue ailleurs (les gestes `cadrer` de
+    // la partition) : on retient d'où le joueur regardait pour l'y ramener.
+    rendu.retenirVue?.();
     rafraichir();
     let suite = adversaire(etat);
     let garde = 0;
@@ -444,12 +555,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       const r = appliquer(etat, action, cat, commandants);
       if (r.ok) {
         etat = r.etat;
+        retenirFin();
         actions.push(action);
         sauvegarder();
-        annoncer(r.evenements);
+        annoncer(r.evenements, avant);
         controleur.poserEtat(etat);
         controleur.attendre(true);
-        await jouerAnimations(r.evenements, avant);
+        await jouerPartition(r.evenements, avant, etat);
         if (!vivant) return;
         ouvrirScenes(r.evenements);
         rafraichir();
@@ -466,6 +578,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     attenteIa = false;
     controleur.poserEtat(etat);
     controleur.attendre(false);
+    // La main revient au joueur : la vue aussi, sauf s'il l'a lui-même déplacée.
+    rendu.revenirVue?.();
     if (etat.partie.terminee) effacerSauvegarde(options.scenario.code, cleLocale);
     rafraichir();
   }
@@ -483,8 +597,18 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     return casesVuesPar(etat, cat, camp);
   }
 
+  /**
+   * La vue du contrôleur est un getter qui recompose surbrillances et enveloppe
+   * de tir à chaque lecture, et trois lecteurs la demandent par rafraîchissement.
+   * Pendant `rafraichir`, elle est calculée une fois et partagée.
+   */
+  let vueCourante: VueControleur | null = null;
+  function vueControleur(): VueControleur {
+    return vueCourante ?? controleur.vue;
+  }
+
   function vueInteraction(): VueInteraction {
-    const v = controleur.vue;
+    const v = vueControleur();
     return {
       catalogue: cat,
       ambiance: ambianceCourante(),
@@ -499,7 +623,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   }
 
   function vueJeu(): VueJeu {
-    const v = controleur.vue;
+    const v = vueControleur();
     return {
       etat,
       catalogue: cat,
@@ -516,12 +640,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       annonce,
       masquerFin: options.finPersonnalisee,
       sceneOuverte: dialogueActif(),
+      finEnAttente,
     };
   }
 
   /** Expose l'état de l'interaction : c'est ce que lisent les tests de fumée. */
   function marquerEtat(): void {
-    const v = controleur.vue;
+    const v = vueControleur();
     const cible = rendu.canvas ?? conteneur;
     cible.dataset['scenario'] = options.scenario.code;
     cible.dataset['rendu'] = rendu.cle;
@@ -539,11 +664,16 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
 
   function rafraichir(): void {
     if (!vivant) return;
-    rendu.afficher(etat, vueInteraction());
-    hud?.rafraichir();
-    sceneHtml?.rafraichir();
-    marquerEtat();
-    options.surEtat?.(etat);
+    vueCourante = controleur.vue;
+    try {
+      rendu.afficher(etat, vueInteraction());
+      hud?.rafraichir();
+      sceneHtml?.rafraichir();
+      marquerEtat();
+      options.surEtat?.(etat);
+    } finally {
+      vueCourante = null;
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -558,6 +688,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     effacerSauvegarde(options.scenario.code, cleLocale);
     attenteIa = false;
     annonce = null;
+    finEnAttente = false;
     fileRepliques.length = 0;
     scenesJouees.clear();
     libererAttentes();
@@ -585,6 +716,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       if (unite) (rendu.recentrer ?? rendu.cadrer).call(rendu, { x: unite.x, y: unite.y });
     },
     versEcran: (c: Case) => rendu.versEcran(c),
+    couper: () => { couperPartition(); },
   };
 
   if (options.hud !== false) hud = monterHudHtml(conteneur, api);
@@ -607,13 +739,18 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   if (avecDialogues) sceneHtml = monterDialogue(conteneur, apiDialogue);
 
   const debrancher = rendu.brancher({
-    surClicCase: (c) => controleur.clicCase(c),
+    // Un clic pendant une partition la coupe, et c'est tout ce qu'il fait.
+    surClicCase: (c) => {
+      if (couperPartition()) return;
+      controleur.clicCase(c);
+    },
     surSurvolCase: (c) => {
       if (c) controleur.poserCurseur(c);
     },
     surAnnuler: () => controleur.annuler(),
     surInspecter: (c) => controleur.inspecter(c),
     surTouche: (touche) => {
+      if (couperPartition()) return;
       switch (touche) {
         case 'haut': controleur.bougerCurseur(0, -1); break;
         case 'bas': controleur.bougerCurseur(0, 1); break;

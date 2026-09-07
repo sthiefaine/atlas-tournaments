@@ -465,3 +465,52 @@ test('un double-clic qui confirme une attaque n’ouvre pas l’inspection de la
   assert.equal(c.inspecter(restante), true);
   assert.equal(c.vue.inspection, restante.id);
 });
+
+// ---------------------------------------------------------------------------
+// Ce que coûte un survol
+// ---------------------------------------------------------------------------
+
+/**
+ * `portee()` lit `type.carburant` à chaque appel, et rien d'autre ne le lit
+ * pendant un survol : un Proxy sur le type d'unité compte donc les Dijkstra.
+ */
+function catalogueCompteur(cle: string): { cat: typeof CAT; lectures: () => number } {
+  let n = 0;
+  const type = CAT.unites[cle as keyof typeof CAT.unites];
+  assert.ok(type);
+  const espion = new Proxy(type, {
+    get(cible, prop, recepteur) {
+      if (prop === 'carburant') n += 1;
+      return Reflect.get(cible, prop, recepteur);
+    },
+  });
+  return { cat: { ...CAT, unites: { ...CAT.unites, [cle]: espion } }, lectures: () => n };
+}
+
+test('dix survols en phase de sélection ne rejouent ni le Dijkstra ni l’enveloppe de tir', () => {
+  const etat = partie();
+  const { cat, lectures } = catalogueCompteur('char_leger');
+  const c = new Controleur({ etat, catalogue: cat, camp: 0 });
+  const unite = etat.unites.find((u) => u.camp === 0 && u.type === 'char_leger');
+  assert.ok(unite);
+  c.clicCase({ x: unite.x, y: unite.y });
+  const v0 = c.vue;
+  const atteignables = v0.surbrillances.filter((s) => s.genre === 'deplacement').map((s) => s.case);
+  const attaque = v0.surbrillances.filter((s) => s.genre === 'attaque');
+  assert.ok(atteignables.length >= 3);
+  assert.ok(attaque.length > 0, 'un char a une enveloppe de tir');
+  const apresSelection = lectures();
+  assert.ok(apresSelection > 0, 'l’espion voit bien la portée se calculer');
+
+  for (let i = 0; i < 10; i += 1) {
+    c.poserCurseur(atteignables[i % atteignables.length]!);
+    const v = c.vue;
+    assert.equal(v.surbrillances.filter((s) => s.genre === 'attaque').length, attaque.length);
+    assert.equal(
+      v.surbrillances.find((s) => s.genre === 'attaque')?.case, attaque[0]!.case,
+      'l’enveloppe est la même liste, pas une liste recalculée',
+    );
+  }
+  assert.equal(lectures(), apresSelection, 'aucun nouveau calcul de portée');
+  assert.ok(c.vue.chemin.length >= 1, 'le chemin, lui, suit le curseur');
+});

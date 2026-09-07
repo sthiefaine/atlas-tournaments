@@ -21,6 +21,7 @@ import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
 import type { Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
+import type { Partition } from './partition';
 import type { QualiteRendu } from './qualite';
 import type { Surbrillance } from './surbrillance';
 
@@ -131,6 +132,15 @@ export interface Rendu {
   afficher(etat: EtatPartie, vue: VueInteraction): void;
   /** Rejoue une file d'événements ; la promesse tient jusqu'à la dernière image. */
   animer(evenements: readonly EvenementJeu[], avant: EtatPartie): Promise<void>;
+  /**
+   * Joue une **partition** (`render/partition.ts`) : les gestes datés qu'un
+   * réalisateur pur a écrits depuis les événements. Remplace `animer`, qui
+   * laissait à la peau le soin de mettre en scène ; la promesse tient jusqu'à
+   * la dernière image. Optionnel le temps que les deux chantiers se rejoignent.
+   */
+  jouer?(partition: Partition): Promise<void>;
+  /** Coupe la partition en cours : tout saute à l'état final, la promesse se résout. */
+  couper?(): void;
   /** Point d'écran → case de la carte, ou `null` hors carte. */
   versMonde(x: number, y: number): Case | null;
   /** Case → point d'écran (centre de la case), ou `null` si hors champ. */
@@ -145,6 +155,14 @@ export interface Rendu {
   zoomer?(sens: number): void;
   /** Un quart de tour autour de la carte : +1 vers la droite, −1 vers la gauche. */
   tourner?(sens: number): void;
+  /**
+   * Retient la vue du joueur avant que la caméra n'aille voir ailleurs — le
+   * tour de l'adversaire —, et l'y ramène ensuite. Un mouvement de caméra
+   * **voulu par le joueur** entre les deux annule le retour : on ne ramène
+   * jamais quelqu'un là où il a choisi de ne plus être.
+   */
+  retenirVue?(): void;
+  revenirVue?(): void;
   /**
    * Une image PNG en `data:` de l'état courant, ou `null`. Le rendu 3D **redessine
    * de façon synchrone** avant de lire : sans cela, un tampon WebGL non préservé

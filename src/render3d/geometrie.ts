@@ -37,6 +37,9 @@ export const HAUTEURS: Readonly<Record<CleTerrain, number>> = {
   pont: 0,
   plage: -0.05,
   radar: 0.02,
+  // Un quai est de plain-pied avec la plaine : c'est la mer voisine, à −0,4,
+  // qui creuse la darse, et la jonction fait le mur de quai.
+  port: 0,
 };
 
 /** Hauteur d'un terrain, `0` pour un terrain inconnu. */
@@ -93,7 +96,7 @@ export const REPLI_CENTRE = 0.28;
  * un talus ».
  */
 export const TERRAINS_BATIS: ReadonlySet<CleTerrain> = new Set<CleTerrain>([
-  'ville', 'qg', 'usine', 'aeroport', 'radar',
+  'ville', 'qg', 'usine', 'aeroport', 'radar', 'port',
 ]);
 
 /** Demi-largeur plate d'une case : la case entière quand elle est bâtie. */
@@ -258,6 +261,9 @@ export function splatTerrain(terrain: CleTerrain): Splat {
     case 'usine': return [0.15, 0.85, 0, 0];
     case 'aeroport': return [0.1, 0.9, 0, 0];
     case 'radar': return [0.15, 0.85, 0, 0];
+    // Un port est du béton et du sable mouillé, pas de l'herbe : ses lisières
+    // doivent fondre vers la plage et la mer, jamais vers la prairie.
+    case 'port': return [0, 0.62, 0.08, 0.3];
     case 'plage': return [0.05, 0, 0, 0.95];
     case 'riviere': return [0.1, 0.3, 0, 0.6];
     case 'mer': return [0, 0, 0.1, 0.9];

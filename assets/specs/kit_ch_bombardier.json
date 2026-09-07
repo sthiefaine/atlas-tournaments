@@ -1,0 +1,162 @@
+{
+  "id": "kit_ch_bombardier",
+  "type": "kit",
+  "cle": "ch_bombardier",
+  "priorite": 1,
+  "description": {
+    "en": "National kit for \"Bombardier\" in the colours and materials of Suisse. Guiding line: Watchmaking precision: brushed steel, red and white, clean lines, nothing protruding and not a single missing screw. Paint the base mesh of unite_bombardier_base in shape template A (short and compact: stubby volumes, sharp angles, everything pulled in). Base colour #c0392f, own shadow #7d2019, edge highlight #f0d2cd, accents #e8e8e6, #c9a227. Materials to read at a glance: brushed steel, flat matte paint, planed timber, stitched leather and polished brass fittings. Finish: brushed in one direction and fully matte. Add these ornaments as separate named nodes, and nothing else: a ski and pole rack, a coil of rope on a cleat and a blank instruction plate. Abstract decals only: a diagonal cross in #e8e8e6 on the toit; a sawtooth line in #c9a227 on the jupe. For colour-blind readability the socle carries a diagonal cross, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Bombardier » aux couleurs et aux matières du style « Suisse ». Ligne directrice : Précision horlogère : acier brossé, rouge et blanc, lignes nettes, aucune pièce qui dépasse et pas une vis qui manque. Peindre la géométrie de base unite_bombardier_base dans le gabarit A (court et ramassé : volumes trapus, angles francs, rien qui dépasse). Couleur de fond #c0392f, ombre propre #7d2019, liseré d’arête #f0d2cd, accents #e8e8e6, #c9a227. Matières à lire d’un coup d’œil : acier brossé, peinture mate, bois raboté, cuir cousu et garnitures de laiton poli. Finition : brossée dans un seul sens et entièrement mate. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un porte-skis et bâtons, une corde lovée sur un taquet et un panneau d’instruction vierge. Décalcomanies abstraites seulement : une croix diagonale en #e8e8e6 sur la zone « toit » ; une ligne en dents de scie en #c9a227 sur la zone « jupe ». Pour la lisibilité sans couleur, le socle porte une croix diagonale, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.95,
+      "tolerance": 0.09
+    },
+    "y": {
+      "cible": 0.45,
+      "tolerance": 0.09
+    },
+    "z": {
+      "cible": 0.85,
+      "tolerance": 0.09
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": false
+  },
+  "budget": {
+    "lod0": 10440,
+    "lod1": 3480,
+    "lod2": 1044,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "ch"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_porte_skis",
+      "ornement_corde_lovee",
+      "ornement_panneau"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_ch_bombardier_lod0.glb",
+      "kit_ch_bombardier_lod1.glb",
+      "kit_ch_bombardier_albedo.png",
+      "kit_ch_bombardier_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

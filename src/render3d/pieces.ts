@@ -50,8 +50,97 @@ export function echelleTaille(taille: TailleSilhouette): number {
 
 const DEMI_PI = Math.PI / 2;
 
-/** Les pièces d'une base de silhouette. */
-function piecesBase(base: Silhouette['base']): Piece[] {
+/**
+ * Un sous-marin est une **coque à corps de capsule** : c'est la seule
+ * combinaison du vocabulaire fermé qui dise « ça plonge ». Sa coque n'a ni
+ * pavois, ni bastingage, ni tableau arrière — un submersible n'a pas de
+ * franc-bord —, d'où cette question posée par la base avant de se dessiner.
+ */
+function submersible(corps: Silhouette['corps']): boolean {
+  return corps === 'capsule';
+}
+
+/**
+ * La coque d'un bâtiment de surface : carène sombre sous la flottaison, muraille
+ * à la couleur du camp, étrave en pointe avec ses deux joues, tableau arrière
+ * plat, et surtout un **pont** — c'est lui qu'on voit d'une caméra à 68°, et
+ * c'est son absence qui faisait lire l'ancienne coque comme une caisse.
+ */
+function coqueDeSurface(): Piece[] {
+  const pieces: Piece[] = [
+    { nom: 'carene', forme: 'boite', role: 'sombre', position: [-0.02, 0.036, 0], taille: [0.74, 0.072, 0.3] },
+    { nom: 'coque', forme: 'boite', role: 'principal', position: [-0.02, 0.118, 0], taille: [0.8, 0.11, 0.38] },
+    { nom: 'etrave', forme: 'cone', role: 'principal', position: [0.44, 0.118, 0], taille: [0.3, 0.2, 0.3], rotation: [0, 0, -DEMI_PI] },
+    { nom: 'tableau_arriere', forme: 'boite', role: 'sombre', position: [-0.41, 0.1, 0], taille: [0.05, 0.13, 0.34] },
+    { nom: 'pont', forme: 'plaque', role: 'principal', position: [-0.02, 0.181, 0], taille: [0.82, 0.026, 0.35] },
+  ];
+  // Les deux joues d'étrave : elles convergent devant la coque, et c'est ce qui
+  // fait une proue vue du dessus plutôt qu'un cône planté sur une caisse.
+  for (const cote of [-1, 1]) {
+    pieces.push({
+      nom: cote < 0 ? 'joue_gauche' : 'joue_droite', forme: 'plaque', role: 'principal',
+      position: [0.33, 0.118, cote * 0.12], taille: [0.26, 0.115, 0.022], rotation: [0, cote * 0.52, 0],
+    });
+  }
+  return pieces;
+}
+
+/**
+ * La coque d'un submersible : un cylindre à bouts ronds, un caillebotis de
+ * pont, des barres de plongée arrière en croix et une hélice. Rien ne dépasse
+ * de plus de quelques centièmes : ce qui doit se lire d'en haut, c'est un long
+ * fuseau et son kiosque, que le corps pose par-dessus.
+ */
+function coqueSubmersible(): Piece[] {
+  return [
+    { nom: 'coque_pression', forme: 'capsule', role: 'principal', position: [-0.01, 0.13, 0], taille: [0.26, 0.9, 0.26], rotation: [0, 0, DEMI_PI] },
+    // Le dôme d'étrave et la bande de flottaison : sans eux, la coque n'est
+    // qu'une gélule, et rien ne dit où est l'avant ni où passe la surface.
+    { nom: 'dome_sonar', forme: 'sphere', role: 'sombre', position: [0.4, 0.125, 0], taille: [0.2, 0.21, 0.22] },
+    { nom: 'ligne_flottaison', forme: 'plaque', role: 'sombre', position: [-0.01, 0.078, 0], taille: [0.82, 0.018, 0.24] },
+    { nom: 'caillebotis', forme: 'plaque', role: 'sombre', position: [0.02, 0.25, 0], taille: [0.5, 0.02, 0.1] },
+    { nom: 'ecoutille_avant', forme: 'cylindre', role: 'materiel', position: [0.24, 0.258, 0], taille: [0.07, 0.014, 0.07] },
+    { nom: 'ecoutille_arriere', forme: 'cylindre', role: 'materiel', position: [-0.22, 0.258, 0], taille: [0.07, 0.014, 0.07] },
+    { nom: 'barre_arriere', forme: 'plaque', role: 'sombre', position: [-0.4, 0.13, 0], taille: [0.11, 0.016, 0.32] },
+    { nom: 'safran', forme: 'plaque', role: 'sombre', position: [-0.4, 0.13, 0], taille: [0.11, 0.24, 0.018] },
+    { nom: 'helice', forme: 'cylindre', role: 'materiel', position: [-0.47, 0.13, 0], taille: [0.11, 0.024, 0.11], rotation: [0, 0, DEMI_PI] },
+  ];
+}
+
+/**
+ * La voilure : deux panneaux en flèche par côté — le panneau d'emplanture à la
+ * couleur du camp, le saumon à l'accent, ce qui donne une **cocarde d'aile** à
+ * chaque nation sans texture —, un empennage, une dérive et des réacteurs. Un
+ * bombardier (corps `bloc`) en porte quatre, un chasseur deux.
+ */
+function voilure(corps: Silhouette['corps']): Piece[] {
+  const bombardier = corps === 'bloc';
+  const pieces: Piece[] = [
+    { nom: 'derive', forme: 'plaque', role: 'clair', position: [-0.32, 0.335, 0], taille: [0.18, 0.18, 0.022], rotation: [0, 0, 0.4] },
+  ];
+  for (const cote of [-1, 1]) {
+    const nom = (racine: string): string => `${racine}_${cote < 0 ? 'gauche' : 'droite'}`;
+    // La flèche : le bout d'aile part vers l'arrière, le dièdre le relève.
+    pieces.push(
+      { nom: nom('aile'), forme: 'plaque', role: 'principal', position: [-0.05, 0.238, cote * 0.2], taille: [0.32, 0.022, 0.32], rotation: [-cote * 0.05, -cote * 0.3, 0] },
+      { nom: nom('saumon'), forme: 'plaque', role: 'clair', position: [-0.21, 0.251, cote * 0.39], taille: [0.15, 0.018, 0.16], rotation: [-cote * 0.09, -cote * 0.44, 0] },
+      { nom: nom('stabilisateur'), forme: 'plaque', role: 'principal', position: [-0.34, 0.246, cote * 0.13], taille: [0.14, 0.016, 0.17], rotation: [0, -cote * 0.28, 0] },
+    );
+    const reacteurs: readonly [string, number][] = bombardier
+      ? [['reacteur_interne', 0.13], ['reacteur_externe', 0.27]]
+      : [['reacteur', 0.09]];
+    for (const [racine, z] of reacteurs) {
+      pieces.push(
+        { nom: nom(racine), forme: 'capsule', role: 'materiel', position: [-0.12, 0.19, cote * z], taille: [0.1, 0.32, 0.1], rotation: [0, 0, DEMI_PI] },
+        { nom: nom(`${racine}_tuyere`), forme: 'cylindre', role: 'sombre', position: [-0.29, 0.19, cote * z], taille: [0.088, 0.04, 0.088], rotation: [0, 0, DEMI_PI] },
+      );
+    }
+  }
+  return pieces;
+}
+
+/** Les pièces d'une base de silhouette. Le corps compte : une coque à capsule plonge, une aile à bloc emporte. */
+function piecesBase(base: Silhouette['base'], corps: Silhouette['corps']): Piece[] {
   switch (base) {
     case 'chenilles':
       return [
@@ -71,10 +160,7 @@ function piecesBase(base: Silhouette['base']): Piece[] {
       // Une troupe à pied : des figurines, jamais un bloc. Voir `troupe`.
       return [];
     case 'coque':
-      return [
-        { nom: 'coque', forme: 'boite', role: 'principal', position: [0, 0.09, 0], taille: [0.82, 0.16, 0.36] },
-        { nom: 'etrave', forme: 'cone', role: 'principal', position: [0.44, 0.09, 0], taille: [0.2, 0.16, 0.34], rotation: [0, 0, -DEMI_PI] },
-      ];
+      return submersible(corps) ? coqueSubmersible() : coqueDeSurface();
     case 'rotor':
       return [
         { nom: 'patin_gauche', forme: 'boite', role: 'materiel', position: [0, 0.02, -0.16], taille: [0.5, 0.03, 0.04] },
@@ -87,12 +173,7 @@ function piecesBase(base: Silhouette['base']): Piece[] {
         { nom: 'rotor_queue', forme: 'plaque', role: 'materiel', position: [-0.42, 0.29, 0.02], taille: [0.03, 0.24, 0.02] },
       ];
     case 'ailes':
-      return [
-        { nom: 'aile_gauche', forme: 'plaque', role: 'principal', position: [-0.02, 0.24, -0.3], taille: [0.3, 0.02, 0.42] },
-        { nom: 'aile_droite', forme: 'plaque', role: 'principal', position: [-0.02, 0.24, 0.3], taille: [0.3, 0.02, 0.42] },
-        { nom: 'derive', forme: 'plaque', role: 'clair', position: [-0.36, 0.33, 0], taille: [0.16, 0.16, 0.02] },
-        { nom: 'train', forme: 'cylindre', role: 'materiel', position: [0.1, 0.06, 0], taille: [0.06, 0.12, 0.06] },
-      ];
+      return voilure(corps);
     case 'rail':
       return [
         { nom: 'rail_gauche', forme: 'boite', role: 'materiel', position: [0, 0.03, -0.17], taille: [0.9, 0.04, 0.05] },
@@ -106,11 +187,12 @@ function piecesBase(base: Silhouette['base']): Piece[] {
 }
 
 /** Hauteur de plancher d'une base : le corps se pose dessus. */
-function hauteurBase(base: Silhouette['base']): number {
+function hauteurBase(base: Silhouette['base'], corps: Silhouette['corps']): number {
   switch (base) {
     case 'chenilles': return 0.135;
     case 'roues': return 0.14;
-    case 'coque': return 0.17;
+    // Le pont d'un bâtiment de surface ; le dos de la coque épaisse d'un submersible.
+    case 'coque': return submersible(corps) ? 0.25 : 0.194;
     case 'rotor': return 0.19;
     case 'ailes': return 0.14;
     case 'rail': return 0.135;
@@ -118,8 +200,80 @@ function hauteurBase(base: Silhouette['base']): number {
   }
 }
 
+/**
+ * Les superstructures d'un bâtiment de surface, par corps.
+ *
+ * `plateau` est un **pont plat** débordant la coque : c'est la barge de
+ * débarquement comme le porte-avions, et ce qui les distingue est ce que
+ * `detailsCorps` y pose, lu dans les modules. `bloc` est un cuirassé : passerelle
+ * et cheminée **rejetées sur l'arrière**, parce que l'avant du pont appartient
+ * aux tourelles que les modules y posent.
+ */
+function superstructure(corps: Silhouette['corps'], y: number): Piece[] {
+  if (corps === 'plateau') {
+    return [
+      { nom: 'pont_plat', forme: 'plaque', role: 'materiel', position: [-0.02, y + 0.016, 0], taille: [0.92, 0.03, 0.46] },
+      { nom: 'liston_pont', forme: 'plaque', role: 'clair', position: [-0.02, y + 0.034, 0], taille: [0.9, 0.012, 0.44] },
+      { nom: 'rouf', forme: 'boite', role: 'principal', position: [-0.3, y + 0.09, 0], taille: [0.18, 0.1, 0.24] },
+      { nom: 'vitrage_rouf', forme: 'plaque', role: 'verre', position: [-0.22, y + 0.105, 0], taille: [0.016, 0.045, 0.2] },
+    ];
+  }
+  return [
+    { nom: 'gaillard', forme: 'boite', role: 'principal', position: [-0.16, y + 0.05, 0], taille: [0.5, 0.1, 0.32] },
+    { nom: 'passerelle', forme: 'boite', role: 'principal', position: [-0.2, y + 0.17, 0], taille: [0.24, 0.16, 0.22] },
+    { nom: 'vitrage_passerelle', forme: 'plaque', role: 'verre', position: [-0.09, y + 0.2, 0], taille: [0.018, 0.055, 0.2] },
+    { nom: 'toit_passerelle', forme: 'plaque', role: 'clair', position: [-0.2, y + 0.257, 0], taille: [0.26, 0.016, 0.24] },
+    { nom: 'cheminee', forme: 'cylindre', role: 'sombre', position: [-0.36, y + 0.15, 0], taille: [0.13, 0.19, 0.13] },
+  ];
+}
+
+/**
+ * Le kiosque d'un submersible : le massif, ses barres de plongée et sa
+ * passerelle vitrée. C'est la seule chose qui dépasse de l'eau, donc la seule
+ * chose qui doit se lire — et le module `antenne` y plante son périscope.
+ */
+function kiosque(y: number): Piece[] {
+  const pieces: Piece[] = [
+    { nom: 'kiosque', forme: 'boite', role: 'principal', position: [0.04, y + 0.09, 0], taille: [0.24, 0.18, 0.11] },
+    { nom: 'etrave_kiosque', forme: 'capsule', role: 'principal', position: [0.15, y + 0.07, 0], taille: [0.11, 0.14, 0.11] },
+    { nom: 'vitrage_kiosque', forme: 'plaque', role: 'verre', position: [0.15, y + 0.13, 0], taille: [0.016, 0.04, 0.08] },
+  ];
+  for (const cote of [-1, 1]) {
+    pieces.push({
+      nom: cote < 0 ? 'barre_plongee_gauche' : 'barre_plongee_droite', forme: 'plaque', role: 'sombre',
+      position: [0.02, y + 0.12, cote * 0.1], taille: [0.09, 0.014, 0.14],
+    });
+  }
+  return pieces;
+}
+
+/**
+ * Le fuselage d'un aéronef. Un chasseur (`capsule`) est un fuseau à verrière en
+ * bulle et nez pointu ; un bombardier (`bloc`) est une caisse à nez vitré, avec
+ * sa soute sous le ventre. Dans les deux cas la longueur court en X, comme la
+ * voilure : c'est ce qui manquait le plus à l'ancienne base, qui posait deux
+ * plaques et un train sans rien pour les tenir.
+ */
+function fuselage(corps: Silhouette['corps'], y: number): Piece[] {
+  if (corps === 'bloc') {
+    return [
+      { nom: 'corps_bloc', forme: 'boite', role: 'principal', position: [-0.04, y + 0.1, 0], taille: [0.7, 0.19, 0.24] },
+      { nom: 'nez', forme: 'capsule', role: 'clair', position: [0.36, y + 0.1, 0], taille: [0.21, 0.26, 0.21], rotation: [0, 0, DEMI_PI] },
+      { nom: 'poste', forme: 'plaque', role: 'verre', position: [0.29, y + 0.155, 0], taille: [0.11, 0.05, 0.17] },
+      { nom: 'soute', forme: 'boite', role: 'sombre', position: [-0.04, y + 0.008, 0], taille: [0.38, 0.05, 0.2] },
+    ];
+  }
+  return [
+    { nom: 'corps_capsule', forme: 'capsule', role: 'principal', position: [-0.03, y + 0.09, 0], taille: [0.18, 0.72, 0.18], rotation: [0, 0, DEMI_PI] },
+    { nom: 'nez', forme: 'cone', role: 'principal', position: [0.39, y + 0.09, 0], taille: [0.17, 0.21, 0.17], rotation: [0, 0, -DEMI_PI] },
+    { nom: 'verriere', forme: 'sphere', role: 'verre', position: [0.11, y + 0.155, 0], taille: [0.15, 0.11, 0.16] },
+  ];
+}
+
 /** Les pièces d'un corps, posées sur le plancher de la base. */
-function piecesCorps(corps: Silhouette['corps'], y: number): Piece[] {
+function piecesCorps(corps: Silhouette['corps'], y: number, base: Silhouette['base']): Piece[] {
+  if (base === 'coque') return submersible(corps) ? kiosque(y) : superstructure(corps, y);
+  if (base === 'ailes') return fuselage(corps, y);
   switch (corps) {
     case 'capsule':
       return [
@@ -141,7 +295,17 @@ function piecesCorps(corps: Silhouette['corps'], y: number): Piece[] {
 }
 
 /** Hauteur du dessus d'un corps : c'est là que se posent les modules. */
-function hauteurCorps(corps: Silhouette['corps'], y: number): number {
+function hauteurCorps(corps: Silhouette['corps'], y: number, base: Silhouette['base']): number {
+  if (base === 'coque') {
+    // Sur un submersible, le module se plante au sommet du kiosque ; sur un pont
+    // plat, juste au-dessus du pont ; sur un cuirassé, sur le gaillard, à
+    // l'avant des superstructures — une tourelle ne se pose pas sur la passerelle.
+    if (submersible(corps)) return y + 0.18;
+    return corps === 'plateau' ? y + 0.05 : y + 0.1;
+  }
+  // Ce qu'un aéronef emporte pend **sous** lui : une nacelle sur le dos d'un
+  // bombardier se lirait comme une tourelle, et un avion n'en porte pas.
+  if (base === 'ailes') return corps === 'bloc' ? y - 0.02 : y + 0.19;
   if (corps === 'capsule') return y + 0.24;
   if (corps === 'plateau') return y + 0.1;
   return y + 0.2;
@@ -197,9 +361,67 @@ function piecesModule(module: ModuleSilhouette, y: number, rang: number): Piece[
   }
 }
 
+/**
+ * L'accastillage d'un bâtiment de surface : la bande de flottaison, les pavois,
+ * la lisse de bastingage sur ses chandeliers, les bittes d'amarrage, l'ancre au
+ * bossoir, le gouvernail et les hélices. Ce sont ces pièces-là, et pas la
+ * silhouette générale, qui font qu'un navire cesse d'être une caisse pointue.
+ */
+function accastillage(): Piece[] {
+  const pieces: Piece[] = [
+    { nom: 'ligne_flottaison', forme: 'plaque', role: 'sombre', position: [-0.02, 0.066, 0], taille: [0.79, 0.02, 0.392] },
+    { nom: 'gouvernail', forme: 'plaque', role: 'sombre', position: [-0.42, 0.035, 0], taille: [0.07, 0.075, 0.02] },
+    { nom: 'cabestan', forme: 'cylindre', role: 'materiel', position: [0.3, 0.203, 0], taille: [0.06, 0.026, 0.06] },
+  ];
+  for (const cote of [-1, 1]) {
+    const nom = (racine: string): string => `${racine}_${cote < 0 ? 'gauche' : 'droite'}`;
+    pieces.push(
+      { nom: nom('pavois'), forme: 'plaque', role: 'principal', position: [-0.04, 0.208, cote * 0.171], taille: [0.76, 0.04, 0.026] },
+      { nom: nom('lisse'), forme: 'cylindre', role: 'materiel', position: [-0.04, 0.246, cote * 0.171], taille: [0.016, 0.74, 0.016], rotation: [0, 0, DEMI_PI] },
+      { nom: nom('ancre'), forme: 'plaque', role: 'materiel', position: [0.33, 0.13, cote * 0.187], taille: [0.08, 0.06, 0.014] },
+      { nom: nom('helice'), forme: 'cylindre', role: 'materiel', position: [-0.43, 0.045, cote * 0.08], taille: [0.07, 0.024, 0.07], rotation: [0, 0, DEMI_PI] },
+    );
+    for (let i = 0; i < 5; i += 1) {
+      pieces.push({
+        nom: nom(`chandelier_${i}`), forme: 'boite', role: 'materiel',
+        position: [-0.34 + i * 0.16, 0.232, cote * 0.171], taille: [0.014, 0.05, 0.014],
+      });
+    }
+    for (const [bout, x] of [['avant', 0.24], ['arriere', -0.3]] as const) {
+      pieces.push({
+        nom: nom(`bitte_${bout}`), forme: 'cylindre', role: 'materiel',
+        position: [x, 0.204, cote * 0.14], taille: [0.03, 0.028, 0.03],
+      });
+    }
+  }
+  return pieces;
+}
+
 /** Détails mécaniques larges : lisibles au zoom de jeu, sans texture de bruit. */
-function detailsBase(base: Silhouette['base']): Piece[] {
+function detailsBase(base: Silhouette['base'], corps: Silhouette['corps']): Piece[] {
   const pieces: Piece[] = [];
+  if (base === 'coque') return submersible(corps) ? [] : accastillage();
+  if (base === 'ailes') {
+    for (const cote of [-1, 1]) {
+      const nom = (racine: string): string => `${racine}_${cote < 0 ? 'gauche' : 'droite'}`;
+      // La cocarde : un disque d'accent à plat sur l'aile. C'est le seul signe
+      // qui distingue deux nations d'un aéronef vu de dessus, où le fuselage
+      // n'offre qu'une arête.
+      pieces.push(
+        { nom: nom('cocarde'), forme: 'cylindre', role: 'clair', position: [-0.06, 0.253, cote * 0.26], taille: [0.1, 0.012, 0.1] },
+        { nom: nom('pylone'), forme: 'boite', role: 'sombre', position: [-0.06, 0.222, cote * (corps === 'bloc' ? 0.13 : 0.09)], taille: [0.1, 0.036, 0.03] },
+      );
+      if (corps !== 'bloc') {
+        // Un chasseur montre ce qu'il emporte : deux missiles sous voilure,
+        // ogive à l'accent. Un bombardier garde ses bombes en soute.
+        pieces.push(
+          { nom: nom('missile'), forme: 'cylindre', role: 'materiel', position: [-0.04, 0.212, cote * 0.29], taille: [0.032, 0.24, 0.032], rotation: [0, 0, DEMI_PI] },
+          { nom: nom('ogive_missile'), forme: 'cone', role: 'clair', position: [0.11, 0.212, cote * 0.29], taille: [0.032, 0.06, 0.032], rotation: [0, 0, -DEMI_PI] },
+        );
+      }
+    }
+    return pieces;
+  }
   if (base === 'chenilles') {
     for (const [cote, z] of [['gauche', -0.278], ['droite', 0.278]] as const) {
       for (let i = 0; i < 5; i++) {
@@ -229,8 +451,81 @@ function detailsBase(base: Silhouette['base']): Piece[] {
   return pieces;
 }
 
+/**
+ * Ce qu'un pont plat porte, **lu dans les modules** : une station de veille en
+ * fait un porte-avions — îlot décalé sur tribord, axe de piste peint, brins
+ * d'arrêt —, une grue en fait une barge — porte d'étrave rabattue, saisines et
+ * cale ouverte. Les deux ont la même base et le même corps ; c'est le seul
+ * endroit du vocabulaire où la différence peut se dire.
+ */
+function pontPlat(modules: readonly ModuleSilhouette[], y: number): Piece[] {
+  const pieces: Piece[] = [];
+  if (modules.includes('radar')) {
+    pieces.push(
+      { nom: 'ilot', forme: 'boite', role: 'principal', position: [-0.19, y + 0.11, 0.16], taille: [0.2, 0.15, 0.12] },
+      { nom: 'vitrage_ilot', forme: 'plaque', role: 'verre', position: [-0.1, y + 0.14, 0.16], taille: [0.016, 0.05, 0.1] },
+      { nom: 'toit_ilot', forme: 'plaque', role: 'clair', position: [-0.19, y + 0.194, 0.16], taille: [0.22, 0.014, 0.14] },
+      { nom: 'cheminee_ilot', forme: 'cylindre', role: 'sombre', position: [-0.27, y + 0.16, 0.16], taille: [0.06, 0.11, 0.06] },
+    );
+    // L'axe de piste, en pointillé : c'est lui qui dit « on décolle d'ici ».
+    for (let i = 0; i < 5; i += 1) {
+      pieces.push({
+        nom: `axe_piste_${i}`, forme: 'plaque', role: 'clair',
+        position: [0.34 - i * 0.17, y + 0.043, -0.08], taille: [0.1, 0.008, 0.026],
+      });
+    }
+    for (let i = 0; i < 3; i += 1) {
+      pieces.push({
+        nom: `brin_arret_${i}`, forme: 'plaque', role: 'sombre',
+        position: [-0.24 - i * 0.08, y + 0.043, -0.08], taille: [0.014, 0.008, 0.26],
+      });
+    }
+    return pieces;
+  }
+  // La barge : la porte d'étrave, rabattue en rampe devant, et la cale.
+  pieces.push(
+    { nom: 'porte_etrave', forme: 'plaque', role: 'sombre', position: [0.46, y + 0.024, 0], taille: [0.16, 0.02, 0.36], rotation: [0, 0, 0.12] },
+    { nom: 'cale', forme: 'boite', role: 'sombre', position: [0.06, y + 0.03, 0], taille: [0.4, 0.022, 0.3] },
+  );
+  for (const cote of [-1, 1]) {
+    pieces.push(
+      { nom: cote < 0 ? 'muraille_cale_gauche' : 'muraille_cale_droite', forme: 'plaque', role: 'principal', position: [0.06, y + 0.06, cote * 0.19], taille: [0.44, 0.06, 0.03] },
+      { nom: cote < 0 ? 'saisine_gauche' : 'saisine_droite', forme: 'plaque', role: 'clair', position: [0.06, y + 0.05, cote * 0.11], taille: [0.4, 0.012, 0.02] },
+    );
+  }
+  return pieces;
+}
+
 function detailsCorps(s: Silhouette, y: number): Piece[] {
   const pieces: Piece[] = [];
+  if (s.base === 'coque') {
+    if (submersible(s.corps)) return pieces;
+    if (s.corps === 'plateau') return pontPlat(s.modules, y);
+    // Le cuirassé : mât de veille en treillis derrière la passerelle, projecteurs.
+    pieces.push(
+      { nom: 'mat_veille', forme: 'cylindre', role: 'materiel', position: [-0.27, y + 0.35, 0], taille: [0.02, 0.22, 0.02] },
+      { nom: 'hune', forme: 'plaque', role: 'materiel', position: [-0.27, y + 0.44, 0], taille: [0.08, 0.014, 0.1] },
+      { nom: 'coiffe_cheminee', forme: 'cylindre', role: 'materiel', position: [-0.36, y + 0.25, 0], taille: [0.145, 0.02, 0.145] },
+    );
+    for (const cote of [-1, 1]) {
+      pieces.push({
+        nom: cote < 0 ? 'projecteur_gauche' : 'projecteur_droit', forme: 'cylindre', role: 'verre',
+        position: [-0.2, y + 0.27, cote * 0.09], taille: [0.05, 0.03, 0.05], rotation: [0, 0, DEMI_PI],
+      });
+    }
+    return pieces;
+  }
+  if (s.base === 'ailes') {
+    pieces.push({ nom: 'gouverne_derive', forme: 'plaque', role: 'principal', position: [-0.39, 0.36, 0], taille: [0.06, 0.13, 0.018], rotation: [0, 0, 0.4] });
+    if (s.corps === 'bloc') {
+      // Un bombardier a une queue longue et une tourelle de queue vitrée.
+      pieces.push(
+        { nom: 'poutre_queue', forme: 'boite', role: 'principal', position: [-0.38, y + 0.1, 0], taille: [0.22, 0.13, 0.16] },
+        { nom: 'tourelle_queue', forme: 'sphere', role: 'verre', position: [-0.47, y + 0.1, 0], taille: [0.1, 0.09, 0.11] },
+      );
+    }
+    return pieces;
+  }
   if (s.base === 'chenilles' || s.base === 'roues') {
     for (const [cote, z] of [['gauche', -0.12], ['droite', 0.12]] as const) {
       pieces.push(
@@ -775,9 +1070,12 @@ export function composerSilhouette(s: Silhouette): Piece[] {
     return pieces;
   }
 
-  const yBase = hauteurBase(s.base);
-  const pieces = [...piecesBase(s.base), ...detailsBase(s.base), ...piecesCorps(s.corps, yBase), ...detailsCorps(s, yBase)];
-  const ySommet = hauteurCorps(s.corps, yBase);
+  const yBase = hauteurBase(s.base, s.corps);
+  const pieces = [
+    ...piecesBase(s.base, s.corps), ...detailsBase(s.base, s.corps),
+    ...piecesCorps(s.corps, yBase, s.base), ...detailsCorps(s, yBase),
+  ];
+  const ySommet = hauteurCorps(s.corps, yBase, s.base);
   let rang = 0;
   for (const m of s.modules.slice(0, 3)) {
     const canonEnTourelle = s.modules.includes('tourelle') && s.modules.includes('canon_long');

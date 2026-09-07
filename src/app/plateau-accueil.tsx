@@ -1,5 +1,6 @@
 import { t } from '@/i18n/index';
 import { paletteDe } from '@/render/palettes';
+import { CARACTERES_CAPTURABLES } from '@/schemas/types';
 
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
 import terrainsJson from '../../content/terrains.json';
@@ -87,10 +88,15 @@ function campDe(x: number, y: number): 0 | 1 | null {
   return camp === 0 || camp === 1 ? camp : null;
 }
 
-/** Les terrains qui prolongent une voie : voies et bâtiments (`geometrie.ts`, `relieVoie`). */
-const RELIE_VOIE = new Set(['R', 'N', 'C', 'U', 'A', 'H', 'T']);
+/**
+ * Les terrains qui prolongent une voie : voies et bâtiments (`geometrie.ts`,
+ * `relieVoie`). Les bâtiments sont **lus** des schémas, non recopiés : la copie
+ * avait été oubliée à l'arrivée du radar puis du port, qui se dessinaient en
+ * case nue sans raccorder leurs routes.
+ */
+const RELIE_VOIE = new Set(['R', 'N', ...CARACTERES_CAPTURABLES]);
 const VOIES = new Set(['R', 'N']);
-const BATIS = new Set(['C', 'U', 'A', 'H', 'T']);
+const BATIS = new Set(CARACTERES_CAPTURABLES);
 const EAU = new Set(['V', 'W']);
 
 /** L'apparence des voies en plaine : `textures-voies.ts`, `BITUME`. */

@@ -34,6 +34,18 @@ import type { Biome, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, NIVEAU_EAU, type GrilleTerrain } from './geometrie';
 
+/**
+ * Vrai si deux ensembles de cases vues disent la même chose. La vue arrive à
+ * chaque survol avec un ensemble **neuf** ; comparer les contenus est ce qui
+ * permet de ne rien refaire tant qu'aucune case n'a changé de camp.
+ */
+export function memesVisibles(a: ReadonlySet<string> | null, b: ReadonlySet<string> | null): boolean {
+  if (a === b) return true;
+  if (a === null || b === null || a.size !== b.size) return false;
+  for (const c of a) if (!b.has(c)) return false;
+  return true;
+}
+
 // ---------------------------------------------------------------------------
 // Le vocabulaire : genres, formes, espèces
 // ---------------------------------------------------------------------------
@@ -239,7 +251,7 @@ export interface Accessoire {
 }
 
 const EAU: ReadonlySet<CleTerrain> = new Set<CleTerrain>(['mer', 'riviere']);
-const BATI: ReadonlySet<CleTerrain> = new Set<CleTerrain>(['ville', 'qg', 'usine', 'aeroport', 'radar']);
+const BATI: ReadonlySet<CleTerrain> = new Set<CleTerrain>(['ville', 'qg', 'usine', 'aeroport', 'radar', 'port']);
 
 /** Vrai si l'une des huit voisines vérifie le prédicat. */
 function voisine(g: GrilleTerrain, x: number, y: number, ok: (t: CleTerrain) => boolean): boolean {
@@ -758,6 +770,10 @@ export interface Paysage {
   avancer(ms: number, mouvementReduit?: boolean): boolean;
   /** Repose tout sur le relief courant. À appeler après une mutation du terrain. */
   majRelief(): void;
+  /**
+   * Le brouillard de guerre : les accessoires et le rivage d'une case hors de
+   * refait rien si l'ensemble n'a pas changé.
+   */
   dispose(): void;
 }
 
@@ -838,7 +854,6 @@ export function creerPaysage(
   const couleur = new THREE.Color();
   let souffle = 0;
   let oscillation = 0;
-
   /** L'altitude d'un accessoire : le sol, ou le plan d'eau s'il flotte ou s'immerge. */
   function altitude(a: Accessoire, r: Regle): number {
     const sol = hauteurEn(a.x, a.z);
@@ -992,11 +1007,16 @@ export function creerPaysage(
 
   const blanc = new THREE.Color(0xffffff);
   const teinteSol = new THREE.Color();
+  // L'ambiance arrive à chaque image ; ses paramètres ne changent d'objet que
+  // pendant une transition. Même objet, même saison : rien à repeindre.
+  let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison } | null = null;
 
   return {
     groupe,
 
     appliquerAmbiance(p: ParametresAmbiance, saison: Saison): void {
+      if (ambianceAppliquee && ambianceAppliquee.p === p && ambianceAppliquee.saison === saison) return;
+      ambianceAppliquee = { p, saison };
       oscillation = p.oscillation;
       const neige = p.neigeSol;
       const s = TEINTE_SAISON[saison];

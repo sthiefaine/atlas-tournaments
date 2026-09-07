@@ -14,6 +14,7 @@
 import * as THREE from 'three';
 
 import type { GenreSurbrillance, Surbrillance } from '../render/surbrillance';
+import { cleCase } from '../engine/index';
 import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
 
@@ -141,9 +142,25 @@ function fleche(
   return geo;
 }
 
+/**
+ * L'altitude d'un décalque posé sur une case **hors de vue**. Le brouillard est
+ * un aplat noir : une nappe qui épouserait le relief invisible le trahirait —
+ * une montagne se devine à la bosse rouge de l'enveloppe de tir. Ces cases ont
+ * donc un décalque **plat**, au niveau du sol nu, et qui ne teste pas la
+ * profondeur : sans quoi la montagne noire y découperait un trou, ce qui
+ * reviendrait à dessiner la montagne.
+ */
+const ALTITUDE_BROUILLARD = 0.026;
+
 /** Ce que le rendu attend de la couche. */
 export interface CoucheSurbrillances {
   readonly groupe: THREE.Group;
+  /**
+   * Les cases que le joueur voit, ou `null` hors brouillard. Les autres
+   * reçoivent un décalque plat (`ALTITUDE_BROUILLARD`) : on sait où l'on peut
+   * aller et frapper, on ne sait pas ce qu'il y a là.
+   */
+  majVisibles(visibles: ReadonlySet<string> | null): void;
   maj(
     surbrillances: readonly Surbrillance[],
     chemin: readonly Case[],
@@ -152,6 +169,12 @@ export interface CoucheSurbrillances {
   ): void;
   /** Fait battre l'anneau de sélection. Rend vrai tant qu'il faut redessiner. */
   avancer(ms: number): boolean;
+  /**
+   * Le relief a bougé : les décalques sont rebâtis sur la dernière vue posée,
+   * quelles que soient leurs cases. Sans cela, une marée laisserait la nappe
+   * verte flotter à l'ancienne altitude jusqu'au prochain changement de cases.
+   */
+  invalider(): void;
   dispose(): void;
 }
 
@@ -231,6 +254,8 @@ export function creerSurbrillances(
 
   const genres: GenreSurbrillance[] = ['deplacement', 'attaque', 'capture', 'production', 'danger'];
   const nappes = new Map<GenreSurbrillance, THREE.Mesh>();
+  /** Les mêmes nappes, à plat, pour les cases hors de vue. */
+  const nappesBrouillard = new Map<GenreSurbrillance, THREE.Mesh>();
   for (const genre of genres) {
     const mat = new THREE.MeshBasicMaterial({
       color: COULEURS[genre],
@@ -247,6 +272,17 @@ export function creerSurbrillances(
     maille.frustumCulled = false;
     nappes.set(genre, maille);
     groupe.add(maille);
+
+    // La même couleur, à plat et sans test de profondeur, pour les cases hors
+    // de vue. Rien de visible ne peut la masquer : dans le brouillard, il n'y a
+    // ni unité dessinée ni bâtiment éclairé à recouvrir.
+    const matPlat = mat.clone();
+    matPlat.depthTest = false;
+    const plate = new THREE.Mesh(new THREE.BufferGeometry(), matPlat);
+    plate.renderOrder = 4;
+    plate.frustumCulled = false;
+    nappesBrouillard.set(genre, plate);
+    groupe.add(plate);
   }
 
   const matLisere = new THREE.MeshBasicMaterial({
@@ -290,43 +326,100 @@ export function creerSurbrillances(
   let temps = 0;
   let anime = false;
 
+  /**
+   * La clé des cases que porte chaque maille. Une géométrie n'est rebâtie que si
+   * sa clé change : au survol, seuls la flèche et le curseur bougent, et les
+   * cinq nappes — dont la verte, la plus lourde — restent telles quelles. Un
+   * décalque coûte neuf sommets et un calcul de normales par case, sept fois par
+   * survol avant cela.
+   */
+  const cles = new Map<string, string>();
+  const cleDe = (cases: readonly Case[]): string => cases.map((c) => `${c.x},${c.y}`).join(' ');
+  const remplacer = (
+    maille: THREE.Mesh, nom: string, cle: string, construire: () => THREE.BufferGeometry,
+  ): void => {
+    if (cles.get(nom) === cle) return;
+    cles.set(nom, cle);
+    maille.geometry.dispose();
+    maille.geometry = construire();
+  };
+  /** Les cases vues par le joueur, ou `null` : hors brouillard, tout est vu. */
+  let visiblesCourantes: ReadonlySet<string> | null = null;
+  const vue = (c: Case): boolean => visiblesCourantes === null || visiblesCourantes.has(cleCase(c));
+  /** Le sol plat du brouillard : la même altitude partout, donc aucun relief. */
+  const solPlat = (): number => 0;
+
+  /** La dernière vue posée, pour rebâtir sur un relief qui a bougé. */
+  let derniere: {
+    surbrillances: readonly Surbrillance[]; chemin: readonly Case[]; curseur: Case | null;
+  } | null = null;
+
+  function poser(
+    surbrillances: readonly Surbrillance[], cheminCases: readonly Case[], curseur: Case | null,
+  ): void {
+    const parGenre = new Map<GenreSurbrillance, Case[]>();
+    for (const s of surbrillances) {
+      const liste = parGenre.get(s.genre) ?? [];
+      liste.push(s.case);
+      parGenre.set(s.genre, liste);
+    }
+    for (const genre of genres) {
+      const maille = nappes.get(genre);
+      const plate = nappesBrouillard.get(genre);
+      if (!maille || !plate) continue;
+      const toutes = parGenre.get(genre) ?? [];
+      const cases = toutes.filter(vue);
+      const cachees = toutes.filter((c) => !vue(c));
+      remplacer(maille, genre, cleDe(cases), () => (cases.length > 0
+        ? decalque(cases, hauteurEn, 0.06, 0.026)
+        : new THREE.BufferGeometry()));
+      maille.visible = cases.length > 0;
+      remplacer(plate, `${genre}:brouillard`, cleDe(cachees), () => (cachees.length > 0
+        ? decalque(cachees, solPlat, 0.06, ALTITUDE_BROUILLARD)
+        : new THREE.BufferGeometry()));
+      plate.visible = cachees.length > 0;
+    }
+    const pas = cheminCases.length > 1 ? [...cheminCases] : [];
+    const cleChemin = cleDe(pas);
+    remplacer(chemin, 'chemin', cleChemin, () => (pas.length > 0
+      ? fleche(pas, hauteurEn, 0.036) : new THREE.BufferGeometry()));
+    remplacer(lisere, 'lisere', cleChemin, () => (pas.length > 0
+      ? fleche(pas, hauteurEn, 0.032, 1.3) : new THREE.BufferGeometry()));
+    chemin.visible = pas.length > 0;
+    lisere.visible = pas.length > 0;
+
+    remplacer(curseurMaille, 'curseur', curseur ? `${curseur.x},${curseur.y}` : '', () => (curseur
+      ? contour(curseur, hauteurEn, 0.055, 0.04)
+      : new THREE.BufferGeometry()));
+    curseurMaille.visible = curseur !== null;
+  }
+
   return {
     groupe,
 
     maj(surbrillances, cheminCases, curseur, positionSelection): void {
-      const parGenre = new Map<GenreSurbrillance, Case[]>();
-      for (const s of surbrillances) {
-        const liste = parGenre.get(s.genre) ?? [];
-        liste.push(s.case);
-        parGenre.set(s.genre, liste);
-      }
-      for (const genre of genres) {
-        const maille = nappes.get(genre);
-        if (!maille) continue;
-        const cases = parGenre.get(genre) ?? [];
-        maille.geometry.dispose();
-        maille.geometry = cases.length > 0
-          ? decalque(cases, hauteurEn, 0.06, 0.026)
-          : new THREE.BufferGeometry();
-        maille.visible = cases.length > 0;
-      }
-      chemin.geometry.dispose();
-      lisere.geometry.dispose();
-      const pas = cheminCases.length > 1 ? [...cheminCases] : [];
-      chemin.geometry = pas.length > 0 ? fleche(pas, hauteurEn, 0.036) : new THREE.BufferGeometry();
-      lisere.geometry = pas.length > 0 ? fleche(pas, hauteurEn, 0.032, 1.3) : new THREE.BufferGeometry();
-      chemin.visible = pas.length > 0;
-      lisere.visible = pas.length > 0;
-
-      curseurMaille.geometry.dispose();
-      curseurMaille.geometry = curseur
-        ? contour(curseur, hauteurEn, 0.055, 0.04)
-        : new THREE.BufferGeometry();
-      curseurMaille.visible = curseur !== null;
-
+      derniere = { surbrillances, chemin: cheminCases, curseur };
+      poser(surbrillances, cheminCases, curseur);
       anneau.visible = positionSelection !== null;
       if (positionSelection) anneau.position.copy(positionSelection).setY(positionSelection.y + 0.05);
       anime = positionSelection !== null;
+    },
+
+    majVisibles(visibles: ReadonlySet<string> | null): void {
+      if (visibles === visiblesCourantes) return;
+      const memes = visibles !== null && visiblesCourantes !== null
+        && visibles.size === visiblesCourantes.size
+        && [...visibles].every((k) => visiblesCourantes!.has(k));
+      visiblesCourantes = visibles;
+      if (memes) return;
+      // Le partage vu / caché change : les nappes se rebâtissent des deux côtés.
+      cles.clear();
+      if (derniere) poser(derniere.surbrillances, derniere.chemin, derniere.curseur);
+    },
+
+    invalider(): void {
+      cles.clear();
+      if (derniere) poser(derniere.surbrillances, derniere.chemin, derniere.curseur);
     },
 
     avancer(ms: number): boolean {
@@ -339,6 +432,10 @@ export function creerSurbrillances(
     },
 
     dispose(): void {
+      for (const maille of nappesBrouillard.values()) {
+        maille.geometry.dispose();
+        (maille.material as THREE.Material).dispose();
+      }
       for (const maille of nappes.values()) {
         maille.geometry.dispose();
         (maille.material as THREE.Material).dispose();

@@ -90,6 +90,10 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
         // seulement si le joueur n'a pas coupé les dialogues dans ses réglages.
         dialogues: Boolean(mission) && preferences.dialogues,
         surDialogue: setEnScene,
+        // L'écran de combat et la réduction des animations sont des réglages du
+        // joueur : la page les lit et les donne au chef d'orchestre, comme la peau.
+        ecranCombat: preferences.ecranCombat,
+        animationsReduites: preferences.animationsReduites,
         surEtat: courant => {
           setEtat(courant);
           if (mission && courant.partie.terminee && courant.partie.vainqueur === 0 && !victoireEnregistree) {

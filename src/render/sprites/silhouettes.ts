@@ -79,11 +79,33 @@ function pattes(g: Pinceau, col: Palette, equipement: Equipement): void {
   else patrouille(g, col);
 }
 
-/** Coque : la base des unités de mer. */
+/**
+ * Coque : la base des unités de mer, vue de profil, l'avant à droite. Une étrave
+ * en pointe, une bande de flottaison sombre, un pont clair et un bastingage :
+ * la version précédente était un trapèze symétrique, qui ne disait ni de quel
+ * côté était l'avant ni où finissait l'eau.
+ */
 function coque(g: Pinceau, col: Palette): void {
-  ell(g, 0, 14, 24, 6, 'rgba(255,255,255,0.35)');
-  polygone(g, [[-24, 2], [24, 2], [17, 14], [-17, 14]], col.dark);
-  rrPlein(g, -20, -2, 40, 6, 3, col.main);
+  // L'étrave fend l'eau : la moustache d'écume part de la proue vers l'arrière.
+  ell(g, -4, 15, 24, 5, 'rgba(255,255,255,0.35)');
+  ell(g, 18, 13, 10, 3, 'rgba(255,255,255,0.5)');
+  polygone(g, [[-22, 1], [21, 1], [26, 6], [17, 14], [-18, 14]], col.dark);
+  rrPlein(g, -22, -3, 45, 6, 2.5, col.main);
+  // Le liseré de flottaison : c'est lui qui pose la coque dans l'eau.
+  g.fillStyle = ACIER;
+  rr(g, -20, 8.5, 42, 2.4, 1.2);
+  g.fill();
+  // Le pont et son bastingage.
+  g.fillStyle = col.light;
+  rr(g, -19, -2, 39, 2.2, 1.1);
+  g.fill();
+  g.fillStyle = ACIER_CLAIR;
+  for (let x = -18; x <= 18; x += 6) {
+    rr(g, x, -6, 1.4, 4, 0.7);
+    g.fill();
+  }
+  rr(g, -19, -7, 40, 1.4, 0.7);
+  g.fill();
 }
 
 /** Rotor : patins et poutre de queue, la base d'un giravion. */
@@ -105,11 +127,24 @@ function rotor(g: Pinceau, col: Palette): void {
   g.fill();
 }
 
-/** Ailes : la base d'un avion. */
+/**
+ * Ailes : la base d'un avion, vu de trois quarts arrière, le nez à droite. Une
+ * voilure en flèche dont le saumon prend l'accent — c'est la seule marque de
+ * nation lisible d'en haut —, un empennage, une dérive et un réacteur. La
+ * version précédente posait deux triangles sombres et rien d'autre.
+ */
 function ailes(g: Pinceau, col: Palette): void {
-  ell(g, 0, 20, 16, 4, 'rgba(0,0,0,0.18)');
-  polygone(g, [[-6, -2], [6, -2], [22, 10], [-22, 10]], col.dark);
-  polygone(g, [[-20, -6], [-12, -6], [-16, 2], [-24, 2]], col.dark);
+  ell(g, -2, 22, 17, 4, 'rgba(0,0,0,0.18)');
+  // La dérive en flèche, puis le plan fixe horizontal, tous deux à l'arrière.
+  polygone(g, [[-24, 1], [-15, -15], [-9, -15], [-14, 1]], col.light);
+  polygone(g, [[-27, 0], [-11, 0], [-15, 5], [-29, 5]], col.dark);
+  // L'aile : bord d'attaque en flèche vers l'avant, saumon à l'accent.
+  polygone(g, [[8, 0], [21, 3], [3, 14], [-16, 10]], col.dark);
+  polygone(g, [[3, 14], [-16, 10], [-21, 12], [-1, 17]], col.light);
+  // Le réacteur sous l'emplanture, tuyère à gauche.
+  rrPlein(g, -14, 3, 21, 6, 3, ACIER);
+  rrPlein(g, -12, 4.2, 15, 2, 1, ACIER_CLAIR);
+  disque(g, -13.5, 6, 2.6, '#1b1e22');
 }
 
 /** Rail : deux files et des traverses. */

@@ -12,7 +12,7 @@ import { genererSpecs, nomModele } from '../../src/assets/index';
 import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
   analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, conformerModele, couleurMasquee, couleurPour,
-  couleurTernie, creerChargeurModeles, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque,
+  creerChargeurModeles, creerLecteurClips, definirMasque, estNomClip, forcerLod, indexTextureMasque,
   lireInventaireReseau, lodForce, masqueDe, NOM_FIGURINE, NOM_NIVEAUX, NOM_ORIENTATION, nomFichierModele, nomsClips,
   PROPORTIONS, ROTATION_AVANT, ROUTE_INVENTAIRE, SEUILS_LOD, teinterModele, type LectureFichier,
 } from '../../src/render3d/modeles';
@@ -255,14 +255,17 @@ test('un matériau masqué mélange la couleur dans le shader et garde son albé
   assert.match(shader.fragmentShader, /#include <map_fragment>\n\tdiffuseColor\.rgb = mix\( diffuseColor\.rgb, atlasCouleurEquipe, texture2D\( atlasMasqueEquipe, vUv \)\.r \);/);
 });
 
-test('la couleur ternie d’un masque suit les mêmes nombres que Materiaux.terni', () => {
+test('le double terni d’un matériau masqué reçoit le masque avec la couleur d’équipe inchangée', () => {
+  // Depuis le 6 septembre 2026, une unité qui a joué ne change que d'opacité :
+  // le clone terni garde la teinte de l'original, et le masque qu'on lui
+  // rend mélange la même couleur d'équipe.
   const materiaux = new Materiaux();
   const origine = new THREE.MeshStandardMaterial({ color: palette.main });
   const terni = materiaux.terni(origine);
-  assert.equal(couleurTernie(new THREE.Color(palette.main)).getHexString(), terni.color.getHexString());
-  // Et le terni d'un matériau masqué peut recevoir le masque à son tour.
+  assert.equal(terni.color.getHexString(), origine.color.getHexString(), 'même teinte');
+  assert.equal(terni.transparent, true);
   const masque = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
-  appliquerMasque(terni, masque, couleurTernie(new THREE.Color(palette.main)));
+  appliquerMasque(terni, masque, new THREE.Color(palette.main));
   assert.equal(masqueDe(terni), masque);
   materiaux.dispose();
 });

@@ -13,7 +13,7 @@
  * en a déjà fait une copie, l'état d'entrée n'est jamais touché.
  */
 
-import type { Case, CleUnite } from '../../schemas/index';
+import type { Case, CleUnite, UnitType } from '../../schemas/index';
 import { degatsBase } from '../catalogue';
 import { surAttaqueHooks } from '../hooks';
 import type {
@@ -28,6 +28,32 @@ export const JAUGE_PAR_PV_INFLIGE = 10;
 /** Jauge gagnée par point de PV affiché encaissé (§7.1). */
 export const JAUGE_PAR_PV_SUBI = 5;
 
+/**
+ * Vrai si `type` tire sur `cible` avec son arme secondaire (`04-gameplay.md`
+ * §5.3) : sans consommer de munition, et même à zéro. C'est une donnée du
+ * catalogue, jamais un nom d'unité : le moteur ne sait pas ce qu'est un char.
+ */
+export function tireSansMunitions(type: UnitType, cible: CleUnite): boolean {
+  return type.armeSecondaire?.includes(cible) ?? false;
+}
+
+/**
+ * Base de dégâts **effective** de `att` contre `cible`, munitions comprises
+ * (§5.3) : `0` si elle ne peut pas tirer ; la base pleine si le tir est
+ * illimité, s'il reste des munitions ou si la cible est listée à l'arme
+ * secondaire ; sinon `degatsSecondaire` — la mitrailleuse contre un blindé,
+ * pour peu — ou `0` s'il n'y en a pas. Seule source de la formule, de la
+ * prévision et de l'IA : un chiffre calculé à deux endroits finit par mentir.
+ */
+export function degatsArme(cat: Catalogue, att: Unite, cible: CleUnite): number {
+  const ta = cat.unites[att.type];
+  if (!ta) return 0;
+  const base = degatsBase(cat, att.type, cible);
+  if (base <= 0) return 0;
+  if (ta.munitions === null || (att.munitions ?? 0) > 0 || tireSansMunitions(ta, cible)) return base;
+  return ta.degatsSecondaire ?? 0;
+}
+
 /** Vrai si l'attaquant peut viser cette cible depuis cette case. */
 export function peutViser(
   etat: EtatPartie, cat: Catalogue, att: Unite, def: Unite, depuis: Case, aBouge: boolean,
@@ -36,8 +62,8 @@ export function peutViser(
   const td = cat.unites[def.type];
   if (!ta || !td) return { ok: false, motif: 'catalogue_inconnu' };
   if (att.camp === def.camp) return { ok: false, motif: 'cible_amie' };
-  if (ta.munitions !== null && (att.munitions ?? 0) <= 0) return { ok: false, motif: 'sans_munitions' };
   if (degatsBase(cat, att.type, def.type) <= 0) return { ok: false, motif: 'ne_peut_pas_viser' };
+  if (degatsArme(cat, att, def.type) <= 0) return { ok: false, motif: 'sans_munitions' };
   const d = manhattan(depuis, def);
   if (d < ta.portee[0] || d > ta.portee[1]) return { ok: false, motif: 'cible_hors_portee' };
   if (aBouge && !ta.peutTirerApresMouvement) return { ok: false, motif: 'a_bouge' };
@@ -48,7 +74,7 @@ export function peutViser(
 export function calculerDegats(
   etat: EtatPartie, cat: Catalogue, att: Unite, def: Unite, rng: Rng,
 ): number {
-  const base = degatsBase(cat, att.type, def.type);
+  const base = degatsArme(cat, att, def.type);
   if (base <= 0) return 0;
   const terrain = terrainSous(etat, cat, def);
   const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
@@ -121,7 +147,10 @@ export function resoudreAttaque(
   const avantCible = pvAffiches(def.pv);
   const degats = calculerDegats(etat, cat, att, def, rng);
   def.pv -= degats;
-  if (ta.munitions !== null && att.munitions !== null) att.munitions = Math.max(0, att.munitions - 1);
+  // Le canon compte ; la mitrailleuse — cible listée, ou tir à sec — jamais.
+  if (ta.munitions !== null && att.munitions !== null && att.munitions > 0 && !tireSansMunitions(ta, def.type)) {
+    att.munitions -= 1;
+  }
   const retires = avantCible - pvAffiches(Math.max(0, def.pv));
   crediterJauge(etat, att.camp, JAUGE_PAR_PV_INFLIGE * retires);
   crediterJauge(etat, def.camp, JAUGE_PAR_PV_SUBI * retires);
@@ -131,13 +160,14 @@ export function resoudreAttaque(
   if (!cibleHorsJeu) {
     const peutRendre = td.peutRiposter
       && manhattan(att, def) === 1
-      && (td.munitions === null || (def.munitions ?? 0) > 0)
-      && degatsBase(cat, def.type, att.type) > 0;
+      && degatsArme(cat, def, att.type) > 0;
     if (peutRendre) {
       const avantAtt = pvAffiches(att.pv);
       riposte = calculerDegats(etat, cat, def, att, rng);
       att.pv -= riposte;
-      if (td.munitions !== null && def.munitions !== null) def.munitions = Math.max(0, def.munitions - 1);
+      if (td.munitions !== null && def.munitions !== null && def.munitions > 0 && !tireSansMunitions(td, att.type)) {
+        def.munitions -= 1;
+      }
       const rendus = avantAtt - pvAffiches(Math.max(0, att.pv));
       crediterJauge(etat, def.camp, JAUGE_PAR_PV_INFLIGE * rendus);
       crediterJauge(etat, att.camp, JAUGE_PAR_PV_SUBI * rendus);
@@ -216,8 +246,7 @@ export function prevoirDuel(
   if (!cibleHorsJeu && td) {
     const peutRendre = td.peutRiposter
       && manhattan(depuis, def) === 1
-      && (td.munitions === null || (def.munitions ?? 0) > 0)
-      && degatsBase(cat, def.type, att.type) > 0;
+      && degatsArme(cat, def, att.type) > 0;
     // La riposte se calcule sur les PV **d'après** la frappe : c'est ce qui rend
     // rentable le fait de frapper en premier, et le joueur doit le voir.
     if (peutRendre) riposte = calculerDegats(etat, cat, { ...def, pv: restant }, arrive, RNG_MEDIAN);

@@ -127,12 +127,32 @@ const TERRAINS = new WeakMap<
  */
 const VUES_PARTAGEES = new Map<string, (CleTerrain | null | undefined)[]>();
 
+/**
+ * La grille jointe, par **identité** du tableau. La grille d'une carte ne
+ * s'écrit jamais — tout est vue — et c'est le seul terme de la signature qui
+ * grandit avec la carte ; or le rendu demande la signature à chaque vue, donc
+ * à chaque case survolée. Le reste (journée, climat, poses, données de la
+ * mécanique) est petit et **s'écrit en place** sur l'état de travail d'une
+ * action : il est recalculé à chaque appel, une mémoire par identité de
+ * l'état mentirait entre deux écritures.
+ */
+const GRILLES_JOINTES = new WeakMap<readonly string[], string>();
+
+function grilleJointe(grille: readonly string[]): string {
+  let jointe = GRILLES_JOINTES.get(grille);
+  if (jointe === undefined) {
+    jointe = grille.join('/');
+    GRILLES_JOINTES.set(grille, jointe);
+  }
+  return jointe;
+}
+
 /** Signature de tout ce dont dépend le terrain logique. */
 export function signatureTerrain(etat: EtatPartie): string {
   const m = etat.mecanique;
   const poses = etat.terrainsPoses.map((p) => `${p.case}:${p.terrain}`).join(',');
   const meca = m === null ? '' : `${m.cle}|${JSON.stringify(m.parametres)}|${JSON.stringify(m.donnees)}|${m.gelable}`;
-  return `${etat.carteCle}|${etat.grille.join("/")}|${etat.largeur}x${etat.hauteur}|${etat.journee}|${etat.climat.saison}`
+  return `${etat.carteCle}|${grilleJointe(etat.grille)}|${etat.largeur}x${etat.hauteur}|${etat.journee}|${etat.climat.saison}`
     + `|${etat.climat.meteo}|${etat.climat.phase}|${etat.reglages.climatPays}|${poses}|${meca}`;
 }
 

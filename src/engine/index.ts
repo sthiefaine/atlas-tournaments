@@ -85,8 +85,8 @@ export {
 } from './regles/mouvement';
 export {
   calculerDegats, crediterJauge, estIndirecte, JAUGE_PAR_PV_INFLIGE,
-  JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
-  type PrevisionDuel,
+  degatsArme, JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
+  tireSansMunitions, type PrevisionDuel,
 } from './regles/combat';
 export {
   avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, PRIME_REMISE_EN_SERVICE, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,

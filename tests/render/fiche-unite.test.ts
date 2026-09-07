@@ -5,8 +5,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { chargerCatalogue, coutBase, degatsBase, surcoutMeteo } from '../../src/engine/index';
-import { CITES, ficheUnite, traitsLisibles } from '../../src/render/fiche-unite';
+import {
+  chargerCatalogue, coutBase, degatsBase, surcoutMeteo, tireSansMunitions,
+} from '../../src/engine/index';
+import {
+  alerteCarburant, alerteMunitions, CITES, ficheUnite, PART_CARBURANT_FAIBLE, traitsLisibles,
+} from '../../src/render/fiche-unite';
 import { CLES_TERRAIN, METEOS, type CleUnite } from '../../src/schemas/index';
 
 const CAT = chargerCatalogue();
@@ -127,4 +131,85 @@ test('les traits sortent dans un ordre stable, et seulement ceux qu’on sait di
   }
   // L'infanterie capture, et c'est la première chose à savoir d'elle.
   assert.equal(traitsLisibles(CAT.unites['infanterie']!.traits)[0], 'capture');
+});
+
+test('un duel tiré à l’arme secondaire est marqué « sans munitions », dans les deux sens', () => {
+  // Le catalogue du dépôt donne au char léger une mitrailleuse contre la troupe
+  // à pied ; si un jour il la perd, le test le dira, c'est son rôle.
+  const charLeger = CAT.unites['char_leger']!;
+  assert.ok(charLeger.armeSecondaire?.includes('infanterie'), 'le char léger doit tirer l’infanterie à la mitrailleuse');
+  for (const cle of TOUTES) {
+    const f = ficheUnite(CAT, cle)!;
+    const u = CAT.unites[cle]!;
+    // « Forte » : c'est l'unité de la fiche qui tire.
+    for (const d of f.forte) {
+      assert.equal(d.sansMunitions, tireSansMunitions(u, d.unite), `${cle} → ${d.unite}`);
+    }
+    // « Craint » : c'est l'adversaire cité qui tire.
+    for (const d of f.craint) {
+      assert.equal(d.sansMunitions, tireSansMunitions(CAT.unites[d.unite]!, cle), `${d.unite} → ${cle}`);
+    }
+  }
+  // Un catalogue construit en mémoire, pour ne pas dépendre de l'équilibrage :
+  // la fiche lit `armeSecondaire`, elle ne l'invente pas. La cible choisie est
+  // la première que le char léger frappe, pour qu'elle soit sûrement citée.
+  const cible = ficheUnite(CAT, 'char_leger')!.forte[0]!.unite;
+  const memoire = {
+    ...CAT,
+    unites: {
+      ...CAT.unites,
+      char_leger: { ...CAT.unites['char_leger']!, armeSecondaire: [cible] },
+      [cible]: { ...CAT.unites[cible]!, armeSecondaire: null },
+    },
+  };
+  const char = ficheUnite(memoire, 'char_leger')!;
+  assert.equal(char.forte[0]!.unite, cible);
+  assert.equal(char.forte[0]!.sansMunitions, true);
+  assert.ok(char.forte.slice(1).every((d) => !d.sansMunitions), 'les autres duels comptent leurs munitions');
+  const fiche = ficheUnite(memoire, cible)!;
+  const parLeChar = fiche.craint.find((d) => d.unite === 'char_leger');
+  if (parLeChar) assert.equal(parLeChar.sansMunitions, true, 'craint lit l’arme de l’adversaire');
+  assert.ok(fiche.forte.every((d) => !d.sansMunitions), 'une unité sans arme secondaire n’en marque aucun');
+});
+
+test('l’alerte carburant suit la règle du tour : rouge quand la panne est au prochain tour, orange sous deux tours', () => {
+  const helico = CAT.unites['helico']!;
+  assert.ok(helico.carburant && helico.carburant.parTour > 0, 'l’hélicoptère consomme par tour');
+  const parTour = helico.carburant!.parTour;
+  assert.equal(alerteCarburant(helico, helico.carburant!.max), null);
+  assert.equal(alerteCarburant(helico, 2 * parTour), null, 'deux tours pleins : rien à signaler');
+  assert.equal(alerteCarburant(helico, 2 * parTour - 1), 'orange', 'moins de deux tours');
+  assert.equal(alerteCarburant(helico, parTour), 'rouge', 'panne au début du prochain tour');
+  assert.equal(alerteCarburant(helico, 0), 'rouge');
+
+  // Une unité qui ne consomme qu'en roulant : orange sous un cinquième du plein,
+  // rouge à zéro — elle ne bouge plus.
+  const roulante = TOUTES.map((c) => CAT.unites[c]!).find((u) => u.carburant !== null && u.carburant.parTour === 0);
+  assert.ok(roulante, 'il faut une unité au carburant sans consommation par tour');
+  const max = roulante.carburant!.max;
+  assert.equal(alerteCarburant(roulante, max), null);
+  assert.equal(alerteCarburant(roulante, Math.ceil(max * PART_CARBURANT_FAIBLE)), null, 'au seuil, pas encore');
+  assert.equal(alerteCarburant(roulante, Math.ceil(max * PART_CARBURANT_FAIBLE) - 1), 'orange');
+  assert.equal(alerteCarburant(roulante, 0), 'rouge');
+
+  // Sans carburant du tout, rien à dire.
+  const infanterie = CAT.unites['infanterie']!;
+  assert.equal(infanterie.carburant, null);
+  assert.equal(alerteCarburant(infanterie, null), null);
+  assert.equal(alerteCarburant(infanterie, 0), null);
+});
+
+test('l’alerte munitions : rouge à zéro, orange à la dernière, rien pour une arme illimitée', () => {
+  const char = CAT.unites['char_leger']!;
+  assert.ok(char.munitions !== null);
+  assert.equal(alerteMunitions(char, char.munitions!), null);
+  assert.equal(alerteMunitions(char, 2), null);
+  assert.equal(alerteMunitions(char, 1), 'orange');
+  assert.equal(alerteMunitions(char, 0), 'rouge');
+  // Le rouge tient même avec une arme secondaire : c'est l'arme principale qui est vide.
+  assert.ok(char.armeSecondaire && char.armeSecondaire.length > 0);
+  assert.equal(alerteMunitions(char, 0), 'rouge');
+  const infanterie = CAT.unites['infanterie']!;
+  assert.equal(infanterie.munitions, null);
+  assert.equal(alerteMunitions(infanterie, null), null);
 });

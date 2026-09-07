@@ -20,7 +20,7 @@
  */
 
 import type {
-  Action, Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, MotifRefus, Suite, Unite,
+  Action, Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, MotifRefus, Portee, Suite, Unite,
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, cheminVers, ciblesDepuis, cleCase,
@@ -146,7 +146,12 @@ export class Controleur {
   private venaitDeJouer = false;
 
   private cacheAtteignables: {
-    etat: EtatPartie; uniteId: string; cases: ReadonlySet<string>;
+    etat: EtatPartie; uniteId: string; portee: Portee; cases: ReadonlySet<string>;
+  } | null = null;
+
+  /** L'enveloppe de tir, mémoïsée comme les atteignables : la vue la relit trois fois par survol. */
+  private cacheEnveloppe: {
+    etat: EtatPartie; uniteId: string; atteignables: ReadonlySet<string>; cases: Case[];
   } | null = null;
 
   constructor(o: OptionsControleur) {
@@ -513,6 +518,16 @@ export class Controleur {
    * case actuelle : afficher l'enveloppe de tous ses points de chute mentirait.
    */
   private porteeAttaque(u: Unite, atteignables: ReadonlySet<string>): Case[] {
+    const cache = this.cacheEnveloppe;
+    if (cache && cache.etat === this.etatPartie && cache.uniteId === u.id && cache.atteignables === atteignables) {
+      return cache.cases;
+    }
+    const cases = this.calculerEnveloppe(u, atteignables);
+    this.cacheEnveloppe = { etat: this.etatPartie, uniteId: u.id, atteignables, cases };
+    return cases;
+  }
+
+  private calculerEnveloppe(u: Unite, atteignables: ReadonlySet<string>): Case[] {
     const type = this.cat.unites[u.type];
     if (!type) return [];
     if (Object.keys(type.degats).length === 0) return [];
@@ -559,16 +574,26 @@ export class Controleur {
    * change — c'est une identité de référence, jamais une comparaison profonde.
    */
   private atteignablesDe(u: Unite): ReadonlySet<string> {
+    return this.deplacementDe(u).cases;
+  }
+
+  /**
+   * Le calcul de mouvement d'une unité — la portée du moteur et les arrivées
+   * libres qui en découlent —, fait **une fois** par (état, unité). Le chemin
+   * du survol lit la même portée : sans ce partage, chaque case survolée
+   * rejouait le Dijkstra entier.
+   */
+  private deplacementDe(u: Unite): { portee: Portee; cases: ReadonlySet<string> } {
     const cache = this.cacheAtteignables;
-    if (cache && cache.etat === this.etatPartie && cache.uniteId === u.id) return cache.cases;
+    if (cache && cache.etat === this.etatPartie && cache.uniteId === u.id) return cache;
     const sortie = new Set<string>();
     const p = portee(this.etatPartie, this.cat, u);
     for (const c of casesAtteignables(p)) {
       if (arriveeLibre(this.etatPartie, c, u.id)) sortie.add(cleCase(c));
     }
     sortie.add(cleCase({ x: u.x, y: u.y }));
-    this.cacheAtteignables = { etat: this.etatPartie, uniteId: u.id, cases: sortie };
-    return sortie;
+    this.cacheAtteignables = { etat: this.etatPartie, uniteId: u.id, portee: p, cases: sortie };
+    return this.cacheAtteignables;
   }
 
   /** L'unité sélectionnée, ou `undefined`. */
@@ -615,8 +640,8 @@ export class Controleur {
   private majChemin(c: Case): void {
     const u = this.uniteSelectionnee();
     if (!u) return;
-    if (!this.atteignables().has(cleCase(c))) return;
-    const p = portee(this.etatPartie, this.cat, u);
+    const { portee: p, cases } = this.deplacementDe(u);
+    if (!cases.has(cleCase(c))) return;
     const chemin = cheminVers(p, { x: u.x, y: u.y }, c);
     this.cheminCourant = chemin ?? [{ x: u.x, y: u.y }];
   }

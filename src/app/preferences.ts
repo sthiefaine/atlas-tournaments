@@ -50,6 +50,12 @@ export interface Preferences {
    * `haute` allume la chaîne de post-traitement, `basse` ne l'allume jamais.
    */
   qualite: QualiteRendu;
+  /**
+   * L'écran de combat : à chaque attaque, un panneau par-dessus la carte montre
+   * les deux unités, leurs jauges et les dégâts. Allumé par défaut — c'est la
+   * grammaire d'Advance Wars —, et un clic le passe de toute façon.
+   */
+  ecranCombat: boolean;
 }
 
 /** Les deux profils d'un appareil. La liste est fermée : deux, pas « n ». */
@@ -187,6 +193,7 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   dialogues: true,
   animationsReduites: false,
   qualite: QUALITE_PAR_DEFAUT,
+  ecranCombat: true,
 });
 
 /** Ramène n'importe quoi à des préférences valides. */
@@ -198,6 +205,7 @@ export function normaliserPreferences(brut: unknown): Preferences {
     dialogues: typeof p.dialogues === 'boolean' ? p.dialogues : PREFERENCES_PAR_DEFAUT.dialogues,
     animationsReduites: p.animationsReduites === true,
     qualite: normaliserQualite(p.qualite),
+    ecranCombat: typeof p.ecranCombat === 'boolean' ? p.ecranCombat : PREFERENCES_PAR_DEFAUT.ecranCombat,
   };
 }
 

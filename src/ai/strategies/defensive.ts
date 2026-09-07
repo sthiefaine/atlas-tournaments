@@ -16,6 +16,13 @@ export const POIDS_DEFENSIVE: Poids = {
   terrain: 3,
   capteursVises: 5,
   engagement: 0.7,
+  // Elle rentre tôt, garde ses munitions et sert ses voisins avant d'avancer.
+  munitions: 2,
+  carburant: 18,
+  reserve: 2,
+  ravitaillement: 16,
+  embarquement: 14,
+  debarquement: 12,
 };
 
 /** La stratégie défensive. */

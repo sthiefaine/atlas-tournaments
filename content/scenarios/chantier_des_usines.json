@@ -18,7 +18,7 @@
     "jour": 4,
     "nuit": 2
   },
-  "catalogueVersion": 2,
+  "catalogueVersion": 4,
   "commandants": [
     {
       "camp": 0,
@@ -32,7 +32,7 @@
   ],
   "fondsDepart": 4000,
   "revenusParBatiment": 500,
-  "brouillard": false,
+  "brouillard": true,
   "limiteJournees": 18,
   "victoire": [
     {

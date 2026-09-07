@@ -1,0 +1,163 @@
+{
+  "id": "kit_ma_porte_avions",
+  "type": "kit",
+  "cle": "ma_porte_avions",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Porte-avions\" in the colours and materials of Maroc. Guiding line: Tarpaulined convoy: thick canvas with red and blue diamonds, stitched leather, brass from the tea service, and sand in every joint. Paint the base mesh of unite_porte_avions_base in shape template A (short and compact: stubby volumes, sharp angles, everything pulled in). Base colour #b0402f, own shadow #6b2117, edge highlight #f0cdc2, accents #2f7d4f, #e8c98a. Materials to read at a glance: heavy canvas, stitched leather, polished brass fittings, flat matte paint and planed timber. Finish: dust-laden on the lower third and fully matte. Add these ornaments as separate named nodes, and nothing else: a stretched canvas roof, sand ladders on the flank, a hanging water can and a rolled patterned rug. Abstract decals only: diamonds in #e8c98a on the flanc; tight hatching in #2f7d4f on the capot. For colour-blind readability the socle carries diamonds, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Porte-avions » aux couleurs et aux matières du style « Maroc ». Ligne directrice : Convoi bâché : toile épaisse aux losanges rouges et bleus, cuir cousu, laiton du service à thé, et du sable dans toutes les jointures. Peindre la géométrie de base unite_porte_avions_base dans le gabarit A (court et ramassé : volumes trapus, angles francs, rien qui dépasse). Couleur de fond #b0402f, ombre propre #6b2117, liseré d’arête #f0cdc2, accents #2f7d4f, #e8c98a. Matières à lire d’un coup d’œil : toile épaisse, cuir cousu, garnitures de laiton poli, peinture mate et bois raboté. Finition : chargée de poussière sur le tiers bas et entièrement mate. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un toit de toile tendue, des plaques de désensablement sur le flanc, un bidon d’eau accroché et un tapis à motifs roulé. Décalcomanies abstraites seulement : des losanges en #e8c98a sur la zone « flanc » ; des hachures serrées en #2f7d4f sur la zone « capot ». Pour la lisibilité sans couleur, le socle porte des losanges, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.7,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.58,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.95,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 10440,
+    "lod1": 3480,
+    "lod2": 1044,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "ma"
+    ]
+  },
+  "animations": [],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "ornement_toit_toile",
+      "ornement_plaque_de_desensablement",
+      "ornement_bidon",
+      "ornement_tapis"
+    ],
+    "materiauxAttendus": [
+      "mat_kit",
+      "mat_ornements"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_ma_porte_avions_lod0.glb",
+      "kit_ma_porte_avions_lod1.glb",
+      "kit_ma_porte_avions_albedo.png",
+      "kit_ma_porte_avions_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

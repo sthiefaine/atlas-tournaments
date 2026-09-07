@@ -36,10 +36,11 @@ export interface LibellesReglages {
   dialoguesNote: string;
   animations: string;
   animationsNote: string;
+  ecranCombat: string;
+  ecranCombatNote: string;
   qualite: string;
   qualiteNote: string;
   qualiteAuto: string;
-  qualiteHaute: string;
   qualiteBasse: string;
   actif: string;
   inactif: string;
@@ -98,7 +99,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
 
   const nomDe = (profil: Profil): string => profils.noms[profil] || (profil === 'a' ? libelles.profilA : libelles.profilB);
   const libelleQualite: Record<QualiteRendu, string> = {
-    auto: libelles.qualiteAuto, haute: libelles.qualiteHaute, basse: libelles.qualiteBasse,
+    auto: libelles.qualiteAuto, basse: libelles.qualiteBasse,
   };
 
   const changer = (partiel: Partial<Preferences>): void => {
@@ -136,7 +137,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
   };
 
   const interrupteur = (
-    cle: 'dialogues' | 'animationsReduites', titre: string, note: string,
+    cle: 'dialogues' | 'animationsReduites' | 'ecranCombat', titre: string, note: string,
   ): React.ReactElement => {
     const actif = preferences[cle];
     return <div className="reglage-ligne">
@@ -163,11 +164,12 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     <section className="reglages-groupe">
       {interrupteur('dialogues', libelles.dialogues, libelles.dialoguesNote)}
       {interrupteur('animationsReduites', libelles.animations, libelles.animationsNote)}
+      {interrupteur('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
     </section>
 
     <section className="reglages-groupe" aria-labelledby="reglage-qualite">
       <h2 id="reglage-qualite">{libelles.qualite}</h2>
-      {/* Trois choix, un rang : le réglage pilote réellement la chaîne de
+      {/* Deux choix, un rang : le réglage pilote réellement la chaîne de
           post-traitement du rendu, lue par la page de jeu au montage. */}
       <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
         {QUALITES_RENDU.map((q) => {

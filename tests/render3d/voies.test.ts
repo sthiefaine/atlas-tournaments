@@ -61,6 +61,9 @@ test('une route se raccorde aux routes, aux ponts et aux bâtiments, à rien d�
   const attendu: Record<CleTerrain, boolean> = {
     plaine: false, foret: false, montagne: false, route: true, ville: true, qg: true,
     usine: true, aeroport: true, mer: false, riviere: false, pont: true, plage: false, radar: true,
+    // Un port est un bâtiment : la route y arrive, sinon un quai serait desservi
+    // par rien et la voie s'arrêterait une case avant lui.
+    port: true,
   };
   for (const t of CLES_TERRAIN) assert.equal(relieVoie(t), attendu[t], t);
 });

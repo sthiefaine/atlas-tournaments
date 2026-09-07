@@ -1108,6 +1108,24 @@
       "pluriel": false
     },
     {
+      "cle": "combat.port_capture",
+      "texte": "Port capturé",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Annonce éphémère : le port passe sous les couleurs du camp qui vient de le prendre."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "combat.radar_capture",
+      "texte": "Station radar capturée",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Annonce éphémère : la station radar change de camp."
+      },
+      "longueurMax": 28
+    },
+    {
       "cle": "combat.aeroport_capture",
       "texte": "Aéroport capturé",
       "contexte": {
@@ -1290,6 +1308,26 @@
       },
       "longueurMax": 22,
       "pluriel": true
+    },
+    {
+      "cle": "dialogue.defaite_defaut",
+      "texte": "La manche nous échappe, mais pas la Ronde. Relisez le terrain, comptez vos unités, et revenez : on gagne rarement au premier essai, on gagne souvent au second.",
+      "contexte": {
+        "ecran": "dialogue",
+        "locuteur": "le commandant du joueur",
+        "note": "Réplique de repli en fin de match perdu, quand le scénario ne déclare aucun dialogueDefaite. Registre du jeu : rien n’est détruit, personne n’est un ennemi."
+      },
+      "longueurMax": 240
+    },
+    {
+      "cle": "dialogue.victoire_defaut",
+      "texte": "Manche gagnée. Vous avez lu le terrain avant l’adversaire et frappé au bon moment : c’est exactement ce qu’on attend d’un commandant. La Ronde continue.",
+      "contexte": {
+        "ecran": "dialogue",
+        "locuteur": "le commandant du joueur",
+        "note": "Réplique de repli en fin de match gagné, quand le scénario ne déclare aucun dialogueVictoire. « Adversaire », jamais « ennemi »."
+      },
+      "longueurMax": 240
     },
     {
       "cle": "dialogue.passer",
@@ -1562,6 +1600,15 @@
       "longueurMax": 14
     },
     {
+      "cle": "fiche.sans_munitions",
+      "texte": "Tir sans munitions",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Infobulle de la pastille « ∞ » sur une figurine de la fiche : ce duel se tire à l’arme secondaire, sans consommer de munition, même à zéro (04 §5.3)."
+      },
+      "longueurMax": 28
+    },
+    {
       "cle": "fiche.sans_trait",
       "texte": "Aucun trait",
       "contexte": {
@@ -1669,6 +1716,24 @@
       "longueurMax": 20
     },
     {
+      "cle": "hud.carburant_critique",
+      "texte": "Carburant critique : panne sèche au prochain tour",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Infobulle et libellé d’accessibilité du chiffre de carburant passé en rouge (04 §2). Une unité qui ne consomme qu’en roulant l’affiche à zéro : elle ne bouge plus."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "hud.carburant_faible",
+      "texte": "Carburant faible : moins de deux tours d’autonomie",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Infobulle et libellé d’accessibilité du chiffre de carburant passé en orange (04 §2). Sous un cinquième du plein pour une unité qui ne consomme qu’en roulant."
+      },
+      "longueurMax": 60
+    },
+    {
       "cle": "hud.commandant",
       "texte": "Commandant",
       "contexte": {
@@ -1729,6 +1794,24 @@
         "note": "Coût prévu de la riposte pour l'attaquant, en points de vie affichés. {n} vaut 0 quand la cible ne riposte pas."
       },
       "longueurMax": 20
+    },
+    {
+      "cle": "hud.ecran_combat",
+      "texte": "Combat",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre de l’écran de combat qui s’ouvre par-dessus la carte pendant une attaque."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "hud.embarquees",
+      "texte": "À bord : {liste}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d’unité d’un transport : les noms courts des unités embarquées, séparés par des virgules."
+      },
+      "longueurMax": 60
     },
     {
       "cle": "hud.embarquer",
@@ -1830,6 +1913,24 @@
       "longueurMax": 20
     },
     {
+      "cle": "hud.munitions_faible",
+      "texte": "Dernière munition",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Infobulle et libellé d’accessibilité du chiffre de munitions passé en orange, à une munition."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.munitions_vides",
+      "texte": "Plus de munitions : ni tir ni riposte à l’arme principale",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Infobulle et libellé d’accessibilité du chiffre de munitions passé en rouge, à zéro (04 §5.3). L’arme secondaire, s’il y en a une, tire encore."
+      },
+      "longueurMax": 64
+    },
+    {
       "cle": "hud.nouvelle_partie",
       "texte": "Nouvelle partie",
       "contexte": {
@@ -1845,6 +1946,24 @@
         "ecran": "hud"
       },
       "longueurMax": 10
+    },
+    {
+      "cle": "hud.panne_seche",
+      "texte": "Panne sèche : {unite} est mise hors jeu",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce éphémère au début d’un tour, quand une unité aérienne tombe à sec (04 §2). Nom court de l’unité. Jamais « détruite »."
+      },
+      "longueurMax": 56
+    },
+    {
+      "cle": "hud.passer_animation",
+      "texte": "Toucher pour passer",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Indice au bas de l’écran de combat : un clic ou un toucher coupe l’animation."
+      },
+      "longueurMax": 30
     },
     {
       "cle": "hud.panneau_unite",
@@ -1909,6 +2028,15 @@
         "note": "Étiquette dessinée sur le bâtiment QG. Deux ou trois lettres."
       },
       "longueurMax": 6
+    },
+    {
+      "cle": "hud.ravitaillement",
+      "texte": "{unite} ravitaillée : munitions et carburant au plein",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Annonce éphémère après l’ordre Ravitailler. Nom court de l’unité servie. « Unité » est féminin en français ; accorder au genre du mot dans la langue cible."
+      },
+      "longueurMax": 60
     },
     {
       "cle": "hud.ravitailler",
@@ -2266,7 +2394,7 @@
     },
     {
       "cle": "objectif.proteger",
-      "texte": "Amenez {unite} sur la case ({x}, {y}).",
+      "texte": "Amenez {unite} sur la case en or.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -2284,7 +2412,7 @@
     },
     {
       "cle": "objectif.relais",
-      "texte": "Relais validés : {n} / {total}. Prochain : ({x}, {y}).",
+      "texte": "Relais validés : {n} / {total}. Le prochain est en or.",
       "contexte": {
         "ecran": "campagne"
       },
@@ -2413,6 +2541,24 @@
       "contexte": {
         "ecran": "reglages",
         "note": "Aide sous l'interrupteur des dialogues."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "reglages.ecran_combat",
+      "texte": "Écran de combat",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Interrupteur : à chaque attaque, un panneau montre les deux unités, leurs jauges et les dégâts."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "reglages.ecran_combat_note",
+      "texte": "Les deux unités face à face, jauges et dégâts. Un clic le passe.",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Aide sous l’interrupteur de l’écran de combat."
       },
       "longueurMax": 80
     },
@@ -2570,15 +2716,6 @@
       "longueurMax": 18
     },
     {
-      "cle": "reglages.qualite_haute",
-      "texte": "Haute",
-      "contexte": {
-        "ecran": "reglages",
-        "note": "Choix de qualité : post-traitement toujours allumé."
-      },
-      "longueurMax": 16
-    },
-    {
       "cle": "reglages.qualite_basse",
       "texte": "Basse",
       "contexte": {
@@ -2589,7 +2726,7 @@
     },
     {
       "cle": "reglages.qualite_note",
-      "texte": "Haute ajoute l’occlusion ambiante et le grain de photo ; automatique ne les allume que si l’appareil suit.",
+      "texte": "Automatique n’allume l’occlusion ambiante et le grain de photo que si l’appareil suit ; basse ne les allume jamais.",
       "contexte": {
         "ecran": "reglages",
         "note": "Aide sous le choix de qualité."
@@ -2734,6 +2871,15 @@
     {
       "cle": "trait.genie",
       "texte": "Génie",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "trait.plongee",
+      "texte": "Plongée",
       "contexte": {
         "ecran": "menu_production",
         "note": "Trait d’unité (04-gameplay.md §13.2), fiche d’unité."

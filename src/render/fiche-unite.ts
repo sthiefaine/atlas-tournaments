@@ -19,11 +19,11 @@
  */
 
 import {
-  coutBase, degatsBase, facteurMouvementMeteo, porte, surcoutMeteo,
+  coutBase, degatsBase, facteurMouvementMeteo, porte, surcoutMeteo, tireSansMunitions,
   type Catalogue,
 } from '../engine/index';
 import {
-  CLES_TERRAIN, METEOS, type CleTerrain, type CleUnite, type Meteo, type Trait,
+  CLES_TERRAIN, METEOS, type CleTerrain, type CleUnite, type Meteo, type Trait, type UnitType,
 } from '../schemas/types';
 
 /** Combien d'adversaires on cite de chaque côté. Trois : au-delà, on ne lit plus. */
@@ -34,6 +34,12 @@ export interface Duel {
   unite: CleUnite;
   /** Dégâts de base, en points de vie sur cent. */
   degats: number;
+  /**
+   * Le tireur frappe cette cible à l'**arme secondaire** (`04-gameplay.md`
+   * §5.3) : sans consommer de munition, et même à zéro. Dans `forte`, c'est
+   * l'unité de la fiche qui tire ; dans `craint`, c'est l'adversaire cité.
+   */
+  sansMunitions: boolean;
 }
 
 /** Ce qui gêne une unité un jour donné. */
@@ -90,8 +96,19 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
     .sort((a, b) => (b.degats - a.degats) || (a.unite < b.unite ? -1 : 1))
     .slice(0, CITES);
 
-  const forte = trier(adversaires.map((cible) => ({ unite: cible, degats: degatsBase(cat, cle, cible) })));
-  const craint = trier(adversaires.map((par) => ({ unite: par, degats: degatsBase(cat, par, cle) })));
+  // L'arme secondaire est lue par `tireSansMunitions`, la fonction du moteur :
+  // la fiche ne sait pas ce qu'est une mitrailleuse, elle demande.
+  const forte = trier(adversaires.map((cible) => ({
+    unite: cible, degats: degatsBase(cat, cle, cible), sansMunitions: tireSansMunitions(u, cible),
+  })));
+  const craint = trier(adversaires.map((par) => {
+    const tireur = cat.unites[par];
+    return {
+      unite: par,
+      degats: degatsBase(cat, par, cle),
+      sansMunitions: tireur ? tireSansMunitions(tireur, cle) : false,
+    };
+  }));
 
   // Les coûts passent par `coutBase`, qui applique déjà `vol` et
   // `tout_terrain` : une unité aérienne ressort donc rapide partout, sans que
@@ -138,12 +155,65 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite): FicheUnite | null {
 /** Les traits qui méritent d'être dits en clair au joueur, dans cet ordre. */
 export const TRAITS_CITES: readonly Trait[] = [
   'capture', 'transport', 'tir_indirect', 'anti_air', 'vol', 'amphibie',
-  'tout_terrain', 'ravitaillement', 'vision_etendue', 'furtif_nuit',
+  'plongee', 'tout_terrain', 'ravitaillement', 'vision_etendue', 'furtif_nuit',
 ];
 
 /** Les traits d'une unité, dans l'ordre de lecture et sans les inconnus. */
 export function traitsLisibles(traits: readonly Trait[]): Trait[] {
   return TRAITS_CITES.filter((t) => traits.includes(t));
+}
+
+// ---------------------------------------------------------------------------
+// Les alertes d'une unité **en jeu** : carburant et munitions
+// ---------------------------------------------------------------------------
+
+/**
+ * Le niveau d'alerte d'une statistique : `orange` quand il faut y penser au
+ * prochain tour, `rouge` quand la règle mord déjà ou mordra au tour suivant,
+ * `null` quand tout va bien. Le HUD n'ajoute aucun mot : une couleur sur le
+ * chiffre, et un libellé pour l'accessibilité.
+ */
+export type Alerte = 'orange' | 'rouge' | null;
+
+/** Sous cette part du plein, une unité qui ne consomme qu'en roulant est signalée. */
+export const PART_CARBURANT_FAIBLE = 0.2;
+
+/**
+ * L'alerte carburant (`04-gameplay.md` §2 : « le HUD signale en orange toute
+ * unité aérienne à moins de 2 tours d'autonomie : la panne sèche ne doit
+ * jamais être une surprise »).
+ *
+ * Une unité qui consomme **par tour** tombe en panne au début du tour où son
+ * carburant ne couvre plus la consommation : à `carburant ≤ parTour` elle ne
+ * passera pas le prochain début de tour (rouge), à moins de deux tours elle
+ * est orange. Une unité qui ne consomme qu'en roulant ne tombe jamais en
+ * panne, elle s'arrête : orange sous un cinquième du plein, rouge à zéro,
+ * quand elle ne bouge plus du tout.
+ */
+export function alerteCarburant(type: UnitType, carburant: number | null): Alerte {
+  if (type.carburant === null || carburant === null) return null;
+  const { parTour, max } = type.carburant;
+  if (parTour > 0) {
+    if (carburant <= parTour) return 'rouge';
+    if (carburant < 2 * parTour) return 'orange';
+    return null;
+  }
+  if (carburant <= 0) return 'rouge';
+  if (max > 0 && carburant < max * PART_CARBURANT_FAIBLE) return 'orange';
+  return null;
+}
+
+/**
+ * L'alerte munitions (`04-gameplay.md` §5.3 : « à 0 munition, l'unité ne peut
+ * ni attaquer ni riposter — le HUD l'affiche en rouge »). Orange à la dernière.
+ * Une arme secondaire ne change rien au rouge : c'est l'arme principale qui
+ * est vide, et c'est elle que le chiffre compte.
+ */
+export function alerteMunitions(type: UnitType, munitions: number | null): Alerte {
+  if (type.munitions === null || munitions === null) return null;
+  if (munitions <= 0) return 'rouge';
+  if (munitions === 1) return 'orange';
+  return null;
 }
 
 /** `porte` du moteur, réexporté : le HUD n'a pas à importer deux couches. */
