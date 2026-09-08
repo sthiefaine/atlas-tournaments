@@ -598,6 +598,8 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
   /** La classe de la zone qui porte cet emplacement : hud-carte, hud-rail, ou la racine. */
   zone(nom: string): string;
   conteneur: FauxElement;
+  /** Rejoue un rendu : la vue est une fonction, le test la fait varier entre deux appels. */
+  rafraichir(): void;
   demonter(): void;
 } {
   const { conteneur } = document();
@@ -614,6 +616,7 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
     slots,
     zone: (nom) => slots.get(nom)?.parent?.className ?? '',
     conteneur,
+    rafraichir: () => hud.rafraichir(),
     demonter: () => hud.demonter(),
   };
 }
@@ -1044,9 +1047,15 @@ test('le démontage rend son conteneur tel quel : pas de marge de colonne orphel
 test('la colonne montre les deux pouvoirs, et un bouton éteint dit pourquoi', () => {
   const etat = partie();
   const pouvoirs = {
-    normal: { nom: 'commandant.x.pouvoir', cout: 100, pret: true },
-    super: { nom: 'commandant.x.super', cout: 300, pret: false },
-  };
+    normal: {
+      nom: 'commandant.x.pouvoir', cout: 100, pret: true,
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.2 } }],
+    },
+    super: {
+      nom: 'commandant.x.super', cout: 300, pret: false,
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'mouvement', valeur: 1 } }],
+    },
+  } as const;
   const large = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }), { largeur: 1400, hauteur: 900 });
   const html = large.slots.get('dock')!.innerHTML;
   assert.match(html, /data-action="pouvoir" data-niveau="normal"(?! disabled)/);
@@ -1088,19 +1097,118 @@ test('le compteur de capture dit le seuil de la case, et le QG en demande le dou
   surQg.demonter();
 });
 
-test('le bandeau de partie dit le revenu, et le compte de bâtiments n’apparaît que dans la colonne', () => {
+test('le bandeau de partie tient sur une bande : la journée, les fonds, le revenu — et rien d’autre', () => {
   const etat = partie();
-  const large = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
-  const html = large.slots.get('partie')!.innerHTML;
-  assert.match(html, /class="revenu"/, 'le solde dit où l’on en est, le revenu dit où l’on va');
-  assert.match(html, /hud\.revenu \{&quot;n&quot;:/);
-  assert.match(html, /class="points"/);
-  assert.match(html, /hud\.batiments \{&quot;n&quot;:\d+,&quot;m&quot;:\d+\}/);
-  large.demonter();
-
-  const etroit = hudSur(() => vueDe(etat, { x: 1, y: 1 }));
-  const compact = etroit.slots.get('partie')!.innerHTML;
-  assert.match(compact, /class="revenu"/, 'le revenu tient partout');
-  assert.doesNotMatch(compact, /class="points"/, 'le compte de bâtiments ne tient pas sur un bandeau de 44 px');
-  etroit.demonter();
+  for (const taille of [undefined, { largeur: 1400, hauteur: 900 }]) {
+    const h = hudSur(() => vueDe(etat, { x: 1, y: 1 }), taille);
+    const html = h.slots.get('partie')!.innerHTML;
+    assert.match(html, /hud\.journee/);
+    assert.match(html, /class="fonds"/);
+    // Le solde dit où l'on en est, le revenu dit où l'on va : c'est la moitié
+    // qui manquait, et elle tient dans six caractères.
+    assert.match(html, /class="revenu"/);
+    assert.match(html, /hud\.revenu \{&quot;n&quot;:/);
+    // Le compte de bâtiments est parti : « le 1/1, je ne suis pas sûr qu'il soit
+    // utile », et il coûtait une ligne permanente pour un chiffre qu'on regarde
+    // deux fois par partie.
+    assert.doesNotMatch(html, /class="points"/);
+    h.demonter();
+  }
 });
+
+test('le bulletin montre trois journées, la courante en avant, sans rien replier', () => {
+  const etat = partie();
+  const h = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
+  const html = h.slots.get('bulletin')!.innerHTML;
+  // Trois cases : aujourd'hui, et les deux journées que le climat annonce.
+  assert.equal((html.match(/class="meteo-case"/g) ?? []).length, 3);
+  assert.equal((html.match(/data-courant="oui"/g) ?? []).length, 1, 'une seule journée est celle qu’on joue');
+  assert.match(html, new RegExp(`hud\\.meteo_jour \\{&quot;n&quot;:${Math.max(1, etat.journee)}\\}`));
+  assert.match(html, new RegExp(`hud\\.meteo_jour \\{&quot;n&quot;:${Math.max(1, etat.journee) + 2}\\}`));
+  // Plus d'accordéon : la météo change le mouvement et la vision, elle ne se
+  // range pas derrière un clic.
+  assert.doesNotMatch(html, /<details|<summary/);
+  h.demonter();
+});
+
+test('le « i » de la jauge déplie ce que font les deux pouvoirs, lu sur leurs effets', () => {
+  const etat = partie();
+  const pouvoirs = {
+    normal: {
+      nom: 'commandant.x.pouvoir', cout: 100, pret: true,
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.2 } }],
+    },
+    super: {
+      nom: 'commandant.x.super', cout: 300, pret: false,
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'mouvement', valeur: 1 } }],
+    },
+  } as const;
+  const h = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }), { largeur: 1400, hauteur: 900 });
+  const dock = h.slots.get('dock')!;
+  // Replié par défaut : le bouton existe, les effets non.
+  assert.match(dock.innerHTML, /data-action="pouvoir_info"/);
+  assert.doesNotMatch(dock.innerHTML, /class="pouvoir-effets"/);
+
+  cliquer(h.conteneur, 'pouvoir_info');
+  const ouvert = h.slots.get('dock')!.innerHTML;
+  assert.match(ouvert, /class="pouvoir-effets"/);
+  // Un rapport se dit en pour cent, un entier en points : la forme vient des
+  // bornes du moteur, elle n'est pas redécidée ici.
+  assert.match(ouvert, /hud\.effet_pourcent \{&quot;quoi&quot;:&quot;modificateur\.attaque&quot;,&quot;signe&quot;:&quot;\+&quot;,&quot;n&quot;:20\}/);
+  assert.match(ouvert, /hud\.effet_points \{&quot;quoi&quot;:&quot;modificateur\.mouvement&quot;,&quot;signe&quot;:&quot;\+&quot;,&quot;n&quot;:1\}/);
+  h.demonter();
+});
+
+test('cliquer une unité seule ouvre son détail ; un transport chargé ne décide pas à ma place', () => {
+  const etat = partie();
+  const [seule, porteur, passager] = etat.unites.filter((u) => u.camp === 0);
+  assert.ok(seule && porteur && passager);
+  porteur.cargo = [passager.id];
+  passager.dansTransport = porteur.id;
+
+  let selection: string | null = null;
+  const vue = (): VueJeu => ({ ...vueDe(etat, { x: seule.x, y: seule.y }), selection });
+  const h = hudSur(vue, { largeur: 1400, hauteur: 900 });
+  // Rien de sélectionné : la fiche est repliée.
+  assert.doesNotMatch(h.slots.get('inspection')!.innerHTML, /class="fiche"/);
+
+  selection = seule.id;
+  h.rafraichir();
+  assert.match(h.slots.get('inspection')!.innerHTML, /class="fiche"/,
+    'une unité qui ne porte rien n’a rien à cacher : le détail s’ouvre');
+
+  // Un transport chargé pose la question de savoir de qui l'on parle ; on n'y
+  // répond pas à sa place.
+  selection = porteur.id;
+  h.rafraichir();
+  assert.doesNotMatch(h.slots.get('inspection')!.innerHTML, /class="fiche"/);
+  h.demonter();
+
+  // Sur écran étroit, jamais : la fiche dépliée couvrirait le plateau qu'on lit.
+  let etroite: string | null = null;
+  const petit = hudSur(() => ({ ...vueDe(etat, { x: seule.x, y: seule.y }), selection: etroite }));
+  etroite = seule.id;
+  petit.rafraichir();
+  assert.doesNotMatch(petit.slots.get('inspection')!.innerHTML, /class="fiche"/);
+  petit.demonter();
+});
+
+test('la fiche montre une tuile par terrain, peinte avec la palette du canon', () => {
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0);
+  assert.ok(unite);
+  const h = hudSur(() => ({
+    ...vueDe(etat, { x: unite.x, y: unite.y }), selection: unite.id,
+  }), { largeur: 1400, hauteur: 900 });
+  const html = h.slots.get('inspection')!.innerHTML;
+  assert.match(html, /class="puce tuilee"/);
+  assert.match(html, /class="tuile"/);
+  // La couleur vient du canon, jamais d'une seconde table : une tuile de plaine
+  // porte exactement la teinte que `content/terrains.json` lui donne.
+  const plaine = CAT.terrains['plaine'];
+  assert.ok(plaine);
+  assert.ok(html.includes(`fill="${plaine.palette.main}"`),
+    'la tuile est peinte avec la palette que le terrain déclare');
+  h.demonter();
+});
+

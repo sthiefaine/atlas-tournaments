@@ -736,6 +736,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         nom: p.nom,
         cout: p.barres * POINTS_PAR_BARRE,
         pret: verifierPouvoir(etat, commandant, camp, niveau).ok,
+        effets: p.effets,
       };
     };
     return { normal: lire('normal'), super: lire('super') };

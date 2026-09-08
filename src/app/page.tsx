@@ -72,6 +72,8 @@ export default function Accueil() {
           profilA: t(locale, 'reglages.profil_a'),
           profilB: t(locale, 'reglages.profil_b'),
           profilActif: t(locale, 'accueil.profil_actif'),
+          choisir: t(locale, 'accueil.choisir_sauvegarde'),
+          retour: t(locale, 'menu.retour'),
         }}
       />
 

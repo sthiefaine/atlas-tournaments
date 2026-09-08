@@ -54,7 +54,7 @@ body {
 .atlas-briefing h1{font-size:30px;line-height:1.15;font-weight:700;margin:10px 0 18px;letter-spacing:-.03em}
 .atlas-briefing h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:16px}
 .atlas-dialogues{margin:18px 0}
-.atlas-dialogues blockquote{border-left:2px solid #94ae9d;padding-left:14px;margin:12px 0}
+.atlas-dialogues blockquote{padding-left:14px;border-top:2px solid #94ae9d;padding-top:8px;margin:12px 0}
 .atlas-dialogues strong{font-size:12px}.atlas-dialogues p{font-size:14px;margin-top:3px}
 .atlas-but{background:#e4ebdf;padding:10px 16px}.atlas-but h2{margin:0}
 .atlas-aide{font-size:12px;opacity:.65;margin-top:18px}
@@ -118,7 +118,7 @@ body {
 .atlas-briefing .campagne-actions>a:not(.atlas-bouton){display:flex;min-height:44px;align-items:center;justify-content:center;flex-basis:100%;font-size:13px}
 .atlas-dialogues p{font-size:15px;line-height:1.6}
 .atlas-dialogues strong{font-size:13px;color:#376650}
-.atlas-but{padding:14px 16px;background:#e2eadd;border-left:4px solid #d2a63c}
+.atlas-but{padding:14px 16px;background:#e2eadd;border-top:4px solid #d2a63c}
 .atlas-but p{margin-top:4px;font-size:15px;font-weight:550}
 .atlas-conseils{margin-top:16px;border-bottom:1px solid #24342e20}
 .atlas-conseils summary{cursor:pointer;min-height:48px;align-content:center;font-size:14px;font-weight:650}
@@ -164,7 +164,7 @@ body {
 .atlas-radio-etapes{display:flex;gap:5px;margin-bottom:20px}.atlas-radio-etapes i{height:3px;flex:1;background:#829d8a30}.atlas-radio-etapes i.active{background:#d8b766}
 .atlas-transmission .campagne-actions{background:#17292c;border-top-color:#a3b89a30}.atlas-transmission .campagne-actions .atlas-bouton{border-radius:2px;background:#e3bd6e;color:#17292c;border:0;font-weight:800;text-transform:uppercase;font-size:13px;letter-spacing:.07em;box-shadow:0 4px 0 #0d1b20;transition:transform .12s,filter .12s}
 .atlas-transmission .campagne-actions .atlas-bouton:active{transform:translateY(3px)}.atlas-transmission .campagne-actions .atlas-bouton.secondaire{background:#344b49;color:#f1e5c7}
-.atlas-transmission .atlas-but{border-left:3px solid #d7bb75;background:#213b3d;color:#f4ecd4;border-radius:0}.atlas-transmission .atlas-but h2{color:#d7bb75}.atlas-transmission .atlas-conseils{border-bottom-color:#a3b89a30}
+.atlas-transmission .atlas-but{border-top:3px solid #d7bb75;background:#213b3d;color:#f4ecd4;border-radius:0}.atlas-transmission .atlas-but h2{color:#d7bb75}.atlas-transmission .atlas-conseils{border-bottom-color:#a3b89a30}
 @keyframes atlas-radio-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes atlas-texte-in{from{opacity:0;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
 @keyframes atlas-radio-signal{50%{opacity:.3}}
@@ -240,10 +240,10 @@ body {
 .carnet-dossier{padding:18px 20px 20px;background:var(--panneau);border:1px solid var(--liseré);border-top:4px solid var(--signal);box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%)}
 .carnet-dossier[data-etat='verrouillee']{border-top-color:var(--liseré)}
 .dossier-rang{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px}
-.dossier-plaque{margin-left:auto;padding:3px 9px;background:#ffd16222;border-left:4px solid var(--signal);color:var(--signal)}
-.dossier-plaque[data-etat='verrouillee']{background:#ffffff10;border-left-color:#6f8794;color:#9fb6b8}
+.dossier-plaque{margin-left:auto;padding:3px 9px;background:#ffd16222;box-shadow:inset 0 -3px 0 var(--signal);color:var(--signal)}
+.dossier-plaque[data-etat='verrouillee']{background:#ffffff10;box-shadow:inset 0 -3px 0 #6f8794;color:#9fb6b8}
 .carnet-dossier h2{margin:11px 0 13px;font-size:clamp(20px,4.4vw,28px);font-weight:900;line-height:1.1;letter-spacing:-.01em}
-.dossier-objectif{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;padding:11px 14px;background:#0a1a24;border-left:4px solid var(--signal);font-size:15px;font-weight:600;line-height:1.45}
+.dossier-objectif{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;padding:11px 14px;background:#0a1a24;border-top:3px solid var(--signal);font-size:15px;font-weight:600;line-height:1.45}
 .dossier-recit{max-width:70ch;font-size:14px;line-height:1.6;color:var(--papier-doux)}
 .dossier-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px}
 .dossier-verrou{font-size:13px;font-weight:800;color:#9fb6b8}
@@ -355,6 +355,21 @@ body {
 .menu-petit .menu-texte strong{font-size:13px}
 .menu-petit .menu-note{font-size:11.5px;opacity:.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .menu-petit{box-shadow:3px 3px 0 #0613188f;clip-path:none}
+/* Le tiroir des sauvegardes : il prend la place du bouton Campagne, il ne se
+   pose pas dessus. Deux lignes, chacune avec sa jauge et l'épreuve où elle en
+   est, et un appui lance — c'est la demande du propriétaire : « on a le choix
+   entre les deux sauvegardes et ensuite ça lance ». */
+.menu-sauvegardes{display:flex;flex-direction:column;gap:8px;animation:accueil-entree .18s ease-out both}
+.menu-sauvegardes>.atlas-etiquette{padding-left:2px;margin-bottom:1px}
+.menu-sauvegarde{flex-direction:column;align-items:stretch;gap:7px;min-height:66px}
+.menu-sauvegarde .menu-texte{flex-direction:row;align-items:baseline;justify-content:space-between;gap:12px}
+.menu-sauvegarde .menu-note{flex:none;font-size:12px;opacity:.85;text-align:right}
+/* Celle qui est active porte le signal : on sait laquelle on reprend sans lire. */
+.menu-sauvegarde[data-actif='oui']{border-left:none;box-shadow:6px 6px 0 #06131899,inset 0 3px 0 var(--signal)}
+.menu-sauvegarde[data-actif='oui'] .menu-texte strong{color:var(--signal)}
+.menu-retour{min-height:48px;justify-content:center;background:transparent;box-shadow:none}
+.menu-retour .menu-texte{flex:none}
+.menu-retour .menu-texte strong{font-size:12px;letter-spacing:.14em;color:var(--papier-doux)}
 
 .atlas-accueil a:focus-visible,.atlas-accueil button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
 .atlas-accueil .menu-principal:focus-visible{outline-color:var(--papier)}
@@ -456,7 +471,7 @@ body {
 .jeu-libre-details{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
 .jeu-libre-details li{padding:3px 8px;border:1px solid var(--liseré);font-size:11.5px;font-weight:700;color:var(--papier-doux);font-variant-numeric:tabular-nums}
 /* Le badge n'existe que rendu par le client, une sauvegarde lue : le serveur n'affirme jamais qu'une partie est en cours. */
-.jeu-libre-badge{align-self:flex-start;padding:3px 8px;background:#ffd16222;border-left:4px solid var(--signal);color:var(--signal);font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+.jeu-libre-badge{align-self:flex-start;padding:3px 8px;background:#ffd16222;box-shadow:inset 0 -3px 0 var(--signal);color:var(--signal);font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
 .jeu-libre-actions{display:flex;gap:8px;margin-top:auto;padding-top:4px}
 .jeu-libre-bouton{flex:1;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:8px 14px;background:var(--signal);color:#10222b;border-top:2px solid #fff0ac;border-bottom:3px solid var(--signal-appui);font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);transition:filter .12s ease-out,translate .1s}
 .jeu-libre-bouton:hover{filter:brightness(1.08)}

@@ -65,6 +65,15 @@
       "longueurMax": 20
     },
     {
+      "cle": "accueil.choisir_sauvegarde",
+      "texte": "Quelle sauvegarde ?",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Titre du tiroir qui s'ouvre sous le bouton Campagne : l'appareil porte deux sauvegardes, on choisit laquelle on reprend avant de lancer."
+      },
+      "longueurMax": 28
+    },
+    {
       "cle": "accueil.entrer",
       "texte": "Entrer dans la Ronde",
       "contexte": {
@@ -1731,15 +1740,6 @@
       "longueurMax": 16
     },
     {
-      "cle": "hud.batiments",
-      "texte": "{n} bâtiments à vous, {m} à l’adversaire",
-      "contexte": {
-        "ecran": "hud",
-        "note": "Intitulé accessible du compte de bâtiments, dans la colonne de droite. À l’écran ce sont deux chiffres et une barre à deux segments aux couleurs des camps."
-      },
-      "longueurMax": 56
-    },
-    {
       "cle": "hud.bulletin",
       "texte": "Demain {j1}, ensuite {j2}",
       "contexte": {
@@ -1882,6 +1882,33 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.effet_pourcent",
+      "texte": "{quoi} {signe}{n} %",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un effet de pouvoir dont le modificateur est un rapport — attaque, défense, fonds. Le signe est déjà composé."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "hud.effet_points",
+      "texte": "{quoi} {signe}{n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un effet de pouvoir dont le modificateur est un entier — mouvement, portée, vision."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "hud.effet_terrain",
+      "texte": "Modifie le terrain",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un pouvoir qui pose du terrain : un pont, un chenal. On le dit sans décrire une géométrie que le joueur verra."
+      },
+      "longueurMax": 26
+    },
+    {
       "cle": "hud.embarquees",
       "texte": "À bord : {liste}",
       "contexte": {
@@ -1979,6 +2006,24 @@
         "note": "Étiquette du menu contextuel d’actions."
       },
       "longueurMax": 14
+    },
+    {
+      "cle": "hud.meteo_jour",
+      "texte": "J{n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "En-tête d'une des trois cases du bulletin météo : la journée concernée. Très court, il tient sous une icône de 20 px."
+      },
+      "longueurMax": 6
+    },
+    {
+      "cle": "hud.meteo_titre",
+      "texte": "Météo sur trois journées",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé accessible du bulletin : aujourd'hui, et les deux journées suivantes."
+      },
+      "longueurMax": 36
     },
     {
       "cle": "hud.mouvement",
@@ -2086,6 +2131,15 @@
         "note": "Portée de tir, panneau d’unité."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "hud.pouvoir_details",
+      "texte": "Ce que fait ce pouvoir",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé du bouton « i » de la jauge de commandement, qui déplie les effets des deux pouvoirs."
+      },
+      "longueurMax": 30
     },
     {
       "cle": "hud.pouvoir_pret",
@@ -2872,6 +2926,96 @@
         "note": "Titre de la page des réglages."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "modificateur.attaque",
+      "texte": "Attaque",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.defense",
+      "texte": "Défense",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.mouvement",
+      "texte": "Mouvement",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.portee",
+      "texte": "Portée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.vision",
+      "texte": "Vision",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.soin",
+      "texte": "Soin",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.degats_directs",
+      "texte": "Dégâts directs",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.fonds",
+      "texte": "Fonds",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.carburant",
+      "texte": "Carburant",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.capture",
+      "texte": "Capture",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
     },
     {
       "cle": "saison.automne",

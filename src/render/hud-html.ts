@@ -17,16 +17,18 @@
 
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import {
-  batimentsDe, consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
+  consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
   seuilCapture, terrainLogique, uniteParId,
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
-import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../schemas/types';
+import type {
+  CampId, Case, CleTerrain, CleUnite, EffetPouvoir, Meteo, Silhouette,
+} from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
 import {
-  libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, nomCommandant,
-  nomCourtUnite, nomTerrain, nomUnite, type OptionMenu,
+  libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, lignesPouvoir,
+  nomCommandant, nomCourtUnite, nomTerrain, nomUnite, type OptionMenu,
 } from './libelles';
 import {
   alerteCarburant, alerteMunitions, ficheUnite, porte, type Alerte, type Duel,
@@ -49,6 +51,8 @@ export interface NiveauPouvoir {
   cout: number;
   /** `verifierPouvoir` l'accepterait-il maintenant ? */
   pret: boolean;
+  /** Ce qu'il fait, tel que le commandant le déclare. Le HUD le met en mots. */
+  effets: readonly EffetPouvoir[];
 }
 
 /** Tout ce que le HUD lit : l'état, la vue d'interaction et la langue. */
@@ -164,28 +168,50 @@ const STYLE = `
    s'estompe, ce qui suffit à rendre la parole au commandant. */
 .atlas-hud[data-rail='oui'][data-scene='ouverte'] .hud-rail{visibility:visible;opacity:.34}
 .atlas-hud .p{position:absolute;pointer-events:auto;background:var(--encre);border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;overflow:hidden}
-.atlas-hud .p>.bord{position:absolute;left:0;top:0;bottom:0;width:4px}
+/* La couleur de camp se pose en **tête** du panneau, plus sur son flanc : le
+   liseré de gauche a été retiré partout sur demande du propriétaire, et un
+   bord haut dit la même chose sans border la carte. */
+.atlas-hud .p[style*='--camp']{border-top:3px solid var(--camp)}
 .atlas-hud .in{padding:10px 14px}
 .atlas-hud .tt{font-weight:800;font-size:15px;letter-spacing:.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .atlas-hud .sb{font-size:13px;color:#b9cbcb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .atlas-hud .symbole{width:24px;height:24px;flex:none;display:block}
-.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:center;height:44px;max-width:calc(100% - 144px);filter:drop-shadow(2px 3px 0 #111b2940)}
-.atlas-hud .jour{display:flex;align-items:center;gap:7px;height:44px;padding:0 16px 0 10px;background:var(--papier);color:var(--encre);font-size:14px;font-weight:850;text-transform:uppercase;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%);white-space:nowrap}
-.atlas-hud .jour .symbole{width:20px;height:20px}
-.atlas-hud .fonds{display:flex;align-items:center;gap:5px;margin-left:-8px;height:34px;padding:0 10px 0 14px;background:var(--encre);color:var(--signal);font-weight:850;font-size:14px;white-space:nowrap}
-.atlas-hud .fonds .symbole{width:18px;height:18px}
-.atlas-hud .bulletin{position:absolute;pointer-events:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:128px;color:var(--papier);filter:drop-shadow(2px 3px 0 #111b2940);z-index:2}
-.atlas-hud .bulletin summary{display:flex;gap:7px;align-items:center;padding:7px 9px;cursor:pointer;list-style:none;min-height:44px;background:var(--encre);border-bottom:3px solid var(--signal)}
-.atlas-hud .bulletin summary::-webkit-details-marker{display:none}
-.atlas-hud .bulletin summary::after{content:'⌄';margin-left:auto;font-size:16px;color:#c0ccd7}
-.atlas-hud .bulletin[open] summary::after{transform:rotate(180deg)}
-.atlas-hud .bulletin svg{flex:0 0 auto;width:23px;height:23px}
-.atlas-hud .bulletin .tt{font-size:13px}
-.atlas-hud .previsions{padding:7px 10px 12px;background:var(--encre);border-top:1px solid #ffffff16}
-.atlas-hud .previsions .sb{white-space:normal;font-size:13px}
+/* La tête de la colonne : **une seule bande** pour la journée et les fonds.
+   C'étaient deux boîtes accolées et une ligne de compte de bâtiments ; le
+   propriétaire a demandé de réduire, et le compte est parti avec. */
+.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:stretch;height:42px;max-width:calc(100% - 144px);background:var(--encre);border:1px solid #3b5b6a;border-top:3px solid var(--camp,#6d8fa5);box-shadow:3px 3px 0 #101d2860}
+.atlas-hud .partie>span{display:flex;align-items:center;gap:7px;padding:0 12px;white-space:nowrap}
+.atlas-hud .partie .jour{color:var(--papier);font-size:13px;font-weight:850;text-transform:uppercase}
+.atlas-hud .partie .fonds{color:var(--signal);font-size:15px;font-weight:900;font-variant-numeric:tabular-nums;border-left:1px solid #ffffff1a}
+.atlas-hud .partie .symbole{width:18px;height:18px;flex:none;opacity:.85}
+/* Le bulletin : trois journées côte à côte, plus un accordéon. La météo change
+   le mouvement **et** la vision — la ranger derrière un clic, c'était ranger une
+   règle derrière un clic. */
+.atlas-hud .bulletin{position:absolute;pointer-events:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:196px;color:var(--papier);background:var(--encre);border:1px solid #3b5b6a;box-shadow:3px 3px 0 #101d2860;z-index:2}
+.atlas-hud .meteo-trois{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.atlas-hud .meteo-case{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 7px;border-bottom:3px solid transparent}
+.atlas-hud .meteo-case+.meteo-case{border-left:1px solid #ffffff14}
+.atlas-hud .meteo-case[data-courant='oui']{background:#ffffff0d;border-bottom-color:var(--signal)}
+.atlas-hud .meteo-jour{font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#9fb6b8}
+.atlas-hud .meteo-case[data-courant='oui'] .meteo-jour{color:var(--signal)}
+.atlas-hud .meteo-case svg{width:22px;height:22px}
+.atlas-hud .meteo-nom{max-width:100%;font-size:9.5px;font-weight:750;color:#b9cbcb;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-hud .meteo-ambiance{padding:4px 8px 5px;border-top:1px solid #ffffff14;font-size:10px;font-weight:750;color:#9fb6b8;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atlas-hud .dock{position:absolute;pointer-events:auto;left:50%;bottom:var(--bas);transform:translateX(-50%);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;width:420px;max-width:calc(100% - 24px);height:var(--dock);filter:drop-shadow(3px 4px 0 #12233270)}
 .atlas-hud .dock .p{position:relative;box-shadow:none}
-.atlas-hud .jauge{border:0;border-top:3px solid #6d8fa5;clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+.atlas-hud .jauge{border:0;border-top:3px solid var(--camp,#6d8fa5);clip-path:polygon(9px 0,100% 0,100% 100%,0 100%,0 9px)}
+/* Le commandant sur une ligne, avec son « i » au bout : le pouvoir prenait la
+   plus grande boîte de la colonne pour l'information la moins fréquente. */
+.atlas-hud .jauge .commandant{display:flex;align-items:center;gap:8px;padding:7px 8px 5px 12px}
+.atlas-hud .jauge .commandant .tt{flex:1;min-width:0;font-size:13px;font-weight:850}
+.atlas-hud .jauge .commandant .detail{min-width:30px;min-height:30px;margin-left:0}
+.atlas-hud .jauge>.energie{margin:0 12px 8px}
+/* Les effets, dépliés : ce que le pouvoir fait, lu sur les données du
+   commandant et jamais rédigé à la main. */
+.atlas-hud .pouvoir-effets{display:grid;gap:5px;margin:0 9px 8px;padding:7px 9px;background:#0a1a24;border:1px solid #33505e}
+.atlas-hud .pouvoir-effets .effet{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.atlas-hud .pouvoir-effets .rang{font-size:9px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#9fb6b8;flex-basis:100%}
+.atlas-hud .pouvoir-effets .puce{padding:2px 7px;background:#ffffff10;border:1px solid #ffffff1a;font-size:11.5px;font-weight:800;color:var(--papier)}
 .atlas-hud .jauge button{all:unset;display:flex;align-items:center;gap:9px;box-sizing:border-box;width:100%;height:100%;padding:8px 12px;cursor:pointer}
 .atlas-hud .insigne{display:flex;align-items:center;justify-content:center;width:42px;height:48px;flex:none;color:var(--signal);background:#284451;clip-path:polygon(0 0,100% 0,100% 77%,50% 100%,0 77%)}
 .atlas-hud .insigne .symbole{width:29px;height:29px;margin-top:-5px}
@@ -234,16 +260,16 @@ const STYLE = `
 .atlas-hud .ordres-grille{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
 /* Un bouton a une **épaisseur** qui s'écrase ; un panneau est plat. C'est
    l'enfoncement qui dit « pressable », pas la couleur. */
-.atlas-hud .ordres-grille button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:flex-start;gap:10px;min-height:46px;padding:10px 12px;cursor:pointer;font-size:14px;font-weight:700;text-align:left;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;border-left:4px solid transparent;transition:background .1s,translate .08s,border-bottom-width .08s}
+.atlas-hud .ordres-grille button{all:unset;display:flex;box-sizing:border-box;align-items:center;justify-content:flex-start;gap:10px;min-height:46px;padding:10px 12px;cursor:pointer;font-size:14px;font-weight:700;text-align:left;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;transition:background .1s,translate .08s,border-bottom-width .08s}
 .atlas-hud .ordres-grille button:hover{background:#2c5670}
 .atlas-hud .ordres-grille button:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
 /* Les couleurs du plateau ne se posent jamais en aplat sur un bouton : le bleu y
    veut dire « chantier », le rouge « je tire ». Un ordre les **cite** par un
    liseré de 4 px, et rien de plus. */
-.atlas-hud .ordres-grille button[data-valeur='attaquer']{border-left:4px solid #ff2e48}
-.atlas-hud .ordres-grille button[data-valeur='capturer']{border-left:4px solid #ffc634}
-.atlas-hud .ordres-grille button[data-valeur='remettre']{border-left:4px solid #ffc634}
-.atlas-hud .ordres-grille button[data-valeur='construire']{border-left:4px solid #4eaaff}
+.atlas-hud .ordres-grille button[data-valeur='attaquer'] .symbole{color:#ff6a5e}
+.atlas-hud .ordres-grille button[data-valeur='capturer'] .symbole{color:#ffc634}
+.atlas-hud .ordres-grille button[data-valeur='remettre'] .symbole{color:#ffc634}
+.atlas-hud .ordres-grille button[data-valeur='construire'] .symbole{color:#4eaaff}
 .atlas-hud .ordres-grille .symbole{width:21px;height:21px;color:#9fb6b8}
 /* « Débarquer <nom> » montre la figurine qu'il pose : on choisit qui descend en la voyant. */
 .atlas-hud .ordres-grille canvas{flex:none;width:24px;height:24px;background:#ffffff0a}
@@ -272,33 +298,39 @@ const STYLE = `
 .atlas-hud .attente{left:50%;top:calc(var(--haut) + 56px);transform:translateX(-50%);max-width:calc(100% - 24px);z-index:2;border-color:#edac76}
 .atlas-hud .attente .in{display:flex;align-items:center;gap:9px;padding:7px 12px}
 .atlas-hud .attente .symbole{width:20px;height:20px;animation:atlas-attente 2s steps(4,end) infinite;color:#edac76}
-.atlas-hud .annonce{left:50%;bottom:calc(var(--bas) + var(--dock) + 108px);transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;z-index:4;border-left:4px solid var(--signal)}
+.atlas-hud .annonce{left:50%;bottom:calc(var(--bas) + var(--dock) + 108px);transform:translateX(-50%);max-width:calc(100% - 32px);width:max-content;z-index:4;border-top:3px solid var(--signal)}
 .atlas-hud .annonce .tt{white-space:normal;font-size:14px}
 .atlas-hud .voile{position:absolute;inset:0;pointer-events:auto;background:#07172499;display:flex;align-items:center;justify-content:center;z-index:5;padding:var(--haut) 12px var(--bas)}
 .atlas-hud .modale{position:relative;pointer-events:auto;background:var(--papier);color:var(--encre);border-top:5px solid var(--signal);box-shadow:6px 6px 0 #10212c80;width:420px;max-width:100%;max-height:100%;display:flex;flex-direction:column;overflow:hidden}
 .atlas-hud .modale h2{margin:0;padding:20px 20px 12px;font-size:20px;font-weight:850;text-transform:uppercase}
 .atlas-hud .modale:focus{outline:none}
-/* Le menu de production : la liste à gauche, la fiche à droite. Une grille de
-   vignettes sans détail obligeait à recruter à l'aveugle ; ici on lit avant de
-   payer. */
-.atlas-hud .modale.production{width:760px}
-.atlas-hud .production-entete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-right:14px}
-.atlas-hud .production-entete h2{padding:16px 20px 12px}
+/* Le menu de production : un panneau **ancré au bâtiment**, plus une modale de
+   760 px centrée sur un voile noir. On recrute six à dix fois par match ; le jeu
+   n'a pas à disparaître à chaque fois. Le voile ne sert plus qu'à recevoir le
+   clic qui referme — il s'éclaircit donc, et le plateau reste lisible. */
+.atlas-hud .voile.clair{background:#07172433;align-items:flex-end;padding:var(--haut) 12px var(--bas)}
+.atlas-hud .p.production{display:flex;flex-direction:column;width:100%;max-width:520px;max-height:100%;background:var(--papier);color:var(--encre);border:0;border-top:4px solid var(--signal);box-shadow:6px 6px 0 #10212c80;overflow:hidden}
+.atlas-hud .p.production[data-ancre='oui']{position:absolute;width:400px;max-width:400px;max-height:calc(100% - 24px)}
+.atlas-hud .production-entete{display:flex;align-items:center;gap:10px;padding:9px 10px 9px 14px;background:#15243b0f;border-bottom:1px solid #15243b22}
+.atlas-hud .production-entete .tt{flex:1;font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#45606b}
+.atlas-hud .production-entete .solde{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:900;color:var(--encre);font-variant-numeric:tabular-nums}
+.atlas-hud .production-entete .solde .symbole{width:16px;height:16px;color:#8a6a1e}
 .atlas-hud .production-entete .retour{background:#15243b12;border-color:#15243b30;color:var(--encre)}
-.atlas-hud .production-corps{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);flex:1 1 auto;min-height:0}
-.atlas-hud .liste{overflow:auto;overscroll-behavior:contain;padding:2px 10px 10px 12px;min-height:0;background:#15243b0a}
-.atlas-hud .liste button{all:unset;display:flex;box-sizing:border-box;width:100%;gap:10px;align-items:center;min-height:56px;padding:6px 10px;cursor:pointer;margin-bottom:5px;background:#e1ddca;border-left:4px solid #60737a}
-.atlas-hud .liste button:hover{background:#d0d7cc}
-/* La ligne mise en avant s'inverse : encre sur papier devient papier sur encre.
-   C'est le seul contraste qui se lit d'un coup d'œil dans une liste de dix. */
-.atlas-hud .liste button[data-actif='oui']{background:var(--encre);color:var(--papier);border-left-color:var(--signal)}
-.atlas-hud .liste button[data-actif='oui'] .cout{color:var(--signal)}
+/* La grille : on achète une **silhouette**, pas une ligne de tableau. */
+.atlas-hud .production-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:5px;padding:8px;overflow:auto;overscroll-behavior:contain;max-height:38cqh;background:#15243b08}
+.atlas-hud .production-grille button{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 4px 5px;cursor:pointer;text-align:center;background:#e1ddca;border-bottom:3px solid #b6b0a0;transition:background .09s,translate .06s,border-bottom-width .06s}
+.atlas-hud .production-grille button:hover{background:#d0d7cc}
+.atlas-hud .production-grille button:active{translate:0 2px;border-bottom-width:1px}
+.atlas-hud .production-grille canvas{width:40px;height:40px;display:block}
+.atlas-hud .production-grille .tt{max-width:100%;font-size:11.5px;font-weight:800;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-hud .production-grille .cout{font-size:12px;font-weight:900;color:#45606b;font-variant-numeric:tabular-nums}
+/* Mise en avant : l'inversion papier → encre, le seul contraste qui se lit d'un
+   coup d'œil dans une grille de dix. */
+.atlas-hud .production-grille button[data-actif='oui']{background:var(--encre);color:var(--papier);border-bottom-color:#060f17}
+.atlas-hud .production-grille button[data-actif='oui'] .cout{color:var(--signal)}
 /* Trop chère : grisée, mais toujours cliquable. Lire la fiche d'une unité qu'on
    ne peut pas encore payer, c'est savoir pour quoi l'on économise. */
-.atlas-hud .liste button[data-abordable='non']{opacity:.55}
-.atlas-hud .liste canvas{flex:0 0 auto;width:38px;height:38px}
-.atlas-hud .liste .tt{flex:1;min-width:0;font-size:14px}
-.atlas-hud .liste .cout{flex:none;font-size:13px;font-weight:750;color:#45606b;font-variant-numeric:tabular-nums}
+.atlas-hud .production-grille button[data-abordable='non']{opacity:.55}
 .atlas-hud .panneau-fiche{display:flex;flex-direction:column;min-height:0;border-left:1px solid #15243b22}
 .atlas-hud .fiche-corps{overflow:auto;overscroll-behavior:contain;flex:1 1 auto;min-height:0;padding:4px 20px 12px 18px}
 .atlas-hud .fiche-entete{display:flex;gap:14px;align-items:center;margin-bottom:12px}
@@ -330,10 +362,10 @@ const STYLE = `
 .atlas-hud .fiche .stat{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);color:var(--f-doux)}
 .atlas-hud .fiche .stat .symbole{width:15px;height:15px;flex:0 0 auto}
 .atlas-hud .fiche .stat b{font-size:13.5px;font-weight:850;font-variant-numeric:tabular-nums;color:var(--f-encre)}
-.atlas-hud .fiche .avert{margin:0 0 8px;padding:5px 8px;background:#3a2620;border-left:3px solid #c07a55;color:#f0d9cc;font-weight:700}
-.atlas-hud .fiche .avert.bon{background:#1e3325;border-left-color:#5aa84c;color:#d6ecd2}
-.atlas-hud .production .fiche .avert{background:#e3d2c6;border-left-color:#a86a4a;color:#1e3038}
-.atlas-hud .production .fiche .avert.bon{background:#d3e0cd;border-left-color:#4e8f43}
+.atlas-hud .fiche .avert{margin:0 0 8px;padding:5px 8px;background:#3a2620;color:#f0d9cc;font-weight:700}
+.atlas-hud .fiche .avert.bon{background:#1e3325;color:#d6ecd2}
+.atlas-hud .production .fiche .avert{background:#e3d2c6;color:#1e3038}
+.atlas-hud .production .fiche .avert.bon{background:#d3e0cd}
 .atlas-hud .fiche .bloc{margin:0 0 9px}
 .atlas-hud .fiche .bloc:last-child{margin-bottom:0}
 /* Le titre est un ruban : une bande pleine, coupée en biseau, comme les
@@ -356,6 +388,10 @@ const STYLE = `
 .atlas-hud .fiche .fort .duel i{color:var(--f-fort)}
 .atlas-hud .fiche .danger .duel i{color:var(--f-danger)}
 .atlas-hud .fiche .puce{display:inline-flex;align-items:center;padding:3px 8px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);font-weight:700;white-space:nowrap}
+/* Une puce de terrain porte sa tuile : le carré du terrain dans sa couleur de
+   canon, et un motif qui le distingue sans dépendre de la teinte. */
+.atlas-hud .fiche .puce.tuilee{gap:6px;padding:2px 8px 2px 3px}
+.atlas-hud .fiche .tuile{width:20px;height:20px;flex:0 0 auto;display:block}
 /* Un palier d'abri : les étoiles à gauche, les terrains de ce palier à droite, qui reviennent à la ligne. */
 .atlas-hud .fiche .abris .corps{display:block}
 .atlas-hud .fiche .abri{display:flex;align-items:baseline;gap:7px;padding:2px 0;font-weight:700}
@@ -429,9 +465,10 @@ const STYLE = `
 /* Le bandeau de tête : la journée, et mes fonds. Le liseré de gauche continue
    de dire **qui joue**, et c'est la seule chose de la colonne qui change de
    couleur — la trouver ailleurs demanderait de la chercher. */
-.atlas-hud[data-rail='oui'] .hud-rail .partie{display:grid;grid-template-columns:minmax(0,1fr) auto;height:auto;flex:none;gap:0}
-.atlas-hud[data-rail='oui'] .hud-rail .jour{height:48px;padding:0 13px;clip-path:none;font-size:15px}
-.atlas-hud[data-rail='oui'] .hud-rail .fonds{height:48px;margin-left:0;padding:0 14px;font-size:17px;background:#0a1a24;border:1px solid #33505e;border-left:0}
+.atlas-hud[data-rail='oui'] .hud-rail .partie{height:46px;flex:none}
+.atlas-hud[data-rail='oui'] .hud-rail .partie .jour{flex:1;min-width:0}
+.atlas-hud[data-rail='oui'] .hud-rail .partie .fonds{font-size:16px}
+.atlas-hud[data-rail='oui'] .hud-rail .bulletin{width:auto}
 /* L'unité regardée prend toute la place qui reste : c'est le panneau qu'on lit
    le plus longtemps, et le seul dont la hauteur soit variable. */
 .atlas-hud[data-rail='oui'] .hud-rail .inspect{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden;border:1px solid #35525f}
@@ -448,14 +485,6 @@ const STYLE = `
    l'on va. Vert parce que c'est un gain, discret parce que ce n'est pas le
    chiffre qu'on lit en premier. */
 .atlas-hud .fonds .revenu{margin-left:7px;font-style:normal;font-size:12px;font-weight:800;color:#8ee0a4}
-/* Le compte de bâtiments : la mesure du match. Deux nombres, et une barre à
-   deux segments aux couleurs des camps — c'est le rapport qui se lit, pas les
-   chiffres. Colonne seulement : le bandeau étroit ne peut pas la porter. */
-.atlas-hud .points{display:flex;align-items:center;gap:9px;grid-column:1/-1;margin-top:7px;padding:7px 10px;background:#0a1a24;border:1px solid #33505e}
-.atlas-hud .points .barre{display:flex;flex:1;gap:2px;height:9px;min-width:0;transform:skewX(-15deg)}
-.atlas-hud .points .barre i{min-width:3px}
-.atlas-hud .points .compte{flex:none;font-size:13px;font-weight:900;color:#9fb3b6;font-variant-numeric:tabular-nums}
-.atlas-hud .points .compte b{color:var(--papier)}
 /* Une capture en cours : la couleur du signal, comme le fanion sur la carte. */
 .atlas-hud .stats .capture{color:var(--signal);font-weight:800}
 /* Le cran du pouvoir normal sur la jauge : la barre mesure le prix du super,
@@ -464,7 +493,6 @@ const STYLE = `
 .atlas-hud .energie::after{content:'';position:absolute;top:-3px;bottom:-3px;left:var(--cran,100%);width:2px;background:var(--papier);opacity:.7}
 /* Les deux pouvoirs, dans la colonne. Le super se distingue par sa peinture,
    pas par un mot : un fond chaud, et le prix en signal. */
-.atlas-hud .jauge .commandant{display:flex;align-items:center;gap:9px;padding:9px 12px 4px}
 .atlas-hud .jauge .pouvoirs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;padding:6px 9px 9px}
 .atlas-hud .jauge .pouvoir{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;min-height:52px;padding:7px 9px;cursor:pointer;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;transition:background .09s,translate .06s,border-bottom-width .06s}
 .atlas-hud .jauge .pouvoir:hover:not(:disabled){background:#2c5670}
@@ -494,23 +522,15 @@ const STYLE = `
   .atlas-hud .inspect .tt{font-size:14px}
   .atlas-hud .voile{align-items:flex-end}
 }
-/* Sous 640 px, les deux colonnes se superposent : la liste en haut, bornée en
-   hauteur de conteneur (cqh) pour que la fiche garde toujours sa part d'écran,
-   la fiche en bas. La modale ne dépasse jamais : elle est bornée à 100 % du
-   voile et chacune de ses parties défile pour elle-même. */
+/* Sous 640 px, le panneau ne s'ancre plus — il n'y a pas de place à côté d'une
+   case — et redevient une feuille basse, ce qui est la bonne forme au doigt. La
+   grille se resserre, la fiche garde sa part d'écran, et chaque partie défile
+   pour elle-même : la feuille ne dépasse jamais le voile. */
 @container atlas-interface (max-width: 640px){
-  .atlas-hud .production-corps{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
-  .atlas-hud .liste{max-height:32cqh;padding:2px 10px 6px;border-bottom:1px solid #15243b22}
-  .atlas-hud .liste button{min-height:44px;padding:4px 8px;gap:9px;margin-bottom:4px}
-  .atlas-hud .liste canvas{width:30px;height:30px}
-  .atlas-hud .fiche{border-left:0}
+  .atlas-hud .production-grille{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));max-height:30cqh;padding:6px}
+  .atlas-hud .production-grille canvas{width:34px;height:34px}
   .atlas-hud .fiche-corps{padding:8px 14px}
-  .atlas-hud .fiche-entete{margin-bottom:8px}
-  .atlas-hud .fiche-entete canvas{width:54px;height:54px}
-  .atlas-hud .fiche-nom{font-size:17px}
-  .atlas-hud .fiche dl{gap:6px 10px;margin-bottom:8px}
   .atlas-hud .fiche-action{padding:8px 14px 12px}
-  .atlas-hud .production-entete h2{padding:12px 14px 8px;font-size:17px}
 }
 @container atlas-interface (max-width: 360px){.atlas-hud .fonds .symbole{display:none}}
 @container atlas-interface (max-height: 500px){
@@ -827,6 +847,9 @@ export function monterHudHtml(
   // l'autre : c'est une façon de jouer, pas un choix par unité. Qui apprend la
   // laisse dépliée, qui connaît la referme une fois.
   let ficheInspection = false;
+  /** Les effets des deux pouvoirs sont dépliés : on dépense une ressource de
+   *  match, on doit pouvoir lire ce qu'on achète. */
+  let pouvoirDetail = false;
   /** La dernière unité montrée par le panneau. Voir `panneauInspection`. */
   let derniereInspectee: string | null = null;
   /** Le pointeur est sur un panneau du HUD : il vient chercher une commande. */
@@ -886,6 +909,17 @@ export function monterHudHtml(
   // Panneaux
   // -------------------------------------------------------------------------
 
+  /**
+   * La tête de la colonne : la journée et mes fonds, **sur une seule bande**.
+   *
+   * C'étaient deux boîtes accolées plus une ligne de compte de bâtiments, et le
+   * propriétaire a tranché : « certaines infos peuvent être réduites comme
+   * journée 1 1500 €, et le 1/1 je ne suis pas sûr qu'il soit utile ». Le compte
+   * de bâtiments est retiré — il disait le rapport de forces, mais il le disait
+   * au prix d'une ligne permanente pour un chiffre qu'on regarde deux fois par
+   * partie. Reste ce qu'on lit à chaque tour : quel jour, combien j'ai, combien
+   * j'aurai.
+   */
   function panneauPartie(v: VueJeu): string {
     // Les fonds affichés sont **les miens**, pas ceux du camp qui joue : pendant
     // le tour adverse, montrer sa trésorerie est une fuite d'information autant
@@ -893,82 +927,80 @@ export function monterHudHtml(
     const camp = v.etat.camps.find((c) => c.id === v.camp);
     const journee = api.t('hud.journee', { n: Math.max(1, v.etat.journee) });
     const fonds = api.t('hud.fonds', { n: nombreIntl(v.locale, camp?.fonds ?? 0) });
-    // Le liseré, lui, dit **qui joue** : c'est la seule chose qui change de camp.
+    // Le liseré dit **qui joue** : la seule chose de la bande qui change de camp.
     const bord = paletteDe(v.etat.campCourant).main;
-    // Le solde dit où l'on en est, le revenu dit où l'on va. Le second manquait,
-    // et c'est lui qui fait décider entre acheter maintenant ou économiser. Il
-    // est lu au moteur (`revenuParTour`), jamais recalculé ici.
+    // Le solde dit où l'on en est, le revenu dit où l'on va. Lu au moteur
+    // (`revenuParTour`), jamais recalculé ici.
     const revenu = revenuParTour(v.etat, v.camp);
     const libelleRevenu = api.t('hud.revenu', { n: nombreIntl(v.locale, revenu) });
-    const revenuHtml = `<em class="revenu" aria-label="${ech(libelleRevenu)}" title="${ech(libelleRevenu)}">`
-      + `+${ech(nombreIntl(v.locale, revenu))}</em>`;
-    return `<div class="partie" role="group" aria-label="${ech(api.t('hud.partie_en_cours'))}">`
-      + `<div class="jour" style="border-left:4px solid ${bord}">${iconeOrdre('jour')}<span>${ech(journee)}</span></div>`
-      + `<div class="fonds" aria-label="${ech(fonds)}" title="${ech(fonds)}">${iconeOrdre('fonds')}`
-      + `<span>${ech(nombreIntl(v.locale, camp?.fonds ?? 0))}</span>${revenuHtml}</div>`
-      + comptePoints(v) + `</div>`;
+    return `<div class="partie" role="group" aria-label="${ech(api.t('hud.partie_en_cours'))}" style="--camp:${bord}">`
+      + `<span class="jour">${iconeOrdre('jour')}<b>${ech(journee)}</b></span>`
+      + `<span class="fonds" aria-label="${ech(fonds)}" title="${ech(fonds)}">${iconeOrdre('fonds')}`
+      + `<b>${ech(nombreIntl(v.locale, camp?.fonds ?? 0))}</b>`
+      + `<em class="revenu" aria-label="${ech(libelleRevenu)}" title="${ech(libelleRevenu)}">`
+      + `+${ech(nombreIntl(v.locale, revenu))}</em></span></div>`;
   }
 
   /**
-   * Le compte de bâtiments, mien contre sien — la mesure du match, et elle
-   * n'était affichée nulle part. On lit son solde et jamais sa trajectoire : à
-   * mille fonds par bâtiment et par journée, « huit contre cinq » dit qui prend
-   * l'avantage bien avant que les fonds ne le disent.
+   * Le bulletin : **trois journées côte à côte**, celle qu'on joue et les deux
+   * qui viennent.
    *
-   * Réservé à la colonne : sur un bandeau de 44 px partagé avec la journée et
-   * les fonds, cette ligne ne tiendrait pas.
+   * C'était un `<details>` — un accordéon HTML dans le coin d'un HUD de jeu —
+   * dont le résumé disait le temps du jour et le corps, replié, les prévisions.
+   * Or la météo change le mouvement **et** la vision : la ranger derrière un
+   * clic, c'est ranger une règle derrière un clic. Trois cases, toujours
+   * ouvertes, la journée en cours mise en avant.
    */
-  function comptePoints(v: VueJeu): string {
-    if (largeurRail === 0) return '';
-    const miens = batimentsDe(v.etat, v.camp).length;
-    const autres = v.etat.camps.filter((c) => c.id !== v.camp);
-    const siens = autres.reduce((n, c) => n + batimentsDe(v.etat, c.id).length, 0);
-    if (miens + siens === 0) return '';
-    // À deux camps, chacun sa couleur ; au-delà, l'adversaire est « tout le
-    // reste » et prend la teinte neutre plutôt qu'une couleur qui mentirait.
-    const mienne = paletteDe(v.camp).main;
-    const sienne = autres.length === 1 && autres[0] ? paletteDe(autres[0].id).main : paletteDe(null).main;
-    const libelle = api.t('hud.batiments', { n: miens, m: siens });
-    return `<div class="points" aria-label="${ech(libelle)}" title="${ech(libelle)}">`
-      + `<span class="barre" aria-hidden="true">`
-      + `<i style="flex:${miens};background:${mienne}"></i><i style="flex:${siens};background:${sienne}"></i></span>`
-      + `<span class="compte" aria-hidden="true"><b>${miens}</b> · ${siens}</span></div>`;
-  }
-
   function panneauBulletin(v: VueJeu): string {
     // Le Bulletin annonce **ce que le joueur voit** : il lit l'ambiance affichée,
     // qu'un aperçu peut avoir forcée, et non le climat brut de l'état.
-    const a = v.ambiance;
-    const c = v.etat.climat;
-    const ligne1 = `${libelleSaison(api.t, a.saison)} · ${libellePhase(api.t, a.phase)}`;
-    const ligne2 = libelleMeteo(api.t, a.meteo);
-    const ligne3 = api.t('hud.bulletin', {
-      j1: libelleMeteo(api.t, c.previsions[0]),
-      j2: libelleMeteo(api.t, c.previsions[1]),
-    });
-    return `<details class="bulletin" aria-label="${ech(api.t('hud.bulletin_titre'))}">`
-      + `<summary>${iconeMeteo(a.meteo)}<span style="min-width:0">`
-      + `<span class="tt" style="display:block">${ech(ligne2)}</span></span></summary>`
-      + `<div class="previsions"><div class="sb">${ech(ligne1)}</div><div class="sb">${ech(ligne3)}</div></div></details>`;
+    const jour = Math.max(1, v.etat.journee);
+    const cases = [
+      { meteo: v.ambiance.meteo, jour, courant: true },
+      { meteo: v.etat.climat.previsions[0], jour: jour + 1, courant: false },
+      { meteo: v.etat.climat.previsions[1], jour: jour + 2, courant: false },
+    ];
+    const cellules = cases.map(({ meteo, jour: j, courant }) => {
+      if (!meteo) return '';
+      const nom = libelleMeteo(api.t, meteo);
+      return `<div class="meteo-case" data-courant="${courant ? 'oui' : 'non'}"`
+        + ` aria-label="${ech(`${api.t('hud.meteo_jour', { n: j })} · ${nom}`)}">`
+        + `<span class="meteo-jour">${ech(api.t('hud.meteo_jour', { n: j }))}</span>`
+        + iconeMeteo(meteo)
+        + `<span class="meteo-nom">${ech(nom)}</span></div>`;
+    }).join('');
+    // La saison et la phase du jour restent dites : elles pèsent sur la vision
+    // autant que le temps, et elles n'ont nulle part ailleurs où vivre.
+    const ambiance = `${libelleSaison(api.t, v.ambiance.saison)} · ${libellePhase(api.t, v.ambiance.phase)}`;
+    return `<div class="bulletin" role="group" aria-label="${ech(api.t('hud.meteo_titre'))}">`
+      + `<div class="meteo-trois">${cellules}</div>`
+      + `<div class="meteo-ambiance">${ech(ambiance)}</div></div>`;
   }
 
   /**
-   * Le commandant et sa jauge.
+   * Le commandant, sa jauge et ses deux pouvoirs — en trois lignes basses.
    *
-   * Deux corrections de fond ici, et aucune n'est une question de goût.
+   * Trois corrections, et aucune n'est une question de goût.
    *
    * **Le seuil était faux.** Le bouton n'était actif qu'à jauge *pleine*, or la
    * jauge se remplit jusqu'au prix du **super** pouvoir (`jaugeMax` vaut les
-   * barres du super) : le pouvoir normal, qui coûte moins, devenait jouable
-   * bien avant et le bouton restait éteint. On lit désormais le verdict du
-   * moteur (`verifierPouvoir`, passé par `VueJeu.pouvoirs`), qui connaît en
-   * plus le cas « déjà utilisé ce tour ».
+   * barres du super) : le pouvoir normal, qui coûte moins, devenait jouable bien
+   * avant et le bouton restait éteint. On lit désormais le verdict du moteur
+   * (`verifierPouvoir`, passé par `VueJeu.pouvoirs`), qui connaît en plus le cas
+   * « déjà utilisé ce tour ».
    *
    * **Le super pouvoir n'avait pas de bouton.** Une mécanique entière — moteur,
-   * partition, splash, chaîne d'interface — était injoignable parce qu'un seul
-   * `'normal'` était écrit en dur. La colonne a la place de les montrer tous
-   * les deux, avec leur nom et leur prix ; l'écran étroit garde son bouton
-   * unique, faute de place dans un dock de 72 px de haut.
+   * partition, splash, chaîne d'interface — injoignable parce qu'un seul
+   * `'normal'` était écrit en dur.
+   *
+   * **Et il ne disait pas ce qu'il fait.** On dépensait une ressource de match
+   * sans savoir ce qu'on achetait. Le « i » déplie les effets, lus sur les
+   * données du commandant (`lignesPouvoir`) et jamais rédigés à la main : un
+   * texte écrit à côté des chiffres finit par mentir.
+   *
+   * Le panneau a maigri au passage — l'insigne pentagonal de 42 px, le nom sur sa
+   * ligne et la mention « Pouvoir » en faisaient le plus gros objet de la
+   * colonne pour l'information la moins fréquente.
    */
   function panneauJauge(v: VueJeu): string {
     const camp = v.etat.camps.find((c) => c.id === v.camp);
@@ -988,21 +1020,24 @@ export function monterHudHtml(
       ? ` style="--cran:${Math.max(0, Math.min(100, (p.normal.cout / camp.jaugeMax) * 100))}%"`
       : '';
     const libelle = api.t(normalPret ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
-    const entete = `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
-      + `<span class="tt" style="display:block">${ech(nom)}</span>`
-      + `<span class="energie" aria-hidden="true"${cran}>${energie}</span>`
-      + `<span class="sb" style="display:block">${ech(libelle)}</span>`
-      + `</span>`;
     const cadre = (dedans: string): string =>
-      `<div class="p jauge" data-pret="${normalPret ? 'oui' : 'non'}" style="border-color:${pal.light}">${dedans}</div>`;
-    // Écran étroit : le bouton unique d'avant, au seuil juste cette fois.
+      `<div class="p jauge" data-pret="${normalPret ? 'oui' : 'non'}" style="--camp:${pal.light}">${dedans}</div>`;
+
+    // Écran étroit : le bouton unique d'avant, au seuil juste cette fois. Un dock
+    // de 72 px de haut ne porte pas deux pouvoirs nommés et leur explication.
     if (largeurRail === 0 || !p) {
       return cadre(`<button type="button" data-action="pouvoir" aria-label="${ech(nom)} · ${ech(libelle)}"`
-        + `${normalPret ? '' : ' disabled'}>${entete}</button>`);
+        + `${normalPret ? '' : ' disabled'}>`
+        + `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
+        + `<span class="tt" style="display:block">${ech(nom)}</span>`
+        + `<span class="energie" aria-hidden="true"${cran}>${energie}</span>`
+        + `<span class="sb" style="display:block">${ech(libelle)}</span>`
+        + `</span></button>`);
     }
-    // Dans la colonne : le commandant, puis ses deux pouvoirs nommés et chiffrés.
-    // Un bouton éteint dit **pourquoi** il l'est, au lieu de se contenter de
-    // pâlir — c'est la même règle que « Fonds insuffisants » au recrutement.
+
+    // Dans la colonne : le nom et le « i » sur une ligne, la jauge sous eux, les
+    // deux pouvoirs en pied. Un bouton éteint dit **pourquoi** il l'est, au lieu
+    // de se contenter de pâlir — la même règle que « Fonds insuffisants ».
     const bouton = (niveau: 'normal' | 'super', action: string, cle: string): string => {
       const n = p[niveau];
       const pret = dispo(niveau);
@@ -1014,7 +1049,22 @@ export function monterHudHtml(
         + `<span class="nom">${ech(titre)}</span>`
         + `<em class="prix">${ech(nombreIntl(v.locale, n.cout))}</em></button>`;
     };
-    return cadre(`<div class="commandant">${entete}</div>`
+    const details = pouvoirDetail
+      ? `<div class="pouvoir-effets">${(['normal', 'super'] as const).map((niveau) => {
+        const lignes = lignesPouvoir(api.t, p[niveau].effets);
+        if (lignes.length === 0) return '';
+        return `<div class="effet"><span class="rang">${ech(api.t(niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir'))}</span>`
+          + lignes.map((l) => `<span class="puce">${ech(l)}</span>`).join('') + `</div>`;
+      }).join('')}</div>`
+      : '';
+    const aide = api.t('hud.pouvoir_details');
+    return cadre(`<div class="commandant">`
+      + `<span class="tt">${ech(nom)}</span>`
+      + `<button type="button" class="detail" data-action="pouvoir_info" aria-expanded="${pouvoirDetail}"`
+      + ` aria-label="${ech(aide)}" title="${ech(aide)}"><span aria-hidden="true">i</span></button>`
+      + `</div>`
+      + `<span class="energie" aria-hidden="true"${cran}>${energie}</span>`
+      + details
       + `<div class="pouvoirs">${bouton('normal', 'pouvoir', 'hud.jauge_pouvoir')}`
       + `${bouton('super', 'pouvoir_super', 'hud.super_pouvoir')}</div>`);
   }
@@ -1164,8 +1214,8 @@ export function monterHudHtml(
         + `aria-label="${ech(api.t('fiche.detail'))}" title="${ech(api.t('fiche.detail'))}">`
         + `<span aria-hidden="true">${ficheInspection ? '\u25B2' : 'i'}</span></button>`
       : '';
-    return `<div class="p inspect" role="group" aria-label="${ech(api.t('hud.panneau_unite'))}">`
-      + `<span class="bord" style="background:${bord}"></span>`
+    return `<div class="p inspect" role="group" aria-label="${ech(api.t('hud.panneau_unite'))}" style="--camp:${bord}">`
+
       + `<div class="in">${icone}<div style="min-width:0">`
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
       + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}</div>` : '')
@@ -1286,7 +1336,7 @@ export function monterHudHtml(
    * quand la case est hors champ, on rend une chaîne vide et le CSS reprend la
    * main avec une feuille basse — c'est le bon comportement au doigt.
    */
-  function ancrer(c: Case | null | undefined, hauteur: number): string {
+  function ancrer(c: Case | null | undefined, hauteur: number, largeur = LARGEUR_ANCRE): string {
     // La largeur de **l'image**, pas celle du HUD : la racine couvre aussi la
     // colonne de droite, et un panneau ancré qui s'autoriserait cette largeur
     // se poserait sous le rail, là où la case qu'il commente n'est pas.
@@ -1295,10 +1345,10 @@ export function monterHudHtml(
     if (!c || L < LARGEUR_MINIMALE_ANCRE) return '';
     const p = api.versEcran(c);
     if (!p) return '';
-    const droite = p.x + ECART_ANCRE + LARGEUR_ANCRE <= L - 12;
-    const x = droite ? p.x + ECART_ANCRE : p.x - ECART_ANCRE - LARGEUR_ANCRE;
+    const droite = p.x + ECART_ANCRE + largeur <= L - 12;
+    const x = droite ? p.x + ECART_ANCRE : p.x - ECART_ANCRE - largeur;
     const y = p.y - hauteur / 2;
-    const cx = Math.round(Math.max(12, Math.min(L - LARGEUR_ANCRE - 12, x)));
+    const cx = Math.round(Math.max(12, Math.min(L - largeur - 12, x)));
     const cy = Math.round(Math.max(12, Math.min(Math.max(12, H - hauteur - 12), y)));
     return ` data-ancre="oui" style="left:${cx}px;top:${cy}px"`;
   }
@@ -1306,6 +1356,44 @@ export function monterHudHtml(
   function boutonRetour(): string {
     const titre = ech(api.t('menu.retour'));
     return `<button type="button" class="retour" data-action="fermer" aria-label="${titre}" title="${titre}"><span aria-hidden="true">↶</span></button>`;
+  }
+
+  /**
+   * Une **tuile de terrain** de 22 px : le carré du terrain, dans sa propre
+   * couleur, et un motif qui le distingue.
+   *
+   * Les couleurs ne sont pas inventées ici — chaque terrain porte sa `palette`
+   * dans le canon (`content/terrains.json`), la même que le plateau de
+   * l'écran-titre lit déjà. Une seconde table de couleurs finirait par diverger
+   * de la première, et c'est la faute que ce dépôt a déjà commise cinq fois.
+   *
+   * Le motif, lui, est une **forme**, pas une couleur : une liste de terrains
+   * qui ne se distingueraient que par leur teinte serait illisible à qui
+   * confond le vert et le brun.
+   */
+  function vignetteTerrain(v: VueJeu, cle: CleTerrain): string {
+    const pal = v.catalogue.terrains[cle]?.palette;
+    if (!pal) return '';
+    const fond = `<rect width="22" height="22" fill="${pal.main}"/>`;
+    // Un motif par famille de terrain : le relief pointe, l'eau ondule, la voie
+    // traverse, le bâti se dresse. Les autres restent un aplat.
+    const motifs: Partial<Record<CleTerrain, string>> = {
+      foret: `<path d="M6 16l4-8 4 8zM12 17l4-7 4 7z" fill="${pal.dark}"/>`,
+      herbe_haute: `<path d="M4 18v-5M8 18v-7M12 18v-5M16 18v-7" stroke="${pal.dark}" stroke-width="2"/>`,
+      montagne: `<path d="M2 18l7-11 5 7 3-4 3 8z" fill="${pal.dark}"/>`,
+      route: `<path d="M0 9h22v4H0z" fill="${pal.light}"/><path d="M3 11h4M10 11h4M17 11h3" stroke="${pal.dark}" stroke-width="1.4"/>`,
+      pont: `<path d="M0 8h22v6H0z" fill="${pal.light}"/><path d="M4 8v6M18 8v6" stroke="${pal.dark}" stroke-width="1.6"/>`,
+      plage: `<path d="M0 15c4-2 7 2 11 0s7-2 11 0v7H0z" fill="${pal.dark}"/>`,
+      mer: `<path d="M0 8c4-2 7 2 11 0s7-2 11 0M0 14c4-2 7 2 11 0s7-2 11 0" stroke="${pal.light}" stroke-width="1.8" fill="none"/>`,
+      riviere: `<path d="M7 0c4 6-4 10 0 14s-2 6 0 8" stroke="${pal.light}" stroke-width="3" fill="none"/>`,
+      ville: `<path d="M4 18v-8h5v8zM11 18V6h7v12z" fill="${pal.dark}"/>`,
+      usine: `<path d="M3 18v-7l5 3v-3l5 3V5h6v13z" fill="${pal.dark}"/>`,
+      aeroport: `<path d="M11 3l3 8h6l-6 3 2 6-5-4-5 4 2-6-6-3h6z" fill="${pal.dark}"/>`,
+      qg: `<path d="M5 19V7l6-4 6 4v12z" fill="${pal.dark}"/>`,
+      radar: `<path d="M11 19V9M4 9a7 7 0 0 1 14 0z" stroke="${pal.dark}" stroke-width="2" fill="none"/>`,
+      port: `<path d="M11 4v14M6 12a5 5 0 0 0 10 0M7 6h8" stroke="${pal.dark}" stroke-width="2" fill="none"/>`,
+    };
+    return `<svg class="tuile" viewBox="0 0 22 22" aria-hidden="true">${fond}${motifs[cle] ?? ''}</svg>`;
   }
 
   function panneauCamera(): string {
@@ -1346,7 +1434,7 @@ export function monterHudHtml(
   function panneauAttente(v: VueJeu): string {
     if (!v.attenteIa) return '';
     const pal = paletteDe(v.camp === 0 ? 1 : 0);
-    return `<div class="p attente"><span class="bord" style="background:${pal.main}"></span>`
+    return `<div class="p attente" style="--camp:${pal.main}">`
       + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t('hud.tour_adverse'))}</div></div></div>`;
   }
 
@@ -1394,8 +1482,11 @@ export function monterHudHtml(
       + (d.sansMunitions ? `<em class="sans" role="img" aria-label="${ech(sansMunitions)}">∞</em>` : '')
       + `<i>${ech(api.t('fiche.degats', { n: d.degats }))}</i>`
       + `<small>${ech(nomDe(d.unite))}</small></span>`).join('');
+    // « Avance vite sur » et « Ne franchit pas » **montrent** les terrains, comme
+    // la table de dégâts montre des figurines : une liste de sept noms se lit
+    // mot à mot, une rangée de tuiles se lit d'un coup.
     const terrains = (l: readonly CleTerrain[]): string => l
-      .map((t) => `<span class="puce">${ech(nomT(t))}</span>`).join('');
+      .map((t) => `<span class="puce tuilee">${vignetteTerrain(v, t)}${ech(nomT(t))}</span>`).join('');
     const bloc = (titre: string, corps: string, ton = ''): string => corps === ''
       ? ''
       : `<section class="bloc ${ton}"><h4><span>${ech(api.t(titre))}</span></h4><div class="corps">${corps}</div></section>`;
@@ -1505,6 +1596,14 @@ export function monterHudHtml(
    * elle bouge, ce qu'elle voit, ce qu'elle porte — puis la fiche commune à
    * l'inspection, `blocFiche`, qui dit ce qu'elle démolit et ce qui la démolit.
    */
+  /**
+   * Ce que le panneau dit de l'unité mise en avant, et le bouton qui l'achète.
+   *
+   * La grille dit déjà le nom, la silhouette et le prix : la fiche n'a plus à
+   * les répéter en en-tête. Restent les chiffres, les traits, et le corps de
+   * fiche **partagé** avec le panneau d'inspection (`blocFiche`) — ce sont les
+   * mêmes questions, il serait absurde qu'elles reçoivent deux réponses.
+   */
   function ficheProduction(v: VueJeu, cle: CleUnite): string {
     const type = v.catalogue.unites[cle];
     if (!type) return '';
@@ -1523,12 +1622,8 @@ export function monterHudHtml(
       : `<span class="vide">${ech(api.t('fiche.sans_trait'))}</span>`;
     const cout = nombreIntl(v.locale, type.cout);
     return `<div class="panneau-fiche" role="group" aria-label="${ech(api.t('fiche.titre'))}"><div class="fiche-corps">`
-      + `<div class="fiche-entete">${vignette(type.silhouette, v.etat.campCourant, 72)}<div style="min-width:0">`
-      + `<div class="fiche-nom">${ech(nomUnite(v.locale, v.catalogue, cle))}</div>`
-      + `<div class="fiche-cout">${iconeOrdre('fonds')}<span>${ech(cout)}</span></div></div></div>`
       + `<dl>${stats.map(([k, val]) => `<div><dt>${ech(k)}</dt><dd>${ech(val)}</dd></div>`).join('')}</dl>`
-      + `<div><dt>${ech(api.t('fiche.traits'))}</dt>`
-      + `<div class="fiche-traits">${traits}</div></div>`
+      + `<div class="fiche-traits">${traits}</div>`
       + blocFiche(v, cle, false)
       + `</div><div class="fiche-action">`
       + (abordable ? '' : `<span class="note">${ech(api.t('fiche.fonds_insuffisants'))}</span>`)
@@ -1536,32 +1631,57 @@ export function monterHudHtml(
       + `${ech(api.t('fiche.recruter'))}<span aria-hidden="true">·</span><span>${ech(cout)}</span></button></div></div>`;
   }
 
+  /** Largeur du panneau de production, ancré au bâtiment. */
+  const LARGEUR_PRODUCTION = 400;
+
   /**
-   * Le menu de production, en deux colonnes : à gauche la liste de ce que le
-   * bâtiment produit, à droite la fiche de l'unité mise en avant. Un clic dans
-   * la liste change la fiche sans rien fermer ; seul « Recruter » engage.
+   * Le menu de production : un **panneau posé à côté du bâtiment**, plus une
+   * modale.
+   *
+   * C'était une fenêtre de 760 px centrée sur un voile qui noircissait tout le
+   * plateau, avec une liste de lignes de texte à gauche et une fiche technique à
+   * droite — « moche et pas très intuitif », et c'est juste : on recrute six à
+   * dix fois par match, et à chaque fois le jeu disparaissait derrière une boîte
+   * de dialogue pour un achat de deux clics.
+   *
+   * Trois changements. Il s'**ancre à la case** du bâtiment, par le mécanisme
+   * qui sert déjà au menu d'ordres — la règle du HUD est de ne jamais couvrir la
+   * case sur laquelle on joue, et un bâtiment est une case comme une autre. Le
+   * voile s'éclaircit : il ne sert plus qu'à recevoir le clic qui referme, le
+   * plateau reste lisible derrière. Et la liste devient une **grille de
+   * figurines** avec le prix sous chacune : on achète une silhouette, pas une
+   * ligne de tableau.
+   *
+   * Les deux temps restent — mettre en avant, puis produire. C'est la grammaire
+   * du genre, et surtout un achat qui part au premier clic est un achat qu'on
+   * regrette.
    */
-  function modaleProduction(v: VueJeu): string {
+  function panneauProduction(v: VueJeu): string {
     const p = v.production;
     if (!p) return '';
     const fonds = fondsCourants(v);
     const enAvant = uniteEnAvant(v, p);
-    const lignes = p.unites.map((cle) => {
+    const cases = p.unites.map((cle) => {
       const type = v.catalogue.unites[cle];
       if (!type) return '';
       const abordable = type.cout <= fonds;
       const actif = cle === enAvant;
       return `<button type="button" data-action="mettre_en_avant" data-valeur="${ech(cle)}"`
         + ` data-actif="${actif ? 'oui' : 'non'}" data-abordable="${abordable ? 'oui' : 'non'}" aria-pressed="${actif ? 'true' : 'false'}">`
-        + `${vignette(type.silhouette, v.etat.campCourant, 38)}`
+        + `${vignette(type.silhouette, v.etat.campCourant, 40)}`
         + `<span class="tt">${ech(nomUnite(v.locale, v.catalogue, cle))}</span>`
         + `<span class="cout">${ech(nombreIntl(v.locale, type.cout))}</span></button>`;
     }).join('');
-    return `<div class="voile" data-action="fermer"><div class="modale production" data-arret="1" tabindex="-1" role="dialog" aria-label="${ech(api.t('menu.production'))}">`
-      + `<div class="production-entete"><h2>${ech(api.t('menu.production'))}</h2>${boutonRetour()}</div>`
-      + `<div class="production-corps"><div class="liste" role="group" aria-label="${ech(api.t('fiche.liste'))}">${lignes}</div>`
+    const solde = api.t('hud.fonds', { n: nombreIntl(v.locale, fonds) });
+    return `<div class="voile clair" data-action="fermer">`
+      + `<div class="p production"${ancrer(p.batiment, 420, LARGEUR_PRODUCTION)} data-arret="1" tabindex="-1"`
+      + ` role="dialog" aria-label="${ech(api.t('menu.production'))}">`
+      + `<div class="production-entete"><span class="tt">${ech(api.t('menu.production'))}</span>`
+      + `<span class="solde" aria-label="${ech(solde)}">${iconeOrdre('fonds')}${ech(nombreIntl(v.locale, fonds))}</span>`
+      + `${boutonRetour()}</div>`
+      + `<div class="production-grille" role="group" aria-label="${ech(api.t('fiche.liste'))}">${cases}</div>`
       + (enAvant ? ficheProduction(v, enAvant) : '')
-      + `</div></div></div>`;
+      + `</div></div>`;
   }
 
   function ecranFin(v: VueJeu): string {
@@ -1613,7 +1733,22 @@ export function monterHudHtml(
     const bulletinOuvert = racine.querySelector<HTMLDetailsElement>('.bulletin')?.open ?? false;
     racine.dataset['ordres'] = v.menu ? 'oui' : 'non';
     racine.dataset['scene'] = v.sceneOuverte ? 'ouverte' : 'fermee';
-    racine.dataset['selectionNouvelle'] = v.selection !== derniereSelection ? 'oui' : 'non';
+    const selectionNeuve = v.selection !== derniereSelection;
+    racine.dataset['selectionNouvelle'] = selectionNeuve ? 'oui' : 'non';
+    // **Cliquer une unité ouvre son détail**, quand elle est seule sur sa case.
+    // Le bouton « i » existait, mais il fallait le trouver et l'atteindre : sur
+    // une unité qui ne porte rien, il n'y a rien à choisir et rien à cacher.
+    // Réservé à la colonne : sur un téléphone, la fiche dépliée mange la moitié
+    // de l'écran et couvre le plateau qu'on est en train de lire.
+    if (selectionNeuve && largeurRail > 0) {
+      const choisie = v.selection ? uniteParId(v.etat, v.selection) : null;
+      // « Tout seul » : rien à bord. Un transport plein pose la question de
+      // savoir de qui l'on parle, et on n'y répond pas à sa place — sa fiche
+      // reste à demander. La règle est **déterministe** : le détail suit la
+      // sélection, il ne garde pas l'état de l'unité d'avant, sans quoi le même
+      // clic donnerait deux écrans différents selon ce qu'on regardait avant.
+      ficheInspection = choisie !== null && choisie !== undefined && choisie.cargo.length === 0;
+    }
     derniereSelection = v.selection;
     // Le duel se calcule **une fois** : il pousse des vignettes, et deux appels
     // en réclameraient deux fois plus qu'il n'y a de canvas à peindre.
@@ -1639,7 +1774,7 @@ export function monterHudHtml(
     composer('camera', () => panneauCamera());
     composer('attente', () => panneauAttente(v));
     composer('annonce', () => panneauAnnonce(v));
-    composer('production', () => modaleProduction(v));
+    composer('production', () => panneauProduction(v));
     composer('fin', () => ecranFin(v));
     const reecrits = new Set(poserEmplacements(emplacements, htmlPose, html));
     if (reecrits.has('bulletin')) {
@@ -1662,16 +1797,16 @@ export function monterHudHtml(
    */
   function replacerFocus(v: VueJeu, avant: DOMStringMap | null): void {
     if (v.production) {
-      const modale = racine.querySelector<HTMLElement>('.modale.production');
+      const modale = racine.querySelector<HTMLElement>('.p.production');
       let cible: HTMLElement | null = null;
       if (avant?.['action'] === 'mettre_en_avant') {
-        cible = racine.querySelector<HTMLElement>('.liste button[data-actif="oui"]');
+        cible = racine.querySelector<HTMLElement>('.production-grille button[data-actif="oui"]');
       } else if (avant?.['action']) {
         const valeur = avant['valeur'] ? `[data-valeur="${avant['valeur']}"]` : '';
-        cible = racine.querySelector<HTMLElement>(`.modale.production [data-action="${avant['action']}"]${valeur}`);
+        cible = racine.querySelector<HTMLElement>(`.p.production [data-action="${avant['action']}"]${valeur}`);
       }
       (cible ?? modale)?.focus({ preventScroll: true });
-      racine.querySelector('.liste button[data-actif="oui"]')?.scrollIntoView({ block: 'nearest' });
+      racine.querySelector('.production-grille button[data-actif="oui"]')?.scrollIntoView({ block: 'nearest' });
       return;
     }
     if (productionOuverte !== null) {
@@ -1700,6 +1835,7 @@ export function monterHudHtml(
       case 'mettre_en_avant': uniteMiseEnAvant = valeur; rafraichir(); break;
       // Déplier la fiche sous le curseur ne touche à rien du jeu non plus.
       case 'fiche': ficheInspection = !ficheInspection; rafraichir(); break;
+      case 'pouvoir_info': pouvoirDetail = !pouvoirDetail; rafraichir(); break;
       case 'pouvoir': api.jouerPouvoir('normal'); break;
       case 'pouvoir_super': api.jouerPouvoir('super'); break;
       case 'fermer': api.annuler(); break;

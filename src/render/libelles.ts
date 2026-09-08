@@ -15,8 +15,9 @@
 import type { Catalogue } from '../engine/index';
 import { resoudre } from '../i18n/index';
 import type {
-  CleTerrain, CleUnite, Meteo, PhaseJour, Saison, Trait, TypeMouvement,
+  CleTerrain, CleUnite, EffetPouvoir, Meteo, PhaseJour, Saison, Trait, TypeMouvement,
 } from '../schemas/types';
+import { BORNES_MODIFICATEUR } from '../schemas/types';
 
 /** Un `t()` déjà lié à la langue. */
 export type Traduire = (cle: string, params?: Record<string, string | number>) => string;
@@ -79,4 +80,37 @@ export function libelleMouvement(t: Traduire, m: TypeMouvement): string {
 /** Libellé d'un trait d'unité : la liste fermée de `04-gameplay.md` §13.2. */
 export function libelleTrait(t: Traduire, tr: Trait): string {
   return t(`trait.${tr}`);
+}
+
+/**
+ * Ce qu'un pouvoir de commandant **fait**, une ligne par effet.
+ *
+ * On dépensait une ressource de match sans savoir ce qu'on achetait : la jauge
+ * affichait le nom du commandant et le mot « Pouvoir », rien de plus. Les
+ * effets sont pourtant des données (`EffetPouvoir`), et il suffit de les lire.
+ *
+ * La forme du chiffre vient de `BORNES_MODIFICATEUR` — le moteur sait déjà
+ * lesquels de ses dix modificateurs sont des rapports et lesquels sont des
+ * entiers. On ne redécide pas ici qu'une attaque se dit en pour cent : on le
+ * demande, sinon la moindre borne changée ferait mentir cette ligne.
+ */
+export function lignesPouvoir(t: Traduire, effets: readonly EffetPouvoir[]): string[] {
+  const lignes: string[] = [];
+  for (const effet of effets) {
+    if (!('modificateur' in effet)) {
+      // Une pose de terrain : le pouvoir change la carte. On le dit sans
+      // prétendre décrire une géométrie qu'un joueur verra de toute façon.
+      lignes.push(t('hud.effet_terrain'));
+      continue;
+    }
+    const { quoi, valeur } = effet.modificateur;
+    const quoiDit = t(`modificateur.${quoi}`);
+    if (BORNES_MODIFICATEUR[quoi].forme === 'mult') {
+      const part = Math.round((valeur - 1) * 100);
+      lignes.push(t('hud.effet_pourcent', { quoi: quoiDit, signe: part >= 0 ? '+' : '−', n: Math.abs(part) }));
+    } else {
+      lignes.push(t('hud.effet_points', { quoi: quoiDit, signe: valeur >= 0 ? '+' : '−', n: Math.abs(valeur) }));
+    }
+  }
+  return lignes;
 }
