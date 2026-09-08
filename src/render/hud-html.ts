@@ -648,6 +648,28 @@ const STYLE = `
 /* Sous 480 px, le revenu cède : la journée et les fonds passent d'abord. */
 @container atlas-interface (max-width: 480px){.atlas-hud .fonds .revenu{display:none}}
 @container atlas-interface (max-width: 600px){
+  /* La météo ne descend sous la journée que là où il y a une colonne pour
+     l'accueillir. Sur un téléphone, l'empiler ajoutait quatre-vingt-quinze
+     pixels au bord gauche, sous une bande de journée et au-dessus du fanion de
+     mission : trois blocs l'un sur l'autre, et autant de carte en moins. Elle
+     reprend le coin haut droit, qui ne sert à rien d'autre. */
+  .atlas-hud .bulletin{left:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:150px}
+  .atlas-hud .partie{max-width:calc(100% - 174px)}
+  /* Les boutons de caméra faisaient une colonne de sept, soit trois cent
+     trente-huit pixels le long du bord droit — sur un téléphone, plus de la
+     moitié de la hauteur jouable, pour des gestes que le doigt fait déjà : deux
+     doigts zooment et inclinent, un doigt déplace. Ne restent que ceux qui
+     n'ont pas de geste — les deux quarts de tour —, plus l'unité suivante et le
+     recentrage, en **une rangée** posée au-dessus du panneau d'unité. */
+  .atlas-hud .camera{bottom:calc(var(--bas) + var(--dock) + 8px);display:flex;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 24px)}
+  .atlas-hud .camera button[data-action='zoom_plus'],
+  .atlas-hud .camera button[data-action='zoom_moins'],
+  .atlas-hud .camera button[data-action='inclinaison']{display:none}
+  /* Le bas s'empile au lieu de se disputer une ligne : le pied, la rangée de
+     caméra, puis le panneau d'unité, qui reprend la largeur que la colonne de
+     boutons lui prenait. Quatre boutons de 44 font 191 px : la rangée ne passe
+     jamais à la ligne, sa hauteur est donc connue. */
+  .atlas-hud .inspect{bottom:calc(var(--bas) + var(--dock) + 60px);max-width:calc(100% - 24px)}
   .atlas-hud .jour{padding:0 10px;gap:5px;font-size:var(--t3)}
   .atlas-hud .fonds{padding-right:8px;font-size:var(--t4)}
   .atlas-hud .dock{width:calc(100% - 24px)}

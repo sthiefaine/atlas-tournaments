@@ -1246,6 +1246,41 @@ function feuille(): string {
   return source.slice(debut, fin);
 }
 
+/** Le corps d'une requête de conteneur, accolades appariées. */
+function requete(css: string, entete: string): string {
+  const debut = css.indexOf(entete);
+  assert.ok(debut >= 0, `requête introuvable : ${entete}`);
+  let profondeur = 0;
+  for (let i = css.indexOf('{', debut); i < css.length; i += 1) {
+    if (css[i] === '{') profondeur += 1;
+    else if (css[i] === '}') {
+      profondeur -= 1;
+      if (profondeur === 0) return css.slice(debut, i);
+    }
+  }
+  throw new Error(`requête non refermée : ${entete}`);
+}
+
+test('sur téléphone, le HUD rend le bord de l’écran à la carte', () => {
+  // Deux dettes payées le 8 septembre 2026, sur retour du propriétaire — « l'UI
+  // prend trop de place pour rien ». La météo était passée **sous** la journée,
+  // ce qui est juste en colonne de droite et ruineux sur un téléphone : trois
+  // blocs empilés le long du bord gauche. Et les boutons de caméra faisaient une
+  // colonne de sept, soit trois cent trente-huit pixels de bord droit, pour des
+  // gestes que deux doigts font déjà.
+  const etroit = requete(feuille(), '@container atlas-interface (max-width: 600px)');
+  assert.match(etroit, /\.atlas-hud \.bulletin\{[^}]*right:/,
+    'la météo reprend le coin haut droit, elle ne s’empile pas à gauche');
+  assert.doesNotMatch(etroit, /\.atlas-hud \.bulletin\{[^}]*top:calc\(var\(--haut\) \+/,
+    'et elle ne descend plus sous la bande de journée');
+  for (const geste of ['zoom_plus', 'zoom_moins', 'inclinaison']) {
+    assert.ok(etroit.includes(`button[data-action='${geste}']`),
+      `${geste} cède la place : le doigt le fait déjà`);
+  }
+  assert.match(etroit, /\.atlas-hud \.camera\{[^}]*display:flex/,
+    'ce qui reste tient sur une rangée, pas une colonne');
+});
+
 test('l’échelle typographique est fermée : huit crans, et aucune taille écrite à la main', () => {
   // Dix-neuf tailles cohabitaient — 9, 9,5, 10, 11, 11,5, 12, 12,5, 13, 13,5,
   // 14, 15, 16, 17, 20, 21, 22, 25, 26 px —, c'est-à-dire aucune échelle. Sans

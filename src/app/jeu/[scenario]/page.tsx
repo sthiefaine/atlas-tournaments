@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
+import type { Viewport } from 'next';
 import { notFound } from 'next/navigation';
 
 import { t } from '@/i18n/index';
@@ -14,6 +15,27 @@ import scenarioDemo from '../../../../content/scenarios/demo.json';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+
+/**
+ * Le plateau est un **jeu au doigt**, pas un document : le zoom de la page n'y
+ * a rien à faire, et il y prend la place du zoom de la carte. Deux doigts sur
+ * la carte doivent zoomer *la carte*, ce que le zoom de page vole ; et une page
+ * agrandie par erreur déplace tout ce que le lancer de rayon calcule.
+ *
+ * Cette déclaration ne vaut que pour cette route : ailleurs — l'écran-titre, la
+ * campagne, les réglages —, ce sont des textes, et on doit pouvoir les
+ * agrandir. C'est aussi pourquoi elle ne suffit pas à elle seule : iOS ignore
+ * `user-scalable` depuis longtemps, et c'est `touch-action` sur la toile plus
+ * les événements `gesture*` de Safari qui font le travail (`render3d/gestes.ts`).
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+  themeColor: '#132329',
+};
 
 /** Forme d'un code de scénario acceptable dans une URL. */
 const CODE_VALIDE = /^[a-z][a-z0-9_]{1,47}$/;

@@ -310,6 +310,19 @@ export function brancherGestes3d(
     gestes.surTouche?.(touche);
   };
 
+  /**
+   * Le pincement de **Safari**, qui n'est pas un événement de pointeur.
+   *
+   * `touch-action:none` suffit à Chrome et Firefox ; iOS garde en plus ses
+   * `gesturestart` / `gesturechange` / `gestureend`, qui agrandissent la page
+   * entière. Deux doigts sur le plateau zoomaient donc le navigateur au lieu de
+   * la carte, et la page agrandie déplaçait ensuite tout ce que le lancer de
+   * rayon calcule : le jeu devenait injouable au doigt. On les refuse ici, et
+   * nulle part ailleurs — le reste du site est du texte, qu'on doit pouvoir
+   * agrandir.
+   */
+  const refuser = (e: Event): void => { e.preventDefault(); };
+
   canvas.addEventListener('pointerdown', surDown);
   canvas.addEventListener('pointermove', surMove);
   canvas.addEventListener('pointerup', surUp);
@@ -317,6 +330,9 @@ export function brancherGestes3d(
   canvas.addEventListener('wheel', surWheel, { passive: false });
   canvas.addEventListener('contextmenu', surContextMenu);
   canvas.addEventListener('keydown', surKey);
+  for (const genre of ['gesturestart', 'gesturechange', 'gestureend']) {
+    canvas.addEventListener(genre, refuser, { passive: false });
+  }
 
   return (): void => {
     annulerAppuiLong();
@@ -330,5 +346,8 @@ export function brancherGestes3d(
     canvas.removeEventListener('wheel', surWheel);
     canvas.removeEventListener('contextmenu', surContextMenu);
     canvas.removeEventListener('keydown', surKey);
+    for (const genre of ['gesturestart', 'gesturechange', 'gestureend']) {
+      canvas.removeEventListener(genre, refuser);
+    }
   };
 }
