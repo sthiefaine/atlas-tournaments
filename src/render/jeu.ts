@@ -219,6 +219,8 @@ export interface PontDebug {
    * l'extérieur qu'une marée est bien arrivée jusqu'à l'image.
    */
   terrain(x: number, y: number): string | null;
+  /** Où la peau dessine cette unité en ce moment (unités de scène), ou `null`. */
+  positionUnite(id: string): { x: number; y: number; z: number } | null;
 }
 
 /**
@@ -840,6 +842,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       forcerAmbiance,
       etat: () => ({ journee: etat.journee, camp: etat.campCourant, terminee: etat.partie.terminee }),
       terrain: (x, y) => terrainLogique(etat, cat, { x, y }),
+      positionUnite: (id) => rendu.positionUnite?.(id) ?? null,
     };
     (globalThis as unknown as { __atlas?: PontDebug }).__atlas = pont;
   }

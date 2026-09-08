@@ -482,6 +482,12 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       }
     },
 
+    positionUnite(id: string): { x: number; y: number; z: number } | null {
+      // Où la figurine est dessinée **maintenant** : au milieu d'un glissement,
+      // c'est le seul témoin, hors écran, qu'elle bouge.
+      const p = monde?.unites.positionDe(id) ?? null;
+      return p ? { x: p.x, y: p.y, z: p.z } : null;
+    },
     zoomer(sens: number): void {
       monde?.vue3d.zoomer(sens);
       salir();

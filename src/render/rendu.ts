@@ -178,6 +178,13 @@ export interface Rendu {
   /** Un quart de tour autour de la carte : +1 vers la droite, −1 vers la gauche. */
   tourner?(sens: number): void;
   /**
+   * Où la peau dessine une unité **en ce moment**, en unités de scène — au
+   * milieu d'un glissement, ce n'est ni sa case de départ ni celle d'arrivée.
+   * Mise au point et tests de fumée : c'est ce qui prouve qu'une figurine bouge
+   * sans regarder l'écran.
+   */
+  positionUnite?(id: string): { x: number; y: number; z: number } | null;
+  /**
    * Retient la vue du joueur avant que la caméra n'aille voir ailleurs — le
    * tour de l'adversaire —, et l'y ramène ensuite. Un mouvement de caméra
    * **voulu par le joueur** entre les deux annule le retour : on ne ramène

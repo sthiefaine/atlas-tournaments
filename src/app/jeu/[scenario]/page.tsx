@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import { validerMapDef, validerScenario, type MapDef, type Scenario } from '@/schemas/index';
 
-import Toile from './toile';
+import Toile from './toile-client';
 
 import carteDemo from '../../../../content/cartes/carte_plaine_symetrique.json';
 import scenarioDemo from '../../../../content/scenarios/demo.json';
