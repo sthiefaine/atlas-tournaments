@@ -17,6 +17,7 @@ import type { GenreSurbrillance, Surbrillance } from '../render/surbrillance';
 import { cleCase } from '../engine/index';
 import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
+import { remplacerGeometrie } from './maillage';
 
 /**
  * Couleurs des décalques, reprises du rendu 2D pour ne pas réapprendre en
@@ -297,6 +298,7 @@ export function creerSurbrillances(
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -5, polygonOffsetUnits: -5,
   });
   const lisere = new THREE.Mesh(new THREE.BufferGeometry(), matLisere);
+  lisere.name = 'lisere';
   lisere.renderOrder = 4;
   lisere.frustumCulled = false;
   groupe.add(lisere);
@@ -306,6 +308,7 @@ export function creerSurbrillances(
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -6, polygonOffsetUnits: -6,
   });
   const chemin = new THREE.Mesh(new THREE.BufferGeometry(), matChemin);
+  chemin.name = 'chemin';
   chemin.renderOrder = 5;
   chemin.frustumCulled = false;
   groupe.add(chemin);
@@ -315,6 +318,7 @@ export function creerSurbrillances(
     side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -8, polygonOffsetUnits: -8,
   });
   const curseurMaille = new THREE.Mesh(new THREE.BufferGeometry(), matCurseur);
+  curseurMaille.name = 'curseur';
   curseurMaille.renderOrder = 5;
   curseurMaille.frustumCulled = false;
   groupe.add(curseurMaille);
@@ -347,8 +351,10 @@ export function creerSurbrillances(
   ): void => {
     if (cles.get(nom) === cle) return;
     cles.set(nom, cle);
-    maille.geometry.dispose();
-    maille.geometry = construire();
+    // Sous WebGPU, échanger une géométrie ne suffit pas : le moteur a mémoïsé
+    // les tampons de l'ancienne (voir maillage.ts). Sans cela, la flèche de
+    // chemin ne se dessinait qu'une fois, puis plus jamais.
+    remplacerGeometrie(maille, construire());
   };
   /** Les cases vues par le joueur, ou `null` : hors brouillard, tout est vu. */
   let visiblesCourantes: ReadonlySet<string> | null = null;

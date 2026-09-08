@@ -58,6 +58,7 @@ import {
   axePont, CASE, construireSplat, hauteurEn, hauteurSol, NIVEAU_EAU, pieceDeCase,
   terrainBorne, type GrilleTerrain,
 } from './geometrie';
+import { remplacerGeometrie } from './maillage';
 import { jeuMatiere, normalesEau, type JeuMatiere } from './textures';
 import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
 
@@ -762,8 +763,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   function majVoies(suivante: GrilleTerrain): void {
     for (const [maille, batir] of [[voies, geometrieVoies], [ponts, geometriePonts]] as const) {
       const geo = batir(suivante);
-      maille.geometry.dispose();
-      maille.geometry = geo ?? new THREE.BufferGeometry();
+      remplacerGeometrie(maille, geo ?? new THREE.BufferGeometry());
       maille.visible = geo !== null;
     }
   }
@@ -841,10 +841,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
    * l'ancienne berge. Le plan d'eau, lui, ne dépend que des dimensions.
    */
   function reposer(g2: GrilleTerrain): void {
-    socle.geometry.dispose();
-    socle.geometry = geometrieSocle(g2);
-    grille.geometry.dispose();
-    grille.geometry = geometrieGrille(g2);
+    remplacerGeometrie(socle, geometrieSocle(g2));
+    remplacerGeometrie(grille, geometrieGrille(g2));
     const donnees = donneesFonds(g2);
     if (tFonds.image.width === g2.largeur && tFonds.image.height === g2.hauteur) {
       (tFonds.image.data as Uint8Array).set(donnees);
@@ -854,8 +852,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       // de valeur, et le moteur relie la nouvelle au prochain rendu.
       tFonds = remplacer(uEau.tFonds, textureCases(donnees, g2.largeur, g2.hauteur, THREE.RGBAFormat));
       uEau.uCarte.value.set(g2.largeur * CASE, g2.hauteur * CASE);
-      eau.geometry.dispose();
-      eau.geometry = geometrieEau(g2);
+      remplacerGeometrie(eau, geometrieEau(g2));
       eau.position.set((g2.largeur * CASE) / 2, NIVEAU_EAU, (g2.hauteur * CASE) / 2);
       // Le masque de visibilité a la taille de la carte : il suit, avec le
       // dernier ensemble connu — la texture des fonds fait exactement cela.
@@ -918,8 +915,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         // Une nouvelle texture plutôt qu'une écriture : sous WebGPU une texture
         // ne change pas de taille, le nœud du sol lit désormais celle-ci.
         splat = remplacer(noeudsSol.tSplat, textureCases(donnees, suivante.largeur, suivante.hauteur, THREE.RGBAFormat));
-        sol.geometry.dispose();
-        sol.geometry = neuve;
+        remplacerGeometrie(sol, neuve);
         majVoies(suivante);
         reposer(suivante);
         return;
@@ -937,8 +933,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
         };
         neuve.dispose();
       } else {
-        sol.geometry.dispose();
-        sol.geometry = neuve;
+        remplacerGeometrie(sol, neuve);
         (splat.image.data as Uint8Array).set(donnees);
         splat.needsUpdate = true;
         reposer(suivante);

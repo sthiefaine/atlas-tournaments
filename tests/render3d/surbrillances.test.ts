@@ -126,3 +126,24 @@ test('sous brouillard, une case hors de vue reçoit un décalque plat qui ne tra
   assert.ok(m['attaque']!.visible);
   couche.dispose();
 });
+
+test('la flèche de chemin se redessine à chaque survol : sa géométrie change et le moteur le sait', () => {
+  // Le bug du 7 septembre 2026 au soir : sous WebGPU, l'objet de rendu capture
+  // la géométrie à sa création et mémoïse ses tampons. Une flèche dont on
+  // échangeait la géométrie sans lever `needsUpdate` s'affichait au premier
+  // survol, puis plus jamais — le moteur dessinait les tampons libérés.
+  const couche = creerSurbrillances(plat);
+  const fleche = couche.groupe.getObjectByName('chemin') as THREE.Mesh;
+  assert.ok(fleche, 'la flèche est dans le groupe');
+  const materiau = fleche.material as THREE.Material;
+
+  couche.maj([], [{ x: 1, y: 1 }, { x: 2, y: 1 }], null, null);
+  const premiere = fleche.geometry;
+  const versionA = materiau.version;
+  assert.ok(premiere.getAttribute('position'), 'la première flèche a des sommets');
+
+  couche.maj([], [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }], null, null);
+  assert.notEqual(fleche.geometry, premiere, 'un autre chemin, une autre géométrie');
+  assert.ok(fleche.geometry.getAttribute('position'), 'la seconde flèche a des sommets');
+  assert.ok(materiau.version > versionA, 'le matériau a changé de version : l’objet de rendu est refait');
+});
