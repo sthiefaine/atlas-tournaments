@@ -83,7 +83,11 @@
    d'un site de documentation. Elle devient un **fanion** — bandeau de signal en
    tête, texte de l'objectif dessous, coin coupé, épaisseur qui s'écrase à
    l'appui, comme tous les boutons du produit. */
-.atlas-mission-bar{position:absolute;top:calc(80px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:4;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
+/* Le fanion se pose **sous** la colonne d'état du HUD : bande de partie (42 px)
+   puis bulletin météo (95 px), descendu là à la demande du propriétaire. Le
+   chiffre suit celui de `.atlas-hud .bulletin` dans `hud-html.ts` — il le
+   suivait déjà quand la colonne s'arrêtait à la bande de partie. */
+.atlas-mission-bar{position:absolute;top:calc(167px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:4;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
 .atlas-mission-bar button{pointer-events:auto;cursor:pointer;padding:0;color:inherit;background:#0f2129f0;border:2px solid var(--atlas-lisere);border-bottom:4px solid #06131a;box-shadow:5px 5px 0 #04090c73;min-height:48px;transition:background .1s,translate .06s,border-bottom-width .06s}
 .atlas-mission-bar button:hover{background:#1d3f51}
 .atlas-mission-bar button:active{translate:0 2px;border-bottom-width:2px}
@@ -228,7 +232,7 @@
  * 6. Adaptations.
  * ------------------------------------------------------------------------- */
 @media(max-width:600px){
-  .atlas-mission-bar{top:calc(76px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left));width:calc(100% - 20px)}
+  .atlas-mission-bar{left:max(10px,env(safe-area-inset-left));width:calc(100% - 20px)}
   .atlas-voile{align-items:flex-end;padding:env(safe-area-inset-top,0px) 0 0}
   .atlas-briefing{max-height:calc(100dvh - max(16px,env(safe-area-inset-top)));clip-path:none;padding:22px max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));width:100%}
   .atlas-briefing .campagne-actions{padding-bottom:max(12px,env(safe-area-inset-bottom))}
@@ -241,6 +245,9 @@
   .bilan-faits b{font-size:20px}
 }
 @media(max-height:500px) and (orientation:landscape){
+  /* Couché, la colonne de gauche mangerait la hauteur : le bulletin est
+     retourné au coin haut droit (`hud-html.ts`), le fanion remonte sous la
+     seule bande de partie. */
   .atlas-mission-bar{top:calc(72px + env(safe-area-inset-top,0px));width:270px}
   .atlas-mission-resume{font-size:12px}
   .atlas-mission-bar button{min-height:44px}

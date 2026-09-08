@@ -57,7 +57,7 @@ test('sélectionner une unité alliée allume ses cases de déplacement', () => 
   );
 });
 
-test('une unité adverse ne se sélectionne pas', () => {
+test('une unité adverse ne se sélectionne pas : elle s’inspecte', () => {
   const etat = partie();
   const c = controleur(etat);
   const adverse = etat.unites.find((u) => u.camp === 1);
@@ -65,6 +65,7 @@ test('une unité adverse ne se sélectionne pas', () => {
   c.clicCase({ x: adverse.x, y: adverse.y });
   assert.equal(c.phase, 'inactif');
   assert.equal(c.vue.selection, null);
+  assert.equal(c.vue.inspection, adverse.id, 'un clic simple suffit à voir ce qu’elle peut faire');
 });
 
 test('cliquer une case atteignable trace un chemin et ouvre le menu d’ordres', () => {
@@ -377,6 +378,38 @@ test('inspecter une unité adverse allume ses arrivées en danger et son envelop
     assert.ok(portable, 'chaque case rouge est à portée depuis une arrivée possible');
   }
   assert.equal(empreinte(c.etat), empreinte(etat), 'inspecter ne touche pas à la partie');
+});
+
+test('un clic simple sur une unité adverse ouvre son détail, sans double-clic ni appui long', () => {
+  const etat = partieAuContact();
+  const c = controleur(etat);
+  const adverse = etat.unites.find((u) => u.camp === 1);
+  assert.ok(adverse);
+  c.clicCase({ x: adverse.x, y: adverse.y });
+  assert.equal(c.vue.inspection, adverse.id);
+  assert.equal(c.phase, 'inactif', 'l’inspection ne joue rien');
+  assert.deepEqual(c.vue.curseur, { x: adverse.x, y: adverse.y });
+  assert.ok(c.vue.surbrillances.some((s) => s.genre === 'danger'), 'ses arrivées sont allumées');
+  assert.equal(empreinte(c.etat), empreinte(etat), 'un clic sur l’adversaire ne touche pas à la partie');
+
+  // Le double-clic reste, et n'ajoute rien : les deux clics passent par le même
+  // chemin, la demande d'inspection qui suit retombe sur la même unité.
+  c.clicCase({ x: adverse.x, y: adverse.y });
+  assert.equal(c.inspecter({ x: adverse.x, y: adverse.y }), true);
+  assert.equal(c.vue.inspection, adverse.id);
+});
+
+test('sous brouillard, cliquer la case d’une unité adverse invisible n’ouvre rien', () => {
+  const etat = creerPartie(
+    sceneDeCarte(carte(), reglagesParDefaut({ meteoForcee: 'clair', brouillard: true })), CAT, 'rendu',
+  );
+  const vues = new Set(unitesVues(etat, CAT, 0).map((u) => u.id));
+  const cachee = etat.unites.find((u) => u.camp === 1 && !vues.has(u.id));
+  assert.ok(cachee);
+  const c = controleur(etat);
+  c.clicCase({ x: cachee.x, y: cachee.y });
+  assert.equal(c.vue.inspection, null);
+  assert.equal(c.vue.surbrillances.length, 0, 'la portée dirait où elle est');
 });
 
 test('l’inspection se referme au clic suivant, à Échap, ou en sélectionnant une unité amie', () => {

@@ -221,15 +221,20 @@ const STYLE = `
    est peinte **dans la couleur du camp qui joue** : c'est la grammaire
    d'Advance Wars, où la fenêtre prend la couleur de l'armée en main, et le
    seul signal du HUD qu'on lit sans le chercher. */
-.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:stretch;height:42px;max-width:calc(100% - 144px);background:var(--encre);border:1px solid var(--cadre);border-top:3px solid var(--camp)}
+.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:stretch;height:42px;max-width:calc(100% - 24px);background:var(--encre);border:1px solid var(--cadre);border-top:3px solid var(--camp)}
 .atlas-hud .partie>span{display:flex;align-items:center;gap:7px;padding:0 12px;white-space:nowrap}
 .atlas-hud .partie .jour{background:var(--camp);color:#08151e;font-size:var(--t4);font-weight:850;text-transform:uppercase}
 .atlas-hud .partie .fonds{color:var(--signal);font-size:var(--t5);font-weight:900;font-variant-numeric:tabular-nums}
 .atlas-hud .partie .symbole{width:18px;height:18px;flex:none;opacity:.9}
-/* Le bulletin : trois journées côte à côte, plus un accordéon. La météo change
-   le mouvement **et** la vision — la ranger derrière un clic, c'était ranger une
-   règle derrière un clic. */
-.atlas-hud .bulletin{position:absolute;pointer-events:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:196px;color:var(--papier);background:var(--encre);border:1px solid var(--cadre);border-top:3px solid var(--camp);z-index:2}
+/* Le bulletin : trois journées côte à côte. La météo change le mouvement **et**
+   la vision — la ranger derrière un clic, c'était ranger une règle derrière un
+   clic.
+   Il vit **sous** la bande de partie, à gauche (demande du propriétaire) : le
+   temps qu'il fait et la journée qu'on joue sont la même question, et les lire
+   demandait de traverser l'écran. La colonne fait donc « --haut » + 42 de bande
+   + 6 de respiration + 95 de bulletin ; « mission.css » pose son fanion dessous,
+   et c'est la seule chose qui dépende de cette hauteur. */
+.atlas-hud .bulletin{position:absolute;pointer-events:auto;left:max(var(--marge),env(safe-area-inset-left,0px));top:calc(var(--haut) + 48px);width:196px;color:var(--papier);background:var(--encre);border:1px solid var(--cadre);border-top:3px solid var(--camp);z-index:2}
 .atlas-hud .meteo-trois{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 .atlas-hud .meteo-case{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 7px;border-bottom:3px solid transparent}
 .atlas-hud .meteo-case+.meteo-case{border-left:1px solid #ffffff14}
@@ -614,8 +619,6 @@ const STYLE = `
 @container atlas-interface (max-width: 600px){
   .atlas-hud .jour{padding:0 10px;gap:5px;font-size:var(--t3)}
   .atlas-hud .fonds{padding-right:8px;font-size:var(--t4)}
-  .atlas-hud .bulletin{width:116px}
-  .atlas-hud .partie{max-width:calc(100% - 132px)}
   .atlas-hud .dock{width:calc(100% - 24px)}
   .atlas-hud .jauge button{gap:7px;padding:7px 9px}
   .atlas-hud .insigne{width:34px;height:43px}
@@ -641,6 +644,7 @@ const STYLE = `
 @container atlas-interface (max-width: 360px){.atlas-hud .fonds .symbole{display:none}}
 @container atlas-interface (max-height: 500px){
   .atlas-hud>*{--dock:60px;--bas:calc(8px + env(safe-area-inset-bottom,0px));--haut:calc(8px + env(safe-area-inset-top,0px))}
+  .atlas-hud .bulletin{left:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut)}
   .atlas-hud .dock{left:auto;right:max(12px,env(safe-area-inset-right,0px));transform:none;width:340px;max-width:50%}
   .atlas-hud .jauge button{padding:4px 9px}
   .atlas-hud .energie{height:8px;margin:3px 0}
