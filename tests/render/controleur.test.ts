@@ -755,3 +755,60 @@ test('« terminer » après un premier passager pose celui-là seul ; annuler à
   assert.deepEqual({ x: m?.x, y: m?.y }, case2);
   assert.equal(uniteParId(c.etat, inf.id)?.dansTransport, transport.id);
 });
+
+test('le chemin pointé dit ce qu’il coûte, et rien tant qu’on n’a pas bougé', () => {
+  const etat = partie();
+  const c = controleur(etat);
+  const unite = etat.unites.find((u) => u.camp === 0 && u.etat === 'prete');
+  assert.ok(unite);
+  // On passe par une variable plutôt que d'écrire `assert.equal(c.vue.cheminCout,
+  // null)` : sous `node:assert/strict`, `equal` **est** `strictEqual`, dont la
+  // signature restreint le chemin de propriété à `null` pour tout le reste du
+  // test — la lecture d'après serait typée `never`.
+  const inactif = c.vue.cheminCout;
+  assert.equal(inactif, null, 'hors phase de chemin, rien à dire');
+
+  c.clicCase({ x: unite.x, y: unite.y });
+  assert.equal(c.phase, 'selection');
+  // Sur sa propre case, « 0 sur 6 » n'apprend rien : le chemin fait une case.
+  const surPlace = c.vue.cheminCout;
+  assert.equal(surPlace, null, 'pas de chemin, pas de budget');
+
+  // On pointe une voisine atteignable : le coût vient de la portée du moteur.
+  const voisine = c.vue.surbrillances
+    .filter((s) => s.genre === 'deplacement')
+    .map((s) => s.case)
+    .find((k) => k.x !== unite.x || k.y !== unite.y);
+  assert.ok(voisine, 'l’unité a au moins une arrivée');
+  c.poserCurseur(voisine);
+  const budget = c.vue.cheminCout;
+  assert.ok(budget, 'un chemin pointé a un coût');
+  assert.ok(budget.cout > 0 && budget.cout <= budget.max,
+    `coût ${budget.cout} dans le budget ${budget.max}`);
+});
+
+test('« unité suivante » parcourt les unités qui n’ont pas joué, en cycle et sans en sauter', () => {
+  const etat = partie();
+  const c = controleur(etat);
+  c.attendre(false);
+  const jouables = etat.unites.filter(
+    (u) => u.camp === 0 && !u.dansTransport && (u.etat === 'prete' || u.etat === 'deplacee'),
+  );
+  assert.ok(jouables.length >= 2, 'la carte de test en pose plusieurs');
+
+  // Un tour complet du cycle passe par chacune, une fois.
+  const vues = new Set<string>();
+  for (let i = 0; i < jouables.length; i += 1) {
+    const ou = c.uniteSuivante();
+    assert.ok(ou, 'le cycle rend toujours une case');
+    const dessus = etat.unites.find((u) => u.x === ou.x && u.y === ou.y && !u.dansTransport);
+    assert.ok(dessus);
+    vues.add(dessus.id);
+  }
+  assert.equal(vues.size, jouables.length, 'aucune unité sautée, aucune vue deux fois');
+  // Et il boucle : après la dernière, on revient à la première.
+  const retour = c.uniteSuivante();
+  assert.ok(retour);
+  assert.equal(c.vue.selection, jouables[0]?.id ?? null);
+});
+

@@ -33,8 +33,8 @@ import type {
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, brouillardActif, casesAtteignables, casesVisibles, cheminVers, ciblesDepuis, cleCase,
-  depuisCle, estDesaffecte, manhattan, peutCapturerIci, porte, portee, produitesPar, terrainLogique, uniteParId,
-  uniteSur, unitesVues, verifierProduction, constructionsPossibles,
+  coutVers, depuisCle, estDesaffecte, manhattan, peutCapturerIci, pointsMouvement, porte, portee, produitesPar,
+  terrainLogique, uniteParId, uniteSur, unitesVues, verifierProduction, constructionsPossibles,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
 import type { OptionMenu } from './libelles';
@@ -103,6 +103,16 @@ export interface VueControleur {
    * `selection` seulement — ailleurs il n'y a pas de chemin à pointer.
    */
   cheminAveugle: boolean;
+  /**
+   * Ce que le chemin pointé **coûte**, sur ce dont l'unité dispose. `null` hors
+   * de la phase de chemin.
+   *
+   * Le panneau d'unité affichait le mouvement du **catalogue**, c'est-à-dire le
+   * maximum du type, jamais ce que le trajet visé consomme : la flèche était
+   * dessinée et le budget muet. Le coût est lu sur la portée que le moteur a
+   * calculée et que le contrôleur garde déjà en cache — il n'est pas recalculé.
+   */
+  cheminCout: { cout: number; max: number } | null;
   surbrillances: Surbrillance[];
   menu: { ancre: Case; options: OptionMenu[] } | null;
   production: { batiment: Case; unites: CleUnite[] } | null;
@@ -267,6 +277,7 @@ export class Controleur {
       selection: this.selectionId,
       chemin: this.cheminCourant,
       cheminAveugle: this.phaseCourante === 'selection' && this.cheminSortDeLaVue(this.cheminCourant),
+      cheminCout: this.coutDuChemin(),
       surbrillances: this.surbrillances(),
       menu: this.phaseCourante === 'action' && this.options.length > 0
         ? {
@@ -734,6 +745,52 @@ export class Controleur {
     sortie.add(cleCase({ x: u.x, y: u.y }));
     this.cacheAtteignables = { etat: this.etatPartie, uniteId: u.id, portee: p, cases: sortie };
     return this.cacheAtteignables;
+  }
+
+  /**
+   * Le coût du chemin courant et le budget de l'unité. `null` tant qu'on ne
+   * pointe pas un chemin, ou si l'unité n'a pas bougé du tout : « 0 sur 6 » sur
+   * sa propre case n'apprend rien.
+   */
+  private coutDuChemin(): { cout: number; max: number } | null {
+    if (this.phaseCourante !== 'selection') return null;
+    const u = this.uniteSelectionnee();
+    if (!u || this.cheminCourant.length < 2) return null;
+    const cout = coutVers(this.deplacementDe(u).portee, this.arrivee());
+    if (cout === null) return null;
+    return { cout, max: pointsMouvement(this.etatPartie, this.cat, u) };
+  }
+
+  /**
+   * Va à la **prochaine unité qui n'a pas joué**, en cycle.
+   *
+   * Le bouton de fin de tour compte depuis longtemps les unités qui restent à
+   * jouer ; il ne savait pas y aller. Sur un match à quinze unités, les
+   * retrouver à l'œil était une chasse au trésor à chaque tour — et `recentrer`
+   * allait sur la sélection, sinon sur la **première du tableau**, qui n'est
+   * presque jamais la bonne.
+   *
+   * On repart de celle qui est sélectionnée : le cycle avance d'un cran à
+   * chaque appui au lieu de revenir sans cesse à la même.
+   */
+  uniteSuivante(): Case | null {
+    if (!this.monTour) return null;
+    const jouables = this.etatPartie.unites.filter(
+      (u) => u.camp === this.camp && !u.dansTransport
+        && (u.etat === 'prete' || u.etat === 'deplacee'),
+    );
+    if (jouables.length === 0) return null;
+    const depuis = jouables.findIndex((u) => u.id === this.selectionId);
+    const suivante = jouables[(depuis + 1) % jouables.length];
+    if (!suivante) return null;
+    const c = { x: suivante.x, y: suivante.y };
+    // La sélection courante est **défaite d'abord** : en phase de chemin, un clic
+    // sur une autre case veut dire « va là », pas « prends celle-ci ». Sans cela
+    // le cycle repassait sans fin entre les deux premières unités.
+    this.reinitialiserSelection();
+    this.poserCurseur(c);
+    this.clicCase(c);
+    return c;
   }
 
   /** L'unité sélectionnée, ou `undefined`. */

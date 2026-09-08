@@ -1794,6 +1794,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "fiche.solde_apres",
+      "texte": "Reste {n}",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Pied du menu de production, à côté de « Recruter » : ce qui resterait en caisse après l'achat. C'est le chiffre qu'on veut avant de cliquer."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "fiche.titre",
       "texte": "Fiche de l’unité",
       "contexte": {
@@ -1846,6 +1855,33 @@
         "note": "Menu d’ordres : l’unité reste où elle est."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "hud.bilan_unites",
+      "texte": "Unités",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : libellé d'une ligne du bilan, rendu en petites capitales."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.bilan_batiments",
+      "texte": "Bâtiments",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : idem, bâtiments tenus."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.bilan_recrutees",
+      "texte": "Recrutées",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : idem, unités produites pendant le match."
+      },
+      "longueurMax": 14
     },
     {
       "cle": "hud.bulletin",
@@ -1919,6 +1955,15 @@
       "longueurMax": 60
     },
     {
+      "cle": "hud.chemin_cout",
+      "texte": "Chemin {n}/{max}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d'unité : remplace le mouvement du catalogue tant qu'un chemin est pointé. Ce qu'il coûte, sur ce qui reste."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "hud.commandant",
       "texte": "Commandant",
       "contexte": {
@@ -1934,6 +1979,15 @@
         "ecran": "jeu"
       },
       "longueurMax": 40
+    },
+    {
+      "cle": "hud.danger_astuce",
+      "texte": "Double-clic : sa zone de danger",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d'unité, sur une unité adverse seulement, et jamais pendant une visée. Le calcul de la zone existait ; c'est le geste que rien n'annonçait."
+      },
+      "longueurMax": 36
     },
     {
       "cle": "hud.debarquer",
@@ -2391,6 +2445,15 @@
         "note": "Même emplacement que hud.unites_pretes, quand il ne reste aucune unité prête."
       },
       "longueurMax": 20
+    },
+    {
+      "cle": "hud.unite_suivante",
+      "texte": "Unité suivante",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé du bouton qui va à la prochaine unité qui n'a pas joué, dans la pile de commandes de carte."
+      },
+      "longueurMax": 40
     },
     {
       "cle": "hud.unites_pretes",
