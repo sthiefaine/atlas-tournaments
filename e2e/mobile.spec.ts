@@ -146,4 +146,23 @@ test('le HUD rend le bord de l’écran à la carte', async ({ page }) => {
   const meteo = await page.locator('.atlas-hud .bulletin').boundingBox();
   expect(meteo).not.toBeNull();
   expect((meteo as { x: number }).x, 'la météo tient le coin droit').toBeGreaterThan(390 / 2);
+
+  // Le budget de place, mesuré et non estimé. Chaque panneau a une hauteur
+  // maximale : c'est ce qui empêche l'interface de reprendre pixel par pixel la
+  // place qu'on vient de rendre à la carte.
+  const boites: Record<string, number> = {};
+  for (const [nom, sel, max] of [
+    ['journée', '.atlas-hud .partie', 40],
+    ['météo', '.atlas-hud .bulletin', 60],
+    ['pied', '.atlas-hud .dock', 60],
+    ['caméra', '.atlas-hud .camera', 50],
+  ] as [string, string, number][]) {
+    const b = await page.locator(sel).boundingBox();
+    expect(b, `${nom} est mesurable`).not.toBeNull();
+    const h = Math.round((b as { height: number }).height);
+    boites[nom] = h;
+    expect(h, `${nom} : ${h} px, budget ${max}`).toBeLessThanOrEqual(max);
+  }
+  const pris = Object.values(boites).reduce((a, b) => a + b, 0);
+  expect(pris, `le HUD prend ${pris} px de haut sur 844`).toBeLessThan(844 * 0.25);
 });

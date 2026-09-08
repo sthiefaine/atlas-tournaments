@@ -653,8 +653,26 @@ const STYLE = `
      pixels au bord gauche, sous une bande de journée et au-dessus du fanion de
      mission : trois blocs l'un sur l'autre, et autant de carte en moins. Elle
      reprend le coin haut droit, qui ne sert à rien d'autre. */
-  .atlas-hud .bulletin{left:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:150px}
-  .atlas-hud .partie{max-width:calc(100% - 174px)}
+  /* Le haut d'un téléphone dit deux choses et pas une de plus : quel jour on
+     est, et quel temps il fait. La ligne d'ambiance — saison et phase — s'en va,
+     les cases se resserrent : le bandeau passe de 93 à 56 px, et la carte
+     récupère la différence sur toute la largeur. */
+  .atlas-hud .bulletin{left:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:144px}
+  .atlas-hud .meteo-ambiance{display:none}
+  .atlas-hud .meteo-case{padding:4px 2px 5px;gap:0}
+  .atlas-hud .meteo-case svg{width:18px;height:18px}
+  /* Le nom du temps s'en va : l'icône le dit, et la case porte déjà son
+     « aria-label » complet — « Jour 2 · Ciel clair ». Un lecteur d'écran ne perd
+     rien, et le bandeau descend à 48 px. */
+  .atlas-hud .meteo-nom{display:none}
+  .atlas-hud .partie{max-width:calc(100% - 168px);height:38px}
+  /* Le pied prenait 72 px de haut sur une dalle qui en compte 844, pour deux
+     boutons. Ils gardent leurs 44 px de cible et perdent leur enflure. */
+  .atlas-hud>*{--dock:56px}
+  .atlas-hud .fintour button{min-height:44px;font-size:var(--t4);padding:8px 10px;gap:6px}
+  .atlas-hud .fintour .symbole{width:22px;height:22px}
+  .atlas-hud .jauge button{gap:6px;padding:5px 8px}
+  .atlas-hud .insigne{width:30px;height:38px}
   /* Les boutons de caméra faisaient une colonne de sept, soit trois cent
      trente-huit pixels le long du bord droit — sur un téléphone, plus de la
      moitié de la hauteur jouable, pour des gestes que le doigt fait déjà : deux

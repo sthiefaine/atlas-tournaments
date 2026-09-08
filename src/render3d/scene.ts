@@ -200,11 +200,52 @@ export interface OptionsScene3d {
   environnement?: boolean;
 }
 
+/**
+ * La borne de densité par défaut : **2 à la souris, 1,4 au doigt**.
+ *
+ * Un téléphone annonce couramment 2,5 ou 3 : rendre à 2 sur un écran de 390 par
+ * 844 fait 1,3 million de pixels par image, pour une dalle où l'œil ne distingue
+ * plus rien au-delà de 1,4 — et la moitié des pixels coûte la moitié du temps
+ * d'image. C'est le levier le moins cher sur un appareil qui rame, et il ne
+ * touche pas la souris, où la finesse se voit.
+ *
+ * On lit le **pointeur**, pas la largeur : une tablette large au doigt a la même
+ * dalle dense et le même processeur graphique modeste qu'un téléphone.
+ */
+export function ratioMaxParDefaut(fenetre: Window | null): number {
+  try {
+    return fenetre?.matchMedia?.('(pointer: coarse)')?.matches === true ? 1.4 : 2;
+  } catch {
+    return 2;
+  }
+}
+
 /** Le ratio de pixels courant, borné. */
 export function ratioPixels(fenetre: Window | null, max = 2): number {
   const brut = fenetre?.devicePixelRatio;
   const valeur = typeof brut === 'number' && brut > 0 ? brut : 1;
   return Math.max(1, Math.min(max, valeur));
+}
+
+/**
+ * Le dos imposé par l'adresse : `?dos=webgl` force le repli WebGL 2, `?dos=webgpu`
+ * force l'inverse, tout le reste laisse la mesure décider.
+ *
+ * C'est un **outil de mesure**, pas un réglage : le choix automatique est le bon
+ * sur les machines où il a été mesuré (`doc/10` §9.4), mais un appareil qui rame
+ * ne se diagnostique pas de loin. Sur Android, le propriétaire signale un jeu
+ * fluide en WebGL 2 et poussif depuis le portage : ce paramètre est ce qui
+ * permet de comparer les deux sur **son** téléphone au lieu de deviner.
+ */
+export function dosForce(fenetre: Window | null): BackendRendu | null {
+  try {
+    const recherche = fenetre?.location?.search;
+    if (typeof recherche !== 'string') return null;
+    const valeur = new URLSearchParams(recherche).get('dos');
+    return valeur === 'webgl' || valeur === 'webgpu' ? valeur : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Ce qu'on regarde du navigateur pour choisir le dos : `navigator.gpu`, s'il existe. */
@@ -355,7 +396,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let cadenceRefusee = false;
   let derniereImage: number | null = null;
 
-  const ratio = (): number => ratioPixels(fenetre, options.ratioMax ?? 2);
+  const ratio = (): number => ratioPixels(fenetre, options.ratioMax ?? ratioMaxParDefaut(fenetre));
   const reduit = (): boolean => options.reduit?.() ?? false;
   const voulu = (): boolean => !echec && decisionComposeur(qualite, msMesurees, reduit(), cadenceRefusee);
   /** Mesure-t-on encore ? Seulement en `auto`, sans chaîne, tant que la médiane manque. */
@@ -481,7 +522,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
    * tenu pour traité ici, et reste visible à qui attend `prete`.
    */
   const prete: Promise<void> = (async () => {
-    const dos = await choisirBackend(fenetre?.navigator as NavigateurGpu | undefined);
+    const dos = dosForce(fenetre) ?? await choisirBackend(fenetre?.navigator as NavigateurGpu | undefined);
     if (!vivante) throw new Error('Scène démontée avant que le moteur soit prêt.');
     const r = new THREE.WebGPURenderer({
       canvas,

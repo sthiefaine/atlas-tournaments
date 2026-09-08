@@ -283,12 +283,16 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || undefined} />
     {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
+    {/* L'objectif ne s'écrit plus sur la carte : un fanion, et la modale le dit.
+        Deux lignes de texte posées en permanence sur le plateau prenaient la
+        place du jeu — sur un téléphone c'était le quart de la largeur, sur PC
+        une bande de 380 px — pour une phrase qu'on lit une fois par manche. */}
     {mission && etat && !fin && !modal && !enScene ? <aside className="atlas-mission-bar">
-      <button type="button" className="atlas-mission-objectif" onClick={() => setVoirAide(true)}>
-        <span className="atlas-mission-label"><span>⚑ {t(locale, 'campagne.mission', { n: index + 1 })}</span><span>{t(locale, 'campagne.objectif')}</span></span>
-        <span className="atlas-mission-resume">{mission.objectif}</span>
+      <button type="button" className="atlas-mission-fanion" onClick={() => setVoirAide(true)}
+        aria-label={`${t(locale, 'campagne.mission', { n: index + 1 })} · ${t(locale, 'campagne.objectif')}`}
+        title={mission.objectif}>
+        <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{index + 1}</span>
       </button>
-      <button type="button" className="atlas-aide-bouton" onClick={() => setVoirAide(true)} aria-label={t(locale, 'campagne.ouvrir_aide')}><span aria-hidden="true">?</span></button>
     </aside> : null}
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>
       <section ref={dialogueRef} tabIndex={-1} className="atlas-briefing" role="dialog" aria-modal="true" aria-labelledby="titre-mission">
