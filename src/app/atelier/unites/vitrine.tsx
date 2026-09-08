@@ -41,6 +41,7 @@ import {
 } from '@/render3d/unites';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
+import { rectangleTuile } from './tuiles';
 
 /** Les six angles, dans l'ordre où on les lit : les quatre élévations, le dessus, le jeu. */
 const VUES = [
@@ -459,13 +460,16 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     for (const vue of VUES) {
       const tuile = tuiles.get(vue.cle);
       if (!tuile) continue;
-      const r = tuile.getBoundingClientRect();
-      const x = Math.round(r.left - rectCadre.left);
-      const yHaut = Math.round(r.top - rectCadre.top);
-      const l = Math.max(1, Math.round(r.width));
-      const h = Math.max(1, Math.round(r.height));
-      // WebGL compte depuis le bas : l'origine de la tuile se mesure au bas du cadre.
-      const y = hauteur - yHaut - h;
+      const rect = rectangleTuile(rectCadre, tuile.getBoundingClientRect(), largeur, hauteur);
+      // Une tuile qui ne tient pas entièrement dans le cadre est **sautée**, pas
+      // rognée : sous WebGPU, `setScissorRect` prend des entiers non signés et
+      // lève « Value is outside the unsigned long value range » sur un `y`
+      // négatif, là où WebGL s'en accommodait. Le cas arrive pendant un
+      // redimensionnement — le `ResizeObserver` appelle `dessiner` quand le
+      // cadre est déjà mesuré et les tuiles pas encore —, et l'exception faisait
+      // tomber toute la page derrière la limite d'erreur de React.
+      if (!rect) continue;
+      const { x, y, l, h } = rect;
       renderer.setViewport(x, y, l, h);
       renderer.setScissor(x, y, l, h);
       const aspect = l / h;
