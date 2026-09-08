@@ -265,6 +265,18 @@ export class LotInstancie extends THREE.Mesh {
   }
 
   /**
+   * Relit la teinte d'une instance, en face de `getMatrixAt`. Rend faux — sans
+   * toucher à la couleur donnée — quand le lot n'a jamais été teinté : c'est
+   * ce qu'`InstancedMesh` dit par un `instanceColor` nul, et le lot n'alloue
+   * son attribut qu'au premier `setColorAt`.
+   */
+  getColorAt(i: number, couleur: THREE.Color): boolean {
+    if (!this.teintesAttr || i < 0 || i >= this.capacite) return false;
+    couleur.fromArray(this.teintesAttr.array as Float32Array, i * 3);
+    return true;
+  }
+
+  /**
    * Libère ce que le lot possède en propre. La **forme** ne l'est pas : ses
    * attributs viennent d'un cache au niveau module, partagé avec les décors
    * encore à l'écran, et les libérer tuerait leurs arbres (`paysage.ts`,

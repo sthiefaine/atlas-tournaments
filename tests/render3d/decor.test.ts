@@ -926,13 +926,21 @@ function decorDe(carte: unknown, scenario: unknown, biome: Biome): Decor {
  * Un chiffre qui bouge ici veut dire qu'un sommet, une pose, une teinte
  * d'instance ou une matière a changé. Si c'est voulu, on relève l'empreinte et
  * on écrit pourquoi ; sinon, c'est une régression.
+ *
+ * **Relevées à nouveau le 8 septembre 2026**, et pour une raison qui n'est pas
+ * un changement de scène : l'empreinte ne hache plus que les instances
+ * **dessinées**. Au-delà du compte, le tampon d'un lot n'atteint pas l'écran, et
+ * un lot vide y gardait une pose morte — deux façons de ne rien dessiner se
+ * lisaient comme deux scènes. La preuve que rien n'a bougé est directe : la même
+ * règle appliquée au code d'avant `lots.ts` rend ces cinq condensés-ci, au
+ * caractère près.
  */
 const EMPREINTES: ReadonlyArray<readonly [string, unknown, unknown, Biome, string, number]> = [
-  ['demo', carteDemo, scenarioDemo, 'plaine', '33757c40', 115],
-  ['demo', carteDemo, scenarioDemo, 'marais', '96124447', 113],
-  ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', 'eb871afa', 161],
-  ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', '0779e4af', 69],
-  ['chantier_des_usines', carteChantier, scenarioChantier, 'neige', 'a9ad09fb', 72],
+  ['demo', carteDemo, scenarioDemo, 'plaine', '8e115f22', 115],
+  ['demo', carteDemo, scenarioDemo, 'marais', 'bcd95007', 113],
+  ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', 'ee3a9258', 161],
+  ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', 'b5e43e79', 69],
+  ['chantier_des_usines', carteChantier, scenarioChantier, 'neige', '1ae091dd', 72],
 ];
 
 for (const [nom, carte, scenario, biome, digest, objets] of EMPREINTES) {

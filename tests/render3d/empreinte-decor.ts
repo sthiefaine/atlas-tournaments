@@ -45,11 +45,11 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
     o.quaternion.x, o.quaternion.y, o.quaternion.z, o.quaternion.w,
     o.scale.x, o.scale.y, o.scale.z,
   ];
-  // Un lot instancié se déclare `Mesh` depuis `lots.ts` — c'est justement ce
-  // qui lui épargne un programme —, mais il met à l'écran ce qu'un
-  // `InstancedMesh` y mettait : l'empreinte le dit comme avant.
-  const type = estLotInstancie(o) ? 'InstancedMesh' : o.type;
-  let ligne = `${chemin}|${type}|${o.name}|${o.visible ? 1 : 0}`
+  // Le type reste celui de three, et il vaut `Mesh` des deux côtés : un
+  // `InstancedMesh` n'a jamais eu de `type` à lui — il se signale par
+  // `isInstancedMesh`, pas par son nom. Écrire `InstancedMesh` ici pour « dire
+  // comme avant » disait justement autre chose, et déplaçait l'empreinte.
+  let ligne = `${chemin}|${o.type}|${o.name}|${o.visible ? 1 : 0}`
     + `|${o.castShadow ? 1 : 0}|${o.receiveShadow ? 1 : 0}`
     + `|${p.map((v) => v.toFixed(9)).join(',')}`;
   const m = o as THREE.Mesh;
@@ -69,7 +69,7 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
   if (estLotInstancie(o)) {
     // Les seize flottants d'une instance, dans l'ordre où `instanceMatrix` les
     // rangeait : quatre colonnes à la suite. Même contenu, même haché.
-    ligne += `|inst:${o.compte}/${o.capacite}:${hacher(o.matricesAPlat())}`;
+    ligne += `|inst:${o.compte}/${o.capacite}:${hacher(o.matricesAPlat().subarray(0, o.compte * 16))}`;
     const teintes = o.teintesAPlat();
     ligne += `|col:${teintes ? hacher(teintes) : 'nul'}`;
     return ligne;
@@ -77,7 +77,7 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
   const lot = m as THREE.InstancedMesh;
   if (lot.isInstancedMesh) {
     ligne += `|inst:${lot.count}/${lot.instanceMatrix.count}`
-      + `:${hacher(lot.instanceMatrix.array as ArrayLike<number>)}`;
+      + `:${hacher((lot.instanceMatrix.array as Float32Array).subarray(0, lot.count * 16))}`;
     ligne += `|col:${lot.instanceColor ? hacher(lot.instanceColor.array as ArrayLike<number>) : 'nul'}`;
   }
   return ligne;
