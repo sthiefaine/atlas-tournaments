@@ -60,8 +60,8 @@ import {
 } from './geometrie';
 import { creerTampon, remplacerGeometrie } from './maillage';
 import { normaliserMateriau } from './programmes';
-import { jeuMatiere, normalesEau, type JeuMatiere } from './textures';
-import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
+import { jeuMatiere, normalesEau, preparerEau, preparerMatiere, type JeuMatiere } from './textures';
+import { APPARENCES, atlasVoies, textureVoies, uvAtlas } from './textures-voies';
 
 /** Subdivisions par case : trois suffisent à arrondir un col de montagne. */
 const SUBDIVISIONS = 3;
@@ -664,16 +664,52 @@ function geometrieGrille(g: GrilleTerrain): THREE.BufferGeometry {
   return geo;
 }
 
+/**
+ * Les cinq matières du sol, avec la taille de leur toile. La neige n'est reprise
+ * par aucune palette de biome (`textures.ts`) : elle garde donc la sienne
+ * partout, et c'est ce qui lui vaut une seule toile pour toutes les cartes.
+ *
+ * **Une seule liste**, lue par `creerPlateau` et par `tranchesToilesPlateau` :
+ * deux copies divergeraient, et la seconde préparerait des toiles que la
+ * première ne demande pas — la faute déjà commise quatre fois sur les listes de
+ * bâtiments (`CLAUDE.md`, catalogue 5).
+ */
+const MATIERES_SOL = [
+  { matiere: 'herbe', taille: 256, teintee: true },
+  { matiere: 'terre', taille: 256, teintee: true },
+  { matiere: 'roche', taille: 256, teintee: true },
+  { matiere: 'sable', taille: 256, teintee: true },
+  { matiere: 'neige', taille: 128, teintee: false },
+] as const;
+
+/**
+ * Les toiles du plateau, en tranches : une par appel, à jouer chacune dans sa
+ * propre tâche avant `creerPlateau` (`index.ts`). Rien n'est rendu — les pixels
+ * vont dans la mémoire de `textures.ts`, où `creerPlateau` les retrouvera sans
+ * repeindre. Un plateau bâti sans avoir joué ces tranches marche exactement
+ * pareil, il paie simplement tout d'un coup : c'est ce que font le banc, la
+ * vitrine et les tests.
+ */
+export function tranchesToilesPlateau(doc: Document, biome: Biome = 'plaine'): Array<() => void> {
+  const tranches: Array<() => void> = MATIERES_SOL.map((d) => (): void => {
+    preparerMatiere(doc, d.matiere, d.taille, d.teintee ? biome : 'plaine');
+  });
+  // L'eau et l'atlas des voies gardent la taille par défaut de leur fonction :
+  // c'est ainsi que `creerPlateau` les demande, et deux appels sans taille ne
+  // peuvent pas diverger.
+  tranches.push((): void => { preparerEau(doc); });
+  tranches.push((): void => { atlasVoies(doc, biome); });
+  return tranches;
+}
+
 /** Monte le plateau complet dans un groupe. */
 export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'plaine'): Plateau {
   const groupe = new THREE.Group();
   groupe.name = 'plateau';
 
-  const herbe = jeuMatiere(doc, 'herbe', 256, biome);
-  const terre = jeuMatiere(doc, 'terre', 256, biome);
-  const roche = jeuMatiere(doc, 'roche', 256, biome);
-  const sable = jeuMatiere(doc, 'sable', 256, biome);
-  const neige = jeuMatiere(doc, 'neige', 128);
+  const [herbe, terre, roche, sable, neige] = MATIERES_SOL.map(
+    (d) => jeuMatiere(doc, d.matiere, d.taille, d.teintee ? biome : 'plaine'),
+  ) as [JeuMatiere, JeuMatiere, JeuMatiere, JeuMatiere, JeuMatiere];
 
   // Les textures d'un texel par case sont **remplacées** quand la carte change
   // de taille : ces trois-là sont les textures du moment, jamais gelées.

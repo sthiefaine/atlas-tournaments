@@ -5,6 +5,13 @@
  * des dix biomes, strates minérales, touffes et rides du sable. Les détails
  * restent continus et déterministes pour une lecture nette en vue rapprochée.
  *
+ * **Peints une fois par page** (8 septembre 2026) : une matière ne dépend que de
+ * son nom, de sa taille et du biome, or c'était le plus gros bloc du chargement
+ * (`10-rendu-3d.md` §9.6). Ce sont les **pixels** qui sont gardés, jamais les
+ * textures — chaque plateau garde et libère les siennes. Les boucles ont été
+ * réécrites dans la foulée, sans changer un octet : `tests/render3d/textures.test.ts`
+ * rejoue la formule d'origine et compare.
+ *
  * Toutes les fonctions prennent le `Document` en paramètre : rien ici ne suppose
  * un `window` global, ce qui garde le module montable dans un `iframe` ou un
  * canvas hors écran.
@@ -44,19 +51,38 @@ function bruit(taille: number, periode: number, graine: number): Float32Array {
   for (let i = 0; i < grille.length; i += 1) grille[i] = alea();
   const sortie = new Float32Array(taille * taille);
   const pas = periode / taille;
-  for (let y = 0; y < taille; y += 1) {
-    const fy = y * pas;
-    const y0 = Math.floor(fy) % periode;
-    const y1 = (y0 + 1) % periode;
-    const ty = adoucir(fy - Math.floor(fy));
+  // L'interpolation est **séparable** : on la fait en deux passes au lieu d'une.
+  // La première étale les `periode` lignes de la grille sur `taille` colonnes ;
+  // la seconde ne fait plus qu'un fondu vertical entre deux de ces lignes. Le
+  // pixel coûte deux lectures et un mélange au lieu de quatre et trois, et la
+  // passe horizontale ne se paie que `periode` fois, pas `taille` fois.
+  //
+  // Les lignes intermédiaires sont en **double** précision : un `Float32Array`
+  // les arrondirait et la texture ne serait plus la même au bit près.
+  const lignes = new Float64Array(periode * taille);
+  for (let g = 0; g < periode; g += 1) {
+    const base = g * periode;
+    const sortieLigne = g * taille;
     for (let x = 0; x < taille; x += 1) {
       const fx = x * pas;
-      const x0 = Math.floor(fx) % periode;
+      const plancher = Math.floor(fx);
+      const x0 = plancher % periode;
       const x1 = (x0 + 1) % periode;
-      const tx = adoucir(fx - Math.floor(fx));
-      const a = (grille[y0 * periode + x0] ?? 0) + ((grille[y0 * periode + x1] ?? 0) - (grille[y0 * periode + x0] ?? 0)) * tx;
-      const b = (grille[y1 * periode + x0] ?? 0) + ((grille[y1 * periode + x1] ?? 0) - (grille[y1 * periode + x0] ?? 0)) * tx;
-      sortie[y * taille + x] = a + (b - a) * ty;
+      const a = grille[base + x0] ?? 0;
+      lignes[sortieLigne + x] = a + ((grille[base + x1] ?? 0) - a) * adoucir(fx - plancher);
+    }
+  }
+  for (let y = 0; y < taille; y += 1) {
+    const fy = y * pas;
+    const plancher = Math.floor(fy);
+    const l0 = (plancher % periode) * taille;
+    const l1 = ((((plancher % periode) + 1) % periode)) * taille;
+    const ty = adoucir(fy - plancher);
+    const ligne = y * taille;
+    for (let x = 0; x < taille; x += 1) {
+      const a = lignes[l0 + x] ?? 0;
+      const b = lignes[l1 + x] ?? 0;
+      sortie[ligne + x] = a + (b - a) * ty;
     }
   }
   return sortie;
@@ -87,6 +113,92 @@ function toile(doc: Document, taille: number): { c: HTMLCanvasElement; g: Canvas
   const g = c.getContext('2d');
   if (!g) throw new Error('Canvas 2D indisponible : textures procédurales impossibles.');
   return { c, g };
+}
+
+// ---------------------------------------------------------------------------
+// Les toiles déjà peintes
+// ---------------------------------------------------------------------------
+//
+// Une matière ne dépend que de son nom, de sa taille et du biome ; un atlas de
+// voies que du biome. Rien de tout cela ne change d'un montage à l'autre, et
+// c'est le plus gros bloc du chargement (`10-rendu-3d.md` §9.6). On garde donc
+// les **pixels**, jamais les textures : une `CanvasTexture` neuve par montage
+// coûte zéro pixel, et chaque plateau reste libre de libérer les siennes sans
+// que le montage suivant hérite d'une texture morte.
+//
+// Le cache est **par document** — un canvas appartient au sien — et **borné** :
+// une page qui promène le joueur de biome en biome ne garde pas tout.
+
+/**
+ * Combien de toiles au plus, tous biomes confondus.
+ *
+ * Un biome complet en occupe douze — quatre matières en albédo et normales à
+ * 256², la neige à 128², les normales de l'eau, l'atlas des voies —, soit
+ * environ **2,8 Mo** de mémoire vive. Vingt-quatre en tiennent donc exactement
+ * deux, ce qui est le cas courant : l'accueil montre un biome, la mission un
+ * autre. Un troisième fait sortir le plus ancien, qui se repeindra si on y
+ * revient.
+ */
+const MAX_TOILES = 24;
+
+/** Un cache borné, le plus anciennement lu sortant en premier. */
+class Memoire<V> {
+  private readonly table = new Map<string, V>();
+
+  constructor(private readonly max: number) {}
+
+  lire(cle: string, creer: () => V): V {
+    const memo = this.table.get(cle);
+    if (memo !== undefined) {
+      // Relire remet en queue : c'est ce qui fait sortir le plus vieux.
+      this.table.delete(cle);
+      this.table.set(cle, memo);
+      return memo;
+    }
+    const valeur = creer();
+    this.table.set(cle, valeur);
+    if (this.table.size > this.max) {
+      const vieille = this.table.keys().next().value;
+      if (vieille !== undefined) this.table.delete(vieille);
+    }
+    return valeur;
+  }
+
+  get taille(): number {
+    return this.table.size;
+  }
+
+  vider(): void {
+    this.table.clear();
+  }
+}
+
+const toilesParDocument = new WeakMap<Document, Memoire<HTMLCanvasElement>>();
+
+/**
+ * La toile de `cle`, peinte une seule fois par document. Le résultat est
+ * **partagé** : on le lit, on ne le repeint pas — la texture qui s'en sert,
+ * elle, appartient à son appelant.
+ */
+export function toileMemorisee(
+  doc: Document, cle: string, peindre: () => HTMLCanvasElement,
+): HTMLCanvasElement {
+  let memoire = toilesParDocument.get(doc);
+  if (!memoire) {
+    memoire = new Memoire<HTMLCanvasElement>(MAX_TOILES);
+    toilesParDocument.set(doc, memoire);
+  }
+  return memoire.lire(cle, peindre);
+}
+
+/** Combien de toiles ce document garde en mémoire. Pour les tests et la mesure. */
+export function toilesEnMemoire(doc: Document): number {
+  return toilesParDocument.get(doc)?.taille ?? 0;
+}
+
+/** Oublie les toiles d'un document : à son démontage, ou pour mesurer à froid. */
+export function oublierToiles(doc: Document): void {
+  toilesParDocument.get(doc)?.vider();
 }
 
 /** Mélange linéaire de deux couleurs `[r, v, b]`. */
@@ -183,17 +295,36 @@ export function albedoMatiere(
   const tache = bruitFractal(taille, 2, taille / 6, r.graine + 211);
   const image = g.createImageData(taille, taille);
   const hauteur = new Float32Array(taille * taille);
-  for (let i = 0; i < taille * taille; i += 1) {
-    const n = reliefPeint(matiere, (i % taille) / taille, Math.floor(i / taille) / taille, base[i] ?? 0.5, detail[i] ?? 0.5);
-    let couleur = mel(r.sombre, r.clair, n);
-    const t = tache[i] ?? 0.5;
-    if (t > 1 - r.taches) couleur = mel(couleur, r.couleurTache, (t - (1 - r.taches)) / r.taches);
-    const j = i * 4;
-    image.data[j] = couleur[0];
-    image.data[j + 1] = couleur[1];
-    image.data[j + 2] = couleur[2];
-    image.data[j + 3] = 255;
-    hauteur[i] = n;
+  // Le mélange est écrit à plat : `mel` allouait deux tableaux de trois nombres
+  // **par pixel**, soit cent trente mille objets par matière, ramassés aussitôt.
+  const [sr, sv, sb] = r.sombre;
+  const [cr, cv, cb] = r.clair;
+  const [tr, tv, tb] = r.couleurTache;
+  const seuil = 1 - r.taches;
+  const donnees = image.data;
+  // Deux boucles au lieu d'un modulo et d'une division entière par pixel.
+  for (let i = 0, py = 0; py < taille; py += 1) {
+    const v = py / taille;
+    for (let px = 0; px < taille; px += 1, i += 1) {
+      const n = reliefPeint(matiere, px / taille, v, base[i] ?? 0.5, detail[i] ?? 0.5);
+      const k = n < 0 ? 0 : n > 1 ? 1 : n;
+      let rouge = sr + (cr - sr) * k;
+      let vert = sv + (cv - sv) * k;
+      let bleu = sb + (cb - sb) * k;
+      const t = tache[i] ?? 0.5;
+      if (t > seuil) {
+        const q = Math.max(0, Math.min(1, (t - seuil) / r.taches));
+        rouge += (tr - rouge) * q;
+        vert += (tv - vert) * q;
+        bleu += (tb - bleu) * q;
+      }
+      const j = i * 4;
+      donnees[j] = rouge;
+      donnees[j + 1] = vert;
+      donnees[j + 2] = bleu;
+      donnees[j + 3] = 255;
+      hauteur[i] = n;
+    }
   }
   g.putImageData(image, 0, 0);
   return { canvas: c, hauteur };
@@ -207,17 +338,26 @@ export function albedoMatiere(
  */
 export function normalesDonnees(hauteur: Float32Array, taille: number, force = 2.4): Uint8ClampedArray {
   const donnees = new Uint8ClampedArray(taille * taille * 4);
-  const h = (x: number, y: number): number => {
-    const xi = ((x % taille) + taille) % taille;
-    const yi = ((y % taille) + taille) % taille;
-    return hauteur[yi * taille + xi] ?? 0;
-  };
+  // Le repli du bord ne dépend que de la colonne ou de la ligne : deux tables
+  // remplacent quatre modulos et un appel de fermeture par voisin, soit seize
+  // par pixel. `Math.hypot` cède à une racine — trois octets quantifiés sur huit
+  // bits ne voient pas la différence, et `tests/render3d/textures.test.ts` le
+  // vérifie octet par octet contre la formule d'origine.
+  const gauche = new Int32Array(taille);
+  const droite = new Int32Array(taille);
+  for (let x = 0; x < taille; x += 1) {
+    gauche[x] = (x + taille - 1) % taille;
+    droite[x] = (x + 1) % taille;
+  }
   for (let y = 0; y < taille; y += 1) {
+    const ligne = y * taille;
+    const haut = ((y + taille - 1) % taille) * taille;
+    const bas = ((y + 1) % taille) * taille;
     for (let x = 0; x < taille; x += 1) {
-      const dx = (h(x + 1, y) - h(x - 1, y)) * force;
-      const dy = (h(x, y + 1) - h(x, y - 1)) * force;
-      const l = Math.hypot(dx, dy, 1);
-      const j = (y * taille + x) * 4;
+      const dx = ((hauteur[ligne + (droite[x] ?? 0)] ?? 0) - (hauteur[ligne + (gauche[x] ?? 0)] ?? 0)) * force;
+      const dy = ((hauteur[bas + x] ?? 0) - (hauteur[haut + x] ?? 0)) * force;
+      const l = Math.sqrt(dx * dx + dy * dy + 1);
+      const j = (ligne + x) * 4;
       donnees[j] = Math.round(((-dx / l) * 0.5 + 0.5) * 255);
       donnees[j + 1] = Math.round(((-dy / l) * 0.5 + 0.5) * 255);
       donnees[j + 2] = Math.round((1 / l) * 0.5 * 255 + 127);
@@ -255,11 +395,43 @@ export interface JeuMatiere {
   normales: THREE.CanvasTexture;
 }
 
-/** Fabrique le jeu de textures d'une matière. */
+/**
+ * Fabrique le jeu de textures d'une matière. Les **pixels** sont mémorisés par
+ * document — une matière ne dépend que de son nom, de sa taille et du biome —,
+ * les textures non : chaque plateau garde les siennes et les libère.
+ */
 export function jeuMatiere(doc: Document, matiere: Matiere, taille = 256, biome: Biome = 'plaine'): JeuMatiere {
-  const { canvas, hauteur } = albedoMatiere(doc, matiere, taille, biome);
-  const normales = normalesDepuis(doc, hauteur, taille, matiere === 'roche' ? 2.6 : 1.25);
-  return { albedo: texture(canvas, true), normales: texture(normales, false) };
+  const { albedo, normales } = toilesMatiere(doc, matiere, taille, biome);
+  return { albedo: texture(albedo, true), normales: texture(normales, false) };
+}
+
+/**
+ * Peint les toiles d'une matière **sans en faire de texture** : de quoi mettre
+ * le cache en place depuis sa propre tranche de construction, avant que
+ * `creerPlateau` ne les demande (`terrain.ts`, `tranchesToilesPlateau`).
+ */
+export function preparerMatiere(doc: Document, matiere: Matiere, taille = 256, biome: Biome = 'plaine'): void {
+  toilesMatiere(doc, matiere, taille, biome);
+}
+
+/** Les deux toiles d'une matière, peintes une fois par document. */
+function toilesMatiere(
+  doc: Document, matiere: Matiere, taille: number, biome: Biome,
+): { albedo: HTMLCanvasElement; normales: HTMLCanvasElement } {
+  const prefixe = `mat:${matiere}:${taille}:${biome}`;
+  // Le champ de hauteur ne sert qu'aux normales : peint avec l'albédo, il est
+  // gardé le temps des deux toiles, et jamais recalculé si les deux sont là.
+  const relais: { champ?: Float32Array } = {};
+  const albedo = toileMemorisee(doc, `${prefixe}:albedo`, () => {
+    const peint = albedoMatiere(doc, matiere, taille, biome);
+    relais.champ = peint.hauteur;
+    return peint.canvas;
+  });
+  const normales = toileMemorisee(doc, `${prefixe}:normales`, () => {
+    const h = relais.champ ?? albedoMatiere(doc, matiere, taille, biome).hauteur;
+    return normalesDepuis(doc, h, taille, matiere === 'roche' ? 2.6 : 1.25);
+  });
+  return { albedo, normales };
 }
 
 /**
@@ -267,20 +439,31 @@ export function jeuMatiere(doc: Document, matiere: Matiere, taille = 256, biome:
  * d'albédo — la couleur de l'eau vient de l'ambiance, ses reflets de la lumière.
  */
 export function normalesEau(doc: Document, taille = 256): THREE.CanvasTexture {
-  const hauteur = new Float32Array(taille * taille);
-  const houle = bruitFractal(taille, 3, 5, 907);
-  for (let y = 0; y < taille; y += 1) {
-    for (let x = 0; x < taille; x += 1) {
-      const i = y * taille + x;
-      const u = (x / taille) * Math.PI * 2;
-      const v = (y / taille) * Math.PI * 2;
-      hauteur[i] = 0.5
-        + Math.sin(u * 3 + v * 2) * 0.18
-        + Math.sin(u * 2 - v * 4) * 0.12
-        + ((houle[i] ?? 0.5) - 0.5) * 0.5;
+  return texture(toileEau(doc, taille), false);
+}
+
+/** Peint les normales de l'eau sans en faire de texture. Voir `preparerMatiere`. */
+export function preparerEau(doc: Document, taille = 256): void {
+  toileEau(doc, taille);
+}
+
+function toileEau(doc: Document, taille: number): HTMLCanvasElement {
+  return toileMemorisee(doc, `eau:${taille}`, () => {
+    const hauteur = new Float32Array(taille * taille);
+    const houle = bruitFractal(taille, 3, 5, 907);
+    for (let y = 0; y < taille; y += 1) {
+      for (let x = 0; x < taille; x += 1) {
+        const i = y * taille + x;
+        const u = (x / taille) * Math.PI * 2;
+        const v = (y / taille) * Math.PI * 2;
+        hauteur[i] = 0.5
+          + Math.sin(u * 3 + v * 2) * 0.18
+          + Math.sin(u * 2 - v * 4) * 0.12
+          + ((houle[i] ?? 0.5) - 0.5) * 0.5;
+      }
     }
-  }
-  return texture(normalesDepuis(doc, hauteur, taille, 1.5), false);
+    return normalesDepuis(doc, hauteur, taille, 1.5);
+  });
 }
 
 /**
@@ -497,11 +680,25 @@ function textureDonnees(donnees: Uint8ClampedArray, taille: number, srgb: boolea
   return t;
 }
 
+/**
+ * Les octets d'une couverture : trois sortes, une ou deux tailles, rien qui
+ * dépende de la carte. Ils sont gardés pour la vie de la page — trois sortes en
+ * 128² font 384 ko —, et `textureDonnees` en recopie une vue à chaque montage :
+ * personne ne partage un tampon avec personne.
+ */
+const octetsToit = new Map<string, { albedo: Uint8ClampedArray; normales: Uint8ClampedArray }>();
+
 /** Fabrique le jeu de textures d'une couverture. Un seul par sorte suffit à toute une carte. */
 export function jeuToit(sorte: SorteToit, taille = 128): JeuToit {
-  const { hauteur, albedo } = reliefToit(sorte, taille);
-  const albedoTexture = textureDonnees(albedo, taille, true);
-  const normales = textureDonnees(normalesDonnees(hauteur, taille, FORCE_TOIT[sorte]), taille, false);
+  const cle = `${sorte}:${taille}`;
+  let octets = octetsToit.get(cle);
+  if (!octets) {
+    const { hauteur, albedo } = reliefToit(sorte, taille);
+    octets = { albedo, normales: normalesDonnees(hauteur, taille, FORCE_TOIT[sorte]) };
+    octetsToit.set(cle, octets);
+  }
+  const albedoTexture = textureDonnees(octets.albedo, taille, true);
+  const normales = textureDonnees(octets.normales, taille, false);
   return {
     sorte,
     albedo: albedoTexture,

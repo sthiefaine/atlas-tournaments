@@ -22,7 +22,7 @@ import * as THREE from 'three/webgpu';
 
 import type { Biome } from '../schemas/types';
 import { LIAISONS_CANON, type FormeVoie } from './geometrie';
-import { bruitFractal, texture } from './textures';
+import { bruitFractal, texture, toileMemorisee } from './textures';
 
 /** L'ordre des tuiles dans l'atlas, en lecture : trois colonnes, deux rangs. */
 export const TUILES_ATLAS: readonly FormeVoie[] = ['droite', 'virage', 'te', 'croix', 'bout', 'isole'];
@@ -110,12 +110,6 @@ export const APPARENCES: Readonly<Record<Biome, ApparenceVoie>> = {
   },
 };
 
-/** Mélange linéaire de deux couleurs. */
-function mel(a: RGB, b: RGB, t: number): RGB {
-  const k = Math.max(0, Math.min(1, t));
-  return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-}
-
 function lisser(a: number, b: number, x: number): number {
   const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
   return t * t * (3 - 2 * t);
@@ -150,7 +144,9 @@ export function uvAtlas(forme: FormeVoie, rotation: number, a: number, b: number
 function distRect(a: number, b: number, x0: number, x1: number, y0: number, y1: number): number {
   const dx = Math.max(x0 - a, 0, a - x1);
   const dy = Math.max(y0 - b, 0, b - y1);
-  const dehors = Math.hypot(dx, dy);
+  // Une racine plutôt qu'`hypot` : ces distances sont bornées par la case, il
+  // n'y a rien à mettre à l'échelle, et l'atlas s'écrit octet pour octet pareil.
+  const dehors = Math.sqrt(dx * dx + dy * dy);
   const dedans = Math.min(0, Math.max(a - x1, x0 - a, b - y1, y0 - b));
   return dehors + dedans;
 }
@@ -228,6 +224,11 @@ function motifEn(
  * laisse voir le sol autour de la voie sans qu'on ait à découper la géométrie.
  */
 export function atlasVoies(doc: Document, biome: Biome, taille = 128): HTMLCanvasElement {
+  return toileMemorisee(doc, `voies:${biome}:${taille}`, () => peindreAtlas(doc, biome, taille));
+}
+
+/** L'atlas, vraiment peint. Séparé pour que la mémoire ne garde qu'une toile par clé. */
+function peindreAtlas(doc: Document, biome: Biome, taille: number): HTMLCanvasElement {
   const ap = APPARENCES[biome];
   const L = taille * COLONNES_ATLAS;
   const H = taille * RANGS_ATLAS;
@@ -242,20 +243,32 @@ export function atlasVoies(doc: Document, biome: Biome, taille = 128): HTMLCanva
   const image = g.createImageData(L, H);
   const w = ap.demiLargeur;
 
+  // Les couleurs sont écrites à plat : `mel` allouait jusqu'à quatre tableaux
+  // de trois nombres **par pixel**, soit un demi-million d'objets par atlas,
+  // ramassés aussitôt. Rien d'autre ne change dans la formule.
+  const [sombreR, sombreV, sombreB] = ap.sombre;
+  const [clairR, clairV, clairB] = ap.clair;
+  const [motifR, motifV, motifB] = ap.couleurMotif;
+  const [accR, accV, accB] = ap.accotement;
+  const donnees = image.data;
+
   TUILES_ATLAS.forEach((forme, indice) => {
     const { colonne, rang } = tuileDe(forme);
     const bras = brasDe(forme, w);
     const rayonCentre = forme === 'isole' ? w * 1.25 : w;
     for (let py = 0; py < taille; py += 1) {
+      const b = (py + 0.5) / taille;
+      const db2 = (b - 0.5) * (b - 0.5);
       for (let px = 0; px < taille; px += 1) {
         const a = (px + 0.5) / taille;
-        const b = (py + 0.5) / taille;
         const i = py * taille + px;
         const n = grain[i] ?? 0.5;
         const f = frange[(i + indice * 977) % frange.length] ?? 0.5;
 
-        // La distance à la voie : le disque du carrefour et chacun des bras.
-        let d = Math.hypot(a - 0.5, b - 0.5) - rayonCentre;
+        // La distance au disque du carrefour, calculée une fois : elle sert au
+        // fond de la tuile **et** au test « suis-je dans le carrefour ».
+        const dCentre = Math.sqrt((a - 0.5) * (a - 0.5) + db2);
+        let d = dCentre - rayonCentre;
         let proche: Bras | null = null;
         let dProche = Infinity;
         for (const br of bras) {
@@ -270,15 +283,19 @@ export function atlasVoies(doc: Document, biome: Biome, taille = 128): HTMLCanva
 
         const chaussee = 1 - lisser(-0.006, 0.006, d);
         let alpha: number;
-        let couleur = mel(ap.sombre, ap.clair, 0.5 + (n - 0.5) * ap.grain);
+        const teinte = Math.max(0, Math.min(1, 0.5 + (n - 0.5) * ap.grain));
+        let rouge = sombreR + (clairR - sombreR) * teinte;
+        let vert = sombreV + (clairV - sombreV) * teinte;
+        let bleu = sombreB + (clairB - sombreB) * teinte;
         if (chaussee > 0) {
           // Coordonnées le long du bras le plus proche, pour les motifs.
           const dir = proche?.dir ?? 0;
           const long = dir === 0 || dir === 2 ? b : a;
           const trav = dir === 0 || dir === 2 ? a - 0.5 : b - 0.5;
-          const centre = Math.hypot(a - 0.5, b - 0.5) < rayonCentre;
-          const m = motifEn(ap, long, trav, centre, bras.length, n, a, b);
-          couleur = mel(couleur, ap.couleurMotif, m);
+          const m = Math.max(0, Math.min(1, motifEn(ap, long, trav, dCentre < rayonCentre, bras.length, n, a, b)));
+          rouge += (motifR - rouge) * m;
+          vert += (motifV - vert) * m;
+          bleu += (motifB - bleu) * m;
           alpha = chaussee;
         } else {
           alpha = 0;
@@ -288,14 +305,18 @@ export function atlasVoies(doc: Document, biome: Biome, taille = 128): HTMLCanva
           const opac = ap.accotementPlein
             ? ap.opaciteAccotement * lisser(0, 0.35, acc)
             : ap.opaciteAccotement * acc ** 1.4;
-          couleur = mel(couleur, mel(ap.accotement, ap.clair, (n - 0.5) * 0.4), 1);
+          // L'accotement recouvre tout : la couleur du dessous ne compte plus.
+          const q = Math.max(0, Math.min(1, (n - 0.5) * 0.4));
+          rouge = accR + (clairR - accR) * q;
+          vert = accV + (clairV - accV) * q;
+          bleu = accB + (clairB - accB) * q;
           alpha = Math.max(alpha, opac);
         }
         const j = ((rang * taille + py) * L + colonne * taille + px) * 4;
-        image.data[j] = Math.round(couleur[0]);
-        image.data[j + 1] = Math.round(couleur[1]);
-        image.data[j + 2] = Math.round(couleur[2]);
-        image.data[j + 3] = Math.round(Math.max(0, Math.min(1, alpha)) * 255);
+        donnees[j] = Math.round(rouge);
+        donnees[j + 1] = Math.round(vert);
+        donnees[j + 2] = Math.round(bleu);
+        donnees[j + 3] = Math.round(Math.max(0, Math.min(1, alpha)) * 255);
       }
     }
   });

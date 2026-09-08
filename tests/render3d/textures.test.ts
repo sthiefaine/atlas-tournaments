@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 import { BIOMES, type CleTerrain } from '../../src/schemas/types';
 import {
-  albedoMatiere, jeuToit, normalesDepuis, normalesDonnees, reliefToit, sorteToit,
+  albedoMatiere, bruitFractal, jeuMatiere, jeuToit, normalesDepuis, normalesDonnees, oublierToiles,
+  reliefToit, sorteToit, toilesEnMemoire,
 } from '../../src/render3d/textures';
-import { creerPlateau } from '../../src/render3d/terrain';
+import { creerPlateau, tranchesToilesPlateau } from '../../src/render3d/terrain';
 import type { GrilleTerrain } from '../../src/render3d/geometrie';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 
@@ -176,4 +177,150 @@ test('normalesDonnees et normalesDepuis rendent les mêmes octets : le sol n’a
   const doc = documentMemoire();
   const { hauteur } = albedoMatiere(doc, 'roche', 32);
   assert.deepEqual([...pixels(normalesDepuis(doc, hauteur, 32, 2.6))], [...normalesDonnees(hauteur, 32, 2.6)]);
+});
+
+// ---------------------------------------------------------------------------
+// Ce que la vitesse ne doit pas changer, et ce que la mémoire doit gagner
+// ---------------------------------------------------------------------------
+//
+// Les boucles de synthèse ont été réécrites le 8 septembre 2026 pour que le
+// premier montage d'une page cesse de geler le fil principal (`10-rendu-3d.md`
+// §9.6). Une texture procédurale n'a pas de valeur de vérité : la seule garantie
+// qui vaille est qu'elle n'a pas **changé**. Ces tests la tiennent en rejouant
+// la formule d'origine — celle d'avant l'optimisation — et en comparant octet
+// par octet.
+
+/** `bruitFractal` tel qu'il était : bilinéaire en une passe, quatre lectures par pixel. */
+function bruitFractalOrigine(taille: number, octaves: number, periodeBase: number, graine: number): Float32Array {
+  const adoucir = (t: number): number => t * t * (3 - 2 * t);
+  const rng = (g: number): (() => number) => {
+    let e = g >>> 0;
+    return (): number => {
+      e = (e + 0x6d2b79f5) >>> 0;
+      let t = Math.imul(e ^ (e >>> 15), 1 | e);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4_294_967_296;
+    };
+  };
+  const bruit = (periode: number, g: number): Float32Array => {
+    const alea = rng(g);
+    const grille = new Float32Array(periode * periode);
+    for (let i = 0; i < grille.length; i += 1) grille[i] = alea();
+    const sortie = new Float32Array(taille * taille);
+    const pas = periode / taille;
+    for (let y = 0; y < taille; y += 1) {
+      const fy = y * pas;
+      const y0 = Math.floor(fy) % periode;
+      const y1 = (y0 + 1) % periode;
+      const ty = adoucir(fy - Math.floor(fy));
+      for (let x = 0; x < taille; x += 1) {
+        const fx = x * pas;
+        const x0 = Math.floor(fx) % periode;
+        const x1 = (x0 + 1) % periode;
+        const tx = adoucir(fx - Math.floor(fx));
+        const a = grille[y0 * periode + x0]! + (grille[y0 * periode + x1]! - grille[y0 * periode + x0]!) * tx;
+        const b = grille[y1 * periode + x0]! + (grille[y1 * periode + x1]! - grille[y1 * periode + x0]!) * tx;
+        sortie[y * taille + x] = a + (b - a) * ty;
+      }
+    }
+    return sortie;
+  };
+  const sortie = new Float32Array(taille * taille);
+  let amplitude = 1;
+  let total = 0;
+  for (let o = 0; o < octaves; o += 1) {
+    const couche = bruit(Math.max(2, Math.round(periodeBase * 2 ** o)), graine + o * 7919);
+    for (let i = 0; i < sortie.length; i += 1) sortie[i] = sortie[i]! + couche[i]! * amplitude;
+    total += amplitude;
+    amplitude *= 0.5;
+  }
+  for (let i = 0; i < sortie.length; i += 1) sortie[i] = sortie[i]! / total;
+  return sortie;
+}
+
+/** `normalesDonnees` tel qu'il était : une fermeture à deux modulos et `Math.hypot`. */
+function normalesOrigine(hauteur: Float32Array, taille: number, force: number): Uint8ClampedArray {
+  const donnees = new Uint8ClampedArray(taille * taille * 4);
+  const h = (x: number, y: number): number => hauteur[(((y % taille) + taille) % taille) * taille
+    + (((x % taille) + taille) % taille)] ?? 0;
+  for (let y = 0; y < taille; y += 1) {
+    for (let x = 0; x < taille; x += 1) {
+      const dx = (h(x + 1, y) - h(x - 1, y)) * force;
+      const dy = (h(x, y + 1) - h(x, y - 1)) * force;
+      const l = Math.hypot(dx, dy, 1);
+      const j = (y * taille + x) * 4;
+      donnees[j] = Math.round(((-dx / l) * 0.5 + 0.5) * 255);
+      donnees[j + 1] = Math.round(((-dy / l) * 0.5 + 0.5) * 255);
+      donnees[j + 2] = Math.round((1 / l) * 0.5 * 255 + 127);
+      donnees[j + 3] = 255;
+    }
+  }
+  return donnees;
+}
+
+test('le bruit en deux passes rend exactement le même champ qu’en une', () => {
+  // Les tailles et périodes réellement demandées par les matières et par l'eau.
+  for (const [taille, octaves, periode, graine] of [
+    [64, 2, 6, 11], [64, 3, 8, 112], [64, 2, 10, 222], [128, 3, 5, 907], [128, 4, 6, 4111],
+  ] as const) {
+    assert.deepEqual(
+      [...bruitFractal(taille, octaves, periode, graine)],
+      [...bruitFractalOrigine(taille, octaves, periode, graine)],
+      `bruit ${taille}/${octaves}/${periode}`,
+    );
+  }
+});
+
+test('les normales par tables rendent exactement les mêmes octets qu’avec hypot', () => {
+  const doc = documentMemoire();
+  for (const matiere of ['herbe', 'roche', 'neige'] as const) {
+    const { hauteur } = albedoMatiere(doc, matiere, 64);
+    for (const force of [1.25, 2.6, 1.5, 2.2]) {
+      assert.deepEqual(
+        [...normalesDonnees(hauteur, 64, force)],
+        [...normalesOrigine(hauteur, 64, force)],
+        `${matiere} à ${force}`,
+      );
+    }
+  }
+});
+
+test('une matière n’est peinte qu’une fois par document, et jamais partagée entre deux', () => {
+  const doc = documentMemoire();
+  oublierToiles(doc);
+  const avant = toilesEnMemoire(doc);
+  const a = jeuMatiere(doc, 'herbe', 32, 'foret');
+  const apresUn = toilesEnMemoire(doc);
+  const b = jeuMatiere(doc, 'herbe', 32, 'foret');
+  assert.equal(toilesEnMemoire(doc), apresUn, 'la seconde demande ne peint rien');
+  assert.equal(apresUn - avant, 2, 'une matière tient en deux toiles : albédo et normales');
+  // Les pixels sont partagés, les textures non : chaque plateau libère les
+  // siennes sans emporter celles du montage suivant.
+  assert.equal(a.albedo.image, b.albedo.image, 'même toile');
+  assert.notEqual(a.albedo, b.albedo, 'texture propre');
+  a.albedo.dispose();
+  a.normales.dispose();
+  b.albedo.dispose();
+  b.normales.dispose();
+  // Un autre document ne lit pas les toiles du premier : un canvas appartient au sien.
+  const autre = documentMemoire();
+  assert.equal(toilesEnMemoire(autre), 0);
+  jeuMatiere(autre, 'herbe', 32, 'foret');
+  assert.equal(toilesEnMemoire(autre), 2);
+});
+
+test('les tranches préparent exactement ce que creerPlateau demande', () => {
+  // C'est le garde-fou de la seule copie possible : `tranchesToilesPlateau` et
+  // `creerPlateau` lisent la même liste de matières. Si l'une demandait une
+  // toile que l'autre ne prépare pas, le compte monterait après coup — et le
+  // premier montage repeindrait ce qu'il croyait déjà peint.
+  for (const biome of ['plaine', 'archipel'] as const) {
+    const doc = documentMemoire();
+    for (const tranche of tranchesToilesPlateau(doc, biome)) tranche();
+    const prepare = toilesEnMemoire(doc);
+    assert.ok(prepare > 0, 'les tranches peignent quelque chose');
+    const plateau = creerPlateau({ largeur: 3, hauteur: 3, terrainDe: () => 'plaine' }, doc, biome);
+    assert.equal(toilesEnMemoire(doc), prepare, `${biome} : le plateau ne peint plus rien`);
+    plateau.dispose();
+  }
 });

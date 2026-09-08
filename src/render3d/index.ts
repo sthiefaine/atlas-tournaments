@@ -14,12 +14,17 @@
  * (`scene.ts`).
  *
  * Le moteur (`WebGPURenderer`, depuis le 7 septembre 2026) s'initialise de
- * façon **asynchrone** ; `monter()` reste synchrone, comme l'interface
- * l'exige. Le monde, lui, se bâtit dès le premier `afficher` — géométries,
- * textures et lumières sont des objets en mémoire, qui n'ont pas besoin du
- * moteur —, de sorte que `versEcran`, `versMonde` et le cadrage répondent tout
- * de suite ; seul le **dessin** attend `prete`, et la scène réveille la boucle
- * quand le moteur est là. `mesurer()` rend des zéros avant, `capturer()` rien.
+ * façon **asynchrone** ; `monter()` reste synchrone, comme l'interface l'exige.
+ * Le monde, lui, se bâtit **en tranches** à partir du premier `afficher`
+ * (`ouvrirChantier`, 8 septembre 2026) : géométries, textures et lumières sont
+ * des objets en mémoire, qui n'ont pas besoin du moteur, mais les fabriquer
+ * d'un bloc gelait la page une centaine de millisecondes. Chaque tranche rend
+ * la main au navigateur ; le préchauffage part quand il n'en reste plus, et
+ * seul le **dessin** attend `prete`. Pendant cette poignée de tranches,
+ * `versEcran`, `versMonde` et `positionUnite` rendent `null` — rien ne les
+ * appelle si tôt —, et un `cadrer` d'ouverture est **retenu** puis rejoué,
+ * parce que celui-là n'arrive qu'une fois. `mesurer()` rend des zéros avant,
+ * `capturer()` rien.
  *
  * three.js n'est importé que dans ce dossier ; le reste du dépôt ne le voit pas.
  */
@@ -45,7 +50,7 @@ import { caseVersMonde, type GrilleTerrain } from './geometrie';
 import { tailleCarteOmbre, type CadreOmbre } from './ombres';
 import { creerScene3d, moteur3dDisponible, type Scene3d } from './scene';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
-import { creerPlateau, grefferBrouillardSur, type Plateau } from './terrain';
+import { creerPlateau, grefferBrouillardSur, tranchesToilesPlateau, type Plateau } from './terrain';
 import { creerUnites, type CalqueUnites } from './unites';
 
 export { parametresAmbiance, melangerParametres, type ParametresAmbiance } from './eclairage';
@@ -92,7 +97,13 @@ const CLE_BROUILLARD_DECOR = 'atlas-brouillard-decor-v1';
 interface Monde {
   grille: GrilleTerrain;
   plateau: Plateau;
-  decor: Decor;
+  /**
+   * Le décor — bâtiments, arbres, rochers, paysage — arrive **une tranche après
+   * le sol** (`ouvrirChantier`) : c'est le plus gros morceau après le plateau,
+   * et rien de ce qui précède n'en dépend. `null` le temps de cette tranche,
+   * jamais après.
+   */
+  decor: Decor | null;
   unites: CalqueUnites;
   surbrillances: CoucheSurbrillances;
   eclairage: Eclairage;
@@ -100,6 +111,13 @@ interface Monde {
   effets: Effets;
   vue3d: Vue3d;
 }
+
+/**
+ * Une tranche de construction : un morceau de monde, joué dans sa propre tâche.
+ * Le navigateur peint et répond entre deux, exactement comme entre deux lots de
+ * préchauffage (`prechauffage.ts`).
+ */
+type Tranche = () => void;
 
 export interface OptionsRendu3d {
   biome?: Biome;
@@ -145,6 +163,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let cleTerrain = '';
   let premierTerrain = true;
   let cadree = false;
+  /** Les tranches de construction qui restent à jouer, `null` hors chantier. */
+  let chantier: Tranche[] | null = null;
+  let trancheCourante = 0;
+  /** Un cadrage d'ouverture demandé avant que la caméra existe : il attend. */
+  let cadrageEnAttente: Case | null = null;
   let mouvementReduit: MediaQueryList | undefined;
   /** Vrai quand le pointeur principal est un doigt : la carte d'ombre passe à 1024². */
   let pointeurGrossier = false;
@@ -221,46 +244,107 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     };
   }
 
-  /** Construit le monde à la première image : c'est là qu'on connaît la carte. */
-  function batir(e: EtatPartie, v: VueInteraction): Monde | null {
+  /**
+   * Le plan de construction du monde, **en tranches**.
+   *
+   * Bâtir d'un bloc coûtait le plus gros morceau du chargement de l'accueil
+   * (`10-rendu-3d.md` §9.6) : la synthèse des textures et la fusion des
+   * géométries, du JavaScript pur, sans rapport avec les nuanceurs. On le
+   * découpe donc dans l'ordre où les choses comptent — les toiles du sol, puis
+   * le plateau et l'éclairage, puis le décor, puis les unités —, et chaque
+   * tranche rend la main au navigateur.
+   *
+   * Ce que cela ne change pas : rien n'est **dessiné** avant la fin du
+   * préchauffage, qui ne part qu'après la dernière tranche. On ne montre donc
+   * jamais un monde à moitié bâti ; on cesse simplement de geler la page
+   * pendant qu'on le bâtit.
+   */
+  function ouvrirChantier(e: EtatPartie, v: VueInteraction): Tranche[] | null {
     const s = scene3d;
     const conteneur = conteneurRef;
     if (!s || !conteneur) return null;
     const doc = conteneur.ownerDocument;
     const grille = grilleDe(e, v);
     cleTerrain = signatureTerrain(e);
-    const plateau = creerPlateau(grille, doc, options.biome);
-    const decor = creerDecor(grille, e, plateau.hauteurEn, options.biome);
-    // Le brouillard s'applique au décor par le **nuanceur**, comme au sol :
-    // teindre un matériau en noir lui laisse le reflet du studio et l'éclat du
-    // soleil, et c'est ce gris qu'on voyait dans le noir.
-    grefferBrouillardSur(decor.groupe, plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
-    const unites = creerUnites(doc, plateau.hauteurEn, options);
-    const surbrillances = creerSurbrillances(plateau.hauteurEn);
-    const effets = creerEffets(doc);
     const depart = parametresAmbiance(e.climat.saison, e.climat.phase, e.climat.meteo);
-    const eclairage = creerEclairage(
-      s.scene, doc, depart,
-      (x, z) => x >= 0 && z >= 0 && x < e.largeur && z < e.hauteur ? plateau.hauteurEn(x, z) : null,
-      { tailleOmbre: tailleCarteOmbre(pointeurGrossier) },
-    );
-    const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
 
-    s.scene.add(plateau.groupe, decor.groupe, unites.groupe, surbrillances.groupe, effets.groupe, eclairage.groupe);
-    vue3d.redimensionner(s.largeur, s.hauteur);
-    vue3d.cadrerCarte();
+    // Les toiles d'abord, une tranche chacune : c'est le poste le plus cher du
+    // premier montage d'une page, et le seul qui soit gratuit au deuxième —
+    // une matière ne dépend que du biome (`textures.ts`).
+    const tranches: Tranche[] = [...tranchesToilesPlateau(doc, options.biome)];
 
-    // La caméra d'ombre suit le champ visible, image après image (`dessiner`) :
-    // elle n'a plus de cadre fixe. Le premier se pose ici, avant l'image.
-    eclairage.cadrerOmbre(vue3d.etat, vue3d.camera.aspect, grille);
+    tranches.push(() => {
+      const plateau = creerPlateau(grille, doc, options.biome);
+      const unites = creerUnites(doc, plateau.hauteurEn, options);
+      const surbrillances = creerSurbrillances(plateau.hauteurEn);
+      const effets = creerEffets(doc);
+      const eclairage = creerEclairage(
+        s.scene, doc, depart,
+        (x, z) => x >= 0 && z >= 0 && x < e.largeur && z < e.hauteur ? plateau.hauteurEn(x, z) : null,
+        { tailleOmbre: tailleCarteOmbre(pointeurGrossier) },
+      );
+      const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
+      s.scene.add(plateau.groupe, unites.groupe, surbrillances.groupe, effets.groupe, eclairage.groupe);
+      vue3d.redimensionner(s.largeur, s.hauteur);
+      vue3d.cadrerCarte();
+      // La caméra d'ombre suit le champ visible, image après image (`dessiner`) :
+      // elle n'a plus de cadre fixe. Le premier se pose ici, avant l'image.
+      eclairage.cadrerOmbre(vue3d.etat, vue3d.camera.aspect, grille);
+      plateau.appliquerAmbiance(depart);
+      unites.appliquerAmbiance(depart);
+      cleAmbiance = v.ambiance.cle;
+      monde = { grille, plateau, decor: null, unites, surbrillances, eclairage, effets, vue3d };
+      // Le cadrage d'ouverture demandé pendant la construction n'est pas perdu :
+      // il se rejoue ici, sur la caméra qui vient de naître.
+      if (cadrageEnAttente) {
+        const c = cadrageEnAttente;
+        cadrageEnAttente = null;
+        cadree = true;
+        vue3d.cadrerCarte(c);
+      }
+    });
 
-    plateau.appliquerAmbiance(depart);
-    decor.appliquerAmbiance(depart, e.climat.saison);
-    unites.appliquerAmbiance(depart);
-    cleAmbiance = v.ambiance.cle;
-    return {
-      grille, plateau, decor, unites, surbrillances, eclairage, effets, vue3d,
-    };
+    tranches.push(() => {
+      const m = monde;
+      if (!m) return;
+      // La carte a pu changer pendant la construction — l'atelier en change sans
+      // démonter la scène : le décor se sème sur la grille **du moment**.
+      // `majGrille` ne peut rien pour un décor qui n'existait pas encore quand
+      // elle est passée, et il resterait semé sur la carte d'avant.
+      const courant = etat ?? e;
+      const decor = creerDecor(vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome);
+      // Le brouillard s'applique au décor par le **nuanceur**, comme au sol :
+      // teindre un matériau en noir lui laisse le reflet du studio et l'éclat du
+      // soleil, et c'est ce gris qu'on voyait dans le noir.
+      grefferBrouillardSur(decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
+      decor.appliquerAmbiance(depart, courant.climat.saison);
+      s.scene.add(decor.groupe);
+      m.decor = decor;
+    });
+
+    // Les unités et tout ce qui dérive de l'état : c'est `majMonde` qui les pose,
+    // et il ne coûte rien tant qu'il n'a pas de monde.
+    tranches.push(() => { majMonde(); });
+    return tranches;
+  }
+
+  /** Joue une tranche, puis rend la main. Le préchauffage part quand il n'en reste plus. */
+  function avancerChantier(): void {
+    const s = scene3d;
+    const liste = chantier;
+    if (!liste || !s) return;
+    const suivante = liste[trancheCourante];
+    if (!suivante) {
+      chantier = null;
+      trancheCourante = 0;
+      if (monde) lancerPrechauffage(monde);
+      return;
+    }
+    trancheCourante += 1;
+    suivante();
+    // Un tour de macrotâche entre deux tranches : le navigateur peint son écran
+    // de chargement et répond aux clics, comme entre deux lots de préchauffage.
+    setTimeout(() => { if (scene3d === s && chantier === liste) avancerChantier(); }, 0);
   }
 
   function dessiner(ecoule: number): void {
@@ -283,13 +367,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const cadre = m.eclairage.cadrerOmbre(m.vue3d.etat, m.vue3d.camera.aspect, m.grille);
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) {
-      m.decor.majRelief();
+      m.decor?.majRelief();
       // Les décalques suivent le sol qui glisse, au lieu d'attendre la
       // prochaine vue pour se reposer dessus.
       m.surbrillances.invalider();
     }
     encore = mutation || encore;
-    encore = m.decor.avancer(ecoule, calme) || encore;
+    encore = (m.decor?.avancer(ecoule, calme) ?? false) || encore;
     // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, un
     // clip ou une respiration s'arrêtent net au lieu de glisser.
     encore = m.unites.avancer(ecoule, calme) || encore;
@@ -305,7 +389,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // l'identique. Un matériau créé entre-temps naît avec l'ambiance courante.
     if (!ambianceAppliquee || ambianceAppliquee.p !== p || ambianceAppliquee.saison !== saison) {
       m.plateau.appliquerAmbiance(p);
-      if (vue) m.decor.appliquerAmbiance(p, vue.ambiance.saison);
+      if (vue) m.decor?.appliquerAmbiance(p, vue.ambiance.saison);
       m.unites.appliquerAmbiance(p);
       ambianceAppliquee = { p, saison };
     }
@@ -341,13 +425,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // Le sol a bougé, et parfois la grille elle-même : tout ce qui en dérive
       // doit repartir d'elle. Les unités relisent l'altitude au `maj` ci-dessous ;
       // le décor ressème arbres et rochers, rebâtit les bâtiments, et se repose.
-      m.decor.majGrille(grilleDe(etat, vue));
+      m.decor?.majGrille(grilleDe(etat, vue));
     }
     // Le brouillard de guerre : le plateau assombrit les cases hors de vue, le
     // décor éteint ce qu'il y sème. L'un et l'autre comparent l'ensemble reçu
     // à celui d'avant — un survol n'écrit rien.
     m.plateau.majVisibles(vue.visibles);
-    m.decor.majProprietaires(etat, vue.visibles, vue.catalogue);
+    m.decor?.majProprietaires(etat, vue.visibles, vue.catalogue);
     // `maj` rend vrai quand une unité a bougé, est apparue ou a disparu — et
     // seulement alors : un survol ne repose rien. C'est l'ombre qui en dépend.
     if (m.unites.maj(etat, vue.catalogue, vue.visibles, { camp: vue.camp ?? null, unites: vue.unitesVues ?? null })) {
@@ -359,7 +443,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // Un bâtiment rebâti, un lot ressemé ou un clone translucide arrivent avec
     // des matériaux neufs : ils reçoivent la greffe à leur tour. `grefferBrouillard`
     // ignore ce qu'il a déjà greffé.
-    grefferBrouillardSur(m.decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
+    if (m.decor) grefferBrouillardSur(m.decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
     m.surbrillances.majVisibles(vue.visibles);
     m.surbrillances.maj(vue.surbrillances, vue.chemin, vue.curseur, position);
     if (vue.ambiance.cle !== cleAmbiance) {
@@ -376,8 +460,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       unites: m.unites,
       effets: m.effets,
       hauteurEn: m.plateau.hauteurEn,
-      drapeau: (cle) => m.decor.drapeau(cle),
-      chantier: (cle) => m.decor.chantier(cle),
+      drapeau: (cle) => m.decor?.drapeau(cle) ?? null,
+      chantier: (cle) => m.decor?.chantier(cle) ?? null,
       etats: () => ({ courant: etat, precedent: etatPrecedent }),
       cadrer: (c) => {
         const p = caseVersMonde(c);
@@ -443,9 +527,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       }
       etat = e;
       vue = v;
-      if (!monde) {
-        monde = batir(e, v);
-        if (monde) lancerPrechauffage(monde);
+      if (!monde && !chantier) {
+        chantier = ouvrirChantier(e, v);
+        trancheCourante = 0;
+        avancerChantier();
       }
       majMonde();
       salir();
@@ -563,7 +648,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     cadrer(c: Case): void {
       const m = monde;
-      if (!m) return;
+      if (!m) {
+        // Le monde se bâtit encore : on retient le cadrage d'ouverture plutôt
+        // que de le perdre — c'est lui qui décide de ce que le joueur voit en
+        // arrivant, et il n'arrive qu'une fois.
+        if (!cadree) cadrageEnAttente = c;
+        return;
+      }
       if (!cadree) {
         // Le premier cadrage est celui de l'ouverture : la carte entière si
         // elle tient, sinon la largeur en portrait et la vue portée vers
@@ -584,12 +675,17 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       if (delaiPrechauffage !== null) clearTimeout(delaiPrechauffage);
       delaiPrechauffage = null;
       prechauffe = false;
+      // La construction en cours s'arrête ici : `avancerChantier` reconnaît que
+      // la liste a changé et ne joue pas la tranche suivante sur une scène morte.
+      chantier = null;
+      trancheCourante = 0;
+      cadrageEnAttente = null;
       boucle?.arreter();
       boucle = null;
       if (monde) {
         monde.surbrillances.dispose();
         monde.unites.dispose();
-        monde.decor.dispose();
+        monde.decor?.dispose();
         monde.plateau.dispose();
         monde.eclairage.dispose();
         monde.effets.dispose();

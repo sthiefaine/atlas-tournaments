@@ -470,6 +470,37 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
 
 const silhouettesFusionnees = new Map<string, ReadonlyMap<RolePiece, THREE.BufferGeometry>>();
 
+/**
+ * Ce que les formes mémorisées pèsent : la somme des tampons de tous les
+ * attributs et index gardés. Le catalogue en compte vingt-quatre silhouettes,
+ * soit quelques centaines de kilo-octets — mesuré par
+ * `tests/render3d/unites.test.ts`, qui échoue si cela dérive.
+ */
+export function poidsFormesUnites(): { formes: number; octets: number } {
+  const vues = new Set<THREE.BufferGeometry>();
+  for (const silhouette of silhouettesFusionnees.values()) for (const g of silhouette.values()) vues.add(g);
+  for (const g of geometries.values()) vues.add(g);
+  let octets = 0;
+  for (const g of vues) {
+    for (const attribut of Object.values(g.attributes)) {
+      octets += (attribut as THREE.BufferAttribute).array.byteLength;
+    }
+    octets += g.index?.array.byteLength ?? 0;
+  }
+  return { formes: vues.size, octets };
+}
+
+/**
+ * Libère les formes mémorisées. Rien ne l'appelle en jeu — c'est justement
+ * l'intérêt du cache —, mais un test qui veut mesurer à froid en a besoin.
+ */
+export function oublierFormesUnites(): void {
+  for (const silhouette of silhouettesFusionnees.values()) for (const g of silhouette.values()) g.dispose();
+  silhouettesFusionnees.clear();
+  for (const g of geometries.values()) g.dispose();
+  geometries.clear();
+}
+
 /** Sept maillages au maximum — un par rôle —, partagés entre unités identiques : le détail ne multiplie pas les draw calls. */
 export function geometriesSilhouette(s: Silhouette): ReadonlyMap<RolePiece, THREE.BufferGeometry> {
   const cle = JSON.stringify(s);
@@ -1393,12 +1424,11 @@ export function creerUnites(
         m.dispose();
       }
       etiquettes.clear();
-      for (const silhouette of silhouettesFusionnees.values()) {
-        for (const g of silhouette.values()) g.dispose();
-      }
-      silhouettesFusionnees.clear();
-      for (const g of geometries.values()) g.dispose();
-      geometries.clear();
+      // Les formes **restent** : une silhouette ne dépend que du catalogue, et
+      // le calque n'en est pas propriétaire. Les vider ici faisait payer à
+      // chaque montage — revenir à l'accueil, changer de carte, ouvrir la
+      // vitrine — la fusion des sept rôles de chaque unité posée, alors que le
+      // cache est prévu pour la vie de la page (`poidsFormesUnites`).
     },
   };
 }

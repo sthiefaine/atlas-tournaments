@@ -10,7 +10,7 @@ import {
 } from '../../src/render3d/modeles';
 import {
   Materiaux, OPACITE_FURTIVE, OPACITE_JOUEE, OPACITE_VERRE, construirePlaceholder, creerUnites, geometriesSilhouette,
-  materiauxPropresDe, type VisionRendu,
+  materiauxPropresDe, oublierFormesUnites, poidsFormesUnites, type VisionRendu,
 } from '../../src/render3d/unites';
 
 import { EPSILON_UNIFORME } from '../../src/render3d/programmes';
@@ -888,4 +888,31 @@ test('ce que le joueur ne voit pas n’est pas dessiné, même sur une case écl
   calque.maj(etat, cat6, cases, { camp: 0, unites: null });
   assert.equal(calque.groupe.children.length, 2);
   calque.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// Les formes mémorisées survivent au calque
+// ---------------------------------------------------------------------------
+
+test('les formes d’unités survivent au démontage du calque, et pèsent ce qu’on a dit', () => {
+  oublierFormesUnites();
+  assert.equal(poidsFormesUnites().formes, 0, 'on part à froid');
+  const catalogue = chargerCatalogue(6);
+  for (const type of Object.values(catalogue.unites)) geometriesSilhouette(type.silhouette);
+  const complet = poidsFormesUnites();
+  const repere = geometriesSilhouette(Object.values(catalogue.unites)[0]!.silhouette);
+
+  const calque = creerUnites(documentFactice().doc, () => 0);
+  calque.dispose();
+  // Le calque n'est pas propriétaire des formes : les vider à son démontage
+  // faisait repayer la fusion des sept rôles de chaque unité à chaque montage —
+  // revenir à l'accueil, changer de carte, ouvrir la vitrine.
+  assert.equal(poidsFormesUnites().formes, complet.formes, 'rien n’a été libéré');
+  assert.equal(geometriesSilhouette(Object.values(catalogue.unites)[0]!.silhouette), repere, 'le cache répond encore');
+
+  // Le plafond : ces formes vivent aussi longtemps que la page. Vingt-quatre
+  // unités posées — la carte-catalogue du banc — tiennent sous huit mébioctets.
+  assert.ok(complet.octets < 8 * 1024 * 1024, `formes d’unités : ${(complet.octets / 1024).toFixed(0)} ko`);
+  oublierFormesUnites();
+  assert.equal(poidsFormesUnites().formes, 0, 'et on sait les libérer');
 });
