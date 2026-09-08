@@ -31,6 +31,16 @@ import { ETAPES_CHARGEMENT, type EtapePage } from './etapes-chargement';
  *    `t()` ici ferait entrer les trois cent soixante-dix-neuf chaînes
  *    d'interface dans le **premier chargement** de `/jeu/[scenario]` — mesuré à
  *    quinze kilo-octets de plus —, pour cinq mots.
+ *
+ * Ce qui a changé le 8 septembre au soir tient à un quatrième point, qui n'est
+ * pas une règle mais un verdict : un ado l'a trouvé « ressemblant à un
+ * installeur ». Il l'était — une pastille par étape, une coche quand c'est fait,
+ * un ruban qui va et vient au-dessus. La liste **reste** (c'est l'honnêteté du
+ * point 2), mais elle prend la forme que le jeu donne déjà à toute progression :
+ * les quatre segments biseautés de la jauge de campagne, dont celui en cours
+ * porte le ruban. Un seul mot est écrit en grand — l'étape courante ; les trois
+ * autres restent lisibles par un lecteur d'écran, où ils servent encore, et
+ * cessent d'encombrer un écran qu'on regarde deux secondes.
  */
 
 /** Les cinq mots de l'écran, déjà traduits par la page. */
@@ -50,11 +60,15 @@ export function EcranChargement(
   const rang = ETAPES_CHARGEMENT.indexOf(etape);
   return <div className="atlas-chargement" role="status" aria-live="polite" data-etape={etape}>
     <div className="chargement-carte">
+      {/* La balise de liaison : trois traits qui battent, comme le filet de
+          fréquence du briefing radio. Aucun mot — donc aucune clé —, et le
+          même vocabulaire que l'écran suivant. */}
+      <span className="atlas-balise" aria-hidden="true"><i /><i /><i /></span>
       {titre ? <p className="chargement-mission">{titre}</p> : null}
-      <p className="chargement-etat">{libelles.etapes[rang]}</p>
-      {/* Un ruban qui va et vient, pas une jauge : il dit qu'il se passe quelque
-          chose, il ne promet pas un pourcentage qu'on ne connaît pas. */}
-      <div className="chargement-jauge" aria-hidden="true"><span /></div>
+      {/* Une étape = un segment. Ce que le segment dit est un **fait** ; ce que
+          le ruban dit à l'intérieur du segment courant est « ça travaille ». Les
+          deux sont vrais, et ils ne se contredisent plus : le ruban n'avance
+          plus au-dessus d'une liste qui, elle, n'avance pas. */}
       <ol className="chargement-etapes" aria-label={libelles.liste}>
         {ETAPES_CHARGEMENT.map((e, i) => <li
           key={e}
@@ -62,6 +76,7 @@ export function EcranChargement(
           data-courant={i === rang ? '1' : undefined}
         ><span>{libelles.etapes[i]}</span></li>)}
       </ol>
+      <p className="chargement-etat">{libelles.etapes[rang]}</p>
     </div>
   </div>;
 }

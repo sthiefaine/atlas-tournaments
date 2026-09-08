@@ -65,6 +65,15 @@
       "longueurMax": 20
     },
     {
+      "cle": "accueil.choisir_sauvegarde",
+      "texte": "Quelle sauvegarde ?",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Titre du tiroir qui s'ouvre sous le bouton Campagne : l'appareil porte deux sauvegardes, on choisit laquelle on reprend avant de lancer."
+      },
+      "longueurMax": 28
+    },
+    {
       "cle": "accueil.entrer",
       "texte": "Entrer dans la Ronde",
       "contexte": {
@@ -135,6 +144,15 @@
         "note": "Nom du menu pour un lecteur d'écran. Jamais affiché."
       },
       "longueurMax": 24
+    },
+    {
+      "cle": "accueil.menu_banc",
+      "texte": "Banc d’essai",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Quatrième entrée du menu de l'écran-titre, vers /atelier. Remplace « Atelier des mondes », qui promettait un éditeur alors que la page ne fait que montrer biomes, saisons et météo. Deux lignes au plus sur une demi-largeur de 163 px."
+      },
+      "longueurMax": 18
     },
     {
       "cle": "accueil.menu_campagne",
@@ -811,6 +829,96 @@
       "pluriel": false
     },
     {
+      "cle": "bilan.titre",
+      "texte": "Bilan de la manche",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Nom accessible du bloc de bilan, sur l'écran de fin de mission."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "bilan.rang",
+      "texte": "Rang",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Sur-titre de la lettre de rang (S, A, B, C). Les lettres elles-mêmes sont une notation du genre, hors traduction."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "bilan.rythme",
+      "texte": "Rythme",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : ce qui reste de l'échéance en journées."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.puissance",
+      "texte": "Puissance",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : part de la force adverse mise hors jeu."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.tenue",
+      "texte": "Tenue",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : part de sa propre force encore debout."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.journees",
+      "texte": "Journées",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Légende d'un chiffre du tableau de marque du bilan."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "bilan.engagees",
+      "texte": "Unités engagées",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : unités de départ plus celles produites."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.perdues",
+      "texte": "Unités perdues",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : ses propres unités mises hors jeu."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.neutralisees",
+      "texte": "Mises hors jeu",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : les unités adverses mises hors jeu."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.batiments",
+      "texte": "Bâtiments tenus",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : bâtiments possédés à la fin de la manche."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "campagne.dialogue_suivant",
       "texte": "Continuer",
       "contexte": {
@@ -874,6 +982,15 @@
       "pluriel": false
     },
     {
+      "cle": "campagne.fermee",
+      "texte": "Verrouillée",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "État court d'une épreuve fermée : plaque du dossier, intitulé d'une station. campagne.verrouillee reste la phrase qui dit comment l'ouvrir."
+      },
+      "longueurMax": 16
+    },
+    {
       "cle": "campagne.fin",
       "texte": "Votre sélection a uni deux délégations. Mais le sceau découvert au col pose une nouvelle question : qui veut fausser la Ronde ?",
       "contexte": {
@@ -917,6 +1034,15 @@
       },
       "longueurMax": null,
       "pluriel": false
+    },
+    {
+      "cle": "campagne.itineraire",
+      "texte": "Itinéraire de la sélection",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Intitulé accessible de la barre de stations du fil de campagne. Chaque station est une épreuve ; le trait qui les relie se remplit derrière soi."
+      },
+      "longueurMax": 40
     },
     {
       "cle": "campagne.jouer",
@@ -1668,6 +1794,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "fiche.solde_apres",
+      "texte": "Reste {n}",
+      "contexte": {
+        "ecran": "menu_production",
+        "note": "Pied du menu de production, à côté de « Recruter » : ce qui resterait en caisse après l'achat. C'est le chiffre qu'on veut avant de cliquer."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "fiche.titre",
       "texte": "Fiche de l’unité",
       "contexte": {
@@ -1722,6 +1857,33 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.bilan_unites",
+      "texte": "Unités",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : libellé d'une ligne du bilan, rendu en petites capitales."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.bilan_batiments",
+      "texte": "Bâtiments",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : idem, bâtiments tenus."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "hud.bilan_recrutees",
+      "texte": "Recrutées",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Écran de fin : idem, unités produites pendant le match."
+      },
+      "longueurMax": 14
+    },
+    {
       "cle": "hud.bulletin",
       "texte": "Demain {j1}, ensuite {j2}",
       "contexte": {
@@ -1746,6 +1908,15 @@
         "ecran": "hud"
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "hud.capture_points",
+      "texte": "Capture {n} / {total}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Points de capture accumulés par l’unité et seuil de la case. Le seuil double sur un QG et sur un bâtiment désaffecté ; il est lu au moteur, jamais supposé."
+      },
+      "longueurMax": 26
     },
     {
       "cle": "hud.capturer",
@@ -1784,6 +1955,15 @@
       "longueurMax": 60
     },
     {
+      "cle": "hud.chemin_cout",
+      "texte": "Chemin {n}/{max}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d'unité : remplace le mouvement du catalogue tant qu'un chemin est pointé. Ce qu'il coûte, sur ce qui reste."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "hud.commandant",
       "texte": "Commandant",
       "contexte": {
@@ -1799,6 +1979,15 @@
         "ecran": "jeu"
       },
       "longueurMax": 40
+    },
+    {
+      "cle": "hud.danger_astuce",
+      "texte": "Double-clic : sa zone de danger",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Panneau d'unité, sur une unité adverse seulement, et jamais pendant une visée. Le calcul de la zone existait ; c'est le geste que rien n'annonçait."
+      },
+      "longueurMax": 36
     },
     {
       "cle": "hud.debarquer",
@@ -1855,6 +2044,33 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.effet_pourcent",
+      "texte": "{quoi} {signe}{n} %",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un effet de pouvoir dont le modificateur est un rapport — attaque, défense, fonds. Le signe est déjà composé."
+      },
+      "longueurMax": 26
+    },
+    {
+      "cle": "hud.effet_points",
+      "texte": "{quoi} {signe}{n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un effet de pouvoir dont le modificateur est un entier — mouvement, portée, vision."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "hud.effet_terrain",
+      "texte": "Modifie le terrain",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Un pouvoir qui pose du terrain : un pont, un chenal. On le dit sans décrire une géométrie que le joueur verra."
+      },
+      "longueurMax": 26
+    },
+    {
       "cle": "hud.embarquees",
       "texte": "À bord : {liste}",
       "contexte": {
@@ -1900,6 +2116,15 @@
       "longueurMax": 18
     },
     {
+      "cle": "hud.jauge_insuffisante",
+      "texte": "Jauge insuffisante",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Pourquoi un bouton de pouvoir est éteint. Un bouton qui ne répond pas doit dire pourquoi."
+      },
+      "longueurMax": 24
+    },
+    {
       "cle": "hud.jauge_pouvoir",
       "texte": "Pouvoir",
       "contexte": {
@@ -1943,6 +2168,24 @@
         "note": "Étiquette du menu contextuel d’actions."
       },
       "longueurMax": 14
+    },
+    {
+      "cle": "hud.meteo_jour",
+      "texte": "J{n}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "En-tête d'une des trois cases du bulletin météo : la journée concernée. Très court, il tient sous une icône de 20 px."
+      },
+      "longueurMax": 6
+    },
+    {
+      "cle": "hud.meteo_titre",
+      "texte": "Météo sur trois journées",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé accessible du bulletin : aujourd'hui, et les deux journées suivantes."
+      },
+      "longueurMax": 36
     },
     {
       "cle": "hud.mouvement",
@@ -2052,6 +2295,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.pouvoir_details",
+      "texte": "Ce que fait ce pouvoir",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé du bouton « i » de la jauge de commandement, qui déplie les effets des deux pouvoirs."
+      },
+      "longueurMax": 30
+    },
+    {
       "cle": "hud.pouvoir_pret",
       "texte": "Pouvoir prêt",
       "contexte": {
@@ -2134,6 +2386,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.revenu",
+      "texte": "+{n} par journée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Le revenu de la prochaine journée, à côté des fonds. À l’écran, seul « +{n} » est affiché ; ce texte est l’intitulé accessible."
+      },
+      "longueurMax": 24
+    },
+    {
       "cle": "hud.saison",
       "texte": "Saison",
       "contexte": {
@@ -2184,6 +2445,15 @@
         "note": "Même emplacement que hud.unites_pretes, quand il ne reste aucune unité prête."
       },
       "longueurMax": 20
+    },
+    {
+      "cle": "hud.unite_suivante",
+      "texte": "Unité suivante",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé du bouton qui va à la prochaine unité qui n'a pas joué, dans la pile de commandes de carte."
+      },
+      "longueurMax": 40
     },
     {
       "cle": "hud.unites_pretes",
@@ -2509,7 +2779,7 @@
       "texte": "Affichage",
       "contexte": {
         "ecran": "reglages",
-        "note": "Titre du groupe : peau de rendu."
+        "note": "Titre du panneau des réglages d'affichage : qualité et réduction des animations. (Elle nommait autrefois le choix d'une peau de rendu, qui n'existe plus.)"
       },
       "longueurMax": 20
     },
@@ -2676,6 +2946,15 @@
       "longueurMax": 100
     },
     {
+      "cle": "reglages.en_partie",
+      "texte": "En partie",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du panneau des réglages qui se voient pendant un match : dialogues, écran de combat."
+      },
+      "longueurMax": 20
+    },
+    {
       "cle": "reglages.inactif",
       "texte": "Désactivé",
       "contexte": {
@@ -2712,6 +2991,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "reglages.profil_bilan",
+      "texte": "{victoires} remportées · {parties} en cours",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Ce que tient une sauvegarde, sous son nom, sur sa cartouche."
+      },
+      "longueurMax": 48
+    },
+    {
       "cle": "reglages.profil_nom",
       "texte": "Nom du profil actif",
       "contexte": {
@@ -2728,6 +3016,15 @@
         "note": "Aide sous le champ de renommage."
       },
       "longueurMax": 60
+    },
+    {
+      "cle": "reglages.profil_vide",
+      "texte": "Sauvegarde neuve",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "La même ligne quand la sauvegarde ne tient rien."
+      },
+      "longueurMax": 40
     },
     {
       "cle": "reglages.profils",
@@ -2793,6 +3090,15 @@
       "longueurMax": 26
     },
     {
+      "cle": "reglages.sauvegardes",
+      "texte": "Sauvegardes",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du panneau des deux profils de l'appareil."
+      },
+      "longueurMax": 20
+    },
+    {
       "cle": "reglages.stockage",
       "texte": "Progression",
       "contexte": {
@@ -2827,6 +3133,96 @@
         "note": "Titre de la page des réglages."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "modificateur.attaque",
+      "texte": "Attaque",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.defense",
+      "texte": "Défense",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.mouvement",
+      "texte": "Mouvement",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.portee",
+      "texte": "Portée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.vision",
+      "texte": "Vision",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.soin",
+      "texte": "Soin",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.degats_directs",
+      "texte": "Dégâts directs",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.fonds",
+      "texte": "Fonds",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.carburant",
+      "texte": "Carburant",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "modificateur.capture",
+      "texte": "Capture",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nom d'une grandeur qu'un pouvoir de commandant peut modifier. Sert à décrire un pouvoir depuis ses effets, jamais à nommer une règle."
+      },
+      "longueurMax": 18
     },
     {
       "cle": "saison.automne",
@@ -3188,6 +3584,24 @@
         "note": "Annonce après un refus du moteur : la case de débarquement n’est pas voisine, libre et franchissable par le passager."
       },
       "longueurMax": 60
+    },
+    {
+      "cle": "jeu_libre.brouillard",
+      "texte": "Brouillard de guerre",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Pastille d'une fiche de /jeu et du dossier de mission : le terrain est caché tant qu'une unité ne le voit pas."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "jeu_libre.decouverte",
+      "texte": "Commencez ici",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Ruban d'angle sur la carte de démonstration, en tête de la liste des parties libres. Ne répète pas son nom."
+      },
+      "longueurMax": 18
     },
     {
       "cle": "jeu_libre.surtitre",

@@ -30,7 +30,9 @@ import { produitesPar } from '../../engine/catalogue';
 import { terrainBrut, terrainLogique } from '../../engine/hooks';
 import { peutCapturerIci, pointsGagnes, seuilCapture } from '../../engine/regles/capture';
 import { brouillardActif } from '../../engine/climat/index';
-import { degatsArme, ECHELLE_DEGATS, facteurTerrain, peutViser, tireSansMunitions } from '../../engine/regles/combat';
+import {
+  degatsArme, ECHELLE_DEGATS, FACTEUR_RIPOSTE, facteurTerrain, peutViser, tireSansMunitions,
+} from '../../engine/regles/combat';
 import {
   batimentsDe, consommationParTour, SURCOUT_CARBURANT_FURTIF, verifierProduction,
 } from '../../engine/regles/economie';
@@ -614,7 +616,12 @@ export function meilleureOption(
       if (tc && tc.peutRiposter && distance === 1 && survivant > 0
         && peutTirerSur(cat, { ...cible, pv: survivant }, u.type)) {
         const riposteur: Unite = { ...cible, pv: survivant };
-        perte = (degatsAttendus(etat, cat, riposteur, fictive, cible) / 100) * coutMoi;
+        // La riposte est atténuée par le moteur (`FACTEUR_RIPOSTE`) : l'IA lit
+        // le facteur au lieu d'en garder une copie. Sans lui, elle surestimerait
+        // ce qu'elle encaisse et refuserait des échanges qu'elle gagne — c'est
+        // exactement la faute du 8 septembre, où sa copie de la formule de
+        // dégâts a menti dès que l'originale a changé.
+        perte = (degatsAttendus(etat, cat, riposteur, fictive, cible) / 100) * coutMoi * FACTEUR_RIPOSTE;
       }
       const acheve = survivant <= 0 ? coutCible * 0.25 : 0;
       // Une munition ne part que si l'unité en a et que la cible n'est pas secondaire.

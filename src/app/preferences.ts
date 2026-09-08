@@ -47,7 +47,9 @@ export interface Preferences {
   animationsReduites: boolean;
   /**
    * La qualité d'affichage (`render/qualite.ts`) : `auto` mesure et décide,
-   * `haute` allume la chaîne de post-traitement, `basse` ne l'allume jamais.
+   * `basse` n'allume jamais la chaîne de post-traitement. Il y avait un troisième
+   * rang, `haute`, retiré le 6 septembre 2026 — il forçait ce que la mesure
+   * aurait refusé ; `normaliserQualite` ramène un `haute` enregistré à `auto`.
    */
   qualite: QualiteRendu;
   /**

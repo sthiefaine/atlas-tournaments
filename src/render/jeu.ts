@@ -24,7 +24,8 @@ import type {
 } from '../engine/index';
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
-  creerPartie, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues, VERSION_MOTEUR,
+  creerPartie, POINTS_PAR_BARRE, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues,
+  verifierPouvoir, VERSION_MOTEUR,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
@@ -720,6 +721,27 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     };
   }
 
+  /**
+   * Les deux pouvoirs du commandant du joueur, avec le verdict du moteur pour
+   * chacun. C'est `verifierPouvoir` qui décide — le HUD n'a pas le commandant,
+   * et une seconde règle écrite dans le HUD aurait divergé de la première au
+   * premier changement de coût.
+   */
+  function pouvoirsDuJoueur(): VueJeu['pouvoirs'] {
+    const commandant = commandants[camp] ?? null;
+    if (!commandant) return null;
+    const lire = (niveau: 'normal' | 'super') => {
+      const p = niveau === 'super' ? commandant.superPouvoir : commandant.pouvoir;
+      return {
+        nom: p.nom,
+        cout: p.barres * POINTS_PAR_BARRE,
+        pret: verifierPouvoir(etat, commandant, camp, niveau).ok,
+        effets: p.effets,
+      };
+    };
+    return { normal: lire('normal'), super: lire('super') };
+  }
+
   function vueJeu(): VueJeu {
     const v = vueControleur();
     return {
@@ -732,11 +754,16 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       curseur: v.curseur,
       selection: v.selection,
       cheminAveugle: v.cheminAveugle,
+      // Ce que le trajet visé consomme, sur ce dont l'unité dispose. Le panneau
+      // affichait le mouvement du catalogue — le maximum du type —, jamais le
+      // budget du chemin qu'on est en train de tracer.
+      cheminCout: v.cheminCout,
       menu: v.menu,
       production: v.production,
       visee: v.visee,
       unitesVues: unitesVuesIds(),
       attenteIa,
+      pouvoirs: pouvoirsDuJoueur(),
       annonce,
       masquerFin: options.finPersonnalisee,
       sceneOuverte: dialogueActif(),
@@ -817,6 +844,15 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       const unite = etat.unites.find(u => u.id === controleur.vue.selection)
         ?? etat.unites.find(u => u.camp === camp && !u.dansTransport);
       if (unite) (rendu.recentrer ?? rendu.cadrer).call(rendu, { x: unite.x, y: unite.y });
+    },
+    // La prochaine unité qui n'a pas joué, et la caméra qui l'amène. Le bouton
+    // de fin de tour comptait ces unités depuis longtemps sans savoir y aller :
+    // sur un match à quinze pièces, les retrouver à l'œil était une chasse au
+    // trésor à chaque tour. Le contrôleur sélectionne, le rendu cadre — chacun
+    // ce qu'il sait faire.
+    uniteSuivante: () => {
+      const c = controleur.uniteSuivante();
+      if (c) (rendu.recentrer ?? rendu.cadrer).call(rendu, c);
     },
     versEcran: (c: Case) => rendu.versEcran(c),
     couper: () => { couperPartition(); },

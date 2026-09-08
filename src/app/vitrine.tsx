@@ -34,9 +34,14 @@ import { lirePreferences } from './preferences';
  *
  * Trois corrections, et aucune ne réintroduit le fondu :
  *
- * 1. **Le plateau SVG est prêt dès le premier pixel**, serveur compris : c'est
- *    l'état de départ, plus une indécision. Il n'a donc rien à charger le jour
- *    où il sert. (Depuis le soir même, il ne sert qu'en repli, voir plus haut.)
+ * 1. **Le plateau SVG n'a plus rien à charger le jour où il sert** : il arrive
+ *    déjà composé par le serveur, en `children`, et il n'y a plus d'état
+ *    « indécis » entre lui et l'attract. Il n'est pas pour autant *dans* le HTML
+ *    du serveur — le rendu statique de la page donne un `.accueil-vitrine`
+ *    vide —, et c'est voulu depuis le soir du 8 septembre : il ne paraît qu'en
+ *    repli, jamais pendant qu'on attend la 3D (voir plus haut). Le fond de
+ *    l'attente est la nappe sombre de l'écran-titre, dont le titre et le menu
+ *    viennent du serveur.
  * 2. **Le module de l'attract part tout de suite**, et seul son *montage* attend
  *    le délai. Le délai protège l'interactivité du menu, pas la bande passante :
  *    télécharger pendant qu'on attend, c'est autant de gagné.

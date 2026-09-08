@@ -11,6 +11,7 @@ import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lirePreferences, profilActif, type Preferences } from '../../preferences';
 import { enregistrerVictoire } from '../../campagne/progression';
+import { bilanDeFin, type Bilan } from './bilan';
 import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
@@ -44,6 +45,86 @@ const MS_BUDGET_CHARGEMENT = 20_000;
  * image, et beaucoup trop court pour un onglet resté une minute en fond.
  */
 const MS_PAS_MAXIMAL = 200;
+
+/**
+ * Le camp du joueur. `monterJeu` prend `options.camp ?? 0` et la page ne le
+ * passe pas : le joueur est le camp 0, ici comme là-bas. La constante existe
+ * pour que le bilan n'écrive pas un zéro nu qu'on ne saurait plus relire.
+ */
+const CAMP_JOUEUR = 0;
+
+/** Le nombre, écrit comme la langue l'écrit. Aucun texte, seulement du format. */
+function nombre(locale: string, n: number): string {
+  return new Intl.NumberFormat(locale).format(n);
+}
+
+/**
+ * Une part sur cent, écrite comme la langue l'écrit — « 70 % » en français,
+ * « 70% » ailleurs. C'est du **format**, pas une chaîne : rien à traduire, donc
+ * rien à mettre dans le canon (même raisonnement que le « − » d'un chiffre de
+ * dégâts ou le « ∞ » d'une pastille de fiche).
+ */
+function pourcent(locale: string, n: number): string {
+  return new Intl.NumberFormat(locale, { style: 'percent' }).format(n / 100);
+}
+
+/**
+ * Une ligne du bilan : l'axe, sa jauge en dix crans, sa part.
+ *
+ * La jauge est `aria-hidden` — elle redit ce que le pourcentage à côté d'elle
+ * dit déjà —, et elle porte les mêmes segments biseautés que la jauge de la
+ * campagne et que le bouton Campagne de l'écran-titre : deux mesures de la même
+ * chose doivent se ressembler.
+ */
+function AxeBilan(
+  { libelle, valeur, locale }: { libelle: string; valeur: number; locale: string },
+): React.ReactElement {
+  const crans = Math.round(valeur / 10);
+  return <li>
+    <span className="bilan-axe-nom">{libelle}</span>
+    <span className="bilan-jauge" aria-hidden="true">
+      {Array.from({ length: 10 }, (_, i) => <i key={i} className={i < crans ? 'faite' : undefined} />)}
+    </span>
+    <b>{pourcent(locale, valeur)}</b>
+  </li>;
+}
+
+/**
+ * Le **bilan de fin de manche**, quand la manche est finie.
+ *
+ * L'écran de fin ne disait que « Manche gagnée » et proposait deux boutons :
+ * une victoire en six journées sans perdre une unité s'y lisait exactement
+ * comme une victoire au forceps en dix-huit. Le rang n'est pas un ornement,
+ * c'est ce qui donne une raison de rejouer une mission déjà remportée — et il
+ * n'est montré **que sur une victoire** : on ne classe pas une manche perdue.
+ *
+ * Sous le rang, les faits d'où il sort, pour que la note ne soit jamais un
+ * verdict qu'on subit sans le comprendre.
+ */
+function BlocBilan(
+  { bilan, gagne, locale }: { bilan: Bilan; gagne: boolean; locale: string },
+): React.ReactElement {
+  // Les clés sont écrites en toutes lettres, jamais composées : c'est ainsi
+  // qu'on les retrouve d'un `grep` le jour où l'on en cherche une.
+  return <section className="atlas-bilan" data-issue={gagne ? 'gagnee' : 'perdue'} aria-label={t(locale, 'bilan.titre')}>
+    {gagne ? <div className="bilan-rang">
+      <span className="campagne-kicker">{t(locale, 'bilan.rang')}</span>
+      <b data-rang={bilan.rang}>{bilan.rang}</b>
+    </div> : null}
+    <ul className="bilan-axes">
+      <AxeBilan libelle={t(locale, 'bilan.rythme')} valeur={bilan.rythme} locale={locale} />
+      <AxeBilan libelle={t(locale, 'bilan.puissance')} valeur={bilan.puissance} locale={locale} />
+      <AxeBilan libelle={t(locale, 'bilan.tenue')} valeur={bilan.tenue} locale={locale} />
+    </ul>
+    <ul className="bilan-faits">
+      <li><b>{nombre(locale, bilan.journees)}</b><span>{t(locale, 'bilan.journees')}</span></li>
+      <li><b>{nombre(locale, bilan.engagees)}</b><span>{t(locale, 'bilan.engagees')}</span></li>
+      <li><b>{nombre(locale, bilan.perdues)}</b><span>{t(locale, 'bilan.perdues')}</span></li>
+      <li><b>{nombre(locale, bilan.neutralisees)}</b><span>{t(locale, 'bilan.neutralisees')}</span></li>
+      <li><b>{nombre(locale, bilan.batiments)}</b><span>{t(locale, 'bilan.batiments')}</span></li>
+    </ul>
+  </section>;
+}
 
 export default function Toile({ scenario, carte, locale, surChargement }: ProprietesToile): React.ReactElement {
   const conteneurRef = useRef<HTMLDivElement>(null);
@@ -186,9 +267,12 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };
   const fin = Boolean(mission && etat?.partie.terminee);
-  const gagne = etat?.partie.vainqueur === 0;
+  const gagne = etat?.partie.vainqueur === CAMP_JOUEUR;
   const modal = Boolean(mission && !enScene && (fin || voirBriefing || voirAide));
   const commandantContact = scenario.commandants[0]?.commandantCle;
+  // Le bilan ne se calcule qu'une fois la manche finie, et il ne lit que l'état
+  // final et la carte : rien à mémoriser en cours de partie.
+  const bilan = fin && etat ? bilanDeFin(etat, carte, CAMP_JOUEUR) : null;
 
   const plateauPret = Boolean(etat);
   useEffect(() => {
@@ -209,14 +293,23 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>
       <section ref={dialogueRef} tabIndex={-1} className="atlas-briefing" role="dialog" aria-modal="true" aria-labelledby="titre-mission">
         <div className="atlas-fiche-entete">
-          {mission && !fin ? <div className="atlas-fiche-portrait"><PortraitCommandant allie={Boolean(scenario.incarnation)} /><span>{t(locale, `commandant.${commandantContact}.nom`)}</span></div> : null}
+          {/* Le portrait reste sur l'écran de fin : c'est le même commandant qui
+              a ouvert la mission et qui la débriefe, et une fin sans visage
+              retombait dans la fiche de site que le reste de l'écran a quittée. */}
+          {mission ? <div className="atlas-fiche-portrait"><PortraitCommandant allie={Boolean(scenario.incarnation)} /><span>{t(locale, `commandant.${commandantContact}.nom`)}</span></div> : null}
           <div className="atlas-fiche-titre">
-            <p className="campagne-kicker">{mission ? t(locale, 'campagne.mission', { n: index + 1 }) : t(locale, 'campagne.demo')}{mission ? ` · ${t(locale, mission.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}` : ''}</p>
+            <p className="campagne-kicker">{/* La balise de liaison, reprise de l'écran de chargement : le briefing
+                  est la suite de ce qu'il annonçait. */}
+              <span className="atlas-balise" aria-hidden="true"><i /><i /><i /></span>
+              {mission ? t(locale, 'campagne.mission', { n: index + 1 }) : t(locale, 'campagne.demo')}{mission ? ` · ${t(locale, mission.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}` : ''}</p>
             <h1 id="titre-mission">{voirAide ? t(locale, 'campagne.ouvrir_aide') : fin ? t(locale, gagne ? 'combat.manche_gagnee' : 'combat.manche_perdue') : scenario.nom}</h1>
             {scenario.incarnation ? <p className="campagne-progression">{t(locale, 'campagne.incarnation')}</p> : null}
           </div>
         </div>
-        {fin && mission ? <p>{gagne ? mission.conclusion : t(locale, 'campagne.defaite')}</p> : null}
+        {fin && mission && bilan ? <>
+          <BlocBilan bilan={bilan} gagne={gagne} locale={locale} />
+          <p className="atlas-conclusion">{gagne ? mission.conclusion : t(locale, 'campagne.defaite')}</p>
+        </> : null}
         {mission && !fin ? <>
           <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p>{mission.objectif}</p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
           {voirAide ? <div className="atlas-lecon">
@@ -232,7 +325,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         <div className="campagne-actions">
           {fin ? <>
             {gagne && suivante ? <Link className="atlas-bouton" href={`/jeu/${suivante.scenarioCle}`}>{t(locale, 'campagne.suivante')}</Link> : null}
-            <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button>
+            {/* Rejouer était **toujours** le bouton secondaire, y compris sur une
+                manche perdue où c'est la seule chose à faire : l'écran de défaite
+                n'avait donc aucune action principale. Il n'est en retrait que
+                lorsqu'une mission suivante lui dispute la place. */}
+            <button className={`atlas-bouton${gagne && suivante ? ' secondaire' : ''}`} onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button>
           </> : <>
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'hud.nouvelle_partie')}</button>

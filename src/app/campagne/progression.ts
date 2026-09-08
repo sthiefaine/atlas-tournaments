@@ -32,6 +32,27 @@ export function lireProgression(): Progression {
   return session;
 }
 
+/**
+ * Les victoires d'un profil **nommé**, sans toucher au profil actif ni à la
+ * mémoire de session.
+ *
+ * `lireProgression` ne sait lire que le profil courant, et c'est ce qu'il faut
+ * partout ailleurs. L'écran-titre, lui, doit montrer les **deux** sauvegardes
+ * avant que le joueur n'en choisisse une : il ne peut pas basculer le profil
+ * actif pour lire l'autre, ce serait changer l'état de l'appareil pour afficher
+ * une ligne.
+ */
+export function victoiresDe(profil: Profil): readonly string[] {
+  try {
+    const texte = localStorage.getItem(cleProgression(profil));
+    return texte ? normaliserProgression(JSON.parse(texte)).victoires : [];
+  } catch {
+    // Stockage refusé : une sauvegarde illisible est une sauvegarde vide, et
+    // l'écran reste utilisable.
+    return [];
+  }
+}
+
 export function enregistrerVictoire(code: string): boolean {
   const profil = profilActif();
   session = normaliserProgression({ version: 1, victoires: [...lireProgression().victoires, code] });

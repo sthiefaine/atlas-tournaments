@@ -20,6 +20,16 @@ import {
  * commandes sont désactivées — basculer un interrupteur sur un état qu'on n'a
  * pas encore lu écraserait le choix précédent.
  *
+ * **Un interrupteur n'est plus une glissière.** C'en était une, avec sa pastille
+ * qui coulisse et le mot « Activé » relégué dans une colonne de 74 px à droite :
+ * le contrôle d'un panneau de préférences de système d'exploitation, posé au
+ * milieu d'un jeu à l'encre et au signal. C'est maintenant une **plaque** qui
+ * porte son propre état, peinte en signal quand le réglage est mis, creuse
+ * quand il ne l'est pas — la même mécanique que les boutons du HUD, avec une
+ * épaisseur qui s'écrase à l'appui. Le contrôle reste un `role="switch"` avec
+ * son `aria-checked` ; la plaque est `aria-hidden`, sans quoi le lecteur d'écran
+ * annoncerait deux fois le même état.
+ *
  * **L'effacement rend compte.** Avant, le bouton passait par une confirmation,
  * effaçait, et une ligne de douze pixels disait « Progression effacée. » — le
  * propriétaire ne l'a pas vue. Le bandeau annonce désormais **ce qui a été
@@ -32,18 +42,25 @@ import {
 export interface LibellesReglages {
   titre: string;
   retour: string;
+  /** Titre du panneau des réglages qui se voient pendant une partie. */
+  enPartie: string;
   dialogues: string;
   dialoguesNote: string;
   animations: string;
   animationsNote: string;
   ecranCombat: string;
   ecranCombatNote: string;
+  /** Titre du panneau d'affichage. */
+  affichage: string;
   qualite: string;
   qualiteNote: string;
   qualiteAuto: string;
   qualiteBasse: string;
   actif: string;
   inactif: string;
+  /** Titre du panneau des deux sauvegardes de l'appareil. */
+  sauvegardes: string;
+  /** Intitulé accessible du choix de sauvegarde. */
   profils: string;
   profilsNote: string;
   /** Les noms par défaut, tant que le joueur n'a pas nommé le profil. */
@@ -52,7 +69,10 @@ export interface LibellesReglages {
   profilActif: string;
   profilNom: string;
   profilNomNote: string;
-  stockage: string;
+  /** Contient `{victoires}` et `{parties}` : ce que la sauvegarde tient. */
+  profilBilan: string;
+  /** Ce que dit une sauvegarde à laquelle personne n'a encore touché. */
+  profilVide: string;
   stockageOk: string;
   stockageKo: string;
   effacer: string;
@@ -75,12 +95,29 @@ function remplir(texte: string, valeurs: Record<string, string | number>): strin
   return texte.replace(/\{([a-z]+)\}/g, (entier, nom: string) => (nom in valeurs ? String(valeurs[nom]) : entier));
 }
 
+/**
+ * Un panneau de réglages. Sans titre — une clé de chaîne pas encore écrite rend
+ * une chaîne vide —, il ne prétend pas en avoir un : ni titre creux, ni
+ * `aria-labelledby` qui désignerait un élément muet.
+ */
+function Groupe({ id, titre, children }: {
+  id: string; titre: string; children: React.ReactNode;
+}): React.ReactElement {
+  return <section className="reglages-groupe" aria-labelledby={titre === '' ? undefined : id}>
+    {titre !== '' ? <h2 id={id}>{titre}</h2> : null}
+    {children}
+  </section>;
+}
+
 /** Ce que le dernier effacement a donné : un bilan, ou un refus. */
 type Effacement = { profil: string; bilan: BilanProgression } | { echec: true } | null;
 
 export default function Reglages({ libelles }: { libelles: LibellesReglages }): React.ReactElement {
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   const [profils, setProfils] = useState<EtatProfils>({ ...PROFILS_PAR_DEFAUT, noms: { ...PROFILS_PAR_DEFAUT.noms } });
+  // Ce que chaque sauvegarde tient. `null` tant que le navigateur n'a pas parlé :
+  // c'est ce qui distingue « pas encore lu » de « lu, et vide ».
+  const [bilans, setBilans] = useState<Record<Profil, BilanProgression> | null>(null);
   // Le champ garde ce que le joueur tape ; on n'enregistre que la forme
   // normalisée, et le champ s'y aligne quand il perd le focus — rogner à chaque
   // frappe empêcherait de taper une espace au milieu d'un nom.
@@ -90,11 +127,16 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
   const [confirme, setConfirme] = useState(false);
   const [effacement, setEffacement] = useState<Effacement>(null);
 
+  const compter = (): Record<Profil, BilanProgression> => ({
+    a: compterProgression('a'), b: compterProgression('b'),
+  });
+
   useEffect(() => {
     const etat = lireProfils();
     setPreferences(lirePreferences());
     setProfils(etat);
     setSaisie(etat.noms[etat.actif]);
+    setBilans(compter());
     setStockage(stockageDisponible());
     setPret(true);
   }, []);
@@ -102,6 +144,13 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
   const nomDe = (profil: Profil): string => profils.noms[profil] || (profil === 'a' ? libelles.profilA : libelles.profilB);
   const libelleQualite: Record<QualiteRendu, string> = {
     auto: libelles.qualiteAuto, basse: libelles.qualiteBasse,
+  };
+  /** Ce que tient une sauvegarde, en une ligne ; vide tant qu'on ne l'a pas lue. */
+  const bilanDe = (profil: Profil): string => {
+    const b = bilans?.[profil];
+    if (!b) return '';
+    if (b.victoires === 0 && b.parties === 0) return libelles.profilVide;
+    return remplir(libelles.profilBilan, { victoires: b.victoires, parties: b.parties });
   };
 
   const changer = (partiel: Partial<Preferences>): void => {
@@ -135,69 +184,80 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     const ok = effacerProgression(profil);
     setStockage(ok);
     setEffacement(ok ? { profil: nomDe(profil), bilan } : { echec: true });
+    setBilans(compter());
     setConfirme(false);
   };
 
-  const interrupteur = (
+  /**
+   * Une bascule : le nom et sa note à gauche, l'état en plaque à droite. La
+   * plaque est `aria-hidden` — `role="switch"` et `aria-checked` disent déjà
+   * l'état, et l'entendre deux fois est une gêne, pas une aide.
+   */
+  const bascule = (
     cle: 'dialogues' | 'animationsReduites' | 'ecranCombat', titre: string, note: string,
   ): React.ReactElement => {
     const actif = preferences[cle];
-    return <div className="reglage-ligne">
-      <button
-        type="button" className="reglage-interrupteur" role="switch" aria-checked={actif}
-        disabled={!pret} onClick={() => changer({ [cle]: !actif } as Partial<Preferences>)}
-      >
-        <span className="reglage-libelle">
-          <strong>{titre}</strong>
-          <span className="reglage-note">{note}</span>
-        </span>
-        <span className="reglage-glissiere" aria-hidden="true"><i /></span>
-      </button>
-      <span className="reglage-etat">{actif ? libelles.actif : libelles.inactif}</span>
-    </div>;
+    return <button
+      type="button" className="reglage-bascule" role="switch" aria-checked={actif}
+      disabled={!pret} onClick={() => changer({ [cle]: !actif } as Partial<Preferences>)}
+    >
+      <span className="reglage-libelle">
+        <strong>{titre}</strong>
+        <span className="reglage-note">{note}</span>
+      </span>
+      <span className="reglage-etat" aria-hidden="true">{actif ? libelles.actif : libelles.inactif}</span>
+    </button>;
   };
 
   return <main className="atlas-reglages">
     <header className="reglages-entete">
       <h1>{libelles.titre}</h1>
-      <Link className="reglages-retour" href="/">{libelles.retour}</Link>
+      <Link className="atlas-retour" href="/">{libelles.retour}</Link>
     </header>
 
-    <section className="reglages-groupe">
-      {interrupteur('dialogues', libelles.dialogues, libelles.dialoguesNote)}
-      {interrupteur('animationsReduites', libelles.animations, libelles.animationsNote)}
-      {interrupteur('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
-    </section>
+    <Groupe id="reglage-en-partie" titre={libelles.enPartie}>
+      {bascule('dialogues', libelles.dialogues, libelles.dialoguesNote)}
+      {bascule('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
+    </Groupe>
 
-    <section className="reglages-groupe" aria-labelledby="reglage-qualite">
-      <h2 id="reglage-qualite">{libelles.qualite}</h2>
+    <Groupe id="reglage-affichage" titre={libelles.affichage}>
       {/* Deux choix, un rang : le réglage pilote réellement la chaîne de
           post-traitement du rendu, lue par la page de jeu au montage. */}
-      <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
-        {QUALITES_RENDU.map((q) => {
-          const choisi = preferences.qualite === q;
-          return <button
-            key={q} type="button" role="radio" aria-checked={choisi}
-            className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => changer({ qualite: q })}
-          >
-            {libelleQualite[q]}
-          </button>;
-        })}
+      <div className="reglage-rangee">
+        <span className="reglage-libelle">
+          <strong>{libelles.qualite}</strong>
+          <span className="reglage-note">{libelles.qualiteNote}</span>
+        </span>
+        <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
+          {QUALITES_RENDU.map((q) => {
+            const choisi = preferences.qualite === q;
+            return <button
+              key={q} type="button" role="radio" aria-checked={choisi}
+              className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => changer({ qualite: q })}
+            >
+              {libelleQualite[q]}
+            </button>;
+          })}
+        </div>
       </div>
-      <p className="reglage-note">{libelles.qualiteNote}</p>
-    </section>
+      {bascule('animationsReduites', libelles.animations, libelles.animationsNote)}
+    </Groupe>
 
-    <section className="reglages-groupe" aria-labelledby="reglage-profils">
-      <h2 id="reglage-profils">{libelles.profils}</h2>
-      <div className="reglage-choix reglage-profils" role="radiogroup" aria-label={libelles.profils}>
+    <Groupe id="reglage-sauvegardes" titre={libelles.sauvegardes}>
+      {/* L'écran-titre choisit **laquelle on joue** ; ici on les nomme, on voit
+          ce qu'elles tiennent, et on en efface une. */}
+      <div className="reglage-cartouches" role="radiogroup" aria-label={libelles.profils}>
         {PROFILS.map((profil) => {
           const choisi = profils.actif === profil;
           return <button
             key={profil} type="button" role="radio" aria-checked={choisi}
-            className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => activer(profil)}
+            className="reglage-cartouche" disabled={!pret} onClick={() => activer(profil)}
           >
-            <span className="reglage-profil-nom">{nomDe(profil)}</span>
-            <span className="reglage-profil-etat">{choisi ? libelles.profilActif : ' '}</span>
+            <span className="cartouche-nom">{nomDe(profil)}</span>
+            <span className="cartouche-bilan">{bilanDe(profil)}</span>
+            {/* `aria-checked` dit déjà « sélectionné » : la plaque est une
+                peinture, elle n'a pas à être annoncée une seconde fois. */}
+            {choisi ? <span className="cartouche-plaque" aria-hidden="true">{libelles.profilActif}</span> : null}
           </button>;
         })}
       </div>
@@ -215,13 +275,11 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
         />
       </label>
       <p className="reglage-note">{libelles.profilsNote}</p>
-    </section>
-
-    <section className="reglages-groupe" aria-labelledby="reglage-stockage">
-      <h2 id="reglage-stockage">{libelles.stockage}</h2>
       {/* En navigation privée, le joueur perd sa progression sans jamais
           l'apprendre : on le lui dit avant, pas après. */}
-      <p className="reglage-note" role="status">{stockage ? libelles.stockageOk : libelles.stockageKo}</p>
+      <p className="reglage-note" data-alerte={stockage ? undefined : 'oui'} role="status">
+        {stockage ? libelles.stockageOk : libelles.stockageKo}
+      </p>
       {effacement && 'echec' in effacement
         ? <p className="reglage-bilan echec" role="alert">{libelles.effaceKo}</p>
         : null}
@@ -243,7 +301,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
         : <button type="button" className="reglage-effacer" disabled={!pret} onClick={() => { setEffacement(null); setConfirme(true); }}>
           {libelles.effacer}
         </button>}
-    </section>
+    </Groupe>
     {libelles.version ? <p className="reglages-version">{libelles.version}</p> : null}
   </main>;
 }

@@ -70,6 +70,55 @@ export function facteurTerrain(etoiles: number): number {
   return 1 - REDUCTION_PAR_ETOILE * etoiles;
 }
 
+/**
+ * Ce que la riposte garde de sa force (§5.1, 8 septembre 2026).
+ *
+ * Frapper en premier ne payait que sur terrain égal. Le propriétaire l'a
+ * rapporté sur le cas exact qui le montre : deux infanteries à 8 PV, la sienne
+ * sur route, l'autre en ville — son coup retirait 20 points internes, la
+ * riposte lui en rendait **21**. Les trois étoiles de la ville retiraient 30 %
+ * à son coup, quand la cible, tombée à 6 PV, ne perdait que 25 % de sa force en
+ * ripostant : l'abri effaçait l'avantage de l'initiative, et un peu plus.
+ *
+ * Ce n'était pas une faute de calcul — c'est la règle d'Advance Wars, où
+ * attaquer une ville depuis la route est un mauvais échange. Mais c'est un
+ * mauvais échange **illisible** : les deux camps affichaient « 8 → 6 », et le
+ * joueur croyait faire jeu égal alors qu'il perdait.
+ *
+ * À `0,80`, l'initiative repasse devant l'abri : dans cette scène, l'attaquant
+ * sort à 7 et la cible à 6, ce qui était la demande. Sur terrain égal, où
+ * attaquer payait déjà, l'écart se creuse au lieu de s'inverser — route contre
+ * route à 10 PV, la cible tombe à 7 et l'attaquant garde 8.
+ *
+ * **Pourquoi 0,80 et pas 0,70**, qui donne le même 7 contre 6 à l'écran : parce
+ * que le facteur ne se lit pas seulement dans un duel, il change tout le jeu.
+ * Mesuré sur vingt parties de `plaine.json`, graine 1, catalogue 6, pondérée
+ * contre agressive : sans facteur 60/40, à 0,80 **50/50**, à 0,70 **15/85** —
+ * une riposte trop faible récompense tant l'attaque que la stratégie agressive
+ * écrase la prudente, et le jeu n'a plus qu'un plan. À 0,80 les deux écoles se
+ * valent, aucune partie ne finit au chronomètre, et les matchs s'allongent de
+ * trois journées médianes (34 → 37) : les unités survivent un échange de plus.
+ *
+ * Le facteur ne s'applique qu'à la **riposte**, jamais au coup : c'est
+ * l'initiative qu'il récompense, pas la puissance.
+ */
+export const FACTEUR_RIPOSTE = 0.80;
+
+/**
+ * Les dégâts d'une riposte : la formule du coup, atténuée. Une seule fonction
+ * pour les deux appelants du moteur — la résolution et la prévision —, sans
+ * quoi l'écran promettrait un chiffre et le tour en jouerait un autre.
+ */
+export function degatsRiposte(
+  etat: EtatPartie, cat: Catalogue, def: Unite, att: Unite, rng: Rng,
+): number {
+  const plein = calculerDegats(etat, cat, def, att, rng);
+  if (plein <= 0) return 0;
+  // Le plancher d'un point interne vaut pour la riposte comme pour le coup :
+  // une riposte légale qui ne retire rien serait une règle incompréhensible.
+  return Math.min(att.pv, Math.max(1, Math.round(plein * FACTEUR_RIPOSTE)));
+}
+
 /** Jauge gagnée par point de PV affiché infligé (§7.1). */
 export const JAUGE_PAR_PV_INFLIGE = 10;
 /** Jauge gagnée par point de PV affiché encaissé (§7.1). */
@@ -212,7 +261,7 @@ export function resoudreAttaque(
       && degatsArme(cat, def, att.type) > 0;
     if (peutRendre) {
       const avantAtt = pvAffiches(att.pv);
-      riposte = calculerDegats(etat, cat, def, att, rng);
+      riposte = degatsRiposte(etat, cat, def, att, rng);
       att.pv -= riposte;
       if (td.munitions !== null && def.munitions !== null && def.munitions > 0 && !tireSansMunitions(td, att.type)) {
         def.munitions -= 1;
@@ -296,9 +345,10 @@ export function prevoirDuel(
     const peutRendre = td.peutRiposter
       && manhattan(depuis, def) === 1
       && degatsArme(cat, def, att.type) > 0;
-    // La riposte se calcule sur les PV **d'après** la frappe : c'est ce qui rend
-    // rentable le fait de frapper en premier, et le joueur doit le voir.
-    if (peutRendre) riposte = calculerDegats(etat, cat, { ...def, pv: restant }, arrive, RNG_MEDIAN);
+    // La riposte se calcule sur les PV **d'après** la frappe, et atténuée par
+    // FACTEUR_RIPOSTE : c'est ce qui rend rentable le fait de frapper en
+    // premier, et le joueur doit le voir avant de confirmer.
+    if (peutRendre) riposte = degatsRiposte(etat, cat, { ...def, pv: restant }, arrive, RNG_MEDIAN);
   }
 
   return {
