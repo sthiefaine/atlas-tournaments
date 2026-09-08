@@ -10,7 +10,9 @@ import {
   appliquer, chargerCatalogue, creerPartie, facteurTerrain, prevoirDuel, pvAffiches, reglagesParDefaut,
   sceneDeCarte, type Catalogue, type EtatPartie, type Unite,
 } from '../../src/engine/index';
+import { nombre } from '../../src/i18n/index';
 import { ambiance } from '../../src/render/ambiance';
+import { PALETTES } from '../../src/render/palettes';
 import {
   HAUTEUR_MINIMALE_RAIL, LARGEUR_MINIMALE_RAIL, monterHudHtml, poserEmplacements, railTient,
   type VueJeu,
@@ -32,7 +34,14 @@ class FauxElement {
   textContent = '';
   dataset: Record<string, string> = {};
   attributs = new Map<string, string>();
-  style: Record<string, unknown> = { setProperty: (): void => undefined };
+  /**
+   * Le style d'un élément. `setProperty` **retient** ce qu'on lui donne : le HUD
+   * pose la couleur de l'armée en main sur sa racine par cette voie, et sans
+   * mémoire on ne pourrait pas la relire.
+   */
+  style: Record<string, unknown> = {
+    setProperty(this: Record<string, unknown>, cle: string, valeur: string): void { this[cle] = valeur; },
+  };
   ecritures = 0;
   private html = '';
   ownerDocument: unknown;
@@ -1131,7 +1140,7 @@ test('le bulletin montre trois journées, la courante en avant, sans rien replie
   h.demonter();
 });
 
-test('le « i » de la jauge déplie ce que font les deux pouvoirs, lu sur leurs effets', () => {
+test('le bouton de détail de la jauge déplie ce que font les deux pouvoirs, lu sur leurs effets', () => {
   const etat = partie();
   const pouvoirs = {
     normal: {
@@ -1212,3 +1221,306 @@ test('la fiche montre une tuile par terrain, peinte avec la palette du canon', (
   h.demonter();
 });
 
+
+// ---------------------------------------------------------------------------
+// Le vocabulaire visuel : l'échelle, les signes, la couleur de l'armée
+// ---------------------------------------------------------------------------
+
+/** La feuille de style du HUD, lue dans la source : elle n'est pas exportée. */
+function feuille(): string {
+  const source = readFileSync(path.resolve(import.meta.dirname, '..', '..', 'src', 'render', 'hud-html.ts'), 'utf8');
+  const debut = source.indexOf('const STYLE = `');
+  const fin = source.indexOf('\n`;', debut);
+  assert.ok(debut >= 0 && fin > debut, 'la feuille de style est introuvable');
+  return source.slice(debut, fin);
+}
+
+test('l’échelle typographique est fermée : huit crans, et aucune taille écrite à la main', () => {
+  // Dix-neuf tailles cohabitaient — 9, 9,5, 10, 11, 11,5, 12, 12,5, 13, 13,5,
+  // 14, 15, 16, 17, 20, 21, 22, 25, 26 px —, c'est-à-dire aucune échelle. Sans
+  // police de jeu, la régularité de l'échelle est le levier le plus fort ; ce
+  // test est ce qui l'empêche de se re-sédimenter au prochain panneau ajouté.
+  const css = feuille();
+  const enDur = css.match(/font-size:\s*[0-9.]+px/g) ?? [];
+  assert.deepEqual(enDur, [], 'une taille écrite à la main dans la feuille du HUD');
+  const crans = new Set(css.match(/font-size:var\(--t[1-8]\)/g) ?? []);
+  assert.equal(crans.size, 8, 'les huit crans servent tous, et il n’y en a pas un neuvième');
+  for (let i = 1; i <= 8; i += 1) {
+    assert.match(css, new RegExp(`--t${i}:[0-9]+px`), `le cran --t${i} est déclaré`);
+  }
+});
+
+test('aucun signe du HUD n’est un caractère : retour, détail et zooms sont dessinés', () => {
+  // Le « i » du bouton de détail était l'icône « info » du web, le retour un
+  // « ↶ » de traitement de texte, et les zooms un « + » et un « − » de 25 px
+  // dans des carrés — « une calculatrice ». Tout le reste du jeu est dessiné.
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0);
+  assert.ok(unite);
+  const h = hudSur(() => ({ ...vueDe(etat, { x: unite.x, y: unite.y }), selection: unite.id }), { largeur: 1400, hauteur: 900 });
+  const inspection = h.slots.get('inspection')!.innerHTML;
+  assert.match(inspection, /class="detail"[^>]*>\s*<svg/, 'le détail est une loupe, pas un « i »');
+  assert.match(inspection, /class="retour"[^>]*>\s*<svg/, 'le retour est une flèche dessinée');
+  assert.ok(!inspection.includes('↶'), 'plus de « ↶ »');
+  h.demonter();
+
+  // Les commandes de caméra n'existent que si le rendu sait zoomer et tourner :
+  // on monte donc un HUD qui le sait.
+  const { conteneur } = document();
+  conteneur.clientWidth = 1400;
+  conteneur.clientHeight = 900;
+  const camera = monterHudHtml(conteneur as unknown as HTMLElement, {
+    vue: () => vueDe(etat, { x: 0, y: 0 }),
+    t: (cle) => cle,
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => null, zoomer: () => undefined, tourner: () => undefined, recentrer: () => undefined,
+  });
+  const boutons = emplacements(conteneur).get('camera')!.innerHTML;
+  assert.equal((boutons.match(/<svg/g) ?? []).length, 5, 'cinq boutons — deux rotations, deux zooms, un recentrage —, cinq dessins');
+  assert.doesNotMatch(boutons, /aria-hidden="true">[+−]</, 'plus de « + » ni de « − » de calculatrice');
+  camera.demonter();
+});
+
+test('le HUD prend la couleur de l’armée en main, sans réécrire un seul emplacement', () => {
+  // « Dans un Advance Wars, la fenêtre prend la couleur de l'armée qui joue ;
+  // ici c'est un filet » — les deux personas, le même reproche. La couleur est
+  // posée sur la racine par le style, jamais par le HTML : changer de tour ne
+  // coûte donc aucune écriture de DOM.
+  const etat = partie();
+  const h = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
+  const racine = h.conteneur.children.find((e) => e.className === 'atlas-hud')!;
+  assert.equal(racine.style['--camp'], PALETTES.bleu.main, 'le camp 0 joue : le bleu');
+  const ecritures = new Map([...h.slots].map(([nom, e]) => [nom, e.ecritures]));
+
+  etat.campCourant = 1;
+  h.rafraichir();
+  assert.equal(racine.style['--camp'], PALETTES.rouge.main, 'le camp 1 joue : le rouge');
+  // Un seul emplacement change, et ce n'est pas pour la couleur : la fin de tour
+  // s'éteint parce que ce n'est plus mon tour. Les dix autres — la bande de
+  // partie comprise, qui porte pourtant la couleur du camp — ne bougent pas.
+  const remues = [...h.slots].filter(([nom, e]) => e.ecritures !== ecritures.get(nom)).map(([nom]) => nom);
+  assert.deepEqual(remues, ['dock'], 'la couleur du tour ne passe pas par le HTML');
+  h.demonter();
+});
+
+test('une alerte porte un signe, pas seulement une couleur', () => {
+  // `data-alerte` ne parlait que par la teinte : un daltonien ne lisait rien.
+  // Trois registres désormais — un signe, une forme (le cadre en orange, la
+  // plaque pleine en rouge, par le CSS), une teinte —, il en reste deux si
+  // l'une manque.
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0 && u.munitions !== null && CAT.unites[u.type]!.munitions !== null);
+  assert.ok(unite);
+  unite.munitions = 0;
+  const r = inspection(etat, { x: unite.x, y: unite.y });
+  assert.match(r.html, /data-alerte="rouge"[^>]*>\s*<svg/, 'le triangle précède le chiffre');
+  r.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// Le pouvoir, et le menu de production
+// ---------------------------------------------------------------------------
+
+const POUVOIRS = {
+  normal: {
+    nom: 'commandant.x.pouvoir', cout: 100, pret: true,
+    effets: [{ cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.2 } }],
+  },
+  super: {
+    nom: 'commandant.x.super', cout: 300, pret: true,
+    effets: [{ cible: 'mes_unites', modificateur: { quoi: 'mouvement', valeur: 1 } }],
+  },
+} as const;
+
+test('un bouton de pouvoir tient sur une ligne : un signe pour le rang, plus un mot', () => {
+  // Ils portaient trois tailles de texte dans une boîte de 40 px — un rang en
+  // capitales de 8,5 px, un nom de 12, un prix de 11 —, soit un panneau pour
+  // deux libellés. Le rang est un éclair, deux pour le super ; il reste écrit
+  // dans le nom accessible, seul endroit où un mot vaut mieux qu'un dessin.
+  const etat = partie();
+  const h = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs: POUVOIRS }), { largeur: 1400, hauteur: 900 });
+  const dock = h.slots.get('dock')!.innerHTML;
+  assert.doesNotMatch(dock, /class="entete"/, 'plus de ligne d’en-tête dans le bouton');
+  assert.doesNotMatch(dock, /class="pouvoir"[^>]*>[^<]*<span class="rang"/, 'le rang n’est plus un mot du bouton');
+  assert.match(dock, /class="pouvoir"[^>]*>\s*<svg/, 'le rang est un signe, en tête du bouton');
+  assert.equal((dock.match(/class="nom"/g) ?? []).length, 2);
+  assert.equal((dock.match(/class="prix"/g) ?? []).length, 2);
+  // Le mot reste dans le nom accessible : c'est là qu'il sert encore.
+  assert.match(dock, /aria-label="hud\.super_pouvoir · commandant\.x\.super"/);
+  h.demonter();
+});
+
+/** Un HUD ouvert sur le menu de production d'un bâtiment, en catalogue 4. */
+function enProduction(unites: readonly CleUnite[], fonds?: number) {
+  const cat = chargerCatalogue(4);
+  const etat = creerPartie(scenePersonnalisee(['PUP'], {}, [{ camp: 0, type: 'infanterie', x: 0, y: 0 }]), cat, 'prod');
+  const camp = etat.camps.find((c) => c.id === 0);
+  assert.ok(camp);
+  if (fonds !== undefined) camp.fonds = fonds;
+  return {
+    cat,
+    fonds: camp.fonds,
+    ...hudSur(() => ({
+      ...vueDe(etat, { x: 1, y: 0 }), catalogue: cat, phase: 'production',
+      production: { batiment: { x: 1, y: 0 }, unites },
+    }), { largeur: 1400, hauteur: 900 }),
+  };
+}
+
+test('le menu de production replie sa fiche longue, et le bouton de détail l’ouvre — un seul balisage', () => {
+  // Le panneau posait la grille, cinq chiffres, les traits, ce qu'elle démolit,
+  // ce qui la démolit, la note de référence, les paliers d'abri, deux listes de
+  // terrains et deux de météo : sept cents pixels ancrés à côté d'un bâtiment,
+  // avec trois zones de défilement imbriquées. « Moche et pas très intuitif. »
+  const h = enProduction(['infanterie', 'char_leger']);
+  let html = h.slots.get('production')!.innerHTML;
+  // Ce qui décide d'un achat reste : les chiffres, ce qu'elle démolit, ce qui la démolit.
+  assert.match(html, /class="cartouche"/);
+  assert.doesNotMatch(html, /<dl>/, 'les chiffres ne sont plus une liste de définitions');
+  assert.match(html, /fiche\.forte/);
+  assert.match(html, /fiche\.craint/);
+  // Ce qui explique un chiffre attend qu'on le demande.
+  assert.ok(!html.includes('fiche.abris'), 'les paliers d’abri sont repliés');
+  assert.ok(!html.includes('fiche.rapide'), 'les terrains aussi');
+  assert.match(html, /data-action="fiche_production" aria-expanded="false"/);
+
+  cliquer(h.conteneur, 'fiche_production');
+  html = h.slots.get('production')!.innerHTML;
+  assert.ok(html.includes('fiche.abris'), 'dépliée, c’est la fiche complète');
+  assert.ok(html.includes('fiche.rapide'));
+  assert.ok(html.includes('fiche.degats_reference'));
+  assert.match(html, /data-action="fiche_production" aria-expanded="true"/);
+  // Et c'est **le même** balisage que le panneau d'unité : une seule fiche.
+  assert.match(html, /class="fiche"/);
+  h.demonter();
+});
+
+test('le pied du menu de production dit ce qui resterait après l’achat, ou ce qui manque', () => {
+  const riche = enProduction(['infanterie'], 9000);
+  const cout = riche.cat.unites['infanterie']!.cout;
+  // Le nombre passe par `Intl` : on compare au **format**, pas aux chiffres nus.
+  assert.ok(riche.slots.get('production')!.innerHTML
+    .includes(`fiche.solde_apres {&quot;n&quot;:&quot;${nombre('fr', 9000 - cout)}&quot;}`));
+  assert.doesNotMatch(riche.slots.get('production')!.innerHTML, /data-manque="oui"/);
+  riche.demonter();
+
+  const pauvre = enProduction(['infanterie'], 0);
+  const html = pauvre.slots.get('production')!.innerHTML;
+  assert.match(html, /class="note" data-manque="oui">fiche\.fonds_insuffisants/);
+  assert.match(html, /class="recruter" data-action="produire" data-valeur="infanterie" disabled/);
+  // Trop chère, mais toujours consultable : on veut savoir pour quoi l'on économise.
+  assert.match(html, /data-abordable="non"/);
+  pauvre.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// L'écran de fin
+// ---------------------------------------------------------------------------
+
+test('l’écran de fin porte un bilan des deux camps, lu sur l’état et rien d’autre', () => {
+  // C'étaient un titre, une journée et un bouton : rien de ce que le match
+  // venait de produire, alors que tout est dans l'état.
+  const etat = partie();
+  etat.partie = { ...etat.partie, terminee: true, vainqueur: 0, nul: false };
+  etat.produites = { '0:infanterie': 3, '0:char_leger': 1, '1:infanterie': 2 };
+  const miennes = etat.unites.filter((u) => u.camp === 0).length;
+  const batiments0 = Object.values(etat.proprietaires).filter((c) => c === 0).length;
+  const h = hudSur(() => ({ ...vueDe(etat, { x: 0, y: 0 }), phase: 'fin' }), { largeur: 1400, hauteur: 900 });
+  const html = h.slots.get('fin')!.innerHTML;
+  assert.match(html, /combat\.manche_gagnee/);
+  assert.match(html, /data-action="rejouer"/);
+  // Trois lignes, plus la tête qui nomme les deux commandants.
+  assert.equal((html.match(/class="bilan-ligne"/g) ?? []).length, 3);
+  assert.match(html, /class="bilan-ligne bilan-tete"/);
+  assert.match(html, /hud\.bilan_unites/);
+  assert.match(html, /hud\.bilan_batiments/);
+  assert.match(html, /hud\.bilan_recrutees/);
+  // Mon camp d'abord, et les comptes sont ceux de l'état.
+  const chiffres = [...html.matchAll(/<b style="--teinte:([^"]+)">([^<]+)<\/b>/g)];
+  assert.equal(chiffres.length, 6, 'trois lignes, deux camps');
+  assert.equal(chiffres[0]![1], PALETTES.bleu.main, 'mon camp est en tête');
+  assert.equal(chiffres[0]![2], String(miennes));
+  assert.equal(chiffres[2]![2], String(batiments0));
+  assert.equal(chiffres[4]![2], '4', 'trois infanteries et un char : quatre recrues');
+  assert.equal(chiffres[5]![2], '2');
+  h.demonter();
+});
+
+test('le panneau d’unité annonce la zone de danger sur une unité adverse, et sur elle seule', () => {
+  // Le calcul existe depuis toujours, le geste est un double-clic, et rien ne
+  // l'annonçait : une fonctionnalité qu'aucun joueur ne peut découvrir n'existe pas.
+  const etat = partie();
+  const mienne = etat.unites.find((u) => u.camp === 0);
+  const sienne = etat.unites.find((u) => u.camp === 1);
+  assert.ok(mienne && sienne);
+  const sur = (u: Unite) => hudSur(() => vueDe(etat, { x: u.x, y: u.y }), { largeur: 1400, hauteur: 900 });
+  const adverse = sur(sienne);
+  assert.match(adverse.slots.get('inspection')!.innerHTML, /class="astuce">.*hud\.danger_astuce/);
+  adverse.demonter();
+  const amie = sur(mienne);
+  assert.doesNotMatch(amie.slots.get('inspection')!.innerHTML, /hud\.danger_astuce/,
+    'sur ma propre unité, le double-clic ne montre rien : l’astuce mentirait');
+  amie.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// Les deux commandes que le HUD sait rendre et que `jeu.ts` doit encore brancher
+// ---------------------------------------------------------------------------
+
+test('la case de mouvement dit le coût du chemin pointé, et redevient le mouvement sans chemin', () => {
+  // « Le coût du chemin pointé pendant la visée » : le calcul existe au
+  // contrôleur (`deplacementDe` garde la Portee du moteur), il n'était affiché
+  // nulle part. Le HUD le rend dès que la vue le porte.
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0);
+  assert.ok(unite);
+  const type = CAT.unites[unite.type]!;
+  let cout: { cout: number; max: number } | null = { cout: 4, max: type.mouvement };
+  const h = hudSur(() => ({
+    ...vueDe(etat, { x: unite.x, y: unite.y }), phase: 'selection', selection: unite.id, cheminCout: cout,
+  }), { largeur: 1400, hauteur: 900 });
+  // La ligne de statistiques du panneau, et elle seule : la fiche dépliée porte
+  // légitimement le mouvement du **type**, qui ne dépend d'aucun chemin.
+  const ligne = (): string => /<div class="stats">(.*?)<\/div>/.exec(h.slots.get('inspection')!.innerHTML)?.[1] ?? '';
+  assert.match(ligne(), new RegExp(`hud\\.chemin_cout \\{&quot;n&quot;:4,&quot;max&quot;:${type.mouvement}\\}`));
+  assert.doesNotMatch(ligne(), /hud\.mouvement/,
+    'la case de mouvement est occupée par le coût, elle n’est pas doublée');
+
+  cout = null;
+  h.rafraichir();
+  assert.match(ligne(), new RegExp(`hud\\.mouvement \\{&quot;n&quot;:${type.mouvement}\\}`));
+  assert.doesNotMatch(ligne(), /hud\.chemin_cout/);
+  h.demonter();
+});
+
+test('le bouton « unité suivante » n’existe que si le jeu sait y répondre', () => {
+  // Le compteur du bouton de fin de tour dit « 4 unités prêtes » sans donner
+  // aucun moyen de les retrouver, et `recentrer` va sur la sélection, pas sur la
+  // prochaine à jouer. Le HUD offre la commande, comme il offre le zoom : dès
+  // que l'API la porte, et jamais sinon.
+  const etat = partie();
+  const monter = (uniteSuivante?: () => void) => {
+    const { conteneur } = document();
+    conteneur.clientWidth = 1400;
+    conteneur.clientHeight = 900;
+    const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
+      vue: () => vueDe(etat, { x: 0, y: 0 }),
+      t: (cle) => cle,
+      finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+      jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+      versEcran: () => null, ...(uniteSuivante ? { uniteSuivante } : {}),
+    });
+    return { html: emplacements(conteneur).get('camera')!.innerHTML, conteneur, demonter: () => hud.demonter() };
+  };
+  const sans = monter();
+  assert.equal(sans.html, '', 'sans commande, pas de bouton — et pas de panneau du tout');
+  sans.demonter();
+
+  let appels = 0;
+  const avec = monter(() => { appels += 1; });
+  assert.match(avec.html, /data-action="unite_suivante"[^>]*aria-label="hud\.unite_suivante"/);
+  cliquer(avec.conteneur, 'unite_suivante');
+  assert.equal(appels, 1, 'le clic va au jeu, le HUD ne décide de rien');
+  avec.demonter();
+});

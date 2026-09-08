@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { etatStation, nomCourt, stationParDefaut } from '../../src/app/campagne/itineraire';
+import { etatsItineraire, etatStation, nomCourt, stationParDefaut } from '../../src/app/campagne/itineraire';
 import campagne from '../../content/campagne.json';
 
 const codes = campagne.missions.map((m) => m.scenarioCle);
@@ -53,4 +53,19 @@ test('la station ouverte à l’arrivée est la prochaine à jouer, et la premi�
   assert.equal(stationParDefaut(codes, codes), 0, 'plus de prochaine : on revient au début');
   // Une victoire dans le désordre ne fait pas sauter les épreuves d'avant.
   assert.equal(stationParDefaut(codes, [codes[3]!]), 0);
+});
+
+test('les états de toutes les stations sont ceux de chacune, et la jauge se compte dessus', () => {
+  const victoires = [codes[0]!, codes[1]!];
+  const etats = etatsItineraire(codes, victoires, true);
+  assert.equal(etats.length, codes.length);
+  etats.forEach((e, i) => assert.equal(e, etatStation(codes, i, victoires, true), `station ${i}`));
+  // La jauge de l'écran est le compte des stations remportées : une seule
+  // source, donc pas de jauge qui contredise l'itinéraire.
+  assert.equal(etats.filter((e) => e === 'gagnee').length, victoires.length);
+  // Au rendu du serveur, le carnet n'a lu aucune victoire : une seule station
+  // est ouverte et la jauge est vide. `pret` ne gouverne que ce qui n'est pas
+  // remporté — c'est ce qui garde l'affirmation vraie dans tous les cas.
+  assert.deepEqual(etatsItineraire(codes, [], false), ['ouverte', ...codes.slice(1).map(() => 'verrouillee')]);
+  assert.deepEqual(etatsItineraire([], [], true), []);
 });

@@ -54,3 +54,18 @@ export function stationParDefaut(codes: readonly string[], victoires: readonly s
   const index = codes.findIndex((c) => !victoires.includes(c));
   return index >= 0 ? index : 0;
 }
+
+/**
+ * L'état de **toutes** les stations, en un appel.
+ *
+ * Le carnet comptait les victoires d'un côté (pour la jauge) et peignait les
+ * stations de l'autre (par `etatStation`) : deux façons de compter la même
+ * chose, donc deux occasions de ne pas dire pareil. La jauge se lit désormais
+ * sur ce tableau — le nombre de stations `gagnee` —, et il n'y a plus qu'une
+ * source.
+ */
+export function etatsItineraire(
+  codes: readonly string[], victoires: readonly string[], pret: boolean,
+): EtatStation[] {
+  return codes.map((_, i) => etatStation(codes, i, victoires, pret));
+}
