@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as THREE from 'three/webgpu';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import {
@@ -819,5 +820,47 @@ test('une unité cachée ne rend pas son bâtiment translucide', () => {
     !materiaux(cachee).some((m) => m.transparent),
     'la case étant hors de vue, rien ne dit qu’une unité s’y trouve',
   );
+  decor.dispose();
+});
+
+test('le nombre d’instances est écrit dans le nuanceur : un lot se rebâtit, il ne se règle pas', () => {
+  // Piège de r170, trouvé le 8 septembre 2026 en cherchant les cousins du défaut
+  // de la flèche. Sous les mille instances, `InstanceNode` range les matrices
+  // dans un tampon d'uniformes dont la taille est **écrite en dur** dans le
+  // WGSL, avec le `count` du premier rendu ; et la clé de l'objet de rendu ne
+  // porte que l'identifiant de la maille, jamais son compte. Relever `count`
+  // ensuite ne recompile donc rien, et les instances au-delà lisent hors du
+  // tableau. C'est pour cela que `batirArbres`, `batirRochers` et
+  // `batirPavillons` refont la maille au lieu d'ajuster le compte.
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshStandardNodeMaterial({ color: 0x808080 });
+  const taille = (compte: number): string | undefined => {
+    const lot = new THREE.InstancedMesh(geo, mat, 64);
+    lot.count = compte;
+    const { vertex } = construireNuanceur(lot, { lumieres: false, brume: false });
+    return /array<\s*mat4x4<f32>\s*,\s*(\d+)\s*>/.exec(vertex)?.[1];
+  };
+  assert.equal(taille(2), '2', 'le nuanceur ne connaît que le compte du moment');
+  assert.equal(taille(6), '6', 'et non la capacité du lot');
+});
+
+test('un lot instancié vide s’éteint : à zéro, le moteur dessinerait une instance', () => {
+  // `RenderObject.getDrawParameters` fait `object.count > 1 ? object.count : 1`.
+  // Un lot à zéro coûterait un appel de dessin et une instance à matrice nulle.
+  const source = readFileSync('node_modules/three/src/renderers/common/RenderObject.js', 'utf8');
+  assert.ok(source.includes('object.count > 1 ? object.count : 1'), 'la règle du moteur n’a pas changé');
+
+  // Une carte de forêt : des arbres, des rochers, un seul bâtiment — donc des
+  // lots pleins et des lots vides, dans la même scène.
+  const etat = partie('plaine');
+  const grille = { largeur: 4, hauteur: 2, terrainDe: (x: number, y: number): 'foret' | 'plaine' | 'ville' => (
+    y === 0 ? (x === 0 ? 'ville' : 'foret') : 'plaine') };
+  const decor = creerDecor(grille, { ...etat, proprietaires: { '0,0': 1 as const }, unites: [] }, () => 0);
+  const lots = [...decor.groupe.children, ...decor.groupe.children.flatMap((o) => o.children)]
+    .filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  assert.ok(lots.length > 0);
+  for (const lot of lots) {
+    assert.equal(lot.visible, lot.count > 0, `${lot.name} : visible si et seulement s’il porte quelque chose`);
+  }
   decor.dispose();
 });

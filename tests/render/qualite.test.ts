@@ -10,9 +10,26 @@ import assert from 'node:assert/strict';
 
 import {
   BUDGET_MS_IMAGE, FACTEUR_COMPOSEUR, IMAGES_CADENCE, IMAGES_CALIBRATION, QUALITE_PAR_DEFAUT, QUALITES_RENDU,
-  SEUIL_MS_CADENCE, SEUIL_MS_COMPOSEUR, cadenceInsuffisante, composeurPossible, decisionComposeur, msCadence,
-  msCalibration, normaliserQualite,
+  SEUIL_MS_CADENCE, SEUIL_MS_COMPOSEUR, cadenceInsuffisante, composeurPossible, decisionComposeur, mediane,
+  msCadence, msCalibration, normaliserQualite,
 } from '../../src/render/qualite';
+
+test('la médiane est la statistique de toutes les mesures d’image', () => {
+  assert.equal(mediane([]), null);
+  assert.equal(mediane([7]), 7);
+  // Nombre impair : la valeur du milieu, l'ordre d'arrivée n'y fait rien.
+  assert.equal(mediane([9, 1, 5]), 5);
+  // Nombre pair : la moyenne des deux du milieu.
+  assert.equal(mediane([1, 2, 3, 4]), 2.5);
+  // Une image exceptionnelle — la première d'un moteur, qui crée ses pipelines
+  // et coûte mille fois les suivantes — ne déplace pas la médiane, là où une
+  // moyenne la porterait pendant cent images.
+  assert.equal(mediane([1562, 2, 2, 3, 3]), 3);
+  // Ce qui ne se lit pas est écarté, jamais compté comme zéro : un NaN ferait
+  // passer un appareil lent pour rapide.
+  assert.equal(mediane([NaN, 4, Infinity, -1, 6]), 5);
+  assert.equal(mediane([NaN, Infinity]), null);
+});
 
 test('la chaîne ne se monte que si une cible flottante est dessinable', () => {
   // Sur le dos WebGL, sans extension, three ne lèverait pas et l'écran serait

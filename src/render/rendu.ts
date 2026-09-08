@@ -61,10 +61,17 @@ export interface MesureFamille {
  * laquelle des deux on a mesurée.
  */
 export interface MesuresRendu {
+  /**
+   * Les triangles de la dernière image, tels que le moteur les a comptés.
+   * **Ne se compare pas d'un dos à l'autre** : le dos WebGL de three r170
+   * appelle `Info.update` avec le mode de dessin là où la signature attend le
+   * nombre d'instances (`mesures.ts`), et son compte est faux. `familles` dit
+   * la vérité de la scène sur les deux dos.
+   */
   triangles: number;
   /** Appels de dessin (*draw calls*). */
   appels: number;
-  /** Durée moyenne glissante d'une image, en millisecondes. */
+  /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   msParImage: number;
   /** Vrai si l'image passe par la chaîne de post-traitement. */
   composeur: boolean;
@@ -74,6 +81,15 @@ export interface MesuresRendu {
    * `auto`. C'est la seule durée ici qui attende vraiment le dessin.
    */
   msCalibration: number | null;
+  /**
+   * La médiane des intervalles entre les dernières images **consécutives**, en
+   * millisecondes ; `null` tant qu'il n'y en a pas assez. C'est la mesure qui
+   * compte le processeur graphique en jeu, sans barrière : le navigateur
+   * retient l'image suivante tant que la précédente n'est pas présentée. Seize
+   * millisecondes, c'est soixante images par seconde. Absente d'une peau qui
+   * ne sait pas la dire.
+   */
+  msCadence?: number | null;
   /** Le dos du moteur qui dessine — WebGPU, ou son repli WebGL 2 — ; `null` tant qu'il n'est pas initialisé. */
   backend: BackendRendu | null;
   /**

@@ -37,6 +37,19 @@
  * deux. Ses modules sont chargés par `import()` au moment de s'allumer :
  * l'accueil, en `basse`, ne les télécharge pas.
  *
+ * La **première image d'un moteur coûte une seconde**, et c'est la seule chose
+ * que le portage à WebGPU ait rendue pire. Mesuré le 8 septembre 2026 sur le
+ * plateau de la mission 1 à 2560 × 1600, l'image suivante coûtant 2,5 ms :
+ * **0,9 à 1,3 s sur WebGPU** (1,6 s pilote froid), **5 s sur le dos WebGL**
+ * (15 s à froid). C'est la traduction TSL → WGSL du système de nœuds, en
+ * JavaScript, plus la création des pipelines : le fil principal est bloqué,
+ * souris comprise, au moment précis où le plateau apparaît. **`compileAsync`
+ * n'y peut rien** — essayé, mesuré, retiré : il projette la scène contre
+ * `Renderer._frustum`, que rien n'a encore renseigné avant la première image,
+ * ne trouve donc aucun objet, et rend la main en 0 ms sans avoir rien compilé.
+ * Le remède est ailleurs : moins de matériaux distincts, ou une première image
+ * sur une scène volontairement pauvre. Non fait.
+ *
  * La **calibration** attend une barrière du processeur graphique, et WebGPU
  * n'en a **aucune de synchrone** : la mesure est donc asynchrone. Une image
  * mesurée part, et sa durée n'est retenue que lorsque le processeur graphique
@@ -62,8 +75,8 @@
 import * as THREE from 'three/webgpu';
 
 import {
-  cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, msCadence, msCalibration,
-  QUALITE_PAR_DEFAUT, type BackendRendu, type QualiteRendu,
+  cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, mediane, msCadence,
+  msCalibration, QUALITE_PAR_DEFAUT, type BackendRendu, type QualiteRendu,
 } from '../render/qualite';
 import { webgl2Disponible, type MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
@@ -92,11 +105,11 @@ export interface Scene3d {
    * d'envoi en millisecondes ; zéro, et rien, tant que le moteur n'est pas prêt.
    */
   dessiner(camera: THREE.Camera, options?: OptionsImage): number;
-  /** Durée moyenne d'envoi des dernières images, en millisecondes. */
+  /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   readonly msParImage: number;
   /**
-   * La médiane des dernières images consécutives dessinées par la chaîne, en
-   * millisecondes entre deux images ; `null` sans chaîne ou sans assez d'images.
+   * La médiane des intervalles entre les dernières images **consécutives**, en
+   * millisecondes ; `null` sans assez d'images. Mesurée avec ou sans chaîne.
    */
   readonly msCadence: number | null;
   /** Vrai quand la chaîne de post-traitement dessine l'image. */
@@ -285,9 +298,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let environnement: Environnement | null = null;
   let largeur = 1;
   let hauteur = 1;
-  let msParImage = 0;
   let exposition = 1;
   let vivante = true;
+  /** Les derniers temps d'envoi, dont `msParImage` prend la médiane. */
+  const envois: number[] = [];
 
   // --- La chaîne de post-traitement et sa décision.
   let qualite: QualiteRendu = options.qualite ?? QUALITE_PAR_DEFAUT;
@@ -300,8 +314,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let msMesurees: number | null = null;
   /** Une image mesurée attend sa barrière : on n'en mesure pas deux à la fois. */
   let mesureEnCours = false;
-  // --- La rétroaction : les intervalles entre images consécutives, chaîne
-  //     allumée. Une cadence refusée le reste pour la session.
+  // --- La cadence : les intervalles entre images consécutives, mesurés avec
+  //     ou sans chaîne — c'est le chiffre qui répond à « ça lag ». La
+  //     rétroaction qui en tire un refus, elle, ne juge que la chaîne, et une
+  //     cadence refusée le reste pour la session.
   const intervalles: number[] = [];
   let msCadenceMesuree: number | null = null;
   let cadenceRefusee = false;
@@ -317,8 +333,14 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     if (!composeur) return;
     composeur.dispose();
     composeur = null;
+    // Les deux régimes ne se mélangent pas dans la même médiane : ce qui suit
+    // ne coûte plus la chaîne, et le dire sur des intervalles qui la comptent
+    // encore serait un mensonge de trente images.
+    intervalles.length = 0;
+    msCadenceMesuree = null;
     options.surChangement?.();
   }
+
 
   /**
    * Aligne la chaîne sur la décision du moment : la monte si elle est voulue
@@ -452,7 +474,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     get backend() { return backend; },
     get largeur() { return largeur; },
     get hauteur() { return hauteur; },
-    get msParImage() { return msParImage; },
+    get msParImage() { return mediane(envois) ?? 0; },
     get msCadence() { return msCadenceMesuree; },
     get composeurActif() { return composeur !== null; },
     get calibration() { return calibration(); },
@@ -464,14 +486,19 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       if (!r || !dos) return 0;
       const debut = horloge.now();
       // L'intervalle depuis l'image précédente est ce qu'elle a coûté, chaîne
-      // comprise, si la boucle n'a pas dormi entre-temps. Il se lit **avant**
-      // `aligner` : `composeur` dit encore si cette image précédente était de
-      // la chaîne, et un refus démonte la chaîne dès cette image-ci.
-      if (composeur && qualite === 'auto' && image.continu && derniereImage !== null) {
+      // comprise, si la boucle n'a pas dormi entre-temps. C'est la seule mesure
+      // qui compte le processeur graphique en jeu, et elle se prend **tout le
+      // temps** : « ça lag » se répond par ce chiffre, chaîne ou pas. Elle se
+      // lit **avant** `aligner` : `composeur` dit encore si cette image
+      // précédente était de la chaîne, et un refus la démonte dès celle-ci.
+      if (image.continu && derniereImage !== null) {
         intervalles.push(debut - derniereImage);
         if (intervalles.length > IMAGES_CADENCE) intervalles.shift();
         msCadenceMesuree = msCadence(intervalles);
-        if (cadenceInsuffisante(msCadenceMesuree)) cadenceRefusee = true;
+        // La rétroaction, elle, ne juge que la chaîne : une cadence basse sans
+        // chaîne n'accuse pas la chaîne, et l'éteindre pour la session serait
+        // punir l'innocent.
+        if (composeur && qualite === 'auto' && cadenceInsuffisante(msCadenceMesuree)) cadenceRefusee = true;
       }
       derniereImage = debut;
       aligner(camera);
@@ -485,7 +512,13 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       if (composeur) composeur.rendre(camera);
       else r.render(scene, camera);
       const envoi = horloge.now() - debut;
-      msParImage = msParImage === 0 ? envoi : msParImage * 0.85 + envoi * 0.15;
+      // Médiane, pas moyenne glissante : une moyenne à 0,85 garde une image
+      // exceptionnelle pendant une centaine d'images — après un montage, elle
+      // affichait 9,8 ms sur WebGPU et 29,2 sur le dos WebGL quand la médiane
+      // valait 2,5 et 5,9. Le chiffre qu'on lit juste après avoir chargé une
+      // partie est justement celui-là.
+      envois.push(envoi);
+      if (envois.length > IMAGES_CADENCE) envois.shift();
       if (mesure) {
         mesureEnCours = true;
         void attendreDessin(r, dos).then(() => {
@@ -504,7 +537,8 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     mesures(): MesuresRendu {
       return {
         ...depuisInfo(renderer?.info),
-        msParImage,
+        msParImage: mediane(envois) ?? 0,
+        msCadence: msCadenceMesuree,
         composeur: composeur !== null,
         msCalibration: msMesurees,
         backend,

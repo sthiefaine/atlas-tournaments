@@ -453,6 +453,26 @@ export function creerDecor(
 
   // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
   // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.
+  //
+  // Deux règles de r170 tiennent ce choix, et il faut les connaître avant de
+  // toucher à un `count` :
+  //
+  // 1. **Le nombre d'instances entre dans le nuanceur.** Sous les mille
+  //    instances, `InstanceNode` range les matrices dans un tampon d'uniformes
+  //    dont la taille est écrite **en dur** dans le WGSL — `array<mat4x4<f32>,
+  //    N>` — avec le `count` du **premier** rendu. Relever `count` ensuite ne
+  //    recompile rien (la clé de l'objet de rendu ne porte que l'identifiant de
+  //    la maille, jamais son compte) : les instances au-delà de N liraient hors
+  //    du tableau. Un lot dont le nombre change se **rebâtit**, il ne se règle
+  //    pas — c'est ce que font `batirArbres`, `batirRochers` et `batirPavillons`.
+  // 2. **Un `count` de zéro dessine une instance.** `getDrawParameters` fait
+  //    `object.count > 1 ? object.count : 1` : un lot vide coûte un appel de
+  //    dessin et une instance à matrice nulle, dégénérée mais payée. On éteint
+  //    donc la maille au lieu de la laisser à zéro.
+  const allumer = (lot: THREE.InstancedMesh, compte: number): void => {
+    lot.count = compte;
+    lot.visible = compte > 0;
+  };
   let troncs!: THREE.InstancedMesh;
   let coniferes!: THREE.InstancedMesh;
   let feuillus!: THREE.InstancedMesh;
@@ -476,8 +496,8 @@ export function creerDecor(
     for (const m of [troncs, coniferes, feuillus]) {
       m.castShadow = true;
       m.receiveShadow = true;
-      m.count = 0;
       m.frustumCulled = false;
+      allumer(m, 0);
       groupe.add(m);
     }
   }
@@ -520,9 +540,9 @@ export function creerDecor(
         iFeu += 1;
       }
     }
-    troncs.count = iTronc;
-    coniferes.count = iCon;
-    feuillus.count = iFeu;
+    allumer(troncs, iTronc);
+    allumer(coniferes, iCon);
+    allumer(feuillus, iFeu);
     troncs.instanceMatrix.needsUpdate = true;
     coniferes.instanceMatrix.needsUpdate = true;
     feuillus.instanceMatrix.needsUpdate = true;
@@ -551,7 +571,7 @@ export function creerDecor(
       lot.castShadow = true;
       lot.receiveShadow = true;
       lot.frustumCulled = false;
-      lot.count = 0;
+      allumer(lot, 0);
       groupe.add(lot);
       return lot;
     });
@@ -577,7 +597,7 @@ export function creerDecor(
       lot.setMatrixAt(i, mat4);
     }
     lotsRocher.forEach((lot, v) => {
-      lot.count = rangs[v]!;
+      allumer(lot, rangs[v]!);
       lot.instanceMatrix.needsUpdate = true;
     });
     teinterRochers();
@@ -1090,7 +1110,7 @@ export function creerDecor(
     for (const lot of [mats, pommeaux, drapeaux]) {
       lot.castShadow = true;
       lot.frustumCulled = false;
-      lot.count = places.length;
+      allumer(lot, places.length);
       pavillons.add(lot);
     }
   }

@@ -58,7 +58,7 @@ import {
   axePont, CASE, construireSplat, hauteurEn, hauteurSol, NIVEAU_EAU, pieceDeCase,
   terrainBorne, type GrilleTerrain,
 } from './geometrie';
-import { remplacerGeometrie } from './maillage';
+import { creerTampon, remplacerGeometrie } from './maillage';
 import { jeuMatiere, normalesEau, type JeuMatiere } from './textures';
 import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
 
@@ -714,6 +714,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   grefferBrouillard(matSocle, uBrouillard, 'atlas-socle');
   const socle = new THREE.Mesh(geometrieSocle(g), matSocle);
+  const tamponSocle = creerTampon(socle);
   socle.name = 'socle';
   socle.receiveShadow = true;
   groupe.add(socle);
@@ -741,6 +742,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   // route claire traverserait le noir comme un trait de craie.
   grefferBrouillard(matVoie, uBrouillard, 'atlas-voie');
   const voies = new THREE.Mesh(new THREE.BufferGeometry(), matVoie);
+  const tamponVoies = creerTampon(voies);
   voies.name = 'voies';
   voies.receiveShadow = true;
   voies.visible = false;
@@ -753,17 +755,28 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   grefferBrouillard(matPont, uBrouillard, 'atlas-pont');
   const ponts = new THREE.Mesh(new THREE.BufferGeometry(), matPont);
+  const tamponPonts = creerTampon(ponts);
   ponts.name = 'ponts';
   ponts.castShadow = true;
   ponts.receiveShadow = true;
   ponts.visible = false;
   groupe.add(ponts);
 
-  /** Recoud voies et ponts sur une grille, ou les cache s'il n'y en a plus. */
+  /**
+   * Recoud voies et ponts sur une grille, ou les cache s'il n'y en a plus.
+   *
+   * Par tampon, et non par échange : une marée passe ici à chaque fois, et sous
+   * WebGPU un échange de géométrie coûte un objet de rendu et un nuanceur neufs
+   * pour **chacune** des passes où la maille paraît — la principale, l'ombre,
+   * les normales du GTAO —, avec le risque qu'une passe qui a manqué l'échange
+   * retombe sur une clé déjà vue (`maillage.ts`).
+   */
   function majVoies(suivante: GrilleTerrain): void {
-    for (const [maille, batir] of [[voies, geometrieVoies], [ponts, geometriePonts]] as const) {
+    for (const [tampon, maille, batir] of [
+      [tamponVoies, voies, geometrieVoies], [tamponPonts, ponts, geometriePonts],
+    ] as const) {
       const geo = batir(suivante);
-      remplacerGeometrie(maille, geo ?? new THREE.BufferGeometry());
+      tampon.poser(geo);
       maille.visible = geo !== null;
     }
   }
@@ -775,6 +788,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     color: 0x0a1220, transparent: true, opacity: 0.17, depthWrite: false,
   });
   const grille = new THREE.LineSegments(geometrieGrille(g), matGrille);
+  const tamponGrille = creerTampon(grille);
   grille.name = 'grille';
   grille.renderOrder = 1;
   groupe.add(grille);
@@ -841,8 +855,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
    * l'ancienne berge. Le plan d'eau, lui, ne dépend que des dimensions.
    */
   function reposer(g2: GrilleTerrain): void {
-    remplacerGeometrie(socle, geometrieSocle(g2));
-    remplacerGeometrie(grille, geometrieGrille(g2));
+    tamponSocle.poser(geometrieSocle(g2));
+    tamponGrille.poser(geometrieGrille(g2));
     const donnees = donneesFonds(g2);
     if (tFonds.image.width === g2.largeur && tFonds.image.height === g2.hauteur) {
       (tFonds.image.data as Uint8Array).set(donnees);
@@ -932,7 +946,24 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
           yApres,
         };
         neuve.dispose();
+      } else if (memeMaillage) {
+        // Le même maillage : on **écrit** les altitudes dans la géométrie du sol
+        // au lieu de l'échanger. Sous WebGPU un échange invalide trois objets de
+        // rendu — la passe principale, la carte d'ombre, les normales du GTAO —
+        // et fait recompiler autant de nuanceurs ; une écriture ne coûte qu'un
+        // téléversement, que `NodeMaterialObserver` déclenche sur la version de
+        // l'attribut. C'est le chemin de la toute première carte affichée.
+        for (let i = 0; i < yApres.length; i += 1) posCourante.setY(i, yApres[i]!);
+        posCourante.needsUpdate = true;
+        sol.geometry.computeVertexNormals();
+        neuve.dispose();
+        (splat.image.data as Uint8Array).set(donnees);
+        splat.needsUpdate = true;
+        reposer(suivante);
       } else {
+        // Même carte mais autre maillage : cela n'arrive pas aujourd'hui, la
+        // subdivision étant constante. On échange, et le témoin monotone de
+        // `remplacerGeometrie` garantit qu'aucune passe ne garde l'ancienne.
         remplacerGeometrie(sol, neuve);
         (splat.image.data as Uint8Array).set(donnees);
         splat.needsUpdate = true;
@@ -1024,10 +1055,11 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
 
     dispose(): void {
       sol.geometry.dispose();
-      socle.geometry.dispose();
-      grille.geometry.dispose();
-      voies.geometry.dispose();
-      ponts.geometry.dispose();
+      // Ces quatre-là ne possèdent plus leur géométrie : c'est leur tampon.
+      tamponSocle.dispose();
+      tamponGrille.dispose();
+      tamponVoies.dispose();
+      tamponPonts.dispose();
       eau.geometry.dispose();
       matSol.dispose();
       matSocle.dispose();

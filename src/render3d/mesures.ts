@@ -133,6 +133,18 @@ export interface CompteursInfo {
  * le moteur les a comptés depuis la dernière remise à zéro — que `scene.ts`
  * fait une fois par image, pas une fois par passe (`info.autoReset` éteint).
  * Sans moteur initialisé, des zéros : rien n'a été dessiné.
+ *
+ * **Les triangles ne se comparent pas d'un dos à l'autre**, et c'est un défaut
+ * de three r170, pas du nôtre : `Info.update(object, count, instanceCount)`
+ * est appelé par le dos WebGL avec la signature de l'ancien `WebGLRenderer`,
+ * `info.update(object, count, mode, primcount)` (`WebGLBufferRenderer`), de
+ * sorte que le **mode de dessin** arrive à la place du nombre d'instances :
+ * quatre, la valeur de `gl.TRIANGLES`. Une maille ordinaire est donc comptée
+ * quatre fois, une maille instanciée quatre fois quel que soit son nombre
+ * réel d'instances. Mesuré le 8 septembre 2026 sur le même plateau et la même
+ * image : 42 799 triangles sur WebGPU, 107 228 sur le dos WebGL. Les
+ * **appels** (`drawCalls`), eux, sont justes des deux côtés — 85 dans les deux
+ * cas —, et `compterFamilles` dit la vérité de la scène sur les deux dos.
  */
 export function depuisInfo(info: CompteursInfo | null | undefined): { triangles: number; appels: number } {
   if (!info) return { triangles: 0, appels: 0 };

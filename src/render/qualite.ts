@@ -122,14 +122,15 @@ export function composeurPossible(backend: BackendRendu, extensions: (nom: strin
 export const IMAGES_CALIBRATION = 10;
 
 /**
- * La durée représentative des images mesurées, ou `null` tant qu'il n'y en a
- * pas assez. C'est la **médiane** des images qui suivent la première : une
- * moyenne serait tirée vers le haut par un ramasse-miettes ou un onglet qui
- * reprend la main, et une image lente sur dix n'est pas un appareil lent.
+ * La **médiane** d'une poignée de durées, ou `null` s'il n'en reste aucune de
+ * lisible. C'est la statistique de toutes les mesures d'image de ce module, et
+ * c'est délibéré : une moyenne serait tirée vers le haut par un ramasse-miettes,
+ * par un onglet qui reprend la main ou par la première image d'un moteur, qui
+ * crée ses pipelines et coûte mille fois les suivantes. Une image lente sur dix
+ * n'est pas un appareil lent.
  */
-export function msCalibration(durees: readonly number[], images = IMAGES_CALIBRATION): number | null {
-  if (durees.length < images + 1) return null;
-  const retenues = durees.slice(1, images + 1).filter((d) => Number.isFinite(d) && d >= 0).sort((a, b) => a - b);
+export function mediane(durees: readonly number[]): number | null {
+  const retenues = durees.filter((d) => Number.isFinite(d) && d >= 0).sort((a, b) => a - b);
   if (retenues.length === 0) return null;
   const milieu = Math.floor(retenues.length / 2);
   return retenues.length % 2 === 1
@@ -138,23 +139,33 @@ export function msCalibration(durees: readonly number[], images = IMAGES_CALIBRA
 }
 
 /**
+ * La durée représentative des images mesurées, ou `null` tant qu'il n'y en a
+ * pas assez : la médiane des images qui suivent la première.
+ */
+export function msCalibration(durees: readonly number[], images = IMAGES_CALIBRATION): number | null {
+  if (durees.length < images + 1) return null;
+  return mediane(durees.slice(1, images + 1));
+}
+
+/**
  * La cadence représentative des dernières images consécutives, ou `null` tant
  * qu'il n'y en a pas assez : la **médiane** des `images` dernières durées entre
- * deux images. C'est la seule mesure qui compte le processeur graphique une
- * fois la chaîne allumée — attendre une barrière n'est acceptable que pendant
- * la calibration, jamais en jeu —, parce que le navigateur retarde l'image
- * suivante tant que la précédente n'est pas présentée. Elle n'a de sens que
- * sur des images consécutives : après un sommeil de la boucle, l'intervalle
- * dit quand quelqu'un a bougé, pas ce que l'image coûte.
+ * deux images. C'est la seule mesure qui compte le processeur graphique **en
+ * jeu** — attendre une barrière n'est acceptable que pendant la calibration —,
+ * parce que le navigateur retarde l'image suivante tant que la précédente n'est
+ * pas présentée. Elle n'a de sens que sur des images consécutives : après un
+ * sommeil de la boucle, l'intervalle dit quand quelqu'un a bougé, pas ce que
+ * l'image coûte.
+ *
+ * Depuis le 8 septembre 2026, elle est mesurée **tout le temps**, chaîne de
+ * post-traitement ou non, et lisible dans `MesuresRendu.msCadence` : c'est le
+ * chiffre à lire quand quelqu'un dit « ça lag », et le seul qui réponde. La
+ * rétroaction qui éteint la chaîne, elle, ne juge toujours que les images de
+ * la chaîne (`scene.ts`) : une cadence basse sans chaîne n'accuse pas la chaîne.
  */
 export function msCadence(intervalles: readonly number[], images = IMAGES_CADENCE): number | null {
   if (intervalles.length < images) return null;
-  const retenues = intervalles.slice(-images).filter((d) => Number.isFinite(d) && d >= 0).sort((a, b) => a - b);
-  if (retenues.length === 0) return null;
-  const milieu = Math.floor(retenues.length / 2);
-  return retenues.length % 2 === 1
-    ? (retenues[milieu] ?? 0)
-    : ((retenues[milieu - 1] ?? 0) + (retenues[milieu] ?? 0)) / 2;
+  return mediane(intervalles.slice(-images));
 }
 
 /** La chaîne fait-elle manquer la cadence ? Vrai dès que la médiane dépasse le seuil. */

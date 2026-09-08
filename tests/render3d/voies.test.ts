@@ -5,6 +5,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import type * as THREE from 'three';
 
+import { sommetsDessines } from './tampons';
+
 import { BIOMES, CARACTERE_PAR_TERRAIN, CLES_TERRAIN, type CleTerrain } from '../../src/schemas/index';
 import {
   axePont, hauteurEn, hauteurSol, hauteurTerrain, LIAISONS_CANON, liaisonsVoie, pieceDeCase,
@@ -280,10 +282,12 @@ test('le plateau coud un décalque par case de voie et un ouvrage par pont, et l
   const voies = plateau.groupe.getObjectByName('voies') as THREE.Mesh;
   const ponts = plateau.groupe.getObjectByName('ponts') as THREE.Mesh;
   assert.ok(voies.visible && ponts.visible);
+  // Les deux mailles sont tenues par des tampons : leurs attributs sont
+  // préalloués, et ce qu'elles dessinent se lit dans la plage (`tampons.ts`).
   // Seize sommets par case de voie : une nappe 3 × 3, aux sommets du sol.
-  assert.equal(voies.geometry.getAttribute('position').count, 7 * 16);
+  assert.equal(sommetsDessines(voies.geometry), 7 * 16);
   // Un pont : tablier, deux parapets, quatre piles — sept boîtes de 24 sommets.
-  assert.equal(ponts.geometry.getAttribute('position').count, 7 * 24);
+  assert.equal(sommetsDessines(ponts.geometry), 7 * 24);
   // Le décalque sur le pont est à hauteur de tablier, le sol dessous au lit.
   assert.ok(plateau.hauteurEn(2.5, 2.5) === 0, 'la surface du pont est à zéro');
   const y = plateau.sol.geometry.getAttribute('position') as THREE.BufferAttribute;
@@ -293,11 +297,16 @@ test('le plateau coud un décalque par case de voie et un ouvrage par pont, et l
   }
   assert.ok(creux < -0.2, `le sol sous le pont doit être creusé (${creux})`);
 
-  // Le génie retire la route : le décalque suit, et rien ne fuit.
+  // Le génie retire la route : le décalque suit, et rien ne fuit. Depuis le
+  // tampon, « rien ne fuit » est plus fort qu'avant : il n'y a plus rien à
+  // libérer du tout, la géométrie reste la même et sa plage tombe à zéro.
   let liberees = 0;
+  const geoVoies = voies.geometry;
   voies.geometry.addEventListener('dispose', () => { liberees += 1; });
   plateau.majTerrain(grille(['PPPPP', 'PPPPP', 'VVVVV', 'PPPPP']));
-  assert.equal(liberees, 1, 'l’ancienne géométrie des voies est libérée');
+  assert.equal(liberees, 0, 'aucune géométrie n’est jetée : on ne fait que vider');
+  assert.equal(voies.geometry, geoVoies, 'et le moteur garde le même objet de rendu');
+  assert.equal(voies.geometry.drawRange.count, 0, 'plus rien à dessiner');
   assert.equal(voies.visible, false);
   assert.equal(ponts.visible, false);
   plateau.dispose();

@@ -14,6 +14,7 @@ import {
 import { melangerParametres, parametresAmbiance } from '../../src/render3d/eclairage';
 import { HAUTEUR_BANC, LARGEUR_BANC, visiblesBanc } from '../../src/app/atelier/banc';
 import { construireNuanceur, ligneDe } from './nuanceur';
+import { bornesDessinees, sommetsDessines } from './tampons';
 
 /** Toile mémoire : les recettes de textures se peignent sans navigateur. */
 function documentMemoire(): Document {
@@ -60,8 +61,7 @@ test('le plan d’eau ne déborde de la carte que d’une case, centré sur elle
   // Le socle descend sous le niveau de l'eau : le bord ne montre pas une
   // tranche ouverte au-dessus du vide, quelle que soit la marge.
   const socle = plateau.groupe.getObjectByName('socle') as THREE.Mesh;
-  socle.geometry.computeBoundingBox();
-  assert.ok(socle.geometry.boundingBox!.min.y < NIVEAU_EAU, 'le socle plonge sous l’eau');
+  assert.ok(bornesDessinees(socle.geometry).min.y < NIVEAU_EAU, 'le socle plonge sous l’eau');
   plateau.dispose();
 });
 
@@ -70,24 +70,22 @@ test('un changement de taille de carte redimensionne l’eau, le socle et la gri
   const eau = plateau.groupe.getObjectByName('eau') as THREE.Mesh;
   const socle = plateau.groupe.getObjectByName('socle') as THREE.Mesh;
   const lignes = plateau.groupe.getObjectByName('grille') as THREE.LineSegments;
-  const sommetsGrille = lignes.geometry.getAttribute('position').count;
+  // Le socle et la grille sont tenus par des tampons : leurs attributs sont
+  // préalloués et seule la plage dessinée dit ce qui existe (`tampons.ts`).
+  const sommetsGrille = sommetsDessines(lignes.geometry);
 
   plateau.majTerrain(grille(20, 12, 'mer'));
   assert.equal(etendue(eau).largeur, 20 * CASE + 2 * DEBORD_EAU, 'l’eau suit la carte, elle ne la déborde plus de trente unités');
   assert.equal(eau.position.x, 10 * CASE, 'et reste centrée');
-  socle.geometry.computeBoundingBox();
-  assert.equal(socle.geometry.boundingBox!.max.x, 20 * CASE, 'le socle ferme la nouvelle carte');
-  assert.ok(lignes.geometry.getAttribute('position').count > sommetsGrille, 'la grille couvre la nouvelle carte');
+  assert.equal(bornesDessinees(socle.geometry).max.x, 20 * CASE, 'le socle ferme la nouvelle carte');
+  assert.ok(sommetsDessines(lignes.geometry) > sommetsGrille, 'la grille couvre la nouvelle carte');
   plateau.dispose();
 });
 
 test('après une marée, la grille et la profondeur lue par l’eau se reposent sur le sol', () => {
   const plateau = creerPlateau(grille(4, 4, 'plaine'), documentMemoire());
   const lignes = plateau.groupe.getObjectByName('grille') as THREE.LineSegments;
-  const yGrille = (): number => {
-    lignes.geometry.computeBoundingBox();
-    return lignes.geometry.boundingBox!.max.y;
-  };
+  const yGrille = (): number => bornesDessinees(lignes.geometry).max.y;
   // La texture des fonds telle que le nuanceur de l'eau la lit : la carte garde
   // sa taille, c'est donc la même texture d'un bout à l'autre de la marée.
   const fonds = (): Uint8Array => (plateau.uniformesEau.tFonds.value as THREE.DataTexture).image.data as Uint8Array;

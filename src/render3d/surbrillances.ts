@@ -17,7 +17,7 @@ import type { GenreSurbrillance, Surbrillance } from '../render/surbrillance';
 import { cleCase } from '../engine/index';
 import type { Case } from '../schemas/types';
 import { CASE } from './geometrie';
-import { remplacerGeometrie } from './maillage';
+import { creerTampon, type TamponMaille } from './maillage';
 
 /**
  * Couleurs des décalques, reprises du rendu 2D pour ne pas réapprendre en
@@ -51,6 +51,24 @@ const AILE_FLECHE = 0.27;
 const PAS_RUBAN = 0.2;
 
 /**
+ * Le brouillon d'une maille : deux tableaux **réutilisés** d'un survol à l'autre.
+ *
+ * Les trois formes d'ici écrivaient chacune une `BufferGeometry` neuve, aussitôt
+ * posée sur la maille et aussitôt libérée au survol suivant. Sous WebGPU, échanger
+ * une géométrie ne suffit pas à prévenir le moteur (`maillage.ts`), et allouer par
+ * mouvement de souris n'a jamais servi à rien : elles écrivent désormais dans ce
+ * brouillon, que le tampon de la maille recopie dans ses attributs préalloués.
+ *
+ * Aucune normale n'est calculée : le WGSL d'un décalque, construit hors navigateur
+ * (`tests/render3d/surbrillances.test.ts`), ne lit que `position`. Un matériau
+ * basique n'a pas d'éclairage, il n'a donc rien à faire d'une normale.
+ */
+interface Sortie {
+  positions: number[];
+  indices: number[];
+}
+
+/**
  * La **flèche de déplacement** : un ruban coudé qui suit les cases traversées et
  * une pointe sur la case d'arrivée (`10-rendu-3d.md` §8).
  *
@@ -61,11 +79,11 @@ const PAS_RUBAN = 0.2;
  * orthogonale, un carré aligné sur les axes recouvre exactement l'angle.
  */
 function fleche(
+  s: Sortie,
   cases: readonly Case[], hauteurEn: (x: number, z: number) => number, altitude: number,
   echelle = 1,
-): THREE.BufferGeometry {
-  const positions: number[] = [];
-  const indices: number[] = [];
+): void {
+  const { positions, indices } = s;
   const sommet = (x: number, z: number): number => {
     const i = positions.length / 3;
     positions.push(x, hauteurEn(x, z) + altitude, z);
@@ -78,7 +96,7 @@ function fleche(
   const centres = cases.map((c) => ({ x: (c.x + 0.5) * CASE, z: (c.y + 0.5) * CASE }));
   const fin = centres[centres.length - 1];
   const precedent = centres[centres.length - 2];
-  if (!fin || !precedent) return new THREE.BufferGeometry();
+  if (!fin || !precedent) return;
   const dx = Math.sign(fin.x - precedent.x);
   const dz = Math.sign(fin.z - precedent.z);
 
@@ -135,12 +153,6 @@ function fleche(
     sommet(bx - dz * aile, bz + dx * aile),
     sommet(bx + dz * aile, bz - dx * aile),
   );
-
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  return geo;
 }
 
 /**
@@ -185,11 +197,11 @@ export interface CoucheSurbrillances {
  * entre deux cases allumées, ce qui garde la lecture case par case.
  */
 function decalque(
+  s: Sortie,
   cases: readonly Case[], hauteurEn: (x: number, z: number) => number,
   marge: number, altitude: number,
-): THREE.BufferGeometry {
-  const positions: number[] = [];
-  const indices: number[] = [];
+): void {
+  const { positions, indices } = s;
   const S = 2;
   for (const c of cases) {
     const base = positions.length / 3;
@@ -210,19 +222,14 @@ function decalque(
       }
     }
   }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  return geo;
 }
 
 /** Le contour d'une case : quatre bandes fines, pour le curseur. */
 function contour(
+  s: Sortie,
   c: Case, hauteurEn: (x: number, z: number) => number, epaisseur: number, altitude: number,
-): THREE.BufferGeometry {
-  const positions: number[] = [];
-  const indices: number[] = [];
+): void {
+  const { positions, indices } = s;
   const x0 = c.x * CASE;
   const z0 = c.y * CASE;
   const e = epaisseur;
@@ -238,12 +245,25 @@ function contour(
     for (const [x, z] of coins) positions.push(x, hauteurEn(x, z) + altitude, z);
     indices.push(base, base + 2, base + 1, base, base + 3, base + 2);
   }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  return geo;
 }
+
+/**
+ * Les capacités de départ, en éléments. Une réallocation coûte un état de
+ * pipeline (`maillage.ts`) : mieux vaut partir large sur ce qui change au survol.
+ *
+ * Une nappe fait neuf sommets et vingt-quatre indices par case ; 192 cases
+ * couvrent la portée d'un mouvement 9 (181 cases) et la plupart des enveloppes
+ * de tir. La flèche ne peut pas dépasser le mouvement maximal du catalogue plus
+ * une case, soit dix cases, donc environ 145 sommets et 325 indices : 512 et
+ * 1024 mettent trois fois la marge. Le curseur est de taille fixe, exactement.
+ */
+const CASES_NAPPE = 192;
+const SOMMETS_NAPPE = CASES_NAPPE * 9;
+const INDICES_NAPPE = CASES_NAPPE * 24;
+const SOMMETS_FLECHE = 512;
+const INDICES_FLECHE = 1024;
+const SOMMETS_CURSEUR = 16;
+const INDICES_CURSEUR = 24;
 
 /** Monte la couche de surbrillances. */
 export function creerSurbrillances(
@@ -257,6 +277,14 @@ export function creerSurbrillances(
   const nappes = new Map<GenreSurbrillance, THREE.Mesh>();
   /** Les mêmes nappes, à plat, pour les cases hors de vue. */
   const nappesBrouillard = new Map<GenreSurbrillance, THREE.Mesh>();
+  /**
+   * Le tampon de chaque maille, sous le nom que `cles` lui donne. C'est lui qui
+   * tient la géométrie : elle est allouée une fois et **remplie** ensuite, si
+   * bien que l'objet de rendu du moteur reste valide quoi qu'il arrive — y
+   * compris après une image où la maille était invisible, ce qui est très
+   * exactement ce qui faisait disparaître la flèche.
+   */
+  const tampons = new Map<string, TamponMaille>();
   // Des matériaux à nœuds (`WebGPURenderer`), aux réglages des classiques. Le
   // décalage de polygone n'est honoré que par le repli WebGL du moteur — la
   // chaîne WebGPU de r170 ne le connaît pas — ; c'est l'altitude posée sur
@@ -278,6 +306,7 @@ export function creerSurbrillances(
     maille.renderOrder = 3;
     maille.frustumCulled = false;
     nappes.set(genre, maille);
+    tampons.set(genre, creerTampon(maille, { sommets: SOMMETS_NAPPE, indices: INDICES_NAPPE }));
     groupe.add(maille);
 
     // La même couleur, à plat et sans test de profondeur, pour les cases hors
@@ -290,6 +319,7 @@ export function creerSurbrillances(
     plate.renderOrder = 4;
     plate.frustumCulled = false;
     nappesBrouillard.set(genre, plate);
+    tampons.set(`${genre}:brouillard`, creerTampon(plate, { sommets: SOMMETS_NAPPE, indices: INDICES_NAPPE }));
     groupe.add(plate);
   }
 
@@ -301,6 +331,7 @@ export function creerSurbrillances(
   lisere.name = 'lisere';
   lisere.renderOrder = 4;
   lisere.frustumCulled = false;
+  tampons.set('lisere', creerTampon(lisere, { sommets: SOMMETS_FLECHE, indices: INDICES_FLECHE }));
   groupe.add(lisere);
 
   const matChemin = new THREE.MeshBasicNodeMaterial({
@@ -311,6 +342,7 @@ export function creerSurbrillances(
   chemin.name = 'chemin';
   chemin.renderOrder = 5;
   chemin.frustumCulled = false;
+  tampons.set('chemin', creerTampon(chemin, { sommets: SOMMETS_FLECHE, indices: INDICES_FLECHE }));
   groupe.add(chemin);
 
   const matCurseur = new THREE.MeshBasicNodeMaterial({
@@ -321,6 +353,7 @@ export function creerSurbrillances(
   curseurMaille.name = 'curseur';
   curseurMaille.renderOrder = 5;
   curseurMaille.frustumCulled = false;
+  tampons.set('curseur', creerTampon(curseurMaille, { sommets: SOMMETS_CURSEUR, indices: INDICES_CURSEUR }));
   groupe.add(curseurMaille);
 
   const geoAnneau = new THREE.TorusGeometry(0.4, 0.055, 8, 30);
@@ -346,15 +379,23 @@ export function creerSurbrillances(
    */
   const cles = new Map<string, string>();
   const cleDe = (cases: readonly Case[]): string => cases.map((c) => `${c.x},${c.y}`).join(' ');
-  const remplacer = (
-    maille: THREE.Mesh, nom: string, cle: string, construire: () => THREE.BufferGeometry,
-  ): void => {
+  /** Le brouillon, vidé avant chaque forme et réutilisé : rien ne s'alloue ici. */
+  const sortie: Sortie = { positions: [], indices: [] };
+  const remplacer = (nom: string, cle: string, construire: (s: Sortie) => void): void => {
     if (cles.get(nom) === cle) return;
     cles.set(nom, cle);
-    // Sous WebGPU, échanger une géométrie ne suffit pas : le moteur a mémoïsé
-    // les tampons de l'ancienne (voir maillage.ts). Sans cela, la flèche de
-    // chemin ne se dessinait qu'une fois, puis plus jamais.
-    remplacerGeometrie(maille, construire());
+    const tampon = tampons.get(nom);
+    if (!tampon) return;
+    sortie.positions.length = 0;
+    sortie.indices.length = 0;
+    construire(sortie);
+    // Aucun échange de géométrie : le tampon remplit ses attributs et bouge sa
+    // plage. C'est ce qui fait que le moteur n'a rien à réapprendre, et donc que
+    // la flèche se redessine même après une image passée invisible.
+    tampon.ecrire({
+      attributs: { position: { valeurs: sortie.positions, taille: 3 } },
+      indices: sortie.indices,
+    });
   };
   /** Les cases vues par le joueur, ou `null` : hors brouillard, tout est vu. */
   let visiblesCourantes: ReadonlySet<string> | null = null;
@@ -383,27 +424,29 @@ export function creerSurbrillances(
       const toutes = parGenre.get(genre) ?? [];
       const cases = toutes.filter(vue);
       const cachees = toutes.filter((c) => !vue(c));
-      remplacer(maille, genre, cleDe(cases), () => (cases.length > 0
-        ? decalque(cases, hauteurEn, 0.06, 0.026)
-        : new THREE.BufferGeometry()));
+      remplacer(genre, cleDe(cases), (s) => {
+        if (cases.length > 0) decalque(s, cases, hauteurEn, 0.06, 0.026);
+      });
       maille.visible = cases.length > 0;
-      remplacer(plate, `${genre}:brouillard`, cleDe(cachees), () => (cachees.length > 0
-        ? decalque(cachees, solPlat, 0.06, ALTITUDE_BROUILLARD)
-        : new THREE.BufferGeometry()));
+      remplacer(`${genre}:brouillard`, cleDe(cachees), (s) => {
+        if (cachees.length > 0) decalque(s, cachees, solPlat, 0.06, ALTITUDE_BROUILLARD);
+      });
       plate.visible = cachees.length > 0;
     }
     const pas = cheminCases.length > 1 ? [...cheminCases] : [];
     const cleChemin = cleDe(pas);
-    remplacer(chemin, 'chemin', cleChemin, () => (pas.length > 0
-      ? fleche(pas, hauteurEn, 0.036) : new THREE.BufferGeometry()));
-    remplacer(lisere, 'lisere', cleChemin, () => (pas.length > 0
-      ? fleche(pas, hauteurEn, 0.032, 1.3) : new THREE.BufferGeometry()));
+    remplacer('chemin', cleChemin, (s) => {
+      if (pas.length > 0) fleche(s, pas, hauteurEn, 0.036);
+    });
+    remplacer('lisere', cleChemin, (s) => {
+      if (pas.length > 0) fleche(s, pas, hauteurEn, 0.032, 1.3);
+    });
     chemin.visible = pas.length > 0;
     lisere.visible = pas.length > 0;
 
-    remplacer(curseurMaille, 'curseur', curseur ? `${curseur.x},${curseur.y}` : '', () => (curseur
-      ? contour(curseur, hauteurEn, 0.055, 0.04)
-      : new THREE.BufferGeometry()));
+    remplacer('curseur', curseur ? `${curseur.x},${curseur.y}` : '', (s) => {
+      if (curseur) contour(s, curseur, hauteurEn, 0.055, 0.04);
+    });
     curseurMaille.visible = curseur !== null;
   }
 
@@ -445,19 +488,12 @@ export function creerSurbrillances(
     },
 
     dispose(): void {
-      for (const maille of nappesBrouillard.values()) {
-        maille.geometry.dispose();
-        (maille.material as THREE.Material).dispose();
-      }
-      for (const maille of nappes.values()) {
-        maille.geometry.dispose();
-        (maille.material as THREE.Material).dispose();
-      }
-      chemin.geometry.dispose();
+      for (const tampon of tampons.values()) tampon.dispose();
+      tampons.clear();
+      for (const maille of nappesBrouillard.values()) (maille.material as THREE.Material).dispose();
+      for (const maille of nappes.values()) (maille.material as THREE.Material).dispose();
       matChemin.dispose();
-      lisere.geometry.dispose();
       matLisere.dispose();
-      curseurMaille.geometry.dispose();
       matCurseur.dispose();
       geoAnneau.dispose();
       matAnneau.dispose();
