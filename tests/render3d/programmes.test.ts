@@ -13,9 +13,12 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
 import {
-  EPSILON_UNIFORME, normaliserMateriau, ordonnerAttributs, sansZero,
+  EPSILON_UNIFORME, normaliserMateriau, sansZero,
 } from '../../src/render3d/programmes';
-import { lotsDePrechauffage, prechauffer, TAILLE_LOT } from '../../src/render3d/prechauffage';
+import {
+  cleGeometrieProgramme, lotsDePrechauffage, lotsDOmbre, porteursOmbre,
+  prechauffer, prechaufferOmbres, signatureOmbre, TAILLE_LOT,
+} from '../../src/render3d/prechauffage';
 import { compterProgrammes, programmes } from './compter-programmes';
 import { batirMonde, etatDeScenario } from './monde';
 import { construireNuanceur } from './nuanceur';
@@ -69,39 +72,53 @@ test('normaliserMateriau efface les zéros et laisse le reste, deux fois de suit
 });
 
 // ---------------------------------------------------------------------------
-// L'ordre des attributs
+// L'ordre des attributs : une fausse piste, épinglée
 // ---------------------------------------------------------------------------
 
-test('ordonnerAttributs range les attributs et ne touche pas ce qui l’est déjà', () => {
-  // `ExtrudeGeometry` pose `position, uv` puis `computeVertexNormals` ajoute
-  // `normal` : c'est exactement le cas qui coûtait un programme de plus.
-  const extrudee = new THREE.ExtrudeGeometry(new THREE.Shape([
-    new THREE.Vector2(0, 0), new THREE.Vector2(1, 0), new THREE.Vector2(1, 1),
-  ]), { depth: 1, bevelEnabled: false });
-  extrudee.computeVertexNormals();
-  assert.deepEqual(Object.keys(extrudee.attributes), ['position', 'uv', 'normal']);
+test('l’ordre des attributs ne sépare pas deux programmes : three trie', () => {
+  // Le §9.5 de `doc/10-rendu-3d.md` disait le contraire, et `ordonnerAttributs`
+  // (retiré le 8 septembre 2026 au soir) rangeait les attributs pour cette
+  // raison. C'était faux : `RenderObject.getGeometryCacheKey` de r170 écrit
+  // `Object.keys(geometry.attributes).sort()`, et la mesure l'a confirmé — le
+  // compte de programmes est le même avec et sans. Ce test tient la découverte :
+  // le jour où une version de three cesserait de trier, il tombe.
   const boite = new THREE.BoxGeometry(1, 1, 1);
   assert.deepEqual(Object.keys(boite.attributes), ['position', 'normal', 'uv']);
+  // La même, posée dans l'ordre qu'`ExtrudeGeometry` suivie de
+  // `computeVertexNormals` produit : c'est le couple qui motivait le rangement.
+  const autrement = new THREE.BoxGeometry(1, 1, 1);
+  const garde = ['position', 'uv', 'normal'].map((n) => [n, autrement.getAttribute(n)] as const);
+  for (const [n] of garde) autrement.deleteAttribute(n);
+  for (const [n, a] of garde) autrement.setAttribute(n, a);
+  assert.deepEqual(Object.keys(autrement.attributes), ['position', 'uv', 'normal'], 'deux ordres de pose');
 
-  const uv = extrudee.getAttribute('uv');
-  ordonnerAttributs(extrudee);
-  assert.deepEqual(Object.keys(extrudee.attributes), Object.keys(boite.attributes));
-  assert.equal(extrudee.getAttribute('uv'), uv, 'les données mêmes, pas une copie');
-
-  // Rangée, elle ne bouge plus : ranger une géométrie déjà dessinée changerait
-  // sa clé et provoquerait la reconstruction qu'on évite.
-  const ordre = extrudee.attributes;
-  ordonnerAttributs(extrudee);
-  assert.equal(extrudee.attributes, ordre);
+  assert.equal(
+    cleGeometrieProgramme(boite), cleGeometrieProgramme(autrement),
+    'et pourtant une seule clé de géométrie',
+  );
 });
 
-test('ordonnerAttributs garde un attribut qu’il ne connaît pas, après les connus', () => {
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('atlas_maj', new THREE.BufferAttribute(new Float32Array(3), 1));
-  geo.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(2), 2));
-  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3), 3));
-  ordonnerAttributs(geo);
-  assert.deepEqual(Object.keys(geo.attributes), ['position', 'uv', 'atlas_maj']);
+test('la clé de géométrie sépare ce qui change vraiment le nuanceur', () => {
+  const nue = new THREE.BufferGeometry();
+  nue.setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3));
+  const teintee = new THREE.BufferGeometry();
+  teintee.setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3));
+  teintee.setAttribute('color', new THREE.BufferAttribute(new Float32Array(9), 3));
+  assert.notEqual(cleGeometrieProgramme(nue), cleGeometrieProgramme(teintee), 'un attribut de plus');
+
+  // Le nombre de composantes entre dans la clé : une couleur en `vec3` et une
+  // en `vec4` ne se lisent pas du même WGSL.
+  const quadri = new THREE.BufferGeometry();
+  quadri.setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3));
+  quadri.setAttribute('color', new THREE.BufferAttribute(new Float32Array(12), 4));
+  assert.notEqual(cleGeometrieProgramme(teintee), cleGeometrieProgramme(quadri));
+
+  // L'index, oui ; les données, non — c'est ce qui permet de préchauffer une
+  // forme pour toutes ses copies.
+  const indexee = nue.clone();
+  indexee.setIndex([0, 1, 2]);
+  assert.notEqual(cleGeometrieProgramme(nue), cleGeometrieProgramme(indexee));
+  assert.equal(cleGeometrieProgramme(nue), cleGeometrieProgramme(nue.clone()));
 });
 
 // ---------------------------------------------------------------------------
@@ -132,6 +149,60 @@ for (const [nom, carte, scenario] of [
       `${compte} programmes contre un plafond de ${PLAFOND[nom]!} :\n`
       + programmes(monde.scene, { invisibles: true }).map((p) => `  ${p.objets} ${p.exemple}`).join('\n'),
     );
+    monde.dispose();
+  });
+}
+
+/**
+ * Ce que le **premier temps** du chantier a à compiler : le plateau et
+ * l'éclairage, rien d'autre (`index.ts`, `PhaseChantier`). C'est ce chiffre qui
+ * décide si montrer le sol avant le reste vaut la peine — si le sol portait
+ * déjà la moitié des programmes, on n'aurait rien gagné à le montrer d'abord.
+ */
+const PLAFOND_SOL: Readonly<Record<string, number>> = { premier_contact: 6, demo: 6 };
+
+for (const [nom, carte, scenario] of [
+  ['premier_contact', carteContact, scenarioContact],
+  ['demo', carteDemo, scenarioDemo],
+] as const) {
+  test(`le sol de ${nom} ne porte qu’une fraction des programmes de la scène`, () => {
+    const { etat, cat } = etatDeScenario(carte, scenario);
+    const monde = batirMonde(etat, cat);
+    const sol = compterProgrammes(monde.plateau.groupe, { invisibles: true });
+    const tout = compterProgrammes(monde.scene, { invisibles: true });
+    assert.ok(
+      sol <= PLAFOND_SOL[nom]!,
+      `${sol} programmes pour le seul plateau, plafond ${PLAFOND_SOL[nom]!} :\n`
+      + programmes(monde.plateau.groupe, { invisibles: true }).map((p) => `  ${p.objets} ${p.exemple}`).join('\n'),
+    );
+    assert.ok(sol * 2 <= tout, `le sol porte ${sol} programmes sur ${tout} : le montrer d’abord ne gagne plus rien`);
+    monde.dispose();
+  });
+}
+
+/**
+ * Les programmes de la **passe d'ombres**, comptés comme `prechaufferOmbres`
+ * les compte : un par forme distincte parmi les porteurs d'ombre, le matériau
+ * étant le même pour tous. Le §9.5 les estimait à douze ou dix-sept ; ce test
+ * les chiffre, et échoue si une forme neuve fait remonter le compte — chacune
+ * coûte un rendu de préchauffage de plus.
+ */
+const PLAFOND_OMBRES: Readonly<Record<string, number>> = { premier_contact: 15, demo: 17 };
+
+for (const [nom, carte, scenario] of [
+  ['premier_contact', carteContact, scenarioContact],
+  ['demo', carteDemo, scenarioDemo],
+] as const) {
+  test(`la passe d’ombres de ${nom} tient sous son plafond de formes`, () => {
+    const { etat, cat } = etatDeScenario(carte, scenario);
+    const monde = batirMonde(etat, cat);
+    const formes = lotsDOmbre(monde.scene).flat();
+    const porteurs = porteursOmbre(monde.scene);
+    assert.ok(
+      formes.length <= PLAFOND_OMBRES[nom]!,
+      `${formes.length} formes d’ombre pour ${porteurs.length} porteurs, plafond ${PLAFOND_OMBRES[nom]!}`,
+    );
+    assert.ok(formes.length < porteurs.length, 'la déduplication doit servir à quelque chose');
     monde.dispose();
   });
 }
@@ -272,4 +343,174 @@ test('un démontage arrête le préchauffage en cours', async () => {
   }, scene, new THREE.PerspectiveCamera(), { taille: 1, pause: () => Promise.resolve(), vivante: () => vivante });
   assert.equal(appels, 1);
   assert.equal(cache.visible, false, 'et la scène reste ce qu’elle était');
+});
+
+test('une famille éteinte par l’appelant se préchauffe quand même, et le reste', async () => {
+  // La révélation en deux temps (`index.ts`) bâtit décor et unités **groupe
+  // éteint** : sans remonter toute la chaîne des porteurs, `_projectObject`
+  // s'arrêtait sur le groupe et le lot ne compilait rien — en silence.
+  const { scene, porteur, porte, cache } = sceneEssai();
+  const famille = scene.children[0]!;
+  famille.visible = false;
+  const compilees = new Set<THREE.Object3D>();
+  await prechauffer({
+    compileAsync: (s): Promise<void> => {
+      const descendre = (o: THREE.Object3D): void => {
+        if (!o.visible) return;
+        if ((o as THREE.Mesh).isMesh) compilees.add(o);
+        for (const e of o.children) descendre(e);
+      };
+      descendre(s);
+      return Promise.resolve();
+    },
+  }, scene, new THREE.PerspectiveCamera(), { taille: 1, pause: () => Promise.resolve() });
+
+  assert.deepEqual(compilees, new Set([porteur, porte, cache]), 'les trois mailles de la famille éteinte');
+  assert.equal(famille.visible, false, 'et la famille reste éteinte : c’est l’appelant qui la rallume');
+  assert.equal(cache.visible, false);
+  assert.equal(porteur.visible, true);
+});
+
+// ---------------------------------------------------------------------------
+// Le préchauffage de la passe d'ombres
+// ---------------------------------------------------------------------------
+
+/** Une scène de porteurs d'ombre : deux formes, dont une en trois exemplaires. */
+function scenePorteurs(): {
+  scene: THREE.Scene; soleil: THREE.DirectionalLight;
+  jumeaux: THREE.Mesh[]; autre: THREE.Mesh; sansOmbre: THREE.Mesh;
+} {
+  const scene = new THREE.Scene();
+  const mat = new THREE.MeshStandardNodeMaterial();
+  const cube = new THREE.BoxGeometry(1, 1, 1);
+  const famille = new THREE.Group();
+  const jumeaux = [0, 1, 2].map(() => {
+    const m = new THREE.Mesh(cube, mat);
+    m.castShadow = true;
+    return m;
+  });
+  // Une sphère aurait la **même** clé qu'un cube : mêmes attributs, même index.
+  // Ce qui sépare deux programmes, c'est la forme des attributs — ici une
+  // couleur par sommet, que le nuanceur doit lire.
+  const teintee = new THREE.BoxGeometry(1, 1, 1);
+  teintee.setAttribute('color', new THREE.BufferAttribute(new Float32Array(teintee.attributes['position']!.count * 3), 3));
+  const autre = new THREE.Mesh(teintee, mat);
+  autre.castShadow = true;
+  const sansOmbre = new THREE.Mesh(cube, mat);
+  famille.add(...jumeaux, autre, sansOmbre);
+  const soleil = new THREE.DirectionalLight();
+  soleil.castShadow = true;
+  scene.add(famille, soleil);
+  return { scene, soleil, jumeaux, autre, sansOmbre };
+}
+
+test('la signature d’ombre confond ce qui partage géométrie, type et réception', () => {
+  const { jumeaux, autre } = scenePorteurs();
+  assert.equal(signatureOmbre(jumeaux[0]!), signatureOmbre(jumeaux[1]!), 'même forme, même programme');
+  assert.notEqual(signatureOmbre(jumeaux[0]!), signatureOmbre(autre), 'une couleur par sommet sépare');
+  jumeaux[1]!.receiveShadow = true;
+  assert.notEqual(signatureOmbre(jumeaux[0]!), signatureOmbre(jumeaux[1]!), '`receiveShadow` entre dans la clé');
+});
+
+test('un lot instancié compte pour lui seul : r170 met son uuid dans la clé', () => {
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshStandardNodeMaterial();
+  const a = new THREE.InstancedMesh(geo, mat, 4);
+  const b = new THREE.InstancedMesh(geo, mat, 4);
+  assert.notEqual(signatureOmbre(a), signatureOmbre(b));
+});
+
+test('les lots d’ombre ne gardent qu’un représentant par forme', () => {
+  const { scene, jumeaux, autre, sansOmbre } = scenePorteurs();
+  const lots = lotsDOmbre(scene);
+  const tous = lots.flat();
+  assert.equal(tous.length, 2, 'trois cubes nus et un cube teinté : deux programmes');
+  assert.ok(tous.includes(autre));
+  assert.ok(tous.some((o) => jumeaux.includes(o as THREE.Mesh)));
+  assert.ok(!tous.includes(sansOmbre), 'ce qui ne porte pas ombre n’a pas de programme d’ombre');
+});
+
+test('le préchauffage des ombres n’allume qu’un lot à la fois, puis rend tout', async () => {
+  const { scene, soleil, jumeaux, autre, sansOmbre } = scenePorteurs();
+  const vues: number[] = [];
+  const recalculs: number[] = [];
+  await prechaufferOmbres({
+    renderAsync: (s): Promise<void> => {
+      let n = 0;
+      s.traverse((o) => { if (o.castShadow === true && (o as THREE.Mesh).isMesh) n += 1; });
+      vues.push(n);
+      recalculs.push(soleil.shadow.needsUpdate ? 1 : 0);
+      return Promise.resolve();
+    },
+  }, scene, new THREE.PerspectiveCamera(), { taille: 1, pause: () => Promise.resolve() });
+
+  assert.deepEqual(vues, [1, 2], 'un porteur au premier rendu, deux au second : les lots s’accumulent');
+  assert.deepEqual(recalculs, [1, 1], 'et chaque rendu redemande la carte d’ombre');
+  assert.ok(jumeaux.every((m) => m.castShadow), 'tous les porteurs sont rendus à la fin');
+  assert.equal(autre.castShadow, true);
+  assert.equal(sansOmbre.castShadow, false, 'et qui n’en portait pas n’en porte toujours pas');
+  assert.equal(soleil.shadow.needsUpdate, true, 'la première vraie image redessine la carte entière');
+});
+
+test('sans lumière qui porte ombre, on ne rend rien du tout', async () => {
+  const { scene, soleil } = scenePorteurs();
+  soleil.castShadow = false;
+  let appels = 0;
+  await prechaufferOmbres({
+    renderAsync: (): Promise<void> => { appels += 1; return Promise.resolve(); },
+  }, scene, new THREE.PerspectiveCamera(), { pause: () => Promise.resolve() });
+  assert.equal(appels, 0);
+});
+
+test('un rendu d’ombre qui échoue n’emporte pas les autres, et trois échecs arrêtent tout', async () => {
+  const scene = new THREE.Scene();
+  const groupe = new THREE.Group();
+  const mat = new THREE.MeshStandardNodeMaterial();
+  // Six formes distinctes : six lots instanciés, que r170 sépare par leur `uuid`
+  // dès que le compte dépasse un — six boîtes de tailles différentes n'en
+  // feraient qu'un seul, la clé ne regardant pas les données.
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const porteurs = [0, 1, 2, 3, 4, 5].map(() => {
+    const m = new THREE.InstancedMesh(geo, mat, 4);
+    m.castShadow = true;
+    return m;
+  });
+  groupe.add(...porteurs);
+  const soleil = new THREE.DirectionalLight();
+  soleil.castShadow = true;
+  scene.add(groupe, soleil);
+  let appels = 0;
+  await prechaufferOmbres({
+    renderAsync: (): Promise<void> => {
+      appels += 1;
+      return Promise.reject(new Error('pas de carte graphique'));
+    },
+  }, scene, new THREE.PerspectiveCamera(), { taille: 1, pause: () => Promise.resolve() });
+  assert.equal(appels, 3, 'trois essais, puis on renonce');
+  assert.ok(porteurs.every((o) => o.castShadow), 'et tous les porteurs sont rendus');
+});
+
+test('un représentant d’ombre est pris allumé quand il en existe un', async () => {
+  // Un rendu ne compile que ce qu'il dessine : un représentant éteint laisserait
+  // sa forme froide tout en occupant sa place.
+  const scene = new THREE.Scene();
+  const groupe = new THREE.Group();
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshStandardNodeMaterial();
+  const eteint = new THREE.Mesh(geo, mat);
+  eteint.castShadow = true;
+  eteint.visible = false;
+  const allume = new THREE.Mesh(geo, mat);
+  allume.castShadow = true;
+  groupe.add(eteint, allume);
+  const soleil = new THREE.DirectionalLight();
+  soleil.castShadow = true;
+  scene.add(groupe, soleil);
+
+  assert.deepEqual(lotsDOmbre(scene).flat(), [allume], 'un seul programme, et c’est celui qu’on peut dessiner');
+
+  // Et si le porteur entier est éteint, on prend ce qu'il y a : le rallumer est
+  // l'affaire de l'appelant, qui le fait avant d'appeler (`index.ts`).
+  groupe.visible = false;
+  assert.equal(lotsDOmbre(scene).flat().length, 1);
 });

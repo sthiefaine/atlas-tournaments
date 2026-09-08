@@ -33,19 +33,32 @@
  * donc la clé de programme, et le préchauffage réchaufferait des programmes
  * dont l'image vraie n'aurait que faire.
  *
- * **Ce que cela ne couvre pas**, et il faut le dire : la **passe d'ombres**. Non
- * seulement elle ne se préchauffe pas — elle rend la scène avec un
- * `overrideMaterial` que three garde pour lui (`ShadowNode.js`, variable de
- * module) et sa propre caméra, et on ne peut pas la rejouer sans ce matériau —,
- * mais elle **casse** le préchauffage si on la laisse faire : `compileAsync`
- * appelle `updateBefore` sur chaque objet, un `ShadowNode` y répond par un
- * `renderer.render()` complet au milieu de la compilation, et il lève avant
- * d'avoir retiré l'`overrideMaterial` qu'il a posé sur la scène. Trois lots sur
- * huit échouaient ainsi, mesuré. C'est `scene.ts` qui l'éteint avant d'appeler
- * ici (`poserOmbres`), et la première image la redemande comme d'habitude : ses
- * programmes — un fragment d'une ligne, mais le même sommet — restent à sa
- * charge. La chaîne de post-traitement non plus : elle dessine dans une autre
- * cible, donc dans un autre contexte, et elle ne s'allume qu'après la
+ * **La passe d'ombres se préchauffe autrement** (`prechaufferOmbres`, 8
+ * septembre 2026). `compileAsync` ne peut rien pour elle, et pire : elle le
+ * casse. Il appelle `updateBefore` sur chaque objet, un `ShadowNode` y répond
+ * par un `renderer.render()` complet au milieu de la compilation, et il lève
+ * avant d'avoir retiré l'`overrideMaterial` qu'il a posé sur la scène — trois
+ * lots sur huit échouaient ainsi, mesuré. C'est `scene.ts` qui l'éteint avant
+ * d'appeler ici (`poserOmbres`).
+ *
+ * Recopier le matériau ne marcherait pas non plus, et la raison est écrite dans
+ * three : `_overrideMaterial` est une variable de module de `ShadowNode.js`, et
+ * la clé de programme d'un matériau à nœuds passe par `getCacheKey`, qui pousse
+ * l'**identifiant** de chaque nœud (`NodeUtils.js` : `values.push(object.id)`).
+ * Deux graphes identiques n'ont donc pas la même clé : on réchaufferait un
+ * pipeline dont la passe d'ombres n'aurait que faire.
+ *
+ * Le seul moyen d'obtenir le vrai matériau est donc de laisser three s'en
+ * servir : on **rend** pour de bon, hors écran, en n'accordant `castShadow`
+ * qu'à un lot à la fois. Chaque rendu compile les programmes d'ombre de son
+ * lot, et rien d'autre — la passe principale, elle, est déjà chaude, et un lot
+ * ne compte que des **représentants** : deux objets qui partagent géométrie,
+ * type et `receiveShadow` partagent leur programme d'ombre, puisqu'ils
+ * partagent aussi le matériau. Une poignée de rendus suffit là où il y avait
+ * douze à dix-sept programmes.
+ *
+ * Ce qui reste hors de portée : la chaîne de post-traitement, qui dessine dans
+ * une autre cible, donc un autre contexte, et ne s'allume qu'après la
  * calibration.
  *
  * **Ce que cela vaut, mesuré** (8 septembre 2026, Chrome sur M1, WebGPU réel,
@@ -153,12 +166,17 @@ export async function prechauffer(
       if (!vivante()) break;
       // `_projectObject` s'arrête net sur un objet invisible : révéler une
       // maille sans son porteur ne la mettrait pas dans la liste. On remonte
-      // donc la chaîne des porteurs qu'on a nous-mêmes cachés — jamais un
-      // groupe ni une lumière, qui gardent la visibilité qu'on leur connaît.
+      // donc **toute** la chaîne des porteurs jusqu'à la scène, et on la
+      // rabaisse à la fin du lot. Remonter seulement ce qu'on avait caché
+      // soi-même suffisait tant que l'appelant montrait tout ; il ne le fait
+      // plus depuis la révélation en deux temps (`index.ts`), qui bâtit décor
+      // et unités **groupe éteint** pour ne pas les dessiner avant qu'ils
+      // soient chauds. Sans cela, une famille cachée par l'appelant ne
+      // compilait rien du tout, en silence.
       const montres: THREE.Object3D[] = [];
       for (const o of lot) {
         o.frustumCulled = false;
-        for (let n: THREE.Object3D | null = o; n && avant.has(n); n = n.parent) {
+        for (let n: THREE.Object3D | null = o; n; n = n.parent) {
           if (n.visible) continue;
           n.visible = true;
           montres.push(n);
@@ -184,5 +202,162 @@ export async function prechauffer(
       o.visible = etat.visible;
       o.frustumCulled = etat.cull;
     }
+  }
+}
+
+/**
+ * La clé de géométrie d'un programme, **telle que three la calcule**
+ * (`RenderObject.getGeometryCacheKey`, r170). Ce ne sont pas les données qui la
+ * font, mais la **forme** des attributs : leurs noms, triés, avec pour chacun le
+ * pas d'un tampon entrelacé, son décalage, son nombre de composantes et sa
+ * normalisation, plus la présence d'un index.
+ *
+ * Deux géométries différentes de même forme partagent donc leur programme.
+ * C'est ce qui permet de préchauffer la passe d'ombres en une poignée de rendus
+ * au lieu d'un par maille, et c'est la fonction que le compteur de programmes
+ * des tests lit ici plutôt que d'en recopier une variante — le dépôt garde
+ * quatre cicatrices de listes recopiées.
+ */
+export function cleGeometrieProgramme(geo: THREE.BufferGeometry): string {
+  let cle = '';
+  for (const nom of Object.keys(geo.attributes).sort()) {
+    const attr = geo.attributes[nom] as THREE.InterleavedBufferAttribute & THREE.BufferAttribute;
+    cle += `${nom},`;
+    if (attr.data) cle += `${attr.data.stride},`;
+    if (attr.offset) cle += `${attr.offset},`;
+    if (attr.itemSize) cle += `${attr.itemSize},`;
+    if (attr.normalized) cle += 'n,';
+  }
+  if (geo.index) cle += 'index,';
+  return cle;
+}
+
+/**
+ * Ce qui sépare deux programmes de la **passe d'ombres**. Le matériau y est le
+ * même pour tous — celui que `ShadowNode` garde en variable de module —, si
+ * bien qu'il ne reste, dans la clé de `RenderObject`, que la forme de la
+ * géométrie, le squelette et les morphes s'il y en a, l'`uuid` d'un lot dès que
+ * son compte dépasse un (r170 écrit ce compte en dur dans le WGSL), et
+ * `receiveShadow`, que la clé dynamique y joint.
+ *
+ * Deux objets de même signature partagent donc leur programme d'ombre : en
+ * préchauffer un les préchauffe tous les deux. C'est ce qui ramène le
+ * préchauffage des ombres à une poignée de rendus.
+ */
+export function signatureOmbre(o: THREE.Object3D): string {
+  const m = o as THREE.Mesh & THREE.InstancedMesh & THREE.SkinnedMesh;
+  let cle = `${o.type}|${m.geometry ? cleGeometrieProgramme(m.geometry) : ''}`;
+  if (m.skeleton) cle += `|os:${m.skeleton.bones.length}`;
+  if (m.morphTargetInfluences) cle += `|mo:${m.morphTargetInfluences.length}`;
+  if (m.count > 1) cle += `|${o.uuid}`;
+  return `${cle}|${o.receiveShadow}`;
+}
+
+/** Les porteurs d'ombre de la scène, dans l'ordre où on les rencontre. */
+export function porteursOmbre(scene: THREE.Object3D): THREE.Object3D[] {
+  const porteurs: THREE.Object3D[] = [];
+  scene.traverse((o) => { if (o.castShadow === true && dessinable(o)) porteurs.push(o); });
+  return porteurs;
+}
+
+/** Vrai si rien, du porteur à la racine, n'éteint cet objet. */
+function affiche(o: THREE.Object3D): boolean {
+  for (let n: THREE.Object3D | null = o; n; n = n.parent) if (!n.visible) return false;
+  return true;
+}
+
+/**
+ * Les lots de la passe d'ombres : un **représentant** par signature, par
+ * tranches d'au plus `taille`. Pur, comme `lotsDePrechauffage` : c'est le plan.
+ *
+ * Le représentant est pris **allumé** quand il en existe un : contrairement à
+ * `compileAsync`, un rendu ne compile que ce qu'il dessine, et un représentant
+ * éteint laisserait sa forme froide tout en occupant sa place.
+ */
+export function lotsDOmbre(scene: THREE.Object3D, taille = TAILLE_LOT): THREE.Object3D[][] {
+  const vus = new Set<string>();
+  const representants: THREE.Object3D[] = [];
+  const porteurs = porteursOmbre(scene);
+  for (const o of [...porteurs.filter(affiche), ...porteurs]) {
+    const s = signatureOmbre(o);
+    if (vus.has(s)) continue;
+    vus.add(s);
+    representants.push(o);
+  }
+  const lots: THREE.Object3D[][] = [];
+  for (let i = 0; i < representants.length; i += taille) lots.push(representants.slice(i, i + taille));
+  return lots;
+}
+
+/** Ce que le préchauffage des ombres a besoin de savoir faire d'un moteur. */
+export interface MoteurOmbrable {
+  renderAsync(scene: THREE.Scene, camera: THREE.Camera): Promise<void>;
+}
+
+/** Une lumière qui porte une carte d'ombre, telle qu'on a besoin de la piloter. */
+type LumierePorteuse = THREE.Light & { shadow: THREE.LightShadow };
+
+/** Les lumières de la scène dont la carte d'ombre se recalcule. */
+function lumieresOmbrantes(scene: THREE.Object3D): LumierePorteuse[] {
+  const lumieres: LumierePorteuse[] = [];
+  scene.traverse((o) => {
+    const l = o as LumierePorteuse;
+    if (l.isLight === true && l.castShadow === true && l.shadow) lumieres.push(l);
+  });
+  return lumieres;
+}
+
+/**
+ * Compile les programmes de la **passe d'ombres**, lot par lot, en rendant la
+ * main entre chacun.
+ *
+ * Le moyen est un vrai rendu, et il n'y en a pas d'autre : le matériau de la
+ * passe est hors d'atteinte (voir l'en-tête). On n'accorde donc `castShadow`
+ * qu'aux représentants d'un lot, on force le recalcul de la carte, et on rend —
+ * hors écran, la cible étant posée par l'appelant, exactement comme pour la
+ * passe principale. Les représentants gardent leur `castShadow` d'un lot au
+ * suivant : le dernier rendu est alors la vraie passe d'ombres, à ceci près
+ * qu'elle ne dessine qu'un exemplaire de chaque forme.
+ *
+ * La passe principale se rejoue à chaque lot, et c'est le prix : elle est déjà
+ * chaude — c'est l'ordre d'appel de `scene.ts` — donc elle ne coûte que ses
+ * tirages, sur la carte graphique, pas sur le fil principal.
+ */
+export async function prechaufferOmbres(
+  moteur: MoteurOmbrable, scene: THREE.Scene, camera: THREE.Camera,
+  options: OptionsPrechauffage = {},
+): Promise<void> {
+  const pause = options.pause ?? tourDeBoucle;
+  const vivante = options.vivante ?? ((): boolean => true);
+  const lumieres = lumieresOmbrantes(scene);
+  if (lumieres.length === 0) return;
+  const lots = lotsDOmbre(scene, options.taille ?? TAILLE_LOT);
+  if (lots.length === 0) return;
+
+  const porteurs = porteursOmbre(scene);
+  for (const o of porteurs) o.castShadow = false;
+  let echecs = 0;
+  try {
+    for (const lot of lots) {
+      if (!vivante()) break;
+      for (const o of lot) o.castShadow = true;
+      // La carte d'ombre ne se recalcule que sur ordre (`poserOmbres`) : sans
+      // cette ligne, seul le premier rendu ferait une passe d'ombres et les
+      // lots suivants ne compileraient rien.
+      for (const l of lumieres) l.shadow.needsUpdate = true;
+      try {
+        await moteur.renderAsync(scene, camera);
+      } catch (cause) {
+        echecs += 1;
+        console.warn('Préchauffage des ombres : un lot n’a pas compilé', cause);
+        if (echecs >= ECHECS_MAX) break;
+      }
+      await pause();
+    }
+  } finally {
+    for (const o of porteurs) o.castShadow = true;
+    // La première vraie image redessine la carte entière : tous les porteurs
+    // sont revenus, et leurs programmes sont chauds.
+    for (const l of lumieres) l.shadow.needsUpdate = true;
   }
 }

@@ -53,7 +53,7 @@ import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
-import { EPSILON_UNIFORME, ordonnerAttributs } from './programmes';
+import { EPSILON_UNIFORME } from './programmes';
 import {
   appliquerMasque, chargerModele, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips,
   masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
@@ -408,10 +408,6 @@ function boiteBiseautee(l: number, h: number, p: number, biseau: number): THREE.
   geo.translate(0, -(h - 2 * b) / 2 - b + h / 2 - h / 2, 0);
   geo.center();
   geo.computeVertexNormals();
-  // `ExtrudeGeometry` pose `position, uv` et `computeVertexNormals` ajoute
-  // `normal` à la fin : sans ce rangement, une pièce biseautée et une boîte nue
-  // de la même matière coûtent deux programmes (`programmes.ts`).
-  ordonnerAttributs(geo);
   geometries.set(cle, geo);
   return geo;
 }
@@ -463,7 +459,6 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
       return boiteBiseautee(l, h, la, Math.min(l, h, la) * 0.22);
     }
   }
-  ordonnerAttributs(geo);
   geometries.set(cle, geo);
   return geo;
 }
@@ -525,9 +520,7 @@ export function geometriesSilhouette(s: Silhouette): ReadonlyMap<RolePiece, THRE
     const fusion = mergeGeometries(morceaux, false);
     if (fusion) {
       fusion.computeBoundingSphere();
-      // La fusion garde l'ordre d'attributs du premier morceau : on le range,
-      // faute de quoi deux rôles de la même matière valent deux programmes.
-      fusionnees.set(role, ordonnerAttributs(fusion));
+      fusionnees.set(role, fusion);
     }
     for (const morceau of morceaux) morceau.dispose();
   }
@@ -540,7 +533,7 @@ function disque(rayon: number, hauteur: number): THREE.BufferGeometry {
   const cle = `d:${rayon}:${hauteur}`;
   const memo = geometries.get(cle);
   if (memo) return memo;
-  const geo = ordonnerAttributs(new THREE.CylinderGeometry(rayon, rayon, hauteur, 20, 1));
+  const geo = new THREE.CylinderGeometry(rayon, rayon, hauteur, 20, 1);
   geometries.set(cle, geo);
   return geo;
 }

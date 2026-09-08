@@ -16,11 +16,23 @@
  * Le moteur (`WebGPURenderer`, depuis le 7 septembre 2026) s'initialise de
  * façon **asynchrone** ; `monter()` reste synchrone, comme l'interface l'exige.
  * Le monde, lui, se bâtit **en tranches** à partir du premier `afficher`
- * (`ouvrirChantier`, 8 septembre 2026) : géométries, textures et lumières sont
- * des objets en mémoire, qui n'ont pas besoin du moteur, mais les fabriquer
- * d'un bloc gelait la page une centaine de millisecondes. Chaque tranche rend
- * la main au navigateur ; le préchauffage part quand il n'en reste plus, et
- * seul le **dessin** attend `prete`. Pendant cette poignée de tranches,
+ * (`planDeConstruction` et `chantier.ts`, 8 septembre 2026) : géométries,
+ * textures et lumières sont des objets en mémoire, qui n'ont pas besoin du
+ * moteur, mais les fabriquer d'un bloc gelait la page une centaine de
+ * millisecondes. Chaque tranche rend la main au navigateur, et seul le
+ * **dessin** attend `prete`.
+ *
+ * **Et le sol paraît avant le reste** (`PhaseChantier`, 8 septembre 2026 au
+ * soir, demande du propriétaire : « au pire tu fais la map vide, tu mets les
+ * unités »). Le chantier a deux temps. Le premier bâtit les toiles, le plateau
+ * et l'éclairage, préchauffe ce peu de programmes, et **dessine** : l'écran de
+ * chargement s'efface sur un terrain, pas sur un canevas vide. Le second bâtit
+ * décor et unités — **groupes éteints**, pour qu'aucune image ne les dessine
+ * avant que leurs programmes soient chauds, ce qui ramènerait le gel qu'on
+ * chasse —, les préchauffe, les rallume, et dessine le monde entier. Entre les
+ * deux, la boucle est paresseuse : elle a dessiné le sol une fois et dort.
+ *
+ * Pendant cette poignée de tranches,
  * `versEcran`, `versMonde` et `positionUnite` rendent `null` — rien ne les
  * appelle si tôt —, et un `cadrer` d'ouverture est **retenu** puis rejoué,
  * parce que celui-là n'arrive qu'une fois. `mesurer()` rend des zéros avant,
@@ -42,8 +54,9 @@ import type {
 import type { Biome, CampId, CodePays, Case, CleTerrain, Saison } from '../schemas/types';
 import { animationsDePartition, partitionProvisoire, type ContexteAnimation } from './animations';
 import { creerVue3d, type Vue3d } from './camera';
+import { jouerTranches, ouvrirChantier, type Chantier, type Tranche } from './chantier';
 import { brancherGestes3d } from './gestes';
-import { creerDecor, type Decor } from './decor';
+import { ouvrirChantierDecor, type Decor } from './decor';
 import { creerEclairage, parametresAmbiance, type Eclairage, type ParametresAmbiance } from './eclairage';
 import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
@@ -98,10 +111,10 @@ interface Monde {
   grille: GrilleTerrain;
   plateau: Plateau;
   /**
-   * Le décor — bâtiments, arbres, rochers, paysage — arrive **une tranche après
-   * le sol** (`ouvrirChantier`) : c'est le plus gros morceau après le plateau,
-   * et rien de ce qui précède n'en dépend. `null` le temps de cette tranche,
-   * jamais après.
+   * Le décor — bâtiments, arbres, rochers, paysage — se bâtit au **second temps**
+   * du chantier (`planDeConstruction`), après que le sol a été montré : c'est le
+   * plus gros morceau après le plateau, et rien de ce qui précède n'en dépend.
+   * `null` jusque-là, jamais après.
    */
   decor: Decor | null;
   unites: CalqueUnites;
@@ -113,11 +126,16 @@ interface Monde {
 }
 
 /**
- * Une tranche de construction : un morceau de monde, joué dans sa propre tâche.
- * Le navigateur peint et répond entre deux, exactement comme entre deux lots de
- * préchauffage (`prechauffage.ts`).
+ * Ce que le monde a de chaud, donc ce qu'on s'autorise à dessiner.
+ *
+ * - `rien` : le chantier n'a pas fini son premier temps. Une image dessinée
+ *   maintenant paierait la traduction TSL → WGSL de toute la scène sur le fil
+ *   principal, ce que le préchauffage fait hors de lui ;
+ * - `sol` : le plateau et l'éclairage sont chauds. On dessine le terrain, sans
+ *   décor ni figurines — ils sont bâtis groupe éteint ;
+ * - `monde` : tout est chaud et rallumé.
  */
-type Tranche = () => void;
+type PhaseChantier = 'rien' | 'sol' | 'monde';
 
 export interface OptionsRendu3d {
   biome?: Biome;
@@ -163,9 +181,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let cleTerrain = '';
   let premierTerrain = true;
   let cadree = false;
-  /** Les tranches de construction qui restent à jouer, `null` hors chantier. */
-  let chantier: Tranche[] | null = null;
-  let trancheCourante = 0;
+  /** Le chantier en cours (`chantier.ts`), `null` quand le monde est bâti. */
+  let chantier: Chantier | null = null;
   /** Un cadrage d'ouverture demandé avant que la caméra existe : il attend. */
   let cadrageEnAttente: Case | null = null;
   let mouvementReduit: MediaQueryList | undefined;
@@ -186,43 +203,63 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
   /**
-   * Vrai quand les programmes de la scène sont compilés, donc quand une image
-   * ne coûte plus que son dessin. Faux entre la construction du monde et la fin
-   * du préchauffage (`prechauffage.ts`) : rien ne se dessine pendant ce temps,
-   * et le fil principal reste libre — c'est tout l'objet de l'opération. La
-   * page voit un canevas vide là où elle voyait un gel d'une seconde.
+   * Jusqu'où le monde est chaud, donc ce qu'une image a le droit de dessiner.
+   * Le chantier la fait monter deux fois : `sol` à la fin de son premier temps,
+   * `monde` à la fin du second.
    */
-  let prechauffe = false;
-  /** Le garde-fou du préchauffage : passé ce délai, on dessine quoi qu'il arrive. */
-  let delaiPrechauffage: ReturnType<typeof setTimeout> | null = null;
+  let phase: PhaseChantier = 'rien';
+  /**
+   * Vrai pendant un préchauffage. Dessiner à cet instant serait une faute
+   * précise, pas une prudence : `compileAsync` remplace, le temps de son
+   * travail, la fonction qui traite chaque objet par celle qui **crée un
+   * pipeline sans dessiner** ; une image qui se glisserait entre deux de ses
+   * attentes ne dessinerait rien du tout.
+   */
+  let enPrechauffage = false;
 
   function salir(): void {
     boucle?.salir();
   }
 
   /**
-   * Lance le préchauffage des programmes et débloque l'image quand il est
-   * fini — ou au bout de `MS_PRECHAUFFAGE_MAX`, parce qu'un écran qui ne vient
-   * jamais est pire qu'un gel d'une seconde.
+   * Préchauffe les programmes de la scène telle qu'elle est, puis fait monter
+   * la phase : à partir de là, on dessine.
+   *
+   * Le budget `MS_PRECHAUFFAGE_MAX` n'interrompt pas le préchauffage au milieu
+   * d'un lot — il lui dit de **s'arrêter au suivant**. Débloquer l'image sans
+   * l'arrêter reviendrait à dessiner pendant un `compileAsync`, c'est-à-dire à
+   * ne rien dessiner du tout. Un écran qui ne vient jamais reste pire qu'un gel
+   * d'une seconde : passé le budget, on dessine, et la première image paiera ce
+   * qu'elle a toujours payé.
    */
-  function lancerPrechauffage(m: Monde): void {
+  async function chauffer(m: Monde, jusqua: Exclude<PhaseChantier, 'rien'>): Promise<void> {
     const s = scene3d;
-    if (!s) { prechauffe = true; return; }
-    const finir = (): void => {
+    if (!s) { phase = jusqua; return; }
+    enPrechauffage = true;
+    let echu = false;
+    // Un seul chronomètre pour les deux attentes : celle du moteur, et celle du
+    // préchauffage lui-même.
+    let reveiller: (() => void) | null = null;
+    const garde = setTimeout(() => { echu = true; reveiller?.(); }, MS_PRECHAUFFAGE_MAX);
+    try {
+      // Un moteur qui ne démarre pas ne retient pas l'image indéfiniment : sans
+      // dos, `prechauffer` rend la main tout de suite et `dessiner` ne dessine
+      // rien, mais la boucle repart et la page cesse d'attendre.
+      await Promise.race([s.prete, new Promise<void>((r) => { reveiller = r; })]);
+      await s.prechauffer(m.vue3d.camera, () => !echu);
+    } catch {
+      // Un préchauffage qui échoue ne coûte qu'une première image plus chère.
+    } finally {
+      clearTimeout(garde);
+      enPrechauffage = false;
       // Un préchauffage encore en vol quand la page démonte ne débloque pas
       // l'image du montage **suivant** : la scène n'est plus la même, et ses
       // programmes non plus.
-      if (prechauffe || scene3d !== s || monde !== m) return;
-      prechauffe = true;
-      if (delaiPrechauffage !== null) clearTimeout(delaiPrechauffage);
-      delaiPrechauffage = null;
-      salir();
-    };
-    delaiPrechauffage = setTimeout(finir, MS_PRECHAUFFAGE_MAX);
-    void s.prete
-      .then(() => s.prechauffer(m.vue3d.camera))
-      .catch(() => undefined)
-      .then(finir);
+      if (scene3d === s && monde === m) {
+        phase = jusqua;
+        salir();
+      }
+    }
   }
 
   /** Moins de mouvement : l'appareil le demande, ou le joueur dans ses réglages. */
@@ -254,12 +291,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
    * le plateau et l'éclairage, puis le décor, puis les unités —, et chaque
    * tranche rend la main au navigateur.
    *
-   * Ce que cela ne change pas : rien n'est **dessiné** avant la fin du
-   * préchauffage, qui ne part qu'après la dernière tranche. On ne montre donc
-   * jamais un monde à moitié bâti ; on cesse simplement de geler la page
-   * pendant qu'on le bâtit.
+   * **Deux temps, et une image entre les deux.** Le sol est chaud bien avant le
+   * reste : le préchauffage de la seule famille du plateau tient en quelques
+   * lots là où la scène entière en demande huit. On le paie donc tout de suite,
+   * on dessine le terrain — l'écran de chargement s'efface là-dessus —, puis on
+   * bâtit décor et unités **groupes éteints** pour qu'aucune image ne les
+   * dessine avant qu'ils soient chauds à leur tour.
    */
-  function ouvrirChantier(e: EtatPartie, v: VueInteraction): Tranche[] | null {
+  function planDeConstruction(e: EtatPartie, v: VueInteraction): Tranche[] | null {
     const s = scene3d;
     const conteneur = conteneurRef;
     if (!s || !conteneur) return null;
@@ -284,6 +323,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         { tailleOmbre: tailleCarteOmbre(pointeurGrossier) },
       );
       const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
+      // Décor et unités se bâtissent au second temps : leurs groupes restent
+      // éteints jusqu'à ce que leurs programmes soient chauds. Un groupe
+      // éteint est ignoré par `_projectObject`, donc par le dessin **et** par
+      // la passe d'ombres ; le préchauffage, lui, le rallume tout seul le temps
+      // de chaque lot (`prechauffage.ts`).
+      unites.groupe.visible = false;
+      surbrillances.groupe.visible = false;
       s.scene.add(plateau.groupe, unites.groupe, surbrillances.groupe, effets.groupe, eclairage.groupe);
       vue3d.redimensionner(s.largeur, s.hauteur);
       vue3d.cadrerCarte();
@@ -304,7 +350,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       }
     });
 
-    tranches.push(() => {
+    // Premier temps clos : le sol est bâti, on le chauffe et on le montre.
+    tranches.push(async () => { if (monde) await chauffer(monde, 'sol'); });
+
+    // Le décor a ses propres tranches (`decor.ts`, `ouvrirChantierDecor`) : les
+    // arbres, les rochers, le paysage, le rivage, les mâts, puis les cases
+    // bâties par paquets de quatre. C'était le plus long bloc du chargement.
+    tranches.push(async () => {
       const m = monde;
       if (!m) return;
       // La carte a pu changer pendant la construction — l'atelier en change sans
@@ -312,12 +364,21 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // `majGrille` ne peut rien pour un décor qui n'existait pas encore quand
       // elle est passée, et il resterait semé sur la carte d'avant.
       const courant = etat ?? e;
-      const decor = creerDecor(vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome);
+      const c = ouvrirChantierDecor(
+        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome,
+      );
+      // Un chantier dans le chantier : c'est le décor qui décide de son
+      // découpage — leur nombre dépend de la carte —, nous qui rendons la main
+      // entre chacune, et cette tranche-ci qui attend qu'il ait fini.
+      await jouerTranches(c.tranches, { vivant: () => scene3d === s && monde === m });
+      if (scene3d !== s || monde !== m) return;
+      const decor = c.decor();
       // Le brouillard s'applique au décor par le **nuanceur**, comme au sol :
       // teindre un matériau en noir lui laisse le reflet du studio et l'éclat du
       // soleil, et c'est ce gris qu'on voyait dans le noir.
       grefferBrouillardSur(decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
-      decor.appliquerAmbiance(depart, courant.climat.saison);
+      decor.appliquerAmbiance(depart, (etat ?? e).climat.saison);
+      decor.groupe.visible = false;
       s.scene.add(decor.groupe);
       m.decor = decor;
     });
@@ -325,37 +386,31 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // Les unités et tout ce qui dérive de l'état : c'est `majMonde` qui les pose,
     // et il ne coûte rien tant qu'il n'a pas de monde.
     tranches.push(() => { majMonde(); });
-    return tranches;
-  }
 
-  /** Joue une tranche, puis rend la main. Le préchauffage part quand il n'en reste plus. */
-  function avancerChantier(): void {
-    const s = scene3d;
-    const liste = chantier;
-    if (!liste || !s) return;
-    const suivante = liste[trancheCourante];
-    if (!suivante) {
-      chantier = null;
-      trancheCourante = 0;
-      if (monde) lancerPrechauffage(monde);
-      return;
-    }
-    trancheCourante += 1;
-    suivante();
-    // Un tour de macrotâche entre deux tranches : le navigateur peint son écran
-    // de chargement et répond aux clics, comme entre deux lots de préchauffage.
-    setTimeout(() => { if (scene3d === s && chantier === liste) avancerChantier(); }, 0);
+    // Second temps clos. On rallume **avant** de chauffer, et non après : le
+    // préchauffage de la passe d'ombres passe par de vrais rendus, qui ne
+    // voient que ce qui est allumé (`prechauffage.ts`). Rien ne s'affiche pour
+    // autant, puisque `enPrechauffage` retient l'image tant qu'il travaille.
+    tranches.push(async () => {
+      const m = monde;
+      if (!m) return;
+      if (m.decor) m.decor.groupe.visible = true;
+      m.unites.groupe.visible = true;
+      m.surbrillances.groupe.visible = true;
+      await chauffer(m, 'monde');
+    });
+    return tranches;
   }
 
   function dessiner(ecoule: number): void {
     const s = scene3d;
     const m = monde;
     if (!s || !m) return;
-    // Tant que les programmes ne sont pas compilés, on ne dessine rien : une
-    // image dessinée maintenant paierait elle-même la traduction TSL → WGSL de
-    // toute la scène, sur le fil principal, ce que le préchauffage est en train
-    // de faire hors de lui. `lancerPrechauffage` réveille la boucle à la fin.
-    if (!prechauffe) return;
+    // Tant que rien n'est compilé, on ne dessine rien : une image dessinée
+    // maintenant paierait elle-même la traduction TSL → WGSL de toute la scène,
+    // sur le fil principal, ce que le préchauffage est en train de faire hors
+    // de lui. Il réveille la boucle à la fin de chacun de ses deux temps.
+    if (phase === 'rien' || enPrechauffage) return;
     let encore = false;
     const calme = reduit();
     // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
@@ -528,9 +583,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       etat = e;
       vue = v;
       if (!monde && !chantier) {
-        chantier = ouvrirChantier(e, v);
-        trancheCourante = 0;
-        avancerChantier();
+        const plan = planDeConstruction(e, v);
+        const s = scene3d;
+        if (plan && s) {
+          // Une scène démontée en cours de construction n'en joue pas une
+          // tranche de plus : le chantier le lit avant chacune.
+          chantier = ouvrirChantier(plan, { vivant: () => scene3d === s });
+          chantier.demarrer();
+        }
       }
       majMonde();
       salir();
@@ -672,13 +732,15 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     demonter(): void {
       if (repos !== null) clearInterval(repos);
       repos = null;
-      if (delaiPrechauffage !== null) clearTimeout(delaiPrechauffage);
-      delaiPrechauffage = null;
-      prechauffe = false;
-      // La construction en cours s'arrête ici : `avancerChantier` reconnaît que
-      // la liste a changé et ne joue pas la tranche suivante sur une scène morte.
+      phase = 'rien';
+      // Un préchauffage encore en vol s'arrêtera de lui-même — la scène qu'il
+      // interroge est morte —, mais il ne doit pas retenir l'image du montage
+      // suivant s'il en survient un.
+      enPrechauffage = false;
+      // La construction en cours s'arrête ici : le chantier ne joue pas une
+      // tranche de plus sur une scène morte.
+      chantier?.arreter();
       chantier = null;
-      trancheCourante = 0;
       cadrageEnAttente = null;
       boucle?.arreter();
       boucle = null;

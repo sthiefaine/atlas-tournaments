@@ -23,21 +23,24 @@
  *    remplace par un millième, sous la quantification d'un canal de huit bits :
  *    invisible à l'écran, un programme de moins.
  *
- * 2. **L'ordre d'insertion des attributs de géométrie.** `getGeometryCacheKey`
- *    parcourt `geometry.attributes` dans l'ordre où ils ont été posés. Or
- *    `BoxGeometry` pose `position, normal, uv` et `ExtrudeGeometry` pose
- *    `position, uv` puis `computeVertexNormals()` ajoute `normal` à la fin :
- *    deux figurines de la même matière, l'une biseautée et l'autre non,
- *    coûtaient deux programmes pour un seul nuanceur. `ordonnerAttributs`
- *    remet tout le monde dans le même ordre.
+ * 2. **L'ordre d'insertion des attributs de géométrie** — et c'était une fausse
+ *    piste, corrigée le 8 septembre 2026 au soir. `ordonnerAttributs` rangeait
+ *    les attributs parce que `getGeometryCacheKey` était réputée les parcourir
+ *    dans l'ordre où ils ont été posés. Elle écrit en fait
+ *    `Object.keys(geometry.attributes).sort()` : l'ordre n'a jamais rien
+ *    séparé, et la mesure l'a confirmé — le compte de programmes est le même
+ *    avec et sans, sur les deux cartes. La fonction est retirée, le compteur
+ *    des tests lit désormais la vraie clé (`cleGeometrieProgramme`, dans
+ *    `prechauffage.ts`), et un test épingle l'invariant pour le jour où une
+ *    version de three cesserait de trier. Les 39 → 31 programmes du §9.5
+ *    viennent donc **entièrement** de `sansZero`.
  *
- * Deux limites, écrites plutôt que cachées : cela ne se fait qu'**avant le
- * premier dessin** d'une géométrie — réordonner après coup changerait la clé
- * et provoquerait précisément la reconstruction qu'on évite —, et cela ne peut
- * rien contre les séparations réelles : un `InstancedMesh` porte son `uuid`
- * dans la clé (le nombre d'instances est écrit en dur dans le WGSL sous mille),
- * `vertexColors`, `flatShading`, `side`, `transparent` et les tests de
- * profondeur changent vraiment le nuanceur ou l'état du pipeline.
+ * Une limite, écrite plutôt que cachée : rien de tout cela ne peut contre les
+ * séparations réelles. Un `InstancedMesh` porte son `uuid` dans la clé (le
+ * nombre d'instances est écrit en dur dans le WGSL sous mille), et
+ * `vertexColors`, `flatShading`, `side`, `transparent`, le nombre de
+ * composantes d'un attribut et les tests de profondeur changent vraiment le
+ * nuanceur ou l'état du pipeline.
  */
 
 import * as THREE from 'three/webgpu';
@@ -53,32 +56,6 @@ export const EPSILON_UNIFORME = 0.001;
 /** Un nombre jamais nul, pour une propriété que three réduit à « nul ou non ». */
 export function sansZero(v: number): number {
   return v === 0 ? EPSILON_UNIFORME : v;
-}
-
-/**
- * L'ordre canonique des attributs. Les quatre premiers sont ceux que le rendu
- * emploie ; tout autre attribut suit, dans son ordre d'apparition — un nom
- * inconnu ne doit pas être perdu, seulement rangé après les connus.
- */
-export const ORDRE_ATTRIBUTS: readonly string[] = ['position', 'normal', 'uv', 'color'];
-
-/**
- * Remet les attributs d'une géométrie dans l'ordre canonique. Sans effet — pas
- * même une écriture — si l'ordre est déjà le bon : la fonction est appelée sur
- * des géométries mémorisées, et repositionner un attribut déjà dessiné coûterait
- * la reconstruction qu'on cherche à éviter.
- */
-export function ordonnerAttributs<T extends THREE.BufferGeometry>(geo: T): T {
-  const noms = Object.keys(geo.attributes);
-  const voulu = [
-    ...ORDRE_ATTRIBUTS.filter((n) => noms.includes(n)),
-    ...noms.filter((n) => !ORDRE_ATTRIBUTS.includes(n)),
-  ];
-  if (voulu.every((n, i) => noms[i] === n)) return geo;
-  const gardes = voulu.map((n) => [n, geo.attributes[n]!] as const);
-  for (const [n] of gardes) geo.deleteAttribute(n);
-  for (const [n, a] of gardes) geo.setAttribute(n, a);
-  return geo;
 }
 
 /**

@@ -46,7 +46,10 @@ import { paletteDe } from '../render/palettes';
 import type { Biome, CampId, Case, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
-import { creerPaysage, memesVisibles } from './paysage';
+import {
+  creerPaysage, formesPaysageMemorisees, memesVisibles, oublierFormesPaysage, ouvrirChantierPaysage,
+  type Paysage,
+} from './paysage';
 import { jeuToit, sorteToit, type SorteToit } from './textures';
 
 /** Couleurs de feuillage par saison : c'est la saison qu'on voit d'abord. */
@@ -184,6 +187,14 @@ export function clonerMateriau(source: THREE.MeshStandardNodeMaterial): THREE.Me
   jumeau.envMapIntensity = source.envMapIntensity;
   return jumeau;
 }
+
+/**
+ * La matière d'une pièce en attente de fusion. Une pièce de bâtiment n'est
+ * jamais dessinée — elle est fondue, puis jetée —, mais `Mesh` en veut une :
+ * sans celle-ci, chaque pièce en allouerait une, soit une soixantaine par ville.
+ * Ce qui compte est son rôle, rangé dans `userData`.
+ */
+const MATIERE_FUSION = new THREE.Material();
 
 /** Pleine lueur des vitrages qui se rallument, au-dessus de l'ambiance la plus nocturne. */
 const LUEUR_PLEINE = 1.1;
@@ -416,11 +427,160 @@ function eroder(geo: THREE.BufferGeometry, sel: number, aplatir: number): THREE.
   return geo;
 }
 
-/** Monte le décor complet. */
+/**
+ * Les formes déjà taillées du décor, partagées entre tous les décors de la page.
+ *
+ * Un tronc, une couronne, une pierre érodée, un mât, un cube de bâtiment : rien
+ * de tout cela ne dépend de la grille — seulement du genre, du biome et de
+ * paramètres fermés. Deux montages les taillaient pourtant deux fois, et
+ * l'érosion d'une pierre est une boucle sur ses sommets.
+ *
+ * Ce qui est gardé est **la géométrie elle-même**, partagée par les maillages
+ * de tous les décors vivants. `Decor.dispose()` ne la libère donc pas : ce
+ * serait tuer la forme d'un décor encore à l'écran — la faute exacte de
+ * `CalqueUnites.dispose()`, qui vidait deux caches pourtant au niveau module
+ * (`CLAUDE.md`, 8 septembre 2026). Une entrée évincée n'est pas libérée non
+ * plus, pour la même raison : elle n'est que lâchée, et le ramasse-miettes la
+ * reprend quand plus aucune maille ne la tient.
+ *
+ * **Ce qui n'y entre pas, et pourquoi** : la toile d'un drapeau, dont
+ * `flotter()` réécrit les sommets à chaque battement — deux décors partageant
+ * la même toile se disputeraient le même tampon —, et la ligne de rivage, qui
+ * est taillée sur le trait de côte de sa carte.
+ */
+const formes = new Map<string, THREE.BufferGeometry>();
+
+/**
+ * Combien de formes au plus. Le décor en compte une douzaine par biome — trois
+ * arbres, trois pierres, un mât, un pommeau, trois primitives de bâtiment —,
+ * quelques kilo-octets chacune : trente-deux en tiennent deux biomes entiers,
+ * ce qui est le cas courant (l'accueil en montre un, la mission un autre).
+ */
+const MAX_FORMES = 32;
+
+/** La forme de `cle`, taillée une seule fois par page. */
+function formeMemorisee(cle: string, tailler: () => THREE.BufferGeometry): THREE.BufferGeometry {
+  const memo = formes.get(cle);
+  if (memo !== undefined) {
+    // Relire remet en queue : c'est ce qui fait sortir la plus vieille.
+    formes.delete(cle);
+    formes.set(cle, memo);
+    return memo;
+  }
+  const geo = tailler();
+  formes.set(cle, geo);
+  if (formes.size > MAX_FORMES) {
+    const vieille = formes.keys().next().value;
+    if (vieille !== undefined) formes.delete(vieille);
+  }
+  return geo;
+}
+
+/**
+ * Les rôles de matériau d'un bâtiment. C'est sur eux, et non sur les matériaux
+ * eux-mêmes, que la fusion d'une case se fait : deux cartes n'ont pas les mêmes
+ * teintes de camp ni le même style régional, mais elles ont la même ville.
+ * Séparer le rôle de la matière est ce qui rend une case **mémorisable**.
+ *
+ * Un rôle vaut exactement un matériau dans un décor donné ; c'est ce qui garde
+ * le regroupement identique à ce qu'il était quand la fusion se faisait sur les
+ * matériaux. En particulier, un bâtiment désaffecté prend `pierre` là où un
+ * bâtiment en service prend `teinte` — il n'a pas de camp —, et ses pièces de
+ * teinte se fondent donc dans le même lot que sa pierre, comme avant.
+ */
+type RoleBatiment =
+  | 'pierre' | 'beton' | 'murTerni' | 'toitClair' | 'toitTerni'
+  | 'fenetres' | 'vitresEteintes' | 'metal' | 'ivoire' | 'planche' | 'teinte' | 'bassin';
+
+/** Les géométries fondues d'une case bâtie, une par rôle présent, dans l'ordre de fusion. */
+type FormesCase = ReadonlyMap<RoleBatiment, THREE.BufferGeometry>;
+
+/**
+ * Les cases bâties déjà fondues, partagées entre tous les décors de la page.
+ *
+ * Une case ne dépend que de son terrain, de son état de service et — pour une
+ * ville — des deux hauteurs de maison tirées de son aléa : ni du camp qui la
+ * tient, ni du style régional, qui sont au matériau. C'est le poste le plus
+ * cher du décor, et il se repayait à chaque montage **et à chaque capture** —
+ * `construireBatiments` rebâtit toute la carte dès qu'un propriétaire change.
+ *
+ * Même doctrine que `formes` : rien n'est libéré, ni au `dispose()` d'un décor
+ * ni à l'éviction, parce qu'une case fondue peut être posée dans un décor
+ * encore à l'écran.
+ */
+const casesFondues = new Map<string, FormesCase>();
+
+/**
+ * Combien de cases fondues au plus. Six terrains bâtis × deux états font douze
+ * formes fixes ; s'y ajoute une forme par couple de hauteurs de ville, soit une
+ * par case de ville d'une carte. Soixante-quatre couvrent largement une carte
+ * de mission et sa voisine.
+ */
+const MAX_CASES_FONDUES = 64;
+
+/** Ce que les formes mémorisées pèsent : la somme des tampons gardés, ici et au paysage. */
+export function poidsFormesDecor(): { formes: number; octets: number } {
+  const vues = new Set<THREE.BufferGeometry>(formes.values());
+  for (const g of formesPaysageMemorisees()) vues.add(g);
+  for (const parRole of casesFondues.values()) for (const g of parRole.values()) vues.add(g);
+  let octets = 0;
+  for (const g of vues) {
+    for (const attribut of Object.values(g.attributes)) {
+      octets += (attribut as THREE.BufferAttribute).array.byteLength;
+    }
+    octets += g.index?.array.byteLength ?? 0;
+  }
+  return { formes: vues.size, octets };
+}
+
+/**
+ * Oublie les formes mémorisées, décor et paysage. Rien ne l'appelle en jeu —
+ * c'est justement l'intérêt du cache —, mais un test ou un banc qui veut
+ * mesurer à froid en a besoin. Les géométries ne sont **pas** libérées : un
+ * décor vivant peut encore en tenir une.
+ */
+export function oublierFormesDecor(): void {
+  formes.clear();
+  casesFondues.clear();
+  oublierFormesPaysage();
+}
+
+/** Un chantier de décor : des tranches à jouer dans l'ordre, puis le décor. */
+export interface ChantierDecor {
+  /**
+   * Les tranches, dans l'ordre : arbres, pierres, accessoires du paysage,
+   * rivage, matières et pavillons, puis les bâtiments par paquets de cases, et
+   * la pose finale. Aucune ne dépasse quelques millisecondes.
+   */
+  readonly tranches: readonly (() => void)[];
+  /** Le décor monté. À n'appeler qu'une fois la dernière tranche jouée. */
+  decor(): Decor;
+}
+
+/** Monte le décor complet, d'un bloc. */
 export function creerDecor(
   g: GrilleTerrain, etat: EtatPartie, hauteurEn: (x: number, z: number) => number,
   biome: Biome = 'plaine',
 ): Decor {
+  const chantier = ouvrirChantierDecor(g, etat, hauteurEn, biome);
+  for (const tranche of chantier.tranches) tranche();
+  return chantier.decor();
+}
+
+/**
+ * Combien de cases bâties par tranche. Une ville coûte environ une milliseconde
+ * à fondre la première fois ; quatre tiennent donc sous le budget d'une image —
+ * mesuré à 3 à 5 ms la tranche sur la carte de démonstration —, et une carte de
+ * soixante cases de côté se bâtit en cinquante tranches plutôt qu'en un
+ * blocage de plusieurs secondes.
+ */
+const CASES_PAR_TRANCHE = 4;
+
+/** Le même montage, en tranches : c'est ce que `index.ts` joue au chargement. */
+export function ouvrirChantierDecor(
+  g: GrilleTerrain, etat: EtatPartie, hauteurEn: (x: number, z: number) => number,
+  biome: Biome = 'plaine',
+): ChantierDecor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
   // La grille courante : `majGrille` la remplace, et tout ce qui en dérive —
@@ -428,26 +588,32 @@ export function creerDecor(
   let grille: GrilleTerrain = g;
 
   // --- Arbres
-  let arbres = semerArbres(grille, biome);
+  let arbres: Arbre[] = [];
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
-  const geoTronc = new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6);
+  const geoTronc = formeMemorisee('tronc', () => new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6));
   const matTronc = new THREE.MeshStandardNodeMaterial({ color: 0x6b4a2f, roughness: 0.92 });
   // Plusieurs volumes dans une seule géométrie : silhouettes travaillées sans
   // appel de dessin supplémentaire par arbre.
-  const etages = [0, 1, 2].map((i) => {
-    const geo = new THREE.ConeGeometry(0.17 - i * 0.035, 0.28 - i * 0.04, 8);
-    return geo.translate(0, -0.12 + i * 0.13, 0);
+  const geoConifere = formeMemorisee('conifere', () => {
+    const etages = [0, 1, 2].map((i) => {
+      const geo = new THREE.ConeGeometry(0.17 - i * 0.035, 0.28 - i * 0.04, 8);
+      return geo.translate(0, -0.12 + i * 0.13, 0);
+    });
+    const fondu = mergeGeometries(etages)!;
+    etages.forEach((geo) => geo.dispose());
+    return fondu;
   });
-  const geoConifere = mergeGeometries(etages)!;
-  etages.forEach((geo) => geo.dispose());
-  const couronnes = tropical
-    ? Array.from({ length: 6 }, (_, i) => new THREE.SphereGeometry(0.16, 6, 3)
-      .scale(0.42, 0.16, 1.5).translate(0, 0, 0.09).rotateY(i * Math.PI / 3))
-    : [[-0.065, -0.025, 0], [0.065, 0, 0.025], [0, 0.095, -0.025]].map(([x, y, z]) =>
-      new THREE.IcosahedronGeometry(0.13, 1).translate(x!, y!, z!));
-  const geoFeuillu = mergeGeometries(couronnes)!;
-  couronnes.forEach((geo) => geo.dispose());
+  const geoFeuillu = formeMemorisee(tropical ? 'palme' : 'feuillu', () => {
+    const couronnes = tropical
+      ? Array.from({ length: 6 }, (_, i) => new THREE.SphereGeometry(0.16, 6, 3)
+        .scale(0.42, 0.16, 1.5).translate(0, 0, 0.09).rotateY(i * Math.PI / 3))
+      : [[-0.065, -0.025, 0], [0.065, 0, 0.025], [0, 0.095, -0.025]].map(([x, y, z]) =>
+        new THREE.IcosahedronGeometry(0.13, 1).translate(x!, y!, z!));
+    const fondu = mergeGeometries(couronnes)!;
+    couronnes.forEach((geo) => geo.dispose());
+    return fondu;
+  });
   const matConifere = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
   const matFeuillu = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
 
@@ -501,7 +667,6 @@ export function creerDecor(
       groupe.add(m);
     }
   }
-  batirArbres();
 
   const mat4 = new THREE.Matrix4();
   const quat = new THREE.Quaternion();
@@ -549,12 +714,12 @@ export function creerDecor(
   }
 
   // --- Rochers
-  let rochers = semerRochers(grille);
+  let rochers: Rocher[] = [];
   // Trois lots : un appel de dessin par silhouette, et non un par pierre.
   const geosRocher = [
-    eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085),
-    eroder(new THREE.IcosahedronGeometry(0.15, 0), 901, 0.06),
-    eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05),
+    formeMemorisee('rocher-bloc', () => eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085)),
+    formeMemorisee('rocher-eclat', () => eroder(new THREE.IcosahedronGeometry(0.15, 0), 901, 0.06)),
+    formeMemorisee('rocher-dalle', () => eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05)),
   ];
   const matRocher = new THREE.MeshStandardNodeMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
   let lotsRocher: THREE.InstancedMesh[] = [];
@@ -576,7 +741,6 @@ export function creerDecor(
       return lot;
     });
   }
-  batirRochers();
   const teinteRocher = new THREE.Color();
 
   function poserRochers(): void {
@@ -617,12 +781,11 @@ export function creerDecor(
     for (const lot of lotsRocher) if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
   }
 
-  poserRochers();
-
   // --- Paysage : les accessoires du biome et la ligne de rivage (`paysage.ts`).
   //     Il lit `hauteurEn` à chaque pose, comme les arbres : rien n'y est gelé.
-  let paysage = creerPaysage(grille, hauteurEn, biome);
-  groupe.add(paysage.groupe);
+  //     Son chantier a ses propres tranches, qu'on enfile dans les nôtres.
+  const chantierPaysage = ouvrirChantierPaysage(grille, hauteurEn, biome);
+  let paysage: Paysage = chantierPaysage.paysage();
   /** La dernière ambiance appliquée, pour la redonner à un paysage refait. */
   let ambianceCourante: { p: ParametresAmbiance; saison: Saison } | null = null;
   // Les teintes fixes de l'ambiance, allouées une fois : elles servaient à
@@ -637,7 +800,6 @@ export function creerDecor(
   // --- Bâtiments
   const batiments = new THREE.Group();
   batiments.name = 'batiments';
-  groupe.add(batiments);
   const matFenetres = new THREE.MeshStandardNodeMaterial({
     color: 0x2a3242, emissive: 0xffd98a, emissiveIntensity: 0.05, roughness: 0.25, metalness: 0.1,
   });
@@ -681,8 +843,6 @@ export function creerDecor(
   const matBassin = new THREE.MeshStandardNodeMaterial({ color: 0x22434e, roughness: 0.28, metalness: 0.12 });
   const paraboles: Parabole[] = [];
   const matsCamp = new Map<string, THREE.MeshStandardNodeMaterial>();
-  const geosBatiment = new Set<THREE.BufferGeometry>();
-  const primitives = new Map<string, THREE.BufferGeometry>();
 
   function matCamp(camp: CampId | null): THREE.MeshStandardNodeMaterial {
     const cle = String(camp);
@@ -693,332 +853,447 @@ export function creerDecor(
     return m;
   }
 
+  /** Une primitive de bâtiment : partagée par toute la page, jamais libérée par un décor. */
   function primitive(cle: string, creer: () => THREE.BufferGeometry): THREE.BufferGeometry {
-    let geo = primitives.get(cle);
-    if (!geo) { geo = creer(); primitives.set(cle, geo); }
-    return geo;
+    return formeMemorisee(`bat:${cle}`, creer);
   }
 
-  function bloc(l: number, h: number, p: number, mat: THREE.Material): THREE.Mesh {
-    const m = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), mat);
-    m.scale.set(l, h, p);
-    return m;
+  /**
+   * La matière d'un rôle, dans ce décor. C'est la seule table qui relie une
+   * silhouette mémorisée — commune à toutes les cartes — aux matières de
+   * celle-ci : style régional, couleurs de camp, état de service.
+   */
+  function matiereDe(role: RoleBatiment, proprio: CampId | null): THREE.MeshStandardNodeMaterial {
+    switch (role) {
+      case 'pierre': return matPierre;
+      case 'beton': return matBeton;
+      case 'murTerni': return matBetonTerni;
+      case 'toitClair': return matToit;
+      case 'toitTerni': return matToitTerni;
+      case 'fenetres': return matFenetres;
+      case 'vitresEteintes': return matVitresEteintes;
+      case 'metal': return matMetal;
+      case 'ivoire': return matIvoire;
+      case 'planche': return matPlanche;
+      case 'bassin': return matBassin;
+      default: return matCamp(proprio);
+    }
   }
 
-  // Les fenêtres, cheminées et encadrements d'une case sont fusionnés par
-  // matériau. Leur nombre ne multiplie donc pas les draw calls sur mobile.
-  function fusionnerCase(caseDecor: THREE.Group): void {
-    const lots = new Map<THREE.Material, THREE.BufferGeometry[]>();
-    for (const enfant of caseDecor.children) {
-      if (!(enfant instanceof THREE.Mesh) || Array.isArray(enfant.material)) continue;
-      enfant.updateMatrix();
-      const geo = enfant.geometry.clone().applyMatrix4(enfant.matrix);
+  /**
+   * Les pièces d'une case bâtie, dans le repère de la case et **sans matière** :
+   * chacune ne porte que son rôle. C'est ce qui rend la silhouette commune à
+   * toutes les cartes — donc mémorisable — alors que ses teintes ne le sont pas.
+   */
+  function construirePieces(
+    terrain: CleTerrain, desaffecte: boolean, hauteurs: readonly number[],
+  ): THREE.Mesh[] {
+    const pieces: THREE.Mesh[] = [];
+    // Désaffecté : pas de couleur de camp, il n'a pas de camp. La pierre
+    // reprend les accents plutôt qu'un gris de plus, qui coûterait un lot.
+    const teinte: RoleBatiment = desaffecte ? 'pierre' : 'teinte';
+    const mur: RoleBatiment = desaffecte ? 'murTerni' : 'beton';
+    const toit: RoleBatiment = desaffecte ? 'toitTerni' : 'toitClair';
+    const vitre: RoleBatiment = desaffecte ? 'vitresEteintes' : 'fenetres';
+    const bloc = (l: number, h: number, p: number, role: RoleBatiment): THREE.Mesh => {
+      const m = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), MATIERE_FUSION);
+      m.scale.set(l, h, p);
+      m.userData['role'] = role;
+      pieces.push(m);
+      return m;
+    };
+    const poser = (l: number, h: number, p: number, role: RoleBatiment,
+      px: number, py: number, pz: number, rz = 0): THREE.Mesh => {
+      const m = bloc(l, h, p, role);
+      m.position.set(px, py, pz); m.rotation.z = rz; return m;
+    };
+    const cylindre = (rayon: number, h: number, role: RoleBatiment,
+      px: number, py: number, pz: number): THREE.Mesh => {
+      const geo = primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10));
+      const m = new THREE.Mesh(geo, MATIERE_FUSION);
+      m.scale.set(rayon, h, rayon); m.position.set(px, py, pz);
+      m.userData['role'] = role;
+      pieces.push(m);
+      return m;
+    };
+      const toiture = (px: number, py: number, pz: number, l: number, p: number): void => {
+        for (const cote of [-1, 1]) poser(l * 0.57, 0.032, p * 1.12, toit,
+          px + cote * l * 0.24, py + l * 0.12, pz, -cote * 0.43);
+        poser(0.032, 0.032, p * 1.15, 'metal', px, py + l * 0.24, pz);
+      };
+      // Une toiture manquante : la charpente à nu, en attente de couverture.
+      const charpente = (px: number, py: number, pz: number, l: number, p: number): void => {
+        for (const k of [-0.36, -0.12, 0.12, 0.36]) {
+          poser(0.02, 0.018, p * 1.05, 'planche', px + k * l, py + l * 0.24 - Math.abs(k) * l * 0.5, pz);
+        }
+        poser(0.02, 0.02, p * 1.1, 'planche', px, py + l * 0.25, pz);
+      };
+      // Les planches clouées en croix sur une porte : c'est fermé.
+      const condamner = (px: number, py: number, pz: number): void => {
+        for (const rz of [0.55, -0.55]) poser(0.19, 0.028, 0.012, 'planche', px, py, pz, rz);
+      };
+      const palissade = (): void => {
+        for (let k = 0; k < 4; k += 1) {
+          const a = k * Math.PI / 2;
+          for (const piece of PIECES_PALISSADE) {
+            const m = bloc(piece.l, piece.h, piece.p, 'planche');
+            // Le repère du côté tourne avec lui : x reste le long de la lisse.
+            m.position.set(
+              Math.cos(a) * piece.x + Math.sin(a) * RAYON_PALISSADE, piece.y,
+              -Math.sin(a) * piece.x + Math.cos(a) * RAYON_PALISSADE,
+            );
+            m.rotation.y = a;
+          }
+        }
+      };
+      const fenetres = (px: number, pz: number, l: number, h: number): void => {
+        for (const cote of [-1, 1]) {
+          for (const rang of [0.43, 0.75]) {
+            // Deux fenêtres distinctes par façade, enchâssées dans une pierre claire.
+            for (const decalage of [-0.23, 0.23]) {
+              poser(l * 0.2, 0.064, 0.014, 'ivoire', px + l * decalage, h * rang, pz + cote * l * 0.505);
+              poser(l * 0.135, 0.047, 0.018, vitre, px + l * decalage, h * rang + 0.003, pz + cote * l * 0.51);
+            }
+            poser(0.018, 0.058, l * 0.38, vitre, px + cote * l * 0.51, h * rang, pz);
+          }
+        }
+      };
+      poser(0.83, 0.025, 0.83, 'pierre', 0, 0.015, 0);
+      if (desaffecte) {
+        palissade();
+      } else {
+        for (const cote of [-1, 1]) {
+          poser(0.9, 0.018, 0.035, teinte, 0, 0.028, cote * 0.44);
+          poser(0.035, 0.018, 0.9, teinte, cote * 0.44, 0.028, 0);
+        }
+      }
+
+      if (terrain === 'ville') {
+        // Deux maisons et leur passage plutôt qu'une collection de tours cubes.
+        const places: [number, number, number][] = [[-0.2, -0.12, 0.31], [0.19, 0.12, 0.27]];
+        places.forEach(([px, pz, l], i) => {
+          const h = 0.32 + (hauteurs[i] ?? 0) * 0.16;
+          poser(l, h, l, mur, px, h / 2 + 0.02, pz);
+          poser(l * 1.05, 0.045, l * 1.05, 'pierre', px, 0.045, pz);
+          fenetres(px, pz, l, h);
+          // Désaffectée, la seconde maison a perdu sa couverture.
+          if (desaffecte && i === 1) charpente(px, h + 0.035, pz, l, l);
+          else toiture(px, h + 0.035, pz, l, l);
+          // Porche, auvent de nation et cheminée coiffée.
+          poser(0.065, 0.11, 0.014, 'metal', px, 0.078, pz + l / 2 + 0.008);
+          if (desaffecte) condamner(px, 0.085, pz + l / 2 + 0.02);
+          poser(0.15, 0.028, 0.09, teinte, px, 0.16, pz + l / 2 + 0.035);
+          poser(0.12, 0.025, 0.07, 'ivoire', px, 0.035, pz + l / 2 + 0.035);
+          poser(0.045, 0.13, 0.05, 'pierre', px + l * 0.23, h + 0.1, pz - l * 0.15);
+          poser(0.06, 0.018, 0.064, toit, px + l * 0.23, h + 0.17, pz - l * 0.15);
+        });
+        // Jardin / banquette laisse libre le centre occupable.
+        poser(0.17, 0.055, 0.075, toit, -0.18, 0.05, 0.3);
+        poser(0.16, 0.018, 0.03, teinte, -0.18, 0.09, 0.33);
+      } else if (terrain === 'qg') {
+        poser(0.68, 0.075, 0.66, 'pierre', 0, 0.055, 0);
+        poser(0.59, 0.27, 0.55, 'beton', 0, 0.22, 0);
+        poser(0.64, 0.045, 0.6, teinte, 0, 0.37, 0);
+        poser(0.36, 0.23, 0.34, 'beton', 0, 0.49, -0.045);
+        poser(0.39, 0.095, 0.36, 'fenetres', 0, 0.52, -0.045);
+        poser(0.44, 0.04, 0.4, 'ivoire', 0, 0.63, -0.045);
+        for (const cote of [-1, 1]) {
+          poser(0.055, 0.28, 0.055, 'ivoire', cote * 0.24, 0.22, 0.29);
+          poser(0.12, 0.11, 0.016, 'fenetres', cote * 0.18, 0.22, 0.282);
+          poser(0.085, 0.025, 0.16, 'pierre', cote * 0.105, 0.032, 0.37);
+        }
+        poser(0.105, 0.18, 0.02, 'metal', 0, 0.17, 0.282);
+        poser(0.2, 0.032, 0.12, teinte, 0, 0.315, 0.3);
+        // Le QG n'a plus son pavillon fusionné sur le toit : tous les
+        // bâtiments portent un mât vivant, le sien est simplement plus haut.
+      } else if (terrain === 'usine') {
+        poser(0.66, 0.28, 0.52, mur, 0, 0.17, 0.025);
+        // Toit industriel à deux sheds, bandeaux de lumière et poutres.
+        for (const cote of [-1, 1]) {
+          // Désaffectée, l'usine a perdu un shed : il n'en reste que les pannes.
+          if (desaffecte && cote === 1) {
+            for (const k of [-0.12, 0, 0.12]) poser(0.02, 0.02, 0.56, 'planche', cote * 0.16 + k, 0.35 - k * 0.23, 0.025);
+          } else {
+            poser(0.36, 0.035, 0.58, toit, cote * 0.16, 0.35, 0.025, -0.23);
+          }
+          poser(0.026, 0.065, 0.48, vitre, cote * 0.16 + 0.165, 0.34, 0.025);
+          poser(0.045, 0.29, 0.03, teinte, cote * 0.28, 0.17, 0.3);
+        }
+        if (desaffecte) condamner(0, 0.15, 0.315);
+        poser(0.39, 0.21, 0.022, 'metal', 0, 0.15, 0.3);
+        for (let i = 0; i < 4; i += 1) poser(0.36, 0.01, 0.025, 'pierre', 0, 0.065 + i * 0.048, 0.316);
+        poser(0.5, 0.045, 0.075, teinte, 0, 0.285, 0.31);
+        for (const px of [-0.22, 0.22]) poser(0.04, 0.08, 0.04, 'ivoire', px, 0.055, 0.37);
+        cylindre(0.055, 0.52, 'pierre', -0.26, 0.37, -0.22);
+        cylindre(0.064, 0.055, teinte, -0.26, 0.54, -0.22);
+        cylindre(0.064, 0.024, 'metal', -0.26, 0.643, -0.22);
+        cylindre(0.066, 0.17, 'metal', 0.3, 0.12, -0.23);
+      } else if (terrain === 'radar') {
+        // Une station : un local technique bas à gauche, une tour en treillis
+        // à droite portant la parabole, et le centre libre pour l'unité.
+        poser(0.32, 0.2, 0.26, mur, -0.22, 0.12, -0.22);
+        poser(0.28, 0.05, 0.016, vitre, -0.22, 0.15, -0.085);
+        poser(0.32, 0.03, 0.27, toit, -0.22, 0.235, -0.225);
+        poser(0.28, 0.02, 0.05, teinte, -0.22, 0.26, -0.11);
+        poser(0.065, 0.11, 0.014, 'metal', -0.22, 0.075, -0.082);
+        if (desaffecte) condamner(-0.22, 0.085, -0.07);
+        // La petite antenne du local, coiffée aux couleurs du camp.
+        cylindre(0.006, 0.22, 'metal', -0.3, 0.36, -0.28);
+        cylindre(0.016, 0.02, teinte, -0.3, 0.475, -0.28);
+        // La tour : quatre montants, trois ceintures, une plate-forme.
+        const tx = 0.24;
+        const tz = -0.22;
+        for (const dx of [-0.07, 0.07]) {
+          for (const dz of [-0.07, 0.07]) cylindre(0.011, 0.44, 'metal', tx + dx, 0.24, tz + dz);
+        }
+        for (const niveau of [0.14, 0.28, 0.42]) {
+          poser(0.16, 0.012, 0.012, 'metal', tx, niveau, tz - 0.07);
+          poser(0.16, 0.012, 0.012, 'metal', tx, niveau, tz + 0.07);
+          poser(0.012, 0.012, 0.16, 'metal', tx - 0.07, niveau, tz);
+          poser(0.012, 0.012, 0.16, 'metal', tx + 0.07, niveau, tz);
+        }
+        poser(0.22, 0.02, 0.22, 'metal', tx, 0.465, tz);
+        poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz - 0.115);
+        poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz + 0.115);
+        poser(0.045, 0.06, 0.045, 'ivoire', tx, 0.5, tz);
+      } else if (terrain === 'port') {
+        // Un port : un quai en L au nord et à l'ouest, un **bassin** en
+        // contrebas au sud-est, un hangar à quai, une grue et le feu du môle.
+        // Le centre de la case reste libre, comme partout ailleurs : c'est là
+        // que se pose la pièce qui tient le port.
+        poser(0.86, 0.05, 0.58, mur, 0, 0.045, -0.14);
+        // Le retour de quai qui garde au sec l'angle avant gauche : c'est là
+        // que tous les bâtiments plantent leur mât de pavillon.
+        poser(0.22, 0.05, 0.32, mur, -0.32, 0.045, 0.27);
+        poser(0.64, 0.022, 0.3, 'bassin', 0.11, 0.026, 0.28);
+        // La margelle borde l'eau aux couleurs du camp : c'est elle qui dit à
+        // qui est le port quand la grue est loin du regard.
+        poser(0.64, 0.02, 0.03, teinte, 0.11, 0.08, 0.14);
+        poser(0.03, 0.02, 0.3, teinte, -0.205, 0.08, 0.28);
+        // Les bittes d'amarrage, sur le bord du quai.
+        for (const px of [-0.08, 0.14, 0.36]) {
+          cylindre(0.021, 0.055, 'metal', px, 0.098, 0.08);
+          cylindre(0.028, 0.014, 'ivoire', px, 0.132, 0.08);
+        }
+        // Le hangar à quai, porte tournée vers l'eau.
+        poser(0.34, 0.22, 0.24, mur, -0.24, 0.18, -0.26);
+        poser(0.28, 0.05, 0.016, vitre, -0.24, 0.225, -0.146);
+        poser(0.075, 0.13, 0.014, 'metal', -0.24, 0.135, -0.146);
+        if (desaffecte) {
+          condamner(-0.24, 0.14, -0.132);
+          charpente(-0.24, 0.325, -0.26, 0.34, 0.24);
+        } else {
+          toiture(-0.24, 0.325, -0.26, 0.34, 0.24);
+        }
+        // La grue de quai : un fût sur le quai, une flèche au-dessus du bassin.
+        cylindre(0.028, 0.4, 'metal', 0.3, 0.24, -0.06);
+        if (desaffecte) {
+          // Désaffectée, la grue est démontée : sa flèche est descendue et
+          // deux étais la remplacent. Elle n'est pas tombée, elle attend.
+          for (const rz of [0.5, -0.5]) poser(0.24, 0.024, 0.024, 'planche', 0.3, 0.34, -0.06, rz);
+        } else {
+          cylindre(0.05, 0.04, teinte, 0.3, 0.46, -0.06);
+          poser(0.05, 0.035, 0.44, 'metal', 0.3, 0.485, 0.07);
+          poser(0.07, 0.05, 0.14, teinte, 0.3, 0.485, -0.19);
+          cylindre(0.006, 0.16, 'metal', 0.3, 0.385, 0.25);
+          poser(0.07, 0.05, 0.06, teinte, 0.3, 0.28, 0.25);
+        }
+        // Le môle et son feu : la seule chose d'un port qui se voie de nuit.
+        poser(0.26, 0.045, 0.09, 'pierre', 0.29, 0.048, 0.385);
+        cylindre(0.024, 0.11, 'ivoire', 0.36, 0.125, 0.385);
+        cylindre(0.028, 0.04, vitre, 0.36, 0.2, 0.385);
+        cylindre(0.032, 0.014, teinte, 0.36, 0.227, 0.385);
+      } else {
+        poser(0.21, 0.39, 0.21, mur, -0.26, 0.22, -0.21);
+        poser(0.29, 0.1, 0.28, vitre, -0.26, 0.43, -0.21);
+        // Désaffectée, la tour a perdu sa coiffe et son antenne.
+        if (desaffecte) {
+          for (const k of [-0.1, 0.1]) poser(0.02, 0.02, 0.3, 'planche', -0.26 + k, 0.505, -0.21);
+        } else {
+          poser(0.33, 0.035, 0.32, teinte, -0.26, 0.505, -0.21);
+          cylindre(0.008, 0.18, 'metal', -0.26, 0.6, -0.21);
+          poser(0.14, 0.025, 0.025, 'ivoire', -0.26, 0.65, -0.21);
+        }
+        poser(0.5, 0.17, 0.25, mur, 0.09, 0.11, 0.17);
+        poser(0.45, 0.075, 0.02, vitre, 0.09, 0.135, 0.302);
+        if (desaffecte) condamner(0.09, 0.1, 0.31);
+        poser(0.56, 0.035, 0.31, teinte, 0.09, 0.215, 0.17);
+        poser(0.53, 0.013, 0.14, 'metal', 0.12, 0.037, -0.19);
+        for (let i = 0; i < 4; i += 1) poser(0.065, 0.004, 0.015, 'ivoire', -0.07 + i * 0.12, 0.046, -0.19);
+      }
+    return pieces;
+  }
+
+  /**
+   * La parabole d'une station : elle n'est pas fondue avec le reste — c'est
+   * elle qui balaie —, elle se rebâtit donc par case, avec ses matières.
+   */
+  function construirePivot(x: number, y: number, desaffecte: boolean, proprio: CampId | null): THREE.Group {
+    // Le pied de la tour en treillis, que `construirePieces` dresse au même endroit.
+    const tx = 0.24;
+    const tz = -0.22;
+    // La parabole, sur son pivot : elle n'est pas fondue avec le reste,
+    // c'est elle qui balaie.
+    const pivot = new THREE.Group();
+    pivot.name = 'parabole';
+    pivot.position.set(tx, 0.56, tz);
+    pivot.rotation.y = alea(x, y, 400) * Math.PI * 2;
+    const calotte = new THREE.Mesh(
+      primitive('calotte', () => new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 3)),
+      matParabole,
+    );
+    calotte.scale.setScalar(0.17);
+    // Le creux regarde l'horizon, un peu vers le ciel.
+    calotte.rotation.x = Math.PI / 2 - 0.35;
+    calotte.position.set(0, 0.04, -0.06);
+    const bras = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
+    bras.scale.set(0.008, 0.16, 0.008);
+    bras.rotation.x = -0.4;
+    bras.position.set(0, 0.06, 0.05);
+    const cornet = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)),
+      desaffecte ? matPierre : matCamp(proprio));
+    cornet.scale.set(0.03, 0.03, 0.03);
+    cornet.position.set(0, 0.13, 0.11);
+    for (const m of [calotte, bras, cornet]) {
+      m.castShadow = true;
+      m.userData['opaque'] = m.material;
+      pivot.add(m);
+    }
+    if (desaffecte) {
+      // Désaffectée, la parabole a basculé et pend de travers : elle
+      // n'est pas tombée du haut de la tour, elle attend qu'on la règle.
+      pivot.rotation.x = 0.85;
+      pivot.rotation.z = 0.3;
+    }
+    return pivot;
+  }
+
+  /**
+   * Fond les pièces d'une case, un lot par rôle. Le résultat ne dépend que de
+   * la silhouette : c'est lui qu'on garde d'un montage à l'autre.
+   */
+  function fondreCase(pieces: readonly THREE.Mesh[]): FormesCase {
+    const lots = new Map<RoleBatiment, THREE.BufferGeometry[]>();
+    for (const piece of pieces) {
+      piece.updateMatrix();
+      const geo = piece.geometry.clone().applyMatrix4(piece.matrix);
+      const role = piece.userData['role'] as RoleBatiment;
       // Un pan de toit prend sa couverture à l'échelle du monde, le motif
       // descendant la pente, quelle que soit la taille du pan.
-      if (enfant.material === matToit || enfant.material === matToitTerni) cartographierToit(geo);
-      const lot = lots.get(enfant.material) ?? [];
+      if (role === 'toitClair' || role === 'toitTerni') cartographierToit(geo);
+      const lot = lots.get(role) ?? [];
       lot.push(geo);
-      lots.set(enfant.material, lot);
+      lots.set(role, lot);
     }
-    // Ce qui n'est pas une maille — la parabole d'une station, qui doit
-    // pouvoir tourner seule — survit à la fusion tel quel.
-    const gardes = caseDecor.children.filter((c) => !(c instanceof THREE.Mesh));
-    caseDecor.clear();
-    for (const garde of gardes) caseDecor.add(garde);
-    for (const [mat, lot] of lots) {
+    const fondues = new Map<RoleBatiment, THREE.BufferGeometry>();
+    for (const [role, lot] of lots) {
       const geo = mergeGeometries(lot)!;
       lot.forEach((g2) => g2.dispose());
-      geosBatiment.add(geo);
+      fondues.set(role, geo);
+    }
+    return fondues;
+  }
+
+  /**
+   * Les fenêtres, cheminées et encadrements d'une case sont fusionnés par rôle.
+   * Leur nombre ne multiplie donc pas les draw calls sur mobile — et la fusion,
+   * qui est le poste le plus cher du décor, ne se paie qu'une fois par
+   * silhouette et par page.
+   */
+  function formesDeCase(
+    terrain: CleTerrain, desaffecte: boolean, hauteurs: readonly number[],
+  ): FormesCase {
+    const cle = `${terrain}:${desaffecte ? 1 : 0}${hauteurs.map((v) => `:${v}`).join('')}`;
+    const memo = casesFondues.get(cle);
+    if (memo !== undefined) {
+      // Relire remet en queue : c'est ce qui fait sortir la plus vieille.
+      casesFondues.delete(cle);
+      casesFondues.set(cle, memo);
+      return memo;
+    }
+    const fondues = fondreCase(construirePieces(terrain, desaffecte, hauteurs));
+    casesFondues.set(cle, fondues);
+    if (casesFondues.size > MAX_CASES_FONDUES) {
+      const vieille = casesFondues.keys().next().value;
+      if (vieille !== undefined) casesFondues.delete(vieille);
+    }
+    return fondues;
+  }
+
+  /** Pose les lots fondus d'une case, chacun dans la matière de son rôle. */
+  function poserCase(groupeCase: THREE.Group, formesCase: FormesCase, proprio: CampId | null): void {
+    for (const [role, geo] of formesCase) {
+      const mat = matiereDe(role, proprio);
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.name = mat === matFenetres ? 'vitrages' : mat === matToit || mat === matToitTerni ? 'toiture' : 'architecture';
-      mesh.castShadow = mat !== matFenetres;
+      mesh.name = role === 'fenetres' ? 'vitrages'
+        : role === 'toitClair' || role === 'toitTerni' ? 'toiture' : 'architecture';
+      mesh.castShadow = role !== 'fenetres';
       mesh.receiveShadow = true;
       // L'occupation échange le matériau contre son jumeau translucide ; il faut
       // pouvoir retrouver l'original quand l'unité repart.
       mesh.userData['opaque'] = mat;
-      caseDecor.add(mesh);
+      groupeCase.add(mesh);
     }
   }
 
-  function construireBatiments(e: EtatPartie): void {
-    batiments.clear();
-    for (const geo of geosBatiment) geo.dispose();
-    geosBatiment.clear();
-    paraboles.length = 0;
+  /** Bâtit une case, silhouette mémorisée et matières du moment. */
+  function batirCase(e: EtatPartie, x: number, y: number): void {
+    const terrain = grille.terrainDe(x, y);
+    const proprio = e.proprietaires[cleCase({ x, y })] ?? null;
+    const desaffecte = e.desaffectes.includes(cleCase({ x, y }));
+    const cx = x * CASE + CASE / 2;
+    const cz = y * CASE + CASE / 2;
+    const groupeCase = new THREE.Group();
+    groupeCase.position.set(cx, hauteurEn(cx, cz), cz);
+    groupeCase.userData['case'] = cleCase({ x, y });
+    groupeCase.userData['type'] = terrain;
+    groupeCase.userData['desaffecte'] = desaffecte;
+    // Les deux hauteurs de maison d'une ville sont tout ce qu'une silhouette
+    // doit à sa case : le reste ne dépend que du terrain et de l'état de service.
+    const hauteurs = terrain === 'ville' ? [alea(x, y, 300), alea(x, y, 301)] : [];
+    if (terrain === 'radar') {
+      const pivot = construirePivot(x, y, desaffecte, proprio);
+      groupeCase.add(pivot);
+      paraboles.push({ pivot, active: proprio !== null && !desaffecte });
+    }
+    poserCase(groupeCase, formesDeCase(terrain, desaffecte, hauteurs), proprio);
+    batiments.add(groupeCase);
+  }
+
+  /** Les cases bâties de la grille, dans l'ordre de lecture. */
+  function casesABatir(): Case[] {
+    const sortie: Case[] = [];
     for (let y = 0; y < grille.hauteur; y += 1) {
       for (let x = 0; x < grille.largeur; x += 1) {
-        const terrain = grille.terrainDe(x, y);
-        if (!TERRAINS_BATIS.includes(terrain)) continue;
-        const proprio = e.proprietaires[cleCase({ x, y })] ?? null;
-        const desaffecte = e.desaffectes.includes(cleCase({ x, y }));
-        const cx = x * CASE + CASE / 2;
-        const cz = y * CASE + CASE / 2;
-        const groupeCase = new THREE.Group();
-        groupeCase.position.set(cx, hauteurEn(cx, cz), cz);
-        groupeCase.userData['case'] = cleCase({ x, y });
-        groupeCase.userData['type'] = terrain;
-        groupeCase.userData['desaffecte'] = desaffecte;
-        // Désaffecté : pas de couleur de camp, il n'a pas de camp. La pierre
-        // reprend les accents plutôt qu'un gris de plus, qui coûterait un lot.
-        const teinte = desaffecte ? matPierre : matCamp(proprio);
-        const mur = desaffecte ? matBetonTerni : matBeton;
-        const toit = desaffecte ? matToitTerni : matToit;
-        const vitre = desaffecte ? matVitresEteintes : matFenetres;
-        const poser = (l: number, h: number, p: number, mat: THREE.Material,
-          px: number, py: number, pz: number, rz = 0): THREE.Mesh => {
-          const m = bloc(l, h, p, mat);
-          m.position.set(px, py, pz); m.rotation.z = rz; groupeCase.add(m); return m;
-        };
-        const cylindre = (rayon: number, h: number, mat: THREE.Material,
-          px: number, py: number, pz: number): THREE.Mesh => {
-          const geo = primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10));
-          const m = new THREE.Mesh(geo, mat);
-          m.scale.set(rayon, h, rayon); m.position.set(px, py, pz); groupeCase.add(m); return m;
-        };
-        const toiture = (px: number, py: number, pz: number, l: number, p: number): void => {
-          for (const cote of [-1, 1]) poser(l * 0.57, 0.032, p * 1.12, toit,
-            px + cote * l * 0.24, py + l * 0.12, pz, -cote * 0.43);
-          poser(0.032, 0.032, p * 1.15, matMetal, px, py + l * 0.24, pz);
-        };
-        // Une toiture manquante : la charpente à nu, en attente de couverture.
-        const charpente = (px: number, py: number, pz: number, l: number, p: number): void => {
-          for (const k of [-0.36, -0.12, 0.12, 0.36]) {
-            poser(0.02, 0.018, p * 1.05, matPlanche, px + k * l, py + l * 0.24 - Math.abs(k) * l * 0.5, pz);
-          }
-          poser(0.02, 0.02, p * 1.1, matPlanche, px, py + l * 0.25, pz);
-        };
-        // Les planches clouées en croix sur une porte : c'est fermé.
-        const condamner = (px: number, py: number, pz: number): void => {
-          for (const rz of [0.55, -0.55]) poser(0.19, 0.028, 0.012, matPlanche, px, py, pz, rz);
-        };
-        const palissade = (): void => {
-          for (let k = 0; k < 4; k += 1) {
-            const a = k * Math.PI / 2;
-            for (const piece of PIECES_PALISSADE) {
-              const m = bloc(piece.l, piece.h, piece.p, matPlanche);
-              // Le repère du côté tourne avec lui : x reste le long de la lisse.
-              m.position.set(
-                Math.cos(a) * piece.x + Math.sin(a) * RAYON_PALISSADE, piece.y,
-                -Math.sin(a) * piece.x + Math.cos(a) * RAYON_PALISSADE,
-              );
-              m.rotation.y = a;
-              groupeCase.add(m);
-            }
-          }
-        };
-        const fenetres = (px: number, pz: number, l: number, h: number): void => {
-          for (const cote of [-1, 1]) {
-            for (const rang of [0.43, 0.75]) {
-              // Deux fenêtres distinctes par façade, enchâssées dans une pierre claire.
-              for (const decalage of [-0.23, 0.23]) {
-                poser(l * 0.2, 0.064, 0.014, matIvoire, px + l * decalage, h * rang, pz + cote * l * 0.505);
-                poser(l * 0.135, 0.047, 0.018, vitre, px + l * decalage, h * rang + 0.003, pz + cote * l * 0.51);
-              }
-              poser(0.018, 0.058, l * 0.38, vitre, px + cote * l * 0.51, h * rang, pz);
-            }
-          }
-        };
-        poser(0.83, 0.025, 0.83, matPierre, 0, 0.015, 0);
-        if (desaffecte) {
-          palissade();
-        } else {
-          for (const cote of [-1, 1]) {
-            poser(0.9, 0.018, 0.035, teinte, 0, 0.028, cote * 0.44);
-            poser(0.035, 0.018, 0.9, teinte, cote * 0.44, 0.028, 0);
-          }
-        }
-
-        if (terrain === 'ville') {
-          // Deux maisons et leur passage plutôt qu'une collection de tours cubes.
-          const places: [number, number, number][] = [[-0.2, -0.12, 0.31], [0.19, 0.12, 0.27]];
-          places.forEach(([px, pz, l], i) => {
-            const h = 0.32 + alea(x, y, 300 + i) * 0.16;
-            poser(l, h, l, mur, px, h / 2 + 0.02, pz);
-            poser(l * 1.05, 0.045, l * 1.05, matPierre, px, 0.045, pz);
-            fenetres(px, pz, l, h);
-            // Désaffectée, la seconde maison a perdu sa couverture.
-            if (desaffecte && i === 1) charpente(px, h + 0.035, pz, l, l);
-            else toiture(px, h + 0.035, pz, l, l);
-            // Porche, auvent de nation et cheminée coiffée.
-            poser(0.065, 0.11, 0.014, matMetal, px, 0.078, pz + l / 2 + 0.008);
-            if (desaffecte) condamner(px, 0.085, pz + l / 2 + 0.02);
-            poser(0.15, 0.028, 0.09, teinte, px, 0.16, pz + l / 2 + 0.035);
-            poser(0.12, 0.025, 0.07, matIvoire, px, 0.035, pz + l / 2 + 0.035);
-            poser(0.045, 0.13, 0.05, matPierre, px + l * 0.23, h + 0.1, pz - l * 0.15);
-            poser(0.06, 0.018, 0.064, toit, px + l * 0.23, h + 0.17, pz - l * 0.15);
-          });
-          // Jardin / banquette laisse libre le centre occupable.
-          poser(0.17, 0.055, 0.075, toit, -0.18, 0.05, 0.3);
-          poser(0.16, 0.018, 0.03, teinte, -0.18, 0.09, 0.33);
-        } else if (terrain === 'qg') {
-          poser(0.68, 0.075, 0.66, matPierre, 0, 0.055, 0);
-          poser(0.59, 0.27, 0.55, matBeton, 0, 0.22, 0);
-          poser(0.64, 0.045, 0.6, teinte, 0, 0.37, 0);
-          poser(0.36, 0.23, 0.34, matBeton, 0, 0.49, -0.045);
-          poser(0.39, 0.095, 0.36, matFenetres, 0, 0.52, -0.045);
-          poser(0.44, 0.04, 0.4, matIvoire, 0, 0.63, -0.045);
-          for (const cote of [-1, 1]) {
-            poser(0.055, 0.28, 0.055, matIvoire, cote * 0.24, 0.22, 0.29);
-            poser(0.12, 0.11, 0.016, matFenetres, cote * 0.18, 0.22, 0.282);
-            poser(0.085, 0.025, 0.16, matPierre, cote * 0.105, 0.032, 0.37);
-          }
-          poser(0.105, 0.18, 0.02, matMetal, 0, 0.17, 0.282);
-          poser(0.2, 0.032, 0.12, teinte, 0, 0.315, 0.3);
-          // Le QG n'a plus son pavillon fusionné sur le toit : tous les
-          // bâtiments portent un mât vivant, le sien est simplement plus haut.
-        } else if (terrain === 'usine') {
-          poser(0.66, 0.28, 0.52, mur, 0, 0.17, 0.025);
-          // Toit industriel à deux sheds, bandeaux de lumière et poutres.
-          for (const cote of [-1, 1]) {
-            // Désaffectée, l'usine a perdu un shed : il n'en reste que les pannes.
-            if (desaffecte && cote === 1) {
-              for (const k of [-0.12, 0, 0.12]) poser(0.02, 0.02, 0.56, matPlanche, cote * 0.16 + k, 0.35 - k * 0.23, 0.025);
-            } else {
-              poser(0.36, 0.035, 0.58, toit, cote * 0.16, 0.35, 0.025, -0.23);
-            }
-            poser(0.026, 0.065, 0.48, vitre, cote * 0.16 + 0.165, 0.34, 0.025);
-            poser(0.045, 0.29, 0.03, teinte, cote * 0.28, 0.17, 0.3);
-          }
-          if (desaffecte) condamner(0, 0.15, 0.315);
-          poser(0.39, 0.21, 0.022, matMetal, 0, 0.15, 0.3);
-          for (let i = 0; i < 4; i += 1) poser(0.36, 0.01, 0.025, matPierre, 0, 0.065 + i * 0.048, 0.316);
-          poser(0.5, 0.045, 0.075, teinte, 0, 0.285, 0.31);
-          for (const px of [-0.22, 0.22]) poser(0.04, 0.08, 0.04, matIvoire, px, 0.055, 0.37);
-          cylindre(0.055, 0.52, matPierre, -0.26, 0.37, -0.22);
-          cylindre(0.064, 0.055, teinte, -0.26, 0.54, -0.22);
-          cylindre(0.064, 0.024, matMetal, -0.26, 0.643, -0.22);
-          cylindre(0.066, 0.17, matMetal, 0.3, 0.12, -0.23);
-        } else if (terrain === 'radar') {
-          // Une station : un local technique bas à gauche, une tour en treillis
-          // à droite portant la parabole, et le centre libre pour l'unité.
-          poser(0.32, 0.2, 0.26, mur, -0.22, 0.12, -0.22);
-          poser(0.28, 0.05, 0.016, vitre, -0.22, 0.15, -0.085);
-          poser(0.32, 0.03, 0.27, toit, -0.22, 0.235, -0.225);
-          poser(0.28, 0.02, 0.05, teinte, -0.22, 0.26, -0.11);
-          poser(0.065, 0.11, 0.014, matMetal, -0.22, 0.075, -0.082);
-          if (desaffecte) condamner(-0.22, 0.085, -0.07);
-          // La petite antenne du local, coiffée aux couleurs du camp.
-          cylindre(0.006, 0.22, matMetal, -0.3, 0.36, -0.28);
-          cylindre(0.016, 0.02, teinte, -0.3, 0.475, -0.28);
-          // La tour : quatre montants, trois ceintures, une plate-forme.
-          const tx = 0.24;
-          const tz = -0.22;
-          for (const dx of [-0.07, 0.07]) {
-            for (const dz of [-0.07, 0.07]) cylindre(0.011, 0.44, matMetal, tx + dx, 0.24, tz + dz);
-          }
-          for (const niveau of [0.14, 0.28, 0.42]) {
-            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz - 0.07);
-            poser(0.16, 0.012, 0.012, matMetal, tx, niveau, tz + 0.07);
-            poser(0.012, 0.012, 0.16, matMetal, tx - 0.07, niveau, tz);
-            poser(0.012, 0.012, 0.16, matMetal, tx + 0.07, niveau, tz);
-          }
-          poser(0.22, 0.02, 0.22, matMetal, tx, 0.465, tz);
-          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz - 0.115);
-          poser(0.24, 0.014, 0.014, teinte, tx, 0.5, tz + 0.115);
-          poser(0.045, 0.06, 0.045, matIvoire, tx, 0.5, tz);
-          // La parabole, sur son pivot : elle n'est pas fondue avec le reste,
-          // c'est elle qui balaie.
-          const pivot = new THREE.Group();
-          pivot.name = 'parabole';
-          pivot.position.set(tx, 0.56, tz);
-          pivot.rotation.y = alea(x, y, 400) * Math.PI * 2;
-          const calotte = new THREE.Mesh(
-            primitive('calotte', () => new THREE.SphereGeometry(1, 12, 6, 0, Math.PI * 2, 0, Math.PI / 3)),
-            matParabole,
-          );
-          calotte.scale.setScalar(0.17);
-          // Le creux regarde l'horizon, un peu vers le ciel.
-          calotte.rotation.x = Math.PI / 2 - 0.35;
-          calotte.position.set(0, 0.04, -0.06);
-          const bras = new THREE.Mesh(primitive('cylindre', () => new THREE.CylinderGeometry(1, 1, 1, 10)), matMetal);
-          bras.scale.set(0.008, 0.16, 0.008);
-          bras.rotation.x = -0.4;
-          bras.position.set(0, 0.06, 0.05);
-          const cornet = new THREE.Mesh(primitive('cube', () => new THREE.BoxGeometry(1, 1, 1)), teinte);
-          cornet.scale.set(0.03, 0.03, 0.03);
-          cornet.position.set(0, 0.13, 0.11);
-          for (const m of [calotte, bras, cornet]) {
-            m.castShadow = true;
-            m.userData['opaque'] = m.material;
-            pivot.add(m);
-          }
-          if (desaffecte) {
-            // Désaffectée, la parabole a basculé et pend de travers : elle
-            // n'est pas tombée du haut de la tour, elle attend qu'on la règle.
-            pivot.rotation.x = 0.85;
-            pivot.rotation.z = 0.3;
-          }
-          groupeCase.add(pivot);
-          paraboles.push({ pivot, active: proprio !== null && !desaffecte });
-        } else if (terrain === 'port') {
-          // Un port : un quai en L au nord et à l'ouest, un **bassin** en
-          // contrebas au sud-est, un hangar à quai, une grue et le feu du môle.
-          // Le centre de la case reste libre, comme partout ailleurs : c'est là
-          // que se pose la pièce qui tient le port.
-          poser(0.86, 0.05, 0.58, mur, 0, 0.045, -0.14);
-          // Le retour de quai qui garde au sec l'angle avant gauche : c'est là
-          // que tous les bâtiments plantent leur mât de pavillon.
-          poser(0.22, 0.05, 0.32, mur, -0.32, 0.045, 0.27);
-          poser(0.64, 0.022, 0.3, matBassin, 0.11, 0.026, 0.28);
-          // La margelle borde l'eau aux couleurs du camp : c'est elle qui dit à
-          // qui est le port quand la grue est loin du regard.
-          poser(0.64, 0.02, 0.03, teinte, 0.11, 0.08, 0.14);
-          poser(0.03, 0.02, 0.3, teinte, -0.205, 0.08, 0.28);
-          // Les bittes d'amarrage, sur le bord du quai.
-          for (const px of [-0.08, 0.14, 0.36]) {
-            cylindre(0.021, 0.055, matMetal, px, 0.098, 0.08);
-            cylindre(0.028, 0.014, matIvoire, px, 0.132, 0.08);
-          }
-          // Le hangar à quai, porte tournée vers l'eau.
-          poser(0.34, 0.22, 0.24, mur, -0.24, 0.18, -0.26);
-          poser(0.28, 0.05, 0.016, vitre, -0.24, 0.225, -0.146);
-          poser(0.075, 0.13, 0.014, matMetal, -0.24, 0.135, -0.146);
-          if (desaffecte) {
-            condamner(-0.24, 0.14, -0.132);
-            charpente(-0.24, 0.325, -0.26, 0.34, 0.24);
-          } else {
-            toiture(-0.24, 0.325, -0.26, 0.34, 0.24);
-          }
-          // La grue de quai : un fût sur le quai, une flèche au-dessus du bassin.
-          cylindre(0.028, 0.4, matMetal, 0.3, 0.24, -0.06);
-          if (desaffecte) {
-            // Désaffectée, la grue est démontée : sa flèche est descendue et
-            // deux étais la remplacent. Elle n'est pas tombée, elle attend.
-            for (const rz of [0.5, -0.5]) poser(0.24, 0.024, 0.024, matPlanche, 0.3, 0.34, -0.06, rz);
-          } else {
-            cylindre(0.05, 0.04, teinte, 0.3, 0.46, -0.06);
-            poser(0.05, 0.035, 0.44, matMetal, 0.3, 0.485, 0.07);
-            poser(0.07, 0.05, 0.14, teinte, 0.3, 0.485, -0.19);
-            cylindre(0.006, 0.16, matMetal, 0.3, 0.385, 0.25);
-            poser(0.07, 0.05, 0.06, teinte, 0.3, 0.28, 0.25);
-          }
-          // Le môle et son feu : la seule chose d'un port qui se voie de nuit.
-          poser(0.26, 0.045, 0.09, matPierre, 0.29, 0.048, 0.385);
-          cylindre(0.024, 0.11, matIvoire, 0.36, 0.125, 0.385);
-          cylindre(0.028, 0.04, vitre, 0.36, 0.2, 0.385);
-          cylindre(0.032, 0.014, teinte, 0.36, 0.227, 0.385);
-        } else {
-          poser(0.21, 0.39, 0.21, mur, -0.26, 0.22, -0.21);
-          poser(0.29, 0.1, 0.28, vitre, -0.26, 0.43, -0.21);
-          // Désaffectée, la tour a perdu sa coiffe et son antenne.
-          if (desaffecte) {
-            for (const k of [-0.1, 0.1]) poser(0.02, 0.02, 0.3, matPlanche, -0.26 + k, 0.505, -0.21);
-          } else {
-            poser(0.33, 0.035, 0.32, teinte, -0.26, 0.505, -0.21);
-            cylindre(0.008, 0.18, matMetal, -0.26, 0.6, -0.21);
-            poser(0.14, 0.025, 0.025, matIvoire, -0.26, 0.65, -0.21);
-          }
-          poser(0.5, 0.17, 0.25, mur, 0.09, 0.11, 0.17);
-          poser(0.45, 0.075, 0.02, vitre, 0.09, 0.135, 0.302);
-          if (desaffecte) condamner(0.09, 0.1, 0.31);
-          poser(0.56, 0.035, 0.31, teinte, 0.09, 0.215, 0.17);
-          poser(0.53, 0.013, 0.14, matMetal, 0.12, 0.037, -0.19);
-          for (let i = 0; i < 4; i += 1) poser(0.065, 0.004, 0.015, matIvoire, -0.07 + i * 0.12, 0.046, -0.19);
-        }
-        fusionnerCase(groupeCase);
-        batiments.add(groupeCase);
+        if (TERRAINS_BATIS.includes(grille.terrainDe(x, y))) sortie.push({ x, y });
       }
     }
+    return sortie;
+  }
+
+  /**
+   * Les bâtiments d'un état, en tranches de quelques cases. C'était le plus
+   * gros bloc du chargement — douze bâtiments d'un seul tenant sur la carte de
+   * démonstration —, et c'est aussi ce que **chaque capture** repayait, puisque
+   * `construireBatiments` rebâtit toute la carte dès qu'un propriétaire change.
+   */
+  function tranchesBatiments(e: EtatPartie): Array<() => void> {
+    const cases = casesABatir();
+    const tranches: Array<() => void> = [(): void => {
+      batiments.clear();
+      paraboles.length = 0;
+    }];
+    for (let d = 0; d < cases.length; d += CASES_PAR_TRANCHE) {
+      const paquet = cases.slice(d, d + CASES_PAR_TRANCHE);
+      tranches.push((): void => {
+        for (const c of paquet) batirCase(e, c.x, c.y);
+      });
+    }
+    return tranches;
+  }
+
+  function construireBatiments(e: EtatPartie): void {
+    for (const tranche of tranchesBatiments(e)) tranche();
   }
 
   // --- Fantômes
@@ -1048,7 +1323,6 @@ export function creerDecor(
   // de bâtiments : trois appels de dessin, et la couleur par instance.
   const pavillons = new THREE.Group();
   pavillons.name = 'pavillons';
-  groupe.add(pavillons);
   // Le tableau est stable : les prises rendues par `drapeau()` le cherchent par
   // clé, et une grille changée le vide et le remplit sur place.
   const places: Pavillon[] = [];
@@ -1077,11 +1351,12 @@ export function creerDecor(
       }
     }
   }
-  semerPavillons();
   // Le mât part de son pied : sa hauteur est une échelle, pas une géométrie.
-  const geoMat = new THREE.CylinderGeometry(0.011, 0.015, 1, 6).translate(0, 0.5, 0);
-  const geoPommeau = new THREE.SphereGeometry(0.022, 8, 6);
-  // Le drapeau tient au mât par son bord gauche : c'est l'axe de son onde.
+  const geoMat = formeMemorisee('mat', () => new THREE.CylinderGeometry(0.011, 0.015, 1, 6).translate(0, 0.5, 0));
+  const geoPommeau = formeMemorisee('pommeau', () => new THREE.SphereGeometry(0.022, 8, 6));
+  // Le drapeau tient au mât par son bord gauche : c'est l'axe de son onde. Sa
+  // toile n'est **pas** mémorisée : `flotter()` en réécrit les sommets à chaque
+  // battement, et deux décors qui la partageraient se disputeraient le tampon.
   const geoDrapeau = new THREE.PlaneGeometry(LARG_DRAPEAU, HAUT_DRAPEAU, 6, 2)
     .translate(LARG_DRAPEAU / 2, 0, 0);
   const drapeauPlat = Float32Array.from(geoDrapeau.getAttribute('position').array);
@@ -1114,7 +1389,6 @@ export function creerDecor(
       pavillons.add(lot);
     }
   }
-  batirPavillons();
   const couleurDrapeau = new THREE.Color();
 
   /** Le pied d'un mât : le sol est relu à chaque pose, une marée le déplace. */
@@ -1184,7 +1458,16 @@ export function creerDecor(
   const MS_TOILE = 1000 / 30;
   let attenteToile = 0;
 
-  /** Signature des bâtiments : propriétaires et désaffectés. */
+  /**
+   * Signature des bâtiments : propriétaires et désaffectés. La remise en
+   * service change l'aspect sans changer de propriétaire dans le même
+   * événement : sans la liste des désaffectés dans la clé, la palissade
+   * resterait à l'écran.
+   */
+  function signatureDe(e: EtatPartie): string {
+    return JSON.stringify([e.proprietaires, e.desaffectes]);
+  }
+
   let signature = '';
   /**
    * Signature de l'aspect : qui occupe une case bâtie, avec ses points de
@@ -1200,8 +1483,6 @@ export function creerDecor(
   let catSeuils: Catalogue | null = null;
   let oscillation = 0.12;
   let souffle = 0;
-  // Une première onde figée : même sans mouvement, un drapeau n'est pas une plaque.
-  flotter();
 
   // --- Vitrages qui se rallument
   // La lueur imposée par une remise en service, par case, et le matériau qui
@@ -1234,10 +1515,7 @@ export function creerDecor(
   function majProprietaires(
     e: EtatPartie, visibles: ReadonlySet<string> | null = null, cat: Catalogue | null = null,
   ): void {
-    // La remise en service change l'aspect sans changer de propriétaire dans
-    // le même événement : sans la liste des désaffectés dans la clé, la
-    // palissade resterait à l'écran.
-    const cle = JSON.stringify([e.proprietaires, e.desaffectes]);
+    const cle = signatureDe(e);
     const rebatir = cle !== signature;
     if (rebatir) {
       signature = cle;
@@ -1293,10 +1571,7 @@ export function creerDecor(
     poserPavillons();
   }
 
-  majProprietaires(etat);
-  poserArbres(0);
-
-  return {
+  const decor: Decor = {
     groupe,
     majProprietaires,
 
@@ -1436,8 +1711,15 @@ export function creerDecor(
     },
 
     dispose(): void {
-      geoMat.dispose();
-      geoPommeau.dispose();
+      // Les **formes** ne sont pas libérées : troncs, couronnes, pierres, mâts,
+      // pommeaux, primitives et cases fondues sont partagés avec les autres
+      // décors de la page, et ce décor n'en est pas propriétaire. Les libérer
+      // ici ferait payer chaque montage — revenir à l'accueil, changer de carte,
+      // rouvrir la vitrine — et blanchirait un décor encore à l'écran
+      // (`formeMemorisee`, `casesFondues`).
+      //
+      // La toile d'un drapeau, elle, n'appartient qu'ici : `flotter()` en
+      // réécrit les sommets, elle n'est donc jamais partagée.
       geoDrapeau.dispose();
       matDrapeau.dispose();
       for (const f of matsFantome.values()) f.dispose();
@@ -1448,12 +1730,6 @@ export function creerDecor(
       matPlanche.dispose();
       matParabole.dispose();
       matBassin.dispose();
-      geoTronc.dispose();
-      geoConifere.dispose();
-      geoFeuillu.dispose();
-      for (const geo of geosRocher) geo.dispose();
-      for (const g2 of geosBatiment) g2.dispose();
-      for (const g2 of primitives.values()) g2.dispose();
       matTronc.dispose();
       matConifere.dispose();
       matFeuillu.dispose();
@@ -1468,5 +1744,41 @@ export function creerDecor(
       for (const m of matsCamp.values()) m.dispose();
       paysage.dispose();
     },
+  };
+
+  return {
+    tranches: [
+      // Les arbres : le semis, puis le lot instancié à sa taille.
+      (): void => { arbres = semerArbres(grille, biome); batirArbres(); },
+      // Les pierres, et le paysage qui prend sa place dans l'ordre du décor.
+      (): void => {
+        rochers = semerRochers(grille);
+        batirRochers();
+        poserRochers();
+        groupe.add(paysage.groupe);
+      },
+      // Les accessoires du biome, puis la ligne de rivage.
+      ...chantierPaysage.tranches,
+      // Les mâts et leurs toiles ; les bâtiments prennent leur place juste avant.
+      (): void => {
+        groupe.add(batiments);
+        groupe.add(pavillons);
+        semerPavillons();
+        batirPavillons();
+        // Une première onde figée : même sans mouvement, un drapeau n'est pas
+        // une plaque.
+        flotter();
+        // La pose finale ne rebâtira pas ce que les tranches suivantes bâtissent.
+        signature = signatureDe(etat);
+      },
+      // Les bâtiments, par paquets de cases : le plus gros poste du décor.
+      ...tranchesBatiments(etat),
+      // La pose : l'aspect des bâtiments, les drapeaux, les arbres sur le relief.
+      (): void => {
+        majProprietaires(etat);
+        poserArbres(0);
+      },
+    ],
+    decor: (): Decor => decor,
   };
 }

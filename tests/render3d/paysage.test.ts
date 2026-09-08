@@ -152,11 +152,17 @@ test('le montage instancie un lot par genre présent, une géométrie de rivage,
   assert.equal(paysage.avancer(16, false), false, 'sans vent ni fumerolle, rien à redessiner');
   paysage.majRelief();
 
-  let liberees = 0;
-  for (const lot of lots) lot.geometry.addEventListener('dispose', () => { liberees += 1; });
-  rivage.geometry.addEventListener('dispose', () => { liberees += 1; });
+  // Les **formes** sont partagées avec les autres paysages de la page : un
+  // démontage ne les libère pas, sans quoi chaque montage retaillerait
+  // cinquante-quatre volumes et un paysage encore à l'écran se blanchirait.
+  // Le rivage, lui, est taillé sur le trait de côte : il n'appartient qu'ici.
+  let formesLiberees = 0;
+  let rivageLibere = 0;
+  for (const lot of lots) lot.geometry.addEventListener('dispose', () => { formesLiberees += 1; });
+  rivage.geometry.addEventListener('dispose', () => { rivageLibere += 1; });
   paysage.dispose();
-  assert.equal(liberees, lots.length + 1);
+  assert.equal(formesLiberees, 0, 'les formes restent : le paysage n’en est pas propriétaire');
+  assert.equal(rivageLibere, 1, 'le rivage est libéré avec son paysage');
 });
 
 test('les fumerolles fument même sans vent, et respectent la préférence de mouvement', () => {

@@ -763,6 +763,68 @@ function construireForme(forme: Forme, couleur: number): THREE.BufferGeometry {
   }
 }
 
+/**
+ * Les formes déjà taillées, partagées entre tous les paysages de la page.
+ *
+ * Une forme ne dépend que de son couple (silhouette, teinte de base) : ni de la
+ * grille, ni du biome, ni de l'ambiance — la saison et la neige se jouent sur
+ * la couleur du matériau, la nuance d'une instance sur `setColorAt`. Deux
+ * montages taillaient donc deux fois le même palmier, et c'était toute la
+ * dépense du paysage : revenir à l'accueil ou changer de carte dans l'atelier
+ * repayait cinquante-quatre fusions de volumes.
+ *
+ * Ce qui est gardé est **la géométrie elle-même**, partagée par les
+ * `InstancedMesh` de tous les paysages vivants. `Paysage.dispose()` ne la libère
+ * donc pas : ce serait tuer la forme d'un paysage encore à l'écran — la faute
+ * exacte de `CalqueUnites.dispose()`, qui vidait deux caches pourtant au niveau
+ * module (`CLAUDE.md`, 8 septembre 2026). Une entrée évincée n'est pas libérée
+ * non plus, pour la même raison : elle n'est que lâchée, et le ramasse-miettes
+ * la reprend quand plus aucune maille ne la tient.
+ */
+const formes = new Map<string, THREE.BufferGeometry>();
+
+/**
+ * Combien de formes au plus. Le catalogue en compte cinquante-quatre couples
+ * (silhouette, teinte) au grand maximum, une poignée de kilo-octets chacune :
+ * soixante-quatre les tiennent toutes, et une page qui promène le joueur de
+ * biome en biome ne garde jamais plus que cela.
+ */
+const MAX_FORMES = 64;
+
+/** La forme d'un genre, taillée une seule fois par page. */
+function formeMemorisee(forme: Forme, couleur: number): THREE.BufferGeometry {
+  const cle = `${forme}:${couleur}`;
+  const memo = formes.get(cle);
+  if (memo !== undefined) {
+    // Relire remet en queue : c'est ce qui fait sortir la plus vieille.
+    formes.delete(cle);
+    formes.set(cle, memo);
+    return memo;
+  }
+  const geo = construireForme(forme, couleur);
+  formes.set(cle, geo);
+  if (formes.size > MAX_FORMES) {
+    const vieille = formes.keys().next().value;
+    if (vieille !== undefined) formes.delete(vieille);
+  }
+  return geo;
+}
+
+/** Les formes gardées, pour la mesure et les tests. */
+export function formesPaysageMemorisees(): ReadonlySet<THREE.BufferGeometry> {
+  return new Set(formes.values());
+}
+
+/**
+ * Oublie les formes mémorisées. Rien ne l'appelle en jeu — c'est justement
+ * l'intérêt du cache —, mais un test ou un banc qui veut mesurer à froid en a
+ * besoin. Les géométries ne sont **pas** libérées : un paysage vivant peut
+ * encore en tenir une.
+ */
+export function oublierFormesPaysage(): void {
+  formes.clear();
+}
+
 // ---------------------------------------------------------------------------
 // Le montage three.js
 // ---------------------------------------------------------------------------
@@ -808,50 +870,34 @@ const PAS_RIVAGE = 5;
 /** Les trois rangées d'un segment : côté terre, sur la jonction, côté eau. */
 const RANGS_RIVAGE: readonly number[] = [-0.11, 0, 0.09];
 
+/**
+ * Un chantier de paysage : deux tranches à jouer dans l'ordre, puis le paysage.
+ * Les accessoires d'abord, la ligne de rivage ensuite — c'est le découpage qui
+ * sépare les deux seuls postes qui grandissent avec la carte.
+ */
+export interface ChantierPaysage {
+  /** Les tranches, dans l'ordre. */
+  readonly tranches: readonly (() => void)[];
+  /** Le paysage monté. À n'appeler qu'une fois la dernière tranche jouée. */
+  paysage(): Paysage;
+}
+
 /** Monte le paysage d'un biome. `hauteurEn` est une fermeture vivante : on la relit à chaque pose. */
 export function creerPaysage(
   g: GrilleTerrain, hauteurEn: (x: number, z: number) => number, biome: Biome,
 ): Paysage {
+  const chantier = ouvrirChantierPaysage(g, hauteurEn, biome);
+  for (const tranche of chantier.tranches) tranche();
+  return chantier.paysage();
+}
+
+/** Le même montage, en tranches : c'est ce que `decor.ts` joue au chargement. */
+export function ouvrirChantierPaysage(
+  g: GrilleTerrain, hauteurEn: (x: number, z: number) => number, biome: Biome,
+): ChantierPaysage {
   const groupe = new THREE.Group();
   groupe.name = 'paysage';
-
-  // --- Les accessoires
-  const semis = semerPaysage(g, biome);
-  const parGenre = new Map<GenrePaysage, Accessoire[]>();
-  for (const a of semis) {
-    const liste = parGenre.get(a.genre) ?? [];
-    liste.push(a);
-    parGenre.set(a.genre, liste);
-  }
-  // Un lot par genre **présent** : un biome sans moulin ne paie pas un moulin.
   const lots: Lot[] = [];
-  for (const [genre, instances] of parGenre) {
-    const espece = ESPECES[genre];
-    const geo = construireForme(espece.forme, espece.couleur);
-    const mat = new THREE.MeshStandardNodeMaterial({
-      vertexColors: true,
-      roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
-      metalness: espece.matiere === 'glace' ? 0.1 : 0,
-      flatShading: espece.matiere === 'mineral',
-    });
-    if (espece.matiere === 'fumee' || espece.matiere === 'glace') {
-      mat.transparent = true;
-      mat.opacity = espece.matiere === 'fumee' ? 0.42 : 0.8;
-      mat.depthWrite = false;
-    }
-    if (espece.matiere === 'feu' || espece.matiere === 'lumiere') {
-      mat.emissive = new THREE.Color(espece.couleur);
-      mat.emissiveIntensity = 0.4;
-    }
-    const mesh = new THREE.InstancedMesh(geo, mat, instances.length);
-    mesh.name = `paysage-${genre}`;
-    mesh.castShadow = !espece.sansOmbre;
-    mesh.receiveShadow = true;
-    mesh.frustumCulled = false;
-    if (espece.matiere === 'fumee') mesh.renderOrder = 4;
-    groupe.add(mesh);
-    lots.push({ genre, espece, mesh, geo, mat, instances });
-  }
 
   const mat4 = new THREE.Matrix4();
   const quat = new THREE.Quaternion();
@@ -924,103 +970,152 @@ export function creerPaysage(
     if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   }
 
+  // --- Les accessoires
+  function batirAccessoires(): void {
+    const semis = semerPaysage(g, biome);
+    const parGenre = new Map<GenrePaysage, Accessoire[]>();
+    for (const a of semis) {
+      const liste = parGenre.get(a.genre) ?? [];
+      liste.push(a);
+      parGenre.set(a.genre, liste);
+  }
+  // Un lot par genre **présent** : un biome sans moulin ne paie pas un moulin.
+  for (const [genre, instances] of parGenre) {
+    const espece = ESPECES[genre];
+    // La forme est **partagée** avec les autres paysages de la page : elle ne
+    // dépend que du couple (silhouette, teinte), jamais de la grille.
+    const geo = formeMemorisee(espece.forme, espece.couleur);
+    const mat = new THREE.MeshStandardNodeMaterial({
+      vertexColors: true,
+      roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
+      metalness: espece.matiere === 'glace' ? 0.1 : 0,
+      flatShading: espece.matiere === 'mineral',
+    });
+    if (espece.matiere === 'fumee' || espece.matiere === 'glace') {
+      mat.transparent = true;
+      mat.opacity = espece.matiere === 'fumee' ? 0.42 : 0.8;
+      mat.depthWrite = false;
+    }
+    if (espece.matiere === 'feu' || espece.matiere === 'lumiere') {
+      mat.emissive = new THREE.Color(espece.couleur);
+      mat.emissiveIntensity = 0.4;
+    }
+    const mesh = new THREE.InstancedMesh(geo, mat, instances.length);
+    mesh.name = `paysage-${genre}`;
+    mesh.castShadow = !espece.sansOmbre;
+    mesh.receiveShadow = true;
+    mesh.frustumCulled = false;
+    if (espece.matiere === 'fumee') mesh.renderOrder = 4;
+    groupe.add(mesh);
+    lots.push({ genre, espece, mesh, geo, mat, instances });
+  }
+
   for (const lot of lots) {
     poserLot(lot);
     teinterLot(lot);
   }
-
-  // --- La ligne de rivage : une seule géométrie pour tous les côtés terre/eau.
-  const segments = segmentsRivage(g);
-  const genre = genreRivage(biome);
-  const rangs = RANGS_RIVAGE.length;
-  const sommetsParSegment = (PAS_RIVAGE + 1) * rangs;
-  const positions = new Float32Array(segments.length * sommetsParSegment * 3);
-  const couleurs = new Float32Array(segments.length * sommetsParSegment * 4);
-  const normales = new Float32Array(segments.length * sommetsParSegment * 3);
-  const indices: number[] = [];
-  segments.forEach((s, n) => {
-    const tx = -s.nz;
-    const tz = s.nx;
-    for (let k = 0; k <= PAS_RIVAGE; k += 1) {
-      const t = k / PAS_RIVAGE - 0.5;
-      RANGS_RIVAGE.forEach((d, rang) => {
-        const i = n * sommetsParSegment + k * rangs + rang;
-        // Le bord ondule : une ligne droite ne ressemble ni à de l'écume ni à des galets.
-        const bruit = alea(Math.round(s.x * 8 + t * 8), Math.round(s.z * 8), 500 + rang);
-        const dd = d + (bruit - 0.5) * 0.05;
-        positions[i * 3] = s.x + tx * t * CASE + s.nx * dd;
-        positions[i * 3 + 2] = s.z + tz * t * CASE + s.nz * dd;
-        normales[i * 3 + 1] = 1;
-        const grain = alea(Math.round(s.x * 16 + t * 16), Math.round(s.z * 16 + rang * 3), 510);
-        if (genre === 'ecume') {
-          const clair = 0.86 + grain * 0.14;
-          couleurs[i * 4] = clair;
-          couleurs[i * 4 + 1] = clair;
-          couleurs[i * 4 + 2] = clair;
-          // L'écume se fond aux deux bords : franche sur la jonction, effacée aux extrémités.
-          couleurs[i * 4 + 3] = rang === 1 ? 0.7 : 0.18;
-        } else {
-          const gris = 0.42 + grain * 0.3;
-          couleurs[i * 4] = gris;
-          couleurs[i * 4 + 1] = gris * 0.96;
-          couleurs[i * 4 + 2] = gris * 0.88;
-          couleurs[i * 4 + 3] = rang === 1 ? 1 : 0.55;
-        }
-      });
-      if (k < PAS_RIVAGE) {
-        for (let rang = 0; rang < rangs - 1; rang += 1) {
-          const a = n * sommetsParSegment + k * rangs + rang;
-          const b = a + rangs;
-          indices.push(a, a + 1, b, a + 1, b + 1, b);
-        }
-      }
-    }
-  });
-  const geoRivage = new THREE.BufferGeometry();
-  geoRivage.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geoRivage.setAttribute('normal', new THREE.BufferAttribute(normales, 3));
-  geoRivage.setAttribute('color', new THREE.BufferAttribute(couleurs, 4));
-  geoRivage.setIndex(indices);
-  // Les couleurs de sommet du rivage ont **quatre** composantes : l'écume se
-  // fond par leur alpha. Le matériau à nœuds ne lit les couleurs de sommet
-  // qu'en `vec3` et jette l'alpha — pire, une seconde lecture en `vec4` du
-  // même attribut se rabat sur la première et rend un alpha de 1. On lit donc
-  // l'attribut une fois, à quatre composantes, et on le donne aux deux nœuds,
-  // `vertexColors` éteint : couleur × rgb, opacité × alpha, comme le faisait
-  // `color_fragment` en WebGL.
-  const teinteSommet = attribute('color', 'vec4');
-  const matRivage = new THREE.MeshStandardNodeMaterial({
-    vertexColors: false,
-    transparent: true,
-    depthWrite: false,
-    roughness: genre === 'ecume' ? 1 : 0.9,
-    flatShading: genre === 'galets',
-  });
-  matRivage.colorNode = materialColor.mul(teinteSommet.xyz);
-  matRivage.opacityNode = materialOpacity.mul(teinteSommet.w);
-  const rivage = new THREE.Mesh(geoRivage, matRivage);
-  rivage.name = 'rivage';
-  rivage.receiveShadow = genre === 'galets';
-  // Dessiné après l'eau, qui n'écrit pas la profondeur : la ligne passe dessus.
-  rivage.renderOrder = 3;
-  rivage.frustumCulled = false;
-  rivage.visible = segments.length > 0;
-  groupe.add(rivage);
-
-  function poserRivage(): void {
-    const posAttr = geoRivage.getAttribute('position') as THREE.BufferAttribute;
-    for (let i = 0; i < posAttr.count; i += 1) {
-      const x = posAttr.getX(i);
-      const z = posAttr.getZ(i);
-      // Sur la terre, la ligne épouse le sol ; sur l'eau, elle flotte juste au-dessus.
-      const relief = genre === 'galets' ? alea(Math.round(x * 32), Math.round(z * 32), 520) * 0.02 : 0;
-      posAttr.setY(i, Math.max(hauteurEn(x, z), NIVEAU_EAU) + 0.008 + relief);
-    }
-    posAttr.needsUpdate = true;
-    if (genre === 'galets') geoRivage.computeVertexNormals();
   }
 
-  poserRivage();
+  // --- La ligne de rivage : une seule géométrie pour tous les côtés terre/eau.
+  //     Elle grandit avec le trait de côte, pas avec le nombre d'accessoires :
+  //     c'est pour cela qu'elle a sa propre tranche.
+  const genre = genreRivage(biome);
+  let geoRivage!: THREE.BufferGeometry;
+  let matRivage!: THREE.MeshStandardNodeMaterial;
+  let poserRivage!: () => void;
+
+  function batirRivage(): void {
+    const segments = segmentsRivage(g);
+    const rangs = RANGS_RIVAGE.length;
+    const sommetsParSegment = (PAS_RIVAGE + 1) * rangs;
+    const positions = new Float32Array(segments.length * sommetsParSegment * 3);
+    const couleurs = new Float32Array(segments.length * sommetsParSegment * 4);
+    const normales = new Float32Array(segments.length * sommetsParSegment * 3);
+    const indices: number[] = [];
+    segments.forEach((s, n) => {
+      const tx = -s.nz;
+      const tz = s.nx;
+      for (let k = 0; k <= PAS_RIVAGE; k += 1) {
+        const t = k / PAS_RIVAGE - 0.5;
+        RANGS_RIVAGE.forEach((d, rang) => {
+          const i = n * sommetsParSegment + k * rangs + rang;
+          // Le bord ondule : une ligne droite ne ressemble ni à de l'écume ni à des galets.
+          const bruit = alea(Math.round(s.x * 8 + t * 8), Math.round(s.z * 8), 500 + rang);
+          const dd = d + (bruit - 0.5) * 0.05;
+          positions[i * 3] = s.x + tx * t * CASE + s.nx * dd;
+          positions[i * 3 + 2] = s.z + tz * t * CASE + s.nz * dd;
+          normales[i * 3 + 1] = 1;
+          const grain = alea(Math.round(s.x * 16 + t * 16), Math.round(s.z * 16 + rang * 3), 510);
+          if (genre === 'ecume') {
+            const clair = 0.86 + grain * 0.14;
+            couleurs[i * 4] = clair;
+            couleurs[i * 4 + 1] = clair;
+            couleurs[i * 4 + 2] = clair;
+            // L'écume se fond aux deux bords : franche sur la jonction, effacée aux extrémités.
+            couleurs[i * 4 + 3] = rang === 1 ? 0.7 : 0.18;
+          } else {
+            const gris = 0.42 + grain * 0.3;
+            couleurs[i * 4] = gris;
+            couleurs[i * 4 + 1] = gris * 0.96;
+            couleurs[i * 4 + 2] = gris * 0.88;
+            couleurs[i * 4 + 3] = rang === 1 ? 1 : 0.55;
+          }
+        });
+        if (k < PAS_RIVAGE) {
+          for (let rang = 0; rang < rangs - 1; rang += 1) {
+            const a = n * sommetsParSegment + k * rangs + rang;
+            const b = a + rangs;
+            indices.push(a, a + 1, b, a + 1, b + 1, b);
+          }
+        }
+      }
+    });
+    geoRivage = new THREE.BufferGeometry();
+    geoRivage.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geoRivage.setAttribute('normal', new THREE.BufferAttribute(normales, 3));
+    geoRivage.setAttribute('color', new THREE.BufferAttribute(couleurs, 4));
+    geoRivage.setIndex(indices);
+    // Les couleurs de sommet du rivage ont **quatre** composantes : l'écume se
+    // fond par leur alpha. Le matériau à nœuds ne lit les couleurs de sommet
+    // qu'en `vec3` et jette l'alpha — pire, une seconde lecture en `vec4` du
+    // même attribut se rabat sur la première et rend un alpha de 1. On lit donc
+    // l'attribut une fois, à quatre composantes, et on le donne aux deux nœuds,
+    // `vertexColors` éteint : couleur × rgb, opacité × alpha, comme le faisait
+    // `color_fragment` en WebGL.
+    const teinteSommet = attribute('color', 'vec4');
+    matRivage = new THREE.MeshStandardNodeMaterial({
+      vertexColors: false,
+      transparent: true,
+      depthWrite: false,
+      roughness: genre === 'ecume' ? 1 : 0.9,
+      flatShading: genre === 'galets',
+    });
+    matRivage.colorNode = materialColor.mul(teinteSommet.xyz);
+    matRivage.opacityNode = materialOpacity.mul(teinteSommet.w);
+    const rivage = new THREE.Mesh(geoRivage, matRivage);
+    rivage.name = 'rivage';
+    rivage.receiveShadow = genre === 'galets';
+    // Dessiné après l'eau, qui n'écrit pas la profondeur : la ligne passe dessus.
+    rivage.renderOrder = 3;
+    rivage.frustumCulled = false;
+    rivage.visible = segments.length > 0;
+    groupe.add(rivage);
+
+    poserRivage = (): void => {
+      const posAttr = geoRivage.getAttribute('position') as THREE.BufferAttribute;
+      for (let i = 0; i < posAttr.count; i += 1) {
+        const x = posAttr.getX(i);
+        const z = posAttr.getZ(i);
+        // Sur la terre, la ligne épouse le sol ; sur l'eau, elle flotte juste au-dessus.
+        const relief = genre === 'galets' ? alea(Math.round(x * 32), Math.round(z * 32), 520) * 0.02 : 0;
+        posAttr.setY(i, Math.max(hauteurEn(x, z), NIVEAU_EAU) + 0.008 + relief);
+      }
+      posAttr.needsUpdate = true;
+      if (genre === 'galets') geoRivage.computeVertexNormals();
+    };
+
+    poserRivage();
+  }
 
   const blanc = new THREE.Color(0xffffff);
   const teinteSol = new THREE.Color();
@@ -1028,7 +1123,7 @@ export function creerPaysage(
   // pendant une transition. Même objet, même saison : rien à repeindre.
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison } | null = null;
 
-  return {
+  const paysage: Paysage = {
     groupe,
 
     appliquerAmbiance(p: ParametresAmbiance, saison: Saison): void {
@@ -1085,12 +1180,19 @@ export function creerPaysage(
     },
 
     dispose(): void {
-      for (const lot of lots) {
-        lot.geo.dispose();
-        lot.mat.dispose();
-      }
+      // Les **formes** restent : elles sont partagées avec les autres paysages
+      // de la page, et le paysage n'en est pas propriétaire. Les libérer ici
+      // ferait payer à chaque montage la taille des cinquante-quatre volumes,
+      // et blanchirait un paysage encore à l'écran (`formeMemorisee`).
+      for (const lot of lots) lot.mat.dispose();
+      // Le rivage, lui, est taillé sur la grille : il n'appartient qu'ici.
       geoRivage.dispose();
       matRivage.dispose();
     },
+  };
+
+  return {
+    tranches: [batirAccessoires, batirRivage],
+    paysage: (): Paysage => paysage,
   };
 }

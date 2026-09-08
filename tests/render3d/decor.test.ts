@@ -4,8 +4,21 @@ import { readFileSync } from 'node:fs';
 import * as THREE from 'three/webgpu';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import {
-  cartographierToit, clonerMateriau, creerDecor, poseDrapeau, REPETITIONS_TOIT,
+  cartographierToit, clonerMateriau, creerDecor, oublierFormesDecor, ouvrirChantierDecor,
+  poidsFormesDecor, poseDrapeau, REPETITIONS_TOIT, type Decor,
 } from '../../src/render3d/decor';
+import type { GrilleTerrain } from '../../src/render3d/geometrie';
+import { terrainLogique } from '../../src/engine/index';
+import type { Biome, CleTerrain } from '../../src/schemas/index';
+import { ecarts, empreinte } from './empreinte-decor';
+import { etatDeScenario } from './monde';
+import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
+import carteBrasDeMer from '../../content/cartes/carte_bras_de_mer.json';
+import scenarioBrasDeMer from '../../content/scenarios/bras_de_mer.json';
+import carteAlliees from '../../content/cartes/carte_couleurs_alliees.json';
+import scenarioAlliees from '../../content/scenarios/couleurs_alliees.json';
+import carteChantier from '../../content/cartes/carte_chantier_des_usines.json';
+import scenarioChantier from '../../content/scenarios/chantier_des_usines.json';
 import { creerUniformesBrouillard, grefferBrouillardSur, type UniformesBrouillard } from '../../src/render3d/terrain';
 import { SEUIL_CAPTURE } from '../../src/engine/index';
 import { CAT, partie } from '../engine/aides';
@@ -346,22 +359,37 @@ test('les drapeaux flottent, sauf quand le système demande moins de mouvement',
   nue.dispose();
 });
 
-test('les détails architecturaux restent fusionnés par matériau et libérés après capture', () => {
+test('les détails architecturaux restent fusionnés par rôle, et une capture ne les refond pas', () => {
   const etat = partie('plaine');
   const types = ['ville', 'qg', 'usine', 'aeroport'] as const;
   const decor = creerDecor({ largeur: 4, hauteur: 1, terrainDe: (x) => types[x]! }, etat, () => 0);
   const batiments = decor.groupe.getObjectByName('batiments')!;
   let geometriesLiberees = 0;
-  const nombre = batiments.children.reduce((n, b) => {
+  const avant = new Map<string, THREE.BufferGeometry[]>();
+  for (const b of batiments.children) {
     assert.ok(b.children.length <= 7, 'les détails ne multiplient pas les appels de dessin');
-    b.children.forEach((m) => {
+    avant.set(String(b.userData['case']), b.children.map((m) => {
       assert.ok(m instanceof THREE.Mesh);
       m.geometry.addEventListener('dispose', () => { geometriesLiberees += 1; });
-    });
-    return n + b.children.length;
-  }, 0);
+      return m.geometry;
+    }));
+  }
   decor.majProprietaires({ ...etat, proprietaires: { ...etat.proprietaires, '0,0': 1 } });
-  assert.equal(geometriesLiberees, nombre, 'une capture libère toute la génération précédente');
+  // Les silhouettes sont **gardées** : elles ne dépendent que du terrain et de
+  // l'état de service, jamais du camp qui tient la case. Une capture rebâtit
+  // les mailles et leurs matières, elle ne refond plus la ville.
+  assert.equal(geometriesLiberees, 0, 'une capture ne libère aucune silhouette');
+  for (const b of batiments.children) {
+    const memes = avant.get(String(b.userData['case']))!;
+    assert.deepEqual(b.children.map((m) => (m as THREE.Mesh).geometry), memes,
+      'la case retrouve exactement les géométries fondues du montage précédent');
+  }
+  // Le camp, lui, a bien changé de matière.
+  const prise = batiments.children.find((b) => b.userData['case'] === '0,0')!;
+  assert.ok(prise.children.some((m) => {
+    const mat = (m as THREE.Mesh).material as THREE.MeshStandardNodeMaterial;
+    return mat.color.getHexString() !== 'ffffff';
+  }));
   decor.dispose();
 });
 
@@ -863,4 +891,164 @@ test('un lot instancié vide s’éteint : à zéro, le moteur dessinerait une i
     assert.equal(lot.visible, lot.count > 0, `${lot.name} : visible si et seulement s’il porte quelque chose`);
   }
   decor.dispose();
+});
+
+// ---------------------------------------------------------------------------
+// L'empreinte : la preuve qu'un remaniement n'a rien déplacé
+// ---------------------------------------------------------------------------
+
+/**
+ * Un relief de banc : une bosse et un creux, déterministes, sans plateau ni
+ * texture. Ce qu'on vérifie ici est le décor, pas le sol qu'il épouse — mais il
+ * faut qu'il l'épouse, sinon l'empreinte ne dirait rien des poses.
+ */
+function reliefTemoin(x: number, z: number): number {
+  return 0.05 * Math.sin(x * 1.3) + 0.03 * Math.cos(z * 0.7);
+}
+
+/** Le décor d'un scénario du canon, sur un relief de banc. */
+function decorDe(carte: unknown, scenario: unknown, biome: Biome): Decor {
+  const { etat, cat } = etatDeScenario(carte, scenario);
+  const grille: GrilleTerrain = {
+    largeur: etat.largeur,
+    hauteur: etat.hauteur,
+    terrainDe: (x, y): CleTerrain => terrainLogique(etat, cat, { x, y }) ?? 'plaine',
+  };
+  return creerDecor(grille, etat, reliefTemoin, biome);
+}
+
+/**
+ * Les empreintes figées, prises **avant** le découpage en tranches et la
+ * mémorisation des formes (8 septembre 2026) et inchangées depuis. Cinq couples
+ * carte × biome qui portent, ensemble, les six terrains bâtis, un bâtiment
+ * désaffecté, une station radar, un port, un rivage d'écume et un de galets.
+ *
+ * Un chiffre qui bouge ici veut dire qu'un sommet, une pose, une teinte
+ * d'instance ou une matière a changé. Si c'est voulu, on relève l'empreinte et
+ * on écrit pourquoi ; sinon, c'est une régression.
+ */
+const EMPREINTES: ReadonlyArray<readonly [string, unknown, unknown, Biome, string, number]> = [
+  ['demo', carteDemo, scenarioDemo, 'plaine', '33757c40', 115],
+  ['demo', carteDemo, scenarioDemo, 'marais', '96124447', 113],
+  ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', 'eb871afa', 161],
+  ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', '0779e4af', 69],
+  ['chantier_des_usines', carteChantier, scenarioChantier, 'neige', 'a9ad09fb', 72],
+];
+
+for (const [nom, carte, scenario, biome, digest, objets] of EMPREINTES) {
+  test(`le décor de ${nom} en ${biome} rend exactement la même scène qu’avant`, () => {
+    oublierFormesDecor();
+    const decor = decorDe(carte, scenario, biome);
+    const e = empreinte(decor.groupe);
+    assert.equal(e.lignes.length, objets, 'le nombre d’objets du décor');
+    assert.equal(e.digest, digest, `l’empreinte du décor de ${nom} en ${biome} a changé`);
+    decor.dispose();
+  });
+}
+
+test('le chantier en tranches rend exactement le décor que creerDecor rend d’un bloc', () => {
+  for (const [nom, carte, scenario, biome] of EMPREINTES) {
+    const { etat, cat } = etatDeScenario(carte, scenario);
+    const grille: GrilleTerrain = {
+      largeur: etat.largeur,
+      hauteur: etat.hauteur,
+      terrainDe: (x, y): CleTerrain => terrainLogique(etat, cat, { x, y }) ?? 'plaine',
+    };
+    oublierFormesDecor();
+    const bloc = creerDecor(grille, etat, reliefTemoin, biome);
+    const attendu = empreinte(bloc.groupe);
+    bloc.dispose();
+
+    oublierFormesDecor();
+    const chantier = ouvrirChantierDecor(grille, etat, reliefTemoin, biome);
+    // Personne ne dessine avant la dernière tranche, mais rien ne doit lever
+    // en chemin : c'est l'ordonnanceur d'`index.ts` qui les joue, une par tâche.
+    for (const tranche of chantier.tranches) tranche();
+    const obtenu = empreinte(chantier.decor().groupe);
+    assert.equal(obtenu.digest, attendu.digest,
+      `${nom} en ${biome} : les tranches ne rendent pas le même décor\n${ecarts(attendu, obtenu).join('\n')}`);
+    chantier.decor().dispose();
+  }
+});
+
+test('aucune tranche du décor ne bâtit plus de quelques cases à la fois', () => {
+  const { etat, cat } = etatDeScenario(carteDemo, scenarioDemo);
+  const grille: GrilleTerrain = {
+    largeur: etat.largeur,
+    hauteur: etat.hauteur,
+    terrainDe: (x, y): CleTerrain => terrainLogique(etat, cat, { x, y }) ?? 'plaine',
+  };
+  const chantier = ouvrirChantierDecor(grille, etat, reliefTemoin, 'plaine');
+  // Douze bâtiments sur la carte de démonstration : quatre par tranche, plus la
+  // tranche qui vide la génération précédente.
+  const batis = [...Array(etat.hauteur).keys()].flatMap((y) => [...Array(etat.largeur).keys()]
+    .filter((x) => ['ville', 'qg', 'usine', 'aeroport', 'radar', 'port']
+      .includes(terrainLogique(etat, cat, { x, y }) ?? 'plaine')));
+  // Arbres, pierres, accessoires, rivage, pavillons, la remise à zéro des
+  // bâtiments, leurs paquets, et la pose finale.
+  const attendues = 6 + Math.ceil(batis.length / 4) + 1;
+  assert.equal(chantier.tranches.length, attendues,
+    `${chantier.tranches.length} tranches pour ${batis.length} bâtiments`);
+  for (const tranche of chantier.tranches) tranche();
+  chantier.decor().dispose();
+});
+
+test('un décor libéré ne touche pas aux formes du décor suivant', () => {
+  // C'est la faute de `CalqueUnites.dispose()`, qui vidait deux caches pourtant
+  // au niveau module : un montage libérait ce que le suivant allait reprendre.
+  oublierFormesDecor();
+  const premier = decorDe(carteDemo, scenarioDemo, 'plaine');
+  const second = decorDe(carteDemo, scenarioDemo, 'plaine');
+  const empreinteAvant = empreinte(second.groupe);
+
+  let liberees = 0;
+  const vues = new Set<THREE.BufferGeometry>();
+  second.groupe.traverse((o) => {
+    const g = (o as THREE.Mesh).geometry;
+    if (!g || vues.has(g)) return;
+    vues.add(g);
+    g.addEventListener('dispose', () => { liberees += 1; });
+  });
+  assert.ok(vues.size > 20, 'le décor porte bien des dizaines de géométries');
+
+  premier.dispose();
+  assert.equal(liberees, 0, 'libérer un décor n’emporte aucune géométrie du suivant');
+  // Et le second reste dessinable à l'identique : mêmes sommets, mêmes poses.
+  const empreinteApres = empreinte(second.groupe);
+  assert.equal(empreinteApres.digest, empreinteAvant.digest,
+    ecarts(empreinteAvant, empreinteApres).join('\n'));
+  for (const g of vues) {
+    assert.ok((g.getAttribute('position') as THREE.BufferAttribute).count > 0);
+  }
+  second.dispose();
+});
+
+test('les formes mémorisées du décor sont bornées, et deux montages ne les repaient pas', () => {
+  oublierFormesDecor();
+  assert.equal(poidsFormesDecor().formes, 0, 'oublierFormesDecor vide bien le cache');
+  const premier = decorDe(carteDemo, scenarioDemo, 'plaine');
+  const apresUn = poidsFormesDecor();
+  premier.dispose();
+  // Le second montage de la même carte ne taille plus rien : mêmes formes,
+  // même poids. C'est tout l'objet du cache.
+  const second = decorDe(carteDemo, scenarioDemo, 'plaine');
+  assert.deepEqual(poidsFormesDecor(), apresUn, 'un second montage ne taille aucune forme de plus');
+  second.dispose();
+
+  // Neuf biomes de plus, deux cartes : le cache est borné, il ne grandit pas
+  // sans fin. Mesuré au 8 septembre 2026 : 601 ko pour une carte et un biome,
+  // 1,7 Mo pour dix biomes sur deux cartes, 2,9 Mo pour les neuf cartes du
+  // canon — l'ordre de grandeur des toiles de `textures.ts`, qui s'autorise
+  // 5,5 Mo. Ce chiffre est ce qu'on surveille : c'est de la mémoire vive.
+  for (const biome of ['foret', 'montagne', 'desert', 'jungle', 'neige', 'volcanique', 'cotier', 'archipel', 'marais'] as const) {
+    decorDe(carteDemo, scenarioDemo, biome).dispose();
+    decorDe(carteBrasDeMer, scenarioBrasDeMer, biome).dispose();
+  }
+  const poids = poidsFormesDecor();
+  assert.ok(poids.octets < 4 * 1024 * 1024, `${(poids.octets / 1024).toFixed(0)} ko gardés : c’est trop`);
+  // Et d'autres montages encore ne le font pas franchir sa borne.
+  for (const biome of ['foret', 'montagne', 'desert'] as const) {
+    decorDe(carteDemo, scenarioDemo, biome).dispose();
+  }
+  assert.ok(poidsFormesDecor().octets < 4 * 1024 * 1024, 'le cache reste borné après d’autres montages');
 });
