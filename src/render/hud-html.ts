@@ -816,12 +816,18 @@ export const ZONES: Readonly<Record<Emplacement, ZoneHud>> = Object.freeze({
 });
 
 /**
- * L'ordre de la colonne, de haut en bas : qui joue et ce que je possède, puis
- * l'unité regardée, puis le temps qu'il fera, et le pouvoir et la fin de tour
- * en pied. Les emplacements de la carte gardent l'ordre du DOM, qui est leur
- * ordre d'empilement.
+ * L'ordre de la colonne, de haut en bas : qui joue et ce que je possède, **le
+ * temps qu'il fera** juste dessous, puis l'unité regardée, et le pouvoir et la
+ * fin de tour en pied. Les emplacements de la carte gardent l'ordre du DOM, qui
+ * est leur ordre d'empilement.
+ *
+ * La météo est passée sous la journée à la demande du propriétaire : c'est la
+ * même question — quel jour on est, et quel temps il y fait —, et le panneau
+ * d'unité les séparait d'une hauteur variable, souvent vide. Le panneau d'unité
+ * est aussi le seul qui grandisse (`flex:1 1 auto`) : le mettre en troisième
+ * lui laisse toute la place restante au lieu de la prendre au milieu.
  */
-const ORDRE_RAIL: readonly Emplacement[] = ['partie', 'inspection', 'bulletin', 'dock'];
+const ORDRE_RAIL: readonly Emplacement[] = ['partie', 'bulletin', 'inspection', 'dock'];
 
 /** Largeur de la colonne de droite, en pixels. */
 export const LARGEUR_RAIL = 340;
@@ -1530,6 +1536,13 @@ export function monterHudHtml(
    * quand la case est hors champ, on rend une chaîne vide et le CSS reprend la
    * main avec une feuille basse — c'est le bon comportement au doigt.
    */
+  /**
+   * L'ordonnée d'écran du bâtiment dont le menu de production est ouvert, sur
+   * laquelle le panneau se recentre une fois mesuré. Nulle quand le menu n'est
+   * pas ancré — sous le seuil de largeur, c'est une feuille basse.
+   */
+  let ancreProduction: number | null = null;
+
   function ancrer(c: Case | null | undefined, hauteur: number, largeur = LARGEUR_ANCRE): string {
     // La largeur de **l'image**, pas celle du HUD : la racine couvre aussi la
     // colonne de droite, et un panneau ancré qui s'autoriserait cette largeur
@@ -1544,7 +1557,12 @@ export function monterHudHtml(
     const y = p.y - hauteur / 2;
     const cx = Math.round(Math.max(12, Math.min(L - largeur - 12, x)));
     const cy = Math.round(Math.max(12, Math.min(Math.max(12, H - hauteur - 12), y)));
-    return ` data-ancre="oui" style="left:${cx}px;top:${cy}px"`;
+    // La borne dure : ce qui reste **sous** le panneau, jamais la hauteur
+    // totale. `max-height:calc(100% - 24px)` en feuille limitait la hauteur sans
+    // rien dire du bord bas : un panneau posé à 575 px pouvait s'autoriser 1 023
+    // et sortait de l'écran, fiche coupée. Ce qui dépasse défile désormais
+    // dedans, ce que `.fiche-corps` et `.production-grille` savent déjà faire.
+    return ` data-ancre="oui" style="left:${cx}px;top:${cy}px;max-height:${Math.max(120, H - cy - 12)}px"`;
   }
 
   function boutonRetour(): string {
@@ -1934,8 +1952,10 @@ export function monterHudHtml(
     // Fiche repliée, le panneau fait à peu près la moitié de ce qu'il faisait —
     // et c'était précisément le reproche.
     const hauteur = ficheProductionOuverte ? 460 : 320;
+    const ancre = ancrer(p.batiment, hauteur, LARGEUR_PRODUCTION);
+    ancreProduction = ancre === '' ? null : (api.versEcran(p.batiment)?.y ?? null);
     return `<div class="voile clair" data-action="fermer">`
-      + `<div class="p production"${ancrer(p.batiment, hauteur, LARGEUR_PRODUCTION)} data-arret="1" tabindex="-1"`
+      + `<div class="p production"${ancre} data-arret="1" tabindex="-1"`
       + ` role="dialog" aria-label="${ech(api.t('menu.production'))}">`
       + `<div class="production-entete"><span class="tt">${ech(api.t('menu.production'))}</span>`
       + `<span class="solde" aria-label="${ech(solde)}">${iconeOrdre('fonds')}${ech(nombreIntl(v.locale, fonds))}</span>`
@@ -2087,7 +2107,34 @@ export function monterHudHtml(
     peindreVignettes(reecrits);
     // Le focus ne meurt qu'avec la modale : tant qu'elle n'est pas réécrite,
     // il est toujours là où le joueur l'a mis.
-    if (reecrits.has('production')) replacerFocus(v, focusAvant);
+    if (reecrits.has('production')) {
+      replacerProduction();
+      replacerFocus(v, focusAvant);
+    }
+  }
+
+  /**
+   * Replace le menu de production sur sa hauteur **mesurée**.
+   *
+   * Il s'ancre sur une hauteur estimée — 320 fiche repliée, 460 dépliée — et une
+   * estimation trop courte le poussait vers le bas puis le laissait déborder
+   * sous le bord de l'écran : le propriétaire voyait sa fiche coupée en deux.
+   * On mesure donc une fois posé, et on recentre sur le bâtiment avec la vraie
+   * hauteur. Le coût est une lecture de mise en page à l'ouverture du menu et à
+   * chaque unité mise en avant — jamais au survol, qui ne réécrit pas ce
+   * panneau ; c'est ce qui rend la mesure acceptable ici et nulle part ailleurs.
+   */
+  function replacerProduction(): void {
+    const el = racine.querySelector<HTMLElement>('.p.production[data-ancre="oui"]');
+    if (!el || ancreProduction === null) return;
+    const H = racine.clientHeight;
+    const dispo = Math.max(120, H - 24);
+    // Rendre d'abord toute la place, sinon on mesurerait la borne d'avant.
+    el.style.maxHeight = `${dispo}px`;
+    const h = Math.min(el.offsetHeight, dispo);
+    const y = Math.round(Math.max(12, Math.min(H - h - 12, ancreProduction - h / 2)));
+    el.style.top = `${y}px`;
+    el.style.maxHeight = `${H - y - 12}px`;
   }
 
   /**

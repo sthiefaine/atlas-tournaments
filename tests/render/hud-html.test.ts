@@ -606,6 +606,8 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
   slots: Map<string, FauxElement>;
   /** La classe de la zone qui porte cet emplacement : hud-carte, hud-rail, ou la racine. */
   zone(nom: string): string;
+  /** Les emplacements de la colonne, dans l'ordre du DOM. */
+  ordreRail(): string[];
   conteneur: FauxElement;
   /** Rejoue un rendu : la vue est une fonction, le test la fait varier entre deux appels. */
   rafraichir(): void;
@@ -624,6 +626,11 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
   return {
     slots,
     zone: (nom) => slots.get(nom)?.parent?.className ?? '',
+    /** Les emplacements de la colonne, dans l'ordre du DOM : c'est l'ordre lu. */
+    ordreRail: (): string[] => {
+      const rail = slots.get('partie')?.parent;
+      return rail ? rail.children.map((e) => e.attributs.get('data-emplacement') ?? '') : [];
+    },
     conteneur,
     rafraichir: () => hud.rafraichir(),
     demonter: () => hud.demonter(),
@@ -1017,6 +1024,10 @@ test('chaque panneau va dans sa zone, et le panneau d’unité ne s’efface plu
   });
 
   const large = hudSur(vue, { largeur: 1400, hauteur: 900 });
+  // La météo se lit **sous** la journée, et non derrière le panneau d'unité :
+  // c'est la même question, et le panneau d'unité est le seul qui grandisse.
+  assert.deepEqual(large.ordreRail(), ['partie', 'bulletin', 'inspection', 'dock'],
+    'la colonne va de la journée au pied, la météo juste sous la journée');
   // Ce qui décrit la partie s'en va dans la colonne...
   for (const nom of ['partie', 'bulletin', 'inspection', 'dock']) {
     assert.equal(large.zone(nom), 'hud-rail', `${nom} appartient à la colonne`);
