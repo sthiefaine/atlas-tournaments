@@ -131,6 +131,35 @@ test('deux doigts zooment la carte, et non la page', async ({ page, browserName 
   expect(apres, `la carte a zoomé (${avant} → ${apres})`).toBeGreaterThan(avant * 1.1);
 });
 
+test('un plateau immobile laisse respirer le fil principal', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'les compteurs de performance passent par CDP');
+  await ouvrirPlateau(page);
+  // Le monde finit de se bâtir : on mesure un plateau **au repos**, pas un
+  // chantier.
+  await page.waitForTimeout(8000);
+
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Performance.enable');
+  const lire = async (): Promise<Record<string, number>> => {
+    const { metrics } = await cdp.send('Performance.getMetrics') as { metrics: { name: string; value: number }[] };
+    return Object.fromEntries(metrics.map((m) => [m.name, m.value]));
+  };
+  const avant = await lire();
+  await page.waitForTimeout(5000);
+  const apres = await lire();
+  const occupe = ((apres['TaskDuration'] ?? 0) - (avant['TaskDuration'] ?? 0)) * 1000;
+
+  // Drapeaux, respiration, rotors et eau ne s'arrêtent jamais, et la boucle se
+  // rappelait pour eux **à chaque image** : le fil principal était saturé sur un
+  // plateau où rien ne se passe — 5 178 ms sur 5 000 au témoin, mesuré le
+  // 9 septembre 2026. L'ambiance a désormais son pas (50 ms au doigt), et
+  // l'urgent — inertie de caméra, marée, effets, animations — garde l'image
+  // suivante. Le seuil est large parce que le rendu logiciel du banc gonfle tout :
+  // ce qu'il attrape, c'est le retour d'une boucle qui ne dort plus.
+  expect(occupe, `${Math.round(occupe)} ms de fil principal sur 5 000 au repos`)
+    .toBeLessThan(5000 * 0.75);
+});
+
 test('le HUD rend le bord de l’écran à la carte', async ({ page }) => {
   await ouvrirPlateau(page);
   // La colonne de sept boutons de caméra faisait 338 px le long du bord droit.

@@ -93,6 +93,21 @@ export {
 /** Millisecondes entre deux images au repos : de quoi faire vivre l'eau. */
 const MS_REPOS = 1000;
 
+/**
+ * Le pas de l'**ambiance** : drapeaux qui flottent, figurines qui respirent,
+ * rotors, eau, décalques qui pulsent. Ces mouvements-là ne s'arrêtent jamais, et
+ * la boucle se rappelait pour eux **à chaque image** : un plateau immobile
+ * redessinait donc soixante fois par seconde, ombres comprises. Sur un ordinateur
+ * cela se voit à peine ; sur un téléphone c'est tout le budget, et le jeu rame
+ * « comme s'il y avait des boucles infinies » — le mot est du propriétaire.
+ *
+ * Un drapeau à trente images par seconde est un drapeau ; à vingt aussi. Ce qui
+ * ne se bride **pas** : l'inertie de la caméra, une transition de lumière, une
+ * marée, les effets, et toute animation de la file — là, un à-coup se voit.
+ */
+const MS_AMBIANCE_SOURIS = 33;
+const MS_AMBIANCE_DOIGT = 50;
+
 /** Durée d'une mutation de terrain : marée qui tourne, chantier du génie. */
 const MS_MUTATION = 1400;
 
@@ -208,6 +223,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let cadrePrecedent: CadreOmbre | null = null;
   /** L'image précédente a réclamé la suivante : les deux sont consécutives, l'intervalle est une cadence. */
   let continuSuivant = false;
+  let minuterieAmbiance: ReturnType<typeof setTimeout> | null = null;
+  /** Le pas de l'ambiance, posé au montage : la nature du pointeur ne change pas. */
+  let msAmbiance = MS_AMBIANCE_SOURIS;
   /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
   /**
@@ -477,8 +495,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const calme = reduit();
     // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
     // la boucle comme les autres animations, et l'image qui suit les voit.
-    encore = m.vue3d.avancer(ecoule, calme) || encore;
-    encore = m.eclairage.avancer(ecoule, m.vue3d.cible) || encore;
+    // Deux familles de mouvement, et elles n'ont pas le même droit à l'image :
+    // l'**urgent** — ce qu'un à-coup trahirait — et l'**ambiant**, qui ne
+    // s'arrête jamais et n'a pas besoin de soixante images par seconde.
+    let urgent = false;
+    urgent = m.vue3d.avancer(ecoule, calme) || urgent;
+    urgent = m.eclairage.avancer(ecoule, m.vue3d.cible) || urgent;
+    encore = urgent || encore;
     // Puis l'ombre suit la caméra et le soleil ; le calcul ne se refait que
     // s'ils ont bougé — et c'est le cadre qui change d'objet qui le dit.
     const cadre = m.eclairage.cadrerOmbre(m.vue3d.etat, m.vue3d.camera.aspect, m.grille);
@@ -489,6 +512,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // prochaine vue pour se reposer dessus.
       m.surbrillances.invalider();
     }
+    urgent = mutation || urgent;
     encore = mutation || encore;
     encore = (m.decor?.avancer(ecoule, calme) ?? false) || encore;
     // Le calque reçoit la préférence au lieu d'être sauté : sous réduction, un
@@ -497,7 +521,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     encore = m.surbrillances.avancer(ecoule) || encore;
     // Les effets vivent ici et nulle part ailleurs : étincelles qui retombent,
     // anneaux qui s'élargissent, halos qui s'éteignent. Des sprites, sans ombre.
-    encore = m.effets.avancer(ecoule) || encore;
+    urgent = m.effets.avancer(ecoule) || urgent;
+    encore = urgent || encore;
     const p = m.eclairage.courant;
     const saison = vue?.ambiance.saison;
     // Les matières ne reçoivent l'ambiance que quand elle change : `courant`
@@ -525,7 +550,20 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     ombreSale = false;
     cadrePrecedent = cadre;
     continuSuivant = encore || animations > 0;
-    if (encore) salir();
+    // L'urgent redemande l'image suivante tout de suite ; l'ambiant la demande
+    // au pas de l'ambiance, et la boucle **dort** entre-temps au lieu de tourner
+    // à vide.
+    if (urgent || animations > 0) salir();
+    else if (encore) planifierAmbiance();
+  }
+
+  /** Réveille la boucle au pas de l'ambiance, une seule minuterie en vol. */
+  function planifierAmbiance(): void {
+    if (minuterieAmbiance !== null) return;
+    minuterieAmbiance = setTimeout(() => {
+      minuterieAmbiance = null;
+      salir();
+    }, msAmbiance);
   }
 
   function majMonde(): void {
@@ -609,6 +647,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     monter(conteneur: HTMLElement): void {
       conteneurRef = conteneur;
+      // Au doigt, l'ambiance se contente de vingt images par seconde : c'est là
+      // que le budget est rare, et un drapeau n'y perd rien.
+      try {
+        msAmbiance = conteneur.ownerDocument.defaultView?.matchMedia?.('(pointer: coarse)')?.matches === true
+          ? MS_AMBIANCE_DOIGT : MS_AMBIANCE_SOURIS;
+      } catch {
+        msAmbiance = MS_AMBIANCE_SOURIS;
+      }
       const fenetre = conteneur.ownerDocument.defaultView;
       mouvementReduit = fenetre?.matchMedia('(prefers-reduced-motion: reduce)');
       pointeurGrossier = fenetre?.matchMedia('(pointer: coarse)').matches ?? false;
@@ -818,6 +864,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     demonter(): void {
       if (repos !== null) clearInterval(repos);
       repos = null;
+      if (minuterieAmbiance !== null) clearTimeout(minuterieAmbiance);
+      minuterieAmbiance = null;
       phase = 'rien';
       // Un préchauffage encore en vol s'arrêtera de lui-même — la scène qu'il
       // interroge est morte —, mais il ne doit pas retenir l'image du montage
