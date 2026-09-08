@@ -85,7 +85,7 @@ import {
 import { webgl2Disponible, type MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
 import { compterFamilles, depuisInfo } from './mesures';
-import { prechauffer } from './prechauffage';
+import { prechauffer, prechaufferOmbres } from './prechauffage';
 import type { Composeur, creerComposeur } from './postraitement';
 
 /** Ce que `creerScene3d` rend à l'appelant. */
@@ -113,11 +113,22 @@ export interface Scene3d {
   /**
    * Compile d'avance les programmes de la scène, lot par lot
    * (`prechauffage.ts`) : c'est ce qui évite qu'une seconde de traduction TSL →
-   * WGSL et de création de pipelines tombe sur la première image. Rend quand
-   * tout est chaud, tout de suite si le moteur n'est pas prêt — l'image le
-   * refera alors elle-même, au prix qu'elle a toujours payé.
+   * WGSL et de création de pipelines tombe sur la première image. La passe
+   * principale d'abord, la **passe d'ombres** ensuite, par de vrais rendus hors
+   * écran — elle n'a pas d'autre porte. Rend quand tout est chaud, tout de
+   * suite si le moteur n'est pas prêt — l'image le refera alors elle-même, au
+   * prix qu'elle a toujours payé.
+   *
+   * S'appelle **plusieurs fois** sans dommage : ce qui est déjà chaud ne coûte
+   * qu'une lecture de cache, et c'est ce qui permet de bâtir le monde en deux
+   * temps (`index.ts`) — le sol, puis le reste.
+   *
+   * `poursuivre` est relu **entre deux lots** : le rendre faux abandonne le
+   * préchauffage proprement, à la frontière d'un lot. C'est ainsi qu'un budget
+   * s'applique sans jamais interrompre une compilation en cours — la couper au
+   * milieu laisserait le moteur incapable de dessiner.
    */
-  prechauffer(camera: THREE.Camera): Promise<void>;
+  prechauffer(camera: THREE.Camera, poursuivre?: () => boolean): Promise<void>;
   /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   readonly msParImage: number;
   /**
@@ -566,9 +577,10 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       return envoi;
     },
 
-    async prechauffer(camera: THREE.Camera): Promise<void> {
+    async prechauffer(camera: THREE.Camera, poursuivre?: () => boolean): Promise<void> {
       const r = renderer;
       if (!r || !vivante) return;
+      const encore = (): boolean => vivante && (poursuivre?.() ?? true);
       const moteur = r as unknown as {
         _handleObjectFunction: unknown;
         _renderObjectDirect: unknown;
@@ -594,17 +606,36 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       // passage un `overrideMaterial` sur la scène et lève avant de le retirer :
       // trois lots sur huit échouaient ainsi, mesuré. Les lumières savent déjà
       // ne recalculer leur carte que sur ordre (`poserOmbres`) ; on le leur dit
-      // avant, et la première image la demandera comme d'habitude.
+      // avant, et c'est `prechaufferOmbres` qui la leur redemandera, lot par
+      // lot, une fois la passe principale chaude.
       poserOmbres(scene, false);
       try {
-        await prechauffer(r, scene, camera, { vivante: () => vivante });
+        await prechauffer(r, scene, camera, { vivante: encore });
       } finally {
-        r.setRenderTarget(cibleAvant);
         // Garde-fou : `compileAsync` remplace la fonction qui traite chaque
         // objet par celle qui **crée un pipeline sans dessiner**, et ne la
         // remet qu'à sa dernière ligne. Une exception en route laisserait le
         // moteur muet pour toujours ; on la remet, comme three la remet.
         moteur._handleObjectFunction = moteur._renderObjectDirect;
+      }
+      try {
+        // **Puis la passe d'ombres**, et dans cet ordre : elle se préchauffe
+        // par de vrais rendus (`prechaufferOmbres`), qui rejouent la passe
+        // principale à chaque lot. Celle-ci doit donc être chaude, sans quoi on
+        // la recompilerait autant de fois qu'il y a de lots d'ombre.
+        if (encore()) await prechaufferOmbres(r, scene, camera, { vivante: encore });
+      } catch {
+        // Un préchauffage d'ombres qui échoue ne coûte qu'une première image
+        // plus chère : elle refera le travail elle-même.
+      } finally {
+        r.setRenderTarget(cibleAvant);
+        // Ces rendus-là ne sont **pas** des images : personne ne les voit, ils
+        // vont dans une cible hors écran. Or `etapeChargement` lit le nombre de
+        // tirages pour savoir si le plateau est à l'écran (`render/jeu.ts`), et
+        // les compteurs ne se remettent à zéro qu'à chaque image dessinée
+        // (`info.autoReset` éteint). Sans cette remise, l'écran de chargement
+        // s'effacerait sur un canevas encore vide.
+        r.info.reset();
       }
     },
 

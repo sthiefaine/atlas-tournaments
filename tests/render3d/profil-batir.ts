@@ -23,7 +23,7 @@ import { Session } from 'node:inspector';
 import * as THREE from 'three/webgpu';
 
 import { terrainLogique, type Catalogue, type EtatPartie } from '../../src/engine/index';
-import { creerDecor } from '../../src/render3d/decor';
+import { creerDecor, oublierFormesDecor, ouvrirChantierDecor, poidsFormesDecor } from '../../src/render3d/decor';
 import { creerEclairage, parametresAmbiance } from '../../src/render3d/eclairage';
 import { creerEffets } from '../../src/render3d/effets';
 import type { GrilleTerrain } from '../../src/render3d/geometrie';
@@ -133,23 +133,41 @@ export function monterEnTranches(
     plateau.appliquerAmbiance(depart);
     unites.appliquerAmbiance(depart);
   }]);
-  tranches.push(['décor + paysage', () => {
-    decor = creerDecor(grille, e, plateau.hauteurEn, biome);
+  const jouer = (liste: Array<[string, () => void]>): void => {
+    for (const [nom, f] of liste) {
+      const d = performance.now();
+      f();
+      t[nom] = performance.now() - d;
+    }
+  };
+  // Le plateau d'abord : le décor lui prend son relief. Le reste ne se connaît
+  // qu'ensuite, exactement comme `index.ts` l'ordonne.
+  jouer(tranches);
+  // Le décor a ses propres tranches — arbres, pierres, accessoires, rivage,
+  // pavillons, puis les bâtiments par paquets de cases : c'était le plus gros
+  // bloc du chargement, et il se joue désormais en une dizaine de morceaux.
+  const suite: Array<[string, () => void]> = [];
+  const dOuverture = performance.now();
+  const chantierDecor = ouvrirChantierDecor(grille, e, plateau.hauteurEn, biome);
+  t['décor (ouverture)'] = performance.now() - dOuverture;
+  chantierDecor.tranches.forEach((f, i) => {
+    suite.push([`décor ${i + 1}/${chantierDecor.tranches.length}`, f]);
+  });
+  suite.push(['décor posé', () => {
+    decor = chantierDecor.decor();
     grefferBrouillardSur(decor.groupe, plateau.uniformesBrouillard, 'atlas-brouillard-decor-v1');
     decor.appliquerAmbiance(depart, e.climat.saison);
     scene.add(decor.groupe);
   }]);
-  tranches.push(['unités (majMonde)', () => {
+  suite.push(['unités (majMonde)', () => {
     unites.maj(e, cat, null);
     decor.majProprietaires(e, null);
   }]);
-  for (const [nom, f] of tranches) {
-    const d = performance.now();
-    f();
-    t[nom] = performance.now() - d;
-  }
+  jouer(suite);
   t.total = Object.values(t).reduce((a, b) => a + b, 0);
-  t['plus longue'] = Math.max(...tranches.map(([nom]) => t[nom] ?? 0));
+  t['plus longue'] = Math.max(
+    t['décor (ouverture)'] ?? 0, ...[...tranches, ...suite].map(([nom]) => t[nom] ?? 0),
+  );
   return {
     postes: t,
     dispose(): void {
@@ -219,6 +237,7 @@ async function principal(): Promise<void> {
     for (let i = 0; i < tours; i += 1) {
       // Le premier montage d'une page ne connaît ni toile ni forme d'unité.
       oublierFormesUnites();
+      oublierFormesDecor();
       const m = monterChronometre(etat, cat);
       series.push(m.postes);
       m.dispose();
@@ -238,6 +257,7 @@ async function principal(): Promise<void> {
     }
     // Le même montage, découpé comme `ouvrirChantier` le découpe.
     oublierFormesUnites();
+    oublierFormesDecor();
     monterEnTranches(etat, cat).dispose();
     const parTranche: Postes[] = [];
     const memeChantier = documentMemoire();
@@ -245,6 +265,7 @@ async function principal(): Promise<void> {
     const parTrancheChaud: Postes[] = [];
     for (let i = 0; i < tours; i += 1) {
       oublierFormesUnites();
+      oublierFormesDecor();
       const m = monterEnTranches(etat, cat);
       parTranche.push(m.postes);
       m.dispose();
@@ -260,6 +281,8 @@ async function principal(): Promise<void> {
     }
     const poids = poidsFormesUnites();
     console.log(`  formes d'unités gardées : ${poids.formes}, ${(poids.octets / 1024).toFixed(0)} ko`);
+    const poidsDecor = poidsFormesDecor();
+    console.log(`  formes de décor gardées : ${poidsDecor.formes}, ${(poidsDecor.octets / 1024).toFixed(0)} ko`);
     if (process.env.PROFIL) {
       const par = profiler(() => {
         for (let i = 0; i < 3; i += 1) monterChronometre(etat, cat).dispose();

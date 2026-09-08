@@ -11,26 +11,18 @@
 // calcule — `customProgramCacheKey()` (le type du matériau plus l'identité de
 // ses nœuds), puis chaque propriété du matériau réduite : un nombre devient
 // « nul ou non », un objet devient `{}`, un booléen son texte —, plus la clé de
-// géométrie, plus l'`uuid` d'un lot instancié, plus `receiveShadow`. La partie
-// dynamique (scène, lumières) est la même pour tous les objets d'une scène :
-// elle ne sépare rien et n'est donc pas recalculée.
+// géométrie (`cleGeometrieProgramme`, lue dans le code de production plutôt que
+// recopiée ici : c'est la même question, elle ne peut pas avoir deux réponses),
+// le squelette, les morphes, l'`uuid` d'un lot instancié et `receiveShadow`. La
+// partie dynamique (scène, lumières) est la même pour tous les objets d'une
+// scène : elle ne sépare rien et n'est donc pas recalculée.
 //
 // Ce que cela ne dit pas : les passes annexes (carte d'ombre, normales MRT du
 // GTAO), qui ont leurs propres objets de rendu, et le temps de compilation
 // lui-même, qui reste affaire de navigateur.
 import * as THREE from 'three/webgpu';
 
-/** Ce que `RenderObject.getGeometryCacheKey` écrit. */
-function cleGeometrie(geo: THREE.BufferGeometry): string {
-  let cle = '';
-  for (const nom of Object.keys(geo.attributes)) {
-    const attr = geo.attributes[nom]!;
-    cle += nom + ',';
-    if ((attr as THREE.InstancedBufferAttribute).isInstancedBufferAttribute) cle += 'instanced,';
-  }
-  if (geo.index) cle += 'index,';
-  return cle;
-}
+import { cleGeometrieProgramme } from '../../src/render3d/prechauffage';
 
 /** Le filtre de `getMaterialCacheKey` : ce qui ne sépare jamais deux programmes. */
 const IGNORE = /^(is[A-Z]|_)|^(visible|version|uuid|name|opacity|userData)$/;
@@ -67,7 +59,11 @@ export function cleProgramme(objet: THREE.Object3D, materiau: THREE.Material): s
     cle += vk + ',';
   }
   const geo = (objet as THREE.Mesh).geometry;
-  if (geo) cle += cleGeometrie(geo);
+  if (geo) cle += cleGeometrieProgramme(geo);
+  const os = (objet as THREE.SkinnedMesh).skeleton;
+  if (os) cle += os.bones.length + ',';
+  const morphes = (objet as THREE.Mesh).morphTargetInfluences;
+  if (morphes) cle += morphes.length + ',';
   // Sous 1000 instances, le compte est écrit en dur dans le WGSL : three sépare
   // donc les lots instanciés par leur `uuid`, un programme chacun.
   if ((objet as THREE.InstancedMesh).count > 1) cle += objet.uuid + ',';
