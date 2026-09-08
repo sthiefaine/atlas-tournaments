@@ -185,6 +185,20 @@ function ech(texte: string): string {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/** Largeur d'un panneau ancré à une case, en pixels. */
+const LARGEUR_ANCRE = 190;
+/** Écart entre le centre de la case et le bord du panneau. */
+const ECART_ANCRE = 36;
+/**
+ * En deçà de cette largeur d'**image**, l'écran est trop étroit pour poser un
+ * panneau à côté d'une case : le menu de production redevient une feuille basse.
+ * La feuille de style lit ce nombre — c'est au même seuil qu'elle empile ses
+ * deux colonnes —, elle ne le recopie pas.
+ */
+const LARGEUR_MINIMALE_ANCRE = 680;
+/** Largeur du panneau de production, ancré au bâtiment : deux colonnes. */
+const LARGEUR_PRODUCTION = 580;
+
 /** La feuille de style du HUD, injectée une seule fois par document. */
 const STYLE = `
 /* ---------------------------------------------------------------------------
@@ -377,38 +391,48 @@ const STYLE = `
    n'a pas à disparaître à chaque fois. Le voile ne sert plus qu'à recevoir le
    clic qui referme — il s'éclaircit donc, et le plateau reste lisible. */
 .atlas-hud .voile.clair{background:#07172433;align-items:flex-end;padding:var(--haut) 12px var(--bas)}
-.atlas-hud .p.production{display:flex;flex-direction:column;width:100%;max-width:520px;max-height:100%;background:var(--papier);color:var(--encre);border:0;border-top:4px solid var(--camp);overflow:hidden}
+.atlas-hud .p.production{display:flex;flex-direction:column;width:100%;max-width:640px;max-height:100%;background:var(--papier);color:var(--encre);border:0;border-top:4px solid var(--camp);overflow:hidden}
 .atlas-hud .p.production:focus{outline:none}
-.atlas-hud .p.production[data-ancre='oui']{position:absolute;width:400px;max-width:400px;max-height:calc(100% - 24px)}
+.atlas-hud .p.production[data-ancre='oui']{position:absolute;width:580px;max-width:580px;max-height:calc(100% - 24px)}
 .atlas-hud .production-entete{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 14px;background:var(--camp-voile);border-bottom:1px solid #15243b22}
 .atlas-hud .production-entete .tt{flex:1;font-size:var(--t2);font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#45606b}
 .atlas-hud .production-entete .solde{display:flex;align-items:center;gap:5px;font-size:var(--t5);font-weight:900;color:var(--encre);font-variant-numeric:tabular-nums}
 .atlas-hud .production-entete .solde .symbole{width:16px;height:16px;color:#8a6a1e}
 .atlas-hud .production-entete .retour{min-width:34px;min-height:34px;background:#15243b12;border-color:#15243b30;border-bottom-color:#15243b40;color:var(--encre)}
-/* La grille : on achète une **silhouette**, pas une ligne de tableau. Le prix
-   est ce qui décide, il est donc plus gros que le nom. */
-.atlas-hud .production-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:4px;padding:7px;overflow:auto;overscroll-behavior:contain;max-height:34cqh;background:#15243b08}
-.atlas-hud .production-grille button{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 4px 4px;cursor:pointer;text-align:center;background:#e1ddca;border-bottom:3px solid #b6b0a0;transition:background .09s,translate .06s,border-bottom-width .06s}
-.atlas-hud .production-grille button:hover{background:#d0d7cc}
-.atlas-hud .production-grille button:active{translate:0 2px;border-bottom-width:1px}
-.atlas-hud .production-grille canvas{width:40px;height:40px;display:block}
-.atlas-hud .production-grille .tt{max-width:100%;font-size:var(--t2);font-weight:750;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4a606b}
-.atlas-hud .production-grille .cout{font-size:var(--t4);font-weight:900;color:var(--encre);font-variant-numeric:tabular-nums}
+/* Le corps : **le catalogue à gauche, la fiche à droite**. C'était une grille de
+   figurines suivie de la fiche en dessous, donc un panneau qui s'allongeait à
+   chaque unité mise en avant ; et avant cela une fenêtre de sept cents pixels à
+   trois zones de défilement imbriquées. Deux colonnes, et **deux zones qui
+   défilent, jamais trois** : la liste, et le corps de la fiche. L'en-tête et le
+   pied ne bougent pas — on doit pouvoir acheter sans avoir rien à parcourir.
+   La colonne de gauche est fixe : une liste dont la largeur change à chaque
+   unité mise en avant se relit à chaque fois. */
+.atlas-hud .production-corps{display:grid;grid-template-columns:minmax(0,212px) minmax(0,1fr);flex:1 1 auto;min-height:0}
+/* Une **ligne** par unité, pas une tuile : c'est le prix qu'on compare, et une
+   colonne de prix alignés se compare d'un coup d'œil. La figurine reste, elle
+   est ce qui se reconnaît le plus vite. */
+.atlas-hud .production-liste{display:flex;flex-direction:column;gap:3px;padding:7px;overflow:auto;overscroll-behavior:contain;background:#15243b08;border-right:1px solid #15243b1f}
+.atlas-hud .production-liste button{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:8px;min-height:44px;padding:4px 8px 4px 5px;cursor:pointer;background:#e1ddca;border-bottom:3px solid #b6b0a0;transition:background .09s,translate .06s,border-bottom-width .06s}
+.atlas-hud .production-liste button:hover{background:#d0d7cc}
+.atlas-hud .production-liste button:active{translate:0 2px;border-bottom-width:1px}
+.atlas-hud .production-liste canvas{width:34px;height:34px;flex:none;display:block}
+.atlas-hud .production-liste .tt{flex:1;min-width:0;font-size:var(--t3);font-weight:750;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#4a606b;text-align:left}
+.atlas-hud .production-liste .cout{flex:none;font-size:var(--t4);font-weight:900;color:var(--encre);font-variant-numeric:tabular-nums}
 /* Mise en avant : l'inversion papier → encre, le seul contraste qui se lit d'un
-   coup d'œil dans une grille de dix. */
-.atlas-hud .production-grille button[data-actif='oui']{background:var(--encre);border-bottom-color:#060f17}
-.atlas-hud .production-grille button[data-actif='oui'] .tt{color:#b9cbcb}
-.atlas-hud .production-grille button[data-actif='oui'] .cout{color:var(--signal)}
+   coup d'œil dans une liste de dix. */
+.atlas-hud .production-liste button[data-actif='oui']{background:var(--encre);border-bottom-color:#060f17}
+.atlas-hud .production-liste button[data-actif='oui'] .tt{color:#b9cbcb}
+.atlas-hud .production-liste button[data-actif='oui'] .cout{color:var(--signal)}
 /* Trop chère : toujours cliquable — lire la fiche d'une unité qu'on ne peut pas
    payer, c'est savoir pour quoi l'on économise —, mais **c'est le prix qui le
    dit**, en rouge, et la figurine perd ses couleurs. Une opacité de 0,55 sur
    tout le bouton disait « désactivé », ce qui était faux, et ne disait pas
    pourquoi, ce qui était inutile. */
-.atlas-hud .production-grille button[data-abordable='non']:not([data-actif='oui']){background:#d9d5c6}
-.atlas-hud .production-grille button[data-abordable='non'] canvas{filter:grayscale(1);opacity:.5}
-.atlas-hud .production-grille button[data-abordable='non'] .cout{color:#a6382c}
-.atlas-hud .production-grille button[data-abordable='non'][data-actif='oui'] .cout{color:#ff9a90}
-.atlas-hud .panneau-fiche{display:flex;flex-direction:column;min-height:0;border-top:1px solid #15243b22}
+.atlas-hud .production-liste button[data-abordable='non']:not([data-actif='oui']){background:#d9d5c6}
+.atlas-hud .production-liste button[data-abordable='non'] canvas{filter:grayscale(1);opacity:.5}
+.atlas-hud .production-liste button[data-abordable='non'] .cout{color:#a6382c}
+.atlas-hud .production-liste button[data-abordable='non'][data-actif='oui'] .cout{color:#ff9a90}
+.atlas-hud .panneau-fiche{display:flex;flex-direction:column;min-height:0;min-width:0}
 .atlas-hud .fiche-corps{overflow:auto;overscroll-behavior:contain;flex:1 1 auto;min-height:0;padding:8px 14px 10px}
 /* Les chiffres de l'unité mise en avant : une rangée de plaques, pas une liste
    de définitions. Un « <dl> » de cinq entrées en trois colonnes, c'était une
@@ -421,6 +445,7 @@ const STYLE = `
 .atlas-hud .fiche-traits .vide{color:#7a8b93;font-weight:600}
 /* Le pied d'achat ne défile pas : c'est le geste, il est toujours sous la main. */
 .atlas-hud .fiche-action{display:flex;align-items:center;gap:10px;padding:8px 14px 12px;border-top:1px solid #15243b22;flex:none}
+.atlas-hud .production>.fiche-action{background:#15243b08}
 .atlas-hud .fiche-action .note{flex:1;min-width:0;font-size:var(--t3);font-weight:750;color:#5d7480}
 .atlas-hud .fiche-action .note[data-manque='oui']{color:#a6382c;font-weight:800}
 .atlas-hud .fiche-action .recruter{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 20px;cursor:pointer;font-weight:900;font-size:var(--t5);text-transform:uppercase;letter-spacing:.04em;background:var(--signal);color:var(--encre);border-top:3px solid #fff0ac;border-bottom:4px solid #c4923a;font-variant-numeric:tabular-nums;transition:translate .08s,border-bottom-width .08s}
@@ -639,8 +664,6 @@ const STYLE = `
    grille se resserre, la fiche garde sa part d'écran, et chaque partie défile
    pour elle-même : la feuille ne dépasse jamais le voile. */
 @container atlas-interface (max-width: 640px){
-  .atlas-hud .production-grille{grid-template-columns:repeat(auto-fill,minmax(88px,1fr));max-height:28cqh;padding:6px}
-  .atlas-hud .production-grille canvas{width:34px;height:34px}
   .atlas-hud .fiche-corps{padding:8px 12px}
   .atlas-hud .fiche-action{padding:8px 12px 12px}
   /* Au doigt, une cible fait 44 px : les boutons resserrés à 34 pour la souris
@@ -669,6 +692,15 @@ const STYLE = `
 /* Sur le papier de la production, l'anneau jaune du focus est invisible : le
    signal ne se voit pas sur une surface crème. Il prend l'encre. */
 .atlas-hud .production button:focus-visible{outline-color:#152c3b!important}
+/* Sous le seuil d'ancrage, le panneau est une feuille basse : pas la place de
+   deux colonnes. La liste repasse au-dessus de la fiche et redevient une grille
+   de figurines, bornée en hauteur pour que la fiche garde sa part d'écran. */
+@container atlas-interface (max-width: ${LARGEUR_MINIMALE_ANCRE}px){
+  .atlas-hud .production-corps{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .atlas-hud .production-liste{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:4px;max-height:26cqh;padding:6px;border-right:0;border-bottom:1px solid #15243b1f}
+  .atlas-hud .production-liste button{flex-direction:column;align-items:center;gap:1px;min-height:0;padding:5px 4px 4px;text-align:center}
+  .atlas-hud .production-liste .tt{flex:none;max-width:100%;font-size:var(--t2);text-align:center}
+}
 @media(prefers-reduced-motion:reduce){.atlas-hud *,.atlas-tour{animation:none!important;transition:none!important}}
 `;
 
@@ -1520,12 +1552,6 @@ export function monterHudHtml(
       + `<div class="ordres-grille">${boutons}</div></div>`;
   }
 
-  /** Largeur d'un panneau ancré à une case, en pixels. */
-  const LARGEUR_ANCRE = 190;
-  /** Écart entre le centre de la case et le bord du panneau. */
-  const ECART_ANCRE = 36;
-  /** En deçà, l'écran est trop étroit pour poser un panneau à côté d'une case. */
-  const LARGEUR_MINIMALE_ANCRE = 680;
 
   /**
    * Pose un panneau **à côté** de la case qu'il commente.
@@ -1561,7 +1587,7 @@ export function monterHudHtml(
     // totale. `max-height:calc(100% - 24px)` en feuille limitait la hauteur sans
     // rien dire du bord bas : un panneau posé à 575 px pouvait s'autoriser 1 023
     // et sortait de l'écran, fiche coupée. Ce qui dépasse défile désormais
-    // dedans, ce que `.fiche-corps` et `.production-grille` savent déjà faire.
+    // dedans, ce que `.fiche-corps` et `.production-liste` savent déjà faire.
     return ` data-ancre="oui" style="left:${cx}px;top:${cy}px;max-height:${Math.max(120, H - cy - 12)}px"`;
   }
 
@@ -1864,8 +1890,6 @@ export function monterHudHtml(
   function ficheProduction(v: VueJeu, cle: CleUnite): string {
     const type = v.catalogue.unites[cle];
     if (!type) return '';
-    const fonds = fondsCourants(v);
-    const abordable = type.cout <= fonds;
     const illimite = api.t('fiche.illimite');
     // Le signe, puis le chiffre — la grammaire de la fiche, ici aussi. Le type de
     // mouvement reste un mot : « chenilles » n'a pas de glyphe qui ne mente pas.
@@ -1881,12 +1905,7 @@ export function monterHudHtml(
     const traits = type.traits.length > 0
       ? type.traits.map((tr) => `<span>${ech(libelleTrait(api.t, tr))}</span>`).join('')
       : `<span class="vide">${ech(api.t('fiche.sans_trait'))}</span>`;
-    const cout = nombreIntl(v.locale, type.cout);
     const aide = api.t('fiche.detail');
-    // Ce qui resterait après l'achat, ou ce qui manque pour le faire.
-    const note = abordable
-      ? `<span class="note">${ech(api.t('fiche.solde_apres', { n: nombreIntl(v.locale, fonds - type.cout) }))}</span>`
-      : `<span class="note" data-manque="oui">${ech(api.t('fiche.fonds_insuffisants'))}</span>`;
     return `<div class="panneau-fiche" role="group" aria-label="${ech(api.t('fiche.titre'))}"><div class="fiche-corps">`
       + `<p class="cartouche">${cartouche}</p>`
       + `<div class="fiche-traits">${traits}</div>`
@@ -1895,14 +1914,30 @@ export function monterHudHtml(
       // est longue, et il faudrait la parcourir en entier pour retrouver de quoi
       // la refermer. C'est la même règle que le bouton d'achat.
       + `</div><button type="button" class="plier" data-action="fiche_production"`
-      + ` aria-expanded="${ficheProductionOuverte}">${ech(aide)}${iconeOrdre('replier')}</button>`
-      + `<div class="fiche-action">${note}`
-      + `<button type="button" class="recruter" data-action="produire" data-valeur="${ech(cle)}"${abordable ? '' : ' disabled'}>`
-      + `${ech(api.t('fiche.recruter'))}<span aria-hidden="true">·</span><span>${ech(cout)}</span></button></div></div>`;
+      + ` aria-expanded="${ficheProductionOuverte}">${ech(aide)}${iconeOrdre('replier')}</button></div>`;
   }
 
-  /** Largeur du panneau de production, ancré au bâtiment. */
-  const LARGEUR_PRODUCTION = 400;
+  /**
+   * Le pied du menu : ce qui resterait après l'achat, et le bouton qui l'achète.
+   *
+   * Il traverse les **deux** colonnes et ne défile pas. Un bouton d'achat qu'il
+   * faut aller chercher en bas d'une fiche est un bouton qu'on ne trouve pas ;
+   * et le solde restant est la seule chose qu'on relit entre deux achats.
+   */
+  function piedProduction(v: VueJeu, cle: CleUnite): string {
+    const type = v.catalogue.unites[cle];
+    if (!type) return '';
+    const fonds = fondsCourants(v);
+    const abordable = type.cout <= fonds;
+    const cout = nombreIntl(v.locale, type.cout);
+    const note = abordable
+      ? `<span class="note">${ech(api.t('fiche.solde_apres', { n: nombreIntl(v.locale, fonds - type.cout) }))}</span>`
+      : `<span class="note" data-manque="oui">${ech(api.t('fiche.fonds_insuffisants'))}</span>`;
+    return `<div class="fiche-action">${note}`
+      + `<button type="button" class="recruter" data-action="produire" data-valeur="${ech(cle)}"${abordable ? '' : ' disabled'}>`
+      + `${ech(api.t('fiche.recruter'))}<span aria-hidden="true">·</span><span>${ech(cout)}</span></button></div>`;
+  }
+
 
   /**
    * Le menu de production : un **panneau posé à côté du bâtiment**, plus une
@@ -1943,15 +1978,15 @@ export function monterHudHtml(
       return `<button type="button" data-action="mettre_en_avant" data-valeur="${ech(cle)}"`
         + ` data-actif="${actif ? 'oui' : 'non'}" data-abordable="${abordable ? 'oui' : 'non'}" aria-pressed="${actif ? 'true' : 'false'}"`
         + ` title="${ech(nom)}" aria-label="${ech(`${nom} · ${prix}`)}">`
-        + `${vignette(type.silhouette, v.etat.campCourant, 40)}`
+        + `${vignette(type.silhouette, v.etat.campCourant, 34)}`
         + `<span class="tt">${ech(nom)}</span>`
         + `<span class="cout">${ech(prix)}</span></button>`;
     }).join('');
     const solde = api.t('hud.fonds', { n: nombreIntl(v.locale, fonds) });
-    // Hauteur estimée : elle sert à centrer le panneau sur la case du bâtiment.
-    // Fiche repliée, le panneau fait à peu près la moitié de ce qu'il faisait —
-    // et c'était précisément le reproche.
-    const hauteur = ficheProductionOuverte ? 460 : 320;
+    // Hauteur estimée : elle ne sert qu'à poser le panneau avant de le mesurer
+    // (`replacerProduction`). En deux colonnes elle ne dépend plus guère du
+    // niveau de détail — c'est la plus haute des deux colonnes qui décide.
+    const hauteur = ficheProductionOuverte ? 520 : 420;
     const ancre = ancrer(p.batiment, hauteur, LARGEUR_PRODUCTION);
     ancreProduction = ancre === '' ? null : (api.versEcran(p.batiment)?.y ?? null);
     return `<div class="voile clair" data-action="fermer">`
@@ -1960,8 +1995,11 @@ export function monterHudHtml(
       + `<div class="production-entete"><span class="tt">${ech(api.t('menu.production'))}</span>`
       + `<span class="solde" aria-label="${ech(solde)}">${iconeOrdre('fonds')}${ech(nombreIntl(v.locale, fonds))}</span>`
       + `${boutonRetour()}</div>`
-      + `<div class="production-grille" role="group" aria-label="${ech(api.t('fiche.liste'))}">${cases}</div>`
-      + (enAvant ? ficheProduction(v, enAvant) : '')
+      + `<div class="production-corps">`
+      + `<div class="production-liste" role="group" aria-label="${ech(api.t('fiche.liste'))}">${cases}</div>`
+      + (enAvant ? ficheProduction(v, enAvant) : '<div class="panneau-fiche"></div>')
+      + `</div>`
+      + (enAvant ? piedProduction(v, enAvant) : '')
       + `</div></div>`;
   }
 
@@ -2150,13 +2188,13 @@ export function monterHudHtml(
       const modale = racine.querySelector<HTMLElement>('.p.production');
       let cible: HTMLElement | null = null;
       if (avant?.['action'] === 'mettre_en_avant') {
-        cible = racine.querySelector<HTMLElement>('.production-grille button[data-actif="oui"]');
+        cible = racine.querySelector<HTMLElement>('.production-liste button[data-actif="oui"]');
       } else if (avant?.['action']) {
         const valeur = avant['valeur'] ? `[data-valeur="${avant['valeur']}"]` : '';
         cible = racine.querySelector<HTMLElement>(`.p.production [data-action="${avant['action']}"]${valeur}`);
       }
       (cible ?? modale)?.focus({ preventScroll: true });
-      racine.querySelector('.production-grille button[data-actif="oui"]')?.scrollIntoView({ block: 'nearest' });
+      racine.querySelector('.production-liste button[data-actif="oui"]')?.scrollIntoView({ block: 'nearest' });
       return;
     }
     if (productionOuverte !== null) {

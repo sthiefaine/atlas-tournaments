@@ -1379,6 +1379,40 @@ function enProduction(unites: readonly CleUnite[], fonds?: number) {
   };
 }
 
+test('le menu de production met le catalogue à gauche, la fiche à droite, et le bouton d’achat hors de ce qui défile', () => {
+  const h = enProduction(['infanterie', 'meca', 'char_leger', 'char_moyen']);
+  const html = h.slots.get('production')!.innerHTML;
+
+  // L'ordre du balisage **est** l'ordre lu : la liste, puis la fiche, dans un
+  // corps commun ; le pied vient après et n'est donc dans aucune des deux.
+  const corps = html.indexOf('class="production-corps"');
+  const liste = html.indexOf('class="production-liste"');
+  const fiche = html.indexOf('class="panneau-fiche"');
+  const pied = html.indexOf('class="fiche-action"');
+  assert.ok(corps >= 0 && liste > corps, 'la liste ouvre le corps');
+  assert.ok(fiche > liste, 'la fiche vient après la liste');
+  assert.ok(pied > fiche, 'le pied vient après les deux colonnes');
+
+  // Deux zones qui défilent, jamais trois : c'est la faute pour laquelle ce
+  // menu avait déjà été refait une fois. La liste et le corps de la fiche
+  // défilent ; l'en-tête, le bouton de repli et le pied ne bougent pas.
+  const css = feuille();
+  const defilantes = ['production-liste', 'fiche-corps'];
+  for (const zone of defilantes) {
+    assert.match(css, new RegExp(`\\.atlas-hud \\.${zone}\\{[^}]*overflow:auto`),
+      `${zone} défile`);
+  }
+  for (const fixe of ['production-entete', 'fiche-action', 'production-corps']) {
+    assert.doesNotMatch(css, new RegExp(`\\.atlas-hud \\.${fixe}\\{[^}]*overflow:auto`),
+      `${fixe} ne défile pas`);
+  }
+
+  // Toutes les unités achetables sont dans la liste, chacune avec son prix.
+  for (const cle of ['infanterie', 'meca', 'char_leger', 'char_moyen']) {
+    assert.match(html, new RegExp(`data-action="mettre_en_avant" data-valeur="${cle}"`), `${cle} est proposée`);
+  }
+});
+
 test('le menu de production replie sa fiche longue, et le bouton de détail l’ouvre — un seul balisage', () => {
   // Le panneau posait la grille, cinq chiffres, les traits, ce qu'elle démolit,
   // ce qui la démolit, la note de référence, les paliers d'abri, deux listes de
