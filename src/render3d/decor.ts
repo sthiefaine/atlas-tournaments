@@ -782,7 +782,7 @@ export function ouvrirChantierDecor(
       teinteRocher.setRGB(r.teinte, r.teinte * 0.995, r.teinte * 0.96);
       lot.setColorAt(i, teinteRocher);
     }
-    for (const lot of lotsRocher) if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
+    for (const lot of lotsRocher) if (lot.teintes) lot.teintes.needsUpdate = true;
   }
 
   // --- Paysage : les accessoires du biome et la ligne de rivage (`paysage.ts`).
@@ -1428,7 +1428,7 @@ export function ouvrirChantierDecor(
     });
     for (const lot of [mats, pommeaux, drapeaux]) {
       lot.instanceMatrix.needsUpdate = true;
-      if (lot.instanceColor) lot.instanceColor.needsUpdate = true;
+      if (lot.teintes) lot.teintes.needsUpdate = true;
     }
   }
 

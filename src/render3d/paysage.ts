@@ -971,7 +971,7 @@ export function ouvrirChantierPaysage(
       }
       mesh.setColorAt(i, couleur);
     });
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    if (mesh.teintes) mesh.teintes.needsUpdate = true;
   }
 
   // --- Les accessoires

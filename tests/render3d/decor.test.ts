@@ -8,6 +8,7 @@ import {
   poidsFormesDecor, poseDrapeau, REPETITIONS_TOIT, type Decor,
 } from '../../src/render3d/decor';
 import type { GrilleTerrain } from '../../src/render3d/geometrie';
+import { LotInstancie } from '../../src/render3d/lots';
 import { terrainLogique } from '../../src/engine/index';
 import type { Biome, CleTerrain } from '../../src/schemas/index';
 import { ecarts, empreinte } from './empreinte-decor';
@@ -34,7 +35,7 @@ function materiaux(batiment: THREE.Object3D): THREE.MeshStandardNodeMaterial[] {
 }
 
 /** La matrice d'instance d'un lot de pavillons, décomposée. */
-function instance(lot: THREE.InstancedMesh, i: number): { position: THREE.Vector3; echelle: THREE.Vector3 } {
+function instance(lot: LotInstancie, i: number): { position: THREE.Vector3; echelle: THREE.Vector3 } {
   const mat = new THREE.Matrix4();
   const position = new THREE.Vector3();
   const echelle = new THREE.Vector3();
@@ -68,10 +69,10 @@ test('chaque bâtiment porte un mât, et seul un bâtiment tenu hisse un drapeau
   const types = ['ville', 'qg', 'usine', 'aeroport'] as const;
   const sans = { ...etat, proprietaires: { '1,0': 1 as const }, unites: [] };
   const decor = creerDecor({ largeur: 4, hauteur: 1, terrainDe: (x) => types[x]! }, sans, () => 0.2);
-  const mats = decor.groupe.getObjectByName('mats') as THREE.InstancedMesh;
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
-  assert.equal(mats.count, 4, 'un mât par bâtiment');
-  assert.equal(drapeaux.count, 4);
+  const mats = decor.groupe.getObjectByName('mats') as LotInstancie;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
+  assert.equal(mats.compte, 4, 'un mât par bâtiment');
+  assert.equal(drapeaux.compte, 4);
   // Le mât se plante sur le socle, à la hauteur du sol lue au moment de la pose.
   assert.ok(instance(mats, 0).position.y > 0.2 && instance(mats, 0).position.y < 0.26);
   // Le QG hisse plus haut que la ville : c'est le drapeau qu'on lit de loin.
@@ -119,9 +120,9 @@ test('le port est un bâtiment comme les autres : quai, bassin, grue, mât et pa
   // En service, les vitrages du hangar et le feu du môle s'allument la nuit.
   assert.ok(materiaux(port).some((m) => m.emissive.getHex() !== 0), 'le feu du môle doit pouvoir s’allumer');
   // Et il porte un mât, comme tout bâtiment : c'est là que se lit la capture.
-  const mats = decor.groupe.getObjectByName('mats') as THREE.InstancedMesh;
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
-  assert.equal(mats.count, 2, 'un mât par port');
+  const mats = decor.groupe.getObjectByName('mats') as LotInstancie;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
+  assert.equal(mats.compte, 2, 'un mât par port');
   assert.equal(instance(drapeaux, 0).echelle.x, 1, 'le port tenu hisse ses couleurs');
   assert.equal(instance(drapeaux, 1).echelle.x, 0, 'le port neutre garde le mât nu');
 
@@ -163,7 +164,7 @@ test('un bâtiment désaffecté est fermé, terni, éteint — jamais aux couleu
     // retire : le bâtiment reste au moins aussi fourni, il n'est pas rasé.
     assert.ok(sommetsDe(b) > sommets[i]!, 'rien n’est effondré');
   });
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
   for (let i = 0; i < 3; i += 1) assert.equal(instance(drapeaux, i).echelle.x, 0, 'mât nu');
 
   // La remise en service reconstruit : la clé de reconstruction lit les désaffectés.
@@ -278,7 +279,7 @@ test('une capture en cours abaisse le drapeau d’après l’état, jamais d’a
   const grille = { largeur: 1, hauteur: 1, terrainDe: () => 'ville' as const };
   const tenue = { ...etat, proprietaires: { [cle]: 1 as const }, unites: [capteur] };
   const decor = creerDecor(grille, tenue, () => 0);
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
   const miCourse = instance(drapeaux, 0).position.y;
   decor.majProprietaires({ ...tenue, unites: [] }, null);
   const haut = instance(drapeaux, 0).position.y;
@@ -313,7 +314,7 @@ test('la prise d’un drapeau s’impose à l’état le temps d’un geste, pui
   );
   assert.equal(decor.drapeau('9,9'), null, 'une case sans bâtiment n’a pas de drapeau');
   const prise = decor.drapeau('0,0')!;
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
   const haut = instance(drapeaux, 0).position.y;
   prise.forcer(0, 0);
   const couleur = new THREE.Color();
@@ -340,7 +341,7 @@ test('les drapeaux flottent, sauf quand le système demande moins de mouvement',
   const etat = partie('plaine');
   const grille = { largeur: 1, hauteur: 1, terrainDe: () => 'ville' as const };
   const tenue = creerDecor(grille, { ...etat, proprietaires: { '0,0': 0 }, unites: [] }, () => 0);
-  const drapeaux = tenue.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = tenue.groupe.getObjectByName('drapeaux') as LotInstancie;
   const pos = drapeaux.geometry.getAttribute('position');
   const avant = [...pos.array];
   assert.ok(tenue.avancer(120), 'un drapeau hissé demande à redessiner');
@@ -398,10 +399,10 @@ test('les biomes portent des silhouettes de végétation distinctes sans multipl
   const grille = { largeur: 1, hauteur: 1, terrainDe: () => 'foret' as const };
   const alpine = creerDecor(grille, etat, () => 0, 'montagne');
   const tropical = creerDecor(grille, etat, () => 0, 'archipel');
-  const coniferes = alpine.groupe.getObjectByName('coniferes') as THREE.InstancedMesh;
-  const palmes = tropical.groupe.getObjectByName('palmes') as THREE.InstancedMesh;
-  assert.equal(coniferes.count, 3);
-  assert.equal(palmes.count, 3);
+  const coniferes = alpine.groupe.getObjectByName('coniferes') as LotInstancie;
+  const palmes = tropical.groupe.getObjectByName('palmes') as LotInstancie;
+  assert.equal(coniferes.compte, 3);
+  assert.equal(palmes.compte, 3);
   assert.notEqual(coniferes.geometry.getAttribute('position').count, palmes.geometry.getAttribute('position').count);
   alpine.dispose(); tropical.dispose();
 });
@@ -409,7 +410,7 @@ test('les biomes portent des silhouettes de végétation distinctes sans multipl
 test('la réduction hivernale des couronnes conserve leurs positions sur le plateau', () => {
   const etat = partie('plaine');
   const decor = creerDecor({ largeur: 3, hauteur: 3, terrainDe: () => 'foret' }, etat, () => 0, 'marais');
-  const feuillus = decor.groupe.getObjectByName('feuillus') as THREE.InstancedMesh;
+  const feuillus = decor.groupe.getObjectByName('feuillus') as LotInstancie;
   const avant = new THREE.Matrix4(); const apres = new THREE.Matrix4();
   feuillus.getMatrixAt(12, avant);
   decor.appliquerAmbiance(parametresAmbiance('hiver', 'jour', 'clair'), 'hiver');
@@ -425,18 +426,18 @@ test('les pierres se posent en couronne, enfoncées dans le sol et jamais identi
   const grille = { largeur: 1, hauteur: 1, terrainDe: (): 'montagne' => 'montagne' };
   const solide = 0.4;
   const decor = creerDecor(grille, etat, () => solide);
-  const lots = [0, 1, 2].map((v) => decor.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh);
+  const lots = [0, 1, 2].map((v) => decor.groupe.getObjectByName(`rochers-${v}`) as LotInstancie);
 
-  for (const lot of lots) assert.ok(lot instanceof THREE.InstancedMesh, 'trois silhouettes, trois lots');
+  for (const lot of lots) assert.ok(lot instanceof LotInstancie, 'trois silhouettes, trois lots');
   // Trois volumes distincts : c'est tout l'objet de la reprise. Un seul
   // polyèdre régulier répété donnait une caillasse de dés.
   const sommets = lots.map((l) => l.geometry.getAttribute('position').count);
   assert.equal(new Set(lots.map((l) => l.geometry.uuid)).size, 3);
   assert.ok(sommets.every((n) => n > 0));
 
-  const total = lots.reduce((n, l) => n + l.count, 0);
+  const total = lots.reduce((n, l) => n + l.compte, 0);
   assert.ok(total >= 3 && total <= 5, `trois à cinq pierres par case, vu ${total}`);
-  assert.ok(lots[0]!.count + lots[2]!.count === 1, 'un seul gros bloc, ou une seule dalle');
+  assert.ok(lots[0]!.compte + lots[2]!.compte === 1, 'un seul gros bloc, ou une seule dalle');
 
   const mat = new THREE.Matrix4();
   const position = new THREE.Vector3();
@@ -445,7 +446,7 @@ test('les pierres se posent en couronne, enfoncées dans le sol et jamais identi
   const couleur = new THREE.Color();
   const teintes = new Set<string>();
   for (const lot of lots) {
-    for (let i = 0; i < lot.count; i += 1) {
+    for (let i = 0; i < lot.compte; i += 1) {
       lot.getMatrixAt(i, mat);
       mat.decompose(position, rotation, echelle);
       // Le centre de la case reste dégagé : c'est là que se pose une unité.
@@ -465,10 +466,10 @@ test('les pierres se posent en couronne, enfoncées dans le sol et jamais identi
   // Déterminisme : deux montages rendent exactement le même éboulis.
   const bis = creerDecor(grille, etat, () => solide);
   for (let v = 0; v < 3; v += 1) {
-    const a = decor.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh;
-    const b = bis.groupe.getObjectByName(`rochers-${v}`) as THREE.InstancedMesh;
-    assert.equal(a.count, b.count);
-    assert.deepEqual([...a.instanceMatrix.array], [...b.instanceMatrix.array]);
+    const a = decor.groupe.getObjectByName(`rochers-${v}`) as LotInstancie;
+    const b = bis.groupe.getObjectByName(`rochers-${v}`) as LotInstancie;
+    assert.equal(a.compte, b.compte);
+    assert.deepEqual([...a.matricesAPlat()], [...b.matricesAPlat()]);
   }
   bis.dispose();
   decor.dispose();
@@ -480,7 +481,7 @@ test('les pierres se reposent quand le terrain bouge', () => {
   const decor = creerDecor(
     { largeur: 1, hauteur: 1, terrainDe: (): 'montagne' => 'montagne' }, etat, () => sol,
   );
-  const lot = decor.groupe.getObjectByName('rochers-1') as THREE.InstancedMesh;
+  const lot = decor.groupe.getObjectByName('rochers-1') as LotInstancie;
   const mat = new THREE.Matrix4();
   lot.getMatrixAt(0, mat);
   const avant = mat.elements[13]!;
@@ -497,7 +498,7 @@ test('changer de grille ressème les arbres, les rochers, les mâts, et rebâtit
   const etat = partie('plaine');
   const nue = { largeur: 4, hauteur: 2, terrainDe: (): 'plaine' => 'plaine' };
   const decor = creerDecor(nue, etat, () => 0);
-  const compter = (nom: string): number => (decor.groupe.getObjectByName(nom) as THREE.InstancedMesh | null)?.count ?? 0;
+  const compter = (nom: string): number => (decor.groupe.getObjectByName(nom) as LotInstancie | null)?.compte ?? 0;
   const batiments = (): number => decor.groupe.getObjectByName('batiments')!.children.length;
   assert.equal(compter('troncs'), 0);
   assert.equal(compter('rochers-1'), 0);
@@ -653,7 +654,7 @@ test('majProprietaires ne rebalaye rien tant que bâtiments, occupants et lueurs
   const grille = { largeur: 3, hauteur: 1, terrainDe: () => 'ville' as const };
   const e = { ...etat, proprietaires: { '0,0': 0 as const, '1,0': 1 as const }, desaffectes: [], unites: [{ ...soldat, x: 5, y: 5 }] };
   const decor = creerDecor(grille, e, () => 0);
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
   const batiments = decor.groupe.getObjectByName('batiments')!;
   decor.majProprietaires(e, null, CAT);
   const version = drapeaux.instanceMatrix.version;
@@ -705,7 +706,7 @@ test('l’ambiance n’est repeinte que si ses paramètres ou la saison changent
   decor.appliquerAmbiance(p, 'ete');
   const batiment = decor.groupe.getObjectByName('batiments')!.children[0]!;
   const mats = materiaux(batiment);
-  const arbres = decor.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const arbres = decor.groupe.children.filter((o): o is LotInstancie => o instanceof LotInstancie);
   const tous = [...mats, ...arbres.map((a) => a.material as THREE.MeshStandardNodeMaterial)];
   // On noircit tout : si l'ambiance repasse, elle repeint.
   for (const m of tous) m.color.setHex(0x000000);
@@ -725,7 +726,7 @@ test('la toile des drapeaux bat trente fois par seconde au plus, sans cesser de 
   const etat = partie('plaine');
   const grille = { largeur: 1, hauteur: 1, terrainDe: () => 'ville' as const };
   const decor = creerDecor(grille, { ...etat, proprietaires: { '0,0': 0 }, unites: [] }, () => 0);
-  const pos = (decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh).geometry.getAttribute('position');
+  const pos = (decor.groupe.getObjectByName('drapeaux') as LotInstancie).geometry.getAttribute('position');
   const avant = [...pos.array];
   assert.ok(decor.avancer(16), 'la boucle doit continuer');
   assert.deepEqual([...pos.array], avant, 'à soixante images par seconde, une image sur deux ne réécrit pas la toile');
@@ -765,7 +766,7 @@ test('tout le décor lit le masque de brouillard, après l’éclairage et par i
     greffes += 1;
     // Le même nœud de sortie pour tout le décor : le masque, après l'éclairage.
     assert.equal(mat.outputNode, uniformes.sortie, `${o.name} lit le masque`);
-    if (o instanceof THREE.InstancedMesh) instancies += 1;
+    if (o instanceof LotInstancie) instancies += 1;
   });
   assert.ok(greffes > 5, `tout le décor est greffé (${greffes} matériaux)`);
   assert.ok(instancies > 0, 'dont des lots instanciés');
@@ -775,16 +776,22 @@ test('tout le décor lit le masque de brouillard, après l’éclairage et par i
   // sommet **après** la matrice d'instance. Sans cela, toutes les copies d'un
   // lot liraient la case de l'origine du lot ; le moteur à nœuds l'assure de
   // lui-même, là où le GLSL exigeait de l'écrire.
-  const drapeaux = decor.groupe.getObjectByName('drapeaux') as THREE.InstancedMesh;
+  const drapeaux = decor.groupe.getObjectByName('drapeaux') as LotInstancie;
   const { vertex, fragment } = construireNuanceur(drapeaux);
-  const instance = ligneDe(vertex, /varyings\.positionLocal = \( NodeBuffer_\d+\.\w+\[ instanceIndex \] \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  // Depuis `lots.ts`, la matrice vient de quatre attributs par instance au lieu
+  // du tampon d'uniformes de three — c'est ce qui fait tenir tous les lots dans
+  // un programme. L'ordre, lui, ne change pas, et c'est ce qui compte ici.
+  const instance = ligneDe(vertex, /varyings\.positionLocal = \( nodeVar\d+ \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
   const monde = ligneDe(vertex, /varyings\.v_positionWorld = \( object\.\w+ \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
   assert.ok(instance >= 0 && monde > instance, 'la matrice d’instance, puis la position monde');
-  assert.match(vertex, /varyings\.vInstanceColor = /, 'la couleur par instance passe au fragment');
+  assert.match(vertex, /nodeVar\d+ = mat4x4<f32>\( iCol0, iCol1, iCol2, iCol3 \)/, 'la matrice vient des colonnes');
+  const teinte = /varyings\.(\w+) = iTeinte;/.exec(vertex)?.[1];
+  assert.ok(teinte, 'la couleur par instance passe au fragment');
+  assert.ok(!fragment.includes('vInstanceColor'), 'et non par le varying de three, que rien n’écrirait');
   const lecture = ligneDe(fragment, /textureSample\( tVisibles, tVisibles_sampler, clamp\( \( v_positionWorld\.xz \/ object\.uCarteBrouillard \)/);
   const eclaire = ligneDe(fragment, /^\s*Output = /);
   assert.ok(eclaire >= 0 && lecture > eclaire, 'le masque se lit après la couleur éclairée');
-  assert.match(fragment, /DiffuseColor = vec4<f32>\( \( vInstanceColor \* object\.\w+ \), 1\.0 \);/, 'la couleur d’instance teinte le diffus');
+  assert.ok(fragment.includes(teinte!), 'et la teinte d’instance entre dans le diffus');
 
   // Greffer deux fois ne change rien, et un jumeau translucide — un clone —
   // naît greffé : le moteur à nœuds recopie les nœuds d'un matériau cloné.
@@ -851,15 +858,19 @@ test('une unité cachée ne rend pas son bâtiment translucide', () => {
   decor.dispose();
 });
 
-test('le nombre d’instances est écrit dans le nuanceur : un lot se rebâtit, il ne se règle pas', () => {
+test('un `InstancedMesh` écrit son compte dans le nuanceur — la raison d’être de `lots.ts`', () => {
   // Piège de r170, trouvé le 8 septembre 2026 en cherchant les cousins du défaut
   // de la flèche. Sous les mille instances, `InstanceNode` range les matrices
   // dans un tampon d'uniformes dont la taille est **écrite en dur** dans le
   // WGSL, avec le `count` du premier rendu ; et la clé de l'objet de rendu ne
   // porte que l'identifiant de la maille, jamais son compte. Relever `count`
   // ensuite ne recompile donc rien, et les instances au-delà lisent hors du
-  // tableau. C'est pour cela que `batirArbres`, `batirRochers` et
-  // `batirPavillons` refont la maille au lieu d'ajuster le compte.
+  // tableau — d'où un lot qui se **rebâtit** au lieu de se régler, et un
+  // programme par lot.
+  //
+  // Le décor ne passe plus par là : ses lots sont des `LotInstancie`, qui
+  // instancient par attributs. Ce test garde la règle du moteur sous les yeux,
+  // parce que c'est elle qui interdit d'y revenir.
   const geo = new THREE.BoxGeometry(1, 1, 1);
   const mat = new THREE.MeshStandardNodeMaterial({ color: 0x808080 });
   const taille = (compte: number): string | undefined => {
@@ -872,9 +883,13 @@ test('le nombre d’instances est écrit dans le nuanceur : un lot se rebâtit, 
   assert.equal(taille(6), '6', 'et non la capacité du lot');
 });
 
-test('un lot instancié vide s’éteint : à zéro, le moteur dessinerait une instance', () => {
-  // `RenderObject.getDrawParameters` fait `object.count > 1 ? object.count : 1`.
-  // Un lot à zéro coûterait un appel de dessin et une instance à matrice nulle.
+test('un lot instancié vide s’éteint, et son groupe avec lui', () => {
+  // `RenderObject.getDrawParameters` fait `object.count > 1 ? object.count : 1`
+  // pour une maille instanciée : un lot à zéro coûtait un appel de dessin et une
+  // instance à matrice nulle. Un `LotInstancie` y échappe — le compte passe par
+  // `geometry.instanceCount`, et zéro rend `null`. On l'éteint tout de même,
+  // pour une autre raison : une maille éteinte est ignorée par la **passe
+  // d'ombres**, qui ne lit pas le compte.
   const source = readFileSync('node_modules/three/src/renderers/common/RenderObject.js', 'utf8');
   assert.ok(source.includes('object.count > 1 ? object.count : 1'), 'la règle du moteur n’a pas changé');
 
@@ -885,10 +900,10 @@ test('un lot instancié vide s’éteint : à zéro, le moteur dessinerait une i
     y === 0 ? (x === 0 ? 'ville' : 'foret') : 'plaine') };
   const decor = creerDecor(grille, { ...etat, proprietaires: { '0,0': 1 as const }, unites: [] }, () => 0);
   const lots = [...decor.groupe.children, ...decor.groupe.children.flatMap((o) => o.children)]
-    .filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+    .filter((o): o is LotInstancie => o instanceof LotInstancie);
   assert.ok(lots.length > 0);
   for (const lot of lots) {
-    assert.equal(lot.visible, lot.count > 0, `${lot.name} : visible si et seulement s’il porte quelque chose`);
+    assert.equal(lot.visible, lot.compte > 0, `${lot.name} : visible si et seulement s’il porte quelque chose`);
   }
   decor.dispose();
 });

@@ -109,6 +109,13 @@ const couleurInstanciee = /*@__PURE__*/ materialColor.mul(vec3(attribute(TEINTE,
 /** Un tampon dont on peut demander le téléversement, comme `instanceMatrix`. */
 export interface TamponInstances {
   needsUpdate: boolean;
+  /**
+   * Le compteur de téléversements, comme celui d'un `BufferAttribute`. Il ne
+   * sert pas au moteur — il sert de **témoin** : `decor.test.ts` s'en sert pour
+   * affirmer qu'un survol ne renvoie rien à la carte graphique. Un booléen ne
+   * pourrait pas le dire, puisqu'il retombe à faux au téléversement suivant.
+   */
+  readonly version: number;
 }
 
 /**
@@ -169,6 +176,8 @@ export class LotInstancie extends THREE.Mesh {
         lot.colonnesSales = v;
         if (v) for (const c of colonnes) c.needsUpdate = true;
       },
+      // Les quatre colonnes partent ensemble : la première dit pour toutes.
+      get version(): number { return colonnes[0]!.version; },
     };
     // Une maille ordinaire n'a pas de sphère englobante juste pour ses
     // instances : le tri par tronc de vue mentirait (voir l'en-tête).
@@ -188,8 +197,17 @@ export class LotInstancie extends THREE.Mesh {
 
   set compte(n: number) { this.formeInstanciee.instanceCount = Math.max(0, Math.min(this.capacite, n)); }
 
-  /** Le tampon des teintes, ou `null` tant que le lot n'en a pas reçu. */
-  get instanceColor(): TamponInstances | null { return this.teintesTampon; }
+  /**
+   * Le tampon des teintes, ou `null` tant que le lot n'en a pas reçu.
+   *
+   * Il s'appelle `teintes` et **surtout pas `instanceColor`**, pour la même
+   * raison que `compte` ne s'appelle pas `count` : `setupDiffuseColor` fait
+   * `if ( object.instanceColor )` et multiplie alors la couleur par le varying
+   * `vInstanceColor` — que seul `InstanceNode` écrit, et qui reste donc **non
+   * initialisé** ici. Les drapeaux sortaient noirs, sans une erreur. Un test le
+   * tient.
+   */
+  get teintes(): TamponInstances | null { return this.teintesTampon; }
 
   /** Pose la matrice d'une instance. Même signature que `InstancedMesh`. */
   setMatrixAt(i: number, matrice: THREE.Matrix4): void {
@@ -255,6 +273,7 @@ export class LotInstancie extends THREE.Mesh {
       this.teintesTampon = {
         get needsUpdate(): boolean { return attr.needsUpdate; },
         set needsUpdate(v: boolean) { attr.needsUpdate = v; },
+        get version(): number { return attr.version; },
       };
       const mat = this.material as THREE.Material & { colorNode?: unknown };
       // Un matériau qui a déjà sa couleur en nœud garde la sienne : on ne la

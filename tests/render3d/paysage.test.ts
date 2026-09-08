@@ -10,6 +10,7 @@ import * as THREE from 'three/webgpu';
 import { carteBanc } from '../../src/app/atelier/banc';
 import { parametresAmbiance } from '../../src/render3d/eclairage';
 import { alea, NIVEAU_EAU, type GrilleTerrain } from '../../src/render3d/geometrie';
+import { LotInstancie } from '../../src/render3d/lots';
 import {
   creerPaysage, ESPECES, GENRES_PAYSAGE, genreRivage, memesVisibles, PAYSAGES, segmentsRivage, semerPaysage,
   type Accessoire,
@@ -111,20 +112,20 @@ test('le montage instancie un lot par genre présent, une géométrie de rivage,
   const paysage = creerPaysage(g, sol, 'marais');
   const semis = semerPaysage(g, 'marais');
   const genres = new Set(semis.map((a) => a.genre));
-  const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const lots = paysage.groupe.children.filter((o): o is LotInstancie => o instanceof LotInstancie);
   assert.equal(lots.length, genres.size, 'un lot par genre, ni plus ni moins');
   for (const lot of lots) {
     const genre = lot.name.replace('paysage-', '');
     assert.ok(genres.has(genre as typeof semis[number]['genre']), `lot inattendu ${lot.name}`);
-    assert.equal(lot.count, semis.filter((a) => a.genre === genre).length);
+    assert.equal(lot.compte, semis.filter((a) => a.genre === genre).length);
   }
 
   // Ce qui flotte ne descend jamais sous l'eau : un nénuphar sur un fond de mer
   // à −0,4 reste au plan d'eau.
-  const nenuphars = paysage.groupe.getObjectByName('paysage-nenuphar') as THREE.InstancedMesh;
+  const nenuphars = paysage.groupe.getObjectByName('paysage-nenuphar') as LotInstancie;
   const mat = new THREE.Matrix4();
   const position = new THREE.Vector3();
-  for (let i = 0; i < nenuphars.count; i += 1) {
+  for (let i = 0; i < nenuphars.compte; i += 1) {
     nenuphars.getMatrixAt(i, mat);
     position.setFromMatrixPosition(mat);
     assert.ok(position.y >= NIVEAU_EAU - 1e-6, `nénuphar noyé à ${position.y}`);
@@ -168,8 +169,8 @@ test('le montage instancie un lot par genre présent, une géométrie de rivage,
 test('les fumerolles fument même sans vent, et respectent la préférence de mouvement', () => {
   const g = grilleTemoin();
   const paysage = creerPaysage(g, () => 0, 'volcanique');
-  const fumee = paysage.groupe.getObjectByName('paysage-fumee') as THREE.InstancedMesh;
-  assert.ok(fumee instanceof THREE.InstancedMesh, 'la carte-témoin porte au moins une fumerolle');
+  const fumee = paysage.groupe.getObjectByName('paysage-fumee') as LotInstancie;
+  assert.ok(fumee instanceof LotInstancie, 'la carte-témoin porte au moins une fumerolle');
   assert.equal(fumee.castShadow, false, 'la fumée ne porte pas d’ombre');
   paysage.appliquerAmbiance(parametresAmbiance('ete', 'jour', 'clair'), 'ete');
   assert.equal(paysage.avancer(16, true), false);
@@ -179,7 +180,7 @@ test('les fumerolles fument même sans vent, et respectent la préférence de mo
 
 test('l’ambiance du paysage n’est repeinte que si ses paramètres ou la saison changent', () => {
   const paysage = creerPaysage(grilleTemoin(), () => 0, 'marais');
-  const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const lots = paysage.groupe.children.filter((o): o is LotInstancie => o instanceof LotInstancie);
   const mats = lots.map((l) => l.material as THREE.MeshStandardNodeMaterial);
   const p = parametresAmbiance('ete', 'jour', 'clair');
   paysage.appliquerAmbiance(p, 'ete');
@@ -217,7 +218,7 @@ test('les accessoires du paysage lisent le masque de brouillard, après l’écl
   const uniformes = uniformesTemoins();
   grefferBrouillardSur(paysage.groupe, uniformes, 'atlas-test');
 
-  const lots = paysage.groupe.children.filter((o): o is THREE.InstancedMesh => o instanceof THREE.InstancedMesh);
+  const lots = paysage.groupe.children.filter((o): o is LotInstancie => o instanceof LotInstancie);
   assert.ok(lots.length > 0, 'la carte-témoin a des accessoires');
   const rivage = paysage.groupe.getObjectByName('rivage') as THREE.Mesh;
   for (const lot of [...lots, rivage]) {
@@ -231,11 +232,23 @@ test('les accessoires du paysage lisent le masque de brouillard, après l’écl
   // la couleur éclairée.
   const lot = lots.find((l) => l.name === 'paysage-roseau') ?? lots[0]!;
   const { vertex, fragment } = construireNuanceur(lot);
-  const instance = ligneDe(vertex, /varyings\.positionLocal = \( NodeBuffer_\d+\.\w+\[ instanceIndex \] \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
+  // La matrice vient de quatre attributs par instance depuis `lots.ts`, et non
+  // plus du tampon d'uniformes de three : c'est ce qui met tous les genres de
+  // paysage dans un même programme. L'ordre, lui, est le même.
+  const instance = ligneDe(vertex, /varyings\.positionLocal = \( nodeVar\d+ \* vec4<f32>\( varyings\.positionLocal, 1\.0 \) \)\.xyz;/);
   const monde = ligneDe(vertex, /varyings\.v_positionWorld = /);
   assert.ok(instance >= 0 && monde > instance, `${lot.name} : la matrice d’instance, puis la position monde`);
-  assert.match(fragment, /DiffuseColor = \( vec4<f32>\( vInstanceColor, 1\.0 \) \* vec4<f32>\( \( object\.\w+ \* nodeVarying\d+ \), /,
-    'couleur d’instance × couleur de sommet');
+  assert.match(vertex, /nodeVar\d+ = mat4x4<f32>\( iCol0, iCol1, iCol2, iCol3 \)/, 'la matrice vient des colonnes');
+  const teinte = /varyings\.(\w+) = iTeinte;/.exec(vertex)?.[1];
+  assert.ok(teinte, 'la teinte d’instance passe au fragment');
+  assert.ok(!fragment.includes('vInstanceColor'), 'et non par le varying de three, que rien n’écrirait');
+  const diffus = fragment.split('\n').find((l) => l.includes('DiffuseColor = ')) ?? '';
+  assert.ok(diffus.includes(teinte!), `couleur d’instance dans le diffus : ${diffus}`);
+  // Et la couleur de **sommet** avec elle : les deux voyagent en varyings, la
+  // teinte par instance et la nuance du maillage, et le diffus est leur produit.
+  const sommet = /varyings\.(\w+) = color;/.exec(vertex)?.[1];
+  assert.ok(sommet && sommet !== teinte, 'la couleur de sommet a son propre varying');
+  assert.ok(diffus.includes(sommet!), `couleur de sommet dans le diffus : ${diffus}`);
   const lecture = ligneDe(fragment, /textureSample\( tVisibles, tVisibles_sampler, clamp\( \( v_positionWorld\.xz/);
   assert.ok(lecture > ligneDe(fragment, /^\s*Output = /), `${lot.name} : le masque après la couleur éclairée`);
   paysage.dispose();

@@ -21,13 +21,34 @@ function forme(): THREE.BufferGeometry {
   return new THREE.BoxGeometry(1, 1, 1);
 }
 
-test('`count` n’existe pas sur un lot : c’est le nom que three interroge', () => {
+test('ni `count` ni `instanceColor` : ce sont les deux noms que three interroge', () => {
   const lot = new LotInstancie(forme(), new THREE.MeshStandardNodeMaterial(), 8);
   lot.compte = 5;
+  lot.setColorAt(0, new THREE.Color(1, 0, 0));
   // `getMaterialCacheKey` fait `if ( object.count > 1 ) cacheKey += object.uuid`.
   // Porter ce nom-là rendrait un programme par lot, c'est-à-dire tout ce que le
   // module défait — et sans bruit, puisque tout continuerait de s'afficher.
   assert.equal((lot as unknown as { count?: number }).count, undefined);
+  // `setupDiffuseColor` fait `if ( object.instanceColor )` et multiplie alors
+  // par le varying `vInstanceColor`, que seul `InstanceNode` écrit. Porter ce
+  // nom-là teindrait le lot par une valeur **non initialisée** : les drapeaux
+  // sortaient noirs, sans une erreur, et c'est le dump du WGSL qui l'a montré.
+  assert.equal((lot as unknown as { instanceColor?: unknown }).instanceColor, undefined);
+  assert.ok(lot.teintes, 'la teinte se lit sous un nom à nous');
+});
+
+test('le WGSL d’un lot teinté ne lit aucun varying que rien n’écrit', () => {
+  const mat = new THREE.MeshStandardNodeMaterial();
+  const lot = new LotInstancie(forme(), mat, 8);
+  lot.compte = 4;
+  lot.setColorAt(0, new THREE.Color(1, 0, 0));
+  const { vertex, fragment } = construireNuanceur(lot);
+  assert.ok(!fragment.includes('vInstanceColor'), 'le varying de three n’est pas convoqué');
+  assert.match(vertex, /iTeinte/, 'la teinte entre par son attribut');
+  // Ce que le sommet écrit, le fragment le lit : le varying a un auteur.
+  const ecrit = /varyings\.(\w+) = iTeinte;/.exec(vertex)?.[1];
+  assert.ok(ecrit, 'le sommet passe la teinte au fragment');
+  assert.ok(fragment.includes(ecrit!), 'et le fragment lit celui-là');
 });
 
 test('deux lots de tailles différentes ne font qu’un seul programme', () => {
@@ -98,11 +119,11 @@ test('une matrice se range en quatre colonnes, comme `Matrix4.elements` les donn
 test('la teinte n’arrive qu’à qui la demande, et branche la couleur du matériau', () => {
   const mat = new THREE.MeshStandardNodeMaterial();
   const lot = new LotInstancie(forme(), mat, 4);
-  assert.equal(lot.instanceColor, null, 'un lot sans teinte n’a pas d’attribut de teinte');
+  assert.equal(lot.teintes, null, 'un lot sans teinte n’a pas d’attribut de teinte');
   assert.equal((mat as unknown as { colorNode: unknown }).colorNode ?? null, null);
 
   lot.setColorAt(2, new THREE.Color(0.25, 0.5, 0.75));
-  assert.ok(lot.instanceColor, 'le premier appel crée le tampon');
+  assert.ok(lot.teintes, 'le premier appel crée le tampon');
   const teintes = lot.geometry.getAttribute('iTeinte');
   assert.deepEqual([...teintes.array.slice(6, 9)], [0.25, 0.5, 0.75]);
   assert.deepEqual([...teintes.array.slice(0, 3)], [1, 1, 1], 'les autres restent neutres');
