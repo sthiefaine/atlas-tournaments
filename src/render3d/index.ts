@@ -721,6 +721,16 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       };
     },
 
+    /**
+     * Bâti veut dire : toutes les tranches jouées — sol, décor, unités, et le
+     * préchauffage qui va avec. Avant `afficher`, il n'y a ni monde ni chantier
+     * et la réponse est non : ce qui attend le monde attend aussi qu'on le lui
+     * demande.
+     */
+    mondeBati(): boolean {
+      return chantier !== null ? chantier.fini : monde !== null;
+    },
+
     qualite(q: QualiteRendu): void {
       scene3d?.reglerQualite(q);
     },

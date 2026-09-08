@@ -6,7 +6,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { etapeChargement, monterJeu, type OptionsJeu } from '../../src/render/jeu';
+import {
+  attendreMonde, etapeChargement, monterJeu, MS_BUDGET_MONDE, MS_SONDE_MONDE, type OptionsJeu,
+} from '../../src/render/jeu';
 import type { MesuresRendu, Rendu } from '../../src/render/rendu';
 import type { Catalogue } from '../../src/engine/index';
 import type { MapDef, Scenario } from '../../src/schemas/types';
@@ -83,4 +85,67 @@ test('sans fabrique de rendu, on lève avant de toucher au conteneur', () => {
     }),
     /aucune fabrique de rendu/,
   );
+});
+
+// ---------------------------------------------------------------------------
+// L'ouverture attend que le monde soit bâti, pas seulement dessiné
+// ---------------------------------------------------------------------------
+
+/** Un ordonnanceur de papier : rien ne court, on avance à la main. */
+function papier(): { planifier: (r: () => void, ms: number) => void; avancer(pas?: number): void; enAttente(): number } {
+  let file: (() => void)[] = [];
+  return {
+    planifier: (rappel) => { file.push(rappel); },
+    avancer(pas = 1): void {
+      for (let i = 0; i < pas; i += 1) {
+        const suite = file;
+        file = [];
+        for (const r of suite) r();
+      }
+    },
+    enAttente: () => file.length,
+  };
+}
+
+test('l’ouverture attend que la peau ait bâti son monde, et non sa première image', () => {
+  const ord = papier();
+  let bati = false;
+  let ouvert = 0;
+  attendreMonde(() => bati, () => { ouvert += 1; }, ord.planifier);
+  assert.equal(ouvert, 0, 'rien ne part tant que le décor et les figurines se posent');
+  ord.avancer(3);
+  assert.equal(ouvert, 0, 'et le sondage ne se lasse pas tout seul');
+  bati = true;
+  ord.avancer();
+  assert.equal(ouvert, 1, 'le monde bâti, l’ouverture part');
+  ord.avancer(2);
+  assert.equal(ouvert, 1, 'et elle ne part qu’une fois');
+});
+
+test('une peau qui ne bâtit rien en tranches ne fait attendre personne', () => {
+  const ord = papier();
+  let ouvert = 0;
+  attendreMonde(undefined, () => { ouvert += 1; }, ord.planifier);
+  assert.equal(ouvert, 1, 'sans réponse possible, on joue tout de suite');
+  assert.equal(ord.enAttente(), 0, 'et rien n’est mis en file');
+});
+
+test('un chantier qui ne finit pas ne retient pas la partie', () => {
+  const ord = papier();
+  let ouvert = 0;
+  attendreMonde(() => false, () => { ouvert += 1; }, ord.planifier);
+  // Le budget est un nombre de pas de sonde : on les joue tous, et un de plus.
+  ord.avancer(Math.ceil(MS_BUDGET_MONDE / MS_SONDE_MONDE) + 1);
+  assert.equal(ouvert, 1, 'au bout du budget, la partie commence quand même');
+});
+
+test('une partie démontée pendant l’attente n’ouvre rien', () => {
+  const ord = papier();
+  let ouvert = 0;
+  let vivant = true;
+  attendreMonde(() => false, () => { ouvert += 1; }, ord.planifier, () => vivant);
+  vivant = false;
+  ord.avancer(5);
+  assert.equal(ouvert, 0);
+  assert.equal(ord.enAttente(), 0, 'et plus rien n’est sondé');
 });

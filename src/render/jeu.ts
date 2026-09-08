@@ -134,6 +134,42 @@ export type EtapeChargement =
  * - zéro appel de dessin : il a démarré, la première image est à venir ;
  * - au moins un appel : une image est passée, le plateau est réellement là.
  */
+/**
+ * Le pas de sondage du monde bâti, et le budget au bout duquel on n'attend plus.
+ * Huit secondes : au-delà, mieux vaut une réplique qui saccade qu'une partie qui
+ * ne commence pas.
+ */
+export const MS_SONDE_MONDE = 90;
+export const MS_BUDGET_MONDE = 8000;
+
+/**
+ * Appelle `surPret` quand la peau déclare son monde **bâti**, en la sondant à
+ * intervalle fixe ; tout de suite si elle ne sait pas répondre, et au plus tard
+ * au bout du budget.
+ *
+ * Bâti n'est pas dessiné : la peau montre le sol d'abord, puis pose décor,
+ * figurines et préchauffage en tranches, et chacune bloque le fil principal. Ce
+ * qui s'anime pendant ce temps — une réplique frappée lettre à lettre, le tour
+ * d'un adversaire qui commence — se voit saccader. Pure : l'ordonnanceur est
+ * donné, ce qui la rend jouable sur du papier.
+ */
+export function attendreMonde(
+  bati: (() => boolean) | undefined,
+  surPret: () => void,
+  planifier: (rappel: () => void, ms: number) => void,
+  vivant: () => boolean = () => true,
+): void {
+  if (!bati) { surPret(); return; }
+  let attendu = 0;
+  const essayer = (): void => {
+    if (!vivant()) return;
+    if (bati() || attendu >= MS_BUDGET_MONDE) { surPret(); return; }
+    attendu += MS_SONDE_MONDE;
+    planifier(essayer, MS_SONDE_MONDE);
+  };
+  essayer();
+}
+
 export function etapeChargement(mesures: MesuresRendu | null | undefined): EtapeChargement {
   if (!mesures) return 'pret';
   if (mesures.backend === null) return 'moteur';
@@ -916,17 +952,42 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     else enfiler('ouverture', options.scenario.dialogueOuverture);
   }
 
+  /**
+   * Attend que la peau ait **bâti** son monde, puis joue l'ouverture.
+   *
+   * La première image tombe tôt — la peau montre le sol avant le décor et les
+   * figurines —, mais les tranches qui suivent bloquent le fil principal le
+   * temps de bâtir et de compiler. L'ouverture partait pourtant au montage :
+   * ses répliques se frappaient lettre à lettre pendant ce temps, et le
+   * propriétaire les a vues saccader. Le tour d'un adversaire qui commence
+   * attend pour la même raison — ses figurines glisseraient par à-coups.
+   *
+   * Une peau qui ne sait pas répondre ne fait attendre personne, et le budget
+   * borne l'attente : un chantier qui ne finirait pas ne doit pas retenir la
+   * partie. Le sondage est rare et ne coûte qu'une lecture d'un booléen.
+   */
+  function quandMondeBati(surPret: () => void): void {
+    const bati = rendu.mondeBati ? (): boolean => rendu.mondeBati?.() === true : undefined;
+    attendreMonde(bati, surPret, (rappel, ms) => {
+      const m = setTimeout(() => { minuteries.delete(m); rappel(); }, ms);
+      minuteries.add(m);
+    }, () => vivant);
+  }
+
   // --- Cadrage de départ : la première unité du joueur.
   const depart = etat.unites.find((u) => u.camp === camp);
   rafraichir();
   if (depart) rendu.cadrer({ x: depart.x, y: depart.y });
-  ouvrirOuverture();
+  quandMondeBati(() => {
+    ouvrirOuverture();
+    rafraichir();
+    if (etat.campCourant !== camp && !etat.partie.terminee) {
+      void attendreDialogue().then(() => {
+        if (vivant) void tourAdversaire();
+      });
+    }
+  });
   rafraichir();
-  if (etat.campCourant !== camp && !etat.partie.terminee) {
-    void attendreDialogue().then(() => {
-      if (vivant) void tourAdversaire();
-    });
-  }
 
   function forcerAmbiance(saison: Saison | null, phase?: PhaseJour, meteo?: Meteo): void {
     ambianceForcee = saison === null

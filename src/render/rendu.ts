@@ -231,6 +231,20 @@ export interface Rendu {
   /** Le coût de la dernière image : triangles, appels, durée, chaîne active ou non. */
   mesurer?(): MesuresRendu;
   /**
+   * Le monde est-il **bâti**, et non seulement dessiné une première fois ?
+   *
+   * Les deux ne sont pas la même chose depuis que la peau montre le sol d'abord
+   * puis pose décor, unités et préchauffage en tranches : la première image
+   * tombe tôt — c'est tout l'intérêt —, mais chaque tranche qui suit bloque le
+   * fil principal le temps de bâtir ou de compiler. Une réplique frappée lettre
+   * à lettre pendant ce temps se voit saccader, et c'est ce que le propriétaire
+   * a signalé le 8 septembre 2026 en jouant `villes_du_bocage`.
+   *
+   * Absente d'une peau qui ne bâtit rien en tranches : l'appelant n'attend
+   * alors personne.
+   */
+  mondeBati?(): boolean;
+  /**
    * Change la qualité d'affichage sans remonter : la chaîne de post-traitement
    * se monte ou se démonte à l'image suivante, la caméra ne bouge pas. C'est
    * ce qui permet de comparer avec et sans occlusion sur la même vue.
