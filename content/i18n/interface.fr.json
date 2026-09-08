@@ -982,6 +982,15 @@
       "pluriel": false
     },
     {
+      "cle": "campagne.fermee",
+      "texte": "Verrouillée",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "État court d'une épreuve fermée : plaque du dossier, intitulé d'une station. campagne.verrouillee reste la phrase qui dit comment l'ouvrir."
+      },
+      "longueurMax": 16
+    },
+    {
       "cle": "campagne.fin",
       "texte": "Votre sélection a uni deux délégations. Mais le sceau découvert au col pose une nouvelle question : qui veut fausser la Ronde ?",
       "contexte": {
@@ -2707,7 +2716,7 @@
       "texte": "Affichage",
       "contexte": {
         "ecran": "reglages",
-        "note": "Titre du groupe : peau de rendu."
+        "note": "Titre du panneau des réglages d'affichage : qualité et réduction des animations. (Elle nommait autrefois le choix d'une peau de rendu, qui n'existe plus.)"
       },
       "longueurMax": 20
     },
@@ -2874,6 +2883,15 @@
       "longueurMax": 100
     },
     {
+      "cle": "reglages.en_partie",
+      "texte": "En partie",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du panneau des réglages qui se voient pendant un match : dialogues, écran de combat."
+      },
+      "longueurMax": 20
+    },
+    {
       "cle": "reglages.inactif",
       "texte": "Désactivé",
       "contexte": {
@@ -2910,6 +2928,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "reglages.profil_bilan",
+      "texte": "{victoires} remportées · {parties} en cours",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Ce que tient une sauvegarde, sous son nom, sur sa cartouche."
+      },
+      "longueurMax": 48
+    },
+    {
       "cle": "reglages.profil_nom",
       "texte": "Nom du profil actif",
       "contexte": {
@@ -2926,6 +2953,15 @@
         "note": "Aide sous le champ de renommage."
       },
       "longueurMax": 60
+    },
+    {
+      "cle": "reglages.profil_vide",
+      "texte": "Sauvegarde neuve",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "La même ligne quand la sauvegarde ne tient rien."
+      },
+      "longueurMax": 40
     },
     {
       "cle": "reglages.profils",
@@ -2989,6 +3025,15 @@
         "note": "Lien de sortie de la page des réglages."
       },
       "longueurMax": 26
+    },
+    {
+      "cle": "reglages.sauvegardes",
+      "texte": "Sauvegardes",
+      "contexte": {
+        "ecran": "reglages",
+        "note": "Titre du panneau des deux profils de l'appareil."
+      },
+      "longueurMax": 20
     },
     {
       "cle": "reglages.stockage",
@@ -3467,6 +3512,24 @@
         "note": "Annonce après un refus du moteur : la case de débarquement n’est pas voisine, libre et franchissable par le passager."
       },
       "longueurMax": 60
+    },
+    {
+      "cle": "jeu_libre.brouillard",
+      "texte": "Brouillard de guerre",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Pastille d'une fiche de /jeu et du dossier de mission : le terrain est caché tant qu'une unité ne le voit pas."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "jeu_libre.decouverte",
+      "texte": "Commencez ici",
+      "contexte": {
+        "ecran": "jeu_libre",
+        "note": "Ruban d'angle sur la carte de démonstration, en tête de la liste des parties libres. Ne répète pas son nom."
+      },
+      "longueurMax": 18
     },
     {
       "cle": "jeu_libre.surtitre",
