@@ -24,9 +24,13 @@
  * - le voile d'erreur rend le conteneur `inert`. Le jeu est là, dessous, et plus
  *   rien n'est touchable : c'est le « impossible de toucher » du rapport.
  *
- * Le test est déclaré **en échec attendu**. Le jour où le graphe s'aplatit, il
- * passera — Playwright signalera alors un succès inattendu, et c'est le signal
- * qu'il faut retirer ce `fail`.
+ * **Corrigé le 8 septembre 2026.** La cause n'était ni la profondeur du graphe —
+ * mesurée à 23 nœuds quand WebKit tolère 73 000 appels — ni le dos WebGPU. C'est
+ * une faute d'amont dans `NodeUtils.getCacheKey` de r170, qui pousse le tableau
+ * de la clé **dans lui-même** ; `cyrb53` le convertit ensuite en nombre, ce qui
+ * appelle `Array.prototype.join` sur un tableau auto-référent — V8 s'en tire par
+ * sa détection de cycle, JavaScriptCore lève. `scripts/rustine-three.mjs` corrige
+ * la ligne à l'installation ; three l'a corrigée de son côté en 0.186.
  */
 import { expect, test } from '@playwright/test';
 
@@ -37,7 +41,6 @@ test.use({
 });
 test.setTimeout(240_000);
 
-test.fail(true, 'three r170 : getCacheKey déborde la pile de WebKit à la première image');
 test('sur Safari, le plateau démarre au lieu de montrer un écran d’erreur', async ({ page, browserName }) => {
   test.skip(browserName !== 'webkit', 'ce défaut est propre au moteur de Safari');
   await page.goto('/jeu/demo');

@@ -81,8 +81,7 @@ test('la route du jeu refuse le zoom de page : il volait le pincement de la cart
   expect(action, 'la toile ne laisse aucun geste au navigateur').toBe('none');
 });
 
-test('un tap sélectionne une unité', async ({ page, browserName }) => {
-  test.skip(browserName === 'webkit', 'le plateau ne démarre pas sur WebKit : voir safari.spec.ts');
+test('un tap sélectionne une unité', async ({ page }) => {
   const erreurs: string[] = [];
   page.on('pageerror', (e) => erreurs.push(String(e)));
   await ouvrirPlateau(page);

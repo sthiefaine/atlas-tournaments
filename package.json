@@ -17,7 +17,8 @@
     "generer:infanterie": "tsx scripts/generer-infanterie.ts",
     "apercu": "tsx scripts/apercu-carte.ts",
     "extraire-chaines": "tsx scripts/extraire-chaines.ts",
-    "verifier:campagne": "tsx scripts/verifier-campagne.ts"
+    "verifier:campagne": "tsx scripts/verifier-campagne.ts",
+    "postinstall": "node scripts/rustine-three.mjs"
   },
   "dependencies": {
     "@types/three": "^0.170.0",
