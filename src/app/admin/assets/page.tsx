@@ -39,6 +39,15 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
 
   return (
     <main>
+      <p className="mb-4 text-sm">
+        <Link href="/admin/assets/chantier" className="underline underline-offset-4">
+          Le chantier — quoi produire maintenant, en quatre étapes
+        </Link>
+        <span className="ml-2 text-xs opacity-60">
+          Cette page dit ce qui existe ; celle-là dit quoi faire, et ne propose jamais un kit dont la géométrie de base manque.
+        </span>
+      </p>
+
       <p className="mb-6 text-sm opacity-70">
         <strong>{specs.length} spécifications</strong> composées depuis le canon ·
         {' '}{parPriorite[1]} en priorité 1, {parPriorite[2]} en priorité 2, {parPriorite[3]} en priorité 3 ·
