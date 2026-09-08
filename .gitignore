@@ -36,3 +36,9 @@ npm-debug.log*
 
 # Les worktrees des agents (isolation des chantiers parallèles)
 .claude/worktrees/
+
+# Les dérivés d'une livraison d'asset : le zip reproduit ce que public/ contient
+# déjà, et les aperçus pèsent un mégaoctet pour une image qu'on regarde une fois.
+# Ce qu'on garde d'une livraison, c'est son README, son atlas et son verdict.
+assets/livraisons/**/*.zip
+assets/livraisons/**/*.png
