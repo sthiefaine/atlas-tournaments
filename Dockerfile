@@ -5,6 +5,12 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
+# `npm ci` déclenche le `postinstall`, qui corrige une ligne de three r170 sans
+# laquelle le jeu ne démarre pas sur Safari (scripts/rustine-three.mjs). Le
+# script doit donc être là **avant** l'installation : cette étape ne copie
+# volontairement que le manifeste, pour que le cache de couche survive à toute
+# modification du code.
+COPY scripts/rustine-three.mjs ./scripts/
 RUN npm ci
 
 FROM node:22-alpine AS build
