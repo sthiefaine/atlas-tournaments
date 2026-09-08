@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
 import { creerSurbrillances } from '../../src/render3d/surbrillances';
+import { temoinDe } from '../../src/render3d/maillage';
 import type { Surbrillance } from '../../src/render/surbrillance';
 
 const plat = (): number => 0;
@@ -135,15 +136,14 @@ test('la flèche de chemin se redessine à chaque survol : sa géométrie change
   const couche = creerSurbrillances(plat);
   const fleche = couche.groupe.getObjectByName('chemin') as THREE.Mesh;
   assert.ok(fleche, 'la flèche est dans le groupe');
-  const materiau = fleche.material as THREE.Material;
-
   couche.maj([], [{ x: 1, y: 1 }, { x: 2, y: 1 }], null, null);
   const premiere = fleche.geometry;
-  const versionA = materiau.version;
   assert.ok(premiere.getAttribute('position'), 'la première flèche a des sommets');
 
   couche.maj([], [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }], null, null);
   assert.notEqual(fleche.geometry, premiere, 'un autre chemin, une autre géométrie');
   assert.ok(fleche.geometry.getAttribute('position'), 'la seconde flèche a des sommets');
-  assert.ok(materiau.version > versionA, 'le matériau a changé de version : l’objet de rendu est refait');
+  // Le témoin change de nom, donc la clé du moteur aussi : sans cela, il
+  // continuerait de dessiner les tampons de la première, déjà libérés.
+  assert.notEqual(temoinDe(fleche.geometry), temoinDe(premiere), 'la clé du moteur change');
 });
