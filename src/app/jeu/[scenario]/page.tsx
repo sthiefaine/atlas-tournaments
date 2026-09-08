@@ -3,9 +3,11 @@ import path from 'node:path';
 
 import { notFound } from 'next/navigation';
 
+import { t } from '@/i18n/index';
 import { validerMapDef, validerScenario, type MapDef, type Scenario } from '@/schemas/index';
 
 import Toile from './toile-client';
+import { CLE_ETAPE, CLE_LISTE_ETAPES, ETAPES_CHARGEMENT } from './etapes-chargement';
 
 import carteDemo from '../../../../content/cartes/carte_plaine_symetrique.json';
 import scenarioDemo from '../../../../content/scenarios/demo.json';
@@ -58,5 +60,19 @@ export default async function PageJeu(
   const { scenario: code } = await params;
   const charge = await charger(code);
   if (!charge) notFound();
-  return <Toile key={charge.scenario.code} scenario={charge.scenario} carte={charge.carte} locale="fr" />;
+  const locale = 'fr';
+  return <Toile
+    key={charge.scenario.code}
+    scenario={charge.scenario}
+    carte={charge.carte}
+    locale={locale}
+    // L'écran de chargement reçoit ses cinq mots **déjà traduits**, comme le
+    // bouton Campagne et la liste des parties libres : il est rendu par le
+    // serveur et vit dans le premier chargement de la page, où les trois cent
+    // soixante-dix-neuf chaînes d'interface n'ont rien à faire.
+    libellesChargement={{
+      etapes: ETAPES_CHARGEMENT.map((e) => t(locale, CLE_ETAPE[e])),
+      liste: t(locale, CLE_LISTE_ETAPES),
+    }}
+  />;
 }

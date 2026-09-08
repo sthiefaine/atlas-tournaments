@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { lireProgression } from './campagne/progression';
 import { lireProfils, type EtatProfils } from './preferences';
+import { GESTES_PRECHARGEMENT } from './jeu/precharger';
 
 /**
  * Le **bouton Campagne** : le seul îlot client de l'écran-titre.
@@ -105,7 +106,7 @@ export function MenuCampagne({ epreuves, libelles }: {
     : null;
 
   return <div className="menu-campagne" data-pret={pret ? 'oui' : 'non'}>
-    <Link className="menu-bouton menu-principal" href={destination}>
+    <Link className="menu-bouton menu-principal" href={destination} {...GESTES_PRECHARGEMENT}>
       {nomProfil !== null
         ? <span className="menu-profil" aria-label={libelles.profilActif.replace('{nom}', nomProfil)}>{nomProfil}</span>
         : null}

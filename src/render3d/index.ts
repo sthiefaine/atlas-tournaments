@@ -78,6 +78,13 @@ const MS_REPOS = 1000;
 /** Durée d'une mutation de terrain : marée qui tourne, chantier du génie. */
 const MS_MUTATION = 1400;
 
+/**
+ * Au-delà, on dessine sans attendre la fin du préchauffage. Un moteur qui
+ * traîne — un pilote froid, une machine chargée — ne doit pas pouvoir retenir
+ * l'image indéfiniment : la première coûtera ce qu'elle coûtait, et c'est tout.
+ */
+const MS_PRECHAUFFAGE_MAX = 6000;
+
 /** Le monde monté : tout ce qui dépend de la carte, donc du premier état. */
 /** La clé de programme du décor greffé : une seule injection, un seul programme. */
 const CLE_BROUILLARD_DECOR = 'atlas-brouillard-decor-v1';
@@ -155,9 +162,44 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let continuSuivant = false;
   /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
+  /**
+   * Vrai quand les programmes de la scène sont compilés, donc quand une image
+   * ne coûte plus que son dessin. Faux entre la construction du monde et la fin
+   * du préchauffage (`prechauffage.ts`) : rien ne se dessine pendant ce temps,
+   * et le fil principal reste libre — c'est tout l'objet de l'opération. La
+   * page voit un canevas vide là où elle voyait un gel d'une seconde.
+   */
+  let prechauffe = false;
+  /** Le garde-fou du préchauffage : passé ce délai, on dessine quoi qu'il arrive. */
+  let delaiPrechauffage: ReturnType<typeof setTimeout> | null = null;
 
   function salir(): void {
     boucle?.salir();
+  }
+
+  /**
+   * Lance le préchauffage des programmes et débloque l'image quand il est
+   * fini — ou au bout de `MS_PRECHAUFFAGE_MAX`, parce qu'un écran qui ne vient
+   * jamais est pire qu'un gel d'une seconde.
+   */
+  function lancerPrechauffage(m: Monde): void {
+    const s = scene3d;
+    if (!s) { prechauffe = true; return; }
+    const finir = (): void => {
+      // Un préchauffage encore en vol quand la page démonte ne débloque pas
+      // l'image du montage **suivant** : la scène n'est plus la même, et ses
+      // programmes non plus.
+      if (prechauffe || scene3d !== s || monde !== m) return;
+      prechauffe = true;
+      if (delaiPrechauffage !== null) clearTimeout(delaiPrechauffage);
+      delaiPrechauffage = null;
+      salir();
+    };
+    delaiPrechauffage = setTimeout(finir, MS_PRECHAUFFAGE_MAX);
+    void s.prete
+      .then(() => s.prechauffer(m.vue3d.camera))
+      .catch(() => undefined)
+      .then(finir);
   }
 
   /** Moins de mouvement : l'appareil le demande, ou le joueur dans ses réglages. */
@@ -225,6 +267,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const s = scene3d;
     const m = monde;
     if (!s || !m) return;
+    // Tant que les programmes ne sont pas compilés, on ne dessine rien : une
+    // image dessinée maintenant paierait elle-même la traduction TSL → WGSL de
+    // toute la scène, sur le fil principal, ce que le préchauffage est en train
+    // de faire hors de lui. `lancerPrechauffage` réveille la boucle à la fin.
+    if (!prechauffe) return;
     let encore = false;
     const calme = reduit();
     // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
@@ -396,7 +443,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       }
       etat = e;
       vue = v;
-      if (!monde) monde = batir(e, v);
+      if (!monde) {
+        monde = batir(e, v);
+        if (monde) lancerPrechauffage(monde);
+      }
       majMonde();
       salir();
     },
@@ -531,6 +581,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     demonter(): void {
       if (repos !== null) clearInterval(repos);
       repos = null;
+      if (delaiPrechauffage !== null) clearTimeout(delaiPrechauffage);
+      delaiPrechauffage = null;
+      prechauffe = false;
       boucle?.arreter();
       boucle = null;
       if (monde) {

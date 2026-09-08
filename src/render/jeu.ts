@@ -107,12 +107,51 @@ export interface OptionsJeu {
   finPersonnalisee?: boolean;
 }
 
+/**
+ * Où en est le chargement, tel que la peau le dit d'elle-même. Aucun de ces
+ * états n'est deviné : ils sortent de `Rendu.mesurer()`, qui rend `backend`
+ * nul tant que le moteur n'a pas démarré et zéro appel de dessin tant qu'aucune
+ * image n'a été envoyée. Une barre qui avancerait toute seule mentirait ; ces
+ * quatre mots, non.
+ */
+export type EtapeChargement =
+  /** Le monde est bâti, le moteur graphique démarre (`renderer.init()`). */
+  | 'moteur'
+  /** Le moteur est là, la première image n'est pas encore dessinée. */
+  | 'image'
+  /** Une image est passée : le plateau est réellement à l'écran. */
+  | 'pret';
+
+/**
+ * L'étape de chargement que disent les compteurs d'une peau. Pure, et c'est
+ * exprès : c'est la **règle d'honnêteté** de l'écran de chargement, elle se
+ * relit et se teste sans monter quoi que ce soit.
+ *
+ * - pas de mesure du tout — une peau qui ne sait pas répondre : `pret`. On ne
+ *   retient jamais un écran de chargement sur une ignorance ;
+ * - `backend` nul : le moteur graphique n'a pas démarré ;
+ * - zéro appel de dessin : il a démarré, la première image est à venir ;
+ * - au moins un appel : une image est passée, le plateau est réellement là.
+ */
+export function etapeChargement(mesures: MesuresRendu | null | undefined): EtapeChargement {
+  if (!mesures) return 'pret';
+  if (mesures.backend === null) return 'moteur';
+  return mesures.appels > 0 ? 'pret' : 'image';
+}
+
 /** Ce que rend `monterJeu` : de quoi observer, piloter et démonter. */
 export interface Jeu {
   /** L'état courant de la partie. */
   readonly etat: EtatPartie;
   /** La peau réellement montée. */
   readonly rendu: CleRendu;
+  /**
+   * Où en est le chargement. À interroger d'image en image par l'hôte : la
+   * réponse ne change que deux fois, et la question ne coûte qu'une lecture
+   * des compteurs du moteur. Une peau qui ne sait pas mesurer répond `pret` —
+   * on ne retient pas un écran de chargement sur une ignorance.
+   */
+  etatChargement(): EtapeChargement;
   /** Force une image. */
   salir(): void;
   /** Efface la sauvegarde locale de ce scénario. */
@@ -228,38 +267,63 @@ export interface PontDebug {
  * de vie est ici : peau, contrôleur, HUD HTML, adversaire, sauvegarde.
  */
 export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
-  const cat = options.catalogue ?? chargerCatalogue(options.scenario.catalogueVersion);
-  const locale = options.locale ?? 'fr';
-  const t = traducteur(locale);
-  const camp: CampId = options.camp ?? 0;
-  const graine = options.graine ?? `${options.scenario.code}:1`;
-  const commandants = options.commandants ?? commandantsDuScenario(options.scenario);
-  const scene = sceneDepuis(options.scenario, options.carte, commandants);
-  const adversaire: Adversaire = options.adversaire ?? ADVERSAIRE_PASSIF;
-  const cleLocale = options.cleSauvegarde ?? cleSauvegarde(options.scenario.code);
-
-  // --- État initial : partie neuve, ou reprise de la sauvegarde locale.
-  let actions: Action[] = [];
-  let etat = creerPartie(scene, cat, graine);
-  if (options.reprendre) {
-    const sauvegarde = lireSauvegarde(options.scenario.code, cleLocale);
-    if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR) {
-      const r = rejouer(scene, cat, { ...sauvegarde, actions: sauvegarde.actions }, commandants);
-      etat = r.etat;
-      actions = [...sauvegarde.actions];
-    }
-  }
-
-  // --- La peau. Il n'y en a plus qu'une, et `render/` n'a pas le droit
-  //     d'importer `render3d/` (`02-architecture.md` §5) : c'est donc l'appelant
-  //     qui la fabrique. S'il n'en fournit pas, ou si elle refuse de se monter,
-  //     on **lève** — un appareil sans WebGL 2 doit l'apprendre par un écran qui
-  //     le dit, pas par un plateau vide.
+  // --- La peau **d'abord**. Il n'y en a plus qu'une, et `render/` n'a pas le
+  //     droit d'importer `render3d/` (`02-architecture.md` §5) : c'est donc
+  //     l'appelant qui la fabrique. S'il n'en fournit pas, ou si elle refuse de
+  //     se monter, on **lève** — un appareil sans moteur doit l'apprendre par un
+  //     écran qui le dit, pas par un plateau vide.
+  //
+  //     Elle est montée **avant** que le moteur de règles ne travaille, et c'est
+  //     délibéré : depuis le portage WebGPU, `monter()` lance une initialisation
+  //     asynchrone (`renderer.init()`, adaptateur et périphérique graphiques) qui
+  //     ne coûte presque rien au fil principal mais met du temps à revenir. La
+  //     lancer d'abord, c'est laisser la mise en place de la partie — catalogue,
+  //     scène, création, et surtout le **rejeu** d'une sauvegarde, qui peut faire
+  //     des centaines d'actions — se dérouler pendant cette attente au lieu de
+  //     s'y ajouter. Rien ici ne dépend de la peau, et la peau ne dépend de rien
+  //     ici : c'est la seule mise en parallèle que le fil principal permette.
   if (!options.fabriqueRendu) throw new Error('aucune fabrique de rendu fournie');
   const rendu: Rendu = options.fabriqueRendu('3d');
   rendu.monter(conteneur);
 
   if (conteneur.style.position === '') conteneur.style.position = 'relative';
+
+  let cat: Catalogue;
+  let camp: CampId;
+  let graine: string;
+  let commandants: (CommandantMoteur | null)[];
+  let scene: ReturnType<typeof sceneDepuis>;
+  let cleLocale: string;
+  let actions: Action[] = [];
+  let etat: EtatPartie;
+  try {
+    cat = options.catalogue ?? chargerCatalogue(options.scenario.catalogueVersion);
+    camp = options.camp ?? 0;
+    graine = options.graine ?? `${options.scenario.code}:1`;
+    commandants = options.commandants ?? commandantsDuScenario(options.scenario);
+    scene = sceneDepuis(options.scenario, options.carte, commandants);
+    cleLocale = options.cleSauvegarde ?? cleSauvegarde(options.scenario.code);
+
+    // --- État initial : partie neuve, ou reprise de la sauvegarde locale.
+    etat = creerPartie(scene, cat, graine);
+    if (options.reprendre) {
+      const sauvegarde = lireSauvegarde(options.scenario.code, cleLocale);
+      if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR) {
+        const r = rejouer(scene, cat, { ...sauvegarde, actions: sauvegarde.actions }, commandants);
+        etat = r.etat;
+        actions = [...sauvegarde.actions];
+      }
+    }
+  } catch (cause) {
+    // La peau est déjà montée : un canon illisible ne doit pas laisser un
+    // moteur graphique et sa boucle derrière lui.
+    rendu.demonter();
+    throw cause;
+  }
+
+  const locale = options.locale ?? 'fr';
+  const t = traducteur(locale);
+  const adversaire: Adversaire = options.adversaire ?? ADVERSAIRE_PASSIF;
 
   let annonce: string | null = null;
   let minuterieAnnonce: ReturnType<typeof setTimeout> | null = null;
@@ -850,6 +914,14 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   return {
     get etat() { return etat; },
     rendu: rendu.cle,
+    /**
+     * L'avancement du chargement, lu sur les compteurs de la peau et sur rien
+     * d'autre : `backend` reste nul tant que le moteur n'a pas démarré, et
+     * `appels` vaut zéro tant qu'aucune image n'a été envoyée au processeur
+     * graphique. Une peau qui ne sait pas mesurer répond `pret` : on ne retient
+     * pas un écran de chargement sur une ignorance.
+     */
+    etatChargement: (): EtapeChargement => etapeChargement(rendu.mesurer?.()),
     salir: () => rafraichir(),
     oublierSauvegarde: () => effacerSauvegarde(options.scenario.code, cleLocale),
     forcerAmbiance,

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { t } from '@/i18n/index';
 import { chargerCatalogue, VERSION_MOTEUR, type EtatPartie } from '@/engine/index';
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
@@ -11,6 +11,7 @@ import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lirePreferences, profilActif, type Preferences } from '../../preferences';
 import { enregistrerVictoire } from '../../campagne/progression';
+import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
 
@@ -18,16 +19,38 @@ export interface ProprietesToile {
   scenario: Scenario;
   carte: MapDef;
   locale: string;
+  /**
+   * L'avancement du chargement, rendu au relais qui porte l'écran
+   * (`toile-client.tsx`). Chaque étape est un **fait**, jamais une estimation :
+   * le module est là, le plateau est bâti, le moteur a démarré, une image a été
+   * dessinée. C'est ce dernier point qui manquait — l'écran s'effaçait dès que
+   * `monterJeu` rendait la main, soit trois secondes avant la première image.
+   */
+  surChargement?: (etape: EtapePage) => void;
 }
 type Depart = 'neuf' | 'reprise';
 
-export default function Toile({ scenario, carte, locale }: ProprietesToile): React.ReactElement {
+/**
+ * Au-delà, on cesse de retenir l'écran de chargement. Une peau qui ne sait pas
+ * mesurer, ou un moteur qui ne rendra jamais la main, ne doivent pas enfermer
+ * le joueur derrière un voile : passé ce délai on rend la vue, quitte à ce
+ * qu'elle soit noire — c'est au moins un état dont il peut sortir.
+ */
+const MS_BUDGET_CHARGEMENT = 20_000;
+
+/**
+ * Ce qu'une seule image peut retirer du budget. Une image de jeu dure quelques
+ * millisecondes, la première en dure mille : deux cents est large pour une
+ * image, et beaucoup trop court pour un onglet resté une minute en fond.
+ */
+const MS_PAS_MAXIMAL = 200;
+
+export default function Toile({ scenario, carte, locale, surChargement }: ProprietesToile): React.ReactElement {
   const conteneurRef = useRef<HTMLDivElement>(null);
   const index = campagne.missions.findIndex(m => m.scenarioCle === scenario.code);
   const mission = campagne.missions[index];
   const suivante = campagne.missions[index + 1];
   const [depart, setDepart] = useState<Depart | null>(null);
-  const [initialise, setInitialise] = useState(false);
   const [etat, setEtat] = useState<EtatPartie | null>(null);
   const [erreur, setErreur] = useState(false);
   const [stockageDisponible, setStockageDisponible] = useState(true);
@@ -46,6 +69,22 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
   const [enScene, setEnScene] = useState(false);
   const dialogueRef = useRef<HTMLElement>(null);
 
+  /**
+   * Le rappel de chargement passe par une référence, et les effets ne dépendent
+   * pas de son identité : une fonction fléchée écrite en propriété change à
+   * chaque rendu du parent, et le jeu entier — moteur graphique compris — serait
+   * démonté puis remonté. C'est exactement ce qui est arrivé à l'attract de
+   * l'accueil le 8 septembre 2026, mesuré, avant qu'on ne le garde ainsi.
+   */
+  const rappelChargement = useRef(surChargement);
+  rappelChargement.current = surChargement;
+  const direChargement = (etape: EtapePage): void => { rappelChargement.current?.(etape); };
+
+  // Le module de la toile vient d'être évalué : l'écran de chargement passe de
+  // « le jeu descend » à « le plateau se prépare ». En effet de mise en page,
+  // pour que le changement parte avec la même image que le montage.
+  useLayoutEffect(() => { rappelChargement.current?.('plateau'); }, []);
+
   // On entre **directement** en jeu : cliquer « jouer » sur l'accueil doit ouvrir
   // un plateau, pas une seconde fiche à valider. Une partie en cours se reprend
   // d'elle-même ; l'objectif, le tutoriel et « recommencer » restent à un clic,
@@ -58,7 +97,6 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
     setAncienFormat(Boolean(sauvegarde && sauvegarde.actions.length > 0 && !compatible));
     setPreferences(lirePreferences());
     setCleSauvegarde(cle);
-    setInitialise(true);
     setDepart(enCours ? 'reprise' : 'neuf');
   }, [scenario.code, scenario.catalogueVersion]);
 
@@ -85,8 +123,9 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
           animationsReduites: preferences.animationsReduites,
           // Le moteur s'initialise après le montage : s'il ne démarre pas —
           // ni WebGPU ni WebGL 2 n'ont voulu du canevas —, c'est le même écran
-          // que pour un montage qui lève, au lieu d'un plateau noir.
-          surEchec: () => setErreur(true),
+          // que pour un montage qui lève, au lieu d'un plateau noir. L'écran de
+          // chargement se retire alors : il n'y a plus rien à attendre.
+          surEchec: () => { setErreur(true); direChargement('pret'); },
         }),
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
@@ -110,8 +149,38 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
       console.error('Montage du jeu impossible', cause);
       conteneur.replaceChildren();
       setErreur(true);
+      direChargement('pret');
+      return undefined;
     }
-    return () => jeu?.demonter();
+
+    // Le plateau est bâti ; reste ce que seule la peau sait dire — le moteur
+    // graphique a-t-il démarré, une image a-t-elle été dessinée. On le lui
+    // demande d'image en image : la réponse ne change que deux fois, et la
+    // question ne coûte qu'une lecture de compteurs. Sans cette boucle, l'écran
+    // s'effaçait ici, alors que la première image était encore à venir.
+    const partie = jeu;
+    let image: number | null = null;
+    // Le budget se dépense **image par image**, jamais en horloge murale : un
+    // onglet mis en arrière-plan ne reçoit plus d'images, et une minute passée
+    // ailleurs ne doit pas être comptée comme une minute d'attente. On plafonne
+    // donc ce qu'une seule image peut consommer.
+    let restant = MS_BUDGET_CHARGEMENT;
+    let dernier = Date.now();
+    const suivre = (): void => {
+      image = null;
+      const maintenant = Date.now();
+      restant -= Math.min(MS_PAS_MAXIMAL, maintenant - dernier);
+      dernier = maintenant;
+      const etape = restant <= 0 ? 'pret' : partie.etatChargement();
+      direChargement(etape);
+      if (etape !== 'pret') image = requestAnimationFrame(suivre);
+    };
+    suivre();
+
+    return () => {
+      if (image !== null) cancelAnimationFrame(image);
+      partie.demonter();
+    };
   }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
@@ -129,7 +198,6 @@ export default function Toile({ scenario, carte, locale }: ProprietesToile): Rea
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || undefined} />
-    {!initialise || (depart !== null && !etat && !erreur) ? <div className="atlas-chargement" role="status">{t(locale, 'campagne.chargement')}</div> : null}
     {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {mission && etat && !fin && !modal && !enScene ? <aside className="atlas-mission-bar">
       <button type="button" className="atlas-mission-objectif" onClick={() => setVoirAide(true)}>

@@ -6,6 +6,7 @@ import { t } from '@/i18n/index';
 import { PROFILS_BIOME } from '@/mapgen/parametres';
 import campagne from '../../../content/campagne.json';
 import { lireProgression, missionOuverte, type Progression } from './progression';
+import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 
 const codes = campagne.missions.map(m => m.scenarioCle);
 
@@ -39,7 +40,7 @@ export default function Carnet() {
             <h2>{m.titre}</h2><p className="campagne-kicker">{t('fr', m.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}</p>
             <p>{m.recit}</p>
             <p className="campagne-but"><strong>{t('fr', 'campagne.objectif')}</strong> — {m.objectif}</p>
-            {ouverte ? <Link className="atlas-bouton" href={`/jeu/${m.scenarioCle}`}>{t('fr', gagnee ? 'campagne.rejouer' : 'campagne.briefing')}</Link> : null}
+            {ouverte ? <Link className="atlas-bouton" href={`/jeu/${m.scenarioCle}`} {...GESTES_PRECHARGEMENT}>{t('fr', gagnee ? 'campagne.rejouer' : 'campagne.briefing')}</Link> : null}
           </div>
         </li>;
       })}

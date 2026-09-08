@@ -536,7 +536,7 @@ Activé par `Scenario.brouillard`. Quand il est actif, chaque camp ne voit qu'un
 
 - Le terrain, lui, est **toujours visible** : le brouillard cache les unités, pas la carte. C'est un choix de lisibilité pour un jeu au ton léger **[proposition]** ; les cases hors vision sont assombries, pas noires.
 - Une unité indirecte ne peut tirer que sur une case **actuellement visible** par son camp. On ne bombarde pas au jugé.
-- Un ordre de déplacement peut être **interrompu** : si une unité adverse est révélée sur le chemin ou à côté, l'unité s'arrête à la case précédente et son ordre s'achève là, sans suite. Le moteur renvoie l'événement correspondant pour que le rendu joue l'arrêt.
+- Un ordre de déplacement peut être **interrompu** : si une unité adverse cachée se trouve **sur une case du chemin**, l'unité s'arrête à la dernière case libre et son ordre s'achève là, sans suite. **Révision du 8 septembre 2026** : une unité voisine du chemin n'interrompt plus rien. La règle disait « sur le chemin ou à côté », et « à côté » coupait la course de qui passait devant une silhouette sans jamais la toucher — une embuscade se déclenche quand on se cogne dedans. Le moteur renvoie l'événement correspondant pour que le rendu joue l'arrêt.
 - **L'état filtré est calculé dans le moteur**, pas dans le rendu (`engine/brouillard.ts`). Le client d'un camp ne reçoit jamais les unités qu'il ne voit pas : c'est une règle d'anti-triche, testée explicitement (`02-architecture.md` §8).
 
 ### 10 bis. Drones, brouilleur et station radar (catalogue 3)

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { cleSauvegardeDe, profilActif } from '../preferences';
+import { GESTES_PRECHARGEMENT } from './precharger';
 import { etatSauvegarde, type EtatSauvegarde } from './parties-libres';
 
 /**
@@ -98,9 +99,11 @@ export function ListeParties({ parties, versionMoteur, libelles }: {
           : null}
         {enCours ? <p className="jeu-libre-badge" role="status">{libelles.enCours}</p> : null}
         <div className="jeu-libre-actions">
-          <Link className="jeu-libre-bouton" href={p.href}>{enCours ? libelles.reprendre : libelles.jouer}</Link>
+          {/* Le survol lance le téléchargement du moteur : c'est le seul moment
+              où l'on sait avant le clic ce qui va être demandé. */}
+          <Link className="jeu-libre-bouton" href={p.href} {...GESTES_PRECHARGEMENT}>{enCours ? libelles.reprendre : libelles.jouer}</Link>
           {enCours
-            ? <Link className="jeu-libre-bouton secondaire" href={p.href} onClick={() => oublier(p.cle)}>{libelles.nouvellePartie}</Link>
+            ? <Link className="jeu-libre-bouton secondaire" href={p.href} {...GESTES_PRECHARGEMENT} onClick={() => oublier(p.cle)}>{libelles.nouvellePartie}</Link>
             : null}
         </div>
       </li>;

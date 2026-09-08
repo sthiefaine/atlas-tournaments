@@ -59,6 +59,7 @@ import {
   terrainBorne, type GrilleTerrain,
 } from './geometrie';
 import { creerTampon, remplacerGeometrie } from './maillage';
+import { normaliserMateriau } from './programmes';
 import { jeuMatiere, normalesEau, type JeuMatiere } from './textures';
 import { APPARENCES, textureVoies, uvAtlas } from './textures-voies';
 
@@ -271,6 +272,12 @@ function estMateriauNoeuds(m: THREE.Material): m is THREE.NodeMaterial {
  * Le masque, lui, s'applique **après** l'éclairage. Un matériau qui n'est pas
  * à nœuds — une étiquette, un sprite — est laissé tel quel, comme l'étaient
  * les matériaux non standard.
+ *
+ * La même passe efface les **zéros qui coûtent un programme** (`programmes.ts`) :
+ * c'est le seul endroit où tous les matériaux du décor passent, ceux des
+ * bâtiments rebâtis et des clones translucides compris, et une vingtaine de
+ * constructeurs dispersés dans `decor.ts` et `paysage.ts` laissaient tous le
+ * métal à zéro par défaut.
  */
 export function grefferBrouillardSur(
   racine: THREE.Object3D, uniformes: UniformesBrouillard, cle: string,
@@ -279,6 +286,7 @@ export function grefferBrouillardSur(
     const m = (o as THREE.Mesh).material;
     if (!m) return;
     for (const mat of Array.isArray(m) ? m : [m]) {
+      normaliserMateriau(mat);
       if (estMateriauNoeuds(mat)) grefferBrouillard(mat, uniformes, cle);
     }
   });

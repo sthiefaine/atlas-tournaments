@@ -37,18 +37,22 @@
  * deux. Ses modules sont chargés par `import()` au moment de s'allumer :
  * l'accueil, en `basse`, ne les télécharge pas.
  *
- * La **première image d'un moteur coûte une seconde**, et c'est la seule chose
- * que le portage à WebGPU ait rendue pire. Mesuré le 8 septembre 2026 sur le
- * plateau de la mission 1 à 2560 × 1600, l'image suivante coûtant 2,5 ms :
+ * La **première image d'un moteur coûtait une seconde**, et c'est la seule
+ * chose que le portage à WebGPU ait rendue pire. Mesuré le 8 septembre 2026 sur
+ * le plateau de la mission 1 à 2560 × 1600, l'image suivante coûtant 2,5 ms :
  * **0,9 à 1,3 s sur WebGPU** (1,6 s pilote froid), **5 s sur le dos WebGL**
  * (15 s à froid). C'est la traduction TSL → WGSL du système de nœuds, en
- * JavaScript, plus la création des pipelines : le fil principal est bloqué,
- * souris comprise, au moment précis où le plateau apparaît. **`compileAsync`
- * n'y peut rien** — essayé, mesuré, retiré : il projette la scène contre
- * `Renderer._frustum`, que rien n'a encore renseigné avant la première image,
- * ne trouve donc aucun objet, et rend la main en 0 ms sans avoir rien compilé.
- * Le remède est ailleurs : moins de matériaux distincts, ou une première image
- * sur une scène volontairement pauvre. Non fait.
+ * JavaScript, plus la création des pipelines : le fil principal était bloqué,
+ * souris comprise, au moment précis où le plateau apparaît. Deux remèdes,
+ * posés le 8 septembre au soir : **moins de programmes** (`programmes.ts`, qui
+ * efface les fausses différences dont three sépare ses clés) et un
+ * **préchauffage** par lots (`prechauffage.ts`, et la méthode `prechauffer`
+ * ci-dessous), qui compile tout d'avance et hors du fil principal. Le
+ * `compileAsync` de three **fonctionne**, contrairement à ce qui était écrit
+ * ici : il ne trouvait aucun objet parce qu'il projette la scène contre un
+ * tronc de vue jamais renseigné avant la première image, et il suffit
+ * d'éteindre `frustumCulled` le temps du préchauffage — c'est `prechauffage.ts`
+ * qui l'explique.
  *
  * La **calibration** attend une barrière du processeur graphique, et WebGPU
  * n'en a **aucune de synchrone** : la mesure est donc asynchrone. Une image
@@ -81,6 +85,7 @@ import {
 import { webgl2Disponible, type MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
 import { compterFamilles, depuisInfo } from './mesures';
+import { prechauffer } from './prechauffage';
 import type { Composeur, creerComposeur } from './postraitement';
 
 /** Ce que `creerScene3d` rend à l'appelant. */
@@ -105,6 +110,14 @@ export interface Scene3d {
    * d'envoi en millisecondes ; zéro, et rien, tant que le moteur n'est pas prêt.
    */
   dessiner(camera: THREE.Camera, options?: OptionsImage): number;
+  /**
+   * Compile d'avance les programmes de la scène, lot par lot
+   * (`prechauffage.ts`) : c'est ce qui évite qu'une seconde de traduction TSL →
+   * WGSL et de création de pipelines tombe sur la première image. Rend quand
+   * tout est chaud, tout de suite si le moteur n'est pas prêt — l'image le
+   * refera alors elle-même, au prix qu'elle a toujours payé.
+   */
+  prechauffer(camera: THREE.Camera): Promise<void>;
   /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   readonly msParImage: number;
   /**
@@ -532,6 +545,48 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         });
       }
       return envoi;
+    },
+
+    async prechauffer(camera: THREE.Camera): Promise<void> {
+      const r = renderer;
+      if (!r || !vivante) return;
+      const moteur = r as unknown as {
+        _handleObjectFunction: unknown;
+        _renderObjectDirect: unknown;
+        _getFrameBufferTarget?(): THREE.RenderTarget | null;
+      };
+      // **Sur la même cible que l'image vraie.** Un pipeline est compilé pour
+      // un format de couleur, un format de profondeur et un nombre
+      // d'échantillons donnés (`WebGPUBackend.getRenderCacheKey`). Or
+      // `render()` ne dessine pas dans la toile : dès qu'il y a une
+      // cartographie tonale ou un espace de couleur non linéaire — les deux
+      // ici —, il passe par une cible intermédiaire en demi-flottants
+      // (`_getFrameBufferTarget`), tandis que `compileAsync` prend la cible
+      // courante, nulle par défaut. Préchauffer sans elle réchauffait des
+      // pipelines en `bgra8unorm` dont la première image n'avait que faire :
+      // mesuré, cela ne gagnait que 13 %, le temps du WGSL et rien du pilote.
+      const cible = moteur._getFrameBufferTarget?.() ?? null;
+      const cibleAvant = r.getRenderTarget();
+      r.setRenderTarget(cible);
+      // **Pas de passe d'ombres pendant le préchauffage.** `compileAsync`
+      // appelle `updateBefore` sur chaque objet, et un `ShadowNode` y répond en
+      // lançant un `renderer.render()` complet — au milieu d'une compilation,
+      // avec la fonction qui crée des pipelines au lieu de dessiner. Il pose au
+      // passage un `overrideMaterial` sur la scène et lève avant de le retirer :
+      // trois lots sur huit échouaient ainsi, mesuré. Les lumières savent déjà
+      // ne recalculer leur carte que sur ordre (`poserOmbres`) ; on le leur dit
+      // avant, et la première image la demandera comme d'habitude.
+      poserOmbres(scene, false);
+      try {
+        await prechauffer(r, scene, camera, { vivante: () => vivante });
+      } finally {
+        r.setRenderTarget(cibleAvant);
+        // Garde-fou : `compileAsync` remplace la fonction qui traite chaque
+        // objet par celle qui **crée un pipeline sans dessiner**, et ne la
+        // remet qu'à sa dernière ligne. Une exception en route laisserait le
+        // moteur muet pour toujours ; on la remet, comme three la remet.
+        moteur._handleObjectFunction = moteur._renderObjectDirect;
+      }
     },
 
     mesures(): MesuresRendu {

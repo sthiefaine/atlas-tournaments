@@ -34,6 +34,13 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  * initial — le plateau SVG du serveur tient la place en attendant, et reste seul
  * si le visiteur demande à ne pas voir d'animation.
  *
+ * Et il tient la place **jusqu'au bout** : depuis le 8 septembre 2026, cet
+ * attract ne se déclare `pret` qu'une fois une image réellement dessinée, pas
+ * une fois monté. Le drapeau `data-attract='pret'` mentait de plusieurs secondes
+ * — sur le serveur de développement, cinq —, et la vitrine retirait le SVG à ce
+ * signal : le visiteur regardait un fond vide pendant que le moteur WebGPU
+ * traduisait ses nuanceurs. `surPret` et `surEchec` sont ce contrat.
+ *
  * Trois économies, parce qu'une page d'accueil n'a pas le droit de chauffer un
  * appareil : la boucle s'arrête quand l'onglet passe en arrière-plan, aucune IA
  * ne tourne tant qu'on ne la regarde pas, et rien ne se monte sans moteur —
@@ -73,6 +80,14 @@ function cransDezoom(): number {
 }
 /** Pause sur l'écran de fin avant de relancer la partie. */
 const MS_AVANT_REPRISE = 2600;
+/**
+ * Au-delà, on renonce : le moteur n'a pas dessiné. La vitrine garde son plateau
+ * SVG et démonte l'attract. Large exprès — un moteur WebGPU sur pilote froid met
+ * plus d'une seconde à sortir sa première image (`doc/10` §9.4) —, mais fini.
+ */
+const MS_BUDGET_PREMIERE_IMAGE = 12_000;
+/** Ce qu'une seule image peut retirer de ce budget (voir `toile.tsx`). */
+const MS_PAS_MAXIMAL = 200;
 /** Garde-fou : au-delà, on repart d'une partie neuve plutôt que de boucler. */
 const ACTIONS_MAX = 900;
 
@@ -106,8 +121,34 @@ function porteeVerte(etat: EtatPartie, cat: Catalogue, uniteId: string): Surbril
   return [...cles].map((k) => ({ case: depuisCle(k), genre: 'deplacement' as const }));
 }
 
-export default function Attract() {
+/**
+ * Ce que l'attract doit à la vitrine : dire quand il **dessine réellement**, et
+ * dire quand il renonce. Tant qu'il n'a pas dessiné, c'est le plateau SVG qui
+ * tient le fond ; c'est ce qui a supprimé les huit secondes de vide mesurées le
+ * 8 septembre 2026 (`vitrine.tsx`).
+ */
+export interface ProprietesAttract {
+  /** Une image est passée : la vitrine peut retirer le plateau SVG. */
+  surPret?: () => void;
+  /** Ni moteur, ni image : la vitrine garde le SVG et nous démonte. */
+  surEchec?: () => void;
+}
+
+export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
   const hote = useRef<HTMLDivElement>(null);
+  /**
+   * Les rappels passent par une référence, et l'effet ne dépend de rien.
+   *
+   * C'est une garde, pas une élégance : mesuré le 8 septembre 2026, une simple
+   * fonction fléchée passée en propriété — ce que toute page écrit
+   * naturellement — changeait d'identité à chaque rendu du parent, l'effet se
+   * rejouait, et **tout le moteur 3D était démonté puis reconstruit** juste
+   * après la première image, soit sept cents millisecondes de fond noir de
+   * plus. Un montage de moteur graphique ne doit pas dépendre de l'identité
+   * d'une fonction.
+   */
+  const rappels = useRef({ surPret, surEchec });
+  rappels.current = { surPret, surEchec };
 
   useEffect(() => {
     const conteneur: HTMLDivElement | null = hote.current;
@@ -120,13 +161,17 @@ export default function Attract() {
     // Le rendu vectoriel n'existe plus : l'attract se joue en 3D comme le jeu,
     // et ne se monte pas du tout sans moteur — WebGPU, ou son repli WebGL 2 :
     // le plateau SVG du serveur reste alors seul à l'écran, ce qui est très bien.
-    if (!rendu3dDisponible()) return undefined;
+    if (!rendu3dDisponible()) {
+      rappels.current.surEchec?.();
+      return undefined;
+    }
     const rendu = creerRendu3d({
       biome: exhibition.biome,
       paysParCamp: { 0: 'fr', 1: 'lu' },
       // Un écran-titre n'a pas besoin d'occlusion ni de grain, et `basse` lui
       // épargne le téléchargement des modules de post-traitement.
       qualite: 'basse',
+      surEchec: () => rappels.current.surEchec?.(),
     });
     let vivant = true;
     let etat = etatNeuf();
@@ -135,6 +180,7 @@ export default function Attract() {
     try {
       rendu.monter(conteneur);
     } catch {
+      rappels.current.surEchec?.();
       return () => undefined;
     }
 
@@ -189,10 +235,45 @@ export default function Attract() {
       for (let i = 0; i < crans; i += 1) rendu.zoomer?.(-1);
     }
 
+    /**
+     * Attend qu'une image ait **réellement** été dessinée. Le seul témoin est
+     * celui du moteur lui-même : `mesurer()` rend un dos nul tant qu'il n'a pas
+     * démarré, et zéro appel de dessin tant qu'aucune image n'est passée. On le
+     * regarde d'image en image, ce qui ne coûte qu'une lecture de compteurs, et
+     * on abandonne au budget plutôt que d'attendre pour toujours.
+     */
+    function attendrePremiereImage(): Promise<boolean> {
+      return new Promise((resoudre) => {
+        // Le budget se dépense image par image et non en horloge murale : un
+        // onglet en arrière-plan ne reçoit plus d'images, et le temps passé
+        // ailleurs n'est pas du temps d'attente.
+        let restant = MS_BUDGET_PREMIERE_IMAGE;
+        let dernier = Date.now();
+        const regarder = (): void => {
+          if (!vivant) { resoudre(false); return; }
+          const maintenant = Date.now();
+          restant -= Math.min(MS_PAS_MAXIMAL, maintenant - dernier);
+          dernier = maintenant;
+          const m = rendu.mesurer?.();
+          if (!m || m.appels > 0) { resoudre(true); return; }
+          if (restant <= 0) { resoudre(false); return; }
+          requestAnimationFrame(regarder);
+        };
+        regarder();
+      });
+    }
+
     async function boucler(hoteRendu: HTMLDivElement): Promise<void> {
       afficher();
       cadrerCarte();
+      // `pret` ne se dit qu'une image dessinée : c'est le drapeau que lit la
+      // vitrine pour retirer le plateau SVG, et il annonçait jusqu'ici un
+      // canevas vide.
+      const dessine = await attendrePremiereImage();
+      if (!vivant) return;
+      if (!dessine) { rappels.current.surEchec?.(); return; }
       hoteRendu.dataset['attract'] = 'pret';
+      rappels.current.surPret?.();
       let jouees = 0;
 
       while (vivant) {

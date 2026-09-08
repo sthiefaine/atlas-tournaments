@@ -103,15 +103,18 @@ test('sous brouillard, un chemin qui sort de la vue joue d’abord, puis ouvre l
 });
 
 test('avec une embuscade, aucun menu : l’unité s’arrête sur la dernière case libre et son tour est fini', () => {
-  // L'adversaire en (2,1) est à trois cases du fantassin : hors de sa vue, et
-  // au contact de (2,0), la troisième case du chemin vers la ville.
+  // Un char léger (mouvement 6, vue 3) file vers (5,0) ; un fantassin adverse
+  // se tient **sur** son chemin en (4,0), à quatre cases, donc hors de sa vue.
+  // Depuis le 8 septembre 2026, une unité seulement voisine du trajet
+  // n'interrompt plus rien : on s'arrête quand on se cogne dedans, et c'est
+  // exactement ce qui se passe ici — la marche bute et le tour s'achève.
   const { ctrl, actions, evenements } = monter([
-    { camp: 0, type: 'infanterie', x: 0, y: 0 },
-    { camp: 1, type: 'infanterie', x: 2, y: 1 },
+    { camp: 0, type: 'char_leger', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 4, y: 0 },
   ], true);
-  const inf = mienne(ctrl, 'infanterie');
+  const inf = mienne(ctrl, 'char_leger');
   ctrl.clicCase(c(0, 0));
-  ctrl.clicCase(c(3, 0));
+  ctrl.clicCase(c(5, 0));
   assert.equal(actions.length, 1);
   assert.ok(actions[0]!.type === 'ordre' && actions[0]!.suite.type === 'puis');
   const dep = evenements.find((e) => e.type === 'deplacement');
@@ -119,13 +122,13 @@ test('avec une embuscade, aucun menu : l’unité s’arrête sur la dernière c
 
   const surprise = uniteParId(ctrl.etat, inf.id);
   assert.ok(surprise);
-  assert.deepEqual({ x: surprise.x, y: surprise.y }, c(2, 0), 'arrêtée au contact, avant la ville');
+  assert.deepEqual({ x: surprise.x, y: surprise.y }, c(3, 0), 'arrêté sur la dernière case libre, devant le fantassin');
   assert.equal(surprise.etat, 'agi', 'surprise : on ne joue plus');
   assert.equal(ctrl.phase, 'inactif');
   assert.equal(ctrl.vue.selection, null);
   assert.equal(ctrl.vue.menu, null);
-  // Elle ne se resélectionne pas : son tour est fini.
-  ctrl.clicCase(c(2, 0));
+  // Il ne se resélectionne pas : son tour est fini.
+  ctrl.clicCase(c(3, 0));
   assert.equal(ctrl.phase, 'inactif');
   assert.equal(actions.length, 1, 'rien d’autre n’est parti');
 });

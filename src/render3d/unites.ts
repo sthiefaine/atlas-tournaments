@@ -53,6 +53,7 @@ import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
+import { EPSILON_UNIFORME, ordonnerAttributs } from './programmes';
 import {
   appliquerMasque, chargerModele, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips,
   masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
@@ -115,15 +116,22 @@ interface MatierePiece {
  *   allumée, pour rester lisible la nuit.
  * - `roulant` : du **caoutchouc** poussiéreux, mat et sans métal.
  * - `peau` : mate, sans métal.
+ *
+ * « Sans métal » et « sans émission » valent `EPSILON_UNIFORME`, pas zéro : la
+ * clé de programme de three réduit tout nombre à « nul ou non » alors que ces
+ * deux-là ne sont que des uniformes — un zéro exact coûtait un programme entier
+ * pour un nuanceur identique (`programmes.ts`). Un millième de métal est sous la
+ * quantification d'un canal de huit bits, et une émission d'un millième sur un
+ * `emissive` noir ne peut rien éclairer.
  */
 const MATIERES: Readonly<Record<RolePiece, MatierePiece>> = {
   principal: { rugosite: 0.5, metal: 0.16, emission: 0.045 },
-  sombre: { rugosite: 0.58, metal: 0.14, emission: 0 },
+  sombre: { rugosite: 0.58, metal: 0.14, emission: EPSILON_UNIFORME },
   clair: { rugosite: 0.46, metal: 0.12, emission: 0.03 },
-  materiel: { rugosite: 0.4, metal: 0.78, emission: 0 },
+  materiel: { rugosite: 0.4, metal: 0.78, emission: EPSILON_UNIFORME },
   verre: { rugosite: 0.1, metal: 0.06, emission: 0.16 },
-  roulant: { rugosite: 0.92, metal: 0, emission: 0 },
-  peau: { rugosite: 0.72, metal: 0, emission: 0 },
+  roulant: { rugosite: 0.92, metal: EPSILON_UNIFORME, emission: EPSILON_UNIFORME },
+  peau: { rugosite: 0.72, metal: EPSILON_UNIFORME, emission: EPSILON_UNIFORME },
 };
 
 /** Les sept rôles, dans l'ordre de la table. */
@@ -400,6 +408,10 @@ function boiteBiseautee(l: number, h: number, p: number, biseau: number): THREE.
   geo.translate(0, -(h - 2 * b) / 2 - b + h / 2 - h / 2, 0);
   geo.center();
   geo.computeVertexNormals();
+  // `ExtrudeGeometry` pose `position, uv` et `computeVertexNormals` ajoute
+  // `normal` à la fin : sans ce rangement, une pièce biseautée et une boîte nue
+  // de la même matière coûtent deux programmes (`programmes.ts`).
+  ordonnerAttributs(geo);
   geometries.set(cle, geo);
   return geo;
 }
@@ -451,6 +463,7 @@ function geometriePiece(p: Piece): THREE.BufferGeometry {
       return boiteBiseautee(l, h, la, Math.min(l, h, la) * 0.22);
     }
   }
+  ordonnerAttributs(geo);
   geometries.set(cle, geo);
   return geo;
 }
@@ -481,7 +494,9 @@ export function geometriesSilhouette(s: Silhouette): ReadonlyMap<RolePiece, THRE
     const fusion = mergeGeometries(morceaux, false);
     if (fusion) {
       fusion.computeBoundingSphere();
-      fusionnees.set(role, fusion);
+      // La fusion garde l'ordre d'attributs du premier morceau : on le range,
+      // faute de quoi deux rôles de la même matière valent deux programmes.
+      fusionnees.set(role, ordonnerAttributs(fusion));
     }
     for (const morceau of morceaux) morceau.dispose();
   }
@@ -494,7 +509,7 @@ function disque(rayon: number, hauteur: number): THREE.BufferGeometry {
   const cle = `d:${rayon}:${hauteur}`;
   const memo = geometries.get(cle);
   if (memo) return memo;
-  const geo = new THREE.CylinderGeometry(rayon, rayon, hauteur, 20, 1);
+  const geo = ordonnerAttributs(new THREE.CylinderGeometry(rayon, rayon, hauteur, 20, 1));
   geometries.set(cle, geo);
   return geo;
 }

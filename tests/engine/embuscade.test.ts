@@ -104,3 +104,25 @@ test('un allié sur l’arrivée est un refus, brouillard ou non : on ne planifi
   const r = appliquer(e, marche('u1', c(0, 0), c(1, 0), c(2, 0)), CAT);
   assert.equal(r.ok ? '' : r.motif, 'case_occupee');
 });
+
+test('passer devant une unité cachée ne coupe plus la course : il faut la heurter', () => {
+  // Le 8 septembre 2026, le propriétaire allait tout droit ; une unité cachée
+  // se tenait **à sa droite**, sans jamais barrer sa route, et sa course
+  // s'arrêtait quand même. La règle disait « sur le chemin ou à côté » ; « à
+  // côté » est retiré. On s'arrête quand on se cogne dedans, pas quand on passe.
+  const e = partie([
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    // Une case au sud de (2,0), donc voisine du trajet, jamais dessus.
+    { camp: 1, type: 'infanterie', x: 2, y: 1 },
+  ], { brouillard: true });
+  assert.ok(!unitesVues(e, CAT, 0).some((x) => x.id === 'u2'), 'l’adverse est bien caché');
+
+  const r = appliquer(e, marche('u1', c(0, 0), c(1, 0), c(2, 0), c(3, 0)), CAT);
+  assert.ok(r.ok, `refusé : ${r.ok ? '' : r.motif}`);
+  if (!r.ok) return;
+  const marcheur = u(r.etat, 'u1');
+  assert.deepEqual({ x: marcheur.x, y: marcheur.y }, c(3, 0), 'la course va jusqu’au bout');
+  const dep = r.evenements.find((ev) => ev.type === 'deplacement');
+  assert.ok(dep && dep.type === 'deplacement');
+  assert.equal(dep.interrompu, false, 'rien n’a interrompu la marche');
+});

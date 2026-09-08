@@ -129,8 +129,14 @@ function executerOrdre(
     const vues = new Set(unitesVues(e, cat, u.camp).filter((a) => a.camp !== u.camp).map((a) => a.id));
     for (let i = 1; i < chemin.length; i += 1) {
       const c = chemin[i]!;
+      // Une unité cachée n'arrête la marche que si elle **barre la route** —
+       // exactement sur la case où l'on va. Jusqu'au 8 septembre 2026, elle
+       // l'arrêtait aussi depuis une case **voisine** (`manhattan <= 1`) : on
+       // allait tout droit, une silhouette passait à droite sans qu'on la
+       // touche, et le tour s'achevait là. C'est une embuscade quand on se
+       // cogne dedans, pas quand on passe devant.
       const surprise = e.unites.find(
-        (a) => a.camp !== u.camp && !a.dansTransport && !vues.has(a.id) && manhattan(a, c) <= 1,
+        (a) => a.camp !== u.camp && !a.dansTransport && !vues.has(a.id) && a.x === c.x && a.y === c.y,
       );
       if (surprise) {
         // On s'arrête sur la **dernière case libre** du trajet parcouru : ni sur

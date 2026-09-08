@@ -13,6 +13,8 @@ import {
   materiauxPropresDe, type VisionRendu,
 } from '../../src/render3d/unites';
 
+import { EPSILON_UNIFORME } from '../../src/render3d/programmes';
+
 import { partiePersonnalisee, scenePersonnalisee } from '../engine/aides';
 
 const cat = chargerCatalogue();
@@ -574,8 +576,11 @@ test('les sept rôles sont des matières : tôle peinte, acier, verre translucid
   assert.equal(verre.depthWrite, true, 'une cabine écrit sa profondeur');
   assert.ok(verre.emissiveIntensity <= 0.25, 'une lueur de cabine, pas un néon');
   assert.ok(jeu.roulant.roughness >= 0.8, 'du caoutchouc, mat');
-  assert.equal(jeu.roulant.metalness, 0);
-  assert.equal(jeu.peau.metalness, 0, 'une peau sans métal');
+  // « Sans métal » vaut `EPSILON_UNIFORME`, pas zéro : la clé de programme de
+  // three réduit tout nombre à « nul ou non », et un zéro exact coûtait un
+  // programme entier pour un nuanceur identique (`programmes.ts`).
+  assert.equal(jeu.roulant.metalness, EPSILON_UNIFORME);
+  assert.equal(jeu.peau.metalness, EPSILON_UNIFORME, 'une peau sans métal');
   assert.ok(jeu.peau.roughness >= 0.6, 'et mate');
   // Le jeu est mémorisé : même camp, mêmes objets.
   assert.equal(materiaux.jeu(0, null), jeu);
