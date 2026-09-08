@@ -15,6 +15,13 @@ import { lirePreferences } from './preferences';
  * mal, un dessin à plat qui cède la place à un plateau en relief faisant deux
  * jeux en une seconde et demie.
  *
+ * **Et le plateau SVG n'est qu'un repli** (8 septembre 2026, au vu de l'écran) :
+ * il paraît quand la 3D est refusée — animations réduites, réglage du joueur,
+ * moteur absent — ou quand elle a renoncé, jamais pendant qu'on l'attend. Montré
+ * en attente, il se lisait comme un autre jeu, plus pauvre, servi avant le vrai.
+ * Le fond de l'attente est donc la nappe sombre de l'écran-titre : rien à lire,
+ * rien à regretter, et le titre et le menu sont là depuis le serveur.
+ *
  * **Ce qui change, le 8 septembre 2026, c'est le moment de la bascule.** Elle se
  * faisait quatre cents millisecondes après l'hydratation, c'est-à-dire quand
  * l'attract était prêt à *se monter* — pas à jouer. Mesuré sur le serveur de
@@ -27,8 +34,9 @@ import { lirePreferences } from './preferences';
  *
  * Trois corrections, et aucune ne réintroduit le fondu :
  *
- * 1. **Le plateau SVG est le fond dès le premier pixel**, serveur compris : c'est
- *    l'état de départ, plus une indécision. Il n'apparaît donc pas, il est là.
+ * 1. **Le plateau SVG est prêt dès le premier pixel**, serveur compris : c'est
+ *    l'état de départ, plus une indécision. Il n'a donc rien à charger le jour
+ *    où il sert. (Depuis le soir même, il ne sert qu'en repli, voir plus haut.)
  * 2. **Le module de l'attract part tout de suite**, et seul son *montage* attend
  *    le délai. Le délai protège l'interactivité du menu, pas la bande passante :
  *    télécharger pendant qu'on attend, c'est autant de gagné.
@@ -82,8 +90,13 @@ export function Vitrine({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(jeton);
   }, [monte, pret, renonce]);
 
+  // Le plateau à plat ne sert **que** de repli, jamais d'attente (8 septembre
+  // 2026, au vu de l'écran-titre) : montré le temps que la 3D démarre, il se
+  // lisait comme un autre jeu, plus pauvre, avant que le vrai n'arrive. Tant
+  // qu'on n'a pas renoncé, le fond reste la nappe sombre de l'écran-titre —
+  // rien à lire, rien à regretter.
   return <div className="accueil-vitrine" aria-hidden="true">
-    {pret ? null : children}
+    {renonce ? children : null}
     {monte && !renonce
       ? <Attract surPret={() => setPret(true)} surEchec={() => setRenonce(true)} />
       : null}
