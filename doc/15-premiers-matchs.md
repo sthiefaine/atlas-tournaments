@@ -74,3 +74,17 @@ Les deux cartes sont **symétriques par miroir sur l'axe vertical**, terrain, pr
 **Mesures du 7 septembre.** `npm run controler` rend **VALIDE** sur les deux, sans motif, sur 60 parties et six conditions de climat : archipel 27-33 (le camp qui commence gagne 45 %), bras de mer 32-28 (53 %), zéro partie sans résultat, zéro case de terre jamais visitée, médiane 41 journées. En catalogue 5, `scripts/simuler.ts` sur dix parties montre l'IA produire des barges (85 et 60) et des transports d'assaut sans qu'on le lui ait appris — elle les traite comme des transports terrestres, ce qui suffit à les faire sortir du port mais pas à réussir un débarquement. L'archipel donne un avantage net à l'IA **pondérée** quel que soit son camp (10-0 en la plaçant au camp 1) : une carte à goulot ne pardonne pas l'assaut frontal, et c'est ce qu'elle est censée dire. Le bras de mer répartit mieux (8-2 puis 6-4 selon la place de l'agressive). La plupart des parties d'IA vont à la limite de journées et se décident aux points : aucune ne finit sans vainqueur.
 
 **Deux dettes ouvertes par le port, hors du périmètre de ces cartes.** `CAPTURABLES` de `src/mapgen/grille.ts` ne connaît pas `port` : le vérificateur structurel ne compte donc pas les ports dans la valeur des camps ni dans les propriétés par camp (sans conséquence ici, la symétrie étant exacte des deux côtés). Et `ORDRE`/`NOMS_TERRAIN` de `src/mapgen/apercu.ts` n'a pas le caractère `O` : l'aperçu texte n'affiche ni la légende du port ni les ports dans la liste des propriétaires.
+
+### Ajustements mobiles — 9 septembre 2026
+
+Le dialogue pose un petit portrait au-dessus du texte, conserve la largeur de
+lecture et porte une vraie commande « Suite » de 44 px minimum. Le texte long
+peut défiler sans repousser les commandes hors de l’écran. « Passer » reste au
+pied, au-dessus de la zone système. Les boutons gardent leur activation clavier.
+
+Sous 600 px, le fanion de mission affiche « Objectif et aide ». Les réglages de
+caméra sont regroupés dans « Vue » : rotation, zoom et inclinaison restent
+accessibles ; unité suivante et recentrage sont directs. La fin de tour reçoit
+plus de largeur, et une fiche d’inspection dépliée ne peut occuper plus de 38 %
+de la hauteur. L’aide garde ses actions au bas du panneau pendant le défilement.
+Les parcours sont vérifiés sur 390 × 844 et 320 × 568, en plus des gestes tactiles.

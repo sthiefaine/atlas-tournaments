@@ -291,7 +291,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       <button type="button" className="atlas-mission-fanion" onClick={() => setVoirAide(true)}
         aria-label={`${t(locale, 'campagne.mission', { n: index + 1 })} · ${t(locale, 'campagne.objectif')}`}
         title={mission.objectif}>
-        <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{index + 1}</span>
+        <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
       </button>
     </aside> : null}
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>

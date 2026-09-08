@@ -699,6 +699,20 @@ const STYLE = `
   .atlas-hud .voile{align-items:flex-end}
   .atlas-hud .bilan-ligne{grid-template-columns:minmax(0,1fr) 54px 54px}
 }
+/* Les réglages de vue restent accessibles sans occuper toute la rangée. */
+@container atlas-interface (max-width:600px){
+  .atlas-hud .camera-mobile .outils-vue{position:relative;pointer-events:auto}
+  .atlas-hud .outils-vue summary{display:flex;align-items:center;justify-content:center;gap:6px;list-style:none;cursor:pointer;min-height:44px;min-width:76px;padding:0 12px;background:var(--encre);color:var(--papier);border:1px solid var(--cadre);border-bottom:3px solid #060f17;font-size:var(--t4);font-weight:800;touch-action:manipulation}
+  .atlas-hud .outils-vue summary::-webkit-details-marker{display:none}
+  .atlas-hud .outils-vue summary::after{content:'▴'}
+  .atlas-hud .outils-vue[open] summary::after{content:'▾'}
+  .atlas-hud .outils-vue-boutons{position:absolute;bottom:52px;right:0;display:grid;grid-template-columns:repeat(3,44px);gap:6px;padding:8px;background:var(--encre);border:1px solid var(--cadre);box-shadow:3px 3px 0 #060f1770}
+  .atlas-hud .camera-mobile .outils-vue button{display:flex}
+  .atlas-hud .camera-mobile{z-index:5}
+  .atlas-hud .inspect{max-height: min(38cqh,320px);overflow-y:auto;overscroll-behavior:contain}
+  .atlas-hud .dock{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+  .atlas-hud .fintour .tt{font-size:var(--t5);white-space:nowrap}
+}
 /* Sous 640 px, le panneau ne s'ancre plus — il n'y a pas de place à côté d'une
    case — et redevient une feuille basse, ce qui est la bonne forme au doigt. La
    grille se resserre, la fiche garde sa part d'écran, et chaque partie défile
@@ -710,7 +724,13 @@ const STYLE = `
      retrouvent leur taille dès que le panneau redevient une feuille basse. */
   .atlas-hud .production-entete .retour,.atlas-hud .ordres .retour{min-width:44px;min-height:44px}
 }
-@container atlas-interface (max-width: 360px){.atlas-hud .fonds .symbole{display:none}}
+@container atlas-interface (max-width: 360px){
+  .atlas-hud .fonds .symbole{display:none}
+  .atlas-hud .bulletin{width:108px}
+  .atlas-hud .partie{max-width:calc(100% - 144px)}
+  .atlas-hud .jour{padding:0 7px;gap:4px;font-size:var(--t2)}
+  .atlas-hud .fonds{font-size:var(--t4);padding-right:7px}
+}
 @container atlas-interface (max-height: 500px){
   .atlas-hud>*{--dock:60px;--bas:calc(8px + env(safe-area-inset-bottom,0px));--haut:calc(8px + env(safe-area-inset-top,0px))}
   .atlas-hud .bulletin{left:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut)}
@@ -1685,6 +1705,18 @@ export function monterHudHtml(
     // office de dessin.
     // Un plateau vu de biais, et l'arc que la caméra suit au-dessus de lui.
     const inclinaison = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.6 4.4 18.1 12 21.6l7.6-3.5z"/><path d="M4.8 12.4a7.4 7.4 0 0 1 14.4 0"/><path d="M16.6 9.9 19.4 12.4 22 10.4"/></svg>';
+    if (racine.clientWidth <= 600) {
+      const outils = (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1))
+        + bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
+        + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
+          + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins')) : '')
+        + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '');
+      return '<div class="camera camera-mobile">'
+        + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
+        + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}</div></details>`
+        + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
+        + '</div>';
+    }
     return '<div class="camera">'
       + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
       + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')

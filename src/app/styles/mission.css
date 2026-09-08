@@ -260,3 +260,13 @@
 .atlas-jeu .atlas-toile{animation:atlas-deploiement .7s cubic-bezier(.2,.7,.3,1) both}
 @keyframes atlas-deploiement{from{opacity:0;transform:scale(1.045)}to{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.atlas-jeu .atlas-toile{animation:none}}
+
+/* Au doigt, le fanion dit ce qu'il ouvre ; la carte garde la priorité. */
+.atlas-mission-libelle{display:none}
+@media(max-width:600px){
+  .atlas-mission-fanion{width:auto;max-width:calc(100vw - 24px);flex-direction:row;gap:8px;padding:0 12px!important}
+  .atlas-mission-libelle{display:block;font-size:12px;font-weight:800}
+  .atlas-mission-numero{color:var(--atlas-signal)}
+  .atlas-transmission .atlas-briefing{padding:18px 16px 0}
+  .atlas-briefing .campagne-actions{position:sticky;bottom:0;z-index:2}
+}

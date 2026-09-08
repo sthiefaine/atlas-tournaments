@@ -188,3 +188,52 @@ test('le HUD rend le bord de l’écran à la carte', async ({ page }) => {
   const pris = Object.values(boites).reduce((a, b) => a + b, 0);
   expect(pris, `le HUD prend ${pris} px de haut sur 844`).toBeLessThan(844 * 0.25);
 });
+
+for (const taille of [{ width: 390, height: 844 }, { width: 320, height: 568 }]) {
+  test(`la première mission se lit et se commande à ${taille.width}px`, async ({ page }) => {
+    await page.setViewportSize(taille);
+    await page.goto('/jeu/premier_contact');
+    const dialogue = page.locator('.atlas-scene');
+    await expect(dialogue).toBeVisible({ timeout: 60000 });
+    const suite = dialogue.getByRole('button', { name: /Suite/ });
+    await expect(suite).toBeVisible();
+    const texte = await dialogue.locator('.texte').boundingBox();
+    expect(texte!.width).toBeGreaterThan(taille.width - 60);
+    for (const bouton of [suite, dialogue.getByRole('button', { name: /Passer/ })]) {
+      const boite = await bouton.boundingBox();
+      expect(boite!.height).toBeGreaterThanOrEqual(44);
+      expect(boite!.y).toBeGreaterThanOrEqual(0);
+      expect(boite!.y + boite!.height).toBeLessThanOrEqual(taille.height);
+    }
+    await suite.tap();
+    await dialogue.getByRole('button', { name: /Passer/ }).tap();
+    await expect(dialogue).toBeHidden();
+    await expect(page.locator('.atlas-mission-libelle')).toHaveText('Objectif et aide');
+    const fonds = await page.locator('.atlas-hud .fonds').boundingBox();
+    const meteo = await page.locator('.atlas-hud .bulletin').boundingBox();
+    expect(fonds!.x + fonds!.width).toBeLessThanOrEqual(meteo!.x - 4);
+    const outils = page.locator('.outils-vue');
+    await expect(outils).not.toHaveAttribute('open');
+    await outils.locator('summary').tap();
+    await expect(outils).toHaveAttribute('open', '');
+    const zoom = outils.getByRole('button', { name: 'Rapprocher', exact: true });
+    // Le bouton garde sa cible tactile, même sur le plus petit écran.
+    const boutons = outils.locator('button');
+    for (const bouton of await boutons.all()) {
+      const boite = await bouton.boundingBox();
+      expect(boite!.width).toBeGreaterThanOrEqual(44);
+      expect(boite!.height).toBeGreaterThanOrEqual(44);
+      expect(boite!.x).toBeGreaterThanOrEqual(0);
+      expect(boite!.x + boite!.width).toBeLessThanOrEqual(taille.width);
+    }
+    await zoom.tap();
+    await expect(outils).toHaveAttribute('open', '');
+    await outils.locator('summary').tap();
+    await page.locator('.atlas-mission-fanion').tap();
+    const aide = page.getByRole('dialog', { name: 'Objectif et aide' });
+    await expect(aide).toBeVisible();
+    await aide.getByRole('button', { name: 'Reprendre', exact: true }).tap();
+    await expect(aide).toBeHidden();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(taille.width);
+  });
+}

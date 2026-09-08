@@ -2350,6 +2350,12 @@
       "longueurMax": 20
     },
     {
+      "cle": "hud.vue_camera",
+      "texte": "Vue",
+      "contexte": { "ecran": "jeu", "note": "Ouvre les réglages de caméra sur mobile." },
+      "longueurMax": 16
+    },
+    {
       "cle": "hud.recentrer",
       "texte": "Recentrer sur votre unité",
       "contexte": {

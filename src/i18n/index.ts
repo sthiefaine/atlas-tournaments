@@ -137,13 +137,26 @@ export function categorieDe(locale: string, n: number): string {
   }
 }
 
+/** Les nombres du HUD utilisent les mêmes réglages à chaque image. Cache borné. */
+const formatsNombres = new Map<string, Intl.NumberFormat>();
+const MAX_FORMATS_NOMBRES = 32;
+
 /** Formate un nombre selon la langue : `38 400` en français, `38,400` en anglais. */
 export function nombre(locale: string, valeur: number, options?: Intl.NumberFormatOptions): string {
-  try {
-    return new Intl.NumberFormat(locale, options).format(valeur);
-  } catch {
-    return new Intl.NumberFormat('fr', options).format(valeur);
+  // Les options personnalisées restent rares ; on conserve leur sémantique
+  // complète (y compris les accesseurs) sans construire de clé approximative.
+  if (options !== undefined) {
+    try { return new Intl.NumberFormat(locale, options).format(valeur); }
+    catch { return new Intl.NumberFormat('fr', options).format(valeur); }
   }
+  let format = formatsNombres.get(locale);
+  if (!format) {
+    try { format = new Intl.NumberFormat(locale); }
+    catch { format = new Intl.NumberFormat('fr'); }
+    if (formatsNombres.size >= MAX_FORMATS_NOMBRES) formatsNombres.clear();
+    formatsNombres.set(locale, format);
+  }
+  return format.format(valeur);
 }
 
 /**

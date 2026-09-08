@@ -50,10 +50,9 @@
  *    parce qu'une réallocation multiplie la capacité par `FACTEUR_CAPACITE` et
  *    qu'il n'en faut donc qu'une poignée avant de ne plus jamais en refaire.
  *
- * Ce que le tampon **ne** fait pas : `updateRanges`. Le chemin partiel de r170
- * (`WebGPUAttributeUtils.updateAttribute`) écrit toujours à l'offset 0 du tampon
- * quel que soit `range.start` — il corromprait les données. On téléverse le
- * tableau entier, ce que fait three quand aucune plage n'est déclarée.
+ * Les mises à jour envoient seulement les éléments écrits, jamais la réserve.
+ * La rustine writeBuffer de r170 (scripts/rustine-three.mjs) corrige les unités
+ * des indices source et le décalage destination avant d'activer updateRanges.
  */
 
 import * as THREE from 'three/webgpu';
@@ -264,11 +263,17 @@ export function creerTampon(maille: MailleDessinee, options: OptionsTampon = {})
       const source = contenu.attributs[nom]!;
       const attribut = geo.getAttribute(nom) as THREE.BufferAttribute;
       (attribut.array as Float32Array).set(source.valeurs, 0);
+      // Plusieurs écritures avant le dessin : seul le préfixe courant sera
+      // lu (drawRange). La réserve conserve son allocation sur le GPU.
+      attribut.clearUpdateRanges();
+      attribut.addUpdateRange(0, source.valeurs.length);
       attribut.needsUpdate = true;
     }
     const index = geo.index;
     if (contenu.indices && index) {
       (index.array as Uint32Array).set(contenu.indices, 0);
+      index.clearUpdateRanges();
+      index.addUpdateRange(0, contenu.indices.length);
       index.needsUpdate = true;
     }
     dessines = nbIndices > 0 ? nbIndices : sommets;

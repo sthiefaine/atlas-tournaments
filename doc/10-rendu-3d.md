@@ -646,3 +646,21 @@ corrige cet appel dans les deux bundles et la source à chaque installation.
 Le préchauffage éteint aussi explicitement `shadow.needsUpdate` avant compilation.
 Les tests de fumée et tactiles tournent maintenant dans Chrome avec WebGPU actif ;
 la fumée vérifie le déplacement de la figurine, pas seulement l’état du HUD.
+
+### Transferts partiels et HUD — 9 septembre 2026
+
+Le profil CPU de `demo` sur Chrome WebGPU au format mobile laisse encore apparaître
+le formatage des nombres dans le travail d’interaction. `nombre()` conserve désormais
+ses `Intl.NumberFormat` par locale dans un cache borné à 32 entrées ; les appels avec
+options gardent leur traitement complet. Micro-mesure locale de 20 000 appels :
+218–256 ms avant, 5,3–5,8 ms après. Ce résultat mesure le formatage, pas la cadence du jeu.
+
+Les `TamponMaille` envoient désormais uniquement le préfixe écrit des attributs et
+indices. La réserve reste allouée sur le GPU, et `drawRange` borne toujours le dessin.
+Cela nécessite une troisième rustine de Three r170 : `writeBuffer` recevait une
+destination nulle pour toute plage et des offsets source exprimés en octets alors
+qu’un TypedArray exige des éléments. La correction est appliquée aux deux bundles et
+à la source à l’installation. Le test exécute l’utilitaire installé avec des plages
+décalées et des sous-vues Float32/Uint32. Sur une géométrie de 12 sommets et 12 indices,
+avec une réserve de 4096 sommets et 8192 indices, la mise à jour passe de 81 920 à
+192 octets. Le premier téléversement alloue toujours la réserve entière.

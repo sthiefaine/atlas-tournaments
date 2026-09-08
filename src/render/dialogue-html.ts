@@ -84,8 +84,8 @@ const STYLE = `
 .atlas-scene .jalons{display:flex;gap:3px;transform:skewX(-15deg)}
 .atlas-scene .jalons i{width:18px;height:5px;background:#ffffff2e}
 .atlas-scene .jalons i.faite{background:var(--signal)}
-.atlas-scene .suite{margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--signal);font-weight:850}
-.atlas-scene[data-frappe='en_cours'] .suite{visibility:hidden}
+.atlas-scene .suite{border:0;background:transparent;font:inherit;cursor:pointer;min-height:44px;padding:8px 10px;touch-action:manipulation;margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--signal);font-weight:850}
+.atlas-scene[data-frappe='en_cours'] .suite span{animation:none}
 .atlas-scene .suite span{animation:atlas-suite 1s steps(2,end) infinite}
 /* « Passer » est un bouton du jeu, donc il a une **épaisseur** qui s'écrase de
    deux pixels à l'appui et un coin coupé. Il était plat, à un liseré de 1 px :
@@ -101,9 +101,16 @@ const STYLE = `
 @keyframes atlas-boite{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes atlas-suite{to{opacity:.15}}
 @media(max-width:620px){
-  .atlas-scene .buste{width:88px}
-  .atlas-scene .texte{min-height:6.4em;padding:12px 13px 14px}
-  .atlas-scene .plateau{padding-bottom:calc(8vh + 10px)}
+  .atlas-scene .bandes{height:12px;min-height:0}
+  .atlas-scene .plateau,.atlas-scene[data-cote='droite'] .plateau{display:block;padding:0 max(12px,env(safe-area-inset-right)) calc(64px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+  .atlas-scene .buste{width:52px;margin-left:12px}
+  .atlas-scene[data-cote='droite'] .buste{margin-left:auto;margin-right:12px}
+  .atlas-scene .boite,.atlas-scene[data-cote='droite'] .boite{border:2px solid var(--lisere);display:flex;flex-direction:column;max-height:calc(100dvh - 180px)}
+  .atlas-scene .nom{padding:10px 12px;letter-spacing:.06em;flex-wrap:wrap;font-size:12px;flex:none}
+  .atlas-scene .texte{min-height:0;margin:0;padding:16px;font-size:16px;line-height:1.55;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+  .atlas-scene .pied{flex:none;padding:4px 6px 6px 14px;border-top:1px solid #ffffff18}
+  .atlas-scene .suite{background:var(--signal);color:#132630;min-width:116px;font-size:13px;justify-content:center;letter-spacing:.06em}
+  .atlas-scene .passer{top:auto;bottom:calc(12px + env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));font-size:12px}
 }
 @media(max-height:460px){
   .atlas-scene .bandes{height:6vh;min-height:22px}
@@ -241,6 +248,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
       return;
     }
     if (e.key !== ' ' && e.key !== 'Enter') return;
+    if (e.target instanceof Element && e.target.closest('button')) return;
     e.preventDefault();
     if (!complete) toutReveler();
     else api.suivante();
@@ -269,7 +277,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
       + `<span class="humeur">${ech(api.t(`emotion.${r.emotion}`))}</span></div>`
       + `<p class="texte">${lettres}</p>`
       + `<div class="pied"><span class="jalons" aria-hidden="true">${jalons}</span>`
-      + `<span class="suite">${ech(api.t('dialogue.suivant'))} <span aria-hidden="true">▶</span></span></div>`
+      + `<button type="button" class="suite" data-action="suivante">${ech(api.t('dialogue.suivant'))} <span aria-hidden="true">▶</span></button></div>`
       + '</div></div>';
     frapper([...racine.querySelectorAll<HTMLElement>('.texte b')]);
   }

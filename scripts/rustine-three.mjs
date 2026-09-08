@@ -76,3 +76,15 @@ for (const relatif of ['build/three.webgpu.js', 'build/three.webgpu.nodes.js', '
   if (source.includes(avant)) writeFileSync(chemin, source.replaceAll(avant, apres));
   else if (!source.includes(apres)) throw new Error(`rustine compileAsync à revoir : ${relatif}`);
 }
+
+// WebGPU : la destination de writeBuffer est en octets, mais les deux
+// paramètres de source sont en éléments lorsque data est un TypedArray.
+// r170 écrivait chaque plage à zéro et multipliait aussi les indices source.
+for (const relatif of ['build/three.webgpu.js', 'build/three.webgpu.nodes.js', 'src/renderers/webgpu/utils/WebGPUAttributeUtils.js']) {
+  const chemin = path.resolve('node_modules/three', relatif);
+  const source = readFileSync(chemin, 'utf8');
+  const avant = /buffer,\s*0,\s*array,\s*range\.start \* array\.BYTES_PER_ELEMENT,\s*range\.count \* array\.BYTES_PER_ELEMENT/g;
+  const apres = 'buffer,\n\t\t\t\t\trange.start * array.BYTES_PER_ELEMENT,\n\t\t\t\t\tarray,\n\t\t\t\t\trange.start,\n\t\t\t\t\trange.count';
+  if (avant.test(source)) writeFileSync(chemin, source.replace(avant, apres));
+  else if (!source.includes(apres)) throw new Error(`rustine writeBuffer à revoir : ${relatif}`);
+}
