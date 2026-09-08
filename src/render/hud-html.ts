@@ -17,7 +17,8 @@
 
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import {
-  consommationParTour, facteurTerrain, prevoirDuel, pvAffiches, terrainLogique, uniteParId,
+  batimentsDe, consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
+  seuilCapture, terrainLogique, uniteParId,
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../schemas/types';
@@ -35,6 +36,20 @@ import type { Partition } from './partition';
 import type { PointVue } from './rendu';
 import { jaugePv, monterScenes, type HorlogeScenes } from './scenes-html';
 import { dessinerUnite } from './sprites/index';
+
+/**
+ * Un niveau de pouvoir, tel que le HUD doit le montrer : son nom, son prix, et
+ * le **verdict du moteur** sur sa disponibilité. Le HUD ne rejoue aucune règle
+ * — il n'a ni le commandant, ni le droit de recalculer un coût.
+ */
+export interface NiveauPouvoir {
+  /** Clé de traduction du nom, ou le nom lui-même en repli. */
+  nom: string;
+  /** Ce qu'il retire à la jauge. */
+  cout: number;
+  /** `verifierPouvoir` l'accepterait-il maintenant ? */
+  pret: boolean;
+}
 
 /** Tout ce que le HUD lit : l'état, la vue d'interaction et la langue. */
 export interface VueJeu {
@@ -64,6 +79,16 @@ export interface VueJeu {
    */
   unitesVues?: ReadonlySet<string> | null;
   attenteIa: boolean;
+  /**
+   * Les deux pouvoirs du commandant du joueur. `null` : ce camp n'en a pas.
+   *
+   * Absent jusqu'ici, et c'est ce qui rendait le **super pouvoir injoignable** :
+   * la mécanique existe du moteur au splash, et le HUD n'écrivait qu'un
+   * `jouerPouvoir('normal')`. Le seuil, lui, était faux dans l'autre sens — le
+   * bouton n'était actif qu'à jauge pleine, alors que la jauge se remplit
+   * jusqu'au prix du **super** et que le pouvoir normal coûte moins.
+   */
+  pouvoirs?: { normal: NiveauPouvoir; super: NiveauPouvoir } | null;
   /** Message éphémère, déjà traduit. */
   annonce: string | null;
   masquerFin?: boolean;
@@ -133,6 +158,11 @@ const STYLE = `
 .atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f}
 .atlas-hud *{box-sizing:border-box}
 .atlas-hud[data-scene='ouverte']{visibility:hidden}
+/* Sauf la colonne, quand elle est ouverte : elle est le cadre de l'écran, pas
+   un panneau posé dessus. L'effacer laisserait une bande vide le temps d'une
+   réplique, et l'écran changerait de forme à chaque prise de parole. Elle
+   s'estompe, ce qui suffit à rendre la parole au commandant. */
+.atlas-hud[data-rail='oui'][data-scene='ouverte'] .hud-rail{visibility:visible;opacity:.34}
 .atlas-hud .p{position:absolute;pointer-events:auto;background:var(--encre);border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;overflow:hidden}
 .atlas-hud .p>.bord{position:absolute;left:0;top:0;bottom:0;width:4px}
 .atlas-hud .in{padding:10px 14px}
@@ -234,14 +264,6 @@ const STYLE = `
 .atlas-hud .duel-chiffres em{font-style:normal;font-size:12px;color:#9fb3b6}
 .atlas-hud .duel-chiffres b{color:#ff8e83}
 .atlas-hud .duel-camp[data-perte='aucune'] .duel-chiffres b{color:#8ee0a4}
-/* Le rôle de la ligne : lequel des deux chiffres est le coup, lequel la riposte. */
-.atlas-hud .duel-chiffres .role{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#9fb3b6;align-self:center}
-.atlas-hud .duel-camp[data-role='riposte'] .duel-chiffres .role{color:var(--signal)}
-/* Le terrain sous l'unité, avec ses étoiles : d'où vient l'écart entre deux échanges qui se ressemblent. */
-.atlas-hud .duel-terrain{display:block;margin-top:2px;font-size:11px;font-weight:700;color:#9fb3b6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.atlas-hud .duel-terrain .etoiles{font-size:10px}
-.atlas-hud .duel-terrain .part{margin-left:5px;font-style:normal;font-weight:850;color:#8ee0a4}
-.atlas-hud .duel-note{margin:0;padding:5px 12px 8px;border-top:1px solid #ffffff14;font-size:11.5px;font-weight:700;color:#c8d7da}
 .atlas-hud .pv{display:flex;gap:2px;height:6px;margin-top:5px;min-width:74px}
 .atlas-hud .pv i{flex:1;background:#ffffff1f}
 .atlas-hud .pv i.plein{background:#8ee0a4}
@@ -366,6 +388,97 @@ const STYLE = `
 @keyframes atlas-ordres{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
 @keyframes atlas-pouvoir{from{color:#ffd162}to{color:white;filter:drop-shadow(0 0 5px #ffd162)}}
 @keyframes atlas-attente{to{transform:rotate(360deg)}}
+/* ---------------------------------------------------------------------------
+ * La colonne de droite — « le rail ».
+ *
+ * Sur un grand écran, le plateau n'a pas besoin de toute la largeur, et le HUD
+ * n'a aucune raison de lui prendre ses quatre coins : **la carte tient la
+ * gauche, la colonne tient la droite**. Ce qui décrit la partie — la journée,
+ * mes fonds, l'unité regardée, le pouvoir, la fin de tour — y vit à demeure, au
+ * lieu de flotter au-dessus du jeu et d'en cacher des cases.
+ *
+ * La règle qui décide du reste : **ce qui commente une case reste sur la
+ * case**. Le menu d'ordres, la prévision de duel, le curseur et tout ce que
+ * joue la partition ne quittent jamais l'image — un ordre se donne à côté de
+ * son unité, pas à huit cents pixels de là.
+ *
+ * Et c'est une **vraie mise en page**, pas un panneau posé sur l'image : le
+ * conteneur rend sa place à la toile par une marge intérieure (--rail-l,
+ * posée par majRail), la toile se remesure (render3d/scene.ts mesure la
+ * toile et non le conteneur), et la caméra continue de cadrer la carte entière
+ * — au centre de ce qu'on voit, pas au centre de ce qui est caché.
+ * ------------------------------------------------------------------------- */
+[data-atlas-hote]{--rail-l:0px}
+[data-atlas-hote][data-atlas-rail='oui']{padding-right:var(--rail-l)}
+/* Rail fermé : les deux zones n'existent pas pour la mise en page, et chaque
+   panneau se positionne exactement comme avant, sur toute l'image. */
+.atlas-hud .hud-carte,.atlas-hud .hud-rail{display:contents}
+.atlas-hud[data-rail='oui']{display:grid;grid-template-columns:minmax(0,1fr) var(--rail-l)}
+/* La zone de carte recouvre la toile au pixel près : c'est elle qui devient le
+   repère des panneaux ancrés. --dock:0 parce que le dock est parti dans la
+   colonne — les panneaux du bas n'ont plus à lui laisser sa hauteur. */
+.atlas-hud[data-rail='oui'] .hud-carte{display:block;position:relative;grid-area:1/1;min-width:0;--dock:0px}
+.atlas-hud[data-rail='oui'] .hud-rail{display:flex;flex-direction:column;grid-area:1/2;gap:9px;min-height:0;padding:var(--haut) 12px var(--bas);pointer-events:auto;overflow:hidden;background:linear-gradient(180deg,#12242e,#0c1922 58%,#0a151c);border-left:1px solid #3b5b6a;box-shadow:inset 3px 0 0 #ffffff0d,-8px 0 22px #04080c66}
+/* Dans la colonne, un panneau n'est plus une fenêtre posée sur le jeu : il est
+   une bande de la colonne. On lui retire donc sa position, sa largeur imposée
+   et son ombre portée — une ombre n'a de sens que sur ce qui flotte. */
+.atlas-hud[data-rail='oui'] .hud-rail .p,
+.atlas-hud[data-rail='oui'] .hud-rail .partie,
+.atlas-hud[data-rail='oui'] .hud-rail .bulletin,
+.atlas-hud[data-rail='oui'] .hud-rail .dock{position:static;inset:auto;transform:none;width:auto;max-width:none;min-width:0;filter:none;box-shadow:none}
+/* Le bandeau de tête : la journée, et mes fonds. Le liseré de gauche continue
+   de dire **qui joue**, et c'est la seule chose de la colonne qui change de
+   couleur — la trouver ailleurs demanderait de la chercher. */
+.atlas-hud[data-rail='oui'] .hud-rail .partie{display:grid;grid-template-columns:minmax(0,1fr) auto;height:auto;flex:none;gap:0}
+.atlas-hud[data-rail='oui'] .hud-rail .jour{height:48px;padding:0 13px;clip-path:none;font-size:15px}
+.atlas-hud[data-rail='oui'] .hud-rail .fonds{height:48px;margin-left:0;padding:0 14px;font-size:17px;background:#0a1a24;border:1px solid #33505e;border-left:0}
+/* L'unité regardée prend toute la place qui reste : c'est le panneau qu'on lit
+   le plus longtemps, et le seul dont la hauteur soit variable. */
+.atlas-hud[data-rail='oui'] .hud-rail .inspect{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:hidden;border:1px solid #35525f}
+.atlas-hud[data-rail='oui'] .hud-rail .inspect .fiche{flex:1 1 auto;max-height:none;min-height:0;overflow:auto}
+.atlas-hud[data-rail='oui'] .hud-rail .bulletin{flex:none}
+/* Le pied : le pouvoir, puis la fin de tour, l'un sur l'autre et sur toute la
+   largeur. margin-top:auto le colle en bas — c'est le bouton qu'on cherche
+   sans regarder, il doit être toujours au même endroit. */
+.atlas-hud[data-rail='oui'] .hud-rail .dock{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;height:auto;flex:none;margin-top:auto}
+.atlas-hud[data-rail='oui'] .hud-rail .jauge button{padding:9px 12px}
+.atlas-hud[data-rail='oui'] .hud-rail .fintour button{min-height:64px;font-size:17px;padding:12px 16px}
+.atlas-hud[data-rail='oui'] .hud-rail .fintour .symbole{width:30px;height:30px}
+/* Le revenu, collé aux fonds : le solde dit où l'on en est, celui-ci dit où
+   l'on va. Vert parce que c'est un gain, discret parce que ce n'est pas le
+   chiffre qu'on lit en premier. */
+.atlas-hud .fonds .revenu{margin-left:7px;font-style:normal;font-size:12px;font-weight:800;color:#8ee0a4}
+/* Le compte de bâtiments : la mesure du match. Deux nombres, et une barre à
+   deux segments aux couleurs des camps — c'est le rapport qui se lit, pas les
+   chiffres. Colonne seulement : le bandeau étroit ne peut pas la porter. */
+.atlas-hud .points{display:flex;align-items:center;gap:9px;grid-column:1/-1;margin-top:7px;padding:7px 10px;background:#0a1a24;border:1px solid #33505e}
+.atlas-hud .points .barre{display:flex;flex:1;gap:2px;height:9px;min-width:0;transform:skewX(-15deg)}
+.atlas-hud .points .barre i{min-width:3px}
+.atlas-hud .points .compte{flex:none;font-size:13px;font-weight:900;color:#9fb3b6;font-variant-numeric:tabular-nums}
+.atlas-hud .points .compte b{color:var(--papier)}
+/* Une capture en cours : la couleur du signal, comme le fanion sur la carte. */
+.atlas-hud .stats .capture{color:var(--signal);font-weight:800}
+/* Le cran du pouvoir normal sur la jauge : la barre mesure le prix du super,
+   et sans ce repère elle ne raconte que la moitié de ce qu'elle mesure. */
+.atlas-hud .energie{position:relative}
+.atlas-hud .energie::after{content:'';position:absolute;top:-3px;bottom:-3px;left:var(--cran,100%);width:2px;background:var(--papier);opacity:.7}
+/* Les deux pouvoirs, dans la colonne. Le super se distingue par sa peinture,
+   pas par un mot : un fond chaud, et le prix en signal. */
+.atlas-hud .jauge .commandant{display:flex;align-items:center;gap:9px;padding:9px 12px 4px}
+.atlas-hud .jauge .pouvoirs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;padding:6px 9px 9px}
+.atlas-hud .jauge .pouvoir{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;min-height:52px;padding:7px 9px;cursor:pointer;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;transition:background .09s,translate .06s,border-bottom-width .06s}
+.atlas-hud .jauge .pouvoir:hover:not(:disabled){background:#2c5670}
+.atlas-hud .jauge .pouvoir:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
+.atlas-hud .jauge .pouvoir[data-niveau='super']:not(:disabled){background:#4a3a1c;border-bottom-color:#1d1608}
+.atlas-hud .jauge .pouvoir[data-niveau='super']:hover:not(:disabled){background:#634d24}
+.atlas-hud .jauge .pouvoir:disabled{background:#26333b;color:#8b99a0;border-bottom-color:#151d23;cursor:default}
+.atlas-hud .jauge .pouvoir .rang{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#9fb6b8}
+.atlas-hud .jauge .pouvoir:disabled .rang{color:#75838a}
+.atlas-hud .jauge .pouvoir .nom{font-size:13px;font-weight:850;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-hud .jauge .pouvoir .prix{font-style:normal;font-size:11px;font-weight:800;color:var(--signal);font-variant-numeric:tabular-nums}
+.atlas-hud .jauge .pouvoir:disabled .prix{color:#8b99a0}
+/* Sous 480 px, le revenu cède : la journée et les fonds passent d'abord. */
+@container atlas-interface (max-width: 480px){.atlas-hud .fonds .revenu{display:none}}
 @container atlas-interface (max-width: 600px){
   .atlas-hud .jour{padding:0 12px 0 8px;gap:5px;font-size:12px}
   .atlas-hud .fonds{padding-right:8px;font-size:13px}
@@ -514,6 +627,71 @@ const EMPLACEMENTS = [
 type Emplacement = typeof EMPLACEMENTS[number];
 
 /**
+ * Les trois zones du HUD lorsque la colonne de droite est ouverte.
+ *
+ * `carte` : au-dessus de l'image, souvent ancré à une case. `rail` : dans la
+ * colonne. `plein` : ni l'une ni l'autre — une modale et son voile couvrent les
+ * deux colonnes, et c'est ce qu'on attend d'une modale.
+ */
+export type ZoneHud = 'carte' | 'rail' | 'plein';
+
+/**
+ * Où vit chaque panneau. La règle qui tranche, et il n'y en a qu'une :
+ * **ce qui commente une case reste sur la case**, ce qui décrit la partie s'en
+ * va dans la colonne. Un ordre se donne à côté de l'unité — traverser l'écran
+ * pour atteindre « Attaquer », c'est jouer plus lentement et viser moins bien.
+ * La prévision de duel obéit à la même règle : elle parle de deux unités
+ * précises, elle se lit près d'elles.
+ */
+export const ZONES: Readonly<Record<Emplacement, ZoneHud>> = Object.freeze({
+  partie: 'rail',
+  inspection: 'rail',
+  bulletin: 'rail',
+  dock: 'rail',
+  duel: 'carte',
+  ordres: 'carte',
+  camera: 'carte',
+  attente: 'carte',
+  annonce: 'carte',
+  production: 'plein',
+  fin: 'plein',
+});
+
+/**
+ * L'ordre de la colonne, de haut en bas : qui joue et ce que je possède, puis
+ * l'unité regardée, puis le temps qu'il fera, et le pouvoir et la fin de tour
+ * en pied. Les emplacements de la carte gardent l'ordre du DOM, qui est leur
+ * ordre d'empilement.
+ */
+const ORDRE_RAIL: readonly Emplacement[] = ['partie', 'inspection', 'bulletin', 'dock'];
+
+/** Largeur de la colonne de droite, en pixels. */
+export const LARGEUR_RAIL = 340;
+
+/**
+ * En deçà de cette largeur de **conteneur**, pas de colonne : le plateau a
+ * besoin de sa place avant tout, et sous cette taille la superposition — les
+ * panneaux posés sur l'image, comme avant — reste la meilleure lecture.
+ */
+export const LARGEUR_MINIMALE_RAIL = 1000;
+
+/**
+ * Et en deçà de cette hauteur non plus : un téléphone couché a de la largeur et
+ * pas de hauteur, une colonne y serait un tunnel. C'est le même cas que les
+ * règles `@container (max-height: 500px)` de la feuille.
+ */
+export const HAUTEUR_MINIMALE_RAIL = 560;
+
+/**
+ * La colonne de droite tient-elle ? Mesurée sur le **conteneur**, jamais sur la
+ * fenêtre : le jeu n'occupe pas toujours l'écran entier, et c'est la place
+ * réellement disponible qui décide.
+ */
+export function railTient(largeur: number, hauteur: number): boolean {
+  return largeur >= LARGEUR_MINIMALE_RAIL && hauteur >= HAUTEUR_MINIMALE_RAIL;
+}
+
+/**
  * Pose chaque HTML dans son emplacement **s'il a changé**, et rend les noms de
  * ceux qui ont été réécrits. `precedent` est mis à jour en place. Pure vis-à-vis
  * du DOM : elle n'écrit que `innerHTML`, ce qui la rend testable sans document.
@@ -559,20 +737,66 @@ export function monterHudHtml(
   racine.setAttribute('data-hud', 'html');
   conteneur.appendChild(racine);
 
+  // Deux zones, et les modales par-dessus les deux. La zone de carte recouvre
+  // exactement la toile, le rail occupe la place que le conteneur lui a rendue
+  // en marge. Tant que le rail est fermé, les deux zones sont en
+  // `display:contents` : elles n'existent pas pour la mise en page, et chaque
+  // panneau se positionne comme il l'a toujours fait, sur toute l'image.
+  const zoneCarte = doc.createElement('div');
+  zoneCarte.className = 'hud-carte';
+  racine.appendChild(zoneCarte);
+  const zoneRail = doc.createElement('div');
+  zoneRail.className = 'hud-rail';
+  racine.appendChild(zoneRail);
+
   // Un enfant par emplacement, en `display:contents` : il n'existe pas pour la
   // mise en page, et la règle `.atlas-hud>*` continue de poser ses variables,
   // que les panneaux héritent. Le HTML posé la dernière fois est retenu par
   // emplacement : c'est la comparaison de chaînes qui épargne le DOM.
   const emplacements = new Map<Emplacement, HTMLElement>();
   const htmlPose = new Map<string, string>();
-  for (const nom of EMPLACEMENTS) {
+  // L'ordre de création est celui du DOM : le rail d'abord, dans son ordre à
+  // lui, puis la carte et les modales dans l'ordre d'empilement d'`EMPLACEMENTS`.
+  const ordre: Emplacement[] = [
+    ...ORDRE_RAIL,
+    ...EMPLACEMENTS.filter((nom) => ZONES[nom] !== 'rail'),
+  ];
+  for (const nom of ordre) {
     const el = doc.createElement('div');
     el.className = 'emplacement';
     el.setAttribute('data-emplacement', nom);
     el.style.display = 'contents';
-    racine.appendChild(el);
+    const zone = ZONES[nom];
+    (zone === 'rail' ? zoneRail : zone === 'carte' ? zoneCarte : racine).appendChild(el);
     emplacements.set(nom, el);
   }
+
+  /**
+   * La colonne de droite s'ouvre et se ferme sur la taille **mesurée** du
+   * conteneur. C'est la seule chose que le HUD écrive sur son hôte — avec la
+   * position relative que `monterJeu` y pose déjà —, et c'est nécessaire : une
+   * colonne posée sur l'image laisserait la caméra cadrer la carte derrière
+   * elle. Le conteneur rend donc sa place à la toile par une marge intérieure,
+   * la toile se remesure (`render3d/scene.ts`), et le plateau reste entier.
+   */
+  let largeurRail = 0;
+  function majRail(): void {
+    const ouvert = railTient(conteneur.clientWidth, conteneur.clientHeight);
+    if (ouvert === (largeurRail > 0)) return;
+    largeurRail = ouvert ? LARGEUR_RAIL : 0;
+    conteneur.dataset['atlasRail'] = ouvert ? 'oui' : 'non';
+    racine.dataset['rail'] = ouvert ? 'oui' : 'non';
+    // La largeur ne s'écrit qu'ici : la feuille la lit, la toile la subit, les
+    // scènes s'y bornent. Un nombre recopié dans le CSS aurait fini par mentir.
+    conteneur.style.setProperty('--rail-l', `${largeurRail}px`);
+  }
+  conteneur.dataset['atlasHote'] = 'jeu';
+  racine.dataset['rail'] = 'non';
+  majRail();
+  const observateurRail = typeof ResizeObserver === 'function'
+    ? new ResizeObserver(() => { majRail(); })
+    : null;
+  observateurRail?.observe(conteneur);
 
   // Les scènes transitoires — chiffres, écran de combat, splash — vivent dans
   // un conteneur frère : le HUD remplace le DOM de ses emplacements, et une
@@ -671,9 +895,44 @@ export function monterHudHtml(
     const fonds = api.t('hud.fonds', { n: nombreIntl(v.locale, camp?.fonds ?? 0) });
     // Le liseré, lui, dit **qui joue** : c'est la seule chose qui change de camp.
     const bord = paletteDe(v.etat.campCourant).main;
+    // Le solde dit où l'on en est, le revenu dit où l'on va. Le second manquait,
+    // et c'est lui qui fait décider entre acheter maintenant ou économiser. Il
+    // est lu au moteur (`revenuParTour`), jamais recalculé ici.
+    const revenu = revenuParTour(v.etat, v.camp);
+    const libelleRevenu = api.t('hud.revenu', { n: nombreIntl(v.locale, revenu) });
+    const revenuHtml = `<em class="revenu" aria-label="${ech(libelleRevenu)}" title="${ech(libelleRevenu)}">`
+      + `+${ech(nombreIntl(v.locale, revenu))}</em>`;
     return `<div class="partie" role="group" aria-label="${ech(api.t('hud.partie_en_cours'))}">`
       + `<div class="jour" style="border-left:4px solid ${bord}">${iconeOrdre('jour')}<span>${ech(journee)}</span></div>`
-      + `<div class="fonds" aria-label="${ech(fonds)}" title="${ech(fonds)}">${iconeOrdre('fonds')}<span>${ech(nombreIntl(v.locale, camp?.fonds ?? 0))}</span></div></div>`;
+      + `<div class="fonds" aria-label="${ech(fonds)}" title="${ech(fonds)}">${iconeOrdre('fonds')}`
+      + `<span>${ech(nombreIntl(v.locale, camp?.fonds ?? 0))}</span>${revenuHtml}</div>`
+      + comptePoints(v) + `</div>`;
+  }
+
+  /**
+   * Le compte de bâtiments, mien contre sien — la mesure du match, et elle
+   * n'était affichée nulle part. On lit son solde et jamais sa trajectoire : à
+   * mille fonds par bâtiment et par journée, « huit contre cinq » dit qui prend
+   * l'avantage bien avant que les fonds ne le disent.
+   *
+   * Réservé à la colonne : sur un bandeau de 44 px partagé avec la journée et
+   * les fonds, cette ligne ne tiendrait pas.
+   */
+  function comptePoints(v: VueJeu): string {
+    if (largeurRail === 0) return '';
+    const miens = batimentsDe(v.etat, v.camp).length;
+    const autres = v.etat.camps.filter((c) => c.id !== v.camp);
+    const siens = autres.reduce((n, c) => n + batimentsDe(v.etat, c.id).length, 0);
+    if (miens + siens === 0) return '';
+    // À deux camps, chacun sa couleur ; au-delà, l'adversaire est « tout le
+    // reste » et prend la teinte neutre plutôt qu'une couleur qui mentirait.
+    const mienne = paletteDe(v.camp).main;
+    const sienne = autres.length === 1 && autres[0] ? paletteDe(autres[0].id).main : paletteDe(null).main;
+    const libelle = api.t('hud.batiments', { n: miens, m: siens });
+    return `<div class="points" aria-label="${ech(libelle)}" title="${ech(libelle)}">`
+      + `<span class="barre" aria-hidden="true">`
+      + `<i style="flex:${miens};background:${mienne}"></i><i style="flex:${siens};background:${sienne}"></i></span>`
+      + `<span class="compte" aria-hidden="true"><b>${miens}</b> · ${siens}</span></div>`;
   }
 
   function panneauBulletin(v: VueJeu): string {
@@ -693,31 +952,87 @@ export function monterHudHtml(
       + `<div class="previsions"><div class="sb">${ech(ligne1)}</div><div class="sb">${ech(ligne3)}</div></div></details>`;
   }
 
+  /**
+   * Le commandant et sa jauge.
+   *
+   * Deux corrections de fond ici, et aucune n'est une question de goût.
+   *
+   * **Le seuil était faux.** Le bouton n'était actif qu'à jauge *pleine*, or la
+   * jauge se remplit jusqu'au prix du **super** pouvoir (`jaugeMax` vaut les
+   * barres du super) : le pouvoir normal, qui coûte moins, devenait jouable
+   * bien avant et le bouton restait éteint. On lit désormais le verdict du
+   * moteur (`verifierPouvoir`, passé par `VueJeu.pouvoirs`), qui connaît en
+   * plus le cas « déjà utilisé ce tour ».
+   *
+   * **Le super pouvoir n'avait pas de bouton.** Une mécanique entière — moteur,
+   * partition, splash, chaîne d'interface — était injoignable parce qu'un seul
+   * `'normal'` était écrit en dur. La colonne a la place de les montrer tous
+   * les deux, avec leur nom et leur prix ; l'écran étroit garde son bouton
+   * unique, faute de place dans un dock de 72 px de haut.
+   */
   function panneauJauge(v: VueJeu): string {
     const camp = v.etat.camps.find((c) => c.id === v.camp);
     if (!camp) return '';
     const pal = paletteDe(v.camp);
     const nom = nomCommandant(v.locale, camp.commandantCle) || api.t('hud.commandant');
     const part = camp.jaugeMax > 0 ? Math.min(1, camp.jauge / camp.jaugeMax) : 0;
-    const pleine = part >= 1;
-    // Un bouton cliquable qui fait refuser l'action est un bouton qui ment : la
-    // jauge doit être pleine, sinon le pouvoir n'est pas disponible.
-    const actif = pleine && !v.attenteIa && !v.etat.partie.terminee
-      && v.etat.campCourant === v.camp;
+    const monTour = !v.attenteIa && !v.etat.partie.terminee && v.etat.campCourant === v.camp;
+    const p = v.pouvoirs ?? null;
+    const dispo = (niveau: 'normal' | 'super'): boolean => monTour && (p?.[niveau].pret ?? false);
+    const normalPret = dispo('normal');
     const segments = Math.min(10, Math.max(1, Math.ceil(camp.jaugeMax / 100)));
     const energie = Array.from({ length: segments }, (_, i) => `<i><b style="width:${Math.max(0, Math.min(1, part * segments - i)) * 100}%"></b></i>`).join('');
-    const libelle = api.t(pleine ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
-    return `<div class="p jauge" data-pret="${pleine ? 'oui' : 'non'}" style="border-color:${pal.light}">`
-      + `<button type="button" data-action="pouvoir" aria-label="${ech(nom)} · ${ech(libelle)}"${actif ? '' : ' disabled'}>`
-      + `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
+    // Le cran du pouvoir normal sur la jauge : à partir d'où il se déclenche.
+    // Sans lui, la jauge ne raconte que la moitié de ce qu'elle mesure.
+    const cran = p && camp.jaugeMax > 0
+      ? ` style="--cran:${Math.max(0, Math.min(100, (p.normal.cout / camp.jaugeMax) * 100))}%"`
+      : '';
+    const libelle = api.t(normalPret ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
+    const entete = `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
       + `<span class="tt" style="display:block">${ech(nom)}</span>`
-      + `<span class="energie" aria-hidden="true">${energie}</span>`
+      + `<span class="energie" aria-hidden="true"${cran}>${energie}</span>`
       + `<span class="sb" style="display:block">${ech(libelle)}</span>`
-      + `</span></button></div>`;
+      + `</span>`;
+    const cadre = (dedans: string): string =>
+      `<div class="p jauge" data-pret="${normalPret ? 'oui' : 'non'}" style="border-color:${pal.light}">${dedans}</div>`;
+    // Écran étroit : le bouton unique d'avant, au seuil juste cette fois.
+    if (largeurRail === 0 || !p) {
+      return cadre(`<button type="button" data-action="pouvoir" aria-label="${ech(nom)} · ${ech(libelle)}"`
+        + `${normalPret ? '' : ' disabled'}>${entete}</button>`);
+    }
+    // Dans la colonne : le commandant, puis ses deux pouvoirs nommés et chiffrés.
+    // Un bouton éteint dit **pourquoi** il l'est, au lieu de se contenter de
+    // pâlir — c'est la même règle que « Fonds insuffisants » au recrutement.
+    const bouton = (niveau: 'normal' | 'super', action: string, cle: string): string => {
+      const n = p[niveau];
+      const pret = dispo(niveau);
+      const titre = api.t(n.nom) || n.nom;
+      const motif = pret ? '' : ` title="${ech(api.t('hud.jauge_insuffisante'))}"`;
+      return `<button type="button" class="pouvoir" data-action="${action}" data-niveau="${niveau}"`
+        + `${pret ? '' : ' disabled'}${motif} aria-label="${ech(`${api.t(cle)} · ${titre}`)}">`
+        + `<span class="rang">${ech(api.t(cle))}</span>`
+        + `<span class="nom">${ech(titre)}</span>`
+        + `<em class="prix">${ech(nombreIntl(v.locale, n.cout))}</em></button>`;
+    };
+    return cadre(`<div class="commandant">${entete}</div>`
+      + `<div class="pouvoirs">${bouton('normal', 'pouvoir', 'hud.jauge_pouvoir')}`
+      + `${bouton('super', 'pouvoir_super', 'hud.super_pouvoir')}</div>`);
   }
 
-  function panneauInspection(v: VueJeu, duelOuvert: boolean): string {
-    if (v.menu || duelOuvert) return '';
+  /**
+   * Le panneau d'unité. `efface` dit s'il doit céder la place : sur l'image, un
+   * menu d'ordres ou une prévision de duel occuperait le même coin, et deux
+   * panneaux qui se recouvrent ne se lisent ni l'un ni l'autre.
+   *
+   * **Dans la colonne, il ne s'efface jamais**, et c'est le premier gain de la
+   * colonne. Jusqu'ici, ouvrir le menu d'ordres emportait les PV, les munitions
+   * et le carburant de l'unité — à l'instant précis où l'on choisit entre
+   * attaquer et capturer, les trois chiffres qui décident quittaient l'écran.
+   * Ce n'était pas un manque de place, c'était deux panneaux qui se disputaient
+   * un coin ; la colonne leur en donne chacun un.
+   */
+  function panneauInspection(v: VueJeu, efface: boolean): string {
+    if (efface) return '';
     // Une unité que la carte cache — brouillard, forêt, furtivité — n'est pas
     // sous le curseur : l'état la porte, le joueur ne la voit pas.
     const vue = (u: Unite): boolean => !v.unitesVues || v.unitesVues.has(u.id);
@@ -820,6 +1135,15 @@ export function monterHudHtml(
       // donner, et la sélectionner rouvre son menu. Dit en clair aussi — une
       // unité qui ne bouge plus sans avoir joué n'a pas d'autre signe.
       if (unite.etat === 'deplacee') lignes.push(`<span class="deplacee">${ech(api.t('hud.deplacee'))}</span>`);
+      // Une capture en cours, et **combien il en reste**. Le fanion hissé à
+      // mi-hauteur de la 3D dit « ça avance » ; il ne dit pas « encore un tour ».
+      // Et comme un QG et un bâtiment désaffecté demandent le double, et qu'une
+      // unité entamée gagne moins de points, le compte n'est pas devinable — le
+      // seuil est donc lu au moteur, case par case.
+      if (unite.pointsCapture > 0) {
+        const seuil = seuilCapture(v.etat, v.catalogue, { x: unite.x, y: unite.y });
+        lignes.push(`<span class="capture">${ech(api.t('hud.capture_points', { n: unite.pointsCapture, total: seuil }))}</span>`);
+      }
       // Ce qu'un transport porte : sans cette ligne, deux unités embarquées
       // n'existent nulle part à l'écran.
       if (unite.cargo.length > 0) {
@@ -872,67 +1196,33 @@ export function monterHudHtml(
   }
 
   /**
-   * Le terrain d'une case, sa défense et ce qu'elle retire : « Forêt ★★☆☆ −20 % ».
-   * C'est la moitié de la formule de combat que le HUD ne montrait nulle part —
-   * deux unités identiques, l'une sur route et l'autre en forêt, n'encaissent
-   * pas la même chose, et rien ne le disait.
+   * Une ligne de duel : la figurine, le nom, la jauge de PV, et « avant → après ».
+   *
+   * Elle portait aussi le terrain avec ses étoiles et la part retirée, et le mot
+   * qui disait lequel des deux coups elle encaissait. Le propriétaire l'a jugé
+   * illisible le 8 septembre 2026 — « je ne comprends pas la riposte, ça fait
+   * trop d'informations à l'écran » —, et il a raison sur le fond : une
+   * prévision se lit **en un dixième de seconde**, entre le moment où l'on vise
+   * et celui où l'on clique. Huit lignes de texte n'entrent pas dans ce temps.
+   *
+   * Le terrain n'est pas perdu pour autant : le panneau d'unité le porte, avec
+   * ses étoiles de défense, et dans la colonne de droite il ne s'efface plus
+   * pendant la visée — c'est là qu'on va chercher le détail, pas dans une
+   * fenêtre posée sur la case qu'on vise.
    */
-  function terrainDuel(v: VueJeu, c: Case): string {
-    const terrain = terrainLogique(v.etat, v.catalogue, c);
-    if (terrain === null) return '';
-    const defense = v.catalogue.terrains[terrain]?.defense ?? 0;
-    return `<span class="duel-terrain" data-defense="${defense}">`
-      + `${ech(nomTerrain(v.locale, v.catalogue, terrain))} ${barreauDefense(defense)}`
-      + partTerrain(facteurTerrain(defense)) + `</span>`;
-  }
-
-  /**
-   * Une ligne de duel : vignette, nom, terrain et défense, PV avant → après,
-   * jauge. `role` dit **quel coup** cette ligne encaisse — le coup pour la
-   * cible, la riposte pour l'attaquant : deux chiffres très différents dans le
-   * même panneau sont incompréhensibles tant qu'on ne sait pas lequel est
-   * lequel. `sur` est la case d'où l'unité encaisse : pour l'attaquant, c'est
-   * son **arrivée**, pas sa case de départ, puisque c'est là que la riposte le
-   * trouvera — et c'est ce terrain-là que le moteur lit.
-   */
-  function ligneDuel(
-    v: VueJeu, unite: Unite, apres: number, role: 'coup' | 'riposte', sur: Case,
-  ): string {
+  function ligneDuel(v: VueJeu, unite: Unite, apres: number): string {
     const type = v.catalogue.unites[unite.type];
     if (!type) return '';
     const avant = pvAffiches(unite.pv);
     const touche = apres < avant;
-    return `<div class="duel-camp" data-perte="${touche ? 'oui' : 'aucune'}" data-role="${role}">`
+    return `<div class="duel-camp" data-perte="${touche ? 'oui' : 'aucune'}">`
       + vignette(type.silhouette, unite.camp, 36)
       + `<span style="min-width:0"><span class="tt" style="display:block">${ech(nomUnite(v.locale, v.catalogue, unite.type))}</span>`
-      + terrainDuel(v, sur)
       + jaugePv(avant, apres)
       + `</span><span class="duel-chiffres">`
-      + (touche ? `<em class="role">${ech(api.t(role === 'riposte' ? 'hud.riposte' : 'hud.coup'))}</em>` : '')
       + `${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
   }
 
-  /**
-   * La **prévision de duel** : ce que l'échange coûterait aux deux camps, avant
-   * de confirmer. C'est l'information qu'Advance Wars met sous le curseur, et
-   * sans laquelle une attaque est un pari plutôt qu'une décision.
-   *
-   * La prévision est la valeur **nominale** (`prevoirDuel`) : le tirage réel
-   * s'en écarte de ±5 %, jamais davantage. Rien n'y est recalculé — le panneau
-   * ne fait que montrer ce que le moteur vient de rejouer sans aléa.
-   *
-   * Trois choses s'y lisent que le joueur ne pouvait pas deviner :
-   *
-   * - **le terrain de chacun**, avec ses étoiles : c'est de là que vient
-   *   l'essentiel de l'écart entre deux échanges qui se ressemblent ;
-   * - **quel chiffre est le coup et quel chiffre est la riposte** ;
-   * - **que la riposte part d'une unité déjà touchée** : le moteur la calcule
-   *   sur les PV restants, ce qui rend le premier coup rentable. Sans cette
-   *   ligne, la riposte semble arbitraire.
-   *
-   * Le cas « pas de riposte » est dit en clair : il affichait « Riposte −0 PV »,
-   * ce qui se lit comme une riposte gratuite plutôt que comme son absence.
-   */
   function panneauDuel(v: VueJeu): string {
     const visee = v.visee;
     // La prévision suit la cible **pointée**, pas le curseur : au doigt il n'y a
@@ -944,25 +1234,17 @@ export function monterHudHtml(
     const cible = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
     if (!attaquant || !cible) return '';
     const p = prevoirDuel(v.etat, v.catalogue, attaquant, cible, visee.depuis);
+    // Le bandeau ne dit plus que ce qui est **notable** : une cible mise hors
+    // jeu, ou un tir auquel on ne répond pas. « Riposte −2 PV » répétait en
+    // mots le second chiffre de la fenêtre, et c'était la ligne de trop.
     const issue = p.cibleHorsJeu
       ? api.t('hud.duel_hors_jeu')
-      : (p.riposte > 0
-        ? api.t('hud.duel_riposte', { n: pvAffiches(attaquant.pv) - p.pvAttaquant })
-        : api.t('hud.duel_sans_riposte'));
-    // Ce que la note dit, dans l'ordre de ce qui compte : une cible hors jeu ne
-    // riposte pas et n'a pas besoin qu'on l'explique ; une riposte se lit en
-    // sachant à combien de PV elle part ; une absence de riposte se dit.
-    const note = p.cibleHorsJeu
-      ? ''
-      : (p.riposte > 0
-        ? api.t('hud.duel_riposte_a', { n: p.pvCible })
-        : api.t('hud.duel_sans_riposte_note'));
-    return `<div class="p duel"${ancrer(c, 208)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
+      : (p.riposte > 0 ? '' : api.t('hud.duel_sans_riposte'));
+    return `<div class="p duel"${ancrer(c, 152)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
       + `<div class="duel-entete">${iconeOrdre('attaquer')}<span>${ech(api.t('hud.duel'))}</span>`
-      + `<span class="issue">${ech(issue)}</span></div>`
-      + ligneDuel(v, cible, p.pvCible, 'coup', c)
-      + ligneDuel(v, attaquant, p.pvAttaquant, 'riposte', visee.depuis)
-      + (note === '' ? '' : `<p class="duel-note">${ech(note)}</p>`)
+      + (issue === '' ? '' : `<span class="issue">${ech(issue)}</span>`) + `</div>`
+      + ligneDuel(v, cible, p.pvCible)
+      + ligneDuel(v, attaquant, p.pvAttaquant)
       + '</div>';
   }
 
@@ -1005,7 +1287,10 @@ export function monterHudHtml(
    * main avec une feuille basse — c'est le bon comportement au doigt.
    */
   function ancrer(c: Case | null | undefined, hauteur: number): string {
-    const L = racine.clientWidth;
+    // La largeur de **l'image**, pas celle du HUD : la racine couvre aussi la
+    // colonne de droite, et un panneau ancré qui s'autoriserait cette largeur
+    // se poserait sous le rail, là où la case qu'il commente n'est pas.
+    const L = racine.clientWidth - largeurRail;
     const H = racine.clientHeight;
     if (!c || L < LARGEUR_MINIMALE_ANCRE) return '';
     const p = api.versEcran(c);
@@ -1346,7 +1631,10 @@ export function monterHudHtml(
     composer('dock', () => `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`);
     composer('duel', () => panneauDuel(v));
     const duelOuvert = (html.get('duel') ?? '') !== '';
-    composer('inspection', () => panneauInspection(v, duelOuvert));
+    // Sur l'image, le menu d'ordres et la prévision prennent le coin du panneau
+    // d'unité ; dans la colonne, chacun a le sien et rien ne s'efface.
+    const effaceInspection = largeurRail === 0 && (v.menu !== null || duelOuvert);
+    composer('inspection', () => panneauInspection(v, effaceInspection));
     composer('ordres', () => panneauOrdres(v));
     composer('camera', () => panneauCamera());
     composer('attente', () => panneauAttente(v));
@@ -1413,6 +1701,7 @@ export function monterHudHtml(
       // Déplier la fiche sous le curseur ne touche à rien du jeu non plus.
       case 'fiche': ficheInspection = !ficheInspection; rafraichir(); break;
       case 'pouvoir': api.jouerPouvoir('normal'); break;
+      case 'pouvoir_super': api.jouerPouvoir('super'); break;
       case 'fermer': api.annuler(); break;
       case 'rejouer': api.recommencer(); break;
       case 'zoom_plus': api.zoomer?.(1); break;
@@ -1469,7 +1758,7 @@ export function monterHudHtml(
   // panneau d'inspection cesse alors de suivre le curseur de jeu, sans quoi le
   // bouton qu'on vise disparaît sous le doigt qui l'approche.
   const surPointeur = (e: Event): void => {
-    const sur = (e.target as Element | null)?.closest?.('.atlas-hud .p') != null;
+    const sur = (e.target as Element | null)?.closest?.('.atlas-hud .p, .atlas-hud .hud-rail') != null;
     if (sur === pointeurSurHud) return;
     pointeurSurHud = sur;
     rafraichir();
@@ -1487,6 +1776,12 @@ export function monterHudHtml(
     couper: () => scenes.couper(),
     demonter: () => {
       scenes.demonter();
+      observateurRail?.disconnect();
+      // Le conteneur est rendu tel qu'il a été reçu : la marge de la colonne
+      // vient de ces attributs, un HUD démonté ne doit pas laisser un bord
+      // vide à la page qui l'hébergeait.
+      delete conteneur.dataset['atlasHote'];
+      delete conteneur.dataset['atlasRail'];
       if (minuterieTour) clearTimeout(minuterieTour);
       if (graceInspection) clearTimeout(graceInspection);
       banniereTour?.remove();

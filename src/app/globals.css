@@ -90,7 +90,7 @@ body {
 
 /* Le plateau reste libre : une mission compacte et les explications à la demande. */
 .atlas-jeu{height:100dvh;isolation:isolate;overscroll-behavior:none}
-.atlas-mission-bar{position:absolute;top:calc(80px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:15;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
+.atlas-mission-bar{position:absolute;top:calc(80px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:4;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
 .atlas-mission-bar button{pointer-events:auto;cursor:pointer;background:#152c3b;border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;min-height:48px}
 .atlas-mission-bar button:hover{background:#22455a}
 .atlas-mission-objectif{text-align:left;padding:9px 13px;min-width:0;flex:1}
@@ -99,6 +99,14 @@ body {
 .atlas-aide-bouton{width:48px;flex:0 0 48px;font-size:21px;font-weight:650}
 /* Un seul anneau de focus dans tout le jeu, celui du HUD. */
 .atlas-mission-bar button:focus-visible{outline:3px solid #ffd162;outline-offset:-3px}
+/* Elle était à `z-index:15`, donc peinte **par-dessus** l'écran de combat
+   (`.atlas-scenes`, 8) et par-dessus le voile du menu de production (5) : un
+   bouton d'objectif restait posé sur les bandes noires d'un duel. Elle descend
+   sous les deux ; elle reste au-dessus du plateau et des panneaux, ce qui est
+   tout ce qu'on lui demande.
+   Et quand la colonne de droite est ouverte, le bandeau de partie a quitté le
+   coin haut-gauche : la barre n'a plus à lui laisser ses 80 px. */
+[data-atlas-rail='oui'] ~ .atlas-mission-bar{top:calc(12px + env(safe-area-inset-top,0px))}
 .atlas-briefing button:focus-visible,.atlas-conseils summary:focus-visible{outline:3px solid #64afff;outline-offset:2px}
 .atlas-voile{background:rgba(7,20,26,.84);padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
 .atlas-briefing{border-radius:24px;box-shadow:0 24px 90px #0006;padding:26px 28px 0;overscroll-behavior:contain;outline:none}

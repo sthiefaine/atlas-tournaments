@@ -1722,6 +1722,15 @@
       "longueurMax": 16
     },
     {
+      "cle": "hud.batiments",
+      "texte": "{n} bâtiments à vous, {m} à l’adversaire",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Intitulé accessible du compte de bâtiments, dans la colonne de droite. À l’écran ce sont deux chiffres et une barre à deux segments aux couleurs des camps."
+      },
+      "longueurMax": 56
+    },
+    {
       "cle": "hud.bulletin",
       "texte": "Demain {j1}, ensuite {j2}",
       "contexte": {
@@ -1746,6 +1755,15 @@
         "ecran": "hud"
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "hud.capture_points",
+      "texte": "Capture {n} / {total}",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Points de capture accumulés par l’unité et seuil de la case. Le seuil double sur un QG et sur un bâtiment désaffecté ; il est lu au moteur, jamais supposé."
+      },
+      "longueurMax": 26
     },
     {
       "cle": "hud.capturer",
@@ -1898,6 +1916,15 @@
         "note": "Menu d’ordres : réunir deux unités du même type."
       },
       "longueurMax": 18
+    },
+    {
+      "cle": "hud.jauge_insuffisante",
+      "texte": "Jauge insuffisante",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Pourquoi un bouton de pouvoir est éteint. Un bouton qui ne répond pas doit dire pourquoi."
+      },
+      "longueurMax": 24
     },
     {
       "cle": "hud.jauge_pouvoir",
@@ -2132,6 +2159,15 @@
         "note": "Bouton de reprise d’une partie sauvegardée."
       },
       "longueurMax": 16
+    },
+    {
+      "cle": "hud.revenu",
+      "texte": "+{n} par journée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Le revenu de la prochaine journée, à côté des fonds. À l’écran, seul « +{n} » est affiché ; ce texte est l’intitulé accessible."
+      },
+      "longueurMax": 24
     },
     {
       "cle": "hud.saison",

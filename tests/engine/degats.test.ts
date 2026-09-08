@@ -104,11 +104,14 @@ test('la scène du propriétaire : route contre forêt, et l’inverse', () => {
   assert.equal(pvAffiches(u(t1, 'u2').pv), 8, 'la forêt encaisse la frappe');
   assert.equal(pvAffiches(u(t1, 'u1').pv), 8, 'la route encaisse la riposte');
 
-  // Celle de la forêt frappe : elle ressort devant, et c'est le terrain qui le dit.
+  // Celle de la forêt frappe : elle ressort devant, et c'est le terrain qui le
+  // dit. Elle en garde neuf depuis que la riposte est atténuée (FACTEUR_RIPOSTE,
+  // 8 septembre 2026) : frapper depuis un abri est le meilleur échange du jeu,
+  // et c'est voulu — c'est ce qui donne une raison de tenir un terrain.
   const t2 = copierEtat(scene(true));
   resoudreAttaque(t2, CAT, u(t2, 'u1'), u(t2, 'u2'), rngFixe(0.5), []);
   assert.equal(pvAffiches(u(t2, 'u2').pv), 7, 'la route encaisse la frappe');
-  assert.equal(pvAffiches(u(t2, 'u1').pv), 8, 'la forêt encaisse la riposte');
+  assert.equal(pvAffiches(u(t2, 'u1').pv), 9, 'la forêt encaisse la riposte');
 });
 
 test('la prévision dit exactement ce que l’échange fera', () => {
@@ -151,4 +154,28 @@ test('deux tirages du même flux donnent les mêmes dégâts', () => {
     resoudreAttaque(a, CAT, u(a, 'u1'), u(a, 'u2'), rngFixe(0.31), []).degats,
     resoudreAttaque(b, CAT, u(b, 'u1'), u(b, 'u2'), rngFixe(0.31), []).degats,
   );
+});
+
+test('la seconde scène du propriétaire : route contre ville, frapper en premier paie', () => {
+  // Rapportée le 8 septembre 2026 : deux infanteries à 8 PV, la sienne sur
+  // route, l'autre en ville. Son coup retirait 20 points internes et la riposte
+  // lui en rendait 21 — les deux camps affichaient « 8 → 6 », et il perdait
+  // l'échange sans que rien ne le dise. Avec FACTEUR_RIPOSTE, l'initiative
+  // repasse devant l'abri : 7 pour lui, 6 pour la ville.
+  const etat = partiePersonnalisee(['RC'], {}, [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 1, y: 0 },
+  ]);
+  const t = copierEtat(etat);
+  const att = u(t, 'u1');
+  const def = u(t, 'u2');
+  att.pv = 80;
+  def.pv = 80;
+  const p = prevoirDuel(t, CAT, att, def, { x: 0, y: 0 });
+  assert.equal(p.pvCible, 6, 'la ville encaisse le coup');
+  assert.equal(p.pvAttaquant, 7, 'la route encaisse la riposte, atténuée');
+  // Et la prévision ne ment pas sur ce que le tour jouera.
+  resoudreAttaque(t, CAT, att, def, rngFixe(0.5), []);
+  assert.equal(pvAffiches(def.pv), p.pvCible);
+  assert.equal(pvAffiches(att.pv), p.pvAttaquant);
 });

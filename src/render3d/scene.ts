@@ -412,8 +412,22 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       });
   }
 
+  /**
+   * La taille de l'image se prend sur **la toile**, pas sur le conteneur.
+   *
+   * Depuis que le HUD réserve une colonne à droite sur grand écran
+   * (`render/hud-html.ts`), le conteneur est plus large que l'image : la mesurer
+   * lui donnerait un tampon plus large que ce qui s'affiche, donc une caméra au
+   * mauvais rapport, un cadrage qui déborde et un `versEcran` faux de la largeur
+   * du rail — tout ce que le HUD ancre sur une case aurait glissé. Le conteneur
+   * ne sert plus que de repli, le temps qu'une toile encore hors flux ait une
+   * boîte.
+   */
   function mesurer(): void {
-    const boite = conteneur.getBoundingClientRect();
+    const boiteToile = canvas.getBoundingClientRect();
+    const boite = boiteToile.width > 0 && boiteToile.height > 0
+      ? boiteToile
+      : conteneur.getBoundingClientRect();
     const l = Math.max(1, Math.round(boite.width));
     const h = Math.max(1, Math.round(boite.height));
     if (l === largeur && h === hauteur) return;
@@ -431,6 +445,11 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   const observateur = typeof ResizeObserver === 'function'
     ? new ResizeObserver(() => mesurer())
     : null;
+  // Les deux sont observés : la toile parce que c'est elle qu'on mesure, le
+  // conteneur pour le cas où elle n'aurait pas encore de boîte. `mesurer` sort
+  // sans rien faire quand la taille n'a pas changé, deux notifications pour un
+  // même redimensionnement ne coûtent donc qu'une comparaison.
+  observateur?.observe(canvas);
   observateur?.observe(conteneur);
   mesurer();
 

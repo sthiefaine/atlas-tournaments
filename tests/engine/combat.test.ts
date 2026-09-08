@@ -199,11 +199,11 @@ test('un char à sec frappe un char sur 10, sans consommer, et un char à sec ri
   const issue = resoudreAttaque(travail, CAT, att, def, rngFixe(0.5), []);
   assert.equal(issue.degats, 10);
   assert.equal(att.munitions, 0);
-  // Riposte à sec, sur les PV d'après la frappe : 91 PV internes s'affichent encore
-  // 9 : la frappe a ôté 10 PV internes, la cible en a 90 et en affiche 9, donc
-  // 0,65 × 15 × (9/10) = 8,8 → 9. La mitrailleuse entame, elle n'achève pas :
-  // c'était déjà la lecture du §5.3.
-  assert.equal(issue.riposte, 9);
+  // Riposte à sec, sur les PV d'après la frappe, et atténuée : la cible a 90 PV
+  // internes et en affiche 9, donc 0,65 × 15 × (9/10) = 8,8 → 9 à pleine force,
+  // et 9 × 0,80 = 7,2 → 7 une fois FACTEUR_RIPOSTE appliqué. La mitrailleuse
+  // entame, elle n'achève pas : c'était déjà la lecture du §5.3.
+  assert.equal(issue.riposte, 7);
   assert.equal(def.munitions, 0);
   assert.equal(p.degats, issue.degats);
   assert.equal(p.riposte, issue.riposte, 'la prévision lit la même base effective');

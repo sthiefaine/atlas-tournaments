@@ -24,11 +24,13 @@ import { cleCase } from './types';
 /**
   * Version du moteur : tout ce qui casse un rejeu l'incrémente. Passée à 4 le
   * 8 septembre 2026, quand la formule de dégâts a pris son échelle et son poids
-  * de terrain (§5.1) : une partie enregistrée avant diverge dès la première
-  * attaque. Une sauvegarde du 3 est déclarée périmée et le joueur repart d'une
-  * partie neuve — rien ne casse, rien ne se perd au-delà du match en cours.
+  * de terrain (§5.1) ; puis à **5** le même jour, quand la riposte a pris son
+  * facteur (`FACTEUR_RIPOSTE`) pour que frapper en premier paie aussi contre
+  * une unité à l'abri. Dans les deux cas une partie enregistrée avant diverge
+  * dès la première attaque : la sauvegarde est déclarée périmée et le joueur
+  * repart d'une partie neuve — rien ne casse au-delà du match en cours.
   */
-export const VERSION_MOTEUR = 4;
+export const VERSION_MOTEUR = 5;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;

@@ -11,7 +11,10 @@ import {
   sceneDeCarte, type Catalogue, type EtatPartie, type Unite,
 } from '../../src/engine/index';
 import { ambiance } from '../../src/render/ambiance';
-import { monterHudHtml, poserEmplacements, type VueJeu } from '../../src/render/hud-html';
+import {
+  HAUTEUR_MINIMALE_RAIL, LARGEUR_MINIMALE_RAIL, monterHudHtml, poserEmplacements, railTient,
+  type VueJeu,
+} from '../../src/render/hud-html';
 import { nomTerrain } from '../../src/render/libelles';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
 import { DUREES, ecrirePartition, type Partition } from '../../src/render/partition';
@@ -23,6 +26,9 @@ class FauxElement {
   children: FauxElement[] = [];
   className = '';
   id = '';
+  /** La colonne de droite se décide sur la taille mesurée du conteneur. */
+  clientWidth = 0;
+  clientHeight = 0;
   textContent = '';
   dataset: Record<string, string> = {};
   attributs = new Map<string, string>();
@@ -102,11 +108,27 @@ function vueDe(etat: EtatPartie, curseur: { x: number; y: number }): VueJeu {
   };
 }
 
-/** Les emplacements de la racine du HUD, par nom, avec leurs écritures. */
+/**
+ * Les emplacements du HUD, par nom, avec leurs écritures.
+ *
+ * Ils ne sont plus tous enfants directs de la racine : chacun vit dans sa zone
+ * — `hud-carte` pour ce qui commente une case, `hud-rail` pour la colonne de
+ * droite —, et les modales restent sous la racine parce que leur voile couvre
+ * les deux. On descend donc jusqu'au premier nœud qui se nomme.
+ */
 function emplacements(conteneur: FauxElement): Map<string, FauxElement> {
   const racine = conteneur.children.find((e) => e.className === 'atlas-hud');
   assert.ok(racine);
-  return new Map(racine.children.map((e) => [e.attributs.get('data-emplacement') ?? '', e]));
+  const trouves = new Map<string, FauxElement>();
+  const parcourir = (noeud: FauxElement): void => {
+    for (const enfant of noeud.children) {
+      const nom = enfant.attributs.get('data-emplacement');
+      if (nom !== undefined) trouves.set(nom, enfant);
+      else parcourir(enfant);
+    }
+  };
+  parcourir(racine);
+  return trouves;
 }
 
 test('poserEmplacements n’écrit que ce qui a changé et rend leurs noms', () => {
@@ -571,8 +593,15 @@ test('une partition sans geste pour le HUD se résout aussitôt, sans rien crée
 // ---------------------------------------------------------------------------
 
 /** Monte un HUD sur cette vue et rend ses emplacements, avec de quoi démonter. */
-function hudSur(vue: () => VueJeu): { slots: Map<string, FauxElement>; demonter(): void } {
+function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }): {
+  slots: Map<string, FauxElement>;
+  /** La classe de la zone qui porte cet emplacement : hud-carte, hud-rail, ou la racine. */
+  zone(nom: string): string;
+  conteneur: FauxElement;
+  demonter(): void;
+} {
   const { conteneur } = document();
+  if (taille) { conteneur.clientWidth = taille.largeur; conteneur.clientHeight = taille.hauteur; }
   const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
     vue,
     t: (cle, params) => (params ? `${cle} ${JSON.stringify(params)}` : cle),
@@ -580,7 +609,13 @@ function hudSur(vue: () => VueJeu): { slots: Map<string, FauxElement>; demonter(
     jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
     versEcran: () => null,
   });
-  return { slots: emplacements(conteneur), demonter: () => hud.demonter() };
+  const slots = emplacements(conteneur);
+  return {
+    slots,
+    zone: (nom) => slots.get(nom)?.parent?.className ?? '',
+    conteneur,
+    demonter: () => hud.demonter(),
+  };
 }
 
 /** Une partie en catalogue 6 : un chasseur furtif du joueur, un fantassin adverse. */
@@ -742,9 +777,12 @@ function hudEnVisee(etat: EtatPartie, visee: NonNullable<VueJeu['visee']>): {
   return { conteneur, hud };
 }
 
-test('la prévision de duel dit le terrain de chacun, lequel est le coup et lequel la riposte, et à combien de PV la riposte part', () => {
-  // Le constat du propriétaire, posé tel quel : deux infanteries pleines,
-  // l'une sur route, l'autre en forêt.
+test('la prévision de duel ne dit plus que les deux chiffres, et ils sont ceux du moteur', () => {
+  // Le panneau portait, pour chaque camp, le terrain, ses étoiles, la part
+  // retirée, et un mot disant lequel des deux coups la ligne encaissait, plus
+  // une note d'une phrase. Le propriétaire l'a jugé illisible le 8 septembre
+  // 2026 — « trop d'informations à l'écran ». Une prévision se lit entre viser
+  // et cliquer : il y reste deux figurines, deux jauges, deux nombres.
   const etat = surGrille(['RFP', 'PPP', 'PPP'], [
     { camp: 0, type: 'infanterie', x: 0, y: 0 },
     { camp: 1, type: 'infanterie', x: 1, y: 0 },
@@ -756,34 +794,27 @@ test('la prévision de duel dit le terrain de chacun, lequel est le coup et lequ
   });
   const html = emplacements(conteneur).get('duel')!.innerHTML;
 
-  // Les deux terrains, chacun avec sa défense — celle du canon, pas un calcul.
-  assert.match(html, /data-defense="0"/, 'la route ne protège pas');
-  assert.match(html, new RegExp(`data-defense="${CAT.terrains['foret']!.defense}"`), 'la forêt protège');
-  assert.ok(html.includes(nomTerrain('fr', CAT, 'route')), 'le terrain de l’attaquant est nommé');
-  assert.ok(html.includes(nomTerrain('fr', CAT, 'foret')), 'celui de la cible aussi');
-  assert.match(html, /★/, 'les étoiles de défense sont là');
-  // Ce que la forêt retire, en pourcentage : le chiffre vient de `facteurTerrain`.
-  const evite = Math.round((1 - facteurTerrain(CAT.terrains['foret']!.defense)) * 100);
-  assert.ok(evite > 0);
-  assert.ok(html.includes(`hud.defense_part(n=${evite})`), 'la part du terrain est dite en pour cent');
-  assert.ok(!html.includes('hud.defense_part(n=0)'), 'à découvert, rien à annoncer');
+  // Ce qui est parti, et qui se lit désormais dans le panneau d'unité — lequel,
+  // dans la colonne de droite, ne s'efface plus pendant la visée.
+  assert.ok(!html.includes(nomTerrain('fr', CAT, 'foret')), 'plus de terrain dans la prévision');
+  assert.doesNotMatch(html, /★/, 'plus d’étoiles de défense');
+  assert.doesNotMatch(html, /data-defense=/);
+  assert.ok(!html.includes('hud.defense_part'), 'plus de pourcentage de terrain');
+  assert.ok(!html.includes('hud.coup'), 'plus de mot sur les lignes');
+  assert.ok(!html.includes('hud.riposte'));
+  assert.ok(!html.includes('hud.duel_riposte_a'), 'plus de note explicative');
+  assert.ok(!html.includes('hud.duel_riposte('), 'plus de « Riposte −2 PV » en bandeau');
 
-  // Quel chiffre est quoi : la cible encaisse le coup, l'attaquant la riposte.
-  assert.match(html, /data-role="coup"/);
-  assert.match(html, /data-role="riposte"/);
-  assert.ok(html.includes('hud.coup'), 'le coup est nommé');
-  assert.ok(html.includes('hud.riposte'), 'la riposte aussi');
-
-  // Et la riposte part d'une unité déjà touchée : le chiffre annoncé est celui
-  // que le moteur prévoit, jamais un calcul du HUD.
+  // Ce qui reste : deux lignes, et les chiffres que le moteur prévoit.
   const p = prevoirDuel(etat, CAT, attaquant, defenseur, { x: 0, y: 0 });
   assert.ok(p.riposte > 0, 'à ce contact, la cible rend le coup');
-  assert.ok(html.includes(`hud.duel_riposte_a(n=${p.pvCible})`), 'la riposte part aux PV restants de la cible');
-  assert.ok(html.includes(`hud.duel_riposte(n=${pvAffiches(attaquant.pv) - p.pvAttaquant})`));
+  assert.equal((html.match(/class="duel-camp"/g) ?? []).length, 2);
+  assert.ok(html.includes(`<b>${p.pvCible}</b>`), 'les PV de la cible après le coup');
+  assert.ok(html.includes(`<b>${p.pvAttaquant}</b>`), 'ceux de l’attaquant après la riposte');
   hud.demonter();
 });
 
-test('sans riposte, la prévision le dit au lieu d’annoncer « Riposte −0 PV »', () => {
+test('sans riposte, la prévision le dit : c’est la seule chose que le bandeau annonce encore', () => {
   // Une pièce indirecte à deux cases : la cible ne rend pas le coup.
   const etat = surGrille(['PPP', 'PPP', 'PPP'], [
     { camp: 0, type: 'artillerie', x: 0, y: 0 },
@@ -798,11 +829,10 @@ test('sans riposte, la prévision le dit au lieu d’annoncer « Riposte −0 PV
     attaquantId: attaquant.id, depuis: { x: 0, y: 0 }, cibles: [{ x: 2, y: 0 }], cible: { x: 2, y: 0 },
   });
   const html = emplacements(conteneur).get('duel')!.innerHTML;
+  // Le bandeau ne dit plus que le notable : un tir gratuit en est.
   assert.ok(html.includes('hud.duel_sans_riposte'), 'l’issue dit l’absence de riposte');
-  assert.ok(html.includes('hud.duel_sans_riposte_note'));
+  assert.ok(!html.includes('hud.duel_sans_riposte_note'), 'la note d’explication est partie');
   assert.ok(!html.includes('hud.duel_riposte('), 'plus de « Riposte −0 PV »');
-  // La ligne de l'attaquant ne porte pas de mot : il n'encaisse rien.
-  assert.ok(!html.includes('hud.riposte'), 'aucun coup rendu, donc aucune étiquette');
   hud.demonter();
 });
 
@@ -945,4 +975,132 @@ test('la fiche dit ce que le terrain fait à la défense, et qu’une unité ble
   const montagne = Math.round((1 - facteurTerrain(CAT.terrains['montagne']!.defense)) * 100);
   assert.ok(html.includes(`hud.defense_part(n=${montagne})`), 'chaque palier dit ce qu’il retire');
   hud.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// La colonne de droite : la carte à gauche, le panneau à droite
+// ---------------------------------------------------------------------------
+
+test('railTient : la colonne demande de la largeur ET de la hauteur', () => {
+  assert.equal(railTient(LARGEUR_MINIMALE_RAIL, HAUTEUR_MINIMALE_RAIL), true);
+  assert.equal(railTient(LARGEUR_MINIMALE_RAIL - 1, HAUTEUR_MINIMALE_RAIL), false,
+    'trop étroit : le plateau a besoin de sa place avant tout');
+  assert.equal(railTient(1600, HAUTEUR_MINIMALE_RAIL - 1), false,
+    'un téléphone couché a de la largeur et pas de hauteur : la colonne y serait un tunnel');
+  assert.equal(railTient(0, 0), false);
+});
+
+test('chaque panneau va dans sa zone, et le panneau d’unité ne s’efface plus quand le menu d’ordres s’ouvre', () => {
+  const etat = partie();
+  const unite = etat.unites.find((u) => u.camp === 0);
+  assert.ok(unite);
+  const vue = (): VueJeu => ({
+    ...vueDe(etat, { x: unite.x, y: unite.y }),
+    phase: 'action',
+    selection: unite.id,
+    menu: {
+      ancre: { x: unite.x, y: unite.y },
+      options: [{ id: 'attendre', cle: 'hud.attendre', disponible: true }],
+    },
+  });
+
+  const large = hudSur(vue, { largeur: 1400, hauteur: 900 });
+  // Ce qui décrit la partie s'en va dans la colonne...
+  for (const nom of ['partie', 'bulletin', 'inspection', 'dock']) {
+    assert.equal(large.zone(nom), 'hud-rail', `${nom} appartient à la colonne`);
+  }
+  // ...ce qui commente une case reste sur l'image...
+  for (const nom of ['ordres', 'duel', 'camera', 'attente', 'annonce']) {
+    assert.equal(large.zone(nom), 'hud-carte', `${nom} reste ancré à la carte`);
+  }
+  // ...et une modale ne relève d'aucune des deux : son voile couvre les deux colonnes.
+  for (const nom of ['production', 'fin']) {
+    assert.equal(large.zone(nom), 'atlas-hud', `${nom} couvre les deux colonnes`);
+  }
+  // Le défaut que la colonne corrige : les PV, les munitions et le carburant
+  // quittaient l'écran à l'instant précis où l'on choisit son ordre.
+  assert.match(large.slots.get('inspection')!.innerHTML, /class="p inspect"/,
+    'dans la colonne, le panneau d’unité survit au menu d’ordres');
+  assert.match(large.slots.get('ordres')!.innerHTML, /data-valeur="attendre"/);
+  large.demonter();
+
+  // Sur écran étroit, rien ne change : les deux panneaux se disputeraient le
+  // même coin, et c'est toujours le menu qui gagne.
+  const etroit = hudSur(vue);
+  assert.equal(etroit.zone('inspection'), 'hud-rail', 'la zone ne dépend pas de la largeur, la mise en page si');
+  assert.equal(etroit.slots.get('inspection')!.innerHTML, '');
+  etroit.demonter();
+});
+
+test('le démontage rend son conteneur tel quel : pas de marge de colonne orpheline', () => {
+  const etat = partie();
+  const h = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
+  assert.equal(h.conteneur.dataset['atlasRail'], 'oui');
+  h.demonter();
+  assert.equal(h.conteneur.dataset['atlasRail'], undefined);
+  assert.equal(h.conteneur.dataset['atlasHote'], undefined);
+});
+
+test('la colonne montre les deux pouvoirs, et un bouton éteint dit pourquoi', () => {
+  const etat = partie();
+  const pouvoirs = {
+    normal: { nom: 'commandant.x.pouvoir', cout: 100, pret: true },
+    super: { nom: 'commandant.x.super', cout: 300, pret: false },
+  };
+  const large = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }), { largeur: 1400, hauteur: 900 });
+  const html = large.slots.get('dock')!.innerHTML;
+  assert.match(html, /data-action="pouvoir" data-niveau="normal"(?! disabled)/);
+  // Le super pouvoir existait du moteur au splash, et n'avait aucun bouton.
+  assert.match(html, /data-action="pouvoir_super" data-niveau="super" disabled/);
+  assert.match(html, /hud\.jauge_insuffisante/, 'le bouton éteint dit pourquoi il l’est');
+  assert.match(html, /commandant\.x\.pouvoir/);
+  assert.match(html, /commandant\.x\.super/);
+  large.demonter();
+
+  // Écran étroit : le bouton unique d'avant, et rien de plus — un dock de 72 px
+  // ne porte pas deux pouvoirs nommés.
+  const etroit = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }));
+  const compact = etroit.slots.get('dock')!.innerHTML;
+  assert.match(compact, /data-action="pouvoir"/);
+  assert.doesNotMatch(compact, /pouvoir_super/);
+  etroit.demonter();
+});
+
+test('le compteur de capture dit le seuil de la case, et le QG en demande le double', () => {
+  const cat = chargerCatalogue();
+  const etat = creerPartie(scenePersonnalisee(['PCH'], {}, [
+    { camp: 0, type: 'infanterie', x: 1, y: 0 },
+  ]), cat, 'hud');
+  const unite = etat.unites[0];
+  assert.ok(unite);
+  unite.pointsCapture = 12;
+  const surVille = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 0 }), catalogue: cat }));
+  assert.match(surVille.slots.get('inspection')!.innerHTML,
+    /hud\.capture_points \{&quot;n&quot;:12,&quot;total&quot;:20\}/);
+  surVille.demonter();
+
+  // Le même compte sur un QG vaut la moitié du chemin : c'est exactement ce
+  // qu'un fanion hissé à mi-hauteur ne peut pas dire.
+  unite.x = 2;
+  const surQg = hudSur(() => ({ ...vueDe(etat, { x: 2, y: 0 }), catalogue: cat }));
+  assert.match(surQg.slots.get('inspection')!.innerHTML,
+    /hud\.capture_points \{&quot;n&quot;:12,&quot;total&quot;:40\}/);
+  surQg.demonter();
+});
+
+test('le bandeau de partie dit le revenu, et le compte de bâtiments n’apparaît que dans la colonne', () => {
+  const etat = partie();
+  const large = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
+  const html = large.slots.get('partie')!.innerHTML;
+  assert.match(html, /class="revenu"/, 'le solde dit où l’on en est, le revenu dit où l’on va');
+  assert.match(html, /hud\.revenu \{&quot;n&quot;:/);
+  assert.match(html, /class="points"/);
+  assert.match(html, /hud\.batiments \{&quot;n&quot;:\d+,&quot;m&quot;:\d+\}/);
+  large.demonter();
+
+  const etroit = hudSur(() => vueDe(etat, { x: 1, y: 1 }));
+  const compact = etroit.slots.get('partie')!.innerHTML;
+  assert.match(compact, /class="revenu"/, 'le revenu tient partout');
+  assert.doesNotMatch(compact, /class="points"/, 'le compte de bâtiments ne tient pas sur un bandeau de 44 px');
+  etroit.demonter();
 });

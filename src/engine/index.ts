@@ -84,7 +84,7 @@ export {
   verifierChemin, voisines, type Portee, type VerdictChemin,
 } from './regles/mouvement';
 export {
-  calculerDegats, crediterJauge, ECHELLE_DEGATS, estIndirecte, facteurTerrain, JAUGE_PAR_PV_INFLIGE,
+  calculerDegats, crediterJauge, ECHELLE_DEGATS, FACTEUR_RIPOSTE, degatsRiposte, estIndirecte, facteurTerrain, JAUGE_PAR_PV_INFLIGE,
   degatsArme, JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
   tireSansMunitions, type PrevisionDuel,
 } from './regles/combat';
@@ -93,8 +93,8 @@ export {
 } from './regles/capture';
 export {
   batimentsDe, consommationParTour, consommerCarburant, estRavitailleur, producteursDe, produire,
-  ravitailleCetteUnite, reparerEtRavitailler, reveiller, SURCOUT_CARBURANT_FURTIF, valeurArmee,
-  verifierProduction, verserRevenus,
+  ravitailleCetteUnite, reparerEtRavitailler, revenuParTour, reveiller, SURCOUT_CARBURANT_FURTIF,
+  valeurArmee, verifierProduction, verserRevenus,
 } from './regles/economie';
 export {
   appliquerPouvoir, estPoseTerrain, expirationDe, expirerPoses, POINTS_PAR_BARRE,

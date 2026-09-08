@@ -30,14 +30,29 @@ export function producteursDe(etat: EtatPartie, cat: Catalogue, camp: CampId): s
   });
 }
 
+/**
+ * Ce qu'un camp touchera à l'ouverture de sa prochaine journée.
+ *
+ * C'est la formule de `verserRevenus`, isolée pour qu'on puisse l'**afficher** :
+ * le solde dit où l'on en est, le revenu dit où l'on va, et c'est la seconde
+ * moitié qui manquait à l'écran. Isolée, et pas recopiée dans le HUD — un
+ * multiplicateur de pouvoir ou une règle régionale changerait la vraie et
+ * laisserait la copie mentir, ce qui est exactement la faute que le dépôt a
+ * déjà commise quatre fois avec des listes de bâtiments et une fois avec la
+ * formule de dégâts.
+ */
+export function revenuParTour(etat: EtatPartie, camp: CampId): number {
+  const nb = batimentsDe(etat, camp).length;
+  return Math.round(nb * etat.reglages.revenusParBatiment * multiplicateurFonds(etat, camp));
+}
+
 /** Phase 2 — revenus. */
 export function verserRevenus(
   etat: EtatPartie, camp: CampId, evts: EvenementJeu[],
 ): void {
   const c = etat.camps.find((e) => e.id === camp);
   if (!c) return;
-  const nb = batimentsDe(etat, camp).length;
-  const montant = Math.round(nb * etat.reglages.revenusParBatiment * multiplicateurFonds(etat, camp));
+  const montant = revenuParTour(etat, camp);
   c.fonds += montant;
   evts.push({ type: 'revenus', camp, montant });
 }

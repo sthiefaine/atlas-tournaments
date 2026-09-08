@@ -24,7 +24,8 @@ import type {
 } from '../engine/index';
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
-  creerPartie, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues, VERSION_MOTEUR,
+  creerPartie, POINTS_PAR_BARRE, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues,
+  verifierPouvoir, VERSION_MOTEUR,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
@@ -720,6 +721,26 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     };
   }
 
+  /**
+   * Les deux pouvoirs du commandant du joueur, avec le verdict du moteur pour
+   * chacun. C'est `verifierPouvoir` qui décide — le HUD n'a pas le commandant,
+   * et une seconde règle écrite dans le HUD aurait divergé de la première au
+   * premier changement de coût.
+   */
+  function pouvoirsDuJoueur(): VueJeu['pouvoirs'] {
+    const commandant = commandants[camp] ?? null;
+    if (!commandant) return null;
+    const lire = (niveau: 'normal' | 'super') => {
+      const p = niveau === 'super' ? commandant.superPouvoir : commandant.pouvoir;
+      return {
+        nom: p.nom,
+        cout: p.barres * POINTS_PAR_BARRE,
+        pret: verifierPouvoir(etat, commandant, camp, niveau).ok,
+      };
+    };
+    return { normal: lire('normal'), super: lire('super') };
+  }
+
   function vueJeu(): VueJeu {
     const v = vueControleur();
     return {
@@ -737,6 +758,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       visee: v.visee,
       unitesVues: unitesVuesIds(),
       attenteIa,
+      pouvoirs: pouvoirsDuJoueur(),
       annonce,
       masquerFin: options.finPersonnalisee,
       sceneOuverte: dialogueActif(),
