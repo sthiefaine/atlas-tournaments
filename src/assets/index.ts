@@ -11,6 +11,7 @@
  */
 
 export * from './spec';
+export * from './commande';
 export * from './valider';
 export * from './valider-gltf';
 export * from './styles';

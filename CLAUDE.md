@@ -2,6 +2,19 @@
 
 Document de passation pour Claude Code. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — commander et déposer un asset depuis le site (9 septembre 2026)
+
+« Fais-moi une page dans le jeu avec chaque asset, où je génère le prompt pour ChatGPT, qu'il fasse le modèle glb, et que je puisse l'uploader. » Le cycle passait jusqu'ici par trois outils et un fichier posé à la main : un prompt écrit dans `tmp/`, un générateur, `npm run controler:asset`, puis une copie dans `public/assets/modeles/`. Il tient désormais sur la fiche d'un asset, `/admin/assets/<id>`.
+
+1. **La commande est composée depuis la fiche** (`src/assets/commande.ts`, pure, testée), jamais écrite à la main. C'est la seule règle qui compte ici : la fiche est contractuelle — `validerGlb` la relit à la livraison —, et une commande recopiée dérive le jour où une dimension change, si bien que le générateur rend un fichier refusé sans que personne comprenne pourquoi. Mesures et tolérances, budgets par niveau de détail, noms de nœuds et de matériaux, canaux de texture, clips, interdits : tout sort de `spec`. Un test lit les quelques centaines de fiches du canon et échoue sur un `undefined`, un gabarit `{id}` non substitué ou une commande trop courte.
+2. **La contrainte qui fait refuser le plus d'assets est répétée à dessein** : aucun éclairage ni ombre cuits dans l'albédo. Une ombre peinte devient une ombre permanente, qui contredit le soleil du jeu à toute heure et à toute saison. Un test la vérifie sur quarante fiches.
+3. **Le dépôt ne reprend jamais un nom reçu du réseau** (`src/serveur/depot-modeles.ts`). Il ne filtre pas des chemins, il **reconnaît** : un fichier n'est écrit que si son nom est exactement l'un de ceux que `nomModele`/`nomTexture` imposent, variantes saisonnières comprises. Un `../../.env` ne ressemble à aucun et se refuse tout seul. Et **rien n'est écrit avant que tout soit contrôlé** : un lot où un niveau de détail manque ou échoue n'en laisse pas deux sur le disque, état qu'aucun chargeur ne sait lire. Le verdict est celui de `validerGlb`, donc exactement celui de `npm run controler:asset` et de la routine de contrôle.
+4. **`POST /api/admin/modeles`** exige une session d'administration et **refuse en production** : `public/` est cuit dans l'image Docker, un fichier déposé sur le site déployé vivrait jusqu'au déploiement suivant puis disparaîtrait sans bruit. Un asset se dépose en développement, puis **se commite** — c'est git qui le garde, et la page le dit.
+
+Le lot manuel de `Claude outputs/lot-generateur/` (quatorze specs et le message anglais) devient un doublon : la page compose la même commande pour n'importe laquelle des fiches du canon. `tmp/PROMPT-CHATGPT.md` reste utile pour ce que la page ne fait pas — la commande d'**image de référence** qui alimente un générateur image-vers-3D.
+
+**Non vérifié** : la page n'a pas été ouverte, ni le dépôt exercé sur un vrai `.glb` — 1 252 tests, `typecheck`, `lint` et `build` verts, et dix tests sur la composition de la commande et le tri du dépôt.
+
 ## Mise à jour — le jeu ne démarrait pas sur Safari : une ligne de three (8 septembre 2026, nuit)
 
 « Impossible de jouer sur téléphone, impossible de toucher et zoomer, et l'UI prend trop de place pour rien. » Deux passes ont été faites **au raisonnement seul**, et aucune ne touchait la cause. Le propriétaire a ré-autorisé Playwright, interdit depuis le 6 septembre ; un spec mobile l'a trouvée en une passe, et la correction tient en une ligne.

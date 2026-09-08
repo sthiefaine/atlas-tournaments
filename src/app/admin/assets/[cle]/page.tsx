@@ -5,15 +5,19 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 
 import {
-  chargerStyleNation, chargerStyleRegion, nomModele, nomTexture, validerAssetSpec, type AssetSpec,
+  chargerStyleNation, chargerStyleRegion, commandeAsset, nomModele, nomTexture, validerAssetSpec,
+  type AssetSpec,
 } from '@/assets/index';
 import { REGEX_CLE } from '@/schemas/index';
+import { nomsAttendus } from '@/serveur/depot-modeles';
 
 import { sessionCourante } from '../../session';
 import { Bloc, Etat, Ligne } from '../../ui';
 
 import { chargerCatalogueAssets, DOSSIER_SPECS } from '../donnees';
 import { LIBELLES_PRIORITE, LIBELLES_TYPE, STATUT_LIVRAISON, territoireDe, urlListe } from '../tri';
+
+import { Livraison } from './livraison';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -104,6 +108,10 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <Etat valeur={STATUT_LIVRAISON} />
           <span className="ml-2 text-xs opacity-60">Aucun fichier livré n’est enregistré : le rendu compose un placeholder depuis la silhouette.</span>
         </Champ>
+      </Bloc>
+
+      <Bloc titre="Commande et dépôt" aide="La fiche traduite en commande pour un générateur, et le dépôt du fichier qu’il rend. Le contrôle est celui de « npm run controler:asset ».">
+        <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} />
       </Bloc>
 
       <Bloc titre="Identité">
