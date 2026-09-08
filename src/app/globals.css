@@ -26,37 +26,37 @@ body {
 }
 
 /* Le carnet emprunte le vocabulaire des feuilles de match et des fanions. */
-.campagne-page{max-width:1040px;margin:0 auto;padding:64px 28px 40px;line-height:1.6}
-.campagne-entete{max-width:760px;margin-bottom:40px}
 .campagne-kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:650;opacity:.65}
-.campagne-entete h1{font-size:clamp(32px,5vw,58px);line-height:1.08;letter-spacing:-.045em;font-weight:700;margin:14px 0 24px}
-.campagne-intro{font-size:18px;opacity:.78;max-width:640px}
 .campagne-progression{display:inline-block;border-bottom:3px solid #568f74;padding-bottom:5px;margin-top:18px;font-weight:650}
-.campagne-etapes{list-style:none;padding:0;margin:0}
-.campagne-etape{display:grid;grid-template-columns:70px minmax(0,1fr);gap:20px;border-top:1px solid #8884;padding:30px 0}
-.campagne-numero{font-size:32px;font-weight:600;opacity:.35;font-variant-numeric:tabular-nums}
-.campagne-fiche h2{font-size:24px;font-weight:650;letter-spacing:-.02em;margin:5px 0 10px}
-.campagne-fiche p{max-width:670px;margin-bottom:10px}
-.campagne-fiche .campagne-but{font-size:14px;opacity:.8}
-.campagne-etape.verrouillee{opacity:.5}
-.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;padding:11px 19px;background:#31634f;color:#fff;border-radius:6px;font-weight:650;font-size:14px;text-decoration:none;cursor:pointer;border:1px solid transparent}
-.atlas-bouton:hover{background:#254e3e}
-.atlas-bouton.secondaire{background:transparent;color:inherit;border-color:#8886}
-.atlas-bouton.secondaire:hover{background:#8882}
-.atlas-bouton:focus-visible,.atlas-briefing a:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid #7fb6ff;outline-offset:3px}
+/* Le bouton du jeu, et il n'y en a qu'un.
+   Il était une pilule verte arrondie à 6 px, en 14 px demi-gras, dans deux
+   couleurs (#31634f, #568f74) qui n'existaient nulle part ailleurs : un bouton
+   de site de réservation posé au milieu d'un jeu à l'encre et au signal.
+   Ce qui fait qu'un bouton donne envie d'être pressé n'est pas sa couleur mais
+   son **épaisseur** : une bordure basse plus sombre que sa peinture, qui
+   s'écrase de deux pixels à l'appui. Le HUD le faisait déjà sur ses ordres et
+   sur sa fin de tour ; c'est la même mécanique, partout. */
+.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:#ffd162;color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid #fff0ac;border-bottom:4px solid #c4923a;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+.atlas-bouton:hover{filter:brightness(1.09)}
+.atlas-bouton:active{translate:0 2px;border-bottom-width:2px}
+.atlas-bouton.secondaire{background:transparent;color:inherit;border:1px solid #8886;border-bottom:3px solid #8886;clip-path:none}
+.atlas-bouton.secondaire:hover{background:#8882;filter:none}
+/* Un seul anneau de focus dans tout le produit — il y en avait trois. Sa
+   couleur suit la **surface**, pas la marque : le signal ne se voit pas sur le
+   papier crème d'un briefing, et un anneau qu'on ne voit pas n'est pas un
+   anneau. */
+.atlas-bouton:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid #ffd162;outline-offset:3px}
+.atlas-briefing a:focus-visible,.atlas-briefing .atlas-bouton:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
 .campagne-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:20px}
 .campagne-actions>a:not(.atlas-bouton){font-size:13px;text-decoration:underline;opacity:.75}
-.campagne-pied{border-top:1px solid #8884;margin-top:36px;padding-top:20px;font-size:13px;opacity:.65}
-.campagne-pied a{text-decoration:underline}
-.campagne-accueil{padding-top:15vh}
 .atlas-voile{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,18,24,.85);overflow:auto}
-.atlas-briefing{width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;border-radius:12px;line-height:1.55}
+.atlas-briefing{width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55}
 .atlas-briefing h1{font-size:30px;line-height:1.15;font-weight:700;margin:10px 0 18px;letter-spacing:-.03em}
 .atlas-briefing h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:16px}
 .atlas-dialogues{margin:18px 0}
 .atlas-dialogues blockquote{border-left:2px solid #94ae9d;padding-left:14px;margin:12px 0}
 .atlas-dialogues strong{font-size:12px}.atlas-dialogues p{font-size:14px;margin-top:3px}
-.atlas-but{background:#e4ebdf;padding:10px 16px;border-radius:5px}.atlas-but h2{margin:0}
+.atlas-but{background:#e4ebdf;padding:10px 16px}.atlas-but h2{margin:0}
 .atlas-aide{font-size:12px;opacity:.65;margin-top:18px}
 /* L'écran de chargement d'une mission (`jeu/[scenario]/chargement.tsx`). Il est
    rendu par le serveur, donc présent au premier pixel, et il tient la page tant
@@ -82,11 +82,10 @@ body {
 @media(prefers-reduced-motion:reduce){.chargement-jauge span{animation:none;transform:none;width:100%;background:#39505e}}
 .atlas-objectifs{position:absolute;left:12px;top:92px;z-index:15;max-width:min(270px,45vw);background:#152c3b;border:1px solid #839798;color:#f5efdf;border-radius:2px;box-shadow:3px 3px 0 #101d2860;padding:9px 13px;font:12px/1.5 system-ui}
 .atlas-objectifs summary{cursor:pointer;font-weight:650}.atlas-objectifs p{margin-top:6px}.atlas-objectifs button,.atlas-objectifs a{display:inline-block;text-decoration:underline;margin:10px 10px 0 0;cursor:pointer}
-@media(max-width:600px){.campagne-page{padding:32px 18px}.campagne-etape{grid-template-columns:34px minmax(0,1fr);gap:12px}.campagne-numero{font-size:22px}.atlas-briefing{padding:22px}.atlas-briefing h1{font-size:25px}.atlas-voile{padding:10px}.atlas-briefing{max-height:calc(100dvh - 20px)}}
+@media(max-width:600px){.atlas-briefing{padding:22px}.atlas-briefing h1{font-size:25px}.atlas-voile{padding:10px}.atlas-briefing{max-height:calc(100dvh - 20px)}}
 .atlas-tutoriel{list-style:decimal;padding-left:20px;margin-top:8px;font-size:13px}.atlas-tutoriel li{padding-left:4px;margin-bottom:8px}
 .atlas-tuto-court{border-top:1px solid #fff3;margin-top:10px;padding-top:4px}.atlas-tuto-actions{display:flex;justify-content:space-between;gap:8px}.atlas-tuto-actions button:disabled{opacity:.35;cursor:default}
 .atlas-objectifs details[open]{max-height:calc(100dvh - 340px);overflow:auto;min-height:70px}
-.campagne-biomes{border-top:1px solid #8884;padding:24px 0}.campagne-biomes summary{cursor:pointer;font-size:20px;font-weight:650}.campagne-biomes dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;margin-top:22px}.campagne-biomes dt{font-weight:650}.campagne-biomes dd{font-size:14px;opacity:.75;margin-top:6px}
 
 /* Le plateau reste libre : une mission compacte et les explications à la demande. */
 .atlas-jeu{height:100dvh;isolation:isolate;overscroll-behavior:none}
@@ -109,14 +108,17 @@ body {
 [data-atlas-rail='oui'] ~ .atlas-mission-bar{top:calc(12px + env(safe-area-inset-top,0px))}
 .atlas-briefing button:focus-visible,.atlas-conseils summary:focus-visible{outline:3px solid #64afff;outline-offset:2px}
 .atlas-voile{background:rgba(7,20,26,.84);padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
-.atlas-briefing{border-radius:24px;box-shadow:0 24px 90px #0006;padding:26px 28px 0;overscroll-behavior:contain;outline:none}
+/* Un coin **coupé** et une ombre dure : le jeu n'a pas d'autre forme de
+   fenêtre, et une ombre floue de 90 px se lit comme une boîte de dialogue de
+   site. */
+.atlas-briefing{box-shadow:10px 10px 0 #04090c66;padding:26px 28px 0;overscroll-behavior:contain;outline:none;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
 .atlas-briefing h1{font-size:clamp(25px,4vw,34px);margin-bottom:20px}
 .atlas-briefing .campagne-actions{position:sticky;bottom:0;background:#f6f3e9;padding:16px 0 max(20px,env(safe-area-inset-bottom));border-top:1px solid #24342e20;margin-top:22px;gap:10px}
-.atlas-briefing .campagne-actions .atlas-bouton{min-height:50px;border-radius:13px;flex:1;font-size:15px;white-space:nowrap}
+.atlas-briefing .campagne-actions .atlas-bouton{min-height:50px;flex:1;font-size:15px;white-space:nowrap}
 .atlas-briefing .campagne-actions>a:not(.atlas-bouton){display:flex;min-height:44px;align-items:center;justify-content:center;flex-basis:100%;font-size:13px}
 .atlas-dialogues p{font-size:15px;line-height:1.6}
 .atlas-dialogues strong{font-size:13px;color:#376650}
-.atlas-but{padding:14px 16px;border-radius:14px;background:#e2eadd}
+.atlas-but{padding:14px 16px;background:#e2eadd;border-left:4px solid #d2a63c}
 .atlas-but p{margin-top:4px;font-size:15px;font-weight:550}
 .atlas-conseils{margin-top:16px;border-bottom:1px solid #24342e20}
 .atlas-conseils summary{cursor:pointer;min-height:48px;align-content:center;font-size:14px;font-weight:650}
@@ -124,11 +126,12 @@ body {
 .atlas-aide{font-size:13px;line-height:1.6;opacity:.8}
 .atlas-lecon{margin-top:20px}.atlas-lecon-entete{display:flex;justify-content:space-between;align-items:center}.atlas-lecon-entete h2{margin:0}.atlas-lecon-entete span{font-size:13px;font-variant-numeric:tabular-nums;color:#56705b}
 .atlas-lecon>p{font-size:17px;line-height:1.55;margin:14px 0;min-height:80px}
-.atlas-tuto-actions button{min-height:48px;padding:10px 14px;border-radius:12px;background:#24342e0c;border:1px solid #24342e20;cursor:pointer;font-size:14px;font-weight:600}
+.atlas-tuto-actions button{min-height:48px;padding:10px 14px;background:#24342e0c;border:1px solid #24342e20;border-bottom:3px solid #24342e44;cursor:pointer;font-size:14px;font-weight:750;transition:translate .06s,border-bottom-width .06s}
+.atlas-tuto-actions button:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
 @media(max-width:600px){
   .atlas-mission-bar{top:calc(76px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left));width:calc(100% - 20px)}
   .atlas-voile{align-items:flex-end;padding:env(safe-area-inset-top,0px) 0 0}
-  .atlas-briefing{max-height:calc(100dvh - max(16px,env(safe-area-inset-top)));border-radius:24px 24px 0 0;padding:22px max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));width:100%}
+  .atlas-briefing{max-height:calc(100dvh - max(16px,env(safe-area-inset-top)));clip-path:none;padding:22px max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));width:100%}
   .atlas-briefing .campagne-actions{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 @media(max-height:500px) and (orientation:landscape){
@@ -142,7 +145,7 @@ body {
 /* Le briefing est une transmission de terrain, puis s'efface pour le jeu. */
 .atlas-radio-rappel{position:absolute;top:calc(67px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));z-index:15;color:#eee6c9;font:700 12px/1 system-ui;letter-spacing:.06em}
 .atlas-radio-rappel button{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 12px;background:#152c3b;border:1px solid #839798;box-shadow:3px 3px 0 #101d2860;cursor:pointer}
-.atlas-radio-rappel button>span:first-child{color:#e8bd67;font-size:20px}.radio-aide{border:1px solid #b8c9be70;border-radius:50%;width:20px;height:20px;display:grid;place-items:center}
+.atlas-radio-rappel button>span:first-child{color:#e8bd67;font-size:20px}.radio-aide{border:1px solid #b8c9be70;width:20px;height:20px;display:grid;place-items:center}
 .atlas-transmission{background:radial-gradient(ellipse at 40% 30%,#40626365,transparent 65%),repeating-linear-gradient(0deg,#fff0 0 39px,#98bcaa08 40px),repeating-linear-gradient(90deg,#fff0 0 39px,#98bcaa08 40px),#0c1b21;backdrop-filter:none}
 .atlas-transmission .atlas-briefing{background:#17292c;color:#f4efd9;border:1px solid #8fab9455;border-radius:2px;box-shadow:12px 12px 0 #070e1540;max-width:720px;clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));animation:atlas-radio-in .35s ease-out both}
 .atlas-transmission .campagne-kicker{color:#dec57f;opacity:1;font-size:10px;letter-spacing:.2em}
@@ -172,6 +175,84 @@ body {
 .atlas-jeu .atlas-toile{animation:atlas-deploiement .7s cubic-bezier(.2,.7,.3,1) both}
 @keyframes atlas-deploiement{from{opacity:0;transform:scale(1.045)}to{opacity:1;transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.atlas-jeu .atlas-toile{animation:none}}
+
+
+/* ---------------------------------------------------------------------------
+ * Le fil de la campagne : un **itinéraire**, plus un sommaire.
+ *
+ * Il était un article : colonne de prose à 1040 px, six entrées numérotées « 01 »
+ * à « 06 » séparées par des filets gris, un paragraphe de récit chacune, un
+ * bouton pilule vert, des liens soulignés et un glossaire en pied. Et surtout,
+ * c'était le seul écran du jeu **sans fond à lui** : il héritait du `body`
+ * Tailwind, donc blanc en thème clair et suivant le réglage du système, quand
+ * tout le reste est à l'encre. On quittait un écran-titre sombre où un plateau
+ * joue tout seul, et on tombait sur une page blanche.
+ *
+ * Il reprend le vocabulaire de l'écran-titre et du HUD, sans exception : encre,
+ * papier, signal, coins **coupés** et jamais arrondis, ombres dures et sans
+ * flou, et la jauge à six segments biseautée qui est littéralement celle du
+ * bouton Campagne. Entrer dans la campagne cesse d'être un changement d'univers.
+ * ------------------------------------------------------------------------- */
+.atlas-carnet{--encre:#132329;--papier:#f4edda;--papier-doux:#f4eddad6;--panneau:#0f2129;--liseré:#4d6a78;--signal:#ffd162;display:flex;flex-direction:column;gap:20px;min-height:100svh;padding:max(24px,calc(12px + env(safe-area-inset-top,0px))) max(20px,env(safe-area-inset-left,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-right,0px));background:var(--encre);background-image:radial-gradient(120% 78% at 50% -12%,#1b333c 0%,transparent 62%);color:var(--papier);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+.atlas-carnet>*{width:min(100%,980px);margin-inline:auto}
+.atlas-etiquette{display:block;font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9fb6b8}
+.carnet-entete{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.carnet-entete h1{margin-top:7px;font-size:clamp(26px,6vw,40px);font-weight:900;line-height:1;letter-spacing:-.015em}
+.carnet-accroche{max-width:56ch;margin-top:9px;font-size:13.5px;line-height:1.5;color:var(--papier-doux)}
+.carnet-retour{flex:none;display:inline-flex;align-items:center;min-height:44px;font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--papier-doux);text-decoration:none}
+.carnet-retour:hover{color:var(--signal)}
+.carnet-avancee{display:flex;align-items:center;gap:12px;margin-top:-8px;font-size:13px;font-weight:800;color:var(--papier-doux)}
+/* La même jauge que sur le bouton Campagne de l'écran-titre : même forme, même
+   biseau, même remplissage. Deux mesures de la même chose doivent se ressembler. */
+.carnet-jauge{display:flex;flex:none;gap:3px;width:126px;height:6px;transform:skewX(-15deg)}
+.carnet-jauge i{flex:1;background:#ffffff1f}
+.carnet-jauge i.faite{background:var(--signal)}
+
+/* L'itinéraire. Six stations sur une ligne, reliées par un trait qui se remplit
+   derrière soi. Il défile horizontalement plutôt que de se replier : un
+   itinéraire qui passe à la ligne n'est plus un itinéraire. */
+.carnet-route{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.carnet-route ol{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(96px,1fr);min-width:min-content;margin:0;padding:4px 0 0;list-style:none}
+.carnet-route li{position:relative;display:flex;justify-content:center}
+.carnet-route li+li::before{content:'';position:absolute;top:24px;right:50%;left:-50%;height:3px;background:#33505e}
+.carnet-route li[data-etat='gagnee']::before{background:var(--signal)}
+.station{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;padding:5px 3px 9px;text-align:center;cursor:pointer}
+/* Trois états, trois peintures — jamais une opacité sur du texte : une épreuve
+   verrouillée doit se lire « fermée », pas « délavée ». */
+.station-losange{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:36px;background:var(--panneau);border:2px solid var(--liseré);box-shadow:3px 3px 0 #06131899;transform:rotate(45deg);transition:background .12s,border-color .12s}
+.station-losange b{font-size:14px;font-weight:900;font-variant-numeric:tabular-nums;transform:rotate(-45deg)}
+.station-nom{max-width:13ch;font-size:11.5px;font-weight:800;line-height:1.2;color:var(--papier-doux);overflow-wrap:anywhere}
+.station[data-etat='gagnee'] .station-losange{background:var(--signal);border-color:#fff0ac;color:#10222b}
+/* Remportée : la coche prend la place du rang. Le rang n'apprend plus rien une
+   fois l'épreuve derrière soi, la coche si. */
+.station[data-etat='gagnee'] .station-losange b{visibility:hidden}
+.station[data-etat='gagnee'] .station-losange::after{content:'\2713';position:absolute;font-size:19px;font-weight:900;line-height:1;color:#10222b;transform:rotate(-45deg)}
+.station[data-etat='ouverte'] .station-losange{background:#10222b;border-color:var(--signal);color:var(--signal);animation:carnet-pouls 1.9s ease-in-out infinite}
+.station[data-etat='verrouillee'] .station-losange{background:#0b191f;border-color:#2c4653;color:#65808d}
+.station[data-etat='verrouillee'] .station-nom{color:#7b929c}
+.station[aria-current='step'] .station-nom{color:var(--papier)}
+.station[aria-current='step'] .station-losange{box-shadow:3px 3px 0 #061318,0 0 0 3px #f4edda40}
+.station:hover .station-losange{border-color:var(--signal)}
+@keyframes carnet-pouls{0%,100%{box-shadow:3px 3px 0 #06131899,0 0 0 0 #ffd16255}60%{box-shadow:3px 3px 0 #06131899,0 0 0 7px #ffd16200}}
+
+/* Le dossier : une épreuve à la fois. Six récits de même poids ne se lisent
+   pas, et ils s'interposent entre le joueur et le bouton. */
+.carnet-dossier{padding:18px 20px 20px;background:var(--panneau);border:1px solid var(--liseré);border-top:4px solid var(--signal);box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%)}
+.carnet-dossier[data-etat='verrouillee']{border-top-color:var(--liseré)}
+.dossier-rang{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px}
+.dossier-plaque{margin-left:auto;padding:3px 9px;background:#ffd16222;border-left:4px solid var(--signal);color:var(--signal)}
+.dossier-plaque[data-etat='verrouillee']{background:#ffffff10;border-left-color:#6f8794;color:#9fb6b8}
+.carnet-dossier h2{margin:11px 0 13px;font-size:clamp(20px,4.4vw,28px);font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.dossier-objectif{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;padding:11px 14px;background:#0a1a24;border-left:4px solid var(--signal);font-size:15px;font-weight:600;line-height:1.45}
+.dossier-recit{max-width:70ch;font-size:14px;line-height:1.6;color:var(--papier-doux)}
+.dossier-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px}
+.dossier-verrou{font-size:13px;font-weight:800;color:#9fb6b8}
+.carnet-pied{display:flex;flex-wrap:wrap;align-items:center;gap:9px 18px;margin-top:auto;padding-top:16px;border-top:1px solid #ffffff1a;font-size:12px;color:#9fb6b8}
+.carnet-pied a{font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:var(--papier-doux);text-decoration:none}
+.carnet-pied a:hover{color:var(--signal)}
+.carnet-fin{flex-basis:100%;color:var(--signal);font-weight:800}
+.atlas-carnet a:focus-visible,.atlas-carnet button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.station-losange{animation:none!important;transition:none}}
 
 /* ---------------------------------------------------------------------------
  * L'accueil : un écran-titre de jeu, pensé en portrait d'abord.
@@ -247,7 +328,7 @@ body {
    la hauteur, le biseau, l'ombre et la glyphe. */
 .menu-bouton{display:flex;align-items:center;gap:12px;min-height:60px;padding:11px 15px;background:var(--panneau);border:1px solid var(--liseré);color:var(--papier);text-decoration:none;box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:filter .12s ease-out,translate .1s}
 .menu-bouton:hover{filter:brightness(1.14)}
-.menu-bouton:active{translate:0 3px;filter:brightness(1.2)}
+.menu-bouton:active{translate:0 3px;filter:brightness(1.2);box-shadow:3px 3px 0 #06131899}
 .menu-glyphe{width:20px;height:20px;flex:none;opacity:.9}
 .menu-texte{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .menu-texte strong{font-size:15px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
@@ -321,7 +402,8 @@ body {
 .reglages-groupe h2{font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9fb6b8;margin-bottom:12px}
 .reglage-note{font-size:12.5px;line-height:1.45;color:#f4edda9e}
 .reglage-choix{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-.reglage-choix button{min-height:48px;padding:8px;background:#13232900;border:1px solid var(--liseré);color:var(--papier);font-size:13px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.reglage-choix button{min-height:48px;padding:8px;background:#13232900;border:1px solid var(--liseré);border-bottom:3px solid #08141a;color:var(--papier);font-size:13px;font-weight:800;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:translate .06s,border-bottom-width .06s,background-color .09s}
+.reglage-choix button:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
 .reglage-choix button.choisi{background:var(--signal);border-color:var(--signal);color:#10222b}
 .reglage-choix button:disabled{opacity:.5}
 /* Les deux profils : un seul rang, chaque bouton porte le nom et « profil actif ». */
@@ -348,7 +430,8 @@ body {
 [aria-checked='true'] .reglage-glissiere{border-color:var(--signal)}
 [aria-checked='true'] .reglage-glissiere i{left:25px;background:var(--signal)}
 .reglage-etat{flex:none;width:74px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#9fb6b8;text-align:right}
-.reglage-effacer,.reglage-detruire,.reglage-actions button{min-height:48px;padding:10px 16px;background:none;border:1px solid var(--liseré);color:var(--papier);font-size:13px;font-weight:800;touch-action:manipulation}
+.reglage-effacer,.reglage-detruire,.reglage-actions button{min-height:48px;padding:10px 16px;background:none;border:1px solid var(--liseré);border-bottom:3px solid #08141a;color:var(--papier);font-size:13px;font-weight:800;touch-action:manipulation;transition:translate .06s,border-bottom-width .06s}
+.reglage-effacer:active,.reglage-detruire:active,.reglage-actions button:active{translate:0 2px;border-bottom-width:1px}
 .reglage-effacer{margin-top:12px;border-color:#a1524a;color:#f0b6ae}
 .reglage-danger{margin-top:12px;padding:14px;border:1px solid #a1524a}
 .reglage-danger p{font-size:13px;line-height:1.45;color:#f0b6ae;margin-bottom:12px}
@@ -377,7 +460,7 @@ body {
 .jeu-libre-actions{display:flex;gap:8px;margin-top:auto;padding-top:4px}
 .jeu-libre-bouton{flex:1;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:8px 14px;background:var(--signal);color:#10222b;border-top:2px solid #fff0ac;border-bottom:3px solid var(--signal-appui);font-size:14px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%);transition:filter .12s ease-out,translate .1s}
 .jeu-libre-bouton:hover{filter:brightness(1.08)}
-.jeu-libre-bouton:active{translate:0 2px}
+.jeu-libre-bouton:active{translate:0 2px;border-bottom-width:1px}
 .jeu-libre-bouton.secondaire{background:transparent;color:var(--papier);border:1px solid var(--liseré);clip-path:none}
 .jeu-libre-pied{width:min(100%,960px);margin:auto auto 0;padding-top:18px;font-size:12.5px;line-height:1.45;color:#f4edda9e}
 .atlas-jeu-libre a:focus-visible{outline:3px solid var(--signal);outline-offset:3px}

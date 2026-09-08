@@ -919,6 +919,15 @@
       "pluriel": false
     },
     {
+      "cle": "campagne.itineraire",
+      "texte": "Itinéraire de la sélection",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Intitulé accessible de la barre de stations du fil de campagne. Chaque station est une épreuve ; le trait qui les relie se remplit derrière soi."
+      },
+      "longueurMax": 40
+    },
+    {
       "cle": "campagne.jouer",
       "texte": "Commencer la mission",
       "contexte": {
