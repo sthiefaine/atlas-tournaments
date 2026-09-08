@@ -1136,7 +1136,7 @@
     },
     {
       "cle": "campagne.sans_webgl",
-      "texte": "Le jeu n’a pas pu démarrer : cet appareil n’a pas de WebGL 2.",
+      "texte": "Le jeu n’a pas pu démarrer : WebGPU est indisponible.",
       "contexte": {
         "ecran": "jeu",
         "note": "Écran d'échec de montage. Le rendu vectoriel de repli n'existe plus : on le dit franchement plutôt que de laisser un plateau vide."

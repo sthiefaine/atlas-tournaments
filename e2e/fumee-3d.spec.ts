@@ -1,46 +1,10 @@
-/**
- * Test de fumée du **rendu 3D** : on ouvre `/jeu/demo?rendu=3d`, on attend que le
- * plateau soit monté, on sélectionne une unité au clic, on regarde les
- * surbrillances s'allumer, on termine le tour, on laisse l'adversaire jouer,
- * puis on force une nuit d'hiver sous la neige.
- *
- * Trois choses valent d'être dites sur ce fichier :
- *
- * - **WebGL en headless** demande d'ouvrir explicitement le rendu logiciel
- *   (`--use-angle=swiftshader`), sans quoi Chromium refuse le contexte sur une
- *   machine sans GPU. Les images sortent donc d'un rasteriseur logiciel : elles
- *   sont justes, mais plus lentes que sur une vraie carte ;
- * - **le moteur est `WebGPURenderer`** (7 septembre 2026), qui tourne sur WebGPU
- *   si `navigator.gpu` rend un adaptateur et sur son dos WebGL 2 sinon. Chromium
- *   headless expose `navigator.gpu` mais ne rend **pas** d'adaptateur sans carte :
- *   le rendu retomberait de lui-même sur WebGL, après une demande d'adaptateur
- *   qui ne mène à rien. `--disable-blink-features=WebGPU` retire `navigator.gpu`
- *   et rend la fumée **déterministe** : c'est le dos WebGL 2, sous SwiftShader,
- *   celui des captures de référence et des mesures de `doc/10` §9.2. Pour
- *   essayer WebGPU sur le rasteriseur logiciel à la place, remplacer ce drapeau
- *   par `--enable-unsafe-webgpu --use-webgpu-adapter=swiftshader` — non essayé,
- *   et rien ne dit que Vulkan logiciel soit présent sur la machine de test ;
- * - **on ne clique pas une case « au pixel »** : le rendu expose en développement
- *   `window.__atlas.positionCase(x, y)`, qui projette le centre d'une case à
- *   l'écran. Le test clique donc une case du jeu, pas une coordonnée devinée —
- *   ce qui le rend insensible au cadrage, au zoom et au quart de tour courant.
- *
- * Les captures vont dans `test-results/`, pour la relecture humaine du style.
- */
+/** Fumée sur WebGPU réel : sélection, déplacement, tour adverse et météo. */
 
 import { expect, test, type Page } from '@playwright/test';
 
 test.use({
-  launchOptions: {
-    args: [
-      '--use-gl=angle',
-      '--use-angle=swiftshader',
-      '--enable-unsafe-swiftshader',
-      '--ignore-gpu-blocklist',
-      // Le dos WebGL 2 du moteur, à coup sûr : voir l'en-tête.
-      '--disable-blink-features=WebGPU',
-    ],
-  },
+  channel: 'chrome',
+  launchOptions: { args: ['--enable-unsafe-webgpu'] },
 });
 
 // Le rasteriseur logiciel dessine une image en dizaines de millisecondes : ce
@@ -115,7 +79,7 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
   page.on('pageerror', (e) => erreurs.push(String(e)));
 
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto('/jeu/demo?rendu=3d');
+  await page.goto('/jeu/demo?dos=webgpu');
 
   const toile = page.locator(TOILE);
   await expect(toile).toBeVisible();
@@ -126,10 +90,13 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
 
   // Le HUD est en HTML, par-dessus le canvas : il doit être là, et en français.
   await expect(page.locator('[data-hud="html"]')).toBeVisible();
-  await expect(page.getByText('Journée 1')).toBeVisible();
+  await expect(page.locator('[data-hud="html"]').getByText('Journée 1', { exact: true })).toBeVisible();
 
   // --- 01 : le plateau au repos, éclairé, avec son décor et ses unités.
-  await page.waitForTimeout(1500);
+  await expect.poll(() => page.evaluate(() =>
+    (window.__atlas as unknown as { mesurer(): { backend: string } } | undefined)?.mesurer()?.backend,
+  )).toBe('webgpu');
+  await expect.poll(() => richesse(page), { timeout: 30000 }).toBeGreaterThan(40);
   await page.screenshot({ path: 'test-results/fumee-3d-01.png' });
   expect(await richesse(page), 'le plateau doit être dessiné, pas un aplat').toBeGreaterThan(40);
 
@@ -142,6 +109,12 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
   await page.waitForTimeout(400);
   await page.screenshot({ path: 'test-results/fumee-3d-02.png' });
 
+  const selection = await toile.getAttribute('data-selection');
+  const position = () => page.evaluate((id) =>
+    (window.__atlas as unknown as { positionUnite(id: string): { x: number; y: number; z: number } })
+      .positionUnite(id!), selection);
+  const avant = await position();
+
   // Un ordre complet : une case plus loin, le menu d'ordres HTML, puis « Attendre ».
   await cliquerCase(page, 5, 3);
   await expect(toile).toHaveAttribute('data-etat', 'action');
@@ -149,6 +122,7 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
   await page.screenshot({ path: 'test-results/fumee-3d-02b.png' });
   await page.getByRole('button', { name: 'Attendre' }).click();
   await expect(toile).toHaveAttribute('data-etat', 'inactif');
+  await expect.poll(position).not.toEqual(avant);
 
   // --- 03 : fin de tour, l'adversaire joue, la main revient en journée 2.
   await page.getByRole('button', { name: 'Fin de tour' }).click();
@@ -165,12 +139,22 @@ test('le plateau 3D se joue, s’éclaire et se laisse regarder', async ({ page 
   // trois cents millisecondes, il faut laisser passer une dizaine d'images.
   await page.waitForTimeout(8000);
   await page.screenshot({ path: 'test-results/fumee-3d-04.png' });
-  // Le Bulletin est un panneau repliable : ses prévisions ne s'affichent qu'une
-  // fois ouvert. On l'ouvre comme le joueur, puis on lit ce qu'il annonce.
-  await page.locator('.atlas-hud .bulletin summary').click();
   await expect(page.getByText('Hiver · Nuit')).toBeVisible();
-  await expect(page.getByText('Neige', { exact: true })).toBeVisible();
+  await expect(page.locator('.meteo-case[data-courant="oui"]').getByText('Neige', { exact: true })).toBeVisible();
   expect(await richesse(page), 'la nuit reste lisible').toBeGreaterThan(25);
 
   expect(erreurs, 'aucune erreur de page').toEqual([]);
+});
+
+test('sans WebGPU, le jeu explique son indisponibilité sans ouvrir WebGL', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'gpu', { value: undefined, configurable: true });
+    const origine = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, ...args: Parameters<typeof origine>) {
+      if (String(args[0]).startsWith('webgl')) throw new Error('Repli WebGL interdit');
+      return origine.apply(this, args);
+    } as typeof origine;
+  });
+  await page.goto('/jeu/demo?dos=webgl');
+  await expect(page.locator('section[role="alert"]')).toContainText('WebGPU est indisponible');
 });

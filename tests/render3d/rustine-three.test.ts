@@ -31,3 +31,11 @@ test('la rustine de three est posée : la clé de programme ne se pousse plus da
   }
   assert.ok(vus > 0, 'aucun fichier de three trouvé : l’installation est incomplète');
 });
+
+test('compileAsync transmet les deux listes transparentes et la vraie scène', () => {
+  for (const relatif of ['build/three.webgpu.js', 'build/three.webgpu.nodes.js', 'src/renderers/common/Renderer.js']) {
+    const source = readFileSync(path.resolve('node_modules/three', relatif), 'utf8');
+    assert.ok(!source.includes('this._renderTransparents( transparentObjects, camera, sceneRef, lightsNode )'));
+    assert.ok(source.includes('this._renderTransparents( transparentObjects, renderList.transparentDoublePass, camera, sceneRef, lightsNode )'));
+  }
+});

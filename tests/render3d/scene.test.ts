@@ -7,26 +7,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { choisirBackend, moteur3dDisponible } from '../../src/render3d/scene';
+import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible } from '../../src/render3d/scene';
 
-test('sans `navigator.gpu`, c’est le dos WebGL', async () => {
-  assert.equal(await choisirBackend(undefined), 'webgl');
-  assert.equal(await choisirBackend(null), 'webgl');
-  assert.equal(await choisirBackend({}), 'webgl');
-  assert.equal(await choisirBackend({ gpu: undefined }), 'webgl');
-});
-
-test('`navigator.gpu` sans adaptateur — Chromium sans carte, SwiftShader — c’est encore WebGL', async () => {
-  // three r170 lève quand l'adaptateur manque : la question doit être posée avant.
-  const demandes: unknown[] = [];
-  const dos = await choisirBackend({
-    gpu: { requestAdapter: async (options) => { demandes.push(options); return null; } },
-  });
-  assert.equal(dos, 'webgl');
-  // Et posée comme le moteur la posera : la même préférence de puissance.
-  assert.deepEqual(demandes, [{ powerPreference: 'high-performance' }]);
-  // Une demande qui lève vaut un refus, jamais une exception qui remonte.
-  assert.equal(await choisirBackend({ gpu: { requestAdapter: async () => { throw new Error('non'); } } }), 'webgl');
+test('sans WebGPU ou sans adaptateur, aucun repli WebGL', async () => {
+  for (const navigateur of [undefined, null, {}, { gpu: undefined }]) {
+    await assert.rejects(choisirBackend(navigateur), /WebGPU/);
+  }
+  await assert.rejects(choisirBackend({ gpu: { requestAdapter: async () => null } }), /adaptateur/);
+  await assert.rejects(choisirBackend({ gpu: { requestAdapter: async () => { throw new Error('refus'); } } }), /refus/);
 });
 
 test('un adaptateur, et c’est WebGPU', async () => {
@@ -49,4 +37,10 @@ test('la sonde : rien sous Node, WebGPU dès que `navigator.gpu` existe', () => 
   } finally {
     Object.defineProperty(globalThis, 'navigator', { value: avant, configurable: true, writable: true });
   }
+});
+
+test('le moteur ne peut pas basculer silencieusement sur WebGL', () => {
+  const moteur = creerMoteurWebGPU({ canvas: {} as HTMLCanvasElement });
+  assert.equal(moteur._getFallback, null);
+  assert.equal((moteur.backend as unknown as { isWebGPUBackend: boolean }).isWebGPUBackend, true);
 });

@@ -254,17 +254,7 @@ export interface Rendu {
   demonter(): void;
 }
 
-/**
- * Vrai si le navigateur courant peut faire tourner le moteur : WebGPU
- * (`navigator.gpu`, sans garantie d'adaptateur — c'est `choisirBackend` qui la
- * demande, et le repli WebGL 2 prend alors), ou à défaut un contexte WebGL 2.
- *
- * Elle vit **ici** plutôt que dans `render3d/scene.ts`, où elle est née, parce
- * que l'écran-titre doit poser la question sans faire entrer le moteur WebGPU
- * dans son paquet. Il posait jusqu'ici celle de WebGL 2 seule : sur un appareil
- * qui a WebGPU sans WebGL 2, l'attract mode ne se montrait jamais, alors que le
- * moteur y aurait tourné — et par son meilleur dos.
- */
+/** Sonde synchrone ; l'initialisation vérifie ensuite l'adaptateur WebGPU. */
 export function moteur3dDisponible(): boolean {
   try {
     const g = globalThis as { navigator?: { gpu?: unknown } };
@@ -272,23 +262,5 @@ export function moteur3dDisponible(): boolean {
   } catch {
     // Un `navigator` qui refuse de se laisser lire n'a pas de WebGPU.
   }
-  return webgl2Disponible();
+  return false;
 }
-
-/** Vrai si le navigateur courant sait ouvrir un contexte WebGL 2. */
-export function webgl2Disponible(): boolean {
-  try {
-    const d = (globalThis as { document?: Document }).document;
-    if (!d) return false;
-    const canvas = d.createElement('canvas');
-    const gl = canvas.getContext('webgl2');
-    if (!gl) return false;
-    const perte = gl.getExtension('WEBGL_lose_context');
-    perte?.loseContext();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-

@@ -7,17 +7,10 @@
  * quelque chose a changé, qu'une animation court ou que des particules tombent —
  * et, au repos, **une image par seconde** suffit à faire vivre l'eau.
  *
- * Le moteur est `WebGPURenderer` (three r170, `three/webgpu`, depuis le
- * 7 septembre 2026) : il tourne sur **WebGPU** quand le navigateur donne un
- * adaptateur, et sur son **dos WebGL 2** sinon — mêmes nuanceurs, compilés en
- * GLSL au lieu de WGSL. Le choix se fait **avant** de construire le moteur
- * (`choisirBackend`) : `navigator.gpu` absent, ou `requestAdapter()` qui rend
- * `null` (Chromium sans carte, SwiftShader…), et c'est `forceWebGL`. Le
- * moteur s'initialise ensuite de façon **asynchrone** (`renderer.init()`), et
- * rien ne se dessine avant : `creerScene3d` reste synchrone — il crée le
- * canevas et l'objet —, expose la promesse `prete`, et `dessiner()` ne fait
- * rien tant qu'elle n'est pas tenue. L'environnement (`environnement.ts`) se
- * cuit juste après `init()`, parce que son générateur **rend**.
+ * WebGPU exclusivement : aucun paramètre d'adresse ni repli WebGL.
+ * L'initialisation asynchrone expose `prete` ; aucun dessin ne la précède.
+ * La rustine de r170 corrige la compilation des transparents, dont une erreur
+ * laissait les pipelines inachevés et la boucle de jeu figée.
  *
  * Le reste est de l'hygiène : espace de couleur sRGB en sortie, cartographie
  * tonale filmique (c'est elle qui empêche un soleil d'été de brûler les blancs),
@@ -54,16 +47,8 @@
  * d'éteindre `frustumCulled` le temps du préchauffage — c'est `prechauffage.ts`
  * qui l'explique.
  *
- * La **calibration** attend une barrière du processeur graphique, et WebGPU
- * n'en a **aucune de synchrone** : la mesure est donc asynchrone. Une image
- * mesurée part, et sa durée n'est retenue que lorsque le processeur graphique
- * a fini (`renderer.waitForGPU()`, c'est-à-dire `onSubmittedWorkDone` ; sur le
- * dos WebGL, `readPixels` d'un pixel, la seule barrière que WebGL ait — la
- * fence de `waitForGPU` y est scrutée à chaque image d'écran, ce qui arrondit
- * toute mesure à seize millisecondes). Une seule mesure court à la fois ; si la
- * boucle dessine d'autres images pendant qu'elle attend, la durée retenue les
- * englobe — elle **surestime**, jamais l'inverse, et une surestimation ne peut
- * qu'éteindre une chaîne, pas l'allumer sur un appareil qui ne suit pas.
+ * La calibration attend `renderer.waitForGPU()` : le temps mesuré comprend
+ * le dessin effectif. Une seule mesure attend cette barrière à la fois.
  *
  * La **carte d'ombre** n'est recalculée que quand l'appelant le dit
  * (`dessiner(camera, { ombre })`) : en partie, la boucle ne dort jamais —
@@ -79,7 +64,7 @@
 import * as THREE from 'three/webgpu';
 
 import {
-  cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, mediane, msCadence,
+  cadenceInsuffisante, decisionComposeur, IMAGES_CADENCE, mediane, msCadence,
   msCalibration, QUALITE_PAR_DEFAUT, type BackendRendu, type QualiteRendu,
 } from '../render/qualite';
 import { moteur3dDisponible, type MesuresRendu } from '../render/rendu';
@@ -97,13 +82,13 @@ export interface Scene3d {
   /**
    * Tenue quand le moteur est initialisé et l'environnement cuit : rien ne se
    * dessine avant, et `surChangement` est appelée à ce moment-là. Rejetée si
-   * aucun dos ne se monte — ni WebGPU, ni WebGL 2 —, ou si la scène est
+   * WebGPU ne se monte pas, ou si la scène est
    * démontée avant.
    */
   readonly prete: Promise<void>;
   /** Vrai une fois `prete` tenue. */
   readonly pret: boolean;
-  /** Le dos qui tourne réellement, ou `null` tant que le moteur n'est pas prêt. */
+  /** WebGPU, ou null pendant l'initialisation. */
   readonly backend: BackendRendu | null;
   /**
    * Dessine une image — par la chaîne si elle est active — et rend le temps
@@ -227,27 +212,6 @@ export function ratioPixels(fenetre: Window | null, max = 2): number {
   return Math.max(1, Math.min(max, valeur));
 }
 
-/**
- * Le dos imposé par l'adresse : `?dos=webgl` force le repli WebGL 2, `?dos=webgpu`
- * force l'inverse, tout le reste laisse la mesure décider.
- *
- * C'est un **outil de mesure**, pas un réglage : le choix automatique est le bon
- * sur les machines où il a été mesuré (`doc/10` §9.4), mais un appareil qui rame
- * ne se diagnostique pas de loin. Sur Android, le propriétaire signale un jeu
- * fluide en WebGL 2 et poussif depuis le portage : ce paramètre est ce qui
- * permet de comparer les deux sur **son** téléphone au lieu de deviner.
- */
-export function dosForce(fenetre: Window | null): BackendRendu | null {
-  try {
-    const recherche = fenetre?.location?.search;
-    if (typeof recherche !== 'string') return null;
-    const valeur = new URLSearchParams(recherche).get('dos');
-    return valeur === 'webgl' || valeur === 'webgpu' ? valeur : null;
-  } catch {
-    return null;
-  }
-}
-
 /** Ce qu'on regarde du navigateur pour choisir le dos : `navigator.gpu`, s'il existe. */
 export interface NavigateurGpu {
   gpu?: {
@@ -255,23 +219,20 @@ export interface NavigateurGpu {
   } | undefined;
 }
 
-/**
- * Sur quel dos le moteur va-t-il tourner ? WebGPU si le navigateur expose
- * `navigator.gpu` **et** rend un adaptateur ; WebGL 2 sinon. La question de
- * l'adaptateur doit être posée : Chromium expose `navigator.gpu` sur des
- * machines où `requestAdapter()` rend `null` — sans carte, sous SwiftShader —,
- * et three r170 ne retombe pas de lui-même sur WebGL dans tous ces cas, il
- * lève. Une demande qui lève vaut un refus. Pur : reçoit le navigateur.
- */
+/** Exige un adaptateur WebGPU : aucun repli WebGL. */
 export async function choisirBackend(navigateur: NavigateurGpu | null | undefined): Promise<BackendRendu> {
   const gpu = navigateur?.gpu;
-  if (!gpu || typeof gpu.requestAdapter !== 'function') return 'webgl';
-  try {
-    const adaptateur = await gpu.requestAdapter({ powerPreference: 'high-performance' });
-    return adaptateur ? 'webgpu' : 'webgl';
-  } catch {
-    return 'webgl';
-  }
+  if (!gpu || typeof gpu.requestAdapter !== 'function') throw new Error('WebGPU indisponible dans ce navigateur.');
+  const adaptateur = await gpu.requestAdapter({ powerPreference: 'high-performance' });
+  if (!adaptateur) throw new Error('Aucun adaptateur WebGPU disponible.');
+  return 'webgpu';
+}
+
+/** Three r170 installe son propre repli : le désactiver avant init(). */
+export function creerMoteurWebGPU(options: ConstructorParameters<typeof THREE.WebGPURenderer>[0]): THREE.WebGPURenderer {
+  const moteur = new THREE.WebGPURenderer(options);
+  moteur._getFallback = null;
+  return moteur;
 }
 
 /**
@@ -288,11 +249,6 @@ export { moteur3dDisponible };
  */
 const INTENSITE_ENVIRONNEMENT_DEPART = 0.3;
 
-/** Le dos qui tourne réellement : c'est le moteur qui le dit, pas la décision. */
-function backendDe(renderer: THREE.WebGPURenderer): BackendRendu {
-  return (renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend === true ? 'webgpu' : 'webgl';
-}
-
 /**
  * Pose la règle des ombres sur toutes les lumières de la scène : jamais
  * automatiques, recalculées seulement quand l'image le demande. Un parcours de
@@ -304,41 +260,22 @@ function poserOmbres(scene: THREE.Scene, recalculer: boolean): void {
     const l = o as THREE.Light;
     if (l.isLight !== true || l.castShadow !== true || !l.shadow) return;
     l.shadow.autoUpdate = false;
-    if (recalculer) l.shadow.needsUpdate = true;
+    l.shadow.needsUpdate = recalculer;
   });
 }
 
-/**
- * Attend que le processeur graphique ait **fini** l'image mesurée. Sans cela
- * on mesurerait l'envoi des commandes, pas le dessin, et un appareil lent
- * passerait pour rapide. Sur WebGPU, `waitForGPU()` est `onSubmittedWorkDone`,
- * la barrière de l'API. Sur le dos WebGL, `finish()` ne suffit pas — Chrome le
- * traite comme un `flush()` et rend la main aussitôt ; sous SwiftShader, une
- * image d'une seconde se mesurait à zéro et la chaîne s'allumait sur
- * l'appareil le plus lent qui soit — et la fence de `waitForGPU()` y est
- * scrutée à chaque image d'écran, ce qui arrondit la mesure à seize
- * millisecondes : lire un pixel, lui, ne peut pas rendre avant que le dessin
- * soit terminé, et ne coûte que sur ces quelques images.
- */
-const pixel = new Uint8Array(4);
-function attendreDessin(renderer: THREE.WebGPURenderer, backend: BackendRendu): Promise<void> {
-  if (backend === 'webgpu') return renderer.waitForGPU();
-  try {
-    const gl = renderer.getContext() as unknown as WebGL2RenderingContext | null;
-    gl?.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
-  } catch {
-    // Un contexte perdu ne se mesure pas ; on gardera le temps d'envoi.
-  }
-  return Promise.resolve();
+/** Attend la fin effective du dessin sur le GPU. */
+function attendreDessin(renderer: THREE.WebGPURenderer): Promise<void> {
+  return renderer.waitForGPU();
 }
 
 /**
- * Monte le moteur dans un conteneur. Lève tout de suite si ni WebGPU ni WebGL 2
- * n'est disponible ; sinon `prete` dit quand — ou si — le moteur a démarré.
+ * Monte le moteur dans un conteneur. Lève tout de suite si WebGPU
+ * n'est pas disponible ; sinon `prete` dit quand — ou si — le moteur a démarré.
  */
 export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {}): Scene3d {
   if (!moteur3dDisponible()) {
-    throw new Error('Rendu 3D indisponible : ni WebGPU ni WebGL 2.');
+    throw new Error('Rendu 3D indisponible : WebGPU requis.');
   }
   const doc = conteneur.ownerDocument;
   const fenetre = doc.defaultView;
@@ -431,18 +368,6 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     const r = renderer;
     const dos = backend;
     if (!r || !dos) return;
-    // three ne lève pas quand une cible flottante n'est pas dessinable : sans
-    // l'extension, la chaîne rendrait un écran noir en silence. On le sait
-    // avant de charger quoi que ce soit, et on reste sur le rendu direct. La
-    // question se pose aux extensions du dos WebGL, pas à `renderer.hasFeature`,
-    // qui ne connaît que la poignée de noms de sa table (`GLFeatureName`) et
-    // répondrait non à `EXT_color_buffer_float` sans même regarder.
-    const extensions = (r.backend as { extensions?: { has(nom: string): boolean } }).extensions;
-    if (!composeurPossible(dos, (nom) => extensions?.has(nom) === true)) {
-      echec = true;
-      console.warn('Chaîne de post-traitement indisponible', 'aucune cible flottante dessinable (EXT_color_buffer_float)');
-      return;
-    }
     if (fabrique) {
       if (!camera) return;
       try {
@@ -522,14 +447,13 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
    * tenu pour traité ici, et reste visible à qui attend `prete`.
    */
   const prete: Promise<void> = (async () => {
-    const dos = dosForce(fenetre) ?? await choisirBackend(fenetre?.navigator as NavigateurGpu | undefined);
+    await choisirBackend(fenetre?.navigator as NavigateurGpu | undefined);
     if (!vivante) throw new Error('Scène démontée avant que le moteur soit prêt.');
-    const r = new THREE.WebGPURenderer({
+    const r = creerMoteurWebGPU({
       canvas,
       antialias: true,
       alpha: false,
       powerPreference: 'high-performance',
-      forceWebGL: dos === 'webgl',
     });
     r.outputColorSpace = THREE.SRGBColorSpace;
     r.toneMapping = THREE.ACESFilmicToneMapping;
@@ -548,7 +472,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       throw new Error('Scène démontée avant que le moteur soit prêt.');
     }
     renderer = r;
-    backend = backendDe(r);
+    backend = 'webgpu';
     if (options.environnement !== false) {
       environnement = creerEnvironnement(r);
       scene.environment = environnement.texture;
@@ -613,7 +537,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       if (envois.length > IMAGES_CADENCE) envois.shift();
       if (mesure) {
         mesureEnCours = true;
-        void attendreDessin(r, dos).then(() => {
+        void attendreDessin(r).then(() => {
           mesureEnCours = false;
           if (!vivante) return;
           durees.push(horloge.now() - debut);

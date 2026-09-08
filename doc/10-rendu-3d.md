@@ -629,3 +629,20 @@ Le §9.6 laissait trois choses écrites noir sur blanc, et ce sont les trois qui
 **Ce que tout cela vaut, mesuré.** Programmes, comptés par la clé exacte de three : le plateau seul en porte **6** sur les 31 de `premier_contact` et les 34 de `demo` — c'est ce chiffre qui justifie de montrer le sol d'abord, un premier temps qui ne compile qu'un cinquième de la scène. La passe d'ombres compte **15 et 17 formes distinctes** pour 64 et 138 porteurs, ce qui confirme l'estimation « 12 à 17 » du §9.5 et ramène son préchauffage à deux ou trois rendus. Construction, en A/B alterné sur la même machine (Node, `profil-batir.ts`, médiane de neuf montages, deux passes croisées, `demo` 16 × 12) : `creerDecor` au **premier** montage 10,8 et 17,8 ms au témoin contre 13,2 et 11,9 après — **aucun gain mesurable, le bruit de cette machine atteint 30 %**, et il faut le dire ainsi ; au **second** montage 10,8 et 23,0 ms contre **1,7 et 1,9**, soit un ordre de grandeur, très au-delà du bruit. Le chargement entier au second montage passe de 18,9 et 23,2 ms à **10,4 et 9,4**, et sa plus longue tranche de 12,0 et 14,9 ms à **7,7 et 6,7**. Au premier montage, ce qui change n'est pas le total mais la **forme** : la plus longue tranche du chargement est désormais une tranche de toiles à ~10 ms, le décor n'y étant plus qu'une suite de morceaux de 2,8 ms au plus.
 
 **Ce qui reste.** Le coût à froid du décor tient dans `fondreCase` — un `Mesh` puis un `clone().applyMatrix4()` par pièce, une soixantaine par ville ; écrire dans des tampons préalloués gagnerait environ 2 ms au prix de reproduire à l'octet près `applyMatrix4` et `applyNormalMatrix` de three, et l'empreinte de non-régression est en place pour qui voudra tenter. Les **treize lots instanciés** du décor coûtent toujours un programme chacun, faute d'un nœud TSL d'instanciation partagé. `webgl2Disponible()` garde encore la porte de la vitrine alors que le moteur est WebGPU. Et rien de tout ceci n'a été regardé à l'écran : ce qui reste à juger de l'œil, c'est la **coupe** — voir le terrain nu pendant une demi-seconde, puis le décor et les figurines paraître d'un coup, sans fondu, parce qu'un fondu montrerait deux mondes à la fois.
+
+
+## Correction du jeu WebGPU — 9 septembre 2026
+
+WebGPU est désormais obligatoire : `?dos=webgl` ne sélectionne plus de moteur,
+la sonde n’ouvre plus de contexte WebGL et le repli interne de Three est désactivé.
+L’atelier et sa vitrine emploient la même fabrique. Sans adaptateur, l’écran d’échec
+indique WebGPU. Le post-traitement perd sa branche FXAA réservée à WebGL.
+
+La panne reproduite était une exception dans `compileAsync` de Three r170 :
+l’appel à `_renderTransparents` omettait `transparentDoublePass`, décalant caméra,
+scène et lumières. La compilation laissait des pipelines inachevés ; les clics
+changeaient l’état du moteur mais le dessin cessait. `scripts/rustine-three.mjs`
+corrige cet appel dans les deux bundles et la source à chaque installation.
+Le préchauffage éteint aussi explicitement `shadow.needsUpdate` avant compilation.
+Les tests de fumée et tactiles tournent maintenant dans Chrome avec WebGPU actif ;
+la fumée vérifie le déplacement de la figurine, pas seulement l’état du HUD.

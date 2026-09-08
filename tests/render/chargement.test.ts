@@ -28,7 +28,7 @@ test('l’étape de chargement ne se lit que sur les compteurs de la peau', () =
   assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 0 })), 'image');
   // Une image est passée : le plateau est réellement à l'écran.
   assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 94 })), 'pret');
-  assert.equal(etapeChargement(mesures({ backend: 'webgl', appels: 1 })), 'pret');
+  assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 1 })), 'pret');
 });
 
 test('une peau qui ne sait pas mesurer est déclarée prête, jamais retenue', () => {

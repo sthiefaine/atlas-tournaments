@@ -318,12 +318,12 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       poser(() => creerRendu3d({
         biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current,
         // Le moteur s'initialise après le montage : un échec là se dit aussi.
-        surEchec: () => { if (!annule) annoncer('La 3D n’a pas pu démarrer : ni WebGPU ni WebGL 2 n’a voulu du canevas.', true); },
+        surEchec: () => { if (!annule) annoncer('La 3D n’a pas pu démarrer : WebGPU n’a pas pu initialiser le canevas.', true); },
       }));
     }).catch(() => {
       if (annule) return;
       courant?.demonter();
-      annoncer('La 3D n’a pas pu démarrer : cet appareil n’a ni WebGPU ni WebGL 2.', true);
+      annoncer('La 3D n’a pas pu démarrer : WebGPU est indisponible sur cet appareil.', true);
     });
     return () => { annule = true; debrancher?.(); courant?.demonter(); rendu.current = null; };
     // `etat` n'est pas une dépendance, et c'est voulu : la peau lit le dernier
@@ -580,7 +580,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       <span className={styles.etiquette}>Dernière image</span>
       <p className={styles.note} data-mesures="oui">
         {mesures
-          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement · ${mesures.backend === 'webgpu' ? 'WebGPU' : mesures.backend === 'webgl' ? 'WebGL 2' : 'moteur en attente'}`
+          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement · ${mesures.backend === 'webgpu' ? 'WebGPU' : 'moteur en attente'}`
           : 'Pas encore d’image.'}
       </p>
       {/* Par famille, sur la scène entière : les appels sont approchés par les

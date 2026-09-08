@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Rustine de three r170 : la clé de programme d'un matériau à nœuds.
+ * Rustines de three r170 : clés de programme et compilation des transparents.
  *
  * `NodeUtils.getCacheKey` compose la clé dans un tableau, et r170 y **pousse le
  * tableau lui-même** :
@@ -18,7 +18,7 @@
  * `values.push( hashString( … ), childNode.getCacheKey( … ) )` dans `Node.js`.
  * Monter de r170 à r186 est un chantier à part — tout ce que ce dépôt exploite
  * de r170 y passerait, à commencer par l'instanciation de `lots.ts` —, alors on
- * corrige la ligne, et rien d'autre.
+ * corrige ces défauts à l'installation.
  *
  * La rustine est **idempotente** et **bruyante** : si le motif fautif a disparu
  * sans que le motif corrigé soit là, elle échoue, parce que cela veut dire que
@@ -64,3 +64,15 @@ for (const relatif of CIBLES) {
 
 if (posees > 0) console.log(`rustine-three : ${posees} fichier(s) corrigé(s).`);
 else if (dejaLa > 0) console.log('rustine-three : déjà posée.');
+
+// r170 : compileAsync oublie la liste de double passe dans _renderTransparents.
+// Les arguments décalés font traiter le LightsNode comme la scène, puis la
+// compilation abandonne avec ses pipelines encore sous forme de promesses.
+for (const relatif of ['build/three.webgpu.js', 'build/three.webgpu.nodes.js', 'src/renderers/common/Renderer.js']) {
+  const chemin = path.resolve('node_modules/three', relatif);
+  const source = readFileSync(chemin, 'utf8');
+  const avant = 'this._renderTransparents( transparentObjects, camera, sceneRef, lightsNode )';
+  const apres = 'this._renderTransparents( transparentObjects, renderList.transparentDoublePass, camera, sceneRef, lightsNode )';
+  if (source.includes(avant)) writeFileSync(chemin, source.replaceAll(avant, apres));
+  else if (!source.includes(apres)) throw new Error(`rustine compileAsync à revoir : ${relatif}`);
+}

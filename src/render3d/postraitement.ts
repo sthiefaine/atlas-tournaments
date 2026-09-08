@@ -29,12 +29,7 @@
  * (`outputColorTransform`) ; on la lui retire pour la poser à la main **avant**
  * le grain, ce qui est toute la raison de cette chaîne.
  *
- * Multi-échantillonnage : sur WebGPU, la passe de scène prend les quatre
- * échantillons du moteur (`antialias: true`, `renderer.samples`). Sur le dos
- * WebGL, three r170 les **refuse** aux cibles d'une passe (`PassNode.setup`,
- * « for now ») : sans rien, la chaîne rendrait des bords en escalier. Un
- * `FXAANode` s'insère alors après la sortie — en espace d'affichage, où il
- * mesure sa luminance —, au prix d'un quad de plus sur ce dos seulement.
+ * La passe de scène utilise les échantillons du moteur WebGPU.
  *
  * Ce module importe les compléments de three.js de façon **statique** ; c'est
  * `scene.ts` qui l'importe, lui, dynamiquement, au moment d'activer la chaîne.
@@ -43,13 +38,12 @@
 
 import * as THREE from 'three/webgpu';
 import {
-  Fn, clamp, convertToTexture, dot, float, floor, fract, min, mix, mrt, normalView, output, pass,
+  Fn, clamp, dot, float, floor, fract, min, mix, mrt, normalView, output, pass,
   renderOutput, screenCoordinate, uniform, uv, vec3, vec4,
   type Node, type ShaderNodeObject,
 } from 'three/tsl';
 import { ao } from 'three/addons/tsl/display/GTAONode.js';
 import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
-import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 
 /** Ce que la scène pilote : dessiner, redimensionner, libérer. */
 export interface Composeur {
@@ -110,7 +104,6 @@ const hachage = Fn(([pixel, compteur]: [ShaderNodeObject<Node>, ShaderNodeObject
  * contrat et n'a rien à faire.
  */
 export function creerComposeur(renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.Camera): Composeur {
-  const surWebgl = (renderer.backend as { isWebGLBackend?: boolean }).isWebGLBackend === true;
   const post = new THREE.PostProcessing(renderer);
   // La sortie se pose à la main, avant le grain : voir l'en-tête.
   post.outputColorTransform = false;
@@ -148,10 +141,7 @@ export function creerComposeur(renderer: THREE.WebGPURenderer, scene: THREE.Scen
   const facteur = mix(float(1), debruitee.r, INTENSITE_OCCLUSION);
   const lineaire = vec4(couleur.rgb.mul(facteur), couleur.a);
   const sortie = renderOutput(lineaire, renderer.toneMapping, renderer.outputColorSpace);
-  // Sur le dos WebGL, la passe de scène n'a pas d'échantillons : l'anticrénelage
-  // se fait sur l'image affichée, qui passe alors par une cible de plus.
-  const intermediaire = surWebgl ? convertToTexture(sortie) : null;
-  const affichee = intermediaire ? fxaa(intermediaire) : sortie;
+  const affichee = sortie;
 
   const tirage = Fn(() => {
     const c = affichee.rgb.toVar();
@@ -189,7 +179,6 @@ export function creerComposeur(renderer: THREE.WebGPURenderer, scene: THREE.Scen
     dispose(): void {
       passeScene.dispose();
       occlusion.dispose();
-      intermediaire?.renderTarget?.dispose();
     },
   };
 }

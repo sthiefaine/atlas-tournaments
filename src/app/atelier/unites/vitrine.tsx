@@ -34,7 +34,7 @@ import { chargerCatalogueUnites, chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
 import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
-import { choisirBackend, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
+import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
 import {
   Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, forcerLod, monterModele,
   NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
@@ -311,7 +311,7 @@ export default function Vitrine(): React.ReactElement {
       </fieldset>
     </div>
 
-    {moteur === false && <p className={styles.sansWebgl}>Ce navigateur n’a ni WebGPU ni WebGL 2 : la vitrine ne peut pas se monter.</p>}
+    {moteur === false && <p className={styles.sansWebgl}>WebGPU est indisponible dans ce navigateur : la vitrine ne peut pas se monter.</p>}
 
     <div className={styles.planche} ref={grille}>
       <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
@@ -361,10 +361,10 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
   // attendu, l'environnement cuit après. Le test de ciseaux ne se pose
   // qu'ensuite : sur le dos WebGL, il touche un contexte qui n'existe pas avant.
   const prete: Promise<void> = (async () => {
-    const dos = await choisirBackend(globalThis.navigator as NavigateurGpu | undefined);
+    await choisirBackend(globalThis.navigator as NavigateurGpu | undefined);
     if (!vivant) throw new Error('Studio démonté avant que le moteur soit prêt.');
-    const r = new THREE.WebGPURenderer({
-      canvas, antialias: true, alpha: false, powerPreference: 'high-performance', forceWebGL: dos === 'webgl',
+    const r = creerMoteurWebGPU({
+      canvas, antialias: true, alpha: false, powerPreference: 'high-performance',
     });
     r.outputColorSpace = THREE.SRGBColorSpace;
     r.toneMapping = THREE.ACESFilmicToneMapping;

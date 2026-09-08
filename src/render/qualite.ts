@@ -28,14 +28,8 @@ export const QUALITES_RENDU: readonly QualiteRendu[] = Object.freeze(['auto', 'b
 /** La qualité par défaut : le rendu mesure et décide. */
 export const QUALITE_PAR_DEFAUT: QualiteRendu = 'auto';
 
-/**
- * Le **dos** du moteur (7 septembre 2026) : un seul moteur, `WebGPURenderer`,
- * qui tourne sur WebGPU quand le navigateur offre un adaptateur, et sur son
- * dos WebGL 2 sinon — le même code, les mêmes nuanceurs compilés en GLSL au
- * lieu de WGSL. La décision se prend **avant** de construire le moteur
- * (`render3d/scene.ts`, `choisirBackend`) ; ce type dit laquelle a été prise.
- */
-export type BackendRendu = 'webgpu' | 'webgl';
+/** WebGPU est le seul moteur autorisé. */
+export type BackendRendu = 'webgpu';
 
 /** Ramène n'importe quoi à une qualité valide. */
 export function normaliserQualite(brut: unknown): QualiteRendu {
@@ -60,9 +54,8 @@ export const FACTEUR_COMPOSEUR = 2.3;
 
 /**
  * Le seuil de la qualité `auto`, en millisecondes par image **sans** la chaîne,
- * processeur graphique compris (`msCalibration`, mesurée derrière une barrière
- * du processeur graphique : `onSubmittedWorkDone` sur WebGPU, `readPixels` sur
- * le dos WebGL).
+ * processeur graphique compris (`msCalibration`, mesurée derrière la barrière
+ * `onSubmittedWorkDone` du processeur graphique).
  *
  * La règle est celle du budget : on n'allume la chaîne que si l'image
  * **composée** tiendra encore dans une image d'écran, c'est-à-dire si l'image
@@ -98,20 +91,7 @@ export const IMAGES_CADENCE = 30;
  */
 export const SEUIL_MS_CADENCE = 24;
 
-/**
- * La chaîne peut-elle se monter sur ce moteur ? Elle dessine dans une cible en
- * demi-flottants. Sur **WebGPU**, `rgba16float` est dessinable par le cœur de
- * l'API : la réponse est oui, sans rien demander. Sur le dos **WebGL**, sans
- * `EXT_color_buffer_float` (ou sa version demi-flottante seule), une telle
- * cible n'est pas dessinable, et three.js **ne lève pas** : l'écran serait
- * noir, en silence. La question se pose alors aux extensions du dos
- * (`backend.extensions.has`), qu'on reçoit ici en fonction pour rester sans
- * three.js.
- */
-export function composeurPossible(backend: BackendRendu, extensions: (nom: string) => boolean): boolean {
-  if (backend === 'webgpu') return true;
-  return extensions('EXT_color_buffer_float') || extensions('EXT_color_buffer_half_float');
-}
+
 
 /**
  * Le nombre d'images mesurées avant de décider. La toute première image d'une

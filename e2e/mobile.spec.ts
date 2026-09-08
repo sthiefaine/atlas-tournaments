@@ -25,15 +25,8 @@ test.use({
   viewport: { width: 390, height: 844 },
   hasTouch: true,
   isMobile: true,
-  launchOptions: {
-    args: [
-      '--use-gl=angle',
-      '--use-angle=swiftshader',
-      '--enable-unsafe-swiftshader',
-      '--ignore-gpu-blocklist',
-      '--disable-blink-features=WebGPU',
-    ],
-  },
+  channel: 'chrome',
+  launchOptions: { args: ['--enable-unsafe-webgpu'] },
 });
 
 test.setTimeout(240_000);

@@ -786,7 +786,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const m = monde;
       // Avant le moteur, le canevas est vide : `null` plutôt qu'une image noire
       // qu'un test prendrait pour un plateau.
-      if (!s || !m || !s.pret) return null;
+      // Ne jamais dessiner au milieu de compileAsync : ses pipelines sont
+      // encore des promesses et la scène est temporairement masquée par lots.
+      if (!s || !m || !s.pret || enPrechauffage || (chantier && !chantier.fini)) return null;
       try {
         // Le tampon n'est pas préservé entre deux compositions : on redessine
         // juste avant de lire, dans la même tâche — par la chaîne de
