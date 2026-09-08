@@ -146,6 +146,15 @@
       "longueurMax": 24
     },
     {
+      "cle": "accueil.menu_banc",
+      "texte": "Banc d’essai",
+      "contexte": {
+        "ecran": "accueil",
+        "note": "Quatrième entrée du menu de l'écran-titre, vers /atelier. Remplace « Atelier des mondes », qui promettait un éditeur alors que la page ne fait que montrer biomes, saisons et météo. Deux lignes au plus sur une demi-largeur de 163 px."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "accueil.menu_campagne",
       "texte": "Campagne",
       "contexte": {

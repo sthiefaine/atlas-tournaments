@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import {
+  destinationCampagne, nombreGagnees, sousLigneCampagne, type Epreuve,
+} from './accueil-campagne';
 import { victoiresDe } from './campagne/progression';
 import { changerProfilActif, lireProfils, PROFILS, type EtatProfils, type Profil } from './preferences';
 import { GESTES_PRECHARGEMENT } from './jeu/precharger';
@@ -15,6 +18,12 @@ import { GESTES_PRECHARGEMENT } from './jeu/precharger';
  * à ce qui s'affiche. C'est la règle du dépôt (`CLAUDE.md`, conventions), et
  * elle évite d'embarquer le récit des missions et les chaînes d'interface dans
  * le lot d'une page d'accueil.
+ *
+ * Il ne **décide** rien non plus : où mène le bouton, combien d'épreuves sont
+ * derrière soi et ce que dit sa sous-ligne sont quatre fonctions pures de
+ * `accueil-campagne.ts`, vérifiées par `tsx --test`. Ce fichier ne fait que lire
+ * le navigateur et peindre — c'est ce que `parties-libres.ts` fait pour `/jeu`
+ * et `itineraire.ts` pour le carnet.
  *
  * ## Le choix de sauvegarde
  *
@@ -37,13 +46,15 @@ import { GESTES_PRECHARGEMENT } from './jeu/precharger';
  * les cas —, le client l'enrichit après montage. Jamais l'inverse. Afficher
  * « 0 sur 6 » pendant deux cents millisecondes à quelqu'un qui a tout gagné
  * serait une affirmation fausse.
+ *
+ * Le curseur — le triangle posé à gauche de l'entrée — n'est pas ici : il est
+ * en CSS sur `.menu-bouton`, permanent et animé sur Campagne, révélé au survol
+ * et au clavier sur les autres. Une seule glyphe SVG a disparu avec lui, et
+ * trois autres avec les vignettes des entrées secondaires : le repère d'un menu
+ * de jeu est le curseur, pas une icône par ligne (revue du 8 septembre 2026).
  */
 
-/** Une épreuve, réduite à ce que le bouton affiche. */
-export interface Epreuve {
-  cle: string;
-  titre: string;
-}
+export type { Epreuve } from './accueil-campagne';
 
 /** Tous les textes du bouton, déjà traduits par la page. */
 export interface LibellesCampagne {
@@ -106,19 +117,9 @@ export function MenuCampagne({ epreuves, libelles }: {
   }, [choix]);
 
   const pret = victoires !== null;
-  const gagneesDe = (p: Profil): number =>
-    epreuves.filter((e) => victoires?.[p].includes(e.cle)).length;
-  /** Où mène une sauvegarde : sa prochaine épreuve, ou le carnet si tout est remporté. */
-  const destinationDe = (p: Profil): string => {
-    if (!victoires) return '/campagne';
-    const prochaine = epreuves.find((e) => !victoires[p].includes(e.cle));
-    return prochaine ? `/jeu/${prochaine.cle}` : '/campagne';
-  };
-  const noteDe = (p: Profil): string => {
-    const n = gagneesDe(p);
-    if (!pret || n === 0) return libelles.neuf;
-    return n >= epreuves.length ? libelles.fini : libelles.etat[n] ?? libelles.neuf;
-  };
+  /** Les victoires d'un profil, ou `null` tant que le navigateur n'a pas parlé. */
+  const victoiresDu = (p: Profil): readonly string[] | null => victoires?.[p] ?? null;
+
   const nomDe = (p: Profil): string =>
     profils?.noms[p] || (p === 'a' ? libelles.profilA : libelles.profilB);
 
@@ -144,7 +145,7 @@ export function MenuCampagne({ epreuves, libelles }: {
           key={p}
           className="menu-bouton menu-sauvegarde"
           data-actif={p === actif ? 'oui' : 'non'}
-          href={destinationDe(p)}
+          href={destinationCampagne(epreuves, victoiresDu(p))}
           // Le profil devient actif **avant** la navigation : la page de jeu lit
           // le profil pour composer sa clé de sauvegarde, elle doit trouver le
           // bon. Un échec d'écriture ne bloque pas le départ — on jouera sur le
@@ -153,14 +154,14 @@ export function MenuCampagne({ epreuves, libelles }: {
           {...GESTES_PRECHARGEMENT}
         >
           <span className="menu-texte">
-            <strong>{nomDe(p)}</strong>
-            <span className="menu-note">{noteDe(p)}</span>
+            <span className="menu-libelle">{nomDe(p)}</span>
+            <span className="menu-note">{sousLigneCampagne(libelles, epreuves, victoiresDu(p))}</span>
           </span>
-          {jauge(gagneesDe(p))}
+          {jauge(nombreGagnees(epreuves, victoiresDu(p)))}
         </Link>
       ))}
       <button type="button" className="menu-bouton menu-petit menu-retour" onClick={() => setChoix(false)}>
-        <span className="menu-texte"><strong>{libelles.retour}</strong></span>
+        <span className="menu-libelle">{libelles.retour}</span>
       </button>
     </div>;
   }
@@ -168,7 +169,7 @@ export function MenuCampagne({ epreuves, libelles }: {
   return <div className="menu-campagne" data-pret={pret ? 'oui' : 'non'}>
     <Link
       className="menu-bouton menu-principal"
-      href={destinationDe(actif)}
+      href={destinationCampagne(epreuves, victoiresDu(actif))}
       // Hydraté, le clic ouvre le tiroir au lieu de partir ; sans JavaScript, le
       // lien fait ce qu'il a toujours fait.
       onClick={(e) => { if (pret) { e.preventDefault(); setChoix(true); } }}
@@ -178,14 +179,13 @@ export function MenuCampagne({ epreuves, libelles }: {
       {nomProfil !== null
         ? <span className="menu-profil" aria-label={libelles.profilActif.replace('{nom}', nomProfil)}>{nomProfil}</span>
         : null}
-      <svg className="menu-glyphe" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M8 5l11 7-11 7z" fill="currentColor" />
-      </svg>
       <span className="menu-texte">
-        <strong>{libelles.campagne}</strong>
-        <span className="menu-note" aria-live="polite">{noteDe(actif)}</span>
+        <span className="menu-libelle">{libelles.campagne}</span>
+        <span className="menu-note" aria-live="polite">
+          {sousLigneCampagne(libelles, epreuves, victoiresDu(actif))}
+        </span>
       </span>
-      {jauge(gagneesDe(actif))}
+      {jauge(nombreGagnees(epreuves, victoiresDu(actif)))}
     </Link>
     <Link className="menu-carnet" href="/campagne">{libelles.carnet}</Link>
   </div>;
