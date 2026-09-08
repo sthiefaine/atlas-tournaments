@@ -23,10 +23,10 @@ import {
   type Silhouette, type Terrain, type UnitType,
 } from '../schemas/types';
 import {
-  cleUniteBase, gabaritDe, idAsset, idBatiment, idDecor, idKit, INTERDITS, slugRegion,
+  cleUniteBase, idAsset, idBatiment, idDecor, idKit, INTERDITS, slugRegion,
   type AnimationSpec, type AssetSpec, type Bilingue, type Budget, type Echelle,
   type ElementDecorRegion, type FinitionStyle, type FormatAsset, type FormeToit,
-  type Gabarit, type Interdit, type MatiereStyle, type MotifDaltonien, type Nommage,
+  type Interdit, type MatiereStyle, type MotifDaltonien, type Nommage,
   type OrnementStyle, type Pivot, type Priorite, type StyleAsset, type StyleNation,
   type StyleRegion, type TextureSpec, type TypeAsset, type Variantes, type Verification,
 } from './spec';
@@ -412,16 +412,6 @@ const ELEMENT_DECOR: Record<ElementDecorRegion, [string, string]> = {
   terril: ['a dark spoil heap turned belvedere', 'un terril noir devenu belvédère'],
   pylone_de_telepherique: ['a cable-car pylon', 'un pylône de téléphérique'],
   kiosque: ['a bandstand kiosk', 'un kiosque à musique'],
-};
-
-/** Ce que veut dire un gabarit, pour le générateur comme pour la relecture. */
-const GABARIT: Record<Gabarit, [string, string]> = {
-  a: ['short and compact: stubby volumes, sharp angles, everything pulled in',
-      'court et ramassé : volumes trapus, angles francs, rien qui dépasse'],
-  b: ['balanced: the reference proportion, neither long nor short',
-      'équilibré : la proportion de référence, ni longue ni courte'],
-  c: ['long and tall: extended chassis, raised superstructure, room for load',
-      'allongé et haut : châssis étiré, superstructure dégagée, de la place pour la charge'],
 };
 
 /** Liste anglaise ou française d'un vocabulaire fermé, prête à insérer. */
@@ -909,12 +899,15 @@ function animationsUnite(u: UnitType): AnimationSpec[] {
 }
 
 /**
- * Une spécification de **géométrie de base** d'unité : le maillage partagé par
- * les vingt-quatre nations, plus la description des trois gabarits de forme
- * `a`, `b` et `c` que les kits nationaux viendront choisir.
+ * Une spécification de **géométrie de base** d'unité : le maillage que les
+ * vingt-quatre nations partagent, et sur lequel chaque kit se peint.
  *
- * C'est la conséquence directe de l'arbitrage du 5 septembre au soir : une unité
- * de base = **une géométrie partagée + un gabarit + un kit national**. Le masque
+ * **Une seule forme** (décision du propriétaire, 9 septembre 2026). La base
+ * annonçait trois gabarits `a`, `b`, `c` qu'un kit venait choisir, mais rien ne
+ * les nommait : `nommage.modele` vaut `{id}_lod{lod}.glb`, sans place pour la
+ * forme, et le validateur n'avait donc rien à contrôler. Un générateur à qui on
+ * commandait « le gabarit B » réclamait un fichier qui ne pouvait pas exister.
+ * Une unité de base = **une géométrie partagée + un kit national**. Le masque
  * d'équipe reste demandé ici, et ici seulement pour le corps entier : c'est le
  * repli du placeholder, tant qu'aucun kit n'est livré.
  */
@@ -951,16 +944,13 @@ export function specUnite(u: UnitType): AssetSpec {
     priorite: 1,
     description: {
       en: `${base.en} ${phrase.en} This is the SHARED BASE GEOMETRY: it carries no national livery and no `
-        + 'ornament. Deliver it in three shape templates sharing one skeleton, one UV layout and one node '
-        + `naming, so a national kit can pick one of them: template A is ${GABARIT.a[0]}; template B is `
-        + `${GABARIT.b[0]}; template C is ${GABARIT.c[0]}. Bulk stays roughly one half to two thirds of a `
-        + 'tile in all three so that two adjacent units never touch.',
+        + 'ornament. One shape, one skeleton, one UV layout, one node naming — every national kit is painted '
+        + 'on this exact mesh. Bulk stays roughly one half to two thirds of a tile so that two adjacent units '
+        + 'never touch.',
       fr: `${base.fr} ${phrase.fr} C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale `
-        + 'ni ornement. La livrer en trois gabarits de forme partageant un même squelette, un même dépliage '
-        + `et les mêmes noms de nœuds, pour qu’un kit national en retienne un : le gabarit A est ${GABARIT.a[1]} ; `
-        + `le gabarit B est ${GABARIT.b[1]} ; le gabarit C est ${GABARIT.c[1]}. L’encombrement reste dans les `
-        + 'trois cas d’environ la moitié aux deux tiers d’une case, pour que deux unités voisines ne se '
-        + 'touchent jamais.',
+        + 'ni ornement. Une seule forme, un squelette, un dépliage, un jeu de noms de nœuds — tout kit national '
+        + 'se peint sur ce maillage-là. L’encombrement reste d’environ la moitié aux deux tiers d’une case, '
+        + 'pour que deux unités voisines ne se touchent jamais.',
     },
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
     echelle: echelleUnite(s),
@@ -982,7 +972,8 @@ export function specUnite(u: UnitType): AssetSpec {
 
 /**
  * Une spécification de **kit national** : les textures complètes d'une nation
- * pour une unité de base, plus ses ornements et le gabarit qu'elle retient.
+ * pour une unité de base, plus ses ornements. La géométrie n'est pas la sienne :
+ * elle est celle de la base, livrée, et le kit se peint dessus sans la toucher.
  *
  * Ce n'est pas un masque teinté (`BRIEF.md`) : l'albédo est peint pour cette
  * nation et pour elle seule. Le seul masque d'équipe qui subsiste est réduit au
@@ -991,7 +982,6 @@ export function specUnite(u: UnitType): AssetSpec {
  */
 export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
   const s = u.silhouette;
-  const g = gabaritDe(styleNation, u.cle);
   const cle: Cle = `${styleNation.code}_${u.cle}`;
   const id = idKit(styleNation.code, u.cle);
   const ornements = styleNation.ornements;
@@ -1010,8 +1000,8 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
     priorite: styleNation.priorite,
     description: {
       en: `National kit for "${u.nom}" in the colours and materials of ${styleNation.nom}. Guiding line: `
-        + `${styleNation.ligneDirectrice.en} Paint the base mesh of unite_${cleUniteBase(u.cle)} in shape `
-        + `template ${g.toUpperCase()} (${GABARIT[g][0]}). Base colour ${styleNation.palette.main}, own shadow `
+        + `${styleNation.ligneDirectrice.en} Paint the delivered base mesh of unite_${cleUniteBase(u.cle)}, `
+        + `unchanged: same geometry, same UV layout, same node names. Base colour ${styleNation.palette.main}, own shadow `
         + `${styleNation.palette.dark}, edge highlight ${styleNation.palette.light}, accents ${accents}. `
         + `Materials to read at a glance: ${liste(MATIERE, styleNation.matieres, true)}. Finish: `
         + `${liste(FINITION, styleNation.finitions, true)}. Add these ornaments as separate named nodes, and `
@@ -1020,8 +1010,8 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
         + 'This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only '
         + 'team mask left is a narrow band on the socle, so two players of the same nation stay apart.',
       fr: `Kit national de « ${u.nom} » aux couleurs et aux matières du style « ${styleNation.nom} ». `
-        + `Ligne directrice : ${styleNation.ligneDirectrice.fr} Peindre la géométrie de base `
-        + `unite_${cleUniteBase(u.cle)} dans le gabarit ${g.toUpperCase()} (${GABARIT[g][1]}). Couleur de fond `
+        + `Ligne directrice : ${styleNation.ligneDirectrice.fr} Peindre la géométrie de base livrée `
+        + `unite_${cleUniteBase(u.cle)}, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond `
         + `${styleNation.palette.main}, ombre propre ${styleNation.palette.dark}, liseré d’arête `
         + `${styleNation.palette.light}, accents ${accents}. Matières à lire d’un coup d’œil : `
         + `${liste(MATIERE, styleNation.matieres, false)}. Finition : ${liste(FINITION, styleNation.finitions, false)}. `

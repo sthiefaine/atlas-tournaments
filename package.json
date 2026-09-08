@@ -18,7 +18,8 @@
     "apercu": "tsx scripts/apercu-carte.ts",
     "extraire-chaines": "tsx scripts/extraire-chaines.ts",
     "verifier:campagne": "tsx scripts/verifier-campagne.ts",
-    "postinstall": "node scripts/rustine-three.mjs"
+    "postinstall": "node scripts/rustine-three.mjs",
+    "commander": "tsx scripts/commander-assets.ts"
   },
   "dependencies": {
     "@types/three": "^0.170.0",

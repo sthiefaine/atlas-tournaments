@@ -261,26 +261,20 @@ Consignes données au générateur : masque **net**, sans dégradé sale ni anti
 
 ### 5.2 bis Les kits nationaux
 
-Une unité de base, c'est désormais **une géométrie partagée + un gabarit + un kit national** :
+Une unité de base, c'est **une géométrie partagée + un kit national** :
 
 | Pièce | Identifiant | Ce que c'est | Combien |
 |---|---|---|---:|
-| Géométrie de base | `unite_<cle>_base` | Un maillage nu, sans livrée ni ornement, livré en **trois gabarits de forme** partageant un squelette, un dépliage UV et des noms de nœuds | 10 |
-| Kit national | `kit_<pays>_<unite>` | Le jeu de textures complet d'une nation pour cette unité, plus ses ornements en nœuds nommés, monté sur le gabarit qu'elle retient | **240** |
+| Géométrie de base | `unite_<cle>_base` | Un maillage nu, sans livrée ni ornement : **une seule forme**, un squelette, un dépliage UV, un jeu de noms de nœuds | 10 |
+| Kit national | `kit_<pays>_<unite>` | Le jeu de textures complet d'une nation pour cette unité, plus ses ornements en nœuds nommés, peint sur cette géométrie sans la toucher | **240** |
 
-Les trois gabarits sont une liste fermée, décrite dans chaque spécification de base :
+**Les trois gabarits de forme sont supprimés** (décision du propriétaire, 9 septembre 2026). La base annonçait trois formes `a`, `b`, `c` qu'un kit venait choisir, mais **rien ne les nommait** : `nommage.modele` vaut `{id}_lod{lod}.glb`, sans place pour la forme ; `variantes` ne les portait pas ; le validateur n'avait donc rien à contrôler. Un générateur à qui la commande d'un kit demandait « le gabarit B » réclamait un fichier qui ne pouvait pas exister — c'est arrivé, sur `kit_fr_artillerie`, et c'est ce qui a fait trancher.
 
-| Gabarit | Ce qu'il change |
-|:-:|---|
-| `a` | court et ramassé : volumes trapus, angles francs, rien qui dépasse |
-| `b` | équilibré : la proportion de référence, ni longue ni courte |
-| `c` | allongé et haut : châssis étiré, superstructure dégagée, de la place pour la charge |
-
-Une nation choisit **un gabarit par unité de base**, dans `content/styles/<code>.json`. L'Australie prend `c` partout — la distance y est une défense, son unité propre est un camion à trois remorques ; le Népal prend `a` partout — tout se porte et doit passer un col. Une unité homologuée demain sans gabarit déclaré prend `a` : `gabaritDe()` ne fait jamais échouer une commande.
+Le champ `StyleNation.gabarits` reste dans les vingt-quatre fiches de style et dans le schéma, **et plus personne ne le lit** : le retirer demanderait de toucher vingt-quatre fichiers de canon pour une donnée que rien n'interroge. Il est inerte, il est daté ici, et la commande d'un kit n'en parle plus.
 
 Un kit est **entièrement dérivé du style** (`StyleNation`, §5.6) : sa ligne directrice ouvre la description, sa palette donne les quatre couleurs, ses matières et ses finitions donnent la consigne de surface, ses ornements deviennent des nœuds `ornement_<nom>`, ses décalcomanies et son motif daltonien deviennent les seuls motifs autorisés. Rien n'y est écrit à la main : changer une matière dans un JSON de style change les dix commandes de la nation.
 
-**Livraison d'un kit.** Un kit se livre **monté sur la géométrie de base** — le maillage habillé — pour qu'il se contrôle tel qu'il apparaîtra en jeu : même boîte englobante, même pivot, budget majoré d'un sixième pour les ornements. Ses textures peuvent être **référencées par le GLB** ou **livrées à côté** sous le nom du gabarit (`kit_fr_char_leger_albedo.png`) : les deux sont acceptés, l'un des deux est exigé (§7.2).
+**Livraison d'un kit.** Un kit se livre **monté sur la géométrie de base** — le maillage habillé — pour qu'il se contrôle tel qu'il apparaîtra en jeu : même boîte englobante, même pivot, budget majoré d'un sixième pour les ornements. Ses textures peuvent être **référencées par le GLB** ou **livrées à côté** sous le nom que le nommage impose (`kit_fr_char_leger_albedo.png`) : les deux sont acceptés, l'un des deux est exigé (§7.2).
 
 ### 5.2 ter Bâtiments et décor : par région, ou par pays
 

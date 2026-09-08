@@ -55,7 +55,7 @@ test('les niveaux de détail manquants sont nommés, et le lot est refusé', () 
   // qu'aucun chargeur ne sait lire.
   const verdict = controlerDepot(spec, [{ nom: nomModele(spec, 0), octets: new Uint8Array([1, 2, 3]) }]);
   assert.equal(verdict.ok, false);
-  assert.ok(verdict.motifs.some((m) => m.detail.includes('niveau de détail manquant')));
+  assert.ok(verdict.motifs.some((m) => (m.detail ?? '').includes('niveau de détail manquant')));
 });
 
 test('un lot vide est refusé, et un GLB illisible aussi', () => {
@@ -71,5 +71,5 @@ test('un lot vide est refusé, et un GLB illisible aussi', () => {
   assert.ok(verdict.motifs.length > 0, 'et le refus est motivé');
   // Chaque motif dit de quel fichier il parle : sans cela, trois niveaux
   // refusés rendent trois motifs qu'on ne sait pas attribuer.
-  assert.ok(verdict.motifs.every((m) => m.detail.includes('.glb')), 'chaque motif nomme son fichier');
+  assert.ok(verdict.motifs.every((m) => (m.detail ?? '').includes('.glb')), 'chaque motif nomme son fichier');
 });

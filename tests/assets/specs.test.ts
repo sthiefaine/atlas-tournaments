@@ -45,8 +45,13 @@ test('chaque unité du catalogue a sa géométrie de base', () => {
     // La silhouette du canon se retrouve dans la description anglaise.
     assert.match(spec.description.en, /Silhouette contract/);
     assert.ok(spec.description.en.includes(u.typeMouvement));
-    // Les trois gabarits de forme sont décrits, sinon un kit ne peut rien choisir.
-    for (const g of ['A', 'B', 'C']) assert.ok(spec.description.en.includes(`template ${g}`), spec.id);
+    // **Une seule forme** (9 septembre 2026). La base annonçait trois gabarits
+    // qu'un kit venait choisir, mais rien ne les nommait : `nommage.modele` n'a
+    // pas de place pour la forme, et le validateur n'avait rien à contrôler. Un
+    // générateur à qui on commandait « le gabarit B » réclamait un fichier qui
+    // ne pouvait pas exister.
+    assert.doesNotMatch(spec.description.en, /template [ABC]/, `${spec.id} : plus de gabarit de forme`);
+    assert.match(spec.description.en, /One shape, one skeleton/, `${spec.id} : une seule forme, dite`);
     assert.equal(spec.priorite, 1, 'une géométrie partagée se produit en premier');
   }
   assert.equal(specs.filter((s) => s.type === 'unite').length, unites.length);
@@ -69,7 +74,9 @@ test('il y a un kit par couple (nation, unité), homologations comprises', () =>
       const masque = kit.textures.find((t) => t.canal === 'masque_equipe');
       assert.ok(masque?.obligatoire, kit.id);
       assert.match(masque.note, /socle/);
-      assert.match(kit.description.fr, /gabarit [ABC]/);
+      // Un kit peint la géométrie livrée, il n'en choisit plus la forme.
+      assert.doesNotMatch(kit.description.fr, /gabarit [ABC]/);
+      assert.match(kit.description.fr, /géométrie de base livrée/);
     }
   }
 });
