@@ -494,16 +494,19 @@ const STYLE = `
 /* Les deux pouvoirs, dans la colonne. Le super se distingue par sa peinture,
    pas par un mot : un fond chaud, et le prix en signal. */
 .atlas-hud .jauge .pouvoirs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px;padding:6px 9px 9px}
-.atlas-hud .jauge .pouvoir{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:1px;min-height:52px;padding:7px 9px;cursor:pointer;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;transition:background .09s,translate .06s,border-bottom-width .06s}
+.atlas-hud .jauge .pouvoir{all:unset;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:1px;min-height:40px;padding:5px 8px;cursor:pointer;background:#1e3f52;color:var(--papier);border-bottom:3px solid #060f17;transition:background .09s,translate .06s,border-bottom-width .06s}
 .atlas-hud .jauge .pouvoir:hover:not(:disabled){background:#2c5670}
 .atlas-hud .jauge .pouvoir:active:not(:disabled){translate:0 2px;border-bottom-width:1px}
 .atlas-hud .jauge .pouvoir[data-niveau='super']:not(:disabled){background:#4a3a1c;border-bottom-color:#1d1608}
 .atlas-hud .jauge .pouvoir[data-niveau='super']:hover:not(:disabled){background:#634d24}
 .atlas-hud .jauge .pouvoir:disabled{background:#26333b;color:#8b99a0;border-bottom-color:#151d23;cursor:default}
-.atlas-hud .jauge .pouvoir .rang{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#9fb6b8}
+/* Le rang partage la ligne du prix : trois lignes empilées par bouton, c'était
+   un panneau pour deux libellés. */
+.atlas-hud .jauge .pouvoir .entete{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+.atlas-hud .jauge .pouvoir .rang{font-size:8.5px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:#9fb6b8}
 .atlas-hud .jauge .pouvoir:disabled .rang{color:#75838a}
-.atlas-hud .jauge .pouvoir .nom{font-size:13px;font-weight:850;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.atlas-hud .jauge .pouvoir .prix{font-style:normal;font-size:11px;font-weight:800;color:var(--signal);font-variant-numeric:tabular-nums}
+.atlas-hud .jauge .pouvoir .nom{font-size:12px;font-weight:850;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-hud .jauge .pouvoir .prix{flex:none;font-style:normal;font-size:11px;font-weight:800;color:var(--signal);font-variant-numeric:tabular-nums}
 .atlas-hud .jauge .pouvoir:disabled .prix{color:#8b99a0}
 /* Sous 480 px, le revenu cède : la journée et les fonds passent d'abord. */
 @container atlas-interface (max-width: 480px){.atlas-hud .fonds .revenu{display:none}}
@@ -1045,9 +1048,9 @@ export function monterHudHtml(
       const motif = pret ? '' : ` title="${ech(api.t('hud.jauge_insuffisante'))}"`;
       return `<button type="button" class="pouvoir" data-action="${action}" data-niveau="${niveau}"`
         + `${pret ? '' : ' disabled'}${motif} aria-label="${ech(`${api.t(cle)} · ${titre}`)}">`
-        + `<span class="rang">${ech(api.t(cle))}</span>`
-        + `<span class="nom">${ech(titre)}</span>`
-        + `<em class="prix">${ech(nombreIntl(v.locale, n.cout))}</em></button>`;
+        + `<span class="entete"><span class="rang">${ech(api.t(cle))}</span>`
+        + `<em class="prix">${ech(nombreIntl(v.locale, n.cout))}</em></span>`
+        + `<span class="nom">${ech(titre)}</span></button>`;
     };
     const details = pouvoirDetail
       ? `<div class="pouvoir-effets">${(['normal', 'super'] as const).map((niveau) => {

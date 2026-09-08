@@ -1,0 +1,37 @@
+/* Une feuille par écran, importée par `globals.css`.
+   Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
+   touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
+   et deux chantiers menés en parallèle se disputaient le même fichier. */
+
+.campagne-kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:650;opacity:.65}
+.campagne-progression{display:inline-block;border-bottom:3px solid #568f74;padding-bottom:5px;margin-top:18px;font-weight:650}
+/* Le bouton du jeu, et il n'y en a qu'un.
+   Il était une pilule verte arrondie à 6 px, en 14 px demi-gras, dans deux
+   couleurs (#31634f, #568f74) qui n'existaient nulle part ailleurs : un bouton
+   de site de réservation posé au milieu d'un jeu à l'encre et au signal.
+   Ce qui fait qu'un bouton donne envie d'être pressé n'est pas sa couleur mais
+   son **épaisseur** : une bordure basse plus sombre que sa peinture, qui
+   s'écrase de deux pixels à l'appui. Le HUD le faisait déjà sur ses ordres et
+   sur sa fin de tour ; c'est la même mécanique, partout. */
+.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:#ffd162;color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid #fff0ac;border-bottom:4px solid #c4923a;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+.atlas-bouton:hover{filter:brightness(1.09)}
+.atlas-bouton:active{translate:0 2px;border-bottom-width:2px}
+.atlas-bouton.secondaire{background:transparent;color:inherit;border:1px solid #8886;border-bottom:3px solid #8886;clip-path:none}
+.atlas-bouton.secondaire:hover{background:#8882;filter:none}
+/* Un seul anneau de focus dans tout le produit — il y en avait trois. Sa
+   couleur suit la **surface**, pas la marque : le signal ne se voit pas sur le
+   papier crème d'un briefing, et un anneau qu'on ne voit pas n'est pas un
+   anneau. */
+.atlas-bouton:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid #ffd162;outline-offset:3px}
+.atlas-briefing a:focus-visible,.atlas-briefing .atlas-bouton:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
+.campagne-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.campagne-actions>a:not(.atlas-bouton){font-size:13px;text-decoration:underline;opacity:.75}
+.atlas-voile{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,18,24,.85);overflow:auto}
+.atlas-briefing{width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55}
+.atlas-briefing h1{font-size:30px;line-height:1.15;font-weight:700;margin:10px 0 18px;letter-spacing:-.03em}
+.atlas-briefing h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:16px}
+.atlas-dialogues{margin:18px 0}
+.atlas-dialogues blockquote{padding-left:14px;border-top:2px solid #94ae9d;padding-top:8px;margin:12px 0}
+.atlas-dialogues strong{font-size:12px}.atlas-dialogues p{font-size:14px;margin-top:3px}
+.atlas-but{background:#e4ebdf;padding:10px 16px}.atlas-but h2{margin:0}
+.atlas-aide{font-size:12px;opacity:.65;margin-top:18px}

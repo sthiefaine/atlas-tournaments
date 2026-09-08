@@ -1,0 +1,81 @@
+/* Une feuille par écran, importée par `globals.css`.
+   Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
+   touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
+   et deux chantiers menés en parallèle se disputaient le même fichier. */
+
+/* ---------------------------------------------------------------------------
+ * Le fil de la campagne : un **itinéraire**, plus un sommaire.
+ *
+ * Il était un article : colonne de prose à 1040 px, six entrées numérotées « 01 »
+ * à « 06 » séparées par des filets gris, un paragraphe de récit chacune, un
+ * bouton pilule vert, des liens soulignés et un glossaire en pied. Et surtout,
+ * c'était le seul écran du jeu **sans fond à lui** : il héritait du `body`
+ * Tailwind, donc blanc en thème clair et suivant le réglage du système, quand
+ * tout le reste est à l'encre. On quittait un écran-titre sombre où un plateau
+ * joue tout seul, et on tombait sur une page blanche.
+ *
+ * Il reprend le vocabulaire de l'écran-titre et du HUD, sans exception : encre,
+ * papier, signal, coins **coupés** et jamais arrondis, ombres dures et sans
+ * flou, et la jauge à six segments biseautée qui est littéralement celle du
+ * bouton Campagne. Entrer dans la campagne cesse d'être un changement d'univers.
+ * ------------------------------------------------------------------------- */
+.atlas-carnet{--encre:#132329;--papier:#f4edda;--papier-doux:#f4eddad6;--panneau:#0f2129;--liseré:#4d6a78;--signal:#ffd162;display:flex;flex-direction:column;gap:20px;min-height:100svh;padding:max(24px,calc(12px + env(safe-area-inset-top,0px))) max(20px,env(safe-area-inset-left,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-right,0px));background:var(--encre);background-image:radial-gradient(120% 78% at 50% -12%,#1b333c 0%,transparent 62%);color:var(--papier);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+.atlas-carnet>*{width:min(100%,980px);margin-inline:auto}
+.atlas-etiquette{display:block;font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9fb6b8}
+.carnet-entete{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.carnet-entete h1{margin-top:7px;font-size:clamp(26px,6vw,40px);font-weight:900;line-height:1;letter-spacing:-.015em}
+.carnet-accroche{max-width:56ch;margin-top:9px;font-size:13.5px;line-height:1.5;color:var(--papier-doux)}
+.carnet-retour{flex:none;display:inline-flex;align-items:center;min-height:44px;font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--papier-doux);text-decoration:none}
+.carnet-retour:hover{color:var(--signal)}
+.carnet-avancee{display:flex;align-items:center;gap:12px;margin-top:-8px;font-size:13px;font-weight:800;color:var(--papier-doux)}
+/* La même jauge que sur le bouton Campagne de l'écran-titre : même forme, même
+   biseau, même remplissage. Deux mesures de la même chose doivent se ressembler. */
+.carnet-jauge{display:flex;flex:none;gap:3px;width:126px;height:6px;transform:skewX(-15deg)}
+.carnet-jauge i{flex:1;background:#ffffff1f}
+.carnet-jauge i.faite{background:var(--signal)}
+
+/* L'itinéraire. Six stations sur une ligne, reliées par un trait qui se remplit
+   derrière soi. Il défile horizontalement plutôt que de se replier : un
+   itinéraire qui passe à la ligne n'est plus un itinéraire. */
+.carnet-route{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
+.carnet-route ol{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(96px,1fr);min-width:min-content;margin:0;padding:4px 0 0;list-style:none}
+.carnet-route li{position:relative;display:flex;justify-content:center}
+.carnet-route li+li::before{content:'';position:absolute;top:24px;right:50%;left:-50%;height:3px;background:#33505e}
+.carnet-route li[data-etat='gagnee']::before{background:var(--signal)}
+.station{all:unset;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;padding:5px 3px 9px;text-align:center;cursor:pointer}
+/* Trois états, trois peintures — jamais une opacité sur du texte : une épreuve
+   verrouillée doit se lire « fermée », pas « délavée ». */
+.station-losange{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:36px;background:var(--panneau);border:2px solid var(--liseré);box-shadow:3px 3px 0 #06131899;transform:rotate(45deg);transition:background .12s,border-color .12s}
+.station-losange b{font-size:14px;font-weight:900;font-variant-numeric:tabular-nums;transform:rotate(-45deg)}
+.station-nom{max-width:13ch;font-size:11.5px;font-weight:800;line-height:1.2;color:var(--papier-doux);overflow-wrap:anywhere}
+.station[data-etat='gagnee'] .station-losange{background:var(--signal);border-color:#fff0ac;color:#10222b}
+/* Remportée : la coche prend la place du rang. Le rang n'apprend plus rien une
+   fois l'épreuve derrière soi, la coche si. */
+.station[data-etat='gagnee'] .station-losange b{visibility:hidden}
+.station[data-etat='gagnee'] .station-losange::after{content:'\2713';position:absolute;font-size:19px;font-weight:900;line-height:1;color:#10222b;transform:rotate(-45deg)}
+.station[data-etat='ouverte'] .station-losange{background:#10222b;border-color:var(--signal);color:var(--signal);animation:carnet-pouls 1.9s ease-in-out infinite}
+.station[data-etat='verrouillee'] .station-losange{background:#0b191f;border-color:#2c4653;color:#65808d}
+.station[data-etat='verrouillee'] .station-nom{color:#7b929c}
+.station[aria-current='step'] .station-nom{color:var(--papier)}
+.station[aria-current='step'] .station-losange{box-shadow:3px 3px 0 #061318,0 0 0 3px #f4edda40}
+.station:hover .station-losange{border-color:var(--signal)}
+@keyframes carnet-pouls{0%,100%{box-shadow:3px 3px 0 #06131899,0 0 0 0 #ffd16255}60%{box-shadow:3px 3px 0 #06131899,0 0 0 7px #ffd16200}}
+
+/* Le dossier : une épreuve à la fois. Six récits de même poids ne se lisent
+   pas, et ils s'interposent entre le joueur et le bouton. */
+.carnet-dossier{padding:18px 20px 20px;background:var(--panneau);border:1px solid var(--liseré);border-top:4px solid var(--signal);box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%)}
+.carnet-dossier[data-etat='verrouillee']{border-top-color:var(--liseré)}
+.dossier-rang{display:flex;flex-wrap:wrap;align-items:center;gap:5px 14px}
+.dossier-plaque{margin-left:auto;padding:3px 9px;background:#ffd16222;box-shadow:inset 0 -3px 0 var(--signal);color:var(--signal)}
+.dossier-plaque[data-etat='verrouillee']{background:#ffffff10;box-shadow:inset 0 -3px 0 #6f8794;color:#9fb6b8}
+.carnet-dossier h2{margin:11px 0 13px;font-size:clamp(20px,4.4vw,28px);font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.dossier-objectif{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;padding:11px 14px;background:#0a1a24;border-top:3px solid var(--signal);font-size:15px;font-weight:600;line-height:1.45}
+.dossier-recit{max-width:70ch;font-size:14px;line-height:1.6;color:var(--papier-doux)}
+.dossier-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:18px}
+.dossier-verrou{font-size:13px;font-weight:800;color:#9fb6b8}
+.carnet-pied{display:flex;flex-wrap:wrap;align-items:center;gap:9px 18px;margin-top:auto;padding-top:16px;border-top:1px solid #ffffff1a;font-size:12px;color:#9fb6b8}
+.carnet-pied a{font-weight:850;letter-spacing:.1em;text-transform:uppercase;color:var(--papier-doux);text-decoration:none}
+.carnet-pied a:hover{color:var(--signal)}
+.carnet-fin{flex-basis:100%;color:var(--signal);font-weight:800}
+.atlas-carnet a:focus-visible,.atlas-carnet button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.station-losange{animation:none!important;transition:none}}

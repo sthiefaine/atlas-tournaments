@@ -1,0 +1,155 @@
+/* Une feuille par écran, importée par `globals.css`.
+   Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
+   touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
+   et deux chantiers menés en parallèle se disputaient le même fichier. */
+
+/* ---------------------------------------------------------------------------
+ * L'accueil : un écran-titre de jeu, pensé en portrait d'abord.
+ *
+ * Il reprend le vocabulaire du HUD (`src/render/hud-html.ts`) — encre, papier,
+ * signal, biseaux, ombres dures et sans flou — pour qu'entrer en jeu ne soit pas
+ * un changement d'univers. La page repeint ses couleurs explicitement : le HUD
+ * n'a pas de mode clair, l'accueil non plus.
+ *
+ * La règle de mise en page tient en une phrase : **le jeu est le fond, le menu
+ * est en bas**. Sur un téléphone tenu à une main, tout ce qui dépasse 560 px du
+ * bord inférieur est hors de portée du pouce ; le titre y va, le menu jamais.
+ * ------------------------------------------------------------------------- */
+.atlas-accueil{--encre:#132329;--encre-haute:#0c1b21;--papier:#f4edda;--papier-doux:#f4eddad6;--panneau:#0f2129e0;--liseré:#4d6a78;--signal:#ffd162;--signal-appui:#c4923a;position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:100svh;background:var(--encre);color:var(--papier);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+
+/* La vitrine : le plateau en **plein cadre**, derrière tout. On n'encadre pas
+   une capture de son propre jeu sur son écran-titre. Le rognage par les bords
+   ne coûte rien : en fond, le plateau n'a pas à se lire comme une carte, il doit
+   se reconnaître comme du jeu qui bouge — et le vert, le rouge et la flèche sont
+   des couleurs et une forme, pas un plan. */
+.accueil-vitrine{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.accueil-vitrine .atlas-plateau{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .5s ease-out}
+/* L'attract monte en fondu quand sa première image est prête. Il ne se
+   superpose plus au plateau SVG : les deux ne coexistent jamais (`vitrine.tsx`),
+   parce qu'un dessin à plat qui cède la place à un plateau en relief se lit
+   comme deux jeux différents. Il est désaturé pour que le vert et le rouge du
+   jeu ne disputent pas au signal le rôle de « couleur qui appelle ». */
+/* L'attract est monté bien avant d'avoir une image : il reste invisible sous le
+   plateau SVG jusqu'à ce qu'il en ait une (`data-attract='pret'`, posé par
+   `attract.tsx` après la première image dessinée). La bascule est **franche** :
+   c'est le fondu de six cents millisecondes qui montrait les deux fonds à la
+   fois, et c'est lui qu'on retire, pas la règle du fond unique. */
+.accueil-attract{position:absolute;inset:0;opacity:0;filter:saturate(.86) brightness(.82)}
+.accueil-attract,.accueil-attract canvas{width:100%;height:100%}
+.accueil-attract[data-attract='pret']{opacity:1}
+.atlas-plateau-curseur{animation:accueil-curseur 2.4s ease-in-out infinite alternate}
+
+/* La nappe remplace le cadre supprimé : elle assombrit le haut et le bas, laisse
+   la bande centrale intacte, et rentre les bords par une vignette. C'est ce qui
+   rend le plein cadre lisible sans ramener un panneau. */
+.accueil-nappe{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#132329 0%,#132329ef 14%,#13232900 34%,#13232900 52%,#132329cc 74%,#132329 88%),radial-gradient(126% 84% at 50% 44%,transparent 52%,#0913184d 100%)}
+
+.atlas-accueil .atlas-etiquette{display:block;font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9fb6b8}
+
+/* Le titre porte le **nom du jeu**, pas un slogan : sur un écran-titre, un H1
+   qui vend et un nom relégué en 13 px dans un bandeau, c'est l'inversion à
+   défaire. Le contraste entre les deux lignes se fait par la graisse et
+   l'interlettrage, jamais par une seconde couleur. */
+.accueil-titre{padding:max(28px,calc(14px + env(safe-area-inset-top,0px))) max(22px,env(safe-area-inset-left,0px)) 0 max(22px,env(safe-area-inset-right,0px))}
+.accueil-titre>*{animation:accueil-entree .28s ease-out both}
+.accueil-titre .atlas-etiquette{animation-delay:.02s}
+.accueil-titre h1{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin:8px 0 0;animation-delay:.06s}
+.titre-haut{font-size:clamp(42px,12vw,64px);font-weight:900;line-height:.92;letter-spacing:-.02em;color:var(--papier)}
+.titre-filet{width:34px;height:4px;background:var(--signal);transform:skewX(-15deg)}
+.titre-bas{font-size:clamp(18px,5.2vw,26px);font-weight:800;letter-spacing:.3em;color:#f4eddac2}
+.accueil-accroche{margin-top:12px;font-size:13px;line-height:1.5;color:#f4eddac9;animation-delay:.12s}
+
+/* Le menu : calé en bas par `margin-top:auto`, jamais en `position:fixed` — la
+   rétraction de la barre d'adresse iOS fait sauter un élément fixe. */
+.accueil-menu{margin-top:auto;display:flex;flex-direction:column;gap:10px;width:min(100% - 40px,420px);margin-inline:auto;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+/* La mention de version : dans le flux, sous le menu, jamais en `position:fixed`
+   (même raison que le menu) ; un gris à 11 px dans l'angle, tabulaire pour que
+   deux dates s'alignent. Quand elle est là, elle prend le bas de page du menu. */
+.accueil-menu:has(+ .accueil-version){padding-bottom:6px}
+.accueil-version{margin:0;padding:2px max(12px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) 12px;text-align:right;font-size:11px;line-height:1.2;color:#9fb6b8;opacity:.75;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.accueil-menu-rang{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.accueil-menu>*,.accueil-menu-rang>*{animation:accueil-entree .3s ease-out both}
+.accueil-menu>:nth-child(1){animation-delay:.1s}
+.accueil-menu>:nth-child(2){animation-delay:.16s}
+.accueil-menu>:nth-child(3){animation-delay:.22s}
+
+/* Cinq registres distinguent les boutons, et aucun n'est le texte : la peinture,
+   la hauteur, le biseau, l'ombre et la glyphe. */
+.menu-bouton{display:flex;align-items:center;gap:12px;min-height:60px;padding:11px 15px;background:var(--panneau);border:1px solid var(--liseré);color:var(--papier);text-decoration:none;box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:filter .12s ease-out,translate .1s}
+.menu-bouton:hover{filter:brightness(1.14)}
+.menu-bouton:active{translate:0 3px;filter:brightness(1.2);box-shadow:3px 3px 0 #06131899}
+.menu-glyphe{width:20px;height:20px;flex:none;opacity:.9}
+.menu-texte{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.menu-texte strong{font-size:15px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
+.menu-note{font-size:12.5px;line-height:1.35;color:var(--papier-doux);opacity:.78;overflow:hidden;text-overflow:ellipsis}
+
+/* Campagne domine sans être plus large : peinture pleine, biseau plus franc,
+   et le seul bouton qui porte de l'état. La carte de progression entière est
+   absorbée dedans. */
+.menu-campagne{position:relative;display:flex;align-items:stretch;gap:0;box-shadow:6px 6px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%)}
+.menu-principal{position:relative;flex:1;min-height:76px;flex-wrap:wrap;background:var(--signal);color:#10222b;border:none;border-top:3px solid #fff0ac;border-bottom:4px solid var(--signal-appui);box-shadow:none;clip-path:none}
+.menu-principal .menu-note{color:#10222bd6;opacity:1;font-weight:650}
+.menu-jauge{display:flex;gap:3px;width:100%;height:3px;transform:skewX(-15deg)}
+.menu-jauge i{flex:1;background:#10222b33;transition:background-color .26s ease-out}
+.menu-jauge i.faite{background:#10222b}
+/* La pastille de profil : posée en absolu dans le coin du bouton, elle n'ajoute
+   aucune hauteur — l'écran-titre tient toujours en un écran. Le client ne la
+   rend que si l'appareil a deux joueurs (`menu-campagne.tsx`). */
+.menu-profil{position:absolute;top:0;right:0;max-width:46%;padding:3px 8px 3px 10px;background:#10222b;color:var(--signal);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%)}
+/* Seconde cible : sans elle, choisir soi-même son épreuve devient impossible
+   depuis l'accueil. Séparée par un filet, ≥ 44 px de large. */
+.menu-carnet{display:flex;align-items:center;justify-content:center;width:64px;flex:none;padding:0 6px;background:var(--panneau);border:1px solid var(--liseré);border-left:none;color:var(--papier-doux);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.menu-carnet:hover{filter:brightness(1.2)}
+.menu-petit{min-height:56px;padding:9px 12px}
+.menu-petit .menu-texte strong{font-size:13px}
+.menu-petit .menu-note{font-size:11.5px;opacity:.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.menu-petit{box-shadow:3px 3px 0 #0613188f;clip-path:none}
+/* Le tiroir des sauvegardes : il prend la place du bouton Campagne, il ne se
+   pose pas dessus. Deux lignes, chacune avec sa jauge et l'épreuve où elle en
+   est, et un appui lance — c'est la demande du propriétaire : « on a le choix
+   entre les deux sauvegardes et ensuite ça lance ». */
+.menu-sauvegardes{display:flex;flex-direction:column;gap:8px;animation:accueil-entree .18s ease-out both}
+.menu-sauvegardes>.atlas-etiquette{padding-left:2px;margin-bottom:1px}
+.menu-sauvegarde{flex-direction:column;align-items:stretch;gap:7px;min-height:66px}
+.menu-sauvegarde .menu-texte{flex-direction:row;align-items:baseline;justify-content:space-between;gap:12px}
+.menu-sauvegarde .menu-note{flex:none;font-size:12px;opacity:.85;text-align:right}
+/* Celle qui est active porte le signal : on sait laquelle on reprend sans lire. */
+.menu-sauvegarde[data-actif='oui']{border-left:none;box-shadow:6px 6px 0 #06131899,inset 0 3px 0 var(--signal)}
+.menu-sauvegarde[data-actif='oui'] .menu-texte strong{color:var(--signal)}
+.menu-retour{min-height:48px;justify-content:center;background:transparent;box-shadow:none}
+.menu-retour .menu-texte{flex:none}
+.menu-retour .menu-texte strong{font-size:12px;letter-spacing:.14em;color:var(--papier-doux)}
+
+.atlas-accueil a:focus-visible,.atlas-accueil button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
+.atlas-accueil .menu-principal:focus-visible{outline-color:var(--papier)}
+
+@keyframes accueil-entree{from{opacity:0;translate:0 10px}to{opacity:1;translate:0 0}}
+@keyframes accueil-curseur{from{stroke-opacity:.35}to{stroke-opacity:1}}
+
+/* On n'ajoute **aucun contenu** quand l'écran grandit : c'est exactement par là
+   qu'un écran-titre redevient une page de présentation à deux colonnes. */
+@media(min-width:1024px){
+  .accueil-titre{padding-left:48px;padding-top:52px}
+  .accueil-menu{margin-inline:48px auto;padding-bottom:48px}
+  .accueil-menu:has(+ .accueil-version){padding-bottom:28px}
+  .accueil-version{padding-right:24px;padding-bottom:18px}
+}
+/* Paysage court : le plateau reste plein cadre, titre et menu se regroupent à
+   gauche et les quatre boutons passent en grille. */
+@media(max-height:560px) and (orientation:landscape){
+  .atlas-accueil{display:grid;grid-template-rows:auto 1fr;align-content:start}
+  .accueil-nappe{background:linear-gradient(100deg,#132329 0%,#132329e0 26%,#13232900 62%),radial-gradient(120% 90% at 50% 50%,transparent 46%,#09131870 100%)}
+  .accueil-titre{padding-top:14px}
+  .accueil-titre h1{flex-direction:row;align-items:baseline;gap:10px}
+  .titre-haut{font-size:30px}
+  .titre-filet{width:20px;height:3px;align-self:center}
+  .titre-bas{font-size:15px;letter-spacing:.22em}
+  .accueil-accroche{display:none}
+  .accueil-menu{width:min(100% - 32px,460px);margin-inline:22px auto;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));gap:8px}
+  .menu-principal{min-height:62px}
+  .menu-bouton{min-height:52px}
+  .menu-petit .menu-note,.menu-bouton:not(.menu-principal) .menu-note{display:none}
+}
+/* Le mouvement se coupe, la page ne se déforme pas : un écran-titre immobile
+   reste un écran-titre. */
+@media(prefers-reduced-motion:reduce){.atlas-accueil *{animation:none!important;transition:none!important}}
