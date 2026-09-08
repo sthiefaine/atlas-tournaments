@@ -55,31 +55,44 @@ function ech(texte: string): string {
 
 /** La feuille de style de la scène, injectée une seule fois par document. */
 const STYLE = `
-.atlas-scene{position:absolute;inset:0;z-index:20;pointer-events:auto;display:flex;flex-direction:column;justify-content:flex-end;font:15px/1.5 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#132630;--papier:#f4edda;--signal:#ffd162;--teinte:#3f86e0}
+.atlas-scene{position:absolute;inset:0;z-index:20;pointer-events:auto;display:flex;flex-direction:column;justify-content:flex-end;font:15px/1.5 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#132630;--papier:#f4edda;--signal:#ffd162;--lisere:#4d6a78;--teinte:#3f86e0;--ombre:8px 8px 0 #050d1288}
 .atlas-scene *{box-sizing:border-box}
 .atlas-scene .bandes{position:absolute;left:0;right:0;height:8vh;min-height:34px;background:#060d12;pointer-events:none}
-.atlas-scene .bandes.haut{top:0;border-bottom:2px solid #ffffff14;animation:atlas-bande-haut .32s ease-out both}
-.atlas-scene .bandes.bas{bottom:0;border-top:2px solid #ffffff14;animation:atlas-bande-bas .32s ease-out both}
+.atlas-scene .bandes.haut{top:0;border-bottom:2px solid var(--lisere);animation:atlas-bande-haut .32s ease-out both}
+.atlas-scene .bandes.bas{bottom:0;border-top:2px solid var(--lisere);animation:atlas-bande-bas .32s ease-out both}
 .atlas-scene .plateau{position:relative;z-index:1;display:flex;align-items:flex-end;gap:0;padding:0 max(14px,env(safe-area-inset-left,0px)) calc(8vh + 14px) max(14px,env(safe-area-inset-right,0px));width:100%}
 .atlas-scene[data-cote='droite'] .plateau{flex-direction:row-reverse}
-.atlas-scene .buste{flex:0 0 auto;width:132px;position:relative;filter:drop-shadow(4px 6px 0 #050d1266);animation:atlas-buste .34s cubic-bezier(.2,.9,.3,1.1) both}
+.atlas-scene .buste{flex:0 0 auto;width:132px;position:relative;filter:drop-shadow(6px 6px 0 #050d12aa);animation:atlas-buste .34s cubic-bezier(.2,.9,.3,1.1) both}
 .atlas-scene[data-cote='droite'] .buste{animation-name:atlas-buste-droite;transform:scaleX(-1)}
 .atlas-scene .buste svg{display:block;width:100%;height:auto;border:2px solid var(--teinte);border-bottom:0;background:#1d3540}
-.atlas-scene .boite{flex:1 1 auto;min-width:0;position:relative;background:var(--encre);border:2px solid #8ba0a6;border-left-width:0;box-shadow:5px 6px 0 #050d1255;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);animation:atlas-boite .22s ease-out both}
+/* La boîte est une **transmission**, comme le briefing d'ouverture : mêmes
+   lignes de trame, même coin coupé, même ombre dure. C'est le meilleur objet
+   visuel du jeu, et il n'y avait aucune raison qu'il s'arrête à la modale. */
+.atlas-scene .boite{flex:1 1 auto;min-width:0;position:relative;background:repeating-linear-gradient(0deg,#fff0 0 39px,#98bcaa0d 40px),var(--encre);border:2px solid var(--lisere);border-left-width:0;box-shadow:var(--ombre);clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%);animation:atlas-boite .22s ease-out both}
 .atlas-scene[data-cote='droite'] .boite{border-left-width:2px;border-right-width:0;clip-path:polygon(16px 0,100% 0,100% 100%,0 100%,0 16px)}
-.atlas-scene .nom{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(--teinte);color:#0b1a22;font-weight:900;font-size:13px;letter-spacing:.13em;text-transform:uppercase}
-.atlas-scene .nom .humeur{margin-left:auto;font-size:11px;letter-spacing:.1em;opacity:.72;font-weight:800}
-.atlas-scene .texte{padding:14px 16px 16px;min-height:5.6em;white-space:pre-wrap;font-size:clamp(15px,1.7vw,18px)}
+.atlas-scene .nom{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--teinte);color:#0b1a22;font-weight:900;font-size:13px;letter-spacing:.13em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% 100%,14px 100%,0 calc(100% - 12px))}
+.atlas-scene[data-cote='droite'] .nom{clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 14px) 100%,0 100%)}
+/* L'humeur est une **étiquette**, pas une note en bas de page : elle se lit sur
+   la même bande que le nom, en creux dans sa peinture. */
+.atlas-scene .nom .humeur{margin-left:auto;padding:2px 8px;background:#0b1a2226;font-size:11px;letter-spacing:.1em;font-weight:800}
+.atlas-scene .texte{padding:15px 16px 16px;min-height:5.6em;white-space:pre-wrap;font-size:clamp(15px,1.7vw,18px)}
 .atlas-scene .texte b{font-weight:inherit;visibility:hidden}
-.atlas-scene .pied{display:flex;align-items:center;gap:10px;padding:0 14px 11px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9db3b6}
-.atlas-scene .jalons{display:flex;gap:4px}
-.atlas-scene .jalons i{width:16px;height:4px;background:#ffffff2e}
+.atlas-scene .pied{display:flex;align-items:center;gap:10px;padding:0 14px 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9db3b6}
+/* Les mêmes segments biseautés que la jauge de la campagne et que le bouton
+   Campagne de l'écran-titre : deux mesures de la même chose — où j'en suis —
+   doivent se ressembler. */
+.atlas-scene .jalons{display:flex;gap:3px;transform:skewX(-15deg)}
+.atlas-scene .jalons i{width:18px;height:5px;background:#ffffff2e}
 .atlas-scene .jalons i.faite{background:var(--signal)}
 .atlas-scene .suite{margin-left:auto;display:flex;align-items:center;gap:7px;color:var(--signal);font-weight:850}
 .atlas-scene[data-frappe='en_cours'] .suite{visibility:hidden}
 .atlas-scene .suite span{animation:atlas-suite 1s steps(2,end) infinite}
-.atlas-scene .passer{all:unset;position:absolute;z-index:2;top:calc(8vh + 12px);right:max(14px,env(safe-area-inset-right,0px));box-sizing:border-box;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;cursor:pointer;background:#132630e6;border:1px solid #93a8ad70;color:#dbe7e4;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.atlas-scene .passer:hover{background:#23404d}
+/* « Passer » est un bouton du jeu, donc il a une **épaisseur** qui s'écrase de
+   deux pixels à l'appui et un coin coupé. Il était plat, à un liseré de 1 px :
+   le seul bouton du produit à ne pas suivre la règle commune. */
+.atlas-scene .passer{all:unset;position:absolute;z-index:2;top:calc(8vh + 12px);right:max(14px,env(safe-area-inset-right,0px));box-sizing:border-box;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;cursor:pointer;background:#1a3340;border:1px solid var(--lisere);border-bottom:4px solid #09171d;color:#dbe7e4;font-size:12px;font-weight:850;letter-spacing:.12em;text-transform:uppercase;clip-path:polygon(0 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%);transition:background .1s,translate .06s,border-bottom-width .06s}
+.atlas-scene .passer:hover{background:#26485a}
+.atlas-scene .passer:active{translate:0 2px;border-bottom-width:2px}
 .atlas-scene button:focus-visible{outline:3px solid var(--signal);outline-offset:-3px}
 @keyframes atlas-bande-haut{from{transform:translateY(-100%)}to{transform:none}}
 @keyframes atlas-bande-bas{from{transform:translateY(100%)}to{transform:none}}
@@ -237,6 +250,10 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
     const pal = paletteDe(r.camp);
     racine.style.setProperty('--teinte', pal.main);
     racine.dataset['cote'] = r.camp !== null && r.camp !== 0 ? 'droite' : 'gauche';
+    // Un `role="dialog"` sans nom accessible s'annonce « dialogue », et rien de
+    // plus. Le nom du locuteur est le seul mot juste ici, et il est déjà
+    // traduit : aucune clé nouvelle pour une information que la scène affiche.
+    racine.setAttribute('aria-label', api.nomLocuteur(r.locuteur));
     // Une lettre par `<b>` : la frappe se contente de lever la visibilité.
     const lettres = [...r.texte].map((c) => `<b>${ech(c)}</b>`).join('');
     const jalons = Array.from(

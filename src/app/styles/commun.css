@@ -1,7 +1,39 @@
 /* Une feuille par écran, importée par `globals.css`.
    Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
    touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
-   et deux chantiers menés en parallèle se disputaient le même fichier. */
+   et deux chantiers menés en parallèle se disputaient le même fichier.
+
+   Celle-ci est le **vocabulaire partagé** : les couleurs, la forme d'un bouton,
+   la forme d'une fenêtre, l'anneau de focus. Plusieurs écrans en dépendent, donc
+   on y ajoute et on n'y renomme rien.
+
+   Le verdict du propriétaire sur l'ensemble — « ça fait pas jeu, ça fait blog » —
+   se règle ici pour une bonne part, parce qu'un blog et un jeu ne se
+   distinguent pas d'abord par leurs couleurs mais par **trois gestes** :
+   un coin se **coupe** au lieu de s'arrondir, une ombre est **dure et sans
+   flou**, et un bouton a une **épaisseur** qui s'écrase à l'appui. Ces trois
+   gestes sont écrits ici une fois, et les autres feuilles les héritent. */
+
+/* Les jetons du jeu. Ils sont préfixés `--atlas-` **exprès** : `campagne.css`,
+   `menus.css` et les feuilles injectées par le rendu définissent chacune un
+   `--encre` / `--papier` / `--signal` sur leur propre racine, et un jeton global
+   du même nom serait tantôt masqué tantôt hérité selon l'écran — c'est-à-dire
+   imprévisible. Ici, rien ne peut les recouvrir. */
+:root{
+  --atlas-encre:#132329;
+  --atlas-encre-claire:#152c3b;
+  --atlas-papier:#f4edda;
+  --atlas-signal:#ffd162;
+  --atlas-signal-haut:#fff0ac;
+  --atlas-signal-bas:#c4923a;
+  --atlas-lisere:#4d6a78;
+  /* L'ombre du jeu : décalée, opaque, **jamais floue**. Le briefing portait un
+     `0 24px 90px #0006` — le halo d'une boîte de dialogue de site. */
+  --atlas-ombre:10px 10px 0 #04090c66;
+  --atlas-ombre-courte:4px 4px 0 #04090c73;
+  /* La coupe d'un coin. Une fenêtre du jeu n'a pas d'autre forme. */
+  --atlas-coupe:18px;
+}
 
 .campagne-kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:650;opacity:.65}
 .campagne-progression{display:inline-block;border-bottom:3px solid #568f74;padding-bottom:5px;margin-top:18px;font-weight:650}
@@ -13,21 +45,31 @@
    son **épaisseur** : une bordure basse plus sombre que sa peinture, qui
    s'écrase de deux pixels à l'appui. Le HUD le faisait déjà sur ses ordres et
    sur sa fin de tour ; c'est la même mécanique, partout. */
-.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:#ffd162;color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid #fff0ac;border-bottom:4px solid #c4923a;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:var(--atlas-signal);color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid var(--atlas-signal-haut);border-bottom:4px solid var(--atlas-signal-bas);clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
 .atlas-bouton:hover{filter:brightness(1.09)}
 .atlas-bouton:active{translate:0 2px;border-bottom-width:2px}
-.atlas-bouton.secondaire{background:transparent;color:inherit;border:1px solid #8886;border-bottom:3px solid #8886;clip-path:none}
-.atlas-bouton.secondaire:hover{background:#8882;filter:none}
+/* Le second bouton a la même **épaisseur** que le premier — c'est elle qui dit
+   « ceci se presse » —, il n'a que moins de peinture. Un bouton plat posé à
+   côté d'un bouton en relief se lit comme un lien, pas comme un choix. */
+.atlas-bouton.secondaire{background:#8881;color:inherit;border:1px solid #8886;border-bottom:4px solid #8889;clip-path:none}
+.atlas-bouton.secondaire:hover{background:#8883;filter:none}
+.atlas-bouton.secondaire:active{translate:0 2px;border-bottom-width:2px}
 /* Un seul anneau de focus dans tout le produit — il y en avait trois. Sa
    couleur suit la **surface**, pas la marque : le signal ne se voit pas sur le
    papier crème d'un briefing, et un anneau qu'on ne voit pas n'est pas un
    anneau. */
-.atlas-bouton:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid #ffd162;outline-offset:3px}
+.atlas-bouton:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid var(--atlas-signal);outline-offset:3px}
 .atlas-briefing a:focus-visible,.atlas-briefing .atlas-bouton:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
 .campagne-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:20px}
 .campagne-actions>a:not(.atlas-bouton){font-size:13px;text-decoration:underline;opacity:.75}
+
+/* La fenêtre du jeu : un voile qui met le monde en arrière-plan, et un panneau
+   dessus. Chaque écran repeint le voile à sa manière ; ce qui est commun, c'est
+   la **forme** du panneau, juste en dessous. */
 .atlas-voile{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,18,24,.85);overflow:auto}
-.atlas-briefing{width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55}
+/* Coin coupé et ombre dure **par défaut** : c'était une règle de `mission.css`,
+   donc vraie d'un seul écran ; toute fenêtre du jeu la suit maintenant. */
+.atlas-briefing{position:relative;width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55;box-shadow:var(--atlas-ombre);clip-path:polygon(0 0,calc(100% - var(--atlas-coupe)) 0,100% var(--atlas-coupe),100% 100%,var(--atlas-coupe) 100%,0 calc(100% - var(--atlas-coupe)))}
 .atlas-briefing h1{font-size:30px;line-height:1.15;font-weight:700;margin:10px 0 18px;letter-spacing:-.03em}
 .atlas-briefing h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:16px}
 .atlas-dialogues{margin:18px 0}

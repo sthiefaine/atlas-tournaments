@@ -829,6 +829,96 @@
       "pluriel": false
     },
     {
+      "cle": "bilan.titre",
+      "texte": "Bilan de la manche",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Nom accessible du bloc de bilan, sur l'écran de fin de mission."
+      },
+      "longueurMax": 28
+    },
+    {
+      "cle": "bilan.rang",
+      "texte": "Rang",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Sur-titre de la lettre de rang (S, A, B, C). Les lettres elles-mêmes sont une notation du genre, hors traduction."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "bilan.rythme",
+      "texte": "Rythme",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : ce qui reste de l'échéance en journées."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.puissance",
+      "texte": "Puissance",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : part de la force adverse mise hors jeu."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.tenue",
+      "texte": "Tenue",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Un des trois axes notés : part de sa propre force encore debout."
+      },
+      "longueurMax": 14
+    },
+    {
+      "cle": "bilan.journees",
+      "texte": "Journées",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Légende d'un chiffre du tableau de marque du bilan."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "bilan.engagees",
+      "texte": "Unités engagées",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : unités de départ plus celles produites."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.perdues",
+      "texte": "Unités perdues",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : ses propres unités mises hors jeu."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.neutralisees",
+      "texte": "Mises hors jeu",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : les unités adverses mises hors jeu."
+      },
+      "longueurMax": 18
+    },
+    {
+      "cle": "bilan.batiments",
+      "texte": "Bâtiments tenus",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Tableau de marque : bâtiments possédés à la fin de la manche."
+      },
+      "longueurMax": 18
+    },
+    {
       "cle": "campagne.dialogue_suivant",
       "texte": "Continuer",
       "contexte": {

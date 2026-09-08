@@ -184,55 +184,81 @@ const STYLE = `
    conteneur), et un écran de combat centré sur la fenêtre passerait pour moitié
    sous cette colonne. Les chiffres, eux, sont ancrés par versEcran, qui rend
    déjà des coordonnées de toile. */
-.atlas-scenes{position:absolute;inset:0;right:var(--rail-l,0px);z-index:8;pointer-events:none;font:14px/1.3 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f;--gain:#8ee0a4;--duree:900ms}
+.atlas-scenes{position:absolute;inset:0;right:var(--rail-l,0px);z-index:8;pointer-events:none;font:14px/1.3 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--lisere:#4d6a78;--alerte:#f2a33a;--alerte-grave:#f0555f;--gain:#8ee0a4;--duree:900ms;
+  /* L'ombre du jeu : décalée, opaque, **jamais floue**. Un halo gaussien sous un
+     panneau est la signature d'une boîte de dialogue de site ; le reste du
+     produit a renoncé au flou, les scènes aussi. */
+  --ombre:8px 8px 0 #050d1288;
+  /* Le contour d'un chiffre posé sur la carte. Huit décalages nets valent mieux
+     qu'un flou de six pixels : ils tiennent sur un sol clair comme sur une mer sombre,
+     et ils ne bavent pas. */
+  --contour:1px 0 0 #0b1a22,-1px 0 0 #0b1a22,0 1px 0 #0b1a22,0 -1px 0 #0b1a22,2px 2px 0 #0b1a22,-2px 2px 0 #0b1a22,2px -2px 0 #0b1a22,-2px -2px 0 #0b1a22,0 3px 0 #0b1a2288}
 .atlas-scenes *{box-sizing:border-box}
 /* Le chiffre : ancré sur la case, il monte et s'efface. La durée vient du geste. */
-.atlas-chiffre{position:absolute;transform:translate(-50%,-100%);text-align:center;font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 2px 0 #0b1a22,0 0 6px #0b1a22cc;animation:atlas-chiffre var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
+.atlas-chiffre{position:absolute;transform:translate(-50%,-100%);text-align:center;font-size:24px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:var(--contour);animation:atlas-chiffre var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
 .atlas-chiffre[data-teinte='perte']{color:var(--alerte-grave)}
 .atlas-chiffre[data-teinte='gain']{color:var(--gain)}
 /* La riposte porte son mot : un peu plus petite que le coup, avec l'étiquette
    dans la couleur du signal — deux chiffres nus se lisent comme deux mesures
    de la même chose, et ce n'en sont pas. */
-.atlas-chiffre[data-role='riposte']{font-size:19px}
-.atlas-chiffre .etiquette{display:block;margin-top:1px;font-style:normal;font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);text-shadow:0 1px 0 #0b1a22}
+.atlas-chiffre[data-role='riposte']{font-size:20px}
+.atlas-chiffre .etiquette{display:block;margin-top:2px;font-style:normal;font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);text-shadow:1px 1px 0 #0b1a22,-1px 1px 0 #0b1a22,1px -1px 0 #0b1a22,-1px -1px 0 #0b1a22}
 .atlas-chiffre[data-fixe='oui']{animation:none;translate:0 -${MONTEE_CHIFFRE / 2}px}
 @keyframes atlas-chiffre{0%{opacity:0;translate:0 6px;scale:.7}14%{opacity:1;translate:0 0;scale:1.08}30%{scale:1}72%{opacity:1}100%{opacity:0;translate:0 -${MONTEE_CHIFFRE}px}}
-/* Le « ! » d'embuscade : ancré sur la case comme un chiffre, plus gros, dans la
-   couleur du signal ; il bondit, tient, puis monte et s'efface. */
-.atlas-surprise{position:absolute;transform:translate(-50%,-100%);font-size:30px;line-height:1;font-weight:900;color:var(--signal);text-shadow:0 2px 0 #0b1a22,0 0 8px #0b1a22cc;animation:atlas-surprise var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
+/* Le « ! » d'embuscade. C'était un glyphe nu, cerné d'un flou : au-dessus d'une
+   figurine, sur un sol de plaine clair, il se confondait avec le décor. C'est
+   désormais un **panonceau** — la forme que le jeu donne à tout ce qui se
+   presse ou s'alarme : peinture de signal, coin coupé, épaisseur en bas. */
+.atlas-surprise{position:absolute;transform:translate(-50%,-100%);display:grid;place-items:center;min-width:32px;padding:1px 11px 3px;font-size:27px;line-height:1.1;font-weight:900;color:#10222b;background:var(--signal);border-top:2px solid #fff0ac;border-bottom:4px solid #b7842c;box-shadow:var(--ombre);clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));animation:atlas-surprise var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
 .atlas-surprise[data-fixe='oui']{animation:none;translate:0 -${MONTEE_SURPRISE / 2}px}
 @keyframes atlas-surprise{0%{opacity:0;translate:0 10px;scale:.5}12%{opacity:1;translate:0 -4px;scale:1.3}26%{scale:1;translate:0 0}68%{opacity:1;translate:0 -6px}100%{opacity:0;translate:0 -${MONTEE_SURPRISE}px}}
 /* Les bandes noires : la carte reste visible entre elles, comme sur une scène de dialogue. */
 .atlas-scenes .bandes{position:absolute;left:0;right:0;height:8vh;min-height:34px;background:#060d12;pointer-events:none}
-.atlas-scenes .bandes.haut{top:0;border-bottom:2px solid #ffffff14;animation:atlas-bande-haut .28s ease-out both}
-.atlas-scenes .bandes.bas{bottom:0;border-top:2px solid #ffffff14;animation:atlas-bande-bas .28s ease-out both}
+.atlas-scenes .bandes.haut{top:0;border-bottom:2px solid var(--lisere);animation:atlas-bande-haut .28s ease-out both}
+.atlas-scenes .bandes.bas{bottom:0;border-top:2px solid var(--lisere);animation:atlas-bande-bas .28s ease-out both}
 @keyframes atlas-bande-haut{from{transform:translateY(-100%)}to{transform:none}}
 @keyframes atlas-bande-bas{from{transform:translateY(100%)}to{transform:none}}
 /* L'écran de combat : un panneau centré, semi-couvrant — jamais plein écran, la
    carte se voit autour —, coupable d'un clic n'importe où sur lui. */
 .atlas-combat{position:absolute;inset:0;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:calc(8vh + 16px) 16px}
-.atlas-combat .cadre{position:relative;width:min(640px,100%);background:#0f1e27f0;border:2px solid #3c5563;border-top:5px solid var(--alerte-grave);box-shadow:inset 0 0 0 1px #ffffff1f,6px 8px 0 #050d1266;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));animation:atlas-combat-entree .26s cubic-bezier(.2,.9,.3,1.1) both}
+/* Le cadre portait une ombre intérieure blanche — un liseré lumineux à
+   l'intérieur du bord, qui n'appartient à aucune autre fenêtre du jeu — et une
+   ombre à demi floue. Une seule bordure, une ombre dure, un coin coupé : la
+   même fenêtre que le briefing et que la boîte de dialogue. */
+.atlas-combat .cadre{position:relative;width:min(640px,100%);background:#0f1e27f2;border:2px solid var(--lisere);box-shadow:var(--ombre);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));animation:atlas-combat-entree .26s cubic-bezier(.2,.9,.3,1.1) both}
 @keyframes atlas-combat-entree{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
-.atlas-combat .titre{display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 14px 7px;font-size:11px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;color:#ffb3aa}
+/* Le titre n'est plus une légende grise en haut d'un panneau : c'est le
+   **bandeau** de l'écran, peint dans la couleur de l'alarme, lisible d'un coup
+   d'œil et coupé au même angle que le cadre. */
+.atlas-combat .titre{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;background:var(--alerte-grave);color:#1b0b0e;font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,0 100%)}
 .atlas-combat .titre svg{width:16px;height:16px}
-.atlas-combat .camps{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:8px;padding:6px 14px 12px}
-.atlas-combat .camp{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 10px 12px;background:#ffffff0a;border:1px solid #ffffff14;border-bottom:4px solid var(--teinte)}
-.atlas-combat .camp canvas{width:${TAILLE_VIGNETTE_COMBAT}px;height:${TAILLE_VIGNETTE_COMBAT}px;background:#ffffff08;border-bottom:2px solid var(--teinte);transition:filter .12s,translate .12s}
+.atlas-combat .camps{display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;gap:8px;padding:14px 14px 12px}
+/* Chaque camp est une **plaque** à ses couleurs : le bandeau du haut dit à qui
+   appartient l'unité avant même qu'on lise son nom. */
+.atlas-combat .camp{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 10px;background:#ffffff0a;border:1px solid #ffffff1a;border-top:5px solid var(--teinte);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px))}
+.atlas-combat .camp canvas{width:${TAILLE_VIGNETTE_COMBAT}px;height:${TAILLE_VIGNETTE_COMBAT}px;background:radial-gradient(60% 60% at 50% 45%,color-mix(in srgb,var(--teinte) 26%,transparent),transparent 72%);transition:filter .12s,translate .12s}
 .atlas-combat .camp .nom{font-size:14px;font-weight:850;text-transform:uppercase;letter-spacing:.06em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.atlas-combat .pv{display:flex;gap:2px;height:8px;width:110px;max-width:100%}
-.atlas-combat .pv i{flex:1;background:#ffffff1f;transition:background .18s}
+/* La jauge de PV du jeu : dix crans, séparés par le fond, assez épais pour se
+   compter d'un coup d'œil. */
+.atlas-combat .pv{display:flex;gap:2px;height:11px;width:118px;max-width:100%;padding:2px;background:#050d12;border:1px solid #ffffff1a}
+.atlas-combat .pv i{flex:1;background:#ffffff21;transition:background .18s}
 .atlas-combat .pv i.plein{background:var(--gain)}
 .atlas-combat .pv i.perdu{background:var(--alerte-grave)}
 .atlas-combat .chiffres{display:flex;align-items:baseline;gap:6px;font-weight:900;font-size:20px;font-variant-numeric:tabular-nums}
 .atlas-combat .chiffres em{font-style:normal;font-size:12px;color:#9fb3b6}
 .atlas-combat .chiffres b{color:#9fb3b6;transition:color .18s}
-.atlas-combat .coup{min-height:1.3em;font-size:26px;font-weight:900;color:var(--alerte-grave);font-variant-numeric:tabular-nums;opacity:0;transform:translateY(6px);transition:opacity .16s,transform .16s}
+.atlas-combat .coup{min-height:1.3em;font-size:28px;font-weight:900;color:var(--alerte-grave);font-variant-numeric:tabular-nums;text-shadow:0 2px 0 #050d12;opacity:0;transform:translateY(6px);transition:opacity .16s,transform .16s}
 /* Le mot qui nomme le chiffre : « Coup » du côté de la cible, « Riposte » du côté de l'attaquant. Il apparaît avec lui. */
 .atlas-combat .camp .role{font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9db3b6;opacity:0;transform:translateY(6px);transition:opacity .16s,transform .16s}
 .atlas-combat .attaquant .role{color:var(--signal)}
-.atlas-combat .contre{display:flex;align-items:center;justify-content:center;width:40px;color:var(--signal)}
-.atlas-combat .contre svg{width:28px;height:28px}
-.atlas-combat .indice{padding:0 14px 10px;text-align:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9db3b6}
+/* Entre les deux plaques, le signe de l'affrontement — deux chevrons qui se
+   font face. C'était la **même** cible que dans le titre : deux fois le même
+   glyphe à trois centimètres d'écart ne dit rien de plus la seconde fois. */
+.atlas-combat .contre{display:flex;align-items:center;justify-content:center;width:44px;color:var(--signal)}
+.atlas-combat .contre svg{width:30px;height:30px}
+/* « Toucher pour passer » : une consigne, pas une légende. Elle est séparée du
+   duel par un filet, comme le pied d'une fenêtre du jeu. */
+.atlas-combat .indice{margin:0 14px;padding:9px 0 11px;border-top:1px solid #ffffff1a;text-align:center;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8fa7ab}
 /* Les étapes de l'écran : avant le coup, le coup, la riposte, la fin. Ce que
    chacune allume est cumulatif — un coup encaissé ne se ré-efface pas. */
 .atlas-combat[data-etape='coup'] .cible canvas,.atlas-combat[data-etape='riposte'] .cible canvas,.atlas-combat[data-etape='fin'] .cible canvas{filter:brightness(1.6) saturate(.6)}
@@ -248,29 +274,39 @@ const STYLE = `
 .atlas-splash .plateau{position:relative;display:flex;align-items:center;gap:0;width:min(720px,calc(100% - 24px));animation:atlas-splash-tenue var(--duree) ease-in-out both}
 @keyframes atlas-splash-tenue{0%,12%{opacity:1}86%{opacity:1}100%{opacity:0}}
 .atlas-splash[data-cote='droite'] .plateau{flex-direction:row-reverse}
-.atlas-splash .buste{flex:0 0 auto;width:150px;filter:drop-shadow(4px 6px 0 #050d1266);animation:atlas-splash-buste .38s cubic-bezier(.2,.9,.3,1.1) both}
+.atlas-splash .buste{flex:0 0 auto;width:150px;filter:drop-shadow(6px 6px 0 #050d12aa);animation:atlas-splash-buste .38s cubic-bezier(.2,.9,.3,1.1) both}
 .atlas-splash[data-cote='droite'] .buste{animation-name:atlas-splash-buste-droite;transform:scaleX(-1)}
 .atlas-splash .buste svg{display:block;width:100%;height:auto;border:2px solid var(--teinte);background:#1d3540}
 @keyframes atlas-splash-buste{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:none}}
 @keyframes atlas-splash-buste-droite{from{opacity:0;transform:scaleX(-1) translateX(-60px)}to{opacity:1;transform:scaleX(-1)}}
-.atlas-splash .carte{flex:1 1 auto;min-width:0;padding:14px 22px 16px;background:var(--encre);border:2px solid #8ba0a6;border-left-width:0;box-shadow:5px 6px 0 #050d1255;clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%);animation:atlas-splash-carte .3s .08s ease-out both}
+/* La carte du pouvoir prend la **couleur du camp** sur son bord et des bandes
+   obliques dans son fond : c'est ce qui la rattache au commandant qui la
+   déclenche, et ce qui la distingue d'un simple panneau de texte. */
+.atlas-splash .carte{position:relative;flex:1 1 auto;min-width:0;padding:16px 22px 18px;background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--teinte) 13%,transparent) 0 12px,#0000 12px 30px),var(--encre);border:2px solid var(--teinte);border-left-width:0;box-shadow:var(--ombre);clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%);animation:atlas-splash-carte .3s .08s ease-out both}
 .atlas-splash[data-cote='droite'] .carte{border-left-width:2px;border-right-width:0;clip-path:polygon(22px 0,100% 0,100% 100%,0 100%,0 22px);text-align:right}
 @keyframes atlas-splash-carte{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.atlas-splash .kicker{display:block;font-size:11px;font-weight:850;letter-spacing:.2em;text-transform:uppercase;color:var(--teinte)}
-.atlas-splash .nom{display:block;margin-top:4px;font-size:clamp(24px,4.2vw,40px);line-height:1.05;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;color:var(--papier);text-shadow:0 3px 0 #050d12}
-.atlas-splash .commandant{display:block;margin-top:8px;font-size:13px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;color:#9db3b6}
+.atlas-splash .kicker{display:inline-block;padding:3px 9px;background:var(--teinte);color:#0b1a22;font-size:11px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}
+.atlas-splash .nom{display:block;margin-top:8px;font-size:clamp(24px,4.2vw,40px);line-height:1.05;font-weight:900;letter-spacing:-.01em;text-transform:uppercase;color:var(--papier);text-shadow:0 4px 0 #050d12}
+/* Le super pouvoir n'est pas le pouvoir : il se paie plus cher et doit se voir
+   plus grand. Le titre passe au signal, la carte gagne un liseré. */
+.atlas-splash[data-niveau='super'] .nom{color:var(--signal)}
+.atlas-splash[data-niveau='super'] .carte{border-top-width:6px}
+.atlas-splash .commandant{display:block;margin-top:9px;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#a9c0c3}
 .atlas-splash .eclat{position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 var(--teinte);animation:atlas-eclat var(--duree) ease-out both;pointer-events:none}
 @keyframes atlas-eclat{0%{opacity:0;transform:translate(-50%,-50%) scale(1)}10%{opacity:1;transform:translate(-50%,-50%) scale(4);box-shadow:0 0 60px 30px var(--teinte)}45%{opacity:0;transform:translate(-50%,-50%) scale(70);box-shadow:0 0 0 0 transparent}100%{opacity:0}}
 [data-fixe='oui'] .lueur,[data-fixe='oui'] .plateau,[data-fixe='oui'] .buste,[data-fixe='oui'] .carte,[data-fixe='oui'] .eclat,[data-fixe='oui'] .bandes,.atlas-combat[data-fixe='oui'] .cadre{animation:none!important}
 @media(max-width:620px){
-  .atlas-combat .camps{gap:6px;padding:4px 10px 10px}
+  .atlas-combat .camps{gap:6px;padding:10px 10px}
+  .atlas-combat .camp{padding:9px 6px}
   .atlas-combat .camp canvas{width:64px;height:64px}
   .atlas-combat .camp .nom{font-size:12px}
-  .atlas-combat .coup{font-size:22px}
+  .atlas-combat .coup{font-size:24px}
+  .atlas-combat .contre{width:30px}
+  .atlas-combat .contre svg{width:24px;height:24px}
   .atlas-splash .buste{width:96px}
-  .atlas-splash .carte{padding:10px 14px 12px}
+  .atlas-splash .carte{padding:12px 14px 14px}
 }
-@media(max-height:460px){.atlas-scenes .bandes{height:6vh;min-height:22px}.atlas-combat .camp canvas{width:56px;height:56px}}
+@media(max-height:460px){.atlas-scenes .bandes{height:6vh;min-height:22px}.atlas-combat .camp canvas{width:56px;height:56px}.atlas-combat .camps{padding:9px 10px}}
 @media(prefers-reduced-motion:reduce){.atlas-scenes *{animation:none!important;transition:none!important}}
 `;
 
@@ -286,6 +322,18 @@ function poserStyle(doc: Document): void {
 /** La cible d'une attaque, en signe : le même que le menu d'ordres. */
 const ICONE_ATTAQUE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
   + '<circle cx="12" cy="12" r="7"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>';
+
+/**
+ * Le signe de l'affrontement, entre les deux plaques de l'écran de combat :
+ * deux chevrons qui se font face.
+ *
+ * Il portait la **même** cible que le bandeau du titre, à trois centimètres
+ * d'écart ; un glyphe répété n'apprend rien la seconde fois, et le lecteur le
+ * prend pour une décoration. Celui-ci dit ce qu'il montre — deux forces qui se
+ * heurtent —, et il pointe vers les deux camps qu'il sépare.
+ */
+const ICONE_CONTRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">'
+  + '<path d="M3 5l6 7-6 7M21 5l-6 7 6 7"/><path d="M12 3v4m0 5v0m0 5v4" stroke-width="2"/></svg>';
 
 /** Un effet en cours : de quand à quand, son nœud une fois créé, ce qu'il fait à chaque image. */
 interface Effet {
@@ -577,7 +625,7 @@ export function monterScenes(
         camps.className = 'camps';
         const contre = doc.createElement('div');
         contre.className = 'contre';
-        contre.innerHTML = ICONE_ATTAQUE;
+        contre.innerHTML = ICONE_CONTRE;
         camps.appendChild(a.el);
         camps.appendChild(contre);
         camps.appendChild(c.el);
