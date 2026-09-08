@@ -311,9 +311,28 @@ export default function Vitrine(): React.ReactElement {
       </fieldset>
     </div>
 
-    {moteur === false && <p className={styles.sansWebgl}>WebGPU est indisponible dans ce navigateur : la vitrine ne peut pas se monter.</p>}
+    {/* Le moteur exige WebGPU depuis le 9 septembre 2026 : le repli WebGL 2 a été
+        retiré (`doc/10`, « Correction du jeu WebGPU »). Sans adaptateur, la
+        vitrine ne montrait qu'une ligne perdue au milieu d'une planche vide et
+        de contrôles qui ne répondaient plus — le lecteur croyait à une panne du
+        site. Elle prend maintenant la place de la planche, nomme ce qui manque,
+        et dit quoi faire : un écran d'échec qui n'indique pas la sortie n'en est
+        pas un. */}
+    {moteur === false ? <div className={styles.sansWebgl} role="alert">
+      <h2>Cette page a besoin de WebGPU</h2>
+      <p>
+        Le navigateur n’expose aucun adaptateur WebGPU, et le moteur n’a plus de repli WebGL 2 :
+        il ne peut pas se monter. Le reste du site fonctionne ; c’est la 3D qui s’arrête ici.
+      </p>
+      <ul>
+        <li><strong>Chrome</strong> ou <strong>Edge</strong> à jour, sur ordinateur : WebGPU y est actif par défaut.</li>
+        <li><strong>Safari 26</strong> ou plus récent, sur macOS et iOS.</li>
+        <li><strong>Firefox</strong> : WebGPU n’est pas encore actif par défaut, il faut passer <code>dom.webgpu.enabled</code> à vrai dans <code>about:config</code>.</li>
+        <li>Sur une machine sans carte graphique — machine virtuelle, rendu logiciel —, aucun adaptateur n’est proposé, quel que soit le navigateur.</li>
+      </ul>
+    </div> : null}
 
-    <div className={styles.planche} ref={grille}>
+    <div className={styles.planche} ref={grille} hidden={moteur === false}>
       <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
       {VUES.map((v) => <div
         key={v.cle}
