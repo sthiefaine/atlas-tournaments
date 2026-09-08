@@ -208,10 +208,10 @@ Notes de conception :
 ### 5.1 Formule
 
 ```
-Fterrain = 1 − 0,05 × E × (pvCible / 10)
+Fterrain = 1 − 0,10 × E
 A        = 0,95 + 0,10 × r          avec r ∈ [0,1), tiré dans rng.branche('combat')
 
-D = base × (pvAtt / 10) × Matt × Fterrain × (1 / Mdef) × A
+D = 0,65 × base × (pvAtt / 10) × Matt × Fterrain × (1 / Mdef) × A
 
 pvPerdus = min( pvCibleInternes , max(1, arrondi(D)) )      si base > 0
 pvPerdus = 0                                                si base = 0
@@ -219,19 +219,46 @@ pvPerdus = 0                                                si base = 0
 
 | Symbole | Sens | Bornes |
 |---|---|---|
+| `0,65` | `ECHELLE_DEGATS` — le rythme du jeu, séparé de la table | constante |
 | `base` | Valeur de la table de dégâts (§8), en points internes | 0 à 130 |
-| `pvAtt`, `pvCible` | PV **affichés** (1 à 10) de l'attaquant et de la cible | 1 à 10 |
+| `pvAtt` | PV **affichés** (1 à 10) de l'attaquant | 1 à 10 |
 | `E` | Étoiles de défense du terrain de la **cible** | 0 à 4 |
 | `Matt` | Produit des multiplicateurs d'attaque de l'attaquant (passif + pouvoir + événement) | 0,5 à 2,0 |
 | `Mdef` | Produit des multiplicateurs de défense de la cible | 0,5 à 2,0 |
 | `A` | Aléa, **seedé** | 0,95 à 1,05 |
 | `D` | Dégâts en PV **internes** | — |
 
-Trois décisions structurantes :
+Quatre décisions structurantes :
 
 - **L'aléa est faible et seedé.** ±5 % : assez pour qu'un échange ne soit jamais parfaitement prévisible, jamais assez pour qu'un plan correct échoue. Et il est tiré du flux `combat` du générateur seedé : la même partie rejouée donne exactement les mêmes jets.
-- **La défense de terrain dépend des PV de la cible.** Une unité entamée profite moins de son abri. C'est ce qui empêche une infanterie à 1 PV sur une montagne d'être un mur.
+- **L'échelle est un nombre, la table en est un autre.** `content/degats.json` dit **qui bat qui** ; `ECHELLE_DEGATS` dit à **quelle vitesse**. Rééchelonner les 576 valeurs de dégâts du canon — la matrice 10 × 10 et les colonnes que portent les unités homologuées — décalerait toutes les lectures relatives du §8 sans rien apprendre à personne ; un seul facteur déplace le rythme et laisse chaque rapport de force intact.
+- **La défense de terrain ne dépend plus des PV de la cible.** Une forêt enlève 20 % des dégâts, une montagne 40 %, à une unité intacte comme à une unité entamée. C'est une règle qu'un joueur peut énoncer, et l'abri sert précisément au moment où il en a besoin.
 - **Le minimum est 1 PV interne**, jamais 0, tant que `base > 0`. Une attaque légitime fait toujours quelque chose ; sinon le joueur ne comprend pas pourquoi son ordre était accepté.
+
+**Révision du 8 septembre 2026 — les échanges sont plus doux, et le terrain se lit.** Le propriétaire a posé la scène : deux infanteries pleines, l'une sur route, l'autre en forêt ; après un échange, la forêt à 5 PV et la route à 8. « C'est beaucoup trop, ça devrait plutôt faire 8-7 », et « ce n'est pas logique que celle qui est en forêt encaisse davantage ».
+
+Vérification faite, la scène n'était pas un défaut de calcul : celle de la route frappait la première à pleins PV (50 PV internes sur une forêt), et la forêt ripostait avec ses PV restants (5/10, donc 28). L'ordre d'un échange **est** la mécanique du jeu et n'a pas changé. Ce qui a changé, ce sont les deux constantes qui rendaient l'échange brutal et le terrain muet :
+
+| | Avant | Après |
+|---|---|---|
+| Échelle | aucune (facteur implicite 1,00) | `ECHELLE_DEGATS = 0,65` |
+| Terrain | `1 − 0,05 × E × (pvCible/10)`, au plus −20 % | `1 − 0,10 × E`, au plus −40 % |
+
+Infanterie pleine contre infanterie pleine, aléa nominal — dégâts en PV internes, PV affichés restants entre parenthèses :
+
+| Terrain | E | Avant | Après |
+|---|---|---|---|
+| Route | 0 | 55 (5 PV) | 33 (**7 PV**) |
+| Plaine | 1 | 52 (5 PV) | 30 (7 PV) |
+| Forêt | 2 | 50 (5 PV) | 26 (**8 PV**) |
+| Ville | 3 | 47 (6 PV) | 23 (8 PV) |
+| Montagne | 4 | 44 (6 PV) | 20 (8 PV) |
+
+Deux raisons pour la seconde ligne du tableau, et la première ne suffisait pas seule. `0,05` par étoile protégeait **deux fois moins** que le jeu de référence, au point qu'une forêt et une route ne se distinguaient pas d'un PV affiché. Et le terme s'effondrait avec les PV : une infanterie à 3 PV en forêt gardait 3 % de protection, l'abri disparaissant à l'instant où il servait. La justification d'origine — « empêcher une infanterie à 1 PV sur une montagne d'être un mur » — ne tient plus à cette échelle : 20 PV internes suffisent à retirer du jeu tout ce qui est sous 2 PV affichés, sur n'importe quel terrain.
+
+**Ce que la révision coûte, et qui est assumé.** Plus rien ne met une unité pleine hors jeu d'une seule salve : la plus grosse case de la table (130) rend 78 PV internes à découvert. Un anti-aérien n'efface plus un hélicoptère ni un drone intacts en un tir — il faut deux salves, ou une cible déjà entamée. Et le soin d'un bâtiment ami (+2 PV affichés par tour, `05` phase 3) pèse désormais lourd face à une frappe qui en retire deux ou trois : déloger une infanterie d'une ville avec une seule unité devient très lent. Mesuré sur 20 parties de `plaine.json` (graine 1, catalogue 6, IA remise en phase avec la formule) : la médiane passe de **29 à 34 journées**, les décisions aux points de 4 à 6 sur 20, et le rapport pondérée/agressive de 40/60 à **65/35** — un échange plus doux récompense le placement plutôt que la charge. `npm run verifier:campagne` reste **6/6**, rejeu conforme.
+
+**Une copie à ne pas oublier.** `src/ai/evaluation.ts` (`degatsAttendus`) et `src/ai/strategies/ponderee.ts` (`menace`) recopient cette formule au lieu de la lire, et n'ont **pas** été remis en phase le 8 septembre 2026 : laissés tels quels, ils surestiment chaque échange de 1,67× et lisent l'ancien terrain, ce qui coûte à la pondérée 65/35 → 15/85 sur la même mesure. `src/engine/regles/combat.ts` exporte `ECHELLE_DEGATS`, `REDUCTION_PAR_ETOILE` et `facteurTerrain(etoiles)` précisément pour qu'ils cessent de recopier ; il reste à les rendre visibles depuis `src/engine/index.ts`. C'est la cinquième copie de liste ou de formule trouvée en deux jours, et la leçon est toujours la même : deux endroits pour une règle en font une règle fausse.
 
 ### 5.2 Riposte
 
@@ -274,18 +301,18 @@ Conséquence tactique : priver un char de munitions ne le neutralise plus. Il re
 Char léger à 10 PV, sur route, attaque une infanterie à 10 PV en forêt (E = 2). Aucun pouvoir actif, `A = 1,00`.
 
 ```
-Fterrain = 1 − 0,05 × 2 × (10/10) = 0,90
-D        = 75 × 1,00 × 1 × 0,90 × 1 × 1,00 = 67,5 → 68 PV internes
+Fterrain = 1 − 0,10 × 2 = 0,80
+D        = 0,65 × 75 × 1,00 × 1 × 0,80 × 1 × 1,00 = 39 PV internes
 ```
 
-L'infanterie tombe de 100 à 32, soit **4 PV affichés**. Elle riposte :
+L'infanterie tombe de 100 à 61, soit **7 PV affichés**. Elle riposte :
 
 ```
-Fterrain = 1 − 0,05 × 0 × (10/10) = 1,00      (le char est sur une route)
-D        = 10 × (4/10) × 1 × 1,00 × 1 × 1,00 = 4 PV internes
+Fterrain = 1 − 0,10 × 0 = 1,00                (le char est sur une route)
+D        = 0,65 × 10 × (7/10) × 1 × 1,00 × 1 × 1,00 = 4,55 → 5 PV internes
 ```
 
-Le char passe de 100 à 96, soit toujours **10 PV affichés**. L'échange est très favorable au char (6 500 fonds contre 1 000), et c'est voulu : depuis le 6 septembre 2026, la ligne infanterie → char léger vaut **10** au lieu de 25 — un fantassin n'entame pas un blindé, c'est la méca (60) qui le fait payer, et deux mécas en forêt lui coûtent déjà 40 % de sa valeur. Jusqu'à cette date la riposte valait 10 PV internes et le char ressortait à 9 PV affichés.
+Le char passe de 100 à 95, soit toujours **10 PV affichés**. L'échange reste très favorable au char (6 500 fonds contre 1 000), et c'est voulu : depuis le 6 septembre 2026, la ligne infanterie → char léger vaut **10** au lieu de 25 — un fantassin n'entame pas un blindé, c'est la méca (60) qui le fait payer, et deux mécas en forêt lui coûtent déjà une bonne part de sa valeur. Ce qui change au 8 septembre 2026, c'est le nombre de coups : le char en met **trois** pour retirer l'infanterie du jeu là où il en mettait deux, et l'infanterie en profite pour se replier ou capturer. Avant l'échelle du 8 septembre, la frappe valait 68 PV internes et l'infanterie tombait à 4 PV affichés ; avant le 6 septembre, la riposte valait 10 PV internes et le char ressortait à 9 PV affichés.
 
 ---
 
@@ -423,7 +450,7 @@ Valeurs `base` de la formule §5, en points internes. **Lignes = attaquant, colo
 | **char_leger** | 75 | 70 | 85 | 55 | 15 | 70 | 85 | 75 | 0 | 90 |
 | **char_lourd** | 95 | 90 | 105 | 85 | 55 | 105 | 105 | 105 | 0 | 125 |
 | **artillerie** | 90 | 85 | 80 | 70 | 45 | 75 | 80 | 75 | 0 | 95 |
-| **roquettes** | 95 | 90 | 90 | 80 | 55 | 80 | 85 | 85 | 0 | 105 |
+| **roquettes** | 95 | 90 | 90 | 80 | **70** | 80 | 85 | 85 | 0 | 105 |
 | **antiair** | 105 | 95 | 60 | 25 | 5 | 50 | 55 | 45 | **120** | 50 |
 | **helico** | 75 | 70 | 55 | 55 | 25 | 65 | 65 | 6 | 65 | 75 |
 | **transport** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -438,6 +465,27 @@ Ce que la table encode :
 - **L'infanterie ne perce pas un char** : 10 contre le léger, 5 contre le lourd. Elle valait 25 contre le léger jusqu'au **6 septembre 2026** — une révision du canon décidée par le propriétaire, pas une homologation : la méca (60) est la réponse à pied aux blindés, et un char à sec garde sa mitrailleuse contre elle (§5.3).
 - **Le transport ne fait jamais rien.** Sa ligne entière est à 0 et il ne riposte pas ; le protéger fait partie du jeu.
 - La diagonale (une unité contre son semblable) est toujours inférieure à 100 sauf pour le char lourd (55) : deux unités identiques qui s'échangent ne se mettent jamais hors jeu en un coup, ce qui garde les fronts vivants.
+
+### 8.1 Ce que la table donne à l'écran (8 septembre 2026)
+
+La table est en points **internes** ; le joueur, lui, lit des PV **affichés**. Les deux ne disent pas la même chose, et la mesure a été faite : pour chacun des **302 couples visables** du catalogue 6, ce qu'une cible pleine perd en PV affichés, terrain nu, aléa figé au médian.
+
+**Le constat de départ.** Le propriétaire trouvait qu'un échange entre deux infanteries pleines coûtait trop cher : 8 PV d'un côté, 5 de l'autre. C'était exact, et ce n'était **pas** un défaut de la ligne de l'infanterie. À l'ancienne échelle, la base 55 de l'infanterie tombait pile sur la bande médiane de la table (médiane 70) : **218 couples sur 302 ôtaient 5 PV affichés ou plus, et 43 mettaient une cible pleine hors jeu en un seul coup**. Retoucher la ligne de l'infanterie aurait corrigé **une case sur 302** et laissé le jeu aussi expéditif partout ailleurs. Le levier juste était l'échelle, pas la table — et il est dans la formule (§5.1), où **un** nombre déplace le rythme sans décaler un seul des rapports de force écrits ci-dessus. Rééchelonner les 576 cases aurait fait l'inverse.
+
+**Ce que l'échelle coûte, et que la table ne peut pas rendre.** `degats ≤ 130` (borne de schéma) multiplié par l'échelle borne ce qu'un coup peut ôter. À 0,60, le maximum est 78 points internes : **aucun couple ne peut plus ôter plus de 7 PV affichés, ni user une cible pleine en un coup**, et les trois derniers crans de lisibilité (8, 9, 10) deviennent inatteignables quoi qu'on écrive dans la table. Les contres les plus durs sont déjà à 120–125 : les monter à 130 ne rendrait pas un cran. **Ce plafond ne se corrige donc pas ici.**
+
+| Échelle | inf → inf, route | inf → inf, forêt | crans lisibles | couples muets | contre le plus lent |
+|---|---:|---:|---:|---:|---:|
+| 1,00 | 5 PV | 4 PV | 11 / 11 | 15 / 302 | 2 coups |
+| 0,70 | 3 PV | 3 PV | 9 / 11 | 20 / 302 | 3 coups |
+| 0,65 | 3 PV | 2 PV | 9 / 11 | 20 / 302 | 3 coups |
+| 0,60 | 3 PV | 2 PV | 8 / 11 | 25 / 302 | 4 coups |
+
+Un **couple muet** est une attaque légale qui n'ôte **aucun** PV affiché à une cible pleine : le plancher de 1 point interne du §5.1 la rend légitime, mais le joueur ne voit rien se passer. La bande de bases à **15** — `meca → char_lourd`, `char_leger → char_lourd`, `genie → char_leger`, `antiair → char_moyen`, `meca → porte_avions` — est exactement le grignotage sur lequel le jeu compte, et elle passe de visible à muette **entre 0,65 et 0,60** : `arrondi(0,65 × 15) = 10` s'affiche, `arrondi(0,60 × 15) = 9` ne s'affiche pas.
+
+**Une correction dans la table, et une seule : `roquettes → char_lourd`, 55 → 70.** La mesure a mis au jour un défaut que l'ancienne échelle masquait : **le char lourd n'avait pas de réponse**. Sa meilleure ligne canon était lui-même (55), et en catalogue 4 — celui des six missions — rien d'autre ne lui ôtait plus d'un PV affiché. À 55, quatre coups sont nécessaires ; à 70, trois. Le lance-roquettes (14 000) devient la réponse désignée au char lourd (15 000), ce qui est un rapport de contre à prix égal ; il est **indirect**, donc il ne riposte pas et ne tire pas après avoir bougé, et le corriger ne touche **aucun** échange au contact. C'est une révision du canon décidée sur mesure, comme le 25 → 10 de l'infanterie du 6 septembre, pas une homologation. Depuis, **la contrainte 2 du §13.3 vaut pour les vingt-quatre unités, `canon` comprises** (`tests/schemas/contenu.test.ts`) : la table du §8 s'exemptait de l'exigence qu'elle impose aux candidates.
+
+**Non tranché** : le plafond de 7 PV et la disparition du coup unique sont des conséquences de l'échelle, pas de la table ; les faire revenir demanderait de remonter l'échelle ou la borne de 130 du schéma. Et l'effet sur l'IA est réel : sur `plaine.json`, 20 parties, graine 1, catalogue 6, les journées médianes passent de **27,5 à 34** et les décisions aux points (`limite_journees`) de **5 à 9 sur 20** — le relevé d'avant est celui du 7 septembre consigné dans `CLAUDE.md`, celui d'après a été mesuré le 8. Sur `carte_bras_de_mer.json`, **18 parties sur 20** finissent au chronomètre. Un combat plus lent rend le manque n° 6 (« l'IA va aux points ») nettement plus visible : c'est le prix du rythme, il est chiffré, il n'est pas résorbé.
 
 ---
 
@@ -942,8 +990,8 @@ Les deux sont **obligatoires et complètes**. Une case absente vaut 0, et 0 sign
 Quatre contraintes de forme, vérifiées par la routine contrôle :
 
 1. **Diagonale < 100** : une unité ne se met jamais hors jeu elle-même en un coup (sauf à ne pas pouvoir se viser du tout, valeur 0).
-2. **Au moins une unité `canon` lui inflige ≥ 70** : pas d'unité sans contre.
-3. **Elle inflige ≤ 30 à au moins deux unités `canon`** : pas d'unité universelle.
+2. **Au moins une unité `canon` lui inflige ≥ 70** : pas d'unité sans contre. **Depuis le 8 septembre 2026, cette contrainte vaut aussi pour les dix `canon`** (§8.1) : c'est une propriété du jeu, pas une formalité d'homologation, et la table du §8 s'en exemptait — le `char_lourd` n'avait pour meilleure réponse canon que lui-même. Un test la tient sur les vingt-quatre.
+3. **Elle inflige ≤ 30 à au moins deux unités `canon`** : pas d'unité universelle. Celle-ci ne s'étend **pas** aux `canon` : `char_lourd`, `artillerie` et `roquettes` n'en épargnent qu'une, et c'est leur rôle écrit — un généraliste du sol sans réponse en l'air.
 4. **Si elle porte `vol`**, seules les unités portant `anti_air` ou `vol`, plus `infanterie` et `meca`, ont une valeur non nulle dans sa colonne — la règle des quatre viseurs du §8 reste vraie. **Une exception nommée depuis le 7 septembre 2026** : le `porte_avions`, qui ne porte ni l'un ni l'autre, garde une défense rapprochée légère contre l'air (§10 quater). C'est la seule, elle est écrite, et elle ne touche pas la table du §8.
 
 ### 13.4 Bornes de coût, mouvement, portée

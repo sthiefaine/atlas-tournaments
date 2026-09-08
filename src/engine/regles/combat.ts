@@ -3,9 +3,9 @@
  * (`doc/04-gameplay.md` §5 et §7.1).
  *
  * ```
- * Fterrain = 1 − 0,05 × E × (pvCible / 10)
+ * Fterrain = 1 − 0,10 × E
  * A        = 0,95 + 0,10 × r        r tiré dans rng.branche('combat')
- * D        = base × (pvAtt / 10) × Matt × Fterrain × (1 / Mdef) × A
+ * D        = ECHELLE_DEGATS × base × (pvAtt / 10) × Matt × Fterrain × (1 / Mdef) × A
  * pvPerdus = min(pvCible, max(1, arrondi(D)))     si base > 0
  * ```
  *
@@ -22,6 +22,53 @@ import type {
 import { cleCase, manhattan, porte, pvAffiches } from '../types';
 import { terrainSous } from './mouvement';
 import { multiplicateur } from './modificateurs';
+
+/**
+ * Échelle des dégâts (§5.1, 8 septembre 2026). La matrice de `content/degats.json`
+ * dit **qui bat qui** ; ce facteur dit à **quelle vitesse**. Les deux questions
+ * sont séparées exprès : rééchelonner les 576 valeurs de dégâts du canon — la
+ * matrice 10 × 10 et les colonnes que portent les homologuées — décalerait
+ * toutes les lectures relatives du §8, alors qu'un seul nombre déplace le rythme
+ * sans toucher à un seul rapport de force.
+ *
+ * À `0,65`, une infanterie pleine en retire trois à une infanterie pleine sur
+ * route au lieu de cinq : un échange n'est plus une demi-unité perdue, et le
+ * terrain a la place de peser.
+ *
+ * Pourquoi 0,65 et pas 0,60, qui se lit pareil (7 PV restants sur route, 8 en
+ * forêt) : la falaise est à la base **15**, la bande de grignotage contre un
+ * blindé lourd. `arrondi(0,65 × 15)` vaut 10 points internes, donc 1 PV
+ * affiché ; `arrondi(0,60 × 15)` vaut 9, donc **rien**. À 0,60, huit des quinze
+ * unités qui ont le droit de tirer sur un char lourd ne lui ôtaient aucun PV :
+ * une attaque légale qui ne fait rien est une règle incompréhensible. À 0,65,
+ * tous les contres du §13.3 tiennent en trois coups au lieu de quatre.
+ */
+export const ECHELLE_DEGATS = 0.65;
+
+/**
+ * Réduction de dégâts par étoile de défense du terrain (§5.1, 8 septembre 2026).
+ *
+ * Deux changements en un. La valeur double — `0,05` protégeait deux fois moins
+ * que le jeu de référence, et sur une forêt la différence avec la route ne se
+ * lisait pas d'un PV affiché. Et le terme **ne dépend plus des PV de la cible** :
+ * l'ancienne forme `0,05 × E × (pvCible/10)` ramenait la forêt d'une infanterie
+ * à 3 PV à 3 % de protection, si bien que l'abri disparaissait au moment précis
+ * où il servait. « La forêt enlève 20 % » est une règle qu'un joueur peut
+ * énoncer ; une courbe ne l'est pas.
+ *
+ * Ce qui se perd : une unité entamée sur une montagne est plus dure à achever
+ * qu'avant. C'est le prix assumé d'un abri qui vaut aussi pour un blessé.
+ */
+export const REDUCTION_PAR_ETOILE = 0.10;
+
+/**
+ * Facteur de terrain d'une cible posée sur `etoiles` étoiles de défense.
+ * Exportée pour que personne n'ait à recopier la formule : une seconde copie
+ * finit par mentir (leçon du 7 septembre sur les quatre listes recopiées).
+ */
+export function facteurTerrain(etoiles: number): number {
+  return 1 - REDUCTION_PAR_ETOILE * etoiles;
+}
 
 /** Jauge gagnée par point de PV affiché infligé (§7.1). */
 export const JAUGE_PAR_PV_INFLIGE = 10;
@@ -78,11 +125,13 @@ export function calculerDegats(
   if (base <= 0) return 0;
   const terrain = terrainSous(etat, cat, def);
   const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
-  const fTerrain = 1 - 0.05 * etoiles * (pvAffiches(def.pv) / 10);
+  const fTerrain = facteurTerrain(etoiles);
   const mAtt = multiplicateur(etat, cat, att, 'attaque');
   const mDef = multiplicateur(etat, cat, def, 'defense');
   const alea = 0.95 + 0.10 * rng.branche('combat').suivant();
-  let d = base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain * (1 / mDef) * alea;
+  // L'échelle s'applique **avant** les hooks : un hook de climat ou de mécanique
+  // est un rapport (× 0,8 sous la tempête), il doit mordre sur les dégâts réels.
+  let d = ECHELLE_DEGATS * base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain * (1 / mDef) * alea;
   d = surAttaqueHooks(etat, cat, att, def, d, rng);
   return Math.min(def.pv, Math.max(1, Math.round(d)));
 }

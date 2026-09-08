@@ -89,6 +89,29 @@ test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3'
   }
 });
 
+test('aucune unité active n’est sans contre, les dix canon comprises', () => {
+  // §13.3 contrainte 2, étendue aux `canon` le 8 septembre 2026. La règle ne
+  // s'appliquait qu'aux candidates à l'homologation, si bien que la table du §8
+  // s'exemptait de sa propre exigence : le `char_lourd` n'avait pour meilleure
+  // réponse canon que lui-même (55), et personne ne l'avait vu tant que 55
+  // suffisait à l'user en deux coups. L'échelle du 8 septembre (§5.1) porte ce
+  // même 55 à quatre coups, et le défaut cesse d'être théorique — d'où
+  // `roquettes → char_lourd` à 70 (§8).
+  //
+  // « Pas d'unité sans contre » est une propriété du **jeu**, pas une formalité
+  // d'homologation : elle vaut pour les vingt-quatre.
+  const unites = chargerUnites();
+  const canon = unites.filter((u) => u.statut === 'canon').map((u) => u.cle);
+  for (const cible of unites) {
+    const meilleur = Math.max(...canon.map((a) => {
+      const colonne = cible.subitDegats?.[a];
+      if (typeof colonne === 'number') return colonne;
+      return unites.find((u) => u.cle === a)?.degats[cible.cle] ?? 0;
+    }));
+    assert.ok(meilleur >= 70, `${cible.cle} : sans contre canon (meilleur ${meilleur})`);
+  }
+});
+
 test('la ligne d’une homologuée et la colonne de sa cible disent la même chose', () => {
   // `degatsBase` lit la colonne de la cible **avant** la ligne de l'attaquant : si
   // les deux divergent, la ligne ment sans qu'aucune partie ne le montre.

@@ -32,7 +32,7 @@ test("la table de dégâts est bien celle du document 04 §8", () => {
   assert.equal(degatsBase(CAT, 'transport', 'infanterie'), 0);
 });
 
-test("l'exemple travaillé du §5.4 donne exactement 68 puis 4 PV", () => {
+test("l'exemple travaillé du §5.4 donne exactement 36 puis 4 PV", () => {
   // Char léger 10 PV sur route (1,0 → route), infanterie 10 PV en forêt (E = 2).
   const etat = partiePersonnalisee(GRILLE, {}, [
     { camp: 0, type: 'char_leger', x: 2, y: 0 },
@@ -41,14 +41,16 @@ test("l'exemple travaillé du §5.4 donne exactement 68 puis 4 PV", () => {
   const travail = copierEtat(etat);
   const char = u(travail, 'u1');
   const inf = u(travail, 'u2');
-  // Fterrain = 1 − 0,05 × 2 × 1 = 0,90 ; D = 75 × 1 × 0,90 = 67,5 → 68.
+  // Le 8 septembre 2026, l'échelle passe à 0,65 et la forêt à 1 − 0,10 × 2 = 0,80,
+  // sans plus dépendre des PV de la cible : D = 0,65 × 75 × 1 × 0,80 = 39 (68 avant).
   const degats = calculerDegats(travail, CAT, char, inf, rngFixe(0.5));
-  assert.equal(degats, 68);
+  assert.equal(degats, 39);
   inf.pv -= degats;
-  assert.equal(inf.pv, 32);
-  assert.equal(pvAffiches(inf.pv), 4);
-  // Riposte : 10 × (4/10) × 1,00 (le char est sur une route, E = 0) = 4.
-  assert.equal(calculerDegats(travail, CAT, inf, char, rngFixe(0.5)), 4);
+  assert.equal(inf.pv, 61);
+  // 7 PV affichés au lieu de 4 : c'est le « plus doux » demandé par le propriétaire.
+  assert.equal(pvAffiches(inf.pv), 7);
+  // Riposte : 0,65 × 10 × (7/10) × 1,00 (le char est sur une route, E = 0) = 4,55 → 5.
+  assert.equal(calculerDegats(travail, CAT, inf, char, rngFixe(0.5)), 5);
 });
 
 test("l'aléa reste borné à ±5 %", () => {
@@ -58,18 +60,25 @@ test("l'aléa reste borné à ±5 %", () => {
   ]);
   const bas = calculerDegats(copierEtat(etat), CAT, u(etat, 'u1'), u(etat, 'u2'), rngFixe(0));
   const haut = calculerDegats(copierEtat(etat), CAT, u(etat, 'u1'), u(etat, 'u2'), rngFixe(0.999999));
-  assert.equal(bas, Math.round(67.5 * 0.95));
-  assert.equal(haut, Math.round(67.5 * 1.05));
+  // La valeur nominale est 39 depuis le 8 septembre 2026 (67,5 avant) ; l'aléa, lui,
+  // n'a pas bougé : ±5 % autour d'elle.
+  assert.equal(bas, Math.round(39 * 0.95));
+  assert.equal(haut, Math.round(39 * 1.05));
 });
 
-test('la défense de terrain dépend des PV de la cible', () => {
-  const etat = partiePersonnalisee(GRILLE, {}, [
-    { camp: 0, type: 'char_leger', x: 3, y: 1 },
-    { camp: 1, type: 'infanterie', x: 4, y: 0, pv: 20 },
-  ]);
-  // Montagne, E = 4, cible à 2 PV affichés : Fterrain = 1 − 0,05 × 4 × 0,2 = 0,96.
-  const degats = calculerDegats(copierEtat(etat), CAT, u(etat, 'u1'), u(etat, 'u2'), rngFixe(0.5));
-  assert.equal(degats, Math.min(20, Math.round(75 * 0.96)));
+test('la défense de terrain ne dépend plus des PV de la cible', () => {
+  // Montagne, E = 4 : Fterrain = 1 − 0,10 × 4 = 0,60, quel que soit l'état de la cible.
+  // Avant le 8 septembre 2026, la même cible à 2 PV n'avait plus que 4 % de
+  // protection au lieu de 20 % : l'abri s'évaporait au moment où il servait.
+  const attendu = Math.round(0.65 * 75 * 0.6); // 29
+  for (const pv of [100, 60]) {
+    const etat = partiePersonnalisee(GRILLE, {}, [
+      { camp: 0, type: 'char_leger', x: 3, y: 1 },
+      { camp: 1, type: 'infanterie', x: 4, y: 0, pv },
+    ]);
+    const degats = calculerDegats(copierEtat(etat), CAT, u(etat, 'u1'), u(etat, 'u2'), rngFixe(0.5));
+    assert.equal(degats, attendu, `cible à ${pv} PV internes : la montagne protège pareil`);
+  }
 });
 
 test('une unité de tir indirect ne riposte jamais et ne tire pas après avoir bougé', () => {
@@ -173,8 +182,10 @@ test('un char à zéro munition tire encore : plein sur l’infanterie, à la mi
   assert.equal(degatsArme(CAT, u(travail, 'u2'), 'char_leger'), 10, 'tir illimité : la base');
 });
 
-test('un char à sec frappe un char sur 15, sans consommer, et un char à sec riposte à un char', () => {
-  // Deux chars sur la route (E = 0) : D = 15 × 1 × 1 × 1 = 15 PV internes.
+test('un char à sec frappe un char sur 10, sans consommer, et un char à sec riposte à un char', () => {
+  // Deux chars sur la route (E = 0) : D = 0,65 × 15 × 1 × 1 × 1 = 9,75 → 10 PV
+  // internes (15 avant l'échelle du 8 septembre 2026). C'est la falaise qui a
+  // fait retenir 0,65 plutôt que 0,60, où le même coup n'ôtait aucun PV affiché.
   const etat = partiePersonnalisee(GRILLE, {}, [
     { camp: 0, type: 'char_leger', x: 1, y: 0 },
     { camp: 1, type: 'char_leger', x: 2, y: 0 },
@@ -186,10 +197,13 @@ test('un char à sec frappe un char sur 15, sans consommer, et un char à sec ri
   def.munitions = 0;
   const p = prevoirDuel(travail, CAT, att, def, { x: 1, y: 0 });
   const issue = resoudreAttaque(travail, CAT, att, def, rngFixe(0.5), []);
-  assert.equal(issue.degats, 15);
+  assert.equal(issue.degats, 10);
   assert.equal(att.munitions, 0);
-  // Riposte à sec, sur les PV d'après la frappe : 15 × (9/10) = 13,5 → 14.
-  assert.equal(issue.riposte, 14);
+  // Riposte à sec, sur les PV d'après la frappe : 91 PV internes s'affichent encore
+  // 9 : la frappe a ôté 10 PV internes, la cible en a 90 et en affiche 9, donc
+  // 0,65 × 15 × (9/10) = 8,8 → 9. La mitrailleuse entame, elle n'achève pas :
+  // c'était déjà la lecture du §5.3.
+  assert.equal(issue.riposte, 9);
   assert.equal(def.munitions, 0);
   assert.equal(p.degats, issue.degats);
   assert.equal(p.riposte, issue.riposte, 'la prévision lit la même base effective');

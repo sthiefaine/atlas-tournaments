@@ -7,13 +7,15 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import {
-  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, type Catalogue, type EtatPartie, type Unite,
+  appliquer, chargerCatalogue, creerPartie, facteurTerrain, prevoirDuel, pvAffiches, reglagesParDefaut,
+  sceneDeCarte, type Catalogue, type EtatPartie, type Unite,
 } from '../../src/engine/index';
 import { ambiance } from '../../src/render/ambiance';
 import { monterHudHtml, poserEmplacements, type VueJeu } from '../../src/render/hud-html';
+import { nomTerrain } from '../../src/render/libelles';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
-import { DUREES, type Partition } from '../../src/render/partition';
-import { chiffreSigne, MS_FIXE } from '../../src/render/scenes-html';
+import { DUREES, ecrirePartition, type Partition } from '../../src/render/partition';
+import { chiffreSigne, MS_FIXE, rolesDesChiffres } from '../../src/render/scenes-html';
 import { validerMapDef, type CleUnite } from '../../src/schemas/index';
 import { scenePersonnalisee } from '../engine/aides';
 
@@ -42,13 +44,32 @@ class FauxElement {
   }
   contains(): boolean { return false; }
   querySelector(): null { return null; }
+  hasAttribute(k: string): boolean { return this.attributs.has(k); }
+  classList = { contains: (c: string): boolean => this.className.split(' ').includes(c) };
+  /**
+   * Le premier ancêtre — soi compris — qui porte l'attribut demandé. Le HUD ne
+   * demande que « [data-action] » et « [data-arret] » : inutile d'écrire un
+   * moteur de sélecteurs pour deux motifs.
+   */
+  closest(selecteur: string): FauxElement | null {
+    const attribut = selecteur.replace(/[[\]]/g, '').replace(/^data-/, '')
+      .replace(/-([a-z])/g, (_m, c: string) => c.toUpperCase());
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- on remonte la chaîne des parents, en partant de soi.
+    let noeud: FauxElement | null = this;
+    while (noeud) {
+      if (noeud.dataset[attribut] !== undefined) return noeud;
+      noeud = noeud.parent;
+    }
+    return null;
+  }
   ecouteurs = new Map<string, (e: Event) => void>();
   addEventListener(type: string, fn: (e: Event) => void): void { this.ecouteurs.set(type, fn); }
   removeEventListener(type: string): void { this.ecouteurs.delete(type); }
   focus(): void { /* idem */ }
 }
-// `instanceof HTMLElement` et `HTMLCanvasElement` sont évalués par le HUD.
+// `instanceof Element`, `HTMLElement` et `HTMLCanvasElement` sont évalués par le HUD.
 const g = globalThis as Record<string, unknown>;
+g['Element'] ??= FauxElement;
 g['HTMLElement'] ??= FauxElement;
 g['HTMLCanvasElement'] ??= class {};
 
@@ -672,4 +693,256 @@ test('le menu d’ordres nomme et dessine le passager d’un débarquement, et g
   assert.match(html, /data-vignette="vg_ordres_0"/, 'la figurine du passager');
   assert.match(html, /data-valeur="attendre"(?! data-passager)/);
   h.demonter();
+});
+
+// ---------------------------------------------------------------------------
+// Le combat lisible : avant (la prévision), après (le coup et la riposte)
+// ---------------------------------------------------------------------------
+
+/**
+ * Un clic sur un bouton du HUD : le gestionnaire est posé sur la racine et
+ * remonte jusqu'au premier « [data-action] ». On lui donne donc un vrai nœud
+ * factice, pas un objet nu.
+ */
+function cliquer(conteneur: FauxElement, action: string): void {
+  const racine = conteneur.children.find((e) => e.className === 'atlas-hud');
+  assert.ok(racine);
+  const bouton = new FauxElement();
+  bouton.dataset['action'] = action;
+  racine.ecouteurs.get('click')?.({
+    target: bouton, preventDefault: () => undefined, stopPropagation: () => undefined,
+  } as unknown as Event);
+}
+
+/** Une partie sur une grille écrite à la main, avec le catalogue du HUD. */
+function surGrille(
+  grille: string[], unites: { camp: 0 | 1; type: CleUnite; x: number; y: number; pv?: number }[],
+): EtatPartie {
+  return creerPartie(scenePersonnalisee(grille, {}, unites), CAT, 'duel');
+}
+
+/**
+ * Le HUD monté sur une visée : la prévision est celle du moteur, et `t` rend la
+ * clé avec ses paramètres en clair, sans guillemets — le HUD échappe son HTML,
+ * et un JSON dans une assertion deviendrait illisible.
+ */
+function hudEnVisee(etat: EtatPartie, visee: NonNullable<VueJeu['visee']>): {
+  conteneur: FauxElement; hud: ReturnType<typeof monterHudHtml>;
+} {
+  const { conteneur } = document();
+  const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
+    vue: (): VueJeu => ({ ...vueDe(etat, visee.cible ?? { x: 0, y: 0 }), phase: 'cible', visee }),
+    t: (cle, params) => (params
+      ? `${cle}(${Object.entries(params).map(([k, x]) => `${k}=${String(x)}`).join(',')})`
+      : cle),
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => null,
+  });
+  return { conteneur, hud };
+}
+
+test('la prévision de duel dit le terrain de chacun, lequel est le coup et lequel la riposte, et à combien de PV la riposte part', () => {
+  // Le constat du propriétaire, posé tel quel : deux infanteries pleines,
+  // l'une sur route, l'autre en forêt.
+  const etat = surGrille(['RFP', 'PPP', 'PPP'], [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 1, y: 0 },
+  ]);
+  const attaquant = etat.unites.find((u) => u.camp === 0)!;
+  const defenseur = etat.unites.find((u) => u.camp === 1)!;
+  const { conteneur, hud } = hudEnVisee(etat, {
+    attaquantId: attaquant.id, depuis: { x: 0, y: 0 }, cibles: [{ x: 1, y: 0 }], cible: { x: 1, y: 0 },
+  });
+  const html = emplacements(conteneur).get('duel')!.innerHTML;
+
+  // Les deux terrains, chacun avec sa défense — celle du canon, pas un calcul.
+  assert.match(html, /data-defense="0"/, 'la route ne protège pas');
+  assert.match(html, new RegExp(`data-defense="${CAT.terrains['foret']!.defense}"`), 'la forêt protège');
+  assert.ok(html.includes(nomTerrain('fr', CAT, 'route')), 'le terrain de l’attaquant est nommé');
+  assert.ok(html.includes(nomTerrain('fr', CAT, 'foret')), 'celui de la cible aussi');
+  assert.match(html, /★/, 'les étoiles de défense sont là');
+  // Ce que la forêt retire, en pourcentage : le chiffre vient de `facteurTerrain`.
+  const evite = Math.round((1 - facteurTerrain(CAT.terrains['foret']!.defense)) * 100);
+  assert.ok(evite > 0);
+  assert.ok(html.includes(`hud.defense_part(n=${evite})`), 'la part du terrain est dite en pour cent');
+  assert.ok(!html.includes('hud.defense_part(n=0)'), 'à découvert, rien à annoncer');
+
+  // Quel chiffre est quoi : la cible encaisse le coup, l'attaquant la riposte.
+  assert.match(html, /data-role="coup"/);
+  assert.match(html, /data-role="riposte"/);
+  assert.ok(html.includes('hud.coup'), 'le coup est nommé');
+  assert.ok(html.includes('hud.riposte'), 'la riposte aussi');
+
+  // Et la riposte part d'une unité déjà touchée : le chiffre annoncé est celui
+  // que le moteur prévoit, jamais un calcul du HUD.
+  const p = prevoirDuel(etat, CAT, attaquant, defenseur, { x: 0, y: 0 });
+  assert.ok(p.riposte > 0, 'à ce contact, la cible rend le coup');
+  assert.ok(html.includes(`hud.duel_riposte_a(n=${p.pvCible})`), 'la riposte part aux PV restants de la cible');
+  assert.ok(html.includes(`hud.duel_riposte(n=${pvAffiches(attaquant.pv) - p.pvAttaquant})`));
+  hud.demonter();
+});
+
+test('sans riposte, la prévision le dit au lieu d’annoncer « Riposte −0 PV »', () => {
+  // Une pièce indirecte à deux cases : la cible ne rend pas le coup.
+  const etat = surGrille(['PPP', 'PPP', 'PPP'], [
+    { camp: 0, type: 'artillerie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 2, y: 0 },
+  ]);
+  const attaquant = etat.unites.find((u) => u.camp === 0)!;
+  const cible = etat.unites.find((u) => u.camp === 1)!;
+  const p = prevoirDuel(etat, CAT, attaquant, cible, { x: 0, y: 0 });
+  assert.equal(p.riposte, 0, 'à deux cases, aucune riposte');
+  assert.equal(p.cibleHorsJeu, false);
+  const { conteneur, hud } = hudEnVisee(etat, {
+    attaquantId: attaquant.id, depuis: { x: 0, y: 0 }, cibles: [{ x: 2, y: 0 }], cible: { x: 2, y: 0 },
+  });
+  const html = emplacements(conteneur).get('duel')!.innerHTML;
+  assert.ok(html.includes('hud.duel_sans_riposte'), 'l’issue dit l’absence de riposte');
+  assert.ok(html.includes('hud.duel_sans_riposte_note'));
+  assert.ok(!html.includes('hud.duel_riposte('), 'plus de « Riposte −0 PV »');
+  // La ligne de l'attaquant ne porte pas de mot : il n'encaisse rien.
+  assert.ok(!html.includes('hud.riposte'), 'aucun coup rendu, donc aucune étiquette');
+  hud.demonter();
+});
+
+test('rolesDesChiffres lit le coup et la riposte dans la vraie partition d’un échange, réduite ou non', () => {
+  const avant = surGrille(['PPP', 'PPP', 'PPP'], [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 1, y: 0 },
+  ]);
+  const attaquant = avant.unites.find((u) => u.camp === 0)!;
+  const r = appliquer(avant, {
+    type: 'ordre', uniteId: attaquant.id, chemin: [{ x: 0, y: 0 }],
+    suite: { type: 'attaquer', cible: { x: 1, y: 0 } },
+  }, CAT);
+  assert.equal(r.ok, true);
+  if (!r.ok) return;
+
+  for (const reduit of [false, true]) {
+    const p = ecrirePartition(r.evenements, avant, r.etat, {
+      camp: 0, reduit, cadrer: false, ecranCombat: true,
+    });
+    const chiffres = p.gestes.filter((g) => g.genre === 'chiffre');
+    assert.equal(chiffres.length, 2, `réduit=${reduit} : un coup et une riposte`);
+    const roles = rolesDesChiffres(p.gestes);
+    // Le coup tombe sur la cible, la riposte sur l'attaquant, et c'est la case
+    // qui le dit : sous animations réduites tous les gestes partent à zéro,
+    // et une règle fondée sur l'horloge y perdrait la distinction.
+    const surCible = chiffres.find((g) => g.genre === 'chiffre' && g.case.x === 1 && g.case.y === 0)!;
+    const surAttaquant = chiffres.find((g) => g.genre === 'chiffre' && g.case.x === 0 && g.case.y === 0)!;
+    assert.equal(roles.get(surCible), 'coup', `réduit=${reduit}`);
+    assert.equal(roles.get(surAttaquant), 'riposte', `réduit=${reduit}`);
+  }
+});
+
+test('un chiffre de riposte porte son mot ; un coup, une réparation et une avarie n’en portent pas', async () => {
+  const etat = partie();
+  const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 90, y: 70 }));
+  // Une salve écrite à la main dans la grammaire du réalisateur : le tir de
+  // l'attaquant, le coup encaissé, puis le coup rendu — et un « + » de
+  // réparation, qui n'est ni l'un ni l'autre.
+  const att = { x: 1, y: 1 };
+  const def = { x: 1, y: 2 };
+  const partition: Partition = {
+    gestes: [
+      { genre: 'tirer', unite: 'a', depuis: att, vers: def, debut: 0, duree: 10 },
+      { genre: 'encaisser', unite: 'b', case: def, degats: 40, depuis: att, debut: 10, duree: 10 },
+      { genre: 'chiffre', case: def, valeur: 4, teinte: 'gain', debut: 10, duree: 60 },
+      { genre: 'tirer', unite: 'b', depuis: def, vers: att, debut: 20, duree: 10 },
+      { genre: 'encaisser', unite: 'a', case: att, degats: 20, depuis: def, debut: 30, duree: 10 },
+      { genre: 'chiffre', case: att, valeur: 2, teinte: 'perte', debut: 30, duree: 60 },
+      { genre: 'reparer', unite: 'c', case: { x: 4, y: 4 }, pv: 20, debut: 0, duree: 10 },
+      { genre: 'chiffre', case: { x: 4, y: 4 }, valeur: 2, teinte: 'gain', debut: 0, duree: 60 },
+      // Une avarie de mécanique : un coup sans tireur, il part de la case même.
+      { genre: 'encaisser', unite: 'd', case: { x: 6, y: 6 }, degats: 10, depuis: { x: 6, y: 6 }, debut: 0, duree: 10 },
+      { genre: 'chiffre', case: { x: 6, y: 6 }, valeur: 1, teinte: 'perte', debut: 0, duree: 60 },
+    ],
+    duree: 90,
+  };
+  const fin = hud.jouer(partition);
+  horloge.avancer(35);
+  const racine = scenes(conteneur);
+  const chiffres = racine.children.filter((e) => e.className === 'atlas-chiffre');
+  assert.equal(chiffres.length, 4);
+  const roles = chiffres.map((e) => e.dataset['role']);
+  assert.deepEqual(roles.filter((x) => x !== undefined).sort(), ['coup', 'riposte']);
+  const riposte = chiffres.find((e) => e.dataset['role'] === 'riposte')!;
+  assert.equal(riposte.textContent, '−2', 'le chiffre reste le chiffre');
+  assert.equal(riposte.children.find((e) => e.className === 'etiquette')?.textContent, 'hud.riposte');
+  const coup = chiffres.find((e) => e.dataset['role'] === 'coup')!;
+  assert.equal(coup.children.length, 0, 'un coup seul se lit sans être nommé');
+  const sansRole = chiffres.filter((e) => e.dataset['role'] === undefined);
+  assert.equal(sansRole.length, 2, 'ni la réparation ni l’avarie ne sont des coups');
+  for (const e of sansRole) assert.equal(e.children.length, 0);
+  horloge.avancer(FIN_DES_SCENES);
+  await fin;
+  hud.demonter();
+});
+
+test('l’écran de combat nomme le coup et la riposte, et se tait quand un camp n’encaisse rien', async () => {
+  const etat = partie();
+  const [a, c] = etat.unites;
+  assert.ok(a && c);
+  const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 0, y: 0 }));
+  const duel = (pvAttaquant: number, riposte: boolean): Partition => ({
+    gestes: [{
+      genre: 'duel',
+      attaquant: { unite: a.id, type: a.type, camp: a.camp, case: { x: a.x, y: a.y }, pvAvant: 10, pvApres: pvAttaquant },
+      cible: { unite: c.id, type: c.type, camp: c.camp, case: { x: c.x, y: c.y }, pvAvant: 10, pvApres: 6 },
+      riposte, debut: 0, duree: 120,
+    }],
+    duree: 120,
+  });
+
+  const fin = hud.jouer(duel(8, true));
+  horloge.avancer(10);
+  const camps = (): FauxElement[] => {
+    const ecran = scenes(conteneur).children.find((e) => e.className === 'atlas-combat')!;
+    const cadre = ecran.children.find((e) => e.className === 'cadre')!;
+    return cadre.children.find((e) => e.className === 'camps')!.children;
+  };
+  const [attaquant, , cible] = camps();
+  assert.equal(cible!.children.find((e) => e.className === 'role')?.textContent, 'hud.coup');
+  assert.equal(attaquant!.children.find((e) => e.className === 'role')?.textContent, 'hud.riposte');
+  horloge.avancer(FIN_DES_SCENES);
+  await fin;
+
+  // Sans riposte, l'attaquant n'a rien encaissé : pas de chiffre, pas de mot.
+  const fin2 = hud.jouer(duel(10, false));
+  horloge.avancer(10);
+  const [sansRiposte, , frappee] = camps();
+  assert.equal(sansRiposte!.children.find((e) => e.className === 'role'), undefined);
+  assert.equal(frappee!.children.find((e) => e.className === 'role')?.textContent, 'hud.coup');
+  horloge.avancer(FIN_DES_SCENES);
+  await fin2;
+  hud.demonter();
+});
+
+test('la fiche dit ce que le terrain fait à la défense, et qu’une unité blessée frappe moins fort', () => {
+  const etat = surGrille(['PPP', 'PPP', 'PPP'], [{ camp: 0, type: 'infanterie', x: 0, y: 0 }]);
+  const blessee = etat.unites[0]!;
+  blessee.pv = 47;
+  const { conteneur } = document();
+  const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
+    vue: (): VueJeu => ({ ...vueDe(etat, { x: 0, y: 0 }), selection: blessee.id }),
+    t: (cle, params) => (params
+      ? `${cle}(${Object.entries(params).map(([k, x]) => `${k}=${String(x)}`).join(',')})`
+      : cle),
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => null,
+  });
+  // La fiche est repliée par défaut : c'est le bouton du panneau qui l'ouvre.
+  const panneau = emplacements(conteneur).get('inspection')!;
+  assert.ok(!panneau.innerHTML.includes('fiche.abris'), 'repliée, la fiche ne dit rien');
+  cliquer(conteneur, 'fiche');
+  const html = emplacements(conteneur).get('inspection')!.innerHTML;
+  assert.ok(html.includes('fiche.abris'), 'le bloc des abris est là');
+  assert.ok(html.includes('fiche.degats_reference'), 'et la note qui dit dans quelles conditions valent les dégâts');
+  assert.ok(html.includes(`fiche.blessee(n=${pvAffiches(blessee.pv)})`), 'blessée, elle frappe moins fort');
+  assert.match(html, /class="abri" data-defense="0"/, 'le découvert est un palier comme un autre');
+  const montagne = Math.round((1 - facteurTerrain(CAT.terrains['montagne']!.defense)) * 100);
+  assert.ok(html.includes(`hud.defense_part(n=${montagne})`), 'chaque palier dit ce qu’il retire');
+  hud.demonter();
 });

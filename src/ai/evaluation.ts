@@ -16,7 +16,7 @@ import type {
 // détour par le baril de réexports, qui se paie cher dans une boucle serrée.
 import { degatsBase, produitesPar } from '../engine/catalogue';
 import { brouillardActif } from '../engine/climat/index';
-import { degatsArme } from '../engine/regles/combat';
+import { degatsArme, ECHELLE_DEGATS, facteurTerrain } from '../engine/regles/combat';
 import { dansCarte, terrainBrut, terrainLogique } from '../engine/hooks';
 import { batimentsDe, producteursDe } from '../engine/regles/economie';
 import { multiplicateur, multiplicateurFonds } from '../engine/regles/modificateurs';
@@ -56,11 +56,15 @@ export function degatsAttendus(
   if (base <= 0) return 0;
   const terrain = terrainLogique(etat, cat, def);
   const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
-  const fTerrain = 1 - 0.05 * etoiles * (pvAffiches(def.pv) / 10);
+  // L'échelle et le terrain viennent du moteur (8 septembre 2026) : l'IA les
+  // recopiait, et sa copie a menti dès que la formule a changé — elle jugeait
+  // ses échanges deux fois trop meurtriers et se jetait sur tout.
+  const fTerrain = facteurTerrain(etoiles);
   const mAtt = multiplicateur(etat, cat, att, 'attaque');
   const mDef = multiplicateur(etat, cat, def, 'defense');
   void depuis;
-  return Math.min(def.pv, Math.max(1, Math.round(base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain / mDef)));
+  const d = ECHELLE_DEGATS * base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain / mDef;
+  return Math.min(def.pv, Math.max(1, Math.round(d)));
 }
 
 /** Valeur en fonds d'une unité, au prorata de ses PV. */

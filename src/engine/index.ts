@@ -84,7 +84,7 @@ export {
   verifierChemin, voisines, type Portee, type VerdictChemin,
 } from './regles/mouvement';
 export {
-  calculerDegats, crediterJauge, estIndirecte, JAUGE_PAR_PV_INFLIGE,
+  calculerDegats, crediterJauge, ECHELLE_DEGATS, estIndirecte, facteurTerrain, JAUGE_PAR_PV_INFLIGE,
   degatsArme, JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
   tireSansMunitions, type PrevisionDuel,
 } from './regles/combat';

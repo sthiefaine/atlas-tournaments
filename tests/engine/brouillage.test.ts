@@ -55,8 +55,12 @@ test('une station radar adverse brouille à douze cases et voit à cinq pour son
 
 test('un drone mis hors jeu au-dessus d’un bâtiment adverse révèle la production de ce camp', () => {
   // L'antiaérien du camp 1 abat le drone du camp 0 posé sur la ville du camp 1.
+  // Le drone est déjà entamé : depuis l'échelle du 8 septembre 2026 (§5.1), un
+  // anti-aérien ne met plus personne hors jeu d'une seule salve — sur une ville
+  // (E = 3) il en retire 53. Ce qui est testé ici est la révélation, pas le
+  // nombre de salves qu'il faut pour l'obtenir.
   const scene = scenePersonnalisee(['HPPPH', 'PPCPP'], { '0,0': 0, '4,0': 1, '2,1': 1 }, [
-    { camp: 0, type: 'drone', x: 2, y: 1 },
+    { camp: 0, type: 'drone', x: 2, y: 1, pv: 40 },
     { camp: 1, type: 'antiair', x: 3, y: 1 },
   ]);
   let e = creerPartie(scene, CAT3, 'test');

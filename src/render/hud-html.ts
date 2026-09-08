@@ -16,7 +16,9 @@
  */
 
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
-import { consommationParTour, prevoirDuel, pvAffiches, terrainLogique, uniteParId } from '../engine/index';
+import {
+  consommationParTour, facteurTerrain, prevoirDuel, pvAffiches, terrainLogique, uniteParId,
+} from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type { CampId, Case, CleTerrain, CleUnite, Meteo, Silhouette } from '../schemas/types';
 import type { Ambiance } from './ambiance';
@@ -232,6 +234,14 @@ const STYLE = `
 .atlas-hud .duel-chiffres em{font-style:normal;font-size:12px;color:#9fb3b6}
 .atlas-hud .duel-chiffres b{color:#ff8e83}
 .atlas-hud .duel-camp[data-perte='aucune'] .duel-chiffres b{color:#8ee0a4}
+/* Le rôle de la ligne : lequel des deux chiffres est le coup, lequel la riposte. */
+.atlas-hud .duel-chiffres .role{font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#9fb3b6;align-self:center}
+.atlas-hud .duel-camp[data-role='riposte'] .duel-chiffres .role{color:var(--signal)}
+/* Le terrain sous l'unité, avec ses étoiles : d'où vient l'écart entre deux échanges qui se ressemblent. */
+.atlas-hud .duel-terrain{display:block;margin-top:2px;font-size:11px;font-weight:700;color:#9fb3b6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.atlas-hud .duel-terrain .etoiles{font-size:10px}
+.atlas-hud .duel-terrain .part{margin-left:5px;font-style:normal;font-weight:850;color:#8ee0a4}
+.atlas-hud .duel-note{margin:0;padding:5px 12px 8px;border-top:1px solid #ffffff14;font-size:11.5px;font-weight:700;color:#c8d7da}
 .atlas-hud .pv{display:flex;gap:2px;height:6px;margin-top:5px;min-width:74px}
 .atlas-hud .pv i{flex:1;background:#ffffff1f}
 .atlas-hud .pv i.plein{background:#8ee0a4}
@@ -324,6 +334,14 @@ const STYLE = `
 .atlas-hud .fiche .fort .duel i{color:var(--f-fort)}
 .atlas-hud .fiche .danger .duel i{color:var(--f-danger)}
 .atlas-hud .fiche .puce{display:inline-flex;align-items:center;padding:3px 8px;background:var(--f-plaque);border:1px solid var(--f-plaque-bord);font-weight:700;white-space:nowrap}
+/* Un palier d'abri : les étoiles à gauche, les terrains de ce palier à droite, qui reviennent à la ligne. */
+.atlas-hud .fiche .abris .corps{display:block}
+.atlas-hud .fiche .abri{display:flex;align-items:baseline;gap:7px;padding:2px 0;font-weight:700}
+.atlas-hud .fiche .abri .etoiles{flex:0 0 auto;font-style:normal;letter-spacing:.1em;color:var(--f-encre)}
+.atlas-hud .fiche .abri .part{flex:0 0 auto;font-style:normal;font-weight:850;font-variant-numeric:tabular-nums;color:var(--f-fort)}
+.atlas-hud .fiche .abri[data-defense='0'] .etoiles{color:var(--f-doux)}
+.atlas-hud .fiche .abri>span{min-width:0;color:var(--f-doux)}
+.atlas-hud .fiche .note.reference{margin:0 0 8px}
 .atlas-hud .fiche .deux{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
 .atlas-hud .fiche .note{font-size:12px;font-weight:700;color:var(--f-doux)}
 /* La consommation par tour : le signe du carburant, puis le chiffre, sur sa ligne. */
@@ -468,6 +486,19 @@ function iconeOrdre(type: string): string {
 
 /** Sursis du panneau d'inspection : le temps d'atteindre son bouton. */
 const MS_SURSIS_INSPECTION = 1500;
+
+/** Le barreau des étoiles de défense : quatre crans, comme la fiche de terrain. */
+export const ETOILES_MAX = 4;
+
+/**
+ * Les étoiles de défense d'un terrain, pleines puis creuses. Une **ponctuation**,
+ * comme le « − » d'un chiffre : rien à traduire, et c'est le libellé
+ * `hud.defense` qui porte les mots pour un lecteur d'écran.
+ */
+export function etoilesDefense(defense: number): string {
+  const n = Math.max(0, Math.min(ETOILES_MAX, Math.round(defense)));
+  return `${'★'.repeat(n)}${'☆'.repeat(ETOILES_MAX - n)}`;
+}
 
 /** Une vignette d'unité à peindre après insertion : le sprite vectoriel partagé. */
 interface Vignette { id: string; emplacement: string; silhouette: Silhouette; camp: CampId; taille: number }
@@ -747,9 +778,7 @@ export function monterHudHtml(
     if (terrain === null) return '';
     const type = unite ? v.catalogue.unites[unite.type] : undefined;
     const fiche = v.catalogue.terrains[terrain];
-    const etoiles = Math.max(0, Math.min(4, fiche?.defense ?? 0));
-    const defense = `<span class="etoiles" aria-label="${ech(api.t('hud.defense', { n: etoiles }))}">`
-      + `${'\u2605'.repeat(etoiles)}${'\u2606'.repeat(4 - etoiles)}</span>`;
+    const defense = barreauDefense(fiche?.defense ?? 0);
     const titre = unite && type
       ? nomUnite(v.locale, v.catalogue, unite.type)
       : nomTerrain(v.locale, v.catalogue, terrain);
@@ -826,16 +855,61 @@ export function monterHudHtml(
       + `</div>`;
   }
 
-  /** Une ligne de duel : vignette, nom, PV avant → après, jauge. */
-  function ligneDuel(v: VueJeu, unite: Unite, apres: number): string {
+  /** Le barreau d'étoiles d'un terrain, avec ses mots pour un lecteur d'écran. */
+  function barreauDefense(defense: number): string {
+    const n = Math.max(0, Math.min(ETOILES_MAX, Math.round(defense)));
+    return `<span class="etoiles" aria-label="${ech(api.t('hud.defense', { n }))}">${etoilesDefense(n)}</span>`;
+  }
+
+  /**
+   * Ce que le terrain retire aux dégâts, en pourcentage : « −20 % ». `facteur`
+   * est celui du moteur (`facteurTerrain`) — le HUD ne fait que le dire en pour
+   * cent, il ne le calcule pas. À découvert, rien à annoncer : chaîne vide.
+   */
+  function partTerrain(facteur: number): string {
+    const evite = Math.round((1 - facteur) * 100);
+    return evite <= 0 ? '' : `<em class="part">${ech(api.t('hud.defense_part', { n: evite }))}</em>`;
+  }
+
+  /**
+   * Le terrain d'une case, sa défense et ce qu'elle retire : « Forêt ★★☆☆ −20 % ».
+   * C'est la moitié de la formule de combat que le HUD ne montrait nulle part —
+   * deux unités identiques, l'une sur route et l'autre en forêt, n'encaissent
+   * pas la même chose, et rien ne le disait.
+   */
+  function terrainDuel(v: VueJeu, c: Case): string {
+    const terrain = terrainLogique(v.etat, v.catalogue, c);
+    if (terrain === null) return '';
+    const defense = v.catalogue.terrains[terrain]?.defense ?? 0;
+    return `<span class="duel-terrain" data-defense="${defense}">`
+      + `${ech(nomTerrain(v.locale, v.catalogue, terrain))} ${barreauDefense(defense)}`
+      + partTerrain(facteurTerrain(defense)) + `</span>`;
+  }
+
+  /**
+   * Une ligne de duel : vignette, nom, terrain et défense, PV avant → après,
+   * jauge. `role` dit **quel coup** cette ligne encaisse — le coup pour la
+   * cible, la riposte pour l'attaquant : deux chiffres très différents dans le
+   * même panneau sont incompréhensibles tant qu'on ne sait pas lequel est
+   * lequel. `sur` est la case d'où l'unité encaisse : pour l'attaquant, c'est
+   * son **arrivée**, pas sa case de départ, puisque c'est là que la riposte le
+   * trouvera — et c'est ce terrain-là que le moteur lit.
+   */
+  function ligneDuel(
+    v: VueJeu, unite: Unite, apres: number, role: 'coup' | 'riposte', sur: Case,
+  ): string {
     const type = v.catalogue.unites[unite.type];
     if (!type) return '';
     const avant = pvAffiches(unite.pv);
-    return `<div class="duel-camp" data-perte="${apres >= avant ? 'aucune' : 'oui'}">`
+    const touche = apres < avant;
+    return `<div class="duel-camp" data-perte="${touche ? 'oui' : 'aucune'}" data-role="${role}">`
       + vignette(type.silhouette, unite.camp, 36)
       + `<span style="min-width:0"><span class="tt" style="display:block">${ech(nomUnite(v.locale, v.catalogue, unite.type))}</span>`
+      + terrainDuel(v, sur)
       + jaugePv(avant, apres)
-      + `</span><span class="duel-chiffres">${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
+      + `</span><span class="duel-chiffres">`
+      + (touche ? `<em class="role">${ech(api.t(role === 'riposte' ? 'hud.riposte' : 'hud.coup'))}</em>` : '')
+      + `${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
   }
 
   /**
@@ -844,7 +918,20 @@ export function monterHudHtml(
    * sans laquelle une attaque est un pari plutôt qu'une décision.
    *
    * La prévision est la valeur **nominale** (`prevoirDuel`) : le tirage réel
-   * s'en écarte de ±5 %, jamais davantage.
+   * s'en écarte de ±5 %, jamais davantage. Rien n'y est recalculé — le panneau
+   * ne fait que montrer ce que le moteur vient de rejouer sans aléa.
+   *
+   * Trois choses s'y lisent que le joueur ne pouvait pas deviner :
+   *
+   * - **le terrain de chacun**, avec ses étoiles : c'est de là que vient
+   *   l'essentiel de l'écart entre deux échanges qui se ressemblent ;
+   * - **quel chiffre est le coup et quel chiffre est la riposte** ;
+   * - **que la riposte part d'une unité déjà touchée** : le moteur la calcule
+   *   sur les PV restants, ce qui rend le premier coup rentable. Sans cette
+   *   ligne, la riposte semble arbitraire.
+   *
+   * Le cas « pas de riposte » est dit en clair : il affichait « Riposte −0 PV »,
+   * ce qui se lit comme une riposte gratuite plutôt que comme son absence.
    */
   function panneauDuel(v: VueJeu): string {
     const visee = v.visee;
@@ -857,14 +944,25 @@ export function monterHudHtml(
     const cible = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
     if (!attaquant || !cible) return '';
     const p = prevoirDuel(v.etat, v.catalogue, attaquant, cible, visee.depuis);
-    const issue = api.t(p.cibleHorsJeu ? 'hud.duel_hors_jeu' : 'hud.duel_riposte', {
-      n: pvAffiches(attaquant.pv) - p.pvAttaquant,
-    });
-    return `<div class="p duel"${ancrer(c, 150)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
+    const issue = p.cibleHorsJeu
+      ? api.t('hud.duel_hors_jeu')
+      : (p.riposte > 0
+        ? api.t('hud.duel_riposte', { n: pvAffiches(attaquant.pv) - p.pvAttaquant })
+        : api.t('hud.duel_sans_riposte'));
+    // Ce que la note dit, dans l'ordre de ce qui compte : une cible hors jeu ne
+    // riposte pas et n'a pas besoin qu'on l'explique ; une riposte se lit en
+    // sachant à combien de PV elle part ; une absence de riposte se dit.
+    const note = p.cibleHorsJeu
+      ? ''
+      : (p.riposte > 0
+        ? api.t('hud.duel_riposte_a', { n: p.pvCible })
+        : api.t('hud.duel_sans_riposte_note'));
+    return `<div class="p duel"${ancrer(c, 208)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
       + `<div class="duel-entete">${iconeOrdre('attaquer')}<span>${ech(api.t('hud.duel'))}</span>`
       + `<span class="issue">${ech(issue)}</span></div>`
-      + ligneDuel(v, cible, p.pvCible)
-      + ligneDuel(v, attaquant, p.pvAttaquant)
+      + ligneDuel(v, cible, p.pvCible, 'coup', c)
+      + ligneDuel(v, attaquant, p.pvAttaquant, 'riposte', visee.depuis)
+      + (note === '' ? '' : `<p class="duel-note">${ech(note)}</p>`)
       + '</div>';
   }
 
@@ -1056,6 +1154,24 @@ export function monterHudHtml(
         + (f.transport.ravitaille ? `<p class="avert bon">${ech(api.t('fiche.ravitaille_cale'))}</p>` : '')
         + `</section>`;
 
+    // Les deux règles que la table de dégâts ne dit pas, et qui expliquent à
+    // elles seules qu'un échange entre deux unités identiques ne rende pas deux
+    // fois le même chiffre. Aucun coefficient n'est écrit ici : les chiffres
+    // sont au moteur, la fiche dit seulement **dans quelles conditions** ceux
+    // qu'elle affiche valent.
+    const reference = `<p class="note reference">${ech(api.t('fiche.degats_reference'))}</p>`
+      + (f.blessee ? `<p class="avert">${ech(api.t('fiche.blessee', { n: f.pv ?? 0 }))}</p>` : '');
+
+    // Ce que le terrain fait à sa défense, par palier d'étoiles — du plus
+    // couvert au découvert. On ne cite que les cases où elle peut se tenir.
+    const abris = f.abris.length === 0 ? '' : `<section class="bloc abris">`
+      + `<h4><span>${ech(api.t('fiche.abris'))}</span></h4><div class="corps">`
+      + f.abris.map((a) => `<span class="abri" data-defense="${a.etoiles}">`
+        + `<em class="etoiles" aria-label="${ech(api.t('hud.defense', { n: a.etoiles }))}">${etoilesDefense(a.etoiles)}</em>`
+        + partTerrain(a.facteur)
+        + `<span>${ech(a.terrains.map(nomT).join(' · '))}</span></span>`).join('')
+      + `</div></section>`;
+
     return `<div class="fiche">`
       + chiffres
       + consommation
@@ -1064,6 +1180,8 @@ export function monterHudHtml(
       + cale
       + bloc('fiche.forte', duels(f.forte), 'fort')
       + bloc('fiche.craint', duels(f.craint), 'danger')
+      + reference
+      + abris
       + `<div class="deux">`
       + bloc('fiche.rapide', terrains(f.terrainsRapides))
       + (f.terrainsInterdits.length > 0

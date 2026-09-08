@@ -10,17 +10,18 @@
  *
  * **Rien n'est réécrit ici.** Les dégâts viennent de `catalogue.degats`, les
  * coûts de terrain de `coutBase` — donc les traits `vol` et `tout_terrain`
- * sont pris en compte sans qu'on ait à y penser —, et les malus de météo de
- * `surcoutMeteo` et `facteurMouvementMeteo`. Une règle qui change au moteur
- * change dans la fiche le jour même ; c'est tout l'intérêt de ne rien recopier.
+ * sont pris en compte sans qu'on ait à y penser —, les malus de météo de
+ * `surcoutMeteo` et `facteurMouvementMeteo`, et ce qu'un abri retire aux dégâts
+ * de `facteurTerrain`. Une règle qui change au moteur change dans la fiche le
+ * jour même ; c'est tout l'intérêt de ne rien recopier.
  *
  * Ce fichier est **pur** : ni DOM, ni horloge, ni état de partie. Il se vérifie
  * comme du moteur.
  */
 
 import {
-  consommationParTour, coutBase, degatsArme, degatsBase, facteurMouvementMeteo, porte, surcoutMeteo,
-  tireSansMunitions, type Catalogue, type Unite,
+  consommationParTour, coutBase, degatsArme, degatsBase, facteurMouvementMeteo, facteurTerrain, porte,
+  pvAffiches, surcoutMeteo, tireSansMunitions, type Catalogue, type Unite,
 } from '../engine/index';
 import {
   CLES_TERRAIN, METEOS, type CleTerrain, type CleUnite, type Meteo, type Trait, type UnitType,
@@ -58,6 +59,37 @@ export interface GeneMeteo {
   effet: 'case' | 'bride';
 }
 
+/**
+ * Un **palier de défense** : les terrains où cette unité peut se tenir qui
+ * valent le même nombre d'étoiles. Le dernier palier, à zéro étoile, est le
+ * découvert — et c'est celui qui manquait à l'écran : deux unités identiques,
+ * l'une sur route et l'autre en forêt, n'encaissent pas la même chose, et rien
+ * ne le disait.
+ *
+ * Les étoiles sont la donnée du canon (`Terrain.defense`), telle quelle, et le
+ * facteur vient de `facteurTerrain` du moteur : **la conversion des étoiles en
+ * dégâts évités est une règle** (`04-gameplay.md` §5.1), et une seconde copie
+ * finirait par mentir. La fiche demande, elle ne calcule pas.
+ */
+export interface Abri {
+  /** Étoiles de défense du terrain, 0 à 4. */
+  etoiles: number;
+  /**
+   * Ce qu'il reste des dégâts sur ce palier, tel que le moteur le calcule :
+   * `1` à découvert, moins ailleurs. Le HUD en tire le pourcentage évité.
+   */
+  facteur: number;
+  /** Les terrains de ce palier, dans l'ordre du canon. */
+  terrains: readonly CleTerrain[];
+}
+
+/**
+ * Le plein des points de vie **affichés** (`pvAffiches` du moteur rend 1 à 10).
+ * C'est une échelle d'affichage, pas un coefficient de combat : elle sert
+ * seulement à dire « cette unité n'est plus au complet ».
+ */
+export const PV_PLEIN = 10;
+
 /** Tout ce qu'on sait dire d'une unité avant de l'acheter. */
 export interface FicheUnite {
   cle: CleUnite;
@@ -93,6 +125,24 @@ export interface FicheUnite {
   terrainsInterdits: readonly CleTerrain[];
   /** Météos qui la ralentissent. Vide si aucune ne la gêne. */
   meteosGenantes: readonly GeneMeteo[];
+  /**
+   * Ce que le terrain fait à sa défense : les cases qu'elle peut occuper,
+   * groupées par étoiles, du plus couvert au découvert. C'est la moitié de la
+   * formule de combat que la table de dégâts ne dit pas.
+   */
+  abris: readonly Abri[];
+  /**
+   * PV **affichés** de l'unité en jeu (1 à 10) ; `null` pour une fiche de
+   * catalogue, qui ne parle d'aucune unité en particulier.
+   */
+  pv: number | null;
+  /**
+   * Elle a déjà encaissé, donc elle frappe moins fort (`04-gameplay.md` §5.1 :
+   * les dégâts sont mis à l'échelle des points de vie de l'attaquant). C'est la
+   * règle la moins intuitive du jeu, et elle n'était écrite nulle part à
+   * l'écran. Faux pour une fiche de catalogue.
+   */
+  blessee: boolean;
 }
 
 /** Les terrains cités dans la fiche, dans l'ordre où on les lit sur une carte. */
@@ -180,6 +230,28 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite, enJeu?: Unite): FicheU
     if (gene) genantes.push({ meteo, effet: 'case' });
   }
 
+  // Les abris : on ne cite que les cases où l'unité peut réellement se tenir —
+  // une infanterie ne s'abrite pas en pleine mer —, et `coutBase` répond pour
+  // nous, traits compris. Le regroupement par étoiles évite d'aligner dix
+  // pastilles dont sept disent la même chose.
+  const paliers = new Map<number, CleTerrain[]>();
+  for (const t of CLES_TERRAIN) {
+    if (coutBase(cat, t, u.typeMouvement, u) === null) continue;
+    const fiche = cat.terrains[t];
+    if (!fiche) continue;
+    const liste = paliers.get(fiche.defense);
+    if (liste) liste.push(t);
+    else paliers.set(fiche.defense, [t]);
+  }
+  const abris: Abri[] = [...paliers.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([etoiles, terrains]) => ({ etoiles, facteur: facteurTerrain(etoiles), terrains }));
+
+  // Les PV de **cette** unité : la fiche de catalogue ne parle de personne, et
+  // ne peut donc dire ni ses points de vie ni qu'elle est blessée.
+  const sienne = enJeu && enJeu.type === cle ? enJeu : undefined;
+  const pv = sienne ? pvAffiches(sienne.pv) : null;
+
   return {
     cle,
     cout: u.cout,
@@ -200,6 +272,9 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite, enJeu?: Unite): FicheU
     terrainsRapides: rapides,
     terrainsInterdits: interdits,
     meteosGenantes: genantes,
+    abris,
+    pv,
+    blessee: pv !== null && pv < PV_PLEIN,
   };
 }
 

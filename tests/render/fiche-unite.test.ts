@@ -6,13 +6,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  chargerCatalogue, consommationParTour, coutBase, degatsArme, degatsBase, porte, SURCOUT_CARBURANT_FURTIF,
-  surcoutMeteo, tireSansMunitions, type Unite,
+  chargerCatalogue, consommationParTour, coutBase, degatsArme, degatsBase, facteurTerrain, porte,
+  pvAffiches, SURCOUT_CARBURANT_FURTIF, surcoutMeteo, tireSansMunitions, type Unite,
 } from '../../src/engine/index';
 import {
-  alerteCarburant, alerteMunitions, CITES, ficheUnite, PART_CARBURANT_FAIBLE, traitsLisibles,
+  alerteCarburant, alerteMunitions, CITES, ficheUnite, PART_CARBURANT_FAIBLE, PV_PLEIN, traitsLisibles,
 } from '../../src/render/fiche-unite';
-import { CLES_TERRAIN, METEOS, type CleUnite } from '../../src/schemas/index';
+import { CLES_TERRAIN, METEOS, type CleTerrain, type CleUnite } from '../../src/schemas/index';
 
 const CAT = chargerCatalogue();
 const TOUTES = Object.keys(CAT.unites) as CleUnite[];
@@ -319,4 +319,65 @@ test('l’alerte carburant se juge sur la consommation effective : une furtive a
   const char = CAT6.unites['char_leger']!;
   assert.equal(alerteCarburant(char, char.carburant!.max, 0), null);
   assert.equal(alerteCarburant(char, 0, 0), 'rouge');
+});
+
+test('les abris disent ce que le terrain fait à la défense : les cases où l’unité tient, groupées par étoiles', () => {
+  for (const cle of Object.keys(CAT6.unites) as CleUnite[]) {
+    const u = CAT6.unites[cle]!;
+    const f = ficheUnite(CAT6, cle)!;
+    // Un palier par nombre d'étoiles, du plus couvert au découvert, sans doublon.
+    const niveaux = f.abris.map((a) => a.etoiles);
+    assert.deepEqual(niveaux, [...niveaux].sort((a, b) => b - a), `${cle} : les paliers ne sont pas triés`);
+    assert.equal(new Set(niveaux).size, niveaux.length, `${cle} : deux paliers pour le même nombre d’étoiles`);
+    const cites: CleTerrain[] = [];
+    for (const a of f.abris) {
+      // Ce que l'abri retire aux dégâts vient du moteur, jamais d'une seconde
+      // copie de la formule : si `facteurTerrain` change, la fiche suit seule.
+      assert.equal(a.facteur, facteurTerrain(a.etoiles), `palier ${a.etoiles} : facteur recalculé`);
+      for (const t of a.terrains) {
+        cites.push(t);
+        // La donnée vient du canon, jamais d'un calcul de la fiche.
+        assert.equal(a.etoiles, CAT6.terrains[t]!.defense, `${cle} : ${t} mal classé`);
+        // Et on ne cite que les cases où elle peut réellement se tenir.
+        assert.notEqual(coutBase(CAT6, t, u.typeMouvement, u), null, `${cle} ne tient pas sur ${t}`);
+      }
+    }
+    // Toutes les cases praticables y sont, et elles seules : un terrain
+    // interdit n'abrite personne.
+    const praticables = CLES_TERRAIN.filter((t) => coutBase(CAT6, t, u.typeMouvement, u) !== null);
+    assert.deepEqual([...cites].sort(), [...praticables].sort(), `${cle} : la liste des abris a dérivé`);
+    for (const t of f.terrainsInterdits) assert.ok(!cites.includes(t), `${cle} : ${t} est interdit et pourtant cité`);
+  }
+
+  // Les deux cas de la remarque du propriétaire : la route ne protège pas, la
+  // forêt oui. Les chiffres restent ceux du canon — si l'équilibrage les
+  // change, ce test le dira sans mentir sur la règle.
+  const inf = ficheUnite(CAT6, 'infanterie')!;
+  const palierDe = (t: CleTerrain): number | undefined => inf.abris.find((a) => a.terrains.includes(t))?.etoiles;
+  assert.equal(palierDe('route'), CAT6.terrains['route']!.defense);
+  assert.equal(palierDe('foret'), CAT6.terrains['foret']!.defense);
+  assert.ok((palierDe('foret') ?? 0) > (palierDe('route') ?? 0), 'la forêt protège plus que la route');
+  const decouvert = inf.abris.find((a) => a.terrains.includes('route'))!;
+  assert.equal(decouvert.facteur, 1, 'à découvert, le terrain ne retire rien');
+  assert.ok(inf.abris.find((a) => a.terrains.includes('foret'))!.facteur < 1, 'la forêt en retire');
+  assert.equal(palierDe('mer'), undefined, 'l’infanterie ne s’abrite pas en mer');
+});
+
+test('la fiche d’une unité en jeu dit ses PV et si elle est blessée ; celle du catalogue ne parle de personne', () => {
+  const pleine = ficheUnite(CAT6, 'infanterie')!;
+  assert.equal(pleine.pv, null, 'une fiche de catalogue n’a pas de points de vie');
+  assert.equal(pleine.blessee, false);
+
+  const intacte = ficheUnite(CAT6, 'infanterie', enJeu('infanterie'))!;
+  assert.equal(intacte.pv, PV_PLEIN);
+  assert.equal(intacte.blessee, false, 'au plein, rien à signaler');
+
+  const touchee = ficheUnite(CAT6, 'infanterie', enJeu('infanterie', { pv: 47 }))!;
+  assert.equal(touchee.pv, pvAffiches(47));
+  assert.equal(touchee.blessee, true, 'blessée : elle frappe moins fort, et il faut le dire');
+
+  // Une unité d'un autre type passée par erreur ne se fait pas passer pour celle-ci.
+  const autre = ficheUnite(CAT6, 'infanterie', enJeu('char_leger', { pv: 12 }))!;
+  assert.equal(autre.pv, null);
+  assert.equal(autre.blessee, false);
 });

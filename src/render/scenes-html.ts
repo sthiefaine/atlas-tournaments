@@ -124,14 +124,72 @@ export function chiffreSigne(valeur: number, teinte: 'perte' | 'gain'): string {
   return `${teinte === 'perte' ? '−' : '+'}${valeur}`;
 }
 
+/** Le rôle d'un chiffre dans un échange : le coup porté, ou le coup rendu. */
+export type RoleCoup = 'coup' | 'riposte';
+
+/** Deux cases sont la même. */
+function memeCase(a: Case, b: Case): boolean {
+  return a.x === b.x && a.y === b.y;
+}
+
+/**
+ * Quel chiffre flottant est un **coup**, et lequel est une **riposte**.
+ *
+ * Le propriétaire a vu deux infanteries pleines s'échanger 5 PV d'un côté et
+ * 8 de l'autre et a trouvé cela incohérent : rien à l'écran ne disait que le
+ * second chiffre était un coup **rendu**, tiré par une unité déjà touchée et
+ * depuis un autre terrain. Deux chiffres nus se lisent comme deux mesures de la
+ * même chose ; ils ne le sont pas.
+ *
+ * La partition ne porte pas ce rôle — `Geste` ne connaît qu'un chiffre et une
+ * teinte —, il se **lit** donc dans sa structure, et la définition employée est
+ * celle du jeu : *une riposte est un coup rendu à qui vient de tirer*. Chaque
+ * chiffre est apparié au `encaisser` que le réalisateur écrit avec lui (même
+ * case, même instant) ; l'unité qui encaisse est une riposteuse si elle avait
+ * elle-même tiré **plus tôt dans la salve**, de cette case vers celle d'où le
+ * coup lui revient. Le rang dans la liste, et non l'instant, fait foi : sous
+ * « animations réduites » tous les gestes commencent à zéro, et une règle
+ * fondée sur l'horloge y perdrait la distinction au moment où elle compte
+ * encore.
+ *
+ * Un coup sans tireur — la mécanique d'une région, une avarie — n'est ni l'un
+ * ni l'autre : son `encaisser` part de la case même, et il ne reçoit pas de
+ * rôle. Un chiffre sans `encaisser` non plus : une réparation n'est pas un coup.
+ *
+ * Pure et testable sans DOM.
+ */
+export function rolesDesChiffres(gestes: readonly Geste[]): Map<Geste, RoleCoup> {
+  const roles = new Map<Geste, RoleCoup>();
+  for (const g of gestes) {
+    if (g.genre !== 'chiffre') continue;
+    const rang = gestes.findIndex(
+      (e) => e.genre === 'encaisser' && e.debut === g.debut && memeCase(e.case, g.case),
+    );
+    const encaisse = rang < 0 ? undefined : gestes[rang];
+    if (!encaisse || encaisse.genre !== 'encaisser') continue;
+    if (memeCase(encaisse.depuis, encaisse.case)) continue;
+    const rendu = gestes.slice(0, rang).some((t) => t.genre === 'tirer'
+      && t.unite === encaisse.unite
+      && memeCase(t.depuis, encaisse.case)
+      && memeCase(t.vers, encaisse.depuis));
+    roles.set(g, rendu ? 'riposte' : 'coup');
+  }
+  return roles;
+}
+
 /** La feuille de style des scènes, injectée une seule fois par document. */
 const STYLE = `
 .atlas-scenes{position:absolute;inset:0;z-index:8;pointer-events:none;font:14px/1.3 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f;--gain:#8ee0a4;--duree:900ms}
 .atlas-scenes *{box-sizing:border-box}
 /* Le chiffre : ancré sur la case, il monte et s'efface. La durée vient du geste. */
-.atlas-chiffre{position:absolute;transform:translate(-50%,-100%);font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 2px 0 #0b1a22,0 0 6px #0b1a22cc;animation:atlas-chiffre var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
+.atlas-chiffre{position:absolute;transform:translate(-50%,-100%);text-align:center;font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 2px 0 #0b1a22,0 0 6px #0b1a22cc;animation:atlas-chiffre var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}
 .atlas-chiffre[data-teinte='perte']{color:var(--alerte-grave)}
 .atlas-chiffre[data-teinte='gain']{color:var(--gain)}
+/* La riposte porte son mot : un peu plus petite que le coup, avec l'étiquette
+   dans la couleur du signal — deux chiffres nus se lisent comme deux mesures
+   de la même chose, et ce n'en sont pas. */
+.atlas-chiffre[data-role='riposte']{font-size:19px}
+.atlas-chiffre .etiquette{display:block;margin-top:1px;font-style:normal;font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:var(--signal);text-shadow:0 1px 0 #0b1a22}
 .atlas-chiffre[data-fixe='oui']{animation:none;translate:0 -${MONTEE_CHIFFRE / 2}px}
 @keyframes atlas-chiffre{0%{opacity:0;translate:0 6px;scale:.7}14%{opacity:1;translate:0 0;scale:1.08}30%{scale:1}72%{opacity:1}100%{opacity:0;translate:0 -${MONTEE_CHIFFRE}px}}
 /* Le « ! » d'embuscade : ancré sur la case comme un chiffre, plus gros, dans la
@@ -164,6 +222,9 @@ const STYLE = `
 .atlas-combat .chiffres em{font-style:normal;font-size:12px;color:#9fb3b6}
 .atlas-combat .chiffres b{color:#9fb3b6;transition:color .18s}
 .atlas-combat .coup{min-height:1.3em;font-size:26px;font-weight:900;color:var(--alerte-grave);font-variant-numeric:tabular-nums;opacity:0;transform:translateY(6px);transition:opacity .16s,transform .16s}
+/* Le mot qui nomme le chiffre : « Coup » du côté de la cible, « Riposte » du côté de l'attaquant. Il apparaît avec lui. */
+.atlas-combat .camp .role{font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9db3b6;opacity:0;transform:translateY(6px);transition:opacity .16s,transform .16s}
+.atlas-combat .attaquant .role{color:var(--signal)}
 .atlas-combat .contre{display:flex;align-items:center;justify-content:center;width:40px;color:var(--signal)}
 .atlas-combat .contre svg{width:28px;height:28px}
 .atlas-combat .indice{padding:0 14px 10px;text-align:center;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9db3b6}
@@ -171,8 +232,8 @@ const STYLE = `
    chacune allume est cumulatif — un coup encaissé ne se ré-efface pas. */
 .atlas-combat[data-etape='coup'] .cible canvas,.atlas-combat[data-etape='riposte'] .cible canvas,.atlas-combat[data-etape='fin'] .cible canvas{filter:brightness(1.6) saturate(.6)}
 .atlas-combat[data-etape='riposte'] .attaquant canvas,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant canvas{filter:brightness(1.6) saturate(.6)}
-.atlas-combat[data-etape='coup'] .cible .coup,.atlas-combat[data-etape='riposte'] .cible .coup,.atlas-combat[data-etape='fin'] .cible .coup{opacity:1;transform:none}
-.atlas-combat[data-etape='riposte'] .attaquant .coup,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant .coup{opacity:1;transform:none}
+.atlas-combat[data-etape='coup'] .cible .coup,.atlas-combat[data-etape='riposte'] .cible .coup,.atlas-combat[data-etape='fin'] .cible .coup,.atlas-combat[data-etape='coup'] .cible .role,.atlas-combat[data-etape='riposte'] .cible .role,.atlas-combat[data-etape='fin'] .cible .role{opacity:1;transform:none}
+.atlas-combat[data-etape='riposte'] .attaquant .coup,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant .coup,.atlas-combat[data-etape='riposte'] .attaquant .role,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant .role{opacity:1;transform:none}
 .atlas-combat[data-etape='coup'] .cible .chiffres b,.atlas-combat[data-etape='riposte'] .chiffres b,.atlas-combat[data-etape='fin'] .chiffres b{color:var(--papier)}
 .atlas-combat[data-etape='riposte'] .cible canvas{filter:none}
 /* Le splash de pouvoir : bandes, buste qui entre par son côté, nom du pouvoir, lueur. */
@@ -347,7 +408,7 @@ export function monterScenes(
   // Les quatre scènes
   // -------------------------------------------------------------------------
 
-  function chiffre(g: Extract<Geste, { genre: 'chiffre' }>): Effet {
+  function chiffre(g: Extract<Geste, { genre: 'chiffre' }>, role: RoleCoup | null): Effet {
     const fixe = g.duree === 0;
     let noeud: HTMLElement | null = null;
     const placer = (): void => {
@@ -368,10 +429,20 @@ export function monterScenes(
         noeud = doc.createElement('div');
         noeud.className = 'atlas-chiffre';
         noeud.dataset['teinte'] = g.teinte;
+        if (role) noeud.dataset['role'] = role;
         if (fixe) noeud.dataset['fixe'] = 'oui';
         noeud.style.setProperty('--duree', `${g.duree}ms`);
         noeud.setAttribute('aria-hidden', 'true');
         noeud.textContent = chiffreSigne(g.valeur, g.teinte);
+        // Une riposte se dit. Un coup, non : un chiffre seul au-dessus d'une
+        // case se lit comme le coup qu'on vient de porter, et l'étiqueter
+        // n'apprendrait rien tout en encombrant l'écran à chaque échange.
+        if (role === 'riposte') {
+          const etiquette = doc.createElement('em');
+          etiquette.className = 'etiquette';
+          etiquette.textContent = api.t('hud.riposte');
+          noeud.appendChild(etiquette);
+        }
         placer();
         return noeud;
       },
@@ -461,9 +532,19 @@ export function monterScenes(
           chiffres.className = 'chiffres';
           chiffres.innerHTML = `${ech(String(u.pvAvant))}<em>&rarr;</em><b>${ech(String(u.pvApres))}</b>`;
           el.appendChild(chiffres);
+          const perte = u.pvAvant - u.pvApres;
+          // Lequel des deux chiffres est le coup, lequel la riposte : sur cet
+          // écran, la cible encaisse le coup, et l'attaquant ne peut perdre des
+          // PV qu'au coup rendu. Sans ces deux mots, deux chiffres très
+          // différents se lisent comme une incohérence.
+          if (perte > 0) {
+            const etiquette = doc.createElement('span');
+            etiquette.className = 'role';
+            etiquette.textContent = api.t(role === 'cible' ? 'hud.coup' : 'hud.riposte');
+            el.appendChild(etiquette);
+          }
           const coup = doc.createElement('b');
           coup.className = 'coup';
-          const perte = u.pvAvant - u.pvApres;
           // L'attaquant qui n'encaisse rien n'a rien à afficher ; la place reste.
           coup.textContent = perte > 0 ? chiffreSigne(perte, 'perte') : '';
           el.appendChild(coup);
@@ -559,8 +640,9 @@ export function monterScenes(
     // Une partition qui en suit une autre coupe la précédente : deux écrans de
     // combat superposés ne se liraient pas.
     terminer();
+    const roles = rolesDesChiffres(partition.gestes);
     for (const g of partition.gestes) {
-      if (g.genre === 'chiffre') effets.push(chiffre(g));
+      if (g.genre === 'chiffre') effets.push(chiffre(g, roles.get(g) ?? null));
       else if (g.genre === 'surprise') effets.push(surprise(g));
       else if (g.genre === 'duel') effets.push(duel(g));
       else if (g.genre === 'pouvoir') effets.push(pouvoir(g));

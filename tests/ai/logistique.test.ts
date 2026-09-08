@@ -70,6 +70,11 @@ test('un char à sec attaque un char adjacent quand rien de mieux n’existe', (
   // (`degatsSecondaire`) : c'est peu, mais c'est mieux que rien — face à un char
   // lui aussi à sec, qui ne riposte qu'à la mitrailleuse. Face à un char plein,
   // la riposte au canon rend l'échange perdant, et l'IA s'abstient : c'est voulu.
+  //
+  // La cible est **entamée** depuis l'échelle du 8 septembre 2026 : entre deux
+  // chars intacts et à sec, la mitrailleuse rend exactement autant qu'elle
+  // reçoit (9 contre 9 sur plaine), et une IA qui refuse un échange nul a
+  // raison. C'est l'avantage réel qu'on vérifie ici, pas l'agressivité.
   const e = partie(PLAINE, {}, [
     { camp: 0, type: 'char_leger', x: 1, y: 1 },
     { camp: 1, type: 'char_leger', x: 2, y: 1 },
@@ -78,13 +83,14 @@ test('un char à sec attaque un char adjacent quand rien de mieux n’existe', (
   char.munitions = 0;
   assert.equal(decision(e, char, { ...POIDS_PONDEREE, securite: 0 }).suite.type, 'rien', 'pas contre un canon chargé');
   sur(e, 2, 1).munitions = 0;
+  sur(e, 2, 1).pv = 50;
   const { action, suite } = decision(e, char, { ...POIDS_PONDEREE, securite: 0 });
   assert.deepEqual(suite, { type: 'attaquer', cible: { x: 2, y: 1 } });
   const r = appliquer(e, action, CAT4);
   assert.equal(r.ok, true);
   if (r.ok) {
     const cible = r.etat.unites.find((u) => u.x === 2 && u.y === 1)!;
-    assert.ok(cible.pv < 100 && cible.pv > 75, `dégâts réduits : ${cible.pv}`);
+    assert.ok(cible.pv < 50 && cible.pv > 30, `dégâts réduits : ${cible.pv}`);
   }
 });
 

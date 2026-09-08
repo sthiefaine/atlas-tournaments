@@ -30,7 +30,7 @@ import { produitesPar } from '../../engine/catalogue';
 import { terrainBrut, terrainLogique } from '../../engine/hooks';
 import { peutCapturerIci, pointsGagnes, seuilCapture } from '../../engine/regles/capture';
 import { brouillardActif } from '../../engine/climat/index';
-import { degatsArme, peutViser, tireSansMunitions } from '../../engine/regles/combat';
+import { degatsArme, ECHELLE_DEGATS, facteurTerrain, peutViser, tireSansMunitions } from '../../engine/regles/combat';
 import {
   batimentsDe, consommationParTour, SURCOUT_CARBURANT_FURTIF, verifierProduction,
 } from '../../engine/regles/economie';
@@ -178,8 +178,9 @@ function menace(
   for (const f of liste) {
     const d = Math.abs(f.x - c.x) + Math.abs(f.y - c.y);
     if (d > f.allonge) continue;
-    const fTerrain = 1 - 0.05 * etoiles * (pvMoi / 10);
-    const degats = f.base * (f.pv / 10) * fTerrain;
+    // La formule du moteur, jamais une copie (8 septembre 2026).
+    const fTerrain = facteurTerrain(etoiles);
+    const degats = ECHELLE_DEGATS * f.base * (f.pv / 10) * fTerrain;
     total += (degats / 100) * coutMoi * (d <= f.portee ? 1 : 0.6);
   }
   return total;

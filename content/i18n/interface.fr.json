@@ -3246,6 +3246,87 @@
         "note": "La même, sans commit connu."
       },
       "longueurMax": 40
+    },
+    {
+      "cle": "hud.coup",
+      "texte": "Coup",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nomme le chiffre encaissé par la cible, dans la prévision et sur l'écran de combat. Le coup porté par celui qui attaque."
+      },
+      "longueurMax": 10
+    },
+    {
+      "cle": "hud.riposte",
+      "texte": "Riposte",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Nomme le chiffre encaissé par l'attaquant : le coup rendu. Sur l'écran de combat, dans la prévision, et sous le chiffre flottant qui monte au-dessus de la case."
+      },
+      "longueurMax": 10
+    },
+    {
+      "cle": "hud.duel_sans_riposte",
+      "texte": "Sans riposte",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Issue de la prévision quand la cible ne rend pas le coup. Remplace « Riposte −0 PV », qui se lisait comme une riposte gratuite."
+      },
+      "longueurMax": 20
+    },
+    {
+      "cle": "hud.duel_sans_riposte_note",
+      "texte": "L’attaquant n’encaisse rien.",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Note de la prévision quand la cible ne rend pas le coup : dit la conséquence, là où l'issue dit le fait. Ne dit pas pourquoi — tir indirect, hors du contact, sans arme contre lui : le moteur seul le sait."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.duel_riposte_a",
+      "texte": "La riposte part à {n} PV, après le coup.",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Note de la prévision : la riposte est tirée par une unité déjà touchée, avec ses points de vie restants. C'est ce qui rend le premier coup rentable, et rien ne le disait."
+      },
+      "longueurMax": 44
+    },
+    {
+      "cle": "hud.defense_part",
+      "texte": "−{n} %",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Part des dégâts que le terrain retire à qui s'y tient, à côté de ses étoiles. Le chiffre vient de facteurTerrain, la fonction du moteur : le HUD ne fait que le dire en pour cent."
+      },
+      "longueurMax": 10
+    },
+    {
+      "cle": "fiche.abris",
+      "texte": "Le terrain la protège",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Titre du bloc de la fiche qui donne les étoiles de défense des terrains où l'unité peut se tenir."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "fiche.degats_reference",
+      "texte": "Base de dégâts. Le coup réel dépend des PV du tireur et du terrain de la cible : la prévision le donne avant de tirer.",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Sous la table de dégâts de la fiche. Ces chiffres sont la matrice du canon — qui bat qui —, pas les points de vie qui seront perdus : c'est la prévision de duel qui les dit. Aucun coefficient n'est cité, ils sont au moteur."
+      },
+      "longueurMax": 130
+    },
+    {
+      "cle": "fiche.blessee",
+      "texte": "À {n} PV, elle frappe moins fort.",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Fiche d'une unité en jeu déjà touchée. La règle la moins intuitive du jeu, et elle n'était écrite nulle part à l'écran."
+      },
+      "longueurMax": 40
     }
   ]
 }
