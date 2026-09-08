@@ -179,7 +179,7 @@ export function rolesDesChiffres(gestes: readonly Geste[]): Map<Geste, RoleCoup>
 
 /** La feuille de style des scènes, injectée une seule fois par document. */
 const STYLE = `
-.atlas-scenes{position:absolute;inset:0;z-index:8;pointer-events:none;font:14px/1.3 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f;--gain:#8ee0a4;--duree:900ms}
+.atlas-scenes{position:absolute;inset:0;z-index:12;pointer-events:none;font:14px/1.3 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f4edda;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f;--gain:#8ee0a4;--duree:900ms}
 .atlas-scenes *{box-sizing:border-box}
 /* Le chiffre : ancré sur la case, il monte et s'efface. La durée vient du geste. */
 .atlas-chiffre{position:absolute;transform:translate(-50%,-100%);text-align:center;font-size:22px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 2px 0 #0b1a22,0 0 6px #0b1a22cc;animation:atlas-chiffre var(--duree) cubic-bezier(.2,.7,.3,1) both;will-change:transform,opacity}

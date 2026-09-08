@@ -61,7 +61,12 @@ function coutDe(o: THREE.Object3D): MesureFamille | null {
   if (!estMaille && !estPoints && !estLigne) return null;
   const { geometry, material } = o as THREE.Mesh;
   if (!geometry) return null;
-  const instances = (o as THREE.InstancedMesh).isInstancedMesh ? (o as THREE.InstancedMesh).count : 1;
+  // Le compte d'instances se lit comme `getDrawParameters` le lit : la
+  // géométrie d'abord — c'est par elle que passent les lots de `lots.ts` —,
+  // la maille ensuite, pour les `InstancedMesh` qui restent.
+  const forme = geometry as THREE.InstancedBufferGeometry;
+  const instances = forme.isInstancedBufferGeometry ? forme.instanceCount
+    : ((o as THREE.InstancedMesh).isInstancedMesh ? (o as THREE.InstancedMesh).count : 1);
   if (instances <= 0) return { triangles: 0, mailles: 0 };
   // Un matériau en tableau dessine la géométrie groupe par groupe : autant de
   // tirages, et un groupe dont le matériau est invisible n'est pas dessiné.

@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
-import { webgl2Disponible } from '@/render/rendu';
+import { moteur3dDisponible } from '@/render/rendu';
 import { lirePreferences } from './preferences';
 
 /**
@@ -71,7 +71,7 @@ export function Vitrine({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Le réglage de l'appareil est maître ; celui du jeu ne peut qu'ajouter.
     const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduit || lirePreferences().animationsReduites || !webgl2Disponible()) {
+    if (reduit || lirePreferences().animationsReduites || !moteur3dDisponible()) {
       setRenonce(true);
       return undefined;
     }

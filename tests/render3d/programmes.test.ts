@@ -263,6 +263,50 @@ test('les lots découpent une grande famille en tranches', () => {
   assert.deepEqual(lotsDePrechauffage(scene, 3).map((l) => l.length), [3, 3, 1]);
 });
 
+test('une liste de racines donne les familles à chauffer, une racine seule donne ses enfants', () => {
+  const { scene, porteur, porte, cache } = sceneEssai();
+  const famille = scene.children[0]!;
+  // Une racine unique : ses **enfants** sont les familles — c'est la scène.
+  assert.deepEqual(new Set(lotsDePrechauffage(scene).flat()), new Set([porteur, porte, cache]));
+  // Une liste : chaque élément **est** une famille, traversée en entier. C'est
+  // ainsi qu'on ne chauffe que le plateau, ou que le seul décor.
+  assert.deepEqual(new Set(lotsDePrechauffage([famille]).flat()), new Set([porteur, porte, cache]));
+  assert.deepEqual(lotsDePrechauffage([porteur]).flat(), [porteur, porte], 'et rien de ses sœurs');
+});
+
+test('chauffer une seule famille ne compile qu’elle, et cache tout le reste', async () => {
+  const scene = new THREE.Scene();
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshStandardNodeMaterial();
+  const sol = new THREE.Group();
+  const dalle = new THREE.Mesh(geo, mat);
+  sol.add(dalle);
+  const decor = new THREE.Group();
+  const arbre = new THREE.Mesh(geo, mat);
+  decor.add(arbre);
+  scene.add(sol, decor);
+
+  const vues: Set<THREE.Object3D>[] = [];
+  await prechauffer({
+    compileAsync: (s): Promise<void> => {
+      const visibles = new Set<THREE.Object3D>();
+      const descendre = (o: THREE.Object3D): void => {
+        if (!o.visible) return;
+        if ((o as THREE.Mesh).isMesh) visibles.add(o);
+        for (const e of o.children) descendre(e);
+      };
+      descendre(s);
+      vues.push(visibles);
+      return Promise.resolve();
+    },
+  }, scene, new THREE.PerspectiveCamera(), { taille: 1, cibles: [sol] });
+
+  assert.equal(vues.length, 1, 'un seul lot : la famille demandée');
+  assert.deepEqual(vues[0], new Set([dalle]), 'et le décor n’est même pas projeté');
+  assert.equal(arbre.visible, true, 'le décor retrouve sa visibilité d’avant');
+  assert.equal(dalle.visible, true);
+});
+
 test('le préchauffage montre chaque maille une fois, avec son porteur, puis rend la scène intacte', async () => {
   const { scene, porteur, porte, cache } = sceneEssai();
   cache.frustumCulled = true;
@@ -428,6 +472,26 @@ test('les lots d’ombre ne gardent qu’un représentant par forme', () => {
   assert.ok(tous.includes(autre));
   assert.ok(tous.some((o) => jumeaux.includes(o as THREE.Mesh)));
   assert.ok(!tous.includes(sansOmbre), 'ce qui ne porte pas ombre n’a pas de programme d’ombre');
+});
+
+test('les formes d’ombre déjà chaudes ne se rechauffent pas d’une famille à l’autre', () => {
+  const { scene, jumeaux, autre } = scenePorteurs();
+  // Un lot d'ombre coûte un rendu entier : `connues` traverse les appels pour
+  // que le décor ne repaie pas les formes que le sol a déjà chauffées.
+  const connues = new Set<string>();
+  const premier = lotsDOmbre(scene, TAILLE_LOT, connues).flat();
+  assert.equal(premier.length, 2);
+  assert.deepEqual(lotsDOmbre(scene, TAILLE_LOT, connues), [], 'la seconde fois, plus rien à chauffer');
+  // Et une forme neuve, elle, se chauffe encore. « Neuve » veut dire d'une
+  // autre **forme d'attributs** : une sphère et un cube en ont la même, et
+  // partagent donc leur programme d'ombre — c'est ce qui fait tenir la passe
+  // en une poignée de rendus.
+  const nue = new THREE.BoxGeometry(1, 1, 1);
+  nue.deleteAttribute('uv');
+  const neuf = new THREE.Mesh(nue, (autre as THREE.Mesh).material as THREE.Material);
+  neuf.castShadow = true;
+  jumeaux[0]!.parent!.add(neuf);
+  assert.deepEqual(lotsDOmbre(scene, TAILLE_LOT, connues).flat(), [neuf]);
 });
 
 test('le préchauffage des ombres n’allume qu’un lot à la fois, puis rend tout', async () => {

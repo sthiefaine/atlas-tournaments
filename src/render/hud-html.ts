@@ -95,6 +95,12 @@ export interface ApiHud {
   zoomer?(sens: 1 | -1): void;
   /** Un quart de tour de la caméra : absent quand le rendu ne sait pas tourner. */
   tourner?(sens: 1 | -1): void;
+  /**
+   * L'inclinaison suivante de la caméra, en boucle : absente quand le rendu ne
+   * sait pas s'incliner. **Un** bouton, pas deux : le panneau en porte déjà
+   * cinq, et une colonne de sept sous le pouce mangerait la moitié de l'écran.
+   */
+  inclinaisonSuivante?(): void;
   recentrer?(): void;
   /** Position d'écran du centre d'une case : sert à ancrer le menu d'ordres. */
   versEcran(c: Case): PointVue | null;
@@ -130,7 +136,7 @@ function ech(texte: string): string {
 
 /** La feuille de style du HUD, injectée une seule fois par document. */
 const STYLE = `
-.atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f}
+.atlas-hud{position:absolute;inset:0;z-index:10;container-type:size;container-name:atlas-interface;pointer-events:none;font:14px/1.35 system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f}
 .atlas-hud *{box-sizing:border-box}
 .atlas-hud[data-scene='ouverte']{visibility:hidden}
 .atlas-hud .p{position:absolute;pointer-events:auto;background:var(--encre);border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;overflow:hidden}
@@ -139,12 +145,12 @@ const STYLE = `
 .atlas-hud .tt{font-weight:800;font-size:15px;letter-spacing:.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .atlas-hud .sb{font-size:13px;color:#b9cbcb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
 .atlas-hud .symbole{width:24px;height:24px;flex:none;display:block}
-.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:center;height:44px;max-width:calc(100% - 144px);filter:drop-shadow(2px 3px 0 #111b2940)}
+.atlas-hud .partie{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:var(--haut);display:flex;align-items:center;height:44px;max-width:calc(100% - 24px);filter:drop-shadow(2px 3px 0 #111b2940)}
 .atlas-hud .jour{display:flex;align-items:center;gap:7px;height:44px;padding:0 16px 0 10px;background:var(--papier);color:var(--encre);font-size:14px;font-weight:850;text-transform:uppercase;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 100%,0 100%);white-space:nowrap}
 .atlas-hud .jour .symbole{width:20px;height:20px}
 .atlas-hud .fonds{display:flex;align-items:center;gap:5px;margin-left:-8px;height:34px;padding:0 10px 0 14px;background:var(--encre);color:var(--signal);font-weight:850;font-size:14px;white-space:nowrap}
 .atlas-hud .fonds .symbole{width:18px;height:18px}
-.atlas-hud .bulletin{position:absolute;pointer-events:auto;right:max(var(--marge),env(safe-area-inset-right,0px));top:var(--haut);width:128px;color:var(--papier);filter:drop-shadow(2px 3px 0 #111b2940);z-index:2}
+.atlas-hud .bulletin{position:absolute;pointer-events:auto;left:max(var(--marge),env(safe-area-inset-left,0px));top:calc(var(--haut) + 48px);width:172px;color:var(--papier);filter:drop-shadow(2px 3px 0 #111b2940);z-index:2}
 .atlas-hud .bulletin summary{display:flex;gap:7px;align-items:center;padding:7px 9px;cursor:pointer;list-style:none;min-height:44px;background:var(--encre);border-bottom:3px solid var(--signal)}
 .atlas-hud .bulletin summary::-webkit-details-marker{display:none}
 .atlas-hud .bulletin summary::after{content:'⌄';margin-left:auto;font-size:16px;color:#c0ccd7}
@@ -357,7 +363,7 @@ const STYLE = `
 .atlas-hud .fin{text-align:center;padding:26px 24px 22px}
 .atlas-hud .fin .grand{font-size:26px;font-weight:850;letter-spacing:-.01em}
 .atlas-hud .fin .sb{color:#536e78}
-.atlas-tour{position:absolute;left:0;right:0;top:38%;z-index:7;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:18px;padding:16px 24px;background:linear-gradient(110deg,transparent 3%,#152c3bf2 3%,#152c3bf2 97%,transparent 97%);color:#f4edda;border-block:3px solid var(--teinte,#ffd162);font-family:system-ui,sans-serif;animation:atlas-tour 1.15s ease both}
+.atlas-tour{position:absolute;left:0;right:0;top:38%;z-index:11;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:18px;padding:16px 24px;background:linear-gradient(110deg,transparent 3%,#152c3bf2 3%,#152c3bf2 97%,transparent 97%);color:#f4edda;border-block:3px solid var(--teinte,#ffd162);font-family:system-ui,sans-serif;animation:atlas-tour 1.15s ease both}
 .atlas-tour .symbole{width:42px;height:42px;color:var(--teinte,#ffd162)}
 .atlas-tour strong{display:block;font-size:26px;line-height:1.15;text-transform:uppercase;font-weight:900;letter-spacing:.03em}
 .atlas-tour span{display:block;margin-top:5px;font-size:13px;font-weight:750;text-transform:uppercase;letter-spacing:.14em;color:var(--teinte,#ffd162)}
@@ -369,8 +375,7 @@ const STYLE = `
 @container atlas-interface (max-width: 600px){
   .atlas-hud .jour{padding:0 12px 0 8px;gap:5px;font-size:12px}
   .atlas-hud .fonds{padding-right:8px;font-size:13px}
-  .atlas-hud .bulletin{width:116px}
-  .atlas-hud .partie{max-width:calc(100% - 132px)}
+  .atlas-hud .bulletin{width:158px}
   .atlas-hud .dock{width:calc(100% - 24px)}
   .atlas-hud .jauge button{gap:7px;padding:7px 9px}
   .atlas-hud .insigne{width:34px;height:43px}
@@ -1024,14 +1029,17 @@ export function monterHudHtml(
   }
 
   function panneauCamera(): string {
-    if (!api.zoomer && !api.recentrer && !api.tourner) return '';
+    if (!api.zoomer && !api.recentrer && !api.tourner && !api.inclinaisonSuivante) return '';
     const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
     // Une flèche qui tourne autour d'un point : c'est la carte qui pivote, pas la pièce.
     const fleche = (sens: 1 | -1): string => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"${sens === -1 ? ' style="transform:scaleX(-1)"' : ''}><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M17 3v4.5h-4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>`;
+    // Un plateau vu de biais, et l'arc que la caméra suit au-dessus de lui.
+    const inclinaison = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.6 4.4 18.1 12 21.6l7.6-3.5z"/><path d="M4.8 12.4a7.4 7.4 0 0 1 14.4 0"/><path d="M16.6 9.9 19.4 12.4 22 10.4"/></svg>';
     return '<div class="camera">'
       + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')
       + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', '+') + bouton('zoom_moins', 'hud.zoom_moins', '−') : '')
       + (api.tourner ? bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
+      + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '')
       + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
       + '</div>';
   }
@@ -1419,6 +1427,7 @@ export function monterHudHtml(
       case 'zoom_moins': api.zoomer?.(-1); break;
       case 'tourner_gauche': api.tourner?.(-1); break;
       case 'tourner_droite': api.tourner?.(1); break;
+      case 'inclinaison': api.inclinaisonSuivante?.(); break;
       case 'recentrer': api.recentrer?.(); break;
       default: break;
     }

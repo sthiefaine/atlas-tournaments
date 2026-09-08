@@ -1,16 +1,18 @@
 // La caméra 3D et le chemin d'animation : les deux morceaux de géométrie qui se
-// vérifient sans WebGL. Le brief fixe le cadre — tangage 60° à 75°, lacet par
-// quarts de tour, zoom par paliers, carte cadrée au montage, jamais perdue — et
-// c'est exactement ce que ce fichier surveille.
+// vérifient sans WebGL. Le brief fixe le cadre — tangage 30° à 75° depuis le
+// 8 septembre 2026, lacet par quarts de tour, zoom par paliers, carte cadrée au
+// montage, jamais perdue — et c'est exactement ce que ce fichier surveille.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
 import {
-  AMORTISSEMENT, DISTANCE_MAX, FOV, PALIERS_DISTANCE, PAS_ZOOM, PIXELS_CADRAGE, PIXELS_DOUBLE_TAP, PIXELS_LISIBLES,
+  AMORTISSEMENT, DISTANCE_MAX, FOV, PALIERS_DISTANCE, PALIERS_TANGAGE, PAS_TANGAGE, PAS_ZOOM,
+  PIXELS_CADRAGE, PIXELS_DOUBLE_TAP, PIXELS_LISIBLES,
   PIXELS_PROCHES, TANGAGE_DEFAUT, TANGAGE_MAX, TANGAGE_MIN,
-  amortir, champAuSol, cibleCadrage, creerVue3d, deplacerCible, distanceCadrage, distanceCadrageLargeur, distanceLisible,
-  limiterCible, palierDistance, palierSuivant, positionCamera,
+  amortir, bornerTangage, champAuSol, cibleCadrage, creerVue3d, deplacerCible, distanceCadrage,
+  distanceCadrageLargeur, distanceLisible,
+  limiterCible, palierDistance, palierSuivant, positionCamera, tangageSuivant,
   type EtatCamera,
 } from '../../src/render3d/camera';
 import { cheminEnL, longueurChemin, surChemin } from '../../src/render/chemin';
@@ -22,10 +24,92 @@ function etat(p: Partial<EtatCamera> = {}): EtatCamera {
 }
 
 test('le tangage par défaut tient dans la fourchette du brief', () => {
-  assert.equal(TANGAGE_MIN, 60);
+  assert.equal(TANGAGE_MIN, 30);
   assert.equal(TANGAGE_MAX, 75);
   assert.ok(TANGAGE_DEFAUT >= TANGAGE_MIN && TANGAGE_DEFAUT <= TANGAGE_MAX);
   assert.equal(TANGAGE_DEFAUT, 68);
+  // La borne basse n'est pas un goût : sous elle, le rayon du haut de l'écran
+  // passerait l'horizon, et le champ visible au sol comme le cadre d'ombre
+  // (`ombres.ts`) partiraient à l'infini. Cinq degrés de marge au moins.
+  assert.ok(TANGAGE_MIN - FOV / 2 >= 5, 'le haut de l’écran regarde encore le sol');
+  // Les paliers du bouton unique descendent, tiennent dans la fourchette, et
+  // partent de la vue de lecture.
+  assert.equal(PALIERS_TANGAGE[0], TANGAGE_DEFAUT);
+  for (const p of PALIERS_TANGAGE) assert.equal(bornerTangage(p), p);
+  for (let i = 1; i < PALIERS_TANGAGE.length; i += 1) {
+    assert.ok(PALIERS_TANGAGE[i]! < PALIERS_TANGAGE[i - 1]!, 'le cycle penche, palier après palier');
+  }
+});
+
+test('l’inclinaison fait le tour de ses paliers et revient à la vue de lecture', () => {
+  // Le cycle du bouton : lecture, oblique, rasante, puis lecture à nouveau.
+  let t: number = TANGAGE_DEFAUT;
+  const vus: number[] = [];
+  for (let i = 0; i < PALIERS_TANGAGE.length; i += 1) {
+    t = tangageSuivant(t);
+    vus.push(t);
+  }
+  assert.deepEqual(vus, [...PALIERS_TANGAGE.slice(1), PALIERS_TANGAGE[0]]);
+  // Une valeur posée au geste tombe au palier d'en dessous, pas en tête de
+  // liste : le bouton continue le mouvement du doigt.
+  assert.equal(tangageSuivant(60), PALIERS_TANGAGE[1]);
+  assert.equal(tangageSuivant(TANGAGE_MIN), PALIERS_TANGAGE[0], 'tout en bas, on remonte');
+  assert.equal(tangageSuivant(TANGAGE_MAX), PALIERS_TANGAGE[0], 'au plafond, on redescend d’un cran');
+  assert.equal(bornerTangage(1000), TANGAGE_MAX);
+  assert.equal(bornerTangage(-1000), TANGAGE_MIN);
+  assert.equal(bornerTangage(Number.NaN), TANGAGE_DEFAUT);
+});
+
+test('incliner penche la caméra vers l’horizon sans lui faire quitter sa cible', () => {
+  const vue = creerVue3d({ largeur: 24, hauteur: 24 });
+  vue.redimensionner(1280, 800);
+  vue.cadrerCarte();
+  const depart = vue.etat.tangage;
+  const cible = { ...vue.etat.cible };
+  const hautDepart = vue.camera.position.y;
+
+  // Négatif : on penche vers l'horizon, la caméra descend et s'éloigne au sol.
+  vue.incliner(-PAS_TANGAGE);
+  assert.equal(vue.etat.tangage, depart - PAS_TANGAGE);
+  assert.ok(vue.camera.position.y < hautDepart, 'pencher fait descendre la caméra');
+  assert.deepEqual(vue.etat.cible, cible, 'le point visé ne bouge pas');
+  const auSol = Math.hypot(vue.camera.position.x - cible.x, vue.camera.position.z - cible.z);
+  assert.ok(Math.abs(Math.hypot(auSol, vue.camera.position.y) - vue.etat.distance) < 1e-6,
+    'la distance à la cible est conservée');
+
+  // Positif : on redresse. Et les deux bornes tiennent, quoi qu'on demande.
+  vue.incliner(PAS_TANGAGE);
+  assert.ok(Math.abs(vue.etat.tangage - depart) < 1e-9);
+  vue.incliner(-1000);
+  assert.equal(vue.etat.tangage, TANGAGE_MIN);
+  vue.incliner(1000);
+  assert.equal(vue.etat.tangage, TANGAGE_MAX);
+  // Un pas nul ou absurde ne fait rien du tout.
+  vue.incliner(0);
+  vue.incliner(Number.NaN);
+  assert.equal(vue.etat.tangage, TANGAGE_MAX);
+  // Le bouton du HUD, lui, passe au palier suivant.
+  vue.inclinaisonSuivante();
+  assert.equal(vue.etat.tangage, PALIERS_TANGAGE[0]);
+});
+
+test('une caméra inclinée à fond regarde encore le sol, jusque dans les coins', () => {
+  // L'invariant qui autorise `TANGAGE_MIN` : au tangage le plus bas, les quatre
+  // rayons des coins de l'écran descendent encore. Sans lui, `champVisibleAuSol`
+  // rendrait un rectangle infini et la carte d'ombre se viderait.
+  for (const aspect of [0.46, 1, 1.78, 2.4]) {
+    const e = etat({ tangage: TANGAGE_MIN });
+    const p = positionCamera(e);
+    const avant = { x: e.cible.x - p.x, y: -p.y, z: e.cible.z - p.z };
+    const norme = Math.hypot(avant.x, avant.y, avant.z);
+    const t = Math.tan((FOV * Math.PI) / 360);
+    // Le haut de l'écran : `avant` normalisé plus le vecteur « haut » de la
+    // caméra, dont la composante verticale vaut le cosinus du tangage.
+    const y = avant.y / norme + Math.cos((TANGAGE_MIN * Math.PI) / 180) * t;
+    const plat = Math.hypot(avant.x / norme, avant.z / norme) + t * Math.max(0.2, aspect);
+    assert.ok(y < 0, `aspect ${aspect} : le haut de l’écran vise encore le bas`);
+    assert.ok(plat > 0);
+  }
 });
 
 test('la caméra se place au-dessus et en arrière de sa cible', () => {

@@ -9,12 +9,19 @@
  * recentre la case tapée à un zoom lisible. La souris garde le double-clic pour
  * l'inspection — elle n'a pas d'appui long fiable, le doigt n'a pas de
  * double-clic fiable, chacun son geste.
+ *
+ * **Depuis le 8 septembre 2026**, deux doigts font trois choses à la fois, comme
+ * dans une carte : leur écart zoome, leur glisser horizontal déplace, et leur
+ * glisser **vertical incline** la caméra — vers le haut on se penche vers
+ * l'horizon, vers le bas on se redresse. Le glisser vertical à deux doigts ne
+ * déplace donc plus la vue : un doigt le fait déjà, et il fallait un geste à
+ * l'inclinaison. À la souris, c'est **Maj + molette**.
  */
 import type * as THREE from 'three/webgpu';
 import { toucheDe } from '../render/entrees';
 import type { GestesRendu } from '../render/rendu';
 import type { Case } from '../schemas/types';
-import type { Vue3d } from './camera';
+import { DEGRES_PAR_PIXEL, PAS_TANGAGE, type Vue3d } from './camera';
 
 /** Seuils des gestes composés, réglables pour les tests. */
 export interface OptionsGestes3d {
@@ -196,8 +203,10 @@ export function brancherGestes3d(
         const nouvel = Math.hypot(a.x - b.x, a.y - b.y);
         // Le milieu des doigts a déjà glissé de la moitié du mouvement de ce
         // doigt ; le zoom s'ancre ensuite sur le nouveau milieu, de sorte que
-        // la case pincée reste sous les doigts.
-        vue()?.glisser(dx / 2, dy / 2);
+        // la case pincée reste sous les doigts. Le vertical, lui, va à
+        // l'inclinaison : monter les doigts penche la caméra vers l'horizon.
+        vue()?.glisser(dx / 2, 0);
+        vue()?.incliner((dy / 2) * DEGRES_PAR_PIXEL);
         if (ecart > 4 && nouvel > 4) {
           vue()?.facteurZoom(nouvel / ecart, { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
         }
@@ -267,7 +276,10 @@ export function brancherGestes3d(
 
   const surWheel = (e: WheelEvent): void => {
     e.preventDefault();
-    vue()?.zoomer(e.deltaY < 0 ? 1 : -1);
+    // Maj incline au lieu de zoomer : la souris n'a pas de second doigt, et le
+    // clic droit sert déjà à glisser puis à annuler.
+    if (e.shiftKey) vue()?.incliner(e.deltaY < 0 ? PAS_TANGAGE : -PAS_TANGAGE);
+    else vue()?.zoomer(e.deltaY < 0 ? 1 : -1);
     salir();
   };
 
@@ -287,6 +299,11 @@ export function brancherGestes3d(
     }
     if (touche === 'tourner_gauche' || touche === 'tourner_droite') {
       vue()?.tourner(touche === 'tourner_gauche' ? -1 : 1);
+      salir();
+      return;
+    }
+    if (touche === 'redresser' || touche === 'pencher') {
+      vue()?.incliner(touche === 'redresser' ? PAS_TANGAGE : -PAS_TANGAGE);
       salir();
       return;
     }

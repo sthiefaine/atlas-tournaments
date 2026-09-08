@@ -3009,6 +3009,15 @@
       "longueurMax": 40
     },
     {
+      "cle": "hud.inclinaison",
+      "texte": "Incliner la vue",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Bouton de caméra : passe à l’inclinaison suivante, en boucle — vue de lecture, oblique, rasante. Interface tactile mobile."
+      },
+      "longueurMax": 40
+    },
+    {
       "cle": "hud.se_cacher",
       "texte": "Se cacher",
       "contexte": {

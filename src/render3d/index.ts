@@ -53,7 +53,7 @@ import type {
 } from '../render/rendu';
 import type { Biome, CampId, CodePays, Case, CleTerrain, Saison } from '../schemas/types';
 import { animationsDePartition, partitionProvisoire, type ContexteAnimation } from './animations';
-import { creerVue3d, type Vue3d } from './camera';
+import { creerVue3d, PAS_TANGAGE, type Vue3d } from './camera';
 import { jouerTranches, ouvrirChantier, type Chantier, type Tranche } from './chantier';
 import { brancherGestes3d } from './gestes';
 import { ouvrirChantierDecor, type Decor } from './decor';
@@ -76,8 +76,8 @@ export {
   type Piece, type RolePiece,
 } from './pieces';
 export {
-  distanceCadrage, palierDistance, palierSuivant, positionCamera, TANGAGE_DEFAUT,
-  TANGAGE_MAX, TANGAGE_MIN, type EtatCamera,
+  distanceCadrage, PALIERS_TANGAGE, palierDistance, palierSuivant, PAS_TANGAGE, positionCamera,
+  tangageSuivant, TANGAGE_DEFAUT, TANGAGE_MAX, TANGAGE_MIN, type EtatCamera,
 } from './camera';
 export {
   cadreOmbre, champVisibleAuSol, DISTANCE_SOLEIL, HAUTEURS_OMBRE, tailleCarteOmbre,
@@ -102,6 +102,13 @@ const MS_MUTATION = 1400;
  * l'image indéfiniment : la première coûtera ce qu'elle coûtait, et c'est tout.
  */
 const MS_PRECHAUFFAGE_MAX = 6000;
+
+/**
+ * Au-delà, une famille révélée cesse d'attendre l'image qui devait la montrer.
+ * Sans boucle qui tourne — onglet masqué, banc de test —, personne n'appelle
+ * `dessiner`, et le monde doit finir de se bâtir quand même.
+ */
+const MS_ATTENTE_IMAGE = 400;
 
 /** Le monde monté : tout ce qui dépend de la carte, donc du premier état. */
 /** La clé de programme du décor greffé : une seule injection, un seul programme. */
@@ -128,14 +135,15 @@ interface Monde {
 /**
  * Ce que le monde a de chaud, donc ce qu'on s'autorise à dessiner.
  *
- * - `rien` : le chantier n'a pas fini son premier temps. Une image dessinée
- *   maintenant paierait la traduction TSL → WGSL de toute la scène sur le fil
- *   principal, ce que le préchauffage fait hors de lui ;
- * - `sol` : le plateau et l'éclairage sont chauds. On dessine le terrain, sans
- *   décor ni figurines — ils sont bâtis groupe éteint ;
- * - `monde` : tout est chaud et rallumé.
+ * - `rien` : le plateau n'est pas encore chaud. Une image dessinée maintenant
+ *   paierait la traduction TSL → WGSL sur le fil principal, ce que le
+ *   préchauffage fait hors de lui ;
+ * - `sol` : le plateau et l'éclairage sont chauds. On dessine, et ce qui n'est
+ *   pas encore chaud est **éteint** (`groupe.visible`), donc ignoré par le
+ *   dessin comme par la passe d'ombres. Chaque famille se rallume quand ses
+ *   programmes sont créés, et paraît là.
  */
-type PhaseChantier = 'rien' | 'sol' | 'monde';
+type PhaseChantier = 'rien' | 'sol';
 
 export interface OptionsRendu3d {
   biome?: Biome;
@@ -216,26 +224,65 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
    * attentes ne dessinerait rien du tout.
    */
   let enPrechauffage = false;
+  /**
+   * Ceux qui attendent qu'une image soit dessinée. La révélation d'une famille
+   * en pose un : sans cela, le chantier enchaînerait sur la famille suivante —
+   * donc sur un `enPrechauffage` qui retient l'image — avant que la boucle ait
+   * eu son tour, et tout paraîtrait d'un bloc à la fin, ce qu'on cherche
+   * précisément à défaire. Deux macrotâches ne valent pas une image.
+   */
+  let attentesImage: Array<() => void> = [];
 
   function salir(): void {
     boucle?.salir();
   }
 
+  /** Une image vient d'être envoyée : on relâche ceux qui l'attendaient. */
+  function imageDessinee(): void {
+    if (attentesImage.length === 0) return;
+    const attentes = attentesImage;
+    attentesImage = [];
+    for (const relacher of attentes) relacher();
+  }
+
   /**
-   * Préchauffe les programmes de la scène telle qu'elle est, puis fait monter
-   * la phase : à partir de là, on dessine.
+   * Attend qu'une image soit dessinée, au plus `MS_ATTENTE_IMAGE`. Le délai
+   * n'est pas une prudence de style : sans boucle qui tourne — un onglet
+   * masqué, un banc de test —, personne n'appellerait jamais `dessiner`, et le
+   * chantier ne finirait pas de bâtir le monde.
+   */
+  function prochaineImage(): Promise<void> {
+    return new Promise((relacher) => {
+      let fait = false;
+      const finir = (): void => { if (!fait) { fait = true; relacher(); } };
+      attentesImage.push(finir);
+      setTimeout(finir, MS_ATTENTE_IMAGE);
+    });
+  }
+
+  /**
+   * Chauffe les programmes d'**une famille**, la rallume, et rend la main pour
+   * qu'une image la montre.
+   *
+   * C'est la brique de la révélation par familles. La famille est **rallumée
+   * avant** d'être chauffée, et non après : la passe d'ombres se préchauffe par
+   * de vrais rendus, qui ne voient que ce qui est allumé (`prechauffage.ts`).
+   * Rien ne s'affiche pour autant, puisque `enPrechauffage` retient l'image
+   * pendant tout le travail.
    *
    * Le budget `MS_PRECHAUFFAGE_MAX` n'interrompt pas le préchauffage au milieu
    * d'un lot — il lui dit de **s'arrêter au suivant**. Débloquer l'image sans
    * l'arrêter reviendrait à dessiner pendant un `compileAsync`, c'est-à-dire à
    * ne rien dessiner du tout. Un écran qui ne vient jamais reste pire qu'un gel
-   * d'une seconde : passé le budget, on dessine, et la première image paiera ce
-   * qu'elle a toujours payé.
+   * d'une seconde : passé le budget, on dessine, et l'image paiera ce qu'elle a
+   * toujours payé. Il court par famille : c'est un budget pour paraître, pas un
+   * budget pour tout le chantier.
    */
-  async function chauffer(m: Monde, jusqua: Exclude<PhaseChantier, 'rien'>): Promise<void> {
+  async function chauffer(m: Monde, familles: readonly THREE.Object3D[]): Promise<void> {
     const s = scene3d;
-    if (!s) { phase = jusqua; return; }
+    if (!s) { phase = 'sol'; for (const f of familles) f.visible = true; return; }
     enPrechauffage = true;
+    for (const f of familles) f.visible = true;
     let echu = false;
     // Un seul chronomètre pour les deux attentes : celle du moteur, et celle du
     // préchauffage lui-même.
@@ -246,9 +293,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // dos, `prechauffer` rend la main tout de suite et `dessiner` ne dessine
       // rien, mais la boucle repart et la page cesse d'attendre.
       await Promise.race([s.prete, new Promise<void>((r) => { reveiller = r; })]);
-      await s.prechauffer(m.vue3d.camera, () => !echu);
+      await s.prechauffer(m.vue3d.camera, () => !echu, familles);
     } catch {
-      // Un préchauffage qui échoue ne coûte qu'une première image plus chère.
+      // Un préchauffage qui échoue ne coûte qu'une image plus chère.
     } finally {
       clearTimeout(garde);
       enPrechauffage = false;
@@ -256,10 +303,14 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // l'image du montage **suivant** : la scène n'est plus la même, et ses
       // programmes non plus.
       if (scene3d === s && monde === m) {
-        phase = jusqua;
+        phase = 'sol';
         salir();
       }
     }
+    // Et on attend qu'elle paraisse pour de bon : la tranche suivante rallume
+    // `enPrechauffage`, et une famille qu'on n'aurait pas laissé le temps de
+    // dessiner ne paraîtrait qu'à la fin, avec toutes les autres.
+    if (scene3d === s && monde === m) await prochaineImage();
   }
 
   /** Moins de mouvement : l'appareil le demande, ou le joueur dans ses réglages. */
@@ -350,8 +401,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       }
     });
 
-    // Premier temps clos : le sol est bâti, on le chauffe et on le montre.
-    tranches.push(async () => { if (monde) await chauffer(monde, 'sol'); });
+    // Premier temps clos : le sol est bâti, on le chauffe et on le montre. Et
+    // **lui seul** : le plateau ne porte que six des trente et un programmes de
+    // `premier_contact` (`tests/render3d/programmes.test.ts` en tient le
+    // plafond). Faire attendre la grille que les arbres, les figurines et les
+    // nappes de surbrillance soient compilés la retenait cinq fois plus
+    // longtemps qu'il n'était nécessaire.
+    tranches.push(async () => { if (monde) await chauffer(monde, [monde.plateau.groupe]); });
 
     // Le décor a ses propres tranches (`decor.ts`, `ouvrirChantierDecor`) : les
     // arbres, les rochers, le paysage, le rivage, les mâts, puis les cases
@@ -383,21 +439,27 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       m.decor = decor;
     });
 
+    // Le décor paraît dès que **ses** programmes sont créés, sans attendre les
+    // figurines : arbres, rochers, bâtiments et pavillons d'un coup, sur un
+    // terrain déjà à l'écran.
+    tranches.push(async () => {
+      const m = monde;
+      if (m?.decor) await chauffer(m, [m.decor.groupe]);
+    });
+
     // Les unités et tout ce qui dérive de l'état : c'est `majMonde` qui les pose,
     // et il ne coûte rien tant qu'il n'a pas de monde.
     tranches.push(() => { majMonde(); });
+    tranches.push(async () => { if (monde) await chauffer(monde, [monde.unites.groupe]); });
 
-    // Second temps clos. On rallume **avant** de chauffer, et non après : le
-    // préchauffage de la passe d'ombres passe par de vrais rendus, qui ne
-    // voient que ce qui est allumé (`prechauffage.ts`). Rien ne s'affiche pour
-    // autant, puisque `enPrechauffage` retient l'image tant qu'il travaille.
+    // Et pour finir ce qui ne se voit pas encore : nappes de surbrillance,
+    // impacts de pluie, étincelles. Leur programme se paierait sinon au premier
+    // survol et au premier tir, là où un gel se remarque autant qu'au
+    // chargement — mais il n'a aucune raison de retarder la grille.
     tranches.push(async () => {
       const m = monde;
       if (!m) return;
-      if (m.decor) m.decor.groupe.visible = true;
-      m.unites.groupe.visible = true;
-      m.surbrillances.groupe.visible = true;
-      await chauffer(m, 'monde');
+      await chauffer(m, [m.surbrillances.groupe, m.effets.groupe, m.eclairage.groupe]);
     });
     return tranches;
   }
@@ -457,6 +519,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const ombre = ombreSale || mutation || cadre !== cadrePrecedent;
     // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
     s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
+    // La famille qui vient de paraître attendait celle-ci pour laisser la
+    // suivante se compiler.
+    imageDessinee();
     ombreSale = false;
     cadrePrecedent = cadre;
     continuSuivant = encore || animations > 0;
@@ -690,6 +755,17 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     tourner(sens: number): void {
       monde?.vue3d.tourner(sens);
+      salir();
+    },
+
+    incliner(sens: number): void {
+      if (sens === 0) return;
+      monde?.vue3d.incliner(Math.sign(sens) * PAS_TANGAGE);
+      salir();
+    },
+
+    inclinaisonSuivante(): void {
+      monde?.vue3d.inclinaisonSuivante();
       salir();
     },
 

@@ -810,6 +810,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     recommencer,
     zoomer: (sens) => rendu.zoomer?.(sens),
     tourner: rendu.tourner ? (sens) => rendu.tourner?.(sens) : undefined,
+    inclinaisonSuivante: rendu.inclinaisonSuivante
+      ? () => rendu.inclinaisonSuivante?.()
+      : undefined,
     recentrer: () => {
       const unite = etat.unites.find(u => u.id === controleur.vue.selection)
         ?? etat.unites.find(u => u.camp === camp && !u.dansTransport);

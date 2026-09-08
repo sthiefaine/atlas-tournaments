@@ -10,7 +10,7 @@
  * `decor.ts` :
  *
  * - **Tout est instancié.** Une géométrie par genre d'accessoire, un
- *   `InstancedMesh` par genre, une teinte par instance. Une carte de bocage a
+ *   `LotInstancie` par genre, une teinte par instance. Une carte de bocage a
  *   cent haies et un seul appel de dessin pour toutes.
  * - **Tout est déterministe**, tiré de `alea(x, y, sel)` : deux montages
  *   sèment exactement le même paysage, et une case ne porte jamais deux fois le
@@ -34,6 +34,7 @@ import { attribute, materialColor, materialOpacity } from 'three/tsl';
 import type { Biome, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, NIVEAU_EAU, type GrilleTerrain } from './geometrie';
+import { LotInstancie } from './lots';
 
 /**
  * Vrai si deux ensembles de cases vues disent la même chose. La vue arrive à
@@ -774,7 +775,7 @@ function construireForme(forme: Forme, couleur: number): THREE.BufferGeometry {
  * repayait cinquante-quatre fusions de volumes.
  *
  * Ce qui est gardé est **la géométrie elle-même**, partagée par les
- * `InstancedMesh` de tous les paysages vivants. `Paysage.dispose()` ne la libère
+ * lots instanciés de tous les paysages vivants. `Paysage.dispose()` ne la libère
  * donc pas : ce serait tuer la forme d'un paysage encore à l'écran — la faute
  * exacte de `CalqueUnites.dispose()`, qui vidait deux caches pourtant au niveau
  * module (`CLAUDE.md`, 8 septembre 2026). Une entrée évincée n'est pas libérée
@@ -850,7 +851,7 @@ export interface Paysage {
 interface Lot {
   genre: GenrePaysage;
   espece: Espece;
-  mesh: THREE.InstancedMesh;
+  mesh: LotInstancie;
   geo: THREE.BufferGeometry;
   mat: THREE.MeshStandardNodeMaterial;
   instances: Accessoire[];
@@ -952,6 +953,9 @@ export function ouvrirChantierPaysage(
       mat4.compose(pos, quat, ech);
       mesh.setMatrixAt(i, mat4);
     });
+    // Un `LotInstancie` naît vide : c'est le compte de la géométrie qui décide
+    // du dessin, et il ne coûte plus rien de le changer (`lots.ts`).
+    mesh.compte = instances.length;
     mesh.instanceMatrix.needsUpdate = true;
   }
 
@@ -1000,7 +1004,7 @@ export function ouvrirChantierPaysage(
       mat.emissive = new THREE.Color(espece.couleur);
       mat.emissiveIntensity = 0.4;
     }
-    const mesh = new THREE.InstancedMesh(geo, mat, instances.length);
+    const mesh = new LotInstancie(geo, mat, Math.max(1, instances.length));
     mesh.name = `paysage-${genre}`;
     mesh.castShadow = !espece.sansOmbre;
     mesh.receiveShadow = true;

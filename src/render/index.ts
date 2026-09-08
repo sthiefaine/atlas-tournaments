@@ -51,6 +51,7 @@ export {
 } from './controleur';
 
 export {
+  moteur3dDisponible,
   webgl2Disponible,
   type CleRendu, type GestesRendu, type MesuresRendu, type PointVue, type Rendu, type VueInteraction,
 } from './rendu';

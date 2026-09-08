@@ -19,7 +19,8 @@ export type ToucheJeu =
   | 'haut' | 'bas' | 'gauche' | 'droite'
   | 'valider' | 'annuler' | 'fin_tour'
   | 'zoom_plus' | 'zoom_moins'
-  | 'tourner_gauche' | 'tourner_droite';
+  | 'tourner_gauche' | 'tourner_droite'
+  | 'redresser' | 'pencher';
 
 /** Ce que le contrôleur reçoit des entrées. */
 export interface Gestes {
@@ -85,6 +86,11 @@ export function toucheDe(code: string): ToucheJeu | null {
     // finir le tour.
     case 'KeyQ': return 'tourner_gauche';
     case 'KeyE': return 'tourner_droite';
+    // R et F inclinent la caméra, et ils sont au même endroit du clavier en
+    // AZERTY comme en QWERTY : R au-dessus de F, comme la vue qu'ils donnent —
+    // R redresse vers le dessus, F penche vers l'horizon.
+    case 'KeyR': return 'redresser';
+    case 'KeyF': return 'pencher';
     default: return null;
   }
 }

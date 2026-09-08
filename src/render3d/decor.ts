@@ -46,6 +46,7 @@ import { paletteDe } from '../render/palettes';
 import type { Biome, CampId, Case, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, type GrilleTerrain } from './geometrie';
+import { LotInstancie } from './lots';
 import {
   creerPaysage, formesPaysageMemorisees, memesVisibles, oublierFormesPaysage, ouvrirChantierPaysage,
   type Paysage,
@@ -620,28 +621,31 @@ export function ouvrirChantierDecor(
   // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
   // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.
   //
-  // Deux règles de r170 tiennent ce choix, et il faut les connaître avant de
-  // toucher à un `count` :
+  // **Deux règles de r170 tenaient ce choix, et `LotInstancie` les a levées
+  // toutes les deux** (`lots.ts`, 8 septembre 2026). Elles sont gardées ici
+  // parce qu'elles expliquent la forme du code, et parce qu'elles reviendraient
+  // au premier `InstancedMesh` qu'on réintroduirait :
   //
-  // 1. **Le nombre d'instances entre dans le nuanceur.** Sous les mille
+  // 1. **Le nombre d'instances entrait dans le nuanceur.** Sous les mille
   //    instances, `InstanceNode` range les matrices dans un tampon d'uniformes
   //    dont la taille est écrite **en dur** dans le WGSL — `array<mat4x4<f32>,
-  //    N>` — avec le `count` du **premier** rendu. Relever `count` ensuite ne
-  //    recompile rien (la clé de l'objet de rendu ne porte que l'identifiant de
-  //    la maille, jamais son compte) : les instances au-delà de N liraient hors
-  //    du tableau. Un lot dont le nombre change se **rebâtit**, il ne se règle
-  //    pas — c'est ce que font `batirArbres`, `batirRochers` et `batirPavillons`.
-  // 2. **Un `count` de zéro dessine une instance.** `getDrawParameters` fait
-  //    `object.count > 1 ? object.count : 1` : un lot vide coûte un appel de
-  //    dessin et une instance à matrice nulle, dégénérée mais payée. On éteint
-  //    donc la maille au lieu de la laisser à zéro.
-  const allumer = (lot: THREE.InstancedMesh, compte: number): void => {
-    lot.count = compte;
+  //    N>` — avec le `count` du **premier** rendu ; d'où un programme par lot,
+  //    et un rebâtissage à chaque changement de compte. Les matrices passent
+  //    désormais par des attributs par instance : le compte n'est plus dans le
+  //    texte, `compte` se règle librement, et tous les lots de même forme
+  //    partagent un programme.
+  // 2. **Un `count` de zéro dessinait une instance.** `getDrawParameters` fait
+  //    `object.count > 1 ? object.count : 1` pour une maille instanciée — mais
+  //    lit `geometry.instanceCount` d'abord, et rend `null` à zéro. Éteindre la
+  //    maille n'est donc plus nécessaire ; on continue de le faire, parce qu'un
+  //    groupe éteint est aussi ignoré par la passe d'ombres.
+  const allumer = (lot: LotInstancie, compte: number): void => {
+    lot.compte = compte;
     lot.visible = compte > 0;
   };
-  let troncs!: THREE.InstancedMesh;
-  let coniferes!: THREE.InstancedMesh;
-  let feuillus!: THREE.InstancedMesh;
+  let troncs!: LotInstancie;
+  let coniferes!: LotInstancie;
+  let feuillus!: LotInstancie;
 
   function batirArbres(): void {
     for (const m of [troncs, coniferes, feuillus]) {
@@ -649,11 +653,11 @@ export function ouvrirChantierDecor(
       groupe.remove(m);
       m.dispose();
     }
-    troncs = new THREE.InstancedMesh(geoTronc, matTronc, Math.max(1, arbres.length));
-    coniferes = new THREE.InstancedMesh(
+    troncs = new LotInstancie(geoTronc, matTronc, Math.max(1, arbres.length));
+    coniferes = new LotInstancie(
       geoConifere, matConifere, Math.max(1, arbres.filter((a) => a.conifere).length),
     );
-    feuillus = new THREE.InstancedMesh(
+    feuillus = new LotInstancie(
       geoFeuillu, matFeuillu, Math.max(1, arbres.filter((a) => !a.conifere).length),
     );
     troncs.name = 'troncs';
@@ -722,7 +726,7 @@ export function ouvrirChantierDecor(
     formeMemorisee('rocher-dalle', () => eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05)),
   ];
   const matRocher = new THREE.MeshStandardNodeMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
-  let lotsRocher: THREE.InstancedMesh[] = [];
+  let lotsRocher: LotInstancie[] = [];
 
   function batirRochers(): void {
     for (const lot of lotsRocher) {
@@ -731,7 +735,7 @@ export function ouvrirChantierDecor(
     }
     lotsRocher = geosRocher.map((geo, v) => {
       const total = Math.max(1, rochers.filter((r) => r.variante === v).length);
-      const lot = new THREE.InstancedMesh(geo, matRocher, total);
+      const lot = new LotInstancie(geo, matRocher, total);
       lot.name = `rochers-${v}`;
       lot.castShadow = true;
       lot.receiveShadow = true;
@@ -1365,9 +1369,9 @@ export function ouvrirChantierDecor(
     { length: drapeauPlat.length / 3 }, (_, i) => drapeauPlat[i * 3]! / LARG_DRAPEAU,
   );
   const matDrapeau = new THREE.MeshStandardNodeMaterial({ color: 0xffffff, roughness: 0.72, side: THREE.DoubleSide });
-  let mats!: THREE.InstancedMesh;
-  let pommeaux!: THREE.InstancedMesh;
-  let drapeaux!: THREE.InstancedMesh;
+  let mats!: LotInstancie;
+  let pommeaux!: LotInstancie;
+  let drapeaux!: LotInstancie;
 
   function batirPavillons(): void {
     for (const lot of [mats, pommeaux, drapeaux]) {
@@ -1376,9 +1380,9 @@ export function ouvrirChantierDecor(
       lot.dispose();
     }
     const totalPavillons = Math.max(1, places.length);
-    mats = new THREE.InstancedMesh(geoMat, matMetal, totalPavillons);
-    pommeaux = new THREE.InstancedMesh(geoPommeau, matIvoire, totalPavillons);
-    drapeaux = new THREE.InstancedMesh(geoDrapeau, matDrapeau, totalPavillons);
+    mats = new LotInstancie(geoMat, matMetal, totalPavillons);
+    pommeaux = new LotInstancie(geoPommeau, matIvoire, totalPavillons);
+    drapeaux = new LotInstancie(geoDrapeau, matDrapeau, totalPavillons);
     mats.name = 'mats';
     pommeaux.name = 'pommeaux';
     drapeaux.name = 'drapeaux';

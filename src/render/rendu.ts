@@ -194,6 +194,18 @@ export interface Rendu {
   /** Un quart de tour autour de la carte : +1 vers la droite, −1 vers la gauche. */
   tourner?(sens: number): void;
   /**
+   * Incline la caméra d'un pas : **+1 redresse** vers la vue de dessus, −1
+   * penche vers l'horizon. Absent quand la peau ne sait pas s'incliner.
+   */
+  incliner?(sens: number): void;
+  /**
+   * Passe à l'inclinaison suivante, en boucle : la vue de lecture, l'oblique,
+   * la rasante, puis la vue de lecture à nouveau. C'est le geste d'**un seul
+   * bouton**, celui du panneau caméra — deux de plus ne tiendraient pas au
+   * pouce à côté du zoom, de la rotation et du recentrage.
+   */
+  inclinaisonSuivante?(): void;
+  /**
    * Où la peau dessine une unité **en ce moment**, en unités de scène — au
    * milieu d'un glissement, ce n'est ni sa case de départ ni celle d'arrivée.
    * Mise au point et tests de fumée : c'est ce qui prouve qu'une figurine bouge
@@ -226,6 +238,27 @@ export interface Rendu {
   qualite?(qualite: QualiteRendu): void;
   /** Retire tout : écouteurs, boucle, contextes, mémoire graphique. */
   demonter(): void;
+}
+
+/**
+ * Vrai si le navigateur courant peut faire tourner le moteur : WebGPU
+ * (`navigator.gpu`, sans garantie d'adaptateur — c'est `choisirBackend` qui la
+ * demande, et le repli WebGL 2 prend alors), ou à défaut un contexte WebGL 2.
+ *
+ * Elle vit **ici** plutôt que dans `render3d/scene.ts`, où elle est née, parce
+ * que l'écran-titre doit poser la question sans faire entrer le moteur WebGPU
+ * dans son paquet. Il posait jusqu'ici celle de WebGL 2 seule : sur un appareil
+ * qui a WebGPU sans WebGL 2, l'attract mode ne se montrait jamais, alors que le
+ * moteur y aurait tourné — et par son meilleur dos.
+ */
+export function moteur3dDisponible(): boolean {
+  try {
+    const g = globalThis as { navigator?: { gpu?: unknown } };
+    if (g.navigator?.gpu) return true;
+  } catch {
+    // Un `navigator` qui refuse de se laisser lire n'a pas de WebGPU.
+  }
+  return webgl2Disponible();
 }
 
 /** Vrai si le navigateur courant sait ouvrir un contexte WebGL 2. */

@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
-import { TANGAGE_DEFAUT, champAuSol, type EtatCamera } from '../../src/render3d/camera';
+import { TANGAGE_DEFAUT, TANGAGE_MIN, champAuSol, type EtatCamera } from '../../src/render3d/camera';
 import { directionSoleil } from '../../src/render3d/eclairage';
 import { CASE } from '../../src/render3d/geometrie';
 import {
@@ -108,6 +108,7 @@ test('le cadre couvre la boîte visible, dans le repère de la vraie caméra d�
     ['tourné, lune d’hiver', etat({ lacet: 270, distance: 9 }), LUNE_HIVER],
     ['loin, portrait', etat({ distance: 45, tangage: 60 }), SOLEIL_ETE],
     ['tout près', etat({ distance: 2, tangage: 75, cible: { x: 1, z: 15 } }), LUNE_HIVER],
+    ['penchée à fond', etat({ distance: 30, tangage: TANGAGE_MIN }), SOLEIL_ETE],
   ] as const) {
     const champ = champVisibleAuSol(e, aspect);
     const cadre = cadreOmbre(champ, CARTE, soleil, e.cible, 2048);
@@ -121,6 +122,23 @@ test('le cadre couvre la boîte visible, dans le repère de la vraie caméra d�
     // Et la cible elle-même, au sol comme au sommet de la tranche.
     assert.ok(dansLeVolume(cam, new THREE.Vector3(e.cible.x, 0, e.cible.z)), nom);
     assert.ok(dansLeVolume(cam, new THREE.Vector3(e.cible.x, HAUTEURS_OMBRE.max, e.cible.z)), nom);
+  }
+});
+
+test('la caméra penchée à fond voit un champ fini, donc une carte d’ombre utile', () => {
+  // Ce que `TANGAGE_MIN` protège : à mesure que la caméra se penche, le champ
+  // visible s'allonge vers le fond, et il partirait à l'infini si le haut de
+  // l'écran passait l'horizon. Il doit rester **fini** — l'écrêtage à la carte
+  // fait le reste.
+  for (const aspect of [0.46, 1.6, 2.4]) {
+    const champ = champVisibleAuSol(etat({ tangage: TANGAGE_MIN, distance: 45 }), aspect);
+    for (const v of [champ.minX, champ.maxX, champ.minZ, champ.maxZ]) {
+      assert.ok(Number.isFinite(v), `aspect ${aspect} : le champ reste borné`);
+    }
+    // Fini, mais long : penchée, la caméra voit plus loin devant elle que la
+    // même caméra à plat. C'est le prix de la vue, et il est écrêté ensuite.
+    const droite = champVisibleAuSol(etat({ tangage: TANGAGE_DEFAUT, distance: 45 }), aspect);
+    assert.ok(champ.maxZ - champ.minZ > droite.maxZ - droite.minZ);
   }
 });
 

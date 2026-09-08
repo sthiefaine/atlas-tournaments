@@ -435,10 +435,17 @@ export class Controleur {
       return false;
     }
     if (!this.dansCarte(c) || this.phaseCourante === 'attente' || this.phaseCourante === 'fin') return false;
-    const u = uniteSur(this.etatPartie, c);
+    return this.ouvrirInspection(uniteSur(this.etatPartie, c));
+  }
+
+  /**
+   * Ouvre l'inspection sur une unité adverse, si elle en est une et qu'on la
+   * voit. Sous brouillard, `uniteSur` lit l'état **entier** : allumer la portée
+   * d'une unité cachée dirait où elle est. Rend vrai si l'inspection s'est
+   * ouverte — l'appelant s'en sert pour ne pas faire en plus autre chose.
+   */
+  private ouvrirInspection(u: Unite | undefined): boolean {
     if (!u || u.camp === this.camp) return false;
-    // Sous brouillard, on n'inspecte que ce qu'on voit : `uniteSur` lit l'état
-    // entier, et la portée d'une unité cachée dirait où elle est.
     if (!unitesVues(this.etatPartie, this.cat, this.camp).some((v) => v.id === u.id)) return false;
     this.reinitialiserSelection();
     this.inspectionId = u.id;
@@ -794,6 +801,11 @@ export class Controleur {
       this.ecouteur.surChangement?.();
       return;
     }
+    // Un clic **simple** sur une unité adverse ouvre son détail. Le double-clic
+    // et l'appui long restent, mais ils ne s'apprennent nulle part, et au doigt
+    // il n'y a pas de survol pour montrer le panneau : ce clic-là ne faisait
+    // rien d'autre que défaire une sélection déjà défaite.
+    if (this.ouvrirInspection(u)) return;
     if (!u && this.ouvrirProduction(c)) return;
     this.reinitialiserSelection();
     this.ecouteur.surChangement?.();

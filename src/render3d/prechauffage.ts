@@ -107,9 +107,17 @@ function dessinable(o: THREE.Object3D): boolean {
  * la montre — c'est-à-dire au premier tir et au premier survol, là où un gel se
  * remarque autant qu'au chargement.
  */
-export function lotsDePrechauffage(scene: THREE.Object3D, taille = TAILLE_LOT): THREE.Object3D[][] {
+export function lotsDePrechauffage(
+  racine: THREE.Object3D | readonly THREE.Object3D[], taille = TAILLE_LOT,
+): THREE.Object3D[][] {
+  // Une racine unique donne ses **enfants** pour familles — c'est la scène, et
+  // ses familles sont le plateau, le décor, les unités. Une liste, elle, est
+  // déjà la liste des familles : c'est ainsi qu'on ne chauffe qu'une part du
+  // monde (`index.ts`, la révélation en quatre temps).
+  const familles = Array.isArray(racine)
+    ? (racine as readonly THREE.Object3D[]) : (racine as THREE.Object3D).children;
   const lots: THREE.Object3D[][] = [];
-  for (const famille of scene.children) {
+  for (const famille of familles) {
     const feuilles: THREE.Object3D[] = [];
     famille.traverse((o) => { if (dessinable(o)) feuilles.push(o); });
     for (let i = 0; i < feuilles.length; i += taille) lots.push(feuilles.slice(i, i + taille));
@@ -128,6 +136,16 @@ interface OptionsPrechauffage {
   /** Vrai tant que la scène vit : un démontage arrête le préchauffage. */
   vivante?(): boolean;
   taille?: number;
+  /**
+   * Les familles à chauffer. Absentes, c'est toute la scène.
+   *
+   * C'est ce qui permet de **montrer le sol avant le reste** : la première
+   * image n'attend que les programmes du plateau, et le décor puis les unités
+   * paient les leurs après, une famille à la fois, chacune paraissant dès
+   * qu'elle est chaude. Le reste de la scène est caché pendant l'opération dans
+   * tous les cas : on ne chauffe que ce qu'on a demandé.
+   */
+  cibles?: readonly THREE.Object3D[];
 }
 
 /** Un tour de boucle d'événements : le navigateur peint, puis on reprend. */
@@ -147,20 +165,24 @@ export async function prechauffer(
 ): Promise<void> {
   const pause = options.pause ?? tourDeBoucle;
   const vivante = options.vivante ?? ((): boolean => true);
-  const lots = lotsDePrechauffage(scene, options.taille ?? TAILLE_LOT);
+  const lots = lotsDePrechauffage(options.cibles ?? scene, options.taille ?? TAILLE_LOT);
   if (lots.length === 0) return;
 
   // On retient l'état de chaque feuille avant de la cacher : c'est la seule
   // chose qu'on touche, et elle doit revenir exactement comme elle était — une
   // nappe de surbrillance éteinte doit le rester.
+  //
+  // On cache **toute** la scène, et pas seulement les cibles : un objet déjà
+  // chaud qu'on laisserait allumé entrerait dans la projection de chaque lot,
+  // et le moteur le traiterait autant de fois qu'il y a de lots. C'est ce qui
+  // rendrait la révélation par familles plus chère que la révélation d'un bloc.
   const avant = new Map<THREE.Object3D, { visible: boolean; cull: boolean }>();
   let echecs = 0;
-  for (const lot of lots) {
-    for (const o of lot) {
-      avant.set(o, { visible: o.visible, cull: o.frustumCulled });
-      o.visible = false;
-    }
-  }
+  scene.traverse((o) => {
+    if (!dessinable(o)) return;
+    avant.set(o, { visible: o.visible, cull: o.frustumCulled });
+    o.visible = false;
+  });
   try {
     for (const lot of lots) {
       if (!vivante()) break;
@@ -274,10 +296,17 @@ function affiche(o: THREE.Object3D): boolean {
  * `compileAsync`, un rendu ne compile que ce qu'il dessine, et un représentant
  * éteint laisserait sa forme froide tout en occupant sa place.
  */
-export function lotsDOmbre(scene: THREE.Object3D, taille = TAILLE_LOT): THREE.Object3D[][] {
-  const vus = new Set<string>();
+export function lotsDOmbre(
+  scene: THREE.Object3D | readonly THREE.Object3D[], taille = TAILLE_LOT, connues?: Set<string>,
+): THREE.Object3D[][] {
+  // `connues` traverse les appels : une forme chauffée quand le sol a paru ne
+  // se rechauffe pas quand le décor paraît. Un lot d'ombre coûte un rendu
+  // entier, on ne le rejoue pas pour rien.
+  const vus = connues ?? new Set<string>();
   const representants: THREE.Object3D[] = [];
-  const porteurs = porteursOmbre(scene);
+  const porteurs = Array.isArray(scene)
+    ? (scene as readonly THREE.Object3D[]).flatMap((r) => porteursOmbre(r))
+    : porteursOmbre(scene as THREE.Object3D);
   for (const o of [...porteurs.filter(affiche), ...porteurs]) {
     const s = signatureOmbre(o);
     if (vus.has(s)) continue;
@@ -325,13 +354,13 @@ function lumieresOmbrantes(scene: THREE.Object3D): LumierePorteuse[] {
  */
 export async function prechaufferOmbres(
   moteur: MoteurOmbrable, scene: THREE.Scene, camera: THREE.Camera,
-  options: OptionsPrechauffage = {},
+  options: OptionsPrechauffage & { connues?: Set<string> } = {},
 ): Promise<void> {
   const pause = options.pause ?? tourDeBoucle;
   const vivante = options.vivante ?? ((): boolean => true);
   const lumieres = lumieresOmbrantes(scene);
   if (lumieres.length === 0) return;
-  const lots = lotsDOmbre(scene, options.taille ?? TAILLE_LOT);
+  const lots = lotsDOmbre(options.cibles ?? scene, options.taille ?? TAILLE_LOT, options.connues);
   if (lots.length === 0) return;
 
   const porteurs = porteursOmbre(scene);

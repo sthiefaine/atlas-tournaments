@@ -82,7 +82,7 @@ import {
   cadenceInsuffisante, composeurPossible, decisionComposeur, IMAGES_CADENCE, mediane, msCadence,
   msCalibration, QUALITE_PAR_DEFAUT, type BackendRendu, type QualiteRendu,
 } from '../render/qualite';
-import { webgl2Disponible, type MesuresRendu } from '../render/rendu';
+import { moteur3dDisponible, type MesuresRendu } from '../render/rendu';
 import { creerEnvironnement, type Environnement } from './environnement';
 import { compterFamilles, depuisInfo } from './mesures';
 import { prechauffer, prechaufferOmbres } from './prechauffage';
@@ -120,15 +120,22 @@ export interface Scene3d {
    * prix qu'elle a toujours payé.
    *
    * S'appelle **plusieurs fois** sans dommage : ce qui est déjà chaud ne coûte
-   * qu'une lecture de cache, et c'est ce qui permet de bâtir le monde en deux
-   * temps (`index.ts`) — le sol, puis le reste.
+   * qu'une lecture de cache, et c'est ce qui permet de faire paraître le monde
+   * **famille par famille** (`index.ts`) — le sol, le décor, les figurines.
+   *
+   * `cibles` dit quelles familles chauffer ; absentes, c'est toute la scène. Le
+   * reste est caché pendant l'opération dans les deux cas. C'est là qu'est le
+   * gain sur la première image : le plateau ne porte qu'une fraction des
+   * programmes, et la grille paraît sans attendre ceux des arbres.
    *
    * `poursuivre` est relu **entre deux lots** : le rendre faux abandonne le
    * préchauffage proprement, à la frontière d'un lot. C'est ainsi qu'un budget
    * s'applique sans jamais interrompre une compilation en cours — la couper au
    * milieu laisserait le moteur incapable de dessiner.
    */
-  prechauffer(camera: THREE.Camera, poursuivre?: () => boolean): Promise<void>;
+  prechauffer(
+    camera: THREE.Camera, poursuivre?: () => boolean, cibles?: readonly THREE.Object3D[],
+  ): Promise<void>;
   /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   readonly msParImage: number;
   /**
@@ -227,19 +234,12 @@ export async function choisirBackend(navigateur: NavigateurGpu | null | undefine
 }
 
 /**
- * Vrai si le navigateur courant peut faire tourner le moteur : WebGPU
- * (`navigator.gpu`, sans garantie d'adaptateur — c'est `choisirBackend` qui la
- * demande, et le repli prend alors) ou, à défaut, un contexte WebGL 2.
+ * Vrai si le navigateur courant peut faire tourner le moteur. Elle vit
+ * désormais dans `render/rendu.ts` — l'écran-titre doit pouvoir la poser sans
+ * faire entrer le moteur WebGPU dans son paquet — et se relaie ici, où tout le
+ * rendu 3D la cherche.
  */
-export function moteur3dDisponible(): boolean {
-  try {
-    const g = globalThis as { navigator?: NavigateurGpu };
-    if (g.navigator?.gpu) return true;
-  } catch {
-    // Un `navigator` qui refuse de se laisser lire n'a pas de WebGPU.
-  }
-  return webgl2Disponible();
-}
+export { moteur3dDisponible };
 
 /**
  * L'intensité d'environnement avant que l'éclairage n'ait parlé : celle d'un
@@ -326,6 +326,14 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   let vivante = true;
   /** Les derniers temps d'envoi, dont `msParImage` prend la médiane. */
   const envois: number[] = [];
+  /**
+   * Les signatures de forme dont la passe d'ombres est déjà chaude
+   * (`prechaufferOmbres`). Elle vit ici, et non dans l'appelant, parce qu'elle
+   * décrit l'état du **moteur** : les pipelines créés survivent à toutes les
+   * révélations, et une forme chauffée pour le sol ne se rechauffe pas pour le
+   * décor.
+   */
+  const ombresChaudes = new Set<string>();
 
   // --- La chaîne de post-traitement et sa décision.
   let qualite: QualiteRendu = options.qualite ?? QUALITE_PAR_DEFAUT;
@@ -558,7 +566,9 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       return envoi;
     },
 
-    async prechauffer(camera: THREE.Camera, poursuivre?: () => boolean): Promise<void> {
+    async prechauffer(
+      camera: THREE.Camera, poursuivre?: () => boolean, cibles?: readonly THREE.Object3D[],
+    ): Promise<void> {
       const r = renderer;
       if (!r || !vivante) return;
       const encore = (): boolean => vivante && (poursuivre?.() ?? true);
@@ -591,7 +601,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
       // lot, une fois la passe principale chaude.
       poserOmbres(scene, false);
       try {
-        await prechauffer(r, scene, camera, { vivante: encore });
+        await prechauffer(r, scene, camera, { vivante: encore, cibles });
       } finally {
         // Garde-fou : `compileAsync` remplace la fonction qui traite chaque
         // objet par celle qui **crée un pipeline sans dessiner**, et ne la
@@ -604,7 +614,12 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         // par de vrais rendus (`prechaufferOmbres`), qui rejouent la passe
         // principale à chaque lot. Celle-ci doit donc être chaude, sans quoi on
         // la recompilerait autant de fois qu'il y a de lots d'ombre.
-        if (encore()) await prechaufferOmbres(r, scene, camera, { vivante: encore });
+        // `ombresChaudes` traverse les appels : une forme d'ombre payée quand le
+        // sol a paru ne se repaie pas quand le décor paraît. Un lot d'ombre
+        // coûte un rendu entier — c'est le poste le plus cher du préchauffage.
+        if (encore()) {
+          await prechaufferOmbres(r, scene, camera, { vivante: encore, cibles, connues: ombresChaudes });
+        }
       } catch {
         // Un préchauffage d'ombres qui échoue ne coûte qu'une première image
         // plus chère : elle refera le travail elle-même.

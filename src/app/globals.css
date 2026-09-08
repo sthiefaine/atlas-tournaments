@@ -90,7 +90,12 @@ body {
 
 /* Le plateau reste libre : une mission compacte et les explications à la demande. */
 .atlas-jeu{height:100dvh;isolation:isolate;overscroll-behavior:none}
-.atlas-mission-bar{position:absolute;top:calc(80px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:15;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
+/* Les étages du jeu, du plateau vers le joueur : HUD 10 (`hud-html.ts`),
+   bandeau de tour 11, scènes transitoires 12 (`scenes-html.ts`), dialogue de
+   commandant 20, voile 30. Le fanion de mission se glisse **sous** le HUD, à 9 :
+   il vit en haut à gauche, sous le bulletin météo, qui se déplie par-dessus lui
+   — et il n'a plus à flotter au-dessus d'un écran de combat ou d'une modale. */
+.atlas-mission-bar{position:absolute;top:calc(116px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left));display:flex;gap:8px;width:min(380px,calc(100% - 24px));z-index:9;pointer-events:none;font:14px/1.35 system-ui;color:#f5f5e9}
 .atlas-mission-bar button{pointer-events:auto;cursor:pointer;background:#152c3b;border:1px solid #839798;border-radius:2px;box-shadow:3px 3px 0 #101d2860;min-height:48px}
 .atlas-mission-bar button:hover{background:#22455a}
 .atlas-mission-objectif{text-align:left;padding:9px 13px;min-width:0;flex:1}
@@ -118,13 +123,13 @@ body {
 .atlas-lecon>p{font-size:17px;line-height:1.55;margin:14px 0;min-height:80px}
 .atlas-tuto-actions button{min-height:48px;padding:10px 14px;border-radius:12px;background:#24342e0c;border:1px solid #24342e20;cursor:pointer;font-size:14px;font-weight:600}
 @media(max-width:600px){
-  .atlas-mission-bar{top:calc(76px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left));width:calc(100% - 20px)}
+  .atlas-mission-bar{top:calc(112px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left));width:calc(100% - 20px)}
   .atlas-voile{align-items:flex-end;padding:env(safe-area-inset-top,0px) 0 0}
   .atlas-briefing{max-height:calc(100dvh - max(16px,env(safe-area-inset-top)));border-radius:24px 24px 0 0;padding:22px max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));width:100%}
   .atlas-briefing .campagne-actions{padding-bottom:max(12px,env(safe-area-inset-bottom))}
 }
 @media(max-height:500px) and (orientation:landscape){
-  .atlas-mission-bar{top:calc(72px + env(safe-area-inset-top,0px));width:270px}
+  .atlas-mission-bar{top:calc(112px + env(safe-area-inset-top,0px));width:270px}
   .atlas-mission-resume{font-size:12px}.atlas-mission-bar button{min-height:44px}
   .atlas-briefing{max-height:calc(100dvh - 16px);width:620px;padding-top:18px}
   .atlas-voile{padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left))}

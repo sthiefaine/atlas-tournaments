@@ -13,6 +13,17 @@
 // dans `decor.test.ts` ont été relevées sur le code d'avant ce remaniement.
 import * as THREE from 'three/webgpu';
 
+import { estLotInstancie } from '../../src/render3d/lots';
+
+/**
+ * Les attributs que `LotInstancie` ajoute à la forme qu'il instancie. Ils sont
+ * **exclus** de la part « géométrie » de l'empreinte et rapportés à part, dans
+ * la ligne `inst:` — exactement là où `InstancedMesh` rangeait les siens. C'est
+ * ce qui permet aux condensés figés, relevés avant `lots.ts`, de tenir : ils
+ * disent ce que le décor met à l'écran, et cela n'a pas bougé.
+ */
+const ATTRIBUTS_INSTANCE = new Set(['iCol0', 'iCol1', 'iCol2', 'iCol3', 'iTeinte']);
+
 /** Un FNV-1a sur les octets d'une suite de nombres, en double précision. */
 function hacher(valeurs: ArrayLike<number>): string {
   let h = 0x811c9dc5;
@@ -34,7 +45,11 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
     o.quaternion.x, o.quaternion.y, o.quaternion.z, o.quaternion.w,
     o.scale.x, o.scale.y, o.scale.z,
   ];
-  let ligne = `${chemin}|${o.type}|${o.name}|${o.visible ? 1 : 0}`
+  // Un lot instancié se déclare `Mesh` depuis `lots.ts` — c'est justement ce
+  // qui lui épargne un programme —, mais il met à l'écran ce qu'un
+  // `InstancedMesh` y mettait : l'empreinte le dit comme avant.
+  const type = estLotInstancie(o) ? 'InstancedMesh' : o.type;
+  let ligne = `${chemin}|${type}|${o.name}|${o.visible ? 1 : 0}`
     + `|${o.castShadow ? 1 : 0}|${o.receiveShadow ? 1 : 0}`
     + `|${p.map((v) => v.toFixed(9)).join(',')}`;
   const m = o as THREE.Mesh;
@@ -42,7 +57,7 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
   const g = m.geometry;
   // Les attributs sont triés : leur ordre d'insertion compte pour le nombre de
   // programmes (`programmes.ts`), pas pour l'image, et il a son propre test.
-  const attributs = Object.keys(g.attributes).sort();
+  const attributs = Object.keys(g.attributes).sort().filter((n) => !ATTRIBUTS_INSTANCE.has(n));
   ligne += `|geo:${attributs.map((n) => {
     const a = g.getAttribute(n) as THREE.BufferAttribute;
     return `${n}:${a.itemSize}:${a.count}:${hacher(a.array as ArrayLike<number>)}`;
@@ -51,6 +66,14 @@ function ligneDe(o: THREE.Object3D, chemin: string): string {
   const mat = m.material as THREE.MeshStandardMaterial;
   ligne += `|mat:${mat.type}:${mat.color?.getHexString?.() ?? '-'}`
     + `:${mat.transparent ? 1 : 0}:${(mat.opacity ?? 1).toFixed(3)}`;
+  if (estLotInstancie(o)) {
+    // Les seize flottants d'une instance, dans l'ordre où `instanceMatrix` les
+    // rangeait : quatre colonnes à la suite. Même contenu, même haché.
+    ligne += `|inst:${o.compte}/${o.capacite}:${hacher(o.matricesAPlat())}`;
+    const teintes = o.teintesAPlat();
+    ligne += `|col:${teintes ? hacher(teintes) : 'nul'}`;
+    return ligne;
+  }
   const lot = m as THREE.InstancedMesh;
   if (lot.isInstancedMesh) {
     ligne += `|inst:${lot.count}/${lot.instanceMatrix.count}`

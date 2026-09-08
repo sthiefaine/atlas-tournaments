@@ -62,6 +62,8 @@ interface PontBanc {
   recentrer(x: number, y: number): void;
   zoomer(sens: number): void;
   tourner(sens: number): void;
+  /** Incline la caméra d'un pas : +1 redresse vers la vue de dessus, −1 penche vers l'horizon. */
+  incliner(sens: number): void;
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
   /** La hauteur de la feuille mobile : 0 poignée seule, 1 un tiers, 2 deux tiers. Sans effet sur PC. */
@@ -398,6 +400,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       recentrer: (x, y) => rendu.current?.recentrer?.({ x, y }),
       zoomer: (sens) => rendu.current?.zoomer?.(sens),
       tourner: (sens) => rendu.current?.tourner?.(sens),
+      incliner: (sens) => rendu.current?.incliner?.(sens),
       silhouettes: (v) => setSilhouettes(v),
       replier: (v) => setDockReplie(v),
       feuille: (n) => setNiveau(n),
@@ -553,11 +556,15 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     <button type="button" aria-label="Éloigner la caméra" onClick={() => rendu.current?.zoomer?.(-1)}>−</button>
     <button type="button" aria-label="Rapprocher la caméra" onClick={() => rendu.current?.zoomer?.(1)}>+</button>
     <button type="button" aria-label="Tourner la caméra vers la droite" onClick={() => rendu.current?.tourner?.(1)}>↻</button>
+    {/* Le banc a la place de deux boutons ; le HUD du jeu n'en a qu'un, qui fait le tour des trois inclinaisons. */}
+    <button type="button" aria-label="Pencher la caméra vers l’horizon" onClick={() => rendu.current?.incliner?.(-1)}>⌄</button>
+    <button type="button" aria-label="Redresser la caméra vers la vue de dessus" onClick={() => rendu.current?.incliner?.(1)}>⌃</button>
     <button type="button" onClick={recentrer}>Recentrer</button>
   </div>;
 
   const note = <p className={styles.note}>
-    Glissez la carte · Pincez pour zoomer · Q et E pour tourner. Le banc rejoue des <strong>événements</strong>,
+    Glissez la carte · Pincez pour zoomer · Q et E pour tourner · R et F pour incliner (ou deux doigts
+    de haut en bas, ou Maj + molette). Le banc rejoue des <strong>événements</strong>,
     pas des règles : rien ici n’est une partie légale, et rien n’est enregistré.
   </p>;
 

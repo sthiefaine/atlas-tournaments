@@ -1,11 +1,12 @@
 /**
  * La caméra du plateau : **perspective, vue de dessus à faible inclinaison**.
  *
- * Le brief fixe le cadre et il ne bouge pas : tangage entre 60° et 75° au-dessus
- * de l'horizontale (68° par défaut), lacet fixe mais tournable **par quarts de
- * tour** (Q et E), zoom borné (molette, pincement, + et −), glisser au un doigt
- * ou bouton droit. Un tap reste au jeu. Le cadrage conserve des cases lisibles
- * sur téléphone, quitte à explorer la carte en glissant.
+ * Le brief fixe le cadre : **tangage inclinable** entre 30° et 75° au-dessus de
+ * l'horizontale (68° par défaut, révision du 8 septembre 2026 — voir
+ * `TANGAGE_MIN`), lacet fixe mais tournable **par quarts de tour** (Q et E),
+ * zoom borné (molette, pincement, + et −), glisser au un doigt ou bouton droit.
+ * Un tap reste au jeu. Le cadrage conserve des cases lisibles sur téléphone,
+ * quitte à explorer la carte en glissant.
  *
  * Tout ce qui **dure** — l'inertie d'un glisser lâché, l'interpolation d'un pas
  * de zoom, le recentrage d'un double-tap — passe par `avancer(ms)`, que la
@@ -21,12 +22,42 @@ import * as THREE from 'three/webgpu';
 import type { Case } from '../schemas/types';
 import { CASE, mondeVersCase } from './geometrie';
 
-/** Tangage minimal, en degrés au-dessus de l'horizontale. */
-export const TANGAGE_MIN = 60;
+/**
+ * Tangage minimal, en degrés au-dessus de l'horizontale.
+ *
+ * **Abaissé de 60° à 30° le 8 septembre 2026**, à la demande du propriétaire
+ * (« on est toujours en vue du dessus »). `10-rendu-3d.md` §3.2 refusait le
+ * dessous de 60° parce que les unités du fond se cachent les unes derrière les
+ * autres : c'est vrai, et c'est désormais **le choix du joueur**, qui redresse
+ * d'un geste et retrouve la vue de lecture. Ce qui, lui, n'est pas négociable
+ * est la borne : le demi-champ vertical vaut 21° (`FOV` / 2), donc sous 25° le
+ * rayon du haut de l'écran passe l'horizon, et le champ visible au sol comme le
+ * cadre d'ombre partent à l'infini (`ombres.ts`, `champVisibleAuSol`). Trente
+ * degrés laissent neuf degrés de marge.
+ */
+export const TANGAGE_MIN = 30;
 /** Tangage maximal : au-delà, la lecture des unités s'aplatit. */
 export const TANGAGE_MAX = 75;
-/** Tangage par défaut. */
+/** Tangage par défaut : la vue de lecture, celle où la partie se joue. */
 export const TANGAGE_DEFAUT = 68;
+
+/**
+ * Les trois inclinaisons du **bouton unique** : la vue de lecture, l'oblique où
+ * le relief et les figurines prennent du volume, la rasante où l'on regarde le
+ * plateau presque de face. Un bouton qui fait le tour plutôt que deux boutons :
+ * le panneau caméra en porte déjà cinq, et sept ne tiennent pas au pouce.
+ */
+export const PALIERS_TANGAGE = [TANGAGE_DEFAUT, 48, 32] as const;
+
+/** Un pas d'inclinaison, en degrés : la touche, la molette, le banc. */
+export const PAS_TANGAGE = 7;
+
+/**
+ * Ce qu'un pixel de glisser à deux doigts vaut en degrés : la plage entière se
+ * couvre en 180 px, soit un pouce d'écran. Plus fin, on n'arrive jamais en bas ;
+ * plus gros, le moindre tremblement bascule la vue.
+ */
+export const DEGRES_PAR_PIXEL = 0.25;
 
 /** Champ de vision vertical, en degrés. */
 export const FOV = 42;
@@ -188,6 +219,29 @@ export function palierSuivant(distance: number, sens: number): number {
   return PALIERS_DISTANCE[j] ?? courant;
 }
 
+/** Borne un tangage à la fourchette du brief. */
+export function bornerTangage(tangage: number): number {
+  return Number.isFinite(tangage)
+    ? Math.max(TANGAGE_MIN, Math.min(TANGAGE_MAX, tangage))
+    : TANGAGE_DEFAUT;
+}
+
+/**
+ * L'inclinaison suivante du cycle : le premier palier **sous** le tangage
+ * courant, et le plus haut quand il n'y en a plus. Un tangage posé au geste
+ * tombe donc au palier d'en dessous plutôt que de sauter en tête de liste : le
+ * bouton continue le mouvement du doigt au lieu de le contredire.
+ */
+export function tangageSuivant(tangage: number): number {
+  const courant = bornerTangage(tangage);
+  for (const p of PALIERS_TANGAGE) {
+    // Une demi-marge : un palier atteint au geste, à un dixième de degré près,
+    // compte comme atteint, sinon le bouton n'avancerait pas.
+    if (p < courant - 0.5) return p;
+  }
+  return PALIERS_TANGAGE[0];
+}
+
 /** Ramène la cible dans la carte : on ne sort jamais du plateau. */
 export function limiterCible(
   etat: EtatCamera, carte: { largeur: number; hauteur: number },
@@ -195,7 +249,7 @@ export function limiterCible(
   const marge = 1.5;
   etat.cible.x = Math.max(-marge, Math.min(carte.largeur * CASE + marge, etat.cible.x));
   etat.cible.z = Math.max(-marge, Math.min(carte.hauteur * CASE + marge, etat.cible.z));
-  etat.tangage = Math.max(TANGAGE_MIN, Math.min(TANGAGE_MAX, etat.tangage));
+  etat.tangage = bornerTangage(etat.tangage);
   etat.distance = Math.max(DISTANCE_MIN, Math.min(DISTANCE_MAX, etat.distance));
   etat.lacet = ((Math.round(etat.lacet / 90) * 90) % 360 + 360) % 360;
   return etat;
@@ -274,6 +328,14 @@ export interface Vue3d {
   zoomer(sens: number): void;
   facteurZoom(facteur: number, ancre?: { x: number; y: number }): void;
   tourner(sens: number): void;
+  /**
+   * Incline la caméra de `degres` : **positif redresse** vers la vue de dessus,
+   * négatif penche vers l'horizon. Manipulation directe — le glisser à deux
+   * doigts, la molette avec Maj —, bornée à [`TANGAGE_MIN`, `TANGAGE_MAX`].
+   */
+  incliner(degres: number): void;
+  /** Pose l'inclinaison suivante du cycle (`tangageSuivant`). */
+  inclinaisonSuivante(): void;
   /** Lance l'inertie d'un glisser lâché : une vitesse d'écran en pixels par milliseconde. */
   lancer(vx: number, vy: number): void;
   /** Coupe inertie et transition. Rend vrai si quelque chose bougeait. */
@@ -527,6 +589,23 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
       oublierVue();
       interrompre();
       etat.lacet += Math.sign(sens) * 90;
+      appliquer();
+    },
+
+    incliner(degres: number): void {
+      if (!Number.isFinite(degres) || degres === 0) return;
+      // Un geste de caméra voulu efface la vue retenue du tour adverse : on ne
+      // ramène personne au point de vue qu'il vient lui-même de quitter.
+      oublierVue();
+      // La transition d'un zoom ne porte que la cible et la distance : elle
+      // continue, inclinée. `appliquer` borne le tangage comme le reste.
+      etat.tangage = bornerTangage(etat.tangage + degres);
+      appliquer();
+    },
+
+    inclinaisonSuivante(): void {
+      oublierVue();
+      etat.tangage = tangageSuivant(etat.tangage);
       appliquer();
     },
 

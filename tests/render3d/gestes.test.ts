@@ -1,6 +1,8 @@
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { creerVue3d, distanceLisible, PIXELS_DOUBLE_TAP } from '../../src/render3d/camera';
+import {
+  creerVue3d, distanceLisible, PAS_TANGAGE, PIXELS_DOUBLE_TAP, TANGAGE_MIN,
+} from '../../src/render3d/camera';
 import { brancherGestes3d } from '../../src/render3d/gestes';
 
 function montage(pointerType = 'touch') {
@@ -25,7 +27,17 @@ function montage(pointerType = 'touch') {
     if (temps !== undefined) Object.defineProperty(e, 'timeStamp', { value: temps });
     cible.dispatchEvent(e);
   };
-  return { vue, pointer, clics: () => clics, demonter };
+  const molette = (deltaY: number, shiftKey = false): void => {
+    cible.dispatchEvent(Object.assign(new Event('wheel'), {
+      deltaY, shiftKey, preventDefault: () => undefined,
+    }));
+  };
+  const touche = (code: string): void => {
+    cible.dispatchEvent(Object.assign(new Event('keydown'), {
+      code, preventDefault: () => undefined,
+    }));
+  };
+  return { vue, pointer, molette, touche, clics: () => clics, demonter };
 }
 
 test('un tap sélectionne, un glisser un doigt déplace la grille sans clic à son retour', () => {
@@ -56,6 +68,81 @@ test('un pincement ne sélectionne jamais la case sous le doigt resté immobile'
   m.pointer('pointerdown', 1, 195, 422);
   m.pointer('pointerup', 1, 195, 422);
   assert.equal(m.clics(), 1, 'le tap suivant reste utilisable');
+  m.demonter();
+});
+
+test('deux doigts glissés de haut en bas inclinent la caméra sans la déplacer', () => {
+  const m = montage();
+  const tangage = m.vue.etat.tangage;
+  const z = m.vue.etat.cible.z;
+  const distance = m.vue.etat.distance;
+  m.pointer('pointerdown', 1, 120, 500);
+  m.pointer('pointerdown', 2, 240, 500);
+  // Deux doigts qui montent **ensemble**, par petits pas alternés : c'est ce
+  // qu'un navigateur envoie, un événement par doigt. Chaque pas déforme
+  // brièvement l'écart — un doigt bouge avant l'autre —, et c'est pourquoi on
+  // mesure ici la dérive résiduelle au lieu de prétendre qu'elle est nulle.
+  const monter = (de: number, pas: number): void => {
+    for (let i = 1; i <= Math.abs(de) / pas; i += 1) {
+      const y = 500 + Math.sign(de) * i * pas;
+      m.pointer('pointermove', 1, 120, y);
+      m.pointer('pointermove', 2, 240, y);
+    }
+  };
+  monter(-100, 5);
+  assert.ok(m.vue.etat.tangage < tangage - 10, 'monter les doigts penche la vue, et franchement');
+  assert.ok(Math.abs(m.vue.etat.distance - distance) < distance * 0.01, 'écart constant : pas de zoom');
+  assert.ok(Math.abs(m.vue.etat.cible.z - z) < 0.1, 'le vertical va à l’inclinaison, pas au glissement');
+  // Et dans l'autre sens on se redresse.
+  const penche = m.vue.etat.tangage;
+  m.pointer('pointermove', 1, 120, 460);
+  m.pointer('pointermove', 2, 240, 460);
+  assert.ok(m.vue.etat.tangage > penche, 'descendre les doigts redresse');
+  m.pointer('pointerup', 1, 120, 460);
+  m.pointer('pointerup', 2, 240, 460);
+  assert.equal(m.clics(), 0);
+  m.demonter();
+});
+
+test('deux doigts qui s’écartent zooment toujours, et le glisser horizontal déplace', () => {
+  const m = montage();
+  const tangage = m.vue.etat.tangage;
+  const x = m.vue.etat.cible.x;
+  const distance = m.vue.etat.distance;
+  m.pointer('pointerdown', 1, 120, 500);
+  m.pointer('pointerdown', 2, 240, 500);
+  m.pointer('pointermove', 2, 320, 500);
+  assert.ok(m.vue.etat.distance < distance, 'l’écart grandit : on se rapproche');
+  assert.equal(m.vue.etat.tangage, tangage, 'un pincement horizontal n’incline pas');
+  assert.ok(m.vue.etat.cible.x !== x, 'le milieu des doigts a glissé, la carte suit');
+  m.demonter();
+});
+
+test('la molette zoome, et Maj + molette incline', () => {
+  const m = montage('mouse');
+  const distance = m.vue.etat.distance;
+  const tangage = m.vue.etat.tangage;
+  m.molette(-100);
+  assert.ok(m.vue.etat.distance <= distance, 'la molette vers le haut rapproche');
+  assert.equal(m.vue.etat.tangage, tangage, 'sans Maj, la molette n’incline pas');
+  m.molette(100, true);
+  assert.equal(m.vue.etat.tangage, tangage - PAS_TANGAGE, 'Maj + molette vers le bas penche');
+  m.molette(-100, true);
+  assert.equal(m.vue.etat.tangage, tangage, 'et vers le haut redresse');
+  m.demonter();
+});
+
+test('R redresse la caméra, F la penche, et ni l’une ni l’autre ne joue', () => {
+  const m = montage('mouse');
+  const tangage = m.vue.etat.tangage;
+  m.touche('KeyF');
+  assert.equal(m.vue.etat.tangage, tangage - PAS_TANGAGE);
+  m.touche('KeyR');
+  assert.equal(m.vue.etat.tangage, tangage);
+  // Jusqu'à la borne, et pas au-delà.
+  for (let i = 0; i < 20; i += 1) m.touche('KeyF');
+  assert.equal(m.vue.etat.tangage, TANGAGE_MIN);
+  assert.equal(m.clics(), 0, 'une touche de caméra ne remonte pas au contrôleur');
   m.demonter();
 });
 
