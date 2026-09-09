@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Commandants : jauge, passif, pouvoir et super pouvoir (`doc/04-gameplay.md` §7).
  *
@@ -73,7 +74,7 @@ export function verifierPose(
     return { ok: false, motif: 'pose_invalide', detail: 'nombre de cases hors bornes' };
   }
   const qgAdverses = Object.entries(etat.proprietaires)
-    .filter(([k, c]) => c !== camp && terrainBrut(etat, cat, {
+    .filter(([k, c]) => !sontAllies(etat, c, camp) && terrainBrut(etat, cat, {
       x: Number(k.split(',')[0]), y: Number(k.split(',')[1]),
     }) === 'qg')
     .map(([k]) => ({ x: Number(k.split(',')[0]), y: Number(k.split(',')[1]) }));

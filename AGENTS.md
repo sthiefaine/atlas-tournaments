@@ -2,6 +2,21 @@
 
 Document de passation pour Codex. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — Aube, équipes et atelier de création (9 septembre 2026)
+
+Complément de livraison : catalogue **7**, 28 unités dont deux drones communs et deux prototypes exclusifs à `atl` ; six essais libres Aube et deux quêtes secondaires débloquées par les décisions. Modes normal/difficile séparés pour les sauvegardes et victoires, décisions partagées dans chaque profil. Le ravitaillement sert désormais aussi un autre camp de la même équipe, sans transfert de propriété ni partage automatique des fonds.
+
+Les effets de combat sont communs aux silhouettes et aux GLB : rafales, missiles avec traînée, tirs en cloche, impacts colorés et poussière claire (`render3d/effets.ts`). `animations.ts` choisit le profil grâce au catalogue fourni par le contexte ; la partition place l’impact après le tir, y compris dans le chemin provisoire de l’atelier. Annulation et animations réduites libèrent les effets. Le banc ajoute « Missile de simulation » et « Tir en cloche ». Les repères de départ sont encore estimés d’après le volume ; le réglage précis des bouches des futurs modèles reste à faire sans changer leurs noms de nœuds. Aucun nouveau GLB ni validation artistique de modèle n’est inclus.
+
+Le propriétaire a confirmé un programme de fusion fictif inspiré d’ITER, un conflit stratégique sérieux sans affrontements sanglants, et **24 nations dont 12 au premier plan, plus une faction inconnue**. Ce roster est distinct des quatre camps simultanés du moteur. `BRIEF.md`, `doc/17-aube.md`, la bible et la narration sont alignés ; les douze étapes de la trame restent une cible éditoriale, pas douze nouvelles missions livrées.
+
+- Moteur **6** : `Scenario.equipes`, `renforts`, `fondsDepartParCamp`, revenus nuls. Vision et victoire communes, contrôle et caisses individuels. L’IA ne termine plus sur un autre camp allié. Renforts déterministes, case libre proche ou report ; J41 avant victoire de survie40. Les anciennes sauvegardes de match sont signalées périmées, la progression locale est conservée.
+- Cinq essais `aube_*` dans le jeu libre, trois cartes originales et deux remappages, formats2v1/1v2/2v2/1v3/3v1. Statut brouillon explicitement visible, aucun nouveau GLB. Le siège est jouable en simulation jusqu’à J41 ; son rythme final reste à éprouver humainement.
+- Choix locaux dans `src/app/campagne/consequences.ts` : deux embranchements qui donnent des fonds au seul camp0 ou des renforts dans une mission suivante. Journal par profil, décision irréversible par version ; la graine sauvegardée fige les conséquences du départ pour les rejeux. Révision des choix1, biographies2 : ce sont deux versions distinctes.
+- `content/personnages.json` contient neuf biographies versionnées. Service filtré `/api/routines/bible/personnages?acte=…`, fichier brut refusé par `/api/canon`. `/admin/personnages` est une vue éditoriale avec révélations.
+- Cinq prompts référencev2, découverte `/api/routines/contrat`, PUT des annotations et PATCH borné. Bootstrap destiné à la cible demandée Claude Sonnet5, sans identifiant fournisseur inventé ni activation externe. Pas de migration/seed exécuté.
+- Admin : navigation groupée et active, bibliothèque par familles/base+déclinaisons, recherche textuelle et territoriale, filtres/manquants/pagination, liste des fichiers obligatoires et prompt Codex complet. Le banc de réception et le contrôle des lots restent ceux du chantier précédent.
+
 ## Mise à jour — l’équipe d’Atlas et les codes de camp (6 septembre 2026)
 
 Une décision de lore, une conséquence dans le schéma. Le nom « la Cinquième Manche » a été rediscuté et **conservé**.

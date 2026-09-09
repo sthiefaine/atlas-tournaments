@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Lecture des modificateurs actifs : passifs, pouvoirs, climat et mécaniques
  * parlent tous le même vocabulaire (`doc/04-gameplay.md` §7.2, `03-schemas.md` §2).
@@ -18,7 +19,7 @@ export function viseUnite(
   const e = mod.effet;
   if (e.cible === 'terrain' || e.cible === 'economie') return false;
   if (e.cible === 'mes_unites' && u.camp !== mod.camp) return false;
-  if (e.cible === 'unites_adverses' && u.camp === mod.camp) return false;
+  if (e.cible === 'unites_adverses' && sontAllies(etat, u.camp, mod.camp)) return false;
   const f = e.filtre;
   if (!f) return true;
   if (f.types && !f.types.includes(u.type)) return false;

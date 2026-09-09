@@ -36,9 +36,9 @@
 
 import * as THREE from 'three/webgpu';
 
-import type { EtatPartie, EvenementJeu, Unite } from '../engine/index';
+import type { Catalogue, EtatPartie, EvenementJeu, Unite } from '../engine/index';
 import { cleCase, depuisCle, pvAffiches, uniteParId, uniteSur } from '../engine/index';
-import type { CampId, Case } from '../schemas/types';
+import type { CampId, Case, UnitType } from '../schemas/types';
 import { animation, type Animation } from '../render/boucle';
 import { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 import { paletteDe } from '../render/palettes';
@@ -46,8 +46,9 @@ import { DUREES, dureePartition, type Geste, type Partition } from '../render/pa
 import {
   COULEUR_PLANCHE, PIECES_PALISSADE, poseDrapeau, RAYON_PALISSADE, type PriseChantier, type PriseDrapeau,
 } from './decor';
-import type { Effet, Effets } from './effets';
-import { CASE } from './geometrie';
+import { emettreTir, emettreImpact, type Effet, type Effets } from './effets';
+import { CASE, NIVEAU_EAU } from './geometrie';
+import { hauteurSilhouette } from './pieces';
 import type { CalqueUnites } from './unites';
 
 /** Durée d'un pas de déplacement, par case traversée — celle du contrat. */
@@ -77,6 +78,8 @@ export interface EtatsConnus {
 /** Ce dont les animations ont besoin pour agir sur la scène. */
 export interface ContexteAnimation {
   unites: CalqueUnites;
+  /** Catalogue courant, sans embarquer le canon dans le rendu. */
+  catalogue?(): Catalogue | null;
   /** Le pool d'effets éphémères : éclairs, étincelles, halos, poussière. */
   effets: Effets;
   hauteurEn(x: number, z: number): number;
@@ -170,6 +173,30 @@ function animationDatee(
 function uniteConnue(ctx: ContexteAnimation, id: string): Unite | null {
   const { courant, precedent } = ctx.etats();
   return (courant && uniteParId(courant, id)) ?? (precedent && uniteParId(precedent, id)) ?? null;
+}
+
+/** Profil partagé par toutes les nations, d'après le matériel et l'arme employée. */
+export function profilTir(type?: UnitType, cible?: UnitType): 'rafale' | 'missile' | 'cloche' | 'marqueur' {
+  if (!type) return 'marqueur';
+  if (cible && type.armeSecondaire?.includes(cible.cle)) return 'rafale';
+  if (['roquettes', 'missiles_air', 'missiles_sol', 'chasseur', 'drone_intercepteur'].includes(type.cle)) return 'missile';
+  if (type.portee[0] > 1 || type.cle === 'bombardier') return 'cloche';
+  if (['infanterie', 'recon', 'antiair', 'helico', 'furtif', 'meridien_bastion'].includes(type.cle)) return 'rafale';
+  return 'marqueur';
+}
+
+/** Hauteur du volume réellement dessiné : un appareil aérien reste une figurine sur le plateau. */
+export function hauteurImpact(type?: UnitType): number {
+  return type ? hauteurSilhouette(type.silhouette) * (type.domaine === 'air' ? 0.55 : 0.65) : 0.32;
+}
+
+function typeConnu(ctx: ContexteAnimation, unite: Unite | null): UnitType | undefined {
+  return unite ? ctx.catalogue?.()?.unites[unite.type] : undefined;
+}
+
+function cibleConnue(ctx: ContexteAnimation, c: Case): Unite | null {
+  const { courant, precedent } = ctx.etats();
+  return (courant && uniteSur(courant, c)) ?? (precedent && uniteSur(precedent, c)) ?? null;
 }
 
 /**
@@ -268,15 +295,19 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
           v.recul = Math.sin(Math.min(1, p * 3) * Math.PI) * -0.09;
           v.clip = 'tir';
           v.clipDuree = g.duree;
-          if (!eclair) {
-            // L'éclair de bouche : au bord de la case du tireur, vers sa cible,
-            // le temps du premier quart du geste.
+          if (!eclair && g.duree > 0 && p < 1) {
+            const type = typeConnu(ctx, uniteConnue(ctx, g.unite));
+            const cible = typeConnu(ctx, cibleConnue(ctx, g.vers));
             const { x: cx, z: cz } = centre(g.depuis);
             const x = cx + Math.cos(cap) * 0.42;
             const z = cz - Math.sin(cap) * 0.42;
-            eclair = ctx.effets.emettre({
-              genre: 'eclair', position: { x, y: ctx.hauteurEn(x, z) + 0.26, z },
-              duree: Math.max(1, g.duree / 4), taille: 0.74, tailleFin: 0.34, opacite: 1, montee: 0,
+            const arrivee = centre(g.vers);
+            const sol = (x: number, z: number): number => Math.max(ctx.hauteurEn(x, z), NIVEAU_EAU + 0.01);
+            eclair = emettreTir(ctx.effets, {
+              profil: profilTir(type, cible),
+              depuis: { x, y: sol(cx, cz) + hauteurImpact(type), z },
+              vers: { ...arrivee, y: sol(arrivee.x, arrivee.z) + hauteurImpact(cible) },
+              duree: Math.max(1, g.duree * (1 - p)),
             });
           }
         },
@@ -309,7 +340,7 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
           v.secousse = Math.max(0, 1 - p) * 0.08;
           v.clip = 'touche';
           v.clipDuree = g.duree;
-          if (etincelles.length === 0) {
+          if (etincelles.length === 0 && g.duree > 0 && p < 1) {
             // Des étincelles claires au point d'impact — le côté de la pièce qui
             // regarde le tireur —, qui filent dans le sens du coup et s'écartent.
             // Pas de sang, pas de débris, pas de fumée noire (`doc/10` §2).
@@ -320,7 +351,8 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
             const { x: cx, z: cz } = centre(g.case);
             const x = cx - ux * 0.3;
             const z = cz - uz * 0.3;
-            const y = ctx.hauteurEn(x, z) + 0.32;
+            const y = Math.max(ctx.hauteurEn(cx, cz), NIVEAU_EAU + 0.01) + hauteurImpact(typeConnu(ctx, uniteConnue(ctx, g.unite)));
+            etincelles.push(emettreImpact(ctx.effets, { x: cx, y, z: cz }));
             const nombre = Math.min(ETINCELLES_MAX, ETINCELLES_MIN + Math.floor(g.degats / 25));
             const duree = Math.max(1, Math.min(g.duree, DUREES.encaisser));
             for (let i = 0; i < nombre; i++) {
@@ -911,8 +943,7 @@ export function partitionProvisoire(
       const att = positionDe(e.attaquantId);
       const def = positionDe(e.cibleId);
       if (!att || !def) continue;
-      // Le coup part quand le tir part : après le déplacement de l'attaquant
-      // s'il vient d'en faire un, et la cible l'encaisse au même instant.
+      // Le projectile part après le déplacement ; le choc attend son arrivée.
       const departTir = fins.get(e.attaquantId) ?? 0;
       const dureeTir = d(DUREES.tir);
       gestes.push({
@@ -922,7 +953,7 @@ export function partitionProvisoire(
         const duree = d(DUREES.encaisser);
         gestes.push({
           genre: 'encaisser', unite: e.cibleId, case: def, degats: e.degats, depuis: att,
-          debut: placer(e.cibleId, duree, departTir), duree,
+          debut: placer(e.cibleId, duree, departTir + dureeTir), duree,
         });
       }
       if (e.riposte > 0) {
@@ -936,7 +967,7 @@ export function partitionProvisoire(
         });
         gestes.push({
           genre: 'encaisser', unite: e.attaquantId, case: att, degats: e.riposte, depuis: def,
-          debut: placer(e.attaquantId, dureeCoup, depart), duree: dureeCoup,
+          debut: placer(e.attaquantId, dureeCoup, depart + dureeRiposte), duree: dureeCoup,
         });
       }
     } else if (e.type === 'hors_jeu') {

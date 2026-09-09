@@ -1,0 +1,230 @@
+{
+  "cle": "aube_releve_1v3",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_releve_1v3",
+  "nom": "Aube · La quarantième relève · 1 contre 3",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_quarantieme_releve",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 6,
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1,
+      2,
+      3
+    ]
+  ],
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 3,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 1000,
+  "revenusParBatiment": 0,
+  "brouillard": false,
+  "limiteJournees": 41,
+  "victoire": [
+    {
+      "type": "survivre",
+      "journees": 40
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Siège facultatif : tenez notre QG pendant quarante journées complètes. Trois délégations arrivent par le nord, l’ouest et l’est. Le détachement de relève rejoint notre camp au début de la journée 41 ; il ne crée pas de cinquième camp.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les budgets sont fixes : aucun revenu périodique. Des réserves adverses finies arrivent aux journées 10, 20 et 30, annoncées la veille. Nos villes permettent de réparer ; gardez des fonds pour cela.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Quarante journées complètes. Le détachement allié rejoint notre camp au sud, et le match s’achève : les accès d’Aube restent partagés. Il n’y a pas de contre-offensive à jouer dans cet essai.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "renforts": [
+    {
+      "journee": 10,
+      "unites": [
+        {
+          "camp": 1,
+          "type": "infanterie",
+          "x": 3,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "journee": 20,
+      "unites": [
+        {
+          "camp": 2,
+          "type": "recon",
+          "x": 20,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "journee": 30,
+      "unites": [
+        {
+          "camp": 3,
+          "type": "infanterie",
+          "x": 10,
+          "y": 3
+        }
+      ]
+    },
+    {
+      "journee": 41,
+      "unites": [
+        {
+          "camp": 0,
+          "type": "char_leger",
+          "x": 11,
+          "y": 16
+        },
+        {
+          "camp": 0,
+          "type": "infanterie",
+          "x": 12,
+          "y": 16
+        },
+        {
+          "camp": 0,
+          "type": "recon",
+          "x": 11,
+          "y": 17
+        }
+      ]
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "releve_alerte_10",
+      "declencheur": {
+        "type": "journee",
+        "journee": 9
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Demain, une infanterie de réserve arrive à l’ouest. Préparez la première ligne de repli.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_alerte_20",
+      "declencheur": {
+        "type": "journee",
+        "journee": 19
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Demain, un recon de réserve arrive à l’est. Gardez une sortie pour contourner sa position.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_alerte_30",
+      "declencheur": {
+        "type": "journee",
+        "journee": 29
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Demain, une infanterie de réserve arrive au nord. C’est la dernière réserve adverse annoncée.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_alerte_41",
+      "declencheur": {
+        "type": "journee",
+        "journee": 40
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La relève entre demain par le sud, sous notre commandement. Terminez cette quarantième journée en conservant le QG.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "fondsDepartParCamp": {
+    "0": 18000,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  }
+}

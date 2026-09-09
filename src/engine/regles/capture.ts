@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Capture : vingt points, les PV affichés de l'unité, un multiplicateur borné
  * (`doc/04-gameplay.md` §6). Les points repartent de zéro au mouvement, jamais
@@ -47,7 +48,7 @@ export function peutCapturerIci(etat: EtatPartie, cat: Catalogue, u: Unite): boo
   // Le génie ne capture pas : il remet en service, et seulement ce qui est désaffecté.
   const capteur = porte(type, 'capture') && type.capture;
   if (!capteur && !(porte(type, 'genie') && estDesaffecte(etat, u))) return false;
-  return etat.proprietaires[cleCase(u)] !== u.camp;
+  return !sontAllies(etat, etat.proprietaires[cleCase(u)], u.camp);
 }
 
 /** Points de capture gagnés par cette unité en un tour. */

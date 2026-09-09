@@ -1,0 +1,126 @@
+{
+  "cle": "carte_detour_des_batteries",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "carte_detour_des_batteries",
+  "nom": "Le détour des batteries",
+  "largeur": 20,
+  "hauteur": 16,
+  "camps": 3,
+  "biome": "cotier",
+  "grille": [
+    "WWWWWWWWWWWWWWWWWWWW",
+    "PPPPPFPPPPVPPPPPPPPP",
+    "PPPPRPPPPPVPPPPRPPPP",
+    "PPHURCPPPPVPPPPRPPPP",
+    "PFRRRRRRRRNRRRRRCRPP",
+    "PPPPRPFPPPVPPPPRPPPP",
+    "PPPPRPPPPPVFPPPRPPPP",
+    "PPPPRPPPCPVPCPPRFPPP",
+    "PPFPRPPPPPVPPPPRUHPP",
+    "PPPPRPPFPPVPPPPRPPPP",
+    "PPPPRPPPPPVPFPPRPPPP",
+    "PPRRRRRRRRNRRRRRCRPP",
+    "PPHURCPPPPVPPPPRPPPP",
+    "PPPPRPPPFPVPPPPRPPPP",
+    "PPPPPPPPPPVPPFPPPPPP",
+    "WWWWWWWWWWWWWWWWWWWW"
+  ],
+  "proprietaires": {
+    "2,3": 0,
+    "3,3": 0,
+    "2,12": 1,
+    "3,12": 1,
+    "17,8": 2,
+    "16,8": 2
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 3,
+      "y": 11
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 3,
+      "y": 13
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 2,
+      "y": 12
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 16,
+      "y": 7
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 16,
+      "y": 9
+    },
+    {
+      "camp": 2,
+      "type": "char_leger",
+      "x": 17,
+      "y": 8
+    },
+    {
+      "camp": 2,
+      "type": "artillerie",
+      "x": 15,
+      "y": 8
+    },
+    {
+      "camp": 2,
+      "type": "recon",
+      "x": 15,
+      "y": 6
+    },
+    {
+      "camp": 2,
+      "type": "char_leger",
+      "x": 15,
+      "y": 10
+    }
+  ]
+}

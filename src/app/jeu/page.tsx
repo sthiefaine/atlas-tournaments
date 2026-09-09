@@ -13,7 +13,7 @@ import carteDemo from '../../../content/cartes/carte_plaine_symetrique.json';
 import scenarioDemo from '../../../content/scenarios/demo.json';
 import terrainsJson from '../../../content/terrains.json';
 import { ListeParties, type PartieAffichee } from './liste-parties';
-import { CLE_DEMONSTRATION, partiesLibres, vignetteCarte } from './parties-libres';
+import { CLE_DEMONSTRATION, essaisAube, partiesLibres, vignetteCarte } from './parties-libres';
 
 /**
  * `/jeu` : le **choix de la carte**.
@@ -107,7 +107,8 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
   const parCle = new Map(cartes.map((c) => [c.cle, c]));
   const parties = partiesLibres(scenarios, parCle, campagne.missions.map((m) => m.scenarioCle));
 
-  const affichees: PartieAffichee[] = parties.map((p) => {
+  const essais = essaisAube(scenarios, parCle);
+  const affichees: PartieAffichee[] = [...parties, ...essais].map((p) => {
     const carte = parCle.get(p.carteCle);
     return {
       cle: p.cle,
@@ -121,13 +122,13 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
       // Le ruban de la démonstration. Il ne répète pas son nom — « Match
       // d'exhibition » est déjà écrit dessous — il dit ce que la place en tête
       // de liste veut dire : c'est par là qu'on commence.
-      ruban: p.demonstration ? t(locale, 'jeu_libre.decouverte') : '',
+      ruban: essais.some(e => e.cle === p.cle) ? 'Essai Aube · non homologué' : p.demonstration ? t(locale, 'jeu_libre.decouverte') : '',
       // Une chaîne encore inconnue de `t()` rend vide : on ne pose pas de pastille vide.
       details: [
         t(locale, 'jeu_libre.taille', { largeur: p.largeur, hauteur: p.hauteur }),
         // « 2 camps » est le cas de tout le monde : ce n'est une information que
         // lorsqu'il y en a plus.
-        p.camps > 2 ? t(locale, 'jeu_libre.camps', { n: p.camps }) : '',
+        p.camps > 2 ? p.format : '',
         t(locale, 'jeu_libre.catalogue', { n: p.catalogueVersion }),
         p.adversaire
           ? t(locale, 'jeu_libre.adversaire', { nom: t(locale, `commandant.${p.adversaire.commandantCle}.nom`) })
@@ -151,7 +152,7 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
     </header>
 
     <ListeParties
-      parties={affichees}
+      parties={affichees.filter(p => !essais.some(e => e.cle === p.cle))}
       versionMoteur={VERSION_MOTEUR}
       libelles={{
         liste: t(locale, 'jeu_libre.liste'),
@@ -161,6 +162,16 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
         enCours: t(locale, 'jeu_libre.en_cours'),
       }}
     />
+
+    {essais.length > 0 && <section aria-labelledby="essais-aube-titre">
+      <h2 id="essais-aube-titre">Essais Aube · coalitions</h2>
+      <p>Scénarios jouables en cours de réglage. Leur équilibre et leur difficulté humaine ne sont pas homologués. Le siège de quarante journées est facultatif.</p>
+      <ListeParties
+        parties={affichees.filter(p => essais.some(e => e.cle === p.cle))}
+        versionMoteur={VERSION_MOTEUR}
+        libelles={{ liste: 'Scénarios d’essai Aube', jouer: 'Essayer', reprendre: t(locale, 'hud.reprendre'), nouvellePartie: t(locale, 'hud.nouvelle_partie'), enCours: t(locale, 'jeu_libre.en_cours') }}
+      />
+    </section>}
 
     <footer className="jeu-libre-pied"><p>{t(locale, 'jeu_libre.sauvegarde')}</p></footer>
   </main>;

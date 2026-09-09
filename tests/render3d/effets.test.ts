@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
-import { CAPACITE, creerEffets } from '../../src/render3d/effets';
+import { CAPACITE, creerEffets, emettreImpact, emettreTir } from '../../src/render3d/effets';
 
 function documentSansToile(): Document {
   return {
@@ -137,5 +137,44 @@ test('la capacité par défaut est celle du budget', () => {
   assert.equal(CAPACITE, 64);
   const effets = creerEffets(documentSansToile());
   assert.equal(effets.capacite, 64);
+  effets.dispose();
+});
+
+test('une trajectoire retardée franchit le même point quel que soit le pas de rendu', () => {
+  const a = creerEffets(documentSansToile());
+  const b = creerEffets(documentSansToile());
+  const spec = { genre: 'etincelle' as const, position: { x: 0, y: 0, z: 0 }, destination: { x: 2, y: 0, z: 4 }, arc: 1, retard: 100, duree: 1000 };
+  a.emettre(spec); b.emettre(spec);
+  assert.equal(a.groupe.children[0]!.visible, false);
+  a.avancer(600);
+  for (let i = 0; i < 6; i++) b.avancer(100);
+  assert.deepEqual(a.groupe.children[0]!.position.toArray(), [1, 1, 2]);
+  assert.deepEqual(a.groupe.children[0]!.position.toArray(), b.groupe.children[0]!.position.toArray());
+  a.dispose(); b.dispose();
+});
+
+test('la coupe annule aussi les rafales et traînées encore différées', () => {
+  const effets = creerEffets(documentSansToile());
+  const tir = emettreTir(effets, { profil: 'missile', depuis: { x: 0, y: 0.3, z: 0 }, vers: { x: 3, y: 0.3, z: 2 }, duree: 700 });
+  assert.equal(tir.vivant, true);
+  assert.ok(effets.vivants > 2);
+  tir.liberer();
+  assert.equal(effets.avancer(400), false);
+  assert.equal(effets.vivants, 0);
+  assert.equal(tir.vivant, false);
+  effets.dispose();
+});
+
+test('un tir complet et son impact rendent toutes les places sans dépasser le pool', () => {
+  const effets = creerEffets(documentSansToile(), 12);
+  for (const profil of ['marqueur', 'rafale', 'missile', 'cloche'] as const) {
+    emettreTir(effets, { profil, depuis: { x: 0, y: 0, z: 0 }, vers: { x: 2, y: 0, z: 2 }, duree: 700 });
+  }
+  assert.ok(effets.vivants <= effets.capacite);
+  effets.avancer(700);
+  emettreImpact(effets, { x: 2, y: 0, z: 2 });
+  assert.ok(effets.vivants <= effets.capacite);
+  effets.avancer(400);
+  assert.equal(effets.vivants, 0);
   effets.dispose();
 });

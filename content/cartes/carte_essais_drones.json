@@ -1,0 +1,100 @@
+{
+  "cle": "carte_essais_drones",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "carte_essais_drones",
+  "nom": "Le banc du matériel méridien",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "WPPPPPPPPPPP",
+    "WRRRRRRRRUHP",
+    "WPFRPCPPRPPP",
+    "WPPRFPPPRPFP",
+    "WVVNVVVVNVVV",
+    "WPPRPPPPRCPP",
+    "WPPRPFFPRFPP",
+    "WPPRPPCPRPPP",
+    "WHURRRRRRRRP",
+    "WPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "2,8": 0,
+    "10,1": 1,
+    "9,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "drone_intercepteur",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "drone_ravitailleur",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_lourd",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "meridien_veilleur",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "meridien_bastion",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "helico",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 10,
+      "y": 2
+    }
+  ]
+}

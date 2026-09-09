@@ -30,14 +30,6 @@ export interface TerritoireAsset {
   region: Cle | null;
 }
 
-/**
- * Le statut de livraison de **toute** spécification aujourd'hui. Aucun `.glb`
- * réel n'a jamais été livré ni enregistré nulle part (`CLAUDE.md`, manque n° 5) :
- * il n'existe ni table, ni dossier, ni champ à consulter. Quand une livraison
- * existera, c'est ici qu'on la lira — et nulle part ailleurs dans la page.
- */
-export const STATUT_LIVRAISON = 'placeholder' as const;
-
 /** Libellés des familles d'assets, dans le vocabulaire de `doc/11` §3.1. */
 export const LIBELLES_TYPE: Record<TypeAsset, string> = {
   unite: 'Géométrie de base',

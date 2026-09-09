@@ -4,8 +4,8 @@
   "cle": "nz_char_moyen",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Char moyen\" in the colours and materials of Nouvelle-Zélande. Guiding line: Wet-fern green: dark satin paint, short surfaces, plant camouflage netting, and water beading on everything all the time. Paint the delivered base mesh of unite_char_moyen_base, unchanged: same geometry, same UV layout, same node names. Base colour #2f5f4f, own shadow #153b30, edge highlight #c6e3d8, accents #f2f0e6, #2c3a4a. Materials to read at a glance: satin paint, multi-tone plant camouflage, heavy canvas, dusty rubber and planed timber. Finish: satin and sun-faded. Add these ornaments as separate named nodes, and nothing else: a knotted net stowed on the deck, a low windbreak screen, a coil of rope on a cleat and a felt-covered flask. Abstract decals only: a repeated arrowhead in #f2f0e6 on the capot. For colour-blind readability the socle carries a repeated arrowhead, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Char moyen » aux couleurs et aux matières du style « Nouvelle-Zélande ». Ligne directrice : Vert de fougère mouillée : peinture sombre et satinée, surfaces courtes, filets de camouflage végétal et de l’eau qui perle sur tout en permanence. Peindre la géométrie de base livrée unite_char_moyen_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #2f5f4f, ombre propre #153b30, liseré d’arête #c6e3d8, accents #f2f0e6, #2c3a4a. Matières à lire d’un coup d’œil : peinture satinée, camouflage végétal à plusieurs tons, toile épaisse, caoutchouc poussiéreux et bois raboté. Finition : satinée et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un filet noué rangé sur le plateau, un brise-vent bas, une corde lovée sur un taquet et une gourde habillée de feutre. Décalcomanies abstraites seulement : une pointe de flèche répétée en #f2f0e6 sur la zone « capot ». Pour la lisibilité sans couleur, le socle porte une pointe de flèche répétée, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Char moyen\" in the colours and materials of Nouvelle-Zélande. Guiding line: Wet-fern green: dark satin paint, short surfaces, plant camouflage netting, and water beading on everything all the time. Paint the delivered base mesh of unite_char_moyen_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #2f5f4f, dark paint #153b30, light paint #c6e3d8, accents #f2f0e6, #2c3a4a. Materials to read at a glance: satin paint, multi-tone plant camouflage, heavy canvas, dusty rubber and planed timber. Finish: satin and sun-faded. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a knotted net stowed on the deck, a low windbreak screen, a coil of rope on a cleat and a felt-covered flask. Abstract decals only: a repeated arrowhead in #f2f0e6 on the capot. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries a repeated arrowhead, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Char moyen » aux couleurs et aux matières du style « Nouvelle-Zélande ». Ligne directrice : Vert de fougère mouillée : peinture sombre et satinée, surfaces courtes, filets de camouflage végétal et de l’eau qui perle sur tout en permanence. Peindre la géométrie de base livrée unite_char_moyen_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #2f5f4f, peinture sombre #153b30, peinture claire #c6e3d8, accents #f2f0e6, #2c3a4a. Matières à lire d’un coup d’œil : peinture satinée, camouflage végétal à plusieurs tons, toile épaisse, caoutchouc poussiéreux et bois raboté. Finition : satinée et délavée par le soleil. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : un filet noué rangé sur le plateau, un brise-vent bas, une corde lovée sur un taquet et une gourde habillée de feutre. Décalcomanies abstraites seulement : une pointe de flèche répétée en #f2f0e6 sur la zone « capot ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte une pointe de flèche répétée, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 6960,
-    "lod1": 2320,
-    "lod2": 696,
+    "lod0": 6000,
+    "lod1": 2000,
+    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,7 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
     }
   ],
   "variantes": {
@@ -102,7 +102,38 @@
       "nz"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +146,12 @@
       "corps",
       "base",
       "socle",
-      "ornement_filet",
-      "ornement_brise_vent",
-      "ornement_corde_lovee",
-      "ornement_gourde"
+      "module_tourelle",
+      "module_canon_long"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +181,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

@@ -24,6 +24,22 @@ import scenarioDemo from '../../content/scenarios/demo.json';
 
 const CAT = chargerCatalogue(VERSION_CATALOGUE_BANC);
 
+test('les essais de projectiles choisissent le lanceur adapté et se rejouent sans supprimer la cible', () => {
+  for (const [geste, type] of [['tir_missile', 'missiles_sol'], ['tir_cloche', 'artillerie']] as const) {
+    let e = etatBanc();
+    for (let i = 0; i < 5; i++) {
+      const r = rejouer(e, geste);
+      assert(r);
+      const tir = r.evenements[0];
+      assert(tir?.type === 'attaque');
+      assert.equal(e.unites.find((u) => u.id === tir.attaquantId)?.type, type);
+      assert.equal(tir.riposte, 0);
+      assert(r.apres.unites.every((u) => u.pv > 0));
+      e = r.apres;
+    }
+  }
+});
+
 function etatBanc(): EtatPartie {
   const s = validerScenario(scenarioDemo);
   if (!s.ok) throw new Error('scénario de démonstration invalide');

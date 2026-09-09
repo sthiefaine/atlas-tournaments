@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { libelleDecision } from './consequences';
+import { indexChoix } from '../navigation-choix';
 import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { Vignette } from '../jeu/parties-libres';
 import { lireProfils, type EtatProfils } from '../preferences';
@@ -72,6 +74,9 @@ export interface EpreuveCarnet {
 
 /** Tous les textes de l'écran, déjà traduits par la page. */
 export interface LibellesCarnet {
+  journalTitre: string;
+  journalNote: string;
+  revoirDecision: string;
   surtitre: string;
   titre: string;
   introduction: string;
@@ -198,6 +203,15 @@ export default function Carnet({ epreuves, libelles }: {
               className="station"
               data-etat={e}
               aria-current={i === active ? 'step' : undefined}
+              aria-controls="dossier-mission"
+              tabIndex={i === active ? 0 : -1}
+              onKeyDown={(event) => {
+                const suivant = indexChoix(event.key, i, epreuves.length);
+                if (suivant === null) return;
+                event.preventDefault();
+                setChoisie(suivant);
+                event.currentTarget.closest('ol')?.querySelectorAll<HTMLButtonElement>('.station')[suivant]?.focus();
+              }}
               aria-label={[m.rang, m.nom, mot(e)].filter((s) => s !== '').join(' · ')}
               onClick={() => setChoisie(i)}
             >
@@ -211,7 +225,7 @@ export default function Carnet({ epreuves, libelles }: {
       </ol>
     </nav>
 
-    {mission ? <section className="carnet-dossier" data-etat={etat} aria-live="polite">
+    {mission ? <section id="dossier-mission" className="carnet-dossier" data-etat={etat} aria-live="polite">
       {mission.vignette ? <CarteEpreuve vignette={mission.vignette} /> : null}
       <div className="dossier-texte">
         <p className="atlas-etiquette dossier-rang">
@@ -237,6 +251,16 @@ export default function Carnet({ epreuves, libelles }: {
             </Link>}
         </div>
       </div>
+    </section> : null}
+
+    {(progression.journal?.length ?? 0) > 0 ? <section className="carnet-journal" aria-labelledby="journal-aube">
+      <h2 id="journal-aube">{libelles.journalTitre}</h2>
+      <p>{libelles.journalNote}</p>
+      <ol>{progression.journal?.map((cle) => {
+        const decision = progression.decisions?.[cle];
+        const texte = decision ? libelleDecision(decision) : undefined;
+        return decision && texte ? <li key={cle}><strong>{texte.titre}</strong><p>{texte.effet}</p><Link href={`/jeu/${decision.scenario}`}>{libelles.revoirDecision}</Link></li> : null;
+      })}</ol>
     </section> : null}
 
     <footer className="carnet-pied">

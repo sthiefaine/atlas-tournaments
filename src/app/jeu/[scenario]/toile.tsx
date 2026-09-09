@@ -1,20 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { t } from '@/i18n/index';
-import { chargerCatalogue, VERSION_MOTEUR, type EtatPartie } from '@/engine/index';
+import { chargerCatalogue, VERSION_MOTEUR, sontAllies, type EtatPartie } from '@/engine/index';
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
 import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
-import type { MapDef, Scenario, StrategieIa } from '@/schemas/index';
+import type { MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
-import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lirePreferences, profilActif, type Preferences } from '../../preferences';
-import { enregistrerVictoire } from '../../campagne/progression';
+import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
+import { enregistrerVictoire, enregistrerDecision, lireProgression, type Progression } from '../../campagne/progression';
+import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte } from '../../campagne/consequences';
 import { bilanDeFin, type Bilan } from './bilan';
 import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
+import { scenarioPourMode } from '../difficulte';
 
 export interface ProprietesToile {
   scenario: Scenario;
@@ -129,8 +131,23 @@ function BlocBilan(
 export default function Toile({ scenario, carte, locale, surChargement }: ProprietesToile): React.ReactElement {
   const conteneurRef = useRef<HTMLDivElement>(null);
   const index = campagne.missions.findIndex(m => m.scenarioCle === scenario.code);
-  const mission = campagne.missions[index];
-  const suivante = campagne.missions[index + 1];
+  const essaiAube = estMissionAube(scenario.code);
+  const mission = useMemo(() => campagne.missions[index] ?? (essaiAube ? {
+    entrainement: false,
+    objectif: scenario.code === 'aube_releve_1v3' ? 'Survivre quarante journées complètes jusqu’à la relève.' : 'Prendre tous les QG adverses ou mettre toute l’équipe adverse hors jeu.',
+    conclusion: scenario.dialogueVictoire.map((d) => d.texte).join(' '),
+    tutoriel: ['Les armées alliées jouent leur propre tour. Consultez leurs unités sans leur donner d’ordres.'],
+    conseil: 'Ces essais Aube sont indépendants des entraînements. Les décisions de fin de match modifient uniquement les nouvelles parties annoncées.',
+  } : undefined), [index, essaiAube, scenario]);
+  const codeSuivant = essaiAube ? (ETAPES_AUBE.some((cle) => cle === scenario.code) ? ETAPES_AUBE[ETAPES_AUBE.findIndex((cle) => cle === scenario.code) + 1] : undefined) : campagne.missions[index + 1]?.scenarioCle;
+  const [mode, setMode] = useState<Mode>('normal');
+  const [queteVerrouillee, setQueteVerrouillee] = useState(false);
+  const [scenarioEffectif, setScenarioEffectif] = useState<Scenario>(scenario);
+  const [progression, setProgression] = useState<Progression>({ version: 1, victoires: [] });
+  const profilPartie = useRef<Profil>('a');
+  const [rappels, setRappels] = useState<string[]>([]);
+  const [erreurDecision, setErreurDecision] = useState(false);
+  const titreEtape = essaiAube ? t(locale, 'aube.essai') : t(locale, 'campagne.mission', { n: index + 1 });
   const [depart, setDepart] = useState<Depart | null>(null);
   const [etat, setEtat] = useState<EtatPartie | null>(null);
   const [erreur, setErreur] = useState(false);
@@ -171,7 +188,19 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // d'elle-même ; l'objectif, le tutoriel et « recommencer » restent à un clic,
   // derrière le fanion de mission.
   useEffect(() => {
-    const cle = cleSauvegardeDe(profilActif(), scenario.code);
+    profilPartie.current = profilActif();
+    const progressionLue = lireProgression(profilPartie.current);
+    setProgression(progressionLue);
+    if (CLES_QUETES_AUBE.some((cle) => cle === scenario.code) && !queteOuverte(scenario.code, Object.values(progressionLue.decisions ?? {}))) {
+      setQueteVerrouillee(true);
+      setDepart(null);
+      direChargement('pret');
+      return;
+    }
+    setQueteVerrouillee(false);
+    const modeLu = lireDifficulte(profilPartie.current);
+    setMode(modeLu);
+    const cle = cleSauvegardeDe(profilPartie.current, scenario.code, modeLu);
     const sauvegarde = lireSauvegarde(scenario.code, cle);
     const compatible = sauvegarde?.engineVersion === VERSION_MOTEUR && sauvegarde.catalogueVersion === scenario.catalogueVersion;
     const enCours = Boolean(compatible && sauvegarde && sauvegarde.actions.length > 0);
@@ -184,14 +213,20 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   useEffect(() => {
     const conteneur = conteneurRef.current;
     if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
-    const ia = scenario.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
+    const decisions = Object.values(lireProgression(profilPartie.current).decisions ?? {});
+    const sauvegarde = depart === 'reprise' ? lireSauvegarde(scenario.code, cleSauvegarde) : null;
+    const graine = sauvegarde?.graine ?? (essaiAube ? graineAube(scenario, decisions) : `${scenario.code}:1`);
+    const prepare = appliquerConsequences(scenarioPourMode(scenario, mode), decisionsDeGraine(scenario, graine));
+    setScenarioEffectif(prepare.scenario);
+    setRappels(prepare.rappels);
+    const ia = prepare.scenario.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
     const commandants = commandantsDuScenario(scenario);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
     try {
       jeu = monterJeu(conteneur, {
-        scenario, carte, locale, commandants,
-        adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants),
+        scenario: prepare.scenario, carte, locale, commandants, graine,
+        adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants, Object.fromEntries(prepare.scenario.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!]))),
         reprendre: depart === 'reprise',
         cleSauvegarde,
         // La qualité d'affichage et la réduction des animations sont des
@@ -220,9 +255,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         animationsReduites: preferences.animationsReduites,
         surEtat: courant => {
           setEtat(courant);
-          if (mission && courant.partie.terminee && courant.partie.vainqueur === 0 && !victoireEnregistree) {
+          if (mission && courant.partie.terminee && sontAllies(courant, courant.partie.vainqueur, CAMP_JOUEUR) && !victoireEnregistree) {
             victoireEnregistree = true;
-            setStockageDisponible(enregistrerVictoire(scenario.code));
+            setStockageDisponible(enregistrerVictoire(scenario.code, profilPartie.current, mode));
+            setProgression(lireProgression(profilPartie.current));
           }
         },
       });
@@ -262,12 +298,21 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       if (image !== null) cancelAnimationFrame(image);
       partie.demonter();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };
   const fin = Boolean(mission && etat?.partie.terminee);
-  const gagne = etat?.partie.vainqueur === CAMP_JOUEUR;
+  const gagne = Boolean(etat && !etat.partie.nul && sontAllies(etat, etat.partie.vainqueur, CAMP_JOUEUR));
+  const choixDisponibles = optionsDecision(scenario.code);
+  const decision = progression.decisions?.[cleDecision(scenario.code, scenario.version)];
+  const decisionEnAttente = gagne && choixDisponibles.length > 0 && !decision;
+  const decider = (choix: string): void => {
+    const ok = enregistrerDecision(scenario.code, scenario.version, choix, profilPartie.current);
+    setErreurDecision(!ok);
+    if (ok) setProgression(lireProgression(profilPartie.current));
+  };
+  const objectifMission = essaiAube && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).join(' · ') : mission?.objectif ?? '';
   const modal = Boolean(mission && !enScene && (fin || voirBriefing || voirAide));
   const commandantContact = scenario.commandants[0]?.commandantCle;
   // Le bilan ne se calcule qu'une fois la manche finie, et il ne lit que l'état
@@ -280,6 +325,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     else if (plateauPret) conteneurRef.current?.querySelector('canvas')?.focus();
   }, [modal, plateauPret]);
 
+  if (queteVerrouillee) return <main className="atlas-jeu fixed inset-0 bg-[#10131a]"><div className="atlas-voile"><section className="atlas-briefing" role="status">
+    <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne">{t(locale, 'campagne.retour')}</Link>
+  </section></div></main>;
+
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || undefined} />
     {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
@@ -289,9 +338,9 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         une bande de 380 px — pour une phrase qu'on lit une fois par manche. */}
     {mission && etat && !fin && !modal && !enScene ? <aside className="atlas-mission-bar">
       <button type="button" className="atlas-mission-fanion" onClick={() => setVoirAide(true)}
-        aria-label={`${t(locale, 'campagne.mission', { n: index + 1 })} · ${t(locale, 'campagne.objectif')}`}
-        title={mission.objectif}>
-        <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
+        aria-label={`${titreEtape} · ${t(locale, 'campagne.objectif')}`}
+        title={objectifMission}>
+        <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{essaiAube ? 'A' : index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
       </button>
     </aside> : null}
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>
@@ -305,7 +354,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             <p className="campagne-kicker">{/* La balise de liaison, reprise de l'écran de chargement : le briefing
                   est la suite de ce qu'il annonçait. */}
               <span className="atlas-balise" aria-hidden="true"><i /><i /><i /></span>
-              {mission ? t(locale, 'campagne.mission', { n: index + 1 }) : t(locale, 'campagne.demo')}{mission ? ` · ${t(locale, mission.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}` : ''}</p>
+              {mission ? titreEtape : t(locale, 'campagne.demo')}{mission ? ` · ${t(locale, mission.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}` : ''}</p>
             <h1 id="titre-mission">{voirAide ? t(locale, 'campagne.ouvrir_aide') : fin ? t(locale, gagne ? 'combat.manche_gagnee' : 'combat.manche_perdue') : scenario.nom}</h1>
             {scenario.incarnation ? <p className="campagne-progression">{t(locale, 'campagne.incarnation')}</p> : null}
           </div>
@@ -315,7 +364,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           <p className="atlas-conclusion">{gagne ? mission.conclusion : t(locale, 'campagne.defaite')}</p>
         </> : null}
         {mission && !fin ? <>
-          <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p>{mission.objectif}</p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
+          <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p>{objectifMission}</p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
           {voirAide ? <div className="atlas-lecon">
             <div className="atlas-lecon-entete"><h2>{t(locale, 'campagne.tutoriel')}</h2><span>{etapeTutoriel + 1} / {mission.tutoriel.length}</span></div>
             <p aria-live="polite">{mission.tutoriel[etapeTutoriel]}</p>
@@ -324,16 +373,32 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           <details className="atlas-conseils"><summary>{t(locale, 'campagne.conseil')}</summary><p>{mission.conseil}</p></details>
           <p className="atlas-aide">{t(locale, 'campagne.gestes_tactiles')}</p>
         </> : null}
+        {fin && gagne && choixDisponibles.length > 0 ? <section className="atlas-conseils" aria-labelledby="titre-decision">
+          <h2 id="titre-decision">{t(locale, 'aube.decider')}</h2>
+          {decision ? <p role="status">{t(locale, 'aube.decision_enregistree', { titre: libelleDecision(decision)?.titre ?? '', effet: libelleDecision(decision)?.effet ?? '' })}</p> : <>
+            <p>{t(locale, 'aube.decision_note')}</p>
+            {choixDisponibles.map((choix) => <div key={choix.cle}><p>{choix.effet}</p><button className="atlas-bouton secondaire" type="button" onClick={() => decider(choix.cle)}>{choix.titre}</button></div>)}
+          </>}
+          {erreurDecision ? <p role="alert">{t(locale, 'aube.decision_erreur')}</p> : null}
+        </section> : null}
+        <section className="atlas-conseils" aria-labelledby="mode-partie"><h2 id="mode-partie">{t(locale, mode === 'normal' ? 'mode.normal' : 'mode.difficile')}</h2>
+          <p>{t(locale, 'mode.partie_note')}</p>
+          <ul>{scenarioEffectif.commandants.map((c) => <li key={c.camp}>{t(locale, 'mode.camp', { camp: c.camp + 1, fonds: scenarioEffectif.fondsDepartParCamp?.[c.camp] ?? scenarioEffectif.fondsDepart, revenu: scenarioEffectif.revenusParBatimentParCamp?.[c.camp] ?? scenarioEffectif.revenusParBatiment, ia: c.ia ?? t(locale, 'mode.joueur') })}</li>)}</ul>
+          <p>{t(locale, 'mode.regles', { brouillard: scenarioEffectif.brouillard ? t(locale, 'reglages.actif') : t(locale, 'reglages.inactif'), bulletin: scenarioEffectif.previsionJournees ?? 2, jauge: scenarioEffectif.vitesseJaugeJoueur ?? 1 })}</p>
+          {mode === 'difficile' && scenario.code === 'aube_releve_1v3' ? <p>{t(locale, 'mode.siege')}</p> : null}
+          <Link href="/reglages">{t(locale, 'mode.changer')}</Link>
+        </section>
+        {rappels.length > 0 ? <section className="atlas-conseils"><h2>{t(locale, 'aube.consequences')}</h2>{rappels.map((r) => <p key={r}>{r}</p>)}</section> : null}
         {ancienFormat ? <p role="status">{t(locale, 'campagne.ancien_format')}</p> : null}
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
         <div className="campagne-actions">
           {fin ? <>
-            {gagne && suivante ? <Link className="atlas-bouton" href={`/jeu/${suivante.scenarioCle}`}>{t(locale, 'campagne.suivante')}</Link> : null}
+            {gagne && codeSuivant && !decisionEnAttente ? <Link className="atlas-bouton" href={`/jeu/${codeSuivant}`}>{t(locale, 'campagne.suivante')}</Link> : null}
             {/* Rejouer était **toujours** le bouton secondaire, y compris sur une
                 manche perdue où c'est la seule chose à faire : l'écran de défaite
                 n'avait donc aucune action principale. Il n'est en retrait que
                 lorsqu'une mission suivante lui dispute la place. */}
-            <button className={`atlas-bouton${gagne && suivante ? ' secondaire' : ''}`} onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button>
+            <button className={`atlas-bouton${gagne && codeSuivant ? ' secondaire' : ''}`} onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button>
           </> : <>
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'hud.nouvelle_partie')}</button>

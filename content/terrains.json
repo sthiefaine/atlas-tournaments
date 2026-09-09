@@ -265,7 +265,8 @@
         "genie",
         "brouilleur",
         "missiles_air",
-        "missiles_sol"
+        "missiles_sol",
+        "meridien_bastion"
       ],
       "ravitaille": true,
       "soigne": 2,
@@ -296,7 +297,10 @@
         "chasseur",
         "bombardier",
         "transport_air",
-        "furtif"
+        "furtif",
+        "drone_intercepteur",
+        "drone_ravitailleur",
+        "meridien_veilleur"
       ],
       "ravitaille": true,
       "soigne": 2,

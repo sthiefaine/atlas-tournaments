@@ -1,0 +1,99 @@
+{
+  "cle": "aube_convoi_secondaire",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_convoi_secondaire",
+  "nom": "Quête · Le convoi de Solveig",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_convoi_secondaire",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 6,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_solveig_tamm"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 6000,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "brouillard": false,
+  "limiteJournees": 15,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "unite_perdue",
+      "uniteRef": "u1"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 15
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Notre transport au sud-ouest porte les relevés du convoi. Gardez-le en jeu pendant que nos capteurs prennent le QG du nord-est. Deux ponts nous permettent de choisir notre approche.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "La dotation est fixe, sans revenu périodique. Vous avez quinze journées pour prendre le QG adverse. Une perte du véhicule ou de l’unité qui porte le dossier termine cette tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Le poste reconnaît notre passage et le transport est intact. Solveig peut désormais engager son convoi sur la route d’Aube.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Le contrôle du poste nous échappe. La quête pourra être retentée ; la route principale reste ouverte.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  }
+}

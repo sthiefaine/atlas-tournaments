@@ -15,8 +15,16 @@ import { sessionCourante } from '../../session';
 import { Bloc, Etat, Ligne } from '../../ui';
 
 import { chargerCatalogueAssets, DOSSIER_SPECS } from '../donnees';
-import { LIBELLES_PRIORITE, LIBELLES_TYPE, STATUT_LIVRAISON, territoireDe, urlListe } from '../tri';
+import { LIBELLES_PRIORITE, LIBELLES_TYPE, territoireDe, urlListe } from '../tri';
 
+import { receptionAsset, LIBELLES_RECEPTION } from '@/serveur/reception-assets';
+import { contratProduction } from '@/assets/production';
+import { InspectionClient } from './inspection-client';
+import { Revue } from './revue';
+
+import { familleAsset, libelleAsset } from '../exploration';
+import { promptProduction } from '../prompt-production';
+import { PromptProduction } from './prompt';
 import { Livraison } from './livraison';
 
 export const dynamic = 'force-dynamic';
@@ -67,6 +75,11 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
   const spec = specs.find((s) => s.id === cle);
   if (!spec) notFound();
 
+  const reception = receptionAsset(spec), production = contratProduction(spec);
+  const referenceSpec = specs.find((s) => s.id === production.reference);
+  const referenceEtat = referenceSpec ? receptionAsset(referenceSpec) : null;
+  const reference = referenceSpec && referenceEtat?.revision && referenceEtat.fichiers.includes(`${referenceSpec.id}_lod0.glb`)
+    ? { id: referenceSpec.id, revision: referenceEtat.revision, approuvee: ['approuve', 'integre'].includes(referenceEtat.etat) } : null;
   const verdict = validerAssetSpec(spec);
   const fichier = await etatDuFichier(spec);
   const territoire = territoireDe(spec, codesPays);
@@ -77,6 +90,9 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
   const styleNation = territoire.pays ? chargerStyleNation(territoire.pays) : null;
   const styleRegion = territoire.pays && region ? chargerStyleRegion(territoire.pays, region.code) : null;
 
+  const famille = familleAsset(spec);
+  const variantes = specs.filter(s => familleAsset(s) === famille);
+  const requis = [...spec.verification.lodRequis.map(l => nomModele(spec, l)), ...spec.textures.filter(t => t.obligatoire).map(t => nomTexture(spec, t.canal))];
   return (
     <main>
       <p className="mb-2 text-xs">
@@ -87,9 +103,12 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         <Link href={urlListe({ type: spec.type })} className="underline-offset-4 hover:underline">{LIBELLES_TYPE[spec.type]}</Link>
         <Etat valeur={`priorité ${spec.priorite}`} />
         <span className="text-xs opacity-60">{LIBELLES_PRIORITE[spec.priorite]}</span>
-        <Etat valeur={STATUT_LIVRAISON} />
+        <Etat valeur={LIBELLES_RECEPTION[reception.etat]} />
       </p>
 
+      <PromptProduction texte={promptProduction(spec, reception.fichiers)} />
+      {variantes.length > 1 ? <Bloc titre={`${libelleAsset(famille)} — base et déclinaisons`} aide="Une géométrie commune, des peintures distinctes. Chaque version conserve son propre état de réception."><div className="assets-variantes">{variantes.map(v => <Link key={v.id} href={`/admin/assets/${v.id}`} aria-current={v.id === spec.id ? 'page' : undefined}>{v.type === 'unite' ? 'Base partagée' : territoireDe(v, codesPays).pays ? paysParCode.get(territoireDe(v, codesPays).pays!)?.nomCourt ?? v.cle : v.cle}</Link>)}</div></Bloc> : null}
+      <Bloc titre="Fichiers obligatoires" aide="Présent ne signifie pas conforme : le verdict technique est indiqué plus bas. Les variantes saisonnières restent facultatives."><ul className="assets-fichiers">{requis.map(n => <li key={n}>{reception.fichiers.includes(n) ? 'Présent' : 'Manquant'} · <code>{n}</code></li>)}</ul></Bloc>
       <Bloc titre="Verdict et fichier" aide="Le validateur est celui du dépôt ; le fichier est celui de assets/specs/, s’il est sur ce disque.">
         <Champ nom="validerAssetSpec">
           <Etat valeur={verdict.ok ? 'valide' : `${verdict.erreurs.length} erreur(s)`} ok={verdict.ok} />
@@ -105,13 +124,25 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           {fichier === 'absent' ? <Etat valeur="absent de ce disque" /> : null}
         </Champ>
         <Champ nom="livraison">
-          <Etat valeur={STATUT_LIVRAISON} />
-          <span className="ml-2 text-xs opacity-60">Aucun fichier livré n’est enregistré : le rendu compose un placeholder depuis la silhouette.</span>
+          <Etat valeur={LIBELLES_RECEPTION[reception.etat]} />
+          <span className="ml-2 text-xs opacity-60">{reception.fichiers.length} fichier(s) présent(s), {(reception.octets / 1048576).toFixed(2)} Mio. {reception.revision ? `Révision ${reception.revision.slice(0, 12)}.` : "Aucun lot à contrôler."}</span>
         </Champ>
       </Bloc>
 
-      <Bloc titre="Commande et dépôt" aide="La fiche traduite en commande pour un générateur, et le dépôt du fichier qu’il rend. Le contrôle est celui de « npm run controler:asset ».">
-        <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} />
+      <section className="mb-8">
+        {reception.motifs.length ? <ul className="mb-3 max-h-56 overflow-auto text-xs">{reception.motifs.map((m, i) => <li key={i}>{m}</li>)}</ul> : null}
+        {reception.revue ? <p className="text-xs">Revue du {reception.revue.date} : {reception.revue.note}</p> : null}
+        <InspectionClient spec={spec} fichiers={reception.fichiers} revision={reception.revision} precedente={reception.precedente} reference={reference} />
+        <Revue id={spec.id} revision={reception.revision} conforme={['conforme', 'approuve', 'integre'].includes(reception.etat)} approuve={!!reception.revue} local={process.env.NODE_ENV !== 'production'} />
+      </section>
+      <Bloc titre="Contrat de production" aide="Consignes communes à la commande et aux contrôles. Une référence candidate attend encore un jugement humain.">
+        {reference ? <Champ nom="repère visuel"><Link className="underline" href={`/admin/assets/${reference.id}`}>{reference.id}</Link> — {reference.approuvee ? 'approuvé visuellement' : 'candidat non approuvé'}</Champ> : <Champ nom="repère visuel">Aucune référence livrée pour cette famille.</Champ>}
+        <Champ nom="raccords">{production.raccord}</Champ>
+        {production.assemblage.map((n) => <Champ key={n.nom} nom={n.nom}>Parent : {n.parent ?? 'scène'} ; pivot local : {n.pivot?.join(', ') ?? 'selon la géométrie'} — {n.role}</Champ>)}
+        <details className="p-3 text-xs"><summary>Consignes UV, matières et gestes</summary><ul>{production.consignes.map((c) => <li key={c} className="mt-2">{c}</li>)}</ul>{spec.animations.map((a) => <p key={a.nom} className="mt-2">{a.nom} — {production.gestes[a.nom]}</p>)}</details>
+      </Bloc>
+      <Bloc titre="Commande et dépôt" aide="La fiche traduite en commande pour un générateur, et le dépôt du fichier qu’il rend. Même contrôle complet que « npm run controler:asset -- --spec assets/specs/<id>.json --lot <dossier> ».">
+        <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} local={process.env.NODE_ENV !== 'production'} />
       </Bloc>
 
       <Bloc titre="Identité">
@@ -187,7 +218,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         <Champ nom="modèles attendus"><Cles valeurs={spec.verification.lodRequis.map((lod) => nomModele(spec, lod))} /></Champ>
       </Bloc>
 
-      <Bloc titre={`Textures — ${spec.textures.length} carte(s)`} aide="Le masque d’équipe est binaire et réduit au liseré de socle (doc/11 §5.2).">
+      <Bloc titre={`Textures — ${spec.textures.length} carte(s)`} aide="Le masque binaire suit les zones de la description : peinture d’équipe en gris neutre dans l’albédo. PNG externes partagés entre les LOD ; rugosité dans G, métal dans B.">
         {spec.textures.map((t) => (
           <Ligne key={t.canal}>
             <span className="w-40 font-mono text-xs">{t.canal}</span>

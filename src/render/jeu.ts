@@ -25,7 +25,7 @@ import type {
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
   creerPartie, POINTS_PAR_BARRE, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues,
-  verifierPouvoir, VERSION_MOTEUR,
+  verifierPouvoir, VERSION_MOTEUR, sontAllies,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
@@ -481,7 +481,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       etat, evenements, camp,
     })) enfiler(s.cle, s.repliques);
     if (etat.partie.terminee) {
-      const gagne = etat.partie.vainqueur === camp && !etat.partie.nul;
+      const gagne = sontAllies(etat, etat.partie.vainqueur, camp) && !etat.partie.nul;
       // Toujours un visage en fin de match : le scénario, sinon le repli.
       enfiler('fin', dialogueFin(options.scenario, camp, gagne, t));
       finEnAttente = false;
@@ -554,7 +554,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     // actions n'annoncent rien.
     let vues: ReadonlySet<string> | null | undefined;
     const seVoit = (u: { camp: CampId; x: number; y: number }): boolean => {
-      if (u.camp === camp) return true;
+      if (sontAllies(avant, u.camp, camp)) return true;
       if (vues === undefined) vues = visibles();
       return vues === null || vues.has(cleCase(u));
     };

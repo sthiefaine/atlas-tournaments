@@ -279,7 +279,7 @@ test('le dépliage d’un visage est réversible, et l’hémisphère avant a la
 test('les fichiers déposés dans public/assets/modeles sont ceux que le script produit, ni plus ni moins', async () => {
   const l = await livraison();
   const dossier = path.join(racineDepot(), DOSSIER_DEPOT);
-  const noms = readdirSync(dossier).filter((n) => !n.startsWith('.')).sort();
+  const noms = readdirSync(dossier).filter((n) => n.startsWith(`${ID_INFANTERIE}_`)).sort();
   assert.deepEqual(noms, [...l.fichiers.keys()].sort());
   for (const nom of noms) {
     const depose = readFileSync(path.join(dossier, nom));

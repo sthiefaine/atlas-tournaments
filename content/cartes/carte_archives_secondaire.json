@@ -1,0 +1,90 @@
+{
+  "cle": "carte_archives_secondaire",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "carte_archives_secondaire",
+  "nom": "Les doubles des archives",
+  "largeur": 10,
+  "hauteur": 12,
+  "camps": 2,
+  "biome": "foret",
+  "grille": [
+    "FPPFPPPPFP",
+    "PPRPPFPUHP",
+    "PPRPMMPRPP",
+    "PRRRRRRRRF",
+    "PPRFMMPRFP",
+    "FPCPMMPRPP",
+    "PPRPMMPCPP",
+    "PFRPMMPRPF",
+    "PRRRRRRRRP",
+    "FPRCMMPRFP",
+    "PHUPPPPRPP",
+    "PPPPFPPPPF"
+  ],
+  "proprietaires": {
+    "1,10": 0,
+    "2,10": 0,
+    "8,1": 1,
+    "7,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "char_moyen",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "drone",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 7,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 8,
+      "y": 4
+    }
+  ]
+}

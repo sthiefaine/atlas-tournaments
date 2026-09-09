@@ -15,6 +15,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 /** Ce que la route de dépôt répond. */
 interface Verdict {
@@ -26,11 +27,13 @@ interface Verdict {
   detail?: string;
 }
 
-export function Livraison({ id, commande, attendus }: {
+export function Livraison({ id, commande, attendus, local = true }: {
   id: string;
+  local?: boolean;
   commande: string;
   attendus: readonly string[];
 }) {
+  const router = useRouter();
   const [copie, setCopie] = useState(false);
   const [envoi, setEnvoi] = useState(false);
   const [verdict, setVerdict] = useState<Verdict | null>(null);
@@ -57,7 +60,10 @@ export function Livraison({ id, commande, attendus }: {
     for (const f of Array.from(fichiers)) corps.append('fichiers', f);
     try {
       const reponse = await fetch('/api/admin/modeles', { method: 'POST', body: corps });
-      setVerdict(await reponse.json() as Verdict);
+      const brut = await reponse.json() as Partial<Verdict>;
+      const resultat = { ok: false, motifs: [], acceptes: [], inconnus: [], ...brut };
+      setVerdict(resultat);
+      if (resultat.ok) router.refresh();
     } catch (cause) {
       setVerdict({ ok: false, motifs: [], acceptes: [], inconnus: [], detail: String(cause) });
     } finally {
@@ -77,7 +83,7 @@ export function Livraison({ id, commande, attendus }: {
           {copie ? 'Commande copiée' : 'Copier la commande'}
         </button>
         <span className="ml-3 text-xs opacity-60">
-          À coller dans le générateur, telle quelle. Elle est composée depuis la fiche : la modifier, c’est se faire refuser au contrôle.
+          À coller dans le générateur, telle quelle. Elle est composée depuis la fiche : les noms et les dimensions doivent rester ceux du contrat.
         </span>
       </div>
 
@@ -90,13 +96,14 @@ export function Livraison({ id, commande, attendus }: {
             ref={champ}
             type="file"
             multiple
-            accept=".glb,.png,.jpg,.jpeg,.ktx2"
-            disabled={envoi}
+            accept=".glb,.png"
+            disabled={envoi || !local}
             onChange={(e) => void deposer(e.target.files)}
             className="text-sm"
           />
         </label>
         <p className="mt-2 text-xs opacity-60">
+          {!local ? "Dépôt disponible en développement uniquement ; versionner les fichiers avant déploiement. " : "24 Mio par fichier, 96 Mio par lot. "}
           Noms attendus : <span className="font-mono">{attendus.join(', ')}</span>.
           {' '}Un fichier dont le nom n’est pas dans cette liste n’est pas écrit — le dépôt ne reprend jamais un nom reçu.
         </p>
@@ -107,7 +114,7 @@ export function Livraison({ id, commande, attendus }: {
       {verdict ? (
         <div className="border border-current/30 p-3 text-sm">
           <p className={verdict.ok ? '' : 'opacity-90'}>
-            <strong>{verdict.ok ? 'Accepté et déposé' : 'Refusé'}</strong>
+            <strong>{verdict.ok ? 'Conforme techniquement et déposé' : 'Refusé'}</strong>
             {verdict.ok && verdict.ecrits ? ` — ${verdict.ecrits.length} fichier(s) écrit(s).` : null}
           </p>
           {verdict.detail ? <p className="mt-1 text-xs opacity-70">{verdict.detail}</p> : null}
@@ -118,7 +125,7 @@ export function Livraison({ id, commande, attendus }: {
           ) : null}
           {verdict.inconnus.length > 0 ? (
             <p className="mt-2 text-xs opacity-70">
-              Ignorés, nom inattendu : <span className="font-mono">{verdict.inconnus.join(', ')}</span>
+              Refusés, nom inattendu : <span className="font-mono">{verdict.inconnus.join(', ')}</span>
             </p>
           ) : null}
           {verdict.ok ? (

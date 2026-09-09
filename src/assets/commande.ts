@@ -21,6 +21,8 @@
  * asset par ailleurs correct.
  */
 
+import { contratProduction } from './production';
+
 import {
   nomModele, nomTexture,
   type AssetSpec, type Dimension, type NiveauLod,
@@ -46,7 +48,7 @@ function niveaux(spec: AssetSpec): string {
 /** Les cartes attendues, avec leur résolution et le nom exact du fichier. */
 function textures(spec: AssetSpec): string {
   return spec.textures
-    .map((t) => `\`${nomTexture(spec, t.canal)}\` (${t.canal}, ${t.resolution}×${t.resolution})`)
+    .map((t) => `\`${nomTexture(spec, t.canal)}\` (${t.canal}, ${t.resolution}×${t.resolution}, ${t.format}, ${t.obligatoire ? "required" : "optional"}; ${t.note})`)
     .join(', ');
 }
 
@@ -69,6 +71,7 @@ function animations(spec: AssetSpec): string {
  */
 export function commandeAsset(spec: AssetSpec): string {
   const e = spec.echelle;
+  const production = contratProduction(spec);
   const masque = spec.textures.some((t) => t.canal === 'masque_equipe');
   const clips = animations(spec);
 
@@ -84,25 +87,32 @@ export function commandeAsset(spec: AssetSpec): string {
     '',
     `Stylised realism: real materials — painted sheet metal, matte technical fabric, washed concrete, worn wood, dusty rubber — on simple, readable volumes. Competition equipment kept in good repair, marked by use, never damaged by violence. Saturated colours, figurine proportions. The silhouette must stay recognisable from a 65° top-down camera at about 48 pixels per metre.`,
     '',
+    `Art direction: ${spec.style.devise} Materials: ${spec.style.matieres}`,
+    `Keywords: ${spec.style.motsCles.join("; ")}. Avoid: ${spec.style.aEviter.join("; ")}.`,
+    '',
     `Forbidden, without exception: ${interdits(spec)}. These are tournament athletes with marker launchers, not soldiers.`,
     '',
     `## Size and pivot`,
     '',
     `Bounding box ${mesure(e.x)} wide, ${mesure(e.y)} tall, ${mesure(e.z)} deep.`,
-    `Origin: ${spec.pivot.origine === 'centre_au_sol' ? 'centre of the footprint, at ground level' : String(spec.pivot.origine).replace(/_/g, ' ')}. Up axis **+Y**, front **+Z**, resting on the ground. 1 unit = 1 metre.`,
+    `Origin: ${spec.pivot.origine === 'centre_au_sol' ? 'centre of the footprint, at ground level' : String(spec.pivot.origine).replace(/_/g, ' ')}. Up axis **+Y**, front **+Z**, ${spec.pivot.poseAuSol ? "resting on the ground" : "at the flight height specified in the description; keep the footprint origin on the ground"}. 1 unit = 1 metre.`,
     '',
     `## Geometry and naming`,
     '',
     `glTF 2.0 binary (.glb), PBR metallic-roughness. One file per level of detail: ${niveaux(spec)}.`,
     `At most ${spec.budget.materiauxMax} materials, named exactly: ${spec.format.materiauxAttendus.map((m) => `\`${m}\``).join(', ')}.`,
-    `Nodes named exactly: ${spec.format.noeuds.map((n) => `\`${n}\``).join(', ')}.`,
+    `Required nodes (unique names; additional skeleton bones allowed): ${spec.format.noeuds.map((n) => `\`${n}\``).join(', ')}.`,
     '',
     `## Textures`,
     '',
-    `One PNG per channel: ${textures(spec)}.`,
+    `One file per channel, using the declared format: ${textures(spec)}.`,
     `**No lighting and no shadow baked into the albedo** — the game lights the scene itself, and a painted shadow becomes a permanent one that contradicts the sun at every hour and every season.`,
   ];
 
+  lignes.push('', '## Assembly, UVs and acceptance', '', ...production.consignes);
+  for (const n of production.assemblage) lignes.push(
+    `Node ${n.nom}; parent ${n.parent ?? 'scene'}; ${n.pivot ? `local pivot [${n.pivot.join(', ')}] metres; ` : ''}${n.role}`,
+  );
   if (masque) {
     lignes.push(
       '',
@@ -116,6 +126,7 @@ export function commandeAsset(spec: AssetSpec): string {
       `## Animations`,
       '',
       `Clips named exactly: ${clips}.`,
+      ...spec.animations.map((a) => `${a.nom}: ${production.gestes[a.nom] ?? "Follow the described role."}`),
       `For a rigid model these are node-transform animations. \`hors_jeu\` is a slump and a switch-off, never an explosion.`,
     );
   }
@@ -134,7 +145,7 @@ export function commandeAsset(spec: AssetSpec): string {
     '',
     `## What you will probably have to fix by hand afterwards`,
     '',
-    `${aReprendre.join(', ')}. Generators rarely get these right; the rest of the specification they usually do.`,
+    `${aReprendre.join(', ')}. Verify every item before delivery. Technical conformance and human visual approval are separate decisions.`,
   );
 
   return lignes.join('\n');

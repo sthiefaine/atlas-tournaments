@@ -17,10 +17,11 @@ export function adversaireIa(
   id: StrategieIa | undefined,
   catalogueVersion: number,
   commandants: (CommandantMoteur | null)[],
+  strategiesParCamp: Partial<Record<number, StrategieIa>> = {},
 ): Adversaire {
   const cat = chargerCatalogue(catalogueVersion);
   const strat = strategie(id ?? 'ponderee');
   return (etat: EtatPartie): Action[] => jouerTour(
-    etat, strat, restaurerRng(etat.graine, etat.flux), cat, commandants,
+    etat, strategiesParCamp[etat.campCourant] ? strategie(strategiesParCamp[etat.campCourant]!) : strat, restaurerRng(etat.graine, etat.flux), cat, commandants,
   ).actions;
 }

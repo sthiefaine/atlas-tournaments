@@ -125,7 +125,7 @@ test('--fichiers passe les textures livrées à côté : un kit s’en contente'
       noeuds: [...kit.format.noeuds],
       materiaux: [...kit.format.materiauxAttendus],
       images: [],
-      animations: [],
+      animations: kit.animations.filter((a) => a.obligatoire).map((a) => a.nom),
     }),
     binTriangle(kit.echelle.x.cible, kit.echelle.y.cible, kit.echelle.z.cible),
   ));

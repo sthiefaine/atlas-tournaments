@@ -1,0 +1,21 @@
+{
+  "id": "unite_artillerie_base",
+  "revision": "4337630fe0319888fbd0e5a013b3baabe14e564d6f96748aebd28ccce4045a6b",
+  "octets": 794246,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_artillerie_base_lod0.glb",
+      "unite_artillerie_base_lod1.glb",
+      "unite_artillerie_base_lod2.glb",
+      "unite_artillerie_base_albedo.png",
+      "unite_artillerie_base_normale.png",
+      "unite_artillerie_base_rugosite.png",
+      "unite_artillerie_base_metal.png",
+      "unite_artillerie_base_masque_equipe.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  }
+}

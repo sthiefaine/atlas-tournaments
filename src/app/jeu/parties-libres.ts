@@ -22,6 +22,26 @@ import type { Biome, CampId, MapDef, Scenario, StrategieIa } from '@/schemas/typ
 /** La clé du scénario de démonstration : toujours en tête de la liste. */
 export const CLE_DEMONSTRATION = 'demo';
 
+/** Brouillons explicitement ouverts aux essais ; aucun autre brouillon n'est publié. */
+export const CLES_ESSAIS_AUBE = [
+  'aube_batteries_2v1', 'aube_reserves_1v2', 'aube_nuit_2v2',
+  'aube_releve_1v3', 'aube_routes_3v1',
+] as const;
+
+/** Les chiffres décrivent la coalition du joueur puis les coalitions adverses. */
+export function formatCoalitions(scenario: Scenario): string {
+  const equipes = scenario.equipes ?? scenario.commandants.map(c => [c.camp]);
+  const nous = equipes.find(e => e.includes(0));
+  return [nous?.length ?? 1, ...equipes.filter(e => !e.includes(0)).map(e => e.length)].join(' contre ');
+}
+
+/** Section d'essais à part : le statut de production reste brouillon dans le canon. */
+export function essaisAube(scenarios: readonly Scenario[], cartes: ReadonlyMap<string, MapDef>): PartieLibre[] {
+  const ouverts = scenarios.filter(s => s.statut === 'brouillon'
+    && (CLES_ESSAIS_AUBE.some(cle => cle === s.code) || s.code === 'aube_essais_drones'));
+  return partiesLibres(ouverts.map(s => ({ ...s, statut: 'en_ligne' })), cartes, []);
+}
+
 /** Une partie libre, réduite à ce que la page affiche et à ce qu'elle relie. */
 export interface PartieLibre {
   cle: string;
@@ -39,6 +59,7 @@ export interface PartieLibre {
   limiteJournees: number | null;
   brouillard: boolean;
   demonstration: boolean;
+  format: string;
 }
 
 /** Un scénario est libre s'il est en ligne et qu'aucune épreuve de la campagne ne le cite. */
@@ -60,7 +81,8 @@ export function partiesLibres(
     if (!estLibre(s, missions)) continue;
     const carte = cartes.get(s.carteCle);
     if (!carte) continue;
-    const adverse = s.commandants.find((c) => c.camp === 1);
+    const allies = s.equipes?.find(e => e.includes(0)) ?? [0];
+    const adverse = s.commandants.find((c) => !allies.includes(c.camp));
     parties.push({
       cle: s.code,
       nom: s.nom,
@@ -74,6 +96,7 @@ export function partiesLibres(
       limiteJournees: s.limiteJournees,
       brouillard: s.brouillard,
       demonstration: s.code === CLE_DEMONSTRATION,
+      format: formatCoalitions(s),
     });
   }
   parties.sort((a, b) => {

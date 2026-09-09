@@ -1,3 +1,4 @@
+import { controlerDepot } from '../src/serveur/depot-modeles';
 /** Flat tournament turf. Generate textures first with scripts/plaine/textures.py. */
 import * as T from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -13,7 +14,7 @@ const livraison = path.resolve('assets/livraisons', ID);
 // First float32 above 0.02, avoiding rejection from rounding below the lower bound.
 const HEIGHT = Math.fround(0.020000001);
 const channels = ['albedo', 'normale', 'rugosite', 'occlusion'];
-const maps = channels.map(c => readFileSync(path.join(destination, `${ID}_${c}.png`)));
+
 
 async function main() {
   const spec = lireSpec(`assets/specs/${ID}.json`);
@@ -46,18 +47,9 @@ async function main() {
     const sol = new T.Mesh(geometry, new T.MeshStandardMaterial({ name: 'mat_sol', roughness: 1, metalness: 0 }));
     sol.name = 'sol'; root.add(sol);
     const { document, bin } = decouperGlb(await exporterGlb(root, []));
-    const views = document.bufferViews as Record<string, unknown>[];
-    const buffers = [Buffer.from(bin)]; let offset = bin.length;
-    document.images = maps.map((bytes, i) => {
-      const pad = (4 - offset % 4) % 4;
-      if (pad) { buffers.push(Buffer.alloc(pad)); offset += pad; }
-      views.push({ buffer: 0, byteOffset: offset, byteLength: bytes.length });
-      buffers.push(bytes); offset += bytes.length;
-      return { name: `${ID}_${channels[i]}.png`, mimeType: 'image/png', bufferView: views.length - 1 };
-    });
+    document.images = channels.map(channel => ({ name: `${ID}_${channel}.png`, uri: `${ID}_${channel}.png`, mimeType: 'image/png' }));
     document.textures = channels.map((name, source) => ({ name, source, sampler: 0 }));
     document.samplers = [{ magFilter: 9729, minFilter: 9987, wrapS: 10497, wrapT: 10497 }];
-    (document.buffers as Record<string, unknown>[])[0]!.byteLength = offset;
     const material = (document.materials as Record<string, unknown>[])[0]!;
     const pbr = material.pbrMetallicRoughness as Record<string, unknown>;
     pbr.baseColorTexture = { index: 0 };
@@ -68,7 +60,7 @@ async function main() {
     document.extras = { units: 'metre', up: '+Y', front: '+Z', grid: 'P', defence: 1,
       flatTop: true, slabThickness: HEIGHT, terrainReliefOwnedByRenderer: true,
       seamlessRotations: [0, 90, 180, 270], textureSource: 'deterministic procedural turf, no baked lighting' };
-    const bytes = assemblerGlb(document, Buffer.concat(buffers));
+    const bytes = assemblerGlb(document, bin);
     const verdict = validerGlb(bytes, spec, { lod });
     if (!verdict.ok) throw new Error(JSON.stringify(verdict));
     const bounds = new T.Box3().setFromObject(root);
@@ -76,6 +68,10 @@ async function main() {
       dimensions: bounds.getSize(new T.Vector3()).toArray(), min: bounds.min.toArray(), max: bounds.max.toArray(), verdict });
     pending.set(`${ID}_lod${lod}.glb`, bytes);
   }
+  const lot = [...pending].map(([nom, octets]) => ({ nom, octets }));
+  for (const canal of channels) { const nom = `${ID}_${canal}.png`; lot.push({ nom, octets: readFileSync(path.join(destination, nom)) }); }
+  const reception = controlerDepot(spec, lot);
+  if (!reception.ok) throw new Error(JSON.stringify(reception));
   mkdirSync(livraison, { recursive: true });
   for (const [name, data] of pending) writeFileSync(path.join(destination, name), data);
   writeFileSync(path.join(livraison, 'validation.json'), JSON.stringify(report, null, 2));

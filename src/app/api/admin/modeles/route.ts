@@ -22,6 +22,8 @@ import path from 'node:path';
 import { genererSpecs } from '@/assets/index';
 import { exigerAdmin } from '@/serveur/auth';
 import { controlerDepot, ecrireDepot, type FichierLivre } from '@/serveur/depot-modeles';
+import { conserverPrecedente, lireBaseKit } from '@/serveur/reception-assets';
+import { LIMITE_FICHIER, LIMITE_LOT } from '@/assets/production';
 import { erreur, json } from '@/serveur/reponses';
 
 export const dynamic = 'force-dynamic';
@@ -42,6 +44,7 @@ export async function POST(requete: Request): Promise<Response> {
       + 'Déposer en développement, puis commiter le fichier.');
   }
 
+  if (Number(requete.headers.get('content-length')) > LIMITE_LOT + 1024 * 1024) return erreur('lot_trop_lourd', 413, '96 Mio maximum');
   let formulaire: FormData;
   try {
     formulaire = await requete.formData();
@@ -53,6 +56,8 @@ export async function POST(requete: Request): Promise<Response> {
   const spec = genererSpecs().find((s) => s.id === id);
   if (!spec) return erreur('asset_inconnu', 404, `aucune fiche pour « ${id} »`);
 
+  const presentes = formulaire.getAll('fichiers').filter((v): v is File => typeof v !== 'string');
+  if (presentes.some((v) => v.size > LIMITE_FICHIER) || presentes.reduce((s, v) => s + v.size, 0) > LIMITE_LOT) return erreur('lot_trop_lourd', 413, '24 Mio par fichier, 96 Mio par lot');
   const fichiers: FichierLivre[] = [];
   for (const valeur of formulaire.getAll('fichiers')) {
     if (typeof valeur === 'string') continue;
@@ -60,9 +65,10 @@ export async function POST(requete: Request): Promise<Response> {
   }
   if (fichiers.length === 0) return erreur('aucun_fichier', 400, 'aucun fichier n’a été présenté');
 
-  const verdict = controlerDepot(spec, fichiers);
+  const verdict = controlerDepot(spec, fichiers, lireBaseKit(spec));
   if (!verdict.ok) return json({ ...verdict, ecrits: [] }, 422);
 
+  conserverPrecedente(spec);
   const ecrits = ecrireDepot(dossierModeles(), fichiers, verdict.acceptes);
   return json({ ...verdict, ecrits });
 }

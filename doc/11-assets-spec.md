@@ -274,7 +274,7 @@ Le champ `StyleNation.gabarits` reste dans les vingt-quatre fiches de style et d
 
 Un kit est **entièrement dérivé du style** (`StyleNation`, §5.6) : sa ligne directrice ouvre la description, sa palette donne les quatre couleurs, ses matières et ses finitions donnent la consigne de surface, ses ornements deviennent des nœuds `ornement_<nom>`, ses décalcomanies et son motif daltonien deviennent les seuls motifs autorisés. Rien n'y est écrit à la main : changer une matière dans un JSON de style change les dix commandes de la nation.
 
-**Livraison d'un kit.** Un kit se livre **monté sur la géométrie de base** — le maillage habillé — pour qu'il se contrôle tel qu'il apparaîtra en jeu : même boîte englobante, même pivot, budget majoré d'un sixième pour les ornements. Ses textures peuvent être **référencées par le GLB** ou **livrées à côté** sous le nom que le nommage impose (`kit_fr_char_leger_albedo.png`) : les deux sont acceptés, l'un des deux est exigé (§7.2).
+**Livraison d'un kit.** Un kit se livre **monté sur la géométrie de base** — le maillage habillé — pour qu'il se contrôle tel qu'il apparaîtra en jeu : même boîte englobante, même pivot, budget identique à la base. Ses textures sont des **PNG externes partagés entre les LOD**, nommés selon le contrat et référencés par URI relative exacte dans le GLB (`kit_fr_char_leger_albedo.png`). Aucune copie embarquée supplémentaire (§7.2, réception du 9 septembre).
 
 ### 5.2 ter Bâtiments et décor : par région, ou par pays
 
@@ -391,9 +391,9 @@ puis, par morceau :
   n octets     données, complétées à un multiple de quatre
 ```
 
-Tout ce dont on a besoin est dans le morceau JSON : le nombre d'éléments des accesseurs (donc les triangles), leurs `min`/`max` (donc la boîte englobante), les noms des nœuds, des matériaux, des images et des animations. Charger un `GLTFLoader` pour cela reviendrait à démarrer un moteur de rendu dans un test, et la couche `assets/` n'a de toute façon pas le droit d'importer `render3d/` (`02-architecture.md` §5).
+Le contrôle déclaratif `validerGlb` commence par le morceau JSON : le nombre d'éléments des accesseurs (donc les triangles), leurs `min`/`max` (donc la boîte englobante), les noms des nœuds, des matériaux, des images et des animations. Charger un `GLTFLoader` pour cela reviendrait à démarrer un moteur de rendu dans un test, et la couche `assets/` n'a de toute façon pas le droit d'importer `render3d/` (`02-architecture.md` §5).
 
-Deux limites assumées et documentées : la **rotation des nœuds est ignorée** dans le calcul de la boîte englobante (seules l'échelle et la translation sont appliquées), parce que le format impose l'avant vers `+Z` — un asset qui aurait une rotation à la racine doit être refusé par le contrôle d'échelle plutôt que rattrapé ; et les **primitives non triangulaires** ne comptent pas dans le budget, parce qu'elles n'ont rien à y faire.
+Depuis le 9 septembre, les bornes composent les transformations de tous les parents (TRS et matrices). Le contrôle de **lot complet** relit aussi le binaire : bornes déclarées contre sommets réels, indices, UV et normales présents, valeurs finies, hiérarchie acyclique et clés d’animation. Les primitives non triangulaires sont refusées.
 
 ### 7.2 Les six codes de refus
 
@@ -406,12 +406,15 @@ Deux limites assumées et documentées : la **rotation des nœuds est ignorée**
 | `asset_animation_absente` | un clip déclaré obligatoire absent des animations du document |
 | `asset_texture_absente` | une carte **obligatoire** absente des deux côtés : ni référencée par le GLB, ni livrée à côté sous son nom de gabarit |
 
-**La règle des textures d'un kit**, contrôle `textures`, exécuté seulement quand la spécification le demande. Pour chaque carte `obligatoire`, la carte est **présente** si :
+**Convention de livraison du 9 septembre 2026 : PNG externes.** Chaque canal n’existe qu’une fois dans le dossier ; tous les LOD le référencent par son nom voisin exact, sans chemin, URL distante, `data:` ni `bufferView` d’image. Chaque GLB garde son binaire de géométrie et d’animation. Un GLB avec PNG voisins reste lisible dans un lecteur glTF standard. Le chargeur du jeu résout déjà ces URI via `GLTFLoader`.
 
-1. le GLB référence une image dont le `name` ou l'`uri` contient le nom du canal (`…_albedo`, `…_masque_equipe`) — cas d'un GLB auto-porteur ; **ou**
-2. les fichiers livrés à côté (`OptionsGlb.fichiersLivres`) contiennent le nom exact que `nomTexture()` produit, variante saisonnière comprise et extension libre (`png` relu ou `ktx2` compressé) — cas d'un kit livré en textures séparées.
+L’albédo est en sRGB ; les autres cartes sont des données linéaires. La carte `rugosite.png` fournit G = rugosité et B = métal pour le branchement PBR glTF ; R peut fournir l’occlusion. Le fichier `metal.png`, lorsqu’il est déclaré, reste le canal métal éditable. Les terrains non métalliques peuvent garder une rugosité en niveaux de gris avec `metallicFactor: 0`. Les variantes saisonnières restent facultatives lors d’une réception du jeu de base ; toute image référencée doit être livrée.
 
-Sinon, `asset_texture_absente`, avec le canal et le nom attendu dans le détail. Le validateur est délibérément permissif sur la **forme** de livraison et strict sur le **nom** : un kit dont l'albédo s'appelle `final_v3.png` est un kit qu'on ne saura pas charger.
+`controlerDepot` est la porte de réception. Il vérifie **tous les LOD requis**, les noms et doublons, les textures requises et celles référencées, les PNG 8 bits non entrelacés (signature, CRC, filtres, dimensions), le masque opaque 0/255 avec zones noires et blanches, et le gris de l’albédo sous ce masque (écart maximal de 4/255 entre composantes). Il contrôle les durées à 1 ms près et les extrémités des boucles, les parents et pivots explicités dans `src/assets/production.ts`, ainsi que les raccords de bord scalaires et vectoriels sous quarts de tour pour les terrains non directionnels. Les routes, ponts et rivages ont des raccords directionnels.
+
+Limites : 24 Mio par fichier, 96 Mio par lot. Les cartes sont partagées entre LODs ; les sources et aperçus ne vont pas dans `public/`. Les PNG de 16 bits, entrelacés ou compressés en KTX2 ne passent pas cette réception PNG : leur transformation éventuelle appartient au build.
+
+Le lecteur déclaratif `validerGlb` conserve sa compatibilité avec les anciens fichiers autonomes et ne suffit **pas** à certifier une livraison. Le contrôle complet refuse désormais les images embarquées : il empêche d’ajouter de nouvelles copies binaires à git.
 
 Le verdict a exactement la forme de `ReviewVerdict.motifs` (`03-schemas.md`) : `{ code, detail?, mesure? }`. Le `detail` nomme la pièce manquante (`nœud attendu absent : module_tourelle`), la `mesure` porte les chiffres (`{ triangles: 41200, budget: 6000, lod: 0 }`). C'est ce qui rend un refus renvoyable tel quel au générateur.
 
@@ -419,11 +422,17 @@ Le verdict a exactement la forme de `ReviewVerdict.motifs` (`03-schemas.md`) : `
 
 ### 7.3 Ce que le validateur ne sait pas faire
 
-Il faut l'écrire pour que personne ne s'y trompe. Le validateur ne juge **ni la beauté, ni la ressemblance, ni le respect du ton, ni les interdits**. Il vérifie qu'un fichier est *utilisable* : bonne taille, bon pivot, bons noms, budget tenu, masque présent, clips présents. Le reste est une relecture humaine, une fois par livraison, à l'œil, sur un rendu de trois quarts et un rendu à 68° de tangage.
+Il faut l'écrire pour que personne ne s'y trompe. Le validateur ne juge **ni la beauté, ni la ressemblance, ni le respect du ton, ni les interdits**. Il contrôle les contraintes techniques décrites ci-dessus, sans prétendre prouver la qualité artistique, l’absence d’éclairage peint, la continuité des dérivées aux coutures, toutes les poses intermédiaires ou le comportement en jeu. La réception humaine utilise les vues dessus, trois-quarts et 65° au-dessus du sol à 48 px/m. Les vérifications de développement sont des tests de code (consigne AGENTS.md) ; aucune approbation visuelle n’est attribuée automatiquement.
 
 ### 7.4 La commande de contrôle, hors ligne (6 septembre 2026)
 
-Le même verdict, sans passer par l'API — c'est ce qu'on renvoie au générateur, tel quel :
+Le **lot complet**, avec exactement la même porte que le dépôt :
+
+```
+npm run controler:asset -- --spec assets/specs/terrain_plaine.json --lot public/assets/modeles
+```
+
+Le mode historique ci-dessous inspecte un seul GLB et ses déclarations, sans certifier les pixels ni la complétude du lot :
 
 ```
 npm run controler:asset -- --spec assets/specs/unite_char_leger_base.json --glb livraison/unite_char_leger_base_lod0.glb
@@ -483,7 +492,27 @@ Ce que le catalogue ajoute au canon, famille par famille : pour une géométrie 
 
 1. **KTX2.** Le format est déclaré possible dans `FormatTexture`, mais toutes les spécifications demandent aujourd'hui du PNG, parce que c'est ce qui se relit. La compression est une étape de build (`scripts/`) à écrire, pas une demande à faire au générateur.
 2. **Les assets de type `effet`.** Impacts, poussière, gerbe d'eau, halo de pouvoir : le type existe, aucune spécification n'est produite. Ils viendront quand le rendu 3D aura ses animations de combat.
-3. **Les 24 unités spéciales.** Chaque pays a une unité au dessin propre (`doc/06` §8, point 3) : la Roulante, le Shinkansen, le Téléphérique, le Taxi-brousse… Ce sont des modèles uniques, pas des kits, et aucune spécification n'est produite pour elles aujourd'hui — il faut d'abord qu'elles entrent au catalogue d'unités.
-4. **La vérification des textures livrées.** Le validateur vérifie qu'une carte obligatoire est **présente** (§7.2) ; il ne vérifie pas encore qu'un PNG livré à côté a la bonne **résolution**, ni que le masque est vraiment **binaire**. C'est un contrôle simple à ajouter (en-tête PNG, histogramme), et il manque.
+3. **Les unités exclusives.** La refonte Aube remplace le principe d’une unité spéciale par nation par des rôles sélectionnés : le catalogue7 apporte deux drones communs et deux exclusives à la faction inconnue. Une exclusive possède une seule géométrie et aucun kit national. Les identités régionales reposent surtout sur les paysages, les bâtiments et les traits.
+4. **La vérification des textures livrées** est maintenant réalisée à la réception du lot (§7.2). Le jugement artistique reste humain.
 5. **Le seuil de relecture humaine.** Une relecture par livraison est la règle aujourd'hui. Si le volume monte, il faudra un échantillonnage — le même raisonnement que l'échantillon humain des traductions (`09-i18n.md`), et probablement le même taux.
-6. **Le poids d'`assets/specs/`.** 540 fichiers, 4 Mo. Tant que le dossier se relit en diff, cela va ; si le catalogue d'unités double avec l'homologation, il faudra soit ne versionner que les priorités 1 et 2, soit compresser. La décision se prendra sur un chiffre, pas sur une impression.
+6. **Le poids d'`assets/specs/`.** 1 025 spécifications au catalogue7, dont28 bases et624 kits. Tant que le dossier se relit en diff, cela va ; si le catalogue d'unités double avec l'homologation, il faudra soit ne versionner que les priorités 1 et 2, soit compresser. La décision se prendra sur un chiffre, pas sur une impression.
+
+
+## Réception et banc d’inspection — 9 septembre 2026
+
+`/admin/assets`, son résumé et le chantier lisent les fichiers présents : à produire, livraison incomplète, correction requise, conforme techniquement, approuvé visuellement, testé en jeu. Un LOD0 seul ne débloque plus les kits ; leur base doit avoir reçu une approbation visuelle. L’état « testé en jeu » est un constat humain, pas une affirmation que tout terrain ou décor est automatiquement branché dans le rendu.
+
+Chaque revue (`assets/receptions/<id>/revue.json`) est liée à l’empreinte SHA-256 du contrat, des consignes de production et du lot. Un changement invalide la revue. Les écritures de dépôt et de revue restent locales : `public/` et la revue doivent être versionnés et déployés. La route de production refuse de faire croire qu’un fichier écrit dans une image Docker sera durable.
+
+Le banc WebGPU est chargé à l’ouverture : vues dessus/trois-quarts/jeu 65°, échelle réelle 48 pixels CSS/m, choix du LOD, pose et lecture des clips, éclairage neutre ou paramètres du jeu, cartes seules, couleurs témoins via masque, mosaïque de terrain 4×4, comparaison avec le candidat de référence ou la livraison précédente. Les paramètres du jeu couvrent ici soleil, hémisphère et environnement ; les effets météorologiques et le post-traitement se vérifient dans l’atelier. Les références ne portent la mention « approuvée » qu’après revue humaine.
+
+Les copies de comparaison sont locales, limitées à la dernière livraison remplacée, ignorées par git et accessibles uniquement par une route administrateur. Aucune copie historique n’est servie au joueur. L’historique git existant n’est pas réécrit.
+
+La commande reprend désormais les matières, mots-clés, exclusions et notes de texture de la fiche. `src/assets/production.ts` précise les parents/pivots des deux véhicules de référence, les gestes, le contrat UV partagé et les conventions PBR ; aucun squelette inconnu n’est inventé. La plaine est explicitement une dalle plate de 2 cm, exactement 1 m × 1 m ; les 6 cm d’ondulation appartiennent au terrain du moteur. Le pont et la montagne conservent leur volume, et ne reçoivent plus la consigne générique de maille plate.
+
+Mesure sur les trois lots convertis (octets non compressés sur disque, tous LOD et PNG compris) : plaine 11 467 508 → 3 867 452 ; anti-air 1 119 865 → 763 055 ; artillerie 1 245 583 → 794 246. Ce sont des économies de stockage ; le trafic réel dépend des LOD chargés et du cache.
+
+
+**Kits : contradiction supprimée le 9 septembre.** Les 576 fiches héritent désormais des matériaux nommés, nœuds, budgets et clips de leur base. Les motifs d’ornement sont peints dans les UV existants ; ils n’ajoutent pas de nœuds. Les trois couleurs de palette désignent des pigments, jamais une ombre ou un reflet à cuire. Le masque de distinction entre équipes peut occuper une bande dans les zones d’équipe héritées : `socle` n’est pas toujours un piédestal (il porte les bêches sur l’artillerie et l’indicateur sur l’anti-air).
+
+La réception d’un kit compare l’empreinte du binaire géométrique, des accesseurs, UV, mailles, nœuds, squelettes et clips à sa base, LOD par LOD. Le lot de base est lu dans le même dossier ; la commande complète accepte `--base <dossier>` si les deux livraisons sont séparées. Seuls les matériaux/images et leurs textures sont à modifier dans une copie de la base. Les UV entre deux LOD différents restent un contrat de correspondance à examiner : leurs nombres de sommets peuvent différer.

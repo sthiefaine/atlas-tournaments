@@ -1,0 +1,88 @@
+{
+  "cle": "carte_convoi_secondaire",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "carte_convoi_secondaire",
+  "nom": "La chaussée de Solveig",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "WPPPPPPPPPPP",
+    "WRRRRRRRRUHP",
+    "WPFRPCPPRPPP",
+    "WPPRFPPPRPFP",
+    "WVVNVVVVNVVV",
+    "WPPRPPPPRCPP",
+    "WPPRPFFPRFPP",
+    "WPPRPPCPRPPP",
+    "WHURRRRRRRRP",
+    "WPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "2,8": 0,
+    "10,1": 1,
+    "9,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "char_moyen",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 7,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 10,
+      "y": 2
+    }
+  ]
+}

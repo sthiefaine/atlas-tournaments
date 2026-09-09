@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Combat : la formule de dégâts, la riposte, les munitions et la jauge
  * (`doc/04-gameplay.md` §5 et §7.1).
@@ -157,7 +158,7 @@ export function peutViser(
   const ta = cat.unites[att.type];
   const td = cat.unites[def.type];
   if (!ta || !td) return { ok: false, motif: 'catalogue_inconnu' };
-  if (att.camp === def.camp) return { ok: false, motif: 'cible_amie' };
+  if (sontAllies(etat, att.camp, def.camp)) return { ok: false, motif: 'cible_amie' };
   if (degatsBase(cat, att.type, def.type) <= 0) return { ok: false, motif: 'ne_peut_pas_viser' };
   if (degatsArme(cat, att, def.type) <= 0) return { ok: false, motif: 'sans_munitions' };
   const d = manhattan(depuis, def);
@@ -189,7 +190,7 @@ export function calculerDegats(
 export function crediterJauge(etat: EtatPartie, camp: number, points: number): void {
   const c = etat.camps.find((e) => e.id === camp);
   if (!c) return;
-  c.jauge = Math.min(c.jaugeMax, c.jauge + points);
+  c.jauge = Math.min(c.jaugeMax, c.jauge + Math.round(points * (camp === 0 ? etat.reglages.vitesseJaugeJoueur ?? 1 : 1)));
 }
 
 /** Retire une unité de la carte : mise hors jeu, jamais destruction. */
@@ -216,7 +217,7 @@ function revelerProduction(etat: EtatPartie, cat: Catalogue, u: Unite, evts: Eve
   const type = cat.unites[u.type];
   if (!type || !porte(type, 'drone')) return;
   const proprietaire = etat.proprietaires[cleCase(u)];
-  if (proprietaire === undefined || proprietaire === u.camp) return;
+  if (proprietaire === undefined || sontAllies(etat, proprietaire, u.camp)) return;
   const produites: Record<CleUnite, number> = {};
   const prefixe = `${proprietaire}:`;
   for (const [k, n] of Object.entries(etat.produites)) {

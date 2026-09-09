@@ -1,6 +1,223 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle":"mode.victoires","texte":"Victoires : {normal} en normal · {difficile} en difficile","contexte":{"ecran":"reglages","note":"Nombre de missions distinctes remportées dans chaque mode par le profil actif."},"longueurMax":100},
+    {
+      "cle": "objectif.defaite_unite",
+      "texte": "Préservez {unite} : sa mise hors jeu termine la mission.",
+      "contexte": {
+        "ecran": "partie",
+        "note": "Condition de défaite impérative des missions à porteur désigné."
+      },
+      "longueurMax": 140
+    },
+    {
+      "cle": "mode.titre",
+      "texte": "Difficulté du profil",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "mode.normal",
+      "texte": "Normal",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "mode.difficile",
+      "texte": "Difficile",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "mode.note",
+      "texte": "Disponible dès le départ. Chaque difficulté conserve sa propre partie. Les choix narratifs restent communs au profil.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 180
+    },
+    {
+      "cle": "mode.partie_note",
+      "texte": "Conditions de cette partie. Les dégâts de base sont identiques dans les deux modes. Le revenu de la première journée s’ajoute aux réserves indiquées.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 200
+    },
+    {
+      "cle": "mode.camp",
+      "texte": "Camp {camp} : {fonds} fonds, {revenu} par bâtiment et par journée · {ia}",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 160
+    },
+    {
+      "cle": "mode.regles",
+      "texte": "Brouillard : {brouillard} · Bulletin : {bulletin} journée(s) · Gain de jauge joueur : ×{jauge}",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 160
+    },
+    {
+      "cle": "mode.joueur",
+      "texte": "Joueur",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "mode.siege",
+      "texte": "Difficile : chaque camp adverse reçoit une infanterie supplémentaire à la journée 18, à son point d’entrée ou sur une case libre proche.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 180
+    },
+    {
+      "cle": "mode.changer",
+      "texte": "Changer de difficulté dans les réglages",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "aube.quete_verrouillee",
+      "texte": "Quête encore fermée",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "aube.quete_condition",
+      "texte": "Choisissez à la fin du Détour des batteries ou de Ligne de nuit pour ouvrir la quête correspondante.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Sélection et briefing des modes normal/difficile ; réglage propre au profil."
+      },
+      "longueurMax": 160
+    },
+    {
+      "cle": "aube.essai",
+      "texte": "Essai Aube",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "aube.decider",
+      "texte": "Décider pour la suite",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "aube.decision_enregistree",
+      "texte": "Décision enregistrée : {titre}. {effet}",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 400
+    },
+    {
+      "cle": "aube.decision_note",
+      "texte": "Un seul choix, conservé pour ce profil. Rejouer ce scénario ne permet pas de le changer. Les parties déjà commencées gardent leurs conditions de départ.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 200
+    },
+    {
+      "cle": "aube.decision_erreur",
+      "texte": "Impossible d’enregistrer ce choix. Vérifiez le stockage du navigateur, puis réessayez.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 120
+    },
+    {
+      "cle": "aube.consequences",
+      "texte": "Conséquences de vos décisions au départ",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "aube.journal",
+      "texte": "Journal des décisions Aube",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 50
+    },
+    {
+      "cle": "aube.journal_note",
+      "texte": "Essais locaux, distincts des entraînements. Les conséquences s’appliquent aux nouvelles parties indiquées ; une reprise conserve ses conditions de départ.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 200
+    },
+    {
+      "cle": "aube.revoir",
+      "texte": "Revoir la décision",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Choix persistants des essais Aube, enregistrés uniquement sur le profil local."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "hud.tour_allie",
+      "texte": "Tour allié",
+      "contexte": {
+        "ecran": "partie",
+        "note": "Tour automatique d'un autre camp de la même équipe."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "hud.unite_alliee",
+      "texte": "Alliée · commandement autonome",
+      "contexte": {
+        "ecran": "partie",
+        "note": "Unité d'un autre camp allié : consultable, sans contrôle direct du joueur."
+      },
+      "longueurMax": 44
+    },
     {
       "cle": "accueil.accroche",
       "texte": "Les guerres sont finies. Reste le tournoi.",
@@ -2352,7 +2569,10 @@
     {
       "cle": "hud.vue_camera",
       "texte": "Vue",
-      "contexte": { "ecran": "jeu", "note": "Ouvre les réglages de caméra sur mobile." },
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Ouvre les réglages de caméra sur mobile."
+      },
       "longueurMax": 16
     },
     {
@@ -3806,6 +4026,87 @@
         "note": "Fiche d'une unité en jeu déjà touchée. La règle la moins intuitive du jeu, et elle n'était écrite nulle part à l'écran."
       },
       "longueurMax": 40
+    },
+    {
+      "cle": "commandant.cmd_hadran_ost.nom",
+      "texte": "Hadran Ost",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_hadran_ost.pouvoir",
+      "texte": "Manœuvre coordonnée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_hadran_ost.super",
+      "texte": "Réserve générale",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_solveig_tamm.nom",
+      "texte": "Solveig Tamm",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_solveig_tamm.pouvoir",
+      "texte": "Manœuvre coordonnée",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_solveig_tamm.super",
+      "texte": "Réserve générale",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Profil de commandant des essais Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_wren_osoko.nom",
+      "texte": "Wren Osoko",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Commandante de la quête des archives Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_wren_osoko.pouvoir",
+      "texte": "Relevé coordonné",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Commandante de la quête des archives Aube."
+      },
+      "longueurMax": 30
+    },
+    {
+      "cle": "commandant.cmd_wren_osoko.super",
+      "texte": "Fenêtre de passage",
+      "contexte": {
+        "ecran": "hud",
+        "note": "Commandante de la quête des archives Aube."
+      },
+      "longueurMax": 30
     }
   ]
 }

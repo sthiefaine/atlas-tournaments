@@ -1,10 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type KeyboardEvent } from 'react';
+import type { Mode } from '../../schemas/types';
+import { lireProgression } from '../campagne/progression';
+import { indexChoix } from '../navigation-choix';
 import { QUALITES_RENDU, type QualiteRendu } from '../../render/qualite';
 import {
-  NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
+  ecrireDifficulte, lireDifficulte, NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
   compterProgression, effacerProgression, ecrirePreferences, lirePreferences,
   lireProfils, normaliserNomProfil, renommerProfil, stockageDisponible,
   type BilanProgression, type EtatProfils, type Preferences, type Profil,
@@ -40,6 +43,11 @@ import {
  */
 
 export interface LibellesReglages {
+  difficulte: string;
+  difficulteNote: string;
+  victoiresModes: string;
+  normal: string;
+  difficile: string;
   titre: string;
   retour: string;
   /** Titre du panneau des réglages qui se voient pendant une partie. */
@@ -113,6 +121,12 @@ function Groupe({ id, titre, children }: {
 type Effacement = { profil: string; bilan: BilanProgression } | { echec: true } | null;
 
 export default function Reglages({ libelles }: { libelles: LibellesReglages }): React.ReactElement {
+  const [victoiresModes, setVictoiresModes] = useState({ normal: 0, difficile: 0 });
+  const compterModes = (profil: Profil): void => {
+    const p = lireProgression(profil);
+    setVictoiresModes({ normal: p.victoiresParMode?.normal?.length ?? (p.victoiresParMode ? 0 : p.victoires.length), difficile: p.victoiresParMode?.difficile?.length ?? 0 });
+  };
+  const [difficulte, setDifficulte] = useState<Mode>('normal');
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   const [profils, setProfils] = useState<EtatProfils>({ ...PROFILS_PAR_DEFAUT, noms: { ...PROFILS_PAR_DEFAUT.noms } });
   // Ce que chaque sauvegarde tient. `null` tant que le navigateur n'a pas parlé :
@@ -135,11 +149,22 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     const etat = lireProfils();
     setPreferences(lirePreferences());
     setProfils(etat);
+    setDifficulte(lireDifficulte(etat.actif));
+    compterModes(etat.actif);
     setSaisie(etat.noms[etat.actif]);
     setBilans(compter());
     setStockage(stockageDisponible());
     setPret(true);
   }, []);
+
+  /** Les radios offrent un seul arrêt Tab ; les flèches déplacent choix et focus. */
+  const naviguer = (event: KeyboardEvent<HTMLButtonElement>, index: number, total: number, choisir: (index: number) => void): void => {
+    const suivant = indexChoix(event.key, index, total);
+    if (suivant === null) return;
+    event.preventDefault();
+    choisir(suivant);
+    event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[suivant]?.focus();
+  };
 
   const nomDe = (profil: Profil): string => profils.noms[profil] || (profil === 'a' ? libelles.profilA : libelles.profilB);
   const libelleQualite: Record<QualiteRendu, string> = {
@@ -163,6 +188,8 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     if (profil === profils.actif) return;
     const suivant = { ...profils, actif: profil };
     setProfils(suivant);
+    setDifficulte(lireDifficulte(profil));
+    compterModes(profil);
     setSaisie(suivant.noms[profil]);
     setStockage(changerProfilActif(profil));
     // Le bandeau parlait de l'autre profil : il n'a plus rien à dire ici.
@@ -185,6 +212,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     setStockage(ok);
     setEffacement(ok ? { profil: nomDe(profil), bilan } : { echec: true });
     setBilans(compter());
+    compterModes(profil);
     setConfirme(false);
   };
 
@@ -220,6 +248,27 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
       {bascule('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
     </Groupe>
 
+    <Groupe id="reglage-difficulte" titre={libelles.difficulte}>
+      <p className="reglage-note">{nomDe(profils.actif)} · {libelles.difficulteNote}</p>
+      <p className="reglage-note">{remplir(libelles.victoiresModes, victoiresModes)}</p>
+      <div className="reglage-choix" role="radiogroup" aria-label={libelles.difficulte}>
+        {(['normal', 'difficile'] as const).map((mode, index) => {
+          const choisi = difficulte === mode;
+          const choisir = (valeur: Mode): void => {
+            const ok = ecrireDifficulte(profils.actif, valeur);
+            setStockage(ok);
+            if (ok) setDifficulte(valeur);
+          };
+          return <button key={mode} type="button" role="radio" aria-checked={choisi} tabIndex={choisi ? 0 : -1}
+            disabled={!pret} className={choisi ? 'choisi' : ''}
+            onClick={() => choisir(mode)}
+            onKeyDown={(event) => naviguer(event, index, 2, (i) => choisir(i === 0 ? 'normal' : 'difficile'))}>
+            {mode === 'normal' ? libelles.normal : libelles.difficile}
+          </button>;
+        })}
+      </div>
+    </Groupe>
+
     <Groupe id="reglage-affichage" titre={libelles.affichage}>
       {/* Deux choix, un rang : le réglage pilote réellement la chaîne de
           post-traitement du rendu, lue par la page de jeu au montage. */}
@@ -229,10 +278,12 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
           <span className="reglage-note">{libelles.qualiteNote}</span>
         </span>
         <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
-          {QUALITES_RENDU.map((q) => {
+          {QUALITES_RENDU.map((q, index) => {
             const choisi = preferences.qualite === q;
             return <button
               key={q} type="button" role="radio" aria-checked={choisi}
+              tabIndex={choisi ? 0 : -1}
+              onKeyDown={(event) => naviguer(event, index, QUALITES_RENDU.length, (i) => changer({ qualite: QUALITES_RENDU[i]! }))}
               className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => changer({ qualite: q })}
             >
               {libelleQualite[q]}
@@ -247,10 +298,12 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
       {/* L'écran-titre choisit **laquelle on joue** ; ici on les nomme, on voit
           ce qu'elles tiennent, et on en efface une. */}
       <div className="reglage-cartouches" role="radiogroup" aria-label={libelles.profils}>
-        {PROFILS.map((profil) => {
+        {PROFILS.map((profil, index) => {
           const choisi = profils.actif === profil;
           return <button
             key={profil} type="button" role="radio" aria-checked={choisi}
+            tabIndex={choisi ? 0 : -1}
+            onKeyDown={(event) => naviguer(event, index, PROFILS.length, (i) => activer(PROFILS[i]!))}
             className="reglage-cartouche" disabled={!pret} onClick={() => activer(profil)}
           >
             <span className="cartouche-nom">{nomDe(profil)}</span>

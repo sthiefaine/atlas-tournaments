@@ -845,3 +845,17 @@ test('« unité suivante » parcourt les unités qui n’ont pas joué, en cycle
   assert.equal(c.vue.selection, jouables[0]?.id ?? null);
 });
 
+
+test('une autre armée alliée se consulte sans ordres ni menaces rouges', () => {
+  const etat = partie();
+  etat.reglages.equipes = [[0, 1]];
+  const alliee = etat.unites.find((u) => u.camp === 1)!;
+  const c = controleur(etat);
+  const avant = empreinte(etat);
+  c.clicCase(alliee);
+  assert.equal(c.vue.inspection, alliee.id);
+  assert.equal(c.vue.selection, null);
+  assert.equal(c.phase, 'inactif');
+  assert.equal(c.vue.surbrillances.length, 0);
+  assert.equal(empreinte(etat), avant, 'consulter une alliée ne joue pas son tour');
+});

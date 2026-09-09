@@ -1,3 +1,4 @@
+import { sontAllies } from '../engine/equipes';
 /**
  * Déplacement prudent sous brouillard (7 septembre 2026).
  *
@@ -51,7 +52,7 @@ export function porteePrudente(etat: EtatPartie, cat: Catalogue, u: Unite): Port
     for (const v of voisines(a)) if (dansCarte(etat, v)) zdc[v.y * largeur + v.x] = 1;
   }
   for (const a of etat.unites) {
-    if (a.camp === u.camp && a.id !== u.id && !a.dansTransport) bloquee[a.y * largeur + a.x] = 1;
+    if (sontAllies(etat, a.camp, u.camp) && a.id !== u.id && !a.dansTransport) bloquee[a.y * largeur + a.x] = 1;
   }
 
   const seaux: number[][] = [];

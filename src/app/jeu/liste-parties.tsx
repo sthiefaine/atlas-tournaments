@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { cleSauvegardeDe, profilActif } from '../preferences';
+import { cleSauvegardeDe, lireDifficulte, profilActif } from '../preferences';
 import { GESTES_PRECHARGEMENT } from './precharger';
 import { etatSauvegarde, type EtatSauvegarde, type Vignette } from './parties-libres';
 
@@ -89,7 +89,7 @@ export function ListeParties({ parties, versionMoteur, libelles }: {
       for (const p of parties) {
         let brut: string | null = null;
         try {
-          brut = localStorage.getItem(cleSauvegardeDe(profil, p.cle));
+          brut = localStorage.getItem(cleSauvegardeDe(profil, p.cle, lireDifficulte(profil)));
         } catch {
           brut = null;
         }
@@ -108,7 +108,7 @@ export function ListeParties({ parties, versionMoteur, libelles }: {
 
   const oublier = (cle: string): void => {
     try {
-      localStorage.removeItem(cleSauvegardeDe(profilActif(), cle));
+      localStorage.removeItem(cleSauvegardeDe(profilActif(), cle, lireDifficulte()));
     } catch {
       // Sans stockage, il n'y a rien à oublier : la page de jeu partira de zéro.
     }

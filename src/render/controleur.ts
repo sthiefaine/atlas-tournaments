@@ -34,7 +34,7 @@ import type {
 import {
   appliquer, arriveeLibre, brouillardActif, casesAtteignables, casesVisibles, cheminVers, ciblesDepuis, cleCase,
   coutVers, depuisCle, estDesaffecte, manhattan, peutCapturerIci, pointsMouvement, porte, portee, produitesPar,
-  terrainLogique, uniteParId, uniteSur, unitesVues, verifierProduction, constructionsPossibles,
+  terrainLogique, uniteParId, uniteSur, unitesVues, verifierProduction, constructionsPossibles, sontAllies,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
 import type { OptionMenu } from './libelles';
@@ -642,6 +642,8 @@ export class Controleur {
     }
     const inspectee = this.inspectionId === null ? undefined : uniteParId(this.etatPartie, this.inspectionId);
     if (inspectee) {
+      // Une autre armée alliée reste consultable, sans menace ni ordre possible.
+      if (sontAllies(this.etatPartie, inspectee.camp, this.camp)) return sortie;
       // L'inspection d'Advance Wars : où l'adversaire peut aller, et d'où il peut
       // frapper. Ses arrivées sont un danger, pas une destination — le vert
       // resterait lu comme « j'y vais ».
@@ -1013,7 +1015,7 @@ export class Controleur {
     const type = this.cat.unites[u.type];
     if (!type || porte(type, 'transport')) return undefined;
     return this.etatPartie.unites.find((a) => {
-      if (a.camp !== u.camp || a.id === u.id || a.dansTransport) return false;
+      if (!sontAllies(this.etatPartie, a.camp, u.camp) || a.id === u.id || a.dansTransport) return false;
       const ta = this.cat.unites[a.type];
       if (!ta || !porte(ta, 'transport') || ta.transport === null) return false;
       if (!ta.transport.accepte.includes(u.type)) return false;
@@ -1067,7 +1069,7 @@ export class Controleur {
     if (terrain === null) return [];
     if (this.etatPartie.proprietaires[cleCase(c)] !== this.camp) return [];
     if (uniteSur(this.etatPartie, c)) return [];
-    return produitesPar(this.cat, terrain).filter(
+    return produitesPar(this.cat, terrain, this.etatPartie, this.camp).filter(
       (cle) => verifierProduction(this.etatPartie, this.cat, this.camp, c, cle).ok
         || (this.cat.unites[cle]?.cout ?? 0) > 0,
     );

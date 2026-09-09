@@ -32,7 +32,7 @@ test('un préfixe de secret n’est pas confondu avec un mot qui commence pareil
   assert.equal(estSecret('cartes/secrets.json'), false, 'seule la racine du canon est filtrée');
 });
 
-test('le dossier canon ne contient aujourd’hui aucun fichier de secret', () => {
+test('seul le registre des personnages est privé dans le contenu courant', () => {
   const racine = path.resolve(import.meta.dirname, '..', '..', 'content');
-  for (const nom of readdirSync(racine)) assert.equal(estSecret(nom), false, `content/${nom}`);
+  assert.deepEqual(readdirSync(racine).filter(estSecret), ['personnages.json']);
 });

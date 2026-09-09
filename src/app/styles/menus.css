@@ -164,3 +164,27 @@
   .reglage-etat{min-width:0;flex:1}
 }
 @media(prefers-reduced-motion:reduce){.atlas-reglages *{transition:none!important}}
+
+/* Le focus intérieur reste visible dans les panneaux aux coins découpés. */
+:is(.atlas-jeu-libre,.atlas-reglages,.atlas-carnet) :is(button,a,input):focus-visible{
+  outline:3px solid var(--atlas-signal);
+  outline-offset:-4px;
+  box-shadow:inset 0 0 0 5px #10222b;
+}
+.jeu-libre-actions{flex-wrap:wrap}
+.jeu-libre-actions .jeu-libre-bouton{min-width:min(100%,140px);overflow-wrap:anywhere}
+.reglage-rangee,.reglage-champ{min-width:0}
+.reglage-libelle{min-width:0;overflow-wrap:anywhere}
+@media(max-width:380px){
+  .jeu-libre-entete,.reglages-entete{align-items:flex-start;flex-wrap:wrap}
+  .jeu-libre-actions .jeu-libre-bouton.secondaire{flex:1 1 100%}
+}
+@media(forced-colors:active){
+  :is(.atlas-jeu-libre,.atlas-reglages,.atlas-carnet) :is(button,a,input):focus-visible{outline:3px solid Highlight;box-shadow:none}
+  .reglage-cartouche[aria-checked='true'],.reglage-choix [aria-checked='true']{outline:2px solid Highlight;outline-offset:-3px}
+}
+.carnet-journal{width:min(100%,960px);margin:20px auto;padding:18px;background:#0f2129;border:1px solid var(--atlas-lisere);color:var(--atlas-papier)}
+.carnet-journal h2{font-size:18px;font-weight:850;margin-bottom:8px}
+.carnet-journal p{font-size:13px;line-height:1.5;margin:6px 0}
+.carnet-journal ol{padding-left:20px;display:grid;gap:14px;margin-top:14px}
+.carnet-journal a{display:inline-flex;align-items:center;min-height:44px;color:var(--atlas-signal);text-decoration:underline}

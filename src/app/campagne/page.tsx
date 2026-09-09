@@ -8,6 +8,7 @@ import { validerMapDef, validerScenario, type CampId, type MapDef, type Resultat
 import campagneJson from '../../../content/campagne.json';
 import terrainsJson from '../../../content/terrains.json';
 import { vignetteCarte } from '../jeu/parties-libres';
+import { ParcoursAube } from './parcours-aube';
 import Carnet, { type EpreuveCarnet } from './carnet';
 import { nomCourt } from './itineraire';
 
@@ -114,9 +115,12 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
     };
   });
 
-  return <Carnet
+  return <><Carnet
     epreuves={epreuves}
     libelles={{
+      journalTitre: t(locale, 'aube.journal'),
+      journalNote: t(locale, 'aube.journal_note'),
+      revoirDecision: t(locale, 'aube.revoir'),
       surtitre: t(locale, 'campagne.surtitre'),
       titre: campagneJson.titre,
       introduction: campagneJson.introduction,
@@ -141,5 +145,5 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
       profilB: t(locale, 'reglages.profil_b'),
       profilActif: t(locale, 'accueil.profil_actif'),
     }}
-  />;
+  /><ParcoursAube /></>;
 }

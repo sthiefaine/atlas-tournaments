@@ -71,5 +71,5 @@ test('un lot vide est refusé, et un GLB illisible aussi', () => {
   assert.ok(verdict.motifs.length > 0, 'et le refus est motivé');
   // Chaque motif dit de quel fichier il parle : sans cela, trois niveaux
   // refusés rendent trois motifs qu'on ne sait pas attribuer.
-  assert.ok(verdict.motifs.every((m) => (m.detail ?? '').includes('.glb')), 'chaque motif nomme son fichier');
+  assert.ok(verdict.motifs.every((m) => /\.(glb|png)/.test(m.detail ?? '')), 'chaque motif nomme son fichier');
 });

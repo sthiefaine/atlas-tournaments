@@ -1,3 +1,4 @@
+import { sontAllies, equipeDe } from '../equipes';
 /**
  * Conditions de victoire et de défaite, et décision aux points
  * (`doc/04-gameplay.md` §9). Elles sont évaluées après chaque action et en
@@ -43,7 +44,8 @@ export function majEliminations(
     const unites = etat.unites.filter((u) => u.camp === camp.id).length;
     const producteurs = producteursDe(etat, cat, camp.id).length;
     const qgPerdu = camp.qgCase !== null && etat.proprietaires[camp.qgCase] !== camp.id;
-    if (!qgPerdu && (unites > 0 || producteurs > 0)) continue;
+    const attend = (etat.reglages.renforts ?? []).some((v, i) => v.unites.some((u, j) => u.camp === camp.id && !(etat.renfortsLivres ?? []).includes(`${i}:${j}`)));
+    if (!qgPerdu && (unites > 0 || producteurs > 0 || attend)) continue;
     camp.elimine = true;
     neutraliser(etat, camp.id);
     etat.unites = etat.unites.filter((u) => u.camp !== camp.id);
@@ -62,9 +64,10 @@ export function vainqueurAuxPoints(etat: EtatPartie, cat: Catalogue): CampId | n
   let meilleur: CampId | null = null;
   let meilleurScore = -Infinity;
   let egalite = false;
-  for (const camp of etat.camps) {
-    if (camp.elimine) continue;
-    const s = score(etat, cat, camp.id);
+  const equipes = [...new Set(etat.camps.filter((c) => !c.elimine).map((c) => equipeDe(etat, c.id)))];
+  for (const id of equipes) {
+    const camp = { id };
+    const s = etat.camps.filter((c) => !c.elimine && sontAllies(etat, c.id, id)).reduce((total, c) => total + score(etat, cat, c.id), 0);
     if (s > meilleurScore + 1e-9) {
       meilleurScore = s;
       meilleur = camp.id;
@@ -80,29 +83,29 @@ export function vainqueurAuxPoints(etat: EtatPartie, cat: Catalogue): CampId | n
 function objectifsCamp0(etat: EtatPartie, cat: Catalogue): string | null {
   for (const [indice, v] of etat.reglages.victoire.entries()) {
     if (v.type === 'capture_qg') {
-      const adversaires = etat.camps.filter((c) => c.id !== 0);
-      if (adversaires.length > 0 && adversaires.every((c) => c.qgCase !== null && etat.proprietaires[c.qgCase] === 0)) return 'objectif_capture_qg';
+      const adversaires = etat.camps.filter((c) => !sontAllies(etat, c.id, 0));
+      if (adversaires.length > 0 && adversaires.every((c) => c.qgCase !== null && sontAllies(etat, etat.proprietaires[c.qgCase], 0))) return 'objectif_capture_qg';
     } else if (v.type === 'capturer') {
-      const pris = v.cases.filter((c) => etat.proprietaires[cleCase(c)] === 0).length;
+      const pris = v.cases.filter((c) => sontAllies(etat, etat.proprietaires[cleCase(c)], 0)).length;
       if (pris >= v.combien) return 'objectif_capturer';
     } else if (v.type === 'survivre') {
       if (etat.journee > v.journees) return 'objectif_survivre';
     } else if (v.type === 'tenir') {
-      const tout = v.cases.every((c) => etat.proprietaires[cleCase(c)] === 0);
+      const tout = v.cases.every((c) => sontAllies(etat, etat.proprietaires[cleCase(c)], 0));
       if (tout && etat.journee > v.journees) return 'objectif_tenir';
     } else if (v.type === 'proteger') {
-      const u = etat.unites.find((u) => u.camp === 0 && u.id === v.uniteRef && !u.dansTransport);
+      const u = etat.unites.find((u) => sontAllies(etat, u.camp, 0) && u.id === v.uniteRef && !u.dansTransport);
       if (u && v.destination && cleCase(u) === cleCase(v.destination)) return 'objectif_proteger';
     } else if (v.type === 'relais') {
       etat.relais ??= {};
       const prochain = etat.relais[String(indice)] ?? 0;
       const cible = v.cases[prochain];
-      if (cible && etat.unites.some((u) => u.camp === 0 && !u.dansTransport && cleCase(u) === cleCase(cible))) {
+      if (cible && etat.unites.some((u) => sontAllies(etat, u.camp, 0) && !u.dansTransport && cleCase(u) === cleCase(cible))) {
         etat.relais[String(indice)] = prochain + 1;
       }
       if ((etat.relais[String(indice)] ?? 0) >= v.cases.length) return 'objectif_relais';
     } else if (v.type === 'points') {
-      if (score(etat, cat, 0) >= v.seuil) return 'objectif_points';
+      if (etat.camps.filter((c) => sontAllies(etat, c.id, 0)).reduce((s, c) => s + score(etat, cat, c.id), 0) >= v.seuil) return 'objectif_points';
     }
   }
   return null;
@@ -112,11 +115,11 @@ function objectifsCamp0(etat: EtatPartie, cat: Catalogue): string | null {
 function defaitesCamp0(etat: EtatPartie): string | null {
   for (const d of etat.reglages.defaite) {
     if (d.type === 'unite_perdue') {
-      if (!etat.unites.some((u) => u.camp === 0 && u.id === d.uniteRef)) return 'unite_protegee_perdue';
+      if (!etat.unites.some((u) => sontAllies(etat, u.camp, 0) && u.id === d.uniteRef)) return 'unite_protegee_perdue';
     } else if (d.type === 'case_perdue') {
       if (d.cases.some((c) => {
         const p = etat.proprietaires[cleCase(c)];
-        return p !== undefined && p !== 0;
+        return p !== undefined && !sontAllies(etat, p, 0);
       })) return 'case_perdue';
     }
   }
@@ -140,8 +143,8 @@ export function evaluerFin(
   // Une discipline ne se gagne pas en vidant le terrain : protéger le joueur
   // reste impératif, mais les adversaires absents ne court-circuitent pas l'objectif.
   const defaite = defaitesCamp0(etat);
-  if (defaite || etat.camps.find((c) => c.id === 0)?.elimine) {
-    finir(restants.find((c) => c.id !== 0)?.id ?? null, defaite ?? 'hors_jeu_total');
+  if (defaite || !restants.some((c) => sontAllies(etat, c.id, 0))) {
+    finir(restants.find((c) => !sontAllies(etat, c.id, 0))?.id ?? null, defaite ?? 'hors_jeu_total');
     return;
   }
   const objectif = objectifsCamp0(etat, cat);
@@ -149,20 +152,20 @@ export function evaluerFin(
     finir(0, objectif);
     return;
   }
-  if (restants.length <= 1 && etat.reglages.victoire.some((v) => v.type === 'hors_jeu_total')) {
+  if (new Set(restants.map((c) => equipeDe(etat, c.id))).size <= 1 && etat.reglages.victoire.some((v) => v.type === 'hors_jeu_total')) {
     const seul = restants[0];
-    finir(seul ? seul.id : null, 'hors_jeu_total', seul === undefined);
+    finir(seul ? equipeDe(etat, seul.id) : null, 'hors_jeu_total', seul === undefined);
     return;
   }
   const echeance = etat.reglages.defaite.find((d) => d.type === 'limite_journees' && etat.journee > d.journees);
   if (echeance) {
-    finir(restants.find((c) => c.id !== 0)?.id ?? null, 'limite_journees');
+    finir(restants.find((c) => !sontAllies(etat, c.id, 0))?.id ?? null, 'limite_journees');
     return;
   }
   const limite = etat.reglages.limiteJournees;
   if (limite !== null && etat.journee > limite) {
     const discipline = etat.reglages.victoire.some((v) => ['proteger', 'relais', 'survivre', 'tenir', 'capturer'].includes(v.type));
-    const vainqueur = discipline ? (restants.find((c) => c.id !== 0)?.id ?? null) : vainqueurAuxPoints(etat, cat);
+    const vainqueur = discipline ? (restants.find((c) => !sontAllies(etat, c.id, 0))?.id ?? null) : vainqueurAuxPoints(etat, cat);
     finir(vainqueur, 'limite_journees', vainqueur === null);
   }
 }

@@ -428,6 +428,22 @@ function liste<T extends string>(table: Record<T, [string, string]>, valeurs: re
 
 /** Textes propres aux dix unités canon. */
 const TEXTES_UNITE: Record<string, Bilingue> = {
+  drone_intercepteur: {
+    fr: 'Un drone intercepteur de tournoi compact : fuselage en losange, deux ailes épaisses et courts lanceurs de marqueurs dirigés vers le ciel. Aucun cockpit habité. Les ailes et le nez portent les panneaux neutres de couleur d’équipe. Silhouette rapide, nette, distincte du drone observateur ; aucune pièce fine ni emblème.',
+    en: 'A compact unmanned tournament interceptor with a diamond fuselage, two thick wings and short upward-pointing marker launchers. No occupied cockpit. Smooth neutral-grey team panels on wings and nose. A fast, crisp silhouette distinct from an observer drone; no thin parts, symbols or lettering.',
+  },
+  drone_ravitailleur: {
+    fr: 'Un drone logistique trapu, deux rotors protégés et une nacelle rectangulaire de batteries et de marqueurs sous le corps. Ni lanceur ni cabine de transport de personnes. La nacelle fermée et les carénages épais le distinguent du drone observateur ; panneaux d’équipe gris neutre sur le dessus et les côtés.',
+    en: 'A squat supply drone with two protected rotors and a rectangular closed battery-and-marker pod beneath its body. No weapon launcher and no passenger cabin. The thick rotor guards and oversized supply pod distinguish it from an observation drone; neutral grey team panels on top and sides.',
+  },
+  meridien_veilleur: {
+    fr: 'Un drone brouilleur méridien : corps compact, deux rotors, large disque radar rabattu au-dessus d’une nacelle courte. Le radar et la nacelle forment deux volumes clairement séparés vus d’en haut. Aucune arme ; matériaux techniques entretenus. Panneaux d’équipe gris neutre, aucun symbole qui révèle sa provenance.',
+    en: 'A Meridian electronic-support drone: compact body, two rotors, a broad folding radar disc above a short equipment pod. Radar and pod form two clearly separated top-down volumes. No weapon. Well-maintained technical materials and neutral-grey team panels, with no provenance-revealing symbols.',
+  },
+  meridien_bastion: {
+    fr: 'Une plateforme méridienne lourde à chenilles : coque basse et large, tourelle compacte portant deux tubes de marquage antiaérien courts et parallèles. Silhouette massive et lente, flancs larges, roues visibles. Panneaux d’équipe gris neutre sur tourelle et glacis, aucun insigne. Aucun canon long d’artillerie.',
+    en: 'A heavy Meridian tracked platform: low wide hull, compact turret with two short parallel anti-air marker tubes. Massive slow silhouette, broad track runs and visible road wheels. Neutral-grey team panels on turret and front plate, no insignia and no long artillery barrel.',
+  },
   infanterie: {
     en: 'A pair of tournament infantry athletes advancing at a steady walk, sculpted as one compact '
       + 'group on a single oval base. Padded team jersey, light chest plastron, knee guards, a soft '
@@ -874,16 +890,6 @@ function budgetUnite(s: Silhouette): Budget {
   return budget(9000, 3000, 900, materiaux);
 }
 
-/**
- * Budget d'un kit national : celui de la géométrie de base, majoré d'un sixième
- * pour les ornements. Un kit se livre **monté** sur la base, donc il porte les
- * triangles des deux ; au-delà de cette marge, ce sont des ornements de trop.
- */
-function budgetKit(s: Silhouette): Budget {
-  const b = budgetUnite(s);
-  return budget(Math.round(b.lod0 * 1.16), Math.round(b.lod1 * 1.16), Math.round(b.lod2 * 1.16), 3);
-}
-
 /** Les clips attendus d'une unité : ce qu'elle sait faire, et rien d'autre. */
 function animationsUnite(u: UnitType): AnimationSpec[] {
   const clips: AnimationSpec[] = [
@@ -943,11 +949,11 @@ export function specUnite(u: UnitType): AssetSpec {
     cle,
     priorite: 1,
     description: {
-      en: `${base.en} ${phrase.en} This is the SHARED BASE GEOMETRY: it carries no national livery and no `
+      en: `${base.en} ${phrase.en} ${u.factionExclusive ? 'Exclusive to the unknown Meridian faction; no national variants are commissioned. ' : ''}This is the SHARED BASE GEOMETRY: it carries no national livery and no `
         + 'ornament. One shape, one skeleton, one UV layout, one node naming — every national kit is painted '
         + 'on this exact mesh. Bulk stays roughly one half to two thirds of a tile so that two adjacent units '
         + 'never touch.',
-      fr: `${base.fr} ${phrase.fr} C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale `
+      fr: `${base.fr} ${phrase.fr} ${u.factionExclusive ? 'Unité exclusive de la faction méridienne inconnue : aucune déclinaison nationale commandée. ' : ''}C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale `
         + 'ni ornement. Une seule forme, un squelette, un dépliage, un jeu de noms de nœuds — tout kit national '
         + 'se peint sur ce maillage-là. L’encombrement reste d’environ la moitié aux deux tiers d’une case, '
         + 'pour que deux unités voisines ne se touchent jamais.',
@@ -981,7 +987,7 @@ export function specUnite(u: UnitType): AssetSpec {
  * match miroir — jamais pour porter la couleur du pays.
  */
 export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
-  const s = u.silhouette;
+  const base = specUnite(u);
   const cle: Cle = `${styleNation.code}_${u.cle}`;
   const id = idKit(styleNation.code, u.cle);
   const ornements = styleNation.ornements;
@@ -1001,51 +1007,49 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
     description: {
       en: `National kit for "${u.nom}" in the colours and materials of ${styleNation.nom}. Guiding line: `
         + `${styleNation.ligneDirectrice.en} Paint the delivered base mesh of unite_${cleUniteBase(u.cle)}, `
-        + `unchanged: same geometry, same UV layout, same node names. Base colour ${styleNation.palette.main}, own shadow `
-        + `${styleNation.palette.dark}, edge highlight ${styleNation.palette.light}, accents ${accents}. `
+        + `unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base ${styleNation.palette.main}, dark paint `
+        + `${styleNation.palette.dark}, light paint ${styleNation.palette.light}, accents ${accents}. `
         + `Materials to read at a glance: ${liste(MATIERE, styleNation.matieres, true)}. Finish: `
-        + `${liste(FINITION, styleNation.finitions, true)}. Add these ornaments as separate named nodes, and `
-        + `nothing else: ${liste(ORNEMENT, ornements, true)}. Abstract decals only: ${decalEn}. For colour-blind `
-        + `readability the socle carries ${MOTIF[styleNation.motifDaltonien][0]}, unique to this nation. `
+        + `${liste(FINITION, styleNation.finitions, true)}. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and `
+        + `nothing else: ${liste(ORNEMENT, ornements, true)}. Abstract decals only: ${decalEn}. No added nodes, geometry, baked shadows or painted highlights. For colour-blind `
+        + `readability an existing team-colour panel carries ${MOTIF[styleNation.motifDaltonien][0]}, unique to this nation. `
         + 'This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only '
-        + 'team mask left is a narrow band on the socle, so two players of the same nation stay apart.',
+        + 'team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.',
       fr: `Kit national de « ${u.nom} » aux couleurs et aux matières du style « ${styleNation.nom} ». `
         + `Ligne directrice : ${styleNation.ligneDirectrice.fr} Peindre la géométrie de base livrée `
-        + `unite_${cleUniteBase(u.cle)}, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond `
-        + `${styleNation.palette.main}, ombre propre ${styleNation.palette.dark}, liseré d’arête `
+        + `unite_${cleUniteBase(u.cle)}, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond `
+        + `${styleNation.palette.main}, peinture sombre ${styleNation.palette.dark}, peinture claire `
         + `${styleNation.palette.light}, accents ${accents}. Matières à lire d’un coup d’œil : `
         + `${liste(MATIERE, styleNation.matieres, false)}. Finition : ${liste(FINITION, styleNation.finitions, false)}. `
-        + `Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : ${liste(ORNEMENT, ornements, false)}. `
-        + `Décalcomanies abstraites seulement : ${decalFr}. Pour la lisibilité sans couleur, le socle porte `
+        + `Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : ${liste(ORNEMENT, ornements, false)}. `
+        + `Décalcomanies abstraites seulement : ${decalFr}. Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte `
         + `${MOTIF[styleNation.motifDaltonien][1]}, propre à cette nation. C’est un jeu de textures complet et `
         + 'non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque '
-        + 'd’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation '
+        + 'd’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation '
         + 'restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il '
         + 'se contrôle tel qu’il apparaîtra en jeu.',
     },
     style: style(['national livery kit', 'hand-painted texture set', 'closed ornament vocabulary'], [
       'no tinted grey base coat pretending to be a livery',
     ]),
-    echelle: echelleUnite(s),
+    echelle: base.echelle,
     pivot: pivot(u.domaine !== 'air'),
-    budget: budgetKit(s),
+    budget: base.budget,
     textures: [
       tex('albedo', 1024, true, 'Peinture nationale complète : couleurs, matières et décalcomanies déjà en place.'),
       tex('normale', 1024, true, 'Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières.'),
       tex('rugosite', 512, true, 'C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste.'),
       tex('metal', 512, false, 'Seulement si le style demande du laiton, du cuivre ou de l’acier nu.'),
-      tex('masque_equipe', 256, true, 'Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste.'),
+      tex('masque_equipe', 256, true, 'Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste.'),
+      ...base.textures.filter((t) => t.canal === 'emission' || t.canal === 'occlusion'),
     ],
     variantes: variantes(['hiver'], [], [styleNation.code]),
-    animations: [],
-    format: format(
-      ['corps', 'base', 'socle', ...ornements.map((o) => `ornement_${o}`)],
-      ['mat_kit', 'mat_ornements'],
-    ),
+    animations: base.animations,
+    format: base.format,
     nommage: nommage(id, 'albedo', 'hiver'),
     interdits: interdits(),
     verification: verification(
-      ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'textures'],
+      ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'textures', 'animations'],
       0.14,
       [0, 1],
     ),
@@ -1054,7 +1058,7 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
 
 /** Relief cible d'un terrain, en mètres (`doc/10-rendu-3d.md` §4). */
 const RELIEF_TERRAIN: Record<string, number> = {
-  plaine: 0.06, foret: 0.09, montagne: 0.95, route: 0.05,
+  plaine: 0.02, foret: 0.09, montagne: 0.95, route: 0.05,
   plage: 0.06, riviere: 0.06, pont: 0.32, mer: 0.04,
 };
 
@@ -1074,6 +1078,8 @@ const BIOMES_TERRAIN: Record<string, Biome[]> = {
 export function specTerrain(t: Terrain): AssetSpec {
   const id = idAsset('terrain', t.cle);
   const hauteur = RELIEF_TERRAIN[t.cle] ?? 0.06;
+  const volume = ['montagne', 'pont'].includes(t.cle);
+  const tournable = ['plaine', 'foret', 'montagne'].includes(t.cle);
   const lourd = t.cle === 'montagne';
   const moyen = t.cle === 'pont';
   const texte = TEXTES_TERRAIN[t.cle];
@@ -1085,16 +1091,17 @@ export function specTerrain(t: Terrain): AssetSpec {
     description: {
       en: `${texte?.en ?? `A one-metre tileable ground patch for the "${t.nom}" tile.`} `
         + `Grid tile "${t.car}", defence ${t.defense} of 4. The patch is exactly one metre square in plan `
-        + 'and tiles seamlessly with itself after a quarter turn, so the renderer can rotate it to break '
-        + 'repetition. Deliver the mesh flat: the height relief comes from the terrain mesh, not from you.',
+        + (tournable ? 'with compatible edges under quarter turns. ' : 'with directional connections; rotate only together with its road, bridge or shoreline axis. ')
+        + (volume ? 'Build the volume described above within the stated dimensions.'
+          : `Deliver a constant-thickness flat slab (${hauteur} m). Surface undulation and altitude are applied by the renderer; do not model them.`),
       fr: `${texte?.fr ?? `Une plaque de sol raccordable d’un mètre pour la case « ${t.nom} ».`} `
-        + `Caractère de grille « ${t.car} », défense ${t.defense} sur 4. La plaque fait exactement un mètre `
-        + 'carré en plan et se raccorde avec elle-même après un quart de tour, pour que le rendu la fasse '
-        + 'tourner et casse la répétition. Livrer la maille à plat : le relief vient du maillage de terrain, '
-        + 'pas de vous.',
+        + `Caractère de grille « ${t.car} », défense ${t.defense} sur 4. Exactement un mètre carré en plan. `
+        + (tournable ? 'Bords compatibles après un quart de tour. ' : 'Raccords directionnels : respecter l’axe de la voie ou du rivage. ')
+        + (volume ? 'Construire le volume décrit dans les dimensions imposées.'
+          : `Livrer une dalle plane d’épaisseur constante (${hauteur} m). Le rendu applique l’altitude et les ondulations ; ne pas les modeler.`),
     },
     style: style(['tileable ground patch', 'photoscan-like surface detail', 'seasonal variants']),
-    echelle: echelle(1, hauteur, 1, 0.04),
+    echelle: { ...echelle(1, hauteur, 1, 0.04), x: { cible: 1, tolerance: 0 }, z: { cible: 1, tolerance: 0 }, ...(t.cle === 'plaine' ? { y: { cible: 0.02, tolerance: 0.002 } } : {}) },
     pivot: pivot(true),
     budget: lourd ? budget(2400, 700, 180, 2) : moyen ? budget(1200, 320, 80, 2) : budget(800, 200, 48, 2),
     textures: [
@@ -1108,7 +1115,7 @@ export function specTerrain(t: Terrain): AssetSpec {
     format: format(['sol'], ['mat_sol']),
     nommage: nommage(id, 'albedo', 'hiver'),
     interdits: interdits(),
-    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget'], 0.1, [0, 1]),
+    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'textures'], 0, [0, 1]),
   };
 }
 
@@ -1438,7 +1445,7 @@ export function genererSpecs(): AssetSpec[] {
 
   for (const u of unites) specs.push(specUnite(u));
   for (const styleNation of chargerStylesNations()) {
-    for (const u of unites) specs.push(specKit(styleNation, u));
+    for (const u of unites) if (!u.factionExclusive) specs.push(specKit(styleNation, u));
   }
 
   const capturables = new Set<string>(TERRAINS_CAPTURABLES);

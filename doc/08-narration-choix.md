@@ -154,7 +154,7 @@ La **Dépêche du jour** (`01-bible.md` §4.7, `BRIEF.md`) est une manche d'exhi
 | État | Comment on y arrive | Ce que ça donne au joueur |
 |---|---|---|
 | `neutre` | L'état par défaut. Une nation absente de `relations` est neutre : ne l'avoir jamais croisée et n'avoir rien décidé chez elle sont la même chose | Rien. Elle reçoit, elle joue, elle salue |
-| `alliee` | `pays.<xx>.allie_recrute`, ou `pays.<xx>.rival_respecte`, ou `pays.<xx>.dette_envers_joueur ≥ 2` — c'est-à-dire exactement la première ligne de la règle de ralliement du §6 | Son commandant recrutable en **co-commandant** ; son **unité spéciale produisible** dans les matchs du joueur, en quantité bornée par match ; sa **carte de terrain** ; son **soutien à l'acte III** ; et son **déblocage comme pays de départ** de la prochaine Ronde |
+| `alliee` | `pays.<xx>.allie_recrute`, ou `pays.<xx>.rival_respecte`, ou `pays.<xx>.dette_envers_joueur ≥ 2` — c'est-à-dire exactement la première ligne de la règle de ralliement du §6 | Son commandant recrutable en **co-commandant** ; son **catalogue commun et soutien tactique disponibles** dans les matchs du joueur, en quantité bornée par match ; sa **carte de terrain** ; son **soutien à l'acte III** ; et son **déblocage comme pays de départ** de la prochaine Ronde |
 | `rivale` | Un commandant du pays à `grief ≥ 3`, ou `pays.<xx>.rival_humilie` sans respect en face | Le grief : IA plus dure, dialogue de revanche, objectif de match personnel — et sa destination **peut se fermer** sur la carte du monde |
 | `retiree` | Le cumul, et lui seul : `pays.<xx>.rival_humilie` **et** `pays.<xx>.terrain_altere ≥ 2`, ou un commandant du pays à `grief ≥ 4` **et** `respect ≤ 1` | La nation quitte la Ronde à cause du joueur : **destination fermée**, territoire grisé, et à l'acte III elle est **absente** ou **passée à la Cinquième Manche** |
 
@@ -226,71 +226,40 @@ Un flag de trace modifie la carte d'un pays lors des **revisites** (finale conti
 
 ---
 
-## 6. La trame de la Cinquième Manche en trois actes
+## 6. La trame énergétique en trois actes — canon du 9 septembre 2026
 
-Un acte = un continent (brief). Une traversée en compte **trois** : le joueur visite trois des cinq continents du monde (`06-pays-de-depart.md` §3), en commençant par le sien et en finissant par un qu'il n'a pas encore vu (`01-bible.md` §4.2). C'est ce qui rend le voyage rejouable — les continents laissés de côté sont autant de flags jamais posés. La trame avance par **points de bascule** : des vérifications de flags évaluées à la fin de chaque étape. Elle n'a aucune variable cachée : tout ce qui la fait avancer est un flag listé en § 8.
+Les actes sont des progressions dramatiques, pas des continents obligatoires. Le voyage reste mondial, avec deux ou trois destinations proposées et des identités régionales fondées sur paysages, météo et traits. Le détail des douze étapes cibles figure dans `17-aube.md`. Elles ne sont pas douze missions terminées : quatre entraînements sont conservés et cinq essais tactiques Aube servent actuellement à éprouver les configurations.
 
-### Acte I — « Le bruit de fond »
+### Acte I — Les droits du vainqueur
 
-Le joueur découvre le tournoi. Trois anomalies passent au second plan : un match qui se termine trop vite, un relevé de terrain corrigé après coup, un commandant qui déclare forfait sans explication. Hadran Ost apparaît comme un vétéran sympathique du service matériel, qui vous offre un café et pose de bonnes questions. La **Sélection Méridienne**, l'équipe d'exhibition d'Atlas qu'il dirige (`01-bible.md` §3.4), est un adversaire de Dépêche parmi d'autres : elle joue proprement et perd souvent.
+Ariane et Tomas enseignent la bataille de tournoi et les concessions. Gagner attribue des droits temporaires d’exploitation, de stockage et de distribution, sans transférer une population. Les contrats méridiens semblent faciliter le voyage. Les premiers choix portent sur le partage des relevés et la maintenance, avec un retour concret sur une route ou un dépôt. Ost est accessible ; Sélène apparaît comme négociatrice, sans révélation prématurée de son rôle.
 
-- **Écrit :** `monde.atlas.soupcon`, `monde.atlas.dossier_truquage`, `cmd.hadran_ost.respect`.
-- **Bascule I.a — le contact.** À la fin de l'acte, si `monde.atlas.soupcon ≥ 2` **ou** `cmd.hadran_ost.respect ≥ 2` : Ost parle à visage découvert et propose au joueur de « rendre au tournoi ce qu'il a perdu ». → `monde.cinquieme.contact = true`.
-- **Bascule I.b — l'infiltration.** Si le joueur accepte tout en ayant `monde.atlas.credibilite ≥ 3` : il joue double jeu. → `monde.cinquieme.infiltre = true`. S'il accepte sans crédibilité, il accepte pour de bon (pas de flag d'infiltration : ses ralliements compteront pour la faction).
-- **Si aucune bascule :** l'acte II démarre en mode « aveugle » — le joueur découvrira tout plus tard et plus brutalement.
+### Acte II — Qui possède le lendemain ?
 
-### Acte II — « Le carton »
+Les fronts convergent : des équipes différentes ont le même bénéficiaire. Les archives de Nera, les convois de Solveig et les contrôles de Wren permettent de recouper les contrats. La Cinquième Manche devient identifiable et son projet vise désormais Aube, programme de fusion entièrement fictif. Sélène Veyr en est toujours la dirigeante ; seuls le moment et la solidité de sa découverte varient. Le fil d’Ost montre une disqualification justifiée, pas une excuse annulant ses choix.
 
-La faction agit. Un terrain est saboté avant homologation, une commandante est disqualifiée sur un dossier fabriqué, du matériel non homologué est retrouvé dans un dépôt de la Sélection Méridienne — le scandale absolu de ce monde, classé par le Bureau au motif qu'un dépôt d'essai contient forcément des pièces sans badge. Nera Aldouin enquête seule et se fait retirer l'affaire par le Bureau ; Talvarec choisit de protéger la Ronde. Vantour, lui, sent la meilleure histoire de sa carrière.
+### Acte III — La cinquième manche
 
-- **Écrit :** `monde.atlas.dossier_truquage`, `monde.atlas.arbitre_alliee`, `monde.regie.faveur`, `monde.atlas.sponsor_meridien`, `pays.<xx>.dette_envers_joueur`.
-- **Bascule II.a — l'alliance.** Si `monde.atlas.credibilite ≥ 4` **et** le joueur a défendu un commandant injustement sanctionné : Aldouin ouvre ses archives. → `monde.atlas.arbitre_alliee = true`.
-- **Bascule II.b — le démasquage.** Fin de l'acte, si `monde.atlas.dossier_truquage ≥ 3` **ou** (`monde.atlas.arbitre_alliee` **et** `monde.carnet.pages_scellees ≥ 1`) : la faction est nommée publiquement. → `monde.cinquieme.demasquee = true`. Le monde entre dans l'acte III en le sachant.
-- **Bascule II.c — la tête.** Si `monde.cinquieme.infiltre` **et** `monde.cinquieme.demasquee` : le joueur remonte jusqu'au Bureau. → `monde.cinquieme.chef_identifie = true`.
-- **Si aucune bascule :** la faction agit sans être inquiétée ; l'acte III s'ouvre sur un fait accompli et `monde.cinquieme.ralliements` démarre avec un bonus de deux pays.
+La coalition protège les accès d’Aube et les garanties du réseau. Une mission de survie annonce précisément ses journées et ses renforts ; le canon cible distingue tenir jusqu’à la fin de J40 et l’arrivée au début de J41. Les essais actuellement livrés doivent être lus selon leur briefing et leurs événements réels : aucun dialogue n’est une preuve de renfort moteur.
 
-### Acte III — « La cinquième manche »
+La conclusion est une vraie bataille de tournoi. Par défaut, capture du QG ou mise hors jeu totale ; une mission d’anéantissement exclusif ne donne pas une victoire alternative par QG. Chaque coalition et chaque camp sont explicites. Une équipe éliminée n’implique pas automatiquement la défaite de ses alliées.
 
-La finale mondiale doit se disputer à Port-Méridien. La faction pose son ultimatum : elle exige la suspension de la Ronde et l'ouverture d'une manche « à enjeux réels ». Sur le terrain, elle a une équipe : la **Sélection Méridienne**, en gris, avec des pièces non homologuées, et à ses côtés les nations retirées passées à la faction. C'est elle que le joueur affronte à Port-Méridien, même quand aucune nation n'a basculé. Chaque nation choisit son camp — et ce choix est **calculé, pas écrit** : pour chaque pays visité, le moteur lit les flags posés chez lui.
+### Relations et conséquences
 
-**Règle de ralliement (par pays) :**
+Les relations continuent d’être calculées depuis les flags autorisés (§4.5), jamais inventées par le rendu ni posées par une routine. Les garanties de parcours tiennent : au moins deux alliées disponibles avant le dernier acte, au plus cinq retraits, aucune fin rendue impossible par une destination fermée. Un rival d’estime peut combattre à vos côtés sans devenir un ami. Aucun camp ne rejoint automatiquement une faction parce que le joueur ne l’a pas visité.
 
-| Condition | Résultat |
-|---|---|
-| `pays.<xx>.allie_recrute` **ou** `pays.<xx>.rival_respecte` **ou** `pays.<xx>.dette_envers_joueur ≥ 2` | Reste avec le joueur |
-| `pays.<xx>.rival_humilie` **et** `pays.<xx>.terrain_altere ≥ 1` | `pays.<xx>.ralliement_cinquieme = true` |
-| Un commandant du pays a `grief ≥ 4` et `respect ≤ 1` | `pays.<xx>.ralliement_cinquieme = true` |
-| Pays non visité | Suit la majorité de son continent |
+Une conséquence doit nommer son choix source, sa destination et son effet borné : dialogue, fonds, déploiement, route, contingent ou condition d’objectif déjà supportée. Le carnet l’annonce avant la mission concernée. Les nouveaux flags passent par le registre canon ; les routines n’en créent pas à la volée. Les anciennes formules de ralliement continental et le « bonus de deux pays » caché sont retirés.
 
-`monde.cinquieme.ralliements` est la somme des `pays.<xx>.ralliement_cinquieme` — un flag **dérivé**, jamais écrit à la main.
+## 7. Les fins — destinations narratives, implémentation à terminer
 
-**C'est la même lecture que la relation de nation** (§4.5), et ce n'est pas une coïncidence : la relation *est* ce calcul, rendu visible sur la carte du monde pendant toute la partie au lieu d'être découvert au dernier acte. À l'acte III, chaque état donne sa scène :
+Les quatre destinations remplacent la conclusion ancienne limitée à une suspension de tournoi. Elles nécessitent une victoire tactique et une lecture traçable des choix. **Leur résolution complète n’est pas déclarée livrée.** Aucun seuil numérique nouveau n’est inventé ici pour simuler un moteur de fins absent.
 
-| Relation au coup de sifflet | Ce qui se joue |
-|---|---|
-| `alliee` | Elle est là, sur le banc ou sur le terrain : co-commandant disponible, unité spéciale produisible, **soutien déclaré** — et sa délégation prend la parole avant la finale |
-| `rivale` | Elle vient quand même, et elle joue contre. Un rival d'estime (`respect ≥ 4`, `grief ≥ 3`) refuse la faction quoi qu'il arrive : c'est la meilleure relation du jeu, et elle reste `rivale` |
-| `neutre` | Elle suit la majorité de son continent, comme un pays non visité |
-| `retiree` | **Elle n'est pas là.** Sa chaise est vide au Collège, sa destination est éteinte sur la carte — ou bien elle est passée à la Cinquième Manche, ce qui est pire et se voit plus |
+- **Le réseau partagé :** preuves suffisantes et garanties communes ; Aube reste coopératif, les concessions distribuées, les responsabilités publiques.
+- **La couronne électrique :** victoire du joueur sans garanties suffisantes ; Aube échappe à la prise immédiate, mais la dépendance économique n’est pas résolue.
+- **La coalition sous tension :** la faction perd, certaines concessions sont concentrées chez les alliés ; le carnet explique les choix qui ont créé ces tensions.
+- **La relève :** le joueur gagne puis confie l’enregistrement de la victoire à un collège indépendant, au lieu d’en conserver seul le contrôle.
 
-**Cinq chaises vides au maximum**, et c'est une règle, pas un réglage : au-delà, la salle de Port-Méridien n'aurait plus assez de monde pour qu'une des quatre fins ait un sens.
-
-- **Bascule III — le coup de sifflet.** La finale mondiale a lieu, ou n'a pas lieu. C'est ce qui détermine la fin. Le climax n'est pas une bataille : c'est une salle pleine, deux équipes sur le terrain, et l'attente d'un sifflet.
-
----
-
-## 7. Les fins
-
-Quatre fins. Aucune ne montre, n'annonce ni ne suggère une guerre réelle : la victoire de la faction est une **suspension**, un silence, des terrains fermés — jamais un conflit.
-
-| Fin | Titre | Conditions | Ce qu'on voit |
-|---|---|---|---|
-| **A** | **La Ronde continue** | `monde.cinquieme.demasquee` **et** `monde.atlas.dossier_truquage ≥ 3` **et** `monde.cinquieme.ralliements ≤ 4` **et** `monde.atlas.credibilite ≥ 6` | La faction est dissoute par le Collège, le règlement est réécrit, la finale se joue avec quatre ans de retard sur le calendrier et un article de plus au Pacte. Talvarec démissionne ; Aldouin le remplace à contrecœur. |
-| **B** | **L'Atlas d'Or** | Le joueur remporte la finale mondiale, sans satisfaire les conditions de A ni de C. | La fin « champion » : trophée, tour d'honneur, Vantour au sommet de son art. Le dernier plan montre un mur de vestiaire avec quatre traits et un cinquième barré, effacé à moitié. Rien n'est réglé. |
-| **C** | **Terrains fermés** | `monde.cinquieme.ralliements ≥ 10` **ou** (`monde.cinquieme.demasquee = false` **et** `monde.atlas.soupcon ≤ 2`) | La Ronde XIV est suspendue. Pas d'image de guerre : des stades vides, des banderoles décrochées, l'Intendance qui range les cars, et la Régie qui coupe l'antenne au milieu d'une phrase de Vantour. Écran noir sur un sifflet qui ne vient pas. |
-| **D** | **La manche que personne n'a jouée** *(fin secrète)* | `monde.cinquieme.infiltre` **et** `monde.cinquieme.chef_identifie` **et** `monde.atlas.arbitre_alliee` **et** au moins **6** commandants avec `co_commandant` ou `rival_jure` **et** `respect ≥ 4` | Le joueur démonte la faction de l'intérieur, en public, pendant la cérémonie. Puis refuse l'Atlas d'Or et demande que la finale soit rejouée sans lui. Le trophée reste dans sa vitrine ; c'est la seule fin où le joueur n'est pas champion, et la seule où plus personne n'a envie d'une cinquième manche. |
-
-**Ordre d'évaluation :** D, puis A, puis C, puis B par défaut. **[Proposition]** Le carnet de voyage est présenté au générique, page par page, avec les décisions qui ont compté — c'est l'écran de fin qui explique la fin.
+L’épilogue cite des événements du carnet et des biographies versionnées, pas un commentaire improvisé par un modèle. Une défaite tactique appelle une reprise ou un repli explicitement scénarisé ; elle ne se transforme pas artificiellement en victoire. L’accès à une fin ne dépend pas du nombre d’unités régionales possédées.
 
 ---
 
@@ -457,7 +426,7 @@ Exemples : `pays.fr.rival_respecte`, `monde.atlas.soupcon`, `cmd.mireille_bousqu
 5. **Pages scellées du carnet** : transformer un souvenir en preuve, avec un coût.
 6. **Calques de trace** déclarés par fiche pays, revalidés par la routine contrôle après application ; plafond de trois traces persistantes par pays.
 7. **Ralliement calculé** à l'acte III depuis les flags de pays, plutôt qu'écrit à la main.
-8. **Quatre fins** (A Ronde continue, B Atlas d'Or, C Terrains fermés, D La manche que personne n'a jouée) avec ordre d'évaluation D → A → C → B, et la règle que la fin C ne montre aucune guerre, seulement des terrains fermés.
+8. **Quatre fins énergétiques** (§7) ; leurs conditions complètes doivent être implémentées et testées avant publication. L’ancien ordre D → A → C → B est retiré.
 9. **Carnet de voyage au générique** comme écran d'explication de la fin.
 10. **Étanchéité de la Dépêche du jour** (§4.4) : le carnet l'ignore, `monde.depeche.serie` vit hors de la sauvegarde de campagne, et les deux flags `monde.atlas.essai_soutenu` / `monde.atlas.homologation_contestee` se posent en scène de campagne, jamais en exhibition.
 11. **Les fils secondaires** (§4.6) : ils écrivent des flags de campagne — c'est ce qui les distingue d'une exhibition —, leurs conséquences sont une liste fermée et bornée, et ils ne touchent ni les bascules ni les conditions de fin. À choix de voyage identiques, deux joueurs obtiennent la même fin, qu'ils aient joué zéro ou neuf fils.

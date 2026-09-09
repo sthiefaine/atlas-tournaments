@@ -1,0 +1,111 @@
+{
+  "cle": "aube_routes_3v1",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_routes_3v1",
+  "nom": "Aube · Les routes d’Aube · 3 contre 1",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_routes_aube",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 6,
+  "equipes": [
+    [
+      0,
+      1,
+      2
+    ],
+    [
+      3
+    ]
+  ],
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 3,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 45,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Trois délégations se partagent les accès nord, ouest et est. Solveig tient seule le poste central, avec une réserve plus forte. Prenez son QG ou mettez son camp hors jeu : Aube est hors de cette enceinte de tournoi.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les voies de coordination sont ouvertes. Le programme Aube conserve son accès partagé aux équipes de recherche.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 3000,
+    "2": 3000,
+    "3": 9000
+  }
+}

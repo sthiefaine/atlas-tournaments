@@ -1,0 +1,313 @@
+{
+  "version": 2,
+  "programme": "Aube",
+  "calendrier": "Repères fictifs des Rondes Atlas ; aucune date réelle.",
+  "personnages": [
+    {
+      "cle": "cmd_ariane_belloc",
+      "nom": "Ariane Belloc",
+      "fonction": "Commandante française et mentore",
+      "motivation": "Former un commandant capable de refuser une victoire trop coûteuse.",
+      "croyance": "Elle croit devoir rester irréprochable pour être écoutée.",
+      "liens": [
+        "cmd_tomas_reiner",
+        "nera_aldouin"
+      ],
+      "historique": [
+        {
+          "cle": "cmd_ariane_belloc_1",
+          "repere": "Ronde XII",
+          "acteRevelation": 1,
+          "fait": "Ancienne responsable de maintenance, elle devient commandante pour défendre les équipes dont les contrats se jouent sur le terrain.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_ariane_belloc_2",
+          "repere": "Ronde XII, après la finale",
+          "acteRevelation": 2,
+          "fait": "Elle signe une concession avantageuse sans voir la dépendance au transport méridien. Elle en révèle elle-même les clauses au joueur.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_ariane_belloc_3",
+          "repere": "Ronde XIV",
+          "acteRevelation": 1,
+          "fait": "Elle enseigne le combat, la capture et la production avant de présenter les enjeux énergétiques des Jeux.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "cmd_tomas_reiner",
+      "nom": "Tomas Reiner",
+      "fonction": "Commandant luxembourgeois et organisateur de convois",
+      "motivation": "Tenir les promesses dont dépendent les autres équipes.",
+      "croyance": "Un accord précis protège mieux qu’une déclaration d’amitié.",
+      "liens": [
+        "cmd_ariane_belloc",
+        "cmd_solveig_tamm"
+      ],
+      "historique": [
+        {
+          "cle": "cmd_tomas_reiner_1",
+          "repere": "Ronde XIII",
+          "acteRevelation": 1,
+          "fait": "Il partage ses transports pour maintenir une délégation dans les Jeux. Son aide est omise du classement.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_tomas_reiner_2",
+          "repere": "Ronde XIV",
+          "acteRevelation": 1,
+          "fait": "Il rencontre le joueur lors des entraînements. Une coopération logistique peut préparer une relève future.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_tomas_reiner_3",
+          "repere": "Ronde XIV, crise des réserves",
+          "acteRevelation": 3,
+          "fait": "Il organise une relève par un itinéraire annoncé ; les engagements antérieurs déterminent les moyens disponibles.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "nera_aldouin",
+      "nom": "Nera Aldouin",
+      "fonction": "Arbitre en chef",
+      "motivation": "Préserver un arbitrage opposable aux plus puissants.",
+      "croyance": "Elle confond parfois légalité d’une clause et justice de son effet.",
+      "liens": [
+        "osmin_talvarec",
+        "cmd_hadran_ost"
+      ],
+      "historique": [
+        {
+          "cle": "nera_aldouin_1",
+          "repere": "Ronde XI",
+          "acteRevelation": 1,
+          "fait": "Elle entre au Collège des arbitres et constitue des archives des concessions.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "nera_aldouin_2",
+          "repere": "Ronde XIII",
+          "acteRevelation": 2,
+          "fait": "Elle homologue un contrat légal qui concentre les réserves chez un intermédiaire unique.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "nera_aldouin_3",
+          "repere": "Ronde XIV",
+          "acteRevelation": 2,
+          "fait": "Elle recoupe les signatures plutôt que les rumeurs pour contester les clauses de dépendance.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "osmin_talvarec",
+      "nom": "Osmin Talvarec",
+      "fonction": "Coordinateur d’Atlas, ancien géomètre",
+      "motivation": "Maintenir un cadre commun lorsque les délégations se divisent.",
+      "croyance": "Il croit qu’avouer les défaillances d’Atlas détruirait le seul arbitre disponible.",
+      "liens": [
+        "nera_aldouin",
+        "selene_veyr"
+      ],
+      "historique": [
+        {
+          "cle": "osmin_talvarec_1",
+          "repere": "Avant la Ronde XI",
+          "acteRevelation": 1,
+          "fait": "Il cartographie les interconnexions ; il n’a jamais été commandant.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "osmin_talvarec_2",
+          "repere": "Ronde XII",
+          "acteRevelation": 2,
+          "fait": "Il délègue au Consortium la gestion de plusieurs voies logistiques pour tenir le calendrier.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "osmin_talvarec_3",
+          "repere": "Ronde XIV",
+          "acteRevelation": 3,
+          "fait": "Il connaît une partie des anomalies mais n’est pas le chef de la Cinquième Manche. Transmettre les cartes complètes engage sa responsabilité.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "celestin_vantour",
+      "nom": "Célestin Vantour",
+      "fonction": "Commentateur et mémoire des Jeux",
+      "motivation": "Raconter des victoires auxquelles le public puisse croire.",
+      "croyance": "Un récit clair lui paraît parfois plus utile qu’un dossier incomplet.",
+      "liens": [
+        "cmd_hadran_ost",
+        "nera_aldouin"
+      ],
+      "historique": [
+        {
+          "cle": "celestin_vantour_1",
+          "repere": "Ronde XII",
+          "acteRevelation": 1,
+          "fait": "Il transforme la série de victoires d’Ost en légende.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "celestin_vantour_2",
+          "repere": "Ronde XIII",
+          "acteRevelation": 2,
+          "fait": "Il minimise sa disqualification sans avoir étudié toutes les pièces.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "celestin_vantour_3",
+          "repere": "Ronde XIV",
+          "acteRevelation": 3,
+          "fait": "Il peut publier une preuve qui contredit ses propres commentaires ; il demeure témoin, pas expert de la fusion.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "cmd_hadran_ost",
+      "nom": "Hadran Ost",
+      "fonction": "Commandant de la Sélection Méridienne, les Gris",
+      "motivation": "Rendre à ses victoires le pouvoir que l’arbitrage leur a retiré.",
+      "croyance": "Il se croit lésé par une sanction pourtant justifiée.",
+      "liens": [
+        "selene_veyr",
+        "celestin_vantour"
+      ],
+      "historique": [
+        {
+          "cle": "hadran_ost_1",
+          "repere": "Ronde XII",
+          "acteRevelation": 1,
+          "fait": "Il enchaîne les victoires et reçoit les jeunes équipes avec chaleur.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "hadran_ost_2",
+          "repere": "Ronde XIII",
+          "acteRevelation": 2,
+          "fait": "Il contourne sciemment une homologation et est disqualifié. La sanction n’était pas un complot.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "hadran_ost_3",
+          "repere": "Entre les Rondes XIII et XIV",
+          "acteRevelation": 2,
+          "fait": "Le Consortium lui confie les Gris, équipe d’essai sans nation propre.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "hadran_ost_4",
+          "repere": "Ronde XIV",
+          "acteRevelation": 3,
+          "fait": "Il participe à l’accaparement des concessions, sans mesurer que ses propres équipes seront dépendantes. Un témoignage ne le dispense pas de répondre de ses actes.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "cmd_solveig_tamm",
+      "nom": "Solveig Tamm",
+      "fonction": "Intendante des transports",
+      "motivation": "Faire arriver les équipes et les réserves promises.",
+      "croyance": "Les trajets révèlent ce que les noms de sociétés cachent.",
+      "liens": [
+        "cmd_tomas_reiner",
+        "cmd_wren_osoko"
+      ],
+      "historique": [
+        {
+          "cle": "solveig_tamm_1",
+          "repere": "Ronde XII",
+          "acteRevelation": 1,
+          "fait": "Elle commence un registre des convois et des pièces prêtées.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "solveig_tamm_2",
+          "repere": "Ronde XIV",
+          "acteRevelation": 2,
+          "fait": "Elle observe que des concessions apparemment concurrentes utilisent les mêmes réserves et les mêmes camions.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "cmd_wren_osoko",
+      "nom": "Wren Osoko",
+      "fonction": "Responsable de l’homologation",
+      "motivation": "Séparer les outils utiles des droits abusifs qui les accompagnent.",
+      "croyance": "Une technologie n’est pas coupable des contrats conclus autour d’elle.",
+      "liens": [
+        "cmd_solveig_tamm",
+        "nera_aldouin"
+      ],
+      "historique": [
+        {
+          "cle": "wren_osoko_1",
+          "repere": "Avant la Ronde XIV",
+          "acteRevelation": 1,
+          "fait": "Elle homologue un système de télémétrie sportif.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "wren_osoko_2",
+          "repere": "Ronde XIV",
+          "acteRevelation": 2,
+          "fait": "Elle découvre que ses droits d’accès ont changé et documente ce transfert sans inventer une panne ou un accident.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    },
+    {
+      "cle": "selene_veyr",
+      "nom": "Sélène Veyr",
+      "fonction": "Directrice des concessions du Consortium Méridien",
+      "motivation": "Remplacer les rivalités par un réseau dont elle fixe seule les conditions.",
+      "croyance": "Elle prend la dépendance pour de la stabilité.",
+      "liens": [
+        "cmd_hadran_ost",
+        "osmin_talvarec"
+      ],
+      "historique": [
+        {
+          "cle": "selene_veyr_1",
+          "repere": "Ronde XI",
+          "acteRevelation": 1,
+          "fait": "Elle rejoint la coordination des réserves ; son travail facilite réellement les déplacements.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "selene_veyr_2",
+          "repere": "Ronde XII",
+          "acteRevelation": 2,
+          "fait": "Elle rédige les contrats qui relient exploitation solaire, stockage et distribution.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "selene_veyr_3",
+          "repere": "Ronde XIV",
+          "acteRevelation": 3,
+          "fait": "Elle dirige la Cinquième Manche. Trois signatures indépendantes relient ses sociétés aux mêmes concessions ; son identité ne change jamais entre deux parties.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "selene_veyr_4",
+          "repere": "Ronde XIV, programme Aube",
+          "acteRevelation": 3,
+          "fait": "Elle cherche une tutelle irrévocable sur la coopération de fusion, ses accès et ses futurs droits. Aube est expérimental : aucune énergie illimitée n’est disponible à gagner.",
+          "source": "canon_aube_v2"
+        }
+      ]
+    }
+  ]
+}

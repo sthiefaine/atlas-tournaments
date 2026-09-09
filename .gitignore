@@ -42,3 +42,8 @@ npm-debug.log*
 # Ce qu'on garde d'une livraison, c'est son README, son atlas et son verdict.
 assets/livraisons/**/*.zip
 assets/livraisons/**/*.png
+
+# Copies locales pour comparer une réception ; seules les revues sont versionnées.
+assets/receptions/*/*/
+assets/receptions/*/precedente.json
+assets/receptions/*/*.tmp

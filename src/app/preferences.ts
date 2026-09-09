@@ -32,6 +32,7 @@
  * l'autre par simple `startsWith`.
  */
 
+import type { Mode } from '../schemas/types';
 import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
 
 /** Ce que le joueur peut régler aujourd'hui. */
@@ -117,8 +118,8 @@ export function prefixePartie(profil: Profil): string {
  * compose et la donne au rendu, comme elle lui donne des libellés déjà traduits :
  * le rendu ne connaît pas les profils.
  */
-export function cleSauvegardeDe(profil: Profil, scenarioCle: string): string {
-  return `${prefixePartie(profil)}${scenarioCle}`;
+export function cleSauvegardeDe(profil: Profil, scenarioCle: string, mode: Mode = 'normal'): string {
+  return `${prefixePartie(profil)}${scenarioCle}${mode === 'difficile' ? ':difficile:v1' : ''}`;
 }
 
 /**
@@ -296,4 +297,15 @@ export function effacerProgression(profil: Profil = profilActif()): boolean {
   } catch {
     return false;
   }
+}
+
+
+/** La difficulté appartient au profil ; les préférences de rendu restent communes. */
+export function lireDifficulte(profil: Profil = profilActif()): Mode {
+  try { return localStorage.getItem(`atlas:${SEGMENT_PROFIL[profil]}difficulte:v1`) === 'difficile' ? 'difficile' : 'normal'; }
+  catch { return 'normal'; }
+}
+export function ecrireDifficulte(profil: Profil, mode: Mode): boolean {
+  try { localStorage.setItem(`atlas:${SEGMENT_PROFIL[profil]}difficulte:v1`, mode === 'difficile' ? 'difficile' : 'normal'); return true; }
+  catch { return false; }
 }

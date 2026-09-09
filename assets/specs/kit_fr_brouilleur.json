@@ -4,8 +4,8 @@
   "cle": "fr_brouilleur",
   "priorite": 1,
   "description": {
-    "en": "National kit for \"Brouilleur mobile\" in the colours and materials of France. Guiding line: The French school: matte blue panels, crisp piping, kit stowed a little too neatly and varnished a little too proudly — the elegance of a team that has not won anything yet. Paint the delivered base mesh of unite_brouilleur_base, unchanged: same geometry, same UV layout, same node names. Base colour #2f5fd0, own shadow #1b3a86, edge highlight #8fb2f2, accents #c8324a, #f4f6fb. Materials to read at a glance: flat matte paint, brushed steel, heavy canvas, stitched leather and varnished wood. Finish: fully matte and satin. Add these ornaments as separate named nodes, and nothing else: a small plain pennant, a stitched side pannier and a whip antenna on a base spring. Abstract decals only: oblique stripes in #c8324a on the flanc; nested squares in #f4f6fb on the capot. For colour-blind readability the socle carries oblique stripes, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Brouilleur mobile » aux couleurs et aux matières du style « France ». Ligne directrice : L’école française : tôle bleue mate, liserés nets, matériel bien rangé et un peu trop verni pour son âge — l’élégance d’une équipe qui n’a encore rien gagné. Peindre la géométrie de base livrée unite_brouilleur_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #2f5fd0, ombre propre #1b3a86, liseré d’arête #8fb2f2, accents #c8324a, #f4f6fb. Matières à lire d’un coup d’œil : peinture mate, acier brossé, toile épaisse, cuir cousu et bois verni. Finition : entièrement mate et satinée. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un fanion uni, une sacoche cousue sur le flanc et une antenne fouet sur ressort. Décalcomanies abstraites seulement : rayures obliques en #c8324a sur la zone « flanc » ; des carrés emboîtés en #f4f6fb sur la zone « capot ». Pour la lisibilité sans couleur, le socle porte rayures obliques, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Brouilleur mobile\" in the colours and materials of France. Guiding line: The French school: matte blue panels, crisp piping, kit stowed a little too neatly and varnished a little too proudly — the elegance of a team that has not won anything yet. Paint the delivered base mesh of unite_brouilleur_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #2f5fd0, dark paint #1b3a86, light paint #8fb2f2, accents #c8324a, #f4f6fb. Materials to read at a glance: flat matte paint, brushed steel, heavy canvas, stitched leather and varnished wood. Finish: fully matte and satin. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a small plain pennant, a stitched side pannier and a whip antenna on a base spring. Abstract decals only: oblique stripes in #c8324a on the flanc; nested squares in #f4f6fb on the capot. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries oblique stripes, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Brouilleur mobile » aux couleurs et aux matières du style « France ». Ligne directrice : L’école française : tôle bleue mate, liserés nets, matériel bien rangé et un peu trop verni pour son âge — l’élégance d’une équipe qui n’a encore rien gagné. Peindre la géométrie de base livrée unite_brouilleur_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #2f5fd0, peinture sombre #1b3a86, peinture claire #8fb2f2, accents #c8324a, #f4f6fb. Matières à lire d’un coup d’œil : peinture mate, acier brossé, toile épaisse, cuir cousu et bois verni. Finition : entièrement mate et satinée. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : un fanion uni, une sacoche cousue sur le flanc et une antenne fouet sur ressort. Décalcomanies abstraites seulement : rayures obliques en #c8324a sur la zone « flanc » ; des carrés emboîtés en #f4f6fb sur la zone « capot ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte rayures obliques, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 6960,
-    "lod1": 2320,
-    "lod2": 696,
+    "lod0": 6000,
+    "lod1": 2000,
+    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,14 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
     }
   ],
   "variantes": {
@@ -102,7 +109,32 @@
       "fr"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,13 +147,12 @@
       "corps",
       "base",
       "socle",
-      "ornement_fanion",
-      "ornement_sacoche",
-      "ornement_antenne"
+      "module_radar",
+      "module_antenne"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -151,7 +182,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

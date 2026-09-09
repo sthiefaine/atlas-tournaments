@@ -621,6 +621,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       drapeau: (cle) => m.decor?.drapeau(cle) ?? null,
       chantier: (cle) => m.decor?.chantier(cle) ?? null,
       etats: () => ({ courant: etat, precedent: etatPrecedent }),
+      catalogue: () => vue?.catalogue ?? null,
       cadrer: (c) => {
         const p = caseVersMonde(c);
         m.vue3d.cadrerCase(c, m.plateau.hauteurEn(p.x, p.z));

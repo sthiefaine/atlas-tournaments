@@ -423,6 +423,8 @@ export interface Silhouette {
 
 /** Type d'unité : tout ce qu'une unité est, en données et jamais en code. */
 export interface UnitType {
+  /** Matériel réservé au camp sans drapeau Atlas-Méridien. */
+  factionExclusive?: 'atl';
   cle: CleUnite;
   nom: string;
   nomCourt: string;
@@ -762,7 +764,16 @@ export interface Incarnation {
  * - `modes` : les deux jeux de paramètres, certifiés tous les deux par le contrôle.
  *   Absent, le scénario se joue en `normal` avec ses champs de premier niveau.
  */
+export interface RenfortScenario {
+  journee: number;
+  unites: { camp: CampId; type: CleUnite; x: number; y: number; pv?: number }[];
+}
+
 export interface Scenario extends Enveloppe {
+  factionsParCamp?: Partial<Record<CampId, 'atl'>>;
+  /** Partition des camps. Absent : chacun pour soi. */
+  equipes?: CampId[][];
+  renforts?: RenfortScenario[];
   code: Cle;
   nom: string;
   acte: number;
@@ -782,6 +793,10 @@ export interface Scenario extends Enveloppe {
   cycleJourNuit: { jour: number; nuit: number };
   catalogueVersion: number;
   commandants: { camp: CampId; commandantCle: Cle; ia?: StrategieIa }[];
+  fondsDepartParCamp?: Partial<Record<CampId, number>>;
+  revenusParBatimentParCamp?: Partial<Record<CampId, number>>;
+  vitesseJaugeJoueur?: number;
+  previsionJournees?: number;
   fondsDepart: number;
   revenusParBatiment: number;
   brouillard: boolean;

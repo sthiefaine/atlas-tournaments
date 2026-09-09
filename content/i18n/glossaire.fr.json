@@ -1,13 +1,6 @@
 {
   "locale": "fr",
   "termesInterdits": [
-    "ennemi",
-    "guerre",
-    "conflit",
-    "front",
-    "bataille",
-    "armée",
-    "troupes",
     "soldats",
     "tuer",
     "mourir",
@@ -39,8 +32,7 @@
     "foi",
     "culte",
     "dieu",
-    "massacre",
-    "anéantir"
+    "massacre"
   ],
   "entrees": [
     {
@@ -340,6 +332,12 @@
       "terme": "Hautes herbes",
       "categorie": "terrain",
       "traduction": "Hautes herbes"
+    },
+    {
+      "terme": "Aube",
+      "categorie": "nom_propre",
+      "traduction": null,
+      "note": "Programme de fusion entièrement fictif. Conflit énergétique sérieux, affrontements non sanglants. Anéantir signifie mettre toutes les unités adverses hors jeu. Aucun récit de violence réelle."
     }
   ],
   "majLe": "2026-09-05"

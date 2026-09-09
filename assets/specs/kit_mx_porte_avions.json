@@ -4,8 +4,8 @@
   "cle": "mx_porte_avions",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Porte-avions\" in the colours and materials of Mexique. Guiding line: Entrance with a brass band: strong green, gold piping stitched like a cape, loud chrome, and a fringed sun visor over the windscreen. Paint the delivered base mesh of unite_porte_avions_base, unchanged: same geometry, same UV layout, same node names. Base colour #2f8f5f, own shadow #155c39, edge highlight #c9edd9, accents #e2c341, #c0392f. Materials to read at a glance: high-gloss paint, polished brass fittings, stitched leather, heavy canvas and enamelled panel. Finish: glossy and lacquered. Add these ornaments as separate named nodes, and nothing else: a fringed sun visor, a string of small hanging pennant lights, a plain unlettered banner and a small mounted bell. Abstract decals only: four-pointed stars in #e2c341 on the capot; a zigzag in #c0392f on the jupe. For colour-blind readability the socle carries four-pointed stars, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Porte-avions » aux couleurs et aux matières du style « Mexique ». Ligne directrice : Entrée en musique : vert franc, liserés dorés cousus comme sur une cape, chromes voyants et un pare-soleil frangé au-dessus du pare-brise. Peindre la géométrie de base livrée unite_porte_avions_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #2f8f5f, ombre propre #155c39, liseré d’arête #c9edd9, accents #e2c341, #c0392f. Matières à lire d’un coup d’œil : peinture brillante, garnitures de laiton poli, cuir cousu, toile épaisse et panneau émaillé. Finition : brillante et laquée. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un pare-soleil frangé, une guirlande de fanions, une banderole unie sans lettrage et une petite cloche montée. Décalcomanies abstraites seulement : des étoiles à quatre branches en #e2c341 sur la zone « capot » ; une ligne brisée en #c0392f sur la zone « jupe ». Pour la lisibilité sans couleur, le socle porte des étoiles à quatre branches, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Porte-avions\" in the colours and materials of Mexique. Guiding line: Entrance with a brass band: strong green, gold piping stitched like a cape, loud chrome, and a fringed sun visor over the windscreen. Paint the delivered base mesh of unite_porte_avions_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #2f8f5f, dark paint #155c39, light paint #c9edd9, accents #e2c341, #c0392f. Materials to read at a glance: high-gloss paint, polished brass fittings, stitched leather, heavy canvas and enamelled panel. Finish: glossy and lacquered. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a fringed sun visor, a string of small hanging pennant lights, a plain unlettered banner and a small mounted bell. Abstract decals only: four-pointed stars in #e2c341 on the capot; a zigzag in #c0392f on the jupe. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries four-pointed stars, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Porte-avions » aux couleurs et aux matières du style « Mexique ». Ligne directrice : Entrée en musique : vert franc, liserés dorés cousus comme sur une cape, chromes voyants et un pare-soleil frangé au-dessus du pare-brise. Peindre la géométrie de base livrée unite_porte_avions_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #2f8f5f, peinture sombre #155c39, peinture claire #c9edd9, accents #e2c341, #c0392f. Matières à lire d’un coup d’œil : peinture brillante, garnitures de laiton poli, cuir cousu, toile épaisse et panneau émaillé. Finition : brillante et laquée. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : un pare-soleil frangé, une guirlande de fanions, une banderole unie sans lettrage et une petite cloche montée. Décalcomanies abstraites seulement : des étoiles à quatre branches en #e2c341 sur la zone « capot » ; une ligne brisée en #c0392f sur la zone « jupe ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte des étoiles à quatre branches, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 10440,
-    "lod1": 3480,
-    "lod2": 1044,
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,14 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
     }
   ],
   "variantes": {
@@ -102,7 +109,38 @@
       "mx"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +153,12 @@
       "corps",
       "base",
       "socle",
-      "ornement_pare_soleil",
-      "ornement_guirlande",
-      "ornement_banniere",
-      "ornement_cloche"
+      "module_antenne",
+      "module_radar"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +188,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

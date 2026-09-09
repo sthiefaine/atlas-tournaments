@@ -4,8 +4,8 @@
   "cle": "pe_meca",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Méca\" in the colours and materials of Pérou. Guiding line: Pack load: braided straps, wool pompoms at the corners, jointed timber, and red paint brushed onto metal that has already served. Paint the delivered base mesh of unite_meca_base, unchanged: same geometry, same UV layout, same node names. Base colour #c0392f, own shadow #722018, edge highlight #f2cec9, accents #e2c341, #2f7d8f. Materials to read at a glance: braided rope, planed timber, flat matte paint, stitched leather and thick felt. Finish: fully matte and patinated by use. Add these ornaments as separate named nodes, and nothing else: a stitched side pannier, a coil of rope on a cleat, a felt-covered flask and a small plain pennant. Abstract decals only: a chequerboard in #e2c341 on the flanc; nested squares in #2f7d8f on the capot. For colour-blind readability the socle carries a chequerboard, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Méca » aux couleurs et aux matières du style « Pérou ». Ligne directrice : Charge de bât : sangles tressées, pompons de laine aux angles, bois assemblé et peinture rouge posée à la brosse sur un métal qui a déjà servi. Peindre la géométrie de base livrée unite_meca_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #c0392f, ombre propre #722018, liseré d’arête #f2cec9, accents #e2c341, #2f7d8f. Matières à lire d’un coup d’œil : cordage tressé, bois raboté, peinture mate, cuir cousu et feutre épais. Finition : entièrement mate et patinée par l’usage. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une sacoche cousue sur le flanc, une corde lovée sur un taquet, une gourde habillée de feutre et un fanion uni. Décalcomanies abstraites seulement : un damier en #e2c341 sur la zone « flanc » ; des carrés emboîtés en #2f7d8f sur la zone « capot ». Pour la lisibilité sans couleur, le socle porte un damier, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Méca\" in the colours and materials of Pérou. Guiding line: Pack load: braided straps, wool pompoms at the corners, jointed timber, and red paint brushed onto metal that has already served. Paint the delivered base mesh of unite_meca_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #c0392f, dark paint #722018, light paint #f2cec9, accents #e2c341, #2f7d8f. Materials to read at a glance: braided rope, planed timber, flat matte paint, stitched leather and thick felt. Finish: fully matte and patinated by use. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a stitched side pannier, a coil of rope on a cleat, a felt-covered flask and a small plain pennant. Abstract decals only: a chequerboard in #e2c341 on the flanc; nested squares in #2f7d8f on the capot. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries a chequerboard, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Méca » aux couleurs et aux matières du style « Pérou ». Ligne directrice : Charge de bât : sangles tressées, pompons de laine aux angles, bois assemblé et peinture rouge posée à la brosse sur un métal qui a déjà servi. Peindre la géométrie de base livrée unite_meca_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #c0392f, peinture sombre #722018, peinture claire #f2cec9, accents #e2c341, #2f7d8f. Matières à lire d’un coup d’œil : cordage tressé, bois raboté, peinture mate, cuir cousu et feutre épais. Finition : entièrement mate et patinée par l’usage. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : une sacoche cousue sur le flanc, une corde lovée sur un taquet, une gourde habillée de feutre et un fanion uni. Décalcomanies abstraites seulement : un damier en #e2c341 sur la zone « flanc » ; des carrés emboîtés en #2f7d8f sur la zone « capot ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte un damier, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 4640,
-    "lod1": 1624,
-    "lod2": 464,
+    "lod0": 4000,
+    "lod1": 1400,
+    "lod2": 400,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,7 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
     }
   ],
   "variantes": {
@@ -102,7 +102,44 @@
       "pe"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "capture",
+      "dureeMs": 1300,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +152,11 @@
       "corps",
       "base",
       "socle",
-      "ornement_sacoche",
-      "ornement_corde_lovee",
-      "ornement_gourde",
-      "ornement_fanion"
+      "module_lance_roquettes"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +186,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

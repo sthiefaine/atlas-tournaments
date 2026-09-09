@@ -202,7 +202,7 @@ test('un terrain ne se voit reprocher ni masque ni animation', () => {
     }),
     binTriangle(1, 0.06, 1),
   );
-  const verdict = validerGlb(plaque, spec);
+  const verdict = validerGlb(plaque, spec, { fichiersLivres: spec.textures.map((t) => `${spec.id}_${t.canal}.png`) });
   assert.deepEqual(verdict.motifs, [], JSON.stringify(verdict.motifs, null, 2));
 });
 
@@ -238,7 +238,7 @@ test('un kit national accepte ses textures dans le GLB ou livrées à côté', (
         noeuds: [...spec.format.noeuds],
         materiaux: [...spec.format.materiauxAttendus],
         images,
-        animations: [],
+        animations: spec.animations.filter((a) => a.obligatoire).map((a) => a.nom),
       }),
       binTriangle(spec.echelle.x.cible, spec.echelle.y.cible, spec.echelle.z.cible),
     ),
@@ -269,4 +269,21 @@ test('un kit national accepte ses textures dans le GLB ou livrées à côté', (
   // 5. Une variante saisonnière porte le même nom, suffixé : elle compte aussi.
   const enHiver = monter([], canaux.map((c) => `kit_fr_char_leger_${c}_hiver.png`));
   assert.deepEqual(enHiver.motifs, [], JSON.stringify(enHiver.motifs, null, 2));
+});
+
+test('les bornes du radar suivent la tourelle et ses parents (TRS et matrice)', () => {
+  const document = {
+    accessors: [{ min: [-1, 0, -1], max: [1, 1, 1], count: 3 }],
+    meshes: [{ primitives: [{ attributes: { POSITION: 0 } }] }],
+    nodes: [
+      { children: [1], translation: [0, 2, 0], scale: [2, 2, 2] },
+      { children: [2], rotation: [0, 0, Math.SQRT1_2, Math.SQRT1_2] },
+      { mesh: 0, matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1] },
+    ],
+  };
+  const { boite, triangles } = mesurerGltf(document);
+  assert.equal(triangles, 1);
+  assert.ok(boite);
+  [-2, 2, -2].forEach((v, i) => assert.ok(Math.abs(boite.min[i]! - v) < 1e-10));
+  [0, 6, 2].forEach((v, i) => assert.ok(Math.abs(boite.max[i]! - v) < 1e-10));
 });

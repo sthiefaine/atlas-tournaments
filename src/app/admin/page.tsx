@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { baseConfiguree } from '@/db/client';
@@ -9,6 +10,15 @@ import { sessionCourante } from './session';
 import { BaseAbsente, Bloc, Etat, Ligne, Message, Vide } from './ui';
 
 export const dynamic = 'force-dynamic';
+function AccesCreation() {
+  return <><h2 className="admin-titre">Votre atelier</h2><p className="admin-intro">Produire les assets, vérifier les missions et garder le récit cohérent. Choisissez le chantier à reprendre.</p><div className="assets-grille">{[
+    ['/admin/assets?etat=manquants', 'Compléter les assets', 'Modèles de base, déclinaisons et prompts prêts à copier.'],
+    ['/admin/personnages', 'Relire les personnages', 'Passé, motivations et révélations du programme Aube.'],
+    ['/admin/file', 'Valider les propositions', 'Missions et livraisons des routines avant publication.'],
+    ['/admin/prompts', 'Piloter les routines', 'Prompts versionnés et instructions de production.'],
+  ].map(([href, titre, aide]) => <Link key={href} href={href!} className="asset-carte"><h3>{titre}</h3><p>{aide}</p></Link>)}</div></>;
+}
+
 
 /** Tableau de bord : état des routines, dernières exécutions, profondeur de file. */
 export default async function TableauDeBord({
@@ -21,23 +31,22 @@ export default async function TableauDeBord({
 
   if (!baseConfiguree()) {
     // Les assets viennent du canon : ils se comptent même sans base.
-    return (<main><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
+    return (<main><AccesCreation /><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
   }
 
   let sonde;
   let derniers;
   let file;
   try {
-    sonde = await sonder();
-    derniers = await runs.derniersRuns(12);
-    file = await missions.profondeurFile();
+    [sonde, derniers, file] = await Promise.all([sonder(), runs.derniersRuns(12), missions.profondeurFile()]);
   } catch {
     // Les assets viennent du canon : ils se comptent même sans base.
-    return (<main><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
+    return (<main><AccesCreation /><Message texte={message} /><BaseAbsente /><ResumeAssets /></main>);
   }
 
   return (
     <main>
+      <AccesCreation />
       <Message texte={message} />
 
       <ResumeAssets />

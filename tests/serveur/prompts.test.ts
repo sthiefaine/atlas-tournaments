@@ -100,3 +100,19 @@ test('deux textes identiques ne produisent aucun changement', () => {
   const d = diffLignes('a\nb', 'a\nb');
   assert.equal(d.every((l) => l.signe === ' '), true);
 });
+
+test('les prompts v2 distinguent fiction énergétique, capacité moteur et fournisseur', () => {
+  assert.equal(DEFAULT_PROMPT_VERSION, 2);
+  for (const corps of Object.values(PROMPTS_PAR_DEFAUT)) {
+    assert.match(corps, /Claude Sonnet 5/);
+    assert.match(corps, /PUT \/missions/);
+    assert.match(corps, /aucun champ au schéma/);
+    assert.match(corps, /guerre d'influence/);
+    assert.match(corps, /ne sont jamais demandés ni reconstitués/);
+    assert.doesNotMatch(corps, /Jamais ennemi, guerre/);
+  }
+  assert.match(PROMPTS_PAR_DEFAUT.atlas_lore, /chronologie fournie/);
+  assert.match(PROMPTS_PAR_DEFAUT.atlas_map, /40 journées/);
+  assert.match(PROMPTS_PAR_DEFAUT.atlas_map, /2v1, 1v2, 1v3, 3v1 et 2v2/);
+  assert.match(PROMPTS_PAR_DEFAUT.atlas_controle, /conséquences\s+effectivement consommées/);
+});

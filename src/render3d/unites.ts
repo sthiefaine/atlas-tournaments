@@ -48,7 +48,7 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { gabaritDe, type StyleNation } from '../assets/spec';
 import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
-import { cleCase, pvAffiches } from '../engine/index';
+import { cleCase, pvAffiches, sontAllies } from '../engine/index';
 import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
@@ -1359,7 +1359,7 @@ export function creerUnites(
         // camp connu, toute furtive se voile. Pendant un fondu, `voile` dit où
         // en est le geste ; sinon l'état dit tout. Jouée **et** furtive, la
         // pièce prend la plus faible des deux opacités.
-        const voilable = !vision || vision.camp === null || u.camp === vision.camp;
+        const voilable = !vision || vision.camp === null || sontAllies(etat, u.camp, vision.camp);
         const part = voilable ? (v.voile ?? (u.furtive === true ? 1 : 0)) : 0;
         // Aux deux bouts, la constante elle-même : un `1 − 1 × (1 − 0,45)` ne
         // vaut pas 0,45 en flottant, et c'est sur cette valeur que les doubles

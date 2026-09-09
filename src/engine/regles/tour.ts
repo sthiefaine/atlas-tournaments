@@ -17,6 +17,7 @@ import { cleCase } from '../types';
 import { consommerCarburant, reparerEtRavitailler, reveiller, verserRevenus } from './economie';
 import { uniteSur } from './mouvement';
 import { expirationDe, expirerPoses, poserModificateur } from './pouvoirs';
+import { deployerRenforts } from './renforts';
 import { evaluerFin } from './victoire';
 
 /** Applique les effets déclaratifs d'un hook. Rien d'autre n'écrit dans l'état. */
@@ -74,8 +75,9 @@ function expirerModificateurs(etat: EtatPartie, camp: CampId): void {
 /** Camp suivant encore en lice, dans l'ordre des camps. */
 export function campSuivant(etat: EtatPartie): CampId {
   const n = etat.camps.length;
+  const courant = etat.camps.findIndex((c) => c.id === etat.campCourant);
   for (let i = 1; i <= n; i += 1) {
-    const candidat = etat.camps[(etat.campCourant + i) % n];
+    const candidat = etat.camps[(courant + i) % n];
     if (candidat && !candidat.elimine) return candidat.id;
   }
   return etat.campCourant;
@@ -89,7 +91,7 @@ export function ouvrirTour(
   etat: EtatPartie, cat: Catalogue, rng: Rng, evts: EvenementJeu[],
 ): void {
   const camp = etat.campCourant;
-  if (camp === 0) {
+  if (camp === etat.camps.find((c) => !c.elimine)?.id) {
     etat.journee += 1;
     if (etat.journee > 1) {
       etat.climat = avancerClimat(etat.climat, etat.reglages, rng);
@@ -99,6 +101,7 @@ export function ouvrirTour(
       saison: etat.climat.saison, phase: etat.climat.phase, meteo: etat.climat.meteo,
     });
   }
+  deployerRenforts(etat, cat, evts);
   evts.push({ type: 'debut_tour', journee: etat.journee, camp });
   expirerModificateurs(etat, camp);
   expirerPoses(etat, cat, evts);

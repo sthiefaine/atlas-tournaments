@@ -44,6 +44,11 @@ export function textesObjectifs(etat: EtatPartie, cat: Catalogue, t: Traduire): 
       if (c) lignes.push(t('objectif.relais', { n, total: o.cases.length }));
     }
   }
+  for (const d of etat.reglages.defaite) {
+    if (d.type !== 'unite_perdue') continue;
+    const unite = etat.unites.find((u) => u.id === d.uniteRef);
+    lignes.push(t('objectif.defaite_unite', { unite: unite ? cat.unites[unite.type]?.nom ?? d.uniteRef : d.uniteRef }));
+  }
   if (etat.reglages.limiteJournees !== null) lignes.push(t('objectif.limite', { n: etat.reglages.limiteJournees }));
   return lignes;
 }

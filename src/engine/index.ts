@@ -61,7 +61,7 @@ export { amorcer, creerRng, fnv1a, restaurerRng } from './rng';
 // Catalogue
 export {
   catalogueDepuis, chargerCatalogue, coutBase, degatsBase, produitesPar,
-  terrainDe, typeUnite,
+  terrainDe, typeUnite, uniteAutorisee,
 } from './catalogue';
 
 // État et création de partie
@@ -139,3 +139,5 @@ export {
 } from './rejeu';
 
 export { COUT_CONSTRUCTION, terrainConstruction, constructionsPossibles } from './regles/genie';
+
+export { sontAllies, equipeDe } from './equipes';

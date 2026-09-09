@@ -4,8 +4,8 @@
   "cle": "herbe_haute",
   "priorite": 1,
   "description": {
-    "en": "A one-metre tileable ground patch for the \"Hautes herbes\" tile. Grid tile \"G\", defence 1 of 4. The patch is exactly one metre square in plan and tiles seamlessly with itself after a quarter turn, so the renderer can rotate it to break repetition. Deliver the mesh flat: the height relief comes from the terrain mesh, not from you.",
-    "fr": "Une plaque de sol raccordable d’un mètre pour la case « Hautes herbes ». Caractère de grille « G », défense 1 sur 4. La plaque fait exactement un mètre carré en plan et se raccorde avec elle-même après un quart de tour, pour que le rendu la fasse tourner et casse la répétition. Livrer la maille à plat : le relief vient du maillage de terrain, pas de vous."
+    "en": "A one-metre tileable ground patch for the \"Hautes herbes\" tile. Grid tile \"G\", defence 1 of 4. The patch is exactly one metre square in plan with directional connections; rotate only together with its road, bridge or shoreline axis. Deliver a constant-thickness flat slab (0.06 m). Surface undulation and altitude are applied by the renderer; do not model them.",
+    "fr": "Une plaque de sol raccordable d’un mètre pour la case « Hautes herbes ». Caractère de grille « G », défense 1 sur 4. Exactement un mètre carré en plan. Raccords directionnels : respecter l’axe de la voie ou du rivage. Livrer une dalle plane d’épaisseur constante (0.06 m). Le rendu applique l’altitude et les ondulations ; ne pas les modeler."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -32,7 +32,7 @@
     "caseEnMetres": 1,
     "x": {
       "cible": 1,
-      "tolerance": 0.04
+      "tolerance": 0
     },
     "y": {
       "cible": 0.06,
@@ -40,7 +40,7 @@
     },
     "z": {
       "cible": 1,
-      "tolerance": 0.04
+      "tolerance": 0
     }
   },
   "pivot": {
@@ -138,9 +138,10 @@
       "noeuds",
       "materiaux",
       "echelle",
-      "budget"
+      "budget",
+      "textures"
     ],
-    "toleranceAabb": 0.1,
+    "toleranceAabb": 0,
     "lodRequis": [
       0,
       1

@@ -2,7 +2,7 @@
 
 Shared unmarked tournament carrier: open pivot mount, raised long marker tube, offset front cab, folded side ladder and two rear ground spades. No turret, shield or national ornament.
 
-Delivery: three self-contained glTF 2.0 GLBs and five PNG channels. LOD triangle counts: **2,840 / 1,912 / 600**. Rest dimensions: **0.620 × 0.484 × 0.850 m**, within all prescribed tolerances. Footprint centred at ground level, +Y up, +Z front.
+Delivery: three glTF 2.0 GLBs and five PNG channels. LOD triangle counts: **2,840 / 1,912 / 600**. Rest dimensions: **0.620 × 0.484 × 0.850 m**, within all prescribed tolerances. Footprint centred at ground level, +Y up, +Z front.
 
 Exactly two materials: `mat_corps`, `mat_details`. Exactly five nodes: `racine`, `corps`, `base`, `socle`, `module_canon_long`. `base` carries the tracks; `socle` is the common rear-spade hinge. The tube follows the hull through its elevation pivot. All articulation uses node transforms; no skin or extra nodes.
 
@@ -17,10 +17,12 @@ Loop intent is recorded in animation `extras.loop`; glTF core leaves repeat beha
 
 The team mask is binary black/white: white only on deck skirts and cradle cheeks. All corresponding albedo texels have exactly equal R/G/B values. Rubber, glazing, bare metal and the functional readiness tab stay unmasked. Albedo contains only material colour with subtle pigment variation, without baked light, shadows or ambient occlusion.
 
-External roughness and metal PNGs are independent grayscale channels. The GLBs embed a derived packed PBR map (G = roughness, B = metallic), plus all five source maps. Standard PBR rendering is self-contained. Team-mask index and filename are in material/document extras for custom recolouring. `atlas.json` gives the fixed part addresses and guard bands, shared across LODs and future national kits.
+External PNGs are shared by all LODs via relative image URIs. The roughness PNG packs G = roughness and B = metalness for standard glTF PBR; the separate metal PNG remains editable. No image bytes are embedded. Team-mask index and filename are in material/document extras for custom recolouring. `atlas.json` gives the fixed part addresses and guard bands, shared across LODs and future national kits.
 
 Validation checks the delivered GLB accessors, exact names, normals, UV ranges, clip durations, looping endpoints and the five PNG resolutions. It verifies every mask value and neutral albedo under the mask, plus sampled animation bounds and raised-spade ground clearance across all LODs.
 
 Regenerate: `node --import tsx scripts/generer-artillerie.ts`.
 Test: `node --import tsx --test tests/assets/artillerie.test.ts`.
 Render: `/Applications/Blender.app/Contents/MacOS/Blender --background --factory-startup --python scripts/artillerie/apercu.py`.
+
+Full delivery check: `npm run controler:asset -- --spec assets/specs/unite_artillerie_base.json --lot public/assets/modeles`. Technical acceptance is separate from human visual approval.

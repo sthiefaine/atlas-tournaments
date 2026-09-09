@@ -1,0 +1,22 @@
+{
+  "id": "unite_antiair_base",
+  "revision": "6a84c687ac0650e441ab64aef205794798a7ea7cccaf79c165b722a74c680d55",
+  "octets": 763055,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_antiair_base_lod0.glb",
+      "unite_antiair_base_lod1.glb",
+      "unite_antiair_base_lod2.glb",
+      "unite_antiair_base_albedo.png",
+      "unite_antiair_base_normale.png",
+      "unite_antiair_base_rugosite.png",
+      "unite_antiair_base_metal.png",
+      "unite_antiair_base_masque_equipe.png",
+      "unite_antiair_base_emission.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  }
+}

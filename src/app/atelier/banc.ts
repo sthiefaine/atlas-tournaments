@@ -138,6 +138,7 @@ export const UNITES_BANC: readonly CleUnite[] = [
   'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'transport',
   'helico', 'transport_air', 'drone', 'chasseur', 'bombardier', 'furtif',
   'barge', 'sous_marin', 'cuirasse', 'porte_avions',
+  'drone_intercepteur', 'drone_ravitailleur', 'meridien_veilleur', 'meridien_bastion',
 ];
 
 /**
@@ -358,14 +359,14 @@ export function carteGrande(): MapDef {
  * test le confronte à la version de `content/unites.json`, pour qu'il ne
  * reste pas en arrière d'une homologation.
  */
-export const VERSION_CATALOGUE_BANC = 6;
+export const VERSION_CATALOGUE_BANC = 7;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui
  * porte toutes les unités. On ne modifie pas le canon, on en prend une copie.
  */
 export function scenarioBanc<T extends { catalogueVersion: number }>(base: T): T {
-  return { ...base, catalogueVersion: VERSION_CATALOGUE_BANC };
+  return { ...base, catalogueVersion: VERSION_CATALOGUE_BANC, factionsParCamp: { 0: 'atl', 1: 'atl' } }; // Banc technique : les deux camps peuvent montrer tous les prototypes.
 }
 
 /**
@@ -447,7 +448,7 @@ export function visiblesBanc(): Set<string> {
 
 /** Les gestes que le banc sait rejouer. */
 export const GESTES_BANC = [
-  'deplacement', 'attaque', 'capture_en_cours', 'capture', 'remise_en_service', 'hors_jeu',
+  'deplacement', 'attaque', 'tir_missile', 'tir_cloche', 'capture_en_cours', 'capture', 'remise_en_service', 'hors_jeu',
   'brouillage', 'drone_abattu', 'maree_haute', 'maree_basse', 'fin_de_tour',
 ] as const;
 export type GesteBanc = typeof GESTES_BANC[number];
@@ -471,6 +472,10 @@ export const DESCRIPTIONS_GESTES: readonly DescriptionGeste[] = [
     aide: 'La première unité bleue suit une flèche coudée deux fois, puis se grise et se cadenasse : elle a joué.' },
   { cle: 'attaque', nom: 'Tirer', groupe: 'unites',
     aide: 'La première unité bleue frappe la première rouge, qui riposte : les deux barres de vie baissent, la bleue se grise.' },
+  { cle: 'tir_missile', nom: 'Missile de simulation', groupe: 'unites',
+    aide: 'Le lanceur bleu envoie un projectile à traînée vers une cible rouge ; le marqueur atteint la cible avant son impact.' },
+  { cle: 'tir_cloche', nom: 'Tir en cloche', groupe: 'unites',
+    aide: 'L’artillerie bleue lance un marqueur sur une trajectoire courbe, puis la cible accuse l’impact sans riposte.' },
   { cle: 'hors_jeu', nom: 'Mettre hors jeu', groupe: 'unites',
     aide: 'La première unité rouge quitte la carte, avec son animation de sortie ; rien ne se casse ni ne brûle.' },
   { cle: 'brouillage', nom: 'Brouiller', groupe: 'unites',
@@ -569,20 +574,23 @@ export function rejouer(etat: EtatPartie, geste: GesteBanc): RejouerBanc | null 
     };
   }
 
-  if (geste === 'attaque') {
-    if (!mien || !sien) return null;
-    const degats = Math.min(sien.pv, 42);
-    const riposte = Math.min(mien.pv - 1, 17);
+  if (geste === 'attaque' || geste === 'tir_missile' || geste === 'tir_cloche') {
+    const tireur = geste === 'attaque' ? mien : etat.unites.find((u) => u.camp === 0
+      && u.type === (geste === 'tir_missile' ? 'missiles_sol' : 'artillerie'));
+    if (!tireur || !sien) return null;
+    // Le banc garde ses pièces pour permettre des essais répétés, même après plusieurs impacts.
+    const degats = Math.min(Math.max(0, sien.pv - 1), 42);
+    const riposte = geste === 'attaque' ? Math.min(Math.max(0, tireur.pv - 1), 17) : 0;
     return {
       apres: {
         ...etat,
         unites: etat.unites.map((u) => {
           if (u.id === sien.id) return { ...u, pv: sien.pv - degats };
-          if (u.id === mien.id) return { ...u, pv: mien.pv - riposte, etat: 'agi' };
+          if (u.id === tireur.id) return { ...u, pv: tireur.pv - riposte, etat: 'agi' };
           return u;
         }),
       },
-      evenements: [{ type: 'attaque', attaquantId: mien.id, cibleId: sien.id, degats, riposte }],
+      evenements: [{ type: 'attaque', attaquantId: tireur.id, cibleId: sien.id, degats, riposte }],
     };
   }
 

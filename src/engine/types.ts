@@ -8,7 +8,7 @@
 import type {
   Case, CampId, Cle, CleTerrain, CleUnite, DateIso, Climat, Hemisphere,
   EtatClimat, Meteo, ObjectifDefaite, ObjectifVictoire, Saison, TableDegats,
-  Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
+  RenfortScenario, Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
 } from '../schemas/index';
 
 // ---------------------------------------------------------------------------
@@ -152,12 +152,19 @@ export interface TerrainPose {
 
 /** Réglages figés du scénario : le moteur ne lit jamais l'horloge. */
 export interface ReglagesPartie {
+  factionsParCamp?: Partial<Record<CampId, 'atl'>>;
+  equipes?: CampId[][];
+  renforts?: RenfortScenario[];
   date: DateIso;
   climatPays: Climat;
   hemisphere: Hemisphere;
   saisonForcee: Saison | null;
   meteoForcee: Meteo | null;
   cycleJourNuit: { jour: number; nuit: number };
+  fondsDepartParCamp?: Partial<Record<CampId, number>>;
+  revenusParBatimentParCamp?: Partial<Record<CampId, number>>;
+  vitesseJaugeJoueur?: number;
+  previsionJournees?: number;
   fondsDepart: number;
   revenusParBatiment: number;
   brouillard: boolean;
@@ -207,6 +214,8 @@ export interface EtatPartie {
   desaffectes: string[];
   unites: Unite[];
   prochainId: number;
+  /** Indices vague:unité déjà déployés, sérialisables. */
+  renfortsLivres?: string[];
   /** Prochaine balise à capturer, indexée par objectif. */
   relais?: Record<string, number>;
   journee: number;

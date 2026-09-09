@@ -31,6 +31,11 @@ export const metadata = { title: 'Réglages · Atlas' };
 export default function PageReglages(): React.ReactElement {
   const locale = 'fr';
   return <Reglages libelles={{
+    difficulte: t(locale, 'mode.titre'),
+    difficulteNote: t(locale, 'mode.note'),
+    victoiresModes: t(locale, 'mode.victoires'),
+    normal: t(locale, 'mode.normal'),
+    difficile: t(locale, 'mode.difficile'),
     titre: t(locale, 'reglages.titre'),
     retour: t(locale, 'reglages.retour'),
     enPartie: t(locale, 'reglages.en_partie'),

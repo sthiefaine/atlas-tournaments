@@ -1,0 +1,198 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "type": "unite",
+  "cle": "meridien_bastion_base",
+  "priorite": 1,
+  "description": {
+    "en": "A heavy Meridian tracked platform: low wide hull, compact turret with two short parallel anti-air marker tubes. Massive slow silhouette, broad track runs and visible road wheels. Neutral-grey team panels on turret and front plate, no insignia and no long artillery barrel. Silhouette contract (must be recognisable from a 65-degree top-down camera): a tracked chassis with visible road wheels and a rubber-padded track run, a blocky angular hull with wide sloped cheeks, a rotating turret, a rotating radar dish, a whip antenna with a base spring, bulk class 3 of 3. Game role: 14500 funds, 3 movement on chenilles, range 1-1, vision 3, traits anti_air. Exclusive to the unknown Meridian faction; no national variants are commissioned. This is the SHARED BASE GEOMETRY: it carries no national livery and no ornament. One shape, one skeleton, one UV layout, one node naming — every national kit is painted on this exact mesh. Bulk stays roughly one half to two thirds of a tile so that two adjacent units never touch.",
+    "fr": "Une plateforme méridienne lourde à chenilles : coque basse et large, tourelle compacte portant deux tubes de marquage antiaérien courts et parallèles. Silhouette massive et lente, flancs larges, roues visibles. Panneaux d’équipe gris neutre sur tourelle et glacis, aucun insigne. Aucun canon long d’artillerie. Contrat de silhouette (reconnaissable à 65° au-dessus de l’horizontale) : un train de chenilles à galets visibles et patins caoutchoutés, une caisse anguleuse aux joues larges et inclinées, une tourelle pivotante, une antenne radar tournante, une antenne fouet sur ressort, encombrement 3 sur 3. Rôle de jeu : 14500 fonds, 3 de mouvement en chenilles, portée 1-1, vision 3, traits anti_air. Unité exclusive de la faction méridienne inconnue : aucune déclinaison nationale commandée. C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale ni ornement. Une seule forme, un squelette, un dépliage, un jeu de noms de nœuds — tout kit national se peint sur ce maillage-là. L’encombrement reste d’environ la moitié aux deux tiers d’une case, pour que deux unités voisines ne se touchent jamais."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "tournament vehicle",
+      "crisp panel lines",
+      "neutral undressed base mesh"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.7,
+      "tolerance": 0.08
+    },
+    "y": {
+      "cible": 0.58,
+      "tolerance": 0.08
+    },
+    "z": {
+      "cible": 0.95,
+      "tolerance": 0.08
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Contraste métal poli / peinture mate / caoutchouc : c’est elle qui vend la matière."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si des pièces nues subsistent ; une valeur uniforme sinon."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": []
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "module_tourelle",
+      "module_radar",
+      "module_antenne"
+    ],
+    "materiauxAttendus": [
+      "mat_corps",
+      "mat_details"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "unite_meridien_bastion_base_lod0.glb",
+      "unite_meridien_bastion_base_lod1.glb",
+      "unite_meridien_bastion_base_albedo.png",
+      "unite_meridien_bastion_base_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "animations"
+    ],
+    "toleranceAabb": 0.12,
+    "lodRequis": [
+      0,
+      1,
+      2
+    ]
+  }
+}

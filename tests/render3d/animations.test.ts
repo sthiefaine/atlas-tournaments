@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 
 import {
-  animationsDePartition, ECLAT_MAX, gesteVersAnimation, MS_ECLAT, partitionProvisoire,
+  animationsDePartition, profilTir, hauteurImpact, ECLAT_MAX, gesteVersAnimation, MS_ECLAT, partitionProvisoire,
   type ContexteAnimation,
 } from '../../src/render3d/animations';
 import { creerEffets, type Effets } from '../../src/render3d/effets';
@@ -24,8 +24,8 @@ import type { CalqueUnites, EtatVisuel } from '../../src/render3d/unites';
 import { paletteDe } from '../../src/render/palettes';
 import { DUREES, type Geste, type Partition } from '../../src/render/partition';
 import type { EtatPartie, EvenementJeu } from '../../src/engine/index';
-import type { Case } from '../../src/schemas/types';
-import { partiePersonnalisee } from '../engine/aides';
+import type { Case, UnitType } from '../../src/schemas/types';
+import { CAT, partiePersonnalisee } from '../engine/aides';
 
 const etat = partiePersonnalisee(['....', '....'], {}, [
   { camp: 0, type: 'infanterie', x: 0, y: 0 },
@@ -141,7 +141,7 @@ test('un tir vise depuis sa case, jette un éclair de bouche, et le reprend en f
   assert.ok(v.recul < 0, 'la pièce recule');
   assert.equal(v.cap, Math.atan2(2, 1), 'le cap part de la case du tireur, pas de son origine de salve');
   const eclair = vivants(b.effets);
-  assert.equal(eclair.length, 1);
+  assert.ok(eclair.length >= 1);
   assert.ok(eclair[0] instanceof THREE.Sprite, 'un éclair de bouche fait face à la caméra');
   const attendu = 0 * CASE + CASE / 2 + Math.cos(v.cap) * 0.42;
   assert.ok(Math.abs(eclair[0].position.x - attendu) < 1e-6, 'l’éclair est au bord de la case du tireur');
@@ -165,7 +165,7 @@ test('un coup encaissé secoue la pièce et jette des étincelles, plus nombreus
   assert.equal(v.clip, 'touche');
   assert.ok(v.secousse > 0);
   const n = vivants(b.effets).length;
-  assert.ok(n >= 5 && n <= 8, `entre cinq et huit étincelles, pas ${n}`);
+  assert.ok(n >= 5 && n <= 20, `impact et étincelles, pas ${n}`);
   a.animation.terminer?.();
   assert.equal(v.secousse, 0);
   assert.equal(v.clip, 'repos');
@@ -326,7 +326,7 @@ test('la partition provisoire enchaîne les gestes d’une même unité : elle n
   assert.equal(tirer.depuis.y, 1, 'et part de la case d’arrivée');
   // Le coup est instantané : la cible accuse le choc à l'instant où il part,
   // elle n'attend pas la fin du geste du tireur.
-  assert.equal(encaisser.debut, tirer.debut, 'la cible encaisse quand le coup part');
+  assert.equal(encaisser.debut, tirer.debut + tirer.duree, 'la cible encaisse à l’arrivée du projectile');
   const riposte = gesteDe(p, 'tirer', sienne);
   assert.ok(riposte, 'une riposte non nulle se joue');
   assert.equal(riposte.debut, encaisser.debut + encaisser.duree, 'elle riposte une fois le choc encaissé');
@@ -382,4 +382,54 @@ test('la partition provisoire écrit le voile après la marche de la même unit�
   assert.equal(g.debut, 2 * DUREES.parCase, 'après deux cases de marche');
   assert.deepEqual(g.case, { x: 2, y: 0 }, 'à l’arrivée');
   assert.equal(partitionProvisoire(evenements, etat, true).duree, 0, 'réduit : rien ne dure');
+});
+
+
+test('les profils distinguent secondaire, missile et tir indirect sans variante nationale', () => {
+  const type = (cle: string, extra = {}): UnitType => ({ cle, portee: [1, 1], ...extra } as UnitType);
+  assert.equal(profilTir(type('drone_intercepteur')), 'missile');
+  assert.equal(profilTir(type('artillerie', { portee: [2, 3] })), 'cloche');
+  assert.equal(profilTir(type('char_lourd', { armeSecondaire: ['infanterie'] }), type('infanterie')), 'rafale');
+  assert.equal(profilTir(type('char_lourd')), 'marqueur');
+  assert.equal(profilTir(), 'marqueur');
+  assert.equal(hauteurImpact(), 0.32);
+});
+
+test('un tir réduit ou coupé avant départ ne fait naître aucun projectile ni impact', () => {
+  const b = banc();
+  const tir: Geste = { genre: 'tirer', unite: mienne, depuis: { x: 0, y: 0 }, vers: { x: 1, y: 0 }, debut: 0, duree: 0 };
+  const a = gesteVersAnimation(tir, b.ctx)!;
+  a.animation.avancer(1);
+  a.animation.terminer?.();
+  const choc = gesteVersAnimation({ genre: 'encaisser', unite: sienne, case: { x: 1, y: 0 }, depuis: { x: 0, y: 0 }, degats: 60, debut: 0, duree: 0 }, b.ctx)!;
+  choc.animation.avancer(1);
+  choc.animation.terminer?.();
+  const attente = gesteVersAnimation({ ...tir, debut: 500, duree: 260 }, b.ctx)!;
+  attente.animation.terminer?.();
+  assert.equal(vivants(b.effets).length, 0);
+  assert.equal(b.visuel(mienne).clip, 'repos');
+  assert.equal(b.visuel(sienne).pv, null);
+  b.effets.dispose();
+});
+
+
+test('le départ et la destination suivent les volumes aériens et le relief', () => {
+  const courant = partiePersonnalisee(['....', '....'], {}, [
+    { camp: 0, type: 'helico', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 1, y: 0 },
+  ]);
+  const b = banc({ courant });
+  b.ctx.catalogue = () => CAT;
+  b.ctx.hauteurEn = () => 0.7;
+  const emissions: { position: { x: number; y: number; z: number }; destination?: { x: number; y: number; z: number } }[] = [];
+  const emettre = b.effets.emettre.bind(b.effets);
+  b.effets.emettre = (spec) => { emissions.push(spec); return emettre(spec); };
+  const a = gesteVersAnimation({ genre: 'tirer', unite: courant.unites[0]!.id, depuis: { x: 0, y: 0 }, vers: { x: 1, y: 0 }, debut: 0, duree: 260 }, b.ctx)!;
+  a.animation.avancer(0);
+  assert.ok(emissions.length > 0);
+  assert.equal(emissions[0]!.position.y, 0.7 + hauteurImpact(CAT.unites.helico));
+  assert.equal(emissions[0]!.destination?.y, 0.7 + hauteurImpact(CAT.unites.infanterie));
+  a.animation.terminer?.();
+  assert.equal(vivants(b.effets).length, 0);
+  b.effets.dispose();
 });

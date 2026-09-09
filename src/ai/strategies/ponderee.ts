@@ -1,3 +1,4 @@
+import { sontAllies } from '../../engine/equipes';
 /**
  * `ponderee` — l'adversaire par défaut (`doc/02-architecture.md` §3.2).
  *
@@ -129,7 +130,7 @@ const RAYON_CAPTEUR_PROCHE = 3;
 
 /** Vrai si un capteur ami, autre que `u`, peut venir prendre cette case sous peu. */
 function capteursProches(etat: EtatPartie, cat: Catalogue, u: Unite, c: Case): boolean {
-  return etat.unites.some((a) => a.camp === u.camp && a.id !== u.id && !a.dansTransport
+  return etat.unites.some((a) => sontAllies(etat, a.camp, u.camp) && a.id !== u.id && !a.dansTransport
     && capteur(cat, a) && manhattan(a, c) <= RAYON_CAPTEUR_PROCHE);
 }
 
@@ -363,7 +364,7 @@ export function meilleureOption(
   const adversaires = adversairesConnus(etat, cat, u.camp);
   const allies: Unite[] = [];
   for (const autre of etat.unites) {
-    if (autre.dansTransport || autre.camp !== u.camp) continue;
+    if (autre.dansTransport || !sontAllies(etat, autre.camp, u.camp)) continue;
     if (autre.id !== u.id) {
       occupees[autre.y * largeur + autre.x] = 1;
       allies.push(autre);
@@ -696,7 +697,7 @@ export function meilleureProduction(
   for (const usine of horsQg.length > 0 ? horsQg : libres) {
     const terrain = terrainLogique(etat, cat, usine);
     if (terrain === null) continue;
-    for (const cle of produitesPar(cat, terrain)) {
+    for (const cle of produitesPar(cat, terrain, etat, camp)) {
       const t = cat.unites[cle];
       if (!t || t.cout > atteignable) continue;
       const verdict = verifierProduction(etat, cat, camp, usine, cle);

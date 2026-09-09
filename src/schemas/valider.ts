@@ -478,7 +478,7 @@ function tableDegats(ctx: Contexte, v: unknown, chemin: string): Record<string, 
 }
 
 const CLES_UNIT_TYPE = [
-  'cle', 'nom', 'nomCourt', 'statut', 'homologation', 'traits', 'silhouette', 'cout',
+  'cle', 'nom', 'nomCourt', 'statut', 'homologation', 'factionExclusive', 'traits', 'silhouette', 'cout',
   'mouvement', 'typeMouvement', 'domaine', 'portee', 'vision', 'munitions', 'carburant',
   'capture', 'transport', 'degats', 'subitDegats', 'armeSecondaire', 'degatsSecondaire', 'peutRiposter', 'peutTirerApresMouvement',
 ] as const;
@@ -515,7 +515,8 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
     ctx.faute('homologation', "une unité non 'canon' déclare son homologation");
   }
 
-  const traits = tableau(ctx, o['traits'], 'traits', { max: 2 },
+  if (presente(o, 'factionExclusive')) enumeration(ctx, o['factionExclusive'], 'factionExclusive', ['atl']);
+  const traits = tableau(ctx, o['traits'], 'traits', { max: 3 },
     (e, cc) => enumeration(ctx, e, cc, TRAITS));
   if (traits) sansDoublon(ctx, traits, 'traits');
   silhouette(ctx, o['silhouette'], 'silhouette');
@@ -652,13 +653,15 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       ctx.faute('traits', "le trait 'ravitaillement' exige une ligne de dégâts entièrement à 0");
     }
     if (a('vol') && a('tout_terrain')) ctx.faute('traits', "traits contradictoires : 'vol' et 'tout_terrain'");
-    // Un drone est un œil volant qu'on peut brouiller ; un brouilleur n'est qu'un
-    // radar sur roues : ni l'un ni l'autre ne tire (`04-gameplay.md` §10 bis).
+    // Avant le catalogue 7, drones et brouilleurs ne sont pas armés.
+    // Le 7 autorise les intercepteurs anti-air et les brouilleurs volants.
     if (a('drone') && !a('vol')) ctx.faute('traits', "le trait 'drone' exige le trait 'vol'");
-    if ((a('drone') || a('brouilleur')) && degats && Object.values(degats).some((n) => n > 0)) {
+    const h = estObjet(o['homologation']) ? o['homologation'] : undefined;
+    const intercepteur = a('drone') && a('anti_air') && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7;
+    if ((a('brouilleur') || (a('drone') && !intercepteur)) && degats && Object.values(degats).some((n) => n > 0)) {
       ctx.faute('traits', "un drone ou un brouilleur ne porte pas d'arme (dégâts à 0)");
     }
-    if (a('brouilleur') && a('drone')) ctx.faute('traits', "traits contradictoires : 'drone' et 'brouilleur'");
+    if (a('brouilleur') && a('drone') && !(typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7)) ctx.faute('traits', "traits contradictoires : 'drone' et 'brouilleur'");
     if (a('tir_indirect') && a('capture')) ctx.faute('traits', "traits contradictoires : 'tir_indirect' et 'capture'");
     // `plongee` (`04-gameplay.md` §13.2, catalogue 5) : une coque qui disparaît
     // sous la surface. Elle n'existe qu'en mer, et rien ne plonge en volant.
@@ -1207,7 +1210,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
   'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
-  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'fondsDepart',
+  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
   'choix', 'flagsRequis', 'flagsInterdits', 'recompenses',
@@ -1295,6 +1298,42 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     return camp;
   });
   sansDoublon(ctx, camps, 'commandants');
+  if (presente(o, 'factionsParCamp')) {
+    const factions = objet(ctx, o['factionsParCamp'], 'factionsParCamp', camps.map(String));
+    if (factions) for (const [camp, faction] of Object.entries(factions)) {
+      enumeration(ctx, faction, sous('factionsParCamp', camp), ['atl']);
+    }
+  }
+  if (presente(o, 'equipes')) {
+    const membres: number[] = [];
+    tableau(ctx, o['equipes'], 'equipes', { min: 2, max: 4 }, (e, c) => {
+      tableau(ctx, e, c, { min: 1, max: 3 }, (v, k) => {
+        const n = entier(ctx, v, k, { min: 0, max: 3 });
+        if (n !== undefined) membres.push(n);
+        return n;
+      });
+      return undefined;
+    });
+    sansDoublon(ctx, membres, 'equipes');
+    if (membres.length !== camps.length || membres.some((n) => !camps.includes(n))) ctx.faute('equipes', 'partition exacte des camps requise');
+  }
+  if (presente(o, 'renforts')) tableau(ctx, o['renforts'], 'renforts', { max: 20 }, (e, c) => {
+    const vague = objet(ctx, e, c, ['journee', 'unites']);
+    if (!vague || !requis(ctx, vague, c, ['journee', 'unites'])) return undefined;
+    entier(ctx, vague['journee'], sous(c, 'journee'), { min: 1, max: 100 });
+    tableau(ctx, vague['unites'], sous(c, 'unites'), { min: 1, max: 60 }, (v, k) => {
+      const u = objet(ctx, v, k, ['camp', 'type', 'x', 'y', 'pv']);
+      if (!u || !requis(ctx, u, k, ['camp', 'type', 'x', 'y'])) return undefined;
+      const camp = entier(ctx, u['camp'], sous(k, 'camp'), { min: 0, max: 3 });
+      if (camp !== undefined && !camps.includes(camp)) ctx.faute(sous(k, 'camp'), 'camp inconnu');
+      cle(ctx, u['type'], sous(k, 'type'));
+      entier(ctx, u['x'], sous(k, 'x'), { min: 0, max: 59 });
+      entier(ctx, u['y'], sous(k, 'y'), { min: 0, max: 59 });
+      if (presente(u, 'pv')) entier(ctx, u['pv'], sous(k, 'pv'), { min: 1, max: 100 });
+      return undefined;
+    });
+    return undefined;
+  });
   if (joueurs > 1) ctx.faute('commandants', 'un seul camp sans IA : le camp 0');
   // Le camp du joueur porte le général de la nation incarnée : c'est ce que
   // `sceneDepuis` lit, et ce qui rend l'incarnation vraie plutôt qu'annoncée.
@@ -1304,7 +1343,23 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   }
 
   entier(ctx, o['fondsDepart'], 'fondsDepart', { min: 0, max: 30000, multiple: 100 });
-  entier(ctx, o['revenusParBatiment'], 'revenusParBatiment', { min: 500, max: 2000, multiple: 100 });
+  if (o['fondsDepartParCamp'] !== undefined) {
+    const fonds = objet(ctx, o['fondsDepartParCamp'], 'fondsDepartParCamp', ['0', '1', '2', '3']);
+    if (fonds) for (const [camp, valeur] of Object.entries(fonds)) {
+      entier(ctx, valeur, `fondsDepartParCamp.${camp}`, { min: 0, max: 30000, multiple: 100 });
+      if (!camps.includes(Number(camp))) ctx.faute(`fondsDepartParCamp.${camp}`, 'camp absent du scénario');
+    }
+  }
+  if (presente(o, 'revenusParBatimentParCamp')) {
+    const revenus = objet(ctx, o['revenusParBatimentParCamp'], 'revenusParBatimentParCamp', ['0', '1', '2', '3']);
+    if (revenus) for (const [camp, valeur] of Object.entries(revenus)) {
+      entier(ctx, valeur, `revenusParBatimentParCamp.${camp}`, { min: 0, max: 2000, multiple: 100 });
+      if (!camps.includes(Number(camp))) ctx.faute(`revenusParBatimentParCamp.${camp}`, 'camp absent du scénario');
+    }
+  }
+  if (presente(o, 'vitesseJaugeJoueur')) nombre(ctx, o['vitesseJaugeJoueur'], 'vitesseJaugeJoueur', { min: 0.5, max: 1.5 });
+  if (presente(o, 'previsionJournees')) entier(ctx, o['previsionJournees'], 'previsionJournees', { min: 1, max: 2 });
+  entier(ctx, o['revenusParBatiment'], 'revenusParBatiment', { min: 0, max: 2000, multiple: 100 });
   booleen(ctx, o['brouillard'], 'brouillard');
   const limite = o['limiteJournees'] === null
     ? null
@@ -2080,7 +2135,7 @@ export function validerCatalogueUnites(valeur: unknown): Resultat<CatalogueUnite
   entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
   const brutes = Array.isArray(o['unites']) ? (o['unites'] as unknown[]) : [];
   if (!Array.isArray(o['unites'])) ctx.faute('unites', 'un tableau de types d\'unité est attendu');
-  if (brutes.length > 24) ctx.faute('unites', 'le catalogue actif est plafonné à 24 unités');
+  if (brutes.length > 28) ctx.faute('unites', 'le catalogue actif est plafonné à 28 unités');
   const cles: string[] = [];
   const silhouettes: string[] = [];
   for (let i = 0; i < brutes.length; i += 1) {

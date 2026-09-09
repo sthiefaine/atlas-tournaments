@@ -18,7 +18,7 @@
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import {
   consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
-  seuilCapture, terrainLogique, uniteParId,
+  seuilCapture, terrainLogique, uniteParId, sontAllies,
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
@@ -255,7 +255,7 @@ const STYLE = `
    + 6 de respiration + 95 de bulletin ; « mission.css » pose son fanion dessous,
    et c'est la seule chose qui dépende de cette hauteur. */
 .atlas-hud .bulletin{position:absolute;pointer-events:auto;left:max(var(--marge),env(safe-area-inset-left,0px));top:calc(var(--haut) + 48px);width:196px;color:var(--papier);background:var(--encre);border:1px solid var(--cadre);border-top:3px solid var(--camp);z-index:2}
-.atlas-hud .meteo-trois{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.atlas-hud .meteo-trois{display:grid;grid-template-columns:repeat(var(--jours,3),minmax(0,1fr))}
 .atlas-hud .meteo-case{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px 7px;border-bottom:3px solid transparent}
 .atlas-hud .meteo-case+.meteo-case{border-left:1px solid #ffffff14}
 .atlas-hud .meteo-case[data-courant='oui']{background:#ffffff0d;border-bottom-color:var(--signal)}
@@ -541,7 +541,7 @@ const STYLE = `
 .atlas-hud .fin .grand{font-size:var(--t8);font-weight:850;letter-spacing:-.01em;line-height:1.05}
 .atlas-hud .fin .sb{color:#536e78;font-size:var(--t4)}
 .atlas-hud .bilan{margin:0 20px 4px;border-top:1px solid #15243b26}
-.atlas-hud .bilan-ligne{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid #15243b14}
+.atlas-hud .bilan-ligne{display:grid;grid-template-columns:minmax(70px,1fr) repeat(var(--nombre-camps,2),minmax(42px,62px));align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid #15243b14}
 .atlas-hud .bilan-ligne .quoi{font-size:var(--t2);font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#5d7480;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atlas-hud .bilan-ligne b,.atlas-hud .bilan-ligne .chef{text-align:center;font-variant-numeric:tabular-nums}
 .atlas-hud .bilan-ligne b{font-size:var(--t6);font-weight:900;color:var(--encre);border-bottom:3px solid var(--teinte,#b9bec7)}
@@ -697,7 +697,7 @@ const STYLE = `
   .atlas-hud .inspect .in{padding:8px 10px;gap:8px}
   .atlas-hud .inspect canvas{width:36px;height:36px}
   .atlas-hud .voile{align-items:flex-end}
-  .atlas-hud .bilan-ligne{grid-template-columns:minmax(0,1fr) 54px 54px}
+  .atlas-hud .bilan-ligne{grid-template-columns:minmax(62px,1fr) repeat(var(--nombre-camps,2),minmax(38px,54px))}
 }
 /* Les réglages de vue restent accessibles sans occuper toute la rangée. */
 @container atlas-interface (max-width:600px){
@@ -1159,9 +1159,9 @@ export function monterHudHtml(
     banniereTour = doc.createElement('div');
     banniereTour.className = 'atlas-tour';
     banniereTour.setAttribute('role', 'status');
-    banniereTour.style.setProperty('--teinte', v.etat.campCourant === v.camp ? '#ffd162' : '#f59a95');
+    banniereTour.style.setProperty('--teinte', sontAllies(v.etat, v.etat.campCourant, v.camp) ? '#ffd162' : '#f59a95');
     banniereTour.innerHTML = iconeOrdre('capturer')
-      + `<div><strong>${ech(api.t(v.etat.campCourant === v.camp ? 'hud.votre_tour' : 'hud.tour_adverse'))}</strong>`
+      + `<div><strong>${ech(api.t(v.etat.campCourant === v.camp ? 'hud.votre_tour' : sontAllies(v.etat, v.etat.campCourant, v.camp) ? 'hud.tour_allie' : 'hud.tour_adverse'))}</strong>`
       + `<span>${ech(api.t('hud.journee', { n: Math.max(1, v.etat.journee) }))}</span></div>`;
     conteneur.appendChild(banniereTour);
     minuterieTour = setTimeout(() => { banniereTour?.remove(); banniereTour = null; }, 1150);
@@ -1223,7 +1223,7 @@ export function monterHudHtml(
       { meteo: v.etat.climat.previsions[0], jour: jour + 1, courant: false },
       { meteo: v.etat.climat.previsions[1], jour: jour + 2, courant: false },
     ];
-    const cellules = cases.map(({ meteo, jour: j, courant }) => {
+    const cellules = cases.slice(0, 1 + (v.etat.reglages.previsionJournees ?? 2)).map(({ meteo, jour: j, courant }) => {
       if (!meteo) return '';
       const nom = libelleMeteo(api.t, meteo);
       return `<div class="meteo-case" data-courant="${courant ? 'oui' : 'non'}"`
@@ -1236,7 +1236,7 @@ export function monterHudHtml(
     // autant que le temps, et elles n'ont nulle part ailleurs où vivre.
     const ambiance = `${libelleSaison(api.t, v.ambiance.saison)} · ${libellePhase(api.t, v.ambiance.phase)}`;
     return `<div class="bulletin" role="group" aria-label="${ech(api.t('hud.meteo_titre'))}">`
-      + `<div class="meteo-trois">${cellules}</div>`
+      + `<div class="meteo-trois" style="--jours:${1 + (v.etat.reglages.previsionJournees ?? 2)}">${cellules}</div>`
       + `<div class="meteo-ambiance">${ech(ambiance)}</div></div>`;
   }
 
@@ -1486,6 +1486,9 @@ export function monterHudHtml(
         if (liste) embarquees = `<span class="embarquees">${ech(api.t('hud.embarquees', { liste }))}</span>`;
       }
     }
+    if (unite && unite.camp !== v.camp && sontAllies(v.etat, unite.camp, v.camp)) {
+      lignes.push(`<span class="allie">${ech(api.t('hud.unite_alliee'))}</span>`);
+    }
     const icone = unite && type ? vignette(type.silhouette, unite.camp, 46) : '';
     const bord = unite ? paletteDe(unite.camp).main : paletteDe(null).main;
     // Le bouton n'apparaît que sur une unité : un terrain n'a pas de fiche, et
@@ -1502,7 +1505,7 @@ export function monterHudHtml(
     // peut découvrir n'existe pas. L'astuce ne paraît que sur une unité adverse,
     // la seule où le geste veuille dire quelque chose, et jamais pendant qu'on
     // vise : à cet instant la portée est déjà peinte sur la carte.
-    const astuce = unite && unite.camp !== v.camp && !v.visee && !v.menu
+    const astuce = unite && !sontAllies(v.etat, unite.camp, v.camp) && !v.visee && !v.menu
       ? `<div class="astuce">${iconeOrdre('attaquer')}<span>${ech(api.t('hud.danger_astuce'))}</span></div>`
       : '';
     return `<div class="p inspect" role="group" aria-label="${ech(api.t('hud.panneau_unite'))}" style="--camp:${bord}">`
@@ -1574,7 +1577,7 @@ export function monterHudHtml(
     if (!visee.cibles.some((cible) => cible.x === c.x && cible.y === c.y)) return '';
     const attaquant = uniteParId(v.etat, visee.attaquantId);
     const cible = v.etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y);
-    if (!attaquant || !cible) return '';
+    if (!attaquant || !cible || sontAllies(v.etat, attaquant.camp, cible.camp)) return '';
     const p = prevoirDuel(v.etat, v.catalogue, attaquant, cible, visee.depuis);
     // Le bandeau ne dit plus que ce qui est **notable** : une cible mise hors
     // jeu, ou un tir auquel on ne répond pas. « Riposte −2 PV » répétait en
@@ -1754,9 +1757,9 @@ export function monterHudHtml(
 
   function panneauAttente(v: VueJeu): string {
     if (!v.attenteIa) return '';
-    const pal = paletteDe(v.camp === 0 ? 1 : 0);
+    const pal = paletteDe(v.etat.campCourant);
     return `<div class="p attente" style="--camp:${pal.main}">`
-      + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t('hud.tour_adverse'))}</div></div></div>`;
+      + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t(sontAllies(v.etat, v.etat.campCourant, v.camp) ? 'hud.tour_allie' : 'hud.tour_adverse'))}</div></div></div>`;
   }
 
   function panneauAnnonce(v: VueJeu): string {
@@ -1799,7 +1802,7 @@ export function monterHudHtml(
     // et la table de dégâts en rangée de figurines avec le chiffre dessous.
     // Les vignettes portent les couleurs de l'adversaire : ce sont ses unités
     // qu'on frappe, et ce sont les siennes qu'on craint.
-    const adversaire: CampId = v.etat.camps.find((c) => c.id !== v.camp)?.id ?? 1;
+    const adversaire: CampId = v.etat.camps.find((c) => !sontAllies(v.etat, c.id, enJeu?.camp ?? v.camp))?.id ?? 1;
     const stat = (icone: string, valeur: string | number, titre: string): string =>
       `<span class="stat" title="${ech(titre)}" aria-label="${ech(titre)}">${iconeOrdre(icone)}<b>${ech(String(valeur))}</b></span>`;
     const figurine = (cle: CleUnite, taille: number): string => {
@@ -2095,7 +2098,7 @@ export function monterHudHtml(
     // pendant la scène, ni dans l'intervalle où elle attend d'être enfilée.
     if (!fin.terminee || v.masquerFin || v.sceneOuverte || v.finEnAttente) return '';
     const cle = fin.nul ? 'hud.match_nul'
-      : fin.vainqueur === v.camp ? 'combat.manche_gagnee' : 'combat.manche_perdue';
+      : sontAllies(v.etat, fin.vainqueur, v.camp) ? 'combat.manche_gagnee' : 'combat.manche_perdue';
     const pal = paletteDe(fin.vainqueur ?? null);
     const titre = api.t(cle);
     // Mon camp d'abord : on lit son propre bilan avant celui d'en face.
@@ -2119,7 +2122,7 @@ export function monterHudHtml(
       + ` role="dialog" aria-label="${ech(titre)}"><div class="fin">`
       + `<div class="grand">${ech(titre)}</div>`
       + `<div class="sb" style="margin-top:6px">${ech(api.t('hud.journee', { n: Math.max(1, v.etat.journee) }))}</div>`
-      + `</div><div class="bilan">${tete}`
+      + `</div><div class="bilan" style="--nombre-camps:${camps.length}">${tete}`
       + ligne('hud.bilan_unites', enJeu)
       + ligne('hud.bilan_batiments', batiments)
       + ligne('hud.bilan_recrutees', recrutees)

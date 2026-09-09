@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Vision et brouillard de guerre (`doc/04-gameplay.md` §10, §12.3, §12.4).
  *
@@ -48,7 +49,7 @@ export function brouilleParCamp(etat: EtatPartie, cat: Catalogue, camp: CampId, 
     if (t && porte(t, 'brouilleur') && manhattan(z, c) <= RAYON_BROUILLEUR_MOBILE) return true;
   }
   for (const [k, proprio] of Object.entries(etat.proprietaires)) {
-    if (proprio !== camp) continue;
+    if (!sontAllies(etat, proprio, camp)) continue;
     const station = depuisCle(k);
     if (terrainLogique(etat, cat, station) === 'radar' && manhattan(station, c) <= RAYON_STATION_RADAR) return true;
   }
@@ -59,7 +60,7 @@ export function brouilleParCamp(etat: EtatPartie, cat: Catalogue, camp: CampId, 
 export function estBrouillee(etat: EtatPartie, cat: Catalogue, u: Unite): boolean {
   const type = cat.unites[u.type];
   if (!type || !porte(type, 'drone')) return false;
-  return etat.camps.some((c) => c.id !== u.camp && !c.elimine && brouilleParCamp(etat, cat, c.id, u));
+  return etat.camps.some((c) => !sontAllies(etat, c.id, u.camp) && !c.elimine && brouilleParCamp(etat, cat, c.id, u));
 }
 
 /** Portée de vision d'une unité, climat compris. */
@@ -169,13 +170,13 @@ export function casesVisibles(etat: EtatPartie, cat: Catalogue, camp: CampId): S
     }
   };
   for (const u of etat.unites) {
-    if (u.camp !== camp || u.dansTransport) continue;
+    if (!sontAllies(etat, u.camp, camp) || u.dansTransport) continue;
     const type = cat.unites[u.type];
     const parDessus = type?.domaine === 'air' || terrainLogique(etat, cat, u) === 'montagne';
     ajouter(u, visionUnite(etat, cat, u), parDessus);
   }
   for (const [k, proprio] of Object.entries(etat.proprietaires)) {
-    if (proprio !== camp) continue;
+    if (!sontAllies(etat, proprio, camp)) continue;
     const c = depuisCle(k);
     ajouter(c, terrainLogique(etat, cat, c) === 'radar' ? VISION_STATION_RADAR : VISION_BATIMENT, false);
   }
@@ -220,10 +221,10 @@ export function unitesVues(etat: EtatPartie, cat: Catalogue, camp: CampId): Unit
 function calculerUnitesVues(etat: EtatPartie, cat: Catalogue, camp: CampId): Unite[] {
   if (!brouillardActif(etat)) return etat.unites.filter((u) => !u.dansTransport);
   const vues = casesVisibles(etat, cat, camp);
-  const miennes = etat.unites.filter((u) => u.camp === camp && !u.dansTransport);
+  const miennes = etat.unites.filter((u) => sontAllies(etat, u.camp, camp) && !u.dansTransport);
   return etat.unites.filter((u) => {
     if (u.dansTransport) return false;
-    if (u.camp === camp) return true;
+    if (sontAllies(etat, u.camp, camp)) return true;
     if (!vues.has(cleCase(u))) return false;
     if (!cacheeAuContact(etat, cat, u)) return true;
     return miennes.some((m) => manhattan(m, u) <= 1);
@@ -246,7 +247,7 @@ export function filtrerPourCamp(etat: EtatPartie, cat: Catalogue, camp: CampId):
   return {
     ...etat,
     unites: etat.unites
-      .filter((u) => gardees.has(u.id) || (u.dansTransport !== null && u.camp === camp))
+      .filter((u) => gardees.has(u.id) || (u.dansTransport !== null && sontAllies(etat, u.camp, camp)))
       .map((u) => ({ ...u })),
     camps: etat.camps.map((c) => (c.id === camp ? { ...c } : { ...c, fonds: 0, jauge: c.jauge })),
     flux: {},

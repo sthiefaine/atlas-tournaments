@@ -16,7 +16,7 @@ Ce document est votre **référence canon**. Règles dures, dans l'ordre de prio
 
 1. **Vous ne contredisez jamais ce document.** Si votre production a besoin d'un fait qui n'y est pas, vous l'inventez uniquement dans les zones explicitement ouvertes (§ 7.4) et vous le signalez dans votre sortie JSON (`inventions: [...]`), sans jamais le présenter comme canon.
 2. **Vous n'inventez jamais de flag.** Vous n'utilisez que les flags de la section 8, ou un flag construit sur un gabarit de la section 8.1 avec un code pays existant.
-3. **Vous respectez le vocabulaire de la section 5.** Un seul mot interdit dans une production suffit à la faire rejeter par la routine contrôle.
+3. **Vous respectez le vocabulaire de la section 5.** Les termes du glossaire et leur contexte font foi ; le vocabulaire tactique fictif autorisé ne doit pas être rejeté comme une référence à un conflit réel.
 4. **Vous respectez la charte de sensibilité de la section 7.** Ce n'est pas une préférence de style : c'est un critère de rejet automatique.
 5. **En cas de doute, vous ne produisez pas.** Une mission signalée en quarantaine coûte moins cher qu'une ligne à retirer après coup.
 6. **Vous n'écrivez pas de valeurs de flags dans un état de partie.** Vous *déclarez* dans votre JSON quels flags une scène lit et quels flags elle écrit ; le moteur applique. **[Proposition]**
@@ -25,15 +25,15 @@ Ce document est votre **référence canon**. Règles dures, dans l'ordre de prio
 
 ## 1. Le monde en dix lignes
 
-- Les nations ne se font plus la guerre : elles disputent des **Jeux Tactiques**, sur une grille, sur un terrain réel, devant un public.
+- Les nations règlent une **guerre stratégique fictive sous forme de tournois** : les Jeux Tactiques attribuent des droits énergétiques, sur une grille, devant un public, sans affrontements sanglants.
 - Chaque pays entretient une **équipe** nationale et un **commandant** qui la mène.
 - Tous les quatre ans, une **Ronde** — le tournoi mondial — fait le tour de la planète. Chaque nation reçoit les autres sur son sol.
 - L'organisation **Atlas** possède le règlement, les arbitres, les cartes et la diffusion. Elle est neutre par construction et le répète beaucoup.
 - Le trophée s'appelle l'**Atlas d'Or**. Il ne se garde pas : on l'emprunte quatre ans.
 - Le joueur est un jeune commandant qui gagne sa sélection nationale, puis fait le tour du monde.
-- À l'intérieur d'Atlas, une faction, **la Cinquième Manche**, considère que le tournoi a désarmé le monde et veut lui rendre ses enjeux réels.
+- Une faction inconnue du joueur, **la Cinquième Manche**, cherche à concentrer les droits solaires, le stockage et la distribution, puis à contrôler le programme de fusion fictif **Aube**.
 - Les choix du joueur décident quels pays suivent qui, le jour où ça éclate.
-- Le ton est celui du sport de haut niveau : rivalités, public, commentateurs, sponsors, protêts, sanctions.
+- Le ton est sérieux : compétition, fronts, alliances, sièges et conséquences durables ; l’humour des personnages ne nie pas les enjeux.
 - Personne ne meurt. Jamais. C'est une règle du monde autant qu'une règle d'écriture.
 
 ---
@@ -68,7 +68,7 @@ Les nations qui adoptèrent la méthode signèrent le **Pacte du Terrain** dans 
 
 Le Pacte tient en quatre articles, connus de tous les commandants :
 
-1. **Le terrain est prêté.** Aucun match ne transfère une population, seulement un droit, une place, un titre.
+1. **Le terrain est prêté.** Aucun match ne transfère une population. Il attribue des droits limités d’exploitation, de stockage et de distribution. Un socle énergétique garanti aux services essentiels reste hors des concessions ; la faction veut abolir cette protection.
 2. **Le matériel est marqué.** Rien de ce qui entre sur un terrain homologué ne peut mettre quelqu'un hors d'état de rejouer (§ 5.3).
 3. **L'arbitrage est extérieur.** Ni l'hôte ni le visiteur n'arbitrent.
 4. **Le refus de jouer se paie plus cher que la défaite.** Un forfait coûte davantage au classement qu'un match perdu, et beaucoup plus à la réputation.
@@ -89,7 +89,7 @@ Le temps se compte en **Rondes** : une Ronde = un cycle de quatre ans = un tour 
 |---|---|
 | Nommer un pays réel comme initiateur ou victime des Vieilles Manières | Désigne un coupable réel |
 | Dater le Pacte dans le calendrier réel | Accroche la fiction à l'histoire réelle |
-| Décrire une bataille, même ancienne, même inventée mais située | Rouvre le registre de la guerre |
+| Attribuer un conflit historique réel à une délégation ou à une personne réelle | Confond histoire réelle et conflit fictif ; les batailles de tournoi inventées sont permises |
 | Faire d'un pays réel un pays « non signataire » ou « exclu » | Statut politique réel déguisé |
 | Expliquer la paix par une religion, une idéologie, un régime | Hors périmètre absolu |
 
@@ -163,6 +163,10 @@ Le visage d'Atlas. Costume voyant, enthousiasme professionnel, mémoire encyclop
 
 Sponsor principal de la Ronde. Une entité commerciale apatride, sans pays, sans visage : des banderoles, des contrats, des enveloppes. Sert à porter les choix de « sponsor douteux » du brief sans impliquer une entreprise ou un pays réels. Relation suivie par `monde.atlas.sponsor_meridien`.
 
+### 3.3 bis Historique des personnages — canon énergétique du 9 septembre 2026
+
+`content/personnages.json` est la source structurée des biographies, liens, croyances et événements historiques. `acteRevelation` borne le moment de révélation ; la vérité du canon, la croyance d’un personnage et les connaissances du joueur restent distinctes. Les repères sont fictifs. Ariane, Tomas, Nera, Talvarec, Vantour, Ost, Solveig et Wren sont conservés ; Sélène est la dirigeante fixée. Le détail de campagne et la frontière avec l’inspiration scientifique sont dans `17-aube.md`.
+
 ### 3.5 **[Proposition]** Les figures qu'on ne voit pas d'abord — les généraux secrets
 
 Atlas emploie des gens qui ont su jouer, et quelques-uns savent encore. Dix d'entre eux sont **jouables** une fois un `Deblocage` acquis (`13-campagne.md` §7, propriétaire de la liste, des conditions et de leurs styles de pouvoir) : trois figures d'Atlas (Talvarec, Aldouin, Vantour), la présidente de la Commission d'homologation, l'intendante de la Ronde, une juge de terrain sans-drapeau qu'on n'appelle plus que par son dossard, une ancienne finaliste malheureuse entrée à Atlas après sa seconde défaite, la figure visible de la Cinquième Manche, le plus vieux commandant en activité, et un Cinquième sans grade.
@@ -179,19 +183,19 @@ Diégétiquement, ils ne descendent pas sur le terrain par caprice : chacun a un
 
 **Nom.** Un match de Jeux Tactiques se dispute en quatre manches. La faction tire son nom de l'idée qu'il en manque une : celle qui se jouerait **hors du terrain**, et qui seule dirait qui gagne vraiment. Ses membres se disent « les Cinquièmes ». Leur signe : quatre traits et un cinquième barré, tracés à la craie sur un mur de vestiaire.
 
-**Mobile.** Ils ne veulent pas le chaos ; ils croient tenir une vérité désagréable. Pour eux, le Pacte du Terrain n'a pas aboli les Vieilles Manières, il les a **anesthésiées** : les nations ne se règlent plus rien, elles se distraient. Un monde où plus rien ne coûte rien ne produit plus ni courage, ni mérite, ni grandeur — seulement des champions bien coiffés et un public repu. Ils veulent « rendre les enjeux » : que le résultat d'un match engage à nouveau quelque chose de réel. Ils sont sincères, articulés, et ils ont un point : le tournoi *est* devenu une industrie, et Atlas *a* classé des affaires.
+**Mobile.** La Cinquième Manche veut transformer les concessions temporaires en dépendance permanente. Elle contrôle progressivement l’exploitation solaire, les réserves et les interconnexions. La fusion ne doit pas permettre de lui échapper : elle vise les accès, les contrats et les données de coopération du programme fictif Aube. Elle ne contrôle ni le Soleil ni une énergie infinie. Son projet menace le socle de services garanti par le Pacte.
 
 **Où ils se trouvent.** À l'intérieur d'Atlas, à tous les étages — un cadre du Bureau, des arbitres, des techniciens de la Cartographie, un ou deux commandants nationaux vieillissants. Jamais dans un pays : **la Cinquième Manche n'a pas de nationalité, et aucune routine, aucun dialogue, aucun visuel ne peut la rattacher à un pays réel, à une culture réelle, à une région du monde réelle.** C'est une règle dure, pas une préférence.
 
 **Figure visible : Hadran Ost, dit « le Recordman ».** Ancien commandant, détenteur d'un record de matchs remportés d'affilée, cassé par une disqualification qu'il juge injuste, reconverti au service du matériel d'Atlas. Poli, chaleureux, désarmant. Il ne recrute pas en menaçant : il recrute en donnant raison. Sa phrase : *« Tu as gagné. Et alors ? Qu'est-ce que ça a changé ? »*
 
-**Figure cachée.** **[Proposition]** Ost n'est pas la tête ; il est le visage. La tête est au Bureau, et son identité est le sujet du troisième acte (`monde.cinquieme.chef_identifie`). Deux candidats crédibles doivent rester ouverts jusque-là : un cadre du Bureau, et le Consortium Méridien lui-même — un commanditaire sans conviction, à qui un tournoi à enjeux réels rapporterait simplement davantage.
+**Figure cachée.** **Sélène Veyr**, directrice des concessions du Consortium Méridien, dirige la faction. C’est une vérité canon fixe ; le joueur la découvre progressivement. Ost en est le visage. Talvarec a couvert des décisions et porte sa responsabilité, mais il n’est pas un coupable interchangeable. Les routines ne changent jamais la tête de la faction entre deux parcours.
 
-**Méthodes.** Elles restent sportives et administratives, jamais militaires : matchs arrangés, dossiers d'arbitrage égarés, terrains sabotés avant homologation, forfaits provoqués, chantage au contrat, campagnes de commentaire. La faction ne tue personne, ne fait exploser aucune ville et ne lève aucune troupe. Sa victoire, ce n'est pas une invasion : c'est **la suspension de la Ronde**, et un monde qui, pour la première fois depuis le Pacte, ne sait plus comment se départager. Le jeu s'arrête exactement là (§ `08-narration-choix.md`, fin C).
+**Méthodes.** Équipes de façade, contrats, manipulation des calendriers et batailles de tournoi coordonnées permettent d’accumuler des concessions. Les sièges et les coalitions ont des effets durables sur les routes et les ressources. La faction ne massacre personne et ne fait pas exploser de ville. Sa menace est un monopole énergétique, pas une simple suspension sportive.
 
-**Ce que la Cinquième Manche n'est jamais :** un pays, une armée, une religion, une idéologie réelle, un groupe ethnique, une organisation réelle transposée. Jamais.
+**Ce que la Cinquième Manche n’est jamais :** une nation, une religion, un groupe ethnique ou une organisation réelle transposée. Ses commandants sont fictifs et sans drapeau.
 
-#### **[Proposition]** L'équipe d'Atlas : la Sélection Méridienne, dite « les Gris »
+#### La Sélection Méridienne — les Gris
 
 Atlas aligne officiellement sa propre équipe. Elle existe pour deux raisons que personne ne conteste : les **matchs d'exhibition** — une Dépêche a besoin d'un adversaire quand aucune délégation n'est disponible — et les **essais d'homologation**, où une pièce à l'essai (§3.2) doit être jouée par quelqu'un avant d'entrer au catalogue. Elle est financée par le Consortium Méridien, dont elle porte le nom sur le maillot. Que le sponsor de la Ronde ait son nom sur l'équipe de l'organisation n'a jamais paru étrange à personne, et c'est le premier indice.
 
@@ -199,7 +203,7 @@ Ses commandants sont des sans-drapeau (§3.1) ; **Hadran Ost** la dirige. Ses co
 
 **Ce qu'elle est dans la trame** (`08-narration-choix.md` §6). À l'acte I, un adversaire anodin : on la croise en exhibition, elle joue proprement, elle perd souvent. À l'acte II, c'est dans **son** dépôt que le matériel non homologué est retrouvé, et le Bureau classe l'affaire en disant qu'un dépôt d'essai contient forcément des pièces sans badge — exactement la confusion entre essai et non-homologué que la faction exploite (§3.2). À l'acte III, elle est **la faction sur le terrain** : l'équipe qui vient disputer la manche « à enjeux réels » à Port-Méridien, avec à ses côtés les nations retirées passées à la faction. C'est la forme sportive que prend une menace institutionnelle : la faction ne lève pas de troupes, elle a une équipe, et cette équipe joue avec des pièces qui trichent.
 
-**Ce que ça apporte, et ce que ça ne change pas.** Le joueur a un adversaire à l'acte III même s'il a bien joué et qu'aucune nation ne s'est retirée — sans elle, le dernier acte d'un bon parcours n'aurait personne à affronter. Le point culminant reste le coup de sifflet qui ne vient pas : la Sélection n'envahit rien, elle dispute un match, et le scandale est qu'elle le dispute avec du matériel non homologué. Les règles dures de ce paragraphe tiennent entièrement : l'équipe n'est pas un pays, n'a pas de culture, et ses commandants sont des sans-drapeau aux noms inventés. Elle rend le Consortium plus crédible comme tête cachée, sans trancher : un cadre du Bureau peut tout aussi bien l'avoir montée.
+**Ce que cela apporte.** La Sélection donne un adversaire à l’acte III même si aucune délégation ne rejoint la faction. La conclusion comporte une vraie bataille de tournoi pour préserver l’accès à Aube et son indépendance. L’équipe reste sans nationalité ; elle réemploie les familles d’unités et la géométrie commune. Ses doctrines et ses commandants la distinguent sans collection de modèles régionaux supplémentaires.
 
 **Dans les données.** Ce n'est pas une `Country` : une fiche pays porte un continent, un climat, un rival naturel et des voisins, et aucun n'a de sens ici. C'est un **code de camp à trois lettres**, `atl` — les nations gardent leur code ISO à deux lettres ; les trois lettres sont réservées aux camps sans drapeau —, un style de camp (`content/styles/atl.json`, gris et orange), des commandants dont Ost, et des scénarios qui lui donnent le catalogue à l'essai puis, à l'acte III, des pièces non homologuées. Le même code sert de **code de terrain à Port-Méridien**, qui n'appartient à aucune nation et n'en avait pas : la finale mondiale est un scénario `paysCode: 'atl'`, et ce qui s'y passe s'écrit sous `pays.atl.*`.
 
@@ -215,23 +219,23 @@ Les pays qui ne sont pas « phares » ont une qualification résumée en une sc�
 
 ### 4.2 Les phases continentales
 
-La Ronde progresse par continents ; **un continent = un acte** de la narration, et une traversée en compte **trois** (`08-narration-choix.md` §6). À chaque étape, le joueur choisit sa prochaine destination parmi deux ou trois pays hôtes. Un continent comporte trois à cinq étapes, se conclut par une **finale continentale**, et la Ronde se termine par la **finale mondiale** et la remise de l'Atlas d'Or.
+La Ronde propose deux ou trois destinations à chaque étape. Les trois actes suivent les droits du vainqueur, la découverte des concessions croisées et la défense d’Aube ; un acte n’est plus obligé de correspondre à un continent. Les finales régionales et continentales restent des rencontres possibles. Port-Méridien accueille l’enregistrement des résultats et des garanties finales.
 
-**[Proposition]** Ordre des actes indexé sur le pays de départ : on commence par son propre continent, on finit toujours par un continent qu'on n'a pas encore visité. La finale mondiale se dispute à Port-Méridien, terrain neutre — le seul terrain qui n'appartient à aucune nation, ce qui donne à l'acte III un décor propre.
+Le monde conserve 24 nations, dont 12 au premier plan de production, plus la faction adverse sans nationalité. Ce roster ne fixe pas le nombre de camps d’une rencontre : quatre au maximum. `17-aube.md` précise le parcours cible et les essais disponibles.
 
 ### 4.3 Le match
 
-Un match oppose deux équipes sur une carte du pays hôte, en **quatre manches**. Une manche est la division *sportive* du match — l'équivalent d'un quart-temps —, pas l'unité de temps du moteur : celle-ci est la **journée** (un tour de chaque camp, `04-gameplay.md` §1). Un match homologué dure `Scenario.limiteJournees` journées, découpées en quatre manches d'égale longueur ; c'est ce découpage qui donne son nom à la Cinquième Manche (§3.4). Conditions de victoire homologuées :
+Un match oppose deux coalitions regroupant jusqu’à quatre camps au total : 1v1, 2v1, 1v2, 1v3, 3v1 ou 2v2. Le règlement traditionnel parle de **quatre manches** ; les missions de campagne déclarent leur propre durée. Une manche est la division *sportive* du match — l'équivalent d'un quart-temps —, pas l'unité de temps du moteur : celle-ci est la **journée** (un tour de chaque camp, `04-gameplay.md` §1). La journée représente un cycle complet des camps actifs. Le découpage traditionnel explique le nom de la Cinquième Manche ; il ne force pas chaque mission à durer un multiple de quatre journées. Conditions de victoire homologuées :
 
 | Condition | Description | Usage |
 |---|---|---|
-| **Capture du QG** | Tenir le quartier général adverse pendant un tour complet | Condition par défaut, présente sur presque toutes les cartes |
-| **Mise hors jeu de l'équipe** | Toutes les unités adverses marquées et sorties du terrain | Toujours valide, rarement la voie la plus rapide |
+| **Capture du QG** | Atteindre le seuil moteur de capture des QG adverses requis ; voir `04-gameplay.md` | Victoire par défaut avec la mise hors jeu, sauf objectif exclusif déclaré |
+| **Mise hors jeu de l’équipe** | Toutes les unités des camps adverses requis sont hors jeu | Défaut ou objectif exclusif d’anéantissement, selon le scénario |
 | **Objectif spécial** | Objectif propre au terrain hôte : tenir trois cols, ouvrir une écluse, escorter un convoi de matériel, occuper le point haut au coup de sifflet | Signature mécanique du pays, définie dans sa fiche |
 | **Décision aux points** | Si les quatre manches s'achèvent sans conclusion (`limiteJournees` atteinte) : villes tenues, unités restantes, objectifs partiels. Formule exacte : `04-gameplay.md` §9.1 | Évite les parties infinies **[Proposition]** |
 | **Forfait** | Une équipe refuse de jouer ou est disqualifiée | Coûte plus cher qu'une défaite (Pacte, art. 4) |
 
-**Ce qu'un match n'est jamais :** une conquête, une invasion, une occupation, une libération. Un match gagné donne un droit sportif — une place, un titre, un point de classement — jamais un territoire, jamais une population, jamais une autorité sur un pays.
+**Ce qu'un match n'est jamais :** une conquête, une invasion, une occupation, une libération. Un match gagné donne un titre et des droits énergétiques limités ; jamais une population ni une autorité sur un pays. Le socle garanti reste hors des concessions.
 
 ### 4.4 Arbitrage, sanctions, tricherie
 
@@ -293,7 +297,7 @@ Entre deux étapes de la Ronde, la Régie diffuse la **Dépêche du jour** : une
 
 ### 5.1 Registre
 
-Sport de haut niveau, chaleureux, un peu cabot. Le modèle n'est pas le film de guerre, c'est la retransmission d'un grand tournoi : vestiaires, superstitions, entraîneurs, public, banderoles, interviews d'après-match. L'humour est **affectueux**, jamais moqueur envers une culture ; l'ironie se dirige vers Atlas, les sponsors, les commentateurs et les commandants eux-mêmes, jamais vers un peuple.
+Conflit stratégique sérieux joué sous forme de tournois : fronts, sièges, concessions et alliances ont un prix. Les vestiaires, commentateurs et rivalités conservent de la chaleur, sans réduire la menace à une plaisanterie. Les affrontements restent non sanglants. L'humour est **affectueux**, jamais moqueur envers une culture ; l'ironie se dirige vers Atlas, les sponsors, les commentateurs et les commandants eux-mêmes, jamais vers un peuple.
 
 **Longueur.** Une réplique tient en une à trois phrases. Une scène de choix tient en six à dix répliques. On ne fait jamais lire un paragraphe au joueur entre deux matchs.
 
@@ -301,10 +305,10 @@ Sport de haut niveau, chaleureux, un peu cabot. Le modèle n'est pas le film de 
 
 | Interdit | Imposé |
 |---|---|
-| ennemi | **adversaire**, concurrent, hôte, visiteur |
-| guerre, conflit, front | **match**, rencontre, manche, tournoi, Ronde |
-| bataille, combat (comme événement) | **match**, échange, duel (sportif) |
-| armée, troupes, soldats | **équipe**, sélection, effectif, joueurs |
+| ennemi désignant un peuple réel | **adversaire**, camp adverse ; « ennemi » peut désigner une équipe du conflit fictif |
+| guerre ou conflit historique réel | **guerre de tournoi**, conflit fictif, front, match, Ronde |
+| violence graphique | **bataille**, combat, échange et siège de tournoi sont autorisés sans violence explicite |
+| armée réelle identifiable | **équipe**, sélection, effectif ; vocabulaire tactique permis pour le matériel fictif |
 | tuer, mourir, mort, blessé, victime | **mettre hors jeu**, marquer, sortir du terrain |
 | détruire une unité | **mettre hors jeu**, retirer du terrain |
 | envahir, invasion, occuper, conquérir | **prendre le terrain**, tenir, capturer (un point), avancer |
@@ -315,7 +319,7 @@ Sport de haut niveau, chaleureux, un peu cabot. Le modèle n'est pas le film de 
 | frontière (au sens de dispute) | **ligne de terrain**, limite de carte |
 | religion, foi, culte, dieu | *(hors périmètre)* |
 | ennemi juré | **rival**, rivalité |
-| massacre, anéantir, écraser (un pays) | on peut « écraser » un adversaire **au score**, jamais un pays |
+| massacre, anéantir un peuple | **anéantissement de l’équipe** signifie mise hors jeu de toutes ses unités, jamais des équipages |
 
 **Zone grise assumée.** Les unités gardent leurs silhouettes de blindés, d'artillerie, d'hélicoptères : c'est la grammaire lisible du genre. On les nomme **matériel homologué** dans le texte officiel, et on les désigne par leur usage (blindé de percée, pièce de portée, appareil de reconnaissance) plutôt que par un lexique militaire. On ne les fait jamais « tirer sur » quelqu'un : elles **marquent**.
 
@@ -325,7 +329,7 @@ Pour que « personne ne meurt » soit une règle du monde et pas une pudeur d'é
 
 ### 5.4 Réglage de la trame de fond
 
-La menace est **institutionnelle**, jamais militaire. Un moment de tension se joue en salle des archives, en couloir de Bureau, en conférence de presse, sur un terrain saboté avant homologation — pas dans une explosion. Le point culminant de l'acte III n'est pas une bataille : c'est un **coup de sifflet qui ne vient pas**.
+La menace est stratégique et institutionnelle : concessions, fronts et sièges convergent vers une bataille de tournoi pour préserver Aube. Archives et conférences de presse rendent les responsabilités lisibles, sans remplacer le point culminant tactique. Le conflit reste non sanglant, sans explosion de réacteur ni atteinte aux équipages.
 
 ---
 
@@ -383,7 +387,7 @@ Un pays réel est représenté **comme on représente une équipe qu'on aime** :
 
 ### 7.3 Ce qu'on n'utilise jamais
 
-- Guerres, batailles, occupations, colonisations, indépendances, traités, quelle que soit l'époque.
+- Guerres, batailles, occupations, colonisations, indépendances et traités **réels**, quelle que soit l’époque. Les batailles de tournoi fictives constituent le jeu.
 - Politique : régimes, dirigeants, partis, élections, lois, mouvements sociaux, symboles politiques.
 - Religion : croyances, pratiques, lieux de culte, symboles religieux, calendrier religieux.
 - Conflits, tensions ou contentieux réels entre pays, y compris sous forme de plaisanterie ou d'allusion.
@@ -396,7 +400,7 @@ Un pays réel est représenté **comme on représente une équipe qu'on aime** :
 
 ### 7.4 Zones ouvertes à l'invention
 
-Les routines peuvent inventer librement : les **commandants** et leur entourage, les **noms de terrains** et de stades, les **surnoms d'équipes**, les **rituels d'avant-match**, les **objets fétiches**, les **anecdotes de Ronde passée**, les **figures d'Atlas secondaires** et tout ce qui touche à la **Cinquième Manche**. Toute invention est signalée dans la sortie JSON.
+Les routines peuvent inventer librement : les **commandants** et leur entourage, les **noms de terrains** et de stades, les **surnoms d'équipes**, les **rituels d'avant-match**, les **objets fétiches**, les **anecdotes de Ronde passée**, les **figures d'Atlas secondaires** et les rencontres secondaires de la **Cinquième Manche**, sans modifier son but, sa dirigeante ni les biographies établies dans `content/personnages.json`. Toute invention est signalée dans la sortie JSON.
 
 ### 7.5 Procédure en cas de doute
 
@@ -404,7 +408,7 @@ Les routines peuvent inventer librement : les **commandants** et leur entourage,
 2. Si la reformulation ne tient pas, **retirer l'élément** et produire sans lui.
 3. Si la production entière dépend de l'élément douteux, **ne pas produire** et signaler la mission en quarantaine avec le motif exact.
 
-Le doute n'est jamais tranché par la routine dans le sens de la production. La routine contrôle rejette d'office toute production contenant un mot de la liste § 5.2 (colonne interdite) ou un thème de la liste § 7.3.
+Le doute n'est jamais tranché par la routine dans le sens de la production. La routine contrôle applique le glossaire structuré et les interdits contextualisés de §5.2 et §7.3. Une recherche aveugle du mot « guerre » ne constitue plus un contrôle valide du nouveau canon.
 
 ---
 
@@ -473,7 +477,7 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 | `monde.cinquieme.contact` | booléen | trame | La faction a approché le joueur |
 | `monde.cinquieme.infiltre` | booléen | choix | Le joueur a feint d'accepter et joue double jeu |
 | `monde.cinquieme.demasquee` | booléen | trame | La faction est publiquement nommée |
-| `monde.cinquieme.chef_identifie` | booléen | trame | La tête au Bureau est identifiée |
+| `monde.cinquieme.chef_identifie` | booléen | trame | Sélène Veyr est identifiée par le joueur |
 | `monde.cinquieme.ralliements` | compteur 0–24 | trame | Nombre de pays passés à la faction (dérivé) |
 | `monde.tournoi.serie_propre` | compteur | moteur | Matchs gagnés sans exploiter une faute adverse |
 | `monde.carnet.pages_scellees` | compteur 0–10 | choix | Pages du carnet remises officiellement au Collège |
@@ -516,7 +520,7 @@ Types : **booléen** (posé une fois, jamais retiré), **compteur** (entier born
 4. Les organes d'Atlas : Bureau, Collège des arbitres, Régie, Intendance, Cartographie, et la **Commission d'homologation** (matériel de fondation, matériel à l'essai et son badge orange, admission au catalogue, retrait du catalogue).
 5. Les trois figures : **Osmin Talvarec**, **Nera Aldouin**, **Célestin Vantour** — et Vantour comme narrateur diégétique des conséquences.
 6. Le **Consortium Méridien**, sponsor apatride, porteur des choix de « sponsor douteux ».
-7. La faction **la Cinquième Manche**, son mobile, son signe, sa figure visible **Hadran Ost**, sa tête cachée au Bureau, et sa victoire définie comme *suspension de la Ronde* et non comme guerre.
+7. La faction **la Cinquième Manche**, son mobile, son signe, sa figure visible **Hadran Ost**, sa dirigeante Sélène Veyr, son projet de monopole énergétique et son offensive contre le programme fictif Aube.
 8. La **doctrine du marquage** (charges de marquage, unité marquée, escortée, revenant au match suivant) et le matériel non homologué comme scandale absolu du monde.
 9. Le **Pacte du Terrain** en quatre articles, dont « le refus de jouer se paie plus cher que la défaite ».
 10. Le format en **quatre manches**, la **décision aux points**, l'échelle de sanctions (rappel, carton, mise hors jeu du commandant, disqualification) et le **protêt** comme source de preuves.

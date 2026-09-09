@@ -4,8 +4,8 @@
   "cle": "au_char_lourd",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Char lourd\" in the colours and materials of Australie. Guiding line: Road train: very long chassis, tubular bull bars, red dust ochre up to the roof, and water cans hung everywhere. Paint the delivered base mesh of unite_char_lourd_base, unchanged: same geometry, same UV layout, same node names. Base colour #d4762a, own shadow #864111, edge highlight #ffd9ac, accents #2c3a4a, #f2e2c4. Materials to read at a glance: flat matte paint, painted steel plate, dusty rubber, heavy canvas and bare aluminium. Finish: dust-laden on the lower third and sun-faded. Add these ornaments as separate named nodes, and nothing else: a hanging water can, a row of strapped jerrycans, a whip antenna on a base spring and a spare wheel on the flank. Abstract decals only: dashed bands in #2c3a4a on the flanc. For colour-blind readability the socle carries dashed bands, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Char lourd » aux couleurs et aux matières du style « Australie ». Ligne directrice : Road train : châssis très longs, pare-buffles tubulaires, ocre de poussière rouge jusqu’au toit, et des bidons d’eau accrochés partout. Peindre la géométrie de base livrée unite_char_lourd_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #d4762a, ombre propre #864111, liseré d’arête #ffd9ac, accents #2c3a4a, #f2e2c4. Matières à lire d’un coup d’œil : peinture mate, tôle d’acier peinte, caoutchouc poussiéreux, toile épaisse et aluminium nu. Finition : chargée de poussière sur le tiers bas et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un bidon d’eau accroché, une rangée de jerricans sanglés, une antenne fouet sur ressort et une roue de secours sur le flanc. Décalcomanies abstraites seulement : des bandes pointillées en #2c3a4a sur la zone « flanc ». Pour la lisibilité sans couleur, le socle porte des bandes pointillées, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Char lourd\" in the colours and materials of Australie. Guiding line: Road train: very long chassis, tubular bull bars, red dust ochre up to the roof, and water cans hung everywhere. Paint the delivered base mesh of unite_char_lourd_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #d4762a, dark paint #864111, light paint #ffd9ac, accents #2c3a4a, #f2e2c4. Materials to read at a glance: flat matte paint, painted steel plate, dusty rubber, heavy canvas and bare aluminium. Finish: dust-laden on the lower third and sun-faded. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a hanging water can, a row of strapped jerrycans, a whip antenna on a base spring and a spare wheel on the flank. Abstract decals only: dashed bands in #2c3a4a on the flanc. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries dashed bands, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Char lourd » aux couleurs et aux matières du style « Australie ». Ligne directrice : Road train : châssis très longs, pare-buffles tubulaires, ocre de poussière rouge jusqu’au toit, et des bidons d’eau accrochés partout. Peindre la géométrie de base livrée unite_char_lourd_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #d4762a, peinture sombre #864111, peinture claire #ffd9ac, accents #2c3a4a, #f2e2c4. Matières à lire d’un coup d’œil : peinture mate, tôle d’acier peinte, caoutchouc poussiéreux, toile épaisse et aluminium nu. Finition : chargée de poussière sur le tiers bas et délavée par le soleil. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : un bidon d’eau accroché, une rangée de jerricans sanglés, une antenne fouet sur ressort et une roue de secours sur le flanc. Décalcomanies abstraites seulement : des bandes pointillées en #2c3a4a sur la zone « flanc ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte des bandes pointillées, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 10440,
-    "lod1": 3480,
-    "lod2": 1044,
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,7 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
     }
   ],
   "variantes": {
@@ -102,7 +102,38 @@
       "au"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +146,12 @@
       "corps",
       "base",
       "socle",
-      "ornement_bidon",
-      "ornement_jerrican",
-      "ornement_antenne",
-      "ornement_roue_de_secours"
+      "module_tourelle",
+      "module_canon_long"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +181,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

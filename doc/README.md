@@ -9,7 +9,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 | [02-architecture.md](02-architecture.md) | Couches, dépôt, serveur, cycle du contenu, déterminisme, tests | la technique |
 | [03-schemas.md](03-schemas.md) | Types TypeScript et exemples JSON de tout ce qui circule | les schémas |
 | [04-gameplay.md](04-gameplay.md) | Règles : tour, unités, terrains, dégâts, capture, commandants, mécaniques régionales | les règles |
-| [05-routines.md](05-routines.md) | Les quatre routines de contenu, leurs prompts bootstrap, endpoints, bornes, administration ; le récapitulatif des sept tâches planifiées | le cerveau |
+| [05-routines.md](05-routines.md) | Les cinq métiers de contenu, prompts v2, contrat GET/POST/PUT/PATCH/DELETE, bornes et administration | le cerveau |
 | [06-pays-de-depart.md](06-pays-de-depart.md) | Les 24 nations, leurs commandants, leur rôle de relation puis de départ débloqué | le contenu pays |
 | [07-france-regions.md](07-france-regions.md) | Le tour des 18 régions de France et leurs mécaniques | le contenu régions |
 | [08-narration-choix.md](08-narration-choix.md) | Flags, carnet de voyage, réputation, trois actes, fins | la narration |
@@ -17,6 +17,7 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 | [10-rendu-3d.md](10-rendu-3d.md) | La 3D three.js : caméra, terrain et splat map, éclairage par saison, phase et météo, unités et masque d'équipe, surbrillances, performance, HUD HTML, interface `Rendu` — la seule peau depuis le retrait du rendu vectoriel | le rendu 3D |
 | [11-assets-spec.md](11-assets-spec.md) | Le format `AssetSpec` donné au générateur externe : échelle, pivot, budgets, textures et masque d'équipe, variantes, animations, glTF 2.0 et nommage, interdits, et le contrôle des livraisons | les assets |
 | [16-realisme.md](16-realisme.md) | Le plan vers des modèles réalistes : l'arbitrage « réaliste, ton léger et cartoon », le lot moteur (environnement, ombres, occlusion, vignettage), le lot des vrais modèles (préalables du chargeur, pilote, priorité 1, kits), le lot animation, jalons et risques | le plan de réalisme |
+| [17-aube.md](17-aube.md) | Canon énergétique : 24 nations dont 12 au premier plan, faction supplémentaire, biographies, douze étapes cibles et cinq essais distincts | la synthèse Aube, sous le brief et les documents propriétaires |
 | [12-au-dela-advance-wars.md](12-au-dela-advance-wars.md) | Réserve de propositions classées par coût : relief jouable, rejeux et défis, multijoueur asynchrone, draft, objectifs variés, génie, éditeur de cartes certifié, accessibilité… **aucune n'est du canon** | — |
 | [13-campagne.md](13-campagne.md) | Le budget d'heures chiffré et la réponse à « 80 h, réalisable ? », la structure d'un parcours, les neuf gabarits de mission, les fils secondaires et leurs conséquences bornées, les deux modes, les dix généraux secrets, le système de déblocage, la sauvegarde de campagne | la campagne |
 | [14-secrets.md](14-secrets.md) | Registre des treize easter eggs : où, comment, ce que ça débloque, le flag `monde.secret.<nom>`. **Jamais servi aux routines, exclu de `/api/canon`, jamais généré** | les secrets |
@@ -29,3 +30,5 @@ Ordre de lecture conseillé. Le canon est `../BRIEF.md` ; en cas de désaccord e
 Les spécifications d'assets produites depuis le canon vivent à la racine du dépôt, dans `../assets/specs/` — 540 fichiers JSON à l'origine, **681** depuis le catalogue 4 du 6 septembre 2026 (14 unités, 336 kits, 205 bâtiments ; `11-assets-spec.md` §8), **947** avec le catalogue 5 et le port, **972** avec le chasseur furtif du catalogue 6 (7 septembre 2026), un par asset, versionnés, régénérés par `npx tsx scripts/generer-specs-assets.ts` et vérifiés par `--verifier`.
 
 Le plan d'étapes est dans `../PLAN.md`, et l'état réel du dépôt — ce qui est fait, ce qui manque, par quoi continuer — dans `../CLAUDE.md`.
+
+Depuis le 9 septembre 2026, lire `17-aube.md` après la bible : la guerre de tournoi énergétique remplace le canon sans enjeu de conflit. `content/personnages.json` contient les biographies versionnées. Les douze étapes constituent une cible ; les cinq scénarios Aube sont des essais brouillons, les quatre entraînements sont conservés. Le contrat opérationnel des routines est servi par `GET /api/routines/contrat` ; `refonte/routines.md` explique la version 2.

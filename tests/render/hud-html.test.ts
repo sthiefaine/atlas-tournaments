@@ -1604,3 +1604,51 @@ test('le bouton « unité suivante » n’existe que si le jeu sait y répondre'
   assert.equal(appels, 1, 'le clic va au jeu, le HUD ne décide de rien');
   avec.demonter();
 });
+
+test('une unité alliée ne promet pas une zone de danger et annonce son autonomie', () => {
+  const etat = partie();
+  etat.reglages.equipes = [[0, 1]];
+  const unite = etat.unites.find((u) => u.camp === 1)!;
+  const h = hudSur(() => vueDe(etat, unite), { largeur: 1400, hauteur: 900 });
+  const html = h.slots.get('inspection')!.innerHTML;
+  assert.doesNotMatch(html, /hud\.danger_astuce/);
+  assert.match(html, /hud\.unite_alliee/);
+  h.demonter();
+});
+
+test('le tour et la victoire d’une alliée sont présentés comme ceux de notre équipe', () => {
+  const etat = partie();
+  etat.reglages.equipes = [[0, 1]];
+  etat.campCourant = 1;
+  const attente = hudSur(() => ({ ...vueDe(etat, { x: 0, y: 0 }), attenteIa: true }));
+  assert.match(attente.slots.get('attente')!.innerHTML, /hud\.tour_allie/);
+  assert.doesNotMatch(attente.slots.get('attente')!.innerHTML, /hud\.tour_adverse/);
+  attente.demonter();
+  etat.partie = { ...etat.partie, terminee: true, vainqueur: 1, nul: false };
+  const fin = hudSur(() => ({ ...vueDe(etat, { x: 0, y: 0 }), phase: 'fin' }));
+  assert.match(fin.slots.get('fin')!.innerHTML, /combat\.manche_gagnee/);
+  fin.demonter();
+});
+
+test('une visée devenue alliée ne conserve aucune prévision de dégâts', () => {
+  const etat = surGrille(['PPP', 'PPP'], [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 1, type: 'infanterie', x: 1, y: 0 },
+  ]);
+  etat.reglages.equipes = [[0, 1]];
+  const attaquant = etat.unites.find((u) => u.camp === 0)!;
+  const { conteneur, hud } = hudEnVisee(etat, {
+    attaquantId: attaquant.id, depuis: { x: 0, y: 0 }, cibles: [{ x: 1, y: 0 }], cible: { x: 1, y: 0 },
+  });
+  assert.equal(emplacements(conteneur).get('duel')!.innerHTML, '');
+  hud.demonter();
+});
+
+test('le mode à une journée de prévision ne montre pas la deuxième météo future', () => {
+  const etat = partie();
+  etat.reglages.previsionJournees = 1;
+  const h = hudSur(() => vueDe(etat, { x: 0, y: 0 }));
+  const html = h.slots.get('bulletin')!.innerHTML;
+  assert.equal((html.match(/class="meteo-case"/g) ?? []).length, 2, 'journée présente et une seule prévision');
+  h.demonter();
+});

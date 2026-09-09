@@ -11,7 +11,8 @@ import { erreur, json, lireJson } from '@/serveur/reponses';
 import { routeRoutine } from '@/serveur/routes';
 import { db } from '@/db/client';
 import { routineMissions } from '@/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
+import { validerAnnotations } from '../annotations';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -49,6 +50,22 @@ export async function PATCH(
   requete: Request,
   contexte: { params: Promise<{ id: string }> },
 ): Promise<Response> {
+  return annoter(requete, contexte, false);
+}
+
+/** Remplace les seules annotations ; le contexte canonique reste intact. */
+export async function PUT(
+  requete: Request,
+  contexte: { params: Promise<{ id: string }> },
+): Promise<Response> {
+  return annoter(requete, contexte, true);
+}
+
+async function annoter(
+  requete: Request,
+  contexte: { params: Promise<{ id: string }> },
+  remplacement: boolean,
+): Promise<Response> {
   const { id } = await contexte.params;
   return routeRoutine(async (req) => {
     const ligne = await lireMission(id);
@@ -57,19 +74,15 @@ export async function PATCH(
 
     const corps = await lireJson(req);
     if (!corps.ok) return corps.reponse;
-    if (typeof corps.valeur !== 'object' || corps.valeur === null) {
-      return erreur('charge_invalide', 400, 'un objet est attendu');
+    const valide = validerAnnotations(corps.valeur, remplacement);
+    if (!valide.ok) {
+      return erreur('annotations_invalides', 422, 'annotations refusées', valide.chemins);
     }
-    const entrant = corps.valeur as Record<string, unknown>;
-    const permis = ['commentaire', 'note', 'confiance'];
-    const inconnus = Object.keys(entrant).filter((c) => !permis.includes(c));
-    if (inconnus.length > 0) {
-      // Un PATCH ne porte jamais de contenu : c'est la soumission qui écrit.
-      return erreur('champ_inconnu', 422, 'seuls commentaire, note et confiance sont acceptés', inconnus);
-    }
-    await db().update(routineMissions)
-      .set({ contexte: sql`${routineMissions.contexte} || ${JSON.stringify(entrant)}::jsonb` })
-      .where(eq(routineMissions.id, id));
+    const misesAJour = await db().update(routineMissions)
+      .set({ contexte: sql`${routineMissions.contexte} || ${JSON.stringify(valide.valeur)}::jsonb` })
+      .where(and(eq(routineMissions.id, id), eq(routineMissions.statut, 'ouverte')))
+      .returning({ id: routineMissions.id });
+    if (misesAJour.length === 0) return erreur('mission_close', 409, 'mission fermée pendant la mise à jour');
     return json({ ok: true });
   })(requete);
 }

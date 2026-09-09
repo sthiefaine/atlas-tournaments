@@ -4,8 +4,8 @@
   "cle": "na_bombardier",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Bombardier\" in the colours and materials of Namibie. Guiding line: Mist grey over dune ochre: paint sanded to a full matte, low surfaces, no reflection, nothing that catches the light. Paint the delivered base mesh of unite_bombardier_base, unchanged: same geometry, same UV layout, same node names. Base colour #c98b3f, own shadow #7d4f14, edge highlight #f4dcb6, accents #8fa3ae, #2c3a4a. Materials to read at a glance: flat matte paint, dusty rubber, heavy canvas and painted steel plate. Finish: sand-blasted to a dead matte and fully matte. Add these ornaments as separate named nodes, and nothing else: sand ladders on the flank, a folding sand anchor and a felt-covered flask. Abstract decals only: a sawtooth line in #8fa3ae on the capot. For colour-blind readability the socle carries a sawtooth line, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Bombardier » aux couleurs et aux matières du style « Namibie ». Ligne directrice : Gris de brume sur ocre de dune : peinture sablée jusqu’au mat complet, surfaces basses, aucun reflet, rien qui accroche la lumière. Peindre la géométrie de base livrée unite_bombardier_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #c98b3f, ombre propre #7d4f14, liseré d’arête #f4dcb6, accents #8fa3ae, #2c3a4a. Matières à lire d’un coup d’œil : peinture mate, caoutchouc poussiéreux, toile épaisse et tôle d’acier peinte. Finition : sablée jusqu’au mat complet et entièrement mate. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : des plaques de désensablement sur le flanc, une ancre de sable repliable et une gourde habillée de feutre. Décalcomanies abstraites seulement : une ligne en dents de scie en #8fa3ae sur la zone « capot ». Pour la lisibilité sans couleur, le socle porte une ligne en dents de scie, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Bombardier\" in the colours and materials of Namibie. Guiding line: Mist grey over dune ochre: paint sanded to a full matte, low surfaces, no reflection, nothing that catches the light. Paint the delivered base mesh of unite_bombardier_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #c98b3f, dark paint #7d4f14, light paint #f4dcb6, accents #8fa3ae, #2c3a4a. Materials to read at a glance: flat matte paint, dusty rubber, heavy canvas and painted steel plate. Finish: sand-blasted to a dead matte and fully matte. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: sand ladders on the flank, a folding sand anchor and a felt-covered flask. Abstract decals only: a sawtooth line in #8fa3ae on the capot. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries a sawtooth line, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Bombardier » aux couleurs et aux matières du style « Namibie ». Ligne directrice : Gris de brume sur ocre de dune : peinture sablée jusqu’au mat complet, surfaces basses, aucun reflet, rien qui accroche la lumière. Peindre la géométrie de base livrée unite_bombardier_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #c98b3f, peinture sombre #7d4f14, peinture claire #f4dcb6, accents #8fa3ae, #2c3a4a. Matières à lire d’un coup d’œil : peinture mate, caoutchouc poussiéreux, toile épaisse et tôle d’acier peinte. Finition : sablée jusqu’au mat complet et entièrement mate. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : des plaques de désensablement sur le flanc, une ancre de sable repliable et une gourde habillée de feutre. Décalcomanies abstraites seulement : une ligne en dents de scie en #8fa3ae sur la zone « capot ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte une ligne en dents de scie, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": false
   },
   "budget": {
-    "lod0": 10440,
-    "lod1": 3480,
-    "lod2": 1044,
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,14 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
     }
   ],
   "variantes": {
@@ -102,7 +109,38 @@
       "na"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,13 +153,11 @@
       "corps",
       "base",
       "socle",
-      "ornement_plaque_de_desensablement",
-      "ornement_ancre_de_sable",
-      "ornement_gourde"
+      "module_nacelle"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -151,7 +187,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

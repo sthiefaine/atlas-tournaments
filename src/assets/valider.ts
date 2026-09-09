@@ -105,7 +105,7 @@ function dimension(ctx: Contexte, v: unknown, chemin: string): Dimension | undef
   const o = objet(ctx, v, chemin, ['cible', 'tolerance']);
   if (!o || !requis(ctx, o, chemin, ['cible', 'tolerance'])) return undefined;
   const cible = nombre(ctx, o['cible'], sous(chemin, 'cible'), { min: 0.02, max: 4 });
-  const tolerance = nombre(ctx, o['tolerance'], sous(chemin, 'tolerance'), { min: 0.005, max: 0.5 });
+  const tolerance = nombre(ctx, o['tolerance'], sous(chemin, 'tolerance'), { min: 0, max: 0.5 });
   if (cible === undefined || tolerance === undefined) return undefined;
   if (tolerance > cible) {
     ctx.faute(chemin, 'une tolérance plus grande que la cible ne contrôle plus rien');
@@ -304,7 +304,7 @@ function verification(ctx: Contexte, v: unknown, chemin: string): Verification |
     sansDoublon(ctx, controles, cControles);
   }
   if (!controles.includes('format')) ctx.faute(cControles, 'le contrôle de format est toujours exigé');
-  const toleranceAabb = nombre(ctx, o['toleranceAabb'], sous(chemin, 'toleranceAabb'), { min: 0.02, max: 0.35 });
+  const toleranceAabb = nombre(ctx, o['toleranceAabb'], sous(chemin, 'toleranceAabb'), { min: 0, max: 0.35 });
   const cLod = sous(chemin, 'lodRequis');
   const lodRequis: NiveauLod[] = [];
   const brutLod: unknown = o['lodRequis'];

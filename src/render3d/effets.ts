@@ -32,6 +32,12 @@ export interface SpecEffet {
   genre: GenreEffet;
   /** Position monde de départ. */
   position: { x: number; y: number; z: number };
+  /** Départ différé, inclus dans la vie de la poignée. */
+  retard?: number;
+  /** Arrivée d'un projectile ; interpolation déterministe indépendante du pas. */
+  destination?: { x: number; y: number; z: number };
+  /** Hauteur de la parabole au milieu du trajet. */
+  arc?: number;
   /** Durée de vie en millisecondes ; à 0, l'effet est retiré au premier pas. */
   duree: number;
   /** Teinte, en CSS ; le défaut dépend du genre. */
@@ -179,6 +185,10 @@ interface Place {
   montee: number;
   gravite: number;
   vitesse: THREE.Vector3;
+  origine: THREE.Vector3;
+  destination: THREE.Vector3 | null;
+  arc: number;
+  retard: number;
 }
 
 /** Monte le pool. `doc` ne sert qu'à dessiner les textures. */
@@ -228,6 +238,7 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
     return {
       objet, materiau, plat, vivant: false, generation: 0, naissance: 0, ecoule: 0, duree: 1,
       taille: 1, tailleFin: 1, opacite: 1, montee: 0, gravite: 0, vitesse: new THREE.Vector3(),
+      origine: new THREE.Vector3(), destination: null, arc: 0, retard: 0,
     };
   }
 
@@ -273,6 +284,10 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
     p.generation += 1;
     p.naissance = compteur;
     p.ecoule = 0;
+    p.retard = Math.max(0, spec.retard ?? 0);
+    p.origine.set(spec.position.x, spec.position.y, spec.position.z);
+    p.destination = spec.destination ? new THREE.Vector3(spec.destination.x, spec.destination.y, spec.destination.z) : null;
+    p.arc = Math.max(0, spec.arc ?? 0);
     p.duree = Math.max(0, spec.duree);
     p.taille = spec.taille ?? defaut.taille;
     p.tailleFin = spec.tailleFin ?? p.taille;
@@ -291,7 +306,7 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
     }
     p.materiau.color.set(spec.couleur ?? defaut.couleur);
     p.objet.position.set(spec.position.x, spec.position.y, spec.position.z);
-    p.objet.visible = true;
+    p.objet.visible = p.retard === 0;
     poser(p, 0);
     const generation = p.generation;
     return {
@@ -310,14 +325,25 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
     for (const pool of [sprites, plats]) {
       for (const p of pool) {
         if (!p.vivant) continue;
+        const avant = Math.max(0, p.ecoule - p.retard);
         p.ecoule += Math.max(0, ms);
-        if (p.duree <= 0 || p.ecoule >= p.duree) {
+        if (p.ecoule < p.retard) { encore = true; continue; }
+        const age = p.ecoule - p.retard;
+        if (p.duree <= 0 || age >= p.duree) {
           eteindre(p);
           continue;
         }
-        if (p.gravite !== 0) p.vitesse.y -= p.gravite * dt;
-        if (p.vitesse.lengthSq() > 0) p.objet.position.addScaledVector(p.vitesse, dt);
-        poser(p, p.ecoule / p.duree);
+        p.objet.visible = true;
+        const t = age / p.duree;
+        if (p.destination) {
+          p.objet.position.lerpVectors(p.origine, p.destination, t);
+          p.objet.position.y += 4 * p.arc * t * (1 - t);
+        } else {
+          const pas = Math.min(dt, (age - avant) / 1000);
+          if (p.gravite !== 0) p.vitesse.y -= p.gravite * pas;
+          if (p.vitesse.lengthSq() > 0) p.objet.position.addScaledVector(p.vitesse, pas);
+        }
+        poser(p, t);
         encore = true;
       }
     }
@@ -364,4 +390,61 @@ export function creerEffets(doc: Document, capacite = CAPACITE): Effets {
       geoPlat.dispose();
     },
   };
+}
+
+
+export type ProfilTir = 'marqueur' | 'rafale' | 'missile' | 'cloche';
+type PointEffet = { x: number; y: number; z: number };
+
+/** Une poignée pour couper tous les éléments d'un même geste, même différés. */
+function ensembleEffets(effets: Effet[]): Effet {
+  return {
+    get vivant() { return effets.some((e) => e.vivant); },
+    liberer() { for (const e of effets) e.liberer(); },
+  };
+}
+
+/** Impact de simulation : signal coloré et poussière claire, sans débris. */
+export function emettreImpact(effets: Effets, position: PointEffet, couleur = '#8ce6ff'): Effet {
+  return ensembleEffets([
+    effets.emettre({ genre: 'anneau', position, couleur, duree: 260, taille: 0.1, tailleFin: 0.48, opacite: 0.7 }),
+    effets.emettre({ genre: 'poussiere', position, duree: 320, taille: 0.12, tailleFin: 0.36,
+      vitesse: { x: 0, y: 0.18, z: 0 }, opacite: 0.4 }),
+  ]);
+}
+
+/** Effets communs à toutes les nations et aux figurines procédurales comme aux GLB.
+ * Aucun effet à l'arrivée : l'animation encaisser le déclenche à son instant exact.
+ * Les points de traînée sont prévus une fois et restent dans le pool borné.
+ */
+export function emettreTir(effets: Effets, spec: {
+  profil: ProfilTir; depuis: PointEffet; vers: PointEffet; duree: number; couleur?: string;
+}): Effet {
+  const couleur = spec.couleur ?? '#8ce6ff';
+  const duree = Math.max(1, spec.duree);
+  const arc = spec.profil === 'cloche' ? Math.min(1.6, Math.hypot(spec.vers.x - spec.depuis.x, spec.vers.z - spec.depuis.z) * 0.18)
+    : spec.profil === 'missile' ? 0.18 : 0;
+  const resultats: Effet[] = [];
+  const nombre = spec.profil === 'rafale' ? 3 : 1;
+  for (let i = 0; i < nombre; i++) {
+    const retard = i * duree * 0.16;
+    resultats.push(effets.emettre({ genre: 'etincelle', position: spec.depuis, destination: spec.vers,
+      arc, retard, duree: duree - retard, couleur, taille: spec.profil === 'missile' ? 0.16 : 0.09, opacite: 1 }));
+    resultats.push(effets.emettre({ genre: 'eclair', position: spec.depuis, retard, duree: Math.min(90, duree * 0.2),
+      couleur, taille: 0.22, tailleFin: 0.08, opacite: 0.8 }));
+  }
+  if (spec.profil === 'missile' || spec.profil === 'cloche') {
+    for (let i = 1; i <= 8; i++) {
+      const t = i / 10;
+      const position = {
+        x: spec.depuis.x + (spec.vers.x - spec.depuis.x) * t,
+        y: spec.depuis.y + (spec.vers.y - spec.depuis.y) * t + 4 * arc * t * (1 - t),
+        z: spec.depuis.z + (spec.vers.z - spec.depuis.z) * t,
+      };
+      resultats.push(effets.emettre({ genre: 'poussiere', position, retard: duree * t,
+        duree: Math.min(240, duree * (1 - t)), taille: 0.07, tailleFin: 0.16,
+        opacite: 0.3, couleur: '#d8e6e9', montee: 0 }));
+    }
+  }
+  return ensembleEffets(resultats);
 }

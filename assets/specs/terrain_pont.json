@@ -4,8 +4,8 @@
   "cle": "pont",
   "priorite": 1,
   "description": {
-    "en": "A one-lane deck bridge section, exactly one metre long, that repeats to span any width: timber deck planks on steel stringers, low tubular side rails, bolted plates at the joints, and abutment blocks at each end. It is the only crossing heavy vehicles get, so it must look solid, functional and slightly worn at the wheel line. Grid tile \"N\", defence 0 of 4. The patch is exactly one metre square in plan and tiles seamlessly with itself after a quarter turn, so the renderer can rotate it to break repetition. Deliver the mesh flat: the height relief comes from the terrain mesh, not from you.",
-    "fr": "Un tronçon de pont à une voie, long d’exactement un mètre, qui se répète pour franchir n’importe quelle largeur : platelage de madriers sur longerons d’acier, garde-corps tubulaires bas, plaques boulonnées aux jonctions, culées à chaque extrémité. C’est le seul franchissement des véhicules lourds : il doit avoir l’air solide, fonctionnel et légèrement usé à la ligne des roues. Caractère de grille « N », défense 0 sur 4. La plaque fait exactement un mètre carré en plan et se raccorde avec elle-même après un quart de tour, pour que le rendu la fasse tourner et casse la répétition. Livrer la maille à plat : le relief vient du maillage de terrain, pas de vous."
+    "en": "A one-lane deck bridge section, exactly one metre long, that repeats to span any width: timber deck planks on steel stringers, low tubular side rails, bolted plates at the joints, and abutment blocks at each end. It is the only crossing heavy vehicles get, so it must look solid, functional and slightly worn at the wheel line. Grid tile \"N\", defence 0 of 4. The patch is exactly one metre square in plan with directional connections; rotate only together with its road, bridge or shoreline axis. Build the volume described above within the stated dimensions.",
+    "fr": "Un tronçon de pont à une voie, long d’exactement un mètre, qui se répète pour franchir n’importe quelle largeur : platelage de madriers sur longerons d’acier, garde-corps tubulaires bas, plaques boulonnées aux jonctions, culées à chaque extrémité. C’est le seul franchissement des véhicules lourds : il doit avoir l’air solide, fonctionnel et légèrement usé à la ligne des roues. Caractère de grille « N », défense 0 sur 4. Exactement un mètre carré en plan. Raccords directionnels : respecter l’axe de la voie ou du rivage. Construire le volume décrit dans les dimensions imposées."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -32,7 +32,7 @@
     "caseEnMetres": 1,
     "x": {
       "cible": 1,
-      "tolerance": 0.04
+      "tolerance": 0
     },
     "y": {
       "cible": 0.32,
@@ -40,7 +40,7 @@
     },
     "z": {
       "cible": 1,
-      "tolerance": 0.04
+      "tolerance": 0
     }
   },
   "pivot": {
@@ -143,9 +143,10 @@
       "noeuds",
       "materiaux",
       "echelle",
-      "budget"
+      "budget",
+      "textures"
     ],
-    "toleranceAabb": 0.1,
+    "toleranceAabb": 0,
     "lodRequis": [
       0,
       1

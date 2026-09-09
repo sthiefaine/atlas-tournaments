@@ -1,0 +1,104 @@
+{
+  "cle": "aube_batteries_2v1",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_batteries_2v1",
+  "nom": "Aube · Le détour des batteries · 2 contre 1",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_detour_des_batteries",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 4,
+    "nuit": 2
+  },
+  "catalogueVersion": 6,
+  "equipes": [
+    [
+      0,
+      1
+    ],
+    [
+      2
+    ]
+  ],
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "revenusParBatiment": 500,
+  "brouillard": false,
+  "limiteJournees": 45,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Tomas tient le passage sud avec son propre budget. Nous prenons le nord. Hadran défend seul les réserves : prendre son QG ou mettre son équipe entière hors jeu nous donne le contrat de transport.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les deux délégations ont ouvert la route. Les réserves restent disponibles pour la coopération Aube.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "fondsDepartParCamp": {
+    "0": 4000,
+    "1": 3000,
+    "2": 9000
+  }
+}

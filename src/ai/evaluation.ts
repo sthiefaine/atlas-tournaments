@@ -1,3 +1,4 @@
+import { sontAllies } from '../engine/equipes';
 /**
  * Les calculs communs aux stratégies : estimation de dégâts sans consommer le
  * flux de combat, carte de distance vers les objectifs, menace subie, et choix
@@ -40,7 +41,7 @@ export const BROUILLARD_HONNETE = true;
 /** Adversaires que ce camp connaît : ceux qu'il voit, ou tous si l'on triche. */
 export function adversairesConnus(etat: EtatPartie, cat: Catalogue, camp: CampId): Unite[] {
   if (BROUILLARD_HONNETE) return adversesVisibles(etat, cat, camp);
-  return etat.unites.filter((u) => u.camp !== camp && !u.dansTransport);
+  return etat.unites.filter((u) => !sontAllies(etat, u.camp, camp) && !u.dansTransport);
 }
 
 /**
@@ -143,7 +144,7 @@ export function objectifsCapture(etat: EtatPartie, cat: Catalogue, camp: CampId)
     for (let x = 0; x < etat.largeur; x += 1) {
       const terrain = terrainBrut(etat, cat, { x, y });
       if (terrain === null || !cat.terrains[terrain]?.capturable) continue;
-      if (etat.proprietaires[cleCase({ x, y })] === camp) continue;
+      if (sontAllies(etat, etat.proprietaires[cleCase({ x, y })], camp)) continue;
       cases.push({ x, y });
     }
   }
@@ -273,14 +274,14 @@ export const TOURS_POTENTIEL = 2;
 export function mixPotentiel(etat: EtatPartie, cat: Catalogue, camp: CampId): Record<CleUnite, number> {
   const mix: Record<CleUnite, number> = {};
   for (const adverse of etat.camps) {
-    if (adverse.id === camp || adverse.elimine) continue;
+    if (sontAllies(etat, adverse.id, camp) || adverse.elimine) continue;
     const revenus = batimentsDe(etat, adverse.id).length * etat.reglages.revenusParBatiment
       * multiplicateurFonds(etat, adverse.id);
     const portee = adverse.fonds + TOURS_POTENTIEL * revenus;
     for (const k of producteursDe(etat, cat, adverse.id)) {
       const terrain = terrainLogique(etat, cat, depuisCle(k));
       if (terrain === null) continue;
-      const armees = produitesPar(cat, terrain).filter((cle) => estArmee(cat, cle));
+      const armees = produitesPar(cat, terrain, etat, adverse.id).filter((cle) => estArmee(cat, cle));
       if (armees.length === 0) continue;
       for (const cle of armees) {
         const t = cat.unites[cle]!;
@@ -301,7 +302,7 @@ export function usinesLibres(etat: EtatPartie, cat: Catalogue, camp: CampId): Ca
     })
     .filter((c) => {
       const terrain = terrainLogique(etat, cat, c);
-      if (terrain === null || produitesPar(cat, terrain).length === 0) return false;
+      if (terrain === null || produitesPar(cat, terrain, etat, camp).length === 0) return false;
       return uniteSur(etat, c) === undefined;
     });
 }
@@ -408,7 +409,7 @@ export function besoinTransport(
     .map(depuisCle)
     .find((c) => {
       const terrain = terrainLogique(etat, cat, c);
-      return terrain !== null && produitesPar(cat, terrain).includes(cle);
+      return terrain !== null && produitesPar(cat, terrain, etat, camp).includes(cle);
     });
   let clients = 0;
   for (const a of etat.unites) {

@@ -4,8 +4,8 @@
   "cle": "gr_furtif",
   "priorite": 2,
   "description": {
-    "en": "National kit for \"Chasseur furtif\" in the colours and materials of Grèce. Guiding line: Painted caique timber: strong blue over pale wood, coiled ropes, rolled tarpaulins, and paint reapplied every year over the same flake. Paint the delivered base mesh of unite_furtif_base, unchanged: same geometry, same UV layout, same node names. Base colour #2e78bf, own shadow #17456f, edge highlight #dcecf8, accents #f7f9fb, #d8c9a0. Materials to read at a glance: planed timber, high-gloss paint, braided rope, heavy canvas and polished brass fittings. Finish: sun-faded and glossy. Add these ornaments as separate named nodes, and nothing else: a coil of rope on a cleat, a rolled tarpaulin along the fender, a small hooded lantern and a knotted net stowed on the deck. Abstract decals only: a wave frieze in #f7f9fb on the flanc. For colour-blind readability the socle carries a wave frieze, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Chasseur furtif » aux couleurs et aux matières du style « Grèce ». Ligne directrice : Bois peint de caïque : bleu franc sur bois clair, cordages lovés, bâches roulées, et de la peinture repassée tous les ans sur la même écaille. Peindre la géométrie de base livrée unite_furtif_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #2e78bf, ombre propre #17456f, liseré d’arête #dcecf8, accents #f7f9fb, #d8c9a0. Matières à lire d’un coup d’œil : bois raboté, peinture brillante, cordage tressé, toile épaisse et garnitures de laiton poli. Finition : délavée par le soleil et brillante. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une corde lovée sur un taquet, une bâche roulée le long du garde-boue, une lanterne à capuchon et un filet noué rangé sur le plateau. Décalcomanies abstraites seulement : une frise de vagues en #f7f9fb sur la zone « flanc ». Pour la lisibilité sans couleur, le socle porte une frise de vagues, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Chasseur furtif\" in the colours and materials of Grèce. Guiding line: Painted caique timber: strong blue over pale wood, coiled ropes, rolled tarpaulins, and paint reapplied every year over the same flake. Paint the delivered base mesh of unite_furtif_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #2e78bf, dark paint #17456f, light paint #dcecf8, accents #f7f9fb, #d8c9a0. Materials to read at a glance: planed timber, high-gloss paint, braided rope, heavy canvas and polished brass fittings. Finish: sun-faded and glossy. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a coil of rope on a cleat, a rolled tarpaulin along the fender, a small hooded lantern and a knotted net stowed on the deck. Abstract decals only: a wave frieze in #f7f9fb on the flanc. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries a wave frieze, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Chasseur furtif » aux couleurs et aux matières du style « Grèce ». Ligne directrice : Bois peint de caïque : bleu franc sur bois clair, cordages lovés, bâches roulées, et de la peinture repassée tous les ans sur la même écaille. Peindre la géométrie de base livrée unite_furtif_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #2e78bf, peinture sombre #17456f, peinture claire #dcecf8, accents #f7f9fb, #d8c9a0. Matières à lire d’un coup d’œil : bois raboté, peinture brillante, cordage tressé, toile épaisse et garnitures de laiton poli. Finition : délavée par le soleil et brillante. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : une corde lovée sur un taquet, une bâche roulée le long du garde-boue, une lanterne à capuchon et un filet noué rangé sur le plateau. Décalcomanies abstraites seulement : une frise de vagues en #f7f9fb sur la zone « flanc ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte une frise de vagues, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": false
   },
   "budget": {
-    "lod0": 10440,
-    "lod1": 3480,
-    "lod2": 1044,
+    "lod0": 9000,
+    "lod1": 3000,
+    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,7 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
     }
   ],
   "variantes": {
@@ -102,7 +102,38 @@
       "gr"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +146,11 @@
       "corps",
       "base",
       "socle",
-      "ornement_corde_lovee",
-      "ornement_bache_roulee",
-      "ornement_lanterne",
-      "ornement_filet"
+      "module_antenne"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +180,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

@@ -40,7 +40,7 @@ const CATALOGUE_5 = [
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 6);
+  assert.equal(catalogue.catalogueVersion, 7);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
   // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
@@ -52,7 +52,7 @@ test('content/unites.json passe son validateur', () => {
   assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
   // Le chasseur furtif entre au 6 : vingt-quatre unités, le plafond du §13.7.
   assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 6);
-  assert.equal(catalogue.unites.length, 24);
+  assert.equal(catalogue.unites.length, 28);
 });
 
 test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
@@ -64,9 +64,8 @@ test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', ()
     assert.equal(u.homologation?.date, '2026-09-07', u.cle);
     assert.ok(u.nomCourt.length <= 12, `${u.cle} : nom court de ${u.nomCourt.length} signes`);
   }
-  // Le plafond de vingt-quatre unités actives (§13.7) est atteint depuis le
-  // catalogue 6 : la prochaine homologuée en retire une.
-  assert.equal(unites.length, 24);
+  // Catalogue 7 : extension demandée à vingt-huit unités, dont deux exclusives.
+  assert.equal(unites.length, 28);
 });
 
 test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3', () => {

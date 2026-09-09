@@ -57,8 +57,8 @@ test('chaque unité du catalogue a sa géométrie de base', () => {
   assert.equal(specs.filter((s) => s.type === 'unite').length, unites.length);
 });
 
-test('il y a un kit par couple (nation, unité), homologations comprises', () => {
-  const unites = chargerUnites();
+test('il y a un kit par couple (nation, unité commune), sans décliner les exclusives', () => {
+  const unites = chargerUnites().filter(u => !u.factionExclusive);
   const pays = chargerPays();
   const kits = specs.filter((s) => s.type === 'kit');
   assert.equal(kits.length, pays.length * unites.length);
@@ -73,7 +73,7 @@ test('il y a un kit par couple (nation, unité), homologations comprises', () =>
       // Le masque d'équipe subsiste, réduit au liseré de socle.
       const masque = kit.textures.find((t) => t.canal === 'masque_equipe');
       assert.ok(masque?.obligatoire, kit.id);
-      assert.match(masque.note, /socle/);
+      assert.match(masque.note, /zones d’équipe de la base/);
       // Un kit peint la géométrie livrée, il n'en choisit plus la forme.
       assert.doesNotMatch(kit.description.fr, /gabarit [ABC]/);
       assert.match(kit.description.fr, /géométrie de base livrée/);
@@ -195,7 +195,7 @@ test('le bilan compte toutes les spécifications', () => {
   const total = Object.values(bilan).reduce((a, b) => a + b, 0);
   assert.equal(total, specs.length);
   assert.equal(bilan.effet, 0, 'aucun effet n’est encore spécifié');
-  assert.equal(bilan.kit, chargerPays().length * chargerUnites().length);
+  assert.equal(bilan.kit, chargerPays().length * chargerUnites().filter(u => !u.factionExclusive).length);
 });
 
 test('la génération est reproductible et triée par identifiant', () => {
@@ -267,4 +267,13 @@ test('une unité inconnue du dépôt reçoit quand même une spécification', ()
   assert.equal(spec.id, 'unite_drone_solaire_base');
   assert.equal(spec.pivot.poseAuSol, false, 'ce qui vole est modélisé en vol');
   assert.ok(spec.format.noeuds.includes('module_panneaux_solaires'));
+});
+
+ test('les unités exclusives ne multiplient pas leur géométrie par nation', () => {
+  const exclusives = chargerUnites().filter(u => u.factionExclusive);
+  assert.equal(exclusives.length, 2);
+  for (const u of exclusives) {
+    assert.ok(specs.some(s => s.id === `unite_${u.cle}_base`));
+    assert.equal(specs.some(s => s.type === 'kit' && s.cle.endsWith(`_${u.cle}`)), false);
+  }
 });

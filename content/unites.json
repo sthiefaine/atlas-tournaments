@@ -1,5 +1,5 @@
 {
-  "catalogueVersion": 6,
+  "catalogueVersion": 7,
   "unites": [
     {
       "cle": "infanterie",
@@ -42,7 +42,11 @@
         "genie": 55,
         "drone": 35,
         "brouilleur": 70,
-        "char_moyen": 7
+        "char_moyen": 7,
+        "drone_intercepteur": 35,
+        "drone_ravitailleur": 35,
+        "meridien_veilleur": 35,
+        "meridien_bastion": 5
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -91,7 +95,11 @@
         "genie": 65,
         "drone": 40,
         "brouilleur": 85,
-        "char_moyen": 35
+        "char_moyen": 35,
+        "drone_intercepteur": 40,
+        "drone_ravitailleur": 40,
+        "meridien_veilleur": 40,
+        "meridien_bastion": 45
       },
       "armeSecondaire": [
         "infanterie",
@@ -151,7 +159,11 @@
         "genie": 70,
         "drone": 0,
         "brouilleur": 60,
-        "char_moyen": 3
+        "char_moyen": 3,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 8
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -201,7 +213,11 @@
         "genie": 75,
         "drone": 0,
         "brouilleur": 85,
-        "char_moyen": 35
+        "char_moyen": 35,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 55
       },
       "armeSecondaire": [
         "infanterie",
@@ -258,7 +274,11 @@
         "genie": 95,
         "drone": 0,
         "brouilleur": 105,
-        "char_moyen": 70
+        "char_moyen": 70,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 90
       },
       "armeSecondaire": [
         "infanterie",
@@ -316,7 +336,11 @@
         "genie": 90,
         "drone": 0,
         "brouilleur": 80,
-        "char_moyen": 55
+        "char_moyen": 55,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 75
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -368,7 +392,11 @@
         "genie": 95,
         "drone": 0,
         "brouilleur": 90,
-        "char_moyen": 70
+        "char_moyen": 70,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 85
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -421,7 +449,11 @@
         "genie": 105,
         "drone": 125,
         "brouilleur": 60,
-        "char_moyen": 15
+        "char_moyen": 15,
+        "drone_intercepteur": 125,
+        "drone_ravitailleur": 125,
+        "meridien_veilleur": 125,
+        "meridien_bastion": 20
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true
@@ -473,7 +505,11 @@
         "genie": 75,
         "drone": 85,
         "brouilleur": 55,
-        "char_moyen": 40
+        "char_moyen": 40,
+        "drone_intercepteur": 85,
+        "drone_ravitailleur": 85,
+        "meridien_veilleur": 85,
+        "meridien_bastion": 50
       },
       "armeSecondaire": [
         "infanterie",
@@ -542,7 +578,11 @@
         "genie": 0,
         "drone": 0,
         "brouilleur": 0,
-        "char_moyen": 0
+        "char_moyen": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false
@@ -600,7 +640,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 55,
@@ -626,7 +670,11 @@
         "porte_avions": 0,
         "cuirasse": 30,
         "sous_marin": 0,
-        "furtif": 85
+        "furtif": 85,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 40
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -692,7 +740,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 35,
@@ -718,7 +770,11 @@
         "porte_avions": 100,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 100
+        "furtif": 100,
+        "drone_intercepteur": 110,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 125
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -785,7 +841,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 70,
@@ -811,7 +871,11 @@
         "porte_avions": 0,
         "cuirasse": 90,
         "sous_marin": 0,
-        "furtif": 85
+        "furtif": 85,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 35
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -876,7 +940,11 @@
         "porte_avions": 45,
         "cuirasse": 30,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 75
       },
       "subitDegats": {
         "infanterie": 7,
@@ -902,7 +970,11 @@
         "porte_avions": 0,
         "cuirasse": 80,
         "sous_marin": 0,
-        "furtif": 45
+        "furtif": 45,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 10
       },
       "armeSecondaire": [
         "infanterie",
@@ -976,7 +1048,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 100
+        "furtif": 100,
+        "drone_intercepteur": 125,
+        "drone_ravitailleur": 125,
+        "meridien_veilleur": 125,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 65,
@@ -1002,7 +1078,11 @@
         "porte_avions": 0,
         "cuirasse": 90,
         "sous_marin": 0,
-        "furtif": 85
+        "furtif": 85,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 30
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1069,7 +1149,11 @@
         "porte_avions": 70,
         "cuirasse": 55,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 90
       },
       "subitDegats": {
         "infanterie": 60,
@@ -1095,7 +1179,11 @@
         "porte_avions": 0,
         "cuirasse": 85,
         "sous_marin": 0,
-        "furtif": 80
+        "furtif": 80,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 25
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1159,7 +1247,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 85
+        "furtif": 85,
+        "drone_intercepteur": 120,
+        "drone_ravitailleur": 120,
+        "meridien_veilleur": 120,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 5,
@@ -1185,7 +1277,11 @@
         "porte_avions": 25,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 45
+        "furtif": 45,
+        "drone_intercepteur": 35,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 100
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1251,7 +1347,11 @@
         "porte_avions": 90,
         "cuirasse": 75,
         "sous_marin": 60,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 85
       },
       "subitDegats": {
         "infanterie": 8,
@@ -1277,7 +1377,11 @@
         "porte_avions": 35,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 70
+        "furtif": 70,
+        "drone_intercepteur": 55,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 110
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1351,7 +1455,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 30,
@@ -1377,7 +1485,11 @@
         "porte_avions": 60,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 95
+        "furtif": 95,
+        "drone_intercepteur": 75,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 120
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1452,7 +1564,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 25,
@@ -1478,7 +1594,11 @@
         "porte_avions": 0,
         "cuirasse": 105,
         "sous_marin": 95,
-        "furtif": 40
+        "furtif": 40,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1556,7 +1676,11 @@
         "porte_avions": 0,
         "cuirasse": 0,
         "sous_marin": 70,
-        "furtif": 25
+        "furtif": 25,
+        "drone_intercepteur": 100,
+        "drone_ravitailleur": 100,
+        "meridien_veilleur": 100,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1582,7 +1706,11 @@
         "porte_avions": 0,
         "cuirasse": 90,
         "sous_marin": 95,
-        "furtif": 45
+        "furtif": 45,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1649,7 +1777,11 @@
         "porte_avions": 90,
         "cuirasse": 60,
         "sous_marin": 55,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 85
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1675,7 +1807,11 @@
         "porte_avions": 0,
         "cuirasse": 60,
         "sous_marin": 85,
-        "furtif": 45
+        "furtif": 45,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "peutRiposter": false,
       "peutTirerApresMouvement": false,
@@ -1741,7 +1877,11 @@
         "porte_avions": 95,
         "cuirasse": 85,
         "sous_marin": 55,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "subitDegats": {
         "infanterie": 0,
@@ -1767,7 +1907,11 @@
         "porte_avions": 70,
         "cuirasse": 55,
         "sous_marin": 55,
-        "furtif": 0
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1834,7 +1978,11 @@
         "porte_avions": 45,
         "cuirasse": 45,
         "sous_marin": 0,
-        "furtif": 55
+        "furtif": 55,
+        "drone_intercepteur": 100,
+        "drone_ravitailleur": 100,
+        "meridien_veilleur": 100,
+        "meridien_bastion": 55
       },
       "subitDegats": {
         "infanterie": 5,
@@ -1860,7 +2008,11 @@
         "porte_avions": 25,
         "cuirasse": 0,
         "sous_marin": 0,
-        "furtif": 55
+        "furtif": 55,
+        "drone_intercepteur": 30,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 90
       },
       "peutRiposter": true,
       "peutTirerApresMouvement": true,
@@ -1868,6 +2020,418 @@
         "date": "2026-09-07",
         "catalogue": 6
       }
+    },
+    {
+      "cle": "drone_intercepteur",
+      "nom": "Drone intercepteur",
+      "nomCourt": "Intercepteur",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "drone",
+        "anti_air"
+      ],
+      "silhouette": {
+        "base": "ailes",
+        "corps": "capsule",
+        "modules": [
+          "radar"
+        ],
+        "taille": 1
+      },
+      "cout": 8500,
+      "mouvement": 7,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 3,
+      "munitions": 5,
+      "carburant": {
+        "max": 40,
+        "parCase": 1,
+        "parTour": 3
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 65,
+        "transport": 0,
+        "genie": 0,
+        "drone": 110,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 35,
+        "bombardier": 55,
+        "transport_air": 75,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 30,
+        "drone_intercepteur": 65,
+        "drone_ravitailleur": 110,
+        "meridien_veilleur": 90,
+        "meridien_bastion": 0
+      },
+      "subitDegats": {
+        "infanterie": 35,
+        "meca": 40,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 125,
+        "helico": 85,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 125,
+        "missiles_sol": 0,
+        "chasseur": 120,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 100,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 100,
+        "drone_intercepteur": 65,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 125
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-09",
+        "catalogue": 7
+      }
+    },
+    {
+      "cle": "drone_ravitailleur",
+      "nom": "Drone ravitailleur",
+      "nomCourt": "Ravitailleur",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "drone",
+        "ravitaillement"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "plateau",
+        "modules": [
+          "grue",
+          "nacelle"
+        ],
+        "taille": 1
+      },
+      "cout": 6000,
+      "mouvement": 5,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 2,
+      "munitions": null,
+      "carburant": {
+        "max": 40,
+        "parCase": 1,
+        "parTour": 2
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
+      },
+      "subitDegats": {
+        "infanterie": 35,
+        "meca": 40,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 125,
+        "helico": 85,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 125,
+        "missiles_sol": 0,
+        "chasseur": 120,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 100,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 100,
+        "drone_intercepteur": 110,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 125
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-09",
+        "catalogue": 7
+      }
+    },
+    {
+      "cle": "meridien_veilleur",
+      "nom": "Veilleur méridien",
+      "nomCourt": "Veilleur",
+      "statut": "homologuee",
+      "traits": [
+        "vol",
+        "drone",
+        "brouilleur"
+      ],
+      "silhouette": {
+        "base": "rotor",
+        "corps": "capsule",
+        "modules": [
+          "radar",
+          "antenne"
+        ],
+        "taille": 2
+      },
+      "cout": 10000,
+      "mouvement": 5,
+      "typeMouvement": "air",
+      "domaine": "air",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 4,
+      "munitions": null,
+      "carburant": {
+        "max": 40,
+        "parCase": 1,
+        "parTour": 2
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 0,
+        "meca": 0,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 0,
+        "helico": 0,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 0,
+        "missiles_sol": 0,
+        "chasseur": 0,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 0,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 0
+      },
+      "subitDegats": {
+        "infanterie": 35,
+        "meca": 40,
+        "recon": 0,
+        "char_leger": 0,
+        "char_lourd": 0,
+        "artillerie": 0,
+        "roquettes": 0,
+        "antiair": 125,
+        "helico": 85,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 0,
+        "missiles_air": 125,
+        "missiles_sol": 0,
+        "chasseur": 120,
+        "bombardier": 0,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 100,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 100,
+        "drone_intercepteur": 90,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 125
+      },
+      "peutRiposter": false,
+      "peutTirerApresMouvement": false,
+      "homologation": {
+        "date": "2026-09-09",
+        "catalogue": 7
+      },
+      "factionExclusive": "atl"
+    },
+    {
+      "cle": "meridien_bastion",
+      "nom": "Bastion méridien",
+      "nomCourt": "Bastion",
+      "statut": "homologuee",
+      "traits": [
+        "anti_air"
+      ],
+      "silhouette": {
+        "base": "chenilles",
+        "corps": "bloc",
+        "modules": [
+          "tourelle",
+          "radar",
+          "antenne"
+        ],
+        "taille": 3
+      },
+      "cout": 14500,
+      "mouvement": 3,
+      "typeMouvement": "chenilles",
+      "domaine": "terre",
+      "portee": [
+        1,
+        1
+      ],
+      "vision": 3,
+      "munitions": 7,
+      "carburant": {
+        "max": 50,
+        "parCase": 1,
+        "parTour": 0
+      },
+      "capture": false,
+      "transport": null,
+      "degats": {
+        "infanterie": 45,
+        "meca": 35,
+        "recon": 30,
+        "char_leger": 15,
+        "char_lourd": 5,
+        "artillerie": 30,
+        "roquettes": 30,
+        "antiair": 25,
+        "helico": 120,
+        "transport": 25,
+        "genie": 40,
+        "drone": 125,
+        "brouilleur": 35,
+        "char_moyen": 10,
+        "missiles_air": 30,
+        "missiles_sol": 25,
+        "chasseur": 100,
+        "bombardier": 110,
+        "transport_air": 120,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 0,
+        "sous_marin": 0,
+        "furtif": 90,
+        "drone_intercepteur": 125,
+        "drone_ravitailleur": 125,
+        "meridien_veilleur": 125,
+        "meridien_bastion": 20
+      },
+      "subitDegats": {
+        "infanterie": 5,
+        "meca": 45,
+        "recon": 8,
+        "char_leger": 55,
+        "char_lourd": 90,
+        "artillerie": 75,
+        "roquettes": 85,
+        "antiair": 20,
+        "helico": 50,
+        "transport": 0,
+        "genie": 0,
+        "drone": 0,
+        "brouilleur": 0,
+        "char_moyen": 75,
+        "missiles_air": 0,
+        "missiles_sol": 90,
+        "chasseur": 0,
+        "bombardier": 85,
+        "transport_air": 0,
+        "barge": 0,
+        "porte_avions": 0,
+        "cuirasse": 85,
+        "sous_marin": 0,
+        "furtif": 55,
+        "drone_intercepteur": 0,
+        "drone_ravitailleur": 0,
+        "meridien_veilleur": 0,
+        "meridien_bastion": 20
+      },
+      "peutRiposter": true,
+      "peutTirerApresMouvement": true,
+      "homologation": {
+        "date": "2026-09-09",
+        "catalogue": 7
+      },
+      "factionExclusive": "atl"
     }
   ]
 }

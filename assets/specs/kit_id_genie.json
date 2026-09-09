@@ -4,8 +4,8 @@
   "cle": "id_genie",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Génie de terrain\" in the colours and materials of Indonésie. Guiding line: Colourful ferry hulls: wide hand-painted bands, varnished wood, strapped bamboo, and paint that turns under an equatorial sun. Paint the delivered base mesh of unite_genie_base, unchanged: same geometry, same UV layout, same node names. Base colour #c8443c, own shadow #7a221d, edge highlight #f6d3d0, accents #2f8f7f, #f2e2b8. Materials to read at a glance: high-gloss paint, varnished wood, strapped bamboo, heavy canvas and woven rattan. Finish: glossy and sun-faded. Add these ornaments as separate named nodes, and nothing else: a stretched canvas roof, a knotted net stowed on the deck, a coil of rope on a cleat and a small hooded lantern. Abstract decals only: overlapping scales in #2f8f7f on the flanc; dashed bands in #f2e2b8 on the toit. For colour-blind readability the socle carries overlapping scales, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Génie de terrain » aux couleurs et aux matières du style « Indonésie ». Ligne directrice : Coques colorées de ferry : bandes larges peintes à la main, bois vernis, bambou sanglé et de la peinture qui vire au soleil équatorial. Peindre la géométrie de base livrée unite_genie_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #c8443c, ombre propre #7a221d, liseré d’arête #f6d3d0, accents #2f8f7f, #f2e2b8. Matières à lire d’un coup d’œil : peinture brillante, bois verni, bambou sanglé, toile épaisse et rotin tressé. Finition : brillante et délavée par le soleil. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : un toit de toile tendue, un filet noué rangé sur le plateau, une corde lovée sur un taquet et une lanterne à capuchon. Décalcomanies abstraites seulement : des écailles en #2f8f7f sur la zone « flanc » ; des bandes pointillées en #f2e2b8 sur la zone « toit ». Pour la lisibilité sans couleur, le socle porte des écailles, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Génie de terrain\" in the colours and materials of Indonésie. Guiding line: Colourful ferry hulls: wide hand-painted bands, varnished wood, strapped bamboo, and paint that turns under an equatorial sun. Paint the delivered base mesh of unite_genie_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #c8443c, dark paint #7a221d, light paint #f6d3d0, accents #2f8f7f, #f2e2b8. Materials to read at a glance: high-gloss paint, varnished wood, strapped bamboo, heavy canvas and woven rattan. Finish: glossy and sun-faded. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a stretched canvas roof, a knotted net stowed on the deck, a coil of rope on a cleat and a small hooded lantern. Abstract decals only: overlapping scales in #2f8f7f on the flanc; dashed bands in #f2e2b8 on the toit. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries overlapping scales, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Génie de terrain » aux couleurs et aux matières du style « Indonésie ». Ligne directrice : Coques colorées de ferry : bandes larges peintes à la main, bois vernis, bambou sanglé et de la peinture qui vire au soleil équatorial. Peindre la géométrie de base livrée unite_genie_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #c8443c, peinture sombre #7a221d, peinture claire #f6d3d0, accents #2f8f7f, #f2e2b8. Matières à lire d’un coup d’œil : peinture brillante, bois verni, bambou sanglé, toile épaisse et rotin tressé. Finition : brillante et délavée par le soleil. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : un toit de toile tendue, un filet noué rangé sur le plateau, une corde lovée sur un taquet et une lanterne à capuchon. Décalcomanies abstraites seulement : des écailles en #2f8f7f sur la zone « flanc » ; des bandes pointillées en #f2e2b8 sur la zone « toit ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte des écailles, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 4640,
-    "lod1": 1624,
-    "lod2": 464,
+    "lod0": 4000,
+    "lod1": 1400,
+    "lod2": 400,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,14 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
     }
   ],
   "variantes": {
@@ -102,7 +109,38 @@
       "id"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +153,11 @@
       "corps",
       "base",
       "socle",
-      "ornement_toit_toile",
-      "ornement_filet",
-      "ornement_corde_lovee",
-      "ornement_lanterne"
+      "module_radar"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +187,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

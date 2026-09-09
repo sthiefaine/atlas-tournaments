@@ -26,7 +26,7 @@ export function batimentsDe(etat: EtatPartie, camp: CampId): string[] {
 export function producteursDe(etat: EtatPartie, cat: Catalogue, camp: CampId): string[] {
   return batimentsDe(etat, camp).filter((k) => {
     const terrain = terrainLogique(etat, cat, depuisCle(k));
-    return terrain !== null && produitesPar(cat, terrain).length > 0;
+    return terrain !== null && produitesPar(cat, terrain, etat, camp).length > 0;
   });
 }
 
@@ -43,7 +43,7 @@ export function producteursDe(etat: EtatPartie, cat: Catalogue, camp: CampId): s
  */
 export function revenuParTour(etat: EtatPartie, camp: CampId): number {
   const nb = batimentsDe(etat, camp).length;
-  return Math.round(nb * etat.reglages.revenusParBatiment * multiplicateurFonds(etat, camp));
+  return Math.round(nb * (etat.reglages.revenusParBatimentParCamp?.[camp] ?? etat.reglages.revenusParBatiment) * multiplicateurFonds(etat, camp));
 }
 
 /** Phase 2 — revenus. */
@@ -164,7 +164,7 @@ export function verifierProduction(
   const k = cleCase(batiment);
   if (etat.proprietaires[k] !== camp) return { ok: false, motif: 'batiment_adverse' };
   if (uniteSur(etat, batiment)) return { ok: false, motif: 'batiment_occupe' };
-  if (!produitesPar(cat, terrain).includes(unite)) {
+  if (!produitesPar(cat, terrain, etat, camp).includes(unite)) {
     return { ok: false, motif: 'unite_non_produite_ici' };
   }
   const type = cat.unites[unite];

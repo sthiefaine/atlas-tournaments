@@ -9,6 +9,7 @@
 import type {
   CampId, Cle, MapDef, Scenario,
 } from '../schemas/index';
+import { uniteAutorisee } from './catalogue';
 import { initialiserClimat } from './climat/index';
 import { terrainBrut } from './hooks';
 import { mecaniqueDe } from './mecaniques/registre';
@@ -30,7 +31,8 @@ import { cleCase } from './types';
   * dès la première attaque : la sauvegarde est déclarée périmée et le joueur
   * repart d'une partie neuve — rien ne casse au-delà du match en cours.
   */
-export const VERSION_MOTEUR = 5;
+/** Version 6 : équipes, victoire commune et renforts déterministes. */
+export const VERSION_MOTEUR = 6;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;
@@ -61,6 +63,7 @@ export function copierEtat(e: EtatPartie): EtatPartie {
     reglages: e.reglages,
     flux: { ...e.flux },
     relais: { ...e.relais },
+    ...(e.renfortsLivres ? { renfortsLivres: [...e.renfortsLivres] } : {}),
     proprietaires: { ...e.proprietaires },
     desaffectes: [...e.desaffectes],
     unites: e.unites.map((u) => (u.cargo.length === 0 ? { ...u } : { ...u, cargo: [...u.cargo] })),
@@ -149,6 +152,9 @@ export function sceneDepuis(
     commandants: commandantsIncarnes(scenario, commandants),
     mecanique: carte.mecanique ? { cle: carte.mecanique, parametres: {} } : null,
     reglages: {
+      ...(scenario.factionsParCamp ? { factionsParCamp: scenario.factionsParCamp } : {}),
+      ...(scenario.equipes ? { equipes: scenario.equipes } : {}),
+      ...(scenario.renforts ? { renforts: scenario.renforts } : {}),
       date: scenario.date,
       climatPays,
       hemisphere,
@@ -156,7 +162,11 @@ export function sceneDepuis(
       meteoForcee: scenario.climatFixe?.meteo ?? null,
       cycleJourNuit: scenario.cycleJourNuit,
       fondsDepart: scenario.fondsDepart,
+      ...(scenario.fondsDepartParCamp ? { fondsDepartParCamp: scenario.fondsDepartParCamp } : {}),
       revenusParBatiment: scenario.revenusParBatiment,
+      ...(scenario.revenusParBatimentParCamp ? { revenusParBatimentParCamp: scenario.revenusParBatimentParCamp } : {}),
+      ...(scenario.vitesseJaugeJoueur !== undefined ? { vitesseJaugeJoueur: scenario.vitesseJaugeJoueur } : {}),
+      ...(scenario.previsionJournees !== undefined ? { previsionJournees: scenario.previsionJournees } : {}),
       brouillard: scenario.brouillard,
       limiteJournees: scenario.limiteJournees,
       victoire: scenario.victoire,
@@ -220,12 +230,24 @@ export function reglagesParDefaut(partiel: Partial<ReglagesPartie> = {}): Reglag
  * nation incarnée — celui qui porte son unité spéciale (`sceneDepuis`).
  */
 export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatPartie {
+  for (const vague of scene.reglages.renforts ?? []) for (const u of vague.unites) {
+    if (!cat.unites[u.type] || !scene.camps.includes(u.camp)
+      || u.x < 0 || u.y < 0 || u.x >= scene.largeur || u.y >= scene.hauteur) {
+      throw new Error('Renfort invalide : unité, camp ou point d’entrée hors de la scène.');
+    }
+  }
+  const contexte = { reglages: scene.reglages };
+  for (const u of [...scene.unitesDepart, ...(scene.reglages.renforts ?? []).flatMap((v) => v.unites)]) {
+    if (cat.unites[u.type] && !uniteAutorisee(cat, u.type, contexte, u.camp)) {
+      throw new Error('Unité exclusive interdite pour ce camp.');
+    }
+  }
   const rng = creerRng(graine);
   const camps: EtatCamp[] = scene.camps.map((id) => {
     const commandant = scene.commandants[id] ?? null;
     return {
       id,
-      fonds: scene.reglages.fondsDepart,
+      fonds: scene.reglages.fondsDepartParCamp?.[id] ?? scene.reglages.fondsDepart,
       jauge: 0,
       jaugeMax: commandant ? commandant.superPouvoir.barres * 100 : JAUGE_MAX_DEFAUT,
       commandantCle: commandant ? commandant.cle : null,

@@ -1,3 +1,4 @@
+import { controlerDepot } from '../src/serveur/depot-modeles';
 /** Deterministic shared vehicle geometry. Run: npx tsx scripts/generer-artillerie.ts.
  * Five rigid nodes, no nation-dependent geometry. Atlas addresses are keyed by
  * physical part and retained at every LOD. No illumination enters the albedo.
@@ -280,42 +281,39 @@ async function main() {
   const spec = lireSpec(`assets/specs/${ID}.json`);
   const scenes = [0, 1, 2].map(build);
   const maps = textures(), animations = clips();
+  // glTF lit rugosité en G et métal en B : une seule carte partagée entre LODs.
+  maps.set('rugosite', maps.get('orm')!); maps.delete('orm');
   const files = new Map<string, Uint8Array>();
   for (const [channel, data] of maps) if (channel !== 'orm') files.set(`${ID}_${channel}.png`, data);
   const report: unknown[] = [];
   for (const lod of [0, 1, 2] as const) {
     const scene = scenes[lod]!;
     const { document, bin } = decouperGlb(await exporterGlb(scene.root, animations));
-    // Self-contained GLBs, with the five individually named maps also delivered.
-    const views = document.bufferViews as Record<string, unknown>[];
-    const chunks: Buffer[] = [Buffer.from(bin)]; let offset = bin.length;
     const images: unknown[] = [], tex: unknown[] = [];
-    for (const [channel, bytes] of maps) {
-      const pad = (4 - offset % 4) % 4; if (pad) { chunks.push(Buffer.alloc(pad)); offset += pad; }
-      views.push({ buffer: 0, byteOffset: offset, byteLength: bytes.length });
-      images.push({ name: `${ID}_${channel}.png`, mimeType: 'image/png', bufferView: views.length - 1 });
+    for (const channel of maps.keys()) {
+      images.push({ name: `${ID}_${channel}.png`, uri: `${ID}_${channel}.png`, mimeType: 'image/png' });
       tex.push({ name: channel, source: images.length - 1, sampler: channel === 'masque_equipe' ? 1 : 0 });
-      chunks.push(Buffer.from(bytes)); offset += bytes.length;
     }
     document.images = images; document.textures = tex;
     document.samplers = [{ magFilter: 9729, minFilter: 9987, wrapS: 33071, wrapT: 33071 }, { magFilter: 9728, minFilter: 9728, wrapS: 33071, wrapT: 33071 }];
-    (document.buffers as Record<string, unknown>[])[0]!.byteLength = offset;
     for (const m of document.materials as Record<string, unknown>[]) {
       const pbr = m.pbrMetallicRoughness as Record<string, unknown>;
-      pbr.baseColorTexture = { index: 0 }; pbr.metallicRoughnessTexture = { index: 5 };
+      pbr.baseColorTexture = { index: 0 }; pbr.metallicRoughnessTexture = { index: 2 };
       m.normalTexture = { index: 1, scale: 0.5 };
       m.extras = { masque_equipe: `${ID}_masque_equipe.png`, teamMaskTexture: 4 };
     }
     (document.animations as Record<string, unknown>[]).forEach(a => { a.extras = { loop: ['repos', 'deplacement'].includes(a.name as string) }; });
     document.extras = { units: 'metre', up: '+Y', front: '+Z', teamMaskTexture: 4, bulk: 2,
       role: { funds: 5500, movement: 5, movementType: 'chenilles', range: [2, 3], vision: 1, traits: ['tir_indirect'] } };
-    const glb = assemblerGlb(document, Buffer.concat(chunks));
+    const glb = assemblerGlb(document, bin);
     const verdict = validerGlb(glb, spec, { lod, fichiersLivres: [...files.keys(), ...[0, 1, 2].map(n => `${ID}_lod${n}.glb`)] });
     if (!verdict.ok) throw new Error(JSON.stringify({ lod, verdict }));
     if (scene.triangles > spec.budget[`lod${lod}`]) throw new Error(`lod${lod}: ${scene.triangles} triangles`);
     files.set(`${ID}_lod${lod}.glb`, glb);
     report.push({ lod, triangles: scene.triangles, dimensions: scene.bounds.getSize(new T.Vector3()).toArray(), min: scene.bounds.min.toArray(), max: scene.bounds.max.toArray(), verdict });
   }
+  const reception = controlerDepot(spec, [...files].map(([nom, octets]) => ({ nom, octets })));
+  if (!reception.ok) throw new Error(JSON.stringify(reception));
   mkdirSync(out, { recursive: true }); mkdirSync(delivery, { recursive: true });
   for (const [name, bytes] of files) writeFileSync(path.join(out, name), bytes);
   writeFileSync(path.join(delivery, 'validation.json'), JSON.stringify(report, null, 2));

@@ -1,3 +1,4 @@
+import { sontAllies } from '../equipes';
 /**
  * Mouvement : coûts par type de mouvement et terrain, zone de contrôle, portée
  * de déplacement par Dijkstra (`doc/04-gameplay.md` §2 et §12.6).
@@ -60,7 +61,7 @@ export function uniteParId(etat: EtatPartie, id: string): Unite | undefined {
 
 /** Cases adverses connues du camp : elles bloquent le passage et posent la ZDC. */
 export function adversesVisibles(etat: EtatPartie, cat: Catalogue, camp: CampId): Unite[] {
-  return unitesVues(etat, cat, camp).filter((u) => u.camp !== camp);
+  return unitesVues(etat, cat, camp).filter((u) => !sontAllies(etat, u.camp, camp));
 }
 
 /**
@@ -293,7 +294,7 @@ export function verifierChemin(
     // comme une embuscade, jamais comme une information. Un allié ou un adverse
     // vu restent des refus : on ne planifie pas une arrivée sur quelqu'un.
     const occupant = uniteSur(etat, arrivee);
-    const cachee = occupant !== undefined && occupant.camp !== u.camp
+    const cachee = occupant !== undefined && !sontAllies(etat, occupant.camp, u.camp)
       && !adverses.some((a) => a.id === occupant.id);
     if (!cachee) return { ok: false, motif: 'case_occupee' };
   }

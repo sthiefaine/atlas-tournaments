@@ -42,7 +42,7 @@ export interface MailleGltf { primitives?: PrimitiveGltf[] }
 /** Un nœud : un nom, éventuellement une maille et une transformation. */
 export interface NoeudGltf {
   name?: string; mesh?: number; children?: number[];
-  translation?: number[]; scale?: number[];
+  translation?: number[]; scale?: number[]; rotation?: number[]; matrix?: number[];
 }
 /** Un objet nommé quelconque du document (matériau, image, animation). */
 export interface NommeGltf { name?: string; uri?: string }
@@ -196,16 +196,15 @@ function bornesMaille(document: DocumentGltf, index: number): Aabb | null {
 /**
  * Triangles et boîte englobante de tout le document, en parcourant les nœuds.
  *
- * On applique l'échelle puis la translation de chaque nœud porteur de maille ; on
- * ignore la rotation, volontairement : le format impose l'avant vers `+Z` et le
- * haut vers `+Y`, donc un asset conforme n'a pas de rotation à la racine, et un
- * asset qui en a une doit être refusé par le contrôle d'échelle plutôt que
- * rattrapé par le validateur.
+ * Les huit coins des bornes locales passent par les transformations glTF
+ * complètes, puis par tous les parents (radar sur tourelle sur caisse).
  */
 export function mesurerGltf(document: DocumentGltf): { triangles: number; boite: Aabb | null } {
   let triangles = 0;
   let boite: Aabb | null = null;
   const noeuds = document.nodes ?? [];
+  const parents = new Map<number, number>();
+  noeuds.forEach((n, i) => n.children?.forEach(enfant => parents.set(enfant, i)));
   const vus = new Set<number>();
   for (let i = 0; i < noeuds.length; i += 1) {
     const noeud = noeuds[i];
@@ -214,17 +213,32 @@ export function mesurerGltf(document: DocumentGltf): { triangles: number; boite:
     triangles += trianglesMaille(document, noeud.mesh);
     const locale = bornesMaille(document, noeud.mesh);
     if (!locale) continue;
-    const e = noeud.scale ?? [1, 1, 1];
-    const t = noeud.translation ?? [0, 0, 0];
-    const bas: [number, number, number] = [0, 0, 0];
-    const haut: [number, number, number] = [0, 0, 0];
-    for (let a = 0; a < 3; a += 1) {
-      const facteur = e[a] ?? 1;
-      const decalage = t[a] ?? 0;
-      const p1 = (locale.min[a] ?? 0) * facteur + decalage;
-      const p2 = (locale.max[a] ?? 0) * facteur + decalage;
-      bas[a] = Math.min(p1, p2);
-      haut[a] = Math.max(p1, p2);
+    const bas: [number, number, number] = [Infinity, Infinity, Infinity];
+    const haut: [number, number, number] = [-Infinity, -Infinity, -Infinity];
+    for (let coin = 0; coin < 8; coin += 1) {
+      let p = [0, 1, 2].map(a => (coin & (1 << a) ? locale.max[a]! : locale.min[a]!));
+      let courant: number | undefined = i;
+      const ancetres = new Set<number>();
+      while (courant !== undefined && !ancetres.has(courant)) {
+        ancetres.add(courant);
+        const n = noeuds[courant]!;
+        const m = n.matrix;
+        if (m?.length === 16) {
+          p = [0, 1, 2].map(a => m[a]! * p[0]! + m[a + 4]! * p[1]! + m[a + 8]! * p[2]! + m[a + 12]!);
+        } else {
+          p = p.map((v, a) => v * (n.scale?.[a] ?? 1));
+          const [x, y, z, w] = n.rotation ?? [0, 0, 0, 1];
+          const [px, py, pz] = p as [number, number, number];
+          const tx = 2 * (y! * pz - z! * py), ty = 2 * (z! * px - x! * pz), tz = 2 * (x! * py - y! * px);
+          p = [px + w! * tx + y! * tz - z! * ty, py + w! * ty + z! * tx - x! * tz, pz + w! * tz + x! * ty - y! * tx];
+          p = p.map((v, a) => v + (n.translation?.[a] ?? 0));
+        }
+        courant = parents.get(courant);
+      }
+      for (let a = 0; a < 3; a += 1) {
+        bas[a] = Math.min(bas[a]!, p[a]!);
+        haut[a] = Math.max(haut[a]!, p[a]!);
+      }
     }
     boite = boite === null ? { min: bas, max: haut } : {
       min: [Math.min(boite.min[0], bas[0]), Math.min(boite.min[1], bas[1]), Math.min(boite.min[2], bas[2])],
@@ -367,14 +381,14 @@ export function validerGlb(octets: Uint8Array, spec: AssetSpec, options: Options
         const attendu = spec.echelle[axe];
         const taille = (boite.max[a] ?? 0) - (boite.min[a] ?? 0);
         const marge = Math.max(attendu.tolerance, attendu.cible * spec.verification.toleranceAabb);
-        if (Math.abs(taille - attendu.cible) > marge) {
+        if (Math.abs(taille - attendu.cible) > marge + 1e-6) {
           motifs.push(motif('asset_echelle', `dimension ${axe} hors tolérance`, {
             mesure: Number(taille.toFixed(4)), cible: attendu.cible, marge: Number(marge.toFixed(4)),
           }));
         }
       }
       const margeY = Math.max(spec.echelle.y.tolerance, spec.echelle.y.cible * spec.verification.toleranceAabb);
-      if (spec.pivot.poseAuSol && Math.abs(boite.min[1]) > margeY) {
+      if (spec.pivot.poseAuSol && Math.abs(boite.min[1]) > margeY + 1e-6) {
         motifs.push(motif('asset_echelle', 'pivot : la géométrie ne repose pas sur le sol (min.y ≠ 0)', {
           minY: Number(boite.min[1].toFixed(4)), marge: Number(margeY.toFixed(4)),
         }));
@@ -382,7 +396,7 @@ export function validerGlb(octets: Uint8Array, spec: AssetSpec, options: Options
       for (const [axe, i] of [['x', 0], ['z', 2]] as const) {
         const centre = ((boite.min[i] ?? 0) + (boite.max[i] ?? 0)) / 2;
         const marge = Math.max(spec.echelle[axe].tolerance, spec.echelle[axe].cible * spec.verification.toleranceAabb);
-        if (Math.abs(centre) > marge) {
+        if (Math.abs(centre) > marge + 1e-6) {
           motifs.push(motif('asset_echelle', `pivot : l’emprise n’est pas centrée sur l’axe ${axe}`, {
             centre: Number(centre.toFixed(4)), marge: Number(marge.toFixed(4)),
           }));

@@ -5,7 +5,7 @@ import { bilanPriorites } from '@/assets/index';
 import { Bloc, Etat, Ligne } from '../ui';
 
 import { chargerCatalogueAssets } from './donnees';
-import { STATUT_LIVRAISON } from './tri';
+import { receptionsAssets } from '@/serveur/reception-assets';
 
 /**
  * La ligne « assets » du tableau de bord. Elle vient du canon, pas de la base,
@@ -15,13 +15,16 @@ import { STATUT_LIVRAISON } from './tri';
 export function ResumeAssets() {
   const { specs } = chargerCatalogueAssets();
   const p = bilanPriorites(specs);
+  const etats = [...receptionsAssets(specs).values()];
+  const presents = etats.filter((r) => r.etat !== 'a_produire').length;
+  const approuves = etats.filter((r) => r.etat === 'approuve' || r.etat === 'integre').length;
   return (
     <Bloc titre="Assets 3D" aide="Les spécifications commandées au générateur externe, composées depuis le canon.">
       <Ligne>
         <Link href="/admin/assets" className="w-44 font-mono text-xs underline-offset-4 hover:underline">assets/specs</Link>
         <span>{specs.length} spécifications</span>
         <span className="text-xs opacity-60">{p[1]} en priorité 1 · {p[2]} en priorité 2 · {p[3]} en priorité 3</span>
-        <span className="ml-auto"><Etat valeur={`0 livrée · ${STATUT_LIVRAISON}`} /></span>
+        <span className="ml-auto"><Etat valeur={`${presents} lot(s) présents · ${approuves} approuvé(s)`} /></span>
       </Ligne>
     </Bloc>
   );

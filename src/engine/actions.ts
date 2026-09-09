@@ -1,3 +1,4 @@
+import { sontAllies } from './equipes';
 /**
  * `appliquer(etat, action)` — le contrat du moteur (`doc/02-architecture.md` §3.1).
  *
@@ -126,7 +127,7 @@ function executerOrdre(
   let arrivee = verif.arrivee;
   let interrompu = false;
   if (brouillardActif(e) && chemin.length > 1) {
-    const vues = new Set(unitesVues(e, cat, u.camp).filter((a) => a.camp !== u.camp).map((a) => a.id));
+    const vues = new Set(unitesVues(e, cat, u.camp).filter((a) => !sontAllies(e, a.camp, u.camp)).map((a) => a.id));
     for (let i = 1; i < chemin.length; i += 1) {
       const c = chemin[i]!;
       // Une unité cachée n'arrête la marche que si elle **barre la route** —
@@ -136,7 +137,7 @@ function executerOrdre(
        // touche, et le tour s'achevait là. C'est une embuscade quand on se
        // cogne dedans, pas quand on passe devant.
       const surprise = e.unites.find(
-        (a) => a.camp !== u.camp && !a.dansTransport && !vues.has(a.id) && a.x === c.x && a.y === c.y,
+        (a) => !sontAllies(e, a.camp, u.camp) && !a.dansTransport && !vues.has(a.id) && a.x === c.x && a.y === c.y,
       );
       if (surprise) {
         // On s'arrête sur la **dernière case libre** du trajet parcouru : ni sur
@@ -333,7 +334,7 @@ function executerSuite(
     const type = cat.unites[u.type];
     if (!type || !porte(type, 'ravitaillement')) return refus('ravitaillement_impossible') as Verdict;
     const cible = uniteSur(e, suite.cible);
-    if (!cible || cible.camp !== u.camp) return refus('ravitaillement_impossible') as Verdict;
+    if (!cible || !sontAllies(e, cible.camp, u.camp)) return refus('ravitaillement_impossible') as Verdict;
     if (manhattan(cible, u) !== 1) return refus('ravitaillement_impossible', 'unité non adjacente') as Verdict;
     const tc = cat.unites[cible.type];
     if (!tc) return refus('catalogue_inconnu') as Verdict;

@@ -1,0 +1,140 @@
+{
+  "cle": "carte_ligne_de_nuit",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "carte_ligne_de_nuit",
+  "nom": "La ligne de nuit",
+  "largeur": 20,
+  "hauteur": 16,
+  "camps": 4,
+  "biome": "foret",
+  "grille": [
+    "FPPPFPPPFPPFPPFPPPFP",
+    "PPFPPPFPPPPPPFPPFPPP",
+    "PFPPFPRPFPPFPRPFPPFP",
+    "PPHUPPRPPMPPPRPPUHPP",
+    "PFPPPFCPFPPFPCPFPPPF",
+    "PRRRRRRRRCRRRRRRRRRP",
+    "PFPPPFRPPFPPFRPFPPPF",
+    "FPPFPPRFPPMPPRFPPFPP",
+    "PPFPPFRPPMPPFRPPFPPF",
+    "FPPPFPRFPPFPPRFPPPFP",
+    "PRRRRRRRRRCRRRRRRRRP",
+    "FPPPFPCPFPPFPCFPPPFP",
+    "PPHUPPRPPPMPPRPPUHPP",
+    "PFPPFPRPFPPFPRPFPPFP",
+    "PPPFPPFPPPPPPFPPPFPP",
+    "PFPPPFPPFPPFPPPFPPPF"
+  ],
+  "proprietaires": {
+    "2,3": 0,
+    "3,3": 0,
+    "2,12": 1,
+    "3,12": 1,
+    "17,12": 2,
+    "16,12": 2,
+    "17,3": 3,
+    "16,3": 3
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 4
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 4,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 2,
+      "y": 13
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 3,
+      "y": 13
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 17,
+      "y": 11
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 17,
+      "y": 13
+    },
+    {
+      "camp": 2,
+      "type": "char_leger",
+      "x": 16,
+      "y": 13
+    },
+    {
+      "camp": 2,
+      "type": "recon",
+      "x": 15,
+      "y": 12
+    },
+    {
+      "camp": 3,
+      "type": "infanterie",
+      "x": 17,
+      "y": 2
+    },
+    {
+      "camp": 3,
+      "type": "infanterie",
+      "x": 17,
+      "y": 4
+    },
+    {
+      "camp": 3,
+      "type": "char_leger",
+      "x": 16,
+      "y": 4
+    },
+    {
+      "camp": 3,
+      "type": "recon",
+      "x": 15,
+      "y": 3
+    }
+  ]
+}

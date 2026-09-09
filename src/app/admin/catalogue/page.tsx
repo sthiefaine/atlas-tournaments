@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { chargerCatalogueUnites } from '@/content/index';
@@ -28,9 +29,9 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
       <main>
         <Message texte={message} />
         <BaseAbsente />
-        <Bloc titre="Canon embarqué" aide="Les dix unités de base, lues dans content/unites.json.">
+        <Bloc titre="Canon embarqué" aide="Catalogue local : rôles, coûts et exclusivités. Les nouveaux modèles restent à produire séparément.">
           {canon.unites.map((u) => (
-            <Ligne key={u.cle}><Etat valeur="canon" /><span className="font-mono text-xs">{u.cle}</span><span>{u.nom}</span></Ligne>
+            <Ligne key={u.cle}><Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : 'Catalogue commun'} /><Link className="font-semibold underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link><span className="text-xs">{u.cout} fonds · mouvement {u.mouvement} · portée {u.portee[0]}–{u.portee[1]} · vision {u.vision}</span><span className="text-xs opacity-70">{u.traits.join(', ')}</span></Ligne>
           ))}
         </Bloc>
       </main>
@@ -59,12 +60,12 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
         {' '}{canon.unites.length} canon intouchables. Chaque changement de statut incrémente la version.
       </p>
 
-      <Bloc titre="Canon" aide="Les dix unités de base. Une ligne canon ne change jamais de statut.">
+      <Bloc titre="Canon" aide="Unités versionnées du dépôt ; les exclusivités sont contrôlées par le moteur.">
         {canon.unites.map((u) => (
           <Ligne key={u.cle}>
-            <Etat valeur="canon" />
+            <Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : u.statut} />
             <span className="w-40 font-mono text-xs">{u.cle}</span>
-            <span>{u.nom}</span>
+            <Link className="underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link>
             <span className="ml-auto text-xs opacity-50">{u.cout} · {u.traits.join(', ') || 'aucun trait'}</span>
           </Ligne>
         ))}

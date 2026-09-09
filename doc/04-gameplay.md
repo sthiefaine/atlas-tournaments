@@ -1120,3 +1120,9 @@ Le schéma pose un garde-fou en amont : `validerScenario` refuse un `difficile` 
 | 27 | Une unité en `essai` compte dans le plafond de 24 | §13 |
 | 28 | Le mode ne change aucune règle, seulement les paramètres de `Scenario.modes` | §14 |
 | 29 | La table des paramètres de `difficile`, et l'invariant « un `difficile` n'est jamais plus facile » | §14.2, §14.4 |
+
+## Catalogue 7 et difficultés locales — 9 septembre 2026
+
+La refonte Aube ajoute quatre rôles au catalogue (28 unités au total) : drone intercepteur, drone ravitailleur, veilleur méridien et bastion méridien. `UnitType.factionExclusive: 'atl'` exige le même code dans `Scenario.factionsParCamp` pour le camp concerné, en production comme en placement et en renfort. Les unités communes restent accessibles aux délégations. Les caractéristiques complètes sont dans `content/unites.json` ; les interactions des catalogues antérieurs ne changent pas. Les nouvelles combinaisons peuvent porter trois traits au maximum ; le drone intercepteur brouillable est explicitement armé et limité aux cibles aériennes.
+
+Les budgets initiaux et revenus peuvent être individualisés par camp. `scenarioPourMode` applique normal ou difficile avant les conséquences du joueur ; aucun bonus de dégâts invisible n’est introduit. Les choix de campagne et de quêtes persistent ensemble, les sauvegardes et résultats des deux difficultés restent distincts. Les détails de production sont dans `doc/refonte/catalogue7.md` et `doc/refonte/modes.md`.

@@ -4,8 +4,8 @@
   "cle": "in_drone",
   "priorite": 3,
   "description": {
-    "en": "National kit for \"Drone d’observation\" in the colours and materials of Inde. Guiding line: Painted lorry: every flat surface is a decorated panel, garlands hung everywhere, mirrors sewn onto the canvas, and nothing discreet anywhere. Paint the delivered base mesh of unite_drone_base, unchanged: same geometry, same UV layout, same node names. Base colour #e2842a, own shadow #8f4d0d, edge highlight #ffe0b8, accents #2f7d4f, #f2c4d8. Materials to read at a glance: high-gloss paint, heavy canvas, painted steel plate, planed timber and enamelled panel. Finish: glossy and lacquered. Add these ornaments as separate named nodes, and nothing else: a string of small hanging pennant lights, a stretched canvas roof, a blank instruction plate and a small mounted bell. Abstract decals only: dots in #f2c4d8 on the portiere; a repeated arrowhead in #2f7d4f on the arriere. For colour-blind readability the socle carries dots, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band on the socle, so two players of the same nation stay apart.",
-    "fr": "Kit national de « Drone d’observation » aux couleurs et aux matières du style « Inde ». Ligne directrice : Camion peint : chaque surface plane est un panneau décoré, guirlandes accrochées partout, miroirs cousus sur la toile, et rien de discret nulle part. Peindre la géométrie de base livrée unite_drone_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds. Couleur de fond #e2842a, ombre propre #8f4d0d, liseré d’arête #ffe0b8, accents #2f7d4f, #f2c4d8. Matières à lire d’un coup d’œil : peinture brillante, toile épaisse, tôle d’acier peinte, bois raboté et panneau émaillé. Finition : brillante et laquée. Ajouter ces ornements en nœuds nommés distincts, et rien d’autre : une guirlande de fanions, un toit de toile tendue, un panneau d’instruction vierge et une petite cloche montée. Décalcomanies abstraites seulement : des pois en #f2c4d8 sur la zone « portiere » ; une pointe de flèche répétée en #2f7d4f sur la zone « arriere ». Pour la lisibilité sans couleur, le socle porte des pois, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit sur le socle, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+    "en": "National kit for \"Drone d’observation\" in the colours and materials of Inde. Guiding line: Painted lorry: every flat surface is a decorated panel, garlands hung everywhere, mirrors sewn onto the canvas, and nothing discreet anywhere. Paint the delivered base mesh of unite_drone_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #e2842a, dark paint #8f4d0d, light paint #ffe0b8, accents #2f7d4f, #f2c4d8. Materials to read at a glance: high-gloss paint, heavy canvas, painted steel plate, planed timber and enamelled panel. Finish: glossy and lacquered. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a string of small hanging pennant lights, a stretched canvas roof, a blank instruction plate and a small mounted bell. Abstract decals only: dots in #f2c4d8 on the portiere; a repeated arrowhead in #2f7d4f on the arriere. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries dots, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Drone d’observation » aux couleurs et aux matières du style « Inde ». Ligne directrice : Camion peint : chaque surface plane est un panneau décoré, guirlandes accrochées partout, miroirs cousus sur la toile, et rien de discret nulle part. Peindre la géométrie de base livrée unite_drone_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #e2842a, peinture sombre #8f4d0d, peinture claire #ffe0b8, accents #2f7d4f, #f2c4d8. Matières à lire d’un coup d’œil : peinture brillante, toile épaisse, tôle d’acier peinte, bois raboté et panneau émaillé. Finition : brillante et laquée. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : une guirlande de fanions, un toit de toile tendue, un panneau d’instruction vierge et une petite cloche montée. Décalcomanies abstraites seulement : des pois en #f2c4d8 sur la zone « portiere » ; une pointe de flèche répétée en #2f7d4f sur la zone « arriere ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte des pois, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -51,9 +51,9 @@
     "poseAuSol": false
   },
   "budget": {
-    "lod0": 4060,
-    "lod1": 1392,
-    "lod2": 406,
+    "lod0": 3500,
+    "lod1": 1200,
+    "lod2": 350,
     "materiauxMax": 3
   },
   "textures": [
@@ -90,7 +90,7 @@
       "resolution": 256,
       "format": "png",
       "obligatoire": true,
-      "note": "Réduit au liseré de socle : blanc = liseré d’équipe, noir = tout le reste."
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
     }
   ],
   "variantes": {
@@ -102,7 +102,32 @@
       "in"
     ]
   },
-  "animations": [],
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
   "format": {
     "conteneur": "glb",
     "versionGltf": "2.0",
@@ -115,14 +140,11 @@
       "corps",
       "base",
       "socle",
-      "ornement_guirlande",
-      "ornement_toit_toile",
-      "ornement_panneau",
-      "ornement_cloche"
+      "module_antenne"
     ],
     "materiauxAttendus": [
-      "mat_kit",
-      "mat_ornements"
+      "mat_corps",
+      "mat_details"
     ]
   },
   "nommage": {
@@ -152,7 +174,8 @@
       "echelle",
       "budget",
       "masque_equipe",
-      "textures"
+      "textures",
+      "animations"
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [

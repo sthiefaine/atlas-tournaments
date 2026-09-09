@@ -1,0 +1,124 @@
+{
+  "cle": "aube_essais_drones",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_essais_drones",
+  "nom": "Aube · Drones et matériel méridien",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_essais_drones",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 7,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 6000,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "brouillard": false,
+  "limiteJournees": 15,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 15
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai du catalogue 7. Notre intercepteur peut menacer l’hélico ; notre drone ravitailleur soutient le groupe. Les chars et l’artillerie couvrent leur approche.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ost dispose d’un Veilleur brouilleur et d’un Bastion. Ce matériel est réservé à la Sélection Méridienne. Prenez son QG ou mettez son camp hors jeu avant la fin de la quinzième journée.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les budgets sont fixes et la caisse adverse est vide. Cet essai sert à comparer les rôles ; il ne donne pas le matériel méridien à notre équipe.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai terminé. Le renseignement, le soutien et l’interception remplissent des rôles différents ; aucun drone ne remplace à lui seul tout le groupe.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le match s’arrête ici. Reprenez la préparation : les drones ont besoin d’une couverture adaptée face au matériel méridien.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "factionsParCamp": {
+    "1": "atl"
+  },
+  "scenesDialogue": [
+    {
+      "cle": "essai_drones_premier_combat",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Lisez la prévision de duel avant de choisir une cible. Le Bastion couvre les airs : contournez sa portée et utilisez les unités terrestres pour le traiter.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
+}

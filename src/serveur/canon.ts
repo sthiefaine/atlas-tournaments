@@ -13,7 +13,7 @@
  * Préfixes de `content/` interdits de service, en chemins relatifs à la racine du
  * canon. Rien ne porte ces noms aujourd'hui : c'est une interdiction, pas un filtre.
  */
-export const PREFIXES_SECRETS = ['secrets'] as const;
+export const PREFIXES_SECRETS = ['secrets', 'personnages'] as const;
 
 /**
  * Vrai si ce chemin, relatif à la racine du canon, relève du registre des secrets.

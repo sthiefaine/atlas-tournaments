@@ -10,10 +10,10 @@ import {
   chargerDegats, chargerTerrains, chargerUnites, degatsDe,
 } from '../content/index';
 import type {
-  CleTerrain, CleUnite, TableDegats, Terrain, TypeMouvement, UnitType,
+  CampId, CleTerrain, CleUnite, TableDegats, Terrain, TypeMouvement, UnitType,
 } from '../schemas/index';
 import { CARACTERE_PAR_TERRAIN } from '../schemas/index';
-import type { Catalogue } from './types';
+import type { Catalogue, EtatPartie } from './types';
 import { porte } from './types';
 
 /** Assemble un catalogue depuis des listes déjà validées. */
@@ -94,11 +94,17 @@ export function coutBase(
 }
 
 /** Liste des unités qu'un terrain produit, filtrée sur le catalogue actif. */
-export function produitesPar(cat: Catalogue, terrain: CleTerrain): CleUnite[] {
+/** L'absence de contexte ne donne jamais accès au matériel exclusif. */
+export function uniteAutorisee(cat: Catalogue, cle: CleUnite, etat?: Pick<EtatPartie, 'reglages'>, camp?: CampId): boolean {
+  const u = cat.unites[cle];
+  return u !== undefined && (!u.factionExclusive || (camp !== undefined && etat?.reglages.factionsParCamp?.[camp] === u.factionExclusive));
+}
+
+export function produitesPar(cat: Catalogue, terrain: CleTerrain, etat?: EtatPartie, camp?: CampId): CleUnite[] {
   const t = cat.terrains[terrain];
   if (!t) return [];
   return t.produit.filter((c) => {
     const u = cat.unites[c];
-    return u !== undefined && u.statut !== 'retiree';
+    return u !== undefined && u.statut !== 'retiree' && uniteAutorisee(cat, c, etat, camp);
   });
 }

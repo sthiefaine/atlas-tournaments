@@ -18,6 +18,8 @@
 
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
+import { lireBaseKit } from '../src/serveur/reception-assets';
+import { controlerDepot } from '../src/serveur/depot-modeles';
 import {
   nomModele, validerAssetSpec, validerGlb,
   type AssetSpec, type NiveauLod, type VerdictAsset,
@@ -99,6 +101,8 @@ export function afficherVerdict(spec: AssetSpec, fichier: string, lod: NiveauLod
 }
 
 const USAGE = [
+  'Lot complet (mêmes contrôles que le dépôt) : --spec <fiche.json> --lot <dossier>',
+  'Inspection déclarative d’un seul GLB (ne certifie pas la livraison) :',
   'usage : npx tsx scripts/controler-asset.ts --spec assets/specs/<id>.json --glb <fichier.glb> [--lod 0|1|2] [--fichiers <dossier>] [--json]',
 ].join('\n');
 
@@ -110,7 +114,7 @@ export function executer(argv: string[]): ResultatControle {
   const o = options(argv);
   const cheminSpec = o['spec'];
   const cheminGlb = o['glb'];
-  if (typeof cheminSpec !== 'string' || typeof cheminGlb !== 'string') {
+  if (typeof cheminSpec !== 'string' || (typeof cheminGlb !== 'string' && typeof o['lot'] !== 'string')) {
     return { code: 2, texte: USAGE, verdict: null };
   }
 
@@ -121,6 +125,14 @@ export function executer(argv: string[]): ResultatControle {
     return { code: 1, texte: e instanceof Error ? e.message : String(e), verdict: null };
   }
 
+  if (typeof o['lot'] === 'string') {
+    try {
+      const dossier = o['lot'];
+      const verdict = controlerDepot(spec, fichiersLivres(dossier).filter((nom) => nom.startsWith(spec.id + '_')).map((nom) => ({ nom, octets: readFileSync(path.join(dossier, nom)) })), lireBaseKit(spec, typeof o['base'] === 'string' ? o['base'] : dossier));
+      return { code: verdict.ok ? 0 : 1, texte: JSON.stringify(verdict, null, 2), verdict };
+    } catch (e) { return { code: 1, texte: String(e), verdict: null }; }
+  }
+  if (typeof cheminGlb !== 'string') return { code: 2, texte: USAGE, verdict: null };
   let octets: Uint8Array;
   try {
     octets = new Uint8Array(readFileSync(cheminGlb));

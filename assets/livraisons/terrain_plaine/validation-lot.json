@@ -1,0 +1,19 @@
+{
+  "id": "terrain_plaine",
+  "revision": "6d04a3c3bdac7b21912c310cf08f8092bfb45f56da95aa664507b883b47cf2b3",
+  "octets": 3867452,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "terrain_plaine_lod0.glb",
+      "terrain_plaine_lod1.glb",
+      "terrain_plaine_albedo.png",
+      "terrain_plaine_normale.png",
+      "terrain_plaine_rugosite.png",
+      "terrain_plaine_occlusion.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  }
+}

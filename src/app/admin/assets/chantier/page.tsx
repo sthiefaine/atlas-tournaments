@@ -1,11 +1,10 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import path from 'node:path';
 
 import { commandeAsset, genererSpecs } from '@/assets/index';
 import { chantier } from '@/serveur/chantier-assets';
 import { nomsAttendus } from '@/serveur/depot-modeles';
-import { lireInventaireModeles } from '@/serveur/modeles';
+import { receptionsAssets } from '@/serveur/reception-assets';
 
 import { sessionCourante } from '../../session';
 import { Bloc } from '../../ui';
@@ -13,14 +12,6 @@ import { Livraison } from '../[cle]/livraison';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-
-/** Les identifiants livrés : un asset l'est dès que son niveau 0 est sur le disque. */
-function livres(): Set<string> {
-  const inventaire = lireInventaireModeles(path.resolve(process.cwd(), 'public', 'assets', 'modeles'));
-  return new Set(
-    Object.entries(inventaire.modeles).filter(([, n]) => n.includes(0)).map(([id]) => id),
-  );
-}
 
 /** Une étape numérotée du mode d'emploi. */
 function Etape({ n, titre, children }: { n: number; titre: string; children?: React.ReactNode }) {
@@ -47,7 +38,9 @@ export default async function Chantier() {
   if (!await sessionCourante()) redirect('/admin/login');
 
   const specs = genererSpecs();
-  const faits = livres();
+  const receptions = receptionsAssets(specs);
+  const faits = new Set([...receptions].filter(([, r]) => ['approuve', 'integre'].includes(r.etat)).map(([id]) => id));
+  const aRelire = specs.filter((s) => receptions.get(s.id)?.etat === 'conforme');
   const suite = chantier(specs, faits);
   const pret = suite.find((e) => e.bloquePar === null) ?? null;
   const enAttente = suite.filter((e) => e.bloquePar !== null).length;
@@ -72,11 +65,12 @@ export default async function Chantier() {
     <main>
       <h2 className="mb-1 text-lg">Le chantier</h2>
       <p className="mb-6 text-sm opacity-70">
-        <strong>{faits.size} livré(s)</strong> sur {specs.length} · {suite.length} à produire,
+        <strong>{faits.size} approuvé(s)</strong> sur {specs.length} · {suite.length} à produire,
         {' '}dont {enAttente} en attente d’une géométrie de base.
         {' '}<Link href="/admin/assets" className="underline underline-offset-4">Voir tout le catalogue</Link>
       </p>
 
+      {aRelire.length ? <Bloc titre="À approuver avant de décliner les kits"><ul>{aRelire.map((s) => <li key={s.id}><Link className="underline" href={`/admin/assets/${s.id}`}>{s.id}</Link> — conforme techniquement, en attente de réception visuelle</li>)}</ul></Bloc> : null}
       <Bloc titre={`À produire maintenant — ${spec.id}`} aide="Le premier asset que rien ne retient. Un kit n’apparaît ici qu’une fois sa géométrie de base livrée.">
         <Etape n={1} titre="Ce que c’est">
           <p className="text-sm">{spec.description.fr}</p>
@@ -90,11 +84,11 @@ export default async function Chantier() {
 
         <Etape n={2} titre="Copier la commande, la donner au générateur" />
         <Etape n={3} titre="Déposer les fichiers qu’il rend">
-          <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} />
+          <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} local={process.env.NODE_ENV !== 'production'} />
         </Etape>
-        <Etape n={4} titre="Recharger la page">
+        <Etape n={4} titre="Inspecter puis approuver la révision">
           <p className="text-sm opacity-70">
-            Accepté, l’asset disparaît de cette liste et le suivant prend sa place.
+            Le dépôt conforme ouvre la réception sur la fiche. L’approbation visuelle libère ensuite ses kits nationaux.
             {' '}Refusé, chaque motif est une consigne pour l’essai d’après.
           </p>
         </Etape>
