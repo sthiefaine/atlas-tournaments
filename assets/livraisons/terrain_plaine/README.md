@@ -1,5 +1,9 @@
 # terrain_plaine
 
+Révision du 9 septembre 2026 : les quatre cartes sont régénérées avec des brins plus lisibles, des directions moins régulières et davantage de variation de pigment. L'essai d'image générée n'est pas utilisé : les cartes procédurales conservent des raccords mesurables et une séparation stricte couleur/relief. Les aperçus locaux précédents sont obsolètes.
+
+Dans le jeu, le biome plaine reçoit aussi 6–8 bouquets de cinq brins pliés par case, hauts de 2–5 cm, instanciés dans un seul lot supplémentaire (90–120 triangles par case). Ils reçoivent la lumière et les ombres, restent hors du centre et suivent le relief, les saisons, le brouillard et le masquage tactique du paysage. La plaque GLB reste plane conformément au contrat ; les brins appartiennent au rendu du paysage, pas au fichier GLB. La nouvelle matière est activée dans Premier contact. Validation esthétique en jeu encore à faire par le propriétaire.
+
 One-metre square tournament turf, grid P, defence 1/4. The grass material has short blades, a faint mowing pattern, scattered small clover/dandelion and tiny earth scuffs. No text, symbols, national livery or large identifying feature.
 
 Two glTF 2.0 binary files and four PNG channels:

@@ -1759,8 +1759,8 @@
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_albedo.png",
-      "octets": 1076763,
-      "sha256": "13236f37765c7fe841b029dd07710ba9b9131c76b2ab75b4cfa1e99a7dfc20ad"
+      "octets": 1182518,
+      "sha256": "53bde505d8d02dd51b6198df3e6baaf583ffacc0536f400455cd2eaf3527c9d5"
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_lod0.glb",
@@ -1774,18 +1774,18 @@
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_normale.png",
-      "octets": 2034307,
-      "sha256": "0d3bf89b13dff82456606bae2b4828339e9b40b766b3c5795ffdef594644e631"
+      "octets": 2596710,
+      "sha256": "76fd0798777fa3ead33aa84ffbf16ffb2a1c2317185c974f8cd3bd44f278bd49"
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_occlusion.png",
-      "octets": 63335,
-      "sha256": "9925f5a0167d04f13d017675419824e5ac59dee3922b626b8382d15134a3dcc8"
+      "octets": 108753,
+      "sha256": "d89710543685daf306624bf81f76f3a0a11c24e2212228604826b7d49d4fbedb"
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_rugosite.png",
-      "octets": 625487,
-      "sha256": "8fa14508ba8e05fca10e1a8b30dd625b2c7e703035d0ae98020f8926b83aecb8"
+      "octets": 641484,
+      "sha256": "9f91e3671b229a9b249808dd3f17325412cca07a9e33df2f2dfd690882c02109"
     },
     {
       "chemin": "modeles/terrain_pont/terrain_pont_albedo.png",

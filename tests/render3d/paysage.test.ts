@@ -40,6 +40,27 @@ function uniformesTemoins(): UniformesBrouillard {
 
 const INTERDITS: ReadonlySet<CleTerrain> = new Set<CleTerrain>(['ville', 'qg', 'usine', 'aeroport', 'route', 'pont']);
 
+test('le gazon reste court, borné et hors du passage des figurines', () => {
+  const g: GrilleTerrain = { largeur: 4, hauteur: 4, terrainDe: (x) => x === 0 ? 'route' : 'plaine' };
+  const brins = semerPaysage(g, 'plaine').filter(a => a.genre === 'gazon');
+  assert.ok(brins.length >= 12 * 6 && brins.length <= 12 * 8);
+  for (const a of brins) {
+    assert.ok(a.case.x > 0);
+    assert.ok(ecartAuCentre(a) >= 0.30 - 1e-8);
+  }
+  const paysage = creerPaysage(g, () => 0, 'plaine');
+  try {
+    const lot = paysage.groupe.getObjectByName('paysage-gazon') as LotInstancie;
+    assert.ok(lot);
+    lot.geometry.computeBoundingBox();
+    assert.equal(lot.geometry.getAttribute('position').count / 3, 15);
+    assert.ok(lot.geometry.boundingBox!.max.y * 1.15 <= 0.051);
+    assert.equal(lot.geometry.boundingBox!.min.y, 0);
+    assert.equal(lot.compte, brins.length);
+    assert.equal(lot.castShadow, false, 'pas de passe d’ombre pour chaque petit brin');
+  } finally { paysage.dispose(); }
+});
+
 function ecartAuCentre(a: Accessoire): number {
   return Math.hypot(a.x - (a.case.x + 0.5), a.z - (a.case.y + 0.5));
 }

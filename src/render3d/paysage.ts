@@ -55,7 +55,7 @@ export function memesVisibles(a: ReadonlySet<string> | null, b: ReadonlySet<stri
 /** Les genres d'accessoires, tous biomes confondus. */
 export const GENRES_PAYSAGE = [
   // Plaine — le bocage.
-  'haie', 'botte', 'champ', 'cloture', 'moulin', 'ailes_moulin', 'herbe_haute', 'herbes_hautes',
+  'gazon', 'haie', 'botte', 'champ', 'cloture', 'moulin', 'ailes_moulin', 'herbe_haute', 'herbes_hautes',
   // Forêt — le sous-bois.
   'souche', 'fougere', 'champignon', 'tronc', 'buisson',
   // Montagne — l'alpage.
@@ -79,7 +79,7 @@ export type GenrePaysage = typeof GENRES_PAYSAGE[number];
 
 /** Les silhouettes : une forme peut servir plusieurs genres, dans des teintes différentes. */
 type Forme =
-  | 'haie' | 'botte' | 'champ' | 'cloture' | 'moulin' | 'ailes' | 'touffe'
+  | 'gazon' | 'haie' | 'botte' | 'champ' | 'cloture' | 'moulin' | 'ailes' | 'touffe'
   | 'souche' | 'fougere' | 'champignon' | 'tronc' | 'buisson'
   | 'eboulis' | 'neve' | 'cairn' | 'chalet'
   | 'dune' | 'cactus' | 'ossement' | 'palmier'
@@ -156,6 +156,7 @@ export const ESPECES: Readonly<Record<GenrePaysage, Espece>> = {
   cloture: { forme: 'cloture', couleur: 0x8b6a45, matiere: 'bois', regle: { sur: ['plaine'], pres: 'bati', chance: 0.55, nombre: [1, 1], rayon: RAYON_BORD, pose: 'bord', echelle: [0.9, 1.05] } },
   moulin: { forme: 'moulin', couleur: 0xd9cfb8, matiere: 'mineral', regle: { sur: ['plaine'], chance: 0.025, nombre: [1, 1], rayon: [0.3, 0.36], pose: 'anneau', echelle: [0.95, 1.05], jumeau: 'ailes_moulin' } },
   ailes_moulin: { forme: 'ailes', couleur: 0xe8e2d2, matiere: 'bois', decalage: { y: 0.3, z: 0.15 }, regle: { sur: [], chance: 0, nombre: [0, 0], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [1, 1] } },
+  gazon: { forme: 'gazon', couleur: 0x628d38, matiere: 'vegetal', sansOmbre: true, regle: { sur: ['plaine'], chance: 1, nombre: [6, 8], rayon: [0.30, 0.40], pose: 'anneau', echelle: [0.75, 1.15] } },
   herbe_haute: { forme: 'touffe', couleur: 0x7fa04a, matiere: 'vegetal', balance: true, regle: { sur: ['plaine'], chance: 0.22, nombre: [1, 2], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [0.7, 1] } },
   // Le terrain `herbe_haute` (7 septembre 2026 au soir) : les mêmes touffes, mais
   // partout et hautes — c'est ce qui doit dire « ça cache un fantassin » sans
@@ -226,7 +227,7 @@ export const ESPECES: Readonly<Record<GenrePaysage, Espece>> = {
  * change le paysage de toutes les cartes du biome.
  */
 export const PAYSAGES: Readonly<Record<Biome, readonly GenrePaysage[]>> = {
-  plaine: ['haie', 'botte', 'champ', 'cloture', 'moulin', 'herbe_haute'],
+  plaine: ['haie', 'botte', 'champ', 'cloture', 'moulin', 'herbe_haute', 'gazon'],
   foret: ['souche', 'fougere', 'champignon', 'tronc', 'buisson'],
   montagne: ['eboulis', 'neve', 'cairn', 'chalet', 'herbe_alpine'],
   desert: ['dune', 'cactus', 'ossement', 'palmier_oasis', 'touffe_oasis'],
@@ -572,6 +573,25 @@ function construireForme(forme: Forme, couleur: number): THREE.BufferGeometry {
         parties.push(boite(0.05, 0.2, 0.008, couleur, { x: 0.035, y: 0.17, ry: 0, rz: 0 }).rotateZ(k * Math.PI / 2));
       }
       return fusion(parties);
+    }
+    case 'gazon': {
+      // Cinq rubans pliés : 15 triangles, sans cartes transparentes ni ombre
+      // peinte. La lumière éclaire réellement les deux faces des brins.
+      const positions: number[] = [];
+      for (let i = 0; i < 5; i += 1) {
+        const a = i * 2.39996;
+        const x = Math.cos(a) * 0.022, z = Math.sin(a) * 0.022;
+        const h = 0.028 + alea(i, 7, 143) * 0.016;
+        const points = [[-0.006, 0, 0], [0.006, 0, 0], [-0.004, h * 0.58, 0.008], [0.004, h * 0.58, 0.008], [0, h, 0.018]] as const;
+        for (const k of [0, 1, 2, 1, 3, 2, 2, 3, 4]) {
+          const [px, py, pz] = points[k]!;
+          positions.push(x + px * Math.cos(a) - pz * Math.sin(a), py, z + px * Math.sin(a) + pz * Math.cos(a));
+        }
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geo.computeVertexNormals();
+      return peindre(geo, couleur);
     }
     case 'touffe':
       return touffe(couleur, 0.17, 7);
@@ -994,6 +1014,7 @@ export function ouvrirChantierPaysage(
       roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
       metalness: espece.matiere === 'glace' ? 0.1 : 0,
       flatShading: espece.matiere === 'mineral',
+      side: genre === 'gazon' ? THREE.DoubleSide : THREE.FrontSide,
     });
     if (espece.matiere === 'fumee' || espece.matiere === 'glace') {
       mat.transparent = true;

@@ -14,7 +14,7 @@ REPORT = Path('assets/livraisons/terrain_plaine')
 RNG = np.random.default_rng(842071)
 Y, X = np.mgrid[:SIZE, :SIZE]
 colour = np.empty((SIZE, SIZE, 3), dtype=np.float64)
-colour[:] = [76, 109, 39]
+colour[:] = [60, 96, 34]
 pigment = RNG.normal(0, 1.3, (SIZE, SIZE))
 for k, amplitude in [(7, 1.1), (19, 0.8), (43, 0.5)]:
     pigment += amplitude * np.sin(2 * math.pi * (X * k + Y * (k + 2)) / SIZE + RNG.random() * 6.28)
@@ -54,13 +54,13 @@ for _ in range(26):
               [106+RNG.uniform(-5, 5), 86+RNG.uniform(-4, 4), 53], 0.0004, 0.96)
 
 # Individual short grass blades, millimetres in scale. No painted highlights.
-for _ in range(79000):
+for _ in range(46000):
     cx, cy = RNG.uniform(0, SIZE, 2)
     band = math.sin(cx / SIZE * math.pi * 12)
-    angle = RNG.normal(0.25 if band > 0 else -0.25, 0.85)
-    tint = RNG.uniform(-9, 11)
-    paint(cx, cy, RNG.uniform(0.6, 1.25), RNG.uniform(2.0, 5.1), angle,
-          [78+tint, 115+tint, 38+tint*0.5], RNG.uniform(0.0011, 0.0019), RNG.uniform(0.79, 0.94), True)
+    angle = RNG.normal(0.25 if band > 0 else -0.25, 1.4)
+    tint = RNG.uniform(-22, 25)
+    paint(cx, cy, RNG.uniform(0.9, 2.2), RNG.uniform(3.5, 9), angle,
+          [73+tint*0.8, 116+tint, 39+tint*0.4], RNG.uniform(0.0010, 0.0032), RNG.uniform(0.79, 0.94), True)
 
 # Scattered small clover leaves, never a large repeated plant silhouette.
 for _ in range(165):
