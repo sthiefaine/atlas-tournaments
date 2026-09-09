@@ -1,0 +1,131 @@
+{
+  "cle": "aube_essai_maritime_iem_climat",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_essai_maritime_iem_climat",
+  "nom": "Aube · La rade des signaux",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_essai_maritime_iem_climat",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 6000,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 18
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai maritime : prenez le QG d’Ost ou mettez son camp hors jeu avant la fin de J18. Notre drone marin observe le chenal, le cuirassé couvre la côte et l’infanterie peut prendre les bâtiments.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le radar en colonne 7, ligne 6 émet une IEM à J3 puis toutes les trois journées, sur trois cases en distance orthogonale. Gardez les appareils aériens et marins hors rayon ou capturez la station avec l’infanterie.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Tempête de simulation à J4 et J5 : Ost dispose d’une adaptation annoncée, nous conservons les règles ordinaires. Préparez vos trajets. Capturer le radar coupe la menace IEM adverse mais ne change pas ce calendrier météo.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La rade est dégagée. Vous avez distingué les trois réponses : couvrir le drone marin, prendre la station et anticiper la météo annoncée.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Reprenez le bulletin et le rayon de la station avant de relancer. Une route terrestre et le large permettent d’éviter l’impulsion.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "factionsParCamp": {
+    "1": "atl"
+  },
+  "scenesDialogue": [],
+  "installationsIem": [
+    {
+      "cle": "iem_rade",
+      "x": 6,
+      "y": 5,
+      "rayon": 3,
+      "premiereJournee": 3,
+      "intervalle": 3
+    }
+  ],
+  "evenementsClimat": [
+    {
+      "cle": "pluie_rade",
+      "journee": 4,
+      "meteo": "tempete",
+      "duree": 2,
+      "campsAdaptes": [
+        1
+      ]
+    }
+  ]
+}

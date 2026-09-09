@@ -10,7 +10,7 @@
  * hooks, eux, ne rendent que des effets déclaratifs.
  */
 
-import type { CleTerrain, CleUnite, EtatClimat, Meteo } from '../../schemas/index';
+import type { CampId, CleTerrain, CleUnite, EtatClimat, Meteo } from '../../schemas/index';
 import type {
   Catalogue, CtxMecanique, EffetMecanique, EtatPartie, Mecanique, ReglagesPartie, Rng, Unite,
 } from '../types';
@@ -22,6 +22,14 @@ import { effetsSaison, saisonDe, type EffetSaison } from './saison';
 export * from './saison';
 export * from './meteo';
 export * from './cycle';
+
+/** Fenêtres bornées : aucune immunité météo permanente. */
+export function evenementClimat(r: ReglagesPartie, journee: number) {
+  return r.evenementsClimat?.find((e) => journee >= e.journee && journee < e.journee + e.duree);
+}
+export function campAdapteClimat(etat: EtatPartie, camp: CampId): boolean {
+  return evenementClimat(etat.reglages, etat.journee)?.campsAdaptes.includes(camp) ?? false;
+}
 
 /** Coût d'unité au-delà duquel une unité terrestre est « lourde » (§12.2). */
 export const COUT_UNITE_LOURDE = 7000;
@@ -59,8 +67,8 @@ export function initialiserClimat(r: ReglagesPartie, rng: Rng): EtatClimat {
     saison,
     phase: phaseDe(cycle, 0),
     journeeDansCycle: 0,
-    meteo: j1,
-    previsions: [j2, j3],
+    meteo: evenementClimat(r, 1)?.meteo ?? j1,
+    previsions: [evenementClimat(r, 2)?.meteo ?? j2, evenementClimat(r, 3)?.meteo ?? j3],
   };
 }
 
@@ -68,7 +76,7 @@ export function initialiserClimat(r: ReglagesPartie, rng: Rng): EtatClimat {
  * Avance le climat d'une journée : cycle, phase, décalage des prévisions et
  * tirage de la journée J+2. Fonction pure, appelée au début du tour du camp 0.
  */
-export function avancerClimat(climat: EtatClimat, r: ReglagesPartie, rng: Rng): EtatClimat {
+export function avancerClimat(climat: EtatClimat, r: ReglagesPartie, rng: Rng, journee?: number): EtatClimat {
   const cycle = cycleEffectif(r);
   const journeeDansCycle = avancerCycle(cycle, climat.journeeDansCycle);
   const flux = rng.branche('meteo');
@@ -77,8 +85,11 @@ export function avancerClimat(climat: EtatClimat, r: ReglagesPartie, rng: Rng): 
     saison: climat.saison,
     phase: phaseDe(cycle, journeeDansCycle),
     journeeDansCycle,
-    meteo: climat.previsions[0],
-    previsions: [climat.previsions[1], nouvelle],
+    meteo: (journee === undefined ? undefined : evenementClimat(r, journee)?.meteo) ?? climat.previsions[0],
+    previsions: [
+      (journee === undefined ? undefined : evenementClimat(r, journee + 1)?.meteo) ?? climat.previsions[1],
+      (journee === undefined ? undefined : evenementClimat(r, journee + 2)?.meteo) ?? nouvelle,
+    ],
   };
 }
 
@@ -116,7 +127,7 @@ export function brouillardActif(etat: EtatPartie): boolean {
 
 /** Surcoût de case dû au climat (§12.2 et §12.4), avant plafond et plancher. */
 export function surcoutClimat(
-  etat: EtatPartie, terrain: CleTerrain, mouvement: string, lourde: boolean,
+  etat: EtatPartie, terrain: CleTerrain, mouvement: string, lourde: boolean, camp: CampId = etat.campCourant,
 ): number {
   const effets = effetsSaisonPartie(etat.reglages);
   const meteo = etat.climat.meteo;
@@ -134,7 +145,7 @@ export function surcoutClimat(
   // `canicule` et `canicule_saison` ne se cumulent pas (§12.4) : le malus est un
   // point de mouvement, posé en modificateur par `debutTour`, pas un surcoût de case.
   void lourde;
-  return surcout + surcoutMeteo(meteo, terrain, mouvement);
+  return surcout + (campAdapteClimat(etat, camp) ? 0 : surcoutMeteo(meteo, terrain, mouvement));
 }
 
 /**
@@ -159,8 +170,8 @@ export function facteurMouvementMeteo(meteo: Meteo, domaine: string): number {
 }
 
 /** Facteur de mouvement dû à la tempête : les unités aériennes sont bridées. */
-export function facteurMouvementClimat(etat: EtatPartie, domaine: string): number {
-  return facteurMouvementMeteo(etat.climat.meteo, domaine);
+export function facteurMouvementClimat(etat: EtatPartie, domaine: string, camp: CampId = etat.campCourant): number {
+  return campAdapteClimat(etat, camp) ? 1 : facteurMouvementMeteo(etat.climat.meteo, domaine);
 }
 
 /** La couche climat, écrite comme n'importe quelle mécanique. */
@@ -173,7 +184,7 @@ export const MECANIQUE_CLIMAT: Mecanique = {
       const effets: EffetMecanique[] = [];
       const etat = ctx.etat;
       const saison = effetsSaisonPartie(etat.reglages);
-      const canicule = etat.climat.meteo === 'canicule' || saison.includes('canicule_saison');
+      const canicule = (etat.climat.meteo === 'canicule' && !campAdapteClimat(etat, ctx.camp)) || saison.includes('canicule_saison');
       if (canicule) {
         const lourdes = unitesLourdes(ctx.catalogue);
         if (lourdes.length > 0) {
@@ -207,7 +218,7 @@ export const MECANIQUE_CLIMAT: Mecanique = {
 
     surAttaque(ctx: CtxMecanique, att: Unite, _def: Unite, degats: number): number {
       const u = ctx.catalogue.unites[att.type];
-      if (u && porte(u, 'tir_indirect') && ctx.etat.climat.meteo === 'tempete') {
+      if (u && porte(u, 'tir_indirect') && ctx.etat.climat.meteo === 'tempete' && !campAdapteClimat(ctx.etat, att.camp)) {
         return degats * 0.8;
       }
       return degats;
@@ -223,7 +234,7 @@ export const MECANIQUE_CLIMAT: Mecanique = {
     },
 
     surCoutCase(ctx: CtxMecanique, mouvement, terrain, u) {
-      return surcoutClimat(ctx.etat, terrain, mouvement, u.domaine === 'terre' && u.cout >= COUT_UNITE_LOURDE);
+      return surcoutClimat(ctx.etat, terrain, mouvement, u.domaine === 'terre' && u.cout >= COUT_UNITE_LOURDE, ctx.camp);
     },
   },
 };

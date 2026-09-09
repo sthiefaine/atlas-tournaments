@@ -1468,6 +1468,7 @@ export function monterHudHtml(
       }
       // Furtive : repérée au contact seulement. Dit en clair, parce qu'une
       // figurine translucide ne se lit pas au doigt.
+      if (unite.iemJusquaJournee !== undefined) lignes.push(stat(api.t('hud.iem'), 'rouge', 'hud.iem'));
       if (unite.furtive === true) lignes.push(`<span class="furtive">${ech(api.t('hud.furtive'))}</span>`);
       // Déplacée par un ordre en deux temps : elle a bougé, sa suite reste à
       // donner, et la sélectionner rouvre son menu. Dit en clair aussi — une

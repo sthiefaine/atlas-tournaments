@@ -655,9 +655,10 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
     if (a('vol') && a('tout_terrain')) ctx.faute('traits', "traits contradictoires : 'vol' et 'tout_terrain'");
     // Avant le catalogue 7, drones et brouilleurs ne sont pas armés.
     // Le 7 autorise les intercepteurs anti-air et les brouilleurs volants.
-    if (a('drone') && !a('vol')) ctx.faute('traits', "le trait 'drone' exige le trait 'vol'");
     const h = estObjet(o['homologation']) ? o['homologation'] : undefined;
-    const intercepteur = a('drone') && a('anti_air') && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7;
+    const droneMarin = domaine === 'mer' && o['typeMouvement'] === 'mer' && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 8;
+    if (a('drone') && !a('vol') && !droneMarin) ctx.faute('traits', "le trait 'drone' exige le vol ou une coque marine à partir du catalogue 8");
+    const intercepteur = a('drone') && a('vol') && a('anti_air') && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7;
     if ((a('brouilleur') || (a('drone') && !intercepteur)) && degats && Object.values(degats).some((n) => n > 0)) {
       ctx.faute('traits', "un drone ou un brouilleur ne porte pas d'arme (dégâts à 0)");
     }
@@ -1210,7 +1211,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
   'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
-  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
+  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
   'choix', 'flagsRequis', 'flagsInterdits', 'recompenses',
@@ -1317,6 +1318,46 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     sansDoublon(ctx, membres, 'equipes');
     if (membres.length !== camps.length || membres.some((n) => !camps.includes(n))) ctx.faute('equipes', 'partition exacte des camps requise');
   }
+  const clesTechnologies: string[] = [];
+  const positionsIem: string[] = [];
+  if (presente(o, 'installationsIem')) tableau(ctx, o['installationsIem'], 'installationsIem', { max: 8 }, (e, c) => {
+    const s = objet(ctx, e, c, ['cle', 'x', 'y', 'rayon', 'premiereJournee', 'intervalle']);
+    if (!s || !requis(ctx, s, c, ['cle', 'x', 'y', 'premiereJournee'])) return undefined;
+    const identifiant = cle(ctx, s['cle'], sous(c, 'cle'));
+    if (identifiant) clesTechnologies.push(identifiant);
+    entier(ctx, s['x'], sous(c, 'x'), { min: 0, max: 59 });
+    entier(ctx, s['y'], sous(c, 'y'), { min: 0, max: 59 });
+    positionsIem.push(`${s['x']},${s['y']}`);
+    entier(ctx, s['premiereJournee'], sous(c, 'premiereJournee'), { min: 2, max: 100 });
+    if (presente(s, 'rayon')) entier(ctx, s['rayon'], sous(c, 'rayon'), { min: 1, max: 6 });
+    if (presente(s, 'intervalle')) entier(ctx, s['intervalle'], sous(c, 'intervalle'), { min: 3, max: 10 });
+    return undefined;
+  });
+  sansDoublon(ctx, positionsIem, 'installationsIem');
+  const fenetresClimat: { debut: number; fin: number }[] = [];
+  if (presente(o, 'evenementsClimat')) tableau(ctx, o['evenementsClimat'], 'evenementsClimat', { max: 12 }, (e, c) => {
+    const s = objet(ctx, e, c, ['cle', 'journee', 'meteo', 'duree', 'campsAdaptes']);
+    if (!s || !requis(ctx, s, c, ['cle', 'journee', 'meteo', 'duree', 'campsAdaptes'])) return undefined;
+    const identifiant = cle(ctx, s['cle'], sous(c, 'cle'));
+    if (identifiant) clesTechnologies.push(identifiant);
+    const debut = entier(ctx, s['journee'], sous(c, 'journee'), { min: 3, max: 100 });
+    const duree = entier(ctx, s['duree'], sous(c, 'duree'), { min: 1, max: 3 });
+    enumeration(ctx, s['meteo'], sous(c, 'meteo'), METEOS);
+    if (debut !== undefined && duree !== undefined) {
+      const fin = debut + duree - 1;
+      if (fenetresClimat.some((f) => debut <= f.fin && fin >= f.debut)) ctx.faute(c, 'fenêtres météo superposées');
+      fenetresClimat.push({ debut, fin });
+    }
+    const adaptes: number[] = [];
+    tableau(ctx, s['campsAdaptes'], sous(c, 'campsAdaptes'), { max: 4 }, (v, k) => {
+      const camp = entier(ctx, v, k, { min: 0, max: 3 });
+      if (camp !== undefined) { adaptes.push(camp); if (!camps.includes(camp)) ctx.faute(k, 'camp inconnu'); }
+      return camp;
+    });
+    sansDoublon(ctx, adaptes, sous(c, 'campsAdaptes'));
+    return undefined;
+  });
+  sansDoublon(ctx, clesTechnologies, 'technologies');
   if (presente(o, 'renforts')) tableau(ctx, o['renforts'], 'renforts', { max: 20 }, (e, c) => {
     const vague = objet(ctx, e, c, ['journee', 'unites']);
     if (!vague || !requis(ctx, vague, c, ['journee', 'unites'])) return undefined;
@@ -2136,7 +2177,7 @@ export function validerCatalogueUnites(valeur: unknown): Resultat<CatalogueUnite
   entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
   const brutes = Array.isArray(o['unites']) ? (o['unites'] as unknown[]) : [];
   if (!Array.isArray(o['unites'])) ctx.faute('unites', 'un tableau de types d\'unité est attendu');
-  if (brutes.length > 28) ctx.faute('unites', 'le catalogue actif est plafonné à 28 unités');
+  if (brutes.length > 29) ctx.faute('unites', 'le catalogue actif est plafonné à 29 unités');
   const cles: string[] = [];
   const silhouettes: string[] = [];
   for (let i = 0; i < brutes.length; i += 1) {

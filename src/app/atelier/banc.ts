@@ -137,7 +137,7 @@ export const UNITES_BANC: readonly CleUnite[] = [
   'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'missiles_air', 'missiles_sol',
   'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'transport',
   'helico', 'transport_air', 'drone', 'chasseur', 'bombardier', 'furtif',
-  'barge', 'sous_marin', 'cuirasse', 'porte_avions',
+  'barge', 'sous_marin', 'cuirasse', 'porte_avions', 'drone_marin',
   'drone_intercepteur', 'drone_ravitailleur', 'meridien_veilleur', 'meridien_bastion',
 ];
 
@@ -148,11 +148,11 @@ export const UNITES_BANC: readonly CleUnite[] = [
  * la liste, et un test la confronte au domaine `mer` du catalogue.
  */
 export const UNITES_NAVALES_BANC: ReadonlySet<CleUnite> = new Set<CleUnite>([
-  'barge', 'sous_marin', 'cuirasse', 'porte_avions',
+  'barge', 'sous_marin', 'cuirasse', 'porte_avions', 'drone_marin',
 ]);
 
 /** Les colonnes où les navires mouillent, une par unité navale. */
-export const COLONNES_NAVIRES: readonly number[] = [5, 8, 11, 14];
+export const COLONNES_NAVIRES: readonly number[] = [5, 8, 11, 14, 17];
 
 /** Les trois ports de la rive : au camp 0, au camp 1, et neutre. */
 export const PORTS_BANC: readonly Case[] = [
@@ -359,7 +359,7 @@ export function carteGrande(): MapDef {
  * test le confronte à la version de `content/unites.json`, pour qu'il ne
  * reste pas en arrière d'une homologation.
  */
-export const VERSION_CATALOGUE_BANC = 7;
+export const VERSION_CATALOGUE_BANC = 8;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui

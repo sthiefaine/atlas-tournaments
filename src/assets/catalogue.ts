@@ -428,6 +428,10 @@ function liste<T extends string>(table: Record<T, [string, string]>, valeurs: re
 
 /** Textes propres aux dix unités canon. */
 const TEXTES_UNITE: Record<string, Bilingue> = {
+  drone_marin: {
+    fr: 'Un petit drone marin de reconnaissance de tournoi : coque basse compacte à deux flotteurs épais, capsule étanche, radar court et antenne robuste. Aucun cockpit, aucun passager et aucun tube de tir. Panneaux gris neutre de couleur d’équipe sur le pont et le nez ; dessous flottant au niveau de référence, silhouette clairement distincte d’une barge.',
+    en: 'A small unmanned tournament reconnaissance surface boat: compact low twin-float hull, sealed capsule, short radar and sturdy antenna. No cockpit, passenger or marker launcher. Neutral grey team panels on deck and bow. Floating underside at reference level, clearly distinct from a transport barge.',
+  },
   drone_intercepteur: {
     fr: 'Un drone intercepteur de tournoi compact : fuselage en losange, deux ailes épaisses et courts lanceurs de marqueurs dirigés vers le ciel. Aucun cockpit habité. Les ailes et le nez portent les panneaux neutres de couleur d’équipe. Silhouette rapide, nette, distincte du drone observateur ; aucune pièce fine ni emblème.',
     en: 'A compact unmanned tournament interceptor with a diamond fuselage, two thick wings and short upward-pointing marker launchers. No occupied cockpit. Smooth neutral-grey team panels on wings and nose. A fast, crisp silhouette distinct from an observer drone; no thin parts, symbols or lettering.',

@@ -6,10 +6,10 @@ import { IDENTITES_COMMANDANTS } from '../../src/content/identites-commandants';
 import { chargerCommandantJeu } from '../../src/content/commandants-jeu';
 import { ficheUnite } from '../../src/render/fiche-unite';
 
-test('les 28 rôles sont distincts et accessibles par la fiche du joueur', () => {
-  const catalogue = chargerCatalogue(7);
+test('les 29 rôles sont distincts et accessibles par la fiche du joueur', () => {
+  const catalogue = chargerCatalogue(8);
   assert.deepEqual(Object.keys(ROLES_UNITES).sort(), [...catalogue.cles].sort());
-  assert.equal(new Set(Object.values(ROLES_UNITES).map(g => g.role)).size, 28);
+  assert.equal(new Set(Object.values(ROLES_UNITES).map(g => g.role)).size, 29);
   for (const cle of catalogue.cles) {
     const fiche = ficheUnite(catalogue, cle)!;
     assert.equal(fiche.guide, ROLES_UNITES[cle]);
@@ -19,7 +19,7 @@ test('les 28 rôles sont distincts et accessibles par la fiche du joueur', () =>
   }
 });
 test('les drones ont des achats distincts et le ravitailleur ne promet aucune attaque', () => {
-  const catalogue = chargerCatalogue(7);
+  const catalogue = chargerCatalogue(8);
   assert.equal(ficheUnite(catalogue, 'drone_ravitailleur')!.forte.length, 0);
   assert.equal(ficheUnite(catalogue, 'drone')!.forte.length, 0);
   assert.ok(ficheUnite(catalogue, 'drone_intercepteur')!.forte.every(d => catalogue.unites[d.unite]!.traits.includes('vol')));
@@ -45,7 +45,7 @@ test('les pouvoirs spécialisés changent seulement les unités prévues dans le
   const { appliquer, creerPartie, visionUnite } = await import('../../src/engine/index');
   const { multiplicateur } = await import('../../src/engine/regles/modificateurs');
   const { scenePersonnalisee } = await import('./aides');
-  const cat = chargerCatalogue(7);
+  const cat = chargerCatalogue(8);
   const scene = scenePersonnalisee(Array.from({ length: 10 }, () => 'PPPPPPPPPP'), {}, [
     { camp: 0, type: 'transport', x: 1, y: 1 },
     { camp: 0, type: 'char_leger', x: 2, y: 1 },

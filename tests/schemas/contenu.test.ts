@@ -40,7 +40,7 @@ const CATALOGUE_5 = [
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 7);
+  assert.equal(catalogue.catalogueVersion, 8);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
   // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
@@ -52,7 +52,7 @@ test('content/unites.json passe son validateur', () => {
   assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
   // Le chasseur furtif entre au 6 : vingt-quatre unités, le plafond du §13.7.
   assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 6);
-  assert.equal(catalogue.unites.length, 28);
+  assert.equal(catalogue.unites.length, 29);
 });
 
 test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
@@ -65,7 +65,7 @@ test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', ()
     assert.ok(u.nomCourt.length <= 12, `${u.cle} : nom court de ${u.nomCourt.length} signes`);
   }
   // Catalogue 7 : extension demandée à vingt-huit unités, dont deux exclusives.
-  assert.equal(unites.length, 28);
+  assert.equal(unites.length, 29);
 });
 
 test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3', () => {
@@ -328,7 +328,7 @@ test('le port est le seul terrain qu’une coque franchisse avec la mer', () => 
   assert.equal(port.revenus, 1000);
   assert.equal(port.defense, 3);
   assert.equal(port.ravitaille, true);
-  assert.deepEqual([...port.produit].sort(), ['barge', 'cuirasse', 'porte_avions', 'sous_marin']);
+  assert.deepEqual([...port.produit].sort(), ['barge', 'cuirasse', 'drone_marin', 'porte_avions', 'sous_marin']);
   // La plage et la rivière restent terrestres : le naval ne remonte pas les fleuves.
   for (const cle of ['plage', 'riviere', 'pont']) {
     assert.equal(terrains.find((t) => t.cle === cle)?.couts.mer, undefined, cle);

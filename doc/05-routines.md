@@ -1668,7 +1668,7 @@ Dans le monde, la **Commission d'homologation d'Atlas** autorise de nouveaux mat
 | `homologuee` | promue sur métriques | partout, campagne comprise |
 | `retiree` | sortie du catalogue | nulle part ; les parties figées la conservent |
 
-**Bornes du canon, non négociables :** une candidate par semaine au plus, une homologation par mois au plus, **catalogue plafonné à 28 unités actives** (`canon` + `essai` + `homologuee`), les 10 `canon` jamais retirées.
+**Bornes du canon, non négociables :** une candidate par semaine au plus, une homologation par mois au plus, **catalogue plafonné à 29 unités actives** (`canon` + `essai` + `homologuee`), les 10 `canon` jamais retirées.
 
 ### 9.2 Le pipeline
 

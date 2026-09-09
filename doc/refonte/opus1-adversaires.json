@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "statut": "bible_editoriale_non_integree",
+  "opus": 1,
+  "faction": "atl",
+  "nombre": 8,
+  "dirigeante": "selene_veyr",
+  "visagePublic": "cmd_hadran_ost",
+  "canon": {
+    "programme": "Aube",
+    "nature": "Fusion fictive expérimentale ; aucun réacteur réel ni énergie illimitée.",
+    "nations": 24,
+    "nationsPremierPlan": 12,
+    "ton": "Conflit stratégique sérieux, affrontements de tournoi non sanglants."
+  },
+  "revelations": [
+    {
+      "fait": "Fratrie Maël–Lise",
+      "repere": "Non révélée dans cet opus sans nouvelle décision utilisateur",
+      "secret": true
+    },
+    {
+      "fait": "Paternité Edran–Maël uniquement",
+      "repere": "final10",
+      "saisonGlobale": 5,
+      "episode": 4,
+      "missionGlobale": 164,
+      "secret": true
+    },
+    {
+      "fait": "Paternité Edran–Lise",
+      "repere": "Coulisses auteur seulement ; ne pas déduire publiquement la fratrie",
+      "secret": true
+    },
+    {
+      "fait": "Identité civile de Relais Zéro",
+      "repere": "Non révélée dans cet opus",
+      "secret": true
+    }
+  ],
+  "personnages": [
+    {
+      "cle": "cmd_hadran_ost",
+      "nom": "Hadran Ost",
+      "fonction": "Le visage des Gris",
+      "identiteTactique": {
+        "style": "Pression mécanisée",
+        "plan": "Faire avancer les chenilles sous couverture, puis engager le centre.",
+        "contreJeu": "Fragile sur plusieurs objectifs éloignés ; ses bonus mécanisés ne protègent pas toute son armée.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Ronde XII : champion accueillant. Ronde XIII : disqualification justifiée après contournement d’une homologation. Entre XIII et XIV : le Consortium lui confie la Sélection Méridienne.",
+      "motivation": "Retrouver le pouvoir perdu sans admettre sa responsabilité.",
+      "dilemme": "Aider ses équipes à témoigner ou protéger sa réputation.",
+      "issueConditionnelle": "Témoignage possible si les preuves et les équipes sont protégées ; responsabilité maintenue, jamais pardon automatique.",
+      "premiereApparitionEditoriale": "national_fr_01",
+      "liens": "Sélène finance ses prototypes ; Célestin a nourri sa légende.",
+      "publication": {
+        "nomPublic": "Hadran Ost",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Garde les stations avec ses mécanisés ; isoler les accès prive ses prototypes de leur avantage tactique."
+    },
+    {
+      "cle": "selene_veyr",
+      "nom": "Sélène Veyr",
+      "fonction": "La direction des concessions",
+      "identiteTactique": {
+        "style": "Économie et objectifs multiples",
+        "plan": "Distribuer les réserves entre fronts et obliger la coalition à choisir quel accès protéger.",
+        "contreJeu": "Les droits dépendent de signatures et de relais distincts : les séparer expose son dispositif.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Ronde XI : coordination utile des réserves. Ronde XII : contrats liant solaire, stockage et distribution. Ronde XIV : direction fixe de la Cinquième Manche, tentative de tutelle irrévocable sur Aube.",
+      "motivation": "Imposer seule les conditions du réseau, en présentant la dépendance comme la stabilité.",
+      "dilemme": "Accepter un accès partagé ou perdre le contrôle exclusif auquel elle tient.",
+      "issueConditionnelle": "Ne se repent pas ; renonce ou perd ses concessions selon le dossier et les objectifs remportés.",
+      "premiereApparitionEditoriale": "national_fr_01",
+      "liens": "Dirige les sept autres ; le personnage inconnu ne la remplace jamais comme cerveau secret.",
+      "publication": {
+        "nomPublic": "Sélène Veyr",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Finance ces outils pour imposer sa tutelle énergétique ; la coalition peut lui retirer chaque source par le jeu."
+    },
+    {
+      "cle": "cmd_mael_orven",
+      "nom": "Maël Orven",
+      "fonction": "Le frère",
+      "identiteTactique": {
+        "style": "Mobilité aérienne",
+        "plan": "Contourner un front lent et déplacer la menace entre pistes et réserves.",
+        "contreJeu": "Ses appareils ont besoin de ravitaillement et de terrains accessibles ; tenir les objectifs au sol lui coûte du temps.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Avant XIV : pilote de reconnaissance de circuits sportifs, il doit abandonner un programme indépendant faute d’accès aux batteries. XIV : accepte les moyens méridiens et transforme cette dépendance en loyauté choisie.",
+      "motivation": "Ne plus dépendre de décisions prises loin du terrain.",
+      "dilemme": "Refuser la tutelle de son père ou accepter ses réserves pour gagner.",
+      "issueConditionnelle": "Accepte la relève paternelle au pivot ; après la défaite imposée au joueur, peut négocier un désengagement si sa sœur et ses équipes ont été traitées équitablement.",
+      "premiereApparitionEditoriale": "national_fr_03",
+      "liens": "Fils d’Edran : révélation publique au final10. Frère de Lise Varen : information auteur, jamais exposée dans cet opus par défaut.",
+      "publication": {
+        "nomPublic": "Maël Orven",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": [
+          "cmd_edran_sorel"
+        ]
+      },
+      "technologieDoctrine": "Exploite les fenêtres IEM et météo publiées pour déplacer les menaces aériennes ; ses appareils subissent les règles annoncées."
+    },
+    {
+      "cle": "cmd_lise_orven",
+      "nom": "Lise Varen",
+      "fonction": "La sœur",
+      "identiteTactique": {
+        "style": "Tirs indirects et contrôle des passages",
+        "plan": "Préparer des lignes de tir et obliger à ouvrir un second passage.",
+        "contreJeu": "Déplacer ses pièces rompt son tempo ; reconnaissance et approche latérale réduisent son avantage.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Avant XIV : organisatrice de parcours, elle conçoit des zones de sécurité pour les marqueurs lourds. Elle rejoint les Gris après avoir négocié une clause protégeant ses techniciens, puis découvre que celle-ci dépend d’un fournisseur unique. Coulisses auteur : sœur de Maël, sous un nom professionnel distinct.",
+      "motivation": "Protéger son équipe sans accepter que cette protection achète son silence.",
+      "dilemme": "Transmettre des plans de tir utiles au retrait ou maintenir son engagement auprès des Gris.",
+      "issueConditionnelle": "Peut rompre avec le Consortium ; si on refuse une issue vérifiable à ses techniciens, elle reste adverse. Elle ne change pas de camp sur un simple compliment.",
+      "premiereApparitionEditoriale": "national_fr_03",
+      "liens": "Sœur de Maël et fille d’Edran, informations strictement auteur non révélées dans cet opus. Les scènes publiques traitent Maël comme un collègue.",
+      "publication": {
+        "nomPublic": "Lise Varen",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Météo de simulation annoncée pour préparer ses positions indirectes ; quitter la portée ou prendre la station casse son rythme."
+    },
+    {
+      "cle": "cmd_edran_sorel",
+      "nom": "Edran Sorel",
+      "fonction": "Le père sous son nom professionnel",
+      "identiteTactique": {
+        "style": "Relève et logistique",
+        "plan": "Engager une deuxième ligne ravitaillée après avoir épuisé les réserves adverses.",
+        "contreJeu": "Sa supériorité vient de routes et de dépôts identifiables ; elle disparaît lorsqu’ils sont isolés.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Avant XII : responsable de coopérative de maintenance, puis rupture familiale liée à un contrat de dépendance. XII–XIV : travaille sous son nom professionnel Sorel. Apparaît tôt comme prestataire de réserve. Les liens familiaux appartiennent aux seules données auteur.",
+      "motivation": "Sauver son fils d’une nouvelle défaite, quitte à renforcer le réseau qu’il prétend seulement utiliser.",
+      "dilemme": "Aider son fils ou refuser le détournement des réserves communes.",
+      "issueConditionnelle": "Rejoint Maël au final10 dans toutes les branches. Peut ensuite contribuer à restituer les réserves ; aucune aide tardive n’efface la responsabilité du repli imposé.",
+      "premiereApparitionEditoriale": "national_ch_04",
+      "liens": "Père de Maël et Lise en coulisses. Seul le lien père-fils est dit avant sa relève au final10/S5E4. Le lien avec Lise reste caché ; aucune parenté avec le joueur.",
+      "publication": {
+        "nomPublic": "Edran Sorel",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": [
+          "cmd_mael_orven"
+        ]
+      },
+      "technologieDoctrine": "Logistique de stations mobiles acheminées puis fixes : leur arrivée est annoncée et ne ferme jamais tous les refuges au repli."
+    },
+    {
+      "cle": "cmd_yuna_serrat",
+      "nom": "Yuna Serrat",
+      "fonction": "La négociatrice de terrain",
+      "identiteTactique": {
+        "style": "Capture et manœuvre terrestre",
+        "plan": "Multiplier de petites équipes de capture et déplacer les enjeux vers des bâtiments négligés.",
+        "contreJeu": "Ses groupes dispersés perdent les duels concentrés ; elle doit conserver des itinéraires de retrait.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "XII : assure la médiation entre équipes privées d’accès à une piste. XIII : reçoit un mandat limité de gestion de concessions. XIV : étend ces délégations provisoires au bénéfice du Consortium, tout en se disant intermédiaire neutre.",
+      "motivation": "Ne plus être la personne que l’on consulte seulement après la signature.",
+      "dilemme": "Restituer les mandats temporaires ou prétendre qu’ils autorisent tout.",
+      "issueConditionnelle": "Peut témoigner contre les contrats si les délégations ont conservé un pouvoir de contrôle ; sinon reste gestionnaire adverse.",
+      "premiereApparitionEditoriale": "national_nl_03",
+      "liens": "Recrute des délégations dissidentes à titre temporaire ; ne représente aucune nation entière.",
+      "publication": {
+        "nomPublic": "Yuna Serrat",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Capture les stations disputées ; la perte de leur contrôle inverse la pression sans lui donner de bonus racial ou national."
+    },
+    {
+      "cle": "cmd_basile_kelm",
+      "nom": "Basile Kelm",
+      "fonction": "Le gardien des réserves",
+      "identiteTactique": {
+        "style": "Défense et couverture radar",
+        "plan": "Ancrer une position autour de dépôts et de stations, obligeant à préparer une percée.",
+        "contreJeu": "Une ligne fixe couvre mal deux objectifs distants ; détourner son attention ouvre des accès.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "XI : organise la sécurité d’installations de tournoi après une panne sans victimes. XIII : crée des réserves redondantes. XIV : accepte leur contrôle exclusif au nom de la continuité et finit par exclure les équipes qui en ont besoin.",
+      "motivation": "Éviter toute interruption, même au prix d’un système injuste.",
+      "dilemme": "Faire fonctionner un réseau partagé imparfait ou conserver une réserve inaccessible.",
+      "issueConditionnelle": "Reste loyal au dispositif de Sélène ; une reddition réglementaire est possible, une conversion soudaine ne l’est pas.",
+      "premiereApparitionEditoriale": "national_ma_05",
+      "liens": "S’oppose aux prises de risque de Maël ; dépend des plans logistiques d’Edran.",
+      "publication": {
+        "nomPublic": "Basile Kelm",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Stations IEM défensives : intervalles lisibles et capture de la source, jamais immunité de camp."
+    },
+    {
+      "cle": "cmd_sans_visage",
+      "nom": "Relais Zéro",
+      "fonction": "Le commandant entièrement inconnu",
+      "identiteTactique": {
+        "style": "Information et drones",
+        "plan": "Faire tourner des observateurs et brouilleurs pour créer des fenêtres de visibilité.",
+        "contreJeu": "Les drones sont fragiles, leurs couloirs et relais sont repérables ; aucune connaissance des unités cachées au moteur.",
+        "statut": "Direction narrative ; pas de nouveau pouvoir moteur implicite."
+      },
+      "historique": "Avant XIV : aucune biographie civile vérifiée. XIV : un identifiant de compétition récurrent signe des ordres dont les effets et la responsabilité sont consignés. Les archives attestent une continuité de commandement, sans révéler d’identité civile.",
+      "motivation": "Motivation personnelle inconnue ; objectif observable : maintenir l’avantage informationnel de la Cinquième Manche.",
+      "dilemme": "Couper un relais et perdre ses observations ou maintenir une liaison susceptible de laisser des traces.",
+      "issueConditionnelle": "Identité civile toujours inconnue à la fin de l’opus1. Le relais local est neutralisé et ses mandats révoqués ; cela ne transforme pas une victoire en faux dénouement.",
+      "premiereApparitionEditoriale": "national_jp_06",
+      "liens": "Reçoit des objectifs de Sélène. Aucun lien familial ou national supposé ; ni silhouette masquée ni révélation arbitraire en fin de partie.",
+      "publication": {
+        "nomPublic": "Relais Zéro",
+        "parentesPubliquesAvantPivot": [],
+        "parentesPubliquesApresPivot": []
+      },
+      "technologieDoctrine": "Drones marins et relais distants : renseignement avancé dépendant de sources identifiables ; son identité civile demeure secrète."
+    }
+  ],
+  "confidentialite": {
+    "publication": "Aucune diffusion brute de ce fichier éditorial.",
+    "public": [
+      "cle",
+      "nom",
+      "identiteTactique"
+    ],
+    "auteurSeulement": [
+      "fonction",
+      "historique",
+      "motivation",
+      "dilemme",
+      "issueConditionnelle",
+      "liens",
+      "revelations"
+    ],
+    "filtrage": "Composer des biographies publiques séparées par jalon ; ne pas simplement masquer les tableaux de liens."
+  },
+  "technologies": {
+    "statut": "conception_a_valider_en_jeu",
+    "principe": "Supériorité technologique adverse visible et localisée ; les nations adaptent leurs parcours et leur doctrine, sans immunité nationale cachée.",
+    "iem": "Station localisée, rayon et prochaines journées annoncés. Quitter la portée ou capturer la station ; effet temporaire sans dégâts permanents.",
+    "climat": "Forçage météorologique local au match de tournoi, jamais contrôle du climat planétaire. Prévision publique et refuge hors des cases ou trajectoires les plus pénalisées ; capture de la station coupe la source.",
+    "maritime": "Drone marin robotisé avec rôle propre de reconnaissance et de pression côtière. Son soutien et ses cibles dépendent du catalogue, aucun pouvoir implicite issu du récit.",
+    "limiteImplementation": "Les événements météo du premier essai suivent un calendrier public. Seule la station IEM est une source capturable active ; couper la météo par capture est une extension de conception, pas une capacité livrée. campsAdaptes est déclaré dans le scénario et annoncé au briefing, jamais déduit silencieusement de la nation."
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "id": "kit_mn_drone_marin",
+  "type": "kit",
+  "cle": "mn_drone_marin",
+  "priorite": 3,
+  "description": {
+    "en": "National kit for \"Drone marin\" in the colours and materials of Mongolie. Guiding line: Felt and dust: long chassis wrapped in strapped raw felt, deel orange on the facings, and a layer of steppe over the lower third. Paint the delivered base mesh of unite_drone_marin_base, unchanged: same geometry, same UV layout, same node names and animation clips. Pigment palette: base #e08a1e, dark paint #8c4d08, light paint #ffdda6, accents #c0392f, #f0e6d2. Materials to read at a glance: thick felt, flat matte paint, stitched leather, planed timber and braided rope. Finish: dust-laden on the lower third and fully matte. Paint these ornament motifs into the existing UV layout, with normal-map detail only, and nothing else: a stitched side pannier, a coil of rope on a cleat, a felt-covered flask and a hanging water can. Abstract decals only: a run of arcs in #c0392f on the flanc. No added nodes, geometry, baked shadows or painted highlights. For colour-blind readability an existing team-colour panel carries a run of arcs, unique to this nation. This is a full texture set, not a tinted mask: the albedo is painted for this nation alone. The only team mask left is a narrow band within the inherited team-colour panels, so two players of the same nation stay apart.",
+    "fr": "Kit national de « Drone marin » aux couleurs et aux matières du style « Mongolie ». Ligne directrice : Feutre et poussière : châssis longs couverts de feutre écru sanglé, orange de deel sur les revers, et une couche de steppe sur le tiers bas. Peindre la géométrie de base livrée unite_drone_marin_base, telle quelle : même géométrie, même dépliage, mêmes noms de nœuds et mêmes clips. Palette de pigments : fond #e08a1e, peinture sombre #8c4d08, peinture claire #ffdda6, accents #c0392f, #f0e6d2. Matières à lire d’un coup d’œil : feutre épais, peinture mate, cuir cousu, bois raboté et cordage tressé. Finition : chargée de poussière sur le tiers bas et entièrement mate. Peindre ces motifs ornementaux dans les UV existants, avec du détail en carte normale seulement : une sacoche cousue sur le flanc, une corde lovée sur un taquet, une gourde habillée de feutre et un bidon d’eau accroché. Décalcomanies abstraites seulement : une suite d’arcs en #c0392f sur la zone « flanc ». Aucun ajout de géométrie, de nœud, d’ombre ou de reflet peint. Pour la lisibilité sans couleur, un panneau d’équipe existant porte une suite d’arcs, propre à cette nation. C’est un jeu de textures complet et non un masque teinté : l’albédo est peint pour cette nation et pour elle seule. Le seul masque d’équipe qui subsiste est un liseré étroit dans les panneaux d’équipe hérités, pour que deux joueurs d’une même nation restent distincts. Livrer le kit monté sur la géométrie de base — le maillage habillé — pour qu’il se contrôle tel qu’il apparaîtra en jeu."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "national livery kit",
+      "hand-painted texture set",
+      "closed ornament vocabulary"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm",
+      "no tinted grey base coat pretending to be a livery"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 0.5,
+      "tolerance": 0.06
+    },
+    "y": {
+      "cible": 0.4,
+      "tolerance": 0.06
+    },
+    "z": {
+      "cible": 0.7,
+      "tolerance": 0.06
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 3500,
+    "lod1": 1200,
+    "lod2": 350,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Peinture nationale complète : couleurs, matières et décalcomanies déjà en place."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Relief propre au kit : coutures, sangles, panneaux rapportés, grain des matières."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "C’est elle qui sépare une peinture mate d’un acier brossé : prévoir du contraste."
+    },
+    {
+      "canal": "metal",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Seulement si le style demande du laiton, du cuivre ou de l’acier nu."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 256,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Liseré dans les zones d’équipe de la base : blanc = liseré gris neutre dans l’albédo, noir = tout le reste."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": [
+      "mn"
+    ]
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "boucle": false,
+      "obligatoire": true
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "base",
+      "socle",
+      "module_radar",
+      "module_antenne"
+    ],
+    "materiauxAttendus": [
+      "mat_corps",
+      "mat_details"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "kit_mn_drone_marin_lod0.glb",
+      "kit_mn_drone_marin_lod1.glb",
+      "kit_mn_drone_marin_albedo.png",
+      "kit_mn_drone_marin_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "textures",
+      "animations"
+    ],
+    "toleranceAabb": 0.14,
+    "lodRequis": [
+      0,
+      1
+    ]
+  }
+}

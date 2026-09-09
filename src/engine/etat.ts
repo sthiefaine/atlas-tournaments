@@ -155,6 +155,8 @@ export function sceneDepuis(
       ...(scenario.factionsParCamp ? { factionsParCamp: scenario.factionsParCamp } : {}),
       ...(scenario.equipes ? { equipes: scenario.equipes } : {}),
       ...(scenario.renforts ? { renforts: scenario.renforts } : {}),
+      ...(scenario.installationsIem ? { installationsIem: scenario.installationsIem } : {}),
+      ...(scenario.evenementsClimat ? { evenementsClimat: scenario.evenementsClimat } : {}),
       date: scenario.date,
       climatPays,
       hemisphere,
@@ -235,6 +237,11 @@ export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatP
       || u.x < 0 || u.y < 0 || u.x >= scene.largeur || u.y >= scene.hauteur) {
       throw new Error('Renfort invalide : unité, camp ou point d’entrée hors de la scène.');
     }
+  }
+  for (const station of scene.reglages.installationsIem ?? []) {
+    const cleTerrain = cat.parCaractere[scene.grille[station.y]?.[station.x] ?? ""];
+    const terrain = cleTerrain ? cat.terrains[cleTerrain] : undefined;
+    if (!terrain?.capturable) throw new Error("Installation IEM hors bâtiment capturable.");
   }
   const contexte = { reglages: scene.reglages };
   for (const u of [...scene.unitesDepart, ...(scene.reglages.renforts ?? []).flatMap((v) => v.unites)]) {

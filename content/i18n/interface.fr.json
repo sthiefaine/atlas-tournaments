@@ -1,6 +1,7 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle":"hud.iem","texte":"IEM · immobilisée jusqu’à la fin de son tour","contexte":{"ecran":"partie"},"longueurMax":70},
     {"cle":"commandant.cmd_solveig_tamm.pouvoir_aube","texte":"Escorte rapprochée","contexte":{"ecran":"partie"},"longueurMax":30},
     {"cle":"commandant.cmd_solveig_tamm.super_aube","texte":"Convoi prioritaire","contexte":{"ecran":"partie"},"longueurMax":30},
     {"cle":"commandant.cmd_wren_osoko.pouvoir_aube","texte":"Relevé du terrain","contexte":{"ecran":"partie"},"longueurMax":30},

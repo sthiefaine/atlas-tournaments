@@ -29,9 +29,9 @@ export function voisines(c: Case): Case[] {
 /** Points de mouvement d'une unité ce tour, modificateurs et météo compris. */
 export function pointsMouvement(etat: EtatPartie, cat: Catalogue, u: Unite): number {
   const type = cat.unites[u.type];
-  if (!type) return 0;
+  if (!type || u.iemJusquaJournee !== undefined) return 0;
   const brut = type.mouvement + additif(etat, cat, u, 'mouvement');
-  const facteur = facteurMouvementClimat(etat, type.domaine);
+  const facteur = facteurMouvementClimat(etat, type.domaine, u.camp);
   return Math.max(1, Math.floor(Math.max(1, brut) * facteur));
 }
 
@@ -45,7 +45,7 @@ export function coutEntree(
   if (terrain === null) return null;
   const base = coutBase(cat, terrain, type.typeMouvement, type);
   if (base === null) return null;
-  const total = base + surcoutCase(etat, cat, type.typeMouvement, terrain, type);
+  const total = base + surcoutCase(etat, cat, type.typeMouvement, terrain, type, u.camp);
   return Math.min(4, Math.max(1, total));
 }
 

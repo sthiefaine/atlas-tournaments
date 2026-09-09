@@ -1,0 +1,1017 @@
+{
+  "version": 1,
+  "statut": "conception",
+  "nature": "plan_editorial_non_jouable",
+  "totalOpus": 172,
+  "repartition": {
+    "tutoriels": 10,
+    "missionsNationales": 144,
+    "finales": 18
+  },
+  "continuite": "24 nations conservées, 12 arcs de premier plan ; les 18 finales ne sont pas 18 nouvelles nations.",
+  "tutoriels": [
+    {
+      "id": "premier_contact",
+      "ordre": 1,
+      "titre": "Premier contact",
+      "statut": "existant_a_reviser",
+      "apprentissage": "Déplacement, terrain, prévision et riposte",
+      "objectifGameplay": "Mettre hors jeu les trois unités de Tomas.",
+      "conditionsVictoire": [
+        "Mettre hors jeu les trois unités de Tomas."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 10 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Conserver la carte et le contrat existants ; aides contextuelles actives.",
+      "difficile": "Même objectif et unités ; prévision à une journée et aides rappelables.",
+      "choixImpact": null,
+      "revelations": [
+        "Les exercices sont arbitrés ; les marqueurs ne blessent pas."
+      ],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "villes_du_bocage"
+    },
+    {
+      "id": "villes_du_bocage",
+      "ordre": 2,
+      "titre": "Les quatre villes",
+      "statut": "existant_a_reviser",
+      "apprentissage": "Capture, revenus et soins",
+      "objectifGameplay": "Posséder simultanément trois des quatre villes désignées.",
+      "conditionsVictoire": [
+        "Posséder simultanément trois des quatre villes désignées."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 16 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Conserver les quatre villes et les vingt points de capture ordinaires.",
+      "difficile": "Tomas donne priorité aux villes encore libres ; aucune réduction des points de capture.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "chantier_des_usines"
+    },
+    {
+      "id": "chantier_des_usines",
+      "ordre": 3,
+      "titre": "Le chantier des usines",
+      "statut": "existant_a_reviser",
+      "apprentissage": "Production, génie et remise en service",
+      "objectifGameplay": "Remettre en service et posséder les deux usines désignées.",
+      "conditionsVictoire": [
+        "Remettre en service et posséder les deux usines désignées."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 18 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Conserver carte, objectifs et prime du génie ; expliquer le menu de production.",
+      "difficile": "Même économie ; IA protège davantage son infanterie de capture.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "qg_de_la_presquile"
+    },
+    {
+      "id": "qg_de_la_presquile",
+      "ordre": 4,
+      "titre": "Le QG de la presqu’île",
+      "statut": "existant_a_reviser",
+      "apprentissage": "Capture du QG, transport et marées",
+      "objectifGameplay": "Capturer le QG adverse : quarante points.",
+      "conditionsVictoire": [
+        "Capturer le QG adverse : quarante points."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 18 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Conserver la carte et les marées ; annoncer les quatre tours de capture.",
+      "difficile": "Même fenêtre de marée ; IA intercepte le transport plutôt que recevoir des dégâts gratuits.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "opus1_tutoriel_05"
+    },
+    {
+      "id": "opus1_tutoriel_05",
+      "ordre": 5,
+      "titre": "La bonne distance",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Tir indirect et protection",
+      "objectifGameplay": "Capturer le QG du plateau ou mettre hors jeu toute la défense.",
+      "conditionsVictoire": [
+        "Capturer le QG du plateau ou mettre hors jeu toute la défense."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 14 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Deux couloirs permettent de déplacer puis installer l’artillerie ; pas de tir après déplacement.",
+      "difficile": "Une reconnaissance adverse cherche le flanc ; défense et dégâts inchangés.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "opus1_tutoriel_06"
+    },
+    {
+      "id": "opus1_tutoriel_06",
+      "ordre": 6,
+      "titre": "Au-delà des arbres",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Brouillard, radar et drones ; aperçu du rayon annoncé d’une station IEM inactive, avant une première impulsion évitable",
+      "objectifGameplay": "Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.",
+      "conditionsVictoire": [
+        "Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 16 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Drone observateur et radar servent à préparer un combat réel.",
+      "difficile": "Brouilleur adverse annoncé dans le briefing ; information jamais omnisciente.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [
+        "Objectif composé mémorisé : prise du radar puis QG.",
+        "Prévision et contour du rayon IEM consultables avant mouvement."
+      ],
+      "transitionVers": "opus1_tutoriel_07"
+    },
+    {
+      "id": "opus1_tutoriel_07",
+      "ordre": 7,
+      "titre": "Le dernier kilomètre",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Munitions, ravitaillement et transport ; variante maritime avec drone marin et quai de ravitaillement",
+      "objectifGameplay": "Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.",
+      "conditionsVictoire": [
+        "Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 14 journées.",
+        "Transport désigné hors jeu.",
+        "Toutes les unités de couverture hors jeu."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Ravitailleur et transport fournis ; un détour protège le convoi.",
+      "difficile": "Une patrouille tente de couper le détour ; réserve de munitions identique.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [
+        "Condition composée : sortie du transport et unité de couverture restante.",
+        "Variante intégrée au même tutoriel, sans créer une onzième mission."
+      ],
+      "transitionVers": "opus1_tutoriel_08"
+    },
+    {
+      "id": "opus1_tutoriel_08",
+      "ordre": 8,
+      "titre": "Une ligne commune",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Équipes, vision partagée et caisses séparées",
+      "objectifGameplay": "En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.",
+      "conditionsVictoire": [
+        "En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 16 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Allié annonce sa route ; enseigner le ravitaillement allié sans transfert de propriété.",
+      "difficile": "Allié autonome moins directif ; adversaire concentre ses attaques sur les positions découvertes.",
+      "choixImpact": null,
+      "revelations": [],
+      "mecaniquesADevelopper": [],
+      "transitionVers": "opus1_tutoriel_09"
+    },
+    {
+      "id": "opus1_tutoriel_09",
+      "ordre": 9,
+      "titre": "Le prix du courant",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Énergie et concessions ; bulletin de pluie provoquée, capture de la station de contrôle",
+      "objectifGameplay": "Capturer deux des trois postes de distribution représentés par des bâtiments existants.",
+      "conditionsVictoire": [
+        "Capturer deux des trois postes de distribution représentés par des bâtiments existants."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 16 journées."
+      ],
+      "transition": "Débloquer le tutoriel suivant après victoire.",
+      "normal": "Les revenus viennent des bâtiments ; aucune nouvelle ressource de combat implicite.",
+      "difficile": "Deux postes plus disputés ; même revenu et même coût de production.",
+      "choixImpact": null,
+      "revelations": [
+        "Les concessions concernent les contrats énergétiques, jamais la souveraineté des habitants."
+      ],
+      "mecaniquesADevelopper": [
+        "Annonce de la première activation après un tour complet de préparation ; aucun effet avant que le joueur puisse agir."
+      ],
+      "transitionVers": "opus1_tutoriel_10"
+    },
+    {
+      "id": "opus1_tutoriel_10",
+      "ordre": 10,
+      "titre": "La première promesse",
+      "statut": "conception_non_jouable",
+      "apprentissage": "Synthèse et choix persistant",
+      "objectifGameplay": "Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.",
+      "conditionsVictoire": [
+        "Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif."
+      ],
+      "conditionsDefaite": [
+        "Perdre son QG lorsque la carte en comporte un.",
+        "Toutes les unités du joueur hors jeu.",
+        "Dépasser la limite de 18 journées."
+      ],
+      "transition": "Ouvrir la première saison nationale.",
+      "normal": "Tous les rappels restent consultables ; choisir ensuite un contrat de maintenance ou des fonds immédiats.",
+      "difficile": "IA coordonnée, même objectif ; le choix narratif garde exactement la même portée.",
+      "choixImpact": {
+        "choix": [
+          "Maintenance partagée",
+          "Fonds immédiats"
+        ],
+        "effets": [
+          "Un ravitailleur de renfort annoncé dans la première mission nationale.",
+          "1 000 fonds supplémentaires dans cette même mission."
+        ],
+        "portee": "Premier départ national uniquement ; sauvegarde et rejeu figent ce choix."
+      },
+      "revelations": [],
+      "mecaniquesADevelopper": [
+        "Branchement du choix de formation vers la première mission nationale."
+      ],
+      "transitionVers": "opus1_fr_01"
+    }
+  ],
+  "finales": [
+    {
+      "id": "opus1_finale_01",
+      "ordre": 1,
+      "ordreGlobal": 155,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 1,
+      "titre": "Les portes du réseau",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_hadran_ost",
+      "format": "2v1",
+      "carteIntention": "Port fluvial ; deux ponts distants, ateliers centraux.",
+      "objectifGameplay": "Capturer le QG d’Ost ou mettre hors jeu ses unités.",
+      "conditionsVictoire": [
+        "Capturer le QG d’Ost ou mettre hors jeu ses unités."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Ouvrir le port aux délégations hésitantes ou réserver les quais à la coalition.",
+        "effet": "Un quai allié disponible en finale 5 ou 1 500 fonds en finale 2."
+      },
+      "revelations": [
+        "Les Gris assument leur rattachement à la Cinquième Manche."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_02",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_02",
+      "ordre": 2,
+      "ordreGlobal": 156,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 2,
+      "titre": "La taxe des sommets",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_basile_kelm",
+      "format": "1v1",
+      "carteIntention": "Trois crêtes, chemins de traverse, radar exposé.",
+      "objectifGameplay": "Capturer deux des trois postes du col.",
+      "conditionsVictoire": [
+        "Capturer deux des trois postes du col."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Maintenir les relais publics ou emporter les batteries mobiles.",
+        "effet": "Radar allié initial en finale 6 ou transport supplémentaire en finale 4."
+      },
+      "revelations": [
+        "Basile applique un contrat de priorité qui coupe les petites délégations."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_03",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "iem",
+        "miseEnScene": "Basile protège une station de col. Rayon annoncé, passage extérieur praticable, infanterie capable de capturer la source.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_03",
+      "ordre": 3,
+      "ordreGlobal": 157,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 3,
+      "titre": "Le ciel verrouillé",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_mael_orven",
+      "format": "1v2",
+      "carteIntention": "Plaine aéroportuaire, hangars bas et haies.",
+      "objectifGameplay": "Capturer les deux QG adverses ou mettre hors jeu leurs deux armées.",
+      "conditionsVictoire": [
+        "Capturer les deux QG adverses ou mettre hors jeu leurs deux armées."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Échanger les journaux de vol ou protéger leur source.",
+        "effet": "Position d’un renfort révélée en finale 9 ou confiance accrue d’une délégation hésitante."
+      },
+      "revelations": [
+        "Maël Orven impose son rythme aérien ; ses liens familiaux ne sont pas connus du joueur."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_04",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_04",
+      "ordre": 4,
+      "ordreGlobal": 158,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 4,
+      "titre": "Le contrat de Lise",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_lise_orven",
+      "format": "2v2",
+      "carteIntention": "Canal industriel, deux lignes indirectes et îlots.",
+      "objectifGameplay": "Capturer les QG de la coalition adverse ou mettre hors jeu ses armées.",
+      "conditionsVictoire": [
+        "Capturer les QG de la coalition adverse ou mettre hors jeu ses armées."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Garantir l’accès public demandé par Lise ou exiger son retrait immédiat.",
+        "effet": "Ouvre une médiation en finale 13 ou réduit la défense de finale 5."
+      },
+      "revelations": [
+        "Lise défend la centralisation pour prévenir les coupures ; elle critique déjà les méthodes de Maël."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_05",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "climat",
+        "miseEnScene": "Lise annonce une pluie de simulation qui ralentit les approches ; deux routes et une station capturable maintiennent le contre-jeu.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_05",
+      "ordre": 5,
+      "ordreGlobal": 159,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 5,
+      "titre": "Les pavillons hésitants",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_yuna_serrat",
+      "format": "2v2",
+      "carteIntention": "Ville basse avec itinéraire civil hors plateau de combat.",
+      "objectifGameplay": "Capturer les QG adverses ou mettre hors jeu leurs armées.",
+      "conditionsVictoire": [
+        "Capturer les QG adverses ou mettre hors jeu leurs armées."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Offrir une audition à la délégation battue ou suspendre son contrat.",
+        "effet": "Renfort conditionnel en finale 11 ou fonds de compensation en finale 6."
+      },
+      "revelations": [
+        "Une délégation ayant choisi un contrat adverse peut combattre ici ; ce ne sont pas tous ses habitants qui ont changé de camp."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_06",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_06",
+      "ordre": 6,
+      "ordreGlobal": 160,
+      "saisonFinale": 1,
+      "saisonGlobale": 4,
+      "episode": 6,
+      "titre": "Le signal sans visage",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_sans_visage",
+      "format": "1v3",
+      "carteIntention": "Archipel de pylônes, pontons et zones boisées.",
+      "objectifGameplay": "Capturer trois postes de transmission ou mettre hors jeu les trois armées adverses.",
+      "conditionsVictoire": [
+        "Capturer trois postes de transmission ou mettre hors jeu les trois armées adverses."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Publier les relais compromis ou surveiller leur trafic.",
+        "effet": "Brouillage adverse réduit en finale 16 ou itinéraire révélé en finale 8."
+      },
+      "revelations": [
+        "Une voix inconnue coordonne les adversaires ; aucune identité ni parenté n’est donnée."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_07",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "maritime",
+        "miseEnScene": "Relais Zéro utilise des drones marins entre les pylônes ; quais, artillerie de côte et sortie des chenaux offrent plusieurs réponses.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_07",
+      "ordre": 7,
+      "ordreGlobal": 161,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 1,
+      "titre": "Les réserves verrouillées",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_basile_kelm",
+      "format": "3v1",
+      "carteIntention": "Trois entrées vers un bassin de stockage.",
+      "objectifGameplay": "Capturer le QG de Basile ou mettre hors jeu sa défense.",
+      "conditionsVictoire": [
+        "Capturer le QG de Basile ou mettre hors jeu sa défense."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Répartir les réserves ou équiper la colonne de tête.",
+        "effet": "Ravitaillement allié en finale 12 ou unité lourde initiale en finale 8."
+      },
+      "revelations": [
+        "Les réserves servent à imposer la tutelle sur Aube."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_08",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "iem",
+        "miseEnScene": "Impulsions alternées entre dépôts, sans couvrir simultanément les trois accès.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_08",
+      "ordre": 8,
+      "ordreGlobal": 162,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 2,
+      "titre": "La contre-offre",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "selene_veyr",
+      "format": "1v2",
+      "carteIntention": "Deux boucles routières et un poste central contesté.",
+      "objectifGameplay": "Posséder deux postes de distribution à la fin de J18 ou capturer les deux QG adverses avant cette échéance.",
+      "conditionsVictoire": [
+        "Posséder deux postes de distribution à la fin de J18 ou capturer les deux QG adverses avant cette échéance."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "À la fin de J18, moins de deux postes possédés et les deux QG adverses non capturés."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Rendre l’offre publique ou négocier un délai transparent sous contrôle de la coalition.",
+        "effet": "Confiance des alliés en finale 17 ou arrivée adverse retardée de deux journées en finale 9."
+      },
+      "revelations": [
+        "Sélène propose de garantir l’énergie en échange de l’exclusivité des décisions."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles.",
+        "Objectif composé ou contrôle évalué à une échéance à implémenter."
+      ],
+      "transitionVers": "opus1_finale_09",
+      "limiteJournees": 18,
+      "technologie": {
+        "type": "climat",
+        "miseEnScene": "Fenêtres de pluie publiées avant départ ; négocier le délai change un renfort et non une prévision secrète.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_09",
+      "ordre": 9,
+      "ordreGlobal": 163,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 3,
+      "titre": "Le dépôt de relève",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_mael_orven",
+      "format": "2v1",
+      "carteIntention": "Vallée resserrée, dépôt de relève au fond.",
+      "objectifGameplay": "Capturer le QG de Maël ou mettre hors jeu sa force avancée.",
+      "conditionsVictoire": [
+        "Capturer le QG de Maël ou mettre hors jeu sa force avancée."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Évacuer les techniciens du dépôt ou sécuriser les archives logistiques.",
+        "effet": "Une équipe de secours supplémentaire en finale 10 ou preuve utilisable à la médiation de finale 13."
+      },
+      "revelations": [
+        "Edran Sorel apparaît comme un logisticien influent ; la relation paternelle reste non confirmée."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_10",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_10",
+      "ordre": 10,
+      "ordreGlobal": 164,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 4,
+      "titre": "Ce que Sorel protège",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_edran_sorel",
+      "format": "1v2",
+      "carteIntention": "Bassin du dépôt ; trois sorties secondaires pour les colonnes sauvées.",
+      "objectifGameplay": "Repli scénarisé : faire sortir le commandement désigné par la porte sud avant la fin de J8. La concession est perdue dans tous les cas.",
+      "conditionsVictoire": [],
+      "conditionsDefaite": [
+        "Commandement de repli hors jeu ou non sorti à la fin de J8 : recommencer la mission."
+      ],
+      "transition": "Défaite stratégique imposée, transition réussie après extraction ; pas de victoire factice ni trophée de conquête. Le journal distingue repli accompli et concession perdue.",
+      "normal": "J3 : arrivée annoncée d’Edran par une zone extérieure interdite au déploiement initial ; forces finies. Trois couloirs de sortie, huit journées pour le commandement.",
+      "difficile": "Même repli obligatoire et huit journées ; une voie secondaire est plus disputée, sans fermer la sortie principale ni rendre le commandement ciblable avant sa fenêtre de décision.",
+      "choixImpact": {
+        "choix": "Sauver les réserves, les archives ou le matériel d’une délégation isolée ; objectifs secondaires incompatibles faute de temps.",
+        "effet": "Bonus distincts en finales 11–13 ; le retrait stratégique est fixé, les moyens sauvés et les relations restent ceux du joueur."
+      },
+      "revelations": [
+        "Edran révèle être le père de Maël, rejoint son fils et bat notre coalition. La révélation précède les ordres, pas le résultat."
+      ],
+      "mecaniquesADevelopper": [
+        "Résultat de campagne repli accompli distinct du résultat de match.",
+        "Extraction de plusieurs groupes et journal des groupes sauvés.",
+        "Entrée scénarisée d’un commandant avec scène bloquant les tours IA.",
+        "Issue stratégique fixe annoncée explicitement après révélation ; conservation des objectifs secondaires."
+      ],
+      "transitionVers": "opus1_finale_11",
+      "limiteJournees": 8,
+      "conditionsTransition": [
+        "Commandement désigné sorti par la porte sud avant la fin de J8."
+      ],
+      "technologie": {
+        "type": "iem",
+        "miseEnScene": "La relève paternelle apporte une station à portée limitée. Le corridor principal de repli reste hors rayon ; sauver des groupes secondaires demande de lire les fenêtres.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_11",
+      "ordre": 11,
+      "ordreGlobal": 165,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 5,
+      "titre": "Les comptes du repli",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_yuna_serrat",
+      "format": "2v1",
+      "carteIntention": "Ravines et route de desserte, poursuite bornée.",
+      "objectifGameplay": "Conduire le transport du commandement à la sortie et conserver au moins une unité alliée.",
+      "conditionsVictoire": [
+        "Conduire le transport du commandement à la sortie et conserver au moins une unité alliée."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Transport désigné hors jeu.",
+        "Objectif non rempli à la fin de J16.",
+        "Toutes les unités alliées hors jeu avant extraction."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Admettre publiquement l’échec ou demander une enquête contradictoire avant publication.",
+        "effet": "Dialogue et soutien de finale 14 ; aucune option ne réécrit la perte de finale 10."
+      },
+      "revelations": [
+        "Les délégations débattent de la défaite ; les fautes du commandement ne sont pas effacées."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles.",
+        "Objectif composé ou contrôle évalué à une échéance à implémenter."
+      ],
+      "transitionVers": "opus1_finale_12",
+      "limiteJournees": 16
+    },
+    {
+      "id": "opus1_finale_12",
+      "ordre": 12,
+      "ordreGlobal": 166,
+      "saisonFinale": 2,
+      "saisonGlobale": 5,
+      "episode": 6,
+      "titre": "Les lignes qui restent",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_basile_kelm",
+      "format": "2v2",
+      "carteIntention": "Deux lignes de retenue, barrage et second gué.",
+      "objectifGameplay": "Tenir jusqu’à la fin de J20 ou capturer les deux QG adverses.",
+      "conditionsVictoire": [
+        "Tenir jusqu’à la fin de J20 ou capturer les deux QG adverses."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Garantir les équipes qui refusent la tutelle ou concentrer la défense sur le dépôt.",
+        "effet": "Allié supplémentaire en finale 17 ou réserve initiale en finale 14."
+      },
+      "revelations": [
+        "Basile veut empêcher la reconstitution de la coalition."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_13",
+      "limiteJournees": 20,
+      "technologie": {
+        "type": "climat",
+        "miseEnScene": "Pluie puis retour au clair à échéance connue ; les gués pénalisés disposent d’une route longue de refuge.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_13",
+      "ordre": 13,
+      "ordreGlobal": 167,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 1,
+      "titre": "Le contrat de Varen",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_lise_orven",
+      "format": "1v1",
+      "carteIntention": "Terrasses, contre-pentes et deux couloirs d’artillerie.",
+      "objectifGameplay": "Capturer le QG de Lise ou mettre hors jeu sa défense.",
+      "conditionsVictoire": [
+        "Capturer le QG de Lise ou mettre hors jeu sa défense."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Proposer une reddition contractuelle contrôlée ou imposer sa suspension après victoire.",
+        "effet": "Médiation crédible : elle peut aider finale 17 ; promesses rompues : elle refuse et reste adverse. Sa conversion n’est jamais automatique."
+      },
+      "revelations": [
+        "Lise confronte les garanties proposées aux actes des dernières saisons ; son engagement personnel ne dépend pas d’une parenté révélée."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_14",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_14",
+      "ordre": 14,
+      "ordreGlobal": 168,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 2,
+      "titre": "Le fils au premier rang",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_mael_orven",
+      "format": "1v2",
+      "carteIntention": "Double aérodrome, axe rapide vulnérable au brouillage.",
+      "objectifGameplay": "Capturer les deux QG adverses ou mettre hors jeu les deux armées.",
+      "conditionsVictoire": [
+        "Capturer les deux QG adverses ou mettre hors jeu les deux armées."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Préserver un accès aux équipes dissidentes ou saisir leurs réserves.",
+        "effet": "Évacuation facilitée en finale 15 ou ravitaillement initial supplémentaire en finale 16."
+      },
+      "revelations": [
+        "Maël refuse de réduire son ambition au projet de son père."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_15",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "iem",
+        "miseEnScene": "Les pistes de Maël sont couvertes par une station capturable ; aucune immunité de ses drones hors règles publiées.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_15",
+      "ordre": 15,
+      "ordreGlobal": 169,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 3,
+      "titre": "La dette de Sorel",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_edran_sorel",
+      "format": "2v1",
+      "carteIntention": "Dépôts en escalier et circulation à sens contraint.",
+      "objectifGameplay": "Capturer le QG d’Edran ou mettre hors jeu sa colonne.",
+      "conditionsVictoire": [
+        "Capturer le QG d’Edran ou mettre hors jeu sa colonne."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Accepter sa déposition sous contrôle ou refuser toute participation opérationnelle.",
+        "effet": "Des preuves supplémentaires pour l’épilogue ou un contrôle public renforcé ; il ne remplace pas le joueur et ne décide pas du sort des autres commandants."
+      },
+      "revelations": [
+        "Edran justifie son ralliement sans nier sa responsabilité ; le joueur peut le battre loyalement cette fois."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_16",
+      "limiteJournees": 24
+    },
+    {
+      "id": "opus1_finale_16",
+      "ordre": 16,
+      "ordreGlobal": 170,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 4,
+      "titre": "Le réseau muet",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_sans_visage",
+      "format": "1v3",
+      "carteIntention": "Trois îles techniques ; relais visibles, drones en réserve.",
+      "objectifGameplay": "Capturer les trois postes de transmission ou mettre hors jeu toutes les forces adverses.",
+      "conditionsVictoire": [
+        "Capturer les trois postes de transmission ou mettre hors jeu toutes les forces adverses."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Conserver une trace sous surveillance ou isoler immédiatement le dernier relais.",
+        "effet": "Piste narrative du prochain opus ou garanties renforcées dans l’épilogue ; aucun combat supplémentaire imposé."
+      },
+      "revelations": [
+        "L’inconnu perd ses relais mais son identité demeure inconnue à la fin de l’opus."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_17",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "maritime",
+        "miseEnScene": "Drones marins et stations IEM couvrent des secteurs distincts ; la première capture ouvre une route sûre, jamais une immunité gratuite.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_17",
+      "ordre": 17,
+      "ordreGlobal": 171,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 5,
+      "titre": "Les droits d’Aube",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "cmd_hadran_ost",
+      "format": "3v1",
+      "carteIntention": "Plateau expérimental fictif ; trois accès, aucun réacteur à détruire.",
+      "objectifGameplay": "Capturer le QG d’Ost ou mettre hors jeu son dispositif.",
+      "conditionsVictoire": [
+        "Capturer le QG d’Ost ou mettre hors jeu son dispositif."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre la finale suivante.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Privilégier l’accès partagé ou exiger un contrôle de coalition temporaire.",
+        "effet": "Modifie le traité final et les dialogues de finale 18 ; ni énergie infinie ni mise en service magique."
+      },
+      "revelations": [
+        "Ost perd la maîtrise du terrain ; les alliés présents dépendent des engagements et médiations."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": "opus1_finale_18",
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "climat",
+        "miseEnScene": "Dernier dispositif météo capturable à l’entrée du campus ; gagner ne manipule pas le réacteur Aube.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    },
+    {
+      "id": "opus1_finale_18",
+      "ordre": 18,
+      "ordreGlobal": 172,
+      "saisonFinale": 3,
+      "saisonGlobale": 6,
+      "episode": 6,
+      "titre": "La dernière concession",
+      "statut": "conception_non_jouable",
+      "adversairePrincipal": "selene_veyr",
+      "format": "2v2",
+      "carteIntention": "Campus de coordination, jardins techniques et deux axes de capture.",
+      "objectifGameplay": "Capturer les QG de la coalition de Sélène ou mettre hors jeu toutes ses unités.",
+      "conditionsVictoire": [
+        "Capturer les QG de la coalition de Sélène ou mettre hors jeu toutes ses unités."
+      ],
+      "conditionsDefaite": [
+        "QG du joueur perdu si présent.",
+        "Toutes les unités du joueur hors jeu.",
+        "Objectif non rempli à la fin de J24."
+      ],
+      "transition": "Victoire ouvre l’épilogue et conserve le journal pour le prochain opus.",
+      "normal": "Forces bornées, intentions et renforts annoncés dans le briefing. Tester capture et élimination quand les deux voies sont prévues.",
+      "difficile": "IA protège les indirects et coordonne les captures ; placements et patrouilles différents annoncés avant lancement. Aucun coefficient de dégâts secret.",
+      "choixImpact": {
+        "choix": "Signer le réseau partagé, un mandat de transition ou refuser un traité insuffisant selon les engagements accumulés.",
+        "effet": "Épilogue calculé sur droits, confiance, preuves et délégations ralliées ; l’inconnu reste une ouverture sans annuler la victoire."
+      },
+      "revelations": [
+        "La direction de Sélène est confirmée et contestée publiquement ; son identité n’était pas le mystère familial."
+      ],
+      "mecaniquesADevelopper": [
+        "Liaison au journal de campagne et aux alliances conditionnelles."
+      ],
+      "transitionVers": null,
+      "limiteJournees": 24,
+      "technologie": {
+        "type": "iem",
+        "miseEnScene": "Les stations restent finies, visibles et contournables ; la finale évalue la maîtrise apprise, sans nouveau pouvoir-surprise.",
+        "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
+        "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      }
+    }
+  ],
+  "technologies": {
+    "statut": "conception_a_valider_en_jeu",
+    "principe": "Supériorité technologique adverse visible et localisée ; les nations adaptent leurs parcours et leur doctrine, sans immunité nationale cachée.",
+    "iem": "Station localisée, rayon et prochaines journées annoncés. Quitter la portée ou capturer la station ; effet temporaire sans dégâts permanents.",
+    "climat": "Forçage météorologique local au match de tournoi, jamais contrôle du climat planétaire. Prévision publique et refuge hors des cases ou trajectoires les plus pénalisées ; capture de la station coupe la source.",
+    "maritime": "Drone marin robotisé avec rôle propre de reconnaissance et de pression côtière. Son soutien et ses cibles dépendent du catalogue, aucun pouvoir implicite issu du récit.",
+    "limiteImplementation": "Les événements météo du premier essai suivent un calendrier public. Seule la station IEM est une source capturable active ; couper la météo par capture est une extension de conception, pas une capacité livrée. campsAdaptes est déclaré dans le scénario et annoncé au briefing, jamais déduit silencieusement de la nation."
+  }
+}

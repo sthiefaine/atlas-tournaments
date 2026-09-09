@@ -19,8 +19,8 @@ test('catalogue 7 ajoute quatre rôles sans modifier les six catalogues antérie
   for (const a of six.cles) for (const d of six.cles) assert.equal(degatsBase(cat,a,d), degatsBase(six,a,d));
   for (const cle of nouvelles) {
     assert(!six.cles.includes(cle));
-    assert.equal(Object.keys(cat.unites[cle]!.degats).length, 28);
-    assert.equal(Object.keys(cat.unites[cle]!.subitDegats!).length, 28);
+    assert.equal(Object.keys(cat.unites[cle]!.degats).length, 29);
+    assert.equal(Object.keys(cat.unites[cle]!.subitDegats!).length, 29);
   }
 });
 test('matériel exclusif : caché à la délégation, production réellement refusée et autorisée à atl', () => {

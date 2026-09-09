@@ -10,7 +10,9 @@ Les victoires attribuent temporairement des droits énergétiques, jamais des ha
 
 Le roster conserve **24 nations, dont 12 au premier plan, plus la faction adverse inconnue**. Une faction du récit est distincte d’un camp sur une carte : le moteur accepte quatre participants simultanés, répartis en équipes.
 
-Les formats 2v1, 1v2, 1v3, 3v1 et 2v2 utilisent des équipes explicites ; capturer les QG adverses ou neutraliser leur coalition reste l’objectif majoritaire. La survie de 40 journées est une épreuve facultative, conclue au début de J41. Les quatre entraînements restent courts ; les régions deviennent des possibilités de parcours plutôt qu’une obligation de dix-huit étapes avant l’intrigue. Les essais de refonte sont identifiés comme tels tant que leur jouabilité n’est pas homologuée.
+Les formats 2v1, 1v2, 1v3, 3v1 et 2v2 utilisent des équipes explicites ; capturer les QG adverses ou neutraliser leur coalition reste l’objectif majoritaire. La survie de 40 journées est une épreuve facultative, conclue au début de J41. La cible du premier opus est désormais **10 tutoriels, 144 missions nationales (12 pour chacune des 12 nations au premier plan) et 18 finales**, soit **172 missions**. Les plans éditoriaux sont dans `doc/refonte/opus1-*.json` ; ils ne sont pas encore des scénarios jouables. Les quatre entraînements existants restent disponibles pendant cette production. Les essais de refonte sont identifiés comme tels tant que leur jouabilité n’est pas homologuée.
+
+Huit commandants adverses structurent cet opus. La fratrie reste secrète : aucun nom public ni dialogue précoce ne doit révéler le lien frère–sœur. La révélation père–fils intervient à la finale 10 (épisode 4 de la saison 5), suivie d’une défaite imposée et d’un repli dont le joueur détermine les pertes et les conséquences. Les documents auteur ne doivent pas être exposés par les interfaces publiques.
 
 ### Extension confirmée — modes et arsenal
 

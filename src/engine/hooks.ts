@@ -236,7 +236,7 @@ function sansSurcout(etat: EtatPartie): boolean {
 
 /** Surcoût de case cumulé (climat puis mécanique), avant plafond et plancher. */
 export function surcoutCase(
-  etat: EtatPartie, cat: Catalogue, mouvement: TypeMouvement, terrain: CleTerrain, u: UnitType,
+  etat: EtatPartie, cat: Catalogue, mouvement: TypeMouvement, terrain: CleTerrain, u: UnitType, camp: CampId = etat.campCourant,
 ): number {
   if (sansSurcout(etat)) return 0;
   let memo = SURCOUTS.get(etat);
@@ -244,12 +244,12 @@ export function surcoutCase(
     memo = new Map<string, number>();
     SURCOUTS.set(etat, memo);
   }
-  const cle = `${etat.journee}|${u.cle}|${mouvement}|${terrain}`;
+  const cle = `${etat.journee}|${camp}|${u.cle}|${mouvement}|${terrain}`;
   const connu = memo.get(cle);
   if (connu !== undefined) return connu;
   let surcout = 0;
   const climat = MECANIQUE_CLIMAT.hooks.surCoutCase;
-  if (climat) surcout += climat(ctxClimat(etat, cat, RNG_LECTURE), mouvement, terrain, u);
+  if (climat) surcout += climat({ ...ctxClimat(etat, cat, RNG_LECTURE), camp }, mouvement, terrain, u);
   const meca = mecaniqueDeLaPartie(etat);
   if (meca?.hooks.surCoutCase) {
     surcout += meca.hooks.surCoutCase(ctxMeca(etat, cat, RNG_LECTURE), mouvement, terrain, u);

@@ -1,0 +1,81 @@
+{
+  "cle": "aube_drone_marin",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "humain",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "aube_drone_marin",
+  "nom": "Essai Aube · Le chenal des signaux",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_drone_marin",
+  "date": "2026-09-07",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "agressive"
+    }
+  ],
+  "fondsDepart": 8000,
+  "revenusParBatiment": 1000,
+  "brouillard": true,
+  "limiteJournees": 30,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Notre drone marin observe le chenal. Il ne tire pas et ne quitte pas les eaux navigables. Le brouilleur sur la rive adverse réduit sa vision : écarte-le de cette rive avant de choisir une traversée.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le carrefour occupait tout le monde, et la plage était vide. Bien joué à l’équipe.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Tu as chargé une barge pendant que je prenais les villes du centre. Le compte des points ne pardonne pas.",
+      "emotion": "triomphe"
+    }
+  ],
+  "scenesDialogue": [],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  }
+}

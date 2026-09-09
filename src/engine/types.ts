@@ -8,7 +8,7 @@
 import type {
   Case, CampId, Cle, CleTerrain, CleUnite, DateIso, Climat, Hemisphere,
   EtatClimat, Meteo, ObjectifDefaite, ObjectifVictoire, Saison, TableDegats,
-  RenfortScenario, Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
+  InstallationIem, EvenementClimatScenario, RenfortScenario, Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
 } from '../schemas/index';
 
 // ---------------------------------------------------------------------------
@@ -76,6 +76,8 @@ export type EtatUnite = 'prete' | 'agi' | 'produite' | 'deplacee';
 
 /** Une unité en jeu. PV internes sur 100, affichés sur 10. */
 export interface Unite {
+  /** Impulsion active jusqu’à la fermeture du prochain tour de son camp. */
+  iemJusquaJournee?: number;
   id: string;
   camp: CampId;
   type: CleUnite;
@@ -152,6 +154,8 @@ export interface TerrainPose {
 
 /** Réglages figés du scénario : le moteur ne lit jamais l'horloge. */
 export interface ReglagesPartie {
+  installationsIem?: InstallationIem[];
+  evenementsClimat?: EvenementClimatScenario[];
   factionsParCamp?: Partial<Record<CampId, 'atl'>>;
   equipes?: CampId[][];
   renforts?: RenfortScenario[];

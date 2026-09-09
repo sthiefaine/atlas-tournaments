@@ -764,12 +764,17 @@ export interface Incarnation {
  * - `modes` : les deux jeux de paramètres, certifiés tous les deux par le contrôle.
  *   Absent, le scénario se joue en `normal` avec ses champs de premier niveau.
  */
+export interface InstallationIem { cle: Cle; x: number; y: number; rayon?: number; premiereJournee: number; intervalle?: number }
+export interface EvenementClimatScenario { cle: Cle; journee: number; meteo: Meteo; duree: number; campsAdaptes: CampId[] }
+
 export interface RenfortScenario {
   journee: number;
   unites: { camp: CampId; type: CleUnite; x: number; y: number; pv?: number }[];
 }
 
 export interface Scenario extends Enveloppe {
+  installationsIem?: InstallationIem[];
+  evenementsClimat?: EvenementClimatScenario[];
   factionsParCamp?: Partial<Record<CampId, 'atl'>>;
   /** Partition des camps. Absent : chacun pour soi. */
   equipes?: CampId[][];

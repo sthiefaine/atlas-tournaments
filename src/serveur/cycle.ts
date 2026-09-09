@@ -148,7 +148,7 @@ export function transitionUniteAutorisee(
 }
 
 /** Le plafond du catalogue : 28 unités actives, dont 10 `canon` intouchables. */
-export const PLAFOND_CATALOGUE = 28;
+export const PLAFOND_CATALOGUE = 29;
 
 /** Durée de l'essai d'une unité, en jours. */
 export const JOURS_ESSAI = 30;

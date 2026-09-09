@@ -382,7 +382,8 @@
         "barge",
         "porte_avions",
         "cuirasse",
-        "sous_marin"
+        "sous_marin",
+        "drone_marin"
       ],
       "ravitaille": true,
       "soigne": 2,

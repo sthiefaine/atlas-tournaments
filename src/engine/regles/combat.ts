@@ -257,7 +257,7 @@ export function resoudreAttaque(
   let riposte = 0;
   const cibleHorsJeu = def.pv <= 0;
   if (!cibleHorsJeu) {
-    const peutRendre = td.peutRiposter
+    const peutRendre = td.peutRiposter && def.iemJusquaJournee === undefined
       && manhattan(att, def) === 1
       && degatsArme(cat, def, att.type) > 0;
     if (peutRendre) {
@@ -343,7 +343,7 @@ export function prevoirDuel(
   let riposte = 0;
   const td = cat.unites[def.type];
   if (!cibleHorsJeu && td) {
-    const peutRendre = td.peutRiposter
+    const peutRendre = td.peutRiposter && def.iemJusquaJournee === undefined
       && manhattan(depuis, def) === 1
       && degatsArme(cat, def, att.type) > 0;
     // La riposte se calcule sur les PV **d'après** la frappe, et atténuée par

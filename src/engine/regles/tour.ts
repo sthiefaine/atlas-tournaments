@@ -19,6 +19,7 @@ import { uniteSur } from './mouvement';
 import { expirationDe, expirerPoses, poserModificateur } from './pouvoirs';
 import { deployerRenforts } from './renforts';
 import { evaluerFin } from './victoire';
+import { ouvrirTechnologies } from './technologies';
 
 /** Applique les effets déclaratifs d'un hook. Rien d'autre n'écrit dans l'état. */
 export function appliquerEffets(
@@ -94,13 +95,14 @@ export function ouvrirTour(
   if (camp === etat.camps.find((c) => !c.elimine)?.id) {
     etat.journee += 1;
     if (etat.journee > 1) {
-      etat.climat = avancerClimat(etat.climat, etat.reglages, rng);
+      etat.climat = avancerClimat(etat.climat, etat.reglages, rng, etat.journee);
     }
     evts.push({
       type: 'debut_journee', journee: etat.journee, camp,
       saison: etat.climat.saison, phase: etat.climat.phase, meteo: etat.climat.meteo,
     });
   }
+  ouvrirTechnologies(etat, cat, evts);
   deployerRenforts(etat, cat, evts);
   evts.push({ type: 'debut_tour', journee: etat.journee, camp });
   expirerModificateurs(etat, camp);
@@ -115,6 +117,7 @@ export function ouvrirTour(
   reparerEtRavitailler(etat, cat, camp, evts);
   consommerCarburant(etat, cat, camp, evts);
   reveiller(etat, camp);
+  for (const u of etat.unites) if (u.camp === camp && u.iemJusquaJournee !== undefined) u.etat = "agi";
   const caisse = etat.camps.find((c) => c.id === camp);
   if (caisse) caisse.pouvoirUtiliseCeTour = false;
   evaluerFin(etat, cat, evts);
@@ -135,6 +138,7 @@ export function fermerTour(
   // Une unité déplacée qui n'a pas donné sa suite (ordre `puis`) la perd :
   // le tour se ferme, elle a joué.
   for (const u of etat.unites) if (u.camp === camp && u.etat === 'deplacee') u.etat = 'agi';
+  for (const u of etat.unites) if (u.camp === camp) delete u.iemJusquaJournee;
   evts.push({ type: 'fin_tour', camp });
   evaluerFin(etat, cat, evts);
   if (etat.partie.terminee) return;

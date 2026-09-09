@@ -1,6 +1,11 @@
 /** Conseils éditoriaux publics ; les contre-unités chiffrées viennent de ficheUnite. */
 export interface GuideUnite { role: string; achat: string; limite: string }
 export const ROLES_UNITES: Readonly<Record<string, GuideUnite>> = {
+  "drone_marin": {
+    "role": "Reconnaissance maritime",
+    "achat": "Pour observer les chenaux et couvrir une traversée à moindre coût naval.",
+    "limite": "Sans arme, limité aux eaux navigables et brouillable ; ne remplace pas une escorte."
+  },
   "infanterie": {
     "role": "Prendre et tenir",
     "achat": "Pour capturer les bâtiments et occuper les abris à petit prix.",
