@@ -1,0 +1,36 @@
+{
+  "albedo": {
+    "all_edges_and_reversals_max_difference": 0,
+    "resolution": [
+      1024,
+      1024
+    ]
+  },
+  "rugosite": {
+    "all_edges_and_reversals_max_difference": 0,
+    "resolution": [
+      1024,
+      1024
+    ]
+  },
+  "occlusion": {
+    "all_edges_and_reversals_max_difference": 0,
+    "resolution": [
+      512,
+      512
+    ]
+  },
+  "normale": {
+    "rotated_edges_max_vector_difference": 0,
+    "resolution": [
+      1024,
+      1024
+    ]
+  },
+  "flat_surface": {
+    "top_y_m": 0.02,
+    "bottom_y_m": 0,
+    "undulation_in_mesh": false,
+    "macro_relief": "supplied by game terrain"
+  }
+}
