@@ -16,6 +16,8 @@
  * l'horizon, vers le bas on se redresse. Le glisser vertical à deux doigts ne
  * déplace donc plus la vue : un doigt le fait déjà, et il fallait un geste à
  * l'inclinaison. À la souris, c'est **Maj + molette**.
+ * La torsion des deux doigts règle le bearing libre. Alt + glisser à la souris
+ * règle simultanément bearing et inclinaison ; Alt + molette tourne par petits pas.
  */
 import type * as THREE from 'three/webgpu';
 import { toucheDe } from '../render/entrees';
@@ -73,7 +75,7 @@ export function brancherGestes3d(
   const seuilLong = options.seuilAppuiLongMs ?? SEUIL_APPUI_LONG;
   const seuilDouble = options.seuilDoubleClicMs ?? SEUIL_DOUBLE_CLIC;
   interface Doigt {
-    x: number; y: number; debutX: number; debutY: number;
+    x: number; y: number; debutX: number; debutY: number; orbite: boolean;
     /** Le seuil de glisser de ce pointeur, fixé à l'appui. */
     seuil: number;
     /** Les derniers points horodatés, pour la vitesse au relâchement. */
@@ -82,6 +84,7 @@ export function brancherGestes3d(
   const doigts = new Map<number, Doigt>();
   let glisse = false;
   let ecart = 0;
+  let angle = 0;
   let annule = false;
   let appuiLong: ReturnType<typeof setTimeout> | null = null;
   /** Le dernier tap, en case et en temps : c'est la case qui fait le double-clic. */
@@ -159,13 +162,14 @@ export function brancherGestes3d(
     }
     canvas.setPointerCapture?.(e.pointerId);
     doigts.set(e.pointerId, {
-      x: p.x, y: p.y, debutX: p.x, debutY: p.y, seuil: seuilDe(e), traces: [{ t: e.timeStamp, x: p.x, y: p.y }],
+      x: p.x, y: p.y, debutX: p.x, debutY: p.y, orbite: e.pointerType === 'mouse' && e.altKey, seuil: seuilDe(e), traces: [{ t: e.timeStamp, x: p.x, y: p.y }],
     });
+    if (e.pointerType === 'mouse' && e.altKey) annule = true;
     annulerAppuiLong();
     if (doigts.size >= 2) {
       annule = true;
       const [a, b] = [...doigts.values()];
-      if (a && b) ecart = Math.hypot(a.x - b.x, a.y - b.y);
+      if (a && b) { ecart = Math.hypot(a.x - b.x, a.y - b.y); angle = Math.atan2(b.y - a.y, b.x - a.x); }
       glisse = true;
     } else {
       // Droit/milieu glissent immédiatement ; gauche et toucher attendent le seuil.
@@ -201,6 +205,10 @@ export function brancherGestes3d(
       const [a, b] = [...doigts.values()];
       if (a && b) {
         const nouvel = Math.hypot(a.x - b.x, a.y - b.y);
+        const nouvelAngle = Math.atan2(b.y - a.y, b.x - a.x);
+        const delta = Math.atan2(Math.sin(nouvelAngle - angle), Math.cos(nouvelAngle - angle)) * 180 / Math.PI;
+        if (ecart > 4 && nouvel > 4) vue()?.tourner(-delta, Math.abs(delta));
+        angle = nouvelAngle;
         // Le milieu des doigts a déjà glissé de la moitié du mouvement de ce
         // doigt ; le zoom s'ancre ensuite sur le nouveau milieu, de sorte que
         // la case pincée reste sous les doigts. Le vertical, lui, va à
@@ -225,7 +233,10 @@ export function brancherGestes3d(
       glisse = true;
       annule = true;
     }
-    vue()?.glisser(dx, dy);
+    if (doigt.orbite) {
+      vue()?.tourner(dx, Math.abs(dx) * DEGRES_PAR_PIXEL);
+      vue()?.incliner(dy * DEGRES_PAR_PIXEL);
+    } else vue()?.glisser(dx, dy);
     salir();
   };
 
@@ -260,7 +271,7 @@ export function brancherGestes3d(
           }
         }
       }
-    } else if (glisse && doigts.size === 0 && e.type !== 'pointercancel') {
+    } else if (glisse && !doigt?.orbite && doigts.size === 0 && e.type !== 'pointercancel') {
       // Un seul doigt qui lâche en mouvement : la carte continue sur sa lancée.
       const v = vitesseAuLacher(doigt, e.timeStamp);
       if (v) {
@@ -278,7 +289,8 @@ export function brancherGestes3d(
     e.preventDefault();
     // Maj incline au lieu de zoomer : la souris n'a pas de second doigt, et le
     // clic droit sert déjà à glisser puis à annuler.
-    if (e.shiftKey) vue()?.incliner(e.deltaY < 0 ? PAS_TANGAGE : -PAS_TANGAGE);
+    if (e.altKey) vue()?.tourner(e.deltaY, PAS_TANGAGE);
+    else if (e.shiftKey) vue()?.incliner(e.deltaY < 0 ? PAS_TANGAGE : -PAS_TANGAGE);
     else vue()?.zoomer(e.deltaY < 0 ? 1 : -1);
     salir();
   };

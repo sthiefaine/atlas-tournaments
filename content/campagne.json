@@ -14,9 +14,8 @@
       "tutoriel": [
         "Cliquez sur votre char : les cases vertes sont celles où il peut aller, les rouges celles qu’il peut frapper après s’être déplacé.",
         "Amenez le char sur la route juste après le pont et choisissez Attaquer sur l’infanterie voisine. Le HUD montre le duel avant de confirmer.",
-        "Une unité attaquée riposte avec ce qui lui reste : frappez en premier, et à deux sur une même cible.",
-        "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : une unité y reçoit moins de dégâts.",
-        "Ce premier exercice reste de jour et sans brouillard. Le sixième tutoriel vous apprendra à reconnaître les zones cachées et à anticiper la nuit."
+        "Lorsqu’une riposte est possible, l’unité répond dès le début de l’échange. Vérifiez la portée et la prévision avant d’attaquer.",
+        "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : une unité y reçoit moins de dégâts."
       ]
     },
     {

@@ -1,0 +1,24 @@
+import { test, expect } from '@playwright/test';
+test.use({ trace: 'off', channel: 'chrome', launchOptions: { args: ['--enable-unsafe-webgpu'] } });
+test('orbiter à la souris et retrouver les commandes de vue au tactile', async ({ page }) => {
+  const erreurs: string[] = [];
+  page.on('pageerror', e => erreurs.push(e.message));
+  await page.goto('/jeu/premier_contact');
+  await expect(page.locator('canvas.atlas-toile')).toBeVisible({ timeout: 45000 });
+  await page.getByRole('button', { name: 'Passer', exact: true }).click();
+  await expect(page.getByRole('button', { name: /Fin de tour/i }).first()).toBeVisible();
+  const rect = await page.locator('canvas.atlas-toile').boundingBox();
+  expect(rect).not.toBeNull();
+  await page.keyboard.down('Alt');
+  await page.mouse.move(rect!.x + rect!.width / 2, rect!.y + rect!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(rect!.x + rect!.width / 2 + 80, rect!.y + rect!.height / 2 - 35, { steps: 8 });
+  await page.mouse.up();
+  await page.keyboard.up('Alt');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('.outils-vue summary').click();
+  await expect(page.locator('button[data-action="inclinaison"]')).toBeVisible();
+  await expect(page.locator('.camera-aide')).toContainText('deux doigts');
+  await page.locator('button[data-action="inclinaison"]').click();
+  expect(erreurs).toEqual([]);
+});

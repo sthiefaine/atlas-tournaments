@@ -3,7 +3,7 @@
  *
  * Le brief fixe le cadre : **tangage inclinable** entre 30° et 75° au-dessus de
  * l'horizontale (68° par défaut, révision du 8 septembre 2026 — voir
- * `TANGAGE_MIN`), lacet fixe mais tournable **par quarts de tour** (Q et E),
+ * `TANGAGE_MIN`), bearing libre, avec raccourcis **par quarts de tour** (Q et E),
  * zoom borné (molette, pincement, + et −), glisser au un doigt ou bouton droit.
  * Un tap reste au jeu. Le cadrage conserve des cases lisibles sur téléphone,
  * quitte à explorer la carte en glissant.
@@ -104,7 +104,7 @@ export interface EtatCamera {
   distance: number;
   /** Tangage en degrés, borné à [`TANGAGE_MIN`, `TANGAGE_MAX`]. */
   tangage: number;
-  /** Lacet en degrés : 0, 90, 180 ou 270. */
+  /** Bearing en degrés, normalisé dans [0, 360[. */
   lacet: number;
 }
 
@@ -183,9 +183,10 @@ export function cibleCadrage(
   centre: { x: number; z: number },
   lacet = 0,
 ): { x: number; z: number } {
-  const tourne = ((Math.round(lacet / 90) % 2) + 2) % 2 === 1;
-  const champX = (tourne ? champ.profondeur : champ.largeur) * CASE;
-  const champZ = (tourne ? champ.largeur : champ.profondeur) * CASE;
+  const angle = lacet * Math.PI / 180;
+  const cos = Math.abs(Math.cos(angle)), sin = Math.abs(Math.sin(angle));
+  const champX = (cos * champ.largeur + sin * champ.profondeur) * CASE;
+  const champZ = (sin * champ.largeur + cos * champ.profondeur) * CASE;
   const borner = (valeur: number, etendue: number, visible: number): number => (
     visible >= etendue
       ? etendue / 2
@@ -251,7 +252,7 @@ export function limiterCible(
   etat.cible.z = Math.max(-marge, Math.min(carte.hauteur * CASE + marge, etat.cible.z));
   etat.tangage = bornerTangage(etat.tangage);
   etat.distance = Math.max(DISTANCE_MIN, Math.min(DISTANCE_MAX, etat.distance));
-  etat.lacet = ((Math.round(etat.lacet / 90) * 90) % 360 + 360) % 360;
+  etat.lacet = ((etat.lacet % 360) + 360) % 360;
   return etat;
 }
 
@@ -327,7 +328,7 @@ export interface Vue3d {
   /** Un pas de zoom (`+1` rapproche), joué en transition ; les pas s'enchaînent. */
   zoomer(sens: number): void;
   facteurZoom(facteur: number, ancre?: { x: number; y: number }): void;
-  tourner(sens: number): void;
+  tourner(sens: number, pas?: number): void;
   /**
    * Incline la caméra de `degres` : **positif redresse** vers la vue de dessus,
    * négatif penche vers l'horizon. Manipulation directe — le glisser à deux
@@ -585,10 +586,11 @@ export function creerVue3d(carte: { largeur: number; hauteur: number }): Vue3d {
       }
     },
 
-    tourner(sens: number): void {
+    tourner(sens: number, pas = 90): void {
+      if (!Number.isFinite(sens) || !Number.isFinite(pas) || pas <= 0 || sens === 0) return;
       oublierVue();
       interrompre();
-      etat.lacet += Math.sign(sens) * 90;
+      etat.lacet += Math.sign(sens) * pas;
       appliquer();
     },
 

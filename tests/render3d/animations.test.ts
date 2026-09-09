@@ -329,7 +329,8 @@ test('la partition provisoire enchaîne les gestes d’une même unité : elle n
   assert.equal(encaisser.debut, tirer.debut + tirer.duree, 'la cible encaisse à l’arrivée du projectile');
   const riposte = gesteDe(p, 'tirer', sienne);
   assert.ok(riposte, 'une riposte non nulle se joue');
-  assert.equal(riposte.debut, encaisser.debut + encaisser.duree, 'elle riposte une fois le choc encaissé');
+  assert.equal(riposte.debut, tirer.debut + 80, 'elle riposte presque dès le départ du tir');
+  assert.ok(riposte.debut < encaisser.debut, 'la riposte ne patiente pas jusqu’à l’impact');
 
   // Sous animations réduites, la partition existe mais ne dure pas.
   const court = partitionProvisoire(evenements, etat, true);

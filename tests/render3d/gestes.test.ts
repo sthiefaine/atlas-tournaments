@@ -19,9 +19,9 @@ function montage(pointerType = 'touch') {
   let clics = 0;
   const demonter = brancherGestes3d(canvas, () => vue, () => null,
     { surClicCase: () => { clics++; } }, () => undefined);
-  const pointer = (type: string, id: number, x: number, y: number, temps?: number) => {
+  const pointer = (type: string, id: number, x: number, y: number, temps?: number, altKey = false) => {
     const e = Object.assign(new Event(type), {
-      pointerId: id, clientX: x, clientY: y, pointerType, button: 0,
+      pointerId: id, clientX: x, clientY: y, pointerType, button: 0, altKey,
     });
     // `timeStamp` est en lecture seule sur `Event` : une propriété propre le masque.
     if (temps !== undefined) Object.defineProperty(e, 'timeStamp', { value: temps });
@@ -275,9 +275,9 @@ function montageInspection(pointerType: string, inspecte: () => boolean) {
     surAnnuler: () => { journal.push('annuler'); },
     surInspecter: () => { journal.push('inspecter'); return inspecte(); },
   }, () => undefined);
-  const pointer = (type: string, id: number, x: number, y: number, temps?: number) => {
+  const pointer = (type: string, id: number, x: number, y: number, temps?: number, altKey = false) => {
     const e = Object.assign(new Event(type), {
-      pointerId: id, clientX: x, clientY: y, pointerType, button: 0,
+      pointerId: id, clientX: x, clientY: y, pointerType, button: 0, altKey,
     });
     // `timeStamp` est en lecture seule sur `Event` : une propriété propre le masque.
     if (temps !== undefined) Object.defineProperty(e, 'timeStamp', { value: temps });
@@ -383,4 +383,36 @@ test('cent positions de souris ne lancent qu’un rayon, à l’image suivante, 
   assert.equal(annulees, 1);
   planifiees[1]!();
   assert.equal(survols.length, 1, 'une image annulée ne survole plus rien');
+});
+
+
+test('Alt-glisser orbite librement sans déplacement de cible ni clic ni inertie', () => {
+  const m = montage('mouse');
+  const depart = { ...m.vue.etat.cible };
+  const lacet = m.vue.etat.lacet;
+  const tangage = m.vue.etat.tangage;
+  m.pointer('pointerdown', 1, 100, 200, 0, true);
+  m.pointer('pointermove', 1, 130, 180, 30, true);
+  m.pointer('pointerup', 1, 130, 180, 40, true);
+  assert.notEqual(m.vue.etat.lacet, lacet);
+  assert.notEqual(m.vue.etat.tangage, tangage);
+  assert.deepEqual(m.vue.etat.cible, depart);
+  assert.equal(m.clics(), 0);
+  const apres = { ...m.vue.etat.cible };
+  m.vue.avancer(100);
+  assert.deepEqual(m.vue.etat.cible, apres);
+  m.demonter();
+});
+
+test('la torsion de deux doigts change le bearing sans sélectionner une case', () => {
+  const m = montage();
+  const lacet = m.vue.etat.lacet;
+  m.pointer('pointerdown', 1, 120, 400);
+  m.pointer('pointerdown', 2, 240, 400);
+  m.pointer('pointermove', 2, 220, 460);
+  assert.notEqual(m.vue.etat.lacet, lacet);
+  m.pointer('pointerup', 2, 220, 460);
+  m.pointer('pointerup', 1, 120, 400);
+  assert.equal(m.clics(), 0);
+  m.demonter();
 });

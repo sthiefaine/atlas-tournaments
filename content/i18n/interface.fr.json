@@ -1,6 +1,7 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle":"hud.aide_camera","texte":"Alt + glisser : tourner et incliner. Maj + molette : incliner. Au tactile : tourner deux doigts, les glisser verticalement pour incliner, pincer pour zoomer.","contexte":{"ecran":"jeu"},"longueurMax":200},
     {"cle":"commandant.cmd_ariane_belloc.pouvoir_v3","texte":"Tempo commun","contexte":{"ecran":"partie"},"longueurMax":40},
     {"cle":"commandant.cmd_ariane_belloc.super_v3","texte":"Tous les relais","contexte":{"ecran":"partie"},"longueurMax":40},
     {"cle":"commandant.cmd_tomas_reiner.pouvoir_v3","texte":"Tenue des accès","contexte":{"ecran":"partie"},"longueurMax":40},

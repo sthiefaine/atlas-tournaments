@@ -664,3 +664,10 @@ qu’un TypedArray exige des éléments. La correction est appliquée aux deux b
 décalées et des sous-vues Float32/Uint32. Sur une géométrie de 12 sommets et 12 indices,
 avec une réserve de 4096 sommets et 8192 indices, la mise à jour passe de 81 920 à
 192 octets. Le premier téléversement alloue toujours la réserve entière.
+
+
+### Caméra libre — 9 septembre 2026
+
+Le bearing accepte tous les angles de 0 à 360°, sans arrondi au quart de tour. Alt + glisser à la souris tourne horizontalement et incline verticalement ; Alt + molette tourne de quelques degrés, Maj + molette incline. Au tactile, la torsion de deux doigts tourne, leur glisser vertical incline, leur pincement zoome. Les boutons Q/E conservent leurs pas de 90° et le menu Vue propose l’inclinaison. Le tangage reste borné entre 30° et 75° au-dessus du sol. Les gestes de rotation ne donnent aucun ordre et ne lancent pas d’inertie de déplacement. Le picking est vérifié à plusieurs bearings obliques.
+
+La riposte visuelle démarre 80 ms après le premier tir, avant son impact. La partition conserve les fins des deux gestes pour empêcher une sortie anticipée. Cette cadence ne modifie pas le calcul de dégâts du moteur.

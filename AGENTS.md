@@ -2,6 +2,10 @@
 
 Document de passation pour Codex. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — caméra libre et rythme de riposte (9 septembre 2026)
+
+La caméra accepte un bearing continu : Alt + glisser orbite à la souris, deux doigts tournés au tactile ; le tangage reste borné 30°–75°. Le picking est testé hors des quarts de tour. La riposte visuelle démarre 80 ms après le premier tir, sans attendre l’impact ; le calcul des dégâts est inchangé. Le premier tutoriel ne fait aucune annonce du brouillard ou de la nuit : découverte au sixième exercice seulement.
+
 ## Mise à jour — registre complet et activation de Premier contact (9 septembre 2026)
 
 `/admin/personnages` présente 37 fiches et 34 commandants dotés de deux capacités. `content/commandants-capacites.json` révision 3 est partagé avec le moteur ; `Scenario.commandantsVersion` est facultatif et laisse les anciens scénarios inchangés. Les notes auteur et les jalons familiaux ne sortent pas par l’API de contexte par acte. Voir `doc/refonte/personnages-pouvoirs.md`.

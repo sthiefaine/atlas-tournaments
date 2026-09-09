@@ -157,13 +157,13 @@ test('le zoom avance de palier en palier et s’arrête aux extrémités', () =>
   assert.equal(palierSuivant(max, -1), max);
 });
 
-test('les bornes gardent la carte à l’écran et le lacet sur ses quarts de tour', () => {
+test('les bornes gardent la carte à l’écran et le bearing libre dans un tour complet', () => {
   const carte = { largeur: 16, hauteur: 12 };
   const e = limiterCible(etat({ cible: { x: 900, z: -900 }, tangage: 120, lacet: 47 }), carte);
   assert.ok(e.cible.x <= 16 + 1.5 && e.cible.x >= -1.5);
   assert.ok(e.cible.z <= 12 + 1.5 && e.cible.z >= -1.5);
   assert.equal(e.tangage, TANGAGE_MAX);
-  assert.equal(e.lacet, 90, 'le lacet retombe sur un quart de tour');
+  assert.equal(e.lacet, 47, 'le bearing reste libre');
   assert.equal(limiterCible(etat({ lacet: -90 }), carte).lacet, 270);
   assert.equal(limiterCible(etat({ tangage: 10 }), carte).tangage, TANGAGE_MIN);
   assert.equal(limiterCible(etat({ distance: 1e6 }), carte).distance, DISTANCE_MAX);
@@ -498,4 +498,18 @@ test('sans rien à défaire, revenir ne coûte rien — et la mémoire ne sert q
   // La mémoire est consommée : un second appel ne ressuscite pas la vue.
   vue.cadrerCase({ x: 22, y: 22 }, 0);
   assert.equal(vue.revenirVue(), false, 'la mémoire ne sert qu’une fois');
+});
+
+test('le picking garde la case visée après un bearing libre et une inclinaison', () => {
+  const vue = creerVue3d({ largeur: 12, hauteur: 10 });
+  vue.redimensionner(800, 600);
+  vue.cadrerCarte();
+  for (const bearing of [17, 47, 133, 271]) {
+    vue.etat.lacet = bearing;
+    vue.etat.tangage = 41;
+    vue.appliquer();
+    const p = vue.versEcran(new THREE.Vector3(5.5, 0, 4.5));
+    assert.ok(p);
+    assert.deepEqual(vue.caseSous(p.x, p.y, null), { x: 5, y: 4 });
+  }
 });

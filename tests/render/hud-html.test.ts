@@ -1273,7 +1273,7 @@ test('sur téléphone, le HUD rend le bord de l’écran à la carte', () => {
     'la météo reprend le coin haut droit, elle ne s’empile pas à gauche');
   assert.doesNotMatch(etroit, /\.atlas-hud \.bulletin\{[^}]*top:calc\(var\(--haut\) \+/,
     'et elle ne descend plus sous la bande de journée');
-  for (const geste of ['zoom_plus', 'zoom_moins', 'inclinaison']) {
+  for (const geste of ['zoom_plus', 'zoom_moins']) {
     assert.ok(etroit.includes(`button[data-action='${geste}']`),
       `${geste} cède la place : le doigt le fait déjà`);
   }

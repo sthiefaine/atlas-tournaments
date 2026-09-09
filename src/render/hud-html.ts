@@ -688,8 +688,7 @@ const STYLE = `
      recentrage, en **une rangée** posée au-dessus du panneau d'unité. */
   .atlas-hud .camera{bottom:calc(var(--bas) + var(--dock) + 8px);display:flex;flex-wrap:wrap;justify-content:flex-end;max-width:calc(100% - 24px)}
   .atlas-hud .camera button[data-action='zoom_plus'],
-  .atlas-hud .camera button[data-action='zoom_moins'],
-  .atlas-hud .camera button[data-action='inclinaison']{display:none}
+  .atlas-hud .camera button[data-action='zoom_moins']{display:none}
   /* Le bas s'empile au lieu de se disputer une ligne : le pied, la rangée de
      caméra, puis le panneau d'unité, qui reprend la largeur que la colonne de
      boutons lui prenait. Quatre boutons de 44 font 191 px : la rangée ne passe
@@ -715,6 +714,7 @@ const STYLE = `
   .atlas-hud .outils-vue[open] summary::after{content:'▾'}
   .atlas-hud .outils-vue-boutons{position:absolute;bottom:52px;right:0;display:grid;grid-template-columns:repeat(3,44px);gap:6px;padding:8px;background:var(--encre);border:1px solid var(--cadre);box-shadow:3px 3px 0 #060f1770}
   .atlas-hud .camera-mobile .outils-vue button{display:flex}
+  .atlas-hud .camera-aide{grid-column:1/-1;margin:0;max-width:144px;font-size:var(--t2);line-height:1.4;color:var(--papier)}
   .atlas-hud .camera-mobile{z-index:5}
   .atlas-hud .inspect{max-height: min(38cqh,320px);overflow-y:auto;overscroll-behavior:contain}
   .atlas-hud .dock{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
@@ -1726,11 +1726,11 @@ export function monterHudHtml(
         + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '');
       return '<div class="camera camera-mobile">' + legende
         + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
-        + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}</div></details>`
+        + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}<p class="camera-aide">${ech(api.t('hud.aide_camera'))}</p></div></details>`
         + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
         + '</div>';
     }
-    return '<div class="camera">' + legende + tactique
+    return `<div class="camera" title="${ech(api.t('hud.aide_camera'))}">` + legende + tactique
       + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
       + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')
       + (api.zoomer

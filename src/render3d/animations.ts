@@ -945,6 +945,7 @@ export function partitionProvisoire(
       if (!att || !def) continue;
       // Le projectile part après le déplacement ; le choc attend son arrivée.
       const departTir = fins.get(e.attaquantId) ?? 0;
+      const disponibleDefenseur = fins.get(e.cibleId) ?? 0;
       const dureeTir = d(DUREES.tir);
       gestes.push({
         genre: 'tirer', unite: e.attaquantId, depuis: att, vers: def, debut: placer(e.attaquantId, dureeTir), duree: dureeTir,
@@ -957,13 +958,14 @@ export function partitionProvisoire(
         });
       }
       if (e.riposte > 0) {
-        // La riposte n'arrive qu'une fois le tir parti : le défenseur tire vers
-        // la case d'**arrivée** de l'attaquant, qui encaisse à son tour.
-        const depart = Math.max(fins.get(e.attaquantId) ?? 0, fins.get(e.cibleId) ?? 0);
+        // La riposte part 80 ms après le premier tir, sans attendre l’impact.
+        // Le choc et le départ de tir peuvent se chevaucher ; la fin retient les deux.
+        const depart = Math.max(disponibleDefenseur, departTir + d(80));
         const dureeRiposte = d(DUREES.tir);
         const dureeCoup = d(DUREES.encaisser);
+        fins.set(e.cibleId, Math.max(fins.get(e.cibleId) ?? 0, depart + dureeRiposte));
         gestes.push({
-          genre: 'tirer', unite: e.cibleId, depuis: def, vers: att, debut: placer(e.cibleId, dureeRiposte, depart), duree: dureeRiposte,
+          genre: 'tirer', unite: e.cibleId, depuis: def, vers: att, debut: depart, duree: dureeRiposte,
         });
         gestes.push({
           genre: 'encaisser', unite: e.attaquantId, case: att, degats: e.riposte, depuis: def,
