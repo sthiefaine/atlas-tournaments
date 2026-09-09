@@ -1075,3 +1075,22 @@ test('les formes mémorisées du décor sont bornées, et deux montages ne les r
   }
   assert.ok(poidsFormesDecor().octets < 4 * 1024 * 1024, 'le cache reste borné après d’autres montages');
 });
+
+test('QG livré : remplace la silhouette, suit le relief et garde la transparence sous brouillard', () => {
+  const e=partie('plaine'); e.camps[0]!.qgCase='0,0';
+  const source=new THREE.Group();source.name='batiment_qg_fr_ile_de_france';
+  const racine=new THREE.Group(), sous=new THREE.Group();
+  const mat=new THREE.MeshStandardNodeMaterial(), mesh=new THREE.Mesh(new THREE.BoxGeometry(.7,.6,.7),mat);
+  mesh.userData['opaque']=mat;sous.add(mesh);racine.add(sous);source.add(racine);
+  const chantier=ouvrirChantierDecor({largeur:1,hauteur:1,terrainDe:()=> 'qg'},e,()=>.27,'plaine',new Map([[source.name,source]]));
+  for(const t of chantier.tranches)t();const decor=chantier.decor();
+  const bat=decor.groupe.getObjectByName('batiments')!.children[0]!;
+  assert.equal(bat.position.y,.27);assert.equal(bat.children.length,1);assert.equal(bat.children[0]!.name,source.name);
+  const unite={...e.unites[0]!,x:0,y:0};const occupe={...e,unites:[unite]};
+  decor.majProprietaires(occupe,new Set(['0,0']));
+  let rendu:THREE.Mesh|undefined;decor.groupe.getObjectByName(source.name)!.traverse(o=>{if(o instanceof THREE.Mesh)rendu=o;});
+  assert.equal((rendu!.material as THREE.MeshStandardNodeMaterial).transparent,true);
+  decor.majProprietaires(occupe,new Set());
+  assert.equal((rendu!.material as THREE.MeshStandardNodeMaterial).transparent,false);
+  decor.dispose();
+});

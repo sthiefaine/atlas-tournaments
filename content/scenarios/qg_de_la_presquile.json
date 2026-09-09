@@ -1,6 +1,6 @@
 {
   "cle": "qg_de_la_presquile",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -15,8 +15,8 @@
     "meteo": "clair"
   },
   "cycleJourNuit": {
-    "jour": 4,
-    "nuit": 2
+    "jour": 12,
+    "nuit": 0
   },
   "catalogueVersion": 4,
   "commandants": [

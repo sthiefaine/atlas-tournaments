@@ -333,3 +333,20 @@ test('une greffe ne se pose qu’une fois, jamais par-dessus un autre nœud de s
   assert.throws(() => grefferBrouillard(autre, uniformes, 'atlas-test'), /outputNode/);
   masque.dispose();
 });
+
+test('matières livrées : PNG PBR dans le relief existant, pont raccordé conservé', () => {
+  const jeu = () => ({albedo:new THREE.Texture({width:8,height:8} as TexImageSource),normale:new THREE.Texture({width:8,height:8} as TexImageSource),rugosite:new THREE.Texture({width:8,height:8} as TexImageSource)});
+  const herbe=jeu(), foret=jeu(), pont=jeu(), route=jeu(), eau=jeu();
+  const sols=new Map([['terrain_plaine',herbe],['terrain_foret',foret],['terrain_pont',pont],['terrain_route',route],['terrain_riviere',eau]]);
+  const g:GrilleTerrain={largeur:3,hauteur:1,terrainDe:x=>x===1?'pont':'plaine'};
+  const plateau=creerPlateau(g,documentMemoire(),'plaine',sols);
+  const sol=plateau.groupe.getObjectByName('sol') as THREE.Mesh;
+  assert.equal((sol.material as THREE.MeshStandardNodeMaterial).map!.image,herbe.albedo.image);
+  const p=plateau.groupe.getObjectByName('ponts') as THREE.Mesh;
+  assert.equal((p.material as THREE.MeshStandardNodeMaterial).normalMap,pont.normale);
+  assert.equal((p.material as THREE.MeshStandardNodeMaterial).roughnessMap,pont.rugosite);
+  assert(p.geometry.getAttribute('position').count>0);
+  const v=plateau.groupe.getObjectByName('voies') as THREE.Mesh;
+  assert.equal((v.material as THREE.MeshStandardNodeMaterial).normalMap,route.normale);
+  plateau.dispose();
+});

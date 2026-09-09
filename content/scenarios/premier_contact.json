@@ -1,6 +1,6 @@
 {
   "cle": "premier_contact",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -15,8 +15,8 @@
     "meteo": "clair"
   },
   "cycleJourNuit": {
-    "jour": 4,
-    "nuit": 2
+    "jour": 12,
+    "nuit": 0
   },
   "catalogueVersion": 4,
   "commandants": [
@@ -56,6 +56,11 @@
     {
       "locuteur": "cmd_ariane_belloc",
       "texte": "Moi, Ariane, je vais vous apprendre à commander. Tomas et sa patrouille attendent de l’autre côté de la rivière : mettez-les hors jeu, toute la patrouille.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Cet exercice se déroule de jour, sans brouillard de guerre. Plus tard, vous apprendrez à reconnaître les zones cachées et à anticiper la nuit. Ici, concentrez-vous sur le déplacement et le premier tir.",
       "emotion": "neutre"
     }
   ],

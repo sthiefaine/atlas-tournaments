@@ -15,7 +15,9 @@
  * disque est une ligne, et un dossier absent est l'état normal du projet.
  */
 
-import { readdirSync } from 'node:fs';
+import { readdirSync, statSync } from 'node:fs';
+
+import path from 'node:path';
 
 import { decomposerNomModele, type InventaireModeles, type NiveauLod } from '../assets/spec';
 
@@ -52,7 +54,11 @@ export function inventaireModeles(noms: readonly string[]): InventaireModeles {
 export function lireInventaireModeles(dossier: string): InventaireModeles {
   let noms: string[];
   try {
-    noms = readdirSync(dossier, { withFileTypes: true }).filter((e) => e.isFile()).map((e) => e.name);
+    noms = readdirSync(dossier, { withFileTypes: true }).filter((e) => {
+      if (e.isFile()) return true;
+      if (!e.isSymbolicLink()) return false;
+      try { return statSync(path.join(dossier, e.name)).isFile(); } catch { return false; }
+    }).map((e) => e.name);
   } catch {
     return { modeles: {} };
   }

@@ -1,3 +1,4 @@
+import { ENVIRONNEMENT_PREMIER_CONTACT, libererBatimentsLivres } from './assets-environnement';
 /**
  * Le décor : arbres, rochers et bâtiments.
  *
@@ -580,7 +581,7 @@ const CASES_PAR_TRANCHE = 4;
 /** Le même montage, en tranches : c'est ce que `index.ts` joue au chargement. */
 export function ouvrirChantierDecor(
   g: GrilleTerrain, etat: EtatPartie, hauteurEn: (x: number, z: number) => number,
-  biome: Biome = 'plaine',
+  biome: Biome = 'plaine', modelesLivres = new Map<string, THREE.Object3D>(),
 ): ChantierDecor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
@@ -1260,7 +1261,17 @@ export function ouvrirChantierDecor(
       groupeCase.add(pivot);
       paraboles.push({ pivot, active: proprio !== null && !desaffecte });
     }
-    poserCase(groupeCase, formesDeCase(terrain, desaffecte, hauteurs), proprio);
+    const campInitial = etat.camps.find(c => c.qgCase === cleCase({x,y}))?.id;
+    const idLivre = terrain === 'qg' && campInitial !== undefined ? ENVIRONNEMENT_PREMIER_CONTACT.qg[campInitial as 0|1] : undefined;
+    const modeleLivre = !desaffecte && idLivre ? modelesLivres.get(idLivre) : undefined;
+    if (modeleLivre) {
+      const copie = modeleLivre.clone(true);
+      // Object3D.clone sérialise userData : rétablir la référence matériau,
+      // sans laquelle la transparence recevrait un simple objet JSON.
+      copie.traverse(o => {if(o instanceof THREE.Mesh)o.userData['opaque']=o.material;});
+      groupeCase.add(copie);
+    }
+    else poserCase(groupeCase, formesDeCase(terrain, desaffecte, hauteurs), proprio);
     batiments.add(groupeCase);
   }
 
@@ -1509,10 +1520,7 @@ export function ouvrirChantierDecor(
   /** Les mailles d'un bâtiment : ses lots fondus, et celles de sa parabole. */
   function maillesDe(batiment: THREE.Object3D): THREE.Mesh[] {
     const mailles: THREE.Mesh[] = [];
-    for (const c of batiment.children) {
-      if (c instanceof THREE.Mesh) mailles.push(c);
-      else for (const m of c.children) if (m instanceof THREE.Mesh) mailles.push(m);
-    }
+    batiment.traverse(o => { if(o instanceof THREE.Mesh) mailles.push(o); });
     return mailles;
   }
 
@@ -1636,6 +1644,7 @@ export function ouvrirChantierDecor(
       // l'ambiance en cours, sans quoi il repartirait en plein été à midi.
       groupe.remove(paysage.groupe);
       paysage.dispose();
+      libererBatimentsLivres(modelesLivres);
       paysage = creerPaysage(grille, hauteurEn, biome);
       groupe.add(paysage.groupe);
       if (ambianceCourante) paysage.appliquerAmbiance(ambianceCourante.p, ambianceCourante.saison);
@@ -1747,6 +1756,7 @@ export function ouvrirChantierDecor(
       matIvoire.dispose();
       for (const m of matsCamp.values()) m.dispose();
       paysage.dispose();
+      libererBatimentsLivres(modelesLivres);
     },
   };
 

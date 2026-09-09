@@ -1,3 +1,4 @@
+import type { MatiereLivree } from './assets-environnement';
 /**
  * Le plateau : maillage de la grille, mélange de matières, eau, voies, grille.
  *
@@ -352,7 +353,9 @@ function nuanceurSol(jeux: JeuxSol, u: UniformesSol, splat: THREE.DataTexture): 
   const humiditeLocale = u.uMouille.mul(smoothstep(0.12, 0.45, reliefFin).mul(0.5).add(0.5));
   const colorNode = teinteSaison.mul(matiere).mul(humiditeLocale.mul(0.17).oneMinus());
 
-  const rugositeMatiere = part.r.mul(0.95).add(part.g.mul(0.92)).add(part.b.mul(0.78)).add(part.a.mul(0.97));
+  const rHerbe = jeux.herbe.rugosite ? texture(jeux.herbe.rugosite,uvD).r : float(0.95);
+  const rTerre = jeux.terre.rugosite ? texture(jeux.terre.rugosite,uvD).r : float(0.92);
+  const rugositeMatiere = part.r.mul(rHerbe).add(part.g.mul(rTerre)).add(part.b.mul(0.78)).add(part.a.mul(0.97));
   const roughnessNode = mix(mix(rugositeMatiere, 0.24, humiditeLocale), 0.68, couverture.mul(0.7));
 
   const decoder = (t: THREE.Texture, uvN: ShaderNodeObject<Node>, nom: string): ShaderNodeObject<Node> =>
@@ -703,13 +706,20 @@ export function tranchesToilesPlateau(doc: Document, biome: Biome = 'plaine'): A
 }
 
 /** Monte le plateau complet dans un groupe. */
-export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'plaine'): Plateau {
+export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'plaine', solsLivres = new Map<string,MatiereLivree>()): Plateau {
   const groupe = new THREE.Group();
   groupe.name = 'plateau';
 
   const [herbe, terre, roche, sable, neige] = MATIERES_SOL.map(
     (d) => jeuMatiere(doc, d.matiere, d.taille, d.teintee ? biome : 'plaine'),
   ) as [JeuMatiere, JeuMatiere, JeuMatiere, JeuMatiere, JeuMatiere];
+
+  // On conserve la maille de relief et la splat : les plaques GLB planes
+  // ne pourraient pas suivre les pentes ni les culées des ponts.
+  for (const [jeu,id] of [[herbe,'terrain_plaine'],[terre,'terrain_foret']] as const) {
+    const source = solsLivres.get(id);
+    if(source) {jeu.albedo.image=source.albedo.image;jeu.albedo.flipY=false;jeu.albedo.needsUpdate=true;jeu.normales.image=source.normale.image;jeu.normales.flipY=false;jeu.normales.needsUpdate=true;jeu.rugosite=source.rugosite;}
+  }
 
   // Les textures d'un texel par case sont **remplacées** quand la carte change
   // de taille : ces trois-là sont les textures du moment, jamais gelées.
@@ -784,6 +794,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   });
   // Les voies et les ponts ont leurs propres matériaux : sans la greffe, une
   // route claire traverserait le noir comme un trait de craie.
+  const routeLivree = solsLivres.get('terrain_route');
+  if(routeLivree) {matVoie.normalMap=routeLivree.normale;matVoie.roughnessMap=routeLivree.rugosite;}
   grefferBrouillard(matVoie, uBrouillard, 'atlas-voie');
   const voies = new THREE.Mesh(new THREE.BufferGeometry(), matVoie);
   const tamponVoies = creerTampon(voies);
@@ -797,6 +809,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     roughness: 0.82,
     metalness: 0,
   });
+  const pontLivre = solsLivres.get('terrain_pont');
+  if(pontLivre) {matPont.map=pontLivre.albedo;matPont.normalMap=pontLivre.normale;matPont.roughnessMap=pontLivre.rugosite;matPont.color.set(0xffffff);}
   grefferBrouillard(matPont, uBrouillard, 'atlas-pont');
   const ponts = new THREE.Mesh(new THREE.BufferGeometry(), matPont);
   const tamponPonts = creerTampon(ponts);
@@ -840,6 +854,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   // --- L'eau : un plan qui déborde de la carte d'une case, pour que le socle
   //     se lise comme posé sur l'eau ; le reste de l'écran est au ciel.
   const nEau = normalesEau(doc);
+  const eauLivree = solsLivres.get('terrain_riviere');
+  if(eauLivree) {nEau.image=eauLivree.normale.image;nEau.flipY=false;nEau.needsUpdate=true;}
   nEau.repeat.set(6, 6);
   const matEau = new THREE.MeshStandardNodeMaterial({
     color: 0x2a6ea8,
@@ -1118,6 +1134,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       tVisibles.dispose();
       texVoies.dispose();
       nEau.dispose();
+      for(const source of solsLivres.values()) for(const t of [source.albedo,source.normale,source.rugosite]) t.dispose();
       for (const j of [herbe, terre, roche, sable, neige]) {
         j.albedo.dispose();
         j.normales.dispose();

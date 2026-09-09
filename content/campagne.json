@@ -15,7 +15,8 @@
         "Cliquez sur votre char : les cases vertes sont celles où il peut aller, les rouges celles qu’il peut frapper après s’être déplacé.",
         "Amenez le char sur la route juste après le pont et choisissez Attaquer sur l’infanterie voisine. Le HUD montre le duel avant de confirmer.",
         "Une unité attaquée riposte avec ce qui lui reste : frappez en premier, et à deux sur une même cible.",
-        "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : une unité y reçoit moins de dégâts."
+        "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : une unité y reçoit moins de dégâts.",
+        "Ce premier exercice reste de jour et sans brouillard. Le sixième tutoriel vous apprendra à reconnaître les zones cachées et à anticiper la nuit."
       ]
     },
     {
@@ -94,7 +95,8 @@
       "tutoriel": [
         "Le drone prépare votre approche ; il ne capture pas. Protégez l’infanterie qui monte vers le radar.",
         "Consultez le rayon IEM et le bulletin avant de déplacer un appareil. Les unités terrestres peuvent approcher la station.",
-        "Prenez aussi la ville indiquée au nord-est : le radar seul ne termine pas l’exercice."
+        "Prenez aussi la ville indiquée au nord-est : le radar seul ne termine pas l’exercice.",
+        "La nuit de J3 et J4 réduit la vision de deux cases, au minimum une ; vos bâtiments éclairent les unités qui s’y trouvent. Le retour du jour à J5 ne désactive pas le brouillard de guerre."
       ]
     },
     {

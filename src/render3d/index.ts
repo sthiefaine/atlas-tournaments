@@ -1,3 +1,4 @@
+import { chargerEnvironnement, type EnvironnementLivre } from './assets-environnement';
 /**
  * # Rendu 3D d'Atlas Tournament — API publique
  *
@@ -387,10 +388,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // Les toiles d'abord, une tranche chacune : c'est le poste le plus cher du
     // premier montage d'une page, et le seul qui soit gratuit au deuxième —
     // une matière ne dépend que du biome (`textures.ts`).
-    const tranches: Tranche[] = [...tranchesToilesPlateau(doc, options.biome)];
+    let livres: EnvironnementLivre = {batiments:new Map(),sols:new Map()};
+    const tranches: Tranche[] = [async () => { livres = await chargerEnvironnement(e.scenarioCle); }, ...tranchesToilesPlateau(doc, options.biome)];
 
     tranches.push(() => {
-      const plateau = creerPlateau(grille, doc, options.biome);
+      const plateau = creerPlateau(grille, doc, options.biome, livres.sols);
       const unites = creerUnites(doc, plateau.hauteurEn, options);
       const surbrillances = creerSurbrillances(plateau.hauteurEn);
       const effets = creerEffets(doc);
@@ -447,7 +449,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // elle est passée, et il resterait semé sur la carte d'avant.
       const courant = etat ?? e;
       const c = ouvrirChantierDecor(
-        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome,
+        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome, livres.batiments,
       );
       // Un chantier dans le chantier : c'est le décor qui décide de son
       // découpage — leur nombre dépend de la carte —, nous qui rendons la main

@@ -797,6 +797,8 @@ export interface Scenario extends Enveloppe {
   climatFixe?: { saison?: Saison; meteo?: Meteo };
   cycleJourNuit: { jour: number; nuit: number };
   catalogueVersion: number;
+  /** Révision des capacités ; absence conserve la sélection historique par catalogue. */
+  commandantsVersion?: 1 | 2 | 3;
   commandants: { camp: CampId; commandantCle: Cle; ia?: StrategieIa }[];
   fondsDepartParCamp?: Partial<Record<CampId, number>>;
   revenusParBatimentParCamp?: Partial<Record<CampId, number>>;

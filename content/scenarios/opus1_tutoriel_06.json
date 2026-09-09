@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_06",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -15,8 +15,8 @@
     "meteo": "clair"
   },
   "cycleJourNuit": {
-    "jour": 12,
-    "nuit": 0
+    "jour": 2,
+    "nuit": 2
   },
   "catalogueVersion": 8,
   "commandants": [
@@ -94,6 +94,11 @@
       "locuteur": "cmd_ariane_belloc",
       "texte": "Normal et difficile gardent le brouillard et ce calendrier. Tomas est plus prudent en difficile ; aucun capteur ne voit secrètement à travers le brouillard.",
       "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le brouillard de guerre masque ce que vos unités ne voient pas. La nuit arrive à J3 et J4 : elle réduit aussi la portée de vue. Le jour revient à J5, mais les zones hors de votre vision restent cachées.",
+      "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
@@ -126,6 +131,48 @@
         {
           "locuteur": "cmd_ariane_belloc",
           "texte": "Le drone prépare votre approche ; il ne capture pas. Protégez l’infanterie qui monte vers le radar.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t06_nuit_j2",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La nuit arrive demain pour deux journées. Placez vos éclaireurs et consultez le bulletin. Une unité sur un bâtiment de votre camp bénéficie de son éclairage.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t06_nuit_j3",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La nuit retire deux cases de vision, avec un minimum d’une, sauf aux unités adaptées ou sur un bâtiment de votre camp. Le drone éclaire les approches ; protégez-le de la station IEM.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t06_nuit_j5",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le jour est revenu. Votre portée de vue augmente, mais le brouillard de guerre reste actif : un terrain non observé peut encore cacher une unité.",
           "emotion": "neutre"
         }
       ]

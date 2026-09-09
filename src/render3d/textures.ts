@@ -391,6 +391,7 @@ export function texture(canvas: HTMLCanvasElement, srgb: boolean): THREE.CanvasT
 
 /** Le jeu complet d'une matière : albédo et normales, déjà en textures. */
 export interface JeuMatiere {
+  rugosite?: THREE.Texture;
   albedo: THREE.CanvasTexture;
   normales: THREE.CanvasTexture;
 }

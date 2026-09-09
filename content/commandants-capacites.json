@@ -1,0 +1,3089 @@
+{
+  "version": 3,
+  "statut": "catalogue_tactique_a_equilibrer",
+  "regles": [
+    "Les effets durent un tour complet et utilisent uniquement les modificateurs existants.",
+    "Le passif est permanent ; les multiplicateurs se composent dans les bornes du moteur.",
+    "Les pouvoirs visent le camp du commandant, pas automatiquement les camps alliés.",
+    "Les révisions 1 et 2 restent inchangées pour les anciens scénarios."
+  ],
+  "commandants": [
+    {
+      "cle": "cmd_ariane_belloc",
+      "nom": "Ariane Belloc",
+      "style": "Initiative polyvalente",
+      "description": "Compose une attaque avec plusieurs rôles, sans unité exclusive.",
+      "contreJeu": "Espacer les fronts pour empêcher une offensive simultanée.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.05
+        }
+      },
+      "descriptionPassif": "Attaque ×1,05 pour vos unités.",
+      "pouvoir": {
+        "nom": "Tempo commun",
+        "description": "Attaque ×1,15 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Tous les relais",
+        "description": "Attaque ×1,25 pour vos unités. Défense ×1,15 pour vos unités. Mouvement +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.25
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "fr"
+    },
+    {
+      "cle": "cmd_tomas_reiner",
+      "nom": "Tomas Reiner",
+      "style": "Protection des points capturés",
+      "description": "Garde un réseau de positions plutôt que poursuivre chaque adversaire.",
+      "contreJeu": "Attaquer les objectifs éloignés de ses bâtiments.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Défense ×1,08 pour vos unités.",
+      "pouvoir": {
+        "nom": "Tenue des accès",
+        "description": "Défense ×1,3 pour vos unités sur ville, qg, usine, radar, port, aeroport. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "qg",
+                "usine",
+                "radar",
+                "port",
+                "aeroport"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le réseau tient",
+        "description": "Défense ×1,35 pour vos unités. Points de capture ×1,25 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "lu"
+    },
+    {
+      "cle": "cmd_elsbeth_vonlanthen",
+      "nom": "Elsbeth Vonlanthen",
+      "style": "Appui des hauteurs",
+      "description": "Installe ses équipes sur les positions défendables.",
+      "contreJeu": "Contourner les sommets et disputer les terrains ouverts.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "surTerrain": [
+            "montagne"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités sur montagne.",
+      "pouvoir": {
+        "nom": "Ligne des cols",
+        "description": "Défense ×1,4 pour vos unités sur montagne. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Passage assuré",
+        "description": "Défense ×1,35 pour vos unités sur montagne. Mouvement +1 pour vos unités de type infanterie, meca. Vision +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "ch"
+    },
+    {
+      "cle": "cmd_lotte_vermeer",
+      "nom": "Lotte Vermeer",
+      "style": "Génie de terrain",
+      "description": "Amène ses équipes techniques à portée de leurs chantiers.",
+      "contreJeu": "Séparer le génie de sa couverture.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "genie"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités de type genie.",
+      "pouvoir": {
+        "nom": "Accès de service",
+        "description": "Mouvement +1 pour vos unités de type genie. Défense ×1,25 pour vos unités de type genie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Chantier coordonné",
+        "description": "Mouvement +2 pour vos unités de type genie. Points de capture ×1,5 pour vos unités de type genie. Défense ×1,2 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.5
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "nl"
+    },
+    {
+      "cle": "cmd_samir_el_hadi",
+      "nom": "Samir El Hadi",
+      "style": "Protection des convois",
+      "description": "Prépare les trajets et accompagne les unités de soutien.",
+      "contreJeu": "Fixer les véhicules avant leur fenêtre de mobilité.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "transport",
+            "transport_air",
+            "barge",
+            "drone_ravitailleur"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités de type transport, transport_air, barge, drone_ravitailleur.",
+      "pouvoir": {
+        "nom": "Halte préparée",
+        "description": "Défense ×1,3 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Mouvement +1 pour vos unités à mouvement roues. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La longue route",
+        "description": "Défense ×1,4 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Mouvement +2 pour vos unités à mouvement roues. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "ma"
+    },
+    {
+      "cle": "cmd_awa_diagne",
+      "nom": "Awa Diagne",
+      "style": "Infanterie accompagnée",
+      "description": "Ouvre le passage avec une ligne d’infanterie soutenue.",
+      "contreJeu": "Tenir les infanteries à distance avec de l’indirect.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,1 pour vos unités de type infanterie, meca.",
+      "pouvoir": {
+        "nom": "Pas commun",
+        "description": "Attaque ×1,25 pour vos unités de type infanterie, meca. Mouvement +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La ligne avance",
+        "description": "Attaque ×1,4 pour vos unités de type infanterie, meca. Défense ×1,2 pour vos unités de type infanterie, meca. Mouvement +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "sn"
+    },
+    {
+      "cle": "cmd_livia_moura",
+      "nom": "Lívia Moura",
+      "style": "Offensive sous couvert",
+      "description": "Fait des bois et herbes hautes ses positions de départ.",
+      "contreJeu": "Forcer le combat sur des voies dégagées.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités sur foret, herbe_haute.",
+      "pouvoir": {
+        "nom": "Sous la canopée",
+        "description": "Attaque ×1,3 pour vos unités sur foret, herbe_haute. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Sortie des lisières",
+        "description": "Attaque ×1,4 pour vos unités sur foret, herbe_haute. Mouvement +1 pour vos unités. Défense ×1,15 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "paysCode": "br"
+    },
+    {
+      "cle": "cmd_ines_valdes",
+      "nom": "Inés Valdés",
+      "style": "Capture sous pression",
+      "description": "Transforme la couverture des capteurs en avantage territorial.",
+      "contreJeu": "Repousser ses capteurs avant leur prochain ordre de capture.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "capture",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        }
+      },
+      "descriptionPassif": "Points de capture ×1,1 pour vos unités de type infanterie, meca.",
+      "pouvoir": {
+        "nom": "Relève des couleurs",
+        "description": "Points de capture ×1,5 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.5
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les places ouvertes",
+        "description": "Points de capture ×1,8 pour vos unités de type infanterie, meca. Défense ×1,3 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.8
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "mx"
+    },
+    {
+      "cle": "cmd_devika_rao",
+      "nom": "Devika Rao",
+      "style": "Masse mobile",
+      "description": "Déplace une ligne de véhicules en gardant plusieurs objectifs possibles.",
+      "contreJeu": "Exploiter sa faible spécialisation aérienne et maritime.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.05
+        },
+        "filtre": {
+          "mouvement": [
+            "chenilles"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,05 pour vos unités à mouvement chenilles.",
+      "pouvoir": {
+        "nom": "Front étendu",
+        "description": "Attaque ×1,2 pour vos unités à mouvement chenilles. Mouvement +1 pour vos unités à mouvement chenilles. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Pression continue",
+        "description": "Attaque ×1,35 pour vos unités à mouvement chenilles. Défense ×1,25 pour vos unités à mouvement chenilles. Mouvement +1 pour vos unités à mouvement chenilles. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "in"
+    },
+    {
+      "cle": "cmd_ren_mizuno",
+      "nom": "Ren Mizuno",
+      "style": "Préparation à distance",
+      "description": "Coordonne observation et tirs indirects préparés.",
+      "contreJeu": "Approcher pendant le déplacement de ses pièces : elles ne tirent toujours pas après avoir bougé.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        },
+        "filtre": {
+          "types": [
+            "artillerie",
+            "roquettes",
+            "missiles_sol",
+            "cuirasse"
+          ]
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse.",
+      "pouvoir": {
+        "nom": "Mesure du terrain",
+        "description": "Portée maximale +1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Tir parfaitement placé",
+        "description": "Portée maximale +1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Attaque ×1,3 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Vision +1 pour vos unités de type recon, drone, drone_marin. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "recon",
+                "drone",
+                "drone_marin"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "jp"
+    },
+    {
+      "cle": "cmd_hazel_quinn",
+      "nom": "Hazel Quinn",
+      "style": "Écrans de reconnaissance",
+      "description": "S’appuie sur les éclaireurs et les longues voies de déplacement.",
+      "contreJeu": "Ne pas offrir d’éclaireurs isolés à sa défense mobile.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "recon",
+            "drone",
+            "drone_marin"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités de type recon, drone, drone_marin.",
+      "pouvoir": {
+        "nom": "Écran avancé",
+        "description": "Vision +2 pour vos unités de type recon, drone, drone_marin. Défense ×1,25 pour vos unités de type recon, drone, drone_marin. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "recon",
+                "drone",
+                "drone_marin"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "recon",
+                "drone",
+                "drone_marin"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Horizon tenu",
+        "description": "Vision +3 pour vos unités de type recon, drone, drone_marin. Défense ×1,35 pour vos unités de type recon, drone, drone_marin. Mouvement +1 pour vos unités à mouvement roues. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            },
+            "filtre": {
+              "types": [
+                "recon",
+                "drone",
+                "drone_marin"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "types": [
+                "recon",
+                "drone",
+                "drone_marin"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "au"
+    },
+    {
+      "cle": "cmd_ayu_pranata",
+      "nom": "Ayu Pranata",
+      "style": "Liaisons maritimes",
+      "description": "Protège les traversées et garde les quais accessibles.",
+      "contreJeu": "Contester les débarquements au sol : ses bonus ne capturent aucun bâtiment.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "mouvement": [
+            "mer",
+            "amphibie"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités à mouvement mer, amphibie.",
+      "pouvoir": {
+        "nom": "Passage du détroit",
+        "description": "Mouvement +1 pour vos unités à mouvement mer, amphibie. Défense ×1,2 pour vos unités à mouvement mer, amphibie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les îles reliées",
+        "description": "Mouvement +2 pour vos unités à mouvement mer, amphibie. Défense ×1,35 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "id"
+    },
+    {
+      "cle": "cmd_leandro_paz",
+      "nom": "Leandro Paz",
+      "style": "Manœuvre de plaine",
+      "description": "Privilégie les mouvements ouverts et les engagements préparés.",
+      "contreJeu": "Casser les routes de contournement avec des obstacles.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "surTerrain": [
+            "plaine"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités sur plaine.",
+      "pouvoir": {
+        "nom": "Grand détour",
+        "description": "Mouvement +1 pour vos unités à mouvement roues. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Ligne d’horizon",
+        "description": "Mouvement +2 pour vos unités à mouvement roues. Attaque ×1,3 pour vos unités à mouvement roues. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "ar"
+    },
+    {
+      "cle": "cmd_noemie_leduc",
+      "nom": "Noémie Leduc",
+      "style": "Lecture des couverts",
+      "description": "Lit les chemins de forêt sans prétendre ignorer toute météo.",
+      "contreJeu": "Garder des réserves hors des lignes boisées.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        },
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités sur foret, herbe_haute.",
+      "pouvoir": {
+        "nom": "Balises du retour",
+        "description": "Vision +2 pour vos unités. Défense ×1,2 pour vos unités sur foret, herbe_haute. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La route retrouvée",
+        "description": "Vision +3 pour vos unités. Mouvement +1 pour vos unités de type infanterie, meca. Défense ×1,3 pour vos unités sur foret, herbe_haute. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "ca"
+    },
+    {
+      "cle": "cmd_jone_vakalau",
+      "nom": "Jone Vakalau",
+      "style": "Initiative navale",
+      "description": "Déplace vite ses coques et couvre les approches amphibies.",
+      "contreJeu": "Protéger les quais et exploiter son manque de bonus terrestre.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "mouvement": [
+            "mer",
+            "amphibie"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités à mouvement mer, amphibie.",
+      "pouvoir": {
+        "nom": "Passe du lagon",
+        "description": "Mouvement +1 pour vos unités à mouvement mer, amphibie. Attaque ×1,15 pour vos unités à mouvement mer, amphibie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.15
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Courant porteur",
+        "description": "Mouvement +2 pour vos unités à mouvement mer, amphibie. Attaque ×1,3 pour vos unités à mouvement mer, amphibie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "fj"
+    },
+    {
+      "cle": "cmd_nikos_delis",
+      "nom": "Nikos Delis",
+      "style": "Défense littorale",
+      "description": "Installe des points d’appui autour des plages et des ports.",
+      "contreJeu": "Déborder ses positions par l’intérieur des terres.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "surTerrain": [
+            "plage",
+            "port"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités sur plage, port.",
+      "pouvoir": {
+        "nom": "Veille des quais",
+        "description": "Défense ×1,35 pour vos unités sur plage, port. Vision +1 pour vos unités à mouvement mer, amphibie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "surTerrain": [
+                "plage",
+                "port"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les rades tiennent",
+        "description": "Défense ×1,45 pour vos unités sur plage, port. Attaque ×1,25 pour vos unités à mouvement mer, amphibie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.45
+            },
+            "filtre": {
+              "surTerrain": [
+                "plage",
+                "port"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "mouvement": [
+                "mer",
+                "amphibie"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "gr"
+    },
+    {
+      "cle": "cmd_elin_arnardottir",
+      "nom": "Elín Arnardóttir",
+      "style": "Lecture des reliefs",
+      "description": "Prépare ses tirs et ses capteurs sur les hauteurs.",
+      "contreJeu": "Disputer les axes bas et déplacer la menace entre vallées.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        },
+        "filtre": {
+          "surTerrain": [
+            "montagne"
+          ]
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités sur montagne.",
+      "pouvoir": {
+        "nom": "Balises de roche",
+        "description": "Vision +3 pour vos unités sur montagne. Défense ×1,2 pour vos unités sur montagne. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Fenêtre claire",
+        "description": "Vision +2 pour vos unités. Attaque ×1,3 pour vos unités sur montagne. Mouvement +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "is"
+    },
+    {
+      "cle": "cmd_kito_njoroge",
+      "nom": "Kito Njoroge",
+      "style": "Course des capteurs",
+      "description": "Donne le tempo à l’infanterie et aux reconnaissances.",
+      "contreJeu": "Conserver un écran de véhicules devant les objectifs.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,08 pour vos unités de type infanterie, meca.",
+      "pouvoir": {
+        "nom": "Dernier relais",
+        "description": "Mouvement +1 pour vos unités de type infanterie, meca. Vision +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Jusqu’à la ligne",
+        "description": "Mouvement +2 pour vos unités de type infanterie, meca. Points de capture ×1,4 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "ke"
+    },
+    {
+      "cle": "cmd_tiana_ravel",
+      "nom": "Tiana Ravel",
+      "style": "Approche forestière",
+      "description": "Utilise les couverts pour rapprocher ses équipes sans immunité climatique.",
+      "contreJeu": "Éclairer les sorties de forêt et défendre les routes.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités sur foret, herbe_haute.",
+      "pouvoir": {
+        "nom": "Pistes reconnues",
+        "description": "Vision +2 pour vos unités sur foret, herbe_haute. Mouvement +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Réseau des pistes",
+        "description": "Défense ×1,35 pour vos unités sur foret, herbe_haute. Attaque ×1,2 pour vos unités sur foret, herbe_haute. Mouvement +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "mg"
+    },
+    {
+      "cle": "cmd_saran_bat",
+      "nom": "Saran Bat",
+      "style": "Reconnaissance offensive",
+      "description": "Frappe les positions fragiles avec des véhicules légers.",
+      "contreJeu": "Opposer du blindage et protéger les unités isolées.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "recon"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,1 pour vos unités de type recon.",
+      "pouvoir": {
+        "nom": "Élan des éclaireurs",
+        "description": "Mouvement +2 pour vos unités de type recon. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "recon"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Manœuvre ouverte",
+        "description": "Mouvement +2 pour vos unités à mouvement roues. Attaque ×1,35 pour vos unités de type recon. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "roues"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "types": [
+                "recon"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "mn"
+    },
+    {
+      "cle": "cmd_amalie_haoses",
+      "nom": "Amalie Haoses",
+      "style": "Renseignement prudent",
+      "description": "Conserve ses capteurs au lieu de les échanger contre une attaque.",
+      "contreJeu": "Capturer les objectifs terrestres pendant ses manœuvres d’observation.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "drone",
+            "drone_marin",
+            "drone_intercepteur",
+            "drone_ravitailleur",
+            "meridien_veilleur"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur.",
+      "pouvoir": {
+        "nom": "Veille rapprochée",
+        "description": "Vision +2 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Défense ×1,3 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le signal demeure",
+        "description": "Vision +3 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Défense ×1,4 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Mouvement +1 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "na"
+    },
+    {
+      "cle": "cmd_mira_karki",
+      "nom": "Mira Karki",
+      "style": "Infanterie des hauteurs",
+      "description": "Conteste les postes d’altitude avec une équipe légère.",
+      "contreJeu": "Garder les unités lourdes sur les itinéraires ouverts.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ],
+          "surTerrain": [
+            "montagne"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,1 pour vos unités de type infanterie, meca sur montagne.",
+      "pouvoir": {
+        "nom": "La cordée passe",
+        "description": "Mouvement +1 pour vos unités de type infanterie, meca. Défense ×1,25 pour vos unités sur montagne. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Dernier col",
+        "description": "Mouvement +2 pour vos unités de type infanterie, meca. Attaque ×1,3 pour vos unités sur montagne. Points de capture ×1,2 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "surTerrain": [
+                "montagne"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "np"
+    },
+    {
+      "cle": "cmd_tess_roa",
+      "nom": "Tess Roa",
+      "style": "Repli couvert",
+      "description": "Préserve ses équipes dans les couverts et change de ligne sans bonus de soin fictif.",
+      "contreJeu": "Attaquer sur terrain ouvert avant son repli.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.12
+        },
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,12 pour vos unités sur foret, herbe_haute.",
+      "pouvoir": {
+        "nom": "Abri des fougères",
+        "description": "Défense ×1,4 pour vos unités sur foret, herbe_haute. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Nouvelle ligne",
+        "description": "Défense ×1,35 pour vos unités. Mouvement +1 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "nz"
+    },
+    {
+      "cle": "cmd_luz_quispe",
+      "nom": "Luz Quispe",
+      "style": "Protection des bâtisseurs",
+      "description": "Protège le génie au moment où il rejoint les objectifs techniques.",
+      "contreJeu": "Forcer ses équipes à se séparer entre chantier et front.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.2
+        },
+        "filtre": {
+          "types": [
+            "genie"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,2 pour vos unités de type genie.",
+      "pouvoir": {
+        "nom": "Équipe de chantier",
+        "description": "Mouvement +1 pour vos unités de type genie. Points de capture ×1,4 pour vos unités de type genie. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "L’ouvrage commun",
+        "description": "Mouvement +2 pour vos unités de type genie. Défense ×1,5 pour vos unités de type genie. Défense ×1,2 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.5
+            },
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "paysCode": "pe"
+    },
+    {
+      "cle": "cmd_hadran_ost",
+      "nom": "Hadran Ost",
+      "style": "Pression mécanisée",
+      "description": "Avance ses chenilles sous une couverture resserrée.",
+      "contreJeu": "Écarter les fronts et menacer son infanterie de capture.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "mouvement": [
+            "chenilles"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités à mouvement chenilles.",
+      "pouvoir": {
+        "nom": "Pression méridienne",
+        "description": "Attaque ×1,3 pour vos unités à mouvement chenilles. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le bloc avance",
+        "description": "Attaque ×1,45 pour vos unités à mouvement chenilles. Défense ×1,2 pour vos unités à mouvement chenilles. Mouvement +1 pour vos unités à mouvement chenilles. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.45
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "selene_veyr",
+      "nom": "Sélène Veyr",
+      "style": "Contrôle des concessions",
+      "description": "Concentre les capteurs et protège les bâtiments disputés.",
+      "contreJeu": "Séparer les objectifs et empêcher une capture durable.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "capture",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Points de capture ×1,1 pour vos unités.",
+      "pouvoir": {
+        "nom": "Mandat prioritaire",
+        "description": "Points de capture ×1,5 pour vos unités. Défense ×1,2 pour vos unités sur ville, qg, usine, radar, port, aeroport. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.5
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "qg",
+                "usine",
+                "radar",
+                "port",
+                "aeroport"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Tutelle du réseau",
+        "description": "Points de capture ×1,8 pour vos unités. Défense ×1,4 pour vos unités sur ville, qg, usine, radar, port, aeroport. Vision +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.8
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "qg",
+                "usine",
+                "radar",
+                "port",
+                "aeroport"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_mael_orven",
+      "nom": "Maël Orven",
+      "style": "Mobilité aérienne",
+      "description": "Change l’axe de ses appareils lors d’une fenêtre préparée.",
+      "contreJeu": "Garder une défense antiaérienne et capturer ses pistes.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        },
+        "filtre": {
+          "mouvement": [
+            "air"
+          ]
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités à mouvement air.",
+      "pouvoir": {
+        "nom": "Fenêtre de vol",
+        "description": "Mouvement +1 pour vos unités à mouvement air. Attaque ×1,2 pour vos unités à mouvement air. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Ciel de manœuvre",
+        "description": "Mouvement +2 pour vos unités à mouvement air. Attaque ×1,35 pour vos unités à mouvement air. Défense ×1,15 pour vos unités à mouvement air. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            },
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_lise_orven",
+      "nom": "Lise Varen",
+      "style": "Contrôle indirect",
+      "description": "Installe les pièces qui ferment un passage déterminé.",
+      "contreJeu": "Flanquer ses pièces lorsqu’elles doivent se déplacer.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "artillerie",
+            "roquettes",
+            "missiles_sol",
+            "cuirasse"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse.",
+      "pouvoir": {
+        "nom": "Angle réservé",
+        "description": "Portée maximale +1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Attaque ×1,1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.1
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Passages verrouillés",
+        "description": "Portée maximale +1 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Attaque ×1,4 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Défense ×1,25 pour vos unités de type artillerie, roquettes, missiles_sol, cuirasse. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "cuirasse"
+              ]
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_edran_sorel",
+      "nom": "Edran Sorel",
+      "style": "Logistique de relève",
+      "description": "Garde ses véhicules de soutien en état et prépare leur sortie.",
+      "contreJeu": "Isoler les soutiens ; ses pouvoirs ne font apparaître aucun renfort.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "transport",
+            "transport_air",
+            "barge",
+            "drone_ravitailleur"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités de type transport, transport_air, barge, drone_ravitailleur.",
+      "pouvoir": {
+        "nom": "Colonne de relève",
+        "description": "Défense ×1,35 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Mouvement +1 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Réserves en ligne",
+        "description": "Défense ×1,5 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Mouvement +2 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Défense ×1,2 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.5
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_sans_visage",
+      "nom": "Relais Zéro",
+      "style": "Information asymétrique",
+      "description": "Protège ses drones et réduit temporairement la vision adverse.",
+      "contreJeu": "Capturer les objectifs et prendre appui sur les capteurs de terrain ; aucune omniscience ne lui est accordée.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        },
+        "filtre": {
+          "types": [
+            "drone",
+            "drone_marin",
+            "drone_intercepteur",
+            "drone_ravitailleur",
+            "meridien_veilleur"
+          ]
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur.",
+      "pouvoir": {
+        "nom": "Signal brouillé",
+        "description": "Vision -1 pour les unités adverses. Vision +1 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Réseau sans écho",
+        "description": "Vision -2 pour les unités adverses. Vision +2 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Défense ×1,2 pour vos unités de type drone, drone_marin, drone_intercepteur, drone_ravitailleur, meridien_veilleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_yuna_serrat",
+      "nom": "Yuna Serrat",
+      "style": "Capture mobile",
+      "description": "Déplace les équipes de capture d’un bâtiment à l’autre.",
+      "contreJeu": "Repousser les capteurs avant la fin de leur opération.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "capture",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        }
+      },
+      "descriptionPassif": "Points de capture ×1,15 pour vos unités de type infanterie, meca.",
+      "pouvoir": {
+        "nom": "Priorité au poste",
+        "description": "Points de capture ×1,6 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.6
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le réseau bascule",
+        "description": "Points de capture ×2 pour vos unités de type infanterie, meca. Mouvement +1 pour vos unités de type infanterie, meca. Défense ×1,2 pour vos unités de type infanterie, meca. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            },
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca"
+              ]
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_basile_kelm",
+      "nom": "Basile Kelm",
+      "style": "Défense des relais",
+      "description": "Installe sa défense autour des bâtiments et de l’anti-air.",
+      "contreJeu": "Contourner les stations ; ses pouvoirs ne déclenchent aucune IEM supplémentaire.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        },
+        "filtre": {
+          "types": [
+            "antiair",
+            "missiles_air",
+            "meridien_bastion"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités de type antiair, missiles_air, meridien_bastion.",
+      "pouvoir": {
+        "nom": "Veille du bastion",
+        "description": "Défense ×1,35 pour vos unités sur ville, qg, usine, radar, port, aeroport. Vision +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 4,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "qg",
+                "usine",
+                "radar",
+                "port",
+                "aeroport"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les relais tiennent",
+        "description": "Défense ×1,45 pour vos unités sur ville, qg, usine, radar, port, aeroport. Attaque ×1,25 pour vos unités de type antiair, missiles_air, meridien_bastion. Vision +2 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 7,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.45
+            },
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "qg",
+                "usine",
+                "radar",
+                "port",
+                "aeroport"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.25
+            },
+            "filtre": {
+              "types": [
+                "antiair",
+                "missiles_air",
+                "meridien_bastion"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "faction": "atl"
+    },
+    {
+      "cle": "cmd_solveig_tamm",
+      "nom": "Solveig Tamm",
+      "style": "Soutien de convoi",
+      "description": "Accompagne les véhicules de soutien jusqu’à leur destination.",
+      "contreJeu": "Forcer le convoi à se séparer de sa couverture.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        },
+        "filtre": {
+          "types": [
+            "transport",
+            "transport_air",
+            "barge",
+            "drone_ravitailleur"
+          ]
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités de type transport, transport_air, barge, drone_ravitailleur.",
+      "pouvoir": {
+        "nom": "Escorte rapprochée",
+        "description": "Défense ×1,35 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.35
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Personne ne reste",
+        "description": "Défense ×1,4 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Mouvement +1 pour vos unités de type transport, transport_air, barge, drone_ravitailleur. Défense ×1,15 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            },
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur"
+              ]
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "organisation": "atlas"
+    },
+    {
+      "cle": "cmd_wren_osoko",
+      "nom": "Wren Osoko",
+      "style": "Renseignement partagé",
+      "description": "Éclaire les positions pour préparer une offensive choisie.",
+      "contreJeu": "Occuper les objectifs : voir plus loin ne suffit pas à les tenir.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        },
+        "filtre": {
+          "types": [
+            "recon",
+            "drone",
+            "drone_marin"
+          ]
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités de type recon, drone, drone_marin.",
+      "pouvoir": {
+        "nom": "Relevés ouverts",
+        "description": "Vision +2 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 3,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Carte complète",
+        "description": "Vision +3 pour vos unités. Mouvement +1 pour vos unités. Les multiplicateurs se combinent avec le passif ; aucun terrain infranchissable ne devient franchissable.",
+        "barres": 6,
+        "duree": "tour_complet",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "organisation": "atlas"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 /** Données tactiques des commandants jouables ; aucune dépendance au moteur. */
+import { lireProfilCommandant } from './profils-commandants';
 import type { Cle, EffetModificateur, EffetPouvoir, Scenario } from '../schemas/types';
 
 interface CapaciteJeu {
@@ -18,6 +19,15 @@ export interface CommandantJeu {
 
 /** Révision 1 inchangée pour les anciens scénarios ; spécialisation Aube à partir du catalogue 7. */
 export function chargerCommandantJeu(cle: Cle, revision = 1): CommandantJeu {
+  if (revision === 3) {
+    const profil = lireProfilCommandant(cle);
+    if (!profil) throw new Error(`Commandant absent du catalogue tactique 3 : ${cle}`);
+    return {
+      cle, nom: `commandant.${cle}.nom`, passif: profil.passif,
+      pouvoir: { ...profil.pouvoir, nom: `commandant.${cle}.pouvoir_v3` },
+      superPouvoir: { ...profil.superPouvoir, nom: `commandant.${cle}.super_v3` },
+    };
+  }
   const defensif = cle === 'cmd_tomas_reiner';
   const quoi = defensif ? 'defense' : 'attaque';
   const commandant: CommandantJeu = {
@@ -69,7 +79,7 @@ export function chargerCommandantJeu(cle: Cle, revision = 1): CommandantJeu {
 export function resoudreCommandantsScenario(scenario: Scenario): (CommandantJeu | null)[] {
   const resultat: (CommandantJeu | null)[] = [];
   for (const commandant of scenario.commandants) {
-    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle, scenario.catalogueVersion >= 7 ? 2 : 1);
+    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle, scenario.commandantsVersion ?? (scenario.catalogueVersion >= 7 ? 2 : 1));
   }
   return resultat;
 }

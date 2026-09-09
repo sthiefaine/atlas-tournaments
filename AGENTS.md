@@ -2,6 +2,12 @@
 
 Document de passation pour Codex. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — registre complet et activation de Premier contact (9 septembre 2026)
+
+`/admin/personnages` présente 37 fiches et 34 commandants dotés de deux capacités. `content/commandants-capacites.json` révision 3 est partagé avec le moteur ; `Scenario.commandantsVersion` est facultatif et laisse les anciens scénarios inchangés. Les notes auteur et les jalons familiaux ne sortent pas par l’API de contexte par acte. Voir `doc/refonte/personnages-pouvoirs.md`.
+
+Après demande explicite du propriétaire, les unités et QG de Premier contact sont activés sous `/assets/modeles` avec les données partagées ; l’inventaire suit les alias valides. Le relief conserve sa géométrie et prend les textures des cinq terrains livrés. Les premiers tutoriels sont désormais aussi en **jour permanent** : un booléen brouillard faux n’empêchait pas la nuit de l’activer. Le tutoriel 6 annonce et explique la nuit J3–J4 et le retour du jour J5. Les changements de scénarios augmentent leurs versions. Activation technique ne signifie pas approbation artistique.
+
 ## Mise à jour — dix tutoriels jouables (9 septembre 2026)
 
 Le parcours local contient dix entraînements puis les deux matchs officiels existants (12 missions). Les quatre anciens scénarios passent en version 2, sans brouillard ; les six nouveaux `opus1_tutoriel_05` à `10` ont des cartes distinctes, des dialogues et des modes explicites. Le choix du dixième finance une nouvelle qualification ou exhibition ; sa conséquence est figée dans la graine pour préserver les reprises. Les anciennes victoires ne sont pas effacées. `doc/refonte/tutoriels-jouables.md` décrit les adaptations honnêtes du plan éditorial et les vérifications : 24 couples mission/mode gagnés avec rejeux conformes, sans mesure de difficulté humaine. Les 144 missions nationales et 18 finales restent éditoriales.

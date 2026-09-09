@@ -1211,7 +1211,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
   'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
-  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
+  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandantsVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
   'choix', 'flagsRequis', 'flagsInterdits', 'recompenses',
@@ -1276,6 +1276,7 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     }
   }
   entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
+  if (o['commandantsVersion'] !== undefined) entier(ctx, o['commandantsVersion'], 'commandantsVersion', { min: 1, max: 3 });
 
   const camps: number[] = [];
   let joueurs = 0;
