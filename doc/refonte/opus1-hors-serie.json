@@ -1,0 +1,1551 @@
+{
+  "version": 1,
+  "statut": "conception",
+  "nature": "Registre éditorial des épisodes hors-série et des quatre disparitions ; aucune fiche n’est une carte jouable. Le document de référence est doc/refonte/opus1-hors-serie.md.",
+  "reglesDures": [
+    "Un hors-série ne retire jamais une nation (relation_nation bornée à alliee | rivale).",
+    "Un hors-série n’écrit jamais monde.secret.*.",
+    "Aucun hors-série ne révèle la fratrie Maël/Lise ni la paternité d’Edran avant opus1_finale_10 ; Edran y est « prestataire de réserve ».",
+    "Deux joueurs aux mêmes choix de trame ont la même fin, hors-série joués ou non : les conséquences sont prises dans la liste fermée de doc/13 §5.2 et ne touchent ni les bascules ni les conditions de fin.",
+    "Une disparition n’a jamais lieu sur un terrain homologué, jamais par du matériel de tournoi, et n’est jamais un homicide commis par une personne identifiée. Elle est écrite à la main ; aucune routine ne peut en produire une."
+  ],
+  "conditionsProposees": {
+    "decision": "[Proposition] Onzième type de Condition, { type: \"decision\", cle, option } : lit l’option retenue d’un choixConsequence national (opus1-nations.json). À trancher : type nouveau, ou traduction de chaque décision en flag pays.<xx>.* canon."
+  },
+  "totalEpisodes": 28,
+  "parNation": {
+    "ar": 2,
+    "ca": 2,
+    "fj": 2,
+    "gr": 3,
+    "is": 3,
+    "ke": 2,
+    "mg": 2,
+    "mn": 2,
+    "na": 2,
+    "np": 3,
+    "nz": 2,
+    "pe": 3
+  },
+  "episodes": [
+    {
+      "id": "opus1_hs_ar_1",
+      "nation": "ar",
+      "numero": 1,
+      "titre": "La route à péage",
+      "situation": "Une seule route traverse la pampa entre les deux QG, et un fournisseur y a posé un dépôt sous licence exclusive. Leandro Paz veut montrer qu’on gagne par les chemins de traverse, et le prouve contre le joueur.",
+      "justificationNation": "Plaine immense, routes longues, rares bosquets ; spécialité « La plaine » (mouvement +1 sur plaine et route) ; passif de Leandro : attaque ×1,08 sur plaine. Sa motivation canon : empêcher qu’une seule voie logistique devienne un péage obligatoire.",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_qg",
+        "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_br_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.br.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_br_04",
+      "ancrageNote": "Le Brésil est le rival naturel de l’Argentine ; Leandro lit les relevés partagés à « Le pont du milieu », ou entend qu’on a battu Lívia Moura sans l’humilier.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_leandro_paz",
+        "cmd_livia_moura"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_ar_2",
+      "nation": "ar",
+      "numero": 2,
+      "titre": "Le chenal du delta",
+      "situation": "Un club du delta a perdu son accès aux batteries quand la route unique est passée sous licence. Leandro et le joueur escortent le transport par les bras d’eau, face à Yuna Serrat qui gère la concession au nom d’un mandat provisoire.",
+      "justificationNation": "Delta et plaine ; le transport suit les bras d’eau à découvert, la spécialité de plaine rend la couverture mobile. Terrain de match, jamais une allusion territoriale (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "escorte",
+        "conditionVictoire": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.ar.qualifie"
+      },
+      "ancrage": "opus1_hs_ar_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_ar_2_decision",
+        "question": "Le chenal peut être ouvert pour raccourcir la traversée. Il ne se refermera pas.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Ouvrir le chenal",
+            "ecritFlags": [
+              "pays.ar.chenal_ouvert",
+              "pays.ar.terrain_altere"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Contourner par la plaine",
+            "ecritFlags": [
+              "pays.ar.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "ar",
+          "relation": "alliee"
+        },
+        {
+          "type": "trace_carte",
+          "paysCode": "ar",
+          "flagTrace": "pays.ar.chenal_ouvert",
+          "condition": "option a"
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_02",
+          "varianteCle": "leandro_peage"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_ar_chenal"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_leandro_paz",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_ca_1",
+      "nation": "ca",
+      "numero": 1,
+      "titre": "Le grand gel",
+      "situation": "Une pièce à badge orange est à l’essai, jouée par la Sélection Méridienne. Noémie Leduc exige que l’essai se joue sous les mêmes conditions pour les deux camps, et confie au joueur le banc de l’équipe témoin sur la carte gelée.",
+      "justificationNation": "Forêt boréale, neige, rivières gelées franchissables ; spécialité « L’hiver ne compte pas » (surcoût de neige annulé, forêt qui soigne) ; passif de Noémie : vision +1 en forêt. Sa motivation canon : rendre les essais comparables. Le froid est un terrain, jamais une épreuve de survie (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_partielle",
+        "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "flag",
+            "cle": "monde.atlas.homologation_contestee"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.atlas.essai_soutenu"
+          }
+        ]
+      },
+      "ancrage": "opus1_ch_08",
+      "ancrageNote": "Après « L’arbitre et le fournisseur », où une équipe suspend sa neutralité sportive : Noémie cherche qui a pris position sur l’homologation.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_noemie_leduc",
+        "cmd_hadran_ost"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_ca_2",
+      "nation": "ca",
+      "numero": 2,
+      "titre": "Les provisions de la tempête",
+      "situation": "Une tempête est annoncée à deux journées. Noémie et le joueur tiennent deux ateliers d’essai contre Ost et Basile Kelm, qui veut faire compter la réserve de batteries comme une avance méridienne.",
+      "justificationNation": "Tempête annoncée par le Bulletin (mécanique de météo existante), grandes distances, peu de villes. Le dilemme canon de Noémie : publier des relevés incomplets ou différer une manche aux dépens d’un partenaire.",
+      "objectifGameplay": {
+        "format": "2v2",
+        "type": "survie",
+        "conditionVictoire": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.ca.qualifie"
+      },
+      "ancrage": "opus1_hs_ca_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_ca_2_decision",
+        "question": "La tempête bloque aussi la délégation adverse. Ses provisions ne passeront pas.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Partager les provisions",
+            "ecritFlags": [
+              "pays.ca.provisions_partagees",
+              "pays.ca.rival_respecte"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Garder la réserve pour la manche",
+            "ecritFlags": [
+              "pays.ca.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "ca",
+          "relation": "alliee"
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_02",
+          "varianteCle": "noemie_releves"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_ca_tempete"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_noemie_leduc",
+        "cmd_hadran_ost",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_fj_1",
+      "nation": "fj",
+      "numero": 1,
+      "titre": "Le lagon sans transport",
+      "situation": "Le transport d’un club du lagon a été retenu par un fournisseur pour une facture contestée. Jone Vakalau prête le sien au joueur, qui doit ramener l’équipement du club à travers les eaux peu profondes, contre Yuna Serrat et une délégation sous mandat.",
+      "justificationNation": "Micro-archipel de lagon, plage et rivière traversées comme de la plaine (« Le lagon est un terrain »), budget le plus petit du tournoi ; passif de Jone : attaque ×1,08 pour les coques et amphibies. Sa motivation canon : garder les petites équipes dans une compétition dominée par les grands budgets. Le cyclone reste une tempête annoncée (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v2",
+        "type": "escorte",
+        "conditionVictoire": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_id_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.nz.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_id_04",
+      "ancrageNote": "Après « Le pont des mandats » ; Jone lit les relevés partagés, ou entend qu’on a respecté Tess Roa, sa rivale naturelle.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_jone_vakalau",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_fj_2",
+      "nation": "fj",
+      "numero": 2,
+      "titre": "La chaîne de passes",
+      "situation": "Trois relais d’un bout à l’autre du lagon, sous des drones que Relais Zéro fait tourner. Jone propose un raccourci par le récif ; le joueur décide s’il le tente ou s’il garantit le retour de tout l’équipement.",
+      "justificationNation": "Îlots reliés par des passes, visibilité brouillée par les drones ; le dilemme canon de Jone : tenter un raccourci pour un allié ou garantir le retour de tous les équipements.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "relais",
+        "conditionVictoire": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.fj.qualifie"
+      },
+      "ancrage": "opus1_hs_fj_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_fj_2_decision",
+        "question": "Le récif raccourcit la chaîne d’une journée, mais rien ne garantit le retour du matériel prêté.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Tenter le raccourci",
+            "ecritFlags": [
+              "pays.fj.chaine_de_passes"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Garantir le retour de tout l’équipement",
+            "ecritFlags": [
+              "pays.fj.salut_rendu",
+              "pays.fj.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "fj",
+          "relation": "alliee"
+        },
+        {
+          "type": "unite_offerte",
+          "uniteCle": "transport",
+          "combien": 1
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_fj_passes"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_jone_vakalau",
+        "cmd_sans_visage"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_gr_1",
+      "nation": "gr",
+      "numero": 1,
+      "titre": "Le café avant le coup d’envoi",
+      "situation": "Nikos Delis ne joue jamais avant son café. Il reçoit le joueur sur un archipel relié par des môles, où les blindés restent au port, et lui montre qu’une méthode vaut mieux qu’un nouvel outil.",
+      "justificationNation": "Centaines d’îlots reliés par passerelles, cabotage à pied (`pied_marin`), blindés au port ; passif de Nikos : défense ×1,15 sur plage et port. Sa motivation canon : transmettre une méthode qui survive à son départ du circuit. Aucune Antiquité militaire, la mer est une manœuvre et jamais un naufrage (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_qg",
+        "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_lu_08_decision",
+            "option": "a"
+          },
+          {
+            "type": "compteur",
+            "cle": "monde.atlas.credibilite",
+            "min": 3
+          }
+        ]
+      },
+      "ancrage": "opus1_lu_08",
+      "ancrageNote": "Après « Une offre de stabilité » : la petite délégation grecque est de celles qui vivent d’une livraison garantie, ou qui font confiance à un commandant crédible auprès du Bureau.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_nikos_delis"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_gr_2",
+      "nation": "gr",
+      "numero": 2,
+      "titre": "La recrue au môle",
+      "situation": "Basile Kelm verrouille la réserve du port principal. Nikos et le joueur tiennent deux môles pendant trois journées, et Nikos doit décider s’il confie le passage des îles à sa recrue ou s’il reprend lui-même toute la préparation.",
+      "justificationNation": "Défense littorale de plage et de port face à une ligne fixe autour de dépôts (contre-jeu canon de Basile). Le dilemme canon de Nikos, tranché ici par le joueur qu’il consulte.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "tenir",
+        "conditionVictoire": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.gr.qualifie"
+      },
+      "ancrage": "opus1_hs_gr_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_gr_2_decision",
+        "question": "Nikos demande votre avis, ce qu’il ne fait jamais. La recrue peut tenir le passage des îles cet hiver.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Confier le passage à la recrue",
+            "ecritFlags": [
+              "pays.gr.rival_respecte",
+              "pays.gr.anecdote_corrigee"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Qu’il reprenne lui-même toute la préparation",
+            "ecritFlags": [
+              "pays.gr.dette_envers_joueur"
+            ]
+          }
+        ],
+        "note": "Branche par défaut si le hors-série n’est pas joué : b. La décision change le moment et les circonstances de la disparition de Nikos (voir `disparitions`), jamais son existence."
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "gr",
+          "relation": "alliee"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_gr_recrue"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_nikos_delis",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_gr_3",
+      "nation": "gr",
+      "numero": 3,
+      "titre": "Le banc du port",
+      "situation": "La plaque de la Grèce est posée à plat sur la tablette du Tableau. Le banc grec joue quand même sa rencontre contre Basile Kelm : avec la recrue de Nikos et sa méthode, ou avec un intérim de la fédération qui ne connaît pas les môles.",
+      "justificationNation": "Même archipel que l’épisode 1, en hiver, ligne du bac suspendue. Ce que l’épisode montre dépend de `opus1_hs_gr_2_decision` : la méthode a survécu (a) ou personne ne l’a apprise (b).",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "capture_qg",
+        "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.gr.qualifie"
+      },
+      "ancrage": "opus1_finale_02",
+      "ancrageNote": "Branche b (ou hors-série 2 non joué) : s’ouvre après « La taxe des sommets » (finale 2). Branche a : s’ouvre après « Les réserves verrouillées » (finale 7). Dans les deux cas l’annonce précède la mission.",
+      "choix": null,
+      "consequences": [
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_18",
+          "varianteCle": "banc_grec"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_gr_nikos"
+        }
+      ],
+      "disparition": "cmd_nikos_delis",
+      "personnages": [
+        "cmd_nikos_delis",
+        "cmd_basile_kelm",
+        "celestin_vantour",
+        "cmd_solveig_tamm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_is_1",
+      "nation": "is",
+      "numero": 1,
+      "titre": "La même réserve vendue deux fois",
+      "situation": "Elín Arnardóttir a comparé deux contrats qui vendent la même réserve à deux délégations. Elle invite le joueur sur la roche noire, de nuit, pour capturer deux des trois stations qui alimentent ces contrats, face à Yuna Serrat qui les gère.",
+      "justificationNation": "Île de roche noire, neige, journées minuscules l’hiver (cycle jour/nuit 2/4 déclaré par le scénario), sources chaudes qui soignent ; passif d’Elín : vision +1 sur montagne. Sa motivation canon : permettre un contrôle indépendant des annonces énergétiques. Le volcan s’allume pour le spectacle, jamais en catastrophe (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_partielle",
+        "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_ch_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "compteur",
+            "cle": "monde.atlas.soupcon",
+            "min": 3
+          }
+        ]
+      },
+      "ancrage": "opus1_ch_04",
+      "ancrageNote": "Après « La route basse » : Elín recoupe les relevés que le joueur a partagés, ou vient trouver quelqu’un qui soupçonne déjà Atlas.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_elin_arnardottir",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_is_2",
+      "nation": "is",
+      "numero": 2,
+      "titre": "Fenêtre claire",
+      "situation": "Trois stations de mesure dans le brouillard, dans l’ordre, pendant que Relais Zéro brouille et que Basile Kelm tient les hauteurs. Elín ne signera rien tant que chaque mesure n’est pas recoupée.",
+      "justificationNation": "Brouillard et relief, vision depuis les points hauts (pouvoir « Balises de roche ») ; le contre-jeu canon de Relais Zéro : ses couloirs de drones sont repérables.",
+      "objectifGameplay": {
+        "format": "1v2",
+        "type": "relais",
+        "conditionVictoire": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.is.qualifie"
+      },
+      "ancrage": "opus1_nl_04",
+      "ancrageNote": null,
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_elin_arnardottir",
+        "cmd_sans_visage",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_is_3",
+      "nation": "is",
+      "numero": 3,
+      "titre": "Le silence de la source",
+      "situation": "Les relevés sont recoupés. Elín et le joueur tiennent deux positions autour de la source chaude contre Ost et Yuna, et le joueur tranche : signaler l’anomalie maintenant, ou attendre une preuve de plus au risque de perdre le contrat.",
+      "justificationNation": "Source chaude comme position de soin à tenir, nuit d’hiver ; le dilemme canon d’Elín : signaler une anomalie plausible ou attendre une preuve.",
+      "objectifGameplay": {
+        "format": "2v2",
+        "type": "tenir",
+        "conditionVictoire": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.is.qualifie"
+      },
+      "ancrage": "opus1_ma_08",
+      "ancrageNote": "Après « Le bail trop long » : les contrats d’exclusivité que le joueur vient de voir sont ceux qu’Elín compare depuis un an.",
+      "choix": {
+        "cle": "opus1_hs_is_3_decision",
+        "question": "Deux contrats, une réserve. Elín a de quoi le dire, pas encore de quoi le prouver deux fois.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Signaler l’anomalie maintenant",
+            "ecritFlags": [
+              "monde.atlas.soupcon",
+              "monde.atlas.dossier_truquage"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Attendre la preuve recoupée",
+            "ecritFlags": [
+              "pays.is.source_chaude_partagee",
+              "monde.atlas.credibilite"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "is",
+          "relation": "alliee"
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_08",
+          "varianteCle": "elin_deux_contrats"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_is_reserve"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_elin_arnardottir",
+        "cmd_hadran_ost",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_ke_1",
+      "nation": "ke",
+      "numero": 1,
+      "titre": "Le match de trois heures",
+      "situation": "Kito Njoroge ne gagne jamais avant la dixième journée. Sur les hauts plateaux, le joueur doit tenir quatorze journées face à une équipe qui court plus loin que la sienne et attend qu’il s’épuise.",
+      "justificationNation": "Hauts plateaux frais, grande vallée ; spécialité « Le fond » (infanterie mouvement +2, budget 0,9) ; passif de Kito : défense ×1,08 pour l’infanterie. Sa motivation canon : prouver que la durée d’un contrat compte autant que son classement. La savane est un terrain de course, pas un décor animalier (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "survie",
+        "conditionVictoire": "Tenir jusqu’à la fin de la journée 14 ; arrivée de la relève au début de la journée suivante.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_sn_08_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.sn.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_sn_08",
+      "ancrageNote": "Après « Le partenaire impatient » : la délégation kényane a reçu la livraison garantie, ou Kito a vu le joueur respecter Awa Diagne, sa rivale naturelle.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_kito_njoroge",
+        "cmd_awa_diagne"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_ke_2",
+      "nation": "ke",
+      "numero": 2,
+      "titre": "Le messager",
+      "situation": "Un messager à pied doit franchir la vallée par trois relais pendant que Yuna Serrat déplace ses petites équipes de capture. Kito demande au joueur s’il faut céder l’avance pour garder une relève, ou soutenir tout de suite le partenaire qui appelle.",
+      "justificationNation": "Relais à pied dans une grande vallée ; le contre-jeu canon de Yuna : ses groupes dispersés perdent les duels concentrés. Le dilemme canon de Kito.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "relais",
+        "conditionVictoire": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.ke.qualifie"
+      },
+      "ancrage": "opus1_hs_ke_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_ke_2_decision",
+        "question": "Le partenaire appelle maintenant. La relève n’est pas prête.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Céder l’avance pour garder une relève",
+            "ecritFlags": [
+              "pays.ke.rythme_trouve"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Soutenir immédiatement le partenaire",
+            "ecritFlags": [
+              "pays.ke.messager_arrive",
+              "pays.ke.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "ke",
+          "relation": "alliee"
+        },
+        {
+          "type": "remise_production",
+          "uniteCle": "infanterie",
+          "remise": 0.9
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_ke_messager"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_kito_njoroge",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_mg_1",
+      "nation": "mg",
+      "numero": 1,
+      "titre": "L’inventaire des pistes",
+      "situation": "Tiana Ravel a cartographié chaque piste rouge de l’île et nomme les espèces en pleine partie. Elle met le joueur à l’épreuve sur une carte qu’elle connaît par cœur, sous couvert et sous brouillard.",
+      "justificationNation": "Jungle, montagne, pistes rouges, deux climats séparés par une arête ; spécialité « La connaissance des pistes » (forêt et route au même prix) ; passif de Tiana : défense ×1,1 en forêt. Sa motivation canon : faire des relevés de terrain un bien partagé. La forêt est un terrain vivant, jamais un sujet de déforestation (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_qg",
+        "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_id_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "compteur",
+            "cle": "monde.atlas.credibilite",
+            "min": 4
+          }
+        ]
+      },
+      "ancrage": "opus1_id_08",
+      "ancrageNote": "Après « Le mandat de trop » : l’Indonésie est la rivale naturelle de Madagascar ; Tiana lit les relevés partagés ou fait confiance à un commandant crédible.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_tiana_ravel",
+        "cmd_ayu_pranata"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_mg_2",
+      "nation": "mg",
+      "numero": 2,
+      "titre": "Les cartes ouvertes",
+      "situation": "Relais Zéro a installé trois relais sur les pistes de l’atelier de Tiana, et Yuna en revendique la gestion. Tiana et le joueur les parcourent dans l’ordre ; à la fin, le joueur tranche si elle ouvre ses cartes à un rival ou protège le travail de son atelier.",
+      "justificationNation": "Relais forestiers, drones repérables par leurs couloirs (contre-jeu canon de Relais Zéro) ; le dilemme canon de Tiana.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "relais",
+        "conditionVictoire": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.mg.qualifie"
+      },
+      "ancrage": "opus1_hs_mg_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_mg_2_decision",
+        "question": "Les cartes de l’atelier montrent où passent les relais. Un rival les demande.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Ouvrir les cartes",
+            "ecritFlags": [
+              "pays.mg.inventaire_complete",
+              "pays.mg.rival_respecte"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Protéger le travail de l’atelier",
+            "ecritFlags": [
+              "pays.mg.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "mg",
+          "relation": "alliee"
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_06",
+          "varianteCle": "tiana_cartes_relais"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_mg_pistes"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_tiana_ravel",
+        "cmd_sans_visage",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_mn_1",
+      "nation": "mn",
+      "numero": 1,
+      "titre": "Le grand galop",
+      "situation": "La plus grande carte de l’opus, presque sans obstacle. Saran Bat propose une course d’avant-match, puis un match où seule la reconnaissance décide de qui frappe le premier.",
+      "justificationNation": "Steppe et neige sans ralentissement (« La steppe », mouvement +2 roues et chenilles), aucun embarquement sur transport allié ; passif de Saran : attaque ×1,1 pour les reconnaissances. Sa motivation canon : préserver le droit de changer de fournisseur. Ni empire ni conquête : le cheval, le feutre et l’horizon (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "elimination",
+        "conditionVictoire": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_mx_10_decision",
+            "option": "b"
+          },
+          {
+            "type": "decision",
+            "cle": "opus1_mx_08_decision",
+            "option": "b"
+          }
+        ]
+      },
+      "ancrage": "opus1_mx_10",
+      "ancrageNote": "Après « Le reçu refusé » : Saran vient trouver le commandant qui a refusé de garantir un crédit ou exigé la fin d’un mandat privé — ce qu’elle demande pour elle-même.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_saran_bat",
+        "cmd_ines_valdes"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_mn_2",
+      "nation": "mn",
+      "numero": 2,
+      "titre": "Le point de ravitaillement déplacé",
+      "situation": "Saran annonce à tous ses partenaires qu’elle change de point de ravitaillement à mi-parcours. Avec le joueur, elle doit capturer deux des trois dépôts que Ost et Basile Kelm tiennent, et choisir entre poursuivre l’ouverture ou revenir couvrir la réserve commune.",
+      "justificationNation": "Manœuvre ouverte sur grande carte, dépôts distants (contre-jeu canon de Basile : une ligne fixe couvre mal deux objectifs). Le dilemme canon de Saran.",
+      "objectifGameplay": {
+        "format": "2v2",
+        "type": "capture_partielle",
+        "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.mn.qualifie"
+      },
+      "ancrage": "opus1_hs_mn_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_mn_2_decision",
+        "question": "L’ouverture est devant, la réserve commune est derrière, et Saran ne peut pas être aux deux.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Poursuivre l’ouverture",
+            "ecritFlags": [
+              "pays.mn.grand_galop_lance"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Revenir couvrir la réserve commune",
+            "ecritFlags": [
+              "pays.mn.respect_du_cavalier",
+              "pays.mn.rival_respecte"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "mn",
+          "relation": "alliee"
+        },
+        {
+          "type": "unite_offerte",
+          "uniteCle": "recon",
+          "combien": 1
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_12",
+          "varianteCle": "saran_fournisseur"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_mn_ravitaillement"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_saran_bat",
+        "cmd_hadran_ost",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_na_1",
+      "nation": "na",
+      "numero": 1,
+      "titre": "Ce que la brume efface",
+      "situation": "Chaque matin la brume côtière tombe et efface tout. Amalie Haoses fait tourner ses observateurs au lieu de les échanger contre une attaque, et le joueur apprend qu’à découvert, sur la dune, personne n’a de couvert.",
+      "justificationNation": "Désert côtier totalement découvert, bande de brume ; spécialité « La brume » ; passif d’Amalie : défense ×1,15 pour les drones. Sa motivation canon : éviter qu’un opérateur vende une information que les participants ont produite ensemble. Le désert se traverse ou l’on y disparaît, il n’affame personne ; aucune référence coloniale (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "elimination",
+        "conditionVictoire": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_au_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.mn.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_au_04",
+      "ancrageNote": "Après « La piste secondaire » : Amalie recoupe les relevés partagés, ou entend qu’on a respecté Saran Bat, sa rivale naturelle.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_amalie_haoses",
+        "cmd_hazel_quinn"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_na_2",
+      "nation": "na",
+      "numero": 2,
+      "titre": "Le passage révélé",
+      "situation": "Les observateurs d’Amalie ont trouvé la seule fenêtre dans la brume. Le joueur décide si elle la révèle à tous ou la garde pour son équipe, puis tient deux positions pendant que Relais Zéro, Basile Kelm et une délégation sous mandat viennent la disputer.",
+      "justificationNation": "Brouillard côtier et radar, trois adversaires aux moyens bornés et fronts séparés (format 1v3 du canon). Le dilemme canon d’Amalie : révéler un passage à tous ou protéger la seule fenêtre de son équipe.",
+      "objectifGameplay": {
+        "format": "1v3",
+        "type": "tenir",
+        "conditionVictoire": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.na.qualifie"
+      },
+      "ancrage": "opus1_hs_na_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_na_2_decision",
+        "question": "La fenêtre est connue d’une seule équipe. Amalie peut la publier avant le coup d’envoi.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Révéler le passage à tous",
+            "ecritFlags": [
+              "pays.na.brume_etendue",
+              "pays.na.rival_respecte"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Protéger la fenêtre de son équipe",
+            "ecritFlags": [
+              "pays.na.silence_impose",
+              "pays.na.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "na",
+          "relation": "alliee"
+        },
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_16",
+          "varianteCle": "amalie_observateurs"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_na_brume"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_amalie_haoses",
+        "cmd_sans_visage",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_np_1",
+      "nation": "np",
+      "numero": 1,
+      "titre": "Les ateliers d’altitude",
+      "situation": "Rien de lourd ne monte ici. Mira Karki dispute au joueur deux des trois ateliers d’altitude, et montre ce qu’une équipe légère fait d’une pente quand elle voit loin depuis un point haut.",
+      "justificationNation": "Carte la plus verticale du tournoi, du subtropical au glacier ; spécialité « L’altitude » (infanterie sans malus de pente, ni char léger ni char lourd) ; passif de Mira : attaque ×1,1 pour l’infanterie sur montagne. Sa motivation canon : donner aux sites isolés une voix dans les engagements de distribution. Les fanions de balisage sont sans signe ; le sommet est une étape, jamais une conquête (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_partielle",
+        "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_ch_10_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.ch.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_ch_10",
+      "ancrageNote": "Après « La clause de restitution » : la Suisse est l’autre pays de relais d’altitude ; Mira vient voir qui a proposé une sortie sous audit au partenaire dépendant, ou qui a respecté Elsbeth Vonlanthen.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_mira_karki",
+        "cmd_elsbeth_vonlanthen"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_np_2",
+      "nation": "np",
+      "numero": 2,
+      "titre": "Le pont de corde",
+      "situation": "Un atelier isolé attend des pièces que la rotation des transports ne monte plus. Mira et le joueur escortent le transport contre Basile Kelm, qui tient le col et son dépôt ; Mira a demandé de l’aide tard, et le dit. Le joueur décide si l’on pose le pont de corde au-dessus de la gorge.",
+      "justificationNation": "Gorge, col tenu par une ligne fixe (contre-jeu canon de Basile) ; la croyance canon de Mira : elle accepte trop facilement une logistique réduite et demande de l’aide tard. C’est le signe qui précède sa disparition, et le joueur le voit ici.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "escorte",
+        "conditionVictoire": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.np.qualifie"
+      },
+      "ancrage": "opus1_hs_np_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_np_2_decision",
+        "question": "Le pont de corde tient une saison et raccourcit la montée. Le col est plus sûr, et plus long d’une journée.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Poser le pont de corde",
+            "ecritFlags": [
+              "pays.np.pont_pose",
+              "pays.np.terrain_altere"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Passer par le col",
+            "ecritFlags": [
+              "pays.np.dette_envers_joueur"
+            ]
+          }
+        ],
+        "note": "La décision change ce que l’atelier a reçu et la page du carnet ; elle ne change ni le moment ni la cause de la disparition de Mira."
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "np",
+          "relation": "alliee"
+        },
+        {
+          "type": "trace_carte",
+          "paysCode": "np",
+          "flagTrace": "pays.np.pont_pose",
+          "condition": "option a"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_np_pont"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_mira_karki",
+        "cmd_basile_kelm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_np_3",
+      "nation": "np",
+      "numero": 3,
+      "titre": "Le relais sans réponse",
+      "situation": "La plaque du Népal est posée à plat sur la tablette du Tableau. L’adjointe de Mira reprend le banc et demande au joueur de l’aider à redescendre la réserve de l’atelier isolé par trois relais, avant que Basile Kelm ne la fasse compter comme réserve méridienne.",
+      "justificationNation": "Mêmes pentes qu’à l’épisode 2, hiver, rotation des transports suspendue ; relais à pied depuis le point haut. La mission montre ce que Mira défendait — un site isolé qui garde sa voix — sans mettre en scène l’instant de sa disparition.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "relais",
+        "conditionVictoire": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.np.qualifie"
+      },
+      "ancrage": "opus1_finale_07",
+      "ancrageNote": "Après « Les réserves verrouillées » : la rotation des transports vers les sites d’altitude dépendait des réserves que Basile a rendues exclusives. L’annonce précède la mission.",
+      "choix": null,
+      "consequences": [
+        {
+          "type": "variante_dialogue",
+          "scenarioCle": "opus1_finale_12",
+          "varianteCle": "banc_nepalais"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_np_mira"
+        }
+      ],
+      "disparition": "cmd_mira_karki",
+      "personnages": [
+        "cmd_mira_karki",
+        "cmd_basile_kelm",
+        "celestin_vantour",
+        "cmd_solveig_tamm"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_nz_1",
+      "nation": "nz",
+      "numero": 1,
+      "titre": "Le dépôt rendu",
+      "situation": "Un dépôt rendu à la fin d’un contrat est revenu désaffecté. Tess Roa dispute au joueur la remise en service de deux des trois postes de la vallée, dans la brume, avec le génie pour seule pièce qui compte.",
+      "justificationNation": "Deux îles étroites, montagne au milieu, brume de vallée, carte la plus défensive du tournoi ; spécialité « La fougère répare » (soin dans la fougère, pas de reconnaissance) ; passif de Tess : défense ×1,12 en forêt. Sa motivation canon : faire compter la réparation dans le partage des moyens. Aucune référence culturelle : la fougère est un terrain (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_partielle",
+        "conditionVictoire": "Remettre en service et posséder deux des trois postes désaffectés annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_au_10_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "pays.fj.rival_respecte"
+          }
+        ]
+      },
+      "ancrage": "opus1_au_10",
+      "ancrageNote": "Après « Le coût de la sortie » : le dépôt rendu par la rupture du contrat est celui que Tess veut remettre en service ; ou elle a entendu qu’on a respecté Jone Vakalau, son rival naturel.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_tess_roa",
+        "cmd_hazel_quinn"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_nz_2",
+      "nation": "nz",
+      "numero": 2,
+      "titre": "La ligne de fougère",
+      "situation": "Tess prête son terrain et sa ligne au joueur, seul face à Ost et Yuna Serrat, pendant que son équipe répare. Le joueur tranche si le dépôt réparé sert à tous ou si le matériel est réservé à la prochaine manche.",
+      "justificationNation": "Défense de vallée dans les couverts (pouvoir « Abri des fougères »), banc prêté au sens de la bible §4.6. Le dilemme canon de Tess.",
+      "objectifGameplay": {
+        "format": "1v2",
+        "type": "survie",
+        "conditionVictoire": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.nz.qualifie"
+      },
+      "ancrage": "opus1_hs_nz_1",
+      "ancrageNote": null,
+      "choix": {
+        "cle": "opus1_hs_nz_2_decision",
+        "question": "Le dépôt est réparé. Les pièces peuvent servir à tous, ou attendre la prochaine manche de Tess.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Réparer pour tous",
+            "ecritFlags": [
+              "pays.nz.ligne_tenue",
+              "pays.nz.rival_respecte"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Réserver le matériel à la prochaine manche",
+            "ecritFlags": [
+              "pays.nz.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "nz",
+          "relation": "alliee"
+        },
+        {
+          "type": "remise_production",
+          "uniteCle": "genie",
+          "remise": 0.9
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_nz_fougere"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_tess_roa",
+        "cmd_hadran_ost",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_pe_1",
+      "nation": "pe",
+      "numero": 1,
+      "titre": "Le passage commun",
+      "situation": "Trois étages en une carte, et pas de route entre eux tant qu’on ne l’a pas bâtie. Luz Quispe dispute au joueur le QG de l’altiplano : le premier génie qui relie ses étages gagne le tempo.",
+      "justificationNation": "Côte sèche, altiplano, versant amazonien reliés par des routes et des ponts à construire ; spécialité « Bâtisseur » ; passif de Luz : défense ×1,2 pour le génie. Sa motivation canon : empêcher qu’une homologation serve à fermer un passage aux petits ateliers. Aucun site archéologique nommé ; l’altitude est une contrainte sportive (interdits de la fiche).",
+      "objectifGameplay": {
+        "format": "1v1",
+        "type": "capture_qg",
+        "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "ou",
+        "conditions": [
+          {
+            "type": "decision",
+            "cle": "opus1_mx_04_decision",
+            "option": "a"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.atlas.homologation_contestee"
+          }
+        ]
+      },
+      "ancrage": "opus1_mx_04",
+      "ancrageNote": "Après « Le verrou latéral » : Luz lit les relevés partagés de la rampe secondaire, ou vient trouver qui a contesté une homologation.",
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_luz_quispe",
+        "cmd_ines_valdes"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_pe_2",
+      "nation": "pe",
+      "numero": 2,
+      "titre": "Le marché d’en haut",
+      "situation": "Un transport de pièces doit monter au marché d’en haut par une route que le génie bâtit devant lui, pendant qu’Ost fait avancer ses chenilles sous couverture. Luz protège les bâtisseurs, le joueur protège le transport.",
+      "justificationNation": "Escorte en pente avec route construite au fur et à mesure (pouvoir « Équipe de chantier ») ; le contre-jeu canon d’Ost : fragile sur plusieurs objectifs éloignés.",
+      "objectifGameplay": {
+        "format": "2v1",
+        "type": "escorte",
+        "conditionVictoire": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.pe.qualifie"
+      },
+      "ancrage": "opus1_hs_pe_1",
+      "ancrageNote": null,
+      "choix": null,
+      "consequences": [],
+      "disparition": null,
+      "personnages": [
+        "cmd_luz_quispe",
+        "cmd_hadran_ost"
+      ],
+      "statut": "conception"
+    },
+    {
+      "id": "opus1_hs_pe_3",
+      "nation": "pe",
+      "numero": 3,
+      "titre": "La querelle d’altitude",
+      "situation": "Basile Kelm et Yuna Serrat tiennent deux des trois postes du col, dont l’altitude réelle est contestée depuis une Ronde. Luz et le joueur les disputent, et Luz doit décider si sa réserve va au passage commun ou à son propre équipement.",
+      "justificationNation": "Col à trois postes, chantier sous pression (contre-jeu canon de Luz : forcer ses équipes à se séparer entre chantier et front). Le dilemme canon de Luz. Le Népal, rival naturel, est cité en dialogue si `pays.np.visite` est posé.",
+      "objectifGameplay": {
+        "format": "2v2",
+        "type": "capture_partielle",
+        "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
+        "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
+        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "victoireAlternative": false
+      },
+      "ouverture": {
+        "type": "flag",
+        "cle": "pays.pe.qualifie"
+      },
+      "ancrage": "opus1_in_08",
+      "ancrageNote": "Après « L’option d’exclusivité » : la clause qui ferme un passage aux petits ateliers est exactement celle que Luz combat.",
+      "choix": {
+        "cle": "opus1_hs_pe_3_decision",
+        "question": "La réserve suffit pour un seul chantier : le passage commun, ou l’équipement de la délégation.",
+        "options": [
+          {
+            "id": "a",
+            "texte": "Consacrer la réserve au passage commun",
+            "ecritFlags": [
+              "pays.pe.reseau_relie",
+              "pays.pe.terrain_altere",
+              "pays.pe.rival_respecte"
+            ]
+          },
+          {
+            "id": "b",
+            "texte": "Terminer son propre équipement",
+            "ecritFlags": [
+              "pays.pe.querelle_daltitude",
+              "pays.pe.dette_envers_joueur"
+            ]
+          }
+        ]
+      },
+      "consequences": [
+        {
+          "type": "relation_nation",
+          "paysCode": "pe",
+          "relation": "alliee"
+        },
+        {
+          "type": "trace_carte",
+          "paysCode": "pe",
+          "flagTrace": "pays.pe.reseau_relie",
+          "condition": "option a"
+        },
+        {
+          "type": "co_commandant",
+          "commandantCle": "cmd_luz_quispe"
+        },
+        {
+          "type": "entree_carnet",
+          "carnetCle": "carnet_hs_pe_col"
+        }
+      ],
+      "disparition": null,
+      "personnages": [
+        "cmd_luz_quispe",
+        "cmd_basile_kelm",
+        "cmd_yuna_serrat"
+      ],
+      "statut": "conception"
+    }
+  ],
+  "disparitions": [
+    {
+      "personnage": "cmd_nikos_delis",
+      "nation": "gr",
+      "horsSerie": true,
+      "ou": "opus1_hs_gr_3",
+      "annonce": "À l’ouverture de « Le banc du port » : la plaque de la Grèce est décrochée et posée à plat sur la tablette du Tableau ; Vantour ouvre son Bulletin sur la météo et ne dit son nom qu’à la dernière phrase.",
+      "signe": "opus1_hs_gr_2 : Nikos consulte le joueur, ce qu’il ne fait jamais, et parle de « quand il ne sera plus sur le circuit ».",
+      "dependDeChoix": {
+        "valeur": true,
+        "decision": "opus1_hs_gr_2_decision",
+        "description": "Branche b (défaut, hors-série 2 non joué compris) : il prend seul son bateau chaque matin pour porter les pièces aux îles quand la ligne du bac est suspendue ; disparition après la finale 2. Branche a : la recrue tient le passage, il reste au quai ; disparition après la finale 7, au café du port, la méthode transmise. La disparition a lieu dans les deux branches."
+      },
+      "cause": "Le cœur, à son âge, un matin d’hiver — au môle après sa dernière traversée (b) ou au café du port (a). Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "contributionCinquieme": "Le contrat de priorité de Basile Kelm (finale 2) coupe les petites délégations : la ligne du bac vers les îles, alimentée par la réserve du port, est suspendue pour l’hiver. Sans bac, quelqu’un prend le bateau.",
+      "contributionJoueur": "Branche b : le joueur lui a conseillé de reprendre lui-même toute la préparation. Ce n’est pas une faute, c’est un poids, et Vantour le dit ainsi.",
+      "consequences": [
+        "Co-commandant perdu : `cmd_nikos_delis` n’est plus recrutable à partir de l’annonce ; s’il l’était, l’emplacement se libère.",
+        "La Grèce reste engagée ; sa relation ne change pas. Branche a : la recrue [Proposition] Dafni Rallis reprend le banc avec la méthode de Nikos ; branche b : intérim de la fédération grecque, sans commandant nommé jusqu’à la fin de la Ronde.",
+        "entree_carnet `carnet_hs_gr_nikos` ; variante_dialogue `banc_grec` à la finale 18 (la recrue est présente à l’épilogue en branche a, le banc grec est vide en branche b)."
+      ]
+    },
+    {
+      "personnage": "cmd_mira_karki",
+      "nation": "np",
+      "horsSerie": true,
+      "ou": "opus1_hs_np_3",
+      "annonce": "À l’ouverture de « Le relais sans réponse » : plaque posée à plat, Solveig Tamm la pose, Vantour ouvre sur la météo de montagne.",
+      "signe": "opus1_hs_np_2 : elle a demandé le transport trop tard et le reconnaît ; « on aurait pu attendre » est sa dernière réplique de l’épisode.",
+      "dependDeChoix": {
+        "valeur": false,
+        "decision": "opus1_hs_np_2_decision",
+        "description": "Le choix du pont de corde change ce que l’atelier isolé a reçu et la page du carnet, jamais le moment ni la cause."
+      },
+      "cause": "La montagne et l’épuisement : montée à pied avec deux porteurs vers l’atelier isolé quand la rotation des transports a été suspendue ; la fenêtre météo s’est refermée ; redescendue trop tard. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "contributionCinquieme": "Les réserves rendues exclusives par Basile Kelm (finale 7) alimentaient la rotation des transports vers les sites d’altitude ; la rotation est suspendue « jusqu’à régularisation ». Elle est montée elle-même.",
+      "contributionJoueur": "Aucune. Le joueur a vu le signe à l’épisode 2, et c’est tout ce qu’on lui laisse : Mira demandait de l’aide tard, et personne n’était à portée.",
+      "consequences": [
+        "Co-commandant perdu : `cmd_mira_karki` n’est plus recrutable à partir de l’annonce.",
+        "Le Népal reste engagé ; le banc est repris par son adjointe [Proposition] Anju Basnet, coordinatrice de l’atelier isolé, qui joue « Le relais sans réponse » aux côtés du joueur.",
+        "entree_carnet `carnet_hs_np_mira` ; variante_dialogue `banc_nepalais` à la finale 12 (Basile « Les lignes qui restent » : l’adjointe refuse la tutelle, et le dit)."
+      ]
+    },
+    {
+      "personnage": "cmd_tomas_reiner",
+      "nation": "lu",
+      "horsSerie": false,
+      "ou": "opus1_finale_12",
+      "annonce": "Au briefing de « Les lignes qui restent » (finale 12) : la plaque du Luxembourg est posée à plat ; Ariane Belloc parle avant Vantour, ce qui n’arrive jamais.",
+      "signe": "opus1_finale_11 : Tomas organise les convois de retour des délégations extraites et annonce que la route principale exige une autorisation méridienne depuis le repli ; il « prendra la desserte ».",
+      "dependDeChoix": {
+        "valeur": false,
+        "decision": "opus1_finale_09",
+        "description": "Le choix de la finale 9 (évacuer les techniciens ou sécuriser les archives) change qui voyage avec lui : les techniciens déjà évacués, il conduit seul et de jour ; sinon il conduit le dernier car de nuit, et le car est vide de blessés — les passagers sont indemnes, c’est dit en toutes lettres. Ni le moment ni la cause ne changent."
+      },
+      "cause": "La route : sortie de desserte de nuit, chaussée verglacée, un seul véhicule. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "contributionCinquieme": "Depuis le repli de la finale 10, la route principale du bassin est sous autorisation méridienne (clause de dépendance d’Edran Sorel sur les dépôts et les routes). Tomas refuse de demander l’autorisation à ceux qui viennent de fermer le terrain, et prend la desserte.",
+      "contributionJoueur": "Indirecte et jamais accusatrice : le repli de la finale 10 est imposé à tous les joueurs. Le carnet dit « la route était fermée », pas « vous l’avez envoyé là ».",
+      "consequences": [
+        "Co-commandant perdu : `cmd_tomas_reiner` n’est plus recrutable à partir de l’annonce ; s’il l’était, l’emplacement se libère. La conséquence `allie_acte_iii` du fil `fil_cars_intendance` tient : c’est la délégation qui reste, pas l’homme.",
+        "Le Luxembourg reste engagé ; le banc est repris par [Proposition] Léa Wagener, son adjointe aux convois — clé de flags `cmd.lea_wagener.*` déjà présente dans `content/flags.json`. Solveig Tamm reprend le registre des convois.",
+        "entree_carnet `carnet_tomas_desserte` ; variante_dialogue à la finale 12 (Ariane), à la finale 15 (Edran répond de la route sans être accusé d’autre chose) et à la finale 18 (banc luxembourgeois à l’épilogue) ; absent de l’épilogue, sa plaque est remise à l’endroit au générique — la seule fois où l’on remet une plaque qui n’a pas été retournée."
+      ]
+    },
+    {
+      "personnage": "cmd_samir_el_hadi",
+      "nation": "ma",
+      "horsSerie": false,
+      "ou": "opus1_au_01",
+      "ouAlternatif": "opus1_finale_14",
+      "annonce": "Branche b : au briefing de « La route longue » (Australie 1) ; branche a : au briefing de « Le fils au premier rang » (finale 14). Plaque posée à plat ; Vantour ouvre sur la météo.",
+      "signe": "opus1_ma_09 « La réserve retenue » : Samir laisse coordonner l’étape à son adjointe et regarde le match depuis le dépôt ; opus1_ma_11 : il dit qu’il « se soigne entre deux étapes ».",
+      "dependDeChoix": {
+        "valeur": true,
+        "decision": "opus1_ma_08_decision",
+        "description": "Branche b (refuser de garantir le crédit du signataire) : la délégation marocaine, sans garantie, ne peut pas payer un coordinateur de remplacement — la clause de dépendance du fournisseur interdit d’employer hors de son personnel — et Samir tient les étapes de convoi une saison de plus au lieu de se soigner ; disparition après le Japon 12, annoncée à l’Australie 1. Branche a : la garantie libère un remplaçant, il se soigne ; disparition après la finale 13, annoncée à la finale 14. La maladie est la sienne dans les deux branches ; ce qui change est le moment."
+      },
+      "cause": "Une maladie longue, la sienne, nommée nulle part. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur.",
+      "contributionCinquieme": "La clause de dépendance du contrat de transport (Maroc 6 « Les crédits de midi », Maroc 8 « Le bail trop long ») interdit à la délégation d’employer un coordinateur hors du personnel du fournisseur ; sans garantie extérieure, personne ne peut le remplacer aux étapes.",
+      "contributionJoueur": "Branche b : le joueur n’a pas garanti le crédit. Vantour le dit sans l’accuser : « on ne remplace pas quelqu’un qu’un contrat interdit de remplacer ».",
+      "consequences": [
+        "Co-commandant perdu : `cmd_samir_el_hadi` n’est plus recrutable à partir de l’annonce.",
+        "Le Maroc reste engagé ; le banc est repris par son adjointe [Proposition] Nadia Berrada, coordinatrice des étapes du sud.",
+        "entree_carnet `carnet_samir_caravane` ; variante_dialogue à la finale 17 (Ost, qui lui prêtait du matériel à conditions opaques au Maroc 11, ne prononce pas son nom) et à la finale 18 (banc marocain à l’épilogue)."
+      ]
+    }
+  ]
+}

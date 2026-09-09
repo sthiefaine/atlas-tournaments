@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_06",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -77,41 +77,46 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Prenez puis conservez le radar central et la ville du nord-est avant la fin de J18. Il faut posséder les deux ; prendre le QG adverse ne remplace pas cet objectif.",
+      "texte": "La forêt, et le brouillard avec : vous ne voyez que ce que vos unités voient. Le drone observe au-delà des arbres, l’infanterie capture. Lisez la zone visible avant d’avancer.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le drone observe au-delà des arbres, l’infanterie capture. Avancez après avoir lu la zone visible. Le radar capturé partage ses relevés avec votre camp.",
+      "texte": "Objectif : le radar du centre et la ville du nord-est, tenus ensemble avant la fin de J18. Prendre le QG de Tomas ne remplace pas cet objectif ; un radar pris partage ses relevés avec tout votre camp.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La station radar émet aussi une IEM à J4 puis toutes les trois journées, rayon deux cases orthogonales. Vos appareils aériens ou marins doivent sortir du rayon avant l’impulsion, ou votre infanterie doit capturer la source.",
-      "emotion": "neutre"
+      "texte": "Cette station n’est pas une station d’Atlas. Elle vient du dépôt d’essai de la Sélection Méridienne, badge orange, et elle émet une impulsion : J4, puis toutes les trois journées, deux cases autour d’elle.",
+      "emotion": "doute"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Normal et difficile gardent le brouillard et ce calendrier. Tomas est plus prudent en difficile ; aucun capteur ne voit secrètement à travers le brouillard.",
+      "texte": "Wren Osoko l’a homologuée pour l’essai et me l’a dit sans détour : « je sais ce qu’elle fait, pas encore pourquoi on la prête ». Sortez vos appareils du rayon avant l’impulsion, ou prenez la source.",
       "emotion": "neutre"
     },
     {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Le brouillard de guerre masque ce que vos unités ne voient pas. La nuit arrive à J3 et J4 : elle réduit aussi la portée de vue. Le jour revient à J5, mais les zones hors de votre vision restent cachées.",
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "La nuit tombe à J3 et J4 et raccourcit la vue. En difficile je suis plus prudent, et personne ne voit à travers le brouillard, ni vous ni moi. Le jour revient à J5 ; le brouillard reste.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Exercice réussi. Vous pouvez revoir la carte ou poursuivre la formation ; les rappels restent consultables.",
+      "texte": "Radar et ville sous vos couleurs, ensemble. Vous savez avancer sans voir, et c’est le plus dur. La station repart au dépôt des Gris ce soir ; Wren la suivra jusqu’au quai.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Hadran Ost prête ce matériel sans qu’on le lui demande. Il joue propre, ces temps-ci, et il perd souvent. Vantour l’adore toujours.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Reprenez votre placement et l’objectif annoncé. Cette tentative s’arrête, mais vous pouvez recommencer sans perdre les autres exercices.",
+      "texte": "Le brouillard ne pardonne pas une approche à l’aveugle. Reprenez, éclairez d’abord ; cette tentative ne coûte rien.",
       "emotion": "neutre"
     }
   ],
@@ -130,7 +135,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Le drone prépare votre approche ; il ne capture pas. Protégez l’infanterie qui monte vers le radar.",
+          "texte": "Le drone prépare l’approche ; il ne capture pas et n’encaisse rien. Protégez l’infanterie qui monte vers le radar : c’est elle qui compte.",
           "emotion": "neutre"
         }
       ]
@@ -144,7 +149,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit arrive demain pour deux journées. Placez vos éclaireurs et consultez le bulletin. Une unité sur un bâtiment de votre camp bénéficie de son éclairage.",
+          "texte": "La nuit arrive demain pour deux journées. Placez vos éclaireurs, consultez le Bulletin. Une unité posée sur un bâtiment de votre camp bénéficie de son éclairage.",
           "emotion": "neutre"
         }
       ]
@@ -158,7 +163,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit retire deux cases de vision, avec un minimum d’une, sauf aux unités adaptées ou sur un bâtiment de votre camp. Le drone éclaire les approches ; protégez-le de la station IEM.",
+          "texte": "La nuit retire deux cases de vue, jamais moins d’une, sauf sur un bâtiment à vous. Le drone éclaire les approches ; tenez-le hors du rayon de la station, l’impulsion arrive demain.",
           "emotion": "neutre"
         }
       ]
@@ -172,7 +177,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Le jour est revenu. Votre portée de vue augmente, mais le brouillard de guerre reste actif : un terrain non observé peut encore cacher une unité.",
+          "texte": "Le jour est revenu, la vue s’allonge, mais le brouillard reste : un bois non observé cache encore une unité. La station a émis hier ; Wren voudra le relevé.",
           "emotion": "neutre"
         }
       ]

@@ -1,6 +1,6 @@
 {
   "cle": "premier_contact",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -50,26 +50,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Bienvenue, commandant. Ici, les Jeux Tactiques ont remplacé les guerres. Atlas organise la Ronde, le tournoi des nations.",
+      "texte": "Bienvenue à la sélection, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le casser.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Moi, Ariane, je vais vous apprendre à commander. Tomas et sa patrouille attendent de l’autre côté de la rivière : mettez-les hors jeu, toute la patrouille.",
+      "texte": "Ici, les Jeux Tactiques ont remplacé les guerres. Ce qu’une délégation gagne sur le terrain, c’est un contrat d’énergie pour quatre ans. Ce qu’elle ne gagne jamais, c’est quelqu’un.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et un mot : « rends-les en bon état ». Ma patrouille est de l’autre côté de la rivière, venez la chercher.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : en vert, où il peut aller ; en rouge, ce qu’il peut marquer après le déplacement. Le pont du nord est à lui.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Premier contact réussi. Vous savez déplacer une unité, frapper en premier et lire le terrain. Le reste, c’est de l’économie : on la voit demain.",
+      "texte": "Patrouille hors jeu. Vous savez déplacer, frapper en premier et lire le terrain. Vantour vous a déjà trouvé un surnom au Bulletin ; je ne vous le répète pas.",
       "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Solveig récupère mes pièces ce soir, toutes les trois, intactes. Demain, on parle d’argent : c’est là que les matchs se gagnent.",
+      "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "texte": "Un exercice sert à essayer, et Tomas ne racontera rien. Reprenons : votre place dans l’équipe ne se joue pas ici.",
       "emotion": "neutre"
     }
   ],
@@ -82,12 +97,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier échange. Retenez ceci : une unité attaquée à bout portant riposte aussitôt, avec les points de vie qu’il lui reste. Frapper en premier coûte donc moins cher.",
+          "texte": "Premier échange. L’unité marquée riposte aussitôt, avec les points qui lui restent : frapper en premier, c’est encaisser moins.",
           "emotion": "neutre"
         },
         {
-          "locuteur": "cmd_ariane_belloc",
-          "texte": "Le terrain compte aussi : les étoiles de défense du panneau réduisent les dégâts. Une forêt vaut deux étoiles, un pont zéro.",
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Et regardez où je me tenais. Deux étoiles de défense dans la forêt, zéro sur un pont : le terrain compte avant le matériel.",
           "emotion": "neutre"
         }
       ]
@@ -101,7 +116,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une de mes unités sort du jeu. Bien joué : votre char passe par le pont, mon infanterie peut traverser la rivière à pied. Pas votre char.",
+          "texte": "Une pièce hors jeu. Son équipage retire le plastron et va boire un café, c’est la règle : on sort du terrain, pas du monde.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Votre char ne traverse que par le pont ; son infanterie passe la rivière à pied. Ne vous laissez pas attirer à découvert.",
           "emotion": "neutre"
         }
       ]
@@ -115,7 +135,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Unité hors jeu. Personne n’est blessé, mais elle ne reviendra pas de la journée. Concentrez vos tirs : deux unités sur une seule cible valent mieux qu’une sur chaque.",
+          "texte": "Une des nôtres sort. Personne n’est touché, mais elle manque pour la journée. Deux unités sur une cible valent mieux qu’une sur chaque.",
           "emotion": "doute"
         }
       ]
@@ -129,7 +149,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre QG rapporte des fonds à chaque journée. Cliquez dessus : quand la caisse le permet, il recrute une infanterie.",
+          "texte": "Votre QG verse des fonds à chaque journée : c’est la part de contrat que le terrain vous avance. Cliquez dessus quand la caisse passe mille, il recrute une infanterie.",
           "emotion": "neutre"
         }
       ]

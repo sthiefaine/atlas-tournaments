@@ -1,6 +1,6 @@
 {
   "cle": "qg_de_la_presquile",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -50,26 +50,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Dernier exercice, et le plus vrai : prenez le QG de Tomas. Un QG demande quarante points de capture, quatre tours d’infanterie intacte, sous le feu. Couvrez-la.",
+      "texte": "La presqu’île. Ce bassin reproduit les marées de la côte : marée basse, la grève entre les deux plages s’ouvre et le trajet est court ; marée haute, il reste le pont du sud.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le bassin reproduit les marées de la côte. Marée basse, la grève entre les deux plages s’ouvre et le trajet est court. Marée haute, il reste le pont au sud. Le Bulletin, en haut à droite, annonce la marée deux journées à l’avance.",
+      "texte": "Le Bulletin de Vantour, en haut à droite, annonce la marée deux journées à l’avance. Il est exact, c’est la règle : Atlas ne surprend jamais un commandant avec le temps qu’il fait.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Prenez le QG de Tomas. Quarante points, quatre tours d’une infanterie intacte sous le feu, et la partie s’arrête à l’instant où le QG change de mains. Couvrez-la.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Un QG pris, c’est le match perdu et le contrat avec. Je défends : mon équipe encaisse mieux qu’elle ne perce, et je gagne du temps. À vous de forcer la porte.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le QG est à vous : la partie s’arrête sur-le-champ. Formation terminée, commandant. Votre premier match officiel se jouera au col, avec Tomas à vos côtés.",
+      "texte": "Le QG est à vous, la partie s’arrête. Quatre exercices, et vous savez ce qu’un commandant sait. Le reste, c’est la distance, l’obscurité et les autres : on continue.",
       "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Solveig dit que le calendrier est tenu. Je vous retrouve en montagne.",
+      "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons : ni le carnet ni votre place n’en gardent trace.",
       "emotion": "neutre"
     }
   ],
@@ -83,7 +98,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La marée monte. Une unité restée sur la grève est repoussée vers la terre. Le passage rouvre à la quatrième journée : préparez vos troupes sur la plage, ou passez par le pont.",
+          "texte": "La marée monte. Une unité restée sur la grève est repoussée à terre, sans dommage : les juges de terrain la déplacent. Le passage rouvre à la quatrième journée ; attendez sur la plage, ou passez par le pont.",
           "emotion": "neutre"
         }
       ]
@@ -97,7 +112,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Marée basse pour deux journées. C’est maintenant que ça traverse.",
+          "texte": "Marée basse pour deux journées. C’est maintenant que ça traverse. Un recon passe le pont en une journée, une infanterie en trois : votre usine vend un transport pour l’emmener.",
           "emotion": "neutre"
         }
       ]
@@ -111,22 +126,8 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre jauge de commandement était pleine : vous venez de déclencher votre pouvoir. Il ne dure qu’une journée, alors gardez-le pour un moment qui compte, l’assaut du QG par exemple.",
+          "texte": "Jauge pleine, pouvoir déclenché. Il ne dure qu’une journée : gardez-le pour l’assaut du QG, pas pour une escarmouche.",
           "emotion": "triomphe"
-        }
-      ]
-    },
-    {
-      "cle": "presquile_capture",
-      "declencheur": {
-        "type": "capture",
-        "camp": 1
-      },
-      "repliques": [
-        {
-          "locuteur": "cmd_tomas_reiner",
-          "texte": "Je prends une de vos villes. Pendant que vous regardez mon QG, surveillez le vôtre : le perdre, c’est perdre le match.",
-          "emotion": "joie"
         }
       ]
     },
@@ -139,7 +140,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une unité hors jeu. Mon équipe défend, elle n’attaque pas : c’est mon style. À vous de forcer la porte.",
+          "texte": "Une unité hors jeu, et elle rentre au dépôt en bonne santé. Mon équipe tient, elle n’attaque pas. Ne vous usez pas contre ma garde : contournez-la.",
           "emotion": "doute"
         }
       ]

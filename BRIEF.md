@@ -18,6 +18,21 @@ Huit commandants adverses structurent cet opus. La fratrie reste secrète : aucu
 
 Le propriétaire autorise deux modes **normal et difficile**, des quêtes secondaires dont les choix influencent la trame principale et réciproquement, et des unités modernes supplémentaires, dont un petit arsenal exclusif à la faction inconnue. Le refus d’ajouter systématiquement une unité par région demeure ; il ne constitue pas une interdiction de créer un rôle tactique utile. Les quatre ajouts du catalogue7 sont deux drones communs et deux unités méridiennes ; seules les unités communes reçoivent des kits nationaux. La difficulté change des paramètres annoncés, pas les règles de dégâts en secret, et reste distincte des décisions narratives.
 
+### Quatre disparitions — décision du 9 septembre 2026
+
+Le propriétaire a décidé que **quatre chefs de nations alliées meurent** au cours du premier opus. C'est l'unique exception à « Personne ne meurt. Jamais. » (`doc/01-bible.md` §1), et elle est fermée : quatre personnes, quatre scènes, nommées ici et nulle part ailleurs.
+
+| Qui | Nation | Où l'annonce est faite | Ce qui dépend du joueur |
+|---|---|---|---|
+| Nikos Delis (`cmd_nikos_delis`) | Grèce | `opus1_hs_gr_3` | Le moment (après la finale 2 ou la finale 7) et ce qui reste, selon `opus1_hs_gr_2_decision` ; jamais le fait |
+| Mira Karki (`cmd_mira_karki`) | Népal | `opus1_hs_np_3` | Rien : la page du carnet seulement |
+| Tomas Reiner (`cmd_tomas_reiner`) | Luxembourg | `opus1_finale_12` | Rien : qui voyage avec lui, selon le choix de `opus1_finale_09` ; les passagers sont indemnes |
+| Samir El Hadi (`cmd_samir_el_hadi`) | Maroc | `opus1_au_01` ou `opus1_finale_14` | Le moment seulement, selon `opus1_ma_08_decision` |
+
+**La borne, une seule.** Une mort n'a **jamais** lieu sur un terrain homologué, **jamais** par du matériel de tournoi, et n'est **jamais** un homicide commis par une personne identifiée. Ce sont des morts du dehors — la route, la mer, la montagne, la maladie, l'âge —, auxquelles les décisions de la Cinquième Manche ont indirectement contribué (un contrat de priorité, une réserve rendue exclusive, une route sous autorisation, une clause de dépendance), et parfois les choix du joueur, sans qu'un choix soit jamais présenté comme la cause. Le joueur ne voit jamais l'instant, toujours l'annonce. La nation reste engagée, sa relation ne bouge pas, une conséquence acquise tient ; ce qui est perdu est un co-commandant, et ce qui reste est un banc repris par une adjointe. Aucune fin ne lit une disparition.
+
+**La règle dure : aucune routine ne peut jamais écrire une mort.** Les quatre scènes sont écrites à la main (`doc/refonte/opus1-hors-serie.md` §3) et sont les seules du jeu. Ni la routine lore, ni la routine cerveau, ni la Dépêche, ni aucun contenu généré ne déclare, ne suggère ni ne prolonge une disparition ; un contenu généré qui en porterait une est refusé, et le vocabulaire de `doc/01-bible.md` §5.2 reste intégralement interdit à toute production de routine. La doctrine du marquage (§5.3) est intacte : sur le terrain, on met hors jeu. Les faits correspondants de `content/personnages.json` sont en confidentialité auteur et ne sortent par aucune route.
+
 ## Le jeu en une phrase
 
 Un tactique au tour par tour dans l'esprit d'Advance Wars (grille, unités, terrains, capture de villes, commandants à pouvoirs, conflit stratégique sérieux, affrontements non sanglants), où un jeune commandant fait le tour du monde pour disputer le **Tournoi Atlas**.

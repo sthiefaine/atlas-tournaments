@@ -34,7 +34,7 @@ Ce document est votre **référence canon**. Règles dures, dans l'ordre de prio
 - Une faction inconnue du joueur, **la Cinquième Manche**, cherche à concentrer les droits solaires, le stockage et la distribution, puis à contrôler le programme de fusion fictif **Aube**.
 - Les choix du joueur décident quels pays suivent qui, le jour où ça éclate.
 - Le ton est sérieux : compétition, fronts, alliances, sièges et conséquences durables ; l’humour des personnages ne nie pas les enjeux.
-- Personne ne meurt. Jamais. C'est une règle du monde autant qu'une règle d'écriture.
+- Personne ne meurt. Jamais. C'est une règle du monde autant qu'une règle d'écriture. **Amendement du 9 septembre 2026** : quatre chefs de nations alliées meurent au cours du premier opus, hors de tout terrain, hors de tout matériel de tournoi, sans qu'une personne identifiée en soit l'auteur — l'exception est fermée, écrite à la main, et nommée dans `BRIEF.md` (« Quatre disparitions ») et `doc/refonte/opus1-hors-serie.md` §3 ; aucune routine ne peut jamais en écrire une autre.
 
 ---
 
@@ -320,12 +320,13 @@ Conflit stratégique sérieux joué sous forme de tournois : fronts, sièges, co
 | religion, foi, culte, dieu | *(hors périmètre)* |
 | ennemi juré | **rival**, rivalité |
 | massacre, anéantir un peuple | **anéantissement de l’équipe** signifie mise hors jeu de toutes ses unités, jamais des équipages |
+| mourir, mort — *amendement du 9 septembre 2026* | **restent interdits** pour tout ce qui se passe sur un terrain et pour toute production de routine ; ils ne s'emploient que dans les **quatre scènes écrites à la main** des disparitions (`BRIEF.md`, « Quatre disparitions » ; `doc/refonte/opus1-hors-serie.md` §3), une fois chacune, dans la bouche de la personne la plus proche, et « disparition » partout ailleurs |
 
 **Zone grise assumée.** Les unités gardent leurs silhouettes de blindés, d'artillerie, d'hélicoptères : c'est la grammaire lisible du genre. On les nomme **matériel homologué** dans le texte officiel, et on les désigne par leur usage (blindé de percée, pièce de portée, appareil de reconnaissance) plutôt que par un lexique militaire. On ne les fait jamais « tirer sur » quelqu'un : elles **marquent**.
 
 ### 5.3 **[Proposition]** La doctrine du marquage
 
-Pour que « personne ne meurt » soit une règle du monde et pas une pudeur d'écriture : tout matériel homologué embarque des **charges de marquage**. Une unité touchée est *marquée* ; au-delà d'un seuil, les juges de terrain la déclarent **hors jeu** et l'escortent au dépôt, où l'équipage retire son plastron et va boire quelque chose. Une unité hors jeu revient au match suivant. C'est pourquoi l'article 2 du Pacte existe, pourquoi le contrôle du matériel est un enjeu, et pourquoi du **matériel non homologué** est le scandale absolu de ce monde — et une arme narrative pour la Cinquième Manche.
+Pour que « personne ne meurt » soit une règle du monde et pas une pudeur d'écriture : tout matériel homologué embarque des **charges de marquage**. Une unité touchée est *marquée* ; au-delà d'un seuil, les juges de terrain la déclarent **hors jeu** et l'escortent au dépôt, où l'équipage retire son plastron et va boire quelque chose. Une unité hors jeu revient au match suivant. C'est pourquoi l'article 2 du Pacte existe, pourquoi le contrôle du matériel est un enjeu, et pourquoi du **matériel non homologué** est le scandale absolu de ce monde — et une arme narrative pour la Cinquième Manche. **Amendement du 9 septembre 2026** : les quatre disparitions de `BRIEF.md` ne touchent pas cette doctrine, qui reste intacte — aucune d'elles n'a lieu sur un terrain ni par du matériel de tournoi ; sur le terrain, on marque, on met hors jeu, et l'équipage va boire quelque chose.
 
 ### 5.4 Réglage de la trame de fond
 

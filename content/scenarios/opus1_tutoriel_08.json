@@ -1,7 +1,7 @@
 {
   "cle": "opus1_tutoriel_08",
   "code": "opus1_tutoriel_08",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -72,31 +72,51 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tomas emprunte la passerelle du sud ; votre groupe prend celle du nord. Nous partageons ce que nos unités voient, pas nos caisses ni nos ordres. Prenez le QG d’Ost ou mettez toutes ses unités hors jeu avant la limite de seize journées.",
+      "texte": "Aujourd’hui, deux délégations, un seul camp adverse. Tomas prend la passerelle du sud, votre groupe celle du nord. Nous partageons ce que nos unités voient ; pas nos caisses, pas nos ordres.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "En face, la Sélection Méridienne : les Gris d’Hadran Ost. L’ancien Recordman, disqualifié il y a une Ronde, qui joue propre depuis et perd souvent. Il a accepté l’exercice avec le sourire.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Bienvenue sur le terrain, commandant. Mes pièces portent le badge orange : matériel à l’essai, homologué pour la journée. Prenez mon QG ou mettez mon équipe hors jeu avant J16 ; je ne fais pas de cadeaux, seulement des souvenirs.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Votre transport peut ravitailler une pièce de Tomas depuis une case voisine ; elle reste à lui. Ne finissez jamais un déplacement sur une case alliée. Chaque délégation touche 500 fonds par bâtiment qu’elle possède.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le transport peut ravitailler une unité de Tomas depuis une case voisine. Cette aide ne change jamais son propriétaire. Laissez libres les cases occupées par vos alliés : vous pouvez vous soutenir, pas finir votre déplacement sur eux.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Chaque délégation reçoit 500 fonds par bâtiment qu’elle possède et par journée. En difficile, les équipes IA utilisent une stratégie pondérée ; les budgets et les objectifs restent identiques.",
+      "texte": "En difficile, les deux IA jouent pondéré ; budgets et objectifs restent les mêmes. C’est la première fois qu’on vous prête un allié : ne dépensez pas ses pièces à sa place.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux commandements, une victoire commune. Vous avez maintenant les moyens de défendre les postes de distribution du prochain exercice.",
+      "texte": "Deux commandements, une victoire commune. Vous avez maintenant de quoi défendre des postes de distribution : c’est l’exercice suivant, et c’est là que les contrats commencent.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Ost a serré la main à tout le monde et repris ses pièces. Solveig a noté l’heure de départ du camion, comme pour n’importe qui : elle note tout.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, puis gardez une réserve pour la prochaine tentative.",
+      "texte": "Cet exercice se rejoue sans pénalité. Repérez la passerelle perdue en premier, gardez une réserve, et laissez Tomas jouer sa part.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Vous reviendrez. Moi aussi : c’est mon métier, maintenant.",
       "emotion": "neutre"
     }
   ],
@@ -110,7 +130,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Je garde l’accès sud. Regardez mon éclairage du terrain : il apparaît aussi dans votre vision. Mes unités restent sous mes ordres.",
+          "texte": "Je garde l’accès sud. Mon éclairage du terrain apparaît dans votre vision, mes unités restent sous mes ordres. Si l’une des vôtres manque de charges près de moi, dites-le : je ne peux pas la servir, vous si.",
           "emotion": "neutre"
         }
       ]
@@ -124,7 +144,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Ce bâtiment remplit votre caisse seulement. L’alliance partage la victoire et les informations, pas tous les fonds.",
+          "texte": "Ce bâtiment remplit votre caisse, pas la sienne. L’alliance partage la victoire et la vue, pas les fonds. Solveig tient deux registres, un par délégation, et elle a raison.",
           "emotion": "neutre"
         }
       ]
@@ -136,8 +156,22 @@
       },
       "repliques": [
         {
-          "locuteur": "cmd_ariane_belloc",
-          "texte": "Gardez les deux passerelles actives. Si un axe est couvert par l’artillerie, l’autre ouvre une prise de flanc.",
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Premier échange. Vous verrez que je ne fais rien d’interdit ; Vantour l’a assez racontée, ma dernière histoire. Deux passerelles, une seule artillerie chez moi : cherchez celle qu’elle ne couvre pas.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t08_perte_ost",
+      "declencheur": {
+        "type": "perte",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Une pièce grise au dépôt. Rien de cassé : c’est ce qu’elle était venue prouver. Continuez, vous jouez bien ensemble, mieux que je n’ai jamais su le faire à deux.",
           "emotion": "neutre"
         }
       ]

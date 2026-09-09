@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_05",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -69,31 +69,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Prenez le QG de Tomas ou mettez toutes ses unités hors jeu avant la fin de J18. Aucun revenu ni renfort : chaque placement compte.",
+      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a homologué le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. Chaque placement compte.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La crête sépare deux couloirs. Placez l’artillerie derrière le char : elle tire à distance, mais ne tire pas après avoir bougé et ne riposte pas au contact.",
+      "texte": "Deux pièces d’artillerie. Elles marquent à deux ou trois cases sans riposte, mais ne tirent pas après avoir bougé et ne ripostent pas au contact. Le char devant, l’artillerie derrière.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "J’attaque, aujourd’hui. Si vous laissez une pièce de portée à découvert, mon char ira la chercher. Prenez mon QG ou mettez mon équipe hors jeu avant la fin de J18.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Normal : Tomas engage directement ses patrouilles. Difficile : il protège mieux ses pièces et ses captures. Les dégâts, effectifs et budgets restent identiques.",
+      "texte": "En difficile, Tomas protège mieux ses pièces et ses captures ; les dégâts et les effectifs ne changent pas. La différence est dans sa tête, pas dans les règles.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Exercice réussi. Vous pouvez revoir la carte ou poursuivre la formation ; les rappels restent consultables.",
+      "texte": "Exercice réussi. Vous avez tenu la distance, et c’est la chose la plus difficile à apprendre à un jeune commandant : attendre le bon tour.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Ce soir, Solveig nous emmène en forêt. Prenez une lampe : ce n’est pas une image.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Reprenez votre placement et l’objectif annoncé. Cette tentative s’arrête, mais vous pouvez recommencer sans perdre les autres exercices.",
+      "texte": "Reprenez votre placement et l’ordre des tours. Cette tentative s’arrête là ; les autres exercices restent acquis, et Tomas oublie vite.",
       "emotion": "neutre"
     }
   ],
@@ -112,7 +122,49 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Gardez le char devant l’artillerie. Une arrivée sûre ce tour prépare un tir au tour suivant.",
+          "texte": "Premier échange. Une arrivée sûre ce tour prépare un tir au tour suivant : l’artillerie ne fait jamais les deux le même jour.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t05_distance",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une de mes pièces sort sans avoir vu qui l’a marquée. Voilà la bonne distance : je ne peux pas riposter à ce que je ne touche pas.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t05_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une pièce de portée seule, c’est une pièce perdue : elle n’a rien pour répondre au contact. Reformez la ligne, le char devant.",
+          "emotion": "doute"
+        }
+      ]
+    },
+    {
+      "cle": "t05_journee_4",
+      "declencheur": {
+        "type": "journee",
+        "journee": 4
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Sélectionnez une artillerie et lisez ses cases rouges : la case voisine n’en fait pas partie. Trop près, c’est hors de portée ; c’est le paradoxe qu’on apprend ici.",
           "emotion": "neutre"
         }
       ]

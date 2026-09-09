@@ -1,10 +1,10 @@
 {
   "cle": "pacte_du_col",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-09",
   "code": "pacte_du_col",
   "nom": "Qualification · Le pacte du col",
   "acte": 0,
@@ -59,19 +59,19 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre formation est terminée : bienvenue à votre première qualification officielle. Tomas vous prête son équipe technique pour une épreuve de coopération. Le passage direct est fermé.",
+      "texte": "Formation terminée : voici votre première qualification officielle. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc pour cette épreuve de coopération. Il joue pour gagner, c’est la règle.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col.",
+      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col : c’est lui qu’Atlas regarde.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Qualification réussie. Vous partagez vos relevés avec Tomas : le Luxembourg devient votre allié. Il vous confie le commandement d’une exhibition sous ses couleurs.",
+      "texte": "Qualification réussie. Vous m’avez remis vos relevés du col : le Luxembourg s’engage aux côtés de la délégation française, et Solveig accroche les deux plaques ce soir. Je vous prête mon banc pour une exhibition sous mes couleurs.",
       "emotion": "joie"
     }
   ],

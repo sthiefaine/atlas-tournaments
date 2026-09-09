@@ -1,0 +1,3477 @@
+{
+ "genere": "scripts/fil-opus1.mjs",
+ "lignes": [
+  {
+   "type": "tutoriel",
+   "id": "premier_contact",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Premier contact",
+   "description": "Déplacement, terrain, prévision et riposte. Mettre hors jeu les trois unités de Tomas.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu les trois unités de Tomas.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 1
+  },
+  {
+   "type": "tutoriel",
+   "id": "villes_du_bocage",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Les quatre villes",
+   "description": "Capture, revenus et soins. Posséder simultanément trois des quatre villes désignées.",
+   "format": "1v1",
+   "objectif": "Posséder simultanément trois des quatre villes désignées.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 2
+  },
+  {
+   "type": "tutoriel",
+   "id": "chantier_des_usines",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Le chantier des usines",
+   "description": "Production, génie et remise en service. Remettre en service et posséder les deux usines désignées.",
+   "format": "1v1",
+   "objectif": "Remettre en service et posséder les deux usines désignées.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 3
+  },
+  {
+   "type": "tutoriel",
+   "id": "qg_de_la_presquile",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Le QG de la presqu’île",
+   "description": "Capture du QG, transport et marées. Capturer le QG adverse : quarante points.",
+   "format": "1v1",
+   "objectif": "Capturer le QG adverse : quarante points.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 4
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_05",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "La bonne distance",
+   "description": "Tir indirect et protection. Capturer le QG du plateau ou mettre hors jeu toute la défense.",
+   "format": "1v1",
+   "objectif": "Capturer le QG du plateau ou mettre hors jeu toute la défense.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 5
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_06",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Au-delà des arbres",
+   "description": "Brouillard, radar et drones ; aperçu du rayon annoncé d’une station IEM inactive, avant une première impulsion évitable. Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.",
+   "format": "1v1",
+   "objectif": "Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 6
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_07",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Le dernier kilomètre",
+   "description": "Munitions, ravitaillement et transport ; variante maritime avec drone marin et quai de ravitaillement. Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.",
+   "format": "1v1",
+   "objectif": "Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 7
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_08",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Une ligne commune",
+   "description": "Équipes, vision partagée et caisses séparées. En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.",
+   "format": "1v1",
+   "objectif": "En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 8
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_09",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "Le prix du courant",
+   "description": "Énergie et concessions ; bulletin de pluie provoquée, capture de la station de contrôle. Capturer deux des trois postes de distribution représentés par des bâtiments existants.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois postes de distribution représentés par des bâtiments existants.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 9
+  },
+  {
+   "type": "tutoriel",
+   "id": "opus1_tutoriel_10",
+   "chapitre": "Les dix exercices",
+   "saison": 0,
+   "titre": "La première promesse",
+   "description": "Synthèse et choix persistant. Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.",
+   "format": "1v1",
+   "objectif": "Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.",
+   "personnages": [],
+   "statut": "integre_parcours_local",
+   "numero": 10
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_01",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Premier courant",
+   "description": "Le bocage accueille une qualification où deux réseaux disputent le même transformateur.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 11
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_02",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Les villes du contrat",
+   "description": "Ariane découvre que les revenus promis excluent les équipes de maintenance.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 12
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_03",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "La voie de service",
+   "description": "Un convoi transporte les batteries dues aux communes partenaires.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 13
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_04",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Deux rives, un réseau",
+   "description": "La fermeture sportive d’un pont sépare les réserves de leurs utilisateurs.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 14
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_05",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Le devis orange",
+   "description": "Ost prête du matériel dont les conditions de retour restent opaques.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 15
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_06",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "La journée sans crédit",
+   "description": "Le financement de la délégation est suspendu au milieu de l’épreuve.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Ariane Belloc",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 16
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_07",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Les clairières témoins",
+   "description": "Les relevés de puissance divergent entre trois postes forestiers.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 17
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_08",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Ligne de partage",
+   "description": "Deux délégations françaises défendent des contrats incompatibles, sans représenter deux nations.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 18
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_09",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "La réserve commune",
+   "description": "Ariane demande de garantir une réserve avant la rencontre décisive.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 19
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_10",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Une signature de trop",
+   "description": "Un avenant méridien associe victoire sportive et exclusivité de transport.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 20
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_11",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Le contrat rendu public",
+   "description": "Deux spécialistes méridiens viennent défendre la même offre de concession, chacun sous son nom public.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 21
+  },
+  {
+   "type": "national",
+   "id": "opus1_fr_12",
+   "chapitre": "France — Les droits du vainqueur",
+   "saison": 1,
+   "titre": "Une victoire à partager",
+   "description": "Le dernier QG contrôle l’attribution du réseau, pas le territoire ni ses habitants.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 22
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_01",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Le relais de Tomas",
+   "description": "Tomas accueille les batteries promises à la frontière de deux réseaux.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 23
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_02",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Les trois aiguillages",
+   "description": "Trois routes logistiques offrent des accès concurrents au dépôt central.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 24
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_03",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Garantie de livraison",
+   "description": "Un transport doit traverser la vallée avant la clôture du contrat.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 25
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_04",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Le prix du retard",
+   "description": "Un adversaire finance sa défense grâce aux jours perdus par le convoi.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 26
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_05",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Deux équipes, deux caisses",
+   "description": "La coopération révèle des fonds séparés et une vision partagée.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 27
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_06",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "La voie détournée",
+   "description": "Yuna change de front pour prendre les dépôts laissés sans couverture.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Tomas Reiner",
+    "Yuna Serrat",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 28
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_07",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Le registre partagé",
+   "description": "Les équipes comparent leurs relevés à trois stations successives.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 29
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_08",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Une offre de stabilité",
+   "description": "Une délégation partenaire accepte un crédit du Consortium pour finir sa saison.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 30
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_gr_1",
+   "chapitre": "Hors-série · Grèce",
+   "saison": null,
+   "titre": "Le café avant le coup d’envoi",
+   "description": "Nikos Delis ne joue jamais avant son café. Il reçoit le joueur sur un archipel relié par des môles, où les blindés restent au port, et lui montre qu’une méthode vaut mieux qu’un nouvel outil.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Nikos Delis"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_lu_08_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":3}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_gr_2",
+   "chapitre": "Hors-série · Grèce",
+   "saison": null,
+   "titre": "La recrue au môle",
+   "description": "Basile Kelm verrouille la réserve du port principal. Nikos et le joueur tiennent deux môles pendant trois journées, et Nikos doit décider s’il confie le passage des îles à sa recrue ou s’il reprend lui-même toute la préparation.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Nikos Delis",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.gr.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_09",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Promesse sous pression",
+   "description": "Tomas maintient une livraison à cette délégation malgré son ralliement.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 31
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_10",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "L’échéance de nuit",
+   "description": "Le remboursement arrive pendant une épreuve sous brouillard.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 32
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_11",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Le garant absent",
+   "description": "Basile refuse d’ouvrir les réserves qu’il s’était engagé à garantir.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen",
+    "Basile Kelm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 33
+  },
+  {
+   "type": "national",
+   "id": "opus1_lu_12",
+   "chapitre": "Luxembourg — Les courants liés",
+   "saison": 1,
+   "titre": "Le pacte des relais",
+   "description": "La victoire doit décider si le réseau repose sur une caisse commune ou des garanties séparées.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 34
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_01",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le premier col",
+   "description": "Une montée étroite oblige à couvrir les unités indirectes.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 35
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_02",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "La retenue froide",
+   "description": "La réserve d’énergie alimente deux sites placés de part et d’autre du lac.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 36
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_03",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le carnet d’altitude",
+   "description": "Une équipe de mesure transporte des relevés contestés par Méridien.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 37
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_04",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "La route basse",
+   "description": "Le tracé court est exposé aux batteries de la commandante des unités indirectes.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 38
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_is_1",
+   "chapitre": "Hors-série · Islande",
+   "saison": null,
+   "titre": "La même réserve vendue deux fois",
+   "description": "Elín Arnardóttir a comparé deux contrats qui vendent la même réserve à deux délégations. Elle invite le joueur sur la roche noire, de nuit, pour capturer deux des trois stations qui alimentent ces contrats, face à Yuna Serrat qui les gère.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Elín Arnardóttir",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_04_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.soupcon\",\"min\":3}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_05",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le plateau verrouillé",
+   "description": "Basile verrouille une station radar sans occuper toute la carte.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost",
+    "Basile Kelm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 39
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_06",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le passage sans renfort",
+   "description": "Une fenêtre limitée de traversée impose de préserver les unités engagées.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Solveig Tamm",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 40
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_07",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Échos dans les vallées",
+   "description": "Des relevés contradictoires doivent être recoupés dans trois relais.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 41
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_08",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "L’arbitre et le fournisseur",
+   "description": "Une équipe locale suspend sa neutralité sportive pour payer sa maintenance.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 42
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ca_1",
+   "chapitre": "Hors-série · Canada",
+   "saison": null,
+   "titre": "Le grand gel",
+   "description": "Une pièce à badge orange est à l’essai, jouée par la Sélection Méridienne. Noémie Leduc exige que l’essai se joue sous les mêmes conditions pour les deux camps, et confie au joueur le banc de l’équipe témoin sur la carte gelée.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Noémie Leduc",
+    "Hadran Ost"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"flag\",\"cle\":\"monde.atlas.homologation_contestee\"},{\"type\":\"flag\",\"cle\":\"monde.atlas.essai_soutenu\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ca_2",
+   "chapitre": "Hors-série · Canada",
+   "saison": null,
+   "titre": "Les provisions de la tempête",
+   "description": "Une tempête est annoncée à deux journées. Noémie et le joueur tiennent deux ateliers d’essai contre Ost et Basile Kelm, qui veut faire compter la réserve de batteries comme une avance méridienne.",
+   "format": "2v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Noémie Leduc",
+    "Hadran Ost",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.ca.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_09",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Les réserves de secours",
+   "description": "Les secours contractuels arrivent après une défense de position limitée.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 43
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_10",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "La clause de restitution",
+   "description": "Le joueur peut proposer une sortie au partenaire dépendant.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 44
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_np_1",
+   "chapitre": "Hors-série · Népal",
+   "saison": null,
+   "titre": "Les ateliers d’altitude",
+   "description": "Rien de lourd ne monte ici. Mira Karki dispute au joueur deux des trois ateliers d’altitude, et montre ce qu’une équipe légère fait d’une pente quand elle voit loin depuis un point haut.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Mira Karki",
+    "Elsbeth Vonlanthen"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_ch_10_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.ch.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_np_2",
+   "chapitre": "Hors-série · Népal",
+   "saison": null,
+   "titre": "Le pont de corde",
+   "description": "Un atelier isolé attend des pièces que la rotation des transports ne monte plus. Mira et le joueur escortent le transport contre Basile Kelm, qui tient le col et son dépôt ; Mira a demandé de l’aide tard, et le dit. Le joueur décide si l’on pose le pont de corde au-dessus de la gorge.",
+   "format": "2v1",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Mira Karki",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.np.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_11",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le col des deux équipes",
+   "description": "Deux adversaires tiennent des passages distincts et partagent leur vision.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 45
+  },
+  {
+   "type": "national",
+   "id": "opus1_ch_12",
+   "chapitre": "Suisse — Les réserves hautes",
+   "saison": 1,
+   "titre": "Le droit de passage",
+   "description": "Le gagnant fixe les garanties d’accès à la réserve pour les saisons suivantes.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 46
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_01",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Les carrés du polder",
+   "description": "Les voies surélevées découpent la carte en compartiments lisibles.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 47
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_02",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "L’usine derrière l’eau",
+   "description": "Une usine centrale vaut davantage que le chemin le plus court vers le QG.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 48
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_03",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Le convoi des pompes",
+   "description": "Un transport de maintenance emprunte une digue sous surveillance.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 49
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_04",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "La digue partagée",
+   "description": "Deux partenaires doivent couvrir chacun une extrémité du passage.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 50
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_is_2",
+   "chapitre": "Hors-série · Islande",
+   "saison": null,
+   "titre": "Fenêtre claire",
+   "description": "Trois stations de mesure dans le brouillard, dans l’ordre, pendant que Relais Zéro brouille et que Basile Kelm tient les hauteurs. Elín ne signera rien tant que chaque mesure n’est pas recoupée.",
+   "format": "1v2",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Elín Arnardóttir",
+    "Relais Zéro",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.is.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_05",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Fenêtre de marée",
+   "description": "Le calendrier de marée rend une route côtière disponible par périodes.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 51
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_06",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "L’atelier encerclé",
+   "description": "La production est limitée tandis que l’adversaire approche des deux côtés.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Wren Osoko",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 52
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_07",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Les trois écluses",
+   "description": "Les relevés du réseau sont répartis entre trois postes accessibles par des routes différentes.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 53
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_08",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "La garantie privée",
+   "description": "Une équipe signe avec Méridien pour assurer ses prochaines dépenses.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 54
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_09",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Le terrain prêté",
+   "description": "Son adversaire d’hier lui offre un passage de repli sans exiger de ralliement.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 55
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_10",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Les comptes de la digue",
+   "description": "Yuna essaie de prendre les centres de revenu pendant le regroupement.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko",
+    "Yuna Serrat"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 56
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_11",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Le retour du garant",
+   "description": "Le signataire doit choisir publiquement entre l’accord et ses partenaires.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 57
+  },
+  {
+   "type": "national",
+   "id": "opus1_nl_12",
+   "chapitre": "Pays-Bas — Le réseau des digues",
+   "saison": 1,
+   "titre": "Un réseau ouvert",
+   "description": "La finale décide des accès techniques communs, jamais du contrôle de la population.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 58
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_01",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Les ombres courtes",
+   "description": "Des plateaux découverts rendent coûteuse toute avance sans reconnaissance.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 59
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_02",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "L’atelier du sud",
+   "description": "Deux axes relient les ateliers aux réserves du parc solaire fictif.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 60
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_03",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "La caravane technique",
+   "description": "Solveig accompagne un transport de pièces jusqu’au dépôt de contrôle.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 61
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_04",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Le passage de roche",
+   "description": "Un détour abrité concurrence une traversée rapide à découvert.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 62
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_05",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Poussière de piste",
+   "description": "Le brouillard de guerre représente les relevés incomplets, sans inventer une météo non implémentée.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 63
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_06",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Les crédits de midi",
+   "description": "Une avance méridienne permet à une équipe rivale d’aligner une réserve finie.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Ariane Belloc",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 64
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_07",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Trois stations au soleil",
+   "description": "Les mesures de trois relais révèlent une clause commune aux contrats.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 65
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_08",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Le bail trop long",
+   "description": "Un sponsor de délégation propose une exclusivité après la victoire.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 66
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_is_3",
+   "chapitre": "Hors-série · Islande",
+   "saison": null,
+   "titre": "Le silence de la source",
+   "description": "Les relevés sont recoupés. Elín et le joueur tiennent deux positions autour de la source chaude contre Ost et Yuna, et le joueur tranche : signaler l’anomalie maintenant, ou attendre une preuve de plus au risque de perdre le contrat.",
+   "format": "2v2",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Elín Arnardóttir",
+    "Hadran Ost",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.is.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_09",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "La réserve retenue",
+   "description": "Le joueur défend le dépôt en attendant une livraison annoncée.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 67
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_10",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Une sortie sans humiliation",
+   "description": "La délégation dépendante reçoit une offre de renégociation publique.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 68
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_11",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "Les deux créanciers",
+   "description": "Ost et la commandante des unités indirectes défendent chacun une moitié du contrat litigieux.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 69
+  },
+  {
+   "type": "national",
+   "id": "opus1_ma_12",
+   "chapitre": "Maroc — Le prix du soleil",
+   "saison": 2,
+   "titre": "La concession limitée",
+   "description": "La finale fixe une durée et une garantie collective pour les concessions futures.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 70
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_01",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "La route de l’estuaire",
+   "description": "Une route étroite longe des zones d’eau qui empêchent les attaques frontales.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 71
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_02",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Les ateliers de rive",
+   "description": "Les villes latérales financent une traversée autrement trop coûteuse.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 72
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_03",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Dernière batterie du jour",
+   "description": "Un transport apporte les réserves promises à l’équipe de nuit.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 73
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_04",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Deux bras de fleuve",
+   "description": "Le joueur doit répartir ses forces sans laisser le centre découvert.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 74
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_05",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Le radar de rive",
+   "description": "Wren teste la reconnaissance face au brouillage de Relais Zéro.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost",
+    "Relais Zéro"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 75
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_06",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Le quai sans relève",
+   "description": "Les renforts sont retardés par un contrat de transport contesté.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Tomas Reiner",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 76
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_07",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "La chaîne des reçus",
+   "description": "Trois relais permettent de vérifier la destination effective des batteries.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 77
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_08",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Le partenaire impatient",
+   "description": "Une délégation rejoint temporairement Méridien pour recevoir son équipement.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 78
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ke_1",
+   "chapitre": "Hors-série · Kenya",
+   "saison": null,
+   "titre": "Le match de trois heures",
+   "description": "Kito Njoroge ne gagne jamais avant la dixième journée. Sur les hauts plateaux, le joueur doit tenir quatorze journées face à une équipe qui court plus loin que la sienne et attend qu’il s’épuise.",
+   "format": "1v1",
+   "objectif": "Tenir jusqu’à la fin de la journée 14 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Kito Njoroge",
+    "Awa Diagne"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_sn_08_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.sn.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ke_2",
+   "chapitre": "Hors-série · Kenya",
+   "saison": null,
+   "titre": "Le messager",
+   "description": "Un messager à pied doit franchir la vallée par trois relais pendant que Yuna Serrat déplace ses petites équipes de capture. Kito demande au joueur s’il faut céder l’avance pour garder une relève, ou soutenir tout de suite le partenaire qui appelle.",
+   "format": "2v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Kito Njoroge",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.ke.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_09",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "La livraison maintenue",
+   "description": "Le joueur décide de tenir ou non la promesse faite avant ce ralliement.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 79
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_10",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Les témoins du quai",
+   "description": "Yuna tente de reprendre le centre logistique pendant l’examen des reçus.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner",
+    "Yuna Serrat"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 80
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_11",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "Le match des garanties",
+   "description": "Les délégations mettent à l’épreuve l’accord négocié plutôt qu’une amitié abstraite.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 81
+  },
+  {
+   "type": "national",
+   "id": "opus1_sn_12",
+   "chapitre": "Sénégal — La traversée du soir",
+   "saison": 2,
+   "titre": "La réserve du soir",
+   "description": "La finale tranche entre revenus immédiats et sécurité du stockage collectif.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 82
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_01",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Les pistes jumelles",
+   "description": "Deux routes forestières rapprochent les QG sans autoriser une ligne de tir directe.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 83
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_02",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "L’atelier de lisière",
+   "description": "La maîtrise des ateliers décide du rythme de production.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 84
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_03",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "La tournée de maintenance",
+   "description": "Un transport circule entre des couloirs forestiers tenus par l’adversaire.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 85
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_04",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Le pont du milieu",
+   "description": "L’axe central paraît efficace mais expose les soutiens aux prises de flanc.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 86
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ar_1",
+   "chapitre": "Hors-série · Argentine",
+   "saison": null,
+   "titre": "La route à péage",
+   "description": "Une seule route traverse la pampa entre les deux QG, et un fournisseur y a posé un dépôt sous licence exclusive. Leandro Paz veut montrer qu’on gagne par les chemins de traverse, et le prouve contre le joueur.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Leandro Paz",
+    "Lívia Moura"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_br_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.br.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_ar_2",
+   "chapitre": "Hors-série · Argentine",
+   "saison": null,
+   "titre": "Le chenal du delta",
+   "description": "Un club du delta a perdu son accès aux batteries quand la route unique est passée sous licence. Leandro et le joueur escortent le transport par les bras d’eau, face à Yuna Serrat qui gère la concession au nom d’un mandat provisoire.",
+   "format": "2v1",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Leandro Paz",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.ar.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_05",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Les relevés sous couvert",
+   "description": "Des drones observent un réseau où les unités terrestres profitent du couvert.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 87
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_06",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "L’avance engagée",
+   "description": "Une délégation a dépensé son crédit et doit finir le match avec une réserve limitée.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Solveig Tamm",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 88
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_07",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Trois carnets concordants",
+   "description": "Les pièces comptables sont recoupées dans trois stations de terrain.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 89
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_08",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Le prêteur et l’équipe",
+   "description": "Un sponsor cherche à parler au nom d’une nation entière ; le récit le contredit explicitement.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 90
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_09",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "Le dépôt sans privilège",
+   "description": "Le joueur protège une réserve qui doit rester accessible à ses anciens rivaux.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 91
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_10",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "L’audit contesté",
+   "description": "la commandante des unités indirectes veut gagner la rencontre avant la publication des contrats.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 92
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_11",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "L’alliance de lisière",
+   "description": "Deux équipes coopèrent sans fusionner leurs budgets ni leurs commandements.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 93
+  },
+  {
+   "type": "national",
+   "id": "opus1_br_12",
+   "chapitre": "Brésil — La forêt des contrats",
+   "saison": 2,
+   "titre": "La règle de la réserve",
+   "description": "La finale institue ou refuse un contrôle partagé des achats futurs.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 94
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_01",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "La route du plateau",
+   "description": "Les pentes canalisent les véhicules dans deux vallées reliées.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 95
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_02",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "La ville d’aiguillage",
+   "description": "Une ville centrale fait le lien entre revenus et voie de renfort.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 96
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_03",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le train sans rails",
+   "description": "Le transport routier suit un corridor ferroviaire décoratif, sans ajouter d’unité ferroviaire.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 97
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_04",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le verrou latéral",
+   "description": "Une rampe secondaire permet de contourner la ligne de Basile.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko",
+    "Basile Kelm"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 98
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_pe_1",
+   "chapitre": "Hors-série · Pérou",
+   "saison": null,
+   "titre": "Le passage commun",
+   "description": "Trois étages en une carte, et pas de route entre eux tant qu’on ne l’a pas bâtie. Luz Quispe dispute au joueur le QG de l’altiplano : le premier génie qui relie ses étages gagne le tempo.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Luz Quispe",
+    "Inés Valdés"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"monde.atlas.homologation_contestee\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_pe_2",
+   "chapitre": "Hors-série · Pérou",
+   "saison": null,
+   "titre": "Le marché d’en haut",
+   "description": "Un transport de pièces doit monter au marché d’en haut par une route que le génie bâtit devant lui, pendant qu’Ost fait avancer ses chenilles sous couverture. Luz protège les bâtisseurs, le joueur protège le transport.",
+   "format": "2v1",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Luz Quispe",
+    "Hadran Ost"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.pe.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_05",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le ciel du plateau",
+   "description": "le commandant aérien montre le coût d’une défense privée d’intercepteurs.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 99
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_06",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "La réserve comptée",
+   "description": "La production ennemie est remplacée par une réserve finie annoncée au briefing.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Wren Osoko",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 100
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_07",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Trois permis concurrents",
+   "description": "Trois postes abritent des versions incompatibles d’un même permis d’accès.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 101
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_08",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le contrat de sécurité",
+   "description": "Une équipe accepte une exclusivité en échange de sa participation au tournoi.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 102
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_09",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le passage accordé",
+   "description": "Le joueur peut préserver une voie logistique pour un futur partenaire.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 103
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_10",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "Le reçu refusé",
+   "description": "Le signataire découvre que son engagement ne garantit pas la livraison.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 104
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_mn_1",
+   "chapitre": "Hors-série · Mongolie",
+   "saison": null,
+   "titre": "Le grand galop",
+   "description": "La plus grande carte de l’opus, presque sans obstacle. Saran Bat propose une course d’avant-match, puis un match où seule la reconnaissance décide de qui frappe le premier.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Saran Bat",
+    "Inés Valdés"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_mx_10_decision\",\"option\":\"b\"},{\"type\":\"decision\",\"cle\":\"opus1_mx_08_decision\",\"option\":\"b\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_mn_2",
+   "chapitre": "Hors-série · Mongolie",
+   "saison": null,
+   "titre": "Le point de ravitaillement déplacé",
+   "description": "Saran annonce à tous ses partenaires qu’elle change de point de ravitaillement à mi-parcours. Avec le joueur, elle doit capturer deux des trois dépôts que Ost et Basile Kelm tiennent, et choisir entre poursuivre l’ouverture ou revenir couvrir la réserve commune.",
+   "format": "2v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Saran Bat",
+    "Hadran Ost",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.mn.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_11",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "La revanche du plateau",
+   "description": "Le partenaire choisit de rester fidèle au prêteur ou de demander une sortie.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 105
+  },
+  {
+   "type": "national",
+   "id": "opus1_mx_12",
+   "chapitre": "Mexique — Les lignes du plateau",
+   "saison": 2,
+   "titre": "La limite du garant",
+   "description": "La finale borne les prérogatives du fournisseur sur le réseau.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 106
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_01",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "La première interconnexion",
+   "description": "Un réseau dense propose plusieurs axes courts et des carrefours difficiles à couvrir.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 107
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_02",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Les villes du relais",
+   "description": "L’économie repose sur des bâtiments dispersés plutôt que sur un seul centre.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 108
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_03",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le lot de convertisseurs",
+   "description": "Un transport doit rejoindre l’installation qui prépare les échanges avec Aube.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 109
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_04",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "La traversée urbaine",
+   "description": "Les positions de tir indirect concurrencent les itinéraires de capture.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 110
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_05",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le bulletin incomplet",
+   "description": "La visibilité réduite donne un rôle décisif au drone et au radar.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 111
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_06",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le réseau en attente",
+   "description": "L’équipe doit tenir jusqu’à une remise à disposition contractuelle de renforts.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Ariane Belloc",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 112
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_07",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Les trois protocoles",
+   "description": "Des relevés techniques relient enfin plusieurs offres au même bénéficiaire.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 113
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_08",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "L’option d’exclusivité",
+   "description": "Une délégation accepte une clause pour sécuriser son accès aux essais Aube.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 114
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_pe_3",
+   "chapitre": "Hors-série · Pérou",
+   "saison": null,
+   "titre": "La querelle d’altitude",
+   "description": "Basile Kelm et Yuna Serrat tiennent deux des trois postes du col, dont l’altitude réelle est contestée depuis une Ronde. Luz et le joueur les disputent, et Luz doit décider si sa réserve va au passage commun ou à son propre équipement.",
+   "format": "2v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Luz Quispe",
+    "Basile Kelm",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.pe.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_09",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le test contradictoire",
+   "description": "Le joueur maintient un test commun auquel participe encore cette délégation.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 115
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_10",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le droit de réponse",
+   "description": "Le signataire reçoit une possibilité de retrait assortie de réparations concrètes.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Ariane Belloc"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 116
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_11",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Les centres coordonnés",
+   "description": "Deux équipes méridiennes tiennent des centres séparés mais se ravitaillent.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Ariane Belloc",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 117
+  },
+  {
+   "type": "national",
+   "id": "opus1_in_12",
+   "chapitre": "Inde — Les réseaux superposés",
+   "saison": 3,
+   "titre": "Le protocole ouvert",
+   "description": "La finale décide de publier ou de réserver les règles d’interconnexion, sans diffuser de secrets réels.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Ariane Belloc",
+    "Sélène Veyr"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 118
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_01",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Le premier détroit",
+   "description": "Une carte côtière met les accès terrestres sous surveillance aérienne.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 119
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_02",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "L’atelier des deux baies",
+   "description": "Les deux baies financent des approches différentes du QG.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 120
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_03",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Les instruments en transit",
+   "description": "Un transport accompagne des instruments de mesure vers une équipe indépendante.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 121
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_04",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Le pont de traverse",
+   "description": "Une route longue donne accès au dos de la ligne adverse.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 122
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_05",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Écran sans signal",
+   "description": "Relais Zéro masque sa doctrine derrière des drones brouillables.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost",
+    "Relais Zéro"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 123
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_06",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Le dernier créneau",
+   "description": "Une fenêtre de transport bornée impose une défense rapide sans tours d’attente.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Tomas Reiner",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 124
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_07",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Les trois miroirs",
+   "description": "Trois relais révèlent une synchronisation des contrats méridiens.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 125
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_08",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Le commandement sous licence",
+   "description": "Une équipe conserve ses couleurs nationales tout en signant un mandat privé.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 126
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_09",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "La mesure commune",
+   "description": "Wren propose une vérification à laquelle le signataire peut encore participer.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Tomas Reiner"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 127
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_10",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "L’aveu technique",
+   "description": "Les documents prouvent la dépendance contractuelle sans révéler l’identité de Relais Zéro.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Tomas Reiner",
+    "Relais Zéro"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 128
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_11",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Les deux silhouettes",
+   "description": "Deux spécialistes méridiens coordonnent leurs appareils et leurs unités indirectes, sans révéler leur histoire privée.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Tomas Reiner",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 129
+  },
+  {
+   "type": "national",
+   "id": "opus1_jp_12",
+   "chapitre": "Japon — Le miroir des îles",
+   "saison": 3,
+   "titre": "Le droit de vérifier",
+   "description": "La finale impose ou refuse un audit indépendant des réseaux d’Aube.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tomas Reiner",
+    "Sélène Veyr"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 130
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_01",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "La route longue",
+   "description": "De longues liaisons font du ravitaillement une décision visible.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": "Samir El Hadi",
+   "statut": "conception",
+   "numero": 131
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_02",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Les ateliers dispersés",
+   "description": "Les centres de production sont éloignés et demandent une réserve mobile.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 132
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_03",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Le convoi sans détour",
+   "description": "Un transport traverse un secteur découvert couvert par des reliefs ponctuels.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 133
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_04",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "La piste secondaire",
+   "description": "Un chemin moins direct permet de déborder les tirs de la commandante des unités indirectes.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 134
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_na_1",
+   "chapitre": "Hors-série · Namibie",
+   "saison": null,
+   "titre": "Ce que la brume efface",
+   "description": "Chaque matin la brume côtière tombe et efface tout. Amalie Haoses fait tourner ses observateurs au lieu de les échanger contre une attaque, et le joueur apprend qu’à découvert, sur la dune, personne n’a de couvert.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Amalie Haoses",
+    "Hazel Quinn"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.mn.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_na_2",
+   "chapitre": "Hors-série · Namibie",
+   "saison": null,
+   "titre": "Le passage révélé",
+   "description": "Les observateurs d’Amalie ont trouvé la seule fenêtre dans la brume. Le joueur décide si elle la révèle à tous ou la garde pour son équipe, puis tient deux positions pendant que Relais Zéro, Basile Kelm et une délégation sous mandat viennent la disputer.",
+   "format": "1v3",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Amalie Haoses",
+    "Relais Zéro",
+    "Basile Kelm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.na.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_05",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Le relais lointain",
+   "description": "Une station radar vaut davantage qu’un investissement offensif immédiat.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 135
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_06",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Les réserves annoncées",
+   "description": "Des renforts finis entrent par un axe déclaré, avec un temps de réaction suffisant.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Solveig Tamm",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 136
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_07",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Les trois délais",
+   "description": "Les reçus montrent qu’un même prêteur a retardé plusieurs délégations.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 137
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_08",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "L’avance conditionnelle",
+   "description": "Un responsable d’équipe accepte une exclusivité pour payer le prochain transfert.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 138
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_09",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "La promesse maintenue",
+   "description": "Un ravitaillement commun teste la sincérité du partenaire compromis.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 139
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_10",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Le coût de la sortie",
+   "description": "La rupture du contrat impose de rendre un dépôt, pas d’abandonner une population.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Solveig Tamm"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 140
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_nz_1",
+   "chapitre": "Hors-série · Nouvelle-Zélande",
+   "saison": null,
+   "titre": "Le dépôt rendu",
+   "description": "Un dépôt rendu à la fin d’un contrat est revenu désaffecté. Tess Roa dispute au joueur la remise en service de deux des trois postes de la vallée, dans la brume, avec le génie pour seule pièce qui compte.",
+   "format": "1v1",
+   "objectif": "Remettre en service et posséder deux des trois postes désaffectés annoncés.",
+   "personnages": [
+    "Tess Roa",
+    "Hazel Quinn"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_au_10_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.fj.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_nz_2",
+   "chapitre": "Hors-série · Nouvelle-Zélande",
+   "saison": null,
+   "titre": "La ligne de fougère",
+   "description": "Tess prête son terrain et sa ligne au joueur, seul face à Ost et Yuna Serrat, pendant que son équipe répare. Le joueur tranche si le dépôt réparé sert à tous ou si le matériel est réservé à la prochaine manche.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Tess Roa",
+    "Hadran Ost",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.nz.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_11",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "Le relais des alliés",
+   "description": "Trois camps alliés attaquent une défense concentrée sans empiler leurs unités.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Solveig Tamm",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 141
+  },
+  {
+   "type": "national",
+   "id": "opus1_au_12",
+   "chapitre": "Australie — La distance des réserves",
+   "saison": 3,
+   "titre": "La réserve de coalition",
+   "description": "La finale décide des contributions à la coalition qui accompagnera Aube.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Solveig Tamm",
+    "Sélène Veyr"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 142
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_01",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "L’île d’entrée",
+   "description": "Un réseau d’îles reliées concentre les premières captures sur les accès.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 143
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_02",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Les ateliers du détroit",
+   "description": "Les revenus de rive déterminent quels passages peuvent être tenus.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 144
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_03",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le manifeste d’Aube",
+   "description": "Un transport apporte les autorisations d’essai au dernier nœud d’interconnexion.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 145
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_04",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le pont des mandats",
+   "description": "Deux équipes contestent le même créneau sans contester la souveraineté nationale.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Partager les relevés / Garder la réserve financière",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 146
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_fj_1",
+   "chapitre": "Hors-série · Fidji",
+   "saison": null,
+   "titre": "Le lagon sans transport",
+   "description": "Le transport d’un club du lagon a été retenu par un fournisseur pour une facture contestée. Jone Vakalau prête le sien au joueur, qui doit ramener l’équipement du club à travers les eaux peu profondes, contre Yuna Serrat et une délégation sous mandat.",
+   "format": "1v2",
+   "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
+   "personnages": [
+    "Jone Vakalau",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"a\"},{\"type\":\"flag\",\"cle\":\"pays.nz.rival_respecte\"}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_fj_2",
+   "chapitre": "Hors-série · Fidji",
+   "saison": null,
+   "titre": "La chaîne de passes",
+   "description": "Trois relais d’un bout à l’autre du lagon, sous des drones que Relais Zéro fait tourner. Jone propose un raccourci par le récif ; le joueur décide s’il le tente ou s’il garantit le retour de tout l’équipement.",
+   "format": "2v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Jone Vakalau",
+    "Relais Zéro"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.fj.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_05",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "La fenêtre de visibilité",
+   "description": "La reconnaissance et le brouillage dévoilent des rotations méridiennes.",
+   "format": "1v1",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 147
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_06",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le quai fermé",
+   "description": "Le joueur tient une position tandis qu’un adversaire tente de reprendre l’accès.",
+   "format": "1v2",
+   "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
+   "personnages": [
+    "Wren Osoko",
+    "Edran Sorel"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 148
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_07",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Les trois autorisations",
+   "description": "Trois relais rapprochent les contrats solaires du programme de fusion fictif.",
+   "format": "1v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 149
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_08",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le mandat de trop",
+   "description": "Un partenaire révèle qu’il a accordé à Méridien le droit de voter à sa place.",
+   "format": "2v2",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Garantir la livraison au signataire / Refuser de garantir son crédit",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 150
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_mg_1",
+   "chapitre": "Hors-série · Madagascar",
+   "saison": null,
+   "titre": "L’inventaire des pistes",
+   "description": "Tiana Ravel a cartographié chaque piste rouge de l’île et nomme les espèces en pleine partie. Elle met le joueur à l’épreuve sur une carte qu’elle connaît par cœur, sous couvert et sous brouillard.",
+   "format": "1v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Tiana Ravel",
+    "Ayu Pranata"
+   ],
+   "ouverture": "{\"type\":\"ou\",\"conditions\":[{\"type\":\"decision\",\"cle\":\"opus1_id_04_decision\",\"option\":\"a\"},{\"type\":\"compteur\",\"cle\":\"monde.atlas.credibilite\",\"min\":4}]}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_mg_2",
+   "chapitre": "Hors-série · Madagascar",
+   "saison": null,
+   "titre": "Les cartes ouvertes",
+   "description": "Relais Zéro a installé trois relais sur les pistes de l’atelier de Tiana, et Yuna en revendique la gestion. Tiana et le joueur les parcourent dans l’ordre ; à la fin, le joueur tranche si elle ouvre ses cartes à un rival ou protège le travail de son atelier.",
+   "format": "2v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Tiana Ravel",
+    "Relais Zéro",
+    "Yuna Serrat"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.mg.qualifie\"}",
+   "disparition": null,
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_09",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le dernier engagement",
+   "description": "La coalition doit honorer une livraison malgré le coût de cette révélation.",
+   "format": "2v1",
+   "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 151
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_10",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "Le vote rendu",
+   "description": "Le partenaire peut récupérer son mandat ou maintenir son choix et devenir adversaire.",
+   "format": "1v2",
+   "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
+   "personnages": [
+    "Wren Osoko"
+   ],
+   "choix": "Accepter un retour sous audit / Exiger la fin préalable du mandat privé",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 152
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_11",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "La porte de la Manche",
+   "description": "Ost défend l’accès à la série finale et reconnaît publiquement l’enjeu Aube.",
+   "format": "2v2",
+   "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
+   "personnages": [
+    "Wren Osoko",
+    "Hadran Ost",
+    "Maël Orven",
+    "Lise Varen"
+   ],
+   "choix": null,
+   "disparition": null,
+   "statut": "conception",
+   "numero": 153
+  },
+  {
+   "type": "national",
+   "id": "opus1_id_12",
+   "chapitre": "Indonésie — Les accès d’Aube",
+   "saison": 3,
+   "titre": "La coalition au départ",
+   "description": "La finale nationale fixe les alliés et garanties qui entrent dans les dix-huit dernières missions.",
+   "format": "3v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Wren Osoko",
+    "Sélène Veyr"
+   ],
+   "choix": "Verser une réserve à la coalition / Financer la préparation locale",
+   "disparition": null,
+   "statut": "conception",
+   "numero": 154
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_01",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "Les portes du réseau",
+   "description": "Port fluvial ; deux ponts distants, ateliers centraux. — Les Gris assument leur rattachement à la Cinquième Manche.",
+   "format": "2v1",
+   "objectif": "Capturer le QG d’Ost ou mettre hors jeu ses unités.",
+   "personnages": [
+    "Hadran Ost"
+   ],
+   "choix": "Ouvrir le port aux délégations hésitantes ou réserver les quais à la coalition.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 155
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_02",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "La taxe des sommets",
+   "description": "Trois crêtes, chemins de traverse, radar exposé. — Basile applique un contrat de priorité qui coupe les petites délégations.",
+   "format": "1v1",
+   "objectif": "Capturer deux des trois postes du col.",
+   "personnages": [
+    "Basile Kelm"
+   ],
+   "choix": "Maintenir les relais publics ou emporter les batteries mobiles.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 156
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_gr_3",
+   "chapitre": "Hors-série · Grèce",
+   "saison": null,
+   "titre": "Le banc du port",
+   "description": "La plaque de la Grèce est posée à plat sur la tablette du Tableau. Le banc grec joue quand même sa rencontre contre Basile Kelm : avec la recrue de Nikos et sa méthode, ou avec un intérim de la fédération qui ne connaît pas les môles.",
+   "format": "2v1",
+   "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
+   "personnages": [
+    "Nikos Delis",
+    "Basile Kelm",
+    "Célestin Vantour",
+    "Solveig Tamm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.gr.qualifie\"}",
+   "disparition": "Nikos Delis",
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_03",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "Le ciel verrouillé",
+   "description": "Plaine aéroportuaire, hangars bas et haies. — Maël Orven impose son rythme aérien ; ses liens familiaux ne sont pas connus du joueur.",
+   "format": "1v2",
+   "objectif": "Capturer les deux QG adverses ou mettre hors jeu leurs deux armées.",
+   "personnages": [
+    "Maël Orven"
+   ],
+   "choix": "Échanger les journaux de vol ou protéger leur source.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 157
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_04",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "Le contrat de Lise",
+   "description": "Canal industriel, deux lignes indirectes et îlots. — Lise défend la centralisation pour prévenir les coupures ; elle critique déjà les méthodes de Maël.",
+   "format": "2v2",
+   "objectif": "Capturer les QG de la coalition adverse ou mettre hors jeu ses armées.",
+   "personnages": [
+    "Lise Varen"
+   ],
+   "choix": "Garantir l’accès public demandé par Lise ou exiger son retrait immédiat.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 158
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_05",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "Les pavillons hésitants",
+   "description": "Ville basse avec itinéraire civil hors plateau de combat. — Une délégation ayant choisi un contrat adverse peut combattre ici ; ce ne sont pas tous ses habitants qui ont changé de camp.",
+   "format": "2v2",
+   "objectif": "Capturer les QG adverses ou mettre hors jeu leurs armées.",
+   "personnages": [
+    "Yuna Serrat"
+   ],
+   "choix": "Offrir une audition à la délégation battue ou suspendre son contrat.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 159
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_06",
+   "chapitre": "Finales — saison 1",
+   "saison": 4,
+   "titre": "Le signal sans visage",
+   "description": "Archipel de pylônes, pontons et zones boisées. — Une voix inconnue coordonne les adversaires ; aucune identité ni parenté n’est donnée.",
+   "format": "1v3",
+   "objectif": "Capturer trois postes de transmission ou mettre hors jeu les trois armées adverses.",
+   "personnages": [
+    "Relais Zéro"
+   ],
+   "choix": "Publier les relais compromis ou surveiller leur trafic.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 160
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_07",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "Les réserves verrouillées",
+   "description": "Trois entrées vers un bassin de stockage. — Les réserves servent à imposer la tutelle sur Aube.",
+   "format": "3v1",
+   "objectif": "Capturer le QG de Basile ou mettre hors jeu sa défense.",
+   "personnages": [
+    "Basile Kelm"
+   ],
+   "choix": "Répartir les réserves ou équiper la colonne de tête.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 161
+  },
+  {
+   "type": "hors_serie",
+   "id": "opus1_hs_np_3",
+   "chapitre": "Hors-série · Népal",
+   "saison": null,
+   "titre": "Le relais sans réponse",
+   "description": "La plaque du Népal est posée à plat sur la tablette du Tableau. L’adjointe de Mira reprend le banc et demande au joueur de l’aider à redescendre la réserve de l’atelier isolé par trois relais, avant que Basile Kelm ne la fasse compter comme réserve méridienne.",
+   "format": "2v1",
+   "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
+   "personnages": [
+    "Mira Karki",
+    "Basile Kelm",
+    "Célestin Vantour",
+    "Solveig Tamm"
+   ],
+   "ouverture": "{\"type\":\"flag\",\"cle\":\"pays.np.qualifie\"}",
+   "disparition": "Mira Karki",
+   "statut": "conception",
+   "numero": null
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_08",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "La contre-offre",
+   "description": "Deux boucles routières et un poste central contesté. — Sélène propose de garantir l’énergie en échange de l’exclusivité des décisions.",
+   "format": "1v2",
+   "objectif": "Posséder deux postes de distribution à la fin de J18 ou capturer les deux QG adverses avant cette échéance.",
+   "personnages": [
+    "Sélène Veyr"
+   ],
+   "choix": "Rendre l’offre publique ou négocier un délai transparent sous contrôle de la coalition.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 162
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_09",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "Le dépôt de relève",
+   "description": "Vallée resserrée, dépôt de relève au fond. — Edran Sorel apparaît comme un logisticien influent ; la relation paternelle reste non confirmée.",
+   "format": "2v1",
+   "objectif": "Capturer le QG de Maël ou mettre hors jeu sa force avancée.",
+   "personnages": [
+    "Maël Orven"
+   ],
+   "choix": "Évacuer les techniciens du dépôt ou sécuriser les archives logistiques.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 163
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_10",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "Ce que Sorel protège",
+   "description": "Bassin du dépôt ; trois sorties secondaires pour les colonnes sauvées. — Edran révèle être le père de Maël, rejoint son fils et bat notre coalition. La révélation précède les ordres, pas le résultat.",
+   "format": "1v2",
+   "objectif": "Repli scénarisé : faire sortir le commandement désigné par la porte sud avant la fin de J8. La concession est perdue dans tous les cas.",
+   "personnages": [
+    "Edran Sorel"
+   ],
+   "choix": "Sauver les réserves, les archives ou le matériel d’une délégation isolée ; objectifs secondaires incompatibles faute de temps.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 164
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_11",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "Les comptes du repli",
+   "description": "Ravines et route de desserte, poursuite bornée. — Les délégations débattent de la défaite ; les fautes du commandement ne sont pas effacées.",
+   "format": "2v1",
+   "objectif": "Conduire le transport du commandement à la sortie et conserver au moins une unité alliée.",
+   "personnages": [
+    "Yuna Serrat"
+   ],
+   "choix": "Admettre publiquement l’échec ou demander une enquête contradictoire avant publication.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 165
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_12",
+   "chapitre": "Finales — saison 2",
+   "saison": 5,
+   "titre": "Les lignes qui restent",
+   "description": "Deux lignes de retenue, barrage et second gué. — Basile veut empêcher la reconstitution de la coalition.",
+   "format": "2v2",
+   "objectif": "Tenir jusqu’à la fin de J20 ou capturer les deux QG adverses.",
+   "personnages": [
+    "Basile Kelm"
+   ],
+   "choix": "Garantir les équipes qui refusent la tutelle ou concentrer la défense sur le dépôt.",
+   "disparition": "Tomas Reiner",
+   "statut": "conception_non_jouable",
+   "numero": 166
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_13",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "Le contrat de Varen",
+   "description": "Terrasses, contre-pentes et deux couloirs d’artillerie. — Lise confronte les garanties proposées aux actes des dernières saisons ; son engagement personnel ne dépend pas d’une parenté révélée.",
+   "format": "1v1",
+   "objectif": "Capturer le QG de Lise ou mettre hors jeu sa défense.",
+   "personnages": [
+    "Lise Varen"
+   ],
+   "choix": "Proposer une reddition contractuelle contrôlée ou imposer sa suspension après victoire.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 167
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_14",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "Le fils au premier rang",
+   "description": "Double aérodrome, axe rapide vulnérable au brouillage. — Maël refuse de réduire son ambition au projet de son père.",
+   "format": "1v2",
+   "objectif": "Capturer les deux QG adverses ou mettre hors jeu les deux armées.",
+   "personnages": [
+    "Maël Orven"
+   ],
+   "choix": "Préserver un accès aux équipes dissidentes ou saisir leurs réserves.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 168
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_15",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "La dette de Sorel",
+   "description": "Dépôts en escalier et circulation à sens contraint. — Edran justifie son ralliement sans nier sa responsabilité ; le joueur peut le battre loyalement cette fois.",
+   "format": "2v1",
+   "objectif": "Capturer le QG d’Edran ou mettre hors jeu sa colonne.",
+   "personnages": [
+    "Edran Sorel"
+   ],
+   "choix": "Accepter sa déposition sous contrôle ou refuser toute participation opérationnelle.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 169
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_16",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "Le réseau muet",
+   "description": "Trois îles techniques ; relais visibles, drones en réserve. — L’inconnu perd ses relais mais son identité demeure inconnue à la fin de l’opus.",
+   "format": "1v3",
+   "objectif": "Capturer les trois postes de transmission ou mettre hors jeu toutes les forces adverses.",
+   "personnages": [
+    "Relais Zéro"
+   ],
+   "choix": "Conserver une trace sous surveillance ou isoler immédiatement le dernier relais.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 170
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_17",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "Les droits d’Aube",
+   "description": "Plateau expérimental fictif ; trois accès, aucun réacteur à détruire. — Ost perd la maîtrise du terrain ; les alliés présents dépendent des engagements et médiations.",
+   "format": "3v1",
+   "objectif": "Capturer le QG d’Ost ou mettre hors jeu son dispositif.",
+   "personnages": [
+    "Hadran Ost"
+   ],
+   "choix": "Privilégier l’accès partagé ou exiger un contrôle de coalition temporaire.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 171
+  },
+  {
+   "type": "finale",
+   "id": "opus1_finale_18",
+   "chapitre": "Finales — saison 3",
+   "saison": 6,
+   "titre": "La dernière concession",
+   "description": "Campus de coordination, jardins techniques et deux axes de capture. — La direction de Sélène est confirmée et contestée publiquement ; son identité n’était pas le mystère familial.",
+   "format": "2v2",
+   "objectif": "Capturer les QG de la coalition de Sélène ou mettre hors jeu toutes ses unités.",
+   "personnages": [
+    "Sélène Veyr"
+   ],
+   "choix": "Signer le réseau partagé, un mandat de transition ou refuser un traité insuffisant selon les engagements accumulés.",
+   "disparition": null,
+   "statut": "conception_non_jouable",
+   "numero": 172
+  }
+ ]
+}

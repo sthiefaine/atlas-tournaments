@@ -1,6 +1,6 @@
 {
   "cle": "villes_du_bocage",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -69,26 +69,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Quatre villes, deux ponts, et Tomas en face qui veut les mêmes. Une ville capturée rapporte des fonds à chaque journée et soigne ce qui s’y repose : tenez-en trois, le match est à vous.",
+      "texte": "Le bocage. Quatre villes, deux ponts, et Tomas en face qui veut les mêmes. Une ville que vous tenez rapporte des fonds chaque journée et remet en état ce qui s’y repose.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ce que vous capturez, c’est un poste de distribution : le droit de servir le courant du quartier pendant la manche. Les gens qui y vivent ne changent pas de camp ; leur socle est garanti par le Pacte.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Attention à celle du sud-est : elle est désaffectée. Votre infanterie mettra quatre tours à la remettre en service. Un génie le ferait en deux, mais vous n’en avez pas encore.",
+      "texte": "Celle du sud-est est désaffectée : une infanterie mettra quatre tours à la remettre en service. Un génie le ferait en deux, mais Solveig n’en a pas mis dans mon camion.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Tenez-en trois en même temps, et le match est à vous.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois villes sur quatre : vous avez compris ce qui gagne les matchs longs. Capturer, encaisser, recruter. Demain, on ouvre l’usine.",
+      "texte": "Trois villes sur quatre. Capturer, encaisser, recruter : c’est ce qui gagne un match long. Vantour dira que la France a « tenu le bocage » ; ce qu’elle tient, ce sont trois contrats de quartier.",
       "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Demain, Solveig nous dépose au sec. On ouvre une usine.",
+      "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons : ni le carnet ni votre place n’en gardent trace.",
       "emotion": "neutre"
     }
   ],
@@ -102,12 +117,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Vos couleurs flottent sur la ville. Dès la prochaine journée, elle rapporte. Regardez la caisse : avec mille fonds, votre QG recrute une infanterie.",
+          "texte": "Vos couleurs flottent sur la ville. Dès la prochaine journée, elle rapporte ; avec mille fonds, votre QG recrute une infanterie.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une capture demande vingt points : une infanterie intacte en gagne dix par tour. Blessée, elle est plus lente. Si elle bouge, tout repart de zéro.",
+          "texte": "Vingt points pour une capture, dix par tour pour une infanterie intacte. Entamée, elle est plus lente ; si elle bouge, tout repart de zéro.",
           "emotion": "neutre"
         }
       ]
@@ -121,7 +136,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une ville pour moi. Le compte est serré, commandant : il faudra venir la reprendre, ou m’en prendre une autre.",
+          "texte": "Une ville pour moi. Je l’inscris au registre de Solveig, elle aime les comptes justes : venez la reprendre, ou prenez-m’en une autre.",
           "emotion": "joie"
         }
       ]
@@ -148,7 +163,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Les haies coûtent du mouvement aux véhicules et protègent l’infanterie. Passez par les ponts avec le char, par les bois avec les fantassins.",
+          "texte": "Les haies ralentissent les véhicules et protègent l’infanterie. Le char par les ponts, les fantassins par les bois : j’ai perdu ma première manche ici en faisant l’inverse.",
           "emotion": "neutre"
         }
       ]

@@ -1,7 +1,7 @@
 {
   "cle": "opus1_tutoriel_10",
   "code": "opus1_tutoriel_10",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -65,36 +65,56 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Dernier exercice : prenez le QG de Tomas ou mettez son équipe hors jeu en dix-huit journées. Ses réserves sont fixes, sans revenu. Les deux ponts permettent une prise de flanc ; votre usine peut compléter le groupe de départ.",
+      "texte": "Dernier exercice, et il rassemble tout : prenez le QG de Tomas ou mettez son équipe hors jeu avant J18. Ses réserves sont fixes, sans revenu ; les vôtres grossissent avec vos bâtiments, et votre usine complète le groupe.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essayez de préserver votre transport et de ravitailler vos soutiens. C’est un défi facultatif : le perdre ne fait pas perdre le match et ne ferme aucun choix de contrat.",
+      "texte": "Les deux ponts ouvrent une prise de flanc. Essayez de préserver le transport et de ravitailler vos soutiens : c’est un défi facultatif, le perdre ne perd pas le match et ne ferme aucune porte.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "À la victoire, on vous demandera une chose. Le Consortium Méridien prête ses réserves aux délégations qui se qualifient ; sa négociatrice, Sélène Veyr, propose deux façons de les prendre. Ariane et moi ne sommes pas d’accord.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Après la victoire : Maintenance partagée réserve 2 000 fonds à votre première nouvelle partie de Couleurs alliées. Fonds immédiats ajoute 2 000 fonds à votre première nouvelle partie du Pacte du col.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre choix sera conservé par ce profil. Une partie déjà commencée garde ses moyens de départ : on ne recharge pas une récompense en rejouant cet exercice. En difficile, les budgets restent les mêmes et Tomas emploie sa stratégie pondérée.",
+      "texte": "Votre choix restera dans ce profil. Une partie déjà commencée garde ses moyens de départ : rejouer cet exercice ne recharge rien. En difficile, les budgets sont les mêmes et Tomas joue pondéré.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La formation est terminée. Choisissez maintenant le contrat que vous voulez emporter : aide immédiate au Pacte du col ou réserve de maintenance pour Couleurs alliées.",
+      "texte": "Formation terminée, commandant. Vous savez tout ce qu’on peut apprendre sans enjeu. Maintenant, la première promesse.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Option une : partager les moyens de maintenance. Deux mille fonds mis de côté pour l’équipe commune, quand vous jouerez sous mes couleurs. Un accord précis, avec quelqu’un qui tient les siens.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Option deux : financer la qualification. Deux mille fonds tout de suite, au col, où votre génie devra ouvrir un passage à quinze cents. Je vous ai appris à ne pas payer trop cher une victoire ; ici, la note arrive plus tard.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Aucune des deux n’est fausse. Retenez seulement ceci : c’est la première fois qu’on vous prête quelque chose. Sachez toujours à qui.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Quel que soit votre choix, je vous retrouve au col. Solveig a déjà chargé le camion.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, puis gardez une réserve pour la prochaine tentative.",
+      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, gardez une réserve. La promesse attendra que vous l’ayez gagnée.",
       "emotion": "neutre"
     }
   ],
@@ -107,7 +127,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Choisissez l’achat qui sert le passage prévu : une infanterie pour capturer, un véhicule pour ouvrir la route, un soutien pour couvrir.",
+          "texte": "Achetez pour le passage prévu : une infanterie pour capturer, un véhicule pour ouvrir la route, un soutien pour couvrir. Une pièce sans plan pour l’employer coûte deux fois.",
           "emotion": "neutre"
         }
       ]
@@ -121,7 +141,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Un QG demande quarante points de capture. Une infanterie intacte a besoin de quatre de ses tours ; couvrez-la pendant tout ce temps.",
+          "texte": "Quarante points pour un QG : quatre tours d’une infanterie intacte, couverte tout du long. C’est la dernière chose que je vous dis en exercice ; après, je vous le dirai en match.",
           "emotion": "neutre"
         }
       ]
@@ -135,8 +155,22 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une unité hors jeu ne termine pas forcément l’épreuve. La perte du transport reste facultative : gardez l’objectif principal en vue.",
+          "texte": "Une pièce hors jeu n’arrête pas l’épreuve, même le transport. Solveig fera les comptes ; gardez l’objectif principal en vue.",
           "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t10_pouvoir",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Votre jauge a parlé. Gardez ce réflexe pour le col : là-bas, personne ne vous laissera le temps de la remplir deux fois.",
+          "emotion": "surprise"
         }
       ]
     }

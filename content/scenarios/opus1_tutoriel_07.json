@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_07",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -72,36 +72,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Faites parvenir le transport désigné à la sortie du nord, colonne 10 ligne 3, avant la fin de J16. Sa mise hors jeu fait perdre l’exercice. Prendre le QG adverse ne remplace pas l’escorte.",
+      "texte": "Le dernier kilomètre. Solveig vous confie un transport de pièces prêtées : il doit sortir au nord, colonne 10 ligne 3, avant la fin de J16. S’il est mis hors jeu, l’exercice est perdu ; le QG de Tomas ne le remplace pas.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le transport peut charger de l’infanterie. Le drone ravitailleur aide les voisins qui ont consommé leurs réserves ; le drone marin observe la côte et reste sur l’eau.",
+      "texte": "Le transport peut charger de l’infanterie. Le drone ravitailleur refait les charges et le carburant de ses voisins : lisez la ligne Munitions après chaque combat, une pièce à sec ne marque plus.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le pont de l’est suit la route rapide. Le passage côtier est plus long mais offre un détour. Faites avancer la couverture avant le véhicule désigné.",
-      "emotion": "neutre"
+      "texte": "Le drone marin est un prêt des Gris : il observe la côte et reste sur l’eau. Wren l’a homologué pour l’essai en notant que ses relevés partent à Port-Méridien avant d’arriver chez nous. Elle a demandé pourquoi.",
+      "emotion": "doute"
     },
     {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Normal : la patrouille attaque directement. Difficile : elle choisit mieux ses cibles. Les mêmes unités, deux ponts et seize journées restent disponibles.",
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Le pont de l’est suit la route rapide ; le passage côtier est plus long mais me tient à distance. Je vise le convoi, pas l’escorte, et en difficile je choisis mieux mes cibles. La couverture devant le véhicule.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Exercice réussi. Vous pouvez revoir la carte ou poursuivre la formation ; les rappels restent consultables.",
+      "texte": "Le transport est sorti, chargement intact. Solveig signe le registre ce soir : « livré ». Une escorte réussie compte plus qu’une poursuite ; la logistique gagne plus de matchs que les charges.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Demain, on joue dans le même camp. Je vous préviens : je tiens mes promesses, et je note celles des autres.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Reprenez votre placement et l’objectif annoncé. Cette tentative s’arrête, mais vous pouvez recommencer sans perdre les autres exercices.",
+      "texte": "Le transport n’est pas passé. Reprenez le trajet, couverture devant ; cette tentative n’efface rien.",
       "emotion": "neutre"
     }
   ],
@@ -120,7 +125,49 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Lisez les munitions après le combat. Placez le ravitailleur près des unités qui ont consommé leurs réserves pour les servir.",
+          "texte": "Après l’échange, regardez les charges. Placez le ravitailleur à côté de ce qui a consommé et donnez-lui l’ordre de ravitailler : il sert ses voisins, jamais lui-même.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t07_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une pièce de couverture sort. Le transport, lui, doit arriver : gardez-le derrière le char et n’engagez pas la poursuite, ce n’est pas votre match.",
+          "emotion": "doute"
+        }
+      ]
+    },
+    {
+      "cle": "t07_journee_3",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Troisième journée, et votre drone marin me regarde depuis la mer. Il ne remplace pas un navire et ne rejoindra jamais la route : c’est un œil, rien d’autre. Ne comptez pas sur lui pour tenir le pont.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t07_perte_tomas",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Ma patrouille perd une pièce, et je ne la remplacerai pas : aucune caisse ne rapporte ici. Chaque échange coûte aux deux camps.",
           "emotion": "neutre"
         }
       ]

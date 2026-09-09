@@ -77,6 +77,14 @@
           "acteRevelation": 3,
           "fait": "Il organise une relève par un itinéraire annoncé ; les engagements antérieurs déterminent les moyens disponibles.",
           "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_tomas_reiner_disparition",
+          "repere": "Ronde XIV, après la finale 11",
+          "acteRevelation": 3,
+          "fait": "Disparition — au sens de l’amendement du 9 septembre 2026 (`BRIEF.md`, « Quatre disparitions ») — écrite à la main, hors du terrain (`opus1_finale_12`, fixe) : la route — sortie de desserte de nuit, chaussée verglacée, un seul véhicule. Depuis le repli de la finale 10, la route principale du bassin est sous autorisation méridienne, par la clause de dépendance sur les dépôts et les routes ; il refuse de la demander à ceux qui viennent de fermer le terrain et prend la desserte. Le choix de la finale 9 change qui voyage avec lui, jamais le moment ni la cause ; les passagers sont indemnes, en toutes lettres. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur. Non recrutable dès l’annonce ; le Luxembourg reste engagé et `allie_acte_iii` tient, le banc repris par son adjointe aux convois.",
+          "source": "canon_aube_v2",
+          "confidentialite": "auteur"
         }
       ],
       "identiteTactique": {
@@ -432,6 +440,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : ouvrir un col à une délégation rivale ou conserver une réserve locale. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_elsbeth_vonlanthen_3",
+          "repere": "Ronde XIV, le premier col",
+          "acteRevelation": 1,
+          "fait": "Elle accueille le joueur au pied du premier col avec un carnet d’altitude où chaque relais de vallée garde sa réserve propre, et couvre ses pièces de portée dans la montée étroite. Elle croit qu’une vallée bien verrouillée n’a besoin de personne.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_elsbeth_vonlanthen_4",
+          "repere": "Ronde XIV, le plateau verrouillé",
+          "acteRevelation": 2,
+          "fait": "Devant la station radar que Basile Kelm verrouille sans tenir toute la carte, elle reconnaît que son propre verrou lui a coûté une fenêtre de traversée. Elle remet alors au joueur les relevés d’une équipe locale qui paie sa maintenance avec un crédit méridien.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -467,6 +489,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : publier le plan des ouvrages ou conserver un avantage de passage. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_lotte_vermeer_3",
+          "repere": "Ronde XIV, les carrés du polder",
+          "acteRevelation": 1,
+          "fait": "Elle ouvre son parcours avec un horaire de marée affiché à la minute et découpe le polder en compartiments que ses voies surélevées rendent lisibles. Elle croit qu’un calendrier tenu dispense de se parler.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_lotte_vermeer_4",
+          "repere": "Ronde XIV, le terrain prêté",
+          "acteRevelation": 2,
+          "fait": "Son adversaire de la digue partagée lui offre un passage de repli sans rien demander en retour, et elle concède qu’aucun horaire n’avait prévu cela. Elle laisse au joueur la question du plan de ses ouvrages, qu’elle gardait jusque-là pour elle.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -502,6 +538,21 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : accepter une livraison exclusive ou ouvrir le dépôt à plusieurs équipes. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_samir_el_hadi_3",
+          "repere": "Ronde XIV, trois stations au soleil",
+          "acteRevelation": 2,
+          "fait": "Aux trois stations du parc solaire, il compare avec le joueur les reçus des convois et trouve la même clause de retour dans des contrats qu’il croyait concurrents. Il concède qu’une réserve gardée pour un risque imaginaire a laissé une étape à découvert.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_samir_el_hadi_disparition",
+          "repere": "Ronde XIV, après le Japon 12 ou la finale 13",
+          "acteRevelation": 3,
+          "fait": "Disparition — au sens de l’amendement du 9 septembre 2026 (`BRIEF.md`, « Quatre disparitions ») — écrite à la main, hors du terrain (`opus1_au_01` en branche b, `opus1_finale_14` en branche a de `opus1_ma_08_decision`) : une maladie longue, la sienne, nommée nulle part. La clause de dépendance du contrat de transport interdit à la délégation d’employer un coordinateur hors du personnel du fournisseur ; sans garantie du crédit, personne ne peut le remplacer et il tient les étapes une saison de plus au lieu de se soigner ; avec la garantie, il se soigne une saison, qui ne le guérit pas. Le choix change le moment, jamais la cause. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur. Non recrutable dès l’annonce ; le Maroc reste engagé, le banc repris par son adjointe des étapes du sud.",
+          "source": "canon_aube_v2",
+          "confidentialite": "auteur"
         }
       ],
       "identiteTactique": {
@@ -537,6 +588,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : maintenir une aide à une délégation défaillante ou exiger sa contribution. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_awa_diagne_3",
+          "repere": "Ronde XIV, la route de l’estuaire",
+          "acteRevelation": 1,
+          "fait": "Elle reçoit le joueur à sa table avant de le jouer sur la route de l’estuaire, et fait avancer ses équipes groupées entre les bras d’eau. Elle croit qu’une promesse faite à un partenaire engage toute la coalition.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_awa_diagne_4",
+          "repere": "Ronde XIV, le quai sans relève",
+          "acteRevelation": 2,
+          "fait": "Quand la relève promise à son équipe de nuit reste bloquée par un contrat de transport contesté, elle tient le quai sans elle et admet devant le joueur qu’elle a signé pour un partenaire qui n’avait rien promis en retour.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -572,6 +637,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : protéger une retransmission populaire ou révéler un contrat de distribution inégal. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_livia_moura_3",
+          "repere": "Ronde XIV, les pistes jumelles",
+          "acteRevelation": 1,
+          "fait": "Elle fait entrer ses équipes sur les pistes jumelles avec les tambours du public derrière elle et joue le pont du milieu parce que le stade l’attend là. Elle croit que le bruit des gradins dit ce que veut son équipe.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_livia_moura_4",
+          "repere": "Ronde XIV, le prêteur et l’équipe",
+          "acteRevelation": 2,
+          "fait": "Quand un sponsor prétend parler au nom de toute la délégation, elle le contredit devant le public. Trois carnets concordants lui montrent ensuite que la retransmission qu’elle défend paie un contrat de distribution que ses ateliers ne voient jamais.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -607,6 +686,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : rendre un poste contesté à l’arbitrage ou exploiter immédiatement ses revenus. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_ines_valdes_3",
+          "repere": "Ronde XIV, la route du plateau",
+          "acteRevelation": 1,
+          "fait": "Elle entre sur le plateau en musique, annonce sa prise à l’avance et la réussit sur la ville d’aiguillage. Elle croit qu’une prise assez spectaculaire fera oublier les deux passages qu’elle laisse encore sans couverture.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_ines_valdes_4",
+          "repere": "Ronde XIV, le ciel du plateau",
+          "acteRevelation": 2,
+          "fait": "Sans intercepteurs, elle voit un adversaire aérien tourner au-dessus de sa ligne et paie chaque prise d’un flanc. Elle concède au joueur que le public applaudit la prise et ne voit jamais le poste perdu derrière, puis compare avec lui trois permis d’accès qui ne disent pas la même chose.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -642,6 +735,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : produire vite pour la manche présente ou préserver des pièces pour un partenaire. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_devika_rao_3",
+          "repere": "Ronde XIV, la première interconnexion",
+          "acteRevelation": 1,
+          "fait": "Elle ouvre son parcours en faisant sortir deux unités par journée de ses ateliers dispersés et couvre les carrefours d’un réseau dense en commentant elle-même chaque coup. Elle croit qu’assez de voies de production rendent tout choix inutile.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_devika_rao_4",
+          "repere": "Ronde XIV, les trois protocoles",
+          "acteRevelation": 2,
+          "fait": "Les relevés de trois protocoles montrent que plusieurs offres qu’elle avait mises en concurrence servaient le même bénéficiaire. Elle concède qu’avoir multiplié les fournisseurs n’a rien préservé, et pose au joueur, pour la première fois, la question de garder des pièces pour un partenaire plutôt que de produire.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -677,6 +784,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : partager une interface de contrôle ou garder la priorité sur son réseau. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_ren_mizuno_3",
+          "repere": "Ronde XIV, le premier détroit",
+          "acteRevelation": 1,
+          "fait": "Il accueille le joueur avec un bento et un horaire de correspondances où chaque unité a son créneau de gare. Il croit qu’une séquence sans retard tient même sous une surveillance aérienne, et perd au premier détroit une journée à attendre une liaison qui ne vient pas.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_ren_mizuno_4",
+          "repere": "Ronde XIV, les trois miroirs",
+          "acteRevelation": 2,
+          "fait": "Face à un adversaire sans visage dont les drones brouillables cachent la doctrine, il réagit trop tard. Les trois relais lui montrent ensuite que les contrats méridiens sont synchronisés sur ses propres horaires, et il concède qu’un réseau ouvert à plusieurs opérateurs vaut mieux qu’une séquence parfaite tenue par lui seul.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -712,6 +833,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : abandonner un dépôt secondaire ou demander à ses partenaires de l’aider à le tenir. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_hazel_quinn_3",
+          "repere": "Ronde XIV, la route longue",
+          "acteRevelation": 1,
+          "fait": "Sur la route longue, sous la canicule, elle laisse le joueur venir à elle et fait de chaque ravitaillement une décision visible entre des ateliers très éloignés. Elle croit que la distance suffit à protéger un dépôt qu’on ne peut pas tenir.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_hazel_quinn_4",
+          "repere": "Ronde XIV, les trois délais",
+          "acteRevelation": 2,
+          "fait": "Les reçus de trois relais montrent qu’un même prêteur a retardé plusieurs délégations, la sienne comprise. Elle concède que son calme a repoussé d’une saison un retrait qu’elle savait nécessaire, et pose au joueur la question qu’elle évitait : rendre le dépôt secondaire, ou demander aux partenaires de le tenir.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -747,6 +882,20 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : décider seule d’une traversée urgente ou accepter le coût d’une consultation. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_ayu_pranata_3",
+          "repere": "Ronde XIV, l’île d’entrée",
+          "acteRevelation": 1,
+          "fait": "Elle explique son plan de traversée au joueur avec un jeu d’ombres, île par île, et refuse de lancer la première capture tant que chaque club du collectif n’a pas pris la parole. Elle croit qu’un accord complet finit toujours par arriver avant la pluie.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_ayu_pranata_4",
+          "repere": "Ronde XIV, le mandat de trop",
+          "acteRevelation": 2,
+          "fait": "Lorsqu’un partenaire du collectif révèle avoir laissé à Méridien le droit de parler à sa place dans les décisions de distribution, elle concède que son tour de parole n’a pas vu passer cette signature. Elle tient le quai fermé le temps d’honorer la livraison promise, malgré le coût de cette révélation.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
@@ -782,13 +931,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : ouvrir un corridor commun ou concentrer les moyens sur sa qualification. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_leandro_paz_3",
+          "repere": "Ronde XIV, la route à péage",
+          "acteRevelation": 1,
+          "fait": "Sur la plaine argentine, un dépôt sous licence exclusive est posé sur l’unique route entre les deux bancs. Il reçoit le joueur pour lui montrer qu’on gagne par les chemins de traverse, et qu’un dépôt posé sur la seule route est un péage.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_leandro_paz_4",
+          "repere": "Ronde XIV, le chenal du delta",
+          "acteRevelation": 2,
+          "fait": "Un club du delta privé d’accès aux batteries attend un transport par les bras d’eau. Ouvrir le chenal, qui ne se refermera plus, ou contourner par la plaine : sa réponse décide d’une trace sur la carte, et il nommera ensuite un péage un péage devant le contrat de priorité de Basile Kelm.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La plaine",
         "faiblesse": "Il élargit son front jusqu’à rendre sa propre réserve trop lointaine.",
         "dilemme": "Ouvrir un corridor commun ou concentrer les moyens sur sa qualification.",
-        "mission": ""
+        "mission": "opus1_hs_ar_1"
       },
       "role": "commandant"
     },
@@ -817,13 +980,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : publier des relevés incomplets ou différer une manche aux dépens d’un partenaire. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_noemie_leduc_3",
+          "repere": "Ronde XIV, le grand gel",
+          "acteRevelation": 1,
+          "fait": "Face à la Sélection Méridienne et à sa pièce à badge orange, elle exige qu’un essai se joue sous les mêmes conditions pour les deux camps et confie au joueur le banc de l’équipe témoin.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_noemie_leduc_4",
+          "repere": "Ronde XIV, la tempête annoncée",
+          "acteRevelation": 2,
+          "fait": "Une tempête annoncée deux journées à l’avance par le Bulletin bloque une délégation adverse. Partager les provisions ou garder la réserve : ce qu’elle relève pendant cette manche contredira la « priorité » de Basile Kelm aux finales.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "L’hiver ne compte pas",
         "faiblesse": "Elle attend parfois une prévision plus sûre au lieu de saisir une fenêtre courte.",
         "dilemme": "Publier des relevés incomplets ou différer une manche aux dépens d’un partenaire.",
-        "mission": ""
+        "mission": "opus1_hs_ca_1"
       },
       "role": "commandant"
     },
@@ -852,13 +1029,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : tenter un raccourci pour un allié ou garantir le retour de tous les équipements. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_jone_vakalau_3",
+          "repere": "Ronde XIV, le lagon sans transport",
+          "acteRevelation": 1,
+          "fait": "Le transport d’un club est retenu pour une facture ; il prête le sien au joueur pour ramener l’équipement, contre Yuna Serrat et une délégation sous mandat, et garde une petite équipe dans la compétition.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_jone_vakalau_4",
+          "repere": "Ronde XIV, la chaîne de passes",
+          "acteRevelation": 2,
+          "fait": "Avec les drones de Relais Zéro sur le récif, il doit tenter le raccourci par les passes ou garantir le retour de tout l’équipement ; c’est là que son improvisation apprend à laisser un plan de secours à ceux qui le suivent.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "Le lagon est un terrain",
         "faiblesse": "Son improvisation laisse rarement un plan de secours à ceux qui le suivent.",
         "dilemme": "Tenter un raccourci pour un allié ou garantir le retour de tous les équipements.",
-        "mission": ""
+        "mission": "opus1_hs_fj_1"
       },
       "role": "commandant"
     },
@@ -887,13 +1078,35 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : confier un passage à une recrue ou reprendre lui-même toute la préparation. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_nikos_delis_3",
+          "repere": "Ronde XIV, le café du port",
+          "acteRevelation": 1,
+          "fait": "Il reçoit le joueur au café du port avant le coup d’envoi et lui montre, môle après môle, qu’une méthode vaut mieux qu’un nouvel outil.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_nikos_delis_4",
+          "repere": "Ronde XIV, la recrue au môle",
+          "acteRevelation": 2,
+          "fait": "Basile Kelm verrouille la réserve du port. Pour la première fois, il demande son avis au joueur — confier le passage des îles à la recrue, ou reprendre lui-même toute la préparation — et parle de « quand il ne sera plus sur le circuit ».",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_nikos_delis_disparition",
+          "repere": "Ronde XIV, après la finale 2 ou la finale 7",
+          "acteRevelation": 3,
+          "fait": "Disparition — au sens de l’amendement du 9 septembre 2026 (`BRIEF.md`, « Quatre disparitions ») — écrite à la main, hors du terrain (`opus1_hs_gr_3`, le moment dépend de `opus1_hs_gr_2_decision`) : le cœur, à son âge, un matin d’hiver — au môle après sa dernière traversée si le joueur lui a dit de garder la main (branche b, défaut si le hors-série n’est pas joué, après la finale 2), au café du port si la recrue tient le passage (branche a, après la finale 7, la méthode transmise). La ligne du bac vers les îles, alimentée par la réserve du port, est suspendue par le contrat de priorité de Basile Kelm : sans bac, quelqu’un prend le bateau. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur. Non recrutable dès l’annonce ; la Grèce reste engagée, relation inchangée.",
+          "source": "canon_aube_v2",
+          "confidentialite": "auteur"
         }
       ],
       "identiteTactique": {
         "style": "Le cabotage à pied",
         "faiblesse": "Il privilégie les itinéraires éprouvés et peut sous-estimer un nouvel outil.",
         "dilemme": "Confier un passage à une recrue ou reprendre lui-même toute la préparation.",
-        "mission": ""
+        "mission": "opus1_hs_gr_1"
       },
       "role": "commandant"
     },
@@ -922,13 +1135,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : signaler une anomalie plausible ou attendre une preuve au risque de perdre le contrat. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_elin_arnardottir_3",
+          "repere": "Ronde XIV, la nuit islandaise",
+          "acteRevelation": 1,
+          "fait": "De nuit, sur la roche noire, elle joue contre Yuna Serrat, qui gère les deux contrats vendant la même réserve à deux délégations ; elle n’accuse pas encore, elle recoupe.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_elin_arnardottir_4",
+          "repere": "Ronde XIV, le silence de la source",
+          "acteRevelation": 2,
+          "fait": "Après un an passé à comparer les exclusivités, elle choisit entre signaler l’anomalie maintenant et attendre la preuve recoupée. Le double contrat qu’elle tient est ce qu’aucune garantie proposée aux finales ne pourra contourner.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La roche et la vapeur",
         "faiblesse": "Elle retarde ses accusations tant que chaque mesure n’est pas recoupée.",
         "dilemme": "Signaler une anomalie plausible ou attendre une preuve au risque de perdre le contrat.",
-        "mission": ""
+        "mission": "opus1_hs_is_1"
       },
       "role": "commandant"
     },
@@ -957,13 +1184,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : céder une avance pour garder une relève ou soutenir immédiatement un partenaire. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_kito_njoroge_3",
+          "repere": "Ronde XIV, le match de trois heures",
+          "acteRevelation": 1,
+          "fait": "Sur les hauts plateaux, il ne gagne jamais avant la dixième journée : il laisse le joueur s’épuiser, et prouve que la durée compte autant que le classement initial.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_kito_njoroge_4",
+          "repere": "Ronde XIV, le messager",
+          "acteRevelation": 2,
+          "fait": "Un relais à pied contre Yuna Serrat le place devant son dilemme : céder l’avance pour garder une relève, ou soutenir immédiatement le partenaire. Sa réponse décide de ce qu’il offre à l’infanterie du joueur.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "Le fond",
         "faiblesse": "Il laisse parfois trop d’initiative au début en attendant l’épuisement adverse.",
         "dilemme": "Céder une avance pour garder une relève ou soutenir immédiatement un partenaire.",
-        "mission": ""
+        "mission": "opus1_hs_ke_1"
       },
       "role": "commandant"
     },
@@ -992,13 +1233,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : ouvrir ses cartes à un rival ou protéger le travail de son atelier. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_tiana_ravel_3",
+          "repere": "Ronde XIV, l’inventaire des pistes",
+          "acteRevelation": 1,
+          "fait": "Sous couvert et sous brouillard, elle nomme chaque espèce en pleine partie et gagne par les pistes rouges qu’elle a relevées elle-même.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_tiana_ravel_4",
+          "repere": "Ronde XIV, les cartes ouvertes",
+          "acteRevelation": 2,
+          "fait": "Face aux relais de Relais Zéro, elle doit ouvrir ses cartes à un rival ou protéger le travail de son atelier ; ouvertes, ses cartes montrent les couloirs des relais compromis.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La connaissance des pistes",
         "faiblesse": "Elle perfectionne la reconnaissance alors qu’un objectif simple exige déjà d’agir.",
         "dilemme": "Ouvrir ses cartes à un rival ou protéger le travail de son atelier.",
-        "mission": ""
+        "mission": "opus1_hs_mg_1"
       },
       "role": "commandant"
     },
@@ -1027,13 +1282,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : poursuivre une ouverture ou revenir couvrir une réserve commune. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_saran_bat_3",
+          "repere": "Ronde XIV, le grand galop",
+          "acteRevelation": 1,
+          "fait": "Elle ne reçoit que qui a refusé une exclusivité sur le parcours mexicain. Sur la steppe, seule la reconnaissance décide de qui frappe le premier, et elle le sait mieux que quiconque.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_saran_bat_4",
+          "repere": "Ronde XIV, le point de ravitaillement déplacé",
+          "acteRevelation": 2,
+          "fait": "Le point de ravitaillement change à mi-parcours, annoncé à tous, face à Ost et Basile Kelm. Poursuivre l’ouverture ou revenir couvrir la réserve commune : elle apprend à ne pas distancer ce qui rend sa mobilité possible.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La steppe",
         "faiblesse": "Elle peut distancer les soutiens qui rendent sa mobilité possible.",
         "dilemme": "Poursuivre une ouverture ou revenir couvrir une réserve commune.",
-        "mission": ""
+        "mission": "opus1_hs_mn_1"
       },
       "role": "commandant"
     },
@@ -1062,13 +1331,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : révéler un passage à tous ou protéger la seule fenêtre de son équipe. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_amalie_haoses_3",
+          "repere": "Ronde XIV, la brume du matin",
+          "acteRevelation": 1,
+          "fait": "Sur le seul terrain totalement découvert du tournoi, la brume côtière tombe chaque matin et aveugle l’adversaire ; elle joue contre le joueur avec ses drones, et lui laisse comprendre ce que la brume efface.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_amalie_haoses_4",
+          "repere": "Ronde XIV, le passage révélé",
+          "acteRevelation": 2,
+          "fait": "Avant le coup d’envoi, contre trois camps aux fronts séparés, elle doit révéler le passage à tous ou protéger la seule fenêtre de son équipe ; ses observateurs relèvent les couloirs du réseau muet.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La brume",
         "faiblesse": "Elle supporte l’incertitude au point de garder trop longtemps un objectif mal connu.",
         "dilemme": "Révéler un passage à tous ou protéger la seule fenêtre de son équipe.",
-        "mission": ""
+        "mission": "opus1_hs_na_1"
       },
       "role": "commandant"
     },
@@ -1097,13 +1380,35 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : concentrer les pièces dans un relais fiable ou maintenir plusieurs ateliers ouverts. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_mira_karki_3",
+          "repere": "Ronde XIV, les ateliers d’altitude",
+          "acteRevelation": 1,
+          "fait": "Du subtropical au glacier, elle joue depuis la montagne contre le joueur ; ses fanions de balisage sont sans signe, et le sommet n’est qu’une étape.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_mira_karki_4",
+          "repere": "Ronde XIV, le pont de corde",
+          "acteRevelation": 2,
+          "fait": "Un atelier isolé attend des pièces que la rotation des transports ne monte plus. Elle a demandé de l’aide tard, et le dit ; poser le pont de corde ou passer par le col, sa dernière réplique est « on aurait pu attendre ».",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_mira_karki_disparition",
+          "repere": "Ronde XIV, après la finale 7",
+          "acteRevelation": 3,
+          "fait": "Disparition — au sens de l’amendement du 9 septembre 2026 (`BRIEF.md`, « Quatre disparitions ») — écrite à la main, hors du terrain (`opus1_hs_np_3`, fixe) : la montagne et l’épuisement. La rotation des transports vers les sites d’altitude est suspendue par les réserves rendues exclusives par Basile Kelm ; elle monte à pied avec deux porteurs vers l’atelier isolé, la fenêtre météo se referme le soir même, ils redescendent quand elle se rouvre, trop tard pour elle. Les porteurs vont bien, et c’est dit. Le choix du pont de corde change ce que l’atelier a reçu, jamais le moment ni la cause. Jamais sur un terrain homologué, jamais par du matériel de tournoi, aucune personne identifiée n’en est l’auteur. Non recrutable dès l’annonce ; le Népal reste engagé, le banc repris par son adjointe.",
+          "source": "canon_aube_v2",
+          "confidentialite": "auteur"
         }
       ],
       "identiteTactique": {
         "style": "L’altitude",
         "faiblesse": "Elle accepte trop facilement une logistique réduite et demande de l’aide tard.",
         "dilemme": "Concentrer les pièces dans un relais fiable ou maintenir plusieurs ateliers ouverts.",
-        "mission": ""
+        "mission": "opus1_hs_np_1"
       },
       "role": "commandant"
     },
@@ -1132,13 +1437,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : réparer un dépôt utile à tous ou réserver le matériel à la prochaine manche. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_tess_roa_3",
+          "repere": "Ronde XIV, le dépôt rendu",
+          "acteRevelation": 1,
+          "fait": "Le dépôt rendu par une rupture de contrat est celui de sa vallée : trois postes désaffectés, dont elle remet en service et tient deux avant le joueur, dans la brume et la fougère.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_tess_roa_4",
+          "repere": "Ronde XIV, la ligne de fougère",
+          "acteRevelation": 2,
+          "fait": "Pendant que son équipe répare, elle prête son banc au joueur contre Ost et Yuna Serrat. Réparer pour tous ou réserver le matériel à la prochaine manche : sa réponse décide de ce qu’elle offre au génie du joueur.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "La fougère répare",
         "faiblesse": "Elle s’attache à remettre chaque poste en service même quand il faut changer d’axe.",
         "dilemme": "Réparer un dépôt utile à tous ou réserver le matériel à la prochaine manche.",
-        "mission": ""
+        "mission": "opus1_hs_nz_1"
       },
       "role": "commandant"
     },
@@ -1167,13 +1486,27 @@
           "acteRevelation": 2,
           "fait": "La révision des accès aux réserves confronte cette délégation à une décision : consacrer la réserve à un passage commun ou terminer son propre équipement. La réponse dépend des engagements pris sur le parcours ; aucun ralliement n’est fixé par la nationalité.",
           "source": "canon_aube_v4"
+        },
+        {
+          "cle": "cmd_luz_quispe_3",
+          "repere": "Ronde XIV, le passage commun",
+          "acteRevelation": 1,
+          "fait": "Côte sèche, altiplano, versant amazonien : le premier génie qui relie ses trois étages gagne le tempo, et c’est elle qui l’apprend au joueur en le battant.",
+          "source": "canon_aube_v2"
+        },
+        {
+          "cle": "cmd_luz_quispe_4",
+          "repere": "Ronde XIV, la querelle d’altitude",
+          "acteRevelation": 2,
+          "fait": "Avec le joueur contre Basile Kelm et Yuna Serrat, elle consacre la réserve au passage commun ou termine son propre équipement ; le passage bâti reste sur la carte, et elle peut rejoindre le banc du joueur comme co-commandante.",
+          "source": "canon_aube_v2"
         }
       ],
       "identiteTactique": {
         "style": "Bâtisseur",
         "faiblesse": "Elle croit parfois qu’un nouvel aménagement peut résoudre un désaccord contractuel.",
         "dilemme": "Consacrer la réserve à un passage commun ou terminer son propre équipement.",
-        "mission": ""
+        "mission": "opus1_hs_pe_1"
       },
       "role": "commandant"
     },

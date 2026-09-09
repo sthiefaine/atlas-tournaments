@@ -1,6 +1,6 @@
 {
   "cle": "chantier_des_usines",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -61,26 +61,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le terrain sec du centre. Deux usines désaffectées à remettre en service : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Votre génie le fait en deux tours ; une infanterie en met quatre, et celles de Tomas aussi.",
+      "texte": "Le terrain sec du centre Atlas. Deux usines désaffectées : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Une usine remise en service produit pour qui l’a relancée.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Une usine produit des véhicules : chars, artillerie, transports. Cliquez sur la vôtre pour recruter. Votre QG, lui, ne produit que de l’infanterie et du génie.",
+      "texte": "Votre génie est un bâtisseur : il ne capture pas, il remet en service, en deux tours. Une infanterie en met quatre, celles de Tomas aussi. Wren l’a renvoyé trois fois au banc avant de lui donner son badge.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Cliquez sur votre usine, près du QG : elle vend des véhicules, chars, artillerie, transports. Le QG, lui, ne produit que de l’infanterie et du génie.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je défends aujourd’hui, c’est mon style. Atlas verse une prime à qui relance une usine, mille fonds, le double pour un génie. Je n’ai que des fantassins, alors j’y vais tout de suite.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une unité pour une cible, et remettre un bâtiment en service. Demain, la marée.",
+      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une pièce pour une cible, remettre un bâtiment en service. Demain, la marée ; Solveig a déjà réservé la traversée.",
       "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons tranquillement : votre place dans l’équipe ne dépend pas de cette tentative.",
+      "texte": "Un exercice sert à essayer. Relisons les étapes et reprenons : ni le carnet ni votre place n’en gardent trace.",
       "emotion": "neutre"
     }
   ],
@@ -94,7 +104,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Bâtiment sous vos couleurs. S’il produit, il produit pour vous dès la prochaine journée. Et Atlas verse une prime de remise en service : mille fonds, le double quand c’est le génie qui a fait le travail.",
+          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille si c’est le génie. Dès demain elle produit pour vous. C’est un droit d’exploitation, pas un bâtiment qu’on emporte.",
           "emotion": "neutre"
         }
       ]
@@ -108,7 +118,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "De l’artillerie. Elle tire à deux ou trois cases sans riposte, mais jamais après avoir bougé et jamais au contact. Posez-la derrière votre infanterie.",
+          "texte": "De l’artillerie. Elle marque à deux ou trois cases sans riposte, jamais après avoir bougé, jamais au contact. Posez-la derrière l’infanterie et laissez-la travailler.",
           "emotion": "neutre"
         }
       ]
@@ -122,22 +132,8 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. Chaque unité a sa cible.",
+          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. Lisez la prévision de duel avant de confirmer : chaque pièce a sa cible.",
           "emotion": "neutre"
-        }
-      ]
-    },
-    {
-      "cle": "chantier_tomas",
-      "declencheur": {
-        "type": "capture",
-        "camp": 1
-      },
-      "repliques": [
-        {
-          "locuteur": "cmd_tomas_reiner",
-          "texte": "Une ville de plus pour moi, et donc cinq cents fonds par jour. Ne me laissez pas creuser l’écart.",
-          "emotion": "joie"
         }
       ]
     },
@@ -150,7 +146,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Cinquième journée. L’usine de l’est est à qui la remettra en service le premier : mon infanterie y travaille déjà. Écartez-la, puis posez votre génie ou une infanterie dessus.",
+          "texte": "Cinquième journée. L’usine de l’est va à qui la relance le premier, et mon infanterie y travaille déjà. Écartez-la avec le char, puis posez votre génie dessus et tenez.",
           "emotion": "neutre"
         }
       ]
