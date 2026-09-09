@@ -1,0 +1,189 @@
+{
+  "cle": "opus1_tutoriel_08",
+  "code": "opus1_tutoriel_08",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Entraînement 8 · Une ligne commune",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_tutoriel_08",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "gloutonne"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "gloutonne"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 0,
+    "2": 0
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500,
+    "2": 500
+  },
+  "brouillard": true,
+  "limiteJournees": 16,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 16
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Tomas emprunte la passerelle du sud ; votre groupe prend celle du nord. Nous partageons ce que nos unités voient, pas nos caisses ni nos ordres. Prenez le QG d’Ost ou mettez toutes ses unités hors jeu avant la limite de seize journées.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le transport peut ravitailler une unité de Tomas depuis une case voisine. Cette aide ne change jamais son propriétaire. Laissez libres les cases occupées par vos alliés : vous pouvez vous soutenir, pas finir votre déplacement sur eux.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Chaque délégation reçoit 500 fonds par bâtiment qu’elle possède et par journée. En difficile, les équipes IA utilisent une stratégie pondérée ; les budgets et les objectifs restent identiques.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux commandements, une victoire commune. Vous avez maintenant les moyens de défendre les postes de distribution du prochain exercice.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, puis gardez une réserve pour la prochaine tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "t08_route_alliee",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Je garde l’accès sud. Regardez mon éclairage du terrain : il apparaît aussi dans votre vision. Mes unités restent sous mes ordres.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t08_capture",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ce bâtiment remplit votre caisse seulement. L’alliance partage la victoire et les informations, pas tous les fonds.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t08_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Gardez les deux passerelles actives. Si un axe est couvert par l’artillerie, l’autre ouvre une prise de flanc.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "gloutonne",
+      "reprises": 0,
+      "dureeVisee": 15
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 15
+    }
+  },
+  "equipes": [
+    [
+      0,
+      1
+    ],
+    [
+      2
+    ]
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "cle": "opus1_tutoriel_10",
+  "code": "opus1_tutoriel_10",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Entraînement 10 · La première promesse",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_tutoriel_10",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "gloutonne"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 0
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 0
+  },
+  "brouillard": false,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    },
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 18
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Dernier exercice : prenez le QG de Tomas ou mettez son équipe hors jeu en dix-huit journées. Ses réserves sont fixes, sans revenu. Les deux ponts permettent une prise de flanc ; votre usine peut compléter le groupe de départ.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essayez de préserver votre transport et de ravitailler vos soutiens. C’est un défi facultatif : le perdre ne fait pas perdre le match et ne ferme aucun choix de contrat.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Après la victoire : Maintenance partagée réserve 2 000 fonds à votre première nouvelle partie de Couleurs alliées. Fonds immédiats ajoute 2 000 fonds à votre première nouvelle partie du Pacte du col.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Votre choix sera conservé par ce profil. Une partie déjà commencée garde ses moyens de départ : on ne recharge pas une récompense en rejouant cet exercice. En difficile, les budgets restent les mêmes et Tomas emploie sa stratégie pondérée.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La formation est terminée. Choisissez maintenant le contrat que vous voulez emporter : aide immédiate au Pacte du col ou réserve de maintenance pour Couleurs alliées.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, puis gardez une réserve pour la prochaine tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "t10_synthese",
+      "declencheur": {
+        "type": "production"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Choisissez l’achat qui sert le passage prévu : une infanterie pour capturer, un véhicule pour ouvrir la route, un soutien pour couvrir.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t10_qg",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Un QG demande quarante points de capture. Une infanterie intacte a besoin de quatre de ses tours ; couvrez-la pendant tout ce temps.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t10_transport",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une unité hors jeu ne termine pas forcément l’épreuve. La perte du transport reste facultative : gardez l’objectif principal en vue.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "gloutonne",
+      "reprises": 0,
+      "dureeVisee": 15
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 15
+    }
+  }
+}

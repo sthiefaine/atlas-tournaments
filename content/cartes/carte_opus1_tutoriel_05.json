@@ -1,0 +1,86 @@
+{
+  "cle": "carte_opus1_tutoriel_05",
+  "code": "carte_opus1_tutoriel_05",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "La bonne distance",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "montagne",
+  "grille": [
+    "PPPPPPPPPPPP",
+    "PRRRRRRRRRHP",
+    "PPRPPMMPPRPP",
+    "PPRFPMMPFRPP",
+    "PPRPPMMPPRPP",
+    "PPCPPMMPPCPP",
+    "PPRFPMMPFRPP",
+    "PPRPPMMPPRPP",
+    "PHRRRRRRRRRP",
+    "PPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "10,1": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 8,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 10,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 8,
+      "y": 5
+    }
+  ]
+}

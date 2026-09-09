@@ -6,22 +6,40 @@
  * une heuristique courte — les capteurs vont vers la case d'objectif la plus
  * proche et capturent, le génie remet en service ce qui est désaffecté, les
  * autres unités frappent au mieux, et les usines recrutent. Si cette heuristique
- * ne gagne plus, c'est que la mission a changé de nature, pas de difficulté.
+ * échoue, aucune solution n'est démontrée : cela ne prouve ni impossibilité ni
+ * difficulté humaine. Tous les ordres et toutes les victoires passent par le moteur.
  */
 import { readFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import { scenarioPourMode } from '../src/app/jeu/difficulte';
+import { sontAllies } from '../src/engine/equipes';
 import {
-  appliquer, chargerCatalogue, creerPartie, empreinte, enregistrerPartie, estDesaffecte, rejouer,
+  appliquer, prevoirDuel, chargerCatalogue, creerPartie, empreinte, enregistrerPartie, estDesaffecte, rejouer,
   restaurerRng, sceneDepuis, type Action, type EtatPartie, type Unite,
 } from '../src/engine/index';
 import { jouerTour, meilleureOption, meilleureProduction, POIDS_AGRESSIVE, POIDS_PONDEREE, strategie } from '../src/ai/index';
 import { ciblesDepuis, terrainLogique } from '../src/engine/index';
 import { casesAtteignables, cheminVers, coutEntree, portee, voisines } from '../src/engine/regles/mouvement';
 import { cleCase, porte } from '../src/engine/types';
-import { validerMapDef, validerScenario, type Case } from '../src/schemas/index';
+import { validerMapDef, validerScenario, type Case, type Mode } from '../src/schemas/index';
 import { resoudreCommandantsScenario } from '../src/content/commandants-jeu';
 
-const manifeste = JSON.parse(readFileSync('content/campagne.json', 'utf8')) as { missions: { scenarioCle: string }[] };
-const TOURS_MAX = 60;
+export function clesCampagne(missions: {scenarioCle:string}[], filtre?: string): string[] {
+  const cles = [...new Set(missions.map(m => m.scenarioCle))];
+  return filtre ? cles.filter(c => filtre.split(',').includes(c)) : cles;
+}
+export const MODES_VERIFICATION: readonly Mode[] = ['normal', 'difficile'];
+
+/** Cibles encore nécessaires ; une possession alliée satisfait le moteur. */
+export function ciblesCaptureCampagne(e: EtatPartie): Case[] {
+  return e.reglages.victoire.flatMap((objectif): Case[] => {
+    if (objectif.type === 'capturer' || objectif.type === 'tenir') return objectif.cases.filter(c => !sontAllies(e, e.proprietaires[cleCase(c)], 0));
+    if (objectif.type === 'capture_qg') return e.camps.filter(c => !sontAllies(e,c.id,0) && c.qgCase !== null && !sontAllies(e,e.proprietaires[c.qgCase!],0)).map(c => {
+      const [x,y] = c.qgCase!.split(','); return {x:Number(x),y:Number(y)};
+    });
+    return [];
+  });
+}
 
 /** Distance en pas de chaque case jusqu'à la cible, pour cette unité, sur la grille entière. */
 function distancesVers(e: EtatPartie, cat: ReturnType<typeof chargerCatalogue>, u: Unite, cible: Case): Map<string, number> {
@@ -40,17 +58,22 @@ function distancesVers(e: EtatPartie, cat: ReturnType<typeof chargerCatalogue>, 
   return distances;
 }
 
-for (const { scenarioCle } of manifeste.missions) {
+export function verifierCampagne(): void {
+const manifeste = JSON.parse(readFileSync('content/campagne.json', 'utf8')) as { missions: { scenarioCle: string }[] };
+const cles = clesCampagne(manifeste.missions, process.env['SCENARIOS_CAMPAGNE']);
+if (!cles.length) throw new Error('Aucune mission sélectionnée');
+let gagnes = 0;
+for (const scenarioCle of cles) for (const mode of MODES_VERIFICATION) {
   const vs = validerScenario(JSON.parse(readFileSync(`content/scenarios/${scenarioCle}.json`, 'utf8')));
   if (!vs.ok) throw new Error(JSON.stringify(vs));
-  const s = vs.valeur;
+  const s = scenarioPourMode(vs.valeur, mode);
   const vm = validerMapDef(JSON.parse(readFileSync(`content/cartes/${s.carteCle}.json`, 'utf8')));
   if (!vm.ok) throw new Error(JSON.stringify(vm));
   const cat = chargerCatalogue(s.catalogueVersion);
   const commandants = resoudreCommandantsScenario(s);
   const scene = sceneDepuis(s, vm.valeur, commandants);
-  const ia = strategie(s.commandants.find((c) => c.camp === 1)?.ia ?? 'ponderee');
-  const objectif = s.victoire[0]!;
+  const objectifsScenario = s.victoire;
+  const journeesMax = Math.max(60, s.limiteJournees ?? 0, ...s.victoire.map(v => 'journees' in v ? v.journees + 2 : 0));
   // Trois joueurs simples, du plus lisible au plus brutal : le premier qui gagne
   // est la démonstration. Aucun n'est une mesure de difficulté humaine.
   const JOUEURS = ['heuristique', 'ponderee', 'agressive'] as const;
@@ -69,14 +92,7 @@ for (const { scenarioCle } of manifeste.missions) {
 
   /** Les cases que le joueur doit encore prendre, selon l'objectif. */
   function ciblesCapture(): Case[] {
-    if (objectif.type === 'capturer') return objectif.cases.filter((c) => e.proprietaires[cleCase(c)] !== 0);
-    if (objectif.type === 'capture_qg') {
-      return e.camps.filter((c) => c.id !== 0 && c.qgCase !== null).map((c) => {
-        const [x, y] = c.qgCase!.split(',');
-        return { x: Number(x), y: Number(y) };
-      });
-    }
-    return [];
+    return ciblesCaptureCampagne(e);
   }
 
   /** Mène une unité vers la cible et capture si elle y arrive. */
@@ -84,7 +100,24 @@ for (const { scenarioCle } of manifeste.missions) {
     const p = portee(e, cat, u);
     const distances = distancesVers(e, cat, u, cible);
     const libres = casesAtteignables(p).filter((c) => !e.unites.some((z) => z.id !== u.id && !z.dansTransport && z.x === c.x && z.y === c.y));
-    libres.sort((a, b) => (distances.get(cleCase(a)) ?? 999) - (distances.get(cleCase(b)) ?? 999));
+    const escortee = objectifsScenario.some(v => v.type === 'proteger' && v.uniteRef === u.id);
+    const risques = new Map<string,number>();
+    if (escortee) {
+      // Prévision prudente, sans mutation : chaque adversaire fournit sa meilleure
+      // frappe légale au prochain mouvement. Ce n'est pas une recherche exhaustive.
+      const menaces = e.unites.filter(z => !sontAllies(e,z.camp,0) && !z.dansTransport).map(z => ({z,cases:casesAtteignables(portee(e,cat,z))}));
+      for (const c of libres) {
+        const cible = {...u,x:c.x,y:c.y};
+        const futur = {...e,unites:e.unites.map(z => z.id === u.id ? cible : z)};
+        const risque = menaces.reduce((somme,{z,cases}) => somme + Math.max(0,...cases.map(depuis => {
+          const bouge = depuis.x !== z.x || depuis.y !== z.y;
+          if (futur.unites.some(autre => autre.id !== z.id && !autre.dansTransport && cleCase(autre) === cleCase(depuis))) return 0;
+          return ciblesDepuis(futur,cat,z,depuis,bouge).some(t => t.id === u.id) ? prevoirDuel(futur,cat,z,cible,depuis).degats : 0;
+        })),0);
+        risques.set(cleCase(c),risque);
+      }
+    }
+    libres.sort((a, b) => (risques.get(cleCase(a)) ?? 0) - (risques.get(cleCase(b)) ?? 0) || (distances.get(cleCase(a)) ?? 999) - (distances.get(cleCase(b)) ?? 999));
     const arrivee = libres[0];
     if (!arrivee) return false;
     const chemin = cheminVers(p, u, arrivee);
@@ -95,7 +128,7 @@ for (const { scenarioCle } of manifeste.missions) {
 
   /** Tire sur un adversaire qui occupe une case d'objectif, depuis la meilleure case atteignable. */
   function frapperOccupant(u: Unite, objectifs: Case[]): boolean {
-    const occupants = e.unites.filter((z) => z.camp !== 0 && !z.dansTransport && objectifs.some((o) => o.x === z.x && o.y === z.y));
+    const occupants = e.unites.filter((z) => !sontAllies(e, z.camp, 0) && !z.dansTransport && objectifs.some((o) => o.x === z.x && o.y === z.y));
     if (occupants.length === 0) return false;
     const p = portee(e, cat, u);
     const candidats = casesAtteignables(p)
@@ -116,7 +149,7 @@ for (const { scenarioCle } of manifeste.missions) {
   /** Quitte les cases d'objectif pour la case libre la plus proche d'un adversaire, et tire si possible. */
   function degager(u: Unite, objectifs: Case[]): void {
     const p = portee(e, cat, u);
-    const adversaires = e.unites.filter((z) => z.camp !== 0 && !z.dansTransport);
+    const adversaires = e.unites.filter((z) => !sontAllies(e, z.camp, 0) && !z.dansTransport);
     const libres = casesAtteignables(p)
       .filter((c) => !objectifs.some((o) => o.x === c.x && o.y === c.y))
       .filter((c) => !e.unites.some((z) => z.id !== u.id && !z.dansTransport && z.x === c.x && z.y === c.y));
@@ -132,13 +165,14 @@ for (const { scenarioCle } of manifeste.missions) {
     agir({ type: 'ordre', uniteId: u.id, chemin: [{ x: u.x, y: u.y }], suite: { type: 'rien' } });
   }
 
-  for (let tour = 0; tour < TOURS_MAX && !e.partie.terminee; tour += 1) {
+  for (let tour = 0; tour < journeesMax * Math.max(1, e.camps.length) && e.journee <= journeesMax && !e.partie.terminee; tour += 1) {
     if (process.env['DEBUG_CAMPAGNE'] === scenarioCle && e.campCourant === 0) {
       const objets = ciblesCapture().map((c) => `${cleCase(c)}:${e.proprietaires[cleCase(c)] ?? '-'}`).join(' ');
       const troupes = e.unites.map((u) => `${u.camp}${u.type.slice(0, 3)}@${u.x},${u.y}/${u.pv}${u.pointsCapture ? '+' + u.pointsCapture : ''}`).join(' ');
       console.log(`  j${e.journee} fonds ${e.camps[0]!.fonds} cibles ${objets} | ${troupes}`);
     }
     if (e.campCourant !== 0) {
+      const ia = strategie(s.commandants.find(c => c.camp === e.campCourant)?.ia ?? 'ponderee');
       const tourIa = jouerTour(e, ia, restaurerRng(e.graine, e.flux), cat, commandants);
       if (tourIa.refus.length) throw new Error(JSON.stringify(tourIa.refus));
       e = tourIa.etat;
@@ -148,6 +182,7 @@ for (const { scenarioCle } of manifeste.missions) {
 
     if (joueur !== 'heuristique' && scenarioCle !== 'pacte_du_col') {
       const tourJoueur = jouerTour(e, strategie(joueur), restaurerRng(e.graine, e.flux), cat, commandants);
+      if (tourJoueur.refus.length) throw new Error(JSON.stringify(tourJoueur.refus));
       e = tourJoueur.etat;
       actions.push(...tourJoueur.actions);
       continue;
@@ -159,7 +194,9 @@ for (const { scenarioCle } of manifeste.missions) {
       if (genie && e.journee === 2) agir({ type: 'ordre', uniteId: genie.id, chemin: [{ x: genie.x, y: genie.y }, { x: 4, y: 1 }], suite: { type: 'rien' } });
     }
 
-    for (const id of e.unites.filter((u) => u.camp === 0 && !u.dansTransport).map((u) => u.id)) {
+    const escortes = new Set(objectifsScenario.flatMap(v => v.type === 'proteger' ? [v.uniteRef] : []));
+    const ordreUnites = e.unites.filter(u => u.camp === 0 && !u.dansTransport).map(u => u.id).sort((a,b) => Number(escortes.has(a)) - Number(escortes.has(b)));
+    for (const id of ordreUnites) {
       if (e.partie.terminee) break;
       const u = e.unites.find((z) => z.id === id);
       if (!u || u.etat !== 'prete') continue;
@@ -167,9 +204,13 @@ for (const { scenarioCle } of manifeste.missions) {
       const capteur = porte(type, 'capture') && type.capture;
       const batisseur = porte(type, 'genie');
 
-      if (objectif.type === 'proteger' && id === objectif.uniteRef && objectif.destination) {
-        progresserVers(u, objectif.destination, false);
-        continue;
+      const escorte = objectifsScenario.find(v => v.type === 'proteger' && id === v.uniteRef);
+      if (escorte?.type === 'proteger' && escorte.destination && progresserVers(u, escorte.destination, false)) continue;
+      const relaisIndice = objectifsScenario.findIndex(v => v.type === 'relais');
+      const relais = objectifsScenario[relaisIndice];
+      if (relais?.type === 'relais') {
+        const cible = relais.cases[e.relais?.[String(relaisIndice)] ?? 0];
+        if (cible && progresserVers(u, cible, false)) continue;
       }
       // Une capture entamée se termine avant tout : bouger remettrait les points à zéro.
       if (u.pointsCapture > 0 && agir({ type: 'ordre', uniteId: id, chemin: [{ x: u.x, y: u.y }], suite: { type: 'capturer' } })) continue;
@@ -203,14 +244,19 @@ for (const { scenarioCle } of manifeste.missions) {
   }
 
   const repetition = rejouer(scene, cat, enregistrerPartie(e, actions), commandants);
-  if (repetition.refus.length || empreinte(repetition.etat) !== empreinte(e)) throw new Error(`${scenarioCle}: rejeu divergent`);
+  if (repetition.refus.length || empreinte(repetition.etat) !== empreinte(e)) throw new Error(`${scenarioCle}/${mode}: rejeu divergent`);
   console.log(`  ${joueur.padEnd(11)} ${JSON.stringify(e.partie)} journée ${e.journee}, ${actions.length} actions`);
   if (e.partie.vainqueur === 0) { demonstration = { joueur, etat: e, actions }; break; }
   }
   if (demonstration) {
-    console.log(`${scenarioCle} : gagnée par ${demonstration.joueur} en ${demonstration.etat.journee} journées, rejeu conforme`);
+    gagnes += 1;
+    console.log(`${scenarioCle}/${mode} : gagnée par ${demonstration.joueur} en ${demonstration.etat.journee} journées, rejeu conforme`);
   } else {
-    console.log(`${scenarioCle} : AUCUN joueur simple ne gagne`);
+    console.log(`${scenarioCle}/${mode} : AUCUNE victoire démontrée par les trois pilotes (ne prouve pas la mission impossible)`);
     process.exitCode = 1;
   }
 }
+
+console.log(`${gagnes}/${cles.length * MODES_VERIFICATION.length} couples mission/mode gagnés avec rejeu conforme ; aucune évaluation de difficulté humaine.`);
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) verifierCampagne();

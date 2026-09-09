@@ -1,0 +1,82 @@
+{
+  "cle": "carte_opus1_tutoriel_06",
+  "code": "carte_opus1_tutoriel_06",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Au-delà des arbres",
+  "largeur": 11,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "foret",
+  "grille": [
+    "PPPPPPPPPPP",
+    "PPPPPPPPPHP",
+    "PPPFFPFFCPP",
+    "PPPFPTPFPPP",
+    "PPPFFRPFFPP",
+    "PPFPPRPPPPP",
+    "PPPFFRFFPPP",
+    "PPPPPRPPFPP",
+    "PHPPPPPPPPP",
+    "PPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,8": 0,
+    "9,1": 1,
+    "5,3": 1,
+    "8,2": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "drone",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 6,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 7,
+      "y": 5
+    }
+  ]
+}

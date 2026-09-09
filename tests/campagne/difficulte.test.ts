@@ -81,3 +81,15 @@ test('une quête annonce sa condition impérative de porteur à préserver', () 
   const etat = creerPartie(sceneDepuis(base, carte.valeur, []), chargerCatalogue(base.catalogueVersion), 'porteur');
   assert.ok(textesObjectifs(etat, chargerCatalogue(base.catalogueVersion), (cle) => cle).includes('objectif.defaite_unite'));
 });
+
+test('un exercice sans économie conserve zéro revenu dans les deux modes', () => {
+  const base = scenario('opus1_tutoriel_05');
+  for (const mode of ['normal', 'difficile'] as const) {
+    const s = scenarioPourMode(base, mode);
+    assert.equal(s.revenusParBatiment, 0);
+    assert.ok(Object.values(s.revenusParBatimentParCamp ?? {}).every(v => v === 0));
+  }
+  const invalide = structuredClone(base);
+  invalide.modes!.normal.revenusParBatiment = -100;
+  assert.equal(validerScenario(invalide).ok, false);
+});

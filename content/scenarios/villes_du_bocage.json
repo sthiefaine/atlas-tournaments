@@ -1,10 +1,10 @@
 {
   "cle": "villes_du_bocage",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-09",
   "code": "villes_du_bocage",
   "nom": "Entraînement 2 · Les quatre villes",
   "acte": 0,
@@ -161,5 +161,33 @@
     "flags": [
       "monde.tournoi.villes_du_bocage"
     ]
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 1000,
+      "fondsDepartIa": 1000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 15
+    },
+    "difficile": {
+      "fondsDepart": 1000,
+      "fondsDepartIa": 1000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 15
+    }
   }
 }

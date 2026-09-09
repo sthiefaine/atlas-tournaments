@@ -100,7 +100,7 @@ export function enregistrerVictoire(code: string, profil: Profil = profilActif()
 
 export function missionOuverte(codes: readonly string[], code: string, progression: Progression): boolean {
   const index = codes.indexOf(code);
-  return index === 0 || (index > 0 && progression.victoires.includes(codes[index - 1]!));
+  return index >= 0 && (progression.victoires.includes(code) || index === 0 || progression.victoires.includes(codes[index - 1]!));
 }
 
 

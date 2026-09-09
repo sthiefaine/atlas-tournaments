@@ -16,3 +16,10 @@ test('le parcours ouvre le tutoriel puis la mission qui suit une victoire', () =
   assert.equal(missionOuverte(codes, 'mission_trois', progression), false);
   assert.equal(missionOuverte(codes, 'inconnue', progression), false);
 });
+
+test('insérer des tutoriels conserve la possibilité de rejouer un match déjà gagné', () => {
+  const codes = ['premier_contact', 'opus1_tutoriel_05', 'pacte_du_col'];
+  const progression = normaliserProgression({ version: 1, victoires: ['premier_contact', 'pacte_du_col'] });
+  assert.ok(missionOuverte(codes, 'opus1_tutoriel_05', progression));
+  assert.ok(missionOuverte(codes, 'pacte_du_col', progression));
+});

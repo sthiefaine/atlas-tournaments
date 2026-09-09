@@ -1,0 +1,172 @@
+{
+  "cle": "opus1_tutoriel_06",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "opus1_tutoriel_06",
+  "nom": "Entraînement 6 · Au-delà des arbres",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_tutoriel_06",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "agressive"
+    }
+  ],
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 0,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "brouillard": true,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 5,
+          "y": 3
+        },
+        {
+          "x": 8,
+          "y": 2
+        }
+      ],
+      "combien": 2
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 18
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Prenez puis conservez le radar central et la ville du nord-est avant la fin de J18. Il faut posséder les deux ; prendre le QG adverse ne remplace pas cet objectif.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le drone observe au-delà des arbres, l’infanterie capture. Avancez après avoir lu la zone visible. Le radar capturé partage ses relevés avec votre camp.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La station radar émet aussi une IEM à J4 puis toutes les trois journées, rayon deux cases orthogonales. Vos appareils aériens ou marins doivent sortir du rayon avant l’impulsion, ou votre infanterie doit capturer la source.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Normal et difficile gardent le brouillard et ce calendrier. Tomas est plus prudent en difficile ; aucun capteur ne voit secrètement à travers le brouillard.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Exercice réussi. Vous pouvez revoir la carte ou poursuivre la formation ; les rappels restent consultables.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Reprenez votre placement et l’objectif annoncé. Cette tentative s’arrête, mais vous pouvez recommencer sans perdre les autres exercices.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "scenesDialogue": [
+    {
+      "cle": "opus1_tutoriel_06_rappel",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le drone prépare votre approche ; il ne capture pas. Protégez l’infanterie qui monte vers le radar.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "modes": {
+    "normal": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "agressive",
+      "reprises": 0,
+      "dureeVisee": 12
+    },
+    "difficile": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 12
+    }
+  },
+  "installationsIem": [
+    {
+      "cle": "t06_iem_radar",
+      "x": 5,
+      "y": 3,
+      "rayon": 2,
+      "premiereJournee": 4,
+      "intervalle": 3
+    }
+  ]
+}

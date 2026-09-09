@@ -14,7 +14,7 @@
       "id": "premier_contact",
       "ordre": 1,
       "titre": "Premier contact",
-      "statut": "existant_a_reviser",
+      "statut": "integre_parcours_local",
       "apprentissage": "Déplacement, terrain, prévision et riposte",
       "objectifGameplay": "Mettre hors jeu les trois unités de Tomas.",
       "conditionsVictoire": [
@@ -33,13 +33,15 @@
         "Les exercices sont arbitrés ; les marqueurs ne blessent pas."
       ],
       "mecaniquesADevelopper": [],
-      "transitionVers": "villes_du_bocage"
+      "transitionVers": "villes_du_bocage",
+      "scenarioJouable": "premier_contact",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "villes_du_bocage",
       "ordre": 2,
       "titre": "Les quatre villes",
-      "statut": "existant_a_reviser",
+      "statut": "integre_parcours_local",
       "apprentissage": "Capture, revenus et soins",
       "objectifGameplay": "Posséder simultanément trois des quatre villes désignées.",
       "conditionsVictoire": [
@@ -56,13 +58,15 @@
       "choixImpact": null,
       "revelations": [],
       "mecaniquesADevelopper": [],
-      "transitionVers": "chantier_des_usines"
+      "transitionVers": "chantier_des_usines",
+      "scenarioJouable": "villes_du_bocage",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "chantier_des_usines",
       "ordre": 3,
       "titre": "Le chantier des usines",
-      "statut": "existant_a_reviser",
+      "statut": "integre_parcours_local",
       "apprentissage": "Production, génie et remise en service",
       "objectifGameplay": "Remettre en service et posséder les deux usines désignées.",
       "conditionsVictoire": [
@@ -79,13 +83,15 @@
       "choixImpact": null,
       "revelations": [],
       "mecaniquesADevelopper": [],
-      "transitionVers": "qg_de_la_presquile"
+      "transitionVers": "qg_de_la_presquile",
+      "scenarioJouable": "chantier_des_usines",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "qg_de_la_presquile",
       "ordre": 4,
       "titre": "Le QG de la presqu’île",
-      "statut": "existant_a_reviser",
+      "statut": "integre_parcours_local",
       "apprentissage": "Capture du QG, transport et marées",
       "objectifGameplay": "Capturer le QG adverse : quarante points.",
       "conditionsVictoire": [
@@ -102,13 +108,15 @@
       "choixImpact": null,
       "revelations": [],
       "mecaniquesADevelopper": [],
-      "transitionVers": "opus1_tutoriel_05"
+      "transitionVers": "opus1_tutoriel_05",
+      "scenarioJouable": "qg_de_la_presquile",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_05",
       "ordre": 5,
       "titre": "La bonne distance",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Tir indirect et protection",
       "objectifGameplay": "Capturer le QG du plateau ou mettre hors jeu toute la défense.",
       "conditionsVictoire": [
@@ -125,13 +133,15 @@
       "choixImpact": null,
       "revelations": [],
       "mecaniquesADevelopper": [],
-      "transitionVers": "opus1_tutoriel_06"
+      "transitionVers": "opus1_tutoriel_06",
+      "scenarioJouable": "opus1_tutoriel_05",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_06",
       "ordre": 6,
       "titre": "Au-delà des arbres",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Brouillard, radar et drones ; aperçu du rayon annoncé d’une station IEM inactive, avant une première impulsion évitable",
       "objectifGameplay": "Capturer le radar central puis le QG adverse ; la prise du radar reste acquise dans le journal d’objectif.",
       "conditionsVictoire": [
@@ -151,13 +161,15 @@
         "Objectif composé mémorisé : prise du radar puis QG.",
         "Prévision et contour du rayon IEM consultables avant mouvement."
       ],
-      "transitionVers": "opus1_tutoriel_07"
+      "transitionVers": "opus1_tutoriel_07",
+      "scenarioJouable": "opus1_tutoriel_06",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_07",
       "ordre": 7,
       "titre": "Le dernier kilomètre",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Munitions, ravitaillement et transport ; variante maritime avec drone marin et quai de ravitaillement",
       "objectifGameplay": "Faire parvenir le transport désigné à la sortie nord en conservant au moins une unité de couverture.",
       "conditionsVictoire": [
@@ -179,13 +191,15 @@
         "Condition composée : sortie du transport et unité de couverture restante.",
         "Variante intégrée au même tutoriel, sans créer une onzième mission."
       ],
-      "transitionVers": "opus1_tutoriel_08"
+      "transitionVers": "opus1_tutoriel_08",
+      "scenarioJouable": "opus1_tutoriel_07",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_08",
       "ordre": 8,
       "titre": "Une ligne commune",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Équipes, vision partagée et caisses séparées",
       "objectifGameplay": "En équipe 2v1, capturer le QG adverse ou mettre hors jeu son armée.",
       "conditionsVictoire": [
@@ -202,13 +216,15 @@
       "choixImpact": null,
       "revelations": [],
       "mecaniquesADevelopper": [],
-      "transitionVers": "opus1_tutoriel_09"
+      "transitionVers": "opus1_tutoriel_09",
+      "scenarioJouable": "opus1_tutoriel_08",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_09",
       "ordre": 9,
       "titre": "Le prix du courant",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Énergie et concessions ; bulletin de pluie provoquée, capture de la station de contrôle",
       "objectifGameplay": "Capturer deux des trois postes de distribution représentés par des bâtiments existants.",
       "conditionsVictoire": [
@@ -229,13 +245,15 @@
       "mecaniquesADevelopper": [
         "Annonce de la première activation après un tour complet de préparation ; aucun effet avant que le joueur puisse agir."
       ],
-      "transitionVers": "opus1_tutoriel_10"
+      "transitionVers": "opus1_tutoriel_10",
+      "scenarioJouable": "opus1_tutoriel_09",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     },
     {
       "id": "opus1_tutoriel_10",
       "ordre": 10,
       "titre": "La première promesse",
-      "statut": "conception_non_jouable",
+      "statut": "integre_parcours_local",
       "apprentissage": "Synthèse et choix persistant",
       "objectifGameplay": "Capturer le QG adverse ou mettre hors jeu son armée ; protéger le transport est un objectif secondaire facultatif.",
       "conditionsVictoire": [
@@ -264,7 +282,9 @@
       "mecaniquesADevelopper": [
         "Branchement du choix de formation vers la première mission nationale."
       ],
-      "transitionVers": "opus1_fr_01"
+      "transitionVers": "opus1_fr_01",
+      "scenarioJouable": "opus1_tutoriel_10",
+      "referenceImplementation": "doc/refonte/tutoriels-jouables.md"
     }
   ],
   "finales": [

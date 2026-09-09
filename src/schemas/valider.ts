@@ -1148,8 +1148,8 @@ function parametresMode(ctx: Contexte, v: unknown, chemin: string): ParametresMo
   if (!o || !requis(ctx, o, chemin, cles)) return undefined;
   entier(ctx, o['fondsDepart'], sous(chemin, 'fondsDepart'), { min: 0, max: 30000, multiple: 100 });
   entier(ctx, o['fondsDepartIa'], sous(chemin, 'fondsDepartIa'), { min: 0, max: 30000, multiple: 100 });
-  entier(ctx, o['revenusParBatiment'], sous(chemin, 'revenusParBatiment'), { min: 500, max: 2000, multiple: 100 });
-  entier(ctx, o['revenusIaParBatiment'], sous(chemin, 'revenusIaParBatiment'), { min: 500, max: 3000, multiple: 100 });
+  entier(ctx, o['revenusParBatiment'], sous(chemin, 'revenusParBatiment'), { min: 0, max: 2000, multiple: 100 });
+  entier(ctx, o['revenusIaParBatiment'], sous(chemin, 'revenusIaParBatiment'), { min: 0, max: 3000, multiple: 100 });
   booleen(ctx, o['brouillard'], sous(chemin, 'brouillard'));
   entier(ctx, o['previsionJournees'], sous(chemin, 'previsionJournees'), { min: 0, max: 2 });
   nombre(ctx, o['vitesseJauge'], sous(chemin, 'vitesseJauge'), { min: 0.5, max: 1.5 });

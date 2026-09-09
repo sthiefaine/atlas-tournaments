@@ -19,6 +19,10 @@ export const CHOIX_AUBE = {
     { cle: 'archives_reconnaissance', titre: 'Partager les relevés techniques', effet: 'À la prochaine partie des Routes d’Aube, un drone d’observation de votre camp arrive à J2. Le carnet conserve la preuve certifiée.' },
     { cle: 'archives_publiques', titre: 'Verser les preuves au dossier public', effet: 'À la prochaine partie des Routes d’Aube, votre camp reçoit 2 000 fonds de soutien. Le carnet conserve la preuve certifiée.' },
   ],
+  opus1_tutoriel_10: [
+    { cle: 'maintenance_partagee', titre: 'Partager les moyens de maintenance', effet: 'À la prochaine nouvelle partie de Sous les couleurs alliées, votre camp reçoit 2 000 fonds pour préparer l’équipe commune.' },
+    { cle: 'fonds_immediats', titre: 'Financer la qualification', effet: 'À la prochaine nouvelle partie du Pacte du col, votre camp reçoit 2 000 fonds pour ouvrir et protéger le passage.' },
+  ],
 } as const;
 export type ScenarioDecision = keyof typeof CHOIX_AUBE;
 export function optionsDecision(code: string): readonly { cle: string; titre: string; effet: string }[] {
@@ -46,6 +50,8 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
   const crediter = (): void => {
     copie.fondsDepartParCamp = { ...copie.fondsDepartParCamp, 0: (copie.fondsDepartParCamp?.[0] ?? scenario.fondsDepart) + 2000 };
   };
+  if (scenario.code === 'pacte_du_col') appliquer('opus1_tutoriel_10', 'fonds_immediats', crediter);
+  if (scenario.code === 'couleurs_alliees') appliquer('opus1_tutoriel_10', 'maintenance_partagee', crediter);
   if (scenario.code === 'aube_nuit_2v2') appliquer('aube_batteries_2v1', 'credit_immediat', crediter);
   if (scenario.code === 'aube_routes_3v1') {
     appliquer('aube_nuit_2v2', 'publier_preuve', crediter);
@@ -92,7 +98,7 @@ export function decisionsDeGraine(scenario: Scenario, graine: string): DecisionL
   const prefixe = `${scenario.code}:a${VERSION_CANON_AUBE}:`;
   if (!graine.startsWith(prefixe)) return [];
   const chiffres = graine.slice(prefixe.length);
-  if (!/^[0-2]{2}([0-2]{2})?$/.test(chiffres)) return [];
+  if (![2, 4, Object.keys(CHOIX_AUBE).length].includes(chiffres.length) || !/^[0-2]+$/.test(chiffres)) return [];
   return Object.keys(CHOIX_AUBE).flatMap((source, i) => {
     const option = optionsDecision(source)[Number(chiffres[i]) - 1];
     return option ? [{ scenario: source, scenarioVersion: 1, canonVersion: VERSION_CANON_AUBE, choix: option.cle }] : [];

@@ -1,0 +1,83 @@
+{
+  "cle": "carte_opus1_tutoriel_07",
+  "code": "carte_opus1_tutoriel_07",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Le dernier kilomètre",
+  "largeur": 12,
+  "hauteur": 12,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "WWWSPPPPPPPP",
+    "WWWSPPPPPPHP",
+    "WWWSPPPPPRPP",
+    "WWWSPPPFPRPP",
+    "WWWSPPFPPRFP",
+    "WWWSNVVVVNVV",
+    "WWWSPRRRRRPP",
+    "WWWSPRCFPPPP",
+    "WWWSPRPPFPPP",
+    "WWWOPRPPPPPP",
+    "WWWSPHPPPPPP",
+    "WWWSPPPPPPPP"
+  ],
+  "proprietaires": {
+    "5,10": 0,
+    "10,1": 1,
+    "3,9": 0
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 5,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 6,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 5,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "drone_ravitailleur",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "drone_marin",
+      "x": 1,
+      "y": 9
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "meca",
+      "x": 8,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 10,
+      "y": 2
+    }
+  ]
+}

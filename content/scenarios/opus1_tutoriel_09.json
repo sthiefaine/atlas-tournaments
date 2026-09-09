@@ -1,0 +1,200 @@
+{
+  "cle": "opus1_tutoriel_09",
+  "code": "opus1_tutoriel_09",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Entraînement 9 · Le prix du courant",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_tutoriel_09",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "gloutonne"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 0
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500
+  },
+  "brouillard": false,
+  "limiteJournees": 16,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 3,
+          "y": 2
+        },
+        {
+          "x": 8,
+          "y": 3
+        },
+        {
+          "x": 8,
+          "y": 7
+        }
+      ],
+      "combien": 2
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 16
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Trois bâtiments représentent les postes de distribution : la ville au nord-ouest, le radar au nord-est et la ville au sud-est. Contrôlez-en deux simultanément. Le QG adverse n’est pas un raccourci vers la victoire de cet exercice.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La concession porte sur un contrat d’énergie, jamais sur les habitants. Les bâtiments conservent leur fonction habituelle et rapportent des fonds ; aucune nouvelle jauge d’énergie n’est cachée dans ce match.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Pluie annoncée à J3 et J4 : deux journées pour préparer vos trajets. Aucune équipe n’a d’adaptation spéciale. Prendre le radar apporte sa vision et compte comme un poste, mais ne coupe pas le calendrier météo.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "En difficile, Tomas choisit mieux ses positions avec sa même réserve initiale. Les revenus du joueur, les coûts et les deux postes à capturer restent identiques.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux postes sous contrat. La prochaine épreuve rassemble combat, capture, production et la première promesse que vous emporterez vers les matchs officiels.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Cet exercice se rejoue sans pénalité. Repérez le premier passage perdu, puis gardez une réserve pour la prochaine tentative.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "t09_preparer_pluie",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le bulletin annonce la pluie pour demain. Approchez les capteurs des postes et évitez de compter sur un long déplacement de dernière minute.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t09_premier_poste",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une capture finance votre délégation. Pour gagner, il faut deux des trois postes désignés : gardez le premier pendant que votre autre groupe approche.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t09_fin_pluie",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La fenêtre de pluie est terminée. Le calendrier était annoncé et identique pour les deux équipes.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "gloutonne",
+      "reprises": 0,
+      "dureeVisee": 15
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 15
+    }
+  },
+  "evenementsClimat": [
+    {
+      "cle": "pluie_tutoriel_courant",
+      "journee": 3,
+      "meteo": "pluie",
+      "duree": 2,
+      "campsAdaptes": []
+    }
+  ]
+}

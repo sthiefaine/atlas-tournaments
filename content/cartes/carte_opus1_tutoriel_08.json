@@ -1,0 +1,100 @@
+{
+  "cle": "carte_opus1_tutoriel_08",
+  "code": "carte_opus1_tutoriel_08",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Les deux passerelles",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 3,
+  "biome": "foret",
+  "grille": [
+    "PPPFPPVPFPPP",
+    "PHUPFPVPPPFP",
+    "PPRRCRNRRRRP",
+    "PPPPPPVPPRPP",
+    "PPPPFPVMPRHP",
+    "PPPFPPVMPRPP",
+    "PPPPPPVPPCPP",
+    "PPRRCRNRRRRP",
+    "PHPPFPVPFPPP",
+    "PPPPPPVPPPFP"
+  ],
+  "proprietaires": {
+    "1,1": 0,
+    "2,1": 0,
+    "1,8": 1,
+    "10,4": 2
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 2
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 1
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 2
+    },
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 2,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "camp": 2,
+      "type": "meca",
+      "x": 10,
+      "y": 5
+    },
+    {
+      "camp": 2,
+      "type": "recon",
+      "x": 9,
+      "y": 5
+    },
+    {
+      "camp": 2,
+      "type": "artillerie",
+      "x": 10,
+      "y": 3
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "cle": "carte_opus1_tutoriel_10",
+  "code": "carte_opus1_tutoriel_10",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "La réserve des deux rives",
+  "largeur": 14,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "cotier",
+  "grille": [
+    "PPPPPPVPPPPPWW",
+    "PFPPFPVPFPPPPW",
+    "PPRCRRNRRRRUPP",
+    "PPPRPPVPPPRPHP",
+    "PPPRFMVMFPRPPP",
+    "PPPRPMVMPPRPPP",
+    "PHPRPPVPPPRCPP",
+    "PPURRRNRRCRRPP",
+    "WPFPPPVPPFPPFP",
+    "WWPPPPVPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,6": 0,
+    "2,7": 0,
+    "12,3": 1,
+    "11,2": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "genie",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 11,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "meca",
+      "x": 10,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 10,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 11,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 3
+    }
+  ]
+}

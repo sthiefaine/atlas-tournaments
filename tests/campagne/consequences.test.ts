@@ -119,3 +119,20 @@ test('chaque récompense de quête référence des unités présentes et se mont
     assert.doesNotThrow(() => creerPartie(sceneDepuis(modifie, carte.valeur, []), chargerCatalogue(base.catalogueVersion), 'recompense-valide'));
   }
 });
+
+test('le choix du dixième tutoriel persiste et finance uniquement le match annoncé', () => {
+  stockage();
+  assert.equal(enregistrerDecision('opus1_tutoriel_10', 1, 'fonds_immediats', 'a'), false);
+  enregistrerVictoire('opus1_tutoriel_10', 'a');
+  assert.equal(enregistrerDecision('opus1_tutoriel_10', 1, 'fonds_immediats', 'a'), true);
+  const decisions = Object.values(lireProgression('a').decisions ?? {});
+  const pacte = scenario('pacte_du_col');
+  const graine = graineAube(pacte, decisions);
+  const prepare = appliquerConsequences(pacte, decisionsDeGraine(pacte, graine));
+  assert.equal(prepare.scenario.fondsDepartParCamp?.[0], pacte.fondsDepart + 2000);
+  assert.equal(prepare.rappels.length, 1);
+  assert.deepEqual(appliquerConsequences(scenario('couleurs_alliees'), decisions).rappels, []);
+  assert.deepEqual(decisionsDeGraine(pacte, `${pacte.code}:1`), [], 'les anciennes parties ne changent pas');
+  const partage = appliquerConsequences(scenario('couleurs_alliees'), [decision('opus1_tutoriel_10', 'maintenance_partagee')]);
+  assert.equal(partage.scenario.fondsDepartParCamp?.[0], scenario('couleurs_alliees').fondsDepart + 2000);
+});

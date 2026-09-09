@@ -1,0 +1,82 @@
+{
+  "cle": "carte_opus1_tutoriel_09",
+  "code": "carte_opus1_tutoriel_09",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "nom": "Le triangle du courant",
+  "largeur": 12,
+  "hauteur": 10,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPPPPPPWW",
+    "PPPPFPPFPPPP",
+    "PPPCPPPPPPHP",
+    "PFPRPMMPTPPP",
+    "PPFRFMMPRFPP",
+    "PPPRPPPPRPPP",
+    "PPPRPPPPRPFP",
+    "PHURRRRRCRPP",
+    "WPPPPPPPPFPP",
+    "WWPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,7": 0,
+    "2,7": 0,
+    "10,2": 1,
+    "8,3": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "genie",
+      "x": 2,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 1,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 9,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 9,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "meca",
+      "x": 7,
+      "y": 3
+    }
+  ]
+}

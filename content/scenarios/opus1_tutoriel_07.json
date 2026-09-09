@@ -1,0 +1,157 @@
+{
+  "cle": "opus1_tutoriel_07",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-09",
+  "majLe": "2026-09-09",
+  "code": "opus1_tutoriel_07",
+  "nom": "Entraînement 7 · Le dernier kilomètre",
+  "acte": 0,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_tutoriel_07",
+  "date": "2026-09-09",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 8,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "agressive"
+    }
+  ],
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 0,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "brouillard": false,
+  "limiteJournees": 16,
+  "victoire": [
+    {
+      "type": "proteger",
+      "uniteRef": "u1",
+      "destination": {
+        "x": 9,
+        "y": 2
+      }
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 16
+    },
+    {
+      "type": "unite_perdue",
+      "uniteRef": "u1"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Faites parvenir le transport désigné à la sortie du nord, colonne 10 ligne 3, avant la fin de J16. Sa mise hors jeu fait perdre l’exercice. Prendre le QG adverse ne remplace pas l’escorte.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le transport peut charger de l’infanterie. Le drone ravitailleur aide les voisins qui ont consommé leurs réserves ; le drone marin observe la côte et reste sur l’eau.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le pont de l’est suit la route rapide. Le passage côtier est plus long mais offre un détour. Faites avancer la couverture avant le véhicule désigné.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Normal : la patrouille attaque directement. Difficile : elle choisit mieux ses cibles. Les mêmes unités, deux ponts et seize journées restent disponibles.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Exercice réussi. Vous pouvez revoir la carte ou poursuivre la formation ; les rappels restent consultables.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Reprenez votre placement et l’objectif annoncé. Cette tentative s’arrête, mais vous pouvez recommencer sans perdre les autres exercices.",
+      "emotion": "neutre"
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "scenesDialogue": [
+    {
+      "cle": "opus1_tutoriel_07_rappel",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Lisez les munitions après le combat. Placez le ravitailleur près des unités qui ont consommé leurs réserves pour les servir.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "modes": {
+    "normal": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "agressive",
+      "reprises": 0,
+      "dureeVisee": 12
+    },
+    "difficile": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 16,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 12
+    }
+  }
+}

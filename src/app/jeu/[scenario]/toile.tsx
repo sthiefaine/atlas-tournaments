@@ -216,7 +216,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
     const decisions = Object.values(lireProgression(profilPartie.current).decisions ?? {});
     const sauvegarde = depart === 'reprise' ? lireSauvegarde(scenario.code, cleSauvegarde) : null;
-    const graine = sauvegarde?.graine ?? (essaiAube ? graineAube(scenario, decisions) : `${scenario.code}:1`);
+    const graine = sauvegarde?.graine ?? (essaiAube || index >= 0 ? graineAube(scenario, decisions) : `${scenario.code}:1`);
     const prepare = appliquerConsequences(scenarioPourMode(scenario, mode), decisionsDeGraine(scenario, graine));
     setScenarioEffectif(prepare.scenario);
     setRappels(prepare.rappels);
@@ -302,7 +302,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       if (image !== null) cancelAnimationFrame(image);
       partie.demonter();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };
