@@ -33,6 +33,7 @@
  */
 
 import type { Mode } from '../schemas/types';
+import { normaliserVitesse, type VitesseAnimations } from '../render/cadence';
 import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
 
 /** Ce que le joueur peut régler aujourd'hui. */
@@ -46,6 +47,8 @@ export interface Preferences {
    * quelqu'un qui l'a demandée à son appareil.
    */
   animationsReduites: boolean;
+  vitesseAnimations: VitesseAnimations;
+  modeTactique: boolean;
   /**
    * La qualité d'affichage (`render/qualite.ts`) : `auto` mesure et décide,
    * `basse` n'allume jamais la chaîne de post-traitement. Il y avait un troisième
@@ -195,6 +198,8 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   version: 1,
   dialogues: true,
   animationsReduites: false,
+  vitesseAnimations: 'normale',
+  modeTactique: false,
   qualite: QUALITE_PAR_DEFAUT,
   ecranCombat: true,
 });
@@ -207,6 +212,8 @@ export function normaliserPreferences(brut: unknown): Preferences {
     version: 1,
     dialogues: typeof p.dialogues === 'boolean' ? p.dialogues : PREFERENCES_PAR_DEFAUT.dialogues,
     animationsReduites: p.animationsReduites === true,
+    vitesseAnimations: normaliserVitesse(p.vitesseAnimations),
+    modeTactique: p.modeTactique === true,
     qualite: normaliserQualite(p.qualite),
     ecranCombat: typeof p.ecranCombat === 'boolean' ? p.ecranCombat : PREFERENCES_PAR_DEFAUT.ecranCombat,
   };

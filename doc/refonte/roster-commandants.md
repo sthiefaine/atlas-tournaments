@@ -1,0 +1,25 @@
+# Rôles et commandants — 9 septembre 2026
+
+Le roster reste à 28 unités. Le guide public `src/content/roles-unites.ts` donne pour chacune un rôle, une situation d'achat et une limite pratique. La fiche d'inspection et de production le reçoit par `ficheUnite.guide`. Le catalogue admin présente les mêmes conseils et les trois contre-unités calculées depuis la matrice du moteur, dans les deux sens. Il n'existe aucune copie chiffrée d'une table de dégâts.
+
+## Audit des décisions d'achat
+
+Les trois chars distinguent initiative, ligne polyvalente et ancrage coûteux. Artillerie, roquettes et missiles sol distinguent distance de couverture et zone morte : des positions différentes à protéger, sans inventer de nouvelles armes. Infanterie, méca et génie distinguent capture économique, progression antiblindé sur relief et remise en service. Les transports sont séparés par leur milieu et leurs passagers ; le porte-avions assure la base aérienne embarquée.
+
+Les quatre rôles liés aux drones sont observation économique, interception aérienne légère, ravitaillement aérien sans passagers et brouillage aérien méridien. Le brouilleur terrestre reste le déni de renseignement derrière une ligne, le Bastion un ancrage antiaérien lent. Les prototypes n'ajoutent aucun kit national. L'audit conserve les stats et les catalogues historiques ; il explicite les choix au lieu de conclure qu'une différence de prix suffit à prouver l'équilibre. Le test humain devra surtout comparer char moyen/lourd, missiles sol/roquettes et intercepteur/chasseur sur leurs coûts d'opportunité.
+
+## Identités jouables
+
+Ariane conserve son offensive polyvalente ; Reiner conserve exactement sa défense permanente et ses deux pouvoirs. Les nouveaux scénarios Aube emploient la révision 2 des capacités :
+
+- Solveig protège les transports. Son pouvoir sans convoi exposé offre peu de valeur ; son super permet un repositionnement de la logistique et une couverture générale.
+- Wren accroît la vision puis le mouvement. Sans exploitation des informations, aucun gain de dégâts ou de résistance ne vient sauver une mauvaise attaque.
+- Ost concentre les bonus offensifs sur les chenilles. Une composition aérienne ou légère ne reçoit pas ce soutien.
+
+Les capacités de la révision 1 sont inchangées. `resoudreCommandantsScenario` sélectionne la révision 2 à partir du catalogue 7. Les versions des scénarios Aube augmentent ; les tutoriels et démos anciens ne changent pas. Les faiblesses annoncées décrivent les bénéficiaires et les avantages absents, pas des malus secrets ajoutés au moteur.
+
+Le carnet de campagne expose les cinq profils publics sans importer les biographies secrètes. Les dilemmes de Reiner, Solveig et Wren renvoient aux décisions de batteries, convoi et archives déjà connectées aux conséquences. Celui d'Ost est un ressort de personnage, pas un choix de joueur prétendument livré. Les biographies passent en révision 3 ; leur champ éditorial `identiteTactique` n'est fourni aux routines qu'à l'acte III. Les faits historiques gardent leurs sources originales v2.
+
+## Validation
+
+Couverture exhaustive des 28 rôles et de leur accès par la fiche ; drones non armés et intercepteur aérien vérifiés depuis les dégâts réels ; révision historique des commandants conservée ; bénéficiaires filtrés de Solveig et Ost et vision de Wren vérifiés. Les contrats de quêtes utilisent le catalogue courant du scénario. Aucun GLB ni nouveau type d'unité.

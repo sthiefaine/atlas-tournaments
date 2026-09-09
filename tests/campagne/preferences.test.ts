@@ -89,7 +89,7 @@ test('des préférences absentes, illisibles ou corrompues restent jouables', ()
 
 test('un aller-retour par le stockage rend exactement ce qu’on a écrit', () => {
   poserStockage();
-  const voulu = { version: 1 as const, dialogues: false, animationsReduites: true, qualite: 'basse' as const, ecranCombat: false };
+  const voulu = { ...PREFERENCES_PAR_DEFAUT, dialogues: false, animationsReduites: true, qualite: 'basse' as const, ecranCombat: false };
   assert.equal(ecrirePreferences(voulu), true);
   assert.deepEqual(lirePreferences(), voulu);
   assert.equal(stockageDisponible(), true);

@@ -42,6 +42,17 @@ const marche: EvenementJeu = {
 };
 const attaque: EvenementJeu = { type: 'attaque', attaquantId: mienne, cibleId: sienne, degats: 34, riposte: 12 };
 
+test('cadence rapide : mêmes gestes et impacts, toutes les échéances divisées par deux', () => {
+  const apres = apresCombat(etat, mienne, sienne, 34, 12);
+  const normale = ecrirePartition([attaque], etat, apres, { ...OPTIONS, ecranCombat: true });
+  const rapide = ecrirePartition([attaque], etat, apres, { ...OPTIONS, ecranCombat: true, facteurDuree: 0.5 });
+  assert.equal(rapide.duree, normale.duree / 2);
+  assert.deepEqual(rapide.gestes, normale.gestes.map((g) => ({ ...g, debut: g.debut / 2, duree: g.duree / 2 })));
+  const instantanee = ecrirePartition([attaque], etat, apres, { ...OPTIONS, reduit: true, facteurDuree: 0.5 });
+  assert.equal(instantanee.duree, 0);
+  assert(instantanee.gestes.every((g) => g.debut === 0 && g.duree === 0));
+});
+
 function genres(p: Partition): string[] {
   return p.gestes.map((g) => g.genre);
 }

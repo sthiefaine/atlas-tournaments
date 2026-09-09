@@ -58,6 +58,7 @@ import { jouerTranches, ouvrirChantier, type Chantier, type Tranche } from './ch
 import { brancherGestes3d } from './gestes';
 import { ouvrirChantierDecor, type Decor } from './decor';
 import { creerEclairage, parametresAmbiance, type Eclairage, type ParametresAmbiance } from './eclairage';
+import { reglerDecorTactique } from './tactique';
 import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
 import { tailleCarteOmbre, type CadreOmbre } from './ombres';
@@ -200,6 +201,13 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let vue: VueInteraction | null = null;
   /** L'éclat d'un pouvoir : un multiplicateur d'exposition, 1 au repos. */
   let eclat = 1;
+  let tactique = false;
+  const visibiliteDecor = new WeakMap<THREE.Object3D, boolean>();
+  function appliquerTactique(): void {
+    monde?.unites.modeTactique(tactique);
+    reglerDecorTactique(monde?.decor?.groupe.children ?? [], tactique, visibiliteDecor);
+    if (scene3d) scene3d.canvas.dataset.modeTactique = String(tactique);
+  }
   let cleAmbiance = '';
   let cleTerrain = '';
   let premierTerrain = true;
@@ -455,6 +463,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       decor.groupe.visible = false;
       s.scene.add(decor.groupe);
       m.decor = decor;
+      appliquerTactique();
     });
 
     // Le décor paraît dès que **ses** programmes sont créés, sans attendre les
@@ -590,6 +599,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // à celui d'avant — un survol n'écrit rien.
     m.plateau.majVisibles(vue.visibles);
     m.decor?.majProprietaires(etat, vue.visibles, vue.catalogue);
+    appliquerTactique();
     // `maj` rend vrai quand une unité a bougé, est apparue ou a disparu — et
     // seulement alors : un survol ne repose rien. C'est l'ombre qui en dépend.
     if (m.unites.maj(etat, vue.catalogue, vue.visibles, { camp: vue.camp ?? null, unites: vue.unitesVues ?? null })) {
@@ -749,6 +759,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       if (!m) return null;
       const p = caseVersMonde(c);
       return m.vue3d.versEcran(new THREE.Vector3(p.x, m.plateau.hauteurEn(p.x, p.z) + 0.3, p.z));
+    },
+
+    modeTactique(actif: boolean): void {
+      tactique = actif; appliquerTactique(); ombreSale = true; salir();
     },
 
     brancher(gestes: GestesRendu): () => void {

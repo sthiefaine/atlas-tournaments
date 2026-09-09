@@ -1960,10 +1960,11 @@ export function validerSauvegarde(valeur: unknown): Resultat<Sauvegarde> {
   const ctx = new Contexte();
   const cles = ['scenarioCle', 'graine', 'catalogueVersion', 'engineVersion', 'mapgenVersion',
     'contentVersion', 'actions'] as const;
-  const o = objet(ctx, valeur, '', cles);
+  const o = objet(ctx, valeur, '', [...cles, 'scenarioVersion']);
   if (!o) return conclure(ctx, valeur as Sauvegarde);
   requis(ctx, o, '', cles);
   cle(ctx, o['scenarioCle'], 'scenarioCle');
+  if (o['scenarioVersion'] !== undefined) entier(ctx, o['scenarioVersion'], 'scenarioVersion', { min: 1 });
   chaine(ctx, o['graine'], 'graine', { max: 64 });
   for (const champ of ['catalogueVersion', 'engineVersion', 'mapgenVersion', 'contentVersion'] as const) {
     entier(ctx, o[champ], champ, { min: 1 });

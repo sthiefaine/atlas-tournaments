@@ -36,6 +36,7 @@ export interface PartieAffichee {
   nom: string;
   /** La version du catalogue jouée : c'est elle qui dit si une sauvegarde se reprend. */
   catalogueVersion: number;
+  scenarioVersion?: number;
   /** Les pastilles : taille, camps, catalogue, adversaire, journées, brouillard. */
   details: readonly string[];
   /** La carte, prête à peindre ; `null` si elle a échappé au canon. */
@@ -93,7 +94,7 @@ export function ListeParties({ parties, versionMoteur, libelles }: {
         } catch {
           brut = null;
         }
-        suivant[p.cle] = etatSauvegarde(brut, versionMoteur, p.catalogueVersion);
+        suivant[p.cle] = etatSauvegarde(brut, versionMoteur, p.catalogueVersion, p.scenarioVersion);
       }
       setEtats(suivant);
     };

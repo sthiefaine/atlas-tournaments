@@ -1,6 +1,6 @@
 {
   "cle": "aube_nuit_2v2",
-  "version": 1,
+  "version": 2,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -18,7 +18,7 @@
     "jour": 4,
     "nuit": 2
   },
-  "catalogueVersion": 6,
+  "catalogueVersion": 7,
   "equipes": [
     [
       0,

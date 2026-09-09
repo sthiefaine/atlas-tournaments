@@ -191,6 +191,8 @@ export interface Rendu {
   recentrer?(c: Case): void;
   /** Zoom tactile explicite : +1 rapproche, −1 éloigne. */
   zoomer?(sens: number): void;
+  /** Réduit le décor et affiche les repères de camp et de rôle. */
+  modeTactique?(actif: boolean): void;
   /** Un quart de tour autour de la carte : +1 vers la droite, −1 vers la gauche. */
   tourner?(sens: number): void;
   /**

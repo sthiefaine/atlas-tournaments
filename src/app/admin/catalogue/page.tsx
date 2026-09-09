@@ -1,3 +1,4 @@
+import { GuideCatalogue } from './guide';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -28,7 +29,7 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
     return (
       <main>
         <Message texte={message} />
-        <BaseAbsente />
+        <BaseAbsente /><GuideCatalogue />
         <Bloc titre="Canon embarqué" aide="Catalogue local : rôles, coûts et exclusivités. Les nouveaux modèles restent à produire séparément.">
           {canon.unites.map((u) => (
             <Ligne key={u.cle}><Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : 'Catalogue commun'} /><Link className="font-semibold underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link><span className="text-xs">{u.cout} fonds · mouvement {u.mouvement} · portée {u.portee[0]}–{u.portee[1]} · vision {u.vision}</span><span className="text-xs opacity-70">{u.traits.join(', ')}</span></Ligne>
@@ -46,14 +47,14 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
     version = await catalogueVersion();
     actives = await unites.actives();
   } catch {
-    return (<main><Message texte={message} /><BaseAbsente /></main>);
+    return (<main><Message texte={message} /><BaseAbsente /><GuideCatalogue /></main>);
   }
 
   const total = Math.max(actives, canon.unites.length);
 
   return (
     <main>
-      <Message texte={message} />
+      <Message texte={message} /><GuideCatalogue />
 
       <p className="mb-6 text-sm opacity-70">
         <strong>catalogueVersion {version}</strong> · {total} / {PLAFOND_CATALOGUE} unités actives ·

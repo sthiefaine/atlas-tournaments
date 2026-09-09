@@ -19,7 +19,7 @@ test('la difficulté choisie est conservée et visible depuis la campagne', asyn
   await difficile.click();
   await expect(difficile).toHaveAttribute('aria-checked', 'true');
   await page.goto('/campagne');
-  await expect(page.locator('.aube-parcours')).toContainText('Mode difficile');
+  await expect(page.getByRole('region', { name: 'Aube · le conflit des réserves' })).toContainText('Mode difficile');
   await page.goto('/reglages');
   await expect(page.getByRole('radio', { name: 'Difficile', exact: true })).toHaveAttribute('aria-checked', 'true');
 });

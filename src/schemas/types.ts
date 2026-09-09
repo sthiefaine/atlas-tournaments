@@ -1137,6 +1137,8 @@ export interface MissionDuJour {
 
 /** Sauvegarde : une partie est ses actions, plus les versions qu'elle a figées. */
 export interface Sauvegarde {
+  /** Version du scénario au départ ; absente dans les anciennes sauvegardes (révision 1). */
+  scenarioVersion?: number;
   scenarioCle: Cle;
   graine: string;
   catalogueVersion: number;

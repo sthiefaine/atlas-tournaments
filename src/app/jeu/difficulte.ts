@@ -38,8 +38,17 @@ export function scenarioPourMode(base: Scenario, mode: Mode): Scenario {
   if (reglage.brouillard !== undefined) scenario.brouillard = reglage.brouillard;
   if (base.code === 'aube_releve_1v3') {
     // Le siège a zéro revenu et pas d'usine adverse : des fonds ne le durciraient pas.
-    // Renforts supplémentaires aux entrées des trois armées, visibles dans le briefing.
-    const camps: CampId[] = adverses.map((c) => c.camp);
+    // Renforts supplémentaires aux entrées des deux armées latérales, visibles dans le briefing.
+    const camps: CampId[] = adverses.slice(0, 2).map((c) => c.camp);
+    scenario.dialogueOuverture = [...scenario.dialogueOuverture, {
+      locuteur: 'cmd_ariane_belloc', emotion: 'neutre',
+      texte: 'En difficile, deux infanteries supplémentaires arrivent à la journée 18 par les accès ouest et est. Conservez une réserve pour les intercepter.',
+    }];
+    scenario.scenesDialogue = [...(scenario.scenesDialogue ?? []), {
+      cle: 'releve_alerte_difficile_18', declencheur: { type: 'journee', journee: 17 },
+      repliques: [{ locuteur: 'cmd_ariane_belloc', emotion: 'neutre',
+        texte: 'Demain, les deux infanteries de réserve du mode difficile arrivent aux accès ouest et est.' }],
+    }];
     scenario.renforts = [...(scenario.renforts ?? []), {
       journee: 18,
       unites: camps.map((camp, i) => ({ camp, type: 'infanterie' as const, x: [2, 20, 11][i]!, y: [2, 2, 1][i]! })),

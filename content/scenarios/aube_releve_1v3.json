@@ -1,6 +1,6 @@
 {
   "cle": "aube_releve_1v3",
-  "version": 1,
+  "version": 2,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -18,7 +18,7 @@
     "jour": 4,
     "nuit": 2
   },
-  "catalogueVersion": 6,
+  "catalogueVersion": 7,
   "equipes": [
     [
       0
@@ -58,6 +58,9 @@
     {
       "type": "survivre",
       "journees": 40
+    },
+    {
+      "type": "capture_qg"
     }
   ],
   "defaite": [
@@ -71,12 +74,12 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Siège facultatif : tenez notre QG pendant quarante journées complètes. Trois délégations arrivent par le nord, l’ouest et l’est. Le détachement de relève rejoint notre camp au début de la journée 41 ; il ne crée pas de cinquième camp.",
+      "texte": "Tenez notre QG pendant quarante journées, ou prenez les trois QG adverses pour terminer plus tôt. Les délégations arrivent du nord, de l’ouest et de l’est. Notre relève entre au début de la journée 41.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les budgets sont fixes : aucun revenu périodique. Des réserves adverses finies arrivent aux journées 10, 20 et 30, annoncées la veille. Nos villes permettent de réparer ; gardez des fonds pour cela.",
+      "texte": "Aucun revenu périodique. Les réserves adverses arrivent aux journées 10, 20, 30, 34 et 38, annoncées la veille. Les deux dernières poussées alternent ouest et est. Gardez une réserve mobile et des fonds pour réparer dans nos villes.",
       "emotion": "neutre"
     },
     {
@@ -88,7 +91,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Quarante journées complètes. Le détachement allié rejoint notre camp au sud, et le match s’achève : les accès d’Aube restent partagés. Il n’y a pas de contre-offensive à jouer dans cet essai.",
+      "texte": "Les accès d’Aube restent partagés. Notre QG a tenu jusqu’à la relève, ou les trois QG adverses ont été pris avant son arrivée : le match est terminé.",
       "emotion": "neutre"
     }
   ],
@@ -136,6 +139,28 @@
           "type": "infanterie",
           "x": 10,
           "y": 3
+        }
+      ]
+    },
+    {
+      "journee": 34,
+      "unites": [
+        {
+          "camp": 1,
+          "type": "infanterie",
+          "x": 3,
+          "y": 7
+        }
+      ]
+    },
+    {
+      "journee": 38,
+      "unites": [
+        {
+          "camp": 2,
+          "type": "infanterie",
+          "x": 20,
+          "y": 7
         }
       ]
     },
@@ -201,7 +226,35 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, une infanterie de réserve arrive au nord. C’est la dernière réserve adverse annoncée.",
+          "texte": "Demain, une infanterie de réserve arrive au nord. Deux dernières poussées suivront aux journées 34 et 38 sur les accès latéraux. Gardez une réserve mobile.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_alerte_34",
+      "declencheur": {
+        "type": "journee",
+        "journee": 33
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Demain, une infanterie arrive par l’accès ouest. Revenez couvrir nos villes sans abandonner le QG.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_alerte_38",
+      "declencheur": {
+        "type": "journee",
+        "journee": 37
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Demain, une dernière infanterie arrive par l’accès est. La relève alliée est proche : protégez le QG jusqu’à la fin de la journée 40.",
           "emotion": "neutre"
         }
       ]

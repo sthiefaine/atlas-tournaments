@@ -116,6 +116,7 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
       biome: t(locale, `biome.${p.biome}`),
       nom: p.nom,
       catalogueVersion: p.catalogueVersion,
+      scenarioVersion: p.scenarioVersion,
       // La carte est calculée ici, au serveur : l'îlot client ne connaît ni les
       // terrains ni les palettes, il pose des tracés déjà teints.
       vignette: carte ? vignetteCarte(carte, couleurCase) : null,

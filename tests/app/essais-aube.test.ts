@@ -47,11 +47,11 @@ test('les cinq formats sont accessibles comme essais sans publier les autres bro
   const batteries = essaisAube(scenarios, cartes).find(p => p.cle === 'aube_batteries_2v1');
   assert.equal(batteries?.adversaire?.commandantCle, 'cmd_hadran_ost', 'Tomas est allié, pas adversaire');
 });
-test('le siège annonce trois réserves finies et sa relève avant la victoire de la journée 41', () => {
+test('le siège annonce ses réserves finies, sa relève et la victoire anticipée par QG', () => {
   const { scenario, carte } = charger('aube_releve_1v3');
   assert.equal(scenario.revenusParBatiment, 0);
-  assert.deepEqual(scenario.victoire, [{ type: 'survivre', journees: 40 }]);
-  assert.deepEqual(scenario.renforts?.map(r => r.journee), [10, 20, 30, 41]);
+  assert.deepEqual(scenario.victoire, [{ type: 'survivre', journees: 40 }, { type: 'capture_qg' }]);
+  assert.deepEqual(scenario.renforts?.map(r => r.journee), [10, 20, 30, 34, 38, 41]);
   const commandants = resoudreCommandantsScenario(scenario);
   const cat = chargerCatalogue(scenario.catalogueVersion);
   let etat = creerPartie(sceneDepuis(scenario, carte, commandants), cat, 'essais-aube:releve');

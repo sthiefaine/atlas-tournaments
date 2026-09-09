@@ -142,6 +142,7 @@ interface Frappeur {
   x: number;
   y: number;
   portee: number;
+  minimum: number;
   /** L'adversaire vole : c'est lui qu'une escorte anti-aérienne tient à distance. */
   vol: boolean;
 }
@@ -162,10 +163,11 @@ function frappeurs(etat: EtatPartie, cat: Catalogue, u: Unite): Frappeur[] {
     sortie.push({
       base,
       pv: pvAffiches(a.pv),
-      allonge: pointsMouvement(etat, cat, a) + ta.portee[1],
+      allonge: (porte(ta, 'tir_indirect') ? 0 : pointsMouvement(etat, cat, a)) + ta.portee[1],
       x: a.x,
       y: a.y,
       portee: ta.portee[1],
+      minimum: porte(ta, 'tir_indirect') ? ta.portee[0] : 0,
       vol: porte(ta, 'vol'),
     });
   }
@@ -180,7 +182,7 @@ function menace(
   let total = 0;
   for (const f of liste) {
     const d = Math.abs(f.x - c.x) + Math.abs(f.y - c.y);
-    if (d > f.allonge) continue;
+    if (d > f.allonge || d < f.minimum) continue;
     // La formule du moteur, jamais une copie (8 septembre 2026).
     const fTerrain = facteurTerrain(etoiles);
     const degats = ECHELLE_DEGATS * f.base * (f.pv / 10) * fTerrain;
@@ -250,11 +252,11 @@ function deposesPour(
 function objectifsSoutien(etat: EtatPartie, cat: Catalogue, u: Unite): Case[] {
   const cibles: Case[] = [];
   for (const a of etat.unites) {
-    if (a.camp !== u.camp || a.id === u.id || a.dansTransport) continue;
+    if (!sontAllies(etat, a.camp, u.camp) || a.id === u.id || a.dansTransport) continue;
     const ta = cat.unites[a.type];
     if (!ta || estSoutien(ta)) continue;
     if (aBesoin(etat, cat, a)) { cibles.push({ x: a.x, y: a.y }); continue; }
-    if (!estTransport(cat, u) || !peutEmbarquer(cat, u, a)) continue;
+    if (a.camp !== u.camp || !estTransport(cat, u) || !peutEmbarquer(cat, u, a)) continue;
     const obj = objectifsDe(etat, cat, a);
     const dist = distances(etat, cat, a, obj.cibles, `${a.camp}|${a.type}|${obj.cle}`);
     const d = dist[a.y * etat.largeur + a.x] ?? -1;
@@ -475,6 +477,18 @@ export function meilleureOption(
       base -= poids.capture * 0.5;
     }
 
+    // Une pièce indirecte garde ses distances au lieu de gagner quelques cases
+    // de progression au prix d'un contact sans riposte. Les menaces restent
+    // exclusivement celles que son équipe connaît.
+    if (porte(type, 'tir_indirect')) {
+      base -= (poids.securite * menaceIci) / 1000;
+      for (const a of adversaires) {
+        if (manhattan(a, c) < type.portee[0] && degatsArme(cat, a, u.type) > 0) {
+          base -= poids.progression * 2;
+        }
+      }
+    }
+
     // Attendre sur place ou se replacer.
     retenir(base, c, { type: 'rien' });
 
@@ -508,8 +522,9 @@ export function meilleureOption(
         const terrain = terrainBrut(etat, cat, c);
         const facteur = terrain === 'qg' ? poids.qg : 1;
         const seuil = seuilCapture(etat, cat, fictive);
-        const acheve = points >= seuil ? 1.5 : 1;
-        retenir(base + poids.capture * (points / seuil) * facteur * acheve, c, { type: 'capturer' });
+        const acquis = aBouge ? 0 : u.pointsCapture;
+        const acheve = points + acquis >= seuil ? 1.5 : 1;
+        retenir(base + poids.capture * ((points + acquis) / seuil) * facteur * acheve, c, { type: 'capturer' });
       }
     }
 

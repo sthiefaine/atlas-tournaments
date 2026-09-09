@@ -9,7 +9,7 @@ import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
 import type { MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
-import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
+import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
 import { enregistrerVictoire, enregistrerDecision, lireProgression, type Progression } from '../../campagne/progression';
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte } from '../../campagne/consequences';
 import { bilanDeFin, type Bilan } from './bilan';
@@ -202,13 +202,14 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     setMode(modeLu);
     const cle = cleSauvegardeDe(profilPartie.current, scenario.code, modeLu);
     const sauvegarde = lireSauvegarde(scenario.code, cle);
-    const compatible = sauvegarde?.engineVersion === VERSION_MOTEUR && sauvegarde.catalogueVersion === scenario.catalogueVersion;
+    const compatible = sauvegarde?.engineVersion === VERSION_MOTEUR && sauvegarde.catalogueVersion === scenario.catalogueVersion
+      && (sauvegarde.scenarioVersion ?? 1) === scenario.version;
     const enCours = Boolean(compatible && sauvegarde && sauvegarde.actions.length > 0);
     setAncienFormat(Boolean(sauvegarde && sauvegarde.actions.length > 0 && !compatible));
     setPreferences(lirePreferences());
     setCleSauvegarde(cle);
     setDepart(enCours ? 'reprise' : 'neuf');
-  }, [scenario.code, scenario.catalogueVersion]);
+  }, [scenario.code, scenario.catalogueVersion, scenario.version]);
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
@@ -253,6 +254,9 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         // joueur : la page les lit et les donne au chef d'orchestre, comme la peau.
         ecranCombat: preferences.ecranCombat,
         animationsReduites: preferences.animationsReduites,
+        vitesseAnimations: preferences.vitesseAnimations,
+        modeTactique: preferences.modeTactique,
+        surModeTactique: (actif) => { ecrirePreferences({ ...lirePreferences(), modeTactique: actif }); },
         surEtat: courant => {
           setEtat(courant);
           if (mission && courant.partie.terminee && sontAllies(courant, courant.partie.vainqueur, CAMP_JOUEUR) && !victoireEnregistree) {

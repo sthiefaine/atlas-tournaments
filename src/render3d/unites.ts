@@ -53,6 +53,7 @@ import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
+import { symboleRole } from './tactique';
 import { EPSILON_UNIFORME } from './programmes';
 import {
   appliquerMasque, chargerModele, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips,
@@ -813,6 +814,7 @@ export interface CalqueUnites {
   positionDe(id: string): THREE.Vector3 | null;
   /** Hauteur d'accroche de l'étiquette de PV. */
   sommetDe(id: string): number;
+  modeTactique(actif: boolean): void;
   /** Le clip que joue le mixer d'une unité, `null` pour un placeholder ou un modèle sans clip. */
   clipJoue(id: string): NomClip | null;
   dispose(): void;
@@ -825,6 +827,8 @@ interface Entree {
   groupe: THREE.Group;
   corps: THREE.Group;
   etiquette: THREE.Sprite | null;
+  repereTactique: THREE.Sprite | null;
+  symbole: string;
   sommet: number;
   pv: number;
   rotor: THREE.Object3D | null;
@@ -955,6 +959,34 @@ export function creerUnites(
   groupe.name = 'unites';
   const materiaux = new Materiaux();
   const entrees = new Map<string, Entree>();
+  let tactique = false;
+  const reperes = new Map<string, THREE.SpriteNodeMaterial>();
+  function majRepere(entree: Entree): void {
+    if (!tactique) { if (entree.repereTactique) entree.repereTactique.visible = false; return; }
+    if (!entree.repereTactique) {
+      const cle = `${entree.camp}:${entree.symbole}`;
+      let mat = reperes.get(cle);
+      if (!mat) {
+        const toile = doc.createElement('canvas');
+        toile.width = 128; toile.height = 64;
+        const g = toile.getContext('2d');
+        if (g) {
+          g.fillStyle = '#10222e'; g.fillRect(0, 0, 128, 64);
+          g.strokeStyle = paletteDe(entree.camp).light; g.lineWidth = 8; g.strokeRect(4, 4, 120, 56);
+          g.fillStyle = '#ffffff'; g.font = 'bold 36px system-ui'; g.textAlign = 'center'; g.textBaseline = 'middle';
+          g.fillText(`${entree.camp + 1} ${entree.symbole}`, 64, 33);
+        }
+        const tex = new THREE.CanvasTexture(toile); tex.colorSpace = THREE.SRGBColorSpace;
+        mat = new THREE.SpriteNodeMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false });
+        reperes.set(cle, mat);
+      }
+      const sprite = new THREE.Sprite(mat);
+      sprite.name = 'repere-tactique'; sprite.scale.set(0.58, 0.29, 1); sprite.renderOrder = 20;
+      entree.groupe.add(sprite); entree.repereTactique = sprite;
+    }
+    entree.repereTactique.visible = true;
+    entree.repereTactique.position.set(-0.1, entree.sommet + 0.45, 0);
+  }
   let tempsAnimation = 0;
   const visuels = new Map<string, EtatVisuel>();
   const retenues = new Map<string, Unite>();
@@ -992,6 +1024,8 @@ export function creerUnites(
       groupe: g,
       corps,
       etiquette: null,
+      repereTactique: null,
+      symbole: symboleRole(type),
       sommet: hauteurSilhouette(type.silhouette),
       pv: -1,
       rotor: corps.getObjectByName('rotor_anime') ?? null,
@@ -1025,6 +1059,7 @@ export function creerUnites(
     // qu'il remplace ; si elle existe déjà, on la remonte sans la redessiner.
     entree.sommet = modele.hauteur > 0 ? modele.hauteur : entree.sommet;
     if (entree.etiquette) entree.etiquette.position.y = entree.sommet + 0.16;
+    majRepere(entree);
     // Le modèle arrive avec ses propres matériaux : s'il remplace une pièce
     // déjà translucide — jouée, furtive —, il doit l'être aussi, sinon l'unité
     // « se réveille » à l'instant où l'asset se charge. Les doubles d'un fondu
@@ -1243,6 +1278,11 @@ export function creerUnites(
   return {
     groupe,
     visuel,
+    modeTactique(actif: boolean): void {
+      if (tactique === actif) return;
+      tactique = actif;
+      for (const entree of entrees.values()) majRepere(entree);
+    },
 
     appliquerAmbiance(p: ParametresAmbiance): void {
       materiaux.mouiller(p.mouille);
@@ -1332,6 +1372,7 @@ export function creerUnites(
           change = true;
         }
         if (!entree) continue;
+        majRepere(entree);
         const v = visuel(u.id);
         if (!memePose(entree.pose, u.x, u.y, v)) {
           poser(entree, u.x, u.y, v);
@@ -1417,6 +1458,8 @@ export function creerUnites(
         m.dispose();
       }
       etiquettes.clear();
+      for (const m of reperes.values()) { m.map?.dispose(); m.dispose(); }
+      reperes.clear();
       // Les formes **restent** : une silhouette ne dépend que du catalogue, et
       // le calque n'en est pas propriétaire. Les vider ici faisait payer à
       // chaque montage — revenir à l'accueil, changer de carte, ouvrir la

@@ -1,3 +1,4 @@
+import { ROLES_UNITES, type GuideUnite } from '../content/roles-unites';
 /**
  * La **fiche d'une unité** : ce qu'elle est, à quoi elle sert, contre quoi elle
  * est bonne, contre quoi elle craint, où elle avance bien et où elle ne passe
@@ -92,6 +93,7 @@ export const PV_PLEIN = 10;
 
 /** Tout ce qu'on sait dire d'une unité avant de l'acheter. */
 export interface FicheUnite {
+  guide?: GuideUnite;
   cle: CleUnite;
   cout: number;
   mouvement: number;
@@ -254,6 +256,7 @@ export function ficheUnite(cat: Catalogue, cle: CleUnite, enJeu?: Unite): FicheU
 
   return {
     cle,
+    guide: ROLES_UNITES[cle],
     cout: u.cout,
     mouvement: u.mouvement,
     vision: u.vision,

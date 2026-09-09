@@ -54,6 +54,7 @@ export interface PartieLibre {
   biome: Biome;
   camps: MapDef['camps'];
   catalogueVersion: number;
+  scenarioVersion?: number;
   /** Le commandant du camp 1 et sa stratégie, s'il est joué par l'IA. */
   adversaire: { commandantCle: string; ia: StrategieIa | null } | null;
   limiteJournees: number | null;
@@ -92,6 +93,7 @@ export function partiesLibres(
       biome: carte.biome,
       camps: carte.camps,
       catalogueVersion: s.catalogueVersion,
+      scenarioVersion: s.version,
       adversaire: adverse ? { commandantCle: adverse.commandantCle, ia: adverse.ia ?? null } : null,
       limiteJournees: s.limiteJournees,
       brouillard: s.brouillard,
@@ -119,12 +121,12 @@ export type EtatSauvegarde = 'aucune' | 'en_cours' | 'perimee';
  * repartira de zéro. Un texte illisible n'est pas une erreur : il n'y a pas de
  * partie, c'est tout.
  */
-export function etatSauvegarde(brut: string | null, versionMoteur: number, catalogueVersion: number): EtatSauvegarde {
+export function etatSauvegarde(brut: string | null, versionMoteur: number, catalogueVersion: number, scenarioVersion = 1): EtatSauvegarde {
   if (!brut) return 'aucune';
   try {
-    const v = JSON.parse(brut) as { actions?: unknown; engineVersion?: unknown; catalogueVersion?: unknown } | null;
+    const v = JSON.parse(brut) as { actions?: unknown; engineVersion?: unknown; catalogueVersion?: unknown; scenarioVersion?: unknown } | null;
     if (!v || typeof v !== 'object' || Array.isArray(v) || !Array.isArray(v.actions) || v.actions.length === 0) return 'aucune';
-    return v.engineVersion === versionMoteur && v.catalogueVersion === catalogueVersion ? 'en_cours' : 'perimee';
+    return v.engineVersion === versionMoteur && v.catalogueVersion === catalogueVersion && (v.scenarioVersion ?? 1) === scenarioVersion ? 'en_cours' : 'perimee';
   } catch {
     return 'aucune';
   }

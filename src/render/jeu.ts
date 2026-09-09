@@ -41,6 +41,7 @@ import {
 import { casesObjectifs } from './objectifs';
 import { nomCourtUnite } from './libelles';
 import { ecrirePartition } from './partition';
+import { facteurDuree } from './cadence';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
@@ -96,6 +97,9 @@ export interface OptionsJeu {
    * restent. Le réglage système (`prefers-reduced-motion`) s'ajoute toujours.
    */
   animationsReduites?: boolean;
+  vitesseAnimations?: import('./cadence').VitesseAnimations;
+  modeTactique?: boolean;
+  surModeTactique?: (actif: boolean) => void;
   /**
    * L'écran de combat par-dessus la carte à chaque attaque (`Preferences.ecranCombat`).
    * **Vrai par défaut** ; un clic le coupe de toute façon.
@@ -322,6 +326,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   if (!options.fabriqueRendu) throw new Error('aucune fabrique de rendu fournie');
   const rendu: Rendu = options.fabriqueRendu('3d');
   rendu.monter(conteneur);
+  let modeTactique = options.modeTactique === true;
+  rendu.modeTactique?.(modeTactique);
 
   if (conteneur.style.position === '') conteneur.style.position = 'relative';
 
@@ -345,7 +351,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     etat = creerPartie(scene, cat, graine);
     if (options.reprendre) {
       const sauvegarde = lireSauvegarde(options.scenario.code, cleLocale);
-      if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR) {
+      if (sauvegarde && sauvegarde.graine === graine && sauvegarde.catalogueVersion === cat.version && sauvegarde.engineVersion === VERSION_MOTEUR
+        && (sauvegarde.scenarioVersion ?? 1) === options.scenario.version) {
         const r = rejouer(scene, cat, { ...sauvegarde, actions: sauvegarde.actions }, commandants);
         etat = r.etat;
         actions = [...sauvegarde.actions];
@@ -498,6 +505,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   function sauvegarder(): void {
     ecrireSauvegarde({
       scenarioCle: options.scenario.code,
+      scenarioVersion: options.scenario.version,
       graine,
       catalogueVersion: cat.version,
       engineVersion: etat.engineVersion,
@@ -606,7 +614,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
 
   /** Vrai si le joueur ou son appareil demande des animations réduites. */
   function reduit(): boolean {
-    return (mouvementReduit?.matches ?? false) || options.animationsReduites === true;
+    return (mouvementReduit?.matches ?? false) || options.animationsReduites === true || options.vitesseAnimations === 'instantanee';
   }
 
   /**
@@ -620,6 +628,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     if (!vivant) return Promise.resolve();
     const partition = ecrirePartition(evenements, avant, apres, {
       camp, reduit: reduit(), cadrer: attenteIa, ecranCombat: options.ecranCombat !== false,
+      facteurDuree: facteurDuree(options.vitesseAnimations),
     });
     partitionEnCours = true;
     const peau = rendu.jouer ? rendu.jouer(partition) : rendu.animer(evenements, avant);
@@ -688,7 +697,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         rafraichir();
         await attendreDialogue();
         if (!vivant) return;
-        await pause(MS_ENTRE_ACTIONS);
+        await pause(MS_ENTRE_ACTIONS * facteurDuree(options.vitesseAnimations, reduit()));
         if (!vivant) return;
       }
       if (suite.length === 0 && !etat.partie.terminee && etat.campCourant !== camp) {
@@ -892,6 +901,13 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     },
     versEcran: (c: Case) => rendu.versEcran(c),
     couper: () => { couperPartition(); },
+    tactiqueActif: () => modeTactique,
+    basculerTactique: () => {
+      modeTactique = !modeTactique;
+      rendu.modeTactique?.(modeTactique);
+      options.surModeTactique?.(modeTactique);
+      rafraichir();
+    },
   };
 
   if (options.hud !== false) hud = monterHudHtml(conteneur, api);

@@ -916,3 +916,27 @@ test('les formes d’unités survivent au démontage du calque, et pèsent ce qu
   oublierFormesUnites();
   assert.equal(poidsFormesUnites().formes, 0, 'et on sait les libérer');
 });
+
+test('les repères tactiques suivent uniquement les unités visibles, restent réversibles et partagent leurs matières', () => {
+  const { doc, traces } = documentFactice();
+  const etat = partiePersonnalisee(['....', '....'], {}, [
+    { camp: 0, type: 'infanterie', x: 0, y: 0 },
+    { camp: 0, type: 'infanterie', x: 1, y: 0 },
+    { camp: 1, type: 'infanterie', x: 2, y: 0 },
+  ]);
+  const calque = creerUnites(doc, () => 0);
+  calque.modeTactique(true);
+  calque.maj(etat, cat, new Set(['0,0', '1,0']));
+  assert.equal(calque.groupe.children.length, 2);
+  const reperes = calque.groupe.children.map((g) => g.getObjectByName('repere-tactique') as THREE.Sprite);
+  assert.ok(reperes.every((s) => s?.visible));
+  assert.equal(reperes[0]!.material, reperes[1]!.material);
+  assert.ok(traces.includes('fillText:1 ⚑'));
+  calque.modeTactique(false);
+  assert.ok(reperes.every((s) => !s.visible));
+  calque.modeTactique(true);
+  assert.ok(reperes.every((s) => s.visible));
+  calque.maj(etat, cat, new Set());
+  assert.equal(calque.groupe.children.length, 0);
+  calque.dispose();
+});

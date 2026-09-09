@@ -29,6 +29,6 @@ export function ParcoursAube() {
       const ouverte = queteOuverte(cle, decisions);
       return <article key={cle}><strong>{titre}</strong><p>{effet}</p>{ouverte ? <Link href={`/jeu/${cle}`}>{progression.victoires.includes(cle) ? 'Rejouer la quête' : 'Jouer la quête'} →</Link> : <small>{condition} pour ouvrir cette quête.</small>}</article>;
     })}</div>
-    <h3>Défi facultatif · la quarantième relève</h3><p>1 contre 3. Survivez quarante journées jusqu’à l’arrivée du convoi à J41. Vos quêtes peuvent préparer des réserves supplémentaires.</p><Link className="atlas-bouton secondaire" href="/jeu/aube_releve_1v3">Jouer le siège</Link>
+    <h3>Défi facultatif · la quarantième relève</h3><p>1 contre 3. Survivez quarante journées jusqu’à l’arrivée du convoi à J41, ou prenez les trois QG adverses pour terminer plus tôt. Vos quêtes peuvent préparer des réserves supplémentaires.</p><Link className="atlas-bouton secondaire" href="/jeu/aube_releve_1v3">Jouer le siège</Link>
   </section>;
 }

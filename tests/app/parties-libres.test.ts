@@ -92,6 +92,8 @@ test('une sauvegarde se reprend si elle a joué et si le moteur et le catalogue 
   assert.equal(etatSauvegarde(texte({ ...ok, actions: [] }), VERSION_MOTEUR, 6), 'aucune', 'sans action, rien à reprendre');
   assert.equal(etatSauvegarde(texte({ ...ok, actions: 'oui' }), VERSION_MOTEUR, 6), 'aucune');
   assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 6), 'en_cours');
+  assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 6, 2), 'perimee', 'les actions anciennes ne se rejouent pas sur une mission réécrite');
+  assert.equal(etatSauvegarde(texte({ ...ok, scenarioVersion: 2 }), VERSION_MOTEUR, 6, 2), 'en_cours');
   // La règle de la page de jeu : un autre moteur ou un autre catalogue, et la
   // partie repart de zéro — on ne l'annonce donc pas comme reprenable.
   assert.equal(etatSauvegarde(texte({ ...ok, engineVersion: VERSION_MOTEUR - 1 }), VERSION_MOTEUR, 6), 'perimee');

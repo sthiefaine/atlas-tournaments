@@ -1,3 +1,4 @@
+import { GuideCommandants } from './commandants';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -145,5 +146,5 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
       profilB: t(locale, 'reglages.profil_b'),
       profilActif: t(locale, 'accueil.profil_actif'),
     }}
-  /><ParcoursAube /></>;
+  /><ParcoursAube /><GuideCommandants /></>;
 }

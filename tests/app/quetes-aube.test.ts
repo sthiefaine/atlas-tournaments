@@ -16,10 +16,10 @@ for (const quete of ['convoi', 'archives']) {
     if (!carte.ok) return;
     assert.ok(carte.valeur.largeur >= 10 && carte.valeur.largeur <= 14);
     assert.ok(carte.valeur.hauteur >= 10 && carte.valeur.hauteur <= 14);
-    assert.equal(s.catalogueVersion, 6);
+    assert.equal(s.catalogueVersion, 7);
     assert.equal(s.limiteJournees, 15);
     assert.deepEqual(s.victoire, [{ type: 'capture_qg' }]);
-    const cat = chargerCatalogue(6);
+    const cat = chargerCatalogue(s.catalogueVersion);
     const commandants = resoudreCommandantsScenario(s);
     const etat = creerPartie(sceneDepuis(s, carte.valeur, commandants), cat, 'quetes:contrat');
     const porteur = etat.unites.find(u => u.id === 'u1');

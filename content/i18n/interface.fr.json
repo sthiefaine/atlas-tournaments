@@ -1,6 +1,22 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle":"commandant.cmd_solveig_tamm.pouvoir_aube","texte":"Escorte rapprochée","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"commandant.cmd_solveig_tamm.super_aube","texte":"Convoi prioritaire","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"commandant.cmd_wren_osoko.pouvoir_aube","texte":"Relevé du terrain","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"commandant.cmd_wren_osoko.super_aube","texte":"Vue d’ensemble","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"commandant.cmd_hadran_ost.pouvoir_aube","texte":"Pression mécanisée","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"commandant.cmd_hadran_ost.super_aube","texte":"Cadence d’essai","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"fiche.role","texte":"Rôle","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"fiche.achat","texte":"Quand produire","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"fiche.limite","texte":"Vigilance","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"reglages.vitesse","texte":"Vitesse des animations","contexte":{"ecran":"reglages"},"longueurMax":40},
+    {"cle":"reglages.vitesse_note","texte":"Rapide : durée divisée par deux. Instantanée : actions sans attente. Un clic sur la carte passe la séquence ; la réduction des animations reste prioritaire.","contexte":{"ecran":"reglages"},"longueurMax":200},
+    {"cle":"reglages.vitesse_normale","texte":"Normale","contexte":{"ecran":"reglages"},"longueurMax":20},
+    {"cle":"reglages.vitesse_rapide","texte":"Rapide ×2","contexte":{"ecran":"reglages"},"longueurMax":20},
+    {"cle":"reglages.vitesse_instantanee","texte":"Instantanée","contexte":{"ecran":"reglages"},"longueurMax":20},
+    {"cle":"hud.mode_tactique","texte":"Mode tactique","contexte":{"ecran":"partie"},"longueurMax":30},
+    {"cle":"hud.legende_tactique","texte":"Camp · ⚑ capture · ⊕ anti-air · ⌒ tir indirect · + soutien · ≈ brouillage · ◇ drone · ↑ aérien · ▱ transport · ■ contact","contexte":{"ecran":"partie"},"longueurMax":200},
     {"cle":"mode.victoires","texte":"Victoires : {normal} en normal · {difficile} en difficile","contexte":{"ecran":"reglages","note":"Nombre de missions distinctes remportées dans chaque mode par le profil actif."},"longueurMax":100},
     {
       "cle": "objectif.defaite_unite",

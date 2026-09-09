@@ -6,6 +6,7 @@ import type { Mode } from '../../schemas/types';
 import { lireProgression } from '../campagne/progression';
 import { indexChoix } from '../navigation-choix';
 import { QUALITES_RENDU, type QualiteRendu } from '../../render/qualite';
+import { VITESSES_ANIMATIONS } from '../../render/cadence';
 import {
   ecrireDifficulte, lireDifficulte, NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
   compterProgression, effacerProgression, ecrirePreferences, lirePreferences,
@@ -56,6 +57,11 @@ export interface LibellesReglages {
   dialoguesNote: string;
   animations: string;
   animationsNote: string;
+  vitesse: string;
+  vitesseNote: string;
+  vitesseNormale: string;
+  vitesseRapide: string;
+  vitesseInstantanee: string;
   ecranCombat: string;
   ecranCombatNote: string;
   /** Titre du panneau d'affichage. */
@@ -246,6 +252,22 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     <Groupe id="reglage-en-partie" titre={libelles.enPartie}>
       {bascule('dialogues', libelles.dialogues, libelles.dialoguesNote)}
       {bascule('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
+      <div className="reglage-rangee">
+        <span className="reglage-libelle"><strong>{libelles.vitesse}</strong>
+          <span className="reglage-note">{libelles.vitesseNote}</span></span>
+        <div className="reglage-choix" role="radiogroup" aria-label={libelles.vitesse}>
+          {VITESSES_ANIMATIONS.map((vitesse, index) => {
+            const choisi = preferences.vitesseAnimations === vitesse;
+            return <button key={vitesse} type="button" role="radio" aria-checked={choisi}
+              tabIndex={choisi ? 0 : -1} disabled={!pret} className={choisi ? 'choisi' : ''}
+              onClick={() => changer({ vitesseAnimations: vitesse })}
+              onKeyDown={(event) => naviguer(event, index, VITESSES_ANIMATIONS.length,
+                (i) => changer({ vitesseAnimations: VITESSES_ANIMATIONS[i]! }))}>
+              {vitesse === 'normale' ? libelles.vitesseNormale : vitesse === 'rapide' ? libelles.vitesseRapide : libelles.vitesseInstantanee}
+            </button>;
+          })}
+        </div>
+      </div>
     </Groupe>
 
     <Groupe id="reglage-difficulte" titre={libelles.difficulte}>

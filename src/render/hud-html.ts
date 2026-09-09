@@ -135,6 +135,8 @@ export interface ApiHud {
   annuler(): void;
   recommencer(): void;
   zoomer?(sens: 1 | -1): void;
+  basculerTactique?(): void;
+  tactiqueActif?(): boolean;
   /** Un quart de tour de la caméra : absent quand le rendu ne sait pas tourner. */
   tourner?(sens: 1 | -1): void;
   recentrer?(): void;
@@ -214,6 +216,11 @@ const STYLE = `
  * ------------------------------------------------------------------------- */
 [data-atlas-hote]{--rail-l:0px;--t1:10px;--t2:11px;--t3:12px;--t4:13px;--t5:15px;--t6:18px;--t7:22px;--t8:28px;--coupe:8px}
 [data-atlas-hote][data-atlas-rail='oui']{padding-right:var(--rail-l)}
+.atlas-hud .camera button[aria-pressed="true"]{background:var(--signal);color:var(--encre)}
+.atlas-hud .legende-tactique{position:relative;max-width:220px;pointer-events:auto;background:var(--encre);padding:6px;font-size:var(--t2);border:1px solid var(--cadre)}
+.atlas-hud .legende-tactique summary{cursor:pointer}
+.atlas-hud .legende-tactique p{position:absolute;right:0;bottom:24px;width:210px;margin:0;padding:10px;background:var(--encre);border:1px solid var(--cadre);line-height:1.7}
+.atlas-hud .guide-unite p{margin:5px 0;line-height:1.4}
 .atlas-hud{position:absolute;inset:0;container-type:size;container-name:atlas-interface;pointer-events:none;font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:var(--t4);line-height:1.35;color:#f5efdf;-webkit-font-smoothing:antialiased;--marge:12px;--bas:calc(12px + env(safe-area-inset-bottom,0px));--haut:calc(12px + env(safe-area-inset-top,0px));--dock:72px;--encre:#152c3b;--encre-clair:#1e3f52;--encre-sombre:#0a1a24;--papier:#f4edda;--signal:#ffd162;--alerte:#f2a33a;--alerte-grave:#f0555f;--cadre:#3b5b6a;--camp:#6d8fa5;--camp-voile:#6d8fa524}
 .atlas-hud *{box-sizing:border-box}
 .atlas-hud[data-scene='ouverte']{visibility:hidden}
@@ -1698,8 +1705,10 @@ export function monterHudHtml(
   }
 
   function panneauCamera(): string {
-    if (!api.zoomer && !api.recentrer && !api.tourner && !api.uniteSuivante && !api.inclinaisonSuivante) return '';
+    if (!api.basculerTactique && !api.zoomer && !api.recentrer && !api.tourner && !api.uniteSuivante && !api.inclinaisonSuivante) return '';
     const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
+    const tactique = api.basculerTactique ? `<button type="button" data-action="mode_tactique" aria-pressed="${api.tactiqueActif?.() ?? false}" aria-label="${ech(api.t('hud.mode_tactique'))}" title="${ech(api.t('hud.mode_tactique'))}"><span aria-hidden="true">▦</span></button>` : '';
+    const legende = api.tactiqueActif?.() ? `<details class="legende-tactique"><summary>${ech(api.t('hud.mode_tactique'))}</summary><p>${ech(api.t('hud.legende_tactique'))}</p></details>` : '';
     // Une flèche qui tourne autour d'un point : c'est la carte qui pivote, pas la pièce.
     const fleche = (sens: 1 | -1): string => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"${sens === -1 ? ' style="transform:scaleX(-1)"' : ''}><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M17 3v4.5h-4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>`;
     // Les deux zooms sont des **loupes**, pas un « + » et un « − » de 25 px dans
@@ -1709,18 +1718,18 @@ export function monterHudHtml(
     // Un plateau vu de biais, et l'arc que la caméra suit au-dessus de lui.
     const inclinaison = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.6 4.4 18.1 12 21.6l7.6-3.5z"/><path d="M4.8 12.4a7.4 7.4 0 0 1 14.4 0"/><path d="M16.6 9.9 19.4 12.4 22 10.4"/></svg>';
     if (racine.clientWidth <= 600) {
-      const outils = (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1))
+      const outils = tactique + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1))
         + bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
         + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
           + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins')) : '')
         + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '');
-      return '<div class="camera camera-mobile">'
+      return '<div class="camera camera-mobile">' + legende
         + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
         + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}</div></details>`
         + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
         + '</div>';
     }
-    return '<div class="camera">'
+    return '<div class="camera">' + legende + tactique
       + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
       + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')
       + (api.zoomer
@@ -1897,7 +1906,12 @@ export function monterHudHtml(
       + `</div>`
       + meteo;
 
+    const guide = f.guide ? `<section class="bloc guide-unite">`
+      + `<h4><span>${ech(api.t('fiche.role'))} · ${ech(f.guide.role)}</span></h4>`
+      + `<p><strong>${ech(api.t('fiche.achat'))}</strong> ${ech(f.guide.achat)}</p>`
+      + `<p><strong>${ech(api.t('fiche.limite'))}</strong> ${ech(f.guide.limite)}</p></section>` : '';
     return `<div class="fiche">`
+      + guide
       + chiffres
       + consommation
       + (f.indirecte ? `<p class="avert">${ech(api.t('fiche.indirecte'))}</p>` : '')
@@ -2304,6 +2318,7 @@ export function monterHudHtml(
       case 'pouvoir_super': api.jouerPouvoir('super'); break;
       case 'fermer': api.annuler(); break;
       case 'rejouer': api.recommencer(); break;
+      case 'mode_tactique': api.basculerTactique?.(); break;
       case 'zoom_plus': api.zoomer?.(1); break;
       case 'zoom_moins': api.zoomer?.(-1); break;
       case 'tourner_gauche': api.tourner?.(-1); break;

@@ -16,11 +16,11 @@ export interface CommandantJeu {
   superPouvoir: CapaciteJeu;
 }
 
-/** Reiner protège ses unités ; le profil offensif reste le repli des autres clés. */
-export function chargerCommandantJeu(cle: Cle): CommandantJeu {
+/** Révision 1 inchangée pour les anciens scénarios ; spécialisation Aube à partir du catalogue 7. */
+export function chargerCommandantJeu(cle: Cle, revision = 1): CommandantJeu {
   const defensif = cle === 'cmd_tomas_reiner';
   const quoi = defensif ? 'defense' : 'attaque';
-  return {
+  const commandant: CommandantJeu = {
     cle,
     nom: `commandant.${cle}.nom`,
     passif: defensif ? { cible: 'mes_unites', modificateur: { quoi: 'defense', valeur: 1.1 } } : null,
@@ -36,12 +36,40 @@ export function chargerCommandantJeu(cle: Cle): CommandantJeu {
       ],
     },
   };
+  if (revision >= 2) {
+    if (['cmd_solveig_tamm', 'cmd_wren_osoko', 'cmd_hadran_ost'].includes(cle)) {
+      commandant.pouvoir.nom = `commandant.${cle}.pouvoir_aube`;
+      commandant.superPouvoir.nom = `commandant.${cle}.super_aube`;
+    }
+    if (cle === 'cmd_solveig_tamm') {
+      const filtre = { types: ['transport', 'transport_air', 'barge'] };
+      commandant.pouvoir.effets = [{ cible: 'mes_unites', filtre, modificateur: { quoi: 'defense', valeur: 1.35 } }];
+      commandant.superPouvoir.effets = [
+        ...commandant.pouvoir.effets,
+        { cible: 'mes_unites', filtre, modificateur: { quoi: 'mouvement', valeur: 1 } },
+        { cible: 'mes_unites', modificateur: { quoi: 'defense', valeur: 1.15 } },
+      ];
+    } else if (cle === 'cmd_wren_osoko') {
+      commandant.pouvoir.effets = [{ cible: 'mes_unites', modificateur: { quoi: 'vision', valeur: 2 } }];
+      commandant.superPouvoir.effets = [
+        { cible: 'mes_unites', modificateur: { quoi: 'vision', valeur: 3 } },
+        { cible: 'mes_unites', modificateur: { quoi: 'mouvement', valeur: 1 } },
+      ];
+    } else if (cle === 'cmd_hadran_ost') {
+      commandant.pouvoir.effets = [{ cible: 'mes_unites', filtre: { mouvement: ['chenilles'] }, modificateur: { quoi: 'attaque', valeur: 1.3 } }];
+      commandant.superPouvoir.effets = [
+        { cible: 'mes_unites', filtre: { mouvement: ['chenilles'] }, modificateur: { quoi: 'attaque', valeur: 1.45 } },
+        { cible: 'mes_unites', filtre: { mouvement: ['chenilles'] }, modificateur: { quoi: 'mouvement', valeur: 1 } },
+      ];
+    }
+  }
+  return commandant;
 }
 
 export function resoudreCommandantsScenario(scenario: Scenario): (CommandantJeu | null)[] {
   const resultat: (CommandantJeu | null)[] = [];
   for (const commandant of scenario.commandants) {
-    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle);
+    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle, scenario.catalogueVersion >= 7 ? 2 : 1);
   }
   return resultat;
 }

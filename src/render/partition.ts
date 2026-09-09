@@ -137,6 +137,8 @@ export interface Partition {
 
 /** Ce que le réalisateur doit savoir du contexte pour écrire. */
 export interface OptionsPartition {
+  /** Facteur de durée de présentation ; 0,5 donne la cadence rapide. */
+  facteurDuree?: number;
   /** Le camp du joueur : les chiffres se teintent par rapport à lui. */
   camp: CampId;
   /** Animations réduites : toutes les durées tombent à 0. */
@@ -219,7 +221,8 @@ export function ecrirePartition(
   evenements: readonly EvenementJeu[], avant: EtatPartie, apres: EtatPartie, options: OptionsPartition,
 ): Partition {
   const gestes: Geste[] = [];
-  const d = (ms: number): number => (options.reduit ? 0 : ms);
+  const facteur = options.facteurDuree === 0.5 ? 0.5 : 1;
+  const d = (ms: number): number => (options.reduit ? 0 : ms * facteur);
 
   // La fin du dernier geste de chaque unité dans la salve.
   const fins = new Map<string, number>();
