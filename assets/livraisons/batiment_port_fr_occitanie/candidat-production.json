@@ -1,0 +1,67 @@
+{
+  "id": "batiment_port_fr_occitanie",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_port_fr_occitanie_lod0.glb",
+      "octets": 35820,
+      "triangles": 260,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_port_fr_occitanie_lod1.glb",
+      "octets": 32556,
+      "triangles": 228,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_port_fr_occitanie",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_port_fr_occitanie_albedo.png",
+      "batiment_port_fr_occitanie_albedo_ete.png",
+      "batiment_port_fr_occitanie_albedo_hiver.png",
+      "batiment_port_fr_occitanie_normale.png",
+      "batiment_port_fr_occitanie_normale_ete.png",
+      "batiment_port_fr_occitanie_normale_hiver.png",
+      "batiment_port_fr_occitanie_rugosite.png",
+      "batiment_port_fr_occitanie_rugosite_ete.png",
+      "batiment_port_fr_occitanie_rugosite_hiver.png",
+      "batiment_port_fr_occitanie_emission.png",
+      "batiment_port_fr_occitanie_emission_ete.png",
+      "batiment_port_fr_occitanie_emission_hiver.png",
+      "batiment_port_fr_occitanie_masque_equipe.png",
+      "batiment_port_fr_occitanie_masque_equipe_ete.png",
+      "batiment_port_fr_occitanie_masque_equipe_hiver.png",
+      "batiment_port_fr_occitanie_lod0.glb",
+      "batiment_port_fr_occitanie_lod1.glb"
+    ]
+  }
+}

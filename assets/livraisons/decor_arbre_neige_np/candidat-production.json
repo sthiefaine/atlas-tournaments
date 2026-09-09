@@ -1,0 +1,81 @@
+{
+  "id": "decor_arbre_neige_np",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "decor_arbre_neige_np_lod0.glb",
+      "octets": 67984,
+      "triangles": 392,
+      "noeuds": [
+        "tronc",
+        "feuillage",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_ecorce",
+        "mat_feuillage"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_arbre_neige_np_lod1.glb",
+      "octets": 38316,
+      "triangles": 216,
+      "noeuds": [
+        "tronc",
+        "feuillage",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_ecorce",
+        "mat_feuillage"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_arbre_neige_np_lod2.glb",
+      "octets": 14152,
+      "triangles": 56,
+      "noeuds": [
+        "tronc",
+        "feuillage",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_ecorce",
+        "mat_feuillage"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "decor_arbre_neige_np",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "decor_arbre_neige_np_albedo.png",
+      "decor_arbre_neige_np_albedo_printemps.png",
+      "decor_arbre_neige_np_albedo_ete.png",
+      "decor_arbre_neige_np_albedo_automne.png",
+      "decor_arbre_neige_np_albedo_hiver.png",
+      "decor_arbre_neige_np_normale.png",
+      "decor_arbre_neige_np_normale_printemps.png",
+      "decor_arbre_neige_np_normale_ete.png",
+      "decor_arbre_neige_np_normale_automne.png",
+      "decor_arbre_neige_np_normale_hiver.png",
+      "decor_arbre_neige_np_rugosite.png",
+      "decor_arbre_neige_np_rugosite_printemps.png",
+      "decor_arbre_neige_np_rugosite_ete.png",
+      "decor_arbre_neige_np_rugosite_automne.png",
+      "decor_arbre_neige_np_rugosite_hiver.png",
+      "decor_arbre_neige_np_lod0.glb",
+      "decor_arbre_neige_np_lod1.glb",
+      "decor_arbre_neige_np_lod2.glb"
+    ]
+  }
+}

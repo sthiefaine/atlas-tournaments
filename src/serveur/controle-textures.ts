@@ -1,6 +1,27 @@
+import { createHash } from 'node:crypto';
 import { lirePng, type PixelsPng } from '../assets/png';
 import { contratProduction } from '../assets/production';
 import { nomTexture, type AssetSpec, type MotifAsset } from '../assets/spec';
+
+/** Cache privé et borné de décodage, jamais de verdict : les contraintes sont revérifiées à chaque lot. */
+const LIMITE_PIXELS_MEMO = 64 * 1024 * 1024;
+const pixelsMemo = new Map<string, PixelsPng>();
+let taillePixelsMemo = 0;
+function lirePixelsControles(octets: Uint8Array): PixelsPng {
+  const cle = createHash('sha256').update(octets).digest('hex');
+  const connu = pixelsMemo.get(cle);
+  if (connu) { pixelsMemo.delete(cle); pixelsMemo.set(cle, connu); return connu; }
+  const pixels = lirePng(octets);
+  while (taillePixelsMemo + pixels.rgba.byteLength > LIMITE_PIXELS_MEMO && pixelsMemo.size) {
+    const ancien = pixelsMemo.keys().next().value!;
+    taillePixelsMemo -= pixelsMemo.get(ancien)!.rgba.byteLength;
+    pixelsMemo.delete(ancien);
+  }
+  if (pixels.rgba.byteLength <= LIMITE_PIXELS_MEMO) {
+    pixelsMemo.set(cle, pixels); taillePixelsMemo += pixels.rgba.byteLength;
+  }
+  return pixels;
+}
 
 /** Le masque se contrôle dans l'espace image : aucun rendu ou éclairage implicite. */
 export function controlerTextures(spec: AssetSpec, fichiers: ReadonlyMap<string, Uint8Array>): MotifAsset[] {
@@ -10,7 +31,7 @@ export function controlerTextures(spec: AssetSpec, fichiers: ReadonlyMap<string,
     // Les variantes se livrent progressivement ; le jeu de base obligatoire reste complet.
     if (!b) { if (t.obligatoire && saison === undefined) motifs.push({ code: 'asset_texture_absente', detail: `${nom} : carte obligatoire absente` }); continue; }
     try {
-      const p = lirePng(b); cartes.set(nom, p);
+      const p = lirePixelsControles(b); cartes.set(nom, p);
       if (p.largeur !== t.resolution || p.hauteur !== t.resolution) throw new Error(`résolution ${p.largeur}×${p.hauteur}, attendue ${t.resolution}×${t.resolution}`);
       if (t.canal === 'masque_equipe') {
         let blanc = 0;

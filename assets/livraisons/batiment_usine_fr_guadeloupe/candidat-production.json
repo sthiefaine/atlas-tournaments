@@ -1,0 +1,67 @@
+{
+  "id": "batiment_usine_fr_guadeloupe",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_usine_fr_guadeloupe_lod0.glb",
+      "octets": 25512,
+      "triangles": 168,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_usine_fr_guadeloupe_lod1.glb",
+      "octets": 23880,
+      "triangles": 152,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_usine_fr_guadeloupe",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_usine_fr_guadeloupe_albedo.png",
+      "batiment_usine_fr_guadeloupe_albedo_ete.png",
+      "batiment_usine_fr_guadeloupe_albedo_hiver.png",
+      "batiment_usine_fr_guadeloupe_normale.png",
+      "batiment_usine_fr_guadeloupe_normale_ete.png",
+      "batiment_usine_fr_guadeloupe_normale_hiver.png",
+      "batiment_usine_fr_guadeloupe_rugosite.png",
+      "batiment_usine_fr_guadeloupe_rugosite_ete.png",
+      "batiment_usine_fr_guadeloupe_rugosite_hiver.png",
+      "batiment_usine_fr_guadeloupe_emission.png",
+      "batiment_usine_fr_guadeloupe_emission_ete.png",
+      "batiment_usine_fr_guadeloupe_emission_hiver.png",
+      "batiment_usine_fr_guadeloupe_masque_equipe.png",
+      "batiment_usine_fr_guadeloupe_masque_equipe_ete.png",
+      "batiment_usine_fr_guadeloupe_masque_equipe_hiver.png",
+      "batiment_usine_fr_guadeloupe_lod0.glb",
+      "batiment_usine_fr_guadeloupe_lod1.glb"
+    ]
+  }
+}

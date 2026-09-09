@@ -1,0 +1,66 @@
+{
+  "id": "terrain_plage",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "terrain_plage_lod0.glb",
+      "octets": 3104,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "terrain_plage_lod1.glb",
+      "octets": 3104,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "terrain_plage",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "terrain_plage_albedo.png",
+      "terrain_plage_albedo_printemps.png",
+      "terrain_plage_albedo_ete.png",
+      "terrain_plage_albedo_automne.png",
+      "terrain_plage_albedo_hiver.png",
+      "terrain_plage_normale.png",
+      "terrain_plage_normale_printemps.png",
+      "terrain_plage_normale_ete.png",
+      "terrain_plage_normale_automne.png",
+      "terrain_plage_normale_hiver.png",
+      "terrain_plage_rugosite.png",
+      "terrain_plage_rugosite_printemps.png",
+      "terrain_plage_rugosite_ete.png",
+      "terrain_plage_rugosite_automne.png",
+      "terrain_plage_rugosite_hiver.png",
+      "terrain_plage_occlusion.png",
+      "terrain_plage_occlusion_printemps.png",
+      "terrain_plage_occlusion_ete.png",
+      "terrain_plage_occlusion_automne.png",
+      "terrain_plage_occlusion_hiver.png",
+      "terrain_plage_lod0.glb",
+      "terrain_plage_lod1.glb"
+    ]
+  }
+}

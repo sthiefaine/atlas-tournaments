@@ -206,6 +206,14 @@ export async function genererInfanterie(): Promise<Livraison> {
     injecterCartes(document, cartes);
     const asset = (document['asset'] ?? {}) as Record<string, unknown>;
     document['asset'] = { ...asset, generator: `atlas-tournaments generer-infanterie · ${String(asset['generator'] ?? '')}` };
+    // La spécification ne demande que mat_corps. Les groupes historiques restent
+    // exportés tels quels pour conserver le BIN, les UV et le squelette octet pour
+    // octet ; leurs deux matériaux avaient les mêmes paramètres et les mêmes cartes.
+    const materiauxExportes = document['materials'] as { name: string }[];
+    document['materials'] = [materiauxExportes.find((m) => m.name === 'mat_corps')!];
+    for (const maille of document['meshes'] as { primitives: { material: number }[] }[]) {
+      for (const primitive of maille.primitives) primitive.material = 0;
+    }
     fichiers.set(nomModele(spec, lod), assemblerGlb(document, binReduit));
     triangles[lod] = scene.triangles;
   }

@@ -19,7 +19,14 @@
     "extraire-chaines": "tsx scripts/extraire-chaines.ts",
     "verifier:campagne": "tsx scripts/verifier-campagne.ts",
     "postinstall": "node scripts/rustine-three.mjs",
-    "commander": "tsx scripts/commander-assets.ts"
+    "commander": "tsx scripts/commander-assets.ts",
+    "produire:manifest": "tsx scripts/production/manifeste.ts",
+    "produire:unites": "tsx scripts/production/unites.ts",
+    "produire:environnement": "tsx scripts/production/generer-environnement.ts",
+    "produire:kits": "tsx scripts/production/kits.ts",
+    "produire:commandants": "tsx scripts/production/commandants.ts",
+    "produire:bilan": "tsx scripts/production/bilan.ts",
+    "produire:exposer": "tsx scripts/production/exposer-candidats.ts"
   },
   "dependencies": {
     "@types/three": "^0.170.0",

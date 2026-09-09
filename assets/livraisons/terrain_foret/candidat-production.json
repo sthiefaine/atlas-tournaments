@@ -1,0 +1,66 @@
+{
+  "id": "terrain_foret",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "terrain_foret_lod0.glb",
+      "octets": 3104,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "terrain_foret_lod1.glb",
+      "octets": 3104,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "terrain_foret",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "terrain_foret_albedo.png",
+      "terrain_foret_albedo_printemps.png",
+      "terrain_foret_albedo_ete.png",
+      "terrain_foret_albedo_automne.png",
+      "terrain_foret_albedo_hiver.png",
+      "terrain_foret_normale.png",
+      "terrain_foret_normale_printemps.png",
+      "terrain_foret_normale_ete.png",
+      "terrain_foret_normale_automne.png",
+      "terrain_foret_normale_hiver.png",
+      "terrain_foret_rugosite.png",
+      "terrain_foret_rugosite_printemps.png",
+      "terrain_foret_rugosite_ete.png",
+      "terrain_foret_rugosite_automne.png",
+      "terrain_foret_rugosite_hiver.png",
+      "terrain_foret_occlusion.png",
+      "terrain_foret_occlusion_printemps.png",
+      "terrain_foret_occlusion_ete.png",
+      "terrain_foret_occlusion_automne.png",
+      "terrain_foret_occlusion_hiver.png",
+      "terrain_foret_lod0.glb",
+      "terrain_foret_lod1.glb"
+    ]
+  }
+}

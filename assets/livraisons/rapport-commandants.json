@@ -1,0 +1,125 @@
+{
+  "statut": "candidats_non_valides_artistiquement",
+  "resultats": [
+    {
+      "id": "commandant_diplomate",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_diplomate_albedo.png",
+        "commandant_diplomate_normale.png",
+        "commandant_diplomate_rugosite.png",
+        "commandant_diplomate_masque_equipe.png",
+        "commandant_diplomate_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_fonceuse",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_fonceuse_albedo.png",
+        "commandant_fonceuse_normale.png",
+        "commandant_fonceuse_rugosite.png",
+        "commandant_fonceuse_masque_equipe.png",
+        "commandant_fonceuse_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_gardienne",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_gardienne_albedo.png",
+        "commandant_gardienne_normale.png",
+        "commandant_gardienne_rugosite.png",
+        "commandant_gardienne_masque_equipe.png",
+        "commandant_gardienne_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_ingenieur",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_ingenieur_albedo.png",
+        "commandant_ingenieur_normale.png",
+        "commandant_ingenieur_rugosite.png",
+        "commandant_ingenieur_masque_equipe.png",
+        "commandant_ingenieur_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_meteorologue",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_meteorologue_albedo.png",
+        "commandant_meteorologue_normale.png",
+        "commandant_meteorologue_rugosite.png",
+        "commandant_meteorologue_masque_equipe.png",
+        "commandant_meteorologue_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_prodige",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_prodige_albedo.png",
+        "commandant_prodige_normale.png",
+        "commandant_prodige_rugosite.png",
+        "commandant_prodige_masque_equipe.png",
+        "commandant_prodige_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_showman",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_showman_albedo.png",
+        "commandant_showman_normale.png",
+        "commandant_showman_rugosite.png",
+        "commandant_showman_masque_equipe.png",
+        "commandant_showman_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_stratege_prudent",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_stratege_prudent_albedo.png",
+        "commandant_stratege_prudent_normale.png",
+        "commandant_stratege_prudent_rugosite.png",
+        "commandant_stratege_prudent_masque_equipe.png",
+        "commandant_stratege_prudent_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_survivante",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_survivante_albedo.png",
+        "commandant_survivante_normale.png",
+        "commandant_survivante_rugosite.png",
+        "commandant_survivante_masque_equipe.png",
+        "commandant_survivante_lod0.glb"
+      ]
+    },
+    {
+      "id": "commandant_veteran",
+      "ok": true,
+      "motifs": [],
+      "fichiers": [
+        "commandant_veteran_albedo.png",
+        "commandant_veteran_normale.png",
+        "commandant_veteran_rugosite.png",
+        "commandant_veteran_masque_equipe.png",
+        "commandant_veteran_lod0.glb"
+      ]
+    }
+  ]
+}

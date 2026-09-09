@@ -1,0 +1,23 @@
+{
+  "id": "commandant_diplomate",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "ageFictif": 47,
+  "generateur": "scripts/production/commandants.ts",
+  "limites": [
+    "Sculpture procédurale par profils anatomiques : expression et finition doivent être relues humainement.",
+    "Aucune ressemblance avec une personne réelle recherchée ; ni identité nationale ni livrée dans le modèle partagé."
+  ],
+  "rapport": {
+    "id": "commandant_diplomate",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "commandant_diplomate_albedo.png",
+      "commandant_diplomate_normale.png",
+      "commandant_diplomate_rugosite.png",
+      "commandant_diplomate_masque_equipe.png",
+      "commandant_diplomate_lod0.glb"
+    ]
+  }
+}

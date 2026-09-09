@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { commandeAsset, genererSpecs } from '@/assets/index';
-import { chantier } from '@/serveur/chantier-assets';
+import { fileProduction } from '../parcours-production';
+import { PromptProduction } from '../[cle]/prompt';
+import { promptProduction } from '../prompt-production';
 import { nomsAttendus } from '@/serveur/depot-modeles';
 import { receptionsAssets } from '@/serveur/reception-assets';
 
@@ -41,7 +43,7 @@ export default async function Chantier() {
   const receptions = receptionsAssets(specs);
   const faits = new Set([...receptions].filter(([, r]) => ['approuve', 'integre'].includes(r.etat)).map(([id]) => id));
   const aRelire = specs.filter((s) => receptions.get(s.id)?.etat === 'conforme');
-  const suite = chantier(specs, faits);
+  const suite = fileProduction(specs, receptions);
   const pret = suite.find((e) => e.bloquePar === null) ?? null;
   const enAttente = suite.filter((e) => e.bloquePar !== null).length;
 
@@ -51,9 +53,10 @@ export default async function Chantier() {
         <h2 className="mb-2 text-lg">Le chantier</h2>
         <p className="text-sm opacity-70">
           {suite.length === 0
-            ? `Les ${specs.length} assets du canon sont livrés.`
-            : `${suite.length} asset(s) restent, tous en attente d’une géométrie de base. C’est un défaut d’ordonnancement : signalez-le.`}
+            ? aRelire.length ? `${aRelire.length} candidat(s) attendent une validation artistique.` : `Les ${specs.length} assets du canon sont approuvés.`
+            : `${suite.length} asset(s) restent en attente d’une base approuvée. Inspectez les candidats conformes avant de lancer leurs déclinaisons.`}
         </p>
+        <div className="admin-actions"><Link className="admin-action admin-action-primaire" href="/admin/assets?etat=conforme">Valider les candidats conformes</Link><Link className="admin-action" href="/admin/assets">Revenir à la bibliothèque</Link></div>
       </main>
     );
   }
@@ -70,8 +73,8 @@ export default async function Chantier() {
         {' '}<Link href="/admin/assets" className="underline underline-offset-4">Voir tout le catalogue</Link>
       </p>
 
-      {aRelire.length ? <Bloc titre="À approuver avant de décliner les kits"><ul>{aRelire.map((s) => <li key={s.id}><Link className="underline" href={`/admin/assets/${s.id}`}>{s.id}</Link> — conforme techniquement, en attente de réception visuelle</li>)}</ul></Bloc> : null}
-      <Bloc titre={`À produire maintenant — ${spec.id}`} aide="Le premier asset que rien ne retient. Un kit n’apparaît ici qu’une fois sa géométrie de base livrée.">
+      {aRelire.length ? <Bloc titre="À approuver avant de décliner les kits"><ul>{aRelire.map((s) => <li key={s.id}><Link className="underline" href={`/admin/assets/${s.id}`}>{s.id}</Link> — candidat conforme techniquement, validation artistique non établie</li>)}</ul></Bloc> : null}
+      <Bloc titre={`À produire maintenant — ${spec.id}`} aide="Le premier asset que rien ne retient. Un kit n’apparaît ici qu’une fois sa géométrie de base approuvée artistiquement.">
         <Etape n={1} titre="Ce que c’est">
           <p className="text-sm">{spec.description.fr}</p>
           <p className="mt-2 text-xs opacity-60">
@@ -82,7 +85,10 @@ export default async function Chantier() {
           </p>
         </Etape>
 
-        <Etape n={2} titre="Copier la commande, la donner au générateur" />
+        <Etape n={2} titre="Copier le prompt ou télécharger la commande">
+          <PromptProduction texte={promptProduction(spec, receptions.get(spec.id)?.fichiers ?? [])} />
+          <div className="admin-actions"><a className="admin-action" href={`/admin/assets/export?cle=${spec.id}`}>Manifeste JSON de cet asset</a><a className="admin-action" href={`/admin/assets/export?cle=${spec.id}&format=prompt`}>Prompt texte</a><a className="admin-action" href="/admin/assets/export" download="plan-assets.json">Plan JSON complet</a></div>
+        </Etape>
         <Etape n={3} titre="Déposer les fichiers qu’il rend">
           <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} local={process.env.NODE_ENV !== 'production'} />
         </Etape>

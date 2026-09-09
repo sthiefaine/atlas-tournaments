@@ -47,6 +47,7 @@ COPY --from=build /app/tsconfig.json ./tsconfig.json
 COPY --from=build /app/scripts ./scripts
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/content ./content
+COPY --from=build /app/assets/production ./assets/production
 
 EXPOSE 3000
 

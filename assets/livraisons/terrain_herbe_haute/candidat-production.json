@@ -1,0 +1,66 @@
+{
+  "id": "terrain_herbe_haute",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "terrain_herbe_haute_lod0.glb",
+      "octets": 3128,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "terrain_herbe_haute_lod1.glb",
+      "octets": 3128,
+      "triangles": 12,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "terrain_herbe_haute",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "terrain_herbe_haute_albedo.png",
+      "terrain_herbe_haute_albedo_printemps.png",
+      "terrain_herbe_haute_albedo_ete.png",
+      "terrain_herbe_haute_albedo_automne.png",
+      "terrain_herbe_haute_albedo_hiver.png",
+      "terrain_herbe_haute_normale.png",
+      "terrain_herbe_haute_normale_printemps.png",
+      "terrain_herbe_haute_normale_ete.png",
+      "terrain_herbe_haute_normale_automne.png",
+      "terrain_herbe_haute_normale_hiver.png",
+      "terrain_herbe_haute_rugosite.png",
+      "terrain_herbe_haute_rugosite_printemps.png",
+      "terrain_herbe_haute_rugosite_ete.png",
+      "terrain_herbe_haute_rugosite_automne.png",
+      "terrain_herbe_haute_rugosite_hiver.png",
+      "terrain_herbe_haute_occlusion.png",
+      "terrain_herbe_haute_occlusion_printemps.png",
+      "terrain_herbe_haute_occlusion_ete.png",
+      "terrain_herbe_haute_occlusion_automne.png",
+      "terrain_herbe_haute_occlusion_hiver.png",
+      "terrain_herbe_haute_lod0.glb",
+      "terrain_herbe_haute_lod1.glb"
+    ]
+  }
+}

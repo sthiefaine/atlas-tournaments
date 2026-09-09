@@ -1,0 +1,67 @@
+{
+  "id": "batiment_radar_fr_normandie",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_radar_fr_normandie_lod0.glb",
+      "octets": 34592,
+      "triangles": 264,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_radar_fr_normandie_lod1.glb",
+      "octets": 25204,
+      "triangles": 172,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_radar_fr_normandie",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_radar_fr_normandie_albedo.png",
+      "batiment_radar_fr_normandie_albedo_ete.png",
+      "batiment_radar_fr_normandie_albedo_hiver.png",
+      "batiment_radar_fr_normandie_normale.png",
+      "batiment_radar_fr_normandie_normale_ete.png",
+      "batiment_radar_fr_normandie_normale_hiver.png",
+      "batiment_radar_fr_normandie_rugosite.png",
+      "batiment_radar_fr_normandie_rugosite_ete.png",
+      "batiment_radar_fr_normandie_rugosite_hiver.png",
+      "batiment_radar_fr_normandie_emission.png",
+      "batiment_radar_fr_normandie_emission_ete.png",
+      "batiment_radar_fr_normandie_emission_hiver.png",
+      "batiment_radar_fr_normandie_masque_equipe.png",
+      "batiment_radar_fr_normandie_masque_equipe_ete.png",
+      "batiment_radar_fr_normandie_masque_equipe_hiver.png",
+      "batiment_radar_fr_normandie_lod0.glb",
+      "batiment_radar_fr_normandie_lod1.glb"
+    ]
+  }
+}

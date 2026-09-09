@@ -1,0 +1,28 @@
+{
+  "statut": "candidats_techniques_non_approuves",
+  "bases": {
+    "nouvelles": 26,
+    "infanterieCorrigee": 1,
+    "existantesConservees": 2
+  },
+  "mesures": [
+    {
+      "rapport": "rapport-unites-candidates.json",
+      "lots": 29,
+      "valides": 29,
+      "fichiers": 386,
+      "octetsLogiques": 25172693,
+      "octetsUniquesLiensDurs": 25172693,
+      "refus": []
+    },
+    {
+      "rapport": "rapport-kits-candidats.json",
+      "lots": 648,
+      "valides": 648,
+      "fichiers": 7896,
+      "octetsLogiques": 489917487,
+      "octetsUniquesLiensDurs": 171885724,
+      "refus": []
+    }
+  ]
+}

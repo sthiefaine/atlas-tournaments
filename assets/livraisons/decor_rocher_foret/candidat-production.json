@@ -1,0 +1,69 @@
+{
+  "id": "decor_rocher_foret",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "decor_rocher_foret_lod0.glb",
+      "octets": 26856,
+      "triangles": 240,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_rocher_foret_lod1.glb",
+      "octets": 8604,
+      "triangles": 60,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_rocher_foret_lod2.glb",
+      "octets": 4036,
+      "triangles": 20,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "decor_rocher_foret",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "decor_rocher_foret_albedo.png",
+      "decor_rocher_foret_albedo_ete.png",
+      "decor_rocher_foret_albedo_hiver.png",
+      "decor_rocher_foret_normale.png",
+      "decor_rocher_foret_normale_ete.png",
+      "decor_rocher_foret_normale_hiver.png",
+      "decor_rocher_foret_rugosite.png",
+      "decor_rocher_foret_rugosite_ete.png",
+      "decor_rocher_foret_rugosite_hiver.png",
+      "decor_rocher_foret_lod0.glb",
+      "decor_rocher_foret_lod1.glb",
+      "decor_rocher_foret_lod2.glb"
+    ]
+  }
+}

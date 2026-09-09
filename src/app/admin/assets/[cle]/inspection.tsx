@@ -9,6 +9,7 @@ import { parametresAmbiance } from '@/render3d/eclairage';
 import type { NiveauLod } from '@/assets/spec';
 
 import type { PropsInspection } from './types-inspection';
+import { cheminInspection, PREFIXE_MODELES } from './chemins-inspection';
 type Vue = 'jeu' | 'dessus' | 'trois_quarts';
 interface Reglages { vue: Vue; reel: boolean; mosaique: boolean; lumiere: string; canal: string; clip: string; lecture: boolean; instant: number; equipe: string }
 function liberation(objet: T.Object3D) {
@@ -130,13 +131,13 @@ function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string;
   }, [url, prefixe, id, reglages]);
   return <div><p role="status" className="mb-1 text-xs">{etat}</p><div ref={conteneur} className="h-80 w-full overflow-hidden rounded bg-slate-900" /></div>;
 }
-export default function Inspection({ spec, fichiers, revision, precedente, reference }: PropsInspection) {
+export default function Inspection({ spec, fichiers, revision, precedente, reference, prefixe = PREFIXE_MODELES }: PropsInspection) {
   const [lod, choisirLod] = useState<NiveauLod>(0), [comparaison, comparer] = useState('aucune');
   const [reglages, regler] = useState<Reglages>({ vue: 'jeu', reel: false, mosaique: false, lumiere: 'neutre', canal: 'pbr', clip: '', lecture: false, instant: 0, equipe: '' });
   const modifier = <K extends keyof Reglages>(k: K, v: Reglages[K]) => regler((r) => ({ ...r, [k]: v }));
-  const prefixe = '/assets/modeles', nom = `${spec.id}_lod${lod}.glb`, present = fichiers.includes(nom);
+  const nom = `${spec.id}_lod${lod}.glb`, present = fichiers.includes(nom);
   const cote = comparaison === 'precedente' && precedente ? { id: spec.id, prefixe: `/api/admin/assets/${spec.id}/historique/${precedente}`, revision: precedente }
-    : comparaison === 'reference' && reference ? { id: reference.id, prefixe, revision: reference.revision } : null;
+    : comparaison === 'reference' && reference ? { id: reference.id, prefixe: reference.prefixe ?? prefixe, revision: reference.revision } : null;
   return <div className="mt-4 space-y-3 text-sm">
     <p className="text-xs opacity-70">La conformité technique ne juge ni la silhouette ni l’absence d’ombre peinte. Comparer les trois vues avant d’approuver. L’éclairage de jeu reprend le soleil, l’hémisphère et l’environnement ; météo et post-traitement se vérifient dans l’atelier.</p>
     <div className="flex flex-wrap gap-3">
@@ -151,8 +152,8 @@ export default function Inspection({ spec, fichiers, revision, precedente, refer
     </div>
     {spec.animations.length ? <div className="flex flex-wrap items-center gap-3"><label>Clip <select aria-label="Clip" value={reglages.clip} onChange={(e) => modifier('clip', e.target.value)}><option value="">Pose de construction</option>{spec.animations.map((a) => <option key={a.nom}>{a.nom}</option>)}</select></label><button disabled={!reglages.clip} onClick={() => modifier('lecture', !reglages.lecture)}>{reglages.lecture ? 'Pause' : 'Lire'}</button><label>Position <input type="range" min="0" max="1" step="0.01" value={reglages.instant} disabled={reglages.lecture || !reglages.clip} onChange={(e) => modifier('instant', Number(e.target.value))} /></label></div> : null}
     <div className={`grid gap-4 ${cote ? 'lg:grid-cols-2' : ''}`}>
-      {present ? <Plateau url={`${prefixe}/${nom}?v=${revision}`} prefixe={prefixe} id={spec.id} reglages={reglages} /> : <p>LOD{lod} absent : déposer le lot pour voir le candidat.</p>}
-      {cote ? <Plateau url={`${cote.prefixe}/${cote.id}_lod${comparaison === 'reference' ? 0 : lod}.glb?v=${cote.revision}`} prefixe={cote.prefixe} id={cote.id} reglages={{ ...reglages, equipe: '', canal: 'pbr', mosaique: false }} /> : null}
+      {present ? <Plateau url={cheminInspection(prefixe, nom, revision)} prefixe={prefixe} id={spec.id} reglages={reglages} /> : <p>LOD{lod} absent : déposer le lot pour voir le candidat.</p>}
+      {cote ? <Plateau url={cheminInspection(cote.prefixe, `${cote.id}_lod${comparaison === 'reference' ? 0 : lod}.glb`, cote.revision)} prefixe={cote.prefixe} id={cote.id} reglages={{ ...reglages, equipe: '', canal: 'pbr', mosaique: false }} /> : null}
     </div>
   </div>;
 }

@@ -1,0 +1,23 @@
+{
+  "id": "commandant_stratege_prudent",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "ageFictif": 54,
+  "generateur": "scripts/production/commandants.ts",
+  "limites": [
+    "Sculpture procédurale par profils anatomiques : expression et finition doivent être relues humainement.",
+    "Aucune ressemblance avec une personne réelle recherchée ; ni identité nationale ni livrée dans le modèle partagé."
+  ],
+  "rapport": {
+    "id": "commandant_stratege_prudent",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "commandant_stratege_prudent_albedo.png",
+      "commandant_stratege_prudent_normale.png",
+      "commandant_stratege_prudent_rugosite.png",
+      "commandant_stratege_prudent_masque_equipe.png",
+      "commandant_stratege_prudent_lod0.glb"
+    ]
+  }
+}

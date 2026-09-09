@@ -149,14 +149,14 @@ test('le document glTF : une escouade en un seul maillage à deux primitives, un
       nodes: { name?: string }[];
     };
     const corps = d.meshes.find((m) => m.primitives.length === 2);
-    assert.ok(corps, 'le corps a deux primitives, une par matériau');
-    assert.deepEqual(corps.primitives.map((p) => p.material), [0, 1]);
+    assert.ok(corps, 'le corps conserve ses deux primitives historiques');
+    assert.deepEqual(corps.primitives.map((p) => p.material), [0, 0]);
     for (const p of corps.primitives) assert.ok('JOINTS_0' in p.attributes && 'WEIGHTS_0' in p.attributes, 'le corps est skinné');
     assert.equal(d.skins.length, 1);
     assert.equal(d.skins[0]!.joints.length, 1 + ALLURES.length * (1 + NOMS_OS.length), 'base, puis une ancre et onze os par figurine');
     assert.deepEqual(d.images.map((i) => i.uri), ['albedo', 'normale', 'rugosite', 'masque_equipe'].map((c) => nomTexture(l.spec, c as 'albedo')));
     assert.equal(d.textures.length, 4);
-    assert.deepEqual(d.materials.map((m) => m.name), ['mat_corps', 'mat_details']);
+    assert.deepEqual(d.materials.map((m) => m.name), ['mat_corps']);
     for (const m of d.materials) {
       assert.equal(m.pbrMetallicRoughness.baseColorTexture?.index, 0);
       assert.equal(m.normalTexture?.index, 1);
@@ -167,7 +167,7 @@ test('le document glTF : une escouade en un seul maillage à deux primitives, un
   }
 });
 
-test('three lit les trois niveaux : nœuds imposés, deux matériaux masqués, six clips aux durées de la spécification', async () => {
+test('three lit les trois niveaux : nœuds imposés, un matériau partagé et masqué, six clips aux durées de la spécification', async () => {
   const l = await livraison();
   for (const lod of NIVEAUX) {
     const { scene, clips } = await analyser(l, lod);
@@ -178,12 +178,12 @@ test('three lit les trois niveaux : nœuds imposés, deux matériaux masqués, s
     assert.ok(corps, 'le nœud corps existe');
     const peaux: THREE.SkinnedMesh[] = [];
     corps.traverse((o) => { if (o instanceof THREE.SkinnedMesh) peaux.push(o); });
-    assert.equal(peaux.length, 2, 'une maille skinnée par matériau');
+    assert.equal(peaux.length, 2, 'une maille skinnée par primitive historique');
     assert.equal(peaux[0]!.skeleton, peaux[1]!.skeleton, 'un seul squelette pour les deux');
     assert.equal(peaux[0]!.skeleton.bones.length, 37);
     assert.ok(scene.getObjectByName('socle') instanceof THREE.Mesh);
     const materiaux = peaux.map((p) => p.material as THREE.MeshStandardMaterial);
-    assert.deepEqual(materiaux.map((m) => m.name), ['mat_corps', 'mat_details']);
+    assert.deepEqual(materiaux.map((m) => m.name), ['mat_corps', 'mat_corps']);
     for (const m of materiaux) assert.ok(masqueDe(m), `${m.name} porte le masque d’équipe`);
     assert.deepEqual(nomsClips(clips), ['repos', 'deplacement', 'tir', 'touche', 'hors_jeu', 'capture']);
     for (const clip of clips) {

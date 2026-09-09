@@ -1,0 +1,23 @@
+{
+  "id": "commandant_meteorologue",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "ageFictif": 51,
+  "generateur": "scripts/production/commandants.ts",
+  "limites": [
+    "Sculpture procédurale par profils anatomiques : expression et finition doivent être relues humainement.",
+    "Aucune ressemblance avec une personne réelle recherchée ; ni identité nationale ni livrée dans le modèle partagé."
+  ],
+  "rapport": {
+    "id": "commandant_meteorologue",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "commandant_meteorologue_albedo.png",
+      "commandant_meteorologue_normale.png",
+      "commandant_meteorologue_rugosite.png",
+      "commandant_meteorologue_masque_equipe.png",
+      "commandant_meteorologue_lod0.glb"
+    ]
+  }
+}

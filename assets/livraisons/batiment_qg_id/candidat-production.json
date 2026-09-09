@@ -1,0 +1,67 @@
+{
+  "id": "batiment_qg_id",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_qg_id_lod0.glb",
+      "octets": 25524,
+      "triangles": 164,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_qg_id_lod1.glb",
+      "octets": 25524,
+      "triangles": 164,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_qg_id",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_qg_id_albedo.png",
+      "batiment_qg_id_albedo_ete.png",
+      "batiment_qg_id_albedo_hiver.png",
+      "batiment_qg_id_normale.png",
+      "batiment_qg_id_normale_ete.png",
+      "batiment_qg_id_normale_hiver.png",
+      "batiment_qg_id_rugosite.png",
+      "batiment_qg_id_rugosite_ete.png",
+      "batiment_qg_id_rugosite_hiver.png",
+      "batiment_qg_id_emission.png",
+      "batiment_qg_id_emission_ete.png",
+      "batiment_qg_id_emission_hiver.png",
+      "batiment_qg_id_masque_equipe.png",
+      "batiment_qg_id_masque_equipe_ete.png",
+      "batiment_qg_id_masque_equipe_hiver.png",
+      "batiment_qg_id_lod0.glb",
+      "batiment_qg_id_lod1.glb"
+    ]
+  }
+}

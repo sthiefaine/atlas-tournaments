@@ -1,0 +1,67 @@
+{
+  "id": "batiment_port_fr_auvergne_rhone_alpes",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_port_fr_auvergne_rhone_alpes_lod0.glb",
+      "octets": 35876,
+      "triangles": 260,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_port_fr_auvergne_rhone_alpes_lod1.glb",
+      "octets": 32608,
+      "triangles": 228,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_port_fr_auvergne_rhone_alpes",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_port_fr_auvergne_rhone_alpes_albedo.png",
+      "batiment_port_fr_auvergne_rhone_alpes_albedo_ete.png",
+      "batiment_port_fr_auvergne_rhone_alpes_albedo_hiver.png",
+      "batiment_port_fr_auvergne_rhone_alpes_normale.png",
+      "batiment_port_fr_auvergne_rhone_alpes_normale_ete.png",
+      "batiment_port_fr_auvergne_rhone_alpes_normale_hiver.png",
+      "batiment_port_fr_auvergne_rhone_alpes_rugosite.png",
+      "batiment_port_fr_auvergne_rhone_alpes_rugosite_ete.png",
+      "batiment_port_fr_auvergne_rhone_alpes_rugosite_hiver.png",
+      "batiment_port_fr_auvergne_rhone_alpes_emission.png",
+      "batiment_port_fr_auvergne_rhone_alpes_emission_ete.png",
+      "batiment_port_fr_auvergne_rhone_alpes_emission_hiver.png",
+      "batiment_port_fr_auvergne_rhone_alpes_masque_equipe.png",
+      "batiment_port_fr_auvergne_rhone_alpes_masque_equipe_ete.png",
+      "batiment_port_fr_auvergne_rhone_alpes_masque_equipe_hiver.png",
+      "batiment_port_fr_auvergne_rhone_alpes_lod0.glb",
+      "batiment_port_fr_auvergne_rhone_alpes_lod1.glb"
+    ]
+  }
+}

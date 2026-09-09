@@ -26,6 +26,9 @@ import { familleAsset, libelleAsset } from '../exploration';
 import { promptProduction } from '../prompt-production';
 import { PromptProduction } from './prompt';
 import { Livraison } from './livraison';
+import { jalonsProduction } from '../parcours-production';
+import { candidatsExposes } from '../candidats';
+import { cheminInspection } from './chemins-inspection';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -43,7 +46,7 @@ function Champ({ nom, children }: { nom: string; children: React.ReactNode }) {
 /** Une liste fermée, affichée telle quelle : ce sont des clés, pas des phrases. */
 function Cles({ valeurs }: { valeurs: readonly string[] }) {
   if (valeurs.length === 0) return <span className="opacity-50">aucune</span>;
-  return <span className="font-mono text-xs">{valeurs.join(', ')}</span>;
+  return <span className="font-mono text-xs [overflow-wrap:anywhere]">{valeurs.join(', ')}</span>;
 }
 
 /**
@@ -80,6 +83,11 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
   const referenceEtat = referenceSpec ? receptionAsset(referenceSpec) : null;
   const reference = referenceSpec && referenceEtat?.revision && referenceEtat.fichiers.includes(`${referenceSpec.id}_lod0.glb`)
     ? { id: referenceSpec.id, revision: referenceEtat.revision, approuvee: ['approuve', 'integre'].includes(referenceEtat.etat) } : null;
+  const exposition = candidatsExposes();
+  const candidat = exposition.get(spec.id);
+  const baseCandidate = production.reference ? exposition.get(production.reference) : undefined;
+  const referenceCandidate = baseCandidate ? { id: baseCandidate.id, revision: baseCandidate.revision, prefixe: baseCandidate.prefixe, approuvee: false } : null;
+  const jalons = jalonsProduction(reception);
   const verdict = validerAssetSpec(spec);
   const fichier = await etatDuFichier(spec);
   const territoire = territoireDe(spec, codesPays);
@@ -106,7 +114,32 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         <Etat valeur={LIBELLES_RECEPTION[reception.etat]} />
       </p>
 
-      <PromptProduction texte={promptProduction(spec, reception.fichiers)} />
+      {candidat ? <section id="candidat-expose" className="mb-8 rounded border border-current/20 p-4" aria-labelledby="titre-candidat-expose">
+        <h3 id="titre-candidat-expose" className="text-lg font-semibold">Candidat disponible à inspecter</h3>
+        <p className="my-2 text-sm">Cette version de production est consultable ici. Elle est distincte du lot réceptionné ci-dessous : aucune validation artistique, aucune intégration en jeu n’est déduite de sa présence.</p>
+        <p className="mb-3 text-xs opacity-70">Révision candidate {candidat.revision.slice(0, 12)} · {candidat.fichiers.length} fichiers. Pour l’approuver, télécharger le lot puis le déposer dans « Déposer et contrôler » afin d’établir sa révision de réception.</p>
+        <InspectionClient spec={spec} fichiers={candidat.fichiers} revision={candidat.revision} precedente={null} reference={referenceCandidate} prefixe={candidat.prefixe} libelleBanc="banc du candidat 3D" />
+        <details><summary className="cursor-pointer font-semibold">Télécharger les GLB et les textures du candidat</summary><ul className="assets-fichiers mt-2">{candidat.fichiers.map(nom => <li key={nom}><a className="underline" href={cheminInspection(candidat.prefixe, nom, candidat.revision)} download={nom}>{nom}</a></li>)}</ul></details>
+      </section> : null}
+      <nav className="admin-actions" aria-label="Parcours de production">
+        <a className="admin-action admin-action-primaire" href="#production">1. Préparer le candidat</a>
+        <a className="admin-action" href="#depot">2. Déposer et contrôler</a>
+        <a className="admin-action" href="#inspection">3. Inspection et revue</a>
+      </nav>
+      <ol className="grid gap-2 mb-6 text-sm" aria-label="État des étapes">
+        <li>Lot réceptionné — fichiers : {jalons.candidat ? 'fichiers présents' : 'aucun lot présent'}</li>
+        <li>Contrôle technique : {jalons.technique ? 'réussi pour cette révision' : jalons.candidat ? 'à corriger ou compléter' : 'en attente du candidat'}</li>
+        <li>Validation artistique : {jalons.artistique ? 'décision enregistrée pour cette révision' : 'non établie'}</li>
+        <li>Essai en jeu : {jalons.enJeu ? 'confirmé pour cette révision' : 'non confirmé'}</li>
+      </ol>
+      <section id="production" className="scroll-mt-6">
+        <h3 className="text-lg font-semibold mb-2">Préparer la production</h3>
+        <div className="admin-actions">
+          <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}`}>Télécharger le manifeste JSON</a>
+          <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}&format=prompt`}>Télécharger le prompt texte</a>
+        </div>
+        <PromptProduction texte={promptProduction(spec, reception.fichiers)} />
+      </section>
       {variantes.length > 1 ? <Bloc titre={`${libelleAsset(famille)} — base et déclinaisons`} aide="Une géométrie commune, des peintures distinctes. Chaque version conserve son propre état de réception."><div className="assets-variantes">{variantes.map(v => <Link key={v.id} href={`/admin/assets/${v.id}`} aria-current={v.id === spec.id ? 'page' : undefined}>{v.type === 'unite' ? 'Base partagée' : territoireDe(v, codesPays).pays ? paysParCode.get(territoireDe(v, codesPays).pays!)?.nomCourt ?? v.cle : v.cle}</Link>)}</div></Bloc> : null}
       <Bloc titre="Fichiers obligatoires" aide="Présent ne signifie pas conforme : le verdict technique est indiqué plus bas. Les variantes saisonnières restent facultatives."><ul className="assets-fichiers">{requis.map(n => <li key={n}>{reception.fichiers.includes(n) ? 'Présent' : 'Manquant'} · <code>{n}</code></li>)}</ul></Bloc>
       <Bloc titre="Verdict et fichier" aide="Le validateur est celui du dépôt ; le fichier est celui de assets/specs/, s’il est sur ce disque.">
@@ -129,7 +162,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         </Champ>
       </Bloc>
 
-      <section className="mb-8">
+      <section id="inspection" className="mb-8 scroll-mt-6">
         {reception.motifs.length ? <ul className="mb-3 max-h-56 overflow-auto text-xs">{reception.motifs.map((m, i) => <li key={i}>{m}</li>)}</ul> : null}
         {reception.revue ? <p className="text-xs">Revue du {reception.revue.date} : {reception.revue.note}</p> : null}
         <InspectionClient spec={spec} fichiers={reception.fichiers} revision={reception.revision} precedente={reception.precedente} reference={reference} />
@@ -141,13 +174,13 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         {production.assemblage.map((n) => <Champ key={n.nom} nom={n.nom}>Parent : {n.parent ?? 'scène'} ; pivot local : {n.pivot?.join(', ') ?? 'selon la géométrie'} — {n.role}</Champ>)}
         <details className="p-3 text-xs"><summary>Consignes UV, matières et gestes</summary><ul>{production.consignes.map((c) => <li key={c} className="mt-2">{c}</li>)}</ul>{spec.animations.map((a) => <p key={a.nom} className="mt-2">{a.nom} — {production.gestes[a.nom]}</p>)}</details>
       </Bloc>
-      <Bloc titre="Commande et dépôt" aide="La fiche traduite en commande pour un générateur, et le dépôt du fichier qu’il rend. Même contrôle complet que « npm run controler:asset -- --spec assets/specs/<id>.json --lot <dossier> ».">
+      <section id="depot" className="scroll-mt-6"><Bloc titre="Commande et dépôt" aide="La fiche traduite en commande pour un générateur, et le dépôt du fichier qu’il rend. Même contrôle complet que « npm run controler:asset -- --spec assets/specs/<id>.json --lot <dossier> ».">
         <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} local={process.env.NODE_ENV !== 'production'} />
-      </Bloc>
+      </Bloc></section>
 
       <Bloc titre="Identité">
-        <Champ nom="type"><span className="font-mono text-xs">{spec.type}</span> · {LIBELLES_TYPE[spec.type]}</Champ>
-        <Champ nom="clé canon"><span className="font-mono text-xs">{spec.cle}</span></Champ>
+        <Champ nom="type"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.type}</span> · {LIBELLES_TYPE[spec.type]}</Champ>
+        <Champ nom="clé canon"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.cle}</span></Champ>
         <Champ nom="territoire">
           {pays ? `${pays.nom} (${pays.code})` : <span className="opacity-50">partagé — aucune nation</span>}
           {region ? ` · ${region.nom}` : territoire.region ? ` · ${territoire.region}` : ''}
@@ -177,7 +210,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <Champ nom="matières"><Cles valeurs={styleNation.matieres} /></Champ>
           <Champ nom="finitions"><Cles valeurs={styleNation.finitions} /></Champ>
           <Champ nom="ornements"><Cles valeurs={styleNation.ornements} /></Champ>
-          <Champ nom="motif daltonien"><span className="font-mono text-xs">{styleNation.motifDaltonien}</span></Champ>
+          <Champ nom="motif daltonien"><span className="font-mono text-xs [overflow-wrap:anywhere]">{styleNation.motifDaltonien}</span></Champ>
           <Champ nom="décalcomanies">
             {styleNation.decalcomanies.length === 0 ? <span className="opacity-50">aucune</span> : (
               <ul className="text-xs">
@@ -195,7 +228,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <Champ nom="ligne directrice">{styleRegion.ligneDirectrice.fr}</Champ>
           <Champ nom="toits"><Cles valeurs={[styleRegion.toits.forme, styleRegion.toits.matiere, styleRegion.toits.couleur]} /></Champ>
           <Champ nom="murs"><Cles valeurs={[styleRegion.murs.matiere, styleRegion.murs.finition, styleRegion.murs.couleur]} /></Champ>
-          <Champ nom="végétation">{styleRegion.vegetation.dominante}, {styleRegion.vegetation.secondaire} · <span className="font-mono text-xs">{styleRegion.vegetation.couleur}</span></Champ>
+          <Champ nom="végétation">{styleRegion.vegetation.dominante}, {styleRegion.vegetation.secondaire} · <span className="font-mono text-xs [overflow-wrap:anywhere]">{styleRegion.vegetation.couleur}</span></Champ>
           <Champ nom="éléments de décor"><Cles valeurs={styleRegion.elementsDecor} /></Champ>
         </Bloc>
       ) : null}
@@ -250,11 +283,11 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
 
       <Bloc titre="Format et nommage" aide="Le rendu cherche les nœuds et les matériaux par leur nom, jamais par leur index.">
         <Champ nom="conteneur"><Cles valeurs={[spec.format.conteneur, `glTF ${spec.format.versionGltf}`, `haut ${spec.format.axeHaut}`, spec.format.unite, spec.format.materiaux]} /></Champ>
-        <Champ nom="nœud racine"><span className="font-mono text-xs">{spec.format.noeudRacine}</span></Champ>
+        <Champ nom="nœud racine"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.format.noeudRacine}</span></Champ>
         <Champ nom="nœuds imposés"><Cles valeurs={spec.format.noeuds} /></Champ>
         <Champ nom="matériaux imposés"><Cles valeurs={spec.format.materiauxAttendus} /></Champ>
-        <Champ nom="gabarit modèle"><span className="font-mono text-xs">{spec.nommage.modele}</span></Champ>
-        <Champ nom="gabarit texture"><span className="font-mono text-xs">{spec.nommage.texture}</span></Champ>
+        <Champ nom="gabarit modèle"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.nommage.modele}</span></Champ>
+        <Champ nom="gabarit texture"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.nommage.texture}</span></Champ>
         <Champ nom="exemples"><Cles valeurs={spec.nommage.exemples} /></Champ>
       </Bloc>
 

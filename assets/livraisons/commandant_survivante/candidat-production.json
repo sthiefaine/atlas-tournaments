@@ -1,0 +1,23 @@
+{
+  "id": "commandant_survivante",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "ageFictif": 39,
+  "generateur": "scripts/production/commandants.ts",
+  "limites": [
+    "Sculpture procédurale par profils anatomiques : expression et finition doivent être relues humainement.",
+    "Aucune ressemblance avec une personne réelle recherchée ; ni identité nationale ni livrée dans le modèle partagé."
+  ],
+  "rapport": {
+    "id": "commandant_survivante",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "commandant_survivante_albedo.png",
+      "commandant_survivante_normale.png",
+      "commandant_survivante_rugosite.png",
+      "commandant_survivante_masque_equipe.png",
+      "commandant_survivante_lod0.glb"
+    ]
+  }
+}

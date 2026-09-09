@@ -1,0 +1,66 @@
+{
+  "id": "terrain_montagne",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "terrain_montagne_lod0.glb",
+      "octets": 62060,
+      "triangles": 568,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "terrain_montagne_lod1.glb",
+      "octets": 11596,
+      "triangles": 88,
+      "noeuds": [
+        "sol",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_sol"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "terrain_montagne",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "terrain_montagne_albedo.png",
+      "terrain_montagne_albedo_printemps.png",
+      "terrain_montagne_albedo_ete.png",
+      "terrain_montagne_albedo_automne.png",
+      "terrain_montagne_albedo_hiver.png",
+      "terrain_montagne_normale.png",
+      "terrain_montagne_normale_printemps.png",
+      "terrain_montagne_normale_ete.png",
+      "terrain_montagne_normale_automne.png",
+      "terrain_montagne_normale_hiver.png",
+      "terrain_montagne_rugosite.png",
+      "terrain_montagne_rugosite_printemps.png",
+      "terrain_montagne_rugosite_ete.png",
+      "terrain_montagne_rugosite_automne.png",
+      "terrain_montagne_rugosite_hiver.png",
+      "terrain_montagne_occlusion.png",
+      "terrain_montagne_occlusion_printemps.png",
+      "terrain_montagne_occlusion_ete.png",
+      "terrain_montagne_occlusion_automne.png",
+      "terrain_montagne_occlusion_hiver.png",
+      "terrain_montagne_lod0.glb",
+      "terrain_montagne_lod1.glb"
+    ]
+  }
+}

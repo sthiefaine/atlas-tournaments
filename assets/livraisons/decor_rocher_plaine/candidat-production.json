@@ -1,0 +1,69 @@
+{
+  "id": "decor_rocher_plaine",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "decor_rocher_plaine_lod0.glb",
+      "octets": 26860,
+      "triangles": 240,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_rocher_plaine_lod1.glb",
+      "octets": 8608,
+      "triangles": 60,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "decor_rocher_plaine_lod2.glb",
+      "octets": 4040,
+      "triangles": 20,
+      "noeuds": [
+        "bloc",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_roche"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "decor_rocher_plaine",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "decor_rocher_plaine_albedo.png",
+      "decor_rocher_plaine_albedo_ete.png",
+      "decor_rocher_plaine_albedo_hiver.png",
+      "decor_rocher_plaine_normale.png",
+      "decor_rocher_plaine_normale_ete.png",
+      "decor_rocher_plaine_normale_hiver.png",
+      "decor_rocher_plaine_rugosite.png",
+      "decor_rocher_plaine_rugosite_ete.png",
+      "decor_rocher_plaine_rugosite_hiver.png",
+      "decor_rocher_plaine_lod0.glb",
+      "decor_rocher_plaine_lod1.glb",
+      "decor_rocher_plaine_lod2.glb"
+    ]
+  }
+}

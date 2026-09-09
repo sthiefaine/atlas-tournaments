@@ -1,0 +1,12 @@
+node_modules
+.next
+.next-build
+playwright-report
+test-results
+apercus
+assets/livraisons
+assets/receptions/*/*
+*.tsbuildinfo
+.env
+.env.*
+.backups

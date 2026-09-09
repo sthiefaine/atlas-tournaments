@@ -1,0 +1,23 @@
+{
+  "id": "commandant_prodige",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "ageFictif": 20,
+  "generateur": "scripts/production/commandants.ts",
+  "limites": [
+    "Sculpture procédurale par profils anatomiques : expression et finition doivent être relues humainement.",
+    "Aucune ressemblance avec une personne réelle recherchée ; ni identité nationale ni livrée dans le modèle partagé."
+  ],
+  "rapport": {
+    "id": "commandant_prodige",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "commandant_prodige_albedo.png",
+      "commandant_prodige_normale.png",
+      "commandant_prodige_rugosite.png",
+      "commandant_prodige_masque_equipe.png",
+      "commandant_prodige_lod0.glb"
+    ]
+  }
+}

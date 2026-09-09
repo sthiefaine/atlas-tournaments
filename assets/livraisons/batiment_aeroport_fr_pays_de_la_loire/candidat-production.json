@@ -1,0 +1,67 @@
+{
+  "id": "batiment_aeroport_fr_pays_de_la_loire",
+  "statut": "candidat_technique",
+  "validationArtistique": "non_effectuee",
+  "generateur": "scripts/production/environnement.ts",
+  "limites": [
+    "Candidat procédural ; composition, matières et variantes saisonnières restent à examiner artistiquement."
+  ],
+  "geometrie": [
+    {
+      "nom": "batiment_aeroport_fr_pays_de_la_loire_lod0.glb",
+      "octets": 54924,
+      "triangles": 456,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    },
+    {
+      "nom": "batiment_aeroport_fr_pays_de_la_loire_lod1.glb",
+      "octets": 45132,
+      "triangles": 360,
+      "noeuds": [
+        "corps",
+        "toit",
+        "enseigne",
+        "racine"
+      ],
+      "materiaux": [
+        "mat_vitrage",
+        "mat_corps"
+      ],
+      "imagesEmbarquees": 0
+    }
+  ],
+  "rapport": {
+    "id": "batiment_aeroport_fr_pays_de_la_loire",
+    "ok": true,
+    "motifs": [],
+    "fichiers": [
+      "batiment_aeroport_fr_pays_de_la_loire_albedo.png",
+      "batiment_aeroport_fr_pays_de_la_loire_albedo_ete.png",
+      "batiment_aeroport_fr_pays_de_la_loire_albedo_hiver.png",
+      "batiment_aeroport_fr_pays_de_la_loire_normale.png",
+      "batiment_aeroport_fr_pays_de_la_loire_normale_ete.png",
+      "batiment_aeroport_fr_pays_de_la_loire_normale_hiver.png",
+      "batiment_aeroport_fr_pays_de_la_loire_rugosite.png",
+      "batiment_aeroport_fr_pays_de_la_loire_rugosite_ete.png",
+      "batiment_aeroport_fr_pays_de_la_loire_rugosite_hiver.png",
+      "batiment_aeroport_fr_pays_de_la_loire_emission.png",
+      "batiment_aeroport_fr_pays_de_la_loire_emission_ete.png",
+      "batiment_aeroport_fr_pays_de_la_loire_emission_hiver.png",
+      "batiment_aeroport_fr_pays_de_la_loire_masque_equipe.png",
+      "batiment_aeroport_fr_pays_de_la_loire_masque_equipe_ete.png",
+      "batiment_aeroport_fr_pays_de_la_loire_masque_equipe_hiver.png",
+      "batiment_aeroport_fr_pays_de_la_loire_lod0.glb",
+      "batiment_aeroport_fr_pays_de_la_loire_lod1.glb"
+    ]
+  }
+}
