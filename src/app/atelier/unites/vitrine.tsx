@@ -445,13 +445,32 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     boite.getSize(taille);
   }
 
+  /** Une caméra par vue, gardée d'une image à l'autre : voir `dessiner`. */
+  const cameras = new Map<CleVue, THREE.Camera>();
+
+  /** La dernière taille réellement posée sur le moteur : voir `dessiner`. */
+  const tailleRendue = { l: 0, h: 0, ratio: 0 };
+
   function dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean {
     if (!renderer || !cadre || support.children.length === 0) return false;
     const rectCadre = cadre.getBoundingClientRect();
     const largeur = Math.max(1, Math.round(rectCadre.width));
     const hauteur = Math.max(1, Math.round(rectCadre.height));
-    renderer.setPixelRatio(Math.min(2, globalThis.devicePixelRatio || 1));
-    renderer.setSize(largeur, hauteur, false);
+    // **Ne redimensionner que si la taille a bougé.** `setSize` et
+    // `setPixelRatio` reconfigurent le contexte WebGPU et refont la chaîne de
+    // cibles de rendu ; appelés à chaque image — ce que fait un clip qui
+    // tourne —, ils coûtaient plus de deux secondes par image, mesurées sur le
+    // déployé : deux images en quatre secondes et demie. Sous WebGL, la même
+    // écriture ne coûtait presque rien, et le défaut est resté invisible
+    // jusqu'au portage.
+    const ratio = Math.min(2, globalThis.devicePixelRatio || 1);
+    if (largeur !== tailleRendue.l || hauteur !== tailleRendue.h || ratio !== tailleRendue.ratio) {
+      renderer.setPixelRatio(ratio);
+      renderer.setSize(largeur, hauteur, false);
+      tailleRendue.l = largeur;
+      tailleRendue.h = hauteur;
+      tailleRendue.ratio = ratio;
+    }
     renderer.setScissorTest(false);
     renderer.setClearColor(fond, 1);
     renderer.clear();
@@ -473,16 +492,30 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
       renderer.setViewport(x, y, l, h);
       renderer.setScissor(x, y, l, h);
       const aspect = l / h;
+      // **La caméra d'une vue est gardée, jamais refaite.** Six caméras neuves
+      // par image, c'était six objets que le moteur n'avait jamais vus : sous
+      // WebGPU, chacun refait ses tampons d'uniformes et ses groupes de liaison,
+      // et rien du travail de l'image précédente ne se réutilise. On la crée une
+      // fois par vue et on ne met à jour que ce qui bouge — le cadrage dépend du
+      // rayon de la pièce et du rapport de la tuile, tous deux stables.
       const direction = new THREE.Vector3(vue.direction[0], vue.direction[1], vue.direction[2]).normalize();
       let camera: THREE.Camera;
       if (vue.ortho) {
-        const o = new THREE.OrthographicCamera(-rayon * aspect, rayon * aspect, rayon, -rayon, 0.01, 20);
+        const o = (cameras.get(vue.cle) as THREE.OrthographicCamera | undefined)
+          ?? new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 20);
+        cameras.set(vue.cle, o);
+        o.left = -rayon * aspect; o.right = rayon * aspect; o.top = rayon; o.bottom = -rayon;
+        o.updateProjectionMatrix();
         o.position.copy(centre).addScaledVector(direction, 6);
         o.up.set(vue.haut[0], vue.haut[1], vue.haut[2]);
         o.lookAt(centre);
         camera = o;
       } else {
-        const p = new THREE.PerspectiveCamera(40, aspect, 0.05, 40);
+        const p = (cameras.get(vue.cle) as THREE.PerspectiveCamera | undefined)
+          ?? new THREE.PerspectiveCamera(40, 1, 0.05, 40);
+        cameras.set(vue.cle, p);
+        p.aspect = aspect;
+        p.updateProjectionMatrix();
         // La distance qui fait tenir la sphère englobante dans le champ vertical.
         const distance = rayon / Math.sin((20 * Math.PI) / 180) * (aspect < 1 ? 1 / aspect : 1);
         p.position.copy(centre).addScaledVector(direction, distance);
