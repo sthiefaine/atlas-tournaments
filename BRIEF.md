@@ -56,6 +56,12 @@ Les interdits du §7.2 tiennent — jamais de mise hors jeu directe, de changeme
 
 Le propriétaire veut des supers de vilains qui ne soient pas « −1 PV à toute l'armée » : des missiles sur une zone, des lasers sur quelques unités, des IEM qui arrêtent ce qui a un moteur et abattent ce qui vole. **Trois familles d'effets réservées à la faction** (`atl`), et à elle seule — `frappe` de zone, rayon `laser`, `iem` —, bornées dans `doc/04-gameplay.md` §7.2, « Les familles de la faction », qui fait foi. Un commandant national ne les porte jamais : le schéma les lui refuse, le moteur aussi. **`iem.abattre` est la seule mise hors jeu directe du jeu**, au super pouvoir de la faction et à huit barres au moins ; l'interdit « jamais de mise hors jeu directe » **reste entier pour tout commandant national**. L'IA vise ces pouvoirs elle-même, sur la case qui touche le plus d'adverse et le moins de sien.
 
+### Superusine, automate, IEM sur les usines — décision du 10 septembre 2026 (fin d'après-midi)
+
+- **La superusine de scénario** (`Scenario.superusines`) fait paraître chaque journée due une unité neuve, gratuite, au début du tour de son camp : c'est **la seule production gratuite du jeu**, une exception nommée réservée au scénario — l'interdit du §7.2 reste entier pour les pouvoirs. Elle se prend comme une usine : capturée ou désaffectée, elle s'arrête (`doc/04-gameplay.md` §7.7).
+- **L'automate de combat méridien** est la **trentième** unité du canon et la troisième exclusive des Gris, au **catalogue 9** : tir illimité, bon contre le mou, moyen contre les chars, rien en l'air, encaissé comme un char moyen.
+- **Une usine sous IEM ne produit pas** : l'impulsion de station comme le pouvoir `iem` arrêtent les bâtiments producteurs adverses de leur rayon pour leur tour (`usine_iem`). Et **le radar télégraphie** : `intentionSuper` dit ce que l'IA déclencherait, l'interface le montre à qui possède une station.
+
 ## Le jeu en une phrase
 
 Un tactique au tour par tour dans l'esprit d'Advance Wars (grille, unités, terrains, capture de villes, commandants à pouvoirs, conflit stratégique sérieux, affrontements non sanglants), où un jeune commandant fait le tour du monde pour disputer le **Tournoi Atlas**.

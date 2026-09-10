@@ -271,7 +271,8 @@ test('une unité inconnue du dépôt reçoit quand même une spécification', ()
 
  test('les unités exclusives ne multiplient pas leur géométrie par nation', () => {
   const exclusives = chargerUnites().filter(u => u.factionExclusive);
-  assert.equal(exclusives.length, 2);
+  // Veilleur, Bastion (catalogue 7) et l'automate de combat (catalogue 9).
+  assert.equal(exclusives.length, 3);
   for (const u of exclusives) {
     assert.ok(specs.some(s => s.id === `unite_${u.cle}_base`));
     assert.equal(specs.some(s => s.type === 'kit' && s.cle.endsWith(`_${u.cle}`)), false);

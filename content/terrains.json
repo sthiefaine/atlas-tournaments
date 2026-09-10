@@ -266,7 +266,8 @@
         "brouilleur",
         "missiles_air",
         "missiles_sol",
-        "meridien_bastion"
+        "meridien_bastion",
+        "meridien_automate"
       ],
       "ravitaille": true,
       "soigne": 2,

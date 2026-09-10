@@ -47,7 +47,7 @@ const DATE_BANC = '2026-09-05';
  * rendent à la flèche de chemin les colonnes de droite, qu'une quinzième unité
  * lui prenait ; le rang des unités n'est croisé par la flèche qu'en colonne 21.
  */
-export const LARGEUR_BANC = 24;
+export const LARGEUR_BANC = 26;
 
 /** La ville que les gestes de capture se disputent : celle du camp 1 au départ. */
 export const VILLE_BANC: Case = { x: 1, y: 3 };
@@ -110,35 +110,38 @@ export const RANGS = {
  * carte. Une carte de mission n'aligne jamais les six pièces côte à côte.
  */
 const GRILLE_BANC: readonly string[] = [
-  'PFMRSVNWCUATOGPPPPPPPPPP',
-  'PFMRSVNWCUATOGPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPPPPPP',
-  'CCCUUUAAAHHTTTPCPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPPPPPPPPPPPP',
-  'PPPPPPPPPPPPPRPPPPPPPPPP',
-  'MCMUMAMCMPPPPRPPVPRRPPPP',
-  'WWWSPPPPRRRRRRRRNRRRPPPP',
-  'WWWSPPPPPPPPPRPPVPPPPPPP',
-  'WWWSSSOSSSOSSSOSSSSSSSSS',
-  'WWWWWWWWWWWWWWWWWWWWWWWW',
-  'WWWWWWWWWWWWWWWWWWWWWWWW',
+  'PFMRSVNWCUATOGPPPPPPPPPPPP',
+  'PFMRSVNWCUATOGPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+  'CCCUUUAAAHHTTTPCPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+  'PPPPPPPPPPPPPRPPPPPPPPPPPP',
+  'MCMUMAMCMPPPPRPPVPRRPPPPPP',
+  'WWWSPPPPRRRRRRRRNRRRPPPPPP',
+  'WWWSPPPPPPPPPRPPVPPPPPPPPP',
+  'WWWSSSOSSSOSSSOSSSSSSSSSSS',
+  'WWWWWWWWWWWWWWWWWWWWWWWWWW',
+  'WWWWWWWWWWWWWWWWWWWWWWWWWW',
 ];
 
 /**
- * Les vingt-quatre unités du catalogue 6, dans l'ordre où elles se lisent : la
+ * Les trente unités du catalogue 9, dans l'ordre où elles se lisent : la
  * piétaille, puis les roues, puis les chenilles, puis ce qui vole, puis ce qui
- * flotte. Le test exige que cette liste **soit** le catalogue, à la clé près :
- * une unité homologuée qu'on oublierait ici ne serait jamais regardée.
+ * flotte, puis les trois matériels exclusifs des Gris — le banc donne la
+ * faction `atl` aux deux camps pour qu'ils y aient droit. Le test exige que
+ * cette liste **soit** le catalogue, à la clé près : une unité homologuée
+ * qu'on oublierait ici ne serait jamais regardée. Vingt-cinq unités de terre
+ * par rang, d'où la largeur de 26 (le brouillard du banc en cache la moitié).
  */
 export const UNITES_BANC: readonly CleUnite[] = [
   'infanterie', 'meca', 'genie', 'recon', 'brouilleur', 'roquettes', 'missiles_air', 'missiles_sol',
   'char_leger', 'char_moyen', 'char_lourd', 'antiair', 'artillerie', 'transport',
   'helico', 'transport_air', 'drone', 'chasseur', 'bombardier', 'furtif',
   'barge', 'sous_marin', 'cuirasse', 'porte_avions', 'drone_marin',
-  'drone_intercepteur', 'drone_ravitailleur', 'meridien_veilleur', 'meridien_bastion',
+  'drone_intercepteur', 'drone_ravitailleur', 'meridien_veilleur', 'meridien_bastion', 'meridien_automate',
 ];
 
 /**
@@ -359,7 +362,7 @@ export function carteGrande(): MapDef {
  * test le confronte à la version de `content/unites.json`, pour qu'il ne
  * reste pas en arrière d'une homologation.
  */
-export const VERSION_CATALOGUE_BANC = 8;
+export const VERSION_CATALOGUE_BANC = 9;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui

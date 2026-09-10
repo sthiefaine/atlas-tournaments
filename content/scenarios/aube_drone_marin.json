@@ -1,10 +1,10 @@
 {
   "cle": "aube_drone_marin",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "humain",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_drone_marin",
   "nom": "Essai Aube · Le chenal des signaux",
   "acte": 0,
@@ -54,14 +54,29 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Notre drone marin observe le chenal. Il ne tire pas et ne quitte pas les eaux navigables. Le brouilleur sur la rive adverse réduit sa vision : écarte-le de cette rive avant de choisir une traversée.",
+      "texte": "Notre **drone marin** observe le chenal : il ne tire pas et ne quitte pas l’eau. Le brouilleur sur la rive de Tomas lui coupe la vue — écartez-le de cette rive avant de choisir une traversée.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Au bocage, c’était un drone marin gris qui pressait notre quai. Celui-ci est à nous : même œil, même silence, et il sert à trouver la **plage vide** pendant que tout le monde regarde le carrefour.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je joue l’ennemi aujourd’hui, et je joue dur : le carrefour du centre vaut trois villes. Si vous chargez une barge pendant que je les prends, le compte des points ne pardonne pas.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Prenez le QG de Tomas ou détruisez son armée. Trente journées, brouillard, revenu par bâtiment : c’est un engagement qui se gagne aussi au compte.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le carrefour occupait tout le monde, et la plage était vide. Bien joué à l’équipe.",
+      "texte": "Le carrefour retenait tout le monde, et la plage était vide. Le drone l’a vue le premier. Bien joué à l’équipe.",
       "emotion": "joie"
     }
   ],
@@ -72,7 +87,36 @@
       "emotion": "triomphe"
     }
   ],
-  "scenesDialogue": [],
+  "scenesDialogue": [
+    {
+      "cle": "drone_marin_journee_4",
+      "declencheur": {
+        "type": "journee",
+        "journee": 4
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le drone vous a montré la rive. Si la plage est vide, c’est là qu’on débarque ; si le carrefour est pris, c’est là qu’on tient. Pas les deux à moitié.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "drone_marin_capture_tomas",
+      "declencheur": {
+        "type": "capture",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une ville de plus pour moi. Le centre paie, commandant ; votre chenal, lui, ne rapporte rien tant que rien n’en sort.",
+          "emotion": "triomphe"
+        }
+      ]
+    }
+  ],
   "choix": [],
   "flagsRequis": [],
   "flagsInterdits": [],

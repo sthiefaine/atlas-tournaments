@@ -1,6 +1,6 @@
 {
   "cle": "pacte_du_col",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -67,26 +67,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Formation terminée : voici votre première qualification officielle. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc pour cette épreuve de coopération. Il joue pour gagner, c’est la règle.",
+      "texte": "Formation terminée : voici votre premier **engagement homologué**. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc. Il se bat pour gagner, c’est la règle.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais vous devrez protéger le char jusqu’au col : c’est lui qu’Atlas regarde.",
+      "texte": "Le Pacte a un quatrième article : **le refus de se battre se paie plus cher que la défaite**. Deux délégations inscrites sur le même front s’affrontent, ou perdent toutes les deux. Les charges sont réelles.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais vous devrez protéger **le char qui porte les relevés du col** jusqu’à la case en or : c’est lui qu’Atlas regarde, et c’est lui que Tomas vise.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Qualification réussie. Vous m’avez remis vos relevés du col : le Luxembourg s’engage aux côtés de la délégation française, et Solveig accroche les deux plaques ce soir. Je vous prête mon banc pour une exhibition sous mes couleurs.",
+      "texte": "Engagement remporté, et proprement. Vous m’avez remis vos relevés du col : le Luxembourg s’engage aux côtés de la France, la **coalition** commence à deux. Solveig accroche les deux plaques ce soir.",
       "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Et je vous prête mon banc pour un front d’essai sous mes couleurs. Vous verrez ce que disent mes relevés ; ils ne me plaisent pas.",
+      "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est perdu, mais personne ne quitte notre équipe. Reprenons le briefing et essayons un autre chemin.",
+      "texte": "Le front est perdu, et cette fois les pièces ne rentrent pas toutes. Personne ne quitte la délégation pour autant. Reprenons le briefing et essayons un autre chemin.",
       "emotion": "doute"
     }
   ],
@@ -100,12 +110,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Le génie est sorti d’usine. Il n’attaque pas, mais il pose un terrain là où il n’y en avait pas : c’est lui qui ouvre le col.",
+          "texte": "Le génie est sorti d’usine. Il n’attaque pas, mais il **pose un terrain** là où il n’y en avait pas : c’est lui qui ouvre le col.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Amenez-le au bord de l’éboulement, puis choisissez Construire. Une escorte n’est pas un luxe.",
+          "texte": "Amenez-le au bord de l’éboulement, puis choisissez Construire. Une escorte n’est pas un luxe : mon artillerie sait où il ira.",
           "emotion": "neutre"
         }
       ]
@@ -118,8 +128,27 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "L’adversaire vise le char, pas vous. Perdre le char termine le match : mettez du blindage entre lui et leurs canons.",
+          "texte": "L’ennemi vise le char, pas vous. **Perdre le char termine l’engagement** : mettez du blindage entre lui et leurs canons.",
           "emotion": "colere"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "**Vous vous souvenez de la crête, au cinquième exercice ?** Ce qui tire de loin ne riposte pas au contact. Si Tomas pose de l’artillerie, allez la chercher avec un char, jamais avec celui des relevés.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "col_nuit",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La nuit tombe, et le brouillard avec, comme dans la forêt du sixième exercice. Mais personne ne vous rendra une pièce perdue à l’aveugle. **Éclairez avant d’avancer** ; le col ne bouge pas, lui.",
+          "emotion": "neutre"
         }
       ]
     }

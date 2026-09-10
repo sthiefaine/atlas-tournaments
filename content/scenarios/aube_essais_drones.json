@@ -1,10 +1,10 @@
 {
   "cle": "aube_essais_drones",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_essais_drones",
   "nom": "Aube · Drones et matériel méridien",
   "acte": 0,
@@ -70,31 +70,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai du catalogue 7. Notre intercepteur peut menacer l’hélico ; notre drone ravitailleur soutient le groupe. Les chars et l’artillerie couvrent leur approche.",
+      "texte": "Essai du matériel homologué : notre drone intercepteur menace l’hélico, le ravitailleur remet la ligne au plein. Chars et artillerie couvrent l’approche.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Ost dispose d’un Veilleur brouilleur et d’un Bastion. Ce matériel est réservé à la Sélection Méridienne. Prenez son QG ou mettez son camp hors jeu avant la fin de la quinzième journée.",
+      "texte": "Ost aligne un Veilleur et un Bastion sous badge orange, « prototypes sous observation ». Les **Gris** en portent partout, et personne ne vérifie. Prenez son QG ou détruisez son armée avant la fin de la quinzième journée.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les budgets sont fixes et la caisse adverse est vide. Cet essai sert à comparer les rôles ; il ne donne pas le matériel méridien à notre équipe.",
+      "texte": "Le Bastion, vous l’avez vu devant les dépôts de Basile : anti-air lourd, lent, il ne capture rien et ne voit pas un char venir. Le Veilleur brouille à dix cases — sous son ombre, vos drones voient à peine.",
       "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Et la Batterie sans plaque : jauge pleine, la **Grêle** tombe sur treize cases, deux points, un drone à moitié abattu. Le Bulletin le dit la veille : écartez les appareils. Caisse adverse vide, la nôtre fixe.",
+      "emotion": "doute"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai terminé. Le renseignement, le soutien et l’interception remplissent des rôles différents ; aucun drone ne remplace à lui seul tout le groupe.",
-      "emotion": "neutre"
+      "texte": "Essai terminé. Renseignement, soutien, interception : trois rôles, et aucun drone ne fait le groupe à lui seul. Le Bastion tombe aux chars, comme prévu.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match s’arrête ici. Reprenez la préparation : les drones ont besoin d’une couverture adaptée face au matériel méridien.",
+      "texte": "L’engagement s’arrête ici. Les drones ont besoin d’une couverture face au matériel gris : reprenez la préparation.",
       "emotion": "neutre"
     }
   ],
@@ -116,8 +121,41 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Lisez la prévision de duel avant de choisir une cible. Le Bastion couvre les airs : contournez sa portée et utilisez les unités terrestres pour le traiter.",
+          "texte": "Lisez la prévision avant de choisir une cible. Le Bastion couvre le ciel : contournez sa portée et laissez les chars le traiter.",
           "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "essai_drones_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Vos drones tiennent mal la pluie, commandant.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Sortez les drones, soignez le reste.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "essai_drones_perte_grise",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une pièce grise au sol. Si c’est le Veilleur, vos drones revoient ; si c’est le Bastion, le ciel est à nous.",
+          "emotion": "joie"
         }
       ]
     }

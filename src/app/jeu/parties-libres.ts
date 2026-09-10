@@ -38,7 +38,7 @@ export function formatCoalitions(scenario: Scenario): string {
 /** Section d'essais à part : le statut de production reste brouillon dans le canon. */
 export function essaisAube(scenarios: readonly Scenario[], cartes: ReadonlyMap<string, MapDef>): PartieLibre[] {
   const ouverts = scenarios.filter(s => s.statut === 'brouillon'
-    && (CLES_ESSAIS_AUBE.some(cle => cle === s.code) || s.code === 'aube_essais_drones' || s.code === 'aube_drone_marin' || s.code === 'aube_essai_maritime_iem_climat'));
+    && (CLES_ESSAIS_AUBE.some(cle => cle === s.code) || s.code === 'aube_essais_drones' || s.code === 'aube_drone_marin' || s.code === 'aube_essai_maritime_iem_climat' || s.code === 'aube_superusine'));
   return partiesLibres(ouverts.map(s => ({ ...s, statut: 'en_ligne' })), cartes, []);
 }
 

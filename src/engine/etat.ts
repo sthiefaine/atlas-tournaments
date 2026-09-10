@@ -37,7 +37,14 @@ import { cleCase } from './types';
  * l'aléa de combat, `etoiles` change la défense, la faiblesse est posée à la
  * création de l'état. Une partie enregistrée avant ne rejoue plus pareil.
  */
-export const VERSION_MOTEUR = 7;
+/**
+ * Version 8 (10 septembre 2026, fin d'après-midi) : une impulsion IEM — de
+ * station comme de pouvoir — touche aussi les bâtiments producteurs adverses,
+ * qui ne produisent rien à leur tour (`usine_iem`) ; et les superusines de
+ * scénario font paraître leurs unités au début du tour. Un rejeu d'avant qui
+ * produisait sous impulsion diverge.
+ */
+export const VERSION_MOTEUR = 8;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;
@@ -69,6 +76,8 @@ export function copierEtat(e: EtatPartie): EtatPartie {
     flux: { ...e.flux },
     relais: { ...e.relais },
     ...(e.renfortsLivres ? { renfortsLivres: [...e.renfortsLivres] } : {}),
+    ...(e.superusinesProduites ? { superusinesProduites: { ...e.superusinesProduites } } : {}),
+    ...(e.usinesIem ? { usinesIem: { ...e.usinesIem } } : {}),
     proprietaires: { ...e.proprietaires },
     desaffectes: [...e.desaffectes],
     unites: e.unites.map((u) => (u.cargo.length === 0 ? { ...u } : { ...u, cargo: [...u.cargo] })),
@@ -161,6 +170,7 @@ export function sceneDepuis(
       ...(scenario.equipes ? { equipes: scenario.equipes } : {}),
       ...(scenario.renforts ? { renforts: scenario.renforts } : {}),
       ...(scenario.installationsIem ? { installationsIem: scenario.installationsIem } : {}),
+      ...(scenario.superusines ? { superusines: scenario.superusines } : {}),
       ...(scenario.evenementsClimat ? { evenementsClimat: scenario.evenementsClimat } : {}),
       date: scenario.date,
       climatPays,
@@ -248,8 +258,22 @@ export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatP
     const terrain = cleTerrain ? cat.terrains[cleTerrain] : undefined;
     if (!terrain?.capturable) throw new Error("Installation IEM hors bâtiment capturable.");
   }
+  // Une superusine (10 septembre 2026) se pose sur un bâtiment producteur —
+  // ou le QG — de son camp, et fait un type du catalogue : c'est ici, avec la
+  // carte et le catalogue sous la main, que le scénario est tenu à sa parole.
+  for (const s of scene.reglages.superusines ?? []) {
+    const cleTerrain = cat.parCaractere[scene.grille[s.y]?.[s.x] ?? ''];
+    const terrain = cleTerrain ? cat.terrains[cleTerrain] : undefined;
+    if (!terrain || (cleTerrain !== 'qg' && terrain.produit.length === 0)) {
+      throw new Error('Superusine hors d’un bâtiment producteur ou d’un QG.');
+    }
+    if (scene.proprietaires[cleCase(s)] !== s.camp || !scene.camps.includes(s.camp)) {
+      throw new Error('Superusine sur un bâtiment qui n’est pas à son camp.');
+    }
+    if (!cat.unites[s.type]) throw new Error('Superusine : type inconnu du catalogue.');
+  }
   const contexte = { reglages: scene.reglages };
-  for (const u of [...scene.unitesDepart, ...(scene.reglages.renforts ?? []).flatMap((v) => v.unites)]) {
+  for (const u of [...scene.unitesDepart, ...(scene.reglages.renforts ?? []).flatMap((v) => v.unites), ...(scene.reglages.superusines ?? [])]) {
     if (cat.unites[u.type] && !uniteAutorisee(cat, u.type, contexte, u.camp)) {
       throw new Error('Unité exclusive interdite pour ce camp.');
     }

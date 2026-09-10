@@ -1,10 +1,10 @@
 {
   "cle": "couleurs_alliees",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-05",
+  "majLe": "2026-09-10",
   "code": "couleurs_alliees",
   "nom": "Exhibition · Sous les couleurs alliées",
   "acte": 0,
@@ -66,26 +66,26 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Mon équipe est à vous pour ce match d’exhibition. Son style privilégie la défense : mes unités encaissent mieux, et mon pouvoir renforce encore leur garde.",
+      "texte": "Mon groupe est à vous pour ce **front d’essai**, sous les couleurs du Luxembourg : charges d’essai, arbitrage réel. Mon style privilégie la défense : mes unités encaissent mieux, et mon pouvoir renforce encore leur garde.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois postes d’arbitrage de la vallée gardent les relevés du tournoi. Tenez-les tous les trois sous nos couleurs en même temps : Ariane fera tout pour en garder un.",
+      "texte": "Les trois **postes d’arbitrage** de la vallée gardent les relevés de la Ronde : ce que chaque front a produit, et pour qui. Tenez-les tous les trois sous nos couleurs en même temps ; Ariane fera tout pour en garder un.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois postes sont à nous. Les relevés mentionnent une commission inconnue : la Cinquième Manche. Votre entraînement est derrière vous ; l’histoire de la Ronde commence.",
+      "texte": "Les trois postes sont à nous, et les relevés avec. Ils portent une signature qu’aucun tableau ne nomme : **la Cinquième Manche**, écrite noir sur blanc pour la première fois. Votre instruction est finie ; la guerre commence.",
       "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est perdu, mais personne ne quitte notre équipe. Reprenons le briefing et essayons un autre chemin.",
+      "texte": "Le front est perdu, mais personne ne quitte la coalition. Reprenons le briefing et essayons un autre chemin.",
       "emotion": "doute"
     }
   ],
@@ -99,12 +99,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Le brouillard couvre la vallée : on ne voit que ce que nos unités voient. Votre drone porte à cinq cases, mais la station radar d’Ariane, au nord-est, le brouille à douze cases : à sa portée, il n’y voit plus qu’à une case.",
+          "texte": "Le brouillard couvre la vallée : on ne voit que ce que nos unités voient. **Vous vous souvenez du radar de la forêt ?** Vous l’aviez pris pour voir. Celui d’Ariane, au nord-est, sert à vous aveugler.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Prenez la station, et c’est nous qui verrons à cinq cases autour d’elle. Son brouilleur mobile, lui, ne se prend pas : il se met hors jeu.",
+          "texte": "À douze cases de son radar, votre drone ne voit plus qu’à une. **Prenez la station**, et c’est nous qui verrons à cinq cases autour d’elle. Son brouilleur mobile, lui, ne se prend pas : il se détruit.",
           "emotion": "neutre"
         }
       ]
@@ -118,7 +118,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Premier poste sous nos couleurs. Servez-vous de ma défense pour tenir plutôt que pour charger : une unité postée sur un bâtiment y gagne trois étoiles.",
+          "texte": "Premier poste sous nos couleurs. Servez-vous de ma défense pour tenir plutôt que pour charger : **une unité postée sur un bâtiment y gagne trois étoiles**.",
           "emotion": "neutre"
         }
       ]
@@ -160,7 +160,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau. Finissons ce match, nous lirons le troisième ensemble.",
+          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau : du courant sort de la vallée que personne n’a déclaré. Finissons ce front, nous lirons le troisième ensemble.",
           "emotion": "doute"
         }
       ]

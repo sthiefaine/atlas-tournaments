@@ -40,6 +40,7 @@ import {
   dialogueFin, filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
 import { casesObjectifs } from './objectifs';
+import { casesUsinesIem } from './iem';
 import { effetInstantane, libelleMeteo, nomCommandant, nomCourtUnite } from './libelles';
 import { ecrirePartition } from './partition';
 import { facteurDuree } from './cadence';
@@ -573,6 +574,18 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       if (vues === undefined) vues = visibles();
       return vues === null || vues.has(cleCase(u));
     };
+    // L'usine sous impulsion (`usine_iem { camp, case }`) : une salve peut en
+    // toucher plusieurs, on les compte une fois — les siennes toujours, celles
+    // d'en face si la case se voit — et l'annonce s'ajoute à celle de
+    // l'impulsion quand la même salve la porte, sinon elle part seule.
+    let usinesTouchees = 0;
+    for (const e of evenements) {
+      if (e.type !== 'usine_iem') continue;
+      if (seVoit({ camp: e.camp, x: e.case.x, y: e.case.y })) usinesTouchees += 1;
+    }
+    const texteUsines = usinesTouchees === 0 ? ''
+      : t(usinesTouchees === 1 ? 'hud.usine_iem_annonce_une' : 'hud.usine_iem_annonce', { n: usinesTouchees });
+    let usinesDites = false;
     for (const e of evenements) {
       if (e.type === 'remise_en_service') {
         poserAnnonce(t('combat.batiment_remis_prime', { n: e.prime }));
@@ -639,6 +652,10 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
           const parts: string[] = [];
           if (arretees > 0) parts.push(t(arretees === 1 ? 'hud.iem_pouvoir_une' : 'hud.iem_pouvoir', { n: arretees }));
           if (abattues > 0) parts.push(t(abattues === 1 ? 'hud.iem_pouvoir_abattue' : 'hud.iem_pouvoir_abattues', { n: abattues }));
+          if (texteUsines) {
+            parts.push(texteUsines);
+            usinesDites = true;
+          }
           texte = parts.length > 0 ? parts.join(' · ') : t('hud.iem_pouvoir_rien');
         } else {
           const n = e.touchees.filter((x) => vueDe(x.uniteId)).length;
@@ -663,6 +680,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         poserAnnonce(t(CLE_PRISE[terrain ?? ''] ?? 'combat.ville_capturee'));
       }
     }
+    if (texteUsines && !usinesDites) poserAnnonce(texteUsines);
   }
 
   /** Vrai si le joueur ou son appareil demande des animations réduites. */
@@ -817,7 +835,27 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       attenteIa,
       etiquetteQg: t('hud.qg'),
       marques: telegraphie().marques,
+      marquesCases: lecture().marquesCases,
     };
+  }
+
+  /**
+   * Ce que la carte **lit** de l'état sans que ce soit une règle : les usines
+   * qu'une impulsion tient (`iem.ts`, un « ! » sur la case). Mémoïsé par état —
+   * la vue le demande à chaque survol. Le radar, lui, ne rapporte rien à la
+   * carte : il voit et il brouille, c'est l'affaire du moteur (10 septembre
+   * 2026, « le radar qui télégraphie » retiré sur décision du propriétaire).
+   */
+  let lectureCarte: {
+    etat: EtatPartie;
+    marquesCases: ReadonlyMap<string, MarqueUnite> | null;
+  } | null = null;
+  function lecture(): NonNullable<typeof lectureCarte> {
+    if (lectureCarte && lectureCarte.etat === etat) return lectureCarte;
+    const marques = new Map<string, MarqueUnite>();
+    for (const k of casesUsinesIem(etat, cat)) marques.set(k, 'menacee');
+    lectureCarte = { etat, marquesCases: marques.size > 0 ? marques : null };
+    return lectureCarte;
   }
 
   /**

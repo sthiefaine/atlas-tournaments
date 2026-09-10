@@ -1,6 +1,6 @@
 {
   "cle": "aube_routes_3v1",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -74,26 +74,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois délégations se partagent les accès nord, ouest et est. Solveig tient seule le poste central, avec une réserve plus forte. Prenez son QG ou mettez son camp hors jeu : Aube est hors de cette enceinte de tournoi.",
+      "texte": "Trois armées sur les accès nord, ouest et est : Tomas, Ost, nous. Solveig tient seule le poste central, avec la caisse la plus lourde. Prenez son QG ou détruisez son armée : Aube est hors de cette enceinte.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "texte": "Le **Pacte** borne la guerre : fronts homologués, armes déclarées, concessions nommées. Ce qui n’y est pas n’est pas une astuce, c’est un crime. Solveig joue l’arbitre qui ferme la route ; nous jouons ceux qui l’ouvrent.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ost est de notre côté ce matin, et sa Grêle ne trie pas : treize cases, **les nôtres comprises**. Vous l’avez vue tomber sur nous ; ne restez pas dans sa zone quand sa jauge est pleine.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Trois routes, un poste : celui qui arrive seul se fait battre seul. Avancez à la cadence des autres, pas à la vôtre.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai : ce front n’est pas inscrit au Registre, rien de ce qui s’y gagne ne suit la campagne. Perdre notre QG ou toutes nos pièces met fin à l’engagement.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les voies de coordination sont ouvertes. Le programme Aube conserve son accès partagé aux équipes de recherche.",
-      "emotion": "neutre"
+      "texte": "Le poste central est ouvert, et Aube reste hors de portée des contrats. Notez ce que la Grêle a coûté à ses alliés : un jour, il faudra le dire à Ost en face.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "texte": "Solveig a tenu. Trois armées qui n’avancent pas ensemble n’en font pas une : réglez la cadence avant de relancer.",
       "emotion": "neutre"
     }
   ],
@@ -111,5 +126,53 @@
   },
   "factionsParCamp": {
     "2": "atl"
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "routes_premier_combat",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Premier tir. Regardez qui a tiré : si c’est Ost, regardez où. Un allié qui frappe seul vous laisse le compte à payer.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "routes_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Je vise le centre. Si vous étiez dessous, il fallait lire le Bulletin.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Comptez vos pièces : la Grêle d’Ost ne distingue pas un allié. Un essai apprend aussi cela — avec qui on partage un front.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "routes_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Un poste de plus. Chaque bâtiment pris est une route que Solveig ne ferme plus.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

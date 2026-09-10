@@ -17,8 +17,8 @@
 
 import type { Catalogue, EtatPartie, EvaluationEffets, Unite } from '../engine/index';
 import {
-  consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
-  seuilCapture, terrainLogique, uniteParId, sontAllies,
+  consommationParTour, prevoirDuel, pvAffiches, RAYON_STATION_RADAR, revenuParTour,
+  seuilCapture, superusineSur, terrainLogique, uniteParId, sontAllies, VISION_STATION_RADAR,
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
@@ -33,6 +33,8 @@ import {
 import {
   alerteCarburant, alerteMunitions, ficheUnite, porte, type Alerte, type Duel,
 } from './fiche-unite';
+import { htmlGras } from './gras';
+import { usineSousIem } from './iem';
 import { paletteDe } from './palettes';
 import type { Partition } from './partition';
 import type { PointVue } from './rendu';
@@ -421,6 +423,15 @@ const STYLE = `
 .atlas-hud .alerte-super{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:calc(var(--haut) + 50px);display:flex;align-items:center;gap:7px;max-width:calc(100% - 24px);padding:5px 10px;background:var(--encre);border-left:3px solid var(--signal);color:var(--signal);font-size:var(--t2);font-weight:800;line-height:1.25}
 .atlas-hud .alerte-super .symbole{width:14px;height:14px;flex:none}
 .atlas-hud[data-rail='oui'] .hud-rail .alerte-super{position:static;flex:none;max-width:none}
+/* Le gras des scénaristes dans une annonce (gras.ts) : au signal. */
+.atlas-hud .annonce strong{color:var(--signal);font-weight:900}
+/* L'usine sous impulsion : le menu s'ouvre, dit pourquoi rien ne sortira
+   ce tour, et laisse consulter les fiches — on veut savoir pour quoi on
+   économise, même quand on ne peut pas acheter. Même registre que les
+   fonds insuffisants, en tête plutôt qu'au pied. */
+.atlas-hud .production-bloquee{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#f0555f;color:#1d0a0d;font-size:var(--t3);font-weight:850}
+.atlas-hud .production-bloquee .symbole{width:16px;height:16px;flex:none}
+.atlas-hud .inspect .radar-aide{display:block;margin-top:4px;color:#b7a9d6;font-weight:700}
 .atlas-hud .duel-entete{display:flex;align-items:center;gap:8px;padding:6px 12px;background:#ff6a5e14;border-bottom:1px solid #ffffff14;font-size:var(--t2);font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#ffb3aa}
 .atlas-hud .duel-entete .symbole{width:16px;height:16px}
 .atlas-hud .duel-entete .issue{margin-left:auto;color:var(--signal);letter-spacing:.08em}
@@ -1059,6 +1070,15 @@ export function premiereAbordable(
  * Monte le HUD HTML dans un conteneur (le même que le canvas, en position
  * relative). Rend `rafraichir()` et `demonter()`.
  */
+/**
+ * Ce qui bloque un menu de production entier : `iem`, l'impulsion qui tient
+ * le bâtiment ce tour ; `inerte`, une superusine de scénario qu'on tient sans
+ * pouvoir s'en servir (`usine_inerte`, 10 septembre 2026). Même bandeau, même
+ * note sous le bouton : seul le mot change.
+ */
+type BlocageProduction = 'iem' | 'inerte' | null;
+const CHAINE_BLOCAGE = { iem: 'hud.usine_iem', inerte: 'hud.usine_inerte' } as const;
+
 export function monterHudHtml(
   conteneur: HTMLElement, api: ApiHud, horloge?: HorlogeScenes,
 ): HudHtml {
@@ -1626,6 +1646,18 @@ export function monterHudHtml(
     if (unite && unite.camp !== v.camp && sontAllies(v.etat, unite.camp, v.camp)) {
       lignes.push(`<span class="allie">${ech(api.t('hud.unite_alliee'))}</span>`);
     }
+    // Le bâtiment sous la case : une usine qu'une impulsion tient ne produit
+    // pas ce tour, et rien sur la carte ne le dit — même registre rouge que
+    // l'IEM d'une unité. Et une station radar dit ce qu'elle apporte — sa vue
+    // et son brouillage, lus au moteur, rien d'autre : le radar ne télégraphie
+    // pas (10 septembre 2026, retiré sur décision du propriétaire).
+    if (usineSousIem(v.etat, v.catalogue, c)) lignes.push(stat(api.t('hud.usine_iem'), 'rouge', 'hud.usine_iem'));
+    // Une superusine de scénario : on peut la tenir, pas s'en servir. Même
+    // registre rouge, et c'est le moteur qui la nomme (`superusineSur`).
+    if (superusineSur(v.etat, c)) lignes.push(stat(api.t('hud.usine_inerte'), 'rouge', 'hud.usine_inerte'));
+    const radar = terrain === 'radar'
+      ? `<span class="radar-aide">${ech(api.t('hud.radar_aide', { vision: VISION_STATION_RADAR, brouillage: RAYON_STATION_RADAR }))}</span>`
+      : '';
     const icone = unite && type ? vignette(type.silhouette, unite.camp, 46) : '';
     const bord = unite ? paletteDe(unite.camp).main : paletteDe(null).main;
     // Le bouton n'apparaît que sur une unité : un terrain n'a pas de fiche, et
@@ -1649,7 +1681,7 @@ export function monterHudHtml(
 
       + `<div class="in">${icone}<div style="min-width:0">`
       + `<div class="tt">${ech(titre)}</div><div class="sb">${sousTitre}</div>`
-      + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}</div>` : '')
+      + (lignes.length > 0 ? `<div class="stats">${lignes.join(' · ')}${embarquees}${radar}</div>` : radar)
       + `</div>${detail}${v.selection && !v.attenteIa ? boutonRetour() : ''}</div>`
       // Le chemin pointé traverse du noir : on prévient que le menu viendra
       // après la marche, pas avant. L'œil est le signe de la vision partout ailleurs.
@@ -1939,7 +1971,7 @@ export function monterHudHtml(
 
   function panneauAnnonce(v: VueJeu): string {
     if (!v.annonce) return '';
-    return `<div class="p annonce"><div class="in"><div class="tt">${ech(v.annonce)}</div></div></div>`;
+    return `<div class="p annonce"><div class="in"><div class="tt">${htmlGras(v.annonce, ech)}</div></div></div>`;
   }
 
   /**
@@ -2179,17 +2211,21 @@ export function monterHudHtml(
    * faut aller chercher en bas d'une fiche est un bouton qu'on ne trouve pas ;
    * et le solde restant est la seule chose qu'on relit entre deux achats.
    */
-  function piedProduction(v: VueJeu, cle: CleUnite): string {
+  function piedProduction(v: VueJeu, cle: CleUnite, blocage: BlocageProduction): string {
     const type = v.catalogue.unites[cle];
     if (!type) return '';
     const fonds = fondsCourants(v);
     const abordable = type.cout <= fonds;
     const cout = nombreIntl(v.locale, type.cout);
-    const note = abordable
-      ? `<span class="note">${ech(api.t('fiche.solde_apres', { n: nombreIntl(v.locale, fonds - type.cout) }))}</span>`
-      : `<span class="note" data-manque="oui">${ech(api.t('fiche.fonds_insuffisants'))}</span>`;
+    // Le blocage passe avant les fonds : on ne dit pas « fonds insuffisants »
+    // à qui ne pourrait rien acheter même riche.
+    const note = blocage
+      ? `<span class="note" data-manque="oui">${ech(api.t(CHAINE_BLOCAGE[blocage]))}</span>`
+      : abordable
+        ? `<span class="note">${ech(api.t('fiche.solde_apres', { n: nombreIntl(v.locale, fonds - type.cout) }))}</span>`
+        : `<span class="note" data-manque="oui">${ech(api.t('fiche.fonds_insuffisants'))}</span>`;
     return `<div class="fiche-action">${note}`
-      + `<button type="button" class="recruter" data-action="produire" data-valeur="${ech(cle)}"${abordable ? '' : ' disabled'}>`
+      + `<button type="button" class="recruter" data-action="produire" data-valeur="${ech(cle)}"${abordable && !blocage ? '' : ' disabled'}>`
       + `${ech(api.t('fiche.recruter'))}<span aria-hidden="true">·</span><span>${ech(cout)}</span></button></div>`;
   }
 
@@ -2238,6 +2274,14 @@ export function monterHudHtml(
         + `<span class="cout">${ech(prix)}</span></button>`;
     }).join('');
     const solde = api.t('hud.fonds', { n: nombreIntl(v.locale, fonds) });
+    // L'usine sous impulsion, ou la superusine inerte : le verdict du moteur,
+    // jamais une règle recopiée. L'inertie passe d'abord — elle ne se lève pas.
+    const blocage: BlocageProduction = superusineSur(v.etat, p.batiment)
+      ? 'inerte'
+      : usineSousIem(v.etat, v.catalogue, p.batiment) ? 'iem' : null;
+    const bloquee = blocage
+      ? `<div class="production-bloquee" role="status" data-${blocage}="oui">${iconeOrdre('alerte')}<span>${ech(api.t(CHAINE_BLOCAGE[blocage]))}</span></div>`
+      : '';
     // Hauteur estimée : elle ne sert qu'à poser le panneau avant de le mesurer
     // (`replacerProduction`). En deux colonnes elle ne dépend plus guère du
     // niveau de détail — c'est la plus haute des deux colonnes qui décide.
@@ -2249,12 +2293,12 @@ export function monterHudHtml(
       + ` role="dialog" aria-label="${ech(api.t('menu.production'))}">`
       + `<div class="production-entete"><span class="tt">${ech(api.t('menu.production'))}</span>`
       + `<span class="solde" aria-label="${ech(solde)}">${iconeOrdre('fonds')}${ech(nombreIntl(v.locale, fonds))}</span>`
-      + `${boutonRetour()}</div>`
+      + `${boutonRetour()}</div>${bloquee}`
       + `<div class="production-corps">`
       + `<div class="production-liste" role="group" aria-label="${ech(api.t('fiche.liste'))}">${cases}</div>`
       + (enAvant ? ficheProduction(v, enAvant) : '<div class="panneau-fiche"></div>')
       + `</div>`
-      + (enAvant ? piedProduction(v, enAvant) : '')
+      + (enAvant ? piedProduction(v, enAvant, blocage) : '')
       + `</div></div>`;
   }
 

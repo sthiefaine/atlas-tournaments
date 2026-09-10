@@ -145,5 +145,10 @@ export const ROLES_UNITES: Readonly<Record<string, GuideUnite>> = {
     "role": "Ancrage antiaérien méridien",
     "achat": "Pour verrouiller un passage face à la pression aérienne.",
     "limite": "Lent, coûteux et exposé au tir indirect terrestre."
+  },
+  "meridien_automate": {
+    "role": "Ligne automatisée méridienne",
+    "achat": "Pour tenir le terrain sans munitions à compter, en nombre, sortie des superusines.",
+    "limite": "Aveugle au ciel et encaissé comme un char moyen : le tir indirect et les chars lourds l’usent."
   }
 };

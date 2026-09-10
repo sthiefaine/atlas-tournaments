@@ -19,6 +19,7 @@
 
 import type { CampId, Emotion } from '../schemas/types';
 import type { RepliqueEnAttente } from './dialogues';
+import { segmenter } from './gras';
 import { paletteDe } from './palettes';
 
 /** Ce que la scène peut demander au jeu. Aucun de ces appels ne mute un état. */
@@ -77,6 +78,10 @@ const STYLE = `
 .atlas-scene .nom .humeur{margin-left:auto;padding:2px 8px;background:#0b1a2226;font-size:11px;letter-spacing:.1em;font-weight:800}
 .atlas-scene .texte{padding:15px 16px 16px;min-height:5.6em;white-space:pre-wrap;font-size:clamp(15px,1.7vw,18px)}
 .atlas-scene .texte b{font-weight:inherit;visibility:hidden}
+/* Le gras des scénaristes (gras.ts) : la lettre hérite du poids de son
+   segment, et la frappe ne fait que lever la visibilité — la balise ne se
+   coupe jamais au milieu. Au signal, comme tout ce qui est mis en avant. */
+.atlas-scene .texte strong{font-weight:900;color:var(--signal)}
 .atlas-scene .pied{display:flex;align-items:center;gap:10px;padding:0 14px 12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9db3b6}
 /* Les mêmes segments biseautés que la jauge de la campagne et que le bouton
    Campagne de l'écran-titre : deux mesures de la même chose — où j'en suis —
@@ -119,6 +124,22 @@ const STYLE = `
 }
 @media(prefers-reduced-motion:reduce){.atlas-scene *{animation:none!important}}
 `;
+
+/**
+ * Le HTML du texte d'une réplique : **une lettre par `<b>`**, que la frappe
+ * révèle une à une, et les segments gras (`**…**`, `gras.ts`) dans un
+ * `<strong>` qui enveloppe ses lettres. La frappe traverse ainsi un segment
+ * gras sans jamais couper une balise : elle ne connaît que des `<b>`, et le
+ * `<strong>` est posé une fois pour toutes. Pure et exportée pour le test.
+ */
+export function htmlReplique(texte: string): string {
+  return segmenter(texte)
+    .map((s) => {
+      const lettres = [...s.texte].map((c) => `<b>${ech(c)}</b>`).join('');
+      return s.gras ? `<strong>${lettres}</strong>` : lettres;
+    })
+    .join('');
+}
 
 /** Injecte la feuille de style de la scène si le document ne l'a pas encore. */
 function poserStyle(doc: Document): void {
@@ -263,7 +284,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
     // traduit : aucune clé nouvelle pour une information que la scène affiche.
     racine.setAttribute('aria-label', api.nomLocuteur(r.locuteur));
     // Une lettre par `<b>` : la frappe se contente de lever la visibilité.
-    const lettres = [...r.texte].map((c) => `<b>${ech(c)}</b>`).join('');
+    const lettres = htmlReplique(r.texte);
     const jalons = Array.from(
       { length: r.total },
       (_, i) => `<i class="${i < r.rang ? 'faite' : ''}"></i>`,

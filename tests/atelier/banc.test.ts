@@ -73,10 +73,11 @@ test('l’état du banc porte bien les quarante-huit unités posées', () => {
   }
 });
 
-// Au catalogue 6, la carte-catalogue pose vingt-quatre unités par camp, soit
-// quarante-huit. `validerMapDef` plafonne `unitesDepart` à soixante
+// Au catalogue 9, la carte-catalogue pose trente unités par camp, soit
+// soixante : exactement le plafond que `validerMapDef` met à `unitesDepart`
 // (`src/schemas/valider.ts`, `doc/03-schemas.md` §5) — il était à quarante,
-// écrit pour une carte de mission, et c'est ce test qui l'a fait monter.
+// écrit pour une carte de mission, et c'est ce test qui l'a fait monter. La
+// prochaine homologuée le fera monter encore, et ce test le dira.
 test('la carte-catalogue est une carte valide, pas un objet bricolé', () => {
   const r = validerMapDef(carteBanc());
   assert.ok(r.ok, `carte du banc invalide : ${JSON.stringify(r.ok ? [] : r.erreurs)}`);

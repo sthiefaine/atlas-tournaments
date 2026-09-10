@@ -18,6 +18,7 @@ import { consommerCarburant, reparerEtRavitailler, reveiller, verserRevenus } fr
 import { uniteSur } from './mouvement';
 import { expirationDe, expirerPoses, poserModificateur } from './pouvoirs';
 import { deployerRenforts } from './renforts';
+import { produireSuperusines } from './superusines';
 import { evaluerFin } from './victoire';
 import { ouvrirTechnologies } from './technologies';
 
@@ -120,6 +121,9 @@ export function ouvrirTour(
   reparerEtRavitailler(etat, cat, camp, evts);
   consommerCarburant(etat, cat, camp, evts);
   reveiller(etat, camp);
+  // Les superusines paraissent après le réveil : une unité neuve arrive prête,
+  // et une impulsion posée ce tour-ci ne l'a pas encore vue.
+  produireSuperusines(etat, cat, evts);
   for (const u of etat.unites) if (u.camp === camp && u.iemJusquaJournee !== undefined) u.etat = "agi";
   const caisse = etat.camps.find((c) => c.id === camp);
   if (caisse) caisse.pouvoirUtiliseCeTour = false;
@@ -142,6 +146,11 @@ export function fermerTour(
   // le tour se ferme, elle a joué.
   for (const u of etat.unites) if (u.camp === camp && u.etat === 'deplacee') u.etat = 'agi';
   for (const u of etat.unites) if (u.camp === camp) delete u.iemJusquaJournee;
+  // Une usine sous impulsion se relève à la même fermeture que ses unités.
+  if (etat.usinesIem) {
+    for (const k of Object.keys(etat.usinesIem)) if (etat.proprietaires[k] === camp) delete etat.usinesIem[k];
+    if (Object.keys(etat.usinesIem).length === 0) delete etat.usinesIem;
+  }
   // Une réactivation ne vaut que pour le tour où elle a été donnée.
   for (const u of etat.unites) if (u.camp === camp) delete u.reactivee;
   evts.push({ type: 'fin_tour', camp });

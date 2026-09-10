@@ -1,10 +1,10 @@
 {
   "cle": "aube_archives_secondaire",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_archives_secondaire",
   "nom": "Quête · Les archives de Wren",
   "acte": 0,
@@ -68,26 +68,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_wren_osoko",
-      "texte": "L’infanterie à l’ouest, près de notre usine, porte le double des archives. Protégez-la et prenez le QG du nord-est. Les deux passages autour du relief évitent de bloquer tout le groupe dans un seul couloir.",
+      "texte": "L’infanterie près de notre usine porte le double des **archives** d’homologation : ce que chaque arme des Gris est censée être, et son numéro de dossier. Protégez-la et prenez le poste au nord-est. Deux passages autour du relief.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_wren_osoko",
-      "texte": "La dotation est fixe, sans revenu périodique. Vous avez quinze journées pour prendre le QG adverse. Une perte du véhicule ou de l’unité qui porte le dossier termine cette tentative.",
+      "texte": "Le **Pacte** dit que toute arme sur un front porte un dossier. La Batterie d’Ost n’en a pas : c’est ce que ces archives prouvent. Perdre le porteur, c’est perdre la preuve.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_wren_osoko",
+      "texte": "Brouillard, comme au bocage : on voit ce que nos bâtiments et nos pièces voient, la forêt cache au-delà du contact. Ost n’attend pas de vous voir pour tirer : sa Grêle tombe sur treize cases. Dispersez-vous.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_wren_osoko",
+      "texte": "Dotation fixe, aucun revenu, quinze journées pour prendre le poste. Le porteur ne passe **jamais en tête** : la couverture ouvre, il suit. Le perdre termine la tentative.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_wren_osoko",
-      "texte": "Les doubles sont restés sous notre contrôle. Wren peut comparer les signatures et certifier les engagements concernant Aube.",
-      "emotion": "neutre"
+      "texte": "Les doubles sont intacts et le poste est pris. Je pourrai comparer les signatures : celle du dossier absent, et celle du contrat qui l’a payé.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_wren_osoko",
-      "texte": "Le contrôle du poste nous échappe. La quête pourra être retentée ; la route principale reste ouverte.",
+      "texte": "Le poste nous échappe, ou le porteur est tombé. La quête peut être retentée ; la route principale reste ouverte.",
       "emotion": "neutre"
     }
   ],
@@ -96,5 +106,39 @@
   "flagsInterdits": [],
   "recompenses": {
     "flags": []
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "archives_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Vous l’écrirez dans votre dossier, Osoko.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_wren_osoko",
+          "texte": "C’est noté. Sortez le porteur de la zone : une preuve ne sert à rien si personne ne la porte.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "archives_premier_combat",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_wren_osoko",
+          "texte": "Premier tir. Ce que vous voyez tomber ici est réel, contrairement à ce que ses dossiers disent de ses armes.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

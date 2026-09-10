@@ -857,6 +857,13 @@
         "miseEnScene": "Les pistes de Maël sont couvertes par une station capturable ; aucune immunité de ses drones hors règles publiées.",
         "annonce": "Briefing : position, calendrier, portée et effets exacts avant le premier ordre.",
         "difficile": "Défense de la station mieux placée ; aucune activation cachée ou portée différente non annoncée."
+      },
+      "superusine": {
+        "essai": "aube_superusine",
+        "carte": "carte_superusine",
+        "note": "Demande du propriétaire (10 septembre 2026) : une superusine adverse au dernier chapitre, en deuxième mission, victoire par élimination totale. La finale 14 garde son identifiant, son ordre (saison globale 6, épisode 2), son adversaire et ses conditions : la superusine y entre comme une pièce sans dossier de plus, sur l’un des deux aérodromes de Maël, quand la fiche sera jouable. Le scénario d’essai aube_superusine (« La Forge de la retenue », Basile Kelm) est le prototype jouable de cette mécanique : voir doc/refonte/superusine.md.",
+        "contrat": "Scenario.superusines : { x, y, camp, type: meridien_automate, depuisJournee 2, chaque 1, max 12 } ; victoire hors_jeu_total seule ; catalogue 9.",
+        "statut": "prototype_essai"
       }
     },
     {

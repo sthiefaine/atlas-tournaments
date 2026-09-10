@@ -64,6 +64,7 @@ import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
 import { tailleCarteOmbre, type CadreOmbre } from './ombres';
 import { creerScene3d, moteur3dDisponible, type Scene3d } from './scene';
+import { creerMarquesCases, type CalqueMarquesCases } from './marques-cases';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
 import { creerPlateau, grefferBrouillardSur, tranchesToilesPlateau, type Plateau } from './terrain';
 import { creerUnites, type CalqueUnites } from './unites';
@@ -143,6 +144,8 @@ interface Monde {
   decor: Decor | null;
   unites: CalqueUnites;
   surbrillances: CoucheSurbrillances;
+  /** Les pastilles posées sur des cases : usine sous impulsion, case visée rapportée par le radar. */
+  marquesCases: CalqueMarquesCases;
   eclairage: Eclairage;
   /** Le pool d'effets transitoires (`effets.ts`) : son groupe est dans la scène. */
   effets: Effets;
@@ -395,6 +398,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const plateau = creerPlateau(grille, doc, options.biome, livres.sols);
       const unites = creerUnites(doc, plateau.hauteurEn, options);
       const surbrillances = creerSurbrillances(plateau.hauteurEn);
+      const marquesCases = creerMarquesCases(doc, plateau.hauteurEn);
       const effets = creerEffets(doc);
       const eclairage = creerEclairage(
         s.scene, doc, depart,
@@ -409,7 +413,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // de chaque lot (`prechauffage.ts`).
       unites.groupe.visible = false;
       surbrillances.groupe.visible = false;
-      s.scene.add(plateau.groupe, unites.groupe, surbrillances.groupe, effets.groupe, eclairage.groupe);
+      marquesCases.groupe.visible = false;
+      s.scene.add(plateau.groupe, unites.groupe, surbrillances.groupe, marquesCases.groupe, effets.groupe, eclairage.groupe);
       vue3d.redimensionner(s.largeur, s.hauteur);
       vue3d.cadrerCarte();
       // La caméra d'ombre suit le champ visible, image après image (`dessiner`) :
@@ -418,7 +423,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       plateau.appliquerAmbiance(depart);
       unites.appliquerAmbiance(depart);
       cleAmbiance = v.ambiance.cle;
-      monde = { grille, plateau, decor: null, unites, surbrillances, eclairage, effets, vue3d };
+      monde = { grille, plateau, decor: null, unites, surbrillances, marquesCases, eclairage, effets, vue3d };
       // Le cadrage d'ouverture demandé pendant la construction n'est pas perdu :
       // il se rejoue ici, sur la caméra qui vient de naître.
       if (cadrageEnAttente) {
@@ -488,7 +493,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     tranches.push(async () => {
       const m = monde;
       if (!m) return;
-      await chauffer(m, [m.surbrillances.groupe, m.effets.groupe, m.eclairage.groupe]);
+      await chauffer(m, [m.surbrillances.groupe, m.marquesCases.groupe, m.effets.groupe, m.eclairage.groupe]);
     });
     return tranches;
   }
@@ -519,6 +524,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const mutation = m.plateau.avancer(ecoule);
     if (mutation) {
       m.decor?.majRelief();
+      m.marquesCases.majRelief();
       // Les décalques suivent le sol qui glisse, au lieu d'attendre la
       // prochaine vue pour se reposer dessus.
       m.surbrillances.invalider();
@@ -618,6 +624,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     if (m.decor) grefferBrouillardSur(m.decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
     m.surbrillances.majVisibles(vue.visibles);
     m.surbrillances.maj(vue.surbrillances, vue.chemin, vue.curseur, position);
+    m.marquesCases.maj(vue.marquesCases ?? null);
     if (vue.ambiance.cle !== cleAmbiance) {
       cleAmbiance = vue.ambiance.cle;
       m.eclairage.viser(parametresAmbiance(
@@ -901,6 +908,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       boucle = null;
       if (monde) {
         monde.surbrillances.dispose();
+        monde.marquesCases.dispose();
         monde.unites.dispose();
         monde.decor?.dispose();
         monde.plateau.dispose();

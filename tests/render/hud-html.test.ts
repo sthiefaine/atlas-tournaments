@@ -22,7 +22,7 @@ import type { HorlogeScenes } from '../../src/render/scenes-html';
 import { DUREES, ecrirePartition, type Partition } from '../../src/render/partition';
 import { chiffreSigne, MS_FIXE, rolesDesChiffres } from '../../src/render/scenes-html';
 import { validerMapDef, type CleUnite } from '../../src/schemas/index';
-import { scenePersonnalisee } from '../engine/aides';
+import { partiePersonnalisee, scenePersonnalisee } from '../engine/aides';
 
 class FauxElement {
   children: FauxElement[] = [];
@@ -1868,4 +1868,111 @@ test('le super adverse prêt se télégraphie sous la journée, avec le commanda
     vue = vueDe(etat, { x: 1, y: 1 });
     h.demonter();
   }
+});
+
+/** Monte un HUD sur cette vue et rend ses emplacements ; le `t` factice rend la clé et ses paramètres. */
+function monter(vue: VueJeu): { slots: Map<string, FauxElement>; demonter(): void } {
+  const { conteneur } = document();
+  const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
+    vue: () => vue,
+    t: (cle, params) => (params ? `${cle} ${JSON.stringify(params)}` : cle),
+    finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
+    jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
+    versEcran: () => null,
+  });
+  return { slots: emplacements(conteneur), demonter: () => hud.demonter() };
+}
+
+test('une annonce rend son gras dans un strong, jamais les étoiles', () => {
+  const etat = partie();
+  const { slots, demonter } = monter({ ...vueDe(etat, { x: 0, y: 0 }), annonce: 'Prenez **la ville** <vite>' });
+  const html = slots.get('annonce')!.innerHTML;
+  assert.match(html, /Prenez <strong>la ville<\/strong> &lt;vite&gt;/);
+  assert.doesNotMatch(html, /\*\*/);
+  demonter();
+});
+
+test('une usine sous impulsion : le menu de production dit pourquoi, le panneau de case aussi', () => {
+  const base = partiePersonnalisee(
+    ['HUTPP', 'PPPPP', 'PPUPH'],
+    { '0,0': 0, '1,0': 0, '2,0': 0, '2,2': 1, '4,2': 1 },
+    [{ camp: 0, type: 'infanterie', x: 0, y: 1 }, { camp: 1, type: 'infanterie', x: 4, y: 1 }],
+  );
+  const usine = { x: 1, y: 0 };
+  const production = { batiment: usine, unites: ['infanterie', 'char_leger'] as CleUnite[] };
+  // Sans impulsion : pas de bandeau, et le bouton d'achat reste actif.
+  const saine = monter({ ...vueDe(base, usine), phase: 'production', production });
+  const menuSain = saine.slots.get('production')!.innerHTML;
+  assert.doesNotMatch(menuSain, /production-bloquee/);
+  assert.doesNotMatch(menuSain, /hud\.usine_iem/);
+  assert.match(menuSain, /data-action="produire"[^>]*>/);
+  assert.doesNotMatch(menuSain, /data-action="produire"[^>]*disabled/);
+  assert.doesNotMatch(saine.slots.get('inspection')!.innerHTML, /hud\.usine_iem/);
+  saine.demonter();
+
+  const touchee: EtatPartie = { ...base, usinesIem: { '1,0': base.journee } };
+  const bloquee = monter({ ...vueDe(touchee, usine), phase: 'production', production });
+  const menu = bloquee.slots.get('production')!.innerHTML;
+  assert.match(menu, /class="production-bloquee"[^>]*data-iem="oui"/, 'le bandeau en tête');
+  assert.match(menu, /hud\.usine_iem/);
+  assert.match(menu, /data-action="produire"[^>]*disabled/, 'le bouton d’achat est désactivé');
+  assert.match(menu, /class="note" data-manque="oui">hud\.usine_iem/, 'la note prend la place des fonds insuffisants');
+  assert.match(menu, /production-liste/, 'la liste reste consultable');
+  const inspection = bloquee.slots.get('inspection')!.innerHTML;
+  assert.match(inspection, /data-alerte="rouge"[^>]*>(?:(?!<\/span>).)*hud\.usine_iem/, 'la ligne rouge du panneau de case');
+  bloquee.demonter();
+  // L'autre usine, non touchée, ne porte rien.
+  const autre = monter(vueDe(touchee, { x: 2, y: 2 }));
+  assert.doesNotMatch(autre.slots.get('inspection')!.innerHTML, /hud\.usine_iem/);
+  autre.demonter();
+});
+
+test('une superusine capturée : le menu de production dit qu’elle ne répond pas, le panneau de case aussi', () => {
+  // L'usine en (1,0) est une superusine du camp 1, prise par le camp 0.
+  const etat = partiePersonnalisee(
+    ['HUTPP', 'PPPPP', 'PPUPH'],
+    { '0,0': 0, '1,0': 0, '2,0': 0, '2,2': 1, '4,2': 1 },
+    [{ camp: 0, type: 'infanterie', x: 0, y: 1 }, { camp: 1, type: 'infanterie', x: 4, y: 1 }],
+  );
+  const usine = { x: 1, y: 0 };
+  const inerte: EtatPartie = { ...etat, reglages: { ...etat.reglages, superusines: [{ x: 1, y: 0, camp: 1, type: 'char_leger' }] } };
+  const production = { batiment: usine, unites: ['infanterie', 'char_leger'] as CleUnite[] };
+  const bloquee = monter({ ...vueDe(inerte, usine), phase: 'production', production });
+  const menu = bloquee.slots.get('production')!.innerHTML;
+  assert.match(menu, /class="production-bloquee"[^>]*data-inerte="oui"/, 'le bandeau en tête, même style que l’IEM');
+  assert.match(menu, /hud\.usine_inerte/);
+  assert.doesNotMatch(menu, /hud\.usine_iem/);
+  assert.match(menu, /data-action="produire"[^>]*disabled/, 'le bouton d’achat est désactivé');
+  assert.match(menu, /class="note" data-manque="oui">hud\.usine_inerte/, 'la note prend la place des fonds insuffisants');
+  assert.match(menu, /production-liste/, 'la liste reste consultable');
+  const inspection = bloquee.slots.get('inspection')!.innerHTML;
+  assert.match(inspection, /data-alerte="rouge"[^>]*>(?:(?!<\/span>).)*hud\.usine_inerte/, 'la ligne rouge du panneau de case');
+  bloquee.demonter();
+  // Sous impulsion en plus, c'est l'inertie qui parle : elle ne se lève pas.
+  const touchee: EtatPartie = { ...inerte, usinesIem: { '1,0': inerte.journee } };
+  const deux = monter({ ...vueDe(touchee, usine), phase: 'production', production });
+  assert.match(deux.slots.get('production')!.innerHTML, /data-inerte="oui"/);
+  assert.doesNotMatch(deux.slots.get('production')!.innerHTML, /data-iem="oui"/);
+  deux.demonter();
+  // L'autre usine, ordinaire, ne porte rien.
+  const autre = monter(vueDe(inerte, { x: 2, y: 2 }));
+  assert.doesNotMatch(autre.slots.get('inspection')!.innerHTML, /hud\.usine_inerte/);
+  autre.demonter();
+});
+
+test('le radar dit ce qu’il apporte — sa vue et son brouillage — et rien d’autre', () => {
+  const etat = partiePersonnalisee(
+    ['HUTPP', 'PPPPP', 'PPUPH'],
+    { '0,0': 0, '1,0': 0, '2,0': 0, '2,2': 1, '4,2': 1 },
+    [{ camp: 0, type: 'infanterie', x: 0, y: 1 }, { camp: 1, type: 'infanterie', x: 4, y: 1 }],
+  );
+  const station = monter(vueDe(etat, { x: 2, y: 0 }));
+  const aide = station.slots.get('inspection')!.innerHTML;
+  assert.match(aide, /radar-aide/);
+  assert.match(aide, /hud\.radar_aide \{&quot;vision&quot;:5,&quot;brouillage&quot;:12\}/, 'les chiffres du moteur, jamais recopiés');
+  // Le radar ne télégraphie pas (10 septembre 2026, retiré) : aucune ligne au
+  // signal, aucune intention adverse, ni sous la journée ni ailleurs.
+  assert.doesNotMatch(station.slots.get('partie')!.innerHTML, /radar/);
+  station.demonter();
+  assert.doesNotMatch(monter(vueDe(etat, { x: 1, y: 0 })).slots.get('inspection')!.innerHTML, /radar-aide/, 'une usine n’a pas d’aide radar');
 });

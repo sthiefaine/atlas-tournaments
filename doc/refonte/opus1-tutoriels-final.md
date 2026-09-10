@@ -227,6 +227,7 @@ Choix final : maintenance partagée (ravitailleur) ou fonds immédiats (+1 000) 
 **Révélation :** Maël refuse de réduire son ambition au projet de son père.
 **Choix :** Préserver un accès aux équipes dissidentes ou saisir leurs réserves. **Conséquence :** Évacuation facilitée en finale 15 ou ravitaillement initial supplémentaire en finale 16.
 **À développer :** Liaison au journal de campagne et aux alliances conditionnelles.
+**Superusine (10 septembre 2026) :** le propriétaire a demandé « des cartes où les ennemis ont une superusine, plutôt dans le dernier chapitre, en deuxième mission, victoire par élimination totale ». C’est cette fiche — saison globale 6, épisode 2 — qui la reçoit, **sans changer d’identifiant, d’ordre, d’adversaire ni de conditions** : la superusine y entre comme une arme sans dossier de plus, posée sur l’un des deux aérodromes de Maël, le jour où la fiche devient jouable. Le prototype jouable de la mécanique est le scénario d’essai `aube_superusine` (« La Forge de la retenue », Basile Kelm, `carte_superusine`, catalogue 9, `Scenario.superusines`), conçu et mesuré dans `doc/refonte/superusine.md`. La finale 14 garde sa victoire par capture des deux QG tant que le moteur élimine un camp à la perte de son QG : la note du JSON (`superusine`) dit ce que l’essai a appris sur ce point.
 
 ### F15 — La dette de Sorel · saison 6, épisode 3
 

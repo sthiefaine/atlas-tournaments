@@ -1,6 +1,6 @@
 {
   "cle": "aube_batteries_2v1",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -75,26 +75,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tomas tient le passage sud avec son propre budget. Nous prenons le nord. Hadran défend seul les réserves : prendre son QG ou mettre son équipe entière hors jeu nous donne le contrat de transport.",
+      "texte": "Les **Gris** tiennent le détour des batteries : la Sélection Méridienne, l’armée du sponsor sous les couleurs de l’arbitre, et Ost la commande. Il défend seul. Tomas prend le passage sud avec sa caisse, nous prenons le nord.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Une **réserve**, c’est un dépôt de batteries chargées : qui la tient décide qui a du courant le mois prochain. Celle-ci est due aux convois. Prenez le QG d’Ost ou détruisez son armée, et la route est à nous.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "texte": "Au bocage, la station à impulsion était éteinte. Ici, Ost a la Batterie sans plaque, un rail de douze tubes sans dossier : jauge pleine, la **Grêle** tombe sur treize cases, deux points à chacun, les siens compris.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Le Bulletin l’annonce la veille. Quand sa jauge approche du plein, **dispersez-vous** : deux pièces côte à côte, c’est quatre points offerts.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai : ce front n’est pas inscrit au Registre, rien de ce qui s’y gagne ne suit la campagne. Perdre notre QG ou toutes nos pièces met fin à l’engagement.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les deux délégations ont ouvert la route. Les réserves restent disponibles pour la coopération Aube.",
-      "emotion": "neutre"
+      "texte": "La route est ouverte et la réserve reste aux convois. Ost dira que c’était un essai ; Nera écrira que la Grêle a tiré sans dossier.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "texte": "L’engagement est perdu. Ost garde la réserve, et nous gardons les relevés : la prochaine fois, la Grêle ne surprendra personne.",
       "emotion": "neutre"
     }
   ],
@@ -111,5 +126,53 @@
   },
   "factionsParCamp": {
     "2": "atl"
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "batteries_premier_combat",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Premier tir. Au front, les charges ne sont plus à blanc : ce que vous perdez ici, un équipage le paie. Lisez la prévision avant d’ordonner.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "batteries_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Douze tubes, treize cases. Vous m’expliquerez le dossier après, commandant.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Écartez-vous et soignez en ville.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "batteries_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Bâtiment pris. Chaque ville tenue, c’est mille de plus par journée pour nous et mille de moins pour Ost : la réserve se gagne aussi au compte.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

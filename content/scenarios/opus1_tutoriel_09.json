@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_09",
   "code": "opus1_tutoriel_09",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "nom": "Entraînement 9 · Le prix du courant",
   "acte": 0,
   "paysCode": "fr",
@@ -78,34 +78,44 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois bâtiments tiennent lieu de postes de distribution : la ville du nord-ouest, le radar du nord-est, la ville du sud-est. Tenez-en deux en même temps. Le QG de Tomas n’est pas un raccourci.",
+      "texte": "Trois bâtiments tiennent lieu de **postes de distribution** : la ville du nord-ouest, le radar du nord-est, la ville du sud-est. Tenez-en deux en même temps. Le QG de Tomas n’est pas un raccourci.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Voilà ce qui se joue dans une Ronde : qui tient deux postes à la fin de la manche sert le courant de la vallée pour quatre ans, stockage et distribution compris. Jamais les habitants : leur socle est garanti par le Pacte.",
+      "texte": "Voilà ce qui se joue dans une Ronde. Qui tient deux postes à la fin de l’engagement reçoit une **concession** : le courant de la vallée pour quatre ans, stockage et distribution compris, inscrit au **Registre de Port-Méridien**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Jamais les habitants : leur socle civil est garanti par le Pacte, et c’est le seul mur qui tient encore. Vous saurez bientôt qui veut l’abattre.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les bâtiments gardent leur fonction et rapportent leurs fonds ; il n’y a pas de jauge d’énergie cachée. Le Bulletin annonce la pluie à J3 et J4, pour tout le monde : personne n’a d’adaptation ici.",
+      "texte": "Les bâtiments gardent leur fonction et rapportent leurs fonds ; il n’y a pas de jauge d’énergie cachée. Le Bulletin annonce la pluie à J3 et J4, pour tout le monde. Et elle ne vient pas du ciel.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Une **station de forçage météo**, sur la crête hors du terrain : dépôt gris, badge orange, elle impose une pluie locale à des journées publiées. Prendre le radar compte comme un poste, mais **ne change pas ce calendrier**.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Prendre le radar apporte sa vue et compte comme un poste, mais ne change pas la météo. En difficile, Tomas place mieux ses pièces avec la même réserve ; vos revenus et les deux postes sont identiques.",
+      "texte": "En difficile, Tomas place mieux ses pièces avec la même réserve ; vos revenus et les deux postes sont identiques.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux postes sous contrat. Ce soir, l’Intendance inscrit une ligne au Tableau : « France — droits de distribution, vallée d’essai ». C’est une ligne d’exercice ; la prochaine sera vraie.",
+      "texte": "Deux postes sous concession. Ce soir, l’Intendance inscrit une ligne au Registre : « France, droits de distribution, vallée d’instruction ». C’est une ligne d’exercice ; **la prochaine sera vraie**.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Un dernier exercice, et il rassemble tout. Puis une promesse à faire, la première. Réfléchissez-y avant demain.",
+      "texte": "Un dernier exercice, et il rassemble tout. Puis une promesse à faire, la première, et quelqu’un pour vous la faire signer. Réfléchissez-y avant demain.",
       "emotion": "neutre"
     }
   ],
@@ -126,7 +136,20 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Vantour vient d’annoncer la pluie pour demain, et il ne se trompe qu’une fois par Ronde. Approchez vos capteurs des postes ; ne comptez pas sur un long déplacement de dernière minute.",
+          "texte": "Vantour vient d’annoncer la pluie pour demain, et il ne se trompe qu’une fois par Ronde. **Approchez vos capteurs des postes** ; ne comptez pas sur un long déplacement de dernière minute.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "t09_rappel",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "**Vous vous souvenez de la station à impulsion de la forêt ?** Celle de la crête est sa cousine : même dépôt, un cran plus loin. Elle ne fige plus des moteurs, elle change le temps. Chaque Ronde, les Gris déclarent un prototype de plus.",
           "emotion": "neutre"
         }
       ]
@@ -140,21 +163,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier poste sous vos couleurs. Il finance déjà la délégation ; pour le contrat, il en faut deux à la fois. Tenez celui-ci pendant que l’autre groupe approche.",
-          "emotion": "neutre"
-        }
-      ]
-    },
-    {
-      "cle": "t09_fin_pluie",
-      "declencheur": {
-        "type": "journee",
-        "journee": 5
-      },
-      "repliques": [
-        {
-          "locuteur": "cmd_tomas_reiner",
-          "texte": "La pluie est passée, comme annoncé, et pour les deux équipes. Vantour aura dit que la France « a joué sous l’averse » : il aime ça, la pluie, à l’antenne.",
+          "texte": "Premier poste sous vos couleurs. Il finance déjà la délégation ; pour la concession, **il en faut deux à la fois**. Tenez celui-ci pendant que l’autre groupe approche.",
           "emotion": "neutre"
         }
       ]
@@ -168,7 +177,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Un poste pour moi. À la fin de la manche, c’est le compte qui parle, pas la carte : deux à la fois, ou rien.",
+          "texte": "Un poste pour moi. À la fin de l’engagement, c’est le compte qui parle, pas la carte : deux à la fois, ou rien.",
           "emotion": "joie"
         }
       ]

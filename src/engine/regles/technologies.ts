@@ -1,6 +1,7 @@
 /** Installations de scénario : leurs positions et calendriers sont publics. */
 import { sontAllies } from '../equipes';
 import type { Catalogue, EtatPartie, EvenementJeu } from '../types';
+import { frapperUsines, producteursAdversesAutour } from './economie';
 
 export function ouvrirTechnologies(etat: EtatPartie, cat: Catalogue, evts: EvenementJeu[]): void {
   if (etat.campCourant !== etat.camps.find((c) => !c.elimine)?.id) return;
@@ -24,7 +25,10 @@ export function ouvrirTechnologies(etat: EtatPartie, cat: Catalogue, evts: Evene
       u.etat = 'agi';
       touches += 1;
     }
-    evts.push({ type: 'annonce', texte: `IEM ${s.cle} : impulsion émise (${touches} unités). Aucun dégât ; arrêt jusqu’à la fin du prochain tour de chaque unité.`, icone: 'radar' });
+    // Depuis le 10 septembre 2026, l'impulsion arrête aussi les usines adverses
+    // du rayon : elles ne produisent rien à leur tour.
+    const usines = frapperUsines(etat, producteursAdversesAutour(etat, cat, camp, s, s.rayon ?? 3), evts);
+    evts.push({ type: 'annonce', texte: `IEM ${s.cle} : impulsion émise (${touches} unités, ${usines} usines). Aucun dégât ; arrêt jusqu’à la fin du prochain tour de chaque unité, aucune production ce tour dans les usines touchées.`, icone: 'radar' });
   }
   for (const e of etat.reglages.evenementsClimat ?? []) {
     if (e.journee - 2 === etat.journee) evts.push({ type: 'annonce', texte: `Modification météo annoncée : ${e.meteo} de J${e.journee} à J${e.journee + e.duree - 1}. Camps équipés : ${e.campsAdaptes.join(', ') || 'aucun'}.`, icone: e.meteo });

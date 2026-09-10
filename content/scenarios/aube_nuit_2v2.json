@@ -1,6 +1,6 @@
 {
   "cle": "aube_nuit_2v2",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -86,26 +86,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tomas couvre la route sud, nous prenons celle du nord. Hadran et Solveig forment la coalition adverse. Prenez leurs deux QG ou mettez leurs deux camps hors jeu. La nuit vient après quatre journées ; le brouillard est actif.",
+      "texte": "Tomas couvre la route sud, nous prenons le nord. Ost et Solveig tiennent la ligne d’en face : prenez leurs deux QG ou détruisez leurs deux armées. Après quatre journées, la **nuit** : deux cases de vue en moins.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "texte": "Vous avez appris à voir dans le brouillard au bocage : un bâtiment à nous voit à une case, un radar à cinq, la forêt cache. La nuit, une ville tenue reste **éclairée** — prenez-les, c’est votre vue.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ost est là. La nuit ne l’empêche pas de tirer : le Bulletin dit sa jauge même quand vous ne voyez pas ses pièces. Jauge pleine, la Grêle tombe sur treize cases : dispersez-vous.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Au bout de cette ligne, les archives : les contrats de stockage comparés aux capacités promises. C’est là qu’on prouvera qu’une **réserve** livrée deux fois n’existe qu’une fois.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai : ce front n’est pas inscrit au Registre, rien de ce qui s’y gagne ne suit la campagne. Perdre notre QG ou toutes nos pièces met fin à l’engagement.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La voie des archives reste ouverte. Nous pouvons comparer les contrats de stockage aux capacités réellement promises.",
-      "emotion": "neutre"
+      "texte": "La voie des archives est ouverte. On y lira les contrats de stockage contre les capacités promises — et la même signature sur plusieurs d’entre eux.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "texte": "La ligne a tenu dans la nuit. Reprenez : la nuit se joue avec les villes et la reconnaissance, pas avec le nombre.",
       "emotion": "neutre"
     }
   ],
@@ -123,5 +138,54 @@
   },
   "factionsParCamp": {
     "2": "atl"
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "nuit_tombee",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La nuit tombe. Deux cases de vue en moins pour tous ; les villes tenues gardent la leur. Rapprochez la reconnaissance, et n’avancez pas dans le noir sans elle.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "nuit_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. La nuit ne cache pas une ligne, elle la rassemble.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Reculez sur les villes éclairées.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "nuit_premiere_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Une pièce perdue dans le noir. Vous ne tirez pas sur ce que vous ne voyez pas : eux non plus. Éclairez avant de frapper.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

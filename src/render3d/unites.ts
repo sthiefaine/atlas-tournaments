@@ -907,7 +907,7 @@ const ORANGE_MARQUE = '#ff9a2e';
  * badge que les Gris portent et que leurs pièces n'ont pas. Le « ! » est une
  * ponctuation comme celui de l'embuscade : il n'a rien à traduire.
  */
-function materiauMarque(doc: Document, genre: MarqueUnite): THREE.SpriteNodeMaterial {
+export function materiauMarque(doc: Document, genre: MarqueUnite): THREE.SpriteNodeMaterial {
   const memo = marques.get(genre);
   if (memo) return memo;
   const cote = COTE_ETIQUETTE;

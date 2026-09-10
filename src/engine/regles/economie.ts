@@ -5,6 +5,7 @@
 
 import type { Case, CampId, CleTerrain, CleUnite, UnitType } from '../../schemas/index';
 import { coutBase, produitesPar } from '../catalogue';
+import { sontAllies } from '../equipes';
 import { terrainLogique } from '../hooks';
 import type {
   Catalogue, EtatPartie, EvenementJeu, MotifRefus, Unite,
@@ -13,6 +14,7 @@ import { cleCase, depuisCle, porte, pvAffiches } from '../types';
 import { multiplicateur, multiplicateurFonds, multiplicateurPrix } from './modificateurs';
 import { mettreHorsJeu } from './combat';
 import { uniteSur } from './mouvement';
+import { superusineSur } from './superusines';
 
 /** Bâtiments capturables possédés par un camp, clés de case triées. */
 export function batimentsDe(etat: EtatPartie, camp: CampId): string[] {
@@ -22,10 +24,50 @@ export function batimentsDe(etat: EtatPartie, camp: CampId): string[] {
     .sort();
 }
 
+/**
+ * Bâtiments producteurs **adverses** à `rayon` pas de `centre` : ce qu'une
+ * impulsion IEM arrête (10 septembre 2026). Adverse veut dire : ni le camp, ni
+ * un allié, ni un camp éliminé. Chaque clé de case est rendue une fois, dans
+ * l'ordre des camps puis l'ordre trié de `producteursDe`.
+ */
+export function producteursAdversesAutour(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, centre: Case, rayon: number,
+): { camp: CampId; case: Case }[] {
+  const sortie: { camp: CampId; case: Case }[] = [];
+  for (const autre of etat.camps) {
+    if (autre.elimine || sontAllies(etat, camp, autre.id)) continue;
+    for (const k of producteursDe(etat, cat, autre.id)) {
+      const c = depuisCle(k);
+      if (Math.abs(c.x - centre.x) + Math.abs(c.y - centre.y) <= rayon) sortie.push({ camp: autre.id, case: c });
+    }
+  }
+  return sortie;
+}
+
+/**
+ * Pose l'impulsion sur ces bâtiments et rend leur nombre : `usinesIem[case]`
+ * vaut la journée, et `verifierProduction` refuse `usine_iem` tant que
+ * l'entrée est là. Un événement `usine_iem` par bâtiment, pour le HUD.
+ */
+export function frapperUsines(
+  etat: EtatPartie, usines: { camp: CampId; case: Case }[], evts: EvenementJeu[],
+): number {
+  for (const u of usines) {
+    (etat.usinesIem ??= {})[cleCase(u.case)] = etat.journee;
+    evts.push({ type: 'usine_iem', camp: u.camp, case: u.case });
+  }
+  return usines.length;
+}
+
 /** Bâtiments producteurs possédés par un camp. */
 export function producteursDe(etat: EtatPartie, cat: Catalogue, camp: CampId): string[] {
   return batimentsDe(etat, camp).filter((k) => {
-    const terrain = terrainLogique(etat, cat, depuisCle(k));
+    const c = depuisCle(k);
+    // Une superusine de scénario ne produit qu'automatiquement, et pour son
+    // seul camp d'origine : au menu, elle est inerte pour tout le monde
+    // (`usine_inerte`), donc elle n'est un producteur pour personne.
+    if (superusineSur(etat, c)) return false;
+    const terrain = terrainLogique(etat, cat, c);
     return terrain !== null && produitesPar(cat, terrain, etat, camp).length > 0;
   });
 }
@@ -189,7 +231,16 @@ export function verifierProduction(
   if (terrain === null) return { ok: false, motif: 'batiment_inconnu' };
   const k = cleCase(batiment);
   if (etat.proprietaires[k] !== camp) return { ok: false, motif: 'batiment_adverse' };
+  // Une superusine de scénario (10 septembre 2026 au soir) se capture, mais ne
+  // sert à rien : aucun menu de production n'y répond, pour qui la tient comme
+  // pour son camp d'origine — celui-ci n'a que la production automatique. Le
+  // motif passe avant l'occupation : l'inertie est celle de la case, qu'une
+  // unité y soit ou non.
+  if (superusineSur(etat, batiment)) return { ok: false, motif: 'usine_inerte' };
   if (uniteSur(etat, batiment)) return { ok: false, motif: 'batiment_occupe' };
+  // Sous impulsion IEM (10 septembre 2026), le bâtiment ne produit rien de ce
+  // tour : l'entrée est levée à la fermeture du tour de son propriétaire.
+  if (etat.usinesIem?.[k] !== undefined) return { ok: false, motif: 'usine_iem' };
   if (!produitesPar(cat, terrain, etat, camp).includes(unite)) {
     return { ok: false, motif: 'unite_non_produite_ici' };
   }

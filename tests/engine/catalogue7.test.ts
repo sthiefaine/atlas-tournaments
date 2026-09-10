@@ -19,8 +19,10 @@ test('catalogue 7 ajoute quatre rôles sans modifier les six catalogues antérie
   for (const a of six.cles) for (const d of six.cles) assert.equal(degatsBase(cat,a,d), degatsBase(six,a,d));
   for (const cle of nouvelles) {
     assert(!six.cles.includes(cle));
-    assert.equal(Object.keys(cat.unites[cle]!.degats).length, 29);
-    assert.equal(Object.keys(cat.unites[cle]!.subitDegats!).length, 29);
+    // Trente colonnes depuis l'automate méridien du catalogue 9 : la ligne
+    // couvre tout le canon, le catalogue 7 n'en lit que vingt-huit.
+    assert.equal(Object.keys(cat.unites[cle]!.degats).length, 30);
+    assert.equal(Object.keys(cat.unites[cle]!.subitDegats!).length, 30);
   }
 });
 test('matériel exclusif : caché à la délégation, production réellement refusée et autorisée à atl', () => {

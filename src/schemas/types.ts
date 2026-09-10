@@ -923,8 +923,30 @@ export interface RenfortScenario {
   unites: { camp: CampId; type: CleUnite; x: number; y: number; pv?: number }[];
 }
 
+/**
+ * Une **superusine** de scénario (10 septembre 2026) : un bâtiment producteur
+ * (ou le QG) du camp qui, à chaque début de tour dû, fait paraître une unité
+ * neuve **sans coût** — la seule production gratuite du jeu, réservée au
+ * scénario (`doc/04-gameplay.md` §7.7). Elle s'arrête dès que la case n'est
+ * plus au camp : capturée, ou désaffectée.
+ */
+export interface Superusine {
+  x: number;
+  y: number;
+  camp: CampId;
+  type: CleUnite;
+  /** Première journée de production (1 à défaut). */
+  depuisJournee?: number;
+  /** Période, en journées (1 à défaut : chaque journée). */
+  chaque?: number;
+  /** Plafond d'unités produites par cette superusine ; absent : sans limite. */
+  max?: number;
+}
+
 export interface Scenario extends Enveloppe {
   installationsIem?: InstallationIem[];
+  /** Superusines du scénario : voir `Superusine`. */
+  superusines?: Superusine[];
   evenementsClimat?: EvenementClimatScenario[];
   factionsParCamp?: Partial<Record<CampId, 'atl'>>;
   /** Partition des camps. Absent : chacun pour soi. */

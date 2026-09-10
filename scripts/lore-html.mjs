@@ -25,7 +25,6 @@ for (const t of tutos.tutoriels) parId.set(t.id, t);
 for (const f of tutos.finales) parId.set(f.id, f);
 for (const e of hs.episodes) parId.set(e.id, e);
 const disparitionsPar = new Map((hs.disparitions ?? []).map((d) => [d.ou, d]));
-const nomPerso = (cle) => personnagesCanon.find((p) => p.cle === cle)?.nom ?? cle;
 
 function decisionDeRegistre(id) {
   const m = parId.get(id);

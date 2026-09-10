@@ -1,0 +1,254 @@
+{
+  "cle": "aube_superusine",
+  "version": 1,
+  "statut": "brouillon",
+  "source": "humain",
+  "creeLe": "2026-09-10",
+  "majLe": "2026-09-10",
+  "code": "aube_superusine",
+  "nom": "Aube · La Forge de la retenue",
+  "acte": 0,
+  "dureeVisee": 60,
+  "paysCode": "fr",
+  "carteCle": "carte_superusine",
+  "date": "2026-09-10",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 12,
+    "nuit": 0
+  },
+  "catalogueVersion": 9,
+  "commandantsVersion": 4,
+  "equipes": [
+    [0],
+    [1]
+  ],
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_basile_kelm",
+      "ia": "ponderee"
+    }
+  ],
+  "factionsParCamp": {
+    "1": "atl"
+  },
+  "superusines": [
+    {
+      "x": 16,
+      "y": 5,
+      "camp": 1,
+      "type": "meridien_automate",
+      "depuisJournee": 2,
+      "chaque": 1,
+      "max": 12
+    }
+  ],
+  "fondsDepart": 10000,
+  "fondsDepartParCamp": {
+    "0": 10000,
+    "1": 9000
+  },
+  "revenusParBatiment": 1000,
+  "brouillard": true,
+  "limiteJournees": 32,
+  "modes": {
+    "normal": {
+      "fondsDepart": 10000,
+      "fondsDepartIa": 9000,
+      "revenusParBatiment": 1000,
+      "revenusIaParBatiment": 1000,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 32,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 60
+    },
+    "difficile": {
+      "fondsDepart": 10000,
+      "fondsDepartIa": 14000,
+      "revenusParBatiment": 1000,
+      "revenusIaParBatiment": 1500,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 0.8,
+      "limiteJournees": 30,
+      "strategieIa": "agressive",
+      "reprises": 0,
+      "dureeVisee": 60
+    }
+  },
+  "victoire": [
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 32
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Basile Kelm garde la **Forge** : une usine sans dossier, sans équipage. Dès demain, chaque journée, **une machine de plus** en sort — un automate à chenilles, tir illimité, et il ne lui coûte rien.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux façons d’en finir : **prendre la Forge** avec l’infanterie, ou détruire tout ce qui en sort. Dans les deux cas, le poste de Basile tombe en dernier : tant qu’un de ses bâtiments produit, la Sélection reste engagée.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux routes. Le pont du centre est **court et à découvert** : son radar voit à cinq cases et un Bastion couvre le ciel. Le col de l’est est long et boisé, et ses montagnes arrêtent les chenilles — pas nos fantassins.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous avez vu la station à impulsion au bocage et la Grêle d’Ost aux essais. Ici, l’arme sans dossier est le **Verrou** : jauge pleine, chacune de nos pièces perd un point et deux cases de vue. Le Bulletin le dit la veille.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_basile_kelm",
+      "texte": "Une réserve qui s’interrompt, c’est un réseau qui tombe. La Forge ne s’interrompt pas. Vous avez trente-deux journées, commandant ; elle en a autant, et elle ne dort pas.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La Forge est silencieuse et le poste de Basile est à nous. Des machines sans dossier, et pas une qui roule encore : Wren aura de quoi écrire son protêt.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_basile_kelm",
+      "texte": "Vous avez coupé la source avant de compter les pièces. C’est la seule façon, et peu de commandants la voient à temps.",
+      "emotion": "doute"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La cadence nous a débordés. Reprenez la carte : la Forge se prend ou se coupe **avant la dixième journée**, jamais après. Passé ce cap, c’est elle qui a gagné, pas Basile.",
+      "emotion": "colere"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "forge_premiere_machine",
+      "declencheur": {
+        "type": "production",
+        "unite": "meridien_automate"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_basile_kelm",
+          "texte": "La première sort. Elle n’a ni équipage à nourrir ni dossier à présenter. Vous vous battrez contre une **cadence**, commandant, pas contre des hommes.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "forge_journee_3",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "La première machine est sortie cette nuit. Lisez sa fiche : chenilles, tir illimité, elle ne capture rien — elle **avance**, c’est tout. Ce n’est pas elle qu’il faut faire taire, c’est la Forge.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "forge_premiere_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_basile_kelm",
+          "texte": "Une pièce de moins. La Forge en fera une autre demain : c’est toute la différence entre votre armée et la mienne.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "forge_pouvoir_basile",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_basile_kelm",
+          "texte": "Réserves fermées. Vos pièces perdent un point et vous voyez moins loin : c’est ce que fait un réseau qui ne dépend plus de vous.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Le Verrou. Comptez vos points, puis reprenez la vue avec la reconnaissance : l’effet dure une journée, la Forge, elle, continue.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "forge_journee_10",
+      "declencheur": {
+        "type": "journee",
+        "journee": 10
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_basile_kelm",
+          "texte": "Journée dix. Huit machines sont sorties, la neuvième vient. Je garde ce dépôt comme les autres : **rien ne s’interrompt**.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Il reste vingt-deux journées avant que le Registre ne compte les points. Si le pont est bouché, passez par le col : **l’infanterie tient la montagne**, l’automate non.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "forge_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Bâtiment pris. Si c’est la Forge, la cadence s’arrête ici. Il reste tout ce qui roule encore, et le poste de Basile derrière.",
+          "emotion": "joie"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  }
+}

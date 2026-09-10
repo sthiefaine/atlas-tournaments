@@ -1,6 +1,6 @@
 {
   "cle": "aube_releve_1v3",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -75,31 +75,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tenez notre QG pendant quarante journées, ou prenez les trois QG adverses pour terminer plus tôt. Les délégations arrivent du nord, de l’ouest et de l’est. Notre relève entre au début de la journée 41.",
+      "texte": "Trois armées arrivent du nord, de l’ouest et de l’est : Tomas, Ost avec ses **Gris**, Solveig. Tenez notre QG quarante journées, ou prenez leurs trois QG pour finir plus tôt. Notre relève entre au début de la journée 41.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Aucun revenu périodique. Les réserves adverses arrivent aux journées 10, 20, 30, 34 et 38, annoncées la veille. Les deux dernières poussées alternent ouest et est. Gardez une réserve mobile et des fonds pour réparer dans nos villes.",
+      "texte": "Aucun revenu : nos réserves sont ce qu’elles sont. Les leurs arrivent aux journées 10, 20, 30, 34 et 38, annoncées la veille. Gardez des fonds pour réparer en ville, et une **réserve mobile** pour les deux dernières poussées.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "texte": "Ost est là avec la Batterie sans plaque, et vous l’avez vue tirer : treize cases, deux points. Dans un siège, tout le monde est groupé — c’est ce qu’elle cherche. Jauge pleine au Bulletin, **étalez la ligne**.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ce qu’ils veulent est derrière nous : l’accès d’**Aube**, le programme de fusion, le seul qui rende inutile tout ce qu’on se dispute ici. Sélène le veut pour elle seule. Quarante journées, pas une de moins.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai : ce front n’est pas inscrit au Registre, rien de ce qui s’y gagne ne suit la campagne. Perdre notre QG ou toutes nos pièces met fin à l’engagement.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les accès d’Aube restent partagés. Notre QG a tenu jusqu’à la relève, ou les trois QG adverses ont été pris avant son arrivée : le match est terminé.",
-      "emotion": "neutre"
+      "texte": "La relève est entrée et les accès d’Aube restent partagés. Quarante journées sans revenu, trois armées dehors : c’est un siège qu’on racontera.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "texte": "Le QG est tombé avant la relève. Reprenez la carte : un siège se perd quand la ligne s’entasse, jamais quand elle recule à temps.",
       "emotion": "neutre"
     }
   ],
@@ -199,7 +209,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, une infanterie de réserve arrive à l’ouest. Préparez la première ligne de repli.",
+          "texte": "Demain, une infanterie de réserve entre à l’ouest. Préparez la première ligne de repli, et gardez la ville pour soigner.",
           "emotion": "neutre"
         }
       ]
@@ -213,7 +223,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, un recon de réserve arrive à l’est. Gardez une sortie pour contourner sa position.",
+          "texte": "Demain, une reconnaissance entre à l’est. Elle voit loin : ne laissez pas notre artillerie découverte.",
           "emotion": "neutre"
         }
       ]
@@ -227,7 +237,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, une infanterie de réserve arrive au nord. Deux dernières poussées suivront aux journées 34 et 38 sur les accès latéraux. Gardez une réserve mobile.",
+          "texte": "Demain, une infanterie entre au nord. Deux dernières poussées suivront aux journées 34 et 38 sur les accès latéraux : gardez la **réserve mobile**.",
           "emotion": "neutre"
         }
       ]
@@ -241,7 +251,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, une infanterie arrive par l’accès ouest. Revenez couvrir nos villes sans abandonner le QG.",
+          "texte": "Demain, une infanterie arrive par l’ouest. Revenez couvrir nos villes sans dégarnir le QG.",
           "emotion": "neutre"
         }
       ]
@@ -255,7 +265,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Demain, une dernière infanterie arrive par l’accès est. La relève alliée est proche : protégez le QG jusqu’à la fin de la journée 40.",
+          "texte": "Demain, la dernière infanterie arrive par l’est. La relève est proche : le QG jusqu’à la fin de la journée 40, rien d’autre ne compte.",
           "emotion": "neutre"
         }
       ]
@@ -269,8 +279,27 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La relève entre demain par le sud, sous notre commandement. Terminez cette quarantième journée en conservant le QG.",
+          "texte": "La relève entre demain par le sud, sous notre commandement. Terminez cette quarantième journée avec le QG.",
           "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "releve_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle sur la ligne. Un siège, c’est une cible qui ne bouge pas.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Écartez ce qui peut l’être, soignez le reste.",
+          "emotion": "colere"
         }
       ]
     }

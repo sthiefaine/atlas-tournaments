@@ -38,7 +38,7 @@ import { terrainBrut, terrainLogique } from '../engine/hooks';
 import { peutCapturerIci, pointsGagnes, seuilCapture } from '../engine/regles/capture';
 import { prevoirDuel } from '../engine/regles/combat';
 import {
-  consommationEffective, prixProduction, producteursDe, revenuParTour,
+  consommationEffective, prixProduction, producteursAdversesAutour, producteursDe, revenuParTour,
 } from '../engine/regles/economie';
 import { portee, uniteSur } from '../engine/regles/mouvement';
 import {
@@ -93,6 +93,21 @@ export const PART_PANNE = 0.5;
  * qu'une prime de mise hors jeu.
  */
 export const PLAFOND_TOUR_PERDU = 1500;
+
+/**
+ * Plafond de ce que vaut une usine adverse arrêtée par une impulsion (10
+ * septembre 2026) : un tour de production perdu se compte comme la part de
+ * revenu qui revient à chaque producteur du camp, sans qu'un QG riche pèse
+ * plus qu'une prime de mise hors jeu.
+ */
+export const PLAFOND_USINE_IEM = 1500;
+
+/** Ce que vaut, en fonds, un tour de production perdu par cette usine adverse. */
+export function valeurUsinePerdue(etat: EtatPartie, cat: Catalogue, camp: CampId): number {
+  const producteurs = producteursDe(etat, cat, camp).length;
+  if (producteurs === 0) return 0;
+  return Math.max(0, Math.min(PLAFOND_USINE_IEM, revenuParTour(etat, camp) / producteurs));
+}
 
 /** Niveau de pouvoir qu'une stratégie déclenche, ou `null` pour garder sa jauge. */
 export type DecisionPouvoir = 'normal' | 'super' | null;
@@ -211,6 +226,10 @@ export function valeurCase(
         else if (!mienne) total += valeurTourPerdu(cat, u);
         else if (u.etat === 'prete' || u.etat === 'deplacee') total -= valeurTourPerdu(cat, u);
       }
+    }
+    // Les usines adverses du rayon, un tour de production chacune.
+    if ('iem' in e) {
+      for (const p of producteursAdversesAutour(etat, cat, camp, centre, rayon)) total += valeurUsinePerdue(etat, cat, p.camp);
     }
   }
   return total;
@@ -512,6 +531,13 @@ export function detailPouvoir(
       if (a.iemJusquaJournee === undefined || v.iemJusquaJournee !== undefined) continue;
       if (adverse) d.faction += valeurTourPerdu(cat, v);
       else if (v.etat === 'prete' || v.etat === 'deplacee') d.faction -= valeurTourPerdu(cat, v);
+    }
+    // Les usines adverses nouvellement arrêtées, lues sur l'état d'après.
+    for (const k of Object.keys(apres.usinesIem ?? {})) {
+      if (etat.usinesIem?.[k] !== undefined) continue;
+      const proprietaire = apres.proprietaires[k];
+      if (proprietaire === undefined || sontAllies(etat, proprietaire, camp)) continue;
+      d.faction += valeurUsinePerdue(etat, cat, proprietaire);
     }
   }
   // Le tour rejoué sur les deux états, mes unités prêtes d'abord ; puis le

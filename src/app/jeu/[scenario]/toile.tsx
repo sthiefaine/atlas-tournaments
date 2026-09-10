@@ -20,6 +20,8 @@ import { bilanDeFin, type Bilan } from './bilan';
 import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
 import { adversaireIa } from '../adversaire';
+import { Gras } from '../../gras';
+import { sansGras } from '@/render/gras';
 import { scenarioPourMode } from '../difficulte';
 
 export interface ProprietesToile {
@@ -430,7 +432,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     {mission && etat && !fin && !modal && !enScene ? <aside className="atlas-mission-bar">
       <button type="button" className="atlas-mission-fanion" onClick={() => setVoirAide(true)}
         aria-label={`${titreEtape} · ${t(locale, 'campagne.objectif')}`}
-        title={objectifMission}>
+        title={sansGras(objectifMission)}>
         <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{essaiAube ? 'A' : index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
       </button>
     </aside> : null}
@@ -453,16 +455,16 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         </div>
         {fin && mission && bilan ? <>
           <BlocBilan bilan={bilan} gagne={gagne} locale={locale} />
-          <p className="atlas-conclusion">{gagne ? mission.conclusion : t(locale, 'campagne.defaite')}</p>
+          <p className="atlas-conclusion">{gagne ? <Gras texte={mission.conclusion} /> : t(locale, 'campagne.defaite')}</p>
         </> : null}
         {mission && !fin ? <>
-          <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p>{objectifMission}</p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
+          <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p><Gras texte={objectifMission} /></p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
           {voirAide ? <div className="atlas-lecon">
             <div className="atlas-lecon-entete"><h2>{t(locale, 'campagne.tutoriel')}</h2><span>{etapeTutoriel + 1} / {mission.tutoriel.length}</span></div>
-            <p aria-live="polite">{mission.tutoriel[etapeTutoriel]}</p>
+            <p aria-live="polite"><Gras texte={mission.tutoriel[etapeTutoriel] ?? ''} /></p>
             <div className="atlas-tuto-actions"><button disabled={etapeTutoriel === 0} onClick={() => setEtapeTutoriel(n => n - 1)}>{t(locale, 'campagne.etape_precedente')}</button><button disabled={etapeTutoriel >= mission.tutoriel.length - 1} onClick={() => setEtapeTutoriel(n => n + 1)}>{t(locale, 'campagne.etape_suivante')}</button></div>
           </div> : null}
-          <details className="atlas-conseils"><summary>{t(locale, 'campagne.conseil')}</summary><p>{mission.conseil}</p></details>
+          <details className="atlas-conseils"><summary>{t(locale, 'campagne.conseil')}</summary><p><Gras texte={mission.conseil} /></p></details>
           <p className="atlas-aide">{t(locale, 'campagne.gestes_tactiles')}</p>
         </> : null}
         {fin && gagne && choixDisponibles.length > 0 ? <section className="atlas-conseils" aria-labelledby="titre-decision">

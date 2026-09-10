@@ -92,8 +92,8 @@ export {
   avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, PRIME_REMISE_EN_SERVICE, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
 } from './regles/capture';
 export {
-  batimentsDe, consommationEffective, consommationParTour, consommerCarburant, estRavitailleur, prixProduction,
-  producteursDe, produire, ravitailleCetteUnite, reparerEtRavitailler, revenuParTour, reveiller,
+  batimentsDe, consommationEffective, consommationParTour, consommerCarburant, estRavitailleur, frapperUsines, prixProduction,
+  producteursAdversesAutour, producteursDe, produire, ravitailleCetteUnite, reparerEtRavitailler, revenuParTour, reveiller,
   SURCOUT_CARBURANT_FURTIF, valeurArmee, verifierProduction, verserRevenus,
 } from './regles/economie';
 export {
@@ -108,6 +108,7 @@ export {
   evaluerFin, majEliminations, score, vainqueurAuxPoints,
 } from './regles/victoire';
 export { appliquerEffets, campSuivant, fermerTour, ouvrirTour } from './regles/tour';
+export { caseDApparition, produireSuperusines, superusineDue, superusineSur } from './regles/superusines';
 export {
   BONUS_VISION_MONTAGNE, brouilleParCamp, cacheeAuContact, casesVisibles, estBrouillee, filtrerPourCamp,
   ligneCoupee, MALUS_VISION_FORET, MALUS_VISION_NUIT, PART_VISION_BROUILLEE,

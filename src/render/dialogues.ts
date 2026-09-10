@@ -69,7 +69,10 @@ function declenche(d: DeclencheurScene, ctx: ContexteScenes): boolean {
       return evts.some((e) => e.type === 'panne_seche' && (d.camp === undefined
         || evts.some((h) => h.type === 'hors_jeu' && h.uniteId === e.uniteId && h.camp === d.camp)));
     case 'production':
-      return evts.some((e) => e.type === 'production' && (d.unite === undefined || e.unite === d.unite));
+      // Une machine sortie d'une superusine est une production comme une autre
+      // pour la scène : Basile parle à la première (`aube_superusine`).
+      return evts.some((e) => (e.type === 'production' || e.type === 'production_automatique')
+        && (d.unite === undefined || e.unite === d.unite));
     case 'pouvoir':
       return evts.some((e) => e.type === 'pouvoir' && (d.camp === undefined || e.camp === d.camp));
     // Le jalon se lit sur l'état, pas sur un événement : le moteur n'émet rien

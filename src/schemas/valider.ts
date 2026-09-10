@@ -1369,7 +1369,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
   'incarnation', 'bancs', 'paysCode', 'regionCle', 'carteCle', 'date',
-  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandantsVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
+  'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandantsVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'superusines', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
   'choix', 'flagsRequis', 'flagsInterdits', 'recompenses',
@@ -1493,6 +1493,26 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     return undefined;
   });
   sansDoublon(ctx, positionsIem, 'installationsIem');
+  // Les superusines (10 septembre 2026) : une case, un camp, un type, un
+  // calendrier. Que la case porte bien un producteur du camp et que le type
+  // soit du catalogue se vérifie à la création de la partie, où la carte et le
+  // catalogue sont là — ici on ne lit que le scénario.
+  const positionsSuperusines: string[] = [];
+  if (presente(o, 'superusines')) tableau(ctx, o['superusines'], 'superusines', { max: 8 }, (e, c) => {
+    const s = objet(ctx, e, c, ['x', 'y', 'camp', 'type', 'depuisJournee', 'chaque', 'max']);
+    if (!s || !requis(ctx, s, c, ['x', 'y', 'camp', 'type'])) return undefined;
+    entier(ctx, s['x'], sous(c, 'x'), { min: 0, max: 59 });
+    entier(ctx, s['y'], sous(c, 'y'), { min: 0, max: 59 });
+    positionsSuperusines.push(`${s['x']},${s['y']}`);
+    const camp = entier(ctx, s['camp'], sous(c, 'camp'), { min: 0, max: 3 });
+    if (camp !== undefined && !camps.includes(camp)) ctx.faute(sous(c, 'camp'), 'camp inconnu');
+    cle(ctx, s['type'], sous(c, 'type'));
+    if (presente(s, 'depuisJournee')) entier(ctx, s['depuisJournee'], sous(c, 'depuisJournee'), { min: 1, max: 100 });
+    if (presente(s, 'chaque')) entier(ctx, s['chaque'], sous(c, 'chaque'), { min: 1, max: 10 });
+    if (presente(s, 'max')) entier(ctx, s['max'], sous(c, 'max'), { min: 1, max: 99 });
+    return undefined;
+  });
+  sansDoublon(ctx, positionsSuperusines, 'superusines');
   const fenetresClimat: { debut: number; fin: number }[] = [];
   if (presente(o, 'evenementsClimat')) tableau(ctx, o['evenementsClimat'], 'evenementsClimat', { max: 12 }, (e, c) => {
     const s = objet(ctx, e, c, ['cle', 'journee', 'meteo', 'duree', 'campsAdaptes']);
@@ -2360,7 +2380,7 @@ export function validerCatalogueUnites(valeur: unknown): Resultat<CatalogueUnite
   entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
   const brutes = Array.isArray(o['unites']) ? (o['unites'] as unknown[]) : [];
   if (!Array.isArray(o['unites'])) ctx.faute('unites', 'un tableau de types d\'unité est attendu');
-  if (brutes.length > 29) ctx.faute('unites', 'le catalogue actif est plafonné à 29 unités');
+  if (brutes.length > 30) ctx.faute('unites', 'le catalogue actif est plafonné à 30 unités');
   const cles: string[] = [];
   const silhouettes: string[] = [];
   for (let i = 0; i < brutes.length; i += 1) {

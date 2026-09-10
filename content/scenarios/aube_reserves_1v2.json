@@ -1,6 +1,6 @@
 {
   "cle": "aube_reserves_1v2",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -68,26 +68,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Notre réserve orientale fait face à deux délégations alliées. Elles contestent le même contrat par les deux ponts. Il faut prendre leurs deux QG ou mettre les deux camps hors jeu.",
+      "texte": "Notre réserve de l’est est contestée par deux **concessions** concurrentes : la même clause, deux signataires. Tomas joue l’une pour l’essai, Ost tient l’autre pour de bon. Ils arrivent par les deux ponts.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai tactique : cet affrontement ne modifie pas la progression de campagne. La prise de notre QG ou la perte de toutes nos unités met fin à notre participation.",
+      "texte": "Une **concession**, c’est un droit de quatre ans sur le courant d’un lieu, inscrit au Registre de Port-Méridien — jamais un territoire, jamais des gens. Deux concessions sur la même réserve, c’est une guerre.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous vous souvenez de la Grêle au détour des batteries ? Ost l’a **rechargée** : même rail, treize cases, deux points — et cette fois il n’est pas seul. Jauge pleine au Bulletin : dispersez-vous.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Prenez leurs deux QG ou détruisez leurs deux armées. Une seule ne suffit pas : une concession contestée le reste tant qu’un signataire tient.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Essai : ce front n’est pas inscrit au Registre, rien de ce qui s’y gagne ne suit la campagne. Perdre notre QG ou toutes nos pièces met fin à l’engagement.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le tournoi suspend le contrat contesté. Une victoire ne décide pas seule à qui le courant doit revenir.",
-      "emotion": "neutre"
+      "texte": "Les deux signataires sont hors du front. Atlas suspend la concession contestée : une victoire ne dit pas seule à qui revient le courant, mais elle dit qui ne l’aura pas.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le match est terminé. Nous conservons nos relevés et nous reprendrons la préparation avant une autre tentative.",
+      "texte": "L’engagement est perdu et la réserve passe sous contrat. Gardez les relevés : ils diront un jour que la même clause portait deux signatures.",
       "emotion": "neutre"
     }
   ],
@@ -104,5 +119,54 @@
   },
   "factionsParCamp": {
     "2": "atl"
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "reserves_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Deux ponts, une réserve, treize cases : le compte est simple.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Reculez sur les villes et soignez.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "reserves_premiere_perte",
+      "declencheur": {
+        "type": "perte",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une pièce perdue. Au front, ce sont des gens : soignez en ville plutôt que d’échanger un coup pour un coup.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "reserves_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Une ville de plus sur notre relevé. Tenez-la : c’est là qu’on répare, et c’est ce que le Registre compte.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

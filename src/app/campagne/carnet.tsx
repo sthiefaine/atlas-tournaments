@@ -10,6 +10,7 @@ import type { Vignette } from '../jeu/parties-libres';
 import { lireProfils, type EtatProfils } from '../preferences';
 import { etatsItineraire, stationParDefaut, type EtatStation } from './itineraire';
 import { lireProgression, type Progression } from './progression';
+import { Gras } from '../gras';
 
 /**
  * Le **fil de la campagne** : un itinéraire, pas un sommaire.
@@ -182,7 +183,7 @@ export default function Carnet({ epreuves, libelles }: {
         <h1>{libelles.titre}</h1>
         {/* La seule phrase de l'écran, et elle porte une règle qu'on ne devine
             pas : ce que vise un objectif est peint en or sur le terrain. */}
-        <p className="carnet-accroche">{libelles.introduction}</p>
+        <p className="carnet-accroche"><Gras texte={libelles.introduction} /></p>
       </div>
       <Link className="atlas-retour" href="/">{libelles.retour}</Link>
     </header>
@@ -249,7 +250,7 @@ export default function Carnet({ epreuves, libelles }: {
         {mission.details.length > 0
           ? <ul className="dossier-details">{mission.details.map((d) => <li key={d}>{d}</li>)}</ul>
           : null}
-        <p className="dossier-recit">{mission.recit}</p>
+        <p className="dossier-recit"><Gras texte={mission.recit} /></p>
         <div className="dossier-actions">
           {etat === 'verrouillee'
             ? <p className="dossier-verrou"><Cadenas />{libelles.verrou}</p>

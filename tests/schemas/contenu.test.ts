@@ -40,7 +40,7 @@ const CATALOGUE_5 = [
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 8);
+  assert.equal(catalogue.catalogueVersion, 9);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
   // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
@@ -52,7 +52,9 @@ test('content/unites.json passe son validateur', () => {
   assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
   // Le chasseur furtif entre au 6 : vingt-quatre unités, le plafond du §13.7.
   assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 6);
-  assert.equal(catalogue.unites.length, 29);
+  // L'automate de combat méridien (10 septembre 2026) entre au 9 : trente unités.
+  assert.equal(catalogue.unites.find((u) => u.cle === 'meridien_automate')?.homologation?.catalogue, 9);
+  assert.equal(catalogue.unites.length, 30);
 });
 
 test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
@@ -64,8 +66,9 @@ test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', ()
     assert.equal(u.homologation?.date, '2026-09-07', u.cle);
     assert.ok(u.nomCourt.length <= 12, `${u.cle} : nom court de ${u.nomCourt.length} signes`);
   }
-  // Catalogue 7 : extension demandée à vingt-huit unités, dont deux exclusives.
-  assert.equal(unites.length, 29);
+  // Catalogue 7 : vingt-huit unités dont deux exclusives ; le drone marin au 8,
+  // l'automate méridien au 9 (troisième exclusive) : trente.
+  assert.equal(unites.length, 30);
 });
 
 test('les neuf unités du catalogue 5 tiennent les quatre contraintes du §13.3', () => {

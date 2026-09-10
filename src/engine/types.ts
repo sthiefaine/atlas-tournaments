@@ -8,7 +8,7 @@
 import type {
   Case, CampId, Cle, CleTerrain, CleUnite, DateIso, Climat, Hemisphere,
   EtatClimat, Meteo, ObjectifDefaite, ObjectifVictoire, Saison, TableDegats,
-  InstallationIem, EvenementClimatScenario, RenfortScenario, Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
+  InstallationIem, EvenementClimatScenario, RenfortScenario, Superusine, Terrain, Trait, TypeMouvement, UnitType, EffetModificateur, EffetPouvoir,
 } from '../schemas/index';
 
 // ---------------------------------------------------------------------------
@@ -161,6 +161,8 @@ export interface TerrainPose {
 /** Réglages figés du scénario : le moteur ne lit jamais l'horloge. */
 export interface ReglagesPartie {
   installationsIem?: InstallationIem[];
+  /** Superusines du scénario (10 septembre 2026) : voir `Superusine`. */
+  superusines?: Superusine[];
   evenementsClimat?: EvenementClimatScenario[];
   factionsParCamp?: Partial<Record<CampId, 'atl'>>;
   equipes?: CampId[][];
@@ -226,6 +228,19 @@ export interface EtatPartie {
   prochainId: number;
   /** Indices vague:unité déjà déployés, sérialisables. */
   renfortsLivres?: string[];
+  /**
+   * Unités déjà produites par chaque superusine, indexées par son rang dans
+   * `reglages.superusines` : c'est ce que `max` plafonne. Absent : aucune.
+   */
+  superusinesProduites?: Record<string, number>;
+  /**
+   * Bâtiments producteurs touchés par une impulsion IEM (10 septembre 2026),
+   * clé de case → journée de l'impulsion : tant que l'entrée est là, la case
+   * ne produit rien (`usine_iem`). Levée à la fermeture du tour suivant de
+   * son propriétaire, exactement comme `Unite.iemJusquaJournee`. Absent :
+   * aucune usine touchée.
+   */
+  usinesIem?: Record<string, number>;
   /** Prochaine balise à capturer, indexée par objectif. */
   relais?: Record<string, number>;
   journee: number;
@@ -300,7 +315,7 @@ export const MOTIFS_REFUS = [
   'transport_impossible', 'transport_plein', 'debarquement_impossible',
   'fusion_impossible', 'ravitaillement_impossible', 'furtivite_impossible', 'deja_deplacee', 'construction_impossible',
   'batiment_inconnu', 'batiment_adverse', 'batiment_occupe', 'unite_non_produite_ici',
-  'fonds_insuffisants', 'catalogue_inconnu',
+  'fonds_insuffisants', 'catalogue_inconnu', 'usine_iem', 'usine_inerte',
   'pas_de_commandant', 'jauge_insuffisante', 'pouvoir_deja_utilise', 'pose_invalide',
   'pouvoir_invalide', 'action_inconnue',
 ] as const;
@@ -332,6 +347,14 @@ export type EvenementJeu =
   /** Un drone mis hors jeu au-dessus d'un bâtiment adverse a lu ce que ce camp a produit. */
   | { type: 'production_revelee'; camp: CampId; proprietaire: CampId; case: Case; produites: Record<CleUnite, number> }
   | { type: 'production'; camp: CampId; unite: CleUnite; case: Case; cout: number }
+  /**
+   * Une superusine de scénario a fait paraître une unité neuve, sans coût, au
+   * début du tour de son camp (10 septembre 2026) — `case` est où elle est
+   * apparue, qui peut être une voisine si le bâtiment était occupé.
+   */
+  | { type: 'production_automatique'; camp: CampId; uniteId: string; unite: CleUnite; case: Case }
+  /** Un bâtiment producteur de ce camp est sous impulsion : il ne produit rien ce tour. */
+  | { type: 'usine_iem'; camp: CampId; case: Case }
   | { type: 'embarquement'; uniteId: string; transportId: string }
   | { type: 'debarquement'; uniteId: string; transportId: string; vers: Case }
   | { type: 'fusion'; uniteId: string; avecId: string; rembourse: number }
@@ -358,7 +381,11 @@ export type EvenementJeu =
    * de leur prochain tour, et celles — aériennes, adverses — mises hors jeu
    * (chacune a aussi son `hors_jeu`).
    */
-  | { type: 'iem_pouvoir'; camp: CampId; centre: Case; rayon: number; immobilisees: string[]; abattues: string[] }
+  | {
+      type: 'iem_pouvoir'; camp: CampId; centre: Case; rayon: number; immobilisees: string[]; abattues: string[];
+      /** Bâtiments producteurs adverses touchés, qui ne produiront rien à leur tour (absent : aucun). */
+      usines?: number;
+    }
   | { type: 'terrain_pose'; case: Case; terrain: CleTerrain }
   | { type: 'terrain_retire'; case: Case }
   | { type: 'repousse'; uniteId: string; vers: Case }

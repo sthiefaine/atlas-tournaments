@@ -1,10 +1,10 @@
 {
   "cle": "premier_contact",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "premier_contact",
   "nom": "Entraînement 1 · Premier contact",
   "acte": 0,
@@ -50,41 +50,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Bienvenue à la sélection, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le casser.",
+      "texte": "Bienvenue au **camp d’instruction du bocage**, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le perdre.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Ici, les Jeux Tactiques ont remplacé les guerres. Ce qu’une délégation gagne sur le terrain, c’est un contrat d’énergie pour quatre ans. Ce qu’elle ne gagne jamais, c’est quelqu’un.",
+      "texte": "Le monde est en guerre depuis quatorze Rondes, et la guerre a un objet : **le courant**. On ne prend pas un pays, on prend ses champs solaires et ses réserves. Nous sommes dans la **Ronde XIV**, et vous y entrez.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et un mot : « rends-les en bon état ». Ma patrouille est de l’autre côté de la rivière, venez la chercher.",
+      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et des charges à blanc : « rends-les en bon état ». Ma patrouille est de l’autre côté de la rivière, venez la chercher.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : en vert, où il peut aller ; en rouge, ce qu’il peut marquer après le déplacement. Le pont du nord est à lui.",
+      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : **en vert, où il peut aller ; en rouge, ce qu’il peut frapper** après le déplacement. Le pont du nord est à lui.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Patrouille hors jeu. Vous savez déplacer, frapper en premier et lire le terrain. Vantour vous a déjà trouvé un surnom au Bulletin ; je ne vous le répète pas.",
+      "texte": "Patrouille hors jeu. Vous savez déplacer, frapper en premier et lire le terrain. Ici les charges étaient à blanc ; **au front, elles ne le seront plus**, et l’équipage qui riposte sera le vôtre.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Solveig récupère mes pièces ce soir, toutes les trois, intactes. Demain, on parle d’argent : c’est là que les matchs se gagnent.",
+      "texte": "Solveig récupère mes pièces ce soir, toutes les trois, et personne n’a rien. Demain, on parle d’argent : c’est avec le courant qu’on paie une guerre.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer, et Tomas ne racontera rien. Reprenons : votre place dans l’équipe ne se joue pas ici.",
+      "texte": "Un exercice sert à essayer, et Tomas ne racontera rien. Au front, cette erreur coûterait des équipages ; ici, elle ne coûte qu’une reprise. Reprenons.",
       "emotion": "neutre"
     }
   ],
@@ -97,12 +97,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier échange. L’unité marquée riposte aussitôt, avec les points qui lui restent : frapper en premier, c’est encaisser moins.",
+          "texte": "Premier échange. **L’unité frappée riposte aussitôt**, avec les points qui lui restent : frapper en premier, c’est encaisser moins.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Et regardez où je me tenais. Deux étoiles de défense dans la forêt, zéro sur un pont : le terrain compte avant le matériel.",
+          "texte": "Et regardez où je me tenais. **Deux étoiles de défense dans la forêt, zéro sur un pont** : le terrain compte avant le matériel.",
           "emotion": "neutre"
         }
       ]
@@ -116,7 +116,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une pièce hors jeu. Son équipage retire le plastron et va boire un café, c’est la règle : on sort du terrain, pas du monde.",
+          "texte": "Une pièce hors jeu. À blanc, mon équipage descend et va boire un café. Au front, **une pièce hors jeu, c’est un équipage qu’on ne revoit pas** : Atlas compte des pièces, nous comptons des gens.",
           "emotion": "neutre"
         },
         {
@@ -135,7 +135,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une des nôtres sort. Personne n’est touché, mais elle manque pour la journée. Deux unités sur une cible valent mieux qu’une sur chaque.",
+          "texte": "Une des nôtres sort. À blanc, elle manque pour la journée ; au front, elle manquerait pour la guerre. **Deux unités sur une cible** valent mieux qu’une sur chaque.",
           "emotion": "doute"
         }
       ]
@@ -149,7 +149,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre QG verse des fonds à chaque journée : c’est la part de contrat que le terrain vous avance. Cliquez dessus quand la caisse passe mille, il recrute une infanterie.",
+          "texte": "Votre QG verse des fonds à chaque journée : c’est le courant que le front vous avance. Cliquez dessus quand la caisse passe mille, **il recrute une infanterie**.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ces fonds, c’est **Atlas** qui les compte. Atlas ne fait pas la guerre, elle l’arbitre : elle dit où l’on se bat, avec quoi, et elle inscrit ce que chaque front rapporte.",
           "emotion": "neutre"
         }
       ]

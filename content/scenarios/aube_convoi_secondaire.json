@@ -1,10 +1,10 @@
 {
   "cle": "aube_convoi_secondaire",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_convoi_secondaire",
   "nom": "Quête · Le convoi de Solveig",
   "acte": 0,
@@ -68,26 +68,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_solveig_tamm",
-      "texte": "Notre transport au sud-ouest porte les relevés du convoi. Gardez-le en jeu pendant que nos capteurs prennent le QG du nord-est. Deux ponts nous permettent de choisir notre approche.",
+      "texte": "Le transport au sud-ouest porte le **manifeste** du convoi : ce que les batteries sont censées être, et où elles vont. Gardez-le en jeu pendant que nos fantassins prennent le poste d’Ost au nord-est. Deux ponts, deux approches.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_solveig_tamm",
-      "texte": "La dotation est fixe, sans revenu périodique. Vous avez quinze journées pour prendre le QG adverse. Une perte du véhicule ou de l’unité qui porte le dossier termine cette tentative.",
+      "texte": "Un **poste**, c’est un nœud du réseau : qui le tient décide où va le courant. Ost tient celui-ci sans contrat. Vous avez déjà mené un transport au dernier kilomètre, au bocage : même règle.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Ost a sa Batterie sans plaque : jauge pleine, la **Grêle** tombe sur treize cases, deux points chacune. Un transport dans la zone, c’est le manifeste perdu. Lisez le Bulletin chaque matin.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Dotation fixe, aucun revenu, quinze journées pour prendre le poste. Le porteur ne passe **jamais en tête** : la couverture ouvre, il suit. Le perdre termine la tentative.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_solveig_tamm",
-      "texte": "Le poste reconnaît notre passage et le transport est intact. Solveig peut désormais engager son convoi sur la route d’Aube.",
-      "emotion": "neutre"
+      "texte": "Le poste est à nous et le manifeste est intact. On saura enfin où ces batteries sont allées — et ce ne sera pas ce que le contrat dit.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_solveig_tamm",
-      "texte": "Le contrôle du poste nous échappe. La quête pourra être retentée ; la route principale reste ouverte.",
+      "texte": "Le poste nous échappe, ou le manifeste est perdu. La quête peut être retentée ; la route principale reste ouverte.",
       "emotion": "neutre"
     }
   ],
@@ -96,5 +106,39 @@
   "flagsInterdits": [],
   "recompenses": {
     "flags": []
-  }
+  },
+  "scenesDialogue": [
+    {
+      "cle": "convoi_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. Un convoi, ça se disperse mal.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_solveig_tamm",
+          "texte": "Ost a ouvert sa jauge. Si c’est la Grêle, sortez le transport de la zone d’abord, le reste ensuite.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "convoi_premier_combat",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_solveig_tamm",
+          "texte": "Premier tir. Où est le transport ? S’il est devant, c’est déjà une faute ; s’il est derrière, continuez.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ]
 }

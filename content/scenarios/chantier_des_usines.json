@@ -1,10 +1,10 @@
 {
   "cle": "chantier_des_usines",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "chantier_des_usines",
   "nom": "Entraînement 3 · Le chantier des usines",
   "acte": 0,
@@ -61,29 +61,34 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le terrain sec du centre Atlas. Deux usines désaffectées : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Une usine remise en service produit pour qui l’a relancée.",
+      "texte": "Le terrain sec du centre d’instruction. Deux usines **désaffectées** par la dernière Ronde : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Une usine remise en service produit pour qui l’a relancée.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre génie est un bâtisseur : il ne capture pas, il remet en service, en deux tours. Une infanterie en met quatre, celles de Tomas aussi. Wren l’a renvoyé trois fois au banc avant de lui donner son badge.",
+      "texte": "Votre génie est un bâtisseur : il ne capture pas, il **remet en service, en deux tours**. Une infanterie en met quatre, celles de Tomas aussi.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Cliquez sur votre usine, près du QG : elle vend des véhicules, chars, artillerie, transports. Le QG, lui, ne produit que de l’infanterie et du génie.",
+      "texte": "Cliquez sur votre usine, près du QG : elle produit chars, artillerie et transports ; le QG ne produit que l’infanterie et le génie. **Produire sur place**, c’est ne plus attendre un convoi qui peut ne pas arriver.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Je défends aujourd’hui, c’est mon style. Atlas verse une prime à qui relance une usine, mille fonds, le double pour un génie. Je n’ai que des fantassins, alors j’y vais tout de suite.",
+      "texte": "Je défends aujourd’hui, c’est mon style. Atlas verse une prime à qui relance une usine : mille fonds, le double pour un génie. Je n’ai que des fantassins, alors j’y vais tout de suite.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Chaque pièce qui sort porte un dossier signé par **Wren Osoko**, le contrôle des armements d’Atlas. **Toute arme sur un front est déclarée** : c’est l’article deux du Pacte. On vous montrera bientôt des armes qui n’en ont pas.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une pièce pour une cible, remettre un bâtiment en service. Demain, la marée ; Solveig a déjà réservé la traversée.",
+      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une pièce pour une cible, remettre un bâtiment en service. Au front, c’est le génie qui décide du rythme. Demain, la marée ; Solveig a réservé la traversée.",
       "emotion": "joie"
     }
   ],
@@ -104,7 +109,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille si c’est le génie. Dès demain elle produit pour vous. C’est un droit d’exploitation, pas un bâtiment qu’on emporte.",
+          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille si c’est le génie. Dès demain elle produit pour vous. C’est **un droit d’exploitation**, pas un bâtiment qu’on emporte.",
           "emotion": "neutre"
         }
       ]
@@ -118,7 +123,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "De l’artillerie. Elle marque à deux ou trois cases sans riposte, jamais après avoir bougé, jamais au contact. Posez-la derrière l’infanterie et laissez-la travailler.",
+          "texte": "De l’artillerie. Elle frappe **à deux ou trois cases sans riposte**, jamais après avoir bougé, jamais au contact. Posez-la derrière l’infanterie et laissez-la travailler.",
           "emotion": "neutre"
         }
       ]
@@ -132,7 +137,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. Lisez la prévision de duel avant de confirmer : chaque pièce a sa cible.",
+          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. **Lisez la prévision de duel** avant de confirmer : chaque pièce a sa cible.",
           "emotion": "neutre"
         }
       ]

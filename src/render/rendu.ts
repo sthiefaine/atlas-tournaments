@@ -154,6 +154,11 @@ export interface VueInteraction {
    * orange — la couleur du matériel à l'essai, celle du badge des Gris.
    */
   marques?: ReadonlyMap<string, MarqueUnite> | null;
+  /**
+   * Les mêmes marques, posées sur des **cases** (clé `cleCase`) : `menacee`
+   * sur une usine qu'une impulsion tient. `null` ou absent : aucune.
+   */
+  marquesCases?: ReadonlyMap<string, MarqueUnite> | null;
 }
 
 /**

@@ -221,7 +221,7 @@ test('iem : arrête ce qui a un moteur dans le rayon, des deux camps, sans dég�
   assert.equal(u(apres, 'u6').iemJusquaJournee, undefined, 'à deux cases');
   assert.equal(apres.unites.length, 6, 'personne ne sort du jeu sans abattre');
   assert.deepEqual(evenements.find((e) => e.type === 'iem_pouvoir'), {
-    type: 'iem_pouvoir', camp: 0, centre: { x: 3, y: 2 }, rayon: 1, immobilisees: ['u1', 'u3', 'u4'], abattues: [],
+    type: 'iem_pouvoir', camp: 0, centre: { x: 3, y: 2 }, rayon: 1, immobilisees: ['u1', 'u3', 'u4'], abattues: [], usines: 0,
   });
   // Pas de riposte sous impulsion : la prévision le sait.
   const prev = prevoirDuel(apres, CAT, u(apres, 'u2'), u(apres, 'u4'), { x: 4, y: 1 });
@@ -270,7 +270,7 @@ test('iem abattre : les aériennes adverses touchées sortent du jeu, drones com
     { type: 'hors_jeu', uniteId: 'u4', camp: 1, unite: 'drone' },
   ]);
   assert.deepEqual(evenements.find((e) => e.type === 'iem_pouvoir'), {
-    type: 'iem_pouvoir', camp: 0, centre: { x: 3, y: 2 }, rayon: 1, immobilisees: ['u1', 'u5'], abattues: ['u3', 'u4'],
+    type: 'iem_pouvoir', camp: 0, centre: { x: 3, y: 2 }, rayon: 1, immobilisees: ['u1', 'u5'], abattues: ['u3', 'u4'], usines: 0,
   });
   assert.equal(apres.camps[1]!.jauge, jaugeAdverse + JAUGE_PAR_PV_SUBI * (6 + 10), 'le camp abattu touche la jauge du subi');
   assert.equal(apres.camps[0]!.jauge, 100, 'le déclencheur a payé ses huit barres, rien ne lui revient');

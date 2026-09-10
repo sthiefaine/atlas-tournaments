@@ -9,6 +9,7 @@ const MISSIONS = [
   ['aube_reserves_1v2', 'La finale des réserves', '1 contre 2 · deux fronts'],
   ['aube_nuit_2v2', 'La ligne de nuit', '2 contre 2 · protection des relevés'],
   ['aube_routes_3v1', 'Les routes d’Aube', '3 contre 1 · coalition'],
+  ['aube_superusine', 'La Forge de la retenue', 'Essai · superusine, impulsions et radar'],
 ] as const;
 const QUETES = [
   ['aube_convoi_secondaire', 'Le convoi de Solveig', 'Choisir après Le détour des batteries', 'Renforts au siège ou fonds pour les routes.'],

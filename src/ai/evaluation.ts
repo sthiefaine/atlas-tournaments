@@ -296,16 +296,11 @@ export function mixPotentiel(etat: EtatPartie, cat: Catalogue, camp: CampId): Re
 
 /** Bâtiments producteurs libres d'un camp, ordre déterministe. */
 export function usinesLibres(etat: EtatPartie, cat: Catalogue, camp: CampId): Case[] {
-  return batimentsDe(etat, camp)
-    .map((k) => {
-      const [x, y] = k.split(',');
-      return { x: Number(x), y: Number(y) };
-    })
-    .filter((c) => {
-      const terrain = terrainLogique(etat, cat, c);
-      if (terrain === null || produitesPar(cat, terrain, etat, camp).length === 0) return false;
-      return uniteSur(etat, c) === undefined;
-    });
+  // Les producteurs sont ceux du moteur — une superusine de scénario n'en est
+  // pas un (`usine_inerte`) —, et libres, c'est sans unité dessus.
+  return producteursDe(etat, cat, camp)
+    .map(depuisCle)
+    .filter((c) => uniteSur(etat, c) === undefined);
 }
 
 /** Répartition des unités d'un camp par clé : sert à diversifier les achats. */

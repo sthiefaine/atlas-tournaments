@@ -1,10 +1,10 @@
 {
   "cle": "aube_essai_maritime_iem_climat",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_essai_maritime_iem_climat",
   "nom": "Aube · La rade des signaux",
   "acte": 0,
@@ -70,31 +70,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Essai maritime : prenez le QG d’Ost ou mettez son camp hors jeu avant la fin de J18. Notre drone marin observe le chenal, le cuirassé couvre la côte et l’infanterie peut prendre les bâtiments.",
+      "texte": "Essai maritime : prenez le QG d’Ost ou détruisez son armée avant la fin de J18. Le **drone marin** observe le chenal, le cuirassé couvre la côte, l’infanterie prend les bâtiments.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le radar en colonne 7, ligne 6 émet une IEM à J3 puis toutes les trois journées, sur trois cases en distance orthogonale. Gardez les appareils aériens et marins hors rayon ou capturez la station avec l’infanterie.",
+      "texte": "Au bocage, la station à impulsion était éteinte ; celle-ci tire. Le radar en colonne 7, ligne 6 émet à J3 puis toutes les trois journées, sur trois cases : les moteurs s’arrêtent, ce qui vole tombe. **Prendre la station coupe la source.**",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Tempête de simulation à J4 et J5 : Ost dispose d’une adaptation annoncée, nous conservons les règles ordinaires. Préparez vos trajets. Capturer le radar coupe la menace IEM adverse mais ne change pas ce calendrier météo.",
+      "texte": "Tempête de forçage à J4 et J5 : Ost a une adaptation déclarée, nous gardons les règles ordinaires. Prendre le radar coupe l’impulsion mais ne change pas ce calendrier — il est public, préparez les trajets.",
       "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Et la Batterie sans plaque, encore. Impulsion ou **Grêle**, la règle est la même : le Bulletin dit la veille ce qui part demain. Personne n’est surpris sur un front d’Atlas — sauf qui ne lit pas.",
+      "emotion": "doute"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La rade est dégagée. Vous avez distingué les trois réponses : couvrir le drone marin, prendre la station et anticiper la météo annoncée.",
-      "emotion": "neutre"
+      "texte": "La rade est dégagée. Trois réponses, vous les avez toutes : couvrir le drone, prendre la station, lire la météo avant qu’elle tombe.",
+      "emotion": "joie"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Reprenez le bulletin et le rayon de la station avant de relancer. Une route terrestre et le large permettent d’éviter l’impulsion.",
+      "texte": "Reprenez le Bulletin et le rayon de la station avant de relancer. Une route terrestre et le large évitent l’impulsion ; rien n’évite la Grêle, sauf l’écart.",
       "emotion": "neutre"
     }
   ],
@@ -107,7 +112,55 @@
   "factionsParCamp": {
     "1": "atl"
   },
-  "scenesDialogue": [],
+  "scenesDialogue": [
+    {
+      "cle": "rade_impulsion_j3",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "L’impulsion part aujourd’hui. Ce qui est à trois cases du radar s’arrête ; ce qui vole tombe. Si vous y êtes encore, c’était écrit.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "rade_pouvoir_ost",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Grêle. La rade est étroite, commandant, et vos coques sont larges.",
+          "emotion": "triomphe"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ost vient d’ouvrir sa jauge. Si c’est la **Grêle**, comptez vos pièces sur treize cases ; sinon, ses chenilles frappent plus fort ce tour-ci. Écartez les coques et les appareils.",
+          "emotion": "colere"
+        }
+      ]
+    },
+    {
+      "cle": "rade_capture_joueur",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Bâtiment pris. Si c’est le radar, l’impulsion est finie : plus rien ne part de cette station. La tempête, elle, viendra quand même.",
+          "emotion": "joie"
+        }
+      ]
+    }
+  ],
   "installationsIem": [
     {
       "cle": "iem_rade",

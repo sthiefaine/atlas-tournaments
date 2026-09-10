@@ -84,6 +84,10 @@ export {
 
 export { casesObjectifs, textesObjectifs } from './objectifs';
 
+export { htmlGras, MARQUE_GRAS, sansGras, segmenter, type Segment } from './gras';
+
+export { casesUsinesIem, usineSousIem } from './iem';
+
 export { cheminEnL, longueurChemin, surChemin } from './chemin';
 
 export {

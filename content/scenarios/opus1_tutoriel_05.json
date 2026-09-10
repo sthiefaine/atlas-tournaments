@@ -1,10 +1,10 @@
 {
   "cle": "opus1_tutoriel_05",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "opus1_tutoriel_05",
   "nom": "Entraînement 5 · La bonne distance",
   "acte": 0,
@@ -70,17 +70,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a homologué le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. Chaque placement compte.",
+      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a homologué le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. **Chaque placement compte.**",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux pièces d’artillerie. Elles marquent à deux ou trois cases sans riposte, mais ne tirent pas après avoir bougé et ne ripostent pas au contact. Le char devant, l’artillerie derrière.",
+      "texte": "Deux pièces d’artillerie. Elles frappent à deux ou trois cases sans riposte, mais **ne tirent pas après avoir bougé** et ne ripostent pas au contact. Le char devant, l’artillerie derrière.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "J’attaque, aujourd’hui. Si vous laissez une pièce de portée à découvert, mon char ira la chercher. Prenez mon QG ou mettez mon équipe hors jeu avant la fin de J18.",
+      "texte": "J’attaque, aujourd’hui. Si vous laissez une pièce de portée à découvert, mon char ira la chercher, et au front un équipage à découvert ne rentre pas. Prenez mon QG ou mettez mon groupe hors jeu avant **J18**.",
       "emotion": "neutre"
     },
     {
@@ -92,12 +92,12 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Exercice réussi. Vous avez tenu la distance, et c’est la chose la plus difficile à apprendre à un jeune commandant : attendre le bon tour.",
+      "texte": "Vous avez tenu la distance, et c’est la chose la plus difficile à apprendre à un jeune commandant : **attendre le bon tour**. Au front, l’impatience coûte des équipages.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Ce soir, Solveig nous emmène en forêt. Prenez une lampe : ce n’est pas une image.",
+      "texte": "Ce soir, Solveig nous emmène en forêt. Prenez une lampe : ce n’est pas une image. Et il y aura du matériel qui n’est pas à nous.",
       "emotion": "neutre"
     }
   ],
@@ -123,7 +123,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier échange. Une arrivée sûre ce tour prépare un tir au tour suivant : l’artillerie ne fait jamais les deux le même jour.",
+          "texte": "Premier échange. **Une arrivée sûre ce tour prépare un tir au tour suivant** : l’artillerie ne fait jamais les deux le même jour.",
           "emotion": "neutre"
         }
       ]
@@ -137,7 +137,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une de mes pièces sort sans avoir vu qui l’a marquée. Voilà la bonne distance : je ne peux pas riposter à ce que je ne touche pas.",
+          "texte": "Une de mes pièces sort sans avoir vu qui l’a frappée. Voilà la bonne distance : **je ne peux pas riposter à ce que je ne touche pas**.",
           "emotion": "neutre"
         }
       ]
@@ -165,7 +165,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Sélectionnez une artillerie et lisez ses cases rouges : la case voisine n’en fait pas partie. Trop près, c’est hors de portée ; c’est le paradoxe qu’on apprend ici.",
+          "texte": "Sélectionnez une artillerie et lisez ses cases rouges : **la case voisine n’en fait pas partie**. Trop près, c’est hors de portée ; c’est le paradoxe qu’on apprend ici.",
           "emotion": "neutre"
         }
       ]

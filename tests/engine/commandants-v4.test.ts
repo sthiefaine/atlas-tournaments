@@ -43,7 +43,7 @@ test('le catalogue est en révision 4, la 3 est gelée à l’octet, et les 34 k
   assert.equal(VERSION_CAPACITES_COMMANDANTS, 4);
   assert.equal(catalogueV4.version, 4);
   assert.equal(catalogueV3.version, 3);
-  assert.equal(VERSION_MOTEUR, 7, 'chance et étoiles changent le rejeu : les sauvegardes du 6 sont périmées');
+  assert.equal(VERSION_MOTEUR, 8, 'l’IEM sur les usines et les superusines changent le rejeu : les sauvegardes du 7 sont périmées');
   const profils = listerProfilsCommandants(4);
   assert.equal(profils.length, 34);
   assert.equal(new Set(profils.map((p) => p.cle)).size, 34);

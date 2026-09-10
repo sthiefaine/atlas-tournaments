@@ -36,6 +36,7 @@ import type {
 } from '../types';
 import { cleCase, depuisCle, manhattan, pvAffiches } from '../types';
 import { crediterJauge, JAUGE_PAR_PV_SUBI, mettreHorsJeu } from './combat';
+import { frapperUsines, producteursAdversesAutour } from './economie';
 import { viseUnite } from './modificateurs';
 import { adversesVisibles, uniteSur, voisines } from './mouvement';
 
@@ -168,6 +169,8 @@ export interface EvaluationEffets {
   immobilisees?: string[];
   /** Unités aériennes adverses qu'une impulsion abattrait. */
   abattues?: string[];
+  /** Bâtiments producteurs adverses qu'une impulsion arrêterait pour leur tour (10 septembre 2026). */
+  usines?: Case[];
 }
 
 /**
@@ -182,8 +185,9 @@ export function evaluerEffets(
   const touchees: { uniteId: string; pv: number }[] = [];
   const immobilisees: string[] = [];
   const abattues: string[] = [];
+  const usines: Case[] = [];
   const bilan: EvaluationEffets = {
-    pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null, touchees, immobilisees, abattues,
+    pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null, touchees, immobilisees, abattues, usines,
   };
   const centre = cases[0];
   const toucher = (u: Unite, pv: number): void => {
@@ -213,6 +217,7 @@ export function evaluerEffets(
             immobilisees.push(u.id);
           }
         }
+        for (const p of producteursAdversesAutour(etat, cat, camp, centre, effet.iem.rayon)) usines.push(p.case);
       }
       continue;
     }
@@ -376,8 +381,10 @@ function appliquerFaction(
     crediterJauge(etat, u.camp, JAUGE_PAR_PV_SUBI * pvAffiches(u.pv));
     mettreHorsJeu(etat, cat, u.id, evts);
   }
+  // Et les usines adverses du rayon (10 septembre 2026) : rien n'en sort à leur tour.
+  const usines = frapperUsines(etat, producteursAdversesAutour(etat, cat, camp, centre, effet.iem.rayon), evts);
   evts.push({
-    type: 'iem_pouvoir', camp, centre, rayon: effet.iem.rayon, immobilisees, abattues: abattues.map((u) => u.id),
+    type: 'iem_pouvoir', camp, centre, rayon: effet.iem.rayon, immobilisees, abattues: abattues.map((u) => u.id), usines,
   });
 }
 
