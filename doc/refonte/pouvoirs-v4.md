@@ -57,29 +57,29 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 
 **« Kito et Awa, c'est deux infanteries rapides, je vois pas la différence. »** → Awa fait *rejouer* (le delta se lève, tout le monde repart), Kito fait *finir* : **Jusqu'à la ligne**, capture ×2 — le fond, c'est celui qui accélère au dixième kilomètre et prend la ville en deux tours au lieu de quatre. L'une pousse, l'autre termine.
 
-**« Où est le moment où l'écran change ? »** Il y en a maintenant de quatre sortes, et on peut les nommer : **la carte change** (polder, digue, téléphérique, pontons, estran, pont — six kits) ; **le ciel change** (neige, brouillard, pluie, tempête — cinq kits, avec l'annonce du commentateur) ; **tout le monde perd un PV d'un coup** (Inés, Hazel, Ost) ; **les unités se rallument** (Awa, Devika, Ren, Maël). Un ado qui voit la mer devenir une plage retient le Grec.
+**« Où est le moment où l'écran change ? »** Il y en a maintenant de quatre sortes, et on peut les nommer : **la carte change** (polder, digue, téléphérique, pontons, estran, pont — six kits) ; **le ciel change** (neige, brouillard, pluie, tempête — cinq kits, avec l'annonce du commentateur) ; **tout le monde perd un PV d'un coup** (Ost et Basile ; Inés et Hazel ne frappent qu'une part de l'armée depuis le 10 septembre au soir) ; **les unités se rallument** (Awa, Devika, Ren, Maël). Un ado qui voit la mer devenir une plage retient le Grec.
 
 **« Les descriptions, on comprend ? »** Chaque `description` d'effet est une phrase avec les chiffres dedans, testée sur le critère « est-ce qu'on sait ce qui va se passer *avant* d'appuyer ». Exemple : « Il neige pendant une journée : bottes et roues paient +1 par case hors route, pied et chenilles passent. » Les mots interdits de la bible (ennemi, détruire, tuer, arme, munitions, mort) ont été cherchés par script dans les huit champs de texte de chaque kit : aucun. « Munitions » devient « charges », comme le veut §5.2.
 
 **« Sélène, la méchante, elle fait quoi ? »** Rien de méchant, et c'est exprès. Elle achète moins cher, encaisse le double, capture plus vite. Elle ne frappe jamais : toutes ses unités sont à 90 %. On la bat en lui prenant des bâtiments, pas en la combattant — et c'est exactement ce que le scénario veut faire comprendre : le réseau, pas la force.
 
-**« Et le premier commandant, Ariane, c'est le plus simple ? »** Oui : elle répare 2 PV. C'est Andy, et c'est délibéré — un tutoriel commence par le kit qu'on comprend en une seconde. Le relecteur Advance Wars a levé le sourcil ; l'ado a dit « c'est bien, on comprend ». L'ado a gagné.
+**« Et le premier commandant, Ariane, c'est le plus simple ? »** Oui : elle répare 2 PV. C'est Andy, et c'est délibéré — un tutoriel commence par le kit qu'on comprend en une seconde. Le relecteur Advance Wars a levé le sourcil ; l'ado a dit « c'est bien, on comprend ». L'ado a gagné. *Renversé le 10 septembre au soir par le propriétaire (« plus français ») : voir « Ariane à la française et les supers de vilains ».*
 
 ## 4. La table des 34
 
 | # | Commandant | Archétype | Pouvoir (barres) — en cinq mots | Super (barres) — en cinq mots | Faiblesse |
 |---|---|---|---|---|---|
-| 1 | **Ariane Belloc** (France) | veteran | Révision express (4) — Toutes mes unités +1 PV *(3 barres et +2 PV jusqu'au 10 septembre au soir, §6 « Mesures IA »)* | Grand entretien (7) — Soin 3, plein, attaque ×1,15 *(6 barres jusqu'au 10 septembre au soir)* | `economie` : L’atelier coûte : ses revenus sont à 90 %. |
+| 1 | **Ariane Belloc** (France) | veteran | L’échappée (3) — Unités au sol +1 mouvement *(« Révision express », soin 1 à 4 barres, jusqu'au 10 septembre au soir — « Ariane à la française »)* | L’atelier roulant (7) — Soin 3, plein, attaque ×1,15 *(« Grand entretien » jusqu'au 10 septembre au soir)* | `economie` : L’atelier coûte : ses revenus sont à 90 %. |
 | 2 | **Tomas Reiner** (Luxembourg) | diplomate | Marché du matin (3) — Revenus ×1,5 une journée | Toutes les routes (6) — Plein général et +1 mouvement | `blindes` : Il protège, il ne perce pas : ses chenilles frappent à 90 %. |
 | 3 | **Elsbeth Vonlanthen** (Suisse) | gardienne | Cols fermés (3) — Relief ×1,4, captures adverses ÷2 | Le téléphérique (7) — Téléphérique : montagne devient route | `mobilite` : Elle tarde à quitter une position : ses roues et chenilles ont −1 de mouvement. |
 | 4 | **Lotte Vermeer** (Pays-Bas) | ingenieur | Polder (3) — Trois cases de mer, plaine | La digue cède (6) — Quatre cases deviennent rivière | `terrain_difficile` : Le pays le plus plat : sur montagne et forêt, ses unités se défendent à 85 %. |
 | 5 | **Samir El Hadi** (Maroc) | veteran | Halte du thé (3) — Plein et charges, tout de suite | Le grand souk (6) — Soin 2, ×1,15 partout, une journée | `terrain_difficile` : La caravane suit la piste : sur montagne et forêt, ses unités ont −1 de mouvement. |
 | 6 | **Awa Diagne** (Sénégal) | fonceuse | Teranga (3) — +1 mouvement, fantassins ×1,15 | Tout le delta (7) — Toute l’infanterie rejoue | `artillerie` : Elle n’a pas la patience du tir de loin : ses pièces de portée frappent à 80 %. |
 | 7 | **Lívia Moura** (Brésil) | showman | Batucada (2) — Chance +10 %, attaque ×1,1, 2 barres | Carnaval (7) — Attaque ×1,4, chance +15 %, garde basse | `partie_longue` : Le moral tombe aussi vite qu’il monte : ses unités se défendent à 90 %. |
-| 8 | **Inés Valdés** (Mexique) | showman | Clé de bras (3) — Adversaires : −2 étoiles | Saut de la troisième corde (6) — −1 PV à tous, −2 étoiles | `aerien` : On ne fait pas de prise à un hélicoptère : ses anti-air et chasseurs frappent à 80 %. |
+| 8 | **Inés Valdés** (Mexique) | showman | Clé de bras (3) — Adversaires : −2 étoiles | Saut de la troisième corde (7) — −1 PV au sol, −2 étoiles à tous *(−1 PV à tous, 6 barres, jusqu'au 10 septembre au soir)* | `aerien` : On ne fait pas de prise à un hélicoptère : ses anti-air et chasseurs frappent à 80 %. |
 | 9 | **Devika Rao** (Inde) | showman | Tournée générale (3) — Achats −25 % ce tour | Le camion peint (7) — Tous les véhicules rejouent | `aerien` : Tout se passe au sol : ses appareils frappent à 85 %. |
 | 10 | **Ren Mizuno** (Japon) | stratege_prudent | Correspondance (3) — Portée +1 des pièces | Dernier train (8) — Les pièces tirent une seconde fois | `infanterie` : Il ne met personne sur la ligne : ses infanteries et mécas frappent à 85 %. |
-| 11 | **Hazel Quinn** (Australie) | gardienne | Longue route (3) — Carburant adverse ×2, vision +1 | Le cœur vide (6) — −1 PV à tous, captures ÷2 | `blindes` : Le bush n’est pas fait pour les chenilles : elles frappent à 85 %. |
+| 11 | **Hazel Quinn** (Australie) | gardienne | Longue route (3) — Carburant adverse ×2, vision +1 | Le cœur vide (5) — −1 PV à ce qui vole ou roule, captures ÷2 *(−1 PV à tous, 6 barres, jusqu'au 10 septembre au soir)* | `blindes` : Le bush n’est pas fait pour les chenilles : elles frappent à 85 %. |
 | 12 | **Ayu Pranata** (Indonésie) | diplomate | De main en main (3) — Capture ×1,5, +1 sur route | Les îles reliées (6) — Pontons entre les îles | `mobilite` : Les îles sont étroites : ses roues et chenilles ont −1 de mouvement. |
 | 13 | **Leandro Paz** (Argentine) | stratege_prudent | Tableau noir (3) — Vision +2, défense ×1,15 | Toute la pampa (6) — Roulant +2, attaque ×1,2 en plaine | `terrain_difficile` : Dès que le relief commence, ses unités se défendent à 85 %. |
 | 14 | **Noémie Leduc** (Canada) | meteorologue | Bulletin de neige (3) — Il neige une journée | Grand Nord (7) — +2 mouvement, neige deux journées | `economie` : Très peu de villes sur ses cartes : ses revenus sont à 85 %. |
@@ -99,7 +99,7 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 | 28 | **Lise Varen** (Gris / Atlas) | stratege_prudent | Angle réservé (3) — Portée +1 des pièces | Passages verrouillés (7) — Rivière posée, pièces ×1,2 | `mobilite` : Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement. |
 | 29 | **Edran Sorel** (Gris / Atlas) | veteran | Colonne de relève (3) — Plein général, transports +1 | Deuxième ligne (7) — Achats −40 %, +1 mouvement | `aerien` : Il n’a pas de flotte aérienne : ses appareils frappent à 85 %. |
 | 30 | **Yuna Serrat** (Gris / Atlas) | diplomate | Mandat provisoire (3) — Capture ×2 | Le réseau bascule (7) — Capture ×3, fantassins +2 | `blindes` : Elle négocie, elle ne perce pas : ses chenilles frappent à 85 %. |
-| 31 | **Basile Kelm** (Gris / Atlas) | gardienne | Veille du bastion (3) — Bâtiments ×1,3, vision +1 | Les relais tiennent (7) — Vision adverse −2, bâtiments ×1,3 | `mobilite` : Une ligne fixe : toutes ses unités ont −1 de mouvement. |
+| 31 | **Basile Kelm** (Gris / Atlas) | gardienne | Veille du bastion (3) — Bâtiments ×1,3, vision +1 | Réserves fermées (8) — −1 PV à tous, vision adverse −2 *(« Les relais tiennent », 7 barres, jusqu'au 10 septembre au soir)* | `mobilite` : Une ligne fixe : ses roues et chenilles ont −1 de mouvement *(toutes ses unités jusqu'au 10 septembre au soir)*. |
 | 32 | **Relais Zéro** (Gris / Atlas) | stratege_prudent | Signal brouillé (3) — Vision adverse −2, drones +2 | Réseau sans écho (7) — Brouillard deux journées, drones +2 | `infanterie` : Personne au sol : ses troupes à pied frappent à 80 %. |
 | 33 | **Solveig Tamm** (Gris / Atlas) | gardienne | Escorte rapprochée (3) — Transports ×1,4, tous ×1,15 | Personne ne reste (6) — Tous +2 mouvement, défense ×1,2 | `artillerie` : Elle escorte, elle ne bombarde pas : ses pièces de portée frappent à 85 %. |
 | 34 | **Wren Osoko** (Gris / Atlas) | stratege_prudent | Relevés ouverts (3) — Vision +2, chance +5 % | Carte complète (6) — Chance +15 %, vision +3 | `economie` : L’homologation ne rapporte rien : ses revenus sont à 90 %. |
@@ -110,7 +110,7 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 
 | Commandant | Pouvoir | Super | Le super est… |
 |---|---|---|---|
-| Ariane Belloc | `soin` | `soin` | même famille |
+| Ariane Belloc | `mouvement` | `soin` | autre chose |
 | Tomas Reiner | `fonds` | `ravitailler` | autre chose |
 | Elsbeth Vonlanthen | `defense` | `terrain` | autre chose |
 | Lotte Vermeer | `terrain` | `terrain` | même famille |
@@ -140,18 +140,18 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 | Lise Varen | `portee` | `terrain` | autre chose |
 | Edran Sorel | `ravitailler` | `prix` | autre chose |
 | Yuna Serrat | `capture` | `capture` | même famille |
-| Basile Kelm | `defense` | `vision` | autre chose |
+| Basile Kelm | `defense` | `degats_directs` | autre chose |
 | Relais Zéro | `vision` | `meteo` | autre chose |
 | Solveig Tamm | `defense` | `mouvement` | autre chose |
 | Wren Osoko | `vision` | `chance` | autre chose |
 
-**30 supers sur 34 sont autre chose qu'un pouvoir plus gros** (règle : au moins six). Les quatre qui restent dans leur famille : Ariane (Andy : un tutoriel commence simple), Lotte (polder puis digue : gagner une case, puis couper un axe — même table, gestes opposés), Saran (galop puis les trois jeux : la steppe n'a qu'une idée, et son super coûte 50 % de carburant en plus), Yuna (adversaire : une seule phrase à apprendre).
+**31 supers sur 34 sont autre chose qu'un pouvoir plus gros** (règle : au moins six ; 30 jusqu'au 10 septembre au soir, Ariane ayant quitté la liste). Les trois qui restent dans leur famille : Lotte (polder puis digue : gagner une case, puis couper un axe — même table, gestes opposés), Saran (galop puis les trois jeux : la steppe n'a qu'une idée, et son super coûte 50 % de carburant en plus), Yuna (adversaire : une seule phrase à apprendre).
 
 **Emploi de chaque famille** (pouvoir ou super, passifs et faiblesses exclus) — règle : chaque famille nouvelle entre 2 et 6 commandants.
 
 | Famille | Statut | Commandants | Qui |
 |---|---|---|---|
-| `mouvement` | existante | 18 | Tomas, Elsbeth, Awa, Ayu, Leandro, Noémie, Jone, Nikos, Kito, Tiana, Saran, Mira, Luz, Hadran, Maël, Edran, Yuna, Solveig |
+| `mouvement` | existante | 19 | Ariane, Tomas, Elsbeth, Awa, Ayu, Leandro, Noémie, Jone, Nikos, Kito, Tiana, Saran, Mira, Luz, Hadran, Maël, Edran, Yuna, Solveig |
 | `defense` | existante | 14 | Elsbeth, Lotte, Samir, Lívia, Leandro, Nikos, Elín, Amalie, Mira, Tess, Luz, Basile, Relais, Solveig |
 | `attaque` | existante | 9 | Ariane, Samir, Awa, Lívia, Inés, Leandro, Saran, Hadran, Lise |
 | `vision` | existante | 8 | Hazel, Leandro, Tiana, Amalie, Tess, Basile, Relais, Wren |
@@ -163,13 +163,13 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 | `meteo` | nouvelle | 5 | Noémie, Jone, Elín, Tiana, Relais |
 | `reactiver` | nouvelle | 4 | Awa, Devika, Ren, Maël |
 | `chance` | nouvelle | 3 | Lívia, Jone, Wren |
-| `degats_directs` | nouvelle | 3 | Inés, Hazel, Hadran |
+| `degats_directs` | nouvelle | 4 | Inés, Hazel, Hadran, Basile |
 | `prix` | nouvelle | 3 | Devika, Sélène, Edran |
 | `fonds` | existante | 2 | Tomas, Sélène |
 | `portee` | existante | 2 | Ren, Lise |
 | `carburant` | existante | 2 | Hazel, Saran |
 
-**Les huit adversaires au premier tour.** Ost : ses chenilles avancent en bloc et l'écran perd un PV partout (contre : le ciel, ses anti-air sont à 80 %). Sélène : elle achète et encaisse, jamais elle ne frappe (contre : lui prendre des bâtiments). Maël : ses appareils font le plein en vol puis rejouent (contre : un anti-air par objectif, ses fantassins sont à 85 %). Lise : portée +1, puis une rivière posée qui ferme un passage (contre : le flanc, ses pièces ont −1 de mouvement). Edran : plein général puis une deuxième ligne à −40 % (contre : isoler ses dépôts, il n'a pas de flotte aérienne). Yuna : capture ×2 puis ×3 (contre : ses capteurs un par un, ses chenilles sont à 85 %). Basile : bâtiments ×1,3 puis vision adverse −2 (contre : deux objectifs, toutes ses unités ont −1 de mouvement). Relais Zéro : vision adverse −2 puis brouillard de deux journées (contre : mettre ses drones hors jeu, personne au sol). Chaque `contreJeu` du JSON dit la même chose en une phrase.
+**Les huit adversaires au premier tour.** Ost : ses chenilles avancent en bloc et l'écran perd un PV partout (contre : le ciel, ses anti-air sont à 80 %). Sélène : elle achète et encaisse, jamais elle ne frappe (contre : lui prendre des bâtiments). Maël : ses appareils font le plein en vol puis rejouent (contre : un anti-air par objectif, ses fantassins sont à 85 %). Lise : portée +1, puis une rivière posée qui ferme un passage (contre : le flanc, ses pièces ont −1 de mouvement). Edran : plein général puis une deuxième ligne à −40 % (contre : isoler ses dépôts, il n'a pas de flotte aérienne). Yuna : capture ×2 puis ×3 (contre : ses capteurs un par un, ses chenilles sont à 85 %). Basile : bâtiments ×1,3 puis les réserves fermées — un PV à toute l'armée et vision adverse −2 (contre : deux objectifs, et ne pas s'attarder devant ses portes quand sa jauge est pleine ; ses roues et chenilles ont −1 de mouvement). Relais Zéro : vision adverse −2 puis brouillard de deux journées (contre : mettre ses drones hors jeu, personne au sol). Chaque `contreJeu` du JSON dit la même chose en une phrase.
 
 ## 6. Ce qui reste à trancher
 
@@ -177,8 +177,8 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 
 1. **`doc/04` §7.2 dit « Un pouvoir ne fait pas la météo »**, et la bible §6 donne à la météorologue la famille « climat ». La famille `meteo` en cours de câblage tranche pour la bible ; le paragraphe de `doc/04` doit être amendé, et le brief avec lui (arbitrage n° 4 : « une seule famille d'effet nouvelle » n'est plus vrai, il y en a huit).
 2. **Les coûts en barres sont une intuition, pas une mesure.** Reactiver à 7–8, degats_directs 1 à 6–7, Carnaval à 7, Tutelle du réseau à 7 : à passer au banc de `scripts/simuler.ts` dès que le moteur joue les pouvoirs — l'IA ne les déclenche pas encore, et un kit qu'elle ne sait pas jouer n'est pas mesurable.
-3. **Les quatre supers « même famille »** (§5) — les garder tels quels, ou exiger 34 sur 34.
-4. **Ariane = Andy.** Assumé pour le tutoriel ; à confirmer.
+3. **Les quatre supers « même famille »** (§5) — les garder tels quels, ou exiger 34 sur 34. *Trois depuis le 10 septembre au soir : Ariane en est sortie ; les trois autres restent, avec leur raison.*
+4. **Ariane = Andy.** Assumé pour le tutoriel ; à confirmer. *Tranché le 10 septembre au soir : non — « plus français ». Voir la section du même nom.*
 
 **Par l'ingénieur moteur**, parce que le JSON suppose une réponse.
 
@@ -234,4 +234,37 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 - **Ren** : le modificateur `portee` n'est lu **nulle part** par le moteur (`peutViser` lit `ta.portee`), donc « Correspondance » ne fait rien ; et « Dernier train » ne réactive que les pièces de portée, que l'IA n'achète presque jamais malgré `KIT_ACHAT`. Inés, qui retire 1 PV à tout le monde, l'écrase ; à corriger au moteur, pas dans l'IA.
 - **Jone** contre Hazel : chance, coques et tempête sur une carte sans mer ; la tempête est même comptée négative pour lui quand ses hélicoptères sont les seuls à voler. Hazel, elle, retire 1 PV à tous et divise les captures par deux.
 
-**Ce qui n'est pas fait.** `degats_directs` à 1 PV sur toute l'armée (Inés, Hazel, Ost) vaut 2 400 à 4 300 fonds par déclenchement en milieu de partie, plus que tout autre super à barres égales : c'est le prochain kit à mesurer contre le témoin. La table du §4 garde ses coûts d'intuition pour les 33 autres. Et les deux paires « même famille » entre kits sans soin (Tomas–Noémie 80/20, Awa–Devika 70/30 dans un ordre) sont dans le bruit de vingt parties : à remesurer à cinquante avant d'y toucher.
+**Ce qui n'est pas fait.** *(Fait le soir même : section suivante.)* `degats_directs` à 1 PV sur toute l'armée (Inés, Hazel, Ost) vaut 2 400 à 4 300 fonds par déclenchement en milieu de partie, plus que tout autre super à barres égales : c'est le prochain kit à mesurer contre le témoin. La table du §4 garde ses coûts d'intuition pour les 33 autres. Et les deux paires « même famille » entre kits sans soin (Tomas–Noémie 80/20, Awa–Devika 70/30 dans un ordre) sont dans le bruit de vingt parties : à remesurer à cinquante avant d'y toucher.
+
+### Ariane à la française et les supers de vilains — 10 septembre 2026
+
+*Trois décisions du propriétaire, le soir même : Ariane « plus française » (« son kit, c'est celui d'Andy ») ; « −n PV à toute l'armée » réservé aux Gris, « pour faire des super vilains » ; et un second vilain à mesurer. Même protocole que les « Mesures IA » ci-dessus (plaine, 20 parties, graine 1, catalogue 6, pondérée contre pondérée, deux ordres). Le contenu, `pouvoirs-v4.json` et les huit chaînes de chaque kit touché sont alignés ; `roster-heros.md` régénéré.*
+
+**Ariane : la course par étapes.** Une seule idée, la Grande Boucle vue depuis la voiture d'assistance : le pouvoir fait rouler tout le monde, le super répare tout le monde. **« L'échappée » (3 barres, ce tour)** : toutes les unités **au sol** (pied, bottes, roues, chenilles — ni appareils ni coques) gagnent +1 de mouvement ; c'est le seul pouvoir normal dont l'unique effet est que toute l'armée avance d'une case. **« L'atelier roulant » (7 barres)** : les effets de « Grand entretien » inchangés — soin 3, plein et charges, attaque ×1,15 —, sous le nom qui était son style. Couple (`mouvement`, `soin`), qu'aucun autre kit ne porte ; passif et faiblesse (`economie`, revenus à 90 %) inchangés. Pourquoi le peloton et pas le bocage, les marées ou les cols : chacune de ces images tombait sur une famille déjà tenue par le kit dont elle est l'identité (Lotte et Nikos pour la marée, Elsbeth et Mira pour les cols, Amalie et Tiana pour le couvert), quand le sport est le registre de la bible §7.2 que personne n'avait pris pour la France, et qu'un +1 de mouvement se lit sur la carte au cinquième exercice — deux infanteries, deux artilleries, un char léger, un QG à prendre — comme une case de plus dans la nappe verte.
+
+**Ce que les deux personas ont objecté au brouillon (« Le peloton », réplique « personne ne reste derrière »), et ce qui a changé.**
+
+- *Le joueur d'Advance Wars* : (1) « Vous avez une deuxième Solveig » — « personne ne reste derrière » décalque « Personne ne reste ». **Suivi** : la réplique devient « L'échappée part maintenant. Prenez la roue : tout le monde y est. » (2) Le mouvement le moins cher de la table, sans filtre ni coût — resserrer à roues et chenilles. **Non suivi** : Teranga (Awa) donne +1 à *toutes* ses unités, appareils compris, *plus* ×1,15 aux fantassins, pour les mêmes 3 barres ; et « ce qui roule » seul serait un Galop sans carburant. La mesure tranche (ci-dessous). (3) « Vous jetez la mesure du §6 sans le dire. » **Suivi** : tout remesuré. (4) Le tutoriel apprend deux choses au lieu d'une. **Non suivi** : c'est la décision du propriétaire, et aucun texte des dix tutoriels ne nomme le kit. (5) « Peloton » se lit d'abord *peloton d'exécution* sur une étiquette sans vélo autour. **Suivi** : « L'échappée », qui n'a qu'un sens. (6) L'exercice 5 devient une course. **Noté** : `verifier:campagne` reste le juge, et le +1 y sert d'abord à placer l'artillerie, ce que l'exercice enseigne.
+- *L'ado* : (1) même objection sur « peloton », il propose « La voiture balai » — **suivi sur le fond, pas sur le nom** : la voiture-balai ramasse ceux qui abandonnent. (2) « Encore un +1 de mouvement comme Awa » — l'accrocher à la route. **Non suivi** : +2 sur route et pont est « Route neuve » (Luz) mot pour mot. (3) « Ça se voit pas. » **Non fait, et c'est vrai** : la nappe verte s'élargit d'un anneau, rien d'autre ne bouge ; un geste de partition « les figurines se resserrent » appartient à la peau 3D (§6.18). (4) Garder 4 barres. **Non suivi** : les 4 barres du §6 corrigeaient un *soin* à toute l'armée, pas une facilité de déclenchement, et à 3 barres la jauge se remplit dès le cinquième exercice. (5) Une seule idée pour le premier commandant. **Non suivi**, même raison que ci-dessus. (6) « Le super est nickel et fait vraiment Tour de France ; le pouvoir n'est France que par le nom. » **Suivi à moitié** : le nom et la phrase disent le vélo ; la mécanique reste un mouvement, parce que c'est ce qu'un peloton fait.
+
+**Les supers de vilains.** Trois kits retiraient 1 PV à toute l'armée adverse : Inés (alliée possible), Hazel (alliée possible), Ost (Gris). Décision : la version « à toute l'armée » est une **signature des Gris** — règle ajoutée aux `regles` des deux JSON —, et les deux alliées **filtrent** selon leur fiche : la lutte d'Inés cloue **ce qui est au sol** (pied, bottes, roues, chenilles — « on ne fait pas de prise à un hélicoptère », sa faiblesse le disait déjà), la distance d'Hazel vide **ce qui vole ou roule** (air, roues, chenilles : ce qui a un moteur et brûle du carburant ; un fantassin marche). Ni l'une ni l'autre n'était « déjà sous 60 % » dans les quatre cases — Hazel l'était dans trois, pas contre Tomas en second. **Basile Kelm** est le second vilain : le gardien des réserves qui « finit par exclure les équipes qui en ont besoin » (`opus1-adversaires.md`) porte **« Réserves fermées » (8 barres)** — toutes les unités adverses perdent 1 PV, et pendant une journée elles voient 2 cases de moins ; réplique : « Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s'éteignent avec. » Il perd le ×1,3 sur bâtiments de son ancien super (il le garde au pouvoir). Relais Zéro gardait son brouillard, qui est le moment « le ciel change » ; Sélène ne frappe jamais, et c'est exprès (§3). Ost garde « Le bloc avance ».
+
+**La mesure a trouvé autre chose que ce qu'on cherchait.** Basile perdait **0 partie sur 80** avant comme après son super de vilain (6 parties relues : il le déclenche trois à quatre fois par match dès la journée 7 ; ce n'est pas l'IA). C'est sa **faiblesse** qui le tuait : seul kit de la table dont le −1 de mouvement touchait aussi l'infanterie, il ne capturait plus rien. Elle passe à **roues et chenilles**, comme les quatre autres `mobilite` (Elsbeth, Ayu, Tess, Lise), et il revient dans le jeu. Hazel filtrée à « air et roues » seulement tombait à 5–20 % : sur une plaine, l'IA joue infanterie, mécas et chenilles ; d'où les chenilles dans son filtre, et **5 barres** au lieu de 6. Inés filtrée ne bougeait pas d'un point (il n'y a presque rien qui vole sur une plaine) : elle passe à **7 barres**, ce qui ramène son 85/15 contre Tomas à 60/40.
+
+| Paire (a–b · b–a) | Avant (matin, kits du §6) | Après |
+|---|---|---|
+| Ariane–Tomas | 65/35 · 35/65 | **70/30 · 35/65** |
+| Ariane–Awa | 55/45 · 70/30 | 60/40 · 45/55 |
+| Inés–Ariane | 60/40 · 25/75 | **60/40 · 25/75** (filtre sol, 7 barres) |
+| Inés–Tomas | 85/15 · 40/60 | **60/40 · 35/65** |
+| Hazel–Ariane | 35/65 · 85/15 | **30/70 · 70/30** (filtre air/roues/chenilles, 5 barres) |
+| Hazel–Tomas | 55/45 · 40/60 | **60/40 · 60/40** |
+| Ost–Ariane | 70/30 · 60/40 | 60/40 · 50/50 (Ost inchangé ; c'est Ariane qui a changé) |
+| Ost–Tomas | 85/15 · 15/85 | 85/15 · 15/85 (inchangé, hors sujet ce soir) |
+| Basile–Ariane | 0/100 · 100/0 | **40/60 · 70/30** (Réserves fermées 8 barres, faiblesse roues/chenilles) |
+| Basile–Tomas | 0/100 · 100/0 | **55/45 · 35/65** |
+
+**Les variantes écartées, pour qu'on ne les refasse pas** : Basile super −1 PV à 7 barres avec l'ancienne faiblesse, 0/100 · 100/0 et 10/90 · 80/20 ; −2 PV avec l'ancienne faiblesse, 5/95 · 80/20 ; −2 PV *et* la faiblesse corrigée, 70/30 · 20/80 contre Ariane et **90/10 · 20/80** contre Tomas — trop ; −1 PV, faiblesse corrigée, 7 barres, 45/55 · 50/50 et 70/30 · 45/55 — le 70 exact a fait prendre la huitième barre. Hazel air/roues à 6 barres, 20/80 · 95/5 et 15/85 · 85/15 ; −2 PV sur air/roues, pareil ; air/roues/chenilles à 6 barres, 20/80 · 75/25 et 30/70 · 55/45. Ariane–Tomas avec « Le peloton » à 3 barres est la case retenue : le kit vaut ce que valait le soin 1 à 4 barres.
+
+**Non fait.** Ost–Tomas reste à 85/15 dans un ordre — il l'était ce matin, ce n'est pas ce lot. Le geste d'écran pour un mouvement (§6.18). Le style `veteran`/`prodige` d'Ariane (§6.12) n'a pas bougé. Aucun texte de tutoriel ne cite le kit, rien n'y a été touché.
+

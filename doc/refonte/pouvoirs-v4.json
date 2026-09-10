@@ -9,15 +9,16 @@
     "Un multiplicateur de capture inférieur à 1 ne vise que unites_adverses ; degats_directs ne vise que unites_adverses et ne descend jamais une unité sous 1 PV.",
     "Chaque commandant a une faiblesse chiffrée et permanente sur un axe déclaré (Commander.faiblesse), et deux répliques, une par pouvoir.",
     "Le champ « familles » [pouvoir, super] et « archetype » sont des annotations de conception pour la table de variété ; l’agent de transcription peut les laisser tomber.",
-    "Les pouvoirs visent le camp du commandant, pas automatiquement les camps alliés. Les révisions 1 à 3 restent inchangées pour les anciens scénarios."
+    "Les pouvoirs visent le camp du commandant, pas automatiquement les camps alliés. Les révisions 1 à 3 restent inchangées pour les anciens scénarios.",
+    "Depuis le 10 septembre 2026 au soir, retirer des PV à toute l’armée adverse (degats_directs sans filtre) est une signature des Gris ; un commandant national filtre ses dégâts directs par type de mouvement ou par famille d’unités."
   ],
   "commandants": [
     {
       "cle": "cmd_ariane_belloc",
       "nom": "Ariane Belloc",
-      "style": "L’atelier roulant",
-      "description": "Ancienne responsable de maintenance : elle remet ses équipes en état au milieu du match, puis repart avec tout le monde.",
-      "contreJeu": "Mettre hors jeu d’un coup plutôt que grignoter : ce qu’elle répare, c’est ce qui est encore debout.",
+      "style": "La course par étapes",
+      "description": "Ancienne responsable de maintenance : son échappée emmène tout le monde une case plus loin, puis l’atelier remet ses équipes en état et repart.",
+      "contreJeu": "Tenir la distance et frapper ce qui s’est détaché de l’échappée : ce qu’elle répare, c’est ce qui est encore debout.",
       "passif": {
         "cible": "mes_unites",
         "modificateur": {
@@ -27,22 +28,30 @@
       },
       "descriptionPassif": "Attaque ×1,05 pour vos unités.",
       "pouvoir": {
-        "nom": "Révision express",
-        "barres": 4,
+        "nom": "L’échappée",
+        "barres": 3,
         "duree": "ce_tour",
-        "description": "Toutes vos unités récupèrent 1 PV, tout de suite.",
+        "description": "Ce tour, toutes vos unités au sol gagnent +1 de mouvement : l’échappée part, et tout le monde y est.",
         "effets": [
           {
             "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes",
+                "roues",
+                "chenilles"
+              ]
+            },
             "modificateur": {
-              "quoi": "soin",
+              "quoi": "mouvement",
               "valeur": 1
             }
           }
         ]
       },
       "superPouvoir": {
-        "nom": "Grand entretien",
+        "nom": "L’atelier roulant",
         "barres": 7,
         "duree": "ce_tour",
         "description": "Toutes vos unités récupèrent 3 PV, repartent le plein fait et les charges au complet, et frappent ×1,15 ce tour.",
@@ -83,12 +92,12 @@
         "description": "L’atelier coûte : ses revenus sont à 90 %."
       },
       "replique": {
-        "pouvoir": "Deux tours de clé et on repart. Personne ne reste au dépôt.",
+        "pouvoir": "L’échappée part maintenant. Prenez la roue : tout le monde y est.",
         "super": "Tout l’atelier sur le terrain : le plein, les charges, des plastrons neufs. Maintenant, on joue."
       },
       "archetype": "veteran",
       "familles": [
-        "soin",
+        "mouvement",
         "soin"
       ]
     },
@@ -671,7 +680,7 @@
       "cle": "cmd_ines_valdes",
       "nom": "Inés Valdés",
       "style": "La prise",
-      "description": "Cloue l’adversaire au sol comme sur un ring : plus de couvert, plus d’étoiles, puis un saut de la troisième corde.",
+      "description": "Cloue l’adversaire au sol comme sur un ring : plus de couvert, plus d’étoiles, puis un saut de la troisième corde sur tout ce qui est au sol.",
       "contreJeu": "Ne pas compter sur le terrain contre elle : compter sur le nombre, et sur des appareils qu’aucune prise n’atteint.",
       "passif": {
         "cible": "mes_unites",
@@ -704,12 +713,20 @@
       },
       "superPouvoir": {
         "nom": "Saut de la troisième corde",
-        "barres": 6,
+        "barres": 7,
         "duree": "ce_tour",
-        "description": "Toutes les unités adverses perdent 1 PV et 2 étoiles de terrain, et vos unités frappent ×1,2 ce tour.",
+        "description": "Toutes les unités adverses au sol perdent 1 PV, toutes perdent 2 étoiles de terrain, et vos unités frappent ×1,2 ce tour.",
         "effets": [
           {
             "cible": "unites_adverses",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes",
+                "roues",
+                "chenilles"
+              ]
+            },
             "modificateur": {
               "quoi": "degats_directs",
               "valeur": 1
@@ -941,7 +958,7 @@
       "cle": "cmd_hazel_quinn",
       "nom": "Hazel Quinn",
       "style": "La distance protège",
-      "description": "Fait payer chaque case à l’adversaire : son carburant file, puis le cœur vide de la carte lui coûte un point de vie.",
+      "description": "Fait payer chaque case à l’adversaire : son carburant file, puis le cœur vide de la carte coûte un point de vie à tout ce qui vole ou roule loin.",
       "contreJeu": "Ne pas traverser : longer la côte de ville en ville, faire le plein souvent, et ne jamais laisser une unité à sec au milieu.",
       "passif": {
         "cible": "mes_unites",
@@ -985,12 +1002,19 @@
       },
       "superPouvoir": {
         "nom": "Le cœur vide",
-        "barres": 6,
+        "barres": 5,
         "duree": "tour_complet",
-        "description": "Toutes les unités adverses perdent 1 PV, et leurs captures avancent deux fois moins vite jusqu’à votre prochain tour.",
+        "description": "Tout ce qui vole ou roule chez l’adversaire — appareils, roues, chenilles — perd 1 PV, et les captures adverses avancent deux fois moins vite jusqu’à votre prochain tour.",
         "effets": [
           {
             "cible": "unites_adverses",
+            "filtre": {
+              "mouvement": [
+                "air",
+                "roues",
+                "chenilles"
+              ]
+            },
             "modificateur": {
               "quoi": "degats_directs",
               "valeur": 1
@@ -2980,8 +3004,8 @@
       "cle": "cmd_basile_kelm",
       "nom": "Basile Kelm",
       "style": "Le bastion",
-      "description": "Ancre sa ligne sur les dépôts et les stations, puis brouille tout ce qui approche.",
-      "contreJeu": "Sa ligne ne couvre qu’un objectif à la fois : en menacer deux, et passer là où il n’est pas.",
+      "description": "Ancre sa ligne sur les dépôts et les stations, puis ferme les réserves : tout ce qui est dehors perd un point de vie et n’y voit plus.",
+      "contreJeu": "Sa ligne ne couvre qu’un objectif à la fois : en menacer deux, passer là où il n’est pas, et ne pas s’attarder devant ses portes quand sa jauge est pleine.",
       "passif": {
         "cible": "mes_unites",
         "filtre": {
@@ -3030,36 +3054,26 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Les relais tiennent",
-        "barres": 7,
+        "nom": "Réserves fermées",
+        "barres": 8,
         "duree": {
           "type": "journees",
           "n": 1
         },
-        "description": "Pendant une journée, les unités adverses voient 2 cases de moins, et vos unités sur un bâtiment se défendent ×1,3.",
+        "description": "Toutes les unités adverses perdent 1 PV, et pendant une journée elles voient 2 cases de moins : les réserves sont fermées, ce qui est dehors y reste.",
         "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "degats_directs",
+              "valeur": 1
+            }
+          },
           {
             "cible": "unites_adverses",
             "modificateur": {
               "quoi": "vision",
               "valeur": -2
-            }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "surTerrain": [
-                "ville",
-                "usine",
-                "aeroport",
-                "qg",
-                "radar",
-                "port"
-              ]
-            },
-            "modificateur": {
-              "quoi": "defense",
-              "valeur": 1.3
             }
           }
         ]
@@ -3069,21 +3083,27 @@
         "axe": "mobilite",
         "effet": {
           "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
           "modificateur": {
             "quoi": "mouvement",
             "valeur": -1
           }
         },
-        "description": "Une ligne fixe : toutes ses unités ont −1 de mouvement."
+        "description": "Une ligne fixe : ses roues et chenilles ont −1 de mouvement."
       },
       "replique": {
         "pouvoir": "Le bastion veille. Rien ne s’interrompt, rien ne passe.",
-        "super": "Les relais tiennent, et vos écrans sont vides. Continuez, si vous voulez."
+        "super": "Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s’éteignent avec."
       },
       "archetype": "gardienne",
       "familles": [
         "defense",
-        "vision"
+        "degats_directs"
       ]
     },
     {

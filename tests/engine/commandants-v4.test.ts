@@ -95,8 +95,13 @@ test('chargerCommandantJeu(cle, 4) rend passif, pouvoir, super et faiblesse sous
   assert.equal(ariane.superPouvoir.nom, 'commandant.cmd_ariane_belloc.super_v4');
   assert.deepEqual(ariane.passif, { cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.05 } });
   assert.deepEqual(ariane.faiblesse, { cible: 'economie', modificateur: { quoi: 'fonds', valeur: 0.9 } });
-  // Soin 1 depuis l'équilibrage du 10 septembre 2026 au soir (`pouvoirs-v4.md` §6, « Mesures IA »).
-  assert.deepEqual(ariane.pouvoir.effets, [{ cible: 'mes_unites', modificateur: { quoi: 'soin', valeur: 1 } }]);
+  // « Le peloton » depuis la refonte du 10 septembre 2026 au soir (`pouvoirs-v4.md`,
+  // « Ariane à la française ») : +1 de mouvement au sol, et le soin ne reste qu'au super.
+  assert.deepEqual(ariane.pouvoir.effets, [{
+    cible: 'mes_unites', filtre: { mouvement: ['pied', 'bottes', 'roues', 'chenilles'] }, modificateur: { quoi: 'mouvement', valeur: 1 },
+  }]);
+  const premierDuSuper = ariane.superPouvoir.effets[0];
+  assert.ok(premierDuSuper && 'modificateur' in premierDuSuper && premierDuSuper.modificateur.quoi === 'soin', 'le soin reste au super');
   const v3 = chargerCommandantJeu('cmd_ariane_belloc', 3);
   assert.equal(v3.pouvoir.nom, 'commandant.cmd_ariane_belloc.pouvoir_v3');
   assert.equal(v3.faiblesse, undefined);
