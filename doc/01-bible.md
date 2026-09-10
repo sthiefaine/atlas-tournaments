@@ -328,6 +328,8 @@ Conflit stratégique sérieux joué sous forme de tournois : fronts, sièges, co
 
 ### 5.3 **[Proposition]** La doctrine du marquage
 
+*Décision du propriétaire, 10 septembre 2026 (après-midi) : un appareil abattu par une IEM de la faction (`abattre`, `doc/04` §7.2) est perdu **avec son équipage** — « c'est pas grave si l'équipage meurt aussi, c'est fictif ». C'est la seule mort sur un terrain, et elle est le fait d'une pièce non homologuée ; le règlement d'Atlas continue de dire hors jeu pour tout le reste.*
+
 *Depuis le 10 septembre 2026, cette doctrine est une règle du **monde** — ce qui arrive à une unité touchée —, plus une règle de **mots** : un commandant peut dire « on va les détruire » dans un dialogue, et l'arbitre déclare l'unité hors jeu.*
 
 Pour que « personne ne meurt » soit une règle du monde et pas une pudeur d'écriture : tout matériel homologué embarque des **charges de marquage**. Une unité touchée est *marquée* ; au-delà d'un seuil, les juges de terrain la déclarent **hors jeu** et l'escortent au dépôt, où l'équipage retire son plastron et va boire quelque chose. Une unité hors jeu revient au match suivant. C'est pourquoi l'article 2 du Pacte existe, pourquoi le contrôle du matériel est un enjeu, et pourquoi du **matériel non homologué** est le scandale absolu de ce monde — et une arme narrative pour la Cinquième Manche. **Amendement du 9 septembre 2026** : les quatre disparitions de `BRIEF.md` ne touchent pas cette doctrine, qui reste intacte — aucune d'elles n'a lieu sur un terrain ni par du matériel de tournoi ; sur le terrain, on marque, on met hors jeu, et l'équipage va boire quelque chose.

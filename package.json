@@ -20,6 +20,7 @@
     "verifier:campagne": "tsx scripts/verifier-campagne.ts",
     "fil:opus1": "node scripts/fil-opus1.mjs --json",
     "roster:heros": "node scripts/roster-heros.mjs",
+    "lore:html": "node scripts/lore-html.mjs doc/refonte/atlas-lore.html",
     "postinstall": "node scripts/rustine-three.mjs",
     "commander": "tsx scripts/commander-assets.ts",
     "produire:manifest": "tsx scripts/production/manifeste.ts",

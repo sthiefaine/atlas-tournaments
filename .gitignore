@@ -47,3 +47,4 @@ assets/livraisons/**/*.png
 assets/receptions/*/*/
 assets/receptions/*/precedente.json
 assets/receptions/*/*.tmp
+doc/refonte/atlas-lore.html
