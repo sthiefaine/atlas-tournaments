@@ -32,6 +32,7 @@ import type {
   CampId, Case, CleUnite, Dialogue, MapDef, Meteo, PhaseJour, Saison, Sauvegarde,
   Scenario,
 } from '../schemas/types';
+import { estEffetFaction } from '../schemas/types';
 import { ambiance as construireAmbiance, ambianceDe, type Ambiance } from './ambiance';
 import { Controleur, type VueControleur } from './controleur';
 import { monterDialogue, type ApiDialogue, type DialogueHtml } from './dialogue-html';
@@ -45,7 +46,7 @@ import { facteurDuree } from './cadence';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
 import { monterHudHtml, type ApiHud, type HudHtml, type VueJeu } from './hud-html';
 import {
-  type CleRendu, type MesuresRendu, type Rendu, type VueInteraction,
+  type CleRendu, type MarqueUnite, type MesuresRendu, type Rendu, type VueInteraction,
 } from './rendu';
 
 /**
@@ -394,6 +395,12 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
    * celui de la page hôte, prévenue par `surDialogue`.
    */
   let finEnAttente = false;
+  /**
+   * Le protêt de Nera Aldouin (`doc/refonte/supers-vilains.md` §4.1) : au
+   * **premier** super de la faction d'une partie, l'annonce le consigne —
+   * matériel sans dossier, pièce observée. Une fois par partie, comme au carnet.
+   */
+  let protetFait = false;
 
   const controleur = new Controleur({
     etat,
@@ -617,6 +624,35 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
           poserAnnonce(t('hud.reactivation_adverse'));
         }
       }
+      // Les familles de la faction : un compte de ce que le joueur **voit**
+      // touché — sous brouillard, une unité adverse hors de vue ne se compte
+      // pas —, et au premier déclenchement de la partie, le protêt de Nera.
+      if (e.type === 'frappe_zone' || e.type === 'rayon_laser' || e.type === 'iem_pouvoir') {
+        const vueDe = (id: string): boolean => {
+          const u = uniteParId(avant, id);
+          return u !== undefined && seVoit(u);
+        };
+        let texte: string;
+        if (e.type === 'iem_pouvoir') {
+          const arretees = e.immobilisees.filter(vueDe).length;
+          const abattues = e.abattues.filter(vueDe).length;
+          const parts: string[] = [];
+          if (arretees > 0) parts.push(t(arretees === 1 ? 'hud.iem_pouvoir_une' : 'hud.iem_pouvoir', { n: arretees }));
+          if (abattues > 0) parts.push(t(abattues === 1 ? 'hud.iem_pouvoir_abattue' : 'hud.iem_pouvoir_abattues', { n: abattues }));
+          texte = parts.length > 0 ? parts.join(' · ') : t('hud.iem_pouvoir_rien');
+        } else {
+          const n = e.touchees.filter((x) => vueDe(x.uniteId)).length;
+          const base = e.type === 'frappe_zone' ? 'hud.frappe_zone' : 'hud.rayon_laser';
+          texte = n === 0 ? t(`${base}_rien`) : t(n === 1 ? `${base}_une` : base, { n });
+        }
+        if (!protetFait) {
+          protetFait = true;
+          const cle = etat.camps.find((c) => c.id === e.camp)?.commandantCle ?? null;
+          const piece = cle ? resoudre(locale, `commandant.${cle}.piece_super`) : null;
+          texte = `${texte} · ${t('hud.protet', { piece: piece ?? (nomCommandant(locale, cle) || t('hud.commandant')) })}`;
+        }
+        poserAnnonce(texte);
+      }
       if (e.type === 'production_revelee' && e.camp === 0) {
         const liste = Object.entries(e.produites)
           .map(([cle, n]) => `${n} ${nomCourtUnite(locale, cat, cle)}`)
@@ -780,6 +816,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       unitesVues: unitesVuesIds(),
       attenteIa,
       etiquetteQg: t('hud.qg'),
+      marques: telegraphie().marques,
     };
   }
 
@@ -808,6 +845,53 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     };
   }
 
+  /**
+   * Le **télégraphage** d'un super de la faction (`doc/refonte/supers-vilains.md`,
+   * champ `telegraphie`) : un camp adverse dont la jauge atteint le prix de son
+   * super, et dont le super porte une frappe, un rayon ou une impulsion. Le
+   * bandeau nomme le commandant et sa pièce ; la carte marque ce qu'il
+   * viserait **maintenant** — les cibles d'un rayon, lues au moteur par
+   * `evaluerEffets` (déterministe, comme le tir lui-même), et chaque appareil
+   * du joueur qu'une impulsion à `abattre` pourrait faire tomber. Rien de tout
+   * cela n'est une règle : c'est de la lecture, mémoïsée par état parce que
+   * la vue la demande à chaque survol.
+   */
+  let telegraphage: {
+    etat: EtatPartie; superAdverse: VueJeu['superAdverse']; marques: ReadonlyMap<string, MarqueUnite> | null;
+  } | null = null;
+  function telegraphie(): NonNullable<typeof telegraphage> {
+    if (telegraphage && telegraphage.etat === etat) return telegraphage;
+    let superAdverse: VueJeu['superAdverse'] = null;
+    const marques = new Map<string, MarqueUnite>();
+    for (const caisse of etat.camps) {
+      if (sontAllies(etat, caisse.id, camp)) continue;
+      const commandant = commandants[caisse.id] ?? null;
+      if (!commandant) continue;
+      const sp = commandant.superPouvoir;
+      if (!sp.effets.some(estEffetFaction)) continue;
+      if (caisse.jauge < sp.barres * POINTS_PAR_BARRE) continue;
+      superAdverse ??= {
+        commandantCle: caisse.commandantCle,
+        piece: `commandant.${caisse.commandantCle ?? ''}.piece_super`,
+        pouvoir: sp.nom,
+      };
+      for (const effet of sp.effets) {
+        if ('laser' in effet) {
+          for (const { uniteId } of evaluerEffets(etat, cat, caisse.id, [effet]).touchees ?? []) {
+            marques.set(uniteId, 'designee');
+          }
+        } else if ('iem' in effet && effet.iem.abattre) {
+          for (const u of etat.unites) {
+            if (u.camp !== camp || u.dansTransport || cat.unites[u.type]?.domaine !== 'air') continue;
+            if (!marques.has(u.id)) marques.set(u.id, 'menacee');
+          }
+        }
+      }
+    }
+    telegraphage = { etat, superAdverse, marques: marques.size > 0 ? marques : null };
+    return telegraphage;
+  }
+
   function vueJeu(): VueJeu {
     const v = vueControleur();
     return {
@@ -830,6 +914,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       unitesVues: unitesVuesIds(),
       attenteIa,
       pouvoirs: pouvoirsDuJoueur(),
+      viseePouvoir: v.viseePouvoir,
+      superAdverse: telegraphie().superAdverse,
       annonce,
       masquerFin: options.finPersonnalisee,
       sceneOuverte: dialogueActif(),
@@ -882,6 +968,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     attenteIa = false;
     annonce = null;
     finEnAttente = false;
+    protetFait = false;
     fileRepliques.length = 0;
     scenesJouees.clear();
     libererAttentes();

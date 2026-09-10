@@ -97,9 +97,9 @@ export {
   SURCOUT_CARBURANT_FURTIF, valeurArmee, verifierProduction, verserRevenus,
 } from './regles/economie';
 export {
-  appliquerPouvoir, estInstantane, estModificateurDurable, estPoseTerrain, evaluerEffets, expirationDe,
-  expirerPoses, POINTS_PAR_BARRE, poserModificateur, unitesVisees, verifierPose, verifierPouvoir,
-  type EvaluationEffets,
+  appliquerPouvoir, ciblesLaser, demandeUneCase, estCampFaction, estInstantane, estModificateurDurable, estPoseTerrain,
+  evaluerEffets, expirationDe, expirerPoses, POINTS_PAR_BARRE, poserModificateur, unitesVisees, verifierPose,
+  verifierPouvoir, type EvaluationEffets,
 } from './regles/pouvoirs';
 export {
   additif, multiplicateur, multiplicateurFonds, multiplicateurPrix, viseUnite, type Visee,

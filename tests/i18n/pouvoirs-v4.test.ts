@@ -71,6 +71,16 @@ test('chaque clé que lignesPouvoir, le HUD et les annonces peuvent demander exi
     'hud.prevision_meteo', 'hud.prevision_rien',
     'hud.meteo_forcee', 'hud.meteo_imposee', 'hud.reactivation', 'hud.reactivation_une', 'hud.reactivation_adverse',
     'hud.ravitaillement', 'hud.commandant', 'hud.jauge_pouvoir', 'hud.super_pouvoir',
+    // Les familles de la faction : la ligne du kit, la visée, le télégraphage, l'impact, le protêt.
+    'effet.frappe', 'effet.frappe_case', 'effet.laser_plus_cheres', 'effet.laser_plus_cheres_une',
+    'effet.laser_plus_avancees', 'effet.laser_plus_avancees_une', 'effet.iem', 'effet.iem_abattre',
+    'hud.pouvoir_annuler', 'hud.visee_pouvoir', 'hud.visee_pouvoir_choisir', 'hud.visee_pouvoir_rayon',
+    'hud.visee_pouvoir_confirmer', 'hud.visee_pouvoir_adverses', 'hud.visee_pouvoir_adverses_une',
+    'hud.visee_pouvoir_miennes', 'hud.visee_pouvoir_miennes_une', 'hud.visee_pouvoir_arretees',
+    'hud.visee_pouvoir_arretees_une', 'hud.visee_pouvoir_abattues', 'hud.visee_pouvoir_abattues_une',
+    'hud.visee_pouvoir_rien', 'hud.super_adverse_pret', 'hud.frappe_zone', 'hud.frappe_zone_une',
+    'hud.frappe_zone_rien', 'hud.rayon_laser', 'hud.rayon_laser_une', 'hud.rayon_laser_rien', 'hud.iem_pouvoir',
+    'hud.iem_pouvoir_une', 'hud.iem_pouvoir_abattues', 'hud.iem_pouvoir_abattue', 'hud.iem_pouvoir_rien', 'hud.protet',
   ];
   for (const cle of cles) assert.ok(SOURCE_FR[cle], `${cle} manque`);
   // Les gabarits se substituent : aucun marqueur ne survit à un appel complet.
@@ -78,4 +88,18 @@ test('chaque clé que lignesPouvoir, le HUD et les annonces peuvent demander exi
   assert.equal(t('fr', 'hud.meteo_forcee', { commandant: 'Ariane Belloc', meteo: 'Neige' }), 'Ariane Belloc impose la météo : Neige');
   assert.equal(t('fr', 'hud.reactivation', { n: 3 }), '3 unités rejouent');
   assert.doesNotMatch(t('fr', 'hud.prevision', { liste: 'x' }), /[{}]/);
+  assert.equal(t('fr', 'effet.iem_abattre', { rayon: 2 }), 'IEM : rayon 2, tout ce qui a un moteur est immobilisé un tour ; les appareils touchés sont perdus');
+  assert.doesNotMatch(t('fr', 'hud.super_adverse_pret', { commandant: 'a', piece: 'b', pouvoir: 'c' }), /[{}]/);
+});
+
+test('les huit Gris ont leur super, sa description, sa réplique et sa pièce alignés sur doc/refonte/supers-vilains.json', () => {
+  interface SuperVilain { cle: string; nom: string; description: string; replique: string; piece: { nom: string } }
+  const supers = (JSON.parse(readFileSync(path.resolve(import.meta.dirname, '..', '..', 'doc', 'refonte', 'supers-vilains.json'), 'utf8')) as { supers: SuperVilain[] }).supers;
+  assert.equal(supers.length, 8);
+  for (const s of supers) {
+    assert.equal(SOURCE_FR[`commandant.${s.cle}.super_v4`], s.nom, s.cle);
+    assert.equal(SOURCE_FR[`commandant.${s.cle}.super_v4_desc`], s.description, s.cle);
+    assert.equal(SOURCE_FR[`commandant.${s.cle}.replique_super_v4`], s.replique, s.cle);
+    assert.equal(SOURCE_FR[`commandant.${s.cle}.piece_super`], s.piece.nom, `${s.cle} : la pièce, nommée par le télégraphage et le protêt`);
+  }
 });

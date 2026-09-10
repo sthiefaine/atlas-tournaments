@@ -1,10 +1,10 @@
 {
   "cle": "aube_releve_1v3",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_releve_1v3",
   "nom": "Aube · La quarantième relève · 1 contre 3",
   "acte": 0,
@@ -280,5 +280,8 @@
     "1": 0,
     "2": 0,
     "3": 0
+  },
+  "factionsParCamp": {
+    "2": "atl"
   }
 }

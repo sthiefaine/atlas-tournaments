@@ -151,3 +151,29 @@ test('en français, chaque famille rend une phrase pleine, sans marqueur ni clé
     assert.doesNotMatch(l, /\b[a-z]+\.[a-z_]+\b/, `clé brute : ${l}`);
   }
 });
+
+test('les trois familles de la faction se disent avec leurs chiffres : rayon, PV, nombre, choix', () => {
+  const effets: EffetPouvoir[] = [
+    { cible: 'terrain', frappe: { pv: 2, rayon: 2 } },
+    { cible: 'terrain', frappe: { pv: 3, rayon: 0 } },
+    { cible: 'unites_adverses', laser: { pv: 3, nombre: 2, choix: 'plus_avancees' } },
+    { cible: 'unites_adverses', laser: { pv: 5, nombre: 1, choix: 'plus_cheres' } },
+    { cible: 'terrain', iem: { rayon: 2, abattre: false } },
+    { cible: 'terrain', iem: { rayon: 1, abattre: true } },
+  ];
+  assert.deepEqual(lignesPouvoir(t, effets), [
+    'effet.frappe {"pv":2,"rayon":2}',
+    'effet.frappe_case {"pv":3}',
+    'effet.laser_plus_avancees {"pv":3,"n":2}',
+    'effet.laser_plus_cheres_une {"pv":5,"n":1}',
+    'effet.iem {"rayon":2}',
+    'effet.iem_abattre {"rayon":1}',
+  ]);
+  // Et en français, la phrase existe et les gabarits se substituent.
+  const fr: Traduire = (cle, params) => traducteur('fr')(cle, params);
+  for (const ligne of lignesPouvoir(fr, effets)) {
+    assert.ok(ligne.length > 0, 'chaque famille a sa chaîne');
+    assert.doesNotMatch(ligne, /[{}]/);
+  }
+  assert.equal(lignesPouvoir(fr, [effets[2]!])[0], 'Rayon : −3 PV à vos 2 unités les plus avancées');
+});

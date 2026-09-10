@@ -50,6 +50,7 @@ import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches, sontAllies } from '../engine/index';
 import { paletteDe } from '../render/palettes';
+import type { MarqueUnite } from '../render/rendu';
 import type { CampId, CleUnite, CodePays, Palette, Silhouette } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { CASE, NIVEAU_EAU } from './geometrie';
@@ -744,6 +745,12 @@ function etatNeutre(): EtatVisuel {
 export interface VisionRendu {
   camp: CampId | null;
   unites: ReadonlySet<string> | null;
+  /**
+   * Les marques du télégraphage d'un super adverse (`MarqueUnite`) : un
+   * chevron orange sur une unité qu'un rayon désignerait, un « ! » orange sur
+   * un appareil qu'une impulsion abattrait. Absent ou `null` : aucune.
+   */
+  marques?: ReadonlyMap<string, MarqueUnite> | null;
 }
 
 /** Ce qui va chercher le modèle d'un couple (unité, nation) : `chargerModele`, ou un double de test. */
@@ -828,6 +835,9 @@ interface Entree {
   corps: THREE.Group;
   etiquette: THREE.Sprite | null;
   repereTactique: THREE.Sprite | null;
+  /** La marque du télégraphage, et laquelle : `null` sans marque. */
+  marque: THREE.Sprite | null;
+  marqueGenre: MarqueUnite | null;
   symbole: string;
   sommet: number;
   pv: number;
@@ -883,6 +893,61 @@ function memePose(p: PoseUnite | null, x: number, y: number, v: EtatVisuel): boo
 
 /** Texture d'étiquette de PV, mémorisée par (points de vie, camp, a joué). */
 const etiquettes = new Map<string, THREE.SpriteNodeMaterial>();
+
+/** Textures des marques du télégraphage, une par genre. */
+const marques = new Map<MarqueUnite, THREE.SpriteNodeMaterial>();
+
+/** L'orange du matériel à l'essai : le badge des Gris, et la couleur de ce qu'ils visent. */
+const ORANGE_MARQUE = '#ff9a2e';
+
+/**
+ * La marque du télégraphage : un **chevron** pointé vers le bas pour une unité
+ * désignée par un rayon, un **« ! »** pour un appareil qu'une impulsion
+ * abattrait. Vectoriels, sur une pastille sombre, en orange — la couleur du
+ * badge que les Gris portent et que leurs pièces n'ont pas. Le « ! » est une
+ * ponctuation comme celui de l'embuscade : il n'a rien à traduire.
+ */
+function materiauMarque(doc: Document, genre: MarqueUnite): THREE.SpriteNodeMaterial {
+  const memo = marques.get(genre);
+  if (memo) return memo;
+  const cote = COTE_ETIQUETTE;
+  const c = doc.createElement('canvas');
+  c.width = cote;
+  c.height = cote;
+  const g = c.getContext('2d');
+  if (g) {
+    g.clearRect(0, 0, cote, cote);
+    g.fillStyle = 'rgba(12,16,24,0.86)';
+    g.beginPath();
+    g.arc(cote / 2, cote / 2, cote / 2 - 4, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = ORANGE_MARQUE;
+    g.lineWidth = 4;
+    g.stroke();
+    g.fillStyle = ORANGE_MARQUE;
+    g.strokeStyle = ORANGE_MARQUE;
+    if (genre === 'designee') {
+      g.lineWidth = 9;
+      g.lineCap = 'round';
+      g.lineJoin = 'round';
+      g.beginPath();
+      g.moveTo(cote * 0.28, cote * 0.38);
+      g.lineTo(cote * 0.5, cote * 0.64);
+      g.lineTo(cote * 0.72, cote * 0.38);
+      g.stroke();
+    } else {
+      g.font = 'bold 40px system-ui, sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText('!', cote / 2, cote / 2 + 2);
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.SpriteNodeMaterial({ map: tex, depthTest: false, transparent: true });
+  marques.set(genre, mat);
+  return mat;
+}
 
 /** Côté du canevas d'étiquette, en pixels ; une pastille de PV le remplit. */
 const COTE_ETIQUETTE = 64;
@@ -1025,6 +1090,8 @@ export function creerUnites(
       corps,
       etiquette: null,
       repereTactique: null,
+      marque: null,
+      marqueGenre: null,
       symbole: symboleRole(type),
       sommet: hauteurSilhouette(type.silhouette),
       pv: -1,
@@ -1059,6 +1126,7 @@ export function creerUnites(
     // qu'il remplace ; si elle existe déjà, on la remonte sans la redessiner.
     entree.sommet = modele.hauteur > 0 ? modele.hauteur : entree.sommet;
     if (entree.etiquette) entree.etiquette.position.y = entree.sommet + 0.16;
+    if (entree.marque) entree.marque.position.y = entree.sommet + 0.42;
     majRepere(entree);
     // Le modèle arrive avec ses propres matériaux : s'il remplace une pièce
     // déjà translucide — jouée, furtive —, il doit l'être aussi, sinon l'unité
@@ -1171,6 +1239,27 @@ export function creerUnites(
     entree.groupe.add(sprite);
     entree.etiquette = sprite;
     entree.pv = pv;
+  }
+
+  /**
+   * La marque du télégraphage, au-dessus de la tête et devant tout (sans test
+   * de profondeur : une marque cachée par un toit ne dirait rien). Posée ou
+   * retirée seulement quand le genre change.
+   */
+  function majMarque(entree: Entree, genre: MarqueUnite | null): void {
+    if (entree.marqueGenre === genre) return;
+    if (entree.marque) {
+      entree.groupe.remove(entree.marque);
+      entree.marque = null;
+    }
+    entree.marqueGenre = genre;
+    if (genre === null) return;
+    const sprite = new THREE.Sprite(materiauMarque(doc, genre));
+    sprite.scale.set(0.34, 0.34, 1);
+    sprite.position.set(-0.2, entree.sommet + 0.42, 0);
+    sprite.renderOrder = 6;
+    entree.groupe.add(sprite);
+    entree.marque = sprite;
   }
 
   /** Le double propre à une unité pour un fondu, créé une fois par matériau d'origine puis réglé. */
@@ -1386,6 +1475,7 @@ export function creerUnites(
         // Les points retenus par un geste en cours l'emportent : l'étiquette
         // ne devance pas le coup (`animations.ts`, `encaisser`).
         majEtiquette(entree, visuel(u.id).pv ?? pvAffiches(u.pv), agie);
+        majMarque(entree, vision?.marques?.get(u.id) ?? null);
         if (entree.agie !== agie) {
           entree.agie = agie;
           entree.groupe.userData['agie'] = agie;
@@ -1458,6 +1548,8 @@ export function creerUnites(
         m.dispose();
       }
       etiquettes.clear();
+      for (const m of marques.values()) { m.map?.dispose(); m.dispose(); }
+      marques.clear();
       for (const m of reperes.values()) { m.map?.dispose(); m.dispose(); }
       reperes.clear();
       // Les formes **restent** : une silhouette ne dépend que du catalogue, et

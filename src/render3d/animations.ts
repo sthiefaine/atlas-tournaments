@@ -40,7 +40,7 @@ import type { Catalogue, EtatPartie, EvenementJeu, Unite } from '../engine/index
 import { cleCase, depuisCle, pvAffiches, uniteParId, uniteSur } from '../engine/index';
 import type { CampId, Case, UnitType } from '../schemas/types';
 import { animation, type Animation } from '../render/boucle';
-import { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
+import { casesDuRayon, cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 import { paletteDe } from '../render/palettes';
 import { DUREES, dureePartition, type Geste, type Partition } from '../render/partition';
 import {
@@ -892,6 +892,114 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
         attente: () => { v.voile = 1 - vers; },
         avancer: (p) => { v.voile = vers === 1 ? p : 1 - p; },
         terminer: () => { v.voile = null; },
+      }, ctx);
+    }
+
+    case 'frapper': {
+      // Les missiles tombent du ciel sur chaque case du rayon, du centre vers
+      // le bord, et chacun fait son impact en arrivant — le même signal clair
+      // qu'un tir, sans débris ni fumée noire (`doc/10` §2). Tout est émis au
+      // départ avec un retard : le pool sait attendre, et un clic qui coupe
+      // libère les poignées, retards compris.
+      const effets: Effet[] = [];
+      const cases = casesDuRayon(g.centre, g.rayon);
+      return animationDatee(`frapper:${cleCase(g.centre)}`, g.debut, g.duree, {
+        ombre: false,
+        avancer: (p) => {
+          if (effets.length > 0 || g.duree <= 0 || p >= 1) return;
+          const restant = Math.max(1, g.duree * (1 - p));
+          const chute = Math.max(1, restant * 0.3);
+          cases.forEach((c, k) => {
+            const { x, z } = centre(c);
+            const y = Math.max(ctx.hauteurEn(x, z), NIVEAU_EAU + 0.01) + 0.05;
+            const retard = (k / Math.max(1, cases.length)) * restant * 0.55;
+            effets.push(ctx.effets.emettre({
+              genre: 'etincelle', position: { x: x + 0.35, y: y + 3.2, z: z - 0.2 }, destination: { x, y, z },
+              retard, duree: chute, couleur: '#ffd27a', taille: 0.16, opacite: 1,
+            }));
+            effets.push(ctx.effets.emettre({
+              genre: 'eclair', position: { x, y: y + 0.25, z }, retard: retard + chute,
+              duree: Math.min(140, restant * 0.15), couleur: '#ff9a4a', taille: 0.5, tailleFin: 0.9, opacite: 0.95,
+            }));
+            effets.push(ctx.effets.emettre({
+              genre: 'anneau', position: { x, y, z }, retard: retard + chute, couleur: '#ff9a4a',
+              duree: Math.min(320, restant * 0.4), taille: 0.15, tailleFin: 0.9, opacite: 0.8,
+            }));
+            effets.push(ctx.effets.emettre({
+              genre: 'poussiere', position: { x, y: y + 0.1, z }, retard: retard + chute,
+              duree: Math.min(420, restant * 0.45), taille: 0.3, tailleFin: 0.8, opacite: 0.45,
+              vitesse: { x: 0, y: 0.3, z: 0 },
+            }));
+          });
+        },
+        terminer: () => {
+          for (const e of effets) e.liberer();
+        },
+      }, ctx);
+    }
+
+    case 'designer': {
+      // Un trait du ciel sur l'unité : une colonne d'étincelles qui descend,
+      // un éclair à hauteur de la pièce, un anneau orange au sol. Rien ne
+      // bouge — le rayon marque, l'unité encaisse ensuite.
+      const { x: cx, z: cz } = centre(g.case);
+      const effets: Effet[] = [];
+      return animationDatee(`designer:${g.unite}`, g.debut, g.duree, {
+        ombre: false,
+        avancer: (p) => {
+          if (effets.length > 0 || g.duree <= 0 || p >= 1) return;
+          const restant = Math.max(1, g.duree * (1 - p));
+          const sol = Math.max(ctx.hauteurEn(cx, cz), NIVEAU_EAU + 0.01);
+          const haut = sol + hauteurImpact(typeConnu(ctx, uniteConnue(ctx, g.unite)));
+          const marches = 6;
+          for (let i = 0; i < marches; i += 1) {
+            const t = i / (marches - 1);
+            effets.push(ctx.effets.emettre({
+              genre: 'etincelle', position: { x: cx, y: haut + 2.6 * (1 - t), z: cz },
+              retard: t * restant * 0.35, duree: Math.max(1, restant * 0.5), couleur: '#ffb45a', taille: 0.12,
+              tailleFin: 0.06, opacite: 1,
+            }));
+          }
+          effets.push(ctx.effets.emettre({
+            genre: 'eclair', position: { x: cx, y: haut, z: cz }, retard: restant * 0.35,
+            duree: Math.max(1, restant * 0.4), couleur: '#ff9a4a', taille: 0.45, tailleFin: 0.7, opacite: 0.9,
+          }));
+          effets.push(ctx.effets.emettre({
+            genre: 'anneau', position: { x: cx, y: sol + 0.03, z: cz }, retard: restant * 0.35, couleur: '#ff9a4a',
+            duree: Math.max(1, restant * 0.6), taille: 0.3, tailleFin: 0.95, opacite: 0.85,
+          }));
+        },
+        terminer: () => {
+          for (const e of effets) e.liberer();
+        },
+      }, ctx);
+    }
+
+    case 'sceller': {
+      // L'anneau se referme sur le rayon, du bord vers le centre, puis un halo
+      // bleu s'éteint au centre : ce qui a un moteur s'est arrêté. Les abattues
+      // tombent après, par leur propre `sortir`.
+      const { x: cx, z: cz } = centre(g.centre);
+      const effets: Effet[] = [];
+      return animationDatee(`sceller:${cleCase(g.centre)}`, g.debut, g.duree, {
+        ombre: false,
+        avancer: (p) => {
+          if (effets.length > 0 || g.duree <= 0 || p >= 1) return;
+          const restant = Math.max(1, g.duree * (1 - p));
+          const sol = Math.max(ctx.hauteurEn(cx, cz), NIVEAU_EAU + 0.01) + 0.03;
+          const diametre = (2 * g.rayon + 1) * CASE;
+          effets.push(ctx.effets.emettre({
+            genre: 'anneau', position: { x: cx, y: sol, z: cz }, couleur: '#8ce6ff',
+            duree: Math.max(1, restant * 0.75), taille: diametre, tailleFin: 0.25, opacite: 0.9, montee: 0.05,
+          }));
+          effets.push(ctx.effets.emettre({
+            genre: 'halo', position: { x: cx, y: sol, z: cz }, couleur: '#8ce6ff', retard: restant * 0.7,
+            duree: Math.max(1, restant * 0.3), taille: 0.4, tailleFin: diametre, opacite: 0.5, montee: 0.2,
+          }));
+        },
+        terminer: () => {
+          for (const e of effets) e.liberer();
+        },
       }, ctx);
     }
 

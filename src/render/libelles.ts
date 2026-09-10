@@ -194,6 +194,26 @@ export function lignesPouvoir(
       lignes.push(t('effet.reactiver', { cible }));
       continue;
     }
+    // Les familles de la faction (`04-gameplay.md` §7.2, « Les familles de la
+    // faction ») : une frappe sur une case choisie, un rayon sans case, une
+    // impulsion. Elles se disent avec leurs chiffres — rayon, PV, nombre —
+    // lus sur l'effet, jamais recopiés : c'est le kit qui parle.
+    if ('frappe' in effet) {
+      const { pv, rayon } = effet.frappe;
+      lignes.push(rayon > 0 ? t('effet.frappe', { pv, rayon }) : t('effet.frappe_case', { pv }));
+      continue;
+    }
+    if ('laser' in effet) {
+      const { pv, nombre, choix } = effet.laser;
+      const cle = nombre === 1 ? `effet.laser_${choix}_une` : `effet.laser_${choix}`;
+      lignes.push(t(cle, { pv, n: nombre }));
+      continue;
+    }
+    if ('iem' in effet) {
+      const { rayon, abattre } = effet.iem;
+      lignes.push(t(abattre ? 'effet.iem_abattre' : 'effet.iem', { rayon }));
+      continue;
+    }
     const { quoi, valeur } = effet.modificateur;
     if (quoi === 'soin' || quoi === 'degats_directs') {
       lignes.push(t(quoi === 'soin' ? 'effet.soin' : 'effet.degats_directs', { n: Math.abs(valeur), cible }));

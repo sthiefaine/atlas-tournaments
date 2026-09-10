@@ -11,7 +11,8 @@
 
 import {
   ARCHETYPES, AUTEURS_PROMPT, AUTEURS_TRADUCTION, AXES_FAIBLESSE, BASES_SILHOUETTE,
-  BIOMES, BORNES_CONSEQUENCE, BORNES_MODIFICATEUR, BORNES_RELATIONS,
+  BIOMES, BORNES_CONSEQUENCE, BORNES_FACTION, BORNES_MODIFICATEUR, BORNES_RELATIONS,
+  CHOIX_LASER, CODE_FACTION, estEffetFaction,
   CARACTERE_PAR_TERRAIN, CARACTERES_CAPTURABLES,
   CATEGORIES_EVENT,
   CATEGORIES_GLOSSAIRE, CIBLES_EFFET, CIBLES_REVIEW, CLES_GABARIT, CLES_PROMPT,
@@ -40,8 +41,8 @@ import {
   type Country,
   DECLENCHEURS_SCENE,
   type Deblocage, type Dialogue, type SceneDialogue,
-  type EffetEvent, type EffetMeteo, type EffetModificateur, type EffetPoserTerrain, type EffetPouvoir,
-  type EffetRavitailler, type EffetReactiver,
+  type EffetEvent, type EffetFrappeZone, type EffetIem, type EffetMeteo, type EffetModificateur,
+  type EffetPoserTerrain, type EffetPouvoir, type EffetRavitailler, type EffetRayonLaser, type EffetReactiver,
   type EtatClimat, type Event, type Fil, type Flag,
   type Glossaire, type Locale, type MapDef, type MemoryEntry, type MetriquesPrompt,
   type MissionDuJour, type ObjectifDefaite, type ObjectifVictoire,
@@ -252,16 +253,63 @@ function effetMeteo(ctx: Contexte, v: unknown, chemin: string): EffetMeteo | und
   return { cible, meteo: { valeur, journees: journees as 1 | 2 } };
 }
 
+/** Lit un `EffetFrappeZone` (faction) : des PV retirés dans un rayon autour d'une case choisie. */
+function effetFrappeZone(ctx: Contexte, v: unknown, chemin: string): EffetFrappeZone | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'frappe']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'frappe'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['terrain'] as const);
+  const cheminF = sous(chemin, 'frappe');
+  const f = objet(ctx, o['frappe'], cheminF, ['pv', 'rayon']);
+  if (!f || !requis(ctx, f, cheminF, ['pv', 'rayon'])) return undefined;
+  const pv = entier(ctx, f['pv'], sous(cheminF, 'pv'), BORNES_FACTION.frappe.pv);
+  const rayon = entier(ctx, f['rayon'], sous(cheminF, 'rayon'), BORNES_FACTION.frappe.rayon);
+  if (cible === undefined || pv === undefined || rayon === undefined) return undefined;
+  return { cible, frappe: { pv, rayon } };
+}
+
+/** Lit un `EffetRayonLaser` (faction) : des PV retirés aux unités adverses vues, choisies par la règle. */
+function effetRayonLaser(ctx: Contexte, v: unknown, chemin: string): EffetRayonLaser | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'laser']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'laser'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['unites_adverses'] as const);
+  const cheminL = sous(chemin, 'laser');
+  const l = objet(ctx, o['laser'], cheminL, ['pv', 'nombre', 'choix']);
+  if (!l || !requis(ctx, l, cheminL, ['pv', 'nombre', 'choix'])) return undefined;
+  const pv = entier(ctx, l['pv'], sous(cheminL, 'pv'), BORNES_FACTION.laser.pv);
+  const nombre = entier(ctx, l['nombre'], sous(cheminL, 'nombre'), BORNES_FACTION.laser.nombre);
+  const choix = enumeration(ctx, l['choix'], sous(cheminL, 'choix'), CHOIX_LASER);
+  if (cible === undefined || pv === undefined || nombre === undefined || choix === undefined) return undefined;
+  return { cible, laser: { pv, nombre, choix } };
+}
+
+/** Lit un `EffetIem` (faction) : les unités à moteur arrêtées dans un rayon, et les aériennes adverses abattues si demandé. */
+function effetIem(ctx: Contexte, v: unknown, chemin: string): EffetIem | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'iem']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'iem'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['terrain'] as const);
+  const cheminI = sous(chemin, 'iem');
+  const i = objet(ctx, o['iem'], cheminI, ['rayon', 'abattre']);
+  if (!i || !requis(ctx, i, cheminI, ['rayon', 'abattre'])) return undefined;
+  const rayon = entier(ctx, i['rayon'], sous(cheminI, 'rayon'), BORNES_FACTION.iem.rayon);
+  const abattre = booleen(ctx, i['abattre'], sous(cheminI, 'abattre'));
+  if (cible === undefined || rayon === undefined || abattre === undefined) return undefined;
+  return { cible, iem: { rayon, abattre } };
+}
+
 /**
- * Lit un `EffetPouvoir` : modificateur, pose de terrain, ou l'une des trois
- * familles instantanées (ravitailler, réactiver, météo) — reconnues à la clé
- * qui les porte, comme la pose.
+ * Lit un `EffetPouvoir` : modificateur, pose de terrain, l'une des trois
+ * familles instantanées (ravitailler, réactiver, météo) ou l'une des trois
+ * familles de la faction (frappe, laser, iem) — reconnues à la clé qui les
+ * porte, comme la pose.
  */
 function effetPouvoir(ctx: Contexte, v: unknown, chemin: string): EffetPouvoir | undefined {
   if (estObjet(v) && presente(v, 'poserTerrain')) return effetPoserTerrain(ctx, v, chemin);
   if (estObjet(v) && presente(v, 'ravitailler')) return effetRavitailler(ctx, v, chemin);
   if (estObjet(v) && presente(v, 'reactiver')) return effetReactiver(ctx, v, chemin);
   if (estObjet(v) && presente(v, 'meteo')) return effetMeteo(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'frappe')) return effetFrappeZone(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'laser')) return effetRayonLaser(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'iem')) return effetIem(ctx, v, chemin);
   return effetModificateur(ctx, v, chemin);
 }
 
@@ -396,7 +444,7 @@ export function validerCountry(valeur: unknown): Resultat<Country> {
 const CLES_POUVOIR = ['nom', 'description', 'barres', 'effets', 'duree', 'replique'] as const;
 
 /** Lit un `Pouvoir` et applique les bornes propres au niveau (normal ou super). */
-function pouvoir(ctx: Contexte, v: unknown, chemin: string, superPouvoir: boolean): number | undefined {
+function pouvoir(ctx: Contexte, v: unknown, chemin: string, superPouvoir: boolean, faction = false): number | undefined {
   const o = objet(ctx, v, chemin, CLES_POUVOIR);
   if (!o || !requis(ctx, o, chemin, CLES_POUVOIR)) return undefined;
   chaine(ctx, o['nom'], sous(chemin, 'nom'), { max: 48 });
@@ -424,6 +472,27 @@ function pouvoir(ctx: Contexte, v: unknown, chemin: string, superPouvoir: boolea
       }
       if ('modificateur' in e && e.modificateur.quoi === 'prix' && d !== undefined && typeof d !== 'string') {
         ctx.faute(sous(chemin, 'duree'), "un prix ne dure que 'ce_tour' ou 'tour_complet'");
+      }
+      // Les familles de la faction (10 septembre 2026) : réservées au camp
+      // `atl`, et bornées plus court au pouvoir normal. Abattre ce qui vole
+      // est la seule mise hors jeu directe du jeu : au super, et pas donné.
+      if (estEffetFaction(e) && !faction) {
+        ctx.faute(cheminEffet, `la famille ${'frappe' in e ? 'frappe_zone' : 'laser' in e ? 'rayon_laser' : 'iem'} est réservée aux commandants de la faction (${CODE_FACTION})`);
+      }
+      if ('frappe' in e && !superPouvoir) {
+        if (e.frappe.pv > BORNES_FACTION.frappe.normal.pv) {
+          ctx.faute(sous(sous(cheminEffet, 'frappe'), 'pv'), `un pouvoir normal frappe ${BORNES_FACTION.frappe.normal.pv} PV au plus`);
+        }
+        if (e.frappe.rayon > BORNES_FACTION.frappe.normal.rayon) {
+          ctx.faute(sous(sous(cheminEffet, 'frappe'), 'rayon'), `un pouvoir normal frappe à ${BORNES_FACTION.frappe.normal.rayon} case au plus`);
+        }
+      }
+      if ('iem' in e && e.iem.abattre) {
+        if (!superPouvoir) {
+          ctx.faute(sous(sous(cheminEffet, 'iem'), 'abattre'), 'abattre ce qui vole est réservé au super pouvoir');
+        } else if (barres !== undefined && barres < BORNES_FACTION.iem.barresAbattre) {
+          ctx.faute(sous(chemin, 'barres'), `un super qui abat coûte au moins ${BORNES_FACTION.iem.barresAbattre} barres`);
+        }
       }
       if (!estPose(e)) continue;
       const cheminPose = sous(cheminEffet, 'poserTerrain');
@@ -478,8 +547,11 @@ export function validerCommander(valeur: unknown): Resultat<Commander> {
       effetModificateur(ctx, o['passif'], 'passif');
     }
   }
-  const barres = pouvoir(ctx, o['pouvoir'], 'pouvoir', false);
-  const barresSuper = pouvoir(ctx, o['superPouvoir'], 'superPouvoir', true);
+  // Le pays du commandant décide des familles qu'il a le droit de porter :
+  // les trois familles de la faction ne vont qu'à un commandant `atl`.
+  const faction = o['paysCode'] === CODE_FACTION;
+  const barres = pouvoir(ctx, o['pouvoir'], 'pouvoir', false, faction);
+  const barresSuper = pouvoir(ctx, o['superPouvoir'], 'superPouvoir', true, faction);
   if (barres !== undefined && barresSuper !== undefined && barresSuper <= barres) {
     ctx.faute('superPouvoir.barres', 'le super pouvoir coûte strictement plus cher que le pouvoir');
   }

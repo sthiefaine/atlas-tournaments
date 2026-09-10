@@ -29,20 +29,28 @@
  */
 
 import type {
-  Action, Catalogue, CommandantMoteur, Debarquement, EtatPartie, EvenementJeu, MotifRefus, Portee, Suite, Unite,
+  Action, Catalogue, CommandantMoteur, Debarquement, EtatPartie, EvaluationEffets, EvenementJeu, MotifRefus, Portee,
+  Suite, Unite,
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, brouillardActif, casesAtteignables, casesVisibles, cheminVers, ciblesDepuis, cleCase,
-  coutVers, depuisCle, estDesaffecte, manhattan, peutCapturerIci, pointsMouvement, porte, portee, porteeEffective, produitesPar,
-  terrainLogique, uniteParId, uniteSur, unitesVues, verifierProduction, constructionsPossibles, sontAllies,
+  coutVers, demandeUneCase, depuisCle, estDesaffecte, evaluerEffets, manhattan, peutCapturerIci, pointsMouvement,
+  porte, portee, porteeEffective, produitesPar, terrainLogique, uniteParId, uniteSur, unitesVues, verifierPouvoir,
+  verifierProduction, constructionsPossibles, sontAllies,
 } from '../engine/index';
-import type { Case, CampId, CleUnite } from '../schemas/types';
+import type { Case, CampId, CleUnite, EffetPouvoir } from '../schemas/types';
+import { casesDuRayon } from './chemin';
 import type { OptionMenu } from './libelles';
 import type { Surbrillance } from './surbrillance';
 
-/** Les phases de l'interaction. */
+/**
+ * Les phases de l'interaction. `pouvoir` est la **visée d'un pouvoir** qui
+ * demande une case (`demandeUneCase` : une frappe de zone, une impulsion) :
+ * comme la visée d'attaque, on pointe puis on confirme, et le rayon s'allume
+ * autour de la case pointée.
+ */
 export type Phase =
-  | 'inactif' | 'selection' | 'action' | 'cible' | 'production' | 'attente' | 'fin';
+  | 'inactif' | 'selection' | 'action' | 'cible' | 'production' | 'attente' | 'fin' | 'pouvoir';
 
 /**
  * Les suites proposables au joueur, dans l'ordre d'affichage du menu.
@@ -138,6 +146,13 @@ export interface VueControleur {
    * sorte que le panneau d'unité continue de la montrer.
    */
   inspection: string | null;
+  /**
+   * La visée d'un pouvoir en cours (phase `pouvoir`) : le niveau, le rayon
+   * autour de la case, la case **pointée** — `null` tant qu'aucune ne l'est,
+   * au doigt avant le premier appui — et ce que le pouvoir y ferait, évalué
+   * par le moteur sans rien appliquer (`evaluerEffets`). `null` hors de la phase.
+   */
+  viseePouvoir: { niveau: 'normal' | 'super'; rayon: number; centre: Case | null; bilan: EvaluationEffets | null } | null;
 }
 
 /** Ce que le contrôleur signale à son hôte. */
@@ -206,6 +221,16 @@ export class Controleur {
 
   /** L'unité adverse inspectée, hors de toute phase : l'inspection ne joue rien. */
   private inspectionId: string | null = null;
+
+  /**
+   * Le pouvoir en cours de visée : son niveau, ses effets — de quoi évaluer
+   * la case pointée — et le rayon le plus large qu'ils demandent. La case
+   * pointée est `cibleVisee`, comme pour une attaque ; le bilan est mémoïsé
+   * sur (état, case), le survol le redemande à chaque image.
+   */
+  private pouvoirVise: { niveau: 'normal' | 'super'; effets: readonly EffetPouvoir[]; rayon: number } | null = null;
+
+  private cacheBilanPouvoir: { etat: EtatPartie; cle: string; bilan: EvaluationEffets } | null = null;
 
   /**
    * Vrai juste après qu'un clic a joué un ordre. Un double-clic qui **confirme**
@@ -309,6 +334,14 @@ export class Controleur {
         }
         : null,
       inspection: this.inspectionId,
+      viseePouvoir: this.phaseCourante === 'pouvoir' && this.pouvoirVise
+        ? {
+          niveau: this.pouvoirVise.niveau,
+          rayon: this.pouvoirVise.rayon,
+          centre: this.cibleVisee,
+          bilan: this.cibleVisee ? this.bilanPouvoir(this.cibleVisee) : null,
+        }
+        : null,
     };
   }
 
@@ -326,6 +359,8 @@ export class Controleur {
     };
     this.curseurCase = c;
     if (this.phaseCourante === 'selection') this.majChemin(c);
+    // En visée de pouvoir, la case pointée suit le curseur : Entrée confirme.
+    if (this.phaseCourante === 'pouvoir') this.cibleVisee = { ...c };
     this.ecouteur.surChangement?.();
   }
 
@@ -346,6 +381,8 @@ export class Controleur {
     if (this.phaseCourante === 'cible' && this.debarquement?.cases.some((v) => v.x === c.x && v.y === c.y)) {
       this.cibleVisee = { x: c.x, y: c.y };
     }
+    // Un pouvoir se vise sur toute la carte : le survol pointe, le rayon suit.
+    if (this.phaseCourante === 'pouvoir') this.cibleVisee = { x: c.x, y: c.y };
     this.ecouteur.surChangement?.();
   }
 
@@ -357,6 +394,18 @@ export class Controleur {
     this.inspectionId = null;
     this.curseurCase = c;
 
+    if (this.phaseCourante === 'pouvoir' && this.pouvoirVise) {
+      // Les mêmes deux temps que la visée d'attaque : à la souris le survol a
+      // déjà pointé, un clic confirme ; au doigt, le premier appui pose le
+      // rayon et montre la prévision, le second confirme.
+      if (this.cibleVisee && this.cibleVisee.x === c.x && this.cibleVisee.y === c.y) {
+        this.jouer({ type: 'pouvoir', niveau: this.pouvoirVise.niveau, cases: [{ x: c.x, y: c.y }] });
+        return;
+      }
+      this.cibleVisee = { x: c.x, y: c.y };
+      this.ecouteur.surChangement?.();
+      return;
+    }
     if (this.phaseCourante === 'cible' && this.travaux.length > 0) {
       if (this.travaux.some((v) => v.x === c.x && v.y === c.y)) this.jouerOrdre({ type: 'construire', cible: c });
       else this.annuler();
@@ -469,6 +518,12 @@ export class Controleur {
   annuler(): void {
     if (this.inspectionId !== null) {
       this.inspectionId = null;
+      this.ecouteur.surChangement?.();
+      return;
+    }
+    if (this.phaseCourante === 'pouvoir') {
+      // La visée d'un pouvoir n'a rien derrière elle : Échap la ferme, la jauge est intacte.
+      this.reinitialiserSelection();
       this.ecouteur.surChangement?.();
       return;
     }
@@ -608,10 +663,57 @@ export class Controleur {
     this.jouer({ type: 'produire', batiment, unite: cle });
   }
 
-  /** Déclenche un pouvoir de commandant. */
+  /**
+   * Déclenche un pouvoir de commandant — ou, s'il **demande une case** (une
+   * frappe de zone, une impulsion : `demandeUneCase`), ouvre sa visée : la
+   * carte montre le rayon autour de la case pointée, le HUD dit ce qu'elle
+   * ferait, un clic confirme. Un second appui sur le bouton pendant la visée
+   * l'annule. Un pouvoir sans case part tout de suite, comme avant.
+   */
   jouerPouvoir(niveau: 'normal' | 'super'): void {
     if (!this.monTour) return;
+    if (this.phaseCourante === 'pouvoir') {
+      this.annuler();
+      return;
+    }
+    const commandant = this.commandants[this.camp] ?? null;
+    const verdict = verifierPouvoir(this.etatPartie, commandant, this.camp, niveau);
+    if (verdict.ok && verdict.effets.some(demandeUneCase)) {
+      this.ouvrirViseePouvoir(niveau, verdict.effets);
+      return;
+    }
     this.jouer({ type: 'pouvoir', niveau });
+  }
+
+  /**
+   * Ouvre la visée d'un pouvoir : le rayon est le plus large que ses effets
+   * demandent, et la case pointée part du curseur — au doigt il n'y a pas de
+   * survol, et un rayon qui n'apparaîtrait qu'au premier appui laisserait le
+   * joueur devant une carte muette.
+   */
+  private ouvrirViseePouvoir(niveau: 'normal' | 'super', effets: readonly EffetPouvoir[]): void {
+    let rayon = 0;
+    for (const e of effets) {
+      if ('frappe' in e) rayon = Math.max(rayon, e.frappe.rayon);
+      if ('iem' in e) rayon = Math.max(rayon, e.iem.rayon);
+    }
+    this.reinitialiserSelection();
+    this.pouvoirVise = { niveau, effets, rayon };
+    this.phaseCourante = 'pouvoir';
+    this.cibleVisee = { ...this.curseurCase };
+    this.ecouteur.surChangement?.();
+  }
+
+  /** Ce que le pouvoir visé ferait sur cette case, lu au moteur et mémoïsé sur (état, case). */
+  private bilanPouvoir(c: Case): EvaluationEffets | null {
+    const p = this.pouvoirVise;
+    if (!p) return null;
+    const cle = cleCase(c);
+    const cache = this.cacheBilanPouvoir;
+    if (cache && cache.etat === this.etatPartie && cache.cle === cle) return cache.bilan;
+    const bilan = evaluerEffets(this.etatPartie, this.cat, this.camp, p.effets, [c]);
+    this.cacheBilanPouvoir = { etat: this.etatPartie, cle, bilan };
+    return bilan;
   }
 
   /** Termine le tour du joueur. */
@@ -628,6 +730,16 @@ export class Controleur {
   /** Les surbrillances de la phase courante. */
   private surbrillances(): Surbrillance[] {
     const sortie: Surbrillance[] = [];
+    if (this.phaseCourante === 'pouvoir') {
+      // Le rayon du pouvoir autour de la case pointée, en `danger` : ce qui est
+      // dessous sera touché, les siennes comprises — la couleur le dit.
+      if (this.pouvoirVise && this.cibleVisee) {
+        for (const c of casesDuRayon(this.cibleVisee, this.pouvoirVise.rayon)) {
+          if (this.dansCarte(c)) sortie.push({ case: c, genre: 'danger' });
+        }
+      }
+      return sortie;
+    }
     if (this.phaseCourante === 'cible') {
       for (const c of this.travaux) sortie.push({ case: c, genre: 'production' });
       for (const c of this.cibles) sortie.push({ case: { x: c.x, y: c.y }, genre: 'attaque' });
@@ -1153,6 +1265,7 @@ export class Controleur {
     this.debarquement = null;
     this.options = [];
     this.batimentProduction = null;
+    this.pouvoirVise = null;
     if (this.phaseCourante !== 'fin' && this.phaseCourante !== 'attente') {
       this.phaseCourante = 'inactif';
     }

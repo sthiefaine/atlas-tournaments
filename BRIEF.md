@@ -48,6 +48,10 @@ Le propriétaire trouve les pouvoirs des commandants « pas variés et pas fun c
 
 Les interdits du §7.2 tiennent — jamais de mise hors jeu directe, de changement de propriétaire, de production gratuite, d'échange de position, ni moins de 1 PV — avec **deux exceptions nommées** : `reactiver` est le seul tour supplémentaire du jeu, et `meteo` la seule prise d'un pouvoir sur le climat ; « un pouvoir ne fait pas la météo » est révisé en conséquence. **L'IA joue désormais ses pouvoirs** (`src/ai/pouvoirs.ts`) : le super dès qu'il est payable, le normal quand il change un duel, un soin ou un achat. Les 34 kits de `content/commandants-capacites.json` sont à réécrire sur ces familles ; le moteur, le schéma et l'IA les précèdent.
 
+### Les supers des Gris — décision du 10 septembre 2026
+
+Le propriétaire veut des supers de vilains qui ne soient pas « −1 PV à toute l'armée » : des missiles sur une zone, des lasers sur quelques unités, des IEM qui arrêtent ce qui a un moteur et abattent ce qui vole. **Trois familles d'effets réservées à la faction** (`atl`), et à elle seule — `frappe` de zone, rayon `laser`, `iem` —, bornées dans `doc/04-gameplay.md` §7.2, « Les familles de la faction », qui fait foi. Un commandant national ne les porte jamais : le schéma les lui refuse, le moteur aussi. **`iem.abattre` est la seule mise hors jeu directe du jeu**, au super pouvoir de la faction et à huit barres au moins ; l'interdit « jamais de mise hors jeu directe » **reste entier pour tout commandant national**. L'IA vise ces pouvoirs elle-même, sur la case qui touche le plus d'adverse et le moins de sien.
+
 ## Le jeu en une phrase
 
 Un tactique au tour par tour dans l'esprit d'Advance Wars (grille, unités, terrains, capture de villes, commandants à pouvoirs, conflit stratégique sérieux, affrontements non sanglants), où un jeune commandant fait le tour du monde pour disputer le **Tournoi Atlas**.

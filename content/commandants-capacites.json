@@ -9,7 +9,8 @@
     "Un multiplicateur de capture inférieur à 1 ne vise que unites_adverses ; degats_directs ne vise que unites_adverses et ne descend jamais une unité sous 1 PV.",
     "Chaque commandant a une faiblesse chiffrée et permanente sur un axe déclaré, posée par le moteur à la création de la partie comme le passif (source « faiblesse »), et deux répliques, une par pouvoir.",
     "Les pouvoirs visent le camp du commandant, pas automatiquement les camps alliés. Les révisions 1 à 3 restent inchangées pour les anciens scénarios (la 3 est gelée dans commandants-capacites-v3.json).",
-    "Depuis le 10 septembre 2026 au soir, retirer des PV à toute l’armée adverse (degats_directs sans filtre) est une signature des Gris ; un commandant national filtre ses dégâts directs par type de mouvement ou par famille d’unités."
+    "Depuis le 10 septembre 2026 au soir, retirer des PV à toute l’armée adverse (degats_directs sans filtre) est une signature des Gris ; un commandant national filtre ses dégâts directs par type de mouvement ou par famille d’unités.",
+    "Depuis le 10 septembre 2026 (supers des Gris, doc/refonte/supers-vilains.md) : les trois familles réservées à la faction — frappe_zone, rayon_laser, iem — ne vont qu’à un commandant atl (validerCommander) et ne partent que d’un camp atl (verifierPouvoir) ; frappe_zone et iem touchent les deux camps dans le rayon et visent une case ; un super qui abat coûte au moins 8 barres ; chaque super d’un Gris est porté par une pièce de matériel sans dossier (piece : nom, silhouette), annotation de scénario que le moteur ne lit pas."
   ],
   "commandants": [
     {
@@ -2262,7 +2263,7 @@
       "cle": "cmd_hadran_ost",
       "nom": "Hadran Ost",
       "style": "Pression mécanisée",
-      "description": "Le visage des Gris : ses chenilles avancent en bloc, et quand le bloc avance, tout ce qui est devant perd un point de vie.",
+      "description": "Le visage des Gris : ses chenilles avancent en bloc, et quand il grêle, treize cases perdent 2 PV — ses chenilles comprises — avant que le bloc avance dans le trou.",
       "contreJeu": "Écarter les fronts et frapper du ciel : ses anti-air sont mous, et le bloc ne couvre qu’une direction.",
       "passif": {
         "cible": "mes_unites",
@@ -2310,28 +2311,16 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Le bloc avance",
+        "nom": "Grêle",
         "barres": 7,
         "duree": "ce_tour",
-        "description": "Toutes les unités adverses perdent 1 PV, et vos chenilles frappent ×1,3 avec +1 de mouvement ce tour.",
+        "description": "Il choisit une case : tout ce qui est à 2 cases ou moins perd 2 PV, ses chenilles comprises, puis ses chenilles gagnent +1 de mouvement et avancent dans le trou.",
         "effets": [
           {
-            "cible": "unites_adverses",
-            "modificateur": {
-              "quoi": "degats_directs",
-              "valeur": 1
-            }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "mouvement": [
-                "chenilles"
-              ]
-            },
-            "modificateur": {
-              "quoi": "attaque",
-              "valeur": 1.3
+            "cible": "terrain",
+            "frappe": {
+              "pv": 2,
+              "rayon": 2
             }
           },
           {
@@ -2347,6 +2336,10 @@
             }
           }
         ]
+      },
+      "piece": {
+        "nom": "La Batterie sans plaque",
+        "silhouette": "Un bloc à chenilles de taille 3 portant un rail de douze tubes gris, sans badge orange, sans plaque de série, sans dossier (chenilles · bloc · [lance_roquettes, antenne] · 3)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2369,14 +2362,14 @@
       },
       "replique": {
         "pouvoir": "La Sélection Méridienne ne contourne pas. Elle avance.",
-        "super": "Le bloc avance, et tout ce qui est devant recule. C’est ainsi qu’on gagne une Ronde."
+        "super": "La Sélection Méridienne n’a pas besoin de contourner. Il grêle, et le bloc avance."
       }
     },
     {
       "cle": "selene_veyr",
       "nom": "Sélène Veyr",
       "style": "La concession",
-      "description": "Ne frappe jamais : elle achète moins cher, encaisse le double, et capture plus vite quand le réseau est sous tutelle.",
+      "description": "Ne frappe jamais : elle achète moins cher, encaisse le double, et coupe le courant — carburant doublé et captures divisées par deux pour l’adversaire, le temps de compter.",
       "contreJeu": "Lui prendre deux bâtiments vaut mieux que lui mettre trois unités hors jeu : tout son jeu passe par le trésor.",
       "passif": {
         "cible": "economie",
@@ -2402,36 +2395,48 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Tutelle du réseau",
-        "barres": 7,
+        "nom": "Délestage",
+        "barres": 8,
         "duree": {
           "type": "journees",
           "n": 2
         },
-        "description": "Pendant 2 journées, vos revenus sont ×2 et vos capteurs capturent ×1,5.",
+        "description": "Pendant 2 journées, tout ce qui a un moteur dans le camp adverse brûle le double de carburant par tour, ses captures comptent moitié, et le Consortium encaisse le double.",
         "effets": [
+          {
+            "cible": "unites_adverses",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles",
+                "air",
+                "mer"
+              ]
+            },
+            "modificateur": {
+              "quoi": "carburant",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 0.5
+            }
+          },
           {
             "cible": "economie",
             "modificateur": {
               "quoi": "fonds",
               "valeur": 2
             }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "types": [
-                "infanterie",
-                "meca",
-                "genie"
-              ]
-            },
-            "modificateur": {
-              "quoi": "capture",
-              "valeur": 1.5
-            }
           }
         ]
+      },
+      "piece": {
+        "nom": "Le Coupleur",
+        "silhouette": "Une armoire grise vissée sur le poste de distribution du terrain, absente du relevé de la Cartographie, qui compte le courant des deux camps et le coupe d’un côté (roues · bloc · [antenne, panneaux_solaires] · 2, posée au pied de son QG comme un décor non capturable)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2447,14 +2452,14 @@
       },
       "replique": {
         "pouvoir": "La stabilité a un prix, et c’est moi qui le fixe.",
-        "super": "Le réseau est sous tutelle. Vous verrez, tout fonctionnera très bien."
+        "super": "Le réseau se protège : délestage sur votre secteur. Vous serez rétablis quand nous aurons fini de compter."
       }
     },
     {
       "cle": "cmd_mael_orven",
       "nom": "Maël Orven",
       "style": "Fenêtre de vol",
-      "description": "Ses appareils refont le plein en vol, et quand le ciel est à lui, ils repartent une seconde fois.",
+      "description": "Ses appareils refont le plein en vol, et quand le ciel est à lui, ils passent en rasante sur la tête de colonne.",
       "contreJeu": "Garder un anti-air près de chaque objectif, et prendre ses pistes : au sol, il n’a presque personne.",
       "passif": {
         "cible": "mes_unites",
@@ -2502,21 +2507,24 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Ciel de manœuvre",
-        "barres": 8,
+        "nom": "Rasante",
+        "barres": 5,
         "duree": "ce_tour",
-        "description": "Tous vos appareils qui ont déjà agi rejouent une fois ce tour.",
+        "description": "Ses appareils passent en rasante : les 2 unités adverses les plus avancées perdent 4 PV chacune, où qu’elles soient.",
         "effets": [
           {
-            "cible": "mes_unites",
-            "filtre": {
-              "mouvement": [
-                "air"
-              ]
-            },
-            "reactiver": true
+            "cible": "unites_adverses",
+            "laser": {
+              "pv": 4,
+              "nombre": 2,
+              "choix": "plus_avancees"
+            }
           }
         ]
+      },
+      "piece": {
+        "nom": "Le Rapace",
+        "silhouette": "Une aile delta sans dérive portant sous le ventre un marqueur à faisceau qui marque sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2538,14 +2546,14 @@
       },
       "replique": {
         "pouvoir": "Ravitaillement en vol. On ne se pose pas, on n’a pas le temps.",
-        "super": "Le ciel est à nous. Deuxième passage, même cible."
+        "super": "Rasante sur la tête de colonne. On ne se pose pas, on n’a pas le temps."
       }
     },
     {
       "cle": "cmd_lise_orven",
       "nom": "Lise Varen",
       "style": "Angle réservé",
-      "description": "Ses pièces tirent une case plus loin, et quand il faut, une rivière coupe le passage pour forcer l’adversaire dans l’angle.",
+      "description": "Ses pièces tirent une case plus loin, et quand il faut, une croix de cinq cases devient rouge : ce qui s’y trouve perd 3 PV, les siennes comprises.",
       "contreJeu": "Approcher par le flanc, vite, avec de la reconnaissance : chaque pièce qu’elle déplace est une pièce qui ne tire pas.",
       "passif": {
         "cible": "mes_unites",
@@ -2589,26 +2597,16 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Passages verrouillés",
+        "nom": "Zone rouge",
         "barres": 7,
         "duree": "tour_complet",
-        "description": "Jusqu’à 3 cases de plaine ou de plage contiguës deviennent une rivière pendant 2 journées, et vos pièces de portée frappent ×1,2 jusqu’à votre prochain tour.",
+        "description": "Elle choisit une case : les 5 cases de la croix perdent 3 PV, les siennes comprises, et ses pièces de portée tirent 1 case plus loin jusqu'à son prochain tour.",
         "effets": [
           {
             "cible": "terrain",
-            "poserTerrain": {
-              "forme": "chenal",
-              "depuis": [
-                "plaine",
-                "plage"
-              ],
-              "vers": "riviere",
-              "casesMax": 3,
-              "contigu": true,
-              "duree": {
-                "type": "journees",
-                "n": 2
-              }
+            "frappe": {
+              "pv": 3,
+              "rayon": 1
             }
           },
           {
@@ -2623,11 +2621,15 @@
               ]
             },
             "modificateur": {
-              "quoi": "attaque",
-              "valeur": 1.2
+              "quoi": "portee",
+              "valeur": 1
             }
           }
         ]
+      },
+      "piece": {
+        "nom": "Le Repère",
+        "silhouette": "Un marqueur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2649,14 +2651,14 @@
       },
       "replique": {
         "pouvoir": "La zone est réservée. Entrez-y, et vous serez marqués avant d’avoir vu qui tire.",
-        "super": "Le passage est fermé. Il en reste un, et il est dans mon angle."
+        "super": "La zone est rouge. Vous y êtes entrés, c’est votre choix, pas le mien."
       }
     },
     {
       "cle": "cmd_edran_sorel",
       "nom": "Edran Sorel",
       "style": "La relève",
-      "description": "Ravitaille tout ce qui roule, puis achète une deuxième ligne à moitié prix quand la première a usé l’adversaire.",
+      "description": "Ravitaille tout ce qui roule, puis fait rejouer sa ligne quand la première a usé l’adversaire : la relève arrive ravitaillée.",
       "contreJeu": "Isoler ses dépôts et ses routes : sa deuxième ligne coûte moins cher, mais elle part de ses usines, pas du front.",
       "passif": {
         "cible": "mes_unites",
@@ -2707,26 +2709,33 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Deuxième ligne",
-        "barres": 7,
+        "nom": "La relève arrive",
+        "barres": 8,
         "duree": "ce_tour",
-        "description": "Ce tour, tout ce que vous achetez coûte 40 % de moins, et vos unités gagnent +1 de mouvement.",
+        "description": "Toutes ses unités refont le plein et les charges, et ses roues et chenilles qui ont déjà agi rejouent une fois ce tour.",
         "effets": [
           {
-            "cible": "economie",
-            "modificateur": {
-              "quoi": "prix",
-              "valeur": 0.6
+            "cible": "mes_unites",
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
             }
           },
           {
             "cible": "mes_unites",
-            "modificateur": {
-              "quoi": "mouvement",
-              "valeur": 1
-            }
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ]
+            },
+            "reactiver": true
           }
         ]
+      },
+      "piece": {
+        "nom": "Le Convoi sans manifeste",
+        "silhouette": "Trois transports dont la cale porte des batteries de relève qui ne figurent sur aucun manifeste d’entrée de terrain — les batteries d’Aube, sorties d’un dépôt méridien sans bordereau (roues · bloc · [grue] · 2)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2747,14 +2756,14 @@
       },
       "replique": {
         "pouvoir": "La colonne est partie ce matin. Elle arrive avant que vous ayez fini de compter.",
-        "super": "Vous avez usé la première ligne. Voici la seconde, et elle est déjà payée."
+        "super": "La colonne est arrivée ce matin, et elle n’a pas fini. Deuxième passage : la relève est là."
       }
     },
     {
       "cle": "cmd_sans_visage",
       "nom": "Relais Zéro",
       "style": "Information asymétrique",
-      "description": "Voit par ses drones, aveugle l’adversaire, et fait tomber un brouillard où seuls ses relais y voient.",
+      "description": "Voit par ses drones, aveugle l’adversaire, et remet un secteur à zéro : ce qui roule s’arrête, ce qui vole tombe.",
       "contreJeu": "Ses drones sont fragiles et ses relais repérables : les mettre hors jeu un par un, et capturer les bâtiments, qui gardent leur vision.",
       "passif": {
         "cible": "mes_unites",
@@ -2805,54 +2814,23 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Réseau sans écho",
-        "barres": 7,
-        "duree": {
-          "type": "journees",
-          "n": 2
-        },
-        "description": "Brouillard pendant 2 journées, et vos drones voient 2 cases plus loin et se défendent ×1,2.",
+        "nom": "Retour à zéro",
+        "barres": 9,
+        "duree": "ce_tour",
+        "description": "Il choisit une case : dans un rayon de 2, tout ce qui a un moteur — des deux camps — s’arrête jusqu'à la fin de son prochain tour, et les avions et drones adverses touchés tombent.",
         "effets": [
           {
             "cible": "terrain",
-            "meteo": {
-              "valeur": "brouillard",
-              "journees": 2
-            }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "types": [
-                "drone",
-                "drone_marin",
-                "drone_intercepteur",
-                "drone_ravitailleur",
-                "meridien_veilleur"
-              ]
-            },
-            "modificateur": {
-              "quoi": "vision",
-              "valeur": 2
-            }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "types": [
-                "drone",
-                "drone_marin",
-                "drone_intercepteur",
-                "drone_ravitailleur",
-                "meridien_veilleur"
-              ]
-            },
-            "modificateur": {
-              "quoi": "defense",
-              "valeur": 1.2
+            "iem": {
+              "rayon": 2,
+              "abattre": true
             }
           }
         ]
+      },
+      "piece": {
+        "nom": "Le Relais sans numéro",
+        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « identifiant de compétition » est vide sur la fiche d’entrée de terrain — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2874,14 +2852,14 @@
       },
       "replique": {
         "pouvoir": "Signal interrompu. Vous ne recevrez plus rien de ce secteur.",
-        "super": "Réseau sans écho. Nos relais entendent tout ; les vôtres n’entendent plus rien."
+        "super": "Retour à zéro sur le secteur. Ce qui volait est au sol ; ce qui roulait attend."
       }
     },
     {
       "cle": "cmd_yuna_serrat",
       "nom": "Yuna Serrat",
       "style": "Le mandat",
-      "description": "Multiplie les petites équipes de capture, et sous mandat, une ville se prend en un tour.",
+      "description": "Multiplie les petites équipes de capture, et sous scellés, tout ce qui a un moteur s’arrête pendant que ses capteurs passent.",
       "contreJeu": "Ses groupes dispersés perdent les duels concentrés : frapper ses capteurs un par un, avant leur prochain ordre.",
       "passif": {
         "cible": "mes_unites",
@@ -2920,11 +2898,18 @@
         ]
       },
       "superPouvoir": {
-        "nom": "Le réseau bascule",
+        "nom": "Mise sous scellés",
         "barres": 7,
         "duree": "ce_tour",
-        "description": "Vos capteurs capturent ×3 ce tour, et vos troupes à pied gagnent +2 de mouvement.",
+        "description": "Elle choisit une case : dans un rayon de 2, tout ce qui a un moteur — des deux camps — est scellé jusqu'à la fin de son prochain tour, ni bouger ni riposter, et ses capteurs capturent ×2 ce tour.",
         "effets": [
+          {
+            "cible": "terrain",
+            "iem": {
+              "rayon": 2,
+              "abattre": false
+            }
+          },
           {
             "cible": "mes_unites",
             "filtre": {
@@ -2936,23 +2921,14 @@
             },
             "modificateur": {
               "quoi": "capture",
-              "valeur": 3
-            }
-          },
-          {
-            "cible": "mes_unites",
-            "filtre": {
-              "mouvement": [
-                "pied",
-                "bottes"
-              ]
-            },
-            "modificateur": {
-              "quoi": "mouvement",
               "valeur": 2
             }
           }
         ]
+      },
+      "piece": {
+        "nom": "La Borne de scellés",
+        "silhouette": "Une borne d'émission grise sur un camion léger, peinte aux couleurs d’un scellé de concession, avec le numéro de mandat au pochoir à la place du badge orange — un numéro de mandat n’est pas un numéro d’homologation (roues · bloc · [antenne, radar] · 2)."
       },
       "faction": "atl",
       "faiblesse": {
@@ -2973,7 +2949,7 @@
       },
       "replique": {
         "pouvoir": "Un mandat provisoire. Provisoire, mais signé.",
-        "super": "Le réseau bascule. Vous serez consultés après la signature, comme tout le monde."
+        "super": "Mandat provisoire, scellés définitifs. Vous serez consultés à la levée des scellés, comme tout le monde."
       }
     },
     {
@@ -3031,7 +3007,7 @@
       },
       "superPouvoir": {
         "nom": "Réserves fermées",
-        "barres": 8,
+        "barres": 7,
         "duree": {
           "type": "journees",
           "n": 1
@@ -3054,6 +3030,10 @@
           }
         ]
       },
+      "piece": {
+        "nom": "Le Verrou",
+        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, qui parle à tous les plastrons de marquage de la carte et leur fait enregistrer une marque à distance : il ne tire rien, il détourne le système de marquage d’Atlas (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
+      },
       "faction": "atl",
       "faiblesse": {
         "axe": "mobilite",
@@ -3074,7 +3054,7 @@
       },
       "replique": {
         "pouvoir": "Le bastion veille. Rien ne s’interrompt, rien ne passe.",
-        "super": "Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s’éteignent avec."
+        "super": "Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s'éteignent avec."
       }
     },
     {

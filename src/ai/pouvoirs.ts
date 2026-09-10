@@ -22,10 +22,15 @@
  * jugée aussi sur ce que l'adversaire pourra faire de mieux à son tour.
  *
  * Une pose de terrain demande des cases que l'IA ne sait pas choisir : un
- * pouvoir qui en porte une est laissé au joueur humain. Tout est déterministe.
+ * pouvoir qui en porte une est laissé au joueur humain. **Les familles de la
+ * faction** (10 septembre 2026), elles, visent une case que l'IA choisit :
+ * `meilleureCase` parcourt toute la carte et garde la case qui maximise la
+ * valeur adverse touchée moins la valeur propre touchée, en fonds — une frappe
+ * qui toucherait plus de sien que d'adverse vaut zéro et ne part pas. Tout est
+ * déterministe.
  */
 
-import type { Catalogue, Commandants, CommandantMoteur, EtatPartie, Unite } from '../engine/index';
+import type { Action, Catalogue, Commandants, CommandantMoteur, EtatPartie, Unite } from '../engine/index';
 import { produitesPar } from '../engine/catalogue';
 import { brouillardActif, unitesLourdes } from '../engine/climat/index';
 import { copierEtat } from '../engine/etat';
@@ -37,11 +42,13 @@ import {
 } from '../engine/regles/economie';
 import { portee, uniteSur } from '../engine/regles/mouvement';
 import {
-  appliquerPouvoir, estModificateurDurable, estPoseTerrain, evaluerEffets, poserModificateur, verifierPouvoir,
+  appliquerPouvoir, demandeUneCase, estModificateurDurable, estPoseTerrain, evaluerEffets,
+  poserModificateur, verifierPouvoir,
 } from '../engine/regles/pouvoirs';
 import { visionUnite } from '../engine/regles/vision';
 import { depuisCle, manhattan, porte, pvAffiches } from '../engine/types';
-import type { Case, CampId, EffetPouvoir } from '../schemas/index';
+import { sontAllies } from '../engine/equipes';
+import { TYPES_MOUVEMENT_MOTEUR, type Case, type CampId, type EffetPouvoir } from '../schemas/index';
 import { adversairesConnus, capteur, valeur } from './evaluation';
 import { aBesoin, manque, peutTirerSur, sourcesRavitaillement } from './logistique';
 
@@ -80,6 +87,13 @@ export const TOURS_PANNE = 2;
 /** Part de la valeur d'une unité aérienne poussée sous `TOURS_PANNE` tours d'autonomie. */
 export const PART_PANNE = 0.5;
 
+/**
+ * Plafond de ce que vaut le tour perdu d'une unité arrêtée par une impulsion :
+ * un dixième de sa valeur, sans qu'un porte-avions à 20 000 fonds pèse plus
+ * qu'une prime de mise hors jeu.
+ */
+export const PLAFOND_TOUR_PERDU = 1500;
+
 /** Niveau de pouvoir qu'une stratégie déclenche, ou `null` pour garder sa jauge. */
 export type DecisionPouvoir = 'normal' | 'super' | null;
 
@@ -89,6 +103,8 @@ export type PouvoirMoteur = CommandantMoteur['pouvoir'];
 /** Ce que `valeurPouvoir` a besoin de savoir en plus du pouvoir. */
 export interface ContextePouvoir {
   niveau: 'normal' | 'super';
+  /** La case visée par une frappe ou une impulsion ; absente, `meilleureCase` la choisit. */
+  cases?: Case[];
 }
 
 /** La valeur d'un pouvoir, famille par famille, en fonds. */
@@ -115,12 +131,19 @@ export interface DetailPouvoir {
   meteo: number;
   /** `carburant` adverse : les appareils poussés au bord de la panne. */
   carburant: number;
+  /**
+   * Familles de la faction : le collatéral d'une frappe sur les miennes
+   * (négatif — les PV retirés à l'adversaire se lisent dans `degatsDirects`),
+   * les tours perdus par les unités arrêtées (adverses en plus, miennes encore
+   * prêtes en moins) et les unités abattues, à leur coût entier.
+   */
+  faction: number;
   total: number;
 }
 
 const VIDE: DetailPouvoir = {
   soin: 0, degatsDirects: 0, ravitailler: 0, reactiver: 0, tactique: 0,
-  vision: 0, economie: 0, meteo: 0, carburant: 0, total: 0,
+  vision: 0, economie: 0, meteo: 0, carburant: 0, faction: 0, total: 0,
 };
 
 /**
@@ -137,9 +160,80 @@ export function rienDePret(etat: EtatPartie, camp: CampId): boolean {
   return !etat.unites.some((u) => u.camp === camp && u.etat === 'prete' && u.dansTransport === null);
 }
 
-/** Vrai si ce pouvoir demande des cases que l'IA ne sait pas choisir. */
+/** Vrai si ce pouvoir demande des cases que l'IA ne sait pas choisir : une pose de terrain. */
 function demandeDesCases(pouvoir: PouvoirMoteur): boolean {
   return pouvoir.effets.some(estPoseTerrain);
+}
+
+/** Vrai si ce pouvoir vise une case que l'IA choisit : une frappe ou une impulsion. */
+function viseUneCase(pouvoir: PouvoirMoteur): boolean {
+  return pouvoir.effets.some(demandeUneCase);
+}
+
+/** Ce que vaut le tour perdu d'une unité arrêtée : un dixième de sa valeur, plafonné. */
+export function valeurTourPerdu(cat: Catalogue, u: Unite): number {
+  return Math.min(PLAFOND_TOUR_PERDU, valeur(cat, u) / 10);
+}
+
+/** Ce qu'une frappe ou un laser retire à une unité, en PV affichés, plancher 1 PV interne. */
+function pvPerdus(u: Unite, pv: number): number {
+  return pvAffiches(u.pv) - pvAffiches(Math.max(1, u.pv - pv * 10));
+}
+
+/**
+ * Ce que vaut, en fonds, viser cette case avec ce pouvoir : la valeur adverse
+ * touchée moins la valeur propre touchée. Compté sans copier l'état — six
+ * cents cases fois toutes les unités se parcourent, six cents copies non.
+ * Adverse : les unités **connues** (brouillard honnête). Propre : les miennes
+ * et celles de mes alliés, toutes — on ne se frappe pas soi-même à l'aveugle.
+ * Une impulsion ne coûte à une unité mienne que si elle est encore à jouer.
+ */
+export function valeurCase(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, pouvoir: PouvoirMoteur, centre: Case, connus?: Unite[],
+): number {
+  const connusIds = new Set((connus ?? adversairesConnus(etat, cat, camp)).map((a) => a.id));
+  let total = 0;
+  for (const e of pouvoir.effets) {
+    if (!demandeUneCase(e)) continue;
+    const rayon = 'frappe' in e ? e.frappe.rayon : e.iem.rayon;
+    for (const u of etat.unites) {
+      if (u.dansTransport !== null || manhattan(u, centre) > rayon) continue;
+      const type = cat.unites[u.type];
+      if (!type) continue;
+      const mienne = sontAllies(etat, u.camp, camp);
+      if (!mienne && !connusIds.has(u.id)) continue;
+      const signe = mienne ? -1 : 1;
+      if ('frappe' in e) {
+        total += signe * (pvPerdus(u, e.frappe.pv) * type.cout) / 10;
+      } else {
+        if (!TYPES_MOUVEMENT_MOTEUR.includes(type.typeMouvement)) continue;
+        if (!mienne && e.iem.abattre && type.domaine === 'air') total += type.cout;
+        else if (!mienne) total += valeurTourPerdu(cat, u);
+        else if (u.etat === 'prete' || u.etat === 'deplacee') total -= valeurTourPerdu(cat, u);
+      }
+    }
+  }
+  return total;
+}
+
+/**
+ * La case qui vaut le plus pour ce pouvoir, sur toute la carte, et sa valeur ;
+ * `null` si aucune case ne rapporte plus qu'elle ne coûte. À égalité, la
+ * première dans l'ordre de lecture : déterministe.
+ */
+export function meilleureCase(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, pouvoir: PouvoirMoteur,
+): { cases: Case[]; valeur: number } | null {
+  if (!viseUneCase(pouvoir)) return null;
+  const connus = adversairesConnus(etat, cat, camp);
+  let meilleure: { cases: Case[]; valeur: number } | null = null;
+  for (let y = 0; y < etat.hauteur; y += 1) {
+    for (let x = 0; x < etat.largeur; x += 1) {
+      const v = valeurCase(etat, cat, camp, pouvoir, { x, y }, connus);
+      if (v > 0 && (meilleure === null || v > meilleure.valeur)) meilleure = { cases: [{ x, y }], valeur: v };
+    }
+  }
+  return meilleure;
 }
 
 /**
@@ -150,11 +244,11 @@ function demandeDesCases(pouvoir: PouvoirMoteur): boolean {
  * on le pose de la même main, pour lire le même monde que lui.
  */
 export function etatApresPouvoir(
-  etat: EtatPartie, cat: Catalogue, camp: CampId, pouvoir: PouvoirMoteur, niveau: 'normal' | 'super',
+  etat: EtatPartie, cat: Catalogue, camp: CampId, pouvoir: PouvoirMoteur, niveau: 'normal' | 'super', cases: Case[] = [],
 ): EtatPartie | null {
   const e = copierEtat(etat);
   const verdict = { ok: true as const, cout: 0, nom: pouvoir.nom, effets: pouvoir.effets, duree: pouvoir.duree };
-  const r = appliquerPouvoir(e, cat, camp, niveau, verdict, [], []);
+  const r = appliquerPouvoir(e, cat, camp, niveau, verdict, cases, []);
   if (!r.ok) return null;
   if (e.climat.meteo === 'canicule' && etat.climat.meteo !== 'canicule') {
     const lourdes = unitesLourdes(cat);
@@ -300,6 +394,9 @@ function gainsAdverses(etat: EtatPartie, cat: Catalogue, camp: CampId): number {
 function pouvoirPourTourAdverse(pouvoir: PouvoirMoteur): PouvoirMoteur {
   const effets = pouvoir.effets.filter((e) => {
     if ('meteo' in e) return true;
+    // Une frappe ou un laser laissent l'adversaire entamé pour son tour ; une
+    // impulsion est comptée à part (`faction`), pas ici.
+    if ('frappe' in e || 'laser' in e) return true;
     if (!('modificateur' in e)) return false;
     if (e.modificateur.quoi === 'degats_directs') return true;
     return estModificateurDurable(e) && pouvoir.duree !== 'ce_tour';
@@ -358,9 +455,15 @@ export function detailPouvoir(
   etat: EtatPartie, cat: Catalogue, camp: CampId, pouvoir: PouvoirMoteur, contexte: ContextePouvoir,
 ): DetailPouvoir {
   if (demandeDesCases(pouvoir)) return VIDE;
-  const apres = etatApresPouvoir(etat, cat, camp, pouvoir, contexte.niveau);
+  let cases = contexte.cases ?? [];
+  if (viseUneCase(pouvoir) && cases.length === 0) {
+    const choix = meilleureCase(etat, cat, camp, pouvoir);
+    if (!choix) return VIDE;
+    cases = choix.cases;
+  }
+  const apres = etatApresPouvoir(etat, cat, camp, pouvoir, contexte.niveau, cases);
   if (!apres) return VIDE;
-  const bilan = evaluerEffets(etat, cat, camp, pouvoir.effets);
+  const bilan = evaluerEffets(etat, cat, camp, pouvoir.effets, cases);
   const avantParId = new Map(etat.unites.map((u) => [u.id, u]));
   const connus = adversairesConnus(etat, cat, camp);
   const connusIds = new Set(connus.map((a) => a.id));
@@ -374,6 +477,8 @@ export function detailPouvoir(
     const delta = pvAffiches(a.pv) - pvAffiches(v.pv);
     if (a.camp === camp) {
       if (delta > 0) d.soin += (delta * cout) / 10;
+      // Le collatéral d'une frappe de zone sur les miennes.
+      if (delta < 0) d.faction += (delta * cout) / 10;
       if (aBesoin(etat, cat, v)) {
         // Le manque est en fonds de coût plein : on le ramène à la valeur de l'unité.
         const comble = Math.max(0, manque(cat, v) - manque(cat, a)) * (pvAffiches(v.pv) / 10);
@@ -391,12 +496,30 @@ export function detailPouvoir(
     if (a) d.reactiver += gainUnite(apres, cat, a);
   }
 
+  // Familles de la faction : les tours perdus et les abattues, lus sur l'état
+  // d'après — une unité arrêtée y porte `iemJusquaJournee`, une abattue n'y est plus.
+  if (viseUneCase(pouvoir)) {
+    const apresParId = new Map(apres.unites.map((a) => [a.id, a]));
+    for (const v of etat.unites) {
+      if (v.dansTransport !== null) continue;
+      const a = apresParId.get(v.id);
+      const adverse = !sontAllies(etat, v.camp, camp);
+      if (adverse && !connusIds.has(v.id)) continue;
+      if (!a) {
+        if (adverse) d.faction += cat.unites[v.type]?.cout ?? 0;
+        continue;
+      }
+      if (a.iemJusquaJournee === undefined || v.iemJusquaJournee !== undefined) continue;
+      if (adverse) d.faction += valeurTourPerdu(cat, v);
+      else if (v.etat === 'prete' || v.etat === 'deplacee') d.faction -= valeurTourPerdu(cat, v);
+    }
+  }
   // Le tour rejoué sur les deux états, mes unités prêtes d'abord ; puis le
   // tour adverse, sur ce que le pouvoir lui laissera.
   d.tactique += gainsDuCamp(apres, cat, camp, reactivees) - gainsDuCamp(etat, cat, camp, reactivees);
   const adverse = pouvoirPourTourAdverse(pouvoir);
   if (adverse.effets.length > 0) {
-    const apresAdverse = etatApresPouvoir(etat, cat, camp, adverse, contexte.niveau);
+    const apresAdverse = etatApresPouvoir(etat, cat, camp, adverse, contexte.niveau, cases);
     if (apresAdverse) d.tactique += gainsAdverses(etat, cat, camp) - gainsAdverses(apresAdverse, cat, camp);
   }
 
@@ -448,7 +571,7 @@ export function detailPouvoir(
   }
 
   d.total = d.soin + d.degatsDirects + d.ravitailler + d.reactiver + d.tactique
-    + d.vision + d.economie + d.meteo + d.carburant;
+    + d.vision + d.economie + d.meteo + d.carburant + d.faction;
   return d;
 }
 
@@ -476,17 +599,38 @@ export function valeurPouvoir(
 export function decisionPouvoir(
   etat: EtatPartie, cat: Catalogue, camp: CampId, commandants: Commandants,
 ): DecisionPouvoir {
+  return actionPouvoir(etat, cat, camp, commandants)?.niveau ?? null;
+}
+
+/**
+ * L'action de pouvoir à jouer maintenant, cases comprises quand le pouvoir en
+ * vise une (frappe, impulsion : `meilleureCase`), ou `null`. C'est ce que la
+ * stratégie envoie au moteur ; `decisionPouvoir` n'en garde que le niveau.
+ */
+export function actionPouvoir(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, commandants: Commandants,
+): Extract<Action, { type: 'pouvoir' }> | null {
   const commandant = commandants[camp] ?? null;
   if (!commandant) return null;
+  const avec = (niveau: 'normal' | 'super', p: PouvoirMoteur): Extract<Action, { type: 'pouvoir' }> | null => {
+    if (!viseUneCase(p)) return { type: 'pouvoir', niveau };
+    const choix = meilleureCase(etat, cat, camp, p);
+    return choix ? { type: 'pouvoir', niveau, cases: choix.cases } : null;
+  };
   if (verifierPouvoir(etat, commandant, camp, 'super').ok && !demandeDesCases(commandant.superPouvoir)) {
     const p = commandant.superPouvoir;
-    const v = valeurPouvoir(etat, cat, camp, p, { niveau: 'super' });
-    if (v >= SEUIL_PAR_BARRE * p.barres) return 'super';
-    if (v > 0 && (debutDeTour(etat, camp) || rienDePret(etat, camp))) return 'super';
+    const action = avec('super', p);
+    if (!action) return null;
+    const v = valeurPouvoir(etat, cat, camp, p, { niveau: 'super', cases: action.cases ?? [] });
+    if (v >= SEUIL_PAR_BARRE * p.barres) return action;
+    if (v > 0 && (debutDeTour(etat, camp) || rienDePret(etat, camp))) return action;
     return null;
   }
   if (!debutDeTour(etat, camp)) return null;
   if (!verifierPouvoir(etat, commandant, camp, 'normal').ok || demandeDesCases(commandant.pouvoir)) return null;
   const p = commandant.pouvoir;
-  return valeurPouvoir(etat, cat, camp, p, { niveau: 'normal' }) >= SEUIL_PAR_BARRE * p.barres ? 'normal' : null;
+  const action = avec('normal', p);
+  if (!action) return null;
+  const v = valeurPouvoir(etat, cat, camp, p, { niveau: 'normal', cases: action.cases ?? [] });
+  return v >= SEUIL_PAR_BARRE * p.barres ? action : null;
 }

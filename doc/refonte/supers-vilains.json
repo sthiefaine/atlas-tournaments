@@ -1,0 +1,346 @@
+{
+  "version": 1,
+  "statut": "conception",
+  "regles": [
+    "Ce fichier ne porte que le super pouvoir de chacun des huit commandants de la Sélection Méridienne (faction atl). Passif, pouvoir normal, faiblesse, contre-jeu de kit et réplique du pouvoir normal restent ceux de la révision 4 de content/commandants-capacites.json.",
+    "Vocabulaire : les familles de doc/04 §7.2 (modificateurs, soin, degats_directs, prix, chance, etoiles, ravitailler, reactiver, meteo, poserTerrain) plus trois familles réservées aux Gris, en cours de câblage : frappe_zone { cible: terrain, frappe: { pv 1..3, rayon 0..2 } }, rayon_laser { cible: unites_adverses, laser: { pv 1..5, nombre 1..3, choix: plus_cheres | plus_avancees } }, iem { cible: terrain, iem: { rayon 1..3, abattre: bool } }.",
+    "frappe_zone et iem touchent les deux camps dans le rayon Manhattan ; l'IA vise la case qui maximise la valeur adverse touchée moins la sienne. Un seul effet choisi sur une case par super. degats_directs et frappe_zone laissent toujours 1 PV ; rayon_laser aussi.",
+    "iem : toute unité à moteur (roues, chenilles, air, mer) dans le rayon ne peut ni bouger ni riposter jusqu'à la fin de son prochain tour (mécanisme de l'impulsion de station, iemJusquaJournee) ; abattre met hors jeu les unités aériennes et les drones adverses touchés — seule famille du jeu qui met hors jeu directement, réservée au super d'un Gris, décision du propriétaire.",
+    "Un super coûte 5 à 9 barres, strictement plus que le pouvoir normal du kit (3 barres pour les huit) ; un super à abattre coûte au moins 8. reactiver n'existe qu'au super.",
+    "Un effet instantané (frappe_zone, rayon_laser, iem, degats_directs, ravitailler, reactiver) s'applique au déclenchement ; la durée ne concerne que les modificateurs durables.",
+    "Retirer des PV à toute l'armée adverse sans filtre (degats_directs sans filtre) reste une signature des Gris ; avec ce lot un seul la porte, Basile Kelm.",
+    "Chaque super est porté par une pièce de matériel sans dossier (piece), télégraphié un tour avant (telegraphie : jauge adverse visible, ligne du Bulletin quand la jauge atteint le coût, gabarit du rayon au survol), et consigné au premier déclenchement comme protêt de Nera Aldouin ; voir doc/refonte/supers-vilains.md §4.",
+    "Aucune réplique ni aucun commentaire n'expose la fratrie Maël–Lise ni la paternité d'Edran avant opus1_finale_10 ; le lien Lise–Edran n'est jamais exposé dans l'opus.",
+    "Les champs remplace, familles, telegraphie, contreJeu, vantour, piece et premiereFinale sont des annotations de conception et de scénario ; l'agent de transcription porte nom, barres, duree, description, effets dans superPouvoir et replique dans replique.super.",
+    "Les chiffres de ce registre sont ceux du contenu joué (content/commandants-capacites.json) après les crans d'équilibrage du 10 septembre 2026 ; la spec d'origine du scénariste est consignée dans pouvoirs-v4.md, section « Les supers des Gris en jeu »."
+  ],
+  "supers": [
+    {
+      "cle": "cmd_hadran_ost",
+      "nom": "Grêle",
+      "description": "Il choisit une case : tout ce qui est à 2 cases ou moins perd 2 PV, ses chenilles comprises, puis ses chenilles gagnent +1 de mouvement et avancent dans le trou.",
+      "barres": 7,
+      "duree": "ce_tour",
+      "effets": [
+        {
+          "cible": "terrain",
+          "frappe": {
+            "pv": 2,
+            "rayon": 2
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": 1
+          }
+        }
+      ],
+      "piece": {
+        "nom": "La Batterie sans plaque",
+        "silhouette": "Un bloc à chenilles de taille 3 portant un rail de douze tubes gris, sans badge orange, sans plaque de série, sans dossier (chenilles · bloc · [lance_roquettes, antenne] · 3)."
+      },
+      "telegraphie": "Jauge visible sous le portrait ; à 8 barres à la fin de son tour, Bulletin « Batterie sans plaque en charge — Grêle possible au prochain tour », portrait au badge orange barré, gabarit du rayon 2 (13 cases) au survol. La case reste son choix.",
+      "contreJeu": "Disperser — treize cases, c'est deux unités espacées d'une case, pas une colonne — et rester au contact des siennes : il ne tire pas où il a du monde.",
+      "replique": "La Sélection Méridienne n’a pas besoin de contourner. Il grêle, et le bloc avance.",
+      "vantour": "Douze tubes, aucune plaque — je cherche le badge orange, et je ne le trouve pas, mesdames et messieurs.",
+      "premiereFinale": "opus1_finale_01",
+      "remplace": "Le bloc avance",
+      "familles": [
+        "frappe_zone",
+        "mouvement"
+      ]
+    },
+    {
+      "cle": "selene_veyr",
+      "nom": "Délestage",
+      "description": "Pendant 2 journées, tout ce qui a un moteur dans le camp adverse brûle le double de carburant par tour, ses captures comptent moitié, et le Consortium encaisse le double.",
+      "barres": 8,
+      "duree": {
+        "type": "journees",
+        "n": 2
+      },
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles",
+              "air",
+              "mer"
+            ]
+          },
+          "modificateur": {
+            "quoi": "carburant",
+            "valeur": 2
+          }
+        },
+        {
+          "cible": "unites_adverses",
+          "modificateur": {
+            "quoi": "capture",
+            "valeur": 0.5
+          }
+        },
+        {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 2
+          }
+        }
+      ],
+      "piece": {
+        "nom": "Le Coupleur",
+        "silhouette": "Une armoire grise vissée sur le poste de distribution du terrain, absente du relevé de la Cartographie, qui compte le courant des deux camps et le coupe d’un côté (roues · bloc · [antenne, panneaux_solaires] · 2, posée au pied de son QG comme un décor non capturable)."
+      },
+      "telegraphie": "Le Coupleur est sur la carte dès J1 et le briefing le nomme. Jauge visible ; à 8 barres, Bulletin « Coupleur armé — Délestage possible au prochain tour ». Une fois déclenché, les deux colonnes suivantes du Bulletin portent l'icône du délestage, comme une météo imposée.",
+      "contreJeu": "Poser les appareils sur un aéroport ou un porte-avions avant son tour, ne pas entamer une capture longue quand sa jauge est pleine, et lui prendre des bâtiments : ce super ne retire rien, il rend dépendant.",
+      "replique": "Le réseau se protège : délestage sur votre secteur. Vous serez rétablis quand nous aurons fini de compter.",
+      "vantour": "Pas un tir, pas un nuage, et regardez les jauges de carburant tomber — c'est la première fois que je commente une facture.",
+      "premiereFinale": "opus1_finale_08",
+      "remplace": "Tutelle du réseau",
+      "familles": [
+        "carburant",
+        "capture",
+        "fonds"
+      ]
+    },
+    {
+      "cle": "cmd_mael_orven",
+      "nom": "Rasante",
+      "description": "Ses appareils passent en rasante : les 2 unités adverses les plus avancées perdent 4 PV chacune, où qu’elles soient.",
+      "barres": 5,
+      "duree": "ce_tour",
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "laser": {
+            "pv": 4,
+            "nombre": 2,
+            "choix": "plus_avancees"
+          }
+        }
+      ],
+      "piece": {
+        "nom": "Le Rapace",
+        "silhouette": "Une aile delta sans dérive portant sous le ventre un marqueur à faisceau qui marque sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
+      },
+      "telegraphie": "Le choix est déterministe et sans case : quand sa jauge est pleine, les deux unités qu'il frapperait maintenant portent un chevron orange au-dessus de leur étiquette (« désignées »), recalculé à chaque mouvement du joueur, et le Bulletin l'écrit. On sait qui, on ne sait pas quand.",
+      "contreJeu": "Ne pas mettre en tête ce qu'on ne veut pas perdre — la pointe, c'est deux infanteries à 1 000, pas le char lourd — et reculer d'une case une unité désignée pour passer le chevron à la suivante.",
+      "replique": "Rasante sur la tête de colonne. On ne se pose pas, on n’a pas le temps.",
+      "vantour": "Un passage, deux marques, aucune charge tirée — on vient de voir une pièce faire quelque chose que le règlement ne sait pas nommer.",
+      "premiereFinale": "opus1_finale_03",
+      "remplace": "Ciel de manœuvre",
+      "familles": [
+        "rayon_laser"
+      ]
+    },
+    {
+      "cle": "cmd_lise_orven",
+      "nom": "Zone rouge",
+      "description": "Elle choisit une case : les 5 cases de la croix perdent 3 PV, les siennes comprises, et ses pièces de portée tirent 1 case plus loin jusqu'à son prochain tour.",
+      "barres": 7,
+      "duree": "tour_complet",
+      "effets": [
+        {
+          "cible": "terrain",
+          "frappe": {
+            "pv": 3,
+            "rayon": 1
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "artillerie",
+              "roquettes",
+              "missiles_sol",
+              "missiles_air",
+              "cuirasse"
+            ]
+          },
+          "modificateur": {
+            "quoi": "portee",
+            "valeur": 1
+          }
+        }
+      ],
+      "piece": {
+        "nom": "Le Repère",
+        "silhouette": "Un marqueur lourd sur roues dont le tube fait deux fois la longueur du catalogue, calé sur les béquilles de sécurité qu’elle dessinait autrefois pour les autres ; badge en règle sur le châssis, aucun sur le tube, qui n’est pas celui du dossier (roues · bloc · [canon_long, lance_roquettes] · 3)."
+      },
+      "telegraphie": "Jauge visible ; à 7 barres, Bulletin « Repère calé — Zone rouge possible au prochain tour », gabarit de la croix au survol. Au tir, la case visée est balisée en rouge avant la chute (geste de partition « baliser », à écrire).",
+      "contreJeu": "Jamais trois unités en croix ; approcher par le flanc, vite, avec de la reconnaissance — ce qu'elle déplace ne tire pas.",
+      "replique": "La zone est rouge. Vous y êtes entrés, c’est votre choix, pas le mien.",
+      "vantour": "Un tube qui n'est pas celui du dossier, et une zone qu'elle appelle de sécurité — je n'ai jamais vu une case aussi peu sûre.",
+      "premiereFinale": "opus1_finale_04",
+      "remplace": "Passages verrouillés",
+      "familles": [
+        "frappe_zone",
+        "portee"
+      ]
+    },
+    {
+      "cle": "cmd_edran_sorel",
+      "nom": "La relève arrive",
+      "description": "Toutes ses unités refont le plein et les charges, et ses roues et chenilles qui ont déjà agi rejouent une fois ce tour.",
+      "barres": 8,
+      "duree": "ce_tour",
+      "effets": [
+        {
+          "cible": "mes_unites",
+          "ravitailler": {
+            "carburant": true,
+            "munitions": true
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "reactiver": true
+        }
+      ],
+      "piece": {
+        "nom": "Le Convoi sans manifeste",
+        "silhouette": "Trois transports dont la cale porte des batteries de relève qui ne figurent sur aucun manifeste d’entrée de terrain — les batteries d’Aube, sorties d’un dépôt méridien sans bordereau (roues · bloc · [grue] · 2)."
+      },
+      "telegraphie": "Le convoi est trois unités visibles sur une route visible, nommées par le Bulletin dès leur entrée (« convoi sans manifeste sur la route est »). Jauge visible ; à 8 barres, « La relève arrive possible au prochain tour ». Les unités réactivées portent l'étiquette de l'événement reactivation.",
+      "contreJeu": "Isoler ses routes et frapper les transports — sans convoi, la relève est un plein à 8 barres — et ne jamais échanger à égalité à la fin de son tour : ce qui a tiré retirera.",
+      "replique": "La colonne est arrivée ce matin, et elle n’a pas fini. Deuxième passage : la relève est là.",
+      "vantour": "Trois transports, pas un manifeste, et une ligne qui rejoue — je ne sais pas ce qu'il y a dans ces caisses, et je crois que personne à Atlas ne le sait non plus.",
+      "premiereFinale": "opus1_finale_10",
+      "remplace": "Deuxième ligne",
+      "familles": [
+        "ravitailler",
+        "reactiver"
+      ]
+    },
+    {
+      "cle": "cmd_yuna_serrat",
+      "nom": "Mise sous scellés",
+      "description": "Elle choisit une case : dans un rayon de 2, tout ce qui a un moteur — des deux camps — est scellé jusqu'à la fin de son prochain tour, ni bouger ni riposter, et ses capteurs capturent ×2 ce tour.",
+      "barres": 7,
+      "duree": "ce_tour",
+      "effets": [
+        {
+          "cible": "terrain",
+          "iem": {
+            "rayon": 2,
+            "abattre": false
+          }
+        },
+        {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "infanterie",
+              "meca",
+              "genie"
+            ]
+          },
+          "modificateur": {
+            "quoi": "capture",
+            "valeur": 2
+          }
+        }
+      ],
+      "piece": {
+        "nom": "La Borne de scellés",
+        "silhouette": "Une borne d'émission grise sur un camion léger, peinte aux couleurs d’un scellé de concession, avec le numéro de mandat au pochoir à la place du badge orange — un numéro de mandat n’est pas un numéro d’homologation (roues · bloc · [antenne, radar] · 2)."
+      },
+      "telegraphie": "Jauge visible ; à 7 barres, Bulletin « Borne en charge — Mise sous scellés possible au prochain tour », gabarit du rayon 2 au survol. Une unité scellée porte l'icône radar de l'IEM de station (iemJusquaJournee).",
+      "contreJeu": "Tenir les bâtiments avec des fantassins, pas des chars — le scellé ne touche pas ce qui marche — et frapper ses capteurs pendant son tour : ses propres roues sont scellées aussi.",
+      "replique": "Mandat provisoire, scellés définitifs. Vous serez consultés à la levée des scellés, comme tout le monde.",
+      "vantour": "Un mandat au pochoir sur une borne sans badge : elle vient de mettre sous scellés du matériel homologué avec du matériel qui ne l'est pas.",
+      "premiereFinale": "opus1_finale_05",
+      "remplace": "Le réseau bascule",
+      "familles": [
+        "iem",
+        "capture"
+      ]
+    },
+    {
+      "cle": "cmd_basile_kelm",
+      "nom": "Réserves fermées",
+      "description": "Toutes les unités adverses perdent 1 PV, et pendant une journée elles voient 2 cases de moins : les réserves sont fermées, ce qui est dehors y reste.",
+      "barres": 7,
+      "duree": {
+        "type": "journees",
+        "n": 1
+      },
+      "effets": [
+        {
+          "cible": "unites_adverses",
+          "modificateur": {
+            "quoi": "degats_directs",
+            "valeur": 1
+          }
+        },
+        {
+          "cible": "unites_adverses",
+          "modificateur": {
+            "quoi": "vision",
+            "valeur": -2
+          }
+        }
+      ],
+      "piece": {
+        "nom": "Le Verrou",
+        "silhouette": "Le coffret de commande des dépôts du terrain, gris, sans badge, qui parle à tous les plastrons de marquage de la carte et leur fait enregistrer une marque à distance : il ne tire rien, il détourne le système de marquage d’Atlas (chenilles · bloc · [radar, antenne] · 3, posé au QG)."
+      },
+      "telegraphie": "Jauge visible ; à 8 barres, Bulletin « Verrou armé — Réserves fermées possible au prochain tour ». Après déclenchement, la colonne suivante du Bulletin porte l'icône de vision réduite, comme une brume.",
+      "contreJeu": "Ne pas s'attarder devant ses portes quand sa jauge est pleine, et garder un drone ou un bâtiment pour voir : un bâtiment possédé garde sa vision, le −2 ne touche que les unités.",
+      "replique": "Les réserves sont fermées. Ce qui est dehors y reste, et vos écrans s'éteignent avec.",
+      "vantour": "Tous les plastrons du terrain viennent de sonner en même temps — ce n'est pas une pièce, ça, c'est une clé, et elle n'est pas censée exister.",
+      "premiereFinale": "opus1_finale_02",
+      "remplace": null,
+      "familles": [
+        "degats_directs",
+        "vision"
+      ]
+    },
+    {
+      "cle": "cmd_sans_visage",
+      "nom": "Retour à zéro",
+      "description": "Il choisit une case : dans un rayon de 2, tout ce qui a un moteur — des deux camps — s’arrête jusqu'à la fin de son prochain tour, et les avions et drones adverses touchés tombent.",
+      "barres": 9,
+      "duree": "ce_tour",
+      "effets": [
+        {
+          "cible": "terrain",
+          "iem": {
+            "rayon": 2,
+            "abattre": true
+          }
+        }
+      ],
+      "piece": {
+        "nom": "Le Relais sans numéro",
+        "silhouette": "Un Veilleur dont l’antenne fait trois fois la taille du catalogue et dont le champ « identifiant de compétition » est vide sur la fiche d’entrée de terrain — l’impulsion de station sortie de sa station (rotor · capsule · [antenne, antenne] · 2)."
+      },
+      "telegraphie": "Jauge visible ; à 9 barres, Bulletin « Relais sans numéro en charge — Retour à zéro possible au prochain tour », gabarit du rayon 2 au survol, et chaque appareil et drone du joueur porte un point d'exclamation orange : ce qui peut tomber le sait. Neuf barres : il part une fois par match.",
+      "contreJeu": "Espacer les appareils de plus de deux cases les uns des autres — il ne peut abattre qu'une zone de treize cases —, poser ce qui peut se poser, et mettre ses Veilleurs hors jeu un par un.",
+      "replique": "Retour à zéro sur le secteur. Ce qui volait est au sol ; ce qui roulait attend.",
+      "vantour": "Un appareil qui tombe sur un terrain homologué — je n'ai pas de mot pour ça, et j'ai commenté quatre Rondes.",
+      "premiereFinale": "opus1_finale_06",
+      "remplace": "Réseau sans écho",
+      "familles": [
+        "iem"
+      ]
+    }
+  ]
+}

@@ -434,3 +434,63 @@ test('le départ et la destination suivent les volumes aériens et le relief', (
   assert.equal(vivants(b.effets).length, 0);
   b.effets.dispose();
 });
+
+// ---------------------------------------------------------------------------
+// Les familles de la faction : frapper, désigner, sceller
+// ---------------------------------------------------------------------------
+
+test('une frappe de zone sème un missile et un impact par case du rayon, et les reprend en finissant', () => {
+  const b = banc();
+  const g: Geste = { genre: 'frapper', camp: 1, centre: { x: 1, y: 0 }, rayon: 1, debut: 0, duree: DUREES.frapper };
+  const a = gesteVersAnimation(g, b.ctx);
+  assert.ok(a);
+  a.animation.avancer(0.1);
+  // Cinq cases à rayon 1 (la carte n'est pas bornée ici), quatre effets chacune, tous émis d'un coup avec leur retard.
+  assert.equal(b.effets.vivants, 5 * 4);
+  assert.ok(b.images > 0, 'le rendu se salit');
+  a.animation.terminer?.();
+  // Le pool ne rend sa place qu'au pas suivant : ce qui compte est que rien ne reste après un pas.
+  b.effets.avancer(16);
+  assert.equal(b.effets.vivants, 0, 'un clic qui coupe libère les missiles, retards compris');
+  b.effets.dispose();
+});
+
+test('un rayon désigne l’unité par une colonne du ciel, un éclair et un anneau ; rien ne bouge', () => {
+  const b = banc();
+  const g: Geste = { genre: 'designer', unite: sienne, case: { x: 1, y: 0 }, camp: 0, debut: 0, duree: DUREES.designer };
+  const a = gesteVersAnimation(g, b.ctx);
+  assert.ok(a);
+  a.animation.avancer(0.05);
+  const v = b.visuel(sienne);
+  assert.deepEqual([v.dx, v.dz, v.recul, v.secousse], [0, 0, 0, 0], 'le trait marque, il ne pousse pas');
+  assert.equal(b.effets.vivants, 6 + 2, 'six marches, un éclair, un anneau');
+  const centre = { x: 1 * CASE + CASE / 2, z: 0 * CASE + CASE / 2 };
+  for (const o of vivants(b.effets)) {
+    assert.ok(Math.abs(o.position.x - centre.x) < 1e-6 && Math.abs(o.position.z - centre.z) < 1e-6, 'tout est sur la case désignée');
+  }
+  a.animation.terminer?.();
+  b.effets.avancer(16);
+  assert.equal(b.effets.vivants, 0);
+  b.effets.dispose();
+});
+
+test('une impulsion referme un anneau du diamètre du rayon vers le centre', () => {
+  const b = banc();
+  const g: Geste = { genre: 'sceller', camp: 1, centre: { x: 1, y: 1 }, rayon: 2, debut: 0, duree: DUREES.sceller };
+  const a = gesteVersAnimation(g, b.ctx);
+  assert.ok(a);
+  a.animation.avancer(0.02);
+  b.effets.avancer(1);
+  const [anneau] = vivants(b.effets);
+  assert.ok(anneau, 'un anneau au sol');
+  assert.ok(Math.abs(anneau.position.x - (1 * CASE + CASE / 2)) < 1e-6);
+  // Il couvre cinq cases de large au départ, et se resserre.
+  const largeurDepart = anneau.scale.x;
+  assert.ok(Math.abs(largeurDepart - 5 * CASE) < 0.05, `l’anneau part du diamètre du rayon (${largeurDepart})`);
+  b.effets.avancer(DUREES.sceller * 0.5);
+  assert.ok(anneau.scale.x < largeurDepart, 'il se referme');
+  a.animation.terminer?.();
+  b.effets.avancer(16);
+  assert.equal(b.effets.vivants, 0);
+  b.effets.dispose();
+});

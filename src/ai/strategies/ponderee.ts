@@ -46,7 +46,7 @@ import { cleCase, manhattan, porte, pvAffiches } from '../../engine/types';
 import type { Case, CampId, CleUnite } from '../../schemas/index';
 import { porteePrudente } from '../deplacement';
 import { orientationAchat } from '../orientation';
-import { decisionPouvoir } from '../pouvoirs';
+import { actionPouvoir } from '../pouvoirs';
 import {
   adversairesConnus, armeeParType, capteur, compterCapteurs, degatsAttendus, distances, memoire,
   menaceParType, mixPotentiel, objectifsDe, scoreAchat, usinesLibres, type Contre,
@@ -753,8 +753,8 @@ export function strategieAvec(id: string, poids: Poids): Strategie {
       void rng;
       // Le pouvoir d'abord (`../pouvoirs.ts`) : chaque famille a sa valeur en
       // fonds, et le pouvoir part quand elle dépasse le seuil de ses barres.
-      const niveau = decisionPouvoir(etat, cat, camp, commandants);
-      if (niveau !== null) return { type: 'pouvoir', niveau };
+      const pouvoir = actionPouvoir(etat, cat, camp, commandants);
+      if (pouvoir !== null) return pouvoir;
       const pretes = etat.unites
         .filter((u) => u.camp === camp && u.etat === 'prete' && u.dansTransport === null)
         .sort((a, b) => {

@@ -8,7 +8,7 @@ import path from 'node:path';
 
 import {
   appliquer, chargerCatalogue, creerPartie, empreinte, reglagesParDefaut, sceneDeCarte, uniteParId, uniteSur,
-  unitesVues, type Catalogue, type EtatPartie, type Unite,
+  unitesVues, type Action, type Catalogue, type CommandantMoteur, type EtatPartie, type Unite,
 } from '../../src/engine/index';
 import { Controleur, SUITES_MENU } from '../../src/render/controleur';
 import { validerMapDef, type MapDef } from '../../src/schemas/index';
@@ -858,4 +858,137 @@ test('une autre armée alliée se consulte sans ordres ni menaces rouges', () =>
   assert.equal(c.phase, 'inactif');
   assert.equal(c.vue.surbrillances.length, 0);
   assert.equal(empreinte(etat), avant, 'consulter une alliée ne joue pas son tour');
+});
+
+// ---------------------------------------------------------------------------
+// La visée d'un pouvoir qui demande une case (familles de la faction)
+// ---------------------------------------------------------------------------
+
+/** Un commandant de la faction dont le super est une frappe de zone (rayon 2) et le normal une impulsion (rayon 1). */
+const COMMANDANT_FACTION: CommandantMoteur = {
+  cle: 'cmd_test_faction',
+  nom: 'Test',
+  passif: null,
+  pouvoir: { nom: 'Impulsion', barres: 3, duree: 'ce_tour', effets: [{ cible: 'terrain', iem: { rayon: 1, abattre: false } }] },
+  superPouvoir: { nom: 'Grêle', barres: 8, duree: 'ce_tour', effets: [{ cible: 'terrain', frappe: { pv: 2, rayon: 2 } }] },
+};
+
+/** Un commandant national dont le super ne demande aucune case. */
+const COMMANDANT_SOIN: CommandantMoteur = {
+  cle: 'cmd_test_soin',
+  nom: 'Test',
+  passif: null,
+  pouvoir: { nom: 'Soin', barres: 3, duree: 'ce_tour', effets: [{ cible: 'mes_unites', modificateur: { quoi: 'soin', valeur: 2 } }] },
+  superPouvoir: { nom: 'Soin', barres: 8, duree: 'ce_tour', effets: [{ cible: 'mes_unites', modificateur: { quoi: 'soin', valeur: 3 } }] },
+};
+
+/** Le camp 0 est la faction, jauge pleine ; deux adverses en (5,1) et (6,1), une mienne en (3,1). */
+function partieFaction(faction = true, commandant = COMMANDANT_FACTION): { etat: EtatPartie; c: Controleur; actions: Action[] } {
+  const scene = scenePersonnalisee(['HPPPPPPP', 'PPPPPPPP', 'PPPPPPPH'], { '0,0': 0, '7,2': 1 }, [
+    { camp: 0, type: 'infanterie', x: 1, y: 0 },
+    { camp: 0, type: 'char_leger', x: 3, y: 1 },
+    { camp: 1, type: 'char_leger', x: 5, y: 1 },
+    { camp: 1, type: 'infanterie', x: 6, y: 1 },
+  ], faction ? { factionsParCamp: { 0: 'atl' } } : {});
+  const etat = creerPartie(scene, CAT, 'visee');
+  etat.camps[0]!.jauge = 900;
+  etat.camps[0]!.jaugeMax = 900;
+  const actions: Action[] = [];
+  const c = new Controleur({
+    etat, catalogue: CAT, camp: 0, commandants: [commandant, null],
+    ecouteur: { surAction: (a) => actions.push(a) },
+  });
+  return { etat, c, actions };
+}
+
+test('un pouvoir qui demande une case ouvre la visée : rayon en danger autour du curseur, rien de joué', () => {
+  const { c, actions } = partieFaction();
+  c.poserCurseur({ x: 5, y: 1 });
+  c.jouerPouvoir('super');
+  assert.equal(c.phase, 'pouvoir');
+  assert.equal(actions.length, 0, 'la jauge est intacte : rien n’est parti');
+  const v = c.vue;
+  assert.ok(v.viseePouvoir);
+  assert.equal(v.viseePouvoir.niveau, 'super');
+  assert.equal(v.viseePouvoir.rayon, 2);
+  assert.deepEqual(v.viseePouvoir.centre, { x: 5, y: 1 }, 'la case pointée part du curseur');
+  const danger = v.surbrillances.filter((s) => s.genre === 'danger');
+  assert.equal(v.surbrillances.length, danger.length, 'le gabarit ne se dit qu’en danger');
+  // Treize cases à rayon 2, moins les deux pointes qui sortent d'une carte de trois lignes (y = −1, y = 3).
+  assert.equal(danger.length, 13 - 2);
+  assert.ok(danger.every((s) => Math.abs(s.case.x - 5) + Math.abs(s.case.y - 1) <= 2));
+  // Le bilan est celui du moteur : les deux adverses et le char du joueur (3,1) sont à deux pas ou moins.
+  const touchees = v.viseePouvoir.bilan?.touchees ?? [];
+  assert.equal(touchees.length, 3);
+});
+
+test('le survol déplace le rayon et le bilan ; un clic sur la case pointée confirme avec la case', () => {
+  const { etat, c, actions } = partieFaction();
+  c.poserCurseur({ x: 1, y: 2 });
+  c.jouerPouvoir('super');
+  c.poserCurseur({ x: 6, y: 1 });
+  assert.deepEqual(c.vue.viseePouvoir?.centre, { x: 6, y: 1 });
+  assert.equal(c.vue.viseePouvoir?.bilan?.touchees?.length, 2, 'à (6,1), seuls les deux adverses sont dans le rayon');
+  c.clicCase({ x: 6, y: 1 });
+  assert.equal(actions.length, 1);
+  assert.deepEqual(actions[0], { type: 'pouvoir', niveau: 'super', cases: [{ x: 6, y: 1 }] });
+  assert.equal(c.phase, 'inactif');
+  assert.equal(c.vue.viseePouvoir, null);
+  assert.ok(c.etat.camps[0]!.jauge < 900, 'la jauge a été payée');
+  assert.ok(c.etat.unites.find((u) => u.x === 5 && u.y === 1)!.pv < 100, 'le char adverse a encaissé');
+  assert.equal(etat.camps[0]!.jauge, 900, 'l’état d’origine n’a pas été muté');
+});
+
+test('au doigt : le premier appui pointe, le second confirme ; Échap ou le bouton annulent sans rien dépenser', () => {
+  const { c, actions } = partieFaction();
+  c.poserCurseur({ x: 1, y: 2 });
+  c.jouerPouvoir('super');
+  // Un appui ailleurs que sur la case pointée ne fait que pointer.
+  c.clicCase({ x: 5, y: 1 });
+  assert.equal(c.phase, 'pouvoir');
+  assert.equal(actions.length, 0);
+  assert.deepEqual(c.vue.viseePouvoir?.centre, { x: 5, y: 1 });
+  // Échap referme la visée, la jauge est intacte.
+  c.annuler();
+  assert.equal(c.phase, 'inactif');
+  assert.equal(c.vue.viseePouvoir, null);
+  assert.equal(c.etat.camps[0]!.jauge, 900);
+  // Un second appui sur le bouton pendant la visée l'annule aussi. (Les vues
+  // passent par des variables : `assert.equal` restreint le chemin de propriété.)
+  c.jouerPouvoir('normal');
+  const normale = c.vue;
+  assert.equal(normale.phase, 'pouvoir');
+  assert.equal(normale.viseePouvoir?.rayon, 1, 'l’impulsion du pouvoir normal a son propre rayon');
+  c.jouerPouvoir('normal');
+  assert.equal(c.vue.phase, 'inactif');
+  assert.equal(actions.length, 0);
+  // Au clavier : le curseur pointe, la touche « valider » confirme.
+  c.jouerPouvoir('normal');
+  c.bougerCurseur(1, 0);
+  const clavier = c.vue;
+  assert.deepEqual(clavier.viseePouvoir?.centre, clavier.curseur);
+  c.valider();
+  assert.equal(actions.length, 1);
+  assert.equal(actions[0]?.type, 'pouvoir');
+});
+
+test('un pouvoir sans case part tout de suite, comme avant', () => {
+  const { c, actions } = partieFaction(false, COMMANDANT_SOIN);
+  c.jouerPouvoir('super');
+  assert.equal(c.phase, 'inactif');
+  assert.deepEqual(actions, [{ type: 'pouvoir', niveau: 'super' }]);
+});
+
+test('une jauge insuffisante n’ouvre pas de visée : le refus du moteur est annoncé', () => {
+  const { etat, actions } = partieFaction();
+  etat.camps[0]!.jauge = 100;
+  const refus: string[] = [];
+  const c = new Controleur({
+    etat, catalogue: CAT, camp: 0, commandants: [COMMANDANT_FACTION, null],
+    ecouteur: { surAction: (a) => actions.push(a), surRefus: (_a, m) => refus.push(m) },
+  });
+  c.jouerPouvoir('super');
+  assert.equal(c.phase, 'inactif');
+  assert.deepEqual(refus, ['jauge_insuffisante']);
+  assert.equal(actions.length, 0);
 });

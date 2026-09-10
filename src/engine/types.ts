@@ -346,6 +346,19 @@ export type EvenementJeu =
   | { type: 'reactivation'; camp: CampId; unites: string[] }
   /** Un pouvoir impose cette météo à tous, `journees` journées à partir de celle-ci (`meteo`). */
   | { type: 'meteo_forcee'; camp: CampId; meteo: Meteo; journees: number }
+  /**
+   * Une frappe de zone de la faction (`frappe_zone`, 10 septembre 2026) : les
+   * unités touchées, des deux camps, et les points internes que chacune a perdus.
+   */
+  | { type: 'frappe_zone'; camp: CampId; centre: Case; rayon: number; touchees: { uniteId: string; pv: number }[] }
+  /** Un rayon laser de la faction : les unités adverses choisies par la règle, et leurs points perdus. */
+  | { type: 'rayon_laser'; camp: CampId; touchees: { uniteId: string; pv: number }[] }
+  /**
+   * Une impulsion de la faction : les unités à moteur arrêtées jusqu'à la fin
+   * de leur prochain tour, et celles — aériennes, adverses — mises hors jeu
+   * (chacune a aussi son `hors_jeu`).
+   */
+  | { type: 'iem_pouvoir'; camp: CampId; centre: Case; rayon: number; immobilisees: string[]; abattues: string[] }
   | { type: 'terrain_pose'; case: Case; terrain: CleTerrain }
   | { type: 'terrain_retire'; case: Case }
   | { type: 'repousse'; uniteId: string; vers: Case }

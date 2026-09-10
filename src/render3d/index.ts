@@ -604,7 +604,9 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     appliquerTactique();
     // `maj` rend vrai quand une unité a bougé, est apparue ou a disparu — et
     // seulement alors : un survol ne repose rien. C'est l'ombre qui en dépend.
-    if (m.unites.maj(etat, vue.catalogue, vue.visibles, { camp: vue.camp ?? null, unites: vue.unitesVues ?? null })) {
+    if (m.unites.maj(etat, vue.catalogue, vue.visibles, {
+      camp: vue.camp ?? null, unites: vue.unitesVues ?? null, marques: vue.marques ?? null,
+    })) {
       ombreSale = true;
     }
     const position = vue.selection ? m.unites.positionDe(vue.selection) : null;

@@ -98,6 +98,21 @@ export interface VueJeu {
   /** La visée en cours : de quoi prévoir le duel avant de confirmer. */
   visee: { attaquantId: string; depuis: Case; cibles: readonly Case[]; cible: Case | null } | null;
   /**
+   * La visée d'un **pouvoir** qui demande une case (phase `pouvoir` : une
+   * frappe de zone, une impulsion) : le rayon, la case pointée et ce que le
+   * moteur dit qu'elle ferait (`evaluerEffets`). Le HUD le met en mots là où
+   * il met la prévision de duel — c'est la même question, « et si je confirme ? ».
+   */
+  viseePouvoir?: { niveau: 'normal' | 'super'; rayon: number; centre: Case | null; bilan: EvaluationEffets | null } | null;
+  /**
+   * Le **télégraphage** d'un super de la faction (`doc/refonte/supers-vilains`) :
+   * un camp adverse a sa jauge pleine et son super porte une frappe, un rayon
+   * ou une impulsion. Atlas ne surprend jamais : le bandeau le dit avec le
+   * commandant et sa pièce, et la carte marque ce qu'il viserait maintenant.
+   * `null` ou absent : rien à télégraphier.
+   */
+  superAdverse?: { commandantCle: string | null; piece: string; pouvoir: string } | null;
+  /**
    * Les identifiants des unités que le joueur **voit** — les siennes, et les
    * adverses que le brouillard, une forêt ou la furtivité ne cachent pas ;
    * `null` sans brouillard, absent : toutes. Le panneau d'unité ne nomme
@@ -395,6 +410,17 @@ const STYLE = `
 .atlas-hud .camera svg{width:22px;height:22px}
 /* « .p.duel » et non « .duel » : la rangée de figurines de la fiche porte aussi la classe « duel », et héritait du panneau entier, animation comprise, à chaque rafraîchissement du DOM. */
 .atlas-hud .p.duel{left:12px;bottom:calc(var(--bas) + var(--dock) + 10px);width:390px;max-width:calc(100% - 84px);border:0;border-top:4px solid #ff6a5e;background:var(--encre);animation:atlas-inspection .16s ease-out}
+.atlas-hud .p.duel.visee-pouvoir{border-top-color:var(--signal)}
+.atlas-hud .visee-pouvoir .duel-entete{background:#ffd16214;color:var(--signal)}
+.atlas-hud .visee-lignes{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px}
+.atlas-hud .visee-lignes .puce{padding:2px 7px;background:#ffffff10;border:1px solid #ffffff1a;font-size:var(--t3);font-weight:800;color:var(--papier)}
+.atlas-hud .visee-lignes .aide{flex-basis:100%;font-size:var(--t2);color:#9fb6b8}
+.atlas-hud .jauge .pouvoir[data-visee='oui']:not(:disabled){background:#5a2c22;border-bottom-color:#20100c}
+/* Le super adverse télégraphié : une ligne au signal sous la journée. Sur la
+   carte elle se pose sous la bande ; dans la colonne elle suit dans le flux. */
+.atlas-hud .alerte-super{position:absolute;left:max(var(--marge),env(safe-area-inset-left,0px));top:calc(var(--haut) + 50px);display:flex;align-items:center;gap:7px;max-width:calc(100% - 24px);padding:5px 10px;background:var(--encre);border-left:3px solid var(--signal);color:var(--signal);font-size:var(--t2);font-weight:800;line-height:1.25}
+.atlas-hud .alerte-super .symbole{width:14px;height:14px;flex:none}
+.atlas-hud[data-rail='oui'] .hud-rail .alerte-super{position:static;flex:none;max-width:none}
 .atlas-hud .duel-entete{display:flex;align-items:center;gap:8px;padding:6px 12px;background:#ff6a5e14;border-bottom:1px solid #ffffff14;font-size:var(--t2);font-weight:850;letter-spacing:.14em;text-transform:uppercase;color:#ffb3aa}
 .atlas-hud .duel-entete .symbole{width:16px;height:16px}
 .atlas-hud .duel-entete .issue{margin-left:auto;color:var(--signal);letter-spacing:.08em}
@@ -1237,6 +1263,23 @@ export function monterHudHtml(
   }
 
   /**
+   * Le télégraphage d'un super de la faction : sous la journée, une ligne au
+   * signal qui nomme le commandant, sa pièce et le pouvoir qu'elle rend
+   * possible. Rien de tout cela n'est une règle — c'est de la lecture de la
+   * jauge adverse, que le joueur voit déjà —, mais Atlas ne surprend jamais
+   * (`doc/refonte/supers-vilains.md` §4).
+   */
+  function alerteSuper(v: VueJeu): string {
+    const s = v.superAdverse;
+    if (!s) return '';
+    const commandant = nomCommandant(v.locale, s.commandantCle) || api.t('hud.commandant');
+    const piece = api.t(s.piece) || s.piece;
+    const pouvoir = api.t(s.pouvoir) || s.pouvoir;
+    const texte = api.t('hud.super_adverse_pret', { commandant, piece, pouvoir });
+    return `<div class="alerte-super" role="status">${iconeOrdre('super_pouvoir')}<span>${ech(texte)}</span></div>`;
+  }
+
+  /**
    * Le bulletin : **trois journées côte à côte**, celle qu'on joue et les deux
    * qui viennent.
    *
@@ -1355,6 +1398,9 @@ export function monterHudHtml(
     const part = camp.jaugeMax > 0 ? Math.min(1, camp.jauge / camp.jaugeMax) : 0;
     const monTour = !v.attenteIa && !v.etat.partie.terminee && v.etat.campCourant === v.camp;
     const p = v.pouvoirs ?? null;
+    // Pendant la visée d'un pouvoir, son bouton reste allumé et dit « annuler » :
+    // un second appui la ferme (le contrôleur bascule), Échap aussi.
+    const vise = v.phase === 'pouvoir' ? v.viseePouvoir?.niveau ?? null : null;
     const dispo = (niveau: 'normal' | 'super'): boolean => monTour && (p?.[niveau].pret ?? false);
     const normalPret = dispo('normal');
     const segments = Math.min(10, Math.max(1, Math.ceil(camp.jaugeMax / 100)));
@@ -1364,15 +1410,16 @@ export function monterHudHtml(
     const cran = p && camp.jaugeMax > 0
       ? ` style="--cran:${Math.max(0, Math.min(100, (p.normal.cout / camp.jaugeMax) * 100))}%"`
       : '';
-    const libelle = api.t(normalPret ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
+    const libelle = api.t(vise !== null ? 'hud.pouvoir_annuler' : normalPret ? 'hud.pouvoir_pret' : 'hud.jauge_pouvoir');
     const cadre = (dedans: string): string =>
-      `<div class="p jauge" data-pret="${normalPret ? 'oui' : 'non'}" style="--camp:${pal.light}">${dedans}</div>`;
+      `<div class="p jauge" data-pret="${normalPret ? 'oui' : 'non'}" data-visee="${vise ?? 'non'}" style="--camp:${pal.light}">${dedans}</div>`;
 
     // Écran étroit : le bouton unique d'avant, au seuil juste cette fois. Un dock
     // de 72 px de haut ne porte pas deux pouvoirs nommés et leur explication.
     if (largeurRail === 0 || !p) {
-      return cadre(`<button type="button" data-action="pouvoir" aria-label="${ech(nom)} · ${ech(libelle)}"`
-        + `${normalPret ? '' : ' disabled'}>`
+      // Pendant une visée, le bouton reste pressable quoi qu'il en soit : c'est lui qui l'annule.
+      return cadre(`<button type="button" data-action="${vise === 'super' ? 'pouvoir_super' : 'pouvoir'}" aria-label="${ech(nom)} · ${ech(libelle)}"`
+        + `${normalPret || vise !== null ? '' : ' disabled'}>`
         + `<span class="insigne">${iconeOrdre('pouvoir')}</span><span class="commande">`
         + `<span class="tt" style="display:block">${ech(nom)}</span>`
         + `<span class="energie" aria-hidden="true"${cran}>${energie}</span>`
@@ -1393,11 +1440,12 @@ export function monterHudHtml(
     const bouton = (niveau: 'normal' | 'super', action: string, cle: string): string => {
       const n = p[niveau];
       const pret = dispo(niveau);
-      const titre = api.t(n.nom) || n.nom;
+      const enVisee = vise === niveau;
+      const titre = enVisee ? api.t('hud.pouvoir_annuler') : (api.t(n.nom) || n.nom);
       // Un bouton éteint dit pourquoi ; un bouton prêt dit ce qu'il ferait maintenant.
       const apercu = pret ? prevision(n) : '';
       const motif = pret ? (apercu ? ` title="${ech(apercu)}"` : '') : ` title="${ech(api.t('hud.jauge_insuffisante'))}"`;
-      return `<button type="button" class="pouvoir" data-action="${action}" data-niveau="${niveau}"`
+      return `<button type="button" class="pouvoir" data-action="${action}" data-niveau="${niveau}"${enVisee ? ' data-visee="oui"' : ''}`
         + `${pret ? '' : ' disabled'}${motif} aria-label="${ech(`${api.t(cle)} · ${titre}`)}">`
         + iconeOrdre(niveau === 'super' ? 'super_pouvoir' : 'pouvoir')
         + `<span class="nom">${ech(titre)}</span>`
@@ -1657,7 +1705,43 @@ export function monterHudHtml(
       + `${ech(String(avant))}<em>&rarr;</em><b>${ech(String(apres))}</b></span></div>`;
   }
 
+  /**
+   * Ce que le pouvoir visé ferait sur la case pointée, lu sur le bilan du
+   * moteur : combien d'adverses touchés, combien des miennes, combien
+   * d'arrêtés, combien d'abattus. Sans case pointée — au doigt, avant le
+   * premier appui —, le panneau dit quoi faire. Une case vide le dit aussi :
+   * dépenser une jauge sur rien mérite d'être dit avant, pas après.
+   */
+  function panneauViseePouvoir(v: VueJeu): string {
+    const visee = v.viseePouvoir;
+    if (!visee) return '';
+    const p = v.pouvoirs?.[visee.niveau] ?? null;
+    const titre = p ? (api.t(p.nom) || p.nom) : api.t(visee.niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir');
+    const lignes: string[] = [];
+    const b = visee.bilan;
+    if (!visee.centre || !b) {
+      lignes.push(api.t('hud.visee_pouvoir_choisir'));
+    } else {
+      const campDe = (id: string): CampId | null => v.etat.unites.find((u) => u.id === id)?.camp ?? null;
+      const adverses = (b.touchees ?? []).filter((t) => { const c = campDe(t.uniteId); return c !== null && !sontAllies(v.etat, c, v.camp); }).length;
+      const miennes = (b.touchees ?? []).length - adverses;
+      const arretees = (b.immobilisees ?? []).length;
+      const abattues = (b.abattues ?? []).length;
+      if (adverses > 0) lignes.push(api.t(adverses === 1 ? 'hud.visee_pouvoir_adverses_une' : 'hud.visee_pouvoir_adverses', { n: adverses }));
+      if (miennes > 0) lignes.push(api.t(miennes === 1 ? 'hud.visee_pouvoir_miennes_une' : 'hud.visee_pouvoir_miennes', { n: miennes }));
+      if (arretees > 0) lignes.push(api.t(arretees === 1 ? 'hud.visee_pouvoir_arretees_une' : 'hud.visee_pouvoir_arretees', { n: arretees }));
+      if (abattues > 0) lignes.push(api.t(abattues === 1 ? 'hud.visee_pouvoir_abattues_une' : 'hud.visee_pouvoir_abattues', { n: abattues }));
+      if (lignes.length === 0) lignes.push(api.t('hud.visee_pouvoir_rien'));
+    }
+    return `<div class="p duel visee-pouvoir"${ancrer(visee.centre, 120)} role="group" aria-label="${ech(api.t('hud.visee_pouvoir'))}">`
+      + `<div class="duel-entete">${iconeOrdre(visee.niveau === 'super' ? 'super_pouvoir' : 'pouvoir')}<span>${ech(titre)}</span>`
+      + `<span class="issue">${ech(api.t('hud.visee_pouvoir_rayon', { n: visee.rayon }))}</span></div>`
+      + `<div class="visee-lignes">${lignes.map((l) => `<span class="puce">${ech(l)}</span>`).join('')}`
+      + `<span class="aide">${ech(api.t('hud.visee_pouvoir_confirmer'))}</span></div></div>`;
+  }
+
   function panneauDuel(v: VueJeu): string {
+    if (v.viseePouvoir) return panneauViseePouvoir(v);
     const visee = v.visee;
     // La prévision suit la cible **pointée**, pas le curseur : au doigt il n'y a
     // pas de survol, et une prévision qui n'existe qu'à la souris ne sert à rien.
@@ -2297,7 +2381,7 @@ export function monterHudHtml(
       emplacementCourant = nom;
       html.set(nom, contenu());
     };
-    composer('partie', () => panneauPartie(v));
+    composer('partie', () => panneauPartie(v) + alerteSuper(v));
     composer('bulletin', () => panneauBulletin(v));
     composer('dock', () => `<div class="dock">${panneauJauge(v)}${panneauFinTour(v)}</div>`);
     composer('duel', () => panneauDuel(v));

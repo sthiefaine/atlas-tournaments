@@ -11,8 +11,11 @@
  * Options : `--carte`, `--parties`, `--graine`, `--strategies a,b`, `--journees`,
  * `--climat`, `--saison`, `--meteo`, `--brouillard`, `--catalogue N` (la version
  * de catalogue jouée, celle du moteur par défaut), `--commandants a,b` (une clé
- * de commandant par camp, kits de la révision 3 : sans elle, aucun camp n'a de
- * pouvoir et la jauge ne sert à rien), `--json`, plus deux options de contrôle :
+ * de commandant par camp, kits de la révision 4 : sans elle, aucun camp n'a de
+ * pouvoir et la jauge ne sert à rien ; un commandant de la faction fait de son
+ * camp un camp `atl`, sans quoi le moteur lui refuserait ses familles réservées,
+ * et la sortie compte ses déclenchements — pouvoirs, frappes, lasers,
+ * impulsions, appareils abattus), `--json`, plus deux options de contrôle :
  *
  * - `--conditions ete/clair/jour,hiver/neige/nuit` — passe par la **campagne du
  *   serveur** (`src/serveur/simulation`) : `parties` s'entend alors **par
@@ -29,9 +32,10 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { jouerPartie, strategie } from '../src/ai/index';
 import { chargerCommandantJeu } from '../src/content/commandants-jeu';
+import { lireProfilCommandant } from '../src/content/profils-commandants';
 import {
-  chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, creerRng,
-  type EtatPartie,
+  appliquer, chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, creerRng,
+  type Action, type Catalogue, type Commandants, type EtatPartie, type ReglagesPartie,
 } from '../src/engine/index';
 import { rendreVerdict, verifierCarteControle } from '../src/serveur/controle/index';
 import {
@@ -39,7 +43,7 @@ import {
 } from '../src/serveur/simulation';
 import { validerMapDef } from '../src/schemas/index';
 import type {
-  Climat, MapDef, Meteo, PhaseJour, Saison, StatsSimulation, StrategieIa,
+  CampId, Climat, MapDef, Meteo, PhaseJour, Saison, StatsSimulation, StrategieIa,
 } from '../src/schemas/index';
 
 /** Lit les options de la ligne de commande. */
@@ -105,12 +109,85 @@ export interface Campagne {
   commandants?: string[];
 }
 
+/** Les déclenchements d'un commandant sur la campagne, événement par événement. */
+export interface DeclenchementsCommandant {
+  /** Pouvoirs normaux et supers partis. */
+  normal: number;
+  super: number;
+  /** Familles de la faction : une frappe, un laser, une impulsion par déclenchement. */
+  frappe_zone: number;
+  rayon_laser: number;
+  iem_pouvoir: number;
+  /** Unités touchées par les frappes et lasers, immobilisées et abattues par les impulsions, en tout. */
+  touchees: number;
+  immobilisees: number;
+  abattues: number;
+}
+
 /** Ce que rend une campagne : les statistiques du contrat, plus le détail. */
 export interface Bilan {
   stats: StatsSimulation;
   produites: Record<string, number>;
   motifs: Record<string, number>;
   journees: number[];
+  /** Par clé de commandant, ce que la campagne l'a vu déclencher ; vide sans `--commandants`. */
+  pouvoirs: Record<string, DeclenchementsCommandant>;
+}
+
+/**
+ * Les camps qu'un commandant de la faction fait passer `atl` : la seule source
+ * de vérité du moteur pour ses familles réservées est `reglages.factionsParCamp`
+ * (`estCampFaction`), et un scénario la déclare ; une campagne de simulation
+ * n'a pas de scénario, elle la déduit du kit.
+ */
+export function factionsDesCommandants(cles: readonly string[]): ReglagesPartie['factionsParCamp'] | undefined {
+  const factions: Partial<Record<CampId, 'atl'>> = {};
+  let une = false;
+  cles.forEach((cle, camp) => {
+    if (lireProfilCommandant(cle, 4)?.faction === 'atl') {
+      factions[camp as CampId] = 'atl';
+      une = true;
+    }
+  });
+  return une ? factions : undefined;
+}
+
+/**
+ * Rejoue les actions d'une partie depuis son état de départ et compte, par
+ * camp, les pouvoirs partis et ce que les familles de la faction ont touché.
+ * L'IA ne rend que ses actions ; les événements se relisent au moteur, qui est
+ * déterministe.
+ */
+export function compterDeclenchements(
+  depart: EtatPartie, actions: readonly Action[], cat: Catalogue, commandants: Commandants,
+): Map<CampId, DeclenchementsCommandant> {
+  const compte = new Map<CampId, DeclenchementsCommandant>();
+  const de = (camp: CampId): DeclenchementsCommandant => {
+    let d = compte.get(camp);
+    if (!d) {
+      d = { normal: 0, super: 0, frappe_zone: 0, rayon_laser: 0, iem_pouvoir: 0, touchees: 0, immobilisees: 0, abattues: 0 };
+      compte.set(camp, d);
+    }
+    return d;
+  };
+  let etat = depart;
+  for (const action of actions) {
+    const r = appliquer(etat, action, cat, commandants);
+    if (!r.ok) break;
+    etat = r.etat;
+    for (const e of r.evenements) {
+      if (e.type === 'pouvoir') de(e.camp)[e.niveau] += 1;
+      else if (e.type === 'frappe_zone' || e.type === 'rayon_laser') {
+        de(e.camp)[e.type] += 1;
+        de(e.camp).touchees += e.touchees.length;
+      } else if (e.type === 'iem_pouvoir') {
+        de(e.camp).iem_pouvoir += 1;
+        de(e.camp).immobilisees += e.immobilisees.length;
+        de(e.camp).abattues += e.abattues.length;
+      }
+    }
+  }
+  return compte;
 }
 
 /** Joue N parties IA contre IA sur une carte et rend les statistiques. */
@@ -123,6 +200,7 @@ export function simuler(c: Campagne): Bilan {
   const journees: number[] = [];
   const graines: string[] = [];
   const visitees = new Set<string>();
+  const pouvoirs: Record<string, DeclenchementsCommandant> = {};
   let nonTerminees = 0;
   let mecaniqueDeclenchee = c.carte.mecanique ? 0 : null;
   let nuls = 0;
@@ -131,18 +209,21 @@ export function simuler(c: Campagne): Bilan {
   for (let i = 0; i < c.parties; i += 1) {
     const graine = `${c.graine}:${i}`;
     graines.push(graine);
+    // Les commandants suivent les stratégies : quand celles-ci s'alternent d'une
+    // partie à l'autre, les kits s'alternent avec elles, sinon le camp qui
+    // commence porterait toujours le même commandant. Le camp d'un commandant
+    // de la faction est déclaré `atl`, et il suit le kit.
+    const cles = i % 2 === 0 ? (c.commandants ?? []) : [...(c.commandants ?? [])].reverse();
+    const commandants = cles.map((cle) => chargerCommandantJeu(cle, 4));
+    const factionsParCamp = factionsDesCommandants(cles);
     const reglages = reglagesParDefaut({
       limiteJournees: c.journees,
       climatPays: c.climat,
       brouillard: c.brouillard,
       saisonForcee: c.saison,
       meteoForcee: c.meteo,
+      ...(factionsParCamp ? { factionsParCamp } : {}),
     });
-    // Les commandants suivent les stratégies : quand celles-ci s'alternent d'une
-    // partie à l'autre, les kits s'alternent avec elles, sinon le camp qui
-    // commence porterait toujours le même commandant.
-    const kits = (c.commandants ?? []).map((cle) => chargerCommandantJeu(cle, 4));
-    const commandants = i % 2 === 0 ? kits : [...kits].reverse();
     const scene = sceneDeCarte(c.carte, reglages, commandants);
     const etat = creerPartie(scene, cat, graine);
     // On alterne les stratégies d'une partie à l'autre : le camp qui commence
@@ -179,6 +260,14 @@ export function simuler(c: Campagne): Bilan {
     }
     if (!fin.partie.terminee) motifs['limite_atteinte'] = (motifs['limite_atteinte'] ?? 0) + 1;
     else if (fin.partie.motif) motifs[fin.partie.motif] = (motifs[fin.partie.motif] ?? 0) + 1;
+    if (cles.length > 0) {
+      for (const [camp, d] of compterDeclenchements(etat, partie.actions, cat, commandants)) {
+        const cle = cles[camp];
+        if (cle === undefined) continue;
+        const total = pouvoirs[cle] ?? (pouvoirs[cle] = { ...d, normal: 0, super: 0, frappe_zone: 0, rayon_laser: 0, iem_pouvoir: 0, touchees: 0, immobilisees: 0, abattues: 0 });
+        for (const k of Object.keys(d) as (keyof DeclenchementsCommandant)[]) total[k] += d[k];
+      }
+    }
   }
 
   let terre = 0;
@@ -209,6 +298,7 @@ export function simuler(c: Campagne): Bilan {
     produites,
     motifs,
     journees: journees.concat(nuls === 0 ? [] : []),
+    pouvoirs,
   };
 }
 
@@ -339,6 +429,13 @@ function principal(): void {
   lignes.push('Fins de partie :');
   for (const [motif, n] of Object.entries(bilan.motifs).sort((a, b) => b[1] - a[1])) {
     lignes.push(`  ${motif.padEnd(22)} ${n}`);
+  }
+  if (Object.keys(bilan.pouvoirs).length > 0) {
+    lignes.push('');
+    lignes.push(`Pouvoirs déclenchés sur ${s.parties} parties (normal / super ; frappes, lasers, impulsions ; unités touchées, immobilisées, abattues) :`);
+    for (const [cle, d] of Object.entries(bilan.pouvoirs)) {
+      lignes.push(`  ${cle.padEnd(20)} ${d.normal} / ${d.super} ; ${d.frappe_zone}, ${d.rayon_laser}, ${d.iem_pouvoir} ; ${d.touchees}, ${d.immobilisees}, ${d.abattues}`);
+    }
   }
   process.stdout.write(`${lignes.join('\n')}\n`);
 }

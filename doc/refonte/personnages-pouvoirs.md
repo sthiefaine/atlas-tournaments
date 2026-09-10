@@ -30,3 +30,8 @@ Le catalogue repose sur les modificateurs déjà exécutés par le moteur. Une d
 L’admin est un espace auteur et montre les révélations avec leur statut. Le contexte des routines est composé explicitement côté serveur. Les faits `confidentialite: auteur` restent privés ; les faits à jalon ne sont jamais débloqués par un simple numéro d’acte. La parenté cachée et le pivot père-fils ne doivent pas être déduits d’un champ de fonction public. L’API actuelle par acte ne permet pas de forcer le jalon S5E4 : cette autorisation demandera la progression serveur correspondante.
 
 Le fichier des histoires n’est pas servi par la route générique du canon. Les textes publics des capacités ne contiennent ni parentés ni notes d’auteur.
+
+## Les supers des Gris — 10 septembre 2026
+
+`content/commandants-capacites.json` porte les huit supers du scénariste (`doc/refonte/supers-vilains.json`) et, sur chaque Gris, `piece { nom, silhouette }` — champ facultatif de `ProfilCommandant`, lu par l'admin et le carnet, jamais par le moteur ; `scripts/simuler.ts` déclare la faction du camp d'un Gris (`factionsDesCommandants`) et compte ses déclenchements (`compterDeclenchements`), sans quoi les familles `frappe_zone`, `rayon_laser` et `iem` étaient refusées en simulation et invisibles.
+Crans retenus par la mesure : Ost 7 barres, Basile 7, Maël 5 barres et 4 PV ; les chaînes `super_v4`, `super_v4_desc` et `replique_super_v4` des huit Gris se réalignent depuis le contenu par le chantier de l'affichage, et `tests/i18n/pouvoirs-v4.test.ts` reste rouge d'ici là.

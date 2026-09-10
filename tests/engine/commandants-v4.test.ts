@@ -17,8 +17,8 @@ import scenarioAllie from '../../content/scenarios/couleurs_alliees.json';
 import { VERSION_CAPACITES_COMMANDANTS, listerProfilsCommandants, lireProfilCommandant } from '../../src/content/profils-commandants';
 import { chargerCommandantJeu, resoudreCommandantsScenario, revisionCommandants } from '../../src/content/commandants-jeu';
 import {
-  VERSION_MOTEUR, appliquer, chargerCatalogue, creerPartie, estModificateurDurable, estPoseTerrain, sceneDepuis,
-  type CommandantMoteur, type EtatPartie,
+  VERSION_MOTEUR, appliquer, chargerCatalogue, creerPartie, demandeUneCase, estModificateurDurable, estPoseTerrain,
+  sceneDepuis, type CommandantMoteur, type EtatPartie,
 } from '../../src/engine/index';
 import {
   AXES_FAIBLESSE, BORNES_MODIFICATEUR, validerCommander, validerMapDef, validerScenario,
@@ -73,7 +73,9 @@ test('chaque kit passe le validateur des effets, et sa faiblesse est réellement
     // Le validateur du schéma `Commander` est le seul juge des bornes et des
     // cibles ; on lui présente le kit dans une enveloppe d'exemple.
     const o: Record<string, unknown> = {
-      ...commandantCamille, code: 'cmd_x_y', cle: 'cmd_x_y', paysCode: profil.paysCode ?? 'fr', nom: profil.nom,
+      // Un commandant de la faction se présente sous `atl` : c'est ce qui lui
+      // ouvre les trois familles réservées (`validerCommander`, 10 septembre 2026).
+      ...commandantCamille, code: 'cmd_x_y', cle: 'cmd_x_y', paysCode: profil.paysCode ?? profil.faction ?? 'fr', nom: profil.nom,
       pouvoir: { ...profil.pouvoir, replique: profil.replique.pouvoir },
       superPouvoir: { ...profil.superPouvoir, replique: profil.replique.super },
       faiblesse: profil.faiblesse,
@@ -128,19 +130,23 @@ test('les 68 pouvoirs se paient, s’appliquent — poses comprises — et leurs
   const grille = ['PPPWWP', 'PMFVVP', 'PPPSPP', 'PPPPPP'];
   for (const profil of listerProfilsCommandants(4)) for (const niveau of ['normal', 'super'] as const) {
     const commandant = chargerCommandantJeu(profil.cle, 4);
+    // Un commandant de la faction joue depuis un camp `atl` : sans quoi le
+    // moteur refuse ses familles réservées (`estCampFaction`, 10 septembre 2026).
     const scene = scenePersonnalisee(grille, {}, [
       { camp: 0, type: 'infanterie', x: 0, y: 0 },
       { camp: 0, type: 'char_leger', x: 0, y: 3, pv: 50 },
       { camp: 1, type: 'infanterie', x: 5, y: 3 },
       { camp: 1, type: 'char_leger', x: 5, y: 0 },
-    ]);
+    ], profil.faction === 'atl' ? { factionsParCamp: { 0: 'atl' } } : {});
     const etat = creerPartie(scene, cat, profil.cle);
     etat.camps[0]!.jauge = 900;
     etat.camps[0]!.jaugeMax = 900;
     const commandants = [commandant, null];
     const capacite = niveau === 'normal' ? commandant.pouvoir : commandant.superPouvoir;
     const poses = capacite.effets.filter(estPoseTerrain);
-    const cases = poses.length > 0 ? [caseDePose(etat, poses[0]!)] : undefined;
+    // Une frappe ou une impulsion vise une case : celle du char adverse.
+    const cases = poses.length > 0 ? [caseDePose(etat, poses[0]!)]
+      : capacite.effets.some(demandeUneCase) ? [{ x: 5, y: 0 }] : undefined;
     const active = appliquer(etat, { type: 'pouvoir', niveau, ...(cases ? { cases } : {}) }, cat, commandants);
     assert.ok(active.ok, `${profil.cle}/${niveau} : ${active.ok ? '' : JSON.stringify(active)}`);
     if (!active.ok) continue;

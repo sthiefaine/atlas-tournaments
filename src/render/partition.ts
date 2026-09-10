@@ -76,6 +76,23 @@ export const DUREES = Object.freeze({
    * elle se réveille.
    */
   reveiller: 520,
+  /**
+   * Une frappe de zone (`frappe_zone`, famille de la faction) : les missiles
+   * tombent sur chaque case du rayon, l'une après l'autre ; les unités touchées
+   * encaissent à la fin, ensemble.
+   */
+  frapper: 900,
+  /**
+   * Un rayon (`rayon_laser`) : un trait qui descend du ciel sur l'unité
+   * désignée, puis elle encaisse. Bref — le rayon marque, il ne bombarde pas.
+   */
+  designer: 520,
+  /**
+   * Une impulsion (`iem_pouvoir`) : un anneau qui se referme sur le rayon de
+   * l'impulsion, du bord vers le centre. Ce qui a un moteur s'arrête quand il
+   * s'est refermé ; ce qui vole tombe après.
+   */
+  sceller: 800,
 });
 
 /**
@@ -137,7 +154,21 @@ export type Geste =
    * elle rejoue. Un geste sur place ; la peau peut y poser un éclat, le HUD n'a
    * rien à en dire — l'annonce compte les unités réveillées.
    */
-  | { genre: 'reveiller'; unite: string; case: Case; camp: CampId; debut: number; duree: number };
+  | { genre: 'reveiller'; unite: string; case: Case; camp: CampId; debut: number; duree: number }
+  /**
+   * La frappe de zone d'un super de la faction : `rayon` cases Manhattan
+   * autour de `centre`, des missiles qui tombent. Les unités touchées ont
+   * chacune leur `encaisser` et leur `chiffre` derrière, comme un tir.
+   */
+  | { genre: 'frapper'; camp: CampId; centre: Case; rayon: number; debut: number; duree: number }
+  /** Le rayon de la faction désigne une unité : un trait du ciel sur elle, puis elle encaisse. */
+  | { genre: 'designer'; unite: string; case: Case; camp: CampId; debut: number; duree: number }
+  /**
+   * L'impulsion de la faction se referme sur `rayon` cases autour de `centre`.
+   * Les unités abattues ont leur `sortir` derrière — le geste de la mise hors
+   * jeu, qui existe déjà ; les immobilisées ne bougent pas, c'est le point.
+   */
+  | { genre: 'sceller'; camp: CampId; centre: Case; rayon: number; debut: number; duree: number };
 
 export type GenreGeste = Geste['genre'];
 
@@ -187,6 +218,8 @@ export const MISE_EN_SCENE = Object.freeze({
   ecartBatir: 120,
   /** Un glissement d'au moins tant de cases mérite un second cadrage, sur l'arrivée. */
   casesCadrageArrivee: 4,
+  /** Deux unités désignées par un même rayon le sont l'une après l'autre : l'écart entre deux départs. */
+  ecartDesigner: 140,
 });
 
 /**
@@ -273,10 +306,16 @@ export function ecrirePartition(
     gestes.push({ genre: 'cadrer', case: c, debut, duree: 0 });
   };
 
-  // Le splash d'abord, puis le reste dans l'ordre du moteur.
+  // Le splash d'abord, puis les familles de la faction — le moteur pousse le
+  // `hors_jeu` d'un appareil abattu **avant** l'`iem_pouvoir` qui l'abat, et
+  // à l'écran l'anneau se referme avant que l'appareil tombe —, puis le reste
+  // dans l'ordre du moteur.
+  const faction = (e: EvenementJeu): boolean =>
+    e.type === 'frappe_zone' || e.type === 'rayon_laser' || e.type === 'iem_pouvoir';
   const ordonnes = [
     ...evenements.filter((e) => e.type === 'pouvoir'),
-    ...evenements.filter((e) => e.type !== 'pouvoir'),
+    ...evenements.filter(faction),
+    ...evenements.filter((e) => e.type !== 'pouvoir' && !faction(e)),
   ];
 
   for (const e of ordonnes) {
@@ -544,6 +583,56 @@ export function ecrirePartition(
           gestes.push({ genre: 'reveiller', unite: id, case: c, camp: e.camp, debut, duree });
           occuper(id, debut, duree);
         }
+        break;
+      }
+      case 'frappe_zone': {
+        // Les missiles tombent sur tout le rayon, et les touchées encaissent
+        // ensemble quand la salve est finie — le centre tient lieu de tireur.
+        const debut = depart(null);
+        const duree = d(DUREES.frapper);
+        cadrer(`frappe:${cleCase(e.centre)}`, e.camp, e.centre, debut);
+        gestes.push({ genre: 'frapper', camp: e.camp, centre: e.centre, rayon: e.rayon, debut, duree });
+        const impact = debut + duree;
+        for (const { uniteId, pv } of e.touchees) {
+          const c = caseDe(uniteId);
+          if (!c || pv <= 0) continue;
+          const debutCoup = depart(uniteId, impact);
+          const dureeCoup = d(DUREES.encaisser);
+          gestes.push({ genre: 'encaisser', unite: uniteId, case: c, degats: pv, depuis: e.centre, debut: debutCoup, duree: dureeCoup });
+          occuper(uniteId, debutCoup, dureeCoup);
+          chiffre(c, dixiemes(pv), teinteDe(campDe(uniteId)), debutCoup);
+        }
+        break;
+      }
+      case 'rayon_laser': {
+        // Une unité après l'autre : le trait la désigne, puis elle encaisse
+        // d'où elle est — un rayon n'a pas de case d'origine.
+        e.touchees.forEach(({ uniteId, pv }, rang) => {
+          const c = caseDe(uniteId);
+          if (!c) return;
+          const debut = depart(uniteId, origine + rang * d(MISE_EN_SCENE.ecartDesigner));
+          const duree = d(DUREES.designer);
+          cadrer(uniteId, campDe(uniteId), c, debut);
+          gestes.push({ genre: 'designer', unite: uniteId, case: c, camp: e.camp, debut, duree });
+          occuper(uniteId, debut, duree);
+          if (pv <= 0) return;
+          const debutCoup = debut + duree;
+          const dureeCoup = d(DUREES.encaisser);
+          gestes.push({ genre: 'encaisser', unite: uniteId, case: c, degats: pv, depuis: c, debut: debutCoup, duree: dureeCoup });
+          occuper(uniteId, debutCoup, dureeCoup);
+          chiffre(c, dixiemes(pv), teinteDe(campDe(uniteId)), debutCoup);
+        });
+        break;
+      }
+      case 'iem_pouvoir': {
+        // L'anneau se referme ; tout ce qu'il a touché attend qu'il soit fermé
+        // — les abattues pour tomber (`hors_jeu`, plus loin dans la salve), les
+        // immobilisées pour ne rien faire d'autre que rester là.
+        const debut = depart(null);
+        const duree = d(DUREES.sceller);
+        cadrer(`iem:${cleCase(e.centre)}`, e.camp, e.centre, debut);
+        gestes.push({ genre: 'sceller', camp: e.camp, centre: e.centre, rayon: e.rayon, debut, duree });
+        for (const id of [...e.immobilisees, ...e.abattues]) occuper(id, debut, duree);
         break;
       }
       // La panne sèche est suivie d'un `hors_jeu`, qui fait le geste ; la météo

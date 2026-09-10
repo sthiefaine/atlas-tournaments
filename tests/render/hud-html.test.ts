@@ -1765,3 +1765,107 @@ test('le Bulletin dit qui impose la météo tant que la prise dure, et se tait a
   assert.doesNotMatch(bulletin(), /meteo-imposee/, 'la prise est finie');
   h.demonter();
 });
+
+// ---------------------------------------------------------------------------
+// La visée d'un pouvoir et le télégraphage d'un super de la faction
+// ---------------------------------------------------------------------------
+
+/** Les deux pouvoirs d'un commandant de la faction, tels que `jeu.ts` les passe au HUD : le super est une frappe. */
+function pouvoirsFaction(pret = true): NonNullable<VueJeu['pouvoirs']> {
+  return {
+    normal: { nom: 'commandant.cmd_test.pouvoir_v4', cout: 300, pret, effets: [{ cible: 'terrain', iem: { rayon: 1, abattre: false } }] },
+    super: { nom: 'commandant.cmd_test.super_v4', cout: 800, pret, effets: [{ cible: 'terrain', frappe: { pv: 2, rayon: 2 } }] },
+  };
+}
+
+test('en visée de pouvoir, le panneau de prévision compte ce que la case ferait, et le bouton dit « annuler »', () => {
+  const etat = surGrille(['PPPPP', 'PPPPP', 'PPPPP'], [
+    { camp: 0, type: 'infanterie', x: 0, y: 1 },
+    { camp: 1, type: 'char_leger', x: 2, y: 1 },
+    { camp: 1, type: 'infanterie', x: 3, y: 1 },
+  ]);
+  const [mienne, char, inf] = etat.unites.map((u) => u.id) as [string, string, string];
+  const base = (): VueJeu => ({ ...vueDe(etat, { x: 2, y: 1 }), pouvoirs: pouvoirsFaction() });
+  // Sans case pointée : le panneau dit quoi faire.
+  let vue: VueJeu = { ...base(), phase: 'pouvoir', viseePouvoir: { niveau: 'super', rayon: 2, centre: null, bilan: null } };
+  const h = hudSur(() => vue, { largeur: 1400, hauteur: 900 });
+  let duel = h.slots.get('duel')!.innerHTML;
+  assert.match(duel, /class="p duel visee-pouvoir"/);
+  assert.match(duel, /hud\.visee_pouvoir_choisir/);
+  assert.match(duel, /hud\.visee_pouvoir_rayon \{&quot;n&quot;:2\}/);
+  // Le bouton du super devient « annuler la visée » et reste actif ; le normal, lui, ne change pas.
+  const dock = h.slots.get('dock')!.innerHTML;
+  assert.match(dock, /data-action="pouvoir_super" data-niveau="super" data-visee="oui"/);
+  assert.match(dock, /data-visee="oui"[^>]*>(?:(?!<\/button>).)*hud\.pouvoir_annuler/);
+  assert.match(dock, /data-action="pouvoir" data-niveau="normal"(?! data-visee)/);
+
+  // Une case pointée : le bilan du moteur, en mots — deux adverses, une des miennes.
+  vue = {
+    ...base(), phase: 'pouvoir',
+    viseePouvoir: {
+      niveau: 'super', rayon: 2, centre: { x: 2, y: 1 },
+      bilan: {
+        pvSoignes: 0, pvRetires: 4, reactivees: [], ravitaillees: [], meteo: null,
+        touchees: [{ uniteId: mienne, pv: 2 }, { uniteId: char, pv: 2 }, { uniteId: inf, pv: 2 }],
+        immobilisees: [], abattues: [],
+      },
+    },
+  };
+  h.rafraichir();
+  duel = h.slots.get('duel')!.innerHTML;
+  assert.match(duel, /hud\.visee_pouvoir_adverses \{&quot;n&quot;:2\}/);
+  assert.match(duel, /hud\.visee_pouvoir_miennes_une/);
+  assert.match(duel, /hud\.visee_pouvoir_confirmer/);
+  assert.doesNotMatch(duel, /hud\.visee_pouvoir_rien/);
+
+  // Une case vide : on le dit avant de dépenser la jauge.
+  vue = {
+    ...base(), phase: 'pouvoir',
+    viseePouvoir: {
+      niveau: 'normal', rayon: 1, centre: { x: 4, y: 0 },
+      bilan: { pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null, touchees: [], immobilisees: [], abattues: [] },
+    },
+  };
+  h.rafraichir();
+  duel = h.slots.get('duel')!.innerHTML;
+  assert.match(duel, /hud\.visee_pouvoir_rien/);
+  // Une impulsion à abattre : arrêtées et abattues comptées séparément.
+  vue = {
+    ...base(), phase: 'pouvoir',
+    viseePouvoir: {
+      niveau: 'normal', rayon: 1, centre: { x: 2, y: 1 },
+      bilan: { pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null, touchees: [], immobilisees: [char, mienne], abattues: [inf] },
+    },
+  };
+  h.rafraichir();
+  duel = h.slots.get('duel')!.innerHTML;
+  assert.match(duel, /hud\.visee_pouvoir_arretees \{&quot;n&quot;:2\}/);
+  assert.match(duel, /hud\.visee_pouvoir_abattues_une/);
+  // Hors visée : plus de panneau, et le bouton redit le nom du pouvoir.
+  vue = base();
+  h.rafraichir();
+  assert.equal(h.slots.get('duel')!.innerHTML, '');
+  assert.doesNotMatch(h.slots.get('dock')!.innerHTML, /hud\.pouvoir_annuler/);
+  h.demonter();
+});
+
+test('le super adverse prêt se télégraphie sous la journée, avec le commandant, la pièce et le pouvoir', () => {
+  const etat = partie();
+  let vue: VueJeu = vueDe(etat, { x: 1, y: 1 });
+  for (const taille of [undefined, { largeur: 1400, hauteur: 900 }]) {
+    const h = hudSur(() => vue, taille);
+    assert.doesNotMatch(h.slots.get('partie')!.innerHTML, /alerte-super/, 'rien à télégraphier : rien');
+    vue = {
+      ...vueDe(etat, { x: 1, y: 1 }),
+      superAdverse: { commandantCle: 'cmd_hadran_ost', piece: 'commandant.cmd_hadran_ost.piece_super', pouvoir: 'commandant.cmd_hadran_ost.super_v4' },
+    };
+    h.rafraichir();
+    const html = h.slots.get('partie')!.innerHTML;
+    assert.match(html, /class="alerte-super" role="status"/);
+    assert.match(html, /hud\.super_adverse_pret \{&quot;commandant&quot;:&quot;Hadran Ost&quot;,&quot;piece&quot;:&quot;commandant\.cmd_hadran_ost\.piece_super&quot;,&quot;pouvoir&quot;:&quot;commandant\.cmd_hadran_ost\.super_v4&quot;\}/);
+    // La bande de la journée reste entière devant l'alerte.
+    assert.match(html, /hud\.journee/);
+    vue = vueDe(etat, { x: 1, y: 1 });
+    h.demonter();
+  }
+});

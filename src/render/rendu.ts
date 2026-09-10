@@ -105,6 +105,15 @@ export interface MesuresRendu {
  * Ce que le contrôleur donne à peindre par-dessus l'état : la sélection, les
  * cases allumées, le chemin, le curseur, le brouillard et l'ambiance.
  */
+/**
+ * Une **marque** posée sur une unité par le télégraphage d'un super de la
+ * faction (`doc/refonte/supers-vilains.md`) : `designee`, un rayon adverse la
+ * frapperait maintenant ; `menacee`, une impulsion adverse pourrait l'abattre.
+ * C'est de la lecture, jamais une règle : la carte dit ce que le joueur pourrait
+ * calculer lui-même.
+ */
+export type MarqueUnite = 'designee' | 'menacee';
+
 export interface VueInteraction {
   catalogue: Catalogue;
   ambiance: Ambiance;
@@ -139,6 +148,12 @@ export interface VueInteraction {
   attenteIa: boolean;
   /** Étiquette du QG, déjà traduite : un rendu n'appelle jamais `t()`. */
   etiquetteQg: string;
+  /**
+   * Les marques du télégraphage, par identifiant d'unité (`MarqueUnite`) ;
+   * `null` ou absent : aucune. Une peau les pose au-dessus de la figurine, en
+   * orange — la couleur du matériel à l'essai, celle du badge des Gris.
+   */
+  marques?: ReadonlyMap<string, MarqueUnite> | null;
 }
 
 /**

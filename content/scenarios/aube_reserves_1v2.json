@@ -1,10 +1,10 @@
 {
   "cle": "aube_reserves_1v2",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_reserves_1v2",
   "nom": "Aube · Les réserves contestées · 1 contre 2",
   "acte": 0,
@@ -101,5 +101,8 @@
     "0": 9000,
     "1": 4000,
     "2": 3000
+  },
+  "factionsParCamp": {
+    "2": "atl"
   }
 }

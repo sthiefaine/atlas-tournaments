@@ -472,3 +472,68 @@ test('une météo imposée ne fait aucun geste : le Bulletin et l’annonce s’
   const p = ecrirePartition([{ type: 'meteo_forcee', camp: 0, meteo: 'neige', journees: 2 }], etat, etat, OPTIONS);
   assert.deepEqual(genres(p), []);
 });
+
+// ---------------------------------------------------------------------------
+// Les familles de la faction : frappe de zone, rayon, impulsion
+// ---------------------------------------------------------------------------
+
+test('une frappe de zone : les missiles tombent, puis chaque touchée encaisse depuis le centre, avec son chiffre', () => {
+  const evts: EvenementJeu[] = [
+    { type: 'frappe_zone', camp: 1, centre: { x: 1, y: 0 }, rayon: 1, touchees: [{ uniteId: mienne, pv: 20 }, { uniteId: sienne, pv: 20 }] },
+    { type: 'pouvoir', camp: 1, niveau: 'super', nom: 'Grêle' },
+  ];
+  const p = ecrirePartition(evts, etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), ['pouvoir', 'frapper', 'encaisser', 'chiffre', 'encaisser', 'chiffre']);
+  const frapper = seul(p, 'frapper');
+  assert.equal(frapper.debut, DUREES.pouvoir, 'la frappe attend la fin du splash');
+  assert.equal(frapper.duree, DUREES.frapper);
+  assert.deepEqual([frapper.centre, frapper.rayon, frapper.camp], [{ x: 1, y: 0 }, 1, 1]);
+  const coup = seul(p, 'encaisser');
+  assert.equal(coup.unite, mienne);
+  assert.equal(coup.debut, DUREES.pouvoir + DUREES.frapper, 'on encaisse quand les missiles sont tombés');
+  assert.deepEqual(coup.depuis, { x: 1, y: 0 }, 'le centre tient lieu de tireur');
+  assert.equal(seul(p, 'encaisser', 1).debut, coup.debut, 'toutes les touchées encaissent ensemble');
+  const [ch1, ch2] = p.gestes.filter((g): g is Extract<Geste, { genre: 'chiffre' }> => g.genre === 'chiffre');
+  assert.deepEqual([ch1?.valeur, ch1?.teinte], [2, 'perte'], 'ma perte est rouge');
+  assert.deepEqual([ch2?.valeur, ch2?.teinte], [2, 'gain'], 'la sienne est verte');
+});
+
+test('un rayon désigne les unités l’une après l’autre, et chacune encaisse quand le trait l’a marquée', () => {
+  const evts: EvenementJeu[] = [
+    { type: 'rayon_laser', camp: 1, touchees: [{ uniteId: mienne, pv: 30 }, { uniteId: genie, pv: 30 }] },
+    { type: 'pouvoir', camp: 1, niveau: 'super', nom: 'Rasante' },
+  ];
+  const p = ecrirePartition(evts, etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), ['pouvoir', 'designer', 'encaisser', 'chiffre', 'designer', 'encaisser', 'chiffre']);
+  const premier = seul(p, 'designer');
+  const second = seul(p, 'designer', 1);
+  assert.equal(premier.debut, DUREES.pouvoir);
+  assert.equal(second.debut, DUREES.pouvoir + MISE_EN_SCENE.ecartDesigner, 'le second trait part un peu après');
+  assert.deepEqual([premier.unite, second.unite], [mienne, genie]);
+  assert.deepEqual(premier.case, { x: 0, y: 0 });
+  const coup = seul(p, 'encaisser');
+  assert.equal(coup.debut, premier.debut + DUREES.designer);
+  assert.deepEqual(coup.depuis, coup.case, 'un rayon n’a pas de case d’origine');
+  assert.equal(seul(p, 'chiffre').valeur, 3);
+});
+
+test('une impulsion se referme d’abord ; l’appareil abattu ne tombe qu’une fois l’anneau fermé', () => {
+  const evts: EvenementJeu[] = [
+    // Le moteur pousse le `hors_jeu` de l'abattue **avant** l'`iem_pouvoir`.
+    { type: 'hors_jeu', uniteId: mienne, camp: 0, unite: 'infanterie' },
+    { type: 'iem_pouvoir', camp: 1, centre: { x: 1, y: 1 }, rayon: 2, immobilisees: [genie], abattues: [mienne] },
+    { type: 'pouvoir', camp: 1, niveau: 'super', nom: 'Retour à zéro' },
+  ];
+  const p = ecrirePartition(evts, etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), ['pouvoir', 'sceller', 'sortir']);
+  const sceller = seul(p, 'sceller');
+  assert.equal(sceller.debut, DUREES.pouvoir);
+  assert.deepEqual([sceller.centre, sceller.rayon], [{ x: 1, y: 1 }, 2]);
+  const sortir = seul(p, 'sortir');
+  assert.equal(sortir.unite, mienne);
+  assert.equal(sortir.debut, DUREES.pouvoir + DUREES.sceller, 'ce qui vole tombe quand l’anneau s’est refermé');
+  // Réduit : tout à zéro, rien de perdu.
+  const reduit = ecrirePartition(evts, etat, etat, { ...OPTIONS, reduit: true });
+  assert.deepEqual(genres(reduit), genres(p));
+  assert.ok(reduit.gestes.every((g) => g.debut === 0 && g.duree === 0));
+});

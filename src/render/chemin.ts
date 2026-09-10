@@ -65,3 +65,19 @@ export function surChemin(
   const avant = pas[pas.length - 2] ?? fin;
   return { x: fin.x, y: fin.y, cap: Math.atan2(-(fin.y - avant.y), fin.x - avant.x) };
 }
+
+/**
+ * Les cases à `rayon` pas Manhattan ou moins de `centre`, **du centre vers le
+ * bord** puis dans l'ordre de lecture : c'est l'ordre dans lequel une frappe
+ * de zone tombe, et celui dans lequel le contrôleur allume le gabarit d'un
+ * pouvoir visé. Aucune borne de carte ici : l'appelant filtre ce qui en sort.
+ */
+export function casesDuRayon(centre: Case, rayon: number): Case[] {
+  const cases: Case[] = [];
+  for (let dy = -rayon; dy <= rayon; dy += 1) {
+    const reste = rayon - Math.abs(dy);
+    for (let dx = -reste; dx <= reste; dx += 1) cases.push({ x: centre.x + dx, y: centre.y + dy });
+  }
+  const distance = (c: Case): number => Math.abs(c.x - centre.x) + Math.abs(c.y - centre.y);
+  return cases.sort((a, b) => distance(a) - distance(b) || a.y - b.y || a.x - b.x);
+}

@@ -27,3 +27,8 @@ Couverture exhaustive des 28 rôles et de leur accès par la fiche ; drones non 
 ## Révision 4 — 10 septembre 2026
 
 Les 34 kits de `doc/refonte/pouvoirs-v4.md` sont en jeu (`content/commandants-capacites.json`, révision 3 gelée dans `-v3.json`) sur vingt et un scénarios en `commandantsVersion: 4`, les quatre premiers tutoriels restant en révision 1 ; la faiblesse est un modificateur permanent posé par le moteur (source `faiblesse`), `VERSION_MOTEUR` 7. Campagne 24/24 sans ajustement ; en simulation, tout kit sans `soin` perd 95 à 100 % contre un kit à soin parce que l’IA ne joue que le soin — détail dans `personnages-pouvoirs.md`.
+
+## Les supers des Gris — 10 septembre 2026
+
+Les huit supers de `doc/refonte/supers-vilains.json` sont en jeu (`content/commandants-capacites.json`, `pouvoirs-v4.json`, `familles` recomptées) : Grêle 7, Délestage 8, Rasante 5 (4 PV), Zone rouge 7, La relève arrive 8, Mise sous scellés 7, Réserves fermées 7, Retour à zéro 9 — trois crans posés à la mesure (Ost 8→7, Basile 8→7, Maël 7→5 et 3→4 PV), chaque Gris portant sa `piece` sans dossier ; passif, pouvoir normal, faiblesse et contre-jeu de kit inchangés.
+Mesuré sur `plaine.json` dans les deux protocoles et les deux ordres (`pouvoirs-v4.md`, « Les supers des Gris en jeu ») : Ost, Maël, Lise, Yuna, Sélène et Basile tiennent entre 20 et 80 % ; Relais Zéro (0–10 %) et Edran (5–35 %) restent sous la cible sur une plaine sans aéroport ni brouillard, où `abattre` n'a rien à abattre ; `verifier:campagne` 24/24, les essais Aube ne déclarant pas la faction, Grêle n'y part pas.

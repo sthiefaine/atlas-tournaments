@@ -1,10 +1,10 @@
 {
   "cle": "aube_routes_3v1",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_routes_3v1",
   "nom": "Aube · Les routes d’Aube · 3 contre 1",
   "acte": 0,
@@ -108,5 +108,8 @@
     "1": 3000,
     "2": 3000,
     "3": 9000
+  },
+  "factionsParCamp": {
+    "2": "atl"
   }
 }

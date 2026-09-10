@@ -33,6 +33,13 @@ export interface ProfilCommandant {
   faiblesse?: { axe: AxeFaiblesse; effet: EffetModificateur; description: string };
   /** Révision 4 : ce que dit le commandant au déclenchement. */
   replique?: { pouvoir: string; super: string };
+  /**
+   * La pièce de matériel sans dossier qui porte le super d'un commandant de la
+   * faction (`doc/refonte/supers-vilains.md` §1, 10 septembre 2026) : un nom et
+   * une silhouette dans le vocabulaire de `pieces.ts`. Annotation de scénario —
+   * le moteur ne la lit pas, l'admin et le carnet peuvent la montrer.
+   */
+  piece?: { nom: string; silhouette: string };
 }
 /** Révisions servies par ce module ; toute autre est une capacité composée par le code. */
 export type RevisionCapacites = 3 | 4;

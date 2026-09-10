@@ -93,14 +93,14 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 | 22 | **Mira Karki** (Népal) | survivante | Encordés (3) — Fantassins ×1,3, +1 en montagne | Le dernier col (7) — Tout le monde +2 étoiles | `blindes` : Rien de lourd ne monte : ses chenilles frappent à 80 %. |
 | 23 | **Tess Roa** (N.-Zélande) | gardienne | Brume de vallée (3) — Couverts ×1,3, vision adverse −1 | La fougère répare (6) — Soin 3, +1 étoile | `mobilite` : Personne ne court ici : ses roues et chenilles ont −1 de mouvement. |
 | 24 | **Luz Quispe** (Pérou) | ingenieur | Route neuve (3) — +2 sur route et pont | Le pont (7) — Un pont, permanent | `economie` : Le trésor reste court : ses revenus sont à 90 %. |
-| 25 | **Hadran Ost** (Gris / Atlas) | fonceuse | Pression méridienne (3) — Chenilles ×1,2, +1 mouvement | Le bloc avance (7) — −1 PV à tous, chenilles ×1,3 | `aerien` : Il néglige la couverture : ses anti-air frappent à 80 %. |
-| 26 | **Sélène Veyr** (Gris / Atlas) | diplomate | Clause de stabilité (3) — Achats −30 % ce tour | Tutelle du réseau (7) — Revenus ×2 deux journées, capture ×1,5 | `blindes` : Elle n’entraîne personne : toutes ses unités frappent à 90 %. |
-| 27 | **Maël Orven** (Gris / Atlas) | fonceuse | Plein en vol (3) — Plein en vol, appareils +1 | Ciel de manœuvre (8) — Tous les appareils rejouent | `infanterie` : Tenir le sol lui coûte : ses troupes à pied frappent à 85 %. |
-| 28 | **Lise Varen** (Gris / Atlas) | stratege_prudent | Angle réservé (3) — Portée +1 des pièces | Passages verrouillés (7) — Rivière posée, pièces ×1,2 | `mobilite` : Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement. |
-| 29 | **Edran Sorel** (Gris / Atlas) | veteran | Colonne de relève (3) — Plein général, transports +1 | Deuxième ligne (7) — Achats −40 %, +1 mouvement | `aerien` : Il n’a pas de flotte aérienne : ses appareils frappent à 85 %. |
-| 30 | **Yuna Serrat** (Gris / Atlas) | diplomate | Mandat provisoire (3) — Capture ×2 | Le réseau bascule (7) — Capture ×3, fantassins +2 | `blindes` : Elle négocie, elle ne perce pas : ses chenilles frappent à 85 %. |
-| 31 | **Basile Kelm** (Gris / Atlas) | gardienne | Veille du bastion (3) — Bâtiments ×1,3, vision +1 | Réserves fermées (8) — −1 PV à tous, vision adverse −2 *(« Les relais tiennent », 7 barres, jusqu'au 10 septembre au soir)* | `mobilite` : Une ligne fixe : ses roues et chenilles ont −1 de mouvement *(toutes ses unités jusqu'au 10 septembre au soir)*. |
-| 32 | **Relais Zéro** (Gris / Atlas) | stratege_prudent | Signal brouillé (3) — Vision adverse −2, drones +2 | Réseau sans écho (7) — Brouillard deux journées, drones +2 | `infanterie` : Personne au sol : ses troupes à pied frappent à 80 %. |
+| 25 | **Hadran Ost** (Gris / Atlas) | fonceuse | Pression méridienne (3) — Chenilles ×1,2, +1 mouvement | Grêle (7) — Frappe 2 PV, rayon 2, chenilles +1 *(« Le bloc avance », 7 barres, −1 PV à tous, jusqu'aux supers des Gris ; 8 barres au brouillon, 7 à la mesure)* | `aerien` : Il néglige la couverture : ses anti-air frappent à 80 %. |
+| 26 | **Sélène Veyr** (Gris / Atlas) | diplomate | Clause de stabilité (3) — Achats −30 % ce tour | Délestage (8) — Carburant adverse ×2, captures ÷2, revenus ×2 *(« Tutelle du réseau », 7 barres, jusqu'aux supers des Gris)* | `blindes` : Elle n’entraîne personne : toutes ses unités frappent à 90 %. |
+| 27 | **Maël Orven** (Gris / Atlas) | fonceuse | Plein en vol (3) — Plein en vol, appareils +1 | Rasante (5) — Laser 4 PV sur les 2 plus avancées *(« Ciel de manœuvre », 8 barres, jusqu'aux supers des Gris ; 7 barres et 3 PV au brouillon, 5 et 4 à la mesure)* | `infanterie` : Tenir le sol lui coûte : ses troupes à pied frappent à 85 %. |
+| 28 | **Lise Varen** (Gris / Atlas) | stratege_prudent | Angle réservé (3) — Portée +1 des pièces | Zone rouge (7) — Frappe 3 PV en croix, portée +1 *(« Passages verrouillés », jusqu'aux supers des Gris)* | `mobilite` : Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement. |
+| 29 | **Edran Sorel** (Gris / Atlas) | veteran | Colonne de relève (3) — Plein général, transports +1 | La relève arrive (8) — Plein général, roues et chenilles rejouent *(« Deuxième ligne », 7 barres, jusqu'aux supers des Gris)* | `aerien` : Il n’a pas de flotte aérienne : ses appareils frappent à 85 %. |
+| 30 | **Yuna Serrat** (Gris / Atlas) | diplomate | Mandat provisoire (3) — Capture ×2 | Mise sous scellés (7) — Impulsion rayon 2, capture ×2 *(« Le réseau bascule », jusqu'aux supers des Gris)* | `blindes` : Elle négocie, elle ne perce pas : ses chenilles frappent à 85 %. |
+| 31 | **Basile Kelm** (Gris / Atlas) | gardienne | Veille du bastion (3) — Bâtiments ×1,3, vision +1 | Réserves fermées (7) — −1 PV à tous, vision adverse −2 *(« Les relais tiennent », 7 barres, jusqu'au 10 septembre au soir ; 8 barres jusqu'aux supers des Gris)* | `mobilite` : Une ligne fixe : ses roues et chenilles ont −1 de mouvement *(toutes ses unités jusqu'au 10 septembre au soir)*. |
+| 32 | **Relais Zéro** (Gris / Atlas) | stratege_prudent | Signal brouillé (3) — Vision adverse −2, drones +2 | Retour à zéro (9) — Impulsion rayon 2, les appareils tombent *(« Réseau sans écho », 7 barres, jusqu'aux supers des Gris)* | `infanterie` : Personne au sol : ses troupes à pied frappent à 80 %. |
 | 33 | **Solveig Tamm** (Gris / Atlas) | gardienne | Escorte rapprochée (3) — Transports ×1,4, tous ×1,15 | Personne ne reste (6) — Tous +2 mouvement, défense ×1,2 | `artillerie` : Elle escorte, elle ne bombarde pas : ses pièces de portée frappent à 85 %. |
 | 34 | **Wren Osoko** (Gris / Atlas) | stratege_prudent | Relevés ouverts (3) — Vision +2, chance +5 % | Carte complète (6) — Chance +15 %, vision +3 | `economie` : L’homologation ne rapporte rien : ses revenus sont à 90 %. |
 
@@ -134,42 +134,47 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 | Mira Karki | `defense` | `etoiles` | autre chose |
 | Tess Roa | `defense` | `soin` | autre chose |
 | Luz Quispe | `mouvement` | `terrain` | autre chose |
-| Hadran Ost | `attaque` | `degats_directs` | autre chose |
-| Sélène Veyr | `prix` | `fonds` | autre chose |
-| Maël Orven | `ravitailler` | `reactiver` | autre chose |
-| Lise Varen | `portee` | `terrain` | autre chose |
-| Edran Sorel | `ravitailler` | `prix` | autre chose |
-| Yuna Serrat | `capture` | `capture` | même famille |
+| Hadran Ost | `attaque` | `frappe_zone` | autre chose |
+| Sélène Veyr | `prix` | `carburant` | autre chose |
+| Maël Orven | `ravitailler` | `rayon_laser` | autre chose |
+| Lise Varen | `portee` | `frappe_zone` | autre chose |
+| Edran Sorel | `ravitailler` | `reactiver` | autre chose — le plein est listé d'abord parce qu'il précède, l'effet principal est la réactivation |
+| Yuna Serrat | `capture` | `iem` | autre chose |
 | Basile Kelm | `defense` | `degats_directs` | autre chose |
-| Relais Zéro | `vision` | `meteo` | autre chose |
+| Relais Zéro | `vision` | `iem` | autre chose |
 | Solveig Tamm | `defense` | `mouvement` | autre chose |
 | Wren Osoko | `vision` | `chance` | autre chose |
 
-**31 supers sur 34 sont autre chose qu'un pouvoir plus gros** (règle : au moins six ; 30 jusqu'au 10 septembre au soir, Ariane ayant quitté la liste). Les trois qui restent dans leur famille : Lotte (polder puis digue : gagner une case, puis couper un axe — même table, gestes opposés), Saran (galop puis les trois jeux : la steppe n'a qu'une idée, et son super coûte 50 % de carburant en plus), Yuna (adversaire : une seule phrase à apprendre).
+**32 supers sur 34 sont autre chose qu'un pouvoir plus gros** (règle : au moins six ; 30 jusqu'au 10 septembre au soir, Ariane ayant quitté la liste ; 31 jusqu'aux supers des Gris, Yuna l'ayant quittée à son tour — son super scelle, il ne capture plus). Les deux qui restent dans leur famille : Lotte (polder puis digue : gagner une case, puis couper un axe — même table, gestes opposés), Saran (galop puis les trois jeux : la steppe n'a qu'une idée, et son super coûte 50 % de carburant en plus). Edran est compté par son effet principal (`reactiver`) ; par la lettre de la règle — le premier effet listé — il serait un troisième `ravitailler`/`ravitailler`.
 
 **Emploi de chaque famille** (pouvoir ou super, passifs et faiblesses exclus) — règle : chaque famille nouvelle entre 2 et 6 commandants.
 
 | Famille | Statut | Commandants | Qui |
 |---|---|---|---|
-| `mouvement` | existante | 19 | Ariane, Tomas, Elsbeth, Awa, Ayu, Leandro, Noémie, Jone, Nikos, Kito, Tiana, Saran, Mira, Luz, Hadran, Maël, Edran, Yuna, Solveig |
-| `defense` | existante | 14 | Elsbeth, Lotte, Samir, Lívia, Leandro, Nikos, Elín, Amalie, Mira, Tess, Luz, Basile, Relais, Solveig |
-| `attaque` | existante | 9 | Ariane, Samir, Awa, Lívia, Inés, Leandro, Saran, Hadran, Lise |
+| `mouvement` | existante | 18 | Ariane, Tomas, Elsbeth, Awa, Ayu, Leandro, Noémie, Jone, Nikos, Kito, Tiana, Saran, Mira, Luz, Hadran, Maël, Edran, Solveig |
+| `defense` | existante | 13 | Elsbeth, Lotte, Samir, Lívia, Leandro, Nikos, Elín, Amalie, Mira, Tess, Luz, Basile, Solveig |
+| `attaque` | existante | 8 | Ariane, Samir, Awa, Lívia, Inés, Leandro, Saran, Hadran |
 | `vision` | existante | 8 | Hazel, Leandro, Tiana, Amalie, Tess, Basile, Relais, Wren |
 | `capture` | existante | 6 | Elsbeth, Hazel, Ayu, Kito, Sélène, Yuna |
-| `terrain` | existante | 6 | Elsbeth, Lotte, Ayu, Nikos, Luz, Lise |
+| `terrain` | existante | 5 | Elsbeth, Lotte, Ayu, Nikos, Luz |
 | `soin` | nouvelle | 5 | Ariane, Samir, Nikos, Elín, Tess |
 | `ravitailler` | nouvelle | 5 | Ariane, Tomas, Samir, Maël, Edran |
 | `etoiles` | nouvelle | 5 | Inés, Tiana, Amalie, Mira, Tess |
-| `meteo` | nouvelle | 5 | Noémie, Jone, Elín, Tiana, Relais |
-| `reactiver` | nouvelle | 4 | Awa, Devika, Ren, Maël |
+| `meteo` | nouvelle | 4 | Noémie, Jone, Elín, Tiana |
+| `reactiver` | nouvelle | 4 | Awa, Devika, Ren, Edran |
 | `chance` | nouvelle | 3 | Lívia, Jone, Wren |
-| `degats_directs` | nouvelle | 4 | Inés, Hazel, Hadran, Basile |
-| `prix` | nouvelle | 3 | Devika, Sélène, Edran |
+| `degats_directs` | nouvelle | 3 | Inés, Hazel, Basile |
+| `carburant` | existante | 3 | Hazel, Saran, Sélène |
 | `fonds` | existante | 2 | Tomas, Sélène |
+| `prix` | nouvelle | 2 | Devika, Sélène |
 | `portee` | existante | 2 | Ren, Lise |
-| `carburant` | existante | 2 | Hazel, Saran |
+| `frappe_zone` | faction | 2 | Hadran, Lise |
+| `iem` | faction | 2 | Yuna, Relais |
+| `rayon_laser` | faction | 1 | Maël |
 
-**Les huit adversaires au premier tour.** Ost : ses chenilles avancent en bloc et l'écran perd un PV partout (contre : le ciel, ses anti-air sont à 80 %). Sélène : elle achète et encaisse, jamais elle ne frappe (contre : lui prendre des bâtiments). Maël : ses appareils font le plein en vol puis rejouent (contre : un anti-air par objectif, ses fantassins sont à 85 %). Lise : portée +1, puis une rivière posée qui ferme un passage (contre : le flanc, ses pièces ont −1 de mouvement). Edran : plein général puis une deuxième ligne à −40 % (contre : isoler ses dépôts, il n'a pas de flotte aérienne). Yuna : capture ×2 puis ×3 (contre : ses capteurs un par un, ses chenilles sont à 85 %). Basile : bâtiments ×1,3 puis les réserves fermées — un PV à toute l'armée et vision adverse −2 (contre : deux objectifs, et ne pas s'attarder devant ses portes quand sa jauge est pleine ; ses roues et chenilles ont −1 de mouvement). Relais Zéro : vision adverse −2 puis brouillard de deux journées (contre : mettre ses drones hors jeu, personne au sol). Chaque `contreJeu` du JSON dit la même chose en une phrase.
+*Table recomptée le 10 septembre 2026 avec les supers des Gris : les trois familles de la faction (`doc/04` §7.2, « Les familles de la faction ») n'entrent que sur ces huit kits, et `rayon_laser` n'a qu'un porteur — la règle « entre 2 et 6 » vaut pour les familles nouvelles ouvertes aux nations, pas pour celles réservées à la faction.*
+
+**Les huit adversaires au premier tour** *(supers du 10 septembre, `supers-vilains.md`)*. Ost : ses chenilles avancent en bloc, et quand il grêle, treize cases perdent 2 PV avant que le bloc avance (contre : se disperser, rester au contact des siennes ; ses anti-air sont à 80 %). Sélène : elle achète et encaisse, jamais elle ne frappe, puis elle coupe le courant — carburant doublé, captures divisées par deux (contre : poser les appareils, lui prendre des bâtiments). Maël : ses appareils font le plein en vol, puis passent en rasante sur les deux unités les plus avancées (contre : du pas cher en tête, un anti-air par objectif ; ses fantassins sont à 85 %). Lise : portée +1, puis une croix de cinq cases qui perd 3 PV (contre : ne jamais s'empiler, approcher par le flanc ; ses pièces ont −1 de mouvement). Edran : plein général, puis sa ligne roulante rejoue (contre : frapper ses transports, ne pas échanger à égalité ; il n'a pas de flotte aérienne). Yuna : capture ×2, puis tout ce qui a un moteur est scellé pendant que ses capteurs passent (contre : tenir avec des fantassins ; ses chenilles sont à 85 %). Basile : bâtiments ×1,3 puis les réserves fermées — un PV à toute l'armée et vision adverse −2 (contre : deux objectifs, garder un bâtiment pour voir ; ses roues et chenilles ont −1 de mouvement). Relais Zéro : vision adverse −2, puis un secteur remis à zéro où ce qui roule s'arrête et ce qui vole tombe (contre : espacer les appareils, poser ce qui se pose, chasser ses Veilleurs). Chaque `contreJeu` du JSON dit la même chose en une phrase — sauf la ligne de kit, que le scénariste a gelée à la révision 4 ; le contre-jeu propre à chaque super est dans `supers-vilains.json`.
 
 ## 6. Ce qui reste à trancher
 
@@ -268,3 +273,29 @@ Un pouvoir d'Advance Wars est bon quand il tient **en une phrase que l'adversair
 
 **Non fait.** Ost–Tomas reste à 85/15 dans un ordre — il l'était ce matin, ce n'est pas ce lot. Le geste d'écran pour un mouvement (§6.18). Le style `veteran`/`prodige` d'Ariane (§6.12) n'a pas bougé. Aucun texte de tutoriel ne cite le kit, rien n'y a été touché.
 
+### Les supers des Gris en jeu — 10 septembre 2026
+
+*Les huit supers de `doc/refonte/supers-vilains.json` (scénariste : une pièce sans dossier par super, trois familles réservées à la faction) sont transcrits dans `content/commandants-capacites.json` et dans le JSON de ce document — `superPouvoir` et `replique.super` remplacés, `piece { nom, silhouette }` ajoutée à chaque Gris (champ facultatif de `ProfilCommandant`, que le moteur ne lit pas), la ligne `description` du kit réécrite pour les sept dont le super change ; passif, pouvoir normal, faiblesse, contre-jeu de kit et réplique du pouvoir normal n'ont pas bougé. Même protocole que les deux sections précédentes, **dans les deux protocoles** : pondérée contre agressive (celui de `simuler.ts` par défaut, le Gris pondéré dans la cellule a–b et agressif dans la cellule b–a) et pondérée contre pondérée, deux ordres. Cible fixée pour ce lot : aucun Gris au-delà de 80/20 ni sous 20 % dans aucune des quatre cellules ; les barres d'abord, puis `pv` ou `rayon` d'un cran, jamais la famille.*
+
+**Deux préalables du simulateur, sans quoi rien ne se mesurait.** Le moteur refuse `pouvoir_invalide` les trois familles à un camp qui n'est pas `atl` (`estCampFaction`, `reglages.factionsParCamp`), et `scripts/simuler.ts` ne déclarait aucune faction : `factionsDesCommandants` fait de tout camp tenu par un kit `faction: 'atl'` un camp de la faction, en suivant l'alternance des kits. Et l'IA ne rend que ses actions : `compterDeclenchements` les rejoue au moteur et compte, par commandant, les pouvoirs normaux et supers partis, les événements `frappe_zone`, `rayon_laser`, `iem_pouvoir`, et les unités touchées, immobilisées et abattues (ligne « Pouvoirs déclenchés » de la sortie, dès que `--commandants` est donné).
+
+| Paire (a–b · b–a) | Pondérée–agressive | Pondérée–pondérée | Déclenchements sur 20 parties (normal / super ; effet) |
+|---|---|---|---|
+| Ost–Ariane, **Grêle 7** | **30/70 · 60/40** | **70/30 · 60/40** | 46–88 / 56–64 ; 3,5 à 4,1 unités par grêle |
+| Maël–Ariane, **Rasante 5, 4 PV** | **45/55 · 70/30** | **20/80 · 80/20** | 0 / 124–153 ; 2 unités par rasante |
+| Lise–Tomas, Zone rouge 7 | **40/60 · 40/60** | **40/60 · 55/45** | 0 / 107–129 ; 2,5 unités par croix |
+| Yuna–Ariane, Mise sous scellés 7 | **20/80 · 65/35** | **25/75 · 80/20** | 73–88 / 72–107 ; 2,3 unités scellées par impulsion |
+| Relais Zéro–Ariane, Retour à zéro 9 | 0/100 · 90/10 | 5/95 · 100/0 | 0–1 / 53–73 ; 2,4 unités arrêtées, **0 abattue** |
+| Sélène–Tomas, Délestage 8 | **60/40 · 35/65** | **55/45 · 50/50** | 278–336 / **2–5** |
+| Edran–Ariane, La relève arrive 8 | 30/70 · 95/5 | 30/70 · 85/15 | 2–4 / 61–76 |
+| Basile–Ariane, **Réserves fermées 7** | **20/80 · 60/40** | **45/55 · 50/50** | 10–24 / 85–114 |
+
+**Les crans, un à la fois, et ce que chacun a mesuré.** *Ost 8 → 7* : à 8 barres, 20/80 · 55/45 et 60/40 · 55/45 — un 20 exact dans la cellule pondérée ; à 7, retenu. *Basile 8 → 7* : à 8, **10/90** · 50/50 et 40/60 · 70/30 — le protocole par défaut, jamais mesuré pour lui, montrait la cellule sous 20 ; à 7, quatre cellules entre 20 et 60, retenu (la huitième barre avait été prise sur un 70/30 pondéré qui n'est plus là). *Maël 7 → 6 → 5, puis 3 → 4 PV* : à 7, 20/80 · 70/30 et **10/90** · 90/10 ; à 6, 35/65 · 80/20 et 20/80 · 85/15 ; à 5, 25/75 · 75/25 et 25/75 · 75/25 ; à 6 et 4 PV, 45/55 · 80/20 et **10/90** · 75/25 ; à **5 barres et 4 PV**, les quatre cellules tiennent, retenu. *Yuna 7 → 6* : 35/65 · 60/40 et **15/85** · 85/15, pire ; *rayon 2 → 3* à 7 barres : 20/80 · 60/40 et 20/80 · 80/20, dans le bruit ; **7 barres et rayon 2 gardés**, à 20 exact dans deux cellules. *Relais Zéro 9 → 8* : 10/90 · 90/10 et 5/95 · 95/5 ; *8 et rayon 3* : 10/90 · 90/10 dans les deux protocoles — rien ne bouge, **9 gardé** (un cran qui ne mesure rien ne se garde pas). *Edran 8 → 7 → 6* : 30/70 · 95/5 et 25/75 · 85/15, puis 35/65 · 95/5 et 35/65 · 90/10 — la cellule « Ariane pondérée contre Edran agressif » ne bouge pas, **8 gardé**.
+
+**Trois Gris restent sous la cible, et la mesure dit pourquoi.** *Relais Zéro* (0 à 10 %) : sur une plaine sans brouillard, son passif et son pouvoir normal — vision de drones, vision adverse −2 — ne valent rien à l'IA, qui ne les joue jamais ; son super arrête 2,4 unités par impulsion et **n'abat rien, parce qu'aucune des trois cartes de test n'a d'aéroport** : l'IA n'y produit pas un appareil en 20 parties (569 infanteries, 279 mécas, 113 chars légers sur la plaine), et `abattre` ne se mesure pas ici. Deux témoins : sous `--brouillard` (pondérée contre pondérée), 15/85 · 75/25, son normal part 38 à 48 fois — c'est là que son kit vit ; avec sa faiblesse à pied ramenée de 0,80 à 0,95 (non retenu, témoin seulement), 20/80 · 85/15. *Edran* (5 à 35 %) : « La relève arrive » part 3 à 4 fois par match, mais sur une plaine d'infanterie il réactive des roues et des chenilles que l'IA achète peu, et le plein ne rend rien à ce qui ne consomme pas ; son normal ne part jamais. *Maël* tient la cible à 5 barres et 4 PV, mais avec la faiblesse à 0,95 il ne dépasse pas 30/70 · 60/40 à 7 barres : c'est le kit d'un pilote sur une carte sans piste. Ces trois-là sont des kits de brouillard, d'appareils et de convois ; la plaine mesure leur super, pas leur carte. À remesurer sur une carte à aéroport quand il y en aura une dans `tests/engine/cartes/`.
+
+**Ce que l'IA fait de ces supers.** Elle vise : Grêle touche 3,5 à 4 unités en moyenne (les siennes comprises, elle accepte le collatéral quand le solde est positif), Zone rouge 2,5, une impulsion arrête 2,3 à 2,4 unités à moteur. Elle **épargne la jauge** pour les supers de Maël, Lise et Relais Zéro (pouvoir normal jamais joué) et joue Sélène à l'envers : « Clause de stabilité » part 14 à 17 fois par match — un prix ×0,7 vaut toujours un achat — et « Délestage » 2 à 5 fois sur 20 parties, parce qu'un carburant doublé ne vaut à l'IA que les appareils poussés au bord de la panne, et qu'il n'y en a pas sur une plaine. Sélène tient 35 à 60 % **par son pouvoir normal** ; le super n'est pas mesuré.
+
+**Et une chose que la mesure n'a pas touchée mais que la lecture a trouvée** : seuls `aube_essais_drones` et `aube_essai_maritime_iem_climat` déclarent `factionsParCamp`. Dans les cinq essais Aube où Ost est l'adversaire (batteries, nuit, relève, réserves, routes, plus les deux secondaires), son camp n'est pas `atl` : **Grêle y est refusée par le moteur**, l'IA retombe sur « Pression méridienne », et `verifier:campagne` — 24/24 avant comme après ce lot — ne mesure donc pas le super. Le scénario est la source de vérité de la faction ; ce lot ne touche pas les missions. À trancher avec l'auteur des scénarios : déclarer la faction là où un Gris commande, en sachant que cela ouvre aussi les prototypes `factionExclusive` à ce camp.
+
+**Non fait.** Les chaînes `commandant.<cle>.super_v4`, `super_v4_desc` et `replique_super_v4` des huit Gris appartiennent au chantier de l'affichage et se réalignent depuis le contenu ; `tests/i18n/pouvoirs-v4.test.ts` est rouge tant qu'elles ne le sont pas. Les gestes de partition `baliser`, `designer`, `sceller`, `tomber` (§6.6 de `supers-vilains.md`) ne sont pas écrits. `doc/04` §7.2 n'est pas amendé par ce lot.

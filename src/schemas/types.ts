@@ -334,12 +334,81 @@ export interface EffetMeteo {
   meteo: { valeur: Meteo; journees: 1 | 2 };
 }
 
+// ---------------------------------------------------------------------------
+// Les familles de la faction (10 septembre 2026, `04-gameplay.md` §7.2)
+// ---------------------------------------------------------------------------
+
+/** Code du camp de la faction : le seul à qui les trois familles ci-dessous sont permises. */
+export const CODE_FACTION = 'atl' as const;
+
 /**
- * Effet d'un pouvoir : un modificateur, une pose de terrain, ou l'une des
- * trois familles instantanées du 10 septembre 2026 (`04-gameplay.md` §7.2).
+ * Frappe de zone : `pv` PV affichés retirés à **toute** unité — des deux
+ * camps — dans le rayon Manhattan autour d'une case choisie au déclenchement
+ * (`cases[0]`), plancher 1 PV interne. Un transport est touché, sa cale non.
+ */
+export interface EffetFrappeZone {
+  cible: 'terrain';
+  frappe: { pv: number; rayon: number };
+}
+
+/** Comment un rayon laser choisit ses cibles parmi ce que le camp voit. */
+export const CHOIX_LASER = ['plus_cheres', 'plus_avancees'] as const;
+/** Critère de choix d'un `EffetRayonLaser`. */
+export type ChoixLaser = typeof CHOIX_LASER[number];
+
+/**
+ * Rayon laser : `pv` PV affichés retirés aux `nombre` unités adverses que le
+ * camp **voit**, les plus chères ou les plus proches de son QG, plancher
+ * 1 PV interne. Sans case : la cible est choisie par la règle, pas par le joueur.
+ */
+export interface EffetRayonLaser {
+  cible: 'unites_adverses';
+  laser: { pv: number; nombre: number; choix: ChoixLaser };
+}
+
+/**
+ * Impulsion électromagnétique : toute unité **à moteur** (`TYPES_MOUVEMENT_MOTEUR`)
+ * dans le rayon autour de `cases[0]`, des deux camps, reçoit l'immobilisation
+ * de l'impulsion de station — ni mouvement ni riposte jusqu'à la fin de son
+ * prochain tour. `abattre` met **hors jeu** les unités adverses du domaine
+ * `air` touchées : c'est la seule mise hors jeu directe du jeu, réservée au
+ * super pouvoir d'au moins `BORNES_FACTION.iem.barresAbattre` barres.
+ */
+export interface EffetIem {
+  cible: 'terrain';
+  iem: { rayon: number; abattre: boolean };
+}
+
+/** Types de mouvement qu'une impulsion arrête : ce qui a un moteur. */
+export const TYPES_MOUVEMENT_MOTEUR: readonly TypeMouvement[] = ['roues', 'chenilles', 'air', 'mer', 'amphibie'];
+
+/**
+ * Bornes des familles de la faction. `normal` est ce qu'un pouvoir normal a
+ * le droit de porter ; au-delà, le super seul. `barresAbattre` est le prix
+ * minimal du super qui abat.
+ */
+export const BORNES_FACTION = {
+  frappe: { pv: { min: 1, max: 3 }, rayon: { min: 0, max: 2 }, normal: { pv: 2, rayon: 1 } },
+  laser: { pv: { min: 1, max: 5 }, nombre: { min: 1, max: 3 } },
+  iem: { rayon: { min: 1, max: 3 }, barresAbattre: 8 },
+} as const;
+
+/** Un effet des trois familles réservées à la faction. */
+export type EffetFaction = EffetFrappeZone | EffetRayonLaser | EffetIem;
+
+/** Vrai si l'effet appartient à l'une des trois familles de la faction. */
+export function estEffetFaction(e: EffetPouvoir): e is EffetFaction {
+  return 'frappe' in e || 'laser' in e || 'iem' in e;
+}
+
+/**
+ * Effet d'un pouvoir : un modificateur, une pose de terrain, l'une des
+ * trois familles instantanées du 10 septembre 2026 (`04-gameplay.md` §7.2),
+ * ou l'une des trois familles de la faction, du même jour.
  */
 export type EffetPouvoir =
-  | EffetModificateur | EffetPoserTerrain | EffetRavitailler | EffetReactiver | EffetMeteo;
+  | EffetModificateur | EffetPoserTerrain | EffetRavitailler | EffetReactiver | EffetMeteo
+  | EffetFrappeZone | EffetRayonLaser | EffetIem;
 
 /** Durées simples d'un pouvoir, hors durée en journées. */
 export const DUREES_POUVOIR = ['ce_tour', 'tour_complet'] as const;
