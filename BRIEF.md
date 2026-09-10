@@ -18,6 +18,10 @@ Huit commandants adverses structurent cet opus. La fratrie reste secrète : aucu
 
 Le propriétaire autorise deux modes **normal et difficile**, des quêtes secondaires dont les choix influencent la trame principale et réciproquement, et des unités modernes supplémentaires, dont un petit arsenal exclusif à la faction inconnue. Le refus d’ajouter systématiquement une unité par région demeure ; il ne constitue pas une interdiction de créer un rôle tactique utile. Les quatre ajouts du catalogue7 sont deux drones communs et deux unités méridiennes ; seules les unités communes reçoivent des kits nationaux. La difficulté change des paramètres annoncés, pas les règles de dégâts en secret, et reste distincte des décisions narratives.
 
+### Le vocabulaire de la fiction est libre — décision du 10 septembre 2026
+
+« On a droit aussi de dire guerre, combat, mort, c'est fictif donc c'est pas grave, c'est un jeu. » Les mots de la fiction — guerre, combat, bataille, mort, mourir, tuer, détruire, arme, soldat, blessé, victime — ne sont plus des motifs de rejet : ils sortent des `termesInterdits` du glossaire et de la table de `doc/01-bible.md` §5.2. Ce qui reste interdit ne change pas et n'est pas un vocabulaire : **accrocher la fiction au monde réel** (conflits, guerres, victimes, dirigeants, régimes, religions réels ; `01-bible.md` §7.3) et l'horreur graphique (sang, cadavres, ruines, civils, réfugiés). Sur le terrain, le règlement d'Atlas continue de dire **mettre hors jeu** : c'est le vocabulaire du HUD et du moteur, une règle du monde, pas une pudeur d'écriture. La borne des quatre disparitions ci-dessous (jamais sur un terrain, jamais un homicide) reste une décision de scénario, pas une règle de mots.
+
 ### Quatre disparitions — décision du 9 septembre 2026
 
 Le propriétaire a décidé que **quatre chefs de nations alliées meurent** au cours du premier opus. C'est l'unique exception à « Personne ne meurt. Jamais. » (`doc/01-bible.md` §1), et elle est fermée : quatre personnes, quatre scènes, nommées ici et nulle part ailleurs.

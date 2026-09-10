@@ -1,13 +1,6 @@
 {
   "locale": "fr",
   "termesInterdits": [
-    "soldats",
-    "tuer",
-    "mourir",
-    "mort",
-    "blessé",
-    "victime",
-    "détruire",
     "envahir",
     "invasion",
     "occuper",
@@ -15,8 +8,6 @@
     "libérer",
     "annexer",
     "coloniser",
-    "arme",
-    "armement",
     "sang",
     "cadavre",
     "ruines",
@@ -340,5 +331,5 @@
       "note": "Programme de fusion entièrement fictif. Conflit énergétique sérieux, affrontements non sanglants. Anéantir signifie mettre toutes les unités adverses hors jeu. Aucun récit de violence réelle."
     }
   ],
-  "majLe": "2026-09-05"
+  "majLe": "2026-09-10"
 }
