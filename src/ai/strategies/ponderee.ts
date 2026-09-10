@@ -24,7 +24,7 @@ import { sontAllies } from '../../engine/equipes';
  */
 
 import type {
-  Action, Catalogue, Debarquement, EtatPartie, Rng, Suite, Unite,
+  Action, Catalogue, Commandants, Debarquement, EtatPartie, Rng, Suite, Unite,
 } from '../../engine/index';
 import { constructionsPossibles } from '../../engine/regles/genie';
 import { produitesPar } from '../../engine/catalogue';
@@ -35,7 +35,7 @@ import {
   degatsArme, ECHELLE_DEGATS, FACTEUR_RIPOSTE, facteurTerrain, peutViser, tireSansMunitions,
 } from '../../engine/regles/combat';
 import {
-  batimentsDe, consommationParTour, SURCOUT_CARBURANT_FURTIF, verifierProduction,
+  batimentsDe, consommationParTour, prixProduction, SURCOUT_CARBURANT_FURTIF, verifierProduction,
 } from '../../engine/regles/economie';
 import { multiplicateurFonds } from '../../engine/regles/modificateurs';
 import {
@@ -45,6 +45,8 @@ import { casesVisibles } from '../../engine/regles/vision';
 import { cleCase, manhattan, porte, pvAffiches } from '../../engine/types';
 import type { Case, CampId, CleUnite } from '../../schemas/index';
 import { porteePrudente } from '../deplacement';
+import { orientationAchat } from '../orientation';
+import { decisionPouvoir } from '../pouvoirs';
 import {
   adversairesConnus, armeeParType, capteur, compterCapteurs, degatsAttendus, distances, memoire,
   menaceParType, mixPotentiel, objectifsDe, scoreAchat, usinesLibres, type Contre,
@@ -670,12 +672,18 @@ const RAYON_MENACE_QG = 8;
  * l'épargne : si une unité hors de prix, atteignable en `TOURS_EPARGNE`
  * journées de revenus, vaut `MARGE_EPARGNE` fois la meilleure abordable, on
  * n'achète rien ce tour. Sauf quand les capteurs manquent : la capture n'attend pas.
+ *
+ * `commandants` (10 septembre 2026) : la faiblesse de chaque adversaire, lue
+ * sur son kit, oriente l'achat vers ce qui bat les types qu'elle affaiblit, et
+ * le kit du camp vers les types qu'il favorise (`../orientation.ts`, borné).
+ * Sans commandants, rien ne change.
  */
 export function meilleureProduction(
-  etat: EtatPartie, cat: Catalogue, camp: CampId, poids: Poids,
+  etat: EtatPartie, cat: Catalogue, camp: CampId, poids: Poids, commandants: Commandants = [],
 ): Action | null {
   const caisse = etat.camps.find((c) => c.id === camp);
   if (!caisse) return null;
+  const orientation = orientationAchat(cat, etat, camp, commandants);
   const manque = compterCapteurs(etat, cat, camp) < poids.capteursVises;
   const mix = menaceParType(etat, cat, camp);
   const menaces: Record<CleUnite, number> = { ...mix };
@@ -691,7 +699,7 @@ export function meilleureProduction(
   const scoreDe = (cle: CleUnite): number => {
     let s = scores.get(cle);
     if (s === undefined) {
-      s = scoreAchat(etat, cat, cle, mix, mienne, manque, camp, contre);
+      s = scoreAchat(etat, cat, cle, mix, mienne, manque, camp, contre) * orientation(cle);
       scores.set(cle, s);
     }
     return s;
@@ -714,9 +722,11 @@ export function meilleureProduction(
     if (terrain === null) continue;
     for (const cle of produitesPar(cat, terrain, etat, camp)) {
       const t = cat.unites[cle];
-      if (!t || t.cout > atteignable) continue;
+      // Le prix est celui du moteur, modificateur `prix` compris (10 septembre 2026).
+      const prix = prixProduction(etat, cat, camp, cle);
+      if (!t || prix > atteignable) continue;
       const verdict = verifierProduction(etat, cat, camp, usine, cle);
-      if (t.cout > budget) {
+      if (prix > budget) {
         // Inabordable aujourd'hui, atteignable demain : ne bute que sur les fonds.
         if (!verdict.ok && verdict.motif !== 'fonds_insuffisants') continue;
         const score = scoreDe(cle);
@@ -739,8 +749,12 @@ export function strategieAvec(id: string, poids: Poids): Strategie {
   return {
     id,
     poids,
-    choisirAction(etat: EtatPartie, camp: CampId, rng: Rng, cat: Catalogue): Action {
+    choisirAction(etat: EtatPartie, camp: CampId, rng: Rng, cat: Catalogue, commandants: Commandants = []): Action {
       void rng;
+      // Le pouvoir d'abord (`../pouvoirs.ts`) : chaque famille a sa valeur en
+      // fonds, et le pouvoir part quand elle dépasse le seuil de ses barres.
+      const niveau = decisionPouvoir(etat, cat, camp, commandants);
+      if (niveau !== null) return { type: 'pouvoir', niveau };
       const pretes = etat.unites
         .filter((u) => u.camp === camp && u.etat === 'prete' && u.dansTransport === null)
         .sort((a, b) => {
@@ -757,7 +771,7 @@ export function strategieAvec(id: string, poids: Poids): Strategie {
         const option = meilleureOption(etat, cat, unite, poids);
         return option.action;
       }
-      const achat = meilleureProduction(etat, cat, camp, poids);
+      const achat = meilleureProduction(etat, cat, camp, poids, commandants);
       if (achat) return achat;
       return { type: 'finTour' };
     },

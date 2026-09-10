@@ -17,7 +17,7 @@ import type {
 // détour par le baril de réexports, qui se paie cher dans une boucle serrée.
 import { degatsBase, produitesPar } from '../engine/catalogue';
 import { brouillardActif } from '../engine/climat/index';
-import { degatsArme, ECHELLE_DEGATS, facteurTerrain } from '../engine/regles/combat';
+import { degatsArme, ECHELLE_DEGATS, etoilesDefense, facteurTerrain, largeurAlea } from '../engine/regles/combat';
 import { dansCarte, terrainBrut, terrainLogique } from '../engine/hooks';
 import { batimentsDe, producteursDe } from '../engine/regles/economie';
 import { multiplicateur, multiplicateurFonds } from '../engine/regles/modificateurs';
@@ -55,16 +55,17 @@ export function degatsAttendus(
 ): number {
   const base = degatsArme(cat, att, def.type);
   if (base <= 0) return 0;
-  const terrain = terrainLogique(etat, cat, def);
-  const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
   // L'échelle et le terrain viennent du moteur (8 septembre 2026) : l'IA les
   // recopiait, et sa copie a menti dès que la formule a changé — elle jugeait
-  // ses échanges deux fois trop meurtriers et se jetait sur tout.
-  const fTerrain = facteurTerrain(etoiles);
+  // ses échanges deux fois trop meurtriers et se jetait sur tout. Les étoiles
+  // comptent le modificateur `etoiles` d'un pouvoir, et l'aléa est pris à sa
+  // **moyenne** : sans `chance`, exactement 1, comme avant (10 septembre 2026).
+  const fTerrain = facteurTerrain(etoilesDefense(etat, cat, def));
   const mAtt = multiplicateur(etat, cat, att, 'attaque');
   const mDef = multiplicateur(etat, cat, def, 'defense');
+  const aleaMoyen = 0.95 + largeurAlea(etat, cat, att) * 0.5;
   void depuis;
-  const d = ECHELLE_DEGATS * base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain / mDef;
+  const d = ECHELLE_DEGATS * base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain / mDef * aleaMoyen;
   return Math.min(def.pv, Math.max(1, Math.round(d)));
 }
 

@@ -11,6 +11,8 @@ import terrainsJson from '../../../content/terrains.json';
 import { vignetteCarte } from '../jeu/parties-libres';
 import { ParcoursAube } from './parcours-aube';
 import Carnet, { type EpreuveCarnet } from './carnet';
+import { SOURCES_DECISION, optionsDecision } from './consequences';
+import { CLES_I18N_BANC, estSourceBanc } from './bancs';
 import { nomCourt } from './itineraire';
 
 /**
@@ -145,6 +147,11 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
       profilA: t(locale, 'reglages.profil_a'),
       profilB: t(locale, 'reglages.profil_b'),
       profilActif: t(locale, 'accueil.profil_actif'),
+      // « Vous avez joué sous les couleurs de… » : chaque banc du canon, traduit
+      // ici pour que le carnet n'embarque pas `t()`.
+      bancs: Object.fromEntries(SOURCES_DECISION.filter(estSourceBanc).flatMap((source) => optionsDecision(source).map((o) => [
+        o.titre, { titre: t(locale, CLES_I18N_BANC.journal, { banc: t(locale, o.titre) }), effet: t(locale, o.effet) },
+      ]))),
     }}
   /><ParcoursAube /><GuideCommandants /></>;
 }

@@ -177,6 +177,20 @@ export function rolesDesChiffres(gestes: readonly Geste[]): Map<Geste, RoleCoup>
   return roles;
 }
 
+/**
+ * La clé de la réplique dite au splash, ou `null` si ce kit n'en a pas.
+ *
+ * Le nom d'un pouvoir est une clé dont le suffixe dit la révision du kit
+ * (`commandant.<cle>.pouvoir_v4`) ; les répliques n'existent qu'à partir de
+ * la révision 4 (`doc/04-gameplay.md` §7.2, 10 septembre 2026), sous
+ * `commandant.<cle>.replique_pouvoir_v4` et `replique_super_v4`.
+ */
+export function repliqueDePouvoir(commandantCle: string, nomPouvoir: string, niveau: 'normal' | 'super'): string | null {
+  const revision = /_v(\d+)$/.exec(nomPouvoir);
+  if (!revision || Number(revision[1]) < 4) return null;
+  return `commandant.${commandantCle}.replique_${niveau === 'super' ? 'super' : 'pouvoir'}_v${revision[1]}`;
+}
+
 /** La feuille de style des scènes, injectée une seule fois par document. */
 const STYLE = `
 /* Les scènes se bornent à **l'image**, jamais à la fenêtre : sur grand écran, le
@@ -291,6 +305,9 @@ const STYLE = `
    plus grand. Le titre passe au signal, la carte gagne un liseré. */
 .atlas-splash[data-niveau='super'] .nom{color:var(--signal)}
 .atlas-splash[data-niveau='super'] .carte{border-top-width:6px}
+/* La réplique du commandant : ce qu'il dit en déclenchant, sous le nom du
+   pouvoir, en italique et sans capitales — c'est une voix, pas un titre. */
+.atlas-splash .replique{display:block;margin-top:8px;font-size:clamp(13px,1.6vw,16px);line-height:1.3;font-style:italic;font-weight:650;color:var(--papier);text-shadow:0 2px 0 #050d12}
 .atlas-splash .commandant{display:block;margin-top:9px;font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#a9c0c3}
 .atlas-splash .eclat{position:absolute;left:50%;top:50%;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 var(--teinte);animation:atlas-eclat var(--duree) ease-out both;pointer-events:none}
 @keyframes atlas-eclat{0%{opacity:0;transform:translate(-50%,-50%) scale(1)}10%{opacity:1;transform:translate(-50%,-50%) scale(4);box-shadow:0 0 60px 30px var(--teinte)}45%{opacity:0;transform:translate(-50%,-50%) scale(70);box-shadow:0 0 0 0 transparent}100%{opacity:0}}
@@ -666,6 +683,10 @@ export function monterScenes(
         // Le nom d'un pouvoir arrive comme une **clé** (`commandant.<cle>.pouvoir`) ;
         // un nom qui n'en serait pas une s'affiche tel quel plutôt que vide.
         const nom = api.t(g.nom) || g.nom;
+        // La réplique (révision 4 des capacités) : le kit joué se lit au suffixe
+        // du nom, et seuls les kits v4 en ont une. On ne demande pas une clé
+        // qu'on sait absente — `t()` compterait un incident pour un kit v3.
+        const replique = commandantCle ? repliqueDePouvoir(commandantCle, g.nom, g.niveau) : null;
         const noeud = doc.createElement('div');
         noeud.className = 'atlas-splash';
         noeud.setAttribute('role', 'status');
@@ -681,6 +702,7 @@ export function monterScenes(
           + `<div class="plateau"><div class="buste">${buste(g.camp, 'triomphe')}</div>`
           + `<div class="carte"><span class="kicker">${ech(api.t(g.niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir'))}</span>`
           + `<strong class="nom">${ech(nom)}</strong>`
+          + (replique ? `<em class="replique">${ech(api.t(replique))}</em>` : '')
           + `<span class="commandant">${ech(commandant)}</span></div></div>`;
         noeud.addEventListener('click', surClic);
         return noeud;

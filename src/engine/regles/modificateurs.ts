@@ -7,14 +7,25 @@ import { sontAllies } from '../equipes';
  * `BORNES_MODIFICATEUR` ; les additifs s'**additionnent**.
  */
 
-import type { QuoiModificateur } from '../../schemas/index';
+import type { CampId, CibleEffet, FiltreEffet, QuoiModificateur } from '../../schemas/index';
 import { BORNES_MODIFICATEUR } from '../../schemas/index';
 import { terrainLogique } from '../hooks';
-import type { Catalogue, EtatPartie, ModificateurActif, Unite } from '../types';
+import type { Catalogue, EtatPartie, Unite } from '../types';
 
-/** Vrai si ce modificateur vise cette unité. */
+/**
+ * Ce qu'il faut pour savoir qui un effet vise : son camp, sa cible et son
+ * filtre. Un `ModificateurActif` le satisfait, et les familles instantanées
+ * du 10 septembre 2026 (`soin`, `ravitailler`, `reactiver`…) aussi — elles
+ * ciblent comme un modificateur sans jamais en poser un.
+ */
+export interface Visee {
+  camp: CampId;
+  effet: { cible: CibleEffet; filtre?: FiltreEffet };
+}
+
+/** Vrai si cet effet vise cette unité. */
 export function viseUnite(
-  etat: EtatPartie, cat: Catalogue, mod: ModificateurActif, u: Unite,
+  etat: EtatPartie, cat: Catalogue, mod: Visee, u: Unite,
 ): boolean {
   const e = mod.effet;
   if (e.cible === 'terrain' || e.cible === 'economie') return false;
@@ -68,6 +79,22 @@ export function multiplicateurFonds(etat: EtatPartie, camp: number): number {
   let produit = 1;
   for (const mod of etat.modificateurs) {
     if (mod.effet.modificateur.quoi !== 'fonds') continue;
+    if (mod.camp !== camp) continue;
+    produit *= mod.effet.modificateur.valeur;
+  }
+  return Math.min(bornes.max, Math.max(bornes.min, produit));
+}
+
+/**
+ * Multiplicateur de prix d'achat d'un camp (`prix`, cible `economie`,
+ * 10 septembre 2026) : lu par `verifierProduction` et `produire`, jamais
+ * recopié — le HUD et l'IA passent par `prixProduction`.
+ */
+export function multiplicateurPrix(etat: EtatPartie, camp: number): number {
+  const bornes = BORNES_MODIFICATEUR.prix;
+  let produit = 1;
+  for (const mod of etat.modificateurs) {
+    if (mod.effet.modificateur.quoi !== 'prix') continue;
     if (mod.camp !== camp) continue;
     produit *= mod.effet.modificateur.valeur;
   }

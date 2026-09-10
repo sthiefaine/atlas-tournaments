@@ -1,13 +1,16 @@
 /** Données tactiques des commandants jouables ; aucune dépendance au moteur. */
 import { lireProfilCommandant } from './profils-commandants';
-import type { Cle, EffetModificateur, EffetPouvoir, Scenario } from '../schemas/types';
+import type { Cle, DureePouvoir, EffetModificateur, EffetPouvoir, Scenario } from '../schemas/types';
 
 interface CapaciteJeu {
   nom: string;
   barres: number;
   effets: EffetPouvoir[];
-  duree: 'tour_complet';
+  duree: DureePouvoir;
 }
+
+/** Révisions des capacités : 1 et 2 composées par le code, 3 et 4 lues au catalogue. */
+export type RevisionCommandants = 1 | 2 | 3 | 4;
 
 export interface CommandantJeu {
   cle: Cle;
@@ -15,18 +18,31 @@ export interface CommandantJeu {
   passif: EffetModificateur | null;
   pouvoir: CapaciteJeu;
   superPouvoir: CapaciteJeu;
+  /**
+   * La faiblesse (révision 4, `doc/04` §7.3) : un modificateur permanent que le
+   * moteur pose à la création de la partie, comme le passif. Absente des
+   * révisions antérieures, qui l'annonçaient sans la chiffrer.
+   */
+  faiblesse?: EffetModificateur | null;
 }
 
-/** Révision 1 inchangée pour les anciens scénarios ; spécialisation Aube à partir du catalogue 7. */
-export function chargerCommandantJeu(cle: Cle, revision = 1): CommandantJeu {
-  if (revision === 3) {
-    const profil = lireProfilCommandant(cle);
-    if (!profil) throw new Error(`Commandant absent du catalogue tactique 3 : ${cle}`);
-    return {
+/**
+ * Révision 1 inchangée pour les anciens scénarios ; spécialisation Aube à
+ * partir du catalogue 7 ; révisions 3 et 4 lues au catalogue tactique, la 4
+ * avec sa faiblesse. Les noms sont des clés i18n, suffixées par la révision.
+ */
+export function chargerCommandantJeu(cle: Cle, revision: RevisionCommandants = 1): CommandantJeu {
+  if (revision === 3 || revision === 4) {
+    const profil = lireProfilCommandant(cle, revision);
+    if (!profil) throw new Error(`Commandant absent du catalogue tactique ${revision} : ${cle}`);
+    const suffixe = revision === 4 ? '_v4' : '_v3';
+    const commandant: CommandantJeu = {
       cle, nom: `commandant.${cle}.nom`, passif: profil.passif,
-      pouvoir: { ...profil.pouvoir, nom: `commandant.${cle}.pouvoir_v3` },
-      superPouvoir: { ...profil.superPouvoir, nom: `commandant.${cle}.super_v3` },
+      pouvoir: { ...profil.pouvoir, nom: `commandant.${cle}.pouvoir${suffixe}` },
+      superPouvoir: { ...profil.superPouvoir, nom: `commandant.${cle}.super${suffixe}` },
     };
+    if (revision === 4) commandant.faiblesse = profil.faiblesse?.effet ?? null;
+    return commandant;
   }
   const defensif = cle === 'cmd_tomas_reiner';
   const quoi = defensif ? 'defense' : 'attaque';
@@ -76,10 +92,15 @@ export function chargerCommandantJeu(cle: Cle, revision = 1): CommandantJeu {
   return commandant;
 }
 
+/** La révision des capacités qu'un scénario joue : la sienne, sinon celle de son catalogue. */
+export function revisionCommandants(scenario: Pick<Scenario, 'commandantsVersion' | 'catalogueVersion'>): RevisionCommandants {
+  return scenario.commandantsVersion ?? (scenario.catalogueVersion >= 7 ? 2 : 1);
+}
+
 export function resoudreCommandantsScenario(scenario: Scenario): (CommandantJeu | null)[] {
   const resultat: (CommandantJeu | null)[] = [];
   for (const commandant of scenario.commandants) {
-    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle, scenario.commandantsVersion ?? (scenario.catalogueVersion >= 7 ? 2 : 1));
+    resultat[commandant.camp] = chargerCommandantJeu(commandant.commandantCle, revisionCommandants(scenario));
   }
   return resultat;
 }

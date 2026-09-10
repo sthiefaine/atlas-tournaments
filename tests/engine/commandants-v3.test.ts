@@ -2,14 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { listerProfilsCommandants, lireProfilCommandant } from '../../src/content/profils-commandants';
 import { chargerCommandantJeu, resoudreCommandantsScenario } from '../../src/content/commandants-jeu';
-import { appliquer, chargerCatalogue, creerPartie } from '../../src/engine/index';
+import { appliquer, chargerCatalogue, creerPartie, estModificateurDurable } from '../../src/engine/index';
 import { scenePersonnalisee } from './aides';
 import scenarioJson from '../../content/scenarios/couleurs_alliees.json';
 import { validerScenario } from '../../src/schemas/index';
 
 const cat = chargerCatalogue(8);
 test('34 commandants explicites couvrent 24 nations, huit adversaires et deux Atlas', () => {
-  const profils = listerProfilsCommandants();
+  const profils = listerProfilsCommandants(3);
   assert.equal(profils.length, 34);
   assert.equal(new Set(profils.map(p => p.cle)).size, 34);
   assert.equal(profils.filter(p => p.paysCode).length, 24);
@@ -25,7 +25,7 @@ test('34 commandants explicites couvrent 24 nations, huit adversaires et deux At
 });
 
 test('les 68 pouvoirs se paient et expirent au prochain tour propre, après le tour adverse', () => {
-  for (const profil of listerProfilsCommandants()) for (const niveau of ['normal', 'super'] as const) {
+  for (const profil of listerProfilsCommandants(3)) for (const niveau of ['normal', 'super'] as const) {
     const commandant = chargerCommandantJeu(profil.cle, 3);
     const scene = scenePersonnalisee(['PPPP', 'PPPP', 'PPPP', 'PPPP'], {}, [
       { camp: 0, type: 'infanterie', x: 0, y: 0 },
@@ -40,8 +40,11 @@ test('les 68 pouvoirs se paient et expirent au prochain tour propre, après le t
     if (!active.ok) continue;
     const capacite = niveau === 'normal' ? commandant.pouvoir : commandant.superPouvoir;
     assert.equal(active.etat.camps[0]!.jauge, 900 - capacite.barres * 100);
+    // Seuls les modificateurs **durables** restent dans l'état : un soin, des
+    // dégâts directs, un ravitaillement, une réactivation ou une météo
+    // s'appliquent au déclenchement et ne laissent rien (10 septembre 2026).
     const nombre = active.etat.modificateurs.length;
-    assert.equal(nombre, capacite.effets.length);
+    assert.equal(nombre, capacite.effets.filter(estModificateurDurable).length);
     const adverse = appliquer(active.etat, { type: 'finTour' }, cat, commandants);
     assert.ok(adverse.ok);
     if (!adverse.ok) continue;
@@ -56,11 +59,15 @@ test('la révision 3 exige une sélection explicite et ses profils sont isolés 
   const validation = validerScenario(scenarioJson);
   assert.ok(validation.ok);
   if (!validation.ok) return;
-  const scenario = { ...validation.valeur, catalogueVersion: 8 };
+  // Le scénario joue la révision 4 depuis le 10 septembre 2026 ; ce que ce test
+  // tient, c'est qu'un scénario **sans** révision déclarée garde la sienne.
+  const sansRevision = { ...validation.valeur };
+  delete sansRevision.commandantsVersion;
+  const scenario = { ...sansRevision, catalogueVersion: 8 };
   const anciens = resoudreCommandantsScenario(scenario);
   assert.deepEqual(anciens, resoudreCommandantsScenario({ ...scenario, commandantsVersion: 2 }));
   assert.notDeepEqual(anciens, resoudreCommandantsScenario({ ...scenario, commandantsVersion: 3 }));
-  const profil = lireProfilCommandant('cmd_tomas_reiner')!;
+  const profil = lireProfilCommandant('cmd_tomas_reiner', 3)!;
   profil.pouvoir.effets.length = 0;
   assert.ok(chargerCommandantJeu(profil.cle, 3).pouvoir.effets.length > 0);
   assert.throws(() => chargerCommandantJeu('absent', 3), /absent/i);

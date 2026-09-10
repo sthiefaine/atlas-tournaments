@@ -394,3 +394,81 @@ test('une marche interrompue — l’embuscade — se termine par un « ! » sur
   // rien ne vient après le « ! » pour cette unité.
   assert.equal(ecrirePartition([marche], etat, etat, OPTIONS).gestes.some((g) => g.genre === 'surprise'), false);
 });
+
+// ---------------------------------------------------------------------------
+// Les familles de pouvoir du 10 septembre 2026 : soin, dégâts directs, réactivation
+// ---------------------------------------------------------------------------
+
+test('un soin de pouvoir : le halo de réparation et un chiffre vert, après le splash', () => {
+  const apres = structuredClone(etat);
+  const u = uniteParId(apres, mienne);
+  assert.ok(u);
+  u.pv = 100;
+  const evts: EvenementJeu[] = [
+    { type: 'soin', uniteId: mienne, pv: 20 },
+    { type: 'pouvoir', camp: 0, niveau: 'normal', nom: 'commandant.x.pouvoir_v4' },
+  ];
+  const p = ecrirePartition(evts, { ...etat, unites: etat.unites.map((v) => (v.id === mienne ? { ...v, pv: 80 } : v)) }, apres, OPTIONS);
+  // Le splash passe en tête, quel que soit l'ordre du moteur.
+  assert.deepEqual(genres(p), ['pouvoir', 'reparer', 'chiffre']);
+  const soin = seul(p, 'reparer');
+  assert.equal(soin.unite, mienne);
+  assert.equal(soin.pv, 20);
+  assert.equal(soin.debut, DUREES.pouvoir, 'après le splash');
+  const chiffre = seul(p, 'chiffre');
+  // Des PV rendus sont un gain, même vus de l'autre camp.
+  assert.deepEqual([chiffre.valeur, chiffre.teinte, chiffre.debut], [2, 'gain', DUREES.pouvoir]);
+  const adverse = ecrirePartition(evts, etat, apres, { ...OPTIONS, camp: 1 });
+  assert.equal(seul(adverse, 'chiffre').teinte, 'gain');
+});
+
+test('des dégâts directs : un coup sans tireur, et un chiffre qui parle au joueur', () => {
+  const apres = structuredClone(etat);
+  const u = uniteParId(apres, sienne);
+  assert.ok(u);
+  u.pv = 90;
+  const evts: EvenementJeu[] = [{ type: 'degats_directs', uniteId: sienne, pv: 10 }];
+  const p = ecrirePartition(evts, etat, apres, OPTIONS);
+  assert.deepEqual(genres(p), ['encaisser', 'chiffre']);
+  const coup = seul(p, 'encaisser');
+  assert.equal(coup.unite, sienne);
+  assert.deepEqual(coup.depuis, coup.case, 'la case tient lieu d’origine : personne n’a tiré');
+  assert.equal(coup.degats, 10);
+  // C'est l'adversaire qui encaisse : un gain pour le joueur ; une perte vue de l'autre camp.
+  assert.equal(seul(p, 'chiffre').teinte, 'gain');
+  assert.equal(seul(ecrirePartition(evts, etat, apres, { ...OPTIONS, camp: 1 }), 'chiffre').teinte, 'perte');
+});
+
+test('une réactivation : un réveil par unité, sur place, tous en même temps après le splash', () => {
+  const evts: EvenementJeu[] = [
+    { type: 'pouvoir', camp: 0, niveau: 'super', nom: 'commandant.x.super_v4' },
+    { type: 'reactivation', camp: 0, unites: [mienne, genie] },
+  ];
+  const p = ecrirePartition(evts, etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), ['pouvoir', 'reveiller', 'reveiller']);
+  const a = seul(p, 'reveiller');
+  const b = seul(p, 'reveiller', 1);
+  assert.deepEqual([a.unite, b.unite], [mienne, genie]);
+  assert.deepEqual(a.case, { x: 0, y: 0 });
+  assert.deepEqual(b.case, { x: 2, y: 2 });
+  assert.equal(a.camp, 0);
+  assert.equal(a.debut, DUREES.pouvoir);
+  assert.equal(b.debut, DUREES.pouvoir, 'toutes se réveillent ensemble');
+  assert.equal(a.duree, DUREES.reveiller);
+  assert.equal(p.duree, DUREES.pouvoir + DUREES.reveiller);
+
+  // Une liste vide ne joue rien ; une unité inconnue est ignorée.
+  assert.deepEqual(genres(ecrirePartition([{ type: 'reactivation', camp: 0, unites: [] }], etat, etat, OPTIONS)), []);
+  assert.deepEqual(genres(ecrirePartition([{ type: 'reactivation', camp: 0, unites: ['nulle'] }], etat, etat, OPTIONS)), []);
+
+  // Réduit : les gestes sont là, sans durée ni début.
+  const reduit = ecrirePartition(evts, etat, etat, { ...OPTIONS, reduit: true });
+  assert.deepEqual(genres(reduit), ['pouvoir', 'reveiller', 'reveiller']);
+  assert(reduit.gestes.every((g) => g.debut === 0 && g.duree === 0));
+  assert.equal(reduit.duree, 0);
+});
+
+test('une météo imposée ne fait aucun geste : le Bulletin et l’annonce s’en chargent', () => {
+  const p = ecrirePartition([{ type: 'meteo_forcee', camp: 0, meteo: 'neige', journees: 2 }], etat, etat, OPTIONS);
+  assert.deepEqual(genres(p), []);
+});

@@ -2,21 +2,28 @@ import { sontAllies } from '../equipes';
 /**
  * Commandants : jauge, passif, pouvoir et super pouvoir (`doc/04-gameplay.md` §7).
  *
- * Les effets sont des données (`EffetPouvoir`) : un modificateur borné, ou la
- * seule famille nouvelle, `poser_terrain`, avec sa table de sept formes.
- * Les interdits du §7.2 sont des règles du moteur, pas des conventions d'écriture.
+ * Les effets sont des données (`EffetPouvoir`) : un modificateur borné, une
+ * pose de terrain avec sa table de sept formes, et depuis le 10 septembre 2026
+ * les familles **instantanées** — soin, dégâts directs, ravitaillement,
+ * réactivation, météo imposée —, appliquées une fois au déclenchement et
+ * jamais posées dans `etat.modificateurs`. Les interdits du §7.2 sont des
+ * règles du moteur, pas des conventions d'écriture : jamais de mise hors jeu
+ * directe (`degats_directs` laisse toujours 1 PV interne), jamais de
+ * changement de propriétaire, jamais de production gratuite, jamais d'échange
+ * de position, et un seul tour supplémentaire — `reactiver`, au super seul.
  */
 
 import type {
-  Case, CampId, CleTerrain, DureePouvoir, EffetModificateur, EffetPouvoir,
+  Case, CampId, CibleEffet, CleTerrain, DureePouvoir, EffetModificateur, EffetPouvoir, FiltreEffet, Meteo,
 } from '../../schemas/index';
-import { TABLE_POSER_TERRAIN } from '../../schemas/index';
+import { QUOI_INSTANTANES, TABLE_POSER_TERRAIN } from '../../schemas/index';
 import { dansCarte, terrainBrut, terrainLogique } from '../hooks';
 import type {
   Catalogue, CommandantMoteur, EtatPartie, EvenementJeu, ExpirationModificateur,
-  MotifRefus, SourceModificateur,
+  MotifRefus, SourceModificateur, Unite,
 } from '../types';
-import { cleCase, manhattan } from '../types';
+import { cleCase, manhattan, pvAffiches } from '../types';
+import { viseUnite } from './modificateurs';
 import { uniteSur, voisines } from './mouvement';
 
 /** Points de jauge d'une barre. */
@@ -25,6 +32,171 @@ export const POINTS_PAR_BARRE = 100;
 /** Vrai si l'effet est une pose de terrain. */
 export function estPoseTerrain(e: EffetPouvoir): e is Extract<EffetPouvoir, { poserTerrain: unknown }> {
   return 'poserTerrain' in e;
+}
+
+/**
+ * Vrai si l'effet est un modificateur **durable**, celui qu'on pose dans
+ * l'état pour la durée du pouvoir. Un `soin` ou des `degats_directs` portent
+ * la forme d'un modificateur mais s'appliquent une fois : ils n'en sont pas.
+ */
+export function estModificateurDurable(e: EffetPouvoir): e is EffetModificateur {
+  return 'modificateur' in e && !QUOI_INSTANTANES.includes(e.modificateur.quoi);
+}
+
+/** Vrai si l'effet s'applique une fois au déclenchement, sans rien laisser dans l'état. */
+export function estInstantane(e: EffetPouvoir): boolean {
+  if (estPoseTerrain(e)) return false;
+  if ('modificateur' in e) return QUOI_INSTANTANES.includes(e.modificateur.quoi);
+  return true;
+}
+
+/**
+ * Les unités qu'un effet vise, pour ce camp : mêmes cible et filtre qu'un
+ * modificateur (`viseUnite`). Les unités embarquées comptent quand
+ * `embarquees` est vrai — un soin atteint la cale, une réactivation non.
+ */
+export function unitesVisees(
+  etat: EtatPartie, cat: Catalogue, camp: CampId,
+  effet: { cible: CibleEffet; filtre?: FiltreEffet }, embarquees: boolean,
+): Unite[] {
+  return etat.unites.filter((u) => (embarquees || u.dansTransport === null)
+    && viseUnite(etat, cat, { camp, effet }, u));
+}
+
+/** Ce qu'un soin rend à une unité, en points internes : plafonné à 100. */
+function soinDe(u: Unite, n: number): number {
+  return Math.max(0, Math.min(100 - u.pv, n * 10));
+}
+
+/** Ce que des dégâts directs retirent à une unité : jamais le dernier point. */
+function degatsDirectsDe(u: Unite, n: number): number {
+  return Math.max(0, Math.min(u.pv - 1, n * 10));
+}
+
+/** Ce que rend `evaluerEffets` : le bilan d'un pouvoir avant de le payer. */
+export interface EvaluationEffets {
+  /** PV affichés que le soin rendrait, toutes unités visées confondues. */
+  pvSoignes: number;
+  /** PV affichés que les dégâts directs retireraient à l'adversaire. */
+  pvRetires: number;
+  /** Unités qui rejoueraient. */
+  reactivees: string[];
+  /** Unités dont les munitions ou le carburant remonteraient. */
+  ravitaillees: string[];
+  /** Météo imposée, ou `null`. */
+  meteo: Meteo | null;
+}
+
+/**
+ * Évalue les effets instantanés d'un pouvoir **sans rien appliquer** : c'est
+ * ce que l'IA lit pour décider de payer (`ai/pouvoirs.ts`), et ce que le HUD
+ * pourra dire avant confirmation. Les modificateurs durables ne sont pas
+ * comptés ici — leur valeur se lit en rejouant un duel sur l'état d'après.
+ */
+export function evaluerEffets(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, effets: readonly EffetPouvoir[],
+): EvaluationEffets {
+  const bilan: EvaluationEffets = { pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null };
+  for (const effet of effets) {
+    if (estPoseTerrain(effet)) continue;
+    if ('modificateur' in effet) {
+      const { quoi, valeur } = effet.modificateur;
+      if (quoi === 'soin') {
+        for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+          bilan.pvSoignes += pvAffiches(u.pv + soinDe(u, valeur)) - pvAffiches(u.pv);
+        }
+      } else if (quoi === 'degats_directs') {
+        for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+          bilan.pvRetires += pvAffiches(u.pv) - pvAffiches(u.pv - degatsDirectsDe(u, valeur));
+        }
+      }
+    } else if ('ravitailler' in effet) {
+      for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+        if (manqueDe(cat, u, effet.ravitailler)) bilan.ravitaillees.push(u.id);
+      }
+    } else if ('reactiver' in effet) {
+      for (const u of unitesVisees(etat, cat, camp, effet, false)) {
+        if ((u.etat === 'agi' || u.etat === 'deplacee') && u.reactivee !== true) bilan.reactivees.push(u.id);
+      }
+    } else if ('meteo' in effet) {
+      bilan.meteo = effet.meteo.valeur;
+    }
+  }
+  return bilan;
+}
+
+/** Vrai si un ravitaillement changerait quelque chose à cette unité. */
+function manqueDe(cat: Catalogue, u: Unite, quoi: { carburant: boolean; munitions: boolean }): boolean {
+  const type = cat.unites[u.type];
+  if (!type) return false;
+  if (quoi.munitions && type.munitions !== null && u.munitions !== null && u.munitions < type.munitions) return true;
+  if (quoi.carburant && type.carburant !== null && u.carburant !== null && u.carburant < type.carburant.max) return true;
+  return false;
+}
+
+/**
+ * Applique un effet instantané dans l'état de travail. Rien ici ne pose de
+ * modificateur : ce qui est fait est fait, et l'état ne garde qu'une trace —
+ * `reactivee` sur l'unité, `meteoImposee` sur la partie — pour tenir la règle
+ * du « une fois par tour » et celle des journées de météo.
+ */
+function appliquerInstantane(
+  etat: EtatPartie, cat: Catalogue, camp: CampId, effet: EffetPouvoir, evts: EvenementJeu[],
+): void {
+  if (estPoseTerrain(effet)) return;
+  if ('modificateur' in effet) {
+    const { quoi, valeur } = effet.modificateur;
+    if (quoi === 'soin') {
+      for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+        const pv = soinDe(u, valeur);
+        if (pv <= 0) continue;
+        u.pv += pv;
+        evts.push({ type: 'soin', uniteId: u.id, pv });
+      }
+    } else if (quoi === 'degats_directs') {
+      for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+        const pv = degatsDirectsDe(u, valeur);
+        if (pv <= 0) continue;
+        u.pv -= pv;
+        evts.push({ type: 'degats_directs', uniteId: u.id, pv });
+      }
+    }
+    return;
+  }
+  if ('ravitailler' in effet) {
+    for (const u of unitesVisees(etat, cat, camp, effet, true)) {
+      const type = cat.unites[u.type];
+      if (!type || !manqueDe(cat, u, effet.ravitailler)) continue;
+      if (effet.ravitailler.munitions && type.munitions !== null) u.munitions = type.munitions;
+      if (effet.ravitailler.carburant && type.carburant !== null) u.carburant = type.carburant.max;
+      // Même événement qu'un ravitaillement de voisin : l'unité est sa propre source.
+      evts.push({ type: 'ravitaillement', uniteId: u.id, cibleId: u.id });
+    }
+    return;
+  }
+  if ('reactiver' in effet) {
+    const unites: string[] = [];
+    for (const u of unitesVisees(etat, cat, camp, effet, false)) {
+      if (u.etat !== 'agi' && u.etat !== 'deplacee') continue;
+      if (u.reactivee === true) continue;
+      // Les points de capture restent : l'unité rejoue, elle ne repart pas.
+      u.etat = 'prete';
+      u.reactivee = true;
+      unites.push(u.id);
+    }
+    evts.push({ type: 'reactivation', camp, unites });
+    return;
+  }
+  if ('meteo' in effet) {
+    const { valeur, journees } = effet.meteo;
+    const jusqu = etat.journee + journees - 1;
+    etat.meteoImposee = { meteo: valeur, jusqu, camp };
+    // La journée courante change tout de suite ; la prévision de demain aussi
+    // si le pouvoir la couvre. Rien n'est tiré : le flux `meteo` ne bouge pas.
+    etat.climat.meteo = valeur;
+    if (journees >= 2) etat.climat.previsions[0] = valeur;
+    evts.push({ type: 'meteo_forcee', camp, meteo: valeur, journees });
+  }
 }
 
 /** Traduit une durée de pouvoir en expiration d'état. */
@@ -127,6 +299,18 @@ export function verifierPouvoir(
   if (!commandant) return { ok: false, motif: 'pas_de_commandant' };
   if (caisse.pouvoirUtiliseCeTour) return { ok: false, motif: 'pouvoir_deja_utilise' };
   const p = niveau === 'super' ? commandant.superPouvoir : commandant.pouvoir;
+  // Les deux exceptions nommées du §7.2 sont réservées au super : un pouvoir
+  // normal qui les porte n'est jamais prêt, quelle que soit la jauge.
+  if (niveau !== 'super') {
+    for (const e of p.effets) {
+      if ('reactiver' in e) {
+        return { ok: false, motif: 'pouvoir_invalide', detail: 'réactiver ses unités est réservé au super pouvoir' };
+      }
+      if ('meteo' in e && e.meteo.journees > 1) {
+        return { ok: false, motif: 'pouvoir_invalide', detail: 'une météo de deux journées est réservée au super pouvoir' };
+      }
+    }
+  }
   const cout = p.barres * POINTS_PAR_BARRE;
   if (caisse.jauge < cout) return { ok: false, motif: 'jauge_insuffisante' };
   return { ok: true, cout, nom: p.nom, effets: p.effets, duree: p.duree };
@@ -158,7 +342,11 @@ export function appliquerPouvoir(
   caisse.pouvoirUtiliseCeTour = true;
   for (const effet of verdict.effets) {
     if (estPoseTerrain(effet)) continue;
-    poserModificateur(etat, camp, source, effet, expirationDe(verdict.duree, etat.journee));
+    if (estModificateurDurable(effet)) {
+      poserModificateur(etat, camp, source, effet, expirationDe(verdict.duree, etat.journee));
+    } else {
+      appliquerInstantane(etat, cat, camp, effet, evts);
+    }
   }
   for (const pose of poses) {
     for (const c of pose.cases) {

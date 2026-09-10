@@ -1,6 +1,7 @@
 /** Progression de la qualification locale : aucune autorité sur un classement en ligne. */
 import type { Mode } from '../../schemas/types';
 import { VERSION_CANON_AUBE, cleDecision, optionsDecision } from './consequences';
+import { cleSourceBanc } from './bancs';
 import { cleProgression, profilActif, type Profil } from '../preferences';
 
 export interface DecisionLocale {
@@ -113,6 +114,31 @@ export function enregistrerDecision(scenario: string, version: number, choix: st
   const suivant = normaliserProgression({ ...p, canonVersion: VERSION_CANON_AUBE,
     decisions: { ...p.decisions, [cle]: d }, journal: [...(p.journal ?? []), cle] });
   // Une décision annoncée irréversible doit réellement avoir été enregistrée.
+  try { localStorage.setItem(cleProgression(profil), JSON.stringify(suivant)); session = suivant; return true; }
+  catch { return false; }
+}
+
+/**
+ * Le **banc** choisi au briefing d'un scénario (`bancs.ts`), enregistré sous la
+ * source `<scenario>:banc`.
+ *
+ * Deux différences avec `enregistrerDecision`, et elles tiennent au moment du
+ * geste : un banc se choisit **avant** de jouer, donc sans victoire à exiger ;
+ * et il se **rechoisit** à chaque nouvelle partie de la même épreuve — on ne
+ * condamne pas quelqu'un à des couleurs pour avoir essayé. La branche qui suit
+ * lit le dernier banc joué, et le carnet garde la ligne à sa place.
+ *
+ * Rend `false` si l'option est inconnue ou si le stockage refuse ; dans ce
+ * second cas, la page garde le choix en mémoire pour la partie en cours.
+ */
+export function enregistrerBanc(scenario: string, version: number, choix: string, profil: Profil = profilActif()): boolean {
+  const p = lireProgression(profil);
+  const source = cleSourceBanc(scenario);
+  if (!optionsDecision(source).some((o) => o.cle === choix)) return false;
+  const cle = cleDecision(source, version);
+  const d: DecisionLocale = { scenario: source, scenarioVersion: version, canonVersion: VERSION_CANON_AUBE, choix };
+  const suivant = normaliserProgression({ ...p, canonVersion: VERSION_CANON_AUBE,
+    decisions: { ...p.decisions, [cle]: d }, journal: [...(p.journal ?? []), cle] });
   try { localStorage.setItem(cleProgression(profil), JSON.stringify(suivant)); session = suivant; return true; }
   catch { return false; }
 }

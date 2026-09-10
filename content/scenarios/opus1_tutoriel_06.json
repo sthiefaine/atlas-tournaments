@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_06",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 8,
+  "commandantsVersion": 4,
   "commandants": [
     {
       "camp": 0,

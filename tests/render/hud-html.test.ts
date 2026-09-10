@@ -1652,3 +1652,116 @@ test('le mode à une journée de prévision ne montre pas la deuxième météo f
   assert.equal((html.match(/class="meteo-case"/g) ?? []).length, 2, 'journée présente et une seule prévision');
   h.demonter();
 });
+
+// ---------------------------------------------------------------------------
+// Les pouvoirs façon Advance Wars (10 septembre 2026) : passif, faiblesse, prévision, réplique
+// ---------------------------------------------------------------------------
+
+test('le détail de la jauge dit le passif, la faiblesse en registre discret, et ce que le pouvoir prêt ferait maintenant', () => {
+  const etat = partie();
+  const pouvoirs: NonNullable<VueJeu['pouvoirs']> = {
+    normal: {
+      nom: 'commandant.x.pouvoir_v4', cout: 300, pret: true, duree: 'ce_tour',
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'soin', valeur: 2 } }],
+      bilan: { pvSoignes: 6, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null },
+    },
+    super: {
+      nom: 'commandant.x.super_v4', cout: 600, pret: false, duree: { type: 'journees', n: 2 },
+      effets: [{ cible: 'mes_unites', reactiver: true }, { cible: 'terrain', meteo: { valeur: 'neige', journees: 2 } }],
+      bilan: null,
+    },
+    passif: { cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.05 } },
+    faiblesse: { cible: 'economie', modificateur: { quoi: 'fonds', valeur: 0.9 } },
+  };
+  const h = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }), { largeur: 1400, hauteur: 900 });
+  // Sur le bouton prêt, la prévision tient lieu d'infobulle.
+  const ferme = h.slots.get('dock')!.innerHTML;
+  assert.match(ferme, /data-action="pouvoir" data-niveau="normal" title="hud\.prevision \{&quot;liste&quot;:&quot;hud\.prevision_soin \{\\&quot;n\\&quot;:6\}&quot;\}"/);
+  assert.match(ferme, /data-niveau="super" disabled title="hud\.jauge_insuffisante"/);
+
+  cliquer(h.conteneur, 'pouvoir_info');
+  const ouvert = h.slots.get('dock')!.innerHTML;
+  const rangs = [...ouvert.matchAll(/class="rang">([^<]+)</g)].map((m) => m[1]);
+  assert.deepEqual(rangs, ['hud.passif', 'hud.faiblesse', 'hud.jauge_pouvoir', 'hud.super_pouvoir'], 'passif et faiblesse d’abord, puis les deux pouvoirs');
+  assert.match(ouvert, /hud\.effet_pourcent \{&quot;quoi&quot;:&quot;modificateur\.attaque&quot;,&quot;signe&quot;:&quot;\+&quot;,&quot;n&quot;:5\}/, 'le passif est lu sur son effet');
+  assert.match(ouvert, /data-registre="faiblesse"[^§]*?modificateur\.fonds[^§]*?&quot;signe&quot;:&quot;−&quot;,&quot;n&quot;:10/, 'la faiblesse aussi, en registre discret');
+  assert.match(ouvert, /effet\.soin \{&quot;n&quot;:2,&quot;cible&quot;:&quot;cible\.mes_unites&quot;\}/);
+  assert.match(ouvert, /class="puce">duree\.ce_tour</, 'la durée ferme la liste');
+  assert.match(ouvert, /class="prevision">hud\.prevision \{&quot;liste&quot;:&quot;hud\.prevision_soin \{\\&quot;n\\&quot;:6\}&quot;\}</, 'la prévision du pouvoir prêt');
+  assert.match(ouvert, /effet\.reactiver \{&quot;cible&quot;:&quot;cible\.mes_unites&quot;\}/);
+  assert.match(ouvert, /effet\.meteo_deux \{&quot;meteo&quot;:&quot;meteo\.neige&quot;\}/);
+  // Le super n'est pas prêt : aucune prévision pour lui.
+  assert.equal((ouvert.match(/class="prevision"/g) ?? []).length, 1);
+  h.demonter();
+
+  // Sans passif ni faiblesse : « aucun passif », et pas de ligne de faiblesse du tout.
+  const nu = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs: { normal: pouvoirs.normal, super: pouvoirs.super } }), { largeur: 1400, hauteur: 900 });
+  cliquer(nu.conteneur, 'pouvoir_info');
+  const sans = nu.slots.get('dock')!.innerHTML;
+  assert.match(sans, /class="puce">hud\.sans_passif</);
+  assert.doesNotMatch(sans, /data-registre="faiblesse"/);
+  nu.demonter();
+});
+
+test('un pouvoir prêt dont l’instantané ne changerait rien le dit, plutôt que de laisser dépenser pour rien', () => {
+  const etat = partie();
+  const pouvoirs: NonNullable<VueJeu['pouvoirs']> = {
+    normal: {
+      nom: 'commandant.x.pouvoir_v4', cout: 300, pret: true,
+      effets: [{ cible: 'mes_unites', ravitailler: { carburant: true, munitions: true } }],
+      bilan: { pvSoignes: 0, pvRetires: 0, reactivees: [], ravitaillees: [], meteo: null },
+    },
+    super: {
+      nom: 'commandant.x.super_v4', cout: 600, pret: true,
+      // Un modificateur durable seulement : rien à prévoir, aucune infobulle.
+      effets: [{ cible: 'mes_unites', modificateur: { quoi: 'attaque', valeur: 1.3 } }],
+      bilan: null,
+    },
+  };
+  const h = hudSur(() => ({ ...vueDe(etat, { x: 1, y: 1 }), pouvoirs }), { largeur: 1400, hauteur: 900 });
+  const html = h.slots.get('dock')!.innerHTML;
+  assert.match(html, /data-niveau="normal" title="hud\.prevision \{&quot;liste&quot;:&quot;hud\.prevision_rien&quot;\}"/);
+  assert.match(html, /data-action="pouvoir_super" data-niveau="super" aria-label/, 'prêt, sans prévision : ni infobulle ni motif');
+  h.demonter();
+});
+
+test('le splash dit la réplique du commandant pour un kit de révision 4, et se tait pour un kit d’avant', async () => {
+  const etat = partie();
+  const camp0 = etat.camps.find((c) => c.id === 0);
+  assert.ok(camp0);
+  camp0.commandantCle = 'cmd_x';
+  const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 5, y: 5 }));
+  const jouer = async (nom: string, niveau: 'normal' | 'super'): Promise<string> => {
+    const fin = hud.jouer({ gestes: [{ genre: 'pouvoir', camp: 0, niveau, nom, debut: 0, duree: DUREES.pouvoir }], duree: DUREES.pouvoir });
+    horloge.avancer(10);
+    const splash = scenes(conteneur).children.find((e) => e.className === 'atlas-splash');
+    assert.ok(splash);
+    const html = splash.innerHTML;
+    horloge.avancer(FIN_DES_SCENES);
+    await fin;
+    return html;
+  };
+  assert.match(await jouer('commandant.cmd_x.pouvoir_v4', 'normal'), /class="replique">commandant\.cmd_x\.replique_pouvoir_v4</);
+  assert.match(await jouer('commandant.cmd_x.super_v4', 'super'), /class="replique">commandant\.cmd_x\.replique_super_v4</);
+  // Un kit v3 n'a pas de réplique : on ne demande pas une clé qu'on sait absente.
+  assert.doesNotMatch(await jouer('commandant.cmd_x.pouvoir_v3', 'normal'), /class="replique"/);
+  assert.doesNotMatch(await jouer('commandant.cmd_x.pouvoir', 'normal'), /class="replique"/);
+  hud.demonter();
+});
+
+test('le Bulletin dit qui impose la météo tant que la prise dure, et se tait après', () => {
+  const etat = partie();
+  const camp1 = etat.camps.find((c) => c.id === 1);
+  assert.ok(camp1);
+  camp1.commandantCle = 'cmd_y';
+  etat.journee = 3;
+  etat.meteoImposee = { meteo: 'neige', jusqu: 4, camp: 1 };
+  const h = hudSur(() => vueDe(etat, { x: 1, y: 1 }), { largeur: 1400, hauteur: 900 });
+  const bulletin = (): string => h.slots.get('bulletin')?.innerHTML ?? '';
+  // `nomCommandant` lit la chaîne source, absente pour cmd_y : c'est le titre générique qui reste.
+  assert.match(bulletin(), /class="meteo-imposee">hud\.meteo_imposee \{&quot;commandant&quot;:&quot;hud\.commandant&quot;\}</);
+  etat.journee = 5;
+  h.rafraichir();
+  assert.doesNotMatch(bulletin(), /meteo-imposee/, 'la prise est finie');
+  h.demonter();
+});

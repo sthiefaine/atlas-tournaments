@@ -1,10 +1,10 @@
 {
   "cle": "pacte_du_col",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "pacte_du_col",
   "nom": "Qualification · Le pacte du col",
   "acte": 0,
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 4,
+  "commandantsVersion": 4,
   "commandants": [
     {
       "camp": 0,
@@ -28,6 +29,13 @@
       "camp": 1,
       "commandantCle": "cmd_tomas_reiner",
       "ia": "ponderee"
+    }
+  ],
+  "bancs": [
+    {
+      "commandantCle": "cmd_tomas_reiner",
+      "paysCode": "lu",
+      "libelle": "banc.pacte_du_col.cmd_tomas_reiner"
     }
   ],
   "fondsDepart": 4500,

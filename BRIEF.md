@@ -33,6 +33,17 @@ Le propriétaire a décidé que **quatre chefs de nations alliées meurent** au 
 
 **La règle dure : aucune routine ne peut jamais écrire une mort.** Les quatre scènes sont écrites à la main (`doc/refonte/opus1-hors-serie.md` §3) et sont les seules du jeu. Ni la routine lore, ni la routine cerveau, ni la Dépêche, ni aucun contenu généré ne déclare, ne suggère ni ne prolonge une disparition ; un contenu généré qui en porterait une est refusé, et le vocabulaire de `doc/01-bible.md` §5.2 reste intégralement interdit à toute production de routine. La doctrine du marquage (§5.3) est intacte : sur le terrain, on met hors jeu. Les faits correspondants de `content/personnages.json` sont en confidentialité auteur et ne sortent par aucune route.
 
+### Pouvoirs façon Advance Wars — décision du 10 septembre 2026
+
+Le propriétaire trouve les pouvoirs des commandants « pas variés et pas fun comme Advance Wars ». **L'arbitrage n° 4 du 5 septembre (« une seule famille d'effet nouvelle, `poser_terrain` ») est rouvert à sa demande.** Les familles d'effets sont désormais **celles-ci, et pas d'autres** — la table de `doc/04-gameplay.md` §7.2, « Familles d'effets », fait foi sur leurs bornes et leurs cibles :
+
+- les dix grandeurs de modificateur, toutes câblées dans le moteur — dont `soin`, `degats_directs` et `carburant`, qui étaient déclarées et jamais lues ;
+- trois grandeurs neuves : `prix` (le coût d'achat du camp, `[0,5 ; 1,5]`), `chance` (la largeur de l'aléa de combat, `[−3 ; 3]`) et `etoiles` (les étoiles de terrain de la cible, `[−2 ; 2]`) ;
+- trois familles instantanées : `ravitailler` (remise au plein), `reactiver` (ses unités qui ont joué rejouent, **une fois**, au **super pouvoir seulement**) et `meteo` (une météo de la liste imposée à tous, une journée, ou deux au super) ;
+- `poser_terrain`, inchangée.
+
+Les interdits du §7.2 tiennent — jamais de mise hors jeu directe, de changement de propriétaire, de production gratuite, d'échange de position, ni moins de 1 PV — avec **deux exceptions nommées** : `reactiver` est le seul tour supplémentaire du jeu, et `meteo` la seule prise d'un pouvoir sur le climat ; « un pouvoir ne fait pas la météo » est révisé en conséquence. **L'IA joue désormais ses pouvoirs** (`src/ai/pouvoirs.ts`) : le super dès qu'il est payable, le normal quand il change un duel, un soin ou un achat. Les 34 kits de `content/commandants-capacites.json` sont à réécrire sur ces familles ; le moteur, le schéma et l'IA les précèdent.
+
 ## Le jeu en une phrase
 
 Un tactique au tour par tour dans l'esprit d'Advance Wars (grille, unités, terrains, capture de villes, commandants à pouvoirs, conflit stratégique sérieux, affrontements non sanglants), où un jeune commandant fait le tour du monde pour disputer le **Tournoi Atlas**.
@@ -56,6 +67,12 @@ Nom du jeu : **Atlas Tournament**. Dépôt : `atlas-tournaments`. Langue des doc
 - Le joueur choisit son **pays de départ parmi les nations débloquées** (la France au premier parcours ; jusqu'à 24 ensuite). Ce choix fixe son commandant d'origine, son style d'unités, son continent de départ et ses premiers rivaux (comme un starter dans Pokémon).
 - Chaque départ est différent, mais on n'écrit pas 24 histoires à la main : chaque pays a une **fiche** structurée (terrain, climat, voisins, spécialité, archétype du commandant, rival naturel, flags narratifs). Le début de partie est construit depuis cette fiche par la routine lore. Quelques pays « phares » ont en plus un prologue vraiment scénarisé (la France en premier, puis Luxembourg, Japon, Brésil au minimum).
 - **La France est le premier pays entièrement détaillé** : les **18 régions** forment un réservoir de parcours et de revisites, sans obligation de les terminer toutes avant l’intrigue (13 régions métropolitaines + Guadeloupe, Martinique, Guyane, La Réunion, Mayotte). Chaque région apporte une mécanique de terrain propre. Nouvelle-Calédonie et Polynésie peuvent être des étapes bonus (ce sont des collectivités, pas des régions). Le système de régions doit être générique pour s'appliquer plus tard à d'autres pays phares.
+
+### Choisir son héros — décision du 10 septembre 2026
+
+- **Certaines épreuves de la campagne principale proposent leur banc.** Avant le montage, le briefing offre de jouer l'étape **sous les couleurs d'une autre délégation** — son général, ses pouvoirs, son style — à côté du commandant du scénario, qui reste le défaut. C'est la mécanique d'incarnation, **choisie** au briefing au lieu d'être écrite dans le scénario (`Scenario.bancs`, `13-campagne.md` §3.4 bis « Le banc prêté au briefing »). Le vocabulaire est celui du Tableau des délégations : un **banc prêté**, un échange d'entraîneurs — « il joue leurs couleurs ce soir » —, jamais un changement de camp. Si le général prêté était déjà sur le terrain, le commandant du joueur prend sa place ; sinon il quitte le terrain et ses consignes passent au général prêté.
+- **Toujours proposé, jamais imposé, et une suite bornée.** Décliner est la première option de la liste. Un banc joué ouvre une **mini-branche** dans l'épreuve suivante — un renfort, des fonds, une réplique —, annoncée au moment du choix et jamais plus loin que l'épreuve d'après. Le choix est une décision locale comme celles de fin de match : enregistrée dans le carnet (« Vous avez joué sous les couleurs de… »), figée dans la graine de la partie, rejouable à l'identique, et refaite à chaque nouvelle partie de l'épreuve. L'étape garde ses flags : c'est une variante de l'étape, pas un match d'incarnation de plus.
+- **Ce que ça ne fait pas encore** : ni catalogue ni style visuel de la nation prêtée (le kit du général seulement), ni montée de la `confiance`, ni banc dans les tutoriels ou dans l'exhibition, qui est déjà un match d'incarnation.
 
 ## Structure du voyage et choix
 

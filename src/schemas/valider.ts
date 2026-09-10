@@ -40,7 +40,8 @@ import {
   type Country,
   DECLENCHEURS_SCENE,
   type Deblocage, type Dialogue, type SceneDialogue,
-  type EffetEvent, type EffetModificateur, type EffetPoserTerrain, type EffetPouvoir,
+  type EffetEvent, type EffetMeteo, type EffetModificateur, type EffetPoserTerrain, type EffetPouvoir,
+  type EffetRavitailler, type EffetReactiver,
   type EtatClimat, type Event, type Fil, type Flag,
   type Glossaire, type Locale, type MapDef, type MemoryEntry, type MetriquesPrompt,
   type MissionDuJour, type ObjectifDefaite, type ObjectifVictoire,
@@ -92,6 +93,26 @@ function effetModificateur(ctx: Contexte, v: unknown, chemin: string): EffetModi
   if (valeur === undefined) return undefined;
   if (quoi === 'capture' && valeur < 1 && cible !== 'unites_adverses') {
     ctx.faute(cheminValeur, "un multiplicateur de capture inférieur à 1,0 ne vise que 'unites_adverses'");
+  }
+  // Familles du 10 septembre 2026 (`04-gameplay.md` §7.2) : une cible
+  // incohérente est refusée ici, avant que le moteur n'ait à choisir un sens.
+  if ((quoi === 'soin' || quoi === 'degats_directs' || quoi === 'chance' || quoi === 'etoiles') && valeur === 0) {
+    ctx.faute(cheminValeur, `un ${quoi} à zéro est sans effet`);
+  }
+  if (quoi === 'soin' && cible === 'unites_adverses') {
+    ctx.faute(sous(chemin, 'cible'), "un soin ne vise jamais 'unites_adverses'");
+  }
+  if (quoi === 'degats_directs' && cible !== 'unites_adverses') {
+    ctx.faute(sous(chemin, 'cible'), "des dégâts directs ne visent que 'unites_adverses'");
+  }
+  if (quoi === 'chance' && valeur > 0 && cible === 'unites_adverses') {
+    ctx.faute(sous(chemin, 'cible'), "une chance positive ne vise jamais 'unites_adverses'");
+  }
+  if (quoi === 'etoiles' && valeur > 0 && cible === 'unites_adverses') {
+    ctx.faute(sous(chemin, 'cible'), "des étoiles en plus ne visent jamais 'unites_adverses'");
+  }
+  if (quoi === 'prix' && cible !== 'economie') {
+    ctx.faute(sous(chemin, 'cible'), "un prix ne vise que 'economie'");
   }
   const effet: EffetModificateur = { cible, modificateur: { quoi, valeur } };
   if (presente(o, 'filtre') && estObjet(o['filtre'])) effet.filtre = o['filtre'] as EffetModificateur['filtre'];
@@ -186,9 +207,61 @@ function effetPoserTerrain(ctx: Contexte, v: unknown, chemin: string): EffetPose
   };
 }
 
-/** Lit un `EffetPouvoir` : modificateur, ou pose de terrain. */
+/** Lit un `EffetRavitailler` : remise au plein instantanée de ses propres unités. */
+function effetRavitailler(ctx: Contexte, v: unknown, chemin: string): EffetRavitailler | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'filtre', 'ravitailler']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'ravitailler'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['mes_unites'] as const);
+  if (presente(o, 'filtre')) filtreEffet(ctx, o['filtre'], sous(chemin, 'filtre'));
+  const cheminR = sous(chemin, 'ravitailler');
+  const r = objet(ctx, o['ravitailler'], cheminR, ['carburant', 'munitions']);
+  if (!r || !requis(ctx, r, cheminR, ['carburant', 'munitions'])) return undefined;
+  const carburant = booleen(ctx, r['carburant'], sous(cheminR, 'carburant'));
+  const munitions = booleen(ctx, r['munitions'], sous(cheminR, 'munitions'));
+  if (cible === undefined || carburant === undefined || munitions === undefined) return undefined;
+  if (!carburant && !munitions) ctx.faute(cheminR, 'un ravitaillement remet au plein au moins une chose');
+  const effet: EffetRavitailler = { cible, ravitailler: { carburant, munitions } };
+  if (presente(o, 'filtre') && estObjet(o['filtre'])) effet.filtre = o['filtre'] as EffetRavitailler['filtre'];
+  return effet;
+}
+
+/** Lit un `EffetReactiver` : ses propres unités qui ont joué rejouent, une fois. */
+function effetReactiver(ctx: Contexte, v: unknown, chemin: string): EffetReactiver | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'filtre', 'reactiver']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'reactiver'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['mes_unites'] as const);
+  if (presente(o, 'filtre')) filtreEffet(ctx, o['filtre'], sous(chemin, 'filtre'));
+  if (o['reactiver'] !== true) ctx.faute(sous(chemin, 'reactiver'), "'reactiver' vaut true, ou l'effet n'existe pas");
+  if (cible === undefined || o['reactiver'] !== true) return undefined;
+  const effet: EffetReactiver = { cible, reactiver: true };
+  if (presente(o, 'filtre') && estObjet(o['filtre'])) effet.filtre = o['filtre'] as EffetReactiver['filtre'];
+  return effet;
+}
+
+/** Lit un `EffetMeteo` : une météo imposée à tous pour une ou deux journées. */
+function effetMeteo(ctx: Contexte, v: unknown, chemin: string): EffetMeteo | undefined {
+  const o = objet(ctx, v, chemin, ['cible', 'meteo']);
+  if (!o || !requis(ctx, o, chemin, ['cible', 'meteo'])) return undefined;
+  const cible = enumeration(ctx, o['cible'], sous(chemin, 'cible'), ['terrain'] as const);
+  const cheminM = sous(chemin, 'meteo');
+  const m = objet(ctx, o['meteo'], cheminM, ['valeur', 'journees']);
+  if (!m || !requis(ctx, m, cheminM, ['valeur', 'journees'])) return undefined;
+  const valeur = enumeration(ctx, m['valeur'], sous(cheminM, 'valeur'), METEOS);
+  const journees = entier(ctx, m['journees'], sous(cheminM, 'journees'), { min: 1, max: 2 });
+  if (cible === undefined || valeur === undefined || journees === undefined) return undefined;
+  return { cible, meteo: { valeur, journees: journees as 1 | 2 } };
+}
+
+/**
+ * Lit un `EffetPouvoir` : modificateur, pose de terrain, ou l'une des trois
+ * familles instantanées (ravitailler, réactiver, météo) — reconnues à la clé
+ * qui les porte, comme la pose.
+ */
 function effetPouvoir(ctx: Contexte, v: unknown, chemin: string): EffetPouvoir | undefined {
   if (estObjet(v) && presente(v, 'poserTerrain')) return effetPoserTerrain(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'ravitailler')) return effetRavitailler(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'reactiver')) return effetReactiver(ctx, v, chemin);
+  if (estObjet(v) && presente(v, 'meteo')) return effetMeteo(ctx, v, chemin);
   return effetModificateur(ctx, v, chemin);
 }
 
@@ -339,8 +412,21 @@ function pouvoir(ctx: Contexte, v: unknown, chemin: string, superPouvoir: boolea
   if (effets) {
     for (let i = 0; i < effets.length; i += 1) {
       const e = effets[i] as EffetPouvoir;
+      const cheminEffet = sous(sous(chemin, 'effets'), i);
+      // Les deux exceptions nommées du §7.2 (10 septembre 2026) : réactiver est
+      // le seul « tour supplémentaire » du jeu et n'existe qu'au super ; une
+      // météo qui tient deux journées aussi. Et un prix ne dure pas des journées.
+      if ('reactiver' in e && !superPouvoir) {
+        ctx.faute(sous(cheminEffet, 'reactiver'), 'réactiver ses unités est réservé au super pouvoir');
+      }
+      if ('meteo' in e && e.meteo.journees === 2 && !superPouvoir) {
+        ctx.faute(sous(sous(cheminEffet, 'meteo'), 'journees'), 'une météo de deux journées est réservée au super pouvoir');
+      }
+      if ('modificateur' in e && e.modificateur.quoi === 'prix' && d !== undefined && typeof d !== 'string') {
+        ctx.faute(sous(chemin, 'duree'), "un prix ne dure que 'ce_tour' ou 'tour_complet'");
+      }
       if (!estPose(e)) continue;
-      const cheminPose = sous(sous(sous(chemin, 'effets'), i), 'poserTerrain');
+      const cheminPose = sous(cheminEffet, 'poserTerrain');
       if (!superPouvoir && e.poserTerrain.casesMax > 3) {
         ctx.faute(sous(cheminPose, 'casesMax'), 'un pouvoir normal pose trois cases au plus');
       }
@@ -1210,7 +1296,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
-  'incarnation', 'paysCode', 'regionCle', 'carteCle', 'date',
+  'incarnation', 'bancs', 'paysCode', 'regionCle', 'carteCle', 'date',
   'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandantsVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
@@ -1276,7 +1362,7 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     }
   }
   entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
-  if (o['commandantsVersion'] !== undefined) entier(ctx, o['commandantsVersion'], 'commandantsVersion', { min: 1, max: 3 });
+  if (o['commandantsVersion'] !== undefined) entier(ctx, o['commandantsVersion'], 'commandantsVersion', { min: 1, max: 4 });
 
   const camps: number[] = [];
   let joueurs = 0;
@@ -1382,6 +1468,30 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   if (incarneCmd !== undefined && cmdJoueur !== undefined && cmdJoueur !== incarneCmd) {
     ctx.faute(cheminJoueur,
       `un match d'incarnation se joue avec le général incarné au camp 0 : ${incarneCmd} attendu`);
+  }
+  // Les bancs prêtés (`BancPrete`) : une incarnation **choisie** au briefing. Un
+  // scénario qui incarne déjà n'a rien à proposer ; un banc du commandant du
+  // joueur ne serait pas un choix ; et deux bancs du même général seraient une
+  // seule option. Le registre des généraux n'est pas lisible d'ici — `schemas`
+  // n'importe rien —, c'est le canon qui vérifie qu'un banc a bien un profil.
+  if (presente(o, 'bancs')) {
+    if (presente(o, 'incarnation')) ctx.faute('bancs', "un match d'incarnation ne propose pas de banc : il en est déjà un");
+    const generaux: string[] = [];
+    tableau(ctx, o['bancs'], 'bancs', { min: 1, max: 3 }, (e, c) => {
+      const b = objet(ctx, e, c, ['commandantCle', 'paysCode', 'libelle']);
+      if (!b || !requis(ctx, b, c, ['commandantCle', 'paysCode', 'libelle'])) return undefined;
+      const general = chaine(ctx, b['commandantCle'], sous(c, 'commandantCle'),
+        { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
+      if (general !== undefined) {
+        generaux.push(general);
+        if (general === cmdJoueur) ctx.faute(sous(c, 'commandantCle'), 'le commandant du camp 0 est déjà le banc par défaut');
+      }
+      codePays(ctx, b['paysCode'], sous(c, 'paysCode'));
+      chaine(ctx, b['libelle'], sous(c, 'libelle'),
+        { max: 120, regex: REGEX_CLE_CHAINE, forme: 'clé pointée de 2 à 6 segments' });
+      return undefined;
+    });
+    sansDoublon(ctx, generaux, 'bancs');
   }
 
   entier(ctx, o['fondsDepart'], 'fondsDepart', { min: 0, max: 30000, multiple: 100 });

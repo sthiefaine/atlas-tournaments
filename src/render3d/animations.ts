@@ -782,6 +782,35 @@ export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationD
       }, ctx);
     }
 
+    case 'reveiller': {
+      // L'unité reprend la main : un halo aux couleurs de son camp qui monte
+      // d'elle, et rien d'autre — elle ne bouge pas, elle se réveille. L'état
+      // est déjà `prete`, la figurine a donc déjà quitté sa transparence de
+      // pièce jouée ; le geste ne fait que dater ce réveil.
+      const { x: cx, z: cz } = centre(g.case);
+      const sol = ctx.hauteurEn(cx, cz);
+      const effets: Effet[] = [];
+      const couleur = paletteDe(g.camp).light;
+      return animationDatee(`reveiller:${g.unite}`, g.debut, g.duree, {
+        ombre: false,
+        avancer: () => {
+          if (effets.length > 0) return;
+          effets.push(ctx.effets.emettre({
+            genre: 'anneau', position: { x: cx, y: sol + 0.03, z: cz }, couleur,
+            duree: Math.max(1, g.duree), taille: 0.35, tailleFin: 1.1, opacite: 0.7, montee: 0.2,
+          }));
+          effets.push(ctx.effets.emettre({
+            genre: 'halo', plat: false, position: { x: cx, y: sol + 0.3, z: cz }, couleur,
+            duree: Math.max(1, g.duree), vitesse: { x: 0, y: 0.6, z: 0 }, taille: 0.35, tailleFin: 0.6,
+            opacite: 0.55, montee: 0.25,
+          }));
+        },
+        terminer: () => {
+          for (const e of effets) e.liberer();
+        },
+      }, ctx);
+    }
+
     case 'pouvoir': {
       const palette = paletteDe(g.camp);
       const anneaux: Effet[] = [];

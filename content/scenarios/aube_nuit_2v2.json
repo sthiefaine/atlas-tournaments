@@ -1,10 +1,10 @@
 {
   "cle": "aube_nuit_2v2",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_nuit_2v2",
   "nom": "Aube · La ligne de nuit · 2 contre 2",
   "acte": 0,
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 7,
+  "commandantsVersion": 4,
   "equipes": [
     [
       0,
@@ -48,6 +49,18 @@
       "camp": 3,
       "commandantCle": "cmd_solveig_tamm",
       "ia": "ponderee"
+    }
+  ],
+  "bancs": [
+    {
+      "commandantCle": "cmd_solveig_tamm",
+      "paysCode": "atl",
+      "libelle": "banc.aube_nuit_2v2.cmd_solveig_tamm"
+    },
+    {
+      "commandantCle": "cmd_wren_osoko",
+      "paysCode": "atl",
+      "libelle": "banc.aube_nuit_2v2.cmd_wren_osoko"
     }
   ],
   "fondsDepart": 3000,

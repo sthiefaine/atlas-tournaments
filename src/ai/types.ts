@@ -5,7 +5,7 @@
  * faire, en passant par `appliquer`, et ne tire ses aléas que du `Rng` reçu.
  */
 
-import type { Action, Catalogue, EtatPartie, Rng } from '../engine/index';
+import type { Action, Catalogue, Commandants, EtatPartie, Rng } from '../engine/index';
 import type { CampId } from '../schemas/index';
 
 /** Les poids d'une stratégie : mêmes calculs, personnalités différentes. */
@@ -56,9 +56,15 @@ export interface Poids {
   contre: number;
 }
 
-/** Une stratégie d'IA : le contrat de `02-architecture.md` §3.2. */
+/**
+ * Une stratégie d'IA : le contrat de `02-architecture.md` §3.2.
+ *
+ * `commandants` (10 septembre 2026) : les mêmes que ceux passés à `appliquer`,
+ * sans quoi la stratégie ne sait ni ce que son pouvoir fait ni s'il est
+ * payable. Absents, elle joue sans pouvoir, comme avant.
+ */
 export interface Strategie {
   readonly id: string;
   readonly poids: Poids;
-  choisirAction(etat: EtatPartie, camp: CampId, rng: Rng, cat: Catalogue): Action;
+  choisirAction(etat: EtatPartie, camp: CampId, rng: Rng, cat: Catalogue, commandants?: Commandants): Action;
 }

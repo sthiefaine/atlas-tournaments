@@ -10,7 +10,7 @@ import type {
   Catalogue, EtatPartie, EvenementJeu, MotifRefus, Unite,
 } from '../types';
 import { cleCase, depuisCle, porte, pvAffiches } from '../types';
-import { multiplicateurFonds } from './modificateurs';
+import { multiplicateur, multiplicateurFonds, multiplicateurPrix } from './modificateurs';
 import { mettreHorsJeu } from './combat';
 import { uniteSur } from './mouvement';
 
@@ -74,10 +74,23 @@ export function ravitailleCetteUnite(cat: Catalogue, terrain: CleTerrain, domain
  */
 export const SURCOUT_CARBURANT_FURTIF = 3;
 
-/** Carburant consommé par tour par cette unité, immobile : la furtivité s'ajoute. */
-export function consommationParTour(type: UnitType, u: Pick<Unite, 'furtive'>): number {
+/**
+ * Carburant consommé par tour par cette unité, immobile : la furtivité
+ * s'ajoute, puis le tout est multiplié par `facteur` — le modificateur
+ * `carburant` d'un pouvoir (10 septembre 2026), que `consommationEffective`
+ * lit dans l'état. Sans facteur, c'est la consommation nominale du catalogue.
+ */
+export function consommationParTour(type: UnitType, u: Pick<Unite, 'furtive'>, facteur = 1): number {
   if (type.carburant === null) return 0;
-  return type.carburant.parTour + (u.furtive === true ? SURCOUT_CARBURANT_FURTIF : 0);
+  const base = type.carburant.parTour + (u.furtive === true ? SURCOUT_CARBURANT_FURTIF : 0);
+  return base <= 0 ? 0 : Math.max(1, Math.round(base * facteur));
+}
+
+/** Consommation par tour d'une unité en jeu, modificateur `carburant` compris. */
+export function consommationEffective(etat: EtatPartie, cat: Catalogue, u: Unite): number {
+  const type = cat.unites[u.type];
+  if (!type) return 0;
+  return consommationParTour(type, u, multiplicateur(etat, cat, u, 'carburant'));
 }
 
 /** Phase 3 — réparation payante et ravitaillement gratuit. */
@@ -131,7 +144,7 @@ export function consommerCarburant(
     if (u.camp !== camp || u.dansTransport) continue;
     const type = cat.unites[u.type];
     if (!type || type.carburant === null || u.carburant === null) continue;
-    const conso = consommationParTour(type, u);
+    const conso = consommationEffective(etat, cat, u);
     if (conso <= 0) continue;
     u.carburant = Math.max(0, u.carburant - conso);
     if (u.carburant <= 0 && type.domaine === 'air') aRetirer.push(u.id);
@@ -148,6 +161,19 @@ export function reveiller(etat: EtatPartie, camp: CampId): void {
     if (u.camp !== camp) continue;
     u.etat = 'prete';
   }
+}
+
+/**
+ * Prix d'achat d'une unité pour ce camp : le coût du catalogue, multiplié par
+ * le modificateur `prix` de ses pouvoirs (10 septembre 2026), arrondi à la
+ * centaine — les fonds se comptent par centaines, un prix de 6 517 ne se lit
+ * pas. Seule source du prix : la vérification, la production, le HUD et l'IA
+ * la lisent tous.
+ */
+export function prixProduction(etat: EtatPartie, cat: Catalogue, camp: CampId, cle: CleUnite): number {
+  const type = cat.unites[cle];
+  if (!type) return 0;
+  return Math.round((type.cout * multiplicateurPrix(etat, camp)) / 100) * 100;
 }
 
 /** Verdict d'une demande de production. */
@@ -173,8 +199,9 @@ export function verifierProduction(
     return { ok: false, motif: 'terrain_infranchissable' };
   }
   const caisse = etat.camps.find((e) => e.id === camp);
-  if (!caisse || caisse.fonds < type.cout) return { ok: false, motif: 'fonds_insuffisants' };
-  return { ok: true, cout: type.cout };
+  const prix = prixProduction(etat, cat, camp, unite);
+  if (!caisse || caisse.fonds < prix) return { ok: false, motif: 'fonds_insuffisants' };
+  return { ok: true, cout: prix };
 }
 
 /** Produit une unité sur un bâtiment : elle ne joue qu'au tour suivant. */
@@ -184,7 +211,8 @@ export function produire(
 ): Unite {
   const type = cat.unites[cle]!;
   const caisse = etat.camps.find((e) => e.id === camp)!;
-  caisse.fonds -= type.cout;
+  const prix = prixProduction(etat, cat, camp, cle);
+  caisse.fonds -= prix;
   const u: Unite = {
     id: `u${etat.prochainId}`,
     camp,
@@ -202,7 +230,7 @@ export function produire(
   etat.prochainId += 1;
   etat.unites.push(u);
   etat.produites[`${camp}:${cle}`] = (etat.produites[`${camp}:${cle}`] ?? 0) + 1;
-  evts.push({ type: 'production', camp, unite: cle, case: batiment, cout: type.cout });
+  evts.push({ type: 'production', camp, unite: cle, case: batiment, cout: prix });
   return u;
 }
 

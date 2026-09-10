@@ -15,20 +15,20 @@
  * Le HUD ne décide de rien : il appelle l'`ApiHud` que `jeu.ts` lui donne.
  */
 
-import type { Catalogue, EtatPartie, Unite } from '../engine/index';
+import type { Catalogue, EtatPartie, EvaluationEffets, Unite } from '../engine/index';
 import {
   consommationParTour, prevoirDuel, pvAffiches, revenuParTour,
   seuilCapture, terrainLogique, uniteParId, sontAllies,
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
-  CampId, Case, CleTerrain, CleUnite, EffetPouvoir, Meteo, Silhouette,
+  CampId, Case, CleTerrain, CleUnite, DureePouvoir, EffetModificateur, EffetPouvoir, Meteo, Silhouette,
 } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
 import {
-  libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, lignesPouvoir,
-  nomCommandant, nomCourtUnite, nomTerrain, nomUnite, type OptionMenu,
+  effetInstantane, libelleMeteo, libelleMouvement, libellePhase, libelleSaison, libelleTrait, lignesPouvoir,
+  nomCommandant, nomCourtUnite, nomTerrain, nomUnite, type NomsPouvoir, type OptionMenu,
 } from './libelles';
 import {
   alerteCarburant, alerteMunitions, ficheUnite, porte, type Alerte, type Duel,
@@ -53,6 +53,15 @@ export interface NiveauPouvoir {
   pret: boolean;
   /** Ce qu'il fait, tel que le commandant le déclare. Le HUD le met en mots. */
   effets: readonly EffetPouvoir[];
+  /** Jusqu'à quand : ce tour, un tour complet, des journées. Absente, la durée se tait. */
+  duree?: DureePouvoir;
+  /**
+   * Ce que le pouvoir ferait **maintenant** — PV rendus, PV retirés, unités
+   * réveillées ou ravitaillées, météo —, tel que le moteur l'évalue sans rien
+   * appliquer (`evaluerEffets`). `null` quand il n'y a rien à prévoir : pouvoir
+   * pas prêt, ou effets durables seulement, dont la valeur se lit en jouant.
+   */
+  bilan?: EvaluationEffets | null;
 }
 
 /** Tout ce que le HUD lit : l'état, la vue d'interaction et la langue. */
@@ -105,7 +114,14 @@ export interface VueJeu {
    * bouton n'était actif qu'à jauge pleine, alors que la jauge se remplit
    * jusqu'au prix du **super** et que le pouvoir normal coûte moins.
    */
-  pouvoirs?: { normal: NiveauPouvoir; super: NiveauPouvoir } | null;
+  pouvoirs?: {
+    normal: NiveauPouvoir;
+    super: NiveauPouvoir;
+    /** Le passif, permanent, tel que le moteur le pose. `null` ou absent : aucun. */
+    passif?: EffetModificateur | null;
+    /** La faiblesse permanente (`04-gameplay.md` §7.3), posée comme le passif. Absente : rien à dire. */
+    faiblesse?: EffetModificateur | null;
+  } | null;
   /** Message éphémère, déjà traduit. */
   annonce: string | null;
   masquerFin?: boolean;
@@ -271,6 +287,8 @@ const STYLE = `
 .atlas-hud .meteo-case svg{width:22px;height:22px}
 .atlas-hud .meteo-nom{max-width:100%;font-size:var(--t1);font-weight:750;color:#b9cbcb;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atlas-hud .meteo-ambiance{padding:4px 8px 5px;border-top:1px solid #ffffff14;font-size:var(--t1);font-weight:750;color:#9fb6b8;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Le temps dicté par un pouvoir : une ligne au signal sous les trois cases, tant que la prise dure. */
+.atlas-hud .meteo-imposee{padding:3px 8px 0;font-size:var(--t1);font-weight:800;color:var(--signal);text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .atlas-hud .dock{position:absolute;pointer-events:auto;left:50%;bottom:var(--bas);transform:translateX(-50%);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:8px;width:420px;max-width:calc(100% - 24px);height:var(--dock);filter:drop-shadow(3px 4px 0 #12233270)}
 .atlas-hud .dock .p{position:relative;filter:none}
 .atlas-hud .jauge{border:0;border-top:3px solid var(--camp)}
@@ -287,6 +305,13 @@ const STYLE = `
 .atlas-hud .pouvoir-effets .effet{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
 .atlas-hud .pouvoir-effets .rang{font-size:var(--t1);font-weight:850;letter-spacing:.12em;text-transform:uppercase;color:#9fb6b8;flex-basis:100%}
 .atlas-hud .pouvoir-effets .puce{padding:2px 7px;background:#ffffff10;border:1px solid #ffffff1a;font-size:var(--t3);font-weight:800;color:var(--papier)}
+/* La faiblesse est un fait défavorable et permanent : elle se dit en registre
+   discret — même ligne, encre plus pâle, pas de cadre —, jamais comme un effet
+   qu'on achète. */
+.atlas-hud .pouvoir-effets .effet[data-registre='faiblesse'] .rang{color:#8b99a0}
+.atlas-hud .pouvoir-effets .effet[data-registre='faiblesse'] .puce{background:none;border-color:transparent;padding-left:0;font-weight:700;color:#b9c6c9}
+/* La prévision : ce que le pouvoir prêt ferait à l'instant, lue au moteur. */
+.atlas-hud .pouvoir-effets .prevision{flex-basis:100%;font-size:var(--t2);font-weight:750;color:var(--signal)}
 .atlas-hud .jauge button{all:unset;display:flex;align-items:center;gap:9px;box-sizing:border-box;width:100%;height:100%;padding:8px 12px;cursor:pointer}
 .atlas-hud .insigne{display:flex;align-items:center;justify-content:center;width:42px;height:48px;flex:none;color:var(--signal);background:#284451;clip-path:polygon(0 0,100% 0,100% 77%,50% 100%,0 77%)}
 .atlas-hud .insigne .symbole{width:29px;height:29px;margin-top:-5px}
@@ -1242,8 +1267,18 @@ export function monterHudHtml(
     // La saison et la phase du jour restent dites : elles pèsent sur la vision
     // autant que le temps, et elles n'ont nulle part ailleurs où vivre.
     const ambiance = `${libelleSaison(api.t, v.ambiance.saison)} · ${libellePhase(api.t, v.ambiance.phase)}`;
+    // Un pouvoir dicte le temps (`meteo`, 10 septembre 2026) : les cases le
+    // montrent déjà — le moteur a remplacé le tirage et la prévision —, le
+    // Bulletin dit en plus **qui** l'impose, tant que la prise dure.
+    const imposee = v.etat.meteoImposee;
+    const dictee = imposee && imposee.jusqu >= v.etat.journee
+      ? `<div class="meteo-imposee">${ech(api.t('hud.meteo_imposee', {
+        commandant: nomCommandant(v.locale, v.etat.camps.find((c) => c.id === imposee.camp)?.commandantCle ?? null) || api.t('hud.commandant'),
+      }))}</div>`
+      : '';
     return `<div class="bulletin" role="group" aria-label="${ech(api.t('hud.meteo_titre'))}">`
       + `<div class="meteo-trois" style="--jours:${1 + (v.etat.reglages.previsionJournees ?? 2)}">${cellules}</div>`
+      + dictee
       + `<div class="meteo-ambiance">${ech(ambiance)}</div></div>`;
   }
 
@@ -1272,6 +1307,46 @@ export function monterHudHtml(
    * ligne et la mention « Pouvoir » en faisaient le plus gros objet de la
    * colonne pour l'information la moins fréquente.
    */
+  /** De quoi nommer les unités et les terrains qu'un filtre de pouvoir cite. */
+  function noms(v: VueJeu): NomsPouvoir {
+    return {
+      unite: (cle) => nomUnite(v.locale, v.catalogue, cle),
+      terrain: (cle) => nomTerrain(v.locale, v.catalogue, cle),
+    };
+  }
+
+  /**
+   * Ce qu'un pouvoir prêt ferait **maintenant**, lu sur le bilan du moteur : des
+   * PV rendus, des PV retirés, des unités qui rejoueraient ou repartiraient au
+   * plein, une météo. Vide sans bilan ; « aucun effet immédiat » quand le
+   * pouvoir porte un instantané qui, à cet instant, ne changerait rien — tout
+   * le monde au plein, personne n'a joué. On le dit plutôt que de laisser
+   * dépenser une jauge pour rien.
+   */
+  function prevision(n: NiveauPouvoir): string {
+    const b = n.bilan;
+    if (!b) return '';
+    const parts: string[] = [];
+    if (b.pvSoignes > 0) parts.push(api.t('hud.prevision_soin', { n: b.pvSoignes }));
+    if (b.pvRetires > 0) parts.push(api.t('hud.prevision_degats', { n: b.pvRetires }));
+    if (b.reactivees.length === 1) parts.push(api.t('hud.prevision_reactivation_une'));
+    else if (b.reactivees.length > 1) parts.push(api.t('hud.prevision_reactivation', { n: b.reactivees.length }));
+    if (b.ravitaillees.length === 1) parts.push(api.t('hud.prevision_ravitaillement_une'));
+    else if (b.ravitaillees.length > 1) parts.push(api.t('hud.prevision_ravitaillement', { n: b.ravitaillees.length }));
+    if (b.meteo) parts.push(api.t('hud.prevision_meteo', { meteo: libelleMeteo(api.t, b.meteo) }));
+    if (parts.length === 0 && n.effets.some(effetInstantane)) parts.push(api.t('hud.prevision_rien'));
+    return parts.length === 0 ? '' : api.t('hud.prevision', { liste: parts.join(' · ') });
+  }
+
+  /** Une ligne du détail : un rang, ses puces, et la prévision s'il y en a une. Rien sans puce. */
+  function rangEffets(cleRang: string, lignes: readonly string[], registre?: string, apercu = ''): string {
+    if (lignes.length === 0) return '';
+    return `<div class="effet"${registre ? ` data-registre="${registre}"` : ''}><span class="rang">${ech(api.t(cleRang))}</span>`
+      + lignes.map((l) => `<span class="puce">${ech(l)}</span>`).join('')
+      + (apercu ? `<span class="prevision">${ech(apercu)}</span>` : '')
+      + `</div>`;
+  }
+
   function panneauJauge(v: VueJeu): string {
     const camp = v.etat.camps.find((c) => c.id === v.camp);
     if (!camp) return '';
@@ -1319,7 +1394,9 @@ export function monterHudHtml(
       const n = p[niveau];
       const pret = dispo(niveau);
       const titre = api.t(n.nom) || n.nom;
-      const motif = pret ? '' : ` title="${ech(api.t('hud.jauge_insuffisante'))}"`;
+      // Un bouton éteint dit pourquoi ; un bouton prêt dit ce qu'il ferait maintenant.
+      const apercu = pret ? prevision(n) : '';
+      const motif = pret ? (apercu ? ` title="${ech(apercu)}"` : '') : ` title="${ech(api.t('hud.jauge_insuffisante'))}"`;
       return `<button type="button" class="pouvoir" data-action="${action}" data-niveau="${niveau}"`
         + `${pret ? '' : ' disabled'}${motif} aria-label="${ech(`${api.t(cle)} · ${titre}`)}">`
         + iconeOrdre(niveau === 'super' ? 'super_pouvoir' : 'pouvoir')
@@ -1327,12 +1404,16 @@ export function monterHudHtml(
         + `<em class="prix">${ech(nombreIntl(v.locale, n.cout))}</em></button>`;
     };
     const details = pouvoirDetail
-      ? `<div class="pouvoir-effets">${(['normal', 'super'] as const).map((niveau) => {
-        const lignes = lignesPouvoir(api.t, p[niveau].effets);
-        if (lignes.length === 0) return '';
-        return `<div class="effet"><span class="rang">${ech(api.t(niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir'))}</span>`
-          + lignes.map((l) => `<span class="puce">${ech(l)}</span>`).join('') + `</div>`;
-      }).join('')}</div>`
+      ? `<div class="pouvoir-effets">`
+        + rangEffets('hud.passif', p.passif ? lignesPouvoir(api.t, [p.passif], { noms: noms(v) }) : [api.t('hud.sans_passif')])
+        + rangEffets('hud.faiblesse', p.faiblesse ? lignesPouvoir(api.t, [p.faiblesse], { noms: noms(v) }) : [], 'faiblesse')
+        + (['normal', 'super'] as const).map((niveau) => {
+          const n = p[niveau];
+          const lignes = lignesPouvoir(api.t, n.effets, { noms: noms(v), duree: n.duree });
+          const apercu = dispo(niveau) ? prevision(n) : '';
+          return rangEffets(niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir', lignes, undefined, apercu);
+        }).join('')
+        + `</div>`
       : '';
     const aide = api.t('hud.pouvoir_details');
     return cadre(`<div class="commandant">`

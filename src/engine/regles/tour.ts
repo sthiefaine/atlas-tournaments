@@ -95,7 +95,10 @@ export function ouvrirTour(
   if (camp === etat.camps.find((c) => !c.elimine)?.id) {
     etat.journee += 1;
     if (etat.journee > 1) {
-      etat.climat = avancerClimat(etat.climat, etat.reglages, rng, etat.journee);
+      // Une météo imposée par un pouvoir expire silencieusement : passée sa
+      // dernière journée, elle n'est plus lue, et l'état ne la garde pas.
+      if (etat.meteoImposee !== undefined && etat.meteoImposee.jusqu < etat.journee) delete etat.meteoImposee;
+      etat.climat = avancerClimat(etat.climat, etat.reglages, rng, etat.journee, etat.meteoImposee);
     }
     evts.push({
       type: 'debut_journee', journee: etat.journee, camp,
@@ -139,6 +142,8 @@ export function fermerTour(
   // le tour se ferme, elle a joué.
   for (const u of etat.unites) if (u.camp === camp && u.etat === 'deplacee') u.etat = 'agi';
   for (const u of etat.unites) if (u.camp === camp) delete u.iemJusquaJournee;
+  // Une réactivation ne vaut que pour le tour où elle a été donnée.
+  for (const u of etat.unites) if (u.camp === camp) delete u.reactivee;
   evts.push({ type: 'fin_tour', camp });
   evaluerFin(etat, cat, evts);
   if (etat.partie.terminee) return;

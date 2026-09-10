@@ -10,8 +10,9 @@
  *
  * Options : `--carte`, `--parties`, `--graine`, `--strategies a,b`, `--journees`,
  * `--climat`, `--saison`, `--meteo`, `--brouillard`, `--catalogue N` (la version
- * de catalogue jouée, celle du moteur par défaut), `--json`, plus deux options
- * de contrôle :
+ * de catalogue jouée, celle du moteur par défaut), `--commandants a,b` (une clé
+ * de commandant par camp, kits de la révision 3 : sans elle, aucun camp n'a de
+ * pouvoir et la jauge ne sert à rien), `--json`, plus deux options de contrôle :
  *
  * - `--conditions ete/clair/jour,hiver/neige/nuit` — passe par la **campagne du
  *   serveur** (`src/serveur/simulation`) : `parties` s'entend alors **par
@@ -27,6 +28,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { jouerPartie, strategie } from '../src/ai/index';
+import { chargerCommandantJeu } from '../src/content/commandants-jeu';
 import {
   chargerCatalogue, creerPartie, reglagesParDefaut, sceneDeCarte, creerRng,
   type EtatPartie,
@@ -99,6 +101,8 @@ export interface Campagne {
   brouillard: boolean;
   /** Version de catalogue jouée ; `undefined` laisse le moteur choisir la sienne. */
   catalogue?: number;
+  /** Clés de commandants, une par camp ; absente, aucun camp n'a de pouvoir. */
+  commandants?: string[];
 }
 
 /** Ce que rend une campagne : les statistiques du contrat, plus le détail. */
@@ -134,13 +138,18 @@ export function simuler(c: Campagne): Bilan {
       saisonForcee: c.saison,
       meteoForcee: c.meteo,
     });
-    const scene = sceneDeCarte(c.carte, reglages);
+    // Les commandants suivent les stratégies : quand celles-ci s'alternent d'une
+    // partie à l'autre, les kits s'alternent avec elles, sinon le camp qui
+    // commence porterait toujours le même commandant.
+    const kits = (c.commandants ?? []).map((cle) => chargerCommandantJeu(cle, 4));
+    const commandants = i % 2 === 0 ? kits : [...kits].reverse();
+    const scene = sceneDeCarte(c.carte, reglages, commandants);
     const etat = creerPartie(scene, cat, graine);
     // On alterne les stratégies d'une partie à l'autre : le camp qui commence
     // ne doit pas être le seul à porter la personnalité la plus forte.
     const strategies = (i % 2 === 0 ? c.strategies : [...c.strategies].reverse())
       .map((id) => strategie(id));
-    const partie = jouerPartie(etat, strategies, creerRng(`${graine}:ia`), cat);
+    const partie = jouerPartie(etat, strategies, creerRng(`${graine}:ia`), cat, commandants);
     const fin: EtatPartie = partie.etat;
     journees.push(fin.journee);
     // « Non terminée » au sens de la routine contrôle (`serveur/controle/verdict.ts`,
@@ -293,6 +302,7 @@ function principal(): void {
     meteo: typeof o['meteo'] === 'string' ? (o['meteo'] as Meteo) : null,
     brouillard: o['brouillard'] === true,
     ...(typeof o['catalogue'] === 'string' ? { catalogue: Number(o['catalogue']) } : {}),
+    ...(typeof o['commandants'] === 'string' ? { commandants: o['commandants'].split(',') } : {}),
   });
 
   if (o['json'] === true) {

@@ -1,6 +1,6 @@
 {
   "cle": "bras_de_mer",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-07",
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 6,
+  "commandantsVersion": 4,
   "commandants": [
     {
       "camp": 0,

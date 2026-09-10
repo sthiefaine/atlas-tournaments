@@ -394,7 +394,7 @@ La durée en journées est ce qui exprime les « pendant 2 tours » et « pendan
 | `ponton` | `mer`, `riviere` | `pont` | le passage léger : même lecture qu'un pont, mais jamais `permanent` |
 | `banc_de_sable` | `mer` | `plage` | découvre un appui côtier le temps de passer |
 
-**La table ne s'ouvre pas.** Une forme nouvelle demande un arbitrage au brief, jamais une routine ni une fiche pays. Ce qui tient du **climat n'est pas un pouvoir** : la **glace** est l'effet de saison `rivieres_gelees` (§12.2) ; une **source chaude** est un effet de `soin` sur terrain, ou une mécanique régionale volcanique (§11) ; la **roche neuve** d'un volcan est une mécanique régionale. Un pouvoir ne fait pas la météo.
+**La table ne s'ouvre pas.** Une forme nouvelle demande un arbitrage au brief, jamais une routine ni une fiche pays. Ce qui tient du **climat n'est pas un pouvoir** : la **glace** est l'effet de saison `rivieres_gelees` (§12.2) ; une **source chaude** est un effet de `soin` sur terrain, ou une mécanique régionale volcanique (§11) ; la **roche neuve** d'un volcan est une mécanique régionale. ~~Un pouvoir ne fait pas la météo.~~ **Révisé le 10 septembre 2026** : un pouvoir peut **imposer** une météo de la liste (`meteo`, ci-dessous), une ou deux journées, à tous les camps ; il ne crée aucune météo nouvelle et ne touche pas à la saison.
 
 Bornes, non négociables :
 
@@ -403,11 +403,43 @@ Bornes, non négociables :
 - **Jamais** sur une case capturable (`ville`, `usine`, `aeroport`, `qg`), **jamais** sur une case occupée par une unité (amie ou adverse), **jamais** adjacente à un QG adverse.
 - La grille de `MapDef` **n'est jamais réécrite** : la pose est une vue `modifTerrain`, consignée dans `etat.mecanique.donnees`, exactement comme une mécanique régionale transformante (§11.1). Une unité qui se retrouve sur une case redevenue infranchissable à l'expiration est **repoussée** vers la case libre franchissable la plus proche, jamais mise hors jeu.
 
-Aucun pouvoir ne peut : mettre une unité hors jeu directement, changer un propriétaire de bâtiment, donner un tour supplémentaire, **rejouer un tour**, **échanger des positions**, **produire une unité gratuitement**, ni faire tomber une unité sous 1 PV interne (`degats_directs` est plafonné et laisse toujours 1 PV). Ces interdits sont **inchangés** par l'arbitrage n° 4 : `poser_terrain` est la seule famille ajoutée, précisément parce qu'elle redessine le terrain sans casser la lisibilité du tour. Ce sont des règles du moteur, pas des conventions d'écriture — c'est ce qui garantit qu'un commandant produit par la routine lore reste jouable.
+Aucun pouvoir ne peut : mettre une unité hors jeu directement, changer un propriétaire de bâtiment, donner un tour supplémentaire, **rejouer un tour**, **échanger des positions**, **produire une unité gratuitement**, ni faire tomber une unité sous 1 PV interne (`degats_directs` est plafonné et laisse toujours 1 PV). Ces interdits sont **inchangés** par l'arbitrage n° 4 : `poser_terrain` est la seule famille ajoutée, précisément parce qu'elle redessine le terrain sans casser la lisibilité du tour. Ce sont des règles du moteur, pas des conventions d'écriture — c'est ce qui garantit qu'un commandant produit par la routine lore reste jouable. *L'arbitrage n° 4 est rouvert le 10 septembre 2026 (`BRIEF.md`, « Pouvoirs façon Advance Wars ») : la sous-section suivante fait foi sur les familles.*
+
+#### Familles d'effets — 10 septembre 2026
+
+Le propriétaire trouvait les pouvoirs « pas variés et pas fun comme Advance Wars ». Le diagnostic : le schéma déclarait dix grandeurs, le moteur n'en lisait que sept — `soin`, `degats_directs` et `carburant` n'étaient lus nulle part —, il n'existait qu'une famille hors modificateur (`poser_terrain`), et l'IA ne déclenchait jamais un pouvoir. Ce qui suit est **la** liste : ces familles et pas d'autres. Une famille de plus demande un arbitrage au brief.
+
+| Grandeur ou famille | Forme et bornes | Cibles permises | Instantané ou durée | Ce que le moteur en fait | Événement |
+|---|---|---|---|---|---|
+| `attaque`, `defense` | mult `[0,5 ; 2,0]` | unités | durée du pouvoir | facteurs de la formule du §5.1 | — |
+| `mouvement` | entier `[−3 ; 4]` | unités | durée | points de mouvement | — |
+| `portee`, `vision` | entier `[−2 ; 3]`, `[−2 ; 5]` | unités | durée | portée, vision | — |
+| `fonds` | mult `[0,5 ; 2,0]` | `economie` ou unités | durée | revenus de la journée | — |
+| `capture` | mult `[0,5 ; 3,0]` (< 1 : `unites_adverses` seulement) | unités | durée | points de capture | — |
+| **`soin`** | entier `[1 ; 5]` | `mes_unites`, `toutes_unites` | **instantané** | +n PV affichés, plafond 100, à chaque unité visée, cale comprise | `soin` par unité |
+| **`degats_directs`** | entier `[1 ; 3]` | `unites_adverses` seulement | **instantané** | −n PV affichés, **plancher 1 PV interne** | `degats_directs` par unité |
+| **`carburant`** | mult `[0,5 ; 2,0]` | unités | durée | multiplie la consommation **par tour** (`consommationEffective`), jamais le coût par case | — |
+| **`prix`** | mult `[0,5 ; 1,5]` | `economie` seulement | `ce_tour` ou `tour_complet` | multiplie le prix d'achat du camp, arrondi à la centaine (`prixProduction`) | `production` porte le prix payé |
+| **`chance`** | entier `[−3 ; 3]`, jamais 0 ; > 0 jamais sur `unites_adverses` | unités | durée | l'aléa devient `0,95 + (0,10 + 0,05 × chance) × r` pour l'**attaquant** visé : +1 élargit vers le haut, −1 resserre vers le bas ; le tirage reste sur `combat` | — |
+| **`etoiles`** | entier `[−2 ; 2]`, jamais 0 ; > 0 jamais sur `unites_adverses` | unités | durée | ajouté aux étoiles de terrain de la **cible** visée, plancher 0, plafond 4 (`etoilesDefense`) | — |
+| **`ravitailler`** | `{ carburant, munitions }`, au moins un vrai | `mes_unites` seulement | **instantané** | remet au plein ce qui est coché, cale comprise | `ravitaillement` (l'unité est sa propre source) |
+| **`reactiver`** | `true` | `mes_unites` seulement, **super pouvoir seulement** | **instantané** | toute unité visée `agi` ou `deplacee` repasse `prete`, **une fois par tour** (`Unite.reactivee`, effacé à la fermeture) ; une capture entamée garde ses points | `reactivation` avec la liste |
+| **`meteo`** | `{ valeur, journees: 1 \| 2 }` ; `2` **super seulement** | `terrain` | **instantané**, porte `journees` journées | impose la météo à tous les camps pour la journée courante et la suivante ; le tirage du climat a lieu et sa valeur est remplacée, **le flux `meteo` ne bouge pas** ; la prévision du Bulletin la montre | `meteo_forcee` |
+| `poser_terrain` | table des sept formes | `terrain` | journées ou permanent (super) | inchangé | `terrain_pose` |
+
+Les instantanés **ne posent rien** dans `etat.modificateurs` : ils s'appliquent une fois dans `appliquerPouvoir`, et `evaluerEffets` en donne le bilan sans rien appliquer — c'est ce que lit l'IA. Le validateur refuse une cible incohérente (`soin` sur `unites_adverses`, `degats_directs` sur `mes_unites`, `reactiver` ou `ravitailler` ailleurs que sur `mes_unites`, `prix` hors `economie`) et les exceptions hors du super ; le moteur refuse en plus `pouvoir_invalide` un pouvoir normal qui porterait `reactiver` ou deux journées de météo, quelle que soit la jauge.
+
+**Les interdits qui tiennent**, vérifiés par `tests/engine/pouvoirs-familles.test.ts` sur chaque famille : jamais de mise hors jeu directe, jamais de changement de propriétaire, jamais de production gratuite, jamais d'échange de position, jamais moins de 1 PV interne. **Les deux exceptions nommées** : `reactiver` est le seul « tour supplémentaire » du jeu, et il n'existe qu'au super pouvoir — c'est la seconde action d'Eagle, pas un tour rejoué ; `meteo` est la seule prise d'un pouvoir sur le climat, bornée à deux journées et à la liste des six météos.
+
+**L'IA joue ses pouvoirs** (`src/ai/pouvoirs.ts`, déterministe ; révisé le 10 septembre 2026 au soir) : chaque famille a une valeur en **fonds**, calculée en appliquant le pouvoir sur une copie de l'état et en comparant avant et après (PV rendus ou retirés × coût/10, économie d'un achat, revenus couverts, duels qui basculent par `prevoirDuel`, unités qui atteignent un objectif de plus, mobilité relative sous la météo imposée). Le normal part quand sa valeur dépasse `SEUIL_PAR_BARRE` × ses barres, sinon la jauge est épargnée pour le super ; le super, payable dès la jauge pleine, part au-dessus du seuil ou au début du tour s'il vaut quelque chose, jamais pour rien. Un pouvoir qui pose du terrain est laissé au joueur : l'IA ne sait pas choisir des cases. Mesures et crans d'équilibrage : `doc/refonte/pouvoirs-v4.md` §6.
+
+**Le modificateur `portee` est lu depuis le 10 septembre 2026 au soir** (`porteeEffective`, `combat.ts`) : il allonge le maximum, ne rapproche jamais le minimum, et l'enveloppe de tir du contrôleur le suit. Avant cela il était validé, posé, affiché et lu nulle part — le kit de Ren Mizuno ne faisait rien.
 
 ### 7.3 Faiblesse
 
 Tout commandant a une **faiblesse obligatoire et réellement défavorable** (`Commander.faiblesse`), permanente, sur un axe déclaré. Un commandant sans faiblesse est rejeté par la routine contrôle (`commandant_sans_faiblesse`). C'est aussi ce qui donne à l'IA un angle d'attaque : la stratégie `ponderee` lit l'axe de faiblesse de son adversaire et pondère ses achats en conséquence.
+
+**Depuis le 10 septembre 2026 (révision 4 des capacités), le moteur l'applique** : `CommandantMoteur.faiblesse` est posée à la création de l'état comme le passif, permanente, sous la source de modificateur `faiblesse` — distincte du passif pour que le HUD ne la présente jamais comme un bonus. Les révisions 1 à 3, qui annonçaient une faiblesse sans la chiffrer, ne posent rien. La lecture de l'axe par la stratégie `ponderee` reste à faire.
 
 ### 7.4 Journée par journée
 

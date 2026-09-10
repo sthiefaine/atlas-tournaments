@@ -217,13 +217,26 @@ export const CIBLES_EFFET = [
 /** Cible d'un `EffetModificateur`. */
 export type CibleEffet = typeof CIBLES_EFFET[number];
 
-/** Grandeurs qu'un modificateur peut toucher. */
+/**
+ * Grandeurs qu'un modificateur peut toucher.
+ *
+ * Depuis le 10 septembre 2026 (`04-gameplay.md` §7.2, « Familles d'effets »),
+ * trois grandeurs neuves : `prix` (le coût d'achat du camp), `chance` (la
+ * largeur de l'aléa de combat) et `etoiles` (les étoiles de terrain de la
+ * cible). Deux grandeurs sont **instantanées** et ne posent jamais de
+ * modificateur dans l'état : `soin` et `degats_directs` s'appliquent une fois,
+ * au déclenchement (`QUOI_INSTANTANES`).
+ */
 export const QUOI_MODIFICATEUR = [
   'attaque', 'defense', 'mouvement', 'portee', 'vision',
   'soin', 'degats_directs', 'fonds', 'carburant', 'capture',
+  'prix', 'chance', 'etoiles',
 ] as const;
 /** Grandeur modifiée par un `EffetModificateur`. */
 export type QuoiModificateur = typeof QUOI_MODIFICATEUR[number];
+
+/** Grandeurs appliquées une fois au déclenchement, jamais posées en modificateur. */
+export const QUOI_INSTANTANES: readonly QuoiModificateur[] = ['soin', 'degats_directs'];
 
 /** Bornes de chaque modificateur : `mult` = multiplicatif, `entier` = additif entier. */
 export const BORNES_MODIFICATEUR: Record<QuoiModificateur, { min: number; max: number; forme: 'mult' | 'entier' }> = {
@@ -237,6 +250,9 @@ export const BORNES_MODIFICATEUR: Record<QuoiModificateur, { min: number; max: n
   fonds: { min: 0.5, max: 2.0, forme: 'mult' },
   carburant: { min: 0.5, max: 2.0, forme: 'mult' },
   capture: { min: 0.5, max: 3.0, forme: 'mult' },
+  prix: { min: 0.5, max: 1.5, forme: 'mult' },
+  chance: { min: -3, max: 3, forme: 'entier' },
+  etoiles: { min: -2, max: 2, forme: 'entier' },
 };
 
 /** Filtre facultatif d'un effet : à qui, sur quoi, dans quel rayon. */
@@ -285,8 +301,45 @@ export interface EffetPoserTerrain {
   };
 }
 
-/** Effet d'un pouvoir : un modificateur, ou une pose de terrain. */
-export type EffetPouvoir = EffetModificateur | EffetPoserTerrain;
+/**
+ * Ravitailler d'un coup (10 septembre 2026) : remet au plein ce qui est coché
+ * sur les unités visées, instantanément. `mes_unites` seulement.
+ */
+export interface EffetRavitailler {
+  cible: 'mes_unites';
+  filtre?: FiltreEffet;
+  ravitailler: { carburant: boolean; munitions: boolean };
+}
+
+/**
+ * Réactiver (10 septembre 2026) : les unités visées qui ont déjà joué ce tour
+ * repassent `prete`, **une fois** par tour. C'est la seule exception à
+ * l'interdit « donner un tour supplémentaire » du §7.2, et elle est réservée
+ * au **super pouvoir** : un pouvoir normal qui la porte est refusé.
+ */
+export interface EffetReactiver {
+  cible: 'mes_unites';
+  filtre?: FiltreEffet;
+  reactiver: true;
+}
+
+/**
+ * Forcer la météo (10 septembre 2026) : la journée courante et les
+ * `journees − 1` suivantes, pour tous les camps. Le tirage du climat a lieu
+ * comme d'habitude, sa valeur est remplacée : le rejeu ne bouge pas.
+ * `journees: 2` est réservé au super pouvoir.
+ */
+export interface EffetMeteo {
+  cible: 'terrain';
+  meteo: { valeur: Meteo; journees: 1 | 2 };
+}
+
+/**
+ * Effet d'un pouvoir : un modificateur, une pose de terrain, ou l'une des
+ * trois familles instantanées du 10 septembre 2026 (`04-gameplay.md` §7.2).
+ */
+export type EffetPouvoir =
+  | EffetModificateur | EffetPoserTerrain | EffetRavitailler | EffetReactiver | EffetMeteo;
 
 /** Durées simples d'un pouvoir, hors durée en journées. */
 export const DUREES_POUVOIR = ['ce_tour', 'tour_complet'] as const;
@@ -752,6 +805,35 @@ export interface Incarnation {
 }
 
 /**
+ * Un **banc prêté** au briefing (`01-bible.md` §4.6, « La délégation prête son banc »).
+ *
+ * Un scénario qui en porte propose au joueur, avant le montage, de jouer l'épreuve
+ * **sous les couleurs** d'une autre délégation : son général et ses pouvoirs au camp
+ * du joueur, ce qui n'est rien d'autre qu'une `Incarnation` choisie au briefing
+ * plutôt qu'écrite dans le scénario. Le commandant d'origine ne quitte pas le
+ * terrain : si le général prêté y jouait déjà, les deux **échangent** leurs bancs —
+ * c'est un échange d'entraîneurs, jamais un changement de camp.
+ *
+ * Deux différences avec `Scenario.incarnation`, qui justifient un champ à part :
+ * un banc est **toujours proposé, jamais imposé** (le commandant du scénario reste
+ * le défaut), et l'épreuve garde ses flags — c'est une variante d'une étape, pas
+ * un match d'incarnation (`13-campagne.md` §3.4 bis). Un scénario ne porte donc
+ * jamais les deux.
+ */
+export interface BancPrete {
+  /** Le général prêté. Forme `cmd_<prenom>_<nom>` ; jamais celui du camp 0. */
+  commandantCle: Cle;
+  /** La délégation dont on joue les couleurs (`atl` pour un banc de l'Intendance). */
+  paysCode: CodePays;
+  /**
+   * Clé i18n du libellé de l'option, sous la forme d'un complément — « sous les
+   * couleurs du Luxembourg, avec Tomas Reiner » — que le briefing et le carnet
+   * préfixent chacun de leur verbe.
+   */
+  libelle: string;
+}
+
+/**
  * Scénario : une mission jouable, sa carte, son climat, ses objectifs et ses choix.
  *
  * Les champs de campagne (`doc/13-campagne.md`) sont facultatifs pour ne pas invalider
@@ -790,6 +872,11 @@ export interface Scenario extends Enveloppe {
    * désignée, avec son général au camp 0. Voir `Incarnation`.
    */
   incarnation?: Incarnation;
+  /**
+   * Les bancs proposés au briefing, en plus du commandant du scénario. Voir
+   * `BancPrete`. Incompatible avec `incarnation`.
+   */
+  bancs?: BancPrete[];
   paysCode: CodePays;
   regionCle?: Cle;
   carteCle: Cle;
@@ -798,7 +885,7 @@ export interface Scenario extends Enveloppe {
   cycleJourNuit: { jour: number; nuit: number };
   catalogueVersion: number;
   /** Révision des capacités ; absence conserve la sélection historique par catalogue. */
-  commandantsVersion?: 1 | 2 | 3;
+  commandantsVersion?: 1 | 2 | 3 | 4;
   commandants: { camp: CampId; commandantCle: Cle; ia?: StrategieIa }[];
   fondsDepartParCamp?: Partial<Record<CampId, number>>;
   revenusParBatimentParCamp?: Partial<Record<CampId, number>>;

@@ -1,5 +1,6 @@
-import type { Scenario } from '../../schemas/index';
+import type { Dialogue, Scenario } from '../../schemas/index';
 import type { DecisionLocale } from './progression';
+import { BANCS_PRETES, CLES_I18N_BANC, appliquerBanc, bancChoisi, cleSourceBanc, estSourceBanc, optionsBanc, scenarioDeSource } from './bancs';
 
 export const VERSION_CANON_AUBE = 1;
 export const CHOIX_AUBE = {
@@ -25,7 +26,22 @@ export const CHOIX_AUBE = {
   ],
 } as const;
 export type ScenarioDecision = keyof typeof CHOIX_AUBE;
+/**
+ * Toutes les sources de décision, dans l'ordre des chiffres de la graine : les
+ * choix de fin de match, puis les bancs prêtés. **On n'y insère jamais au
+ * milieu** — une graine enregistrée lit ses chiffres par position.
+ */
+export const SOURCES_DECISION: readonly string[] = [
+  ...Object.keys(CHOIX_AUBE),
+  ...Object.keys(BANCS_PRETES).map(cleSourceBanc),
+];
+/**
+ * Les options d'une source. Pour un choix de fin de match, `titre` et `effet`
+ * sont des textes ; pour un banc (`<scenario>:banc`), ce sont des **clés i18n**
+ * — `estSourceBanc` dit lequel des deux on tient.
+ */
 export function optionsDecision(code: string): readonly { cle: string; titre: string; effet: string }[] {
+  if (estSourceBanc(code)) return optionsBanc(scenarioDeSource(code));
   return CHOIX_AUBE[code as ScenarioDecision] ?? [];
 }
 export function cleDecision(scenario: string, version: number): string {
@@ -35,8 +51,31 @@ export function libelleDecision(d: DecisionLocale): { titre: string; effet: stri
   return optionsDecision(d.scenario).find((o) => o.cle === d.choix);
 }
 
-/** Repart toujours du canon : aucun bonus ne s'additionne au résultat précédent. */
-export function appliquerConsequences(scenario: Scenario, decisions: readonly DecisionLocale[]): { scenario: Scenario; rappels: string[] } {
+/** Ce qu'il faut pour traduire un rappel de banc ; les rappels de choix sont déjà des textes. */
+export type Traduire = (cle: string, params?: Record<string, string | number>) => string;
+
+/**
+ * Les répliques ajoutées par une branche. Du **contenu**, écrit ici comme
+ * `difficulte.ts` écrit les siennes, et jamais avec un locuteur absent de la
+ * distribution de l'épreuve qui les joue — un test le vérifie sur les
+ * scénarios effectifs.
+ */
+const REPLIQUES_BANC = {
+  pacte_du_col_echange: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Formation terminée : voici votre première qualification officielle. Vantour est à l’antenne, Nera Aldouin arbitre, et nous échangeons les bancs pour cette épreuve : vous jouez mes couleurs et mon matériel, Ariane tient le mien. Elle joue pour gagner, c’est la règle.' },
+  couleurs_transport: { locuteur: 'cmd_ariane_belloc', emotion: 'joie', texte: 'Vous avez déjà joué les couleurs de Tomas au col, commandant. L’Intendance vous laisse un transport de plus à la deuxième journée ; je n’ai pas oublié comment vous vous en servez.' },
+  nuit_fonds: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous avez tenu mon banc au détour des batteries. L’Intendance a validé mille cinq cents fonds de plus pour la ligne de nuit : ne les gardez pas pour la fin.' },
+  routes_solveig: { locuteur: 'cmd_ariane_belloc', emotion: 'doute', texte: 'Solveig ne l’a pas oublié : vous avez tenu son banc sur la ligne de nuit. Ce soir elle est en face, et elle sait exactement comment vous couvrez un convoi.' },
+  routes_wren: { locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Wren a homologué votre relevé de la ligne de nuit, joué sous ses couleurs. Trois délégations d’un côté, Solveig de l’autre : voyez loin avant d’avancer.' },
+} as const satisfies Record<string, Dialogue>;
+
+/**
+ * Repart toujours du canon : aucun bonus ne s'additionne au résultat précédent.
+ *
+ * `traduire` ne sert qu'aux rappels de banc, dont les libellés sont des clés ;
+ * sans lui, ces rappels portent la clé — les tests et le vérificateur s'en
+ * contentent, une page passe `t()`.
+ */
+export function appliquerConsequences(scenario: Scenario, decisions: readonly DecisionLocale[], traduire: Traduire = (cle) => cle): { scenario: Scenario; rappels: string[] } {
   const copie: Scenario = structuredClone(scenario);
   const rappels: string[] = [];
   const prises = new Map(decisions.filter((d) => d.canonVersion === VERSION_CANON_AUBE).map((d) => [d.scenario, d]));
@@ -45,11 +84,16 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
     if (!d || d.choix !== choix) return;
     effet();
     const texte = libelleDecision(d);
-    if (texte) rappels.push(`${texte.titre} — ${texte.effet}`);
+    if (!texte) return;
+    rappels.push(estSourceBanc(origine)
+      ? `${traduire(CLES_I18N_BANC.journal, { banc: traduire(texte.titre) })} — ${traduire(texte.effet)}`
+      : `${texte.titre} — ${texte.effet}`);
   };
-  const crediter = (): void => {
-    copie.fondsDepartParCamp = { ...copie.fondsDepartParCamp, 0: (copie.fondsDepartParCamp?.[0] ?? scenario.fondsDepart) + 2000 };
+  const crediterDe = (montant: number): void => {
+    copie.fondsDepartParCamp = { ...copie.fondsDepartParCamp, 0: (copie.fondsDepartParCamp?.[0] ?? scenario.fondsDepart) + montant };
   };
+  const crediter = (): void => crediterDe(2000);
+  const ouvrir = (replique: Dialogue): void => { copie.dialogueOuverture = [...copie.dialogueOuverture, replique]; };
   if (scenario.code === 'pacte_du_col') appliquer('opus1_tutoriel_10', 'fonds_immediats', crediter);
   if (scenario.code === 'couleurs_alliees') appliquer('opus1_tutoriel_10', 'maintenance_partagee', crediter);
   if (scenario.code === 'aube_nuit_2v2') appliquer('aube_batteries_2v1', 'credit_immediat', crediter);
@@ -83,23 +127,60 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
     appliquer('aube_archives_secondaire', 'archives_publiques', crediter);
     appliquer('aube_archives_secondaire', 'archives_reconnaissance', () => renfort(2, 'drone', 10, 2));
   }
+
+  // --- Les mini-branches des bancs prêtés (`bancs.ts`). Chacune est bornée à
+  // l'épreuve suivante et annoncée au briefing où l'on choisit le banc.
+  if (scenario.code === 'couleurs_alliees') appliquer(cleSourceBanc('pacte_du_col'), 'cmd_tomas_reiner', () => {
+    // Une case de plaine libre contre le QG du joueur (1,1) ; le moteur reporte
+    // l'arrivée si elle est occupée, comme pour tout renfort.
+    renfort(2, 'transport', 0, 2);
+    ouvrir(REPLIQUES_BANC.couleurs_transport);
+  });
+  if (scenario.code === 'aube_nuit_2v2') appliquer(cleSourceBanc('aube_batteries_2v1'), 'cmd_tomas_reiner', () => {
+    crediterDe(1500);
+    ouvrir(REPLIQUES_BANC.nuit_fonds);
+  });
+  if (scenario.code === 'aube_routes_3v1') {
+    appliquer(cleSourceBanc('aube_nuit_2v2'), 'cmd_solveig_tamm', () => ouvrir(REPLIQUES_BANC.routes_solveig));
+    appliquer(cleSourceBanc('aube_nuit_2v2'), 'cmd_wren_osoko', () => ouvrir(REPLIQUES_BANC.routes_wren));
+  }
+
+  // --- Le banc de **cette** épreuve, appliqué en dernier : les répliques
+  // ajoutées ci-dessus ont été écrites pour la distribution du canon, et
+  // l'échange des bancs ne retire personne du terrain — seul un général venu
+  // d'ailleurs (Wren à la ligne de nuit) fait quitter le sien au commandant du
+  // joueur, et aucune branche ne le fait parler là.
+  const banc = bancChoisi(scenario.code, prises.get(cleSourceBanc(scenario.code))?.choix);
+  if (banc) {
+    appliquerBanc(copie, banc);
+    if (scenario.code === 'pacte_du_col') {
+      // La première réplique disait « Tomas tient l'autre banc » : c'est
+      // désormais Ariane, et c'est Tomas qui le dit.
+      copie.dialogueOuverture = [REPLIQUES_BANC.pacte_du_col_echange, ...copie.dialogueOuverture.slice(1)];
+    }
+  }
   return { scenario: copie, rappels };
 }
 
-/** Un chiffre par décision ; les anciennes graines à deux chiffres restent lisibles. */
+/**
+ * Un chiffre par source de décision, dans l'ordre de `SOURCES_DECISION` ; les
+ * anciennes graines, plus courtes, restent lisibles (`LONGUEURS_GRAINE`).
+ */
 export function graineAube(scenario: Scenario, decisions: readonly DecisionLocale[]): string {
-  const chiffres = Object.keys(CHOIX_AUBE).map((source) => {
+  const chiffres = SOURCES_DECISION.map((source) => {
     const d = decisions.filter((x) => x.scenario === source && x.canonVersion === VERSION_CANON_AUBE).at(-1);
     return d ? optionsDecision(source).findIndex((o) => o.cle === d.choix) + 1 : 0;
   }).join('');
   return `${scenario.code}:a${VERSION_CANON_AUBE}:${chiffres}`;
 }
+/** Chaque longueur qu'une graine a pu avoir : deux, quatre, puis cinq choix, puis les bancs. */
+const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, SOURCES_DECISION.length];
 export function decisionsDeGraine(scenario: Scenario, graine: string): DecisionLocale[] {
   const prefixe = `${scenario.code}:a${VERSION_CANON_AUBE}:`;
   if (!graine.startsWith(prefixe)) return [];
   const chiffres = graine.slice(prefixe.length);
-  if (![2, 4, Object.keys(CHOIX_AUBE).length].includes(chiffres.length) || !/^[0-2]+$/.test(chiffres)) return [];
-  return Object.keys(CHOIX_AUBE).flatMap((source, i) => {
+  if (!LONGUEURS_GRAINE.includes(chiffres.length) || !/^[0-9]+$/.test(chiffres)) return [];
+  return SOURCES_DECISION.flatMap((source, i) => {
     const option = optionsDecision(source)[Number(chiffres[i]) - 1];
     return option ? [{ scenario: source, scenarioVersion: 1, canonVersion: VERSION_CANON_AUBE, choix: option.cle }] : [];
   });

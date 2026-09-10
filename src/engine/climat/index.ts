@@ -72,23 +72,40 @@ export function initialiserClimat(r: ReglagesPartie, rng: Rng): EtatClimat {
   };
 }
 
+/** Une météo imposée par un pouvoir, jusqu'à une journée incluse (`EtatPartie.meteoImposee`). */
+export interface MeteoImposee { meteo: Meteo; jusqu: number }
+
 /**
  * Avance le climat d'une journée : cycle, phase, décalage des prévisions et
  * tirage de la journée J+2. Fonction pure, appelée au début du tour du camp 0.
+ *
+ * `imposee` est la météo qu'un pouvoir impose (10 septembre 2026) : elle
+ * **remplace** la valeur du jour et des prévisions qu'elle couvre encore, mais
+ * le tirage a lieu comme d'habitude — le flux `meteo` avance du même pas avec
+ * ou sans pouvoir, et le rejeu ne bouge pas. Elle l'emporte aussi sur une
+ * fenêtre de scénario : un pouvoir est un acte, la fenêtre un décor.
  */
-export function avancerClimat(climat: EtatClimat, r: ReglagesPartie, rng: Rng, journee?: number): EtatClimat {
+export function avancerClimat(
+  climat: EtatClimat, r: ReglagesPartie, rng: Rng, journee?: number, imposee?: MeteoImposee,
+): EtatClimat {
   const cycle = cycleEffectif(r);
   const journeeDansCycle = avancerCycle(cycle, climat.journeeDansCycle);
   const flux = rng.branche('meteo');
   const nouvelle = r.meteoForcee ?? tirerMeteo(r.climatPays, climat.saison, flux);
+  const imposeeLe = (j: number | undefined): Meteo | undefined => (
+    imposee !== undefined && j !== undefined && j <= imposee.jusqu ? imposee.meteo : undefined
+  );
   return {
     saison: climat.saison,
     phase: phaseDe(cycle, journeeDansCycle),
     journeeDansCycle,
-    meteo: (journee === undefined ? undefined : evenementClimat(r, journee)?.meteo) ?? climat.previsions[0],
+    meteo: imposeeLe(journee)
+      ?? (journee === undefined ? undefined : evenementClimat(r, journee)?.meteo) ?? climat.previsions[0],
     previsions: [
-      (journee === undefined ? undefined : evenementClimat(r, journee + 1)?.meteo) ?? climat.previsions[1],
-      (journee === undefined ? undefined : evenementClimat(r, journee + 2)?.meteo) ?? nouvelle,
+      imposeeLe(journee === undefined ? undefined : journee + 1)
+        ?? (journee === undefined ? undefined : evenementClimat(r, journee + 1)?.meteo) ?? climat.previsions[1],
+      imposeeLe(journee === undefined ? undefined : journee + 2)
+        ?? (journee === undefined ? undefined : evenementClimat(r, journee + 2)?.meteo) ?? nouvelle,
     ],
   };
 }

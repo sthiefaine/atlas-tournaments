@@ -1,10 +1,10 @@
 {
   "cle": "aube_batteries_2v1",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-09",
+  "majLe": "2026-09-10",
   "code": "aube_batteries_2v1",
   "nom": "Aube · Le détour des batteries · 2 contre 1",
   "acte": 0,
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 7,
+  "commandantsVersion": 4,
   "equipes": [
     [
       0,
@@ -42,6 +43,13 @@
       "camp": 2,
       "commandantCle": "cmd_hadran_ost",
       "ia": "ponderee"
+    }
+  ],
+  "bancs": [
+    {
+      "commandantCle": "cmd_tomas_reiner",
+      "paysCode": "lu",
+      "libelle": "banc.aube_batteries_2v1.cmd_tomas_reiner"
     }
   ],
   "fondsDepart": 3000,

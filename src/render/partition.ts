@@ -70,6 +70,12 @@ export const DUREES = Object.freeze({
    * s'est arrêtée net sur une unité cachée. Bref — un signe, pas une scène.
    */
   surprise: 700,
+  /**
+   * La réactivation (`reactiver`, super pouvoir, 10 septembre 2026) : une unité
+   * qui avait joué reprend la main. Un éclat bref sur elle — elle ne bouge pas,
+   * elle se réveille.
+   */
+  reveiller: 520,
 });
 
 /**
@@ -125,7 +131,13 @@ export type Geste =
    * Écrit juste après le `glisser` d'un `deplacement` interrompu, ou seul si
    * l'unité n'a pas fait un pas.
    */
-  | { genre: 'surprise'; unite: string; case: Case; debut: number; duree: number };
+  | { genre: 'surprise'; unite: string; case: Case; debut: number; duree: number }
+  /**
+   * L'unité reprend la main (`reactivation`, super pouvoir) : elle avait joué,
+   * elle rejoue. Un geste sur place ; la peau peut y poser un éclat, le HUD n'a
+   * rien à en dire — l'annonce compte les unités réveillées.
+   */
+  | { genre: 'reveiller'; unite: string; case: Case; camp: CampId; debut: number; duree: number };
 
 export type GenreGeste = Geste['genre'];
 
@@ -497,8 +509,46 @@ export function ecrirePartition(
         occuper(e.uniteId, debut, duree);
         break;
       }
-      // La panne sèche est suivie d'un `hors_jeu`, qui fait le geste ; les
-      // autres événements n'ont rien à montrer sur la carte.
+      case 'soin': {
+        // Un pouvoir rend des PV : même geste qu'une réparation sur un bâtiment,
+        // et un chiffre vert — des PV rendus sont un gain, à qui que ce soit.
+        const c = caseDe(e.uniteId);
+        if (!c) break;
+        const debut = depart(e.uniteId);
+        const duree = d(DUREES.reparer);
+        gestes.push({ genre: 'reparer', unite: e.uniteId, case: c, pv: e.pv, debut, duree });
+        occuper(e.uniteId, debut, duree);
+        chiffre(c, dixiemes(e.pv), 'gain', debut);
+        break;
+      }
+      case 'degats_directs': {
+        // Un coup sans tireur, comme un dégât de mécanique : la case tient lieu
+        // d'origine, et le chiffre parle au joueur — perte si c'est à lui.
+        const c = caseDe(e.uniteId);
+        if (!c) break;
+        const debut = depart(e.uniteId);
+        const duree = d(DUREES.encaisser);
+        gestes.push({ genre: 'encaisser', unite: e.uniteId, case: c, degats: e.pv, depuis: c, debut, duree });
+        occuper(e.uniteId, debut, duree);
+        chiffre(c, dixiemes(e.pv), teinteDe(campDe(e.uniteId)), debut);
+        break;
+      }
+      case 'reactivation': {
+        // Toutes se réveillent ensemble, après le splash : un geste par unité,
+        // sur place. Une liste vide ne joue rien.
+        for (const id of e.unites) {
+          const c = caseDe(id);
+          if (!c) continue;
+          const debut = depart(id);
+          const duree = d(DUREES.reveiller);
+          gestes.push({ genre: 'reveiller', unite: id, case: c, camp: e.camp, debut, duree });
+          occuper(id, debut, duree);
+        }
+        break;
+      }
+      // La panne sèche est suivie d'un `hors_jeu`, qui fait le geste ; la météo
+      // imposée se lit au Bulletin et dans l'annonce ; les autres événements
+      // n'ont rien à montrer sur la carte.
       default:
         break;
     }

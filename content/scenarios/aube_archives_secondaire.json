@@ -1,6 +1,6 @@
 {
   "cle": "aube_archives_secondaire",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -19,6 +19,7 @@
     "nuit": 0
   },
   "catalogueVersion": 7,
+  "commandantsVersion": 4,
   "commandants": [
     {
       "camp": 0,

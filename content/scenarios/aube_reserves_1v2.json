@@ -1,6 +1,6 @@
 {
   "cle": "aube_reserves_1v2",
-  "version": 2,
+  "version": 3,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -19,6 +19,7 @@
     "nuit": 2
   },
   "catalogueVersion": 7,
+  "commandantsVersion": 4,
   "equipes": [
     [
       0

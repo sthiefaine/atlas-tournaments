@@ -33,7 +33,9 @@ export { AGRESSIVE, POIDS_AGRESSIVE } from './strategies/agressive';
 export { DEFENSIVE, POIDS_DEFENSIVE } from './strategies/defensive';
 export * from './deplacement';
 export * from './evaluation';
+export * from './orientation';
 export * from './logistique';
+export * from './pouvoirs';
 
 /**
  * `gloutonne` : la stratégie pondérée privée de tout ce qui n'est pas immédiat.
@@ -109,7 +111,7 @@ export function jouerTour(
   const campDepart = courant.campCourant;
   for (let i = 0; i < ACTIONS_MAX_PAR_TOUR; i += 1) {
     if (courant.partie.terminee) break;
-    const action = strat.choisirAction(courant, courant.campCourant, flux, cat);
+    const action = strat.choisirAction(courant, courant.campCourant, flux, cat, commandants);
     const r = appliquer(courant, action, cat, commandants);
     if (!r.ok) {
       const depart = action.type === 'ordre' ? action.chemin[0] : undefined;

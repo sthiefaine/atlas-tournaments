@@ -173,6 +173,20 @@
    souligné de tout le jeu, et la dernière trace d'article de cet écran. C'est
    une **sortie**, donc une cible : pleine largeur, en capitales, sans trait. */
 .atlas-transmission .campagne-actions>a:not(.atlas-bouton){text-decoration:none;opacity:1;color:#a9c0b4;font-size:12px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+/* Le choix du banc (`campagne/bancs.ts`). Une option est un **bouton** au
+   vocabulaire du dépôt — coin coupé, épaisseur qui s'écrase à l'appui —, jamais
+   une carte : on n'y lit pas, on y appuie. Une colonne, pleine largeur, pour
+   qu'un pouce de 390 px atteigne les trois options sans viser. */
+.atlas-bancs{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.atlas-banc{width:100%;display:grid;gap:4px;text-align:left;padding:12px 14px 14px;min-height:44px;background:#fffdf6;color:#24342e;font:inherit;line-height:1.4;cursor:pointer;border:1px solid #24342e40;border-bottom:4px solid #24342e80;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+.atlas-banc:hover{filter:brightness(1.03)}
+.atlas-banc:active{translate:0 2px;border-bottom-width:2px}
+.atlas-banc:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
+.atlas-banc strong{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.atlas-banc span{font-size:13px;opacity:.85}
+.atlas-banc small{font-size:12px;opacity:.7}
+/* Le kit lu sur ses effets : une ligne serrée, sous le nom, avant la suite annoncée. */
+.atlas-banc .atlas-banc-kit{font-size:12px;opacity:.78;line-height:1.35}
 .atlas-transmission .campagne-actions>a:not(.atlas-bouton):hover{color:var(--atlas-signal)}
 .atlas-transmission .atlas-but{border-top:3px solid #d7bb75;background:#213b3d;color:#f4ecd4}
 .atlas-transmission .atlas-but h2{color:#d7bb75}

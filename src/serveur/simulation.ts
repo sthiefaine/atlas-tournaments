@@ -28,9 +28,10 @@ import { strategie } from '../ai/index';
 import {
   appliquer, catalogueDepuis, chargerCatalogue, creerPartie, creerRng, fnv1a,
   meteoDominante, meteoPossible, sceneDepuis,
-  type Action, type Catalogue, type EtatPartie, type EvenementJeu, type Rng,
+  type Action, type Catalogue, type Commandants, type EtatPartie, type EvenementJeu, type Rng,
 } from '../engine/index';
 import { chargerDegats, chargerUnites } from '../content/index';
+import { chargerCommandantJeu, revisionCommandants } from '../content/commandants-jeu';
 import { genererCarte } from '../mapgen/index';
 import { cartes as requetesCartes, unites as requetesUnites } from '../db/requetes/index';
 import type {
@@ -322,6 +323,21 @@ export function scenarioMinimal(carte: MapDef, catalogueVersion = 1, date = '202
   };
 }
 
+/**
+ * Les commandants qu'une simulation joue : ceux du scénario, avec leurs kits
+ * (10 septembre 2026 — avant, le serveur simulait sans aucun commandant, et
+ * une carte certifiée sans pouvoirs ne l'était pas pour la partie qu'on y
+ * joue). Le `cmd_neutre` d'un scénario minimal n'est pas un commandant : il
+ * ne porte ni passif ni pouvoir, et le contrôle d'une carte nue reste nu.
+ */
+export function commandantsDeSimulation(scenario: Scenario): Commandants {
+  const resultat: Commandants = [];
+  for (const c of scenario.commandants) {
+    resultat[c.camp] = c.commandantCle === 'cmd_neutre' ? null : chargerCommandantJeu(c.commandantCle, revisionCommandants(scenario));
+  }
+  return resultat;
+}
+
 /** Le catalogue d'une campagne : le canon, plus l'unité candidate s'il y en a une. */
 export function catalogueAvec(candidat: UnitType | null, version = 1): Catalogue {
   const base = chargerCatalogue(version);
@@ -365,6 +381,7 @@ interface BilanPartie {
  */
 function jouerPartieInstrumentee(
   depart: EtatPartie, strategies: StrategieIa[], rng: Rng, cat: Catalogue, toursMax: number,
+  commandants: Commandants = [],
 ): BilanPartie {
   const degatsParType: Record<string, number> = {};
   const capturesParType: Record<string, number> = {};
@@ -381,11 +398,11 @@ function jouerPartieInstrumentee(
       if (courant.partie.terminee) break;
       const typeParId = new Map<string, string>();
       for (const u of courant.unites) typeParId.set(u.id, u.type);
-      const action: Action = strat.choisirAction(courant, courant.campCourant, flux, cat);
-      const r = appliquer(courant, action, cat, []);
+      const action: Action = strat.choisirAction(courant, courant.campCourant, flux, cat, commandants);
+      const r = appliquer(courant, action, cat, commandants);
       if (!r.ok) {
         if (action.type === 'finTour') break;
-        const fin = appliquer(courant, { type: 'finTour' }, cat, []);
+        const fin = appliquer(courant, { type: 'finTour' }, cat, commandants);
         if (fin.ok) {
           courant = fin.etat;
           jouees += 1;
@@ -630,7 +647,7 @@ function jouerLot(
     cycleJourNuit: cycleDePhase(condition.phase),
     limiteJournees: scenario.limiteJournees,
   };
-  const commandants = new Array<null>(carte.camps).fill(null);
+  const commandants = commandantsDeSimulation(applique);
   const toursMax = Math.max(8, (applique.limiteJournees ?? 40) * carte.camps + 4);
 
   for (let i = 0; i < parties; i += 1) {
@@ -641,7 +658,7 @@ function jouerLot(
     const scene = sceneDepuis(applique, carte, commandants, climatPays, hemisphere);
     const etat = creerPartie(scene, cat, graine);
     const debut = Date.now();
-    const bilan = jouerPartieInstrumentee(etat, tournantes, creerRng(`${graine}:ia`), cat, toursMax);
+    const bilan = jouerPartieInstrumentee(etat, tournantes, creerRng(`${graine}:ia`), cat, toursMax, commandants);
     cumul.dureeMs += Date.now() - debut;
     cumuler(cumul, bilan, graine, cible);
   }

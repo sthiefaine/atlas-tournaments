@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { libelleDecision } from './consequences';
+import { estSourceBanc, scenarioDeSource } from './bancs';
 import { indexChoix } from '../navigation-choix';
 import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { Vignette } from '../jeu/parties-libres';
@@ -100,6 +101,12 @@ export interface LibellesCarnet {
   profilB: string;
   /** Contient `{nom}` : l'intitulé accessible de la pastille de profil. */
   profilActif: string;
+  /**
+   * Les lignes de journal des **bancs prêtés**, déjà traduites, par clé de
+   * libellé (`bancs.ts`) : un banc s'enregistre sous des clés i18n, et ce
+   * composant n'appelle pas `t()`.
+   */
+  bancs: Readonly<Record<string, { titre: string; effet: string }>>;
 }
 
 /** La carte d'une épreuve, en petit. Décorative : tout est dit à côté. */
@@ -258,8 +265,10 @@ export default function Carnet({ epreuves, libelles }: {
       <p>{libelles.journalNote}</p>
       <ol>{progression.journal?.map((cle) => {
         const decision = progression.decisions?.[cle];
-        const texte = decision ? libelleDecision(decision) : undefined;
-        return decision && texte ? <li key={cle}><strong>{texte.titre}</strong><p>{texte.effet}</p><Link href={`/jeu/${decision.scenario}`}>{libelles.revoirDecision}</Link></li> : null;
+        const brut = decision ? libelleDecision(decision) : undefined;
+        // Un banc porte des clés : la page les a traduites d'avance.
+        const texte = brut && decision && estSourceBanc(decision.scenario) ? libelles.bancs[brut.titre] : brut;
+        return decision && texte ? <li key={cle}><strong>{texte.titre}</strong><p>{texte.effet}</p><Link href={`/jeu/${scenarioDeSource(decision.scenario)}`}>{libelles.revoirDecision}</Link></li> : null;
       })}</ol>
     </section> : null}
 

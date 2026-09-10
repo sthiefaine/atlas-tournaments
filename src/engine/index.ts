@@ -84,23 +84,26 @@ export {
   verifierChemin, voisines, type Portee, type VerdictChemin,
 } from './regles/mouvement';
 export {
-  calculerDegats, crediterJauge, ECHELLE_DEGATS, FACTEUR_RIPOSTE, degatsRiposte, estIndirecte, facteurTerrain, JAUGE_PAR_PV_INFLIGE,
-  degatsArme, JAUGE_PAR_PV_SUBI, mettreHorsJeu, peutViser, prevoirDuel, resoudreAttaque,
-  tireSansMunitions, type PrevisionDuel,
+  calculerDegats, crediterJauge, ECHELLE_DEGATS, ETOILES_MAX, etoilesDefense, FACTEUR_RIPOSTE, degatsRiposte, estIndirecte,
+  facteurTerrain, JAUGE_PAR_PV_INFLIGE, degatsArme, JAUGE_PAR_PV_SUBI, largeurAlea, mettreHorsJeu, peutViser, porteeEffective, prevoirDuel,
+  resoudreAttaque, tireSansMunitions, type PrevisionDuel,
 } from './regles/combat';
 export {
   avancerCapture, estDesaffecte, peutCapturerIci, pointsGagnes, PRIME_REMISE_EN_SERVICE, reinitialiserCapture, SEUIL_CAPTURE, seuilCapture,
 } from './regles/capture';
 export {
-  batimentsDe, consommationParTour, consommerCarburant, estRavitailleur, producteursDe, produire,
-  ravitailleCetteUnite, reparerEtRavitailler, revenuParTour, reveiller, SURCOUT_CARBURANT_FURTIF,
-  valeurArmee, verifierProduction, verserRevenus,
+  batimentsDe, consommationEffective, consommationParTour, consommerCarburant, estRavitailleur, prixProduction,
+  producteursDe, produire, ravitailleCetteUnite, reparerEtRavitailler, revenuParTour, reveiller,
+  SURCOUT_CARBURANT_FURTIF, valeurArmee, verifierProduction, verserRevenus,
 } from './regles/economie';
 export {
-  appliquerPouvoir, estPoseTerrain, expirationDe, expirerPoses, POINTS_PAR_BARRE,
-  poserModificateur, verifierPose, verifierPouvoir,
+  appliquerPouvoir, estInstantane, estModificateurDurable, estPoseTerrain, evaluerEffets, expirationDe,
+  expirerPoses, POINTS_PAR_BARRE, poserModificateur, unitesVisees, verifierPose, verifierPouvoir,
+  type EvaluationEffets,
 } from './regles/pouvoirs';
-export { additif, multiplicateur, multiplicateurFonds, viseUnite } from './regles/modificateurs';
+export {
+  additif, multiplicateur, multiplicateurFonds, multiplicateurPrix, viseUnite, type Visee,
+} from './regles/modificateurs';
 export {
   evaluerFin, majEliminations, score, vainqueurAuxPoints,
 } from './regles/victoire';
@@ -120,7 +123,7 @@ export {
   avancerClimat, brouillardActif, bulletin, cycleEffectif, effetsSaison,
   effetsSaisonPartie, facteurMouvementMeteo, foretCache, initialiserClimat, MECANIQUE_CLIMAT, meteoDominante,
   meteoPossible, phaseDe, saisonDe, saisonEffective, surcoutMeteo, TABLE_CLIMAT_SAISON, TABLE_METEO,
-  tirerMeteo, unitesLourdes, unitesTerrestres, type EffetSaison,
+  tirerMeteo, unitesLourdes, unitesTerrestres, type EffetSaison, type MeteoImposee,
 } from './climat/index';
 export {
   clesMecaniques, enregistrer, mecaniqueDe, MECANIQUE_MAREES, MECANIQUE_TEST,

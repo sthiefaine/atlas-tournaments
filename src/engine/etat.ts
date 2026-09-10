@@ -32,7 +32,12 @@ import { cleCase } from './types';
   * repart d'une partie neuve — rien ne casse au-delà du match en cours.
   */
 /** Version 6 : équipes, victoire commune et renforts déterministes. */
-export const VERSION_MOTEUR = 6;
+/**
+ * Version 7 (10 septembre 2026) : révision 4 des capacités — `chance` élargit
+ * l'aléa de combat, `etoiles` change la défense, la faiblesse est posée à la
+ * création de l'état. Une partie enregistrée avant ne rejoue plus pareil.
+ */
+export const VERSION_MOTEUR = 7;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;
@@ -337,11 +342,16 @@ export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatP
     if (terrainBrut(etat, cat, { x: Number(x), y: Number(y) }) === 'qg') c.qgCase = k;
   }
 
-  // Passifs des commandants : des modificateurs permanents comme les autres.
+  // Passifs et faiblesses des commandants : des modificateurs permanents comme
+  // les autres, sous deux sources distinctes — le HUD les lit séparément, et la
+  // faiblesse (`doc/04` §7.3) ne doit jamais passer pour un bonus.
   for (const camp of etat.camps) {
     const commandant = scene.commandants[camp.id] ?? null;
     if (commandant?.passif) {
       poserModificateur(etat, camp.id, 'passif', commandant.passif, { type: 'permanent' });
+    }
+    if (commandant?.faiblesse) {
+      poserModificateur(etat, camp.id, 'faiblesse', commandant.faiblesse, { type: 'permanent' });
     }
   }
 

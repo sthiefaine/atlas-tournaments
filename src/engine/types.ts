@@ -100,6 +100,12 @@ export interface Unite {
    * états du moteur 3 ne portent pas le champ et restent lisibles tels quels.
    */
   furtive?: boolean;
+  /**
+   * Réactivée par un super pouvoir ce tour (`reactiver`, 10 septembre 2026) :
+   * une unité ne rejoue qu'une fois par tour, quel que soit le nombre de
+   * pouvoirs. Effacé à la fermeture du tour ; absent : jamais réactivée.
+   */
+  reactivee?: boolean;
 }
 
 /** Ce qu'un camp possède hors de la carte. */
@@ -132,7 +138,7 @@ export type ExpirationModificateur =
 
 /** Origine d'un modificateur : sert au retrait et à la lecture du HUD. */
 export type SourceModificateur =
-  | 'passif' | 'pouvoir' | 'super' | 'climat' | 'mecanique' | 'specialite';
+  | 'passif' | 'faiblesse' | 'pouvoir' | 'super' | 'climat' | 'mecanique' | 'specialite';
 
 /** Un modificateur actif, posé par un passif, un pouvoir, le climat ou une mécanique. */
 export interface ModificateurActif {
@@ -227,6 +233,12 @@ export interface EtatPartie {
   camps: EtatCamp[];
   climat: EtatClimat;
   terrainsPoses: TerrainPose[];
+  /**
+   * Météo imposée par un pouvoir (`meteo`, 10 septembre 2026) jusqu'à la
+   * journée `jusqu` incluse : le climat tire sa météo comme d'habitude et la
+   * remplace par celle-ci. Absent : rien n'est imposé.
+   */
+  meteoImposee?: { meteo: Meteo; jusqu: number; camp: CampId };
   modificateurs: ModificateurActif[];
   prochainModificateur: number;
   mecanique: EtatMecanique | null;
@@ -290,7 +302,7 @@ export const MOTIFS_REFUS = [
   'batiment_inconnu', 'batiment_adverse', 'batiment_occupe', 'unite_non_produite_ici',
   'fonds_insuffisants', 'catalogue_inconnu',
   'pas_de_commandant', 'jauge_insuffisante', 'pouvoir_deja_utilise', 'pose_invalide',
-  'action_inconnue',
+  'pouvoir_invalide', 'action_inconnue',
 ] as const;
 /** Motif d'un refus d'action. */
 export type MotifRefus = typeof MOTIFS_REFUS[number];
@@ -326,6 +338,14 @@ export type EvenementJeu =
   | { type: 'ravitaillement'; uniteId: string; cibleId: string }
   | { type: 'furtivite'; uniteId: string; furtive: boolean }
   | { type: 'pouvoir'; camp: CampId; niveau: 'normal' | 'super'; nom: string }
+  /** Un pouvoir a rendu `pv` points internes à cette unité (`soin`, 10 septembre 2026). */
+  | { type: 'soin'; uniteId: string; pv: number }
+  /** Un pouvoir a retiré `pv` points internes à cette unité, jamais le dernier (`degats_directs`). */
+  | { type: 'degats_directs'; uniteId: string; pv: number }
+  /** Un super pouvoir a rendu la main à ces unités, qui avaient déjà joué (`reactiver`). */
+  | { type: 'reactivation'; camp: CampId; unites: string[] }
+  /** Un pouvoir impose cette météo à tous, `journees` journées à partir de celle-ci (`meteo`). */
+  | { type: 'meteo_forcee'; camp: CampId; meteo: Meteo; journees: number }
   | { type: 'terrain_pose'; case: Case; terrain: CleTerrain }
   | { type: 'terrain_retire'; case: Case }
   | { type: 'repousse'; uniteId: string; vers: Case }
@@ -405,6 +425,12 @@ export interface CommandantMoteur {
   cle: Cle;
   nom: string;
   passif: EffetModificateur | null;
+  /**
+   * La faiblesse chiffrée (`doc/04` §7.3, révision 4 des capacités) : posée
+   * comme le passif, permanente, sous la source `faiblesse`. Absente ou nulle
+   * pour les révisions qui ne la chiffrent pas.
+   */
+  faiblesse?: EffetModificateur | null;
   pouvoir: { nom: string; barres: number; effets: EffetPouvoir[]; duree: 'ce_tour' | 'tour_complet' | { type: 'journees'; n: 1 | 2 | 3 } };
   superPouvoir: { nom: string; barres: number; effets: EffetPouvoir[]; duree: 'ce_tour' | 'tour_complet' | { type: 'journees'; n: 1 | 2 | 3 } };
 }

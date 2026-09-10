@@ -5,13 +5,17 @@ import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { t } from '@/i18n/index';
 import { chargerCatalogue, VERSION_MOTEUR, sontAllies, type EtatPartie } from '@/engine/index';
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
+import { lignesPouvoir, nomTerrain, nomUnite } from '@/render/libelles';
 import { textesObjectifs } from '@/render/objectifs';
 import { creerRendu3d } from '@/render3d/index';
 import type { MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
-import { enregistrerVictoire, enregistrerDecision, lireProgression, type Progression } from '../../campagne/progression';
-import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte } from '../../campagne/consequences';
+import { enregistrerVictoire, enregistrerDecision, enregistrerBanc, lireProgression, type DecisionLocale, type Progression } from '../../campagne/progression';
+import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
+import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, optionsBanc } from '../../campagne/bancs';
+import { chargerCommandantJeu, revisionCommandants } from '@/content/commandants-jeu';
+import { lireProfilCommandant } from '@/content/profils-commandants';
 import { bilanDeFin, type Bilan } from './bilan';
 import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
@@ -156,6 +160,15 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const [etapeTutoriel, setEtapeTutoriel] = useState(0);
   const [ancienFormat, setAncienFormat] = useState(false);
   const [voirBriefing, setVoirBriefing] = useState(false);
+  // Les bancs prêtés (`campagne/bancs.ts`) : quand le scénario en propose, une
+  // partie **neuve** commence par le choix du banc, et rien ne se monte avant.
+  // Le choix est gardé ici en plus de la progression : si le stockage refuse,
+  // la partie se joue quand même sous les couleurs choisies.
+  const bancs = useMemo(() => (scenario.bancs?.length ? optionsBanc(scenario.code) : []), [scenario.bancs, scenario.code]);
+  // Le catalogue du scénario, pour nommer les unités qu'un filtre de pouvoir cite au briefing.
+  const catalogueKit = useMemo(() => chargerCatalogue(scenario.catalogueVersion), [scenario.catalogueVersion]);
+  const [bancEnAttente, setBancEnAttente] = useState(false);
+  const [bancChoix, setBancChoix] = useState<string | null>(null);
   // Les réglages du joueur, lus une fois avant le montage du plateau.
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   // La clé de sauvegarde dépend du profil actif de l'appareil ; c'est la page
@@ -208,20 +221,36 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     setAncienFormat(Boolean(sauvegarde && sauvegarde.actions.length > 0 && !compatible));
     setPreferences(lirePreferences());
     setCleSauvegarde(cle);
+    // Une partie en cours reprend le banc de sa graine ; une partie neuve le
+    // demande d'abord. L'écran de chargement se retire : il n'y a rien à
+    // attendre tant que le joueur n'a pas choisi.
+    if (!enCours && bancs.length > 0) {
+      setDepart(null);
+      setBancEnAttente(true);
+      direChargement('pret');
+      return;
+    }
     setDepart(enCours ? 'reprise' : 'neuf');
-  }, [scenario.code, scenario.catalogueVersion, scenario.version]);
+  }, [scenario.code, scenario.catalogueVersion, scenario.version, bancs]);
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
     if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
-    const decisions = Object.values(lireProgression(profilPartie.current).decisions ?? {});
+    // Le banc choisi à l'instant passe en dernier : `graineAube` lit la dernière
+    // décision d'une source, et c'est lui qui doit gagner sur une entrée plus
+    // ancienne du stockage.
+    const decisionBanc: DecisionLocale[] = bancChoix
+      ? [{ scenario: cleSourceBanc(scenario.code), scenarioVersion: scenario.version, canonVersion: VERSION_CANON_AUBE, choix: bancChoix }]
+      : [];
+    const decisions = [...Object.values(lireProgression(profilPartie.current).decisions ?? {}), ...decisionBanc];
     const sauvegarde = depart === 'reprise' ? lireSauvegarde(scenario.code, cleSauvegarde) : null;
     const graine = sauvegarde?.graine ?? (essaiAube || index >= 0 ? graineAube(scenario, decisions) : `${scenario.code}:1`);
-    const prepare = appliquerConsequences(scenarioPourMode(scenario, mode), decisionsDeGraine(scenario, graine));
+    const prepare = appliquerConsequences(scenarioPourMode(scenario, mode), decisionsDeGraine(scenario, graine), (cle, params) => t(locale, cle, params));
     setScenarioEffectif(prepare.scenario);
     setRappels(prepare.rappels);
     const ia = prepare.scenario.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
-    const commandants = commandantsDuScenario(scenario);
+    // Les commandants du scénario **effectif** : un banc prêté a pu en échanger deux.
+    const commandants = commandantsDuScenario(prepare.scenario);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
     try {
@@ -235,7 +264,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         // connaît pas `localStorage`.
         fabriqueRendu: () => creerRendu3d({
           biome: carte.biome,
-          paysParCamp: { 0: scenario.incarnation?.paysCode ?? scenario.paysCode, 1: scenario.incarnation ? 'fr' : 'lu' },
+          paysParCamp: { 0: prepare.scenario.incarnation?.paysCode ?? scenario.paysCode, 1: prepare.scenario.incarnation ? 'fr' : 'lu' },
           qualite: preferences.qualite,
           animationsReduites: preferences.animationsReduites,
           // Le moteur s'initialise après le montage : s'il ne démarre pas —
@@ -302,10 +331,24 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       if (image !== null) cancelAnimationFrame(image);
       partie.demonter();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
-  const rejouer = () => { reprendre('neuf'); setTentative(n => n + 1); };
+  // Une nouvelle partie d'une épreuve à bancs repasse par le choix : démonter
+  // (`depart` à `null`), demander, puis monter au choix.
+  const rejouer = () => {
+    if (bancs.length > 0) { setErreur(false); setEtat(null); setVoirBriefing(false); setVoirAide(false); setDepart(null); setBancEnAttente(true); return; }
+    reprendre('neuf'); setTentative(n => n + 1);
+  };
+  const choisirBanc = (choix: string): void => {
+    setStockageDisponible(enregistrerBanc(scenario.code, scenario.version, choix, profilPartie.current));
+    setBancChoix(choix);
+    setBancEnAttente(false);
+    setDepart('neuf');
+    setTentative(n => n + 1);
+  };
+  // Le banc effectivement joué, pour le rappeler au briefing.
+  const bancActif = bancChoisi(scenario.code, scenarioEffectif.incarnation?.commandantCle);
   const fin = Boolean(mission && etat?.partie.terminee);
   const gagne = Boolean(etat && !etat.partie.nul && sontAllies(etat, etat.partie.vainqueur, CAMP_JOUEUR));
   const choixDisponibles = optionsDecision(scenario.code);
@@ -318,23 +361,67 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   };
   const objectifMission = essaiAube && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).join(' · ') : mission?.objectif ?? '';
   const modal = Boolean(mission && !enScene && (fin || voirBriefing || voirAide));
-  const commandantContact = scenario.commandants[0]?.commandantCle;
+  const commandantContact = scenarioEffectif.commandants.find((c) => c.camp === CAMP_JOUEUR)?.commandantCle ?? scenarioEffectif.commandants[0]?.commandantCle;
+  const commandantDefaut = scenario.commandants.find((c) => c.camp === CAMP_JOUEUR)?.commandantCle ?? '';
   // Le bilan ne se calcule qu'une fois la manche finie, et il ne lit que l'état
   // final et la carte : rien à mémoriser en cours de partie.
   const bilan = fin && etat ? bilanDeFin(etat, carte, CAMP_JOUEUR) : null;
 
   const plateauPret = Boolean(etat);
   useEffect(() => {
-    if (modal) dialogueRef.current?.focus();
+    if (modal || bancEnAttente) dialogueRef.current?.focus();
     else if (plateauPret) conteneurRef.current?.querySelector('canvas')?.focus();
-  }, [modal, plateauPret]);
+  }, [modal, plateauPret, bancEnAttente]);
 
   if (queteVerrouillee) return <main className="atlas-jeu fixed inset-0 bg-[#10131a]"><div className="atlas-voile"><section className="atlas-briefing" role="status">
     <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne">{t(locale, 'campagne.retour')}</Link>
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
-    <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || undefined} />
+    <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || undefined} />
+    {/* Le choix du banc, avant tout montage : « Jouer sous les couleurs de… ».
+        Chaque option dit le général, son kit tel qu'il sera joué, et la suite
+        qu'elle annonce dans l'épreuve suivante. Le premier bouton est le banc du
+        scénario : décliner reste une option de la liste, jamais un autre écran. */}
+    {bancEnAttente && !erreur ? <div className="atlas-voile atlas-transmission">
+      <section ref={dialogueRef} tabIndex={-1} className="atlas-briefing" role="dialog" aria-modal="true" aria-labelledby="titre-banc">
+        <div className="atlas-fiche-entete">
+          <div className="atlas-fiche-portrait"><PortraitCommandant /><span>{t(locale, `commandant.${commandantDefaut}.nom`)}</span></div>
+          <div className="atlas-fiche-titre">
+            <p className="campagne-kicker"><span className="atlas-balise" aria-hidden="true"><i /><i /><i /></span>{mission ? titreEtape : t(locale, 'campagne.demo')} · {t(locale, 'banc.choisir')}</p>
+            <h1 id="titre-banc">{scenario.nom}</h1>
+          </div>
+        </div>
+        <p className="atlas-aide">{t(locale, 'banc.note')}</p>
+        <ul className="atlas-bancs">
+          {bancs.map((option) => {
+            const general = option.cle === PROPRES_COULEURS ? commandantDefaut : option.cle;
+            const kit = chargerCommandantJeu(general, revisionCommandants(scenario));
+            const profil = lireProfilCommandant(general);
+            // Le kit **tel qu'il sera joué**, lu sur ses effets par la même
+            // `lignesPouvoir` que le HUD : un briefing qui recopierait une
+            // phrase dériverait de la jauge au premier chiffre changé.
+            const tr = (cle: string, params?: Record<string, string | number>) => t(locale, cle, params);
+            const noms = { unite: (c: Parameters<typeof nomUnite>[2]) => nomUnite(locale, catalogueKit, c), terrain: (c: Parameters<typeof nomTerrain>[2]) => nomTerrain(locale, catalogueKit, c) };
+            const lignes = [
+              ...(kit.passif ? lignesPouvoir(tr, [kit.passif], { noms }) : []),
+              ...lignesPouvoir(tr, kit.pouvoir.effets, { noms, duree: kit.pouvoir.duree }),
+              ...lignesPouvoir(tr, kit.superPouvoir.effets, { noms, duree: kit.superPouvoir.duree }),
+            ];
+            return <li key={option.cle}>
+              <button type="button" className="atlas-banc" data-banc={option.cle} onClick={() => choisirBanc(option.cle)}>
+                <strong>{t(locale, 'banc.jouer', { banc: t(locale, option.titre) })}</strong>
+                <span>{t(locale, `commandant.${general}.nom`)} · {t(locale, 'banc.kit', { style: profil?.style ?? '', pouvoir: t(locale, kit.pouvoir.nom), super: t(locale, kit.superPouvoir.nom) })}</span>
+                {lignes.length > 0 ? <span className="atlas-banc-kit">{lignes.join(' · ')}</span> : null}
+                <small>{t(locale, option.effet)}</small>
+              </button>
+            </li>;
+          })}
+        </ul>
+        {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
+        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
+      </section>
+    </div> : null}
     {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {/* L'objectif ne s'écrit plus sur la carte : un fanion, et la modale le dit.
         Deux lignes de texte posées en permanence sur le plateau prenaient la
@@ -353,7 +440,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           {/* Le portrait reste sur l'écran de fin : c'est le même commandant qui
               a ouvert la mission et qui la débriefe, et une fin sans visage
               retombait dans la fiche de site que le reste de l'écran a quittée. */}
-          {mission ? <div className="atlas-fiche-portrait"><PortraitCommandant allie={Boolean(scenario.incarnation)} /><span>{t(locale, `commandant.${commandantContact}.nom`)}</span></div> : null}
+          {mission ? <div className="atlas-fiche-portrait"><PortraitCommandant allie={Boolean(scenarioEffectif.incarnation)} /><span>{t(locale, `commandant.${commandantContact}.nom`)}</span></div> : null}
           <div className="atlas-fiche-titre">
             <p className="campagne-kicker">{/* La balise de liaison, reprise de l'écran de chargement : le briefing
                   est la suite de ce qu'il annonçait. */}
@@ -361,6 +448,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
               {mission ? titreEtape : t(locale, 'campagne.demo')}{mission ? ` · ${t(locale, mission.entrainement ? 'campagne.entrainement' : 'campagne.officiel')}` : ''}</p>
             <h1 id="titre-mission">{voirAide ? t(locale, 'campagne.ouvrir_aide') : fin ? t(locale, gagne ? 'combat.manche_gagnee' : 'combat.manche_perdue') : scenario.nom}</h1>
             {scenario.incarnation ? <p className="campagne-progression">{t(locale, 'campagne.incarnation')}</p> : null}
+            {bancActif ? <p className="campagne-progression">{t(locale, 'banc.en_cours', { banc: t(locale, bancActif.libelle) })}</p> : null}
           </div>
         </div>
         {fin && mission && bilan ? <>

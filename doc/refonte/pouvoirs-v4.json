@@ -1,0 +1,3416 @@
+{
+  "version": 4,
+  "statut": "conception",
+  "regles": [
+    "Chaque kit tient dans le vocabulaire du schéma (BORNES_MODIFICATEUR, poserTerrain) plus les huit familles en cours de câblage : soin, degats_directs, ravitailler, prix, chance, etoiles, reactiver, meteo.",
+    "Un effet instantané (soin, degats_directs, ravitailler, reactiver) s’applique au déclenchement ; la durée du pouvoir ne concerne que ses modificateurs et sa météo.",
+    "Le passif est permanent et faible ; il n’emploie que des modificateurs qui ont un sens permanent (attaque, defense, mouvement, vision, capture, fonds, carburant, chance).",
+    "Un pouvoir coûte 2 à 4 barres, un super 5 à 9, strictement plus ; reactiver n’existe qu’au super ; une météo dure 1 journée au pouvoir, 2 au super.",
+    "Un multiplicateur de capture inférieur à 1 ne vise que unites_adverses ; degats_directs ne vise que unites_adverses et ne descend jamais une unité sous 1 PV.",
+    "Chaque commandant a une faiblesse chiffrée et permanente sur un axe déclaré (Commander.faiblesse), et deux répliques, une par pouvoir.",
+    "Le champ « familles » [pouvoir, super] et « archetype » sont des annotations de conception pour la table de variété ; l’agent de transcription peut les laisser tomber.",
+    "Les pouvoirs visent le camp du commandant, pas automatiquement les camps alliés. Les révisions 1 à 3 restent inchangées pour les anciens scénarios."
+  ],
+  "commandants": [
+    {
+      "cle": "cmd_ariane_belloc",
+      "nom": "Ariane Belloc",
+      "style": "L’atelier roulant",
+      "description": "Ancienne responsable de maintenance : elle remet ses équipes en état au milieu du match, puis repart avec tout le monde.",
+      "contreJeu": "Mettre hors jeu d’un coup plutôt que grignoter : ce qu’elle répare, c’est ce qui est encore debout.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.05
+        }
+      },
+      "descriptionPassif": "Attaque ×1,05 pour vos unités.",
+      "pouvoir": {
+        "nom": "Révision express",
+        "barres": 4,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités récupèrent 1 PV, tout de suite.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Grand entretien",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités récupèrent 3 PV, repartent le plein fait et les charges au complet, et frappent ×1,15 ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "paysCode": "fr",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        },
+        "description": "L’atelier coûte : ses revenus sont à 90 %."
+      },
+      "replique": {
+        "pouvoir": "Deux tours de clé et on repart. Personne ne reste au dépôt.",
+        "super": "Tout l’atelier sur le terrain : le plein, les charges, des plastrons neufs. Maintenant, on joue."
+      },
+      "archetype": "veteran",
+      "familles": [
+        "soin",
+        "soin"
+      ]
+    },
+    {
+      "cle": "cmd_tomas_reiner",
+      "nom": "Tomas Reiner",
+      "style": "Le carrefour",
+      "description": "Fait tourner le trésor plus vite que tout le monde, puis ravitaille tout son réseau d’un coup.",
+      "contreJeu": "Couper les routes entre ses bâtiments : son avantage vient de ce qu’il tient, pas de ce qu’il frappe.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "ville",
+            "usine",
+            "aeroport",
+            "qg",
+            "radar",
+            "port"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités sur un bâtiment.",
+      "pouvoir": {
+        "nom": "Marché du matin",
+        "barres": 3,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Vos revenus de la prochaine journée sont ×1,5.",
+        "effets": [
+          {
+            "cible": "economie",
+            "modificateur": {
+              "quoi": "fonds",
+              "valeur": 1.5
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Toutes les routes",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités refont le plein et les charges, et gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "lu",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.9
+          }
+        },
+        "description": "Il protège, il ne perce pas : ses chenilles frappent à 90 %."
+      },
+      "replique": {
+        "pouvoir": "Le marché ouvre tôt ici. Tout le monde passe, tout le monde paie.",
+        "super": "Trois langues, toutes les routes, et pas un dépôt fermé. Les convois roulent."
+      },
+      "archetype": "diplomate",
+      "familles": [
+        "fonds",
+        "ravitailler"
+      ]
+    },
+    {
+      "cle": "cmd_elsbeth_vonlanthen",
+      "nom": "Elsbeth Vonlanthen",
+      "style": "L’horloge des cols",
+      "description": "Ferme les cols comme on ferme une horloge, puis tend un câble par-dessus la montagne quand l’adversaire s’est usé dessus.",
+      "contreJeu": "Ne pas entrer dans ses vallées : disputer le terrain plat, où son verrou ne sert à rien.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "montagne",
+            "foret"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités sur montagne et forêt.",
+      "pouvoir": {
+        "nom": "Cols fermés",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités sur montagne et forêt se défendent ×1,4, et les captures adverses avancent deux fois moins vite jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "montagne",
+                "foret"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            }
+          },
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 0.5
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le téléphérique",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Jusqu’à 3 cases de montagne contiguës deviennent une route pendant 2 journées, et vos unités gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "telepherique",
+              "depuis": [
+                "montagne"
+              ],
+              "vers": "route",
+              "casesMax": 3,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 2
+              }
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "ch",
+      "faiblesse": {
+        "axe": "mobilite",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Elle tarde à quitter une position : ses roues et chenilles ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "Les cols ferment à l’heure. Vous auriez dû regarder l’horaire.",
+        "super": "La cabine part. Ne regardez pas en bas, regardez où nous arrivons."
+      },
+      "archetype": "gardienne",
+      "familles": [
+        "defense",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_lotte_vermeer",
+      "nom": "Lotte Vermeer",
+      "style": "La maîtrise de l’eau",
+      "description": "Gagne de la terre sur la mer quand il lui faut un passage, et ouvre une digue quand il faut en couper un.",
+      "contreJeu": "Elle redessine les bords de carte, pas le centre : tenir le milieu et attaquer là où il n’y a pas d’eau.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "genie"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos génies.",
+      "pouvoir": {
+        "nom": "Polder",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Jusqu’à 3 cases de mer contiguës deviennent de la plaine pendant 2 journées.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "polder",
+              "depuis": [
+                "mer"
+              ],
+              "vers": "plaine",
+              "casesMax": 3,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 2
+              }
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La digue cède",
+        "barres": 6,
+        "duree": "tour_complet",
+        "description": "Jusqu’à 4 cases de plaine ou de plage contiguës deviennent une rivière pendant 2 journées, et vos unités se défendent ×1,2 jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "chenal",
+              "depuis": [
+                "plaine",
+                "plage"
+              ],
+              "vers": "riviere",
+              "casesMax": 4,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 2
+              }
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "nl",
+      "faiblesse": {
+        "axe": "terrain_difficile",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.85
+          }
+        },
+        "description": "Le pays le plus plat : sur montagne et forêt, ses unités se défendent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Là où il y avait de l’eau, il y a un chemin. Le moulin pompe depuis ce matin.",
+        "super": "Ouvrez la digue. L’eau décide qui passe, et aujourd’hui elle est avec nous."
+      },
+      "archetype": "ingenieur",
+      "familles": [
+        "terrain",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_samir_el_hadi",
+      "nom": "Samir El Hadi",
+      "style": "La caravane",
+      "description": "Fait halte, sert le thé, refait le plein, et repart avec une équipe remise d’aplomb.",
+      "contreJeu": "L’attaquer pendant la halte : un convoi qui vient de faire le plein n’a pas encore bougé.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "carburant",
+          "valeur": 0.8
+        }
+      },
+      "descriptionPassif": "Vos unités consomment 20 % de carburant en moins.",
+      "pouvoir": {
+        "nom": "Halte du thé",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités refont le plein et les charges, tout de suite.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le grand souk",
+        "barres": 6,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Toutes vos unités récupèrent 2 PV, et frappent ×1,15 et se défendent ×1,15 pendant une journée.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.15
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "paysCode": "ma",
+      "faiblesse": {
+        "axe": "terrain_difficile",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "La caravane suit la piste : sur montagne et forêt, ses unités ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "On s’arrête, on verse le thé de haut, et on repart avec le plein.",
+        "super": "Le souk est ouvert, tout le monde a mangé. Voilà une équipe qui va bien."
+      },
+      "archetype": "veteran",
+      "familles": [
+        "ravitailler",
+        "soin"
+      ]
+    },
+    {
+      "cle": "cmd_awa_diagne",
+      "nom": "Awa Diagne",
+      "style": "On avance ensemble",
+      "description": "Fait avancer tout le monde d’un pas, puis fait rejouer toute son infanterie d’un coup.",
+      "contreJeu": "Tenir ses fantassins à distance : de l’indirect, des rivières, et jamais de duel à une case.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos infanteries et mécas.",
+      "pouvoir": {
+        "nom": "Teranga",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités gagnent +1 de mouvement ce tour, et vos troupes à pied frappent ×1,15.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Tout le delta",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités à pied qui ont déjà agi rejouent une fois ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "reactiver": true
+          }
+        ]
+      },
+      "paysCode": "sn",
+      "faiblesse": {
+        "axe": "artillerie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "artillerie",
+              "roquettes",
+              "missiles_sol",
+              "missiles_air",
+              "cuirasse"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.8
+          }
+        },
+        "description": "Elle n’a pas la patience du tir de loin : ses pièces de portée frappent à 80 %."
+      },
+      "replique": {
+        "pouvoir": "Vous êtes mes invités. Entrez, asseyez-vous : on vous rattrape dans une demi-heure.",
+        "super": "Tout le delta se lève. Personne ne s’arrête, personne ne reste derrière."
+      },
+      "archetype": "fonceuse",
+      "familles": [
+        "mouvement",
+        "reactiver"
+      ]
+    },
+    {
+      "cle": "cmd_livia_moura",
+      "nom": "Lívia Moura",
+      "style": "Le stade fait du bruit",
+      "description": "Joue sur l’élan : un pouvoir pas cher qui donne de la chance, un super qui met le feu au stade et baisse la garde.",
+      "contreJeu": "Encaisser sa journée de carnaval sans lui rendre un duel, puis frapper ses unités pendant que leur garde est basse.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.05
+        }
+      },
+      "descriptionPassif": "Attaque ×1,05 pour vos unités.",
+      "pouvoir": {
+        "nom": "Batucada",
+        "barres": 2,
+        "duree": "ce_tour",
+        "description": "Vos unités ont +10 % de chance dans chaque duel et frappent ×1,1 ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "chance",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Carnaval",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Vos unités frappent ×1,4 avec +15 % de chance ce tour, mais se défendent à 85 % : quand on danse, on ne se couvre pas.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.4
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "chance",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 0.85
+            }
+          }
+        ]
+      },
+      "paysCode": "br",
+      "faiblesse": {
+        "axe": "partie_longue",
+        "effet": {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.9
+          }
+        },
+        "description": "Le moral tombe aussi vite qu’il monte : ses unités se défendent à 90 %."
+      },
+      "replique": {
+        "pouvoir": "Écoutez les tambours. Ils jouent pour nous, et l’adversaire le sait.",
+        "super": "C’est carnaval ! Tout le stade est debout, et personne ne reste sur le banc."
+      },
+      "archetype": "showman",
+      "familles": [
+        "chance",
+        "attaque"
+      ]
+    },
+    {
+      "cle": "cmd_ines_valdes",
+      "nom": "Inés Valdés",
+      "style": "La prise",
+      "description": "Cloue l’adversaire au sol comme sur un ring : plus de couvert, plus d’étoiles, puis un saut de la troisième corde.",
+      "contreJeu": "Ne pas compter sur le terrain contre elle : compter sur le nombre, et sur des appareils qu’aucune prise n’atteint.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        },
+        "modificateur": {
+          "quoi": "capture",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Points de capture ×1,1 pour vos infanteries et mécas.",
+      "pouvoir": {
+        "nom": "Clé de bras",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Ce tour, les unités adverses perdent 2 étoiles de terrain : leur ville ou leur forêt ne les protège plus.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": -2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Saut de la troisième corde",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Toutes les unités adverses perdent 1 PV et 2 étoiles de terrain, et vos unités frappent ×1,2 ce tour.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "degats_directs",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": -2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "mx",
+      "faiblesse": {
+        "axe": "aerien",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "antiair",
+              "missiles_air",
+              "meridien_bastion",
+              "chasseur",
+              "drone_intercepteur"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.8
+          }
+        },
+        "description": "On ne fait pas de prise à un hélicoptère : ses anti-air et chasseurs frappent à 80 %."
+      },
+      "replique": {
+        "pouvoir": "La prise est annoncée, et elle passe quand même. C’est ça, le spectacle.",
+        "super": "Troisième corde ! Le public compte jusqu’à trois avec moi."
+      },
+      "archetype": "showman",
+      "familles": [
+        "etoiles",
+        "degats_directs"
+      ]
+    },
+    {
+      "cle": "cmd_devika_rao",
+      "nom": "Devika Rao",
+      "style": "Le volume",
+      "description": "Le public paie la tournée : elle achète pour rien, puis fait rejouer tous ses véhicules quand les gradins sont pleins.",
+      "contreJeu": "Elle produit plus qu’elle ne vise : ses achats sont mous, ses appareils rares. Frapper du ciel et laisser sa masse s’étaler.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "mouvement": [
+            "chenilles"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.05
+        }
+      },
+      "descriptionPassif": "Défense ×1,05 pour vos chenilles.",
+      "pouvoir": {
+        "nom": "Tournée générale",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Ce tour, tout ce que vous achetez coûte 25 % de moins.",
+        "effets": [
+          {
+            "cible": "economie",
+            "modificateur": {
+              "quoi": "prix",
+              "valeur": 0.75
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le camion peint",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Tous vos véhicules à roues et à chenilles qui ont déjà agi rejouent une fois ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ]
+            },
+            "reactiver": true
+          }
+        ]
+      },
+      "paysCode": "in",
+      "faiblesse": {
+        "axe": "aerien",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "air"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Tout se passe au sol : ses appareils frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La tournée est pour la maison ! Achetez, achetez, le public a déjà payé.",
+        "super": "Le camion est repeint et les gradins sont pleins. Deuxième passage, mêmes tarifs."
+      },
+      "archetype": "showman",
+      "familles": [
+        "prix",
+        "reactiver"
+      ]
+    },
+    {
+      "cle": "cmd_ren_mizuno",
+      "nom": "Ren Mizuno",
+      "style": "L’horaire tenu",
+      "description": "Ses pièces de portée tirent une case plus loin, et au dernier train, elles tirent une seconde fois.",
+      "contreJeu": "Passer sous sa portée : approcher par le flanc, vite, et le forcer à déplacer des pièces qui ne tirent pas après avoir bougé.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "artillerie",
+            "roquettes",
+            "missiles_sol",
+            "missiles_air",
+            "cuirasse"
+          ]
+        },
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos pièces de portée.",
+      "pouvoir": {
+        "nom": "Correspondance",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos pièces de portée tirent 1 case plus loin ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "missiles_air",
+                "cuirasse"
+              ]
+            },
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Dernier train",
+        "barres": 8,
+        "duree": "ce_tour",
+        "description": "Vos pièces de portée qui ont déjà tiré tirent une seconde fois ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "missiles_air",
+                "cuirasse"
+              ]
+            },
+            "reactiver": true
+          }
+        ]
+      },
+      "paysCode": "jp",
+      "faiblesse": {
+        "axe": "infanterie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "infanterie",
+              "meca"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Il ne met personne sur la ligne : ses infanteries et mécas frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La correspondance est assurée. Votre position aussi, à la minute près.",
+        "super": "Dernier train de la journée. Tout le monde à bord, et on repasse par la même gare."
+      },
+      "archetype": "stratege_prudent",
+      "familles": [
+        "portee",
+        "reactiver"
+      ]
+    },
+    {
+      "cle": "cmd_hazel_quinn",
+      "nom": "Hazel Quinn",
+      "style": "La distance protège",
+      "description": "Fait payer chaque case à l’adversaire : son carburant file, puis le cœur vide de la carte lui coûte un point de vie.",
+      "contreJeu": "Ne pas traverser : longer la côte de ville en ville, faire le plein souvent, et ne jamais laisser une unité à sec au milieu.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "recon",
+            "drone",
+            "drone_marin"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos éclaireurs et drones.",
+      "pouvoir": {
+        "nom": "Longue route",
+        "barres": 3,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Pendant une journée, les unités adverses consomment deux fois plus de carburant, et vos unités voient 1 case plus loin.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "carburant",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le cœur vide",
+        "barres": 6,
+        "duree": "tour_complet",
+        "description": "Toutes les unités adverses perdent 1 PV, et leurs captures avancent deux fois moins vite jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "degats_directs",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 0.5
+            }
+          }
+        ]
+      },
+      "paysCode": "au",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Le bush n’est pas fait pour les chenilles : elles frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La prochaine ville est à trois cents kilomètres. Vous avez le plein ?",
+        "super": "Le milieu de la carte est vide. C’est lui qui gagne, pas moi."
+      },
+      "archetype": "gardienne",
+      "familles": [
+        "carburant",
+        "degats_directs"
+      ]
+    },
+    {
+      "cle": "cmd_ayu_pranata",
+      "nom": "Ayu Pranata",
+      "style": "Gotong royong",
+      "description": "Tout le monde porte : les captures vont plus vite, et quand il faut, des pontons relient les îles.",
+      "contreJeu": "Ses pontons tombent au bout de 2 journées : tenir les quais, et reprendre les bâtiments que ses capteurs viennent de quitter.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "mouvement": [
+            "mer"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos coques.",
+      "pouvoir": {
+        "nom": "De main en main",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos capteurs capturent ×1,5 ce tour, et vos unités gagnent +1 de mouvement sur route, pont et ville.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.5
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "route",
+                "pont",
+                "ville"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les îles reliées",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Jusqu’à 4 cases de mer ou de rivière contiguës deviennent un ponton pendant 2 journées, et vos coques gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "ponton",
+              "depuis": [
+                "mer",
+                "riviere"
+              ],
+              "vers": "pont",
+              "casesMax": 4,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 2
+              }
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "mer"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "id",
+      "faiblesse": {
+        "axe": "mobilite",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Les îles sont étroites : ses roues et chenilles ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "On ne décide pas seule, mais on porte ensemble. Et ça va plus vite qu’on ne croit.",
+        "super": "Les îles ne sont plus des îles. Passez, c’est nous qui tenons les planches."
+      },
+      "archetype": "diplomate",
+      "familles": [
+        "capture",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_leandro_paz",
+      "nom": "Leandro Paz",
+      "style": "Le tableau noir",
+      "description": "Voit tout avant d’agir, puis lance ses véhicules à travers la pampa quand la ligne est dessinée.",
+      "contreJeu": "Lui refuser le plat : le forcer dans la forêt ou le relief, où ses véhicules traînent et se défendent mal.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "plaine"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos unités sur plaine.",
+      "pouvoir": {
+        "nom": "Tableau noir",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités voient 2 cases plus loin et se défendent ×1,15 jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Toute la pampa",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Vos roues et chenilles gagnent +2 de mouvement ce tour, et frappent ×1,2 depuis la plaine ou la route.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ],
+              "surTerrain": [
+                "plaine",
+                "route"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "ar",
+      "faiblesse": {
+        "axe": "terrain_difficile",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "montagne",
+              "foret"
+            ]
+          },
+          "modificateur": {
+            "quoi": "defense",
+            "valeur": 0.85
+          }
+        },
+        "description": "Dès que le relief commence, ses unités se défendent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Le tableau est écrit depuis hier. Vous jouez exactement ce que j’ai dessiné.",
+        "super": "La ligne d’horizon est à nous. Tout ce qui roule, roule maintenant."
+      },
+      "archetype": "stratege_prudent",
+      "familles": [
+        "vision",
+        "mouvement"
+      ]
+    },
+    {
+      "cle": "cmd_noemie_leduc",
+      "nom": "Noémie Leduc",
+      "style": "L’hiver ne compte pas",
+      "description": "Fait tomber la neige quand ça l’arrange : ses fantassins et ses chenilles passent, les roues de l’adversaire s’enlisent.",
+      "contreJeu": "Jouer chenilles et infanterie contre elle, et garder les roues sur la route : la neige ne gêne que ce qui n’est pas préparé.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        },
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités en forêt et dans les hautes herbes.",
+      "pouvoir": {
+        "nom": "Bulletin de neige",
+        "barres": 3,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Il neige pendant une journée : bottes et roues paient +1 par case hors route, pied et chenilles passent.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "neige",
+              "journees": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Grand Nord",
+        "barres": 7,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Vos unités gagnent +2 de mouvement pendant une journée, et il neige pendant 2 journées.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "neige",
+              "journees": 2
+            }
+          }
+        ]
+      },
+      "paysCode": "ca",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.85
+          }
+        },
+        "description": "Très peu de villes sur ses cartes : ses revenus sont à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Bulletin du soir : neige. Mettez les chaînes, ou restez à la maison.",
+        "super": "Le Grand Nord n’attend personne. Nous, on est déjà partis."
+      },
+      "archetype": "meteorologue",
+      "familles": [
+        "meteo",
+        "mouvement"
+      ]
+    },
+    {
+      "cle": "cmd_jone_vakalau",
+      "nom": "Jone Vakalau",
+      "style": "Neuf fois sur dix",
+      "description": "Improvise et s’en sort : de la chance à chaque duel, et un cyclone annoncé qui cloue les appareils et les pièces de portée adverses.",
+      "contreJeu": "Ne pas lui offrir de duels serrés, et sortir les appareils du ciel dès que la tempête est annoncée.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "chance",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vos unités ont +5 % de chance dans chaque duel.",
+      "pouvoir": {
+        "nom": "Passe au large",
+        "barres": 2,
+        "duree": "ce_tour",
+        "description": "Vos unités ont +10 % de chance dans chaque duel ce tour, et vos coques gagnent +1 de mouvement.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "chance",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "mer"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le cyclone",
+        "barres": 7,
+        "duree": {
+          "type": "journees",
+          "n": 2
+        },
+        "description": "Tempête pendant 2 journées : les appareils avancent deux fois moins, les tirs de loin font −20 %, et vos coques gagnent +1 de mouvement.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "tempete",
+              "journees": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "mer"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "fj",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.85
+          }
+        },
+        "description": "Le plus petit budget du tournoi : ses revenus sont à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Je n’avais pas de plan. J’en ai un maintenant, et il est bon.",
+        "super": "Le cyclone était annoncé depuis deux jours. Vous ne lisez pas la météo ?"
+      },
+      "archetype": "prodige",
+      "familles": [
+        "chance",
+        "meteo"
+      ]
+    },
+    {
+      "cle": "cmd_nikos_delis",
+      "nom": "Nikos Delis",
+      "style": "Le cabotage",
+      "description": "Un café serré remet l’équipe d’aplomb, et à marée basse, l’estran devient une plage que ses fantassins traversent à pied.",
+      "contreJeu": "Le tenir loin de la côte : ses bancs de sable ne durent qu’une journée, et ses chenilles restent au port.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "plage",
+            "port"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos unités sur plage et port.",
+      "pouvoir": {
+        "nom": "Café serré",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités récupèrent 1 PV tout de suite, et se défendent ×1,2 jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "L’estran",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Jusqu’à 4 cases de mer contiguës deviennent une plage pendant une journée, et vos troupes à pied gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "banc_de_sable",
+              "depuis": [
+                "mer"
+              ],
+              "vers": "plage",
+              "casesMax": 4,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 1
+              }
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "gr",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Les blindés restent au port : ses chenilles ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "Un café, serré, et on reprend. Je vous ai déjà raconté la finale de la Ronde IX ?",
+        "super": "La mer se retire. On passe à pied, comme on l’a toujours fait."
+      },
+      "archetype": "veteran",
+      "familles": [
+        "soin",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_elin_arnardottir",
+      "nom": "Elín Arnardóttir",
+      "style": "La roche et la vapeur",
+      "description": "Fait monter la vapeur jusqu’à ce que personne ne voie plus loin qu’une case, et soigne son équipe aux sources chaudes.",
+      "contreJeu": "Dans son brouillard, personne ne voit : rester groupé, occuper les bâtiments qui gardent leur vision, et la chercher au contact.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "montagne"
+          ]
+        },
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos unités sur montagne.",
+      "pouvoir": {
+        "nom": "La vapeur monte",
+        "barres": 3,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Brouillard pendant une journée : tout le monde voit à 1 case, et vos unités se défendent ×1,1.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "brouillard",
+              "journees": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Source chaude",
+        "barres": 6,
+        "duree": {
+          "type": "journees",
+          "n": 2
+        },
+        "description": "Toutes vos unités récupèrent 3 PV tout de suite, et le brouillard tombe pendant 2 journées.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "brouillard",
+              "journees": 2
+            }
+          }
+        ]
+      },
+      "paysCode": "is",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Aucun char lourd ne sort d’ici : ses chenilles frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La vapeur monte des fissures. Dans dix minutes, vous ne verrez plus vos propres pièces.",
+        "super": "Tout le monde au bain. On en sort neuf, et on en sort en silence."
+      },
+      "archetype": "meteorologue",
+      "familles": [
+        "meteo",
+        "soin"
+      ]
+    },
+    {
+      "cle": "cmd_kito_njoroge",
+      "nom": "Kito Njoroge",
+      "style": "Le fond",
+      "description": "Ses fantassins courent plus loin que tout le monde, et à la dixième journée, ils prennent une ville en deux tours.",
+      "contreJeu": "Le battre avant qu’il ne s’installe : un char coûte cher chez lui, et ses coureurs n’aiment pas les duels contre du blindage.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Défense ×1,08 pour vos infanteries et mécas.",
+      "pouvoir": {
+        "nom": "Foulée",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos troupes à pied gagnent +2 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Jusqu’à la ligne",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Vos capteurs capturent ×2 ce tour, et vos troupes à pied gagnent +1 de mouvement.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "ke",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        },
+        "description": "Le blindé se paie cher ici : ses revenus sont à 90 %."
+      },
+      "replique": {
+        "pouvoir": "On accélère au dixième kilomètre. C’est là que les autres s’arrêtent.",
+        "super": "La ligne est là. Tout le monde la passe, et personne ne regarde derrière."
+      },
+      "archetype": "fonceuse",
+      "familles": [
+        "mouvement",
+        "capture"
+      ]
+    },
+    {
+      "cle": "cmd_tiana_ravel",
+      "nom": "Tiana Ravel",
+      "style": "Deux climats",
+      "description": "Fait tomber la pluie sur le versant qui l’arrange, et connaît chaque espèce de sa forêt : elle y est deux fois mieux protégée.",
+      "contreJeu": "La sortir de la forêt : sur le plat, ses unités n’ont rien, et son budget ne lui laisse pas de seconde armée.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités en forêt et dans les hautes herbes.",
+      "pouvoir": {
+        "nom": "Saison des pluies",
+        "barres": 3,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Il pleut pendant une journée : roues +1 par case hors route et vision −1 pour tous, mais vos unités gagnent +1 de mouvement sur forêt et route.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "pluie",
+              "journees": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "route"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Chaque espèce a un nom",
+        "barres": 6,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Pendant une journée, vos unités en forêt et dans les hautes herbes ont +2 étoiles de terrain, et toutes voient 2 cases plus loin.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute"
+              ]
+            },
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "paysCode": "mg",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.85
+          }
+        },
+        "description": "Le budget le plus court du tournoi : ses revenus sont à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La pluie prend le versant est. Prenez la piste rouge, elle tient.",
+        "super": "Ravenala, pandanus, baobab de Grandidier. Vous ne voyez qu’une forêt ; moi, je vois mille abris."
+      },
+      "archetype": "meteorologue",
+      "familles": [
+        "meteo",
+        "etoiles"
+      ]
+    },
+    {
+      "cle": "cmd_saran_bat",
+      "nom": "Saran Bat",
+      "style": "La steppe",
+      "description": "Traverse l’espace vide plus vite que tout le monde, au prix du carburant : un galop, puis les trois jeux de l’horizon.",
+      "contreJeu": "La laisser distancer ses soutiens, puis frapper ses éclaireurs isolés et à sec.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "recon"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Attaque ×1,1 pour vos recons.",
+      "pouvoir": {
+        "nom": "Galop",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos roues et chenilles gagnent +2 de mouvement ce tour, mais consomment 30 % de carburant en plus.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "carburant",
+              "valeur": 1.3
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les trois jeux",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Vos roues et chenilles gagnent +3 de mouvement ce tour, vos recons et chars légers frappent ×1,2, et tout consomme 50 % de carburant en plus.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "roues",
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "recon",
+                "char_leger",
+                "char_moyen"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "carburant",
+              "valeur": 1.5
+            }
+          }
+        ]
+      },
+      "paysCode": "mn",
+      "faiblesse": {
+        "axe": "terrain_difficile",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "surTerrain": [
+              "foret",
+              "montagne"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "La steppe est vide, la forêt ne l’est pas : sur forêt et montagne, ses unités ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "L’horizon est à une heure. Les autres mettent une journée.",
+        "super": "Lutte, tir, course : les trois jeux le même jour. Et on gagne les trois."
+      },
+      "archetype": "fonceuse",
+      "familles": [
+        "mouvement",
+        "mouvement"
+      ]
+    },
+    {
+      "cle": "cmd_amalie_haoses",
+      "nom": "Amalie Haoses",
+      "style": "La brume",
+      "description": "Discrète en tête, redoutable menée : sa brume aveugle l’adversaire pour presque rien, et son super fait de la dune un abri.",
+      "contreJeu": "Ne pas la mener trop vite : chaque coup encaissé remplit sa jauge, et son super arrive quand on la croit finie.",
+      "passif": {
+        "cible": "mes_unites",
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos unités.",
+      "pouvoir": {
+        "nom": "La brume tombe",
+        "barres": 2,
+        "duree": "tour_complet",
+        "description": "Les unités adverses voient 2 cases de moins, et vos unités se défendent ×1,15 jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La dune est un abri",
+        "barres": 8,
+        "duree": "tour_complet",
+        "description": "Jusqu’à votre prochain tour, vos unités à découvert — plaine, plage, route — ont +2 étoiles de terrain, et toutes se défendent ×1,2.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "plaine",
+                "plage",
+                "route"
+              ]
+            },
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "na",
+      "faiblesse": {
+        "axe": "infanterie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "infanterie",
+              "meca"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "À découvert, un fantassin n’a rien : ses infanteries et mécas frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La brume tombe tous les matins. Aujourd’hui, elle tombe pour nous.",
+        "super": "Vous croyez que le désert est vide. Il est plein de nous."
+      },
+      "archetype": "survivante",
+      "familles": [
+        "vision",
+        "etoiles"
+      ]
+    },
+    {
+      "cle": "cmd_mira_karki",
+      "nom": "Mira Karki",
+      "style": "La cordée",
+      "description": "Encorde ses fantassins pour qu’ils tiennent, puis fait de toute la carte une montagne.",
+      "contreJeu": "Ne pas la suivre en altitude : la battre en plaine avec du blindé, qu’elle n’a pas.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ],
+          "surTerrain": [
+            "montagne"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Attaque ×1,1 pour vos infanteries et mécas sur montagne.",
+      "pouvoir": {
+        "nom": "Encordés",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos troupes à pied se défendent ×1,3 jusqu’à votre prochain tour, et gagnent +1 de mouvement sur montagne.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ],
+              "surTerrain": [
+                "montagne"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le dernier col",
+        "barres": 7,
+        "duree": "tour_complet",
+        "description": "Jusqu’à votre prochain tour, toutes vos unités ont +2 étoiles de terrain, où qu’elles soient, et se défendent ×1,15.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "paysCode": "np",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.8
+          }
+        },
+        "description": "Rien de lourd ne monte : ses chenilles frappent à 80 %."
+      },
+      "replique": {
+        "pouvoir": "On s’encorde. Si l’un tient, tout le monde tient.",
+        "super": "Le dernier col est le plus haut. Là-haut, tout le monde est chez nous."
+      },
+      "archetype": "survivante",
+      "familles": [
+        "defense",
+        "etoiles"
+      ]
+    },
+    {
+      "cle": "cmd_tess_roa",
+      "nom": "Tess Roa",
+      "style": "La fougère répare",
+      "description": "La brume de vallée cache ses positions, et la fougère répare ce que le match a abîmé.",
+      "contreJeu": "Elle ne court pas : contourner ses couverts par la route et prendre ce qu’elle ne peut pas rejoindre.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "surTerrain": [
+            "foret",
+            "herbe_haute"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.12
+        }
+      },
+      "descriptionPassif": "Défense ×1,12 pour vos unités en forêt et dans les hautes herbes.",
+      "pouvoir": {
+        "nom": "Brume de vallée",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités en forêt, hautes herbes et montagne se défendent ×1,3, et les unités adverses voient 1 case de moins, jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "foret",
+                "herbe_haute",
+                "montagne"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            }
+          },
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "La fougère répare",
+        "barres": 6,
+        "duree": "tour_complet",
+        "description": "Toutes vos unités récupèrent 3 PV tout de suite, et ont +1 étoile de terrain jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "soin",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "etoiles",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "nz",
+      "faiblesse": {
+        "axe": "mobilite",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Personne ne court ici : ses roues et chenilles ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "La brume de vallée ne se lève pas avant midi. Nous, on est déjà en place.",
+        "super": "La fougère repousse toujours. Regardez : on est neufs."
+      },
+      "archetype": "gardienne",
+      "familles": [
+        "defense",
+        "soin"
+      ]
+    },
+    {
+      "cle": "cmd_luz_quispe",
+      "nom": "Luz Quispe",
+      "style": "Bâtisseuse",
+      "description": "Tout ce qui roule sur ses routes va loin, et là où il manque un pont, elle en construit un — pour de bon.",
+      "contreJeu": "Ses ponts sont permanents et ouverts à tous : les traverser dans l’autre sens, et disputer les routes qu’elle a payées.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "genie"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.2
+        }
+      },
+      "descriptionPassif": "Défense ×1,2 pour vos génies.",
+      "pouvoir": {
+        "nom": "Route neuve",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos unités gagnent +2 de mouvement sur route et pont ce tour, et vos génies se défendent ×1,2.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "route",
+                "pont"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le pont",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Jusqu’à 3 cases de mer ou de rivière contiguës deviennent un pont, pour le reste du match.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "pont",
+              "depuis": [
+                "mer",
+                "riviere"
+              ],
+              "vers": "pont",
+              "casesMax": 3,
+              "contigu": true,
+              "duree": "permanent"
+            }
+          }
+        ]
+      },
+      "paysCode": "pe",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        },
+        "description": "Le trésor reste court : ses revenus sont à 90 %."
+      },
+      "replique": {
+        "pouvoir": "La route est neuve, elle porte tout. Roulez, elle est faite pour ça.",
+        "super": "Un pont, ça se construit une fois. Celui-là restera après le match."
+      },
+      "archetype": "ingenieur",
+      "familles": [
+        "mouvement",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_hadran_ost",
+      "nom": "Hadran Ost",
+      "style": "Pression mécanisée",
+      "description": "Le visage des Gris : ses chenilles avancent en bloc, et quand le bloc avance, tout ce qui est devant perd un point de vie.",
+      "contreJeu": "Écarter les fronts et frapper du ciel : ses anti-air sont mous, et le bloc ne couvre qu’une direction.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "mouvement": [
+            "chenilles"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos chenilles.",
+      "pouvoir": {
+        "nom": "Pression méridienne",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos chenilles frappent ×1,2 et gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le bloc avance",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Toutes les unités adverses perdent 1 PV, et vos chenilles frappent ×1,3 avec +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "degats_directs",
+              "valeur": 1
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "chenilles"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "aerien",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "antiair",
+              "missiles_air",
+              "meridien_bastion"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.8
+          }
+        },
+        "description": "Il néglige la couverture : ses anti-air frappent à 80 %."
+      },
+      "replique": {
+        "pouvoir": "La Sélection Méridienne ne contourne pas. Elle avance.",
+        "super": "Le bloc avance, et tout ce qui est devant recule. C’est ainsi qu’on gagne une Ronde."
+      },
+      "archetype": "fonceuse",
+      "familles": [
+        "attaque",
+        "degats_directs"
+      ]
+    },
+    {
+      "cle": "selene_veyr",
+      "nom": "Sélène Veyr",
+      "style": "La concession",
+      "description": "Ne frappe jamais : elle achète moins cher, encaisse le double, et capture plus vite quand le réseau est sous tutelle.",
+      "contreJeu": "Lui prendre deux bâtiments vaut mieux que lui mettre trois unités hors jeu : tout son jeu passe par le trésor.",
+      "passif": {
+        "cible": "economie",
+        "modificateur": {
+          "quoi": "fonds",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Vos revenus sont ×1,1.",
+      "pouvoir": {
+        "nom": "Clause de stabilité",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Ce tour, tout ce que vous achetez coûte 30 % de moins.",
+        "effets": [
+          {
+            "cible": "economie",
+            "modificateur": {
+              "quoi": "prix",
+              "valeur": 0.7
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Tutelle du réseau",
+        "barres": 7,
+        "duree": {
+          "type": "journees",
+          "n": 2
+        },
+        "description": "Pendant 2 journées, vos revenus sont ×2 et vos capteurs capturent ×1,5.",
+        "effets": [
+          {
+            "cible": "economie",
+            "modificateur": {
+              "quoi": "fonds",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 1.5
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.9
+          }
+        },
+        "description": "Elle n’entraîne personne : toutes ses unités frappent à 90 %."
+      },
+      "replique": {
+        "pouvoir": "La stabilité a un prix, et c’est moi qui le fixe.",
+        "super": "Le réseau est sous tutelle. Vous verrez, tout fonctionnera très bien."
+      },
+      "archetype": "diplomate",
+      "familles": [
+        "prix",
+        "fonds"
+      ]
+    },
+    {
+      "cle": "cmd_mael_orven",
+      "nom": "Maël Orven",
+      "style": "Fenêtre de vol",
+      "description": "Ses appareils refont le plein en vol, et quand le ciel est à lui, ils repartent une seconde fois.",
+      "contreJeu": "Garder un anti-air près de chaque objectif, et prendre ses pistes : au sol, il n’a presque personne.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "mouvement": [
+            "air"
+          ]
+        },
+        "modificateur": {
+          "quoi": "attaque",
+          "valeur": 1.08
+        }
+      },
+      "descriptionPassif": "Attaque ×1,08 pour vos appareils.",
+      "pouvoir": {
+        "nom": "Plein en vol",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos appareils refont le plein et les charges tout de suite, et gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            },
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Ciel de manœuvre",
+        "barres": 8,
+        "duree": "ce_tour",
+        "description": "Tous vos appareils qui ont déjà agi rejouent une fois ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "air"
+              ]
+            },
+            "reactiver": true
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "infanterie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "pied",
+              "bottes"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Tenir le sol lui coûte : ses troupes à pied frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Ravitaillement en vol. On ne se pose pas, on n’a pas le temps.",
+        "super": "Le ciel est à nous. Deuxième passage, même cible."
+      },
+      "archetype": "fonceuse",
+      "familles": [
+        "ravitailler",
+        "reactiver"
+      ]
+    },
+    {
+      "cle": "cmd_lise_orven",
+      "nom": "Lise Varen",
+      "style": "Angle réservé",
+      "description": "Ses pièces tirent une case plus loin, et quand il faut, une rivière coupe le passage pour forcer l’adversaire dans l’angle.",
+      "contreJeu": "Approcher par le flanc, vite, avec de la reconnaissance : chaque pièce qu’elle déplace est une pièce qui ne tire pas.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "artillerie",
+            "roquettes",
+            "missiles_sol",
+            "missiles_air",
+            "cuirasse"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.1
+        }
+      },
+      "descriptionPassif": "Défense ×1,1 pour vos pièces de portée.",
+      "pouvoir": {
+        "nom": "Angle réservé",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos pièces de portée tirent 1 case plus loin jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "missiles_air",
+                "cuirasse"
+              ]
+            },
+            "modificateur": {
+              "quoi": "portee",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Passages verrouillés",
+        "barres": 7,
+        "duree": "tour_complet",
+        "description": "Jusqu’à 3 cases de plaine ou de plage contiguës deviennent une rivière pendant 2 journées, et vos pièces de portée frappent ×1,2 jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "poserTerrain": {
+              "forme": "chenal",
+              "depuis": [
+                "plaine",
+                "plage"
+              ],
+              "vers": "riviere",
+              "casesMax": 3,
+              "contigu": true,
+              "duree": {
+                "type": "journees",
+                "n": 2
+              }
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "artillerie",
+                "roquettes",
+                "missiles_sol",
+                "missiles_air",
+                "cuirasse"
+              ]
+            },
+            "modificateur": {
+              "quoi": "attaque",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "mobilite",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "roues",
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Déplacer une pièce rompt son tempo : ses roues et chenilles ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "La zone est réservée. Entrez-y, et vous serez marqués avant d’avoir vu qui tire.",
+        "super": "Le passage est fermé. Il en reste un, et il est dans mon angle."
+      },
+      "archetype": "stratege_prudent",
+      "familles": [
+        "portee",
+        "terrain"
+      ]
+    },
+    {
+      "cle": "cmd_edran_sorel",
+      "nom": "Edran Sorel",
+      "style": "La relève",
+      "description": "Ravitaille tout ce qui roule, puis achète une deuxième ligne à moitié prix quand la première a usé l’adversaire.",
+      "contreJeu": "Isoler ses dépôts et ses routes : sa deuxième ligne coûte moins cher, mais elle part de ses usines, pas du front.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "transport",
+            "transport_air",
+            "barge",
+            "drone_ravitailleur",
+            "porte_avions"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos transports.",
+      "pouvoir": {
+        "nom": "Colonne de relève",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités refont le plein et les charges, et vos transports gagnent +1 de mouvement ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "ravitailler": {
+              "carburant": true,
+              "munitions": true
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur",
+                "porte_avions"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Deuxième ligne",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Ce tour, tout ce que vous achetez coûte 40 % de moins, et vos unités gagnent +1 de mouvement.",
+        "effets": [
+          {
+            "cible": "economie",
+            "modificateur": {
+              "quoi": "prix",
+              "valeur": 0.6
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "aerien",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "air"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Il n’a pas de flotte aérienne : ses appareils frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "La colonne est partie ce matin. Elle arrive avant que vous ayez fini de compter.",
+        "super": "Vous avez usé la première ligne. Voici la seconde, et elle est déjà payée."
+      },
+      "archetype": "veteran",
+      "familles": [
+        "ravitailler",
+        "prix"
+      ]
+    },
+    {
+      "cle": "cmd_yuna_serrat",
+      "nom": "Yuna Serrat",
+      "style": "Le mandat",
+      "description": "Multiplie les petites équipes de capture, et sous mandat, une ville se prend en un tour.",
+      "contreJeu": "Ses groupes dispersés perdent les duels concentrés : frapper ses capteurs un par un, avant leur prochain ordre.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "infanterie",
+            "meca"
+          ]
+        },
+        "modificateur": {
+          "quoi": "capture",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Points de capture ×1,15 pour vos infanteries et mécas.",
+      "pouvoir": {
+        "nom": "Mandat provisoire",
+        "barres": 3,
+        "duree": "ce_tour",
+        "description": "Vos capteurs capturent ×2 ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Le réseau bascule",
+        "barres": 7,
+        "duree": "ce_tour",
+        "description": "Vos capteurs capturent ×3 ce tour, et vos troupes à pied gagnent +2 de mouvement.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "infanterie",
+                "meca",
+                "genie"
+              ]
+            },
+            "modificateur": {
+              "quoi": "capture",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "blindes",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "chenilles"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Elle négocie, elle ne perce pas : ses chenilles frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Un mandat provisoire. Provisoire, mais signé.",
+        "super": "Le réseau bascule. Vous serez consultés après la signature, comme tout le monde."
+      },
+      "archetype": "diplomate",
+      "familles": [
+        "capture",
+        "capture"
+      ]
+    },
+    {
+      "cle": "cmd_basile_kelm",
+      "nom": "Basile Kelm",
+      "style": "Le bastion",
+      "description": "Ancre sa ligne sur les dépôts et les stations, puis brouille tout ce qui approche.",
+      "contreJeu": "Sa ligne ne couvre qu’un objectif à la fois : en menacer deux, et passer là où il n’est pas.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "antiair",
+            "missiles_air",
+            "meridien_bastion"
+          ]
+        },
+        "modificateur": {
+          "quoi": "defense",
+          "valeur": 1.15
+        }
+      },
+      "descriptionPassif": "Défense ×1,15 pour vos anti-air.",
+      "pouvoir": {
+        "nom": "Veille du bastion",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités sur un bâtiment se défendent ×1,3, et toutes voient 1 case plus loin, jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "usine",
+                "aeroport",
+                "qg",
+                "radar",
+                "port"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Les relais tiennent",
+        "barres": 7,
+        "duree": {
+          "type": "journees",
+          "n": 1
+        },
+        "description": "Pendant une journée, les unités adverses voient 2 cases de moins, et vos unités sur un bâtiment se défendent ×1,3.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "surTerrain": [
+                "ville",
+                "usine",
+                "aeroport",
+                "qg",
+                "radar",
+                "port"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.3
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "mobilite",
+        "effet": {
+          "cible": "mes_unites",
+          "modificateur": {
+            "quoi": "mouvement",
+            "valeur": -1
+          }
+        },
+        "description": "Une ligne fixe : toutes ses unités ont −1 de mouvement."
+      },
+      "replique": {
+        "pouvoir": "Le bastion veille. Rien ne s’interrompt, rien ne passe.",
+        "super": "Les relais tiennent, et vos écrans sont vides. Continuez, si vous voulez."
+      },
+      "archetype": "gardienne",
+      "familles": [
+        "defense",
+        "vision"
+      ]
+    },
+    {
+      "cle": "cmd_sans_visage",
+      "nom": "Relais Zéro",
+      "style": "Information asymétrique",
+      "description": "Voit par ses drones, aveugle l’adversaire, et fait tomber un brouillard où seuls ses relais y voient.",
+      "contreJeu": "Ses drones sont fragiles et ses relais repérables : les mettre hors jeu un par un, et capturer les bâtiments, qui gardent leur vision.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "drone",
+            "drone_marin",
+            "drone_intercepteur",
+            "drone_ravitailleur",
+            "meridien_veilleur"
+          ]
+        },
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos drones.",
+      "pouvoir": {
+        "nom": "Signal brouillé",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Les unités adverses voient 2 cases de moins, et vos drones 2 de plus, jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "unites_adverses",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": -2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            },
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Réseau sans écho",
+        "barres": 7,
+        "duree": {
+          "type": "journees",
+          "n": 2
+        },
+        "description": "Brouillard pendant 2 journées, et vos drones voient 2 cases plus loin et se défendent ×1,2.",
+        "effets": [
+          {
+            "cible": "terrain",
+            "meteo": {
+              "valeur": "brouillard",
+              "journees": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            },
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "drone",
+                "drone_marin",
+                "drone_intercepteur",
+                "drone_ravitailleur",
+                "meridien_veilleur"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "infanterie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "mouvement": [
+              "pied",
+              "bottes"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.8
+          }
+        },
+        "description": "Personne au sol : ses troupes à pied frappent à 80 %."
+      },
+      "replique": {
+        "pouvoir": "Signal interrompu. Vous ne recevrez plus rien de ce secteur.",
+        "super": "Réseau sans écho. Nos relais entendent tout ; les vôtres n’entendent plus rien."
+      },
+      "archetype": "stratege_prudent",
+      "familles": [
+        "vision",
+        "meteo"
+      ]
+    },
+    {
+      "cle": "cmd_solveig_tamm",
+      "nom": "Solveig Tamm",
+      "style": "L’escorte",
+      "description": "Ses transports arrivent : escortés, blindés, et quand il faut sortir, tout le monde sort en même temps.",
+      "contreJeu": "Forcer le convoi à se séparer de sa couverture, et frapper ce qui descend du transport plutôt que le transport.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "transport",
+            "transport_air",
+            "barge",
+            "drone_ravitailleur",
+            "porte_avions"
+          ]
+        },
+        "modificateur": {
+          "quoi": "mouvement",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Mouvement +1 pour vos transports.",
+      "pouvoir": {
+        "nom": "Escorte rapprochée",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos transports se défendent ×1,4 et toutes vos unités ×1,15, jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "filtre": {
+              "types": [
+                "transport",
+                "transport_air",
+                "barge",
+                "drone_ravitailleur",
+                "porte_avions"
+              ]
+            },
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.4
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.15
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Personne ne reste",
+        "barres": 6,
+        "duree": "ce_tour",
+        "description": "Toutes vos unités gagnent +2 de mouvement et se défendent ×1,2 ce tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "mouvement",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "defense",
+              "valeur": 1.2
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "artillerie",
+        "effet": {
+          "cible": "mes_unites",
+          "filtre": {
+            "types": [
+              "artillerie",
+              "roquettes",
+              "missiles_sol",
+              "missiles_air",
+              "cuirasse"
+            ]
+          },
+          "modificateur": {
+            "quoi": "attaque",
+            "valeur": 0.85
+          }
+        },
+        "description": "Elle escorte, elle ne bombarde pas : ses pièces de portée frappent à 85 %."
+      },
+      "replique": {
+        "pouvoir": "Le convoi est couvert sur les deux flancs. Il arrivera.",
+        "super": "Personne ne reste. On part tous, et on part maintenant."
+      },
+      "archetype": "gardienne",
+      "familles": [
+        "defense",
+        "mouvement"
+      ]
+    },
+    {
+      "cle": "cmd_wren_osoko",
+      "nom": "Wren Osoko",
+      "style": "Les archives",
+      "description": "Connaît chaque fiche d’homologation : elle voit loin, et rien de ce qu’elle engage ne rate.",
+      "contreJeu": "Voir n’est pas tenir : occuper les objectifs, et l’obliger à engager là où ses chiffres ne servent à rien.",
+      "passif": {
+        "cible": "mes_unites",
+        "filtre": {
+          "types": [
+            "recon",
+            "drone",
+            "drone_marin"
+          ]
+        },
+        "modificateur": {
+          "quoi": "vision",
+          "valeur": 1
+        }
+      },
+      "descriptionPassif": "Vision +1 pour vos éclaireurs et drones.",
+      "pouvoir": {
+        "nom": "Relevés ouverts",
+        "barres": 3,
+        "duree": "tour_complet",
+        "description": "Vos unités voient 2 cases plus loin et ont +5 % de chance dans chaque duel, jusqu’à votre prochain tour.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 2
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "chance",
+              "valeur": 1
+            }
+          }
+        ]
+      },
+      "superPouvoir": {
+        "nom": "Carte complète",
+        "barres": 6,
+        "duree": "tour_complet",
+        "description": "Jusqu’à votre prochain tour, vos unités ont +15 % de chance dans chaque duel et voient 3 cases plus loin.",
+        "effets": [
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "chance",
+              "valeur": 3
+            }
+          },
+          {
+            "cible": "mes_unites",
+            "modificateur": {
+              "quoi": "vision",
+              "valeur": 3
+            }
+          }
+        ]
+      },
+      "paysCode": "atl",
+      "faiblesse": {
+        "axe": "economie",
+        "effet": {
+          "cible": "economie",
+          "modificateur": {
+            "quoi": "fonds",
+            "valeur": 0.9
+          }
+        },
+        "description": "L’homologation ne rapporte rien : ses revenus sont à 90 %."
+      },
+      "replique": {
+        "pouvoir": "Les relevés sont publics. Lisez-les, tout le monde y a droit.",
+        "super": "J’ai la fiche de chaque pièce que vous alignez. Aucune ne fera ce que vous espérez."
+      },
+      "archetype": "stratege_prudent",
+      "familles": [
+        "vision",
+        "chance"
+      ]
+    }
+  ]
+}

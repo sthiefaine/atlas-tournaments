@@ -24,7 +24,7 @@ import type {
 } from '../engine/index';
 import {
   appliquer, brouillardActif, casesVisibles as casesVuesPar, chargerCatalogue, cleCase,
-  creerPartie, POINTS_PAR_BARRE, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues,
+  creerPartie, evaluerEffets, POINTS_PAR_BARRE, rejouer, sceneDepuis, terrainLogique, uniteParId, unitesVues,
   verifierPouvoir, VERSION_MOTEUR, sontAllies,
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
@@ -39,7 +39,7 @@ import {
   dialogueFin, filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
 import { casesObjectifs } from './objectifs';
-import { nomCourtUnite } from './libelles';
+import { effetInstantane, libelleMeteo, nomCommandant, nomCourtUnite } from './libelles';
 import { ecrirePartition } from './partition';
 import { facteurDuree } from './cadence';
 import { resoudreCommandantsScenario } from '../content/commandants-jeu';
@@ -600,6 +600,23 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
           poserAnnonce(t(e.furtive ? 'hud.furtivite_activee' : 'hud.furtivite_levee', { unite: nomCourtUnite(locale, cat, u.type) }));
         }
       }
+      // Une météo imposée se voit au ciel et au Bulletin ; l'annonce dit **qui**
+      // l'impose, ce que ni l'un ni l'autre ne disent.
+      if (e.type === 'meteo_forcee') {
+        const cle = etat.camps.find((c) => c.id === e.camp)?.commandantCle ?? null;
+        poserAnnonce(t('hud.meteo_forcee', {
+          commandant: nomCommandant(locale, cle) || t('hud.commandant'), meteo: libelleMeteo(t, e.meteo),
+        }));
+      }
+      // La réactivation : les siennes se comptent ; celles de l'adversaire, non —
+      // sous brouillard, le compte dirait ce que la carte cache.
+      if (e.type === 'reactivation' && e.unites.length > 0) {
+        if (sontAllies(avant, e.camp, camp)) {
+          poserAnnonce(e.unites.length === 1 ? t('hud.reactivation_une') : t('hud.reactivation', { n: e.unites.length }));
+        } else {
+          poserAnnonce(t('hud.reactivation_adverse'));
+        }
+      }
       if (e.type === 'production_revelee' && e.camp === 0) {
         const liste = Object.entries(e.produites)
           .map(([cle, n]) => `${n} ${nomCourtUnite(locale, cat, cle)}`)
@@ -777,14 +794,18 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     if (!commandant) return null;
     const lire = (niveau: 'normal' | 'super') => {
       const p = niveau === 'super' ? commandant.superPouvoir : commandant.pouvoir;
-      return {
-        nom: p.nom,
-        cout: p.barres * POINTS_PAR_BARRE,
-        pret: verifierPouvoir(etat, commandant, camp, niveau).ok,
-        effets: p.effets,
-      };
+      const pret = verifierPouvoir(etat, commandant, camp, niveau).ok;
+      // La prévision — ce que le pouvoir ferait **maintenant** — vient du moteur
+      // (`evaluerEffets`, ce que l'IA lit pour décider de payer), et seulement
+      // pour un pouvoir prêt qui porte un effet instantané : le reste n'a rien
+      // à prévoir, et un calcul par survol pour rien serait un calcul de trop.
+      const bilan = pret && p.effets.some(effetInstantane) ? evaluerEffets(etat, cat, camp, p.effets) : null;
+      return { nom: p.nom, cout: p.barres * POINTS_PAR_BARRE, pret, effets: p.effets, duree: p.duree, bilan };
     };
-    return { normal: lire('normal'), super: lire('super') };
+    return {
+      normal: lire('normal'), super: lire('super'),
+      passif: commandant.passif ?? null, faiblesse: commandant.faiblesse ?? null,
+    };
   }
 
   function vueJeu(): VueJeu {

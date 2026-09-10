@@ -4,8 +4,9 @@ import { sontAllies } from '../equipes';
  * (`doc/04-gameplay.md` §5 et §7.1).
  *
  * ```
+ * E        = étoiles du terrain + modificateur `etoiles` de la cible, dans [0 ; 4]
  * Fterrain = 1 − 0,10 × E
- * A        = 0,95 + 0,10 × r        r tiré dans rng.branche('combat')
+ * A        = 0,95 + (0,10 + 0,05 × chance) × r        r tiré dans rng.branche('combat')
  * D        = ECHELLE_DEGATS × base × (pvAtt / 10) × Matt × Fterrain × (1 / Mdef) × A
  * pvPerdus = min(pvCible, max(1, arrondi(D)))     si base > 0
  * ```
@@ -22,7 +23,7 @@ import type {
 } from '../types';
 import { cleCase, manhattan, porte, pvAffiches } from '../types';
 import { terrainSous } from './mouvement';
-import { multiplicateur } from './modificateurs';
+import { additif, multiplicateur } from './modificateurs';
 
 /**
  * Échelle des dégâts (§5.1, 8 septembre 2026). La matrice de `content/degats.json`
@@ -69,6 +70,33 @@ export const REDUCTION_PAR_ETOILE = 0.10;
  */
 export function facteurTerrain(etoiles: number): number {
   return 1 - REDUCTION_PAR_ETOILE * etoiles;
+}
+
+/** Plafond d'étoiles de défense qu'une cible peut compter, modificateur compris. */
+export const ETOILES_MAX = 4;
+
+/**
+ * Étoiles de défense d'une cible : celles de son terrain, plus le modificateur
+ * `etoiles` qui la vise (10 septembre 2026), dans `[0 ; ETOILES_MAX]`. Un
+ * `−2` sur les unités adverses met tout le monde en plaine ; un `+1` sur les
+ * siennes vaut un abri de plus. Seule source : la formule, la prévision et
+ * l'IA la lisent — une copie de plus finirait par mentir.
+ */
+export function etoilesDefense(etat: EtatPartie, cat: Catalogue, def: Unite): number {
+  const terrain = terrainSous(etat, cat, def);
+  const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
+  return Math.min(ETOILES_MAX, Math.max(0, etoiles + additif(etat, cat, def, 'etoiles')));
+}
+
+/**
+ * Largeur de l'aléa de combat pour cet attaquant (10 septembre 2026). Sans
+ * `chance`, `0,10` : l'aléa court de 0,95 à 1,05, exactement comme avant, et
+ * le rejeu ne bouge pas d'un bit. Chaque point de chance l'élargit de 0,05
+ * vers le haut ; chaque point en moins le resserre vers le bas — à −3, le
+ * tirage court de 0,90 à 0,95. Le tirage lui-même reste sur `combat`.
+ */
+export function largeurAlea(etat: EtatPartie, cat: Catalogue, att: Unite): number {
+  return 0.10 + 0.05 * additif(etat, cat, att, 'chance');
 }
 
 /**
@@ -151,6 +179,21 @@ export function degatsArme(cat: Catalogue, att: Unite, cible: CleUnite): number 
   return ta.degatsSecondaire ?? 0;
 }
 
+/**
+ * Portée effective d'une unité : celle de son type, plus le modificateur
+ * `portee` des pouvoirs (Ren, Lise). Le minimum ne bouge pas — allonger un tir
+ * indirect ne le rapproche jamais du contact —, et le maximum ne descend
+ * jamais sous le minimum. Avant le 10 septembre 2026, ce modificateur était
+ * validé, posé, affiché… et lu nulle part.
+ */
+export function porteeEffective(etat: EtatPartie, cat: Catalogue, u: Unite): [number, number] {
+  const type = cat.unites[u.type];
+  if (!type) return [0, 0];
+  const [min, max] = type.portee;
+  if (max <= 0) return [min, max];
+  return [min, Math.max(min, max + additif(etat, cat, u, 'portee'))];
+}
+
 /** Vrai si l'attaquant peut viser cette cible depuis cette case. */
 export function peutViser(
   etat: EtatPartie, cat: Catalogue, att: Unite, def: Unite, depuis: Case, aBouge: boolean,
@@ -162,7 +205,8 @@ export function peutViser(
   if (degatsBase(cat, att.type, def.type) <= 0) return { ok: false, motif: 'ne_peut_pas_viser' };
   if (degatsArme(cat, att, def.type) <= 0) return { ok: false, motif: 'sans_munitions' };
   const d = manhattan(depuis, def);
-  if (d < ta.portee[0] || d > ta.portee[1]) return { ok: false, motif: 'cible_hors_portee' };
+  const [pMin, pMax] = porteeEffective(etat, cat, att);
+  if (d < pMin || d > pMax) return { ok: false, motif: 'cible_hors_portee' };
   if (aBouge && !ta.peutTirerApresMouvement) return { ok: false, motif: 'a_bouge' };
   return { ok: true };
 }
@@ -173,12 +217,10 @@ export function calculerDegats(
 ): number {
   const base = degatsArme(cat, att, def.type);
   if (base <= 0) return 0;
-  const terrain = terrainSous(etat, cat, def);
-  const etoiles = terrain ? (cat.terrains[terrain]?.defense ?? 0) : 0;
-  const fTerrain = facteurTerrain(etoiles);
+  const fTerrain = facteurTerrain(etoilesDefense(etat, cat, def));
   const mAtt = multiplicateur(etat, cat, att, 'attaque');
   const mDef = multiplicateur(etat, cat, def, 'defense');
-  const alea = 0.95 + 0.10 * rng.branche('combat').suivant();
+  const alea = 0.95 + largeurAlea(etat, cat, att) * rng.branche('combat').suivant();
   // L'échelle s'applique **avant** les hooks : un hook de climat ou de mécanique
   // est un rapport (× 0,8 sous la tempête), il doit mordre sur les dégâts réels.
   let d = ECHELLE_DEGATS * base * (pvAffiches(att.pv) / 10) * mAtt * fTerrain * (1 / mDef) * alea;

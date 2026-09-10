@@ -33,7 +33,7 @@ import type {
 } from '../engine/index';
 import {
   appliquer, arriveeLibre, brouillardActif, casesAtteignables, casesVisibles, cheminVers, ciblesDepuis, cleCase,
-  coutVers, depuisCle, estDesaffecte, manhattan, peutCapturerIci, pointsMouvement, porte, portee, produitesPar,
+  coutVers, depuisCle, estDesaffecte, manhattan, peutCapturerIci, pointsMouvement, porte, portee, porteeEffective, produitesPar,
   terrainLogique, uniteParId, uniteSur, unitesVues, verifierProduction, constructionsPossibles, sontAllies,
 } from '../engine/index';
 import type { Case, CampId, CleUnite } from '../schemas/types';
@@ -691,7 +691,7 @@ export class Controleur {
     const type = this.cat.unites[u.type];
     if (!type) return [];
     if (Object.keys(type.degats).length === 0) return [];
-    const [min, max] = type.portee;
+    const [min, max] = porteeEffective(this.etatPartie, this.cat, u);
     if (max <= 0) return [];
     const departs = type.peutTirerApresMouvement
       ? [...atteignables].map(depuisCle)

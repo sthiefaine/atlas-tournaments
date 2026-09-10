@@ -23,3 +23,7 @@ Le carnet de campagne expose les cinq profils publics sans importer les biograph
 ## Validation
 
 Couverture exhaustive des 28 rôles et de leur accès par la fiche ; drones non armés et intercepteur aérien vérifiés depuis les dégâts réels ; révision historique des commandants conservée ; bénéficiaires filtrés de Solveig et Ost et vision de Wren vérifiés. Les contrats de quêtes utilisent le catalogue courant du scénario. Aucun GLB ni nouveau type d'unité.
+
+## Révision 4 — 10 septembre 2026
+
+Les 34 kits de `doc/refonte/pouvoirs-v4.md` sont en jeu (`content/commandants-capacites.json`, révision 3 gelée dans `-v3.json`) sur vingt et un scénarios en `commandantsVersion: 4`, les quatre premiers tutoriels restant en révision 1 ; la faiblesse est un modificateur permanent posé par le moteur (source `faiblesse`), `VERSION_MOTEUR` 7. Campagne 24/24 sans ajustement ; en simulation, tout kit sans `soin` perd 95 à 100 % contre un kit à soin parce que l’IA ne joue que le soin — détail dans `personnages-pouvoirs.md`.
