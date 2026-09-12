@@ -2,6 +2,17 @@
 
 Document de passation pour Claude Code. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
+## Mise à jour — Teranga et Rasante, corrigés par la mesure (12 septembre 2026, nuit)
+
+Les deux défauts que le joueur d'Advance Wars avait signalés au moment du roster, corrigés sur ordre du propriétaire (« vas-y fais les corrections »).
+
+1. **Teranga contenait L'échappée.** Le pouvoir d'Awa donnait `mouvement +1` à **toutes** ses unités **plus** `attaque ×1,15` aux fantassins, pour 3 barres — exactement le pouvoir d'Ariane au même prix, plus un effet. Les deux effets sont désormais filtrés sur `pied` et `bottes`, le filtre de son propre super : Ariane emmène ce qui roule et ce qui chenille sans frapper plus fort, Awa n'emmène que ce qui marche mais le fait frapper. Prix inchangé.
+2. **Rasante était un bouton** : 4 PV à chacune des deux unités adverses les plus avancées, sans choix, sans placement, sans risque. Elle passe à **6 barres, 5 PV sur l'unité la plus chère** : le super ne vaut plus que ce que l'adversaire a mis sur la table, le tirer sur de l'infanterie gaspille six barres, l'attendre jusqu'au char lourd en vaut 7 500. La décision devient **quand**.
+3. **Ce que la mesure a dit avant de corriger, et qui change la question** : aucun des deux kits n'était trop fort. Awa tournait à 47,5 % de moyenne, Maël à 36,4 %, et les cellules hors bande étaient **basses**, presque toutes contre Ariane. C'étaient des défauts de **forme**, pas de puissance — un pouvoir qui en contient un autre, un super qui ne se joue pas. Après : Awa 12 → 10 cellules hors bande sur 32, Maël 9 → 9 mais moyenne 36,4 → 46,9 et plancher 0 → 10 %.
+4. **Sept crans essayés et rejetés**, tous consignés dans `pouvoirs-v4.md` « Teranga et Rasante ». Le plus instructif : Teranga filtré à **2 barres** donnait la meilleure bande de tout le lot, et a été rejeté parce que le pouvoir partait 140 à 211 fois par vingt parties au lieu de 55 à 121 — un pouvoir qui part deux fois par tour n'est plus un événement. Et viser `plus_cheres` **sans toucher au reste** faisait bondir Maël à 74 % de moyenne : c'est le prix qui devait suivre, pas la cible seule.
+
+**Vérifié** : `typecheck`, `lint` verts ; **1 632 tests verts** sur 1 634, un sauté, le seul rouge préexistant ; `verifier:campagne` 24/24. Protocole des mesures : deux cartes, deux graines, deux ordres, **deux protocoles de stratégie** — et le rapport cite lequel, parce que les deux ne disent pas la même chose. **Restes** : Maël contre Tomas sur `relief` monte de 30–55 % à 65–85 %, parce que les revenus ×1,5 de Tomas achètent exactement les pièces chères que le rayon chasse — premier chiffre à reprendre. Aucune carte de test n'a d'aéroport, donc l'IA ne déclenche jamais le pouvoir normal de Maël et le ressenti « bouton » d'un humain reste non mesuré.
+
 ## Mise à jour — le vestiaire : seize commandants et quatre secrets (12 septembre 2026, soir)
 
 « On peut faire comme Advance Wars, mais avec **16 commandants et peut-être 4 secrets difficiles à débloquer**. » Le constat qui l'a motivé : le joueur commandait Ariane dans 20 scénarios sur 26 et ne choisissait que dans trois missions. Trois agents sur des lots disjoints, la fin reprise à la main. **Rien regardé à l'écran.**

@@ -75,7 +75,7 @@ La course est une mécanique de récit : chaque technologie apparaît à un épi
 | `bastion_meridien` | Bastion méridien | `atl` | Suisse 5 | non | — | Anti-air lourd exclusif. |
 | `batterie_sans_plaque` | La Batterie sans plaque (Ost) | `atl` | finale 1 | oui | finale 17 | Super `frappe_zone` « Grêle », −2 sur treize cases. |
 | `verrou` | Le Verrou (Basile) | `atl` | finale 2 | oui | finale 7 | Super « Réserves fermées », −1 partout, vision −2. |
-| `rapace` | Le Rapace (Maël) | `atl` | finale 3 | oui | finale 14 | Super `rayon_laser` « Rasante », −3 sur les deux unités de tête. |
+| `rapace` | Le Rapace (Maël) | `atl` | finale 3 | oui | finale 14 | Super `rayon_laser` « Rasante », −5 sur l’unité adverse la plus chère. |
 | `repere` | Le Repère (Lise) | `atl` | finale 4 | oui | finale 13 | Super `frappe_zone` « Zone rouge », −3 sur une croix. |
 | `borne_scelles` | La Borne de scellés (Yuna) | `atl` | finale 5 | oui | finale 11 | Super `iem` sans abattre, capture ×2. |
 | `relais_sans_numero` | Le Relais sans numéro (Relais Zéro) | `atl` | finale 6 | oui | finale 16 | Super `iem` avec `abattre` — la seule mise hors jeu directe. |

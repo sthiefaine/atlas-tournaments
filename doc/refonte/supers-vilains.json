@@ -116,16 +116,16 @@
     {
       "cle": "cmd_mael_orven",
       "nom": "Rasante",
-      "description": "Ses appareils passent en rasante : les 2 unités adverses les plus avancées perdent 4 PV chacune, où qu’elles soient.",
-      "barres": 5,
+      "description": "Ses appareils passent en rasante : l’unité adverse la plus chère perd 5 PV, où qu’elle soit.",
+      "barres": 6,
       "duree": "ce_tour",
       "effets": [
         {
           "cible": "unites_adverses",
           "laser": {
-            "pv": 4,
-            "nombre": 2,
-            "choix": "plus_avancees"
+            "pv": 5,
+            "nombre": 1,
+            "choix": "plus_cheres"
           }
         }
       ],
@@ -133,10 +133,10 @@
         "nom": "Le Rapace",
         "silhouette": "Une aile delta sans dérive portant sous le ventre un marqueur à faisceau qui marque sans charge et hors de riposte ; le badge orange a été peint puis gratté (ailes · plateau · [antenne] · 3)."
       },
-      "telegraphie": "Le choix est déterministe et sans case : quand sa jauge est pleine, les deux unités qu'il frapperait maintenant portent un chevron orange au-dessus de leur étiquette (« désignées »), recalculé à chaque mouvement du joueur, et le Bulletin l'écrit. On sait qui, on ne sait pas quand.",
-      "contreJeu": "Ne pas mettre en tête ce qu'on ne veut pas perdre — la pointe, c'est deux infanteries à 1 000, pas le char lourd — et reculer d'une case une unité désignée pour passer le chevron à la suivante.",
-      "replique": "Rasante sur la tête de colonne. On ne se pose pas, on n’a pas le temps.",
-      "vantour": "Un passage, deux marques, aucune charge tirée — on vient de voir une pièce faire quelque chose que le règlement ne sait pas nommer.",
+      "telegraphie": "Le choix est déterministe et sans case : quand sa jauge est pleine, la pièce qu'il frapperait maintenant — la plus chère qu'il voie — porte un chevron orange au-dessus de son étiquette (« désignée »), recalculé à chaque achat et à chaque perte, et le Bulletin l'écrit. On sait qui, on ne sait pas quand.",
+      "contreJeu": "Ne pas concentrer sa valeur sur une seule pièce — deux chars moyens portent mieux qu'un char lourd désigné — et, sous brouillard, tenir la plus chère hors de sa vue : le rayon ne prend que ce que son camp voit.",
+      "replique": "Rasante sur la pièce la plus chère du terrain. On ne se pose pas, on n’a pas le temps.",
+      "vantour": "Un passage, une marque, aucune charge tirée — et c'est tombé sur la pièce la plus chère du terrain, ce qui n'est pas un hasard.",
       "premiereFinale": "opus1_finale_03",
       "remplace": "Ciel de manœuvre",
       "familles": [

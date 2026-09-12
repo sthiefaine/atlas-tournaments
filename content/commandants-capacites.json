@@ -470,7 +470,7 @@
       "cle": "cmd_awa_diagne",
       "nom": "Awa Diagne",
       "style": "On avance ensemble",
-      "description": "Fait avancer tout le monde d’un pas, puis fait rejouer toute son infanterie d’un coup.",
+      "description": "Fait partir ses fantassins un pas plus loin et un cran plus fort, puis les fait tous rejouer d’un coup.",
       "contreJeu": "Tenir ses fantassins à distance : de l’indirect, des rivières, et jamais de duel à une case.",
       "passif": {
         "cible": "mes_unites",
@@ -490,10 +490,16 @@
         "nom": "Teranga",
         "barres": 3,
         "duree": "ce_tour",
-        "description": "Toutes vos unités gagnent +1 de mouvement ce tour, et vos troupes à pied frappent ×1,15.",
+        "description": "Ce tour, vos troupes à pied gagnent +1 de mouvement et frappent ×1,15 : la colonne part d’un seul bloc.",
         "effets": [
           {
             "cible": "mes_unites",
+            "filtre": {
+              "mouvement": [
+                "pied",
+                "bottes"
+              ]
+            },
             "modificateur": {
               "quoi": "mouvement",
               "valeur": 1
@@ -502,10 +508,9 @@
           {
             "cible": "mes_unites",
             "filtre": {
-              "types": [
-                "infanterie",
-                "meca",
-                "genie"
+              "mouvement": [
+                "pied",
+                "bottes"
               ]
             },
             "modificateur": {
@@ -2459,7 +2464,7 @@
       "cle": "cmd_mael_orven",
       "nom": "Maël Orven",
       "style": "Fenêtre de vol",
-      "description": "Ses appareils refont le plein en vol, et quand le ciel est à lui, ils passent en rasante sur la tête de colonne.",
+      "description": "Ses appareils refont le plein en vol, et quand le ciel est à lui, ils passent en rasante sur la pièce la plus chère du terrain.",
       "contreJeu": "Garder un anti-air près de chaque objectif, et prendre ses pistes : au sol, il n’a presque personne.",
       "passif": {
         "cible": "mes_unites",
@@ -2508,16 +2513,16 @@
       },
       "superPouvoir": {
         "nom": "Rasante",
-        "barres": 5,
+        "barres": 6,
         "duree": "ce_tour",
-        "description": "Ses appareils passent en rasante : les 2 unités adverses les plus avancées perdent 4 PV chacune, où qu’elles soient.",
+        "description": "Ses appareils passent en rasante : l’unité adverse la plus chère perd 5 PV, où qu’elle soit.",
         "effets": [
           {
             "cible": "unites_adverses",
             "laser": {
-              "pv": 4,
-              "nombre": 2,
-              "choix": "plus_avancees"
+              "pv": 5,
+              "nombre": 1,
+              "choix": "plus_cheres"
             }
           }
         ]
@@ -2546,7 +2551,7 @@
       },
       "replique": {
         "pouvoir": "Ravitaillement en vol. On ne se pose pas, on n’a pas le temps.",
-        "super": "Rasante sur la tête de colonne. On ne se pose pas, on n’a pas le temps."
+        "super": "Rasante sur la pièce la plus chère du terrain. On ne se pose pas, on n’a pas le temps."
       }
     },
     {
