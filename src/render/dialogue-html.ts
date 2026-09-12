@@ -29,6 +29,7 @@ import { paletteDe } from './palettes';
 export interface ApiDialogue {
   /** La réplique à l'écran, ou `null` quand la file est vide. */
   replique(): RepliqueEnAttente | null;
+  sonParole?(): void;
   /** Nom affichable d'un locuteur, déjà traduit. */
   nomLocuteur(cle: string): string;
   t(cle: string, params?: Record<string, string | number>): string;
@@ -220,10 +221,16 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
     racine.dataset['frappe'] = 'en_cours';
     const pas = Math.max(1, Math.ceil((lettres.length * MS_PAR_CARACTERE) / MS_FRAPPE_MAX));
     let i = 0;
+    let dernierSon = 0;
     frappe = setInterval(() => {
       for (let k = 0; k < pas && i < lettres.length; k += 1, i += 1) {
         const lettre = lettres[i];
-        if (lettre) lettre.style.visibility = 'visible';
+        if (lettre) {
+          lettre.style.visibility = 'visible';
+          if (/\p{L}/u.test(lettre.textContent ?? '') && Date.now() - dernierSon >= 90) {
+            dernierSon = Date.now(); api.sonParole?.();
+          }
+        }
       }
       if (i >= lettres.length) toutReveler();
     }, MS_PAR_CARACTERE * pas);

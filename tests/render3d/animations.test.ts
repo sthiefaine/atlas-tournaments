@@ -537,3 +537,20 @@ test('sons : une attaque hors de vue reste silencieuse', () => {
   assert.deepEqual(cues, []);
   b.effets.dispose();
 });
+
+test('déplacement sonore : cadence visible, pas de fuite hors vue ni après annulation', () => {
+  const b = banc(), cues: string[] = [];
+  b.ctx.audio = { jouer: cue => cues.push(cue) };
+  b.ctx.catalogue = () => CAT;
+  b.ctx.visible = c => c.x === 0;
+  const a = gesteVersAnimation({ genre: 'glisser', unite: mienne, debut: 0, duree: 1000, chemin: [{x:0,y:0},{x:1,y:0}] }, b.ctx)!;
+  a.animation.avancer(0);
+  a.animation.avancer(.1);
+  assert.equal(cues.length, 1);
+  a.animation.avancer(.6);
+  assert.equal(cues.length, 1);
+  a.animation.terminer?.();
+  a.animation.avancer(.3);
+  assert.equal(cues.length, 1);
+  b.effets.dispose();
+});
