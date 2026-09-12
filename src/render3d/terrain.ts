@@ -718,7 +718,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
 
   // On conserve la maille de relief et la splat : les plaques GLB planes
   // ne pourraient pas suivre les pentes ni les culées des ponts.
-  for (const [jeu,id] of [[herbe,'terrain_plaine'],[terre,'terrain_foret']] as const) {
+  for (const [jeu,id] of [[herbe,'terrain_plaine'],[terre,'terrain_foret'],[roche,'terrain_montagne'],[sable,'terrain_plage']] as const) {
     const source = solsLivres.get(id);
     if(source) {jeu.albedo.image=source.albedo.image;jeu.albedo.flipY=false;jeu.albedo.needsUpdate=true;jeu.normales.image=source.normale.image;jeu.normales.flipY=false;jeu.normales.needsUpdate=true;jeu.rugosite=source.rugosite;}
   }
@@ -760,7 +760,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   sol.receiveShadow = true;
   sol.castShadow = true;
   groupe.add(sol);
-  const sourceVegetation=biome==='plaine'?solsLivres.get('terrain_plaine')?.vegetation:undefined;
+  const sourceVegetation=solsLivres.get('terrain_plaine')?.vegetation;
   const matVegetation=sourceVegetation?new THREE.MeshStandardNodeMaterial({vertexColors:true,roughness:.86,metalness:0,side:THREE.DoubleSide}):null;
   if(matVegetation)grefferBrouillard(matVegetation,uBrouillard,'atlas-gazon');
   const vegetation=sourceVegetation&&matVegetation?new THREE.Mesh(geometrieGazon(g,sourceVegetation),matVegetation):undefined;
@@ -862,7 +862,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   // --- L'eau : un plan qui déborde de la carte d'une case, pour que le socle
   //     se lise comme posé sur l'eau ; le reste de l'écran est au ciel.
   const nEau = normalesEau(doc);
-  const eauLivree = solsLivres.get('terrain_riviere');
+  const eauLivree = solsLivres.get('terrain_riviere') ?? solsLivres.get('terrain_mer');
   if(eauLivree) {nEau.image=eauLivree.normale.image;nEau.flipY=false;nEau.needsUpdate=true;}
   nEau.repeat.set(6, 6);
   const matEau = new THREE.MeshStandardNodeMaterial({

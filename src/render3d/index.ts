@@ -393,7 +393,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // premier montage d'une page, et le seul qui soit gratuit au deuxième —
     // une matière ne dépend que du biome (`textures.ts`).
     let livres: EnvironnementLivre = {batiments:new Map(),sols:new Map()};
-    const tranches: Tranche[] = [async () => { livres = await chargerEnvironnement(e.scenarioCle); }, ...tranchesToilesPlateau(doc, options.biome)];
+    const tranches: Tranche[] = [async () => { livres = await chargerEnvironnement(grille,options.paysParCamp); }, ...tranchesToilesPlateau(doc, options.biome)];
 
     tranches.push(() => {
       const plateau = creerPlateau(grille, doc, options.biome, livres.sols);
@@ -455,7 +455,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // elle est passée, et il resterait semé sur la carte d'avant.
       const courant = etat ?? e;
       const c = ouvrirChantierDecor(
-        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome, livres.batiments,
+        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome, livres.batiments, options.paysParCamp,
       );
       // Un chantier dans le chantier : c'est le décor qui décide de son
       // découpage — leur nombre dépend de la carte —, nous qui rendons la main

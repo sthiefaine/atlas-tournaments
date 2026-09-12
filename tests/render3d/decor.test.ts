@@ -1086,7 +1086,7 @@ test('QG livré : remplace la silhouette, suit le relief et garde la transparenc
   const racine=new THREE.Group(), sous=new THREE.Group();
   const mat=new THREE.MeshStandardNodeMaterial(), mesh=new THREE.Mesh(new THREE.BoxGeometry(.7,.6,.7),mat);
   mesh.userData['opaque']=mat;sous.add(mesh);racine.add(sous);source.add(racine);
-  const chantier=ouvrirChantierDecor({largeur:1,hauteur:1,terrainDe:()=> 'qg'},e,()=>.27,'plaine',new Map([[source.name,source]]));
+  const chantier=ouvrirChantierDecor({largeur:1,hauteur:1,terrainDe:()=> 'qg'},e,()=>.27,'plaine',new Map([[source.name,source]]),{0:'fr'});
   for(const t of chantier.tranches)t();const decor=chantier.decor();
   const bat=decor.groupe.getObjectByName('batiments')!.children[0]!;
   assert.equal(bat.position.y,.27);assert.equal(bat.children.length,1);assert.equal(bat.children[0]!.name,source.name);

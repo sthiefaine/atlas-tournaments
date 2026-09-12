@@ -1,22 +1,38 @@
-/** Première activation explicite ; aucune sélection nationale déduite du terrain. */
+/** Assets actifs, sélectionnés selon la carte et les nations, quel que soit le scénario. */
 import { extraireVegetation, type VegetationLivree } from './vegetation-plaine';
 import * as THREE from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { chargerInventaire, convertirMateriaux } from './modeles';
-export const ENVIRONNEMENT_PREMIER_CONTACT = {
-  qg: ['batiment_qg_fr_ile_de_france', 'batiment_qg_lu'],
-  sols: ['terrain_plaine','terrain_foret','terrain_riviere','terrain_route','terrain_pont'],
-} as const;
+import type { GrilleTerrain } from './geometrie';
+import type { CodePays, CampId } from '../schemas/types';
+import type { InventaireModeles } from '../assets/spec';
+
+/** Le QG français livré avant le nom national générique reste un repli explicite. */
+export function candidatsBatiment(terrain:string,pays?:string):string[] {
+  return [...(pays?[`batiment_${terrain}_${pays}`]:[]),...(terrain==='qg'&&pays==='fr'?['batiment_qg_fr_ile_de_france']:[]),`batiment_${terrain}_base`];
+}
+export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>,inventaire:InventaireModeles):string[] {
+  const terrains=new Set<string>();
+  for(let y=0;y<grille.hauteur;y++)for(let x=0;x<grille.largeur;x++)terrains.add(grille.terrainDe(x,y));
+  const selection=new Set<string>();
+  const present=(id:string)=>inventaire.modeles[id]?.includes(0);
+  for(const terrain of terrains) {
+    const sol=`terrain_${terrain}`;if(present(sol))selection.add(sol);
+    for(const pays of [undefined,...new Set(Object.values(paysParCamp))]) {
+      const id=candidatsBatiment(terrain,pays).find(present);if(id)selection.add(id);
+    }
+  }
+  // Les forêts et herbes hautes utilisent également la matière d'herbe du sol continu.
+  if((terrains.has('foret')||terrains.has('herbe_haute'))&&present('terrain_plaine'))selection.add('terrain_plaine');
+  return [...selection];
+}
 export interface MatiereLivree { albedo: THREE.Texture; normale: THREE.Texture; rugosite: THREE.Texture; vegetation?:VegetationLivree }
 export interface EnvironnementLivre { batiments: Map<string, THREE.Object3D>; sols: Map<string,MatiereLivree> }
-export function selectionEnvironnement(scenario: string): string[] {
-  return scenario === 'premier_contact' ? [...ENVIRONNEMENT_PREMIER_CONTACT.qg,...ENVIRONNEMENT_PREMIER_CONTACT.sols] : [];
-}
-export async function chargerEnvironnement(scenario: string): Promise<EnvironnementLivre> {
+export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>={}): Promise<EnvironnementLivre> {
   const resultat: EnvironnementLivre = {batiments:new Map(),sols:new Map()};
-  const selection = selectionEnvironnement(scenario);
-  if (!selection.length) return resultat;
   const inventaire = await chargerInventaire();
+  if(!inventaire)return resultat;
+  const selection = selectionEnvironnement(grille,paysParCamp,inventaire);
   const glb = new GLTFLoader(), images = new THREE.TextureLoader();
   await Promise.all(selection.map(async id => {
     if (!inventaire?.modeles[id]?.includes(0)) return;

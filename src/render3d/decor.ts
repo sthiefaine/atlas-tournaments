@@ -1,5 +1,5 @@
 import { couronneFeuillue, conifereBoise, troncRamifie } from './vegetation-boisee';
-import { ENVIRONNEMENT_PREMIER_CONTACT, libererBatimentsLivres } from './assets-environnement';
+import { candidatsBatiment, libererBatimentsLivres } from './assets-environnement';
 /**
  * Le décor : arbres, rochers et bâtiments.
  *
@@ -583,6 +583,7 @@ const CASES_PAR_TRANCHE = 4;
 export function ouvrirChantierDecor(
   g: GrilleTerrain, etat: EtatPartie, hauteurEn: (x: number, z: number) => number,
   biome: Biome = 'plaine', modelesLivres = new Map<string, THREE.Object3D>(),
+  paysParCamp: Partial<Record<number,string>> = {},
 ): ChantierDecor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
@@ -1253,7 +1254,9 @@ export function ouvrirChantierDecor(
       paraboles.push({ pivot, active: proprio !== null && !desaffecte });
     }
     const campInitial = etat.camps.find(c => c.qgCase === cleCase({x,y}))?.id;
-    const idLivre = terrain === 'qg' && campInitial !== undefined ? ENVIRONNEMENT_PREMIER_CONTACT.qg[campInitial as 0|1] : undefined;
+    const campModele=terrain==='qg'?campInitial:proprio;
+    const pays=campModele===undefined||campModele===null?undefined:paysParCamp[campModele];
+    const idLivre=candidatsBatiment(terrain,pays).find(id=>modelesLivres.has(id));
     const modeleLivre = !desaffecte && idLivre ? modelesLivres.get(idLivre) : undefined;
     if (modeleLivre) {
       const copie = modeleLivre.clone(true);

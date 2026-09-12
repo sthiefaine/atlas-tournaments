@@ -351,3 +351,7 @@ Les décors procéduraux de plaine sont repris pour accompagner l’herbe GLB : 
 ## Forêts et feuillage — 12 septembre 2026
 
 Après rejet des buissons/haies sphériques, `vegetation-boisee.ts` fournit des feuilles pliées en rameaux pour haies, buissons et feuillus, des branches étagées pour les conifères et des troncs ramifiés. Les placements des arbres restent inchangés. Saisons, brouillard, instanciation et mode tactique sont conservés. Ce sont les formes procédurales en jeu qui changent, pas les GLB de bibliothèque ; aucun PNG ajouté. Voir `doc/refonte/forets-feuillage.md`. Validation esthétique par le propriétaire encore nécessaire.
+
+## Assets actifs dans toutes les parties — 12 septembre 2026
+
+L’environnement n’est plus limité à Premier contact. Le chargeur sélectionne les assets de `public/assets/modeles` selon les terrains et nations présents ; l’accueil suit la même chaîne. Les QG ne sont plus associés aux numéros0=FR/1=LU. Les unités avaient déjà leur repli kit/base/procédural. Les candidats de l’admin restent distincts des modèles actifs ; le relief reste continu et les arbres procéduraux. Voir `doc/refonte/assets-partout.md`.
