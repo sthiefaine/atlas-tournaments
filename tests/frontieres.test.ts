@@ -15,14 +15,15 @@ const autorise: Record<string, string[]> = {
   ai: ["engine", "schemas", "content"],
   mapgen: ["engine", "schemas", "content"],
   render: ["engine", "schemas", "content", "i18n"],
-  render3d: ["engine", "schemas", "content", "i18n", "render", "assets"],
+  render3d: ["engine", "schemas", "content", "i18n", "render", "assets", "audio"],
+  audio: [],
   assets: ["schemas", "content"],
   schemas: [],
   content: ["schemas"],
   i18n: ["schemas"],
   db: ["schemas"],
   serveur: ["engine", "ai", "mapgen", "schemas", "content", "db", "i18n", "assets"],
-  app: ["engine", "ai", "mapgen", "render", "render3d", "assets", "schemas", "content", "db", "serveur", "i18n"],
+  app: ["audio", "engine", "ai", "mapgen", "render", "render3d", "assets", "schemas", "content", "db", "serveur", "i18n"],
 };
 
 // Modules du navigateur interdits dans les couches pures.

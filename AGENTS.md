@@ -355,3 +355,9 @@ Après rejet des buissons/haies sphériques, `vegetation-boisee.ts` fournit des 
 ## Assets actifs dans toutes les parties — 12 septembre 2026
 
 L’environnement n’est plus limité à Premier contact. Le chargeur sélectionne les assets de `public/assets/modeles` selon les terrains et nations présents ; l’accueil suit la même chaîne. Les QG ne sont plus associés aux numéros0=FR/1=LU. Les unités avaient déjà leur repli kit/base/procédural. Les candidats de l’admin restent distincts des modèles actifs ; le relief reste continu et les arbres procéduraux. Voir `doc/refonte/assets-partout.md`.
+
+## Mise à jour — sons synchronisés et assets communs (12 septembre 2026)
+
+Les parties et l'accueil sélectionnent désormais l'environnement actif selon la grille et les nations, sans exception réservée à Premier contact. Les candidats de l'admin restent distincts des modèles activés. Voir `doc/refonte/assets-partout.md`.
+
+La branche `codex/audio-vfx` ajoute huit bruitages synthétiques, les réglages son/volume persistants et leur déclenchement depuis la partition visuelle. Web Audio attend un geste en partie ; l'accueil reste silencieux. Les sons locaux respectent la visibilité, les annulations et la destruction du rendu. La riposte visuelle commence 80 ms après le tir, également dans le duel ; le calcul des dégâts reste inchangé. Voir `doc/refonte/sons-partie.md` et `doc/refonte/bataille-animation.md`. La vue de combat rapprochée en 3D et les animations Blender supplémentaires restent des suites proposées, pas des fonctionnalités livrées.

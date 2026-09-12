@@ -19,7 +19,7 @@ import {
 } from '../../src/render/hud-html';
 import { nomTerrain } from '../../src/render/libelles';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
-import { DUREES, ecrirePartition, type Partition } from '../../src/render/partition';
+import { DUREES, MISE_EN_SCENE, ecrirePartition, type Partition } from '../../src/render/partition';
 import { chiffreSigne, MS_FIXE, rolesDesChiffres } from '../../src/render/scenes-html';
 import { validerMapDef, type CleUnite } from '../../src/schemas/index';
 import { partiePersonnalisee, scenePersonnalisee } from '../engine/aides';
@@ -472,7 +472,7 @@ test('un duel crée l’écran de combat, qui passe par ses étapes puis se reti
   const [a, c] = etat.unites;
   assert.ok(a && c);
   const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 0, y: 0 }));
-  const duree = 120;
+  const duree = DUREES.duel;
   const partition: Partition = {
     gestes: [{
       genre: 'duel',
@@ -501,10 +501,14 @@ test('un duel crée l’écran de combat, qui passe par ses étapes puis se reti
   assert.equal((jaugeCible.innerHTML.match(/class="plein"/g) ?? []).length, 10, 'la jauge est pleine avant le coup');
   assert.equal(cible.children.find((e) => e.className === 'coup')!.textContent, '−4');
   assert.equal(attaquant.children.find((e) => e.className === 'coup')!.textContent, '−2');
-  // Le coup tombe à 35 %, la riposte à 70 % ; les jauges suivent.
-  horloge.avancer(duree * 0.5);
+  // Le coup tombe à 35 %, puis la riposte 80 ms plus tard ; les jauges suivent.
+  horloge.avancer(duree * MISE_EN_SCENE.partCoup - 10);
   assert.equal(ecran.dataset['etape'], 'coup');
   assert.equal((jaugeCible.innerHTML.match(/class="perdu"/g) ?? []).length, 4);
+  horloge.avancer(MISE_EN_SCENE.delaiRiposte);
+  assert.equal(ecran.dataset['etape'], 'riposte');
+  const jaugeAttaquant = attaquant.children.find((e) => e.className === 'jauge')!;
+  assert.equal((jaugeAttaquant.innerHTML.match(/class="perdu"/g) ?? []).length, 2);
   horloge.avancer(FIN_DES_SCENES);
   await fin;
   assert.equal(racine.children.length, 0, 'l’écran est retiré à la fin');

@@ -363,7 +363,7 @@ Deux absences volontaires : il n'y a **pas** de dossier `app/` à la racine (tou
 Trois règles, vérifiées par `tests/frontieres.test.ts`, qui lit les imports de chaque fichier de `src/` et échoue sur la moindre violation :
 
 1. `src/engine/**`, `src/mapgen/**`, `src/ai/**` n'importent **jamais** `src/render/**`, `src/render3d/**`, `src/db/**`, `src/app/**`, ni aucune API navigateur. Le test refuse en plus `window`, `document`, `fetch(`, `Date.now(` et `Math.random(` dans les cinq couches pures (`engine`, `ai`, `mapgen`, `schemas`, `content`) : c'est le déterminisme, écrit une fois.
-2. `src/render/**` n'importe jamais `src/db/**` ni `src/app/**` ; `src/render3d/**` a le droit d'importer `src/render/**` et `src/assets/**`, jamais l'inverse. La table complète des couches autorisées est dans le test lui-même, qui fait foi.
+2. `src/render/**` n'importe jamais `src/db/**` ni `src/app/**` ; `src/render3d/**` a le droit d'importer `src/render/**` et `src/assets/**`, jamais l'inverse. La couche navigateur `src/audio/**` reste indépendante des autres couches ; `app/` la monte et `render3d/` utilise son contrat pour synchroniser les sons. Elle reste interdite au moteur et au socle `render/`. La table complète des couches autorisées est dans le test lui-même, qui fait foi.
 3. Le jeu n'a **qu'une seule dépendance npm runtime**, `three`, et elle n'est utilisée que par `src/render3d/` : `engine`, `ai`, `mapgen`, `schemas`, `content` et le socle `render/` restent sans aucune. Le `package.json` sépare `dependencies` (next, react, drizzle, pg, three) de `devDependencies` (typescript, tsx, playwright, eslint, tailwind) ; toute nouvelle ligne dans `dependencies` est une décision consciente.
 
 ---
