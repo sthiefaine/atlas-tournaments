@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "date": "2026-09-12",
+  "statut": "prompts_a_essayer",
+  "camera": {
+    "elevationAuDessusHorizontaleDeg": 65,
+    "pixelsParMetreIndicatifs": 48
+  },
+  "priorites": [
+    "silhouette_et_masses",
+    "lecture_a_distance_de_jeu",
+    "coherence_des_matieres",
+    "detail_fin"
+  ],
+  "notes": [
+    "Les spécifications sources priment sur cet instantané.",
+    "Les prompts ne garantissent pas un export conforme.",
+    "La texture de sol ne passe pas par une reconstruction image vers 3D."
+  ],
+  "assets": [
+    {
+      "id": "terrain_plaine",
+      "specSource": "../../assets/specs/terrain_plaine.json",
+      "prompt": "01-textures.md",
+      "sectionExemple": "B",
+      "contrat": {
+        "echelle": {
+          "caseEnMetres": 1,
+          "x": {
+            "cible": 1,
+            "tolerance": 0
+          },
+          "y": {
+            "cible": 0.02,
+            "tolerance": 0.002
+          },
+          "z": {
+            "cible": 1,
+            "tolerance": 0
+          }
+        },
+        "pivot": {
+          "origine": "centre_au_sol",
+          "avant": "+z",
+          "haut": "+y",
+          "poseAuSol": true
+        },
+        "budget": {
+          "lod0": 800,
+          "lod1": 200,
+          "lod2": 48,
+          "materiauxMax": 2
+        },
+        "format": {
+          "conteneur": "glb",
+          "versionGltf": "2.0",
+          "axeHaut": "y",
+          "unite": "metre",
+          "materiaux": "pbr_metallic_roughness",
+          "noeudRacine": "racine",
+          "noeuds": [
+            "racine",
+            "sol"
+          ],
+          "materiauxAttendus": [
+            "mat_sol"
+          ]
+        },
+        "textures": [
+          {
+            "canal": "albedo",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Couleurs de surface, sans ombre peinte ni éclairage cuit."
+          },
+          {
+            "canal": "normale",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Le grain qui fait la matière à faible incidence de lumière."
+          },
+          {
+            "canal": "rugosite",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "C’est elle qui montre le sol mouillé sous la pluie : prévoir du contraste."
+          },
+          {
+            "canal": "occlusion",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": false,
+            "note": "Facultative : creux et jointures, si la géométrie ne suffit pas."
+          }
+        ],
+        "animations": [],
+        "verification": {
+          "controles": [
+            "format",
+            "noeuds",
+            "materiaux",
+            "echelle",
+            "budget",
+            "textures"
+          ],
+          "toleranceAabb": 0,
+          "lodRequis": [
+            0,
+            1
+          ]
+        }
+      },
+      "vuesReference": [
+        "top"
+      ],
+      "vuesImportMeshy": [],
+      "validationArtistique": "a_faire"
+    },
+    {
+      "id": "unite_char_leger_base",
+      "specSource": "../../assets/specs/unite_char_leger_base.json",
+      "prompt": "03-unites.md",
+      "sectionExemple": "B",
+      "contrat": {
+        "echelle": {
+          "caseEnMetres": 1,
+          "x": {
+            "cible": 0.62,
+            "tolerance": 0.07
+          },
+          "y": {
+            "cible": 0.5,
+            "tolerance": 0.07
+          },
+          "z": {
+            "cible": 0.85,
+            "tolerance": 0.07
+          }
+        },
+        "pivot": {
+          "origine": "centre_au_sol",
+          "avant": "+z",
+          "haut": "+y",
+          "poseAuSol": true
+        },
+        "budget": {
+          "lod0": 6000,
+          "lod1": 2000,
+          "lod2": 600,
+          "materiauxMax": 3
+        },
+        "format": {
+          "conteneur": "glb",
+          "versionGltf": "2.0",
+          "axeHaut": "y",
+          "unite": "metre",
+          "materiaux": "pbr_metallic_roughness",
+          "noeudRacine": "racine",
+          "noeuds": [
+            "racine",
+            "corps",
+            "base",
+            "socle",
+            "module_tourelle"
+          ],
+          "materiauxAttendus": [
+            "mat_corps",
+            "mat_details"
+          ]
+        },
+        "textures": [
+          {
+            "canal": "albedo",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
+          },
+          {
+            "canal": "normale",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."
+          },
+          {
+            "canal": "rugosite",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Contraste métal poli / peinture mate / caoutchouc : c’est elle qui vend la matière."
+          },
+          {
+            "canal": "metal",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": false,
+            "note": "Seulement si des pièces nues subsistent ; une valeur uniforme sinon."
+          },
+          {
+            "canal": "masque_equipe",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale."
+          }
+        ],
+        "animations": [
+          {
+            "nom": "repos",
+            "dureeMs": 2400,
+            "boucle": true,
+            "obligatoire": true
+          },
+          {
+            "nom": "deplacement",
+            "dureeMs": 1000,
+            "boucle": true,
+            "obligatoire": true
+          },
+          {
+            "nom": "tir",
+            "dureeMs": 700,
+            "boucle": false,
+            "obligatoire": true
+          },
+          {
+            "nom": "touche",
+            "dureeMs": 500,
+            "boucle": false,
+            "obligatoire": true
+          },
+          {
+            "nom": "hors_jeu",
+            "dureeMs": 900,
+            "boucle": false,
+            "obligatoire": true
+          }
+        ],
+        "verification": {
+          "controles": [
+            "format",
+            "noeuds",
+            "materiaux",
+            "echelle",
+            "budget",
+            "masque_equipe",
+            "animations"
+          ],
+          "toleranceAabb": 0.12,
+          "lodRequis": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "vuesReference": [
+        "front",
+        "left",
+        "back",
+        "right",
+        "top",
+        "bottom"
+      ],
+      "vuesImportMeshy": [
+        "front",
+        "left",
+        "back",
+        "right"
+      ],
+      "validationArtistique": "a_faire"
+    },
+    {
+      "id": "batiment_qg_lu",
+      "specSource": "../../assets/specs/batiment_qg_lu.json",
+      "prompt": "04-batiments.md",
+      "sectionExemple": "B",
+      "contrat": {
+        "echelle": {
+          "caseEnMetres": 1,
+          "x": {
+            "cible": 0.85,
+            "tolerance": 0.07
+          },
+          "y": {
+            "cible": 0.95,
+            "tolerance": 0.07
+          },
+          "z": {
+            "cible": 0.85,
+            "tolerance": 0.07
+          }
+        },
+        "pivot": {
+          "origine": "centre_au_sol",
+          "avant": "+z",
+          "haut": "+y",
+          "poseAuSol": true
+        },
+        "budget": {
+          "lod0": 6500,
+          "lod1": 2100,
+          "lod2": 600,
+          "materiauxMax": 3
+        },
+        "format": {
+          "conteneur": "glb",
+          "versionGltf": "2.0",
+          "axeHaut": "y",
+          "unite": "metre",
+          "materiaux": "pbr_metallic_roughness",
+          "noeudRacine": "racine",
+          "noeuds": [
+            "racine",
+            "corps",
+            "toit",
+            "enseigne"
+          ],
+          "materiauxAttendus": [
+            "mat_corps",
+            "mat_vitrage"
+          ]
+        },
+        "textures": [
+          {
+            "canal": "albedo",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre."
+          },
+          {
+            "canal": "normale",
+            "resolution": 1024,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Joints de maçonnerie, bardages, tuiles, encadrements."
+          },
+          {
+            "canal": "rugosite",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées."
+          },
+          {
+            "canal": "emission",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Fenêtres et lanterneaux éclairés : c’est ce qui fait la nuit du jeu."
+          },
+          {
+            "canal": "masque_equipe",
+            "resolution": 512,
+            "format": "png",
+            "obligatoire": true,
+            "note": "Stores, rives de toit, fanion : les surfaces qui prennent la nation."
+          }
+        ],
+        "animations": [
+          {
+            "nom": "repos",
+            "dureeMs": 3200,
+            "boucle": true,
+            "obligatoire": true
+          },
+          {
+            "nom": "capture",
+            "dureeMs": 1400,
+            "boucle": false,
+            "obligatoire": true
+          },
+          {
+            "nom": "touche",
+            "dureeMs": 400,
+            "boucle": false,
+            "obligatoire": false
+          }
+        ],
+        "verification": {
+          "controles": [
+            "format",
+            "noeuds",
+            "materiaux",
+            "echelle",
+            "budget",
+            "masque_equipe",
+            "animations"
+          ],
+          "toleranceAabb": 0.08,
+          "lodRequis": [
+            0,
+            1
+          ]
+        }
+      },
+      "vuesReference": [
+        "front",
+        "left",
+        "back",
+        "right",
+        "top",
+        "bottom"
+      ],
+      "vuesImportMeshy": [
+        "front",
+        "left",
+        "back",
+        "right"
+      ],
+      "validationArtistique": "a_faire"
+    }
+  ]
+}
