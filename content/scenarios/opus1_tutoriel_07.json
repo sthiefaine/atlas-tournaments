@@ -1,10 +1,10 @@
 {
   "cle": "opus1_tutoriel_07",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "opus1_tutoriel_07",
   "nom": "Entraînement 7 · Le dernier kilomètre",
   "acte": 0,
@@ -73,27 +73,31 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le dernier kilomètre. Solveig vous confie un transport qui doit sortir au nord, **colonne 10 ligne 3, avant la fin de J16**. S’il est mis hors jeu, l’exercice est perdu ; le QG de Tomas ne le remplace pas.",
+      "texte": "Le dernier kilomètre. Solveig vous confie un transport [[img:unite_transport]] qui doit sortir au nord, **colonne 10 ligne 3, avant la fin de J16**. S’il est mis hors jeu, l’exercice est perdu.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Dans sa cale, une **réserve** : des batteries de champ, ce que les parcs solaires gardent et ce que les concessions attribuent en premier. Au front, c’est pour ça qu’on se bat ; ici, elles sont vides.",
+      "texte": "Dans sa cale, une **réserve** : des batteries de champ, ce qu’on se dispute en premier quand l’énergie manque. Au front, c’est pour ça qu’on se bat ; ici, elles sont vides.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "reserve",
+        "legende": "Une réserve : de l’énergie stockée, et qui roule."
+      }
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le **drone ravitailleur** refait les charges et le carburant de ses voisins : lisez la ligne Munitions après chaque combat, une pièce à sec ne frappe plus.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le transport peut charger de l’infanterie. Le **drone ravitailleur** refait les charges et le carburant de ses voisins : lisez la ligne Munitions après chaque combat, une pièce à sec ne frappe plus.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Sur l’eau, un **drone marin** : même dépôt gris que la station de la forêt, même badge orange. Il observe la côte, et ses relevés partent à Port-Méridien avant d’arriver chez nous. Wren a demandé pourquoi.",
+      "texte": "Sur l’eau, un **drone marin** : même dépôt gris que la station de la forêt, même badge orange. Ses relevés partent à Port-Méridien avant d’arriver chez nous. Wren a demandé pourquoi.",
       "emotion": "doute"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Le pont de l’est suit la route rapide ; le passage côtier est plus long mais me tient à distance. Je vise le convoi, pas l’escorte : au front, c’est la réserve qu’on veut, pas vos chars. La couverture devant le véhicule.",
+      "texte": "Le pont de l’est suit la route rapide ; le passage de la côte est plus long mais me tient à distance. Je vise le convoi, pas l’escorte : c’est la réserve qu’on veut, pas vos chars.",
       "emotion": "neutre"
     }
   ],
@@ -159,7 +163,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "**Vous vous souvenez de la station à impulsion ?** Le drone marin sort du même dépôt. Les Gris l’ont fait tourner sur trois côtes cette Ronde, et il voit plus loin qu’à sa première sortie.",
+          "texte": "**Vous vous souvenez de la station à impulsion ?** Le drone marin sort du même dépôt. Les Gris l’ont fait tourner sur trois côtes cette année, et il voit plus loin qu’à sa première sortie.",
           "emotion": "neutre"
         },
         {

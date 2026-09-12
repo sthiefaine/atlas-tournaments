@@ -8,7 +8,7 @@
   "code": "fil_carnets_cartographe",
   "titre": "Les carnets du Cartographe",
   "accroche": "Osmin Talvarec relève encore les terrains lui-même. Il vous demande de vérifier cinq d'entre eux.",
-  "arc": "Le directeur d'Atlas n'a jamais cessé de relever les terrains à la main, et ses carnets ne quittent pas son bureau. Il en confie cinq au joueur, avec pour consigne de rejouer chaque carte telle qu'elle est aujourd'hui et de noter ce qui a bougé. Trois écarts sont des erreurs de relevé, un est un affaissement de terrain, et le cinquième est une modification qui n'a jamais été déclarée. Talvarec choisit de classer l'affaire pour protéger la Ronde ; le joueur choisit de le suivre ou de sceller la page. C'est le fil qui explique pourquoi les traces persistantes existent, et pourquoi Atlas y tient.",
+  "arc": "Le directeur d'Atlas n'a jamais cessé de relever les terrains à la main, et ses carnets ne quittent pas son bureau. Il en confie cinq au joueur, avec pour consigne de rejouer chaque carte telle qu'elle est aujourd'hui et de noter ce qui a bougé. Trois écarts sont des erreurs de relevé, un est un affaissement de terrain, et le cinquième est une modification qui n'a jamais été déclarée. Talvarec choisit de classer l'affaire pour protéger Atlas ; le joueur choisit de le suivre ou de sceller la page. C'est le fil qui explique pourquoi les traces persistantes existent, et pourquoi Atlas y tient.",
   "acteMin": 1,
   "missions": [
     { "ordre": 1, "scenarioCle": "scen_fil_carnets_01", "gabarit": "relais", "dureeVisee": 30, "titre": "Cinq points, un carnet" },

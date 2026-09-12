@@ -1,10 +1,10 @@
 {
   "cle": "opus1_tutoriel_06",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "opus1_tutoriel_06",
   "nom": "Entraînement 6 · Au-delà des arbres",
   "acte": 0,
@@ -79,22 +79,30 @@
     {
       "locuteur": "cmd_ariane_belloc",
       "texte": "La forêt, et le **brouillard** avec : vous ne voyez que ce que vos unités voient. Le drone observe au-delà des arbres, l’infanterie capture. Lisez la zone visible avant d’avancer.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "brouillard",
+        "legende": "Les cases noires cachent tout : terrain et unités."
+      }
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Objectif : le **radar** [[img:radar]] du centre et la ville du nord-est, tenus ensemble avant la fin de J18. Un radar pris voit à cinq cases et partage sa vue avec tout votre camp.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Objectif : le **radar** du centre et la ville du nord-est, tenus ensemble avant la fin de J18. Un radar pris voit à cinq cases et partage ses relevés avec tout votre camp ; le QG de Tomas ne remplace pas cet objectif.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "La station à côté n’est pas à Atlas. Elle vient du dépôt de la **Sélection Méridienne**, les Gris : l’armée d’essai que le Consortium finance sous les couleurs de l’arbitre. Badge orange, prototype sous observation.",
+      "texte": "La station à côté n’est pas à Atlas. Elle sort du dépôt de la **Sélection Méridienne**, les Gris : l’armée d’essai que le Consortium paie sous les couleurs de l’arbitre. Badge orange.",
       "emotion": "doute"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Une **station à impulsion** : J4, puis toutes les trois journées, tout moteur à deux cases s’arrête et ce qui vole tombe. Le Bulletin publie rayon et journée : Atlas ne surprend pas, même avec une arme qui n’est pas à elle.",
-      "emotion": "neutre"
+      "texte": "Une **station à impulsion** : à J4, puis toutes les trois journées, tout moteur à deux cases s’arrête et ce qui vole tombe. Le Bulletin publie le rayon et le jour.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "impulsion",
+        "legende": "Dans le rayon, plus un moteur ne tourne."
+      }
     },
     {
       "locuteur": "cmd_ariane_belloc",
@@ -110,19 +118,19 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Radar et ville sous vos couleurs, ensemble. Vous savez avancer sans voir, et c’est le plus dur. La station repart au dépôt des Gris ce soir ; Wren la suivra jusqu’au quai, elle veut le relevé de l’impulsion.",
+      "texte": "Radar et ville sous vos couleurs, ensemble. Vous savez avancer sans voir, et c’est le plus dur. La station repart au dépôt des Gris ce soir ; Wren la suivra jusqu’au quai.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Hadran Ost prête ce matériel sans qu’on le lui demande, et on dit qu’il en a d’autres. Ceux qui font la guerre hors du front, on les appelle **la Cinquième Manche** ; personne n’a de preuve. Vantour, lui, adore toujours Ost.",
+      "texte": "Hadran Ost prête ce matériel sans qu’on le lui demande, et on dit qu’il en a d’autres. Ceux qui font la guerre hors du front, on les appelle **la Cinquième Manche** ; personne n’a de preuve.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le brouillard ne pardonne pas une approche à l’aveugle. Reprenez, éclairez d’abord ; cette tentative ne coûte rien. Au front, elle aurait coûté la colonne.",
+      "texte": "Le brouillard ne pardonne pas une approche sans regarder. Reprenez, éclairez d’abord ; cette tentative ne coûte rien. Au front, elle aurait coûté la colonne.",
       "emotion": "neutre"
     }
   ],
@@ -141,12 +149,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Vous vous souvenez de la ville désaffectée du bocage ?** Le radar se prend de la même façon : vingt points, dix par tour pour une infanterie intacte. Le drone prépare l’approche ; il ne capture pas et n’encaisse rien.",
+          "texte": "**Vous vous souvenez de la ville hors service, au deuxième exercice ?** Le radar se prend de la même façon : vingt points, dix par tour. Le drone prépare l’approche ; il ne capture pas.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Et ce drone-là est à tout le monde : c’est la première technologie de la Ronde que les Gris n’ont pas réussi à garder pour eux. Homologué, déclaré, dossier complet.",
+          "texte": "Et ce drone-là est à tout le monde : c’est la première technologie de l’année que les Gris n’ont pas réussi à garder pour eux. Déclarée, dossier complet.",
           "emotion": "neutre"
         }
       ]
@@ -188,7 +196,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Le jour est revenu, la vue s’allonge, mais le brouillard reste : un bois non observé cache encore une unité. La station a émis hier ; Wren voudra le relevé, et le nom du dépôt d’où elle vient.",
+          "texte": "Le jour est revenu, la vue s’allonge, mais le brouillard reste [[img:brouillard]] : un bois non observé cache encore une unité. La station a émis hier ; Wren voudra son relevé.",
           "emotion": "neutre"
         }
       ]

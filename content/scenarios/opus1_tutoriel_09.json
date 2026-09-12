@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_09",
   "code": "opus1_tutoriel_09",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "nom": "Entraînement 9 · Le prix du courant",
   "acte": 0,
   "paysCode": "fr",
@@ -78,17 +78,26 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois bâtiments tiennent lieu de **postes de distribution** : la ville du nord-ouest, le radar du nord-est, la ville du sud-est. Tenez-en deux en même temps. Le QG de Tomas n’est pas un raccourci.",
+      "texte": "Trois bâtiments servent de **postes** : la ville du nord-ouest, le radar [[img:radar]] du nord-est, la ville du sud-est. Tenez-en deux en même temps. Le QG de Tomas n’est pas un raccourci.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Voilà ce qui se joue dans une Ronde. Qui tient deux postes à la fin de l’engagement reçoit une **concession** : le courant de la vallée pour quatre ans, stockage et distribution compris, inscrit au **Registre de Port-Méridien**.",
+      "texte": "Une **concession**, c’est un contrat : Atlas vous donne le droit d’exploiter quelque chose pendant un temps fixé, et l’écrit sur son registre. Rien de plus, rien de moins.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Jamais les habitants : leur socle civil est garanti par le Pacte, et c’est le seul mur qui tient encore. Vous saurez bientôt qui veut l’abattre.",
+      "texte": "Qui tient deux postes à la fin reçoit la sienne : l’énergie de la vallée pour quatre ans, stockage et distribution compris, inscrite au **registre de Port-Méridien**.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "poste",
+        "legende": "Deux postes tenus en même temps, et le contrat est à vous."
+      }
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Jamais les habitants : l’électricité de leurs maisons est garantie par le Pacte, et c’est le seul mur qui tienne encore. Vous saurez bientôt qui veut l’abattre.",
       "emotion": "neutre"
     },
     {
@@ -98,7 +107,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Une **station de forçage météo**, sur la crête hors du terrain : dépôt gris, badge orange, elle impose une pluie locale à des journées publiées. Prendre le radar compte comme un poste, mais **ne change pas ce calendrier**.",
+      "texte": "Une **machine à faire la pluie**, sur la crête hors du terrain : dépôt gris, badge orange. Prendre le radar compte comme un poste, mais **ne change pas ce calendrier**.",
       "emotion": "neutre"
     },
     {
@@ -110,7 +119,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux postes sous concession. Ce soir, l’Intendance inscrit une ligne au Registre : « France, droits de distribution, vallée d’instruction ». C’est une ligne d’exercice ; **la prochaine sera vraie**.",
+      "texte": "Deux postes sous contrat. Ce soir, le bureau d’Atlas écrit une ligne au registre : « France, droits de distribution, vallée d’instruction ». C’est une ligne d’exercice ; **la prochaine sera vraie**.",
       "emotion": "joie"
     },
     {
@@ -136,7 +145,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Vantour vient d’annoncer la pluie pour demain, et il ne se trompe qu’une fois par Ronde. **Approchez vos capteurs des postes** ; ne comptez pas sur un long déplacement de dernière minute.",
+          "texte": "Vantour vient d’annoncer la pluie pour demain, et il ne se trompe qu’une fois par an. **Approchez vos fantassins des postes** ; ne comptez pas sur un long déplacement de dernière minute.",
           "emotion": "neutre"
         }
       ]
@@ -149,7 +158,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "**Vous vous souvenez de la station à impulsion de la forêt ?** Celle de la crête est sa cousine : même dépôt, un cran plus loin. Elle ne fige plus des moteurs, elle change le temps. Chaque Ronde, les Gris déclarent un prototype de plus.",
+          "texte": "**Vous vous souvenez de la station à impulsion, en forêt ?** Celle de la crête est sa cousine : même dépôt, un cran plus loin. Elle ne fige plus des moteurs, elle change le temps.",
           "emotion": "neutre"
         }
       ]
@@ -163,7 +172,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier poste sous vos couleurs. Il finance déjà la délégation ; pour la concession, **il en faut deux à la fois**. Tenez celui-ci pendant que l’autre groupe approche.",
+          "texte": "Premier poste sous vos couleurs. Il finance déjà l’équipe ; pour le contrat, **il en faut deux à la fois**. Tenez celui-ci pendant que l’autre groupe approche.",
           "emotion": "neutre"
         }
       ]

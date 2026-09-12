@@ -16,7 +16,7 @@ Le pivot est **final10 : saison globale5, épisode4, mission164 sur172**, après
 
 **Fonction auteur :** Le visage des Gris. **Style :** Pression mécanisée.
 
-Ronde XII : champion accueillant. Ronde XIII : disqualification justifiée après contournement d’une homologation. Entre XIII et XIV : le Consortium lui confie la Sélection Méridienne.
+An 12 : champion accueillant. An 13 : disqualification justifiée après contournement du contrôle des armes. Entre l’an 13 et l’an 14 : le Consortium lui confie la Sélection Méridienne.
 
 **Motivation :** Retrouver le pouvoir perdu sans admettre sa responsabilité.
 
@@ -30,7 +30,7 @@ Ronde XII : champion accueillant. Ronde XIII : disqualification justifiée aprè
 
 **Fonction auteur :** La direction des concessions. **Style :** Économie et objectifs multiples.
 
-Ronde XI : coordination utile des réserves. Ronde XII : contrats liant solaire, stockage et distribution. Ronde XIV : direction fixe de la Cinquième Manche, tentative de tutelle irrévocable sur Aube.
+An 11 : coordination utile des réserves. An 12 : contrats liant solaire, stockage et distribution. An 14 : direction fixe de la Cinquième Manche, tentative de prise en main définitive d’Aube.
 
 **Motivation :** Imposer seule les conditions du réseau, en présentant la dépendance comme la stabilité.
 

@@ -19,7 +19,7 @@
 
 import type { EtatPartie, EvenementJeu } from '../engine/index';
 import type {
-  CampId, DeclencheurScene, Dialogue, Emotion, Scenario, SceneDialogue,
+  CampId, DeclencheurScene, Dialogue, Emotion, Illustration, Scenario, SceneDialogue,
 } from '../schemas/types';
 
 /** Une réplique prête à peindre : tout ce dont le HUD a besoin, et rien de plus. */
@@ -30,6 +30,12 @@ export interface RepliqueEnAttente {
   locuteur: string;
   texte: string;
   emotion: Emotion;
+  /**
+   * La vignette que la réplique montre, s'il y en a une (`illustrations.ts`).
+   * Une règle de jeu se montre mieux qu'elle ne se dit, et le pictogramme dans
+   * le `texte` ne suffit pas quand c'est **la réplique entière** qui explique.
+   */
+  illustration?: Illustration;
   /** Camp du locuteur quand on sait le rattacher : donne le côté et la couleur. */
   camp: CampId | null;
   /** Rang dans la scène, à partir de 1, et taille de la scène. */
@@ -146,6 +152,9 @@ export function filerRepliques(
     locuteur: r.locuteur,
     texte: r.texte,
     emotion: r.emotion ?? 'neutre',
+    // Le champ reste absent quand la réplique ne montre rien : `exactOptionalPropertyTypes`
+    // distingue « pas d'illustration » de « une illustration indéfinie ».
+    ...(r.illustration ? { illustration: r.illustration } : {}),
     camp: campDe(r.locuteur),
     rang: i + 1,
     total: repliques.length,

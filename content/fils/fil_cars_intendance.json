@@ -8,7 +8,7 @@
   "code": "fil_cars_intendance",
   "titre": "Les cars de l'Intendance",
   "accroche": "Trois délégations sont bloquées quelque part entre deux étapes. Personne ne veut s'en occuper.",
-  "arc": "L'Intendance déplace quatorze délégations, leur matériel et leurs cuisiniers d'un bout du monde à l'autre, avec un budget que le Bureau réduit chaque Ronde. Solveig Tamm demande au joueur de jouer trois manches à la place d'équipes qui n'arriveront pas à temps, pour que le calendrier tienne et que personne ne soit déclaré forfait — parce qu'un forfait coûte plus cher qu'une défaite. C'est le fil le plus court du jeu et le seul qui ne cache rien : il n'y a pas de complot, seulement une organisation à bout de souffle, et trois équipes qui vous devront quelque chose. Le Luxembourg, dont la délégation tenait dans un seul car, s'en souvient jusqu'à la fin de la Ronde.",
+  "arc": "L'Intendance déplace quatorze délégations, leur matériel et leurs cuisiniers d'un bout du monde à l'autre, avec un budget que le Bureau réduit chaque année. Solveig Tamm demande au joueur de jouer trois manches à la place d'équipes qui n'arriveront pas à temps, pour que le calendrier tienne et que personne ne soit déclaré forfait — parce qu'un forfait coûte plus cher qu'une défaite. C'est le fil le plus court du jeu et le seul qui ne cache rien : il n'y a pas de complot, seulement une organisation à bout de souffle, et trois équipes qui vous devront quelque chose. Le Luxembourg, dont la délégation tenait dans un seul car, s'en souvient jusqu'à la fin de la guerre.",
   "acteMin": 1,
   "missions": [
     { "ordre": 1, "scenarioCle": "scen_fil_cars_01", "gabarit": "course", "dureeVisee": 20, "titre": "Le car de la délégation quatre" },

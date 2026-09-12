@@ -1,10 +1,10 @@
 {
   "cle": "opus1_tutoriel_05",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "opus1_tutoriel_05",
   "nom": "Entraînement 5 · La bonne distance",
   "acte": 0,
@@ -70,17 +70,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a homologué le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. **Chaque placement compte.**",
+      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a contrôlé et signé le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. **Chaque placement compte.**",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux pièces d’artillerie. Elles frappent à deux ou trois cases sans riposte, mais **ne tirent pas après avoir bougé** et ne ripostent pas au contact. Le char devant, l’artillerie derrière.",
+      "texte": "Deux pièces d’artillerie [[img:unite_artillerie]]. Elles frappent à deux ou trois cases sans riposte, mais **ne tirent pas après avoir bougé** et ne ripostent pas au contact. Le char devant.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "J’attaque, aujourd’hui. Si vous laissez une pièce de portée à découvert, mon char ira la chercher, et au front un équipage à découvert ne rentre pas. Prenez mon QG ou mettez mon groupe hors jeu avant **J18**.",
+      "texte": "J’attaque, aujourd’hui. Si vous laissez une artillerie à découvert, mon char ira la chercher, et au front un équipage à découvert ne rentre pas. Prenez mon QG ou videz mon groupe avant **J18**.",
       "emotion": "neutre"
     },
     {
@@ -151,7 +151,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une pièce de portée seule, c’est une pièce perdue : elle n’a rien pour répondre au contact. Reformez la ligne, le char devant.",
+          "texte": "Une artillerie seule, c’est une artillerie perdue : elle n’a rien pour répondre au contact. Reformez la ligne, le char devant.",
           "emotion": "doute"
         }
       ]
@@ -165,8 +165,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Sélectionnez une artillerie et lisez ses cases rouges : **la case voisine n’en fait pas partie**. Trop près, c’est hors de portée ; c’est le paradoxe qu’on apprend ici.",
-          "emotion": "neutre"
+          "texte": "Sélectionnez une artillerie et lisez ses cases [[img:case_rouge]] : **la case voisine n’en fait pas partie**. Trop près, c’est hors de portée.",
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "unite_artillerie",
+            "legende": "Une portée a un minimum autant qu’un maximum."
+          }
         }
       ]
     }

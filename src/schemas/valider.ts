@@ -17,6 +17,7 @@ import {
   CATEGORIES_EVENT,
   CATEGORIES_GLOSSAIRE, CIBLES_EFFET, CIBLES_REVIEW, CLES_GABARIT, CLES_PROMPT,
   CLES_TERRAIN,
+  CLES_ILLUSTRATION,
   CLES_UNITE_CANON, CLIMATS, CONFIANCE_MAX, CONTINENTS, CORPS_SILHOUETTE, DOMAINES,
   EMOTIONS,
   FAMILLES_PAR_TRAIT_SPECIALITE, FAMILLES_SPECIALITE, FORMES_POSER_TERRAIN,
@@ -1204,13 +1205,29 @@ function objectifDefaite(ctx: Contexte, v: unknown, chemin: string): ObjectifDef
   }
 }
 
-/** Lit une réplique de dialogue. */
+/**
+ * Lit une réplique de dialogue, et l'illustration qu'elle montre le cas échéant.
+ *
+ * La clé d'illustration est validée contre la liste **fermée** de `types.ts` :
+ * une clé inconnue est une faute de contenu, pas une image manquante à l'écran.
+ * Le rendu, lui, ne peut alors plus rien dessiner, et une vignette absente au
+ * milieu d'une explication vaut moins que rien — autant le dire ici.
+ */
 function dialogue(ctx: Contexte, v: unknown, chemin: string): Dialogue | undefined {
-  const o = objet(ctx, v, chemin, ['locuteur', 'texte', 'emotion']);
+  const o = objet(ctx, v, chemin, ['locuteur', 'texte', 'emotion', 'illustration']);
   if (!o || !requis(ctx, o, chemin, ['locuteur', 'texte'])) return undefined;
   cle(ctx, o['locuteur'], sous(chemin, 'locuteur'));
   chaine(ctx, o['texte'], sous(chemin, 'texte'), { max: 240 });
   if (presente(o, 'emotion')) enumeration(ctx, o['emotion'], sous(chemin, 'emotion'), EMOTIONS);
+  if (presente(o, 'illustration')) {
+    const cheminI = sous(chemin, 'illustration');
+    const i = objet(ctx, o['illustration'], cheminI, ['cle', 'legende']);
+    if (i && requis(ctx, i, cheminI, ['cle'])) {
+      enumeration(ctx, i['cle'], sous(cheminI, 'cle'), CLES_ILLUSTRATION);
+      // Une légende est une phrase sous une image, pas un second paragraphe.
+      if (presente(i, 'legende')) chaine(ctx, i['legende'], sous(cheminI, 'legende'), { max: 80 });
+    }
+  }
   return o as unknown as Dialogue;
 }
 

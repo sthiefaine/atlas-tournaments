@@ -30,7 +30,7 @@
       "terme": "Atlas",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "L'organisation qui gère le tournoi. Ne se traduit jamais."
+      "note": "L'organisation qui arbitre la guerre : elle homologue les fronts, contrôle les armes, tient le Registre. Ne se traduit jamais."
     },
     {
       "terme": "Atlas Tournament",
@@ -60,13 +60,7 @@
       "terme": "le Pacte du Terrain",
       "categorie": "nom_propre",
       "traduction": null,
-      "note": "Le texte fondateur des Jeux Tactiques."
-    },
-    {
-      "terme": "la Ronde",
-      "categorie": "nom_propre",
-      "traduction": null,
-      "note": "Le cycle de quatre ans du tournoi mondial."
+      "note": "Le texte qui borne la guerre : ce qu'on prend en gagnant, les armes déclarées, l'arbitrage extérieur."
     },
     {
       "terme": "la Dépêche du jour",
@@ -331,5 +325,5 @@
       "note": "Programme de fusion entièrement fictif. Conflit énergétique sérieux, affrontements non sanglants. Anéantir signifie mettre toutes les unités adverses hors jeu. Aucun récit de violence réelle."
     }
   ],
-  "majLe": "2026-09-10"
+  "majLe": "2026-09-12"
 }

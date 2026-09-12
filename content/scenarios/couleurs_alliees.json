@@ -1,10 +1,10 @@
 {
   "cle": "couleurs_alliees",
-  "version": 3,
+  "version": 4,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "couleurs_alliees",
   "nom": "Exhibition · Sous les couleurs alliées",
   "acte": 0,
@@ -66,19 +66,19 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Mon groupe est à vous pour ce **front d’essai**, sous les couleurs du Luxembourg : charges d’essai, arbitrage réel. Mon style privilégie la défense : mes unités encaissent mieux, et mon pouvoir renforce encore leur garde.",
+      "texte": "Mon groupe est à vous pour ce **front d’essai**, sous les couleurs du Luxembourg : charges d’essai, arbitrage réel. Mon style privilégie la défense : mes unités encaissent mieux que les vôtres.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois **postes d’arbitrage** de la vallée gardent les relevés de la Ronde : ce que chaque front a produit, et pour qui. Tenez-les tous les trois sous nos couleurs en même temps ; Ariane fera tout pour en garder un.",
+      "texte": "Les trois **postes** de la vallée gardent les relevés de l’année : ce que chaque front a produit, et pour qui. Tenez-les tous les trois en même temps ; Ariane fera tout pour en garder un.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois postes sont à nous, et les relevés avec. Ils portent une signature qu’aucun tableau ne nomme : **la Cinquième Manche**, écrite noir sur blanc pour la première fois. Votre instruction est finie ; la guerre commence.",
+      "texte": "Les trois postes sont à nous, et les relevés avec. Ils portent une signature qu’aucun tableau ne nomme : **la Cinquième Manche**, écrite noir sur blanc pour la première fois. La vraie guerre commence.",
       "emotion": "joie"
     }
   ],
@@ -99,12 +99,16 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Le brouillard couvre la vallée : on ne voit que ce que nos unités voient. **Vous vous souvenez du radar de la forêt ?** Vous l’aviez pris pour voir. Celui d’Ariane, au nord-est, sert à vous aveugler.",
-          "emotion": "neutre"
+          "texte": "Le brouillard couvre la vallée. **Vous vous souvenez du radar de la forêt ?** Vous l’aviez pris pour voir ; celui d’Ariane, à l’est, sert à vous aveugler.",
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "radar",
+            "legende": "Un radar voit loin, et brouille encore plus loin."
+          }
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "À douze cases de son radar, votre drone ne voit plus qu’à une. **Prenez la station**, et c’est nous qui verrons à cinq cases autour d’elle. Son brouilleur mobile, lui, ne se prend pas : il se détruit.",
+          "texte": "À douze cases de son radar, votre drone ne voit plus qu’à une. **Prenez la station**, et c’est nous qui verrons à cinq cases autour d’elle. Son brouilleur mobile, lui, ne se prend pas.",
           "emotion": "neutre"
         }
       ]
@@ -160,7 +164,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau : du courant sort de la vallée que personne n’a déclaré. Finissons ce front, nous lirons le troisième ensemble.",
+          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau : de l’énergie sort de la vallée que personne n’a déclarée. Finissons ce front, nous lirons le troisième ensemble.",
           "emotion": "doute"
         }
       ]

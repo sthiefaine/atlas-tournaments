@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_08",
   "code": "opus1_tutoriel_08",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "nom": "Entraînement 8 · Une ligne commune",
   "acte": 0,
   "paysCode": "fr",
@@ -73,22 +73,22 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Aujourd’hui, deux délégations, un seul ennemi. Tomas prend la passerelle du sud, votre groupe celle du nord. **Nous partageons ce que nos unités voient ; pas nos caisses, pas nos ordres.**",
+      "texte": "Aujourd’hui, deux équipes, un seul ennemi. Tomas prend la passerelle du sud, votre groupe celle du nord. **Nous partageons ce que nos unités voient ; pas nos caisses, pas nos ordres.**",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "En face, la Sélection Méridienne en personne : les Gris d’**Hadran Ost**. L’ancien Recordman, disqualifié il y a une Ronde pour une **arme sans dossier**, qui joue propre depuis et perd souvent.",
+      "texte": "En face, la Sélection Méridienne en personne : les Gris d’**Hadran Ost**. L’ancien Recordman, disqualifié il y a un an pour une **arme sans dossier**, qui joue propre depuis et perd souvent.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_hadran_ost",
-      "texte": "Bienvenue sur le front, commandant. Mes pièces portent le badge orange : prototypes sous observation, déclarés pour la journée. Prenez mon QG ou mettez mon groupe hors jeu avant J16 ; je ne fais pas de cadeaux, seulement des souvenirs.",
+      "texte": "Bienvenue sur le front, commandant. Mes pièces portent le badge orange : prototypes sous observation, déclarés pour la journée. Prenez mon QG ou mettez mon groupe hors jeu avant J16.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre transport peut ravitailler une pièce de Tomas depuis une case voisine ; elle reste à lui. **Ne finissez jamais un déplacement sur une case alliée.** Chaque délégation touche 500 fonds par bâtiment qu’elle possède.",
+      "texte": "Votre transport peut ravitailler une pièce de Tomas depuis une case voisine ; elle reste à lui. **Ne finissez jamais un déplacement sur une case alliée.** Chaque équipe touche 500 fonds par bâtiment.",
       "emotion": "neutre"
     },
     {
@@ -100,12 +100,12 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux commandements, une victoire commune. C’est ce qu’une **coalition** partage : la vue et la victoire. Le courant, chacun garde le sien ; ce sont les règles du Pacte, pas celles de Tomas.",
+      "texte": "Deux commandements, une victoire commune. C’est ce qu’une **coalition** partage : la vue et la victoire. L’énergie, chacun garde la sienne ; ce sont les règles du Pacte.",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Ost a serré la main à tout le monde et repris ses pièces. Solveig a noté l’heure du camion, comme pour n’importe qui : elle note tout. Demain, on met un contrat sur la table.",
+      "texte": "Ost a serré la main à tout le monde et repris ses pièces. Solveig a noté l’heure du camion, comme pour n’importe qui. Demain, on met un contrat sur la table.",
       "emotion": "neutre"
     }
   ],
@@ -131,12 +131,17 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "**Vous vous souvenez de la station à impulsion et du drone marin ?** Badge orange, dépôt gris : c’est le dépôt d’Ost. Officiellement, une force d’essai d’Atlas ; en vérité, l’armée que le **Consortium Méridien** paie.",
+          "texte": "**Vous vous souvenez de la station à impulsion et du drone marin ?** Badge orange, dépôt gris : celui d’Ost. Une force d’essai d’Atlas, dit-on ; en vérité, l’armée que le Consortium paie.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Je garde l’accès sud. Mon éclairage apparaît dans votre vision, mes unités restent sous mes ordres. Si l’une des vôtres manque de charges près de moi, dites-le : je ne peux pas la servir, vous si.",
+          "texte": "Entre nations, on rend le terrain à la fin et on garde ce qu’on a gagné. **La Cinquième Manche, elle, ne rend rien** : les sites qu’elle prend, les équipes qu’elle prend, elle les garde.",
+          "emotion": "neutre"
+        },
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Je garde l’accès sud. Ce que j’éclaire apparaît dans votre vision, mes unités restent sous mes ordres. Si une des vôtres manque de charges près de moi, je ne peux pas la servir : vous si.",
           "emotion": "neutre"
         }
       ]
@@ -150,7 +155,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Ce bâtiment remplit votre caisse, pas la sienne. **L’alliance partage la victoire et la vue, pas les fonds.** Solveig tient deux registres, un par délégation, et elle a raison.",
+          "texte": "Ce bâtiment remplit votre caisse, pas la sienne. **Une coalition partage la victoire et la vue, pas les fonds.** Solveig tient deux registres, un par équipe, et elle a raison.",
           "emotion": "neutre"
         }
       ]
@@ -163,7 +168,7 @@
       "repliques": [
         {
           "locuteur": "cmd_hadran_ost",
-          "texte": "Premier échange. Vous verrez que je ne fais rien d’interdit ; Vantour l’a assez racontée, ma dernière histoire. Deux passerelles, une seule artillerie chez moi : cherchez celle qu’elle ne couvre pas.",
+          "texte": "Premier échange. Vous verrez que je ne fais rien d’interdit ; Vantour l’a assez racontée, ma dernière histoire. Deux passerelles, une seule artillerie chez moi : cherchez celle qu’elle laisse.",
           "emotion": "neutre"
         }
       ]

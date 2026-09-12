@@ -1,10 +1,10 @@
 {
   "cle": "villes_du_bocage",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "villes_du_bocage",
   "nom": "Entraînement 2 · Les quatre villes",
   "acte": 0,
@@ -69,22 +69,27 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le bocage. Quatre villes, deux ponts, et Tomas en face qui veut les mêmes. Une ville que vous tenez rapporte des fonds chaque journée et **répare ce qui s’y repose**.",
+      "texte": "Des champs, des haies, deux ponts et quatre villes [[img:ville]] que Tomas veut aussi. Une ville que vous tenez rapporte des fonds chaque journée et **répare ce qui s’y repose**.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Ce que vous capturez s’appelle un **poste de distribution** : qui tient le poste décide où va le courant du quartier, et l’encaisse.",
+      "texte": "Ce que vous capturez est un **poste** : celui qui le tient décide où va l’énergie du quartier, et il l’encaisse.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Les gens qui y vivent ne changent pas de camp. C’est l’article premier du **Pacte du Terrain** : une concession attribue du courant, jamais une population. Leur socle civil reste hors de la guerre.",
+      "texte": "En gagnant, on prend les sites, les richesses et les savoirs — un gisement, une usine, un laboratoire, des plans — **et le terrain, tant qu’on le tient**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**Jamais les habitants** : c’est l’article premier du Pacte du Terrain. L’électricité de leurs maisons ne se prend pas, et personne n’a intérêt à ce que cet article tombe.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Celle du sud-est est désaffectée depuis la dernière Ronde : une infanterie mettra quatre tours à la remettre en service. Un génie le ferait en deux, mais Solveig n’en a pas mis dans mon camion.",
+      "texte": "Celle du sud-est est désaffectée — hors service — depuis l’an dernier : une infanterie mettra quatre tours à la relancer. Un génie en mettrait deux, mais Solveig n’en a pas mis dans mon camion.",
       "emotion": "neutre"
     },
     {
@@ -96,7 +101,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois villes sur quatre. Capturer, encaisser, recruter : c’est ce qui gagne un front long. Vantour dira que la France a « tenu le bocage » ; ce qu’elle tient, ce sont trois postes, et le courant qui passe par eux.",
+      "texte": "Trois villes sur quatre. Capturer, encaisser, recruter : c’est ce qui gagne un front long. Vantour dira que la France a « tenu la vallée » ; ce qu’elle tient, ce sont trois postes.",
       "emotion": "joie"
     },
     {
@@ -122,8 +127,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Vos couleurs flottent sur la ville. Dès la prochaine journée, elle rapporte **500 fonds** ; avec mille, votre QG recrute une infanterie.",
-          "emotion": "neutre"
+          "texte": "Vos couleurs flottent sur la ville. Dès la prochaine journée elle rapporte **500 fonds** ; avec mille, votre QG [[img:qg]] recrute une infanterie.",
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "ville",
+            "legende": "Une ville tenue rapporte chaque journée et répare."
+          }
         },
         {
           "locuteur": "cmd_ariane_belloc",
@@ -141,7 +150,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une ville pour moi, et son courant avec. Je l’inscris au registre de Solveig, elle aime les comptes justes : venez la reprendre, ou prenez-m’en une autre.",
+          "texte": "Une ville pour moi, et son énergie avec. Je l’inscris au registre de Solveig, elle aime les comptes justes : venez la reprendre, ou prenez-m’en une autre.",
           "emotion": "joie"
         }
       ]
@@ -155,7 +164,11 @@
         {
           "locuteur": "cmd_ariane_belloc",
           "texte": "Une recrue sort du QG. Elle jouera au prochain tour : **une unité produite ne bouge jamais le jour même**.",
-          "emotion": "neutre"
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "qg",
+            "legende": "Le QG recrute à pied ; l’usine sort les véhicules."
+          }
         }
       ]
     },
@@ -168,7 +181,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Les haies ralentissent les véhicules et protègent l’infanterie. Le char par les ponts, les fantassins par les bois : j’ai perdu mon premier front ici en faisant l’inverse, et il n’était pas à blanc.",
+          "texte": "Les haies ralentissent les véhicules et protègent l’infanterie. Le char par les ponts [[img:pont]], les fantassins par les bois [[img:foret]] : j’ai perdu mon premier front en faisant l’inverse.",
           "emotion": "neutre"
         }
       ]

@@ -19,7 +19,7 @@
     {
       "cle": "veteran",
       "libelle": "Le vétéran",
-      "temperament": "Bourru, protecteur, plein d'anecdotes de Rondes passées",
+      "temperament": "Bourru, protecteur, plein d'anecdotes des guerres passées",
       "famillePouvoir": "Vétérance : unités promues qui gardent leurs bonus, remise en état d'une unité marquée, moral d'équipe",
       "courbe": "Régulière, cumule sur la durée",
       "contrePar": ["meteorologue", "prodige"]

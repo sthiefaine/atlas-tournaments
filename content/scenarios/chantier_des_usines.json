@@ -1,10 +1,10 @@
 {
   "cle": "chantier_des_usines",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "chantier_des_usines",
   "nom": "Entraînement 3 · Le chantier des usines",
   "acte": 0,
@@ -61,17 +61,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le terrain sec du centre d’instruction. Deux usines **désaffectées** par la dernière Ronde : celle du milieu, et celle de l’est, à mi-chemin du QG de Tomas. Une usine remise en service produit pour qui l’a relancée.",
+      "texte": "Le terrain sec du centre d’instruction. Deux usines [[img:usine]] hors service depuis l’an dernier : celle du milieu, celle de l’est. **Une usine relancée produit pour qui l’a relancée.**",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre génie est un bâtisseur : il ne capture pas, il **remet en service, en deux tours**. Une infanterie en met quatre, celles de Tomas aussi.",
+      "texte": "Votre génie [[img:unite_genie]] est un bâtisseur : il ne capture pas, il **remet en service, en deux tours**. Une infanterie en met quatre, celles de Tomas aussi.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Cliquez sur votre usine, près du QG : elle produit chars, artillerie et transports ; le QG ne produit que l’infanterie et le génie. **Produire sur place**, c’est ne plus attendre un convoi qui peut ne pas arriver.",
+      "texte": "Cliquez sur votre usine, près du QG : elle produit chars, artillerie et transports ; le QG ne fait que l’infanterie et le génie. **Produire sur place**, c’est ne plus attendre un convoi.",
       "emotion": "neutre"
     },
     {
@@ -81,14 +81,14 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Chaque pièce qui sort porte un dossier signé par **Wren Osoko**, le contrôle des armements d’Atlas. **Toute arme sur un front est déclarée** : c’est l’article deux du Pacte. On vous montrera bientôt des armes qui n’en ont pas.",
+      "texte": "Chaque pièce qui sort porte un dossier signé par **Wren Osoko**, le contrôle des armements d’Atlas : **toute arme sur un front est déclarée**. Bientôt, vous en verrez qui ne le sont pas.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une pièce pour une cible, remettre un bâtiment en service. Au front, c’est le génie qui décide du rythme. Demain, la marée ; Solveig a réservé la traversée.",
+      "texte": "Deux usines sous vos couleurs. Vous savez recruter, choisir une pièce pour une cible, relancer un bâtiment. Au front, c’est le génie qui décide du rythme. Demain, la marée.",
       "emotion": "joie"
     }
   ],
@@ -109,8 +109,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille si c’est le génie. Dès demain elle produit pour vous. C’est **un droit d’exploitation**, pas un bâtiment qu’on emporte.",
-          "emotion": "neutre"
+          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille pour le génie. C’est **le droit de s’en servir**, pas un bâtiment qu’on emporte.",
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "usine",
+            "legende": "Relancée aujourd’hui, elle produit dès demain."
+          }
         }
       ]
     },
@@ -123,8 +127,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "De l’artillerie. Elle frappe **à deux ou trois cases sans riposte**, jamais après avoir bougé, jamais au contact. Posez-la derrière l’infanterie et laissez-la travailler.",
-          "emotion": "neutre"
+          "texte": "De l’artillerie. Elle frappe **à deux ou trois cases sans riposte**, jamais après avoir bougé, jamais au contact. Posez-la derrière l’infanterie.",
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "unite_artillerie",
+            "legende": "Elle tire loin ; de près, elle ne se défend pas."
+          }
         }
       ]
     },
@@ -137,7 +145,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Un char léger. Il écrase l’infanterie et le recon ; l’artillerie et un char lourd lui font mal. **Lisez la prévision de duel** avant de confirmer : chaque pièce a sa cible.",
+          "texte": "Un char léger [[img:unite_char_leger]]. Il écrase l’infanterie ; l’artillerie et un char lourd lui font mal. **Lisez la prévision de duel** [[img:duel]] avant de confirmer.",
           "emotion": "neutre"
         }
       ]

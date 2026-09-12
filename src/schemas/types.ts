@@ -758,11 +758,53 @@ export const EMOTIONS = ['neutre', 'joie', 'colere', 'surprise', 'doute', 'triom
 /** Émotion d'une réplique de dialogue. */
 export type Emotion = typeof EMOTIONS[number];
 
+/**
+ * Les **illustrations** qu'une réplique peut montrer (`10-rendu-3d.md` §11).
+ *
+ * Une règle expliquée avec des mots — « les cases vertes sont celles où il peut
+ * aller » — se montre en une vignette. La liste est **fermée** et déclarée ici,
+ * et nulle part ailleurs : chaque clé est dessinée par `render/illustrations.ts`
+ * et nommée par une chaîne `illustration.<cle>` ; en ouvrir une nouvelle se fait
+ * donc en trois endroits, jamais par une chaîne libre écrite dans un scénario.
+ *
+ * Le vocabulaire suit celui de la fiction quand il s'en écarte : un **poste**
+ * est le poste de distribution que l'on capture, une **réserve** est le stock de
+ * fonds dont parlent les commandants — les deux valent en plus des terrains
+ * `ville` et `qg`, qui sont ce que le moteur, lui, appelle ces cases.
+ */
+export const CLES_ILLUSTRATION = [
+  // Les cinq genres de surbrillance, moins `danger` : une case peinte.
+  'case_verte', 'case_rouge', 'case_or', 'case_bleue',
+  // Les gestes et les repères de l'interface.
+  'fleche_chemin', 'curseur', 'duel', 'jauge_pouvoir', 'bouton_fin_tour',
+  'brouillard', 'impulsion', 'radar',
+  // Les lieux : ceux de la fiction, puis ceux du terrain.
+  'reserve', 'poste', 'usine', 'qg', 'ville', 'foret', 'montagne', 'pont', 'riviere',
+  // Les six unités des premiers exercices, dessinées par leur silhouette.
+  'unite_infanterie', 'unite_meca', 'unite_genie',
+  'unite_char_leger', 'unite_artillerie', 'unite_transport',
+] as const;
+/** Clé d'une illustration de réplique. */
+export type CleIllustration = typeof CLES_ILLUSTRATION[number];
+
+/**
+ * Une vignette montrée à côté d'une réplique, avec sa légende facultative.
+ *
+ * C'est l'illustration **de la réplique entière**, à la taille d'une image ; le
+ * pictogramme `[[img:cle]]` glissé dans le `texte` est le même dessin à la
+ * taille d'un mot. Les deux tirent de la même liste fermée.
+ */
+export interface Illustration {
+  cle: CleIllustration;
+  legende?: string;
+}
+
 /** Réplique d'un dialogue de scénario. */
 export interface Dialogue {
   locuteur: Cle;
   texte: string;
   emotion?: Emotion;
+  illustration?: Illustration;
 }
 
 /** Ce qui peut ouvrir une scène de dialogue pendant un match. */

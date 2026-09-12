@@ -61,9 +61,9 @@ export type Traduire = (cle: string, params?: Record<string, string | number>) =
  * scénarios effectifs.
  */
 const REPLIQUES_BANC = {
-  pacte_du_col_echange: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Formation terminée : voici votre première qualification officielle. Vantour est à l’antenne, Nera Aldouin arbitre, et nous échangeons les bancs pour cette épreuve : vous jouez mes couleurs et mon matériel, Ariane tient le mien. Elle joue pour gagner, c’est la règle.' },
-  couleurs_transport: { locuteur: 'cmd_ariane_belloc', emotion: 'joie', texte: 'Vous avez déjà joué les couleurs de Tomas au col, commandant. L’Intendance vous laisse un transport de plus à la deuxième journée ; je n’ai pas oublié comment vous vous en servez.' },
-  nuit_fonds: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous avez tenu mon banc au détour des batteries. L’Intendance a validé mille cinq cents fonds de plus pour la ligne de nuit : ne les gardez pas pour la fin.' },
+  pacte_du_col_echange: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Formation terminée : voici votre premier vrai front. Vantour est à l’antenne, Nera Aldouin arbitre, et nous échangeons les bancs pour cette épreuve : vous jouez mes couleurs et mon matériel, Ariane tient le mien. Elle joue pour gagner, c’est la règle.' },
+  couleurs_transport: { locuteur: 'cmd_ariane_belloc', emotion: 'joie', texte: 'Vous avez déjà joué les couleurs de Tomas au col, commandant. Le bureau d’Atlas vous laisse un transport de plus à la deuxième journée ; je n’ai pas oublié comment vous vous en servez.' },
+  nuit_fonds: { locuteur: 'cmd_tomas_reiner', emotion: 'neutre', texte: 'Vous avez tenu mon banc au détour des batteries. Le bureau d’Atlas a validé mille cinq cents fonds de plus pour la ligne de nuit : ne les gardez pas pour la fin.' },
   routes_solveig: { locuteur: 'cmd_ariane_belloc', emotion: 'doute', texte: 'Solveig ne l’a pas oublié : vous avez tenu son banc sur la ligne de nuit. Ce soir elle est en face, et elle sait exactement comment vous couvrez un convoi.' },
   routes_wren: { locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Wren a homologué votre relevé de la ligne de nuit, joué sous ses couleurs. Trois délégations d’un côté, Solveig de l’autre : voyez loin avant d’avancer.' },
 } as const satisfies Record<string, Dialogue>;

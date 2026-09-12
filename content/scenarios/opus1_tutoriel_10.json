@@ -1,11 +1,11 @@
 {
   "cle": "opus1_tutoriel_10",
   "code": "opus1_tutoriel_10",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "nom": "Entraînement 10 · La première promesse",
   "acte": 0,
   "paysCode": "fr",
@@ -66,7 +66,7 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Dernier exercice, et il rassemble tout : prenez le QG de Tomas ou mettez son groupe hors jeu avant **J18**. Ses réserves sont fixes, sans revenu ; les vôtres grossissent avec vos bâtiments, et votre usine complète le groupe.",
+      "texte": "Dernier exercice, et il rassemble tout : prenez le QG de Tomas ou mettez son groupe hors jeu avant **J18**. Ses réserves sont fixes ; les vôtres grossissent avec vos bâtiments.",
       "emotion": "neutre"
     },
     {
@@ -76,12 +76,12 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "À la victoire, on vous demandera une signature. Le **Consortium Méridien**, le sponsor de la Ronde, celui qui finance les Gris, prête ses réserves aux délégations qui se qualifient. Sa négociatrice s’appelle **Sélène Veyr**.",
+      "texte": "À la victoire, on vous demandera une signature. Le **Consortium Méridien**, le grand sponsor de la guerre, celui qui paie les Gris, prête ses réserves aux équipes qualifiées. Sa négociatrice : **Sélène Veyr**.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Ce prêt est une **concession**, la première que vous signerez, et Tomas et moi ne sommes pas d’accord sur sa forme. Votre choix restera dans ce profil ; rejouer cet exercice ne recharge rien. En difficile, Tomas joue pondéré.",
+      "texte": "Ce prêt est une **concession**, la première que vous signerez, et Tomas et moi ne sommes pas d’accord sur sa forme. Votre choix restera dans ce profil. En difficile, Tomas joue pondéré.",
       "emotion": "doute"
     }
   ],
@@ -98,12 +98,12 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Option deux : **fonds immédiats**. Deux mille fonds tout de suite, au col, où votre génie devra ouvrir un passage à quinze cents. Je vous ai appris à ne pas payer trop cher une victoire ; ici, la note arrive plus tard.",
+      "texte": "Option deux : **fonds immédiats**. Deux mille fonds tout de suite, au col, où votre génie devra ouvrir un passage à quinze cents. Je vous ai appris à ne pas payer trop cher une victoire.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Sachez pourquoi ils prêtent. Le Consortium veut **Aube**, le programme de fusion : la seule technologie qui rendrait inutile tout ce que cette guerre dispute. Une délégation endettée vote comme on lui dit.",
+      "texte": "Sachez pourquoi ils prêtent. Le Consortium veut **Aube**, le programme de fusion : la seule technologie qui rendrait inutile tout ce que cette guerre dispute. Une équipe endettée vote comme on lui dit.",
       "emotion": "neutre"
     },
     {
@@ -133,7 +133,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Vous vous souvenez du premier échange, au bocage ?** L’unité frappée riposte avec ce qui lui reste. Dix exercices plus tard, la règle n’a pas changé ; ce qui change demain, c’est que la riposte tue.",
+          "texte": "**Vous vous souvenez du premier échange, au premier exercice ?** L’unité frappée riposte avec ce qui lui reste. Dix exercices plus tard, la règle n’a pas changé ; demain, la riposte tue.",
           "emotion": "neutre"
         }
       ]
@@ -160,7 +160,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Quarante points pour un QG** : quatre tours d’une infanterie intacte, couverte tout du long, comme sur la presqu’île. C’est la dernière chose que je vous dis en exercice ; après, je vous le dirai au front.",
+          "texte": "**Quarante points pour un QG** [[img:qg]] : quatre tours d’une infanterie intacte, couverte tout du long, comme sur la presqu’île. C’est la dernière fois que je vous le dis en exercice.",
           "emotion": "neutre"
         }
       ]

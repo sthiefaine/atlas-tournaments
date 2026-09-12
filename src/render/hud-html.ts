@@ -22,7 +22,8 @@ import {
 } from '../engine/index';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
-  CampId, Case, CleTerrain, CleUnite, DureePouvoir, EffetModificateur, EffetPouvoir, Meteo, Silhouette,
+  CampId, Case, CleIllustration, CleTerrain, CleUnite, DureePouvoir, EffetModificateur,
+  EffetPouvoir, Meteo, Silhouette,
 } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
@@ -33,7 +34,7 @@ import {
 import {
   alerteCarburant, alerteMunitions, ficheUnite, porte, type Alerte, type Duel,
 } from './fiche-unite';
-import { htmlGras } from './gras';
+import { CLASSE_PICTOGRAMME, htmlRiche, STYLE_ILLUSTRATIONS } from './illustrations';
 import { usineSousIem } from './iem';
 import { paletteDe } from './palettes';
 import type { Partition } from './partition';
@@ -831,6 +832,10 @@ const STYLE = `
   .atlas-hud .production-liste .tt{flex:none;max-width:100%;font-size:var(--t2);text-align:center}
 }
 @media(prefers-reduced-motion:reduce){.atlas-hud *,.atlas-tour{animation:none!important;transition:none!important}}
+/* Le pictogramme d'une annonce est mesuré en em : il suit la taille du bandeau,
+   qui n'est pas celle d'une boîte de dialogue. */
+${STYLE_ILLUSTRATIONS}
+.atlas-hud .annonce .${CLASSE_PICTOGRAMME}{vertical-align:-.24em}
 `;
 
 /** Injecte la feuille de style du HUD si le document ne l'a pas encore. */
@@ -1969,9 +1974,15 @@ export function monterHudHtml(
       + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t(sontAllies(v.etat, v.etat.campCourant, v.camp) ? 'hud.tour_allie' : 'hud.tour_adverse'))}</div></div></div>`;
   }
 
+  /**
+   * Le bandeau d'annonce. Il porte le gras des scénaristes, et le pictogramme
+   * avec : une annonce arrive parfois d'une réplique, et la syntaxe qui vit
+   * dans les dialogues ne doit pas se rendre en crochets dès qu'elle en sort.
+   */
   function panneauAnnonce(v: VueJeu): string {
     if (!v.annonce) return '';
-    return `<div class="p annonce"><div class="in"><div class="tt">${htmlGras(v.annonce, ech)}</div></div></div>`;
+    const nomIllu = (cle: CleIllustration): string => api.t(`illustration.${cle}`);
+    return `<div class="p annonce"><div class="in"><div class="tt">${htmlRiche(v.annonce, ech, nomIllu)}</div></div></div>`;
   }
 
   /**

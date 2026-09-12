@@ -1,10 +1,10 @@
 {
   "cle": "qg_de_la_presquile",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "qg_de_la_presquile",
   "nom": "Entraînement 4 · Le QG de la presqu’île",
   "acte": 0,
@@ -50,22 +50,22 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La presqu’île. Ce bassin reproduit les marées de la côte : **marée basse, la grève** entre les deux plages s’ouvre et le trajet est court ; marée haute, il reste le pont du sud.",
+      "texte": "La presqu’île. Ce bassin reproduit les marées de la côte : **à marée basse, le sable découvert** entre les deux plages s’ouvre et le trajet est court ; à marée haute, il reste le pont du sud.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le **Bulletin d’engagement**, en haut à droite, annonce la marée deux journées à l’avance. Il est exact, c’est la règle : Atlas ne surprend jamais un commandant, ni avec le temps, ni avec une arme.",
+      "texte": "Le **Bulletin d’engagement**, en haut à droite, annonce la marée deux journées à l’avance, et il ne se trompe pas : Atlas ne surprend jamais un commandant, ni avec le temps, ni avec une arme.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Atlas ne fait pas la guerre, elle l’arbitre : elle homologue les fronts, déclare les armes, tient les comptes. Ce bassin est un **front homologué** d’instruction ; le prochain sera réel.",
+      "texte": "Atlas ne fait pas la guerre, elle l’arbitre : elle déclare les fronts et les armes, elle tient les comptes. Ce bassin est un front **officiel** d’instruction ; le prochain sera réel.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Prenez le QG de Tomas. **Quarante points, quatre tours d’une infanterie intacte** sous le feu, et la partie s’arrête à l’instant où le QG change de mains. Couvrez-la.",
+      "texte": "Prenez le QG [[img:qg]] de Tomas : **quarante points, quatre tours d’une infanterie intacte** sous le feu. La partie s’arrête à l’instant où il change de mains. Couvrez-la.",
       "emotion": "neutre"
     },
     {
@@ -103,7 +103,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La marée monte. Une unité restée sur la grève est **repoussée à terre**, sans dommage : les arbitres de terrain la déplacent. Le passage rouvre à la quatrième journée ; attendez sur la plage, ou passez par le pont.",
+          "texte": "La marée monte. Une unité restée sur le sable est **repoussée à terre**, sans dommage : les arbitres la déplacent. Le passage rouvre à la quatrième journée ; sinon, le pont [[img:pont]].",
           "emotion": "neutre"
         }
       ]
@@ -117,7 +117,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Marée basse pour deux journées. C’est maintenant que ça traverse. Un recon passe le pont en une journée, une infanterie en trois : votre usine vend **un transport** pour l’emmener.",
+          "texte": "Marée basse pour deux journées : c’est maintenant que ça traverse. Un recon passe le pont en une journée, une infanterie en trois — votre usine vend **un transport** [[img:unite_transport]].",
           "emotion": "neutre"
         }
       ]
@@ -131,8 +131,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Jauge pleine, pouvoir déclenché. Il ne dure qu’une journée : **gardez-le pour l’assaut du QG**, pas pour une escarmouche.",
-          "emotion": "triomphe"
+          "texte": "Jauge pleine, pouvoir déclenché. Il ne dure qu’une journée : **gardez-le pour l’assaut du QG**, pas pour un échange sans importance.",
+          "emotion": "triomphe",
+          "illustration": {
+            "cle": "jauge_pouvoir",
+            "legende": "La jauge monte quand vous frappez et quand vous encaissez."
+          }
         }
       ]
     },
@@ -145,7 +149,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une unité hors jeu, et son équipage rentre au dépôt parce que les charges sont à blanc. Mon groupe tient, il n’attaque pas. Ne vous usez pas contre ma garde : contournez-la.",
+          "texte": "Une unité hors jeu ; à blanc, son équipage rentre au dépôt. Mon groupe tient, il n’attaque pas : ne vous usez pas contre ma garde, contournez-la.",
           "emotion": "doute"
         }
       ]

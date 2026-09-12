@@ -1,10 +1,10 @@
 {
   "cle": "pacte_du_col",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "pacte_du_col",
   "nom": "Qualification · Le pacte du col",
   "acte": 0,
@@ -67,17 +67,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Formation terminée : voici votre premier **engagement homologué**. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc. Il se bat pour gagner, c’est la règle.",
+      "texte": "Formation terminée : voici votre premier **engagement officiel**. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc. Il se bat pour gagner, c’est la règle.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le Pacte a un quatrième article : **le refus de se battre se paie plus cher que la défaite**. Deux délégations inscrites sur le même front s’affrontent, ou perdent toutes les deux. Les charges sont réelles.",
+      "texte": "Le Pacte a un quatrième article : **le refus de se battre se paie plus cher que la défaite**. Deux équipes inscrites sur le même front s’affrontent, ou perdent toutes les deux. Les charges sont réelles.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais vous devrez protéger **le char qui porte les relevés du col** jusqu’à la case en or : c’est lui qu’Atlas regarde, et c’est lui que Tomas vise.",
+      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais protégez **le char qui porte les relevés** jusqu’à la case [[img:case_or]] : c’est lui qu’Atlas regarde, et lui que Tomas vise.",
       "emotion": "neutre"
     }
   ],
@@ -96,7 +96,7 @@
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le front est perdu, et cette fois les pièces ne rentrent pas toutes. Personne ne quitte la délégation pour autant. Reprenons le briefing et essayons un autre chemin.",
+      "texte": "Le front est perdu, et cette fois les pièces ne rentrent pas toutes. Personne ne quitte l’équipe pour autant. Reprenons le briefing et essayons un autre chemin.",
       "emotion": "doute"
     }
   ],
@@ -111,7 +111,11 @@
         {
           "locuteur": "cmd_tomas_reiner",
           "texte": "Le génie est sorti d’usine. Il n’attaque pas, mais il **pose un terrain** là où il n’y en avait pas : c’est lui qui ouvre le col.",
-          "emotion": "neutre"
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "montagne",
+            "legende": "Une route ouverte dans la montagne, et le passage existe."
+          }
         },
         {
           "locuteur": "cmd_tomas_reiner",
@@ -133,7 +137,7 @@
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Vous vous souvenez de la crête, au cinquième exercice ?** Ce qui tire de loin ne riposte pas au contact. Si Tomas pose de l’artillerie, allez la chercher avec un char, jamais avec celui des relevés.",
+          "texte": "**Vous vous souvenez de la crête, au cinquième exercice ?** Ce qui tire de loin ne riposte pas au contact. Allez chercher son artillerie avec un char, jamais avec celui des relevés.",
           "emotion": "neutre"
         }
       ]
@@ -147,7 +151,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit tombe, et le brouillard avec, comme dans la forêt du sixième exercice. Mais personne ne vous rendra une pièce perdue à l’aveugle. **Éclairez avant d’avancer** ; le col ne bouge pas, lui.",
+          "texte": "La nuit tombe, et le brouillard [[img:brouillard]] avec, comme dans la forêt du sixième exercice. Mais personne ne vous rendra une pièce perdue sans avoir vu. **Éclairez avant d’avancer.**",
           "emotion": "neutre"
         }
       ]

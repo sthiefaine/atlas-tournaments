@@ -17,9 +17,11 @@
  * `jeu.ts` lui donne, et n'appelle jamais `t()` sur autre chose qu'une clé.
  */
 
-import type { CampId, Emotion } from '../schemas/types';
+import type { CampId, CleIllustration, Emotion } from '../schemas/types';
 import type { RepliqueEnAttente } from './dialogues';
-import { segmenter } from './gras';
+import {
+  CLASSE_VIGNETTE, pictogramme, segmenterRiche, STYLE_ILLUSTRATIONS, vignetteIllustration,
+} from './illustrations';
 import { paletteDe } from './palettes';
 
 /** Ce que la scène peut demander au jeu. Aucun de ces appels ne mute un état. */
@@ -76,7 +78,14 @@ const STYLE = `
 /* L'humeur est une **étiquette**, pas une note en bas de page : elle se lit sur
    la même bande que le nom, en creux dans sa peinture. */
 .atlas-scene .nom .humeur{margin-left:auto;padding:2px 8px;background:#0b1a2226;font-size:11px;letter-spacing:.1em;font-weight:800}
-.atlas-scene .texte{padding:15px 16px 16px;min-height:5.6em;white-space:pre-wrap;font-size:clamp(15px,1.7vw,18px)}
+/* Le corps de la boîte : la vignette de la réplique à gauche du texte, et le
+   texte qui garde toute sa place. C'est le retour à la ligne qui la couche
+   quand la ligne devient trop courte — la mesure est au CSS, pas au montage,
+   sinon la boîte déciderait de sa mise en page une fois pour toutes au moment
+   où la réplique paraît, et un pivotement d'écran la laisserait fausse. */
+.atlas-scene .corps{display:flex;flex-wrap:wrap;align-items:flex-start;gap:0 14px;padding:15px 16px 16px}
+.atlas-scene .corps .texte{flex:1 1 14em;padding:0}
+.atlas-scene .texte{min-height:5.6em;white-space:pre-wrap;font-size:clamp(15px,1.7vw,18px)}
 .atlas-scene .texte b{font-weight:inherit;visibility:hidden}
 /* Le gras des scénaristes (gras.ts) : la lettre hérite du poids de son
    segment, et la frappe ne fait que lever la visibilité — la balise ne se
@@ -113,6 +122,12 @@ const STYLE = `
   .atlas-scene .boite,.atlas-scene[data-cote='droite'] .boite{border:2px solid var(--lisere);display:flex;flex-direction:column;max-height:calc(100dvh - 180px)}
   .atlas-scene .nom{padding:10px 12px;letter-spacing:.06em;flex-wrap:wrap;font-size:12px;flex:none}
   .atlas-scene .texte{min-height:0;margin:0;padding:16px;font-size:16px;line-height:1.55;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+  /* Sur un téléphone, la vignette se couche **au-dessus** du texte et se
+     centre : à 390 px, une image de 96 px à côté ne laisserait pas de quoi
+     lire une phrase française, qui est un tiers plus longue que l'anglaise. */
+  .atlas-scene .corps{display:block;padding:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+  .atlas-scene .corps .texte{padding:12px 16px 16px;overflow:visible}
+  .atlas-scene .corps .${CLASSE_VIGNETTE}{margin:12px auto 0;width:clamp(56px,22vw,84px)}
   .atlas-scene .pied{flex:none;padding:4px 6px 6px 14px;border-top:1px solid #ffffff18}
   .atlas-scene .suite{background:var(--signal);color:#132630;min-width:116px;font-size:13px;justify-content:center;letter-spacing:.06em}
   .atlas-scene .passer{top:auto;bottom:calc(12px + env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));font-size:12px}
@@ -123,7 +138,7 @@ const STYLE = `
   .atlas-scene .texte{min-height:4.4em}
 }
 @media(prefers-reduced-motion:reduce){.atlas-scene *{animation:none!important}}
-`;
+${STYLE_ILLUSTRATIONS}`;
 
 /**
  * Le HTML du texte d'une réplique : **une lettre par `<b>`**, que la frappe
@@ -131,12 +146,19 @@ const STYLE = `
  * `<strong>` qui enveloppe ses lettres. La frappe traverse ainsi un segment
  * gras sans jamais couper une balise : elle ne connaît que des `<b>`, et le
  * `<strong>` est posé une fois pour toutes. Pure et exportée pour le test.
+ *
+ * **Un pictogramme `[[img:cle]]` est une lettre de plus** (`illustrations.ts`) :
+ * un seul `<b>` qui contient tout le SVG. C'est ce qui garantit que la frappe
+ * ne le coupe jamais — elle ne sait pas qu'il existe, elle lève sa visibilité
+ * comme celle d'un caractère, et le dessin paraît d'un coup à son tour.
  */
-export function htmlReplique(texte: string): string {
-  return segmenter(texte)
+export function htmlReplique(texte: string, nomDe?: (cle: CleIllustration) => string): string {
+  return segmenterRiche(texte)
     .map((s) => {
-      const lettres = [...s.texte].map((c) => `<b>${ech(c)}</b>`).join('');
-      return s.gras ? `<strong>${lettres}</strong>` : lettres;
+      const contenu = s.genre === 'image'
+        ? `<b>${pictogramme(s.cle, nomDe)}</b>`
+        : [...s.texte].map((c) => `<b>${ech(c)}</b>`).join('');
+      return s.gras ? `<strong>${contenu}</strong>` : contenu;
     })
     .join('');
 }
@@ -284,7 +306,14 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
     // traduit : aucune clé nouvelle pour une information que la scène affiche.
     racine.setAttribute('aria-label', api.nomLocuteur(r.locuteur));
     // Une lettre par `<b>` : la frappe se contente de lever la visibilité.
-    const lettres = htmlReplique(r.texte);
+    const nomIllu = (cle: CleIllustration): string => api.t(`illustration.${cle}`);
+    const lettres = htmlReplique(r.texte, nomIllu);
+    // La vignette de la réplique, quand elle en montre une : une image et sa
+    // légende, dans la boîte, au-dessus du texte. C'est le CSS qui décide où
+    // elle se pose et ce qu'elle mesure — jamais une décision prise ici.
+    const vignette = r.illustration
+      ? vignetteIllustration(r.illustration.cle, r.illustration.legende, ech, nomIllu)
+      : '';
     const jalons = Array.from(
       { length: r.total },
       (_, i) => `<i class="${i < r.rang ? 'faite' : ''}"></i>`,
@@ -296,7 +325,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
       + '<div class="boite">'
       + `<div class="nom">${ech(api.nomLocuteur(r.locuteur))}`
       + `<span class="humeur">${ech(api.t(`emotion.${r.emotion}`))}</span></div>`
-      + `<p class="texte">${lettres}</p>`
+      + `<div class="corps">${vignette}<p class="texte">${lettres}</p></div>`
       + `<div class="pied"><span class="jalons" aria-hidden="true">${jalons}</span>`
       + `<button type="button" class="suite" data-action="suivante">${ech(api.t('dialogue.suivant'))} <span aria-hidden="true">▶</span></button></div>`
       + '</div></div>';

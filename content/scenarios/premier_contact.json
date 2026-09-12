@@ -1,10 +1,10 @@
 {
   "cle": "premier_contact",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "premier_contact",
   "nom": "Entraînement 1 · Premier contact",
   "acte": 0,
@@ -50,22 +50,22 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Bienvenue au **camp d’instruction du bocage**, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le perdre.",
+      "texte": "Bienvenue au **camp d’instruction**, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le perdre.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le monde est en guerre depuis quatorze Rondes, et la guerre a un objet : **le courant**. On ne prend pas un pays, on prend ses champs solaires et ses réserves. Nous sommes dans la **Ronde XIV**, et vous y entrez.",
+      "texte": "Le monde est en guerre depuis quatorze ans, et il se bat pour **l’énergie et les machines qui la font**. On ne prend pas un pays : on prend ses barrages, ses usines, ses plans. Nous sommes en **an 14**.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et des charges à blanc : « rends-les en bon état ». Ma patrouille est de l’autre côté de la rivière, venez la chercher.",
+      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et des charges à blanc : « rends-les en bon état ». Ma patrouille attend de l’autre côté de la rivière [[img:riviere]].",
       "emotion": "joie"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : **en vert, où il peut aller ; en rouge, ce qu’il peut frapper** après le déplacement. Le pont du nord est à lui.",
+      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : il ira sur les cases [[img:case_verte]] et frappera les [[img:case_rouge]]. Le pont du nord est à lui.",
       "emotion": "neutre"
     }
   ],
@@ -77,7 +77,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Solveig récupère mes pièces ce soir, toutes les trois, et personne n’a rien. Demain, on parle d’argent : c’est avec le courant qu’on paie une guerre.",
+      "texte": "Solveig récupère mes trois pièces ce soir, et personne n’a rien. Demain, on parle d’argent : une guerre se paie avec ce qu’on lui prend.",
       "emotion": "neutre"
     }
   ],
@@ -98,11 +98,15 @@
         {
           "locuteur": "cmd_ariane_belloc",
           "texte": "Premier échange. **L’unité frappée riposte aussitôt**, avec les points qui lui restent : frapper en premier, c’est encaisser moins.",
-          "emotion": "neutre"
+          "emotion": "neutre",
+          "illustration": {
+            "cle": "duel",
+            "legende": "Les deux camps se lisent avant que vous confirmiez."
+          }
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Et regardez où je me tenais. **Deux étoiles de défense dans la forêt, zéro sur un pont** : le terrain compte avant le matériel.",
+          "texte": "Et regardez où je me tenais. **Deux étoiles de défense dans le bois** [[img:foret]], zéro sur un pont [[img:pont]] : le terrain compte avant le matériel.",
           "emotion": "neutre"
         }
       ]
@@ -116,12 +120,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une pièce hors jeu. À blanc, mon équipage descend et va boire un café. Au front, **une pièce hors jeu, c’est un équipage qu’on ne revoit pas** : Atlas compte des pièces, nous comptons des gens.",
+          "texte": "Une pièce hors jeu. À blanc, mon équipage rentre à pied. Au front, **une pièce hors jeu, c’est un équipage qu’on ne revoit pas** : Atlas compte des pièces, nous comptons des gens.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre char ne traverse que par le pont ; son infanterie passe la rivière à pied. Ne vous laissez pas attirer à découvert.",
+          "texte": "Votre char ne traverse que par le pont [[img:pont]] ; son infanterie [[img:unite_infanterie]] passe la rivière à pied. Ne vous laissez pas attirer à découvert.",
           "emotion": "neutre"
         }
       ]
@@ -149,12 +153,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre QG verse des fonds à chaque journée : c’est le courant que le front vous avance. Cliquez dessus quand la caisse passe mille, **il recrute une infanterie**.",
+          "texte": "Votre QG [[img:qg]] verse des fonds à chaque journée. Cliquez dessus quand la caisse passe mille : **il recrute une infanterie**.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Ces fonds, c’est **Atlas** qui les compte. Atlas ne fait pas la guerre, elle l’arbitre : elle dit où l’on se bat, avec quoi, et elle inscrit ce que chaque front rapporte.",
+          "texte": "Ces fonds, c’est **Atlas** qui les compte. Atlas ne fait pas la guerre, elle l’arbitre : elle dit où l’on se bat, avec quoi, et note ce que chaque front rapporte.",
           "emotion": "neutre"
         }
       ]
