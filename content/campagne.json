@@ -1,6 +1,6 @@
 {
   "titre": "Les dix exercices d’Atlas",
-  "introduction": "Vous entrez à la **sélection française** pour l’an 14 de la guerre. Le monde se bat pour l’énergie et pour l’avance technologique ; Ariane Belloc vous forme en dix exercices à charges à blanc, Tomas Reiner vous donne la réplique, Solveig déplace tout le monde et Vantour commente. Ce qu’on prend en gagnant — des sites, des usines, des savoirs, jamais les habitants — s’explique en chemin. **Les objectifs sont signalés en or.**",
+  "introduction": "Vous rejoignez la **sélection française**. Ariane vous apprend à commander ; Tomas, votre partenaire d’entraînement, compte bien vous battre. Dix exercices pour déplacer vos unités, protéger vos équipages et gagner ensemble. Dehors, les nations se disputent l’énergie. Ici, vous avez le droit d’essayer et de recommencer. **Les objectifs sont signalés en or.**",
   "missions": [
     {
       "scenarioCle": "premier_contact",
@@ -8,13 +8,13 @@
       "biome": "plaine",
       "objectif": "Mettre hors jeu les trois unités de la patrouille de Tomas.",
       "conseil": "Votre char passe par le **pont du nord** et frappe le premier ; l’infanterie traverse la rivière à pied, plus lentement. **Deux unités sur une cible** valent mieux qu’une sur chaque.",
-      "recit": "Premier jour au camp d’instruction, **an 14** de la guerre. Le monde se bat pour l’énergie et pour les machines qui la font, et **Ariane Belloc** vous reçoit avec un char, deux infanteries et une rivière ; Tomas Reiner, déposé le matin même par le camion de Solveig, attend en face avec une patrouille prêtée. Charges à blanc : la seule fois où une erreur ne coûte personne.",
-      "conclusion": "Patrouille hors jeu. Vous savez déplacer une unité, frapper en premier et lire le terrain. Vantour vous a trouvé un surnom au Bulletin ; Ariane refuse de le répéter. Demain, l’argent : une guerre se paie avec ce qu’on lui prend.",
+      "recit": "Un char, deux infanteries et une rivière. **Ariane Belloc** vous accompagne pour votre premier exercice ; **Tomas Reiner** vous attend sur l’autre rive. Les charges sont à blanc. Votre premier défi : faire travailler vos unités ensemble.",
+      "conclusion": "Première victoire. Tomas réclame déjà une revanche ; Ariane vous laisse savourer avant de préparer le prochain exercice : prendre et tenir des villes.",
       "entrainement": true,
       "tutoriel": [
         "Cliquez sur votre char : **les cases vertes** sont celles où il peut aller, **les rouges** celles qu’il peut frapper après s’être déplacé.",
         "Amenez le char sur la route juste après le pont et choisissez Attaquer sur l’infanterie voisine. **Le duel s’affiche avant de confirmer** : lisez-le.",
-        "**Une unité frappée à bout portant riposte aussitôt**, avec les points qui lui restent. Frapper en premier coûte moins cher.",
+        "**Une cible capable de riposter répond dès le début de l’échange.** La prévision de duel montre les pertes attendues des deux camps : vérifiez-la avant de confirmer.",
         "Cliquez sur Fin de tour pour laisser jouer Tomas. Les forêts protègent : **deux étoiles de défense**, contre zéro sur un pont."
       ]
     },
@@ -24,8 +24,8 @@
       "biome": "foret",
       "objectif": "Capturer trois des quatre villes, signalées en or.",
       "conseil": "La ville du sud-est est **hors service** : quatre tours d’infanterie pour la relancer. Prenez celle du sud-ouest tout de suite, puis traversez par un pont.",
-      "recit": "Des champs, des haies, deux ponts, quatre villes — et Tomas en face qui veut les mêmes. Une ville tenue rapporte des fonds à chaque journée et répare ce qui s’y repose. Ce qu’on y capture est un **poste** : qui le tient décide où va l’énergie du quartier. En gagnant on prend les sites, les usines et les plans ; **jamais les habitants**, c’est le Pacte du Terrain.",
-      "conclusion": "Trois villes sur quatre. Capturer, encaisser, recruter : c’est ce qui gagne un front long. Vantour dira que la France a « tenu la vallée » ; ce qu’elle tient, ce sont trois postes et l’énergie qui passe par eux.",
+      "recit": "Quatre villes, deux ponts et Tomas qui part vite. Une ville tenue finance votre équipe et accueille vos unités pour les réparer. Ariane vous demande d’en garder trois à la fois : il faudra choisir où avancer et où rester.",
+      "conclusion": "Trois villes tenues ensemble. Vous avez appris à protéger une capture et à financer les renforts. Tomas admet que vous lui avez laissé trop peu de place.",
       "entrainement": true,
       "tutoriel": [
         "Déplacez une infanterie sur la ville du sud-ouest, la plus proche de votre QG, et choisissez Capturer. Une ville demande **20 points : une infanterie intacte en gagne 10 par tour**.",
@@ -40,8 +40,8 @@
       "biome": "desert",
       "objectif": "Remettre en service les deux usines désaffectées, au centre puis à l’est.",
       "conseil": "Le génie remet une usine en service en **deux tours**, l’infanterie en quatre. Recrutez de l’artillerie à votre usine : elle frappe à distance sans riposte.",
-      "recit": "Le terrain sec du centre d’instruction, où Solveig dépose les groupes au petit matin. Deux usines **hors service** depuis l’an dernier, au milieu et à l’est, plus près de Tomas que de vous. Votre génie est un bâtisseur : il ne capture pas, il remet en service. Votre usine, elle, produit des véhicules, chacun avec un dossier signé par **Wren Osoko**, le contrôle des armements d’Atlas, et Ariane veut vous voir choisir la bonne pièce pour la bonne cible.",
-      "conclusion": "Deux usines sous vos couleurs, et les primes d’Atlas avec. Vous savez recruter, choisir une pièce pour une cible, et remettre un bâtiment en service : au front, c’est le génie qui décide du rythme. Demain, la marée.",
+      "recit": "Le génie a enfin son terrain d’essai : deux usines à remettre en service. Tomas envoie ses fantassins les prendre avant vous. Ariane vous confie aussi une usine déjà active : choisissez les véhicules qui couvriront les travaux.",
+      "conclusion": "Deux ateliers remis en service. Le génie a fait son travail parce que vous lui avez ouvert la route. Ariane inspecte les machines ; Tomas essaie de convaincre son équipe qu’il avait presque fini le premier.",
       "entrainement": true,
       "tutoriel": [
         "Le terrain est entièrement visible pour cet exercice : repérez les défenseurs avant de conduire le génie vers les usines.",
@@ -57,8 +57,8 @@
       "biome": "cotier",
       "objectif": "Capturer le QG de Tomas, au nord-est.",
       "conseil": "Un QG demande **40 points** : quatre tours d’une infanterie intacte. Traversez le sable découvert à **marée basse** (journées 1, 4, 5, 8…), sinon par le pont du sud.",
-      "recit": "La presqu’île, et le plus vrai des quatre premiers exercices : prendre le QG adverse termine l’engagement sur-le-champ. Le bassin reproduit les marées de la côte, et le **Bulletin d’engagement** de Vantour les annonce deux journées à l’avance, sans jamais se tromper : **Atlas** arbitre cette guerre, et un arbitre ne surprend personne. Tomas défend : à vous de forcer la porte.",
-      "conclusion": "Le QG est à vous, la partie s’arrête. Quatre exercices, et vous savez déjà ce qu’un commandant sait. Le reste, c’est la distance, l’obscurité et les autres : on continue.",
+      "recit": "Le QG de Tomas se trouve au bout d’une presqu’île. Le sable offre un raccourci, mais la marée le recouvre. Ariane veut vous voir préparer une capture longue ; Tomas espère que vous oublierez de regarder l’eau.",
+      "conclusion": "Le QG change de mains et l’exercice s’arrête. Vous avez appris à préparer un assaut en plusieurs tours. Prochaine étape : couvrir vos unités depuis les hauteurs.",
       "entrainement": true,
       "tutoriel": [
         "Ouvrez le Bulletin, en haut à droite : il annonce la marée deux journées à l’avance. **Marée basse, les cases de mer entre les deux plages deviennent praticables.**",
@@ -73,8 +73,8 @@
       "biome": "montagne",
       "objectif": "Prenez le QG de Tomas ou mettez toutes ses unités hors jeu avant la fin de J18. Aucun revenu ni renfort : chaque placement compte.",
       "conseil": "Gardez **le char devant l’artillerie**. Une arrivée sûre ce tour prépare un tir au tour suivant.",
-      "recit": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren Osoko a contrôlé et signé le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. Deux pièces d’artillerie, un char pour les couvrir, et Tomas qui attaque : la leçon du jour, c’est **la distance**, et attendre le bon tour. Au front, un équipage à découvert ne rentre pas.",
-      "conclusion": "Vous avez tenu la distance, et c’est la chose la plus difficile à apprendre à un jeune commandant : **attendre le bon tour**. Ce soir, Solveig vous emmène en forêt. Prenez une lampe, et attendez-vous à du matériel qui n’est pas à nous.",
+      "recit": "Deux couloirs de montagne, deux artilleries et aucun renfort. Tomas passe à l’attaque. Pour garder vos soutiens, vous devrez choisir où les installer avant de pouvoir tirer.",
+      "conclusion": "Vous avez protégé vos soutiens et préparé leurs tirs. Ariane vous fait remarquer que votre meilleur ordre a parfois été d’attendre. Demain, rendez-vous en forêt.",
       "entrainement": true,
       "tutoriel": [
         "Gardez le char devant l’artillerie. **Une arrivée sûre ce tour prépare un tir au tour suivant.**",
@@ -88,12 +88,12 @@
       "biome": "foret",
       "objectif": "Prenez puis conservez le radar central et la ville du nord-est avant la fin de J18. Il faut posséder les deux ; prendre le QG adverse ne remplace pas cet objectif.",
       "conseil": "Le drone prépare votre approche ; il ne capture pas. Protégez l’infanterie qui monte vers le radar, et **tenez vos appareils hors du rayon avant l’impulsion**.",
-      "recit": "La forêt, le brouillard, et la première pièce grise. La station du centre vient du dépôt de la **Sélection Méridienne**, les Gris, l’armée d’essai que le Consortium finance sous les couleurs de l’arbitre : une **station à impulsion**, qui à J4 puis toutes les trois journées arrête tout moteur à deux cases et fait tomber ce qui vole. Wren l’a autorisée pour l’essai en disant qu’elle savait ce qu’elle faisait, pas qui l’avait conçue. Le drone voit au-delà des arbres ; l’infanterie capture.",
-      "conclusion": "Radar et ville sous vos couleurs, ensemble. Vous savez avancer sans voir. La station repart au dépôt des Gris ce soir, et Wren la suit jusqu’au quai : elle veut le relevé de l’impulsion. Tomas a prononcé un nom, sans preuve : **la Cinquième Manche**.",
+      "recit": "Une forêt masque les positions adverses. Votre drone doit préparer le passage des fantassins vers le radar central et la ville du nord-est. Attention à la station IEM du radar : première impulsion à J4, rayon deux cases. Capturez-la ou écartez vos appareils.",
+      "conclusion": "Les deux objectifs sont tenus. Tomas vous apprend que la station appartient aux Gris, une équipe qui prête volontiers ses prototypes. Pour l’instant, vous connaissez surtout ce que leur machine peut faire.",
       "entrainement": true,
       "tutoriel": [
         "Le drone prépare votre approche ; il ne capture pas. **Protégez l’infanterie qui monte vers le radar.**",
-        "Consultez le rayon de la station et le Bulletin avant de déplacer un appareil. Les unités terrestres peuvent approcher la station ; **l’impulsion tombe à J4 puis toutes les trois journées**.",
+        "La station IEM agit à **J4 puis toutes les trois journées, rayon deux cases** : avions et navires adverses bloqués un tour, sans dégâts, usines adverses arrêtées ce tour. Capturez la station ou sortez vos appareils du rayon ; les troupes terrestres peuvent approcher.",
         "Prenez aussi la ville indiquée au nord-est : **le radar seul ne termine pas l’exercice**.",
         "La nuit de J3 et J4 réduit la vision de deux cases, au minimum une ; vos bâtiments éclairent les unités qui s’y trouvent. **Le retour du jour à J5 ne désactive pas le brouillard.**"
       ]
@@ -104,8 +104,8 @@
       "biome": "cotier",
       "objectif": "Faites parvenir le transport désigné à la sortie du nord, colonne 10 ligne 3, avant la fin de J16. Sa mise hors jeu fait perdre l’exercice. Prendre le QG adverse ne remplace pas l’escorte.",
       "conseil": "Lisez les charges après le combat, ligne Munitions du panneau. Placez le ravitailleur près des unités qui ont consommé pour les servir, et **gardez le transport derrière le char**.",
-      "recit": "Le dernier kilomètre. Solveig vous confie un transport qui doit sortir au nord avant la fin de J16 ; dans sa cale, une **réserve**, des batteries de champ, ce qu’on se dispute en premier quand l’énergie manque, vides pour l’exercice. Tomas vise le convoi, pas l’escorte. Le drone ravitailleur refait les charges de ses voisins ; le **drone marin**, second prêt des Gris, observe la côte et envoie ses relevés à Port-Méridien avant de les envoyer à vous. Wren a demandé pourquoi.",
-      "conclusion": "Le transport est sorti, chargement intact ; Solveig signe « livré ». Une escorte réussie compte plus qu’une poursuite : **la logistique gagne plus de fronts que les charges**. Demain, Tomas se bat dans votre camp, et il note les promesses.",
+      "recit": "Solveig vous confie un transport de batteries d’exercice à faire sortir au nord. Tomas essaiera de l’arrêter. Un ravitailleur soutient l’escorte et un drone marin observe la côte : gagner, cette fois, signifie arriver à destination.",
+      "conclusion": "Transport arrivé. Solveig peut préparer la prochaine équipe. Tomas a perdu l’exercice, mais il a vu que vous saviez protéger un groupe : demain, il combattra à vos côtés.",
       "entrainement": true,
       "tutoriel": [
         "Lisez les charges après le combat. Placez le ravitailleur près des unités qui ont consommé leurs réserves et donnez-lui l’ordre de **ravitailler**.",
@@ -119,8 +119,8 @@
       "biome": "foret",
       "objectif": "QG adverse capturé ou toutes ses unités hors jeu, avant la limite de 16 journées.",
       "conseil": "Tomas ouvre la passerelle sud ; préparez le passage nord. Ost n’a qu’une artillerie : **cherchez la passerelle qu’elle ne couvre pas**.",
-      "recit": "Deux équipes, un seul ennemi : Tomas prend la passerelle du sud, vous celle du nord, et vous partagez ce que vos unités voient, pas vos caisses ni vos ordres. En face, la Sélection Méridienne d’**Hadran Ost**, l’ancien Recordman disqualifié il y a un an pour une **arme sans dossier**, qui joue propre depuis et perd souvent. Entre nations on rend le terrain à la fin ; la Cinquième Manche, elle, garde les sites et les équipes qu’elle prend.",
-      "conclusion": "Deux commandements, une victoire commune : une **coalition** partage la vue et la victoire, jamais l’énergie. Ost a serré la main à tout le monde et repris ses pièces ; Solveig a noté l’heure du camion, comme pour n’importe qui. Le prochain exercice met un contrat sur la table.",
+      "recit": "Tomas tient la passerelle sud ; vous préparez celle du nord. Vous partagez la vision et la victoire, tout en gardant vos propres unités et vos fonds. En face, les Gris et leur commandant, **Hadran Ost** : votre premier exercice contre cette équipe.",
+      "conclusion": "Première victoire côte à côte. Tomas vous remercie d’avoir laissé son passage libre. Ost félicite votre coordination ; il observe longtemps vos véhicules avant de repartir.",
       "entrainement": true,
       "tutoriel": [
         "Tomas ouvre la passerelle sud ; **préparez le passage nord**.",
@@ -134,8 +134,8 @@
       "biome": "plaine",
       "objectif": "Deux des trois bâtiments cibles contrôlés simultanément, avant la limite de 16 journées.",
       "conseil": "Contrôlez **deux des trois postes** signalés en or : les deux villes ou le radar. Gardez une infanterie sur chaque accès et approchez vos fantassins avant la pluie.",
-      "recit": "Le prix de l’énergie. Trois bâtiments tiennent lieu de postes de distribution ; qui en tient deux à la fin de l’engagement reçoit une **concession** — un contrat qui donne le droit d’exploiter quelque chose pendant un temps fixé : ici, l’énergie de la vallée pour quatre ans, inscrite au **registre de Port-Méridien**. Jamais les habitants : l’électricité de leurs maisons est garantie par le Pacte. Vantour annonce la pluie pour J3 et J4, pour tout le monde, et elle ne vient pas du ciel : une machine des Gris, sur la crête, la fabrique.",
-      "conclusion": "Deux postes sous contrat. Le bureau d’Atlas écrit une ligne au registre : « France, droits de distribution, vallée d’instruction ». C’est une ligne d’exercice ; **la prochaine sera vraie**, et une signature l’accompagne.",
+      "recit": "Deux postes à tenir parmi trois. Tomas vise les mêmes et la pluie ralentira les trajets à J3 et J4. Elle est produite par une machine d’essai des Gris, hors de la carte. Préparez votre approche : prendre le radar ne l’arrêtera pas.",
+      "conclusion": "Deux postes tenus. Vous avez appris à préparer vos trajets pour un changement de météo. Il reste un exercice avant les matchs officiels, puis une décision à prendre avec Ariane et Tomas.",
       "entrainement": true,
       "tutoriel": [
         "Contrôlez deux des trois postes signalés en or : les deux villes ou le radar. **Gardez une infanterie sur chaque accès.**",
@@ -149,8 +149,8 @@
       "biome": "cotier",
       "objectif": "QG adverse capturé ou toutes ses unités hors jeu, avant la limite de 18 journées.",
       "conseil": "Utilisez les deux ponts pour contourner les soutiens adverses. Tomas n’a aucun revenu : **chaque pièce qu’il perd manque pour de bon**.",
-      "recit": "Dernier exercice, et il rassemble tout : prendre le QG de Tomas ou mettre son groupe hors jeu, avec une usine, deux ponts et des soutiens à ravitailler. À la victoire, la première promesse : le **Consortium Méridien**, le grand sponsor de la guerre, celui qui finance les Gris, prête ses réserves aux équipes qualifiées, et sa négociatrice, **Sélène Veyr**, propose deux façons de les prendre. Ariane et Tomas ne sont pas d’accord sur laquelle. Ce qu’ils savent tous les deux : le Consortium veut Aube.",
-      "conclusion": "Formation terminée. Vous signez votre **première concession** : maintenance partagée pour la coalition, sous les couleurs de Tomas, ou fonds immédiats pour l’engagement au col. Ariane : sachez toujours à qui vous devez quelque chose. Tomas : le Consortium veut **Aube**, le programme de fusion, et une équipe endettée vote comme on lui dit.",
+      "recit": "Dernier exercice : deux ponts, une usine et des soutiens à protéger. Prenez le QG de Tomas ou mettez son groupe hors jeu. Après la victoire, vous déciderez ensemble où affecter une aide : au prochain passage du col ou à un futur match sous ses couleurs.",
+      "conclusion": "Vous choisissez où affecter **2 000 fonds** : au pacte du col, ou à l’exhibition sous les couleurs de Tomas. Ce choix change la préparation du match concerné. Vous apprenez aussi le nom de ceux qui proposent cette aide : le Consortium Méridien, qui finance les Gris et s’intéresse au programme de fusion Aube.",
       "entrainement": true,
       "tutoriel": [
         "Utilisez les deux ponts pour **contourner les soutiens adverses**.",
@@ -165,8 +165,8 @@
       "biome": "montagne",
       "objectif": "Faire parvenir le char au-delà du col, sur la case signalée en or.",
       "conseil": "Le génie peut ouvrir une route sur la montagne adjacente pour **1 500 fonds**. Un détour au sud reste possible.",
-      "recit": "Premier **engagement officiel**, à charges réelles : Vantour à l’antenne, Nera Aldouin à l’arbitrage, et Tomas sur l’autre banc, qui se bat pour gagner. Le Pacte punit plus cher le refus de se battre que la défaite. Le passage direct est fermé par un éboulement ; le génie peut l’ouvrir, à condition de protéger jusqu’au col le char qui porte les **relevés**. La concession signée à la fin de la formation compte ici si vous avez choisi les fonds immédiats.",
-      "conclusion": "Engagement remporté. Vous remettez vos relevés du col à Tomas : le Luxembourg s’engage aux côtés de la France, la **coalition** commence à deux, Solveig accroche les deux plaques, et Tomas vous prête son banc pour un front d’essai sous ses couleurs.",
+      "recit": "Premier match officiel contre Tomas. Il faut faire passer un char désigné au-delà du col. Ouvrir la route coûte des fonds ; contourner prend du temps. Ariane vous laisse choisir le chemin. Si vous avez réservé l’aide pour ce match, elle est déjà disponible.",
+      "conclusion": "Le char a franchi le col. Tomas vous propose de commander son groupe pour un match d’essai : il vous fait confiance avec ses unités. Votre alliance prend une forme concrète.",
       "alliance": {
         "paysCode": "lu",
         "commandantCle": "cmd_tomas_reiner"
@@ -184,8 +184,8 @@
       "biome": "montagne",
       "objectif": "Sous les couleurs luxembourgeoises, tenir en même temps les trois postes d’arbitrage : au nord, au centre et au sud.",
       "conseil": "Brouillard de guerre : votre drone éclaire à cinq cases, sauf près de la **station radar** d’Ariane, à l’est, qui le brouille à douze cases. Prenez-la. Ariane prendra le poste du sud le plus vite possible : gardez un char et l’artillerie pour le reprendre.",
-      "recit": "Tomas vous prête son banc : vous commandez le Luxembourg, son général en retrait, pour un **front d’essai** sous des couleurs alliées. Son style privilégie la défense. Les trois postes de la vallée gardent les relevés de l’année, ce que chaque front a produit et pour qui, et quelque chose cloche dans leurs chiffres ; Wren n’est pas la seule à l’avoir remarqué. La maintenance partagée, si vous l’avez choisie, compte ici.",
-      "conclusion": "Première victoire commune, et les relevés des trois postes portent une signature qu’aucun tableau ne nomme : **la Cinquième Manche**, écrite pour la première fois. Votre instruction est derrière vous ; la vraie guerre commence.",
+      "recit": "Tomas vous confie ses unités pour affronter Ariane. Son groupe tient bien les positions : prenez les trois postes ensemble. Si vous avez choisi l’aide partagée, elle finance ce départ. Après le match, Tomas aimerait aussi vous parler de batteries qui n’arrivent pas aux bonnes équipes.",
+      "conclusion": "Tomas vous fait désormais confiance avec son groupe. Des livraisons manquent dans la vallée, et un nom apparaît dans les messages : **la Cinquième Manche**. Une piste à vérifier ensemble, pas encore une accusation.",
       "entrainement": false,
       "tutoriel": [
         "Vous incarnez Tomas : ses unités encaissent mieux, et **son pouvoir renforce encore leur défense** pendant une journée.",

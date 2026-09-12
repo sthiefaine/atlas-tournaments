@@ -5,11 +5,11 @@ import { BANCS_PRETES, CLES_I18N_BANC, appliquerBanc, bancChoisi, cleSourceBanc,
 export const VERSION_CANON_AUBE = 1;
 export const CHOIX_AUBE = {
   aube_batteries_2v1: [
-    { cle: 'mutualiser_reserves', titre: 'Mutualiser les réserves', effet: 'À la prochaine nouvelle partie de La quarantième relève, un char léger de votre camp arrive à la journée 20 ; la quête du convoi reçoit aussi une reconnaissance à J2, près du point d’entrée prévu ; si les cases proches sont occupées, son arrivée est reportée.' },
-    { cle: 'credit_immediat', titre: 'Mobiliser un crédit', effet: 'À la prochaine nouvelle partie de Ligne de nuit, votre camp commence avec 2 000 fonds supplémentaires.' },
+    { cle: 'mutualiser_reserves', titre: 'Garder des réserves pour les alliés', effet: 'À la prochaine nouvelle partie de La quarantième relève, un char léger de votre camp arrive à la journée 20 ; la quête du convoi reçoit aussi une reconnaissance à J2, près du point d’entrée prévu ; si les cases proches sont occupées, son arrivée est reportée.' },
+    { cle: 'credit_immediat', titre: 'Équiper notre colonne maintenant', effet: 'À la prochaine nouvelle partie de Ligne de nuit, votre camp commence avec 2 000 fonds supplémentaires.' },
   ],
   aube_nuit_2v2: [
-    { cle: 'publier_preuve', titre: 'Publier les preuves', effet: 'À la prochaine nouvelle partie des Routes d’Aube, votre camp reçoit 2 000 fonds supplémentaires grâce au soutien public.' },
+    { cle: 'publier_preuve', titre: 'Dire publiquement ce que nous avons trouvé', effet: 'À la prochaine nouvelle partie des Routes d’Aube, votre camp reçoit 2 000 fonds supplémentaires grâce au soutien public.' },
     { cle: 'securiser_routes', titre: 'Sécuriser les routes', effet: 'À la prochaine nouvelle partie des Routes d’Aube, un génie de votre camp arrive à la journée 2 ; la quête des archives reçoit aussi une infanterie à J2, près du point d’entrée prévu ; si les cases proches sont occupées, son arrivée est reportée.' },
   ],
   aube_convoi_secondaire: [
@@ -21,8 +21,8 @@ export const CHOIX_AUBE = {
     { cle: 'archives_publiques', titre: 'Verser les preuves au dossier public', effet: 'À la prochaine partie des Routes d’Aube, votre camp reçoit 2 000 fonds de soutien. Le carnet conserve la preuve certifiée.' },
   ],
   opus1_tutoriel_10: [
-    { cle: 'maintenance_partagee', titre: 'Partager les moyens de maintenance', effet: 'À la prochaine nouvelle partie de Sous les couleurs alliées, votre camp reçoit 2 000 fonds pour préparer l’équipe commune.' },
-    { cle: 'fonds_immediats', titre: 'Financer la qualification', effet: 'À la prochaine nouvelle partie du Pacte du col, votre camp reçoit 2 000 fonds pour ouvrir et protéger le passage.' },
+    { cle: 'maintenance_partagee', titre: 'Préparer la prochaine bataille avec Tomas', effet: 'À la prochaine nouvelle partie de Sous les couleurs alliées, votre camp reçoit 2 000 fonds pour préparer l’équipe commune.' },
+    { cle: 'fonds_immediats', titre: 'Préparer notre passage du col', effet: 'À la prochaine nouvelle partie du Pacte du col, votre camp reçoit 2 000 fonds pour ouvrir et protéger le passage.' },
   ],
 } as const;
 export type ScenarioDecision = keyof typeof CHOIX_AUBE;
@@ -82,30 +82,49 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
   const appliquer = (origine: string, choix: string, effet: () => void): void => {
     const d = prises.get(origine);
     if (!d || d.choix !== choix) return;
+    const debutRappel = rappels.length;
     effet();
     const texte = libelleDecision(d);
     if (!texte) return;
-    rappels.push(estSourceBanc(origine)
+    // Une seule entrée par décision : le souvenir donne du sens au bonus,
+    // sans doubler le nombre de paragraphes du briefing.
+    const souvenirs = rappels.splice(debutRappel);
+    const bilan = estSourceBanc(origine)
       ? `${traduire(CLES_I18N_BANC.journal, { banc: traduire(texte.titre) })} — ${traduire(texte.effet)}`
-      : `${texte.titre} — ${texte.effet}`);
+      : `${texte.titre} — ${texte.effet}`;
+    rappels.push(souvenirs.length ? `${texte.titre} — ${souvenirs.join(' ')}` : bilan);
   };
   const crediterDe = (montant: number): void => {
     copie.fondsDepartParCamp = { ...copie.fondsDepartParCamp, 0: (copie.fondsDepartParCamp?.[0] ?? scenario.fondsDepart) + montant };
   };
   const crediter = (): void => crediterDe(2000);
   const ouvrir = (replique: Dialogue): void => { copie.dialogueOuverture = [...copie.dialogueOuverture, replique]; };
-  if (scenario.code === 'pacte_du_col') appliquer('opus1_tutoriel_10', 'fonds_immediats', crediter);
-  if (scenario.code === 'couleurs_alliees') appliquer('opus1_tutoriel_10', 'maintenance_partagee', crediter);
-  if (scenario.code === 'aube_nuit_2v2') appliquer('aube_batteries_2v1', 'credit_immediat', crediter);
+  if (scenario.code === 'pacte_du_col') appliquer('opus1_tutoriel_10', 'fonds_immediats', () => {
+    crediter();
+    rappels.push('Vous avez choisi de préparer ce passage. Ariane a réservé les moyens du génie : les 2 000 fonds promis sont là. Tomas attendra la prochaine bataille pour l’atelier commun.');
+  });
+  if (scenario.code === 'couleurs_alliees') appliquer('opus1_tutoriel_10', 'maintenance_partagee', () => {
+    crediter();
+    rappels.push('Tomas a préparé l’atelier commun comme convenu. Les 2 000 fonds sont disponibles : votre choix de fin de formation sert aujourd’hui aux deux équipes.');
+  });
+  if (scenario.code === 'aube_nuit_2v2') appliquer('aube_batteries_2v1', 'credit_immediat', () => {
+    crediter();
+    rappels.push('Vous avez équipé la colonne sans attendre. Les 2 000 fonds sont disponibles cette nuit ; les réserves communes ne fourniront pas le char de J20 par ce choix.');
+  });
   if (scenario.code === 'aube_routes_3v1') {
-    appliquer('aube_nuit_2v2', 'publier_preuve', crediter);
+    appliquer('aube_nuit_2v2', 'publier_preuve', () => {
+      crediter();
+      rappels.push('Vous avez rendu les preuves publiques. Les soutiens ont suivi leurs paroles : 2 000 fonds pour cette bataille. La route, elle, reste à ouvrir sans le génie offert par l’autre choix.');
+    });
     appliquer('aube_nuit_2v2', 'securiser_routes', () => {
       copie.renforts = [...(copie.renforts ?? []), { journee: 2, unites: [{ camp: 0, type: 'genie', x: 10, y: 2 }] }];
+      rappels.push('La route que vous avez protégée sert maintenant au génie : il vous rejoint à J2, ou dès qu’une case d’arrivée se libère. Votre aide revient sous la forme d’une équipe.');
     });
   }
   if (scenario.code === 'aube_releve_1v3') {
     appliquer('aube_batteries_2v1', 'mutualiser_reserves', () => {
       copie.renforts = [...(copie.renforts ?? []), { journee: 20, unites: [{ camp: 0, type: 'char_leger', x: 11, y: 16 }] }];
+      rappels.push('Vous aviez gardé des réserves pour les autres. Elles permettent maintenant d’envoyer un char léger à J20, ou dès que sa zone d’arrivée est libre. Tenez jusque-là.');
     });
   }
   const renfort = (journee: number, type: string, x: number, y: number): void => {
@@ -121,11 +140,21 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
   });
   if (scenario.code === 'aube_releve_1v3') appliquer('aube_convoi_secondaire', 'convoi_reserves', () => {
     renfort(2, 'transport', 11, 16); renfort(2, 'infanterie', 12, 16);
+    rappels.push('Le convoi que vous avez envoyé à la relève revient vous aider : un transport et une infanterie sont attendus à J2, selon les places libres.');
   });
   if (scenario.code === 'aube_routes_3v1') {
-    appliquer('aube_convoi_secondaire', 'convoi_routes', crediter);
-    appliquer('aube_archives_secondaire', 'archives_publiques', crediter);
-    appliquer('aube_archives_secondaire', 'archives_reconnaissance', () => renfort(2, 'drone', 10, 2));
+    appliquer('aube_convoi_secondaire', 'convoi_routes', () => {
+      crediter();
+      rappels.push('Le convoi a servi à préparer cette route : 2 000 fonds sont disponibles ici. Il n’apportera pas de transport supplémentaire à la relève par ce choix.');
+    });
+    appliquer('aube_archives_secondaire', 'archives_publiques', () => {
+      crediter();
+      rappels.push('Vous avez rendu les archives accessibles. Ceux qui les ont lues soutiennent cette bataille avec 2 000 fonds ; les preuves restent conservées.');
+    });
+    appliquer('aube_archives_secondaire', 'archives_reconnaissance', () => {
+      renfort(2, 'drone', 10, 2);
+      rappels.push('Les relevés partagés ont servi aux éclaireurs. Leur drone rejoint votre camp à J2, selon les places libres ; partager les plans n’a pas effacé les preuves.');
+    });
   }
 
   // --- Les mini-branches des bancs prêtés (`bancs.ts`). Chacune est bornée à

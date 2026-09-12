@@ -101,8 +101,8 @@ test('deux textes identiques ne produisent aucun changement', () => {
   assert.equal(d.every((l) => l.signe === ' '), true);
 });
 
-test('les prompts v2 distinguent fiction énergétique, capacité moteur et fournisseur', () => {
-  assert.equal(DEFAULT_PROMPT_VERSION, 2);
+test('les prompts v3 distinguent fiction énergétique, capacité moteur et fournisseur', () => {
+  assert.equal(DEFAULT_PROMPT_VERSION, 3);
   for (const corps of Object.values(PROMPTS_PAR_DEFAUT)) {
     assert.match(corps, /Claude Sonnet 5/);
     assert.match(corps, /PUT \/missions/);

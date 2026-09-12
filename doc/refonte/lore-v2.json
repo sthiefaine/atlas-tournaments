@@ -4,7 +4,7 @@
  "date": "2026-09-12",
  "monde": {
   "titre": "La guerre de l’énergie et des inventions — an 14",
-  "premisse": "Le monde d’Atlas est en guerre depuis quatorze ans, et cette guerre a deux objets qui n’en font qu’un : l’énergie et l’avance technique. L’énergie, c’est tout ce qui fait tourner un pays — les gisements, les carburants, les champs solaires, les barrages, les réserves de batteries, les lignes et les postes qui portent le courant. L’avance technique, c’est ce qui décidera de la suite : les laboratoires, les prototypes, les plans, les brevets, les ingénieurs, les relevés de mesure. Une armée se bat pour un dépôt le lundi et pour un atelier d’essai le mardi, et c’est la même guerre : qui tient l’énergie fabrique, qui tient les plans fabrique mieux, et qui fabrique mieux gagnera l’année suivante.\nCe qu’une victoire prend, et c’est le cœur de ce monde : les sites, les richesses, les savoirs et le terrain — gisements, centrales, dépôts, laboratoires, brevets, plans, archives, et le sol tant qu’on le tient. Ce qu’elle ne prend pas, entre les vingt-quatre nations : les habitants. On prend ce qu’un pays produit et ce qu’il sait, jamais les gens qui y vivent, et le nécessaire civil — l’eau, les hôpitaux, le courant des maisons — reste hors de la guerre. C’est le Pacte du Terrain, et il tient parce qu’aucune nation n’a intérêt à ce qu’il tombe : celle qui l’enfreindrait aurait les vingt-trois autres sur le dos dès la saison suivante.\nLa Cinquième Manche, elle, ne rend rien. Elle n’a pas de pays, donc rien à craindre en retour : elle garde les sites qu’elle prend, absorbe les équipes et les laboratoires, ne signe aucune restitution et n’attend aucune échéance. C’est la seule puissance du monde qui annexe pour de bon — et c’est exactement pour ça que des nations qui se battent entre elles finissent par se liguer contre elle.\nLe Pacte du Terrain n’a pas aboli la guerre ; il l’a bornée. Signé à Port-Méridien après les Vieilles Manières, il fixe où l’on se bat (des fronts déclarés à l’avance et contrôlés), quand (tous les quatre ans, tout est remis en jeu), avec quoi (des armes déclarées, portant un dossier) et pour quoi (une concession — le droit d’exploiter un site pendant quatre ans, inscrit au Registre).\nAtlas est l’organisation qui arbitre cette guerre. Elle déclare les fronts, contrôle les armes, enregistre les concessions, tient les trêves et diffuse le Bulletin d’engagement. Elle ne lève pas d’armée — sauf une, la Sélection Méridienne, force d’essai et de garantie des trêves, financée par le Consortium Méridien, son sponsor.\nLa Cinquième Manche est la puissance qui refuse le Pacte de l’intérieur : un réseau sans pays, dirigé par Sélène Veyr depuis le Consortium, qui fait la guerre hors du front — contrats de dépendance, réserves réservées à un seul client, routes sous autorisation, armes sans dossier — et qui rafle chaque invention nouvelle avant qu’elle soit déclarée. Un prototype volé aujourd’hui est une arme sur le front dans deux ans : c’est là sa vraie conquête, et elle est plus lourde que n’importe quel dépôt.\nSon but dans cet opus : Aube, le programme de fusion, la seule technologie capable de rendre inutile tout ce que la guerre dispute. Qui tient Aube tient le siècle. Sélène le veut pour elle seule ; la Sélection Méridienne est son armée ; huit armes sans dossier sont ses secrets ; Aube est la prise finale.\nLe joueur est un jeune commandant formé par Ariane Belloc et Tomas Reiner. Il part de France, tient douze fronts nationaux, découvre que des concessions concurrentes ont le même bénéficiaire, et mène la coalition d’Aube jusqu’à Port-Méridien. Ses choix décident quelles nations se battent à ses côtés, ce qu’il sauve d’une défaite écrite, et à qui revient Aube.\nLes équipages meurent. Les commandants meurent. Atlas compte des pièces « hors jeu », jamais des morts : c’est la règle du Registre, et c’est ce que le monde lui reproche.",
+  "premisse": "Depuis quatorze ans, les nations se battent pour l’énergie et les nouvelles technologies. Atlas impose des règles pour limiter cette guerre. Vous débutez auprès d’Ariane et de Tomas, puis découvrez que les Gris rendent les pays dépendants de leur aide. Leur cible est Aube, un programme de recherche sur la fusion qui pourrait changer l’avenir. Pour les arrêter, il faut réunir des alliés qui ne se font pas tous confiance. Vos décisions déterminent qui vous suit, ce que vous sauvez et ce que les vainqueurs feront de leur pouvoir.",
   "enjeu": "Qui gagne l’an 14 n’emporte pas un trophée : il inscrit au Registre de Port-Méridien, pour quatre ans, les sites d’énergie qu’il exploitera — et, cette année, les droits sur Aube. Mais chaque front se joue deux fois : une fois pour le courant, une fois pour ce qu’il y a dans les hangars d’en face. Un laboratoire pris, un lot de plans saisi, une télémétrie récupérée changent les moyens du front suivant, et ceux-là ne se rendent pas au bout de quatre ans : un savoir capturé reste. La Cinquième Manche veut Aube pour elle seule et la fin du nécessaire civil garanti par le Pacte ; la coalition veut un Aube partagé et un arbitre qui a retrouvé ses dents.",
   "ton": "Sérieux, dur, sans complaisance. La guerre est une guerre : on prend, on tient, on perd des équipages, on signe des trêves qu’on ne respecte pas. L’humour appartient aux personnages — Vantour, Nikos, Saran — jamais au narrateur. Réalisme des matières et de la fatigue, pas de l’horreur : le sang, les corps, les ruines et les civils restent hors champ. Et personne n’explique le monde au joueur : les mots du Pacte se comprennent la première fois qu’un personnage s’en sert.",
   "cequiChange": [
@@ -89,15 +89,19 @@
    "La fratrie Maël–Lise et la paternité Edran–Lise restent cachées tout l’opus ; seule la paternité Edran–Maël sort, à la finale 10.",
    "Aucune arme réelle nommée par sa marque ou son constructeur ; les technologies sont inventées et décrites par leur effet en jeu.",
    "Aube est inspiré de la recherche sur la fusion, jamais d’un programme réel ; gagner ne rend pas la fusion disponible.",
-   "Aucun mot qu’un joueur de quinze ans devrait chercher. Les mots du monde qu’on garde — concession, protêt, dossier, Registre — sont dits en clair par un personnage la première fois qu’ils servent."
+   "Aucun mot qu’un joueur de quinze ans devrait chercher. Les mots du monde qu’on garde — concession, protêt, dossier, Registre — sont dits en clair par un personnage la première fois qu’ils servent.",
+   "La présentation suit le vécu du joueur : une personne, un besoin concret, une décision. Les détails du Pacte et des contrats viennent ensuite dans le carnet ; un briefing ne demande pas de mémoriser tous les services d’Atlas.",
+   "Découverte de l’adversaire : les Gris après le tutoriel 6, Ost au tutoriel 8, Consortium et Aube après le tutoriel 10, Cinquième Manche après couleurs_alliees. Les biographies auteur ne sont jamais un texte d’ouverture public.",
+   "Le sérieux passe par les relations et les suites des décisions, pas par des rappels de mort à chaque exercice. Des scènes de travail, de soulagement et d’humour sobre séparent les revers.",
+   "Les rappels de choix montrent qui attend une aide, qui la donne et ce qu’elle permet. Ils n’ajoutent ni unité, ni fonds, ni ralliement qui ne figurent dans les effets déclarés. Une variante de dialogue éditoriale n’est pas un nouvel effet du moteur."
   ]
  },
  "factions": [
   {
    "cle": "atlas",
    "nom": "Atlas",
-   "nature": "L’arbitre du Pacte du Terrain. Six services : le Bureau (les décisions), le Collège des arbitres (les litiges du front), la Régie (la diffusion et la presse), l’Intendance (les transports et le ravitaillement), la Cartographie (les cartes et les relevés) et la Commission des armes, qui vérifie que chaque pièce engagée a bien un dossier. Siège à Port-Méridien ; son personnel n’a pas de drapeau.",
-   "but": "Que cette année de guerre aille à son terme sans que le Pacte se déchire — quitte à ne pas regarder de trop près qui le viole. Et, sans se l’avouer, garder la main sur Aube : l’arbitre est aussi celui chez qui la fusion est hébergée.",
+   "nature": "L’organisation qui fixe les règles, annonce les conditions des batailles et contrôle les armes. Ses services et son siège à Port-Méridien se découvrent quand ils sont utiles.",
+   "but": "Limiter la guerre et maintenir les réseaux en marche. Ses dirigeants peuvent confondre cette responsabilité avec le refus de reconnaître leurs erreurs.",
    "moyens": "Déclaration des fronts, contrôle des armes, Registre des concessions, Bulletin d’engagement, protêts, sanctions (rappel, carton, mise hors jeu du commandant, disqualification). Aucune armée propre, sauf la Sélection Méridienne qu’elle a laissée au Consortium.",
    "chef": "osmin_talvarec",
    "membres": [
@@ -115,8 +119,8 @@
   {
    "cle": "cinquieme_manche",
    "nom": "La Cinquième Manche",
-   "nature": "La puissance qui fait la guerre hors du front, et la seule qui garde ce qu’elle prend. Un réseau sans pays, à tous les étages d’Atlas et du Consortium : un cadre du Bureau, des arbitres, des techniciens de la Cartographie, des commandants sans drapeau. Son signe : quatre traits et un cinquième barré, à la craie.",
-   "but": "La fusion pour elle seule, et l’avance technique de tout le monde sous son toit. Prendre les sites, les équipes et les laboratoires sans jamais les rendre ; transformer des droits de quatre ans en dépendance permanente ; abolir le nécessaire civil garanti par le Pacte ; placer Aube sous son seul contrôle, sans retour.",
+   "nature": "Le projet de pouvoir caché derrière les Gris et leur financeur ; un réseau sans nation, pas un nouveau pays ennemi. Cette fiche contient des informations auteur à révéler selon les jalons.",
+   "but": "Contrôler Aube et les nouvelles techniques. Sélène promet la stabilité, mais veut pouvoir décider seule qui reçoit l’énergie et qui doit obéir.",
    "moyens": "Contrats de dépendance, réserves réservées à un seul client, routes sous autorisation, contrats provisoires, crédit aux délégations à sec, vol de plans et de prototypes avant leur déclaration, huit armes sans dossier, stations à impulsion et de forçage météo, veilleurs, et une armée : la Sélection Méridienne.",
    "chef": "selene_veyr",
    "membres": [
@@ -148,8 +152,8 @@
   {
    "cle": "consortium_meridien",
    "nom": "Le Consortium Méridien",
-   "nature": "Le financier officiel de la guerre et la façade légale de la Cinquième Manche : une entreprise sans pays — banderoles, contrats, enveloppes, transports, crédit. Sélène Veyr en dirige les concessions ; c’est elle qui décide quel laboratoire reçoit son argent, donc quel laboratoire lui doit ses plans.",
-   "but": "Posséder le lendemain : que chaque réseau national, chaque réserve, chaque route et chaque brevet passe par ses contrats.",
+   "nature": "L’entreprise sans nation qui finance les Gris, prête du matériel et organise des transports. Elle est la face publique du même réseau.",
+   "but": "Devenir indispensable aux équipes : leur donner de quoi continuer, puis leur retirer le choix de leur fournisseur et de leurs décisions.",
    "moyens": "Avances aux délégations, exclusivités de transport, clauses de retour, voix votées à sa place, prêt de matériel à conditions opaques, rachat d’ateliers en difficulté, financement des prototypes des Gris.",
    "chef": "selene_veyr",
    "membres": [
@@ -166,8 +170,8 @@
   {
    "cle": "selection_meridienne",
    "nom": "La Sélection Méridienne — les Gris",
-   "nature": "L’armée privée du Consortium, officiellement force d’essai d’Atlas et garante des trêves. Gris et badge orange en permanence. Sans pays, sans continent, sans climat : elle vient à vous.",
-   "but": "Tenir les fronts où la Cinquième Manche a un dépôt, une station, un atelier ou un contrat à protéger, servir de banc d’essai à ce que la faction a volé, et gagner la dernière concession à Port-Méridien.",
+   "nature": "Les Gris, commandés par Ost : les unités que le joueur reconnaît sur le terrain. Sélection Méridienne est leur nom officiel, pas une équipe supplémentaire.",
+   "but": "Protéger les dépôts et les accès du Consortium, tester ses armes, puis prendre le contrôle des accès d’Aube.",
    "moyens": "Pression mécanisée (Ost), dépôts verrouillés et radar (Basile), mobilité aérienne (Maël), artillerie et passages (Lise), capture et contrats (Yuna), information et drones (Relais Zéro), relève et logistique (Edran) ; deux matériels exclusifs et huit armes sans dossier, toutes issues de plans pris ailleurs.",
    "chef": "cmd_hadran_ost",
    "membres": [
@@ -197,8 +201,8 @@
   {
    "cle": "coalition_aube",
    "nom": "La coalition d’Aube",
-   "nature": "L’alliance de guerre que le joueur assemble front après front : la France d’Ariane, le Luxembourg de Tomas, et les nations qui ont choisi de partager plutôt que de dépendre. Elle n’a pas de chef : elle a des engagements vérifiables et une caisse commune.",
-   "but": "Garder Aube hors de la main du Consortium, remettre en commun ce que la faction a volé — plans, relevés, brevets —, faire tenir le nécessaire civil, et obliger Atlas à juger enfin ses propres dossiers.",
+   "nature": "Les alliés que le joueur rassemble. Ils gardent leurs commandants, leurs caisses et leurs désaccords ; une aide promise n’est jamais supposée acquise.",
+   "but": "Empêcher Sélène de décider seule de l’avenir d’Aube, puis choisir ensemble des règles que même les vainqueurs devront respecter.",
    "moyens": "Les catalogues nationaux, les relevés partagés, la télémétrie récupérée, les convertisseurs, les archives de Nera, les convois de Solveig, les contrôles de Wren, et ce que chaque décision a mis dans la caisse commune.",
    "chef": null,
    "membres": [
@@ -226,8 +230,8 @@
   {
    "cle": "delegations_sous_mandat",
    "nom": "Les délégations sous contrat",
-   "nature": "Des délégations nationales — jamais des nations entières — qui ont signé avec le Consortium pour finir leur année : un crédit, un fournisseur unique, une voix votée à leur place. Elles gardent leurs couleurs et se battent aux côtés des Gris tant que la clause tient.",
-   "but": "Tenir jusqu’à la fin de l’année ; puis, selon le joueur, rompre comptes ouverts, persister, ou rester dépendantes.",
+   "nature": "Des équipes nationales qui ont signé avec le Consortium pour pouvoir continuer. Cela ne rend pas leur population mauvaise et ne garantit pas leur repentir.",
+   "but": "Obtenir les moyens qui leur manquent. Leurs responsables peuvent rompre, revenir sous contrôle ou rester avec les Gris selon les choix conservés.",
    "moyens": "Leur catalogue national, financé par Méridien ; recrutées par Yuna Serrat, ravitaillées par Edran Sorel.",
    "chef": "cmd_yuna_serrat",
    "membres": [],
@@ -238,8 +242,8 @@
   {
    "cle": "nations_hors_serie",
    "nom": "Les douze nations du second plan",
-   "nature": "Argentine, Canada, Fidji, Grèce, Islande, Kenya, Madagascar, Mongolie, Namibie, Népal, Nouvelle-Zélande, Pérou : des pays en guerre à part entière, rencontrés hors du fil principal, qui ont chacun un intérêt précis dans la guerre de l’énergie — une route sous péage, une réserve vendue deux fois, un dépôt mis hors service, un atelier que personne ne veut financer.",
-   "but": "Ne plus être la monnaie d’échange des grands réseaux ; entrer dans la coalition à leurs conditions, et garder la main sur ce qu’ils savent faire mieux que les autres.",
+   "nature": "Douze partenaires du second plan, avec des personnes à retrouver et des terrains propres. Leurs histoires restent facultatives ; elles ne sont pas douze variantes d’une collecte de documents.",
+   "but": "Garder la maîtrise de leurs équipes et choisir ce qu’elles partagent, sans être traitées comme de simples réserves pour la coalition.",
    "moyens": "Leur savoir-faire de terrain, que personne d’autre n’a ; leur ralliement est une alliance de guerre, écrite en hors-série, jamais automatique.",
    "chef": null,
    "membres": [
@@ -467,7 +471,7 @@
    "nom": "Ariane Belloc",
    "camp": "fr",
    "role": "Commandante de la France, mentore du joueur",
-   "veut": "Former un commandant qui sache refuser une victoire trop coûteuse en équipages et en dettes.",
+   "veut": "Former un commandant qui sait gagner sans sacrifier ses équipages pour un drapeau.",
    "craint": "Que la concession qu’elle a signée il y a deux ans coûte à d’autres ce qu’elle lui a évité.",
    "sort": "vit",
    "secret": "Elle a signé, après la dernière bataille de l’an 12, une concession avantageuse qui plaçait la France sous dépendance du transport méridien. Elle en révèle elle-même les clauses au joueur (acte II)."
@@ -477,7 +481,7 @@
    "nom": "Tomas Reiner",
    "camp": "lu",
    "role": "Commandant du Luxembourg, organisateur des convois de la coalition",
-   "veut": "Tenir les promesses de livraison dont dépendent les fronts des autres.",
+   "veut": "Faire arriver les renforts promis, même quand cela complique sa propre bataille.",
    "craint": "Qu’un convoi arrive trop tard parce qu’il a demandé une autorisation à ceux qu’il combat.",
    "sort": "meurt:opus1_finale_12",
    "secret": null
@@ -487,7 +491,7 @@
    "nom": "Nera Aldouin",
    "camp": "atlas",
    "role": "Arbitre en chef d’Atlas, « la Ligne Blanche »",
-   "veut": "Que le Pacte soit plus fort que ceux qui l’écrivent ; que les protêts que le Bureau classe soient enfin jugés.",
+   "veut": "Faire appliquer les mêmes règles aux puissants et aux petites équipes.",
    "craint": "Avoir validé, sans le voir, le contrat qui a rendu la guerre injuste.",
    "sort": "vit",
    "secret": "En l’an 13, elle a validé un contrat parfaitement légal qui concentrait les réserves chez un intermédiaire unique : le Consortium (acte II)."
@@ -497,7 +501,7 @@
    "nom": "Osmin Talvarec",
    "camp": "atlas",
    "role": "Directeur d’Atlas, « le Cartographe »",
-   "veut": "Que cette année de guerre aille à son terme sans que le Pacte se déchire.",
+   "veut": "Empêcher que les nations abandonnent les dernières règles communes.",
    "craint": "Un dossier public qu’il ne pourrait pas classer.",
    "sort": "vit",
    "secret": "En l’an 12, il a confié au Consortium la gestion de plusieurs voies de transport pour tenir le calendrier. Il n’a jamais relu ce qu’il signait ensuite."
@@ -507,7 +511,7 @@
    "nom": "Célestin Vantour",
    "camp": "atlas",
    "role": "Correspondant de guerre d’Atlas, « la Voix »",
-   "veut": "La meilleure histoire de la guerre — et que ce soit la sienne.",
+   "veut": "Raconter ce qui se passe vraiment, même quand cela contredit le héros qu’il a présenté au public.",
    "craint": "Le silence de l’antenne, et découvrir qu’il a raconté la légende d’un homme qui trichait.",
    "sort": "vit",
    "secret": "Il a fait d’Ost une légende en l’an 12 et minimisé sa disqualification l’année suivante sans lire les pièces."
@@ -517,7 +521,7 @@
    "nom": "Hadran Ost",
    "camp": "atl",
    "role": "Commandant de la Sélection Méridienne, « le Recordman »",
-   "veut": "Retrouver le pouvoir perdu sans admettre sa responsabilité ; faire avancer le bloc.",
+   "veut": "Redevenir celui que tout le monde appelle quand la bataille tourne mal.",
    "craint": "Que ses propres équipages découvrent qu’il les a rendus dépendants.",
    "sort": "vit",
    "secret": "Sa disqualification de l’an 13 était justifiée : il savait que la pièce n’avait pas de dossier, et il sait aujourd’hui d’où viennent ses plans."
@@ -527,7 +531,7 @@
    "nom": "Solveig Tamm",
    "camp": "atlas",
    "role": "Intendante des transports d’Atlas",
-   "veut": "Faire arriver les équipes et les réserves promises, quel que soit le front.",
+   "veut": "Faire rentrer les équipes et livrer les réserves qu’elles attendent.",
    "craint": "Découvrir que ses propres camions servent deux contrats concurrents.",
    "sort": "vit",
    "secret": null
@@ -537,7 +541,7 @@
    "nom": "Wren Osoko",
    "camp": "atlas",
    "role": "Responsable du contrôle des armes d’Atlas : elle vérifie que chaque pièce engagée a bien un dossier",
-   "veut": "Séparer les outils utiles des droits abusifs qui les accompagnent ; attester qu’une arme n’a pas de dossier.",
+   "veut": "Donner aux équipes des machines qu’elles comprennent et peuvent réparer elles-mêmes.",
    "craint": "Qu’une invention qu’elle a déclarée bonne serve à fermer un front.",
    "sort": "vit",
    "secret": "Ses droits d’accès à la télémétrie qu’elle a validée ont été transférés au Consortium sans qu’elle le sache ; elle le documente sans inventer une panne (acte II)."
@@ -547,7 +551,7 @@
    "nom": "Sélène Veyr",
    "camp": "atl",
    "role": "Directrice des concessions du Consortium Méridien — chef de la Cinquième Manche",
-   "veut": "Imposer seule les conditions du réseau, et présenter la dépendance comme la stabilité ; Aube pour elle seule.",
+   "veut": "Contrôler seule l’énergie et Aube, pour que personne ne puisse plus agir sans elle.",
    "craint": "Un accès partagé : perdre le contrôle exclusif auquel elle tient.",
    "sort": "vit",
    "secret": "Elle dirige la Cinquième Manche depuis l’an 14 ; avant elle, le réseau existait sans chef, et c’est elle qui lui a donné un but : la fusion."
@@ -557,7 +561,7 @@
    "nom": "Elsbeth Vonlanthen",
    "camp": "ch",
    "role": "Commandante de la Suisse, responsable des relais alpins",
-   "veut": "Que chaque vallée garde un accès indépendant aux réserves d’altitude.",
+   "veut": "Garder chaque vallée ravitaillée, même quand les voisins ferment leurs routes.",
    "craint": "Verrouiller si bien un col qu’elle ne le quitte plus quand il faudrait.",
    "sort": "vit",
    "secret": null
@@ -567,7 +571,7 @@
    "nom": "Lotte Vermeer",
    "camp": "nl",
    "role": "Commandante des Pays-Bas, ingénieure des ouvrages de passage",
-   "veut": "Que les pompes, les digues et les écluses obéissent à qui les tient, pas au propriétaire de leurs logiciels.",
+   "veut": "Garder les pompes et les digues en marche sans demander la permission à un fournisseur.",
    "craint": "Qu’un calendrier exact ne suffise pas à tenir une digue.",
    "sort": "vit",
    "secret": null
@@ -577,7 +581,7 @@
    "nom": "Samir El Hadi",
    "camp": "ma",
    "role": "Commandant du Maroc, coordinateur des étapes de convoi",
-   "veut": "Qu’aucun contrat de transport ne décide seul qui peut se battre.",
+   "veut": "Empêcher qu’un convoi en retard condamne les équipes qui l’attendent.",
    "craint": "Laisser une étape à découvert pour un risque qui ne vient pas.",
    "sort": "meurt:opus1_au_01",
    "secret": "Il est malade depuis la saison 2 — « il se soigne entre deux étapes » (Maroc 9, Maroc 11). La clause de dépendance du fournisseur interdit de le remplacer ; selon `opus1_ma_08_decision`, il tient une saison de plus (annonce à l’Australie 1) ou se soigne une saison qui ne le guérit pas (annonce à la finale 14)."
@@ -587,7 +591,7 @@
    "nom": "Awa Diagne",
    "camp": "sn",
    "role": "Commandante du Sénégal, capitaine des équipes de l’estuaire",
-   "veut": "Prouver qu’une coalition tient par des engagements vérifiables et réciproques.",
+   "veut": "Construire une alliance où les petites équipes sont aidées autant qu’elles aident.",
    "craint": "Porter seule les engagements que ses partenaires devraient assumer.",
    "sort": "vit",
    "secret": null
@@ -597,7 +601,7 @@
    "nom": "Lívia Moura",
    "camp": "br",
    "role": "Commandante du Brésil, organisatrice des fronts du fleuve",
-   "veut": "Que les ateliers locaux profitent des concessions que leurs équipages gagnent.",
+   "veut": "Faire revenir aux ateliers locaux une part de ce qu’ils ont aidé à gagner.",
    "craint": "Confondre l’enthousiasme du public avec l’adhésion de son équipe.",
    "sort": "vit",
    "secret": null
@@ -607,7 +611,7 @@
    "nom": "Inés Valdés",
    "camp": "mx",
    "role": "Commandante du Mexique, responsable des fronts de plateau",
-   "veut": "Des concessions qui récompensent le travail des équipages de terrain.",
+   "veut": "Obtenir que ceux qui tiennent le terrain aient leur mot à dire après la victoire.",
    "craint": "Devoir prouver encore qu’une prise spectaculaire répare un départ difficile.",
    "sort": "vit",
    "secret": null
@@ -617,7 +621,7 @@
    "nom": "Devika Rao",
    "camp": "in",
    "role": "Commandante de l’Inde, coordinatrice des ateliers d’interconnexion",
-   "veut": "Garder plusieurs voies de production quand les concessions se concentrent.",
+   "veut": "Garder des ateliers capables de produire même si un grand fournisseur coupe ses livraisons.",
    "craint": "Multiplier les solutions jusqu’à retarder le choix indispensable.",
    "sort": "vit",
    "secret": null
@@ -627,7 +631,7 @@
    "nom": "Ren Mizuno",
    "camp": "jp",
    "role": "Commandant du Japon, planificateur des correspondances",
-   "veut": "Que les réseaux solaires et leurs branchements restent ouverts à plusieurs fournisseurs.",
+   "veut": "Partager les plans utiles sans laisser un seul groupe décider qui peut les utiliser.",
    "craint": "Une séquence parfaite qui réagit trop tard à un ennemi irrationnel.",
    "sort": "vit",
    "secret": null
@@ -637,7 +641,7 @@
    "nom": "Hazel Quinn",
    "camp": "au",
    "role": "Commandante de l’Australie, responsable des réserves côtières",
-   "veut": "Une autonomie de réserve entre des sites très éloignés.",
+   "veut": "Ne laisser aucun poste lointain attendre un ravitaillement qui ne viendra pas.",
    "craint": "Que son calme masque trop longtemps un retrait nécessaire.",
    "sort": "vit",
    "secret": null
@@ -647,7 +651,7 @@
    "nom": "Ayu Pranata",
    "camp": "id",
    "role": "Commandante de l’Indonésie, déléguée d’un groupement de clubs des îles",
-   "veut": "Faire entrer les petites délégations dans les décisions sur la distribution — et dans le programme Aube.",
+   "veut": "Faire entendre les petites îles lorsque les grandes puissances décident où vont les réserves.",
    "craint": "Chercher un accord complet quand le délai impose de trancher.",
    "sort": "vit",
    "secret": null
@@ -657,7 +661,7 @@
    "nom": "Leandro Paz",
    "camp": "ar",
    "role": "Commandant de l’Argentine, ancien chef de piste",
-   "veut": "Qu’aucune voie logistique ne devienne un péage obligatoire.",
+   "veut": "Garder une seconde route ouverte quand un ennemi bloque la première.",
    "craint": "Élargir son front jusqu’à rendre sa propre réserve trop lointaine.",
    "sort": "vit",
    "secret": null
@@ -667,7 +671,7 @@
    "nom": "Noémie Leduc",
    "camp": "ca",
    "role": "Commandante du Canada, technicienne des essais saisonniers",
-   "veut": "Des essais comparables et des préparatifs accessibles à tous les clubs.",
+   "veut": "Permettre aux nouvelles équipes de préparer leurs machines aussi bien que les plus riches.",
    "craint": "Attendre une prévision plus sûre au lieu de saisir une fenêtre courte.",
    "sort": "vit",
    "secret": null
@@ -677,7 +681,7 @@
    "nom": "Jone Vakalau",
    "camp": "fj",
    "role": "Commandant des Fidji, jeune capitaine des entraînements de lagon",
-   "veut": "Garder les petites équipes dans une guerre dominée par les grands budgets.",
+   "veut": "Donner aux petites équipes une vraie chance de tenir face aux grands budgets.",
    "craint": "Laisser ceux qui le suivent sans plan de secours.",
    "sort": "vit",
    "secret": null
@@ -687,7 +691,7 @@
    "nom": "Nikos Delis",
    "camp": "gr",
    "role": "Commandant de la Grèce, vétéran des relais côtiers",
-   "veut": "Transmettre une méthode qui lui survive.",
+   "veut": "Transmettre ce qu’il sait à ceux qui devront continuer sans lui.",
    "craint": "Qu’un nouvel outil remplace la méthode avant qu’elle soit apprise.",
    "sort": "meurt:opus1_hs_gr_3",
    "secret": null
@@ -697,7 +701,7 @@
    "nom": "Elín Arnardóttir",
    "camp": "is",
    "role": "Commandante de l’Islande, observatrice des sites d’essai",
-   "veut": "Un contrôle indépendant des annonces énergétiques.",
+   "veut": "Vérifier les promesses des fournisseurs avant que des équipes en dépendent.",
    "craint": "Accuser avant d’avoir recoupé deux fois.",
    "sort": "vit",
    "secret": null
@@ -707,7 +711,7 @@
    "nom": "Kito Njoroge",
    "camp": "ke",
    "role": "Commandant du Kenya, entraîneur des engagements longs",
-   "veut": "Prouver que la durée d’un contrat compte autant que son classement initial.",
+   "veut": "Éviter qu’un équipement bon marché aujourd’hui devienne impossible à entretenir demain.",
    "craint": "Laisser trop d’initiative au début en attendant l’épuisement adverse.",
    "sort": "vit",
    "secret": null
@@ -717,7 +721,7 @@
    "nom": "Tiana Ravel",
    "camp": "mg",
    "role": "Commandante de Madagascar, cartographe des pistes",
-   "veut": "Faire des relevés de terrain un bien partagé, pas une dépendance commerciale.",
+   "veut": "Partager les observations du terrain avec les équipes qui y risquent leurs véhicules.",
    "craint": "Perfectionner la reconnaissance quand un objectif simple exige d’agir.",
    "sort": "vit",
    "secret": null
@@ -727,7 +731,7 @@
    "nom": "Saran Bat",
    "camp": "mn",
    "role": "Commandante de la Mongolie, capitaine des parcours mobiles",
-   "veut": "Le droit de changer de fournisseur sans perdre l’accès au front.",
+   "veut": "Pouvoir changer de fournisseur sans perdre son matériel ni abandonner son équipe.",
    "craint": "Distancer les soutiens qui rendent sa mobilité possible.",
    "sort": "vit",
    "secret": null
@@ -737,7 +741,7 @@
    "nom": "Amalie Haoses",
    "camp": "na",
    "role": "Commandante de la Namibie, responsable des relevés côtiers",
-   "veut": "Qu’un opérateur ne vende pas une information que les pays en guerre ont produite ensemble.",
+   "veut": "Rendre aux équipes les informations qu’elles ont collectées ensemble.",
    "craint": "Garder trop longtemps un objectif mal connu.",
    "sort": "vit",
    "secret": null
@@ -747,7 +751,7 @@
    "nom": "Mira Karki",
    "camp": "np",
    "role": "Commandante du Népal, coordinatrice des ateliers d’altitude",
-   "veut": "Donner aux sites isolés une voix dans les engagements de distribution.",
+   "veut": "Faire livrer les postes isolés avant qu’il ne soit trop tard pour leurs équipes.",
    "craint": "Demander de l’aide trop tard.",
    "sort": "meurt:opus1_hs_np_3",
    "secret": null
@@ -757,7 +761,7 @@
    "nom": "Tess Roa",
    "camp": "nz",
    "role": "Commandante de la Nouvelle-Zélande, responsable des remises en service",
-   "veut": "Que la réparation et l’entretien comptent dans le partage des moyens.",
+   "veut": "Obtenir du temps et des pièces pour réparer, pas seulement de l’argent pour remplacer.",
    "craint": "S’attacher à un poste quand il faut changer d’axe.",
    "sort": "vit",
    "secret": null
@@ -767,7 +771,7 @@
    "nom": "Luz Quispe",
    "camp": "pe",
    "role": "Commandante du Pérou, conductrice des chantiers de passage",
-   "veut": "Qu’un dossier d’armes ne serve jamais à fermer la porte aux petits ateliers.",
+   "veut": "Garder les passages ouverts aux petits ateliers aussi bien qu’aux grandes armées.",
    "craint": "Croire qu’un chantier règle un désaccord écrit sur un contrat.",
    "sort": "vit",
    "secret": null
@@ -777,7 +781,7 @@
    "nom": "Maël Orven",
    "camp": "atl",
    "role": "Commandant de la mobilité aérienne des Gris",
-   "veut": "Ne plus dépendre de décisions prises loin du front.",
+   "veut": "Choisir ses missions et ne plus attendre que quelqu’un décide à sa place.",
    "craint": "Devoir sa victoire aux réserves de son père.",
    "sort": "vit",
    "secret": "Fils d’Edran Sorel — révélé à la finale 10. Frère de Lise Varen — jamais révélé dans cet opus. Il a dû abandonner un programme indépendant faute d’accès aux batteries d’Aube."
@@ -787,7 +791,7 @@
    "nom": "Lise Varen",
    "camp": "atl",
    "role": "Commandante de l’artillerie et des passages des Gris",
-   "veut": "Protéger ses techniciens sans que cette protection achète son silence.",
+   "veut": "Protéger ses techniciens sans devoir se taire quand leurs chefs les mettent en danger.",
    "craint": "Que la clause qui protège son équipe dépende d’un fournisseur unique.",
    "sort": "vit",
    "secret": "Sœur de Maël Orven et fille d’Edran Sorel, sous un nom professionnel distinct — information auteur, jamais exposée dans cet opus. Elle peut rompre avec le Consortium sur une pièce, jamais sur un compliment."
@@ -797,7 +801,7 @@
    "nom": "Edran Sorel",
    "camp": "atl",
    "role": "Coordinateur des réserves et de la relève, fournisseur du Consortium",
-   "veut": "Sauver son fils d’une nouvelle défaite, quitte à renforcer le réseau qu’il prétend seulement utiliser.",
+   "veut": "Garder des réserves pour les équipes que les chefs oublient lorsqu’elles sont épuisées.",
    "craint": "Que la relève qu’il apporte soit précisément ce qui rend son fils dépendant.",
    "sort": "vit",
    "secret": "Père de Maël et de Lise, sous son nom professionnel Sorel après une rupture familiale liée à un contrat de dépendance. Seul le lien avec Maël sort, à la finale 10 ; il rejoint son fils dans toutes les branches. Ses convois portent les batteries de relève d’Aube."
@@ -807,7 +811,7 @@
    "nom": "Yuna Serrat",
    "camp": "atl",
    "role": "Négociatrice des concessions de terrain, recruteuse des délégations sous contrat",
-   "veut": "Ne plus être celle qu’on consulte seulement après la signature.",
+   "veut": "Être celle qui décide de l’accord, plutôt que celle qui répare ses conséquences.",
    "craint": "Devoir restituer les contrats provisoires qu’elle a étendus.",
    "sort": "vit",
    "secret": "Ses contrats de gestion, limités à l’an 13, ont été étendus au bénéfice du Consortium pendant qu’elle se disait neutre."
@@ -817,7 +821,7 @@
    "nom": "Basile Kelm",
    "camp": "atl",
    "role": "Gardien des dépôts et de la couverture radar des Gris",
-   "veut": "Qu’aucun réseau ne s’interrompe, même au prix d’un système injuste.",
+   "veut": "Éviter les pannes et les interruptions, même en laissant les moins puissants attendre.",
    "craint": "Une réserve partagée qui tombe en panne.",
    "sort": "vit",
    "secret": "Il dépend des plans logistiques d’Edran et s’oppose aux prises de risque de Maël. Ses réserves rendues exclusives sont ce qui suspend le bac de Nikos et la rotation de Mira : deux des quatre morts passent par ses contrats, sans qu’il en soit l’auteur."
@@ -827,7 +831,7 @@
    "nom": "Relais Zéro",
    "camp": "atl",
    "role": "Relais Zéro — commandement distant sous indicatif",
-   "veut": "Objectif observable : garder à la Cinquième Manche une longueur d’avance sur ce que les autres savent.",
+   "veut": "But observable : voir les mouvements adverses avant d’être repéré. Son identité et ses raisons personnelles restent inconnues.",
    "craint": "Un relais qui laisse une trace.",
    "sort": "inconnu",
    "secret": "Aucune identité civile vérifiée, ni pour le joueur ni pour les auteurs : ce n’est pas un masque, c’est un indicatif. Son dernier relais tombe à la finale 16 ; qui parlait derrière reste une ouverture du prochain opus."
@@ -837,7 +841,7 @@
   {
    "cle": "prologue",
    "titre": "Prologue — l’école du front",
-   "resume": "Dix exercices au camp d’instruction des Haies — un pays de champs coupés de haies où l’on ne voit jamais à plus de deux cents mètres —, munitions à blanc, sous Ariane Belloc et Tomas Reiner. On y apprend à bouger, prendre, produire, tirer de loin, voir dans le brouillard, ravitailler, se battre en coalition — et, aux deux derniers, ce qu’une victoire prend et ce que coûte une promesse. La station à impulsion et la station de forçage météo y sont montrées éteintes, pour que le joueur sache lire un Bulletin avant qu’une arme réelle parte : ce sont des inventions de la faction, et les reconnaître est déjà un avantage. Le dernier exercice fixe le premier choix qui suivra le joueur sur le front français.",
+   "resume": "Dix exercices avec Ariane et Tomas : une action utile à apprendre à la fois, puis le plaisir de réussir ensemble. Les explications arrivent au moment où elles servent ; le brouillard et la nuit attendent le sixième exercice. Les technologies montrées n’imposent pas d’apprendre déjà l’organisation de leurs fabricants. Le dernier choix prépare une conséquence annoncée et concrète.",
    "episodes": [
     "premier_contact",
     "villes_du_bocage",
@@ -854,7 +858,7 @@
   {
    "cle": "nationale_1",
    "titre": "Saison nationale 1 — les droits du vainqueur",
-   "resume": "Quatre fronts d’Europe — France, Luxembourg, Suisse, Pays-Bas — où le joueur apprend ce qu’une victoire prend : des sites, des réserves, des ateliers, et les carnets qui vont avec. Ost prête du matériel, Edran ravitaille l’ennemi, Basile ferme des réserves qu’il garantit, Yuna raide les caisses. Les relevés recoupés disent qu’une part du courant sort des réseaux sans être inscrite, que les mêmes batteries sont livrées deux fois, et que la télémétrie de Wren — une invention civile, validée par elle — répond désormais à quelqu’un d’autre. Huit hors-série mènent en Grèce, en Islande, au Canada et au Népal. Quatre finales nationales inscrivent quatre concessions au Registre, et quatre décisions disent à qui elles vont.",
+   "resume": "Quatre fronts, quatre relations : Ariane apprend à vous faire confiance ; Tomas éprouve ses promesses ; Elsbeth ouvre peu à peu ses réserves ; Lotte doit coopérer avec une ancienne rivale. Ost et les Gris constituent d’abord un adversaire reconnaissable. Leur financement révèle ensuite le Consortium. Les contrats expliquent un problème vécu, jamais l’inverse. Huit hors-série donnent une place aux partenaires du second plan.",
    "episodes": [
     "opus1_fr_01",
     "opus1_fr_02",
@@ -917,7 +921,7 @@
   {
    "cle": "nationale_2",
    "titre": "Saison nationale 2 — qui possède le lendemain",
-   "resume": "Quatre fronts du soleil — Maroc, Sénégal, Brésil, Mexique — où l’on relie production solaire, stockage et transport, et où l’on comprend que le vrai butin n’est pas le champ mais l’atelier qui fabrique ses batteries. Les contrats concurrents portent la même clause, les batteries « livrées » finissent dans un dépôt méridien, le même prêteur finance trois délégations et choisit leurs ennemis, et le retard est une arme. Relais Zéro apparaît derrière ses Veilleurs ; les stations de forçage météo imposent leur pluie ; Samir El Hadi se soigne entre deux étapes et personne ne relève. Neuf hors-série mènent au Kenya, en Argentine, au Pérou, en Mongolie et en Islande. Les délégations compromises apprennent qu’elles peuvent changer de camp — comptes ouverts, ou après rupture.",
+   "resume": "Samir apprend à laisser son adjointe prendre le relais ; Awa défend les équipes qui attendent au quai ; Lívia refuse de confondre alliance et obéissance ; Inés cherche une victoire qui vaille mieux qu’une revanche. Le Consortium exploite leurs urgences de façons différentes. Neuf hors-série prolongent des relations au lieu de répéter la même collecte de preuves. La santé de Samir suit les jalons et branches conservés.",
    "episodes": [
     "opus1_ma_01",
     "opus1_ma_02",
@@ -981,7 +985,7 @@
   {
    "cle": "nationale_3",
    "titre": "Saison nationale 3 — les accès d’Aube",
-   "resume": "Quatre fronts vers Aube — Inde, Japon, Australie, Indonésie. Les convertisseurs, les instruments et les autorisations d’essai sont escortés vers le programme de fusion, et les relevés montrent que les concessions solaires et les accès d’Aube portent la même signature. C’est la saison où la course technique passe devant la course au courant : on ne se bat plus pour un dépôt, on se bat pour une place dans le laboratoire. Sélène Veyr vient elle-même aux quatre finales nationales ; Ost reconnaît à l’antenne que la Sélection se bat pour Aube. La plaque du Maroc est posée à plat à l’Australie 1 si le crédit de sa délégation n’a pas été garanti. Neuf hors-série mènent au Pérou, en Namibie, en Nouvelle-Zélande, aux Fidji et à Madagascar. La finale indonésienne fixe les alliés et les garanties qui entrent dans les dix-huit dernières batailles.",
+   "resume": "Devika protège une recherche encore incertaine ; Ren accepte une vérification indépendante ; Hazel reconnaît ce qu’une colonne ne peut pas couvrir ; Ayu rassemble ceux qui choisissent réellement de partir. Après sa présentation à la fin du tutoriel 10, Aube devient un objectif matériel à Inde 3, avec l’escorte de ses convertisseurs. Les décisions préparent une coalition qui peut rester incomplète. Sélène défend son offre publiquement sans révéler les secrets familiaux. Neuf hors-série font revenir des partenaires déjà rencontrés.",
    "episodes": [
     "opus1_in_01",
     "opus1_in_02",
@@ -1045,7 +1049,7 @@
   {
    "cle": "globale_4",
    "titre": "Saison globale 4 — la Cinquième Manche à visage découvert",
-   "resume": "Les Gris combattent sous le signe de la Cinquième Manche, et chaque commandant sort son arme sans dossier : la Batterie sans plaque d’Ost, le Verrou de Basile, le Rapace de Maël, le Repère de Lise, la Borne de scellés de Yuna, le Relais sans numéro de Relais Zéro. Six armes, six laboratoires qu’on n’a jamais payés, et aucune n’a de plans déposés nulle part : la faction n’a pas seulement triché, elle a pillé la recherche du monde entier. Nera Aldouin dépose un protêt par arme — une plainte écrite que le Bureau est obligé d’inscrire, même s’il la classe ; il les classe toutes les six. La Grèce perd Nikos Delis hors du front. Six décisions font de chaque arme une pièce à charge, ou pas.",
+   "resume": "Les Gris assument le projet de la Cinquième Manche. Six armes nouvelles changent les batailles et forcent la coalition à adapter ses plans. Nera réunit ensuite ce qui permet de contester leur usage ; le dossier suit les victoires, il ne les remplace pas. La disparition de Nikos reçoit un temps de silence et des réactions personnelles, sans spectacle ni nouvelle mort ajoutée.",
    "episodes": [
     "opus1_finale_01",
     "opus1_finale_02",
@@ -1059,7 +1063,7 @@
   {
    "cle": "globale_5",
    "titre": "Saison globale 5 — la défaite écrite",
-   "resume": "Les réserves de Basile servent à imposer le contrôle d’Aube ; Sélène propose le courant contre les décisions, et le Coupleur coupe le vôtre. Au Dépôt de relève, Edran Sorel apparaît ; à Ce que Sorel protège, il révèle être le père de Maël, rejoint sa ligne avec les batteries d’Aube — la fusion déjà volée, pièce par pièce, avant même la bataille du campus — et la coalition perd : la seule victoire est d’extraire le commandement. Le repli coûte Mira Karki dans la montagne et Tomas Reiner sur la desserte de nuit. Basile veut empêcher la coalition de se reformer ; elle se reforme.",
+   "resume": "Sélène propose la sécurité énergétique contre le pouvoir de décider. La coalition tente encore d’avancer, puis Edran rejoint Maël à la finale 10 en révélant sa paternité. La perte du front est imposée ; extraire le commandement et choisir ce qu’on sauve reste une réussite jouable. Les disparitions de Mira et Tomas conservent leurs jalons. Le repli doit aussi montrer qui aide, qui reste et comment repartir.",
    "episodes": [
     "opus1_finale_07",
     "opus1_hs_np_3",
@@ -1073,7 +1077,7 @@
   {
    "cle": "globale_6",
    "titre": "Saison globale 6 — la dernière concession",
-   "resume": "La coalition remonte, et chaque bataille reprend une invention : Lise confronte les garanties aux actes et peut se rendre sur une pièce dont elle a dessiné les plans, Maël refuse le projet de son père, Edran est battu loyalement et le Convoi sans manifeste saisi avec les batteries d’Aube, Relais Zéro perd ses relais sans perdre son nom. Sur le plateau d’Aube, Ost perd la maîtrise du terrain avec les alliés que les engagements ont donnés. Au campus, Sélène commande en personne ; sa direction de la Cinquième Manche est confirmée et contestée publiquement, et le joueur signe — ou refuse — la dernière concession, qui décide à qui revient Aube : à un collège, à des vainqueurs, ou à personne.",
+   "resume": "La coalition revient avec ses pertes et ses désaccords. Lise juge les promesses aux actes, Maël conteste son père, Edran peut cette fois être battu loyalement. L’identité de Relais Zéro reste inconnue. Chaque aide présente vient d’un engagement conservé ; la victoire finale ne rend pas Aube opérationnel et ne résout pas tout. Les quatre fins donnent des suites distinctes aux choix déjà faits.",
    "episodes": [
     "opus1_finale_13",
     "opus1_finale_14",
@@ -1087,7 +1091,7 @@
  "episodes": {
   "premier_contact": {
    "titre": "Premier contact",
-   "resume": "Camp d’instruction des Haies — des champs coupés de haies où l’on ne voit jamais à plus de deux cents mètres —, munitions d’exercice. Tomas Reiner aligne trois pièces et vous apprend ce qu’un tir coûte à qui riposte : au front, ces charges ne seront plus à blanc.",
+   "resume": "Au camp des Haies, Tomas a aligné les unités pour un exercice simple. Ariane vous confie les premiers ordres et attend de voir comment vous couvrez votre avance. Les munitions sont d’exercice ; on apprend en essayant, et un conseil bref accompagne la première erreur.",
    "enjeu": "Apprendre à bouger, à lire le terrain et à frapper avant qu’on frappe. Ici les charges sont à blanc ; au front, elles ne le seront plus.",
    "technologies": [],
    "personnages": [
@@ -1150,7 +1154,7 @@
   },
   "opus1_tutoriel_06": {
    "titre": "Au-delà des arbres",
-   "resume": "Brouillard sur la forêt, un radar au centre, et pour la première fois une station à impulsion inactive dont le Bulletin publie le rayon. Prendre le radar, contourner la station le jour dit, puis le QG : la première impulsion est évitable, et c’est la leçon.",
+   "resume": "Une liaison se coupe derrière les haies : les unités doivent reconnaître ce que la carte ne montre plus. Ariane explique le brouillard au départ ; le radar reçoit son explication lorsqu’il devient utile. La nuit est annoncée avant J3, puis le retour du jour à J5 permet de comparer. Les impulsions ont leur calendrier et leur rayon visibles ; l’identité du fabricant attend le compte rendu.",
    "enjeu": "Voir dans le brouillard, et reconnaître une station à impulsion avant qu’elle parte : c’est une invention de la faction, et savoir la lire est déjà un avantage.",
    "technologies": [
     "station_radar",
@@ -1166,7 +1170,7 @@
   },
   "opus1_tutoriel_07": {
    "titre": "Le dernier kilomètre",
-   "resume": "Un transport doit atteindre la sortie nord avec au moins une pièce de couverture vivante ; les charges s’épuisent, le carburant aussi. Variante maritime : un drone marin ennemi presse le quai de ravitaillement, et il faut choisir entre le poursuivre et tenir le quai.",
+   "resume": "Le transport doit atteindre la sortie avec une couverture. Tomas montre les réserves qui baissent et le ravitaillement qui permet de repartir. La menace maritime s’explique par ce qu’elle fait au quai ; on ne quitte pas l’escorte pour poursuivre une unité qui n’empêche pas son passage.",
    "enjeu": "Apprendre que la logistique est un front comme un autre : sans carburant, la meilleure machine est une cible.",
    "technologies": [
     "drone_marin",
@@ -1181,7 +1185,7 @@
   },
   "opus1_tutoriel_08": {
    "titre": "Une ligne commune",
-   "resume": "Premier engagement de coalition : deux camps contre un, vision partagée, caisses séparées. Tomas tient l’autre flanc et ne vous prêtera pas un fonds — ce sont les règles du Pacte, pas les siennes.",
+   "resume": "Tomas tient un flanc et le joueur l’autre : les alliés partagent leur vision, mais chacun commande ses unités et garde sa caisse. On présente Ost comme le chef des Gris, sans lui ajouter encore toute une organisation. Le bon geste est de couvrir une unité alliée au moment où elle en a besoin.",
    "enjeu": "Comprendre ce qu’une alliance de guerre partage — les convois, les relevés, les plans — et ce qu’elle ne partage pas.",
    "technologies": [],
    "personnages": [
@@ -1194,7 +1198,7 @@
   },
   "opus1_tutoriel_09": {
    "titre": "Le prix du courant",
-   "resume": "Trois postes de distribution, une station de forçage météo qui annonce sa pluie, et pour la première fois le mot concession au briefing. Prendre deux postes sur trois, c’est décider où va le courant du canton pendant quatre ans.",
+   "resume": "Trois postes distribuent le courant du secteur ; il faut en prendre deux. La météo modifiée est annoncée avant de changer les déplacements. Ariane explique seulement ce qu’on gagne et ce qu’on peut promettre avec cette ressource ; les détails du règlement attendent le carnet.",
    "enjeu": "Apprendre ce qu’une victoire prend — les sites, les réserves, les ateliers et les carnets qui vont avec — et ce qu’elle ne prend jamais.",
    "technologies": [
     "poste_distribution",
@@ -1209,7 +1213,7 @@
   },
   "opus1_tutoriel_10": {
    "titre": "La première promesse",
-   "resume": "Dernier exercice, toutes les leçons ensemble : prendre le QG ou détruire l’armée qui le défend, en protégeant si possible un transport. À la fin, Ariane pose la première vraie question de la guerre : un contrat de maintenance partagée, ou des fonds tout de suite.",
+   "resume": "Dernier exercice : combiner les ordres appris pour prendre le QG ou battre la force adverse. Ariane et Tomas laissent davantage de place au joueur. Après la victoire viennent le choix de maintenance partagée ou de fonds immédiats, puis deux explications brèves : le Consortium finance les Gris ; Aube cherche à produire de l’énergie par fusion, mais n’y est pas encore. La Cinquième Manche ne sera nommée qu’après couleurs_alliees.",
    "enjeu": "Faire le premier choix qui suivra le joueur sur le front français : gagner vite, ou gagner en tenant ce qu’on a promis.",
    "technologies": [],
    "personnages": [
@@ -1251,7 +1255,7 @@
   },
   "opus1_fr_01": {
    "titre": "Premier courant",
-   "resume": "Premier front réel, dans les Haies : deux réseaux disputent le même transformateur et le Registre n’en inscrira qu’un. Ariane commande la France ; vous commandez sa deuxième colonne, et les charges sont vraies.",
+   "resume": "Ariane vous confie une colonne pour votre premier combat réel. Elle connaît chaque équipage ; vous devez encore apprendre leurs voix à la radio. Le transformateur des Haies est votre objectif, pas une occasion de prouver que vous êtes meilleur qu’elle.",
    "enjeu": "Prendre le QG du réseau concurrent : le transformateur, la ligne qu’il commande et l’atelier qui l’entretient partent avec.",
    "technologies": [
     "poste_distribution"
@@ -1265,7 +1269,7 @@
   },
   "opus1_fr_02": {
    "titre": "Les villes du contrat",
-   "resume": "Les revenus promis par la concession des Haies excluent les équipes de maintenance : le contrat paie les pièces, pas ceux qui les réparent. Ariane vous fait prendre deux des trois villes qui tiennent les ateliers, pour que quelqu’un les paie.",
+   "resume": "Les ateliers gagnés ne peuvent pas redémarrer : leurs mécaniciens n’ont plus de quoi travailler. Ariane veut reprendre les villes qui les approvisionnent ; votre rival voudrait déjà pousser vers le QG. Une victoire ne sert à rien si personne ne peut la faire durer.",
    "enjeu": "Tenir les villes qui paient les ateliers, avant que le contrat les vide de leurs équipes.",
    "technologies": [
     "poste_distribution"
@@ -1279,7 +1283,7 @@
   },
   "opus1_fr_03": {
    "titre": "La voie de service",
-   "resume": "Un convoi de batteries dues aux communes partenaires doit traverser deux lignes ennemies. Si le transport tombe, la concession est perdue avec lui : c’est la première fois qu’un équipage escorté vaut plus qu’un QG.",
+   "resume": "Les batteries promises aux communes partenaires prennent la route. Ariane vous laisse commander l’escorte et garde ses conseils pour les moments où vous les demandez. Le transport doit arriver ; courir après les unités en fuite le laisserait seul.",
    "enjeu": "Faire passer les batteries jusqu’au dépôt des communes : elles valent une année de courant, et plus personne ici ne sait en fabriquer.",
    "technologies": [
     "stockage_solaire"
@@ -1293,7 +1297,7 @@
   },
   "opus1_fr_04": {
    "titre": "Deux rives, un réseau",
-   "resume": "Un pont fermé « pour raisons d’engagement » sépare les réserves de ceux qui les utilisent ; deux fronts, un réseau. Ariane et vous prenez le QG qui commande le pont, et vous découvrez que les relevés de front valent autant qu’une réserve de guerre.",
+   "resume": "Un pont sépare les réserves de la colonne d’Ariane. Vous devez coordonner les deux rives, et accepter qu’elle voie un danger que votre carte ne montre pas. Après la bataille, partager vos relevés signifie aussi montrer vos erreurs.",
    "enjeu": "Décider si les relevés des deux rives partent à la coalition ou si la caisse reste pleine.",
    "technologies": [
     "stockage_solaire",
@@ -1337,7 +1341,7 @@
   },
   "opus1_fr_05": {
    "titre": "Le devis orange",
-   "resume": "Hadran Ost, commandant de la Sélection Méridienne, prête à la France du matériel dont les conditions de retour sont écrites en tout petit. Premier engagement contre les Gris : les détruire tous, sans QG à prendre, et rendre ce qui a été prêté.",
+   "resume": "Ost, le chef des Gris, vient reprendre le matériel qu’il avait prêté. Son sourire ne change pas quand il réclame davantage que prévu. C’est votre première confrontation avec lui : sa force est redoutable, mais sa politesse agace encore plus Ariane.",
    "enjeu": "Battre Ost, et comprendre ce qu’un prêt de matériel méridien coûte vraiment : pas de l’argent, des plans.",
    "technologies": [
     "bastion_meridien"
@@ -1352,7 +1356,7 @@
   },
   "opus1_fr_06": {
    "titre": "La journée sans crédit",
-   "resume": "Le crédit de la délégation est suspendu au milieu de l’engagement : plus de production, tenir huit journées avec ce qui est sur le terrain. Un prestataire de réserve nommé Edran Sorel propose une relève — à ses conditions.",
+   "resume": "Plus de fonds pour produire ; il faut tenir avec les unités présentes. Edran Sorel offre une aide coûteuse. Ariane refuse de décider à votre place, puis vous aide à compter ce qui peut réellement tenir huit journées.",
    "enjeu": "Survivre sans crédit jusqu’à la relève de J9.",
    "technologies": [
     "stockage_solaire"
@@ -1367,7 +1371,7 @@
   },
   "opus1_fr_07": {
    "titre": "Les clairières témoins",
-   "resume": "Trois postes forestiers donnent trois relevés de puissance qui ne concordent pas. Une pièce doit les visiter dans l’ordre sous le feu ; ce que les clairières disent, c’est qu’une part du courant sort du réseau sans être inscrite.",
+   "resume": "Une patrouille est rentrée sans comprendre pourquoi ses batteries étaient vides. Relier les trois postes permet de retrouver son parcours et de repérer une dérivation cachée. L’enquête part d’une équipe épuisée, pas d’un dossier à remplir.",
    "enjeu": "Recouper les relevés des trois clairières : le courant qui manque au compteur est parti quelque part.",
    "technologies": [
     "telemetrie",
@@ -1382,7 +1386,7 @@
   },
   "opus1_fr_08": {
    "titre": "Ligne de partage",
-   "resume": "Deux délégations françaises ont signé deux contrats incompatibles avec le même fournisseur, et se battent l’une contre l’autre sous le même drapeau. Ariane refuse de choisir un camp ; elle vous laisse choisir si l’on garantit la livraison au signataire ou si l’on refuse de couvrir sa dette.",
+   "resume": "Deux délégations françaises se font face parce qu’un fournisseur leur a promis les mêmes réserves. Ariane veut les réunir, mais l’une exige que vous payiez pour sa signature. Aider peut sauver un futur partenaire ; garder les fonds peut protéger vos propres équipages.",
    "enjeu": "Gagner un 2v2 entre Français, et trancher la dette de celui qui a signé.",
    "technologies": [
     "stockage_solaire"
@@ -1425,7 +1429,7 @@
   },
   "opus1_fr_09": {
    "titre": "La réserve commune",
-   "resume": "Avant l’engagement décisif, Ariane demande de garantir une réserve commune : deux positions à tenir trois journées pendant que les dépôts se remplissent. L’ennemi attaque les réserves, pas le QG.",
+   "resume": "Avant l’assaut, il faut tenir les deux réserves communes. Pour la première fois, Ariane vous demande où placer sa colonne. Le changement tient en une phrase à la radio : elle attend votre décision.",
    "enjeu": "Tenir la réserve commune jusqu’à ce qu’elle soit pleine.",
    "technologies": [
     "stockage_solaire"
@@ -1439,7 +1443,7 @@
   },
   "opus1_fr_10": {
    "titre": "Une signature de trop",
-   "resume": "Une ligne ajoutée au contrat méridien lie la victoire française à une exclusivité de transport — un seul transporteur autorisé, et c’est le leur : gagner le front, c’est perdre les routes. Prendre deux des trois bâtiments avant la signature, et décider si la délégation dépendante revient tout de suite, comptes ouverts à la coalition, ou seulement après avoir rompu son contrat.",
+   "resume": "Le fournisseur veut devenir le seul transporteur autorisé sur les routes gagnées. Reprendre ses centres donne une porte de sortie à la délégation dépendante. La reprendre immédiatement sous contrôle ou attendre sa rupture protège deux formes différentes de confiance.",
    "enjeu": "Gagner le front sans signer la ligne ajoutée : une victoire qui livre les routes ne vaut rien.",
    "technologies": [
     "stockage_solaire"
@@ -1482,7 +1486,7 @@
   },
   "opus1_fr_11": {
    "titre": "Le contrat rendu public",
-   "resume": "Ost, Maël Orven et Lise Varen viennent défendre la même offre de concession, chacun sous son nom public. Tout détruire, pas de QG : c’est le premier engagement où la Sélection aligne trois commandants, et ils se coordonnent comme une armée.",
+   "resume": "Ost revient avec Maël et Lise, chacun présenté par son rôle de combat. Leurs attaques coordonnées obligent Ariane et vous à vous couvrir sans tout diriger ensemble. Aucun de leurs échanges ne renseigne sur leur vie privée.",
    "enjeu": "Détruire les trois colonnes méridiennes des Haies, et rendre le contrat public.",
    "technologies": [
     "bastion_meridien"
@@ -1499,7 +1503,7 @@
   },
   "opus1_fr_12": {
    "titre": "Une victoire à partager",
-   "resume": "Finale du front français, trois contre un : le dernier QG contrôle l’attribution du réseau. Gagner inscrit la concession de la France ; ce qu’on en fait — la verser à la caisse commune ou armer le front suivant — est la première décision de coalition.",
+   "resume": "Le dernier QG tombe si les trois colonnes coopèrent. Ariane ne vous offre pas un discours : elle vous laisse annoncer la victoire aux équipages. La réserve gagnée peut soutenir les alliés ou préparer votre prochaine bataille ; elle vous demande de nommer à qui vous faites cette promesse.",
    "enjeu": "Prendre le QG et décider à qui va la concession française.",
    "technologies": [
     "poste_distribution"
@@ -1542,7 +1546,7 @@
   },
   "opus1_lu_01": {
    "titre": "Le relais de Tomas",
-   "resume": "Tomas Reiner accueille les batteries promises à la frontière de deux réseaux, et une colonne ennemie veut les prendre avant qu’elles soient inscrites. Le Luxembourg est un carrefour ; on ne le tient pas, on le traverse en premier.",
+   "resume": "Tomas accueille les batteries françaises et vérifie lui-même la dernière caisse. Un convoi ennemi approche du relais. Son calme vous rassure ; vous découvrez vite qu’il mémorise toutes les promesses faites en route.",
    "enjeu": "Prendre le QG qui commande le relais de Tomas : sans lui, aucun convoi de la région ne sait plus où il va.",
    "technologies": [
     "stockage_solaire"
@@ -1556,7 +1560,7 @@
   },
   "opus1_lu_02": {
    "titre": "Les trois aiguillages",
-   "resume": "Trois routes logistiques offrent trois accès au dépôt central, et l’ennemi n’en tient qu’un à la fois. Prendre deux aiguillages sur trois, c’est décider par où passent les convois de toute la saison.",
+   "resume": "Trois aiguillages ouvrent le dépôt. Tomas connaît le trajet le plus rapide, mais vous laisse choisir les deux passages à reprendre. Il ne veut pas former un commandant qui attend toujours son itinéraire.",
    "enjeu": "Tenir deux des trois aiguillages : qui tient l’aiguillage fixe l’heure d’arrivée de tout le monde.",
    "technologies": [
     "poste_distribution"
@@ -1570,7 +1574,7 @@
   },
   "opus1_lu_03": {
    "titre": "Garantie de livraison",
-   "resume": "Un transport doit traverser la vallée avant la clôture du contrat, contre deux camps qui savent l’heure limite. Tomas couvre ; vous escortez ; si le transport tombe, le contrat est rompu et la dette reste.",
+   "resume": "Le transport doit franchir la vallée avant la fermeture du passage. Tomas reste derrière pour couvrir les retardataires. Vous escorteriez volontiers plus vite ; partir sans eux ferait arriver les batteries et manquer les personnes qui doivent les utiliser.",
    "enjeu": "Faire passer la vallée avant la clôture, et livrer ce qui a été promis.",
    "technologies": [
     "stockage_solaire"
@@ -1584,7 +1588,7 @@
   },
   "opus1_lu_04": {
    "titre": "Le prix du retard",
-   "resume": "L’ennemi finance sa défense avec les pénalités de retard du convoi : chaque journée perdue lui paie un bastion de plus. Tomas et vous prenez son QG avant qu’il soit riche, puis Tomas pose la question des relevés.",
+   "resume": "Le retard du convoi paie la défense adverse. Tomas admet avoir promis une heure impossible, puis continue la bataille sans chercher d’excuse. Les relevés permettent de l’établir ; les partager, c’est accepter que les alliés le sachent.",
    "enjeu": "Prendre le QG avant que le retard soit payé — par vous.",
    "technologies": [
     "stockage_solaire"
@@ -1627,7 +1631,7 @@
   },
   "opus1_lu_05": {
    "titre": "Deux équipes, deux caisses",
-   "resume": "Engagement de coalition contre Ost : caisses séparées, vision partagée, et Tomas qui refuse un fonds parce que le Pacte l’interdit. Tout détruire ; les Gris ne laissent pas de QG derrière eux.",
+   "resume": "Face à Ost, vos deux caisses restent séparées. Tomas ne peut pas payer votre prochaine unité et doit vous aider avec ce qu’il commande déjà. Couvrir un allié compte autant que lui donner de l’argent.",
    "enjeu": "Détruire la colonne d’Ost en coalition, et voir ce que son matériel prêté cache sous le capot.",
    "technologies": [
     "bastion_meridien"
@@ -1642,7 +1646,7 @@
   },
   "opus1_lu_06": {
    "titre": "La voie détournée",
-   "resume": "Yuna Serrat change de front pour prendre les dépôts laissés sans couverture, pendant qu’Edran Sorel ravitaille sa colonne. Tenir dix journées avec ce qu’il reste, jusqu’à la relève de J11.",
+   "resume": "Yuna attaque les dépôts laissés derrière le convoi ; Edran ravitaille sa poursuite. Tomas doit choisir quelles routes fermer pour tenir jusqu’à la relève. Vous l’entendez renoncer à une livraison pour sauver le réseau qui permettra les suivantes.",
    "enjeu": "Survivre à la manœuvre de Yuna sans lui laisser une caisse.",
    "technologies": [
     "stockage_solaire"
@@ -1658,7 +1662,7 @@
   },
   "opus1_lu_07": {
    "titre": "Le registre partagé",
-   "resume": "Trois stations successives, trois relevés à comparer sous le feu. Le registre partagé de Tomas montre que les batteries « livrées » à deux délégations sont les mêmes.",
+   "resume": "Trois stations cherchent le même chargement. Les reprendre dans l’ordre permet de joindre des équipes qui attendent chacune des batteries promises deux fois. Tomas appelle lui-même celles qui devront patienter.",
    "enjeu": "Parcourir les trois stations dans l’ordre : un registre partagé ne vaut que complet.",
    "technologies": [
     "telemetrie"
@@ -1672,7 +1676,7 @@
   },
   "opus1_lu_08": {
    "titre": "Une offre de stabilité",
-   "resume": "Une délégation partenaire accepte un crédit du Consortium pour finir son année, et se retrouve en face. Tomas ne rompt pas une promesse pour une signature ; il vous laisse dire si la coalition garantit la livraison ou refuse la dette.",
+   "resume": "Une délégation rejoint le Consortium Méridien, l’entreprise qui finance les Gris, pour obtenir son matériel. Tomas comprend son urgence sans approuver son choix. Garantir sa livraison vous engage à payer ; refuser conserve de quoi assurer les vôtres.",
    "enjeu": "Gagner le 2v2 et trancher la garantie qu’on donne à un partenaire endetté.",
    "technologies": [
     "stockage_solaire"
@@ -1717,7 +1721,7 @@
   },
   "opus1_hs_gr_1": {
    "titre": "Le café avant l’engagement",
-   "resume": "Nikos Delis ne se bat jamais avant son café. Il vous reçoit sur un archipel relié par des jetées, où les blindés restent au port, et vous montre qu’une méthode vaut mieux qu’un nouvel outil.",
+   "resume": "Nikos ne commence jamais avant son café. Sur les jetées, il vous apprend une méthode de couverture que sa recrue connaît déjà par cœur. Il plaisante quand elle le corrige ; leur complicité compte davantage que l’outil le plus neuf.",
    "enjeu": "Prendre le QG de Nikos jetée après jetée, et repartir avec sa méthode plutôt qu’avec son matériel.",
    "technologies": [],
    "personnages": [
@@ -1729,7 +1733,7 @@
   },
   "opus1_hs_gr_2": {
    "titre": "La recrue sur la jetée",
-   "resume": "Basile verrouille la réserve du port principal et suspend le bac. Nikos et vous tenez deux jetées pendant trois journées, et pour la première fois il demande votre avis : confier le passage des îles à sa recrue cet hiver, ou reprendre lui-même toute la préparation.",
+   "resume": "Basile ferme la réserve et suspend le bac. Nikos et vous devez tenir les deux jetées trois journées. Après la bataille, il demande s’il doit former sa recrue pour l’hiver ou reprendre lui-même la préparation : transmettre sa méthode ou continuer à tout porter.",
    "enjeu": "Tenir les jetées et conseiller Nikos sur qui apprendra le passage après lui.",
    "technologies": [
     "stockage_solaire"
@@ -1773,7 +1777,7 @@
   },
   "opus1_lu_09": {
    "titre": "Promesse sous pression",
-   "resume": "Tomas maintient une livraison à la délégation qui a signé contre lui : deux positions à tenir trois journées pour que le convoi passe. L’ennemi ne comprend pas qu’on livre à qui vous tire dessus.",
+   "resume": "Tomas maintient une livraison promise avant le changement de camp du destinataire. Deux positions doivent tenir pendant le passage. Il ne demande pas au joueur de lui donner raison : il lui demande si sa parole reste utile lorsqu’elle coûte quelque chose.",
    "enjeu": "Tenir les deux positions le temps de la livraison.",
    "technologies": [
     "stockage_solaire"
@@ -1787,7 +1791,7 @@
   },
   "opus1_lu_10": {
    "titre": "L’échéance de nuit",
-   "resume": "Le remboursement arrive de nuit, sous brouillard, pendant que deux camps prennent les bâtiments qui garantissent la dette. Deux sur trois, et la question du retour de la délégation : comptes ouverts, ou après rupture du contrat.",
+   "resume": "La dette tombe de nuit. Reprendre les centres permet de ramener le partenaire, mais Tomas exige qu’il explique sa signature aux équipages qui l’ont couvert. Une aide surveillée et une rupture préalable ne réparent pas la confiance de la même façon.",
    "enjeu": "Prendre deux bâtiments de nuit et fixer les conditions du retour du signataire.",
    "technologies": [
     "poste_distribution"
@@ -1830,7 +1834,7 @@
   },
   "opus1_lu_11": {
    "titre": "Le garant absent",
-   "resume": "Basile Kelm refuse d’ouvrir les réserves qu’il s’était engagé à garantir ; Ost, Maël et Lise tiennent ses portes. Tout détruire pour rouvrir le dépôt : c’est la première fois que le garant est l’ennemi.",
+   "resume": "Basile garde fermées les réserves qu’il devait fournir. Ost, Maël et Lise défendent ses portes. Tomas cesse d’attendre une réponse et prépare avec vous l’assaut qui fera enfin repartir les convois.",
    "enjeu": "Détruire la garde du dépôt et rouvrir les réserves fermées.",
    "technologies": [
     "bastion_meridien",
@@ -1849,7 +1853,7 @@
   },
   "opus1_lu_12": {
    "titre": "Le pacte des relais",
-   "resume": "Finale du front luxembourgeois, trois contre un : la victoire décide si le réseau repose sur une caisse commune ou sur des garanties séparées. Tomas commande la coalition ; ce que vous faites de la concession dit ce qu’elle vaut.",
+   "resume": "Les trois colonnes atteignent le dernier relais. Tomas propose un réseau dont personne ne promet plus qu’il ne peut livrer. Vous choisissez où va la réserve gagnée ; il inscrit la promesse et garde une place pour noter, plus tard, comment elle a été tenue.",
    "enjeu": "Prendre le dernier QG et fixer qui commande les relais pour les quatre ans qui viennent.",
    "technologies": [
     "poste_distribution"
@@ -1892,7 +1896,7 @@
   },
   "opus1_ch_01": {
    "titre": "Le premier col",
-   "resume": "Solveig Tamm, intendante d’Atlas, vous rejoint sur un col où une montée étroite oblige à couvrir l’artillerie. Elsbeth Vonlanthen défend les réserves d’altitude ; le QG ennemi est au bout du col.",
+   "resume": "Elsbeth n’ouvre pas ses réserves au premier allié de passage. Solveig vous accompagne sur le col pour montrer que votre colonne sait protéger les accès étroits. La confiance commence par un passage laissé libre, pas par une signature.",
    "enjeu": "Prendre le QG au sommet du premier col, et la station de mesure qu’il abrite.",
    "technologies": [],
    "personnages": [
@@ -1905,7 +1909,7 @@
   },
   "opus1_ch_02": {
    "titre": "La retenue froide",
-   "resume": "La retenue froide alimente deux sites de part et d’autre du lac ; celui qui en tient deux sur trois tient la réserve. Première capture d’une réserve de stockage ennemie : ce qui était inscrit à un autre nom passe au vôtre.",
+   "resume": "La retenue alimente les deux versants. Reprendre deux sites permet de répartir la réserve ; Elsbeth observe si vous servez seulement la route par laquelle vous repartirez. Solveig rappelle qu’une vallée restera ici après votre victoire.",
    "enjeu": "Prendre deux des trois sites de la retenue : l’eau haute est la plus grosse réserve d’énergie du continent.",
    "technologies": [
     "stockage_solaire"
@@ -1920,7 +1924,7 @@
   },
   "opus1_ch_03": {
    "titre": "Le carnet d’altitude",
-   "resume": "Une équipe de mesure transporte des relevés d’altitude que Méridien conteste ; deux camps veulent le carnet. L’escorte est la mission ; le carnet vaut une réserve.",
+   "resume": "Une équipe de mesure doit redescendre avec son carnet. Elsbeth connaît les personnes dans le transport et refuse qu’on traite leur escorte comme un détour secondaire. Deux camps tiennent les pentes ; ouvrir le chemin devient votre tâche commune.",
    "enjeu": "Amener le carnet d’altitude au dépôt de contrôle : ce sont des mesures que personne d’autre au monde ne possède.",
    "technologies": [
     "telemetrie"
@@ -1935,7 +1939,7 @@
   },
   "opus1_ch_04": {
    "titre": "La route basse",
-   "resume": "La route basse est courte et exposée aux batteries de Lise Varen ; la haute est longue et sûre. Solveig et vous prenez le QG par l’une ou l’autre, puis Solveig demande si les relevés du col vont à la coalition.",
+   "resume": "La route basse est rapide, mais Lise la couvre. Elsbeth défend le détour ; Solveig craint le temps perdu. Votre approche tranche ce désaccord sans rendre l’une des deux stupide. Les relevés obtenus permettront aux prochains convois de choisir en connaissance de cause.",
    "enjeu": "Prendre le QG malgré l’artillerie de la route basse.",
    "technologies": [
     "telemetrie"
@@ -1982,7 +1986,7 @@
   },
   "opus1_hs_is_1": {
    "titre": "La même réserve vendue deux fois",
-   "resume": "Elín Arnardóttir a comparé deux contrats qui vendent la même réserve à deux délégations. Elle vous invite sur la roche noire, de nuit, pour prendre deux des trois stations qui alimentent ces contrats, face à Yuna qui les gère.",
+   "resume": "Elín a promis des batteries à deux équipes et découvre que le fournisseur leur a vendu la même réserve. Elle veut reprendre deux stations face à Yuna avant d’annoncer un départ qu’elle ne pourrait pas tenir. Sa prudence ressemble à de la froideur jusqu’à ce qu’on rencontre ceux qui l’attendent.",
    "enjeu": "Prendre deux des trois stations de la réserve vendue deux fois, et établir à qui elle appartient vraiment.",
    "technologies": [
     "stockage_solaire",
@@ -1998,7 +2002,7 @@
   },
   "opus1_ch_05": {
    "titre": "Le plateau verrouillé",
-   "resume": "Basile Kelm verrouille une station radar avec un Bastion méridien sans tenir toute la carte : il tient ce qui voit. Ost couvre ; tout détruire, y compris le Bastion, pour rendre la vue à la vallée.",
+   "resume": "Le Bastion de Basile protège la station qui surveille la vallée. Elsbeth ne veut pas exposer une colonne pour reprendre un sommet symbolique ; l’enjeu est de rendre la vue aux équipes d’en bas. Ost couvre la position, qu’il faut isoler avant l’assaut.",
    "enjeu": "Détruire la garde du radar et le Bastion qui la couvre — et voir de près une pièce que les Gris ne prêtent jamais.",
    "technologies": [
     "station_radar",
@@ -2016,7 +2020,7 @@
   },
   "opus1_ch_06": {
    "titre": "Le passage sans renfort",
-   "resume": "Une fenêtre de traversée limitée, aucun renfort avant J-fin, et Edran Sorel qui ravitaille l’ennemi en face. Préserver ce qui est engagé ; chaque équipage perdu ne sera pas remplacé.",
+   "resume": "Le passage ferme bientôt et les renforts n’arriveront pas à temps. Solveig prend en charge les réserves pendant qu’Elsbeth couvre la traversée. Vous apprenez combien leur désaccord cachait deux façons de protéger les mêmes équipages.",
    "enjeu": "Survivre sans renfort jusqu’à la fermeture de la fenêtre.",
    "technologies": [
     "stockage_solaire"
@@ -2032,7 +2036,7 @@
   },
   "opus1_ch_07": {
    "titre": "Échos dans les vallées",
-   "resume": "Trois relais dans trois vallées, trois relevés qui se contredisent. Une pièce les visite dans l’ordre ; les échos disent que la réserve suisse est comptée deux fois, une fois pour la Suisse et une fois pour quelqu’un d’autre.",
+   "resume": "Les trois relais des vallées n’entendent plus leurs voisins. Les rétablir révèle que Basile a promis la même réserve à plusieurs fronts. Elsbeth doit annoncer aux équipes isolées que les secours attendus n’existent pas encore.",
    "enjeu": "Parcourir les trois relais des vallées et recouper ce qu’ils mesurent.",
    "technologies": [
     "telemetrie"
@@ -2047,7 +2051,7 @@
   },
   "opus1_ch_08": {
    "titre": "L’arbitre et le fournisseur",
-   "resume": "Une équipe locale suspend sa neutralité pour payer sa maintenance, et se retrouve dans le camp d’en face. Solveig ne juge pas ; elle demande si la coalition garantit la livraison au signataire ou refuse sa dette.",
+   "resume": "Une équipe locale accepte l’aide du fournisseur pour entretenir son matériel. Elsbeth y voit une porte ouverte aux Gris ; Solveig y voit une urgence ignorée trop longtemps. Votre garantie coûtera des fonds, votre refus laissera cette équipe liée au fournisseur.",
    "enjeu": "Gagner contre l’arbitre devenu fournisseur, et trancher la garantie.",
    "technologies": [
     "stockage_solaire"
@@ -2091,7 +2095,7 @@
   },
   "opus1_hs_ca_1": {
    "titre": "Le grand gel",
-   "resume": "Un prototype à badge orange est à l’essai, joué par la Sélection Méridienne. Noémie Leduc exige que l’essai se joue aux mêmes conditions pour les deux camps, et vous confie le banc de l’équipe témoin sur la carte gelée.",
+   "resume": "Noémie invite votre équipe à éprouver un prototype des Gris sur terrain gelé. Elle réclame les mêmes conditions pour les deux camps, puis accepte que vos observations contredisent son essai. Elle aime les inventions, pas les résultats arrangés.",
    "enjeu": "Prendre deux des trois postes du grand gel contre Ost : par ce froid, le poste est la seule chose qui tient un pays debout.",
    "technologies": [
     "bastion_meridien"
@@ -2106,7 +2110,7 @@
   },
   "opus1_hs_ca_2": {
    "titre": "Les provisions de la tempête",
-   "resume": "Une tempête est annoncée à deux journées. Noémie et vous tenez deux ateliers d’essai contre Ost et Basile, qui veut faire compter la réserve de batteries comme une avance méridienne ; la tempête bloque aussi l’ennemi, et ses provisions ne passeront pas.",
+   "resume": "Une tempête arrive dans deux journées. Noémie veut sauver les essais commencés ; vous devez aussi préserver les ateliers et leurs équipes face à Ost et Basile. La météo gêne tout le monde, et savoir interrompre un essai devient une compétence à part entière.",
    "enjeu": "Survivre à la tempête et décider qui reçoit les provisions.",
    "technologies": [
     "stockage_solaire"
@@ -2151,7 +2155,7 @@
   },
   "opus1_ch_09": {
    "titre": "Les réserves de secours",
-   "resume": "Les secours contractuels n’arrivent qu’après une défense de position : deux points à tenir trois journées avant que le contrat ne les déclenche. La clause est écrite pour que l’aide arrive quand on n’en a plus besoin.",
+   "resume": "L’aide reste bloquée pendant que deux positions tiennent sous pression. Elsbeth envoie ce qu’elle peut sans attendre qu’un bureau confirme chaque caisse. Vous protégez les réserves de secours, avec une alliée qui a enfin ouvert sa porte.",
    "enjeu": "Tenir jusqu’au déclenchement des secours.",
    "technologies": [
     "stockage_solaire"
@@ -2166,7 +2170,7 @@
   },
   "opus1_ch_10": {
    "titre": "La clause de restitution",
-   "resume": "Le partenaire dépendant peut sortir de son contrat si quelqu’un le lui propose. Prendre deux des trois bâtiments qui garantissent sa restitution, et décider s’il revient comptes ouverts ou après rupture.",
+   "resume": "Le partenaire peut quitter Basile, à condition de récupérer ses dépôts. Reprendre deux bâtiments lui donne ce choix. Le retour sous contrôle préserve la proximité ; attendre la rupture évite de faire entrer une dépendance au cœur de votre réseau.",
    "enjeu": "Prendre les bâtiments de la clause et proposer une sortie au signataire.",
    "technologies": [
     "poste_distribution"
@@ -2212,7 +2216,7 @@
   },
   "opus1_hs_np_1": {
    "titre": "Les ateliers d’altitude",
-   "resume": "Rien de lourd ne monte ici. Mira Karki vous dispute deux des trois ateliers d’altitude, et montre ce qu’une équipe légère fait d’une pente quand elle voit loin depuis un point haut.",
+   "resume": "Mira vous accueille avec une équipe légère qui connaît les pentes. Reprendre les ateliers vous oblige à la suivre du regard plutôt qu’à attendre des unités lourdes. Elle fait une place aux conseils de ses porteurs sans en faire un discours.",
    "enjeu": "Prendre deux ateliers d’altitude contre Mira : ce qu’on y répare, personne d’autre ne sait le réparer.",
    "technologies": [],
    "personnages": [
@@ -2225,7 +2229,7 @@
   },
   "opus1_hs_np_2": {
    "titre": "Le pont de corde",
-   "resume": "Un atelier isolé attend des pièces que la rotation des transports ne monte plus, depuis que Basile a rendu les réserves exclusives. Mira et vous escortez le transport contre Basile qui tient le col et son dépôt ; Mira a demandé de l’aide tard, et le dit. Poser le pont de corde, ou passer par le col.",
+   "resume": "L’atelier isolé n’a plus ses pièces et Mira reconnaît avoir demandé de l’aide trop tard. Vous escortez le transport contre Basile. Le pont de corde et le passage du col correspondent aux branches déjà prévues ; son adjointe insiste pour que la prochaine urgence soit annoncée plus tôt.",
    "enjeu": "Monter les pièces à l’atelier et décider du sort du pont.",
    "technologies": [
     "stockage_solaire"
@@ -2269,7 +2273,7 @@
   },
   "opus1_ch_11": {
    "titre": "Le col des deux équipes",
-   "resume": "Ost, Maël et Lise tiennent deux cols distincts et partagent leur vision : la Sélection sait faire ce que les nations apprennent à peine. Tout détruire, en coalition avec Elsbeth.",
+   "resume": "Ost, Maël et Lise tiennent deux cols et partagent leur vision. Elsbeth accepte que votre colonne garde l’un des accès vitaux. La coalition doit prouver sur le terrain qu’elle sait tenir cette responsabilité.",
    "enjeu": "Détruire les deux garnisons méridiennes des cols.",
    "technologies": [
     "bastion_meridien"
@@ -2287,7 +2291,7 @@
   },
   "opus1_ch_12": {
    "titre": "Le droit de passage",
-   "resume": "Finale du front suisse, trois contre un : le vainqueur fixe les garanties d’accès à la réserve pour les quatre ans qui viennent. Prendre le QG, puis choisir entre la caisse commune et l’armement du prochain front.",
+   "resume": "Après le dernier QG, Elsbeth ouvre un passage durable à vos convois. Elle demande que les réserves restent accessibles quand vous serez loin. Soutenir la caisse commune ou équiper le prochain front devient un choix sur la manière de protéger cet accès.",
    "enjeu": "Gagner le droit de passage des réserves hautes, et dire pour combien de temps.",
    "technologies": [
     "stockage_solaire"
@@ -2331,7 +2335,7 @@
   },
   "opus1_nl_01": {
    "titre": "Les carrés du polder",
-   "resume": "Wren Osoko, responsable du contrôle des armements, vous accompagne dans les polders : les voies surélevées découpent le front en carrés lisibles, et Lotte Vermeer commande les ouvrages. Le QG ennemi est à trois digues.",
+   "resume": "Lotte vous attend au bord d’une digue qu’elle connaît depuis ses premiers exercices. Wren découvre combien une erreur de carte peut coûter ici. Pour atteindre le QG, il faut garder les voies de service ouvertes derrière l’avance.",
    "enjeu": "Prendre le QG du polder, et la salle des pompes qui tient tout le pays au sec.",
    "technologies": [],
    "personnages": [
@@ -2344,7 +2348,7 @@
   },
   "opus1_nl_02": {
    "titre": "L’usine derrière l’eau",
-   "resume": "Une usine centrale vaut plus que le chemin le plus court vers le QG : elle produit, le QG ne fait qu’inscrire. Deux bâtiments sur trois, l’usine en premier.",
+   "resume": "L’usine des pompes vaut plus qu’un raccourci vers le QG. Lotte veut la reprendre avant les autres ateliers. Elle ne défend pas seulement des revenus : les équipes qui entretiennent les digues ont besoin de ces pièces demain matin.",
    "enjeu": "Tenir l’usine derrière l’eau : c’est elle qui fabrique les pompes de la moitié du continent.",
    "technologies": [
     "poste_distribution"
@@ -2359,7 +2363,7 @@
   },
   "opus1_nl_03": {
    "titre": "Le convoi des pompes",
-   "resume": "Un transport de maintenance des pompes emprunte une digue sous surveillance ; si les pompes ne sont pas réparées, le polder se referme. Escorte sous deux feux.",
+   "resume": "Le transport emporte de quoi réparer les pompes. Sa conductrice refuse qu’on promette une digue sûre sans l’avoir reconnue. Wren écoute cette fois les gens de terrain ; votre escorte doit leur donner raison de vous suivre.",
    "enjeu": "Amener le convoi des pompes à la station avant que le polder se referme.",
    "technologies": [
     "stockage_solaire"
@@ -2374,7 +2378,7 @@
   },
   "opus1_nl_04": {
    "titre": "La digue partagée",
-   "resume": "Deux partenaires doivent couvrir chacun une extrémité de la digue partagée ; en lâcher une, c’est ouvrir l’autre. Prendre le QG à deux, puis dire si les relevés de la digue vont à la coalition.",
+   "resume": "Chaque partenaire garde une extrémité de la digue. Lotte se dispute avec sa voisine sur la couverture du milieu, puis doit lui faire confiance pour avancer. Partager les relevés après le combat rend ce désaccord vérifiable au lieu de le nourrir.",
    "enjeu": "Prendre le QG sans lâcher une extrémité de la digue.",
    "technologies": [
     "telemetrie"
@@ -2418,7 +2422,7 @@
   },
   "opus1_hs_is_2": {
    "titre": "Fenêtre claire",
-   "resume": "Trois stations de mesure dans le brouillard, dans l’ordre, pendant que Relais Zéro brouille et que Basile tient les hauteurs. Elín ne signera rien tant que chaque mesure n’est pas recoupée.",
+   "resume": "Les trois stations doivent être rejointes dans le brouillard pendant que le réseau inconnu brouille les appels. Elín vous laisse effectuer une mesure qu’elle aurait vérifiée seule autrefois. Elle demande un recoupement, pas une obéissance aveugle.",
    "enjeu": "Recouper les trois stations dans la fenêtre claire.",
    "technologies": [
     "telemetrie",
@@ -2435,7 +2439,7 @@
   },
   "opus1_nl_05": {
    "titre": "Fenêtre de marée",
-   "resume": "Le calendrier de marée ouvre une route côtière par périodes, et pour la première fois un drone marin méridien observe les canaux. Ost tient les ponts ; tout détruire dans la fenêtre de marée.",
+   "resume": "La marée ouvre un passage que surveille un drone marin des Gris. Lotte connaît l’heure, Ost connaît aussi le calendrier. Le bon mouvement dépend du moment choisi autant que de la force engagée.",
    "enjeu": "Détruire la colonne d’Ost pendant la fenêtre de marée.",
    "technologies": [
     "drone_marin"
@@ -2451,7 +2455,7 @@
   },
   "opus1_nl_06": {
    "titre": "L’atelier encerclé",
-   "resume": "Production limitée, l’ennemi approche des deux côtés, et Edran Sorel ravitaille ses colonnes à un rythme que l’atelier ne peut pas suivre. Survivre à l’encerclement jusqu’à la relève.",
+   "resume": "L’atelier est encerclé et produit trop lentement pour répondre aux colonnes ravitaillées par Edran. Lotte veut garder toutes les machines ; Wren insiste pour conserver des unités capables de sortir. Tenir oblige à abandonner quelques positions, sans abandonner l’atelier.",
    "enjeu": "Tenir l’atelier encerclé : ses bancs d’essai valent plus cher que le front autour.",
    "technologies": [
     "stockage_solaire"
@@ -2467,7 +2471,7 @@
   },
   "opus1_nl_07": {
    "titre": "Les trois écluses",
-   "resume": "Les relevés du réseau sont répartis entre trois écluses accessibles par trois routes ; Wren découvre que la télémétrie qu’elle a validée ne lui répond plus. Parcourir les écluses dans l’ordre.",
+   "resume": "La télémétrie validée par Wren ne répond plus. Rejoindre les trois écluses permet aux équipes locales de reprendre les commandes sur place. Wren reconnaît sa part d’erreur au lieu de blâmer ceux qui lui avaient fait confiance.",
    "enjeu": "Recouper les trois écluses, et comprendre à qui répond désormais la télémétrie de Wren.",
    "technologies": [
     "telemetrie"
@@ -2482,7 +2486,7 @@
   },
   "opus1_nl_08": {
    "titre": "La garantie privée",
-   "resume": "Une équipe signe avec Méridien pour assurer ses prochaines dépenses, et devient l’ennemi de sa voisine. 2v2 dans les polders ; Wren pose la question de la garantie.",
+   "resume": "La voisine de Lotte accepte la garantie du Consortium pour payer ses réparations. Elles se retrouvent adversaires sur une digue qu’elles entretenaient ensemble. La soutenir coûte à votre coalition ; refuser lui laisse ses raisons d’avoir signé.",
    "enjeu": "Gagner le 2v2 et trancher la garantie privée.",
    "technologies": [
     "stockage_solaire"
@@ -2526,7 +2530,7 @@
   },
   "opus1_nl_09": {
    "titre": "Le terrain prêté",
-   "resume": "L’adversaire d’hier offre un passage de repli sans rien exiger, mais une station de pompage réquisitionnée par les Gris envoie des impulsions annoncées sur les digues. Tenir deux positions trois journées, et prendre la station : première capture d’une station IEM.",
+   "resume": "L’ancienne rivale offre un passage de repli. Une station IEM des Gris bloque les véhicules sur les digues à des journées annoncées. Tenir les positions et prendre la source permet d’éprouver son geste dans les faits, pas seulement dans un dialogue.",
    "enjeu": "Tenir le terrain prêté et couper la station à impulsion : la première invention de la faction qui change de main.",
    "technologies": [
     "station_iem"
@@ -2541,7 +2545,7 @@
   },
   "opus1_nl_10": {
    "titre": "Les comptes de la digue",
-   "resume": "Yuna Serrat essaie de prendre les centres de revenu pendant le regroupement. Deux bâtiments sur trois avant elle, puis les conditions du retour du signataire : comptes ouverts, ou rupture d’abord.",
+   "resume": "Yuna profite du regroupement pour prendre les centres de revenu. Votre intervention rend possible le retour du partenaire. Lotte est prête à travailler avec lui ; Wren demande un contrôle réel de ce qui reste relié au Consortium.",
    "enjeu": "Prendre les comptes de la digue avant Yuna.",
    "technologies": [
     "poste_distribution"
@@ -2586,7 +2590,7 @@
   },
   "opus1_nl_11": {
    "titre": "Le retour du garant",
-   "resume": "Le signataire doit choisir publiquement entre l’accord méridien et ses partenaires, pendant qu’Ost, Maël et Lise viennent « garantir » l’accord. Tout détruire.",
+   "resume": "Ost, Maël et Lise viennent imposer l’accord des Gris. Les deux voisines défendent enfin la même digue sans nier ce qui les a séparées. La bataille dira si leur coopération tient sous pression.",
    "enjeu": "Détruire la garde méridienne du garant.",
    "technologies": [
     "bastion_meridien"
@@ -2604,7 +2608,7 @@
   },
   "opus1_nl_12": {
    "titre": "Un réseau ouvert",
-   "resume": "Finale du front néerlandais, trois contre un : la victoire décide des accès techniques communs, jamais de qui vit derrière les digues. Prendre le QG ; verser ou garder la concession.",
+   "resume": "Le dernier QG donne accès au réseau, pas le droit de parler au nom de tous ceux qui l’entretiennent. Lotte et Wren fixent ensemble ce qu’elles partageront. La réserve gagnée servira la coalition ou le prochain front, avec une promesse explicite faite aux équipes des digues.",
    "enjeu": "Ouvrir le réseau des digues, et publier ce qu’on a appris dessus.",
    "technologies": [
     "poste_distribution"
@@ -2648,7 +2652,7 @@
   },
   "opus1_ma_01": {
    "titre": "Les ombres courtes",
-   "resume": "Ariane vous retrouve sur des plateaux découverts où toute avance sans reconnaissance coûte un équipage. Samir El Hadi commande les étapes de convoi du parc solaire ; le QG ennemi est au bout des ombres courtes.",
+   "resume": "Samir connaît les étapes du parc solaire par leurs pauses, leurs pannes et leurs équipes. Ariane admire son expérience, mais remarque qu’il vérifie seul chaque départ. Sur le plateau découvert, reconnaître avant d’avancer reste votre première urgence.",
    "enjeu": "Prendre le QG du plateau sans avancer à l’aveugle : dessous s’étend le plus grand champ de miroirs du continent.",
    "technologies": [],
    "personnages": [
@@ -2661,7 +2665,7 @@
   },
   "opus1_ma_02": {
    "titre": "L’atelier du sud",
-   "resume": "Deux axes relient les ateliers aux réserves du parc solaire ; celui qui tient deux bâtiments sur trois tient le courant du sud. L’ennemi coupe l’un des axes à J3.",
+   "resume": "Deux axes alimentent les ateliers du sud. L’adjointe de Samir propose une répartition qu’il corrige trop vite. Reprendre les bâtiments lui donne enfin une partie du réseau à organiser elle-même.",
    "enjeu": "Tenir les ateliers du sud, où l’on assemble et règle les miroirs.",
    "technologies": [
     "stockage_solaire",
@@ -2677,7 +2681,7 @@
   },
   "opus1_ma_03": {
    "titre": "La caravane technique",
-   "resume": "Solveig accompagne une caravane de pièces jusqu’au dépôt de contrôle, à travers deux colonnes qui ont l’heure du convoi. Escorte à découvert.",
+   "resume": "Solveig accompagne la caravane technique à découvert. Samir voudrait rejoindre l’escorte ; son adjointe lui rappelle qu’on a besoin de lui au dépôt. Vous couvrez le transport pendant qu’elle prend ses premiers appels difficiles.",
    "enjeu": "Amener la caravane technique au dépôt : elle porte les seuls instruments de réglage du pays.",
    "technologies": [
     "stockage_solaire"
@@ -2692,7 +2696,7 @@
   },
   "opus1_ma_04": {
    "titre": "Le passage de roche",
-   "resume": "Un détour abrité par la roche contre une traversée rapide à découvert. Prendre le QG à deux, puis dire si les relevés du parc vont à la coalition ou si la caisse reste pleine.",
+   "resume": "Le passage de roche protège un détour plus lent. Samir conseille la prudence ; Ariane vous laisse évaluer l’autre route. Les relevés partagés peuvent éviter aux prochains équipages de refaire cette hésitation sous le feu.",
    "enjeu": "Prendre le QG par la roche ou par le plateau.",
    "technologies": [
     "telemetrie"
@@ -2736,7 +2740,7 @@
   },
   "opus1_ma_05": {
    "titre": "Poussière de piste",
-   "resume": "La poussière des pistes réduit la vue à une case : le brouillard représente les relevés incomplets. Ost avance dans la poussière ; tout détruire, sans voir.",
+   "resume": "La poussière cache l’avance d’Ost. Samir connaît des repères que les capteurs manquent, mais vous devez encore envoyer une reconnaissance. Son expérience aide ; elle ne remplace pas ce que vos unités peuvent réellement voir.",
    "enjeu": "Détruire la colonne d’Ost dans la poussière.",
    "technologies": [
     "bastion_meridien"
@@ -2752,7 +2756,7 @@
   },
   "opus1_ma_06": {
    "titre": "Les crédits de midi",
-   "resume": "Une avance méridienne permet à une délégation rivale d’aligner une réserve finie, ravitaillée par Edran Sorel. Survivre jusqu’à ce qu’elle soit à sec — et comprendre que la clause qui la finance interdit d’employer hors du personnel du fournisseur.",
+   "resume": "Une délégation rivale dispose d’une réserve finie qu’Edran entretient. Tenir révèle le prix de son crédit : le fournisseur interdit de choisir librement les remplaçants. Samir comprend que cette règle touche aussi les équipes de ses propres étapes.",
    "enjeu": "Tenir jusqu’à l’épuisement de la réserve avancée.",
    "technologies": [
     "stockage_solaire"
@@ -2768,7 +2772,7 @@
   },
   "opus1_ma_07": {
    "titre": "Trois stations au soleil",
-   "resume": "Trois stations du parc solaire, une pluie de forçage annoncée sur la route sèche, et Samir qui compare les reçus avec vous : la même clause de retour dans des contrats qu’il croyait concurrents.",
+   "resume": "Les trois stations doivent retrouver leur liaison sous une pluie provoquée et annoncée. Samir manque un appel ; son adjointe le reprend sans dramatiser. Les reçus montrent ensuite pourquoi les mêmes restrictions de personnel reviennent partout.",
    "enjeu": "Parcourir les trois stations sous la pluie forcée, et noter d’où vient cette pluie.",
    "technologies": [
     "station_meteo",
@@ -2784,7 +2788,7 @@
   },
   "opus1_ma_08": {
    "titre": "Le bail trop long",
-   "resume": "Un sponsor de délégation propose une exclusivité après la victoire, et la délégation en face a déjà signé. 2v2 ; garantir la livraison au signataire libère un remplaçant pour Samir, refuser le laisse aux étapes une saison de plus.",
+   "resume": "La délégation dépendante demande votre garantie. L’aide libère aussi un remplaçant pour Samir ; la refuser conserve des moyens pour votre front. Samir refuse qu’on fasse de sa santé un argument de négociation, mais le briefing explique les conséquences connues sans cacher le coût humain.",
    "enjeu": "Gagner le 2v2 et décider de la garantie — Samir en dépend.",
    "technologies": [
     "stockage_solaire"
@@ -2836,7 +2840,7 @@
   },
   "opus1_hs_is_3": {
    "titre": "Le silence de la source",
-   "resume": "Les relevés sont recoupés. Elín et vous tenez deux positions autour de la source chaude contre Ost et Yuna, et vous tranchez : signaler l’anomalie maintenant, ou attendre une preuve de plus au risque de perdre le contrat.",
+   "resume": "Les mesures concordent enfin. En tenant les positions autour de la source chaude, Elín doit décider quand parler : tout de suite pour prévenir ses partenaires, ou après une vérification de plus. Le risque du retard est annoncé ; la prudence ne devient pas automatiquement de la lâcheté.",
    "enjeu": "Tenir la source et décider quand accuser.",
    "technologies": [
     "telemetrie"
@@ -2881,7 +2885,7 @@
   },
   "opus1_ma_09": {
    "titre": "La réserve retenue",
-   "resume": "Défendre le dépôt en attendant une livraison annoncée : deux positions, trois journées. Samir laisse coordonner l’étape à son adjointe et regarde depuis le dépôt ; il dit qu’il se repose.",
+   "resume": "Il faut tenir la réserve jusqu’à la livraison. Cette fois, l’adjointe coordonne l’étape et Samir suit depuis le dépôt. Il commence par intervenir sur chaque appel, puis laisse enfin une réponse partir sans lui.",
    "enjeu": "Tenir la réserve retenue jusqu’à la livraison.",
    "technologies": [
     "stockage_solaire"
@@ -2896,7 +2900,7 @@
   },
   "opus1_ma_10": {
    "titre": "Une sortie sans humiliation",
-   "resume": "La délégation dépendante reçoit une offre de renégociation publique. Prendre deux des trois bâtiments qui portent son contrat, et lui offrir une sortie sans humiliation : comptes ouverts, ou rupture d’abord.",
+   "resume": "Reprendre les bâtiments ouvre une sortie au partenaire dépendant. Son responsable craint de perdre la face devant les équipes. Vous pouvez organiser un retour surveillé ou attendre une rupture : l’humilier ne fait partie d’aucune des deux options.",
    "enjeu": "Prendre les bâtiments du contrat et fixer une sortie que le signataire puisse tenir.",
    "technologies": [
     "poste_distribution"
@@ -2940,7 +2944,7 @@
   },
   "opus1_ma_11": {
    "titre": "Les deux prêteurs",
-   "resume": "Ost et Lise Varen défendent chacun une moitié du contrat litigieux, Maël couvre du ciel. Tout détruire ; Samir dit qu’il « se soigne entre deux étapes », et personne ne relève.",
+   "resume": "Ost et Lise défendent le contrat pendant que Maël couvre le ciel. Samir dit qu’il se soigne entre deux étapes ; Ariane lui répond qu’une relève n’efface pas ce qu’il a construit. L’assaut appartient désormais à plusieurs responsables.",
    "enjeu": "Détruire les colonnes des deux prêteurs, et reprendre les carnets qu’elles escortent.",
    "technologies": [
     "bastion_meridien"
@@ -2958,7 +2962,7 @@
   },
   "opus1_ma_12": {
    "titre": "La concession limitée",
-   "resume": "Finale du front marocain, trois contre un : la victoire fixe une durée et une garantie collective pour les concessions solaires. Prendre le QG ; verser ou garder la concession du soleil.",
+   "resume": "Le dernier QG libère les accès du parc solaire. Samir remercie d’abord son adjointe à la radio. Le choix de la réserve reste ouvert, et les conséquences de son remplacement suivront leur branche déjà définie : cette victoire ne guérit personne par magie.",
    "enjeu": "Limiter la concession du soleil : dire ce qu’elle donne, et ce qu’elle ne donnera jamais.",
    "technologies": [
     "stockage_solaire"
@@ -3002,7 +3006,7 @@
   },
   "opus1_sn_01": {
    "titre": "La route de l’estuaire",
-   "resume": "Tomas vous retrouve sur l’estuaire : une route étroite entre des eaux qui interdisent l’assaut frontal. Awa Diagne tient les bras du fleuve ; le QG ennemi est de l’autre côté de l’eau.",
+   "resume": "Awa garde l’estuaire, Tomas apporte les batteries. Une route étroite interdit de tout engager de front. Awa demande d’abord quelles équipes votre détour laissera attendre sur l’autre rive.",
    "enjeu": "Prendre le QG de l’estuaire par la route étroite, et le barrage de marée qu’il commande.",
    "technologies": [],
    "personnages": [
@@ -3015,7 +3019,7 @@
   },
   "opus1_sn_02": {
    "titre": "Les ateliers de rive",
-   "resume": "Les villes latérales financent une traversée autrement trop coûteuse : deux ateliers de rive sur trois, et la coalition a de quoi payer les barges.",
+   "resume": "Les ateliers latéraux peuvent payer les barges nécessaires. Awa veut les reprendre pour éviter de demander encore un effort aux mêmes équipages. Les deux rives doivent recevoir quelque chose de cette victoire.",
    "enjeu": "Tenir les ateliers de rive.",
    "technologies": [
     "poste_distribution"
@@ -3030,7 +3034,7 @@
   },
   "opus1_sn_03": {
    "titre": "Dernière batterie du jour",
-   "resume": "Un transport apporte les réserves promises à l’équipe de nuit, sous deux feux, avant que la lumière tombe. Si la batterie n’arrive pas, l’équipe de nuit se bat sans courant.",
+   "resume": "La dernière batterie du jour voyage vers l’équipe de nuit. Le transport est sous deux feux et ceux qui l’attendent comptent les appels radio. L’escorte donne un visage concret à une réserve qu’on aurait pu traiter comme une simple ressource.",
    "enjeu": "Livrer la dernière batterie du jour.",
    "technologies": [
     "stockage_solaire"
@@ -3045,7 +3049,7 @@
   },
   "opus1_sn_04": {
    "titre": "Deux bras de fleuve",
-   "resume": "Deux bras de fleuve, deux QG ennemis, un centre à ne pas découvrir. Tomas et vous répartissez les colonnes ; puis la question des relevés.",
+   "resume": "Deux bras de fleuve séparent les colonnes. Tomas veut garantir les deux trajets ; Awa lui demande de reconnaître celui qu’il ne pourra pas couvrir. Vos relevés aideront à expliquer cette décision aux équipes concernées.",
    "enjeu": "Prendre les QG des deux bras sans perdre le centre.",
    "technologies": [
     "telemetrie"
@@ -3089,7 +3093,7 @@
   },
   "opus1_sn_05": {
    "titre": "Le radar de rive",
-   "resume": "Wren teste la reconnaissance face au brouillage de Relais Zéro, dont les Veilleurs tournent au-dessus de la rive. Ost avance sous le brouillage ; tout détruire, radar en main.",
+   "resume": "Un opérateur inconnu brouille la rive avec ses Veilleurs. Wren montre comment distinguer ce qu’on voit de ce qu’on suppose. Le joueur n’apprend ici ni le nom d’un réseau secret ni l’identité de cette voix ; reprendre la vue suffit à l’urgence.",
    "enjeu": "Détruire la colonne d’Ost malgré le brouillage, et identifier ce qui brouille.",
    "technologies": [
     "veilleur_meridien",
@@ -3107,7 +3111,7 @@
   },
   "opus1_sn_06": {
    "titre": "Le quai sans relève",
-   "resume": "Les renforts sont retardés par un contrat de transport contesté ; Edran ravitaille l’ennemi pendant qu’un drone marin presse le quai. Survivre en tenant le quai plutôt qu’en poursuivant en pleine mer.",
+   "resume": "Le quai attend des renforts retardés tandis qu’Edran ravitaille l’adversaire. Awa refuse une poursuite en mer qui laisserait les équipes de relève sans débarcadère. Tenir le quai devient une victoire que l’on peut expliquer à ceux qui y attendent.",
    "enjeu": "Tenir le quai sans relève.",
    "technologies": [
     "drone_marin",
@@ -3124,7 +3128,7 @@
   },
   "opus1_sn_07": {
    "titre": "La chaîne des reçus",
-   "resume": "Trois relais permettent de vérifier où sont réellement allées les batteries : la chaîne des reçus se lit dans l’ordre, sous le feu. Elle finit dans un dépôt méridien.",
+   "resume": "Trois relais suivent le trajet de batteries jamais arrivées. Les atteindre permet de rétablir la liaison avec les équipes oubliées. Les reçus retrouvés confirment après coup qu’un dépôt du Consortium a servi avant elles.",
    "enjeu": "Parcourir la chaîne des reçus : la preuve est faite de papiers, pas de courant.",
    "technologies": [
     "telemetrie",
@@ -3140,7 +3144,7 @@
   },
   "opus1_sn_08": {
    "titre": "Le partenaire impatient",
-   "resume": "Une délégation rejoint temporairement Méridien pour recevoir son équipement, et se bat en face avec ce matériel. 2v2 ; garantir la livraison ou refuser la dette.",
+   "resume": "Une délégation lasse d’attendre accepte du matériel méridien. Awa comprend sa colère ; Tomas rappelle les réserves qu’il reste à livrer ailleurs. Garantir sa dette et garder les fonds ont chacun des destinataires à nommer.",
    "enjeu": "Gagner le 2v2 et trancher la garantie du partenaire impatient.",
    "technologies": [
     "stockage_solaire"
@@ -3186,7 +3190,7 @@
   },
   "opus1_hs_ke_1": {
    "titre": "La bataille de trois heures",
-   "resume": "Kito Njoroge ne gagne jamais avant la dixième journée. Sur les hauts plateaux, tenir quatorze journées face à une armée qui court plus loin que la vôtre et attend que vous vous épuisiez.",
+   "resume": "Kito vous laisse prendre de l’avance, puis attend que vos unités s’épuisent. Tenir quatorze journées sur le plateau apprend la patience avec un commandant qui sait aussi rire de ses propres départs trop rapides.",
    "enjeu": "Survivre quatorze journées à Kito.",
    "technologies": [],
    "personnages": [
@@ -3199,7 +3203,7 @@
   },
   "opus1_hs_ke_2": {
    "titre": "Le messager",
-   "resume": "Un messager à pied doit franchir la vallée par trois relais pendant que Yuna déplace ses petites équipes de capture. Kito demande s’il faut céder l’avance pour garder une relève, ou soutenir tout de suite le partenaire qui appelle.",
+   "resume": "Un messager doit franchir trois relais pendant que Yuna déplace ses équipes. Kito entend un partenaire demander de l’aide et vous laisse choisir entre le soutien immédiat et la relève gardée en réserve. Attendre n’a de sens que si l’on sait qui l’on prépare à aider.",
    "enjeu": "Faire passer le messager et décider de la relève.",
    "technologies": [],
    "personnages": [
@@ -3241,7 +3245,7 @@
   },
   "opus1_sn_09": {
    "titre": "La livraison maintenue",
-   "resume": "Tenir ou non la promesse faite avant le ralliement : deux positions, trois journées, un convoi qui livre à qui a changé de camp. Tomas livre ; vous tenez.",
+   "resume": "Le convoi promis doit traverser malgré le changement de camp du partenaire. Deux positions protègent son passage. Awa veut que l’équipe de nuit reçoive enfin ses batteries, même si son responsable vous a tourné le dos.",
    "enjeu": "Tenir la livraison maintenue.",
    "technologies": [
     "stockage_solaire"
@@ -3256,7 +3260,7 @@
   },
   "opus1_sn_10": {
    "titre": "Les témoins du quai",
-   "resume": "Yuna tente de reprendre le centre logistique pendant l’examen des reçus. Deux bâtiments sur trois avant elle, et les conditions du retour du signataire.",
+   "resume": "Yuna attaque le centre pendant que les équipes du quai confrontent leurs récits. Reprendre les bâtiments protège leur possibilité de revenir. Le contrôle du retour devra porter sur les engagements du responsable, pas sur la loyauté supposée de tout un pays.",
    "enjeu": "Prendre les témoins du quai avant Yuna.",
    "technologies": [
     "poste_distribution"
@@ -3301,7 +3305,7 @@
   },
   "opus1_sn_11": {
    "titre": "Les garanties à l’épreuve",
-   "resume": "Les délégations mettent à l’épreuve l’accord négocié, pas une amitié : Ost, Maël et Lise viennent voir s’il tient. Tout détruire, en coalition avec Awa.",
+   "resume": "Ost, Maël et Lise testent la coopération des rives. Awa et vous devez tenir sans réclamer à chaque fois le sacrifice du même partenaire. Ceux qui ont attendu voient enfin une place qui leur est réservée dans le plan.",
    "enjeu": "Détruire la garde méridienne de l’accord.",
    "technologies": [
     "bastion_meridien"
@@ -3319,7 +3323,7 @@
   },
   "opus1_sn_12": {
    "titre": "La réserve du soir",
-   "resume": "Finale du front sénégalais, trois contre un : la victoire tranche entre revenus immédiats et sécurité du stockage collectif. Prendre le QG ; verser ou garder la réserve du soir.",
+   "resume": "La réserve du soir est gagnée. Awa demande quand elle arrivera, pas un discours sur la solidarité. La caisse commune ou l’équipement du prochain front engage deux calendriers différents, qu’il faudra rappeler aux équipes concernées.",
    "enjeu": "Décider du stockage collectif de l’estuaire : à qui appartient une réserve que tout le monde remplit.",
    "technologies": [
     "stockage_solaire"
@@ -3363,7 +3367,7 @@
   },
   "opus1_br_01": {
    "titre": "Les pistes jumelles",
-   "resume": "Solveig vous retrouve sur deux pistes forestières qui rapprochent les QG sans ligne de tir directe. Lívia Moura commande les fronts fluviaux ; l’ennemi est à une piste.",
+   "resume": "Lívia connaît deux pistes qui rapprochent les fronts sans offrir de ligne de tir. Solveig voudrait un seul itinéraire logistique ; Lívia défend la liberté de ses colonnes. La première bataille les oblige à préciser ce dont elles ont réellement besoin l’une de l’autre.",
    "enjeu": "Prendre le QG par les pistes jumelles, et l’atelier de moteurs qui les sépare.",
    "technologies": [],
    "personnages": [
@@ -3376,7 +3380,7 @@
   },
   "opus1_br_02": {
    "titre": "L’atelier de lisière",
-   "resume": "Les ateliers de lisière décident du rythme de production : deux sur trois, et la coalition produit plus vite que la forêt ne cache.",
+   "resume": "Les ateliers de lisière donnent des moyens aux deux axes. Les reprendre évite qu’une colonne dépende entièrement de l’autre. Lívia veut partager la mission, pas demander l’autorisation pour chaque unité produite.",
    "enjeu": "Tenir les ateliers de lisière.",
    "technologies": [
     "poste_distribution"
@@ -3391,7 +3395,7 @@
   },
   "opus1_br_03": {
    "titre": "La tournée de maintenance",
-   "resume": "Un transport de maintenance circule entre des couloirs forestiers tenus par l’ennemi ; chaque couloir est une embuscade possible. Escorte sous couvert.",
+   "resume": "Le transport de maintenance traverse des couloirs forestiers. Chaque équipe connaît son tronçon, aucune ne voit tout le trajet. Votre escorte fonctionne si le passage de relais est clair ; un ordre central trop tardif n’aidera personne.",
    "enjeu": "Faire la tournée de maintenance sans perdre le transport.",
    "technologies": [
     "stockage_solaire"
@@ -3406,7 +3410,7 @@
   },
   "opus1_br_04": {
    "titre": "Le pont du milieu",
-   "resume": "L’axe central paraît efficace et expose les soutiens aux prises de flanc. Prendre le QG à deux par le pont du milieu ou par les flancs ; puis la question des relevés.",
+   "resume": "Le pont central attire les colonnes et expose leurs soutiens. Lívia propose deux approches simultanées ; Solveig demande comment les ravitailler. Après le combat, partager les relevés permet de comparer leurs méthodes plutôt que de proclamer une gagnante.",
    "enjeu": "Prendre le QG sans exposer les soutiens.",
    "technologies": [
     "telemetrie"
@@ -3452,7 +3456,7 @@
   },
   "opus1_hs_ar_1": {
    "titre": "La route à péage",
-   "resume": "Une seule route traverse la pampa entre les deux QG, et un fournisseur y a posé un dépôt sous licence exclusive. Leandro Paz veut prouver qu’on gagne par les chemins de traverse, et le prouve contre vous.",
+   "resume": "Leandro croit toujours à un chemin de traverse. Une route unique et son dépôt lui donnent l’occasion de vous le prouver. Votre duel montre aussi que son enthousiasme peut oublier ceux qui devront ravitailler le détour.",
    "enjeu": "Prendre le QG de Leandro sans passer par la route à péage.",
    "technologies": [
     "stockage_solaire"
@@ -3467,7 +3471,7 @@
   },
   "opus1_hs_ar_2": {
    "titre": "Le canal de l’estuaire",
-   "resume": "Un club de l’estuaire a perdu son accès aux batteries quand la route unique est passée sous licence. Leandro et vous escortez le transport par les bras d’eau contre Yuna, qui gère la concession au nom d’un contrat provisoire ; le canal peut être ouvert, et ne se refermera pas.",
+   "resume": "Une équipe de l’estuaire a perdu son accès aux batteries. Leandro propose cette fois de couvrir lui-même les bras d’eau pendant votre escorte. Ouvrir le canal aura la conséquence prévue ; son idée devient une aide qu’il assume jusqu’au bout.",
    "enjeu": "Livrer les batteries de l’estuaire, et décider si le canal reste ouvert pour toujours.",
    "technologies": [
     "stockage_solaire"
@@ -3511,7 +3515,7 @@
   },
   "opus1_br_05": {
    "titre": "Les relevés sous couvert",
-   "resume": "Des drones méridiens observent un réseau où les colonnes terrestres profitent du couvert ; Ost avance sous les arbres. Tout détruire, drones compris.",
+   "resume": "Les drones des Gris surveillent les pistes pendant qu’Ost avance sous couvert. Vos alliés doivent annoncer ce qu’ils voient sans dicter le mouvement des autres. La reconnaissance devient un langage commun.",
    "enjeu": "Détruire la colonne d’Ost sous couvert, et rapporter les relevés qu’elle transportait.",
    "technologies": [
     "drones_communs",
@@ -3528,7 +3532,7 @@
   },
   "opus1_br_06": {
    "titre": "L’avance engagée",
-   "resume": "Une délégation a dépensé son crédit et finit l’engagement avec une réserve limitée que seul Edran peut refaire. Survivre jusqu’à ce que l’avance engagée soit à sec.",
+   "resume": "Une délégation a épuisé son crédit et dépend d’Edran pour continuer. Lívia refuse de lui donner des ordres en échange de l’aide. Tenir la pression laisse le temps de chercher une sortie qui n’installe pas un nouveau maître.",
    "enjeu": "Tenir jusqu’à l’épuisement de l’avance.",
    "technologies": [
     "stockage_solaire"
@@ -3544,7 +3548,7 @@
   },
   "opus1_br_07": {
    "titre": "Trois carnets concordants",
-   "resume": "Trois carnets comptables recoupés dans trois stations de terrain, sous le feu. Ils concordent : le prêteur qui a « sauvé » trois délégations est le même, et il a fixé leurs adversaires.",
+   "resume": "Les trois stations ont reçu trois ordres incompatibles du même prêteur. Les reconnecter permet aux équipes de se parler directement. Les carnets confirment ensuite que leurs désaccords avaient été entretenus pour les isoler.",
    "enjeu": "Recouper les trois carnets : trois écritures, un seul bénéficiaire.",
    "technologies": [
     "telemetrie"
@@ -3559,7 +3563,7 @@
   },
   "opus1_br_08": {
    "titre": "Le prêteur et l’équipe",
-   "resume": "Un sponsor cherche à parler au nom d’une nation entière, et Lívia le contredit devant tout le monde ; une station météo méridienne impose la pluie sur les voies hautes. 2v2 ; garantir ou refuser.",
+   "resume": "Un sponsor prétend parler pour toute la délégation ; Lívia le contredit devant ses propres équipes. La pluie imposée complique les routes pendant le 2v2. Garantir la livraison ou garder les fonds ne donne pas pour autant au joueur le droit de choisir leur chef.",
    "enjeu": "Gagner sous la pluie forcée et trancher la garantie.",
    "technologies": [
     "station_meteo",
@@ -3604,7 +3608,7 @@
   },
   "opus1_br_09": {
    "titre": "Le dépôt sans privilège",
-   "resume": "Protéger une réserve qui doit rester accessible à ses anciens rivaux : deux positions, trois journées, et des alliés d’hier qui viennent chercher leur part.",
+   "resume": "Deux positions protègent une réserve ouverte aux anciens rivaux. Certains alliés veulent leur fermer l’accès après leur signature. Lívia vous demande d’appliquer la règle commune même lorsqu’elle ne vous arrange plus.",
    "enjeu": "Tenir le dépôt sans privilège.",
    "technologies": [
     "stockage_solaire"
@@ -3619,7 +3623,7 @@
   },
   "opus1_br_10": {
    "titre": "Les comptes contestés",
-   "resume": "Lise Varen veut gagner avant la publication des contrats : son artillerie tient les bâtiments de les comptes. Deux sur trois avant elle, et les conditions du retour du signataire.",
+   "resume": "Lise couvre les bâtiments où le partenaire peut retrouver son autonomie. Les reprendre donne une issue concrète au désaccord. Le retour surveillé et la rupture préalable posent des limites différentes ; aucun ne doit devenir un ordre d’obéir au joueur pour toujours.",
    "enjeu": "Prendre les bâtiments des comptes avant Lise.",
    "technologies": [
     "poste_distribution"
@@ -3664,7 +3668,7 @@
   },
   "opus1_br_11": {
    "titre": "L’alliance de lisière",
-   "resume": "Deux équipes coopèrent sans fusionner budgets ni commandements : Ost, Maël et Lise viennent tester l’alliance de lisière. Tout détruire.",
+   "resume": "Face à Ost, Maël et Lise, les équipes gardent leurs budgets et leurs décisions. Solveig annonce les besoins au lieu de distribuer tous les ordres. La coopération de lisière réussit si chacun tient sa part au bon moment.",
    "enjeu": "Détruire la garde méridienne de la lisière.",
    "technologies": [
     "bastion_meridien"
@@ -3682,7 +3686,7 @@
   },
   "opus1_br_12": {
    "titre": "La règle de la réserve",
-   "resume": "Finale du front brésilien, trois contre un : la victoire institue ou refuse un contrôle partagé des achats futurs. Prendre le QG ; verser ou garder.",
+   "resume": "Le dernier QG tombe sans chef unique pour s’attribuer toute la victoire. Lívia et Solveig rédigent ensemble ce qu’elles se doivent, et ce qu’elles ne peuvent pas exiger. La réserve servira le commun ou votre prochaine bataille ; les partenaires sauront lequel vous avez choisi.",
    "enjeu": "Fixer la règle de la réserve : qui la remplit, qui y puise, qui la répare.",
    "technologies": [
     "stockage_solaire"
@@ -3726,7 +3730,7 @@
   },
   "opus1_mx_01": {
    "titre": "La route du plateau",
-   "resume": "Wren vous retrouve sur un plateau dont les pentes canalisent les véhicules dans deux vallées reliées. Inés Valdés commande le front ; le QG ennemi est dans la seconde vallée.",
+   "resume": "Inés se souvient d’une défaite sur ce plateau et reconnaît chaque position qui l’avait enfermée. Wren l’accompagne sans connaître toute l’histoire. Le joueur doit atteindre l’autre vallée, sans refaire une bataille ancienne pour satisfaire sa fierté.",
    "enjeu": "Prendre le QG par la route du plateau, et le dépôt de carburant qu’il garde.",
    "technologies": [],
    "personnages": [
@@ -3739,7 +3743,7 @@
   },
   "opus1_mx_02": {
    "titre": "La ville d’aiguillage",
-   "resume": "Une ville d’aiguillage fait le lien entre revenus et voie de renfort : deux bâtiments sur trois, la ville en premier, ou les renforts n’arrivent pas.",
+   "resume": "La ville d’aiguillage commande l’arrivée des renforts. Inés voudrait pousser vers l’ancien QG adverse ; reprendre les ateliers donne les moyens de tenir ensuite. Gagner mieux vaut ici davantage que gagner exactement au même endroit.",
    "enjeu": "Tenir la ville d’aiguillage.",
    "technologies": [
     "poste_distribution"
@@ -3754,7 +3758,7 @@
   },
   "opus1_mx_03": {
    "titre": "Le train sans rails",
-   "resume": "Le transport suit un corridor ferroviaire désaffecté sous deux feux ; les rails ne portent plus rien, la route le long des rails porte tout.",
+   "resume": "Le transport suit une ancienne voie ferrée. Inés avait perdu une escorte sur ce trajet ; elle vérifie trop longtemps chaque passage. Vous devez utiliser son expérience sans laisser ce souvenir immobiliser le convoi.",
    "enjeu": "Faire passer le train sans rails.",
    "technologies": [
     "stockage_solaire"
@@ -3769,7 +3773,7 @@
   },
   "opus1_mx_04": {
    "titre": "Le verrou latéral",
-   "resume": "Une rampe secondaire permet de contourner la ligne de Basile Kelm, verrouillée autour de ses dépôts. Prendre le QG à deux par le verrou latéral ; puis la question des relevés.",
+   "resume": "Basile ferme la rampe principale. Une voie latérale permet de contourner sa ligne, et Inés accepte enfin un chemin qui ne ressemble pas à une revanche frontale. Les relevés peuvent rendre cette leçon disponible aux autres équipes.",
    "enjeu": "Contourner la ligne de Basile et prendre le QG.",
    "technologies": [
     "bastion_meridien",
@@ -3817,7 +3821,7 @@
   },
   "opus1_hs_pe_1": {
    "titre": "Le passage commun",
-   "resume": "Trois étages en une carte, et pas de route entre eux tant qu’on ne l’a pas bâtie. Luz Quispe vous dispute le QG de l’altiplano : le premier génie qui relie ses étages gagne le tempo.",
+   "resume": "Luz suit le travail du génie avec plus d’attention que l’avance des blindés. Sur les étages du plateau, elle vous montre qu’un accès construit au bon moment change toute la bataille. Elle connaît aussi le nom de l’équipe qui devra l’entretenir.",
    "enjeu": "Prendre le QG des hauts plateaux en bâtissant le passage.",
    "technologies": [],
    "personnages": [
@@ -3830,7 +3834,7 @@
   },
   "opus1_hs_pe_2": {
    "titre": "Le marché d’en haut",
-   "resume": "Un transport de pièces doit monter au marché d’en haut par une route que le génie bâtit devant lui, pendant qu’Ost fait avancer ses chenilles sous couverture. Luz protège les bâtisseurs ; vous protégez le transport.",
+   "resume": "Le génie ouvre la route devant le transport. Luz protège les bâtisseurs, vous couvrez les pièces qui montent. Ost pousse ses chenilles ; chaque section terminée donne aux deux équipes une raison concrète de se faire confiance.",
    "enjeu": "Monter le transport au marché d’en haut.",
    "technologies": [
     "stockage_solaire"
@@ -3845,7 +3849,7 @@
   },
   "opus1_mx_05": {
    "titre": "Le ciel du plateau",
-   "resume": "Maël Orven montre le coût d’une défense sans intercepteurs : ses appareils passent où il veut. Ost avance dessous ; tout détruire, y compris ce qui vole.",
+   "resume": "Maël domine le ciel et Ost avance dessous. Inés doit demander une couverture qu’elle voulait assurer seule. Wren traite cette demande comme une bonne décision, pas comme l’aveu qu’Inés serait moins compétente.",
    "enjeu": "Détruire la colonne d’Ost et les appareils de Maël.",
    "technologies": [
     "drones_communs"
@@ -3862,7 +3866,7 @@
   },
   "opus1_mx_06": {
    "titre": "La réserve comptée",
-   "resume": "La production ennemie est remplacée par une réserve finie annoncée au briefing, ravitaillée par Edran. Survivre jusqu’à ce qu’elle soit comptée à zéro.",
+   "resume": "La réserve ennemie est finie, mais Edran la maintient assez longtemps pour vous tenter à l’assaut. Tenir exige de résister à la bataille décisive qu’Inés attend. Elle commence à compter les unités préservées plutôt que les occasions de revanche.",
    "enjeu": "Tenir jusqu’à la fin de la réserve comptée.",
    "technologies": [
     "stockage_solaire"
@@ -3878,7 +3882,7 @@
   },
   "opus1_mx_07": {
    "titre": "Trois permis concurrents",
-   "resume": "Trois postes abritent trois versions incompatibles du même permis d’accès. Les parcourir dans l’ordre ; le permis valide est celui qui porte la signature du Consortium.",
+   "resume": "Les trois postes bloquent chacun un accès avec un permis différent. Les reprendre ouvre un trajet aux équipes coincées entre les vallées. Le nom du Consortium apparaît derrière les refus ; le problème est désormais commun, pas le vieux grief d’Inés.",
    "enjeu": "Parcourir les trois permis : trois autorisations pour le même terrain, trois signatures à comparer.",
    "technologies": [
     "telemetrie"
@@ -3893,7 +3897,7 @@
   },
   "opus1_mx_08": {
    "titre": "Le contrat de sécurité",
-   "resume": "Une équipe accepte une exclusivité en échange de sa participation aux combats de l’année. 2v2 ; garantir la livraison ou refuser la dette.",
+   "resume": "Une équipe rivale signe pour pouvoir continuer à combattre. Inés connaît son responsable et se méfie de sa promesse. Garantir sa livraison engage votre réserve ; refuser garde des moyens mais laisse sa dépendance intacte.",
    "enjeu": "Gagner le 2v2 et trancher le contrat de sécurité.",
    "technologies": [
     "stockage_solaire"
@@ -3939,7 +3943,7 @@
   },
   "opus1_mx_09": {
    "titre": "Le passage accordé",
-   "resume": "Préserver une voie logistique pour un futur partenaire : deux positions, trois journées, un passage qui ne sert à personne aujourd’hui et à tout le monde demain.",
+   "resume": "Deux positions protègent un passage destiné à ce partenaire possible. Inés couvre la voie par laquelle il l’avait autrefois débordée. Elle n’oublie pas la défaite ; elle choisit ce qu’elle veut en faire aujourd’hui.",
    "enjeu": "Tenir le passage accordé.",
    "technologies": [
     "stockage_solaire"
@@ -3954,7 +3958,7 @@
   },
   "opus1_mx_10": {
    "titre": "Le reçu refusé",
-   "resume": "Le signataire découvre que son engagement ne garantit pas la livraison : le reçu est refusé. Deux bâtiments sur trois, et les conditions de son retour.",
+   "resume": "Le fournisseur refuse la livraison promise au signataire. Reprendre les bâtiments lui rend une possibilité de retour. Inés demande des engagements vérifiables plutôt que des excuses répétées ; votre décision fixe quand il pourra revenir.",
    "enjeu": "Prendre les bâtiments du reçu refusé.",
    "technologies": [
     "poste_distribution"
@@ -4000,7 +4004,7 @@
   },
   "opus1_hs_mn_1": {
    "titre": "Le grand galop",
-   "resume": "La plus grande carte de l’opus, presque sans obstacle. Saran Bat propose une course d’avant-bataille, puis une bataille où seule la reconnaissance décide de qui frappe le premier.",
+   "resume": "Saran propose une course avant l’exercice sur le grand découvert. Elle aime aller vite, mais vous montre ensuite pourquoi un observateur doit parfois rester immobile. La reconnaissance offre ici un plaisir de maîtrise plutôt qu’une simple attente.",
    "enjeu": "Détruire l’armée de Saran sur la steppe.",
    "technologies": [],
    "personnages": [
@@ -4013,7 +4017,7 @@
   },
   "opus1_hs_mn_2": {
    "titre": "Le point de ravitaillement déplacé",
-   "resume": "Saran annonce à tous ses partenaires qu’elle change de point de ravitaillement à mi-parcours. Avec vous, elle doit prendre deux des trois dépôts qu’Ost et Basile tiennent, et choisir entre poursuivre l’ouverture et revenir couvrir la réserve commune.",
+   "resume": "Saran annonce son changement de ravitaillement à tous les partenaires. Reprendre les dépôts face à Ost et Basile ouvre une occasion de poursuite. Revenir couvrir la réserve ou exploiter l’ouverture doit rester un choix assumé, pas une promesse oubliée dans l’élan.",
    "enjeu": "Prendre deux dépôts et décider de l’ouverture du point de ravitaillement.",
    "technologies": [
     "stockage_solaire"
@@ -4058,7 +4062,7 @@
   },
   "opus1_mx_11": {
    "titre": "La revanche du plateau",
-   "resume": "Le partenaire choisit entre rester fidèle au prêteur ou demander une sortie, pendant qu’Ost, Maël et Lise viennent « protéger » le prêteur. Tout détruire.",
+   "resume": "Ost, Maël et Lise viennent protéger le prêteur. Le partenaire doit agir selon la branche déjà choisie, pas devenir allié parce qu’un discours le demande. Inés accepte que cette bataille ait plusieurs responsables et plusieurs souvenirs.",
    "enjeu": "Détruire la garde du prêteur.",
    "technologies": [
     "bastion_meridien"
@@ -4076,7 +4080,7 @@
   },
   "opus1_mx_12": {
    "titre": "La limite du garant",
-   "resume": "Finale du front mexicain, trois contre un : la victoire borne les prérogatives du fournisseur sur le réseau. Prendre le QG ; verser ou garder.",
+   "resume": "Le dernier QG donne à Inés la victoire qu’elle voulait, autrement qu’elle l’imaginait. Wren lui demande ce qu’elle compte préserver pour la suite. La réserve rejoint le commun ou le prochain front ; la revanche cesse d’être le seul horizon.",
    "enjeu": "Fixer la limite du garant : jusqu’où un prêteur a le droit de commander.",
    "technologies": [
     "poste_distribution"
@@ -4120,7 +4124,7 @@
   },
   "opus1_in_01": {
    "titre": "La première interconnexion",
-   "resume": "Ariane vous retrouve sur un réseau dense : plusieurs axes courts, des carrefours qu’on ne couvre pas tous. Devika Rao commande les ateliers d’interconnexion ; le QG ennemi est à deux carrefours.",
+   "resume": "Devika accueille la coalition au milieu d’ateliers qui travaillent trop vite et de carrefours toujours encombrés. Ariane demande ce qui peut attendre. Reprendre le réseau doit rendre le travail possible, pas ajouter une urgence militaire à toutes les autres.",
    "enjeu": "Prendre le QG de la première interconnexion : le premier endroit du monde où deux réseaux nationaux se parlent.",
    "technologies": [],
    "personnages": [
@@ -4133,7 +4137,7 @@
   },
   "opus1_in_02": {
    "titre": "Les villes du relais",
-   "resume": "L’économie repose sur des bâtiments dispersés, pas sur un centre : deux villes du relais sur trois, aux deux bouts du réseau.",
+   "resume": "Les villes dispersées alimentent plusieurs équipes de recherche. Deux sites repris permettent de les relier sans tout concentrer au même endroit. Devika défend cette répartition : perdre un atelier ne doit pas arrêter tout le programme.",
    "enjeu": "Tenir les villes du relais.",
    "technologies": [
     "poste_distribution"
@@ -4148,7 +4152,7 @@
   },
   "opus1_in_03": {
    "titre": "Le lot de convertisseurs",
-   "resume": "Un transport de convertisseurs doit rejoindre l’installation qui prépare les échanges avec Aube. C’est la première fois qu’Aube est nommé au briefing, et deux colonnes veulent le lot.",
+   "resume": "Le convoi emporte des convertisseurs destinés à Aube, un programme fictif de recherche sur la fusion. Devika le dit simplement : il ne fournit pas encore d’électricité, mais pourrait un jour changer ce que les pays se disputent. Les personnes qui escortent ses pièces ont besoin d’une route sûre maintenant.",
    "enjeu": "Livrer le lot de convertisseurs à l’installation d’Aube : sans eux, l’Inde n’a pas de place dans le programme.",
    "technologies": [
     "convertisseurs",
@@ -4164,7 +4168,7 @@
   },
   "opus1_in_04": {
    "titre": "La traversée urbaine",
-   "resume": "Les positions de tir indirect concurrencent les itinéraires de capture dans la traversée urbaine. Prendre le QG à deux ; puis la question des relevés.",
+   "resume": "L’artillerie contrôle les axes courts. Ariane veut un trajet lisible ; Devika connaît les passages de service. Mettre leurs cartes en commun permet de protéger le transport suivant, même si les relevés montrent ce qui reste mal connu.",
    "enjeu": "Prendre le QG dans la ville sans être pris sous le feu.",
    "technologies": [
     "telemetrie"
@@ -4208,7 +4212,7 @@
   },
   "opus1_in_05": {
    "titre": "Le bulletin incomplet",
-   "resume": "Le Bulletin est incomplet, la visibilité réduite, et le drone et le radar décident. Ost avance dans le brouillard ; tout détruire.",
+   "resume": "Le Bulletin manque de mesures et le brouillard cache Ost. Devika refuse de présenter une estimation comme une certitude. Drones et radar doivent établir ce qui est réellement là avant d’engager les colonnes.",
    "enjeu": "Détruire la colonne d’Ost avec un Bulletin incomplet.",
    "technologies": [
     "drones_communs",
@@ -4225,7 +4229,7 @@
   },
   "opus1_in_06": {
    "titre": "Le réseau en attente",
-   "resume": "Tenir jusqu’à une remise à disposition contractuelle de renforts, pendant qu’Edran ravitaille l’ennemi. Le réseau attend ; vous aussi.",
+   "resume": "Les renforts ne peuvent pas être libérés à temps ; Edran continue d’approvisionner l’ennemi. Devika propose de tout miser sur une arrivée idéale. Ariane lui demande un plan qui tienne aussi si les équipes ont du retard.",
    "enjeu": "Survivre jusqu’à la remise à disposition du réseau.",
    "technologies": [
     "stockage_solaire"
@@ -4241,7 +4245,7 @@
   },
   "opus1_in_07": {
    "titre": "Les trois protocoles",
-   "resume": "Trois protocoles d’interconnexion, trois relais dans l’ordre : les relevés techniques relient enfin plusieurs offres au même bénéficiaire, et le bénéficiaire prépare Aube.",
+   "resume": "Trois relais doivent accepter les mêmes convertisseurs. Les parcourir permet aux techniciens de faire fonctionner ensemble des installations conçues séparément. Les relevés révèlent ensuite qu’un fournisseur veut décider seul de ce qui pourra rejoindre Aube.",
    "enjeu": "Recouper les trois protocoles d’essai : ce sont ces papiers-là qui ouvrent la porte du laboratoire.",
    "technologies": [
     "telemetrie",
@@ -4257,7 +4261,7 @@
   },
   "opus1_in_08": {
    "titre": "L’option d’exclusivité",
-   "resume": "Une délégation accepte une clause d’exclusivité pour sécuriser son accès aux essais d’Aube. 2v2 ; garantir ou refuser.",
+   "resume": "Une délégation accepte l’exclusivité du Consortium pour accéder aux essais. Devika comprend la peur d’être laissée de côté. Garantir sa livraison ou garder les moyens de vos équipes ne résout pas la question de savoir qui pourra participer à la recherche.",
    "enjeu": "Gagner le 2v2 et trancher la clause du fournisseur unique.",
    "technologies": [
     "convertisseurs"
@@ -4301,7 +4305,7 @@
   },
   "opus1_hs_pe_3": {
    "titre": "La querelle d’altitude",
-   "resume": "Basile et Yuna tiennent deux des trois postes du col, dont l’altitude réelle est contestée depuis quatre ans. Luz et vous les disputez, et la réserve suffit pour un seul chantier : le passage commun, ou l’équipement de la délégation.",
+   "resume": "Basile et Yuna tiennent les postes du col. Une fois l’accès repris, la réserve ne permet qu’un chantier. Luz vous demande de choisir entre le passage commun et l’équipement de sa délégation en nommant ceux qui attendront dans chaque cas.",
    "enjeu": "Prendre les postes du col et décider du chantier.",
    "technologies": [
     "stockage_solaire"
@@ -4346,7 +4350,7 @@
   },
   "opus1_in_09": {
    "titre": "Le test contradictoire",
-   "resume": "Maintenir un test commun auquel la délégation participe encore, sous une station IEM qui impulse à journées annoncées : capturer la station, ou tenir hors rayon. Deux positions, trois journées.",
+   "resume": "Deux positions doivent rester tenues pendant un test commun, sous les impulsions annoncées d’une station IEM. Le partenaire compromis peut encore y participer. Devika veut des résultats que chacun puisse vérifier, même chez ceux dont elle se méfie.",
    "enjeu": "Tenir l’essai contradictoire sous l’impulsion.",
    "technologies": [
     "station_iem",
@@ -4362,7 +4366,7 @@
   },
   "opus1_in_10": {
    "titre": "Le droit de réponse",
-   "resume": "Le signataire reçoit une possibilité de retrait assortie de réparations concrètes. Deux bâtiments sur trois, et son retour comptes ouverts ou après rupture.",
+   "resume": "Reprendre les bâtiments permet au signataire de quitter son accord et de réparer ce qu’il a engagé. Le joueur décide du retour sous contrôle ou après rupture. Devika insiste pour distinguer les techniciens qui ont besoin de travailler des responsables qui ont promis leur accès.",
    "enjeu": "Prendre les bâtiments du droit de réponse.",
    "technologies": [
     "poste_distribution"
@@ -4406,7 +4410,7 @@
   },
   "opus1_in_11": {
    "titre": "Les centres coordonnés",
-   "resume": "Deux centres méridiens séparés se ravitaillent l’un l’autre : Ost, Maël et Lise tiennent un réseau, pas une position. Tout détruire, centre par centre.",
+   "resume": "Les centres des Gris se ravitaillent mutuellement. Ost, Maël et Lise montrent ce que permet déjà une technique coordonnée. Il faut défaire ce réseau sans raconter qu’Aube fournira demain la réponse à tous vos problèmes.",
    "enjeu": "Détruire les centres coordonnés.",
    "technologies": [
     "bastion_meridien",
@@ -4425,7 +4429,7 @@
   },
   "opus1_in_12": {
    "titre": "Le protocole ouvert",
-   "resume": "Finale du front indien, trois contre un, et Sélène Veyr en personne à la table : la victoire décide de publier ou de réserver les règles d’interconnexion. Prendre le QG ; verser ou garder.",
+   "resume": "Sélène se présente à la table comme celle qui peut financer la suite. Le QG repris donne la possibilité de publier les règles de connexion. Devika demande que la promesse de partage survive au choix immédiat de la réserve commune ou du prochain front.",
    "enjeu": "Ouvrir le protocole d’Aube — devant Sélène : ce qui est publié ne se vole plus.",
    "technologies": [
     "convertisseurs",
@@ -4471,7 +4475,7 @@
   },
   "opus1_jp_01": {
    "titre": "Le premier détroit",
-   "resume": "Tomas vous retrouve sur une côte où les accès terrestres sont sous surveillance aérienne. Ren Mizuno commande les correspondances ; le QG ennemi est au-delà du premier détroit.",
+   "resume": "Ren organise les traversées avec une précision qui impressionne Tomas. La surveillance aérienne rend pourtant chaque horaire fragile. Prendre le premier accès doit permettre aux équipes de signaler un problème sans avoir peur de décevoir leur commandant.",
    "enjeu": "Prendre le QG du premier détroit, et l’atelier d’optique qu’il protège.",
    "technologies": [],
    "personnages": [
@@ -4484,7 +4488,7 @@
   },
   "opus1_jp_02": {
    "titre": "L’atelier des deux baies",
-   "resume": "Les deux baies financent deux approches différentes du QG : deux ateliers sur trois, et la coalition choisit la sienne.",
+   "resume": "Deux baies offrent des approches différentes. Ren préfère un plan parfaitement synchronisé ; le joueur peut répartir les ateliers pour conserver une solution de secours. La marge fait partie du plan, elle n’en est pas l’échec.",
    "enjeu": "Tenir les ateliers des deux baies, où se fabriquent les instruments d’Aube.",
    "technologies": [
     "poste_distribution"
@@ -4499,7 +4503,7 @@
   },
   "opus1_jp_03": {
    "titre": "Les instruments en transit",
-   "resume": "Un transport accompagne des instruments de mesure vers une équipe indépendante qui veut vérifier Aube elle-même. Deux colonnes veulent les instruments.",
+   "resume": "Des instruments de mesure doivent rejoindre une équipe indépendante chargée de vérifier les essais d’Aube. Ren veut protéger ceux qui pourront contredire les résultats attendus. L’escorte transporte donc aussi le droit de dire que quelque chose ne fonctionne pas.",
    "enjeu": "Livrer les instruments en transit.",
    "technologies": [
     "telemetrie"
@@ -4514,7 +4518,7 @@
   },
   "opus1_jp_04": {
    "titre": "Le pont de traverse",
-   "resume": "Une route longue donne accès au dos de la ligne ennemie. Prendre le QG à deux par le pont de traverse ; puis la question des relevés.",
+   "resume": "Le long détour donne accès au dos de la ligne. Tomas accepte de modifier son horaire ; Ren doit prévenir les équipes qui l’attendent. Les relevés partagés permettent de comprendre le retard au lieu d’en chercher un coupable.",
    "enjeu": "Prendre le QG par le dos de la ligne.",
    "technologies": [
     "telemetrie"
@@ -4558,7 +4562,7 @@
   },
   "opus1_jp_05": {
    "titre": "Écran sans signal",
-   "resume": "Relais Zéro masque sa doctrine derrière des drones brouillables, et un drone marin observe les chenaux portuaires. Ost avance ; tout détruire, en distinguant l’observateur du navire.",
+   "resume": "Une voix inconnue utilise drones et brouillage, un drone marin observe les chenaux. Les silhouettes vues ne disent pas qui commande. Ren et vous devez séparer les observations des suppositions avant d’attaquer Ost.",
    "enjeu": "Détruire la colonne d’Ost sous les Veilleurs.",
    "technologies": [
     "veilleur_meridien",
@@ -4576,7 +4580,7 @@
   },
   "opus1_jp_06": {
    "titre": "Le dernier créneau",
-   "resume": "Une fenêtre de transport bornée impose une défense rapide, sans journées d’attente ; Edran ravitaille en face. Survivre jusqu’au dernier créneau.",
+   "resume": "Le dernier créneau de transport approche tandis qu’Edran ravitaille l’ennemi. Ren refuse de faire partir une unité juste pour respecter l’horaire annoncé. Tenir jusqu’au passage sûr vaut mieux qu’une ponctualité qui perdrait l’escorte.",
    "enjeu": "Tenir jusqu’au dernier créneau.",
    "technologies": [
     "stockage_solaire"
@@ -4592,7 +4596,7 @@
   },
   "opus1_jp_07": {
    "titre": "Les trois miroirs",
-   "resume": "Trois relais miroirs révèlent une synchronisation des contrats méridiens : trois délégations signent le même jour, à la même heure, la même clause.",
+   "resume": "Les trois relais miroirs doivent comparer la même mesure. Une discordance conduit les équipes à vérifier ensemble plutôt qu’à choisir le résultat le plus flatteur. Elles trouvent la trace d’une coordination du Consortium après avoir restauré leur propre liaison.",
    "enjeu": "Parcourir les trois miroirs.",
    "technologies": [
     "telemetrie"
@@ -4607,7 +4611,7 @@
   },
   "opus1_jp_08": {
    "titre": "Le commandement sous licence",
-   "resume": "Une équipe garde ses couleurs nationales en signant un contrat privé : le commandement est sous licence. 2v2 ; garantir ou refuser.",
+   "resume": "Une équipe conserve ses couleurs mais cède ses décisions à un fournisseur. Ren demande à son responsable ce qu’il peut encore refuser. Votre garantie peut aider son retour ; garder les fonds protège vos moyens sans résoudre sa perte d’autonomie.",
    "enjeu": "Gagner contre un commandement loué, et dire ce qu’on fait de ceux qui l’ont loué.",
    "technologies": [
     "stockage_solaire"
@@ -4651,7 +4655,7 @@
   },
   "opus1_jp_09": {
    "titre": "La mesure commune",
-   "resume": "Wren propose une vérification commune à laquelle le signataire peut encore participer : deux positions, trois journées, et la télémétrie récupérée pour la première fois.",
+   "resume": "Wren conduit une mesure commune pendant la tenue de deux positions. Elle accepte qu’un partenaire compromis vérifie aussi ses instruments. La télémétrie récupérée ne vaut que si quelqu’un peut en contester les erreurs.",
    "enjeu": "Tenir la mesure commune et reprendre la télémétrie : un savoir volé qui revient à celle qui l’a inventé.",
    "technologies": [
     "telemetrie"
@@ -4666,7 +4670,7 @@
   },
   "opus1_jp_10": {
    "titre": "L’aveu technique",
-   "resume": "Les documents prouvent la dépendance contractuelle sans révéler qui est Relais Zéro ; une station IEM de chantier impulse à horizon égal pour tous. Deux bâtiments sur trois, et le retour du signataire.",
+   "resume": "La station IEM annonce ses impulsions pendant la reprise des bâtiments. Les données établissent la dépendance du partenaire, pas l’identité de la voix inconnue. Le retour exige un contrôle concret ; une révélation imaginaire ne peut pas remplacer ce travail.",
    "enjeu": "Prendre les bâtiments de l’aveu technique sous l’impulsion.",
    "technologies": [
     "station_iem"
@@ -4711,7 +4715,7 @@
   },
   "opus1_jp_11": {
    "titre": "Les deux silhouettes",
-   "resume": "Deux spécialistes méridiens coordonnent appareils et artillerie : Maël dans le ciel, Lise au sol, Ost au centre, et rien de leur histoire privée n’affleure. Tout détruire.",
+   "resume": "Maël couvre le ciel, Lise règle ses tirs, Ost tient le centre. Ren identifie leur coordination de combat sans spéculer sur leur histoire personnelle. Battre cette formation demande de rompre leurs appuis, pas de deviner un secret familial.",
    "enjeu": "Détruire les deux silhouettes.",
    "technologies": [
     "bastion_meridien"
@@ -4729,7 +4733,7 @@
   },
   "opus1_jp_12": {
    "titre": "Le droit de vérifier",
-   "resume": "Finale du front japonais, trois contre un, Sélène à la table : la victoire impose ou refuse un contrôle indépendant des réseaux d’Aube. Prendre le QG ; verser ou garder.",
+   "resume": "Sélène promet des essais plus rapides si l’on réduit les vérifications. La victoire donne au contraire la possibilité de les rendre indépendantes. Ren sait désormais que la confiance se mesure aussi à la place laissée à celui qui pose une question gênante.",
    "enjeu": "Gagner le droit de vérifier Aube — d’aller voir soi-même ce qui s’y fabrique.",
    "technologies": [
     "aube",
@@ -4775,7 +4779,7 @@
   },
   "opus1_au_01": {
    "titre": "La route longue",
-   "resume": "Solveig vous retrouve sur de longues liaisons où chaque ravitaillement est une décision visible ; Hazel Quinn commande les réserves côtières. Au briefing, la plaque du Maroc est posée à plat : Samir El Hadi est mort — en branche b de « Le bail trop long ».",
+   "resume": "Les distances obligent Hazel à compter chaque ravitaillement. Si la branche marocaine le prévoit, l’annonce de la mort de Samir précède le briefing ; sinon elle reste réservée à son jalon tardif. Solveig laisse un silence, puis demande quelle route les équipes peuvent réellement tenir aujourd’hui.",
    "enjeu": "Prendre le QG au bout de la route longue, et le champ de forage qui la justifie.",
    "technologies": [
     "stockage_solaire"
@@ -4791,7 +4795,7 @@
   },
   "opus1_au_02": {
    "titre": "Les ateliers dispersés",
-   "resume": "Les centres de production sont éloignés et demandent une réserve mobile : deux ateliers dispersés sur trois, et le convoi entre les deux.",
+   "resume": "Les ateliers sont trop éloignés pour qu’une réserve fixe les serve tous. Hazel veut tout couvrir ; le joueur doit choisir deux centres et organiser ce qui les relie. Une limite annoncée évite une promesse impossible.",
    "enjeu": "Tenir les ateliers dispersés.",
    "technologies": [
     "poste_distribution",
@@ -4807,7 +4811,7 @@
   },
   "opus1_au_03": {
    "titre": "Le convoi sans détour",
-   "resume": "Un transport traverse un secteur découvert, couvert par des reliefs ponctuels ; pas de détour, pas de couvert continu.",
+   "resume": "Le transport traverse un découvert sans détour continu. Hazel a prévu les abris ponctuels et les équipes qui attendent chacun. L’escorte avance de refuge en refuge, avec le soulagement concret d’un appel reçu à chaque étape.",
    "enjeu": "Faire passer le convoi sans détour.",
    "technologies": [
     "stockage_solaire"
@@ -4822,7 +4826,7 @@
   },
   "opus1_au_04": {
    "titre": "La piste secondaire",
-   "resume": "Une piste secondaire permet de déborder l’artillerie de Lise Varen. Prendre le QG à deux ; puis la question des relevés.",
+   "resume": "Une piste secondaire déborde l’artillerie de Lise. Solveig demande de garder de quoi revenir, même si l’assaut paraît proche. Les relevés partagés disent autant les points de repos que les positions ennemies.",
    "enjeu": "Déborder Lise et prendre le QG.",
    "technologies": [
     "telemetrie"
@@ -4869,7 +4873,7 @@
   },
   "opus1_hs_na_1": {
    "titre": "Ce que la brume efface",
-   "resume": "Chaque matin la brume côtière tombe et efface tout. Amalie Haoses fait tourner ses observateurs au lieu de les échanger contre une attaque, et vous apprenez qu’à découvert, sur la dune, personne n’a de couvert.",
+   "resume": "Amalie fait tourner ses observateurs dans la brume côtière. Elle se souvient de ceux qui ont passé le dernier créneau dehors et les fait relever. Le joueur apprend à protéger sa vision autant qu’à l’étendre.",
    "enjeu": "Détruire l’armée d’Amalie dans la brume.",
    "technologies": [
     "station_radar"
@@ -4884,7 +4888,7 @@
   },
   "opus1_hs_na_2": {
    "titre": "Le passage révélé",
-   "resume": "Les observateurs d’Amalie ont trouvé la seule fenêtre dans la brume. Vous décidez si elle la révèle à tous ou la garde pour son équipe, puis tenez deux positions pendant que Relais Zéro, Basile et une délégation sous contrat viennent la disputer.",
+   "resume": "Les observateurs ont trouvé une fenêtre dans la brume. Amalie hésite entre la partager et garder l’avantage pour son équipe. La tenue des positions confronte ce choix au réseau inconnu et aux forces de Basile ; ses éclaireurs restent ceux qui ont rendu cette décision possible.",
    "enjeu": "Tenir le passage révélé — ou gardé.",
    "technologies": [
     "veilleur_meridien"
@@ -4929,7 +4933,7 @@
   },
   "opus1_au_05": {
    "titre": "Le relais lointain",
-   "resume": "Une station radar lointaine vaut plus qu’une offensive immédiate : Ost avance ; tout détruire, mais prendre le radar d’abord ou se battre aveugle.",
+   "resume": "Le radar lointain donnerait la vue avant l’avance d’Ost. Hazel doit envoyer une colonne qu’elle ne pourra pas soutenir immédiatement. Prendre cette distance au sérieux change le plan, sans rendre les ordres plus compliqués.",
    "enjeu": "Détruire la colonne d’Ost en tenant le relais lointain.",
    "technologies": [
     "station_radar"
@@ -4945,7 +4949,7 @@
   },
   "opus1_au_06": {
    "titre": "Les réserves annoncées",
-   "resume": "Des renforts finis entrent par un axe déclaré, ravitaillés par Edran, avec un temps de réaction suffisant. Survivre aux réserves annoncées.",
+   "resume": "Les renforts ennemis sont annoncés et finis, mais Edran les ravitaille. Hazel ne peut pas répondre partout à la fois. Tenir demande de faire tourner les unités et de reconnaître quand une position a rempli son rôle.",
    "enjeu": "Tenir jusqu’à l’épuisement des réserves annoncées.",
    "technologies": [
     "stockage_solaire"
@@ -4961,7 +4965,7 @@
   },
   "opus1_au_07": {
    "titre": "Les trois délais",
-   "resume": "Trois délais, trois relais : les reçus montrent qu’un même prêteur a retardé plusieurs délégations pour les faire signer.",
+   "resume": "Trois relais permettent de joindre des délégations retardées. Leurs récits montrent que le Consortium les a fait attendre pour les pousser à signer. Hazel peut enfin distinguer les retards subis de ceux qu’elle aurait pu mieux préparer.",
    "enjeu": "Parcourir les trois délais.",
    "technologies": [
     "telemetrie"
@@ -4976,7 +4980,7 @@
   },
   "opus1_au_08": {
    "titre": "L’avance conditionnelle",
-   "resume": "Un responsable d’équipe accepte une exclusivité pour payer le prochain transfert ; une station météo impose la pluie sur le terrain aride. 2v2 ; garantir ou refuser.",
+   "resume": "Une équipe signe pour payer son prochain transfert tandis qu’une pluie imposée ralentit le terrain. Solveig rappelle les autres convois engagés. Garantir cette livraison aide un partenaire ; garder les fonds conserve une marge pour ceux qui roulent déjà.",
    "enjeu": "Gagner sous la pluie forcée et trancher l’avance conditionnelle.",
    "technologies": [
     "station_meteo"
@@ -5020,7 +5024,7 @@
   },
   "opus1_au_09": {
    "titre": "La promesse maintenue",
-   "resume": "Un ravitaillement commun teste la sincérité du partenaire compromis : deux positions, trois journées, et un convoi qu’il pourrait livrer à l’ennemi.",
+   "resume": "Le partenaire compromis pourrait détourner le ravitaillement commun. Deux positions protègent la livraison pendant que sa conduite met vos engagements à l’épreuve. Hazel veut lui laisser une tâche réelle, avec des limites vérifiables.",
    "enjeu": "Tenir la promesse maintenue.",
    "technologies": [
     "stockage_solaire"
@@ -5035,7 +5039,7 @@
   },
   "opus1_au_10": {
    "titre": "Le coût de la sortie",
-   "resume": "Rompre le contrat impose de rendre un dépôt, pas d’abandonner qui que ce soit. Deux bâtiments sur trois, et les conditions de la sortie.",
+   "resume": "La sortie du contrat coûte un dépôt. Reprendre les bâtiments permet de le rendre sans abandonner les équipes. Le retour immédiat sous contrôle et la rupture préalable répartissent autrement le risque de la prochaine longue traversée.",
    "enjeu": "Payer le coût de la sortie.",
    "technologies": [
     "poste_distribution"
@@ -5081,7 +5085,7 @@
   },
   "opus1_hs_nz_1": {
    "titre": "Le dépôt rendu",
-   "resume": "Un dépôt rendu à la fin d’un contrat est revenu désaffecté. Tess Roa vous dispute la remise en service de deux des trois postes de la vallée, dans la brume, avec le génie pour seule pièce qui compte.",
+   "resume": "Tess retrouve un dépôt rendu inutilisable et commence par dresser la liste de ce qui peut repartir. Votre exercice de remise en service oppose deux méthodes de chantier. Elle apprécie moins le grand discours de victoire que la première machine qui redémarre.",
    "enjeu": "Remettre en service deux postes avant Tess.",
    "technologies": [
     "poste_distribution"
@@ -5096,7 +5100,7 @@
   },
   "opus1_hs_nz_2": {
    "titre": "La ligne de fougère",
-   "resume": "Tess prête son terrain et sa ligne ; vous êtes seul face à Ost et Yuna pendant que son équipe répare. Le dépôt réparé sert à tous, ou le matériel est réservé à la prochaine bataille de Tess.",
+   "resume": "Tess vous confie sa ligne pendant que son équipe répare. Ost et Yuna attaquent ; elle doit accepter de ne pas contrôler à la fois le chantier et la défense. Le choix final garde ses effets : ouvrir le dépôt à tous ou préparer sa prochaine bataille.",
    "enjeu": "Survivre sur la ligne de fougère et décider du dépôt.",
    "technologies": [
     "stockage_solaire"
@@ -5141,7 +5145,7 @@
   },
   "opus1_au_11": {
    "titre": "Le relais des alliés",
-   "resume": "Trois camps alliés attaquent une défense concentrée sans empiler leurs colonnes ; Ost, Maël et Lise tiennent le centre. Tout détruire.",
+   "resume": "Trois colonnes alliées approchent sans pouvoir se secourir en un instant. Face à Ost, Maël et Lise, chacune tient un créneau que les autres respectent. Solveig coordonne les réserves ; Hazel accepte de ne pas tout garder sous sa vue.",
    "enjeu": "Détruire la défense concentrée avec trois alliés.",
    "technologies": [
     "bastion_meridien"
@@ -5159,7 +5163,7 @@
   },
   "opus1_au_12": {
    "titre": "La réserve de coalition",
-   "resume": "Finale du front australien, trois contre un, Sélène à la table : la victoire décide des contributions à la coalition qui accompagnera Aube. Prendre le QG ; verser ou garder.",
+   "resume": "Sélène demande qui paiera une coalition aussi étendue. Le dernier QG donne une première réponse en matériel. La réserve commune et l’équipement du front suivant sont deux engagements limités : personne ne prétend désormais couvrir le monde entier avec une seule colonne.",
    "enjeu": "Constituer la réserve de coalition : la première caisse commune d’énergie du monde.",
    "technologies": [
     "aube",
@@ -5205,7 +5209,7 @@
   },
   "opus1_id_01": {
    "titre": "L’île d’entrée",
-   "resume": "Wren vous retrouve sur un réseau d’îles reliées ; Ayu Pranata commande les clubs insulaires. Les premières captures sont les accès, et le QG ennemi est sur l’île d’entrée.",
+   "resume": "Ayu commande des équipes réparties sur les îles, chacune avec son passage à protéger. Wren veut savoir lesquelles suivront jusqu’à Aube. Avant de demander une promesse, le joueur doit reprendre l’accès par lequel elles pourront se rejoindre.",
    "enjeu": "Prendre le QG de l’île d’entrée, et le quai d’où partent les instruments d’Aube.",
    "technologies": [],
    "personnages": [
@@ -5218,7 +5222,7 @@
   },
   "opus1_id_02": {
    "titre": "Les ateliers du détroit",
-   "resume": "Les revenus de rive déterminent quels passages peuvent être tenus : deux ateliers du détroit sur trois.",
+   "resume": "Les ateliers du détroit donnent les moyens de tenir plusieurs passages. Ayu refuse de servir toujours l’île la plus proche du commandement. Deux sites repris doivent montrer que les petites équipes ont leur place dans le départ commun.",
    "enjeu": "Tenir les ateliers du détroit.",
    "technologies": [
     "poste_distribution"
@@ -5233,7 +5237,7 @@
   },
   "opus1_id_03": {
    "titre": "Le manifeste d’Aube",
-   "resume": "Un transport apporte les autorisations d’essai au dernier nœud d’interconnexion d’Aube. Deux colonnes veulent le manifeste.",
+   "resume": "Le transport porte les autorisations et le matériel nécessaires au dernier accès d’essai d’Aube. Des équipes attendent de savoir si elles pourront travailler ensemble. Escortez-le avant que les deux colonnes adverses referment le passage.",
    "enjeu": "Livrer le manifeste d’Aube — la liste, signée avant le départ, de tout ce que le programme attend et de qui doit le fournir.",
    "technologies": [
     "aube",
@@ -5249,7 +5253,7 @@
   },
   "opus1_id_04": {
    "titre": "Le pont des contrats",
-   "resume": "Deux équipes contestent le même créneau d’accès sans contester à qui appartient l’île. Prendre le QG à deux par le pont des contrats ; puis la question des relevés.",
+   "resume": "Deux partenaires réclament le même créneau de traversée. Ayu connaît leurs urgences et refuse d’en inventer une moins légitime. La prise du QG ouvre le pont ; partager les relevés permettra ensuite d’expliquer la priorité retenue.",
    "enjeu": "Prendre le QG du pont des contrats.",
    "technologies": [
     "telemetrie"
@@ -5296,7 +5300,7 @@
   },
   "opus1_hs_fj_1": {
    "titre": "Le lagon sans transport",
-   "resume": "Le transport d’un club du lagon a été retenu par un fournisseur pour une facture contestée. Jone Vakalau vous prête le sien pour ramener l’équipement du club à travers les eaux peu profondes, contre Yuna et une délégation sous contrat.",
+   "resume": "Jone prête son transport à une équipe dont le matériel est bloqué pour une facture contestée. Vous escortez l’équipement dans les eaux peu profondes. Sa générosité est concrète : c’est aussi le véhicule dont il aura besoin demain.",
    "enjeu": "Ramener l’équipement du club par le lagon.",
    "technologies": [
     "stockage_solaire"
@@ -5311,7 +5315,7 @@
   },
   "opus1_hs_fj_2": {
    "titre": "La chaîne des passages",
-   "resume": "Trois relais d’un bout à l’autre du lagon, sous les Veilleurs que Relais Zéro fait tourner. Jone propose un raccourci par le récif ; rien ne garantit le retour du matériel prêté.",
+   "resume": "Trois relais traversent le lagon sous les Veilleurs. Jone connaît un raccourci par le récif, mais ne garantit pas le retour du matériel prêté. Le choix porte sur une aide reçue, et pas seulement sur un gain de temps abstrait.",
    "enjeu": "Parcourir la chaîne des passages et décider du récif.",
    "technologies": [
     "veilleur_meridien"
@@ -5355,7 +5359,7 @@
   },
   "opus1_id_05": {
    "titre": "La fenêtre de visibilité",
-   "resume": "La reconnaissance et le brouillage dévoilent des rotations méridiennes ; prendre le quai pour retourner le drone marin qui les guide. Ost avance ; tout détruire.",
+   "resume": "Les rotations des Gris apparaissent entre deux périodes de brouillage. Reprendre le quai permet de retourner le drone marin qui les observe. Ayu veut employer cette information pour ouvrir les passages, pas promettre qu’elle révèle tous les plans ennemis.",
    "enjeu": "Détruire la colonne d’Ost et retourner le drone marin contre ceux qui l’ont lancé.",
    "technologies": [
     "drone_marin",
@@ -5372,7 +5376,7 @@
   },
   "opus1_id_06": {
    "titre": "Le quai fermé",
-   "resume": "Tenir une position pendant qu’Edran essaie de reprendre l’accès au quai fermé. Survivre jusqu’à la relève.",
+   "resume": "Edran tente de reprendre le quai avant la relève. Les équipes insulaires doivent tenir assez longtemps pour que le passage reste utilisable. Leur coopération existe déjà dans ce qu’elles font, même si elles n’ont pas toutes promis de partir.",
    "enjeu": "Tenir le quai fermé.",
    "technologies": [
     "stockage_solaire"
@@ -5388,7 +5392,7 @@
   },
   "opus1_id_07": {
    "titre": "Les trois autorisations",
-   "resume": "Trois relais rapprochent les contrats solaires du programme de fusion : les autorisations d’essai d’Aube sont signées par la même main que les concessions solaires.",
+   "resume": "Trois relais rétablissent les autorisations d’accès. Le même pouvoir de blocage relie désormais les sites solaires et Aube. Ayu l’explique sans jargon : celui qui pouvait retenir leurs batteries veut aussi décider qui entre au laboratoire.",
    "enjeu": "Parcourir les trois autorisations.",
    "technologies": [
     "telemetrie",
@@ -5399,12 +5403,12 @@
     "cmd_ayu_pranata"
    ],
    "decision": null,
-   "revelation": "Les autorisations d’essai d’Aube et les concessions solaires portent la même signature : la Cinquième Manche est déjà dans Aube.",
+   "revelation": "Les autorisations d’essai d’Aube et les concessions solaires portent la même signature : les Gris est déjà dans Aube.",
    "disparition": null
   },
   "opus1_id_08": {
    "titre": "Le contrat de trop",
-   "resume": "Un partenaire révèle qu’il a accordé à Méridien le droit de voter à sa place au collège d’Aube. 2v2 ; garantir ou refuser.",
+   "resume": "Un partenaire avoue avoir laissé Méridien voter à sa place pour Aube. Ayu est en colère, mais lui demande ce qu’il veut encore défendre. Garantir sa livraison aide sa marge de manœuvre ; garder les fonds protège ceux qui ont conservé leur indépendance.",
    "enjeu": "Gagner le 2v2 et trancher le contrat de trop.",
    "technologies": [
     "aube"
@@ -5448,7 +5452,7 @@
   },
   "opus1_hs_mg_1": {
    "titre": "L’inventaire des pistes",
-   "resume": "Tiana Ravel a cartographié chaque piste rouge de l’île et nomme les espèces en pleine bataille. Elle vous met à l’épreuve sur une carte qu’elle connaît par cœur, sous couvert et sous brouillard.",
+   "resume": "Tiana nomme les espèces au bord des pistes même pendant votre exercice. Elle connaît la carte par cœur et s’amuse de vos raccourcis trop évidents. Son savoir est un travail accumulé, pas un décor exotique posé derrière la bataille.",
    "enjeu": "Prendre le QG de Tiana sur ses pistes.",
    "technologies": [
     "station_radar"
@@ -5463,7 +5467,7 @@
   },
   "opus1_hs_mg_2": {
    "titre": "Les cartes ouvertes",
-   "resume": "Relais Zéro a installé trois relais sur les pistes de l’atelier de Tiana, et Yuna en revendique la gestion. Tiana et vous les parcourez dans l’ordre ; à la fin, ouvrir ses cartes à un rival, ou protéger le travail de l’atelier.",
+   "resume": "Le réseau inconnu occupe trois relais sur les pistes de l’atelier. Tiana et vous les rejoignez sous la pression de Yuna. Ouvrir ensuite ses cartes à un rival ou protéger son travail prolonge la confiance née pendant ce trajet.",
    "enjeu": "Parcourir les relais et décider des cartes.",
    "technologies": [
     "veilleur_meridien",
@@ -5509,7 +5513,7 @@
   },
   "opus1_id_09": {
    "titre": "Le dernier engagement",
-   "resume": "La coalition doit honorer une livraison malgré le coût de cette révélation : deux positions, trois journées, un dernier engagement à tenir.",
+   "resume": "Une dernière livraison reste due au partenaire compromis. Deux positions doivent tenir pour qu’elle arrive. La coalition montre si ses promesses survivent à une révélation qui la met mal à l’aise.",
    "enjeu": "Tenir le dernier engagement.",
    "technologies": [
     "stockage_solaire"
@@ -5524,7 +5528,7 @@
   },
   "opus1_id_10": {
    "titre": "Le vote rendu",
-   "resume": "Le partenaire peut récupérer son contrat ou le maintenir et devenir ennemi ; une station météo annonce son activation avant le choix du canal. Deux bâtiments sur trois, et son retour.",
+   "resume": "Le partenaire peut récupérer sa voix ou rester lié aux Gris. Les impulsions météo annoncées encadrent la reprise des bâtiments. Le joueur fixe les conditions du retour ; Ayu ne transforme pas un refus en ralliement automatique.",
    "enjeu": "Rendre le vote — ou pas.",
    "technologies": [
     "station_meteo",
@@ -5569,7 +5573,7 @@
   },
   "opus1_id_11": {
    "titre": "La porte de la Manche",
-   "resume": "Ost défend l’accès à la série finale et reconnaît publiquement l’enjeu Aube ; Maël et Lise tiennent la porte de la Manche. Tout détruire.",
+   "resume": "Ost défend l’accès à Aube avec Maël et Lise. Il reconnaît que les Gris ne protègent plus seulement des dépôts : ils veulent décider de l’avenir du programme. Le projet de la Cinquième Manche, nommé après les premiers matchs, devient maintenant une puissance assumée.",
    "enjeu": "Forcer la porte de la Manche.",
    "technologies": [
     "bastion_meridien",
@@ -5583,12 +5587,12 @@
     "cmd_ayu_pranata"
    ],
    "decision": null,
-   "revelation": "Ost le dit à l’antenne : la Sélection se bat pour Aube. Le nom de la Cinquième Manche n’est pas encore prononcé.",
+   "revelation": "Ost le dit à l’antenne : la Sélection se bat pour Aube. Le nom de les Gris n’est pas encore prononcé.",
    "disparition": null
   },
   "opus1_id_12": {
    "titre": "La coalition au départ",
-   "resume": "Finale du front indonésien, trois contre un, Sélène à la table : la victoire fixe les alliés et les garanties qui entrent dans les dix-huit dernières batailles. Drone marin, station IEM, fenêtre météo — tout ce qu’on a appris est sur la carte.",
+   "resume": "La dernière bataille nationale réunit ceux dont les engagements ont tenu. Sélène est à la table, les réserves sont comptées, certains partenaires peuvent manquer. Ayu fait nommer chaque aide promise avant le départ vers Aube : une coalition imparfaite, choisie, vaut mieux qu’une unanimité écrite d’avance.",
    "enjeu": "Assembler la coalition au départ : qui vient, avec quoi, et ce que chacun met en commun.",
    "technologies": [
     "aube",
@@ -5731,7 +5735,7 @@
   },
   "opus1_hs_gr_3": {
    "titre": "Le banc du port",
-   "resume": "La plaque de la Grèce est posée à plat sur le Tableau des délégations : Nikos est mort, le cœur, un matin d’hiver — sur la jetée après sa dernière traversée, ou au café du port si la recrue tient le passage. Le banc grec joue quand même son engagement contre Basile, avec la méthode de Nikos ou avec un remplaçant qui ne connaît pas les jetées.",
+   "resume": "Nikos est mort hors du front ; le lieu suit la branche déjà choisie, sur la jetée ou au café si la recrue tient le passage. La nouvelle vient d’une personne qui l’a connu, puis laisse un silence. L’équipe joue contre Basile avec la méthode transmise ou un remplaçant moins préparé : ce que Nikos a appris aux autres reste visible.",
    "enjeu": "Prendre le QG de Basile sans Nikos.",
    "technologies": [
     "stockage_solaire"
@@ -5973,7 +5977,7 @@
   },
   "opus1_hs_np_3": {
    "titre": "Le relais sans réponse",
-   "resume": "La plaque du Népal est posée à plat : Mira est morte en montant à pied vers l’atelier isolé, la fenêtre météo refermée le soir même ; les porteurs vont bien. Son adjointe reprend le banc et vous demande de redescendre la réserve de l’atelier par trois relais, avant que Basile ne la fasse compter comme réserve méridienne.",
+   "resume": "L’adjointe de Mira annonce sa mort pendant la montée vers l’atelier isolé ; les porteurs vont bien. Elle reprend la coordination sans prétendre remplacer Mira dans tous les souvenirs. Redescendre la réserve par trois relais face à Basile permet au joueur d’aider une équipe qu’il connaît déjà.",
    "enjeu": "Redescendre la réserve de Mira par les trois relais.",
    "technologies": [
     "stockage_solaire"
@@ -5990,7 +5994,7 @@
   },
   "opus1_finale_08": {
    "titre": "La contre-offre",
-   "resume": "Deux boucles routières, un poste central contesté, et Sélène Veyr en commandement : elle propose de garantir l’énergie contre l’exclusivité des décisions. Le Coupleur est sur la carte dès J1 ; le Délestage coupe votre courant.",
+   "resume": "Sélène commande face aux deux routes et au poste central. Elle promet une énergie régulière, puis précise le prix : elle décidera seule qui la reçoit. Le Coupleur, visible dès J1, rend cette menace concrète. La coalition doit tenir deux postes à J18 ou prendre les QG, puis répondre à une offre séduisante sans la confondre avec une solution gratuite.",
    "enjeu": "Tenir deux postes à J18 ou prendre les QG — et répondre à la contre-offre de Sélène.",
    "technologies": [
     "coupleur",
@@ -6001,7 +6005,7 @@
    ],
    "decision": {
     "cle": "opus1_finale_08_decision",
-    "question": "Sélène garantit l’énergie contre l’exclusivité des décisions. Rendre l’offre publique — le Coupleur y est —, ou négocier un délai transparent sous contrôle de la coalition.",
+    "question": "Sélène promet de fournir l’énergie si elle décide seule de sa répartition. Publier son offre permet aux alliés de la juger ; négocier un délai sous leur contrôle donne du temps au prochain front. Que privilégiez-vous ?",
     "options": [
      {
       "cle": "a",
@@ -6086,7 +6090,7 @@
   },
   "opus1_finale_10": {
    "titre": "Ce que Sorel protège",
-   "resume": "Bassin du dépôt, trois sorties. À J3, Edran Sorel entre par une zone interdite au déploiement, annonce qu’il est le père de Maël, et rejoint sa ligne avec le Convoi sans manifeste — les batteries d’Aube. La concession est perdue ; faire sortir le commandement par la porte sud avant la fin de J8 est la seule victoire.",
+   "resume": "À J3, Edran entre par une zone interdite au déploiement. Maël reconnaît sa voix : « Papa ? Tu ne devais pas venir. » Edran répond : « Alors couvre le convoi. On en parlera quand tu seras sorti. » Son convoi apporte les batteries d’Aube et fait basculer le front. L’objectif devient immédiatement explicite : sortir le commandement par la porte sud avant la fin de J8. Perdre le terrain est écrit ; réussir le repli, protéger les unités et choisir ce qu’on sauve dépendent du joueur. Aucun menu ne présente l’anéantissement impossible comme une victoire encore accessible.",
    "enjeu": "Extraire le commandement et sauver ce qu’on peut d’une défaite écrite.",
    "technologies": [
     "convoi_sans_manifeste",
@@ -6186,7 +6190,7 @@
   },
   "opus1_finale_12": {
    "titre": "Les lignes qui restent",
-   "resume": "Deux lignes de retenue, barrage et second gué, pluie puis retour au clair : Basile veut empêcher la reconstitution de la coalition. Au briefing, la plaque du Luxembourg est posée à plat, et Ariane parle avant Vantour : Tomas Reiner est mort sur la desserte, de nuit.",
+   "resume": "Au briefing, Ariane annonce que Tomas est mort sur la desserte. Le moment et les personnes présentes suivent la branche conservée du Dépôt de relève ; ses passagers éventuels sont indemnes. Un silence précède les ordres. Basile attaque les deux lignes de retenue pour empêcher la coalition de se reformer. Tenir jusqu’à J20 ou prendre les deux QG est aussi apprendre à se coordonner sans la voix qui annonçait chaque convoi.",
    "enjeu": "Tenir jusqu’à J20 ou prendre les deux QG — sans Tomas.",
    "technologies": [
     "station_meteo",
@@ -6530,5 +6534,274 @@
    "condition": "Signer le réseau partagé à la finale 18 en ayant isolé le dernier relais (finale 16), refusé la participation opérationnelle d’Edran (finale 15) et garanti les équipes qui refusent la prise méridienne (finale 12) ; le dossier compte au moins six protêts.",
    "aubeDevient": "Un programme sous collège indépendant d’une Atlas réformée, hors de la main d’une nation comme du Consortium, dont l’accès est inscrit au Registre comme un droit de chaque signataire du Pacte."
   }
- ]
+ ],
+ "arcsNationaux": [
+  {
+   "nation": "fr",
+   "titre": "Gagner sans perdre les siens",
+   "relation": "Ariane et le joueur : passer de l’obéissance à une confiance qui accepte le désaccord.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_fr_01",
+    "opus1_fr_02",
+    "opus1_fr_03",
+    "opus1_fr_04",
+    "opus1_fr_05",
+    "opus1_fr_06",
+    "opus1_fr_07",
+    "opus1_fr_08",
+    "opus1_fr_09",
+    "opus1_fr_10",
+    "opus1_fr_11",
+    "opus1_fr_12"
+   ]
+  },
+  {
+   "nation": "lu",
+   "titre": "La promesse de Tomas",
+   "relation": "Tomas et le joueur : découvrir qu’être fiable demande parfois de dire non.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_lu_01",
+    "opus1_lu_02",
+    "opus1_lu_03",
+    "opus1_lu_04",
+    "opus1_lu_05",
+    "opus1_lu_06",
+    "opus1_lu_07",
+    "opus1_lu_08",
+    "opus1_lu_09",
+    "opus1_lu_10",
+    "opus1_lu_11",
+    "opus1_lu_12"
+   ]
+  },
+  {
+   "nation": "ch",
+   "titre": "Qui ouvre la porte ?",
+   "relation": "Elsbeth et Solveig : passer de la méfiance envers les visiteurs à un secours réciproque.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_ch_01",
+    "opus1_ch_02",
+    "opus1_ch_03",
+    "opus1_ch_04",
+    "opus1_ch_05",
+    "opus1_ch_06",
+    "opus1_ch_07",
+    "opus1_ch_08",
+    "opus1_ch_09",
+    "opus1_ch_10",
+    "opus1_ch_11",
+    "opus1_ch_12"
+   ]
+  },
+  {
+   "nation": "nl",
+   "titre": "La digue commune",
+   "relation": "Lotte et Wren : réparer une confiance technique brisée, avec une ancienne rivale.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_nl_01",
+    "opus1_nl_02",
+    "opus1_nl_03",
+    "opus1_nl_04",
+    "opus1_nl_05",
+    "opus1_nl_06",
+    "opus1_nl_07",
+    "opus1_nl_08",
+    "opus1_nl_09",
+    "opus1_nl_10",
+    "opus1_nl_11",
+    "opus1_nl_12"
+   ]
+  },
+  {
+   "nation": "ma",
+   "titre": "Apprendre à passer le relais",
+   "relation": "Samir et son adjointe : distinguer la fidélité à une tâche du refus de se faire remplacer.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_ma_01",
+    "opus1_ma_02",
+    "opus1_ma_03",
+    "opus1_ma_04",
+    "opus1_ma_05",
+    "opus1_ma_06",
+    "opus1_ma_07",
+    "opus1_ma_08",
+    "opus1_ma_09",
+    "opus1_ma_10",
+    "opus1_ma_11",
+    "opus1_ma_12"
+   ]
+  },
+  {
+   "nation": "sn",
+   "titre": "Ceux qui attendent au quai",
+   "relation": "Awa et Tomas : servir les équipes de nuit sans sacrifier toujours les mêmes.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_sn_01",
+    "opus1_sn_02",
+    "opus1_sn_03",
+    "opus1_sn_04",
+    "opus1_sn_05",
+    "opus1_sn_06",
+    "opus1_sn_07",
+    "opus1_sn_08",
+    "opus1_sn_09",
+    "opus1_sn_10",
+    "opus1_sn_11",
+    "opus1_sn_12"
+   ]
+  },
+  {
+   "nation": "br",
+   "titre": "Alliés sans chef unique",
+   "relation": "Lívia et Solveig : coopérer sans confondre coordination et obéissance.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_br_01",
+    "opus1_br_02",
+    "opus1_br_03",
+    "opus1_br_04",
+    "opus1_br_05",
+    "opus1_br_06",
+    "opus1_br_07",
+    "opus1_br_08",
+    "opus1_br_09",
+    "opus1_br_10",
+    "opus1_br_11",
+    "opus1_br_12"
+   ]
+  },
+  {
+   "nation": "mx",
+   "titre": "La revanche utile",
+   "relation": "Inés et Wren : transformer une rivalité blessée en droit de revenir sans effacer les fautes.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_mx_01",
+    "opus1_mx_02",
+    "opus1_mx_03",
+    "opus1_mx_04",
+    "opus1_mx_05",
+    "opus1_mx_06",
+    "opus1_mx_07",
+    "opus1_mx_08",
+    "opus1_mx_09",
+    "opus1_mx_10",
+    "opus1_mx_11",
+    "opus1_mx_12"
+   ]
+  },
+  {
+   "nation": "in",
+   "titre": "Construire ce qui manque",
+   "relation": "Devika et Ariane : protéger une recherche imparfaite sans promettre une énergie miraculeuse.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_in_01",
+    "opus1_in_02",
+    "opus1_in_03",
+    "opus1_in_04",
+    "opus1_in_05",
+    "opus1_in_06",
+    "opus1_in_07",
+    "opus1_in_08",
+    "opus1_in_09",
+    "opus1_in_10",
+    "opus1_in_11",
+    "opus1_in_12"
+   ]
+  },
+  {
+   "nation": "jp",
+   "titre": "Le droit de douter",
+   "relation": "Ren et Wren : se faire confiance assez pour accepter une vérification indépendante.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_jp_01",
+    "opus1_jp_02",
+    "opus1_jp_03",
+    "opus1_jp_04",
+    "opus1_jp_05",
+    "opus1_jp_06",
+    "opus1_jp_07",
+    "opus1_jp_08",
+    "opus1_jp_09",
+    "opus1_jp_10",
+    "opus1_jp_11",
+    "opus1_jp_12"
+   ]
+  },
+  {
+   "nation": "au",
+   "titre": "Personne ne tient seul si loin",
+   "relation": "Hazel et Solveig : accepter ses limites et construire une relève après la fatigue et le deuil.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_au_01",
+    "opus1_au_02",
+    "opus1_au_03",
+    "opus1_au_04",
+    "opus1_au_05",
+    "opus1_au_06",
+    "opus1_au_07",
+    "opus1_au_08",
+    "opus1_au_09",
+    "opus1_au_10",
+    "opus1_au_11",
+    "opus1_au_12"
+   ]
+  },
+  {
+   "nation": "id",
+   "titre": "Qui vient vraiment avec nous ?",
+   "relation": "Ayu et le joueur : transformer des accords dispersés en coalition choisie, sans unanimité forcée.",
+   "statut": "conception",
+   "episodes": [
+    "opus1_id_01",
+    "opus1_id_02",
+    "opus1_id_03",
+    "opus1_id_04",
+    "opus1_id_05",
+    "opus1_id_06",
+    "opus1_id_07",
+    "opus1_id_08",
+    "opus1_id_09",
+    "opus1_id_10",
+    "opus1_id_11",
+    "opus1_id_12"
+   ]
+  }
+ ],
+ "presentation": {
+  "statut": "conception éditoriale ; 12 missions jouables locales, pas 200 missions implémentées",
+  "entree": "Atlas fixe les règles. Les nations cherchent de l’énergie. Vous apprenez à commander avec Ariane et Tomas.",
+  "decouverteAdversaire": [
+   {
+    "jalon": "victoire du tutoriel 6",
+    "public": "Les Gris : un surnom pour l’équipe aperçue, sans enquête sur ses fabricants."
+   },
+   {
+    "jalon": "tutoriel 8",
+    "public": "Ost est le chef des Gris. Un visage et un rôle, pas toute une organisation."
+   },
+   {
+    "jalon": "victoire du tutoriel 10",
+    "public": "Le Consortium Méridien finance les Gris ; Aube est un programme fictif de recherche sur la fusion, qui ne produit pas encore d’électricité."
+   },
+   {
+    "jalon": "victoire de couleurs_alliees",
+    "public": "Le nom Cinquième Manche apparaît comme celui du projet caché derrière les Gris. Le carnet le relie explicitement aux noms déjà connus."
+   },
+   {
+    "jalon": "arcs nationaux puis finales",
+    "public": "Les dépendances vécues donnent progressivement un sens à ces noms. Les finales montrent le réseau agissant ouvertement ; elles ne demandent pas de découvrir une quatrième faction."
+   }
+  ],
+  "secrets": "Maël et Lise ne sont jamais présentés comme frère et sœur. Seule la paternité Edran–Maël est révélée à la finale 10 ; les autres liens restent secrets pendant cet opus."
+ }
 }

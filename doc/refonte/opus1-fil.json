@@ -137,7 +137,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Premier courant",
-   "description": "Le bocage accueille une qualification où deux réseaux disputent le même transformateur.",
+   "description": "Ariane vous confie une colonne pour votre premier combat réel. Elle connaît chaque équipage ; vous devez encore apprendre leurs voix à la radio. Le transformateur des Haies est votre objectif, pas une occasion de prouver que vous êtes meilleur qu’elle.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -154,7 +154,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Les villes du contrat",
-   "description": "Ariane découvre que les revenus promis excluent les équipes de maintenance.",
+   "description": "Les ateliers gagnés ne peuvent pas redémarrer : leurs mécaniciens n’ont plus de quoi travailler. Ariane veut reprendre les villes qui les approvisionnent ; votre rival voudrait déjà pousser vers le QG. Une victoire ne sert à rien si personne ne peut la faire durer.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -171,7 +171,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "La voie de service",
-   "description": "Un convoi transporte les batteries dues aux communes partenaires.",
+   "description": "Les batteries promises aux communes partenaires prennent la route. Ariane vous laisse commander l’escorte et garde ses conseils pour les moments où vous les demandez. Le transport doit arriver ; courir après les unités en fuite le laisserait seul.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -188,7 +188,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Deux rives, un réseau",
-   "description": "La fermeture sportive d’un pont sépare les réserves de leurs utilisateurs.",
+   "description": "Un pont sépare les réserves de la colonne d’Ariane. Vous devez coordonner les deux rives, et accepter qu’elle voie un danger que votre carte ne montre pas. Après la bataille, partager vos relevés signifie aussi montrer vos erreurs.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -205,7 +205,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Le devis orange",
-   "description": "Ost prête du matériel dont les conditions de retour restent opaques.",
+   "description": "Ost, le chef des Gris, vient reprendre le matériel qu’il avait prêté. Son sourire ne change pas quand il réclame davantage que prévu. C’est votre première confrontation avec lui : sa force est redoutable, mais sa politesse agace encore plus Ariane.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -223,7 +223,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "La journée sans crédit",
-   "description": "Le financement de la délégation est suspendu au milieu de l’épreuve.",
+   "description": "Plus de fonds pour produire ; il faut tenir avec les unités présentes. Edran Sorel offre une aide coûteuse. Ariane refuse de décider à votre place, puis vous aide à compter ce qui peut réellement tenir huit journées.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -241,7 +241,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Les clairières témoins",
-   "description": "Les relevés de puissance divergent entre trois postes forestiers.",
+   "description": "Une patrouille est rentrée sans comprendre pourquoi ses batteries étaient vides. Relier les trois postes permet de retrouver son parcours et de repérer une dérivation cachée. L’enquête part d’une équipe épuisée, pas d’un dossier à remplir.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -258,7 +258,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Ligne de partage",
-   "description": "Deux délégations françaises défendent des contrats incompatibles, sans représenter deux nations.",
+   "description": "Deux délégations françaises se font face parce qu’un fournisseur leur a promis les mêmes réserves. Ariane veut les réunir, mais l’une exige que vous payiez pour sa signature. Aider peut sauver un futur partenaire ; garder les fonds peut protéger vos propres équipages.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -275,7 +275,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "La réserve commune",
-   "description": "Ariane demande de garantir une réserve avant la rencontre décisive.",
+   "description": "Avant l’assaut, il faut tenir les deux réserves communes. Pour la première fois, Ariane vous demande où placer sa colonne. Le changement tient en une phrase à la radio : elle attend votre décision.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -292,7 +292,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Une signature de trop",
-   "description": "Un avenant méridien associe victoire sportive et exclusivité de transport.",
+   "description": "Le fournisseur veut devenir le seul transporteur autorisé sur les routes gagnées. Reprendre ses centres donne une porte de sortie à la délégation dépendante. La reprendre immédiatement sous contrôle ou attendre sa rupture protège deux formes différentes de confiance.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -309,7 +309,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Le contrat rendu public",
-   "description": "Deux spécialistes méridiens viennent défendre la même offre de concession, chacun sous son nom public.",
+   "description": "Ost revient avec Maël et Lise, chacun présenté par son rôle de combat. Leurs attaques coordonnées obligent Ariane et vous à vous couvrir sans tout diriger ensemble. Aucun de leurs échanges ne renseigne sur leur vie privée.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -329,7 +329,7 @@
    "chapitre": "France — Les droits du vainqueur",
    "saison": 1,
    "titre": "Une victoire à partager",
-   "description": "Le dernier QG contrôle l’attribution du réseau, pas le territoire ni ses habitants.",
+   "description": "Le dernier QG tombe si les trois colonnes coopèrent. Ariane ne vous offre pas un discours : elle vous laisse annoncer la victoire aux équipages. La réserve gagnée peut soutenir les alliés ou préparer votre prochaine bataille ; elle vous demande de nommer à qui vous faites cette promesse.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -346,7 +346,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Le relais de Tomas",
-   "description": "Tomas accueille les batteries promises à la frontière de deux réseaux.",
+   "description": "Tomas accueille les batteries françaises et vérifie lui-même la dernière caisse. Un convoi ennemi approche du relais. Son calme vous rassure ; vous découvrez vite qu’il mémorise toutes les promesses faites en route.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -363,7 +363,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Les trois aiguillages",
-   "description": "Trois routes logistiques offrent des accès concurrents au dépôt central.",
+   "description": "Trois aiguillages ouvrent le dépôt. Tomas connaît le trajet le plus rapide, mais vous laisse choisir les deux passages à reprendre. Il ne veut pas former un commandant qui attend toujours son itinéraire.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -380,7 +380,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Garantie de livraison",
-   "description": "Un transport doit traverser la vallée avant la clôture du contrat.",
+   "description": "Le transport doit franchir la vallée avant la fermeture du passage. Tomas reste derrière pour couvrir les retardataires. Vous escorteriez volontiers plus vite ; partir sans eux ferait arriver les batteries et manquer les personnes qui doivent les utiliser.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -397,7 +397,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Le prix du retard",
-   "description": "Un adversaire finance sa défense grâce aux jours perdus par le convoi.",
+   "description": "Le retard du convoi paie la défense adverse. Tomas admet avoir promis une heure impossible, puis continue la bataille sans chercher d’excuse. Les relevés permettent de l’établir ; les partager, c’est accepter que les alliés le sachent.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -414,7 +414,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Deux équipes, deux caisses",
-   "description": "La coopération révèle des fonds séparés et une vision partagée.",
+   "description": "Face à Ost, vos deux caisses restent séparées. Tomas ne peut pas payer votre prochaine unité et doit vous aider avec ce qu’il commande déjà. Couvrir un allié compte autant que lui donner de l’argent.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -432,7 +432,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "La voie détournée",
-   "description": "Yuna change de front pour prendre les dépôts laissés sans couverture.",
+   "description": "Yuna attaque les dépôts laissés derrière le convoi ; Edran ravitaille sa poursuite. Tomas doit choisir quelles routes fermer pour tenir jusqu’à la relève. Vous l’entendez renoncer à une livraison pour sauver le réseau qui permettra les suivantes.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -451,7 +451,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Le registre partagé",
-   "description": "Les équipes comparent leurs relevés à trois stations successives.",
+   "description": "Trois stations cherchent le même chargement. Les reprendre dans l’ordre permet de joindre des équipes qui attendent chacune des batteries promises deux fois. Tomas appelle lui-même celles qui devront patienter.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -468,7 +468,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Une offre de stabilité",
-   "description": "Une délégation partenaire accepte un crédit du Consortium pour finir sa saison.",
+   "description": "Une délégation rejoint le Consortium Méridien, l’entreprise qui finance les Gris, pour obtenir son matériel. Tomas comprend son urgence sans approuver son choix. Garantir sa livraison vous engage à payer ; refuser conserve de quoi assurer les vôtres.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -520,7 +520,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Promesse sous pression",
-   "description": "Tomas maintient une livraison à cette délégation malgré son ralliement.",
+   "description": "Tomas maintient une livraison promise avant le changement de camp du destinataire. Deux positions doivent tenir pendant le passage. Il ne demande pas au joueur de lui donner raison : il lui demande si sa parole reste utile lorsqu’elle coûte quelque chose.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -537,7 +537,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "L’échéance de nuit",
-   "description": "Le remboursement arrive pendant une épreuve sous brouillard.",
+   "description": "La dette tombe de nuit. Reprendre les centres permet de ramener le partenaire, mais Tomas exige qu’il explique sa signature aux équipages qui l’ont couvert. Une aide surveillée et une rupture préalable ne réparent pas la confiance de la même façon.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -554,7 +554,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Le garant absent",
-   "description": "Basile refuse d’ouvrir les réserves qu’il s’était engagé à garantir.",
+   "description": "Basile garde fermées les réserves qu’il devait fournir. Ost, Maël et Lise défendent ses portes. Tomas cesse d’attendre une réponse et prépare avec vous l’assaut qui fera enfin repartir les convois.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -575,7 +575,7 @@
    "chapitre": "Luxembourg — Les courants liés",
    "saison": 1,
    "titre": "Le pacte des relais",
-   "description": "La victoire doit décider si le réseau repose sur une caisse commune ou des garanties séparées.",
+   "description": "Les trois colonnes atteignent le dernier relais. Tomas propose un réseau dont personne ne promet plus qu’il ne peut livrer. Vous choisissez où va la réserve gagnée ; il inscrit la promesse et garde une place pour noter, plus tard, comment elle a été tenue.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -592,7 +592,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le premier col",
-   "description": "Une montée étroite oblige à couvrir les unités indirectes.",
+   "description": "Elsbeth n’ouvre pas ses réserves au premier allié de passage. Solveig vous accompagne sur le col pour montrer que votre colonne sait protéger les accès étroits. La confiance commence par un passage laissé libre, pas par une signature.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -609,7 +609,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "La retenue froide",
-   "description": "La réserve d’énergie alimente deux sites placés de part et d’autre du lac.",
+   "description": "La retenue alimente les deux versants. Reprendre deux sites permet de répartir la réserve ; Elsbeth observe si vous servez seulement la route par laquelle vous repartirez. Solveig rappelle qu’une vallée restera ici après votre victoire.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -626,7 +626,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le carnet d’altitude",
-   "description": "Une équipe de mesure transporte des relevés contestés par Méridien.",
+   "description": "Une équipe de mesure doit redescendre avec son carnet. Elsbeth connaît les personnes dans le transport et refuse qu’on traite leur escorte comme un détour secondaire. Deux camps tiennent les pentes ; ouvrir le chemin devient votre tâche commune.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -643,7 +643,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "La route basse",
-   "description": "Le tracé court est exposé aux batteries de la commandante des unités indirectes.",
+   "description": "La route basse est rapide, mais Lise la couvre. Elsbeth défend le détour ; Solveig craint le temps perdu. Votre approche tranche ce désaccord sans rendre l’une des deux stupide. Les relevés obtenus permettront aux prochains convois de choisir en connaissance de cause.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -678,7 +678,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le plateau verrouillé",
-   "description": "Basile verrouille une station radar sans occuper toute la carte.",
+   "description": "Le Bastion de Basile protège la station qui surveille la vallée. Elsbeth ne veut pas exposer une colonne pour reprendre un sommet symbolique ; l’enjeu est de rendre la vue aux équipes d’en bas. Ost couvre la position, qu’il faut isoler avant l’assaut.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -697,7 +697,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le passage sans renfort",
-   "description": "Une fenêtre limitée de traversée impose de préserver les unités engagées.",
+   "description": "Le passage ferme bientôt et les renforts n’arriveront pas à temps. Solveig prend en charge les réserves pendant qu’Elsbeth couvre la traversée. Vous apprenez combien leur désaccord cachait deux façons de protéger les mêmes équipages.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -715,7 +715,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Échos dans les vallées",
-   "description": "Des relevés contradictoires doivent être recoupés dans trois relais.",
+   "description": "Les trois relais des vallées n’entendent plus leurs voisins. Les rétablir révèle que Basile a promis la même réserve à plusieurs fronts. Elsbeth doit annoncer aux équipes isolées que les secours attendus n’existent pas encore.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -732,7 +732,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "L’arbitre et le fournisseur",
-   "description": "Une équipe locale suspend sa neutralité sportive pour payer sa maintenance.",
+   "description": "Une équipe locale accepte l’aide du fournisseur pour entretenir son matériel. Elsbeth y voit une porte ouverte aux Gris ; Solveig y voit une urgence ignorée trop longtemps. Votre garantie coûtera des fonds, votre refus laissera cette équipe liée au fournisseur.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -786,7 +786,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Les réserves de secours",
-   "description": "Les secours contractuels arrivent après une défense de position limitée.",
+   "description": "L’aide reste bloquée pendant que deux positions tiennent sous pression. Elsbeth envoie ce qu’elle peut sans attendre qu’un bureau confirme chaque caisse. Vous protégez les réserves de secours, avec une alliée qui a enfin ouvert sa porte.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -803,7 +803,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "La clause de restitution",
-   "description": "Le joueur peut proposer une sortie au partenaire dépendant.",
+   "description": "Le partenaire peut quitter Basile, à condition de récupérer ses dépôts. Reprendre deux bâtiments lui donne ce choix. Le retour sous contrôle préserve la proximité ; attendre la rupture évite de faire entrer une dépendance au cœur de votre réseau.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -856,7 +856,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le col des deux équipes",
-   "description": "Deux adversaires tiennent des passages distincts et partagent leur vision.",
+   "description": "Ost, Maël et Lise tiennent deux cols et partagent leur vision. Elsbeth accepte que votre colonne garde l’un des accès vitaux. La coalition doit prouver sur le terrain qu’elle sait tenir cette responsabilité.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -876,7 +876,7 @@
    "chapitre": "Suisse — Les réserves hautes",
    "saison": 1,
    "titre": "Le droit de passage",
-   "description": "Le gagnant fixe les garanties d’accès à la réserve pour les saisons suivantes.",
+   "description": "Après le dernier QG, Elsbeth ouvre un passage durable à vos convois. Elle demande que les réserves restent accessibles quand vous serez loin. Soutenir la caisse commune ou équiper le prochain front devient un choix sur la manière de protéger cet accès.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -893,7 +893,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Les carrés du polder",
-   "description": "Les voies surélevées découpent la carte en compartiments lisibles.",
+   "description": "Lotte vous attend au bord d’une digue qu’elle connaît depuis ses premiers exercices. Wren découvre combien une erreur de carte peut coûter ici. Pour atteindre le QG, il faut garder les voies de service ouvertes derrière l’avance.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -910,7 +910,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "L’usine derrière l’eau",
-   "description": "Une usine centrale vaut davantage que le chemin le plus court vers le QG.",
+   "description": "L’usine des pompes vaut plus qu’un raccourci vers le QG. Lotte veut la reprendre avant les autres ateliers. Elle ne défend pas seulement des revenus : les équipes qui entretiennent les digues ont besoin de ces pièces demain matin.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -927,7 +927,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Le convoi des pompes",
-   "description": "Un transport de maintenance emprunte une digue sous surveillance.",
+   "description": "Le transport emporte de quoi réparer les pompes. Sa conductrice refuse qu’on promette une digue sûre sans l’avoir reconnue. Wren écoute cette fois les gens de terrain ; votre escorte doit leur donner raison de vous suivre.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -944,7 +944,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "La digue partagée",
-   "description": "Deux partenaires doivent couvrir chacun une extrémité du passage.",
+   "description": "Chaque partenaire garde une extrémité de la digue. Lotte se dispute avec sa voisine sur la couverture du milieu, puis doit lui faire confiance pour avancer. Partager les relevés après le combat rend ce désaccord vérifiable au lieu de le nourrir.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -980,7 +980,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Fenêtre de marée",
-   "description": "Le calendrier de marée rend une route côtière disponible par périodes.",
+   "description": "La marée ouvre un passage que surveille un drone marin des Gris. Lotte connaît l’heure, Ost connaît aussi le calendrier. Le bon mouvement dépend du moment choisi autant que de la force engagée.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -998,7 +998,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "L’atelier encerclé",
-   "description": "La production est limitée tandis que l’adversaire approche des deux côtés.",
+   "description": "L’atelier est encerclé et produit trop lentement pour répondre aux colonnes ravitaillées par Edran. Lotte veut garder toutes les machines ; Wren insiste pour conserver des unités capables de sortir. Tenir oblige à abandonner quelques positions, sans abandonner l’atelier.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -1016,7 +1016,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Les trois écluses",
-   "description": "Les relevés du réseau sont répartis entre trois postes accessibles par des routes différentes.",
+   "description": "La télémétrie validée par Wren ne répond plus. Rejoindre les trois écluses permet aux équipes locales de reprendre les commandes sur place. Wren reconnaît sa part d’erreur au lieu de blâmer ceux qui lui avaient fait confiance.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -1033,7 +1033,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "La garantie privée",
-   "description": "Une équipe signe avec Méridien pour assurer ses prochaines dépenses.",
+   "description": "La voisine de Lotte accepte la garantie du Consortium pour payer ses réparations. Elles se retrouvent adversaires sur une digue qu’elles entretenaient ensemble. La soutenir coûte à votre coalition ; refuser lui laisse ses raisons d’avoir signé.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1050,7 +1050,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Le terrain prêté",
-   "description": "Son adversaire d’hier lui offre un passage de repli sans exiger de ralliement.",
+   "description": "L’ancienne rivale offre un passage de repli. Une station IEM des Gris bloque les véhicules sur les digues à des journées annoncées. Tenir les positions et prendre la source permet d’éprouver son geste dans les faits, pas seulement dans un dialogue.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -1067,7 +1067,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Les comptes de la digue",
-   "description": "Yuna essaie de prendre les centres de revenu pendant le regroupement.",
+   "description": "Yuna profite du regroupement pour prendre les centres de revenu. Votre intervention rend possible le retour du partenaire. Lotte est prête à travailler avec lui ; Wren demande un contrôle réel de ce qui reste relié au Consortium.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1085,7 +1085,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Le retour du garant",
-   "description": "Le signataire doit choisir publiquement entre l’accord et ses partenaires.",
+   "description": "Ost, Maël et Lise viennent imposer l’accord des Gris. Les deux voisines défendent enfin la même digue sans nier ce qui les a séparées. La bataille dira si leur coopération tient sous pression.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1105,7 +1105,7 @@
    "chapitre": "Pays-Bas — Le réseau des digues",
    "saison": 1,
    "titre": "Un réseau ouvert",
-   "description": "La finale décide des accès techniques communs, jamais du contrôle de la population.",
+   "description": "Le dernier QG donne accès au réseau, pas le droit de parler au nom de tous ceux qui l’entretiennent. Lotte et Wren fixent ensemble ce qu’elles partageront. La réserve gagnée servira la coalition ou le prochain front, avec une promesse explicite faite aux équipes des digues.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1122,7 +1122,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Les ombres courtes",
-   "description": "Des plateaux découverts rendent coûteuse toute avance sans reconnaissance.",
+   "description": "Samir connaît les étapes du parc solaire par leurs pauses, leurs pannes et leurs équipes. Ariane admire son expérience, mais remarque qu’il vérifie seul chaque départ. Sur le plateau découvert, reconnaître avant d’avancer reste votre première urgence.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1139,7 +1139,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "L’atelier du sud",
-   "description": "Deux axes relient les ateliers aux réserves du parc solaire fictif.",
+   "description": "Deux axes alimentent les ateliers du sud. L’adjointe de Samir propose une répartition qu’il corrige trop vite. Reprendre les bâtiments lui donne enfin une partie du réseau à organiser elle-même.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1156,7 +1156,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "La caravane technique",
-   "description": "Solveig accompagne un transport de pièces jusqu’au dépôt de contrôle.",
+   "description": "Solveig accompagne la caravane technique à découvert. Samir voudrait rejoindre l’escorte ; son adjointe lui rappelle qu’on a besoin de lui au dépôt. Vous couvrez le transport pendant qu’elle prend ses premiers appels difficiles.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -1173,7 +1173,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Le passage de roche",
-   "description": "Un détour abrité concurrence une traversée rapide à découvert.",
+   "description": "Le passage de roche protège un détour plus lent. Samir conseille la prudence ; Ariane vous laisse évaluer l’autre route. Les relevés partagés peuvent éviter aux prochains équipages de refaire cette hésitation sous le feu.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1190,7 +1190,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Poussière de piste",
-   "description": "Le brouillard de guerre représente les relevés incomplets, sans inventer une météo non implémentée.",
+   "description": "La poussière cache l’avance d’Ost. Samir connaît des repères que les capteurs manquent, mais vous devez encore envoyer une reconnaissance. Son expérience aide ; elle ne remplace pas ce que vos unités peuvent réellement voir.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1208,7 +1208,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Les crédits de midi",
-   "description": "Une avance méridienne permet à une équipe rivale d’aligner une réserve finie.",
+   "description": "Une délégation rivale dispose d’une réserve finie qu’Edran entretient. Tenir révèle le prix de son crédit : le fournisseur interdit de choisir librement les remplaçants. Samir comprend que cette règle touche aussi les équipes de ses propres étapes.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -1226,7 +1226,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Trois stations au soleil",
-   "description": "Les mesures de trois relais révèlent une clause commune aux contrats.",
+   "description": "Les trois stations doivent retrouver leur liaison sous une pluie provoquée et annoncée. Samir manque un appel ; son adjointe le reprend sans dramatiser. Les reçus montrent ensuite pourquoi les mêmes restrictions de personnel reviennent partout.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -1243,7 +1243,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Le bail trop long",
-   "description": "Un sponsor de délégation propose une exclusivité après la victoire.",
+   "description": "La délégation dépendante demande votre garantie. L’aide libère aussi un remplaçant pour Samir ; la refuser conserve des moyens pour votre front. Samir refuse qu’on fasse de sa santé un argument de négociation, mais le briefing explique les conséquences connues sans cacher le coût humain.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1279,7 +1279,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "La réserve retenue",
-   "description": "Le joueur défend le dépôt en attendant une livraison annoncée.",
+   "description": "Il faut tenir la réserve jusqu’à la livraison. Cette fois, l’adjointe coordonne l’étape et Samir suit depuis le dépôt. Il commence par intervenir sur chaque appel, puis laisse enfin une réponse partir sans lui.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -1296,7 +1296,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Une sortie sans humiliation",
-   "description": "La délégation dépendante reçoit une offre de renégociation publique.",
+   "description": "Reprendre les bâtiments ouvre une sortie au partenaire dépendant. Son responsable craint de perdre la face devant les équipes. Vous pouvez organiser un retour surveillé ou attendre une rupture : l’humilier ne fait partie d’aucune des deux options.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1313,7 +1313,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "Les deux créanciers",
-   "description": "Ost et la commandante des unités indirectes défendent chacun une moitié du contrat litigieux.",
+   "description": "Ost et Lise défendent le contrat pendant que Maël couvre le ciel. Samir dit qu’il se soigne entre deux étapes ; Ariane lui répond qu’une relève n’efface pas ce qu’il a construit. L’assaut appartient désormais à plusieurs responsables.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1333,7 +1333,7 @@
    "chapitre": "Maroc — Le prix du soleil",
    "saison": 2,
    "titre": "La concession limitée",
-   "description": "La finale fixe une durée et une garantie collective pour les concessions futures.",
+   "description": "Le dernier QG libère les accès du parc solaire. Samir remercie d’abord son adjointe à la radio. Le choix de la réserve reste ouvert, et les conséquences de son remplacement suivront leur branche déjà définie : cette victoire ne guérit personne par magie.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1350,7 +1350,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "La route de l’estuaire",
-   "description": "Une route étroite longe des zones d’eau qui empêchent les attaques frontales.",
+   "description": "Awa garde l’estuaire, Tomas apporte les batteries. Une route étroite interdit de tout engager de front. Awa demande d’abord quelles équipes votre détour laissera attendre sur l’autre rive.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1367,7 +1367,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Les ateliers de rive",
-   "description": "Les villes latérales financent une traversée autrement trop coûteuse.",
+   "description": "Les ateliers latéraux peuvent payer les barges nécessaires. Awa veut les reprendre pour éviter de demander encore un effort aux mêmes équipages. Les deux rives doivent recevoir quelque chose de cette victoire.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1384,7 +1384,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Dernière batterie du jour",
-   "description": "Un transport apporte les réserves promises à l’équipe de nuit.",
+   "description": "La dernière batterie du jour voyage vers l’équipe de nuit. Le transport est sous deux feux et ceux qui l’attendent comptent les appels radio. L’escorte donne un visage concret à une réserve qu’on aurait pu traiter comme une simple ressource.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -1401,7 +1401,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Deux bras de fleuve",
-   "description": "Le joueur doit répartir ses forces sans laisser le centre découvert.",
+   "description": "Deux bras de fleuve séparent les colonnes. Tomas veut garantir les deux trajets ; Awa lui demande de reconnaître celui qu’il ne pourra pas couvrir. Vos relevés aideront à expliquer cette décision aux équipes concernées.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1418,7 +1418,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Le radar de rive",
-   "description": "Wren teste la reconnaissance face au brouillage de Relais Zéro.",
+   "description": "Un opérateur inconnu brouille la rive avec ses Veilleurs. Wren montre comment distinguer ce qu’on voit de ce qu’on suppose. Le joueur n’apprend ici ni le nom d’un réseau secret ni l’identité de cette voix ; reprendre la vue suffit à l’urgence.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1437,7 +1437,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Le quai sans relève",
-   "description": "Les renforts sont retardés par un contrat de transport contesté.",
+   "description": "Le quai attend des renforts retardés tandis qu’Edran ravitaille l’adversaire. Awa refuse une poursuite en mer qui laisserait les équipes de relève sans débarcadère. Tenir le quai devient une victoire que l’on peut expliquer à ceux qui y attendent.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -1455,7 +1455,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "La chaîne des reçus",
-   "description": "Trois relais permettent de vérifier la destination effective des batteries.",
+   "description": "Trois relais suivent le trajet de batteries jamais arrivées. Les atteindre permet de rétablir la liaison avec les équipes oubliées. Les reçus retrouvés confirment après coup qu’un dépôt du Consortium a servi avant elles.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -1472,7 +1472,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Le partenaire impatient",
-   "description": "Une délégation rejoint temporairement Méridien pour recevoir son équipement.",
+   "description": "Une délégation lasse d’attendre accepte du matériel méridien. Awa comprend sa colère ; Tomas rappelle les réserves qu’il reste à livrer ailleurs. Garantir sa dette et garder les fonds ont chacun des destinataires à nommer.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1525,7 +1525,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "La livraison maintenue",
-   "description": "Le joueur décide de tenir ou non la promesse faite avant ce ralliement.",
+   "description": "Le convoi promis doit traverser malgré le changement de camp du partenaire. Deux positions protègent son passage. Awa veut que l’équipe de nuit reçoive enfin ses batteries, même si son responsable vous a tourné le dos.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -1542,7 +1542,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Les témoins du quai",
-   "description": "Yuna tente de reprendre le centre logistique pendant l’examen des reçus.",
+   "description": "Yuna attaque le centre pendant que les équipes du quai confrontent leurs récits. Reprendre les bâtiments protège leur possibilité de revenir. Le contrôle du retour devra porter sur les engagements du responsable, pas sur la loyauté supposée de tout un pays.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1560,7 +1560,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "Le match des garanties",
-   "description": "Les délégations mettent à l’épreuve l’accord négocié plutôt qu’une amitié abstraite.",
+   "description": "Ost, Maël et Lise testent la coopération des rives. Awa et vous devez tenir sans réclamer à chaque fois le sacrifice du même partenaire. Ceux qui ont attendu voient enfin une place qui leur est réservée dans le plan.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1580,7 +1580,7 @@
    "chapitre": "Sénégal — La traversée du soir",
    "saison": 2,
    "titre": "La réserve du soir",
-   "description": "La finale tranche entre revenus immédiats et sécurité du stockage collectif.",
+   "description": "La réserve du soir est gagnée. Awa demande quand elle arrivera, pas un discours sur la solidarité. La caisse commune ou l’équipement du prochain front engage deux calendriers différents, qu’il faudra rappeler aux équipes concernées.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1597,7 +1597,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Les pistes jumelles",
-   "description": "Deux routes forestières rapprochent les QG sans autoriser une ligne de tir directe.",
+   "description": "Lívia connaît deux pistes qui rapprochent les fronts sans offrir de ligne de tir. Solveig voudrait un seul itinéraire logistique ; Lívia défend la liberté de ses colonnes. La première bataille les oblige à préciser ce dont elles ont réellement besoin l’une de l’autre.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1614,7 +1614,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "L’atelier de lisière",
-   "description": "La maîtrise des ateliers décide du rythme de production.",
+   "description": "Les ateliers de lisière donnent des moyens aux deux axes. Les reprendre évite qu’une colonne dépende entièrement de l’autre. Lívia veut partager la mission, pas demander l’autorisation pour chaque unité produite.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1631,7 +1631,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "La tournée de maintenance",
-   "description": "Un transport circule entre des couloirs forestiers tenus par l’adversaire.",
+   "description": "Le transport de maintenance traverse des couloirs forestiers. Chaque équipe connaît son tronçon, aucune ne voit tout le trajet. Votre escorte fonctionne si le passage de relais est clair ; un ordre central trop tardif n’aidera personne.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -1648,7 +1648,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Le pont du milieu",
-   "description": "L’axe central paraît efficace mais expose les soutiens aux prises de flanc.",
+   "description": "Le pont central attire les colonnes et expose leurs soutiens. Lívia propose deux approches simultanées ; Solveig demande comment les ravitailler. Après le combat, partager les relevés permet de comparer leurs méthodes plutôt que de proclamer une gagnante.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1701,7 +1701,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Les relevés sous couvert",
-   "description": "Des drones observent un réseau où les unités terrestres profitent du couvert.",
+   "description": "Les drones des Gris surveillent les pistes pendant qu’Ost avance sous couvert. Vos alliés doivent annoncer ce qu’ils voient sans dicter le mouvement des autres. La reconnaissance devient un langage commun.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1719,7 +1719,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "L’avance engagée",
-   "description": "Une délégation a dépensé son crédit et doit finir le match avec une réserve limitée.",
+   "description": "Une délégation a épuisé son crédit et dépend d’Edran pour continuer. Lívia refuse de lui donner des ordres en échange de l’aide. Tenir la pression laisse le temps de chercher une sortie qui n’installe pas un nouveau maître.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -1737,7 +1737,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Trois carnets concordants",
-   "description": "Les pièces comptables sont recoupées dans trois stations de terrain.",
+   "description": "Les trois stations ont reçu trois ordres incompatibles du même prêteur. Les reconnecter permet aux équipes de se parler directement. Les carnets confirment ensuite que leurs désaccords avaient été entretenus pour les isoler.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -1754,7 +1754,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Le prêteur et l’équipe",
-   "description": "Un sponsor cherche à parler au nom d’une nation entière ; le récit le contredit explicitement.",
+   "description": "Un sponsor prétend parler pour toute la délégation ; Lívia le contredit devant ses propres équipes. La pluie imposée complique les routes pendant le 2v2. Garantir la livraison ou garder les fonds ne donne pas pour autant au joueur le droit de choisir leur chef.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1771,7 +1771,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "Le dépôt sans privilège",
-   "description": "Le joueur protège une réserve qui doit rester accessible à ses anciens rivaux.",
+   "description": "Deux positions protègent une réserve ouverte aux anciens rivaux. Certains alliés veulent leur fermer l’accès après leur signature. Lívia vous demande d’appliquer la règle commune même lorsqu’elle ne vous arrange plus.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -1788,7 +1788,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "L’audit contesté",
-   "description": "la commandante des unités indirectes veut gagner la rencontre avant la publication des contrats.",
+   "description": "Lise couvre les bâtiments où le partenaire peut retrouver son autonomie. Les reprendre donne une issue concrète au désaccord. Le retour surveillé et la rupture préalable posent des limites différentes ; aucun ne doit devenir un ordre d’obéir au joueur pour toujours.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1805,7 +1805,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "L’alliance de lisière",
-   "description": "Deux équipes coopèrent sans fusionner leurs budgets ni leurs commandements.",
+   "description": "Face à Ost, Maël et Lise, les équipes gardent leurs budgets et leurs décisions. Solveig annonce les besoins au lieu de distribuer tous les ordres. La coopération de lisière réussit si chacun tient sa part au bon moment.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1825,7 +1825,7 @@
    "chapitre": "Brésil — La forêt des contrats",
    "saison": 2,
    "titre": "La règle de la réserve",
-   "description": "La finale institue ou refuse un contrôle partagé des achats futurs.",
+   "description": "Le dernier QG tombe sans chef unique pour s’attribuer toute la victoire. Lívia et Solveig rédigent ensemble ce qu’elles se doivent, et ce qu’elles ne peuvent pas exiger. La réserve servira le commun ou votre prochaine bataille ; les partenaires sauront lequel vous avez choisi.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1842,7 +1842,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "La route du plateau",
-   "description": "Les pentes canalisent les véhicules dans deux vallées reliées.",
+   "description": "Inés se souvient d’une défaite sur ce plateau et reconnaît chaque position qui l’avait enfermée. Wren l’accompagne sans connaître toute l’histoire. Le joueur doit atteindre l’autre vallée, sans refaire une bataille ancienne pour satisfaire sa fierté.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1859,7 +1859,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "La ville d’aiguillage",
-   "description": "Une ville centrale fait le lien entre revenus et voie de renfort.",
+   "description": "La ville d’aiguillage commande l’arrivée des renforts. Inés voudrait pousser vers l’ancien QG adverse ; reprendre les ateliers donne les moyens de tenir ensuite. Gagner mieux vaut ici davantage que gagner exactement au même endroit.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -1876,7 +1876,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le train sans rails",
-   "description": "Le transport routier suit un corridor ferroviaire décoratif, sans ajouter d’unité ferroviaire.",
+   "description": "Le transport suit une ancienne voie ferrée. Inés avait perdu une escorte sur ce trajet ; elle vérifie trop longtemps chaque passage. Vous devez utiliser son expérience sans laisser ce souvenir immobiliser le convoi.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -1893,7 +1893,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le verrou latéral",
-   "description": "Une rampe secondaire permet de contourner la ligne de Basile.",
+   "description": "Basile ferme la rampe principale. Une voie latérale permet de contourner sa ligne, et Inés accepte enfin un chemin qui ne ressemble pas à une revanche frontale. Les relevés peuvent rendre cette leçon disponible aux autres équipes.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -1947,7 +1947,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le ciel du plateau",
-   "description": "le commandant aérien montre le coût d’une défense privée d’intercepteurs.",
+   "description": "Maël domine le ciel et Ost avance dessous. Inés doit demander une couverture qu’elle voulait assurer seule. Wren traite cette demande comme une bonne décision, pas comme l’aveu qu’Inés serait moins compétente.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -1965,7 +1965,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "La réserve comptée",
-   "description": "La production ennemie est remplacée par une réserve finie annoncée au briefing.",
+   "description": "La réserve ennemie est finie, mais Edran la maintient assez longtemps pour vous tenter à l’assaut. Tenir exige de résister à la bataille décisive qu’Inés attend. Elle commence à compter les unités préservées plutôt que les occasions de revanche.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -1983,7 +1983,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Trois permis concurrents",
-   "description": "Trois postes abritent des versions incompatibles d’un même permis d’accès.",
+   "description": "Les trois postes bloquent chacun un accès avec un permis différent. Les reprendre ouvre un trajet aux équipes coincées entre les vallées. Le nom du Consortium apparaît derrière les refus ; le problème est désormais commun, pas le vieux grief d’Inés.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -2000,7 +2000,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le contrat de sécurité",
-   "description": "Une équipe accepte une exclusivité en échange de sa participation au tournoi.",
+   "description": "Une équipe rivale signe pour pouvoir continuer à combattre. Inés connaît son responsable et se méfie de sa promesse. Garantir sa livraison engage votre réserve ; refuser garde des moyens mais laisse sa dépendance intacte.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2017,7 +2017,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le passage accordé",
-   "description": "Le joueur peut préserver une voie logistique pour un futur partenaire.",
+   "description": "Deux positions protègent un passage destiné à ce partenaire possible. Inés couvre la voie par laquelle il l’avait autrefois débordée. Elle n’oublie pas la défaite ; elle choisit ce qu’elle veut en faire aujourd’hui.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -2034,7 +2034,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "Le reçu refusé",
-   "description": "Le signataire découvre que son engagement ne garantit pas la livraison.",
+   "description": "Le fournisseur refuse la livraison promise au signataire. Reprendre les bâtiments lui rend une possibilité de retour. Inés demande des engagements vérifiables plutôt que des excuses répétées ; votre décision fixe quand il pourra revenir.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2088,7 +2088,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "La revanche du plateau",
-   "description": "Le partenaire choisit de rester fidèle au prêteur ou de demander une sortie.",
+   "description": "Ost, Maël et Lise viennent protéger le prêteur. Le partenaire doit agir selon la branche déjà choisie, pas devenir allié parce qu’un discours le demande. Inés accepte que cette bataille ait plusieurs responsables et plusieurs souvenirs.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2108,7 +2108,7 @@
    "chapitre": "Mexique — Les lignes du plateau",
    "saison": 2,
    "titre": "La limite du garant",
-   "description": "La finale borne les prérogatives du fournisseur sur le réseau.",
+   "description": "Le dernier QG donne à Inés la victoire qu’elle voulait, autrement qu’elle l’imaginait. Wren lui demande ce qu’elle compte préserver pour la suite. La réserve rejoint le commun ou le prochain front ; la revanche cesse d’être le seul horizon.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2125,7 +2125,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "La première interconnexion",
-   "description": "Un réseau dense propose plusieurs axes courts et des carrefours difficiles à couvrir.",
+   "description": "Devika accueille la coalition au milieu d’ateliers qui travaillent trop vite et de carrefours toujours encombrés. Ariane demande ce qui peut attendre. Reprendre le réseau doit rendre le travail possible, pas ajouter une urgence militaire à toutes les autres.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2142,7 +2142,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Les villes du relais",
-   "description": "L’économie repose sur des bâtiments dispersés plutôt que sur un seul centre.",
+   "description": "Les villes dispersées alimentent plusieurs équipes de recherche. Deux sites repris permettent de les relier sans tout concentrer au même endroit. Devika défend cette répartition : perdre un atelier ne doit pas arrêter tout le programme.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2159,7 +2159,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le lot de convertisseurs",
-   "description": "Un transport doit rejoindre l’installation qui prépare les échanges avec Aube.",
+   "description": "Le convoi emporte des convertisseurs destinés à Aube, un programme fictif de recherche sur la fusion. Devika le dit simplement : il ne fournit pas encore d’électricité, mais pourrait un jour changer ce que les pays se disputent. Les personnes qui escortent ses pièces ont besoin d’une route sûre maintenant.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -2176,7 +2176,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "La traversée urbaine",
-   "description": "Les positions de tir indirect concurrencent les itinéraires de capture.",
+   "description": "L’artillerie contrôle les axes courts. Ariane veut un trajet lisible ; Devika connaît les passages de service. Mettre leurs cartes en commun permet de protéger le transport suivant, même si les relevés montrent ce qui reste mal connu.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2193,7 +2193,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le bulletin incomplet",
-   "description": "La visibilité réduite donne un rôle décisif au drone et au radar.",
+   "description": "Le Bulletin manque de mesures et le brouillard cache Ost. Devika refuse de présenter une estimation comme une certitude. Drones et radar doivent établir ce qui est réellement là avant d’engager les colonnes.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2211,7 +2211,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le réseau en attente",
-   "description": "L’équipe doit tenir jusqu’à une remise à disposition contractuelle de renforts.",
+   "description": "Les renforts ne peuvent pas être libérés à temps ; Edran continue d’approvisionner l’ennemi. Devika propose de tout miser sur une arrivée idéale. Ariane lui demande un plan qui tienne aussi si les équipes ont du retard.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -2229,7 +2229,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Les trois protocoles",
-   "description": "Des relevés techniques relient enfin plusieurs offres au même bénéficiaire.",
+   "description": "Trois relais doivent accepter les mêmes convertisseurs. Les parcourir permet aux techniciens de faire fonctionner ensemble des installations conçues séparément. Les relevés révèlent ensuite qu’un fournisseur veut décider seul de ce qui pourra rejoindre Aube.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -2246,7 +2246,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "L’option d’exclusivité",
-   "description": "Une délégation accepte une clause pour sécuriser son accès aux essais Aube.",
+   "description": "Une délégation accepte l’exclusivité du Consortium pour accéder aux essais. Devika comprend la peur d’être laissée de côté. Garantir sa livraison ou garder les moyens de vos équipes ne résout pas la question de savoir qui pourra participer à la recherche.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2282,7 +2282,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le test contradictoire",
-   "description": "Le joueur maintient un test commun auquel participe encore cette délégation.",
+   "description": "Deux positions doivent rester tenues pendant un test commun, sous les impulsions annoncées d’une station IEM. Le partenaire compromis peut encore y participer. Devika veut des résultats que chacun puisse vérifier, même chez ceux dont elle se méfie.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -2299,7 +2299,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le droit de réponse",
-   "description": "Le signataire reçoit une possibilité de retrait assortie de réparations concrètes.",
+   "description": "Reprendre les bâtiments permet au signataire de quitter son accord et de réparer ce qu’il a engagé. Le joueur décide du retour sous contrôle ou après rupture. Devika insiste pour distinguer les techniciens qui ont besoin de travailler des responsables qui ont promis leur accès.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2316,7 +2316,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Les centres coordonnés",
-   "description": "Deux équipes méridiennes tiennent des centres séparés mais se ravitaillent.",
+   "description": "Les centres des Gris se ravitaillent mutuellement. Ost, Maël et Lise montrent ce que permet déjà une technique coordonnée. Il faut défaire ce réseau sans raconter qu’Aube fournira demain la réponse à tous vos problèmes.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2336,7 +2336,7 @@
    "chapitre": "Inde — Les réseaux superposés",
    "saison": 3,
    "titre": "Le protocole ouvert",
-   "description": "La finale décide de publier ou de réserver les règles d’interconnexion, sans diffuser de secrets réels.",
+   "description": "Sélène se présente à la table comme celle qui peut financer la suite. Le QG repris donne la possibilité de publier les règles de connexion. Devika demande que la promesse de partage survive au choix immédiat de la réserve commune ou du prochain front.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2354,7 +2354,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Le premier détroit",
-   "description": "Une carte côtière met les accès terrestres sous surveillance aérienne.",
+   "description": "Ren organise les traversées avec une précision qui impressionne Tomas. La surveillance aérienne rend pourtant chaque horaire fragile. Prendre le premier accès doit permettre aux équipes de signaler un problème sans avoir peur de décevoir leur commandant.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2371,7 +2371,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "L’atelier des deux baies",
-   "description": "Les deux baies financent des approches différentes du QG.",
+   "description": "Deux baies offrent des approches différentes. Ren préfère un plan parfaitement synchronisé ; le joueur peut répartir les ateliers pour conserver une solution de secours. La marge fait partie du plan, elle n’en est pas l’échec.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2388,7 +2388,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Les instruments en transit",
-   "description": "Un transport accompagne des instruments de mesure vers une équipe indépendante.",
+   "description": "Des instruments de mesure doivent rejoindre une équipe indépendante chargée de vérifier les essais d’Aube. Ren veut protéger ceux qui pourront contredire les résultats attendus. L’escorte transporte donc aussi le droit de dire que quelque chose ne fonctionne pas.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -2405,7 +2405,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Le pont de traverse",
-   "description": "Une route longue donne accès au dos de la ligne adverse.",
+   "description": "Le long détour donne accès au dos de la ligne. Tomas accepte de modifier son horaire ; Ren doit prévenir les équipes qui l’attendent. Les relevés partagés permettent de comprendre le retard au lieu d’en chercher un coupable.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2422,7 +2422,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Écran sans signal",
-   "description": "Relais Zéro masque sa doctrine derrière des drones brouillables.",
+   "description": "Une voix inconnue utilise drones et brouillage, un drone marin observe les chenaux. Les silhouettes vues ne disent pas qui commande. Ren et vous devez séparer les observations des suppositions avant d’attaquer Ost.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2441,7 +2441,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Le dernier créneau",
-   "description": "Une fenêtre de transport bornée impose une défense rapide sans tours d’attente.",
+   "description": "Le dernier créneau de transport approche tandis qu’Edran ravitaille l’ennemi. Ren refuse de faire partir une unité juste pour respecter l’horaire annoncé. Tenir jusqu’au passage sûr vaut mieux qu’une ponctualité qui perdrait l’escorte.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 8 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -2459,7 +2459,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Les trois miroirs",
-   "description": "Trois relais révèlent une synchronisation des contrats méridiens.",
+   "description": "Les trois relais miroirs doivent comparer la même mesure. Une discordance conduit les équipes à vérifier ensemble plutôt qu’à choisir le résultat le plus flatteur. Elles trouvent la trace d’une coordination du Consortium après avoir restauré leur propre liaison.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -2476,7 +2476,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Le commandement sous licence",
-   "description": "Une équipe conserve ses couleurs nationales tout en signant un mandat privé.",
+   "description": "Une équipe conserve ses couleurs mais cède ses décisions à un fournisseur. Ren demande à son responsable ce qu’il peut encore refuser. Votre garantie peut aider son retour ; garder les fonds protège vos moyens sans résoudre sa perte d’autonomie.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2493,7 +2493,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "La mesure commune",
-   "description": "Wren propose une vérification à laquelle le signataire peut encore participer.",
+   "description": "Wren conduit une mesure commune pendant la tenue de deux positions. Elle accepte qu’un partenaire compromis vérifie aussi ses instruments. La télémétrie récupérée ne vaut que si quelqu’un peut en contester les erreurs.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -2510,7 +2510,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "L’aveu technique",
-   "description": "Les documents prouvent la dépendance contractuelle sans révéler l’identité de Relais Zéro.",
+   "description": "La station IEM annonce ses impulsions pendant la reprise des bâtiments. Les données établissent la dépendance du partenaire, pas l’identité de la voix inconnue. Le retour exige un contrôle concret ; une révélation imaginaire ne peut pas remplacer ce travail.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2528,7 +2528,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Les deux silhouettes",
-   "description": "Deux spécialistes méridiens coordonnent leurs appareils et leurs unités indirectes, sans révéler leur histoire privée.",
+   "description": "Maël couvre le ciel, Lise règle ses tirs, Ost tient le centre. Ren identifie leur coordination de combat sans spéculer sur leur histoire personnelle. Battre cette formation demande de rompre leurs appuis, pas de deviner un secret familial.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2548,7 +2548,7 @@
    "chapitre": "Japon — Le miroir des îles",
    "saison": 3,
    "titre": "Le droit de vérifier",
-   "description": "La finale impose ou refuse un audit indépendant des réseaux d’Aube.",
+   "description": "Sélène promet des essais plus rapides si l’on réduit les vérifications. La victoire donne au contraire la possibilité de les rendre indépendantes. Ren sait désormais que la confiance se mesure aussi à la place laissée à celui qui pose une question gênante.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2566,7 +2566,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "La route longue",
-   "description": "De longues liaisons font du ravitaillement une décision visible.",
+   "description": "Les distances obligent Hazel à compter chaque ravitaillement. Si la branche marocaine le prévoit, l’annonce de la mort de Samir précède le briefing ; sinon elle reste réservée à son jalon tardif. Solveig laisse un silence, puis demande quelle route les équipes peuvent réellement tenir aujourd’hui.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2583,7 +2583,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Les ateliers dispersés",
-   "description": "Les centres de production sont éloignés et demandent une réserve mobile.",
+   "description": "Les ateliers sont trop éloignés pour qu’une réserve fixe les serve tous. Hazel veut tout couvrir ; le joueur doit choisir deux centres et organiser ce qui les relie. Une limite annoncée évite une promesse impossible.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2600,7 +2600,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Le convoi sans détour",
-   "description": "Un transport traverse un secteur découvert couvert par des reliefs ponctuels.",
+   "description": "Le transport traverse un découvert sans détour continu. Hazel a prévu les abris ponctuels et les équipes qui attendent chacun. L’escorte avance de refuge en refuge, avec le soulagement concret d’un appel reçu à chaque étape.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -2617,7 +2617,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "La piste secondaire",
-   "description": "Un chemin moins direct permet de déborder les tirs de la commandante des unités indirectes.",
+   "description": "Une piste secondaire déborde l’artillerie de Lise. Solveig demande de garder de quoi revenir, même si l’assaut paraît proche. Les relevés partagés disent autant les points de repos que les positions ennemies.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2671,7 +2671,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Le relais lointain",
-   "description": "Une station radar vaut davantage qu’un investissement offensif immédiat.",
+   "description": "Le radar lointain donnerait la vue avant l’avance d’Ost. Hazel doit envoyer une colonne qu’elle ne pourra pas soutenir immédiatement. Prendre cette distance au sérieux change le plan, sans rendre les ordres plus compliqués.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2689,7 +2689,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Les réserves annoncées",
-   "description": "Des renforts finis entrent par un axe déclaré, avec un temps de réaction suffisant.",
+   "description": "Les renforts ennemis sont annoncés et finis, mais Edran les ravitaille. Hazel ne peut pas répondre partout à la fois. Tenir demande de faire tourner les unités et de reconnaître quand une position a rempli son rôle.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 10 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -2707,7 +2707,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Les trois délais",
-   "description": "Les reçus montrent qu’un même prêteur a retardé plusieurs délégations.",
+   "description": "Trois relais permettent de joindre des délégations retardées. Leurs récits montrent que le Consortium les a fait attendre pour les pousser à signer. Hazel peut enfin distinguer les retards subis de ceux qu’elle aurait pu mieux préparer.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -2724,7 +2724,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "L’avance conditionnelle",
-   "description": "Un responsable d’équipe accepte une exclusivité pour payer le prochain transfert.",
+   "description": "Une équipe signe pour payer son prochain transfert tandis qu’une pluie imposée ralentit le terrain. Solveig rappelle les autres convois engagés. Garantir cette livraison aide un partenaire ; garder les fonds conserve une marge pour ceux qui roulent déjà.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2741,7 +2741,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "La promesse maintenue",
-   "description": "Un ravitaillement commun teste la sincérité du partenaire compromis.",
+   "description": "Le partenaire compromis pourrait détourner le ravitaillement commun. Deux positions protègent la livraison pendant que sa conduite met vos engagements à l’épreuve. Hazel veut lui laisser une tâche réelle, avec des limites vérifiables.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -2758,7 +2758,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Le coût de la sortie",
-   "description": "La rupture du contrat impose de rendre un dépôt, pas d’abandonner une population.",
+   "description": "La sortie du contrat coûte un dépôt. Reprendre les bâtiments permet de le rendre sans abandonner les équipes. Le retour immédiat sous contrôle et la rupture préalable répartissent autrement le risque de la prochaine longue traversée.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2812,7 +2812,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "Le relais des alliés",
-   "description": "Trois camps alliés attaquent une défense concentrée sans empiler leurs unités.",
+   "description": "Trois colonnes alliées approchent sans pouvoir se secourir en un instant. Face à Ost, Maël et Lise, chacune tient un créneau que les autres respectent. Solveig coordonne les réserves ; Hazel accepte de ne pas tout garder sous sa vue.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2832,7 +2832,7 @@
    "chapitre": "Australie — La distance des réserves",
    "saison": 3,
    "titre": "La réserve de coalition",
-   "description": "La finale décide des contributions à la coalition qui accompagnera Aube.",
+   "description": "Sélène demande qui paiera une coalition aussi étendue. Le dernier QG donne une première réponse en matériel. La réserve commune et l’équipement du front suivant sont deux engagements limités : personne ne prétend désormais couvrir le monde entier avec une seule colonne.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2850,7 +2850,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "L’île d’entrée",
-   "description": "Un réseau d’îles reliées concentre les premières captures sur les accès.",
+   "description": "Ayu commande des équipes réparties sur les îles, chacune avec son passage à protéger. Wren veut savoir lesquelles suivront jusqu’à Aube. Avant de demander une promesse, le joueur doit reprendre l’accès par lequel elles pourront se rejoindre.",
    "format": "1v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2867,7 +2867,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Les ateliers du détroit",
-   "description": "Les revenus de rive déterminent quels passages peuvent être tenus.",
+   "description": "Les ateliers du détroit donnent les moyens de tenir plusieurs passages. Ayu refuse de servir toujours l’île la plus proche du commandement. Deux sites repris doivent montrer que les petites équipes ont leur place dans le départ commun.",
    "format": "1v1",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -2884,7 +2884,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le manifeste d’Aube",
-   "description": "Un transport apporte les autorisations d’essai au dernier nœud d’interconnexion.",
+   "description": "Le transport porte les autorisations et le matériel nécessaires au dernier accès d’essai d’Aube. Des équipes attendent de savoir si elles pourront travailler ensemble. Escortez-le avant que les deux colonnes adverses referment le passage.",
    "format": "1v2",
    "objectif": "Amener le transport désigné à la destination ; sa mise hors jeu fait perdre la mission.",
    "personnages": [
@@ -2901,7 +2901,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le pont des mandats",
-   "description": "Deux équipes contestent le même créneau sans contester la souveraineté nationale.",
+   "description": "Deux partenaires réclament le même créneau de traversée. Ayu connaît leurs urgences et refuse d’en inventer une moins légitime. La prise du QG ouvre le pont ; partager les relevés permettra ensuite d’expliquer la priorité retenue.",
    "format": "2v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -2954,7 +2954,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "La fenêtre de visibilité",
-   "description": "La reconnaissance et le brouillage dévoilent des rotations méridiennes.",
+   "description": "Les rotations des Gris apparaissent entre deux périodes de brouillage. Reprendre le quai permet de retourner le drone marin qui les observe. Ayu veut employer cette information pour ouvrir les passages, pas promettre qu’elle révèle tous les plans ennemis.",
    "format": "1v1",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -2972,7 +2972,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le quai fermé",
-   "description": "Le joueur tient une position tandis qu’un adversaire tente de reprendre l’accès.",
+   "description": "Edran tente de reprendre le quai avant la relève. Les équipes insulaires doivent tenir assez longtemps pour que le passage reste utilisable. Leur coopération existe déjà dans ce qu’elles font, même si elles n’ont pas toutes promis de partir.",
    "format": "1v2",
    "objectif": "Tenir jusqu’à la fin de la journée 12 ; arrivée de la relève au début de la journée suivante.",
    "personnages": [
@@ -2990,7 +2990,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Les trois autorisations",
-   "description": "Trois relais rapprochent les contrats solaires du programme de fusion fictif.",
+   "description": "Trois relais rétablissent les autorisations d’accès. Le même pouvoir de blocage relie désormais les sites solaires et Aube. Ayu l’explique sans jargon : celui qui pouvait retenir leurs batteries veut aussi décider qui entre au laboratoire.",
    "format": "1v1",
    "objectif": "Faire passer une unité admissible sur les trois relais dans l’ordre indiqué.",
    "personnages": [
@@ -3007,7 +3007,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le mandat de trop",
-   "description": "Un partenaire révèle qu’il a accordé à Méridien le droit de voter à sa place.",
+   "description": "Un partenaire avoue avoir laissé Méridien voter à sa place pour Aube. Ayu est en colère, mais lui demande ce qu’il veut encore défendre. Garantir sa livraison aide sa marge de manœuvre ; garder les fonds protège ceux qui ont conservé leur indépendance.",
    "format": "2v2",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [
@@ -3061,7 +3061,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le dernier engagement",
-   "description": "La coalition doit honorer une livraison malgré le coût de cette révélation.",
+   "description": "Une dernière livraison reste due au partenaire compromis. Deux positions doivent tenir pour qu’elle arrive. La coalition montre si ses promesses survivent à une révélation qui la met mal à l’aise.",
    "format": "2v1",
    "objectif": "Conserver les deux positions annoncées pendant trois journées consécutives.",
    "personnages": [
@@ -3078,7 +3078,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "Le vote rendu",
-   "description": "Le partenaire peut récupérer son mandat ou maintenir son choix et devenir adversaire.",
+   "description": "Le partenaire peut récupérer sa voix ou rester lié aux Gris. Les impulsions météo annoncées encadrent la reprise des bâtiments. Le joueur fixe les conditions du retour ; Ayu ne transforme pas un refus en ralliement automatique.",
    "format": "1v2",
    "objectif": "Capturer deux des trois bâtiments objectifs annoncés.",
    "personnages": [
@@ -3095,7 +3095,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "La porte de la Manche",
-   "description": "Ost défend l’accès à la série finale et reconnaît publiquement l’enjeu Aube.",
+   "description": "Ost défend l’accès à Aube avec Maël et Lise. Il reconnaît que les Gris ne protègent plus seulement des dépôts : ils veulent décider de l’avenir du programme. Le projet de la Cinquième Manche, nommé après les premiers matchs, devient maintenant une puissance assumée.",
    "format": "2v2",
    "objectif": "Mettre hors jeu toutes les unités adverses ; aucune victoire alternative par capture du QG.",
    "personnages": [
@@ -3115,7 +3115,7 @@
    "chapitre": "Indonésie — Les accès d’Aube",
    "saison": 3,
    "titre": "La coalition au départ",
-   "description": "La finale nationale fixe les alliés et garanties qui entrent dans les dix-huit dernières missions.",
+   "description": "La dernière bataille nationale réunit ceux dont les engagements ont tenu. Sélène est à la table, les réserves sont comptées, certains partenaires peuvent manquer. Ayu fait nommer chaque aide promise avant le départ vers Aube : une coalition imparfaite, choisie, vaut mieux qu’une unanimité écrite d’avance.",
    "format": "3v1",
    "objectif": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
    "personnages": [

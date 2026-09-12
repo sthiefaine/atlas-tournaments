@@ -85,7 +85,7 @@ const factions = lore?.factions ?? [];
 const technologies = lore?.technologies ?? [];
 const personnages = lore?.personnages ?? personnagesCanon.map((p) => ({ cle: p.cle, nom: p.nom, camp: p.paysCode ?? (p.role === 'civil' ? 'atlas' : 'atlas'), role: p.fonction, veut: p.motivation, craint: p.croyance, sort: 'inconnu', secret: null }));
 const fins = lore?.fins ?? [];
-const donnees = { monde, factions, technologies, personnages, saisons, episodes, fins, nomPays, genere: new Date().toISOString().slice(0, 10), source: lore ? 'lore-v2.json' : 'registres' };
+const donnees = { presentation: lore?.presentation ?? null, arcsNationaux: lore?.arcsNationaux ?? [], monde, factions, technologies, personnages, saisons, episodes, fins, nomPays, genere: new Date().toISOString().slice(0, 10), source: lore ? 'lore-v2.json' : 'registres' };
 
 const e = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const nbDecisions = Object.values(episodes).filter((x) => x.decision).length;
@@ -233,7 +233,12 @@ function rendreFil() {
   const liste = document.createElement('div'); liste.className = 'liste'; let chap = null;
   for (const id of sa.episodes) {
     const ep = D.episodes[id]; if (!ep) continue;
-    if (ep.type !== 'hors_serie' && ep.chapitre !== chap) { chap = ep.chapitre; const h = document.createElement('h3'); h.className = 'chapitre'; h.textContent = chap; liste.appendChild(h); }
+    if (ep.type !== 'hors_serie' && ep.chapitre !== chap) {
+      chap = ep.chapitre;
+      const h = document.createElement('h3'); h.className = 'chapitre'; h.textContent = chap; liste.appendChild(h);
+      const arc = D.arcsNationaux.find((a) => a.episodes.includes(id));
+      if (arc) { const p = document.createElement('p'); p.className = 'premisse'; p.textContent = arc.titre + ' — ' + arc.relation; liste.appendChild(p); }
+    }
     liste.appendChild(carteEpisode(id, etat));
   }
   c.appendChild(liste);

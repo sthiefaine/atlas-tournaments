@@ -950,8 +950,10 @@ function decorDe(carte: unknown, scenario: unknown, biome: Biome): Decor {
  * règle appliquée au code d'avant `lots.ts` rend ces cinq condensés-ci, au
  * caractère près.
  */
+// 12 septembre : la plaine inclut le lot paysage-gazon ajouté par 9f378cd.
+// Les autres scènes conservent leurs empreintes ; le gazon est borné par paysage.test.ts.
 const EMPREINTES: ReadonlyArray<readonly [string, unknown, unknown, Biome, string, number]> = [
-  ['demo', carteDemo, scenarioDemo, 'plaine', '8e115f22', 115],
+  ['demo', carteDemo, scenarioDemo, 'plaine', 'ef291773', 116],
   ['demo', carteDemo, scenarioDemo, 'marais', 'bcd95007', 113],
   ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', 'ee3a9258', 161],
   ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', 'b5e43e79', 69],

@@ -1,6 +1,6 @@
 {
   "cle": "premier_contact",
-  "version": 7,
+  "version": 8,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -50,41 +50,36 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Bienvenue au **camp d’instruction**, commandant. Je suis Ariane Belloc : j’ai passé dix ans à réparer du matériel avant de le commander, alors je vous apprendrai d’abord à ne pas le perdre.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Le monde est en guerre depuis quatorze ans, et il se bat pour **l’énergie et les machines qui la font**. On ne prend pas un pays : on prend ses barrages, ses usines, ses plans. Nous sommes en **an 14**.",
+      "texte": "Bienvenue, commandant. **Ariane Belloc**. Avant de commander ces véhicules, je les réparais. Si vous me les ramenez en bon état, on devrait bien s’entendre.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Tomas Reiner, Luxembourg. Solveig m’a déposé ce matin avec trois pièces et des charges à blanc : « rends-les en bon état ». Ma patrouille attend de l’autre côté de la rivière [[img:riviere]].",
-      "emotion": "joie"
+      "texte": "**Tomas Reiner**, Luxembourg. Trois unités, de l’autre côté de la rivière [[img:riviere]]. Ariane m’a demandé de vous laisser apprendre. Elle n’a pas dit de vous laisser gagner.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Mettez ses trois unités hors jeu. Cliquez sur votre char : il ira sur les cases [[img:case_verte]] et frappera les [[img:case_rouge]]. Le pont du nord est à lui.",
+      "texte": "Mettez ses **trois unités hors jeu**. Les charges sont à blanc : profitez-en pour essayer. Sélectionnez votre char : cases [[img:case_verte]] pour avancer, [[img:case_rouge]] pour attaquer. Passez par le pont du nord.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Patrouille hors jeu. Vous savez déplacer, frapper en premier et lire le terrain. Ici les charges étaient à blanc ; **au front, elles ne le seront plus**, et l’équipage qui riposte sera le vôtre.",
-      "emotion": "joie"
+      "texte": "Patrouille hors jeu. Vous avez su avancer, attaquer et vous servir du terrain. C’est un bon début.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Solveig récupère mes trois pièces ce soir, et personne n’a rien. Demain, on parle d’argent : une guerre se paie avec ce qu’on lui prend.",
+      "texte": "Je demanderai une revanche. Demain, quatre villes à se partager… enfin, à se disputer.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Un exercice sert à essayer, et Tomas ne racontera rien. Au front, cette erreur coûterait des équipages ; ici, elle ne coûte qu’une reprise. Reprenons.",
+      "texte": "Tomas gagne cette manche. Regardons où vos unités se sont retrouvées seules, puis essayons un autre passage. Un entraînement sert à ça.",
       "emotion": "neutre"
     }
   ],
@@ -97,7 +92,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Premier échange. **L’unité frappée riposte aussitôt**, avec les points qui lui restent : frapper en premier, c’est encaisser moins.",
+          "texte": "La riposte commence aussitôt si la cible peut répondre. **Lisez les deux côtés de la prévision de duel** avant de confirmer : elle tient compte des pertes de l’échange.",
           "emotion": "neutre",
           "illustration": {
             "cle": "duel",
@@ -106,7 +101,7 @@
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Et regardez où je me tenais. **Deux étoiles de défense dans le bois** [[img:foret]], zéro sur un pont [[img:pont]] : le terrain compte avant le matériel.",
+          "texte": "Regardez aussi le terrain : **deux étoiles dans le bois** [[img:foret]], zéro sur un pont [[img:pont]]. Je préfère vous attendre dans les arbres.",
           "emotion": "neutre"
         }
       ]
@@ -120,12 +115,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une pièce hors jeu. À blanc, mon équipage rentre à pied. Au front, **une pièce hors jeu, c’est un équipage qu’on ne revoit pas** : Atlas compte des pièces, nous comptons des gens.",
+          "texte": "Une unité pour vous. Mon équipage rentre à pied ; ils vont encore me demander pourquoi je leur ai promis un trajet facile.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre char ne traverse que par le pont [[img:pont]] ; son infanterie [[img:unite_infanterie]] passe la rivière à pied. Ne vous laissez pas attirer à découvert.",
+          "texte": "Votre char passe par le pont [[img:pont]]. L’infanterie [[img:unite_infanterie]] peut traverser la rivière à pied, plus lentement. Gardez une couverture à l’arrivée.",
           "emotion": "neutre"
         }
       ]
@@ -139,7 +134,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une des nôtres sort. À blanc, elle manque pour la journée ; au front, elle manquerait pour la guerre. **Deux unités sur une cible** valent mieux qu’une sur chaque.",
+          "texte": "Une unité sort de l’exercice. On peut encore reprendre l’avantage : **concentrez deux attaques sur une cible**, au lieu de disperser vos forces.",
           "emotion": "doute"
         }
       ]
@@ -153,12 +148,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Votre QG [[img:qg]] verse des fonds à chaque journée. Cliquez dessus quand la caisse passe mille : **il recrute une infanterie**.",
+          "texte": "Votre QG [[img:qg]] verse des fonds chaque journée. Avec **1 000 fonds**, cliquez dessus pour recruter une infanterie.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Ces fonds, c’est **Atlas** qui les compte. Atlas ne fait pas la guerre, elle l’arbitre : elle dit où l’on se bat, avec quoi, et note ce que chaque front rapporte.",
+          "texte": "Une unité de plus peut aider. Mais avant d’acheter, regardez où vous voulez l’envoyer.",
           "emotion": "neutre"
         }
       ]

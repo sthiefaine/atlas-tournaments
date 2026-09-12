@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_05",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -70,7 +70,7 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La crête coupe le plateau en deux couloirs. Pas de revenu, pas de renfort : Wren a contrôlé et signé le lot de la journée pièce par pièce, et il n’y en aura pas d’autre. **Chaque placement compte.**",
+      "texte": "La crête partage la carte en deux couloirs. **Aucun revenu, aucun renfort** : vous jouez avec les unités présentes. Placez-les pour qu’elles se couvrent.",
       "emotion": "neutre"
     },
     {
@@ -80,7 +80,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "J’attaque, aujourd’hui. Si vous laissez une artillerie à découvert, mon char ira la chercher, et au front un équipage à découvert ne rentre pas. Prenez mon QG ou videz mon groupe avant **J18**.",
+      "texte": "Aujourd’hui, j’avance. Si votre artillerie reste seule, mon char ira la chercher. Prenez mon QG ou mettez toutes mes unités hors jeu avant **la fin de J18**.",
       "emotion": "neutre"
     },
     {
@@ -92,12 +92,12 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Vous avez tenu la distance, et c’est la chose la plus difficile à apprendre à un jeune commandant : **attendre le bon tour**. Au front, l’impatience coûte des équipages.",
-      "emotion": "joie"
+      "texte": "Vous avez attendu le bon moment pour tirer. C’est parfois plus difficile que d’avancer.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Ce soir, Solveig nous emmène en forêt. Prenez une lampe : ce n’est pas une image. Et il y aura du matériel qui n’est pas à nous.",
+      "texte": "Vous commencez à connaître mes trajets. Demain, changement de terrain : rendez-vous en forêt.",
       "emotion": "neutre"
     }
   ],
@@ -137,7 +137,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une de mes pièces sort sans avoir vu qui l’a frappée. Voilà la bonne distance : **je ne peux pas riposter à ce que je ne touche pas**.",
+          "texte": "Une unité en moins. À distance, je ne peux riposter que si ma portée le permet. Gardez cet avantage pour vos prochains tirs.",
           "emotion": "neutre"
         }
       ]
@@ -151,7 +151,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Une artillerie seule, c’est une artillerie perdue : elle n’a rien pour répondre au contact. Reformez la ligne, le char devant.",
+          "texte": "Une unité de moins. Reformez votre couverture ; votre artillerie ne peut pas répondre à une attaque au contact.",
           "emotion": "doute"
         }
       ]

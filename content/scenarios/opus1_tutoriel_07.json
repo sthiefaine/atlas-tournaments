@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_07",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -78,7 +78,7 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Dans sa cale, une **réserve** : des batteries de champ, ce qu’on se dispute en premier quand l’énergie manque. Au front, c’est pour ça qu’on se bat ; ici, elles sont vides.",
+      "texte": "Solveig vous confie un chargement de batteries d’exercice. Elle n’a demandé qu’une chose : qu’il arrive. Pas besoin de gagner tous les combats en chemin.",
       "emotion": "neutre",
       "illustration": {
         "cle": "reserve",
@@ -92,7 +92,7 @@
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Sur l’eau, un **drone marin** : même dépôt gris que la station de la forêt, même badge orange. Ses relevés partent à Port-Méridien avant d’arriver chez nous. Wren a demandé pourquoi.",
+      "texte": "Le **drone marin** observe depuis l’eau. Servez-vous-en pour regarder la côte ; il ne combat pas à la place de vos navires et ne peut pas suivre une route terrestre.",
       "emotion": "doute"
     },
     {
@@ -163,12 +163,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "**Vous vous souvenez de la station à impulsion ?** Le drone marin sort du même dépôt. Les Gris l’ont fait tourner sur trois côtes cette année, et il voit plus loin qu’à sa première sortie.",
+          "texte": "Le drone marin vient des **Gris**, comme la station en forêt. Il observe la côte ; il ne rejoint pas la route.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Il ne remplace pas un navire et ne rejoindra jamais la route : c’est un œil, rien d’autre. Mais l’œil est à eux avant d’être à vous.",
+          "texte": "Gardez surtout les yeux sur votre transport. Si vous pouvez passer sans me poursuivre, vous avez déjà gagné du temps.",
           "emotion": "neutre"
         }
       ]
@@ -182,7 +182,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Ma patrouille perd une pièce, et je ne la remplacerai pas : aucune caisse ne rapporte ici. Chaque échange coûte aux deux camps, et au front il coûte des gens.",
+          "texte": "Une unité en moins pour moi, et aucun revenu pour la remplacer. Mais votre objectif reste le transport : ne m’offrez pas une deuxième occasion de l’intercepter.",
           "emotion": "neutre"
         }
       ]

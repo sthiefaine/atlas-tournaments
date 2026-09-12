@@ -1,5 +1,9 @@
 # 08 — Narration et choix à conséquences
 
+## Présentation de l’aventure — 12 septembre 2026
+
+Les enjeux se découvrent par les personnes et les situations : objectifs concrets, dialogues courts, Gris puis Ost avant les structures cachées. Chaque arc national transforme une relation au lieu de répéter la collecte de preuves. Les choix montrent qui reçoit l’aide et qui attend ; leurs effets sont rappelés dans la suite. La famille adverse reste secrète jusqu’au jalon prévu. Ces règles de présentation remplacent les conseils historiques incompatibles ; elles ne modifient ni les flags ni les règles de combat. Voir [Une aventure claire, des choix qui comptent](refonte/aventure-lisible.md). Le plan éditorial reste distinct des missions jouables.
+
 *Atlas Tournament — système de choix, flags, réputation et fins. Canon supérieur : `BRIEF.md`, puis `01-bible.md` (§ 8) qui fait foi sur les noms de flags. Tout ce qui dépasse le brief est signalé par **[Proposition]**.*
 
 ---

@@ -1,5 +1,9 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## Présentation de l’aventure — 12 septembre 2026
+
+Les enjeux se découvrent par les personnes et les situations : objectifs concrets, dialogues courts, Gris puis Ost avant les structures cachées. Chaque arc national transforme une relation au lieu de répéter la collecte de preuves. Les choix montrent qui reçoit l’aide et qui attend ; leurs effets sont rappelés dans la suite. La famille adverse reste secrète jusqu’au jalon prévu. Ces règles de présentation remplacent les conseils historiques incompatibles ; elles ne modifient ni les flags ni les règles de combat. Voir [Une aventure claire, des choix qui comptent](doc/refonte/aventure-lisible.md). Le plan éditorial reste distinct des missions jouables.
+
 Ce fichier est la source de vérité pour tous les documents du dossier `doc/`. Tout ce qui est écrit ici a été décidé ; ce qui n'y est pas est à proposer, en le signalant comme proposition.
 
 ## Refonte Aube — canon du 9 septembre 2026

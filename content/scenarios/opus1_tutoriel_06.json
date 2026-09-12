@@ -1,6 +1,6 @@
 {
   "cle": "opus1_tutoriel_06",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -78,59 +78,41 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La forêt, et le **brouillard** avec : vous ne voyez que ce que vos unités voient. Le drone observe au-delà des arbres, l’infanterie capture. Lisez la zone visible avant d’avancer.",
-      "emotion": "neutre",
-      "illustration": {
-        "cle": "brouillard",
-        "legende": "Les cases noires cachent tout : terrain et unités."
-      }
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Objectif : le **radar** [[img:radar]] du centre et la ville du nord-est, tenus ensemble avant la fin de J18. Un radar pris voit à cinq cases et partage sa vue avec tout votre camp.",
+      "texte": "Le **brouillard** cache ce qui est hors de votre vision. Envoyez le drone observer, puis avancez vos troupes. Il éclaire ; **seule l’infanterie capture** dans votre groupe.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "La station à côté n’est pas à Atlas. Elle sort du dépôt de la **Sélection Méridienne**, les Gris : l’armée d’essai que le Consortium paie sous les couleurs de l’arbitre. Badge orange.",
-      "emotion": "doute"
+      "texte": "Tenez **le radar central et la ville du nord-est ensemble**, avant la fin de J18. Prendre le QG adverse ne remplace pas ces deux objectifs.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Une **station à impulsion** : à J4, puis toutes les trois journées, tout moteur à deux cases s’arrête et ce qui vole tombe. Le Bulletin publie le rayon et le jour.",
-      "emotion": "neutre",
-      "illustration": {
-        "cle": "impulsion",
-        "legende": "Dans le rayon, plus un moteur ne tourne."
-      }
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Wren l’a autorisée pour l’essai et me l’a dit sans détour : « je sais ce qu’elle fait, pas qui l’a conçue ». Sortez vos appareils du rayon avant l’impulsion, ou prenez la source.",
+      "texte": "Le radar porte une **station IEM** : à **J4, puis toutes les trois journées**, elle bloque les avions et navires adverses à **deux cases**, jusqu’à la fin de leur prochain tour. Aucun dégât ; les usines adverses du rayon sont arrêtées.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "La nuit tombe à J3 et J4 et raccourcit la vue. En difficile je suis plus prudent, et personne ne voit à travers le brouillard, ni vous ni moi. Le jour revient à J5 ; le brouillard reste.",
+      "texte": "Les usines touchées ne produisent pas ce tour. Sortez vos appareils du rayon ou capturez la station avant l’impulsion. Les unités terrestres peuvent approcher : repérez un chemin sûr pour vos fantassins.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Radar et ville sous vos couleurs, ensemble. Vous savez avancer sans voir, et c’est le plus dur. La station repart au dépôt des Gris ce soir ; Wren la suivra jusqu’au quai.",
-      "emotion": "joie"
+      "texte": "Radar et ville tenus ensemble. Vous avez avancé en gardant un œil devant vos unités.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Hadran Ost prête ce matériel sans qu’on le lui demande, et on dit qu’il en a d’autres. Ceux qui font la guerre hors du front, on les appelle **la Cinquième Manche** ; personne n’a de preuve.",
+      "texte": "La station est prêtée par une équipe qu’on appelle **les Gris**. Beau matériel. J’aimerais savoir pourquoi ils nous le prêtent si facilement.",
       "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le brouillard ne pardonne pas une approche sans regarder. Reprenez, éclairez d’abord ; cette tentative ne coûte rien. Au front, elle aurait coûté la colonne.",
+      "texte": "On reprend. Utilisez le drone pour préparer le trajet des fantassins, puis mettez-le à l’abri avant l’impulsion. Pensez aux deux objectifs.",
       "emotion": "neutre"
     }
   ],
@@ -149,12 +131,12 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Vous vous souvenez de la ville hors service, au deuxième exercice ?** Le radar se prend de la même façon : vingt points, dix par tour. Le drone prépare l’approche ; il ne capture pas.",
+          "texte": "Le radar se capture comme une ville en service : **20 points**, 10 par tour pour une infanterie intacte. Le drone ne peut pas le prendre.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Et ce drone-là est à tout le monde : c’est la première technologie de l’année que les Gris n’ont pas réussi à garder pour eux. Déclarée, dossier complet.",
+          "texte": "Dès qu’il est à vous, le radar voit à cinq cases. Gardez ensuite ce point pendant qu’une autre infanterie rejoint la ville.",
           "emotion": "neutre"
         }
       ]
@@ -168,7 +150,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit arrive demain pour deux journées. Placez vos éclaireurs, consultez le Bulletin. **Une unité posée sur un bâtiment de votre camp** voit sous son éclairage.",
+          "texte": "La nuit arrive à **J3 et J4**. Elle réduit la vision de deux cases, au minimum une. Une unité sur un bâtiment de votre camp conserve sa vision : placez vos éclaireurs avant demain.",
           "emotion": "neutre"
         }
       ]
@@ -182,7 +164,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit retire deux cases de vue, jamais moins d’une, sauf sur un bâtiment à vous. Le drone éclaire les approches ; **tenez-le hors du rayon de la station**, l’impulsion arrive demain.",
+          "texte": "La nuit est là. **L’impulsion arrive demain, rayon deux cases autour du radar.** Sortez vos appareils de la zone ou capturez la station. L’infanterie peut continuer l’approche.",
           "emotion": "neutre"
         }
       ]
@@ -196,7 +178,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Le jour est revenu, la vue s’allonge, mais le brouillard reste [[img:brouillard]] : un bois non observé cache encore une unité. La station a émis hier ; Wren voudra son relevé.",
+          "texte": "Le jour revient et votre vision s’allonge. **Le brouillard reste actif** : continuez d’observer avant d’avancer. La prochaine impulsion est prévue à J7.",
           "emotion": "neutre"
         }
       ]

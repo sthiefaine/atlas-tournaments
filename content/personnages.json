@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "programme": "Aube",
   "calendrier": "Repères inventés, comptés en années de guerre (an 11, an 12, an 14) ; aucune date réelle, aucun calendrier réel.",
   "personnages": [
@@ -7,8 +7,8 @@
       "cle": "cmd_ariane_belloc",
       "nom": "Ariane Belloc",
       "fonction": "Commandante française et mentore",
-      "motivation": "Former un commandant capable de refuser une victoire trop coûteuse.",
-      "croyance": "Elle croit devoir rester irréprochable pour être écoutée.",
+      "motivation": "Former un commandant qui sait gagner sans sacrifier ses équipages pour un drapeau.",
+      "croyance": "Elle croit que demander du renfort est une force ; elle a encore du mal à le faire elle-même.",
       "liens": [
         "cmd_tomas_reiner",
         "nera_aldouin"
@@ -50,8 +50,8 @@
       "cle": "cmd_tomas_reiner",
       "nom": "Tomas Reiner",
       "fonction": "Commandant luxembourgeois et organisateur de convois",
-      "motivation": "Tenir les promesses dont dépendent les autres équipes.",
-      "croyance": "Un accord précis protège mieux qu’une déclaration d’amitié.",
+      "motivation": "Faire arriver les renforts promis, même quand cela complique sa propre bataille.",
+      "croyance": "Il croit qu’une promesse vaut plus qu’un beau discours ; il prend mal qu’on doute de sa parole.",
       "liens": [
         "cmd_ariane_belloc",
         "cmd_solveig_tamm"
@@ -101,8 +101,8 @@
       "cle": "nera_aldouin",
       "nom": "Nera Aldouin",
       "fonction": "Arbitre en chef",
-      "motivation": "Préserver un arbitrage opposable aux plus puissants.",
-      "croyance": "Elle confond parfois légalité d’une clause et justice de son effet.",
+      "motivation": "Faire appliquer les mêmes règles aux puissants et aux petites équipes.",
+      "croyance": "Elle croit qu’une preuve peut arrêter un abus ; elle doit apprendre à agir quand personne ne veut la lire.",
       "liens": [
         "osmin_talvarec",
         "cmd_hadran_ost"
@@ -136,8 +136,8 @@
       "cle": "osmin_talvarec",
       "nom": "Osmin Talvarec",
       "fonction": "Coordinateur d’Atlas, ancien géomètre",
-      "motivation": "Maintenir un cadre commun lorsque les délégations se divisent.",
-      "croyance": "Il croit qu’avouer les défaillances d’Atlas détruirait le seul arbitre disponible.",
+      "motivation": "Empêcher que les nations abandonnent les dernières règles communes.",
+      "croyance": "Il croit qu’un compromis évite le pire ; il tarde parfois à reconnaître celui qui ne veut aucun compromis.",
       "liens": [
         "nera_aldouin",
         "selene_veyr"
@@ -171,8 +171,8 @@
       "cle": "celestin_vantour",
       "nom": "Célestin Vantour",
       "fonction": "Correspondant de guerre et mémoire du front",
-      "motivation": "Raconter des victoires auxquelles le public puisse croire.",
-      "croyance": "Un récit clair lui paraît parfois plus utile qu’un dossier incomplet.",
+      "motivation": "Raconter ce qui se passe vraiment, même quand cela contredit le héros qu’il a présenté au public.",
+      "croyance": "Il croit qu’une histoire peut réunir les gens ; il redoute de découvrir qu’il en a raconté une fausse.",
       "liens": [
         "cmd_hadran_ost",
         "nera_aldouin"
@@ -206,8 +206,8 @@
       "cle": "cmd_hadran_ost",
       "nom": "Hadran Ost",
       "fonction": "Commandant des mécanisés de la Sélection Méridienne",
-      "motivation": "Retrouver le pouvoir perdu sans admettre sa responsabilité.",
-      "croyance": "Il confond encore reconnaissance du public et droit de décider seul.",
+      "motivation": "Redevenir celui que tout le monde appelle quand la bataille tourne mal.",
+      "croyance": "Il croit que ses victoires lui donnent raison, même sur les décisions qui ont coûté cher aux autres.",
       "liens": [
         "selene_veyr",
         "celestin_vantour"
@@ -279,8 +279,8 @@
       "cle": "cmd_solveig_tamm",
       "nom": "Solveig Tamm",
       "fonction": "Intendante des transports",
-      "motivation": "Faire arriver les équipes et les réserves promises.",
-      "croyance": "Les trajets révèlent ce que les noms de sociétés cachent.",
+      "motivation": "Faire rentrer les équipes et livrer les réserves qu’elles attendent.",
+      "croyance": "Elle croit aux horaires et aux préparatifs ; elle supporte mal les héros qui improvisent avec les moyens des autres.",
       "liens": [
         "cmd_tomas_reiner",
         "cmd_wren_osoko"
@@ -313,8 +313,8 @@
       "cle": "cmd_wren_osoko",
       "nom": "Wren Osoko",
       "fonction": "Responsable du contrôle des armes",
-      "motivation": "Séparer les outils utiles des droits abusifs qui les accompagnent.",
-      "croyance": "Une technologie n’est pas coupable des contrats conclus autour d’elle.",
+      "motivation": "Donner aux équipes des machines qu’elles comprennent et peuvent réparer elles-mêmes.",
+      "croyance": "Elle croit qu’on peut partager un outil sans livrer le pouvoir à son fabricant.",
       "liens": [
         "cmd_solveig_tamm",
         "nera_aldouin"
@@ -347,8 +347,8 @@
       "cle": "selene_veyr",
       "nom": "Sélène Veyr",
       "fonction": "Directrice du Consortium Méridien",
-      "motivation": "Imposer seule les conditions du réseau, en présentant la dépendance comme la stabilité.",
-      "croyance": "Elle croit que le réseau ne reste stable que sous une autorité unique.",
+      "motivation": "Contrôler seule l’énergie et Aube, pour que personne ne puisse plus agir sans elle.",
+      "croyance": "Elle croit qu’une seule autorité peut arrêter le chaos ; elle appelle protection ce que les autres vivent comme une dépendance.",
       "liens": [
         "cmd_hadran_ost"
       ],
@@ -421,8 +421,8 @@
       "paysCode": "ch",
       "premierPlan": true,
       "fonction": "Commandante de la délégation suisse, responsable de relais alpins",
-      "motivation": "Garantir que chaque vallée conserve un accès indépendant aux réserves.",
-      "croyance": "Elle prépare si soigneusement un verrou qu’elle tarde à quitter une position devenue inutile.",
+      "motivation": "Garder chaque vallée ravitaillée, même quand les voisins ferment leurs routes.",
+      "croyance": "Elle croit que prévoir le pire protège les autres ; elle risque de refuser une aide dont elle a besoin.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -470,8 +470,8 @@
       "paysCode": "nl",
       "premierPlan": true,
       "fonction": "Commandante de la délégation néerlandaise, ingénieure des ouvrages de passage",
-      "motivation": "Rendre les infrastructures accessibles sans dépendre du propriétaire de leurs logiciels.",
-      "croyance": "Elle croit qu’un calendrier exact peut remplacer une relation de confiance.",
+      "motivation": "Garder les pompes et les digues en marche sans demander la permission à un fournisseur.",
+      "croyance": "Elle croit qu’un système doit pouvoir être réparé par ceux qui vivent avec ses pannes.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -519,8 +519,8 @@
       "paysCode": "ma",
       "premierPlan": true,
       "fonction": "Commandant de la délégation marocaine, coordinateur des étapes de convoi",
-      "motivation": "Empêcher qu’un contrat de transport décide seul qui peut encore se battre.",
-      "croyance": "Il garde trop longtemps une réserve pour un risque qui ne se réalise pas toujours.",
+      "motivation": "Empêcher qu’un convoi en retard condamne les équipes qui l’attendent.",
+      "croyance": "Il croit devoir tenir jusqu’à la relève ; reconnaître ses propres limites lui coûte.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -569,8 +569,8 @@
       "paysCode": "sn",
       "premierPlan": true,
       "fonction": "Commandante de la délégation sénégalaise, capitaine des équipes du fleuve",
-      "motivation": "Prouver qu’une coalition tient par des engagements vérifiables et réciproques.",
-      "croyance": "Elle prend parfois sur elle les engagements que ses partenaires devraient assumer.",
+      "motivation": "Construire une alliance où les petites équipes sont aidées autant qu’elles aident.",
+      "croyance": "Elle croit aux actes réciproques ; elle ne confond pas pardonner et oublier une promesse rompue.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -618,8 +618,8 @@
       "paysCode": "br",
       "premierPlan": true,
       "fonction": "Commandante de la délégation brésilienne, organisatrice de rencontres fluviales",
-      "motivation": "Faire bénéficier les ateliers locaux des contrats que leurs équipes remportent.",
-      "croyance": "Elle confond parfois l’enthousiasme du public avec l’adhésion de son équipe.",
+      "motivation": "Faire revenir aux ateliers locaux une part de ce qu’ils ont aidé à gagner.",
+      "croyance": "Elle croit qu’une victoire n’a de sens que si ceux qui réparent peuvent continuer à travailler.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -667,8 +667,8 @@
       "paysCode": "mx",
       "premierPlan": true,
       "fonction": "Commandante de la délégation mexicaine, responsable des qualifications de plateau",
-      "motivation": "Obtenir des contrats qui récompensent le travail des équipes de terrain.",
-      "croyance": "Elle veut encore prouver qu’une prise spectaculaire peut corriger un départ difficile.",
+      "motivation": "Obtenir que ceux qui tiennent le terrain aient leur mot à dire après la victoire.",
+      "croyance": "Elle croit aux solutions trouvées sur place ; elle se méfie parfois trop vite des conseils venus d’ailleurs.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -716,8 +716,8 @@
       "paysCode": "in",
       "premierPlan": true,
       "fonction": "Commandante de la délégation indienne, coordinatrice d’ateliers de compétition",
-      "motivation": "Maintenir plusieurs voies de production lorsque les concessions se concentrent.",
-      "croyance": "Elle multiplie les solutions au point de retarder parfois le choix indispensable.",
+      "motivation": "Garder des ateliers capables de produire même si un grand fournisseur coupe ses livraisons.",
+      "croyance": "Elle croit qu’il faut toujours une autre solution ; elle peut disperser ses moyens à trop en préparer.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -765,8 +765,8 @@
       "paysCode": "jp",
       "premierPlan": true,
       "fonction": "Commandant de la délégation japonaise, planificateur des correspondances",
-      "motivation": "Garder les réseaux solaires et leurs interfaces ouverts à plusieurs opérateurs.",
-      "croyance": "Il cherche une séquence parfaite et réagit tard aux décisions irrationnelles d’un rival.",
+      "motivation": "Partager les plans utiles sans laisser un seul groupe décider qui peut les utiliser.",
+      "croyance": "Il croit au travail précis et partagé ; il doit accepter qu’un allié puisse faire autrement.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -814,8 +814,8 @@
       "paysCode": "au",
       "premierPlan": true,
       "fonction": "Commandante de la délégation australienne, responsable des réserves côtières",
-      "motivation": "Maintenir une autonomie de réserve entre des sites très éloignés.",
-      "croyance": "Son calme peut masquer trop longtemps une décision de retrait nécessaire.",
+      "motivation": "Ne laisser aucun poste lointain attendre un ravitaillement qui ne viendra pas.",
+      "croyance": "Elle croit qu’on doit pouvoir tenir seul ; elle apprend à compter sur des alliés aussi éloignés qu’elle.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -863,8 +863,8 @@
       "paysCode": "id",
       "premierPlan": true,
       "fonction": "Commandante de la délégation indonésienne, déléguée d’un collectif de clubs insulaires",
-      "motivation": "Faire entrer les petites délégations dans les décisions sur la distribution.",
-      "croyance": "Elle recherche un accord complet même quand le délai impose un arbitrage.",
+      "motivation": "Faire entendre les petites îles lorsque les grandes puissances décident où vont les réserves.",
+      "croyance": "Elle croit qu’une alliance doit écouter ceux qui ont le moins de moyens, pas seulement ceux qui parlent fort.",
       "liens": [
         "cmd_ariane_belloc"
       ],
@@ -912,8 +912,8 @@
       "paysCode": "ar",
       "premierPlan": false,
       "fonction": "Commandant de la délégation argentine, ancien régisseur de pistes",
-      "motivation": "Empêcher qu’une seule voie logistique devienne un péage obligatoire.",
-      "croyance": "Il élargit son front jusqu’à rendre sa propre réserve trop lointaine.",
+      "motivation": "Garder une seconde route ouverte quand un ennemi bloque la première.",
+      "croyance": "Il croit qu’on reste libre tant qu’on peut changer de chemin.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -961,8 +961,8 @@
       "paysCode": "ca",
       "premierPlan": false,
       "fonction": "Commandante de la délégation canadienne, technicienne des essais saisonniers",
-      "motivation": "Rendre les essais comparables et les préparatifs accessibles à tous les clubs.",
-      "croyance": "Elle attend parfois une prévision plus sûre au lieu de saisir une fenêtre courte.",
+      "motivation": "Permettre aux nouvelles équipes de préparer leurs machines aussi bien que les plus riches.",
+      "croyance": "Elle croit qu’un essai honnête doit pouvoir être refait par quelqu’un d’autre.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1010,8 +1010,8 @@
       "paysCode": "fj",
       "premierPlan": false,
       "fonction": "Commandant de la délégation fidjienne, jeune capitaine des entraînements de lagon",
-      "motivation": "Garder les petites équipes dans une compétition dominée par les grands budgets.",
-      "croyance": "Son improvisation laisse rarement un plan de secours à ceux qui le suivent.",
+      "motivation": "Donner aux petites équipes une vraie chance de tenir face aux grands budgets.",
+      "croyance": "Il croit que connaître ses partenaires compte autant que posséder le meilleur matériel.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1059,8 +1059,8 @@
       "paysCode": "gr",
       "premierPlan": false,
       "fonction": "Commandant de la délégation grecque, vétéran des relais côtiers",
-      "motivation": "Transmettre une méthode qui survive à son départ du circuit.",
-      "croyance": "Il privilégie les itinéraires éprouvés et peut sous-estimer un nouvel outil.",
+      "motivation": "Transmettre ce qu’il sait à ceux qui devront continuer sans lui.",
+      "croyance": "Il croit qu’un bon chef prépare quelqu’un à prendre sa place.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1116,8 +1116,8 @@
       "paysCode": "is",
       "premierPlan": false,
       "fonction": "Commandante de la délégation islandaise, observatrice des sites d’essai",
-      "motivation": "Permettre un contrôle indépendant des annonces énergétiques.",
-      "croyance": "Elle retarde ses accusations tant que chaque mesure n’est pas recoupée.",
+      "motivation": "Vérifier les promesses des fournisseurs avant que des équipes en dépendent.",
+      "croyance": "Elle croit davantage à une mesure refaite qu’à une annonce brillante.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1165,8 +1165,8 @@
       "paysCode": "ke",
       "premierPlan": false,
       "fonction": "Commandant de la délégation kényane, entraîneur des rencontres longues",
-      "motivation": "Prouver que la durée d’un contrat compte autant que son classement initial.",
-      "croyance": "Il laisse parfois trop d’initiative au début en attendant l’épuisement adverse.",
+      "motivation": "Éviter qu’un équipement bon marché aujourd’hui devienne impossible à entretenir demain.",
+      "croyance": "Il croit qu’on doit regarder ce qui reste après la première victoire.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1214,8 +1214,8 @@
       "paysCode": "mg",
       "premierPlan": false,
       "fonction": "Commandante de la délégation malgache, cartographe des pistes d’entraînement",
-      "motivation": "Faire des relevés de terrain un bien partagé plutôt qu’une dépendance commerciale.",
-      "croyance": "Elle perfectionne la reconnaissance alors qu’un objectif simple exige déjà d’agir.",
+      "motivation": "Partager les observations du terrain avec les équipes qui y risquent leurs véhicules.",
+      "croyance": "Elle croit qu’une découverte utile ne doit pas être cachée à ceux qui en ont besoin.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1263,8 +1263,8 @@
       "paysCode": "mn",
       "premierPlan": false,
       "fonction": "Commandante de la délégation mongole, capitaine des parcours mobiles",
-      "motivation": "Préserver le droit de changer de fournisseur sans perdre l’accès au circuit.",
-      "croyance": "Elle peut distancer les soutiens qui rendent sa mobilité possible.",
+      "motivation": "Pouvoir changer de fournisseur sans perdre son matériel ni abandonner son équipe.",
+      "croyance": "Il croit qu’une aide qui interdit de partir est déjà un piège.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1312,8 +1312,8 @@
       "paysCode": "na",
       "premierPlan": false,
       "fonction": "Commandante de la délégation namibienne, responsable des relevés côtiers",
-      "motivation": "Éviter qu’un opérateur vende une information que les participants ont produite ensemble.",
-      "croyance": "Elle supporte l’incertitude au point de garder trop longtemps un objectif mal connu.",
+      "motivation": "Rendre aux équipes les informations qu’elles ont collectées ensemble.",
+      "croyance": "Elle croit qu’on ne devrait pas payer deux fois pour son propre travail.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1361,8 +1361,8 @@
       "paysCode": "np",
       "premierPlan": false,
       "fonction": "Commandante de la délégation népalaise, coordinatrice des ateliers d’altitude",
-      "motivation": "Donner aux sites isolés une voix dans les engagements de distribution.",
-      "croyance": "Elle accepte trop facilement une logistique réduite et demande de l’aide tard.",
+      "motivation": "Faire livrer les postes isolés avant qu’il ne soit trop tard pour leurs équipes.",
+      "croyance": "Elle croit que personne ne doit disparaître d’une carte parce qu’il vit trop loin.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1418,8 +1418,8 @@
       "paysCode": "nz",
       "premierPlan": false,
       "fonction": "Commandante de la délégation néo-zélandaise, responsable des remises en service",
-      "motivation": "Faire compter la réparation et l’entretien dans le partage des moyens.",
-      "croyance": "Elle s’attache à remettre chaque poste en service même quand il faut changer d’axe.",
+      "motivation": "Obtenir du temps et des pièces pour réparer, pas seulement de l’argent pour remplacer.",
+      "croyance": "Elle croit qu’une machine sauvée peut encore ramener quelqu’un.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1467,8 +1467,8 @@
       "paysCode": "pe",
       "premierPlan": false,
       "fonction": "Commandante de la délégation péruvienne, conductrice des chantiers de parcours",
-      "motivation": "Empêcher qu’une homologation serve à fermer un passage aux petits ateliers.",
-      "croyance": "Elle croit parfois qu’un nouvel aménagement peut résoudre un désaccord contractuel.",
+      "motivation": "Garder les passages ouverts aux petits ateliers aussi bien qu’aux grandes armées.",
+      "croyance": "Elle croit qu’une règle doit protéger les gens, pas réserver la route aux plus riches.",
       "liens": [
         "cmd_tomas_reiner"
       ],
@@ -1514,8 +1514,8 @@
       "cle": "cmd_mael_orven",
       "nom": "Maël Orven",
       "fonction": "Commandant de mobilité aérienne",
-      "motivation": "Ne plus dépendre de décisions prises loin du terrain.",
-      "croyance": "Il croit qu’une équipe mobile peut choisir ses propres dépendances.",
+      "motivation": "Choisir ses missions et ne plus attendre que quelqu’un décide à sa place.",
+      "croyance": "Il croit être libre parce qu’il choisit ses batailles ; il voit mal le prix du matériel qui les rend possibles.",
       "liens": [
         "cmd_hadran_ost"
       ],
@@ -1575,8 +1575,8 @@
       "cle": "cmd_lise_orven",
       "nom": "Lise Varen",
       "fonction": "Commandante de l’artillerie et des passages",
-      "motivation": "Protéger son équipe sans accepter que cette protection achète son silence.",
-      "croyance": "Elle croit qu’un engagement écrit protège mieux ses techniciens que la confiance.",
+      "motivation": "Protéger ses techniciens sans devoir se taire quand leurs chefs les mettent en danger.",
+      "croyance": "Elle croit aux garanties concrètes ; elle ne quitte pas un camp sur une simple promesse.",
       "liens": [
         "cmd_hadran_ost",
         "selene_veyr"
@@ -1628,8 +1628,8 @@
       "cle": "cmd_edran_sorel",
       "nom": "Edran Sorel",
       "fonction": "Coordinateur des réserves et de la relève",
-      "motivation": "Préserver les équipes menacées d’épuisement en contrôlant les routes et les réserves.",
-      "croyance": "Il croit pouvoir utiliser le Consortium sans finir par servir ses objectifs.",
+      "motivation": "Garder des réserves pour les équipes que les chefs oublient lorsqu’elles sont épuisées.",
+      "croyance": "Il croit pouvoir se servir du Consortium sans devenir son serviteur.",
       "liens": [
         "selene_veyr"
       ],
@@ -1689,8 +1689,8 @@
       "cle": "cmd_yuna_serrat",
       "nom": "Yuna Serrat",
       "fonction": "Commandante des concessions de terrain",
-      "motivation": "Ne plus être la personne que l’on consulte seulement après la signature.",
-      "croyance": "Elle croit que la personne qui organise un compromis mérite de le contrôler.",
+      "motivation": "Être celle qui décide de l’accord, plutôt que celle qui répare ses conséquences.",
+      "croyance": "Elle croit qu’il vaut mieux tenir la dette des autres que dépendre de leur gratitude.",
       "liens": [
         "selene_veyr"
       ],
@@ -1733,8 +1733,8 @@
       "cle": "cmd_basile_kelm",
       "nom": "Basile Kelm",
       "fonction": "Commandant des dépôts et de la surveillance",
-      "motivation": "Éviter toute interruption, même au prix d’un système injuste.",
-      "croyance": "Il croit qu’une réserve fermée vaut mieux qu’un partage susceptible de tomber en panne.",
+      "motivation": "Éviter les pannes et les interruptions, même en laissant les moins puissants attendre.",
+      "croyance": "Il croit qu’un système qui continue de tourner est forcément un système qui fonctionne.",
       "liens": [
         "selene_veyr",
         "cmd_edran_sorel"
@@ -1778,8 +1778,8 @@
       "cle": "cmd_sans_visage",
       "nom": "Relais Zéro",
       "fonction": "Commandement distant sous indicatif",
-      "motivation": "Motivation personnelle inconnue ; objectif observable : maintenir l’avantage informationnel de la Cinquième Manche.",
-      "croyance": "Aucune croyance personnelle vérifiée ; ses décisions privilégient la continuité des observations.",
+      "motivation": "But observable : voir les mouvements adverses avant d’être repéré. Son identité et ses raisons personnelles restent inconnues.",
+      "croyance": "Aucune croyance personnelle vérifiée. Ses ordres protègent d’abord ses moyens d’observation.",
       "liens": [
         "selene_veyr"
       ],

@@ -1,7 +1,7 @@
 {
   "cle": "opus1_tutoriel_08",
   "code": "opus1_tutoriel_08",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -78,12 +78,12 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "En face, la Sélection Méridienne en personne : les Gris d’**Hadran Ost**. L’ancien Recordman, disqualifié il y a un an pour une **arme sans dossier**, qui joue propre depuis et perd souvent.",
+      "texte": "En face, les **Gris**, commandés par **Hadran Ost**. C’est leur équipe qui nous a prêté la station et le drone marin. Cette fois, on rencontre les pilotes.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_hadran_ost",
-      "texte": "Bienvenue sur le front, commandant. Mes pièces portent le badge orange : prototypes sous observation, déclarés pour la journée. Prenez mon QG ou mettez mon groupe hors jeu avant J16.",
+      "texte": "Hadran Ost. Bienvenue. Prenez mon QG ou mettez mes unités hors jeu avant **J16**. Deux commandants contre moi : j’espère que vous savez vous parler.",
       "emotion": "joie"
     },
     {
@@ -117,7 +117,7 @@
     },
     {
       "locuteur": "cmd_hadran_ost",
-      "texte": "Vous reviendrez. Moi aussi : la Sélection vient à vous, on ne la visite pas.",
+      "texte": "Une alliance s’apprend aussi. Revenez : je garderai une passerelle pour chacun.",
       "emotion": "neutre"
     }
   ],
@@ -131,17 +131,12 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "**Vous vous souvenez de la station à impulsion et du drone marin ?** Badge orange, dépôt gris : celui d’Ost. Une force d’essai d’Atlas, dit-on ; en vérité, l’armée que le Consortium paie.",
+          "texte": "Je couvre le sud. Ce que mes unités voient apparaît aussi pour vous, mais elles restent sous mes ordres.",
           "emotion": "neutre"
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Entre nations, on rend le terrain à la fin et on garde ce qu’on a gagné. **La Cinquième Manche, elle, ne rend rien** : les sites qu’elle prend, les équipes qu’elle prend, elle les garde.",
-          "emotion": "neutre"
-        },
-        {
-          "locuteur": "cmd_tomas_reiner",
-          "texte": "Je garde l’accès sud. Ce que j’éclaire apparaît dans votre vision, mes unités restent sous mes ordres. Si une des vôtres manque de charges près de moi, je ne peux pas la servir : vous si.",
+          "texte": "Votre transport peut ravitailler mes unités voisines. Je garde le passage libre pour vous ; faites de même au nord.",
           "emotion": "neutre"
         }
       ]
@@ -168,7 +163,7 @@
       "repliques": [
         {
           "locuteur": "cmd_hadran_ost",
-          "texte": "Premier échange. Vous verrez que je ne fais rien d’interdit ; Vantour l’a assez racontée, ma dernière histoire. Deux passerelles, une seule artillerie chez moi : cherchez celle qu’elle laisse.",
+          "texte": "Deux passerelles, une seule artillerie chez moi. Vous avez assez de terrain pour me faire hésiter. Voyons si vous allez le faire.",
           "emotion": "neutre"
         }
       ]

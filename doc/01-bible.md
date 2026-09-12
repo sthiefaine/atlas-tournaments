@@ -1,5 +1,9 @@
 # 01 — Bible du monde
 
+## Présentation de l’aventure — 12 septembre 2026
+
+Les enjeux se découvrent par les personnes et les situations : objectifs concrets, dialogues courts, Gris puis Ost avant les structures cachées. Chaque arc national transforme une relation au lieu de répéter la collecte de preuves. Les choix montrent qui reçoit l’aide et qui attend ; leurs effets sont rappelés dans la suite. La famille adverse reste secrète jusqu’au jalon prévu. Ces règles de présentation remplacent les conseils historiques incompatibles ; elles ne modifient ni les flags ni les règles de combat. Voir [Une aventure claire, des choix qui comptent](refonte/aventure-lisible.md). Le plan éditorial reste distinct des missions jouables.
+
 *Atlas Tournament — document canon. Source de vérité supérieure : `BRIEF.md`, qui prime en cas de contradiction. Tout ce qui dépasse le brief est signalé par **[Proposition]**. Ce document est écrit pour être lu par des humains **et** servi tel quel aux routines IA comme référence canon.*
 
 ---

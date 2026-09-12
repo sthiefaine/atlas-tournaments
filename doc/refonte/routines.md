@@ -1,5 +1,7 @@
 # Routines — refonte énergétique, 9 septembre 2026
 
+Révision du 12 septembre 2026 : les cinq prompts de référence passent en version 3 pour les règles d’écriture de [l’aventure lisible](aventure-lisible.md). Le contrat HTTP reste en version 2, les sections verrouillées sont inchangées. Aucun run externe ni changement de base n’est effectué par cette livraison.
+
 Ce document décrit les changements effectivement codés pour la refonte demandée. Il complète `doc/05-routines.md` ; les capacités narratives qui ne sont pas encore dans les schémas ne deviennent pas disponibles par la seule écriture d'un prompt.
 
 ## Exécution

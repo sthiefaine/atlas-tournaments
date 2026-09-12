@@ -1,6 +1,6 @@
 {
   "cle": "couleurs_alliees",
-  "version": 4,
+  "version": 5,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -66,20 +66,25 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Mon groupe est à vous pour ce **front d’essai**, sous les couleurs du Luxembourg : charges d’essai, arbitrage réel. Mon style privilégie la défense : mes unités encaissent mieux que les vôtres.",
+      "texte": "Cette fois, vous commandez mon groupe, sous les couleurs du Luxembourg. Mon style privilégie la défense. Je reste à la radio, mais **c’est vous qui donnez les ordres**.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois **postes** de la vallée gardent les relevés de l’année : ce que chaque front a produit, et pour qui. Tenez-les tous les trois en même temps ; Ariane fera tout pour en garder un.",
+      "texte": "Tenez **les trois postes en même temps**, au nord, au centre et au sud. Ariane essaiera d’en garder un. Si vous avez choisi la maintenance partagée, les fonds sont disponibles pour ce match.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les trois postes sont à nous, et les relevés avec. Ils portent une signature qu’aucun tableau ne nomme : **la Cinquième Manche**, écrite noir sur blanc pour la première fois. La vraie guerre commence.",
-      "emotion": "joie"
+      "texte": "Trois postes tenus. Vous avez pris soin de mon groupe : je vous le confierai à nouveau.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Les livraisons ne correspondent pas aux besoins de la vallée. Un nom revient dans les messages : **la Cinquième Manche**. Nous ne savons pas encore qui c’est, ni ce qu’ils font. Je préfère vérifier avant d’accuser.",
+      "emotion": "neutre"
     }
   ],
   "dialogueDefaite": [
@@ -164,7 +169,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Les chiffres des relevés ne concordent pas avec ceux du Bureau : de l’énergie sort de la vallée que personne n’a déclarée. Finissons ce front, nous lirons le troisième ensemble.",
+          "texte": "Le dépôt annonce des batteries pour toute la vallée, mais il en manque à l’arrivée. Finissons l’exercice ; ensuite, j’aimerais comprendre qui attend encore sa livraison.",
           "emotion": "doute"
         }
       ]

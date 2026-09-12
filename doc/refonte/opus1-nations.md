@@ -10,13 +10,13 @@ Les 24 nations du monde restent présentes. Les douze parcours de premier plan r
 - Saison nationale 2 : Maroc → Sénégal → Brésil → Mexique. Relier production solaire, stockage et transport ; rencontrer des équipes compromises capables de changer de position.
 - Saison nationale 3 : Inde → Japon → Australie → Indonésie. Établir le lien avec Aube ; préparer les garanties et les moyens de la coalition finale.
 
-La succession indiquée est une ossature de continuité, pas une obligation de jouer douze variantes du même duel. Les cartes devront varier relief, axes, positions de producteurs, distance au QG et visibilité. Les douze rôles d’épisode constituent un rythme commun (arrivée, économie, escorte, coopération, contre-jeu, pression, preuve, engagement, soutien, retour, confrontation, arbitrage) ; leur traduction géographique est propre à chaque parcours.
+La succession indiquée est une ossature de continuité, pas une obligation de jouer douze variantes du même duel. Les cartes devront varier relief, axes, positions de producteurs, distance au QG et visibilité. Les douze emplacements gardent leurs objectifs existants, mais ne doivent plus imposer le même récit de contrat et de preuves à chaque nation. La révision du 12 septembre 2026 reporte les 144 situations de `lore-v2.json` dans le JSON voisin. Chaque parcours porte désormais une relation distincte : Ariane et la confiance, Tomas et les promesses, Elsbeth et les accès, Lotte et une ancienne rivale, Samir et la relève, Awa et les équipes qui attendent, Lívia et l’autonomie, Inés et la revanche, Devika et une recherche incertaine, Ren et la vérification, Hazel et les limites, Ayu et la coalition choisie. Voir `lore-v2.md` pour les arcs complets. Ces scènes restent éditoriales et n’ajoutent aucune unité ni conséquence moteur.
 
 ## Famille et adversaires
 
 Huit commandants adverses sont définis dans la bible parallèle. Les identifiants techniques ne sont jamais des noms d’affichage. Le public ne connaît ni le lien frère–sœur ni le lien père–fils pendant ces missions nationales. Toute réplique, biographie publique et prompt de mission doit utiliser la projection sans révélations. Edran intervient tôt comme prestataire logistique ; son action tardive pourra ainsi être comprise sans révéler sa paternité à sa première apparition. Le repli imposé appartient à la dixième finale, pas à un chapitre national.
 
-Les ralliements concernent des responsables et des délégations sportives identifiés, jamais une population présentée comme mauvaise. Les huit adversaires de la faction restent distincts de ces partenaires qui peuvent rompre, revenir sous audit ou persister. Aucun ralliement automatique ne doit annuler un choix déjà enregistré.
+Les ralliements concernent des responsables et des délégations identifiés, jamais une population présentée comme mauvaise. Les huit adversaires de la faction restent distincts de ces partenaires qui peuvent rompre, revenir sous audit ou persister. Aucun ralliement automatique ne doit annuler un choix déjà enregistré.
 
 ## Victoires et conséquences
 
@@ -218,3 +218,9 @@ La supériorité adverse vient du matériel et du placement. Les stations ont un
 Aucune scène publique nouvelle ne révèle la fratrie ; les doctrines techniques ne fournissent aucun indice familial imposé. La révélation père-fils reste au pivot prévu, sans révéler le lien avec Lise.
 
 Limite du premier essai : la capture interrompt la menace IEM adverse. La météo reste programmée ; sa commande par station capturable est une proposition ultérieure. Toute adaptation de camp est explicite dans le scénario et le briefing, jamais déduite secrètement du pays.
+
+## Lecture des révélations et rappels
+
+Les Gris sont nommés après le tutoriel 6, Ost au tutoriel 8, Consortium et Aube après le tutoriel 10, puis Cinquième Manche après Couleurs alliées. Les parcours nationaux donnent un sens vécu à ces noms ; ils ne les présentent pas comme quatre factions nouvelles. Les résumés et notes auteur ne deviennent jamais automatiquement des textes publics.
+
+Un rappel de choix nomme la personne aidée et l’effet déjà déclaré. Il ne crée pas de renfort, fonds ou ralliement supplémentaire. Les situations réécrites restent alignées sur les 144 identifiants et les mêmes objectifs, variantes, options et conditions ; les nouvelles cartes restent à produire. Le parcours local compte toujours douze missions jouables.

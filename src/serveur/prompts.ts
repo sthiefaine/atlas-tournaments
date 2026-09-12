@@ -24,7 +24,7 @@ import type { ClePrompt } from '../schemas/index';
 import { CLES_PROMPT } from '../schemas/index';
 
 /** Version de référence embarquée par le code. Toute modification d'un corps l'incrémente. */
-export const DEFAULT_PROMPT_VERSION = 2;
+export const DEFAULT_PROMPT_VERSION = 3;
 
 /** Les deux noms de verrous reconnus. Un troisième marqueur est un verrou rompu. */
 export const NOMS_VERROUS = ['SECURITE', 'SENSIBILITE'] as const;
@@ -69,6 +69,29 @@ const VERROU_SENSIBILITE = `<<<VERROU:SENSIBILITE>>>
 - Les nationalités ne déterminent ni la morale ni la personnalité des personnages.
 - Lis GET /api/routines/bible/personnages?acte={0..3} pour les faits autorisés. Ne demande pas un acte supérieur à la mission. Les motivations privées et les croyances ne sont accessibles qu’à l’acte III ; une croyance ne vaut jamais fait.
 <<<FIN VERROU:SENSIBILITE>>>`;
+
+/** Règles de présentation ; aucune permission de révéler un fait non servi. */
+const CLARTE_NARRATIVE = `ÉCRITURE POUR LE JOUEUR — révision du 12 septembre 2026
+- Commence par ce que le joueur doit faire, pour qui et ce qui arrivera s’il échoue.
+  Les noms d’organisations et leurs règles viennent quand ils deviennent nécessaires.
+- Une réplique porte une idée. Préfère « nos batteries sont bloquées » à une clause
+  de priorité. Un terme technique utile est expliqué par son effet visible sur la carte.
+- Au début : les Gris, puis Ost. Le Consortium est leur fournisseur ; la Cinquième
+  Manche n’est révélée que si le contexte de mission l’autorise. Ces quatre noms ne
+  sont pas quatre armées. Ne déduis jamais un secret familial des fiches auteur.
+- Un briefing annonce toutes les menaces actives avant que le joueur agisse. Répartir
+  une explication ne signifie jamais cacher une IEM, son rayon ou sa première activation.
+- Les personnages ont des désaccords, de l’humour et des habitudes ; ne répète pas la
+  gravité ou la mort après chaque action. Ne transforme pas un briefing en biographie.
+- Les choix disent qui reçoit l’aide et qui attend. Reprends leur conséquence plus
+  tard par un retour concret, sans inventer renfort, bonus, flag ni promesse implémentée.
+- Varie les arcs : rivalité, secours, désaccord entre alliés, coût de victoire. Une
+  nouvelle nation ne doit pas rejouer seulement la collecte d’une preuve du fournisseur.
+- Une défaite scénarisée donne un objectif de repli explicite et un résultat maîtrisable.
+  Ne prétends pas qu’une bataille est gagnable si elle doit être perdue.
+- Une scène intime ou un rappel de promesse peut porter la profondeur sans vocabulaire
+  administratif. Le carnet conserve le détail ; le dialogue donne une raison d’agir.
+`;
 
 /** Contrat commun indépendant du fournisseur qui exécute le bootstrap. */
 const CONTRAT_EXECUTION = `CONTRAT D'EXÉCUTION — version 2
@@ -137,6 +160,8 @@ BORNES
 
 ${CONTRAT_EXECUTION}
 
+${CLARTE_NARRATIVE}
+
 ${VERROU_SECURITE}
 
 ${VERROU_SENSIBILITE}
@@ -191,6 +216,8 @@ BORNES
 
 ${CONTRAT_EXECUTION}
 
+${CLARTE_NARRATIVE}
+
 ${VERROU_SECURITE}
 
 ${VERROU_SENSIBILITE}
@@ -240,6 +267,8 @@ BORNES
 12 missions par run, 1 simulation par mission, 1 simulation de catalogue par run.
 
 ${CONTRAT_EXECUTION}
+
+${CLARTE_NARRATIVE}
 
 ${VERROU_SECURITE}
 
@@ -293,6 +322,8 @@ Vérifie les deux modes normal/difficile et les conséquences des quêtes second
 
 ${CONTRAT_EXECUTION}
 
+${CLARTE_NARRATIVE}
+
 ${VERROU_SECURITE}
 
 ${VERROU_SENSIBILITE}
@@ -335,6 +366,8 @@ BORNES
 1 langue, 1 mission, 1 GET de lot, 60 chaînes, 1 POST.
 
 ${CONTRAT_EXECUTION}
+
+${CLARTE_NARRATIVE}
 
 ${VERROU_SECURITE}
 

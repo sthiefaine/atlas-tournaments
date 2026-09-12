@@ -1,5 +1,11 @@
 # AGENTS.md — passation
 
+## Mise à jour — une aventure plus claire (12 septembre 2026)
+
+Les 12 missions du parcours local ont des dialogues et récits plus directs, avec leurs versions augmentées ; leurs règles, choix et récompenses sont conservés. T1 présente Ariane et Tomas sans répétition des morts. Gris à la victoire T6, Ost T8, Consortium/Aube après T10, nom de la Cinquième Manche après Sous les couleurs alliées. T6 annonce l’IEM avant l’action et décrit son effet réel (immobilisation air/mer et arrêt des usines, sans dégâts), puis explique la nuit avant J3.
+
+Les motivations et croyances des 37 personnages sont simplifiées (registre version 5), leurs histoires et secrets restent identiques. Les rappels de choix donnent une cause humaine au bonus sans modifier l’état tactique ni les identifiants du journal. Le plan national est réécrit en 12 arcs distincts, toujours éditoriaux ; les 200 épisodes prévus ne sont pas 200 missions jouables. Les cinq prompts de routine passent en référence 3 avec des règles de clarté hors des verrous ; aucun service externe n’est activé. Voir `doc/refonte/aventure-lisible.md`.
+
 Document de passation pour Codex. Il dit ce qu'est le projet, où sont les choses, ce qui est vrai aujourd'hui et ce qui ne l'est pas. Quand il contredit `BRIEF.md`, c'est `BRIEF.md` qui a raison.
 
 ## Mise à jour — caméra libre et rythme de riposte (9 septembre 2026)

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "mission": "premier_contact",
-  "scenarioVersion": 4,
+  "scenarioVersion": 8,
   "catalogueVersion": 4,
   "carte": "carte_premier_contact",
   "statut": "lot_autonome_de_candidats_non_approuves",
@@ -654,8 +654,8 @@
     },
     {
       "chemin": "mission/scenario.json",
-      "octets": 4712,
-      "sha256": "90905d29556b3ea880b330e020fd22359129cef3e58193b5ae8f441e7d6b2b6a"
+      "octets": 5852,
+      "sha256": "dd4d816db813da8d2adf791f30274a0ae2887d5e534e28c1b67f843ca25911a0"
     },
     {
       "chemin": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_albedo.png",

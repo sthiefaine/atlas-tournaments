@@ -54,3 +54,28 @@ test('les premiers exercices ne déclenchent pas de brouillard nocturne avant sa
   assert.deepEqual(s.cycleJourNuit, { jour: 2, nuit: 2 });
   for (const journee of [2, 3, 5]) assert.ok(s.scenesDialogue.some((scene: { declencheur: {type: string; journee?: number} }) => scene.declencheur.type === 'journee' && scene.declencheur.journee === journee));
 });
+
+test('le joueur découvre les organisations progressivement, sans annonce nocturne au premier exercice', () => {
+  const debut = lire('content/scenarios/premier_contact.json');
+  const textesDebut = JSON.stringify([debut.dialogueOuverture, debut.dialogueVictoire, debut.dialogueDefaite, debut.scenesDialogue, manifeste.missions[0]]);
+  assert.doesNotMatch(textesDebut, /brouillard|obscurité|nuit|riposte tue|équipage qu’on ne revoit/i);
+  for (const m of manifeste.missions.slice(0, 9)) {
+    const s = lire(`content/scenarios/${m.scenarioCle}.json`);
+    assert.doesNotMatch(JSON.stringify([s.dialogueOuverture, s.dialogueVictoire, s.scenesDialogue, m]), /Consortium|Cinquième Manche|Sélection Méridienne/, m.scenarioCle);
+  }
+});
+
+test('la leçon de vision annonce précisément la station IEM avant le premier ordre', () => {
+  const s = lire('content/scenarios/opus1_tutoriel_06.json');
+  const ouverture = s.dialogueOuverture.map((r: { texte: string }) => r.texte).join(' ');
+  assert.match(ouverture, /J4/);
+  assert.match(ouverture, /toutes les trois journées/);
+  assert.match(ouverture, /deux cases/);
+  assert.match(ouverture, /avions et navires adverses/);
+  assert.match(ouverture, /Aucun dégât/);
+  assert.match(ouverture, /usines touchées ne produisent pas ce tour/);
+  assert.doesNotMatch(ouverture, /ce qui vole tombe|tout moteur/);
+  const nuit = s.scenesDialogue.find((scene: { cle: string }) => scene.cle === 't06_nuit_j2');
+  assert.equal(nuit.declencheur.journee, 2);
+  assert.match(nuit.repliques[0].texte, /J3 et J4/);
+});

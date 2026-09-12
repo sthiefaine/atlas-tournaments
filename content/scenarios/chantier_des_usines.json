@@ -1,6 +1,6 @@
 {
   "cle": "chantier_des_usines",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -61,27 +61,22 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le terrain sec du centre d’instruction. Deux usines [[img:usine]] hors service depuis l’an dernier : celle du milieu, celle de l’est. **Une usine relancée produit pour qui l’a relancée.**",
+      "texte": "Deux usines sont **hors service**, au centre et à l’est. Remettez-les toutes les deux en service et gardez-les.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Votre génie [[img:unite_genie]] est un bâtisseur : il ne capture pas, il **remet en service, en deux tours**. Une infanterie en met quatre, celles de Tomas aussi.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Cliquez sur votre usine, près du QG : elle produit chars, artillerie et transports ; le QG ne fait que l’infanterie et le génie. **Produire sur place**, c’est ne plus attendre un convoi.",
+      "texte": "Votre génie [[img:unite_genie]] les relance en **deux tours**, une infanterie intacte en quatre. Couvrez son approche : il est là pour construire.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Je défends aujourd’hui, c’est mon style. Atlas verse une prime à qui relance une usine : mille fonds, le double pour un génie. Je n’ai que des fantassins, alors j’y vais tout de suite.",
+      "texte": "Je n’ai pas de génie, mais mes fantassins sont déjà en route. À vous de voir si votre atelier va plus vite que mes jambes.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Chaque pièce qui sort porte un dossier signé par **Wren Osoko**, le contrôle des armements d’Atlas : **toute arme sur un front est déclarée**. Bientôt, vous en verrez qui ne le sont pas.",
+      "texte": "Votre usine près du QG produit des véhicules. Cliquez dessus pour comparer les unités. Relancer une usine rapporte aussi une prime : **2 000 fonds avec le génie**, 1 000 avec l’infanterie.",
       "emotion": "neutre"
     }
   ],
@@ -109,7 +104,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "Usine sous vos couleurs, et la prime d’Atlas avec : mille fonds, deux mille pour le génie. C’est **le droit de s’en servir**, pas un bâtiment qu’on emporte.",
+          "texte": "Usine sous vos couleurs, prime reçue. Vous pouvez maintenant préparer vos renforts plus près de l’objectif.",
           "emotion": "neutre",
           "illustration": {
             "cle": "usine",

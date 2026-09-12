@@ -1,7 +1,7 @@
 {
   "cle": "opus1_tutoriel_10",
   "code": "opus1_tutoriel_10",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -76,44 +76,39 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "À la victoire, on vous demandera une signature. Le **Consortium Méridien**, le grand sponsor de la guerre, celui qui paie les Gris, prête ses réserves aux équipes qualifiées. Sa négociatrice : **Sélène Veyr**.",
+      "texte": "Après l’exercice, nous aurons **2 000 fonds à affecter** : préparer votre passage au col ou les garder pour notre prochain match sous mes couleurs. Gagnons d’abord ; nous en parlerons après.",
       "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Ce prêt est une **concession**, la première que vous signerez, et Tomas et moi ne sommes pas d’accord sur sa forme. Votre choix restera dans ce profil. En difficile, Tomas joue pondéré.",
-      "emotion": "doute"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Formation terminée, commandant. Vous savez tout ce qu’on apprend à blanc. Maintenant, la première promesse, et elle, elle est réelle.",
-      "emotion": "joie"
+      "texte": "Formation terminée. Vous n’avez plus besoin que je commente chaque virage. Reste notre décision : où employer les **2 000 fonds** proposés ?",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Option une : **maintenance partagée**. Deux mille fonds mis de côté pour la coalition, quand vous vous battrez sous mes couleurs. Un accord précis, avec quelqu’un qui tient les siens.",
+      "texte": "**Maintenance partagée** : les garder pour le match où vous commanderez mon groupe. J’apprécierais de préparer ce départ ensemble.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Option deux : **fonds immédiats**. Deux mille fonds tout de suite, au col, où votre génie devra ouvrir un passage à quinze cents. Je vous ai appris à ne pas payer trop cher une victoire.",
+      "texte": "**Fonds immédiats** : les recevoir au col. Ouvrir le passage avec le génie coûte 1 500 ; cette aide vous laisse davantage de marge.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Sachez pourquoi ils prêtent. Le Consortium veut **Aube**, le programme de fusion : la seule technologie qui rendrait inutile tout ce que cette guerre dispute. Une équipe endettée vote comme on lui dit.",
+      "texte": "L’argent vient du **Consortium Méridien**, qui finance aussi les Gris. Leur négociatrice, Sélène Veyr, cherche des partenaires pour **Aube**, un programme de fusion qui pourrait produire énormément d’énergie.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Aucune des deux options n’est fausse. Retenez seulement ceci : c’est la première fois qu’on vous prête quelque chose. **Sachez toujours à qui.**",
-      "emotion": "doute"
+      "texte": "Nous connaissons les deux aides proposées. Cela ne nous oblige pas à leur faire confiance sur tout. **Choisissez selon le prochain match que vous voulez préparer.**",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Quel que soit votre choix, je vous retrouve au col, à charges réelles. Solveig a déjà chargé le camion.",
+      "texte": "Quelle que soit votre réponse, je vous retrouve au col. Et je compte toujours gagner.",
       "emotion": "neutre"
     }
   ],
@@ -133,7 +128,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "**Vous vous souvenez du premier échange, au premier exercice ?** L’unité frappée riposte avec ce qui lui reste. Dix exercices plus tard, la règle n’a pas changé ; demain, la riposte tue.",
+          "texte": "Même réflexe qu’au premier exercice : **regardez les pertes prévues des deux côtés avant de confirmer**. Une cible capable de répondre riposte dès le début de l’échange.",
           "emotion": "neutre"
         }
       ]

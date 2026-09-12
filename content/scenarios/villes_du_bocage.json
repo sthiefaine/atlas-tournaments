@@ -1,6 +1,6 @@
 {
   "cle": "villes_du_bocage",
-  "version": 6,
+  "version": 7,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -69,32 +69,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Des champs, des haies, deux ponts et quatre villes [[img:ville]] que Tomas veut aussi. Une ville que vous tenez rapporte des fonds chaque journée et **répare ce qui s’y repose**.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Ce que vous capturez est un **poste** : celui qui le tient décide où va l’énergie du quartier, et il l’encaisse.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "En gagnant, on prend les sites, les richesses et les savoirs — un gisement, une usine, un laboratoire, des plans — **et le terrain, tant qu’on le tient**.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "**Jamais les habitants** : c’est l’article premier du Pacte du Terrain. L’électricité de leurs maisons ne se prend pas, et personne n’a intérêt à ce que cet article tombe.",
+      "texte": "Aujourd’hui, **tenez trois des quatre villes en même temps**. Une ville rapporte des fonds et répare les unités qui s’y reposent.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Celle du sud-est est désaffectée — hors service — depuis l’an dernier : une infanterie mettra quatre tours à la relancer. Un génie en mettrait deux, mais Solveig n’en a pas mis dans mon camion.",
+      "texte": "Je veux les mêmes que vous. Celle du sud-est est **hors service** : quatre tours d’une infanterie intacte pour la relancer. Les autres se prennent en deux.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "**Tenez-en trois en même temps**, et l’exercice est à vous.",
+      "texte": "Commencez par la ville du sud-ouest. Posez une infanterie dessus et choisissez **Capturer**. Nous prenons les postes de distribution, jamais les habitants ni l’électricité de leurs maisons.",
       "emotion": "neutre"
     }
   ],
@@ -150,7 +135,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Une ville pour moi, et son énergie avec. Je l’inscris au registre de Solveig, elle aime les comptes justes : venez la reprendre, ou prenez-m’en une autre.",
+          "texte": "Une ville pour moi. Je comptais vous en laisser… mais pas celle-ci. Venez la reprendre, ou passez par l’autre pont.",
           "emotion": "joie"
         }
       ]

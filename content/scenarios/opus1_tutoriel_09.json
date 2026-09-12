@@ -1,7 +1,7 @@
 {
   "cle": "opus1_tutoriel_09",
   "code": "opus1_tutoriel_09",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
@@ -78,53 +78,34 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Trois bâtiments servent de **postes** : la ville du nord-ouest, le radar [[img:radar]] du nord-est, la ville du sud-est. Tenez-en deux en même temps. Le QG de Tomas n’est pas un raccourci.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Une **concession**, c’est un contrat : Atlas vous donne le droit d’exploiter quelque chose pendant un temps fixé, et l’écrit sur son registre. Rien de plus, rien de moins.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Qui tient deux postes à la fin reçoit la sienne : l’énergie de la vallée pour quatre ans, stockage et distribution compris, inscrite au **registre de Port-Méridien**.",
-      "emotion": "neutre",
-      "illustration": {
-        "cle": "poste",
-        "legende": "Deux postes tenus en même temps, et le contrat est à vous."
-      }
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Jamais les habitants : l’électricité de leurs maisons est garantie par le Pacte, et c’est le seul mur qui tienne encore. Vous saurez bientôt qui veut l’abattre.",
+      "texte": "Tenez **deux des trois postes en même temps** : les deux villes et le radar sont signalés en or. Le QG adverse ne remplace pas cet objectif.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Les bâtiments gardent leur fonction et rapportent leurs fonds ; il n’y a pas de jauge d’énergie cachée. Le Bulletin annonce la pluie à J3 et J4, pour tout le monde. Et elle ne vient pas du ciel.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_tomas_reiner",
-      "texte": "Une **machine à faire la pluie**, sur la crête hors du terrain : dépôt gris, badge orange. Prendre le radar compte comme un poste, mais **ne change pas ce calendrier**.",
+      "texte": "Le Bulletin annonce **la pluie à J3 et J4**. Elle gênera nos déplacements à tous les deux : rapprochez vos fantassins avant qu’elle commence.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "En difficile, Tomas place mieux ses pièces avec la même réserve ; vos revenus et les deux postes sont identiques.",
+      "texte": "Les Gris testent une machine météo hors du terrain. **Prendre le radar ne change pas la pluie prévue.** Il vous donne de la vision et compte comme un poste.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ces postes distribuent l’énergie de la vallée. Dans un match officiel, les tenir donne le droit d’exploiter ces installations pour une durée fixée. Les maisons des habitants restent alimentées. Aujourd’hui, nous nous entraînons.",
       "emotion": "neutre"
     }
   ],
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux postes sous contrat. Ce soir, le bureau d’Atlas écrit une ligne au registre : « France, droits de distribution, vallée d’instruction ». C’est une ligne d’exercice ; **la prochaine sera vraie**.",
-      "emotion": "joie"
+      "texte": "Deux postes tenus. Vous avez préparé les trajets avant la pluie, puis gardé vos accès.",
+      "emotion": "neutre"
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Un dernier exercice, et il rassemble tout. Puis une promesse à faire, la première, et quelqu’un pour vous la faire signer. Réfléchissez-y avant demain.",
+      "texte": "Dernier exercice demain. Ensuite, on choisira comment préparer notre premier déplacement ensemble. J’ai une proposition pour vous.",
       "emotion": "neutre"
     }
   ],

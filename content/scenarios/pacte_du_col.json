@@ -1,6 +1,6 @@
 {
   "cle": "pacte_du_col",
-  "version": 5,
+  "version": 6,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
@@ -67,17 +67,17 @@
   "dialogueOuverture": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Formation terminée : voici votre premier **engagement officiel**. Vantour est à l’antenne, Nera Aldouin arbitre, et Tomas tient l’autre banc. Il se bat pour gagner, c’est la règle.",
+      "texte": "Premier **match officiel**. Tomas garde le passage ; vous devez amener **le char désigné jusqu’à la case en or**. S’il est mis hors jeu, le match est perdu.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "On se connaît mieux maintenant. Je ne vais pas vous offrir le col, mais je regarderai comment vous protégez votre groupe.",
       "emotion": "neutre"
     },
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le Pacte a un quatrième article : **le refus de se battre se paie plus cher que la défaite**. Deux équipes inscrites sur le même front s’affrontent, ou perdent toutes les deux. Les charges sont réelles.",
-      "emotion": "neutre"
-    },
-    {
-      "locuteur": "cmd_ariane_belloc",
-      "texte": "Le passage direct est fermé par un éboulement. Le génie peut l’ouvrir, mais protégez **le char qui porte les relevés** jusqu’à la case [[img:case_or]] : c’est lui qu’Atlas regarde, et lui que Tomas vise.",
+      "texte": "Un éboulement bloque le trajet direct. Le génie peut ouvrir une route pour **1 500 fonds** ; un détour au sud reste possible. Si vous avez choisi l’aide pour le col, elle est déjà dans votre caisse.",
       "emotion": "neutre"
     }
   ],
@@ -96,8 +96,8 @@
   "dialogueDefaite": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Le front est perdu, et cette fois les pièces ne rentrent pas toutes. Personne ne quitte l’équipe pour autant. Reprenons le briefing et essayons un autre chemin.",
-      "emotion": "doute"
+      "texte": "Le passage nous échappe. Reprenons le trajet : pouvez-vous mieux couvrir le char, ou passer au sud ? Votre place dans l’équipe ne dépend pas d’une seule tentative.",
+      "emotion": "neutre"
     }
   ],
   "scenesDialogue": [
@@ -110,7 +110,7 @@
       "repliques": [
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Le génie est sorti d’usine. Il n’attaque pas, mais il **pose un terrain** là où il n’y en avait pas : c’est lui qui ouvre le col.",
+          "texte": "Le génie peut ouvrir une route dans une case de montagne voisine. Il ne combat pas : protégez-le pendant l’approche.",
           "emotion": "neutre",
           "illustration": {
             "cle": "montagne",
@@ -119,7 +119,7 @@
         },
         {
           "locuteur": "cmd_tomas_reiner",
-          "texte": "Amenez-le au bord de l’éboulement, puis choisissez Construire. Une escorte n’est pas un luxe : mon artillerie sait où il ira.",
+          "texte": "Choisissez **Ouvrir un passage** près de l’éboulement. Cela coûte 1 500 fonds et son action ; la route restera ouverte pendant le match.",
           "emotion": "neutre"
         }
       ]
@@ -151,7 +151,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La nuit tombe, et le brouillard [[img:brouillard]] avec, comme dans la forêt du sixième exercice. Mais personne ne vous rendra une pièce perdue sans avoir vu. **Éclairez avant d’avancer.**",
+          "texte": "La nuit réduit la vision et active le brouillard [[img:brouillard]]. Gardez un éclaireur devant le char désigné et vérifiez le passage avant de l’engager.",
           "emotion": "neutre"
         }
       ]
