@@ -1,4 +1,5 @@
 'use client';
+import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 import { useEffect, useRef, useState } from 'react';
 import * as T from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -36,7 +37,7 @@ function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string;
       const gestion = new T.LoadingManager();
       const revision = new URL(url, location.href).searchParams.get('v');
       gestion.setURLModifier((adresse) => revision && !adresse.startsWith('blob:') && !adresse.includes('?') ? `${adresse}?v=${revision}` : adresse);
-      const gltf = await new GLTFLoader(gestion).loadAsync(url); modele = gltf.scene;
+      const gltf = await new GLTFLoader(gestion).setMeshoptDecoder(MeshoptDecoder).loadAsync(url); modele = gltf.scene;
       if (ferme) { liberation(modele); return; }
       ressource.current ??= (async () => {
         const moteur = creerMoteurWebGPU({ antialias: true, alpha: false });

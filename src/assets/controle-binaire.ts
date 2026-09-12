@@ -1,4 +1,5 @@
 /** Vérifications des données réelles, en complément du contrat déclaratif glTF. */
+import { decompresserGlb } from './compression-glb';
 import { lireGlb } from './valider-gltf';
 import { contratProduction } from './production';
 import { nomTexture, type AssetSpec, type MotifAsset } from './spec';
@@ -17,6 +18,7 @@ export function controlerBinaire(octets: Uint8Array, spec: AssetSpec): MotifAsse
   const motifs: MotifAsset[] = [];
   const refuser = (detail: string) => motifs.push({ code: 'asset_format', detail });
   try {
+    octets = decompresserGlb(octets);
     const lu = lireGlb(octets);
     if (!lu.ok) return [lu.motif];
     const d = lu.document as Document, vue = new DataView(octets.buffer, octets.byteOffset, octets.byteLength);

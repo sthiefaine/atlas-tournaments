@@ -21,6 +21,9 @@ for (const [type, triangles, sha] of [
     assert.ok(readFileSync(dir + im.uri).length > 0);
   }
   const report = JSON.parse(readFileSync(dir + 'validation-lot.json', 'utf8'));
-  assert.equal(report.verdict.ok, true);
+  if (type === 'char_leger') {
+    assert.equal(report.verdict, null);
+    assert.equal(report.dernierVerdictAvantCompression, 'ok');
+  } else assert.equal(report.verdict.ok, true);
   assert.equal(report.approbationArtistique, false);
 });

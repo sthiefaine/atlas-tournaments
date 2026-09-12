@@ -1,7 +1,9 @@
 /** Un kit peint le fichier de base ; une réexportation de la géométrie n'est pas une variante de livrée. */
+import { decompresserGlb } from './compression-glb';
 import { createHash } from 'node:crypto';
 import { lireGlb } from './valider-gltf';
 export function empreinteGeometrie(octets: Uint8Array): string | null {
+  try { octets = decompresserGlb(octets); } catch { return null; }
   const lu = lireGlb(octets); if (!lu.ok) return null;
   const d = lu.document as unknown as Record<string, unknown>;
   const h = createHash('sha256');

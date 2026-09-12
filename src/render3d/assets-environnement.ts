@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 /** Assets actifs, sélectionnés selon la carte et les nations, quel que soit le scénario. */
 import { extraireVegetation, type VegetationLivree } from './vegetation-plaine';
 import * as THREE from 'three/webgpu';
@@ -32,7 +33,7 @@ export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Part
   const inventaire = await chargerInventaire();
   if(!inventaire)return resultat;
   const selection = selectionEnvironnement(grille,paysParCamp,inventaire);
-  const glb = new GLTFLoader(), images = new THREE.TextureLoader();
+  const glb = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder), images = new THREE.TextureLoader();
   await Promise.all(selection.map(async id => {
     if (!inventaire?.modeles[id]?.includes(0)) return;
     try {

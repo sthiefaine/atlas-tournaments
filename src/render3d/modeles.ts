@@ -1,3 +1,4 @@
+import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 /**
  * Les modèles livrés : **chargement** d'un GLB et **conformation** de ce qu'il
  * contient en une pièce prête pour la scène (`doc/16-realisme.md` §3.1, B0).
@@ -706,7 +707,7 @@ export async function lectureDepuisGltf(gltf: GLTF): Promise<LectureFichier> {
  * carte vaut alors `null` et le modèle passe sans elle, sauf si le
  * gestionnaire de chargement du `chargeur` fourni sait la produire.
  */
-export function analyserGlb(donnees: ArrayBuffer, chargeur = new GLTFLoader()): Promise<LectureFichier | null> {
+export function analyserGlb(donnees: ArrayBuffer, chargeur = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder)): Promise<LectureFichier | null> {
   const global = globalThis as { self?: unknown };
   if (typeof global.self === 'undefined') global.self = globalThis;
   return new Promise<LectureFichier | null>((resoudre) => {
@@ -724,7 +725,7 @@ let chargeur: GLTFLoader | null = null;
 function lireFichierReseau(nom: string): Promise<LectureFichier | null> {
   return new Promise<LectureFichier | null>((resoudre) => {
     try {
-      chargeur = chargeur ?? new GLTFLoader();
+      chargeur = chargeur ?? new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
       chargeur.load(
         `${RACINE_MODELES}/${nom}`,
         (gltf) => { void lectureDepuisGltf(gltf).then(resoudre, () => resoudre(null)); },
