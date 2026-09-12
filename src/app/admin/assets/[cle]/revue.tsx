@@ -15,6 +15,7 @@ export function Revue({ id, revision, conforme, approuve, local }: { id: string;
   return <div className="mt-4 space-y-2">
     <p className="text-xs opacity-70">Approbation humaine : silhouette lisible à 48 px/m, matières sans ombre peinte, zones d’équipe, raccords et poses cohérents. Une nouvelle révision annule cette approbation.</p>
     {!local ? <p className="text-xs">Revue et dépôt à enregistrer en développement, puis à versionner pour le déploiement.</p> : <>
+      {!conforme ? <p>La validation artistique sera disponible après un contrôle technique réussi.</p> : !note.trim() ? <p>Ajoutez vos observations pour activer la validation.</p> : null}
       <label className="block text-sm">Observations de réception<textarea className="mt-1 block w-full rounded border border-current/20 p-2" value={note} onChange={(e) => noter(e.target.value)} maxLength={2000} placeholder="Vues et poses examinées, puis scénario testé dans l’atelier…" /></label>
       <div className="flex flex-wrap gap-3"><button className="rounded border px-3 py-2 disabled:opacity-40" disabled={!conforme || !note.trim() || envoi} onClick={() => void enregistrer('approuve')}>Approuver visuellement</button><button className="rounded border px-3 py-2 disabled:opacity-40" disabled={!approuve || !note.trim() || envoi} onClick={() => void enregistrer('integre')}>Confirmer testé en jeu</button><a className="self-center underline" href="/atelier" target="_blank" rel="noreferrer">Ouvrir l’atelier</a></div>
     </>}

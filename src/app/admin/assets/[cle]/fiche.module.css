@@ -1,0 +1,61 @@
+/* Palette opaque propre à la fiche : indépendante du fond et du thème du jeu. */
+.fiche {
+  --fiche-encre: #172b36;
+  --fiche-secondaire: #405463;
+  --fiche-papier: #ffffff;
+  --fiche-fond: #f0f4f6;
+  --fiche-accent: #145c53;
+  --fiche-alerte: #813914;
+  color-scheme: light;
+  color: var(--fiche-encre);
+  background: var(--fiche-fond);
+  border: 1px solid #b7c6ce;
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 32px);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.fiche [class*='opacity-'] { opacity: 1; }
+.fiche :global(.text-xs) { font-size: .875rem; }
+.fiche > section, .fiche .specifications { scroll-margin-top: 20px; }
+.fiche > section { background: var(--fiche-papier); padding: 20px; border: 1px solid #b7c6ce; border-radius: 10px; margin-bottom: 24px; }
+.fiche :is(h2,h3) { color: var(--fiche-encre); }
+.fiche p { max-width: 85ch; }
+.fiche :is(pre,textarea) { color: var(--fiche-encre); background: var(--fiche-papier); font-size: .875rem; max-width: 100%; }
+.fiche :is(input,select,textarea) { border: 1px solid #697d8b; border-radius: 6px; padding: 8px; color: var(--fiche-encre); background: var(--fiche-papier); }
+.fiche :is(button,select,input:not([type=range]),summary) { min-height: 44px; }
+.fiche button { border: 1px solid #697d8b; border-radius: 6px; padding: 8px 12px; color: var(--fiche-encre); background: var(--fiche-papier); cursor: pointer; }
+.fiche button:disabled, .fiche input:disabled { opacity: 1; cursor: not-allowed; color: #52616b; background: #e4e9ed; border-style: dashed; }
+.fiche a { color: var(--fiche-accent); text-decoration: underline; text-underline-offset: 3px; }
+.fiche :is(button,a,input,select,textarea,summary):focus-visible { outline: 3px solid #813914; outline-offset: 3px; }
+.fiche :global(.admin-action-primaire) { background: var(--fiche-accent); color: #ffffff; border-color: var(--fiche-accent); font-weight: 700; text-decoration: none; }
+.fiche :global(.admin-action):hover { background: #dcece7; color: #172b36; }
+.fiche :global(.assets-fichiers) { font-size: .875rem; padding: 12px; gap: 12px; }
+.fiche :global(.assets-fichiers) li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
+.fiche :global(.assets-variantes) a[aria-current] { background: var(--fiche-accent); color: white; }
+/* Les pastilles partagées ont aussi des couleurs dark : le papier reste clair ici. */
+.fiche [class*='text-emerald-'] { color: #145c53; }
+.fiche [class*='text-red-'] { color: #9b2525; }
+.fiche summary { cursor: pointer; font-weight: 650; padding: 12px 0; }
+.titre { font-size: clamp(24px, 3vw, 32px); font-weight: 750; }
+.identifiant { color: var(--fiche-secondaire); font-size: .875rem; margin-bottom: 12px; }
+.resume h3 { font-size: 1.125rem; font-weight: 700; }
+.resume p { margin: 8px 0 16px; }
+.raccourcis { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.raccourcis a { display: flex; align-items: center; min-height: 44px; background: white; border: 1px solid #697d8b; border-radius: 6px; padding: 8px 12px; }
+.jalons { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
+.jalons li { padding: 14px; border-left: 4px solid #145c53; background: white; }
+.jalons strong,.jalons span { display: block; }
+.jalons span { color: var(--fiche-secondaire); font-size: .875rem; }
+.present,.manquant { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 650; }
+.present { color: #145c53; background: #e2f1e9; }
+.manquant { color: #813914; background: #fff0d6; }
+.specifications { padding: 16px; background: white; border: 1px solid #b7c6ce; border-radius: 10px; }
+.specifications > summary { font-size: 1rem; }
+@media(max-width:600px) {
+  .jalons { grid-template-columns: 1fr; }
+  .fiche > section { padding: 14px; }
+  .fiche :global(.w-40) { width: 100%; flex-shrink: 1; }
+  .fiche input[type=file] { width: 100%; }
+  .raccourcis a { flex: 1 1 45%; }
+}
