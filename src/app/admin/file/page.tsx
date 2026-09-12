@@ -82,9 +82,9 @@ export default async function File({ searchParams }: { searchParams: Promise<{ m
       <Bloc titre="À mettre en ligne" aide="Objets certifiés par le contrôle. La mise en ligne est le seul geste qui change le jeu pour les joueurs.">
         {parStatut('valide').length === 0 ? <Vide texte="Rien en attente." /> : parStatut('valide').map((o) => (
           <Ligne key={`${o.type}:${o.cle}`}>
-            <span className="w-24 text-xs uppercase tracking-wide opacity-50">{o.type}</span>
+            <span className="w-24 text-xs uppercase tracking-wide admin-secondaire">{o.type}</span>
             <span className="font-medium">{o.titre}</span>
-            <span className="basis-full whitespace-pre-wrap font-mono text-xs opacity-60">{o.apercu}</span>
+            <span className="basis-full whitespace-pre-wrap font-mono text-xs admin-secondaire">{o.apercu}</span>
             <div className="ml-auto flex gap-2">
               <Action action="mettre_en_ligne" retour={RETOUR} champs={{ type: o.type, cle: o.cle }}>
                 <Bouton>Mettre en ligne</Bouton>
@@ -103,9 +103,9 @@ export default async function File({ searchParams }: { searchParams: Promise<{ m
       <Bloc titre="Brouillons" aide="En attente du passage de la routine contrôle. Rien n’atteint « validé » sans elle.">
         {parStatut('brouillon').length === 0 ? <Vide texte="Aucun brouillon." /> : parStatut('brouillon').map((o) => (
           <Ligne key={`${o.type}:${o.cle}`}>
-            <span className="w-24 text-xs uppercase tracking-wide opacity-50">{o.type}</span>
+            <span className="w-24 text-xs uppercase tracking-wide admin-secondaire">{o.type}</span>
             <span>{o.titre}</span>
-            <span className="ml-auto text-xs opacity-50">{o.cle}</span>
+            <span className="ml-auto text-xs admin-secondaire">{o.cle}</span>
           </Ligne>
         ))}
       </Bloc>
@@ -113,7 +113,7 @@ export default async function File({ searchParams }: { searchParams: Promise<{ m
       <Bloc titre="Rejets" aide="Groupés par motif ci-dessous. Annuler un rejet compte comme un faux positif de contrôle.">
         {parStatut('rejete').length === 0 ? <Vide texte="Aucun rejet." /> : parStatut('rejete').map((o) => (
           <Ligne key={`${o.type}:${o.cle}`}>
-            <span className="w-24 text-xs uppercase tracking-wide opacity-50">{o.type}</span>
+            <span className="w-24 text-xs uppercase tracking-wide admin-secondaire">{o.type}</span>
             <span>{o.titre}</span>
             <div className="ml-auto flex gap-2">
               <Action action="annuler_rejet" retour={RETOUR} champs={{ type: o.type, cle: o.cle }}>
@@ -130,7 +130,7 @@ export default async function File({ searchParams }: { searchParams: Promise<{ m
       <Bloc titre="Quarantaine" aide="Ce que les routines n’ont pas su interpréter. On rend, ou on écarte.">
         {parStatut('quarantaine').length === 0 ? <Vide texte="Aucun objet en quarantaine." /> : parStatut('quarantaine').map((o) => (
           <Ligne key={`${o.type}:${o.cle}`}>
-            <span className="w-24 text-xs uppercase tracking-wide opacity-50">{o.type}</span>
+            <span className="w-24 text-xs uppercase tracking-wide admin-secondaire">{o.type}</span>
             <span>{o.titre}</span>
             <div className="ml-auto flex gap-2">
               <Action action="renvoyer" retour={RETOUR} champs={{ type: o.type, cle: o.cle }}>
@@ -148,11 +148,11 @@ export default async function File({ searchParams }: { searchParams: Promise<{ m
         {derniersVerdicts.length === 0 ? <Vide texte="Aucun verdict rendu." /> : derniersVerdicts.map((v) => (
           <Ligne key={v.id}>
             <Etat valeur={v.verdict} ok={v.verdict === 'valide'} />
-            <span className="w-24 text-xs uppercase tracking-wide opacity-50">{v.cibleType}</span>
+            <span className="w-24 text-xs uppercase tracking-wide admin-secondaire">{v.cibleType}</span>
             <span className="font-mono text-xs">{v.cibleCle}</span>
-            <span className="ml-auto text-xs opacity-60">{v.createdAt.toLocaleString('fr-FR')}</span>
+            <span className="ml-auto text-xs admin-secondaire">{v.createdAt.toLocaleString('fr-FR')}</span>
             {v.motifs.length > 0 ? (
-              <span className="basis-full text-xs opacity-70">
+              <span className="basis-full text-xs admin-secondaire">
                 {v.motifs.map((m) => `${m.code}${m.mesure ? ` (${Object.entries(m.mesure).map(([k, n]) => `${k} ${n}`).join(', ')})` : ''}`).join(' · ')}
               </span>
             ) : null}

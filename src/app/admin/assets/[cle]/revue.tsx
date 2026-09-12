@@ -13,7 +13,7 @@ export function Revue({ id, revision, conforme, approuve, local }: { id: string;
     } catch (e) { annoncer(e instanceof Error ? e.message : String(e)); } finally { envoyer(false); }
   }
   return <div className="mt-4 space-y-2">
-    <p className="text-xs opacity-70">Approbation humaine : silhouette lisible à 48 px/m, matières sans ombre peinte, zones d’équipe, raccords et poses cohérents. Une nouvelle révision annule cette approbation.</p>
+    <p className="text-xs admin-secondaire">Approbation humaine : silhouette lisible à 48 px/m, matières sans ombre peinte, zones d’équipe, raccords et poses cohérents. Une nouvelle révision annule cette approbation.</p>
     {!local ? <p className="text-xs">Revue et dépôt à enregistrer en développement, puis à versionner pour le déploiement.</p> : <>
       {!conforme ? <p>La validation artistique sera disponible après un contrôle technique réussi.</p> : !note.trim() ? <p>Ajoutez vos observations pour activer la validation.</p> : null}
       <label className="block text-sm">Observations de réception<textarea className="mt-1 block w-full rounded border border-current/20 p-2" value={note} onChange={(e) => noter(e.target.value)} maxLength={2000} placeholder="Vues et poses examinées, puis scénario testé dans l’atelier…" /></label>

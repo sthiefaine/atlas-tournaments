@@ -47,10 +47,10 @@ export default async function Depeche({ searchParams }: { searchParams: Promise<
           <>
             <Ligne>
               <Etat valeur={dujour.statut} ok={dujour.statut === 'en_ligne' || dujour.statut === 'valide'} />
-              <span className="text-xs opacity-60">
+              <span className="text-xs admin-secondaire">
                 événement {dujour.eventId ? '✓' : '—'} · scénario {dujour.scenarioId ? '✓' : '—'}
               </span>
-              <span className="text-xs opacity-60">expire le {dujour.expireLe}</span>
+              <span className="text-xs admin-secondaire">expire le {dujour.expireLe}</span>
               <span className="ml-auto text-sm">
                 {restant > 0
                   ? `${Math.floor(restant / 60)} h ${String(restant % 60).padStart(2, '0')} avant 17 h 00`
@@ -77,6 +77,7 @@ export default async function Depeche({ searchParams }: { searchParams: Promise<
                     <input
                       type="text"
                       name="motif"
+                    aria-label="Motif du refus"
                       required
                       placeholder="motif du refus (obligatoire)"
                       className="w-64 rounded-md border border-current/20 bg-transparent px-2 py-1 text-xs"
@@ -92,7 +93,7 @@ export default async function Depeche({ searchParams }: { searchParams: Promise<
                   <Action action="valider_depeche" retour={RETOUR} champs={{ jour }}>
                     <Bouton>Armer la publication de 18 h 00</Bouton>
                   </Action>
-                  <span className="text-xs opacity-60">
+                  <span className="text-xs admin-secondaire">
                     (la certification par la routine contrôle n’est pas encore arrivée)
                   </span>
                 </div>
@@ -107,9 +108,9 @@ export default async function Depeche({ searchParams }: { searchParams: Promise<
           <Ligne key={d.id}>
             <span className="w-28 font-mono text-xs">{d.date}</span>
             <Etat valeur={d.statut} ok={d.statut === 'en_ligne'} />
-            {d.etapeManquee ? <span className="text-xs opacity-60">étape manquée : {d.etapeManquee}</span> : null}
-            {d.motifRefus ? <span className="text-xs opacity-60">refus : {d.motifRefus}</span> : null}
-            <span className="ml-auto text-xs opacity-50">catalogue v{d.catalogueVersion} · chaînes v{d.chainesVersion}</span>
+            {d.etapeManquee ? <span className="text-xs admin-secondaire">étape manquée : {d.etapeManquee}</span> : null}
+            {d.motifRefus ? <span className="text-xs admin-secondaire">refus : {d.motifRefus}</span> : null}
+            <span className="ml-auto text-xs admin-secondaire">catalogue v{d.catalogueVersion} · chaînes v{d.chainesVersion}</span>
           </Ligne>
         ))}
       </Bloc>

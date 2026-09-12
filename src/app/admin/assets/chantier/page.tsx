@@ -20,7 +20,7 @@ function Etape({ n, titre, children }: { n: number; titre: string; children?: Re
   return (
     <section className="mb-6">
       <h3 className="mb-2 text-sm font-semibold">
-        <span className="mr-2 inline-block w-6 text-center opacity-50">{n}</span>{titre}
+        <span className="mr-2 inline-block w-6 text-center admin-secondaire">{n}</span>{titre}
       </h3>
       <div className="pl-8">{children}</div>
     </section>
@@ -51,7 +51,7 @@ export default async function Chantier() {
     return (
       <main>
         <h2 className="mb-2 text-lg">Le chantier</h2>
-        <p className="text-sm opacity-70">
+        <p className="text-sm admin-secondaire">
           {suite.length === 0
             ? aRelire.length ? `${aRelire.length} candidat(s) attendent une validation artistique.` : `Les ${specs.length} assets du canon sont approuvés.`
             : `${suite.length} asset(s) restent en attente d’une base approuvée. Inspectez les candidats conformes avant de lancer leurs déclinaisons.`}
@@ -67,7 +67,7 @@ export default async function Chantier() {
   return (
     <main>
       <h2 className="mb-1 text-lg">Le chantier</h2>
-      <p className="mb-6 text-sm opacity-70">
+      <p className="mb-6 text-sm admin-secondaire">
         <strong>{faits.size} approuvé(s)</strong> sur {specs.length} · {suite.length} à produire,
         {' '}dont {enAttente} en attente d’une géométrie de base.
         {' '}<Link href="/admin/assets" className="underline underline-offset-4">Voir tout le catalogue</Link>
@@ -77,7 +77,7 @@ export default async function Chantier() {
       <Bloc titre={`À produire maintenant — ${spec.id}`} aide="Le premier asset que rien ne retient. Un kit n’apparaît ici qu’une fois sa géométrie de base approuvée artistiquement.">
         <Etape n={1} titre="Ce que c’est">
           <p className="text-sm">{spec.description.fr}</p>
-          <p className="mt-2 text-xs opacity-60">
+          <p className="mt-2 text-xs admin-secondaire">
             Priorité {spec.priorite} · {spec.type} ·
             {' '}{spec.echelle.x.cible} × {spec.echelle.y.cible} × {spec.echelle.z.cible} m ·
             {' '}{spec.verification.lodRequis.length} niveau(x) de détail ·
@@ -93,7 +93,7 @@ export default async function Chantier() {
           <Livraison id={spec.id} commande={commandeAsset(spec)} attendus={nomsAttendus(spec)} local={process.env.NODE_ENV !== 'production'} />
         </Etape>
         <Etape n={4} titre="Inspecter puis approuver la révision">
-          <p className="text-sm opacity-70">
+          <p className="text-sm admin-secondaire">
             Le dépôt conforme ouvre la réception sur la fiche. L’approbation visuelle libère ensuite ses kits nationaux.
             {' '}Refusé, chaque motif est une consigne pour l’essai d’après.
           </p>
@@ -106,7 +106,7 @@ export default async function Chantier() {
             {suivants.map((e) => (
               <li key={e.spec.id}>
                 <Link href={`/admin/assets/${e.spec.id}`} className="font-mono underline underline-offset-4">{e.spec.id}</Link>
-                <span className="ml-2 text-xs opacity-60">priorité {e.spec.priorite} · {e.spec.type}</span>
+                <span className="ml-2 text-xs admin-secondaire">priorité {e.spec.priorite} · {e.spec.type}</span>
               </li>
             ))}
           </ol>

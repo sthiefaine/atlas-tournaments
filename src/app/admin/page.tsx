@@ -13,6 +13,7 @@ export const dynamic = 'force-dynamic';
 function AccesCreation() {
   return <><h2 className="admin-titre">Votre atelier</h2><p className="admin-intro">Produire les assets, vérifier les missions et garder le récit cohérent. Choisissez le chantier à reprendre.</p><div className="assets-grille">{[
     ['/admin/assets?etat=manquants', 'Compléter les assets', 'Modèles de base, déclinaisons et prompts prêts à copier.'],
+    ['/admin/cartes', 'Composer une mission', 'Contraintes, variantes, simulations et conséquences.'],
     ['/admin/personnages', 'Relire les personnages', 'Passé, motivations et révélations du programme Aube.'],
     ['/admin/file', 'Valider les propositions', 'Missions et livraisons des routines avant publication.'],
     ['/admin/prompts', 'Piloter les routines', 'Prompts versionnés et instructions de production.'],
@@ -59,10 +60,10 @@ export default async function TableauDeBord({
           <Ligne key={r.key}>
             <span className="w-44 font-mono text-xs">{r.key}</span>
             <Etat valeur={r.ok ? 'répond' : 'silencieuse'} ok={r.ok} />
-            <span className="opacity-60">
+            <span className="admin-secondaire">
               {r.dernier_run ? `dernier run ${new Date(r.dernier_run).toLocaleString('fr-FR')}` : 'jamais lancée'}
             </span>
-            <span className="ml-auto text-xs opacity-50">silence max {r.silence_max_min} min</span>
+            <span className="ml-auto text-xs admin-secondaire">silence max {r.silence_max_min} min</span>
           </Ligne>
         ))}
       </Bloc>
@@ -81,11 +82,11 @@ export default async function TableauDeBord({
           <Ligne key={r.id}>
             <span className="w-44 font-mono text-xs">{r.routine}</span>
             <Etat valeur={r.statut} ok={r.statut === 'ok' ? true : r.statut === 'en_cours' ? undefined : false} />
-            <span className="text-xs opacity-60">{r.demarreLe.toLocaleString('fr-FR')}</span>
-            <span className="text-xs opacity-60">{r.missionsRecues} reçues · {r.missionsSoumises} soumises · {r.appels} appels</span>
-            {r.bilan ? <span className="basis-full text-xs opacity-70">{r.bilan}</span> : null}
+            <span className="text-xs admin-secondaire">{r.demarreLe.toLocaleString('fr-FR')}</span>
+            <span className="text-xs admin-secondaire">{r.missionsRecues} reçues · {r.missionsSoumises} soumises · {r.appels} appels</span>
+            {r.bilan ? <span className="basis-full text-xs admin-secondaire">{r.bilan}</span> : null}
             {r.erreurs.length > 0 ? (
-              <span className="basis-full font-mono text-xs opacity-60">
+              <span className="basis-full font-mono text-xs admin-secondaire">
                 {r.erreurs.map((e, i) => <span key={i} className="mr-3">{e.etape}/{e.code}</span>)}
               </span>
             ) : null}

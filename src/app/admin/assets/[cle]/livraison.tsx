@@ -83,7 +83,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
         >
           {copie ? 'Commande copiée' : 'Copier la commande'}
         </button>
-        <span className="ml-3 text-xs opacity-60">
+        <span className="ml-3 text-xs admin-secondaire">
           À coller dans le générateur, telle quelle. Elle est composée depuis la fiche : les noms et les dimensions doivent rester ceux du contrat.
         </span>
       </div>
@@ -92,7 +92,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
 
       <div>
         <label className="block text-sm">
-          <span className="mb-1 block opacity-80">Déposer les fichiers livrés</span>
+          <span className="mb-1 block admin-secondaire">Déposer les fichiers livrés</span>
           <input
             ref={champ}
             type="file"
@@ -103,34 +103,34 @@ export function Livraison({ id, commande, attendus, local = true }: {
             className="text-sm"
           />
         </label>
-        <p className="mt-2 text-xs opacity-60">
+        <p className="mt-2 text-xs admin-secondaire">
           {!local ? "Dépôt disponible en développement uniquement ; versionner les fichiers avant déploiement. " : "24 Mio par fichier, 96 Mio par lot. "}
           Noms attendus : <span className="font-mono">{attendus.join(', ')}</span>.
           {' '}Un fichier dont le nom n’est pas dans cette liste n’est pas écrit — le dépôt ne reprend jamais un nom reçu.
         </p>
       </div>
 
-      {envoi ? <p className="text-sm opacity-70">Contrôle en cours…</p> : null}
+      {envoi ? <p className="text-sm admin-secondaire">Contrôle en cours…</p> : null}
 
       {verdict ? (
         <div role="status" className="border border-current/30 p-3 text-sm">
-          <p className={verdict.ok ? '' : 'opacity-90'}>
+          <p className={verdict.ok ? '' : 'admin-secondaire'}>
             <strong>{verdict.ok ? 'Conforme techniquement et déposé' : 'Refusé'}</strong>
             {verdict.ok && verdict.ecrits ? ` — ${verdict.ecrits.length} fichier(s) écrit(s).` : null}
           </p>
-          {verdict.detail ? <p className="mt-1 text-xs opacity-70">{verdict.detail}</p> : null}
+          {verdict.detail ? <p className="mt-1 text-xs admin-secondaire">{verdict.detail}</p> : null}
           {verdict.motifs.length > 0 ? (
             <ul className="mt-2 space-y-1 font-mono text-xs">
               {verdict.motifs.map((m, i) => <li key={i}>{m.code} — {m.detail}</li>)}
             </ul>
           ) : null}
           {verdict.inconnus.length > 0 ? (
-            <p className="mt-2 text-xs opacity-70">
+            <p className="mt-2 text-xs admin-secondaire">
               Refusés, nom inattendu : <span className="font-mono">{verdict.inconnus.join(', ')}</span>
             </p>
           ) : null}
           {verdict.ok ? (
-            <p className="mt-2 text-xs opacity-70">
+            <p className="mt-2 text-xs admin-secondaire">
               Le lot est réceptionné. L’approbation artistique et l’essai en jeu restent à confirmer dans l’étape suivante.
               {' '}<strong>Commiter le fichier</strong> : <span className="font-mono">public/</span> est cuit dans l’image, un dépôt non commité disparaît au déploiement suivant.
             </p>

@@ -5,7 +5,7 @@ export function Bloc({ titre, aide, children }: { titre: string; aide?: string; 
   return (
     <section className="mb-8">
       <h2 className="mb-1 text-base font-semibold">{titre}</h2>
-      {aide ? <p className="mb-3 text-xs opacity-60">{aide}</p> : null}
+      {aide ? <p className="mb-3 text-xs admin-secondaire">{aide}</p> : null}
       <div className="rounded-lg border border-current/10">{children}</div>
     </section>
   );
@@ -18,17 +18,17 @@ export function Ligne({ children }: { children: React.ReactNode }) {
 
 /** Message plat quand une liste est vide. */
 export function Vide({ texte }: { texte: string }) {
-  return <p className="px-4 py-6 text-sm opacity-50">{texte}</p>;
+  return <p className="px-4 py-6 text-sm admin-secondaire">{texte}</p>;
 }
 
 /** Pastille de statut, sans couleur criarde : c'est un outil de travail, pas un tableau de bord d'aéroport. */
 export function Etat({ valeur, ok }: { valeur: string; ok?: boolean }) {
   const teinte = ok === undefined
-    ? 'border-current/20'
+    ? 'admin-etat-neutre'
     : ok
-      ? 'border-emerald-600/50 text-emerald-700 dark:text-emerald-300'
-      : 'border-red-600/50 text-red-700 dark:text-red-300';
-  return <span className={`rounded border px-2 py-0.5 text-xs ${teinte}`}>{valeur}</span>;
+      ? 'admin-etat-ok'
+      : 'admin-etat-erreur';
+  return <span className={`admin-etat ${teinte}`}>{valeur}</span>;
 }
 
 /** Bouton d'action, à l'intérieur d'un formulaire qui poste vers /api/admin/actions. */
@@ -37,7 +37,7 @@ export function Bouton({ children, discret }: { children: React.ReactNode; discr
     <button
       type="submit"
       className={`rounded-md border px-3 py-1.5 text-xs font-medium transition hover:bg-current/5 ${
-        discret ? 'border-current/15 opacity-70' : 'border-current/30'
+        discret ? 'admin-bouton-secondaire' : 'admin-bouton-primaire'
       }`}
     >
       {children}

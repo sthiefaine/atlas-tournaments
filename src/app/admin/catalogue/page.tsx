@@ -32,7 +32,7 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
         <BaseAbsente /><GuideCatalogue />
         <Bloc titre="Canon embarqué" aide="Catalogue local : rôles, coûts et exclusivités. Les nouveaux modèles restent à produire séparément.">
           {canon.unites.map((u) => (
-            <Ligne key={u.cle}><Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : 'Catalogue commun'} /><Link className="font-semibold underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link><span className="text-xs">{u.cout} fonds · mouvement {u.mouvement} · portée {u.portee[0]}–{u.portee[1]} · vision {u.vision}</span><span className="text-xs opacity-70">{u.traits.join(', ')}</span></Ligne>
+            <Ligne key={u.cle}><Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : 'Catalogue commun'} /><Link className="font-semibold underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link><span className="text-xs">{u.cout} fonds · mouvement {u.mouvement} · portée {u.portee[0]}–{u.portee[1]} · vision {u.vision}</span><span className="text-xs admin-secondaire">{u.traits.join(', ')}</span></Ligne>
           ))}
         </Bloc>
       </main>
@@ -56,7 +56,7 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
     <main>
       <Message texte={message} /><GuideCatalogue />
 
-      <p className="mb-6 text-sm opacity-70">
+      <p className="mb-6 text-sm admin-secondaire">
         <strong>catalogueVersion {version}</strong> · {total} / {PLAFOND_CATALOGUE} unités actives ·
         {' '}{canon.unites.length} canon intouchables. Chaque changement de statut incrémente la version.
       </p>
@@ -67,7 +67,7 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
             <Etat valeur={u.factionExclusive ? 'Faction inconnue uniquement' : u.statut} />
             <span className="w-40 font-mono text-xs">{u.cle}</span>
             <Link className="underline" href={`/admin/assets/unite_${u.cle}_base`}>{u.nom}</Link>
-            <span className="ml-auto text-xs opacity-50">{u.cout} · {u.traits.join(', ') || 'aucun trait'}</span>
+            <span className="ml-auto text-xs admin-secondaire">{u.cout} · {u.traits.join(', ') || 'aucun trait'}</span>
           </Ligne>
         ))}
       </Bloc>
@@ -81,8 +81,8 @@ export default async function Catalogue({ searchParams }: { searchParams: Promis
             <Etat valeur={u.statut} ok={u.statut === 'homologuee' ? true : u.statut === 'retiree' ? false : undefined} />
             <span className="w-40 font-mono text-xs">{u.cle}</span>
             <span>{u.donnees.nom}</span>
-            <span className="text-xs opacity-60">cycle {u.statutCycle}</span>
-            {u.essaiJusquAu ? <span className="text-xs opacity-60">essai jusqu’au {u.essaiJusquAu}</span> : null}
+            <span className="text-xs admin-secondaire">cycle {u.statutCycle}</span>
+            {u.essaiJusquAu ? <span className="text-xs admin-secondaire">essai jusqu’au {u.essaiJusquAu}</span> : null}
             <div className="ml-auto flex gap-2">
               {u.statut === 'essai' && u.statutCycle === 'valide' && u.essaiJusquAu === null ? (
                 <Action action="statut_unite" retour={RETOUR} champs={{ cle: u.cle, statut: 'essai' }}>
