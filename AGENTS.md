@@ -365,3 +365,7 @@ La branche `codex/audio-vfx` ajoute huit bruitages synthétiques, les réglages 
 ## Mise à jour — atelier Gemini et Tripo (12 septembre 2026)
 
 `/admin/assets/creation` guide vers les catégories et variantes. Chaque fiche possède des prompts concept/multivue et un dépôt de source GLB autonome (150 Mio), distinct du lot final et du modèle actif. Les sources sont versionnées par empreinte et privées. `ATLAS_UPLOAD_URL` + `ATLAS_UPLOAD_TOKEN` raccordent le service voisin next-upload ; une route dédiée y exige `ATLAS_SOURCES_DIR` sur un volume persistant. Alternative locale : `ATLAS_ASSET_SOURCES_DIR`. Aucune clé n’est transmise au client. Configuration réelle du service distant et persistance à confirmer avant activation en ligne. Voir `doc/refonte/atelier-gemini-tripo.md`. Pas de conversion Blender automatique ni d’approbation artistique implicite.
+
+## Mise à jour — barge Tripo (12 septembre 2026)
+
+Le modèle fourni « tugboat » devient `unite_barge_base`, activé comme base partagée. LOD 49 956 / 11 956 / 2 956 triangles, budget propre 50 000 / 12 000 / 3 000 propagé à ses 24 kits. Quatre clips rigides, PBR externe partagé et panneaux d’équipe ; source HD gardée hors git. Grue fixe, rampe non articulée : aucune animation de débarquement nouvelle. Les anciens kits candidats de barge doivent être régénérés sur cette géométrie et ses UV avant activation. Voir `assets/livraisons/unite_barge_base/README.md`. Activation technique ne vaut pas validation artistique de la réduction.

@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "motifs": [],
+  "acceptes": [
+    "unite_barge_base_albedo.png",
+    "unite_barge_base_lod0.glb",
+    "unite_barge_base_lod1.glb",
+    "unite_barge_base_lod2.glb",
+    "unite_barge_base_masque_equipe.png",
+    "unite_barge_base_metal.png",
+    "unite_barge_base_normale.png",
+    "unite_barge_base_rugosite.png"
+  ],
+  "inconnus": [],
+  "lodManquants": []
+}

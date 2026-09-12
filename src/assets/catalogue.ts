@@ -965,7 +965,7 @@ export function specUnite(u: UnitType): AssetSpec {
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
     echelle: echelleUnite(s),
     pivot: pivot(u.domaine !== 'air'),
-    budget: budgetUnite(s),
+    budget: u.cle === 'barge' ? budget(50000, 12000, 3000, 3) : budgetUnite(s),
     textures,
     variantes: variantes(['hiver']),
     animations: animationsUnite(u),
