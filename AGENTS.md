@@ -343,3 +343,7 @@ Coolify, image construite depuis le `Dockerfile` à la racine (Node 22 Alpine, t
 ### Deuxième passe herbe — hauteur et détail, 12 septembre 2026
 
 Après essai, le propriétaire demande plus de hauteur et autorise un budget supérieur. La plaine porte désormais 360 brins à trois segments de 6–12 cm (72 au LOD1), 12/4 trèfles, pour 1 914/402 triangles sur des budgets de 2 400/600. Hauteur totale de la dalle GLB : 14 cm. Le rendu passe au LOD1 au-delà de 200 000 triangles de végétation détaillée par carte. Les autres terrains et les PNG restent inchangés dans cette seconde passe. Validation esthétique encore à faire.
+
+## Bocage harmonisé — 12 septembre 2026
+
+Les décors procéduraux de plaine sont repris pour accompagner l’herbe GLB : haies feuillues, bottes liées et striées, parcelles à rosettes et marguerites, grandes touffes courbées. Buissons et fougères rejoignent le semis de plaine ; bottes/parcelles sont moins fréquentes et les points de placement des accessoires s’espacent de 18 cm (hors gazon et jumeaux). Aucun nouveau GLB/PNG de décor : c’est le rendu en jeu qui change. Voir `doc/refonte/decors-plaine.md` ; contrôle esthétique encore à faire par le propriétaire.

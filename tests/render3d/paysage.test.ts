@@ -293,3 +293,28 @@ test('le rivage se fond par l’alpha de ses couleurs de sommet, que le matéria
   assert.match(fragment, new RegExp(`\\* ${alpha![1]}\\.xyz \\)`), 'et sa couleur teinte le diffus');
   paysage.dispose();
 });
+
+
+test('les décors de prairie restent bornés, regroupés et espacés malgré leur détail', () => {
+  const grille: GrilleTerrain = {largeur:20,hauteur:20,terrainDe:()=> 'plaine'};
+  const semis=semerPaysage(grille,'plaine');
+  for(const a of semis.filter(a=>a.genre!=='gazon'&&a.genre!=='ailes_moulin')) {
+    for(const b of semis.filter(b=>b!==a&&b.case.x===a.case.x&&b.case.y===a.case.y&&b.genre!=='gazon'&&b.genre!=='ailes_moulin')) {
+      assert.ok(Math.hypot(a.x-b.x,a.z-b.z)>=.18-1e-8,'pas de décors empilés');
+    }
+  }
+  const paysage=creerPaysage(grille,()=>0,'plaine');
+  try {
+    for(const genre of ['haie','botte','champ','herbe_haute']) {
+      const lot=paysage.groupe.getObjectByName(`paysage-${genre}`) as LotInstancie;
+      assert.ok(lot,genre);
+      const geo=lot.geometry;geo.computeBoundingBox();
+      const triangles=(geo.index?.count??geo.getAttribute('position').count)/3;
+      assert.ok(triangles<=1500,`${genre}: ${triangles} triangles`);
+      assert.ok(geo.boundingBox!.max.y<=.26,genre);
+      assert.ok(geo.boundingBox!.min.y>=-1e-6,genre);
+      assert.ok(geo.getAttribute('color'));
+      if(genre==='champ'||genre==='herbe_haute') assert.equal((lot.material as THREE.MeshStandardNodeMaterial).side,THREE.DoubleSide);
+    }
+  } finally {paysage.dispose();}
+});
