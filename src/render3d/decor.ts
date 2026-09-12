@@ -1,3 +1,4 @@
+import { couronneFeuillue, conifereBoise, troncRamifie } from './vegetation-boisee';
 import { ENVIRONNEMENT_PREMIER_CONTACT, libererBatimentsLivres } from './assets-environnement';
 /**
  * Le décor : arbres, rochers et bâtiments.
@@ -593,31 +594,21 @@ export function ouvrirChantierDecor(
   let arbres: Arbre[] = [];
   const tropical = biome === 'jungle' || biome === 'archipel';
   let saisonCourante: Saison = 'ete';
-  const geoTronc = formeMemorisee('tronc', () => new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6));
+  const geoTronc = formeMemorisee(tropical ? 'tronc' : 'tronc-ramifie', () => tropical ? new THREE.CylinderGeometry(0.028, 0.042, 0.2, 6) : troncRamifie());
   const matTronc = new THREE.MeshStandardNodeMaterial({ color: 0x6b4a2f, roughness: 0.92 });
   // Plusieurs volumes dans une seule géométrie : silhouettes travaillées sans
   // appel de dessin supplémentaire par arbre.
-  const geoConifere = formeMemorisee('conifere', () => {
-    const etages = [0, 1, 2].map((i) => {
-      const geo = new THREE.ConeGeometry(0.17 - i * 0.035, 0.28 - i * 0.04, 8);
-      return geo.translate(0, -0.12 + i * 0.13, 0);
-    });
-    const fondu = mergeGeometries(etages)!;
-    etages.forEach((geo) => geo.dispose());
-    return fondu;
-  });
+  const geoConifere = formeMemorisee('conifere', conifereBoise);
   const geoFeuillu = formeMemorisee(tropical ? 'palme' : 'feuillu', () => {
-    const couronnes = tropical
-      ? Array.from({ length: 6 }, (_, i) => new THREE.SphereGeometry(0.16, 6, 3)
-        .scale(0.42, 0.16, 1.5).translate(0, 0, 0.09).rotateY(i * Math.PI / 3))
-      : [[-0.065, -0.025, 0], [0.065, 0, 0.025], [0, 0.095, -0.025]].map(([x, y, z]) =>
-        new THREE.IcosahedronGeometry(0.13, 1).translate(x!, y!, z!));
+    if(!tropical)return couronneFeuillue([[-.075,-.035,0,.092],[.07,-.008,.025,.09],[0,.095,-.03,.105],[.005,.025,-.095,.074],[.01,.04,.075,.076]],57);
+    const couronnes = Array.from({ length: 6 }, (_, i) => new THREE.SphereGeometry(0.16, 6, 3)
+      .scale(0.42, 0.16, 1.5).translate(0, 0, 0.09).rotateY(i * Math.PI / 3));
     const fondu = mergeGeometries(couronnes)!;
     couronnes.forEach((geo) => geo.dispose());
     return fondu;
   });
-  const matConifere = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.82 });
-  const matFeuillu = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.84 });
+  const matConifere = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.conifere, roughness: 0.86, vertexColors:true, side:THREE.DoubleSide });
+  const matFeuillu = new THREE.MeshStandardNodeMaterial({ color: FEUILLAGE.ete.feuillu, roughness: 0.86, vertexColors:!tropical, side:tropical?THREE.FrontSide:THREE.DoubleSide });
 
   // Un lot instancié a une capacité fixe : quand le semis change, on le rebâtit
   // à la taille du nouveau semis plutôt que de le surdimensionner à l'aveugle.

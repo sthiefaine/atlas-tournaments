@@ -347,3 +347,7 @@ Après essai, le propriétaire demande plus de hauteur et autorise un budget sup
 ## Bocage harmonisé — 12 septembre 2026
 
 Les décors procéduraux de plaine sont repris pour accompagner l’herbe GLB : haies feuillues, bottes liées et striées, parcelles à rosettes et marguerites, grandes touffes courbées. Buissons et fougères rejoignent le semis de plaine ; bottes/parcelles sont moins fréquentes et les points de placement des accessoires s’espacent de 18 cm (hors gazon et jumeaux). Aucun nouveau GLB/PNG de décor : c’est le rendu en jeu qui change. Voir `doc/refonte/decors-plaine.md` ; contrôle esthétique encore à faire par le propriétaire.
+
+## Forêts et feuillage — 12 septembre 2026
+
+Après rejet des buissons/haies sphériques, `vegetation-boisee.ts` fournit des feuilles pliées en rameaux pour haies, buissons et feuillus, des branches étagées pour les conifères et des troncs ramifiés. Les placements des arbres restent inchangés. Saisons, brouillard, instanciation et mode tactique sont conservés. Ce sont les formes procédurales en jeu qui changent, pas les GLB de bibliothèque ; aucun PNG ajouté. Voir `doc/refonte/forets-feuillage.md`. Validation esthétique par le propriétaire encore nécessaire.

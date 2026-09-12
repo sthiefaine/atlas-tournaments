@@ -1,4 +1,6 @@
-# Décors de plaine — 12 septembre 2026
+# Décors de plaine — première passe du 12 septembre 2026
+
+Les haies et buissons de cette première passe ont ensuite été remplacés : voir `forets-feuillage.md` pour leur état actuel.
 
 Le propriétaire demande d’harmoniser les accessoires posés sur la plaine avec la nouvelle herbe GLB. Cette passe modifie les géométries procédurales réellement utilisées en jeu, dans `src/render3d/paysage.ts`. Elle ne livre pas de nouveaux GLB ou PNG pour la bibliothèque d’assets.
 

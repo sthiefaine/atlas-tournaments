@@ -1,3 +1,4 @@
+import { couronneFeuillue } from './vegetation-boisee';
 /**
  * Le paysage : les **accessoires** qui font qu'un biome se reconnaît avant même
  * qu'on ait lu la grille — haies et bottes de foin du bocage, souches et
@@ -168,7 +169,7 @@ export const ESPECES: Readonly<Record<GenrePaysage, Espece>> = {
   fougere: { forme: 'fougere', couleur: 0x4f8a3c, matiere: 'vegetal', balance: true, regle: { sur: ['foret', 'plaine'], pres: 'foret', chance: 0.4, nombre: [1, 2], rayon: RAYON_SOUS_BOIS, pose: 'sous_bois', echelle: [0.7, 1] } },
   champignon: { forme: 'champignon', couleur: 0xb8452f, matiere: 'persistant', regle: { sur: ['foret'], chance: 0.28, nombre: [1, 1], rayon: RAYON_SOUS_BOIS, pose: 'sous_bois', echelle: [0.8, 1.2] } },
   tronc: { forme: 'tronc', couleur: 0x6b4a2f, matiere: 'bois', regle: { sur: ['foret', 'plaine'], pres: 'foret', chance: 0.14, nombre: [1, 1], rayon: RAYON_BORD, pose: 'bord', echelle: [0.8, 1] } },
-  buisson: { forme: 'buisson', couleur: 0x4d7d3a, matiere: 'vegetal', regle: { sur: ['plaine', 'foret'], chance: 0.22, nombre: [1, 2], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [0.7, 1.1] } },
+  buisson: { forme: 'buisson', couleur: 0x769d59, matiere: 'vegetal', regle: { sur: ['plaine', 'foret'], chance: 0.22, nombre: [1, 2], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [0.7, 1.1] } },
   // --- Montagne
   eboulis: { forme: 'eboulis', couleur: 0x8c8a82, matiere: 'mineral', regle: { sur: ['plaine', 'foret'], pres: 'montagne', chance: 0.5, nombre: [1, 2], rayon: RAYON_ANNEAU, pose: 'anneau', echelle: [0.8, 1.2] } },
   neve: { forme: 'neve', couleur: 0xf2f6fa, matiere: 'glace', sansOmbre: true, regle: { sur: ['montagne'], chance: 0.45, nombre: [1, 1], rayon: [0.3, 0.42], pose: 'anneau', echelle: [0.8, 1.2] } },
@@ -562,14 +563,10 @@ function palmier(couleurPalmes: number): THREE.BufferGeometry {
 function construireForme(forme: Forme, couleur: number): THREE.BufferGeometry {
   switch (forme) {
     case 'haie': {
-      const parties: THREE.BufferGeometry[] = [];
-      for (let i=0;i<5;i++) {
-        const x=-.24+i*.12, h=.12+alea(i,2,83)*.025;
-        parties.push(boite(.016,.09,.016,0x806448,{x,y:.045}));
-        parties.push(boule(.085,couleur,{x,y:h},1.1,.85,.8,6));
-        parties.push(boule(.048,i%2?0x86ad5f:0x769d59,{x:x+.027,y:h+.055,z:.022},1,.75,.8,5));
-      }
-      return fusion(parties);
+      const feuillage=couronneFeuillue([[-.22,.14,0,.065],[-.11,.17,.012,.074],[0,.14,-.012,.07],[.11,.18,0,.075],[.22,.145,.008,.065]],41);
+      const pigment=new THREE.Color(couleur),c=feuillage.getAttribute('color');
+      for(let i=0;i<c.count;i++)c.setXYZ(i,c.getX(i)*pigment.r,c.getY(i)*pigment.g,c.getZ(i)*pigment.b);
+      return fusion([feuillage,...[-.2,0,.2].map(x=>boite(.015,.13,.015,0x806448,{x,y:.065}))]);
     }
     case 'botte': {
       const parties=[cylindre(.078,.078,.13,16,couleur,{rx:Math.PI/2,y:.082})];
@@ -661,12 +658,12 @@ function construireForme(forme: Forme, couleur: number): THREE.BufferGeometry {
         cylindre(0.02, 0.015, 0.08, 5, couleur, { rz: 0.5, x: 0.1, y: 0.1 }),
         disque(0.055, 7, 0xb9976b, 0).rotateZ(-Math.PI / 2).translate(0.25, 0.045, 0),
       ]);
-    case 'buisson':
-      return fusion([
-        boule(0.075, couleur, { y: 0.06 }, 1, 0.85, 1, 6),
-        boule(0.06, couleur, { x: 0.07, y: 0.05, z: 0.03 }, 1, 0.85, 1, 6),
-        boule(0.055, couleur, { x: -0.05, y: 0.045, z: -0.05 }, 1, 0.85, 1, 6),
-      ]);
+    case 'buisson': {
+      const g=couronneFeuillue([[-.06,.105,0,.065],[.045,.14,.022,.078],[.035,.08,-.045,.06]],93);
+      const pigment=new THREE.Color(couleur),c=g.getAttribute('color');
+      for(let i=0;i<c.count;i++)c.setXYZ(i,c.getX(i)*pigment.r,c.getY(i)*pigment.g,c.getZ(i)*pigment.b);
+      return g;
+    }
     case 'eboulis': {
       const parties: THREE.BufferGeometry[] = [];
       for (let k = 0; k < 7; k += 1) {
@@ -1058,7 +1055,7 @@ export function ouvrirChantierPaysage(
       roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
       metalness: espece.matiere === 'glace' ? 0.1 : 0,
       flatShading: espece.matiere === 'mineral',
-      side: ['gazon','champ','touffe_prairie'].includes(espece.forme) ? THREE.DoubleSide : THREE.FrontSide,
+      side: ['gazon','champ','touffe_prairie','haie','buisson'].includes(espece.forme) ? THREE.DoubleSide : THREE.FrontSide,
     });
     if (espece.matiere === 'fumee' || espece.matiere === 'glace') {
       mat.transparent = true;

@@ -952,13 +952,14 @@ function decorDe(carte: unknown, scenario: unknown, biome: Biome): Decor {
  */
 // 12 septembre : la plaine inclut le lot paysage-gazon ajouté par 9f378cd.
 // Deuxième passe du 12 septembre : haies, bottes, parcelles et touffes refaites, buissons et fougères ajoutés au bocage.
-// Les autres scènes conservent leurs empreintes ; les volumes et le semis sont bornés par paysage.test.ts.
+// Troisième passe du 12 septembre : feuillages pliés, troncs ramifiés et conifères en rameaux sur tous les biomes tempérés.
+// Les effectifs et les placements restent identiques ; seules les géométries et matières changent.
 const EMPREINTES: ReadonlyArray<readonly [string, unknown, unknown, Biome, string, number]> = [
-  ['demo', carteDemo, scenarioDemo, 'plaine', 'fcd52dcd', 118],
-  ['demo', carteDemo, scenarioDemo, 'marais', 'bcd95007', 113],
-  ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', 'ee3a9258', 161],
-  ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', 'b5e43e79', 69],
-  ['chantier_des_usines', carteChantier, scenarioChantier, 'neige', '1ae091dd', 72],
+  ['demo', carteDemo, scenarioDemo, 'plaine', '2a0e8be5', 118],
+  ['demo', carteDemo, scenarioDemo, 'marais', 'b32d1dea', 113],
+  ['bras_de_mer', carteBrasDeMer, scenarioBrasDeMer, 'cotier', '78bd3341', 161],
+  ['couleurs_alliees', carteAlliees, scenarioAlliees, 'montagne', '6ff4a9a0', 69],
+  ['chantier_des_usines', carteChantier, scenarioChantier, 'neige', '0993fdf4', 72],
 ];
 
 for (const [nom, carte, scenario, biome, digest, objets] of EMPREINTES) {
