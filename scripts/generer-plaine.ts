@@ -62,7 +62,7 @@ async function main() {
     material.normalTexture = { index: 1, scale: 1 };
     material.occlusionTexture = { index: 3, strength: 1 };
     document.extras = { units: 'metre', up: '+Y', front: '+Z', grid: 'P', defence: 1,
-      flatTop: true, vegetationMaterial:'mat_herbe',vegetationBase:HEIGHT, vegetationHeight:0.04, slabThickness: HEIGHT, terrainReliefOwnedByRenderer: true,
+      flatTop: true, vegetationMaterial:'mat_herbe',vegetationBase:HEIGHT, vegetationHeight:0.12, slabThickness: HEIGHT, terrainReliefOwnedByRenderer: true,
       seamlessRotations: [0, 90, 180, 270], textureSource: 'deterministic procedural turf, no baked lighting',vegetationTriangles:vegetation.getAttribute('position').count/3 };
     const bytes = assemblerGlb(document, bin);
     const verdict = validerGlb(bytes, spec, { lod });

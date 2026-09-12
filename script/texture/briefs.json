@@ -31,7 +31,7 @@
             "tolerance": 0
           },
           "y": {
-            "cible": 0.06,
+            "cible": 0.14,
             "tolerance": 0.002
           },
           "z": {
@@ -46,9 +46,9 @@
           "poseAuSol": true
         },
         "budget": {
-          "lod0": 800,
-          "lod1": 200,
-          "lod2": 48,
+          "lod0": 2400,
+          "lod1": 600,
+          "lod2": 120,
           "materiauxMax": 2
         },
         "format": {

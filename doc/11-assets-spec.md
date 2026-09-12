@@ -521,3 +521,8 @@ La réception d’un kit compare l’empreinte du binaire géométrique, des acc
 ## Herbe en volume — 12 septembre 2026
 
 À la demande du propriétaire, `terrain_plaine` contient maintenant une dalle plate de 2 cm et des brins courbés jusqu’à 6 cm au total. Deux matériaux (`mat_sol`, `mat_herbe`), mêmes nœuds `racine`/`sol`, budgets conservés : 798/174 triangles. Les PNG restent externes, sans éclairage cuit. Premier contact extrait la végétation du GLB et la pose sur son relief continu ; les grandes cartes utilisent le LOD1, et le mode tactique la masque. Cette révision remplace la consigne historique interdisant tout brin dans le GLB, sans donner le relief du paysage à la dalle. Validation artistique par le propriétaire encore attendue. Voir `assets/livraisons/terrain_plaine/README.md`.
+
+
+### Deuxième passe herbe — hauteur et détail, 12 septembre 2026
+
+Après essai, le propriétaire demande plus de hauteur et autorise un budget supérieur. La plaine porte désormais 360 brins à trois segments de 6–12 cm (72 au LOD1), 12/4 trèfles, pour 1 914/402 triangles sur des budgets de 2 400/600. Hauteur totale de la dalle GLB : 14 cm. Le rendu passe au LOD1 au-delà de 200 000 triangles de végétation détaillée par carte. Les autres terrains et les PNG restent inchangés dans cette seconde passe. Validation esthétique encore à faire.

@@ -67,7 +67,7 @@ for (const lod of [0, 1] as const) test(`LOD${lod}: dimensions, surface plane, n
     }
   }
   assert.ok(heights.size > 10, 'curved vegetation has real volume');
-  assert.ok(heights.has(0)); assert.ok(Math.abs(Math.max(...heights) - 0.06) < 1e-8);
+  assert.ok(heights.has(0)); assert.ok(Math.abs(Math.max(...heights) - 0.14) < 1e-8);
   assert.deepEqual(bounds[0], [-0.5, 0.5]); assert.deepEqual(bounds[2], [-0.5, 0.5]);
-  assert.ok(triangles <= (lod === 0 ? 800 : 200));
+  assert.ok(triangles <= (lod === 0 ? 2400 : 600));
 });

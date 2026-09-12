@@ -18,7 +18,8 @@ export function geometrieGazon(g:GrilleTerrain,source:VegetationLivree):THREE.Bu
   const cases:{x:number;y:number}[]=[];
   for(let y=0;y<g.hauteur;y++)for(let x=0;x<g.largeur;x++)if(g.terrainDe(x,y)==='plaine')cases.push({x,y});
   // Un seul appel de dessin ; les grandes cartes utilisent le LOD léger pour borner le coût.
-  const originale=cases.length>144?source.loin:source.proche;
+  const lod=cases.length*source.proche.getAttribute('position').count/3>200000?1:0;
+  const originale=lod===1?source.loin:source.proche;
   const a=originale.getAttribute('position'),c=originale.getAttribute('color');
   const positions=new Float32Array(cases.length*a.count*3),couleurs=new Float32Array(positions.length);
   let n=0;
@@ -32,5 +33,5 @@ export function geometrieGazon(g:GrilleTerrain,source:VegetationLivree):THREE.Bu
     }
   }
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(positions,3));geo.setAttribute('color',new THREE.BufferAttribute(couleurs,3));geo.computeVertexNormals();
-  geo.userData={cases:cases.length,lod:cases.length>144?1:0,triangles:positions.length/9};return geo;
+  geo.userData={cases:cases.length,lod,triangles:positions.length/9};return geo;
 }

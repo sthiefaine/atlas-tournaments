@@ -1062,7 +1062,7 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
 
 /** Relief cible d'un terrain, en mètres (`doc/10-rendu-3d.md` §4). */
 const RELIEF_TERRAIN: Record<string, number> = {
-  plaine: 0.06, foret: 0.09, montagne: 0.95, route: 0.05,
+  plaine: 0.14, foret: 0.09, montagne: 0.95, route: 0.05,
   plage: 0.06, riviere: 0.06, pont: 0.32, mer: 0.04,
 };
 
@@ -1096,18 +1096,18 @@ export function specTerrain(t: Terrain): AssetSpec {
       en: `${texte?.en ?? `A one-metre tileable ground patch for the "${t.nom}" tile.`} `
         + `Grid tile "${t.car}", defence ${t.defense} of 4. The patch is exactly one metre square in plan `
         + (tournable ? 'with compatible edges under quarter turns. ' : 'with directional connections; rotate only together with its road, bridge or shoreline axis. ')
-        + (t.cle === 'plaine' ? 'A flat 0.02 m base carries short curved grass blades and sparse clover up to 0.06 m total height. Separate grass with mat_herbe; retain one sol node. Broad terrain undulation belongs to the renderer.' : volume ? 'Build the volume described above within the stated dimensions.'
+        + (t.cle === 'plaine' ? 'A flat 0.02 m base carries curved grass blades 6–12 cm high and sparse low clover, up to 0.14 m total height. Separate grass with mat_herbe; retain one sol node. Broad terrain undulation belongs to the renderer.' : volume ? 'Build the volume described above within the stated dimensions.'
           : `Deliver a constant-thickness flat slab (${hauteur} m). Surface undulation and altitude are applied by the renderer; do not model them.`),
       fr: `${texte?.fr ?? `Une plaque de sol raccordable d’un mètre pour la case « ${t.nom} ».`} `
         + `Caractère de grille « ${t.car} », défense ${t.defense} sur 4. Exactement un mètre carré en plan. `
         + (tournable ? 'Bords compatibles après un quart de tour. ' : 'Raccords directionnels : respecter l’axe de la voie ou du rivage. ')
-        + (t.cle === 'plaine' ? 'Une base plane de 0.02 m porte des brins courts courbés et quelques trèfles, hauteur totale 0.06 m. Séparer la végétation avec mat_herbe, conserver le nœud sol. Les ondulations du terrain appartiennent au rendu.' : volume ? 'Construire le volume décrit dans les dimensions imposées.'
+        + (t.cle === 'plaine' ? 'Une base plane de 0.02 m porte des brins courbés de 6 à 12 cm et quelques trèfles bas, hauteur totale 0.14 m. Séparer la végétation avec mat_herbe, conserver le nœud sol. Les ondulations du terrain appartiennent au rendu.' : volume ? 'Construire le volume décrit dans les dimensions imposées.'
           : `Livrer une dalle plane d’épaisseur constante (${hauteur} m). Le rendu applique l’altitude et les ondulations ; ne pas les modeler.`),
     },
     style: style(['tileable ground patch', 'photoscan-like surface detail', 'seasonal variants']),
-    echelle: { ...echelle(1, hauteur, 1, 0.04), x: { cible: 1, tolerance: 0 }, z: { cible: 1, tolerance: 0 }, ...(t.cle === 'plaine' ? { y: { cible: 0.06, tolerance: 0.002 } } : {}) },
+    echelle: { ...echelle(1, hauteur, 1, 0.04), x: { cible: 1, tolerance: 0 }, z: { cible: 1, tolerance: 0 }, ...(t.cle === 'plaine' ? { y: { cible: 0.14, tolerance: 0.002 } } : {}) },
     pivot: pivot(true),
-    budget: lourd ? budget(2400, 700, 180, 2) : moyen ? budget(1200, 320, 80, 2) : budget(800, 200, 48, 2),
+    budget: t.cle === 'plaine' ? budget(2400, 600, 120, 2) : lourd ? budget(2400, 700, 180, 2) : moyen ? budget(1200, 320, 80, 2) : budget(800, 200, 48, 2),
     textures: [
       tex('albedo', 1024, true, 'Couleurs de surface, sans ombre peinte ni éclairage cuit.'),
       tex('normale', 1024, true, 'Le grain qui fait la matière à faible incidence de lumière.'),
