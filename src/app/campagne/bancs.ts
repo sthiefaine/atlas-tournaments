@@ -57,9 +57,71 @@ export function cleSourceBanc(code: string): string {
 export function estSourceBanc(source: string): boolean {
   return source.endsWith(SUFFIXE_BANC);
 }
-/** Le scénario derrière une source, de banc ou de choix. */
+/** Le scénario derrière une source, de banc, de commandant ou de choix. */
 export function scenarioDeSource(source: string): string {
-  return estSourceBanc(source) ? source.slice(0, -SUFFIXE_BANC.length) : source;
+  if (estSourceBanc(source)) return source.slice(0, -SUFFIXE_BANC.length);
+  if (estSourceCommandant(source)) return source.slice(0, -SUFFIXE_COMMANDANT.length);
+  return source;
+}
+
+// ---------------------------------------------------------------------------
+// Le choix du commandant au briefing (`Scenario.choixCommandant`)
+// ---------------------------------------------------------------------------
+//
+// Le banc prêté est un choix **nommé** : trois options écrites par un auteur,
+// chacune avec sa conséquence. Le choix du commandant est le même geste ouvert
+// à tout le roster débloqué — mêmes propriétés (choisi avant de jouer,
+// rechoisi à chaque nouvelle partie, figé dans la graine, rejouable), autre
+// source de vérité pour la liste. Ce qui suit est la part **pure** de ce
+// mécanisme, celle dont la progression et les conséquences ont besoin sans
+// charger le roster ; le reste vit dans `commandants-jouables.ts`.
+
+/** Le suffixe de source d'un choix de commandant : `pacte_du_col:commandant`. */
+export const SUFFIXE_COMMANDANT = ':commandant';
+export function cleSourceCommandant(code: string): string {
+  return `${code}${SUFFIXE_COMMANDANT}`;
+}
+export function estSourceCommandant(source: string): boolean {
+  return source.endsWith(SUFFIXE_COMMANDANT);
+}
+
+/**
+ * La marque du commandant choisi dans la graine, en dernier segment.
+ *
+ * Les décisions sont encodées **par position** — un chiffre par source, jamais
+ * d'insertion au milieu ; un roster qui s'allonge ou se réordonne casserait ce
+ * comptage, et une graine enregistrée relirait un autre général que celui qui a
+ * été joué. Le commandant est donc écrit **par son nom**, en clair, à la fin.
+ * Le `cmd_` est retiré parce que la graine tient en 64 caractères
+ * (`validerSauvegarde`) et qu'il n'apporte rien : un test le vérifie sur tous
+ * les couples scénario × roster.
+ */
+export const MARQUE_COMMANDANT_GRAINE = '@';
+const PREFIXE_COMMANDANT = 'cmd_';
+
+/** Le commandant écrit dans une graine, ou `null` si elle n'en porte pas. */
+export function commandantDeGraine(graine: string): string | null {
+  const dernier = graine.slice(graine.lastIndexOf(':') + 1);
+  if (!graine.includes(':') || !dernier.startsWith(MARQUE_COMMANDANT_GRAINE)) return null;
+  const nom = dernier.slice(MARQUE_COMMANDANT_GRAINE.length);
+  return nom === '' ? null : `${PREFIXE_COMMANDANT}${nom}`;
+}
+
+/** La graine sans sa marque de commandant : celle que lisent les décisions. */
+export function graineSansCommandant(graine: string): string {
+  return commandantDeGraine(graine) === null ? graine : graine.slice(0, graine.lastIndexOf(':'));
+}
+
+/**
+ * Ajoute (ou remplace) la marque de commandant d'une graine. `null` la retire —
+ * jouer le commandant du scénario, c'est ne rien inscrire, de sorte qu'une
+ * partie sans choix garde exactement la graine qu'elle avait avant.
+ */
+export function graineAvecCommandant(graine: string, cle: string | null): string {
+  const base = graineSansCommandant(graine);
+  if (cle === null) return base;
+  const nom = cle.startsWith(PREFIXE_COMMANDANT) ? cle.slice(PREFIXE_COMMANDANT.length) : cle;
+  return `${base}:${MARQUE_COMMANDANT_GRAINE}${nom}`;
 }
 
 /**
@@ -111,5 +173,11 @@ export function appliquerBanc(scenario: Scenario, banc: BancPrete): void {
   }
   joueur.commandantCle = banc.commandantCle;
   scenario.incarnation = { paysCode: banc.paysCode, commandantCle: banc.commandantCle };
+  // Le témoin qui distingue un banc prêté d'un match d'incarnation : même forme,
+  // pas les mêmes droits sur les flags. L'épreuve garde les siens — on la gagne
+  // pour de bon, sous ses couleurs ou sous celles d'un autre (`01-bible.md`
+  // §4.6). Sans lui, `validerScenario` refusait Le pacte du col sous Tomas,
+  // parce qu'il écrit `monde.tournoi.pacte_du_col`.
+  scenario.bancPrete = true;
   delete scenario.bancs;
 }

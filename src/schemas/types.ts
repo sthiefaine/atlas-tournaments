@@ -945,6 +945,23 @@ export interface BancPrete {
 }
 
 /**
+ * Ce qu'un scénario ouvre comme choix de commandant au briefing.
+ *
+ * `aucun` (le défaut, et la valeur d'un champ absent) : on joue le commandant du
+ * scénario, rien ne change. `debloques` : le joueur choisit parmi **ceux qu'il a
+ * débloqués** (`content/commandants-jouables.json`), le commandant du scénario
+ * restant le premier de la liste et le défaut.
+ *
+ * Le champ est **exclusif de `bancs`** : une liste de bancs nommés est une variante
+ * écrite par un auteur, avec sa conséquence annoncée et sa mini-branche ; ouvrir en
+ * plus le roster entier la rendrait sans objet. Un scénario propose donc l'un ou
+ * l'autre, et `validerScenario` refuse les deux ensemble.
+ */
+export const CHOIX_COMMANDANT = ['aucun', 'debloques'] as const;
+/** Politique de choix du commandant au briefing. Absent vaut `aucun`. */
+export type ChoixCommandant = typeof CHOIX_COMMANDANT[number];
+
+/**
  * Scénario : une mission jouable, sa carte, son climat, ses objectifs et ses choix.
  *
  * Les champs de campagne (`doc/13-campagne.md`) sont facultatifs pour ne pas invalider
@@ -1010,6 +1027,26 @@ export interface Scenario extends Enveloppe {
    * `BancPrete`. Incompatible avec `incarnation`.
    */
   bancs?: BancPrete[];
+  /**
+   * Le choix du commandant au briefing parmi ceux que le joueur a débloqués.
+   * Voir `ChoixCommandant`. Absent vaut `aucun` ; incompatible avec `bancs`.
+   */
+  choixCommandant?: ChoixCommandant;
+  /**
+   * Posé par le code, jamais écrit dans le canon : **ce scénario effectif est une
+   * épreuve jouée sous un banc prêté** (`appliquerBanc`), pas un match
+   * d'incarnation.
+   *
+   * Les deux ont la même forme — le camp du joueur porte un général étranger, et
+   * l'`Incarnation` le dit — mais pas les mêmes droits sur les flags. Un match
+   * d'incarnation n'écrit rien de la trame principale (`08-narration-choix.md`
+   * §4.5) ; un banc prêté, lui, **garde les flags de son épreuve** : c'est une
+   * variante d'une étape, on la gagne pour de bon (`BancPrete`, `01-bible.md`
+   * §4.6). Sans ce témoin, `validerScenario` refusait un scénario effectif
+   * parfaitement légitime — Le pacte du col sous Tomas écrit
+   * `monde.tournoi.pacte_du_col` comme il l'écrit sous Ariane.
+   */
+  bancPrete?: true;
   paysCode: CodePays;
   regionCle?: Cle;
   carteCle: Cle;
@@ -1787,6 +1824,63 @@ export interface Deblocage {
   recompense: { type: TypeRecompenseDeblocage; ref: Cle };
   /** Vrai si l'existence même du déblocage est cachée avant son acquisition. */
   cache: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Le roster jouable : les commandants que la campagne ouvre au fil des missions
+// ---------------------------------------------------------------------------
+
+/**
+ * Un commandant du **roster jouable** (`content/commandants-jouables.json`).
+ *
+ * `ouvertPar` dit *quand* il entre au vestiaire, et il n'y a que trois formes,
+ * parce qu'un roster qui se lirait autrement serait un calendrier caché dans du
+ * code : `debut` (disponible dès la première mission), le **code d'un scénario**
+ * (ouvert dès que ce scénario est remporté), ou `a_venir` (écrit au roster,
+ * jamais proposé — la place est réservée, le contenu suivra).
+ *
+ * Un commandant ordinaire n'a jamais de `condition` : ce qui demande une
+ * condition est un secret, et il vit dans `secrets`.
+ */
+export interface CommandantJouableRoster {
+  /** La clé du commandant, telle qu'elle est au catalogue des capacités. */
+  cle: Cle;
+  /** `debut`, le code du scénario qui l'ouvre, ou `a_venir`. */
+  ouvertPar: string;
+  /** Une ligne de goût : ce qu'on gagne à le prendre, dite au joueur. */
+  gout: string;
+}
+
+/**
+ * Un commandant **secret** : la même chose, ouverte par une `Condition`
+ * composable plutôt que par une victoire, et annoncée par un indice tant
+ * qu'elle n'est pas remplie (`13-campagne.md` §8, `engine/deblocages.ts`).
+ */
+export interface CommandantSecretRoster {
+  cle: Cle;
+  /** Le nom sous lequel le vestiaire l'annonce une fois ouvert. */
+  libelle: string;
+  /** Ce que le joueur lit avant : un indice, jamais la recette. */
+  indice: string;
+  condition: Condition;
+}
+
+/**
+ * Le roster jouable au complet. Les **comptes ne sont pas figés** par le
+ * validateur — seize et quatre aujourd'hui, dix-huit demain si le propriétaire
+ * le veut : ce qu'il refuse, c'est le vide et les doublons.
+ */
+export interface RosterJouables {
+  version: number;
+  statut: string;
+  /** D'où vient ce roster : documents et catalogues dont il dérive. */
+  source?: string;
+  /** Ce que l'auteur veut qu'on sache avant d'y toucher. */
+  note?: string;
+  /** Les règles d'écriture du fichier, pour qui l'édite — comme `commandants-capacites.json`. */
+  regles?: string[];
+  jouables: CommandantJouableRoster[];
+  secrets: CommandantSecretRoster[];
 }
 
 /** Une étape d'un fil : un scénario, son gabarit, sa durée mesurée. */

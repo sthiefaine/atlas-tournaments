@@ -1,10 +1,10 @@
 {
   "cle": "aube_superusine",
-  "version": 1,
+  "version": 2,
   "statut": "brouillon",
   "source": "humain",
   "creeLe": "2026-09-10",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "aube_superusine",
   "nom": "Aube · La Forge de la retenue",
   "acte": 0,
@@ -36,6 +36,7 @@
       "ia": "ponderee"
     }
   ],
+  "choixCommandant": "debloques",
   "factionsParCamp": {
     "1": "atl"
   },

@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "statut": "conception",
+  "source": "doc/refonte/roster-jouable.md (12 septembre 2026) ; kits dans content/commandants-capacites.json révision 4 ; doctrine des secrets dans doc/13-campagne.md §7 ; vocabulaire du prêt de banc dans doc/01-bible.md §4.6.",
+  "note": "Seize commandants jouables, quatre secrets. Les seize couvrent les dix-sept familles d'effet qu'une nation a le droit d'employer ; les trois familles qui restent — frappe_zone, rayon_laser, iem — sont celles de la faction, et c'est exactement ce que les quatre secrets achètent. Aucune clé n'est dans les deux listes ; chaque clé existe dans content/commandants-capacites.json.",
+  "regles": [
+    "Les dix exercices imposent leur commandant : on y apprend le jeu, pas le roster. Le choix s'ouvre à la Qualification.",
+    "Choisir un commandant qui n'est pas le vôtre est un banc prêté (01-bible §4.6) : sa délégation vous prête son général, vous jouez ses consignes, on rend le banc au coup de sifflet. Un banc écrit dans Scenario.bancs garde sa conséquence annoncée ; un commandant simplement débloqué n'en a aucune.",
+    "Un secret n'est jamais indispensable (13-campagne §7.1) : un joueur qui n'en débloque aucun voit tout le jeu, toutes les fins et tous les fils. Il est équilibré comme les autres et porte la faiblesse déclarée de son kit.",
+    "Un commandant dont le super appartient à une famille de la faction (frappe_zone, rayon_laser, iem) ne tire ce super que depuis un camp déclaré atl : le choix doit poser reglages.factionsParCamp pour le camp du joueur, sinon verifierPouvoir refuse en silence. Cela concerne cmd_hadran_ost, cmd_mael_orven et cmd_yuna_serrat, jamais les seize.",
+    "Le même drapeau ouvre le matériel : uniteAutorisee (catalogue.ts) lit factionsParCamp, donc déclarer atl met meridien_veilleur et meridien_bastion (catalogue 7), et meridien_automate (catalogue 9), dans le menu de production du joueur. À décider exprès, pas à découvrir.",
+    "Les flags cités par les conditions sont écrits par Scenario.recompenses.flags à la victoire, sur le modèle de monde.tournoi.pacte_du_col qui existe déjà ; le compteur monde.tournoi.matchs_sans_perte est écrit à la fin d'un match gagné sans perte. Aucun n'est encore posé : la liste est dans roster-jouable.md.",
+    "Les lignes de goût sont écrites verbe en tête et disent le pouvoir puis le super, jamais un multiplicateur nu : deux relectures (le joueur d’Advance Wars, l’ado de quinze ans) les ont refaites. Une ligne se réaligne sur le kit, jamais l’inverse."
+  ],
+  "jouables": [
+    {
+      "cle": "cmd_ariane_belloc",
+      "ouvertPar": "debut",
+      "gout": "Avancer, puis tout remettre debout : toute l’armée au sol gagne une case, et l’atelier rend 3 PV, le plein et les charges à tout le monde."
+    },
+    {
+      "cle": "cmd_tomas_reiner",
+      "ouvertPar": "opus1_tutoriel_10",
+      "gout": "Compter : une journée payée une fois et demie quand il le décide, puis un tour où tout son réseau repart plein et va plus loin."
+    },
+    {
+      "cle": "cmd_elsbeth_vonlanthen",
+      "ouvertPar": "pacte_du_col",
+      "gout": "Tenir un col : le relief protège une fois et demie et l’adversaire y capture deux fois moins vite — puis un câble passe par-dessus la montagne."
+    },
+    {
+      "cle": "cmd_mira_karki",
+      "ouvertPar": "pacte_du_col",
+      "gout": "Encaisser : ses fantassins s’encordent et tiennent la montagne, et au dernier col la plaine nue protège toute son armée comme une forêt."
+    },
+    {
+      "cle": "cmd_livia_moura",
+      "ouvertPar": "couleurs_alliees",
+      "gout": "Parier : deux barres et elle cogne déjà plus fort ; au carnaval elle frappe comme un camion, garde ouverte."
+    },
+    {
+      "cle": "cmd_ines_valdes",
+      "ouvertPar": "couleurs_alliees",
+      "gout": "Clouer au sol : elle arrache la ville et la forêt sous leurs pieds, puis saute de la troisième corde sur ce qui reste."
+    },
+    {
+      "cle": "cmd_devika_rao",
+      "ouvertPar": "aube_batteries_2v1",
+      "gout": "Acheter en volume : un quart de remise sur tout, et le jour dit, tous ses véhicules rejouent leur tour."
+    },
+    {
+      "cle": "cmd_solveig_tamm",
+      "ouvertPar": "aube_convoi_secondaire",
+      "gout": "Escorter : des transports qu’on ne perce pas, et un tour où toute l’armée avance de deux cases."
+    },
+    {
+      "cle": "cmd_samir_el_hadi",
+      "ouvertPar": "aube_reserves_1v2",
+      "gout": "Partir loin de sa base : il consomme un cinquième de moins que tout le monde, s’arrête pour le thé — plein et charges refaits — et repart avec une équipe soignée."
+    },
+    {
+      "cle": "cmd_hazel_quinn",
+      "ouvertPar": "aube_reserves_1v2",
+      "gout": "Étouffer : en face le carburant part deux fois plus vite et les captures deux fois moins ; puis tout ce qui vole ou roule chez eux perd un point de vie d’un coup."
+    },
+    {
+      "cle": "cmd_wren_osoko",
+      "ouvertPar": "aube_archives_secondaire",
+      "gout": "Ne plus rater : voir trois cases plus loin que tout le monde, et gagner les duels serrés."
+    },
+    {
+      "cle": "cmd_awa_diagne",
+      "ouvertPar": "aube_routes_3v1",
+      "gout": "Faire rejouer : ses fantassins cognent plus fort, et une fois par match toute son infanterie rejoue son tour entier."
+    },
+    {
+      "cle": "cmd_kito_njoroge",
+      "ouvertPar": "aube_routes_3v1",
+      "gout": "Courir aux objectifs : ses fantassins vont deux cases plus loin, et à l’arrivée ils prennent une ville en un tour au lieu de deux."
+    },
+    {
+      "cle": "cmd_ren_mizuno",
+      "ouvertPar": "aube_essais_drones",
+      "gout": "Frapper sans riposte : une case de portée en plus, et un tour où ses artilleries tirent deux fois."
+    },
+    {
+      "cle": "cmd_lotte_vermeer",
+      "ouvertPar": "aube_drone_marin",
+      "gout": "Redessiner la carte : gagner trois cases sur la mer quand il faut passer, en noyer quatre quand il faut couper la route."
+    },
+    {
+      "cle": "cmd_noemie_leduc",
+      "ouvertPar": "aube_essai_maritime_iem_climat",
+      "gout": "Imposer les conditions : il neige quand elle le décide, et au Grand Nord elle est la seule à avancer de deux cases dedans."
+    }
+  ],
+  "secrets": [
+    {
+      "cle": "cmd_hadran_ost",
+      "libelle": "Le reçu manquant",
+      "indice": "Au dépôt du banc d'essai, une batterie à douze tubes sans plaque de série attend un reçu que personne n'a signé.",
+      "condition": {
+        "type": "et",
+        "conditions": [
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_routes_3v1"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_releve_1v3"
+          }
+        ]
+      }
+    },
+    {
+      "cle": "cmd_mael_orven",
+      "libelle": "Le badge gratté",
+      "indice": "Une aile delta au badge gratté est consignée au hangar. Le registre dit : rendue au premier dossier qui ne porte aucun équipage manquant.",
+      "condition": {
+        "type": "et",
+        "conditions": [
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_nuit_2v2"
+          },
+          {
+            "type": "compteur",
+            "cle": "monde.tournoi.matchs_sans_perte",
+            "min": 3
+          }
+        ]
+      }
+    },
+    {
+      "cle": "cmd_yuna_serrat",
+      "libelle": "Les trois signatures",
+      "indice": "Une borne grise dort sous scellés dans le hall de l’Intendance. Trois signatures manquent au bas de son mandat, et aucune ne se signe à Port-Méridien.",
+      "condition": {
+        "type": "et",
+        "conditions": [
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_superusine"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_convoi_secondaire"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_archives_secondaire"
+          }
+        ]
+      }
+    },
+    {
+      "cle": "cmd_basile_kelm",
+      "libelle": "Le Verrou",
+      "indice": "Un coffret gris parle à tous les plastrons de marquage du terrain. On ne l'ouvre pas : on prend la Forge, et on la reprend une seconde fois par le chemin le plus dur.",
+      "condition": {
+        "type": "et",
+        "conditions": [
+          {
+            "type": "mode_fini",
+            "mode": "difficile"
+          },
+          {
+            "type": "flag",
+            "cle": "monde.tournoi.aube_superusine"
+          }
+        ]
+      }
+    }
+  ]
+}

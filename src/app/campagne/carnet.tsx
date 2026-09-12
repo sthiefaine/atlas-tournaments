@@ -9,8 +9,12 @@ import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { Vignette } from '../jeu/parties-libres';
 import { lireProfils, type EtatProfils } from '../preferences';
 import { etatsItineraire, stationParDefaut, type EtatStation } from './itineraire';
-import { lireProgression, type Progression } from './progression';
+import { lireProgression, vestiaire as clesOuvertes, type Progression } from './progression';
 import { Gras } from '../gras';
+import { Buste, Silhouette } from '../buste-commandant';
+import { compteRoster, fichesRoster, type FicheRoster } from '../../render/roster-commandants';
+import type { RosterJouables } from '../../schemas/index';
+import type { DescriptionCommandant } from './roster';
 
 /**
  * Le **fil de la campagne** : un itinéraire, pas un sommaire.
@@ -110,6 +114,47 @@ export interface LibellesCarnet {
   bancs: Readonly<Record<string, { titre: string; effet: string }>>;
 }
 
+/**
+ * Le **vestiaire** du carnet : le roster du canon, et de quoi le peindre.
+ *
+ * La page ne peut pas composer les cases elle-même — l'état de chacune dépend de
+ * la progression, qui vit dans `localStorage` et n'existe donc qu'ici. Elle
+ * envoie ce qu'elle sait traduire, le carnet compose par `fichesRoster`, et la
+ * règle d'ouverture reste celle de `vestiaire()` : le carnet n'en invente pas
+ * une seconde.
+ */
+export interface VestiaireCarnet {
+  roster: RosterJouables;
+  /** Nom, style et kit de chaque commandant, déjà traduits. */
+  descriptions: Readonly<Record<string, DescriptionCommandant>>;
+  /** Ce que chaque `ouvertPar` veut dire, déjà dit : « Remportez Le pacte du col ». */
+  portes: Readonly<Record<string, string>>;
+  titre: string;
+  note: string;
+  /** Une entrée par nombre de bancs ouverts, de zéro à tous. */
+  comptes: readonly string[];
+  /** Une entrée par nombre de secrets encore fermés. */
+  comptesSecrets: readonly string[];
+  grille: string;
+  verrouille: string;
+  secret: string;
+  indice: string;
+  kit: string;
+}
+
+/** Une case du vestiaire. Même grammaire qu'au briefing, sans le geste de prendre. */
+function CaseCommandant({ fiche, v }: { fiche: FicheRoster; v: VestiaireCarnet }): React.ReactElement {
+  return <li className="vestiaire-case" data-etat={fiche.etat} data-commandant={fiche.cle === '' ? undefined : fiche.cle}>
+    {fiche.etat === 'secret' ? <Silhouette /> : <Buste camp={0} teinte={fiche.etat === 'verrouille'} />}
+    <span className="vestiaire-nom">{fiche.etat === 'secret' ? v.secret : fiche.nom}</span>
+    {fiche.style !== '' ? <span className="vestiaire-style">{fiche.style}</span> : null}
+    {fiche.etat === 'verrouille' ? <span className="vestiaire-plaque" data-plaque="verrouille">{v.verrouille}</span> : null}
+    {fiche.porte !== '' ? <span className="vestiaire-porte">{fiche.porte}</span> : null}
+    {fiche.indice !== '' ? <span className="vestiaire-indice"><b>{v.indice}</b>{fiche.indice}</span> : null}
+    {fiche.etat === 'jouable' && fiche.gout !== '' ? <p className="vestiaire-gout">{fiche.gout}</p> : null}
+  </li>;
+}
+
 /** La carte d'une épreuve, en petit. Décorative : tout est dit à côté. */
 function CarteEpreuve({ vignette }: { vignette: Vignette }): React.ReactElement {
   return <svg
@@ -131,9 +176,11 @@ function Cadenas(): React.ReactElement {
   </svg>;
 }
 
-export default function Carnet({ epreuves, libelles }: {
+export default function Carnet({ epreuves, libelles, vestiaire }: {
   epreuves: readonly EpreuveCarnet[];
   libelles: LibellesCarnet;
+  /** Le vestiaire, ou `null` quand le roster n'a pas pu être lu. */
+  vestiaire?: VestiaireCarnet | null;
 }): React.ReactElement {
   const [progression, setProgression] = useState<Progression>({ version: 1, victoires: [] });
   const [profils, setProfils] = useState<EtatProfils | null>(null);
@@ -175,6 +222,20 @@ export default function Carnet({ epreuves, libelles }: {
   const nomProfil = profils && (profils.actif === 'b' || profils.noms[profils.actif] !== '')
     ? profils.noms[profils.actif] || (profils.actif === 'a' ? libelles.profilA : libelles.profilB)
     : null;
+
+  // Le vestiaire se compose ici parce que son état dépend de la progression, que
+  // seul le client connaît. Tant que rien n'est lu (`pret`), l'acquis est vide :
+  // le serveur rend donc un vestiaire fermé, et le client l'ouvre — jamais
+  // l'inverse, comme pour les stations de l'itinéraire.
+  const fichesVestiaire = vestiaire ? (() => {
+    const fiches = fichesRoster({
+      roster: vestiaire.roster,
+      acquis: pret ? clesOuvertes(progression, vestiaire.roster) : [],
+      decrire: (cle) => vestiaire.descriptions[cle] ?? { nom: '', style: '', lignes: [] },
+      direPorte: (ouvertPar) => vestiaire.portes[ouvertPar] ?? '',
+    });
+    return { fiches, compte: compteRoster(fiches) };
+  })() : null;
 
   return <main className="atlas-carnet">
     <header className="carnet-entete">
@@ -259,6 +320,23 @@ export default function Carnet({ epreuves, libelles }: {
             </Link>}
         </div>
       </div>
+    </section> : null}
+
+    {/* La collection. C'est ici qu'on vient voir ce qu'on a gagné, et surtout
+        ce qui reste : quatre silhouettes qui ne disent qu'un indice font plus
+        pour l'envie de rejouer que douze bustes déjà acquis. */}
+    {fichesVestiaire && vestiaire ? <section className="carnet-vestiaire" aria-labelledby="titre-collection">
+      <h2 id="titre-collection">{vestiaire.titre}</h2>
+      <p className="carnet-avancee">
+        <span>{vestiaire.comptes[fichesVestiaire.compte.acquis] ?? ''}</span>
+        {fichesVestiaire.compte.secrets > 0
+          ? <span className="carnet-profil">{vestiaire.comptesSecrets[fichesVestiaire.compte.secrets] ?? ''}</span>
+          : null}
+      </p>
+      <p>{vestiaire.note}</p>
+      <ul className="vestiaire-grille" aria-label={vestiaire.grille}>
+        {fichesVestiaire.fiches.map((f) => <CaseCommandant key={f.id} fiche={f} v={vestiaire} />)}
+      </ul>
     </section> : null}
 
     {(progression.journal?.length ?? 0) > 0 ? <section className="carnet-journal" aria-labelledby="journal-aube">

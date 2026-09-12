@@ -4754,6 +4754,276 @@
         "note": "Banc prêté au briefing : le joueur choisit son héros avant le montage (13-campagne.md §3.4 bis)."
       },
       "longueurMax": 200
+    },
+    {
+      "cle": "vestiaire.choisir",
+      "texte": "Choisissez votre commandant",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "vestiaire.note",
+      "texte": "Votre vestiaire s’ouvre au fil des titres. Le banc de l’épreuve est retenu d’avance : parcourez la grille, lisez ce que chacun change, et prenez celui que la carte demande.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 220
+    },
+    {
+      "cle": "vestiaire.compte",
+      "texte": "{acquis} commandants sur {total}",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "vestiaire.compte_secrets",
+      "texte": "et {n} sous silhouette",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 32
+    },
+    {
+      "cle": "vestiaire.grille",
+      "texte": "Vestiaire des commandants",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "vestiaire.prendre",
+      "texte": "Prendre ce banc",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "vestiaire.defaut",
+      "texte": "Banc de l’épreuve",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "vestiaire.verrouille",
+      "texte": "À gagner",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 16
+    },
+    {
+      "cle": "vestiaire.secret",
+      "texte": "Commandant secret",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "vestiaire.indice",
+      "texte": "Indice",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 12
+    },
+    {
+      "cle": "vestiaire.kit",
+      "texte": "Ce qu’il change",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "vestiaire.porte",
+      "texte": "Remportez {epreuve}",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 60
+    },
+    {
+      "cle": "vestiaire.porte_a_venir",
+      "texte": "Son épreuve d’entrée reste à écrire",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "vestiaire.porte_inconnue",
+      "texte": "Se gagne plus loin dans la campagne",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "vestiaire.ouvert",
+      "texte": "Un commandant rejoint votre vestiaire",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "vestiaire.ouverts",
+      "texte": "{n} commandants rejoignent votre vestiaire",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 48
+    },
+    {
+      "cle": "vestiaire.ouvert_note",
+      "texte": "Vous pourrez le prendre au briefing des épreuves qui laissent choisir leur banc.",
+      "contexte": {
+        "ecran": "fin_de_match",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 110
+    },
+    {
+      "cle": "vestiaire.carnet_titre",
+      "texte": "Le vestiaire",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 24
+    },
+    {
+      "cle": "vestiaire.carnet_note",
+      "texte": "Chaque titre ouvre un banc. Quatre commandants ne s’annoncent que par un indice : ils ne sont indispensables à aucun fil, et c’est ce qui permet de les rendre difficiles.",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
+      },
+      "longueurMax": 220
+    },
+    {
+      "cle": "epreuve.aube_batteries_2v1",
+      "texte": "Le détour des batteries",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_reserves_1v2",
+      "texte": "La finale des réserves",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_nuit_2v2",
+      "texte": "La ligne de nuit",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_releve_1v3",
+      "texte": "La quarantième relève",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_routes_3v1",
+      "texte": "Les routes d’Aube",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_superusine",
+      "texte": "La Forge de la retenue",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_convoi_secondaire",
+      "texte": "Le convoi de Solveig",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_archives_secondaire",
+      "texte": "Les archives de Wren",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_essais_drones",
+      "texte": "Drones et matériel méridien",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_drone_marin",
+      "texte": "Le chenal des signaux",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
+    },
+    {
+      "cle": "epreuve.aube_essai_maritime_iem_climat",
+      "texte": "La rade des signaux",
+      "contexte": {
+        "ecran": "campagne",
+        "note": "Titre court d'un essai ou d'une quête d'Aube, pour dire ce qui ouvre un commandant du vestiaire."
+      },
+      "longueurMax": 40
     }
   ]
 }

@@ -1,10 +1,10 @@
 {
   "cle": "aube_essai_maritime_iem_climat",
-  "version": 3,
+  "version": 4,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "aube_essai_maritime_iem_climat",
   "nom": "Aube · La rade des signaux",
   "acte": 0,
@@ -31,6 +31,7 @@
       "ia": "ponderee"
     }
   ],
+  "choixCommandant": "debloques",
   "equipes": [
     [
       0

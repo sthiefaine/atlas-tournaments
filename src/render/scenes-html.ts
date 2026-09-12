@@ -25,7 +25,7 @@
 
 import type { Catalogue, EtatPartie } from '../engine/index';
 import type { CampId, Case, Silhouette, UnitType } from '../schemas/types';
-import { buste } from './dialogue-html';
+import { buste } from './buste';
 import { nomCommandant, nomUnite } from './libelles';
 import { paletteDe } from './palettes';
 import { type Geste, MISE_EN_SCENE, type Partition } from './partition';

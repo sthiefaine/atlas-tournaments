@@ -1,10 +1,10 @@
 {
   "cle": "aube_routes_3v1",
-  "version": 5,
+  "version": 6,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "aube_routes_3v1",
   "nom": "Aube · Les routes d’Aube · 3 contre 1",
   "acte": 0,
@@ -51,6 +51,7 @@
       "ia": "ponderee"
     }
   ],
+  "choixCommandant": "debloques",
   "fondsDepart": 3000,
   "revenusParBatiment": 500,
   "brouillard": false,

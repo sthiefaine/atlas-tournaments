@@ -284,3 +284,9 @@
   .atlas-transmission .atlas-briefing{padding:18px 16px 0}
   .atlas-briefing .campagne-actions{position:sticky;bottom:0;z-index:2}
 }
+
+/* Le vestiaire tient plus large qu'un briefing : seize cases à 148 px font
+   quatre colonnes, et un panneau de 680 n'en laisserait passer que trois avec
+   une gouttière serrée. Le reste de la fenêtre ne change pas — même papier,
+   même coupe, même ombre. */
+.atlas-briefing.atlas-vestiaire{width:min(100%,880px)}

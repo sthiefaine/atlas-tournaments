@@ -539,6 +539,27 @@ Le seul général secret qui touche au tabou fondateur, et il faut dire précis�
 
 C'est aussi lui qui donne à la doctrine « jamais indispensable » son sens narratif : le plus ancien commandant du monde est une option, pas une clé.
 
+### 7.4 Seize jouables et quatre secrets — 12 septembre 2026
+
+Décision du propriétaire, en réponse à la façon dont Advance Wars fait tourner sa douzaine de commandants : « on peut faire ça mais avec **16 commandants et peut-être 4 secrets** difficiles à débloquer ». La conception est `doc/refonte/roster-jouable.md` ; le contrat que le code lit est `content/commandants-jouables.json` ; le champ de scénario est `Scenario.choixCommandant?: 'aucun' | 'debloques'`.
+
+**§7.1 tient sans une virgule de changement** — jamais indispensable, équilibré comme les autres avec une faiblesse réellement défavorable, invisible avant. **§7.2 est périmée**, et il faut le dire net plutôt que la laisser lire : sept de ses dix — Nera Aldouin, Célestin Vantour, Osmin Talvarec, Numéro Six, Ilva Marecq, Barnab Estève, « Craie » — **n'ont aucun kit** dans `content/commandants-capacites.json`, dont la révision 4 fixe les 34 profils jouables ; leurs styles de pouvoir (`gardienne`, `showman`, `survivante`…) sont des archétypes de la bible, pas des capacités transcrites. Les trois qui ont un kit ont changé de place : **Wren Osoko** et **Solveig Tamm** sont devenues jouables — chacune est le camp 0 d'une quête d'Aube et prête déjà son banc — et **Hadran Ost** reste secret, mais par la porte ci-dessous et non par une fin. La table de §7.2 se lit désormais comme une **proposition d'auteur non réalisée** : elle garde sa valeur d'intention, elle ne décrit pas le jeu.
+
+**Les quatre retenus, et la ligne qui les justifie.** Les kits de la révision 4 emploient vingt familles d'effet ; dix-sept sont ouvertes aux nations, trois — `frappe_zone`, `rayon_laser`, `iem` — sont réservées à la faction (`doc/04` §7.2). Les seize jouables couvrent les dix-sept familles nationales ; **les quatre secrets sont ce qui donne accès aux trois autres**, plus le seul aveuglement du roster.
+
+| Secret | Ce qu'il ouvre | Condition |
+|---|---|---|
+| **Hadran Ost**, « Le reçu manquant » | `frappe_zone` — viser une case, treize touchées, les siennes comprises | `aube_routes_3v1` **et** `aube_releve_1v3` gagnées : le battre chez lui, puis tenir quarante journées |
+| **Maël Orven**, « Le badge gratté » | `rayon_laser` — le seul super désigné | `aube_nuit_2v2` gagnée **et** trois matchs sans perdre une unité |
+| **Yuna Serrat**, « Les trois signatures » | `iem` — sceller les moteurs, et les usines touchées ne produisent pas | `aube_superusine`, `aube_convoi_secondaire` **et** `aube_archives_secondaire` gagnées |
+| **Basile Kelm**, « Le Verrou » | `degats_directs` sans filtre **et** `vision −2` | une campagne finie en `difficile` **et** `aube_superusine` gagnée |
+
+Aucune n'emploie autre chose que `et`, `flag`, `compteur` et `mode_fini` (§8.2), à deux niveaux sur les trois permis. **Ce qui n'a pas pu être exprimé** : « gagner une mission sans perdre une unité » n'est pas une `Condition` — `recompenses.flags` se pose sur toute victoire — et passe donc par un **compteur** écrit à la fin d'un match, `monde.tournoi.matchs_sans_perte`. Aucun type de `Condition` n'a été inventé pour l'occasion.
+
+**La justification de fiction n'est pas nouvelle** : `lore-v2.json` déclare les huit pièces des Gris capturables, chacune à son épisode (`capturePar`). Un secret est **une pièce sans dossier saisie au protêt, et le banc d'essai qui va avec** — pas un bonus. Le jour où les finales seront écrites, la porte canonique est celle du `capturePar`.
+
+**Un piège nommé, parce qu'il se découvrirait sinon en jouant** : `estCampFaction` et `uniteAutorisee` lisent le **même** `reglages.factionsParCamp`. Rendre Ost, Maël ou Yuna jouables oblige à déclarer le camp du joueur `atl` pour que leur super parte — et ouvre du même coup les unités `factionExclusive` dans son menu de production. À trancher exprès.
+
 ---
 
 ## 8. Le système de déblocage

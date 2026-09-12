@@ -1,10 +1,10 @@
 {
   "cle": "aube_essais_drones",
-  "version": 4,
+  "version": 5,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "aube_essais_drones",
   "nom": "Aube · Drones et matériel méridien",
   "acte": 0,
@@ -31,6 +31,7 @@
       "ia": "ponderee"
     }
   ],
+  "choixCommandant": "debloques",
   "equipes": [
     [
       0

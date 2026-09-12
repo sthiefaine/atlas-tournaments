@@ -11,9 +11,15 @@ import { creerRendu3d } from '@/render3d/index';
 import type { CleIllustration, MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
-import { enregistrerVictoire, enregistrerDecision, enregistrerBanc, lireProgression, type DecisionLocale, type Progression } from '../../campagne/progression';
+import { debloquerCommandants, enregistrerVictoire, enregistrerDecision, enregistrerBanc, lireProgression, vestiaire, type DecisionLocale, type Progression } from '../../campagne/progression';
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
-import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, optionsBanc } from '../../campagne/bancs';
+import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, graineAvecCommandant, optionsBanc } from '../../campagne/bancs';
+import { grilleCommandants } from '../../campagne/roster';
+import { appliquerCommandantDeGraine } from '../../campagne/commandants-jouables';
+import { chargerCommandantsJouables } from '@/content/commandants-jouables';
+import { compteRoster, ouvertures } from '@/render/roster-commandants';
+import ChoixCommandant from './choix-commandant';
+import { Buste } from '../../buste-commandant';
 import { chargerCommandantJeu, revisionCommandants } from '@/content/commandants-jeu';
 import { lireProfilCommandant } from '@/content/profils-commandants';
 import { bilanDeFin, type Bilan } from './bilan';
@@ -169,8 +175,25 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const bancs = useMemo(() => (scenario.bancs?.length ? optionsBanc(scenario.code) : []), [scenario.bancs, scenario.code]);
   // Le catalogue du scénario, pour nommer les unités qu'un filtre de pouvoir cite au briefing.
   const catalogueKit = useMemo(() => chargerCatalogue(scenario.catalogueVersion), [scenario.catalogueVersion]);
+  // Le commandant du scénario : le défaut de tout choix de banc, et le premier
+  // bouton de la grille du vestiaire.
+  const commandantDefaut = scenario.commandants.find((c) => c.camp === CAMP_JOUEUR)?.commandantCle ?? '';
   const [bancEnAttente, setBancEnAttente] = useState(false);
   const [bancChoix, setBancChoix] = useState<string | null>(null);
+  // Le **vestiaire** (`Scenario.choixCommandant`) : l'autre façon de choisir son
+  // héros au briefing, ouverte à tout le roster débloqué au lieu de deux ou
+  // trois bancs nommés. Le schéma les rend exclusifs, la page aussi.
+  const vestiaireOuvert = scenario.choixCommandant === 'debloques' && bancs.length === 0;
+  // Le roster est lu pour **tout** scénario, pas seulement pour ceux qui ouvrent
+  // le vestiaire : une victoire ouvre des commandants où qu'elle ait lieu, et
+  // l'écran de fin doit pouvoir nommer ce qu'elle vient d'ouvrir.
+  const roster = useMemo(() => chargerCommandantsJouables(), []);
+  const [commandantEnAttente, setCommandantEnAttente] = useState(false);
+  const [commandantChoix, setCommandantChoix] = useState<string | null>(null);
+  // Ce qu'une victoire vient d'ouvrir, à annoncer une seule fois sur l'écran de
+  // fin. La liste vient de `debloquerCommandants`, qui l'enregistre du même
+  // geste : la page ne recalcule aucune règle de déblocage.
+  const [ouvertsParVictoire, setOuvertsParVictoire] = useState<readonly string[]>([]);
   // Les réglages du joueur, lus une fois avant le montage du plateau.
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   // La clé de sauvegarde dépend du profil actif de l'appareil ; c'est la page
@@ -232,8 +255,18 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       direChargement('pret');
       return;
     }
+    // Le vestiaire suit exactement la règle du banc prêté : une partie neuve
+    // demande, une partie en cours reprend. Le commandant joué est écrit dans la
+    // **graine** de la sauvegarde (`bancs.ts`, `graineAvecCommandant`), donc une
+    // reprise rejoue le bon banc sans que rien d'autre soit à retenir.
+    if (!enCours && vestiaireOuvert) {
+      setDepart(null);
+      setCommandantEnAttente(true);
+      direChargement('pret');
+      return;
+    }
     setDepart(enCours ? 'reprise' : 'neuf');
-  }, [scenario.code, scenario.catalogueVersion, scenario.version, bancs]);
+  }, [scenario.code, scenario.catalogueVersion, scenario.version, bancs, vestiaireOuvert]);
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
@@ -246,19 +279,29 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       : [];
     const decisions = [...Object.values(lireProgression(profilPartie.current).decisions ?? {}), ...decisionBanc];
     const sauvegarde = depart === 'reprise' ? lireSauvegarde(scenario.code, cleSauvegarde) : null;
-    const graine = sauvegarde?.graine ?? (essaiAube || index >= 0 ? graineAube(scenario, decisions) : `${scenario.code}:1`);
+    const graineBase = sauvegarde?.graine ?? (essaiAube || index >= 0 ? graineAube(scenario, decisions) : `${scenario.code}:1`);
+    // Le commandant choisi s'écrit en dernier segment de la graine, et n'y entre
+    // que s'il n'est pas celui du scénario : une partie sans vestiaire garde
+    // exactement la graine qu'elle avait avant, donc le même rejeu au bit près.
+    const graine = sauvegarde?.graine
+      ?? (commandantChoix && commandantChoix !== commandantDefaut ? graineAvecCommandant(graineBase, commandantChoix) : graineBase);
     const prepare = appliquerConsequences(scenarioPourMode(scenario, mode), decisionsDeGraine(scenario, graine), (cle, params) => t(locale, cle, params));
-    setScenarioEffectif(prepare.scenario);
+    // Le vestiaire, appliqué **depuis la graine** et non depuis l'état de la
+    // page : une partie reprise rejoue le général qu'elle a enregistré, même si
+    // le joueur en a choisi un autre depuis (`campagne/commandants-jouables.ts`).
+    const joue = appliquerCommandantDeGraine(prepare.scenario, graine);
+    const paysJoueur = joue.incarnation?.paysCode ?? scenario.paysCode;
+    setScenarioEffectif(joue);
     setRappels(prepare.rappels);
-    const ia = prepare.scenario.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
+    const ia = joue.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
     // Les commandants du scénario **effectif** : un banc prêté a pu en échanger deux.
-    const commandants = commandantsDuScenario(prepare.scenario);
+    const commandants = commandantsDuScenario(joue);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
     try {
       jeu = monterJeu(conteneur, {
-        scenario: prepare.scenario, carte, locale, commandants, graine,
-        adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants, Object.fromEntries(prepare.scenario.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!]))),
+        scenario: joue, carte, locale, commandants, graine,
+        adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants, Object.fromEntries(joue.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!]))),
         reprendre: depart === 'reprise',
         cleSauvegarde,
         // La qualité d'affichage et la réduction des animations sont des
@@ -266,7 +309,13 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         // connaît pas `localStorage`.
         fabriqueRendu: () => creerRendu3d({
           biome: carte.biome,
-          paysParCamp: { 0: prepare.scenario.incarnation?.paysCode ?? scenario.paysCode, 1: prepare.scenario.incarnation ? 'fr' : 'lu' },
+          // La nation d'en face ne suit **pas** celle du joueur : elle le
+          // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
+          // était rare et toujours luxembourgeoise ; avec le vestiaire elle
+          // devient l'ordinaire, et l'adversaire changeait de couleurs chaque
+          // fois qu'on changeait d'entraîneur. Il garde le Luxembourg, sauf
+          // quand le joueur le lui prend.
+          paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
           qualite: preferences.qualite,
           animationsReduites: preferences.animationsReduites,
           // Le moteur s'initialise après le montage : s'il ne démarre pas —
@@ -292,7 +341,15 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           setEtat(courant);
           if (mission && courant.partie.terminee && sontAllies(courant, courant.partie.vainqueur, CAMP_JOUEUR) && !victoireEnregistree) {
             victoireEnregistree = true;
-            setStockageDisponible(enregistrerVictoire(scenario.code, profilPartie.current, mode));
+            // Sans perte : la condition d'un secret du vestiaire. Elle se lit
+            // sur l'état final, jamais sur le journal, qui est une fenêtre.
+            const sansPerte = bilanDeFin(courant, carte, CAMP_JOUEUR).perdues === 0;
+            setStockageDisponible(enregistrerVictoire(scenario.code, profilPartie.current, mode, sansPerte));
+            // Ce que cette victoire ouvre, dit **une fois**, sur l'écran de fin.
+            // `debloquerCommandants` calcule et enregistre ; la page ne fait que
+            // le montrer, et une seconde victoire de la même manche ne rendrait
+            // plus rien à annoncer.
+            setOuvertsParVictoire(debloquerCommandants(chargerCommandantsJouables(), profilPartie.current));
             setProgression(lireProgression(profilPartie.current));
           }
         },
@@ -333,14 +390,21 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       if (image !== null) cancelAnimationFrame(image);
       partie.demonter();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   // Une nouvelle partie d'une épreuve à bancs repasse par le choix : démonter
   // (`depart` à `null`), demander, puis monter au choix.
   const rejouer = () => {
     if (bancs.length > 0) { setErreur(false); setEtat(null); setVoirBriefing(false); setVoirAide(false); setDepart(null); setBancEnAttente(true); return; }
+    if (vestiaireOuvert) { setErreur(false); setEtat(null); setVoirBriefing(false); setVoirAide(false); setDepart(null); setOuvertsParVictoire([]); setCommandantEnAttente(true); return; }
     reprendre('neuf'); setTentative(n => n + 1);
+  };
+  const choisirCommandant = (cle: string): void => {
+    setCommandantChoix(cle);
+    setCommandantEnAttente(false);
+    setDepart('neuf');
+    setTentative(n => n + 1);
   };
   const choisirBanc = (choix: string): void => {
     setStockageDisponible(enregistrerBanc(scenario.code, scenario.version, choix, profilPartie.current));
@@ -368,23 +432,63 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   const nomIllustration = (c: CleIllustration): string => t(locale, `illustration.${c}`);
   const modal = Boolean(mission && !enScene && (fin || voirBriefing || voirAide));
   const commandantContact = scenarioEffectif.commandants.find((c) => c.camp === CAMP_JOUEUR)?.commandantCle ?? scenarioEffectif.commandants[0]?.commandantCle;
-  const commandantDefaut = scenario.commandants.find((c) => c.camp === CAMP_JOUEUR)?.commandantCle ?? '';
   // Le bilan ne se calcule qu'une fois la manche finie, et il ne lit que l'état
   // final et la carte : rien à mémoriser en cours de partie.
   const bilan = fin && etat ? bilanDeFin(etat, carte, CAMP_JOUEUR) : null;
 
+  // Le vestiaire, composé une fois par état de progression : seize fiches, c'est
+  // seize kits lus au catalogue, et il n'y a aucune raison de les relire à
+  // chaque image d'un plateau qui tourne derrière.
+  const grilleVestiaire = useMemo(() => grilleCommandants({
+    t: (cle, params) => t(locale, cle, params), locale, roster,
+    acquis: vestiaire(progression, roster), defaut: commandantDefaut,
+    catalogue: catalogueKit, revision: revisionCommandants(scenario),
+  }), [locale, roster, progression, commandantDefaut, catalogueKit, scenario]);
+  const fichesOuvertes = ouvertsParVictoire.length > 0 ? ouvertures(grilleVestiaire, ouvertsParVictoire) : [];
+  const compteVestiaire = compteRoster(grilleVestiaire);
+  const libellesVestiaire = {
+    surtitre: `${mission ? titreEtape : t(locale, 'campagne.demo')} \u00b7 ${t(locale, 'vestiaire.choisir')}`,
+    titre: scenario.nom,
+    note: t(locale, 'vestiaire.note'),
+    compte: [
+      t(locale, 'vestiaire.compte', { acquis: compteVestiaire.acquis, total: compteVestiaire.total }),
+      compteVestiaire.secrets > 0 ? t(locale, 'vestiaire.compte_secrets', { n: compteVestiaire.secrets }) : '',
+    ].filter((x) => x !== '').join(' \u00b7 '),
+    grille: t(locale, 'vestiaire.grille'),
+    prendre: t(locale, 'vestiaire.prendre'),
+    defaut: t(locale, 'vestiaire.defaut'),
+    verrouille: t(locale, 'vestiaire.verrouille'),
+    secret: t(locale, 'vestiaire.secret'),
+    indice: t(locale, 'vestiaire.indice'),
+    kit: t(locale, 'vestiaire.kit'),
+  };
+
   const plateauPret = Boolean(etat);
   useEffect(() => {
     if (modal || bancEnAttente) dialogueRef.current?.focus();
-    else if (plateauPret) conteneurRef.current?.querySelector('canvas')?.focus();
-  }, [modal, plateauPret, bancEnAttente]);
+    else if (plateauPret && !commandantEnAttente) conteneurRef.current?.querySelector('canvas')?.focus();
+  }, [modal, plateauPret, bancEnAttente, commandantEnAttente]);
 
   if (queteVerrouillee) return <main className="atlas-jeu fixed inset-0 bg-[#10131a]"><div className="atlas-voile"><section className="atlas-briefing" role="status">
     <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne">{t(locale, 'campagne.retour')}</Link>
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
-    <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || undefined} />
+    <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || commandantEnAttente || undefined} />
+    {/* Le vestiaire, avant tout montage : seize cases, un banc à prendre. Le
+        composant ne lit rien — la page compose ses fiches depuis le roster du
+        canon et l'acquis que la progression a calculé. */}
+    {commandantEnAttente && !erreur ? <div className="atlas-voile atlas-transmission">
+      <ChoixCommandant
+        fiches={grilleVestiaire}
+        camp={CAMP_JOUEUR}
+        surPrendre={choisirCommandant}
+        libelles={libellesVestiaire}
+      >
+        {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
+        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
+      </ChoixCommandant>
+    </div> : null}
     {/* Le choix du banc, avant tout montage : « Jouer sous les couleurs de… ».
         Chaque option dit le général, son kit tel qu'il sera joué, et la suite
         qu'elle annonce dans l'épreuve suivante. Le premier bouton est le banc du
@@ -461,6 +565,18 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           <BlocBilan bilan={bilan} gagne={gagne} locale={locale} />
           <p className="atlas-conclusion">{gagne ? <Gras texte={mission.conclusion} nomIllustration={nomIllustration} /> : t(locale, 'campagne.defaite')}</p>
         </> : null}
+        {/* Ce que la victoire vient d'ouvrir. Un buste, un nom, une ligne : de
+            quoi savoir ce qu'on a gagné sans quitter l'écran de fin, et de quoi
+            avoir envie du prochain briefing. */}
+        {fin && fichesOuvertes.length > 0 ? <section className="vestiaire-annonce" aria-labelledby="titre-vestiaire-ouvert">
+          <h2 id="titre-vestiaire-ouvert">{t(locale, fichesOuvertes.length > 1 ? 'vestiaire.ouverts' : 'vestiaire.ouvert', { n: fichesOuvertes.length })}</h2>
+          <ul>{fichesOuvertes.map((f) => <li key={f.cle}>
+            <Buste camp={CAMP_JOUEUR} />
+            <div><strong>{f.nom}</strong>{f.style !== '' ? <span>{f.style}</span> : null}
+              {f.gout !== '' ? <p>{f.gout}</p> : <p>{f.lignes[0] ?? ''}</p>}</div>
+          </li>)}</ul>
+          <p className="atlas-aide">{t(locale, 'vestiaire.ouvert_note')}</p>
+        </section> : null}
         {mission && !fin ? <>
           <div className="atlas-but"><h2>{t(locale, 'campagne.objectif')}</h2><p><Gras texte={objectifMission} nomIllustration={nomIllustration} /></p>{voirAide && etat ? textesObjectifs(etat, chargerCatalogue(scenario.catalogueVersion), (cle, params) => t(locale, cle, params)).map((ligne, i) => <p className="atlas-progres-but" key={i}>{ligne}</p>) : null}</div>
           {voirAide ? <div className="atlas-lecon">

@@ -1,6 +1,6 @@
 import type { Dialogue, Scenario } from '../../schemas/index';
 import type { DecisionLocale } from './progression';
-import { BANCS_PRETES, CLES_I18N_BANC, appliquerBanc, bancChoisi, cleSourceBanc, estSourceBanc, optionsBanc, scenarioDeSource } from './bancs';
+import { BANCS_PRETES, CLES_I18N_BANC, appliquerBanc, bancChoisi, cleSourceBanc, estSourceBanc, graineSansCommandant, optionsBanc, scenarioDeSource } from './bancs';
 
 export const VERSION_CANON_AUBE = 1;
 export const CHOIX_AUBE = {
@@ -178,7 +178,11 @@ const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, SOURCES_DECISION
 export function decisionsDeGraine(scenario: Scenario, graine: string): DecisionLocale[] {
   const prefixe = `${scenario.code}:a${VERSION_CANON_AUBE}:`;
   if (!graine.startsWith(prefixe)) return [];
-  const chiffres = graine.slice(prefixe.length);
+  // Le commandant choisi au briefing s'écrit en dernier segment de la graine et
+  // ne se compte pas par position (`bancs.ts`) : on le retire avant de lire les
+  // chiffres, sans quoi une longueur inattendue ferait perdre **toutes** les
+  // décisions de l'épreuve.
+  const chiffres = graineSansCommandant(graine).slice(prefixe.length);
   if (!LONGUEURS_GRAINE.includes(chiffres.length) || !/^[0-9]+$/.test(chiffres)) return [];
   return SOURCES_DECISION.flatMap((source, i) => {
     const option = optionsDecision(source)[Number(chiffres[i]) - 1];

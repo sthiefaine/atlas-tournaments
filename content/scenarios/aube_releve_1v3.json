@@ -1,10 +1,10 @@
 {
   "cle": "aube_releve_1v3",
-  "version": 5,
+  "version": 6,
   "statut": "brouillon",
   "source": "atlas_lore",
   "creeLe": "2026-09-09",
-  "majLe": "2026-09-10",
+  "majLe": "2026-09-12",
   "code": "aube_releve_1v3",
   "nom": "Aube · La quarantième relève · 1 contre 3",
   "acte": 0,
@@ -51,6 +51,7 @@
       "ia": "ponderee"
     }
   ],
+  "choixCommandant": "debloques",
   "fondsDepart": 1000,
   "revenusParBatiment": 0,
   "brouillard": false,

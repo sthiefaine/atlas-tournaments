@@ -1,10 +1,10 @@
 {
   "cle": "bras_de_mer",
-  "version": 2,
+  "version": 3,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-07",
-  "majLe": "2026-09-07",
+  "majLe": "2026-09-12",
   "code": "bras_de_mer",
   "nom": "Jeu libre · Le bras de mer",
   "acte": 0,
@@ -31,6 +31,7 @@
       "ia": "agressive"
     }
   ],
+  "choixCommandant": "debloques",
   "fondsDepart": 8000,
   "revenusParBatiment": 1000,
   "brouillard": false,

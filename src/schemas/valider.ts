@@ -12,7 +12,7 @@
 import {
   ARCHETYPES, AUTEURS_PROMPT, AUTEURS_TRADUCTION, AXES_FAIBLESSE, BASES_SILHOUETTE,
   BIOMES, BORNES_CONSEQUENCE, BORNES_FACTION, BORNES_MODIFICATEUR, BORNES_RELATIONS,
-  CHOIX_LASER, CODE_FACTION, estEffetFaction,
+  CHOIX_COMMANDANT, CHOIX_LASER, CODE_FACTION, estEffetFaction,
   CARACTERE_PAR_TERRAIN, CARACTERES_CAPTURABLES,
   CATEGORIES_EVENT,
   CATEGORIES_GLOSSAIRE, CIBLES_EFFET, CIBLES_REVIEW, CLES_GABARIT, CLES_PROMPT,
@@ -25,7 +25,7 @@ import {
   MODULES_SILHOUETTE, MOMENTS_CHOIX, MOTIFS_REJET, ORIGINES_CHAINE, PHASES_JOUR,
   PORTEES_FLAG, PORTEES_MEMOIRE, PORTEES_MEMOIRE_REFERENCEES, PORTEES_SPECIALITE,
   PROFONDEUR_CONDITION_MAX,
-  QUOI_MODIFICATEUR, REGEX_CASE, REGEX_CLE_CHAINE, REGEX_CLE_MECANIQUE,
+  QUOI_MODIFICATEUR, REGEX_CASE, REGEX_CLE, REGEX_CLE_CHAINE, REGEX_CLE_MECANIQUE,
   RELATIONS_CONSEQUENCE, RELATIONS_NATION,
   REGEX_CODE_COMMANDANT, REGEX_CODE_LOCALE, SAISONS, SCRIPTS_LOCALE, SENS_ECRITURE,
   SOURCES_ENVELOPPE, SOURCES_MEMOIRE, STATUTS, STATUTS_LOCALE, STATUTS_PROMPT,
@@ -48,7 +48,7 @@ import {
   type Glossaire, type Locale, type MapDef, type MemoryEntry, type MetriquesPrompt,
   type MissionDuJour, type ObjectifDefaite, type ObjectifVictoire,
   type ParametresCarte, type ParametresMode, type ProfilCampagne, type PromptVersion,
-  type Region, type ReviewVerdict,
+  type Region, type ReviewVerdict, type RosterJouables,
   type Sauvegarde, type Scenario, type Silhouette, type Specialite,
   type StatsSimulation, type TableDegats, type Terrain, type Traduction,
   type Trait, type UnitType, type UniteDepart,
@@ -1385,7 +1385,7 @@ function modesScenario(ctx: Contexte, v: unknown, chemin: string): void {
 
 const CLES_SCENARIO = [
   ...CLES_ENVELOPPE, 'code', 'nom', 'acte', 'gabarit', 'dureeVisee', 'modes',
-  'incarnation', 'bancs', 'paysCode', 'regionCle', 'carteCle', 'date',
+  'incarnation', 'bancs', 'choixCommandant', 'bancPrete', 'paysCode', 'regionCle', 'carteCle', 'date',
   'climatFixe', 'cycleJourNuit', 'catalogueVersion', 'commandantsVersion', 'commandants', 'factionsParCamp', 'equipes', 'renforts', 'installationsIem', 'superusines', 'evenementsClimat', 'fondsDepart', 'fondsDepartParCamp', 'revenusParBatimentParCamp', 'vitesseJaugeJoueur', 'previsionJournees',
   'revenusParBatiment', 'brouillard', 'limiteJournees', 'victoire', 'defaite',
   'dialogueOuverture', 'dialogueVictoire', 'dialogueDefaite', 'scenesDialogue',
@@ -1602,6 +1602,33 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
     });
     sansDoublon(ctx, generaux, 'bancs');
   }
+  // Le choix du commandant au briefing (`ChoixCommandant`). Il ouvre le roster
+  // débloqué ; une liste de bancs nommés dit l'inverse — trois options écrites,
+  // chacune avec sa conséquence. Les deux ensemble, et la liste ne veut plus
+  // rien dire : le scénario propose l'un ou l'autre.
+  if (presente(o, 'choixCommandant')) {
+    const politique = enumeration(ctx, o['choixCommandant'], 'choixCommandant', CHOIX_COMMANDANT);
+    if (politique === 'debloques' && presente(o, 'bancs')) {
+      ctx.faute('choixCommandant', "un scénario propose ses bancs nommés ou le roster débloqué, jamais les deux");
+    }
+    // Même raison que pour les bancs : un match d'incarnation **est** déjà le
+    // choix d'un général, et il écrit les flags de la nation incarnée. Ouvrir le
+    // roster par-dessus rendrait ces flags faux.
+    if (politique === 'debloques' && presente(o, 'incarnation')) {
+      ctx.faute('choixCommandant', "un match d'incarnation ne fait pas choisir son commandant : il en est déjà un");
+    }
+  }
+  // Le témoin d'un scénario effectif joué sous un banc prêté (`Scenario.bancPrete`).
+  // Il ne marque rien tout seul : c'est l'`Incarnation` posée par `appliquerBanc`
+  // qu'il qualifie.
+  // Sans incarnation il ne dit rien de plus que la vérité — le scénario garde ses
+  // flags de toute façon —, et c'est voulu : un appelant qui applique un banc
+  // puis retire l'incarnation (jouer le général sans changer de délégation) ne
+  // doit pas produire un scénario que le validateur refuse.
+  const bancPrete = presente(o, 'bancPrete');
+  if (bancPrete && o['bancPrete'] !== true) {
+    ctx.faute('bancPrete', 'vrai, ou absent : un banc prêté ne se nie pas');
+  }
 
   entier(ctx, o['fondsDepart'], 'fondsDepart', { min: 0, max: 30000, multiple: 100 });
   if (o['fondsDepartParCamp'] !== undefined) {
@@ -1651,8 +1678,10 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   // principale du joueur, donc rien en `monde.*`, et ses flags de pays sont ceux de
   // la nation incarnée. Restent `cmd.*` : la relation avec le général, qui est
   // précisément ce qu'un match d'incarnation fait bouger (`08` §4.5).
+  // Un **banc prêté** échappe au serrage : l'épreuve garde ses flags, c'est une
+  // variante d'une étape et non un match d'incarnation (`Scenario.bancPrete`).
   const portee = (f: string, chemin: string): void => {
-    if (incarnePays !== undefined) {
+    if (incarnePays !== undefined && !bancPrete) {
       if (f.startsWith('monde.')) {
         ctx.faute(chemin,
           "un match d'incarnation n'écrit aucun flag de la trame principale : pays.<nation incarnée>.* ou cmd.* seulement");
@@ -2722,6 +2751,90 @@ export function validerCondition(valeur: unknown): Resultat<Condition> {
   const ctx = new Contexte();
   const lue = condition(ctx, valeur, '');
   return conclure(ctx, lue as Condition);
+}
+
+/** Les deux formes d'`ouvertPar` qui ne désignent pas un scénario. */
+export const OUVERTURES_HORS_SCENARIO = ['debut', 'a_venir'] as const;
+
+/**
+ * Valide le **roster jouable** (`content/commandants-jouables.json`).
+ *
+ * Deux références sortent du fichier et ne peuvent donc pas être résolues ici —
+ * `schemas` n'importe rien : le catalogue des capacités et la liste des
+ * scénarios. L'appelant les passe s'il les a (le chargeur de `src/content/`
+ * passe le premier, un test les deux) ; sans elles, seules la **forme** et les
+ * doublons sont vérifiés.
+ *
+ * Ce que le validateur **ne fige pas** : les comptes. Seize jouables et quatre
+ * secrets aujourd'hui, dix-huit demain — c'est une décision de contenu, pas de
+ * schéma. Ce qu'il refuse : le vide, un doublon dans une liste, et la même clé
+ * des deux côtés — un commandant est ouvert par une victoire ou par une
+ * condition secrète, jamais par les deux, sinon on ne saurait pas lequel des
+ * deux chemins l'annonce.
+ */
+export function validerRosterJouables(
+  valeur: unknown,
+  refs: { commandants?: readonly string[]; scenarios?: readonly string[] } = {},
+): Resultat<RosterJouables> {
+  const ctx = new Contexte();
+  const o = objet(ctx, valeur, '', ['version', 'statut', 'source', 'note', 'regles', 'jouables', 'secrets']);
+  if (!o || !requis(ctx, o, '', ['version', 'statut', 'jouables', 'secrets'])) {
+    return conclure(ctx, valeur as RosterJouables);
+  }
+  entier(ctx, o['version'], 'version', { min: 1 });
+  chaine(ctx, o['statut'], 'statut', { max: 80 });
+  // Trois champs de documentation, comme en porte `commandants-capacites.json` :
+  // d'où vient le roster, ce qu'il faut savoir avant d'y toucher, et les règles
+  // que son auteur s'impose. Aucun n'est lu par le jeu.
+  if (presente(o, 'source')) chaine(ctx, o['source'], 'source', { max: 400 });
+  if (presente(o, 'note')) chaine(ctx, o['note'], 'note', { max: 800 });
+  if (presente(o, 'regles')) {
+    tableau(ctx, o['regles'], 'regles', { max: 20 }, (e, c) => chaine(ctx, e, c, { max: 600 }));
+  }
+
+  const commandant = (v: unknown, chemin: string): string | undefined => {
+    const k = chaine(ctx, v, chemin, { regex: REGEX_CODE_COMMANDANT, forme: 'cmd_<prenom>_<nom>' });
+    if (k !== undefined && refs.commandants && !refs.commandants.includes(k)) {
+      ctx.faute(chemin, `commandant absent du catalogue des capacités : ${k}`);
+    }
+    return k;
+  };
+
+  const jouables = tableau(ctx, o['jouables'], 'jouables', { min: 1, max: 64 }, (e, c) => {
+    const j = objet(ctx, e, c, ['cle', 'ouvertPar', 'gout']);
+    if (!j || !requis(ctx, j, c, ['cle', 'ouvertPar', 'gout'])) return undefined;
+    const k = commandant(j['cle'], sous(c, 'cle'));
+    const ouvertPar = chaine(ctx, j['ouvertPar'], sous(c, 'ouvertPar'),
+      { regex: REGEX_CLE, forme: "'debut', 'a_venir' ou un code de scénario" });
+    if (ouvertPar !== undefined
+      && !(OUVERTURES_HORS_SCENARIO as readonly string[]).includes(ouvertPar)
+      && refs.scenarios && !refs.scenarios.includes(ouvertPar)) {
+      ctx.faute(sous(c, 'ouvertPar'), `scénario inconnu : ${ouvertPar}`);
+    }
+    chaine(ctx, j['gout'], sous(c, 'gout'), { min: 1, max: 240 });
+    return k;
+  });
+  if (jouables) sansDoublon(ctx, jouables, 'jouables');
+
+  const secrets = tableau(ctx, o['secrets'], 'secrets', { min: 1, max: 32 }, (e, c) => {
+    const s = objet(ctx, e, c, ['cle', 'libelle', 'indice', 'condition']);
+    if (!s || !requis(ctx, s, c, ['cle', 'libelle', 'indice', 'condition'])) return undefined;
+    const k = commandant(s['cle'], sous(c, 'cle'));
+    chaine(ctx, s['libelle'], sous(c, 'libelle'), { min: 1, max: 80 });
+    chaine(ctx, s['indice'], sous(c, 'indice'), { min: 1, max: 240 });
+    condition(ctx, s['condition'], sous(c, 'condition'));
+    return k;
+  });
+  if (secrets) sansDoublon(ctx, secrets, 'secrets');
+  if (jouables && secrets) {
+    const ouverts = new Set(jouables.filter((k): k is string => k !== undefined));
+    for (const [i, k] of secrets.entries()) {
+      if (k !== undefined && ouverts.has(k)) {
+        ctx.faute(sous('secrets', i), `déjà au roster ouvert : ${k}`);
+      }
+    }
+  }
+  return conclure(ctx, o as unknown as RosterJouables);
 }
 
 /** Lit une `Consequence` de la liste fermée du brief, avec ses paramètres bornés. */
