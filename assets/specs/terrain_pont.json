@@ -51,8 +51,6 @@
   },
   "budget": {
     "lod0": 1200,
-    "lod1": 320,
-    "lod2": 80,
     "materiauxMax": 2
   },
   "textures": [
@@ -123,7 +121,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "terrain_pont_lod0.glb",
-      "terrain_pont_lod1.glb",
       "terrain_pont_albedo.png",
       "terrain_pont_albedo_hiver.png"
     ]
@@ -148,8 +145,7 @@
     ],
     "toleranceAabb": 0,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

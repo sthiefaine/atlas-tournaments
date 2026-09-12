@@ -19,19 +19,6 @@
         "mat_sol"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "terrain_route_lod1.glb",
-      "octets": 3104,
-      "triangles": 12,
-      "noeuds": [
-        "sol",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_sol"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -59,8 +46,7 @@
       "terrain_route_occlusion_ete.png",
       "terrain_route_occlusion_automne.png",
       "terrain_route_occlusion_hiver.png",
-      "terrain_route_lod0.glb",
-      "terrain_route_lod1.glb"
+      "terrain_route_lod0.glb"
     ]
   }
 }

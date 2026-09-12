@@ -51,8 +51,6 @@
   },
   "budget": {
     "lod0": 9000,
-    "lod1": 3000,
-    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -164,7 +162,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "unite_meridien_bastion_base_lod0.glb",
-      "unite_meridien_bastion_base_lod1.glb",
       "unite_meridien_bastion_base_albedo.png",
       "unite_meridien_bastion_base_albedo_hiver.png"
     ]
@@ -190,9 +187,7 @@
     ],
     "toleranceAabb": 0.12,
     "lodRequis": [
-      0,
-      1,
-      2
+      0
     ]
   }
 }

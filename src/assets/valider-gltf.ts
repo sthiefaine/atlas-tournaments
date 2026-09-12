@@ -318,6 +318,7 @@ function texturePresente(
  * terrain de ne pas se voir reprocher l'absence d'animations.
  */
 export function validerGlb(octets: Uint8Array, spec: AssetSpec, options: OptionsGlb = {}): VerdictAsset {
+  if (options.lod !== undefined && options.lod !== 0) return { ok: false, motifs: [motif('asset_format', 'Seul le LOD0 est accepté.')] };
   const lecture = lireGlb(octets);
   if (!lecture.ok) return { ok: false, motifs: [lecture.motif] };
 

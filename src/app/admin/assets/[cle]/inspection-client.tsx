@@ -8,6 +8,6 @@ export function InspectionClient(props: PropsInspection) {
   const [ouvert, ouvrir] = useState(false);
   return <section className="mb-8 rounded border border-current/20 p-4">
     <button type="button" className="underline" aria-expanded={ouvert} onClick={() => ouvrir(!ouvert)}>{ouvert ? 'Fermer' : 'Ouvrir'} le {libelle}</button>
-    {ouvert ? <Inspection {...props} /> : <p className="mt-2 text-xs admin-secondaire">Dessus, trois-quarts, caméra de jeu, textures, LOD et animations. Le moteur 3D est chargé à l’ouverture.</p>}
+    {ouvert ? <Inspection {...props} /> : <p className="mt-2 text-xs admin-secondaire">Dessus, trois-quarts, caméra de jeu, textures et animations du LOD0. Le moteur 3D est chargé à l’ouverture.</p>}
   </section>;
 }

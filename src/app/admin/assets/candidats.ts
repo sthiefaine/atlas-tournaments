@@ -20,7 +20,7 @@ export function lireExposition(valeur: unknown): Map<string, CandidatExpose> {
     if (!element || typeof element !== 'object') continue;
     const a = element as {id?:unknown;fichiers?:unknown;revision?:unknown};
     if (typeof a.id !== 'string' || !/^[a-z][a-z0-9_]*$/.test(a.id) || typeof a.revision !== 'string' || !/^[a-f0-9]{64}$/.test(a.revision) || !Array.isArray(a.fichiers)) continue;
-    const motif = new RegExp(`^${a.id}_(?:lod[012]\\.glb|[a-z0-9_]+\\.png)$`);
+    const motif = new RegExp(`^${a.id}_(?:lod0\\.glb|[a-z0-9_]+\\.png)$`);
     if (!a.fichiers.every((n): n is string => typeof n === 'string' && motif.test(n)) || !a.fichiers.includes(`${a.id}_lod0.glb`)) continue;
     resultat.set(a.id, {id:a.id, fichiers:[...new Set(a.fichiers)], revision:a.revision, prefixe:PREFIXE_CANDIDATS});
   }

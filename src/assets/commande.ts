@@ -41,7 +41,7 @@ function interdits(spec: AssetSpec): string {
 /** Les niveaux de détail exigés, dans l'ordre, avec leur budget de triangles. */
 function niveaux(spec: AssetSpec): string {
   return spec.verification.lodRequis
-    .map((lod: NiveauLod) => `\`${nomModele(spec, lod)}\` ≤ ${spec.budget[`lod${lod}` as 'lod0' | 'lod1' | 'lod2']} triangles`)
+    .map((lod: NiveauLod) => `\`${nomModele(spec, lod)}\` ≤ ${spec.budget.lod0} triangles`)
     .join(', ');
 }
 
@@ -136,7 +136,7 @@ export function commandeAsset(spec: AssetSpec): string {
   // masque d'équipe demandé, pas de masque d'équipe à corriger.
   const aReprendre = [
     'node names', 'material names',
-    `the ${spec.verification.lodRequis.length} levels of detail`,
+    'the single LOD0 model (no other LOD files)',
     ...(masque ? ['the team mask'] : []),
     'the pivot',
     ...(clips !== '' ? ['the animation clips'] : []),

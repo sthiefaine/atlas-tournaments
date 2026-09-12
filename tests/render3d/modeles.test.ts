@@ -9,13 +9,12 @@ import assert from 'node:assert/strict';
 import * as THREE from 'three/webgpu';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { genererSpecs, nomModele } from '../../src/assets/index';
-import { PALIERS_DISTANCE } from '../../src/render3d/camera';
 import {
   analyserGlb, appliquerMasque, candidatsModele, clipEnBoucle, clonerMateriauNoeud, conformerModele, convertirMateriaux,
-  couleurMasquee, couleurPour, creerChargeurModeles, creerLecteurClips, definirMasque, estMateriauStandard, estNomClip, forcerLod,
-  indexTextureMasque, lireInventaireReseau, lodForce, masqueDe, NOEUD_MASQUE_EQUIPE, NOM_FIGURINE, NOM_NIVEAUX,
+  couleurMasquee, couleurPour, creerChargeurModeles, creerLecteurClips, definirMasque, estMateriauStandard, estNomClip,
+  indexTextureMasque, lireInventaireReseau, masqueDe, NOEUD_MASQUE_EQUIPE, NOM_FIGURINE, NOM_NIVEAUX,
   NOM_ORIENTATION, nomFichierModele, nomsClips, PROP_COULEUR_EQUIPE, PROP_MASQUE_EQUIPE, PROPORTIONS, ROTATION_AVANT,
-  ROUTE_INVENTAIRE, SEUILS_LOD, teinterModele, versMateriauNoeud, type LectureFichier, type MateriauMasque,
+  ROUTE_INVENTAIRE, teinterModele, versMateriauNoeud, type LectureFichier, type MateriauMasque,
 } from '../../src/render3d/modeles';
 import { Materiaux } from '../../src/render3d/unites';
 import { binTriangle, construireGlb, documentTest } from '../assets/glb';
@@ -118,58 +117,16 @@ test('les niveaux livrés sont clonés, jamais volés à la lecture partagée', 
 // Niveaux de détail
 // ---------------------------------------------------------------------------
 
-test('les seuils de niveau de détail se déduisent des paliers de zoom, à mi-chemin', () => {
-  assert.deepEqual(SEUILS_LOD, [(13 + 17.5) / 2, (24 + 33) / 2]);
-  assert.equal(PALIERS_DISTANCE[3], 13);
-  assert.equal(PALIERS_DISTANCE[6], 33);
-});
-
-test('trois niveaux font un THREE.LOD aux seuils, un seul niveau se pose sans seuil', () => {
-  const trois = conformerModele({
-    niveaux: [sceneLivree('corps'), sceneLivree('corps'), sceneLivree('corps')], clips: [], kit: false,
-  });
-  assert.equal(trois.lods, 3);
-  const lod = trois.objet.getObjectByName(NOM_NIVEAUX);
-  assert.ok(lod instanceof THREE.LOD);
-  assert.deepEqual(lod.levels.map((l) => l.distance), [0, SEUILS_LOD[0], SEUILS_LOD[1]]);
-  assert.deepEqual(lod.levels.map((l) => l.object.name), ['lod0', 'lod1', 'lod2']);
-  assert.equal(lod.getObjectForDistance(PALIERS_DISTANCE[3])?.name, 'lod0', 'au palier 13, encore le plein');
-  assert.equal(lod.getObjectForDistance(PALIERS_DISTANCE[4])?.name, 'lod1', 'à 17,5, le moyen');
-  assert.equal(lod.getObjectForDistance(PALIERS_DISTANCE[7])?.name, 'lod2', 'à 45, le léger');
-
-  const deux = conformerModele({ niveaux: [sceneLivree(), sceneLivree()], clips: [], kit: false });
-  assert.equal(deux.lods, 2);
-  const lod2 = deux.objet.getObjectByName(NOM_NIVEAUX) as THREE.LOD;
-  assert.deepEqual(lod2.levels.map((l) => l.distance), [0, SEUILS_LOD[0]]);
-  assert.equal(lod2.getObjectForDistance(40)?.name, 'lod1', 'sans lod2, le lod1 tient jusqu’au bout');
-
-  const un = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false });
-  assert.equal(un.lods, 1);
-  assert.equal(un.objet.getObjectByName(NOM_NIVEAUX), undefined, 'un seul niveau : pas de LOD');
-  assert.equal(un.objet.getObjectByName(NOM_ORIENTATION)!.children[0]?.name, 'lod0');
+test('seul le LOD0 est conservé même si une ancienne source fournit plusieurs niveaux', () => {
+  const m = conformerModele({ niveaux: [sceneLivree(), sceneLivree(), sceneLivree()], clips: [], kit: false });
+  assert.equal(m.lods, 1);
+  assert.ok(m.objet.getObjectByName('lod0'));
+  assert.equal(m.objet.getObjectByName('lod1'), undefined);
+  assert.equal(m.objet.getObjectByName(NOM_NIVEAUX), undefined);
+  assert.ok(m.objet.getObjectByName('lod0')!.visible);
   assert.throws(() => conformerModele({ niveaux: [], clips: [], kit: false }), /lod0/);
 });
 
-test('forcer un niveau fige la visibilité ; rendre la main relance le choix de three', () => {
-  const { objet } = conformerModele({ niveaux: [sceneLivree(), sceneLivree(), sceneLivree()], clips: [], kit: false });
-  const lod = objet.getObjectByName(NOM_NIVEAUX) as THREE.LOD;
-  assert.equal(lodForce(objet), null);
-  forcerLod(objet, 2);
-  assert.equal(lod.autoUpdate, false);
-  assert.deepEqual(lod.levels.map((l) => l.object.visible), [false, false, true]);
-  assert.equal(lodForce(objet), 2);
-  forcerLod(objet, 0);
-  assert.deepEqual(lod.levels.map((l) => l.object.visible), [true, false, false]);
-  forcerLod(objet, null);
-  assert.equal(lod.autoUpdate, true);
-  assert.equal(lodForce(objet), null);
-  // Sans LOD dans l'objet, forcer ne fait rien et ne lève pas.
-  const un = conformerModele({ niveaux: [sceneLivree()], clips: [], kit: false });
-  forcerLod(un.objet, 2);
-  assert.equal(un.objet.getObjectByName('lod0')!.visible, true);
-});
-
-// ---------------------------------------------------------------------------
 // Teinte : base, kit, masque
 // ---------------------------------------------------------------------------
 
@@ -416,8 +373,8 @@ test('le clone complet d’un matériau à nœuds garde couleur, matière et car
 test('le rendu compose le même nom de fichier que la spécification', () => {
   const spec = genererSpecs().find((s) => s.id === 'unite_char_leger_base');
   assert.ok(spec);
-  for (const lod of [0, 1, 2] as const) assert.equal(nomFichierModele(spec.id, lod), nomModele(spec, lod));
-  assert.equal(nomFichierModele('kit_fr_char_leger', 1), 'kit_fr_char_leger_lod1.glb');
+  for (const lod of [0] as const) assert.equal(nomFichierModele(spec.id, lod), nomModele(spec, lod));
+  assert.equal(nomFichierModele('kit_fr_char_leger', 0), 'kit_fr_char_leger_lod0.glb');
 });
 
 test('l’ordre de repli : le kit de la nation, puis la base ; sans nation, la base seule', () => {
@@ -517,14 +474,14 @@ test('un inventaire vide ne coûte aucune requête : le placeholder reste, sans 
 test('un inventaire connu ne fait demander que ce qu’il liste, aux niveaux listés, dans l’ordre', async () => {
   const lecteur = lecteurFactice(['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb', 'unite_x_base_lod2.glb']);
   const charger = creerChargeurModeles({
-    inventaire: async () => ({ modeles: { unite_x_base: [0, 1] } }),
+    inventaire: async () => ({ modeles: { unite_x_base: [0] } }),
     lecteur: lecteur.lire,
   });
   const modele = await charger('x', 'fr');
   assert.ok(modele);
-  assert.equal(modele.lods, 2);
+  assert.equal(modele.lods, 1);
   assert.equal(modele.kit, false);
-  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb'],
+  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb'],
     'le kit fr n’est pas listé : pas demandé ; le lod2 n’est pas listé : pas demandé');
 
   // Le résultat est mémorisé par couple, la lecture par nom : une seconde
@@ -532,13 +489,13 @@ test('un inventaire connu ne fait demander que ce qu’il liste, aux niveaux lis
   await charger('x', 'fr');
   const autre = await charger('x', 'lu');
   assert.ok(autre);
-  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb', 'unite_x_base_lod1.glb']);
+  assert.deepEqual(lecteur.demandes, ['unite_x_base_lod0.glb']);
 });
 
 test('un lod2 listé sans lod1 n’est pas un jeu de niveaux : on s’arrête au lod0', async () => {
   const lecteur = lecteurFactice(['unite_x_base_lod0.glb', 'unite_x_base_lod2.glb']);
   const charger = creerChargeurModeles({
-    inventaire: async () => ({ modeles: { unite_x_base: [0, 2], kit_fr_x: [1] } }),
+    inventaire: async () => ({ modeles: { unite_x_base: [0], kit_fr_x: [] } }),
     lecteur: lecteur.lire,
   });
   const modele = await charger('x', 'fr');
@@ -552,14 +509,14 @@ test('sans inventaire, le chargeur sonde chaque candidat comme avant, un 404 par
   const charger = creerChargeurModeles({ inventaire: async () => null, lecteur: lecteur.lire });
   const modele = await charger('x', 'fr');
   assert.ok(modele);
-  assert.equal(modele.lods, 2);
+  assert.equal(modele.lods, 1);
   assert.deepEqual(lecteur.demandes, [
-    'kit_fr_x_lod0.glb', 'unite_x_base_lod0.glb', 'unite_x_base_lod1.glb', 'unite_x_base_lod2.glb',
+    'kit_fr_x_lod0.glb', 'unite_x_base_lod0.glb',
   ]);
   await charger('x', 'lu');
-  assert.deepEqual(lecteur.demandes.slice(4), ['kit_lu_x_lod0.glb'], 'la base déjà lue n’est pas relue');
+  assert.deepEqual(lecteur.demandes.slice(2), ['kit_lu_x_lod0.glb'], 'la base déjà lue n’est pas relue');
   assert.equal(await charger('y', null), null);
-  assert.deepEqual(lecteur.demandes.slice(5), ['unite_y_base_lod0.glb']);
+  assert.deepEqual(lecteur.demandes.slice(3), ['unite_y_base_lod0.glb']);
   // Un inventaire qui échoue vaut « inconnu », pas une exception.
   const casse = creerChargeurModeles({ inventaire: async () => { throw new Error('hors ligne'); }, lecteur: lecteur.lire });
   assert.ok(await casse('x', null));
@@ -682,8 +639,28 @@ test('chaque niveau de détail reçoit sa propre action, avancée en même temps
   const lecteur = creerLecteurClips(objet, clips)!;
   lecteur.jouer('repos');
   lecteur.avancer(0.5);
-  const lod = objet.getObjectByName(NOM_NIVEAUX) as THREE.LOD;
-  const positions = lod.levels.map((l) => l.object.getObjectByName('noeud')!.position.x);
-  assert.deepEqual(positions.map((x) => Number(x.toFixed(6))), [0.5, 0.5]);
+  const position = objet.getObjectByName('lod0')!.getObjectByName('noeud')!.position.x;
+  assert.equal(Number(position.toFixed(6)), 0.5);
   lecteur.dispose();
+});
+
+
+test('les normales quantifiées GLB deviennent compatibles WebGPU sans perdre leurs valeurs ni dupliquer les attributs partagés', () => {
+  const normal = new THREE.Int16BufferAttribute([32767, 0, -32767, 16384, 0, 16384], 3, true);
+  const source = Array.from(normal.array);
+  const groupe = new THREE.Group();
+  for (let i = 0; i < 2; i++) {
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('normal', normal);
+    groupe.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial()));
+  }
+  convertirMateriaux(groupe);
+  const a = (groupe.children[0] as THREE.Mesh).geometry.getAttribute('normal');
+  const b = (groupe.children[1] as THREE.Mesh).geometry.getAttribute('normal');
+  assert.ok(a.array instanceof Float32Array);
+  assert.equal(a.itemSize * a.array.BYTES_PER_ELEMENT % 4, 0);
+  assert.equal(a.normalized, false); assert.equal(a.count, normal.count); assert.equal(a, b);
+  for (let i = 0; i < a.count; i++) for (let c = 0; c < 3; c++) assert.ok(Math.abs(a.getComponent(i,c) - normal.getComponent(i,c)) < 1e-7);
+  assert.deepEqual(Array.from(normal.array), source);
+  convertirMateriaux(groupe);
+  assert.equal((groupe.children[0] as THREE.Mesh).geometry.getAttribute('normal'), a);
 });

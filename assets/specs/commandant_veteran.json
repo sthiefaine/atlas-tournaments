@@ -53,8 +53,6 @@
   },
   "budget": {
     "lod0": 14000,
-    "lod1": 4500,
-    "lod2": 1300,
     "materiauxMax": 3
   },
   "textures": [
@@ -123,7 +121,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "commandant_veteran_lod0.glb",
-      "commandant_veteran_lod1.glb",
       "commandant_veteran_albedo.png",
       "commandant_veteran_albedo_hiver.png"
     ]

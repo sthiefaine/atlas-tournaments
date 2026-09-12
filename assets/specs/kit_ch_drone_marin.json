@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 3500,
-    "lod1": 1200,
-    "lod2": 350,
     "materiauxMax": 3
   },
   "textures": [
@@ -160,7 +158,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_ch_drone_marin_lod0.glb",
-      "kit_ch_drone_marin_lod1.glb",
       "kit_ch_drone_marin_albedo.png",
       "kit_ch_drone_marin_albedo_hiver.png"
     ]
@@ -187,8 +184,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

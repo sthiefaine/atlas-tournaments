@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 6500,
-    "lod1": 2100,
-    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -146,7 +144,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "batiment_qg_is_lod0.glb",
-      "batiment_qg_is_lod1.glb",
       "batiment_qg_is_emission.png",
       "batiment_qg_is_emission_hiver.png"
     ]
@@ -172,8 +169,7 @@
     ],
     "toleranceAabb": 0.08,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

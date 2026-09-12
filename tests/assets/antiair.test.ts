@@ -36,7 +36,7 @@ test('six textures aux résolutions prescrites, masque binaire et albédo neutre
   }
   assert.ok(whites > 0 && whites < 512 * 512 / 4);
 });
-for (const lod of [0, 1, 2] as const) test(`LOD${lod}: noms exacts, géométrie valide et cinq clips aux durées exactes`, () => {
+for (const lod of [0] as const) test(`LOD${lod}: noms exacts, géométrie valide et cinq clips aux durées exactes`, () => {
   const bytes = readFileSync(`${dir}${id}_lod${lod}.glb`);
   assert.equal(validerGlb(bytes, lireSpec(`assets/specs/${id}.json`), { lod }).ok, true);
   const { document: d, bin } = decouperGlb(bytes);

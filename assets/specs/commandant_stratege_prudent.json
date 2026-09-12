@@ -53,8 +53,6 @@
   },
   "budget": {
     "lod0": 14000,
-    "lod1": 4500,
-    "lod2": 1300,
     "materiauxMax": 3
   },
   "textures": [
@@ -123,7 +121,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "commandant_stratege_prudent_lod0.glb",
-      "commandant_stratege_prudent_lod1.glb",
       "commandant_stratege_prudent_albedo.png",
       "commandant_stratege_prudent_albedo_hiver.png"
     ]

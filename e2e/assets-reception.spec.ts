@@ -15,11 +15,11 @@ test('catalogue réel, fiches, chargement différé et PNG partagés', async ({ 
   await expect(page.getByRole('heading', { name: 'Bibliothèque d’assets', exact: true })).toBeVisible();
   await expect(page.locator('a.asset-carte[href="/admin/assets/terrain_plaine"]')).toBeVisible();
   await page.locator('a.asset-carte[href="/admin/assets/terrain_plaine"]').click();
-  await expect(page.getByRole('heading', { name: 'terrain_plaine', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'plaine', exact: true })).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(0);
   await page.getByRole('button', { name: 'Ouvrir le banc de réception 3D' }).click();
   await expect(page.locator('[data-pret="true"]')).toHaveCount(1, { timeout: 90000 });
-  await page.getByLabel('LOD', { exact: true }).selectOption('1');
+  await expect(page.getByRole('combobox', { name: 'LOD', exact: true })).toHaveCount(0);
   await expect(page.locator('[data-pret="true"]')).toHaveCount(1, { timeout: 60000 });
   await page.getByLabel('Taille réelle : 48 px/m').check();
   await expect(page.locator('[data-pret="true"]')).toHaveCount(1, { timeout: 60000 });
@@ -74,7 +74,7 @@ test('familles, recherche et biographies se parcourent sans charger la 3D', asyn
   await expect(page.locator('.asset-carte')).toHaveCount(25);
   await page.locator('a.asset-carte[href="/admin/assets/unite_antiair_base"]').click();
   await expect(page.getByRole('button', { name: 'Copier le prompt pour Codex' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Fichiers obligatoires', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Fichiers obligatoires/ })).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(0);
   await page.getByRole('link', { name: 'Personnages et histoire', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Sélène Veyr', exact: true })).toBeVisible();

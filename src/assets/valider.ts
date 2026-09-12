@@ -144,21 +144,13 @@ function pivot(ctx: Contexte, v: unknown, chemin: string): Pivot | undefined {
 
 /** Lit le bloc `budget` : trois paliers strictement décroissants. */
 function budget(ctx: Contexte, v: unknown, chemin: string): Budget | undefined {
-  const cles = ['lod0', 'lod1', 'lod2', 'materiauxMax'];
+  const cles = ['lod0', 'materiauxMax'];
   const o = objet(ctx, v, chemin, cles);
   if (!o || !requis(ctx, o, chemin, cles)) return undefined;
   const lod0 = entier(ctx, o['lod0'], sous(chemin, 'lod0'), { min: 32, max: 1000000 });
-  const lod1 = entier(ctx, o['lod1'], sous(chemin, 'lod1'), { min: 16, max: 60000 });
-  const lod2 = entier(ctx, o['lod2'], sous(chemin, 'lod2'), { min: 8, max: 60000 });
   const materiauxMax = entier(ctx, o['materiauxMax'], sous(chemin, 'materiauxMax'), { min: 1, max: 4 });
-  if (lod0 === undefined || lod1 === undefined || lod2 === undefined || materiauxMax === undefined) {
-    return undefined;
-  }
-  if (!(lod0 > lod1 && lod1 > lod2)) {
-    ctx.faute(chemin, 'les budgets doivent décroître strictement de lod0 à lod2');
-    return undefined;
-  }
-  return { lod0, lod1, lod2, materiauxMax };
+  if (lod0 === undefined || materiauxMax === undefined) return undefined;
+  return { lod0, materiauxMax };
 }
 
 /** Lit une carte de texture. */
@@ -311,7 +303,7 @@ function verification(ctx: Contexte, v: unknown, chemin: string): Verification |
   if (!Array.isArray(brutLod)) ctx.faute(cLod, 'un tableau est attendu');
   else {
     for (let i = 0; i < brutLod.length; i += 1) {
-      const n = entier(ctx, brutLod[i], sous(cLod, i), { min: 0, max: 2 });
+      const n = entier(ctx, brutLod[i], sous(cLod, i), { min: 0, max: 0 });
       if (n !== undefined && (NIVEAUX_LOD as readonly number[]).includes(n)) lodRequis.push(n as NiveauLod);
     }
     sansDoublon(ctx, lodRequis, cLod);

@@ -1127,7 +1127,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
     dispose(): void {
       sol.geometry.dispose();
       vegetation?.geometry.dispose();matVegetation?.dispose();
-      for(const source of solsLivres.values()){source.vegetation?.proche.dispose();source.vegetation?.loin.dispose();}
+      for(const source of solsLivres.values()){source.vegetation?.proche.dispose();}
       // Ces quatre-là ne possèdent plus leur géométrie : c'est leur tampon.
       tamponSocle.dispose();
       tamponGrille.dispose();

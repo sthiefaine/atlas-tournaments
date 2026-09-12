@@ -51,8 +51,6 @@
   },
   "budget": {
     "lod0": 900,
-    "lod1": 260,
-    "lod2": 64,
     "materiauxMax": 2
   },
   "textures": [
@@ -109,7 +107,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "decor_rocher_neige_lod0.glb",
-      "decor_rocher_neige_lod1.glb",
       "decor_rocher_neige_albedo.png",
       "decor_rocher_neige_albedo_hiver.png"
     ]
@@ -133,9 +130,7 @@
     ],
     "toleranceAabb": 0.15,
     "lodRequis": [
-      0,
-      1,
-      2
+      0
     ]
   }
 }

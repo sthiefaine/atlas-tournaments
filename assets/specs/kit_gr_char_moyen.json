@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 6000,
-    "lod1": 2000,
-    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -159,7 +157,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_gr_char_moyen_lod0.glb",
-      "kit_gr_char_moyen_lod1.glb",
       "kit_gr_char_moyen_albedo.png",
       "kit_gr_char_moyen_albedo_hiver.png"
     ]
@@ -186,8 +183,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

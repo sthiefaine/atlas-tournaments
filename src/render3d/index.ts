@@ -91,7 +91,7 @@ export {
 export { cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 export { compterFamilles } from './mesures';
 export {
-  chargerModele, conformerModele, forcerLod, RACINE_MODELES, teinterModele,
+  chargerModele, conformerModele, RACINE_MODELES, teinterModele,
   type ModeleCharge, type NomClip,
 } from './unites';
 

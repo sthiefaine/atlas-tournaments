@@ -377,3 +377,11 @@ Le modèle fourni « tugboat » devient `unite_barge_base`, activé comme base p
 ## Mise à jour — barge HD et vitrine unique (12 septembre 2026)
 
 Sur demande du propriétaire, la barge utilise uniquement le LOD0 : 934 594 triangles, dont 934 558 conservés de la source Tripo, textures albedo/normale 4096². `scripts/barge/preparer-source.py` remplace la décimation Blender ; normales quantifiées 16 bits, géométrie non simplifiée. Les deux anciens LOD sont retirés. Les autres unités gardent leurs budgets. La vitrine `/atelier/unites` ne présente plus les six vues techniques ni le sélecteur LOD : vue libre interactive au LOD0, rotation et zoom conservés. Validation artistique encore à effectuer par le propriétaire.
+
+## Décision en vigueur — LOD0 uniquement (12 septembre 2026)
+
+Tous les assets du site utilisent désormais un seul modèle `*_lod0.glb` : unités, kits nationaux, bâtiments, terrains, décors et commandants. Les autres LOD sont supprimés des fichiers livrés et publics, des spécifications, des générateurs et des sélecteurs de l’administration. Les chargeurs du jeu, de l’accueil et des ateliers ne demandent que le LOD0, sans baisse de détail au zoom. Les PNG restent externes. Les budgets LOD0 existants sont conservés ; cette décision ne relève pas automatiquement leur nombre de triangles. Cette règle remplace les anciens passages prescrivant plusieurs LOD dans ce document.
+
+La barge HD révélait une incompatibilité WebGPU de Three r170 : les normales VEC3 int16 normalisées ont un pas de 6 octets, refusé par le GPU. `convertirMateriaux` adapte maintenant les attributs normalisés compacts en float32 à la lecture, en partageant les conversions. Aucun triangle ni fichier GLB n’est réduit. Les E2E de la barge contrôlent aussi les avertissements de validation GPU ; le simple badge « Modèle livré » ne prouve pas que le GPU a dessiné.
+
+Le GLB barge est également réexporté avec normales float32, sans extension de quantification, pour corriger le fichier lui-même. La limite de réception passe à 32 Mio par fichier (lot inchangé à 96 Mio). La géométrie, les UV et les textures sont conservés.

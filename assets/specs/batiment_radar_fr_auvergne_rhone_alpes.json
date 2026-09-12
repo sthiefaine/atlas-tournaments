@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 5000,
-    "lod1": 1600,
-    "lod2": 450,
     "materiauxMax": 3
   },
   "textures": [
@@ -146,7 +144,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "batiment_radar_fr_auvergne_rhone_alpes_lod0.glb",
-      "batiment_radar_fr_auvergne_rhone_alpes_lod1.glb",
       "batiment_radar_fr_auvergne_rhone_alpes_emission.png",
       "batiment_radar_fr_auvergne_rhone_alpes_emission_hiver.png"
     ]
@@ -172,8 +169,7 @@
     ],
     "toleranceAabb": 0.08,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

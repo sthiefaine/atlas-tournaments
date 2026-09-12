@@ -104,7 +104,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
           />
         </label>
         <p className="mt-2 text-xs admin-secondaire">
-          {!local ? "Dépôt disponible en développement uniquement ; versionner les fichiers avant déploiement. " : "24 Mio par fichier, 96 Mio par lot. "}
+          {!local ? "Dépôt disponible en développement uniquement ; versionner les fichiers avant déploiement. " : "32 Mio par fichier, 96 Mio par lot. "}
           Noms attendus : <span className="font-mono">{attendus.join(', ')}</span>.
           {' '}Un fichier dont le nom n’est pas dans cette liste n’est pas écrit — le dépôt ne reprend jamais un nom reçu.
         </p>

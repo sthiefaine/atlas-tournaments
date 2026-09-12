@@ -21,36 +21,6 @@
         "mat_feuillage"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod1.glb",
-      "octets": 38392,
-      "triangles": 216,
-      "noeuds": [
-        "tronc",
-        "feuillage",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_ecorce",
-        "mat_feuillage"
-      ],
-      "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod2.glb",
-      "octets": 14228,
-      "triangles": 56,
-      "noeuds": [
-        "tronc",
-        "feuillage",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_ecorce",
-        "mat_feuillage"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -73,9 +43,7 @@
       "decor_arbre_cotier_fr_provence_alpes_cote_azur_rugosite_ete.png",
       "decor_arbre_cotier_fr_provence_alpes_cote_azur_rugosite_automne.png",
       "decor_arbre_cotier_fr_provence_alpes_cote_azur_rugosite_hiver.png",
-      "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod0.glb",
-      "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod1.glb",
-      "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod2.glb"
+      "decor_arbre_cotier_fr_provence_alpes_cote_azur_lod0.glb"
     ]
   }
 }

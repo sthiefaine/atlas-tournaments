@@ -51,8 +51,6 @@
   },
   "budget": {
     "lod0": 2400,
-    "lod1": 600,
-    "lod2": 120,
     "materiauxMax": 2
   },
   "textures": [
@@ -127,7 +125,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "terrain_plaine_lod0.glb",
-      "terrain_plaine_lod1.glb",
       "terrain_plaine_albedo.png",
       "terrain_plaine_albedo_hiver.png"
     ]
@@ -152,8 +149,7 @@
     ],
     "toleranceAabb": 0,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

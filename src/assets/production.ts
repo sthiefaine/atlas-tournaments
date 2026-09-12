@@ -14,7 +14,7 @@ export interface ContratProduction {
   consignes: string[];
   gestes: Record<string, string>;
 }
-export const LIMITE_FICHIER = 24 * 1024 * 1024;
+export const LIMITE_FICHIER = 32 * 1024 * 1024;
 export const LIMITE_LOT = 96 * 1024 * 1024;
 
 export function contratProduction(spec: AssetSpec): ContratProduction {

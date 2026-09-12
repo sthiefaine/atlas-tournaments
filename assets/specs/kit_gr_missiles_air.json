@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 9000,
-    "lod1": 3000,
-    "lod2": 900,
     "materiauxMax": 3
   },
   "textures": [
@@ -166,7 +164,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_gr_missiles_air_lod0.glb",
-      "kit_gr_missiles_air_lod1.glb",
       "kit_gr_missiles_air_albedo.png",
       "kit_gr_missiles_air_albedo_hiver.png"
     ]
@@ -193,8 +190,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

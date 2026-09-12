@@ -7,7 +7,6 @@
     "motifs": [],
     "acceptes": [
       "terrain_plaine_lod0.glb",
-      "terrain_plaine_lod1.glb",
       "terrain_plaine_albedo.png",
       "terrain_plaine_normale.png",
       "terrain_plaine_rugosite.png",

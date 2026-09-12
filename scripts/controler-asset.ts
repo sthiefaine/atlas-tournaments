@@ -42,9 +42,9 @@ function options(argv: string[]): Record<string, string | boolean> {
   return sortie;
 }
 
-/** Le niveau de détail que dit le nom du fichier (`…_lod1.glb`), ou `null`. */
+/** Le niveau de détail que dit le nom du fichier (`…_lod0.glb`), ou `null`. */
 export function lodDuNom(nom: string): NiveauLod | null {
-  const m = /_lod([012])\.glb$/i.exec(path.basename(nom));
+  const m = /_lod(0)\.glb$/i.exec(path.basename(nom));
   return m ? (Number(m[1]) as NiveauLod) : null;
 }
 
@@ -103,7 +103,7 @@ export function afficherVerdict(spec: AssetSpec, fichier: string, lod: NiveauLod
 const USAGE = [
   'Lot complet (mêmes contrôles que le dépôt) : --spec <fiche.json> --lot <dossier>',
   'Inspection déclarative d’un seul GLB (ne certifie pas la livraison) :',
-  'usage : npx tsx scripts/controler-asset.ts --spec assets/specs/<id>.json --glb <fichier.glb> [--lod 0|1|2] [--fichiers <dossier>] [--json]',
+  'usage : npx tsx scripts/controler-asset.ts --spec assets/specs/<id>.json --glb <fichier.glb> [--lod 0] [--fichiers <dossier>] [--json]',
 ].join('\n');
 
 /**
@@ -141,7 +141,8 @@ export function executer(argv: string[]): ResultatControle {
   }
 
   const lodDemande = typeof o['lod'] === 'string' ? Number(o['lod']) : null;
-  const lod: NiveauLod = lodDemande !== null && [0, 1, 2].includes(lodDemande)
+  if ((lodDemande !== null && lodDemande !== 0) || /_lod[1-9]\.glb$/i.test(cheminGlb)) return { code: 1, texte: 'Seul le LOD0 est accepté.', verdict: null };
+  const lod: NiveauLod = lodDemande !== null && [0].includes(lodDemande)
     ? (lodDemande as NiveauLod)
     : lodDuNom(cheminGlb) ?? 0;
 

@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 test.use({ trace: 'off', channel: 'chrome', launchOptions: { args: ['--enable-unsafe-webgpu'] } });
 test('Premier contact charge les GLB nationaux et leurs textures depuis le serveur', async ({ page }) => {
   const recus = new Set<string>();
+  const demandes: string[] = [];
+  page.on('request', r => demandes.push(new URL(r.url()).pathname));
   const erreurs: string[] = [];
   page.on('pageerror', e => erreurs.push(e.message));
   page.on('response', r => { if (r.ok()) recus.add(new URL(r.url()).pathname); });
@@ -18,19 +20,23 @@ test('Premier contact charge les GLB nationaux et leurs textures depuis le serve
     await expect.poll(() => recus.has(`/assets/modeles/${id}_albedo.png`), { timeout: 30000 }).toBe(true);
   }
   expect([...recus].some(p => p.startsWith('/assets/modeles/terrain_plaine_'))).toBe(false);
+  expect(demandes.filter(p => /_lod[1-9]\.glb$/.test(p))).toEqual([]);
   expect(erreurs).toEqual([]);
 });
 
 test('les assets actifs se chargent aussi dans une autre mission et sur l’accueil', async ({page})=>{
   for(const route of ['/jeu/villes_du_bocage','/']) {
-    const recus=new Set<string>(),erreurs:string[]=[];
+    const recus=new Set<string>(),erreurs:string[]=[],demandes:string[]=[];
+    const demande=(r:import('@playwright/test').Request)=>demandes.push(new URL(r.url()).pathname);
+    page.on('request',demande);
     const reponse=(r:import('@playwright/test').Response)=>{if(r.ok())recus.add(new URL(r.url()).pathname);};
     const erreur=(e:Error)=>erreurs.push(e.message);
     page.on('response',reponse);page.on('pageerror',erreur);
     await page.goto(route);
     await expect.poll(()=>recus.has('/assets/modeles/batiment_qg_fr_ile_de_france_lod0.glb'),{timeout:30000}).toBe(true);
     expect([...recus].some(p=>p.startsWith('/assets/modeles/terrain_plaine_'))).toBe(false);
-    expect(erreurs).toEqual([]);
-    page.off('response',reponse);page.off('pageerror',erreur);
+    expect(demandes.filter(p => /_lod[1-9]\.glb$/.test(p))).toEqual([]);
+  expect(erreurs).toEqual([]);
+    page.off('response',reponse);page.off('pageerror',erreur);page.off('request',demande);
   }
 });

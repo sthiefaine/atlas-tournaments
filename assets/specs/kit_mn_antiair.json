@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 6000,
-    "lod1": 2000,
-    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -166,7 +164,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_mn_antiair_lod0.glb",
-      "kit_mn_antiair_lod1.glb",
       "kit_mn_antiair_albedo.png",
       "kit_mn_antiair_albedo_hiver.png"
     ]
@@ -193,8 +190,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

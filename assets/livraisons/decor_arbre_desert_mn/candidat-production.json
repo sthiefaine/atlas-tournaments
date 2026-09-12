@@ -21,36 +21,6 @@
         "mat_feuillage"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_arbre_desert_mn_lod1.glb",
-      "octets": 38312,
-      "triangles": 216,
-      "noeuds": [
-        "tronc",
-        "feuillage",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_ecorce",
-        "mat_feuillage"
-      ],
-      "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_arbre_desert_mn_lod2.glb",
-      "octets": 14148,
-      "triangles": 56,
-      "noeuds": [
-        "tronc",
-        "feuillage",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_ecorce",
-        "mat_feuillage"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -73,9 +43,7 @@
       "decor_arbre_desert_mn_rugosite_ete.png",
       "decor_arbre_desert_mn_rugosite_automne.png",
       "decor_arbre_desert_mn_rugosite_hiver.png",
-      "decor_arbre_desert_mn_lod0.glb",
-      "decor_arbre_desert_mn_lod1.glb",
-      "decor_arbre_desert_mn_lod2.glb"
+      "decor_arbre_desert_mn_lod0.glb"
     ]
   }
 }

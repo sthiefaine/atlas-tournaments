@@ -19,19 +19,6 @@
         "mat_sol"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "terrain_montagne_lod1.glb",
-      "octets": 11596,
-      "triangles": 88,
-      "noeuds": [
-        "sol",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_sol"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -59,8 +46,7 @@
       "terrain_montagne_occlusion_ete.png",
       "terrain_montagne_occlusion_automne.png",
       "terrain_montagne_occlusion_hiver.png",
-      "terrain_montagne_lod0.glb",
-      "terrain_montagne_lod1.glb"
+      "terrain_montagne_lod0.glb"
     ]
   }
 }

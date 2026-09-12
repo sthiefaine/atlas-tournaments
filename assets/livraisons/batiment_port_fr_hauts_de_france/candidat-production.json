@@ -22,22 +22,6 @@
         "mat_corps"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "batiment_port_fr_hauts_de_france_lod1.glb",
-      "octets": 32584,
-      "triangles": 228,
-      "noeuds": [
-        "corps",
-        "toit",
-        "enseigne",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_vitrage",
-        "mat_corps"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -60,8 +44,7 @@
       "batiment_port_fr_hauts_de_france_masque_equipe.png",
       "batiment_port_fr_hauts_de_france_masque_equipe_ete.png",
       "batiment_port_fr_hauts_de_france_masque_equipe_hiver.png",
-      "batiment_port_fr_hauts_de_france_lod0.glb",
-      "batiment_port_fr_hauts_de_france_lod1.glb"
+      "batiment_port_fr_hauts_de_france_lod0.glb"
     ]
   }
 }

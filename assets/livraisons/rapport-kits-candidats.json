@@ -10,8 +10,7 @@
       "kit_ar_antiair_metal.png",
       "kit_ar_antiair_masque_equipe.png",
       "kit_ar_antiair_emission.png",
-      "kit_ar_antiair_lod0.glb",
-      "kit_ar_antiair_lod1.glb"
+      "kit_ar_antiair_lod0.glb"
     ]
   },
   {
@@ -24,8 +23,7 @@
       "kit_ar_artillerie_rugosite.png",
       "kit_ar_artillerie_metal.png",
       "kit_ar_artillerie_masque_equipe.png",
-      "kit_ar_artillerie_lod0.glb",
-      "kit_ar_artillerie_lod1.glb"
+      "kit_ar_artillerie_lod0.glb"
     ]
   },
   {
@@ -43,8 +41,7 @@
       "kit_ar_barge_rugosite_hiver.png",
       "kit_ar_barge_metal_hiver.png",
       "kit_ar_barge_masque_equipe_hiver.png",
-      "kit_ar_barge_lod0.glb",
-      "kit_ar_barge_lod1.glb"
+      "kit_ar_barge_lod0.glb"
     ]
   },
   {
@@ -64,8 +61,7 @@
       "kit_ar_bombardier_metal_hiver.png",
       "kit_ar_bombardier_masque_equipe_hiver.png",
       "kit_ar_bombardier_emission_hiver.png",
-      "kit_ar_bombardier_lod0.glb",
-      "kit_ar_bombardier_lod1.glb"
+      "kit_ar_bombardier_lod0.glb"
     ]
   },
   {
@@ -85,8 +81,7 @@
       "kit_ar_brouilleur_metal_hiver.png",
       "kit_ar_brouilleur_masque_equipe_hiver.png",
       "kit_ar_brouilleur_emission_hiver.png",
-      "kit_ar_brouilleur_lod0.glb",
-      "kit_ar_brouilleur_lod1.glb"
+      "kit_ar_brouilleur_lod0.glb"
     ]
   },
   {
@@ -104,8 +99,7 @@
       "kit_ar_char_leger_rugosite_hiver.png",
       "kit_ar_char_leger_metal_hiver.png",
       "kit_ar_char_leger_masque_equipe_hiver.png",
-      "kit_ar_char_leger_lod0.glb",
-      "kit_ar_char_leger_lod1.glb"
+      "kit_ar_char_leger_lod0.glb"
     ]
   },
   {
@@ -123,8 +117,7 @@
       "kit_ar_char_lourd_rugosite_hiver.png",
       "kit_ar_char_lourd_metal_hiver.png",
       "kit_ar_char_lourd_masque_equipe_hiver.png",
-      "kit_ar_char_lourd_lod0.glb",
-      "kit_ar_char_lourd_lod1.glb"
+      "kit_ar_char_lourd_lod0.glb"
     ]
   },
   {
@@ -142,8 +135,7 @@
       "kit_ar_char_moyen_rugosite_hiver.png",
       "kit_ar_char_moyen_metal_hiver.png",
       "kit_ar_char_moyen_masque_equipe_hiver.png",
-      "kit_ar_char_moyen_lod0.glb",
-      "kit_ar_char_moyen_lod1.glb"
+      "kit_ar_char_moyen_lod0.glb"
     ]
   },
   {
@@ -161,8 +153,7 @@
       "kit_ar_chasseur_rugosite_hiver.png",
       "kit_ar_chasseur_metal_hiver.png",
       "kit_ar_chasseur_masque_equipe_hiver.png",
-      "kit_ar_chasseur_lod0.glb",
-      "kit_ar_chasseur_lod1.glb"
+      "kit_ar_chasseur_lod0.glb"
     ]
   },
   {
@@ -180,8 +171,7 @@
       "kit_ar_cuirasse_rugosite_hiver.png",
       "kit_ar_cuirasse_metal_hiver.png",
       "kit_ar_cuirasse_masque_equipe_hiver.png",
-      "kit_ar_cuirasse_lod0.glb",
-      "kit_ar_cuirasse_lod1.glb"
+      "kit_ar_cuirasse_lod0.glb"
     ]
   },
   {
@@ -199,8 +189,7 @@
       "kit_ar_drone_rugosite_hiver.png",
       "kit_ar_drone_metal_hiver.png",
       "kit_ar_drone_masque_equipe_hiver.png",
-      "kit_ar_drone_lod0.glb",
-      "kit_ar_drone_lod1.glb"
+      "kit_ar_drone_lod0.glb"
     ]
   },
   {
@@ -220,8 +209,7 @@
       "kit_ar_drone_intercepteur_metal_hiver.png",
       "kit_ar_drone_intercepteur_masque_equipe_hiver.png",
       "kit_ar_drone_intercepteur_emission_hiver.png",
-      "kit_ar_drone_intercepteur_lod0.glb",
-      "kit_ar_drone_intercepteur_lod1.glb"
+      "kit_ar_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -241,8 +229,7 @@
       "kit_ar_drone_marin_metal_hiver.png",
       "kit_ar_drone_marin_masque_equipe_hiver.png",
       "kit_ar_drone_marin_emission_hiver.png",
-      "kit_ar_drone_marin_lod0.glb",
-      "kit_ar_drone_marin_lod1.glb"
+      "kit_ar_drone_marin_lod0.glb"
     ]
   },
   {
@@ -262,8 +249,7 @@
       "kit_ar_drone_ravitailleur_metal_hiver.png",
       "kit_ar_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_ar_drone_ravitailleur_emission_hiver.png",
-      "kit_ar_drone_ravitailleur_lod0.glb",
-      "kit_ar_drone_ravitailleur_lod1.glb"
+      "kit_ar_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -281,8 +267,7 @@
       "kit_ar_furtif_rugosite_hiver.png",
       "kit_ar_furtif_metal_hiver.png",
       "kit_ar_furtif_masque_equipe_hiver.png",
-      "kit_ar_furtif_lod0.glb",
-      "kit_ar_furtif_lod1.glb"
+      "kit_ar_furtif_lod0.glb"
     ]
   },
   {
@@ -302,8 +287,7 @@
       "kit_ar_genie_metal_hiver.png",
       "kit_ar_genie_masque_equipe_hiver.png",
       "kit_ar_genie_emission_hiver.png",
-      "kit_ar_genie_lod0.glb",
-      "kit_ar_genie_lod1.glb"
+      "kit_ar_genie_lod0.glb"
     ]
   },
   {
@@ -323,8 +307,7 @@
       "kit_ar_helico_metal_hiver.png",
       "kit_ar_helico_masque_equipe_hiver.png",
       "kit_ar_helico_emission_hiver.png",
-      "kit_ar_helico_lod0.glb",
-      "kit_ar_helico_lod1.glb"
+      "kit_ar_helico_lod0.glb"
     ]
   },
   {
@@ -336,8 +319,7 @@
       "kit_ar_infanterie_normale.png",
       "kit_ar_infanterie_rugosite.png",
       "kit_ar_infanterie_masque_equipe.png",
-      "kit_ar_infanterie_lod0.glb",
-      "kit_ar_infanterie_lod1.glb"
+      "kit_ar_infanterie_lod0.glb"
     ]
   },
   {
@@ -355,8 +337,7 @@
       "kit_ar_meca_rugosite_hiver.png",
       "kit_ar_meca_metal_hiver.png",
       "kit_ar_meca_masque_equipe_hiver.png",
-      "kit_ar_meca_lod0.glb",
-      "kit_ar_meca_lod1.glb"
+      "kit_ar_meca_lod0.glb"
     ]
   },
   {
@@ -376,8 +357,7 @@
       "kit_ar_missiles_air_metal_hiver.png",
       "kit_ar_missiles_air_masque_equipe_hiver.png",
       "kit_ar_missiles_air_emission_hiver.png",
-      "kit_ar_missiles_air_lod0.glb",
-      "kit_ar_missiles_air_lod1.glb"
+      "kit_ar_missiles_air_lod0.glb"
     ]
   },
   {
@@ -395,8 +375,7 @@
       "kit_ar_missiles_sol_rugosite_hiver.png",
       "kit_ar_missiles_sol_metal_hiver.png",
       "kit_ar_missiles_sol_masque_equipe_hiver.png",
-      "kit_ar_missiles_sol_lod0.glb",
-      "kit_ar_missiles_sol_lod1.glb"
+      "kit_ar_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -416,8 +395,7 @@
       "kit_ar_porte_avions_metal_hiver.png",
       "kit_ar_porte_avions_masque_equipe_hiver.png",
       "kit_ar_porte_avions_emission_hiver.png",
-      "kit_ar_porte_avions_lod0.glb",
-      "kit_ar_porte_avions_lod1.glb"
+      "kit_ar_porte_avions_lod0.glb"
     ]
   },
   {
@@ -437,8 +415,7 @@
       "kit_ar_recon_metal_hiver.png",
       "kit_ar_recon_masque_equipe_hiver.png",
       "kit_ar_recon_emission_hiver.png",
-      "kit_ar_recon_lod0.glb",
-      "kit_ar_recon_lod1.glb"
+      "kit_ar_recon_lod0.glb"
     ]
   },
   {
@@ -456,8 +433,7 @@
       "kit_ar_roquettes_rugosite_hiver.png",
       "kit_ar_roquettes_metal_hiver.png",
       "kit_ar_roquettes_masque_equipe_hiver.png",
-      "kit_ar_roquettes_lod0.glb",
-      "kit_ar_roquettes_lod1.glb"
+      "kit_ar_roquettes_lod0.glb"
     ]
   },
   {
@@ -475,8 +451,7 @@
       "kit_ar_sous_marin_rugosite_hiver.png",
       "kit_ar_sous_marin_metal_hiver.png",
       "kit_ar_sous_marin_masque_equipe_hiver.png",
-      "kit_ar_sous_marin_lod0.glb",
-      "kit_ar_sous_marin_lod1.glb"
+      "kit_ar_sous_marin_lod0.glb"
     ]
   },
   {
@@ -494,8 +469,7 @@
       "kit_ar_transport_rugosite_hiver.png",
       "kit_ar_transport_metal_hiver.png",
       "kit_ar_transport_masque_equipe_hiver.png",
-      "kit_ar_transport_lod0.glb",
-      "kit_ar_transport_lod1.glb"
+      "kit_ar_transport_lod0.glb"
     ]
   },
   {
@@ -513,8 +487,7 @@
       "kit_ar_transport_air_rugosite_hiver.png",
       "kit_ar_transport_air_metal_hiver.png",
       "kit_ar_transport_air_masque_equipe_hiver.png",
-      "kit_ar_transport_air_lod0.glb",
-      "kit_ar_transport_air_lod1.glb"
+      "kit_ar_transport_air_lod0.glb"
     ]
   },
   {
@@ -528,8 +501,7 @@
       "kit_au_antiair_metal.png",
       "kit_au_antiair_masque_equipe.png",
       "kit_au_antiair_emission.png",
-      "kit_au_antiair_lod0.glb",
-      "kit_au_antiair_lod1.glb"
+      "kit_au_antiair_lod0.glb"
     ]
   },
   {
@@ -542,8 +514,7 @@
       "kit_au_artillerie_rugosite.png",
       "kit_au_artillerie_metal.png",
       "kit_au_artillerie_masque_equipe.png",
-      "kit_au_artillerie_lod0.glb",
-      "kit_au_artillerie_lod1.glb"
+      "kit_au_artillerie_lod0.glb"
     ]
   },
   {
@@ -561,8 +532,7 @@
       "kit_au_barge_rugosite_hiver.png",
       "kit_au_barge_metal_hiver.png",
       "kit_au_barge_masque_equipe_hiver.png",
-      "kit_au_barge_lod0.glb",
-      "kit_au_barge_lod1.glb"
+      "kit_au_barge_lod0.glb"
     ]
   },
   {
@@ -582,8 +552,7 @@
       "kit_au_bombardier_metal_hiver.png",
       "kit_au_bombardier_masque_equipe_hiver.png",
       "kit_au_bombardier_emission_hiver.png",
-      "kit_au_bombardier_lod0.glb",
-      "kit_au_bombardier_lod1.glb"
+      "kit_au_bombardier_lod0.glb"
     ]
   },
   {
@@ -603,8 +572,7 @@
       "kit_au_brouilleur_metal_hiver.png",
       "kit_au_brouilleur_masque_equipe_hiver.png",
       "kit_au_brouilleur_emission_hiver.png",
-      "kit_au_brouilleur_lod0.glb",
-      "kit_au_brouilleur_lod1.glb"
+      "kit_au_brouilleur_lod0.glb"
     ]
   },
   {
@@ -622,8 +590,7 @@
       "kit_au_char_leger_rugosite_hiver.png",
       "kit_au_char_leger_metal_hiver.png",
       "kit_au_char_leger_masque_equipe_hiver.png",
-      "kit_au_char_leger_lod0.glb",
-      "kit_au_char_leger_lod1.glb"
+      "kit_au_char_leger_lod0.glb"
     ]
   },
   {
@@ -641,8 +608,7 @@
       "kit_au_char_lourd_rugosite_hiver.png",
       "kit_au_char_lourd_metal_hiver.png",
       "kit_au_char_lourd_masque_equipe_hiver.png",
-      "kit_au_char_lourd_lod0.glb",
-      "kit_au_char_lourd_lod1.glb"
+      "kit_au_char_lourd_lod0.glb"
     ]
   },
   {
@@ -660,8 +626,7 @@
       "kit_au_char_moyen_rugosite_hiver.png",
       "kit_au_char_moyen_metal_hiver.png",
       "kit_au_char_moyen_masque_equipe_hiver.png",
-      "kit_au_char_moyen_lod0.glb",
-      "kit_au_char_moyen_lod1.glb"
+      "kit_au_char_moyen_lod0.glb"
     ]
   },
   {
@@ -679,8 +644,7 @@
       "kit_au_chasseur_rugosite_hiver.png",
       "kit_au_chasseur_metal_hiver.png",
       "kit_au_chasseur_masque_equipe_hiver.png",
-      "kit_au_chasseur_lod0.glb",
-      "kit_au_chasseur_lod1.glb"
+      "kit_au_chasseur_lod0.glb"
     ]
   },
   {
@@ -698,8 +662,7 @@
       "kit_au_cuirasse_rugosite_hiver.png",
       "kit_au_cuirasse_metal_hiver.png",
       "kit_au_cuirasse_masque_equipe_hiver.png",
-      "kit_au_cuirasse_lod0.glb",
-      "kit_au_cuirasse_lod1.glb"
+      "kit_au_cuirasse_lod0.glb"
     ]
   },
   {
@@ -717,8 +680,7 @@
       "kit_au_drone_rugosite_hiver.png",
       "kit_au_drone_metal_hiver.png",
       "kit_au_drone_masque_equipe_hiver.png",
-      "kit_au_drone_lod0.glb",
-      "kit_au_drone_lod1.glb"
+      "kit_au_drone_lod0.glb"
     ]
   },
   {
@@ -738,8 +700,7 @@
       "kit_au_drone_intercepteur_metal_hiver.png",
       "kit_au_drone_intercepteur_masque_equipe_hiver.png",
       "kit_au_drone_intercepteur_emission_hiver.png",
-      "kit_au_drone_intercepteur_lod0.glb",
-      "kit_au_drone_intercepteur_lod1.glb"
+      "kit_au_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -759,8 +720,7 @@
       "kit_au_drone_marin_metal_hiver.png",
       "kit_au_drone_marin_masque_equipe_hiver.png",
       "kit_au_drone_marin_emission_hiver.png",
-      "kit_au_drone_marin_lod0.glb",
-      "kit_au_drone_marin_lod1.glb"
+      "kit_au_drone_marin_lod0.glb"
     ]
   },
   {
@@ -780,8 +740,7 @@
       "kit_au_drone_ravitailleur_metal_hiver.png",
       "kit_au_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_au_drone_ravitailleur_emission_hiver.png",
-      "kit_au_drone_ravitailleur_lod0.glb",
-      "kit_au_drone_ravitailleur_lod1.glb"
+      "kit_au_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -799,8 +758,7 @@
       "kit_au_furtif_rugosite_hiver.png",
       "kit_au_furtif_metal_hiver.png",
       "kit_au_furtif_masque_equipe_hiver.png",
-      "kit_au_furtif_lod0.glb",
-      "kit_au_furtif_lod1.glb"
+      "kit_au_furtif_lod0.glb"
     ]
   },
   {
@@ -820,8 +778,7 @@
       "kit_au_genie_metal_hiver.png",
       "kit_au_genie_masque_equipe_hiver.png",
       "kit_au_genie_emission_hiver.png",
-      "kit_au_genie_lod0.glb",
-      "kit_au_genie_lod1.glb"
+      "kit_au_genie_lod0.glb"
     ]
   },
   {
@@ -841,8 +798,7 @@
       "kit_au_helico_metal_hiver.png",
       "kit_au_helico_masque_equipe_hiver.png",
       "kit_au_helico_emission_hiver.png",
-      "kit_au_helico_lod0.glb",
-      "kit_au_helico_lod1.glb"
+      "kit_au_helico_lod0.glb"
     ]
   },
   {
@@ -854,8 +810,7 @@
       "kit_au_infanterie_normale.png",
       "kit_au_infanterie_rugosite.png",
       "kit_au_infanterie_masque_equipe.png",
-      "kit_au_infanterie_lod0.glb",
-      "kit_au_infanterie_lod1.glb"
+      "kit_au_infanterie_lod0.glb"
     ]
   },
   {
@@ -873,8 +828,7 @@
       "kit_au_meca_rugosite_hiver.png",
       "kit_au_meca_metal_hiver.png",
       "kit_au_meca_masque_equipe_hiver.png",
-      "kit_au_meca_lod0.glb",
-      "kit_au_meca_lod1.glb"
+      "kit_au_meca_lod0.glb"
     ]
   },
   {
@@ -894,8 +848,7 @@
       "kit_au_missiles_air_metal_hiver.png",
       "kit_au_missiles_air_masque_equipe_hiver.png",
       "kit_au_missiles_air_emission_hiver.png",
-      "kit_au_missiles_air_lod0.glb",
-      "kit_au_missiles_air_lod1.glb"
+      "kit_au_missiles_air_lod0.glb"
     ]
   },
   {
@@ -913,8 +866,7 @@
       "kit_au_missiles_sol_rugosite_hiver.png",
       "kit_au_missiles_sol_metal_hiver.png",
       "kit_au_missiles_sol_masque_equipe_hiver.png",
-      "kit_au_missiles_sol_lod0.glb",
-      "kit_au_missiles_sol_lod1.glb"
+      "kit_au_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -934,8 +886,7 @@
       "kit_au_porte_avions_metal_hiver.png",
       "kit_au_porte_avions_masque_equipe_hiver.png",
       "kit_au_porte_avions_emission_hiver.png",
-      "kit_au_porte_avions_lod0.glb",
-      "kit_au_porte_avions_lod1.glb"
+      "kit_au_porte_avions_lod0.glb"
     ]
   },
   {
@@ -955,8 +906,7 @@
       "kit_au_recon_metal_hiver.png",
       "kit_au_recon_masque_equipe_hiver.png",
       "kit_au_recon_emission_hiver.png",
-      "kit_au_recon_lod0.glb",
-      "kit_au_recon_lod1.glb"
+      "kit_au_recon_lod0.glb"
     ]
   },
   {
@@ -974,8 +924,7 @@
       "kit_au_roquettes_rugosite_hiver.png",
       "kit_au_roquettes_metal_hiver.png",
       "kit_au_roquettes_masque_equipe_hiver.png",
-      "kit_au_roquettes_lod0.glb",
-      "kit_au_roquettes_lod1.glb"
+      "kit_au_roquettes_lod0.glb"
     ]
   },
   {
@@ -993,8 +942,7 @@
       "kit_au_sous_marin_rugosite_hiver.png",
       "kit_au_sous_marin_metal_hiver.png",
       "kit_au_sous_marin_masque_equipe_hiver.png",
-      "kit_au_sous_marin_lod0.glb",
-      "kit_au_sous_marin_lod1.glb"
+      "kit_au_sous_marin_lod0.glb"
     ]
   },
   {
@@ -1012,8 +960,7 @@
       "kit_au_transport_rugosite_hiver.png",
       "kit_au_transport_metal_hiver.png",
       "kit_au_transport_masque_equipe_hiver.png",
-      "kit_au_transport_lod0.glb",
-      "kit_au_transport_lod1.glb"
+      "kit_au_transport_lod0.glb"
     ]
   },
   {
@@ -1031,8 +978,7 @@
       "kit_au_transport_air_rugosite_hiver.png",
       "kit_au_transport_air_metal_hiver.png",
       "kit_au_transport_air_masque_equipe_hiver.png",
-      "kit_au_transport_air_lod0.glb",
-      "kit_au_transport_air_lod1.glb"
+      "kit_au_transport_air_lod0.glb"
     ]
   },
   {
@@ -1046,8 +992,7 @@
       "kit_br_antiair_metal.png",
       "kit_br_antiair_masque_equipe.png",
       "kit_br_antiair_emission.png",
-      "kit_br_antiair_lod0.glb",
-      "kit_br_antiair_lod1.glb"
+      "kit_br_antiair_lod0.glb"
     ]
   },
   {
@@ -1060,8 +1005,7 @@
       "kit_br_artillerie_rugosite.png",
       "kit_br_artillerie_metal.png",
       "kit_br_artillerie_masque_equipe.png",
-      "kit_br_artillerie_lod0.glb",
-      "kit_br_artillerie_lod1.glb"
+      "kit_br_artillerie_lod0.glb"
     ]
   },
   {
@@ -1079,8 +1023,7 @@
       "kit_br_barge_rugosite_hiver.png",
       "kit_br_barge_metal_hiver.png",
       "kit_br_barge_masque_equipe_hiver.png",
-      "kit_br_barge_lod0.glb",
-      "kit_br_barge_lod1.glb"
+      "kit_br_barge_lod0.glb"
     ]
   },
   {
@@ -1100,8 +1043,7 @@
       "kit_br_bombardier_metal_hiver.png",
       "kit_br_bombardier_masque_equipe_hiver.png",
       "kit_br_bombardier_emission_hiver.png",
-      "kit_br_bombardier_lod0.glb",
-      "kit_br_bombardier_lod1.glb"
+      "kit_br_bombardier_lod0.glb"
     ]
   },
   {
@@ -1121,8 +1063,7 @@
       "kit_br_brouilleur_metal_hiver.png",
       "kit_br_brouilleur_masque_equipe_hiver.png",
       "kit_br_brouilleur_emission_hiver.png",
-      "kit_br_brouilleur_lod0.glb",
-      "kit_br_brouilleur_lod1.glb"
+      "kit_br_brouilleur_lod0.glb"
     ]
   },
   {
@@ -1140,8 +1081,7 @@
       "kit_br_char_leger_rugosite_hiver.png",
       "kit_br_char_leger_metal_hiver.png",
       "kit_br_char_leger_masque_equipe_hiver.png",
-      "kit_br_char_leger_lod0.glb",
-      "kit_br_char_leger_lod1.glb"
+      "kit_br_char_leger_lod0.glb"
     ]
   },
   {
@@ -1159,8 +1099,7 @@
       "kit_br_char_lourd_rugosite_hiver.png",
       "kit_br_char_lourd_metal_hiver.png",
       "kit_br_char_lourd_masque_equipe_hiver.png",
-      "kit_br_char_lourd_lod0.glb",
-      "kit_br_char_lourd_lod1.glb"
+      "kit_br_char_lourd_lod0.glb"
     ]
   },
   {
@@ -1178,8 +1117,7 @@
       "kit_br_char_moyen_rugosite_hiver.png",
       "kit_br_char_moyen_metal_hiver.png",
       "kit_br_char_moyen_masque_equipe_hiver.png",
-      "kit_br_char_moyen_lod0.glb",
-      "kit_br_char_moyen_lod1.glb"
+      "kit_br_char_moyen_lod0.glb"
     ]
   },
   {
@@ -1197,8 +1135,7 @@
       "kit_br_chasseur_rugosite_hiver.png",
       "kit_br_chasseur_metal_hiver.png",
       "kit_br_chasseur_masque_equipe_hiver.png",
-      "kit_br_chasseur_lod0.glb",
-      "kit_br_chasseur_lod1.glb"
+      "kit_br_chasseur_lod0.glb"
     ]
   },
   {
@@ -1216,8 +1153,7 @@
       "kit_br_cuirasse_rugosite_hiver.png",
       "kit_br_cuirasse_metal_hiver.png",
       "kit_br_cuirasse_masque_equipe_hiver.png",
-      "kit_br_cuirasse_lod0.glb",
-      "kit_br_cuirasse_lod1.glb"
+      "kit_br_cuirasse_lod0.glb"
     ]
   },
   {
@@ -1235,8 +1171,7 @@
       "kit_br_drone_rugosite_hiver.png",
       "kit_br_drone_metal_hiver.png",
       "kit_br_drone_masque_equipe_hiver.png",
-      "kit_br_drone_lod0.glb",
-      "kit_br_drone_lod1.glb"
+      "kit_br_drone_lod0.glb"
     ]
   },
   {
@@ -1256,8 +1191,7 @@
       "kit_br_drone_intercepteur_metal_hiver.png",
       "kit_br_drone_intercepteur_masque_equipe_hiver.png",
       "kit_br_drone_intercepteur_emission_hiver.png",
-      "kit_br_drone_intercepteur_lod0.glb",
-      "kit_br_drone_intercepteur_lod1.glb"
+      "kit_br_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -1277,8 +1211,7 @@
       "kit_br_drone_marin_metal_hiver.png",
       "kit_br_drone_marin_masque_equipe_hiver.png",
       "kit_br_drone_marin_emission_hiver.png",
-      "kit_br_drone_marin_lod0.glb",
-      "kit_br_drone_marin_lod1.glb"
+      "kit_br_drone_marin_lod0.glb"
     ]
   },
   {
@@ -1298,8 +1231,7 @@
       "kit_br_drone_ravitailleur_metal_hiver.png",
       "kit_br_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_br_drone_ravitailleur_emission_hiver.png",
-      "kit_br_drone_ravitailleur_lod0.glb",
-      "kit_br_drone_ravitailleur_lod1.glb"
+      "kit_br_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -1317,8 +1249,7 @@
       "kit_br_furtif_rugosite_hiver.png",
       "kit_br_furtif_metal_hiver.png",
       "kit_br_furtif_masque_equipe_hiver.png",
-      "kit_br_furtif_lod0.glb",
-      "kit_br_furtif_lod1.glb"
+      "kit_br_furtif_lod0.glb"
     ]
   },
   {
@@ -1338,8 +1269,7 @@
       "kit_br_genie_metal_hiver.png",
       "kit_br_genie_masque_equipe_hiver.png",
       "kit_br_genie_emission_hiver.png",
-      "kit_br_genie_lod0.glb",
-      "kit_br_genie_lod1.glb"
+      "kit_br_genie_lod0.glb"
     ]
   },
   {
@@ -1359,8 +1289,7 @@
       "kit_br_helico_metal_hiver.png",
       "kit_br_helico_masque_equipe_hiver.png",
       "kit_br_helico_emission_hiver.png",
-      "kit_br_helico_lod0.glb",
-      "kit_br_helico_lod1.glb"
+      "kit_br_helico_lod0.glb"
     ]
   },
   {
@@ -1372,8 +1301,7 @@
       "kit_br_infanterie_normale.png",
       "kit_br_infanterie_rugosite.png",
       "kit_br_infanterie_masque_equipe.png",
-      "kit_br_infanterie_lod0.glb",
-      "kit_br_infanterie_lod1.glb"
+      "kit_br_infanterie_lod0.glb"
     ]
   },
   {
@@ -1391,8 +1319,7 @@
       "kit_br_meca_rugosite_hiver.png",
       "kit_br_meca_metal_hiver.png",
       "kit_br_meca_masque_equipe_hiver.png",
-      "kit_br_meca_lod0.glb",
-      "kit_br_meca_lod1.glb"
+      "kit_br_meca_lod0.glb"
     ]
   },
   {
@@ -1412,8 +1339,7 @@
       "kit_br_missiles_air_metal_hiver.png",
       "kit_br_missiles_air_masque_equipe_hiver.png",
       "kit_br_missiles_air_emission_hiver.png",
-      "kit_br_missiles_air_lod0.glb",
-      "kit_br_missiles_air_lod1.glb"
+      "kit_br_missiles_air_lod0.glb"
     ]
   },
   {
@@ -1431,8 +1357,7 @@
       "kit_br_missiles_sol_rugosite_hiver.png",
       "kit_br_missiles_sol_metal_hiver.png",
       "kit_br_missiles_sol_masque_equipe_hiver.png",
-      "kit_br_missiles_sol_lod0.glb",
-      "kit_br_missiles_sol_lod1.glb"
+      "kit_br_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -1452,8 +1377,7 @@
       "kit_br_porte_avions_metal_hiver.png",
       "kit_br_porte_avions_masque_equipe_hiver.png",
       "kit_br_porte_avions_emission_hiver.png",
-      "kit_br_porte_avions_lod0.glb",
-      "kit_br_porte_avions_lod1.glb"
+      "kit_br_porte_avions_lod0.glb"
     ]
   },
   {
@@ -1473,8 +1397,7 @@
       "kit_br_recon_metal_hiver.png",
       "kit_br_recon_masque_equipe_hiver.png",
       "kit_br_recon_emission_hiver.png",
-      "kit_br_recon_lod0.glb",
-      "kit_br_recon_lod1.glb"
+      "kit_br_recon_lod0.glb"
     ]
   },
   {
@@ -1492,8 +1415,7 @@
       "kit_br_roquettes_rugosite_hiver.png",
       "kit_br_roquettes_metal_hiver.png",
       "kit_br_roquettes_masque_equipe_hiver.png",
-      "kit_br_roquettes_lod0.glb",
-      "kit_br_roquettes_lod1.glb"
+      "kit_br_roquettes_lod0.glb"
     ]
   },
   {
@@ -1511,8 +1433,7 @@
       "kit_br_sous_marin_rugosite_hiver.png",
       "kit_br_sous_marin_metal_hiver.png",
       "kit_br_sous_marin_masque_equipe_hiver.png",
-      "kit_br_sous_marin_lod0.glb",
-      "kit_br_sous_marin_lod1.glb"
+      "kit_br_sous_marin_lod0.glb"
     ]
   },
   {
@@ -1530,8 +1451,7 @@
       "kit_br_transport_rugosite_hiver.png",
       "kit_br_transport_metal_hiver.png",
       "kit_br_transport_masque_equipe_hiver.png",
-      "kit_br_transport_lod0.glb",
-      "kit_br_transport_lod1.glb"
+      "kit_br_transport_lod0.glb"
     ]
   },
   {
@@ -1549,8 +1469,7 @@
       "kit_br_transport_air_rugosite_hiver.png",
       "kit_br_transport_air_metal_hiver.png",
       "kit_br_transport_air_masque_equipe_hiver.png",
-      "kit_br_transport_air_lod0.glb",
-      "kit_br_transport_air_lod1.glb"
+      "kit_br_transport_air_lod0.glb"
     ]
   },
   {
@@ -1564,8 +1483,7 @@
       "kit_ca_antiair_metal.png",
       "kit_ca_antiair_masque_equipe.png",
       "kit_ca_antiair_emission.png",
-      "kit_ca_antiair_lod0.glb",
-      "kit_ca_antiair_lod1.glb"
+      "kit_ca_antiair_lod0.glb"
     ]
   },
   {
@@ -1578,8 +1496,7 @@
       "kit_ca_artillerie_rugosite.png",
       "kit_ca_artillerie_metal.png",
       "kit_ca_artillerie_masque_equipe.png",
-      "kit_ca_artillerie_lod0.glb",
-      "kit_ca_artillerie_lod1.glb"
+      "kit_ca_artillerie_lod0.glb"
     ]
   },
   {
@@ -1597,8 +1514,7 @@
       "kit_ca_barge_rugosite_hiver.png",
       "kit_ca_barge_metal_hiver.png",
       "kit_ca_barge_masque_equipe_hiver.png",
-      "kit_ca_barge_lod0.glb",
-      "kit_ca_barge_lod1.glb"
+      "kit_ca_barge_lod0.glb"
     ]
   },
   {
@@ -1618,8 +1534,7 @@
       "kit_ca_bombardier_metal_hiver.png",
       "kit_ca_bombardier_masque_equipe_hiver.png",
       "kit_ca_bombardier_emission_hiver.png",
-      "kit_ca_bombardier_lod0.glb",
-      "kit_ca_bombardier_lod1.glb"
+      "kit_ca_bombardier_lod0.glb"
     ]
   },
   {
@@ -1639,8 +1554,7 @@
       "kit_ca_brouilleur_metal_hiver.png",
       "kit_ca_brouilleur_masque_equipe_hiver.png",
       "kit_ca_brouilleur_emission_hiver.png",
-      "kit_ca_brouilleur_lod0.glb",
-      "kit_ca_brouilleur_lod1.glb"
+      "kit_ca_brouilleur_lod0.glb"
     ]
   },
   {
@@ -1658,8 +1572,7 @@
       "kit_ca_char_leger_rugosite_hiver.png",
       "kit_ca_char_leger_metal_hiver.png",
       "kit_ca_char_leger_masque_equipe_hiver.png",
-      "kit_ca_char_leger_lod0.glb",
-      "kit_ca_char_leger_lod1.glb"
+      "kit_ca_char_leger_lod0.glb"
     ]
   },
   {
@@ -1677,8 +1590,7 @@
       "kit_ca_char_lourd_rugosite_hiver.png",
       "kit_ca_char_lourd_metal_hiver.png",
       "kit_ca_char_lourd_masque_equipe_hiver.png",
-      "kit_ca_char_lourd_lod0.glb",
-      "kit_ca_char_lourd_lod1.glb"
+      "kit_ca_char_lourd_lod0.glb"
     ]
   },
   {
@@ -1696,8 +1608,7 @@
       "kit_ca_char_moyen_rugosite_hiver.png",
       "kit_ca_char_moyen_metal_hiver.png",
       "kit_ca_char_moyen_masque_equipe_hiver.png",
-      "kit_ca_char_moyen_lod0.glb",
-      "kit_ca_char_moyen_lod1.glb"
+      "kit_ca_char_moyen_lod0.glb"
     ]
   },
   {
@@ -1715,8 +1626,7 @@
       "kit_ca_chasseur_rugosite_hiver.png",
       "kit_ca_chasseur_metal_hiver.png",
       "kit_ca_chasseur_masque_equipe_hiver.png",
-      "kit_ca_chasseur_lod0.glb",
-      "kit_ca_chasseur_lod1.glb"
+      "kit_ca_chasseur_lod0.glb"
     ]
   },
   {
@@ -1734,8 +1644,7 @@
       "kit_ca_cuirasse_rugosite_hiver.png",
       "kit_ca_cuirasse_metal_hiver.png",
       "kit_ca_cuirasse_masque_equipe_hiver.png",
-      "kit_ca_cuirasse_lod0.glb",
-      "kit_ca_cuirasse_lod1.glb"
+      "kit_ca_cuirasse_lod0.glb"
     ]
   },
   {
@@ -1753,8 +1662,7 @@
       "kit_ca_drone_rugosite_hiver.png",
       "kit_ca_drone_metal_hiver.png",
       "kit_ca_drone_masque_equipe_hiver.png",
-      "kit_ca_drone_lod0.glb",
-      "kit_ca_drone_lod1.glb"
+      "kit_ca_drone_lod0.glb"
     ]
   },
   {
@@ -1774,8 +1682,7 @@
       "kit_ca_drone_intercepteur_metal_hiver.png",
       "kit_ca_drone_intercepteur_masque_equipe_hiver.png",
       "kit_ca_drone_intercepteur_emission_hiver.png",
-      "kit_ca_drone_intercepteur_lod0.glb",
-      "kit_ca_drone_intercepteur_lod1.glb"
+      "kit_ca_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -1795,8 +1702,7 @@
       "kit_ca_drone_marin_metal_hiver.png",
       "kit_ca_drone_marin_masque_equipe_hiver.png",
       "kit_ca_drone_marin_emission_hiver.png",
-      "kit_ca_drone_marin_lod0.glb",
-      "kit_ca_drone_marin_lod1.glb"
+      "kit_ca_drone_marin_lod0.glb"
     ]
   },
   {
@@ -1816,8 +1722,7 @@
       "kit_ca_drone_ravitailleur_metal_hiver.png",
       "kit_ca_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_ca_drone_ravitailleur_emission_hiver.png",
-      "kit_ca_drone_ravitailleur_lod0.glb",
-      "kit_ca_drone_ravitailleur_lod1.glb"
+      "kit_ca_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -1835,8 +1740,7 @@
       "kit_ca_furtif_rugosite_hiver.png",
       "kit_ca_furtif_metal_hiver.png",
       "kit_ca_furtif_masque_equipe_hiver.png",
-      "kit_ca_furtif_lod0.glb",
-      "kit_ca_furtif_lod1.glb"
+      "kit_ca_furtif_lod0.glb"
     ]
   },
   {
@@ -1856,8 +1760,7 @@
       "kit_ca_genie_metal_hiver.png",
       "kit_ca_genie_masque_equipe_hiver.png",
       "kit_ca_genie_emission_hiver.png",
-      "kit_ca_genie_lod0.glb",
-      "kit_ca_genie_lod1.glb"
+      "kit_ca_genie_lod0.glb"
     ]
   },
   {
@@ -1877,8 +1780,7 @@
       "kit_ca_helico_metal_hiver.png",
       "kit_ca_helico_masque_equipe_hiver.png",
       "kit_ca_helico_emission_hiver.png",
-      "kit_ca_helico_lod0.glb",
-      "kit_ca_helico_lod1.glb"
+      "kit_ca_helico_lod0.glb"
     ]
   },
   {
@@ -1890,8 +1792,7 @@
       "kit_ca_infanterie_normale.png",
       "kit_ca_infanterie_rugosite.png",
       "kit_ca_infanterie_masque_equipe.png",
-      "kit_ca_infanterie_lod0.glb",
-      "kit_ca_infanterie_lod1.glb"
+      "kit_ca_infanterie_lod0.glb"
     ]
   },
   {
@@ -1909,8 +1810,7 @@
       "kit_ca_meca_rugosite_hiver.png",
       "kit_ca_meca_metal_hiver.png",
       "kit_ca_meca_masque_equipe_hiver.png",
-      "kit_ca_meca_lod0.glb",
-      "kit_ca_meca_lod1.glb"
+      "kit_ca_meca_lod0.glb"
     ]
   },
   {
@@ -1930,8 +1830,7 @@
       "kit_ca_missiles_air_metal_hiver.png",
       "kit_ca_missiles_air_masque_equipe_hiver.png",
       "kit_ca_missiles_air_emission_hiver.png",
-      "kit_ca_missiles_air_lod0.glb",
-      "kit_ca_missiles_air_lod1.glb"
+      "kit_ca_missiles_air_lod0.glb"
     ]
   },
   {
@@ -1949,8 +1848,7 @@
       "kit_ca_missiles_sol_rugosite_hiver.png",
       "kit_ca_missiles_sol_metal_hiver.png",
       "kit_ca_missiles_sol_masque_equipe_hiver.png",
-      "kit_ca_missiles_sol_lod0.glb",
-      "kit_ca_missiles_sol_lod1.glb"
+      "kit_ca_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -1970,8 +1868,7 @@
       "kit_ca_porte_avions_metal_hiver.png",
       "kit_ca_porte_avions_masque_equipe_hiver.png",
       "kit_ca_porte_avions_emission_hiver.png",
-      "kit_ca_porte_avions_lod0.glb",
-      "kit_ca_porte_avions_lod1.glb"
+      "kit_ca_porte_avions_lod0.glb"
     ]
   },
   {
@@ -1991,8 +1888,7 @@
       "kit_ca_recon_metal_hiver.png",
       "kit_ca_recon_masque_equipe_hiver.png",
       "kit_ca_recon_emission_hiver.png",
-      "kit_ca_recon_lod0.glb",
-      "kit_ca_recon_lod1.glb"
+      "kit_ca_recon_lod0.glb"
     ]
   },
   {
@@ -2010,8 +1906,7 @@
       "kit_ca_roquettes_rugosite_hiver.png",
       "kit_ca_roquettes_metal_hiver.png",
       "kit_ca_roquettes_masque_equipe_hiver.png",
-      "kit_ca_roquettes_lod0.glb",
-      "kit_ca_roquettes_lod1.glb"
+      "kit_ca_roquettes_lod0.glb"
     ]
   },
   {
@@ -2029,8 +1924,7 @@
       "kit_ca_sous_marin_rugosite_hiver.png",
       "kit_ca_sous_marin_metal_hiver.png",
       "kit_ca_sous_marin_masque_equipe_hiver.png",
-      "kit_ca_sous_marin_lod0.glb",
-      "kit_ca_sous_marin_lod1.glb"
+      "kit_ca_sous_marin_lod0.glb"
     ]
   },
   {
@@ -2048,8 +1942,7 @@
       "kit_ca_transport_rugosite_hiver.png",
       "kit_ca_transport_metal_hiver.png",
       "kit_ca_transport_masque_equipe_hiver.png",
-      "kit_ca_transport_lod0.glb",
-      "kit_ca_transport_lod1.glb"
+      "kit_ca_transport_lod0.glb"
     ]
   },
   {
@@ -2067,8 +1960,7 @@
       "kit_ca_transport_air_rugosite_hiver.png",
       "kit_ca_transport_air_metal_hiver.png",
       "kit_ca_transport_air_masque_equipe_hiver.png",
-      "kit_ca_transport_air_lod0.glb",
-      "kit_ca_transport_air_lod1.glb"
+      "kit_ca_transport_air_lod0.glb"
     ]
   },
   {
@@ -2082,8 +1974,7 @@
       "kit_ch_antiair_metal.png",
       "kit_ch_antiair_masque_equipe.png",
       "kit_ch_antiair_emission.png",
-      "kit_ch_antiair_lod0.glb",
-      "kit_ch_antiair_lod1.glb"
+      "kit_ch_antiair_lod0.glb"
     ]
   },
   {
@@ -2096,8 +1987,7 @@
       "kit_ch_artillerie_rugosite.png",
       "kit_ch_artillerie_metal.png",
       "kit_ch_artillerie_masque_equipe.png",
-      "kit_ch_artillerie_lod0.glb",
-      "kit_ch_artillerie_lod1.glb"
+      "kit_ch_artillerie_lod0.glb"
     ]
   },
   {
@@ -2115,8 +2005,7 @@
       "kit_ch_barge_rugosite_hiver.png",
       "kit_ch_barge_metal_hiver.png",
       "kit_ch_barge_masque_equipe_hiver.png",
-      "kit_ch_barge_lod0.glb",
-      "kit_ch_barge_lod1.glb"
+      "kit_ch_barge_lod0.glb"
     ]
   },
   {
@@ -2136,8 +2025,7 @@
       "kit_ch_bombardier_metal_hiver.png",
       "kit_ch_bombardier_masque_equipe_hiver.png",
       "kit_ch_bombardier_emission_hiver.png",
-      "kit_ch_bombardier_lod0.glb",
-      "kit_ch_bombardier_lod1.glb"
+      "kit_ch_bombardier_lod0.glb"
     ]
   },
   {
@@ -2157,8 +2045,7 @@
       "kit_ch_brouilleur_metal_hiver.png",
       "kit_ch_brouilleur_masque_equipe_hiver.png",
       "kit_ch_brouilleur_emission_hiver.png",
-      "kit_ch_brouilleur_lod0.glb",
-      "kit_ch_brouilleur_lod1.glb"
+      "kit_ch_brouilleur_lod0.glb"
     ]
   },
   {
@@ -2176,8 +2063,7 @@
       "kit_ch_char_leger_rugosite_hiver.png",
       "kit_ch_char_leger_metal_hiver.png",
       "kit_ch_char_leger_masque_equipe_hiver.png",
-      "kit_ch_char_leger_lod0.glb",
-      "kit_ch_char_leger_lod1.glb"
+      "kit_ch_char_leger_lod0.glb"
     ]
   },
   {
@@ -2195,8 +2081,7 @@
       "kit_ch_char_lourd_rugosite_hiver.png",
       "kit_ch_char_lourd_metal_hiver.png",
       "kit_ch_char_lourd_masque_equipe_hiver.png",
-      "kit_ch_char_lourd_lod0.glb",
-      "kit_ch_char_lourd_lod1.glb"
+      "kit_ch_char_lourd_lod0.glb"
     ]
   },
   {
@@ -2214,8 +2099,7 @@
       "kit_ch_char_moyen_rugosite_hiver.png",
       "kit_ch_char_moyen_metal_hiver.png",
       "kit_ch_char_moyen_masque_equipe_hiver.png",
-      "kit_ch_char_moyen_lod0.glb",
-      "kit_ch_char_moyen_lod1.glb"
+      "kit_ch_char_moyen_lod0.glb"
     ]
   },
   {
@@ -2233,8 +2117,7 @@
       "kit_ch_chasseur_rugosite_hiver.png",
       "kit_ch_chasseur_metal_hiver.png",
       "kit_ch_chasseur_masque_equipe_hiver.png",
-      "kit_ch_chasseur_lod0.glb",
-      "kit_ch_chasseur_lod1.glb"
+      "kit_ch_chasseur_lod0.glb"
     ]
   },
   {
@@ -2252,8 +2135,7 @@
       "kit_ch_cuirasse_rugosite_hiver.png",
       "kit_ch_cuirasse_metal_hiver.png",
       "kit_ch_cuirasse_masque_equipe_hiver.png",
-      "kit_ch_cuirasse_lod0.glb",
-      "kit_ch_cuirasse_lod1.glb"
+      "kit_ch_cuirasse_lod0.glb"
     ]
   },
   {
@@ -2271,8 +2153,7 @@
       "kit_ch_drone_rugosite_hiver.png",
       "kit_ch_drone_metal_hiver.png",
       "kit_ch_drone_masque_equipe_hiver.png",
-      "kit_ch_drone_lod0.glb",
-      "kit_ch_drone_lod1.glb"
+      "kit_ch_drone_lod0.glb"
     ]
   },
   {
@@ -2292,8 +2173,7 @@
       "kit_ch_drone_intercepteur_metal_hiver.png",
       "kit_ch_drone_intercepteur_masque_equipe_hiver.png",
       "kit_ch_drone_intercepteur_emission_hiver.png",
-      "kit_ch_drone_intercepteur_lod0.glb",
-      "kit_ch_drone_intercepteur_lod1.glb"
+      "kit_ch_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -2313,8 +2193,7 @@
       "kit_ch_drone_marin_metal_hiver.png",
       "kit_ch_drone_marin_masque_equipe_hiver.png",
       "kit_ch_drone_marin_emission_hiver.png",
-      "kit_ch_drone_marin_lod0.glb",
-      "kit_ch_drone_marin_lod1.glb"
+      "kit_ch_drone_marin_lod0.glb"
     ]
   },
   {
@@ -2334,8 +2213,7 @@
       "kit_ch_drone_ravitailleur_metal_hiver.png",
       "kit_ch_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_ch_drone_ravitailleur_emission_hiver.png",
-      "kit_ch_drone_ravitailleur_lod0.glb",
-      "kit_ch_drone_ravitailleur_lod1.glb"
+      "kit_ch_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -2353,8 +2231,7 @@
       "kit_ch_furtif_rugosite_hiver.png",
       "kit_ch_furtif_metal_hiver.png",
       "kit_ch_furtif_masque_equipe_hiver.png",
-      "kit_ch_furtif_lod0.glb",
-      "kit_ch_furtif_lod1.glb"
+      "kit_ch_furtif_lod0.glb"
     ]
   },
   {
@@ -2374,8 +2251,7 @@
       "kit_ch_genie_metal_hiver.png",
       "kit_ch_genie_masque_equipe_hiver.png",
       "kit_ch_genie_emission_hiver.png",
-      "kit_ch_genie_lod0.glb",
-      "kit_ch_genie_lod1.glb"
+      "kit_ch_genie_lod0.glb"
     ]
   },
   {
@@ -2395,8 +2271,7 @@
       "kit_ch_helico_metal_hiver.png",
       "kit_ch_helico_masque_equipe_hiver.png",
       "kit_ch_helico_emission_hiver.png",
-      "kit_ch_helico_lod0.glb",
-      "kit_ch_helico_lod1.glb"
+      "kit_ch_helico_lod0.glb"
     ]
   },
   {
@@ -2408,8 +2283,7 @@
       "kit_ch_infanterie_normale.png",
       "kit_ch_infanterie_rugosite.png",
       "kit_ch_infanterie_masque_equipe.png",
-      "kit_ch_infanterie_lod0.glb",
-      "kit_ch_infanterie_lod1.glb"
+      "kit_ch_infanterie_lod0.glb"
     ]
   },
   {
@@ -2427,8 +2301,7 @@
       "kit_ch_meca_rugosite_hiver.png",
       "kit_ch_meca_metal_hiver.png",
       "kit_ch_meca_masque_equipe_hiver.png",
-      "kit_ch_meca_lod0.glb",
-      "kit_ch_meca_lod1.glb"
+      "kit_ch_meca_lod0.glb"
     ]
   },
   {
@@ -2448,8 +2321,7 @@
       "kit_ch_missiles_air_metal_hiver.png",
       "kit_ch_missiles_air_masque_equipe_hiver.png",
       "kit_ch_missiles_air_emission_hiver.png",
-      "kit_ch_missiles_air_lod0.glb",
-      "kit_ch_missiles_air_lod1.glb"
+      "kit_ch_missiles_air_lod0.glb"
     ]
   },
   {
@@ -2467,8 +2339,7 @@
       "kit_ch_missiles_sol_rugosite_hiver.png",
       "kit_ch_missiles_sol_metal_hiver.png",
       "kit_ch_missiles_sol_masque_equipe_hiver.png",
-      "kit_ch_missiles_sol_lod0.glb",
-      "kit_ch_missiles_sol_lod1.glb"
+      "kit_ch_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -2488,8 +2359,7 @@
       "kit_ch_porte_avions_metal_hiver.png",
       "kit_ch_porte_avions_masque_equipe_hiver.png",
       "kit_ch_porte_avions_emission_hiver.png",
-      "kit_ch_porte_avions_lod0.glb",
-      "kit_ch_porte_avions_lod1.glb"
+      "kit_ch_porte_avions_lod0.glb"
     ]
   },
   {
@@ -2509,8 +2379,7 @@
       "kit_ch_recon_metal_hiver.png",
       "kit_ch_recon_masque_equipe_hiver.png",
       "kit_ch_recon_emission_hiver.png",
-      "kit_ch_recon_lod0.glb",
-      "kit_ch_recon_lod1.glb"
+      "kit_ch_recon_lod0.glb"
     ]
   },
   {
@@ -2528,8 +2397,7 @@
       "kit_ch_roquettes_rugosite_hiver.png",
       "kit_ch_roquettes_metal_hiver.png",
       "kit_ch_roquettes_masque_equipe_hiver.png",
-      "kit_ch_roquettes_lod0.glb",
-      "kit_ch_roquettes_lod1.glb"
+      "kit_ch_roquettes_lod0.glb"
     ]
   },
   {
@@ -2547,8 +2415,7 @@
       "kit_ch_sous_marin_rugosite_hiver.png",
       "kit_ch_sous_marin_metal_hiver.png",
       "kit_ch_sous_marin_masque_equipe_hiver.png",
-      "kit_ch_sous_marin_lod0.glb",
-      "kit_ch_sous_marin_lod1.glb"
+      "kit_ch_sous_marin_lod0.glb"
     ]
   },
   {
@@ -2566,8 +2433,7 @@
       "kit_ch_transport_rugosite_hiver.png",
       "kit_ch_transport_metal_hiver.png",
       "kit_ch_transport_masque_equipe_hiver.png",
-      "kit_ch_transport_lod0.glb",
-      "kit_ch_transport_lod1.glb"
+      "kit_ch_transport_lod0.glb"
     ]
   },
   {
@@ -2585,8 +2451,7 @@
       "kit_ch_transport_air_rugosite_hiver.png",
       "kit_ch_transport_air_metal_hiver.png",
       "kit_ch_transport_air_masque_equipe_hiver.png",
-      "kit_ch_transport_air_lod0.glb",
-      "kit_ch_transport_air_lod1.glb"
+      "kit_ch_transport_air_lod0.glb"
     ]
   },
   {
@@ -2600,8 +2465,7 @@
       "kit_fj_antiair_metal.png",
       "kit_fj_antiair_masque_equipe.png",
       "kit_fj_antiair_emission.png",
-      "kit_fj_antiair_lod0.glb",
-      "kit_fj_antiair_lod1.glb"
+      "kit_fj_antiair_lod0.glb"
     ]
   },
   {
@@ -2614,8 +2478,7 @@
       "kit_fj_artillerie_rugosite.png",
       "kit_fj_artillerie_metal.png",
       "kit_fj_artillerie_masque_equipe.png",
-      "kit_fj_artillerie_lod0.glb",
-      "kit_fj_artillerie_lod1.glb"
+      "kit_fj_artillerie_lod0.glb"
     ]
   },
   {
@@ -2633,8 +2496,7 @@
       "kit_fj_barge_rugosite_hiver.png",
       "kit_fj_barge_metal_hiver.png",
       "kit_fj_barge_masque_equipe_hiver.png",
-      "kit_fj_barge_lod0.glb",
-      "kit_fj_barge_lod1.glb"
+      "kit_fj_barge_lod0.glb"
     ]
   },
   {
@@ -2654,8 +2516,7 @@
       "kit_fj_bombardier_metal_hiver.png",
       "kit_fj_bombardier_masque_equipe_hiver.png",
       "kit_fj_bombardier_emission_hiver.png",
-      "kit_fj_bombardier_lod0.glb",
-      "kit_fj_bombardier_lod1.glb"
+      "kit_fj_bombardier_lod0.glb"
     ]
   },
   {
@@ -2675,8 +2536,7 @@
       "kit_fj_brouilleur_metal_hiver.png",
       "kit_fj_brouilleur_masque_equipe_hiver.png",
       "kit_fj_brouilleur_emission_hiver.png",
-      "kit_fj_brouilleur_lod0.glb",
-      "kit_fj_brouilleur_lod1.glb"
+      "kit_fj_brouilleur_lod0.glb"
     ]
   },
   {
@@ -2694,8 +2554,7 @@
       "kit_fj_char_leger_rugosite_hiver.png",
       "kit_fj_char_leger_metal_hiver.png",
       "kit_fj_char_leger_masque_equipe_hiver.png",
-      "kit_fj_char_leger_lod0.glb",
-      "kit_fj_char_leger_lod1.glb"
+      "kit_fj_char_leger_lod0.glb"
     ]
   },
   {
@@ -2713,8 +2572,7 @@
       "kit_fj_char_lourd_rugosite_hiver.png",
       "kit_fj_char_lourd_metal_hiver.png",
       "kit_fj_char_lourd_masque_equipe_hiver.png",
-      "kit_fj_char_lourd_lod0.glb",
-      "kit_fj_char_lourd_lod1.glb"
+      "kit_fj_char_lourd_lod0.glb"
     ]
   },
   {
@@ -2732,8 +2590,7 @@
       "kit_fj_char_moyen_rugosite_hiver.png",
       "kit_fj_char_moyen_metal_hiver.png",
       "kit_fj_char_moyen_masque_equipe_hiver.png",
-      "kit_fj_char_moyen_lod0.glb",
-      "kit_fj_char_moyen_lod1.glb"
+      "kit_fj_char_moyen_lod0.glb"
     ]
   },
   {
@@ -2751,8 +2608,7 @@
       "kit_fj_chasseur_rugosite_hiver.png",
       "kit_fj_chasseur_metal_hiver.png",
       "kit_fj_chasseur_masque_equipe_hiver.png",
-      "kit_fj_chasseur_lod0.glb",
-      "kit_fj_chasseur_lod1.glb"
+      "kit_fj_chasseur_lod0.glb"
     ]
   },
   {
@@ -2770,8 +2626,7 @@
       "kit_fj_cuirasse_rugosite_hiver.png",
       "kit_fj_cuirasse_metal_hiver.png",
       "kit_fj_cuirasse_masque_equipe_hiver.png",
-      "kit_fj_cuirasse_lod0.glb",
-      "kit_fj_cuirasse_lod1.glb"
+      "kit_fj_cuirasse_lod0.glb"
     ]
   },
   {
@@ -2789,8 +2644,7 @@
       "kit_fj_drone_rugosite_hiver.png",
       "kit_fj_drone_metal_hiver.png",
       "kit_fj_drone_masque_equipe_hiver.png",
-      "kit_fj_drone_lod0.glb",
-      "kit_fj_drone_lod1.glb"
+      "kit_fj_drone_lod0.glb"
     ]
   },
   {
@@ -2810,8 +2664,7 @@
       "kit_fj_drone_intercepteur_metal_hiver.png",
       "kit_fj_drone_intercepteur_masque_equipe_hiver.png",
       "kit_fj_drone_intercepteur_emission_hiver.png",
-      "kit_fj_drone_intercepteur_lod0.glb",
-      "kit_fj_drone_intercepteur_lod1.glb"
+      "kit_fj_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -2831,8 +2684,7 @@
       "kit_fj_drone_marin_metal_hiver.png",
       "kit_fj_drone_marin_masque_equipe_hiver.png",
       "kit_fj_drone_marin_emission_hiver.png",
-      "kit_fj_drone_marin_lod0.glb",
-      "kit_fj_drone_marin_lod1.glb"
+      "kit_fj_drone_marin_lod0.glb"
     ]
   },
   {
@@ -2852,8 +2704,7 @@
       "kit_fj_drone_ravitailleur_metal_hiver.png",
       "kit_fj_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_fj_drone_ravitailleur_emission_hiver.png",
-      "kit_fj_drone_ravitailleur_lod0.glb",
-      "kit_fj_drone_ravitailleur_lod1.glb"
+      "kit_fj_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -2871,8 +2722,7 @@
       "kit_fj_furtif_rugosite_hiver.png",
       "kit_fj_furtif_metal_hiver.png",
       "kit_fj_furtif_masque_equipe_hiver.png",
-      "kit_fj_furtif_lod0.glb",
-      "kit_fj_furtif_lod1.glb"
+      "kit_fj_furtif_lod0.glb"
     ]
   },
   {
@@ -2892,8 +2742,7 @@
       "kit_fj_genie_metal_hiver.png",
       "kit_fj_genie_masque_equipe_hiver.png",
       "kit_fj_genie_emission_hiver.png",
-      "kit_fj_genie_lod0.glb",
-      "kit_fj_genie_lod1.glb"
+      "kit_fj_genie_lod0.glb"
     ]
   },
   {
@@ -2913,8 +2762,7 @@
       "kit_fj_helico_metal_hiver.png",
       "kit_fj_helico_masque_equipe_hiver.png",
       "kit_fj_helico_emission_hiver.png",
-      "kit_fj_helico_lod0.glb",
-      "kit_fj_helico_lod1.glb"
+      "kit_fj_helico_lod0.glb"
     ]
   },
   {
@@ -2926,8 +2774,7 @@
       "kit_fj_infanterie_normale.png",
       "kit_fj_infanterie_rugosite.png",
       "kit_fj_infanterie_masque_equipe.png",
-      "kit_fj_infanterie_lod0.glb",
-      "kit_fj_infanterie_lod1.glb"
+      "kit_fj_infanterie_lod0.glb"
     ]
   },
   {
@@ -2945,8 +2792,7 @@
       "kit_fj_meca_rugosite_hiver.png",
       "kit_fj_meca_metal_hiver.png",
       "kit_fj_meca_masque_equipe_hiver.png",
-      "kit_fj_meca_lod0.glb",
-      "kit_fj_meca_lod1.glb"
+      "kit_fj_meca_lod0.glb"
     ]
   },
   {
@@ -2966,8 +2812,7 @@
       "kit_fj_missiles_air_metal_hiver.png",
       "kit_fj_missiles_air_masque_equipe_hiver.png",
       "kit_fj_missiles_air_emission_hiver.png",
-      "kit_fj_missiles_air_lod0.glb",
-      "kit_fj_missiles_air_lod1.glb"
+      "kit_fj_missiles_air_lod0.glb"
     ]
   },
   {
@@ -2985,8 +2830,7 @@
       "kit_fj_missiles_sol_rugosite_hiver.png",
       "kit_fj_missiles_sol_metal_hiver.png",
       "kit_fj_missiles_sol_masque_equipe_hiver.png",
-      "kit_fj_missiles_sol_lod0.glb",
-      "kit_fj_missiles_sol_lod1.glb"
+      "kit_fj_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -3006,8 +2850,7 @@
       "kit_fj_porte_avions_metal_hiver.png",
       "kit_fj_porte_avions_masque_equipe_hiver.png",
       "kit_fj_porte_avions_emission_hiver.png",
-      "kit_fj_porte_avions_lod0.glb",
-      "kit_fj_porte_avions_lod1.glb"
+      "kit_fj_porte_avions_lod0.glb"
     ]
   },
   {
@@ -3027,8 +2870,7 @@
       "kit_fj_recon_metal_hiver.png",
       "kit_fj_recon_masque_equipe_hiver.png",
       "kit_fj_recon_emission_hiver.png",
-      "kit_fj_recon_lod0.glb",
-      "kit_fj_recon_lod1.glb"
+      "kit_fj_recon_lod0.glb"
     ]
   },
   {
@@ -3046,8 +2888,7 @@
       "kit_fj_roquettes_rugosite_hiver.png",
       "kit_fj_roquettes_metal_hiver.png",
       "kit_fj_roquettes_masque_equipe_hiver.png",
-      "kit_fj_roquettes_lod0.glb",
-      "kit_fj_roquettes_lod1.glb"
+      "kit_fj_roquettes_lod0.glb"
     ]
   },
   {
@@ -3065,8 +2906,7 @@
       "kit_fj_sous_marin_rugosite_hiver.png",
       "kit_fj_sous_marin_metal_hiver.png",
       "kit_fj_sous_marin_masque_equipe_hiver.png",
-      "kit_fj_sous_marin_lod0.glb",
-      "kit_fj_sous_marin_lod1.glb"
+      "kit_fj_sous_marin_lod0.glb"
     ]
   },
   {
@@ -3084,8 +2924,7 @@
       "kit_fj_transport_rugosite_hiver.png",
       "kit_fj_transport_metal_hiver.png",
       "kit_fj_transport_masque_equipe_hiver.png",
-      "kit_fj_transport_lod0.glb",
-      "kit_fj_transport_lod1.glb"
+      "kit_fj_transport_lod0.glb"
     ]
   },
   {
@@ -3103,8 +2942,7 @@
       "kit_fj_transport_air_rugosite_hiver.png",
       "kit_fj_transport_air_metal_hiver.png",
       "kit_fj_transport_air_masque_equipe_hiver.png",
-      "kit_fj_transport_air_lod0.glb",
-      "kit_fj_transport_air_lod1.glb"
+      "kit_fj_transport_air_lod0.glb"
     ]
   },
   {
@@ -3118,8 +2956,7 @@
       "kit_fr_antiair_metal.png",
       "kit_fr_antiair_masque_equipe.png",
       "kit_fr_antiair_emission.png",
-      "kit_fr_antiair_lod0.glb",
-      "kit_fr_antiair_lod1.glb"
+      "kit_fr_antiair_lod0.glb"
     ]
   },
   {
@@ -3132,8 +2969,7 @@
       "kit_fr_artillerie_rugosite.png",
       "kit_fr_artillerie_metal.png",
       "kit_fr_artillerie_masque_equipe.png",
-      "kit_fr_artillerie_lod0.glb",
-      "kit_fr_artillerie_lod1.glb"
+      "kit_fr_artillerie_lod0.glb"
     ]
   },
   {
@@ -3151,8 +2987,7 @@
       "kit_fr_barge_rugosite_hiver.png",
       "kit_fr_barge_metal_hiver.png",
       "kit_fr_barge_masque_equipe_hiver.png",
-      "kit_fr_barge_lod0.glb",
-      "kit_fr_barge_lod1.glb"
+      "kit_fr_barge_lod0.glb"
     ]
   },
   {
@@ -3172,8 +3007,7 @@
       "kit_fr_bombardier_metal_hiver.png",
       "kit_fr_bombardier_masque_equipe_hiver.png",
       "kit_fr_bombardier_emission_hiver.png",
-      "kit_fr_bombardier_lod0.glb",
-      "kit_fr_bombardier_lod1.glb"
+      "kit_fr_bombardier_lod0.glb"
     ]
   },
   {
@@ -3193,8 +3027,7 @@
       "kit_fr_brouilleur_metal_hiver.png",
       "kit_fr_brouilleur_masque_equipe_hiver.png",
       "kit_fr_brouilleur_emission_hiver.png",
-      "kit_fr_brouilleur_lod0.glb",
-      "kit_fr_brouilleur_lod1.glb"
+      "kit_fr_brouilleur_lod0.glb"
     ]
   },
   {
@@ -3212,8 +3045,7 @@
       "kit_fr_char_leger_rugosite_hiver.png",
       "kit_fr_char_leger_metal_hiver.png",
       "kit_fr_char_leger_masque_equipe_hiver.png",
-      "kit_fr_char_leger_lod0.glb",
-      "kit_fr_char_leger_lod1.glb"
+      "kit_fr_char_leger_lod0.glb"
     ]
   },
   {
@@ -3231,8 +3063,7 @@
       "kit_fr_char_lourd_rugosite_hiver.png",
       "kit_fr_char_lourd_metal_hiver.png",
       "kit_fr_char_lourd_masque_equipe_hiver.png",
-      "kit_fr_char_lourd_lod0.glb",
-      "kit_fr_char_lourd_lod1.glb"
+      "kit_fr_char_lourd_lod0.glb"
     ]
   },
   {
@@ -3250,8 +3081,7 @@
       "kit_fr_char_moyen_rugosite_hiver.png",
       "kit_fr_char_moyen_metal_hiver.png",
       "kit_fr_char_moyen_masque_equipe_hiver.png",
-      "kit_fr_char_moyen_lod0.glb",
-      "kit_fr_char_moyen_lod1.glb"
+      "kit_fr_char_moyen_lod0.glb"
     ]
   },
   {
@@ -3269,8 +3099,7 @@
       "kit_fr_chasseur_rugosite_hiver.png",
       "kit_fr_chasseur_metal_hiver.png",
       "kit_fr_chasseur_masque_equipe_hiver.png",
-      "kit_fr_chasseur_lod0.glb",
-      "kit_fr_chasseur_lod1.glb"
+      "kit_fr_chasseur_lod0.glb"
     ]
   },
   {
@@ -3288,8 +3117,7 @@
       "kit_fr_cuirasse_rugosite_hiver.png",
       "kit_fr_cuirasse_metal_hiver.png",
       "kit_fr_cuirasse_masque_equipe_hiver.png",
-      "kit_fr_cuirasse_lod0.glb",
-      "kit_fr_cuirasse_lod1.glb"
+      "kit_fr_cuirasse_lod0.glb"
     ]
   },
   {
@@ -3307,8 +3135,7 @@
       "kit_fr_drone_rugosite_hiver.png",
       "kit_fr_drone_metal_hiver.png",
       "kit_fr_drone_masque_equipe_hiver.png",
-      "kit_fr_drone_lod0.glb",
-      "kit_fr_drone_lod1.glb"
+      "kit_fr_drone_lod0.glb"
     ]
   },
   {
@@ -3328,8 +3155,7 @@
       "kit_fr_drone_intercepteur_metal_hiver.png",
       "kit_fr_drone_intercepteur_masque_equipe_hiver.png",
       "kit_fr_drone_intercepteur_emission_hiver.png",
-      "kit_fr_drone_intercepteur_lod0.glb",
-      "kit_fr_drone_intercepteur_lod1.glb"
+      "kit_fr_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -3349,8 +3175,7 @@
       "kit_fr_drone_marin_metal_hiver.png",
       "kit_fr_drone_marin_masque_equipe_hiver.png",
       "kit_fr_drone_marin_emission_hiver.png",
-      "kit_fr_drone_marin_lod0.glb",
-      "kit_fr_drone_marin_lod1.glb"
+      "kit_fr_drone_marin_lod0.glb"
     ]
   },
   {
@@ -3370,8 +3195,7 @@
       "kit_fr_drone_ravitailleur_metal_hiver.png",
       "kit_fr_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_fr_drone_ravitailleur_emission_hiver.png",
-      "kit_fr_drone_ravitailleur_lod0.glb",
-      "kit_fr_drone_ravitailleur_lod1.glb"
+      "kit_fr_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -3389,8 +3213,7 @@
       "kit_fr_furtif_rugosite_hiver.png",
       "kit_fr_furtif_metal_hiver.png",
       "kit_fr_furtif_masque_equipe_hiver.png",
-      "kit_fr_furtif_lod0.glb",
-      "kit_fr_furtif_lod1.glb"
+      "kit_fr_furtif_lod0.glb"
     ]
   },
   {
@@ -3410,8 +3233,7 @@
       "kit_fr_genie_metal_hiver.png",
       "kit_fr_genie_masque_equipe_hiver.png",
       "kit_fr_genie_emission_hiver.png",
-      "kit_fr_genie_lod0.glb",
-      "kit_fr_genie_lod1.glb"
+      "kit_fr_genie_lod0.glb"
     ]
   },
   {
@@ -3431,8 +3253,7 @@
       "kit_fr_helico_metal_hiver.png",
       "kit_fr_helico_masque_equipe_hiver.png",
       "kit_fr_helico_emission_hiver.png",
-      "kit_fr_helico_lod0.glb",
-      "kit_fr_helico_lod1.glb"
+      "kit_fr_helico_lod0.glb"
     ]
   },
   {
@@ -3444,8 +3265,7 @@
       "kit_fr_infanterie_normale.png",
       "kit_fr_infanterie_rugosite.png",
       "kit_fr_infanterie_masque_equipe.png",
-      "kit_fr_infanterie_lod0.glb",
-      "kit_fr_infanterie_lod1.glb"
+      "kit_fr_infanterie_lod0.glb"
     ]
   },
   {
@@ -3463,8 +3283,7 @@
       "kit_fr_meca_rugosite_hiver.png",
       "kit_fr_meca_metal_hiver.png",
       "kit_fr_meca_masque_equipe_hiver.png",
-      "kit_fr_meca_lod0.glb",
-      "kit_fr_meca_lod1.glb"
+      "kit_fr_meca_lod0.glb"
     ]
   },
   {
@@ -3484,8 +3303,7 @@
       "kit_fr_missiles_air_metal_hiver.png",
       "kit_fr_missiles_air_masque_equipe_hiver.png",
       "kit_fr_missiles_air_emission_hiver.png",
-      "kit_fr_missiles_air_lod0.glb",
-      "kit_fr_missiles_air_lod1.glb"
+      "kit_fr_missiles_air_lod0.glb"
     ]
   },
   {
@@ -3503,8 +3321,7 @@
       "kit_fr_missiles_sol_rugosite_hiver.png",
       "kit_fr_missiles_sol_metal_hiver.png",
       "kit_fr_missiles_sol_masque_equipe_hiver.png",
-      "kit_fr_missiles_sol_lod0.glb",
-      "kit_fr_missiles_sol_lod1.glb"
+      "kit_fr_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -3524,8 +3341,7 @@
       "kit_fr_porte_avions_metal_hiver.png",
       "kit_fr_porte_avions_masque_equipe_hiver.png",
       "kit_fr_porte_avions_emission_hiver.png",
-      "kit_fr_porte_avions_lod0.glb",
-      "kit_fr_porte_avions_lod1.glb"
+      "kit_fr_porte_avions_lod0.glb"
     ]
   },
   {
@@ -3545,8 +3361,7 @@
       "kit_fr_recon_metal_hiver.png",
       "kit_fr_recon_masque_equipe_hiver.png",
       "kit_fr_recon_emission_hiver.png",
-      "kit_fr_recon_lod0.glb",
-      "kit_fr_recon_lod1.glb"
+      "kit_fr_recon_lod0.glb"
     ]
   },
   {
@@ -3564,8 +3379,7 @@
       "kit_fr_roquettes_rugosite_hiver.png",
       "kit_fr_roquettes_metal_hiver.png",
       "kit_fr_roquettes_masque_equipe_hiver.png",
-      "kit_fr_roquettes_lod0.glb",
-      "kit_fr_roquettes_lod1.glb"
+      "kit_fr_roquettes_lod0.glb"
     ]
   },
   {
@@ -3583,8 +3397,7 @@
       "kit_fr_sous_marin_rugosite_hiver.png",
       "kit_fr_sous_marin_metal_hiver.png",
       "kit_fr_sous_marin_masque_equipe_hiver.png",
-      "kit_fr_sous_marin_lod0.glb",
-      "kit_fr_sous_marin_lod1.glb"
+      "kit_fr_sous_marin_lod0.glb"
     ]
   },
   {
@@ -3602,8 +3415,7 @@
       "kit_fr_transport_rugosite_hiver.png",
       "kit_fr_transport_metal_hiver.png",
       "kit_fr_transport_masque_equipe_hiver.png",
-      "kit_fr_transport_lod0.glb",
-      "kit_fr_transport_lod1.glb"
+      "kit_fr_transport_lod0.glb"
     ]
   },
   {
@@ -3621,8 +3433,7 @@
       "kit_fr_transport_air_rugosite_hiver.png",
       "kit_fr_transport_air_metal_hiver.png",
       "kit_fr_transport_air_masque_equipe_hiver.png",
-      "kit_fr_transport_air_lod0.glb",
-      "kit_fr_transport_air_lod1.glb"
+      "kit_fr_transport_air_lod0.glb"
     ]
   },
   {
@@ -3636,8 +3447,7 @@
       "kit_gr_antiair_metal.png",
       "kit_gr_antiair_masque_equipe.png",
       "kit_gr_antiair_emission.png",
-      "kit_gr_antiair_lod0.glb",
-      "kit_gr_antiair_lod1.glb"
+      "kit_gr_antiair_lod0.glb"
     ]
   },
   {
@@ -3650,8 +3460,7 @@
       "kit_gr_artillerie_rugosite.png",
       "kit_gr_artillerie_metal.png",
       "kit_gr_artillerie_masque_equipe.png",
-      "kit_gr_artillerie_lod0.glb",
-      "kit_gr_artillerie_lod1.glb"
+      "kit_gr_artillerie_lod0.glb"
     ]
   },
   {
@@ -3669,8 +3478,7 @@
       "kit_gr_barge_rugosite_hiver.png",
       "kit_gr_barge_metal_hiver.png",
       "kit_gr_barge_masque_equipe_hiver.png",
-      "kit_gr_barge_lod0.glb",
-      "kit_gr_barge_lod1.glb"
+      "kit_gr_barge_lod0.glb"
     ]
   },
   {
@@ -3690,8 +3498,7 @@
       "kit_gr_bombardier_metal_hiver.png",
       "kit_gr_bombardier_masque_equipe_hiver.png",
       "kit_gr_bombardier_emission_hiver.png",
-      "kit_gr_bombardier_lod0.glb",
-      "kit_gr_bombardier_lod1.glb"
+      "kit_gr_bombardier_lod0.glb"
     ]
   },
   {
@@ -3711,8 +3518,7 @@
       "kit_gr_brouilleur_metal_hiver.png",
       "kit_gr_brouilleur_masque_equipe_hiver.png",
       "kit_gr_brouilleur_emission_hiver.png",
-      "kit_gr_brouilleur_lod0.glb",
-      "kit_gr_brouilleur_lod1.glb"
+      "kit_gr_brouilleur_lod0.glb"
     ]
   },
   {
@@ -3730,8 +3536,7 @@
       "kit_gr_char_leger_rugosite_hiver.png",
       "kit_gr_char_leger_metal_hiver.png",
       "kit_gr_char_leger_masque_equipe_hiver.png",
-      "kit_gr_char_leger_lod0.glb",
-      "kit_gr_char_leger_lod1.glb"
+      "kit_gr_char_leger_lod0.glb"
     ]
   },
   {
@@ -3749,8 +3554,7 @@
       "kit_gr_char_lourd_rugosite_hiver.png",
       "kit_gr_char_lourd_metal_hiver.png",
       "kit_gr_char_lourd_masque_equipe_hiver.png",
-      "kit_gr_char_lourd_lod0.glb",
-      "kit_gr_char_lourd_lod1.glb"
+      "kit_gr_char_lourd_lod0.glb"
     ]
   },
   {
@@ -3768,8 +3572,7 @@
       "kit_gr_char_moyen_rugosite_hiver.png",
       "kit_gr_char_moyen_metal_hiver.png",
       "kit_gr_char_moyen_masque_equipe_hiver.png",
-      "kit_gr_char_moyen_lod0.glb",
-      "kit_gr_char_moyen_lod1.glb"
+      "kit_gr_char_moyen_lod0.glb"
     ]
   },
   {
@@ -3787,8 +3590,7 @@
       "kit_gr_chasseur_rugosite_hiver.png",
       "kit_gr_chasseur_metal_hiver.png",
       "kit_gr_chasseur_masque_equipe_hiver.png",
-      "kit_gr_chasseur_lod0.glb",
-      "kit_gr_chasseur_lod1.glb"
+      "kit_gr_chasseur_lod0.glb"
     ]
   },
   {
@@ -3806,8 +3608,7 @@
       "kit_gr_cuirasse_rugosite_hiver.png",
       "kit_gr_cuirasse_metal_hiver.png",
       "kit_gr_cuirasse_masque_equipe_hiver.png",
-      "kit_gr_cuirasse_lod0.glb",
-      "kit_gr_cuirasse_lod1.glb"
+      "kit_gr_cuirasse_lod0.glb"
     ]
   },
   {
@@ -3825,8 +3626,7 @@
       "kit_gr_drone_rugosite_hiver.png",
       "kit_gr_drone_metal_hiver.png",
       "kit_gr_drone_masque_equipe_hiver.png",
-      "kit_gr_drone_lod0.glb",
-      "kit_gr_drone_lod1.glb"
+      "kit_gr_drone_lod0.glb"
     ]
   },
   {
@@ -3846,8 +3646,7 @@
       "kit_gr_drone_intercepteur_metal_hiver.png",
       "kit_gr_drone_intercepteur_masque_equipe_hiver.png",
       "kit_gr_drone_intercepteur_emission_hiver.png",
-      "kit_gr_drone_intercepteur_lod0.glb",
-      "kit_gr_drone_intercepteur_lod1.glb"
+      "kit_gr_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -3867,8 +3666,7 @@
       "kit_gr_drone_marin_metal_hiver.png",
       "kit_gr_drone_marin_masque_equipe_hiver.png",
       "kit_gr_drone_marin_emission_hiver.png",
-      "kit_gr_drone_marin_lod0.glb",
-      "kit_gr_drone_marin_lod1.glb"
+      "kit_gr_drone_marin_lod0.glb"
     ]
   },
   {
@@ -3888,8 +3686,7 @@
       "kit_gr_drone_ravitailleur_metal_hiver.png",
       "kit_gr_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_gr_drone_ravitailleur_emission_hiver.png",
-      "kit_gr_drone_ravitailleur_lod0.glb",
-      "kit_gr_drone_ravitailleur_lod1.glb"
+      "kit_gr_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -3907,8 +3704,7 @@
       "kit_gr_furtif_rugosite_hiver.png",
       "kit_gr_furtif_metal_hiver.png",
       "kit_gr_furtif_masque_equipe_hiver.png",
-      "kit_gr_furtif_lod0.glb",
-      "kit_gr_furtif_lod1.glb"
+      "kit_gr_furtif_lod0.glb"
     ]
   },
   {
@@ -3928,8 +3724,7 @@
       "kit_gr_genie_metal_hiver.png",
       "kit_gr_genie_masque_equipe_hiver.png",
       "kit_gr_genie_emission_hiver.png",
-      "kit_gr_genie_lod0.glb",
-      "kit_gr_genie_lod1.glb"
+      "kit_gr_genie_lod0.glb"
     ]
   },
   {
@@ -3949,8 +3744,7 @@
       "kit_gr_helico_metal_hiver.png",
       "kit_gr_helico_masque_equipe_hiver.png",
       "kit_gr_helico_emission_hiver.png",
-      "kit_gr_helico_lod0.glb",
-      "kit_gr_helico_lod1.glb"
+      "kit_gr_helico_lod0.glb"
     ]
   },
   {
@@ -3962,8 +3756,7 @@
       "kit_gr_infanterie_normale.png",
       "kit_gr_infanterie_rugosite.png",
       "kit_gr_infanterie_masque_equipe.png",
-      "kit_gr_infanterie_lod0.glb",
-      "kit_gr_infanterie_lod1.glb"
+      "kit_gr_infanterie_lod0.glb"
     ]
   },
   {
@@ -3981,8 +3774,7 @@
       "kit_gr_meca_rugosite_hiver.png",
       "kit_gr_meca_metal_hiver.png",
       "kit_gr_meca_masque_equipe_hiver.png",
-      "kit_gr_meca_lod0.glb",
-      "kit_gr_meca_lod1.glb"
+      "kit_gr_meca_lod0.glb"
     ]
   },
   {
@@ -4002,8 +3794,7 @@
       "kit_gr_missiles_air_metal_hiver.png",
       "kit_gr_missiles_air_masque_equipe_hiver.png",
       "kit_gr_missiles_air_emission_hiver.png",
-      "kit_gr_missiles_air_lod0.glb",
-      "kit_gr_missiles_air_lod1.glb"
+      "kit_gr_missiles_air_lod0.glb"
     ]
   },
   {
@@ -4021,8 +3812,7 @@
       "kit_gr_missiles_sol_rugosite_hiver.png",
       "kit_gr_missiles_sol_metal_hiver.png",
       "kit_gr_missiles_sol_masque_equipe_hiver.png",
-      "kit_gr_missiles_sol_lod0.glb",
-      "kit_gr_missiles_sol_lod1.glb"
+      "kit_gr_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -4042,8 +3832,7 @@
       "kit_gr_porte_avions_metal_hiver.png",
       "kit_gr_porte_avions_masque_equipe_hiver.png",
       "kit_gr_porte_avions_emission_hiver.png",
-      "kit_gr_porte_avions_lod0.glb",
-      "kit_gr_porte_avions_lod1.glb"
+      "kit_gr_porte_avions_lod0.glb"
     ]
   },
   {
@@ -4063,8 +3852,7 @@
       "kit_gr_recon_metal_hiver.png",
       "kit_gr_recon_masque_equipe_hiver.png",
       "kit_gr_recon_emission_hiver.png",
-      "kit_gr_recon_lod0.glb",
-      "kit_gr_recon_lod1.glb"
+      "kit_gr_recon_lod0.glb"
     ]
   },
   {
@@ -4082,8 +3870,7 @@
       "kit_gr_roquettes_rugosite_hiver.png",
       "kit_gr_roquettes_metal_hiver.png",
       "kit_gr_roquettes_masque_equipe_hiver.png",
-      "kit_gr_roquettes_lod0.glb",
-      "kit_gr_roquettes_lod1.glb"
+      "kit_gr_roquettes_lod0.glb"
     ]
   },
   {
@@ -4101,8 +3888,7 @@
       "kit_gr_sous_marin_rugosite_hiver.png",
       "kit_gr_sous_marin_metal_hiver.png",
       "kit_gr_sous_marin_masque_equipe_hiver.png",
-      "kit_gr_sous_marin_lod0.glb",
-      "kit_gr_sous_marin_lod1.glb"
+      "kit_gr_sous_marin_lod0.glb"
     ]
   },
   {
@@ -4120,8 +3906,7 @@
       "kit_gr_transport_rugosite_hiver.png",
       "kit_gr_transport_metal_hiver.png",
       "kit_gr_transport_masque_equipe_hiver.png",
-      "kit_gr_transport_lod0.glb",
-      "kit_gr_transport_lod1.glb"
+      "kit_gr_transport_lod0.glb"
     ]
   },
   {
@@ -4139,8 +3924,7 @@
       "kit_gr_transport_air_rugosite_hiver.png",
       "kit_gr_transport_air_metal_hiver.png",
       "kit_gr_transport_air_masque_equipe_hiver.png",
-      "kit_gr_transport_air_lod0.glb",
-      "kit_gr_transport_air_lod1.glb"
+      "kit_gr_transport_air_lod0.glb"
     ]
   },
   {
@@ -4154,8 +3938,7 @@
       "kit_id_antiair_metal.png",
       "kit_id_antiair_masque_equipe.png",
       "kit_id_antiair_emission.png",
-      "kit_id_antiair_lod0.glb",
-      "kit_id_antiair_lod1.glb"
+      "kit_id_antiair_lod0.glb"
     ]
   },
   {
@@ -4168,8 +3951,7 @@
       "kit_id_artillerie_rugosite.png",
       "kit_id_artillerie_metal.png",
       "kit_id_artillerie_masque_equipe.png",
-      "kit_id_artillerie_lod0.glb",
-      "kit_id_artillerie_lod1.glb"
+      "kit_id_artillerie_lod0.glb"
     ]
   },
   {
@@ -4187,8 +3969,7 @@
       "kit_id_barge_rugosite_hiver.png",
       "kit_id_barge_metal_hiver.png",
       "kit_id_barge_masque_equipe_hiver.png",
-      "kit_id_barge_lod0.glb",
-      "kit_id_barge_lod1.glb"
+      "kit_id_barge_lod0.glb"
     ]
   },
   {
@@ -4208,8 +3989,7 @@
       "kit_id_bombardier_metal_hiver.png",
       "kit_id_bombardier_masque_equipe_hiver.png",
       "kit_id_bombardier_emission_hiver.png",
-      "kit_id_bombardier_lod0.glb",
-      "kit_id_bombardier_lod1.glb"
+      "kit_id_bombardier_lod0.glb"
     ]
   },
   {
@@ -4229,8 +4009,7 @@
       "kit_id_brouilleur_metal_hiver.png",
       "kit_id_brouilleur_masque_equipe_hiver.png",
       "kit_id_brouilleur_emission_hiver.png",
-      "kit_id_brouilleur_lod0.glb",
-      "kit_id_brouilleur_lod1.glb"
+      "kit_id_brouilleur_lod0.glb"
     ]
   },
   {
@@ -4248,8 +4027,7 @@
       "kit_id_char_leger_rugosite_hiver.png",
       "kit_id_char_leger_metal_hiver.png",
       "kit_id_char_leger_masque_equipe_hiver.png",
-      "kit_id_char_leger_lod0.glb",
-      "kit_id_char_leger_lod1.glb"
+      "kit_id_char_leger_lod0.glb"
     ]
   },
   {
@@ -4267,8 +4045,7 @@
       "kit_id_char_lourd_rugosite_hiver.png",
       "kit_id_char_lourd_metal_hiver.png",
       "kit_id_char_lourd_masque_equipe_hiver.png",
-      "kit_id_char_lourd_lod0.glb",
-      "kit_id_char_lourd_lod1.glb"
+      "kit_id_char_lourd_lod0.glb"
     ]
   },
   {
@@ -4286,8 +4063,7 @@
       "kit_id_char_moyen_rugosite_hiver.png",
       "kit_id_char_moyen_metal_hiver.png",
       "kit_id_char_moyen_masque_equipe_hiver.png",
-      "kit_id_char_moyen_lod0.glb",
-      "kit_id_char_moyen_lod1.glb"
+      "kit_id_char_moyen_lod0.glb"
     ]
   },
   {
@@ -4305,8 +4081,7 @@
       "kit_id_chasseur_rugosite_hiver.png",
       "kit_id_chasseur_metal_hiver.png",
       "kit_id_chasseur_masque_equipe_hiver.png",
-      "kit_id_chasseur_lod0.glb",
-      "kit_id_chasseur_lod1.glb"
+      "kit_id_chasseur_lod0.glb"
     ]
   },
   {
@@ -4324,8 +4099,7 @@
       "kit_id_cuirasse_rugosite_hiver.png",
       "kit_id_cuirasse_metal_hiver.png",
       "kit_id_cuirasse_masque_equipe_hiver.png",
-      "kit_id_cuirasse_lod0.glb",
-      "kit_id_cuirasse_lod1.glb"
+      "kit_id_cuirasse_lod0.glb"
     ]
   },
   {
@@ -4343,8 +4117,7 @@
       "kit_id_drone_rugosite_hiver.png",
       "kit_id_drone_metal_hiver.png",
       "kit_id_drone_masque_equipe_hiver.png",
-      "kit_id_drone_lod0.glb",
-      "kit_id_drone_lod1.glb"
+      "kit_id_drone_lod0.glb"
     ]
   },
   {
@@ -4364,8 +4137,7 @@
       "kit_id_drone_intercepteur_metal_hiver.png",
       "kit_id_drone_intercepteur_masque_equipe_hiver.png",
       "kit_id_drone_intercepteur_emission_hiver.png",
-      "kit_id_drone_intercepteur_lod0.glb",
-      "kit_id_drone_intercepteur_lod1.glb"
+      "kit_id_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -4385,8 +4157,7 @@
       "kit_id_drone_marin_metal_hiver.png",
       "kit_id_drone_marin_masque_equipe_hiver.png",
       "kit_id_drone_marin_emission_hiver.png",
-      "kit_id_drone_marin_lod0.glb",
-      "kit_id_drone_marin_lod1.glb"
+      "kit_id_drone_marin_lod0.glb"
     ]
   },
   {
@@ -4406,8 +4177,7 @@
       "kit_id_drone_ravitailleur_metal_hiver.png",
       "kit_id_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_id_drone_ravitailleur_emission_hiver.png",
-      "kit_id_drone_ravitailleur_lod0.glb",
-      "kit_id_drone_ravitailleur_lod1.glb"
+      "kit_id_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -4425,8 +4195,7 @@
       "kit_id_furtif_rugosite_hiver.png",
       "kit_id_furtif_metal_hiver.png",
       "kit_id_furtif_masque_equipe_hiver.png",
-      "kit_id_furtif_lod0.glb",
-      "kit_id_furtif_lod1.glb"
+      "kit_id_furtif_lod0.glb"
     ]
   },
   {
@@ -4446,8 +4215,7 @@
       "kit_id_genie_metal_hiver.png",
       "kit_id_genie_masque_equipe_hiver.png",
       "kit_id_genie_emission_hiver.png",
-      "kit_id_genie_lod0.glb",
-      "kit_id_genie_lod1.glb"
+      "kit_id_genie_lod0.glb"
     ]
   },
   {
@@ -4467,8 +4235,7 @@
       "kit_id_helico_metal_hiver.png",
       "kit_id_helico_masque_equipe_hiver.png",
       "kit_id_helico_emission_hiver.png",
-      "kit_id_helico_lod0.glb",
-      "kit_id_helico_lod1.glb"
+      "kit_id_helico_lod0.glb"
     ]
   },
   {
@@ -4480,8 +4247,7 @@
       "kit_id_infanterie_normale.png",
       "kit_id_infanterie_rugosite.png",
       "kit_id_infanterie_masque_equipe.png",
-      "kit_id_infanterie_lod0.glb",
-      "kit_id_infanterie_lod1.glb"
+      "kit_id_infanterie_lod0.glb"
     ]
   },
   {
@@ -4499,8 +4265,7 @@
       "kit_id_meca_rugosite_hiver.png",
       "kit_id_meca_metal_hiver.png",
       "kit_id_meca_masque_equipe_hiver.png",
-      "kit_id_meca_lod0.glb",
-      "kit_id_meca_lod1.glb"
+      "kit_id_meca_lod0.glb"
     ]
   },
   {
@@ -4520,8 +4285,7 @@
       "kit_id_missiles_air_metal_hiver.png",
       "kit_id_missiles_air_masque_equipe_hiver.png",
       "kit_id_missiles_air_emission_hiver.png",
-      "kit_id_missiles_air_lod0.glb",
-      "kit_id_missiles_air_lod1.glb"
+      "kit_id_missiles_air_lod0.glb"
     ]
   },
   {
@@ -4539,8 +4303,7 @@
       "kit_id_missiles_sol_rugosite_hiver.png",
       "kit_id_missiles_sol_metal_hiver.png",
       "kit_id_missiles_sol_masque_equipe_hiver.png",
-      "kit_id_missiles_sol_lod0.glb",
-      "kit_id_missiles_sol_lod1.glb"
+      "kit_id_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -4560,8 +4323,7 @@
       "kit_id_porte_avions_metal_hiver.png",
       "kit_id_porte_avions_masque_equipe_hiver.png",
       "kit_id_porte_avions_emission_hiver.png",
-      "kit_id_porte_avions_lod0.glb",
-      "kit_id_porte_avions_lod1.glb"
+      "kit_id_porte_avions_lod0.glb"
     ]
   },
   {
@@ -4581,8 +4343,7 @@
       "kit_id_recon_metal_hiver.png",
       "kit_id_recon_masque_equipe_hiver.png",
       "kit_id_recon_emission_hiver.png",
-      "kit_id_recon_lod0.glb",
-      "kit_id_recon_lod1.glb"
+      "kit_id_recon_lod0.glb"
     ]
   },
   {
@@ -4600,8 +4361,7 @@
       "kit_id_roquettes_rugosite_hiver.png",
       "kit_id_roquettes_metal_hiver.png",
       "kit_id_roquettes_masque_equipe_hiver.png",
-      "kit_id_roquettes_lod0.glb",
-      "kit_id_roquettes_lod1.glb"
+      "kit_id_roquettes_lod0.glb"
     ]
   },
   {
@@ -4619,8 +4379,7 @@
       "kit_id_sous_marin_rugosite_hiver.png",
       "kit_id_sous_marin_metal_hiver.png",
       "kit_id_sous_marin_masque_equipe_hiver.png",
-      "kit_id_sous_marin_lod0.glb",
-      "kit_id_sous_marin_lod1.glb"
+      "kit_id_sous_marin_lod0.glb"
     ]
   },
   {
@@ -4638,8 +4397,7 @@
       "kit_id_transport_rugosite_hiver.png",
       "kit_id_transport_metal_hiver.png",
       "kit_id_transport_masque_equipe_hiver.png",
-      "kit_id_transport_lod0.glb",
-      "kit_id_transport_lod1.glb"
+      "kit_id_transport_lod0.glb"
     ]
   },
   {
@@ -4657,8 +4415,7 @@
       "kit_id_transport_air_rugosite_hiver.png",
       "kit_id_transport_air_metal_hiver.png",
       "kit_id_transport_air_masque_equipe_hiver.png",
-      "kit_id_transport_air_lod0.glb",
-      "kit_id_transport_air_lod1.glb"
+      "kit_id_transport_air_lod0.glb"
     ]
   },
   {
@@ -4672,8 +4429,7 @@
       "kit_in_antiair_metal.png",
       "kit_in_antiair_masque_equipe.png",
       "kit_in_antiair_emission.png",
-      "kit_in_antiair_lod0.glb",
-      "kit_in_antiair_lod1.glb"
+      "kit_in_antiair_lod0.glb"
     ]
   },
   {
@@ -4686,8 +4442,7 @@
       "kit_in_artillerie_rugosite.png",
       "kit_in_artillerie_metal.png",
       "kit_in_artillerie_masque_equipe.png",
-      "kit_in_artillerie_lod0.glb",
-      "kit_in_artillerie_lod1.glb"
+      "kit_in_artillerie_lod0.glb"
     ]
   },
   {
@@ -4705,8 +4460,7 @@
       "kit_in_barge_rugosite_hiver.png",
       "kit_in_barge_metal_hiver.png",
       "kit_in_barge_masque_equipe_hiver.png",
-      "kit_in_barge_lod0.glb",
-      "kit_in_barge_lod1.glb"
+      "kit_in_barge_lod0.glb"
     ]
   },
   {
@@ -4726,8 +4480,7 @@
       "kit_in_bombardier_metal_hiver.png",
       "kit_in_bombardier_masque_equipe_hiver.png",
       "kit_in_bombardier_emission_hiver.png",
-      "kit_in_bombardier_lod0.glb",
-      "kit_in_bombardier_lod1.glb"
+      "kit_in_bombardier_lod0.glb"
     ]
   },
   {
@@ -4747,8 +4500,7 @@
       "kit_in_brouilleur_metal_hiver.png",
       "kit_in_brouilleur_masque_equipe_hiver.png",
       "kit_in_brouilleur_emission_hiver.png",
-      "kit_in_brouilleur_lod0.glb",
-      "kit_in_brouilleur_lod1.glb"
+      "kit_in_brouilleur_lod0.glb"
     ]
   },
   {
@@ -4766,8 +4518,7 @@
       "kit_in_char_leger_rugosite_hiver.png",
       "kit_in_char_leger_metal_hiver.png",
       "kit_in_char_leger_masque_equipe_hiver.png",
-      "kit_in_char_leger_lod0.glb",
-      "kit_in_char_leger_lod1.glb"
+      "kit_in_char_leger_lod0.glb"
     ]
   },
   {
@@ -4785,8 +4536,7 @@
       "kit_in_char_lourd_rugosite_hiver.png",
       "kit_in_char_lourd_metal_hiver.png",
       "kit_in_char_lourd_masque_equipe_hiver.png",
-      "kit_in_char_lourd_lod0.glb",
-      "kit_in_char_lourd_lod1.glb"
+      "kit_in_char_lourd_lod0.glb"
     ]
   },
   {
@@ -4804,8 +4554,7 @@
       "kit_in_char_moyen_rugosite_hiver.png",
       "kit_in_char_moyen_metal_hiver.png",
       "kit_in_char_moyen_masque_equipe_hiver.png",
-      "kit_in_char_moyen_lod0.glb",
-      "kit_in_char_moyen_lod1.glb"
+      "kit_in_char_moyen_lod0.glb"
     ]
   },
   {
@@ -4823,8 +4572,7 @@
       "kit_in_chasseur_rugosite_hiver.png",
       "kit_in_chasseur_metal_hiver.png",
       "kit_in_chasseur_masque_equipe_hiver.png",
-      "kit_in_chasseur_lod0.glb",
-      "kit_in_chasseur_lod1.glb"
+      "kit_in_chasseur_lod0.glb"
     ]
   },
   {
@@ -4842,8 +4590,7 @@
       "kit_in_cuirasse_rugosite_hiver.png",
       "kit_in_cuirasse_metal_hiver.png",
       "kit_in_cuirasse_masque_equipe_hiver.png",
-      "kit_in_cuirasse_lod0.glb",
-      "kit_in_cuirasse_lod1.glb"
+      "kit_in_cuirasse_lod0.glb"
     ]
   },
   {
@@ -4861,8 +4608,7 @@
       "kit_in_drone_rugosite_hiver.png",
       "kit_in_drone_metal_hiver.png",
       "kit_in_drone_masque_equipe_hiver.png",
-      "kit_in_drone_lod0.glb",
-      "kit_in_drone_lod1.glb"
+      "kit_in_drone_lod0.glb"
     ]
   },
   {
@@ -4882,8 +4628,7 @@
       "kit_in_drone_intercepteur_metal_hiver.png",
       "kit_in_drone_intercepteur_masque_equipe_hiver.png",
       "kit_in_drone_intercepteur_emission_hiver.png",
-      "kit_in_drone_intercepteur_lod0.glb",
-      "kit_in_drone_intercepteur_lod1.glb"
+      "kit_in_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -4903,8 +4648,7 @@
       "kit_in_drone_marin_metal_hiver.png",
       "kit_in_drone_marin_masque_equipe_hiver.png",
       "kit_in_drone_marin_emission_hiver.png",
-      "kit_in_drone_marin_lod0.glb",
-      "kit_in_drone_marin_lod1.glb"
+      "kit_in_drone_marin_lod0.glb"
     ]
   },
   {
@@ -4924,8 +4668,7 @@
       "kit_in_drone_ravitailleur_metal_hiver.png",
       "kit_in_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_in_drone_ravitailleur_emission_hiver.png",
-      "kit_in_drone_ravitailleur_lod0.glb",
-      "kit_in_drone_ravitailleur_lod1.glb"
+      "kit_in_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -4943,8 +4686,7 @@
       "kit_in_furtif_rugosite_hiver.png",
       "kit_in_furtif_metal_hiver.png",
       "kit_in_furtif_masque_equipe_hiver.png",
-      "kit_in_furtif_lod0.glb",
-      "kit_in_furtif_lod1.glb"
+      "kit_in_furtif_lod0.glb"
     ]
   },
   {
@@ -4964,8 +4706,7 @@
       "kit_in_genie_metal_hiver.png",
       "kit_in_genie_masque_equipe_hiver.png",
       "kit_in_genie_emission_hiver.png",
-      "kit_in_genie_lod0.glb",
-      "kit_in_genie_lod1.glb"
+      "kit_in_genie_lod0.glb"
     ]
   },
   {
@@ -4985,8 +4726,7 @@
       "kit_in_helico_metal_hiver.png",
       "kit_in_helico_masque_equipe_hiver.png",
       "kit_in_helico_emission_hiver.png",
-      "kit_in_helico_lod0.glb",
-      "kit_in_helico_lod1.glb"
+      "kit_in_helico_lod0.glb"
     ]
   },
   {
@@ -4998,8 +4738,7 @@
       "kit_in_infanterie_normale.png",
       "kit_in_infanterie_rugosite.png",
       "kit_in_infanterie_masque_equipe.png",
-      "kit_in_infanterie_lod0.glb",
-      "kit_in_infanterie_lod1.glb"
+      "kit_in_infanterie_lod0.glb"
     ]
   },
   {
@@ -5017,8 +4756,7 @@
       "kit_in_meca_rugosite_hiver.png",
       "kit_in_meca_metal_hiver.png",
       "kit_in_meca_masque_equipe_hiver.png",
-      "kit_in_meca_lod0.glb",
-      "kit_in_meca_lod1.glb"
+      "kit_in_meca_lod0.glb"
     ]
   },
   {
@@ -5038,8 +4776,7 @@
       "kit_in_missiles_air_metal_hiver.png",
       "kit_in_missiles_air_masque_equipe_hiver.png",
       "kit_in_missiles_air_emission_hiver.png",
-      "kit_in_missiles_air_lod0.glb",
-      "kit_in_missiles_air_lod1.glb"
+      "kit_in_missiles_air_lod0.glb"
     ]
   },
   {
@@ -5057,8 +4794,7 @@
       "kit_in_missiles_sol_rugosite_hiver.png",
       "kit_in_missiles_sol_metal_hiver.png",
       "kit_in_missiles_sol_masque_equipe_hiver.png",
-      "kit_in_missiles_sol_lod0.glb",
-      "kit_in_missiles_sol_lod1.glb"
+      "kit_in_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -5078,8 +4814,7 @@
       "kit_in_porte_avions_metal_hiver.png",
       "kit_in_porte_avions_masque_equipe_hiver.png",
       "kit_in_porte_avions_emission_hiver.png",
-      "kit_in_porte_avions_lod0.glb",
-      "kit_in_porte_avions_lod1.glb"
+      "kit_in_porte_avions_lod0.glb"
     ]
   },
   {
@@ -5099,8 +4834,7 @@
       "kit_in_recon_metal_hiver.png",
       "kit_in_recon_masque_equipe_hiver.png",
       "kit_in_recon_emission_hiver.png",
-      "kit_in_recon_lod0.glb",
-      "kit_in_recon_lod1.glb"
+      "kit_in_recon_lod0.glb"
     ]
   },
   {
@@ -5118,8 +4852,7 @@
       "kit_in_roquettes_rugosite_hiver.png",
       "kit_in_roquettes_metal_hiver.png",
       "kit_in_roquettes_masque_equipe_hiver.png",
-      "kit_in_roquettes_lod0.glb",
-      "kit_in_roquettes_lod1.glb"
+      "kit_in_roquettes_lod0.glb"
     ]
   },
   {
@@ -5137,8 +4870,7 @@
       "kit_in_sous_marin_rugosite_hiver.png",
       "kit_in_sous_marin_metal_hiver.png",
       "kit_in_sous_marin_masque_equipe_hiver.png",
-      "kit_in_sous_marin_lod0.glb",
-      "kit_in_sous_marin_lod1.glb"
+      "kit_in_sous_marin_lod0.glb"
     ]
   },
   {
@@ -5156,8 +4888,7 @@
       "kit_in_transport_rugosite_hiver.png",
       "kit_in_transport_metal_hiver.png",
       "kit_in_transport_masque_equipe_hiver.png",
-      "kit_in_transport_lod0.glb",
-      "kit_in_transport_lod1.glb"
+      "kit_in_transport_lod0.glb"
     ]
   },
   {
@@ -5175,8 +4906,7 @@
       "kit_in_transport_air_rugosite_hiver.png",
       "kit_in_transport_air_metal_hiver.png",
       "kit_in_transport_air_masque_equipe_hiver.png",
-      "kit_in_transport_air_lod0.glb",
-      "kit_in_transport_air_lod1.glb"
+      "kit_in_transport_air_lod0.glb"
     ]
   },
   {
@@ -5190,8 +4920,7 @@
       "kit_is_antiair_metal.png",
       "kit_is_antiair_masque_equipe.png",
       "kit_is_antiair_emission.png",
-      "kit_is_antiair_lod0.glb",
-      "kit_is_antiair_lod1.glb"
+      "kit_is_antiair_lod0.glb"
     ]
   },
   {
@@ -5204,8 +4933,7 @@
       "kit_is_artillerie_rugosite.png",
       "kit_is_artillerie_metal.png",
       "kit_is_artillerie_masque_equipe.png",
-      "kit_is_artillerie_lod0.glb",
-      "kit_is_artillerie_lod1.glb"
+      "kit_is_artillerie_lod0.glb"
     ]
   },
   {
@@ -5223,8 +4951,7 @@
       "kit_is_barge_rugosite_hiver.png",
       "kit_is_barge_metal_hiver.png",
       "kit_is_barge_masque_equipe_hiver.png",
-      "kit_is_barge_lod0.glb",
-      "kit_is_barge_lod1.glb"
+      "kit_is_barge_lod0.glb"
     ]
   },
   {
@@ -5244,8 +4971,7 @@
       "kit_is_bombardier_metal_hiver.png",
       "kit_is_bombardier_masque_equipe_hiver.png",
       "kit_is_bombardier_emission_hiver.png",
-      "kit_is_bombardier_lod0.glb",
-      "kit_is_bombardier_lod1.glb"
+      "kit_is_bombardier_lod0.glb"
     ]
   },
   {
@@ -5265,8 +4991,7 @@
       "kit_is_brouilleur_metal_hiver.png",
       "kit_is_brouilleur_masque_equipe_hiver.png",
       "kit_is_brouilleur_emission_hiver.png",
-      "kit_is_brouilleur_lod0.glb",
-      "kit_is_brouilleur_lod1.glb"
+      "kit_is_brouilleur_lod0.glb"
     ]
   },
   {
@@ -5284,8 +5009,7 @@
       "kit_is_char_leger_rugosite_hiver.png",
       "kit_is_char_leger_metal_hiver.png",
       "kit_is_char_leger_masque_equipe_hiver.png",
-      "kit_is_char_leger_lod0.glb",
-      "kit_is_char_leger_lod1.glb"
+      "kit_is_char_leger_lod0.glb"
     ]
   },
   {
@@ -5303,8 +5027,7 @@
       "kit_is_char_lourd_rugosite_hiver.png",
       "kit_is_char_lourd_metal_hiver.png",
       "kit_is_char_lourd_masque_equipe_hiver.png",
-      "kit_is_char_lourd_lod0.glb",
-      "kit_is_char_lourd_lod1.glb"
+      "kit_is_char_lourd_lod0.glb"
     ]
   },
   {
@@ -5322,8 +5045,7 @@
       "kit_is_char_moyen_rugosite_hiver.png",
       "kit_is_char_moyen_metal_hiver.png",
       "kit_is_char_moyen_masque_equipe_hiver.png",
-      "kit_is_char_moyen_lod0.glb",
-      "kit_is_char_moyen_lod1.glb"
+      "kit_is_char_moyen_lod0.glb"
     ]
   },
   {
@@ -5341,8 +5063,7 @@
       "kit_is_chasseur_rugosite_hiver.png",
       "kit_is_chasseur_metal_hiver.png",
       "kit_is_chasseur_masque_equipe_hiver.png",
-      "kit_is_chasseur_lod0.glb",
-      "kit_is_chasseur_lod1.glb"
+      "kit_is_chasseur_lod0.glb"
     ]
   },
   {
@@ -5360,8 +5081,7 @@
       "kit_is_cuirasse_rugosite_hiver.png",
       "kit_is_cuirasse_metal_hiver.png",
       "kit_is_cuirasse_masque_equipe_hiver.png",
-      "kit_is_cuirasse_lod0.glb",
-      "kit_is_cuirasse_lod1.glb"
+      "kit_is_cuirasse_lod0.glb"
     ]
   },
   {
@@ -5379,8 +5099,7 @@
       "kit_is_drone_rugosite_hiver.png",
       "kit_is_drone_metal_hiver.png",
       "kit_is_drone_masque_equipe_hiver.png",
-      "kit_is_drone_lod0.glb",
-      "kit_is_drone_lod1.glb"
+      "kit_is_drone_lod0.glb"
     ]
   },
   {
@@ -5400,8 +5119,7 @@
       "kit_is_drone_intercepteur_metal_hiver.png",
       "kit_is_drone_intercepteur_masque_equipe_hiver.png",
       "kit_is_drone_intercepteur_emission_hiver.png",
-      "kit_is_drone_intercepteur_lod0.glb",
-      "kit_is_drone_intercepteur_lod1.glb"
+      "kit_is_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -5421,8 +5139,7 @@
       "kit_is_drone_marin_metal_hiver.png",
       "kit_is_drone_marin_masque_equipe_hiver.png",
       "kit_is_drone_marin_emission_hiver.png",
-      "kit_is_drone_marin_lod0.glb",
-      "kit_is_drone_marin_lod1.glb"
+      "kit_is_drone_marin_lod0.glb"
     ]
   },
   {
@@ -5442,8 +5159,7 @@
       "kit_is_drone_ravitailleur_metal_hiver.png",
       "kit_is_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_is_drone_ravitailleur_emission_hiver.png",
-      "kit_is_drone_ravitailleur_lod0.glb",
-      "kit_is_drone_ravitailleur_lod1.glb"
+      "kit_is_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -5461,8 +5177,7 @@
       "kit_is_furtif_rugosite_hiver.png",
       "kit_is_furtif_metal_hiver.png",
       "kit_is_furtif_masque_equipe_hiver.png",
-      "kit_is_furtif_lod0.glb",
-      "kit_is_furtif_lod1.glb"
+      "kit_is_furtif_lod0.glb"
     ]
   },
   {
@@ -5482,8 +5197,7 @@
       "kit_is_genie_metal_hiver.png",
       "kit_is_genie_masque_equipe_hiver.png",
       "kit_is_genie_emission_hiver.png",
-      "kit_is_genie_lod0.glb",
-      "kit_is_genie_lod1.glb"
+      "kit_is_genie_lod0.glb"
     ]
   },
   {
@@ -5503,8 +5217,7 @@
       "kit_is_helico_metal_hiver.png",
       "kit_is_helico_masque_equipe_hiver.png",
       "kit_is_helico_emission_hiver.png",
-      "kit_is_helico_lod0.glb",
-      "kit_is_helico_lod1.glb"
+      "kit_is_helico_lod0.glb"
     ]
   },
   {
@@ -5516,8 +5229,7 @@
       "kit_is_infanterie_normale.png",
       "kit_is_infanterie_rugosite.png",
       "kit_is_infanterie_masque_equipe.png",
-      "kit_is_infanterie_lod0.glb",
-      "kit_is_infanterie_lod1.glb"
+      "kit_is_infanterie_lod0.glb"
     ]
   },
   {
@@ -5535,8 +5247,7 @@
       "kit_is_meca_rugosite_hiver.png",
       "kit_is_meca_metal_hiver.png",
       "kit_is_meca_masque_equipe_hiver.png",
-      "kit_is_meca_lod0.glb",
-      "kit_is_meca_lod1.glb"
+      "kit_is_meca_lod0.glb"
     ]
   },
   {
@@ -5556,8 +5267,7 @@
       "kit_is_missiles_air_metal_hiver.png",
       "kit_is_missiles_air_masque_equipe_hiver.png",
       "kit_is_missiles_air_emission_hiver.png",
-      "kit_is_missiles_air_lod0.glb",
-      "kit_is_missiles_air_lod1.glb"
+      "kit_is_missiles_air_lod0.glb"
     ]
   },
   {
@@ -5575,8 +5285,7 @@
       "kit_is_missiles_sol_rugosite_hiver.png",
       "kit_is_missiles_sol_metal_hiver.png",
       "kit_is_missiles_sol_masque_equipe_hiver.png",
-      "kit_is_missiles_sol_lod0.glb",
-      "kit_is_missiles_sol_lod1.glb"
+      "kit_is_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -5596,8 +5305,7 @@
       "kit_is_porte_avions_metal_hiver.png",
       "kit_is_porte_avions_masque_equipe_hiver.png",
       "kit_is_porte_avions_emission_hiver.png",
-      "kit_is_porte_avions_lod0.glb",
-      "kit_is_porte_avions_lod1.glb"
+      "kit_is_porte_avions_lod0.glb"
     ]
   },
   {
@@ -5617,8 +5325,7 @@
       "kit_is_recon_metal_hiver.png",
       "kit_is_recon_masque_equipe_hiver.png",
       "kit_is_recon_emission_hiver.png",
-      "kit_is_recon_lod0.glb",
-      "kit_is_recon_lod1.glb"
+      "kit_is_recon_lod0.glb"
     ]
   },
   {
@@ -5636,8 +5343,7 @@
       "kit_is_roquettes_rugosite_hiver.png",
       "kit_is_roquettes_metal_hiver.png",
       "kit_is_roquettes_masque_equipe_hiver.png",
-      "kit_is_roquettes_lod0.glb",
-      "kit_is_roquettes_lod1.glb"
+      "kit_is_roquettes_lod0.glb"
     ]
   },
   {
@@ -5655,8 +5361,7 @@
       "kit_is_sous_marin_rugosite_hiver.png",
       "kit_is_sous_marin_metal_hiver.png",
       "kit_is_sous_marin_masque_equipe_hiver.png",
-      "kit_is_sous_marin_lod0.glb",
-      "kit_is_sous_marin_lod1.glb"
+      "kit_is_sous_marin_lod0.glb"
     ]
   },
   {
@@ -5674,8 +5379,7 @@
       "kit_is_transport_rugosite_hiver.png",
       "kit_is_transport_metal_hiver.png",
       "kit_is_transport_masque_equipe_hiver.png",
-      "kit_is_transport_lod0.glb",
-      "kit_is_transport_lod1.glb"
+      "kit_is_transport_lod0.glb"
     ]
   },
   {
@@ -5693,8 +5397,7 @@
       "kit_is_transport_air_rugosite_hiver.png",
       "kit_is_transport_air_metal_hiver.png",
       "kit_is_transport_air_masque_equipe_hiver.png",
-      "kit_is_transport_air_lod0.glb",
-      "kit_is_transport_air_lod1.glb"
+      "kit_is_transport_air_lod0.glb"
     ]
   },
   {
@@ -5708,8 +5411,7 @@
       "kit_jp_antiair_metal.png",
       "kit_jp_antiair_masque_equipe.png",
       "kit_jp_antiair_emission.png",
-      "kit_jp_antiair_lod0.glb",
-      "kit_jp_antiair_lod1.glb"
+      "kit_jp_antiair_lod0.glb"
     ]
   },
   {
@@ -5722,8 +5424,7 @@
       "kit_jp_artillerie_rugosite.png",
       "kit_jp_artillerie_metal.png",
       "kit_jp_artillerie_masque_equipe.png",
-      "kit_jp_artillerie_lod0.glb",
-      "kit_jp_artillerie_lod1.glb"
+      "kit_jp_artillerie_lod0.glb"
     ]
   },
   {
@@ -5741,8 +5442,7 @@
       "kit_jp_barge_rugosite_hiver.png",
       "kit_jp_barge_metal_hiver.png",
       "kit_jp_barge_masque_equipe_hiver.png",
-      "kit_jp_barge_lod0.glb",
-      "kit_jp_barge_lod1.glb"
+      "kit_jp_barge_lod0.glb"
     ]
   },
   {
@@ -5762,8 +5462,7 @@
       "kit_jp_bombardier_metal_hiver.png",
       "kit_jp_bombardier_masque_equipe_hiver.png",
       "kit_jp_bombardier_emission_hiver.png",
-      "kit_jp_bombardier_lod0.glb",
-      "kit_jp_bombardier_lod1.glb"
+      "kit_jp_bombardier_lod0.glb"
     ]
   },
   {
@@ -5783,8 +5482,7 @@
       "kit_jp_brouilleur_metal_hiver.png",
       "kit_jp_brouilleur_masque_equipe_hiver.png",
       "kit_jp_brouilleur_emission_hiver.png",
-      "kit_jp_brouilleur_lod0.glb",
-      "kit_jp_brouilleur_lod1.glb"
+      "kit_jp_brouilleur_lod0.glb"
     ]
   },
   {
@@ -5802,8 +5500,7 @@
       "kit_jp_char_leger_rugosite_hiver.png",
       "kit_jp_char_leger_metal_hiver.png",
       "kit_jp_char_leger_masque_equipe_hiver.png",
-      "kit_jp_char_leger_lod0.glb",
-      "kit_jp_char_leger_lod1.glb"
+      "kit_jp_char_leger_lod0.glb"
     ]
   },
   {
@@ -5821,8 +5518,7 @@
       "kit_jp_char_lourd_rugosite_hiver.png",
       "kit_jp_char_lourd_metal_hiver.png",
       "kit_jp_char_lourd_masque_equipe_hiver.png",
-      "kit_jp_char_lourd_lod0.glb",
-      "kit_jp_char_lourd_lod1.glb"
+      "kit_jp_char_lourd_lod0.glb"
     ]
   },
   {
@@ -5840,8 +5536,7 @@
       "kit_jp_char_moyen_rugosite_hiver.png",
       "kit_jp_char_moyen_metal_hiver.png",
       "kit_jp_char_moyen_masque_equipe_hiver.png",
-      "kit_jp_char_moyen_lod0.glb",
-      "kit_jp_char_moyen_lod1.glb"
+      "kit_jp_char_moyen_lod0.glb"
     ]
   },
   {
@@ -5859,8 +5554,7 @@
       "kit_jp_chasseur_rugosite_hiver.png",
       "kit_jp_chasseur_metal_hiver.png",
       "kit_jp_chasseur_masque_equipe_hiver.png",
-      "kit_jp_chasseur_lod0.glb",
-      "kit_jp_chasseur_lod1.glb"
+      "kit_jp_chasseur_lod0.glb"
     ]
   },
   {
@@ -5878,8 +5572,7 @@
       "kit_jp_cuirasse_rugosite_hiver.png",
       "kit_jp_cuirasse_metal_hiver.png",
       "kit_jp_cuirasse_masque_equipe_hiver.png",
-      "kit_jp_cuirasse_lod0.glb",
-      "kit_jp_cuirasse_lod1.glb"
+      "kit_jp_cuirasse_lod0.glb"
     ]
   },
   {
@@ -5897,8 +5590,7 @@
       "kit_jp_drone_rugosite_hiver.png",
       "kit_jp_drone_metal_hiver.png",
       "kit_jp_drone_masque_equipe_hiver.png",
-      "kit_jp_drone_lod0.glb",
-      "kit_jp_drone_lod1.glb"
+      "kit_jp_drone_lod0.glb"
     ]
   },
   {
@@ -5918,8 +5610,7 @@
       "kit_jp_drone_intercepteur_metal_hiver.png",
       "kit_jp_drone_intercepteur_masque_equipe_hiver.png",
       "kit_jp_drone_intercepteur_emission_hiver.png",
-      "kit_jp_drone_intercepteur_lod0.glb",
-      "kit_jp_drone_intercepteur_lod1.glb"
+      "kit_jp_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -5939,8 +5630,7 @@
       "kit_jp_drone_marin_metal_hiver.png",
       "kit_jp_drone_marin_masque_equipe_hiver.png",
       "kit_jp_drone_marin_emission_hiver.png",
-      "kit_jp_drone_marin_lod0.glb",
-      "kit_jp_drone_marin_lod1.glb"
+      "kit_jp_drone_marin_lod0.glb"
     ]
   },
   {
@@ -5960,8 +5650,7 @@
       "kit_jp_drone_ravitailleur_metal_hiver.png",
       "kit_jp_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_jp_drone_ravitailleur_emission_hiver.png",
-      "kit_jp_drone_ravitailleur_lod0.glb",
-      "kit_jp_drone_ravitailleur_lod1.glb"
+      "kit_jp_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -5979,8 +5668,7 @@
       "kit_jp_furtif_rugosite_hiver.png",
       "kit_jp_furtif_metal_hiver.png",
       "kit_jp_furtif_masque_equipe_hiver.png",
-      "kit_jp_furtif_lod0.glb",
-      "kit_jp_furtif_lod1.glb"
+      "kit_jp_furtif_lod0.glb"
     ]
   },
   {
@@ -6000,8 +5688,7 @@
       "kit_jp_genie_metal_hiver.png",
       "kit_jp_genie_masque_equipe_hiver.png",
       "kit_jp_genie_emission_hiver.png",
-      "kit_jp_genie_lod0.glb",
-      "kit_jp_genie_lod1.glb"
+      "kit_jp_genie_lod0.glb"
     ]
   },
   {
@@ -6021,8 +5708,7 @@
       "kit_jp_helico_metal_hiver.png",
       "kit_jp_helico_masque_equipe_hiver.png",
       "kit_jp_helico_emission_hiver.png",
-      "kit_jp_helico_lod0.glb",
-      "kit_jp_helico_lod1.glb"
+      "kit_jp_helico_lod0.glb"
     ]
   },
   {
@@ -6034,8 +5720,7 @@
       "kit_jp_infanterie_normale.png",
       "kit_jp_infanterie_rugosite.png",
       "kit_jp_infanterie_masque_equipe.png",
-      "kit_jp_infanterie_lod0.glb",
-      "kit_jp_infanterie_lod1.glb"
+      "kit_jp_infanterie_lod0.glb"
     ]
   },
   {
@@ -6053,8 +5738,7 @@
       "kit_jp_meca_rugosite_hiver.png",
       "kit_jp_meca_metal_hiver.png",
       "kit_jp_meca_masque_equipe_hiver.png",
-      "kit_jp_meca_lod0.glb",
-      "kit_jp_meca_lod1.glb"
+      "kit_jp_meca_lod0.glb"
     ]
   },
   {
@@ -6074,8 +5758,7 @@
       "kit_jp_missiles_air_metal_hiver.png",
       "kit_jp_missiles_air_masque_equipe_hiver.png",
       "kit_jp_missiles_air_emission_hiver.png",
-      "kit_jp_missiles_air_lod0.glb",
-      "kit_jp_missiles_air_lod1.glb"
+      "kit_jp_missiles_air_lod0.glb"
     ]
   },
   {
@@ -6093,8 +5776,7 @@
       "kit_jp_missiles_sol_rugosite_hiver.png",
       "kit_jp_missiles_sol_metal_hiver.png",
       "kit_jp_missiles_sol_masque_equipe_hiver.png",
-      "kit_jp_missiles_sol_lod0.glb",
-      "kit_jp_missiles_sol_lod1.glb"
+      "kit_jp_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -6114,8 +5796,7 @@
       "kit_jp_porte_avions_metal_hiver.png",
       "kit_jp_porte_avions_masque_equipe_hiver.png",
       "kit_jp_porte_avions_emission_hiver.png",
-      "kit_jp_porte_avions_lod0.glb",
-      "kit_jp_porte_avions_lod1.glb"
+      "kit_jp_porte_avions_lod0.glb"
     ]
   },
   {
@@ -6135,8 +5816,7 @@
       "kit_jp_recon_metal_hiver.png",
       "kit_jp_recon_masque_equipe_hiver.png",
       "kit_jp_recon_emission_hiver.png",
-      "kit_jp_recon_lod0.glb",
-      "kit_jp_recon_lod1.glb"
+      "kit_jp_recon_lod0.glb"
     ]
   },
   {
@@ -6154,8 +5834,7 @@
       "kit_jp_roquettes_rugosite_hiver.png",
       "kit_jp_roquettes_metal_hiver.png",
       "kit_jp_roquettes_masque_equipe_hiver.png",
-      "kit_jp_roquettes_lod0.glb",
-      "kit_jp_roquettes_lod1.glb"
+      "kit_jp_roquettes_lod0.glb"
     ]
   },
   {
@@ -6173,8 +5852,7 @@
       "kit_jp_sous_marin_rugosite_hiver.png",
       "kit_jp_sous_marin_metal_hiver.png",
       "kit_jp_sous_marin_masque_equipe_hiver.png",
-      "kit_jp_sous_marin_lod0.glb",
-      "kit_jp_sous_marin_lod1.glb"
+      "kit_jp_sous_marin_lod0.glb"
     ]
   },
   {
@@ -6192,8 +5870,7 @@
       "kit_jp_transport_rugosite_hiver.png",
       "kit_jp_transport_metal_hiver.png",
       "kit_jp_transport_masque_equipe_hiver.png",
-      "kit_jp_transport_lod0.glb",
-      "kit_jp_transport_lod1.glb"
+      "kit_jp_transport_lod0.glb"
     ]
   },
   {
@@ -6211,8 +5888,7 @@
       "kit_jp_transport_air_rugosite_hiver.png",
       "kit_jp_transport_air_metal_hiver.png",
       "kit_jp_transport_air_masque_equipe_hiver.png",
-      "kit_jp_transport_air_lod0.glb",
-      "kit_jp_transport_air_lod1.glb"
+      "kit_jp_transport_air_lod0.glb"
     ]
   },
   {
@@ -6226,8 +5902,7 @@
       "kit_ke_antiair_metal.png",
       "kit_ke_antiair_masque_equipe.png",
       "kit_ke_antiair_emission.png",
-      "kit_ke_antiair_lod0.glb",
-      "kit_ke_antiair_lod1.glb"
+      "kit_ke_antiair_lod0.glb"
     ]
   },
   {
@@ -6240,8 +5915,7 @@
       "kit_ke_artillerie_rugosite.png",
       "kit_ke_artillerie_metal.png",
       "kit_ke_artillerie_masque_equipe.png",
-      "kit_ke_artillerie_lod0.glb",
-      "kit_ke_artillerie_lod1.glb"
+      "kit_ke_artillerie_lod0.glb"
     ]
   },
   {
@@ -6259,8 +5933,7 @@
       "kit_ke_barge_rugosite_hiver.png",
       "kit_ke_barge_metal_hiver.png",
       "kit_ke_barge_masque_equipe_hiver.png",
-      "kit_ke_barge_lod0.glb",
-      "kit_ke_barge_lod1.glb"
+      "kit_ke_barge_lod0.glb"
     ]
   },
   {
@@ -6280,8 +5953,7 @@
       "kit_ke_bombardier_metal_hiver.png",
       "kit_ke_bombardier_masque_equipe_hiver.png",
       "kit_ke_bombardier_emission_hiver.png",
-      "kit_ke_bombardier_lod0.glb",
-      "kit_ke_bombardier_lod1.glb"
+      "kit_ke_bombardier_lod0.glb"
     ]
   },
   {
@@ -6301,8 +5973,7 @@
       "kit_ke_brouilleur_metal_hiver.png",
       "kit_ke_brouilleur_masque_equipe_hiver.png",
       "kit_ke_brouilleur_emission_hiver.png",
-      "kit_ke_brouilleur_lod0.glb",
-      "kit_ke_brouilleur_lod1.glb"
+      "kit_ke_brouilleur_lod0.glb"
     ]
   },
   {
@@ -6320,8 +5991,7 @@
       "kit_ke_char_leger_rugosite_hiver.png",
       "kit_ke_char_leger_metal_hiver.png",
       "kit_ke_char_leger_masque_equipe_hiver.png",
-      "kit_ke_char_leger_lod0.glb",
-      "kit_ke_char_leger_lod1.glb"
+      "kit_ke_char_leger_lod0.glb"
     ]
   },
   {
@@ -6339,8 +6009,7 @@
       "kit_ke_char_lourd_rugosite_hiver.png",
       "kit_ke_char_lourd_metal_hiver.png",
       "kit_ke_char_lourd_masque_equipe_hiver.png",
-      "kit_ke_char_lourd_lod0.glb",
-      "kit_ke_char_lourd_lod1.glb"
+      "kit_ke_char_lourd_lod0.glb"
     ]
   },
   {
@@ -6358,8 +6027,7 @@
       "kit_ke_char_moyen_rugosite_hiver.png",
       "kit_ke_char_moyen_metal_hiver.png",
       "kit_ke_char_moyen_masque_equipe_hiver.png",
-      "kit_ke_char_moyen_lod0.glb",
-      "kit_ke_char_moyen_lod1.glb"
+      "kit_ke_char_moyen_lod0.glb"
     ]
   },
   {
@@ -6377,8 +6045,7 @@
       "kit_ke_chasseur_rugosite_hiver.png",
       "kit_ke_chasseur_metal_hiver.png",
       "kit_ke_chasseur_masque_equipe_hiver.png",
-      "kit_ke_chasseur_lod0.glb",
-      "kit_ke_chasseur_lod1.glb"
+      "kit_ke_chasseur_lod0.glb"
     ]
   },
   {
@@ -6396,8 +6063,7 @@
       "kit_ke_cuirasse_rugosite_hiver.png",
       "kit_ke_cuirasse_metal_hiver.png",
       "kit_ke_cuirasse_masque_equipe_hiver.png",
-      "kit_ke_cuirasse_lod0.glb",
-      "kit_ke_cuirasse_lod1.glb"
+      "kit_ke_cuirasse_lod0.glb"
     ]
   },
   {
@@ -6415,8 +6081,7 @@
       "kit_ke_drone_rugosite_hiver.png",
       "kit_ke_drone_metal_hiver.png",
       "kit_ke_drone_masque_equipe_hiver.png",
-      "kit_ke_drone_lod0.glb",
-      "kit_ke_drone_lod1.glb"
+      "kit_ke_drone_lod0.glb"
     ]
   },
   {
@@ -6436,8 +6101,7 @@
       "kit_ke_drone_intercepteur_metal_hiver.png",
       "kit_ke_drone_intercepteur_masque_equipe_hiver.png",
       "kit_ke_drone_intercepteur_emission_hiver.png",
-      "kit_ke_drone_intercepteur_lod0.glb",
-      "kit_ke_drone_intercepteur_lod1.glb"
+      "kit_ke_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -6457,8 +6121,7 @@
       "kit_ke_drone_marin_metal_hiver.png",
       "kit_ke_drone_marin_masque_equipe_hiver.png",
       "kit_ke_drone_marin_emission_hiver.png",
-      "kit_ke_drone_marin_lod0.glb",
-      "kit_ke_drone_marin_lod1.glb"
+      "kit_ke_drone_marin_lod0.glb"
     ]
   },
   {
@@ -6478,8 +6141,7 @@
       "kit_ke_drone_ravitailleur_metal_hiver.png",
       "kit_ke_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_ke_drone_ravitailleur_emission_hiver.png",
-      "kit_ke_drone_ravitailleur_lod0.glb",
-      "kit_ke_drone_ravitailleur_lod1.glb"
+      "kit_ke_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -6497,8 +6159,7 @@
       "kit_ke_furtif_rugosite_hiver.png",
       "kit_ke_furtif_metal_hiver.png",
       "kit_ke_furtif_masque_equipe_hiver.png",
-      "kit_ke_furtif_lod0.glb",
-      "kit_ke_furtif_lod1.glb"
+      "kit_ke_furtif_lod0.glb"
     ]
   },
   {
@@ -6518,8 +6179,7 @@
       "kit_ke_genie_metal_hiver.png",
       "kit_ke_genie_masque_equipe_hiver.png",
       "kit_ke_genie_emission_hiver.png",
-      "kit_ke_genie_lod0.glb",
-      "kit_ke_genie_lod1.glb"
+      "kit_ke_genie_lod0.glb"
     ]
   },
   {
@@ -6539,8 +6199,7 @@
       "kit_ke_helico_metal_hiver.png",
       "kit_ke_helico_masque_equipe_hiver.png",
       "kit_ke_helico_emission_hiver.png",
-      "kit_ke_helico_lod0.glb",
-      "kit_ke_helico_lod1.glb"
+      "kit_ke_helico_lod0.glb"
     ]
   },
   {
@@ -6552,8 +6211,7 @@
       "kit_ke_infanterie_normale.png",
       "kit_ke_infanterie_rugosite.png",
       "kit_ke_infanterie_masque_equipe.png",
-      "kit_ke_infanterie_lod0.glb",
-      "kit_ke_infanterie_lod1.glb"
+      "kit_ke_infanterie_lod0.glb"
     ]
   },
   {
@@ -6571,8 +6229,7 @@
       "kit_ke_meca_rugosite_hiver.png",
       "kit_ke_meca_metal_hiver.png",
       "kit_ke_meca_masque_equipe_hiver.png",
-      "kit_ke_meca_lod0.glb",
-      "kit_ke_meca_lod1.glb"
+      "kit_ke_meca_lod0.glb"
     ]
   },
   {
@@ -6592,8 +6249,7 @@
       "kit_ke_missiles_air_metal_hiver.png",
       "kit_ke_missiles_air_masque_equipe_hiver.png",
       "kit_ke_missiles_air_emission_hiver.png",
-      "kit_ke_missiles_air_lod0.glb",
-      "kit_ke_missiles_air_lod1.glb"
+      "kit_ke_missiles_air_lod0.glb"
     ]
   },
   {
@@ -6611,8 +6267,7 @@
       "kit_ke_missiles_sol_rugosite_hiver.png",
       "kit_ke_missiles_sol_metal_hiver.png",
       "kit_ke_missiles_sol_masque_equipe_hiver.png",
-      "kit_ke_missiles_sol_lod0.glb",
-      "kit_ke_missiles_sol_lod1.glb"
+      "kit_ke_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -6632,8 +6287,7 @@
       "kit_ke_porte_avions_metal_hiver.png",
       "kit_ke_porte_avions_masque_equipe_hiver.png",
       "kit_ke_porte_avions_emission_hiver.png",
-      "kit_ke_porte_avions_lod0.glb",
-      "kit_ke_porte_avions_lod1.glb"
+      "kit_ke_porte_avions_lod0.glb"
     ]
   },
   {
@@ -6653,8 +6307,7 @@
       "kit_ke_recon_metal_hiver.png",
       "kit_ke_recon_masque_equipe_hiver.png",
       "kit_ke_recon_emission_hiver.png",
-      "kit_ke_recon_lod0.glb",
-      "kit_ke_recon_lod1.glb"
+      "kit_ke_recon_lod0.glb"
     ]
   },
   {
@@ -6672,8 +6325,7 @@
       "kit_ke_roquettes_rugosite_hiver.png",
       "kit_ke_roquettes_metal_hiver.png",
       "kit_ke_roquettes_masque_equipe_hiver.png",
-      "kit_ke_roquettes_lod0.glb",
-      "kit_ke_roquettes_lod1.glb"
+      "kit_ke_roquettes_lod0.glb"
     ]
   },
   {
@@ -6691,8 +6343,7 @@
       "kit_ke_sous_marin_rugosite_hiver.png",
       "kit_ke_sous_marin_metal_hiver.png",
       "kit_ke_sous_marin_masque_equipe_hiver.png",
-      "kit_ke_sous_marin_lod0.glb",
-      "kit_ke_sous_marin_lod1.glb"
+      "kit_ke_sous_marin_lod0.glb"
     ]
   },
   {
@@ -6710,8 +6361,7 @@
       "kit_ke_transport_rugosite_hiver.png",
       "kit_ke_transport_metal_hiver.png",
       "kit_ke_transport_masque_equipe_hiver.png",
-      "kit_ke_transport_lod0.glb",
-      "kit_ke_transport_lod1.glb"
+      "kit_ke_transport_lod0.glb"
     ]
   },
   {
@@ -6729,8 +6379,7 @@
       "kit_ke_transport_air_rugosite_hiver.png",
       "kit_ke_transport_air_metal_hiver.png",
       "kit_ke_transport_air_masque_equipe_hiver.png",
-      "kit_ke_transport_air_lod0.glb",
-      "kit_ke_transport_air_lod1.glb"
+      "kit_ke_transport_air_lod0.glb"
     ]
   },
   {
@@ -6744,8 +6393,7 @@
       "kit_lu_antiair_metal.png",
       "kit_lu_antiair_masque_equipe.png",
       "kit_lu_antiair_emission.png",
-      "kit_lu_antiair_lod0.glb",
-      "kit_lu_antiair_lod1.glb"
+      "kit_lu_antiair_lod0.glb"
     ]
   },
   {
@@ -6758,8 +6406,7 @@
       "kit_lu_artillerie_rugosite.png",
       "kit_lu_artillerie_metal.png",
       "kit_lu_artillerie_masque_equipe.png",
-      "kit_lu_artillerie_lod0.glb",
-      "kit_lu_artillerie_lod1.glb"
+      "kit_lu_artillerie_lod0.glb"
     ]
   },
   {
@@ -6777,8 +6424,7 @@
       "kit_lu_barge_rugosite_hiver.png",
       "kit_lu_barge_metal_hiver.png",
       "kit_lu_barge_masque_equipe_hiver.png",
-      "kit_lu_barge_lod0.glb",
-      "kit_lu_barge_lod1.glb"
+      "kit_lu_barge_lod0.glb"
     ]
   },
   {
@@ -6798,8 +6444,7 @@
       "kit_lu_bombardier_metal_hiver.png",
       "kit_lu_bombardier_masque_equipe_hiver.png",
       "kit_lu_bombardier_emission_hiver.png",
-      "kit_lu_bombardier_lod0.glb",
-      "kit_lu_bombardier_lod1.glb"
+      "kit_lu_bombardier_lod0.glb"
     ]
   },
   {
@@ -6819,8 +6464,7 @@
       "kit_lu_brouilleur_metal_hiver.png",
       "kit_lu_brouilleur_masque_equipe_hiver.png",
       "kit_lu_brouilleur_emission_hiver.png",
-      "kit_lu_brouilleur_lod0.glb",
-      "kit_lu_brouilleur_lod1.glb"
+      "kit_lu_brouilleur_lod0.glb"
     ]
   },
   {
@@ -6838,8 +6482,7 @@
       "kit_lu_char_leger_rugosite_hiver.png",
       "kit_lu_char_leger_metal_hiver.png",
       "kit_lu_char_leger_masque_equipe_hiver.png",
-      "kit_lu_char_leger_lod0.glb",
-      "kit_lu_char_leger_lod1.glb"
+      "kit_lu_char_leger_lod0.glb"
     ]
   },
   {
@@ -6857,8 +6500,7 @@
       "kit_lu_char_lourd_rugosite_hiver.png",
       "kit_lu_char_lourd_metal_hiver.png",
       "kit_lu_char_lourd_masque_equipe_hiver.png",
-      "kit_lu_char_lourd_lod0.glb",
-      "kit_lu_char_lourd_lod1.glb"
+      "kit_lu_char_lourd_lod0.glb"
     ]
   },
   {
@@ -6876,8 +6518,7 @@
       "kit_lu_char_moyen_rugosite_hiver.png",
       "kit_lu_char_moyen_metal_hiver.png",
       "kit_lu_char_moyen_masque_equipe_hiver.png",
-      "kit_lu_char_moyen_lod0.glb",
-      "kit_lu_char_moyen_lod1.glb"
+      "kit_lu_char_moyen_lod0.glb"
     ]
   },
   {
@@ -6895,8 +6536,7 @@
       "kit_lu_chasseur_rugosite_hiver.png",
       "kit_lu_chasseur_metal_hiver.png",
       "kit_lu_chasseur_masque_equipe_hiver.png",
-      "kit_lu_chasseur_lod0.glb",
-      "kit_lu_chasseur_lod1.glb"
+      "kit_lu_chasseur_lod0.glb"
     ]
   },
   {
@@ -6914,8 +6554,7 @@
       "kit_lu_cuirasse_rugosite_hiver.png",
       "kit_lu_cuirasse_metal_hiver.png",
       "kit_lu_cuirasse_masque_equipe_hiver.png",
-      "kit_lu_cuirasse_lod0.glb",
-      "kit_lu_cuirasse_lod1.glb"
+      "kit_lu_cuirasse_lod0.glb"
     ]
   },
   {
@@ -6933,8 +6572,7 @@
       "kit_lu_drone_rugosite_hiver.png",
       "kit_lu_drone_metal_hiver.png",
       "kit_lu_drone_masque_equipe_hiver.png",
-      "kit_lu_drone_lod0.glb",
-      "kit_lu_drone_lod1.glb"
+      "kit_lu_drone_lod0.glb"
     ]
   },
   {
@@ -6954,8 +6592,7 @@
       "kit_lu_drone_intercepteur_metal_hiver.png",
       "kit_lu_drone_intercepteur_masque_equipe_hiver.png",
       "kit_lu_drone_intercepteur_emission_hiver.png",
-      "kit_lu_drone_intercepteur_lod0.glb",
-      "kit_lu_drone_intercepteur_lod1.glb"
+      "kit_lu_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -6975,8 +6612,7 @@
       "kit_lu_drone_marin_metal_hiver.png",
       "kit_lu_drone_marin_masque_equipe_hiver.png",
       "kit_lu_drone_marin_emission_hiver.png",
-      "kit_lu_drone_marin_lod0.glb",
-      "kit_lu_drone_marin_lod1.glb"
+      "kit_lu_drone_marin_lod0.glb"
     ]
   },
   {
@@ -6996,8 +6632,7 @@
       "kit_lu_drone_ravitailleur_metal_hiver.png",
       "kit_lu_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_lu_drone_ravitailleur_emission_hiver.png",
-      "kit_lu_drone_ravitailleur_lod0.glb",
-      "kit_lu_drone_ravitailleur_lod1.glb"
+      "kit_lu_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -7015,8 +6650,7 @@
       "kit_lu_furtif_rugosite_hiver.png",
       "kit_lu_furtif_metal_hiver.png",
       "kit_lu_furtif_masque_equipe_hiver.png",
-      "kit_lu_furtif_lod0.glb",
-      "kit_lu_furtif_lod1.glb"
+      "kit_lu_furtif_lod0.glb"
     ]
   },
   {
@@ -7036,8 +6670,7 @@
       "kit_lu_genie_metal_hiver.png",
       "kit_lu_genie_masque_equipe_hiver.png",
       "kit_lu_genie_emission_hiver.png",
-      "kit_lu_genie_lod0.glb",
-      "kit_lu_genie_lod1.glb"
+      "kit_lu_genie_lod0.glb"
     ]
   },
   {
@@ -7057,8 +6690,7 @@
       "kit_lu_helico_metal_hiver.png",
       "kit_lu_helico_masque_equipe_hiver.png",
       "kit_lu_helico_emission_hiver.png",
-      "kit_lu_helico_lod0.glb",
-      "kit_lu_helico_lod1.glb"
+      "kit_lu_helico_lod0.glb"
     ]
   },
   {
@@ -7070,8 +6702,7 @@
       "kit_lu_infanterie_normale.png",
       "kit_lu_infanterie_rugosite.png",
       "kit_lu_infanterie_masque_equipe.png",
-      "kit_lu_infanterie_lod0.glb",
-      "kit_lu_infanterie_lod1.glb"
+      "kit_lu_infanterie_lod0.glb"
     ]
   },
   {
@@ -7089,8 +6720,7 @@
       "kit_lu_meca_rugosite_hiver.png",
       "kit_lu_meca_metal_hiver.png",
       "kit_lu_meca_masque_equipe_hiver.png",
-      "kit_lu_meca_lod0.glb",
-      "kit_lu_meca_lod1.glb"
+      "kit_lu_meca_lod0.glb"
     ]
   },
   {
@@ -7110,8 +6740,7 @@
       "kit_lu_missiles_air_metal_hiver.png",
       "kit_lu_missiles_air_masque_equipe_hiver.png",
       "kit_lu_missiles_air_emission_hiver.png",
-      "kit_lu_missiles_air_lod0.glb",
-      "kit_lu_missiles_air_lod1.glb"
+      "kit_lu_missiles_air_lod0.glb"
     ]
   },
   {
@@ -7129,8 +6758,7 @@
       "kit_lu_missiles_sol_rugosite_hiver.png",
       "kit_lu_missiles_sol_metal_hiver.png",
       "kit_lu_missiles_sol_masque_equipe_hiver.png",
-      "kit_lu_missiles_sol_lod0.glb",
-      "kit_lu_missiles_sol_lod1.glb"
+      "kit_lu_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -7150,8 +6778,7 @@
       "kit_lu_porte_avions_metal_hiver.png",
       "kit_lu_porte_avions_masque_equipe_hiver.png",
       "kit_lu_porte_avions_emission_hiver.png",
-      "kit_lu_porte_avions_lod0.glb",
-      "kit_lu_porte_avions_lod1.glb"
+      "kit_lu_porte_avions_lod0.glb"
     ]
   },
   {
@@ -7171,8 +6798,7 @@
       "kit_lu_recon_metal_hiver.png",
       "kit_lu_recon_masque_equipe_hiver.png",
       "kit_lu_recon_emission_hiver.png",
-      "kit_lu_recon_lod0.glb",
-      "kit_lu_recon_lod1.glb"
+      "kit_lu_recon_lod0.glb"
     ]
   },
   {
@@ -7190,8 +6816,7 @@
       "kit_lu_roquettes_rugosite_hiver.png",
       "kit_lu_roquettes_metal_hiver.png",
       "kit_lu_roquettes_masque_equipe_hiver.png",
-      "kit_lu_roquettes_lod0.glb",
-      "kit_lu_roquettes_lod1.glb"
+      "kit_lu_roquettes_lod0.glb"
     ]
   },
   {
@@ -7209,8 +6834,7 @@
       "kit_lu_sous_marin_rugosite_hiver.png",
       "kit_lu_sous_marin_metal_hiver.png",
       "kit_lu_sous_marin_masque_equipe_hiver.png",
-      "kit_lu_sous_marin_lod0.glb",
-      "kit_lu_sous_marin_lod1.glb"
+      "kit_lu_sous_marin_lod0.glb"
     ]
   },
   {
@@ -7228,8 +6852,7 @@
       "kit_lu_transport_rugosite_hiver.png",
       "kit_lu_transport_metal_hiver.png",
       "kit_lu_transport_masque_equipe_hiver.png",
-      "kit_lu_transport_lod0.glb",
-      "kit_lu_transport_lod1.glb"
+      "kit_lu_transport_lod0.glb"
     ]
   },
   {
@@ -7247,8 +6870,7 @@
       "kit_lu_transport_air_rugosite_hiver.png",
       "kit_lu_transport_air_metal_hiver.png",
       "kit_lu_transport_air_masque_equipe_hiver.png",
-      "kit_lu_transport_air_lod0.glb",
-      "kit_lu_transport_air_lod1.glb"
+      "kit_lu_transport_air_lod0.glb"
     ]
   },
   {
@@ -7262,8 +6884,7 @@
       "kit_ma_antiair_metal.png",
       "kit_ma_antiair_masque_equipe.png",
       "kit_ma_antiair_emission.png",
-      "kit_ma_antiair_lod0.glb",
-      "kit_ma_antiair_lod1.glb"
+      "kit_ma_antiair_lod0.glb"
     ]
   },
   {
@@ -7276,8 +6897,7 @@
       "kit_ma_artillerie_rugosite.png",
       "kit_ma_artillerie_metal.png",
       "kit_ma_artillerie_masque_equipe.png",
-      "kit_ma_artillerie_lod0.glb",
-      "kit_ma_artillerie_lod1.glb"
+      "kit_ma_artillerie_lod0.glb"
     ]
   },
   {
@@ -7295,8 +6915,7 @@
       "kit_ma_barge_rugosite_hiver.png",
       "kit_ma_barge_metal_hiver.png",
       "kit_ma_barge_masque_equipe_hiver.png",
-      "kit_ma_barge_lod0.glb",
-      "kit_ma_barge_lod1.glb"
+      "kit_ma_barge_lod0.glb"
     ]
   },
   {
@@ -7316,8 +6935,7 @@
       "kit_ma_bombardier_metal_hiver.png",
       "kit_ma_bombardier_masque_equipe_hiver.png",
       "kit_ma_bombardier_emission_hiver.png",
-      "kit_ma_bombardier_lod0.glb",
-      "kit_ma_bombardier_lod1.glb"
+      "kit_ma_bombardier_lod0.glb"
     ]
   },
   {
@@ -7337,8 +6955,7 @@
       "kit_ma_brouilleur_metal_hiver.png",
       "kit_ma_brouilleur_masque_equipe_hiver.png",
       "kit_ma_brouilleur_emission_hiver.png",
-      "kit_ma_brouilleur_lod0.glb",
-      "kit_ma_brouilleur_lod1.glb"
+      "kit_ma_brouilleur_lod0.glb"
     ]
   },
   {
@@ -7356,8 +6973,7 @@
       "kit_ma_char_leger_rugosite_hiver.png",
       "kit_ma_char_leger_metal_hiver.png",
       "kit_ma_char_leger_masque_equipe_hiver.png",
-      "kit_ma_char_leger_lod0.glb",
-      "kit_ma_char_leger_lod1.glb"
+      "kit_ma_char_leger_lod0.glb"
     ]
   },
   {
@@ -7375,8 +6991,7 @@
       "kit_ma_char_lourd_rugosite_hiver.png",
       "kit_ma_char_lourd_metal_hiver.png",
       "kit_ma_char_lourd_masque_equipe_hiver.png",
-      "kit_ma_char_lourd_lod0.glb",
-      "kit_ma_char_lourd_lod1.glb"
+      "kit_ma_char_lourd_lod0.glb"
     ]
   },
   {
@@ -7394,8 +7009,7 @@
       "kit_ma_char_moyen_rugosite_hiver.png",
       "kit_ma_char_moyen_metal_hiver.png",
       "kit_ma_char_moyen_masque_equipe_hiver.png",
-      "kit_ma_char_moyen_lod0.glb",
-      "kit_ma_char_moyen_lod1.glb"
+      "kit_ma_char_moyen_lod0.glb"
     ]
   },
   {
@@ -7413,8 +7027,7 @@
       "kit_ma_chasseur_rugosite_hiver.png",
       "kit_ma_chasseur_metal_hiver.png",
       "kit_ma_chasseur_masque_equipe_hiver.png",
-      "kit_ma_chasseur_lod0.glb",
-      "kit_ma_chasseur_lod1.glb"
+      "kit_ma_chasseur_lod0.glb"
     ]
   },
   {
@@ -7432,8 +7045,7 @@
       "kit_ma_cuirasse_rugosite_hiver.png",
       "kit_ma_cuirasse_metal_hiver.png",
       "kit_ma_cuirasse_masque_equipe_hiver.png",
-      "kit_ma_cuirasse_lod0.glb",
-      "kit_ma_cuirasse_lod1.glb"
+      "kit_ma_cuirasse_lod0.glb"
     ]
   },
   {
@@ -7451,8 +7063,7 @@
       "kit_ma_drone_rugosite_hiver.png",
       "kit_ma_drone_metal_hiver.png",
       "kit_ma_drone_masque_equipe_hiver.png",
-      "kit_ma_drone_lod0.glb",
-      "kit_ma_drone_lod1.glb"
+      "kit_ma_drone_lod0.glb"
     ]
   },
   {
@@ -7472,8 +7083,7 @@
       "kit_ma_drone_intercepteur_metal_hiver.png",
       "kit_ma_drone_intercepteur_masque_equipe_hiver.png",
       "kit_ma_drone_intercepteur_emission_hiver.png",
-      "kit_ma_drone_intercepteur_lod0.glb",
-      "kit_ma_drone_intercepteur_lod1.glb"
+      "kit_ma_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -7493,8 +7103,7 @@
       "kit_ma_drone_marin_metal_hiver.png",
       "kit_ma_drone_marin_masque_equipe_hiver.png",
       "kit_ma_drone_marin_emission_hiver.png",
-      "kit_ma_drone_marin_lod0.glb",
-      "kit_ma_drone_marin_lod1.glb"
+      "kit_ma_drone_marin_lod0.glb"
     ]
   },
   {
@@ -7514,8 +7123,7 @@
       "kit_ma_drone_ravitailleur_metal_hiver.png",
       "kit_ma_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_ma_drone_ravitailleur_emission_hiver.png",
-      "kit_ma_drone_ravitailleur_lod0.glb",
-      "kit_ma_drone_ravitailleur_lod1.glb"
+      "kit_ma_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -7533,8 +7141,7 @@
       "kit_ma_furtif_rugosite_hiver.png",
       "kit_ma_furtif_metal_hiver.png",
       "kit_ma_furtif_masque_equipe_hiver.png",
-      "kit_ma_furtif_lod0.glb",
-      "kit_ma_furtif_lod1.glb"
+      "kit_ma_furtif_lod0.glb"
     ]
   },
   {
@@ -7554,8 +7161,7 @@
       "kit_ma_genie_metal_hiver.png",
       "kit_ma_genie_masque_equipe_hiver.png",
       "kit_ma_genie_emission_hiver.png",
-      "kit_ma_genie_lod0.glb",
-      "kit_ma_genie_lod1.glb"
+      "kit_ma_genie_lod0.glb"
     ]
   },
   {
@@ -7575,8 +7181,7 @@
       "kit_ma_helico_metal_hiver.png",
       "kit_ma_helico_masque_equipe_hiver.png",
       "kit_ma_helico_emission_hiver.png",
-      "kit_ma_helico_lod0.glb",
-      "kit_ma_helico_lod1.glb"
+      "kit_ma_helico_lod0.glb"
     ]
   },
   {
@@ -7588,8 +7193,7 @@
       "kit_ma_infanterie_normale.png",
       "kit_ma_infanterie_rugosite.png",
       "kit_ma_infanterie_masque_equipe.png",
-      "kit_ma_infanterie_lod0.glb",
-      "kit_ma_infanterie_lod1.glb"
+      "kit_ma_infanterie_lod0.glb"
     ]
   },
   {
@@ -7607,8 +7211,7 @@
       "kit_ma_meca_rugosite_hiver.png",
       "kit_ma_meca_metal_hiver.png",
       "kit_ma_meca_masque_equipe_hiver.png",
-      "kit_ma_meca_lod0.glb",
-      "kit_ma_meca_lod1.glb"
+      "kit_ma_meca_lod0.glb"
     ]
   },
   {
@@ -7628,8 +7231,7 @@
       "kit_ma_missiles_air_metal_hiver.png",
       "kit_ma_missiles_air_masque_equipe_hiver.png",
       "kit_ma_missiles_air_emission_hiver.png",
-      "kit_ma_missiles_air_lod0.glb",
-      "kit_ma_missiles_air_lod1.glb"
+      "kit_ma_missiles_air_lod0.glb"
     ]
   },
   {
@@ -7647,8 +7249,7 @@
       "kit_ma_missiles_sol_rugosite_hiver.png",
       "kit_ma_missiles_sol_metal_hiver.png",
       "kit_ma_missiles_sol_masque_equipe_hiver.png",
-      "kit_ma_missiles_sol_lod0.glb",
-      "kit_ma_missiles_sol_lod1.glb"
+      "kit_ma_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -7668,8 +7269,7 @@
       "kit_ma_porte_avions_metal_hiver.png",
       "kit_ma_porte_avions_masque_equipe_hiver.png",
       "kit_ma_porte_avions_emission_hiver.png",
-      "kit_ma_porte_avions_lod0.glb",
-      "kit_ma_porte_avions_lod1.glb"
+      "kit_ma_porte_avions_lod0.glb"
     ]
   },
   {
@@ -7689,8 +7289,7 @@
       "kit_ma_recon_metal_hiver.png",
       "kit_ma_recon_masque_equipe_hiver.png",
       "kit_ma_recon_emission_hiver.png",
-      "kit_ma_recon_lod0.glb",
-      "kit_ma_recon_lod1.glb"
+      "kit_ma_recon_lod0.glb"
     ]
   },
   {
@@ -7708,8 +7307,7 @@
       "kit_ma_roquettes_rugosite_hiver.png",
       "kit_ma_roquettes_metal_hiver.png",
       "kit_ma_roquettes_masque_equipe_hiver.png",
-      "kit_ma_roquettes_lod0.glb",
-      "kit_ma_roquettes_lod1.glb"
+      "kit_ma_roquettes_lod0.glb"
     ]
   },
   {
@@ -7727,8 +7325,7 @@
       "kit_ma_sous_marin_rugosite_hiver.png",
       "kit_ma_sous_marin_metal_hiver.png",
       "kit_ma_sous_marin_masque_equipe_hiver.png",
-      "kit_ma_sous_marin_lod0.glb",
-      "kit_ma_sous_marin_lod1.glb"
+      "kit_ma_sous_marin_lod0.glb"
     ]
   },
   {
@@ -7746,8 +7343,7 @@
       "kit_ma_transport_rugosite_hiver.png",
       "kit_ma_transport_metal_hiver.png",
       "kit_ma_transport_masque_equipe_hiver.png",
-      "kit_ma_transport_lod0.glb",
-      "kit_ma_transport_lod1.glb"
+      "kit_ma_transport_lod0.glb"
     ]
   },
   {
@@ -7765,8 +7361,7 @@
       "kit_ma_transport_air_rugosite_hiver.png",
       "kit_ma_transport_air_metal_hiver.png",
       "kit_ma_transport_air_masque_equipe_hiver.png",
-      "kit_ma_transport_air_lod0.glb",
-      "kit_ma_transport_air_lod1.glb"
+      "kit_ma_transport_air_lod0.glb"
     ]
   },
   {
@@ -7780,8 +7375,7 @@
       "kit_mg_antiair_metal.png",
       "kit_mg_antiair_masque_equipe.png",
       "kit_mg_antiair_emission.png",
-      "kit_mg_antiair_lod0.glb",
-      "kit_mg_antiair_lod1.glb"
+      "kit_mg_antiair_lod0.glb"
     ]
   },
   {
@@ -7794,8 +7388,7 @@
       "kit_mg_artillerie_rugosite.png",
       "kit_mg_artillerie_metal.png",
       "kit_mg_artillerie_masque_equipe.png",
-      "kit_mg_artillerie_lod0.glb",
-      "kit_mg_artillerie_lod1.glb"
+      "kit_mg_artillerie_lod0.glb"
     ]
   },
   {
@@ -7813,8 +7406,7 @@
       "kit_mg_barge_rugosite_hiver.png",
       "kit_mg_barge_metal_hiver.png",
       "kit_mg_barge_masque_equipe_hiver.png",
-      "kit_mg_barge_lod0.glb",
-      "kit_mg_barge_lod1.glb"
+      "kit_mg_barge_lod0.glb"
     ]
   },
   {
@@ -7834,8 +7426,7 @@
       "kit_mg_bombardier_metal_hiver.png",
       "kit_mg_bombardier_masque_equipe_hiver.png",
       "kit_mg_bombardier_emission_hiver.png",
-      "kit_mg_bombardier_lod0.glb",
-      "kit_mg_bombardier_lod1.glb"
+      "kit_mg_bombardier_lod0.glb"
     ]
   },
   {
@@ -7855,8 +7446,7 @@
       "kit_mg_brouilleur_metal_hiver.png",
       "kit_mg_brouilleur_masque_equipe_hiver.png",
       "kit_mg_brouilleur_emission_hiver.png",
-      "kit_mg_brouilleur_lod0.glb",
-      "kit_mg_brouilleur_lod1.glb"
+      "kit_mg_brouilleur_lod0.glb"
     ]
   },
   {
@@ -7874,8 +7464,7 @@
       "kit_mg_char_leger_rugosite_hiver.png",
       "kit_mg_char_leger_metal_hiver.png",
       "kit_mg_char_leger_masque_equipe_hiver.png",
-      "kit_mg_char_leger_lod0.glb",
-      "kit_mg_char_leger_lod1.glb"
+      "kit_mg_char_leger_lod0.glb"
     ]
   },
   {
@@ -7893,8 +7482,7 @@
       "kit_mg_char_lourd_rugosite_hiver.png",
       "kit_mg_char_lourd_metal_hiver.png",
       "kit_mg_char_lourd_masque_equipe_hiver.png",
-      "kit_mg_char_lourd_lod0.glb",
-      "kit_mg_char_lourd_lod1.glb"
+      "kit_mg_char_lourd_lod0.glb"
     ]
   },
   {
@@ -7912,8 +7500,7 @@
       "kit_mg_char_moyen_rugosite_hiver.png",
       "kit_mg_char_moyen_metal_hiver.png",
       "kit_mg_char_moyen_masque_equipe_hiver.png",
-      "kit_mg_char_moyen_lod0.glb",
-      "kit_mg_char_moyen_lod1.glb"
+      "kit_mg_char_moyen_lod0.glb"
     ]
   },
   {
@@ -7931,8 +7518,7 @@
       "kit_mg_chasseur_rugosite_hiver.png",
       "kit_mg_chasseur_metal_hiver.png",
       "kit_mg_chasseur_masque_equipe_hiver.png",
-      "kit_mg_chasseur_lod0.glb",
-      "kit_mg_chasseur_lod1.glb"
+      "kit_mg_chasseur_lod0.glb"
     ]
   },
   {
@@ -7950,8 +7536,7 @@
       "kit_mg_cuirasse_rugosite_hiver.png",
       "kit_mg_cuirasse_metal_hiver.png",
       "kit_mg_cuirasse_masque_equipe_hiver.png",
-      "kit_mg_cuirasse_lod0.glb",
-      "kit_mg_cuirasse_lod1.glb"
+      "kit_mg_cuirasse_lod0.glb"
     ]
   },
   {
@@ -7969,8 +7554,7 @@
       "kit_mg_drone_rugosite_hiver.png",
       "kit_mg_drone_metal_hiver.png",
       "kit_mg_drone_masque_equipe_hiver.png",
-      "kit_mg_drone_lod0.glb",
-      "kit_mg_drone_lod1.glb"
+      "kit_mg_drone_lod0.glb"
     ]
   },
   {
@@ -7990,8 +7574,7 @@
       "kit_mg_drone_intercepteur_metal_hiver.png",
       "kit_mg_drone_intercepteur_masque_equipe_hiver.png",
       "kit_mg_drone_intercepteur_emission_hiver.png",
-      "kit_mg_drone_intercepteur_lod0.glb",
-      "kit_mg_drone_intercepteur_lod1.glb"
+      "kit_mg_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -8011,8 +7594,7 @@
       "kit_mg_drone_marin_metal_hiver.png",
       "kit_mg_drone_marin_masque_equipe_hiver.png",
       "kit_mg_drone_marin_emission_hiver.png",
-      "kit_mg_drone_marin_lod0.glb",
-      "kit_mg_drone_marin_lod1.glb"
+      "kit_mg_drone_marin_lod0.glb"
     ]
   },
   {
@@ -8032,8 +7614,7 @@
       "kit_mg_drone_ravitailleur_metal_hiver.png",
       "kit_mg_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_mg_drone_ravitailleur_emission_hiver.png",
-      "kit_mg_drone_ravitailleur_lod0.glb",
-      "kit_mg_drone_ravitailleur_lod1.glb"
+      "kit_mg_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -8051,8 +7632,7 @@
       "kit_mg_furtif_rugosite_hiver.png",
       "kit_mg_furtif_metal_hiver.png",
       "kit_mg_furtif_masque_equipe_hiver.png",
-      "kit_mg_furtif_lod0.glb",
-      "kit_mg_furtif_lod1.glb"
+      "kit_mg_furtif_lod0.glb"
     ]
   },
   {
@@ -8072,8 +7652,7 @@
       "kit_mg_genie_metal_hiver.png",
       "kit_mg_genie_masque_equipe_hiver.png",
       "kit_mg_genie_emission_hiver.png",
-      "kit_mg_genie_lod0.glb",
-      "kit_mg_genie_lod1.glb"
+      "kit_mg_genie_lod0.glb"
     ]
   },
   {
@@ -8093,8 +7672,7 @@
       "kit_mg_helico_metal_hiver.png",
       "kit_mg_helico_masque_equipe_hiver.png",
       "kit_mg_helico_emission_hiver.png",
-      "kit_mg_helico_lod0.glb",
-      "kit_mg_helico_lod1.glb"
+      "kit_mg_helico_lod0.glb"
     ]
   },
   {
@@ -8106,8 +7684,7 @@
       "kit_mg_infanterie_normale.png",
       "kit_mg_infanterie_rugosite.png",
       "kit_mg_infanterie_masque_equipe.png",
-      "kit_mg_infanterie_lod0.glb",
-      "kit_mg_infanterie_lod1.glb"
+      "kit_mg_infanterie_lod0.glb"
     ]
   },
   {
@@ -8125,8 +7702,7 @@
       "kit_mg_meca_rugosite_hiver.png",
       "kit_mg_meca_metal_hiver.png",
       "kit_mg_meca_masque_equipe_hiver.png",
-      "kit_mg_meca_lod0.glb",
-      "kit_mg_meca_lod1.glb"
+      "kit_mg_meca_lod0.glb"
     ]
   },
   {
@@ -8146,8 +7722,7 @@
       "kit_mg_missiles_air_metal_hiver.png",
       "kit_mg_missiles_air_masque_equipe_hiver.png",
       "kit_mg_missiles_air_emission_hiver.png",
-      "kit_mg_missiles_air_lod0.glb",
-      "kit_mg_missiles_air_lod1.glb"
+      "kit_mg_missiles_air_lod0.glb"
     ]
   },
   {
@@ -8165,8 +7740,7 @@
       "kit_mg_missiles_sol_rugosite_hiver.png",
       "kit_mg_missiles_sol_metal_hiver.png",
       "kit_mg_missiles_sol_masque_equipe_hiver.png",
-      "kit_mg_missiles_sol_lod0.glb",
-      "kit_mg_missiles_sol_lod1.glb"
+      "kit_mg_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -8186,8 +7760,7 @@
       "kit_mg_porte_avions_metal_hiver.png",
       "kit_mg_porte_avions_masque_equipe_hiver.png",
       "kit_mg_porte_avions_emission_hiver.png",
-      "kit_mg_porte_avions_lod0.glb",
-      "kit_mg_porte_avions_lod1.glb"
+      "kit_mg_porte_avions_lod0.glb"
     ]
   },
   {
@@ -8207,8 +7780,7 @@
       "kit_mg_recon_metal_hiver.png",
       "kit_mg_recon_masque_equipe_hiver.png",
       "kit_mg_recon_emission_hiver.png",
-      "kit_mg_recon_lod0.glb",
-      "kit_mg_recon_lod1.glb"
+      "kit_mg_recon_lod0.glb"
     ]
   },
   {
@@ -8226,8 +7798,7 @@
       "kit_mg_roquettes_rugosite_hiver.png",
       "kit_mg_roquettes_metal_hiver.png",
       "kit_mg_roquettes_masque_equipe_hiver.png",
-      "kit_mg_roquettes_lod0.glb",
-      "kit_mg_roquettes_lod1.glb"
+      "kit_mg_roquettes_lod0.glb"
     ]
   },
   {
@@ -8245,8 +7816,7 @@
       "kit_mg_sous_marin_rugosite_hiver.png",
       "kit_mg_sous_marin_metal_hiver.png",
       "kit_mg_sous_marin_masque_equipe_hiver.png",
-      "kit_mg_sous_marin_lod0.glb",
-      "kit_mg_sous_marin_lod1.glb"
+      "kit_mg_sous_marin_lod0.glb"
     ]
   },
   {
@@ -8264,8 +7834,7 @@
       "kit_mg_transport_rugosite_hiver.png",
       "kit_mg_transport_metal_hiver.png",
       "kit_mg_transport_masque_equipe_hiver.png",
-      "kit_mg_transport_lod0.glb",
-      "kit_mg_transport_lod1.glb"
+      "kit_mg_transport_lod0.glb"
     ]
   },
   {
@@ -8283,8 +7852,7 @@
       "kit_mg_transport_air_rugosite_hiver.png",
       "kit_mg_transport_air_metal_hiver.png",
       "kit_mg_transport_air_masque_equipe_hiver.png",
-      "kit_mg_transport_air_lod0.glb",
-      "kit_mg_transport_air_lod1.glb"
+      "kit_mg_transport_air_lod0.glb"
     ]
   },
   {
@@ -8298,8 +7866,7 @@
       "kit_mn_antiair_metal.png",
       "kit_mn_antiair_masque_equipe.png",
       "kit_mn_antiair_emission.png",
-      "kit_mn_antiair_lod0.glb",
-      "kit_mn_antiair_lod1.glb"
+      "kit_mn_antiair_lod0.glb"
     ]
   },
   {
@@ -8312,8 +7879,7 @@
       "kit_mn_artillerie_rugosite.png",
       "kit_mn_artillerie_metal.png",
       "kit_mn_artillerie_masque_equipe.png",
-      "kit_mn_artillerie_lod0.glb",
-      "kit_mn_artillerie_lod1.glb"
+      "kit_mn_artillerie_lod0.glb"
     ]
   },
   {
@@ -8331,8 +7897,7 @@
       "kit_mn_barge_rugosite_hiver.png",
       "kit_mn_barge_metal_hiver.png",
       "kit_mn_barge_masque_equipe_hiver.png",
-      "kit_mn_barge_lod0.glb",
-      "kit_mn_barge_lod1.glb"
+      "kit_mn_barge_lod0.glb"
     ]
   },
   {
@@ -8352,8 +7917,7 @@
       "kit_mn_bombardier_metal_hiver.png",
       "kit_mn_bombardier_masque_equipe_hiver.png",
       "kit_mn_bombardier_emission_hiver.png",
-      "kit_mn_bombardier_lod0.glb",
-      "kit_mn_bombardier_lod1.glb"
+      "kit_mn_bombardier_lod0.glb"
     ]
   },
   {
@@ -8373,8 +7937,7 @@
       "kit_mn_brouilleur_metal_hiver.png",
       "kit_mn_brouilleur_masque_equipe_hiver.png",
       "kit_mn_brouilleur_emission_hiver.png",
-      "kit_mn_brouilleur_lod0.glb",
-      "kit_mn_brouilleur_lod1.glb"
+      "kit_mn_brouilleur_lod0.glb"
     ]
   },
   {
@@ -8392,8 +7955,7 @@
       "kit_mn_char_leger_rugosite_hiver.png",
       "kit_mn_char_leger_metal_hiver.png",
       "kit_mn_char_leger_masque_equipe_hiver.png",
-      "kit_mn_char_leger_lod0.glb",
-      "kit_mn_char_leger_lod1.glb"
+      "kit_mn_char_leger_lod0.glb"
     ]
   },
   {
@@ -8411,8 +7973,7 @@
       "kit_mn_char_lourd_rugosite_hiver.png",
       "kit_mn_char_lourd_metal_hiver.png",
       "kit_mn_char_lourd_masque_equipe_hiver.png",
-      "kit_mn_char_lourd_lod0.glb",
-      "kit_mn_char_lourd_lod1.glb"
+      "kit_mn_char_lourd_lod0.glb"
     ]
   },
   {
@@ -8430,8 +7991,7 @@
       "kit_mn_char_moyen_rugosite_hiver.png",
       "kit_mn_char_moyen_metal_hiver.png",
       "kit_mn_char_moyen_masque_equipe_hiver.png",
-      "kit_mn_char_moyen_lod0.glb",
-      "kit_mn_char_moyen_lod1.glb"
+      "kit_mn_char_moyen_lod0.glb"
     ]
   },
   {
@@ -8449,8 +8009,7 @@
       "kit_mn_chasseur_rugosite_hiver.png",
       "kit_mn_chasseur_metal_hiver.png",
       "kit_mn_chasseur_masque_equipe_hiver.png",
-      "kit_mn_chasseur_lod0.glb",
-      "kit_mn_chasseur_lod1.glb"
+      "kit_mn_chasseur_lod0.glb"
     ]
   },
   {
@@ -8468,8 +8027,7 @@
       "kit_mn_cuirasse_rugosite_hiver.png",
       "kit_mn_cuirasse_metal_hiver.png",
       "kit_mn_cuirasse_masque_equipe_hiver.png",
-      "kit_mn_cuirasse_lod0.glb",
-      "kit_mn_cuirasse_lod1.glb"
+      "kit_mn_cuirasse_lod0.glb"
     ]
   },
   {
@@ -8487,8 +8045,7 @@
       "kit_mn_drone_rugosite_hiver.png",
       "kit_mn_drone_metal_hiver.png",
       "kit_mn_drone_masque_equipe_hiver.png",
-      "kit_mn_drone_lod0.glb",
-      "kit_mn_drone_lod1.glb"
+      "kit_mn_drone_lod0.glb"
     ]
   },
   {
@@ -8508,8 +8065,7 @@
       "kit_mn_drone_intercepteur_metal_hiver.png",
       "kit_mn_drone_intercepteur_masque_equipe_hiver.png",
       "kit_mn_drone_intercepteur_emission_hiver.png",
-      "kit_mn_drone_intercepteur_lod0.glb",
-      "kit_mn_drone_intercepteur_lod1.glb"
+      "kit_mn_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -8529,8 +8085,7 @@
       "kit_mn_drone_marin_metal_hiver.png",
       "kit_mn_drone_marin_masque_equipe_hiver.png",
       "kit_mn_drone_marin_emission_hiver.png",
-      "kit_mn_drone_marin_lod0.glb",
-      "kit_mn_drone_marin_lod1.glb"
+      "kit_mn_drone_marin_lod0.glb"
     ]
   },
   {
@@ -8550,8 +8105,7 @@
       "kit_mn_drone_ravitailleur_metal_hiver.png",
       "kit_mn_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_mn_drone_ravitailleur_emission_hiver.png",
-      "kit_mn_drone_ravitailleur_lod0.glb",
-      "kit_mn_drone_ravitailleur_lod1.glb"
+      "kit_mn_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -8569,8 +8123,7 @@
       "kit_mn_furtif_rugosite_hiver.png",
       "kit_mn_furtif_metal_hiver.png",
       "kit_mn_furtif_masque_equipe_hiver.png",
-      "kit_mn_furtif_lod0.glb",
-      "kit_mn_furtif_lod1.glb"
+      "kit_mn_furtif_lod0.glb"
     ]
   },
   {
@@ -8590,8 +8143,7 @@
       "kit_mn_genie_metal_hiver.png",
       "kit_mn_genie_masque_equipe_hiver.png",
       "kit_mn_genie_emission_hiver.png",
-      "kit_mn_genie_lod0.glb",
-      "kit_mn_genie_lod1.glb"
+      "kit_mn_genie_lod0.glb"
     ]
   },
   {
@@ -8611,8 +8163,7 @@
       "kit_mn_helico_metal_hiver.png",
       "kit_mn_helico_masque_equipe_hiver.png",
       "kit_mn_helico_emission_hiver.png",
-      "kit_mn_helico_lod0.glb",
-      "kit_mn_helico_lod1.glb"
+      "kit_mn_helico_lod0.glb"
     ]
   },
   {
@@ -8624,8 +8175,7 @@
       "kit_mn_infanterie_normale.png",
       "kit_mn_infanterie_rugosite.png",
       "kit_mn_infanterie_masque_equipe.png",
-      "kit_mn_infanterie_lod0.glb",
-      "kit_mn_infanterie_lod1.glb"
+      "kit_mn_infanterie_lod0.glb"
     ]
   },
   {
@@ -8643,8 +8193,7 @@
       "kit_mn_meca_rugosite_hiver.png",
       "kit_mn_meca_metal_hiver.png",
       "kit_mn_meca_masque_equipe_hiver.png",
-      "kit_mn_meca_lod0.glb",
-      "kit_mn_meca_lod1.glb"
+      "kit_mn_meca_lod0.glb"
     ]
   },
   {
@@ -8664,8 +8213,7 @@
       "kit_mn_missiles_air_metal_hiver.png",
       "kit_mn_missiles_air_masque_equipe_hiver.png",
       "kit_mn_missiles_air_emission_hiver.png",
-      "kit_mn_missiles_air_lod0.glb",
-      "kit_mn_missiles_air_lod1.glb"
+      "kit_mn_missiles_air_lod0.glb"
     ]
   },
   {
@@ -8683,8 +8231,7 @@
       "kit_mn_missiles_sol_rugosite_hiver.png",
       "kit_mn_missiles_sol_metal_hiver.png",
       "kit_mn_missiles_sol_masque_equipe_hiver.png",
-      "kit_mn_missiles_sol_lod0.glb",
-      "kit_mn_missiles_sol_lod1.glb"
+      "kit_mn_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -8704,8 +8251,7 @@
       "kit_mn_porte_avions_metal_hiver.png",
       "kit_mn_porte_avions_masque_equipe_hiver.png",
       "kit_mn_porte_avions_emission_hiver.png",
-      "kit_mn_porte_avions_lod0.glb",
-      "kit_mn_porte_avions_lod1.glb"
+      "kit_mn_porte_avions_lod0.glb"
     ]
   },
   {
@@ -8725,8 +8271,7 @@
       "kit_mn_recon_metal_hiver.png",
       "kit_mn_recon_masque_equipe_hiver.png",
       "kit_mn_recon_emission_hiver.png",
-      "kit_mn_recon_lod0.glb",
-      "kit_mn_recon_lod1.glb"
+      "kit_mn_recon_lod0.glb"
     ]
   },
   {
@@ -8744,8 +8289,7 @@
       "kit_mn_roquettes_rugosite_hiver.png",
       "kit_mn_roquettes_metal_hiver.png",
       "kit_mn_roquettes_masque_equipe_hiver.png",
-      "kit_mn_roquettes_lod0.glb",
-      "kit_mn_roquettes_lod1.glb"
+      "kit_mn_roquettes_lod0.glb"
     ]
   },
   {
@@ -8763,8 +8307,7 @@
       "kit_mn_sous_marin_rugosite_hiver.png",
       "kit_mn_sous_marin_metal_hiver.png",
       "kit_mn_sous_marin_masque_equipe_hiver.png",
-      "kit_mn_sous_marin_lod0.glb",
-      "kit_mn_sous_marin_lod1.glb"
+      "kit_mn_sous_marin_lod0.glb"
     ]
   },
   {
@@ -8782,8 +8325,7 @@
       "kit_mn_transport_rugosite_hiver.png",
       "kit_mn_transport_metal_hiver.png",
       "kit_mn_transport_masque_equipe_hiver.png",
-      "kit_mn_transport_lod0.glb",
-      "kit_mn_transport_lod1.glb"
+      "kit_mn_transport_lod0.glb"
     ]
   },
   {
@@ -8801,8 +8343,7 @@
       "kit_mn_transport_air_rugosite_hiver.png",
       "kit_mn_transport_air_metal_hiver.png",
       "kit_mn_transport_air_masque_equipe_hiver.png",
-      "kit_mn_transport_air_lod0.glb",
-      "kit_mn_transport_air_lod1.glb"
+      "kit_mn_transport_air_lod0.glb"
     ]
   },
   {
@@ -8816,8 +8357,7 @@
       "kit_mx_antiair_metal.png",
       "kit_mx_antiair_masque_equipe.png",
       "kit_mx_antiair_emission.png",
-      "kit_mx_antiair_lod0.glb",
-      "kit_mx_antiair_lod1.glb"
+      "kit_mx_antiair_lod0.glb"
     ]
   },
   {
@@ -8830,8 +8370,7 @@
       "kit_mx_artillerie_rugosite.png",
       "kit_mx_artillerie_metal.png",
       "kit_mx_artillerie_masque_equipe.png",
-      "kit_mx_artillerie_lod0.glb",
-      "kit_mx_artillerie_lod1.glb"
+      "kit_mx_artillerie_lod0.glb"
     ]
   },
   {
@@ -8849,8 +8388,7 @@
       "kit_mx_barge_rugosite_hiver.png",
       "kit_mx_barge_metal_hiver.png",
       "kit_mx_barge_masque_equipe_hiver.png",
-      "kit_mx_barge_lod0.glb",
-      "kit_mx_barge_lod1.glb"
+      "kit_mx_barge_lod0.glb"
     ]
   },
   {
@@ -8870,8 +8408,7 @@
       "kit_mx_bombardier_metal_hiver.png",
       "kit_mx_bombardier_masque_equipe_hiver.png",
       "kit_mx_bombardier_emission_hiver.png",
-      "kit_mx_bombardier_lod0.glb",
-      "kit_mx_bombardier_lod1.glb"
+      "kit_mx_bombardier_lod0.glb"
     ]
   },
   {
@@ -8891,8 +8428,7 @@
       "kit_mx_brouilleur_metal_hiver.png",
       "kit_mx_brouilleur_masque_equipe_hiver.png",
       "kit_mx_brouilleur_emission_hiver.png",
-      "kit_mx_brouilleur_lod0.glb",
-      "kit_mx_brouilleur_lod1.glb"
+      "kit_mx_brouilleur_lod0.glb"
     ]
   },
   {
@@ -8910,8 +8446,7 @@
       "kit_mx_char_leger_rugosite_hiver.png",
       "kit_mx_char_leger_metal_hiver.png",
       "kit_mx_char_leger_masque_equipe_hiver.png",
-      "kit_mx_char_leger_lod0.glb",
-      "kit_mx_char_leger_lod1.glb"
+      "kit_mx_char_leger_lod0.glb"
     ]
   },
   {
@@ -8929,8 +8464,7 @@
       "kit_mx_char_lourd_rugosite_hiver.png",
       "kit_mx_char_lourd_metal_hiver.png",
       "kit_mx_char_lourd_masque_equipe_hiver.png",
-      "kit_mx_char_lourd_lod0.glb",
-      "kit_mx_char_lourd_lod1.glb"
+      "kit_mx_char_lourd_lod0.glb"
     ]
   },
   {
@@ -8948,8 +8482,7 @@
       "kit_mx_char_moyen_rugosite_hiver.png",
       "kit_mx_char_moyen_metal_hiver.png",
       "kit_mx_char_moyen_masque_equipe_hiver.png",
-      "kit_mx_char_moyen_lod0.glb",
-      "kit_mx_char_moyen_lod1.glb"
+      "kit_mx_char_moyen_lod0.glb"
     ]
   },
   {
@@ -8967,8 +8500,7 @@
       "kit_mx_chasseur_rugosite_hiver.png",
       "kit_mx_chasseur_metal_hiver.png",
       "kit_mx_chasseur_masque_equipe_hiver.png",
-      "kit_mx_chasseur_lod0.glb",
-      "kit_mx_chasseur_lod1.glb"
+      "kit_mx_chasseur_lod0.glb"
     ]
   },
   {
@@ -8986,8 +8518,7 @@
       "kit_mx_cuirasse_rugosite_hiver.png",
       "kit_mx_cuirasse_metal_hiver.png",
       "kit_mx_cuirasse_masque_equipe_hiver.png",
-      "kit_mx_cuirasse_lod0.glb",
-      "kit_mx_cuirasse_lod1.glb"
+      "kit_mx_cuirasse_lod0.glb"
     ]
   },
   {
@@ -9005,8 +8536,7 @@
       "kit_mx_drone_rugosite_hiver.png",
       "kit_mx_drone_metal_hiver.png",
       "kit_mx_drone_masque_equipe_hiver.png",
-      "kit_mx_drone_lod0.glb",
-      "kit_mx_drone_lod1.glb"
+      "kit_mx_drone_lod0.glb"
     ]
   },
   {
@@ -9026,8 +8556,7 @@
       "kit_mx_drone_intercepteur_metal_hiver.png",
       "kit_mx_drone_intercepteur_masque_equipe_hiver.png",
       "kit_mx_drone_intercepteur_emission_hiver.png",
-      "kit_mx_drone_intercepteur_lod0.glb",
-      "kit_mx_drone_intercepteur_lod1.glb"
+      "kit_mx_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -9047,8 +8576,7 @@
       "kit_mx_drone_marin_metal_hiver.png",
       "kit_mx_drone_marin_masque_equipe_hiver.png",
       "kit_mx_drone_marin_emission_hiver.png",
-      "kit_mx_drone_marin_lod0.glb",
-      "kit_mx_drone_marin_lod1.glb"
+      "kit_mx_drone_marin_lod0.glb"
     ]
   },
   {
@@ -9068,8 +8596,7 @@
       "kit_mx_drone_ravitailleur_metal_hiver.png",
       "kit_mx_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_mx_drone_ravitailleur_emission_hiver.png",
-      "kit_mx_drone_ravitailleur_lod0.glb",
-      "kit_mx_drone_ravitailleur_lod1.glb"
+      "kit_mx_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -9087,8 +8614,7 @@
       "kit_mx_furtif_rugosite_hiver.png",
       "kit_mx_furtif_metal_hiver.png",
       "kit_mx_furtif_masque_equipe_hiver.png",
-      "kit_mx_furtif_lod0.glb",
-      "kit_mx_furtif_lod1.glb"
+      "kit_mx_furtif_lod0.glb"
     ]
   },
   {
@@ -9108,8 +8634,7 @@
       "kit_mx_genie_metal_hiver.png",
       "kit_mx_genie_masque_equipe_hiver.png",
       "kit_mx_genie_emission_hiver.png",
-      "kit_mx_genie_lod0.glb",
-      "kit_mx_genie_lod1.glb"
+      "kit_mx_genie_lod0.glb"
     ]
   },
   {
@@ -9129,8 +8654,7 @@
       "kit_mx_helico_metal_hiver.png",
       "kit_mx_helico_masque_equipe_hiver.png",
       "kit_mx_helico_emission_hiver.png",
-      "kit_mx_helico_lod0.glb",
-      "kit_mx_helico_lod1.glb"
+      "kit_mx_helico_lod0.glb"
     ]
   },
   {
@@ -9142,8 +8666,7 @@
       "kit_mx_infanterie_normale.png",
       "kit_mx_infanterie_rugosite.png",
       "kit_mx_infanterie_masque_equipe.png",
-      "kit_mx_infanterie_lod0.glb",
-      "kit_mx_infanterie_lod1.glb"
+      "kit_mx_infanterie_lod0.glb"
     ]
   },
   {
@@ -9161,8 +8684,7 @@
       "kit_mx_meca_rugosite_hiver.png",
       "kit_mx_meca_metal_hiver.png",
       "kit_mx_meca_masque_equipe_hiver.png",
-      "kit_mx_meca_lod0.glb",
-      "kit_mx_meca_lod1.glb"
+      "kit_mx_meca_lod0.glb"
     ]
   },
   {
@@ -9182,8 +8704,7 @@
       "kit_mx_missiles_air_metal_hiver.png",
       "kit_mx_missiles_air_masque_equipe_hiver.png",
       "kit_mx_missiles_air_emission_hiver.png",
-      "kit_mx_missiles_air_lod0.glb",
-      "kit_mx_missiles_air_lod1.glb"
+      "kit_mx_missiles_air_lod0.glb"
     ]
   },
   {
@@ -9201,8 +8722,7 @@
       "kit_mx_missiles_sol_rugosite_hiver.png",
       "kit_mx_missiles_sol_metal_hiver.png",
       "kit_mx_missiles_sol_masque_equipe_hiver.png",
-      "kit_mx_missiles_sol_lod0.glb",
-      "kit_mx_missiles_sol_lod1.glb"
+      "kit_mx_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -9222,8 +8742,7 @@
       "kit_mx_porte_avions_metal_hiver.png",
       "kit_mx_porte_avions_masque_equipe_hiver.png",
       "kit_mx_porte_avions_emission_hiver.png",
-      "kit_mx_porte_avions_lod0.glb",
-      "kit_mx_porte_avions_lod1.glb"
+      "kit_mx_porte_avions_lod0.glb"
     ]
   },
   {
@@ -9243,8 +8762,7 @@
       "kit_mx_recon_metal_hiver.png",
       "kit_mx_recon_masque_equipe_hiver.png",
       "kit_mx_recon_emission_hiver.png",
-      "kit_mx_recon_lod0.glb",
-      "kit_mx_recon_lod1.glb"
+      "kit_mx_recon_lod0.glb"
     ]
   },
   {
@@ -9262,8 +8780,7 @@
       "kit_mx_roquettes_rugosite_hiver.png",
       "kit_mx_roquettes_metal_hiver.png",
       "kit_mx_roquettes_masque_equipe_hiver.png",
-      "kit_mx_roquettes_lod0.glb",
-      "kit_mx_roquettes_lod1.glb"
+      "kit_mx_roquettes_lod0.glb"
     ]
   },
   {
@@ -9281,8 +8798,7 @@
       "kit_mx_sous_marin_rugosite_hiver.png",
       "kit_mx_sous_marin_metal_hiver.png",
       "kit_mx_sous_marin_masque_equipe_hiver.png",
-      "kit_mx_sous_marin_lod0.glb",
-      "kit_mx_sous_marin_lod1.glb"
+      "kit_mx_sous_marin_lod0.glb"
     ]
   },
   {
@@ -9300,8 +8816,7 @@
       "kit_mx_transport_rugosite_hiver.png",
       "kit_mx_transport_metal_hiver.png",
       "kit_mx_transport_masque_equipe_hiver.png",
-      "kit_mx_transport_lod0.glb",
-      "kit_mx_transport_lod1.glb"
+      "kit_mx_transport_lod0.glb"
     ]
   },
   {
@@ -9319,8 +8834,7 @@
       "kit_mx_transport_air_rugosite_hiver.png",
       "kit_mx_transport_air_metal_hiver.png",
       "kit_mx_transport_air_masque_equipe_hiver.png",
-      "kit_mx_transport_air_lod0.glb",
-      "kit_mx_transport_air_lod1.glb"
+      "kit_mx_transport_air_lod0.glb"
     ]
   },
   {
@@ -9334,8 +8848,7 @@
       "kit_na_antiair_metal.png",
       "kit_na_antiair_masque_equipe.png",
       "kit_na_antiair_emission.png",
-      "kit_na_antiair_lod0.glb",
-      "kit_na_antiair_lod1.glb"
+      "kit_na_antiair_lod0.glb"
     ]
   },
   {
@@ -9348,8 +8861,7 @@
       "kit_na_artillerie_rugosite.png",
       "kit_na_artillerie_metal.png",
       "kit_na_artillerie_masque_equipe.png",
-      "kit_na_artillerie_lod0.glb",
-      "kit_na_artillerie_lod1.glb"
+      "kit_na_artillerie_lod0.glb"
     ]
   },
   {
@@ -9367,8 +8879,7 @@
       "kit_na_barge_rugosite_hiver.png",
       "kit_na_barge_metal_hiver.png",
       "kit_na_barge_masque_equipe_hiver.png",
-      "kit_na_barge_lod0.glb",
-      "kit_na_barge_lod1.glb"
+      "kit_na_barge_lod0.glb"
     ]
   },
   {
@@ -9388,8 +8899,7 @@
       "kit_na_bombardier_metal_hiver.png",
       "kit_na_bombardier_masque_equipe_hiver.png",
       "kit_na_bombardier_emission_hiver.png",
-      "kit_na_bombardier_lod0.glb",
-      "kit_na_bombardier_lod1.glb"
+      "kit_na_bombardier_lod0.glb"
     ]
   },
   {
@@ -9409,8 +8919,7 @@
       "kit_na_brouilleur_metal_hiver.png",
       "kit_na_brouilleur_masque_equipe_hiver.png",
       "kit_na_brouilleur_emission_hiver.png",
-      "kit_na_brouilleur_lod0.glb",
-      "kit_na_brouilleur_lod1.glb"
+      "kit_na_brouilleur_lod0.glb"
     ]
   },
   {
@@ -9428,8 +8937,7 @@
       "kit_na_char_leger_rugosite_hiver.png",
       "kit_na_char_leger_metal_hiver.png",
       "kit_na_char_leger_masque_equipe_hiver.png",
-      "kit_na_char_leger_lod0.glb",
-      "kit_na_char_leger_lod1.glb"
+      "kit_na_char_leger_lod0.glb"
     ]
   },
   {
@@ -9447,8 +8955,7 @@
       "kit_na_char_lourd_rugosite_hiver.png",
       "kit_na_char_lourd_metal_hiver.png",
       "kit_na_char_lourd_masque_equipe_hiver.png",
-      "kit_na_char_lourd_lod0.glb",
-      "kit_na_char_lourd_lod1.glb"
+      "kit_na_char_lourd_lod0.glb"
     ]
   },
   {
@@ -9466,8 +8973,7 @@
       "kit_na_char_moyen_rugosite_hiver.png",
       "kit_na_char_moyen_metal_hiver.png",
       "kit_na_char_moyen_masque_equipe_hiver.png",
-      "kit_na_char_moyen_lod0.glb",
-      "kit_na_char_moyen_lod1.glb"
+      "kit_na_char_moyen_lod0.glb"
     ]
   },
   {
@@ -9485,8 +8991,7 @@
       "kit_na_chasseur_rugosite_hiver.png",
       "kit_na_chasseur_metal_hiver.png",
       "kit_na_chasseur_masque_equipe_hiver.png",
-      "kit_na_chasseur_lod0.glb",
-      "kit_na_chasseur_lod1.glb"
+      "kit_na_chasseur_lod0.glb"
     ]
   },
   {
@@ -9504,8 +9009,7 @@
       "kit_na_cuirasse_rugosite_hiver.png",
       "kit_na_cuirasse_metal_hiver.png",
       "kit_na_cuirasse_masque_equipe_hiver.png",
-      "kit_na_cuirasse_lod0.glb",
-      "kit_na_cuirasse_lod1.glb"
+      "kit_na_cuirasse_lod0.glb"
     ]
   },
   {
@@ -9523,8 +9027,7 @@
       "kit_na_drone_rugosite_hiver.png",
       "kit_na_drone_metal_hiver.png",
       "kit_na_drone_masque_equipe_hiver.png",
-      "kit_na_drone_lod0.glb",
-      "kit_na_drone_lod1.glb"
+      "kit_na_drone_lod0.glb"
     ]
   },
   {
@@ -9544,8 +9047,7 @@
       "kit_na_drone_intercepteur_metal_hiver.png",
       "kit_na_drone_intercepteur_masque_equipe_hiver.png",
       "kit_na_drone_intercepteur_emission_hiver.png",
-      "kit_na_drone_intercepteur_lod0.glb",
-      "kit_na_drone_intercepteur_lod1.glb"
+      "kit_na_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -9565,8 +9067,7 @@
       "kit_na_drone_marin_metal_hiver.png",
       "kit_na_drone_marin_masque_equipe_hiver.png",
       "kit_na_drone_marin_emission_hiver.png",
-      "kit_na_drone_marin_lod0.glb",
-      "kit_na_drone_marin_lod1.glb"
+      "kit_na_drone_marin_lod0.glb"
     ]
   },
   {
@@ -9586,8 +9087,7 @@
       "kit_na_drone_ravitailleur_metal_hiver.png",
       "kit_na_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_na_drone_ravitailleur_emission_hiver.png",
-      "kit_na_drone_ravitailleur_lod0.glb",
-      "kit_na_drone_ravitailleur_lod1.glb"
+      "kit_na_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -9605,8 +9105,7 @@
       "kit_na_furtif_rugosite_hiver.png",
       "kit_na_furtif_metal_hiver.png",
       "kit_na_furtif_masque_equipe_hiver.png",
-      "kit_na_furtif_lod0.glb",
-      "kit_na_furtif_lod1.glb"
+      "kit_na_furtif_lod0.glb"
     ]
   },
   {
@@ -9626,8 +9125,7 @@
       "kit_na_genie_metal_hiver.png",
       "kit_na_genie_masque_equipe_hiver.png",
       "kit_na_genie_emission_hiver.png",
-      "kit_na_genie_lod0.glb",
-      "kit_na_genie_lod1.glb"
+      "kit_na_genie_lod0.glb"
     ]
   },
   {
@@ -9647,8 +9145,7 @@
       "kit_na_helico_metal_hiver.png",
       "kit_na_helico_masque_equipe_hiver.png",
       "kit_na_helico_emission_hiver.png",
-      "kit_na_helico_lod0.glb",
-      "kit_na_helico_lod1.glb"
+      "kit_na_helico_lod0.glb"
     ]
   },
   {
@@ -9660,8 +9157,7 @@
       "kit_na_infanterie_normale.png",
       "kit_na_infanterie_rugosite.png",
       "kit_na_infanterie_masque_equipe.png",
-      "kit_na_infanterie_lod0.glb",
-      "kit_na_infanterie_lod1.glb"
+      "kit_na_infanterie_lod0.glb"
     ]
   },
   {
@@ -9679,8 +9175,7 @@
       "kit_na_meca_rugosite_hiver.png",
       "kit_na_meca_metal_hiver.png",
       "kit_na_meca_masque_equipe_hiver.png",
-      "kit_na_meca_lod0.glb",
-      "kit_na_meca_lod1.glb"
+      "kit_na_meca_lod0.glb"
     ]
   },
   {
@@ -9700,8 +9195,7 @@
       "kit_na_missiles_air_metal_hiver.png",
       "kit_na_missiles_air_masque_equipe_hiver.png",
       "kit_na_missiles_air_emission_hiver.png",
-      "kit_na_missiles_air_lod0.glb",
-      "kit_na_missiles_air_lod1.glb"
+      "kit_na_missiles_air_lod0.glb"
     ]
   },
   {
@@ -9719,8 +9213,7 @@
       "kit_na_missiles_sol_rugosite_hiver.png",
       "kit_na_missiles_sol_metal_hiver.png",
       "kit_na_missiles_sol_masque_equipe_hiver.png",
-      "kit_na_missiles_sol_lod0.glb",
-      "kit_na_missiles_sol_lod1.glb"
+      "kit_na_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -9740,8 +9233,7 @@
       "kit_na_porte_avions_metal_hiver.png",
       "kit_na_porte_avions_masque_equipe_hiver.png",
       "kit_na_porte_avions_emission_hiver.png",
-      "kit_na_porte_avions_lod0.glb",
-      "kit_na_porte_avions_lod1.glb"
+      "kit_na_porte_avions_lod0.glb"
     ]
   },
   {
@@ -9761,8 +9253,7 @@
       "kit_na_recon_metal_hiver.png",
       "kit_na_recon_masque_equipe_hiver.png",
       "kit_na_recon_emission_hiver.png",
-      "kit_na_recon_lod0.glb",
-      "kit_na_recon_lod1.glb"
+      "kit_na_recon_lod0.glb"
     ]
   },
   {
@@ -9780,8 +9271,7 @@
       "kit_na_roquettes_rugosite_hiver.png",
       "kit_na_roquettes_metal_hiver.png",
       "kit_na_roquettes_masque_equipe_hiver.png",
-      "kit_na_roquettes_lod0.glb",
-      "kit_na_roquettes_lod1.glb"
+      "kit_na_roquettes_lod0.glb"
     ]
   },
   {
@@ -9799,8 +9289,7 @@
       "kit_na_sous_marin_rugosite_hiver.png",
       "kit_na_sous_marin_metal_hiver.png",
       "kit_na_sous_marin_masque_equipe_hiver.png",
-      "kit_na_sous_marin_lod0.glb",
-      "kit_na_sous_marin_lod1.glb"
+      "kit_na_sous_marin_lod0.glb"
     ]
   },
   {
@@ -9818,8 +9307,7 @@
       "kit_na_transport_rugosite_hiver.png",
       "kit_na_transport_metal_hiver.png",
       "kit_na_transport_masque_equipe_hiver.png",
-      "kit_na_transport_lod0.glb",
-      "kit_na_transport_lod1.glb"
+      "kit_na_transport_lod0.glb"
     ]
   },
   {
@@ -9837,8 +9325,7 @@
       "kit_na_transport_air_rugosite_hiver.png",
       "kit_na_transport_air_metal_hiver.png",
       "kit_na_transport_air_masque_equipe_hiver.png",
-      "kit_na_transport_air_lod0.glb",
-      "kit_na_transport_air_lod1.glb"
+      "kit_na_transport_air_lod0.glb"
     ]
   },
   {
@@ -9852,8 +9339,7 @@
       "kit_nl_antiair_metal.png",
       "kit_nl_antiair_masque_equipe.png",
       "kit_nl_antiair_emission.png",
-      "kit_nl_antiair_lod0.glb",
-      "kit_nl_antiair_lod1.glb"
+      "kit_nl_antiair_lod0.glb"
     ]
   },
   {
@@ -9866,8 +9352,7 @@
       "kit_nl_artillerie_rugosite.png",
       "kit_nl_artillerie_metal.png",
       "kit_nl_artillerie_masque_equipe.png",
-      "kit_nl_artillerie_lod0.glb",
-      "kit_nl_artillerie_lod1.glb"
+      "kit_nl_artillerie_lod0.glb"
     ]
   },
   {
@@ -9885,8 +9370,7 @@
       "kit_nl_barge_rugosite_hiver.png",
       "kit_nl_barge_metal_hiver.png",
       "kit_nl_barge_masque_equipe_hiver.png",
-      "kit_nl_barge_lod0.glb",
-      "kit_nl_barge_lod1.glb"
+      "kit_nl_barge_lod0.glb"
     ]
   },
   {
@@ -9906,8 +9390,7 @@
       "kit_nl_bombardier_metal_hiver.png",
       "kit_nl_bombardier_masque_equipe_hiver.png",
       "kit_nl_bombardier_emission_hiver.png",
-      "kit_nl_bombardier_lod0.glb",
-      "kit_nl_bombardier_lod1.glb"
+      "kit_nl_bombardier_lod0.glb"
     ]
   },
   {
@@ -9927,8 +9410,7 @@
       "kit_nl_brouilleur_metal_hiver.png",
       "kit_nl_brouilleur_masque_equipe_hiver.png",
       "kit_nl_brouilleur_emission_hiver.png",
-      "kit_nl_brouilleur_lod0.glb",
-      "kit_nl_brouilleur_lod1.glb"
+      "kit_nl_brouilleur_lod0.glb"
     ]
   },
   {
@@ -9946,8 +9428,7 @@
       "kit_nl_char_leger_rugosite_hiver.png",
       "kit_nl_char_leger_metal_hiver.png",
       "kit_nl_char_leger_masque_equipe_hiver.png",
-      "kit_nl_char_leger_lod0.glb",
-      "kit_nl_char_leger_lod1.glb"
+      "kit_nl_char_leger_lod0.glb"
     ]
   },
   {
@@ -9965,8 +9446,7 @@
       "kit_nl_char_lourd_rugosite_hiver.png",
       "kit_nl_char_lourd_metal_hiver.png",
       "kit_nl_char_lourd_masque_equipe_hiver.png",
-      "kit_nl_char_lourd_lod0.glb",
-      "kit_nl_char_lourd_lod1.glb"
+      "kit_nl_char_lourd_lod0.glb"
     ]
   },
   {
@@ -9984,8 +9464,7 @@
       "kit_nl_char_moyen_rugosite_hiver.png",
       "kit_nl_char_moyen_metal_hiver.png",
       "kit_nl_char_moyen_masque_equipe_hiver.png",
-      "kit_nl_char_moyen_lod0.glb",
-      "kit_nl_char_moyen_lod1.glb"
+      "kit_nl_char_moyen_lod0.glb"
     ]
   },
   {
@@ -10003,8 +9482,7 @@
       "kit_nl_chasseur_rugosite_hiver.png",
       "kit_nl_chasseur_metal_hiver.png",
       "kit_nl_chasseur_masque_equipe_hiver.png",
-      "kit_nl_chasseur_lod0.glb",
-      "kit_nl_chasseur_lod1.glb"
+      "kit_nl_chasseur_lod0.glb"
     ]
   },
   {
@@ -10022,8 +9500,7 @@
       "kit_nl_cuirasse_rugosite_hiver.png",
       "kit_nl_cuirasse_metal_hiver.png",
       "kit_nl_cuirasse_masque_equipe_hiver.png",
-      "kit_nl_cuirasse_lod0.glb",
-      "kit_nl_cuirasse_lod1.glb"
+      "kit_nl_cuirasse_lod0.glb"
     ]
   },
   {
@@ -10041,8 +9518,7 @@
       "kit_nl_drone_rugosite_hiver.png",
       "kit_nl_drone_metal_hiver.png",
       "kit_nl_drone_masque_equipe_hiver.png",
-      "kit_nl_drone_lod0.glb",
-      "kit_nl_drone_lod1.glb"
+      "kit_nl_drone_lod0.glb"
     ]
   },
   {
@@ -10062,8 +9538,7 @@
       "kit_nl_drone_intercepteur_metal_hiver.png",
       "kit_nl_drone_intercepteur_masque_equipe_hiver.png",
       "kit_nl_drone_intercepteur_emission_hiver.png",
-      "kit_nl_drone_intercepteur_lod0.glb",
-      "kit_nl_drone_intercepteur_lod1.glb"
+      "kit_nl_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -10083,8 +9558,7 @@
       "kit_nl_drone_marin_metal_hiver.png",
       "kit_nl_drone_marin_masque_equipe_hiver.png",
       "kit_nl_drone_marin_emission_hiver.png",
-      "kit_nl_drone_marin_lod0.glb",
-      "kit_nl_drone_marin_lod1.glb"
+      "kit_nl_drone_marin_lod0.glb"
     ]
   },
   {
@@ -10104,8 +9578,7 @@
       "kit_nl_drone_ravitailleur_metal_hiver.png",
       "kit_nl_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_nl_drone_ravitailleur_emission_hiver.png",
-      "kit_nl_drone_ravitailleur_lod0.glb",
-      "kit_nl_drone_ravitailleur_lod1.glb"
+      "kit_nl_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -10123,8 +9596,7 @@
       "kit_nl_furtif_rugosite_hiver.png",
       "kit_nl_furtif_metal_hiver.png",
       "kit_nl_furtif_masque_equipe_hiver.png",
-      "kit_nl_furtif_lod0.glb",
-      "kit_nl_furtif_lod1.glb"
+      "kit_nl_furtif_lod0.glb"
     ]
   },
   {
@@ -10144,8 +9616,7 @@
       "kit_nl_genie_metal_hiver.png",
       "kit_nl_genie_masque_equipe_hiver.png",
       "kit_nl_genie_emission_hiver.png",
-      "kit_nl_genie_lod0.glb",
-      "kit_nl_genie_lod1.glb"
+      "kit_nl_genie_lod0.glb"
     ]
   },
   {
@@ -10165,8 +9636,7 @@
       "kit_nl_helico_metal_hiver.png",
       "kit_nl_helico_masque_equipe_hiver.png",
       "kit_nl_helico_emission_hiver.png",
-      "kit_nl_helico_lod0.glb",
-      "kit_nl_helico_lod1.glb"
+      "kit_nl_helico_lod0.glb"
     ]
   },
   {
@@ -10178,8 +9648,7 @@
       "kit_nl_infanterie_normale.png",
       "kit_nl_infanterie_rugosite.png",
       "kit_nl_infanterie_masque_equipe.png",
-      "kit_nl_infanterie_lod0.glb",
-      "kit_nl_infanterie_lod1.glb"
+      "kit_nl_infanterie_lod0.glb"
     ]
   },
   {
@@ -10197,8 +9666,7 @@
       "kit_nl_meca_rugosite_hiver.png",
       "kit_nl_meca_metal_hiver.png",
       "kit_nl_meca_masque_equipe_hiver.png",
-      "kit_nl_meca_lod0.glb",
-      "kit_nl_meca_lod1.glb"
+      "kit_nl_meca_lod0.glb"
     ]
   },
   {
@@ -10218,8 +9686,7 @@
       "kit_nl_missiles_air_metal_hiver.png",
       "kit_nl_missiles_air_masque_equipe_hiver.png",
       "kit_nl_missiles_air_emission_hiver.png",
-      "kit_nl_missiles_air_lod0.glb",
-      "kit_nl_missiles_air_lod1.glb"
+      "kit_nl_missiles_air_lod0.glb"
     ]
   },
   {
@@ -10237,8 +9704,7 @@
       "kit_nl_missiles_sol_rugosite_hiver.png",
       "kit_nl_missiles_sol_metal_hiver.png",
       "kit_nl_missiles_sol_masque_equipe_hiver.png",
-      "kit_nl_missiles_sol_lod0.glb",
-      "kit_nl_missiles_sol_lod1.glb"
+      "kit_nl_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -10258,8 +9724,7 @@
       "kit_nl_porte_avions_metal_hiver.png",
       "kit_nl_porte_avions_masque_equipe_hiver.png",
       "kit_nl_porte_avions_emission_hiver.png",
-      "kit_nl_porte_avions_lod0.glb",
-      "kit_nl_porte_avions_lod1.glb"
+      "kit_nl_porte_avions_lod0.glb"
     ]
   },
   {
@@ -10279,8 +9744,7 @@
       "kit_nl_recon_metal_hiver.png",
       "kit_nl_recon_masque_equipe_hiver.png",
       "kit_nl_recon_emission_hiver.png",
-      "kit_nl_recon_lod0.glb",
-      "kit_nl_recon_lod1.glb"
+      "kit_nl_recon_lod0.glb"
     ]
   },
   {
@@ -10298,8 +9762,7 @@
       "kit_nl_roquettes_rugosite_hiver.png",
       "kit_nl_roquettes_metal_hiver.png",
       "kit_nl_roquettes_masque_equipe_hiver.png",
-      "kit_nl_roquettes_lod0.glb",
-      "kit_nl_roquettes_lod1.glb"
+      "kit_nl_roquettes_lod0.glb"
     ]
   },
   {
@@ -10317,8 +9780,7 @@
       "kit_nl_sous_marin_rugosite_hiver.png",
       "kit_nl_sous_marin_metal_hiver.png",
       "kit_nl_sous_marin_masque_equipe_hiver.png",
-      "kit_nl_sous_marin_lod0.glb",
-      "kit_nl_sous_marin_lod1.glb"
+      "kit_nl_sous_marin_lod0.glb"
     ]
   },
   {
@@ -10336,8 +9798,7 @@
       "kit_nl_transport_rugosite_hiver.png",
       "kit_nl_transport_metal_hiver.png",
       "kit_nl_transport_masque_equipe_hiver.png",
-      "kit_nl_transport_lod0.glb",
-      "kit_nl_transport_lod1.glb"
+      "kit_nl_transport_lod0.glb"
     ]
   },
   {
@@ -10355,8 +9816,7 @@
       "kit_nl_transport_air_rugosite_hiver.png",
       "kit_nl_transport_air_metal_hiver.png",
       "kit_nl_transport_air_masque_equipe_hiver.png",
-      "kit_nl_transport_air_lod0.glb",
-      "kit_nl_transport_air_lod1.glb"
+      "kit_nl_transport_air_lod0.glb"
     ]
   },
   {
@@ -10370,8 +9830,7 @@
       "kit_np_antiair_metal.png",
       "kit_np_antiair_masque_equipe.png",
       "kit_np_antiair_emission.png",
-      "kit_np_antiair_lod0.glb",
-      "kit_np_antiair_lod1.glb"
+      "kit_np_antiair_lod0.glb"
     ]
   },
   {
@@ -10384,8 +9843,7 @@
       "kit_np_artillerie_rugosite.png",
       "kit_np_artillerie_metal.png",
       "kit_np_artillerie_masque_equipe.png",
-      "kit_np_artillerie_lod0.glb",
-      "kit_np_artillerie_lod1.glb"
+      "kit_np_artillerie_lod0.glb"
     ]
   },
   {
@@ -10403,8 +9861,7 @@
       "kit_np_barge_rugosite_hiver.png",
       "kit_np_barge_metal_hiver.png",
       "kit_np_barge_masque_equipe_hiver.png",
-      "kit_np_barge_lod0.glb",
-      "kit_np_barge_lod1.glb"
+      "kit_np_barge_lod0.glb"
     ]
   },
   {
@@ -10424,8 +9881,7 @@
       "kit_np_bombardier_metal_hiver.png",
       "kit_np_bombardier_masque_equipe_hiver.png",
       "kit_np_bombardier_emission_hiver.png",
-      "kit_np_bombardier_lod0.glb",
-      "kit_np_bombardier_lod1.glb"
+      "kit_np_bombardier_lod0.glb"
     ]
   },
   {
@@ -10445,8 +9901,7 @@
       "kit_np_brouilleur_metal_hiver.png",
       "kit_np_brouilleur_masque_equipe_hiver.png",
       "kit_np_brouilleur_emission_hiver.png",
-      "kit_np_brouilleur_lod0.glb",
-      "kit_np_brouilleur_lod1.glb"
+      "kit_np_brouilleur_lod0.glb"
     ]
   },
   {
@@ -10464,8 +9919,7 @@
       "kit_np_char_leger_rugosite_hiver.png",
       "kit_np_char_leger_metal_hiver.png",
       "kit_np_char_leger_masque_equipe_hiver.png",
-      "kit_np_char_leger_lod0.glb",
-      "kit_np_char_leger_lod1.glb"
+      "kit_np_char_leger_lod0.glb"
     ]
   },
   {
@@ -10483,8 +9937,7 @@
       "kit_np_char_lourd_rugosite_hiver.png",
       "kit_np_char_lourd_metal_hiver.png",
       "kit_np_char_lourd_masque_equipe_hiver.png",
-      "kit_np_char_lourd_lod0.glb",
-      "kit_np_char_lourd_lod1.glb"
+      "kit_np_char_lourd_lod0.glb"
     ]
   },
   {
@@ -10502,8 +9955,7 @@
       "kit_np_char_moyen_rugosite_hiver.png",
       "kit_np_char_moyen_metal_hiver.png",
       "kit_np_char_moyen_masque_equipe_hiver.png",
-      "kit_np_char_moyen_lod0.glb",
-      "kit_np_char_moyen_lod1.glb"
+      "kit_np_char_moyen_lod0.glb"
     ]
   },
   {
@@ -10521,8 +9973,7 @@
       "kit_np_chasseur_rugosite_hiver.png",
       "kit_np_chasseur_metal_hiver.png",
       "kit_np_chasseur_masque_equipe_hiver.png",
-      "kit_np_chasseur_lod0.glb",
-      "kit_np_chasseur_lod1.glb"
+      "kit_np_chasseur_lod0.glb"
     ]
   },
   {
@@ -10540,8 +9991,7 @@
       "kit_np_cuirasse_rugosite_hiver.png",
       "kit_np_cuirasse_metal_hiver.png",
       "kit_np_cuirasse_masque_equipe_hiver.png",
-      "kit_np_cuirasse_lod0.glb",
-      "kit_np_cuirasse_lod1.glb"
+      "kit_np_cuirasse_lod0.glb"
     ]
   },
   {
@@ -10559,8 +10009,7 @@
       "kit_np_drone_rugosite_hiver.png",
       "kit_np_drone_metal_hiver.png",
       "kit_np_drone_masque_equipe_hiver.png",
-      "kit_np_drone_lod0.glb",
-      "kit_np_drone_lod1.glb"
+      "kit_np_drone_lod0.glb"
     ]
   },
   {
@@ -10580,8 +10029,7 @@
       "kit_np_drone_intercepteur_metal_hiver.png",
       "kit_np_drone_intercepteur_masque_equipe_hiver.png",
       "kit_np_drone_intercepteur_emission_hiver.png",
-      "kit_np_drone_intercepteur_lod0.glb",
-      "kit_np_drone_intercepteur_lod1.glb"
+      "kit_np_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -10601,8 +10049,7 @@
       "kit_np_drone_marin_metal_hiver.png",
       "kit_np_drone_marin_masque_equipe_hiver.png",
       "kit_np_drone_marin_emission_hiver.png",
-      "kit_np_drone_marin_lod0.glb",
-      "kit_np_drone_marin_lod1.glb"
+      "kit_np_drone_marin_lod0.glb"
     ]
   },
   {
@@ -10622,8 +10069,7 @@
       "kit_np_drone_ravitailleur_metal_hiver.png",
       "kit_np_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_np_drone_ravitailleur_emission_hiver.png",
-      "kit_np_drone_ravitailleur_lod0.glb",
-      "kit_np_drone_ravitailleur_lod1.glb"
+      "kit_np_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -10641,8 +10087,7 @@
       "kit_np_furtif_rugosite_hiver.png",
       "kit_np_furtif_metal_hiver.png",
       "kit_np_furtif_masque_equipe_hiver.png",
-      "kit_np_furtif_lod0.glb",
-      "kit_np_furtif_lod1.glb"
+      "kit_np_furtif_lod0.glb"
     ]
   },
   {
@@ -10662,8 +10107,7 @@
       "kit_np_genie_metal_hiver.png",
       "kit_np_genie_masque_equipe_hiver.png",
       "kit_np_genie_emission_hiver.png",
-      "kit_np_genie_lod0.glb",
-      "kit_np_genie_lod1.glb"
+      "kit_np_genie_lod0.glb"
     ]
   },
   {
@@ -10683,8 +10127,7 @@
       "kit_np_helico_metal_hiver.png",
       "kit_np_helico_masque_equipe_hiver.png",
       "kit_np_helico_emission_hiver.png",
-      "kit_np_helico_lod0.glb",
-      "kit_np_helico_lod1.glb"
+      "kit_np_helico_lod0.glb"
     ]
   },
   {
@@ -10696,8 +10139,7 @@
       "kit_np_infanterie_normale.png",
       "kit_np_infanterie_rugosite.png",
       "kit_np_infanterie_masque_equipe.png",
-      "kit_np_infanterie_lod0.glb",
-      "kit_np_infanterie_lod1.glb"
+      "kit_np_infanterie_lod0.glb"
     ]
   },
   {
@@ -10715,8 +10157,7 @@
       "kit_np_meca_rugosite_hiver.png",
       "kit_np_meca_metal_hiver.png",
       "kit_np_meca_masque_equipe_hiver.png",
-      "kit_np_meca_lod0.glb",
-      "kit_np_meca_lod1.glb"
+      "kit_np_meca_lod0.glb"
     ]
   },
   {
@@ -10736,8 +10177,7 @@
       "kit_np_missiles_air_metal_hiver.png",
       "kit_np_missiles_air_masque_equipe_hiver.png",
       "kit_np_missiles_air_emission_hiver.png",
-      "kit_np_missiles_air_lod0.glb",
-      "kit_np_missiles_air_lod1.glb"
+      "kit_np_missiles_air_lod0.glb"
     ]
   },
   {
@@ -10755,8 +10195,7 @@
       "kit_np_missiles_sol_rugosite_hiver.png",
       "kit_np_missiles_sol_metal_hiver.png",
       "kit_np_missiles_sol_masque_equipe_hiver.png",
-      "kit_np_missiles_sol_lod0.glb",
-      "kit_np_missiles_sol_lod1.glb"
+      "kit_np_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -10776,8 +10215,7 @@
       "kit_np_porte_avions_metal_hiver.png",
       "kit_np_porte_avions_masque_equipe_hiver.png",
       "kit_np_porte_avions_emission_hiver.png",
-      "kit_np_porte_avions_lod0.glb",
-      "kit_np_porte_avions_lod1.glb"
+      "kit_np_porte_avions_lod0.glb"
     ]
   },
   {
@@ -10797,8 +10235,7 @@
       "kit_np_recon_metal_hiver.png",
       "kit_np_recon_masque_equipe_hiver.png",
       "kit_np_recon_emission_hiver.png",
-      "kit_np_recon_lod0.glb",
-      "kit_np_recon_lod1.glb"
+      "kit_np_recon_lod0.glb"
     ]
   },
   {
@@ -10816,8 +10253,7 @@
       "kit_np_roquettes_rugosite_hiver.png",
       "kit_np_roquettes_metal_hiver.png",
       "kit_np_roquettes_masque_equipe_hiver.png",
-      "kit_np_roquettes_lod0.glb",
-      "kit_np_roquettes_lod1.glb"
+      "kit_np_roquettes_lod0.glb"
     ]
   },
   {
@@ -10835,8 +10271,7 @@
       "kit_np_sous_marin_rugosite_hiver.png",
       "kit_np_sous_marin_metal_hiver.png",
       "kit_np_sous_marin_masque_equipe_hiver.png",
-      "kit_np_sous_marin_lod0.glb",
-      "kit_np_sous_marin_lod1.glb"
+      "kit_np_sous_marin_lod0.glb"
     ]
   },
   {
@@ -10854,8 +10289,7 @@
       "kit_np_transport_rugosite_hiver.png",
       "kit_np_transport_metal_hiver.png",
       "kit_np_transport_masque_equipe_hiver.png",
-      "kit_np_transport_lod0.glb",
-      "kit_np_transport_lod1.glb"
+      "kit_np_transport_lod0.glb"
     ]
   },
   {
@@ -10873,8 +10307,7 @@
       "kit_np_transport_air_rugosite_hiver.png",
       "kit_np_transport_air_metal_hiver.png",
       "kit_np_transport_air_masque_equipe_hiver.png",
-      "kit_np_transport_air_lod0.glb",
-      "kit_np_transport_air_lod1.glb"
+      "kit_np_transport_air_lod0.glb"
     ]
   },
   {
@@ -10888,8 +10321,7 @@
       "kit_nz_antiair_metal.png",
       "kit_nz_antiair_masque_equipe.png",
       "kit_nz_antiair_emission.png",
-      "kit_nz_antiair_lod0.glb",
-      "kit_nz_antiair_lod1.glb"
+      "kit_nz_antiair_lod0.glb"
     ]
   },
   {
@@ -10902,8 +10334,7 @@
       "kit_nz_artillerie_rugosite.png",
       "kit_nz_artillerie_metal.png",
       "kit_nz_artillerie_masque_equipe.png",
-      "kit_nz_artillerie_lod0.glb",
-      "kit_nz_artillerie_lod1.glb"
+      "kit_nz_artillerie_lod0.glb"
     ]
   },
   {
@@ -10921,8 +10352,7 @@
       "kit_nz_barge_rugosite_hiver.png",
       "kit_nz_barge_metal_hiver.png",
       "kit_nz_barge_masque_equipe_hiver.png",
-      "kit_nz_barge_lod0.glb",
-      "kit_nz_barge_lod1.glb"
+      "kit_nz_barge_lod0.glb"
     ]
   },
   {
@@ -10942,8 +10372,7 @@
       "kit_nz_bombardier_metal_hiver.png",
       "kit_nz_bombardier_masque_equipe_hiver.png",
       "kit_nz_bombardier_emission_hiver.png",
-      "kit_nz_bombardier_lod0.glb",
-      "kit_nz_bombardier_lod1.glb"
+      "kit_nz_bombardier_lod0.glb"
     ]
   },
   {
@@ -10963,8 +10392,7 @@
       "kit_nz_brouilleur_metal_hiver.png",
       "kit_nz_brouilleur_masque_equipe_hiver.png",
       "kit_nz_brouilleur_emission_hiver.png",
-      "kit_nz_brouilleur_lod0.glb",
-      "kit_nz_brouilleur_lod1.glb"
+      "kit_nz_brouilleur_lod0.glb"
     ]
   },
   {
@@ -10982,8 +10410,7 @@
       "kit_nz_char_leger_rugosite_hiver.png",
       "kit_nz_char_leger_metal_hiver.png",
       "kit_nz_char_leger_masque_equipe_hiver.png",
-      "kit_nz_char_leger_lod0.glb",
-      "kit_nz_char_leger_lod1.glb"
+      "kit_nz_char_leger_lod0.glb"
     ]
   },
   {
@@ -11001,8 +10428,7 @@
       "kit_nz_char_lourd_rugosite_hiver.png",
       "kit_nz_char_lourd_metal_hiver.png",
       "kit_nz_char_lourd_masque_equipe_hiver.png",
-      "kit_nz_char_lourd_lod0.glb",
-      "kit_nz_char_lourd_lod1.glb"
+      "kit_nz_char_lourd_lod0.glb"
     ]
   },
   {
@@ -11020,8 +10446,7 @@
       "kit_nz_char_moyen_rugosite_hiver.png",
       "kit_nz_char_moyen_metal_hiver.png",
       "kit_nz_char_moyen_masque_equipe_hiver.png",
-      "kit_nz_char_moyen_lod0.glb",
-      "kit_nz_char_moyen_lod1.glb"
+      "kit_nz_char_moyen_lod0.glb"
     ]
   },
   {
@@ -11039,8 +10464,7 @@
       "kit_nz_chasseur_rugosite_hiver.png",
       "kit_nz_chasseur_metal_hiver.png",
       "kit_nz_chasseur_masque_equipe_hiver.png",
-      "kit_nz_chasseur_lod0.glb",
-      "kit_nz_chasseur_lod1.glb"
+      "kit_nz_chasseur_lod0.glb"
     ]
   },
   {
@@ -11058,8 +10482,7 @@
       "kit_nz_cuirasse_rugosite_hiver.png",
       "kit_nz_cuirasse_metal_hiver.png",
       "kit_nz_cuirasse_masque_equipe_hiver.png",
-      "kit_nz_cuirasse_lod0.glb",
-      "kit_nz_cuirasse_lod1.glb"
+      "kit_nz_cuirasse_lod0.glb"
     ]
   },
   {
@@ -11077,8 +10500,7 @@
       "kit_nz_drone_rugosite_hiver.png",
       "kit_nz_drone_metal_hiver.png",
       "kit_nz_drone_masque_equipe_hiver.png",
-      "kit_nz_drone_lod0.glb",
-      "kit_nz_drone_lod1.glb"
+      "kit_nz_drone_lod0.glb"
     ]
   },
   {
@@ -11098,8 +10520,7 @@
       "kit_nz_drone_intercepteur_metal_hiver.png",
       "kit_nz_drone_intercepteur_masque_equipe_hiver.png",
       "kit_nz_drone_intercepteur_emission_hiver.png",
-      "kit_nz_drone_intercepteur_lod0.glb",
-      "kit_nz_drone_intercepteur_lod1.glb"
+      "kit_nz_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -11119,8 +10540,7 @@
       "kit_nz_drone_marin_metal_hiver.png",
       "kit_nz_drone_marin_masque_equipe_hiver.png",
       "kit_nz_drone_marin_emission_hiver.png",
-      "kit_nz_drone_marin_lod0.glb",
-      "kit_nz_drone_marin_lod1.glb"
+      "kit_nz_drone_marin_lod0.glb"
     ]
   },
   {
@@ -11140,8 +10560,7 @@
       "kit_nz_drone_ravitailleur_metal_hiver.png",
       "kit_nz_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_nz_drone_ravitailleur_emission_hiver.png",
-      "kit_nz_drone_ravitailleur_lod0.glb",
-      "kit_nz_drone_ravitailleur_lod1.glb"
+      "kit_nz_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -11159,8 +10578,7 @@
       "kit_nz_furtif_rugosite_hiver.png",
       "kit_nz_furtif_metal_hiver.png",
       "kit_nz_furtif_masque_equipe_hiver.png",
-      "kit_nz_furtif_lod0.glb",
-      "kit_nz_furtif_lod1.glb"
+      "kit_nz_furtif_lod0.glb"
     ]
   },
   {
@@ -11180,8 +10598,7 @@
       "kit_nz_genie_metal_hiver.png",
       "kit_nz_genie_masque_equipe_hiver.png",
       "kit_nz_genie_emission_hiver.png",
-      "kit_nz_genie_lod0.glb",
-      "kit_nz_genie_lod1.glb"
+      "kit_nz_genie_lod0.glb"
     ]
   },
   {
@@ -11201,8 +10618,7 @@
       "kit_nz_helico_metal_hiver.png",
       "kit_nz_helico_masque_equipe_hiver.png",
       "kit_nz_helico_emission_hiver.png",
-      "kit_nz_helico_lod0.glb",
-      "kit_nz_helico_lod1.glb"
+      "kit_nz_helico_lod0.glb"
     ]
   },
   {
@@ -11214,8 +10630,7 @@
       "kit_nz_infanterie_normale.png",
       "kit_nz_infanterie_rugosite.png",
       "kit_nz_infanterie_masque_equipe.png",
-      "kit_nz_infanterie_lod0.glb",
-      "kit_nz_infanterie_lod1.glb"
+      "kit_nz_infanterie_lod0.glb"
     ]
   },
   {
@@ -11233,8 +10648,7 @@
       "kit_nz_meca_rugosite_hiver.png",
       "kit_nz_meca_metal_hiver.png",
       "kit_nz_meca_masque_equipe_hiver.png",
-      "kit_nz_meca_lod0.glb",
-      "kit_nz_meca_lod1.glb"
+      "kit_nz_meca_lod0.glb"
     ]
   },
   {
@@ -11254,8 +10668,7 @@
       "kit_nz_missiles_air_metal_hiver.png",
       "kit_nz_missiles_air_masque_equipe_hiver.png",
       "kit_nz_missiles_air_emission_hiver.png",
-      "kit_nz_missiles_air_lod0.glb",
-      "kit_nz_missiles_air_lod1.glb"
+      "kit_nz_missiles_air_lod0.glb"
     ]
   },
   {
@@ -11273,8 +10686,7 @@
       "kit_nz_missiles_sol_rugosite_hiver.png",
       "kit_nz_missiles_sol_metal_hiver.png",
       "kit_nz_missiles_sol_masque_equipe_hiver.png",
-      "kit_nz_missiles_sol_lod0.glb",
-      "kit_nz_missiles_sol_lod1.glb"
+      "kit_nz_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -11294,8 +10706,7 @@
       "kit_nz_porte_avions_metal_hiver.png",
       "kit_nz_porte_avions_masque_equipe_hiver.png",
       "kit_nz_porte_avions_emission_hiver.png",
-      "kit_nz_porte_avions_lod0.glb",
-      "kit_nz_porte_avions_lod1.glb"
+      "kit_nz_porte_avions_lod0.glb"
     ]
   },
   {
@@ -11315,8 +10726,7 @@
       "kit_nz_recon_metal_hiver.png",
       "kit_nz_recon_masque_equipe_hiver.png",
       "kit_nz_recon_emission_hiver.png",
-      "kit_nz_recon_lod0.glb",
-      "kit_nz_recon_lod1.glb"
+      "kit_nz_recon_lod0.glb"
     ]
   },
   {
@@ -11334,8 +10744,7 @@
       "kit_nz_roquettes_rugosite_hiver.png",
       "kit_nz_roquettes_metal_hiver.png",
       "kit_nz_roquettes_masque_equipe_hiver.png",
-      "kit_nz_roquettes_lod0.glb",
-      "kit_nz_roquettes_lod1.glb"
+      "kit_nz_roquettes_lod0.glb"
     ]
   },
   {
@@ -11353,8 +10762,7 @@
       "kit_nz_sous_marin_rugosite_hiver.png",
       "kit_nz_sous_marin_metal_hiver.png",
       "kit_nz_sous_marin_masque_equipe_hiver.png",
-      "kit_nz_sous_marin_lod0.glb",
-      "kit_nz_sous_marin_lod1.glb"
+      "kit_nz_sous_marin_lod0.glb"
     ]
   },
   {
@@ -11372,8 +10780,7 @@
       "kit_nz_transport_rugosite_hiver.png",
       "kit_nz_transport_metal_hiver.png",
       "kit_nz_transport_masque_equipe_hiver.png",
-      "kit_nz_transport_lod0.glb",
-      "kit_nz_transport_lod1.glb"
+      "kit_nz_transport_lod0.glb"
     ]
   },
   {
@@ -11391,8 +10798,7 @@
       "kit_nz_transport_air_rugosite_hiver.png",
       "kit_nz_transport_air_metal_hiver.png",
       "kit_nz_transport_air_masque_equipe_hiver.png",
-      "kit_nz_transport_air_lod0.glb",
-      "kit_nz_transport_air_lod1.glb"
+      "kit_nz_transport_air_lod0.glb"
     ]
   },
   {
@@ -11406,8 +10812,7 @@
       "kit_pe_antiair_metal.png",
       "kit_pe_antiair_masque_equipe.png",
       "kit_pe_antiair_emission.png",
-      "kit_pe_antiair_lod0.glb",
-      "kit_pe_antiair_lod1.glb"
+      "kit_pe_antiair_lod0.glb"
     ]
   },
   {
@@ -11420,8 +10825,7 @@
       "kit_pe_artillerie_rugosite.png",
       "kit_pe_artillerie_metal.png",
       "kit_pe_artillerie_masque_equipe.png",
-      "kit_pe_artillerie_lod0.glb",
-      "kit_pe_artillerie_lod1.glb"
+      "kit_pe_artillerie_lod0.glb"
     ]
   },
   {
@@ -11439,8 +10843,7 @@
       "kit_pe_barge_rugosite_hiver.png",
       "kit_pe_barge_metal_hiver.png",
       "kit_pe_barge_masque_equipe_hiver.png",
-      "kit_pe_barge_lod0.glb",
-      "kit_pe_barge_lod1.glb"
+      "kit_pe_barge_lod0.glb"
     ]
   },
   {
@@ -11460,8 +10863,7 @@
       "kit_pe_bombardier_metal_hiver.png",
       "kit_pe_bombardier_masque_equipe_hiver.png",
       "kit_pe_bombardier_emission_hiver.png",
-      "kit_pe_bombardier_lod0.glb",
-      "kit_pe_bombardier_lod1.glb"
+      "kit_pe_bombardier_lod0.glb"
     ]
   },
   {
@@ -11481,8 +10883,7 @@
       "kit_pe_brouilleur_metal_hiver.png",
       "kit_pe_brouilleur_masque_equipe_hiver.png",
       "kit_pe_brouilleur_emission_hiver.png",
-      "kit_pe_brouilleur_lod0.glb",
-      "kit_pe_brouilleur_lod1.glb"
+      "kit_pe_brouilleur_lod0.glb"
     ]
   },
   {
@@ -11500,8 +10901,7 @@
       "kit_pe_char_leger_rugosite_hiver.png",
       "kit_pe_char_leger_metal_hiver.png",
       "kit_pe_char_leger_masque_equipe_hiver.png",
-      "kit_pe_char_leger_lod0.glb",
-      "kit_pe_char_leger_lod1.glb"
+      "kit_pe_char_leger_lod0.glb"
     ]
   },
   {
@@ -11519,8 +10919,7 @@
       "kit_pe_char_lourd_rugosite_hiver.png",
       "kit_pe_char_lourd_metal_hiver.png",
       "kit_pe_char_lourd_masque_equipe_hiver.png",
-      "kit_pe_char_lourd_lod0.glb",
-      "kit_pe_char_lourd_lod1.glb"
+      "kit_pe_char_lourd_lod0.glb"
     ]
   },
   {
@@ -11538,8 +10937,7 @@
       "kit_pe_char_moyen_rugosite_hiver.png",
       "kit_pe_char_moyen_metal_hiver.png",
       "kit_pe_char_moyen_masque_equipe_hiver.png",
-      "kit_pe_char_moyen_lod0.glb",
-      "kit_pe_char_moyen_lod1.glb"
+      "kit_pe_char_moyen_lod0.glb"
     ]
   },
   {
@@ -11557,8 +10955,7 @@
       "kit_pe_chasseur_rugosite_hiver.png",
       "kit_pe_chasseur_metal_hiver.png",
       "kit_pe_chasseur_masque_equipe_hiver.png",
-      "kit_pe_chasseur_lod0.glb",
-      "kit_pe_chasseur_lod1.glb"
+      "kit_pe_chasseur_lod0.glb"
     ]
   },
   {
@@ -11576,8 +10973,7 @@
       "kit_pe_cuirasse_rugosite_hiver.png",
       "kit_pe_cuirasse_metal_hiver.png",
       "kit_pe_cuirasse_masque_equipe_hiver.png",
-      "kit_pe_cuirasse_lod0.glb",
-      "kit_pe_cuirasse_lod1.glb"
+      "kit_pe_cuirasse_lod0.glb"
     ]
   },
   {
@@ -11595,8 +10991,7 @@
       "kit_pe_drone_rugosite_hiver.png",
       "kit_pe_drone_metal_hiver.png",
       "kit_pe_drone_masque_equipe_hiver.png",
-      "kit_pe_drone_lod0.glb",
-      "kit_pe_drone_lod1.glb"
+      "kit_pe_drone_lod0.glb"
     ]
   },
   {
@@ -11616,8 +11011,7 @@
       "kit_pe_drone_intercepteur_metal_hiver.png",
       "kit_pe_drone_intercepteur_masque_equipe_hiver.png",
       "kit_pe_drone_intercepteur_emission_hiver.png",
-      "kit_pe_drone_intercepteur_lod0.glb",
-      "kit_pe_drone_intercepteur_lod1.glb"
+      "kit_pe_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -11637,8 +11031,7 @@
       "kit_pe_drone_marin_metal_hiver.png",
       "kit_pe_drone_marin_masque_equipe_hiver.png",
       "kit_pe_drone_marin_emission_hiver.png",
-      "kit_pe_drone_marin_lod0.glb",
-      "kit_pe_drone_marin_lod1.glb"
+      "kit_pe_drone_marin_lod0.glb"
     ]
   },
   {
@@ -11658,8 +11051,7 @@
       "kit_pe_drone_ravitailleur_metal_hiver.png",
       "kit_pe_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_pe_drone_ravitailleur_emission_hiver.png",
-      "kit_pe_drone_ravitailleur_lod0.glb",
-      "kit_pe_drone_ravitailleur_lod1.glb"
+      "kit_pe_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -11677,8 +11069,7 @@
       "kit_pe_furtif_rugosite_hiver.png",
       "kit_pe_furtif_metal_hiver.png",
       "kit_pe_furtif_masque_equipe_hiver.png",
-      "kit_pe_furtif_lod0.glb",
-      "kit_pe_furtif_lod1.glb"
+      "kit_pe_furtif_lod0.glb"
     ]
   },
   {
@@ -11698,8 +11089,7 @@
       "kit_pe_genie_metal_hiver.png",
       "kit_pe_genie_masque_equipe_hiver.png",
       "kit_pe_genie_emission_hiver.png",
-      "kit_pe_genie_lod0.glb",
-      "kit_pe_genie_lod1.glb"
+      "kit_pe_genie_lod0.glb"
     ]
   },
   {
@@ -11719,8 +11109,7 @@
       "kit_pe_helico_metal_hiver.png",
       "kit_pe_helico_masque_equipe_hiver.png",
       "kit_pe_helico_emission_hiver.png",
-      "kit_pe_helico_lod0.glb",
-      "kit_pe_helico_lod1.glb"
+      "kit_pe_helico_lod0.glb"
     ]
   },
   {
@@ -11732,8 +11121,7 @@
       "kit_pe_infanterie_normale.png",
       "kit_pe_infanterie_rugosite.png",
       "kit_pe_infanterie_masque_equipe.png",
-      "kit_pe_infanterie_lod0.glb",
-      "kit_pe_infanterie_lod1.glb"
+      "kit_pe_infanterie_lod0.glb"
     ]
   },
   {
@@ -11751,8 +11139,7 @@
       "kit_pe_meca_rugosite_hiver.png",
       "kit_pe_meca_metal_hiver.png",
       "kit_pe_meca_masque_equipe_hiver.png",
-      "kit_pe_meca_lod0.glb",
-      "kit_pe_meca_lod1.glb"
+      "kit_pe_meca_lod0.glb"
     ]
   },
   {
@@ -11772,8 +11159,7 @@
       "kit_pe_missiles_air_metal_hiver.png",
       "kit_pe_missiles_air_masque_equipe_hiver.png",
       "kit_pe_missiles_air_emission_hiver.png",
-      "kit_pe_missiles_air_lod0.glb",
-      "kit_pe_missiles_air_lod1.glb"
+      "kit_pe_missiles_air_lod0.glb"
     ]
   },
   {
@@ -11791,8 +11177,7 @@
       "kit_pe_missiles_sol_rugosite_hiver.png",
       "kit_pe_missiles_sol_metal_hiver.png",
       "kit_pe_missiles_sol_masque_equipe_hiver.png",
-      "kit_pe_missiles_sol_lod0.glb",
-      "kit_pe_missiles_sol_lod1.glb"
+      "kit_pe_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -11812,8 +11197,7 @@
       "kit_pe_porte_avions_metal_hiver.png",
       "kit_pe_porte_avions_masque_equipe_hiver.png",
       "kit_pe_porte_avions_emission_hiver.png",
-      "kit_pe_porte_avions_lod0.glb",
-      "kit_pe_porte_avions_lod1.glb"
+      "kit_pe_porte_avions_lod0.glb"
     ]
   },
   {
@@ -11833,8 +11217,7 @@
       "kit_pe_recon_metal_hiver.png",
       "kit_pe_recon_masque_equipe_hiver.png",
       "kit_pe_recon_emission_hiver.png",
-      "kit_pe_recon_lod0.glb",
-      "kit_pe_recon_lod1.glb"
+      "kit_pe_recon_lod0.glb"
     ]
   },
   {
@@ -11852,8 +11235,7 @@
       "kit_pe_roquettes_rugosite_hiver.png",
       "kit_pe_roquettes_metal_hiver.png",
       "kit_pe_roquettes_masque_equipe_hiver.png",
-      "kit_pe_roquettes_lod0.glb",
-      "kit_pe_roquettes_lod1.glb"
+      "kit_pe_roquettes_lod0.glb"
     ]
   },
   {
@@ -11871,8 +11253,7 @@
       "kit_pe_sous_marin_rugosite_hiver.png",
       "kit_pe_sous_marin_metal_hiver.png",
       "kit_pe_sous_marin_masque_equipe_hiver.png",
-      "kit_pe_sous_marin_lod0.glb",
-      "kit_pe_sous_marin_lod1.glb"
+      "kit_pe_sous_marin_lod0.glb"
     ]
   },
   {
@@ -11890,8 +11271,7 @@
       "kit_pe_transport_rugosite_hiver.png",
       "kit_pe_transport_metal_hiver.png",
       "kit_pe_transport_masque_equipe_hiver.png",
-      "kit_pe_transport_lod0.glb",
-      "kit_pe_transport_lod1.glb"
+      "kit_pe_transport_lod0.glb"
     ]
   },
   {
@@ -11909,8 +11289,7 @@
       "kit_pe_transport_air_rugosite_hiver.png",
       "kit_pe_transport_air_metal_hiver.png",
       "kit_pe_transport_air_masque_equipe_hiver.png",
-      "kit_pe_transport_air_lod0.glb",
-      "kit_pe_transport_air_lod1.glb"
+      "kit_pe_transport_air_lod0.glb"
     ]
   },
   {
@@ -11924,8 +11303,7 @@
       "kit_sn_antiair_metal.png",
       "kit_sn_antiair_masque_equipe.png",
       "kit_sn_antiair_emission.png",
-      "kit_sn_antiair_lod0.glb",
-      "kit_sn_antiair_lod1.glb"
+      "kit_sn_antiair_lod0.glb"
     ]
   },
   {
@@ -11938,8 +11316,7 @@
       "kit_sn_artillerie_rugosite.png",
       "kit_sn_artillerie_metal.png",
       "kit_sn_artillerie_masque_equipe.png",
-      "kit_sn_artillerie_lod0.glb",
-      "kit_sn_artillerie_lod1.glb"
+      "kit_sn_artillerie_lod0.glb"
     ]
   },
   {
@@ -11957,8 +11334,7 @@
       "kit_sn_barge_rugosite_hiver.png",
       "kit_sn_barge_metal_hiver.png",
       "kit_sn_barge_masque_equipe_hiver.png",
-      "kit_sn_barge_lod0.glb",
-      "kit_sn_barge_lod1.glb"
+      "kit_sn_barge_lod0.glb"
     ]
   },
   {
@@ -11978,8 +11354,7 @@
       "kit_sn_bombardier_metal_hiver.png",
       "kit_sn_bombardier_masque_equipe_hiver.png",
       "kit_sn_bombardier_emission_hiver.png",
-      "kit_sn_bombardier_lod0.glb",
-      "kit_sn_bombardier_lod1.glb"
+      "kit_sn_bombardier_lod0.glb"
     ]
   },
   {
@@ -11999,8 +11374,7 @@
       "kit_sn_brouilleur_metal_hiver.png",
       "kit_sn_brouilleur_masque_equipe_hiver.png",
       "kit_sn_brouilleur_emission_hiver.png",
-      "kit_sn_brouilleur_lod0.glb",
-      "kit_sn_brouilleur_lod1.glb"
+      "kit_sn_brouilleur_lod0.glb"
     ]
   },
   {
@@ -12018,8 +11392,7 @@
       "kit_sn_char_leger_rugosite_hiver.png",
       "kit_sn_char_leger_metal_hiver.png",
       "kit_sn_char_leger_masque_equipe_hiver.png",
-      "kit_sn_char_leger_lod0.glb",
-      "kit_sn_char_leger_lod1.glb"
+      "kit_sn_char_leger_lod0.glb"
     ]
   },
   {
@@ -12037,8 +11410,7 @@
       "kit_sn_char_lourd_rugosite_hiver.png",
       "kit_sn_char_lourd_metal_hiver.png",
       "kit_sn_char_lourd_masque_equipe_hiver.png",
-      "kit_sn_char_lourd_lod0.glb",
-      "kit_sn_char_lourd_lod1.glb"
+      "kit_sn_char_lourd_lod0.glb"
     ]
   },
   {
@@ -12056,8 +11428,7 @@
       "kit_sn_char_moyen_rugosite_hiver.png",
       "kit_sn_char_moyen_metal_hiver.png",
       "kit_sn_char_moyen_masque_equipe_hiver.png",
-      "kit_sn_char_moyen_lod0.glb",
-      "kit_sn_char_moyen_lod1.glb"
+      "kit_sn_char_moyen_lod0.glb"
     ]
   },
   {
@@ -12075,8 +11446,7 @@
       "kit_sn_chasseur_rugosite_hiver.png",
       "kit_sn_chasseur_metal_hiver.png",
       "kit_sn_chasseur_masque_equipe_hiver.png",
-      "kit_sn_chasseur_lod0.glb",
-      "kit_sn_chasseur_lod1.glb"
+      "kit_sn_chasseur_lod0.glb"
     ]
   },
   {
@@ -12094,8 +11464,7 @@
       "kit_sn_cuirasse_rugosite_hiver.png",
       "kit_sn_cuirasse_metal_hiver.png",
       "kit_sn_cuirasse_masque_equipe_hiver.png",
-      "kit_sn_cuirasse_lod0.glb",
-      "kit_sn_cuirasse_lod1.glb"
+      "kit_sn_cuirasse_lod0.glb"
     ]
   },
   {
@@ -12113,8 +11482,7 @@
       "kit_sn_drone_rugosite_hiver.png",
       "kit_sn_drone_metal_hiver.png",
       "kit_sn_drone_masque_equipe_hiver.png",
-      "kit_sn_drone_lod0.glb",
-      "kit_sn_drone_lod1.glb"
+      "kit_sn_drone_lod0.glb"
     ]
   },
   {
@@ -12134,8 +11502,7 @@
       "kit_sn_drone_intercepteur_metal_hiver.png",
       "kit_sn_drone_intercepteur_masque_equipe_hiver.png",
       "kit_sn_drone_intercepteur_emission_hiver.png",
-      "kit_sn_drone_intercepteur_lod0.glb",
-      "kit_sn_drone_intercepteur_lod1.glb"
+      "kit_sn_drone_intercepteur_lod0.glb"
     ]
   },
   {
@@ -12155,8 +11522,7 @@
       "kit_sn_drone_marin_metal_hiver.png",
       "kit_sn_drone_marin_masque_equipe_hiver.png",
       "kit_sn_drone_marin_emission_hiver.png",
-      "kit_sn_drone_marin_lod0.glb",
-      "kit_sn_drone_marin_lod1.glb"
+      "kit_sn_drone_marin_lod0.glb"
     ]
   },
   {
@@ -12176,8 +11542,7 @@
       "kit_sn_drone_ravitailleur_metal_hiver.png",
       "kit_sn_drone_ravitailleur_masque_equipe_hiver.png",
       "kit_sn_drone_ravitailleur_emission_hiver.png",
-      "kit_sn_drone_ravitailleur_lod0.glb",
-      "kit_sn_drone_ravitailleur_lod1.glb"
+      "kit_sn_drone_ravitailleur_lod0.glb"
     ]
   },
   {
@@ -12195,8 +11560,7 @@
       "kit_sn_furtif_rugosite_hiver.png",
       "kit_sn_furtif_metal_hiver.png",
       "kit_sn_furtif_masque_equipe_hiver.png",
-      "kit_sn_furtif_lod0.glb",
-      "kit_sn_furtif_lod1.glb"
+      "kit_sn_furtif_lod0.glb"
     ]
   },
   {
@@ -12216,8 +11580,7 @@
       "kit_sn_genie_metal_hiver.png",
       "kit_sn_genie_masque_equipe_hiver.png",
       "kit_sn_genie_emission_hiver.png",
-      "kit_sn_genie_lod0.glb",
-      "kit_sn_genie_lod1.glb"
+      "kit_sn_genie_lod0.glb"
     ]
   },
   {
@@ -12237,8 +11600,7 @@
       "kit_sn_helico_metal_hiver.png",
       "kit_sn_helico_masque_equipe_hiver.png",
       "kit_sn_helico_emission_hiver.png",
-      "kit_sn_helico_lod0.glb",
-      "kit_sn_helico_lod1.glb"
+      "kit_sn_helico_lod0.glb"
     ]
   },
   {
@@ -12250,8 +11612,7 @@
       "kit_sn_infanterie_normale.png",
       "kit_sn_infanterie_rugosite.png",
       "kit_sn_infanterie_masque_equipe.png",
-      "kit_sn_infanterie_lod0.glb",
-      "kit_sn_infanterie_lod1.glb"
+      "kit_sn_infanterie_lod0.glb"
     ]
   },
   {
@@ -12269,8 +11630,7 @@
       "kit_sn_meca_rugosite_hiver.png",
       "kit_sn_meca_metal_hiver.png",
       "kit_sn_meca_masque_equipe_hiver.png",
-      "kit_sn_meca_lod0.glb",
-      "kit_sn_meca_lod1.glb"
+      "kit_sn_meca_lod0.glb"
     ]
   },
   {
@@ -12290,8 +11650,7 @@
       "kit_sn_missiles_air_metal_hiver.png",
       "kit_sn_missiles_air_masque_equipe_hiver.png",
       "kit_sn_missiles_air_emission_hiver.png",
-      "kit_sn_missiles_air_lod0.glb",
-      "kit_sn_missiles_air_lod1.glb"
+      "kit_sn_missiles_air_lod0.glb"
     ]
   },
   {
@@ -12309,8 +11668,7 @@
       "kit_sn_missiles_sol_rugosite_hiver.png",
       "kit_sn_missiles_sol_metal_hiver.png",
       "kit_sn_missiles_sol_masque_equipe_hiver.png",
-      "kit_sn_missiles_sol_lod0.glb",
-      "kit_sn_missiles_sol_lod1.glb"
+      "kit_sn_missiles_sol_lod0.glb"
     ]
   },
   {
@@ -12330,8 +11688,7 @@
       "kit_sn_porte_avions_metal_hiver.png",
       "kit_sn_porte_avions_masque_equipe_hiver.png",
       "kit_sn_porte_avions_emission_hiver.png",
-      "kit_sn_porte_avions_lod0.glb",
-      "kit_sn_porte_avions_lod1.glb"
+      "kit_sn_porte_avions_lod0.glb"
     ]
   },
   {
@@ -12351,8 +11708,7 @@
       "kit_sn_recon_metal_hiver.png",
       "kit_sn_recon_masque_equipe_hiver.png",
       "kit_sn_recon_emission_hiver.png",
-      "kit_sn_recon_lod0.glb",
-      "kit_sn_recon_lod1.glb"
+      "kit_sn_recon_lod0.glb"
     ]
   },
   {
@@ -12370,8 +11726,7 @@
       "kit_sn_roquettes_rugosite_hiver.png",
       "kit_sn_roquettes_metal_hiver.png",
       "kit_sn_roquettes_masque_equipe_hiver.png",
-      "kit_sn_roquettes_lod0.glb",
-      "kit_sn_roquettes_lod1.glb"
+      "kit_sn_roquettes_lod0.glb"
     ]
   },
   {
@@ -12389,8 +11744,7 @@
       "kit_sn_sous_marin_rugosite_hiver.png",
       "kit_sn_sous_marin_metal_hiver.png",
       "kit_sn_sous_marin_masque_equipe_hiver.png",
-      "kit_sn_sous_marin_lod0.glb",
-      "kit_sn_sous_marin_lod1.glb"
+      "kit_sn_sous_marin_lod0.glb"
     ]
   },
   {
@@ -12408,8 +11762,7 @@
       "kit_sn_transport_rugosite_hiver.png",
       "kit_sn_transport_metal_hiver.png",
       "kit_sn_transport_masque_equipe_hiver.png",
-      "kit_sn_transport_lod0.glb",
-      "kit_sn_transport_lod1.glb"
+      "kit_sn_transport_lod0.glb"
     ]
   },
   {
@@ -12427,8 +11780,7 @@
       "kit_sn_transport_air_rugosite_hiver.png",
       "kit_sn_transport_air_metal_hiver.png",
       "kit_sn_transport_air_masque_equipe_hiver.png",
-      "kit_sn_transport_air_lod0.glb",
-      "kit_sn_transport_air_lod1.glb"
+      "kit_sn_transport_air_lod0.glb"
     ]
   }
 ]

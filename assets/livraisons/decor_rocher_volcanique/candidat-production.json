@@ -19,32 +19,6 @@
         "mat_roche"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_rocher_volcanique_lod1.glb",
-      "octets": 9796,
-      "triangles": 72,
-      "noeuds": [
-        "bloc",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_roche"
-      ],
-      "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_rocher_volcanique_lod2.glb",
-      "octets": 8572,
-      "triangles": 60,
-      "noeuds": [
-        "bloc",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_roche"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -61,9 +35,7 @@
       "decor_rocher_volcanique_rugosite.png",
       "decor_rocher_volcanique_rugosite_ete.png",
       "decor_rocher_volcanique_rugosite_hiver.png",
-      "decor_rocher_volcanique_lod0.glb",
-      "decor_rocher_volcanique_lod1.glb",
-      "decor_rocher_volcanique_lod2.glb"
+      "decor_rocher_volcanique_lod0.glb"
     ]
   }
 }

@@ -21,7 +21,7 @@ async function main() {
   const spec = lireSpec(`assets/specs/${ID}.json`);
   const pending = new Map<string, Uint8Array>();
   const report: unknown[] = [];
-  for (const lod of [0, 1] as const) {
+  for (const lod of [0] as const) {
     const subdivisions = lod === 0 ? 4 : 2;
     const top = new T.PlaneGeometry(1, 1, subdivisions, subdivisions);
     top.rotateX(-Math.PI / 2);

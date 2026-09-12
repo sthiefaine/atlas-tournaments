@@ -29,6 +29,6 @@ export function AtelierExterne({id,concept,vues,stockage,sources:initiales,erreu
       <p role="status" aria-live="polite">{message}</p>
       {sources.length ? <ul className="space-y-2">{sources.map(s=><li key={s.revision}><a className="underline" href={`/api/admin/assets/${id}/sources?revision=${s.revision}`}>Télécharger la source {s.revision.slice(0,12)}</a> · {(s.octets/1024/1024).toFixed(1)} Mio{s.date?` · ${new Date(s.date).toLocaleDateString('fr-FR')}`:''}</li>)}</ul> : <p>Aucune source déposée.</p>}
     </div>
-    <p><strong>5. Préparer et intégrer.</strong> Transmettez le GLB téléchargé avec le prompt Codex ci-dessous. Les LOD, dimensions, matériaux, masque d’équipe et animations seront contrôlés avant réception du lot final. Pas de conversion ni de publication automatique.</p>
+    <p><strong>5. Préparer et intégrer.</strong> Transmettez le GLB téléchargé avec le prompt Codex ci-dessous. Le LOD0, les dimensions, matériaux, masque d’équipe et animations seront contrôlés avant réception du lot final. Pas de conversion ni de publication automatique.</p>
   </section>;
 }

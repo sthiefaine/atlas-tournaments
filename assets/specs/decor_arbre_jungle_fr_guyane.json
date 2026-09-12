@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 2500,
-    "lod1": 700,
-    "lod2": 180,
     "materiauxMax": 2
   },
   "textures": [
@@ -123,7 +121,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "decor_arbre_jungle_fr_guyane_lod0.glb",
-      "decor_arbre_jungle_fr_guyane_lod1.glb",
       "decor_arbre_jungle_fr_guyane_albedo.png",
       "decor_arbre_jungle_fr_guyane_albedo_automne.png"
     ]
@@ -148,9 +145,7 @@
     ],
     "toleranceAabb": 0.15,
     "lodRequis": [
-      0,
-      1,
-      2
+      0
     ]
   }
 }

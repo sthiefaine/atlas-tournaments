@@ -53,10 +53,8 @@ export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Part
           const scenes:THREE.Object3D[]=[];
           try{
             const proche=await glb.loadAsync(`/assets/modeles/${id}_lod0.glb`);scenes.push(proche.scene);
-            const loin=await glb.loadAsync(`/assets/modeles/${id}_lod1.glb`);scenes.push(loin.scene);
-            const g0=extraireVegetation(proche.scene),g1=extraireVegetation(loin.scene);
-            if(g0&&g1)matiere.vegetation={proche:g0,loin:g1,base:.020000001};
-            else {g0?.dispose();g1?.dispose();}
+            const g0=extraireVegetation(proche.scene);
+            if(g0)matiere.vegetation={proche:g0,base:.020000001};
           }catch{/* Une ancienne livraison plane reste utilisable. */}
           finally{libererBatimentsLivres(new Map(scenes.map((s,n)=>[String(n),s])));}
         }

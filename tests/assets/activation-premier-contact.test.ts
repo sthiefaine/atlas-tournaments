@@ -51,6 +51,6 @@ test('les dix couples Premier contact sélectionnent et conforment leurs vrais G
     assert.ok(modele.objet.getObjectByName('lod0')); assert.ok(modele.clips.length >= 5);
     assert.ok(demandes.includes(`kit_${pays}_${unite}_lod0.glb`));
   }
-  assert.equal(demandes.length,20);
+  assert.equal(demandes.length,10);
   assert.ok(demandes.every(nom => nom.startsWith('kit_')));
 });

@@ -1,6 +1,7 @@
 import {test,expect} from '@playwright/test';
 test.use({trace:'off',screenshot:'off',video:'off',channel:'chrome',launchOptions:{args:['--enable-unsafe-webgpu']}});
 test('barge active : chargement du LOD0 HD et des clips dans la vitrine',async({page})=>{
+ const gpu:string[]=[];page.on('console',m=>{if(/arrayStride|Invalid RenderPipeline|Invalid CommandBuffer|CreateRenderPipeline/i.test(m.text()))gpu.push(m.text());});
  const recus=new Set<string>(),erreurs:string[]=[];page.on('response',r=>{if(r.ok())recus.add(new URL(r.url()).pathname);});page.on('pageerror',e=>erreurs.push(e.message));
  await page.goto('/atelier/unites');await page.getByRole('combobox',{name:'Unité',exact:true}).selectOption('barge');
  await expect(page.locator('[data-livre="oui"]')).toBeVisible({timeout:60000});
@@ -11,4 +12,5 @@ test('barge active : chargement du LOD0 HD et des clips dans la vitrine',async({
  for(const clip of ['repos','deplacement','touche','hors_jeu']){const bouton=page.getByRole('button',{name:clip,exact:true});await bouton.click();await expect(bouton).toHaveAttribute('aria-pressed','true');}
  await page.getByRole('combobox',{name:'Nation',exact:true}).selectOption('fr');await expect(page.locator('[data-livre="oui"]')).toBeVisible();
  expect(erreurs).toEqual([]);
+ expect(gpu).toEqual([]);
 });

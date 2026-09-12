@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 1000000,
-    "lod1": 12000,
-    "lod2": 3000,
     "materiauxMax": 3
   },
   "textures": [
@@ -152,7 +150,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_ch_barge_lod0.glb",
-      "kit_ch_barge_lod1.glb",
       "kit_ch_barge_albedo.png",
       "kit_ch_barge_albedo_hiver.png"
     ]

@@ -19,19 +19,6 @@
         "mat_sol"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "terrain_pont_lod1.glb",
-      "octets": 29516,
-      "triangles": 228,
-      "noeuds": [
-        "sol",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_sol"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -59,8 +46,7 @@
       "terrain_pont_occlusion_ete.png",
       "terrain_pont_occlusion_automne.png",
       "terrain_pont_occlusion_hiver.png",
-      "terrain_pont_lod0.glb",
-      "terrain_pont_lod1.glb"
+      "terrain_pont_lod0.glb"
     ]
   }
 }

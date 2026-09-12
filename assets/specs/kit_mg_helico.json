@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 6000,
-    "lod1": 2000,
-    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -165,7 +163,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_mg_helico_lod0.glb",
-      "kit_mg_helico_lod1.glb",
       "kit_mg_helico_albedo.png",
       "kit_mg_helico_albedo_hiver.png"
     ]
@@ -192,8 +189,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

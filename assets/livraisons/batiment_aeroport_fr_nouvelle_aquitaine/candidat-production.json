@@ -22,22 +22,6 @@
         "mat_corps"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "batiment_aeroport_fr_nouvelle_aquitaine_lod1.glb",
-      "octets": 45140,
-      "triangles": 360,
-      "noeuds": [
-        "corps",
-        "toit",
-        "enseigne",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_vitrage",
-        "mat_corps"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -60,8 +44,7 @@
       "batiment_aeroport_fr_nouvelle_aquitaine_masque_equipe.png",
       "batiment_aeroport_fr_nouvelle_aquitaine_masque_equipe_ete.png",
       "batiment_aeroport_fr_nouvelle_aquitaine_masque_equipe_hiver.png",
-      "batiment_aeroport_fr_nouvelle_aquitaine_lod0.glb",
-      "batiment_aeroport_fr_nouvelle_aquitaine_lod1.glb"
+      "batiment_aeroport_fr_nouvelle_aquitaine_lod0.glb"
     ]
   }
 }

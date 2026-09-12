@@ -75,7 +75,6 @@ function nommage(id: string, canalExemple: string, varianteExemple: string): Nom
     texture: '{id}_{canal}_{variante}.{ext}',
     exemples: [
       `${id}_lod0.glb`,
-      `${id}_lod1.glb`,
       `${id}_${canalExemple}.png`,
       `${id}_${canalExemple}_${varianteExemple}.png`,
     ],
@@ -116,9 +115,9 @@ function echelle(x: number, y: number, z: number, tolerance: number): Echelle {
   };
 }
 
-/** Un budget de triangles à trois paliers. */
-function budget(lod0: number, lod1: number, lod2: number, materiauxMax: number): Budget {
-  return { lod0, lod1, lod2, materiauxMax };
+/** Le budget du modèle LOD0. */
+function budget(lod0: number, materiauxMax: number): Budget {
+  return { lod0, materiauxMax };
 }
 
 /** Une carte de texture. */
@@ -888,10 +887,10 @@ function echelleUnite(s: Silhouette): Echelle {
 /** Budget de triangles d'une unité : l'encombrement paie la géométrie. */
 function budgetUnite(s: Silhouette): Budget {
   const materiaux = s.modules.length > 0 ? 3 : 2;
-  if (s.base === 'pattes') return budget(4000, 1400, 400, materiaux);
-  if (s.taille === 1) return budget(3500, 1200, 350, materiaux);
-  if (s.taille === 2) return budget(6000, 2000, 600, materiaux);
-  return budget(9000, 3000, 900, materiaux);
+  if (s.base === 'pattes') return budget(4000, materiaux);
+  if (s.taille === 1) return budget(3500, materiaux);
+  if (s.taille === 2) return budget(6000, materiaux);
+  return budget(9000, materiaux);
 }
 
 /** Les clips attendus d'une unité : ce qu'elle sait faire, et rien d'autre. */
@@ -965,7 +964,7 @@ export function specUnite(u: UnitType): AssetSpec {
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
     echelle: echelleUnite(s),
     pivot: pivot(u.domaine !== 'air'),
-    budget: u.cle === 'barge' ? budget(1000000, 12000, 3000, 3) : budgetUnite(s),
+    budget: u.cle === 'barge' ? budget(1000000, 3) : budgetUnite(s),
     textures: u.cle === 'barge' ? textures.map(t => ['albedo', 'normale'].includes(t.canal) ? { ...t, resolution: 4096 as const } : t) : textures,
     variantes: variantes(['hiver']),
     animations: animationsUnite(u),
@@ -975,7 +974,7 @@ export function specUnite(u: UnitType): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'animations'],
       0.12,
-      u.cle === 'barge' ? [0] : [0, 1, 2],
+      [0],
     ),
   };
 }
@@ -1055,7 +1054,7 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'textures', 'animations'],
       0.14,
-      u.cle === 'barge' ? [0] : [0, 1],
+      [0],
     ),
   };
 }
@@ -1107,7 +1106,7 @@ export function specTerrain(t: Terrain): AssetSpec {
     style: style(['tileable ground patch', 'photoscan-like surface detail', 'seasonal variants']),
     echelle: { ...echelle(1, hauteur, 1, 0.04), x: { cible: 1, tolerance: 0 }, z: { cible: 1, tolerance: 0 }, ...(t.cle === 'plaine' ? { y: { cible: 0.14, tolerance: 0.002 } } : {}) },
     pivot: pivot(true),
-    budget: t.cle === 'plaine' ? budget(2400, 600, 120, 2) : lourd ? budget(2400, 700, 180, 2) : moyen ? budget(1200, 320, 80, 2) : budget(800, 200, 48, 2),
+    budget: t.cle === 'plaine' ? budget(2400, 2) : lourd ? budget(2400, 2) : moyen ? budget(1200, 2) : budget(800, 2),
     textures: [
       tex('albedo', 1024, true, 'Couleurs de surface, sans ombre peinte ni éclairage cuit.'),
       tex('normale', 1024, true, 'Le grain qui fait la matière à faible incidence de lumière.'),
@@ -1119,7 +1118,7 @@ export function specTerrain(t: Terrain): AssetSpec {
     format: format(['sol'], t.cle === 'plaine' ? ['mat_sol','mat_herbe'] : ['mat_sol']),
     nommage: nommage(id, 'albedo', 'hiver'),
     interdits: interdits(),
-    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'textures'], 0, [0, 1]),
+    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'textures'], 0, [0]),
   };
 }
 
@@ -1223,7 +1222,7 @@ export function specBatiment(t: Terrain, territoire: Territoire): AssetSpec {
       'regional building vernacular']),
     echelle: echelle(g.x, g.y, g.z, 0.07),
     pivot: pivot(true),
-    budget: budget(g.tris[0], g.tris[1], g.tris[2], 3),
+    budget: budget(g.tris[0], 3),
     textures: [
       tex('albedo', 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
       tex('normale', 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
@@ -1239,7 +1238,7 @@ export function specBatiment(t: Terrain, territoire: Territoire): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'animations'],
       0.08,
-      [0, 1],
+      [0],
     ),
   };
 }
@@ -1279,7 +1278,7 @@ export function specArbre(biome: Biome, territoire: Territoire): AssetSpec {
       'regional planting']),
     echelle: echelle(0.55, 0.62, 0.55, 0.09),
     pivot: pivot(true),
-    budget: budget(2500, 700, 180, 2),
+    budget: budget(2500, 2),
     textures: [
       tex('albedo', 1024, true, 'Écorce et feuillage sur un seul atlas ; canal alpha net, sans halo.'),
       tex('normale', 512, true, 'Nervures des feuilles et relief d’écorce.'),
@@ -1293,7 +1292,7 @@ export function specArbre(biome: Biome, territoire: Territoire): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'animations'],
       0.15,
-      [0, 1, 2],
+      [0],
     ),
   };
 }
@@ -1327,7 +1326,7 @@ export function specRocher(biome: Biome): AssetSpec {
     style: style(['instanced rock', 'real fracture planes', 'lichen and weathering']),
     echelle: echelle(0.45, 0.3, 0.45, 0.08),
     pivot: pivot(true),
-    budget: budget(900, 260, 64, 2),
+    budget: budget(900, 2),
     textures: [
       tex('albedo', 1024, true, 'Roche et lichen ; pas d’ombre peinte, l’éclairage vient de la scène.'),
       tex('normale', 512, true, 'Grain minéral et arêtes de fracture.'),
@@ -1338,7 +1337,7 @@ export function specRocher(biome: Biome): AssetSpec {
     format: format(['bloc'], ['mat_roche']),
     nommage: nommage(id, 'albedo', 'hiver'),
     interdits: interdits(),
-    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget'], 0.15, [0, 1, 2]),
+    verification: verification(['format', 'noeuds', 'materiaux', 'echelle', 'budget'], 0.15, [0]),
   };
 }
 
@@ -1375,7 +1374,7 @@ export function specCommandant(
     ]),
     echelle: echelle(0.55, 0.9, 0.45, 0.08),
     pivot: pivot(true),
-    budget: budget(14000, 4500, 1300, 3),
+    budget: budget(14000, 3),
     textures: [
       tex('albedo', 2048, true, 'Peau, cheveux et tissus ; le visage occupe la moitié de l’espace de carte.'),
       tex('normale', 1024, true, 'Pores, rides, mailles de tricot et coutures.'),

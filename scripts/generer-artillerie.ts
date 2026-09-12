@@ -279,14 +279,14 @@ function textures() {
 
 async function main() {
   const spec = lireSpec(`assets/specs/${ID}.json`);
-  const scenes = [0, 1, 2].map(build);
+  const scenes = [0].map(build);
   const maps = textures(), animations = clips();
   // glTF lit rugosité en G et métal en B : une seule carte partagée entre LODs.
   maps.set('rugosite', maps.get('orm')!); maps.delete('orm');
   const files = new Map<string, Uint8Array>();
   for (const [channel, data] of maps) if (channel !== 'orm') files.set(`${ID}_${channel}.png`, data);
   const report: unknown[] = [];
-  for (const lod of [0, 1, 2] as const) {
+  for (const lod of [0] as const) {
     const scene = scenes[lod]!;
     const { document, bin } = decouperGlb(await exporterGlb(scene.root, animations));
     const images: unknown[] = [], tex: unknown[] = [];
@@ -306,7 +306,7 @@ async function main() {
     document.extras = { units: 'metre', up: '+Y', front: '+Z', teamMaskTexture: 4, bulk: 2,
       role: { funds: 5500, movement: 5, movementType: 'chenilles', range: [2, 3], vision: 1, traits: ['tir_indirect'] } };
     const glb = assemblerGlb(document, bin);
-    const verdict = validerGlb(glb, spec, { lod, fichiersLivres: [...files.keys(), ...[0, 1, 2].map(n => `${ID}_lod${n}.glb`)] });
+    const verdict = validerGlb(glb, spec, { lod, fichiersLivres: [...files.keys(), ...[0].map(n => `${ID}_lod${n}.glb`)] });
     if (!verdict.ok) throw new Error(JSON.stringify({ lod, verdict }));
     if (scene.triangles > spec.budget[`lod${lod}`]) throw new Error(`lod${lod}: ${scene.triangles} triangles`);
     files.set(`${ID}_lod${lod}.glb`, glb);

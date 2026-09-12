@@ -28,8 +28,8 @@ test('l’inventaire regroupe les niveaux par identifiant, triés, et ignore ce 
   ]);
   assert.deepEqual(inventaire, {
     modeles: {
-      kit_fr_x: [0, 2],
-      unite_x_base: [0, 1],
+      kit_fr_x: [0],
+      unite_x_base: [0],
     },
   });
   assert.deepEqual(Object.keys(inventaire.modeles), ['kit_fr_x', 'unite_x_base'], 'identifiants triés : un JSON stable');
@@ -37,13 +37,13 @@ test('l’inventaire regroupe les niveaux par identifiant, triés, et ignore ce 
 });
 
 test('un niveau manquant se voit : le lod1 absent n’est pas inventé', () => {
-  assert.deepEqual(inventaireModeles(['unite_x_base_lod0.glb', 'unite_x_base_lod2.glb']).modeles['unite_x_base'], [0, 2]);
+  assert.deepEqual(inventaireModeles(['unite_x_base_lod0.glb', 'unite_x_base_lod2.glb']).modeles['unite_x_base'], [0]);
 });
 
 test('la décomposition d’un nom est l’inverse exact du gabarit de la spécification', () => {
   const spec = genererSpecs().find((s) => s.id === 'unite_char_leger_base');
   assert.ok(spec);
-  for (const lod of [0, 1, 2] as const) {
+  for (const lod of [0] as const) {
     assert.deepEqual(decomposerNomModele(nomModele(spec, lod)), { id: spec.id, lod });
   }
   assert.equal(decomposerNomModele('unite_char_leger_base.glb'), null, 'sans suffixe, ce n’est pas un niveau');
@@ -53,7 +53,7 @@ test('la décomposition d’un nom est l’inverse exact du gabarit de la spéci
 
 test('la forme d’un inventaire se vérifie, parce qu’elle traverse le réseau', () => {
   assert.equal(estInventaireModeles({ modeles: {} }), true);
-  assert.equal(estInventaireModeles({ modeles: { unite_x_base: [0, 1, 2] } }), true);
+  assert.equal(estInventaireModeles({ modeles: { unite_x_base: [0, 1, 2] } }), false);
   assert.equal(estInventaireModeles(null), false);
   assert.equal(estInventaireModeles([]), false);
   assert.equal(estInventaireModeles({}), false);
@@ -74,6 +74,6 @@ test('un dossier de livraison se lit, sous-dossiers exclus', () => {
   }
   mkdirSync(path.join(dossier, 'unite_y_base_lod0.glb'));
   assert.deepEqual(lireInventaireModeles(dossier), {
-    modeles: { kit_fr_x: [0], unite_x_base: [0, 1] },
+    modeles: { kit_fr_x: [0], unite_x_base: [0] },
   });
 });

@@ -19,32 +19,6 @@
         "mat_roche"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_rocher_desert_lod1.glb",
-      "octets": 11008,
-      "triangles": 84,
-      "noeuds": [
-        "bloc",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_roche"
-      ],
-      "imagesEmbarquees": 0
-    },
-    {
-      "nom": "decor_rocher_desert_lod2.glb",
-      "octets": 8556,
-      "triangles": 60,
-      "noeuds": [
-        "bloc",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_roche"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -61,9 +35,7 @@
       "decor_rocher_desert_rugosite.png",
       "decor_rocher_desert_rugosite_ete.png",
       "decor_rocher_desert_rugosite_hiver.png",
-      "decor_rocher_desert_lod0.glb",
-      "decor_rocher_desert_lod1.glb",
-      "decor_rocher_desert_lod2.glb"
+      "decor_rocher_desert_lod0.glb"
     ]
   }
 }

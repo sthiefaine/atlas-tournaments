@@ -22,22 +22,6 @@
         "mat_corps"
       ],
       "imagesEmbarquees": 0
-    },
-    {
-      "nom": "batiment_usine_ar_lod1.glb",
-      "octets": 23824,
-      "triangles": 152,
-      "noeuds": [
-        "corps",
-        "toit",
-        "enseigne",
-        "racine"
-      ],
-      "materiaux": [
-        "mat_vitrage",
-        "mat_corps"
-      ],
-      "imagesEmbarquees": 0
     }
   ],
   "rapport": {
@@ -60,8 +44,7 @@
       "batiment_usine_ar_masque_equipe.png",
       "batiment_usine_ar_masque_equipe_ete.png",
       "batiment_usine_ar_masque_equipe_hiver.png",
-      "batiment_usine_ar_lod0.glb",
-      "batiment_usine_ar_lod1.glb"
+      "batiment_usine_ar_lod0.glb"
     ]
   }
 }

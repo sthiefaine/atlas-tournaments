@@ -20,10 +20,9 @@ async function charger(lod: number) {
   return g;
 }
 test('real GLBs expose only the vegetation; grass conforms to relief and avoids water', async () => {
-  const proche = await charger(0), loin = await charger(1);
+  const proche = await charger(0);
   assert.equal(proche.getAttribute('position').count / 3, 1872);
-  assert.equal(loin.getAttribute('position').count / 3, 384);
-  const source = {proche, loin, base: .020000001};
+  const source = {proche, base: .020000001};
   const grille: GrilleTerrain = {largeur: 2, hauteur: 1, terrainDe: x => x === 0 ? 'plaine' : 'riviere'};
   const before = Array.from(proche.getAttribute('position').array);
   const g = geometrieGazon(grille, source), a = g.getAttribute('position');
@@ -37,7 +36,7 @@ test('real GLBs expose only the vegetation; grass conforms to relief and avoids 
   assert.deepEqual(Array.from(proche.getAttribute('position').array), before);
   assert.deepEqual(g.getAttribute('position').array, geometrieGazon(grille, source).getAttribute('position').array);
   const grand = geometrieGazon({largeur: 15, hauteur: 10, terrainDe: () => 'plaine'}, source);
-  assert.equal(grand.userData.lod, 1); assert.equal(grand.userData.triangles, 150 * 384);
+  assert.equal(grand.userData.lod, 0); assert.equal(grand.userData.triangles, 150 * 1872);
   const carte = JSON.parse(readFileSync('content/cartes/carte_premier_contact.json', 'utf8'));
   const premierContact = geometrieGazon({largeur: carte.largeur, hauteur: carte.hauteur, terrainDe: (x,y) => carte.grille[y][x] === 'P' ? 'plaine' : 'route'}, source);
   assert.equal(premierContact.userData.lod, 0, 'Premier contact must show the detailed new grass');

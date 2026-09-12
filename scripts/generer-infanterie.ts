@@ -191,9 +191,9 @@ export async function genererInfanterie(): Promise<Livraison> {
     new THREE.MeshStandardMaterial({ name: 'mat_details', roughness: 1, metalness: 1 }),
   ] as const;
   const durees = dureesDe(spec);
-  const triangles: Record<NiveauLod, number> = { 0: 0, 1: 0, 2: 0 };
+  const triangles: Record<NiveauLod, number> = { 0: 0 };
   let clips: THREE.AnimationClip[] | null = null;
-  for (const lod of [0, 1, 2] as const) {
+  for (const lod of [0] as const) {
     const scene = construireScene(lod, materiaux);
     // Les articulations ne dépendent pas de la finesse : les clips se
     // construisent une fois et servent aux trois niveaux, qui portent les
@@ -228,7 +228,7 @@ export function controlerLivraison(livraison: Livraison): Record<NiveauLod, Verd
     if (!octets) return { ok: false, motifs: [{ code: 'asset_format', detail: `lod${lod} absent de la livraison` }] };
     return validerGlb(octets, livraison.spec, { lod, fichiersLivres: livres });
   };
-  return { 0: verdict(0), 1: verdict(1), 2: verdict(2) };
+  return { 0: verdict(0) };
 }
 
 /** Lit les options : `--sortie <dossier>`, `--sec`. */
@@ -254,7 +254,7 @@ export async function executer(argv: string[]): Promise<{ code: number; texte: s
   const lignes: string[] = [];
   lignes.push(`Asset   : ${livraison.spec.id} — ${livraison.fichiers.size} fichiers`);
   let refuse = false;
-  for (const lod of [0, 1, 2] as const) {
+  for (const lod of [0] as const) {
     const nom = nomModele(livraison.spec, lod);
     const v = verdicts[lod];
     const octets = livraison.fichiers.get(nom)?.byteLength ?? 0;

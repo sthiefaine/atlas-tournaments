@@ -45,7 +45,7 @@ test('normales : les vecteurs des bords se raccordent aussi après rotation', ()
     assert.deepEqual(normal(t, n - 1, a), normal(t, 0, b));
   }
 });
-for (const lod of [0, 1] as const) test(`LOD${lod}: dimensions, surface plane, noms et budget`, () => {
+for (const lod of [0] as const) test(`LOD${lod}: dimensions, surface plane, noms et budget`, () => {
   const bytes = readFileSync(`${dir}${id}_lod${lod}.glb`);
   assert.equal(validerGlb(bytes, lireSpec(`assets/specs/${id}.json`), { lod }).ok, true);
   const { document: d, bin } = decouperGlb(bytes);

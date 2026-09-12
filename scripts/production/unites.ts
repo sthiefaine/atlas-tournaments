@@ -53,7 +53,7 @@ export async function genererUnite(spec:AssetSpec,sortie:string){
  }
  const cle=spec.id.replace(/^unite_/,'').replace(/_base$/,'');const u=chargerUnites().find(u=>u.cle===cle);if(!u)throw new Error(`Unité absente : ${cle}`);
  return ecrireCandidat(spec,sortie,lod=>{
-  const budget=spec.budget[`lod${lod}` as 'lod0'|'lod1'|'lod2']??Infinity;
+  const budget=spec.budget.lod0??Infinity;
   let pieces=composerSilhouette(u.silhouette);let morceaux:Morceau[]=[];
   const construire=()=>pieces.map(p=>({geometrie:geometrie(p,lod),noeud:noeudPiece(spec,p),role:ROLES[p.role]}));
   morceaux=construire();const compte=()=>morceaux.reduce((s,m)=>s+(m.geometrie.index?.count??m.geometrie.getAttribute('position').count)/3,0);

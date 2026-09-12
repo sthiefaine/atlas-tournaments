@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 4200,
-    "lod1": 1400,
-    "lod2": 400,
     "materiauxMax": 3
   },
   "textures": [
@@ -146,7 +144,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "batiment_aeroport_fr_occitanie_lod0.glb",
-      "batiment_aeroport_fr_occitanie_lod1.glb",
       "batiment_aeroport_fr_occitanie_emission.png",
       "batiment_aeroport_fr_occitanie_emission_hiver.png"
     ]
@@ -172,8 +169,7 @@
     ],
     "toleranceAabb": 0.08,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

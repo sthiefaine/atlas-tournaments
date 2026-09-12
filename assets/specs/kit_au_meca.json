@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 4000,
-    "lod1": 1400,
-    "lod2": 400,
     "materiauxMax": 3
   },
   "textures": [
@@ -164,7 +162,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_au_meca_lod0.glb",
-      "kit_au_meca_lod1.glb",
       "kit_au_meca_albedo.png",
       "kit_au_meca_albedo_hiver.png"
     ]
@@ -191,8 +188,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

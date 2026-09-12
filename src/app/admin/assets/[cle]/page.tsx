@@ -261,13 +261,13 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
       </Bloc>
 
       <Bloc titre="Budget" aide="Triangles par niveau de détail, et nombre de matériaux admis.">
-        <Champ nom="lod 0 / 1 / 2">{spec.budget.lod0} / {spec.budget.lod1} / {spec.budget.lod2} triangles</Champ>
+        <Champ nom="Modèle LOD0">{spec.budget.lod0} triangles maximum</Champ>
         <Champ nom="matériaux max">{spec.budget.materiauxMax}</Champ>
         <Champ nom="lod requis"><Cles valeurs={spec.verification.lodRequis.map(String)} /></Champ>
         <Champ nom="modèles attendus"><Cles valeurs={spec.verification.lodRequis.map((lod) => nomModele(spec, lod))} /></Champ>
       </Bloc>
 
-      <Bloc titre={`Textures — ${spec.textures.length} carte(s)`} aide="Le masque binaire suit les zones de la description : peinture d’équipe en gris neutre dans l’albédo. PNG externes partagés entre les LOD ; rugosité dans G, métal dans B.">
+      <Bloc titre={`Textures — ${spec.textures.length} carte(s)`} aide="Le masque binaire suit les zones de la description : peinture d’équipe en gris neutre dans l’albédo. PNG externes référencés par le LOD0 ; rugosité dans G, métal dans B.">
         {spec.textures.map((t) => (
           <Ligne key={t.canal}>
             <span className="w-40 font-mono text-xs">{t.canal}</span>

@@ -27,8 +27,7 @@
  *    le mélange `albédo × (1 − masque) + palette × masque` se fait dans le
  *    nuanceur, par un **nœud de couleur** TSL partagé ; sans masque, on teinte
  *    `color`.
- * 4. **Les niveaux de détail.** Un `THREE.LOD` aux distances des paliers de zoom ;
- *    un seul niveau livré est posé tel quel, sans seuil.
+ * 4. **Le détail.** Le LOD0 est posé tel quel, sans seuil ni bascule au zoom.
  * 5. **Les matériaux.** `GLTFLoader` fabrique des `MeshStandardMaterial`
  *    classiques ; depuis le passage à `WebGPURenderer` (7 septembre 2026), la
  *    lecture et la conformation les remplacent par leurs **jumeaux à nœuds**
@@ -50,7 +49,6 @@ import {
 import { chargerStyleNation } from '../assets/styles';
 import { paletteDe } from '../render/palettes';
 import type { CampId, CleUnite, CodePays, Couleur, Palette } from '../schemas/types';
-import { PALIERS_DISTANCE } from './camera';
 
 // ---------------------------------------------------------------------------
 // 1. Le vocabulaire : clips, gabarits, seuils
@@ -91,25 +89,6 @@ export const PROPORTIONS: Readonly<Record<Gabarit, [number, number, number]>> = 
  */
 export const ROTATION_AVANT = Math.PI / 2;
 
-/**
- * Les distances de bascule des niveaux de détail, en unités de scène : lod0
- * jusqu'au premier seuil, lod1 jusqu'au second, lod2 au-delà.
- *
- * Elles se déduisent des paliers de zoom plutôt que d'être écrites : lod0 pour
- * les quatre premiers paliers (jusqu'à 13), lod1 pour 17,5 et 24, lod2 pour 33
- * et 45. Chaque seuil est posé **à mi-chemin** entre deux paliers, pour qu'une
- * unité au centre de la vue ne tombe jamais exactement sur une bascule — au
- * palier 13, tout ce qui entoure la cible reste en lod0, seul le bord du champ
- * passe en lod1. À 24 et au-delà, une figurine fait moins de trente pixels : le
- * budget de `doc/10` §9.2 (2 000 triangles par unité) est celui du lod1.
- */
-export const SEUILS_LOD: readonly [number, number] = [
-  (PALIERS_DISTANCE[3] + PALIERS_DISTANCE[4]) / 2,
-  (PALIERS_DISTANCE[5] + PALIERS_DISTANCE[6]) / 2,
-];
-
-/** Hystérésis des bascules : cinq pour cent, pour qu'un léger recul ne fasse pas clignoter. */
-const HYSTERESIS_LOD = 0.05;
 
 /** Nom du groupe qui porte la figurine, celui que le calque enfonce et anime. */
 export const NOM_FIGURINE = 'figurine_modele';
@@ -288,6 +267,27 @@ export function clonerMateriauNoeud<T extends THREE.MeshStandardNodeMaterial>(or
  * nœuds. Un matériau partagé par plusieurs maillages n'a qu'un jumeau, partagé
  * de même. Rend les jumeaux créés — ceux qui n'existaient pas avant l'appel.
  */
+// GLB quantifiés : les VEC3 int16 normalisés ont un pas de 6 octets.
+// Three r170 ne l’aligne pas pour WebGPU. Décompacter en mémoire préserve les
+// valeurs et le fichier source, et donne un pas float32 de 12 octets valide.
+const attributsAlignes = new WeakMap<THREE.BufferAttribute | THREE.InterleavedBufferAttribute, THREE.BufferAttribute>();
+function alignerAttributs(geometrie: THREE.BufferGeometry): void {
+  for (const [nom, attribut] of Object.entries(geometrie.attributes)) {
+    if (!attribut.normalized || attribut.array.BYTES_PER_ELEMENT >= 4) continue;
+    let aligne = attributsAlignes.get(attribut);
+    if (!aligne) {
+      const valeurs = new Float32Array(attribut.count * attribut.itemSize);
+      for (let i = 0; i < attribut.count; i++) {
+        for (let c = 0; c < attribut.itemSize; c++) valeurs[i * attribut.itemSize + c] = attribut.getComponent(i, c);
+      }
+      aligne = new THREE.BufferAttribute(valeurs, attribut.itemSize);
+      aligne.name = attribut.name;
+      attributsAlignes.set(attribut, aligne);
+    }
+    geometrie.setAttribute(nom, aligne);
+  }
+}
+
 export function convertirMateriaux(objet: THREE.Object3D): THREE.Material[] {
   const jumeaux = new Map<THREE.Material, THREE.Material>();
   const convertir = (m: THREE.Material): THREE.Material => {
@@ -299,6 +299,7 @@ export function convertirMateriaux(objet: THREE.Object3D): THREE.Material[] {
   };
   objet.traverse((n) => {
     if (!(n instanceof THREE.Mesh)) return;
+    alignerAttributs(n.geometry);
     n.material = Array.isArray(n.material) ? n.material.map(convertir) : convertir(n.material);
   });
   return [...jumeaux].filter(([m, jumeau]) => m !== jumeau).map(([, jumeau]) => jumeau);
@@ -402,7 +403,7 @@ export interface ModeleCharge {
   objet: THREE.Group;
   /** Les clips livrés, tous noms confondus ; `nomsClips()` en tire les six connus. */
   clips: readonly THREE.AnimationClip[];
-  /** Nombre de niveaux de détail livrés, de 1 à 3. */
+  /** Nombre de modèles retenus : toujours 1. */
   lods: number;
   kit: boolean;
   /** Hauteur de la figurine au gabarit, en unités de scène : là où s'accroche l'étiquette. */
@@ -592,7 +593,7 @@ export function conformerModele(lu: ModeleLu, gabarit: Gabarit = 'b'): ModeleCha
   orientation.rotation.y = ROTATION_AVANT;
   objet.add(orientation);
 
-  const niveaux = lu.niveaux.slice(0, 3).map((n, i) => {
+  const niveaux = lu.niveaux.slice(0, 1).map((n, i) => {
     const copie = clonerSquelette(n);
     copie.name = `lod${i}`;
     // Un modèle conformé ne porte que des matériaux à nœuds : la lecture les a
@@ -602,50 +603,12 @@ export function conformerModele(lu: ModeleLu, gabarit: Gabarit = 'b'): ModeleCha
     convertirMateriaux(copie);
     return copie;
   });
-  if (niveaux.length === 1) {
-    orientation.add(niveaux[0]!);
-  } else {
-    // Un seul LOD sans seuil serait un objet de plus pour rien ; à partir de
-    // deux niveaux, c'est three qui choisit à chaque image selon la caméra.
-    const lod = new THREE.LOD();
-    lod.name = NOM_NIVEAUX;
-    niveaux.forEach((n, i) => lod.addLevel(n, i === 0 ? 0 : SEUILS_LOD[i - 1] ?? 0, i === 0 ? 0 : HYSTERESIS_LOD));
-    orientation.add(lod);
-  }
+  orientation.add(niveaux[0]!);
 
   objet.updateMatrixWorld(true);
   const boite = new THREE.Box3().setFromObject(objet);
   const hauteur = boite.isEmpty() ? 0 : Math.max(0, boite.max.y);
   return { objet, clips: lu.clips, lods: niveaux.length, kit: lu.kit, hauteur };
-}
-
-/**
- * Force un niveau de détail — la vitrine s'en sert pour juger un lod2 de près —
- * ou rend la main à three avec `null`. Sans `THREE.LOD` dans l'objet (un seul
- * niveau livré), il n'y a rien à forcer et l'appel ne fait rien.
- */
-export function forcerLod(objet: THREE.Object3D, niveau: NiveauLod | null): void {
-  objet.traverse((o) => {
-    if (!(o instanceof THREE.LOD)) return;
-    if (niveau === null) {
-      o.autoUpdate = true;
-      return;
-    }
-    o.autoUpdate = false;
-    const choisi = Math.min(niveau, o.levels.length - 1);
-    o.levels.forEach((l, i) => { l.object.visible = i === choisi; });
-  });
-}
-
-/** Le niveau forcé d'un objet, `null` si three choisit. */
-export function lodForce(objet: THREE.Object3D): NiveauLod | null {
-  let resultat: NiveauLod | null = null;
-  objet.traverse((o) => {
-    if (!(o instanceof THREE.LOD) || o.autoUpdate) return;
-    const i = o.levels.findIndex((l) => l.object.visible);
-    if (i >= 0 && i <= 2) resultat = i as NiveauLod;
-  });
-  return resultat;
 }
 
 // ---------------------------------------------------------------------------
@@ -830,7 +793,7 @@ export type ChargeurModeles = (cle: CleUnite, pays?: CodePays | null) => Promise
  * `doc/10-rendu-3d.md` §7.1 :
  *
  * ```
- * 1. kit national      kit_<pays>_<unite>_lod0.glb   (+ _lod1, _lod2 s'ils existent)
+ * 1. kit national      kit_<pays>_<unite>_lod0.glb
  * 2. géométrie de base unite_<cle>_base_lod0.glb     (idem)
  * 3. rien              → le placeholder reste en place
  * ```
@@ -839,9 +802,7 @@ export type ChargeurModeles = (cle: CleUnite, pays?: CodePays | null) => Promise
  * fichiers qu'il liste sont lus, aux niveaux qu'il liste, et un couple sans
  * fichier ne coûte **aucune** requête. S'il vaut `null` — route absente, hors
  * ligne —, chaque candidat est sondé comme avant, et un 404 n'est demandé
- * qu'une fois. Dans les deux cas le lod0 est obligatoire, les niveaux suivants
- * sont pris dans l'ordre et l'on s'arrête au premier absent — un lod2 sans
- * lod1 ne serait pas un jeu de niveaux. Une lecture est mémorisée par nom (une
+ * qu'une fois. Seul le LOD0 est demandé. Une lecture est mémorisée par nom (une
  * base sur laquelle retombent vingt-trois nations n'est lue qu'une fois), le
  * résultat conformé par couple. Rend `null` — jamais une exception — quand rien
  * n'existe, ce qui est l'état normal du projet.
@@ -874,12 +835,7 @@ export function creerChargeurModeles(options: OptionsChargeur = {}): ChargeurMod
         const lod0 = await lire(nomFichierModele(id, 0));
         if (!lod0) continue;
         const niveaux: THREE.Object3D[] = [lod0.scene];
-        for (const lod of [1, 2] as const) {
-          if (!listes.includes(lod)) break;
-          const suivant = await lire(nomFichierModele(id, lod));
-          if (!suivant) break;
-          niveaux.push(suivant.scene);
-        }
+
         const style = pays === null ? null : chargerStyleNation(pays);
         return conformerModele({ niveaux, clips: lod0.clips, kit }, style ? gabaritDe(style, cle) : 'b');
       }

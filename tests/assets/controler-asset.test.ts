@@ -66,18 +66,16 @@ test('un GLB refusé rend 1, et le motif est imprimé tel que le serveur le rend
   assert.deepEqual(JSON.parse(brut.texte).motifs.map((m: { code: string }) => m.code), ['asset_animation_absente']);
 });
 
-test('le niveau de détail se lit dans le nom du fichier, et --lod l’emporte', () => {
-  assert.equal(lodDuNom('livraison/unite_char_leger_base_lod2.glb'), 2);
-  assert.equal(lodDuNom('unite_char_leger_base.glb'), null);
-  // 3 000 sommets = 1 000 triangles : bon pour le lod0 (6 000), trop pour le lod2 (600).
-  const lod2 = ecrire('unite_char_leger_base_lod2.glb', { sommets: 3000 });
-  const r = executer(['--spec', cheminSpec, '--glb', lod2]);
-  assert.equal(r.code, 1);
-  assert.equal(r.verdict?.motifs[0]?.code, 'asset_budget');
-  assert.equal(r.verdict?.motifs[0]?.mesure?.['lod'], 2);
-  const force = executer(['--spec', cheminSpec, '--glb', lod2, '--lod', '0']);
-  assert.equal(force.code, 0, force.texte);
-  assert.match(force.texte, /lod0/);
+test('seul le LOD0 est accepté, les anciens niveaux sont refusés même avec une option', () => {
+  assert.equal(lodDuNom('unite_char_leger_base_lod0.glb'), 0);
+  assert.equal(lodDuNom('unite_char_leger_base_lod2.glb'), null);
+  const ancien = ecrire('unite_char_leger_base_lod2.glb');
+  for (const options of [[], ['--lod', '0']]) {
+    const r = executer(['--spec', cheminSpec, '--glb', ancien, ...options]);
+    assert.equal(r.code, 1); assert.match(r.texte, /Seul le LOD0/);
+  }
+  const actuel = ecrire('unite_char_leger_base_lod0.glb');
+  assert.equal(executer(['--spec', cheminSpec, '--glb', actuel, '--lod', '1']).code, 1);
 });
 
 test('un fichier mal nommé est accepté mais prévenu : le rendu ne le trouverait pas', () => {

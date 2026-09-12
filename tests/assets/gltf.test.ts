@@ -147,13 +147,6 @@ test('un modèle trop lourd est refusé en asset_budget, par niveau de détail',
   assert.equal(trop.motifs[0]?.mesure?.['triangles'], 10_000);
   assert.equal(trop.motifs[0]?.mesure?.['budget'], spec.budget.lod0);
 
-  // Le même fichier passe en lod0 et échoue en lod2 : le budget dépend du palier.
-  const moyen = gros(3_000);
-  assert.equal(validerGlb(moyen, spec, { lod: 0 }).ok, true);
-  const lod2 = validerGlb(moyen, spec, { lod: 2 });
-  assert.equal(lod2.ok, false);
-  assert.equal(lod2.motifs[0]?.mesure?.['lod'], 2);
-
   // Un fichier sans géométrie est un fichier vide, pas un fichier léger.
   const vide = construireGlb({ asset: { version: '2.0' } });
   assert.ok(validerGlb(vide, spec).motifs.some((m) => m.code === 'asset_budget'));

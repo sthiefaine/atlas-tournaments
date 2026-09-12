@@ -57,7 +57,7 @@ export async function POST(requete: Request): Promise<Response> {
   if (!spec) return erreur('asset_inconnu', 404, `aucune fiche pour « ${id} »`);
 
   const presentes = formulaire.getAll('fichiers').filter((v): v is File => typeof v !== 'string');
-  if (presentes.some((v) => v.size > LIMITE_FICHIER) || presentes.reduce((s, v) => s + v.size, 0) > LIMITE_LOT) return erreur('lot_trop_lourd', 413, '24 Mio par fichier, 96 Mio par lot');
+  if (presentes.some((v) => v.size > LIMITE_FICHIER) || presentes.reduce((s, v) => s + v.size, 0) > LIMITE_LOT) return erreur('lot_trop_lourd', 413, '32 Mio par fichier, 96 Mio par lot');
   const fichiers: FichierLivre[] = [];
   for (const valeur of formulaire.getAll('fichiers')) {
     if (typeof valeur === 'string') continue;

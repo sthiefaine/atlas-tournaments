@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 5600,
-    "lod1": 1800,
-    "lod2": 500,
     "materiauxMax": 3
   },
   "textures": [
@@ -146,7 +144,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "batiment_usine_ca_lod0.glb",
-      "batiment_usine_ca_lod1.glb",
       "batiment_usine_ca_emission.png",
       "batiment_usine_ca_emission_hiver.png"
     ]
@@ -172,8 +169,7 @@
     ],
     "toleranceAabb": 0.08,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

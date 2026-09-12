@@ -34,7 +34,7 @@ function livraison(): Promise<Livraison> {
   return partagee;
 }
 
-const NIVEAUX = [0, 1, 2] as const;
+const NIVEAUX = [0] as const;
 
 /** Un chargeur three qui lit les PNG voisins comme des textures d'un pixel : sous Node, il n'y a pas d'image. */
 function chargeurSansImage(): GLTFLoader {
@@ -51,7 +51,7 @@ function chargeurSansImage(): GLTFLoader {
 }
 
 /** Lit un GLB livré par three, ou échoue. */
-async function analyser(l: Livraison, lod: 0 | 1 | 2): Promise<{ scene: THREE.Group; clips: THREE.AnimationClip[] }> {
+async function analyser(l: Livraison, lod: 0): Promise<{ scene: THREE.Group; clips: THREE.AnimationClip[] }> {
   const octets = l.fichiers.get(nomModele(l.spec, lod));
   assert.ok(octets, `le lod${lod} est livré`);
   const lecture = await analyserGlb(octets.buffer.slice(octets.byteOffset, octets.byteOffset + octets.byteLength) as ArrayBuffer, chargeurSansImage());
@@ -122,7 +122,7 @@ test('la livraison porte les sept fichiers aux noms du gabarit, et moins d’un 
   assert.ok(total < 1_000_000, `${total} octets en tout`);
 });
 
-test('les trois niveaux passent le contrôle de la spécification, budgets décroissants', async () => {
+test('le LOD0 passent le contrôle de la spécification, budgets décroissants', async () => {
   const l = await livraison();
   const verdicts = controlerLivraison(l);
   for (const lod of NIVEAUX) {
@@ -132,7 +132,6 @@ test('les trois niveaux passent le contrôle de la spécification, budgets décr
     assert.ok(lecture.ok);
     assert.equal(mesurerGltf(lecture.document).triangles, l.triangles[lod], 'le compte du script est celui du validateur');
   }
-  assert.ok(l.triangles[0] > l.triangles[1] && l.triangles[1] > l.triangles[2]);
 });
 
 test('le document glTF : une escouade en un seul maillage à deux primitives, un squelette de trente-sept os, les cartes par uri', async () => {
@@ -167,7 +166,7 @@ test('le document glTF : une escouade en un seul maillage à deux primitives, un
   }
 });
 
-test('three lit les trois niveaux : nœuds imposés, un matériau partagé et masqué, six clips aux durées de la spécification', async () => {
+test('three lit le LOD0 : nœuds imposés, un matériau partagé et masqué, six clips aux durées de la spécification', async () => {
   const l = await livraison();
   for (const lod of NIVEAUX) {
     const { scene, clips } = await analyser(l, lod);
@@ -199,7 +198,7 @@ test('conformé, le modèle tient dans la tolérance de la spécification, dans 
   const niveaux = [];
   for (const lod of NIVEAUX) niveaux.push((await analyser(l, lod)).scene);
   const modele = conformerModele({ niveaux, clips: [], kit: false }, 'b');
-  assert.equal(modele.lods, 3);
+  assert.equal(modele.lods, 1);
   modele.objet.updateMatrixWorld(true);
   const boite = new THREE.Box3().setFromObject(modele.objet);
   const taille = boite.getSize(new THREE.Vector3());
@@ -212,11 +211,10 @@ test('conformé, le modèle tient dans la tolérance de la spécification, dans 
   assert.ok(Math.abs(modele.hauteur - 0.6) <= marge('y'), `l’étiquette s’accroche à ${modele.hauteur}`);
 });
 
-test('les clips animent les os des trois niveaux : la marche lance les cuisses, la mise hors jeu abaisse le bassin', async () => {
+test('les clips animent les os du LOD0 : la marche lance les cuisses, la mise hors jeu abaisse le bassin', async () => {
   const l = await livraison();
   const lu = await analyser(l, 0);
   const niveaux = [lu.scene];
-  for (const lod of [1, 2] as const) niveaux.push((await analyser(l, lod)).scene);
   const modele = conformerModele({ niveaux, clips: lu.clips, kit: false });
   const lecteur = creerLecteurClips(modele.objet, modele.clips);
   assert.ok(lecteur);
@@ -229,7 +227,7 @@ test('les clips animent les os des trois niveaux : la marche lance les cuisses, 
   const reposBassin = os('lod0', 'f1_bassin').position.y;
   lecteur.jouer('deplacement', 0, false);
   lecteur.avancer(0.25);
-  for (const niveau of ['lod0', 'lod1', 'lod2']) {
+  for (const niveau of ['lod0']) {
     const cuisse = os(niveau, 'f1_cuisse_g').quaternion;
     assert.ok(Math.abs(cuisse.x) > 0.05, `${niveau} : la cuisse gauche a basculé (${cuisse.x})`);
   }
@@ -285,5 +283,5 @@ test('les fichiers déposés dans public/assets/modeles sont ceux que le script 
     const depose = readFileSync(path.join(dossier, nom));
     assert.equal(Buffer.compare(depose, Buffer.from(l.fichiers.get(nom)!)), 0, `${nom} : le dépôt est la production du script`);
   }
-  assert.deepEqual(inventaireModeles(noms), { modeles: { [ID_INFANTERIE]: [0, 1, 2] } }, 'l’inventaire voit les trois niveaux');
+  assert.deepEqual(inventaireModeles(noms), { modeles: { [ID_INFANTERIE]: [0] } }, 'l’inventaire voit le LOD0');
 });

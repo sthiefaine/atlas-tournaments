@@ -52,8 +52,6 @@
   },
   "budget": {
     "lod0": 9000,
-    "lod1": 3000,
-    "lod2": 900,
     "materiauxMax": 2
   },
   "textures": [
@@ -156,7 +154,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "kit_lu_chasseur_lod0.glb",
-      "kit_lu_chasseur_lod1.glb",
       "kit_lu_chasseur_albedo.png",
       "kit_lu_chasseur_albedo_hiver.png"
     ]
@@ -183,8 +180,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

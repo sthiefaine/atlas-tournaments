@@ -42,18 +42,16 @@ test('un chemin livré est réduit à son nom de base', () => {
   // Un navigateur peut livrer « dossier/fichier.glb » : c'est le nom qui décide,
   // et il est comparé sans son chemin — jamais rejoint à un dossier.
   const spec = fiche();
-  const { acceptes } = classerDepot(spec, [`livraison/${nomModele(spec, 1)}`]);
-  assert.deepEqual(acceptes, [nomModele(spec, 1)]);
+  const { acceptes } = classerDepot(spec, [`livraison/${nomModele(spec, 0)}`]);
+  assert.deepEqual(acceptes, [nomModele(spec, 0)]);
 });
 
 test('les niveaux de détail manquants sont nommés, et le lot est refusé', () => {
   const spec = fiche();
-  const { lodManquants } = classerDepot(spec, [nomModele(spec, 0)]);
-  assert.deepEqual(lodManquants, spec.verification.lodRequis.filter((l) => l !== 0));
+  const { lodManquants } = classerDepot(spec, []);
+  assert.deepEqual(lodManquants, [0]);
 
-  // Un lot incomplet ne s'écrit pas : deux niveaux sur trois est un état
-  // qu'aucun chargeur ne sait lire.
-  const verdict = controlerDepot(spec, [{ nom: nomModele(spec, 0), octets: new Uint8Array([1, 2, 3]) }]);
+  const verdict = controlerDepot(spec, []);
   assert.equal(verdict.ok, false);
   assert.ok(verdict.motifs.some((m) => (m.detail ?? '').includes('niveau de détail manquant')));
 });

@@ -100,7 +100,7 @@ export function controlerDepot(spec: AssetSpec, fichiers: readonly FichierLivre[
   if (new Set(acceptes).size !== acceptes.length) motifs.push({ code: 'asset_format', detail: 'noms de fichiers dupliqués dans le lot' });
   if (inconnus.length) motifs.push({ code: 'asset_format', detail: `noms inattendus : ${inconnus.join(', ')}` });
   if (fichiers.reduce((s, f) => s + f.octets.byteLength, 0) > LIMITE_LOT || fichiers.some((f) => f.octets.byteLength > LIMITE_FICHIER))
-    return { ok: false, motifs: [...motifs, { code: 'asset_budget', detail: 'limite : 24 Mio par fichier, 96 Mio par lot' }], acceptes, inconnus, lodManquants };
+    return { ok: false, motifs: [...motifs, { code: 'asset_budget', detail: 'limite : 32 Mio par fichier, 96 Mio par lot' }], acceptes, inconnus, lodManquants };
 
   for (const lod of lodManquants) {
     motifs.push({ code: 'asset_format', detail: `niveau de détail manquant : ${nomModele(spec, lod)}` });

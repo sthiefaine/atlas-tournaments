@@ -52,7 +52,7 @@ export function receptionAsset(spec: AssetSpec, dossier = dossierModeles(), suiv
   const resultat: ReceptionAsset = { etat: 'a_produire', revision: null, fichiers, octets: statistiques.reduce((s, f) => s + f.size, 0), motifs: [], precedente, revue: null };
   if (fichiers.length) {
     if (resultat.octets > LIMITE_LOT || statistiques.some((s) => s.size > LIMITE_FICHIER)) {
-      resultat.etat = 'refuse'; resultat.motifs = ['Limite de poids dépassée : 24 Mio par fichier, 96 Mio par lot.'];
+      resultat.etat = 'refuse'; resultat.motifs = ['Limite de poids dépassée : 32 Mio par fichier, 96 Mio par lot.'];
     } else {
       const lot = lireLot(spec, dossier), verdict = controlerDepot(spec, lot, base);
       resultat.revision = revisionLot(spec, lot);

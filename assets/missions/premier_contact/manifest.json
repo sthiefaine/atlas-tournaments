@@ -51,8 +51,6 @@
         "modeles/unite_char_leger_base/unite_char_leger_base_albedo.png",
         "modeles/unite_char_leger_base/unite_char_leger_base_albedo_hiver.png",
         "modeles/unite_char_leger_base/unite_char_leger_base_lod0.glb",
-        "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-        "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
         "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe.png",
         "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe_hiver.png",
         "modeles/unite_char_leger_base/unite_char_leger_base_metal.png",
@@ -74,7 +72,6 @@
         "modeles/kit_fr_char_leger/kit_fr_char_leger_albedo.png",
         "modeles/kit_fr_char_leger/kit_fr_char_leger_albedo_hiver.png",
         "modeles/kit_fr_char_leger/kit_fr_char_leger_lod0.glb",
-        "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
         "modeles/kit_fr_char_leger/kit_fr_char_leger_masque_equipe.png",
         "modeles/kit_fr_char_leger/kit_fr_char_leger_masque_equipe_hiver.png",
         "modeles/kit_fr_char_leger/kit_fr_char_leger_metal.png",
@@ -96,7 +93,6 @@
         "modeles/kit_lu_char_leger/kit_lu_char_leger_albedo.png",
         "modeles/kit_lu_char_leger/kit_lu_char_leger_albedo_hiver.png",
         "modeles/kit_lu_char_leger/kit_lu_char_leger_lod0.glb",
-        "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
         "modeles/kit_lu_char_leger/kit_lu_char_leger_masque_equipe.png",
         "modeles/kit_lu_char_leger/kit_lu_char_leger_masque_equipe_hiver.png",
         "modeles/kit_lu_char_leger/kit_lu_char_leger_metal.png",
@@ -120,8 +116,6 @@
         "modeles/unite_genie_base/unite_genie_base_emission.png",
         "modeles/unite_genie_base/unite_genie_base_emission_hiver.png",
         "modeles/unite_genie_base/unite_genie_base_lod0.glb",
-        "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-        "modeles/unite_genie_base/unite_genie_base_lod2.glb",
         "modeles/unite_genie_base/unite_genie_base_masque_equipe.png",
         "modeles/unite_genie_base/unite_genie_base_masque_equipe_hiver.png",
         "modeles/unite_genie_base/unite_genie_base_metal.png",
@@ -145,7 +139,6 @@
         "modeles/kit_fr_genie/kit_fr_genie_emission.png",
         "modeles/kit_fr_genie/kit_fr_genie_emission_hiver.png",
         "modeles/kit_fr_genie/kit_fr_genie_lod0.glb",
-        "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
         "modeles/kit_fr_genie/kit_fr_genie_masque_equipe.png",
         "modeles/kit_fr_genie/kit_fr_genie_masque_equipe_hiver.png",
         "modeles/kit_fr_genie/kit_fr_genie_metal.png",
@@ -169,7 +162,6 @@
         "modeles/kit_lu_genie/kit_lu_genie_emission.png",
         "modeles/kit_lu_genie/kit_lu_genie_emission_hiver.png",
         "modeles/kit_lu_genie/kit_lu_genie_lod0.glb",
-        "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
         "modeles/kit_lu_genie/kit_lu_genie_masque_equipe.png",
         "modeles/kit_lu_genie/kit_lu_genie_masque_equipe_hiver.png",
         "modeles/kit_lu_genie/kit_lu_genie_metal.png",
@@ -190,8 +182,6 @@
       "fichiers": [
         "modeles/unite_infanterie_base/unite_infanterie_base_albedo.png",
         "modeles/unite_infanterie_base/unite_infanterie_base_lod0.glb",
-        "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-        "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
         "modeles/unite_infanterie_base/unite_infanterie_base_masque_equipe.png",
         "modeles/unite_infanterie_base/unite_infanterie_base_normale.png",
         "modeles/unite_infanterie_base/unite_infanterie_base_rugosite.png"
@@ -207,7 +197,6 @@
       "fichiers": [
         "modeles/kit_fr_infanterie/kit_fr_infanterie_albedo.png",
         "modeles/kit_fr_infanterie/kit_fr_infanterie_lod0.glb",
-        "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
         "modeles/kit_fr_infanterie/kit_fr_infanterie_masque_equipe.png",
         "modeles/kit_fr_infanterie/kit_fr_infanterie_normale.png",
         "modeles/kit_fr_infanterie/kit_fr_infanterie_rugosite.png"
@@ -223,7 +212,6 @@
       "fichiers": [
         "modeles/kit_lu_infanterie/kit_lu_infanterie_albedo.png",
         "modeles/kit_lu_infanterie/kit_lu_infanterie_lod0.glb",
-        "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
         "modeles/kit_lu_infanterie/kit_lu_infanterie_masque_equipe.png",
         "modeles/kit_lu_infanterie/kit_lu_infanterie_normale.png",
         "modeles/kit_lu_infanterie/kit_lu_infanterie_rugosite.png"
@@ -240,8 +228,6 @@
         "modeles/unite_meca_base/unite_meca_base_albedo.png",
         "modeles/unite_meca_base/unite_meca_base_albedo_hiver.png",
         "modeles/unite_meca_base/unite_meca_base_lod0.glb",
-        "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-        "modeles/unite_meca_base/unite_meca_base_lod2.glb",
         "modeles/unite_meca_base/unite_meca_base_masque_equipe.png",
         "modeles/unite_meca_base/unite_meca_base_masque_equipe_hiver.png",
         "modeles/unite_meca_base/unite_meca_base_metal.png",
@@ -263,7 +249,6 @@
         "modeles/kit_fr_meca/kit_fr_meca_albedo.png",
         "modeles/kit_fr_meca/kit_fr_meca_albedo_hiver.png",
         "modeles/kit_fr_meca/kit_fr_meca_lod0.glb",
-        "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
         "modeles/kit_fr_meca/kit_fr_meca_masque_equipe.png",
         "modeles/kit_fr_meca/kit_fr_meca_masque_equipe_hiver.png",
         "modeles/kit_fr_meca/kit_fr_meca_metal.png",
@@ -285,7 +270,6 @@
         "modeles/kit_lu_meca/kit_lu_meca_albedo.png",
         "modeles/kit_lu_meca/kit_lu_meca_albedo_hiver.png",
         "modeles/kit_lu_meca/kit_lu_meca_lod0.glb",
-        "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
         "modeles/kit_lu_meca/kit_lu_meca_masque_equipe.png",
         "modeles/kit_lu_meca/kit_lu_meca_masque_equipe_hiver.png",
         "modeles/kit_lu_meca/kit_lu_meca_metal.png",
@@ -309,8 +293,6 @@
         "modeles/unite_recon_base/unite_recon_base_emission.png",
         "modeles/unite_recon_base/unite_recon_base_emission_hiver.png",
         "modeles/unite_recon_base/unite_recon_base_lod0.glb",
-        "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-        "modeles/unite_recon_base/unite_recon_base_lod2.glb",
         "modeles/unite_recon_base/unite_recon_base_masque_equipe.png",
         "modeles/unite_recon_base/unite_recon_base_masque_equipe_hiver.png",
         "modeles/unite_recon_base/unite_recon_base_metal.png",
@@ -334,7 +316,6 @@
         "modeles/kit_fr_recon/kit_fr_recon_emission.png",
         "modeles/kit_fr_recon/kit_fr_recon_emission_hiver.png",
         "modeles/kit_fr_recon/kit_fr_recon_lod0.glb",
-        "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
         "modeles/kit_fr_recon/kit_fr_recon_masque_equipe.png",
         "modeles/kit_fr_recon/kit_fr_recon_masque_equipe_hiver.png",
         "modeles/kit_fr_recon/kit_fr_recon_metal.png",
@@ -358,7 +339,6 @@
         "modeles/kit_lu_recon/kit_lu_recon_emission.png",
         "modeles/kit_lu_recon/kit_lu_recon_emission_hiver.png",
         "modeles/kit_lu_recon/kit_lu_recon_lod0.glb",
-        "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
         "modeles/kit_lu_recon/kit_lu_recon_masque_equipe.png",
         "modeles/kit_lu_recon/kit_lu_recon_masque_equipe_hiver.png",
         "modeles/kit_lu_recon/kit_lu_recon_metal.png",
@@ -379,7 +359,6 @@
       "fichiers": [
         "modeles/terrain_plaine/terrain_plaine_albedo.png",
         "modeles/terrain_plaine/terrain_plaine_lod0.glb",
-        "modeles/terrain_plaine/terrain_plaine_lod1.glb",
         "modeles/terrain_plaine/terrain_plaine_normale.png",
         "modeles/terrain_plaine/terrain_plaine_occlusion.png",
         "modeles/terrain_plaine/terrain_plaine_rugosite.png"
@@ -399,7 +378,6 @@
         "modeles/terrain_foret/terrain_foret_albedo_hiver.png",
         "modeles/terrain_foret/terrain_foret_albedo_printemps.png",
         "modeles/terrain_foret/terrain_foret_lod0.glb",
-        "modeles/terrain_foret/terrain_foret_lod1.glb",
         "modeles/terrain_foret/terrain_foret_normale.png",
         "modeles/terrain_foret/terrain_foret_normale_automne.png",
         "modeles/terrain_foret/terrain_foret_normale_ete.png",
@@ -431,7 +409,6 @@
         "modeles/terrain_riviere/terrain_riviere_albedo_hiver.png",
         "modeles/terrain_riviere/terrain_riviere_albedo_printemps.png",
         "modeles/terrain_riviere/terrain_riviere_lod0.glb",
-        "modeles/terrain_riviere/terrain_riviere_lod1.glb",
         "modeles/terrain_riviere/terrain_riviere_normale.png",
         "modeles/terrain_riviere/terrain_riviere_normale_automne.png",
         "modeles/terrain_riviere/terrain_riviere_normale_ete.png",
@@ -463,7 +440,6 @@
         "modeles/terrain_route/terrain_route_albedo_hiver.png",
         "modeles/terrain_route/terrain_route_albedo_printemps.png",
         "modeles/terrain_route/terrain_route_lod0.glb",
-        "modeles/terrain_route/terrain_route_lod1.glb",
         "modeles/terrain_route/terrain_route_normale.png",
         "modeles/terrain_route/terrain_route_normale_automne.png",
         "modeles/terrain_route/terrain_route_normale_ete.png",
@@ -495,7 +471,6 @@
         "modeles/terrain_pont/terrain_pont_albedo_hiver.png",
         "modeles/terrain_pont/terrain_pont_albedo_printemps.png",
         "modeles/terrain_pont/terrain_pont_lod0.glb",
-        "modeles/terrain_pont/terrain_pont_lod1.glb",
         "modeles/terrain_pont/terrain_pont_normale.png",
         "modeles/terrain_pont/terrain_pont_normale_automne.png",
         "modeles/terrain_pont/terrain_pont_normale_ete.png",
@@ -528,7 +503,6 @@
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_emission_ete.png",
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_emission_hiver.png",
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod0.glb",
-        "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_masque_equipe.png",
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_masque_equipe_ete.png",
         "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_masque_equipe_hiver.png",
@@ -555,7 +529,6 @@
         "modeles/batiment_qg_lu/batiment_qg_lu_emission_ete.png",
         "modeles/batiment_qg_lu/batiment_qg_lu_emission_hiver.png",
         "modeles/batiment_qg_lu/batiment_qg_lu_lod0.glb",
-        "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
         "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe.png",
         "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe_ete.png",
         "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe_hiver.png",
@@ -581,8 +554,6 @@
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_albedo_hiver.png",
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_albedo_printemps.png",
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod0.glb",
-        "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod1.glb",
-        "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod2.glb",
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale.png",
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale_automne.png",
         "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale_ete.png",
@@ -609,8 +580,6 @@
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_albedo_hiver.png",
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_albedo_printemps.png",
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod0.glb",
-        "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod1.glb",
-        "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod2.glb",
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale.png",
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale_automne.png",
         "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale_ete.png",
@@ -635,8 +604,6 @@
         "modeles/decor_rocher_plaine/decor_rocher_plaine_albedo_ete.png",
         "modeles/decor_rocher_plaine/decor_rocher_plaine_albedo_hiver.png",
         "modeles/decor_rocher_plaine/decor_rocher_plaine_lod0.glb",
-        "modeles/decor_rocher_plaine/decor_rocher_plaine_lod1.glb",
-        "modeles/decor_rocher_plaine/decor_rocher_plaine_lod2.glb",
         "modeles/decor_rocher_plaine/decor_rocher_plaine_normale.png",
         "modeles/decor_rocher_plaine/decor_rocher_plaine_normale_ete.png",
         "modeles/decor_rocher_plaine/decor_rocher_plaine_normale_hiver.png",
@@ -689,11 +656,6 @@
     },
     {
       "chemin": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod0.glb",
-      "octets": 25592,
-      "sha256": "9800ae441bd6a973c353a742f5ea9d7cc6459c4e7b0c32e8a7477a7022630582"
-    },
-    {
-      "chemin": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
       "octets": 25592,
       "sha256": "9800ae441bd6a973c353a742f5ea9d7cc6459c4e7b0c32e8a7477a7022630582"
     },
@@ -778,11 +740,6 @@
       "sha256": "299f8a90aa2b7cb29d4c82a4cb51c4577a3ce1fb6a9ab664ad8b5f7ad7fad504"
     },
     {
-      "chemin": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "octets": 25524,
-      "sha256": "299f8a90aa2b7cb29d4c82a4cb51c4577a3ce1fb6a9ab664ad8b5f7ad7fad504"
-    },
-    {
       "chemin": "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe.png",
       "octets": 1968,
       "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2"
@@ -856,16 +813,6 @@
       "chemin": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod0.glb",
       "octets": 68040,
       "sha256": "5b5d81d69b2a7e165ea438c75b96842154f79c77f167697c153bdf245f069ef2"
-    },
-    {
-      "chemin": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod1.glb",
-      "octets": 38376,
-      "sha256": "92f7fdf7ba669c50c8dd4f421dac992d880f2ff27b7dd58285d93440ddfc68d1"
-    },
-    {
-      "chemin": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod2.glb",
-      "octets": 14208,
-      "sha256": "3d208934808072eca03b16fa48ff0c5e13780043252f2ae899ea9859aa9b71b7"
     },
     {
       "chemin": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale.png",
@@ -948,16 +895,6 @@
       "sha256": "735207fd0bcfcda91f5e061f40cf3f49f195cc14324a0da96f20ab8c4a33e9b8"
     },
     {
-      "chemin": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod1.glb",
-      "octets": 38360,
-      "sha256": "4f4cc034d3b209caefc31bc3bb54ab3fe4d28891211b0e0c92e86546107e7c59"
-    },
-    {
-      "chemin": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod2.glb",
-      "octets": 14180,
-      "sha256": "178efb16f4f49cc869544b5d00079c27aab34780fe92ed8d43f4bed2e1a30d4a"
-    },
-    {
       "chemin": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale.png",
       "octets": 2976,
       "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39"
@@ -1028,16 +965,6 @@
       "sha256": "439eb39ad17f816bbb7fca7b9eab77831d47de90d635a9cd375e158914baf569"
     },
     {
-      "chemin": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod1.glb",
-      "octets": 8608,
-      "sha256": "67233803922f9a9e054915b45854bbe1a7067ce3e18bdc7bed0e16713bbcaf96"
-    },
-    {
-      "chemin": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod2.glb",
-      "octets": 4040,
-      "sha256": "de48ded5d2d7134ae3ff8e04b28a415561ac80df7bac8fca70441525f6f221bc"
-    },
-    {
       "chemin": "modeles/decor_rocher_plaine/decor_rocher_plaine_normale.png",
       "octets": 2976,
       "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39"
@@ -1081,11 +1008,6 @@
       "chemin": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod0.glb",
       "octets": 121264,
       "sha256": "374f3dd54e424123102c2e5e6ea92069881f8e3081b9c9d98eeeea8b7374f60f"
-    },
-    {
-      "chemin": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
-      "octets": 95084,
-      "sha256": "fc36e33855c311fdd324380c3f7e664f0007bab5aec1f3aebc162120c584d806"
     },
     {
       "chemin": "modeles/kit_fr_char_leger/kit_fr_char_leger_masque_equipe.png",
@@ -1153,11 +1075,6 @@
       "sha256": "aeb2afd1f8657984761a0c0518c4c3354d2947ab261c15f8dc8868f5f90e90c6"
     },
     {
-      "chemin": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "octets": 164208,
-      "sha256": "87f4e456e60f331673891b73dc8dbd2609902cb7207271381a88f3cb0fb050ae"
-    },
-    {
       "chemin": "modeles/kit_fr_genie/kit_fr_genie_masque_equipe.png",
       "octets": 577,
       "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15"
@@ -1208,11 +1125,6 @@
       "sha256": "7322b2fc88c8c4eb593f5ccb9038d990bf63c93f5852f176144fc2615ca923e3"
     },
     {
-      "chemin": "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
-      "octets": 174072,
-      "sha256": "921f1d58dacbba3361e95539688804ff92927dfb60bf7324e7f06bc2e6c3e069"
-    },
-    {
       "chemin": "modeles/kit_fr_infanterie/kit_fr_infanterie_masque_equipe.png",
       "octets": 459,
       "sha256": "fa0637bfaabbe0ac44d29bf9fa1d26031c28b68077f209b30a869cdf2e2a4b9f"
@@ -1241,11 +1153,6 @@
       "chemin": "modeles/kit_fr_meca/kit_fr_meca_lod0.glb",
       "octets": 411616,
       "sha256": "3b2fd57cca4feb1f072f4f87f38b424d61d865617f70d38022799d36a19daa42"
-    },
-    {
-      "chemin": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "octets": 165772,
-      "sha256": "ae1ebbd84fe4c7367990a4aa55c75a09e906a0de2729b0a0dbf70fdd214f26cd"
     },
     {
       "chemin": "modeles/kit_fr_meca/kit_fr_meca_masque_equipe.png",
@@ -1313,11 +1220,6 @@
       "sha256": "9e4199e5806456013e821e200d2d87c58b8c395a2662ff066d1aa04790232f51"
     },
     {
-      "chemin": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "octets": 53320,
-      "sha256": "626ce74cd7fdb55a4cd50d875370d4da3074d6da86669eff0aba0b0a2d2e291b"
-    },
-    {
       "chemin": "modeles/kit_fr_recon/kit_fr_recon_masque_equipe.png",
       "octets": 577,
       "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15"
@@ -1371,11 +1273,6 @@
       "chemin": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod0.glb",
       "octets": 121264,
       "sha256": "0b966198382662f459502d995d93e9eb591fbc9ed15a95c98db70059b4c73df5"
-    },
-    {
-      "chemin": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "octets": 95084,
-      "sha256": "4ec493d5139893c19b64fe48ab5108375e92fb85bd92434edbbd141f3e8586e2"
     },
     {
       "chemin": "modeles/kit_lu_char_leger/kit_lu_char_leger_masque_equipe.png",
@@ -1443,11 +1340,6 @@
       "sha256": "2a89e04893b71f9d45b692726cd98b62fa150448eb8361ca27f26f9c319ca7ec"
     },
     {
-      "chemin": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "octets": 164208,
-      "sha256": "deda6daba368dce0c1b7007b7ae04e88455dcf457373ee2555bac6ba6e26cfa6"
-    },
-    {
       "chemin": "modeles/kit_lu_genie/kit_lu_genie_masque_equipe.png",
       "octets": 577,
       "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15"
@@ -1498,11 +1390,6 @@
       "sha256": "ea1a9f9e113ea18c466797cdeed173b7051c2e6a7b80c7c007f3b1a6dd924ce0"
     },
     {
-      "chemin": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
-      "octets": 174072,
-      "sha256": "568abf8dba738e05ad654bae5049370e5e4cf340b52779d1e07a40a840e729e1"
-    },
-    {
       "chemin": "modeles/kit_lu_infanterie/kit_lu_infanterie_masque_equipe.png",
       "octets": 459,
       "sha256": "fa0637bfaabbe0ac44d29bf9fa1d26031c28b68077f209b30a869cdf2e2a4b9f"
@@ -1531,11 +1418,6 @@
       "chemin": "modeles/kit_lu_meca/kit_lu_meca_lod0.glb",
       "octets": 411616,
       "sha256": "8da6e58fd32f5823a47dbcebb62738b63741a6a523959d510cea3770559fa0ae"
-    },
-    {
-      "chemin": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "octets": 165772,
-      "sha256": "64ee08be475f4cdaee050505719160b07d2197abf8a6e7c95472c8b0c4b9d917"
     },
     {
       "chemin": "modeles/kit_lu_meca/kit_lu_meca_masque_equipe.png",
@@ -1601,11 +1483,6 @@
       "chemin": "modeles/kit_lu_recon/kit_lu_recon_lod0.glb",
       "octets": 83548,
       "sha256": "f7f86779468a69093f8c9edd59749615eb6a600314fcd30e45611dd7d66c1330"
-    },
-    {
-      "chemin": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "octets": 53320,
-      "sha256": "9c5e547718265640179897a44e5921aa90dc6816fc6596af07d1b2e2fc2f4e1d"
     },
     {
       "chemin": "modeles/kit_lu_recon/kit_lu_recon_masque_equipe.png",
@@ -1674,11 +1551,6 @@
     },
     {
       "chemin": "modeles/terrain_foret/terrain_foret_lod0.glb",
-      "octets": 3104,
-      "sha256": "c152b635e119da87500fcac6f773cec02f3bf86e1cd0ea78785608482dace1ec"
-    },
-    {
-      "chemin": "modeles/terrain_foret/terrain_foret_lod1.glb",
       "octets": 3104,
       "sha256": "c152b635e119da87500fcac6f773cec02f3bf86e1cd0ea78785608482dace1ec"
     },
@@ -1759,18 +1631,13 @@
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_albedo.png",
-      "octets": 1182518,
-      "sha256": "53bde505d8d02dd51b6198df3e6baaf583ffacc0536f400455cd2eaf3527c9d5"
+      "octets": 1145285,
+      "sha256": "57dc07cf9dcfba720fc4d2d35ff09c00c0eef38e639930afec0ec7c114c0e1f4"
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_lod0.glb",
-      "octets": 52216,
-      "sha256": "66b97d71b9d5d05fb39ba159b62c123cdd218af392677e3566907b69af3f7c9f"
-    },
-    {
-      "chemin": "modeles/terrain_plaine/terrain_plaine_lod1.glb",
-      "octets": 15344,
-      "sha256": "ca809ee23169d40087fc2432b070f548bf944aad8324c95ea2cbf8b9b519f199"
+      "octets": 267132,
+      "sha256": "8cbd45cad89f23a28444c4f52477809c95c98eebb90b39846586fcc4e1bfd8be"
     },
     {
       "chemin": "modeles/terrain_plaine/terrain_plaine_normale.png",
@@ -1814,11 +1681,6 @@
     },
     {
       "chemin": "modeles/terrain_pont/terrain_pont_lod0.glb",
-      "octets": 29516,
-      "sha256": "5025db67beb32bbbee894f802250be3f64944db52c4a678edf23dd2fabc262a7"
-    },
-    {
-      "chemin": "modeles/terrain_pont/terrain_pont_lod1.glb",
       "octets": 29516,
       "sha256": "5025db67beb32bbbee894f802250be3f64944db52c4a678edf23dd2fabc262a7"
     },
@@ -1928,11 +1790,6 @@
       "sha256": "f0f43d29e0a2fa9895f419d7f34321bdf765e39bfbdd8e240d49d03fa3c2a7d5"
     },
     {
-      "chemin": "modeles/terrain_riviere/terrain_riviere_lod1.glb",
-      "octets": 3112,
-      "sha256": "f0f43d29e0a2fa9895f419d7f34321bdf765e39bfbdd8e240d49d03fa3c2a7d5"
-    },
-    {
       "chemin": "modeles/terrain_riviere/terrain_riviere_normale.png",
       "octets": 29757,
       "sha256": "193858e986cd0ad7e0cd0b9ee63257aea8128642741f22ca08f782a99f048830"
@@ -2038,11 +1895,6 @@
       "sha256": "ce7e360bf16b3275dfa1341425267707de8823c1bba0c0da8314dce707fb3203"
     },
     {
-      "chemin": "modeles/terrain_route/terrain_route_lod1.glb",
-      "octets": 3104,
-      "sha256": "ce7e360bf16b3275dfa1341425267707de8823c1bba0c0da8314dce707fb3203"
-    },
-    {
       "chemin": "modeles/terrain_route/terrain_route_normale.png",
       "octets": 260371,
       "sha256": "bba2129f702eac35931dec779f045b9a8a84492485698605f2b88aec16486ab9"
@@ -2133,16 +1985,6 @@
       "sha256": "d8b5ed73a6027fd3bfb688f8ec1e45760b14fb52413786e3123974b2661c008a"
     },
     {
-      "chemin": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "octets": 95104,
-      "sha256": "e7dcd18164ca0c7c7463f700eb7ef55e5e03bf2153e14a7eb7958b901609221b"
-    },
-    {
-      "chemin": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "octets": 79072,
-      "sha256": "d8157999876faaec327833a66ef5ebc1e8df10e93fa2a5eda36e01556fa1373d"
-    },
-    {
       "chemin": "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe.png",
       "octets": 1968,
       "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2"
@@ -2208,16 +2050,6 @@
       "sha256": "ce2760c103f02ad596052d8e74bffcc2311c08b0b648e5b7c0759989cdec5ed9"
     },
     {
-      "chemin": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "octets": 164232,
-      "sha256": "dcef15893105b93a40f45c83dbf9c5fb32e2b73b2c85c0d37f0e00916725ec09"
-    },
-    {
-      "chemin": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "octets": 52324,
-      "sha256": "f1231ae6033e7c4de048038e8c960f12c5d76fa6598218d90a4dcf38c9ae5aa6"
-    },
-    {
       "chemin": "modeles/unite_genie_base/unite_genie_base_masque_equipe.png",
       "octets": 1968,
       "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2"
@@ -2268,16 +2100,6 @@
       "sha256": "a6e13f93d10d23757f8e684d5af6eebe2da343454c9ef979ded5cf3b9d6f7b29"
     },
     {
-      "chemin": "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-      "octets": 174104,
-      "sha256": "62f7a9baa82bfde15e136099321b77034fed999045c3a3746736bc7368a06e5a"
-    },
-    {
-      "chemin": "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
-      "octets": 115980,
-      "sha256": "5e563c3c5439c1b9c5a2b94c5c1938e78e1e965cd64f0bc0007d3cbb59f794c5"
-    },
-    {
       "chemin": "modeles/unite_infanterie_base/unite_infanterie_base_masque_equipe.png",
       "octets": 1009,
       "sha256": "1d40220b4b520e4853c97750305c9b916d21608830d32829fe9e1e4f75810087"
@@ -2306,16 +2128,6 @@
       "chemin": "modeles/unite_meca_base/unite_meca_base_lod0.glb",
       "octets": 411636,
       "sha256": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025"
-    },
-    {
-      "chemin": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "octets": 165792,
-      "sha256": "1449ba81197305fb53b65d62c180ceea12aa7c24f1df42542d4d6c035f76e6f4"
-    },
-    {
-      "chemin": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
-      "octets": 53148,
-      "sha256": "76c91c6fc5215a464cba9a7aff648f7c52cc2c1db3391d6a50e7003286b7b974"
     },
     {
       "chemin": "modeles/unite_meca_base/unite_meca_base_masque_equipe.png",
@@ -2381,16 +2193,6 @@
       "chemin": "modeles/unite_recon_base/unite_recon_base_lod0.glb",
       "octets": 83572,
       "sha256": "0800c043edf22b57db7bd120e3274b0668e813e59678cffbeb1f4e794c8ad0df"
-    },
-    {
-      "chemin": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "octets": 53344,
-      "sha256": "bc78e56b6351d5fffe9e4246f89127957eb141ae3ce4a69bbfde4144df531194"
-    },
-    {
-      "chemin": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "octets": 44316,
-      "sha256": "700a0100569eb3720e96f8ca8a5c59d8bcce0dc8b59badb781afda5ac01e07e6"
     },
     {
       "chemin": "modeles/unite_recon_base/unite_recon_base_masque_equipe.png",
@@ -2460,56 +2262,6 @@
       "cible": "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe.png"
     },
     {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "uri": "unite_char_leger_base_albedo.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "uri": "unite_char_leger_base_normale.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "uri": "unite_char_leger_base_rugosite.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "uri": "unite_char_leger_base_metal.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod1.glb",
-      "uri": "unite_char_leger_base_masque_equipe.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "uri": "unite_char_leger_base_albedo.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "uri": "unite_char_leger_base_normale.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "uri": "unite_char_leger_base_rugosite.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "uri": "unite_char_leger_base_metal.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_char_leger_base/unite_char_leger_base_lod2.glb",
-      "uri": "unite_char_leger_base_masque_equipe.png",
-      "cible": "modeles/unite_char_leger_base/unite_char_leger_base_masque_equipe.png"
-    },
-    {
       "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod0.glb",
       "uri": "kit_fr_char_leger_albedo.png",
       "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_albedo.png"
@@ -2531,31 +2283,6 @@
     },
     {
       "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod0.glb",
-      "uri": "kit_fr_char_leger_masque_equipe.png",
-      "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
-      "uri": "kit_fr_char_leger_albedo.png",
-      "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
-      "uri": "kit_fr_char_leger_normale.png",
-      "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_normale.png"
-    },
-    {
-      "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
-      "uri": "kit_fr_char_leger_rugosite.png",
-      "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
-      "uri": "kit_fr_char_leger_metal.png",
-      "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_metal.png"
-    },
-    {
-      "modele": "modeles/kit_fr_char_leger/kit_fr_char_leger_lod1.glb",
       "uri": "kit_fr_char_leger_masque_equipe.png",
       "cible": "modeles/kit_fr_char_leger/kit_fr_char_leger_masque_equipe.png"
     },
@@ -2585,31 +2312,6 @@
       "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_masque_equipe.png"
     },
     {
-      "modele": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "uri": "kit_lu_char_leger_albedo.png",
-      "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "uri": "kit_lu_char_leger_normale.png",
-      "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_normale.png"
-    },
-    {
-      "modele": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "uri": "kit_lu_char_leger_rugosite.png",
-      "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "uri": "kit_lu_char_leger_metal.png",
-      "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_metal.png"
-    },
-    {
-      "modele": "modeles/kit_lu_char_leger/kit_lu_char_leger_lod1.glb",
-      "uri": "kit_lu_char_leger_masque_equipe.png",
-      "cible": "modeles/kit_lu_char_leger/kit_lu_char_leger_masque_equipe.png"
-    },
-    {
       "modele": "modeles/unite_genie_base/unite_genie_base_lod0.glb",
       "uri": "unite_genie_base_albedo.png",
       "cible": "modeles/unite_genie_base/unite_genie_base_albedo.png"
@@ -2636,66 +2338,6 @@
     },
     {
       "modele": "modeles/unite_genie_base/unite_genie_base_lod0.glb",
-      "uri": "unite_genie_base_emission.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_emission.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_albedo.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_normale.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_rugosite.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_metal.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_masque_equipe.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod1.glb",
-      "uri": "unite_genie_base_emission.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_emission.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "uri": "unite_genie_base_albedo.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "uri": "unite_genie_base_normale.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "uri": "unite_genie_base_rugosite.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "uri": "unite_genie_base_metal.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
-      "uri": "unite_genie_base_masque_equipe.png",
-      "cible": "modeles/unite_genie_base/unite_genie_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_genie_base/unite_genie_base_lod2.glb",
       "uri": "unite_genie_base_emission.png",
       "cible": "modeles/unite_genie_base/unite_genie_base_emission.png"
     },
@@ -2730,36 +2372,6 @@
       "cible": "modeles/kit_fr_genie/kit_fr_genie_emission.png"
     },
     {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_albedo.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_normale.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_normale.png"
-    },
-    {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_rugosite.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_metal.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_metal.png"
-    },
-    {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_masque_equipe.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/kit_fr_genie/kit_fr_genie_lod1.glb",
-      "uri": "kit_fr_genie_emission.png",
-      "cible": "modeles/kit_fr_genie/kit_fr_genie_emission.png"
-    },
-    {
       "modele": "modeles/kit_lu_genie/kit_lu_genie_lod0.glb",
       "uri": "kit_lu_genie_albedo.png",
       "cible": "modeles/kit_lu_genie/kit_lu_genie_albedo.png"
@@ -2790,36 +2402,6 @@
       "cible": "modeles/kit_lu_genie/kit_lu_genie_emission.png"
     },
     {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_albedo.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_normale.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_normale.png"
-    },
-    {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_rugosite.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_metal.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_metal.png"
-    },
-    {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_masque_equipe.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/kit_lu_genie/kit_lu_genie_lod1.glb",
-      "uri": "kit_lu_genie_emission.png",
-      "cible": "modeles/kit_lu_genie/kit_lu_genie_emission.png"
-    },
-    {
       "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod0.glb",
       "uri": "unite_infanterie_base_albedo.png",
       "cible": "modeles/unite_infanterie_base/unite_infanterie_base_albedo.png"
@@ -2836,46 +2418,6 @@
     },
     {
       "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod0.glb",
-      "uri": "unite_infanterie_base_masque_equipe.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-      "uri": "unite_infanterie_base_albedo.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-      "uri": "unite_infanterie_base_normale.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-      "uri": "unite_infanterie_base_rugosite.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod1.glb",
-      "uri": "unite_infanterie_base_masque_equipe.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
-      "uri": "unite_infanterie_base_albedo.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
-      "uri": "unite_infanterie_base_normale.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
-      "uri": "unite_infanterie_base_rugosite.png",
-      "cible": "modeles/unite_infanterie_base/unite_infanterie_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_infanterie_base/unite_infanterie_base_lod2.glb",
       "uri": "unite_infanterie_base_masque_equipe.png",
       "cible": "modeles/unite_infanterie_base/unite_infanterie_base_masque_equipe.png"
     },
@@ -2900,26 +2442,6 @@
       "cible": "modeles/kit_fr_infanterie/kit_fr_infanterie_masque_equipe.png"
     },
     {
-      "modele": "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
-      "uri": "kit_fr_infanterie_albedo.png",
-      "cible": "modeles/kit_fr_infanterie/kit_fr_infanterie_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
-      "uri": "kit_fr_infanterie_normale.png",
-      "cible": "modeles/kit_fr_infanterie/kit_fr_infanterie_normale.png"
-    },
-    {
-      "modele": "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
-      "uri": "kit_fr_infanterie_rugosite.png",
-      "cible": "modeles/kit_fr_infanterie/kit_fr_infanterie_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_fr_infanterie/kit_fr_infanterie_lod1.glb",
-      "uri": "kit_fr_infanterie_masque_equipe.png",
-      "cible": "modeles/kit_fr_infanterie/kit_fr_infanterie_masque_equipe.png"
-    },
-    {
       "modele": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod0.glb",
       "uri": "kit_lu_infanterie_albedo.png",
       "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_albedo.png"
@@ -2940,26 +2462,6 @@
       "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_masque_equipe.png"
     },
     {
-      "modele": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
-      "uri": "kit_lu_infanterie_albedo.png",
-      "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
-      "uri": "kit_lu_infanterie_normale.png",
-      "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_normale.png"
-    },
-    {
-      "modele": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
-      "uri": "kit_lu_infanterie_rugosite.png",
-      "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_lu_infanterie/kit_lu_infanterie_lod1.glb",
-      "uri": "kit_lu_infanterie_masque_equipe.png",
-      "cible": "modeles/kit_lu_infanterie/kit_lu_infanterie_masque_equipe.png"
-    },
-    {
       "modele": "modeles/unite_meca_base/unite_meca_base_lod0.glb",
       "uri": "unite_meca_base_albedo.png",
       "cible": "modeles/unite_meca_base/unite_meca_base_albedo.png"
@@ -2981,56 +2483,6 @@
     },
     {
       "modele": "modeles/unite_meca_base/unite_meca_base_lod0.glb",
-      "uri": "unite_meca_base_masque_equipe.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "uri": "unite_meca_base_albedo.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "uri": "unite_meca_base_normale.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "uri": "unite_meca_base_rugosite.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "uri": "unite_meca_base_metal.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod1.glb",
-      "uri": "unite_meca_base_masque_equipe.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
-      "uri": "unite_meca_base_albedo.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
-      "uri": "unite_meca_base_normale.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
-      "uri": "unite_meca_base_rugosite.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
-      "uri": "unite_meca_base_metal.png",
-      "cible": "modeles/unite_meca_base/unite_meca_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_meca_base/unite_meca_base_lod2.glb",
       "uri": "unite_meca_base_masque_equipe.png",
       "cible": "modeles/unite_meca_base/unite_meca_base_masque_equipe.png"
     },
@@ -3060,31 +2512,6 @@
       "cible": "modeles/kit_fr_meca/kit_fr_meca_masque_equipe.png"
     },
     {
-      "modele": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "uri": "kit_fr_meca_albedo.png",
-      "cible": "modeles/kit_fr_meca/kit_fr_meca_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "uri": "kit_fr_meca_normale.png",
-      "cible": "modeles/kit_fr_meca/kit_fr_meca_normale.png"
-    },
-    {
-      "modele": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "uri": "kit_fr_meca_rugosite.png",
-      "cible": "modeles/kit_fr_meca/kit_fr_meca_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "uri": "kit_fr_meca_metal.png",
-      "cible": "modeles/kit_fr_meca/kit_fr_meca_metal.png"
-    },
-    {
-      "modele": "modeles/kit_fr_meca/kit_fr_meca_lod1.glb",
-      "uri": "kit_fr_meca_masque_equipe.png",
-      "cible": "modeles/kit_fr_meca/kit_fr_meca_masque_equipe.png"
-    },
-    {
       "modele": "modeles/kit_lu_meca/kit_lu_meca_lod0.glb",
       "uri": "kit_lu_meca_albedo.png",
       "cible": "modeles/kit_lu_meca/kit_lu_meca_albedo.png"
@@ -3110,31 +2537,6 @@
       "cible": "modeles/kit_lu_meca/kit_lu_meca_masque_equipe.png"
     },
     {
-      "modele": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "uri": "kit_lu_meca_albedo.png",
-      "cible": "modeles/kit_lu_meca/kit_lu_meca_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "uri": "kit_lu_meca_normale.png",
-      "cible": "modeles/kit_lu_meca/kit_lu_meca_normale.png"
-    },
-    {
-      "modele": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "uri": "kit_lu_meca_rugosite.png",
-      "cible": "modeles/kit_lu_meca/kit_lu_meca_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "uri": "kit_lu_meca_metal.png",
-      "cible": "modeles/kit_lu_meca/kit_lu_meca_metal.png"
-    },
-    {
-      "modele": "modeles/kit_lu_meca/kit_lu_meca_lod1.glb",
-      "uri": "kit_lu_meca_masque_equipe.png",
-      "cible": "modeles/kit_lu_meca/kit_lu_meca_masque_equipe.png"
-    },
-    {
       "modele": "modeles/unite_recon_base/unite_recon_base_lod0.glb",
       "uri": "unite_recon_base_albedo.png",
       "cible": "modeles/unite_recon_base/unite_recon_base_albedo.png"
@@ -3161,66 +2563,6 @@
     },
     {
       "modele": "modeles/unite_recon_base/unite_recon_base_lod0.glb",
-      "uri": "unite_recon_base_emission.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_emission.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_albedo.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_normale.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_rugosite.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_metal.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_masque_equipe.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod1.glb",
-      "uri": "unite_recon_base_emission.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_emission.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "uri": "unite_recon_base_albedo.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_albedo.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "uri": "unite_recon_base_normale.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_normale.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "uri": "unite_recon_base_rugosite.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_rugosite.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "uri": "unite_recon_base_metal.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_metal.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
-      "uri": "unite_recon_base_masque_equipe.png",
-      "cible": "modeles/unite_recon_base/unite_recon_base_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/unite_recon_base/unite_recon_base_lod2.glb",
       "uri": "unite_recon_base_emission.png",
       "cible": "modeles/unite_recon_base/unite_recon_base_emission.png"
     },
@@ -3255,36 +2597,6 @@
       "cible": "modeles/kit_fr_recon/kit_fr_recon_emission.png"
     },
     {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_albedo.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_normale.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_normale.png"
-    },
-    {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_rugosite.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_metal.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_metal.png"
-    },
-    {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_masque_equipe.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/kit_fr_recon/kit_fr_recon_lod1.glb",
-      "uri": "kit_fr_recon_emission.png",
-      "cible": "modeles/kit_fr_recon/kit_fr_recon_emission.png"
-    },
-    {
       "modele": "modeles/kit_lu_recon/kit_lu_recon_lod0.glb",
       "uri": "kit_lu_recon_albedo.png",
       "cible": "modeles/kit_lu_recon/kit_lu_recon_albedo.png"
@@ -3315,36 +2627,6 @@
       "cible": "modeles/kit_lu_recon/kit_lu_recon_emission.png"
     },
     {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_albedo.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_albedo.png"
-    },
-    {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_normale.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_normale.png"
-    },
-    {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_rugosite.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_rugosite.png"
-    },
-    {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_metal.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_metal.png"
-    },
-    {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_masque_equipe.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_masque_equipe.png"
-    },
-    {
-      "modele": "modeles/kit_lu_recon/kit_lu_recon_lod1.glb",
-      "uri": "kit_lu_recon_emission.png",
-      "cible": "modeles/kit_lu_recon/kit_lu_recon_emission.png"
-    },
-    {
       "modele": "modeles/terrain_plaine/terrain_plaine_lod0.glb",
       "uri": "terrain_plaine_albedo.png",
       "cible": "modeles/terrain_plaine/terrain_plaine_albedo.png"
@@ -3361,26 +2643,6 @@
     },
     {
       "modele": "modeles/terrain_plaine/terrain_plaine_lod0.glb",
-      "uri": "terrain_plaine_occlusion.png",
-      "cible": "modeles/terrain_plaine/terrain_plaine_occlusion.png"
-    },
-    {
-      "modele": "modeles/terrain_plaine/terrain_plaine_lod1.glb",
-      "uri": "terrain_plaine_albedo.png",
-      "cible": "modeles/terrain_plaine/terrain_plaine_albedo.png"
-    },
-    {
-      "modele": "modeles/terrain_plaine/terrain_plaine_lod1.glb",
-      "uri": "terrain_plaine_normale.png",
-      "cible": "modeles/terrain_plaine/terrain_plaine_normale.png"
-    },
-    {
-      "modele": "modeles/terrain_plaine/terrain_plaine_lod1.glb",
-      "uri": "terrain_plaine_rugosite.png",
-      "cible": "modeles/terrain_plaine/terrain_plaine_rugosite.png"
-    },
-    {
-      "modele": "modeles/terrain_plaine/terrain_plaine_lod1.glb",
       "uri": "terrain_plaine_occlusion.png",
       "cible": "modeles/terrain_plaine/terrain_plaine_occlusion.png"
     },
@@ -3405,26 +2667,6 @@
       "cible": "modeles/terrain_foret/terrain_foret_occlusion.png"
     },
     {
-      "modele": "modeles/terrain_foret/terrain_foret_lod1.glb",
-      "uri": "terrain_foret_albedo.png",
-      "cible": "modeles/terrain_foret/terrain_foret_albedo.png"
-    },
-    {
-      "modele": "modeles/terrain_foret/terrain_foret_lod1.glb",
-      "uri": "terrain_foret_normale.png",
-      "cible": "modeles/terrain_foret/terrain_foret_normale.png"
-    },
-    {
-      "modele": "modeles/terrain_foret/terrain_foret_lod1.glb",
-      "uri": "terrain_foret_rugosite.png",
-      "cible": "modeles/terrain_foret/terrain_foret_rugosite.png"
-    },
-    {
-      "modele": "modeles/terrain_foret/terrain_foret_lod1.glb",
-      "uri": "terrain_foret_occlusion.png",
-      "cible": "modeles/terrain_foret/terrain_foret_occlusion.png"
-    },
-    {
       "modele": "modeles/terrain_riviere/terrain_riviere_lod0.glb",
       "uri": "terrain_riviere_albedo.png",
       "cible": "modeles/terrain_riviere/terrain_riviere_albedo.png"
@@ -3441,26 +2683,6 @@
     },
     {
       "modele": "modeles/terrain_riviere/terrain_riviere_lod0.glb",
-      "uri": "terrain_riviere_occlusion.png",
-      "cible": "modeles/terrain_riviere/terrain_riviere_occlusion.png"
-    },
-    {
-      "modele": "modeles/terrain_riviere/terrain_riviere_lod1.glb",
-      "uri": "terrain_riviere_albedo.png",
-      "cible": "modeles/terrain_riviere/terrain_riviere_albedo.png"
-    },
-    {
-      "modele": "modeles/terrain_riviere/terrain_riviere_lod1.glb",
-      "uri": "terrain_riviere_normale.png",
-      "cible": "modeles/terrain_riviere/terrain_riviere_normale.png"
-    },
-    {
-      "modele": "modeles/terrain_riviere/terrain_riviere_lod1.glb",
-      "uri": "terrain_riviere_rugosite.png",
-      "cible": "modeles/terrain_riviere/terrain_riviere_rugosite.png"
-    },
-    {
-      "modele": "modeles/terrain_riviere/terrain_riviere_lod1.glb",
       "uri": "terrain_riviere_occlusion.png",
       "cible": "modeles/terrain_riviere/terrain_riviere_occlusion.png"
     },
@@ -3485,26 +2707,6 @@
       "cible": "modeles/terrain_route/terrain_route_occlusion.png"
     },
     {
-      "modele": "modeles/terrain_route/terrain_route_lod1.glb",
-      "uri": "terrain_route_albedo.png",
-      "cible": "modeles/terrain_route/terrain_route_albedo.png"
-    },
-    {
-      "modele": "modeles/terrain_route/terrain_route_lod1.glb",
-      "uri": "terrain_route_normale.png",
-      "cible": "modeles/terrain_route/terrain_route_normale.png"
-    },
-    {
-      "modele": "modeles/terrain_route/terrain_route_lod1.glb",
-      "uri": "terrain_route_rugosite.png",
-      "cible": "modeles/terrain_route/terrain_route_rugosite.png"
-    },
-    {
-      "modele": "modeles/terrain_route/terrain_route_lod1.glb",
-      "uri": "terrain_route_occlusion.png",
-      "cible": "modeles/terrain_route/terrain_route_occlusion.png"
-    },
-    {
       "modele": "modeles/terrain_pont/terrain_pont_lod0.glb",
       "uri": "terrain_pont_albedo.png",
       "cible": "modeles/terrain_pont/terrain_pont_albedo.png"
@@ -3521,26 +2723,6 @@
     },
     {
       "modele": "modeles/terrain_pont/terrain_pont_lod0.glb",
-      "uri": "terrain_pont_occlusion.png",
-      "cible": "modeles/terrain_pont/terrain_pont_occlusion.png"
-    },
-    {
-      "modele": "modeles/terrain_pont/terrain_pont_lod1.glb",
-      "uri": "terrain_pont_albedo.png",
-      "cible": "modeles/terrain_pont/terrain_pont_albedo.png"
-    },
-    {
-      "modele": "modeles/terrain_pont/terrain_pont_lod1.glb",
-      "uri": "terrain_pont_normale.png",
-      "cible": "modeles/terrain_pont/terrain_pont_normale.png"
-    },
-    {
-      "modele": "modeles/terrain_pont/terrain_pont_lod1.glb",
-      "uri": "terrain_pont_rugosite.png",
-      "cible": "modeles/terrain_pont/terrain_pont_rugosite.png"
-    },
-    {
-      "modele": "modeles/terrain_pont/terrain_pont_lod1.glb",
       "uri": "terrain_pont_occlusion.png",
       "cible": "modeles/terrain_pont/terrain_pont_occlusion.png"
     },
@@ -3570,31 +2752,6 @@
       "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_masque_equipe.png"
     },
     {
-      "modele": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
-      "uri": "batiment_qg_fr_ile_de_france_albedo.png",
-      "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_albedo.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
-      "uri": "batiment_qg_fr_ile_de_france_normale.png",
-      "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_normale.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
-      "uri": "batiment_qg_fr_ile_de_france_rugosite.png",
-      "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_rugosite.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
-      "uri": "batiment_qg_fr_ile_de_france_emission.png",
-      "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_emission.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_lod1.glb",
-      "uri": "batiment_qg_fr_ile_de_france_masque_equipe.png",
-      "cible": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_masque_equipe.png"
-    },
-    {
       "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod0.glb",
       "uri": "batiment_qg_lu_albedo.png",
       "cible": "modeles/batiment_qg_lu/batiment_qg_lu_albedo.png"
@@ -3620,31 +2777,6 @@
       "cible": "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe.png"
     },
     {
-      "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "uri": "batiment_qg_lu_albedo.png",
-      "cible": "modeles/batiment_qg_lu/batiment_qg_lu_albedo.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "uri": "batiment_qg_lu_normale.png",
-      "cible": "modeles/batiment_qg_lu/batiment_qg_lu_normale.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "uri": "batiment_qg_lu_rugosite.png",
-      "cible": "modeles/batiment_qg_lu/batiment_qg_lu_rugosite.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "uri": "batiment_qg_lu_emission.png",
-      "cible": "modeles/batiment_qg_lu/batiment_qg_lu_emission.png"
-    },
-    {
-      "modele": "modeles/batiment_qg_lu/batiment_qg_lu_lod1.glb",
-      "uri": "batiment_qg_lu_masque_equipe.png",
-      "cible": "modeles/batiment_qg_lu/batiment_qg_lu_masque_equipe.png"
-    },
-    {
       "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod0.glb",
       "uri": "decor_arbre_plaine_fr_ile_de_france_albedo.png",
       "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_albedo.png"
@@ -3656,36 +2788,6 @@
     },
     {
       "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod0.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_rugosite.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_rugosite.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod1.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_albedo.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod1.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_normale.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod1.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_rugosite.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_rugosite.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod2.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_albedo.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod2.glb",
-      "uri": "decor_arbre_plaine_fr_ile_de_france_normale.png",
-      "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_normale.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_lod2.glb",
       "uri": "decor_arbre_plaine_fr_ile_de_france_rugosite.png",
       "cible": "modeles/decor_arbre_plaine_fr_ile_de_france/decor_arbre_plaine_fr_ile_de_france_rugosite.png"
     },
@@ -3705,36 +2807,6 @@
       "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_rugosite.png"
     },
     {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod1.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_albedo.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod1.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_normale.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod1.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_rugosite.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_rugosite.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod2.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_albedo.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod2.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_normale.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_normale.png"
-    },
-    {
-      "modele": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_lod2.glb",
-      "uri": "decor_arbre_foret_fr_centre_val_de_loire_rugosite.png",
-      "cible": "modeles/decor_arbre_foret_fr_centre_val_de_loire/decor_arbre_foret_fr_centre_val_de_loire_rugosite.png"
-    },
-    {
       "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod0.glb",
       "uri": "decor_rocher_plaine_albedo.png",
       "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_albedo.png"
@@ -3746,36 +2818,6 @@
     },
     {
       "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod0.glb",
-      "uri": "decor_rocher_plaine_rugosite.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_rugosite.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod1.glb",
-      "uri": "decor_rocher_plaine_albedo.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod1.glb",
-      "uri": "decor_rocher_plaine_normale.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_normale.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod1.glb",
-      "uri": "decor_rocher_plaine_rugosite.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_rugosite.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod2.glb",
-      "uri": "decor_rocher_plaine_albedo.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_albedo.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod2.glb",
-      "uri": "decor_rocher_plaine_normale.png",
-      "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_normale.png"
-    },
-    {
-      "modele": "modeles/decor_rocher_plaine/decor_rocher_plaine_lod2.glb",
       "uri": "decor_rocher_plaine_rugosite.png",
       "cible": "modeles/decor_rocher_plaine/decor_rocher_plaine_rugosite.png"
     }

@@ -1,12 +1,12 @@
 {
   "ok": true,
   "archive": "premier_contact_glb_textures.zip",
-  "sha256": "40cf89eca0e24abaa54f075571731b160dd256c43c4a7d3c6b150df434375329",
-  "octets": 21874248,
+  "sha256": "13d7319c7175c8c504001c01ed150f3d0a93bbc3734f188e48837964570cf7f5",
+  "octets": 21412560,
   "assets": 25,
-  "glb": 58,
+  "glb": 25,
   "png": 297,
-  "referencesVerifiees": 269,
+  "referencesVerifiees": 117,
   "approbationArtistique": false,
   "activationEnJeu": false
 }

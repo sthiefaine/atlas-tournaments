@@ -30,11 +30,10 @@ import * as THREE from 'three/webgpu';
 import { chargerCatalogue } from '@/engine/index';
 import { chargerCatalogueUnites, chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
-import type { NiveauLod } from '@/assets/spec';
 import { creerEnvironnement } from '@/render3d/environnement';
 import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
 import {
-  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, forcerLod, monterModele,
+  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, monterModele,
   NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
 } from '@/render3d/unites';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
@@ -88,7 +87,6 @@ export default function Vitrine(): React.ReactElement {
   const [moteur, setMoteur] = useState<boolean | null>(null);
   const [rendues, setRendues] = useState(0);
   const [etatModele, setEtatModele] = useState<EtatModele>(PLACEHOLDER);
-  const lod: NiveauLod = 0;
   const [clip, setClip] = useState<NomClip | null>(null);
   const [fige, setFige] = useState(false);
   const grille = useRef<HTMLDivElement | null>(null);
@@ -195,15 +193,6 @@ export default function Vitrine(): React.ReactElement {
     // le moteur détecté, dans un effet qui court après celui-ci au premier rendu.
   }, [catalogue, uniteSure, pays, camp, moteur, arreterBoucle, lancerBoucle]);
 
-  // Le niveau forcé s'applique à la pièce posée, quelle qu'elle soit : sans
-  // `THREE.LOD` dedans, il n'y a rien à forcer et rien ne change.
-  useEffect(() => {
-    const p = piece.current;
-    const s = studio.current;
-    if (!p || !s) return;
-    forcerLod(p, lod);
-    s.dessiner(tuiles.current, grille.current);
-  }, [lod, etatModele]);
 
   useEffect(() => {
     const g = grille.current;

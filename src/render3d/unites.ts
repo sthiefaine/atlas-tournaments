@@ -68,7 +68,7 @@ import {
 // d'ici parce que la vitrine et `index.ts` les ont toujours pris à cette porte,
 // et qu'une seule porte suffit à qui monte une unité.
 export {
-  chargerModele, conformerModele, creerLecteurClips, forcerLod, NOM_FIGURINE, NOMS_CLIPS, RACINE_MODELES,
+  chargerModele, conformerModele, creerLecteurClips, NOM_FIGURINE, NOMS_CLIPS, RACINE_MODELES,
   teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
 } from './modeles';
 

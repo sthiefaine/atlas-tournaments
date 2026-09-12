@@ -2,7 +2,7 @@
 import * as THREE from 'three/webgpu';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { alea, hauteurEn, type GrilleTerrain } from './geometrie';
-export interface VegetationLivree { proche:THREE.BufferGeometry; loin:THREE.BufferGeometry; base:number }
+export interface VegetationLivree { proche:THREE.BufferGeometry; base:number }
 export function extraireVegetation(scene:THREE.Object3D):THREE.BufferGeometry|null{
   scene.updateMatrixWorld(true);const morceaux:THREE.BufferGeometry[]=[];
   scene.traverse(o=>{
@@ -17,9 +17,9 @@ export function extraireVegetation(scene:THREE.Object3D):THREE.BufferGeometry|nu
 export function geometrieGazon(g:GrilleTerrain,source:VegetationLivree):THREE.BufferGeometry{
   const cases:{x:number;y:number}[]=[];
   for(let y=0;y<g.hauteur;y++)for(let x=0;x<g.largeur;x++)if(g.terrainDe(x,y)==='plaine')cases.push({x,y});
-  // Un seul appel de dessin ; les grandes cartes utilisent le LOD léger pour borner le coût.
-  const lod=cases.length*source.proche.getAttribute('position').count/3>200000?1:0;
-  const originale=lod===1?source.loin:source.proche;
+  // Un seul appel de dessin, toujours la géométrie LOD0.
+  const lod=0;
+  const originale=source.proche;
   const a=originale.getAttribute('position'),c=originale.getAttribute('color');
   const positions=new Float32Array(cases.length*a.count*3),couleurs=new Float32Array(positions.length);
   let n=0;

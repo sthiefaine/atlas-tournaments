@@ -239,3 +239,7 @@ Le joueur a validé : objectifs escorte/relais/survie corrigés ; six missions d
 ### Deuxième passe herbe — hauteur et détail, 12 septembre 2026
 
 Après essai, le propriétaire demande plus de hauteur et autorise un budget supérieur. La plaine porte désormais 360 brins à trois segments de 6–12 cm (72 au LOD1), 12/4 trèfles, pour 1 914/402 triangles sur des budgets de 2 400/600. Hauteur totale de la dalle GLB : 14 cm. Le rendu passe au LOD1 au-delà de 200 000 triangles de végétation détaillée par carte. Les autres terrains et les PNG restent inchangés dans cette seconde passe. Validation esthétique encore à faire.
+
+## Décision en vigueur — LOD0 uniquement (12 septembre 2026)
+
+Tous les assets du site utilisent désormais un seul modèle `*_lod0.glb` : unités, kits nationaux, bâtiments, terrains, décors et commandants. Les autres LOD sont supprimés des fichiers livrés et publics, des spécifications, des générateurs et des sélecteurs de l’administration. Les chargeurs du jeu, de l’accueil et des ateliers ne demandent que le LOD0, sans baisse de détail au zoom. Les PNG restent externes. Les budgets LOD0 existants sont conservés ; cette décision ne relève pas automatiquement leur nombre de triangles. Cette règle remplace les anciens passages prescrivant plusieurs LOD dans ce document.

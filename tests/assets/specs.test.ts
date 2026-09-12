@@ -209,7 +209,7 @@ test('les gabarits de nommage produisent les noms attendus', () => {
   const spec = specs.find((s) => s.id === 'unite_char_leger_base');
   assert.ok(spec);
   assert.equal(nomModele(spec, 0), 'unite_char_leger_base_lod0.glb');
-  assert.equal(nomModele(spec, 2), 'unite_char_leger_base_lod2.glb');
+  assert.deepEqual(spec.verification.lodRequis, [0]);
   assert.equal(nomTexture(spec, 'albedo'), 'unite_char_leger_base_albedo.png');
   assert.equal(nomTexture(spec, 'albedo', 'hiver'), 'unite_char_leger_base_albedo_hiver.png');
 

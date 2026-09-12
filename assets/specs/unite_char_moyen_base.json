@@ -51,8 +51,6 @@
   },
   "budget": {
     "lod0": 6000,
-    "lod1": 2000,
-    "lod2": 600,
     "materiauxMax": 3
   },
   "textures": [
@@ -156,7 +154,6 @@
     "texture": "{id}_{canal}_{variante}.{ext}",
     "exemples": [
       "unite_char_moyen_base_lod0.glb",
-      "unite_char_moyen_base_lod1.glb",
       "unite_char_moyen_base_albedo.png",
       "unite_char_moyen_base_albedo_hiver.png"
     ]
@@ -182,9 +179,7 @@
     ],
     "toleranceAabb": 0.12,
     "lodRequis": [
-      0,
-      1,
-      2
+      0
     ]
   }
 }

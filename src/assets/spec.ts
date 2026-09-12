@@ -69,8 +69,8 @@ export const CLIPS_ANIMATION = [
 export type ClipAnimation = typeof CLIPS_ANIMATION[number];
 
 /** Niveaux de détail attendus. */
-export const NIVEAUX_LOD = [0, 1, 2] as const;
-/** Niveau de détail : 0 est le modèle plein, 2 le plus léger. */
+export const NIVEAUX_LOD = [0] as const;
+/** Niveau unique : modèle plein LOD0. */
 export type NiveauLod = typeof NIVEAUX_LOD[number];
 
 /**
@@ -269,8 +269,6 @@ export interface Pivot {
 /** Le budget de géométrie, en triangles, par niveau de détail. */
 export interface Budget {
   lod0: number;
-  lod1: number;
-  lod2: number;
   /** Nombre de matériaux distincts admis dans le fichier. */
   materiauxMax: number;
 }
@@ -525,9 +523,8 @@ export function gabaritDe(style: StyleNation, unite: Cle): Gabarit {
 
 /** Le budget de triangles d'un niveau de détail donné. */
 export function budgetDe(budget: Budget, lod: NiveauLod): number {
-  if (lod === 0) return budget.lod0;
-  if (lod === 1) return budget.lod1;
-  return budget.lod2;
+  void lod;
+  return budget.lod0;
 }
 
 /** Le nom de fichier d'un modèle, gabarit appliqué. */
@@ -542,7 +539,7 @@ export function nomModele(spec: AssetSpec, lod: NiveauLod): string {
  * dossier de livraison sans ouvrir un seul fichier.
  */
 export function decomposerNomModele(nom: string): { id: Cle; lod: NiveauLod } | null {
-  const m = /^(.+)_lod([012])\.glb$/.exec(nom);
+  const m = /^(.+)_lod(0)\.glb$/.exec(nom);
   if (!m || !REGEX_ID_ASSET.test(m[1]!)) return null;
   return { id: m[1]!, lod: Number(m[2]) as NiveauLod };
 }

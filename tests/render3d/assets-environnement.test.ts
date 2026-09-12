@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { selectionEnvironnement, candidatsBatiment } from '../../src/render3d/assets-environnement';
 import type { GrilleTerrain } from '../../src/render3d/geometrie';
 const grille:GrilleTerrain={largeur:3,hauteur:1,terrainDe:x=>x===0?'plaine':x===1?'qg':'route'};
-const inventaire={modeles:{terrain_plaine:[0,1] as (0|1)[],terrain_route:[0] as 0[],terrain_mer:[0] as 0[],batiment_qg_fr_ile_de_france:[0] as 0[],batiment_qg_lu:[0] as 0[],batiment_qg_jp:[0] as 0[]}};
+const inventaire={modeles:{terrain_plaine:[0] as 0[],terrain_route:[0] as 0[],terrain_mer:[0] as 0[],batiment_qg_fr_ile_de_france:[0] as 0[],batiment_qg_lu:[0] as 0[],batiment_qg_jp:[0] as 0[]}};
 test('assets actifs sélectionnés selon la carte et les nations, jamais le numéro du camp',()=>{
   assert.deepEqual(new Set(selectionEnvironnement(grille,{0:'lu',2:'fr'},inventaire)),new Set(['terrain_route','batiment_qg_lu','batiment_qg_fr_ile_de_france']));
   assert.deepEqual(selectionEnvironnement(grille,{},inventaire),['terrain_route']);
