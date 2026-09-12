@@ -1,6 +1,9 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle": "reglages.sons", "texte": "Sons en partie", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
+    {"cle": "reglages.sons_note", "texte": "Tirs, impacts et captures. Le son démarre après un geste sur la carte.", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
+    {"cle": "reglages.volume_sons", "texte": "Volume des effets", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
     {"cle":"illustration.case_verte","texte":"Case verte : là où l’unité peut aller","contexte":{"ecran":"partie","note":"La nappe de déplacement, vue sur une case de terrain. Nom accessible du pictogramme et de la vignette ; le dessin est composé par render/illustrations.ts."},"longueurMax":50},
     {"cle":"illustration.case_rouge","texte":"Case rouge : là où l’unité peut frapper","contexte":{"ecran":"partie","note":"L’enveloppe de tir, vue sur une case de terrain."},"longueurMax":50},
     {"cle":"illustration.case_or","texte":"Case or : objectif de la manche","contexte":{"ecran":"partie","note":"La surbrillance des objectifs, vue sur une case de terrain."},"longueurMax":50},

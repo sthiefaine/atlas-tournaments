@@ -32,6 +32,7 @@
  * l'autre par simple `startsWith`.
  */
 
+import { volumeNormalise } from '../audio/types';
 import type { Mode } from '../schemas/types';
 import { normaliserVitesse, type VitesseAnimations } from '../render/cadence';
 import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
@@ -62,6 +63,8 @@ export interface Preferences {
    * grammaire d'Advance Wars —, et un clic le passe de toute façon.
    */
   ecranCombat: boolean;
+  sons: boolean;
+  volumeSons: number;
 }
 
 /** Les deux profils d'un appareil. La liste est fermée : deux, pas « n ». */
@@ -202,6 +205,8 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   modeTactique: false,
   qualite: QUALITE_PAR_DEFAUT,
   ecranCombat: true,
+  sons: true,
+  volumeSons: .45,
 });
 
 /** Ramène n'importe quoi à des préférences valides. */
@@ -215,6 +220,8 @@ export function normaliserPreferences(brut: unknown): Preferences {
     vitesseAnimations: normaliserVitesse(p.vitesseAnimations),
     modeTactique: p.modeTactique === true,
     qualite: normaliserQualite(p.qualite),
+    sons: typeof p.sons === 'boolean' ? p.sons : true,
+    volumeSons: volumeNormalise(p.volumeSons),
     ecranCombat: typeof p.ecranCombat === 'boolean' ? p.ecranCombat : PREFERENCES_PAR_DEFAUT.ecranCombat,
   };
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { creerAudioJeu } from '@/audio/moteur';
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { t } from '@/i18n/index';
 import { chargerCatalogue, VERSION_MOTEUR, sontAllies, type EtatPartie } from '@/engine/index';
@@ -296,6 +297,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     const ia = joue.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
     // Les commandants du scénario **effectif** : un banc prêté a pu en échanger deux.
     const commandants = commandantsDuScenario(joue);
+    const audio = creerAudioJeu(conteneur, preferences.sons, preferences.volumeSons);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
     try {
@@ -308,6 +310,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         // réglages du joueur : la page les lit et les donne à la peau, qui ne
         // connaît pas `localStorage`.
         fabriqueRendu: () => creerRendu3d({
+          audio,
           biome: carte.biome,
           // La nation d'en face ne suit **pas** celle du joueur : elle le
           // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
@@ -357,6 +360,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     } catch (cause) {
       console.error('Montage du jeu impossible', cause);
       conteneur.replaceChildren();
+      audio.detruire();
       setErreur(true);
       direChargement('pret');
       return undefined;
@@ -388,6 +392,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
 
     return () => {
       if (image !== null) cancelAnimationFrame(image);
+      audio.detruire();
       partie.demonter();
     };
   }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut]);

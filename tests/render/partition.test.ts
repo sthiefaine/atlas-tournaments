@@ -93,11 +93,12 @@ test('avancer puis tirer : marche, tir depuis l’arrivée, coup encaissé, ripo
   assert.equal(coup.degats, 34);
   assert.deepEqual(coup.depuis, { x: 0, y: 2 });
 
-  // La riposte : le défenseur tire vers l'arrivée quand il a fini d'encaisser ;
+  // Le défenseur riposte vers l'arrivée avant de recevoir le premier impact ;
   // l'attaquant encaisse à la fin de ce tir.
   const riposte = seul(p, 'tirer', 1);
   assert.equal(riposte.unite, sienne);
-  assert.equal(riposte.debut, coup.debut + DUREES.encaisser);
+  assert.equal(riposte.debut, tir.debut + MISE_EN_SCENE.delaiRiposte);
+  assert.ok(riposte.debut < coup.debut);
   assert.deepEqual(riposte.vers, { x: 0, y: 2 });
   const contre = seul(p, 'encaisser', 1);
   assert.equal(contre.unite, mienne);
@@ -152,7 +153,7 @@ test('l’écran de combat ne s’écrit que si l’option l’allume, et décal
   assert.equal(coup.debut, tir.debut + DUREES.tir);
   const riposte = seul(avec, 'tirer', 1);
   assert.equal(riposte.debut, dureeMarche + Math.round(DUREES.duel * MISE_EN_SCENE.partRiposte));
-  assert.ok(riposte.debut >= coup.debut + DUREES.encaisser, 'le défenseur a fini d’encaisser avant de riposter');
+  assert.ok(riposte.debut < coup.debut, 'le défenseur riposte avant le premier impact');
   assert.ok(seul(avec, 'encaisser', 1).debut + DUREES.encaisser <= duel.debut + duel.duree, 'tout tient sous l’écran');
 });
 

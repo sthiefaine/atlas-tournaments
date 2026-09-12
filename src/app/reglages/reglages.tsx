@@ -44,6 +44,9 @@ import {
  */
 
 export interface LibellesReglages {
+  sons: string;
+  sonsNote: string;
+  volumeSons: string;
   difficulte: string;
   difficulteNote: string;
   victoiresModes: string;
@@ -228,7 +231,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
    * l'état, et l'entendre deux fois est une gêne, pas une aide.
    */
   const bascule = (
-    cle: 'dialogues' | 'animationsReduites' | 'ecranCombat', titre: string, note: string,
+    cle: 'dialogues' | 'animationsReduites' | 'ecranCombat' | 'sons', titre: string, note: string,
   ): React.ReactElement => {
     const actif = preferences[cle];
     return <button
@@ -250,6 +253,11 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     </header>
 
     <Groupe id="reglage-en-partie" titre={libelles.enPartie}>
+      {bascule('sons', libelles.sons, libelles.sonsNote)}
+      <label className="reglage-rangee"><span className="reglage-libelle"><strong>{libelles.volumeSons} : {Math.round(preferences.volumeSons * 100)} %</strong></span>
+        <input type="range" min={0} max={100} step={5} value={Math.round(preferences.volumeSons * 100)} disabled={!pret || !preferences.sons}
+          onChange={e => changer({ volumeSons: Number(e.target.value) / 100 })} />
+      </label>
       {bascule('dialogues', libelles.dialogues, libelles.dialoguesNote)}
       {bascule('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
       <div className="reglage-rangee">

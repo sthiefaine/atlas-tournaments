@@ -22,8 +22,7 @@ import Reglages from './reglages';
  * ouvre les deux et lance celle qu'on désigne. Ce panneau ne fait donc plus
  * doublon avec lui — il ne sert pas à *jouer* l'une ou l'autre, il sert à les
  * **nommer**, à voir ce qu'elles contiennent, et à en effacer une. On n'affiche
- * pas d'interrupteur inerte : il n'y a pas d'audio dans le jeu, il n'y a donc pas
- * de réglage de son, même si c'est le premier qu'un joueur cherche.
+ * propose les sons de partie et leur volume, communs aux profils.
  */
 
 export const metadata = { title: 'Réglages · Atlas' };
@@ -31,6 +30,9 @@ export const metadata = { title: 'Réglages · Atlas' };
 export default function PageReglages(): React.ReactElement {
   const locale = 'fr';
   return <Reglages libelles={{
+    sons: t(locale, 'reglages.sons'),
+    sonsNote: t(locale, 'reglages.sons_note'),
+    volumeSons: t(locale, 'reglages.volume_sons'),
     difficulte: t(locale, 'mode.titre'),
     difficulteNote: t(locale, 'mode.note'),
     victoiresModes: t(locale, 'mode.victoires'),
