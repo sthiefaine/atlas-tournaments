@@ -1,3 +1,5 @@
+import { cleCase } from '../engine/index';
+import type { SortieAudio } from '../audio/types';
 import { chargerEnvironnement, type EnvironnementLivre } from './assets-environnement';
 /**
  * # Rendu 3D d'Atlas Tournament — API publique
@@ -166,6 +168,7 @@ interface Monde {
 type PhaseChantier = 'rien' | 'sol';
 
 export interface OptionsRendu3d {
+  audio?: SortieAudio;
   biome?: Biome;
   paysParCamp?: Partial<Record<CampId, CodePays>>;
   /**
@@ -639,6 +642,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   /** Ce que les animations d'une partition ont le droit de toucher. */
   function contexte(m: Monde): ContexteAnimation {
     return {
+      audio: options.audio,
+      visible: (c) => !vue?.visibles || vue.visibles.has(cleCase(c)),
       unites: m.unites,
       effets: m.effets,
       hauteurEn: m.plateau.hauteurEn,
@@ -746,6 +751,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     couper(): void {
+      options.audio?.annuler();
       // Tout saute à l'état final : chaque `terminer` pose le sien et libère
       // ses effets ; ce qui vivrait encore dans le pool est retiré avec.
       boucle?.viderFile(true);
@@ -893,6 +899,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     demonter(): void {
+      options.audio?.annuler();
       if (repos !== null) clearInterval(repos);
       repos = null;
       if (minuterieAmbiance !== null) clearTimeout(minuterieAmbiance);

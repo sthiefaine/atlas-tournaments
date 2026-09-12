@@ -494,3 +494,46 @@ test('une impulsion referme un anneau du diamètre du rayon vers le centre', () 
   assert.equal(b.effets.vivants, 0);
   b.effets.dispose();
 });
+
+test('sons : un départ par geste, calé sur le premier instant visible', () => {
+  const b = banc();
+  const cues: string[] = [];
+  b.ctx.audio = { jouer: (cue) => cues.push(cue) };
+  b.ctx.catalogue = () => CAT;
+  const a = gesteVersAnimation({ genre: 'tirer', unite: mienne, depuis: { x: 0, y: 0 }, vers: { x: 1, y: 0 }, debut: 80, duree: 320 }, b.ctx)!;
+  a.animation.avancer(0);
+  a.animation.avancer(0.19);
+  assert.deepEqual(cues, []);
+  a.animation.avancer(0.2);
+  a.animation.avancer(0.5);
+  a.animation.avancer(1);
+  a.animation.terminer?.();
+  assert.deepEqual(cues, ['rafale']);
+  b.effets.dispose();
+});
+
+test('sons : annuler, sauter une animation ou réduire sa durée ne lance aucun son tardif', () => {
+  for (const mode of ['annuler', 'sauter', 'reduit']) {
+    const b = banc();
+    const cues: string[] = [];
+    b.ctx.audio = { jouer: (cue) => cues.push(cue) };
+    const a = gesteVersAnimation({ genre: 'encaisser', unite: mienne, case: { x: 0, y: 0 }, depuis: { x: 1, y: 0 }, degats: 20, debut: 0, duree: mode === 'reduit' ? 0 : 300 }, b.ctx)!;
+    if (mode === 'annuler') { a.animation.terminer?.(); a.animation.avancer(0.5); }
+    else { a.animation.avancer(1); a.animation.terminer?.(); }
+    assert.deepEqual(cues, [], mode);
+    b.effets.dispose();
+  }
+});
+
+
+test('sons : une attaque hors de vue reste silencieuse', () => {
+  const b = banc();
+  const cues: string[] = [];
+  b.ctx.audio = { jouer: (cue) => cues.push(cue) };
+  b.ctx.visible = () => false;
+  const a = gesteVersAnimation({ genre: 'tirer', unite: mienne, depuis: { x: 0, y: 0 }, vers: { x: 1, y: 0 }, debut: 0, duree: 300 }, b.ctx)!;
+  a.animation.avancer(0);
+  a.animation.terminer?.();
+  assert.deepEqual(cues, []);
+  b.effets.dispose();
+});

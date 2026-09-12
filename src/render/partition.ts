@@ -212,8 +212,10 @@ export function dureePartition(gestes: readonly Geste[]): number {
 export const MISE_EN_SCENE = Object.freeze({
   /** Part de l'écran de combat écoulée quand l'attaquant frappe. */
   partCoup: 0.35,
+  /** Décalage de riposte sur la carte, avant le premier impact. */
+  delaiRiposte: 80,
   /** Part de l'écran de combat écoulée quand la riposte part. */
-  partRiposte: 0.7,
+  partRiposte: 0.35 + 80 / DUREES.duel,
   /** Deux poses de terrain d'une même salve se posent l'une après l'autre : l'écart entre deux départs. */
   ecartBatir: 120,
   /** Un glissement d'au moins tant de cases mérite un second cadrage, sur l'arrivée. */
@@ -246,7 +248,7 @@ export function dixiemes(pv: number): number {
  *   les `terrain_pose` qu'il a provoqués ; à l'écran, le splash précède ses
  *   effets, et tout ce qui suit dans la salve part après lui ;
  * - **une unité ne fait qu'un geste à la fois** (`fins`) : le tir attend la fin
- *   de la marche, la riposte attend la fin du tir ;
+ *   de la marche, la riposte part presque avec le tir ;
  * - **une unité agit d'où elle est arrivée** (`positions`) : le tir part de la
  *   case d'arrivée, jamais de la case de départ de `avant` ;
  * - **une capture qui suit une remise en service** de la même case attend que
@@ -363,9 +365,9 @@ export function ecrirePartition(
         if (!att || !def || !uAtt || !uDef) break;
         // Le coup part quand l'attaquant est arrivé — après sa marche, s'il en a fait une.
         const departCombat = depart(e.attaquantId);
+        const disponibleDefenseur = depart(e.cibleId);
         cadrer(e.attaquantId, uAtt.camp, att, departCombat);
         let debutTir = departCombat;
-        let debutRiposteAuPlusTot = 0;
         if (options.ecranCombat) {
           const duree = d(DUREES.duel);
           const pvApres = (id: string): number => {
@@ -390,7 +392,6 @@ export function ecrirePartition(
           });
           // Sous l'écran, le tir et le coup tombent quand l'écran les montre.
           debutTir = departCombat + d(Math.round(DUREES.duel * MISE_EN_SCENE.partCoup));
-          debutRiposteAuPlusTot = departCombat + d(Math.round(DUREES.duel * MISE_EN_SCENE.partRiposte));
         }
         const dureeTir = d(DUREES.tir);
         gestes.push({ genre: 'tirer', unite: e.attaquantId, depuis: att, vers: def, debut: debutTir, duree: dureeTir });
@@ -403,9 +404,8 @@ export function ecrirePartition(
           chiffre(def, dixiemes(e.degats), teinteDe(uDef.camp), finTir);
         }
         if (e.riposte > 0) {
-          // La riposte n'arrive qu'une fois le coup encaissé : le défenseur tire
-          // depuis sa case vers l'**arrivée** de l'attaquant, qui encaisse à son tour.
-          const debutRiposte = depart(e.cibleId, Math.max(finTir, debutRiposteAuPlusTot));
+          // Carte et panneau de duel partagent le même décalage de riposte.
+          const debutRiposte = Math.max(disponibleDefenseur, debutTir + d(MISE_EN_SCENE.delaiRiposte));
           gestes.push({ genre: 'tirer', unite: e.cibleId, depuis: def, vers: att, debut: debutRiposte, duree: dureeTir });
           occuper(e.cibleId, debutRiposte, dureeTir);
           const finRiposte = debutRiposte + dureeTir;

@@ -42,7 +42,7 @@ import type { CampId, Case, UnitType } from '../schemas/types';
 import { animation, type Animation } from '../render/boucle';
 import { casesDuRayon, cheminEnL, longueurChemin, surChemin } from '../render/chemin';
 import { paletteDe } from '../render/palettes';
-import { DUREES, dureePartition, type Geste, type Partition } from '../render/partition';
+import { DUREES, MISE_EN_SCENE, dureePartition, type Geste, type Partition } from '../render/partition';
 import {
   COULEUR_PLANCHE, PIECES_PALISSADE, poseDrapeau, RAYON_PALISSADE, type PriseChantier, type PriseDrapeau,
 } from './decor';
@@ -78,11 +78,15 @@ export interface EtatsConnus {
 /** Ce dont les animations ont besoin pour agir sur la scène. */
 export interface ContexteAnimation {
   unites: CalqueUnites;
+  /** Sons déclenchés par la même horloge que les gestes visibles. */
+  audio?: { jouer(cue: 'rafale' | 'canon' | 'missile' | 'impact' | 'hors_jeu' | 'capture' | 'production' | 'pouvoir'): void };
   /** Catalogue courant, sans embarquer le canon dans le rendu. */
   catalogue?(): Catalogue | null;
   /** Le pool d'effets éphémères : éclairs, étincelles, halos, poussière. */
   effets: Effets;
   hauteurEn(x: number, z: number): number;
+  /** Un son local ne révèle jamais une case hors de vue. */
+  visible?(c: Case): boolean;
   /** La prise du drapeau d'une case bâtie, `null` si la case n'en porte pas. */
   drapeau(cle: string): PriseDrapeau | null;
   /** La prise des vitrages d'une case bâtie, `null` si la case n'en porte pas. */
@@ -255,7 +259,37 @@ const HAUTEUR_PALISSADE = Math.max(...PIECES_PALISSADE.map((p) => p.y + p.h / 2)
  * Traduit un geste en animation, ou `null` si la peau n'a rien à en faire — un
  * geste lu par le HUD (`duel`, `chiffre`), une capture sur une case sans mât.
  */
+/** Une seule émission sonore au départ visible, jamais à l'annulation. */
 export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationDatee | null {
+  const a = interpreterGeste(g, ctx);
+  if (!a || !ctx.audio || g.duree <= 0) return a;
+  let commence = false;
+  let termine = false;
+  const avancer = a.animation.avancer;
+  const terminer = a.animation.terminer;
+  a.animation.avancer = (p) => {
+    const local = (p * (g.debut + g.duree) - g.debut) / g.duree;
+    if (!commence && !termine && local >= 0 && local < 1) {
+      commence = true;
+      let cue: Parameters<NonNullable<ContexteAnimation['audio']>['jouer']>[0] | undefined;
+      if (g.genre === 'tirer') {
+        const profil = profilTir(typeConnu(ctx, uniteConnue(ctx, g.unite)), typeConnu(ctx, cibleConnue(ctx, g.vers)));
+        cue = profil === 'rafale' || profil === 'missile' ? profil : 'canon';
+      } else if (g.genre === 'encaisser') cue = 'impact';
+      else if (g.genre === 'sortir') cue = 'hors_jeu';
+      else if (g.genre === 'hisser' && g.acquis) cue = 'capture';
+      else if (g.genre === 'apparaitre') cue = 'production';
+      else if (g.genre === 'pouvoir') cue = 'pouvoir';
+      const position = g.genre === 'tirer' ? g.depuis : 'case' in g ? g.case : null;
+      if (cue && (position === null || ctx.visible?.(position) !== false)) ctx.audio?.jouer(cue);
+    }
+    avancer(p);
+  };
+  a.animation.terminer = () => { termine = true; terminer?.(); };
+  return a;
+}
+
+function interpreterGeste(g: Geste, ctx: ContexteAnimation): AnimationDatee | null {
   switch (g.genre) {
     case 'glisser': {
       if (g.chemin.length < 2) return null;
@@ -1031,7 +1065,7 @@ export function animationsDePartition(
 /**
  * Traduit une file d'événements en partition, **provisoirement** : la même mise
  * en scène que l'ancien `construireAnimations` — les gestes d'une même unité
- * s'enchaînent, la cible encaisse quand le tir part, la riposte suit le tir,
+ * s'enchaînent, la cible encaisse à l’impact, la riposte part presque avec le tir,
  * une capture attend la palissade tombée, les constructions se regardent l'une
  * après l'autre — exprimée dans le contrat. Sous animations réduites, toutes
  * les durées valent 0. À remplacer par `ecrirePartition` (`render/`) dès qu'il
@@ -1097,7 +1131,7 @@ export function partitionProvisoire(
       if (e.riposte > 0) {
         // La riposte part 80 ms après le premier tir, sans attendre l’impact.
         // Le choc et le départ de tir peuvent se chevaucher ; la fin retient les deux.
-        const depart = Math.max(disponibleDefenseur, departTir + d(80));
+        const depart = Math.max(disponibleDefenseur, departTir + d(MISE_EN_SCENE.delaiRiposte));
         const dureeRiposte = d(DUREES.tir);
         const dureeCoup = d(DUREES.encaisser);
         fins.set(e.cibleId, Math.max(fins.get(e.cibleId) ?? 0, depart + dureeRiposte));
