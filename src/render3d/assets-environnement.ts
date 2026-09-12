@@ -17,13 +17,12 @@ export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<
   const selection=new Set<string>();
   const present=(id:string)=>inventaire.modeles[id]?.includes(0);
   for(const terrain of terrains) {
-    const sol=`terrain_${terrain}`;if(present(sol))selection.add(sol);
+    // La plaine conserve l'herbe procédurale de base ; ses décors sont indépendants.
+    const sol=`terrain_${terrain}`;if(terrain!=='plaine'&&present(sol))selection.add(sol);
     for(const pays of [undefined,...new Set(Object.values(paysParCamp))]) {
       const id=candidatsBatiment(terrain,pays).find(present);if(id)selection.add(id);
     }
   }
-  // Les forêts et herbes hautes utilisent également la matière d'herbe du sol continu.
-  if((terrains.has('foret')||terrains.has('herbe_haute'))&&present('terrain_plaine'))selection.add('terrain_plaine');
   return [...selection];
 }
 export interface MatiereLivree { albedo: THREE.Texture; normale: THREE.Texture; rugosite: THREE.Texture; vegetation?:VegetationLivree }

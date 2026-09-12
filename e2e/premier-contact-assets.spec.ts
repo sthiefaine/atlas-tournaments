@@ -14,12 +14,10 @@ test('Premier contact charge les GLB nationaux et leurs textures depuis le serve
   for (const id of ['batiment_qg_fr_ile_de_france', 'batiment_qg_lu']) {
     await expect.poll(() => recus.has(`/assets/modeles/${id}_lod0.glb`), { timeout: 30000 }).toBe(true);
   }
-  for (const id of ['terrain_plaine', 'terrain_foret', 'terrain_riviere', 'terrain_route', 'terrain_pont']) {
+  for (const id of ['terrain_foret', 'terrain_riviere', 'terrain_route', 'terrain_pont']) {
     await expect.poll(() => recus.has(`/assets/modeles/${id}_albedo.png`), { timeout: 30000 }).toBe(true);
   }
-  for (const lod of [0, 1]) {
-    await expect.poll(() => recus.has(`/assets/modeles/terrain_plaine_lod${lod}.glb`), { timeout: 30000 }).toBe(true);
-  }
+  expect([...recus].some(p => p.startsWith('/assets/modeles/terrain_plaine_'))).toBe(false);
   expect(erreurs).toEqual([]);
 });
 
@@ -30,9 +28,8 @@ test('les assets actifs se chargent aussi dans une autre mission et sur l’accu
     const erreur=(e:Error)=>erreurs.push(e.message);
     page.on('response',reponse);page.on('pageerror',erreur);
     await page.goto(route);
-    await expect.poll(()=>recus.has('/assets/modeles/terrain_plaine_lod0.glb'),{timeout:45000}).toBe(true);
-    await expect.poll(()=>recus.has('/assets/modeles/terrain_plaine_lod1.glb'),{timeout:30000}).toBe(true);
     await expect.poll(()=>recus.has('/assets/modeles/batiment_qg_fr_ile_de_france_lod0.glb'),{timeout:30000}).toBe(true);
+    expect([...recus].some(p=>p.startsWith('/assets/modeles/terrain_plaine_'))).toBe(false);
     expect(erreurs).toEqual([]);
     page.off('response',reponse);page.off('pageerror',erreur);
   }
