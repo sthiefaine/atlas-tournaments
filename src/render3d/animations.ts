@@ -1,3 +1,5 @@
+import { sonDeplacement } from '../audio/profils';
+import type { SortieAudio } from '../audio/types';
 /**
  * L'**interprète** de la partition (`render/partition.ts`) : chaque geste daté
  * qu'un réalisateur a écrit devient une `Animation` de la boucle
@@ -79,7 +81,7 @@ export interface EtatsConnus {
 export interface ContexteAnimation {
   unites: CalqueUnites;
   /** Sons déclenchés par la même horloge que les gestes visibles. */
-  audio?: { jouer(cue: 'rafale' | 'canon' | 'missile' | 'impact' | 'hors_jeu' | 'capture' | 'production' | 'pouvoir'): void };
+  audio?: Pick<SortieAudio, 'jouer'>;
   /** Catalogue courant, sans embarquer le canon dans le rendu. */
   catalogue?(): Catalogue | null;
   /** Le pool d'effets éphémères : éclairs, étincelles, halos, poussière. */
@@ -263,12 +265,21 @@ const HAUTEUR_PALISSADE = Math.max(...PIECES_PALISSADE.map((p) => p.y + p.h / 2)
 export function gesteVersAnimation(g: Geste, ctx: ContexteAnimation): AnimationDatee | null {
   const a = interpreterGeste(g, ctx);
   if (!a || !ctx.audio || g.duree <= 0) return a;
+  let dernierPas = -1;
   let commence = false;
   let termine = false;
   const avancer = a.animation.avancer;
   const terminer = a.animation.terminer;
   a.animation.avancer = (p) => {
     const local = (p * (g.debut + g.duree) - g.debut) / g.duree;
+    if (g.genre === 'glisser' && !termine && local >= 0 && local < 1) {
+      const pas = Math.floor(local * g.duree / 280);
+      const position = g.chemin[Math.min(g.chemin.length - 1, Math.floor(local * g.chemin.length))];
+      if (pas !== dernierPas && position && ctx.visible?.(position) !== false) {
+        dernierPas = pas;
+        ctx.audio?.jouer(sonDeplacement(typeConnu(ctx, uniteConnue(ctx, g.unite))?.typeMouvement));
+      }
+    }
     if (!commence && !termine && local >= 0 && local < 1) {
       commence = true;
       let cue: Parameters<NonNullable<ContexteAnimation['audio']>['jouer']>[0] | undefined;

@@ -62,6 +62,7 @@ export const ADVERSAIRE_PASSIF: Adversaire = () => [{ type: 'finTour' }];
 
 /** Ce qu'il faut pour monter une partie. */
 export interface OptionsJeu {
+  sonParole?(): void;
   scenario: Scenario;
   carte: MapDef;
   catalogue?: Catalogue;
@@ -1073,7 +1074,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       rafraichir();
     },
   };
-  if (avecDialogues) sceneHtml = monterDialogue(conteneur, apiDialogue);
+  if (avecDialogues) sceneHtml = monterDialogue(conteneur, { ...apiDialogue, sonParole: options.sonParole });
 
   const debrancher = rendu.brancher({
     // Un clic pendant une partition la coupe, et c'est tout ce qu'il fait.

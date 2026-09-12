@@ -1,7 +1,17 @@
 import { volumeNormalise, type Son, type SortieAudio } from './types';
 
 /** Timbres synthétiques courts, sans téléchargement ni aléa du moteur de jeu. */
-export const TIMBRES: Record<Son, { hz: number; fin: number; duree: number; bruit: number }> = {
+export const TIMBRES: Record<Son, { hz: number; fin: number; duree: number; bruit: number; niveau?: number }> = {
+  pas: { hz: 95, fin: 45, duree: .12, bruit: .8, niveau: .2 },
+  chenilles: { hz: 65, fin: 55, duree: .28, bruit: .7, niveau: .18 },
+  moteur: { hz: 100, fin: 125, duree: .28, bruit: .15, niveau: .16 },
+  rotor: { hz: 75, fin: 95, duree: .28, bruit: .5, niveau: .13 },
+  sillage: { hz: 65, fin: 35, duree: .3, bruit: .9, niveau: .13 },
+  parole: { hz: 310, fin: 240, duree: .045, bruit: .05, niveau: .08 },
+  vent: { hz: 30, fin: 35, duree: 3.8, bruit: .9, niveau: .025 },
+  pluie: { hz: 35, fin: 30, duree: 3.8, bruit: 1, niveau: .04 },
+  insectes: { hz: 1800, fin: 2100, duree: .12, bruit: .05, niveau: .015 },
+  vagues: { hz: 35, fin: 25, duree: 3.8, bruit: 1, niveau: .035 },
   rafale: { hz: 180, fin: 70, duree: .12, bruit: .65 },
   canon: { hz: 115, fin: 35, duree: .25, bruit: .5 },
   missile: { hz: 230, fin: 700, duree: .35, bruit: .75 },
@@ -44,7 +54,16 @@ export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number
   cible.addEventListener('pointerdown', debloquer, true);
   cible.addEventListener('keydown', debloquer, true);
   document.addEventListener('visibilitychange', visibilite);
-  return {
+  let ambiance: Son | null = null;
+  let prochaineAmbiance = 0;
+  const minuterie = setInterval(() => {
+    if (ambiance && contexte?.state === 'running' && !document.hidden && contexte.currentTime >= prochaineAmbiance) {
+      prochaineAmbiance = contexte.currentTime + 4;
+      api.jouer(ambiance);
+    }
+  }, 1000);
+  const api: AudioJeu = {
+    environnement(son) { if (ambiance !== son) { ambiance = son; prochaineAmbiance = 0; } },
     annuler,
     regler(a, v) { actif = a; niveau = volumeNormalise(v); if (!a || !niveau) annuler(); if (sortie && contexte) sortie.gain.setTargetAtTime(a ? niveau * .32 : 0, contexte.currentTime, .015); },
     jouer(son) {
@@ -52,7 +71,7 @@ export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number
       if (voix.size >= MAX_VOIX) voix.values().next().value?.();
       const c = contexte, t = c.currentTime, p = TIMBRES[son];
       const gain = c.createGain(); gain.connect(sortie);
-      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(.5, t + .006);
+      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(p.niveau ?? .5, t + (p.duree > 1 ? .5 : .006));
       gain.gain.exponentialRampToValueAtTime(.0001, t + p.duree);
       const osc = c.createOscillator(); osc.type = 'triangle'; osc.frequency.setValueAtTime(p.hz, t);
       osc.frequency.exponentialRampToValueAtTime(p.fin, t + p.duree); osc.connect(gain);
@@ -68,10 +87,11 @@ export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number
       osc.start(t); bruit.start(t); osc.stop(t + p.duree); bruit.stop(t + p.duree);
     },
     detruire() {
-      if (mort) return; mort = true; annuler();
+      if (mort) return; mort = true; clearInterval(minuterie); annuler();
       cible.removeEventListener('pointerdown', debloquer, true); cible.removeEventListener('keydown', debloquer, true);
       document.removeEventListener('visibilitychange', visibilite);
       if (contexte) void contexte.close().catch(() => {}); contexte = null; sortie = null;
     },
   };
+  return api;
 }

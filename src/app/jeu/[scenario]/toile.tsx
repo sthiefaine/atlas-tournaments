@@ -302,6 +302,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     let victoireEnregistree = false;
     try {
       jeu = monterJeu(conteneur, {
+        sonParole: () => audio.jouer('parole'),
         scenario: joue, carte, locale, commandants, graine,
         adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants, Object.fromEntries(joue.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!]))),
         reprendre: depart === 'reprise',

@@ -1,3 +1,4 @@
+import { sonEnvironnement } from '../audio/profils';
 import { cleCase } from '../engine/index';
 import type { SortieAudio } from '../audio/types';
 import { chargerEnvironnement, type EnvironnementLivre } from './assets-environnement';
@@ -722,6 +723,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         etatPrecedent = etat;
       }
       etat = e;
+      options.audio?.environnement?.(sonEnvironnement(e.climat.meteo, e.climat.phase, options.biome ?? ''));
       vue = v;
       if (!monde && !chantier) {
         const plan = planDeConstruction(e, v);

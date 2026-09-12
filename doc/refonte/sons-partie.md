@@ -9,3 +9,9 @@ Le contexte est créé après un appui ou une touche sur la carte ; les refus du
 Les réglages proposent « Sons en partie » et un volume de 0 à 100 %, enregistrés avec les autres préférences de l’appareil. Les anciennes préférences adoptent 45 % et le son actif, toujours derrière le premier geste. Les valeurs invalides sont normalisées. Aucun état sonore n’influence la simulation ou les sauvegardes tactiques.
 
 Vérifications automatisées : absence de création avant geste, plafonnement des voix, annulation, pause d’onglet, absence de reprise automatique, mute, nettoyage idempotent ; déclenchement daté des gestes testé côté animations. L’équilibre sonore final reste à écouter sur haut-parleurs et casque.
+
+## Complément — environnement, déplacements et dialogues (13 septembre 2026)
+
+Branche `codex/sons-environnement-dialogues` : cinq timbres de locomotion suivent les gestes de déplacement, cadencés à 280 ms sans rattrapage de sons entre deux images. La position courante du trajet est vérifiée contre la visibilité. Les textes produisent une ponctuation synthétique espacée de 90 ms uniquement pendant la frappe des lettres ; compléter ou passer la réplique arrête la frappe. Il ne s’agit pas de doublage enregistré.
+
+L’environnement sélectionne pluie/tempête, insectes nocturnes, vagues du littoral ou vent. Des nappes discrètes sont émises toutes les quatre secondes, après déverrouillage audio. Tous ces sons partagent le volume existant, le mute, la suspension d’onglet et le nettoyage de la partie. L’accueil reste silencieux. Aucun fichier audio n’est téléchargé. Les timbres sont une première réalisation synthétique ; leur qualité et leur équilibre doivent encore être écoutés humainement.
