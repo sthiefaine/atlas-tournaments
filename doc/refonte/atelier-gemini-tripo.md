@@ -11,7 +11,7 @@ Une route dédiée est préparée dans le projet voisin `next-upload` : `/api/at
 Configuration de production à effectuer dans l’hébergeur, sans envoyer les secrets au navigateur :
 
 - **next-upload** : `ATLAS_SOURCES_DIR=/data/atlas-sources`, dossier situé dans un volume persistant, avec sauvegarde ; réutiliser son `UPLOADFILES_WRITE_TOKEN` existant. Déployer la nouvelle route.
-- **Atlas** : `ATLAS_UPLOAD_URL=https://votre-service-upload`, `ATLAS_UPLOAD_TOKEN` contenant le jeton d’écriture du service. Déployer Atlas.
+- **Atlas** : `ATLAS_UPLOAD_URL=https://uploadfiles.clairdev.com`, `ATLAS_UPLOAD_TOKEN` contenant le jeton d’écriture du service. Cette URL est désormais la valeur par défaut côté serveur ; la variable reste disponible pour la remplacer. Déployer Atlas.
 - Le proxy devant les deux services doit accepter 150 Mio et le temps nécessaire au transfert. Les octets traversent Atlas pour garder l’authentification admin et le jeton distant côté serveur.
 
 Alternative locale : `ATLAS_ASSET_SOURCES_DIR` absolu ; par défaut en développement `assets/sources`, ignoré par git. En production, aucun dépôt local n’est proposé sans configuration explicite. Configurer un chemin ne prouve pas qu’il est persistant : le montage reste à vérifier sur l’hébergeur.

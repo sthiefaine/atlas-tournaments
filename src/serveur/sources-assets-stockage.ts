@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { cheminSource, dossierSources, enregistrerSource, listerSources } from './sources-assets';
 export interface SourceAsset {revision:string;octets:number;date?:string}
 function distant(){
-  const url=process.env.ATLAS_UPLOAD_URL,token=process.env.ATLAS_UPLOAD_TOKEN;
+  const url=process.env.ATLAS_UPLOAD_URL || 'https://uploadfiles.clairdev.com',token=process.env.ATLAS_UPLOAD_TOKEN;
   if(!url||!token)return null;
   const u=new URL(url);
   if(u.protocol!=='https:' && !(u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname)))throw new Error('Le stockage distant doit utiliser HTTPS');
