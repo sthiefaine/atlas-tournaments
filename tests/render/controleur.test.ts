@@ -559,7 +559,7 @@ test('dix survols en phase de sélection ne rejouent ni le Dijkstra ni l’envel
  * de tout — assez pour que la partie ne soit pas finie d'avance.
  */
 function partieCatalogue6(): { etat: EtatPartie; cat: Catalogue } {
-  const cat = chargerCatalogue(6);
+  const cat = chargerCatalogue(0);
   // `P` : la plaine du catalogue — un point n'est pas un terrain, et une case
   // sans terrain n'est ni franchissable ni débarquable.
   const scene = scenePersonnalisee(['PPPPP', 'PPPPP', 'PPPPP'], {}, [

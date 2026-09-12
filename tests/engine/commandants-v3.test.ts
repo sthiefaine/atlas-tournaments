@@ -7,7 +7,7 @@ import { scenePersonnalisee } from './aides';
 import scenarioJson from '../../content/scenarios/couleurs_alliees.json';
 import { validerScenario } from '../../src/schemas/index';
 
-const cat = chargerCatalogue(8);
+const cat = chargerCatalogue(0);
 test('34 commandants explicites couvrent 24 nations, huit adversaires et deux Atlas', () => {
   const profils = listerProfilsCommandants(3);
   assert.equal(profils.length, 34);
@@ -63,7 +63,7 @@ test('la révision 3 exige une sélection explicite et ses profils sont isolés 
   // tient, c'est qu'un scénario **sans** révision déclarée garde la sienne.
   const sansRevision = { ...validation.valeur };
   delete sansRevision.commandantsVersion;
-  const scenario = { ...sansRevision, catalogueVersion: 8 };
+  const scenario = { ...sansRevision, catalogueVersion: 0 };
   const anciens = resoudreCommandantsScenario(scenario);
   assert.deepEqual(anciens, resoudreCommandantsScenario({ ...scenario, commandantsVersion: 2 }));
   assert.notDeepEqual(anciens, resoudreCommandantsScenario({ ...scenario, commandantsVersion: 3 }));

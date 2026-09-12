@@ -286,7 +286,7 @@ export function dateDeSaison(saison: Saison, hemisphere: Hemisphere = 'nord'): s
  * version de catalogue courante. La date est imposée par la condition jouée —
  * c'est elle qui fixe la saison quand aucun `climatFixe` ne la force.
  */
-export function scenarioMinimal(carte: MapDef, catalogueVersion = 1, date = '2026-09-05'): Scenario {
+export function scenarioMinimal(carte: MapDef, catalogueVersion = 0, date = '2026-09-05'): Scenario {
   const commandants = [];
   for (let camp = 0; camp < carte.camps; camp += 1) {
     commandants.push({ camp: camp as CampId, commandantCle: 'cmd_neutre' });
@@ -339,7 +339,7 @@ export function commandantsDeSimulation(scenario: Scenario): Commandants {
 }
 
 /** Le catalogue d'une campagne : le canon, plus l'unité candidate s'il y en a une. */
-export function catalogueAvec(candidat: UnitType | null, version = 1): Catalogue {
+export function catalogueAvec(candidat: UnitType | null, version = 0): Catalogue {
   const base = chargerCatalogue(version);
   const unites = base.cles.map((c) => base.unites[c]!);
   const terrains = Object.values(base.terrains);
@@ -691,7 +691,7 @@ export function simuler(d: DemandeSimulation): ResultatSimulation {
     return resultat;
   }
 
-  const cat = catalogueAvec(null, d.scenario?.catalogueVersion ?? 1);
+  const cat = catalogueAvec(null, d.scenario?.catalogueVersion ?? 0);
   const scenario = scenarioLimite(d, journeesMax);
   const terre = surfaceTerre(d.carte);
   const nomStrategies = nomDeCampagne(strategies);
@@ -735,7 +735,7 @@ export function simuler(d: DemandeSimulation): ResultatSimulation {
 
 /** Le scénario appliqué : celui fourni, ou un minimal, avec la limite de journées demandée. */
 function scenarioLimite(d: DemandeSimulation, journeesMax: number): Scenario {
-  const base = d.scenario ?? scenarioMinimal(d.carte, d.catalogueCandidat?.catalogueVersion ?? 1);
+  const base = d.scenario ?? scenarioMinimal(d.carte, d.catalogueCandidat?.catalogueVersion ?? 0);
   return { ...base, limiteJournees: journeesMax };
 }
 

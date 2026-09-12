@@ -258,7 +258,7 @@ const suites: Suite[] = [
     valider: validerSauvegarde,
     valide: sauvegarde,
     invalides: [
-      { titre: 'version de catalogue nulle', muter: (o) => { o['catalogueVersion'] = 0; }, chemin: 'catalogueVersion' },
+      { titre: 'version de catalogue négative', muter: (o) => { o['catalogueVersion'] = -1; }, chemin: 'catalogueVersion' },
       { titre: 'version de scénario invalide', muter: (o) => { o['scenarioVersion'] = 0; }, chemin: 'scenarioVersion' },
       { titre: 'journal d\'actions absent', muter: (o) => { o['actions'] = null; }, chemin: 'actions' },
       { titre: 'graine manquante', muter: (o) => { delete o['graine']; }, chemin: 'graine' },

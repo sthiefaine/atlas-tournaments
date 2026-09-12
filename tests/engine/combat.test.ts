@@ -257,7 +257,7 @@ test('la prévision annonce la riposte secondaire à zéro munition', () => {
 });
 
 test('le char moyen du catalogue 4 se joue comme les autres chars', () => {
-  const cat4 = chargerCatalogue(4);
+  const cat4 = chargerCatalogue(0);
   const moyen = cat4.unites['char_moyen']!;
   assert.equal(moyen.cout, 10000);
   assert.deepEqual(moyen.armeSecondaire, ['infanterie', 'meca', 'genie']);

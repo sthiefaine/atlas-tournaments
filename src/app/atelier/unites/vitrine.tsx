@@ -28,7 +28,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three/webgpu';
 import { chargerCatalogue } from '@/engine/index';
-import { chargerCatalogueUnites, chargerPays } from '@/content/index';
+import { chargerPays } from '@/content/index';
 import { chargerStyleNation } from '@/assets/styles';
 import { creerEnvironnement } from '@/render3d/environnement';
 import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
@@ -68,19 +68,8 @@ interface PontVitrine {
   modele(): { livre: boolean; lods: number; clips: string[] };
 }
 
-/**
- * Les versions de catalogue qu'on peut regarder. La dernière est le défaut :
- * une unité homologuée ce matin doit être visible ici sans changer de menu, et
- * les anciennes restent pour comparer une silhouette à ce qu'elle était. La
- * liste se **déduit** de `content/unites.json` : écrite à la main, elle s'était
- * arrêtée au 5 pendant que le canon passait au 6, et le furtif n'y était pas.
- */
-const VERSION_CANON = chargerCatalogueUnites().catalogueVersion;
-const VERSIONS_CATALOGUE: readonly number[] = Array.from({ length: VERSION_CANON }, (_, i) => i + 1);
-
 export default function Vitrine(): React.ReactElement {
   const orbite = useRef<Orbite>({ ...ORBITE_INITIALE });
-  const [version, setVersion] = useState<number>(VERSION_CANON);
   const [unite, setUnite] = useState<string>('infanterie');
   const [pays, setPays] = useState<string>('fr');
   const [camp, setCamp] = useState<CampId>(0);
@@ -99,7 +88,7 @@ export default function Vitrine(): React.ReactElement {
   const dernier = useRef(0);
   const figeRef = useRef(false);
 
-  const catalogue = useMemo(() => chargerCatalogue(version), [version]);
+  const catalogue = useMemo(() => chargerCatalogue(), []);
   const nations = useMemo(() => chargerPays().map((p) => ({ code: p.code, nom: p.nom })), []);
   const uniteSure: CleUnite = catalogue.cles.includes(unite as CleUnite) ? (unite as CleUnite) : catalogue.cles[0]!;
 
@@ -313,11 +302,7 @@ export default function Vitrine(): React.ReactElement {
         <label><input type="radio" name="camp" checked={camp === 0} onChange={() => setCamp(0)} /> Bleu</label>
         <label><input type="radio" name="camp" checked={camp === 1} onChange={() => setCamp(1)} /> Rouge</label>
       </fieldset>
-      <label>Catalogue
-        <select value={version} onChange={(e) => setVersion(Number(e.target.value))}>
-          {VERSIONS_CATALOGUE.map((v) => <option key={v} value={v}>{v}</option>)}
-        </select>
-      </label>
+      <span>Catalogue actuel · {catalogue.cles.length} unités</span>
       <p className={styles.legende}>
         Silhouette : {fiche.silhouette.base} · {fiche.silhouette.corps}
         {fiche.silhouette.modules.length > 0 ? ` · ${fiche.silhouette.modules.join(', ')}` : ''} · taille {fiche.silhouette.taille}

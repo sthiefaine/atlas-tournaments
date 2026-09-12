@@ -20,7 +20,7 @@ import type { CampId, CleUnite } from '../../src/schemas/index';
 import { carte, scenePersonnalisee } from '../engine/aides';
 
 /** Le catalogue 4 : celui du transport ravitailleur et de l'arme secondaire. */
-const CAT4 = chargerCatalogue(4);
+const CAT4 = chargerCatalogue(0);
 
 /** Une partie sur une grille écrite à la main, au catalogue 4, sans brouillard ni météo. */
 function partie(

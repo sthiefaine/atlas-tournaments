@@ -2,7 +2,7 @@
   "version": 1,
   "mission": "premier_contact",
   "scenarioVersion": 8,
-  "catalogueVersion": 4,
+  "catalogueVersion": 0,
   "carte": "carte_premier_contact",
   "statut": "lot_autonome_de_candidats_non_approuves",
   "archive": "premier_contact_glb_textures.zip",
@@ -37,7 +37,7 @@
     "Ce lot ne remplace aucun modèle servi au jeu et ne modifie pas les réglages de chargement.",
     "Les bâtiments et décors constituent une sélection éditoriale ; les accessoires procéduraux du rendu ne sont pas tous des GLB de ce lot.",
     "La plaine est copiée depuis la livraison existante ; aucune nouvelle approbation n’est donnée.",
-    "Les géométries communes actuelles sont fournies pour une mission catalogue 4 ; cela ne modifie aucune statistique de ce catalogue."
+    "Les géométries communes actuelles sont fournies pour une mission catalogue 0 ; cela ne modifie aucune statistique de ce catalogue."
   ],
   "assets": [
     {
@@ -621,8 +621,8 @@
     },
     {
       "chemin": "mission/scenario.json",
-      "octets": 5852,
-      "sha256": "dd4d816db813da8d2adf791f30274a0ae2887d5e534e28c1b67f843ca25911a0"
+      "octets": 5879,
+      "sha256": "50ff2944d60fdc0623eda7cda9fb98b36b22716232159168f2fc04b3af1427a0"
     },
     {
       "chemin": "modeles/batiment_qg_fr_ile_de_france/batiment_qg_fr_ile_de_france_albedo.png",

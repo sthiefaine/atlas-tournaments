@@ -60,11 +60,10 @@ test('l’IA sait construire un passage au profit de ses véhicules', async () =
   assert.equal(appliquer(e, option.action, CAT).ok, true);
 });
 
-test('le catalogue 1 conserve ses dix unités et ses anciens producteurs', async () => {
+test('le catalogue actuel permet de produire le génie', async () => {
   const { chargerCatalogue, produitesPar } = await import('../../src/engine/index');
-  const ancien = chargerCatalogue(1); const courant = chargerCatalogue(2);
-  assert.equal(ancien.cles.length, 10);
-  assert.equal(ancien.unites['genie'], undefined);
-  assert.ok(!produitesPar(ancien, 'usine').includes('genie'));
+  const courant = chargerCatalogue();
+  assert.equal(courant.cles.length, 30);
+  assert.ok(courant.unites['genie']);
   assert.ok(produitesPar(courant, 'usine').includes('genie'));
 });

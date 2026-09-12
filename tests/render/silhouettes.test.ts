@@ -36,7 +36,7 @@ function pinceauFactice(): { g: Pinceau; journal: string[] } {
   return { g: g as unknown as Pinceau, journal };
 }
 
-const CAT = chargerCatalogue(5);
+const CAT = chargerCatalogue(0);
 const BLEU = PALETTES.bleu;
 
 test('toute silhouette du catalogue se dessine, et chaque save a son restore', () => {

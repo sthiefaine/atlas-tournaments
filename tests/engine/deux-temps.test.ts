@@ -8,7 +8,7 @@ import { appliquer, chargerCatalogue, type Action, type EtatPartie, type Suite }
 import type { Case } from '../../src/schemas/index';
 import { partiePersonnalisee, u } from './aides';
 
-const CAT = chargerCatalogue(6);
+const CAT = chargerCatalogue(0);
 //               012345
 const GRILLE = [
   'PPPCPP',

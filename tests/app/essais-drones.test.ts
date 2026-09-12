@@ -14,10 +14,10 @@ test('l’essai du catalogue 7 place le matériel exclusif uniquement dans le ca
   if (!vs.ok || !vm.ok) return;
   const scenario = vs.valeur, carte = vm.valeur;
   assert.equal(scenario.statut, 'brouillon');
-  assert.equal(scenario.catalogueVersion, 7);
+  assert.equal(scenario.catalogueVersion, 0);
   assert.deepEqual(scenario.factionsParCamp, { 1: 'atl' });
   assert.equal(scenario.limiteJournees, 15);
-  const cat = chargerCatalogue(7);
+  const cat = chargerCatalogue(0);
   for (const u of carte.unitesDepart) {
     const type = cat.unites[u.type];
     assert.ok(type, u.type);

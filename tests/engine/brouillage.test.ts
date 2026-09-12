@@ -1,5 +1,5 @@
 // Drones, brouilleur mobile et station radar (`04-gameplay.md` §10 bis) :
-// catalogue 3 seulement, et un rejeu du catalogue 2 ne les voit jamais.
+// Catalogue actuel.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -8,15 +8,14 @@ import {
 } from '../../src/engine/index';
 import { scenePersonnalisee } from './aides';
 
-const CAT3 = chargerCatalogue(3);
+const CAT3 = chargerCatalogue(0);
 const LARGE = 'P'.repeat(30);
 
-test('le catalogue 2 ignore les drones, le catalogue 3 les porte', () => {
-  assert.equal(chargerCatalogue(2).unites['drone'], undefined);
-  assert.equal(chargerCatalogue(3).unites['drone']?.cout, 3000);
-  // Le char moyen entre au 4 : le catalogue 3 ne le voit pas plus que le 2 ne voit le drone.
-  assert.equal(chargerCatalogue(3).unites['char_moyen'], undefined);
-  assert.equal(chargerCatalogue(4).unites['char_moyen']?.cout, 10000);
+test('le catalogue actuel porte drones et blindés', () => {
+  assert.equal(CAT3.version, 0);
+  assert.equal(CAT3.unites['drone']?.cout, 3000);
+  assert.equal(CAT3.unites['char_moyen']?.cout, 10000);
+  assert.ok(CAT3.unites['brouilleur']);
 });
 
 test('un brouilleur mobile adverse aveugle un drone à dix cases, pas à onze', () => {

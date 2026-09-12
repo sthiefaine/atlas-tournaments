@@ -5,7 +5,7 @@ import { appliquer, chargerCatalogue, creerPartie } from '../../src/engine';
 import { scenePersonnalisee } from '../engine/aides';
 
 test('une infanterie IA ne termine pas son déplacement sur une unité d’un autre camp allié', () => {
-  const cat = chargerCatalogue(6);
+  const cat = chargerCatalogue(0);
   const scene = scenePersonnalisee(
     ['HPPCHPH'],
     { '0,0': 0, '4,0': 1, '6,0': 2 },

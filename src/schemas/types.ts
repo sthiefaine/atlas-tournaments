@@ -551,7 +551,7 @@ export interface UnitType {
   nom: string;
   nomCourt: string;
   statut: StatutUnite;
-  /** `catalogue` : la version de catalogue qui accueille l'unité (2 à défaut). */
+  /** `catalogue` : la révision d’accueil ; toutes les unités actuelles sont regroupées au catalogue 0. */
   homologation?: { date: DateIso; sourceEventCode?: Cle; catalogue?: number };
   traits: Trait[];
   silhouette: Silhouette;
@@ -1054,7 +1054,7 @@ export interface Scenario extends Enveloppe {
   climatFixe?: { saison?: Saison; meteo?: Meteo };
   cycleJourNuit: { jour: number; nuit: number };
   catalogueVersion: number;
-  /** Révision des capacités ; absence conserve la sélection historique par catalogue. */
+  /** Révision des capacités ; indépendante du catalogue d’unités. */
   commandantsVersion?: 1 | 2 | 3 | 4;
   commandants: { camp: CampId; commandantCle: Cle; ia?: StrategieIa }[];
   fondsDepartParCamp?: Partial<Record<CampId, number>>;

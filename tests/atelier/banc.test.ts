@@ -47,16 +47,10 @@ function etatBanc(): EtatPartie {
 }
 
 test('le banc force le catalogue qui porte toutes ses unités', () => {
-  // Le scénario de démonstration, celui que l'atelier prête au banc, est en
-  // catalogue 1 : dix unités, pas de génie. Sans ce forçage, le banc montait
-  // sans broncher une carte à laquelle il manquait une unité.
   const s = validerScenario(scenarioDemo);
   if (!s.ok) throw new Error('scénario de démonstration invalide');
   assert.equal(scenarioBanc(s.valeur).catalogueVersion, VERSION_CATALOGUE_BANC);
-  const maigre = chargerCatalogue(1);
-  const manquantes = UNITES_BANC.filter((u) => !maigre.unites[u]);
-  assert.ok(manquantes.length > 0, 'si le catalogue 1 suffisait, ce forçage serait inutile');
-  // Et le catalogue forcé, lui, les porte toutes.
+  assert.equal(VERSION_CATALOGUE_BANC, 0);
   const complet = chargerCatalogue(VERSION_CATALOGUE_BANC);
   for (const u of UNITES_BANC) assert.ok(complet.unites[u], `unité absente du catalogue du banc : ${u}`);
   // Le banc suit le **dernier** catalogue, celui de `content/unites.json` : une

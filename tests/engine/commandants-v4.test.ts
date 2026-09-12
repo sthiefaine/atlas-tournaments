@@ -30,7 +30,7 @@ import { cleSourceBanc } from '../../src/app/campagne/bancs';
 import { commandantCamille } from '../schemas/exemples';
 import { scenePersonnalisee } from './aides';
 
-const cat = chargerCatalogue(8);
+const cat = chargerCatalogue(0);
 const TUTORIELS_SANS_JAUGE = ['premier_contact', 'villes_du_bocage', 'chantier_des_usines', 'qg_de_la_presquile'];
 
 function scenario(code: string): Scenario {
@@ -207,7 +207,7 @@ test('les scénarios jouables déclarent la révision 4 ; les quatre premiers tu
   for (const code of codes) {
     const s = scenario(code);
     if (TUTORIELS_SANS_JAUGE.includes(code)) {
-      assert.equal(s.commandantsVersion, undefined, `${code} : pas de jauge utile, la révision 1 reste`);
+      assert.equal(s.commandantsVersion, 1, `${code} : pas de jauge utile, la révision 1 reste`);
       assert.equal(revisionCommandants(s), 1);
       continue;
     }
@@ -222,8 +222,8 @@ test('les scénarios jouables déclarent la révision 4 ; les quatre premiers tu
   // Le schéma accepte 4 et refuse au-delà ; l'absence garde la règle du catalogue.
   assert.ok(validerScenario({ ...scenarioAllie, commandantsVersion: 4 }).ok);
   assert.equal(validerScenario({ ...scenarioAllie, commandantsVersion: 5 }).ok, false);
-  assert.equal(revisionCommandants({ catalogueVersion: 6 }), 1);
-  assert.equal(revisionCommandants({ catalogueVersion: 7 }), 2);
+  assert.equal(revisionCommandants({ catalogueVersion: 0, commandantsVersion: 1 }), 1);
+  assert.equal(revisionCommandants({ catalogueVersion: 0 }), 2);
 });
 
 test('le banc prêté lit la révision 4 : Tomas prêté au pacte du col joue son kit et porte sa faiblesse', () => {

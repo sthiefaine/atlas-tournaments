@@ -60,7 +60,7 @@ test('chaque fiche dit ce que la page affiche : la carte, le catalogue, les camp
     assert.equal(p.demonstration, p.cle === CLE_DEMONSTRATION);
   }
   const archipel = partiesLibres(SCENARIOS, CARTES, MISSIONS).find((p) => p.cle === 'archipel_des_deux_rades')!;
-  assert.equal(archipel.catalogueVersion, 6, 'les cartes navales sont en catalogue 6');
+  assert.equal(archipel.catalogueVersion, 0, 'les cartes navales sont en catalogue 6');
   assert.equal(archipel.largeur, 20);
   assert.equal(archipel.hauteur, 14);
   assert.equal(archipel.biome, 'archipel');
@@ -84,20 +84,20 @@ test('un brouillon, un scénario sans carte ou une épreuve ne s’affichent pas
 
 test('une sauvegarde se reprend si elle a joué et si le moteur et le catalogue sont ceux d’aujourd’hui', () => {
   const texte = (v: unknown): string => JSON.stringify(v);
-  const ok = { scenarioCle: 'demo', actions: [{ type: 'fin_tour' }], engineVersion: VERSION_MOTEUR, catalogueVersion: 6 };
-  assert.equal(etatSauvegarde(null, VERSION_MOTEUR, 6), 'aucune');
-  assert.equal(etatSauvegarde('', VERSION_MOTEUR, 6), 'aucune');
-  assert.equal(etatSauvegarde('pas du json', VERSION_MOTEUR, 6), 'aucune');
-  assert.equal(etatSauvegarde(texte([1, 2]), VERSION_MOTEUR, 6), 'aucune');
-  assert.equal(etatSauvegarde(texte({ ...ok, actions: [] }), VERSION_MOTEUR, 6), 'aucune', 'sans action, rien à reprendre');
-  assert.equal(etatSauvegarde(texte({ ...ok, actions: 'oui' }), VERSION_MOTEUR, 6), 'aucune');
-  assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 6), 'en_cours');
-  assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 6, 2), 'perimee', 'les actions anciennes ne se rejouent pas sur une mission réécrite');
-  assert.equal(etatSauvegarde(texte({ ...ok, scenarioVersion: 2 }), VERSION_MOTEUR, 6, 2), 'en_cours');
+  const ok = { scenarioCle: 'demo', actions: [{ type: 'fin_tour' }], engineVersion: VERSION_MOTEUR, catalogueVersion: 0 };
+  assert.equal(etatSauvegarde(null, VERSION_MOTEUR, 0), 'aucune');
+  assert.equal(etatSauvegarde('', VERSION_MOTEUR, 0), 'aucune');
+  assert.equal(etatSauvegarde('pas du json', VERSION_MOTEUR, 0), 'aucune');
+  assert.equal(etatSauvegarde(texte([1, 2]), VERSION_MOTEUR, 0), 'aucune');
+  assert.equal(etatSauvegarde(texte({ ...ok, actions: [] }), VERSION_MOTEUR, 0), 'aucune', 'sans action, rien à reprendre');
+  assert.equal(etatSauvegarde(texte({ ...ok, actions: 'oui' }), VERSION_MOTEUR, 0), 'aucune');
+  assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 0), 'en_cours');
+  assert.equal(etatSauvegarde(texte(ok), VERSION_MOTEUR, 0, 2), 'perimee', 'les actions anciennes ne se rejouent pas sur une mission réécrite');
+  assert.equal(etatSauvegarde(texte({ ...ok, scenarioVersion: 2 }), VERSION_MOTEUR, 0, 2), 'en_cours');
   // La règle de la page de jeu : un autre moteur ou un autre catalogue, et la
   // partie repart de zéro — on ne l'annonce donc pas comme reprenable.
-  assert.equal(etatSauvegarde(texte({ ...ok, engineVersion: VERSION_MOTEUR - 1 }), VERSION_MOTEUR, 6), 'perimee');
-  assert.equal(etatSauvegarde(texte({ ...ok, catalogueVersion: 5 }), VERSION_MOTEUR, 6), 'perimee');
+  assert.equal(etatSauvegarde(texte({ ...ok, engineVersion: VERSION_MOTEUR - 1 }), VERSION_MOTEUR, 0), 'perimee');
+  assert.equal(etatSauvegarde(texte({ ...ok, catalogueVersion: 9 }), VERSION_MOTEUR, 0), 'perimee');
 });
 
 // ---------------------------------------------------------------------------

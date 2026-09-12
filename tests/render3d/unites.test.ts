@@ -754,7 +754,7 @@ test('ce qui repose sur le sol se repose avec lui : une mutation de terrain repo
 // Catalogue 6 : le voile de la furtivité, et ce que le joueur voit
 // ---------------------------------------------------------------------------
 
-const cat6 = chargerCatalogue(6);
+const cat6 = chargerCatalogue(0);
 
 /** Deux chasseurs furtifs au contact, un par camp, sur une plaine. */
 function partieFurtive(): ReturnType<typeof partiePersonnalisee> {
@@ -897,7 +897,7 @@ test('ce que le joueur ne voit pas n’est pas dessiné, même sur une case écl
 test('les formes d’unités survivent au démontage du calque, et pèsent ce qu’on a dit', () => {
   oublierFormesUnites();
   assert.equal(poidsFormesUnites().formes, 0, 'on part à froid');
-  const catalogue = chargerCatalogue(6);
+  const catalogue = chargerCatalogue(0);
   for (const type of Object.values(catalogue.unites)) geometriesSilhouette(type.silhouette);
   const complet = poidsFormesUnites();
   const repere = geometriesSilhouette(Object.values(catalogue.unites)[0]!.silhouette);

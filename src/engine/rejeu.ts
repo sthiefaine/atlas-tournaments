@@ -44,6 +44,7 @@ export function rejouer(
   scene: Scene, cat: Catalogue, sauvegarde: SauvegardeMoteur,
   commandants: Commandants = [],
 ): ResultatRejeu {
+  if (sauvegarde.catalogueVersion !== cat.version) throw new Error('Catalogue de sauvegarde incompatible : recommencer la partie avec le catalogue actuel.');
   let etat = creerPartie(scene, cat, sauvegarde.graine);
   const refus: { indice: number; motif: MotifRefus }[] = [];
   for (let i = 0; i < sauvegarde.actions.length; i += 1) {

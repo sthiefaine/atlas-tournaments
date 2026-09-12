@@ -33,7 +33,7 @@ function profil(surcharge: Partial<ProfilCampagne> = {}): ProfilCampagne {
     relations: { lu: 'alliee', ch: 'rivale', gr: 'retiree' },
     confiance: { cmd_elsbeth_vonlanthen: 2, cmd_yann_reinert: 3 },
     serieDepeches: 3,
-    catalogueVersion: 1,
+    catalogueVersion: 0,
     chainesVersion: 1,
     creeLe: '2026-09-01',
     majLe: '2026-09-05',

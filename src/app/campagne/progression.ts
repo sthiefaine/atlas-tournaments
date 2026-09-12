@@ -248,7 +248,7 @@ export function profilDepuisProgression(p: Progression, etat: EtatCampagne = {})
     relations: {},
     confiance: {},
     serieDepeches: 0,
-    catalogueVersion: 1,
+    catalogueVersion: 0,
     chainesVersion: 1,
     creeLe: JOUR_SANS_HORLOGE,
     majLe: JOUR_SANS_HORLOGE,

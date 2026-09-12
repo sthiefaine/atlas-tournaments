@@ -20,7 +20,7 @@ import { commandantCamille } from '../schemas/exemples';
 import { scenePersonnalisee, u } from './aides';
 
 /** Le catalogue 3 : il porte le drone, qu'une impulsion doit abattre comme un hélicoptère. */
-const CAT = chargerCatalogue(3);
+const CAT = chargerCatalogue(0);
 
 const GRILLE = [
   'HPPPPPPP',

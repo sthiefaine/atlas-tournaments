@@ -252,7 +252,7 @@ export const scenarioBretagne = {
   carteCle: 'carte_fr_bretagne_01',
   date: '2026-09-06',
   cycleJourNuit: { jour: 4, nuit: 2 },
-  catalogueVersion: 1,
+  catalogueVersion: 0,
   commandants: [
     { camp: 0, commandantCle: 'cmd_camille_aubertin' },
     { camp: 1, commandantCle: 'cmd_maelle_kerdraon', ia: 'defensive' },
@@ -332,7 +332,7 @@ export const scenarioIncarnationCh = {
   carteCle: 'carte_ch_col_01',
   date: '2026-10-02',
   cycleJourNuit: { jour: 4, nuit: 2 },
-  catalogueVersion: 1,
+  catalogueVersion: 0,
   commandants: [
     { camp: 0, commandantCle: 'cmd_elsbeth_vonlanthen' },
     { camp: 1, commandantCle: 'cmd_maelle_kerdraon', ia: 'agressive' },
@@ -567,7 +567,7 @@ export const missionDuJour = {
 export const sauvegarde = {
   scenarioCle: 'scen_fr_bretagne_01',
   graine: 'fr-bretagne-2026-0006',
-  catalogueVersion: 1,
+  catalogueVersion: 0,
   engineVersion: 1,
   mapgenVersion: 1,
   contentVersion: 1,
@@ -722,7 +722,7 @@ export const profilCampagneFr = {
   relations: { lu: 'alliee', ch: 'rivale', gr: 'retiree' },
   confiance: { cmd_yann_reinert: 2 },
   serieDepeches: 3,
-  catalogueVersion: 1,
+  catalogueVersion: 0,
   chainesVersion: 7,
   creeLe: '2026-09-01',
   majLe: '2026-09-05',

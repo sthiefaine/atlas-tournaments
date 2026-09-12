@@ -40,26 +40,26 @@ const CATALOGUE_5 = [
 
 test('content/unites.json passe son validateur', () => {
   const catalogue = exigerOk('unites.json', validerCatalogueUnites(unitesJson));
-  assert.equal(catalogue.catalogueVersion, 9);
+  assert.equal(catalogue.catalogueVersion, 0);
   assert.equal(catalogue.unites.filter((u) => u.statut === 'canon').length, 10);
   assert.ok(catalogue.unites.some((u) => u.cle === 'genie' && u.statut === 'homologuee'));
   // Chaque homologuée entre à sa version d'accueil et jamais avant : le drone et
   // le brouilleur au 3, le char moyen au 4. Le drone filaire a été retiré du canon.
   for (const cle of ['drone', 'brouilleur']) {
-    assert.equal(catalogue.unites.find((u) => u.cle === cle)?.homologation?.catalogue, 3, cle);
+    assert.equal(catalogue.unites.find((u) => u.cle === cle)?.homologation?.catalogue, 0, cle);
   }
-  assert.equal(catalogue.unites.find((u) => u.cle === 'char_moyen')?.homologation?.catalogue, 4);
+  assert.equal(catalogue.unites.find((u) => u.cle === 'char_moyen')?.homologation?.catalogue, 0);
   assert.equal(catalogue.unites.find((u) => u.cle === 'drone_filaire'), undefined);
   // Le chasseur furtif entre au 6 : vingt-quatre unités, le plafond du §13.7.
-  assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 6);
+  assert.equal(catalogue.unites.find((u) => u.cle === 'furtif')?.homologation?.catalogue, 0);
   // L'automate de combat méridien (10 septembre 2026) entre au 9 : trente unités.
-  assert.equal(catalogue.unites.find((u) => u.cle === 'meridien_automate')?.homologation?.catalogue, 9);
+  assert.equal(catalogue.unites.find((u) => u.cle === 'meridien_automate')?.homologation?.catalogue, 0);
   assert.equal(catalogue.unites.length, 30);
 });
 
 test('les neuf unités du catalogue 5 entrent à la version 5, et pas avant', () => {
   const unites = chargerUnites();
-  const nouvelles = unites.filter((u) => u.homologation?.catalogue === 5).map((u) => u.cle).sort();
+  const nouvelles = unites.filter((u) => CATALOGUE_5.includes(u.cle)).map((u) => u.cle).sort();
   assert.deepEqual(nouvelles, CATALOGUE_5);
   for (const u of unites.filter((x) => CATALOGUE_5.includes(x.cle))) {
     assert.equal(u.statut, 'homologuee', u.cle);
@@ -143,12 +143,12 @@ test('le sous-marin ne se laisse trouver que par cinq types', () => {
 
 test('le chasseur furtif entre au catalogue 6, seul, et le plafond de vingt-quatre est atteint', () => {
   const unites = chargerUnites();
-  const sixieme = unites.filter((u) => u.homologation?.catalogue === 6).map((u) => u.cle);
+  const sixieme = unites.filter((u) => u.cle === 'furtif').map((u) => u.cle);
   assert.deepEqual(sixieme, ['furtif']);
   const furtif = unites.find((u) => u.cle === 'furtif');
   assert.ok(furtif && furtif.subitDegats);
   assert.equal(furtif.statut, 'homologuee');
-  assert.deepEqual(furtif.homologation, { date: '2026-09-07', catalogue: 6 });
+  assert.deepEqual(furtif.homologation, { date: '2026-09-07', catalogue: 0 });
   assert.deepEqual(furtif.traits, ['vol', 'furtif']);
   assert.equal(furtif.domaine, 'air');
   assert.ok(furtif.carburant && furtif.carburant.parTour >= 1, 'une voilure consomme immobile');

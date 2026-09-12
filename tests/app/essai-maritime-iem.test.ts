@@ -14,7 +14,7 @@ test('la rade des signaux annonce ses menaces et traverse leurs premières activ
   if (!vs.ok || !vm.ok) return;
   const scenario = vs.valeur;
   const carte = vm.valeur;
-  const cat = chargerCatalogue(8);
+  const cat = chargerCatalogue(0);
   const commandants = resoudreCommandantsScenario(scenario);
   assert.equal(carte.grille[5]?.[6], 'T');
   assert.equal(carte.proprietaires['6,5'], 1);

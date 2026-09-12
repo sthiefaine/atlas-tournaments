@@ -65,7 +65,7 @@ test('le moteur graphique est lancé avant que le moteur de règles ne travaille
   // Le catalogue est la toute première chose que la mise en place demandait ;
   // il explose ici. Si la peau était fabriquée après lui, rien ne serait monté.
   const options = {
-    scenario: { code: 'essai', catalogueVersion: 1 } as unknown as Scenario,
+    scenario: { code: 'essai', catalogueVersion: 0 } as unknown as Scenario,
     carte: {} as MapDef,
     get catalogue(): Catalogue { throw new Error('canon illisible'); },
     fabriqueRendu: () => { journal.push('fabrique'); return rendu; },
@@ -80,7 +80,7 @@ test('le moteur graphique est lancé avant que le moteur de règles ne travaille
 test('sans fabrique de rendu, on lève avant de toucher au conteneur', () => {
   assert.throws(
     () => monterJeu({ style: {} } as unknown as HTMLElement, {
-      scenario: { code: 'essai', catalogueVersion: 1 } as unknown as Scenario,
+      scenario: { code: 'essai', catalogueVersion: 0 } as unknown as Scenario,
       carte: {} as MapDef,
     }),
     /aucune fabrique de rendu/,

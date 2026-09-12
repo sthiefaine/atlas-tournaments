@@ -643,7 +643,7 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
 
 /** Une partie en catalogue 6 : un chasseur furtif du joueur, un fantassin adverse. */
 function partieCatalogue6(): { etat: EtatPartie; cat: Catalogue } {
-  const cat = chargerCatalogue(6);
+  const cat = chargerCatalogue(0);
   const etat = creerPartie(scenePersonnalisee(['PPPPP', 'PPPPP'], {}, [
     { camp: 0, type: 'furtif', x: 0, y: 0 },
     { camp: 1, type: 'infanterie', x: 4, y: 1 },
@@ -1403,7 +1403,7 @@ test('un bouton de pouvoir tient sur une ligne : un signe pour le rang, plus un 
 
 /** Un HUD ouvert sur le menu de production d'un bâtiment, en catalogue 4. */
 function enProduction(unites: readonly CleUnite[], fonds?: number) {
-  const cat = chargerCatalogue(4);
+  const cat = chargerCatalogue(0);
   const etat = creerPartie(scenePersonnalisee(['PUP'], {}, [{ camp: 0, type: 'infanterie', x: 0, y: 0 }]), cat, 'prod');
   const camp = etat.camps.find((c) => c.id === 0);
   assert.ok(camp);

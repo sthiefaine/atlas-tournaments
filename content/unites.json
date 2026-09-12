@@ -1,5 +1,5 @@
 {
-  "catalogueVersion": 9,
+  "catalogueVersion": 0,
   "unites": [
     {
       "cle": "infanterie",
@@ -808,7 +808,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-05",
-        "catalogue": 3
+        "catalogue": 0
       }
     },
     {
@@ -913,7 +913,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-05",
-        "catalogue": 3
+        "catalogue": 0
       }
     },
     {
@@ -1022,7 +1022,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-06",
-        "catalogue": 4
+        "catalogue": 0
       }
     },
     {
@@ -1128,7 +1128,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1233,7 +1233,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1335,7 +1335,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1439,7 +1439,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1551,7 +1551,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1664,7 +1664,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1780,7 +1780,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1885,7 +1885,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -1989,7 +1989,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 5
+        "catalogue": 0
       }
     },
     {
@@ -2094,7 +2094,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-07",
-        "catalogue": 6
+        "catalogue": 0
       }
     },
     {
@@ -2200,7 +2200,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-09",
-        "catalogue": 7
+        "catalogue": 0
       }
     },
     {
@@ -2307,7 +2307,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-09",
-        "catalogue": 7
+        "catalogue": 0
       }
     },
     {
@@ -2414,7 +2414,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-09",
-        "catalogue": 7
+        "catalogue": 0
       },
       "factionExclusive": "atl"
     },
@@ -2521,7 +2521,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-09",
-        "catalogue": 7
+        "catalogue": 0
       },
       "factionExclusive": "atl"
     },
@@ -2628,7 +2628,7 @@
       "peutTirerApresMouvement": false,
       "homologation": {
         "date": "2026-09-09",
-        "catalogue": 8
+        "catalogue": 0
       }
     },
     {
@@ -2732,7 +2732,7 @@
       "peutTirerApresMouvement": true,
       "homologation": {
         "date": "2026-09-10",
-        "catalogue": 9
+        "catalogue": 0
       },
       "factionExclusive": "atl"
     }

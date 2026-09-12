@@ -92,9 +92,9 @@ export function chargerCommandantJeu(cle: Cle, revision: RevisionCommandants = 1
   return commandant;
 }
 
-/** La révision des capacités qu'un scénario joue : la sienne, sinon celle de son catalogue. */
+/** La révision des capacités qu'un scénario joue : la sienne, sinon la révision par défaut, indépendante du catalogue. */
 export function revisionCommandants(scenario: Pick<Scenario, 'commandantsVersion' | 'catalogueVersion'>): RevisionCommandants {
-  return scenario.commandantsVersion ?? (scenario.catalogueVersion >= 7 ? 2 : 1);
+  return scenario.commandantsVersion ?? 2;
 }
 
 export function resoudreCommandantsScenario(scenario: Scenario): (CommandantJeu | null)[] {

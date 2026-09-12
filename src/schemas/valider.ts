@@ -668,7 +668,7 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
     if (h && requis(ctx, h, 'homologation', ['date'])) {
       dateIso(ctx, h['date'], 'homologation.date');
       if (presente(h, 'sourceEventCode')) cle(ctx, h['sourceEventCode'], 'homologation.sourceEventCode');
-      if (presente(h, 'catalogue')) entier(ctx, h['catalogue'], 'homologation.catalogue', { min: 2, max: 99 });
+      if (presente(h, 'catalogue')) entier(ctx, h['catalogue'], 'homologation.catalogue', { min: 0, max: 99 });
     }
   } else if (statut !== undefined && statut !== 'canon') {
     ctx.faute('homologation', "une unité non 'canon' déclare son homologation");
@@ -812,16 +812,13 @@ export function validerUnitType(valeur: unknown): Resultat<UnitType> {
       ctx.faute('traits', "le trait 'ravitaillement' exige une ligne de dégâts entièrement à 0");
     }
     if (a('vol') && a('tout_terrain')) ctx.faute('traits', "traits contradictoires : 'vol' et 'tout_terrain'");
-    // Avant le catalogue 7, drones et brouilleurs ne sont pas armés.
-    // Le 7 autorise les intercepteurs anti-air et les brouilleurs volants.
-    const h = estObjet(o['homologation']) ? o['homologation'] : undefined;
-    const droneMarin = domaine === 'mer' && o['typeMouvement'] === 'mer' && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 8;
-    if (a('drone') && !a('vol') && !droneMarin) ctx.faute('traits', "le trait 'drone' exige le vol ou une coque marine à partir du catalogue 8");
-    const intercepteur = a('drone') && a('vol') && a('anti_air') && typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7;
+    // Les drones marins, intercepteurs et brouilleurs volants font partie du catalogue courant.
+    const droneMarin = domaine === 'mer' && o['typeMouvement'] === 'mer';
+    if (a('drone') && !a('vol') && !droneMarin) ctx.faute('traits', "le trait 'drone' exige le vol ou une coque marine");
+    const intercepteur = a('drone') && a('vol') && a('anti_air');
     if ((a('brouilleur') || (a('drone') && !intercepteur)) && degats && Object.values(degats).some((n) => n > 0)) {
       ctx.faute('traits', "un drone ou un brouilleur ne porte pas d'arme (dégâts à 0)");
     }
-    if (a('brouilleur') && a('drone') && !(typeof h?.['catalogue'] === 'number' && h['catalogue'] >= 7)) ctx.faute('traits', "traits contradictoires : 'drone' et 'brouilleur'");
     if (a('tir_indirect') && a('capture')) ctx.faute('traits', "traits contradictoires : 'tir_indirect' et 'capture'");
     // `plongee` (`04-gameplay.md` §13.2, catalogue 5) : une coque qui disparaît
     // sous la surface. Elle n'existe qu'en mer, et rien ne plonge en volant.
@@ -1450,7 +1447,7 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
       ctx.faute('cycleJourNuit', 'la somme jour + nuit est comprise entre 1 et 12');
     }
   }
-  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
+  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 0 });
   if (o['commandantsVersion'] !== undefined) entier(ctx, o['commandantsVersion'], 'commandantsVersion', { min: 1, max: 4 });
 
   const camps: number[] = [];
@@ -2266,7 +2263,7 @@ export function validerSauvegarde(valeur: unknown): Resultat<Sauvegarde> {
   if (o['scenarioVersion'] !== undefined) entier(ctx, o['scenarioVersion'], 'scenarioVersion', { min: 1 });
   chaine(ctx, o['graine'], 'graine', { max: 64 });
   for (const champ of ['catalogueVersion', 'engineVersion', 'mapgenVersion', 'contentVersion'] as const) {
-    entier(ctx, o[champ], champ, { min: 1 });
+    entier(ctx, o[champ], champ, { min: champ === 'catalogueVersion' ? 0 : 1 });
   }
   if (!Array.isArray(o['actions'])) ctx.faute('actions', "un journal d'actions est attendu");
   return conclure(ctx, o as unknown as Sauvegarde);
@@ -2432,7 +2429,7 @@ export function validerCatalogueUnites(valeur: unknown): Resultat<CatalogueUnite
   if (!o || !requis(ctx, o, '', ['catalogueVersion', 'unites'])) {
     return conclure(ctx, valeur as CatalogueUnites);
   }
-  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
+  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 0 });
   const brutes = Array.isArray(o['unites']) ? (o['unites'] as unknown[]) : [];
   if (!Array.isArray(o['unites'])) ctx.faute('unites', 'un tableau de types d\'unité est attendu');
   if (brutes.length > 30) ctx.faute('unites', 'le catalogue actif est plafonné à 30 unités');
@@ -3147,7 +3144,7 @@ export function validerProfilCampagne(valeur: unknown): Resultat<ProfilCampagne>
   }
 
   entier(ctx, o['serieDepeches'], 'serieDepeches', { min: 0, max: 4000 });
-  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 1 });
+  entier(ctx, o['catalogueVersion'], 'catalogueVersion', { min: 0 });
   entier(ctx, o['chainesVersion'], 'chainesVersion', { min: 1 });
   dateIso(ctx, o['creeLe'], 'creeLe');
   dateIso(ctx, o['majLe'], 'majLe');

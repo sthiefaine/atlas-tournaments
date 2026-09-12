@@ -370,8 +370,10 @@ test('la faiblesse adverse oriente un achat, et le kit du camp aussi', () => {
   };
   const etat = partie(unites, 0, { '0,2': 0 }, {}, grille);
   etat.camps[0]!.fonds = 15000;
-  const achatSans = meilleureProduction(etat, CAT, 0, POIDS_PONDEREE);
-  const achatAvec = meilleureProduction(etat, CAT, 0, POIDS_PONDEREE, [null, faible]);
+  // Isoler ce duel d’achat des autres blindés du catalogue complet.
+  const cat = { ...CAT, terrains: { ...CAT.terrains, usine: { ...CAT.terrains.usine!, produit: ['char_leger', 'char_lourd'] } } };
+  const achatSans = meilleureProduction(etat, cat, 0, POIDS_PONDEREE);
+  const achatAvec = meilleureProduction(etat, cat, 0, POIDS_PONDEREE, [null, faible]);
   assert.ok(achatSans && achatSans.type === 'produire' && achatAvec && achatAvec.type === 'produire');
   assert.equal(achatSans.unite, 'char_leger');
   assert.equal(achatAvec.unite, 'char_lourd', "face à des chenilles qui frappent à 80 %, l'achat change");

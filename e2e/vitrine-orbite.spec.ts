@@ -3,6 +3,8 @@ test.use({trace:'off',screenshot:'off',video:'off',channel:'chrome',launchOption
 test('vitrine : glisser, zoom, clavier, vue unique et remise à zéro',async({page})=>{
  const erreurs:string[]=[];page.on('pageerror',e=>erreurs.push(e.message));
  await page.goto('/atelier/unites');
+ await expect(page.getByRole('combobox',{name:'Catalogue',exact:true})).toHaveCount(0);
+ await expect(page.getByRole('combobox',{name:'Unité',exact:true}).locator('option')).toHaveCount(30);
  await page.getByRole('combobox',{name:'Unité',exact:true}).selectOption('barge');
  await expect(page.locator('[data-livre="oui"]')).toBeVisible({timeout:45000});
  const vue=page.getByRole('region',{name:'Vue 3D interactive de l’unité'});

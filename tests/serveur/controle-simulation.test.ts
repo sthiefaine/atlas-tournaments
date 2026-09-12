@@ -150,7 +150,7 @@ test('une unité candidate absurde est rejetée en unite_dominante', () => {
     parties: 12,
     strategies: ['ponderee', 'agressive'],
     journeesMax: 20,
-    catalogueCandidat: { unite: absurde, catalogueVersion: 12 },
+    catalogueCandidat: { unite: absurde, catalogueVersion: 0 },
   });
   assert.ok(resultat.avec && resultat.sans, 'la campagne de catalogue rend deux blocs');
   assert.equal(resultat.cartesReference?.length, 2);

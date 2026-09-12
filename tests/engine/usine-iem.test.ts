@@ -15,7 +15,7 @@ import { meilleureCase, valeurCase, valeurUsinePerdue } from '../../src/ai/index
 import type { EffetPouvoir } from '../../src/schemas/index';
 import { scenePersonnalisee } from './aides';
 
-const CAT = chargerCatalogue(8);
+const CAT = chargerCatalogue(0);
 
 function fin(e: EtatPartie, commandants: (CommandantMoteur | null)[] = []): EtatPartie {
   const r = appliquer(e, { type: 'finTour' }, CAT, commandants);

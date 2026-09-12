@@ -93,7 +93,7 @@ test('une même clé rend deux fois la même chaîne : rien n’est tiré au sor
 test('les six figurines sont celles du canon, pas un second dessin', () => {
   // Le module recopie six silhouettes pour pouvoir composer sans état de
   // partie ; si le canon en change une, c'est ici que ça doit rougir.
-  const catalogue = chargerCatalogue(6);
+  const catalogue = chargerCatalogue(0);
   for (const cle of ['infanterie', 'meca', 'genie', 'char_leger', 'artillerie', 'transport']) {
     const type = catalogue.unites[cle];
     assert.ok(type, `${cle} absente du catalogue 6`);

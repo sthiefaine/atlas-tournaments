@@ -11,7 +11,7 @@ export type CleCompteur = 'catalogue_version' | 'chaines_version';
 /** Lit un compteur. Rend 1 si la ligne manque (base fraîchement migrée). */
 export async function lire(cle: CleCompteur): Promise<number> {
   const lignes = await db().select().from(compteurs).where(eq(compteurs.cle, cle)).limit(1);
-  return lignes[0]?.valeur ?? 1;
+  return lignes[0]?.valeur ?? (cle === 'catalogue_version' ? 0 : 1);
 }
 
 /**
@@ -21,11 +21,11 @@ export async function lire(cle: CleCompteur): Promise<number> {
  */
 export async function incrementer(cle: CleCompteur): Promise<number> {
   const lignes = await db().insert(compteurs)
-    .values({ cle, valeur: 2 })
+    .values({ cle, valeur: cle === 'catalogue_version' ? 1 : 2 })
     .onConflictDoUpdate({
       target: compteurs.cle,
       set: { valeur: sql`${compteurs.valeur} + 1`, majLe: new Date() },
     })
     .returning({ valeur: compteurs.valeur });
-  return lignes[0]?.valeur ?? 1;
+  return lignes[0]?.valeur ?? (cle === 'catalogue_version' ? 0 : 1);
 }

@@ -219,7 +219,7 @@ test('l’alerte munitions : rouge à zéro, orange à la dernière, rien pour u
 // Catalogue 6 : la cale, la consommation, la furtivité, les dégâts effectifs
 // ---------------------------------------------------------------------------
 
-const CAT6 = chargerCatalogue(6);
+const CAT6 = chargerCatalogue(0);
 
 /** Une unité en jeu de ce type, au plein, telle que `creerPartie` la poserait. */
 function enJeu(cle: CleUnite, extra: Partial<Unite> = {}): Unite {

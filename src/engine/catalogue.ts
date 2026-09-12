@@ -46,10 +46,9 @@ export function catalogueDepuis(
 }
 
 /** Charge le catalogue canon embarqué (`content/*.json`). */
-export function chargerCatalogue(version = 2): Catalogue {
-  // Une unité homologuée entre au catalogue de sa version d'accueil et y reste :
-  // le catalogue 2 ne voit jamais les drones du 3, et un rejeu du 2 reste exact.
-  const unites = chargerUnites().filter((u) => u.statut === 'canon' || version >= (u.homologation?.catalogue ?? 2));
+export function chargerCatalogue(version = 0): Catalogue {
+  // Une seule collection actuelle ; aucun filtre d’anciennes versions.
+  const unites = chargerUnites();
   const cles = new Set(unites.map((u) => u.cle));
   const terrains = chargerTerrains().map((t) => ({ ...t, produit: t.produit.filter((c) => cles.has(c)) }));
   return catalogueDepuis(version, unites, terrains, chargerDegats());

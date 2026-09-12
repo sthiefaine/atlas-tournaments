@@ -32,7 +32,7 @@ test('la Forge : carte 20 × 16, catalogue 9, élimination seule, superusine gri
   assert.equal(carte.largeur, 20);
   assert.equal(carte.hauteur, 16);
   assert.equal(carte.camps, 2);
-  assert.equal(scenario.catalogueVersion, 9);
+  assert.equal(scenario.catalogueVersion, 0);
   assert.equal(scenario.statut, 'brouillon');
   // Une mission d'anéantissement exclusif n'ajoute pas une capture gagnante (`doc/17`).
   assert.deepEqual(scenario.victoire, [{ type: 'hors_jeu_total' }]);
@@ -64,7 +64,7 @@ test('la Forge : carte 20 × 16, catalogue 9, élimination seule, superusine gri
   // Le joueur a une économie réelle : QG, usine, aéroport et des villes.
   const miens = Object.entries(carte.proprietaires).filter(([, c]) => c === 0).map(([k]) => carte.grille[Number(k.split(',')[1])]![Number(k.split(',')[0])]);
   for (const car of ['H', 'U', 'A', 'C']) assert.ok(miens.includes(car), `le joueur part avec ${car}`);
-  assert.ok(carte.unitesDepart.every((u) => u.camp !== 0 || !chargerCatalogue(9).unites[u.type]?.factionExclusive), 'rien de méridien chez le joueur');
+  assert.ok(carte.unitesDepart.every((u) => u.camp !== 0 || !chargerCatalogue(0).unites[u.type]?.factionExclusive), 'rien de méridien chez le joueur');
 
   // Deux modes : le difficile serre les fonds et la stratégie, jamais la cadence de la Forge (le schéma ne la porte pas).
   assert.ok(scenario.modes);

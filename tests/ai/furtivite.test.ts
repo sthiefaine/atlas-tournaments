@@ -20,7 +20,7 @@ import {
 import type { CampId, CleUnite } from '../../src/schemas/index';
 import { scenePersonnalisee } from '../engine/aides';
 
-const CAT6 = chargerCatalogue(6);
+const CAT6 = chargerCatalogue(0);
 
 /** Une partie sur une grille écrite à la main, au catalogue 6, de jour et sans météo. */
 function partie(
@@ -78,7 +78,7 @@ test('un aéroport adverse est une menace aérienne en puissance, qui croît ave
   const volantes = Object.keys(pauvre).filter((cle) => porte(CAT6.unites[cle]!, 'vol'));
   assert.ok(volantes.length > 0, 'ce que l’aéroport produit entre au mix');
   assert.ok(Object.keys(pauvre).every((cle) => !porte(CAT6.unites[cle]!, 'transport')), 'jamais un transport');
-  assert.ok(Object.keys(pauvre).every((cle) => !porte(CAT6.unites[cle]!, 'drone')), 'jamais un drone');
+  assert.ok(Object.keys(pauvre).every((cle) => (!porte(CAT6.unites[cle]!, 'drone') || porte(CAT6.unites[cle]!, 'anti_air'))), 'seuls les drones armés sont des menaces');
   e.camps[1]!.fonds = 30000;
   const riche = mixPotentiel(e, CAT6, 0);
   for (const cle of volantes) assert.ok(riche[cle]! > pauvre[cle]!, `${cle} pèse plus quand l’adversaire est riche`);

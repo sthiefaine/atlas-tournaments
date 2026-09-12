@@ -12,7 +12,7 @@ import {
 import type { Case, CampId, CleUnite } from '../../src/schemas/index';
 import { scenePersonnalisee, u } from './aides';
 
-const CAT = chargerCatalogue(6);
+const CAT = chargerCatalogue(0);
 const PLAINE = Array.from({ length: 6 }, () => 'P'.repeat(10));
 
 function partie(

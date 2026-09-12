@@ -193,7 +193,7 @@ test('creerPartie tient le scénario à sa parole : bâtiment producteur du camp
   assert.throws(sur({ x: 1, y: 0, camp: 1, type: 'char_leger' }), /son camp/);
   assert.throws(sur({ x: 6, y: 2, camp: 1, type: 'licorne' }), /inconnu/);
   assert.doesNotThrow(sur({ x: 7, y: 2, camp: 1, type: 'infanterie' }), 'le QG produit');
-  const cat9 = chargerCatalogue(9);
+  const cat9 = chargerCatalogue(0);
   assert.throws(() => creerPartie(scene({ superusines: [{ x: 6, y: 2, camp: 1, type: 'meridien_automate' }] }), cat9, 'x'), /exclusive/);
   const faction = scene({ superusines: [{ x: 6, y: 2, camp: 1, type: 'meridien_automate' }], factionsParCamp: { 1: 'atl' } });
   const r = appliquer(creerPartie(faction, cat9, 'atl'), { type: 'finTour' }, cat9);

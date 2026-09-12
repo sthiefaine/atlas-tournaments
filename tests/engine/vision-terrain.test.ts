@@ -13,7 +13,7 @@ import {
 import type { CampId } from '../../src/schemas/index';
 import { partiePersonnalisee, u } from './aides';
 
-const CAT = chargerCatalogue(6);
+const CAT = chargerCatalogue(0);
 //               0123456789
 const GRILLE = [
   'PMFGCPPPPT',

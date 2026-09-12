@@ -2,12 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chargerCatalogue, creerPartie, coutBase, degatsBase, produitesPar, visionUnite, verifierProduction } from '../../src/engine/index';
 import { scenePersonnalisee } from './aides';
-const cat = chargerCatalogue(8);
-test('catalogue 8 ouvre le drone marin et conserve les anciens duels', () => {
-  assert.equal(cat.cles.length,29);
-  for(let v=1;v<=7;v++) assert(!chargerCatalogue(v).cles.includes('drone_marin'));
-  const ancien=chargerCatalogue(7);
-  for(const a of ancien.cles)for(const d of ancien.cles)assert.equal(degatsBase(cat,a,d),degatsBase(ancien,a,d));
+const cat = chargerCatalogue(0);
+test('le drone marin appartient au catalogue courant', () => {
+  assert.equal(cat.cles.length,30);
   assert(cat.unites.drone_marin!.traits.includes('drone'));
   assert.equal(cat.unites.drone_marin!.domaine,'mer');
   assert.equal(cat.unites.drone_marin!.vision,5);

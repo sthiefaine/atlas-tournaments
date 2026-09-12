@@ -6,7 +6,7 @@ import { prevoirDuel } from '../../src/engine/regles/combat';
 import { ouvrirTechnologies } from '../../src/engine/regles/technologies';
 import { campAdapteClimat } from '../../src/engine/climat/index';
 import { scenePersonnalisee } from './aides';
-const CAT = chargerCatalogue(8);
+const CAT = chargerCatalogue(0);
 import type { EtatPartie } from '../../src/engine/types';
 
 function scene() {

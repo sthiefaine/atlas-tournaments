@@ -74,7 +74,7 @@ test('chaque clé de la liste a son nom accessible dans les chaînes', () => {
 test('le nom d’une figurine est celui du canon, jamais un second nom', () => {
   // La leçon des chaînes de pouvoirs : la chaîne se réaligne sur le contenu,
   // jamais l'inverse. Si `unites.json` renomme une unité, c'est ici que ça rougit.
-  const catalogue = chargerCatalogue(6);
+  const catalogue = chargerCatalogue(0);
   for (const cle of ['infanterie', 'meca', 'genie', 'char_leger', 'artillerie', 'transport']) {
     const type = catalogue.unites[cle];
     assert.ok(type, `${cle} absente du catalogue 6`);

@@ -12,20 +12,17 @@ import { jouerTour, PONDEREE } from '../../src/ai/index';
 import { creerRng } from '../../src/engine/rng';
 import { scenePersonnalisee } from './aides';
 
-const cat = chargerCatalogue(9);
+const cat = chargerCatalogue(0);
 const auto = cat.unites['meridien_automate']!;
 
-test('catalogue 9 : trente unités, l’automate invisible avant, les anciens duels intacts', () => {
-  assert.equal(cat.cles.length, 30);
-  for (let v = 1; v <= 8; v += 1) assert.ok(!chargerCatalogue(v).cles.includes('meridien_automate'), `catalogue ${v}`);
-  const huit = chargerCatalogue(8);
-  assert.equal(huit.cles.length, 29);
-  for (const a of huit.cles) for (const d of huit.cles) assert.equal(degatsBase(cat, a, d), degatsBase(huit, a, d));
+test('le catalogue actuel contient les trente unités, dont l’automate', () => {
+  assert.equal(cat.version, 0); assert.equal(cat.cles.length, 30);
+  assert.ok(cat.unites['meridien_automate']);
 });
 
 test('l’automate : chenilles, tir illimité, exclusif, produit à l’usine des Gris seulement', () => {
   assert.equal(auto.factionExclusive, 'atl');
-  assert.equal(auto.homologation?.catalogue, 9);
+  assert.equal(auto.homologation?.catalogue, 0);
   assert.equal(auto.munitions, null);
   assert.equal(auto.typeMouvement, 'chenilles');
   assert.equal(auto.mouvement, 5);

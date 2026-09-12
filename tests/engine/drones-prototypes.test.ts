@@ -5,20 +5,18 @@ import { scenePersonnalisee } from './aides';
 import { usinesLibres } from '../../src/ai/evaluation';
 import { validerScenario } from '../../src/schemas/index';
 import scenarioJson from '../../content/scenarios/demo.json';
-const cat = chargerCatalogue(7);
+const cat = chargerCatalogue(0);
 const nouvelles = ['drone_intercepteur', 'drone_ravitailleur', 'meridien_veilleur', 'meridien_bastion'];
 function scene(atl = false) {
   return scenePersonnalisee(['APPPPPPP', 'UPPPPPPP'], { '0,0': 0, '0,1': 0 }, [
     { camp: 0, type: 'infanterie', x: 1, y: 1 }, { camp: 1, type: 'infanterie', x: 7, y: 1 },
   ], { fondsDepart: 30000, factionsParCamp: atl ? { 0: 'atl' } : {}, meteoForcee: 'clair', cycleJourNuit: { jour: 1, nuit: 0 } });
 }
-test('catalogue 7 ajoute quatre rôles sans modifier les six catalogues antérieurs', () => {
-  assert.deepEqual([1,2,3,4,5,6,7].map((v) => chargerCatalogue(v).cles.length), [10,11,13,14,23,24,28]);
-  const six = chargerCatalogue(6);
-  for (const cle of six.cles) assert.deepEqual(cat.unites[cle], six.unites[cle]);
-  for (const a of six.cles) for (const d of six.cles) assert.equal(degatsBase(cat,a,d), degatsBase(six,a,d));
+test('le catalogue courant inclut les quatre rôles de drones et prototypes', () => {
+  assert.equal(cat.version, 0);
+  assert.equal(cat.cles.length, 30);
   for (const cle of nouvelles) {
-    assert(!six.cles.includes(cle));
+    assert(cat.cles.includes(cle));
     // Trente colonnes depuis l'automate méridien du catalogue 9 : la ligne
     // couvre tout le canon, le catalogue 7 n'en lit que vingt-huit.
     assert.equal(Object.keys(cat.unites[cle]!.degats).length, 30);

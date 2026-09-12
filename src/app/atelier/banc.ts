@@ -362,7 +362,7 @@ export function carteGrande(): MapDef {
  * test le confronte à la version de `content/unites.json`, pour qu'il ne
  * reste pas en arrière d'une homologation.
  */
-export const VERSION_CATALOGUE_BANC = 9;
+export const VERSION_CATALOGUE_BANC = 0;
 
 /**
  * Un scénario pour le banc : celui qu'on lui prête, forcé sur le catalogue qui

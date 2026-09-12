@@ -10,16 +10,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   appliquer, brouillardActif, cacheeAuContact, canonique, casesVisibles, chargerCatalogue, cleCase,
-  consommationParTour, creerPartie, creerRng, degatsBase, empreinte, enregistrerPartie, produitesPar,
-  reglagesParDefaut, rejouer, sceneDeCarte, SURCOUT_CARBURANT_FURTIF, unitesVues, verifierProduction,
+  consommationParTour, creerPartie, degatsBase, empreinte, enregistrerPartie, produitesPar,
+  rejouer, SURCOUT_CARBURANT_FURTIF, unitesVues, verifierProduction,
   type Action, type Catalogue, type EtatPartie, type Suite,
 } from '../../src/engine/index';
-import { jouerPartie, strategie } from '../../src/ai/index';
 import type { Case } from '../../src/schemas/index';
-import { carte, scenePersonnalisee, u } from './aides';
+import { scenePersonnalisee, u } from './aides';
 
-const CAT5 = chargerCatalogue(5);
-const CAT6 = chargerCatalogue(6);
+const CATALOGUE = chargerCatalogue(0);
 
 /** Une plaine nue : rien n'y cache personne, seul le trait compte. */
 const PLAINE = Array.from({ length: 10 }, () => 'P'.repeat(10));
@@ -46,14 +44,14 @@ function ordre(uniteId: string, chemin: Case[], suite: Suite): Action {
 }
 
 /** Applique une action qui doit passer, et rend l'état qui en sort. */
-function exiger(e: EtatPartie, a: Action, cat: Catalogue = CAT6): EtatPartie {
+function exiger(e: EtatPartie, a: Action, cat: Catalogue = CATALOGUE): EtatPartie {
   const r = appliquer(e, a, cat);
   assert.ok(r.ok, `action refusée : ${JSON.stringify(a)} → ${r.ok ? '' : `${r.motif} ${r.detail ?? ''}`}`);
   return r.ok ? r.etat : e;
 }
 
 /** Applique une action qui doit être refusée, et rend le motif. */
-function refuser(e: EtatPartie, a: Action, cat: Catalogue = CAT6): string {
+function refuser(e: EtatPartie, a: Action, cat: Catalogue = CATALOGUE): string {
   const avant = canonique(e);
   const r = appliquer(e, a, cat);
   assert.equal(r.ok, false, `action acceptée à tort : ${JSON.stringify(a)}`);
@@ -63,7 +61,7 @@ function refuser(e: EtatPartie, a: Action, cat: Catalogue = CAT6): string {
 }
 
 /** Deux fins de tour : la main revient au camp 0, une journée plus tard. */
-function journeeSuivante(e: EtatPartie, cat: Catalogue = CAT6): EtatPartie {
+function journeeSuivante(e: EtatPartie, cat: Catalogue = CATALOGUE): EtatPartie {
   return exiger(exiger(e, { type: 'finTour' }, cat), { type: 'finTour' }, cat);
 }
 
@@ -76,55 +74,48 @@ function avec(e: EtatPartie, id: string, champs: Partial<EtatPartie['unites'][nu
 // Catalogue 6 : le chasseur furtif entre, l'aéroport le produit
 // ---------------------------------------------------------------------------
 
-test('le catalogue 5 ignore le chasseur furtif, le 6 le porte, et le plafond de vingt-quatre est atteint', () => {
-  assert.equal(CAT5.unites['furtif'], undefined);
-  assert.equal(CAT6.unites['furtif']?.cout, 20000);
-  assert.deepEqual(CAT6.unites['furtif']?.traits, ['vol', 'furtif']);
-  assert.equal(CAT5.cles.length, 23);
-  assert.equal(CAT6.cles.length, 24);
-  assert.ok(produitesPar(CAT6, 'aeroport').includes('furtif'), 'l’aéroport le produit au 6');
-  assert.ok(!produitesPar(CAT5, 'aeroport').includes('furtif'), 'jamais au 5');
+test('le catalogue actuel propose le chasseur furtif à l’aéroport', () => {
+  assert.equal(CATALOGUE.version, 0); assert.equal(CATALOGUE.cles.length, 30);
+  assert.equal(CATALOGUE.unites['furtif']?.cout, 20000);
+  assert.ok(produitesPar(CATALOGUE, 'aeroport').includes('furtif'));
 });
 
-test('un aéroport possédé produit le furtif en catalogue 6 et le refuse en 5', () => {
+test('un aéroport possédé produit le furtif avec ses réserves complètes', () => {
   const grille = ['APPPPPPPPP', ...PLAINE.slice(1)];
   const scene = scenePersonnalisee(grille, { '0,0': 0 }, [
     { camp: 0, type: 'infanterie', x: 5, y: 5 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ], { fondsDepart: 30000 });
   const piste = { x: 0, y: 0 };
-  const en6 = verifierProduction(creerPartie(scene, CAT6, 'piste'), CAT6, 0, piste, 'furtif');
+  const en6 = verifierProduction(creerPartie(scene, CATALOGUE, 'piste'), CATALOGUE, 0, piste, 'furtif');
   assert.deepEqual(en6, { ok: true, cout: 20000 });
-  const en5 = verifierProduction(creerPartie(scene, CAT5, 'piste'), CAT5, 0, piste, 'furtif');
-  assert.equal(en5.ok, false);
-  if (!en5.ok) assert.equal(en5.motif, 'unite_non_produite_ici');
   // Et la production elle-même, avec le plein de ses réserves.
-  const r = appliquer(creerPartie(scene, CAT6, 'piste'), { type: 'produire', batiment: piste, unite: 'furtif' }, CAT6);
+  const r = appliquer(creerPartie(scene, CATALOGUE, 'piste'), { type: 'produire', batiment: piste, unite: 'furtif' }, CATALOGUE);
   assert.ok(r.ok);
   if (!r.ok) return;
   const neuf = r.etat.unites.find((x) => x.type === 'furtif');
   assert.ok(neuf);
-  assert.equal(neuf.munitions, CAT6.unites['furtif']?.munitions);
-  assert.equal(neuf.carburant, CAT6.unites['furtif']?.carburant?.max);
+  assert.equal(neuf.munitions, CATALOGUE.unites['furtif']?.munitions);
+  assert.equal(neuf.carburant, CATALOGUE.unites['furtif']?.carburant?.max);
   assert.equal(neuf.furtive, undefined, 'produit visible : le champ n’est pas écrit');
 });
 
 test('la table 24 × 24 du catalogue 6 se lit sans trou', () => {
-  for (const att of CAT6.cles) {
-    for (const cible of CAT6.cles) {
-      const d = degatsBase(CAT6, att, cible);
+  for (const att of CATALOGUE.cles) {
+    for (const cible of CATALOGUE.cles) {
+      const d = degatsBase(CATALOGUE, att, cible);
       assert.ok(Number.isInteger(d) && d >= 0 && d <= 130, `${att} → ${cible} : ${d}`);
     }
   }
   // La colonne du furtif : sept viseurs, dont l'exception nommée du porte-avions
   // (§13.3, règle 4) ; personne d'autre.
-  const viseurs = CAT6.cles.filter((c) => degatsBase(CAT6, c, 'furtif') > 0).sort();
-  assert.deepEqual(viseurs, ['antiair', 'chasseur', 'furtif', 'infanterie', 'meca', 'missiles_air', 'porte_avions']);
-  assert.equal(degatsBase(CAT6, 'porte_avions', 'furtif'), 25);
-  assert.equal(degatsBase(CAT6, 'missiles_air', 'furtif'), 100);
+  const viseurs = CATALOGUE.cles.filter((c) => degatsBase(CATALOGUE, c, 'furtif') > 0).sort();
+  assert.deepEqual(viseurs, ['antiair', 'chasseur', 'drone_intercepteur', 'furtif', 'infanterie', 'meca', 'meridien_bastion', 'missiles_air', 'porte_avions']);
+  assert.equal(degatsBase(CATALOGUE, 'porte_avions', 'furtif'), 25);
+  assert.equal(degatsBase(CATALOGUE, 'missiles_air', 'furtif'), 100);
   // Sa ligne : zéro sur le sous-marin, qui garde ses cinq chasseurs.
-  assert.equal(degatsBase(CAT6, 'furtif', 'sous_marin'), 0);
-  assert.equal(degatsBase(CAT6, 'furtif', 'furtif'), 55);
+  assert.equal(degatsBase(CATALOGUE, 'furtif', 'sous_marin'), 0);
+  assert.equal(degatsBase(CATALOGUE, 'furtif', 'furtif'), 55);
 });
 
 // ---------------------------------------------------------------------------
@@ -136,10 +127,10 @@ test('la suite furtivite bascule visible → furtive → visible, et émet l’�
     { camp: 0, type: 'furtif', x: 2, y: 2 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ]);
-  const e = creerPartie(scene, CAT6, 'bascule');
+  const e = creerPartie(scene, CATALOGUE, 'bascule');
   assert.equal(u(e, 'u1').furtive, undefined, 'à la création, le champ n’existe pas : visible');
 
-  const r1 = appliquer(e, ordre('u1', [{ x: 2, y: 2 }], { type: 'furtivite' }), CAT6);
+  const r1 = appliquer(e, ordre('u1', [{ x: 2, y: 2 }], { type: 'furtivite' }), CATALOGUE);
   assert.ok(r1.ok);
   if (!r1.ok) return;
   assert.equal(u(r1.etat, 'u1').furtive, true);
@@ -153,7 +144,7 @@ test('la suite furtivite bascule visible → furtive → visible, et émet l’�
 
   // Après un déplacement, comme toute suite : la bascule inverse.
   const lendemain = journeeSuivante(r1.etat);
-  const r2 = appliquer(lendemain, ordre('u1', [{ x: 2, y: 2 }, { x: 3, y: 2 }], { type: 'furtivite' }), CAT6);
+  const r2 = appliquer(lendemain, ordre('u1', [{ x: 2, y: 2 }, { x: 3, y: 2 }], { type: 'furtivite' }), CATALOGUE);
   assert.ok(r2.ok);
   if (!r2.ok) return;
   assert.equal(u(r2.etat, 'u1').furtive, false);
@@ -168,7 +159,7 @@ test('sans le trait, la furtivité est refusée ; d’un autre camp ou déjà jo
     { camp: 0, type: 'furtif', x: 6, y: 2 },
     { camp: 1, type: 'furtif', x: 8, y: 8 },
   ]);
-  const e = creerPartie(scene, CAT6, 'sans-trait');
+  const e = creerPartie(scene, CATALOGUE, 'sans-trait');
   // Voler ne suffit pas : c'est le trait `furtif`, et lui seul.
   assert.equal(refuser(e, ordre('u1', [{ x: 2, y: 2 }], { type: 'furtivite' })), 'furtivite_impossible');
   assert.equal(refuser(e, ordre('u2', [{ x: 4, y: 2 }], { type: 'furtivite' })), 'furtivite_impossible');
@@ -188,22 +179,22 @@ test('sous brouillard, une unité furtive n’est repérée qu’au contact', ()
     { camp: 0, type: 'furtif', x: 5, y: 0 },
     { camp: 1, type: 'helico', x: 5, y: 2 },
   ], { brouillard: true });
-  const e = creerPartie(scene, CAT6, 'contact');
+  const e = creerPartie(scene, CATALOGUE, 'contact');
   assert.equal(brouillardActif(e), true);
   const furtif = u(e, 'u1');
   // Visible, en plaine, à deux cases d'un hélicoptère qui voit à deux : repéré.
-  assert.equal(cacheeAuContact(e, CAT6, furtif), false);
-  assert.ok(unitesVues(e, CAT6, 1).some((x) => x.id === 'u1'));
+  assert.equal(cacheeAuContact(e, CATALOGUE, furtif), false);
+  assert.ok(unitesVues(e, CATALOGUE, 1).some((x) => x.id === 'u1'));
 
   const cache = exiger(e, ordre('u1', [{ x: 5, y: 0 }], { type: 'furtivite' }));
-  assert.equal(cacheeAuContact(cache, CAT6, u(cache, 'u1')), true);
-  assert.ok(casesVisibles(cache, CAT6, 1).has(cleCase({ x: 5, y: 0 })), 'la case reste éclairée…');
-  assert.ok(!unitesVues(cache, CAT6, 1).some((x) => x.id === 'u1'), '…et l’unité y est invisible à distance 2');
+  assert.equal(cacheeAuContact(cache, CATALOGUE, u(cache, 'u1')), true);
+  assert.ok(casesVisibles(cache, CATALOGUE, 1).has(cleCase({ x: 5, y: 0 })), 'la case reste éclairée…');
+  assert.ok(!unitesVues(cache, CATALOGUE, 1).some((x) => x.id === 'u1'), '…et l’unité y est invisible à distance 2');
   // À distance 1, elle est repérée, comme une coque en plongée.
   const contact = avec(cache, 'u2', { x: 5, y: 1 });
-  assert.ok(unitesVues(contact, CAT6, 1).some((x) => x.id === 'u1'));
+  assert.ok(unitesVues(contact, CATALOGUE, 1).some((x) => x.id === 'u1'));
   // Son propre camp la voit toujours.
-  assert.ok(unitesVues(cache, CAT6, 0).some((x) => x.id === 'u1'));
+  assert.ok(unitesVues(cache, CATALOGUE, 0).some((x) => x.id === 'u1'));
 });
 
 test('sans brouillard, une unité furtive est vue comme les autres : le brouillard éteint montre tout', () => {
@@ -214,12 +205,12 @@ test('sans brouillard, une unité furtive est vue comme les autres : le brouilla
     { camp: 0, type: 'furtif', x: 5, y: 0 },
     { camp: 1, type: 'helico', x: 5, y: 2 },
   ]);
-  const e = creerPartie(scene, CAT6, 'clair');
+  const e = creerPartie(scene, CATALOGUE, 'clair');
   assert.equal(brouillardActif(e), false);
   const cache = exiger(e, ordre('u1', [{ x: 5, y: 0 }], { type: 'furtivite' }));
   assert.equal(u(cache, 'u1').furtive, true);
-  assert.equal(cacheeAuContact(cache, CAT6, u(cache, 'u1')), true, 'le trait s’applique…');
-  assert.ok(unitesVues(cache, CAT6, 1).some((x) => x.id === 'u1'), '…mais sans brouillard, rien n’est caché');
+  assert.equal(cacheeAuContact(cache, CATALOGUE, u(cache, 'u1')), true, 'le trait s’applique…');
+  assert.ok(unitesVues(cache, CATALOGUE, 1).some((x) => x.id === 'u1'), '…mais sans brouillard, rien n’est caché');
 });
 
 test('la mémoire des vues suit la furtivité basculée sur place', () => {
@@ -230,12 +221,12 @@ test('la mémoire des vues suit la furtivité basculée sur place', () => {
     { camp: 0, type: 'furtif', x: 5, y: 0 },
     { camp: 1, type: 'helico', x: 5, y: 2 },
   ], { brouillard: true });
-  const e = creerPartie(scene, CAT6, 'memoire');
-  assert.ok(unitesVues(e, CAT6, 1).some((x) => x.id === 'u1'));
+  const e = creerPartie(scene, CATALOGUE, 'memoire');
+  assert.ok(unitesVues(e, CATALOGUE, 1).some((x) => x.id === 'u1'));
   u(e, 'u1').furtive = true;
-  assert.ok(!unitesVues(e, CAT6, 1).some((x) => x.id === 'u1'), 'la vue mémoïsée a survécu à la bascule');
+  assert.ok(!unitesVues(e, CATALOGUE, 1).some((x) => x.id === 'u1'), 'la vue mémoïsée a survécu à la bascule');
   u(e, 'u1').furtive = false;
-  assert.ok(unitesVues(e, CAT6, 1).some((x) => x.id === 'u1'));
+  assert.ok(unitesVues(e, CATALOGUE, 1).some((x) => x.id === 'u1'));
 });
 
 // ---------------------------------------------------------------------------
@@ -243,21 +234,21 @@ test('la mémoire des vues suit la furtivité basculée sur place', () => {
 // ---------------------------------------------------------------------------
 
 test('se cacher coûte trois de carburant de plus par tour', () => {
-  const type = CAT6.unites['furtif']!;
+  const type = CATALOGUE.unites['furtif']!;
   assert.ok(type.carburant);
   const visible = { ...u(creerPartie(scenePersonnalisee(PLAINE, {}, [
     { camp: 0, type: 'furtif', x: 2, y: 2 }, { camp: 1, type: 'infanterie', x: 9, y: 9 },
-  ]), CAT6, 'conso'), 'u1') };
+  ]), CATALOGUE, 'conso'), 'u1') };
   assert.equal(SURCOUT_CARBURANT_FURTIF, 3);
   assert.equal(consommationParTour(type, visible), type.carburant.parTour);
   assert.equal(consommationParTour(type, { ...visible, furtive: true }), type.carburant.parTour + SURCOUT_CARBURANT_FURTIF);
   // Une unité sans carburant ne consomme rien, furtive ou non — le validateur
   // exige `vol` avec `furtif`, donc du carburant ; la fonction reste totale.
-  assert.equal(consommationParTour(CAT6.unites['infanterie']!, { ...visible, furtive: true }), 0);
+  assert.equal(consommationParTour(CATALOGUE.unites['infanterie']!, { ...visible, furtive: true }), 0);
 });
 
 test('le carburant baisse de parTour visible, de parTour + 3 furtive, et la panne sèche arrive plus tôt', () => {
-  const type = CAT6.unites['furtif']!;
+  const type = CATALOGUE.unites['furtif']!;
   assert.ok(type.carburant);
   const { max, parTour } = type.carburant;
   const scene = scenePersonnalisee(PLAINE, {}, [
@@ -266,7 +257,7 @@ test('le carburant baisse de parTour visible, de parTour + 3 furtive, et la pann
     { camp: 0, type: 'infanterie', x: 0, y: 9 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ]);
-  const e = creerPartie(scene, CAT6, 'carburant');
+  const e = creerPartie(scene, CATALOGUE, 'carburant');
   // La journée 1 est ouverte à la création : une consommation a déjà eu lieu.
   assert.equal(u(e, 'u1').carburant, max - parTour);
 
@@ -279,7 +270,7 @@ test('le carburant baisse de parTour visible, de parTour + 3 furtive, et la pann
   const journeeDePanne = (depart: EtatPartie): number => {
     let courant = depart;
     for (let i = 0; i < 80; i += 1) {
-      const r = appliquer(courant, { type: 'finTour' }, CAT6);
+      const r = appliquer(courant, { type: 'finTour' }, CATALOGUE);
       assert.ok(r.ok);
       if (!r.ok) break;
       courant = r.etat;
@@ -306,8 +297,8 @@ test('un tir depuis l’état furtif laisse l’unité furtive, riposte comprise
     { camp: 1, type: 'infanterie', x: 3, y: 4 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ]);
-  const e = avec(creerPartie(scene, CAT6, 'tir'), 'u1', { furtive: true });
-  const r = appliquer(e, ordre('u1', [{ x: 3, y: 3 }], { type: 'attaquer', cible: { x: 3, y: 4 } }), CAT6);
+  const e = avec(creerPartie(scene, CATALOGUE, 'tir'), 'u1', { furtive: true });
+  const r = appliquer(e, ordre('u1', [{ x: 3, y: 3 }], { type: 'attaquer', cible: { x: 3, y: 4 } }), CATALOGUE);
   assert.ok(r.ok);
   if (!r.ok) return;
   const attaque = r.evenements.find((ev) => ev.type === 'attaque');
@@ -315,7 +306,7 @@ test('un tir depuis l’état furtif laisse l’unité furtive, riposte comprise
   assert.ok(attaque.degats > 0, 'le coup est parti');
   assert.ok(attaque.riposte > 0, 'la riposte est rendue : le contact découvre le tireur, pas le trait');
   assert.equal(u(r.etat, 'u1').furtive, true, 'tirer ne dévoile pas');
-  assert.equal(u(r.etat, 'u1').munitions, (CAT6.unites['furtif']?.munitions ?? 0) - 1);
+  assert.equal(u(r.etat, 'u1').munitions, (CATALOGUE.unites['furtif']?.munitions ?? 0) - 1);
 });
 
 test('une fusion garde l’état de furtivité de la cible', () => {
@@ -324,7 +315,7 @@ test('une fusion garde l’état de furtivité de la cible', () => {
     { camp: 0, type: 'furtif', x: 3, y: 4, pv: 60 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ]);
-  const e = creerPartie(scene, CAT6, 'fusion');
+  const e = creerPartie(scene, CATALOGUE, 'fusion');
   const fusion = ordre('u1', [{ x: 3, y: 3 }], { type: 'fusionner', avec: 'u2' });
   // Cible furtive, source visible : la survivante reste furtive.
   const a = exiger(avec(e, 'u2', { furtive: true }), fusion);
@@ -342,15 +333,15 @@ test('un état du moteur 3, sans champ furtive, est accepté et l’unité y est
     { camp: 1, type: 'helico', x: 5, y: 2 },
   ], { brouillard: true });
   // Un état sérialisé d'avant le catalogue 6 : mêmes clés, jamais `furtive`.
-  const ancien = JSON.parse(JSON.stringify(creerPartie(scene, CAT6, 'moteur3'))) as EtatPartie;
+  const ancien = JSON.parse(JSON.stringify(creerPartie(scene, CATALOGUE, 'moteur3'))) as EtatPartie;
   for (const x of ancien.unites) delete x.furtive;
   assert.ok(ancien.unites.every((x) => !('furtive' in x)));
-  assert.equal(cacheeAuContact(ancien, CAT6, u(ancien, 'u1')), false);
-  assert.ok(unitesVues(ancien, CAT6, 1).some((x) => x.id === 'u1'));
+  assert.equal(cacheeAuContact(ancien, CATALOGUE, u(ancien, 'u1')), false);
+  assert.ok(unitesVues(ancien, CATALOGUE, 1).some((x) => x.id === 'u1'));
   // Et il se joue : la bascule écrit le champ pour la première fois.
   const cache = exiger(ancien, ordre('u1', [{ x: 5, y: 0 }], { type: 'furtivite' }));
   assert.equal(u(cache, 'u1').furtive, true);
-  assert.ok(!unitesVues(cache, CAT6, 1).some((x) => x.id === 'u1'));
+  assert.ok(!unitesVues(cache, CATALOGUE, 1).some((x) => x.id === 'u1'));
 });
 
 test('une partie qui contient des ordres furtivite se rejoue à l’identique', () => {
@@ -359,7 +350,7 @@ test('une partie qui contient des ordres furtivite se rejoue à l’identique', 
     { camp: 1, type: 'infanterie', x: 2, y: 5 },
     { camp: 1, type: 'infanterie', x: 9, y: 9 },
   ], { brouillard: true });
-  const depart = creerPartie(scene, CAT6, 'rejeu-furtif');
+  const depart = creerPartie(scene, CATALOGUE, 'rejeu-furtif');
   const actions: Action[] = [
     ordre('u1', [{ x: 2, y: 2 }], { type: 'furtivite' }),
     { type: 'finTour' }, { type: 'finTour' },
@@ -371,8 +362,8 @@ test('une partie qui contient des ordres furtivite se rejoue à l’identique', 
   for (const a of actions) e = exiger(e, a);
   assert.equal(u(e, 'u1').furtive, false, 'cachée, puis montrée');
   const sauvegarde = enregistrerPartie(e, actions);
-  assert.equal(sauvegarde.catalogueVersion, 6);
-  const rejoue = rejouer(scene, CAT6, sauvegarde);
+  assert.equal(sauvegarde.catalogueVersion, 0);
+  const rejoue = rejouer(scene, CATALOGUE, sauvegarde);
   assert.deepEqual(rejoue.refus, []);
   assert.equal(empreinte(rejoue.etat), empreinte(e));
   assert.equal(u(rejoue.etat, 'u1').furtive, false);
@@ -391,7 +382,7 @@ function bargeChargee(graine = 'barge'): EtatPartie {
     { camp: 0, type: 'infanterie', x: 0, y: 3 },
     { camp: 1, type: 'infanterie', x: 9, y: 3 },
   ]);
-  const e = creerPartie(scene, CAT6, graine);
+  const e = creerPartie(scene, CATALOGUE, graine);
   const charge = exiger(exiger(e,
     ordre('u2', [{ x: 4, y: 0 }], { type: 'embarquer', transport: 'u1' })),
   ordre('u3', [{ x: 4, y: 2 }], { type: 'embarquer', transport: 'u1' }));
@@ -408,7 +399,7 @@ test('une barge pose ses deux passagers sur deux cases en un ordre, événements
   const pret = bargeChargee();
   const r = appliquer(pret, ordre('u1', [{ x: 4, y: 1 }], {
     type: 'debarquer', vers: { x: 4, y: 0 }, autres: [{ vers: { x: 4, y: 2 } }],
-  }), CAT6);
+  }), CATALOGUE);
   assert.ok(r.ok);
   if (!r.ok) return;
   const e = r.etat;
@@ -500,14 +491,14 @@ test('à bord d’un porte-avions, un chasseur fait le plein de munitions et de 
     { camp: 0, type: 'chasseur', x: 3, y: 2 },
     { camp: 1, type: 'infanterie', x: 9, y: 3 },
   ]);
-  const e = creerPartie(scene, CAT6, 'cale');
-  assert.equal(CAT6.unites['porte_avions']?.transport?.ravitaille, true);
+  const e = creerPartie(scene, CATALOGUE, 'cale');
+  assert.equal(CATALOGUE.unites['porte_avions']?.transport?.ravitaille, true);
   const embarque = exiger(e, ordre('u2', [{ x: 3, y: 2 }], { type: 'embarquer', transport: 'u1' }));
   assert.equal(u(embarque, 'u2').dansTransport, 'u1');
   // Un chasseur rentré à sec et abîmé, sur un porteur lui-même à sec.
   const vide = avec(avec(embarque, 'u2', { munitions: 0, carburant: 10, pv: 50 }), 'u1', { munitions: 0 });
   const lendemain = journeeSuivante(vide);
-  const chasseur = CAT6.unites['chasseur']!;
+  const chasseur = CATALOGUE.unites['chasseur']!;
   assert.equal(u(lendemain, 'u2').munitions, chasseur.munitions);
   assert.equal(u(lendemain, 'u2').carburant, chasseur.carburant?.max);
   assert.equal(u(lendemain, 'u2').pv, 50, 'on ne répare pas en mer');
@@ -515,7 +506,7 @@ test('à bord d’un porte-avions, un chasseur fait le plein de munitions et de 
   // Le porteur, lui, reste à sec en pleine mer : seul le port le sert.
   assert.equal(u(lendemain, 'u1').munitions, 0);
   const aQuai = journeeSuivante(avec(lendemain, 'u1', { x: 0, y: 2 }));
-  assert.equal(u(aQuai, 'u1').munitions, CAT6.unites['porte_avions']?.munitions);
+  assert.equal(u(aQuai, 'u1').munitions, CATALOGUE.unites['porte_avions']?.munitions);
 });
 
 test('à bord d’une barge, rien ne se remplit ; à bord du camion, si', () => {
@@ -526,9 +517,9 @@ test('à bord d’une barge, rien ne se remplit ; à bord du camion, si', () => 
     { camp: 0, type: 'meca', x: 8, y: 3 },
     { camp: 1, type: 'infanterie', x: 9, y: 3 },
   ]);
-  const e = creerPartie(scene, CAT6, 'barge-camion');
-  assert.notEqual(CAT6.unites['barge']?.transport?.ravitaille, true);
-  assert.equal(CAT6.unites['transport']?.transport?.ravitaille, true);
+  const e = creerPartie(scene, CATALOGUE, 'barge-camion');
+  assert.notEqual(CATALOGUE.unites['barge']?.transport?.ravitaille, true);
+  assert.equal(CATALOGUE.unites['transport']?.transport?.ravitaille, true);
   const charge = exiger(exiger(e,
     ordre('u2', [{ x: 4, y: 0 }], { type: 'embarquer', transport: 'u1' })),
   ordre('u4', [{ x: 8, y: 3 }], { type: 'embarquer', transport: 'u3' }));
@@ -536,27 +527,9 @@ test('à bord d’une barge, rien ne se remplit ; à bord du camion, si', () => 
   const lendemain = journeeSuivante(aSec);
   assert.equal(u(lendemain, 'u2').munitions, 0, 'la barge ne fait que porter');
   assert.equal(u(lendemain, 'u2').carburant, 10);
-  assert.equal(u(lendemain, 'u4').munitions, CAT6.unites['meca']?.munitions, 'le camion ravitaille sa cale');
+  assert.equal(u(lendemain, 'u4').munitions, CATALOGUE.unites['meca']?.munitions, 'le camion ravitaille sa cale');
 });
 
 // ---------------------------------------------------------------------------
 // Non-régression : sur une carte terrestre, le 6 joue comme le 5
 // ---------------------------------------------------------------------------
-
-test('sur plaine.json, le catalogue 6 joue exactement comme le 5', () => {
-  // Pas d'aéroport sur la plaine : le furtif n'y est jamais produit, et rien
-  // d'autre n'a changé. Même graine, mêmes actions, même état final — au
-  // numéro de catalogue près, qui est la seule différence attendue.
-  const jouer = (cat: Catalogue): { etat: EtatPartie; actions: Action[] } => {
-    const scene = sceneDeCarte(carte('plaine'), reglagesParDefaut({ limiteJournees: 10 }));
-    const depart = creerPartie(scene, cat, 'six-contre-cinq');
-    const r = jouerPartie(depart, [strategie('ponderee'), strategie('agressive')], creerRng('six-contre-cinq:ia'), cat);
-    return { etat: r.etat, actions: r.actions };
-  };
-  const cinq = jouer(CAT5);
-  const six = jouer(CAT6);
-  assert.ok(cinq.actions.length > 10);
-  assert.deepEqual(six.actions, cinq.actions);
-  const sansVersion = (e: EtatPartie): string => canonique({ ...e, catalogueVersion: 0, journal: [] });
-  assert.equal(sansVersion(six.etat), sansVersion(cinq.etat));
-});
