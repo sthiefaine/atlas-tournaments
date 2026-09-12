@@ -23,7 +23,7 @@ export function ResumeAssets() {
       <Ligne>
         <Link href="/admin/assets" className="w-44 font-mono text-xs underline-offset-4 hover:underline">assets/specs</Link>
         <span>{specs.length} spécifications</span>
-        <span className="text-xs opacity-60">{p[1]} en priorité 1 · {p[2]} en priorité 2 · {p[3]} en priorité 3</span>
+        <span className="text-xs admin-secondaire">{p[1]} en priorité 1 · {p[2]} en priorité 2 · {p[3]} en priorité 3</span>
         <span className="ml-auto"><Etat valeur={`${presents} lot(s) présents · ${approuves} approuvé(s)`} /></span>
       </Ligne>
     </Bloc>

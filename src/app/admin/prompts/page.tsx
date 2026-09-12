@@ -55,7 +55,7 @@ export default async function Prompts({
           <a
             key={k}
             href={`/admin/prompts?cle=${k}`}
-            className={`font-mono text-xs underline-offset-4 hover:underline ${k === cle ? 'font-semibold' : 'opacity-60'}`}
+            className={`font-mono text-xs underline-offset-4 hover:underline ${k === cle ? 'font-semibold' : 'admin-secondaire'}`}
           >
             {k}
           </a>
@@ -67,14 +67,14 @@ export default async function Prompts({
           <>
             <Ligne>
               <Etat valeur={`v${courant.version}`} ok />
-              <span className="opacity-70">auteur {courant.auteur}</span>
-              <span className="text-xs opacity-60">{courant.createdAt.toLocaleString('fr-FR')}</span>
-              <span className="ml-auto text-xs opacity-60">
+              <span className="admin-secondaire">auteur {courant.auteur}</span>
+              <span className="text-xs admin-secondaire">{courant.createdAt.toLocaleString('fr-FR')}</span>
+              <span className="ml-auto text-xs admin-secondaire">
                 verrous : {Object.keys(courant.sections).join(', ') || 'aucun'}
               </span>
             </Ligne>
             <div className="max-h-96 overflow-auto px-4 py-3">
-              <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed opacity-80">{courant.corps}</pre>
+              <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed admin-secondaire">{courant.corps}</pre>
             </div>
           </>
         )}
@@ -84,13 +84,13 @@ export default async function Prompts({
         {historique.length === 0 ? <Vide texte="Aucune version." /> : historique.map((h) => (
           <Ligne key={h.id}>
             <Etat valeur={`v${h.version}`} ok={h.statut === 'courant' ? true : undefined} />
-            <span className="w-24 text-xs opacity-60">{h.statut}</span>
-            <span className="text-xs opacity-60">{h.auteur}</span>
-            <span className="basis-full text-xs opacity-70">{h.justification || '—'}</span>
+            <span className="w-24 text-xs admin-secondaire">{h.statut}</span>
+            <span className="text-xs admin-secondaire">{h.auteur}</span>
+            <span className="basis-full text-xs admin-secondaire">{h.justification || '—'}</span>
             <div className="ml-auto flex flex-wrap gap-2">
               <a
                 href={`/admin/prompts?cle=${cle}&version=${h.version}`}
-                className="rounded-md border border-current/15 px-3 py-1.5 text-xs opacity-70 hover:bg-current/5"
+                className="rounded-md border border-current/15 px-3 py-1.5 text-xs admin-secondaire hover:bg-current/5"
               >
                 Comparer
               </a>
@@ -108,6 +108,7 @@ export default async function Prompts({
                   <input
                     type="text"
                     name="motif"
+                    aria-label="Motif du refus"
                     required
                     placeholder="motif du refus"
                     className="w-40 rounded-md border border-current/20 bg-transparent px-2 py-1 text-xs"
@@ -128,9 +129,9 @@ export default async function Prompts({
                 <div
                   key={i}
                   className={
-                    l.signe === '+' ? 'text-emerald-700 dark:text-emerald-300'
-                      : l.signe === '-' ? 'text-red-700 dark:text-red-300'
-                        : 'opacity-50'
+                    l.signe === '+' ? 'text-emerald-700'
+                      : l.signe === '-' ? 'text-red-700'
+                        : 'admin-secondaire'
                   }
                 >
                   {l.signe} {l.texte}

@@ -54,20 +54,20 @@ export default async function Traductions({
               <span className="w-40">{l.nom}</span>
               <Etat valeur={l.statut} ok={l.statut === 'active'} />
               {l.code === 'fr' ? (
-                <span className="text-xs opacity-60">langue source</span>
+                <span className="text-xs admin-secondaire">langue source</span>
               ) : (
                 <>
                   <span className="text-sm">{couverture} %</span>
-                  <span className="text-xs opacity-60">
+                  <span className="text-xs admin-secondaire">
                     {p ? `${p.manquantes} manquantes · ${p.perimees} périmées` : 'aucune chaîne'}
                   </span>
                   {!glossairesConnus.has(l.code) ? (
-                    <span className="text-xs text-amber-700 dark:text-amber-300">glossaire absent : aucun lot servi</span>
+                    <span className="text-xs text-amber-700">glossaire absent : aucun lot servi</span>
                   ) : null}
                   <div className="ml-auto flex gap-2">
                     <a
                       href={`/admin/traductions?locale=${l.code}`}
-                      className="rounded-md border border-current/15 px-3 py-1.5 text-xs opacity-70 hover:bg-current/5"
+                      className="rounded-md border border-current/15 px-3 py-1.5 text-xs admin-secondaire hover:bg-current/5"
                     >
                       Échantillon
                     </a>
@@ -91,9 +91,9 @@ export default async function Traductions({
         >
           {echantillon.length === 0 ? <Vide texte="Aucune ligne en attente de relecture." /> : echantillon.map((e) => (
             <Ligne key={e.cle}>
-              <span className="basis-full font-mono text-xs opacity-60">{e.cle}</span>
+              <span className="basis-full font-mono text-xs admin-secondaire">{e.cle}</span>
               <span className="basis-full text-sm">« {e.source} »</span>
-              <span className="basis-full text-sm opacity-80">→ {e.texte ?? '(vide)'}</span>
+              <span className="basis-full text-sm admin-secondaire">→ {e.texte ?? '(vide)'}</span>
               <form action="/api/admin/actions" method="post" className="mt-2 flex w-full flex-wrap items-center gap-2">
                 <input type="hidden" name="action" value="relire_traduction" />
                 <input type="hidden" name="retour" value={`${RETOUR}?locale=${choisie}`} />
@@ -102,6 +102,7 @@ export default async function Traductions({
                 <input
                   type="text"
                   name="texte"
+                  aria-label={`Correction de ${e.cle}`}
                   placeholder="laisser vide si conforme, sinon écrire la version correcte"
                   className="min-w-64 flex-1 rounded-md border border-current/20 bg-transparent px-2 py-1 text-xs"
                 />

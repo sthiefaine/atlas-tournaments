@@ -38,7 +38,7 @@ export const runtime = 'nodejs';
 function Champ({ nom, children }: { nom: string; children: React.ReactNode }) {
   return (
     <Ligne>
-      <span className="w-40 shrink-0 text-xs opacity-60">{nom}</span>
+      <span className="w-40 shrink-0 text-xs admin-secondaire">{nom}</span>
       <span className="min-w-0 flex-1 text-sm">{children}</span>
     </Ligne>
   );
@@ -46,7 +46,7 @@ function Champ({ nom, children }: { nom: string; children: React.ReactNode }) {
 
 /** Une liste fermée, affichée telle quelle : ce sont des clés, pas des phrases. */
 function Cles({ valeurs }: { valeurs: readonly string[] }) {
-  if (valeurs.length === 0) return <span className="opacity-50">aucune</span>;
+  if (valeurs.length === 0) return <span className="admin-secondaire">aucune</span>;
   return <span className="font-mono text-xs [overflow-wrap:anywhere]">{valeurs.join(', ')}</span>;
 }
 
@@ -105,14 +105,14 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
   return (
     <main className={styles.fiche}>
       <p className="mb-2 text-xs">
-        <Link href="/admin/assets" className="underline underline-offset-4 opacity-70">← tous les assets</Link>
+        <Link href="/admin/assets" className="underline underline-offset-4 admin-secondaire">← tous les assets</Link>
       </p>
       <h2 className={styles.titre}>{libelleAsset(famille)}</h2>
       <p className={styles.identifiant}><code>{spec.id}</code></p>
-      <p className="mb-6 flex flex-wrap items-center gap-2 text-sm opacity-80">
+      <p className="mb-6 flex flex-wrap items-center gap-2 text-sm admin-secondaire">
         <Link href={urlListe({ type: spec.type })} className="underline-offset-4 hover:underline">{LIBELLES_TYPE[spec.type]}</Link>
         <Etat valeur={`priorité ${spec.priorite}`} />
-        <span className="text-xs opacity-60">{LIBELLES_PRIORITE[spec.priorite]}</span>
+        <span className="text-xs admin-secondaire">{LIBELLES_PRIORITE[spec.priorite]}</span>
         <Etat valeur={LIBELLES_RECEPTION[reception.etat]} />
       </p>
 
@@ -133,7 +133,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
       {candidat ? <section id="candidat-expose" className="mb-8 rounded border border-current/20 p-4" aria-labelledby="titre-candidat-expose">
         <h3 id="titre-candidat-expose" className="text-lg font-semibold">Candidat disponible à inspecter</h3>
         <p className="my-2 text-sm">Cette version de production est consultable ici. Elle est distincte du lot réceptionné ci-dessous : aucune validation artistique, aucune intégration en jeu n’est déduite de sa présence.</p>
-        <p className="mb-3 text-xs opacity-70">Révision candidate {candidat.revision.slice(0, 12)} · {candidat.fichiers.length} fichiers. Pour l’approuver, télécharger le lot puis le déposer dans « Déposer et contrôler » afin d’établir sa révision de réception.</p>
+        <p className="mb-3 text-xs admin-secondaire">Révision candidate {candidat.revision.slice(0, 12)} · {candidat.fichiers.length} fichiers. Pour l’approuver, télécharger le lot puis le déposer dans « Déposer et contrôler » afin d’établir sa révision de réception.</p>
         <InspectionClient spec={spec} fichiers={candidat.fichiers} revision={candidat.revision} precedente={null} reference={referenceCandidate} prefixe={candidat.prefixe} libelleBanc="banc du candidat 3D" />
         <details><summary className="cursor-pointer font-semibold">Télécharger les GLB et les textures du candidat</summary><ul className="assets-fichiers mt-2">{candidat.fichiers.map(nom => <li key={nom}><a className="underline" href={cheminInspection(candidat.prefixe, nom, candidat.revision)} download={nom}>{nom}</a></li>)}</ul></details>
       </section> : null}
@@ -163,7 +163,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         </Champ>
         <Champ nom="livraison">
           <Etat valeur={LIBELLES_RECEPTION[reception.etat]} />
-          <span className="ml-2 text-xs opacity-60">{reception.fichiers.length} fichier(s) présent(s), {(reception.octets / 1048576).toFixed(2)} Mio. {reception.revision ? `Révision ${reception.revision.slice(0, 12)}.` : "Aucun lot à contrôler."}</span>
+          <span className="ml-2 text-xs admin-secondaire">{reception.fichiers.length} fichier(s) présent(s), {(reception.octets / 1048576).toFixed(2)} Mio. {reception.revision ? `Révision ${reception.revision.slice(0, 12)}.` : "Aucun lot à contrôler."}</span>
         </Champ>
       </Bloc>
 
@@ -190,7 +190,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         <Champ nom="type"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.type}</span> · {LIBELLES_TYPE[spec.type]}</Champ>
         <Champ nom="clé canon"><span className="font-mono text-xs [overflow-wrap:anywhere]">{spec.cle}</span></Champ>
         <Champ nom="territoire">
-          {pays ? `${pays.nom} (${pays.code})` : <span className="opacity-50">partagé — aucune nation</span>}
+          {pays ? `${pays.nom} (${pays.code})` : <span className="admin-secondaire">partagé — aucune nation</span>}
           {region ? ` · ${region.nom}` : territoire.region ? ` · ${territoire.region}` : ''}
         </Champ>
         <Champ nom="priorité">{spec.priorite} — {LIBELLES_PRIORITE[spec.priorite]}</Champ>
@@ -198,7 +198,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
 
       <Bloc titre="Description" aide="L’anglais est ce que le générateur lit ; le français fait foi en cas de désaccord.">
         <Champ nom="français"><span className="whitespace-pre-wrap">{spec.description.fr}</span></Champ>
-        <Champ nom="anglais"><span className="whitespace-pre-wrap opacity-80">{spec.description.en}</span></Champ>
+        <Champ nom="anglais"><span className="whitespace-pre-wrap admin-secondaire">{spec.description.en}</span></Champ>
       </Bloc>
 
       <Bloc titre="Style">
@@ -220,7 +220,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <Champ nom="ornements"><Cles valeurs={styleNation.ornements} /></Champ>
           <Champ nom="motif daltonien"><span className="font-mono text-xs [overflow-wrap:anywhere]">{styleNation.motifDaltonien}</span></Champ>
           <Champ nom="décalcomanies">
-            {styleNation.decalcomanies.length === 0 ? <span className="opacity-50">aucune</span> : (
+            {styleNation.decalcomanies.length === 0 ? <span className="admin-secondaire">aucune</span> : (
               <ul className="text-xs">
                 {styleNation.decalcomanies.map((d, i) => (
                   <li key={i}><span className="font-mono">{d.motif}</span> · {d.placement} · {d.couleur} — {d.note}</li>
@@ -266,8 +266,8 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
             <span className="w-24 text-xs">{t.resolution} px</span>
             <span className="w-12 font-mono text-xs">{t.format}</span>
             <Etat valeur={t.obligatoire ? 'obligatoire' : 'facultative'} ok={t.obligatoire ? true : undefined} />
-            <span className="basis-full text-xs opacity-70">{t.note}</span>
-            <span className="basis-full font-mono text-xs opacity-50">{nomTexture(spec, t.canal)}</span>
+            <span className="basis-full text-xs admin-secondaire">{t.note}</span>
+            <span className="basis-full font-mono text-xs admin-secondaire">{nomTexture(spec, t.canal)}</span>
           </Ligne>
         ))}
       </Bloc>
@@ -279,7 +279,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
       </Bloc>
 
       <Bloc titre={`Animations — ${spec.animations.length} clip(s)`}>
-        {spec.animations.length === 0 ? <Champ nom="clips"><span className="opacity-50">aucun : l’asset est immobile</span></Champ> : spec.animations.map((a) => (
+        {spec.animations.length === 0 ? <Champ nom="clips"><span className="admin-secondaire">aucun : l’asset est immobile</span></Champ> : spec.animations.map((a) => (
           <Ligne key={a.nom}>
             <span className="w-40 font-mono text-xs">{a.nom}</span>
             <span className="w-24 text-xs">{a.dureeMs} ms</span>
@@ -306,7 +306,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
       </Bloc>
 
       <details className="mb-8 text-xs">
-        <summary className="cursor-pointer opacity-70">Le JSON tel qu’il part au générateur</summary>
+        <summary className="cursor-pointer admin-secondaire">Le JSON tel qu’il part au générateur</summary>
         <pre className="mt-2 overflow-x-auto rounded-lg border border-current/10 p-4 font-mono">{JSON.stringify(spec, null, 2)}</pre>
       </details>
       </details>

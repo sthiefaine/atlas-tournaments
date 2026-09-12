@@ -139,7 +139,7 @@ export default function Inspection({ spec, fichiers, revision, precedente, refer
   const cote = comparaison === 'precedente' && precedente ? { id: spec.id, prefixe: `/api/admin/assets/${spec.id}/historique/${precedente}`, revision: precedente }
     : comparaison === 'reference' && reference ? { id: reference.id, prefixe: reference.prefixe ?? prefixe, revision: reference.revision } : null;
   return <div className="mt-4 space-y-3 text-sm">
-    <p className="text-xs opacity-70">La conformité technique ne juge ni la silhouette ni l’absence d’ombre peinte. Comparer les trois vues avant d’approuver. L’éclairage de jeu reprend le soleil, l’hémisphère et l’environnement ; météo et post-traitement se vérifient dans l’atelier.</p>
+    <p className="text-xs admin-secondaire">La conformité technique ne juge ni la silhouette ni l’absence d’ombre peinte. Comparer les trois vues avant d’approuver. L’éclairage de jeu reprend le soleil, l’hémisphère et l’environnement ; météo et post-traitement se vérifient dans l’atelier.</p>
     <div className="flex flex-wrap gap-3">
       <label>Vue <select aria-label="Vue" value={reglages.vue} onChange={(e) => modifier('vue', e.target.value as Vue)}><option value="jeu">Jeu 65°</option><option value="dessus">Dessus</option><option value="trois_quarts">Trois-quarts</option></select></label>
       <label>LOD <select aria-label="LOD" value={lod} onChange={(e) => choisirLod(Number(e.target.value) as NiveauLod)}>{spec.verification.lodRequis.map((n) => <option key={n} value={n}>{n}</option>)}</select></label>
