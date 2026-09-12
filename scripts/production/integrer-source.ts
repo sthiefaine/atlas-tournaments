@@ -5,7 +5,7 @@ import path from 'node:path';
 import { lireSpec } from '../controler-asset';
 import { controlerDepot, nomsAttendus } from '../../src/serveur/depot-modeles';
 const id = process.argv[2];
-if (!id || !['unite_artillerie_base', 'unite_infanterie_base', 'unite_antiair_base'].includes(id)) throw new Error('Asset source attendu');
+if (!id || !['unite_artillerie_base', 'unite_infanterie_base', 'unite_antiair_base', 'unite_char_leger_base'].includes(id)) throw new Error('Asset source attendu');
 const dossier = path.resolve('assets/livraisons', id);
 const spec = lireSpec(`assets/specs/${id}.json`);
 const fichiers = nomsAttendus(spec).filter(nom => existsSync(path.join(dossier, nom))).map(nom => ({ nom, octets: readFileSync(path.join(dossier, nom)) }));

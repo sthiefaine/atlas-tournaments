@@ -1,0 +1,19 @@
+{
+  "source": "tank 3d model.glb",
+  "sha256": "82f0857a3f0074cbd2aca688ec81c2227f53fa1a1dcbba66d6579f399a513f99",
+  "trianglesSource": 957200,
+  "trianglesLivres": 957212,
+  "trianglesAjoutes": 12,
+  "trianglesParAttache": [
+    423364,
+    328046,
+    205790
+  ],
+  "pixelsEquipe": 9902,
+  "approbationArtistique": false,
+  "limites": [
+    "Segmentation g\u00e9om\u00e9trique des attaches \u00e0 v\u00e9rifier humainement",
+    "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+    "Orientation front \u00e0 confirmer dans inspecteur"
+  ]
+}

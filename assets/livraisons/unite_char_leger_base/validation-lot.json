@@ -1,0 +1,21 @@
+{
+  "id": "unite_char_leger_base",
+  "revision": "212d808f70b9d8fcb501f07114ccc62aa50c8b37cf60923e72f3b53af0ab6873",
+  "octets": 53130822,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_char_leger_base_lod0.glb",
+      "unite_char_leger_base_albedo.png",
+      "unite_char_leger_base_normale.png",
+      "unite_char_leger_base_rugosite.png",
+      "unite_char_leger_base_metal.png",
+      "unite_char_leger_base_masque_equipe.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "candidat_inspecteur"
+}
