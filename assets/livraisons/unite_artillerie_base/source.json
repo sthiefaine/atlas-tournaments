@@ -1,0 +1,19 @@
+{
+  "source": "military cannon vehicle 3d model.glb",
+  "sha256": "38a5dbc65010bb45ec2424de7fa9c19b1e6d220ec0beb5339d2a5c35214fad5b",
+  "trianglesSource": 941718,
+  "trianglesLivres": 941718,
+  "trianglesParAttache": [
+    650690,
+    218045,
+    44403,
+    28580
+  ],
+  "pixelsEquipe": 1256,
+  "approbationArtistique": false,
+  "limites": [
+    "Segmentation g\u00e9om\u00e9trique des attaches \u00e0 v\u00e9rifier humainement",
+    "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+    "Orientation front \u00e0 confirmer dans inspecteur"
+  ]
+}

@@ -19215,7 +19215,7 @@
         "unite_antiair_base_masque_equipe.png",
         "unite_antiair_base_emission.png"
       ],
-      "revision": "2c1869fd89b96342dccc4a5be19e154a12ed6b1f0ec8f9163203f09dd0d34f5d"
+      "revision": "52fadd787e05c87d0e40d3b763a6def99375d25c6ff156f3d3b7ea1f3c5460ed"
     },
     {
       "id": "unite_artillerie_base",
@@ -19227,7 +19227,7 @@
         "unite_artillerie_base_metal.png",
         "unite_artillerie_base_masque_equipe.png"
       ],
-      "revision": "34ff39193517d753c8bec0c9dbbbebe9dd0378eea5861ccd5157ef3e4695e8f6"
+      "revision": "13661837030267ea68c48a67b726588bcdb9985230ca47b73a815a8ddc1daacf"
     },
     {
       "id": "unite_barge_base",
@@ -19505,9 +19505,10 @@
         "unite_infanterie_base_albedo.png",
         "unite_infanterie_base_normale.png",
         "unite_infanterie_base_rugosite.png",
+        "unite_infanterie_base_metal.png",
         "unite_infanterie_base_masque_equipe.png"
       ],
-      "revision": "41e5846c500cbd56974f452ba4d80345857d165715fbb6f0ae731b8b1a0e64b3"
+      "revision": "8a5b0acab61a4c25bf420b69ffaa8f22bb34e30a7f7af4f3e49507ae4821fbca"
     },
     {
       "id": "unite_meca_base",

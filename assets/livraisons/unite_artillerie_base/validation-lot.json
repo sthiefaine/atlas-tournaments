@@ -1,7 +1,7 @@
 {
   "id": "unite_artillerie_base",
-  "revision": "4337630fe0319888fbd0e5a013b3baabe14e564d6f96748aebd28ccce4045a6b",
-  "octets": 794246,
+  "revision": "13661837030267ea68c48a67b726588bcdb9985230ca47b73a815a8ddc1daacf",
+  "octets": 48822478,
   "verdict": {
     "ok": true,
     "motifs": [],
@@ -15,5 +15,7 @@
     ],
     "inconnus": [],
     "lodManquants": []
-  }
+  },
+  "approbationArtistique": false,
+  "integration": "candidat_inspecteur"
 }

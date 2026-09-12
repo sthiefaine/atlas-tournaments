@@ -35,3 +35,11 @@ test('le prompt exige la source uploadée même si le lot est complet', () => {
   assert.ok(prompt.includes('ne le remplace jamais par une génération procédurale'));
   assert.ok(promptProduction(spec, []).includes('Recherche la dernière source déposée'));
 });
+
+test('les sources détaillées gardent leur géométrie sans reconfirmation du budget', () => {
+  const prompt = promptProduction(specs.find(s => s.id === 'unite_artillerie_base')!, []);
+  assert.ok(prompt.includes('Aucune décimation'));
+  assert.ok(prompt.includes('cette adaptation est déjà autorisée'));
+  assert.ok(prompt.includes('ne redemande pas confirmation'));
+  assert.ok(prompt.includes('optimise sans perte'));
+});

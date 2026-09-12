@@ -1,1 +1,6 @@
-{"version":2,"origine":"copie_infanterie_publique_materiaux_normalises","validationArtistique":"non_effectuee"}
+{
+  "remplacePar": "source.json",
+  "revision": "c2a572aa2c925035e8037e1901f145ffa108d5300c98533537df14267c85dfd6",
+  "approbationArtistique": false,
+  "note": "Ancien rapport proc\u00e9dural remplac\u00e9 par le candidat source HD."
+}

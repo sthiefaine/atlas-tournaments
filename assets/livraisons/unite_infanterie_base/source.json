@@ -1,0 +1,17 @@
+{
+  "source": "armored soldier 3d model.glb",
+  "sha256": "d98081ee79d3d57c5ce16d8dec70f602a78ec07e63030ee9652aa4b7ac433b84",
+  "trianglesSource": 985194,
+  "trianglesLivres": 985194,
+  "trianglesParAttache": [
+    80377,
+    904817
+  ],
+  "pixelsEquipe": 7383,
+  "approbationArtistique": false,
+  "limites": [
+    "Geste rigide du groupe : pas de marche squelettique individuelle",
+    "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+    "Orientation front \u00e0 confirmer dans inspecteur"
+  ]
+}

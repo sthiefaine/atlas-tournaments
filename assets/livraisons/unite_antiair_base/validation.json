@@ -1,25 +1,6 @@
-[
-  {
-    "lod": 0,
-    "triangles": 4040,
-    "dimensions": [
-      0.6200000047683716,
-      0.5025076472759247,
-      0.8500000238418579
-    ],
-    "min": [
-      -0.3100000023841858,
-      0,
-      -0.42500001192092896
-    ],
-    "max": [
-      0.3100000023841858,
-      0.5025076472759247,
-      0.42500001192092896
-    ],
-    "verdict": {
-      "ok": true,
-      "motifs": []
-    }
-  }
-]
+{
+  "remplacePar": "source.json",
+  "revision": "52fadd787e05c87d0e40d3b763a6def99375d25c6ff156f3d3b7ea1f3c5460ed",
+  "approbationArtistique": false,
+  "note": "Ancien rapport proc\u00e9dural remplac\u00e9 par le candidat source HD."
+}

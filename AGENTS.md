@@ -397,3 +397,14 @@ Refonte des boutons et cartes : surfaces bleu nuit, accent menthe, angles arrond
 ## Anti-air de base — candidat du 13 septembre 2026
 
 `assets/livraisons/unite_antiair_base` contient le candidat LOD0 à 4 040 triangles (6 000 autorisés), 569 911 octets pour les sept fichiers. Six PNG préservés à l’octet près ; courbes subdivisées et normales lisses, positions des attaches et animations inchangées. `scripts/antiair/integrer.ts` expose uniquement ce lot dans l’inspecteur via `/assets/candidats`, après contrôle complet. Le modèle actif et les kits ne sont pas remplacés. Les repères projetés figurent dans `reperes.json` ; ni ces mesures ni les tests DOM ne valent approbation artistique. La revue visuelle humaine reste à faire.
+
+
+## Sources GLB détaillées — décision du propriétaire, 13 septembre 2026
+
+Pour chaque source GLB uploadée, appliquer systématiquement le traitement de la barge : conserver la géométrie détaillée, les normales, les UV et la résolution des textures. Aucune décimation, aucun remeshing ni réduction automatique des textures. Cette règle remplace les anciens budgets lorsqu’ils imposeraient une perte de détail : après mesure de la source, adapter le catalogue générateur et les spécifications versionnées de la base et de ses kits, avec une marge pour les attaches nécessaires. Cette adaptation est autorisée sans nouvelle confirmation. Les budgets des assets sans source mesurée ne sont pas augmentés arbitrairement.
+
+Conserver un seul LOD0, les PNG externes, la provenance SHA-256, et documenter les triangles et octets avant/après. Orientation, dimensions, pivots, matériaux, masque d’équipe et animations restent à préparer et contrôler. Une limite technique dépassée se traite par une optimisation sans perte ou un blocage expliqué, jamais par une simplification silencieuse. L’acceptation technique reste distincte de la validation artistique humaine ; cette règle n’active pas automatiquement un candidat.
+
+## Candidats GLB uploadés — 13 septembre 2026
+
+Les trois candidats anti-air, artillerie et infanterie proviennent désormais des sources Tripo déposées, identifiées par SHA-256 dans chaque `source.json`. Géométrie source conservée : 950 800, 941 718 et 985 194 triangles ; un témoin de 12 triangles est ajouté à l’anti-air. Les cartes PBR source restent en 4K, les PNG externes. Les budgets mesurés sont adaptés dans le générateur et les specs de base/kits, sans produire de kit supplémentaire. Les scripts `scripts/{antiair,artillerie,infanterie}/preparer-source.py` préparent les attaches rigides et `scripts/production/integrer-source.ts` expose uniquement les candidats contrôlés. Orientation, découpe des pièces mobiles et zones d’équipe restent à revoir humainement ; l’infanterie n’a pas de marche squelettique individuelle. Aucun modèle actif n’est remplacé par cette livraison.

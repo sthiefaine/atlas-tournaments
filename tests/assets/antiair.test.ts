@@ -2,25 +2,21 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { inflateSync } from 'node:zlib';
+import { lirePng } from '../../src/assets/png';
 import { decouperGlb } from '../../scripts/infanterie/gltf';
 import { lireSpec } from '../../scripts/controler-asset';
 import { validerGlb } from '../../src/assets';
 const id = 'unite_antiair_base';
 const dir = 'assets/livraisons/unite_antiair_base/';
 function png(channel: string) {
-  const b = readFileSync(`${dir}${id}_${channel}.png`);
-  const width = b.readUInt32BE(16), height = b.readUInt32BE(20);
-  assert.equal(b[24], 8); assert.equal(b[25], 2);
-  const chunks: Buffer[] = [];
-  for (let p = 8; p < b.length;) { const n = b.readUInt32BE(p); if (b.toString('ascii', p + 4, p + 8) === 'IDAT') chunks.push(b.subarray(p + 8, p + 8 + n)); p += n + 12; }
-  const raw = inflateSync(Buffer.concat(chunks)), rgb = Buffer.alloc(width * height * 3);
-  for (let y = 0; y < height; y++) { assert.equal(raw[y * (width * 3 + 1)], 0); raw.copy(rgb, y * width * 3, y * (width * 3 + 1) + 1, (y + 1) * (width * 3 + 1)); }
-  return { width, height, rgb };
+  const p = lirePng(readFileSync(`${dir}${id}_${channel}.png`));
+  const rgb = Buffer.alloc(p.largeur * p.hauteur * 3);
+  for (let i = 0; i < p.largeur * p.hauteur; i++) for (let c = 0; c < 3; c++) rgb[i * 3 + c] = p.rgba[i * 4 + c]!;
+  return { width: p.largeur, height: p.hauteur, rgb };
 }
 test('six textures aux résolutions prescrites, masque binaire et albédo neutre sous le masque', () => {
   for (const channel of ['albedo', 'normale', 'rugosite', 'metal', 'masque_equipe', 'emission']) {
-    const image = png(channel), size = ['albedo', 'normale'].includes(channel) ? 1024 : 512;
+    const image = png(channel), size = ['albedo', 'normale', 'rugosite', 'metal'].includes(channel) ? 4096 : 512;
     assert.equal(image.width, size); assert.equal(image.height, size);
   }
   const mask = png('masque_equipe').rgb, albedo = png('albedo').rgb;
@@ -31,7 +27,7 @@ test('six textures aux résolutions prescrites, masque binaire et albédo neutre
     if (mask[i] === 255) {
       whites++;
       const x = (i / 3) % 512, y = Math.floor(i / 3 / 512);
-      for (const dx of [0, 1]) for (const dy of [0, 1]) { const p = ((y * 2 + dy) * 1024 + x * 2 + dx) * 3; assert.equal(albedo[p], albedo[p + 1]); assert.equal(albedo[p], albedo[p + 2]); }
+      for (const dx of [0, 7]) for (const dy of [0, 7]) { const p = ((y * 8 + dy) * 4096 + x * 8 + dx) * 3; assert.equal(albedo[p], albedo[p + 1]); assert.equal(albedo[p], albedo[p + 2]); }
     }
   }
   assert.ok(whites > 0 && whites < 512 * 512 / 4);
@@ -70,21 +66,20 @@ for (const lod of [0] as const) test(`LOD${lod}: noms exacts, géométrie valide
   assert.deepEqual(values(off.samplers[lamp.sampler]!.output).slice(-3), [0, 0, 0]);
 });
 
-test('le candidat conserve les PNG externes et les trois repères séparés', () => {
+test('le candidat utilise la source HD et les PNG externes avec les canaux PBR attendus', () => {
   const { document: d } = decouperGlb(readFileSync(`${dir}${id}_lod0.glb`));
   for (const image of d.images as { uri: string; bufferView?: number }[]) {
     assert.equal(image.bufferView, undefined);
     assert.match(image.uri, /^unite_antiair_base_[a-z_]+\.png$/);
-    assert.deepEqual(readFileSync(`${dir}${image.uri}`), readFileSync(`public/assets/modeles/${image.uri}`), 'PNG existant conservé');
+    assert.ok(readFileSync(`${dir}${image.uri}`).length > 0);
   }
   const metal = png('metal').rgb, orm = png('rugosite').rgb;
   for (let i = 0; i < metal.length; i += 3) assert.equal(orm[i + 2], metal[i], 'canal B = métal éditable');
-  const mesures = JSON.parse(readFileSync(`${dir}reperes.json`, 'utf8'));
-  const gauche = mesures.reperes['marker--1'], droite = mesures.reperes['marker-1'];
-  assert.ok(droite.min[0] - gauche.max[0] > .09, 'les tubes restent clairement séparés');
-  assert.ok(mesures.reperes['radar-dish'].max[2] < gauche.min[2], 'radar distinct derrière les tubes');
-  assert.equal(mesures.pixelsParMetre, 48);
-  assert.equal(mesures.validationArtistique, false);
+  const source = JSON.parse(readFileSync(`${dir}source.json`, 'utf8'));
+  assert.equal(source.sha256, 'bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989');
+  assert.equal(source.trianglesSource, 950800);
+  assert.equal(source.trianglesLivres, source.trianglesSource + 12);
+  assert.equal(source.approbationArtistique, false);
   const nodes = d.nodes as { name: string }[];
   for (const a of d.animations as { channels: { target: { node: number } }[] }[]) {
     assert.ok(a.channels.every(c => nodes[c.target.node]!.name !== 'racine'));

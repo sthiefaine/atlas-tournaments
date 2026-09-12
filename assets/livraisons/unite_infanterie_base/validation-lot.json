@@ -1,0 +1,21 @@
+{
+  "id": "unite_infanterie_base",
+  "revision": "8a5b0acab61a4c25bf420b69ffaa8f22bb34e30a7f7af4f3e49507ae4821fbca",
+  "octets": 38678057,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_infanterie_base_lod0.glb",
+      "unite_infanterie_base_albedo.png",
+      "unite_infanterie_base_normale.png",
+      "unite_infanterie_base_rugosite.png",
+      "unite_infanterie_base_metal.png",
+      "unite_infanterie_base_masque_equipe.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "candidat_inspecteur"
+}

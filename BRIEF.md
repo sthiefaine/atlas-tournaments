@@ -247,3 +247,10 @@ Tous les assets du site utilisent désormais un seul modèle `*_lod0.glb` : unit
 ## Catalogue unique — nouvelle base 0 (12 septembre 2026)
 
 Décision du propriétaire : le catalogue courant complet de 30 unités devient la version 0. Les anciens filtres par version et le sélecteur de la vitrine sont supprimés. Tous les scénarios embarqués et les homologations pointent vers 0. Les prix, traits et exclusivités sont conservés. Les révisions des capacités de commandants restent indépendantes et leurs choix implicites sont figés dans les scénarios avant conversion. Les sauvegardes antérieures restent périmées plutôt que rejouées sous des règles différentes ; la progression n’est pas effacée. La migration `0001_catalogue_zero.sql` aligne les données et le compteur de production à ce nouveau point de départ. Les compteurs techniques pourront à nouveau évoluer lors de futures modifications, sans restaurer les anciens catalogues.
+
+
+## Sources GLB détaillées — décision du propriétaire, 13 septembre 2026
+
+Pour chaque source GLB uploadée, appliquer systématiquement le traitement de la barge : conserver la géométrie détaillée, les normales, les UV et la résolution des textures. Aucune décimation, aucun remeshing ni réduction automatique des textures. Cette règle remplace les anciens budgets lorsqu’ils imposeraient une perte de détail : après mesure de la source, adapter le catalogue générateur et les spécifications versionnées de la base et de ses kits, avec une marge pour les attaches nécessaires. Cette adaptation est autorisée sans nouvelle confirmation. Les budgets des assets sans source mesurée ne sont pas augmentés arbitrairement.
+
+Conserver un seul LOD0, les PNG externes, la provenance SHA-256, et documenter les triangles et octets avant/après. Orientation, dimensions, pivots, matériaux, masque d’équipe et animations restent à préparer et contrôler. Une limite technique dépassée se traite par une optimisation sans perte ou un blocage expliqué, jamais par une simplification silencieuse. L’acceptation technique reste distincte de la validation artistique humaine ; cette règle n’active pas automatiquement un candidat.

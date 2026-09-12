@@ -51,7 +51,7 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 6000,
+    "lod0": 1000000,
     "materiauxMax": 3
   },
   "textures": [
