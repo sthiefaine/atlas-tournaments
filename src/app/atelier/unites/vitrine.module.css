@@ -56,3 +56,14 @@
 @media (max-width: 720px) {
   .planche { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(180px, 1fr); }
 }
+
+.navigationCamera { display:flex; flex-wrap:wrap; gap:8px; padding:0 16px 12px; }
+.navigationCamera button { min-height:44px; border:1px solid #839798; padding:8px 12px; background:var(--encre); color:var(--papier); cursor:pointer; font:inherit; font-size:13px; font-weight:700; }
+.navigationCamera button[aria-pressed='true'] { background:var(--signal); color:var(--encre-haute); }
+.navigationCamera p { flex-basis:100%; margin:0; font-size:13px; line-height:1.5; }
+.navigationCamera button:focus-visible,.tuile[data-vue='jeu']:focus-visible { outline:3px solid var(--signal); outline-offset:3px; }
+.planche[data-techniques='false'] { grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(400px,65svh); }
+.planche[data-techniques='false'] .tuile:not([data-vue='jeu']) { display:none; }
+.tuile[data-vue='jeu'] { pointer-events:auto; touch-action:none; cursor:grab; user-select:none; }
+.tuile[data-vue='jeu'][data-glisser='true'] { cursor:grabbing; }
+.tuile[data-vue='jeu'] span { pointer-events:none; }

@@ -369,3 +369,7 @@ La branche `codex/audio-vfx` ajoute huit bruitages synthétiques, les réglages 
 ## Mise à jour — barge Tripo (12 septembre 2026)
 
 Le modèle fourni « tugboat » devient `unite_barge_base`, activé comme base partagée. LOD 49 956 / 11 956 / 2 956 triangles, budget propre 50 000 / 12 000 / 3 000 propagé à ses 24 kits. Quatre clips rigides, PBR externe partagé et panneaux d’équipe ; source HD gardée hors git. Grue fixe, rampe non articulée : aucune animation de débarquement nouvelle. Les anciens kits candidats de barge doivent être régénérés sur cette géométrie et ses UV avant activation. Voir `assets/livraisons/unite_barge_base/README.md`. Activation technique ne vaut pas validation artistique de la réduction.
+
+## Mise à jour — vitrine orientable (12 septembre 2026)
+
+`/atelier/unites` ouvre une grande vue libre par défaut. Glisser tourne et incline la caméra, molette et pincement zooment ; flèches, +/−, Début et boutons fournissent des alternatives. Bearing continu, inclinaison −80° à 85°, zoom ×0,4 à ×3. Les six vues techniques restent accessibles, la dernière étant orbitale. Gestes via Pointer Events et capture, annulation/nettoyage au démontage, redessin des gestes regroupé par frame. Build, test de bornes et deux E2E DOM/réseau passent (dont le chargement de la barge) ; aucun contrôle visuel automatisé.

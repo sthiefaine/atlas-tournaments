@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * La vitrine des unités : une seule pièce, vue sous six angles à la fois —
+ * La vitrine des unités : une grande vue orbitale par défaut, ou six angles —
  * face, profil gauche, profil droit, dos, dessus, et l'angle du jeu (68°).
  *
  * Le banc d'essai montre tout le catalogue dans une scène complète, ce qui est
@@ -42,6 +42,7 @@ import {
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
 import { rectangleTuile } from './tuiles';
+import { ORBITE_INITIALE, reglerOrbite, type Orbite } from './orbite';
 
 /** Les six angles, dans l'ordre où on les lit : les quatre élévations, le dessus, le jeu. */
 const VUES = [
@@ -86,6 +87,8 @@ const VERSION_CANON = chargerCatalogueUnites().catalogueVersion;
 const VERSIONS_CATALOGUE: readonly number[] = Array.from({ length: VERSION_CANON }, (_, i) => i + 1);
 
 export default function Vitrine(): React.ReactElement {
+  const [vuesTechniques, setVuesTechniques] = useState(false);
+  const orbite = useRef<Orbite>({ ...ORBITE_INITIALE });
   const [version, setVersion] = useState<number>(VERSION_CANON);
   const [unite, setUnite] = useState<string>('infanterie');
   const [pays, setPays] = useState<string>('fr');
@@ -229,6 +232,59 @@ export default function Vitrine(): React.ReactElement {
     return () => { delete g.__atlasVitrine; };
   }, [rendues, etatModele]);
 
+  const changerOrbite = useCallback((dx = 0, dy = 0, facteur = 1, reset = false): void => {
+    orbite.current = reset ? { ...ORBITE_INITIALE } : reglerOrbite(orbite.current, dx, dy, facteur);
+    const s = studio.current;
+    s?.orienter(orbite.current);
+    const tuile = tuiles.current.get('jeu');
+    if (tuile) {
+      tuile.dataset.bearing = String(orbite.current.bearing);
+      tuile.dataset.inclinaison = String(orbite.current.inclinaison);
+      tuile.dataset.zoom = String(orbite.current.zoom);
+    }
+  }, []);
+
+  useEffect(() => {
+    const tuile = tuiles.current.get('jeu');
+    if (!tuile || moteur !== true) return;
+    const doigts = new Map<number, {x:number;y:number}>();
+    let raf: number | null = null;
+    const dessiner = () => {
+      if (raf !== null) return;
+      raf = requestAnimationFrame(() => { raf = null; studio.current?.dessiner(tuiles.current, grille.current); });
+    };
+    const appliquer = (dx=0,dy=0,facteur=1,reset=false) => { changerOrbite(dx,dy,facteur,reset); dessiner(); };
+    const down = (e:PointerEvent) => {
+      if (e.button !== 0) return;
+      tuile.focus({preventScroll:true}); tuile.setPointerCapture(e.pointerId);
+      doigts.set(e.pointerId,{x:e.clientX,y:e.clientY}); tuile.dataset.glisser='true';
+    };
+    const move = (e:PointerEvent) => {
+      const precedent=doigts.get(e.pointerId); if(!precedent)return;
+      const autre=[...doigts.entries()].find(([id])=>id!==e.pointerId)?.[1];
+      doigts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+      if(autre) {
+        const avant=Math.hypot(precedent.x-autre.x,precedent.y-autre.y);
+        const apres=Math.hypot(e.clientX-autre.x,e.clientY-autre.y);
+        if(avant>5&&apres>5)appliquer(0,0,apres/avant);
+      } else appliquer(-(e.clientX-precedent.x)*.4,(e.clientY-precedent.y)*.3);
+    };
+    const up=(e:PointerEvent)=>{doigts.delete(e.pointerId);if(tuile.hasPointerCapture(e.pointerId))tuile.releasePointerCapture(e.pointerId);tuile.dataset.glisser=String(doigts.size>0);};
+    const wheel=(e:WheelEvent)=>{e.preventDefault();const dy=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?tuile.clientHeight:1);appliquer(0,0,Math.exp(-Math.max(-500,Math.min(500,dy))*.001));};
+    const key=(e:KeyboardEvent)=>{
+      const actions:Record<string,()=>void>={ArrowLeft:()=>appliquer(-10),ArrowRight:()=>appliquer(10),ArrowUp:()=>appliquer(0,5),ArrowDown:()=>appliquer(0,-5),'+':()=>appliquer(0,0,1.15),'=':()=>appliquer(0,0,1.15),'-':()=>appliquer(0,0,1/1.15),Home:()=>appliquer(0,0,1,true)};
+      if(actions[e.key]){e.preventDefault();actions[e.key]!();}
+    };
+    tuile.addEventListener('pointerdown',down);tuile.addEventListener('pointermove',move);
+    for(const event of ['pointerup','pointercancel','lostpointercapture'])tuile.addEventListener(event,up as EventListener);
+    tuile.addEventListener('wheel',wheel,{passive:false});tuile.addEventListener('keydown',key);
+    return()=>{if(raf!==null)cancelAnimationFrame(raf);tuile.removeEventListener('pointerdown',down);tuile.removeEventListener('pointermove',move);for(const event of ['pointerup','pointercancel','lostpointercapture'])tuile.removeEventListener(event,up as EventListener);tuile.removeEventListener('wheel',wheel);tuile.removeEventListener('keydown',key);doigts.clear();};
+  }, [moteur, changerOrbite]);
+
+  function commandeCamera(dx=0,dy=0,facteur=1,reset=false) {
+    changerOrbite(dx,dy,facteur,reset); studio.current?.dessiner(tuiles.current,grille.current);
+  }
+
   function jouerClip(nom: NomClip): void {
     const l = lecteur.current;
     if (!l) return;
@@ -333,15 +389,31 @@ export default function Vitrine(): React.ReactElement {
       </ul>
     </div> : null}
 
-    <div className={styles.planche} ref={grille} hidden={moteur === false}>
+    <div className={styles.navigationCamera} hidden={moteur === false}>
+      <button type="button" aria-pressed={!vuesTechniques} onClick={()=>setVuesTechniques(false)}>Grande vue libre</button>
+      <button type="button" aria-pressed={vuesTechniques} onClick={()=>setVuesTechniques(true)}>Six vues techniques</button>
+      <button type="button" aria-label="Tourner à gauche" onClick={()=>commandeCamera(-15)}>↶</button>
+      <button type="button" aria-label="Tourner à droite" onClick={()=>commandeCamera(15)}>↷</button>
+      <button type="button" aria-label="Augmenter l’inclinaison" onClick={()=>commandeCamera(0,10)}>Incliner +</button>
+      <button type="button" aria-label="Diminuer l’inclinaison" onClick={()=>commandeCamera(0,-10)}>Incliner −</button>
+      <button type="button" aria-label="Zoomer" onClick={()=>commandeCamera(0,0,1.2)}>Zoom +</button>
+      <button type="button" aria-label="Dézoomer" onClick={()=>commandeCamera(0,0,1/1.2)}>Zoom −</button>
+      <button type="button" onClick={()=>commandeCamera(0,0,1,true)}>Réinitialiser la vue</button>
+      <p id="aide-camera-vitrine">Glissez sur la vue libre pour tourner et incliner. Molette ou pincement pour zoomer. Au clavier : flèches, +/− et touche Début pour réinitialiser.</p>
+    </div>
+    <div className={styles.planche} data-techniques={vuesTechniques} ref={grille} hidden={moteur === false}>
       <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
       {VUES.map((v) => <div
         key={v.cle}
         className={styles.tuile}
         ref={(el) => { if (el) tuiles.current.set(v.cle, el); else tuiles.current.delete(v.cle); }}
         data-vue={v.cle}
+        tabIndex={v.cle === 'jeu' ? 0 : undefined}
+        role={v.cle === 'jeu' ? 'region' : undefined}
+        aria-label={v.cle === 'jeu' ? 'Vue 3D interactive de l’unité' : undefined}
+        aria-describedby={v.cle === 'jeu' ? 'aide-camera-vitrine' : undefined}
       >
-        <span>{v.titre}</span>
+        <span>{v.cle === 'jeu' ? 'Vue libre · glisser pour tourner' : v.titre}</span>
       </div>)}
     </div>
   </div>;
@@ -356,6 +428,7 @@ interface Studio {
   /** Tenue quand le moteur est initialisé ; rejetée s'il ne démarre pas. */
   readonly prete: Promise<void>;
   poser(piece: THREE.Object3D): void;
+  orienter(vue: Orbite): void;
   /** Dessine la planche ; rend faux — et ne fait rien — tant que le moteur n'est pas prêt. */
   dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean;
   dispose(): void;
@@ -447,6 +520,7 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
 
   /** Une caméra par vue, gardée d'une image à l'autre : voir `dessiner`. */
   const cameras = new Map<CleVue, THREE.Camera>();
+  let vueLibre: Orbite = { ...ORBITE_INITIALE };
 
   /** La dernière taille réellement posée sur le moteur : voir `dessiner`. */
   const tailleRendue = { l: 0, h: 0, ratio: 0 };
@@ -478,7 +552,7 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     const rayon = Math.max(taille.x, taille.y, taille.z) / 2 * MARGE;
     for (const vue of VUES) {
       const tuile = tuiles.get(vue.cle);
-      if (!tuile) continue;
+      if (!tuile || tuile.getBoundingClientRect().width === 0) continue;
       const rect = rectangleTuile(rectCadre, tuile.getBoundingClientRect(), largeur, hauteur);
       // Une tuile qui ne tient pas entièrement dans le cadre est **sautée**, pas
       // rognée : sous WebGPU, `setScissorRect` prend des entiers non signés et
@@ -499,6 +573,10 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
       // fois par vue et on ne met à jour que ce qui bouge — le cadrage dépend du
       // rayon de la pièce et du rapport de la tuile, tous deux stables.
       const direction = new THREE.Vector3(vue.direction[0], vue.direction[1], vue.direction[2]).normalize();
+      if (vue.cle === 'jeu') {
+        const a=vueLibre.bearing*Math.PI/180, p=vueLibre.inclinaison*Math.PI/180;
+        direction.set(Math.sin(a)*Math.cos(p),Math.sin(p),Math.cos(a)*Math.cos(p));
+      }
       let camera: THREE.Camera;
       if (vue.ortho) {
         const o = (cameras.get(vue.cle) as THREE.OrthographicCamera | undefined)
@@ -518,7 +596,7 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
         p.updateProjectionMatrix();
         // La distance qui fait tenir la sphère englobante dans le champ vertical.
         const distance = rayon / Math.sin((20 * Math.PI) / 180) * (aspect < 1 ? 1 / aspect : 1);
-        p.position.copy(centre).addScaledVector(direction, distance);
+        p.position.copy(centre).addScaledVector(direction, distance / vueLibre.zoom);
         p.up.set(0, 1, 0);
         p.lookAt(centre);
         camera = p;
@@ -532,6 +610,7 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     materiaux,
     prete,
     poser,
+    orienter: (v) => { vueLibre = { ...v }; },
     dessiner,
     dispose: () => {
       vivant = false;
