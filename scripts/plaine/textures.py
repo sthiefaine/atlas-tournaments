@@ -14,7 +14,7 @@ REPORT = Path('assets/livraisons/terrain_plaine')
 RNG = np.random.default_rng(842071)
 Y, X = np.mgrid[:SIZE, :SIZE]
 colour = np.empty((SIZE, SIZE, 3), dtype=np.float64)
-colour[:] = [60, 96, 34]
+colour[:] = [91, 128, 61]
 pigment = RNG.normal(0, 1.3, (SIZE, SIZE))
 for k, amplitude in [(7, 1.1), (19, 0.8), (43, 0.5)]:
     pigment += amplitude * np.sin(2 * math.pi * (X * k + Y * (k + 2)) / SIZE + RNG.random() * 6.28)
@@ -60,7 +60,7 @@ for _ in range(46000):
     angle = RNG.normal(0.25 if band > 0 else -0.25, 1.4)
     tint = RNG.uniform(-22, 25)
     paint(cx, cy, RNG.uniform(0.9, 2.2), RNG.uniform(3.5, 9), angle,
-          [73+tint*0.8, 116+tint, 39+tint*0.4], RNG.uniform(0.0010, 0.0032), RNG.uniform(0.79, 0.94), True)
+          [108+tint*0.65, 147+tint*0.8, 74+tint*0.45], RNG.uniform(0.0010, 0.0032), RNG.uniform(0.79, 0.94), True)
 
 # Scattered small clover leaves, never a large repeated plant silhouette.
 for _ in range(165):
@@ -69,7 +69,7 @@ for _ in range(165):
     for j in range(3):
         a = phase + j*math.tau/3
         paint(cx+2.4*math.cos(a), cy+2.4*math.sin(a), 2.3, 1.9, a,
-              [65, 108+RNG.uniform(0, 12), 45], 0.0020, 0.77)
+              [82, 129+RNG.uniform(0, 12), 68], 0.0020, 0.77)
         # Fine pale leaf marking is pigment, not illumination.
         paint(cx+2.4*math.cos(a), cy+2.4*math.sin(a), 0.45, 1.3, a,
               [99, 136, 64], 0.00205, 0.77)
@@ -157,6 +157,6 @@ for a in range(4):
         worst=max(worst,float(np.abs(left[:,-1]-right[:,0]).max()),float(np.abs(left[-1]-right[0]).max()))
 assert worst<0.017, worst
 validation['normale']={'rotated_edges_max_vector_difference':worst,'resolution':[1024,1024]}
-validation['flat_surface']={'top_y_m':0.02,'bottom_y_m':0,'undulation_in_mesh':False,'macro_relief':'supplied by game terrain'}
+validation['flat_surface']={'soil_top_y_m':0.02,'bottom_y_m':0,'undulation_in_mesh':False,'macro_relief':'supplied by game terrain'}
 (REPORT/'texture-validation.json').write_text(json.dumps(validation,indent=2)+'\n')
 print(json.dumps(validation,indent=2))

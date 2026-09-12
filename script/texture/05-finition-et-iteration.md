@@ -17,7 +17,7 @@ Export external PNG textures with the exact filenames and resolutions in the spe
 
 For units, create the exact required clips, durations and rest pivots from the specification. For rigid parts use node transforms; for infantry follow its own rig contract. Do not animate a cannon that is fused to the hull. Looping clips must match at their endpoints. glTF does not standardize the playback loop flag: configure looping in the runtime or supported metadata as well as making seamless keys. Keep missile trails, impact particles and other gameplay effects outside the unit mesh unless explicitly required. Do not create these effects as permanent geometry.
 
-For terrain_plaine, keep the constant-thickness flat slab specified by the project. The game terrain supplies the broad relief. Independent short vegetation pieces may add silhouette in the renderer; do not replace the continuous terrain with disconnected mounds or bake their shadows into its albedo.
+For terrain_plaine, keep the constant-thickness flat slab specified by the project. The game terrain supplies the broad relief. The same GLB now includes curved grass under mat_herbe, reaching 6 cm total height; the renderer extracts this layer onto its continuous relief; do not replace the continuous terrain with disconnected mounds or bake their shadows into its albedo.
 
 Run the project's asset validator on every required LOD and complete lot. Report actual triangle counts, measured bounds, nodes, materials, UV channels, image dimensions, external references, clip durations and remaining issues. Technical acceptance and owner visual approval are separate outcomes. Never mark the asset artistically approved merely because these checks pass.
 ```

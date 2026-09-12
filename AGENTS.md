@@ -333,3 +333,8 @@ Coolify, image construite depuis le `Dockerfile` à la racine (Node 22 Alpine, t
 - `/api/health/routines` est la sonde « homme mort » : `500` dès qu'une routine dépasse trois fois sa cadence nominale. Une routine qui n'a jamais tourné n'est pas en panne. À brancher sur la supervision externe.
 - Variables à poser dans Coolify : `DATABASE_URL`, `ADMIN_PASSWORD`, `AUTH_SECRET`, `CRON_SECRET`, `SITE_URL`, et si l'on veut s'écarter des valeurs par défaut `DEPECHE_TZ` (`Europe/Paris`), `DEPECHE_HEURE` (`18:00`), `BACKUP_DIR` (`.backups`, à monter sur un volume en production, sinon la copie de sécurité meurt avec le conteneur).
 - Le conteneur embarque `content/` et `drizzle/`, lus au démarrage. Une modification du canon est donc un déploiement, pas une écriture en base.
+
+
+## Herbe en volume — 12 septembre 2026
+
+À la demande du propriétaire, `terrain_plaine` contient maintenant une dalle plate de 2 cm et des brins courbés jusqu’à 6 cm au total. Deux matériaux (`mat_sol`, `mat_herbe`), mêmes nœuds `racine`/`sol`, budgets conservés : 798/174 triangles. Les PNG restent externes, sans éclairage cuit. Premier contact extrait la végétation du GLB et la pose sur son relief continu ; les grandes cartes utilisent le LOD1, et le mode tactique la masque. Cette révision remplace la consigne historique interdisant tout brin dans le GLB, sans donner le relief du paysage à la dalle. Validation artistique par le propriétaire encore attendue. Voir `assets/livraisons/terrain_plaine/README.md`.

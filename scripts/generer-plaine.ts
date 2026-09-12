@@ -1,3 +1,4 @@
+import { vegetationPlaine, SOL_PLAINE } from './plaine/vegetation';
 import { controlerDepot } from '../src/serveur/depot-modeles';
 /** Flat tournament turf. Generate textures first with scripts/plaine/textures.py. */
 import * as T from 'three';
@@ -12,7 +13,7 @@ const ID = 'terrain_plaine';
 const destination = path.resolve('public/assets/modeles');
 const livraison = path.resolve('assets/livraisons', ID);
 // First float32 above 0.02, avoiding rejection from rounding below the lower bound.
-const HEIGHT = Math.fround(0.020000001);
+const HEIGHT = SOL_PLAINE;
 const channels = ['albedo', 'normale', 'rugosite', 'occlusion'];
 
 
@@ -21,7 +22,7 @@ async function main() {
   const pending = new Map<string, Uint8Array>();
   const report: unknown[] = [];
   for (const lod of [0, 1] as const) {
-    const subdivisions = lod === 0 ? 16 : 8;
+    const subdivisions = lod === 0 ? 4 : 2;
     const top = new T.PlaneGeometry(1, 1, subdivisions, subdivisions);
     top.rotateX(-Math.PI / 2);
     // Exact flat top, no displacement, bump geometry or residual rotation noise.
@@ -42,9 +43,12 @@ async function main() {
       }
       components.push(g);
     }
-    const geometry = mergeGeometries(components, false)!;
+    const terre = mergeGeometries(components, false)!;
+    terre.setAttribute('color',new T.Float32BufferAttribute(new Float32Array(terre.getAttribute('position').count*3).fill(1),3));
+    const vegetation=vegetationPlaine(lod);
+    const geometry = mergeGeometries([terre,vegetation], true)!;
     const root = new T.Group(); root.name = 'racine';
-    const sol = new T.Mesh(geometry, new T.MeshStandardMaterial({ name: 'mat_sol', roughness: 1, metalness: 0 }));
+    const sol = new T.Mesh(geometry, [new T.MeshStandardMaterial({ name: 'mat_sol', roughness: .9, metalness: 0,vertexColors:true }),new T.MeshStandardMaterial({name:'mat_herbe',roughness:.86,metalness:0,vertexColors:true,side:T.DoubleSide})]);
     sol.name = 'sol'; root.add(sol);
     const { document, bin } = decouperGlb(await exporterGlb(root, []));
     document.images = channels.map(channel => ({ name: `${ID}_${channel}.png`, uri: `${ID}_${channel}.png`, mimeType: 'image/png' }));
@@ -58,8 +62,8 @@ async function main() {
     material.normalTexture = { index: 1, scale: 1 };
     material.occlusionTexture = { index: 3, strength: 1 };
     document.extras = { units: 'metre', up: '+Y', front: '+Z', grid: 'P', defence: 1,
-      flatTop: true, slabThickness: HEIGHT, terrainReliefOwnedByRenderer: true,
-      seamlessRotations: [0, 90, 180, 270], textureSource: 'deterministic procedural turf, no baked lighting' };
+      flatTop: true, vegetationMaterial:'mat_herbe',vegetationBase:HEIGHT, vegetationHeight:0.04, slabThickness: HEIGHT, terrainReliefOwnedByRenderer: true,
+      seamlessRotations: [0, 90, 180, 270], textureSource: 'deterministic procedural turf, no baked lighting',vegetationTriangles:vegetation.getAttribute('position').count/3 };
     const bytes = assemblerGlb(document, bin);
     const verdict = validerGlb(bytes, spec, { lod });
     if (!verdict.ok) throw new Error(JSON.stringify(verdict));

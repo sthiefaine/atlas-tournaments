@@ -60,7 +60,7 @@ test('les références servent de candidats, et le prompt reprend le style et le
   assert.match(texte, /parent module_tourelle/); assert.match(texte, /PNG textures external/);
   assert.equal(contratProduction(fiche('terrain_pont')).raccord, 'directionnel');
   assert.doesNotMatch(fiche('terrain_pont').description.en, /Deliver the mesh flat/);
-  assert.equal(plaine.echelle.y.cible, .02); assert.equal(plaine.echelle.x.tolerance, 0);
+  assert.equal(plaine.echelle.y.cible, .06); assert.equal(plaine.echelle.x.tolerance, 0);
 });
 
 test('faux nom, doublon et texture obligatoire manquante refusent le lot', () => {

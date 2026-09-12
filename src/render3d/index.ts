@@ -209,6 +209,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   const visibiliteDecor = new WeakMap<THREE.Object3D, boolean>();
   function appliquerTactique(): void {
     monde?.unites.modeTactique(tactique);
+    if(monde?.plateau.vegetation)monde.plateau.vegetation.visible=!tactique;
     reglerDecorTactique(monde?.decor?.groupe.children ?? [], tactique, visibiliteDecor);
     if (scene3d) scene3d.canvas.dataset.modeTactique = String(tactique);
   }
@@ -468,6 +469,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       grefferBrouillardSur(decor.groupe, m.plateau.uniformesBrouillard, CLE_BROUILLARD_DECOR);
       decor.appliquerAmbiance(depart, (etat ?? e).climat.saison);
       decor.groupe.visible = false;
+      if(m.plateau.vegetation)decor.groupe.traverse(o=>{if(o.name==='paysage-gazon')o.visible=false;});
       s.scene.add(decor.groupe);
       m.decor = decor;
       appliquerTactique();
@@ -601,6 +603,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // doit repartir d'elle. Les unités relisent l'altitude au `maj` ci-dessous ;
       // le décor ressème arbres et rochers, rebâtit les bâtiments, et se repose.
       m.decor?.majGrille(grilleDe(etat, vue));
+      if(m.plateau.vegetation)m.decor?.groupe.traverse(o=>{if(o.name==='paysage-gazon')o.visible=false;});
     }
     // Le brouillard de guerre : le plateau assombrit les cases hors de vue, le
     // décor éteint ce qu'il y sème. L'un et l'autre comparent l'ensemble reçu

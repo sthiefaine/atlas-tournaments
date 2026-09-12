@@ -17,5 +17,8 @@ test('Premier contact charge les GLB nationaux et leurs textures depuis le serve
   for (const id of ['terrain_plaine', 'terrain_foret', 'terrain_riviere', 'terrain_route', 'terrain_pont']) {
     await expect.poll(() => recus.has(`/assets/modeles/${id}_albedo.png`), { timeout: 30000 }).toBe(true);
   }
+  for (const lod of [0, 1]) {
+    await expect.poll(() => recus.has(`/assets/modeles/terrain_plaine_lod${lod}.glb`), { timeout: 30000 }).toBe(true);
+  }
   expect(erreurs).toEqual([]);
 });

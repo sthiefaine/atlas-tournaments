@@ -31,7 +31,7 @@
             "tolerance": 0
           },
           "y": {
-            "cible": 0.02,
+            "cible": 0.06,
             "tolerance": 0.002
           },
           "z": {
@@ -63,7 +63,8 @@
             "sol"
           ],
           "materiauxAttendus": [
-            "mat_sol"
+            "mat_sol",
+            "mat_herbe"
           ]
         },
         "textures": [

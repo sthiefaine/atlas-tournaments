@@ -7,8 +7,8 @@
   "glb": 2227,
   "png": 12353,
   "imagesEmbarquees": 0,
-  "octetsLogiques": 988239208,
-  "octetsUniques": 245549115,
+  "octetsLogiques": 988274527,
+  "octetsUniques": 245584434,
   "lots": [
     {
       "id": "batiment_aeroport_ar",
@@ -9168,7 +9168,7 @@
       "famille": "terrain",
       "dossier": "public/assets/modeles",
       "fichiers": 6,
-      "octets": 4597025,
+      "octets": 4632344,
       "manquants": [],
       "referencesAbsentes": []
     },

@@ -50,7 +50,7 @@ for (const lod of [0, 1] as const) test(`LOD${lod}: dimensions, surface plane, n
   assert.equal(validerGlb(bytes, lireSpec(`assets/specs/${id}.json`), { lod }).ok, true);
   const { document: d, bin } = decouperGlb(bytes);
   assert.deepEqual((d.nodes as { name: string }[]).map(n => n.name).sort(), ['racine', 'sol']);
-  assert.deepEqual((d.materials as { name: string }[]).map(n => n.name), ['mat_sol']);
+  assert.deepEqual((d.materials as { name: string }[]).map(n => n.name), ['mat_sol', 'mat_herbe']);
   assert.equal((d.animations as unknown[] | undefined)?.length ?? 0, 0);
   const accessors = d.accessors as { bufferView: number; byteOffset?: number; count: number; type: string; componentType: number }[];
   const views = d.bufferViews as { byteOffset?: number; byteStride?: number }[];
@@ -66,8 +66,8 @@ for (const lod of [0, 1] as const) test(`LOD${lod}: dimensions, surface plane, n
       if (axis === 1) heights.add(n);
     }
   }
-  assert.equal(heights.size, 2, 'only bottom and a perfectly level top');
-  assert.ok(heights.has(0)); assert.ok(Math.abs(Math.max(...heights) - 0.02) < 1e-8);
+  assert.ok(heights.size > 10, 'curved vegetation has real volume');
+  assert.ok(heights.has(0)); assert.ok(Math.abs(Math.max(...heights) - 0.06) < 1e-8);
   assert.deepEqual(bounds[0], [-0.5, 0.5]); assert.deepEqual(bounds[2], [-0.5, 0.5]);
   assert.ok(triangles <= (lod === 0 ? 800 : 200));
 });

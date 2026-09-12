@@ -28,7 +28,7 @@
     ]
   },
   "flat_surface": {
-    "top_y_m": 0.02,
+    "soil_top_y_m": 0.02,
     "bottom_y_m": 0,
     "undulation_in_mesh": false,
     "macro_relief": "supplied by game terrain"

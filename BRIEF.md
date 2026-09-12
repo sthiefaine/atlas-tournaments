@@ -229,3 +229,8 @@ Un coordinateur (Claude Fable 5.1) et des agents (Claude Opus) autant que néces
 ## Validation des cinq axes et de la formation — 5 septembre 2026
 
 Le joueur a validé : objectifs escorte/relais/survie corrigés ; six missions dans trois environnements et une alliance jouable ; biomes tactiquement distincts ; unité de génie ; 3D plus lisible aux textures moins chargées. Les **quatre premières manches sont des entraînements expliqués**, avant l’entrée dans les matchs officiels. Le parcours local sert de première réalisation ; le tour régional et mondial reste l’ambition de campagne. Périmètre livré et limites : `doc/15-premiers-matchs.md`.
+
+
+## Herbe en volume — 12 septembre 2026
+
+À la demande du propriétaire, `terrain_plaine` contient maintenant une dalle plate de 2 cm et des brins courbés jusqu’à 6 cm au total. Deux matériaux (`mat_sol`, `mat_herbe`), mêmes nœuds `racine`/`sol`, budgets conservés : 798/174 triangles. Les PNG restent externes, sans éclairage cuit. Premier contact extrait la végétation du GLB et la pose sur son relief continu ; les grandes cartes utilisent le LOD1, et le mode tactique la masque. Cette révision remplace la consigne historique interdisant tout brin dans le GLB, sans donner le relief du paysage à la dalle. Validation artistique par le propriétaire encore attendue. Voir `assets/livraisons/terrain_plaine/README.md`.

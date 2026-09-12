@@ -1,3 +1,4 @@
+import { geometrieGazon } from './vegetation-plaine';
 import type { MatiereLivree } from './assets-environnement';
 /**
  * Le plateau : maillage de la grille, mélange de matières, eau, voies, grille.
@@ -107,6 +108,7 @@ export interface Plateau {
   readonly groupe: THREE.Group;
   /** Le maillage du sol : c'est lui que le lancer de rayon interroge. */
   readonly sol: THREE.Mesh;
+  readonly vegetation?: THREE.Mesh;
   /**
    * Les tabliers de pont, interrogés **avant** le sol : sous un pont le sol se
    * creuse jusqu'au lit, et un clic sur le tablier tombait dans l'eau d'à côté.
@@ -758,6 +760,12 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   sol.receiveShadow = true;
   sol.castShadow = true;
   groupe.add(sol);
+  const sourceVegetation=biome==='plaine'?solsLivres.get('terrain_plaine')?.vegetation:undefined;
+  const matVegetation=sourceVegetation?new THREE.MeshStandardNodeMaterial({vertexColors:true,roughness:.86,metalness:0,side:THREE.DoubleSide}):null;
+  if(matVegetation)grefferBrouillard(matVegetation,uBrouillard,'atlas-gazon');
+  const vegetation=sourceVegetation&&matVegetation?new THREE.Mesh(geometrieGazon(g,sourceVegetation),matVegetation):undefined;
+  if(vegetation){vegetation.name='gazon-glb';vegetation.receiveShadow=true;vegetation.castShadow=false;groupe.add(vegetation);}
+
 
   const matSocle = new THREE.MeshStandardNodeMaterial({
     map: terre.albedo,
@@ -915,6 +923,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
    * l'ancienne berge. Le plan d'eau, lui, ne dépend que des dimensions.
    */
   function reposer(g2: GrilleTerrain): void {
+    if(vegetation&&sourceVegetation)remplacerGeometrie(vegetation,geometrieGazon(g2,sourceVegetation));
     tamponSocle.poser(geometrieSocle(g2));
     tamponGrille.poser(geometrieGrille(g2));
     const donnees = donneesFonds(g2);
@@ -962,6 +971,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
   return {
     groupe,
     sol,
+    vegetation,
     ponts,
     uniformesBrouillard: uBrouillard,
     uniformesEau: uEau,
@@ -1054,6 +1064,7 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
       if (p === ambiance) return;
       ambiance = p;
       matSol.color.set(p.teinteSol);
+      if(matVegetation){matVegetation.color.set(p.teinteSol).lerp(new THREE.Color(0xe9efec),p.neigeSol);matVegetation.roughness=.86-p.mouille*.16;}
       matSocle.color.set(p.teinteSol).multiplyScalar(0.55);
       // Le revêtement ne prend qu'un soupçon de la teinte de saison : une route
       // qui vire au sable en automne se lit comme un chemin de terre. La neige
@@ -1115,6 +1126,8 @@ export function creerPlateau(g: GrilleTerrain, doc: Document, biome: Biome = 'pl
 
     dispose(): void {
       sol.geometry.dispose();
+      vegetation?.geometry.dispose();matVegetation?.dispose();
+      for(const source of solsLivres.values()){source.vegetation?.proche.dispose();source.vegetation?.loin.dispose();}
       // Ces quatre-là ne possèdent plus leur géométrie : c'est leur tampon.
       tamponSocle.dispose();
       tamponGrille.dispose();

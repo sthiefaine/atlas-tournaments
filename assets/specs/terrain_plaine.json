@@ -4,8 +4,8 @@
   "cle": "plaine",
   "priorite": 1,
   "description": {
-    "en": "A one-metre tileable patch of mown tournament grassland: dense short turf with a faint mowing pattern, scattered clover and dandelion, a few bare earth scuffs, and a very shallow surface undulation of about six centimetres. It tiles seamlessly on all four edges and never shows a feature large enough to be recognised twice on the same map. Grid tile \"P\", defence 1 of 4. The patch is exactly one metre square in plan with compatible edges under quarter turns. Deliver a constant-thickness flat slab (0.02 m). Surface undulation and altitude are applied by the renderer; do not model them.",
-    "fr": "Une plaque carrée d’un mètre, raccordable, de prairie de tournoi tondue : gazon court et dense à trace de tonte discrète, trèfle et pissenlits épars, quelques éraflures de terre nue, et une ondulation de surface d’environ six centimètres. Elle se raccorde sur ses quatre bords et ne montre jamais un motif assez gros pour être reconnu deux fois sur la même carte. Caractère de grille « P », défense 1 sur 4. Exactement un mètre carré en plan. Bords compatibles après un quart de tour. Livrer une dalle plane d’épaisseur constante (0.02 m). Le rendu applique l’altitude et les ondulations ; ne pas les modeler."
+    "en": "A one-metre tileable patch of mown tournament grassland: dense short turf with a faint mowing pattern, scattered clover and dandelion, a few bare earth scuffs, and a very shallow surface undulation of about six centimetres. It tiles seamlessly on all four edges and never shows a feature large enough to be recognised twice on the same map. Grid tile \"P\", defence 1 of 4. The patch is exactly one metre square in plan with compatible edges under quarter turns. A flat 0.02 m base carries short curved grass blades and sparse clover up to 0.06 m total height. Separate grass with mat_herbe; retain one sol node. Broad terrain undulation belongs to the renderer.",
+    "fr": "Une plaque carrée d’un mètre, raccordable, de prairie de tournoi tondue : gazon court et dense à trace de tonte discrète, trèfle et pissenlits épars, quelques éraflures de terre nue, et une ondulation de surface d’environ six centimètres. Elle se raccorde sur ses quatre bords et ne montre jamais un motif assez gros pour être reconnu deux fois sur la même carte. Caractère de grille « P », défense 1 sur 4. Exactement un mètre carré en plan. Bords compatibles après un quart de tour. Une base plane de 0.02 m porte des brins courts courbés et quelques trèfles, hauteur totale 0.06 m. Séparer la végétation avec mat_herbe, conserver le nœud sol. Les ondulations du terrain appartiennent au rendu."
   },
   "style": {
     "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
@@ -35,7 +35,7 @@
       "tolerance": 0
     },
     "y": {
-      "cible": 0.02,
+      "cible": 0.06,
       "tolerance": 0.002
     },
     "z": {
@@ -118,7 +118,8 @@
       "sol"
     ],
     "materiauxAttendus": [
-      "mat_sol"
+      "mat_sol",
+      "mat_herbe"
     ]
   },
   "nommage": {
