@@ -1762,3 +1762,13 @@ Le profil ne porte **jamais** l'état d'une partie en cours : celui-ci est une `
 | 34 | `Scenario.incarnation` : le général incarné au camp 0, et aucun flag de la trame principale — ni en récompense, ni dans un choix | §15.2 bis |
 | 35 | La condition `confiance`, calquée sur `compteur`, et le second chemin vers `depart_nation` | §15.5, §15.6 |
 | 36 | `ProfilCampagne.confiance` : 0 à `CONFIANCE_MAX` par général, clé de commandant, absent = 0 | §15.9 |
+
+## Installation IEM renforcée — 12 septembre 2026
+
+Exemple de station mondiale réservée à une mission avancée :
+
+```json
+{"cle":"station_heliarque","x":3,"y":1,"mode":"renforcee","portee":"carte","campProtege":1,"premiereJournee":6,"intervalle":6}
+```
+
+La case doit être un bâtiment capturable. `portee: "carte"` exige le mode renforcé, un camp protégé présent dans le scénario et interdit `rayon`. Capture par un autre camp : désactivation. Portée locale absente ou `locale` : rayon 2 par défaut (1–3). Mode renforcé : première journée 6–100 et période 6–10. Sans mode, les anciens réglages standard subsistent. Voir `doc/refonte/conception-missions.md` pour le contrat séparé du laboratoire.

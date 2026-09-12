@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 const GROUPES: { nom: string; liens: [string, string][] }[] = [
   { nom: 'Pilotage', liens: [['/admin', 'Vue d’ensemble'], ['/admin/file', 'À valider'], ['/admin/depeche', 'Missions du jour']] },
-  { nom: 'Création', liens: [['/admin/assets', 'Bibliothèque d’assets'], ['/admin/assets/chantier', 'Chantier de production'], ['/admin/catalogue', 'Unités et équilibrage'], ['/admin/personnages', 'Personnages et histoire']] },
+  { nom: 'Création', liens: [['/admin/cartes', 'Laboratoire de missions'], ['/admin/assets', 'Bibliothèque d’assets'], ['/admin/assets/chantier', 'Chantier de production'], ['/admin/catalogue', 'Unités et équilibrage'], ['/admin/personnages', 'Personnages et histoire']] },
   { nom: 'Routines', liens: [['/admin/prompts', 'Prompts et versions'], ['/admin/traductions', 'Traductions']] },
 ];
 export function NavigationAdmin() {

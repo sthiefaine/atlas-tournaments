@@ -90,3 +90,33 @@ test('IEM : refuse un emplacement non capturable à la création', () => {
   const s = scene(); s.reglages.installationsIem![0]!.x = 0;
   assert.throws(() => creerPartie(s, CAT, 'invalide'), /capturable/);
 });
+
+test('IEM renforcée mondiale : J6 puis J12, aéronefs adverses abattus et propriétaire protégé', () => {
+  const s=scene();s.reglages.installationsIem=[{cle:'poste',x:3,y:1,mode:'renforcee',portee:'carte',campProtege:1,premiereJournee:6,intervalle:6}];
+  const e=creerPartie(s,CAT,'mondiale');
+  assert(e.journal.some(v=>v.type==='annonce'&&v.texte.includes('toute la carte')));
+  e.journee=5;ouvrirTechnologies(e,CAT,[]);assert.equal(e.unites.length,5);
+  e.journee=6;const evts:Parameters<typeof ouvrirTechnologies>[2]=[];ouvrirTechnologies(e,CAT,evts);
+  assert(!e.unites.some(u=>u.id==='u1'||u.id==='u5'));assert(e.unites.some(u=>u.id==='u3'));
+  assert.equal(e.unites.find(u=>u.id==='u4')!.iemJusquaJournee,6);assert.equal(e.unites.find(u=>u.id==='u2')!.iemJusquaJournee,undefined);
+  assert.equal(evts.filter(v=>v.type==='hors_jeu').length,2);
+  delete e.unites.find(u=>u.id==='u4')!.iemJusquaJournee;
+  e.journee=11;ouvrirTechnologies(e,CAT,[]);assert.equal(e.unites.find(u=>u.id==='u4')!.iemJusquaJournee,undefined);
+  e.journee=12;ouvrirTechnologies(e,CAT,[]);assert.equal(e.unites.find(u=>u.id==='u4')!.iemJusquaJournee,12);
+});
+test('la station mondiale capturée ou désaffectée reste éteinte ; les alliés du propriétaire sont protégés', () => {
+  const s=scene();s.reglages.installationsIem=[{cle:'poste',x:3,y:1,mode:'renforcee',portee:'carte',campProtege:1,premiereJournee:6}];
+  for(const off of ['capture','desaffecte','allies']){
+    const e=creerPartie(s,CAT,off);e.journee=6;
+    if(off==='capture')e.proprietaires['3,1']=0;
+    if(off==='desaffecte')e.desaffectes.push('3,1');
+    if(off==='allies')e.reglages.equipes=[[0,1]];
+    ouvrirTechnologies(e,CAT,[]);assert.equal(e.unites.length,5);assert(e.unites.every(u=>u.iemJusquaJournee===undefined));
+  }
+});
+test('le moteur refuse une station mondiale sans camp protégé ou une cadence renforcée trop courte',()=>{
+  const s=scene();s.reglages.installationsIem=[{cle:'poste',x:3,y:1,mode:'renforcee',portee:'carte',premiereJournee:6}];
+  assert.throws(()=>creerPartie(s,CAT,'refus'),/camp protégé/);
+  s.reglages.installationsIem[0]!.campProtege=1;s.reglages.installationsIem[0]!.intervalle=3;
+  assert.throws(()=>creerPartie(s,CAT,'refus'),/intervalle/);
+});

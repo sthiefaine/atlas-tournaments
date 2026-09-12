@@ -1497,16 +1497,25 @@ export function validerScenario(valeur: unknown): Resultat<Scenario> {
   const clesTechnologies: string[] = [];
   const positionsIem: string[] = [];
   if (presente(o, 'installationsIem')) tableau(ctx, o['installationsIem'], 'installationsIem', { max: 8 }, (e, c) => {
-    const s = objet(ctx, e, c, ['cle', 'x', 'y', 'rayon', 'premiereJournee', 'intervalle']);
+    const s = objet(ctx, e, c, ['cle', 'x', 'y', 'rayon', 'premiereJournee', 'intervalle', 'mode', 'portee', 'campProtege']);
     if (!s || !requis(ctx, s, c, ['cle', 'x', 'y', 'premiereJournee'])) return undefined;
     const identifiant = cle(ctx, s['cle'], sous(c, 'cle'));
     if (identifiant) clesTechnologies.push(identifiant);
     entier(ctx, s['x'], sous(c, 'x'), { min: 0, max: 59 });
     entier(ctx, s['y'], sous(c, 'y'), { min: 0, max: 59 });
     positionsIem.push(`${s['x']},${s['y']}`);
-    entier(ctx, s['premiereJournee'], sous(c, 'premiereJournee'), { min: 2, max: 100 });
-    if (presente(s, 'rayon')) entier(ctx, s['rayon'], sous(c, 'rayon'), { min: 1, max: 6 });
-    if (presente(s, 'intervalle')) entier(ctx, s['intervalle'], sous(c, 'intervalle'), { min: 3, max: 10 });
+    if (presente(s, 'mode')) enumeration(ctx, s['mode'], sous(c, 'mode'), ['standard', 'renforcee'] as const);
+    const renforcee = s['mode'] === 'renforcee';
+    if (presente(s,'portee')) enumeration(ctx,s['portee'],sous(c,'portee'),['locale','carte'] as const);
+    if (presente(s,'campProtege')) entier(ctx,s['campProtege'],sous(c,'campProtege'),{min:0,max:3});
+    if (s['portee']==='carte') {
+      if(!renforcee)ctx.faute(c,'la portée carte exige une station renforcée');
+      if(!camps.includes(s['campProtege'] as typeof camps[number]))ctx.faute(sous(c,'campProtege'),'camp protégé présent dans le scénario requis');
+      if(presente(s,'rayon'))ctx.faute(sous(c,'rayon'),'la portée carte ne prend pas de rayon');
+    }
+    entier(ctx, s['premiereJournee'], sous(c, 'premiereJournee'), { min: renforcee ? 6 : 2, max: 100 });
+    if (presente(s, 'rayon')) entier(ctx, s['rayon'], sous(c, 'rayon'), { min: 1, max: renforcee ? 3 : 6 });
+    if (presente(s, 'intervalle')) entier(ctx, s['intervalle'], sous(c, 'intervalle'), { min: renforcee ? 6 : 3, max: 10 });
     return undefined;
   });
   sansDoublon(ctx, positionsIem, 'installationsIem');

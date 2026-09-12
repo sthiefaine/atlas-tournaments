@@ -974,7 +974,7 @@ export type ChoixCommandant = typeof CHOIX_COMMANDANT[number];
  * - `modes` : les deux jeux de paramètres, certifiés tous les deux par le contrôle.
  *   Absent, le scénario se joue en `normal` avec ses champs de premier niveau.
  */
-export interface InstallationIem { cle: Cle; x: number; y: number; rayon?: number; premiereJournee: number; intervalle?: number }
+export interface InstallationIem { mode?: 'standard' | 'renforcee'; portee?: 'locale' | 'carte'; campProtege?: CampId; cle: Cle; x: number; y: number; rayon?: number; premiereJournee: number; intervalle?: number }
 export interface EvenementClimatScenario { cle: Cle; journee: number; meteo: Meteo; duree: number; campsAdaptes: CampId[] }
 
 export interface RenfortScenario {

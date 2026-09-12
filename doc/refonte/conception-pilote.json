@@ -1,0 +1,332 @@
+{
+  "version": 1,
+  "scenario": "opus1_tutoriel_05",
+  "graine": 20260912,
+  "budget": {
+    "parties": 16,
+    "partiesMax": 32,
+    "interrompu": false
+  },
+  "recommandation": {
+    "rang": 1,
+    "revision": 2
+  },
+  "candidates": [
+    {
+      "rang": 1,
+      "revisions": [
+        {
+          "revision": 1,
+          "empreinte": "d2b68b47",
+          "statut": "a_tester",
+          "score": 44,
+          "erreurs": [],
+          "avertissements": [
+            "Contrôle de carte libre : 2 camp(s) sans usine à moins de 18 cases",
+            "La durée observée sort de la fenêtre souhaitée pour au moins un essai."
+          ],
+          "essais": [
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "agressive",
+              "graine": "20260912:normal:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 13,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "77ce9e0da66539f1",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 113
+            },
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "ponderee",
+              "graine": "20260912:normal:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": false,
+              "journees": 19,
+              "motif": "limite_journees",
+              "premierContact": 2,
+              "captures": 3,
+              "empreinte": "945860199e9ae72c",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 157
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "agressive",
+              "graine": "20260912:difficile:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 14,
+              "motif": "objectif_capture_qg",
+              "premierContact": 3,
+              "captures": 4,
+              "empreinte": "fcc0a0d1e3554689",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 114
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "ponderee",
+              "graine": "20260912:difficile:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": false,
+              "journees": 19,
+              "motif": "limite_journees",
+              "premierContact": 3,
+              "captures": 3,
+              "empreinte": "413559cca1e67ff0",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 142
+            }
+          ]
+        },
+        {
+          "revision": 2,
+          "empreinte": "57d1828c",
+          "statut": "a_tester",
+          "score": 97,
+          "erreurs": [],
+          "avertissements": [
+            "Contrôle de carte libre : 2 camp(s) sans usine à moins de 18 cases"
+          ],
+          "essais": [
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "agressive",
+              "graine": "20260912:normal:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 14,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "93e33e6fa1a58257",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 110
+            },
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "ponderee",
+              "graine": "20260912:normal:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 15,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "18ef5b60ae796bb3",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 111
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "agressive",
+              "graine": "20260912:difficile:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 13,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "9f3228a99d8f1432",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 104
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "ponderee",
+              "graine": "20260912:difficile:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 15,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "d78df6a140d332ca",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 124
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rang": 2,
+      "revisions": [
+        {
+          "revision": 1,
+          "empreinte": "4ea8a790",
+          "statut": "a_tester",
+          "score": 69,
+          "erreurs": [],
+          "avertissements": [
+            "Contrôle de carte libre : 2 camp(s) sans usine à moins de 18 cases",
+            "La durée observée sort de la fenêtre souhaitée pour au moins un essai."
+          ],
+          "essais": [
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "agressive",
+              "graine": "20260912:normal:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 15,
+              "motif": "objectif_capture_qg",
+              "premierContact": 3,
+              "captures": 4,
+              "empreinte": "59b9af983e168cb1",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 114
+            },
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "ponderee",
+              "graine": "20260912:normal:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 15,
+              "motif": "objectif_capture_qg",
+              "premierContact": 3,
+              "captures": 4,
+              "empreinte": "6fd06f040dbb7da4",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 109
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "agressive",
+              "graine": "20260912:difficile:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": false,
+              "journees": 19,
+              "motif": "limite_journees",
+              "premierContact": 3,
+              "captures": 3,
+              "empreinte": "38510399a0f6ad06",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 149
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "ponderee",
+              "graine": "20260912:difficile:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 15,
+              "motif": "objectif_capture_qg",
+              "premierContact": 3,
+              "captures": 4,
+              "empreinte": "2d566e7453a1ce72",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 107
+            }
+          ]
+        },
+        {
+          "revision": 2,
+          "empreinte": "6f4873d9",
+          "statut": "a_tester",
+          "score": 97,
+          "erreurs": [],
+          "avertissements": [
+            "Contrôle de carte libre : 2 camp(s) sans usine à moins de 18 cases"
+          ],
+          "essais": [
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "agressive",
+              "graine": "20260912:normal:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 11,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "4b5c12c6d834770a",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 83
+            },
+            {
+              "branche": "Référence",
+              "mode": "normal",
+              "profil": "ponderee",
+              "graine": "20260912:normal:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 10,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "7844d152a43a79aa",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 83
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "agressive",
+              "graine": "20260912:difficile:agressive:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 10,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "f7c66a7b7675996a",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 81
+            },
+            {
+              "branche": "Référence",
+              "mode": "difficile",
+              "profil": "ponderee",
+              "graine": "20260912:difficile:ponderee:Référence",
+              "terminee": true,
+              "victoireJoueur": true,
+              "journees": 18,
+              "motif": "objectif_capture_qg",
+              "premierContact": 2,
+              "captures": 4,
+              "empreinte": "d177d11ccdc43742",
+              "rejeuConforme": true,
+              "refus": 0,
+              "actions": 139
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,10 @@
 # AGENTS.md — passation
 
+## Laboratoire de missions — 12 septembre 2026
+
+`/admin/cartes` compose des variantes privées avec contraintes, deux modes, branches de conséquences, corrections et rejeux. GET/POST `/api/routines/map/conception` offre le même contrat sans BDD ni publication. `src/content/difficulte.ts` est la résolution partagée ; le chemin app réexporte. Pilote et limites : `doc/refonte/conception-missions.md`. L’IEM renforcée optionnelle peut couvrir toute la carte (camp protégé obligatoire), J6 puis toutes les 6 journées, capture désactivante ; aucun tutoriel modifié.
+
+
 ## Mise à jour — une aventure plus claire (12 septembre 2026)
 
 Les 12 missions du parcours local ont des dialogues et récits plus directs, avec leurs versions augmentées ; leurs règles, choix et récompenses sont conservés. T1 présente Ariane et Tomas sans répétition des morts. Gris à la victoire T6, Ost T8, Consortium/Aube après T10, nom de la Cinquième Manche après Sous les couleurs alliées. T6 annonce l’IEM avant l’action et décrit son effet réel (immobilisation air/mer et arrêt des usines, sans dégâts), puis explique la nuit avant J3.

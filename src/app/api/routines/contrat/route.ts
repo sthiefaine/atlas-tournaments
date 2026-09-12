@@ -16,6 +16,8 @@ export async function GET(requete: Request): Promise<Response> {
     routines: CLES_PROMPT,
     execution: { cibleDemandee: 'Claude Sonnet 5', identifiantModele: null, configuration: 'opérateur' },
     endpoints: [
+      { methode: 'GET', chemin: '/api/routines/map/conception?scenario={cle}', effet: 'lire le contrat de conception et son prompt, sans réservation' },
+      { methode: 'POST', chemin: '/api/routines/map/conception', effet: 'générer, corriger et simuler des brouillons ; aucune publication' },
       { methode: 'GET', chemin: '/api/routines/bible/personnages?acte={0..3}', effet: 'lire les biographies et faits révélables à cet acte' },
       { methode: 'GET', chemin: '/api/routines/contrat', effet: 'lire les capacités sans réserver' },
       { methode: 'GET', chemin: '/api/routines/missions?routine={cle}', effet: 'réserver la file et lire le prompt du run' },

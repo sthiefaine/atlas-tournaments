@@ -254,6 +254,12 @@ export function creerPartie(scene: Scene, cat: Catalogue, graine: string): EtatP
     }
   }
   for (const station of scene.reglages.installationsIem ?? []) {
+    if (station.portee === 'carte' && (station.mode !== 'renforcee' || station.campProtege === undefined || !scene.camps.includes(station.campProtege) || station.rayon !== undefined)) throw new Error('IEM carte : mode renforcé et camp protégé requis, sans rayon.');
+    if (station.mode === 'renforcee' && (!Number.isInteger(station.premiereJournee) || station.premiereJournee < 6 || station.premiereJournee > 100
+      || !Number.isInteger(station.intervalle ?? 6) || (station.intervalle ?? 6) < 6 || (station.intervalle ?? 6) > 10
+      || !Number.isInteger(station.rayon ?? 2) || (station.rayon ?? 2) < 1 || (station.rayon ?? 2) > 3)) {
+      throw new Error('IEM renforcée : première impulsion dès J6, intervalle 6–10 et rayon 1–3 requis.');
+    }
     const cleTerrain = cat.parCaractere[scene.grille[station.y]?.[station.x] ?? ""];
     const terrain = cleTerrain ? cat.terrains[cleTerrain] : undefined;
     if (!terrain?.capturable) throw new Error("Installation IEM hors bâtiment capturable.");

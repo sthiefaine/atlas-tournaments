@@ -1,5 +1,11 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## Laboratoire et station renforcée — 12 septembre 2026
+
+Le propriétaire demande une chaîne de conception de missions : contraintes structurées, variantes, simulations dans les deux modes, correction bornée, mémoire de variété et comparaison admin. `/admin/cartes` fournit ce laboratoire ; son contrat, son pilote et ses limites sont décrits dans `doc/refonte/conception-missions.md`. La présence du laboratoire ne signifie pas qu'un modèle externe est activé ni qu'un brouillon est publié.
+
+La station IEM renforcée peut couvrir **toute la carte**. Par défaut elle s'active à J6, puis toutes les six journées (calendrier configurable, intervalle minimum 6). Elle abat les aéronefs adverses, arrête leurs navires et leurs producteurs un tour, protège le camp déclaré et ses alliés. La capturer ou la désaffecter l'éteint ; le joueur ne récupère pas l'arme mondiale. Son compte à rebours est annoncé. Elle reste une mécanique de scénario avancé, sans remplacement de l'IEM classique ni activation dans les tutoriels existants.
+
 ## Présentation de l’aventure — 12 septembre 2026
 
 Les enjeux se découvrent par les personnes et les situations : objectifs concrets, dialogues courts, Gris puis Ost avant les structures cachées. Chaque arc national transforme une relation au lieu de répéter la collecte de preuves. Les choix montrent qui reçoit l’aide et qui attend ; leurs effets sont rappelés dans la suite. La famille adverse reste secrète jusqu’au jalon prévu. Ces règles de présentation remplacent les conseils historiques incompatibles ; elles ne modifient ni les flags ni les règles de combat. Voir [Une aventure claire, des choix qui comptent](doc/refonte/aventure-lisible.md). Le plan éditorial reste distinct des missions jouables.
@@ -70,7 +76,7 @@ Les interdits du §7.2 tiennent — jamais de mise hors jeu directe, de changeme
 
 ### Les supers des Gris — décision du 10 septembre 2026
 
-Le propriétaire veut des supers de vilains qui ne soient pas « −1 PV à toute l'armée » : des missiles sur une zone, des lasers sur quelques unités, des IEM qui arrêtent ce qui a un moteur et abattent ce qui vole. **Trois familles d'effets réservées à la faction** (`atl`), et à elle seule — `frappe` de zone, rayon `laser`, `iem` —, bornées dans `doc/04-gameplay.md` §7.2, « Les familles de la faction », qui fait foi. Un commandant national ne les porte jamais : le schéma les lui refuse, le moteur aussi. **`iem.abattre` est la seule mise hors jeu directe du jeu**, au super pouvoir de la faction et à huit barres au moins ; l'interdit « jamais de mise hors jeu directe » **reste entier pour tout commandant national**. L'IA vise ces pouvoirs elle-même, sur la case qui touche le plus d'adverse et le moins de sien.
+Le propriétaire veut des supers de vilains qui ne soient pas « −1 PV à toute l'armée » : des missiles sur une zone, des lasers sur quelques unités, des IEM qui arrêtent ce qui a un moteur et abattent ce qui vole. **Trois familles d'effets réservées à la faction** (`atl`), et à elle seule — `frappe` de zone, rayon `laser`, `iem` —, bornées dans `doc/04-gameplay.md` §7.2, « Les familles de la faction », qui fait foi. Un commandant national ne les porte jamais : le schéma les lui refuse, le moteur aussi. **`iem.abattre` est une mise hors jeu directe**, au super pouvoir de la faction et à huit barres au moins ; la station renforcée de scénario décrite ci-dessous est la seconde exception ; l'interdit « jamais de mise hors jeu directe » **reste entier pour tout commandant national**. L'IA vise ces pouvoirs elle-même, sur la case qui touche le plus d'adverse et le moins de sien.
 
 ### Superusine, automate, IEM sur les usines — décision du 10 septembre 2026 (fin d'après-midi)
 
