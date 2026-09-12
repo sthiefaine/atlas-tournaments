@@ -3,7 +3,7 @@
    comme le jeu. Le cadre fait `100svh` et rien n'y est en `position:fixed` :
    le dock et la feuille sont des enfants en flux, la toile seule est absolue
    derrière eux. */
-.atelier { --encre: #152c3b; --encre-haute: #0c1b21; --encre-douce: #1e3f52; --papier: #f4edda; --papier-doux: #f4eddac2; --sourdine: #9fb6b8; --liseré: #4d6a78; --signal: #ffd162; --signal-appui: #c4923a; --vert: #4fc27c; --rouge: #ff2e48; --or: #ffc634; --bleu: #4eaaff; --danger: #ff6a5e; --dock: 320px; --dock-replie: 56px; --poignee: 48px;
+.atelier { --encre: #152237; --encre-haute: #0c1422; --encre-douce: #20334d; --papier: #eef4fa; --papier-doux: #eef4fac2; --sourdine: #b1c2d5; --liseré: #4d6a78; --signal: #72e4ce; --signal-appui: #45b9a5; --vert: #4fc27c; --rouge: #ff2e48; --or: #ffc634; --bleu: #4eaaff; --danger: #ff6a5e; --dock: 320px; --dock-replie: 56px; --poignee: 48px;
   position: relative; isolation: isolate; display: flex; flex-direction: column; height: 100svh; overflow: hidden; background: var(--encre-haute); color: var(--papier); font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
 .atelier * { box-sizing: border-box; }
 .atelier button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
@@ -23,7 +23,7 @@
 /* Le statut est un toast en haut de la toile : il ne prend jamais la place des
    commandes, et un geste sans effet ne laisse pas de trace. */
 .toast { position: absolute; z-index: 3; top: calc(64px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); pointer-events: none; display: flex; justify-content: center; width: min(92%, 520px); }
-.toast span { display: block; max-width: 100%; padding: 10px 16px; background: var(--encre); color: var(--papier); border: 1px solid #839798; border-top: 3px solid var(--signal); box-shadow: 3px 3px 0 #101d2860; font-size: 13px; font-weight: 700; text-align: center; animation: atelier-toast .18s ease-out both; }
+.toast span { display: block; max-width: 100%; padding: 10px 16px; background: var(--encre); color: var(--papier); border: 1px solid #839798; border-top: 3px solid var(--signal); box-shadow: 0 8px 24px #03091626; font-size: 13px; font-weight: 700; text-align: center; animation: atelier-toast .18s ease-out both; }
 
 /* La barre : fil d'Ariane et titre à gauche, deux actions à droite. Elle est en
    flux, sur la toile, et transparente entre ses cibles pour qu'un glisser qui
@@ -35,15 +35,15 @@
 .ariane a { color: inherit; text-decoration: none; padding: 15px 0; margin: -15px 0; }
 .ariane a:hover { color: var(--papier); }
 .titre h1 { margin: 1px 0 0; font-size: 17px; font-weight: 900; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.accueil, .jouerLien { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; text-decoration: none; font-size: 13px; font-weight: 800; text-shadow: none; box-shadow: 3px 3px 0 #101d2860; }
+.accueil, .jouerLien { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; text-decoration: none; font-size: 13px; font-weight: 800; text-shadow: none; box-shadow: 0 8px 24px #03091626; }
 .accueil { background: var(--encre); color: var(--papier); border: 1px solid #839798; }
 .accueil:hover { background: var(--encre-douce); }
-.jouerLien { background: var(--signal); color: var(--encre); border-top: 3px solid #fff0ac; border-bottom: 4px solid var(--signal-appui); text-transform: uppercase; letter-spacing: .04em; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9px), calc(100% - 9px) 100%, 0 100%); }
+.jouerLien { background: var(--signal); color: var(--encre); border: 1px solid var(--signal); text-transform: uppercase; letter-spacing: .04em; border-radius: 12px; }
 .jouerLien:hover { filter: brightness(1.08); }
 .jouerLien:active { translate: 0 2px; }
 
 /* --- Le dock (écran large) -------------------------------------------- */
-.dock { position: relative; z-index: 2; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; width: var(--dock); margin-left: max(14px, env(safe-area-inset-left, 0px)); margin-bottom: max(14px, env(safe-area-inset-bottom, 0px)); background: #0f2129f0; border: 1px solid var(--liseré); box-shadow: 6px 6px 0 #06131899; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%); backdrop-filter: blur(8px); }
+.dock { position: relative; z-index: 2; display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; width: var(--dock); margin-left: max(14px, env(safe-area-inset-left, 0px)); margin-bottom: max(14px, env(safe-area-inset-bottom, 0px)); background: #0f2129f0; border: 1px solid var(--liseré); box-shadow: 0 8px 24px #03091626; border-radius: 12px; backdrop-filter: blur(8px); }
 .atelier[data-dock='replie'] .dock { width: var(--dock-replie); }
 .replier { display: flex; align-items: center; gap: 10px; flex: none; min-height: 44px; padding: 0 14px; background: var(--encre); border: 0; border-bottom: 1px solid var(--liseré); font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); }
 .replier:hover { color: var(--papier); background: var(--encre-douce); }
@@ -67,7 +67,7 @@
 .champ { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .etiquette { font-size: 10px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--sourdine); }
 .grille2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 8px; }
-.champ select { width: 100%; min-height: 44px; padding: 8px 32px 8px 10px; color: var(--papier); background: var(--encre) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fb6b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center / 16px; border: 1px solid #839798; border-bottom-width: 3px; border-radius: 0; font-size: 14px; font-weight: 700; appearance: none; -webkit-appearance: none; }
+.champ select { width: 100%; min-height: 44px; padding: 8px 32px 8px 10px; color: var(--papier); background: var(--encre) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239fb6b8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>") no-repeat right 10px center / 16px; border: 1px solid #839798; border-bottom-width: 1px; border-radius: 0; font-size: 14px; font-weight: 700; appearance: none; -webkit-appearance: none; }
 .champ select:hover { background-color: var(--encre-douce); }
 
 /* Le contrôle segmenté : des boutons radio côte à côte. Le choix se lit à sa
@@ -75,12 +75,12 @@
 .segmente { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 2px; background: var(--encre-haute); border: 1px solid var(--liseré); }
 .segmente button { min-height: 44px; padding: 6px 4px; background: transparent; border: 0; font-size: 12.5px; font-weight: 750; color: var(--papier-doux); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .segmente button:hover { background: #ffffff0d; color: var(--papier); }
-.segmente button[aria-checked='true'] { background: var(--signal); color: var(--encre); box-shadow: inset 0 -3px 0 var(--signal-appui); }
+.segmente button[aria-checked='true'] { background: var(--signal); color: var(--encre); box-shadow: 0 8px 24px #03091626; }
 
 /* Les bascules : surbrillances et cas limites. Chaque surbrillance porte la
    couleur qu'elle a sur la carte, en liseré gauche, comme les ordres du HUD. */
 .bascules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-.bascule { min-height: 44px; padding: 8px 10px 8px 12px; background: var(--encre); border: 1px solid #839798; border-left: 4px solid var(--liseré); border-bottom-width: 3px; text-align: left; font-size: 13px; font-weight: 750; color: var(--papier); }
+.bascule { min-height: 44px; padding: 8px 10px 8px 12px; background: var(--encre); border: 1px solid #839798; border-left: 4px solid var(--liseré); border-bottom-width: 1px; text-align: left; font-size: 13px; font-weight: 750; color: var(--papier); }
 .bascule:hover { background: var(--encre-douce); }
 .bascule[aria-pressed='true'] { background: var(--papier); color: var(--encre); border-color: var(--papier); }
 .bascule[data-genre='deplacement'] { border-left-color: var(--vert); }
@@ -94,7 +94,7 @@
    défile horizontalement, sans retour : rien ne dépasse, rien n'empile. */
 .rangPuces { display: flex; gap: 6px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; padding: 2px 0 4px; margin: -2px 0 -4px; scroll-snap-type: x proximity; }
 .rangPuces::-webkit-scrollbar { display: none; }
-.puce { flex: none; min-height: 40px; padding: 8px 12px; background: var(--encre); border: 1px solid #839798; border-bottom-width: 3px; font-size: 12.5px; font-weight: 750; white-space: nowrap; scroll-snap-align: start; }
+.puce { flex: none; min-height: 40px; padding: 8px 12px; background: var(--encre); border: 1px solid #839798; border-bottom-width: 1px; font-size: 12.5px; font-weight: 750; white-space: nowrap; scroll-snap-align: start; }
 .puce:hover { background: var(--encre-douce); }
 .puce[aria-pressed='true'] { background: var(--signal); color: var(--encre); border-color: var(--signal); border-bottom-color: var(--signal-appui); }
 
@@ -121,7 +121,7 @@
 /* --- La feuille (téléphone) ------------------------------------------- */
 /* Trois hauteurs, en `svh` pour ne pas sauter avec la barre d'adresse. La
    feuille est un enfant en flux calé en bas par `margin-top:auto`, jamais fixe. */
-.feuille { position: relative; z-index: 2; display: flex; flex-direction: column; flex: none; margin-top: auto; width: 100%; height: calc(var(--poignee) + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: var(--encre); border-top: 3px solid var(--signal); box-shadow: 0 -8px 24px #06131866; transition: height .24s cubic-bezier(.2, .7, .3, 1); }
+.feuille { position: relative; z-index: 2; display: flex; flex-direction: column; flex: none; margin-top: auto; width: 100%; height: calc(var(--poignee) + env(safe-area-inset-bottom, 0px)); overflow: hidden; background: var(--encre); border-top: 3px solid var(--signal); box-shadow: 0 8px 24px #03091626; transition: height .24s cubic-bezier(.2, .7, .3, 1); }
 .feuille[data-niveau='1'] { height: 36svh; }
 .feuille[data-niveau='2'] { height: 68svh; }
 .poignee { display: flex; align-items: center; gap: 10px; flex: none; width: 100%; height: var(--poignee); padding: 0 16px; background: transparent; border: 0; font-size: 12px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--papier); touch-action: none; }
@@ -157,3 +157,10 @@
   .toast span { animation: none; }
   .section h2 button i { transition: none; }
 }
+
+/* Commandes communes à l’atelier, sans modifier la place laissée au plateau. */
+.atelier button, .atelier select, .accueil, .jouerLien { border-radius: 10px; }
+.dock { border-radius: 16px; }
+.feuille { border-radius: 18px 18px 0 0; }
+.puce { min-height: 44px; }
+.accueil, .jouerLien { box-shadow: none; text-transform: none; letter-spacing: 0; }

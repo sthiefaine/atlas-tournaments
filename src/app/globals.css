@@ -8,8 +8,11 @@
 @import "./styles/menus.css";
 
 :root {
-  --background: #fbfaf7;
-  --foreground: #1a1a18;
+  --background: #0c1422;
+  --foreground: #eef4fa;
+  --atlas-surface: #152237;
+  --atlas-border: #3e536c;
+  --atlas-accent: #72e4ce;
 }
 
 @theme inline {
@@ -19,13 +22,6 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #131313;
-    --foreground: #ececea;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
@@ -33,3 +29,9 @@ body {
 }
 
 /* Le carnet emprunte le vocabulaire des feuilles de match et des fanions. */
+
+/* Les contrôles gardent un focus visible et les libellés restent lisibles. */
+:where(button, select, input, textarea) { font: inherit; }
+:where(button, a, select, input, textarea):focus-visible { outline: 3px solid var(--atlas-accent); outline-offset: 3px; }
+:where(button, a) { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled), summary { cursor: pointer; }

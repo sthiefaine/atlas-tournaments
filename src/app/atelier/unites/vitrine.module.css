@@ -1,7 +1,7 @@
 /* La vitrine reprend les couleurs de l'atelier : encre, papier, signal. Une
    planche de six tuiles sur un seul canevas ; les tuiles sont des cadres vides
    au-dessus du canevas, qui dessine dans leur rectangle. */
-.vitrine { --encre: #152c3b; --encre-haute: #0c1b21; --encre-douce: #1e3f52; --papier: #f4edda; --sourdine: #9fb6b8; --signal: #ffd162;
+.vitrine { --encre: #152237; --encre-haute: #0c1422; --encre-douce: #20334d; --papier: #eef4fa; --sourdine: #b1c2d5; --signal: #72e4ce;
   display: flex; flex-direction: column; min-height: 100svh; background: var(--encre-haute); color: var(--papier); font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 .vitrine * { box-sizing: border-box; }
 
@@ -11,7 +11,7 @@
 .ariane a { color: inherit; text-decoration: none; }
 .ariane a:hover { color: var(--papier); }
 .titre h1 { margin: 2px 0 0; font-size: 18px; font-weight: 900; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lien { display: flex; align-items: center; min-height: 40px; padding: 6px 14px; background: var(--encre); color: var(--papier); border: 1px solid #839798; box-shadow: 3px 3px 0 #101d2860; text-decoration: none; font-size: 13px; font-weight: 800; }
+.lien { display: flex; align-items: center; min-height: 40px; padding: 6px 14px; background: var(--encre); color: var(--papier); border: 1px solid #839798; box-shadow: 0 8px 24px #03091626; text-decoration: none; font-size: 13px; font-weight: 800; }
 .lien:hover { background: var(--encre-douce); }
 
 .commandes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; padding: 6px 16px 10px; font-size: 12px; font-weight: 700; color: var(--sourdine); }
@@ -67,3 +67,17 @@
 .tuile[data-vue='jeu'] span { pointer-events:none; }
 
 .planche[hidden], .navigationCamera[hidden] { display: none; }
+
+/* Même famille de cartes et de commandes que les menus du jeu. */
+.vitrine button, .vitrine select, .lien { border-radius: 10px; min-height: 44px; }
+.modele, .sansWebgl, .tuile { border-radius: 16px; }
+.modele { padding: 14px 16px; }
+.badge { border-radius: 8px; letter-spacing: .04em; }
+.lien { box-shadow: none; }
+.commandes { padding-top: 12px; padding-bottom: 16px; }
+@media (max-width: 480px) {
+  .barre { flex-wrap: wrap; }
+  .titre { flex-basis: 100%; }
+  .commandes label { max-width: 100%; }
+  .commandes select { max-width: 100%; }
+}

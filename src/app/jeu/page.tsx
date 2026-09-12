@@ -130,7 +130,6 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
         // « 2 camps » est le cas de tout le monde : ce n'est une information que
         // lorsqu'il y en a plus.
         p.camps > 2 ? p.format : '',
-        t(locale, 'jeu_libre.catalogue', { n: p.catalogueVersion }),
         p.adversaire
           ? t(locale, 'jeu_libre.adversaire', { nom: t(locale, `commandant.${p.adversaire.commandantCle}.nom`) })
           : '',
@@ -152,21 +151,43 @@ export default async function PageJeuLibre(): Promise<React.ReactElement> {
       <Link className="atlas-retour" href="/">{t(locale, 'reglages.retour')}</Link>
     </header>
 
-    <ListeParties
-      parties={affichees.filter(p => !essais.some(e => e.cle === p.cle))}
-      versionMoteur={VERSION_MOTEUR}
-      libelles={{
-        liste: t(locale, 'jeu_libre.liste'),
-        jouer: t(locale, 'menu.jouer'),
-        reprendre: t(locale, 'hud.reprendre'),
-        nouvellePartie: t(locale, 'hud.nouvelle_partie'),
-        enCours: t(locale, 'jeu_libre.en_cours'),
-      }}
-    />
+    <section className="jeu-libre-parcours" aria-labelledby="parcours-titre">
+      <div className="jeu-libre-parcours-texte">
+        <p className="atlas-etiquette">Votre prochaine partie</p>
+        <h2 id="parcours-titre">Apprendre les règles. Trouver votre stratégie.</h2>
+        <p>La campagne commence par dix entraînements. Envie de jouer librement ? Choisissez votre terrain ci-dessous.</p>
+      </div>
+      <div className="jeu-libre-parcours-actions">
+        <Link className="jeu-libre-bouton" href="/campagne">Ouvrir la campagne <span aria-hidden="true">↗</span></Link>
+        <a className="jeu-libre-bouton secondaire" href="#parties-libres">Choisir une carte <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
 
-    {essais.length > 0 && <section aria-labelledby="essais-aube-titre">
-      <h2 id="essais-aube-titre">Essais Aube · coalitions</h2>
-      <p>Scénarios jouables en cours de réglage. Leur équilibre et leur difficulté humaine ne sont pas homologués. Le siège de quarante journées est facultatif.</p>
+    <section className="jeu-libre-section" id="parties-libres" aria-labelledby="parties-libres-titre">
+      <div className="jeu-libre-section-entete">
+        <div><p className="atlas-etiquette">À votre rythme</p><h2 id="parties-libres-titre">Parties libres</h2></div>
+        <span className="jeu-libre-compte">{parties.length} {parties.length === 1 ? 'carte' : 'cartes'}</span>
+      </div>
+      <ListeParties
+        parties={affichees.filter(p => !essais.some(e => e.cle === p.cle))}
+        versionMoteur={VERSION_MOTEUR}
+        libelles={{
+          liste: t(locale, 'jeu_libre.liste'),
+          jouer: t(locale, 'menu.jouer'),
+          reprendre: t(locale, 'hud.reprendre'),
+          nouvellePartie: t(locale, 'hud.nouvelle_partie'),
+          enCours: t(locale, 'jeu_libre.en_cours'),
+        }}
+      />
+
+    </section>
+
+    {essais.length > 0 && <section className="jeu-libre-section" aria-labelledby="essais-aube-titre">
+      <div className="jeu-libre-section-entete">
+        <div><p className="atlas-etiquette">Pour varier les défis</p><h2 id="essais-aube-titre">Coalitions &amp; scénarios d’essai</h2></div>
+        <span className="jeu-libre-compte">{essais.length} scénarios</span>
+      </div>
+      <p className="jeu-libre-note">Des alliances et des rapports de force différents. Ces scénarios Aube restent en cours d’équilibrage ; le siège de quarante journées est facultatif.</p>
       <ListeParties
         parties={affichees.filter(p => essais.some(e => e.cle === p.cle))}
         versionMoteur={VERSION_MOTEUR}

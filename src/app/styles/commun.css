@@ -1,75 +1,38 @@
-/* Une feuille par écran, importée par `globals.css`.
-   Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
-   touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
-   et deux chantiers menés en parallèle se disputaient le même fichier.
-
-   Celle-ci est le **vocabulaire partagé** : les couleurs, la forme d'un bouton,
-   la forme d'une fenêtre, l'anneau de focus. Plusieurs écrans en dépendent, donc
-   on y ajoute et on n'y renomme rien.
-
-   Le verdict du propriétaire sur l'ensemble — « ça fait pas jeu, ça fait blog » —
-   se règle ici pour une bonne part, parce qu'un blog et un jeu ne se
-   distinguent pas d'abord par leurs couleurs mais par **trois gestes** :
-   un coin se **coupe** au lieu de s'arrondir, une ombre est **dure et sans
-   flou**, et un bouton a une **épaisseur** qui s'écrase à l'appui. Ces trois
-   gestes sont écrits ici une fois, et les autres feuilles les héritent. */
-
-/* Les jetons du jeu. Ils sont préfixés `--atlas-` **exprès** : `campagne.css`,
-   `menus.css` et les feuilles injectées par le rendu définissent chacune un
-   `--encre` / `--papier` / `--signal` sur leur propre racine, et un jeton global
-   du même nom serait tantôt masqué tantôt hérité selon l'écran — c'est-à-dire
-   imprévisible. Ici, rien ne peut les recouvrir. */
+/* Interface Atlas — surfaces lisibles, commandes tactiles et accent menthe. */
 :root{
-  --atlas-encre:#132329;
-  --atlas-encre-claire:#152c3b;
-  --atlas-papier:#f4edda;
-  --atlas-signal:#ffd162;
-  --atlas-signal-haut:#fff0ac;
-  --atlas-signal-bas:#c4923a;
-  --atlas-lisere:#4d6a78;
-  /* L'ombre du jeu : décalée, opaque, **jamais floue**. Le briefing portait un
-     `0 24px 90px #0006` — le halo d'une boîte de dialogue de site. */
-  --atlas-ombre:10px 10px 0 #04090c66;
-  --atlas-ombre-courte:4px 4px 0 #04090c73;
-  /* La coupe d'un coin. Une fenêtre du jeu n'a pas d'autre forme. */
+  --atlas-encre:#0c1422;
+  --atlas-encre-claire:#182940;
+  --atlas-papier:#f1f5fa;
+  --atlas-signal:#72e4ce;
+  --atlas-signal-haut:#a6f3e3;
+  --atlas-signal-bas:#42af9b;
+  --atlas-lisere:#3b4e66;
+
+  --atlas-ombre:0 12px 32px #02061024;
+  --atlas-ombre-courte:0 4px 14px #02061018;
+
   --atlas-coupe:18px;
 }
 
 .campagne-kicker{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:650;opacity:.65}
-.campagne-progression{display:inline-block;border-bottom:3px solid #568f74;padding-bottom:5px;margin-top:18px;font-weight:650}
-/* Le bouton du jeu, et il n'y en a qu'un.
-   Il était une pilule verte arrondie à 6 px, en 14 px demi-gras, dans deux
-   couleurs (#31634f, #568f74) qui n'existaient nulle part ailleurs : un bouton
-   de site de réservation posé au milieu d'un jeu à l'encre et au signal.
-   Ce qui fait qu'un bouton donne envie d'être pressé n'est pas sa couleur mais
-   son **épaisseur** : une bordure basse plus sombre que sa peinture, qui
-   s'écrase de deux pixels à l'appui. Le HUD le faisait déjà sur ses ordres et
-   sur sa fin de tour ; c'est la même mécanique, partout. */
-.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:var(--atlas-signal);color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid var(--atlas-signal-haut);border-bottom:4px solid var(--atlas-signal-bas);clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+.campagne-progression{display:inline-block;border-bottom:1px solid #568f74;padding-bottom:5px;margin-top:18px;font-weight:650}
+
+.atlas-bouton{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;background:var(--atlas-signal);color:#10222b;font-weight:900;font-size:15px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:0;border-top:2px solid var(--atlas-signal-haut);border-bottom:1px solid var(--atlas-signal-bas);clip-path:none;transition:filter .09s,translate .06s,border-bottom-width .06s}
 .atlas-bouton:hover{filter:brightness(1.09)}
-.atlas-bouton:active{translate:0 2px;border-bottom-width:2px}
-/* Le second bouton a la même **épaisseur** que le premier — c'est elle qui dit
-   « ceci se presse » —, il n'a que moins de peinture. Un bouton plat posé à
-   côté d'un bouton en relief se lit comme un lien, pas comme un choix. */
-.atlas-bouton.secondaire{background:#8881;color:inherit;border:1px solid #8886;border-bottom:4px solid #8889;clip-path:none}
+.atlas-bouton:active{translate:0 2px;border-bottom-width:1px}
+
+.atlas-bouton.secondaire{background:#8881;color:inherit;border:1px solid #8886;border-bottom:1px solid #8889;clip-path:none}
 .atlas-bouton.secondaire:hover{background:#8883;filter:none}
-.atlas-bouton.secondaire:active{translate:0 2px;border-bottom-width:2px}
-/* Un seul anneau de focus dans tout le produit — il y en avait trois. Sa
-   couleur suit la **surface**, pas la marque : le signal ne se voit pas sur le
-   papier crème d'un briefing, et un anneau qu'on ne voit pas n'est pas un
-   anneau. */
+.atlas-bouton.secondaire:active{translate:0 2px;border-bottom-width:1px}
+
 .atlas-bouton:focus-visible,.atlas-objectifs summary:focus-visible{outline:3px solid var(--atlas-signal);outline-offset:3px}
 .atlas-briefing a:focus-visible,.atlas-briefing .atlas-bouton:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
 .campagne-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:20px}
 .campagne-actions>a:not(.atlas-bouton){font-size:13px;text-decoration:underline;opacity:.75}
 
-/* La fenêtre du jeu : un voile qui met le monde en arrière-plan, et un panneau
-   dessus. Chaque écran repeint le voile à sa manière ; ce qui est commun, c'est
-   la **forme** du panneau, juste en dessous. */
 .atlas-voile{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(10,18,24,.85);overflow:auto}
-/* Coin coupé et ombre dure **par défaut** : c'était une règle de `mission.css`,
-   donc vraie d'un seul écran ; toute fenêtre du jeu la suit maintenant. */
-.atlas-briefing{position:relative;width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55;box-shadow:var(--atlas-ombre);clip-path:polygon(0 0,calc(100% - var(--atlas-coupe)) 0,100% var(--atlas-coupe),100% 100%,var(--atlas-coupe) 100%,0 calc(100% - var(--atlas-coupe)))}
+
+.atlas-briefing{position:relative;width:min(100%,680px);max-height:calc(100dvh - 40px);overflow:auto;background:#f6f3e9;color:#24342e;padding:30px 34px;line-height:1.55;box-shadow:none;clip-path:none}
 .atlas-briefing h1{font-size:30px;line-height:1.15;font-weight:700;margin:10px 0 18px;letter-spacing:-.03em}
 .atlas-briefing h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-top:16px}
 .atlas-dialogues{margin:18px 0}
@@ -78,48 +41,23 @@
 .atlas-but{background:#e4ebdf;padding:10px 16px}.atlas-but h2{margin:0}
 .atlas-aide{font-size:12px;opacity:.65;margin-top:18px}
 
-/* Les **pictogrammes** des scénaristes (`render/illustrations.ts`) : un
-   `[[img:cle]]` posé dans un briefing, un tutoriel ou un récit du carnet. La
-   règle est la même que dans la boîte de dialogue et que dans le HUD, et elle
-   est écrite ici une seconde fois parce que ces pages n'injectent pas la
-   feuille du rendu — un composant serveur ne monte pas le HUD.
-   Mesuré en `em` : le dessin suit la taille du texte qui le porte, donc il
-   tient à 13 px dans une note comme à 18 dans un récit, et il suit les
-   réglages de police du système. Rien n'y bouge : ce n'est pas une animation,
-   il reste sous `prefers-reduced-motion`. */
 .atlas-img-mot{display:inline-block;width:1.25em;height:1.25em;vertical-align:-.28em;margin:0 .1em}
 .atlas-img-mot svg{display:block;width:100%;height:100%}
 
-/* ---------------------------------------------------------------------------
-   Le **vestiaire** : la grille des commandants, au briefing comme au carnet.
-
-   Elle est ici, dans le vocabulaire partagé, parce que deux écrans la posent et
-   qu'une collection doit se reconnaître d'un écran à l'autre — la case qu'on
-   regarde au carnet est celle qu'on prendra au briefing.
-
-   Les trois états ne se distinguent **pas par une opacité** : un texte délavé
-   dit « délavé », pas « verrouillé » (c'est la leçon des stations de
-   l'itinéraire). Un jouable est peint sur papier, un verrouillé est en creux
-   sur un fond froid avec son buste désaturé, un secret est une ombre sans
-   visage. La case retenue prend le signal, une bordure épaisse, et **s'ouvre
-   sur toute la largeur de la grille** pour dire son kit là où elle est.
-   --------------------------------------------------------------------------- */
 .vestiaire-grille{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(148px,1fr))}
 .vestiaire-grille>li{display:contents}
-/* Une case est un bouton au briefing et un `<li>` au carnet : la même peinture,
-   et le curseur ne paraît que là où l'on peut appuyer. */
-.vestiaire-case{position:relative;display:grid;grid-template-rows:auto auto auto;align-content:start;gap:2px;width:100%;min-height:44px;padding:0 0 10px;text-align:left;font:inherit;color:#24342e;background:#fffdf6;border:1px solid #24342e40;border-bottom:4px solid #24342e80;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);transition:filter .09s,translate .06s,border-bottom-width .06s}
+
+.vestiaire-case{position:relative;display:grid;grid-template-rows:auto auto auto;align-content:start;gap:2px;width:100%;min-height:44px;padding:0 0 10px;text-align:left;font:inherit;color:#24342e;background:#fffdf6;border:1px solid #24342e40;border-bottom:1px solid #24342e80;clip-path:none;transition:filter .09s,translate .06s,border-bottom-width .06s}
 button.vestiaire-case{cursor:pointer}
 button.vestiaire-case:hover{filter:brightness(1.04)}
-button.vestiaire-case:active{translate:0 2px;border-bottom-width:2px}
+button.vestiaire-case:active{translate:0 2px;border-bottom-width:1px}
 button.vestiaire-case:focus-visible{outline:3px solid #1e3038;outline-offset:3px}
 .vestiaire-case[data-etat='verrouille'],.vestiaire-case[data-etat='secret']{background:#dfe5e2;color:#3d4f52;border-bottom-color:#3d4f5266}
 .vestiaire-case[data-etat='secret']{background:#cfd8d8}
-.vestiaire-case[data-retenu='oui']{border-color:var(--atlas-signal-bas);border-bottom-color:var(--atlas-signal-bas);box-shadow:inset 0 0 0 3px var(--atlas-signal)}
+.vestiaire-case[data-retenu='oui']{border-color:var(--atlas-signal-bas);border-bottom-color:var(--atlas-signal-bas);box-shadow:none}
 .vestiaire-buste{display:block;width:100%;aspect-ratio:4/3;overflow:hidden}
 .vestiaire-buste svg{display:block;width:100%;height:auto;margin-top:-8%}
-/* Le buste d'un verrouillé est **désaturé**, pas assombri : on doit reconnaître
-   la figurine qu'on va gagner, sans la confondre avec un banc disponible. */
+
 .vestiaire-buste[data-teinte='oui'] svg{filter:grayscale(1) contrast(.85) opacity(.7)}
 .vestiaire-nom{padding:6px 10px 0;font-size:13px;font-weight:850;letter-spacing:-.01em}
 .vestiaire-style{padding:0 10px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;opacity:.7}
@@ -127,15 +65,10 @@ button.vestiaire-case:focus-visible{outline:3px solid #1e3038;outline-offset:3px
 .vestiaire-indice{display:block;padding:4px 10px 0;font-size:11px;line-height:1.4;font-style:italic;opacity:.85}
 .vestiaire-indice b{display:block;font-style:normal;font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.65}
 .vestiaire-gout{margin:4px 0 0;padding:0 10px;font-size:11px;line-height:1.4;opacity:.8}
-/* La plaque d'état, dans le coin du buste : le même objet que la plaque d'une
-   station fermée au carnet. */
-.vestiaire-plaque{position:absolute;top:0;right:0;padding:3px 7px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.1em;background:#24342e;color:#f6f3e9;clip-path:polygon(0 0,100% 0,100% 100%,7px 100%)}
+
+.vestiaire-plaque{position:absolute;top:0;right:0;padding:3px 7px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.1em;background:#24342e;color:#f6f3e9;clip-path:none}
 .vestiaire-plaque[data-plaque='defaut']{background:var(--atlas-signal);color:#10222b}
 
-/* Le détail de la case retenue. Il occupe **toute la rangée** : la grille passe
-   de quatre colonnes à une entre un écran et un téléphone, et une colonne de
-   détail à part aurait demandé deux mises en page, donc deux façons de lire un
-   kit. Ici la même rangée s'ouvre partout, sous la case qu'on regarde. */
 .vestiaire-detail{grid-column:1/-1;background:#eef1e6;border-left:4px solid var(--atlas-signal-bas);padding:12px 14px 14px;margin-bottom:4px}
 .vestiaire-detail .atlas-etiquette{font-size:10px}
 .vestiaire-detail .vestiaire-gout{padding:0;margin:0 0 8px;font-size:13px;opacity:.9}
@@ -143,7 +76,6 @@ button.vestiaire-case:focus-visible{outline:3px solid #1e3038;outline-offset:3px
 .vestiaire-kit li{font-size:12.5px;line-height:1.4;padding-left:12px;position:relative}
 .vestiaire-kit li::before{content:'';position:absolute;left:0;top:.5em;width:5px;height:5px;background:var(--atlas-signal-bas)}
 
-/* L'annonce de fin de mission : ce que la victoire vient d'ouvrir. */
 .vestiaire-annonce{margin-top:18px;background:#eef1e6;border-left:4px solid var(--atlas-signal-bas);padding:12px 14px}
 .vestiaire-annonce h2{margin:0 0 8px}
 .vestiaire-annonce ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
@@ -155,9 +87,31 @@ button.vestiaire-case:focus-visible{outline:3px solid #1e3038;outline-offset:3px
 .vestiaire-annonce .atlas-aide{margin-top:10px}
 
 @media(max-width:520px){
-  /* Une colonne : la case retenue est alors littéralement sous son nom, et le
-     détail sous elle. Rien à changer d'autre — c'est la même rangée. */
+
   .vestiaire-grille{grid-template-columns:1fr;gap:8px}
   .vestiaire-buste{aspect-ratio:16/7}
   .vestiaire-buste svg{margin-top:-14%}
 }
+
+/* Les mêmes commandes servent aux menus, au briefing et aux collections. */
+:root{--atlas-surface:#152237;--atlas-surface-haute:#1c2d45;--atlas-texte-secondaire:#b5c5d8;--atlas-rayon:16px;--atlas-coupe:0px}
+.atlas-bouton{border:1px solid transparent;border-radius:10px;padding:13px 22px;font-size:15px;font-weight:750;letter-spacing:0;text-transform:none;transition:background-color .15s,translate .12s;touch-action:manipulation}
+.atlas-bouton:hover{filter:none;background:var(--atlas-signal-haut)}
+.atlas-bouton:active,.atlas-bouton.secondaire:active{translate:0 1px;border-bottom-width:1px}
+.atlas-bouton.secondaire{border:1px solid #8093a66b;border-radius:10px;background:#8798ac12}
+.atlas-bouton:disabled,.atlas-bouton[aria-disabled='true']{opacity:.55;cursor:not-allowed}
+.campagne-kicker{opacity:1;font-size:12px;letter-spacing:.1em}
+.atlas-briefing{border:1px solid #cad4d9;border-radius:18px;background:#f3f6f7;color:#203143;box-shadow:var(--atlas-ombre)}
+.atlas-briefing h1{font-weight:800}
+.atlas-but{border-radius:12px;background:#e2eeeb}
+.atlas-aide{opacity:1;color:#526576}
+.vestiaire-case{border-radius:12px;border:1px solid #b4c4cd;overflow:hidden;background:#fff;color:#203143;padding-bottom:14px}
+.vestiaire-case[data-retenu='oui']{outline:2px solid #168b79;outline-offset:-2px;background:#e6f6f0}
+.vestiaire-buste{background:#dfe8ed}
+.vestiaire-nom{font-size:15px;padding-top:10px}
+.vestiaire-style,.vestiaire-porte,.vestiaire-indice,.vestiaire-gout{font-size:12px;opacity:1;line-height:1.5}
+.vestiaire-style{color:#4e6271;letter-spacing:.03em;text-transform:none}
+.vestiaire-plaque{top:8px;right:8px;border-radius:6px;padding:5px 8px;font-size:10px}
+.vestiaire-detail,.vestiaire-annonce{border-radius:12px;border:1px solid #b9d4cb;background:#e8f2ee;padding:16px}
+.vestiaire-kit{gap:7px}.vestiaire-kit li{font-size:14px;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.atlas-bouton,.vestiaire-case{transition:none}}

@@ -1,16 +1,16 @@
 .admin-entete { display:flex; align-items:center; justify-content:space-between; gap:16px; padding-bottom:24px; border-bottom:1px solid; }
-.admin-marque { letter-spacing:.16em; text-transform:uppercase; }
+.admin-marque { letter-spacing:.1em; text-transform:uppercase; }
 .admin-entete h1 { font-size:26px; font-weight:750; }
-.admin-cadre { display:grid; grid-template-columns:230px minmax(0,1fr); gap:28px; padding-top:24px; }
+.admin-cadre { display:grid; grid-template-columns:224px minmax(0,1fr); gap:24px; padding-top:24px; }
 .admin-contenu { min-width:0; }
 .admin-navigation { align-self:start; position:sticky; top:20px; }
 .admin-navigation section { margin-bottom:24px; }
-.admin-navigation h2 { letter-spacing:.12em; text-transform:uppercase; padding:0 12px 8px; }
-.admin-navigation a { display:flex; align-items:center; min-height:44px; padding:9px 12px; border-radius:8px; font-size:.875rem; }
-.admin-navigation a:hover { background:#e3f2e9; }
+.admin-navigation h2 { letter-spacing:.06em; text-transform:uppercase; padding:0 12px 8px; }
+.admin-navigation a { display:flex; align-items:center; min-height:44px; padding:9px 12px; border-radius:12px; font-size:.875rem; }
+.admin-navigation a:hover { background:#203e47; }
 .admin-navigation a[aria-current] { font-weight:650; }
 .admin-shell button,.admin-shell select,.admin-shell input:not([type=range]) { min-height:44px; }
-.admin-evitement { position:absolute; top:-100px; background:white; padding:14px; z-index:99; }
+.admin-evitement { position:absolute; top:-100px; background:var(--admin-papier); padding:14px; z-index:99; }
 .admin-evitement:focus { top:8px; }
 .admin-titre { font-size:28px; font-weight:750; margin-bottom:6px; }
 .admin-intro { max-width:75ch; margin-bottom:24px; font-size:.875rem; }
@@ -20,66 +20,66 @@
 .assets-filtres label { display:flex; flex-direction:column; gap:4px; }
 .assets-filtres label:first-child { flex:1; min-width:200px; }
 .assets-grille { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:14px; margin:16px 0 24px; }
-.asset-carte { display:flex; flex-direction:column; gap:10px; padding:18px; border:1px solid; border-radius:12px; background:#fff; min-width:0; }
-.asset-carte:hover { border-color:#145c53; box-shadow:0 3px 12px #203c3c12; }
+.asset-carte { display:flex; flex-direction:column; gap:10px; padding:22px; border:1px solid; border-radius:16px; background:var(--admin-papier); min-width:0; }
+.asset-carte:hover { border-color:#68e1cf; background:#1a2c42; }
 .asset-carte h3 { font-size:17px; font-weight:650; }
 .asset-carte code { overflow-wrap:anywhere; }
-.asset-carte progress { width:100%; height:6px; accent-color:#145c53; }
+.asset-carte progress { width:100%; height:6px; accent-color:#68e1cf; }
 .asset-carte .asset-etat { margin-top:auto; }
 .assets-pagination { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:24px 0; }
 .assets-variantes { display:flex; flex-wrap:wrap; gap:8px; padding:12px; }
-.assets-variantes a { border:1px solid; border-radius:6px; padding:10px; }
-.assets-variantes a[aria-current] { border-color:#145c53; background:#e3f2e9; }
+.assets-variantes a { border:1px solid; border-radius:12px; padding:10px; }
+.assets-variantes a[aria-current] { border-color:#68e1cf; background:#203e47; }
 .assets-fichiers { padding:12px; display:grid; gap:6px; }
 .assets-fichiers li { overflow-wrap:anywhere; }
 .admin-shell details>summary { cursor:pointer; padding:10px 0; }
 .admin-shell pre { max-width:100%; }
-@media(prefers-reduced-motion:no-preference) { .asset-carte { transition:border-color .15s,box-shadow .15s; } }
+@media(prefers-reduced-motion:no-preference) { .asset-carte { transition:border-color .15s,background .15s; } }
 
-/* Administration : surfaces opaques, indépendantes du thème du jeu et du système. */
+/* Atelier : surfaces opaques bleu nuit, actions menthe et états toujours nommés. */
 .admin-shell {
-  --admin-encre:#172b36; --admin-secondaire:#405463; --admin-fond:#f0f4f6;
-  --admin-papier:#ffffff; --admin-bord:#697d8b; --admin-accent:#145c53;
+  --admin-encre:#edf4fa; --admin-secondaire:#b2c3d3; --admin-fond:#0b1422;
+  --admin-papier:#142237; --admin-bord:#607d99; --admin-accent:#68e1cf;
   --fond:var(--admin-papier); --encre:var(--admin-encre);
-  color-scheme:light; color:var(--admin-encre); background:var(--admin-fond);
+  color-scheme:dark; color:var(--admin-encre); background:var(--admin-fond);
   min-height:100dvh; max-width:none; padding:clamp(16px,2.5vw,40px);
   line-height:1.6; overflow-wrap:anywhere;
 }
 .admin-entete,.admin-cadre,.admin-shell>.admin-contenu { max-width:1600px; margin-inline:auto; }
-.admin-entete { border-color:#b7c6ce; }
+.admin-entete { border-color:#30465e; }
 .admin-marque { color:var(--admin-accent); font-size:.8125rem; font-weight:700; }
 .admin-entete h1 { margin:4px 0; }
-.admin-contenu>main { background:var(--admin-papier); border:1px solid #b7c6ce; border-radius:14px; padding:clamp(16px,2vw,28px); }
+.admin-contenu>main { background:var(--admin-papier); border:1px solid #30465e; border-radius:18px; padding:clamp(16px,2vw,28px); }
 .admin-shell .admin-secondaire,.admin-intro,.asset-carte p { color:var(--admin-secondaire); opacity:1; }
 .admin-shell .text-xs,.asset-carte code,.asset-carte p,.asset-carte .asset-etat,.assets-fichiers,.assets-variantes a { font-size:.875rem; }
 .admin-intro { line-height:1.7; }
-.admin-shell :is(input,select,textarea) { color:var(--admin-encre); background:var(--admin-papier); border:1px solid var(--admin-bord); border-radius:6px; padding:8px 10px; max-width:100%; min-width:0; font:inherit; }
+.admin-shell :is(input,select,textarea) { color:var(--admin-encre); background:var(--admin-papier); border:1px solid var(--admin-bord); border-radius:12px; padding:8px 10px; max-width:100%; min-width:0; font:inherit; }
 .admin-shell :is(input,textarea)::placeholder { color:var(--admin-secondaire); opacity:1; }
 .admin-shell input:is([type=checkbox],[type=radio]) { min-height:20px; width:20px; height:20px; accent-color:var(--admin-accent); }
 .admin-shell input[type=hidden] { display:none; }
 .admin-shell label { color:var(--admin-encre); }
-.admin-shell button,.admin-action,.assets-etats a { color:var(--admin-accent); background:var(--admin-papier); border:1px solid var(--admin-bord); border-radius:7px; padding:9px 14px; font-size:.875rem; font-weight:650; cursor:pointer; }
-.admin-shell button:hover,.admin-action:hover,.assets-etats a:hover { color:var(--admin-encre); background:#dcece7; }
-.admin-shell .admin-bouton-primaire,.admin-shell .admin-action-primaire,.assets-etats a[aria-current] { color:white; background:var(--admin-accent); border-color:var(--admin-accent); }
-.admin-shell button:disabled,.admin-shell input:disabled,.admin-shell select:disabled { color:#52616b; background:#e4e9ed; border-style:dashed; opacity:1; cursor:not-allowed; }
-.admin-shell :is(button,a,input,select,textarea,summary):focus-visible { outline:3px solid #813914; outline-offset:3px; }
+.admin-shell button,.admin-action,.assets-etats a { color:var(--admin-accent); background:var(--admin-papier); border:1px solid var(--admin-bord); border-radius:12px; padding:9px 14px; font-size:.875rem; font-weight:650; cursor:pointer; }
+.admin-shell button:hover,.admin-action:hover,.assets-etats a:hover { color:var(--admin-encre); background:#213750; }
+.admin-shell .admin-bouton-primaire,.admin-shell .admin-action-primaire,.assets-etats a[aria-current] { color:#082923; background:var(--admin-accent); border-color:var(--admin-accent); }
+.admin-shell button:disabled,.admin-shell input:disabled,.admin-shell select:disabled { color:#9bafc1; background:#172638; border-style:dashed; opacity:1; cursor:not-allowed; }
+.admin-shell :is(button,a,input,select,textarea,summary):focus-visible { outline:3px solid #68e1cf; outline-offset:3px; }
 .admin-shell :is(pre,code) { overflow-wrap:anywhere; }
-.admin-shell pre { color:var(--admin-encre); background:var(--admin-fond); border-radius:8px; padding:14px; overflow:auto; }
+.admin-shell pre { color:var(--admin-encre); background:var(--admin-fond); border-radius:12px; padding:14px; overflow:auto; }
 .admin-shell details>summary { min-height:44px; font-weight:650; color:var(--admin-accent); }
 .admin-shell main>h2:first-child { font-size:clamp(24px,3vw,30px); margin-bottom:12px; }
-.admin-shell .admin-etat { display:inline-block; border:1px solid; border-radius:6px; padding:3px 9px; font-size:.875rem; font-weight:650; }
-.admin-etat-neutre { color:#405463; background:#edf2f5; border-color:#697d8b; }
-.admin-etat-ok { color:#145c53; background:#e3f2e9; border-color:#568675; }
-.admin-etat-erreur { color:#9b2525; background:#fff0ee; border-color:#ae6565; }
-.admin-navigation { background:white; border:1px solid #b7c6ce; border-radius:12px; padding:12px; }
+.admin-shell .admin-etat { display:inline-block; border:1px solid; border-radius:12px; padding:3px 9px; font-size:.875rem; font-weight:650; }
+.admin-etat-neutre { color:#b2c3d3; background:#1b2d43; border-color:#607d99; }
+.admin-etat-ok { color:#68e1cf; background:#203e47; border-color:#438b83; }
+.admin-etat-erreur { color:#ffb4ac; background:#422b36; border-color:#a76368; }
+.admin-navigation { background:var(--admin-papier); border:1px solid #30465e; border-radius:12px; padding:12px; }
 .admin-navigation h2 { color:var(--admin-secondaire); opacity:1; font-size:.8125rem; }
 .admin-navigation a { color:var(--admin-encre); }
-.admin-navigation a[aria-current] { background:var(--admin-accent); color:white; }
+.admin-navigation a[aria-current] { background:#203e47; color:#91f1e0; box-shadow:inset 3px 0 0 var(--admin-accent); }
 .admin-navigation section:last-child { margin-bottom:0; }
 .admin-navigation .admin-menu-mobile { display:none; }
-.asset-carte { border-color:#b7c6ce; }
+.asset-carte { border-color:#30465e; }
 .asset-carte h3 { color:var(--admin-encre); }
-.assets-filtres { background:var(--admin-fond); border-color:#b7c6ce; }
+.assets-filtres { background:var(--admin-fond); border-color:#30465e; }
 .assets-filtres label { font-size:.875rem; }
 .assets-filtres :is(input,select) { border-color:var(--admin-bord); font-size:.875rem; }
 .assets-variantes a { border-color:var(--admin-bord); }
@@ -100,4 +100,21 @@
   .admin-cadre { padding-top:16px; }
   .assets-filtres label:first-child { min-width:0; flex-basis:100%; }
   .assets-grille { grid-template-columns:minmax(0,1fr); }
+}
+
+/* Une hiérarchie commune, même dans les anciennes pages en classes utilitaires. */
+.admin-shell :is(button,.admin-action,.assets-etats a,.assets-variantes a) { box-shadow:none; clip-path:none; text-transform:none; letter-spacing:normal; text-decoration:none; }
+.admin-shell .admin-action-primaire:hover,.admin-shell .admin-bouton-primaire:hover { color:#082923; background:#91f1e0; border-color:#91f1e0; }
+.admin-shell [class*="text-emerald-"] { color:#91f1e0; }
+.admin-shell [class*="text-red-"] { color:#ffb4ac; }
+.admin-shell [class*="text-amber-"] { color:#f3ce86; }
+.admin-shell .admin-contenu section > .rounded-lg { border-radius:16px; border-color:var(--admin-bord); overflow:hidden; }
+.admin-shell .admin-contenu h2 { letter-spacing:-.015em; }
+.admin-shell a:not([class]):hover { text-decoration:underline; text-underline-offset:4px; }
+.admin-navigation a + a { margin-top:4px; }
+.admin-shell .asset-carte:focus-visible { outline-offset:4px; }
+.admin-shell .assets-etats a[aria-current] { color:#082923; }
+.admin-shell input[type=file]::file-selector-button { border:0; border-radius:8px; padding:8px 12px; margin-right:12px; background:#294058; color:#edf4fa; cursor:pointer; }
+@media(prefers-reduced-motion:no-preference) {
+  .admin-shell :is(button,.admin-action,.assets-etats a,.admin-navigation a) { transition:background .15s,border-color .15s,color .15s; }
 }

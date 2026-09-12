@@ -44,5 +44,5 @@ test('connexion accessible au clavier sous thème sombre',async({page})=>{
   await page.goto('/admin/login');
   await page.getByLabel('Mot de passe').focus();
   await expect(page.getByLabel('Mot de passe')).toBeFocused();
-  expect(await page.locator('.admin-shell').evaluate(el=>getComputedStyle(el).colorScheme)).toBe('light');
+  expect(await page.locator('.admin-shell').evaluate(el=>getComputedStyle(el).colorScheme)).toBe('dark');
 });

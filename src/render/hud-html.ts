@@ -836,6 +836,17 @@ const STYLE = `
    qui n'est pas celle d'une boîte de dialogue. */
 ${STYLE_ILLUSTRATIONS}
 .atlas-hud .annonce .${CLASSE_PICTOGRAMME}{vertical-align:-.24em}
+/* Surfaces communes aux menus ; les couleurs de camp restent des repères. */
+.atlas-hud{--encre:#152237;--encre-clair:#20334d;--encre-sombre:#0c1422;--papier:#f1f5f9;--signal:#72e4ce;--cadre:#52677f;color:#eef4fa}
+.atlas-hud .p,.atlas-hud .partie,.atlas-hud .bulletin,.atlas-hud .modale{clip-path:none;filter:none;border-radius:14px;box-shadow:0 8px 24px #03091633}
+.atlas-hud button{border-radius:9px}
+.atlas-hud .fintour button{clip-path:none;border:1px solid var(--signal);border-radius:10px;text-transform:none;font-weight:800}
+.atlas-hud .fiche{border-radius:10px;box-shadow:none;border-width:1px}
+.atlas-hud .fiche h4 span{clip-path:none;border-radius:6px}
+.atlas-hud button:focus-visible,.atlas-hud summary:focus-visible{outline-color:var(--signal)!important}
+.atlas-hud .production button:focus-visible{outline-color:var(--encre)!important}
+@media(prefers-reduced-motion:reduce){.atlas-hud button[data-action]{transition:none}}
+
 `;
 
 /** Injecte la feuille de style du HUD si le document ne l'a pas encore. */

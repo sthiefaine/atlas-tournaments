@@ -37,7 +37,7 @@ export interface PartieAffichee {
   /** La version du catalogue jouée : c'est elle qui dit si une sauvegarde se reprend. */
   catalogueVersion: number;
   scenarioVersion?: number;
-  /** Les pastilles : taille, camps, catalogue, adversaire, journées, brouillard. */
+  /** Les pastilles : taille, camps, adversaire, journées, brouillard. */
   details: readonly string[];
   /** La carte, prête à peindre ; `null` si elle a échappé au canon. */
   vignette: Vignette | null;
@@ -126,10 +126,11 @@ export function ListeParties({ parties, versionMoteur, libelles }: {
         </div>
         <div className="partie-corps">
           <p className="atlas-etiquette">{p.biome}</p>
-          <h2>{p.nom}</h2>
+          <h3>{p.nom}</h3>
           {p.details.length > 0
             ? <ul className="jeu-libre-details">{p.details.map((d) => <li key={d}>{d}</li>)}</ul>
             : null}
+          {etats[p.cle] === 'perimee' && <p className="partie-statut">Cette carte a été mise à jour. Lancez une nouvelle partie.</p>}
           <div className="jeu-libre-actions">
             {/* Le survol lance le téléchargement du moteur : c'est le seul moment
                 où l'on sait avant le clic ce qui va être demandé. */}

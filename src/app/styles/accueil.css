@@ -1,108 +1,28 @@
-/* Une feuille par écran, importée par `globals.css`.
-   Le fichier unique faisait 483 lignes et décrivait cinq écrans qui ne se
-   touchent pas : toucher à l'accueil obligeait à ouvrir le fil de campagne,
-   et deux chantiers menés en parallèle se disputaient le même fichier. */
+/* Interface Atlas — surfaces lisibles, commandes tactiles et accent menthe. */
+.atlas-accueil{--encre:#0c1422;--encre-haute:#101b2c;--papier:#f1f5fa;--papier-doux:#f1f5fad6;--panneau:#152237e0;--liseré:#3b4e66;--signal:#72e4ce;--signal-haut:#a6f3e3;--signal-appui:#42af9b;--ombre:6px 6px 0 #06131899;position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:100svh;background:var(--encre) radial-gradient(122% 78% at 50% 40%,#1a323b 0%,transparent 64%);color:var(--papier);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
 
-/* ---------------------------------------------------------------------------
- * L'accueil : un écran-titre de jeu, pensé en portrait d'abord.
- *
- * Il reprend le vocabulaire du HUD (`src/render/hud-html.ts`) — encre, papier,
- * signal, coins **coupés** et jamais arrondis, ombres dures et sans flou, un
- * bouton qui a une **épaisseur** et s'écrase de deux pixels à l'appui — pour
- * qu'entrer en jeu ne soit pas un changement d'univers. La page repeint ses
- * couleurs explicitement : le HUD n'a pas de mode clair, l'accueil non plus.
- *
- * La règle de mise en page tient en une phrase : **le jeu est le fond, le menu
- * est en bas**. Sur un téléphone tenu à une main, tout ce qui dépasse 560 px du
- * bord inférieur est hors de portée du pouce ; l'enseigne y va, le menu jamais.
- *
- * ## Revue du 8 septembre 2026 — « ça fait pas jeu, ça fait blog »
- *
- * Trois choses ont changé ici, et toutes les trois viennent de la lecture faite
- * par deux personas (un ado, un joueur d'Advance Wars).
- *
- * 1. **La bande de jeu était mince.** La nappe montait à l'opaque dès 14 % en
- *    haut et 74 % en bas : la partie qui joue derrière n'était réellement
- *    visible que sur dix-huit pour cent de la hauteur, et l'attract mode était
- *    en plus rabattu à `saturate(.86) brightness(.82)`. Le fond est l'atout de
- *    cet écran — c'est le seul endroit du produit où l'on voit le jeu sans y
- *    entrer —, et on l'éteignait. La nappe laisse désormais **la moitié de la
- *    hauteur** intacte en portrait, et sur un grand écran elle devient un
- *    **coin** : elle assombrit la colonne de gauche, où vivent l'enseigne et le
- *    menu, et rend les quarante pour cent de droite au jeu.
- * 2. **Le nom du jeu était du texte, pas une enseigne.** `system-ui` en graisse
- *    900, un filet, une seconde ligne espacée : de la typographie de site. Sans
- *    fichier de police (aucun asset n'existe, `CLAUDE.md`), il restait quatre
- *    leviers vérifiables — la condensation, l'interlettrage négatif, l'ombre
- *    dure portée dans la direction de la maison, et une **plaque** qui verrouille
- *    les deux mots en une seule forme. Les quatre sont pris.
- * 3. **Le menu était une liste de réglages** : quatre entrées, chacune avec un
- *    nom, une note de 12,5 px et une vignette. Il ne reste qu'une note — celle
- *    de Campagne, qui porte un état qui change —, plus aucune vignette, et un
- *    **curseur** : le triangle qui se pose sur l'entrée visée, permanent sur
- *    Campagne où il bat lentement, révélé au survol et au clavier ailleurs.
- * ------------------------------------------------------------------------- */
-/* Le fond propre de la page — celui qu'on voit **pendant que la 3D démarre**,
-   quand la vitrine est encore vide et que le plateau à plat ne paraît qu'en
-   repli (`vitrine.tsx`, décision du 8 septembre 2026). C'est plusieurs secondes
-   sur un pilote froid, et c'était de l'encre parfaitement plate : un écran-titre
-   sans image doit au moins avoir un ciel. La lueur est celle du carnet, posée au
-   milieu de la bande que la nappe laisse libre — donc exactement là où le jeu
-   viendra la couvrir. */
-
-.atlas-accueil{--encre:#132329;--encre-haute:#0b191f;--papier:#f4edda;--papier-doux:#f4eddad6;--panneau:#0f2129e0;--liseré:#4d6a78;--signal:#ffd162;--signal-haut:#fff0ac;--signal-appui:#c4923a;--ombre:6px 6px 0 #06131899;position:relative;isolation:isolate;display:flex;flex-direction:column;min-height:100svh;background:var(--encre) radial-gradient(122% 78% at 50% 40%,#1a323b 0%,transparent 64%);color:var(--papier);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
-
-/* La vitrine : le plateau en **plein cadre**, derrière tout. On n'encadre pas
-   une capture de son propre jeu sur son écran-titre. Le rognage par les bords
-   ne coûte rien : en fond, le plateau n'a pas à se lire comme une carte, il doit
-   se reconnaître comme du jeu qui bouge — et le vert, le rouge et la flèche sont
-   des couleurs et une forme, pas un plan. */
 .accueil-vitrine{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
 .accueil-vitrine .atlas-plateau{display:block;width:100%;height:100%;object-fit:cover}
-/* L'attract et le plateau SVG ne coexistent jamais (`vitrine.tsx`) : un dessin à
-   plat qui cède la place à un plateau en relief se lit comme deux jeux
-   différents. Le rabat de couleur reste — le vert et le rouge du jeu ne doivent
-   pas disputer au signal le rôle de « couleur qui appelle » — mais il était
-   devenu une extinction : `.86/.82` sur un fond déjà couvert à quatre-vingts
-   pour cent par la nappe. À `.94/.9`, la partie se voit encore comme une partie,
-   et le bouton Campagne reste la seule chose franchement jaune de l'écran. */
+
 .accueil-attract{position:absolute;inset:0;opacity:0;filter:saturate(.94) brightness(.9)}
 .accueil-attract,.accueil-attract canvas{width:100%;height:100%}
 .accueil-attract[data-attract='pret']{opacity:1}
 .atlas-plateau-curseur{animation:accueil-curseur 2.4s ease-in-out infinite alternate}
 
-/* La nappe remplace le cadre supprimé : elle assombrit **ce qui porte du
-   texte**, et rend le reste au jeu. En portrait, deux ramps — un court en haut
-   sous l'enseigne, un long en bas sous le menu — laissent la bande 23 %-61 %
-   entièrement libre. La vignette ne fait que rentrer les coins. */
-.accueil-nappe{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#132329 0%,#132329e8 9%,#13232900 23%,#13232900 61%,#132329ba 76%,#132329f2 91%,#132329 100%),radial-gradient(132% 86% at 50% 42%,#13232900 54%,#0913186b 100%)}
+.accueil-nappe{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#0c1422 0%,#0c1422e8 9%,#0c142200 23%,#0c142200 61%,#0c1422ba 76%,#0c1422f2 91%,#0c1422 100%),radial-gradient(132% 86% at 50% 42%,#0c142200 54%,#0913186b 100%)}
 
 .atlas-accueil .atlas-etiquette{display:block;font-size:11px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:#9fb6b8}
 
-/* ---------------------------------------------------------------------------
- * L'enseigne : un surtitre de genre, le nom, la plaque.
- * ------------------------------------------------------------------------- */
 .accueil-enseigne{padding:max(26px,calc(13px + env(safe-area-inset-top,0px))) max(22px,env(safe-area-inset-left,0px)) 0 max(22px,env(safe-area-inset-right,0px))}
 .accueil-enseigne>*{animation:accueil-entree .26s ease-out backwards}
 .accueil-genre{display:flex;align-items:center;gap:9px;margin:0;font-size:11px;font-weight:850;letter-spacing:.18em;text-transform:uppercase;color:#a9c0c2;animation-delay:.02s}
-/* Le même biais que la jauge de progression et que les coins coupés : quinze
-   degrés, partout, jamais un arrondi. */
-.accueil-genre::before{content:'';flex:none;width:9px;height:12px;background:var(--signal);transform:skewX(-15deg)}
 
-/* Les deux mots sont **une seule forme** : la plaque s'étire exactement à la
-   largeur du nom (`align-items:stretch` dans une colonne dimensionnée par son
-   contenu). C'est ce qui distingue une enseigne d'un titre suivi d'un
-   sous-titre. La condensation de quatre pour cent porte sur le bloc entier —
-   appliquée au seul nom, elle le décrocherait de sa plaque, un `scale` ne
-   changeant pas la largeur de mise en page. */
+.accueil-genre::before{content:'';flex:none;width:9px;height:12px;background:var(--signal);transform:none}
+
 .accueil-marque{display:flex;flex-direction:column;align-items:stretch;gap:8px;width:max-content;max-width:100%;margin:12px 0 0;scale:.96 1;transform-origin:left center;animation-delay:.07s}
-.marque-nom{font-size:clamp(54px,15.5vw,96px);font-weight:900;line-height:.86;letter-spacing:-.035em;text-transform:uppercase;color:var(--papier);text-shadow:5px 5px 0 #061318b3}
-.marque-plaque{display:block;padding:5px 12px 6px;background:var(--panneau);border:1px solid var(--liseré);border-bottom:3px solid var(--signal);box-shadow:5px 5px 0 #06131899;clip-path:polygon(0 0,100% 0,100% calc(100% - 9px),calc(100% - 9px) 100%,0 100%);font-size:clamp(12.5px,3.5vw,19px);font-weight:800;line-height:1.25;letter-spacing:.34em;text-transform:uppercase;color:var(--papier)}
+.marque-nom{font-size:clamp(54px,15.5vw,96px);font-weight:900;line-height:.86;letter-spacing:-.035em;text-transform:uppercase;color:var(--papier);text-shadow:none}
+.marque-plaque{display:block;padding:5px 12px 6px;background:var(--panneau);border:1px solid var(--liseré);border-bottom:1px solid var(--signal);box-shadow:none;clip-path:none;font-size:clamp(12.5px,3.5vw,19px);font-weight:800;line-height:1.25;letter-spacing:.34em;text-transform:uppercase;color:var(--papier)}
 
-/* ---------------------------------------------------------------------------
- * Le menu : calé en bas par `margin-top:auto`, jamais en `position:fixed` — la
- * rétraction de la barre d'adresse iOS fait sauter un élément fixe.
- * ------------------------------------------------------------------------- */
 .accueil-menu{margin-top:auto;display:flex;flex-direction:column;gap:8px;width:min(100% - 40px,420px);margin-inline:auto;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .accueil-menu:has(+ .accueil-tampon){padding-bottom:6px}
 .accueil-menu-rang{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -111,65 +31,41 @@
 .accueil-menu>:nth-child(2){animation-delay:.15s}
 .accueil-menu>:nth-child(3){animation-delay:.2s}
 
-/* Un bouton a une **épaisseur** : une bordure basse plus sombre que sa peinture,
-   qui s'écrase de deux pixels à l'appui, et une ombre dure sans flou qui se
-   raccourcit avec elle. C'est la règle de `.atlas-bouton` (`commun.css`),
-   appliquée ici à des plaques posées sur une partie qui bouge — d'où la
-   peinture opaque : un bouton translucide sur du jeu animé n'a pas de contraste
-   garanti. */
-.menu-bouton{position:relative;display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 15px 10px 30px;background:var(--panneau);border:1px solid var(--liseré);border-bottom:4px solid #061218;color:var(--papier);text-decoration:none;box-shadow:var(--ombre);clip-path:polygon(0 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .1s ease-out,translate .07s,border-bottom-width .07s,box-shadow .07s}
+.menu-bouton{position:relative;display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 15px 10px 30px;background:var(--panneau);border:1px solid var(--liseré);border-bottom:1px solid #061218;color:var(--papier);text-decoration:none;box-shadow:none;clip-path:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .1s ease-out,translate .07s,border-bottom-width .07s,box-shadow .07s}
 .menu-bouton:hover{background:#17323ce8}
-.menu-bouton:active{translate:0 2px;border-bottom-width:2px;box-shadow:4px 4px 0 #06131899}
+.menu-bouton:active{translate:0 2px;border-bottom-width:1px;box-shadow:none}
 
-/* Le curseur. Un menu de jeu ne se repère pas à une vignette par ligne mais au
-   marqueur posé sur l'entrée visée ; il occupe une place réservée dans le
-   rembourrage gauche, de sorte que rien ne bouge quand il paraît. */
 .menu-bouton::before{content:'';position:absolute;left:11px;top:50%;width:0;height:0;border-left:8px solid var(--signal);border-top:6px solid transparent;border-bottom:6px solid transparent;opacity:0;translate:-6px -50%;transition:opacity .1s ease-out,translate .1s ease-out}
 .menu-bouton:hover::before,.menu-bouton:focus-visible::before{opacity:1;translate:0 -50%}
 
 .menu-libelle{font-size:15px;font-weight:900;letter-spacing:.07em;line-height:1.15;text-transform:uppercase}
 .menu-texte{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
-/* La seule sous-ligne de l'écran, et elle porte un état qui change. Elle ne
-   disparaît plus selon la fenêtre : une information qui dépend de la taille de
-   l'écran n'en est pas une. */
+
 .menu-note{font-size:12px;line-height:1.3;color:var(--papier-doux);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* Campagne domine sans être plus large : peinture pleine, biseau plus franc, et
-   le seul bouton qui porte de l'état. La carte de progression entière est
-   absorbée dedans. Son curseur est permanent — c'est l'entrée par défaut — et
-   bat lentement, comme la station ouverte du carnet. */
-.menu-campagne{position:relative;display:flex;align-items:stretch;box-shadow:var(--ombre);clip-path:polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%);transition:translate .07s,box-shadow .07s}
-.menu-principal{position:relative;flex:1;min-height:78px;flex-wrap:wrap;align-content:space-between;padding-left:32px;background:var(--signal);color:#10222b;border:none;border-top:3px solid var(--signal-haut);border-bottom:5px solid var(--signal-appui);box-shadow:none;clip-path:none}
+.menu-campagne{position:relative;display:flex;align-items:stretch;box-shadow:none;clip-path:none;transition:translate .07s,box-shadow .07s}
+.menu-principal{position:relative;flex:1;min-height:78px;flex-wrap:wrap;align-content:space-between;padding-left:32px;background:var(--signal);color:#10222b;border:none;border-top:3px solid var(--signal-haut);border-bottom:1px solid var(--signal-appui);box-shadow:none;clip-path:none}
 .menu-principal:hover{background:var(--signal);filter:brightness(1.06)}
 .menu-principal .menu-libelle{font-size:17px}
 .menu-principal .menu-note{color:#10222bd0;font-weight:650}
 .menu-principal::before{border-left-color:#10222b;opacity:1;animation:accueil-viseur 1.9s ease-in-out infinite}
-/* L'appui enfonce l'**ensemble** — bouton et onglet du carnet sont une seule
-   plaque : n'écraser que la moitié gauche la décollerait de sa moitié droite. */
-.menu-campagne:has(.menu-principal:active){translate:0 2px;box-shadow:4px 4px 0 #06131899}
-.menu-principal:active{translate:0;box-shadow:none;border-bottom-width:3px}
-.menu-jauge{display:flex;gap:3px;width:100%;height:4px;margin-top:1px;transform:skewX(-15deg)}
+
+.menu-campagne:has(.menu-principal:active){translate:0 2px;box-shadow:none}
+.menu-principal:active{translate:0;box-shadow:none;border-bottom-width:1px}
+.menu-jauge{display:flex;gap:3px;width:100%;height:4px;margin-top:1px;transform:none}
 .menu-jauge i{flex:1;background:#10222b33;transition:background-color .26s ease-out}
 .menu-jauge i.faite{background:#10222b}
-/* La pastille de profil : posée en absolu dans le coin du bouton, elle n'ajoute
-   aucune hauteur — l'écran-titre tient toujours en un écran. Le client ne la
-   rend que si l'appareil a réellement deux joueurs (`menu-campagne.tsx`). */
-.menu-profil{position:absolute;top:0;right:0;max-width:46%;padding:3px 8px 3px 10px;background:var(--encre-haute);color:var(--signal);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;clip-path:polygon(8px 0,100% 0,100% 100%,0 100%)}
-/* Seconde cible : sans elle, choisir soi-même son épreuve devient impossible
-   depuis l'accueil. C'est un **onglet** collé au bouton, pas un lien souligné —
-   ≥ 44 px de large, et il se peint en survol au lieu de s'éclaircir. */
-.menu-carnet{display:flex;align-items:center;justify-content:center;width:62px;flex:none;padding:0 6px;background:var(--encre-haute);border:1px solid var(--liseré);border-left:none;border-bottom:5px solid #061218;color:var(--papier-doux);font-size:11px;font-weight:850;letter-spacing:.08em;text-align:center;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .1s ease-out,color .1s ease-out}
+
+.menu-profil{position:absolute;top:0;right:0;max-width:46%;padding:3px 8px 3px 10px;background:var(--encre-haute);color:var(--signal);font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;clip-path:none}
+
+.menu-carnet{display:flex;align-items:center;justify-content:center;width:62px;flex:none;padding:0 6px;background:var(--encre-haute);border:1px solid var(--liseré);border-left:none;border-bottom:1px solid #061218;color:var(--papier-doux);font-size:11px;font-weight:850;letter-spacing:.08em;text-align:center;text-transform:uppercase;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background-color .1s ease-out,color .1s ease-out}
 .menu-carnet:hover{background:#16303a;color:var(--signal)}
 
-.menu-petit{min-height:52px;padding:9px 11px 9px 26px;box-shadow:4px 4px 0 #0613188f;clip-path:none}
+.menu-petit{min-height:52px;padding:9px 11px 9px 26px;box-shadow:none;clip-path:none}
 .menu-petit::before{left:9px}
 .menu-petit .menu-libelle{font-size:12.5px;letter-spacing:.08em}
-.menu-petit:active{box-shadow:2px 2px 0 #0613188f}
+.menu-petit:active{box-shadow:none}
 
-/* Le tiroir des sauvegardes : il prend la place du bouton Campagne, il ne se
-   pose pas dessus. Deux lignes, chacune avec sa jauge et l'épreuve où elle en
-   est, et un appui lance — c'est la demande du propriétaire : « on a le choix
-   entre les deux sauvegardes et ensuite ça lance ». */
 .menu-sauvegardes{display:flex;flex-direction:column;gap:8px;animation:accueil-entree .18s ease-out backwards}
 .menu-sauvegardes>.atlas-etiquette{padding-left:2px;margin-bottom:1px}
 .menu-sauvegarde{flex-direction:column;align-items:stretch;gap:7px;min-height:66px}
@@ -177,21 +73,16 @@
 .menu-sauvegarde .menu-note{flex:0 1 auto;min-width:0;font-size:12px;text-align:right}
 .menu-sauvegarde .menu-jauge i{background:#ffffff1f}
 .menu-sauvegarde .menu-jauge i.faite{background:var(--signal)}
-/* Celle qui est active porte le signal : on sait laquelle on reprend sans lire. */
-.menu-sauvegarde[data-actif='oui']{box-shadow:var(--ombre),inset 0 3px 0 var(--signal)}
+
+.menu-sauvegarde[data-actif='oui']{box-shadow:none}
 .menu-sauvegarde[data-actif='oui'] .menu-libelle{color:var(--signal)}
 .menu-retour{min-height:48px;justify-content:center;padding-left:11px;background:transparent;border-color:#2c4653;border-bottom-color:#0a171d;box-shadow:none}
 .menu-retour:hover{background:#132a33}
 .menu-retour .menu-libelle{font-size:12px;letter-spacing:.14em;color:var(--papier-doux)}
 .menu-retour::before{display:none}
 
-/* Le tampon de build : la même chose qu'un numéro de version dans le coin d'un
-   écran-titre de console — une plaque estampée, tabulaire, à un coin coupé. En
-   gris de onze pixels dans l'angle, c'était une mention de pied de page. */
-.accueil-tampon{align-self:flex-end;justify-self:end;margin:0 max(14px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) 0;padding:3px 9px 4px;background:#0b191fb3;border:1px solid #274453;clip-path:polygon(7px 0,100% 0,100% 100%,0 100%,0 7px);font-size:10px;font-weight:800;line-height:1.2;letter-spacing:.13em;text-transform:uppercase;font-variant-numeric:tabular-nums;color:#8fa8b2;white-space:nowrap}
+.accueil-tampon{align-self:flex-end;justify-self:end;margin:0 max(14px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) 0;padding:3px 9px 4px;background:#101b2cb3;border:1px solid #274453;clip-path:none;font-size:10px;font-weight:800;line-height:1.2;letter-spacing:.13em;text-transform:uppercase;font-variant-numeric:tabular-nums;color:#8fa8b2;white-space:nowrap}
 
-/* Un seul anneau de focus par surface, et sa couleur suit la peinture : le
-   signal ne se voit pas sur le signal. */
 .atlas-accueil a:focus-visible,.atlas-accueil button:focus-visible{outline:3px solid var(--signal);outline-offset:3px}
 .atlas-accueil .menu-principal:focus-visible{outline-color:var(--papier)}
 
@@ -199,36 +90,49 @@
 @keyframes accueil-curseur{from{stroke-opacity:.35}to{stroke-opacity:1}}
 @keyframes accueil-viseur{0%,100%{translate:0 -50%}52%{translate:4px -50%}}
 
-/* On n'ajoute **aucun contenu** quand l'écran grandit : c'est exactement par là
-   qu'un écran-titre redevient une page de présentation à deux colonnes. Ce qui
-   change est la **forme de la nappe** : elle passe de deux bandes horizontales à
-   un coin, parce que tout ce qui porte du texte tient dans la colonne de gauche.
-   Les quarante pour cent de droite sont rendus au jeu, sans un pixel de voile. */
 @media(min-width:1024px){
-  .accueil-nappe{background:linear-gradient(96deg,#132329 0%,#132329f0 20%,#132329a8 38%,#13232900 60%),linear-gradient(180deg,#132329 0%,#13232900 16%,#13232900 72%,#132329cc 96%,#132329 100%),radial-gradient(120% 92% at 46% 46%,#13232900 58%,#0913185c 100%)}
+  .accueil-nappe{background:linear-gradient(96deg,#0c1422 0%,#0c1422f0 20%,#0c1422a8 38%,#0c142200 60%),linear-gradient(180deg,#0c1422 0%,#0c142200 16%,#0c142200 72%,#0c1422cc 96%,#0c1422 100%),radial-gradient(120% 92% at 46% 46%,#0c142200 58%,#0913185c 100%)}
   .accueil-enseigne{padding-left:48px;padding-top:52px}
   .accueil-menu{margin-inline:48px auto;padding-bottom:46px}
   .accueil-menu:has(+ .accueil-tampon){padding-bottom:26px}
   .accueil-tampon{margin-right:24px;margin-bottom:18px}
 }
-/* Paysage court : le plateau reste plein cadre, l'enseigne se met sur une ligne
-   — le nom et sa plaque côte à côte, la plaque cessant de s'étirer — et le menu
-   garde ses quatre entrées. Aucune sous-ligne ne disparaît : il n'y en a plus
-   qu'une, et elle tient. */
+
 @media(max-height:560px) and (orientation:landscape){
   .atlas-accueil{display:grid;grid-template-rows:auto 1fr auto;align-content:start}
-  .accueil-nappe{background:linear-gradient(100deg,#132329 0%,#132329e6 24%,#132329a0 40%,#13232900 64%),radial-gradient(120% 90% at 50% 50%,#13232900 46%,#09131870 100%)}
+  .accueil-nappe{background:linear-gradient(100deg,#0c1422 0%,#0c1422e6 24%,#0c1422a0 40%,#0c142200 64%),radial-gradient(120% 90% at 50% 50%,#0c142200 46%,#09131870 100%)}
   .accueil-enseigne{padding-top:14px}
   .accueil-marque{flex-direction:row;align-items:center;gap:11px;margin-top:8px}
-  .marque-nom{font-size:34px;text-shadow:3px 3px 0 #061318b3}
-  .marque-plaque{padding:3px 6px 4px 10px;font-size:11.5px;letter-spacing:.24em;box-shadow:3px 3px 0 #06131899}
+  .marque-nom{font-size:34px;text-shadow:none}
+  .marque-plaque{padding:3px 6px 4px 10px;font-size:11.5px;letter-spacing:.24em;box-shadow:none}
   .accueil-menu{width:min(100% - 32px,440px);margin-inline:22px auto;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));gap:7px}
   .menu-principal{min-height:62px}
   .menu-bouton{min-height:48px}
   .menu-petit{min-height:46px}
   .accueil-tampon{margin-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
 }
-/* Le mouvement se coupe, la page ne se déforme pas : un écran-titre immobile
-   reste un écran-titre — le curseur de Campagne cesse de battre, il ne
-   disparaît pas. */
+
 @media(prefers-reduced-motion:reduce){.atlas-accueil *{animation:none!important;transition:none!important}}
+
+/* La partie animée reste visible ; le menu forme une colonne calme et contrastée. */
+.atlas-accueil{--encre:var(--atlas-encre);--encre-haute:#101b2c;--papier:var(--atlas-papier);--papier-doux:#bdcddd;--panneau:#152237f5;--liseré:var(--atlas-lisere);--signal:var(--atlas-signal);--signal-haut:var(--atlas-signal-haut);--signal-appui:var(--atlas-signal-bas);--ombre:none}
+.accueil-genre{letter-spacing:.12em;color:#c1d3df}.accueil-genre::before{width:7px;height:7px;border-radius:50%}
+.accueil-marque{scale:1;gap:13px}.marque-nom{letter-spacing:-.065em;font-weight:850;line-height:.95;text-shadow:none}
+.marque-plaque{background:transparent;border:0;padding:0;letter-spacing:.24em;font-size:clamp(13px,3vw,18px);color:#bcd3df}
+.accueil-menu{gap:12px;width:min(100% - 40px,440px)}.accueil-menu-rang{gap:12px}
+.menu-bouton{border:1px solid #536981;border-radius:12px;min-height:58px;padding:15px 20px;background:#152237fa;transition:background-color .15s,border-color .15s,translate .1s}
+.menu-bouton:hover{background:#203650;border-color:#72e4ce}.menu-bouton:active{translate:0 1px;border-bottom-width:1px;box-shadow:none}
+.menu-bouton::before{display:none}.menu-libelle{font-size:16px;letter-spacing:0;text-transform:none;font-weight:750;line-height:1.3}
+.menu-note{font-size:13px;line-height:1.5}.menu-campagne{border-radius:14px;overflow:visible;gap:8px;box-shadow:none}
+.menu-principal{border:1px solid transparent;border-radius:12px;min-height:90px;padding:17px 20px;background:var(--signal)}
+.menu-principal .menu-libelle{font-size:20px}.menu-principal:hover{background:var(--signal-haut);filter:none}
+.menu-principal:active{border-bottom-width:1px}.menu-campagne:has(.menu-principal:active){translate:0 1px;box-shadow:none}
+.menu-carnet{border:1px solid #536981;border-radius:12px;width:72px;background:#152237fa;color:#d5e1eb;font-size:12px;letter-spacing:0;text-transform:none}
+.menu-carnet:hover{background:#203650}.menu-jauge{height:5px;gap:4px;margin-top:7px}
+.menu-petit{padding:14px 16px;min-height:54px;border-radius:12px}.menu-petit .menu-libelle{font-size:14px;letter-spacing:0}
+.menu-profil{border-radius:0 10px 0 7px;padding:4px 8px}.menu-sauvegarde[data-actif='oui']{border-color:#72e4ce}
+.menu-retour{background:#101b2ce6}.menu-retour .menu-libelle{font-size:13px;letter-spacing:0}
+.accueil-tampon{border-radius:6px;font-weight:600;letter-spacing:.04em;color:#b5c5d8;border-color:#3b4e66}
+.atlas-accueil .menu-principal:focus-visible{outline:3px solid white;outline-offset:4px}
+@media(min-width:1024px){.accueil-enseigne{padding-left:64px}.accueil-menu{margin-left:64px;padding-bottom:48px}}
+@media(max-height:560px) and (orientation:landscape){.menu-principal{min-height:62px;padding-block:10px}.menu-bouton{min-height:46px;padding-block:10px}.accueil-menu{gap:7px}.marque-nom{text-shadow:none}.marque-plaque{border:0}}
