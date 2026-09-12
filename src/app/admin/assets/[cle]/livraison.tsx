@@ -74,6 +74,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
 
   return (
     <div className="space-y-4">
+      {!local ? <p role="note"><strong>Dépôt indisponible sur ce site.</strong> Copiez le prompt et demandez à votre agent de livrer les fichiers dans le projet, puis de les versionner et déployer. Le contrôle et la revue s’effectuent en développement.</p> : <p>Sélectionnez ensemble les GLB et les PNG du lot. Le contrôle démarre dès la sélection.</p>}
       <div>
         <button
           type="button"
@@ -87,7 +88,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
         </span>
       </div>
 
-      <pre className="max-h-80 overflow-auto border border-current/30 p-3 text-xs leading-relaxed whitespace-pre-wrap">{commande}</pre>
+      <details><summary>Commande alternative pour un générateur externe</summary><pre className="max-h-80 overflow-auto border border-current/30 p-3 text-xs leading-relaxed whitespace-pre-wrap">{commande}</pre></details>
 
       <div>
         <label className="block text-sm">
@@ -112,7 +113,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
       {envoi ? <p className="text-sm opacity-70">Contrôle en cours…</p> : null}
 
       {verdict ? (
-        <div className="border border-current/30 p-3 text-sm">
+        <div role="status" className="border border-current/30 p-3 text-sm">
           <p className={verdict.ok ? '' : 'opacity-90'}>
             <strong>{verdict.ok ? 'Conforme techniquement et déposé' : 'Refusé'}</strong>
             {verdict.ok && verdict.ecrits ? ` — ${verdict.ecrits.length} fichier(s) écrit(s).` : null}
@@ -130,7 +131,7 @@ export function Livraison({ id, commande, attendus, local = true }: {
           ) : null}
           {verdict.ok ? (
             <p className="mt-2 text-xs opacity-70">
-              Le jeu et <span className="font-mono">/atelier/unites</span> les prennent au prochain chargement.
+              Le lot est réceptionné. L’approbation artistique et l’essai en jeu restent à confirmer dans l’étape suivante.
               {' '}<strong>Commiter le fichier</strong> : <span className="font-mono">public/</span> est cuit dans l’image, un dépôt non commité disparaît au déploiement suivant.
             </p>
           ) : null}

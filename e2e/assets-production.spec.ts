@@ -49,3 +49,35 @@ test('la fiche et la bibliothèque permettent de parcourir les étapes et télé
   await expect(page.locator('a[href^="/assets/candidats/unite_drone_marin_base_lod0.glb?"]')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true);
 });
+
+test('la fiche herbe haute reste contrastée, navigable au clavier et sans débordement', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/admin/assets/terrain_herbe_haute');
+  await expect(page.getByRole('heading', { name: 'Votre prochaine étape' })).toBeVisible();
+  const navigation = page.getByRole('navigation', { name: 'Parcours de production' });
+  await navigation.getByRole('link', { name: '2. Fichiers attendus' }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL(/#fichiers$/);
+  await expect(page.locator('#fichiers')).toContainText('réceptionnés');
+  const specification = page.locator('#specifications > summary');
+  await specification.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#specifications')).toHaveAttribute('open', '');
+  const contrastes = await page.evaluate(() => {
+    function rgb(texte: string) { return (texte.match(/[\d.]+/g) ?? []).map(Number); }
+    function lumi(c: number[]) { return c.slice(0,3).map(x => { x /= 255; return x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }).reduce((s,x,i) => s+x*([.2126,.7152,.0722][i] ?? 0),0); }
+    return [...document.querySelectorAll('main h2, main h3, main p, main summary, main .admin-action, #fichiers code, #fichiers li > span')].filter(el => el.getClientRects().length).map(el => {
+      const style = getComputedStyle(el);
+      let fond: Element | null = el;
+      while (fond && rgb(getComputedStyle(fond).backgroundColor)[3] === 0) fond = fond.parentElement;
+      const l1 = lumi(rgb(style.color)), l2 = lumi(rgb(getComputedStyle(fond ?? el).backgroundColor));
+      return { texte: el.textContent?.slice(0,60), ratio: (Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05), opacite: style.opacity };
+    });
+  });
+  for (const resultat of contrastes) { expect(resultat.ratio, resultat.texte).toBeGreaterThanOrEqual(4.5); expect(resultat.opacite).toBe('1'); }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ colorScheme: 'light' });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+});
