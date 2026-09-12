@@ -1,3 +1,4 @@
+import { origineAutorisee } from '@/serveur/origine';
 import { genererSpecs } from '@/assets/index';
 import { exigerAdmin } from '@/serveur/auth';
 import { erreur, json } from '@/serveur/reponses';
@@ -26,8 +27,7 @@ export async function GET(req:Request, ctx:Contexte) {
 }
 export async function POST(req:Request, ctx:Contexte) {
   const c = await contexte(req,ctx); if(c instanceof Response) return c;
-  const origin = req.headers.get('origin');
-  if(origin && origin !== new URL(req.url).origin) return erreur('origine_refusee',403);
+  if(!origineAutorisee(req)) return erreur('origine_refusee',403, 'Adresse du site refusée. Vérifiez SITE_URL sur le serveur Atlas.');
   if(!['model/gltf-binary','application/octet-stream'].includes(req.headers.get('content-type')??'')) return erreur('type_invalide',415,'Envoyer le GLB brut.');
   if(Number(req.headers.get('content-length'))>LIMITE_SOURCE) return erreur('source_trop_lourde',413,'150 Mio maximum');
   const reader=req.body?.getReader(); if(!reader) return erreur('fichier_absent',400);

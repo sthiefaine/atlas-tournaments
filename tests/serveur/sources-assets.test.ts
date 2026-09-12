@@ -26,8 +26,8 @@ test('API privée : authentification, dépôt brut, téléchargement et limite a
   const {POST,GET}=await import('../../src/app/api/admin/assets/[id]/sources/route');
   const {signerSession,COOKIE_ADMIN}=await import('../../src/serveur/auth');
   const racine=await mkdtemp(path.join(os.tmpdir(),'atlas-source-api-'));
-  const ancien={dir:process.env.ATLAS_ASSET_SOURCES_DIR,secret:process.env.AUTH_SECRET,url:process.env.ATLAS_UPLOAD_URL};
-  process.env.ATLAS_ASSET_SOURCES_DIR=racine;process.env.AUTH_SECRET='test-sources-local';delete process.env.ATLAS_UPLOAD_URL;
+  const ancien={site:process.env.SITE_URL,dir:process.env.ATLAS_ASSET_SOURCES_DIR,secret:process.env.AUTH_SECRET,url:process.env.ATLAS_UPLOAD_URL};
+  process.env.ATLAS_ASSET_SOURCES_DIR=racine;process.env.AUTH_SECRET='test-sources-local';process.env.SITE_URL='https://atlas-tournament.clairdev.com';delete process.env.ATLAS_UPLOAD_URL;
   const ctx={params:Promise.resolve({id:'batiment_qg_fr_ile_de_france'})};
   const url='http://localhost/api/admin/assets/batiment_qg_fr_ile_de_france/sources';
   const cookie=`${COOKIE_ADMIN}=${signerSession({sujet:'test',expire:Date.now()+60000})}`;
@@ -35,13 +35,13 @@ test('API privée : authentification, dépôt brut, téléchargement et limite a
     assert.equal((await GET(new Request(url),ctx)).status,403);
     assert.equal((await POST(new Request(url,{method:'POST',headers:{cookie,origin:'https://autre.test'}}),ctx)).status,403);
     assert.equal((await POST(new Request(url,{method:'POST',headers:{cookie,'content-type':'model/gltf-binary','content-length':String(151*1024*1024)}}),ctx)).status,413);
-    const r=await POST(new Request(url,{method:'POST',headers:{cookie,'content-type':'model/gltf-binary'},body:new Uint8Array(glb())}),ctx);
+    const r=await POST(new Request(url,{method:'POST',headers:{cookie,origin:'https://atlas-tournament.clairdev.com','content-type':'model/gltf-binary'},body:new Uint8Array(glb())}),ctx);
     assert.equal(r.status,201);const {source}=await r.json();
     const liste=await GET(new Request(url,{headers:{cookie}}),ctx);assert.equal((await liste.json()).sources.length,1);
     const telecharge=await GET(new Request(url+'?revision='+source.revision,{headers:{cookie}}),ctx);
     assert.equal(telecharge.status,200);assert.deepEqual(Buffer.from(await telecharge.arrayBuffer()),glb());
   }finally{
-    for(const [cle,val] of [['ATLAS_ASSET_SOURCES_DIR',ancien.dir],['AUTH_SECRET',ancien.secret],['ATLAS_UPLOAD_URL',ancien.url]] as const){if(val===undefined)delete process.env[cle];else process.env[cle]=val;}
+    for(const [cle,val] of [['SITE_URL',ancien.site],['ATLAS_ASSET_SOURCES_DIR',ancien.dir],['AUTH_SECRET',ancien.secret],['ATLAS_UPLOAD_URL',ancien.url]] as const){if(val===undefined)delete process.env[cle];else process.env[cle]=val;}
     await rm(racine,{recursive:true,force:true});
   }
 });
