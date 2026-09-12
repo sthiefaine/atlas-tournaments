@@ -26,6 +26,9 @@ import { familleAsset, libelleAsset } from '../exploration';
 import { promptProduction } from '../prompt-production';
 import { PromptProduction } from './prompt';
 import { Livraison } from './livraison';
+import { AtelierExterne } from './atelier-externe';
+import { promptsGemini } from '../prompts-gemini';
+import { stockageSourcesDisponible, sourcesStockees } from '@/serveur/sources-assets-stockage';
 import { jalonsProduction } from '../parcours-production';
 import { candidatsExposes } from '../candidats';
 import { cheminInspection } from './chemins-inspection';
@@ -99,6 +102,10 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
   const styleNation = territoire.pays ? chargerStyleNation(territoire.pays) : null;
   const styleRegion = territoire.pays && region ? chargerStyleRegion(territoire.pays, region.code) : null;
 
+  const stockageSources = stockageSourcesDisponible();
+  let erreurSources = false;
+  const sources = stockageSources ? await sourcesStockees(spec.id).catch(() => { erreurSources = true; return []; }) : [];
+  const prompts = promptsGemini(spec);
   const famille = familleAsset(spec);
   const variantes = specs.filter(s => familleAsset(s) === famille);
   const requis = [...spec.verification.lodRequis.map(l => nomModele(spec, l)), ...spec.textures.filter(t => t.obligatoire).map(t => nomTexture(spec, t.canal))];
@@ -143,6 +150,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}`}>Télécharger le manifeste JSON</a>
           <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}&format=prompt`}>Télécharger le prompt texte</a>
         </div>
+        <AtelierExterne id={spec.id} concept={prompts.concept} vues={prompts.vues} stockage={!!stockageSources} sources={sources} erreurSources={erreurSources} />
         <PromptProduction texte={promptProduction(spec, reception.fichiers)} />
       </section>
       {variantes.length > 1 ? <Bloc titre={`${libelleAsset(famille)} — base et déclinaisons`} aide="Une géométrie commune, des peintures distinctes. Chaque version conserve son propre état de réception."><div className="assets-variantes">{variantes.map(v => <Link key={v.id} href={`/admin/assets/${v.id}`} aria-current={v.id === spec.id ? 'page' : undefined}>{v.type === 'unite' ? 'Base partagée' : territoireDe(v, codesPays).pays ? paysParCode.get(territoireDe(v, codesPays).pays!)?.nomCourt ?? v.cle : v.cle}</Link>)}</div></Bloc> : null}

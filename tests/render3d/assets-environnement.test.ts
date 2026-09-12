@@ -9,7 +9,7 @@ test('assets actifs sélectionnés selon la carte et les nations, jamais le num�
   assert.deepEqual(selectionEnvironnement(grille,{},inventaire),['terrain_route']);
   assert.ok(!selectionEnvironnement(grille,{1:'jp'},inventaire).includes('batiment_qg_lu'));
   assert.deepEqual(selectionEnvironnement(grille,{}, {modeles:{}}),[]);
-  for(const terrain of ['plaine','foret','herbe_haute']) {
+  for(const terrain of ['plaine','foret','herbe_haute'] as const) {
     assert.ok(!selectionEnvironnement({...grille,terrainDe:()=>terrain},{},inventaire).includes('terrain_plaine'));
   }
 });

@@ -1,0 +1,22 @@
+import {test,expect} from '@playwright/test';
+import {signerSession,COOKIE_ADMIN} from '../src/serveur/auth';
+const secret=process.env.E2E_ASSETS_SECRET;
+test.use({trace:'off',screenshot:'off',video:'off',channel:'chrome'});
+test('atelier Gemini Tripo : catégories, variante, prompts et source conservée',async({page,context,baseURL})=>{
+  test.skip(!secret,'Serveur de réception isolé requis');
+  await context.addCookies([{name:COOKIE_ADMIN,value:signerSession({sujet:'creation',expire:Date.now()+600000},secret),url:baseURL!}]);
+  await page.goto('/admin/assets/creation');
+  await expect(page.getByRole('heading',{name:'Créer avec Gemini et Tripo'})).toBeVisible();
+  await expect(page.locator('a[href="/admin/assets?type=batiment"]')).toBeVisible();
+  await page.goto('/admin/assets/batiment_qg_fr_ile_de_france');
+  await page.getByText('1. Gemini — créer le concept',{exact:true}).click();
+  await expect(page.getByRole('button',{name:'Copier le prompt concept Gemini'})).toBeVisible();
+  await page.getByText('2. Gemini — obtenir les vues multiples',{exact:true}).click();
+  await expect(page.getByRole('button',{name:'Copier le prompt multivue Gemini'})).toBeVisible();
+  const json=Buffer.from('{"asset":{"version":"2.0"},"meshes":[{"primitives":[]}]}'.padEnd(60,' '));
+  const b=Buffer.alloc(20+json.length);b.writeUInt32LE(0x46546c67,0);b.writeUInt32LE(2,4);b.writeUInt32LE(b.length,8);b.writeUInt32LE(json.length,12);b.writeUInt32LE(0x4e4f534a,16);json.copy(b,20);
+  await page.getByLabel('Choisir le GLB source').setInputFiles({name:'export-tripo.glb',mimeType:'model/gltf-binary',buffer:b});
+  await expect(page.getByText(/Source conservée\./)).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('link',{name:/Télécharger la source/}).first()).toBeVisible();
+});

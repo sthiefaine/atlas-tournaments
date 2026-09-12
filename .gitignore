@@ -48,3 +48,6 @@ assets/receptions/*/*/
 assets/receptions/*/precedente.json
 assets/receptions/*/*.tmp
 doc/refonte/atlas-lore.html
+
+# Sources HD privées, conservées hors du dépôt git
+/assets/sources/
