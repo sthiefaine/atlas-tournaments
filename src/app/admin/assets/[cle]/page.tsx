@@ -151,7 +151,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}&format=prompt`}>Télécharger le prompt texte</a>
         </div>
         <AtelierExterne id={spec.id} concept={prompts.concept} vues={prompts.vues} stockage={!!stockageSources} sources={sources} erreurSources={erreurSources} />
-        <PromptProduction texte={promptProduction(spec, reception.fichiers)} />
+        <PromptProduction texte={promptProduction(spec, reception.fichiers, sources[0])} />
       </section>
       {variantes.length > 1 ? <Bloc titre={`${libelleAsset(famille)} — base et déclinaisons`} aide="Une géométrie commune, des peintures distinctes. Chaque version conserve son propre état de réception."><div className="assets-variantes">{variantes.map(v => <Link key={v.id} href={`/admin/assets/${v.id}`} aria-current={v.id === spec.id ? 'page' : undefined}>{v.type === 'unite' ? 'Base partagée' : territoireDe(v, codesPays).pays ? paysParCode.get(territoireDe(v, codesPays).pays!)?.nomCourt ?? v.cle : v.cle}</Link>)}</div></Bloc> : null}
       <section id="fichiers"><Bloc titre={`Fichiers obligatoires — ${requis.filter(n => reception.fichiers.includes(n)).length} / ${requis.length} réceptionnés`} aide="Présent ne signifie pas conforme : le verdict technique est indiqué plus bas. Les variantes saisonnières restent facultatives."><ul className="assets-fichiers">{requis.map(n => <li key={n}><span className={reception.fichiers.includes(n) ? styles.present : styles.manquant}>{reception.fichiers.includes(n) ? 'Présent' : 'Manquant'}</span> <code>{n}</code></li>)}</ul></Bloc></section>

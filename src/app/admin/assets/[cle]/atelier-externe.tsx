@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { PromptProduction } from './prompt';
 type Source = {revision:string;octets:number;date?:string};
 export function AtelierExterne({id,concept,vues,stockage,sources:initiales,erreurSources=false}:{id:string;concept:string;vues:string;stockage:boolean;sources:Source[];erreurSources?:boolean}) {
+  const router = useRouter();
   const [sources,setSources]=useState(initiales),[message,setMessage]=useState(''),[envoi,setEnvoi]=useState(false);
   async function deposer(fichier:File|undefined) {
     if(!fichier)return;
@@ -13,6 +15,7 @@ export function AtelierExterne({id,concept,vues,stockage,sources:initiales,erreu
       const resultat=await r.json();
       if(!r.ok)throw new Error(resultat.detail??resultat.error??'Dépôt impossible');
       setSources(s=>[resultat.source,...s.filter(x=>x.revision!==resultat.source.revision)]);
+      router.refresh();
       setMessage('Source conservée. Elle attend sa préparation pour le jeu ; aucun modèle actif n’a été remplacé.');
     }catch(e){setMessage(e instanceof Error?e.message:'Envoi impossible');}finally{setEnvoi(false);}
   }
