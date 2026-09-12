@@ -50,7 +50,7 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 50000,
+    "lod0": 1000000,
     "lod1": 12000,
     "lod2": 3000,
     "materiauxMax": 3
@@ -58,14 +58,14 @@
   "textures": [
     {
       "canal": "albedo",
-      "resolution": 1024,
+      "resolution": 4096,
       "format": "png",
       "obligatoire": true,
       "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
     },
     {
       "canal": "normale",
-      "resolution": 1024,
+      "resolution": 4096,
       "format": "png",
       "obligatoire": true,
       "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."
@@ -175,9 +175,7 @@
     ],
     "toleranceAabb": 0.12,
     "lodRequis": [
-      0,
-      1,
-      2
+      0
     ]
   }
 }

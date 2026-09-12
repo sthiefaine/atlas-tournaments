@@ -51,7 +51,7 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 50000,
+    "lod0": 1000000,
     "lod1": 12000,
     "lod2": 3000,
     "materiauxMax": 3
@@ -179,8 +179,7 @@
     ],
     "toleranceAabb": 0.14,
     "lodRequis": [
-      0,
-      1
+      0
     ]
   }
 }

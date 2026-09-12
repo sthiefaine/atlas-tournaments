@@ -26,8 +26,8 @@ export function lirePng(octets: Uint8Array): PixelsPng {
       if (largeur || n !== 13) throw new Error('IHDR invalide');
       largeur = b.readUInt32BE(debut); hauteur = b.readUInt32BE(debut + 4); couleur = b[debut + 9]!;
       canaux = ({ 0: 1, 2: 3, 3: 1, 4: 2, 6: 4 } as Record<number, number>)[couleur] ?? 0;
-      if (!largeur || !hauteur || largeur > 2048 || hauteur > 2048 || b[debut + 8] !== 8 || !canaux
-        || b[debut + 10] !== 0 || b[debut + 11] !== 0 || b[debut + 12] !== 0) throw new Error('PNG attendu : 8 bits, non entrelacé, au plus 2048 px');
+      if (!largeur || !hauteur || largeur > 4096 || hauteur > 4096 || b[debut + 8] !== 8 || !canaux
+        || b[debut + 10] !== 0 || b[debut + 11] !== 0 || b[debut + 12] !== 0) throw new Error('PNG attendu : 8 bits, non entrelacé, au plus 4096 px');
     } else if (type === 'IDAT') morceaux.push(b.subarray(debut, debut + n));
     else if (type === 'PLTE') palette = b.subarray(debut, debut + n);
     else if (type === 'tRNS') alpha = b.subarray(debut, debut + n);

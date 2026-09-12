@@ -1,8 +1,7 @@
 'use client';
 
 /**
- * La vitrine des unités : une grande vue orbitale par défaut, ou six angles —
- * face, profil gauche, profil droit, dos, dessus, et l'angle du jeu (68°).
+ * La vitrine des unités : une seule grande vue orbitale interactive.
  *
  * Le banc d'essai montre tout le catalogue dans une scène complète, ce qui est
  * ce qu'il faut pour juger un plateau et bien trop lent pour juger une figurine :
@@ -11,17 +10,16 @@
  * lumières de studio, et un rendu **à la demande** — la scène ne se redessine
  * que lorsqu'un choix change ou que la fenêtre bouge.
  *
- * Six vues, un seul canevas : chaque tuile de la grille est un rectangle de
- * ciseaux du même moteur. Six contextes coûteraient six fois la géométrie et
- * les textures pour la même image. Le moteur est celui du jeu —
+ * Une vue, un seul canevas : la surface de rendu est un rectangle de
+ * ciseaux du même moteur. Le moteur est celui du jeu —
  * `WebGPURenderer`, WebGPU ou son dos WebGL 2, décidé avant de le construire
  * (`render3d/scene.ts`, `choisirBackend`) — et il s'initialise de façon
  * asynchrone : le studio expose `prete`, ne dessine rien avant, et redessine
  * de lui-même dès que le moteur est là.
  *
  * Depuis le préalable B0 de `doc/16-realisme.md` §3.1, la vitrine dit aussi
- * **ce qu'elle montre** — un modèle livré ou le placeholder —, laisse forcer un
- * niveau de détail, et joue les clips d'un modèle livré dans le même lecteur
+ * **ce qu'elle montre** — un modèle livré au LOD0 ou le placeholder —,
+ * et joue les clips d'un modèle livré dans le même lecteur
  * que le jeu. La seule boucle est celle du lecteur : un
  * `requestAnimationFrame` tant qu'un clip joue, plus rien dès qu'on le fige.
  */
@@ -44,14 +42,9 @@ import styles from './vitrine.module.css';
 import { rectangleTuile } from './tuiles';
 import { ORBITE_INITIALE, reglerOrbite, type Orbite } from './orbite';
 
-/** Les six angles, dans l'ordre où on les lit : les quatre élévations, le dessus, le jeu. */
+/** Vue orbitale unique. */
 const VUES = [
-  { cle: 'face', titre: 'Face', ortho: true, direction: [1, 0, 0], haut: [0, 1, 0] },
-  { cle: 'profil_gauche', titre: 'Profil gauche', ortho: true, direction: [0, 0, -1], haut: [0, 1, 0] },
-  { cle: 'profil_droit', titre: 'Profil droit', ortho: true, direction: [0, 0, 1], haut: [0, 1, 0] },
-  { cle: 'dos', titre: 'Dos', ortho: true, direction: [-1, 0, 0], haut: [0, 1, 0] },
-  { cle: 'dessus', titre: 'Dessus', ortho: true, direction: [0, 1, 0], haut: [1, 0, 0] },
-  { cle: 'jeu', titre: 'En jeu · 68°', ortho: false, direction: [0, Math.sin((68 * Math.PI) / 180), Math.cos((68 * Math.PI) / 180)], haut: [0, 1, 0] },
+  { cle: 'jeu', titre: 'Vue libre', ortho: false, direction: [0, Math.sin((68 * Math.PI) / 180), Math.cos((68 * Math.PI) / 180)], haut: [0, 1, 0] },
 ] as const;
 
 type CleVue = (typeof VUES)[number]['cle'];
@@ -87,7 +80,6 @@ const VERSION_CANON = chargerCatalogueUnites().catalogueVersion;
 const VERSIONS_CATALOGUE: readonly number[] = Array.from({ length: VERSION_CANON }, (_, i) => i + 1);
 
 export default function Vitrine(): React.ReactElement {
-  const [vuesTechniques, setVuesTechniques] = useState(false);
   const orbite = useRef<Orbite>({ ...ORBITE_INITIALE });
   const [version, setVersion] = useState<number>(VERSION_CANON);
   const [unite, setUnite] = useState<string>('infanterie');
@@ -96,7 +88,7 @@ export default function Vitrine(): React.ReactElement {
   const [moteur, setMoteur] = useState<boolean | null>(null);
   const [rendues, setRendues] = useState(0);
   const [etatModele, setEtatModele] = useState<EtatModele>(PLACEHOLDER);
-  const [lod, setLod] = useState<NiveauLod | null>(null);
+  const lod: NiveauLod = 0;
   const [clip, setClip] = useState<NomClip | null>(null);
   const [fige, setFige] = useState(false);
   const grille = useRef<HTMLDivElement | null>(null);
@@ -345,16 +337,6 @@ export default function Vitrine(): React.ReactElement {
 
     <div className={styles.modele} data-livre={etatModele.livre ? 'oui' : 'non'}>
       <span className={styles.badge}>{etatModele.livre ? 'Modèle livré' : 'Placeholder'}</span>
-      <label>Niveau de détail
-        <select
-          value={lod === null ? 'auto' : String(lod)}
-          disabled={!etatModele.livre || etatModele.lods <= 1}
-          onChange={(e) => setLod(e.target.value === 'auto' ? null : (Number(e.target.value) as NiveauLod))}
-        >
-          <option value="auto">Automatique</option>
-          {[0, 1, 2].filter((i) => i < etatModele.lods).map((i) => <option key={i} value={i}>lod{i}</option>)}
-        </select>
-      </label>
       <fieldset className={styles.clips} disabled={sansClips}>
         <legend>Clips{etatModele.livre && etatModele.nomsFichier.length > 0 ? ` · fichier : ${etatModele.nomsFichier.join(', ')}` : ''}</legend>
         {NOMS_CLIPS.map((nom) => <button
@@ -390,8 +372,6 @@ export default function Vitrine(): React.ReactElement {
     </div> : null}
 
     <div className={styles.navigationCamera} hidden={moteur === false}>
-      <button type="button" aria-pressed={!vuesTechniques} onClick={()=>setVuesTechniques(false)}>Grande vue libre</button>
-      <button type="button" aria-pressed={vuesTechniques} onClick={()=>setVuesTechniques(true)}>Six vues techniques</button>
       <button type="button" aria-label="Tourner à gauche" onClick={()=>commandeCamera(-15)}>↶</button>
       <button type="button" aria-label="Tourner à droite" onClick={()=>commandeCamera(15)}>↷</button>
       <button type="button" aria-label="Augmenter l’inclinaison" onClick={()=>commandeCamera(0,10)}>Incliner +</button>
@@ -401,7 +381,7 @@ export default function Vitrine(): React.ReactElement {
       <button type="button" onClick={()=>commandeCamera(0,0,1,true)}>Réinitialiser la vue</button>
       <p id="aide-camera-vitrine">Glissez sur la vue libre pour tourner et incliner. Molette ou pincement pour zoomer. Au clavier : flèches, +/− et touche Début pour réinitialiser.</p>
     </div>
-    <div className={styles.planche} data-techniques={vuesTechniques} ref={grille} hidden={moteur === false}>
+    <div className={styles.planche} ref={grille} hidden={moteur === false}>
       <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
       {VUES.map((v) => <div
         key={v.cle}

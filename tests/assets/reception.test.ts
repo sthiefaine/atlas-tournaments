@@ -39,7 +39,8 @@ test('les cinq filtres PNG décodent les mêmes pixels ; corruption et surdimens
   const pixels = Uint8Array.from({ length: 64 }, (_, i) => i * 13 % 256);
   for (let f = 0; f < 5; f++) assert.deepEqual(lirePng(encoder(4, 4, pixels, f)).rgba, pixels);
   const corrompu = encoder(4, 4, pixels); corrompu[40] = corrompu[40]! ^ 1; assert.throws(() => lirePng(corrompu), /CRC/);
-  assert.throws(() => lirePng(encoder(2049, 1, new Uint8Array(2049 * 4))), /2048/);
+  assert.equal(lirePng(encoder(4096, 1, new Uint8Array(4096 * 4))).largeur, 4096);
+  assert.throws(() => lirePng(encoder(4097, 1, new Uint8Array(4097 * 4))), /4096/);
 });
 
 test('les trois lots passent le contrôle complet ; PNG voisins uniques et aucune image embarquée', () => {

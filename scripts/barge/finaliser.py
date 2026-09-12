@@ -9,22 +9,22 @@ def ecrire(p,d,b):
  j=json.dumps(d,separators=(',',':')).encode();j+=b' '*((-len(j))%4);b+=b'\0'*((-len(b))%4)
  p.write_bytes(struct.pack('<III',0x46546c67,2,28+len(j)+len(b))+struct.pack('<II',len(j),0x4e4f534a)+j+struct.pack('<II',len(b),0x004e4942)+b)
 # Extraction technique des canaux PBR de la source ; aucun éclairage n'est ajouté.
-d,b=lire(ROOT/'assets/sources/tripo_tugboat/tugboat_etude_50000.glb')
+d,b=lire(ROOT/'assets/sources/tripo_tugboat/original.glb')
 def image_texture(index):
  im=d['images'][d['textures'][index]['source']];v=d['bufferViews'][im['bufferView']];start=v.get('byteOffset',0)
  return Image.open(io.BytesIO(b[start:start+v['byteLength']])).convert('RGB')
 m=d['materials'][0];a=image_texture(m['pbrMetallicRoughness']['baseColorTexture']['index']);n=image_texture(m['normalTexture']['index']);rm=image_texture(m['pbrMetallicRoughness']['metallicRoughnessTexture']['index'])
 def atlas(image,size,fill):
  out=Image.new('RGB',(size,size),fill);out.paste(image.resize((size,size*7//8),Image.Resampling.LANCZOS),(0,size//8));return out
-atlas(a,1024,(128,128,128)).save(OUT/f'{ID}_albedo.png')
-atlas(n,1024,(128,128,255)).save(OUT/f'{ID}_normale.png')
+atlas(a,4096,(128,128,128)).save(OUT/f'{ID}_albedo.png')
+atlas(n,4096,(128,128,255)).save(OUT/f'{ID}_normale.png')
 rough=atlas(rm.getchannel('G').convert('RGB'),512,(210,210,210));rough.save(OUT/f'{ID}_rugosite.png')
 metal=atlas(rm.getchannel('B').convert('RGB'),512,(0,0,0)).getchannel('R')
 # glTF attend la rugosité en G et le métal en B dans une carte combinée.
 Image.merge('RGB',(Image.new('L',(512,512),255),rough.getchannel('R'),metal)).save(OUT/f'{ID}_metal.png')
 mask=Image.new('RGB',(512,512),(0,0,0));mask.paste((255,255,255),(0,0,512,64));mask.save(OUT/f'{ID}_masque_equipe.png')
 report=[]
-for lod in range(3):
+for lod in [0]:
  d,b=lire(ROOT/f'assets/sources/{ID}/preparation/lod{lod}.glb')
  images_views={x['bufferView']for x in d.get('images',[])if 'bufferView'in x};out=bytearray();views=[];mapping={}
  for i,v in enumerate(d['bufferViews']):
@@ -43,7 +43,7 @@ for lod in range(3):
  d['textures']=[{'source':i,'sampler':0}for i in range(4)];d['samplers']=[{'magFilter':9729,'minFilter':9987,'wrapS':33071,'wrapT':33071}]
  def material(name):return {'name':name,'pbrMetallicRoughness':{'baseColorTexture':{'index':0},'metallicRoughnessTexture':{'index':2},'metallicFactor':1,'roughnessFactor':1},'normalTexture':{'index':1}}
  d['materials']=[material('mat_corps'),material('mat_details')]
- d.pop('extensionsUsed',None);d.pop('extensionsRequired',None)
+ # Conserver KHR_mesh_quantization : normales int16 normalisées, sans décimation.
  def accessor(values,components):
   out.extend(b'\0'*((-len(out))%4));raw=struct.pack('<'+'f'*len(values),*values);view=len(d['bufferViews']);d['bufferViews'].append({'buffer':0,'byteOffset':len(out),'byteLength':len(raw)});out.extend(raw)
   aa={'bufferView':view,'componentType':5126,'count':len(values)//components,'type':{1:'SCALAR',3:'VEC3',4:'VEC4'}[components]}

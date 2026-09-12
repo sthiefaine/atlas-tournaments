@@ -965,8 +965,8 @@ export function specUnite(u: UnitType): AssetSpec {
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
     echelle: echelleUnite(s),
     pivot: pivot(u.domaine !== 'air'),
-    budget: u.cle === 'barge' ? budget(50000, 12000, 3000, 3) : budgetUnite(s),
-    textures,
+    budget: u.cle === 'barge' ? budget(1000000, 12000, 3000, 3) : budgetUnite(s),
+    textures: u.cle === 'barge' ? textures.map(t => ['albedo', 'normale'].includes(t.canal) ? { ...t, resolution: 4096 as const } : t) : textures,
     variantes: variantes(['hiver']),
     animations: animationsUnite(u),
     format: format(['corps', 'base', 'socle', ...modules], materiaux),
@@ -975,7 +975,7 @@ export function specUnite(u: UnitType): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'animations'],
       0.12,
-      [0, 1, 2],
+      u.cle === 'barge' ? [0] : [0, 1, 2],
     ),
   };
 }
@@ -1055,7 +1055,7 @@ export function specKit(styleNation: StyleNation, u: UnitType): AssetSpec {
     verification: verification(
       ['format', 'noeuds', 'materiaux', 'echelle', 'budget', 'masque_equipe', 'textures', 'animations'],
       0.14,
-      [0, 1],
+      u.cle === 'barge' ? [0] : [0, 1],
     ),
   };
 }

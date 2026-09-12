@@ -373,3 +373,7 @@ Le modèle fourni « tugboat » devient `unite_barge_base`, activé comme base p
 ## Mise à jour — vitrine orientable (12 septembre 2026)
 
 `/atelier/unites` ouvre une grande vue libre par défaut. Glisser tourne et incline la caméra, molette et pincement zooment ; flèches, +/−, Début et boutons fournissent des alternatives. Bearing continu, inclinaison −80° à 85°, zoom ×0,4 à ×3. Les six vues techniques restent accessibles, la dernière étant orbitale. Gestes via Pointer Events et capture, annulation/nettoyage au démontage, redessin des gestes regroupé par frame. Build, test de bornes et deux E2E DOM/réseau passent (dont le chargement de la barge) ; aucun contrôle visuel automatisé.
+
+## Mise à jour — barge HD et vitrine unique (12 septembre 2026)
+
+Sur demande du propriétaire, la barge utilise uniquement le LOD0 : 934 594 triangles, dont 934 558 conservés de la source Tripo, textures albedo/normale 4096². `scripts/barge/preparer-source.py` remplace la décimation Blender ; normales quantifiées 16 bits, géométrie non simplifiée. Les deux anciens LOD sont retirés. Les autres unités gardent leurs budgets. La vitrine `/atelier/unites` ne présente plus les six vues techniques ni le sélecteur LOD : vue libre interactive au LOD0, rotation et zoom conservés. Validation artistique encore à effectuer par le propriétaire.

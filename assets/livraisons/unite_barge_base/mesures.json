@@ -1,17 +1,7 @@
 [
   {
     "lod": 0,
-    "triangles": 49956,
-    "octets": 1933960
-  },
-  {
-    "lod": 1,
-    "triangles": 11956,
-    "octets": 586224
-  },
-  {
-    "lod": 2,
-    "triangles": 2956,
-    "octets": 181936
+    "triangles": 934594,
+    "octets": 24533164
   }
 ]

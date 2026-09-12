@@ -147,7 +147,7 @@ function budget(ctx: Contexte, v: unknown, chemin: string): Budget | undefined {
   const cles = ['lod0', 'lod1', 'lod2', 'materiauxMax'];
   const o = objet(ctx, v, chemin, cles);
   if (!o || !requis(ctx, o, chemin, cles)) return undefined;
-  const lod0 = entier(ctx, o['lod0'], sous(chemin, 'lod0'), { min: 32, max: 60000 });
+  const lod0 = entier(ctx, o['lod0'], sous(chemin, 'lod0'), { min: 32, max: 1000000 });
   const lod1 = entier(ctx, o['lod1'], sous(chemin, 'lod1'), { min: 16, max: 60000 });
   const lod2 = entier(ctx, o['lod2'], sous(chemin, 'lod2'), { min: 8, max: 60000 });
   const materiauxMax = entier(ctx, o['materiauxMax'], sous(chemin, 'materiauxMax'), { min: 1, max: 4 });
@@ -167,7 +167,7 @@ function texture(ctx: Contexte, v: unknown, chemin: string): TextureSpec | undef
   const o = objet(ctx, v, chemin, cles);
   if (!o || !requis(ctx, o, chemin, cles)) return undefined;
   const canal = enumeration(ctx, o['canal'], sous(chemin, 'canal'), CANAUX_TEXTURE);
-  const resolutionBrute = entier(ctx, o['resolution'], sous(chemin, 'resolution'), { min: 256, max: 2048 });
+  const resolutionBrute = entier(ctx, o['resolution'], sous(chemin, 'resolution'), { min: 256, max: 4096 });
   const format = enumeration(ctx, o['format'], sous(chemin, 'format'), FORMATS_TEXTURE);
   const obligatoire = booleen(ctx, o['obligatoire'], sous(chemin, 'obligatoire'));
   const note = chaine(ctx, o['note'], sous(chemin, 'note'), { min: 8, max: 240 });

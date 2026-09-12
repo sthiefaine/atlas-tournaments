@@ -51,8 +51,8 @@ export const CANAUX_TEXTURE = [
 /** Canal d'une carte de texture. */
 export type CanalTexture = typeof CANAUX_TEXTURE[number];
 
-/** Résolutions admises : puissances de deux, 2048 au plus (budget mémoire mobile). */
-export const RESOLUTIONS_TEXTURE = [256, 512, 1024, 2048] as const;
+/** Résolutions admises : puissances de deux, 4096 au plus (sources HD explicitement retenues). */
+export const RESOLUTIONS_TEXTURE = [256, 512, 1024, 2048, 4096] as const;
 /** Résolution d'une carte de texture, en pixels de côté. */
 export type ResolutionTexture = typeof RESOLUTIONS_TEXTURE[number];
 
