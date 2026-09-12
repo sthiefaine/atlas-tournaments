@@ -7,7 +7,7 @@ import { decouperGlb } from '../../scripts/infanterie/gltf';
 import { lireSpec } from '../../scripts/controler-asset';
 import { validerGlb } from '../../src/assets';
 const id = 'unite_antiair_base';
-const dir = 'public/assets/modeles/';
+const dir = 'assets/livraisons/unite_antiair_base/';
 function png(channel: string) {
   const b = readFileSync(`${dir}${id}_${channel}.png`);
   const width = b.readUInt32BE(16), height = b.readUInt32BE(20);
@@ -68,4 +68,25 @@ for (const lod of [0] as const) test(`LOD${lod}: noms exacts, géométrie valide
   const off = animations.find(a => a.name === 'hors_jeu')!;
   const lamp = off.channels.find(c => nodes[c.target.node]!.name === 'socle' && c.target.path === 'scale')!;
   assert.deepEqual(values(off.samplers[lamp.sampler]!.output).slice(-3), [0, 0, 0]);
+});
+
+test('le candidat conserve les PNG externes et les trois repères séparés', () => {
+  const { document: d } = decouperGlb(readFileSync(`${dir}${id}_lod0.glb`));
+  for (const image of d.images as { uri: string; bufferView?: number }[]) {
+    assert.equal(image.bufferView, undefined);
+    assert.match(image.uri, /^unite_antiair_base_[a-z_]+\.png$/);
+    assert.deepEqual(readFileSync(`${dir}${image.uri}`), readFileSync(`public/assets/modeles/${image.uri}`), 'PNG existant conservé');
+  }
+  const metal = png('metal').rgb, orm = png('rugosite').rgb;
+  for (let i = 0; i < metal.length; i += 3) assert.equal(orm[i + 2], metal[i], 'canal B = métal éditable');
+  const mesures = JSON.parse(readFileSync(`${dir}reperes.json`, 'utf8'));
+  const gauche = mesures.reperes['marker--1'], droite = mesures.reperes['marker-1'];
+  assert.ok(droite.min[0] - gauche.max[0] > .09, 'les tubes restent clairement séparés');
+  assert.ok(mesures.reperes['radar-dish'].max[2] < gauche.min[2], 'radar distinct derrière les tubes');
+  assert.equal(mesures.pixelsParMetre, 48);
+  assert.equal(mesures.validationArtistique, false);
+  const nodes = d.nodes as { name: string }[];
+  for (const a of d.animations as { channels: { target: { node: number } }[] }[]) {
+    assert.ok(a.channels.every(c => nodes[c.target.node]!.name !== 'racine'));
+  }
 });

@@ -5,27 +5,18 @@ import { controlerDepot } from '../src/serveur/depot-modeles';
  */
 import * as T from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, existsSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { creerImage, encoderPng, pixel, type Rvb } from '../src/render/apercu/png';
 import { exporterGlb, decouperGlb, assemblerGlb } from './infanterie/gltf';
 import { lireSpec } from './controler-asset';
 import { validerGlb } from '../src/assets';
 
 const ID = 'unite_antiair_base';
-const out = path.resolve('public/assets/modeles');
+const texturesExistantes = path.resolve('public/assets/modeles');
 const delivery = path.resolve('assets/livraisons', ID);
 type V = [number, number, number];
 type Finish = 'paint' | 'team' | 'rubber' | 'metal' | 'dish' | 'signal';
 const slots = new Map<string, { index: number; finish: Finish }>();
-const finishes: Record<Finish, { color: Rvb; rough: number; metal: number }> = {
-  paint: { color: [107, 118, 123], rough: 0.57, metal: 0 },
-  team: { color: [170, 170, 170], rough: 0.5, metal: 0 },
-  rubber: { color: [38, 42, 43], rough: 0.91, metal: 0 },
-  metal: { color: [142, 151, 157], rough: 0.34, metal: 0.92 },
-  dish: { color: [206, 211, 208], rough: 0.63, metal: 0 },
-  signal: { color: [35, 234, 165], rough: 0.3, metal: 0 },
-};
 const names = ['racine', 'corps', 'base', 'socle', 'module_tourelle', 'module_radar'] as const;
 type NodeName = typeof names[number];
 const pivots: Record<NodeName, V> = {
@@ -38,6 +29,7 @@ const parents: Partial<Record<NodeName, NodeName>> = {
 const materials = ['mat_corps', 'mat_details'].map(name => new T.MeshStandardMaterial({ name, roughness: 1, metalness: 1 }));
 
 function build(lod: number) {
+  const reperes: Record<string, { min: number[]; max: number[] }> = {};
   const pieces = new Map<NodeName, [T.BufferGeometry[], T.BufferGeometry[]]>();
   for (const name of names) pieces.set(name, [[], []]);
   function add(key: string, node: NodeName, finish: Finish, g: T.BufferGeometry, pos: V, rotation: V = [0, 0, 0]) {
@@ -53,20 +45,27 @@ function build(lod: number) {
     g.applyMatrix4(new T.Matrix4().makeRotationFromEuler(new T.Euler(...rotation)));
     const p = pivots[node];
     g.translate(pos[0] - p[0], pos[1] - p[1], pos[2] - p[2]);
+    if (!g.getAttribute('normal')) g.computeVertexNormals();
+    if (['hull', 'track--1', 'track-1', 'marker--1', 'marker-1', 'radar-dish'].includes(key)) {
+      g.computeBoundingBox();
+      const b = g.boundingBox!.clone().translate(new T.Vector3(...p));
+      reperes[key] = { min: b.min.toArray(), max: b.max.toArray() };
+    }
     const source = g.index ? g.toNonIndexed() : g;
     // Lathe poles contain collapsed triangles; remove them before export.
-    const positions = source.getAttribute('position'), sourceUv = source.getAttribute('uv');
-    const keptPositions: number[] = [], keptUv: number[] = [];
+    const positions = source.getAttribute('position'), sourceUv = source.getAttribute('uv'), sourceNormal = source.getAttribute('normal');
+    const keptPositions: number[] = [], keptUv: number[] = [], keptNormals: number[] = [];
     const a = new T.Vector3(), b = new T.Vector3(), c = new T.Vector3();
     for (let i = 0; i < positions.count; i += 3) {
       a.fromBufferAttribute(positions, i); b.fromBufferAttribute(positions, i + 1); c.fromBufferAttribute(positions, i + 2);
       if (b.sub(a).cross(c.sub(a)).lengthSq() < 1e-18) continue;
-      for (let j = i; j < i + 3; j++) { keptPositions.push(positions.getX(j), positions.getY(j), positions.getZ(j)); keptUv.push(sourceUv.getX(j), sourceUv.getY(j)); }
+      for (let j = i; j < i + 3; j++) { keptPositions.push(positions.getX(j), positions.getY(j), positions.getZ(j)); keptUv.push(sourceUv.getX(j), sourceUv.getY(j)); keptNormals.push(sourceNormal.getX(j), sourceNormal.getY(j), sourceNormal.getZ(j)); }
     }
     const flat = new T.BufferGeometry();
     flat.setAttribute('position', new T.Float32BufferAttribute(keptPositions, 3));
     flat.setAttribute('uv', new T.Float32BufferAttribute(keptUv, 2));
-    flat.computeVertexNormals();
+    // Garder les normales lisses des courbes, et les arêtes franches des plaques.
+    flat.setAttribute('normal', new T.Float32BufferAttribute(keptNormals, 3));
     pieces.get(node)![finish === 'paint' || finish === 'team' ? 0 : 1].push(flat);
   }
   function box(key: string, node: NodeName, finish: Finish, pos: V, size: V, rotation?: V) {
@@ -79,7 +78,7 @@ function build(lod: number) {
     }
     add(key, node, finish, g, pos, rotation);
   }
-  function cylinder(key: string, node: NodeName, finish: Finish, pos: V, radius: number, length: number, axis: 'x' | 'y' | 'z', n = [12, 8, 6][lod]!) {
+  function cylinder(key: string, node: NodeName, finish: Finish, pos: V, radius: number, length: number, axis: 'x' | 'y' | 'z', n = [24, 8, 6][lod]!) {
     add(key, node, finish, new T.CylinderGeometry(radius, radius, length, n, 1), pos,
       axis === 'x' ? [0, 0, Math.PI / 2] : axis === 'z' ? [Math.PI / 2, 0, 0] : [0, 0, 0]);
   }
@@ -88,6 +87,7 @@ function build(lod: number) {
     const g = new T.BoxGeometry(...lower);
     const p = g.getAttribute('position');
     for (let i = 0; i < p.count; i++) if (p.getY(i) > 0) p.setXYZ(i, p.getX(i) * top[0] / lower[0], p.getY(i), p.getZ(i) * top[2] / lower[2]);
+    g.computeVertexNormals();
     add(key, node, finish, g, pos);
   }
   hull('hull', 'corps', 'paint', [0, 0.19, -0.015], [0.49, 0.15, 0.75], [0.36, 0.15, 0.56]);
@@ -125,7 +125,7 @@ function build(lod: number) {
       cylinder(`wheel-${s}-${i}`, 'base', 'metal', [s * 0.263, 0.101, -0.285 + i * 0.19], 0.072, 0.082, 'x');
       if (lod < 2) {
         cylinder(`tire-${s}-${i}`, 'base', 'rubber', [s * 0.261, 0.101, -0.285 + i * 0.19], 0.079, 0.065, 'x');
-        cylinder(`hub-${s}-${i}`, 'base', 'paint', [s * 0.307, 0.101, -0.285 + i * 0.19], 0.032, 0.006, 'x', 8);
+        cylinder(`hub-${s}-${i}`, 'base', 'paint', [s * 0.307, 0.101, -0.285 + i * 0.19], 0.032, 0.006, 'x', 12);
       }
     }
     // Broad rubber shoes over the continuous belt, no disconnected track links.
@@ -140,18 +140,18 @@ function build(lod: number) {
   for (const s of [-1, 1]) {
     box(`turret-team-${s}`, 'module_tourelle', 'team', [s * 0.158, 0.318, 0.008], [0.012, 0.066, 0.229], [0, 0, s * 0.33]);
     cylinder(`marker-${s}`, 'module_tourelle', 'paint', [s * 0.09, 0.331, 0.249], 0.042, 0.228, 'z');
-    cylinder(`muzzle-${s}`, 'module_tourelle', 'metal', [s * 0.09, 0.331, 0.35], 0.047, 0.027, 'z', lod === 2 ? 4 : [12, 8][lod]!);
-    cylinder(`aperture-${s}`, 'module_tourelle', 'rubber', [s * 0.09, 0.331, 0.364], 0.031, 0.003, 'z', lod === 2 ? 4 : [12, 8][lod]!);
+    cylinder(`muzzle-${s}`, 'module_tourelle', 'metal', [s * 0.09, 0.331, 0.35], 0.047, 0.027, 'z', lod === 2 ? 4 : [24, 8][lod]!);
+    cylinder(`aperture-${s}`, 'module_tourelle', 'rubber', [s * 0.09, 0.331, 0.364], 0.031, 0.003, 'z', lod === 2 ? 4 : [24, 8][lod]!);
   }
   if (lod < 2) box('turret-hatch', 'module_tourelle', 'metal', [0, 0.375, 0.023], [0.106, 0.01, 0.12]);
   // Hinged radar support: all its vertices are above the hinge; folds as one module.
   box('radar-arm', 'module_radar', 'metal', [0, 0.402, -0.17], [0.032, 0.079, 0.034], [-0.32, 0, 0]);
-  if (lod < 2) cylinder('radar-hinge', 'module_radar', 'paint', [0, 0.372, -0.169], 0.025, 0.059, 'x', 8);
+  if (lod < 2) cylinder('radar-hinge', 'module_radar', 'paint', [0, 0.372, -0.169], 0.025, 0.059, 'x', 12);
   // Thick shallow concave dish, angled upwards for top-down readability.
-  const n = [20, 12, 6][lod]!;
+  const n = [32, 12, 6][lod]!;
   const dish = new T.LatheGeometry([new T.Vector2(0, -0.017), new T.Vector2(0.095, 0.006), new T.Vector2(0.098, 0.026), new T.Vector2(0.083, 0.019), new T.Vector2(0, -0.005)], n);
   add('radar-dish', 'module_radar', 'dish', dish, [0, 0.447, -0.178], [0.32, 0, 0]);
-  if (lod < 2) cylinder('dish-feed', 'module_radar', 'metal', [0, 0.464, -0.173], 0.015, 0.035, 'y', 8);
+  if (lod < 2) cylinder('dish-feed', 'module_radar', 'metal', [0, 0.464, -0.173], 0.015, 0.035, 'y', 12);
   // Status lamp on an existing named rigid node: scale hides it on switch-off.
   box('status', 'socle', 'signal', pivots.socle, [0.046, 0.018, 0.01]);
   const nodes = new Map<NodeName, T.Object3D>();
@@ -178,7 +178,7 @@ function build(lod: number) {
   const root = nodes.get('racine')!;
   root.updateMatrixWorld(true);
   const bounds = new T.Box3().setFromObject(root);
-  return { root, triangles, bounds, nodes };
+  return { root, triangles, bounds, nodes, reperes };
 }
 
 function clips() {
@@ -213,28 +213,12 @@ function clips() {
   });
 }
 
+/** Les six PNG existants sont conservés à l’octet près ; aucune nouvelle peinture. */
 function textures() {
-  const result = new Map<string, Uint8Array>();
-  // Semantic per-channel PNGs; ORM is packed only inside the GLB.
-  for (const channel of ['albedo', 'normale', 'rugosite', 'metal', 'masque_equipe', 'emission', 'orm']) {
-    const size = ['albedo', 'normale'].includes(channel) ? 1024 : 512;
-    const img = creerImage(size, size, channel === 'normale' ? [128, 128, 255] : [0, 0, 0]);
-    for (const { index, finish } of slots.values()) {
-      const m = finishes[finish], cell = size / 16;
-      for (let y = 0; y < cell; y++) for (let x = 0; x < cell; x++) {
-        const noise = ((Math.imul(x + index * 19, 73) ^ Math.imul(y, 193)) & 15) / 15 - 0.5;
-        let c: Rvb;
-        if (channel === 'albedo') c = m.color.map(v => Math.round(v + noise * (finish === 'rubber' ? 6 : 2))) as V;
-        else if (channel === 'normale') c = [Math.round(128 + noise * 5), Math.round(128 + Math.sin(x * 0.6) * (finish === 'rubber' ? 7 : 1)), 255];
-        else if (channel === 'masque_equipe') c = finish === 'team' ? [255, 255, 255] : [0, 0, 0];
-        else if (channel === 'emission') c = finish === 'signal' ? [18, 220, 130] : [0, 0, 0];
-        else { const r = Math.round((m.rough + noise * 0.02) * 255), metal = Math.round(m.metal * 255); c = channel === 'orm' ? [255, r, metal] : channel === 'metal' ? [metal, metal, metal] : [r, r, r]; }
-        pixel(img, index % 16 * cell + x, Math.floor(index / 16) * cell + y, c);
-      }
-    }
-    result.set(channel, encoderPng(img));
-  }
-  return result;
+  return new Map(['albedo', 'normale', 'rugosite', 'metal', 'masque_equipe', 'emission'].map(channel => {
+    const nom = `${ID}_${channel}.png`, livre = path.join(delivery, nom);
+    return [channel, readFileSync(existsSync(livre) ? livre : path.join(texturesExistantes, nom))];
+  }));
 }
 
 async function main() {
@@ -242,7 +226,6 @@ async function main() {
   const scenes = [0].map(build);
   const maps = textures(), animations = clips();
   // glTF lit rugosité en G et métal en B : une seule carte partagée entre LODs.
-  maps.set('rugosite', maps.get('orm')!); maps.delete('orm');
   const files = new Map<string, Uint8Array>();
   for (const [channel, data] of maps) if (channel !== 'orm') files.set(`${ID}_${channel}.png`, data);
   const report: unknown[] = [];
@@ -274,9 +257,18 @@ async function main() {
   }
   const reception = controlerDepot(spec, [...files].map(([nom, octets]) => ({ nom, octets })));
   if (!reception.ok) throw new Error(JSON.stringify(reception));
-  mkdirSync(out, { recursive: true }); mkdirSync(delivery, { recursive: true });
-  for (const [name, bytes] of files) writeFileSync(path.join(out, name), bytes);
+  mkdirSync(delivery, { recursive: true });
+  for (const [name, bytes] of files) writeFileSync(path.join(delivery, name), bytes);
   writeFileSync(path.join(delivery, 'validation.json'), JSON.stringify(report, null, 2));
+  // Projections numériques des trois repères, sans capture ni jugement de silhouette.
+  const projections = Object.fromEntries([['dessus', 90, 0], ['trois_quarts', 45, 45], ['jeu_65', 65, 0]].map(([nom, elevation, azimut]) => {
+    const e = Number(elevation) * Math.PI / 180, a = Number(azimut) * Math.PI / 180;
+    return [nom, Object.fromEntries(Object.entries(scenes[0]!.reperes).map(([cle, b]) => {
+      const points = [b.min[0]!, b.max[0]!].flatMap(x => [b.min[1]!, b.max[1]!].flatMap(y => [b.min[2]!, b.max[2]!].map(z => [48 * (x * Math.cos(a) - z * Math.sin(a)), 48 * (y * Math.cos(e) - (x * Math.sin(a) + z * Math.cos(a)) * Math.sin(e))])));
+      return [cle, { largeurPx: Math.max(...points.map(p => p[0]!)) - Math.min(...points.map(p => p[0]!)), hauteurPx: Math.max(...points.map(p => p[1]!)) - Math.min(...points.map(p => p[1]!)) }];
+    }))];
+  }));
+  writeFileSync(path.join(delivery, 'reperes.json'), JSON.stringify({ pixelsParMetre: 48, methode: 'projection_des_boites_englobantes_sans_rendu', validationArtistique: false, reperes: scenes[0]!.reperes, projections }, null, 2) + '\n');
   writeFileSync(path.join(delivery, 'atlas.json'), JSON.stringify({ grid: 16, uvOrigin: 'glTF image top-left', paddingAt512: 4, parts: Object.fromEntries(slots) }, null, 2));
   console.log(JSON.stringify(report, null, 2));
 }

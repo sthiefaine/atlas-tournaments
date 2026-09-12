@@ -393,3 +393,7 @@ Décision du propriétaire : le catalogue courant complet de 30 unités devient 
 ## Interface commune — 13 septembre 2026
 
 Refonte des boutons et cartes : surfaces bleu nuit, accent menthe, angles arrondis, ombres discrètes, focus clavier conservé. Les cinq CSS publics, l'administration, les fiches assets, les ateliers et les panneaux du HUD suivent cette direction. /jeu distingue l'entrée campagne (dix entraînements), les parties libres et les essais ; les numéros de catalogue n'y sont plus exposés. Les sauvegardes, objectifs et règles ne changent pas. Trois agents ont apporté des perspectives simulées (adolescent, joueuse adulte, designer novateur), pas des tests utilisateurs humains. Contrôles DOM et styles calculés uniquement selon la consigne de vérification ; validation esthétique laissée au propriétaire.
+
+## Anti-air de base — candidat du 13 septembre 2026
+
+`assets/livraisons/unite_antiair_base` contient le candidat LOD0 à 4 040 triangles (6 000 autorisés), 569 911 octets pour les sept fichiers. Six PNG préservés à l’octet près ; courbes subdivisées et normales lisses, positions des attaches et animations inchangées. `scripts/antiair/integrer.ts` expose uniquement ce lot dans l’inspecteur via `/assets/candidats`, après contrôle complet. Le modèle actif et les kits ne sont pas remplacés. Les repères projetés figurent dans `reperes.json` ; ni ces mesures ni les tests DOM ne valent approbation artistique. La revue visuelle humaine reste à faire.

@@ -1,7 +1,7 @@
 {
   "id": "unite_antiair_base",
-  "revision": "6a84c687ac0650e441ab64aef205794798a7ea7cccaf79c165b722a74c680d55",
-  "octets": 763055,
+  "revision": "2c1869fd89b96342dccc4a5be19e154a12ed6b1f0ec8f9163203f09dd0d34f5d",
+  "octets": 569911,
   "verdict": {
     "ok": true,
     "motifs": [],
@@ -16,5 +16,7 @@
     ],
     "inconnus": [],
     "lodManquants": []
-  }
+  },
+  "approbationArtistique": false,
+  "integration": "candidat_inspecteur"
 }
