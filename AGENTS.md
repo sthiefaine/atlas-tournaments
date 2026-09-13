@@ -448,3 +448,7 @@ Le salon ne présente plus le carnet. Le fanion de mission propose un lien Carne
 ### Départ sans illustration ni salon — 13 septembre 2026
 
 Le départ conserve uniquement le choix de sauvegarde/nom/difficulté, centré sans illustration. Il ouvre directement `/campagne`. `/campagne/salon` redirige vers la carte pour les anciens liens ; les retours de mission vont directement à la carte, et celui de la carte au choix du profil. Le retour des réglages précède le titre dans le DOM et reste à gauche. Aucun test/build lancé, conformément à la demande.
+
+### Atelier : toutes les unités par défaut
+
+Le sélecteur ouvre sur « Toutes les unités » (camp bleu). Un paramètre `unite` explicite conserve la sélection partagée ; revenir à Toutes retire ce paramètre et recentre le plateau. Aucun test/build lancé.

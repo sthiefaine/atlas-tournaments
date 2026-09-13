@@ -186,7 +186,7 @@ function useAgencement(): 'pc' | 'mobile' {
 interface Toast { texte: string; fixe: boolean }
 
 export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; simple?: boolean }): React.ReactElement {
-  const [uniteChoisie, setUniteChoisie] = useState('infanterie');
+  const [uniteChoisie, setUniteChoisie] = useState('toutes');
   const [index, setIndex] = useState(VUE_DEFAUT.monde);
   const [biome, setBiome] = useState<Biome>(VUE_DEFAUT.biome);
   const [saison, setSaison] = useState<Saison>(VUE_DEFAUT.saison);
@@ -272,7 +272,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   const [etat, setEtat] = useState<EtatPartie>(etatNeuf);
   useEffect(() => { setEtat(etatNeuf); }, [etatNeuf]);
 
-  const etatAffiche = useMemo(() => simple ? { ...etat, unites: etat.unites.filter(u => u.camp === 0 && u.type === uniteChoisie) } : etat, [etat, simple, uniteChoisie]);
+  const etatAffiche = useMemo(() => simple ? { ...etat, unites: etat.unites.filter(u => u.camp === 0 && (uniteChoisie === 'toutes' || u.type === uniteChoisie)) } : etat, [etat, simple, uniteChoisie]);
 
   const vue = useMemo<VueInteraction>(() => ({
     catalogue,
@@ -371,9 +371,13 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
 
   useEffect(() => {
     if (!simple) return;
+    if (uniteChoisie === 'toutes') {
+      rendu.current?.recentrer?.({ x: Math.floor(etatAffiche.largeur / 2), y: Math.floor(etatAffiche.hauteur / 2) });
+      return;
+    }
     const unite = etatAffiche.unites[0];
     if (unite) rendu.current?.recentrer?.({ x: unite.x, y: unite.y });
-  }, [simple, etatAffiche]);
+  }, [simple, etatAffiche, uniteChoisie]);
 
   // ---- La vue dans l'URL -------------------------------------------------
   const vueBanc = useMemo<VueBanc>(() => ({
@@ -386,7 +390,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   useEffect(() => {
     if (!urlLue.current) return;
     const params = new URLSearchParams(encoderVue(vueBanc));
-    if (simple) params.set('unite', uniteChoisie);
+    if (simple && uniteChoisie !== 'toutes') params.set('unite', uniteChoisie);
     const requete = params.toString();
     window.history.replaceState(null, '', `${window.location.pathname}${requete ? `?${requete}` : ''}`);
   }, [vueBanc, simple, uniteChoisie]);
@@ -625,6 +629,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     <label className={styles.selecteurUnite}>
       <span>Unité</span>
       <select value={uniteChoisie} onChange={e => setUniteChoisie(e.target.value)}>
+        <option value="toutes">Toutes les unités</option>
         {Object.values(catalogueCanon.unites).map(u => <option key={u.cle} value={u.cle}>{nomUnite('fr', catalogueCanon, u.cle)}</option>)}
       </select>
     </label>
