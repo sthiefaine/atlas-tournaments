@@ -125,7 +125,7 @@ export function fichesRoster(o: OptionsFiches): FicheRoster[] {
     if (!ouvert(s.cle, false)) {
       return {
         id: `secret_${rang + 1}`, cle: '', etat: 'secret', nom: '', style: '', gout: '',
-        lignes: [], porte: '', indice: s.indice, defaut: false,
+        lignes: [], porte: '', indice: '', defaut: false,
       };
     }
     const decrit = o.decrire(s.cle);

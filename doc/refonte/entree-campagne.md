@@ -23,3 +23,9 @@ Aucun test, build ou contrôle visuel exécuté pour cette suite, conformément 
 ## Direction visuelle de l’écran de départ
 
 Suite au rejet du rendu « blog », `/campagne/depart` utilise un menu dédié, sans modifier les styles partagés du journal et du salon : diorama SVG original (terrain, ponts, QG et véhicule), signature Atlas, deux emplacements de sauvegarde verticaux numérotés, sélection de difficulté puis bouton de validation unique. Les textes sont raccourcis, les états sélectionné/verrouillé contrastés. La saisie du nom conserve Entrée pour valider, Plus tard pour ignorer, Retour et Échap pour revenir aux profils. Les doubles départs sont désactivés pendant la navigation. Les réglages, les sauvegardes et la règle de déblocage ne changent pas. Mise en page adaptée aux petits écrans et préférence de mouvement réduit respectée. Aucun téléchargement de texture/GLB supplémentaire pour ce menu. Aucun test, build ou examen visuel exécuté ; appréciation artistique par le propriétaire.
+
+## Carte allégée, aucun indice de commandant
+
+Après le retour du propriétaire sur la densité d’informations, `/campagne` ne présente que l’identité du profil/mode, la carte et le nom/objectif/action de la mission choisie. Retirés de cette page : introduction narrative, briefing détaillé, collection de commandants, portes de déblocage, silhouettes secrètes, journal des décisions, accès assets, fronts secondaires et guide des commandants. Les récits restent dans les missions et les rencontres dans le journal dédié. Le nom sur la carte n’apparaît que pour l’étape disponible/remportée sélectionnée ; les étapes verrouillées restent anonymes et ne dévoilent pas leur briefing.
+
+Les indices secrets ne sont plus émis par `fichesRoster`, ni affichés par le sélecteur de commandant en briefing. Le texte public annonçant des indices est remplacé. Les conditions de déblocage du moteur et la progression ne changent pas. Aucun test, build ou contrôle visuel exécuté.

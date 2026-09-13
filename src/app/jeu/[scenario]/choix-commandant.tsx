@@ -125,7 +125,6 @@ export default function ChoixCommandant(
             {f.defaut ? <span className="vestiaire-plaque" data-plaque="defaut">{libelles.defaut}</span> : null}
             {f.etat === 'verrouille' ? <span className="vestiaire-plaque" data-plaque="verrouille">{libelles.verrouille}</span> : null}
             {f.porte !== '' ? <span className="vestiaire-porte">{f.porte}</span> : null}
-            {f.indice !== '' ? <span className="vestiaire-indice"><b>{libelles.indice}</b>{f.indice}</span> : null}
           </button>
 
           {/* Le détail de la case retenue s'ouvre **là où elle est**, en pleine

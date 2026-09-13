@@ -4769,7 +4769,7 @@
     },
     {
       "cle": "vestiaire.note",
-      "texte": "Votre vestiaire s’ouvre au fil des titres. Le banc de l’épreuve est retenu d’avance : parcourez la grille, lisez ce que chacun change, et prenez celui que la carte demande.",
+      "texte": "Choisissez un commandant disponible.",
       "contexte": {
         "ecran": "campagne",
         "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."
@@ -4922,7 +4922,7 @@
     },
     {
       "cle": "vestiaire.carnet_note",
-      "texte": "Chaque titre ouvre un banc. Quatre commandants ne s’annoncent que par un indice : ils ne sont indispensables à aucun fil, et c’est ce qui permet de les rendre difficiles.",
+      "texte": "Choisissez un commandant disponible.",
       "contexte": {
         "ecran": "campagne",
         "note": "Le vestiaire : le choix du commandant au briefing parmi ceux que le joueur a débloqués, et la collection au carnet (13-campagne.md §8)."

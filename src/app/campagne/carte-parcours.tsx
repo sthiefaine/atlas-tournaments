@@ -8,7 +8,7 @@ export function CarteParcours({ epreuves, etats, active, choisir }: { epreuves: 
   const colonnes = 5, rangs = Math.ceil(epreuves.length / colonnes), hauteur = Math.max(480, rangs * 150 + 130);
   const point = (i: number) => { const r = Math.floor(i / colonnes), c = i % colonnes; return { x: 90 + (r % 2 ? colonnes - 1 - c : c) * 165, y: 100 + r * 150 + (c % 2 ? 25 : 0) }; };
   const trace = epreuves.map((_, i) => { const p = point(i); return `${i ? 'L' : 'M'}${p.x},${p.y}`; }).join(' ');
-  return <section className={styles.cadre} aria-label="Carte de la campagne"><div className={styles.entete}><strong>Votre route à travers Atlas</strong><span>✓ Remportée · ● Disponible · 🔒 À débloquer</span></div>
+  return <section className={styles.cadre} aria-label="Carte de la campagne"><div className={styles.entete}><span>✓ Terminée · ● Disponible · 🔒 Verrouillée</span></div>
     <div className={styles.defilement}><div className={styles.carte} style={{ height: hauteur }}>
       <svg viewBox={`0 0 900 ${hauteur}`} preserveAspectRatio="none" aria-hidden="true">
         <defs><pattern id="atlas-mer" width="40" height="35" patternUnits="userSpaceOnUse"><path d="M5 20q8 5 16 0" stroke="#6ca5b9" fill="none" opacity=".35" /></pattern></defs>
@@ -20,7 +20,7 @@ export function CarteParcours({ epreuves, etats, active, choisir }: { epreuves: 
         <path d={trace} fill="none" stroke="#546c53" strokeWidth="14" strokeLinejoin="round"/><path d={trace} fill="none" stroke="#f0dfa6" strokeWidth="8" strokeDasharray="8 5" strokeLinejoin="round"/>
         {epreuves.map((_,i)=>{const p=point(i);return <g key={i} transform={`translate(${p.x-32} ${p.y-24})`}><rect x="-10" y="-7" width="22" height="17" fill="#f5e6ba"/><path d="M-15-7 1-18 17-7Z" fill={i<10?'#63788a':'#bd7050'}/></g>;})}
       </svg>
-      {epreuves.map((m,i)=>{const p=point(i), etat=etats[i]??'verrouillee';return <button key={m.cle} className={styles.etape} style={{left:`${p.x/9}%`,top:p.y}} data-etat={etat} aria-current={i===active?'step':undefined} aria-controls="dossier-mission" aria-label={`${m.rang} : ${m.nom}, ${etat==='gagnee'?'remportée':etat==='ouverte'?'disponible':'verrouillée'}`} onClick={()=>choisir(i)}><span className={styles.numero}>{etat==='gagnee'?'✓':etat==='verrouillee'?'🔒':i+1}</span><span className={styles.nom}>{m.nom}</span>{i===active&&<span className={styles.position}>▼</span>}</button>;})}
-    </div></div><p className={styles.legende}>Sélectionnez une étape pour lire l’objectif. Les étapes futures se découvrent au fil de la progression.</p>
+      {epreuves.map((m,i)=>{const p=point(i), etat=etats[i]??'verrouillee';return <button key={m.cle} className={styles.etape} style={{left:`${p.x/9}%`,top:p.y}} data-etat={etat} aria-current={i===active?'step':undefined} aria-controls="dossier-mission" aria-label={etat === 'verrouillee' ? `${m.rang}, verrouillée` : `${m.rang} : ${m.nom}, ${etat === 'gagnee' ? 'remportée' : 'disponible'}`} onClick={()=>choisir(i)}><span className={styles.numero}>{etat==='gagnee'?'✓':etat==='verrouillee'?'🔒':i+1}</span>{(etat !== 'verrouillee' && i === active) && <span className={styles.nom}>{m.nom}</span>}{i===active&&<span className={styles.position}>▼</span>}</button>;})}
+    </div></div>
   </section>;
 }

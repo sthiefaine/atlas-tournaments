@@ -1,19 +1,14 @@
-import { GuideCommandants } from './commandants';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { t } from '@/i18n/index';
-import { chargerCatalogue } from '@/engine/index';
-import { chargerCommandantsJouables } from '@/content/commandants-jouables';
 import { paletteDe } from '@/render/palettes';
 import { validerMapDef, validerScenario, type CampId, type MapDef, type Resultat, type Scenario } from '@/schemas/index';
 
 import campagneJson from '../../../content/campagne.json';
 import terrainsJson from '../../../content/terrains.json';
 import { vignetteCarte } from '../jeu/parties-libres';
-import { ParcoursAube } from './parcours-aube';
-import Carnet, { type EpreuveCarnet, type VestiaireCarnet } from './carnet';
-import { descripteurCommandant, porteCommandant } from './roster';
+import Carnet, { type EpreuveCarnet } from './carnet';
 import { SOURCES_DECISION, optionsDecision } from './consequences';
 import { CLES_I18N_BANC, estSourceBanc } from './bancs';
 import { nomCourt } from './itineraire';
@@ -83,40 +78,6 @@ async function lireDossier<T>(dossier: string, valider: (brut: unknown) => Resul
   return valeurs;
 }
 
-/**
- * Le vestiaire, composé côté serveur : le roster du canon, chaque kit lu au
- * catalogue tactique, chaque porte dite une fois. Le carnet n'a plus qu'à
- * décider de l'état de chaque case, ce qui demande la progression et ne peut
- * donc se faire qu'au client.
- *
- * La révision **4** est celle du catalogue courant : le carnet montre le kit
- * tel qu'il se joue aujourd'hui, pas celui d'une épreuve gelée à la révision 1.
- */
-function vestiaireCarnet(): VestiaireCarnet {
-  const roster = chargerCommandantsJouables();
-  const tr = (cle: string, params?: Record<string, string | number>) => t(locale, cle, params);
-  const decrire = descripteurCommandant(tr, locale, chargerCatalogue(), 4);
-  const cles = [...roster.jouables.map((j) => j.cle), ...roster.secrets.map((s) => s.cle)];
-  const portes = [...new Set(roster.jouables.map((j) => j.ouvertPar))];
-  const total = cles.length;
-  return {
-    roster,
-    descriptions: Object.fromEntries(cles.map((cle) => [cle, decrire(cle)])),
-    portes: Object.fromEntries(portes.map((p) => [p, porteCommandant(tr, locale, p)])),
-    titre: t(locale, 'vestiaire.carnet_titre'),
-    note: t(locale, 'vestiaire.carnet_note'),
-    // Un tableau borné plutôt qu'un `t()` embarqué, comme la jauge de l'itinéraire.
-    comptes: Array.from({ length: total + 1 }, (_, n) => t(locale, 'vestiaire.compte', { acquis: n, total })),
-    comptesSecrets: Array.from({ length: roster.secrets.length + 1 },
-      (_, n) => t(locale, 'vestiaire.compte_secrets', { n })),
-    grille: t(locale, 'vestiaire.grille'),
-    verrouille: t(locale, 'vestiaire.verrouille'),
-    secret: t(locale, 'vestiaire.secret'),
-    indice: t(locale, 'vestiaire.indice'),
-    kit: t(locale, 'vestiaire.kit'),
-  };
-}
-
 export default async function PageCampagne(): Promise<React.ReactElement> {
   const [scenarios, cartes] = await Promise.all([
     lireDossier<Scenario>('scenarios', validerScenario),
@@ -157,7 +118,6 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
 
   return <><Carnet
     epreuves={epreuves}
-    vestiaire={vestiaireCarnet()}
     libelles={{
       journalTitre: t(locale, 'aube.journal'),
       journalNote: t(locale, 'aube.journal_note'),
@@ -191,5 +151,5 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
         o.titre, { titre: t(locale, CLES_I18N_BANC.journal, { banc: t(locale, o.titre) }), effet: t(locale, o.effet) },
       ]))),
     }}
-  /><details className="campagne-complements"><summary>Autres fronts et quêtes secondaires</summary><ParcoursAube /></details><details className="campagne-complements"><summary>Les commandants</summary><GuideCommandants /></details></>;
+  /></>;
 }

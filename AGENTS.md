@@ -432,3 +432,7 @@ Après profil/nom/difficulté, `/campagne/salon` propose Continuer (carte) ou Jo
 ### Écran de départ : présentation de jeu
 
 `campagne/depart/menu.module.css` et `theatre.tsx` donnent au départ une présentation dédiée de menu de jeu (diorama SVG original, emplacements numérotés, sélection puis validation de difficulté). L’ancienne feuille partagée reste au salon/journal. Aucune nouvelle ressource lourde, aucune modification des sauvegardes ou du déblocage. Aucun test/build ni validation visuelle lancé, selon la consigne.
+
+### Carte de campagne allégée et indices retirés
+
+Le propriétaire rejette la densité de `/campagne` : écran réduit à profil/mode, carte et objectif/bouton de la mission sélectionnée. Plus de vestiaire, liste de futurs commandants, journal détaillé, guide, fronts annexes ni lien assets sur cette page. Les étapes verrouillées restent anonymes. Les indices secrets sont vides dans `fichesRoster` et retirés du sélecteur en briefing, sans changer les déblocages. Aucun test/build lancé.
