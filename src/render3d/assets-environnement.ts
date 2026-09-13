@@ -10,6 +10,7 @@ import type { InventaireModeles } from '../assets/spec';
 
 /** Le QG français livré avant le nom national générique reste un repli explicite. */
 export function candidatsBatiment(terrain:string,pays?:string):string[] {
+  if (terrain === 'qg') return ['batiment_qg_base', ...(pays ? [`batiment_qg_${pays}`] : [])];
   return [...(pays?[`batiment_${terrain}_${pays}`]:[]),`batiment_${terrain}_base`];
 }
 export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>,inventaire:InventaireModeles):string[] {

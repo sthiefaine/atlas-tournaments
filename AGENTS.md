@@ -505,3 +505,7 @@ Le carnet en dialogue natif utilise une liste de production et un aperçu 3D man
 
 ## Marées — 13 septembre 2026
 Le bulletin affiche marée haute/basse selon les paramètres de la mécanique pour chaque journée prévue. À la montée, une unité terrestre prise sur la grève perd 40 PV internes (4 affichés), puis est repoussée si elle survit. Cargo, ponts posés et unités capables de naviguer sont exemptés. Moteur 9 : ancienne sauvegarde de partie incompatible, progression conservée. Aucun test exécuté.
+
+
+## QG uploadé — 13 septembre 2026
+Base QG activée sur source SHA 71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326 (copie locale identique, API sans session 403). 873807 triangles source conservés, 36 ajoutés (parcelle/mât/fanion), échelle uniforme, 3 textures 4K conservées. GLB Meshopt sans quantification 11309588 octets, lot 31492496 octets. Contrôle technique ok, aucune approbation artistique prétendue. Émission noire : fenêtres nocturnes non peintes. Le sélecteur QG préfère la base active à l’ancien kit national ; aucune variante générée.

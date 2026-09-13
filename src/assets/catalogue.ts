@@ -1127,7 +1127,7 @@ const GABARIT_BATIMENT: Record<string, { x: number; y: number; z: number; tris: 
   ville: { x: 0.85, y: 0.7, z: 0.85, tris: [5000, 1600, 450] },
   usine: { x: 0.9, y: 0.8, z: 0.9, tris: [5600, 1800, 500] },
   aeroport: { x: 0.92, y: 0.45, z: 0.92, tris: [4200, 1400, 400] },
-  qg: { x: 0.85, y: 0.95, z: 0.85, tris: [6500, 2100, 600] },
+  qg: { x: 0.85, y: 0.95, z: 0.85, tris: [875000, 2100, 600] },
 };
 
 /**
@@ -1224,9 +1224,9 @@ export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
     pivot: pivot(true),
     budget: budget(g.tris[0], 3),
     textures: [
-      tex('albedo', 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
-      tex('normale', 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
-      tex('rugosite', 512, true, 'Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées.'),
+      tex('albedo', t.cle === 'qg' ? 4096 : 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
+      tex('normale', t.cle === 'qg' ? 4096 : 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
+      tex('rugosite', t.cle === 'qg' ? 4096 : 512, true, 'Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées.'),
       tex('emission', 512, true, 'Fenêtres et lanterneaux éclairés : c’est ce qui fait la nuit du jeu.'),
       tex('masque_equipe', 512, true, 'Stores, rives de toit, fanion : les surfaces qui prennent la nation.'),
     ],

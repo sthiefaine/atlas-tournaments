@@ -1,0 +1,21 @@
+{
+  "source": "modern wooden house 3d model.glb",
+  "sha256": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326",
+  "trianglesSource": 873807,
+  "trianglesLivres": 873843,
+  "trianglesAjoutes": 36,
+  "trianglesParAttache": [
+    730718,
+    143113,
+    12
+  ],
+  "pixelsEquipe": 16569,
+  "approbationArtistique": false,
+  "limites": [
+    "Segmentation g\u00e9om\u00e9trique des attaches \u00e0 v\u00e9rifier humainement",
+    "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+    "Orientation front \u00e0 confirmer dans inspecteur",
+    "\u00c9mission noire conservatrice : fen\u00eatres source non isol\u00e9es",
+    "Source mise \u00e0 \u00e9chelle uniforme ; parcelle et fanion ajout\u00e9s pour gabarit"
+  ]
+}

@@ -51,27 +51,27 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 6500,
+    "lod0": 875000,
     "materiauxMax": 3
   },
   "textures": [
     {
       "canal": "albedo",
-      "resolution": 1024,
+      "resolution": 4096,
       "format": "png",
       "obligatoire": true,
       "note": "Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre."
     },
     {
       "canal": "normale",
-      "resolution": 1024,
+      "resolution": 4096,
       "format": "png",
       "obligatoire": true,
       "note": "Joints de maçonnerie, bardages, tuiles, encadrements."
     },
     {
       "canal": "rugosite",
-      "resolution": 512,
+      "resolution": 4096,
       "format": "png",
       "obligatoire": true,
       "note": "Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées."

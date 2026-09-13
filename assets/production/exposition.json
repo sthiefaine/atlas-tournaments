@@ -16929,6 +16929,18 @@
         "unite_transport_base_masque_equipe_hiver.png"
       ],
       "revision": "aa5dd4eb9f15aec535bded10ac59339f322015328dfdae3a705bff2865e07a38"
+    },
+    {
+      "id": "batiment_qg_base",
+      "fichiers": [
+        "batiment_qg_base_albedo.png",
+        "batiment_qg_base_emission.png",
+        "batiment_qg_base_lod0.glb",
+        "batiment_qg_base_masque_equipe.png",
+        "batiment_qg_base_normale.png",
+        "batiment_qg_base_rugosite.png"
+      ],
+      "revision": "01b1fcc6bd97769cce2b0b7dc59359c4305cf8147f15be8392f663ba6fb54b68"
     }
   ]
 }

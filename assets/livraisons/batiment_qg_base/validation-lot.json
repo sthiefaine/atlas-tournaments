@@ -1,0 +1,13 @@
+{
+  "id": "batiment_qg_base",
+  "revision": "01b1fcc6bd97769cce2b0b7dc59359c4305cf8147f15be8392f663ba6fb54b68",
+  "octets": 31492496,
+  "triangles": 873843,
+  "verdict": {
+    "ok": true,
+    "motifs": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif",
+  "sourceSha256": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326"
+}
