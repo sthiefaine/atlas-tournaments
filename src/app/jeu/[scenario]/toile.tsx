@@ -611,7 +611,6 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             <p aria-live="polite"><Gras texte={mission.tutoriel[etapeTutoriel] ?? ''} nomIllustration={nomIllustration} /></p>
             <div className="atlas-tuto-actions"><button disabled={etapeTutoriel === 0} onClick={() => setEtapeTutoriel(n => n - 1)}>{t(locale, 'campagne.etape_precedente')}</button><button disabled={etapeTutoriel >= mission.tutoriel.length - 1} onClick={() => setEtapeTutoriel(n => n + 1)}>{t(locale, 'campagne.etape_suivante')}</button></div>
           </div> : null}
-          <details className="atlas-conseils"><summary>{t(locale, 'campagne.conseil')}</summary><p><Gras texte={mission.conseil} nomIllustration={nomIllustration} /></p></details>
           <p className="atlas-aide">{t(locale, 'campagne.gestes_tactiles')}</p>
         </> : null}
         {fin && gagne && choixDisponibles.length > 0 ? <section className="atlas-conseils" aria-labelledby="titre-decision">
@@ -644,7 +643,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'hud.nouvelle_partie')}</button>
           </>}
-          <Link href="/campagne">{t(locale, 'campagne.retour')}</Link>
+          {fin ? <Link href="/campagne">{t(locale, 'campagne.retour')}</Link> : null}
         </div>
       </section>
     </div> : null}
