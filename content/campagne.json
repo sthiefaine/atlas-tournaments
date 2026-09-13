@@ -62,7 +62,7 @@
       "entrainement": true,
       "tutoriel": [
         "Ouvrez le Bulletin, en haut à droite : il annonce la marée deux journées à l’avance. **Marée basse, les cases de mer entre les deux plages deviennent praticables.**",
-        "Journée 1 : marée basse. Journées 2 et 3 : haute, **une unité restée sur le sable est repoussée à terre**. Journées 4 et 5 : basse à nouveau.",
+        "Journée 1 : marée basse. À la montée en J2, une unité terrestre prise sur le sable perd **4 PV** : à 4 PV ou moins, elle est mise hors jeu. Sinon, elle se replie à terre si une case libre est à proximité. J3 : haute ; J4 et J5 : basse.",
         "Le pont du sud passe toujours. Un recon y met une journée, une infanterie trois : recrutez **un transport** à votre usine pour l’emmener.",
         "Posez une infanterie sur le QG de Tomas et **capturez quatre tours de suite**. Couvrez-la : le char devant, l’artillerie derrière. Votre pouvoir est là pour l’assaut."
       ]

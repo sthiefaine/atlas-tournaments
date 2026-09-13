@@ -1,10 +1,10 @@
 {
   "cle": "qg_de_la_presquile",
-  "version": 7,
+  "version": 8,
   "statut": "en_ligne",
   "source": "humain",
   "creeLe": "2026-09-05",
-  "majLe": "2026-09-12",
+  "majLe": "2026-09-13",
   "code": "qg_de_la_presquile",
   "nom": "Entraînement 4 · Le QG de la presqu’île",
   "acte": 0,
@@ -60,7 +60,7 @@
     },
     {
       "locuteur": "cmd_tomas_reiner",
-      "texte": "Marée basse aujourd’hui ; haute à J2 et J3 ; basse à J4 et J5. Si vous restez sur le sable quand l’eau remonte, votre unité sera repoussée à terre sans dommage.",
+      "texte": "Marée basse aujourd’hui ; haute à J2 et J3 ; basse à J4 et J5. Une unité terrestre prise sur le sable à la montée perd **4 PV**. À 4 PV ou moins, elle est mise hors jeu ; sinon, elle se replie sur une case de terre libre à proximité, s’il y en a une.",
       "emotion": "neutre"
     },
     {
@@ -98,7 +98,7 @@
       "repliques": [
         {
           "locuteur": "cmd_ariane_belloc",
-          "texte": "La marée monte. Une unité restée sur le sable est **repoussée à terre**, sans dommage : les arbitres la déplacent. Le passage rouvre à la quatrième journée ; sinon, le pont [[img:pont]].",
+          "texte": "La marée monte : les unités terrestres prises sur le sable perdent **4 PV**. À 4 PV ou moins, elles sont mises hors jeu. Les survivantes se replient à terre si une case libre est à proximité. Le passage rouvre à la quatrième journée ; sinon, le pont [[img:pont]].",
           "emotion": "neutre"
         }
       ]
