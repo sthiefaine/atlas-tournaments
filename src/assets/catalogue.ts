@@ -1194,19 +1194,19 @@ function consigneTerritoire(t: Territoire): Bilingue {
  * Une spécification de bâtiment, **par région pour la France et par pays
  * sinon** : capturable, donc coloré et éclairé, et habillé du style local.
  */
-export function specBatiment(t: Terrain, territoire: Territoire): AssetSpec {
-  const cle: Cle = `${t.cle}_${cleTerritoire(territoire)}`;
-  const id = idBatiment(t.cle, territoire.pays.code, territoire.region ? slugRegion(territoire.region.code) : undefined);
+export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
+  const cle: Cle = `${t.cle}_${territoire ? cleTerritoire(territoire) : 'base'}`;
+  const id = territoire ? idBatiment(t.cle, territoire.pays.code, territoire.region ? slugRegion(territoire.region.code) : undefined) : `batiment_${t.cle}_base`;
   const g = GABARIT_BATIMENT[t.cle] ?? { x: 0.85, y: 0.7, z: 0.85, tris: [5000, 1600, 450] as [number, number, number] };
   const texte = TEXTES_TERRAIN[t.cle];
   const revenus = t.revenus > 0 ? `Il rapporte ${t.revenus} fonds par journée.` : '';
   const revenusEn = t.revenus > 0 ? `It yields ${t.revenus} funds per day.` : '';
-  const consigne = consigneTerritoire(territoire);
+  const consigne = territoire ? consigneTerritoire(territoire) : { fr: 'Bâtiment de base partagé, sans identité nationale. Architecture fonctionnelle neutre, volumes simples et détaillés, béton clair, métal peint et verre. Les surfaces de couleur d’équipe restent gris neutre. Aucun symbole ni ornement national.', en: 'Shared base building without national identity. Neutral functional architecture, readable detailed volumes, light concrete, painted metal and glass. Team-colour surfaces remain neutral grey. No national symbols or ornament.' };
   return {
     id,
     type: 'batiment',
     cle,
-    priorite: territoire.priorite,
+    priorite: territoire?.priorite ?? 1,
     description: {
       en: `${texte?.en ?? `A capturable "${t.nom}" building on a one-metre plot.`} ${revenusEn} ${consigne.en} `
         + 'It is a capturable point: it changes owner during a match, so every surface that carries the '
@@ -1219,7 +1219,7 @@ export function specBatiment(t: Terrain, territoire: Territoire): AssetSpec {
         + 'sur la case ne soit jamais cachée.',
     },
     style: style(['host-town architecture', 'warm lived-in details', 'emissive windows at night',
-      'regional building vernacular']),
+      territoire ? 'national building vernacular' : 'neutral shared base architecture']),
     echelle: echelle(g.x, g.y, g.z, 0.07),
     pivot: pivot(true),
     budget: budget(g.tris[0], 3),
@@ -1230,7 +1230,7 @@ export function specBatiment(t: Terrain, territoire: Territoire): AssetSpec {
       tex('emission', 512, true, 'Fenêtres et lanterneaux éclairés : c’est ce qui fait la nuit du jeu.'),
       tex('masque_equipe', 512, true, 'Stores, rives de toit, fanion : les surfaces qui prennent la nation.'),
     ],
-    variantes: variantes(['ete', 'hiver'], [], [territoire.pays.code]),
+    variantes: variantes(['ete', 'hiver'], [], territoire ? [territoire.pays.code] : []),
     animations: [anim('repos', 3200, true), anim('capture', 1400, false), anim('touche', 400, false, false)],
     format: format(['corps', 'toit', 'enseigne'], ['mat_corps', 'mat_vitrage']),
     nommage: nommage(id, 'emission', 'hiver'),
@@ -1432,6 +1432,7 @@ export function genererSpecs(): AssetSpec[] {
   const terrains = chargerTerrains();
   for (const t of terrains) {
     if (!capturables.has(t.cle)) specs.push(specTerrain(t));
+    else specs.push(specBatiment(t));
   }
 
   for (const territoire of territoires()) {

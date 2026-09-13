@@ -18,7 +18,7 @@ export function Modeles({ modeles }: { modeles: Modele[] }): React.ReactElement 
       {GROUPES.map(([cle, nom]) => <button key={cle} type="button" className={`admin-action${groupe === cle ? ' admin-action-primaire' : ''}`} aria-pressed={groupe === cle} onClick={() => setGroupe(cle)}>{nom}</button>)}
     </nav>}
     <div className="assets-filtres"><label>Rechercher<input type="search" value={recherche} onChange={e => setRecherche(e.target.value)} placeholder={`Rechercher dans ${CATEGORIES.find(([cle]) => cle === categorie)?.[1].toLowerCase()}…`} /></label></div>
-    <div className="assets-grille">{visibles.map(m => <Link key={m.id} className="asset-carte" href={`/admin/assets/${m.id}`}><small>{m.categorie === 'unites' ? GROUPES.find(([cle]) => cle === m.groupe)?.[1] : m.type}</small><h3>{m.nom}</h3><span className="asset-etat">Modifier le GLB →</span></Link>)}</div>
+    <div className="assets-grille">{visibles.map(m => <Link key={m.id} className="asset-carte" href={`/admin/assets/${m.id}`}><small>{m.categorie === 'unites' ? GROUPES.find(([cle]) => cle === m.groupe)?.[1] : m.type}</small><h3>{m.nom}</h3><span className="asset-etat">Prompt et GLB →</span></Link>)}</div>
     {!visibles.length && <p role="status">Aucun modèle dans cette sélection.</p>}
   </section>;
 }

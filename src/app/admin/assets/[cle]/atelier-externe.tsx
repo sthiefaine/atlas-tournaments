@@ -27,9 +27,9 @@ export function AtelierExterne({id,concept,stockage,sources:initiales,erreurSour
       <p role="status" aria-live="polite">{message}</p>
       {sources.length ? <details><summary>Fichiers déjà envoyés ({sources.length})</summary><ul className="space-y-2">{sources.map(s=><li key={s.revision}><a className="underline" href={`/api/admin/assets/${id}/sources?revision=${s.revision}`}>Télécharger la source {s.revision.slice(0,12)}</a> · {(s.octets/1024/1024).toFixed(1)} Mio{s.date?` · ${new Date(s.date).toLocaleDateString('fr-FR')}`:''}</li>)}</ul></details> : null}
     </div>
-    <details><summary>Besoin de créer un modèle avec Gemini / Tripo ?</summary>
+    <section aria-label="Créer avec Gemini et Tripo">
       <PromptProduction texte={concept} libelle="Copier le prompt Gemini" />
       <a className="underline" href="https://studio.tripo3d.ai/" target="_blank" rel="noreferrer">Ouvrir Tripo ↗</a>
-    </details>
+    </section>
   </section>;
 }

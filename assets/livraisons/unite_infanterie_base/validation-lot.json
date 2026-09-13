@@ -17,5 +17,6 @@
     "lodManquants": []
   },
   "approbationArtistique": false,
-  "integration": "candidat_inspecteur"
+  "integration": "modele_actif",
+  "autorisation": "Remplacement direct demand\u00e9 par le propri\u00e9taire, sans \u00e9tape de validation visuelle"
 }

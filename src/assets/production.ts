@@ -56,7 +56,7 @@ export function contratProduction(spec: AssetSpec): ContratProduction {
       `Each file must be at most ${LIMITE_FICHIER / 1048576} MiB; the complete delivery at most ${LIMITE_LOT / 1048576} MiB. Keep PNG textures external, shared by all LODs. Each GLB image URI must be the exact neighbouring filename, without a directory or data URI. Never embed duplicate PNG copies.`,
       ...(raccord === 'quart_tour' ? ['All four texture edges must match, including reversal after 90-degree rotation. Rotate tangent-space normals with the tile. Keep interior variations asymmetric; test a 4×4 mosaic with mixed quarter turns. No large repeated landmark.'] : []),
       ...(raccord === 'directionnel' ? ['This is directional: preserve connected road/bridge/shore axes. Do not demand arbitrary quarter-turn edge compatibility. Test aligned repetitions and the intended neighbouring terrain.'] : []),
-      'Deliver a candidate, then obtain human visual approval in the inspector. Technical acceptance alone never approves the art or proves that lighting was not baked into albedo.',
+      'After technical acceptance, replace the active game asset directly as authorized by the owner. Do not require prior human visual approval. Technical acceptance does not certify artistic quality or prove that lighting was not baked into albedo.',
     ],
     gestes: {
       repos: 'Subtle breathing or scanning; start and end transforms coincide. No root motion.',

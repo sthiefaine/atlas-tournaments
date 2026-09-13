@@ -10,7 +10,8 @@ export function familleAsset(spec: AssetSpec): string {
   return spec.id;
 }
 export function libelleAsset(cle: string): string {
-  return cle.replace(/^(unite|terrain|batiment|decor|commandant)_/, '').replace(/_/g, ' ');
+  const noms: Record<string, string> = { batiment_qg: 'Quartier général', batiment_aeroport: 'Aéroport', batiment_port: 'Port', batiment_radar: 'Station radar', batiment_usine: 'Usine', batiment_ville: 'Ville' };
+  return noms[cle] ?? cle.replace(/^(unite|terrain|batiment|decor|commandant)_/, '').replace(/_/g, ' ');
 }
 export function regrouperAssets(specs: readonly AssetSpec[]): { cle: string; libelle: string; specs: AssetSpec[] }[] {
   const groupes = new Map<string, AssetSpec[]>();
