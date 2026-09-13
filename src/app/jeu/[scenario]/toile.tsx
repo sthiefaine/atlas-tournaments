@@ -562,6 +562,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         title={texteNu(objectifMission, (c) => t(locale, `illustration.${c}`))}>
         <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{essaiAube ? 'A' : index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
       </button>
+      <Link className="atlas-mission-fanion" href={`/campagne/journal?retour=${encodeURIComponent(`/jeu/${scenario.code}`)}`} aria-label="Ouvrir le carnet de bord">▤ Carnet</Link>
     </aside> : null}
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>
       <section ref={dialogueRef} tabIndex={-1} className="atlas-briefing" role="dialog" aria-modal="true" aria-labelledby="titre-mission">

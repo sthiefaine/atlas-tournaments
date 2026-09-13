@@ -440,3 +440,7 @@ Le propriétaire rejette la densité de `/campagne` : écran réduit à profil/m
 ### Atelier des unités simplifié — 13 septembre 2026
 
 `/atelier` et `/atelier/unites` partagent le plateau du banc (monde 3, plaine au printemps par défaut) avec un seul sélecteur d’unité. Les panneaux, statistiques et fiches ne sont plus affichés. Une unité du camp bleu à la fois, à son emplacement terrestre ou marin ; sélection persistée dans l’URL et recentrage sans remise à zéro de l’orientation. Les gestes caméra restent disponibles. Aucun test, build ni contrôle visuel lancé, selon la demande.
+
+### Carnet accessible depuis la mission
+
+Le salon ne présente plus le carnet. Le fanion de mission propose un lien Carnet, avec chemin de retour local borné à `/jeu/[code]`. Le carnet montre deux rubriques (unités/commandants), une liste de rencontres et une seule fiche sélectionnée ; aucun indice ni personnage futur. Les retours du carnet, de la campagne et des panneaux d’ordres/production sont à gauche. Aucun test/build lancé à la demande du propriétaire.

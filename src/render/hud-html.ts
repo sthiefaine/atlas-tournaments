@@ -375,9 +375,10 @@ const STYLE = `
 .atlas-hud .inspect .astuce{display:flex;align-items:center;gap:8px;padding:6px 12px 8px;border-top:1px solid #ffffff14;font-size:var(--t2);font-weight:750;color:#9fb6b8}
 .atlas-hud .inspect .astuce .symbole{width:16px;height:16px;color:#ff8e83}
 .atlas-hud .retour{all:unset;box-sizing:border-box;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;background:#ffffff10;padding:0 10px;border:1px solid #ffffff20;border-bottom:3px solid #060f17;color:#d6e2ea}
+.atlas-hud .ordres-entete>.retour,.atlas-hud .production-entete>.retour{order:-1;margin-left:0;margin-right:8px}
 .atlas-hud .retour .symbole{width:20px;height:20px}
 .atlas-hud .retour:active{translate:0 2px;border-bottom-width:1px}
-.atlas-hud .inspect .in>.retour:first-of-type{margin-left:auto}
+.atlas-hud .inspect .in>.retour:first-of-type{order:-1;margin-left:0;margin-right:8px}
 /* Par défaut, le menu est une feuille basse — c'est la bonne forme au doigt. Il
    devient un panneau posé à côté de l'unité dès que l'écran est assez large
    (attribut data-ancre, position calculée par la fonction ancrer). */

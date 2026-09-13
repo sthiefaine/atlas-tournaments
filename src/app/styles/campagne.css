@@ -115,3 +115,7 @@
 .campagne-complements{background:#142b3b;color:#e7f1f6;padding:20px max(20px,calc((100% - 980px)/2));border-top:1px solid #3c5968}.campagne-complements>summary{cursor:pointer;font-weight:800;padding:8px 0;color:#a5efd8}.campagne-complements>summary:focus-visible{outline:3px solid #ffdf83;outline-offset:4px}
 /* Carte de campagne : une destination et une action, sans encyclopédie ni indices. */
 .campagne-epuree{gap:18px}.campagne-epuree .carnet-entete{align-items:center}.campagne-epuree .carnet-entete h1{font-size:28px;margin:0}.campagne-identite{font-size:12px;color:#b4cbd5;margin-top:7px}.campagne-mission{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px 24px;background:#183442;border:1px solid #50778b;border-radius:16px}.campagne-mission small{font-size:10px;color:#a5c7d1;text-transform:uppercase;letter-spacing:.12em}.campagne-mission h2{font-size:22px;font-weight:850;margin:5px 0 8px}.campagne-mission p{font-size:13px;line-height:1.5;color:#d9e5e8;max-width:64ch}.campagne-mission .atlas-bouton{flex-shrink:0}@media(max-width:600px){.campagne-mission{align-items:stretch;flex-direction:column;gap:16px;padding:18px}.campagne-epuree .carnet-entete h1{font-size:25px}.campagne-mission .atlas-bouton{text-align:center}}
+
+/* Navigation de retour toujours à gauche. */
+.carnet-entete > a[href="/campagne/salon"], .campagne-actions > a[href="/campagne/salon"]{order:-1;margin-right:auto;margin-left:0}
+.atlas-mission-bar a.atlas-mission-fanion{text-decoration:none;display:inline-flex;align-items:center;gap:8px}
