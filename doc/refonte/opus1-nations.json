@@ -30,13 +30,13 @@
         "type": "capture_qg",
         "conditionVictoire": "Prendre tous les QG adverses nécessaires à la victoire de coalition.",
         "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
-        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "support": "Carte et scénario intégrés au parcours local le 13 septembre 2026 ; aucune simulation ni homologation de difficulté.",
         "victoireAlternative": false
       },
       "variationNormaleDifficile": {
-        "normal": "Axes annoncés, budget adverse borné, fenêtre de reconnaissance avant l’engagement.",
-        "difficile": "Une unité de couverture supplémentaire protège les indirects ; mêmes conditions de victoire.",
-        "validation": "Non simulé : fiche de conception, pas mission jouable."
+        "normal": "3 000 fonds adverses au départ, 500 par bâtiment et journée, IA pondérée.",
+        "difficile": "6 000 fonds adverses au départ ; mêmes règles, revenus, IA et objectifs.",
+        "validation": "Non simulé à la demande du propriétaire."
       },
       "choixConsequence": null,
       "liens": {
@@ -47,7 +47,7 @@
       "personnages": [
         "cmd_ariane_belloc"
       ],
-      "statut": "conception"
+      "statut": "integre_parcours_local_non_simule"
     },
     {
       "id": "opus1_fr_02",
@@ -62,13 +62,13 @@
         "type": "capturer",
         "conditionVictoire": "Capturer deux des trois bâtiments objectifs annoncés.",
         "conditionDefaite": "QG allié décisif perdu ou toutes les unités de la coalition hors jeu ; si escorte, perte du transport désigné.",
-        "support": "Type présent dans le moteur ; cases, références d’unités, cartes et paramètres à produire et valider.",
+        "support": "Carte et scénario intégrés au parcours local le 13 septembre 2026 ; aucune simulation ni homologation de difficulté.",
         "victoireAlternative": false
       },
       "variationNormaleDifficile": {
-        "normal": "Axes annoncés, budget adverse borné, fenêtre de reconnaissance avant l’engagement.",
-        "difficile": "Crédit adverse de 1 500 fonds maximum ; l’escorte et ses seuils restent identiques.",
-        "validation": "Non simulé : fiche de conception, pas mission jouable."
+        "normal": "3 000 fonds adverses au départ, 500 par bâtiment et journée, IA pondérée.",
+        "difficile": "6 000 fonds adverses au départ ; mêmes règles, revenus, IA et objectifs.",
+        "validation": "Non simulé à la demande du propriétaire."
       },
       "choixConsequence": null,
       "liens": {
@@ -79,7 +79,7 @@
       "personnages": [
         "cmd_ariane_belloc"
       ],
-      "statut": "conception"
+      "statut": "integre_parcours_local_non_simule"
     },
     {
       "id": "opus1_fr_03",

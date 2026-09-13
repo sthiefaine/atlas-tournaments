@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { creerAudioJeu } from '@/audio/moteur';
+import { lirePreferences } from '../preferences';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { chargerCatalogue, creerPartie, sceneDepuis, type EtatPartie } from '@/engine/index';
 import { resoudreCommandantsScenario } from '@/content/commandants-jeu';
@@ -297,6 +299,8 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     let courant: Rendu | null = null;
     let debrancher: (() => void) | undefined;
     annoncer('Préparation du monde…', true);
+    const preferences = lirePreferences();
+    const audio = conteneur.current ? creerAudioJeu(conteneur.current, preferences.sons, preferences.volumeSons) : undefined;
 
     const poser = (fabrique: () => Rendu): void => {
       if (annule || !conteneur.current) return;
@@ -316,6 +320,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
 
     void import('@/render3d/index').then(({ creerRendu3d }) => {
       poser(() => creerRendu3d({
+        audio,
         biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current,
         // Le moteur s'initialise après le montage : un échec là se dit aussi.
         surEchec: () => { if (!annule) annoncer('La 3D n’a pas pu démarrer : WebGPU n’a pas pu initialiser le canevas.', true); },
@@ -325,7 +330,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
       courant?.demonter();
       annoncer('La 3D n’a pas pu démarrer : WebGPU est indisponible sur cet appareil.', true);
     });
-    return () => { annule = true; debrancher?.(); courant?.demonter(); rendu.current = null; };
+    return () => { annule = true; debrancher?.(); courant?.demonter(); audio?.detruire(); rendu.current = null; };
     // `etat` n'est pas une dépendance, et c'est voulu : la peau lit le dernier
     // état par `etatCourant`. Le mettre ici rebâtirait la scène à chaque geste,
     // donc rejouerait le cadrage de caméra et effacerait l'animation qu'on vient
@@ -610,6 +615,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
         <h1>Atelier des mondes</h1>
       </div>
       <Link href="/" className={styles.accueil}><Glyphe cle="accueil" /><span>Accueil</span></Link>
+      <Link href="/atelier/assets" className={styles.accueil}><span>Carte de tous les assets</span></Link>
       <Link href="/atelier/unites" className={styles.accueil}><span>Vitrine des unités</span></Link>
       <Link href={`/jeu/${monde.scenario.code}`} className={styles.jouerLien}><Glyphe cle="jouer" /><span>Jouer cette mission</span></Link>
     </header>

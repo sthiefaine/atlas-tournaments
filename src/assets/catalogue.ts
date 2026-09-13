@@ -16,7 +16,7 @@
  * Cette couche n'importe que `schemas/` et `content/` (`doc/02-architecture.md` §5).
  */
 
-import { chargerArchetypes, chargerPays, chargerRegions, chargerTerrains, chargerUnites } from '../content/index';
+import { chargerArchetypes, chargerPays, chargerTerrains, chargerUnites } from '../content/index';
 import {
   BIOMES, TERRAINS_CAPTURABLES,
   type Biome, type Cle, type CodePays, type Country, type Region, type Saison,
@@ -30,7 +30,7 @@ import {
   type OrnementStyle, type Pivot, type Priorite, type StyleAsset, type StyleNation,
   type StyleRegion, type TextureSpec, type TypeAsset, type Variantes, type Verification,
 } from './spec';
-import { chargerStyleNation, chargerStylesNations, chargerStylesRegions } from './styles';
+import { chargerStyleNation, chargerStylesNations } from './styles';
 
 // ---------------------------------------------------------------------------
 // 1. Blocs communs à toutes les spécifications
@@ -1401,35 +1401,12 @@ export function specCommandant(
 /** Combien de spécifications chaque famille produit, pour le bilan du script. */
 export type BilanSpecs = Record<TypeAsset, number>;
 
-/**
- * Les territoires du pipeline : **les régions de la France** d'un côté, **les
- * vingt-trois autres pays** de l'autre.
- *
- * La France n'apparaît jamais comme territoire entier : ses bâtiments et son
- * décor sont régionaux, sans exception, parce que c'est le pays que le joueur
- * traverse région par région avant tout le reste. Un pays phare qui recevra ses
- * régions plus tard (Luxembourg, Japon, Brésil) basculera automatiquement le
- * jour où `content/regions/<pays>/` existera : ce code lit `chargerRegions`, il
- * ne connaît aucun pays par son nom.
- */
+/** Les variantes régionales sont suspendues : un territoire de production par nation. */
 export function territoires(): Territoire[] {
-  const liste: Territoire[] = [];
-  for (const pays of chargerPays()) {
+  return chargerPays().flatMap(pays => {
     const styleNation = chargerStyleNation(pays.code);
-    if (!styleNation) continue;
-    const priorite = styleNation.priorite;
-    const regions = chargerRegions(pays.code);
-    if (regions.length === 0) {
-      liste.push({ pays, styleNation, region: null, styleRegion: null, priorite });
-      continue;
-    }
-    const styles = chargerStylesRegions(pays.code);
-    for (const region of regions) {
-      const styleRegion = styles.find((s) => s.code === region.code) ?? null;
-      liste.push({ pays, styleNation, region, styleRegion, priorite: styleRegion?.priorite ?? priorite });
-    }
-  }
-  return liste;
+    return styleNation ? [{ pays, styleNation, region: null, styleRegion: null, priorite: styleNation.priorite }] : [];
+  });
 }
 
 /**

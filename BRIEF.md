@@ -1,5 +1,10 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## Simplification et début de saison 1 — 13 septembre 2026
+
+Les variantes **régionales d’assets** sont suspendues à la demande du propriétaire ; les régions du récit et leurs cartes restent au canon. Conserver les bases et les déclinaisons nationales. L’entrée Jeu libre est retirée au profit de la campagne. Deux premières missions nationales de saison 1 sont désormais accessibles, avec des cartes distinctes et les modes normal/difficile ; leur équilibrage n’est pas homologué. Le parcours contient 14 missions dont dix tutoriels. La carte de bibliothèque `/atelier/assets` présente séparément fichiers actifs, candidats et manquants. Les sons d’environnement, déplacements et dialogues sont fusionnés. Détails et limites : `doc/refonte/livraison-saison1-assets-sons.md`.
+
+
 ## Laboratoire et station renforcée — 12 septembre 2026
 
 Le propriétaire demande une chaîne de conception de missions : contraintes structurées, variantes, simulations dans les deux modes, correction bornée, mémoire de variété et comparaison admin. `/admin/cartes` fournit ce laboratoire ; son contrat, son pilote et ses limites sont décrits dans `doc/refonte/conception-missions.md`. La présence du laboratoire ne signifie pas qu'un modèle externe est activé ni qu'un brouillon est publié.

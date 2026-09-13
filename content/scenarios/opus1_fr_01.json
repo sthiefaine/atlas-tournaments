@@ -1,0 +1,144 @@
+{
+  "cle": "opus1_fr_01",
+  "code": "opus1_fr_01",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-13",
+  "majLe": "2026-09-13",
+  "nom": "Saison 1 · Premier courant",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_01",
+  "date": "2026-09-13",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 4000,
+  "fondsDepartParCamp": {
+    "0": 4000,
+    "1": 3000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500
+  },
+  "brouillard": false,
+  "limiteJournees": 24,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 24
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le transformateur alimente les ateliers de la vallée. Prenez le QG qui commande ses accès avant J24. Je reste à la radio ; les décisions sont à vous.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Ma délégation tient l’autre rive. Deux ponts, deux passages à défendre. Je ne vous offrirai pas le réseau parce que nous nous connaissons.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les villes financent les renforts. Gardez une infanterie pour la prise du QG : le char peut ouvrir le chemin, pas signer à votre place.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le transformateur est à vous. Ses ateliers réclament maintenant des pièces et des équipes de maintenance. Gagner un site était la première étape ; le faire fonctionner sera la suivante.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le front nous échappe. Reprenons la préparation : gardez vos fantassins couverts et une réserve pour reprendre les accès.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "opus1_fr_01_jour5",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Vérifiez les deux passages. Une infanterie isolée aura besoin de plusieurs journées pour prendre le QG.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 4000,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 24,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 4000,
+      "fondsDepartIa": 6000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 24,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  }
+}

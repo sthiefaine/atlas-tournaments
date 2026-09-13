@@ -106,9 +106,7 @@ export default function Accueil() {
         }}
       />
 
-      <Link className="menu-bouton" href="/jeu">
-        <span className="menu-libelle">{t(locale, 'accueil.menu_jeu_libre')}</span>
-      </Link>
+
 
       <div className="accueil-menu-rang">
         {/* « Banc d'essai » et non « Atelier des mondes » : la page ne compose

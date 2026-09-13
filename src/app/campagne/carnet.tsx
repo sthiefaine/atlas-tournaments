@@ -356,7 +356,7 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
         ? <p className="carnet-fin">{libelles.fin}</p>
         : null}
       <p>{libelles.sauvegarde}</p>
-      <Link className="carnet-lien" href="/jeu">{libelles.demo}</Link>
+      <Link className="carnet-lien" href="/atelier/assets">Carte des assets</Link>
     </footer>
   </main>;
 }

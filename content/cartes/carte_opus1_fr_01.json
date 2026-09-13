@@ -1,0 +1,96 @@
+{
+  "cle": "carte_opus1_fr_01",
+  "code": "carte_opus1_fr_01",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-13",
+  "majLe": "2026-09-13",
+  "nom": "Premier courant",
+  "largeur": 16,
+  "hauteur": 12,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPPPVPPPPPPPP",
+    "PPPPPPPVPPPPPPPP",
+    "PPPPFFPVPPPPPPPP",
+    "PPRRRCRNRRRRCRPP",
+    "PPPPFPPVPPPPPUPP",
+    "PPPPPPPVPFFPPPHP",
+    "PHPPPPFVPPPPPPPP",
+    "PPUPPPPVPPPPPPPP",
+    "PPRRRRRNRRCRRRPP",
+    "PPFPPPPVPPPFFPPP",
+    "PPPPPPPVPPPPPPPP",
+    "PPPPPPPVPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,6": 0,
+    "2,7": 0,
+    "14,5": 1,
+    "13,4": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 4,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 12,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 11,
+      "y": 4
+    }
+  ]
+}

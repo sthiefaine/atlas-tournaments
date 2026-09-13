@@ -1,5 +1,5 @@
 {
-  "titre": "Les dix exercices d’Atlas",
+  "titre": "Atlas · Formation et saison 1",
   "introduction": "Vous rejoignez la **sélection française**. Ariane vous apprend à commander ; Tomas, votre partenaire d’entraînement, compte bien vous battre. Dix exercices pour déplacer vos unités, protéger vos équipages et gagner ensemble. Dehors, les nations se disputent l’énergie. Ici, vous avez le droit d’essayer et de recommencer. **Les objectifs sont signalés en or.**",
   "missions": [
     {
@@ -192,6 +192,34 @@
         "Les trois postes sont des villes : capturez-les avec l’infanterie et gardez-les. **La victoire exige les trois sous vos couleurs au même moment.**",
         "Le brouillard cache les unités adverses hors de votre vision. Le drone (3 000 à l’aéroport) voit à cinq cases ; **brouillé par un brouilleur ou une station radar adverse, il ne voit plus qu’à une**.",
         "Le passage du nord-ouest ne laisse passer que l’infanterie ; les véhicules contournent par la route. Une victoire sous les couleurs alliées renforce votre confiance avec ce commandant."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_01",
+      "titre": "Saison 1 · Premier courant",
+      "biome": "plaine",
+      "objectif": "Prenez le QG adverse avant la fin de J24. Éliminer sa colonne ne remplace pas la capture.",
+      "conseil": "Mode difficile : la réserve adverse passe de 3 000 à 6 000 fonds. Les revenus, objectifs et dégâts restent identiques. Mission en cours d’équilibrage, non simulée.",
+      "recit": "Ariane vous confie une colonne pour votre premier combat réel. Elle connaît chaque équipage ; vous devez encore apprendre leurs voix à la radio. Le transformateur des Haies est votre objectif, pas une occasion de prouver que vous êtes meilleur qu’elle.",
+      "conclusion": "Le transformateur est à vous. Ses ateliers réclament maintenant des pièces et des équipes de maintenance. Gagner un site était la première étape ; le faire fonctionner sera la suivante.",
+      "entrainement": false,
+      "tutoriel": [
+        "Prenez le QG adverse avant la fin de J24. Éliminer sa colonne ne remplace pas la capture.",
+        "Normal : 3 000 fonds adverses. Difficile : 6 000. Même limite de 24 journées."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_02",
+      "titre": "Saison 1 · Les villes du contrat",
+      "biome": "foret",
+      "objectif": "Possédez simultanément deux des trois villes marquées en or avant la fin de J24. La capture du QG ne remplace pas cet objectif.",
+      "conseil": "Mode difficile : la réserve adverse passe de 3 000 à 6 000 fonds. Les revenus, objectifs et dégâts restent identiques. Mission en cours d’équilibrage, non simulée.",
+      "recit": "Les ateliers gagnés ne peuvent pas redémarrer : leurs mécaniciens n’ont plus de quoi travailler. Ariane veut reprendre les villes qui les approvisionnent ; votre rival voudrait déjà pousser vers le QG. Une victoire ne sert à rien si personne ne peut la faire durer.",
+      "conclusion": "Deux villes approvisionnent les ateliers. Un bon de livraison mentionne une voie de service réservée. Ariane vous demande de préparer un convoi : la prochaine étape de la saison reste à venir.",
+      "entrainement": false,
+      "tutoriel": [
+        "Possédez simultanément deux des trois villes marquées en or avant la fin de J24. La capture du QG ne remplace pas cet objectif.",
+        "Normal : 3 000 fonds adverses. Difficile : 6 000. Même limite de 24 journées."
       ]
     }
   ]

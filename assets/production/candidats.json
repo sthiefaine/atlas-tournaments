@@ -33,96 +33,6 @@
       "destination": "assets/livraisons/batiment_aeroport_fj"
     },
     {
-      "id": "batiment_aeroport_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_aeroport_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_aeroport_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_bretagne"
-    },
-    {
-      "id": "batiment_aeroport_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_aeroport_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_corse"
-    },
-    {
-      "id": "batiment_aeroport_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_grand_est"
-    },
-    {
-      "id": "batiment_aeroport_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_aeroport_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_guyane"
-    },
-    {
-      "id": "batiment_aeroport_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_aeroport_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_aeroport_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_la_reunion"
-    },
-    {
-      "id": "batiment_aeroport_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_martinique"
-    },
-    {
-      "id": "batiment_aeroport_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_mayotte"
-    },
-    {
-      "id": "batiment_aeroport_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_normandie"
-    },
-    {
-      "id": "batiment_aeroport_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_aeroport_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_occitanie"
-    },
-    {
-      "id": "batiment_aeroport_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_aeroport_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_aeroport_fr_provence_alpes_cote_azur"
-    },
-    {
       "id": "batiment_aeroport_gr",
       "complet": true,
       "destination": "assets/livraisons/batiment_aeroport_gr"
@@ -236,96 +146,6 @@
       "id": "batiment_port_fj",
       "complet": true,
       "destination": "assets/livraisons/batiment_port_fj"
-    },
-    {
-      "id": "batiment_port_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_port_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_port_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_bretagne"
-    },
-    {
-      "id": "batiment_port_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_port_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_corse"
-    },
-    {
-      "id": "batiment_port_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_grand_est"
-    },
-    {
-      "id": "batiment_port_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_port_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_guyane"
-    },
-    {
-      "id": "batiment_port_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_port_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_port_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_la_reunion"
-    },
-    {
-      "id": "batiment_port_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_martinique"
-    },
-    {
-      "id": "batiment_port_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_mayotte"
-    },
-    {
-      "id": "batiment_port_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_normandie"
-    },
-    {
-      "id": "batiment_port_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_port_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_occitanie"
-    },
-    {
-      "id": "batiment_port_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_port_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_port_fr_provence_alpes_cote_azur"
     },
     {
       "id": "batiment_port_gr",
@@ -443,96 +263,6 @@
       "destination": "assets/livraisons/batiment_qg_fj"
     },
     {
-      "id": "batiment_qg_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_qg_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_qg_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_bretagne"
-    },
-    {
-      "id": "batiment_qg_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_qg_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_corse"
-    },
-    {
-      "id": "batiment_qg_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_grand_est"
-    },
-    {
-      "id": "batiment_qg_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_qg_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_guyane"
-    },
-    {
-      "id": "batiment_qg_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_qg_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_qg_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_la_reunion"
-    },
-    {
-      "id": "batiment_qg_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_martinique"
-    },
-    {
-      "id": "batiment_qg_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_mayotte"
-    },
-    {
-      "id": "batiment_qg_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_normandie"
-    },
-    {
-      "id": "batiment_qg_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_qg_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_occitanie"
-    },
-    {
-      "id": "batiment_qg_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_qg_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_qg_fr_provence_alpes_cote_azur"
-    },
-    {
       "id": "batiment_qg_gr",
       "complet": true,
       "destination": "assets/livraisons/batiment_qg_gr"
@@ -646,96 +376,6 @@
       "id": "batiment_radar_fj",
       "complet": true,
       "destination": "assets/livraisons/batiment_radar_fj"
-    },
-    {
-      "id": "batiment_radar_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_radar_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_radar_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_bretagne"
-    },
-    {
-      "id": "batiment_radar_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_radar_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_corse"
-    },
-    {
-      "id": "batiment_radar_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_grand_est"
-    },
-    {
-      "id": "batiment_radar_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_radar_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_guyane"
-    },
-    {
-      "id": "batiment_radar_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_radar_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_radar_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_la_reunion"
-    },
-    {
-      "id": "batiment_radar_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_martinique"
-    },
-    {
-      "id": "batiment_radar_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_mayotte"
-    },
-    {
-      "id": "batiment_radar_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_normandie"
-    },
-    {
-      "id": "batiment_radar_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_radar_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_occitanie"
-    },
-    {
-      "id": "batiment_radar_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_radar_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_radar_fr_provence_alpes_cote_azur"
     },
     {
       "id": "batiment_radar_gr",
@@ -853,96 +493,6 @@
       "destination": "assets/livraisons/batiment_usine_fj"
     },
     {
-      "id": "batiment_usine_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_usine_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_usine_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_bretagne"
-    },
-    {
-      "id": "batiment_usine_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_usine_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_corse"
-    },
-    {
-      "id": "batiment_usine_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_grand_est"
-    },
-    {
-      "id": "batiment_usine_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_usine_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_guyane"
-    },
-    {
-      "id": "batiment_usine_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_usine_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_usine_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_la_reunion"
-    },
-    {
-      "id": "batiment_usine_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_martinique"
-    },
-    {
-      "id": "batiment_usine_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_mayotte"
-    },
-    {
-      "id": "batiment_usine_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_normandie"
-    },
-    {
-      "id": "batiment_usine_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_usine_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_occitanie"
-    },
-    {
-      "id": "batiment_usine_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_usine_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_usine_fr_provence_alpes_cote_azur"
-    },
-    {
       "id": "batiment_usine_gr",
       "complet": true,
       "destination": "assets/livraisons/batiment_usine_gr"
@@ -1056,96 +606,6 @@
       "id": "batiment_ville_fj",
       "complet": true,
       "destination": "assets/livraisons/batiment_ville_fj"
-    },
-    {
-      "id": "batiment_ville_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "batiment_ville_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "batiment_ville_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_bretagne"
-    },
-    {
-      "id": "batiment_ville_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_centre_val_de_loire"
-    },
-    {
-      "id": "batiment_ville_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_corse"
-    },
-    {
-      "id": "batiment_ville_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_grand_est"
-    },
-    {
-      "id": "batiment_ville_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_guadeloupe"
-    },
-    {
-      "id": "batiment_ville_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_guyane"
-    },
-    {
-      "id": "batiment_ville_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_hauts_de_france"
-    },
-    {
-      "id": "batiment_ville_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_ile_de_france"
-    },
-    {
-      "id": "batiment_ville_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_la_reunion"
-    },
-    {
-      "id": "batiment_ville_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_martinique"
-    },
-    {
-      "id": "batiment_ville_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_mayotte"
-    },
-    {
-      "id": "batiment_ville_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_normandie"
-    },
-    {
-      "id": "batiment_ville_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_nouvelle_aquitaine"
-    },
-    {
-      "id": "batiment_ville_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_occitanie"
-    },
-    {
-      "id": "batiment_ville_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_pays_de_la_loire"
-    },
-    {
-      "id": "batiment_ville_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/batiment_ville_fr_provence_alpes_cote_azur"
     },
     {
       "id": "batiment_ville_gr",
@@ -1288,11 +748,6 @@
       "destination": "assets/livraisons/decor_arbre_archipel_fj"
     },
     {
-      "id": "decor_arbre_archipel_fr_mayotte",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_archipel_fr_mayotte"
-    },
-    {
       "id": "decor_arbre_archipel_gr",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_archipel_gr"
@@ -1321,16 +776,6 @@
       "id": "decor_arbre_cotier_fj",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_cotier_fj"
-    },
-    {
-      "id": "decor_arbre_cotier_fr_bretagne",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_cotier_fr_bretagne"
-    },
-    {
-      "id": "decor_arbre_cotier_fr_provence_alpes_cote_azur",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_cotier_fr_provence_alpes_cote_azur"
     },
     {
       "id": "decor_arbre_cotier_gr",
@@ -1443,21 +888,6 @@
       "destination": "assets/livraisons/decor_arbre_foret_ch"
     },
     {
-      "id": "decor_arbre_foret_fr_centre_val_de_loire",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_foret_fr_centre_val_de_loire"
-    },
-    {
-      "id": "decor_arbre_foret_fr_grand_est",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_foret_fr_grand_est"
-    },
-    {
-      "id": "decor_arbre_foret_fr_nouvelle_aquitaine",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_foret_fr_nouvelle_aquitaine"
-    },
-    {
       "id": "decor_arbre_foret_jp",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_foret_jp"
@@ -1503,21 +933,6 @@
       "destination": "assets/livraisons/decor_arbre_jungle_fj"
     },
     {
-      "id": "decor_arbre_jungle_fr_guadeloupe",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_jungle_fr_guadeloupe"
-    },
-    {
-      "id": "decor_arbre_jungle_fr_guyane",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_jungle_fr_guyane"
-    },
-    {
-      "id": "decor_arbre_jungle_fr_martinique",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_jungle_fr_martinique"
-    },
-    {
       "id": "decor_arbre_jungle_id",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_jungle_id"
@@ -1548,11 +963,6 @@
       "destination": "assets/livraisons/decor_arbre_marais_br"
     },
     {
-      "id": "decor_arbre_marais_fr_pays_de_la_loire",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_marais_fr_pays_de_la_loire"
-    },
-    {
       "id": "decor_arbre_marais_nl",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_marais_nl"
@@ -1576,21 +986,6 @@
       "id": "decor_arbre_montagne_ch",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_montagne_ch"
-    },
-    {
-      "id": "decor_arbre_montagne_fr_bourgogne_franche_comte",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_montagne_fr_bourgogne_franche_comte"
-    },
-    {
-      "id": "decor_arbre_montagne_fr_corse",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_montagne_fr_corse"
-    },
-    {
-      "id": "decor_arbre_montagne_fr_occitanie",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_montagne_fr_occitanie"
     },
     {
       "id": "decor_arbre_montagne_gr",
@@ -1703,21 +1098,6 @@
       "destination": "assets/livraisons/decor_arbre_plaine_ca"
     },
     {
-      "id": "decor_arbre_plaine_fr_hauts_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_plaine_fr_hauts_de_france"
-    },
-    {
-      "id": "decor_arbre_plaine_fr_ile_de_france",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_plaine_fr_ile_de_france"
-    },
-    {
-      "id": "decor_arbre_plaine_fr_normandie",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_plaine_fr_normandie"
-    },
-    {
       "id": "decor_arbre_plaine_in",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_plaine_in"
@@ -1746,16 +1126,6 @@
       "id": "decor_arbre_plaine_sn",
       "complet": true,
       "destination": "assets/livraisons/decor_arbre_plaine_sn"
-    },
-    {
-      "id": "decor_arbre_volcanique_fr_auvergne_rhone_alpes",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_volcanique_fr_auvergne_rhone_alpes"
-    },
-    {
-      "id": "decor_arbre_volcanique_fr_la_reunion",
-      "complet": true,
-      "destination": "assets/livraisons/decor_arbre_volcanique_fr_la_reunion"
     },
     {
       "id": "decor_arbre_volcanique_id",
@@ -5101,6 +4471,16 @@
       "id": "terrain_route",
       "complet": true,
       "destination": "assets/livraisons/terrain_route"
+    },
+    {
+      "id": "unite_antiair_base",
+      "complet": true,
+      "destination": "assets/livraisons/unite_antiair_base"
+    },
+    {
+      "id": "unite_artillerie_base",
+      "complet": true,
+      "destination": "assets/livraisons/unite_artillerie_base"
     },
     {
       "id": "unite_barge_base",
