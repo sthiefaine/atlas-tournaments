@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Modeles } from './modeles';
 import { candidatsLocaux, candidatsExposes } from './candidats';
 import { redirect } from 'next/navigation';
 import { PRIORITES, TYPES_ASSET } from '@/assets/index';
@@ -39,6 +40,11 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
   const manquants = [...receptions.values()].filter(r => ['a_produire', 'incomplet'].includes(r.etat)).length;
   return <main>
     <h2 className="admin-titre">Bibliothèque d’assets</h2>
+    <Modeles modeles={groupes.map(g => {
+      const base = g.specs.find(s => s.id.endsWith('_base')) ?? g.specs[0]!;
+      return { id: base.id, nom: g.libelle, type: LIBELLES_TYPE[base.type] };
+    })} />
+    <details className="mt-8"><summary className="admin-action">Gestion avancée : variantes et suivi de production</summary>
     <p className="admin-intro">{specs.length} assets, regroupés par modèle et déclinaisons. Ouvrez une famille, choisissez sa version, puis copiez son prompt de production.</p>
     <div className="admin-actions"><Link className="admin-action" href="/atelier/assets">Carte de tous les assets</Link><Link className="admin-action admin-action-primaire" href="/admin/assets/creation">Créer avec Gemini / Tripo</Link><a className="admin-action" href="/admin/assets/export" download="plan-assets.json">Télécharger le plan JSON</a><Link className="admin-action" href="/admin/assets?q=meridien">Arsenal de la faction inconnue</Link><Link className="admin-action admin-action-primaire" href="/admin/assets/chantier">Quoi produire maintenant</Link><Link className="admin-action" href={url({ etat: 'manquants', page: '' })}>À compléter · {manquants}</Link></div>
     <p className="text-sm admin-secondaire mb-4">Parcours : 1. Générer un candidat → 2. Contrôler le lot → 3. Faire valider artistiquement → 4. Tester en jeu. Un fichier présent ne vaut pas une approbation. Le plan JSON est un instantané de production ; les états ci-dessous sont ceux du serveur.</p>
@@ -69,5 +75,6 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
       </Link>;
     })}</div>
     <nav className="assets-pagination" aria-label="Pages d’assets">{pagination.page > 1 ? <Link className="admin-action" href={url({ page: String(pagination.page - 1) })}>← Précédente</Link> : <span />}<span>Page {pagination.page} sur {pagination.total}</span>{pagination.page < pagination.total ? <Link className="admin-action" href={url({ page: String(pagination.page + 1) })}>Suivante →</Link> : <span />}</nav>
+    </details>
   </main>;
 }

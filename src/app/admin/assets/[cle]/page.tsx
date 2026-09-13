@@ -115,6 +115,9 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
         <Link href="/admin/assets" className="underline underline-offset-4 admin-secondaire">← tous les assets</Link>
       </p>
       <h2 className={styles.titre}>{libelleAsset(famille)}</h2>
+      <AtelierExterne id={spec.id} concept={prompts.concept} vues={prompts.vues} stockage={!!stockageSources} sources={sources} erreurSources={erreurSources} />
+      <PromptProduction texte={promptProduction(spec, reception.fichiers, sources[0])} libelle="Copier la demande d’intégration pour mon agent" />
+      <details><summary className="admin-action mb-6">Aperçus 3D, variantes et détails techniques</summary>
       <p className={styles.identifiant}><code>{spec.id}</code></p>
       <p className="mb-6 flex flex-wrap items-center gap-2 text-sm admin-secondaire">
         <Link href={urlListe({ type: spec.type })} className="underline-offset-4 hover:underline">{LIBELLES_TYPE[spec.type]}</Link>
@@ -150,8 +153,6 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
           <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}`}>Télécharger le manifeste JSON</a>
           <a className="admin-action" href={`/admin/assets/export?cle=${spec.id}&format=prompt`}>Télécharger le prompt texte</a>
         </div>
-        <AtelierExterne id={spec.id} concept={prompts.concept} vues={prompts.vues} stockage={!!stockageSources} sources={sources} erreurSources={erreurSources} />
-        <PromptProduction texte={promptProduction(spec, reception.fichiers, sources[0])} />
       </section>
       {variantes.length > 1 ? <Bloc titre={`${libelleAsset(famille)} — base et déclinaisons`} aide="Une géométrie commune, des peintures distinctes. Chaque version conserve son propre état de réception."><div className="assets-variantes">{variantes.map(v => <Link key={v.id} href={`/admin/assets/${v.id}`} aria-current={v.id === spec.id ? 'page' : undefined}>{v.type === 'unite' ? 'Base partagée' : territoireDe(v, codesPays).pays ? paysParCode.get(territoireDe(v, codesPays).pays!)?.nomCourt ?? v.cle : v.cle}</Link>)}</div></Bloc> : null}
       <section id="fichiers"><Bloc titre={`Fichiers obligatoires — ${requis.filter(n => reception.fichiers.includes(n)).length} / ${requis.length} réceptionnés`} aide="Présent ne signifie pas conforme : le verdict technique est indiqué plus bas. Les variantes saisonnières restent facultatives."><ul className="assets-fichiers">{requis.map(n => <li key={n}><span className={reception.fichiers.includes(n) ? styles.present : styles.manquant}>{reception.fichiers.includes(n) ? 'Présent' : 'Manquant'}</span> <code>{n}</code></li>)}</ul></Bloc></section>
@@ -316,6 +317,7 @@ export default async function FicheAsset({ params }: { params: Promise<{ cle: st
       <details className="mb-8 text-xs">
         <summary className="cursor-pointer admin-secondaire">Le JSON tel qu’il part au générateur</summary>
         <pre className="mt-2 overflow-x-auto rounded-lg border border-current/10 p-4 font-mono">{JSON.stringify(spec, null, 2)}</pre>
+      </details>
       </details>
       </details>
     </main>
