@@ -428,3 +428,7 @@ Les variantes régionales sont suspendues (126 fiches et lots retirés, 10 fiche
 ### Suite — le camp de base avant la carte
 
 Après profil/nom/difficulté, `/campagne/salon` propose Continuer (carte) ou Journal de bord. Les retours des missions reviennent au salon. `Progression.rencontres` est alimenté depuis les unités réellement visibles en campagne et leurs commandants ; première mission/journée et relation allié/adversaire sont conservées. Pas de rétroactivité supposée depuis les anciennes victoires, pas de fiches auteur dans le journal. Les commandants purement dialogués sans unités observées restent hors collecte. Aucun test ni build lancé.
+
+### Écran de départ : présentation de jeu
+
+`campagne/depart/menu.module.css` et `theatre.tsx` donnent au départ une présentation dédiée de menu de jeu (diorama SVG original, emplacements numérotés, sélection puis validation de difficulté). L’ancienne feuille partagée reste au salon/journal. Aucune nouvelle ressource lourde, aucune modification des sauvegardes ou du déblocage. Aucun test/build ni validation visuelle lancé, selon la consigne.
