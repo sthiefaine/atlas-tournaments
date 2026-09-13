@@ -656,6 +656,12 @@ export class Controleur {
     return true;
   }
 
+  /** Achat depuis le carnet : même validation et mêmes événements que le HUD. */
+  produireDepuisCarnet(cle: CleUnite, batiment: Case): boolean {
+    if (!this.monTour || this.phaseCourante === 'attente') return false;
+    return this.jouer({ type: 'produire', batiment, unite: cle });
+  }
+
   /** Produit une unité depuis le menu de production. */
   choisirProduction(cle: CleUnite): void {
     const batiment = this.batimentProduction;

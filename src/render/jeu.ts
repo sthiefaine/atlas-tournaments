@@ -196,6 +196,7 @@ export interface Jeu {
    * on ne retient pas un écran de chargement sur une ignorance.
    */
   etatChargement(): EtapeChargement;
+  produireDepuisCarnet(unite: CleUnite, batiment: Case): boolean;
   /** Force une image. */
   salir(): void;
   /** Efface la sauvegarde locale de ce scénario. */
@@ -1185,6 +1186,10 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
      * pas un écran de chargement sur une ignorance.
      */
     etatChargement: (): EtapeChargement => etapeChargement(rendu.mesurer?.()),
+    produireDepuisCarnet: (unite, batiment) => {
+      if (!vivant || attenteIa || partitionEnCours || dialogueActif()) return false;
+      return controleur.produireDepuisCarnet(unite, batiment);
+    },
     salir: () => rafraichir(),
     oublierSauvegarde: () => effacerSauvegarde(options.scenario.code, cleLocale),
     forcerAmbiance,

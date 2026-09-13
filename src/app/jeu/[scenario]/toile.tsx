@@ -145,6 +145,7 @@ function BlocBilan(
 
 export default function Toile({ scenario, carte, locale, surChargement }: ProprietesToile): React.ReactElement {
   const conteneurRef = useRef<HTMLDivElement>(null);
+  const jeuRef = useRef<Jeu | null>(null);
   const index = campagne.missions.findIndex(m => m.scenarioCle === scenario.code);
   const essaiAube = estMissionAube(scenario.code);
   const mission = useMemo(() => campagne.missions[index] ?? (essaiAube ? {
@@ -389,6 +390,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     // question ne coûte qu'une lecture de compteurs. Sans cette boucle, l'écran
     // s'effaçait ici, alors que la première image était encore à venir.
     const partie = jeu;
+    jeuRef.current = partie;
     let image: number | null = null;
     // Le budget se dépense **image par image**, jamais en horloge murale : un
     // onglet mis en arrière-plan ne reçoit plus d'images, et une minute passée
@@ -410,6 +412,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     return () => {
       if (image !== null) cancelAnimationFrame(image);
       audio.detruire();
+      if (jeuRef.current === partie) jeuRef.current = null;
       partie.demonter();
     };
   }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut]);
@@ -496,7 +499,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
-    {carnetOuvert && etat && <CarnetEnJeu etat={etat} catalogueVersion={scenario.catalogueVersion} fermer={() => setCarnetOuvert(false)} />}
+    {carnetOuvert && etat && <CarnetEnJeu etat={etat} catalogueVersion={scenario.catalogueVersion} pays={scenarioEffectif.incarnation?.paysCode ?? scenario.paysCode} surProduire={(unite, batiment) => jeuRef.current?.produireDepuisCarnet(unite, batiment) ?? false} fermer={() => setCarnetOuvert(false)} />}
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || commandantEnAttente || undefined} />
     {/* Le vestiaire, avant tout montage : seize cases, un banc à prendre. Le
         composant ne lit rien — la page compose ses fiches depuis le roster du
