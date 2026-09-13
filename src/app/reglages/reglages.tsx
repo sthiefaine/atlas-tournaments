@@ -8,7 +8,7 @@ import { indexChoix } from '../navigation-choix';
 import { QUALITES_RENDU, type QualiteRendu } from '../../render/qualite';
 import { VITESSES_ANIMATIONS } from '../../render/cadence';
 import {
-  ecrireDifficulte, lireDifficulte, NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
+  modeDifficileDebloque, ecrireDifficulte, lireDifficulte, NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
   compterProgression, effacerProgression, ecrirePreferences, lirePreferences,
   lireProfils, normaliserNomProfil, renommerProfil, stockageDisponible,
   type BilanProgression, type EtatProfils, type Preferences, type Profil,
@@ -279,6 +279,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     </Groupe>
 
     <Groupe id="reglage-difficulte" titre={libelles.difficulte}>
+      <p className="reglage-note">Le mode difficile se débloque après la finale de la campagne en mode normal, pour ce profil.</p>
       <p className="reglage-note">{nomDe(profils.actif)} · {libelles.difficulteNote}</p>
       <p className="reglage-note">{remplir(libelles.victoiresModes, victoiresModes)}</p>
       <div className="reglage-choix" role="radiogroup" aria-label={libelles.difficulte}>
@@ -290,7 +291,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
             if (ok) setDifficulte(valeur);
           };
           return <button key={mode} type="button" role="radio" aria-checked={choisi} tabIndex={choisi ? 0 : -1}
-            disabled={!pret} className={choisi ? 'choisi' : ''}
+            disabled={!pret || (mode === 'difficile' && !modeDifficileDebloque(profils.actif))} className={choisi ? 'choisi' : ''}
             onClick={() => choisir(mode)}
             onKeyDown={(event) => naviguer(event, index, 2, (i) => choisir(i === 0 ? 'normal' : 'difficile'))}>
             {mode === 'normal' ? libelles.normal : libelles.difficile}

@@ -111,3 +111,5 @@
 .aube-cartes article>a,.carnet-kit dt{color:#72e4ce}.aube-cartes small{opacity:1;color:#bacbd9}
 .carnet-vestiaire{border:1px solid #cad4d9;border-radius:18px;padding:26px;background:#f3f6f7;color:#203143}
 @media(max-width:600px){.carnet-vestiaire{padding:20px}.dossier-texte{padding:20px}.carnet-route ol{gap:2px}.station-losange{width:36px;height:36px}}
+
+.campagne-complements{background:#142b3b;color:#e7f1f6;padding:20px max(20px,calc((100% - 980px)/2));border-top:1px solid #3c5968}.campagne-complements>summary{cursor:pointer;font-weight:800;padding:8px 0;color:#a5efd8}.campagne-complements>summary:focus-visible{outline:3px solid #ffdf83;outline-offset:4px}

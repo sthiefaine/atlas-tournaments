@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { libelleDecision } from './consequences';
 import { estSourceBanc, scenarioDeSource } from './bancs';
-import { indexChoix } from '../navigation-choix';
+import { CarteParcours } from './carte-parcours';
 import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { Vignette } from '../jeu/parties-libres';
-import { lireProfils, type EtatProfils } from '../preferences';
+import { lireDifficulte, lireProfils, type EtatProfils } from '../preferences';
 import { etatsItineraire, stationParDefaut, type EtatStation } from './itineraire';
 import { lireProgression, vestiaire as clesOuvertes, type Progression } from './progression';
 import { Gras } from '../gras';
@@ -185,6 +185,7 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
   const [progression, setProgression] = useState<Progression>({ version: 1, victoires: [] });
   const [profils, setProfils] = useState<EtatProfils | null>(null);
   const [pret, setPret] = useState(false);
+  const [mode, setMode] = useState<'normal' | 'difficile'>('normal');
   // La station que le joueur a choisie ; tant qu'il n'a rien choisi, c'est la
   // prochaine à jouer qui s'ouvre — c'est ce qu'il vient chercher neuf fois sur dix.
   const [choisie, setChoisie] = useState<number | null>(null);
@@ -193,7 +194,10 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
     // `pageshow` et `storage` : le retour depuis une mission passe souvent par le
     // cache de navigation, qui ne rejoue pas le montage.
     const lire = (): void => {
-      setProgression(lireProgression());
+      const progression = lireProgression();
+      const mode = lireDifficulte();
+      setMode(mode);
+      setProgression(progression);
       setProfils(lireProfils());
       setPret(true);
     };
@@ -206,10 +210,11 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
     };
   }, []);
 
+  const victoiresMode = progression.victoiresParMode?.[mode] ?? (mode === 'normal' && !progression.victoiresParMode ? progression.victoires : []);
   const codes = epreuves.map((e) => e.cle);
-  const etats = etatsItineraire(codes, progression.victoires, pret);
+  const etats = etatsItineraire(codes, victoiresMode, pret);
   const gagnees = etats.filter((e) => e === 'gagnee').length;
-  const active = choisie ?? stationParDefaut(codes, progression.victoires);
+  const active = choisie ?? stationParDefaut(codes, victoiresMode);
   const mission = epreuves[active];
   const etat: EtatStation = etats[active] ?? 'verrouillee';
   const mot = (e: EtatStation): string =>
@@ -259,40 +264,8 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
         : null}
     </p>
 
-    <nav className="carnet-route" aria-label={libelles.itineraire}>
-      <ol>
-        {epreuves.map((m, i) => {
-          const e = etats[i] ?? 'verrouillee';
-          // L'état est peint sur la station ; il est aussi **dit**, parce qu'une
-          // peinture ne se lit pas à la voix et qu'un losange plein ne prononce
-          // pas « remportée ».
-          return <li key={m.cle} data-etat={e}>
-            <button
-              type="button"
-              className="station"
-              data-etat={e}
-              aria-current={i === active ? 'step' : undefined}
-              aria-controls="dossier-mission"
-              tabIndex={i === active ? 0 : -1}
-              onKeyDown={(event) => {
-                const suivant = indexChoix(event.key, i, epreuves.length);
-                if (suivant === null) return;
-                event.preventDefault();
-                setChoisie(suivant);
-                event.currentTarget.closest('ol')?.querySelectorAll<HTMLButtonElement>('.station')[suivant]?.focus();
-              }}
-              aria-label={[m.rang, m.nom, mot(e)].filter((s) => s !== '').join(' · ')}
-              onClick={() => setChoisie(i)}
-            >
-              <span className="station-losange" aria-hidden="true">
-                <b>{i + 1}</b>
-              </span>
-              <span className="station-nom">{m.nom}</span>
-            </button>
-          </li>;
-        })}
-      </ol>
-    </nav>
+    <div className="carnet-avancee"><strong>{mode === 'normal' ? 'Mode normal' : 'Mode difficile'}</strong><Link className="atlas-retour" href="/campagne/depart">Changer de profil ou de difficulté</Link></div>
+    <CarteParcours epreuves={epreuves} etats={etats} active={active} choisir={i => { setChoisie(i); document.getElementById('dossier-mission')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' }); }} />
 
     {mission ? <section id="dossier-mission" className="carnet-dossier" data-etat={etat} aria-live="polite">
       {mission.vignette ? <CarteEpreuve vignette={mission.vignette} /> : null}

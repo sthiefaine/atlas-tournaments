@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-13",
+  "autorisation": "Demande du propriétaire de voir QG, infanterie et char importés dans Premier contact.",
+  "approbationArtistique": false,
+  "controle": "non_execute_a_la_demande_du_proprietaire",
+  "assets": [
+    {
+      "id": "unite_infanterie_base",
+      "fichierActif": "public/assets/modeles/unite_infanterie_base_lod0.glb",
+      "donnees": "../donnees/f83910c6a647389c04ae265d0f829eb0c54ab6b281d39ce0ff3b8b82dcf1661a.glb"
+    },
+    {
+      "id": "unite_char_leger_base",
+      "fichierActif": "public/assets/modeles/unite_char_leger_base_lod0.glb",
+      "donnees": "../donnees/df8a0e83a4a06118742ae8f8b75d692eba6349f16f4fc10b4c709186daa3ff90.glb"
+    },
+    {
+      "id": "batiment_qg_fr",
+      "fichierActif": "public/assets/modeles/batiment_qg_fr_lod0.glb",
+      "donnees": "../donnees/3d6c31e61c2416faae174771006d9925cc71dd7798a03227aa24f00a9829d679.glb"
+    }
+  ],
+  "notes": [
+    "Les kits actifs des anciennes bases infanterie et char sont retirés ; leurs candidats restent consultables.",
+    "Le QG est l’ancien modèle français remis sous une référence nationale, pas un nouveau GLB issu de Gemini."
+  ]
+}

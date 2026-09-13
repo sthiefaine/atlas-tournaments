@@ -191,5 +191,5 @@ export default async function PageCampagne(): Promise<React.ReactElement> {
         o.titre, { titre: t(locale, CLES_I18N_BANC.journal, { banc: t(locale, o.titre) }), effet: t(locale, o.effet) },
       ]))),
     }}
-  /><ParcoursAube /><GuideCommandants /></>;
+  /><details className="campagne-complements"><summary>Autres fronts et quêtes secondaires</summary><ParcoursAube /></details><details className="campagne-complements"><summary>Les commandants</summary><GuideCommandants /></details></>;
 }

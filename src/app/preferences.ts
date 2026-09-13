@@ -32,6 +32,7 @@
  * l'autre par simple `startsWith`.
  */
 
+import { campagneTermineeEnNormal } from './campagne/acces';
 import { volumeNormalise } from '../audio/types';
 import type { Mode } from '../schemas/types';
 import { normaliserVitesse, type VitesseAnimations } from '../render/cadence';
@@ -314,12 +315,19 @@ export function effacerProgression(profil: Profil = profilActif()): boolean {
 }
 
 
+/** Le déblocage appartient au profil, sans dépendance circulaire vers progression.ts. */
+export function modeDifficileDebloque(profil: Profil = profilActif()): boolean {
+  try { return campagneTermineeEnNormal(JSON.parse(localStorage.getItem(cleProgression(profil)) ?? 'null')); }
+  catch { return false; }
+}
+
 /** La difficulté appartient au profil ; les préférences de rendu restent communes. */
 export function lireDifficulte(profil: Profil = profilActif()): Mode {
-  try { return localStorage.getItem(`atlas:${SEGMENT_PROFIL[profil]}difficulte:v1`) === 'difficile' ? 'difficile' : 'normal'; }
+  try { return localStorage.getItem(`atlas:${SEGMENT_PROFIL[profil]}difficulte:v1`) === 'difficile' && modeDifficileDebloque(profil) ? 'difficile' : 'normal'; }
   catch { return 'normal'; }
 }
 export function ecrireDifficulte(profil: Profil, mode: Mode): boolean {
+  if (mode === 'difficile' && !modeDifficileDebloque(profil)) return false;
   try { localStorage.setItem(`atlas:${SEGMENT_PROFIL[profil]}difficulte:v1`, mode === 'difficile' ? 'difficile' : 'normal'); return true; }
   catch { return false; }
 }
