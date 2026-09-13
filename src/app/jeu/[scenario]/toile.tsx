@@ -496,7 +496,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
-    {carnetOuvert && <CarnetEnJeu fermer={() => setCarnetOuvert(false)} />}
+    {carnetOuvert && etat && <CarnetEnJeu etat={etat} catalogueVersion={scenario.catalogueVersion} fermer={() => setCarnetOuvert(false)} />}
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || commandantEnAttente || undefined} />
     {/* Le vestiaire, avant tout montage : seize cases, un banc à prendre. Le
         composant ne lit rien — la page compose ses fiches depuis le roster du

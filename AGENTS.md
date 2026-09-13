@@ -492,3 +492,7 @@ Boutons rotation gauche/droite et inclinaison retirés sur PC et mobile ; gestes
 ### Carnet superposé en jeu
 
 Le bouton Carnet ouvre un dialogue natif au-dessus du plateau, sans navigation ni démontage de la partie. Retour au jeu à gauche et Échap ferment le carnet, avec restitution du focus. Données publiques partagées avec la page historique, chargées à la demande. Aucun test/build lancé.
+
+### Carnet tactique contextuel
+
+Carnet superposé compact : Unités achetables maintenant calculées avec verifierProduction, état courant, camp 0, prix et producteurs libres ; bâtiments possédés et possibilités actuelles. Aucun achat de bâtiment inventé : le moteur ne le permet pas. Commandants rencontrés conservés. Aucun test/build lancé.

@@ -5,3 +5,5 @@
 @media(max-width:620px){.entete{align-items:flex-start;flex-direction:column;gap:10px}.contenu{grid-template-columns:1fr}.liste{flex-direction:row;max-height:none;overflow-x:auto;padding-bottom:8px}.liste button{min-width:160px}.onglets{margin-top:20px}}
 
 button.retour{background:none;border:0;font:inherit;cursor:pointer;padding:0}
+
+.integre{padding:20px;color:#edf4f5}.integre .fiche{border:0;background:#203949;padding:22px}.integre .fiche h2{font-size:24px}.integre .liste button{border:0}.integre .fiche footer{display:none}
