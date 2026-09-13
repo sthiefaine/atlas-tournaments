@@ -456,3 +456,7 @@ Le sélecteur ouvre sur « Toutes les unités » (camp bleu). Un paramètre `uni
 ### Lancement des missions sur la carte
 
 Le dossier de mission et son bouton sont ancrés directement sous l’étape sélectionnée sur la carte, plus dans un bloc en dessous. Les missions verrouillées restent sans bouton de lancement. Aucun test/build lancé.
+
+### Sons plus sobres — 13 septembre 2026
+
+Les timbres Web Audio abandonnent les montées mélodiques de capture/production/pouvoir. Mélange tonal distinct du bruit par son ; ambiances, sillage et clic de dialogue sans oscillateur audible. Moteurs/chenilles/rotors graves, pulsations mécaniques, filtres par matière et ambiances chevauchantes. Toujours synthétiques, aucun enregistrement ajouté ni validation d’écoute revendiquée. Aucun test/build lancé.

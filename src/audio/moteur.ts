@@ -1,25 +1,30 @@
 import { volumeNormalise, type Son, type SortieAudio } from './types';
 
 /** Timbres synthétiques courts, sans téléchargement ni aléa du moteur de jeu. */
-export const TIMBRES: Record<Son, { hz: number; fin: number; duree: number; bruit: number; niveau?: number }> = {
-  pas: { hz: 95, fin: 45, duree: .12, bruit: .8, niveau: .2 },
-  chenilles: { hz: 65, fin: 55, duree: .28, bruit: .7, niveau: .18 },
-  moteur: { hz: 100, fin: 125, duree: .28, bruit: .15, niveau: .16 },
-  rotor: { hz: 75, fin: 95, duree: .28, bruit: .5, niveau: .13 },
-  sillage: { hz: 65, fin: 35, duree: .3, bruit: .9, niveau: .13 },
-  parole: { hz: 310, fin: 240, duree: .045, bruit: .05, niveau: .08 },
-  vent: { hz: 30, fin: 35, duree: 3.8, bruit: .9, niveau: .025 },
-  pluie: { hz: 35, fin: 30, duree: 3.8, bruit: 1, niveau: .04 },
-  insectes: { hz: 1800, fin: 2100, duree: .12, bruit: .05, niveau: .015 },
-  vagues: { hz: 35, fin: 25, duree: 3.8, bruit: 1, niveau: .035 },
-  rafale: { hz: 180, fin: 70, duree: .12, bruit: .65 },
-  canon: { hz: 115, fin: 35, duree: .25, bruit: .5 },
-  missile: { hz: 230, fin: 700, duree: .35, bruit: .75 },
-  impact: { hz: 90, fin: 30, duree: .18, bruit: .8 },
-  hors_jeu: { hz: 180, fin: 35, duree: .42, bruit: .3 },
-  capture: { hz: 390, fin: 780, duree: .3, bruit: 0 },
-  production: { hz: 260, fin: 520, duree: .18, bruit: 0 },
-  pouvoir: { hz: 220, fin: 880, duree: .4, bruit: .1 },
+interface Timbre {
+  hz: number; fin: number; duree: number; bruit: number;
+  niveau: number; tonal: number; filtre: number; attaque?: number; pulsation?: number;
+}
+/** Matières sourdes et mécaniques ; aucune mélodie de récompense. */
+export const TIMBRES: Record<Son, Timbre> = {
+  pas: { hz: 72, fin: 58, duree: .11, bruit: .85, niveau: .24, tonal: .12, filtre: 650 },
+  chenilles: { hz: 52, fin: 50, duree: .32, bruit: .8, niveau: .24, tonal: .18, filtre: 950, pulsation: 24 },
+  moteur: { hz: 62, fin: 65, duree: .34, bruit: .45, niveau: .21, tonal: .35, filtre: 420, pulsation: 32 },
+  rotor: { hz: 48, fin: 48, duree: .34, bruit: .85, niveau: .18, tonal: .12, filtre: 650, pulsation: 18 },
+  sillage: { hz: 40, fin: 40, duree: .45, bruit: 1, niveau: .18, tonal: 0, filtre: 1100, attaque: .08 },
+  parole: { hz: 120, fin: 120, duree: .028, bruit: .7, niveau: .045, tonal: 0, filtre: 1400 },
+  vent: { hz: 30, fin: 30, duree: 4.8, bruit: 1, niveau: .055, tonal: 0, filtre: 480, attaque: 1.4 },
+  pluie: { hz: 30, fin: 30, duree: 4.8, bruit: 1, niveau: .055, tonal: 0, filtre: 2600, attaque: 1.2 },
+  insectes: { hz: 1800, fin: 1800, duree: 4.8, bruit: 1, niveau: .008, tonal: 0, filtre: 2800, attaque: 1.4, pulsation: 7 },
+  vagues: { hz: 30, fin: 30, duree: 4.8, bruit: 1, niveau: .07, tonal: 0, filtre: 850, attaque: 1.8 },
+  rafale: { hz: 105, fin: 65, duree: .095, bruit: 1, niveau: .42, tonal: .2, filtre: 2100 },
+  canon: { hz: 78, fin: 38, duree: .32, bruit: 1, niveau: .55, tonal: .35, filtre: 1300 },
+  missile: { hz: 65, fin: 55, duree: .5, bruit: 1, niveau: .34, tonal: .08, filtre: 1900, attaque: .06 },
+  impact: { hz: 68, fin: 36, duree: .22, bruit: 1, niveau: .42, tonal: .2, filtre: 850 },
+  hors_jeu: { hz: 58, fin: 38, duree: .55, bruit: .8, niveau: .28, tonal: .12, filtre: 550 },
+  capture: { hz: 130, fin: 125, duree: .16, bruit: .65, niveau: .22, tonal: .12, filtre: 1100 },
+  production: { hz: 82, fin: 78, duree: .24, bruit: .85, niveau: .26, tonal: .18, filtre: 800 },
+  pouvoir: { hz: 56, fin: 48, duree: .55, bruit: .8, niveau: .34, tonal: .25, filtre: 1200, attaque: .04 },
 };
 export const MAX_VOIX = 12;
 export interface AudioJeu extends SortieAudio { detruire(): void; regler(actif: boolean, volume: number): void }
@@ -71,18 +76,18 @@ export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number
       if (voix.size >= MAX_VOIX) voix.values().next().value?.();
       const c = contexte, t = c.currentTime, p = TIMBRES[son];
       const gain = c.createGain(); gain.connect(sortie);
-      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(p.niveau ?? .5, t + (p.duree > 1 ? .5 : .006));
+      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(p.niveau, t + (p.attaque ?? .004));
       gain.gain.exponentialRampToValueAtTime(.0001, t + p.duree);
-      const osc = c.createOscillator(); osc.type = 'triangle'; osc.frequency.setValueAtTime(p.hz, t);
-      osc.frequency.exponentialRampToValueAtTime(p.fin, t + p.duree); osc.connect(gain);
+      const osc = c.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(p.hz, t);
+      osc.frequency.exponentialRampToValueAtTime(p.fin, t + p.duree); const tonal = c.createGain(); tonal.gain.value = p.tonal; osc.connect(tonal); tonal.connect(gain);
       const buffer = c.createBuffer(1, Math.ceil(c.sampleRate * p.duree), c.sampleRate);
-      const donnees = buffer.getChannelData(0); let graine = 1977;
-      for (let i = 0; i < donnees.length; i++) { graine = (Math.imul(graine, 1664525) + 1013904223) >>> 0; donnees[i] = (graine / 2147483648 - 1) * p.bruit; }
+      const donnees = buffer.getChannelData(0); let graine = (1977 + Math.floor(t * 1000)) >>> 0;
+      for (let i = 0; i < donnees.length; i++) { graine = (Math.imul(graine, 1664525) + 1013904223) >>> 0; const modulation = p.pulsation ? .55 + .45 * Math.sin(2 * Math.PI * p.pulsation * i / c.sampleRate) ** 2 : 1; donnees[i] = (graine / 2147483648 - 1) * p.bruit * modulation; }
       const bruit = c.createBufferSource(); bruit.buffer = buffer;
-      const filtre = c.createBiquadFilter(); filtre.type = 'lowpass'; filtre.frequency.value = son === 'missile' ? 2200 : 1200;
+      const filtre = c.createBiquadFilter(); filtre.type = 'lowpass'; filtre.frequency.value = p.filtre;
       bruit.connect(filtre); filtre.connect(gain);
       let fini = false;
-      const arreter = (): void => { if (fini) return; fini = true; voix.delete(arreter); osc.onended = null; try { osc.stop(); bruit.stop(); } catch {} osc.disconnect(); bruit.disconnect(); filtre.disconnect(); gain.disconnect(); };
+      const arreter = (): void => { if (fini) return; fini = true; voix.delete(arreter); osc.onended = null; try { osc.stop(); bruit.stop(); } catch {} osc.disconnect(); tonal.disconnect(); bruit.disconnect(); filtre.disconnect(); gain.disconnect(); };
       voix.add(arreter); osc.onended = arreter;
       osc.start(t); bruit.start(t); osc.stop(t + p.duree); bruit.stop(t + p.duree);
     },
