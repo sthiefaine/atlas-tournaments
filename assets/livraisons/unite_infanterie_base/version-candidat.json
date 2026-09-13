@@ -1,6 +1,6 @@
 {
-  "remplacePar": "source.json",
-  "revision": "c2a572aa2c925035e8037e1901f145ffa108d5300c98533537df14267c85dfd6",
-  "approbationArtistique": false,
-  "note": "Ancien rapport proc\u00e9dural remplac\u00e9 par le candidat source HD."
+  "revision": "82d0e24c92770b2954f9c978ffdbc7efa253a24a06bb47e35aeb15e3db238587",
+  "source": "source.json",
+  "compression": "compression.json",
+  "approbationArtistique": false
 }

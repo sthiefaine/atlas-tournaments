@@ -1,13 +1,24 @@
 {
-  "source": "armored soldier 3d model.glb",
-  "sha256": "d98081ee79d3d57c5ce16d8dec70f602a78ec07e63030ee9652aa4b7ac433b84",
-  "trianglesSource": 985194,
-  "trianglesLivres": 985194,
-  "trianglesParAttache": [
-    80377,
-    904817
+  "source": "military soldier 3d model.glb",
+  "sha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710",
+  "octetsSource": 30302800,
+  "dimensionsSource": [
+    0.979888916015625,
+    0.960662841796875,
+    0.630340576171875
   ],
-  "pixelsEquipe": 7383,
+  "facteursEchelle": [
+    0.4592357283004765,
+    0.6245687601257981,
+    0.7138997821350763
+  ],
+  "trianglesSource": 951858,
+  "trianglesLivres": 951858,
+  "trianglesParAttache": [
+    44313,
+    907545
+  ],
+  "pixelsEquipe": 22105,
   "approbationArtistique": false,
   "limites": [
     "Geste rigide du groupe : pas de marche squelettique individuelle",

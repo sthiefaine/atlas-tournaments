@@ -48,8 +48,10 @@ export function decompresserGlb(octets: Uint8Array): Uint8Array {
   const brut = new Uint8Array(taille);
   for (const b of d.bufferViews) {
     const c = b.extensions![EXT_MESHOPT]!;
-    const sortie = brut.subarray(b.byteOffset ?? 0, (b.byteOffset ?? 0) + b.byteLength);
+    // Le décodeur de référence reconstruit des vues sur target.buffer sans byteOffset.
+    const sortie = new Uint8Array(b.byteLength);
     MeshoptDecoder.decodeGltfBuffer(sortie, c.count, c.byteStride, bin.subarray(c.byteOffset ?? 0, (c.byteOffset ?? 0) + c.byteLength), c.mode);
+    brut.set(sortie, b.byteOffset ?? 0);
     b.buffer = 0; delete b.extensions![EXT_MESHOPT]; if (!Object.keys(b.extensions!).length) delete b.extensions;
   }
   d.buffers = [{ byteLength: taille }];

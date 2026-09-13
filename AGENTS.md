@@ -468,3 +468,7 @@ Les timbres Web Audio abandonnent les montées mélodiques de capture/production
 ### Catégories lisibles dans la bibliothèque
 
 La vue simple propose Unités / Bâtiments / Commandants / Décors. Les unités se filtrent en Infanterie / Mobiles / Aériennes / Navales / Autres à partir du domaine et du déplacement du catalogue. Terrains et effets restent accessibles dans Décors. Les fiches et le dépôt GLB restent inchangés. Aucun test/build lancé.
+
+### Nouvelle source infanterie 083b0e21 — 13 septembre 2026
+
+951 858 triangles conservés depuis military soldier 3d model.glb, SHA sélectionné vérifié sur la copie Downloads. PNG 4K externes ; GLB Meshopt 13 268 248 octets ; lot 44 953 155 octets. Contrôle ciblé explicitement demandé : ok. Le décodeur JS de contrôle ignorait byteOffset pour les indices : décodage dans un tampon séparé puis copie au bon emplacement. Candidat exposé, aucune activation automatique avant revue humaine. Animations rigides, échelle distincte par axe pour le contrat, masque estimé à revoir.

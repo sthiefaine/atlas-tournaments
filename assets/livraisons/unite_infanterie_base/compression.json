@@ -1,0 +1,12 @@
+{
+  "id": "unite_infanterie_base",
+  "revision": "82d0e24c92770b2954f9c978ffdbc7efa253a24a06bb47e35aeb15e3db238587",
+  "codec": "EXT_meshopt_compression",
+  "quantification": false,
+  "octetsGlbAvant": 27548200,
+  "octetsGlbApres": 13268248,
+  "octetsLot": 44953155,
+  "tests": "non ex\u00e9cut\u00e9s \u00e0 la demande du propri\u00e9taire",
+  "approbationArtistique": false,
+  "controle": "controler:asset ok, apr\u00e8s correction du d\u00e9codeur de contr\u00f4le"
+}

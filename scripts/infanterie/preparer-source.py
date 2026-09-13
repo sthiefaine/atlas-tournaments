@@ -5,7 +5,7 @@ import struct,json,math,io,hashlib,sys
 ROOT=Path(__file__).resolve().parents[2]
 SRC=Path(sys.argv[1]); ID='unite_infanterie_base'; OUT=ROOT/'assets/livraisons'/ID; OUT.mkdir(parents=True,exist_ok=True)
 b=SRC.read_bytes(); sha=hashlib.sha256(b).hexdigest()
-if sha!='d98081ee79d3d57c5ce16d8dec70f602a78ec07e63030ee9652aa4b7ac433b84': raise ValueError('Source différente de la révision inspectée')
+if sha!='083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710': raise ValueError('Source différente de la révision inspectée')
 n=struct.unpack_from('<I',b,12)[0];d=json.loads(b[20:20+n]);binary=b[28+n:]
 def read(i,nc):
  a=d['accessors'][i];v=d['bufferViews'][a['bufferView']];fmt={5126:'f',5125:'I',5123:'H'}[a['componentType']];start=v.get('byteOffset',0)+a.get('byteOffset',0);step=v.get('byteStride',struct.calcsize(fmt)*nc)
@@ -67,5 +67,5 @@ for name,dur in [('repos',2.4),('deplacement',1),('tir',.7),('touche',.5),('hors
 material=lambda name:{'name':name,'pbrMetallicRoughness':{'baseColorTexture':{'index':0},'metallicRoughnessTexture':{'index':2},'metallicFactor':1,'roughnessFactor':1},'normalTexture':{'index':1}}
 g={'asset':{'version':'2.0','generator':'Atlas — source Tripo HD sans décimation','extras':{'sourceSha256':sha}},'buffers':[{'byteLength':len(out)}],'bufferViews':views,'accessors':accessors,'meshes':meshes,'nodes':nodes,'scenes':[{'nodes':[0]}],'scene':0,'animations':animations,'materials':[material('mat_corps')],'images':[{'uri':f'{ID}_{c}.png'}for c in ['albedo','normale','rugosite','masque_equipe']],'textures':[{'source':i}for i in range(4)]}
 j=json.dumps(g,separators=(',',':')).encode();j+=b' '*((-len(j))%4);out.extend(b'\0'*((-len(out))%4));(OUT/f'{ID}_lod0.glb').write_bytes(struct.pack('<III',0x46546c67,2,28+len(j)+len(out))+struct.pack('<II',len(j),0x4e4f534a)+j+struct.pack('<II',len(out),0x004e4942)+out)
-report={'source':SRC.name,'sha256':sha,'trianglesSource':len(idx)//3,'trianglesLivres':sum(len(x)//3 for x in groupes),'trianglesParAttache':[len(x)//3 for x in groupes],'pixelsEquipe':sum(x==255 for x in mask.getdata()),'approbationArtistique':False,'limites':['Geste rigide du groupe : pas de marche squelettique individuelle','Absence de lumière cuite non certifiée','Orientation front à confirmer dans inspecteur']}
+report={'source':SRC.name,'sha256':sha,'octetsSource':len(b),'dimensionsSource':[hi[i]-lo[i]for i in range(3)],'facteursEchelle':[sx,sy,sz],'trianglesSource':len(idx)//3,'trianglesLivres':sum(len(x)//3 for x in groupes),'trianglesParAttache':[len(x)//3 for x in groupes],'pixelsEquipe':sum(x==255 for x in mask.getdata()),'approbationArtistique':False,'limites':['Geste rigide du groupe : pas de marche squelettique individuelle','Absence de lumière cuite non certifiée','Orientation front à confirmer dans inspecteur']}
 (OUT/'source.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

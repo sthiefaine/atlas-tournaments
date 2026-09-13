@@ -7,7 +7,7 @@ import { assemblerCompression, EXT_MESHOPT, morceauxGlb } from '../../src/assets
 
 async function main() {
   const id = process.argv[2];
-  if (id !== 'unite_char_leger_base') throw new Error('Cette première compression est limitée au char léger demandé');
+  if (!id || !['unite_char_leger_base', 'unite_infanterie_base'].includes(id)) throw new Error('Asset source non autorisé pour cette compression');
   const dossier = path.resolve('assets/livraisons', id), nom = `${id}_lod0.glb`, fichier = path.join(dossier, nom);
   const initial = readFileSync(fichier), { document: d, bin } = morceauxGlb(initial);
   if (d.extensionsRequired?.includes(EXT_MESHOPT)) throw new Error('Fichier déjà compressé : repartir de la préparation source');
