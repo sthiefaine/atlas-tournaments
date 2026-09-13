@@ -116,10 +116,14 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
       cancelAnimationFrame(image);
       observer?.disconnect(); controls?.dispose();
       scene.environment = null;
-      environnement?.dispose(); renderer?.dispose();
       // Les unités partagent leurs géométries et textures avec le jeu : ne pas les libérer ici.
       for (const materiau of propres) materiau.dispose();
       materiaux.dispose(); libererBatimentsLivres(batiments); batiments.clear();
+      environnement?.dispose();
+      // Les événements dispose des matériaux utilisent encore les programmes du moteur.
+      // Détruire le moteur en dernier, une fois ces écouteurs détachés.
+      renderer?.dispose();
+      renderer = null;
     };
   }, [unite, batiment, pays, camp]);
   return <div className={styles.scene} ref={cadre}>
