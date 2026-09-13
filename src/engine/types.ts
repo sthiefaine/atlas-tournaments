@@ -418,7 +418,7 @@ export interface CtxMecanique<P = Record<string, never>> {
 /** Effet déclaratif renvoyé par un hook : le moteur seul écrit dans l'état. */
 export type EffetMecanique =
   | { type: 'changer_terrain'; case: Case; vers: CleTerrain; journees?: number }
-  | { type: 'degats'; case: Case; pv: number }
+  | { type: 'degats'; case: Case; pv: number; lethal?: boolean }
   | { type: 'repousser'; case: Case; vers: Case }
   | {
       type: 'modificateur';

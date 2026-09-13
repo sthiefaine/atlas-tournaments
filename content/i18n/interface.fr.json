@@ -1,6 +1,9 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle": "hud.maree_basse", "texte": "Marée basse", "contexte": {"ecran": "partie", "note": "Prévision de la marée pour cette journée."}, "longueurMax": 24},
+    {"cle": "hud.maree_haute", "texte": "Marée haute", "contexte": {"ecran": "partie", "note": "Prévision de la marée pour cette journée."}, "longueurMax": 24},
+
     {"cle": "reglages.sons", "texte": "Sons en partie", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
     {"cle": "reglages.sons_note", "texte": "Tirs, impacts et captures. Le son démarre après un geste sur la carte.", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},
     {"cle": "reglages.volume_sons", "texte": "Volume des effets", "contexte": {"ecran": "reglages", "note": "Réglage des effets sonores de partie."}, "longueurMax": 90},

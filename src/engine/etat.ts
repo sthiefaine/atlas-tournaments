@@ -44,7 +44,7 @@ import { cleCase } from './types';
  * scénario font paraître leurs unités au début du tour. Un rejeu d'avant qui
  * produisait sous impulsion diverge.
  */
-export const VERSION_MOTEUR = 8;
+export const VERSION_MOTEUR = 9;
 
 /** Jauge maximale par défaut, quand le camp n'a pas de commandant. */
 export const JAUGE_MAX_DEFAUT = 900;

@@ -20,6 +20,7 @@ import { expirationDe, expirerPoses, poserModificateur } from './pouvoirs';
 import { deployerRenforts } from './renforts';
 import { produireSuperusines } from './superusines';
 import { evaluerFin } from './victoire';
+import { mettreHorsJeu } from './combat';
 import { ouvrirTechnologies } from './technologies';
 
 /** Applique les effets déclaratifs d'un hook. Rien d'autre n'écrit dans l'état. */
@@ -42,10 +43,11 @@ export function appliquerEffets(
     } else if (effet.type === 'degats') {
       const u = uniteSur(etat, effet.case);
       if (u) {
-        // Une mécanique handicape, elle n'élimine jamais : au moins 1 PV interne.
-        const perdus = Math.max(0, Math.min(u.pv - 1, Math.round(effet.pv)));
+        // Les mécaniques restent non létales sauf demande explicite (marée).
+        const perdus = Math.max(0, Math.min(u.pv - (effet.lethal ? 0 : 1), Math.round(effet.pv)));
         u.pv -= perdus;
         evts.push({ type: 'degats_mecanique', uniteId: u.id, pv: perdus });
+        if (u.pv <= 0) mettreHorsJeu(etat, cat, u.id, evts);
       }
     } else if (effet.type === 'repousser') {
       const u = uniteSur(etat, effet.case);

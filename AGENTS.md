@@ -501,3 +501,7 @@ Carnet superposé compact : Unités achetables maintenant calculées avec verifi
 ## Mise à jour — carnet de production en jeu (13 septembre 2026)
 
 Le carnet en dialogue natif utilise une liste de production et un aperçu 3D manipulable, chargé par les mêmes sources actives que le jeu (silhouette de repli pour les unités sans GLB). Les unités affichées sont achetables dans la partie courante : fonds, camp, occupation et règles de production. Le joueur choisit un bâtiment puis produit via le contrôleur normal, avec ses événements et sauvegardes ; les animations, dialogues et tours adverses bloquent cet achat. Les bâtiments possédés donnent accès à leurs productions, les commandants conservent leur journal de rencontres. Aucun test, build ni contrôle visuel automatique exécuté, conformément aux consignes du propriétaire.
+
+
+## Marées — 13 septembre 2026
+Le bulletin affiche marée haute/basse selon les paramètres de la mécanique pour chaque journée prévue. À la montée, une unité terrestre prise sur la grève perd 40 PV internes (4 affichés), puis est repoussée si elle survit. Cargo, ponts posés et unités capables de naviguer sont exemptés. Moteur 9 : ancienne sauvegarde de partie incompatible, progression conservée. Aucun test exécuté.

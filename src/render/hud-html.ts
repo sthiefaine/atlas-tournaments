@@ -20,6 +20,7 @@ import {
   consommationParTour, prevoirDuel, pvAffiches, RAYON_STATION_RADAR, revenuParTour,
   seuilCapture, superusineSur, terrainLogique, uniteParId, sontAllies, VISION_STATION_RADAR,
 } from '../engine/index';
+import { mareeBasse, type ParametresMarees } from '../engine/mecaniques/marees';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
   CampId, Case, CleIllustration, CleTerrain, CleUnite, DureePouvoir, EffetModificateur,
@@ -1352,11 +1353,14 @@ export function monterHudHtml(
     const cellules = cases.slice(0, 1 + (v.etat.reglages.previsionJournees ?? 2)).map(({ meteo, jour: j, courant }) => {
       if (!meteo) return '';
       const nom = libelleMeteo(api.t, meteo);
+      const maree = v.etat.mecanique?.cle === 'meca_marees'
+        ? api.t(mareeBasse(v.etat.mecanique.parametres as unknown as ParametresMarees, j) ? 'hud.maree_basse' : 'hud.maree_haute') : '';
       return `<div class="meteo-case" data-courant="${courant ? 'oui' : 'non'}"`
         + ` aria-label="${ech(`${api.t('hud.meteo_jour', { n: j })} · ${nom}`)}">`
         + `<span class="meteo-jour">${ech(api.t('hud.meteo_jour', { n: j }))}</span>`
         + iconeMeteo(meteo)
-        + `<span class="meteo-nom">${ech(nom)}</span></div>`;
+        + `<span class="meteo-nom">${ech(nom)}</span>`
+        + (maree ? `<span class="meteo-nom">${ech(maree)}</span>` : '') + '</div>';
     }).join('');
     // La saison et la phase du jour restent dites : elles pèsent sur la vision
     // autant que le temps, et elles n'ont nulle part ailleurs où vivre.

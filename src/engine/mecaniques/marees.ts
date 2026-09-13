@@ -4,8 +4,7 @@
  * Une journée sur deux la mer se retire : toute case `mer` à `amplitudeCases` ou
  * moins d'une case `plage` est **vue comme** `plage`. La grille n'est jamais
  * réécrite. À la bascule vers la marée haute, une unité terrestre restée sur le
- * fond marin est repoussée vers la case libre la plus proche ; à défaut elle
- * subit 30 PV internes, jamais jusqu'à la mise hors jeu.
+ * fond marin perd 40 PV internes, puis se replie vers la terre si elle survit.
  */
 
 import type { Case, CleTerrain } from '../../schemas/index';
@@ -82,13 +81,16 @@ export const MECANIQUE_MAREES: Mecanique<ParametresMarees> = {
         const brut = terrainBrut(ctx.etat.grille, ctx.catalogue.parCaractere, u);
         if (brut !== 'mer') continue;
         if (!decouvre(ctx.etat.grille, ctx.catalogue.parCaractere, u, amplitude)) continue;
+        if (ctx.etat.unites.some(transport => transport.cargo.includes(u.id))) continue;
+        if (coutBase(ctx.catalogue, 'mer', type.typeMouvement, type) !== null) continue;
+        if (ctx.etat.terrainsPoses.some(t => t.case === cleCase(u) && t.terrain === 'pont' && (t.jusqu === null || t.jusqu >= ctx.journee))) continue;
+        effets.push({ type: 'degats', case: { x: u.x, y: u.y }, pv: 40, lethal: true });
+        if (u.pv <= 40) { occupees.delete(cleCase(u)); continue; }
         const refuge = plusProcheTerre(ctx, u, occupees, type);
         if (refuge) {
           occupees.delete(cleCase(u));
           occupees.add(cleCase(refuge));
           effets.push({ type: 'repousser', case: { x: u.x, y: u.y }, vers: refuge });
-        } else {
-          effets.push({ type: 'degats', case: { x: u.x, y: u.y }, pv: 30 });
         }
       }
       return effets;
