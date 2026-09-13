@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+const CarnetEnJeu = dynamic(() => import('../../campagne/journal/en-jeu'), { ssr: false });
 import { creerAudioJeu } from '@/audio/moteur';
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { t } from '@/i18n/index';
@@ -200,6 +202,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // La clé de sauvegarde dépend du profil actif de l'appareil ; c'est la page
   // qui la compose et la donne au rendu, qui ne connaît pas les profils.
   const [cleSauvegarde, setCleSauvegarde] = useState<string | null>(null);
+  const [carnetOuvert, setCarnetOuvert] = useState(false);
   const [voirAide, setVoirAide] = useState(false);
   // Une scène de dialogue est ouverte sur la carte : aucune modale ne doit
   // passer devant, pas même l'écran de fin.
@@ -493,6 +496,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
+    {carnetOuvert && <CarnetEnJeu fermer={() => setCarnetOuvert(false)} />}
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || commandantEnAttente || undefined} />
     {/* Le vestiaire, avant tout montage : seize cases, un banc à prendre. Le
         composant ne lit rien — la page compose ses fiches depuis le roster du
@@ -562,7 +566,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         title={texteNu(objectifMission, (c) => t(locale, `illustration.${c}`))}>
         <span aria-hidden="true">⚑</span><span className="atlas-mission-numero">{essaiAube ? 'A' : index + 1}</span><span className="atlas-mission-libelle">{t(locale, 'campagne.ouvrir_aide')}</span>
       </button>
-      <Link className="atlas-mission-fanion" href={`/campagne/journal?retour=${encodeURIComponent(`/jeu/${scenario.code}`)}`} aria-label="Ouvrir le carnet de bord">▤ Carnet</Link>
+      <button type="button" className="atlas-mission-fanion" onClick={() => setCarnetOuvert(true)} aria-label="Ouvrir le carnet de campagne">▤ Carnet</button>
     </aside> : null}
     {modal && !erreur ? <div className={`atlas-voile ${mission ? 'atlas-transmission' : ''}`}>
       <section ref={dialogueRef} tabIndex={-1} className="atlas-briefing" role="dialog" aria-modal="true" aria-labelledby="titre-mission">

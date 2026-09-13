@@ -488,3 +488,7 @@ La source de la corruption publiée était Buffer.slice dans le décodeur Meshop
 ### HUD : gestes caméra, titres et surfaces
 
 Boutons rotation gauche/droite et inclinaison retirés sur PC et mobile ; gestes du plateau conservés. Le bouton de détail des pouvoirs avait hérité width:100%, écrasant le titre du commandant : largeur bornée. Noms des pouvoirs sur lignes complètes, empilés et lisibles même indisponibles. Liserés décoratifs des cartes du HUD retirés, focus clavier conservé. Aucun test/build lancé.
+
+### Carnet superposé en jeu
+
+Le bouton Carnet ouvre un dialogue natif au-dessus du plateau, sans navigation ni démontage de la partie. Retour au jeu à gauche et Échap ferment le carnet, avec restitution du focus. Données publiques partagées avec la page historique, chargées à la demande. Aucun test/build lancé.
