@@ -1,8 +1,5 @@
-import Vitrine from './vitrine-client';
+import PageAtelier from '../page';
 
-export const metadata = { title: 'Vitrine des unités · Atlas' };
+export const metadata = { title: 'Unités · Atlas' };
 
-/** Une unité à la fois, sous six angles : la page où l'on juge une figurine. */
-export default function PageVitrine(): React.ReactElement {
-  return <Vitrine />;
-}
+export default PageAtelier;

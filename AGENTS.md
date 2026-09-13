@@ -436,3 +436,7 @@ Après profil/nom/difficulté, `/campagne/salon` propose Continuer (carte) ou Jo
 ### Carte de campagne allégée et indices retirés
 
 Le propriétaire rejette la densité de `/campagne` : écran réduit à profil/mode, carte et objectif/bouton de la mission sélectionnée. Plus de vestiaire, liste de futurs commandants, journal détaillé, guide, fronts annexes ni lien assets sur cette page. Les étapes verrouillées restent anonymes. Les indices secrets sont vides dans `fichesRoster` et retirés du sélecteur en briefing, sans changer les déblocages. Aucun test/build lancé.
+
+### Atelier des unités simplifié — 13 septembre 2026
+
+`/atelier` et `/atelier/unites` partagent le plateau du banc (monde 3, plaine au printemps par défaut) avec un seul sélecteur d’unité. Les panneaux, statistiques et fiches ne sont plus affichés. Une unité du camp bleu à la fois, à son emplacement terrestre ou marin ; sélection persistée dans l’URL et recentrage sans remise à zéro de l’orientation. Les gestes caméra restent disponibles. Aucun test, build ni contrôle visuel lancé, selon la demande.

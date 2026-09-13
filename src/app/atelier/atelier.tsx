@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { nomUnite } from '@/render/libelles';
 import { creerAudioJeu } from '@/audio/moteur';
 import { lirePreferences } from '../preferences';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
@@ -107,7 +108,7 @@ const ORDRE_GROUPES: readonly DescriptionGeste['groupe'][] = ['unites', 'batimen
 
 /** La vue d'ouverture, celle que l'URL complète ou corrige. */
 const VUE_DEFAUT: VueBanc = {
-  monde: 0, biome: 'plaine', saison: 'printemps', phase: 'jour', meteo: 'clair',
+  monde: 3, biome: 'plaine', saison: 'printemps', phase: 'jour', meteo: 'clair',
   paysAllie: 'fr', paysAdverse: 'lu', brouillard: false, genres: [],
 };
 
@@ -184,7 +185,8 @@ function useAgencement(): 'pc' | 'mobile' {
 
 interface Toast { texte: string; fixe: boolean }
 
-export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactElement {
+export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; simple?: boolean }): React.ReactElement {
+  const [uniteChoisie, setUniteChoisie] = useState('infanterie');
   const [index, setIndex] = useState(VUE_DEFAUT.monde);
   const [biome, setBiome] = useState<Biome>(VUE_DEFAUT.biome);
   const [saison, setSaison] = useState<Saison>(VUE_DEFAUT.saison);
@@ -270,6 +272,8 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   const [etat, setEtat] = useState<EtatPartie>(etatNeuf);
   useEffect(() => { setEtat(etatNeuf); }, [etatNeuf]);
 
+  const etatAffiche = useMemo(() => simple ? { ...etat, unites: etat.unites.filter(u => u.camp === 0 && u.type === uniteChoisie) } : etat, [etat, simple, uniteChoisie]);
+
   const vue = useMemo<VueInteraction>(() => ({
     catalogue,
     ambiance: ambiance(saison, phase, meteo),
@@ -287,7 +291,7 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   // avant celui de l'affichage, et il posait la scène avec l'état du monde
   // précédent — une carte 16 × 12 pour un banc de 20 × 12.
   vueCourante.current = vue;
-  etatCourant.current = etat;
+  etatCourant.current = etatAffiche;
 
   /** L'état, recouvert du climat choisi : les réglages doivent se voir. */
   const habille = useCallback((e: EtatPartie, v: VueInteraction): EtatPartie => ({
@@ -361,9 +365,15 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   // ferait repeindre les cinq jeux de matières pour rien.
   useEffect(() => {
     vueCourante.current = vue;
-    etatCourant.current = etat;
-    rendu.current?.afficher(habille(etat, vue), vue);
-  }, [etat, vue, habille]);
+    etatCourant.current = etatAffiche;
+    rendu.current?.afficher(habille(etatAffiche, vue), vue);
+  }, [etatAffiche, vue, habille]);
+
+  useEffect(() => {
+    if (!simple) return;
+    const unite = etatAffiche.unites[0];
+    if (unite) rendu.current?.recentrer?.({ x: unite.x, y: unite.y });
+  }, [simple, etatAffiche]);
 
   // ---- La vue dans l'URL -------------------------------------------------
   const vueBanc = useMemo<VueBanc>(() => ({
@@ -375,12 +385,16 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
   // l'URL partagée avec la vue par défaut avant même de l'avoir lue.
   useEffect(() => {
     if (!urlLue.current) return;
-    const requete = encoderVue(vueBanc);
+    const params = new URLSearchParams(encoderVue(vueBanc));
+    if (simple) params.set('unite', uniteChoisie);
+    const requete = params.toString();
     window.history.replaceState(null, '', `${window.location.pathname}${requete ? `?${requete}` : ''}`);
-  }, [vueBanc]);
+  }, [vueBanc, simple, uniteChoisie]);
   useEffect(() => {
     const v = decoderVue(window.location.search.replace(/^\?/, ''), VUE_DEFAUT);
-    setIndex(v.monde); setBiome(v.biome); setSaison(v.saison); setPhase(v.phase); setMeteo(v.meteo);
+    const unite = new URLSearchParams(window.location.search).get('unite');
+    if (unite && Object.hasOwn(catalogueCanon.unites, unite)) setUniteChoisie(unite);
+    setIndex(simple ? 3 : v.monde); setBiome(v.biome); setSaison(v.saison); setPhase(v.phase); setMeteo(v.meteo);
     setPaysAllie(v.paysAllie); setPaysAdverse(v.paysAdverse); setBrouillard(v.brouillard); setGenres([...v.genres]);
     urlLue.current = true;
   }, []);
@@ -604,6 +618,17 @@ export default function Atelier({ mondes }: { mondes: Monde[] }): React.ReactEle
     monde: blocMonde, ambiance: blocAmbiance, surbrillances: blocSurbrillances,
     gestes: blocGestesGroupes, limites: blocLimites, camera: blocCamera, rendu: blocRendu,
   };
+
+  if (simple) return <main className={styles.atelier}>
+    <div ref={conteneur} className={styles.monde} aria-label="Plateau 3D : glisser pour déplacer, Alt et glisser pour tourner, molette pour zoomer" />
+    <div className={styles.toast} role="status" aria-live="polite">{toast ? <span>{toast.texte}</span> : null}</div>
+    <label className={styles.selecteurUnite}>
+      <span>Unité</span>
+      <select value={uniteChoisie} onChange={e => setUniteChoisie(e.target.value)}>
+        {Object.values(catalogueCanon.unites).map(u => <option key={u.cle} value={u.cle}>{nomUnite('fr', catalogueCanon, u.cle)}</option>)}
+      </select>
+    </label>
+  </main>;
 
   return <main className={styles.atelier} data-agencement={agencement} data-dock={dockReplie ? 'replie' : 'ouvert'} data-niveau={niveau}>
     <div ref={conteneur} className={styles.monde} aria-label="Aperçu interactif : glissez pour déplacer la carte, pincez pour zoomer" />

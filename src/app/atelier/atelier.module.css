@@ -164,3 +164,34 @@
 .feuille { border-radius: 18px 18px 0 0; }
 .puce { min-height: 44px; }
 .accueil, .jouerLien { box-shadow: none; text-transform: none; letter-spacing: 0; }
+
+/* Le plateau et un seul choix, communs aux deux entrées de l’atelier. */
+.selecteurUnite {
+  position: absolute;
+  z-index: 10;
+  top: max(18px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(360px, calc(100% - 32px));
+  padding: 12px 16px;
+  border: 1px solid #567082;
+  border-radius: 14px;
+  background: #122735;
+  color: #fff;
+  box-shadow: 0 8px 24px #0005;
+}
+.selecteurUnite select {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid #6f8998;
+  border-radius: 8px;
+  background: #1d394a;
+  color: #fff;
+  font: inherit;
+}
+.selecteurUnite select:focus-visible { outline: 3px solid #7de7cb; outline-offset: 3px; }
