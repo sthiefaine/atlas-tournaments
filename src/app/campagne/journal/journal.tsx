@@ -32,7 +32,7 @@ export default function Journal({ fiches, missions, fermer, rubrique, integre = 
     {!pret ? <p className={styles.vide}>Ouverture du carnet…</p> : !active ? <p className={styles.vide}>Vos rencontres apparaîtront ici au fil des missions.</p> : <div className={styles.contenu}>
       <nav className={styles.liste} aria-label="Rencontres">
         {visibles.map(r => { const f = fiches.find(f => f.cle === r.cle && f.genre === r.genre); return <button key={identite(r)} type="button" aria-pressed={identite(r) === identite(active)} onClick={() => setSelection(identite(r))}><strong>{f?.nom ?? 'Rencontre'}</strong><span>{r.relation === 'allie' ? 'Allié' : 'Adversaire'}</span></button>; })}
-      </nav>}
+      </nav>
       <article className={styles.fiche} aria-live="polite">
         <p className={styles.categorie}>{active.relation === 'allie' ? 'Allié' : 'Adversaire'}</p>
         <h2>{fiche?.nom ?? 'Rencontre'}</h2>
