@@ -476,3 +476,7 @@ La vue simple propose Unités / Bâtiments / Commandants / Décors. Les unités 
 ## Remplacement direct des assets — décision du propriétaire, 13 septembre 2026
 
 Pour un GLB dont le propriétaire demande l’intégration, remplacer directement le modèle actif après contrôle technique réussi, sans demander d’approbation visuelle préalable. Cette décision remplace les consignes historiques contraires. Ne pas présenter cette activation comme une approbation artistique ; les limites connues restent à documenter. La nouvelle infanterie source 083b0e21 est activée selon cette règle. Les bâtiments disposent désormais de six fiches neutres `_base`, accessibles en priorité depuis la bibliothèque, avec prompt Gemini visible.
+
+### Carte de campagne cartographique — 13 septembre 2026
+
+Remplacement de l’île quadrillée de stations par un paysage SVG original (`paysage-campagne.tsx`) : côte, champs, reliefs, rivière et villages. Positions du parcours dessinées pour les 14 missions livrées ; géographie illustrative, pas frontières réelles. Repères hexagonaux SVG, route de progression, zoom et recentrage, navigation des missions par flèches clavier. Panneau de lancement superposé à la carte (bas sur mobile), étapes verrouillées anonymes. Aucune modification des règles de déblocage ni des sauvegardes. Aucun test/build ni capture, rendu non vérifié visuellement selon la consigne.

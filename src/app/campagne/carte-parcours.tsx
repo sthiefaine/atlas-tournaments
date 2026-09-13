@@ -1,36 +1,54 @@
 'use client';
 import Link from 'next/link';
+import { useEffect, useId, useRef, useState } from 'react';
 import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { EpreuveCarnet } from './carnet';
 import type { EtatStation } from './itineraire';
+import { PaysageCampagne } from './paysage-campagne';
 import styles from './carte-parcours.module.css';
 
-/** Carte de voyage originale : les chemins suivent le véritable ordre des missions. */
+const POSITIONS = [[205,185],[325,275],[435,225],[542,290],[478,411],[594,482],[721,431],[798,334],[903,262],[1050,340],[1054,460],[945,565],[813,636],[1000,690]] as const;
+function point(i: number) { const p = POSITIONS[i]; return p ? { x:p[0], y:p[1] } : { x:200+(i%6)*150, y:800+Math.floor((i-POSITIONS.length)/6)*120 }; }
+function Repere({ gagnee, verrouillee }: { gagnee: boolean; verrouillee: boolean }) {
+  return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 43 14V35L24 46 5 35V14Z" fill="currentColor"/><path d="M24 7 39 16V33L24 42 9 33V16Z" fill="none" stroke="currentColor"/>{gagnee ? <path d="m15 24 6 6 13-14" fill="none" stroke="var(--repere-encre)" strokeWidth="3"/> : verrouillee ? <><path d="M18 22v-4a6 6 0 0 1 12 0v4" fill="none" stroke="var(--repere-encre)" strokeWidth="2"/><rect x="16" y="22" width="16" height="12" rx="2" fill="var(--repere-encre)"/></> : <path d="M16 34V14h18l-4 6 4 6H18" fill="none" stroke="var(--repere-encre)" strokeWidth="2.5"/>}</svg>;
+}
 export function CarteParcours({ epreuves, etats, active, choisir, jouer, rejouer }: { epreuves: readonly EpreuveCarnet[]; etats: readonly EtatStation[]; active: number; choisir: (i: number) => void; jouer: string; rejouer: string }): React.ReactElement {
-  const colonnes = 5, rangs = Math.ceil(epreuves.length / colonnes), hauteur = Math.max(480, rangs * 150 + 280);
-  const point = (i: number) => { const r = Math.floor(i / colonnes), c = i % colonnes; return { x: 90 + (r % 2 ? colonnes - 1 - c : c) * 165, y: 100 + r * 150 + (c % 2 ? 25 : 0) }; };
-  const mission = epreuves[active], etatActif = etats[active] ?? 'verrouillee', ancre = point(active);
-  const trace = epreuves.map((_, i) => { const p = point(i); return `${i ? 'L' : 'M'}${p.x},${p.y}`; }).join(' ');
-  return <section className={styles.cadre} aria-label="Carte de la campagne"><div className={styles.entete}><span>✓ Terminée · ● Disponible · 🔒 Verrouillée</span></div>
-    <div className={styles.defilement}><div className={styles.carte} style={{ height: hauteur }}>
-      <svg viewBox={`0 0 900 ${hauteur}`} preserveAspectRatio="none" aria-hidden="true">
-        <defs><pattern id="atlas-mer" width="40" height="35" patternUnits="userSpaceOnUse"><path d="M5 20q8 5 16 0" stroke="#6ca5b9" fill="none" opacity=".35" /></pattern></defs>
-        <rect width="900" height={hauteur} fill="#306479" /><rect width="900" height={hauteur} fill="url(#atlas-mer)" />
-        <path d={`M25 50Q150 5 290 40T590 25Q820 5 870 90L850 ${hauteur-70}Q730 ${hauteur+5} 620 ${hauteur-45}T300 ${hauteur-35}Q50 ${hauteur+10} 30 ${hauteur-120}Z`} fill="#d3c994" stroke="#94b2a1" strokeWidth="14" />
-        <path d={`M55 75Q210 35 330 75T800 65L810 ${hauteur-100}Q560 ${hauteur-10} 360 ${hauteur-90}T65 ${hauteur-70}Z`} fill="#83aa72" />
-        {Array.from({length:rangs * 8},(_,i)=>{const x=60+(i*113)%780,y=50+(i*79)%(hauteur-100);return <g key={i} transform={`translate(${x} ${y})`}><path d="M-15 8 0-28 15 8Z" fill="#417b58"/><path d="M-10-1 0-24 10-1Z" fill="#5d9464"/><path d="M0 8v9" stroke="#685745" strokeWidth="4"/></g>;})}
-        <path d={`M420 25Q470 110 430 195T475 ${hauteur}`} stroke="#b8d5c2" strokeWidth="24" fill="none" /><path d={`M420 25Q470 110 430 195T475 ${hauteur}`} stroke="#5294b0" strokeWidth="14" fill="none" />
-        <path d={trace} fill="none" stroke="#546c53" strokeWidth="14" strokeLinejoin="round"/><path d={trace} fill="none" stroke="#f0dfa6" strokeWidth="8" strokeDasharray="8 5" strokeLinejoin="round"/>
-        {epreuves.map((_,i)=>{const p=point(i);return <g key={i} transform={`translate(${p.x-32} ${p.y-24})`}><rect x="-10" y="-7" width="22" height="17" fill="#f5e6ba"/><path d="M-15-7 1-18 17-7Z" fill={i<10?'#63788a':'#bd7050'}/></g>;})}
-      </svg>
-      {epreuves.map((m,i)=>{const p=point(i), etat=etats[i]??'verrouillee';return <button key={m.cle} className={styles.etape} style={{left:`${p.x/9}%`,top:p.y}} data-etat={etat} aria-current={i===active?'step':undefined} aria-controls="dossier-mission" aria-label={etat === 'verrouillee' ? `${m.rang}, verrouillée` : `${m.rang} : ${m.nom}, ${etat === 'gagnee' ? 'remportée' : 'disponible'}`} onClick={()=>choisir(i)}><span className={styles.numero}>{etat==='gagnee'?'✓':etat==='verrouillee'?'🔒':i+1}</span>{(etat !== 'verrouillee' && i === active) && <span className={styles.nom}>{m.nom}</span>}{i===active&&<span className={styles.position}>▼</span>}</button>;})}
-      {mission && <section id="dossier-mission" className={styles.dossier} style={{left: `clamp(12px, calc(${ancre.x/9}% - 130px), calc(100% - 272px))`, top: ancre.y + 60}} aria-live="polite">
-        {etatActif === 'verrouillee' ? <p>Remportez l’étape précédente.</p> : <>
-          <h2>{mission.nom}</h2>
-          <p>{mission.objectif}</p>
-          <Link href={`/jeu/${mission.cle}`} {...GESTES_PRECHARGEMENT}>{etatActif === 'gagnee' ? rejouer : jouer} →</Link>
-        </>}
+  const prefixe = useId().replace(/:/g, '');
+  const viewport = useRef<HTMLDivElement>(null), carte = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState(1);
+  const mission = epreuves[active], etat = etats[active] ?? 'verrouillee';
+  const hauteur = Math.max(880, ...epreuves.map((_,i)=>point(i).y+160));
+  const termine = etats.filter(e=>e==='gagnee').length;
+  function centrer() {
+    const v = viewport.current, c = carte.current; if (!v || !c) return;
+    const p = point(active);
+    v.scrollTo({left:p.x/1200*c.offsetWidth-v.clientWidth/2, top:p.y/hauteur*c.offsetHeight-v.clientHeight*.38, behavior:'auto'});
+  }
+  useEffect(() => {
+    const v = viewport.current, c = carte.current; if (!v || !c) return;
+    const p = point(active);
+    v.scrollTo({left:p.x/1200*c.offsetWidth-v.clientWidth/2, top:p.y/hauteur*c.offsetHeight-v.clientHeight*.38, behavior:'auto'});
+  }, [active, zoom, hauteur]);
+  return <section className={styles.cadre} aria-label="Carte des opérations">
+    <div className={styles.barre}><div><span className={styles.surtitre}>ATLAS / OPÉRATIONS</span><strong>Votre campagne</strong></div><span className={styles.progression}>{termine}<span> / {epreuves.length} terminées</span></span></div>
+    <div className={styles.theatre}>
+      <div ref={viewport} className={styles.defilement} tabIndex={0} aria-label="Carte défilante. Sélectionnez une mission ; utilisez les commandes pour zoomer.">
+        <div ref={carte} className={styles.carte} style={{width:`max(100%, ${1000*zoom}px)`, aspectRatio:`1200 / ${hauteur}`}}>
+          <div className={styles.paysage}><PaysageCampagne prefixe={prefixe}/></div>
+          <svg className={styles.routes} viewBox={`0 0 1200 ${hauteur}`} aria-hidden="true">
+            {epreuves.slice(1).map((m,k)=>{const a=point(k),b=point(k+1),d=`M${a.x} ${a.y} C${a.x+(b.x-a.x)*.5} ${a.y},${a.x+(b.x-a.x)*.5} ${b.y},${b.x} ${b.y}`;return <g key={m.cle}><path d={d} fill="none" stroke="#172f2c" strokeWidth="7" opacity=".55"/><path d={d} fill="none" stroke={etats[k]==='gagnee'?'#e6ca83':'#d9dfc5'} strokeWidth="2" strokeDasharray={etats[k]==='gagnee'?undefined:'3 8'} opacity={etats[k]==='gagnee'?1:.45}/></g>;})}
+          </svg>
+          {epreuves.map((m,i)=>{const p=point(i),e=etats[i]??'verrouillee';return <button key={m.cle} className={styles.etape} style={{left:`${p.x/12}%`,top:`${p.y/hauteur*100}%`}} data-etat={e} aria-current={i===active?'step':undefined} aria-controls="dossier-mission" aria-label={e==='verrouillee'?`Mission ${i+1}, verrouillée`:`Mission ${i+1}, ${m.nom}, ${e==='gagnee'?'terminée':'disponible'}`} onClick={()=>choisir(i)} onKeyDown={event=>{const sens=['ArrowRight','ArrowDown'].includes(event.key)?1:['ArrowLeft','ArrowUp'].includes(event.key)?-1:0;if(sens){event.preventDefault();const suivant=Math.max(0,Math.min(epreuves.length-1,i+sens));choisir(suivant);carte.current?.querySelectorAll<HTMLButtonElement>('button')[suivant]?.focus({preventScroll:true});}}}>
+            <Repere gagnee={e==='gagnee'} verrouillee={e==='verrouillee'}/><span className={styles.numero}>{String(i+1).padStart(2,'0')}</span>{i===active&&e!=='verrouillee'&&<span className={styles.nom}>{m.nom}</span>}
+          </button>;})}
+        </div>
+      </div>
+      <div className={styles.outils} role="group" aria-label="Caméra de la carte"><button type="button" disabled={zoom<=.8} onClick={()=>setZoom(z=>Math.max(.8,z-.2))} aria-label="Dézoomer">−</button><button type="button" onClick={centrer} aria-label="Recentrer sur la mission"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor"/><path d="M12 2v6m0 8v6M2 12h6m8 0h6" stroke="currentColor"/></svg></button><button type="button" disabled={zoom>=1.8} onClick={()=>setZoom(z=>Math.min(1.8,z+.2))} aria-label="Zoomer">+</button></div>
+      {mission && <section id="dossier-mission" className={styles.dossier} aria-live="polite">
+        <div className={styles.dossierEntete}><span>MISSION {String(active+1).padStart(2,'0')}</span><span>{etat==='gagnee'?'TERMINÉE':etat==='verrouillee'?'VERROUILLÉE':'À VOUS DE JOUER'}</span></div>
+        {etat==='verrouillee'?<p>Remportez la mission précédente pour poursuivre.</p>:<><h2>{mission.nom}</h2><p>{mission.objectif}</p><Link href={`/jeu/${mission.cle}`} {...GESTES_PRECHARGEMENT}>{etat==='gagnee'?rejouer:jouer}<span aria-hidden="true">↗</span></Link></>}
       </section>}
-    </div></div>
+      <div className={styles.legende} aria-label="Légende"><span><i/>Terminée</span><span><i/>Disponible</span><span><i/>À débloquer</span></div>
+    </div>
   </section>;
 }

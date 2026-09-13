@@ -119,3 +119,6 @@
 /* Navigation de retour toujours à gauche. */
 .carnet-entete > a[href="/campagne"], .campagne-actions > a[href="/campagne"]{order:-1;margin-right:auto;margin-left:0}
 .atlas-mission-bar a.atlas-mission-fanion{text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+
+/* La carte devient la surface principale de la campagne. */
+.atlas-carnet.campagne-epuree{width:min(1380px,100%);max-width:1380px;padding:24px clamp(12px,3vw,40px);margin:auto}.campagne-epuree .carnet-entete{justify-content:flex-start;gap:22px;margin-bottom:8px}.campagne-epuree .carnet-entete .atlas-retour{margin-right:0}.campagne-epuree .carnet-titre{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}.campagne-epuree .carnet-entete h1{font-size:23px}.campagne-epuree .campagne-identite{margin:0;font-size:12px}@media(max-width:700px){.atlas-carnet.campagne-epuree{padding:14px 10px}.campagne-epuree .carnet-titre{gap:5px;flex-direction:column}.campagne-epuree .carnet-entete{gap:16px}}
