@@ -464,3 +464,7 @@ Les timbres Web Audio abandonnent les montées mélodiques de capture/production
 ### Bibliothèque : remplacer un GLB sans parcourir le suivi technique
 
 `/admin/assets` présente une recherche de modèles par famille avec lien direct vers la base et raccourci Infanterie. L’ancien suivi est replié sous Gestion avancée. La fiche met le dépôt de source en premier, puis la demande d’intégration ; aperçus et détails sont repliés. Le dépôt conserve une source privée : aucune conversion ni activation automatique n’est prétendue. Les erreurs de stockage restent affichées. Aucun test/build lancé.
+
+### Catégories lisibles dans la bibliothèque
+
+La vue simple propose Unités / Bâtiments / Commandants / Décors. Les unités se filtrent en Infanterie / Mobiles / Aériennes / Navales / Autres à partir du domaine et du déplacement du catalogue. Terrains et effets restent accessibles dans Décors. Les fiches et le dépôt GLB restent inchangés. Aucun test/build lancé.

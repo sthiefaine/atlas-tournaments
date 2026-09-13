@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Modeles } from './modeles';
+import { chargerUnites } from '@/content/index';
 import { candidatsLocaux, candidatsExposes } from './candidats';
 import { redirect } from 'next/navigation';
 import { PRIORITES, TYPES_ASSET } from '@/assets/index';
@@ -20,6 +21,7 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
   const exposes = candidatsExposes();
   const etat = typeof params.etat === 'string' && (params.etat === 'manquants' || params.etat in LIBELLES_RECEPTION) ? params.etat : '';
   const groupes = regrouperAssets(specs);
+  const unites = new Map(chargerUnites().map(u => [u.cle, u]));
   const famille = typeof params.famille === 'string' && groupes.some(g => g.cle === params.famille) ? params.famille : '';
   const liste = params.vue === 'liste' || famille !== '';
   const territoire = (s: (typeof specs)[number]) => {
@@ -42,7 +44,10 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
     <h2 className="admin-titre">Bibliothèque d’assets</h2>
     <Modeles modeles={groupes.map(g => {
       const base = g.specs.find(s => s.id.endsWith('_base')) ?? g.specs[0]!;
-      return { id: base.id, nom: g.libelle, type: LIBELLES_TYPE[base.type] };
+      const unite = unites.get(base.cle.replace(/_base$/, ''));
+      const categorie = base.type === 'unite' || base.type === 'kit' ? 'unites' : base.type === 'batiment' ? 'batiments' : base.type === 'commandant' ? 'commandants' : 'decors';
+      const groupe = unite?.domaine === 'air' ? 'aeriennes' : unite?.domaine === 'mer' ? 'navales' : unite?.typeMouvement === 'pied' ? 'infanterie' : unite?.domaine === 'terre' ? 'mobiles' : 'autres';
+      return { id: base.id, nom: unite?.nom ?? g.libelle, type: LIBELLES_TYPE[base.type], categorie, groupe };
     })} />
     <details className="mt-8"><summary className="admin-action">Gestion avancée : variantes et suivi de production</summary>
     <p className="admin-intro">{specs.length} assets, regroupés par modèle et déclinaisons. Ouvrez une famille, choisissez sa version, puis copiez son prompt de production.</p>
