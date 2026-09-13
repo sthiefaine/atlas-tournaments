@@ -170,3 +170,5 @@
 @media(prefers-reduced-motion:reduce){.jeu-libre-partie,.jeu-libre-bouton{transition:none}}
 
 .reglage-choix{flex-wrap:wrap;max-width:100%;gap:6px}
+
+.reglages-entete{justify-content:flex-start}.reglages-entete>.atlas-retour{order:-1;margin-left:0}

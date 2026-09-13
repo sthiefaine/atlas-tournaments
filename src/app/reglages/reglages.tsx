@@ -248,8 +248,8 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
 
   return <main className="atlas-reglages">
     <header className="reglages-entete">
-      <h1>{libelles.titre}</h1>
       <Link className="atlas-retour" href="/">{libelles.retour}</Link>
+      <h1>{libelles.titre}</h1>
     </header>
 
     <Groupe id="reglage-en-partie" titre={libelles.enPartie}>

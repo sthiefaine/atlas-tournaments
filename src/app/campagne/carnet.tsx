@@ -87,7 +87,7 @@ export default function Carnet({ epreuves, libelles }: { epreuves: readonly Epre
   const active = choisie ?? stationParDefaut(codes, victoires), mission = epreuves[active];
   const etat = etats[active] ?? 'verrouillee';
   return <main className="atlas-carnet campagne-epuree">
-    <header className="carnet-entete"><div className="carnet-titre"><h1>Campagne</h1><p className="campagne-identite">{nom}{nom ? ' · ' : ''}{mode}</p></div><Link className="atlas-retour" href="/campagne/salon">← Retour au camp</Link></header>
+    <header className="carnet-entete"><Link className="atlas-retour" href="/campagne/depart">Retour</Link><div className="carnet-titre"><h1>Campagne</h1><p className="campagne-identite">{nom}{nom ? ' · ' : ''}{mode}</p></div></header>
     <CarteParcours epreuves={epreuves} etats={etats} active={active} choisir={setChoisie} />
     {mission && <section id="dossier-mission" className="campagne-mission" aria-live="polite">
       {etat === 'verrouillee' ? <p>Remportez l’étape précédente pour ouvrir cette mission.</p> : <><div><small>{mission.rang}</small><h2>{mission.nom}</h2><p>{mission.objectif}</p></div><Link className="atlas-bouton" href={`/jeu/${mission.cle}`} {...GESTES_PRECHARGEMENT}>{etat === 'gagnee' ? libelles.rejouer : libelles.jouer} →</Link></>}

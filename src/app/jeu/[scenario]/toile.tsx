@@ -489,7 +489,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   }, [modal, plateauPret, bancEnAttente, commandantEnAttente]);
 
   if (queteVerrouillee) return <main className="atlas-jeu fixed inset-0 bg-[#10131a]"><div className="atlas-voile"><section className="atlas-briefing" role="status">
-    <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne/salon">{t(locale, 'campagne.retour')}</Link>
+    <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne">{t(locale, 'campagne.retour')}</Link>
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
@@ -505,7 +505,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         libelles={libellesVestiaire}
       >
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
-        <div className="campagne-actions"><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div>
+        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
       </ChoixCommandant>
     </div> : null}
     {/* Le choix du banc, avant tout montage : « Jouer sous les couleurs de… ».
@@ -548,10 +548,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           })}
         </ul>
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
-        <div className="campagne-actions"><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div>
+        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
       </section>
     </div> : null}
-    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
+    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {/* L'objectif ne s'écrit plus sur la carte : un fanion, et la modale le dit.
         Deux lignes de texte posées en permanence sur le plateau prenaient la
         place du jeu — sur un téléphone c'était le quart de la largeur, sur PC
@@ -637,7 +637,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'hud.nouvelle_partie')}</button>
           </>}
-          <Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link>
+          <Link href="/campagne">{t(locale, 'campagne.retour')}</Link>
         </div>
       </section>
     </div> : null}

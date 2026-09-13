@@ -444,3 +444,7 @@ Le propriétaire rejette la densité de `/campagne` : écran réduit à profil/m
 ### Carnet accessible depuis la mission
 
 Le salon ne présente plus le carnet. Le fanion de mission propose un lien Carnet, avec chemin de retour local borné à `/jeu/[code]`. Le carnet montre deux rubriques (unités/commandants), une liste de rencontres et une seule fiche sélectionnée ; aucun indice ni personnage futur. Les retours du carnet, de la campagne et des panneaux d’ordres/production sont à gauche. Aucun test/build lancé à la demande du propriétaire.
+
+### Départ sans illustration ni salon — 13 septembre 2026
+
+Le départ conserve uniquement le choix de sauvegarde/nom/difficulté, centré sans illustration. Il ouvre directement `/campagne`. `/campagne/salon` redirige vers la carte pour les anciens liens ; les retours de mission vont directement à la carte, et celui de la carte au choix du profil. Le retour des réglages précède le titre dans le DOM et reste à gauche. Aucun test/build lancé, conformément à la demande.

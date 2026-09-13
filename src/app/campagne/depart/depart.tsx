@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { PROFILS, lireProfils, changerProfilActif, renommerProfil, normaliserNomProfil, NOM_PROFIL_MAX, ecrireDifficulte, modeDifficileDebloque, type EtatProfils, type Profil } from '../../preferences';
 import { victoiresDe } from '../progression';
 import styles from './menu.module.css';
-import { Theatre } from './theatre';
 
 export default function Depart(): React.ReactElement {
   const router = useRouter();
@@ -31,7 +30,7 @@ export default function Depart(): React.ReactElement {
     if (mode === 'difficile' && !modeDifficileDebloque(profil)) { setErreur('Terminez la campagne en normal pour débloquer ce mode.'); return; }
     if (!ecrireDifficulte(profil, mode) || !changerProfilActif(profil)) { setErreur('Le navigateur refuse de sauvegarder ce profil. Autorisez le stockage local pour continuer.'); return; }
     setDepartEnCours(true);
-    router.push('/campagne/salon');
+    router.push('/campagne');
   };
   const nomProfil = profil ? profils?.noms[profil] || `Profil ${profil.toUpperCase()}` : '';
   const retour = () => { if (departEnCours) return; setEtape('profil'); setErreur(''); };
@@ -42,9 +41,9 @@ export default function Depart(): React.ReactElement {
       <Link href="/" className={styles.quitter}>Quitter <span aria-hidden="true">×</span></Link>
     </header>
     <div className={styles.scene}>
-      <aside className={styles.theatre} aria-hidden="true"><div className={styles.halo} /><p className={styles.surtitre}>À vous de commander</p><h2>CHAQUE CHOIX<br/><em>COMPTE.</em></h2><Theatre/><div className={styles.coordonnees}><span>FORMATION → SAISON 1</span><i/><span>VOTRE AVENTURE</span></div></aside>
+
       <section className={styles.console}>
-        <ol className={styles.etapes} aria-label="Étapes du départ"><li data-actif={etape !== 'mode'}>01 <span>Sauvegarde</span></li><li data-actif={etape === 'mode'}>02 <span>Difficulté</span></li><li>03 <span>Camp de base</span></li></ol>
+        <ol className={styles.etapes} aria-label="Étapes du départ"><li data-actif={etape !== 'mode'}>01 <span>Sauvegarde</span></li><li data-actif={etape === 'mode'}>02 <span>Difficulté</span></li></ol>
         <div className={styles.entete}><p>{etape === 'profil' ? 'CHOISIR UNE SAUVEGARDE' : etape === 'nom' ? 'NOUVEAU PROFIL' : nomProfil}</p><h1 ref={titre} tabIndex={-1}>{etape === 'profil' ? 'Votre campagne' : etape === 'nom' ? 'Votre nom ?' : 'Votre défi'}</h1></div>
         {etape === 'profil' && <div className={styles.sauvegardes}>{PROFILS.map((p, i) => <button key={p} disabled={!profils} onClick={() => choisir(p)} className={styles.slot}>
           <span className={styles.numero}>0{i + 1}</span><span className={styles.slotTexte}><small>{profils && victoires[p] > 0 ? 'PARTIE EN COURS' : 'NOUVELLE PARTIE'}</small><strong>{profils?.noms[p] || `Profil ${p.toUpperCase()}`}</strong><span>{!profils ? 'Chargement…' : victoires[p] ? `${victoires[p]} missions remportées` : 'Le voyage commence ici'}</span>{debloques[p] && <b>Difficile débloqué</b>}</span><span className={styles.fleche} aria-hidden="true">→</span>
@@ -60,7 +59,7 @@ export default function Depart(): React.ReactElement {
         <footer className={styles.actions}>
           {etape === 'profil' ? <p className={styles.aide}>Deux sauvegardes indépendantes sur cet appareil.</p> : <button disabled={departEnCours} className={styles.retour} onClick={retour}>← Retour</button>}
           {etape === 'nom' && <><button className={styles.retour} onClick={() => { setErreur(''); setEtape('mode'); }}>Plus tard</button><button className={styles.confirmer} type="submit" form="nom-campagne">Valider <span>→</span></button></>}
-          {etape === 'mode' && <button className={styles.confirmer} disabled={departEnCours} onClick={() => partir(mode)}>{departEnCours ? 'Ouverture…' : 'Entrer au camp'} <span aria-hidden="true">→</span></button>}
+          {etape === 'mode' && <button className={styles.confirmer} disabled={departEnCours} onClick={() => partir(mode)}>{departEnCours ? 'Ouverture…' : 'Ouvrir la campagne'} <span aria-hidden="true">→</span></button>}
         </footer>
       </section>
     </div>

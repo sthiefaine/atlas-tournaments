@@ -7,7 +7,7 @@ interface Fiche { cle: string; genre: 'unite' | 'commandant'; nom: string; texte
 export default function Journal({ fiches, missions }: { fiches: Fiche[]; missions: Record<string,string> }): React.ReactElement {
   const [rencontres, setRencontres] = useState<Rencontre[]>([]);
   const [pret, setPret] = useState(false);
-  const [retour, setRetour] = useState('/campagne/salon');
+  const [retour, setRetour] = useState('/campagne');
   const [filtre, setFiltre] = useState('unite');
   const [selection, setSelection] = useState('');
   useEffect(() => {
