@@ -7,3 +7,5 @@ Source : military soldier 3d model.glb. SHA-256 : 083b0e217128b3d7a4a627bde7e44b
 Contrôle demandé : ok, aucun refus. Modèle activé directement à la demande du propriétaire après contrôle technique ok. Pas d’approbation artistique prétendue.
 
 Limites : mise aux dimensions 0,45 × 0,60 × 0,45 m par échelles distinctes selon les axes (consignées dans source.json), donc proportions adaptées au contrat. UV conservés ; normales transformées pour cette échelle. Masque d’équipe estimé par position : placement à revoir humainement. Animation rigide du groupe, sans marche articulée. Orientation, fidélité visuelle, présence éventuelle de lumière cuite et silhouette non approuvées automatiquement.
+
+Correction de diffusion : le décodeur de contrôle recevait un Buffer Node dont slice partage la mémoire ; son accumulation de deltas altérait le fichier publié. Entrée copiée en Uint8Array, garde SHA avant/après contrôle. Le GLB actif est identique au lot intact, SHA cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a.

@@ -480,3 +480,7 @@ Pour un GLB dont le propriétaire demande l’intégration, remplacer directemen
 ### Carte de campagne cartographique — 13 septembre 2026
 
 Remplacement de l’île quadrillée de stations par un paysage SVG original (`paysage-campagne.tsx`) : côte, champs, reliefs, rivière et villages. Positions du parcours dessinées pour les 14 missions livrées ; géographie illustrative, pas frontières réelles. Repères hexagonaux SVG, route de progression, zoom et recentrage, navigation des missions par flèches clavier. Panneau de lancement superposé à la carte (bas sur mobile), étapes verrouillées anonymes. Aucune modification des règles de déblocage ni des sauvegardes. Aucun test/build ni capture, rendu non vérifié visuellement selon la consigne.
+
+### Correction de l’infanterie étirée
+
+La source de la corruption publiée était Buffer.slice dans le décodeur Meshopt de référence : son tampon temporaire partageait les données source, modifiées pendant controlerDepot puis publiées. Copie en Uint8Array avant décodage, garde SHA avant/après le contrôle dans l’intégrateur. Infanterie active rétablie sur le GLB intact cd14267b, identique au lot. Contrôle ciblé du lot réussi lors de la réintégration ; pas de suite de tests/build ni capture.

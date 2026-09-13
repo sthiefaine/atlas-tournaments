@@ -7,8 +7,8 @@
     {
       "id": "unite_infanterie_base",
       "fichierActif": "public/assets/modeles/unite_infanterie_base_lod0.glb",
-      "donnees": "../donnees/b8d800225e29f15f18da1f6ec1090c3a6904112542b09329e18ed281e4302957.glb",
-      "revision": "82d0e24c92770b2954f9c978ffdbc7efa253a24a06bb47e35aeb15e3db238587",
+      "donnees": "../donnees/cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a.glb",
+      "revision": "f56da6d98938fd8e02609e32d6e65241072d18416953227c413b0f566d605b23",
       "controle": "ok",
       "sourceSha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710"
     },

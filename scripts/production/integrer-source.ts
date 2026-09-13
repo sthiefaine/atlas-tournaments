@@ -9,7 +9,9 @@ if (!id || !['unite_artillerie_base', 'unite_infanterie_base', 'unite_antiair_ba
 const dossier = path.resolve('assets/livraisons', id);
 const spec = lireSpec(`assets/specs/${id}.json`);
 const fichiers = nomsAttendus(spec).filter(nom => existsSync(path.join(dossier, nom))).map(nom => ({ nom, octets: readFileSync(path.join(dossier, nom)) }));
+const avantControle = fichiers.map(f => createHash('sha256').update(f.octets).digest('hex'));
 const verdict = controlerDepot(spec, fichiers);
+if (fichiers.some((f, i) => createHash('sha256').update(f.octets).digest('hex') !== avantControle[i])) throw new Error('Le contrôle a modifié les fichiers : publication annulée');
 if (!verdict.ok) throw new Error(JSON.stringify(verdict));
 const revision = createHash('sha256').update(JSON.stringify(spec));
 const alias = path.resolve('public/assets/candidats'), donnees = path.resolve('public/assets/donnees');
