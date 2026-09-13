@@ -251,7 +251,7 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
             pas : ce que vise un objectif est peint en or sur le terrain. */}
         <p className="carnet-accroche"><Gras texte={libelles.introduction} /></p>
       </div>
-      <Link className="atlas-retour" href="/">{libelles.retour}</Link>
+      <Link className="atlas-retour" href="/campagne/salon">Retour au camp</Link>
     </header>
 
     <p className="carnet-avancee">
@@ -264,7 +264,7 @@ export default function Carnet({ epreuves, libelles, vestiaire }: {
         : null}
     </p>
 
-    <div className="carnet-avancee"><strong>{mode === 'normal' ? 'Mode normal' : 'Mode difficile'}</strong><Link className="atlas-retour" href="/campagne/depart">Changer de profil ou de difficulté</Link></div>
+    <div className="carnet-avancee"><strong>{mode === 'normal' ? 'Mode normal' : 'Mode difficile'}</strong><Link className="atlas-retour" href="/campagne/depart">Changer de profil ou de difficulté</Link><Link className="atlas-retour" href="/campagne/journal">Journal de bord</Link></div>
     <CarteParcours epreuves={epreuves} etats={etats} active={active} choisir={i => { setChoisie(i); document.getElementById('dossier-mission')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest' }); }} />
 
     {mission ? <section id="dossier-mission" className="carnet-dossier" data-etat={etat} aria-live="polite">

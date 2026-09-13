@@ -263,3 +263,5 @@ Conserver un seul LOD0, les PNG externes, la provenance SHA-256, et documenter l
 ## Parcours Campagne et difficulté — décision du 13 septembre 2026
 
 Campagne ouvre le choix de profil, propose un nom au profil vide, puis Normal ou Difficile, avant la carte graphique de l’aventure. **Difficile se débloque uniquement en terminant l’opus en Normal avec le même profil** : victoire explicite en normal sur la finale 18. Le premier mode s’appelle Normal ; les formulations « facile » du propriétaire désignent ce mode. L’achèvement du contenu partiel actuellement livré ne vaut pas fin de campagne. Le réglage Difficile est désactivé tant que cette condition n’est pas remplie, y compris dans les réglages généraux.
+
+Le 13 septembre, précision du propriétaire : la carte n’est pas l’accueil de campagne. Après le choix du profil et de la difficulté, un **camp de base** offre **Continuer** (ouvre la carte) et **Journal de bord** (unités, commandants et adversaires rencontrés, sans annoncer les futures découvertes).

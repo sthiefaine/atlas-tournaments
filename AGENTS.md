@@ -424,3 +424,7 @@ Les variantes régionales sont suspendues (126 fiches et lots retirés, 10 fiche
 ## Entrée de campagne et réparation de Premier contact — 13 septembre 2026
 
 `/campagne/depart` propose profil, nom facultatif si vide, difficulté, puis carte illustrée de campagne. Difficile est réellement verrouillé par `campagne/acces.ts` et `preferences.ts` (lecture/écriture/réglages) jusqu’à une victoire explicite en normal sur `opus1_finale_18`, encore éditoriale. Les quatorze missions actuelles ne suffisent pas. Le carnet lit les victoires du mode pour sa carte, conserve le vestiaire partagé. Infanterie et char HD demandés sont activés ; anciens kits actifs retirés car ils masquaient les nouvelles bases. Ancien QG français restauré depuis Git sous `batiment_qg_fr`, sans retour du catalogue régional. Activation ne signifie pas approbation artistique. Aucun test ni build lancé. Voir `doc/refonte/entree-campagne.md`.
+
+### Suite — le camp de base avant la carte
+
+Après profil/nom/difficulté, `/campagne/salon` propose Continuer (carte) ou Journal de bord. Les retours des missions reviennent au salon. `Progression.rencontres` est alimenté depuis les unités réellement visibles en campagne et leurs commandants ; première mission/journée et relation allié/adversaire sont conservées. Pas de rétroactivité supposée depuis les anciennes victoires, pas de fiches auteur dans le journal. Les commandants purement dialogués sans unités observées restent hors collecte. Aucun test ni build lancé.

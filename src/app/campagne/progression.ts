@@ -12,7 +12,9 @@ export interface DecisionLocale {
   canonVersion: number;
   choix: string;
 }
+export interface Rencontre { genre: 'unite' | 'commandant'; cle: string; relation: 'allie' | 'adversaire'; mission: string; journee: number }
 export interface Progression {
+  rencontres?: Rencontre[];
   version: 1;
   victoires: string[];
   victoiresParMode?: Partial<Record<Mode, string[]>>;
@@ -59,6 +61,7 @@ export function normaliserProgression(brut: unknown): Progression {
       if (Array.isArray(liste)) resultat.victoiresParMode[mode] = [...new Set(liste.filter((code) => typeof code === 'string' && resultat.victoires.includes(code)))];
     }
   }
+  if (Array.isArray(p.rencontres)) resultat.rencontres = p.rencontres.filter(r => r && ['unite', 'commandant'].includes(r.genre) && ['allie', 'adversaire'].includes(r.relation) && typeof r.cle === 'string' && /^[a-z][a-z0-9_]{1,47}$/.test(r.cle) && typeof r.mission === 'string' && Number.isInteger(r.journee) && r.journee > 0).slice(0, 512);
   const lireDecision = (d: unknown): DecisionLocale | null => {
     if (!d || typeof d !== 'object') return null;
     const x = d as Partial<DecisionLocale>;
@@ -363,4 +366,15 @@ export function enregistrerCommandant(
 /** Le commandant enregistré pour cette épreuve dans cette version, ou `null`. */
 export function commandantEnregistre(scenario: string, version: number, p: Progression): string | null {
   return p.decisions?.[cleDecision(cleSourceCommandant(scenario), version)]?.choix ?? null;
+}
+
+/** Le premier contact est conservé ; aucun catalogue entier n’est marqué rencontré. */
+export function enregistrerRencontres(rencontres: readonly Rencontre[], profil: Profil): void {
+  const p = lireProgression(profil);
+  const precedentes = p.rencontres ?? [];
+  const cles = new Set(precedentes.map(r => `${r.genre}:${r.cle}:${r.relation}`));
+  const ajouts = rencontres.filter(r => { const id = `${r.genre}:${r.cle}:${r.relation}`; if (cles.has(id)) return false; cles.add(id); return true; });
+  if (!ajouts.length) return;
+  session = normaliserProgression({ ...p, rencontres: [...precedentes, ...ajouts] });
+  try { localStorage.setItem(cleProgression(profil), JSON.stringify(session)); } catch { /* Conserver les découvertes en mémoire pour cette session. */ }
 }

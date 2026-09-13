@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { creerAudioJeu } from '@/audio/moteur';
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
 import { t } from '@/i18n/index';
-import { chargerCatalogue, VERSION_MOTEUR, sontAllies, type EtatPartie } from '@/engine/index';
+import { chargerCatalogue, VERSION_MOTEUR, sontAllies, unitesVues, type EtatPartie } from '@/engine/index';
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
 import { lignesPouvoir, nomTerrain, nomUnite } from '@/render/libelles';
 import { textesObjectifs } from '@/render/objectifs';
@@ -12,7 +12,7 @@ import { creerRendu3d } from '@/render3d/index';
 import type { CleIllustration, MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
-import { debloquerCommandants, enregistrerVictoire, enregistrerDecision, enregistrerBanc, lireProgression, vestiaire, type DecisionLocale, type Progression } from '../../campagne/progression';
+import { debloquerCommandants, enregistrerRencontres, enregistrerVictoire, enregistrerDecision, enregistrerBanc, lireProgression, vestiaire, type DecisionLocale, type Progression } from '../../campagne/progression';
 import { appliquerConsequences, cleDecision, decisionsDeGraine, graineAube, libelleDecision, optionsDecision, ETAPES_AUBE, estMissionAube, CLES_QUETES_AUBE, queteOuverte, VERSION_CANON_AUBE } from '../../campagne/consequences';
 import { PROPRES_COULEURS, bancChoisi, cleSourceBanc, graineAvecCommandant, optionsBanc } from '../../campagne/bancs';
 import { grilleCommandants } from '../../campagne/roster';
@@ -300,6 +300,8 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     const audio = creerAudioJeu(conteneur, preferences.sons, preferences.volumeSons);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
+    let dernierEtatJournal: EtatPartie | null = null;
+    const catalogueJournal = chargerCatalogue(joue.catalogueVersion);
     try {
       jeu = monterJeu(conteneur, {
         sonParole: () => audio.jouer('parole'),
@@ -343,6 +345,17 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         surModeTactique: (actif) => { ecrirePreferences({ ...lirePreferences(), modeTactique: actif }); },
         surEtat: courant => {
           setEtat(courant);
+          if (mission && courant !== dernierEtatJournal) {
+            dernierEtatJournal = courant;
+            const vues = unitesVues(courant, catalogueJournal, CAMP_JOUEUR);
+            const relation = (camp: Parameters<typeof sontAllies>[1]): 'allie' | 'adversaire' => sontAllies(courant, camp, CAMP_JOUEUR) ? 'allie' : 'adversaire';
+            const campsVus = new Set(vues.map(u => u.camp));
+            const commun = { mission: scenario.code, journee: courant.journee };
+            enregistrerRencontres([
+              ...vues.map(u => ({ ...commun, genre: 'unite' as const, cle: u.type, relation: relation(u.camp) })),
+              ...joue.commandants.filter(c => c.camp === CAMP_JOUEUR || campsVus.has(c.camp)).map(c => ({ ...commun, genre: 'commandant' as const, cle: c.commandantCle, relation: relation(c.camp) })),
+            ], profilPartie.current);
+          }
           if (mission && courant.partie.terminee && sontAllies(courant, courant.partie.vainqueur, CAMP_JOUEUR) && !victoireEnregistree) {
             victoireEnregistree = true;
             // Sans perte : la condition d'un secret du vestiaire. Elle se lit
@@ -476,7 +489,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   }, [modal, plateauPret, bancEnAttente, commandantEnAttente]);
 
   if (queteVerrouillee) return <main className="atlas-jeu fixed inset-0 bg-[#10131a]"><div className="atlas-voile"><section className="atlas-briefing" role="status">
-    <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne">{t(locale, 'campagne.retour')}</Link>
+    <h1>{t(locale, 'aube.quete_verrouillee')}</h1><p>{t(locale, 'aube.quete_condition')}</p><Link className="atlas-bouton" href="/campagne/salon">{t(locale, 'campagne.retour')}</Link>
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
@@ -492,7 +505,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         libelles={libellesVestiaire}
       >
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
-        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
+        <div className="campagne-actions"><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div>
       </ChoixCommandant>
     </div> : null}
     {/* Le choix du banc, avant tout montage : « Jouer sous les couleurs de… ».
@@ -535,10 +548,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
           })}
         </ul>
         {!stockageDisponible ? <p role="status">{t(locale, 'campagne.sauvegarde_indisponible')}</p> : null}
-        <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
+        <div className="campagne-actions"><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div>
       </section>
     </div> : null}
-    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
+    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {/* L'objectif ne s'écrit plus sur la carte : un fanion, et la modale le dit.
         Deux lignes de texte posées en permanence sur le plateau prenaient la
         place du jeu — sur un téléphone c'était le quart de la largeur, sur PC
@@ -623,7 +636,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             <button className="atlas-bouton" onClick={() => { setVoirBriefing(false); setVoirAide(false); }}>{t(locale, 'hud.reprendre')}</button>
             <button className="atlas-bouton secondaire" onClick={rejouer}>{t(locale, 'hud.nouvelle_partie')}</button>
           </>}
-          <Link href="/campagne">{t(locale, 'campagne.retour')}</Link>
+          <Link href="/campagne/salon">{t(locale, 'campagne.retour')}</Link>
         </div>
       </section>
     </div> : null}
