@@ -72,7 +72,7 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
       if (!vivant) { moteur.dispose(); return; }
       renderer = moteur;
       moteur.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-      moteur.setClearColor(0x000000, 0);
+      moteur.setClearColor(new THREE.Color(0x000000), 0);
       moteur.toneMapping = THREE.ACESFilmicToneMapping;
       environnement = creerEnvironnement(moteur);
       scene.environment = environnement.texture;
