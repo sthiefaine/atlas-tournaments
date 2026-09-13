@@ -848,6 +848,20 @@ ${STYLE_ILLUSTRATIONS}
 .atlas-hud .production button:focus-visible{outline-color:var(--encre)!important}
 @media(prefers-reduced-motion:reduce){.atlas-hud button[data-action]{transition:none}}
 
+/* Le bouton de détail ne doit pas prendre les 100% réservés aux anciens boutons de jauge. */
+.atlas-hud .jauge .commandant .detail{flex:0 0 36px;width:36px;height:36px;padding:8px}
+.atlas-hud .jauge .commandant .tt{white-space:normal;overflow:visible;text-overflow:clip;color:var(--papier);line-height:1.35}
+.atlas-hud .jauge .pouvoirs{grid-template-columns:minmax(0,1fr)}
+.atlas-hud .jauge .pouvoir{height:auto;min-height:42px}
+.atlas-hud .jauge .pouvoir .nom{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;line-height:1.35}
+.atlas-hud .jauge .pouvoir:disabled{color:#c5d2df;opacity:1}
+.atlas-hud .jauge .pouvoir:disabled .prix{color:#c5d2df}
+/* Surfaces sans liseré décoratif ; les focus clavier restent visibles. */
+.atlas-hud .p,.atlas-hud .partie,.atlas-hud .bulletin,.atlas-hud .modale,
+.atlas-hud .p.production,.atlas-hud .p.duel,.atlas-hud .jauge,
+.atlas-hud[data-rail='oui'] .hud-rail .inspect,.atlas-hud .inspect .fiche,
+.atlas-hud .fiche,.atlas-hud .pouvoir-effets{border:0}
+
 `;
 
 /** Injecte la feuille de style du HUD si le document ne l'a pas encore. */
@@ -1920,24 +1934,14 @@ export function monterHudHtml(
   }
 
   function panneauCamera(): string {
-    if (!api.basculerTactique && !api.zoomer && !api.recentrer && !api.tourner && !api.uniteSuivante && !api.inclinaisonSuivante) return '';
+    if (!api.basculerTactique && !api.zoomer && !api.recentrer && !api.uniteSuivante) return '';
     const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
     const tactique = api.basculerTactique ? `<button type="button" data-action="mode_tactique" aria-pressed="${api.tactiqueActif?.() ?? false}" aria-label="${ech(api.t('hud.mode_tactique'))}" title="${ech(api.t('hud.mode_tactique'))}"><span aria-hidden="true">▦</span></button>` : '';
     const legende = api.tactiqueActif?.() ? `<details class="legende-tactique"><summary>${ech(api.t('hud.mode_tactique'))}</summary><p>${ech(api.t('hud.legende_tactique'))}</p></details>` : '';
-    // Une flèche qui tourne autour d'un point : c'est la carte qui pivote, pas la pièce.
-    const fleche = (sens: 1 | -1): string => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"${sens === -1 ? ' style="transform:scaleX(-1)"' : ''}><path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M17 3v4.5h-4.5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>`;
-    // Les deux zooms sont des **loupes**, pas un « + » et un « − » de 25 px dans
-    // des carrés : les deux personas y ont lu « une calculatrice », et ils ont
-    // raison — c'était le seul endroit du HUD où un signe de clavier faisait
-    // office de dessin.
-    // Un plateau vu de biais, et l'arc que la caméra suit au-dessus de lui.
-    const inclinaison = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14.6 4.4 18.1 12 21.6l7.6-3.5z"/><path d="M4.8 12.4a7.4 7.4 0 0 1 14.4 0"/><path d="M16.6 9.9 19.4 12.4 22 10.4"/></svg>';
     if (racine.clientWidth <= 600) {
-      const outils = tactique + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1))
-        + bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
+      const outils = tactique
         + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
-          + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins')) : '')
-        + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '');
+          + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins')) : '');
       return '<div class="camera camera-mobile">' + legende
         + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
         + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}<p class="camera-aide">${ech(api.t('hud.aide_camera'))}</p></div></details>`
@@ -1946,13 +1950,10 @@ export function monterHudHtml(
     }
     return `<div class="camera" title="${ech(api.t('hud.aide_camera'))}">` + legende + tactique
       + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
-      + (api.tourner ? bouton('tourner_gauche', 'hud.tourner_gauche', fleche(-1)) : '')
       + (api.zoomer
         ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
           + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins'))
         : '')
-      + (api.tourner ? bouton('tourner_droite', 'hud.tourner_droite', fleche(1)) : '')
-      + (api.inclinaisonSuivante ? bouton('inclinaison', 'hud.inclinaison', inclinaison) : '')
       + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
       + '</div>';
   }

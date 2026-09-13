@@ -484,3 +484,7 @@ Remplacement de l’île quadrillée de stations par un paysage SVG original (`p
 ### Correction de l’infanterie étirée
 
 La source de la corruption publiée était Buffer.slice dans le décodeur Meshopt de référence : son tampon temporaire partageait les données source, modifiées pendant controlerDepot puis publiées. Copie en Uint8Array avant décodage, garde SHA avant/après le contrôle dans l’intégrateur. Infanterie active rétablie sur le GLB intact cd14267b, identique au lot. Contrôle ciblé du lot réussi lors de la réintégration ; pas de suite de tests/build ni capture.
+
+### HUD : gestes caméra, titres et surfaces
+
+Boutons rotation gauche/droite et inclinaison retirés sur PC et mobile ; gestes du plateau conservés. Le bouton de détail des pouvoirs avait hérité width:100%, écrasant le titre du commandant : largeur bornée. Noms des pouvoirs sur lignes complètes, empilés et lisibles même indisponibles. Liserés décoratifs des cartes du HUD retirés, focus clavier conservé. Aucun test/build lancé.
