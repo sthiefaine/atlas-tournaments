@@ -7,7 +7,7 @@ import styles from './carte-parcours.module.css';
 
 /** Carte de voyage originale : les chemins suivent le véritable ordre des missions. */
 export function CarteParcours({ epreuves, etats, active, choisir, jouer, rejouer }: { epreuves: readonly EpreuveCarnet[]; etats: readonly EtatStation[]; active: number; choisir: (i: number) => void; jouer: string; rejouer: string }): React.ReactElement {
-  const colonnes = 5, rangs = Math.ceil(epreuves.length / colonnes), hauteur = Math.max(480, rangs * 150 + 130);
+  const colonnes = 5, rangs = Math.ceil(epreuves.length / colonnes), hauteur = Math.max(480, rangs * 150 + 280);
   const point = (i: number) => { const r = Math.floor(i / colonnes), c = i % colonnes; return { x: 90 + (r % 2 ? colonnes - 1 - c : c) * 165, y: 100 + r * 150 + (c % 2 ? 25 : 0) }; };
   const mission = epreuves[active], etatActif = etats[active] ?? 'verrouillee', ancre = point(active);
   const trace = epreuves.map((_, i) => { const p = point(i); return `${i ? 'L' : 'M'}${p.x},${p.y}`; }).join(' ');
