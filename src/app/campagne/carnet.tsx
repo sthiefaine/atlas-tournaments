@@ -6,7 +6,6 @@ import { lireDifficulte, lireProfils } from '../preferences';
 import { lireProgression } from './progression';
 import { etatsItineraire, stationParDefaut } from './itineraire';
 import { CarteParcours } from './carte-parcours';
-import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 
 export interface EpreuveCarnet {
   cle: string;
@@ -84,13 +83,9 @@ export default function Carnet({ epreuves, libelles }: { epreuves: readonly Epre
     return () => { window.removeEventListener('pageshow', lire); window.removeEventListener('storage', lire); };
   }, []);
   const codes = epreuves.map(m => m.cle), etats = etatsItineraire(codes, victoires, pret);
-  const active = choisie ?? stationParDefaut(codes, victoires), mission = epreuves[active];
-  const etat = etats[active] ?? 'verrouillee';
+  const active = choisie ?? stationParDefaut(codes, victoires);
   return <main className="atlas-carnet campagne-epuree">
     <header className="carnet-entete"><Link className="atlas-retour" href="/campagne/depart">Retour</Link><div className="carnet-titre"><h1>Campagne</h1><p className="campagne-identite">{nom}{nom ? ' · ' : ''}{mode}</p></div></header>
-    <CarteParcours epreuves={epreuves} etats={etats} active={active} choisir={setChoisie} />
-    {mission && <section id="dossier-mission" className="campagne-mission" aria-live="polite">
-      {etat === 'verrouillee' ? <p>Remportez l’étape précédente pour ouvrir cette mission.</p> : <><div><small>{mission.rang}</small><h2>{mission.nom}</h2><p>{mission.objectif}</p></div><Link className="atlas-bouton" href={`/jeu/${mission.cle}`} {...GESTES_PRECHARGEMENT}>{etat === 'gagnee' ? libelles.rejouer : libelles.jouer} →</Link></>}
-    </section>}
+    <CarteParcours epreuves={epreuves} etats={etats} active={active} choisir={setChoisie} jouer={libelles.jouer} rejouer={libelles.rejouer} />
   </main>;
 }

@@ -1,12 +1,15 @@
 'use client';
+import Link from 'next/link';
+import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { EpreuveCarnet } from './carnet';
 import type { EtatStation } from './itineraire';
 import styles from './carte-parcours.module.css';
 
 /** Carte de voyage originale : les chemins suivent le véritable ordre des missions. */
-export function CarteParcours({ epreuves, etats, active, choisir }: { epreuves: readonly EpreuveCarnet[]; etats: readonly EtatStation[]; active: number; choisir: (i: number) => void }): React.ReactElement {
+export function CarteParcours({ epreuves, etats, active, choisir, jouer, rejouer }: { epreuves: readonly EpreuveCarnet[]; etats: readonly EtatStation[]; active: number; choisir: (i: number) => void; jouer: string; rejouer: string }): React.ReactElement {
   const colonnes = 5, rangs = Math.ceil(epreuves.length / colonnes), hauteur = Math.max(480, rangs * 150 + 130);
   const point = (i: number) => { const r = Math.floor(i / colonnes), c = i % colonnes; return { x: 90 + (r % 2 ? colonnes - 1 - c : c) * 165, y: 100 + r * 150 + (c % 2 ? 25 : 0) }; };
+  const mission = epreuves[active], etatActif = etats[active] ?? 'verrouillee', ancre = point(active);
   const trace = epreuves.map((_, i) => { const p = point(i); return `${i ? 'L' : 'M'}${p.x},${p.y}`; }).join(' ');
   return <section className={styles.cadre} aria-label="Carte de la campagne"><div className={styles.entete}><span>✓ Terminée · ● Disponible · 🔒 Verrouillée</span></div>
     <div className={styles.defilement}><div className={styles.carte} style={{ height: hauteur }}>
@@ -21,6 +24,13 @@ export function CarteParcours({ epreuves, etats, active, choisir }: { epreuves: 
         {epreuves.map((_,i)=>{const p=point(i);return <g key={i} transform={`translate(${p.x-32} ${p.y-24})`}><rect x="-10" y="-7" width="22" height="17" fill="#f5e6ba"/><path d="M-15-7 1-18 17-7Z" fill={i<10?'#63788a':'#bd7050'}/></g>;})}
       </svg>
       {epreuves.map((m,i)=>{const p=point(i), etat=etats[i]??'verrouillee';return <button key={m.cle} className={styles.etape} style={{left:`${p.x/9}%`,top:p.y}} data-etat={etat} aria-current={i===active?'step':undefined} aria-controls="dossier-mission" aria-label={etat === 'verrouillee' ? `${m.rang}, verrouillée` : `${m.rang} : ${m.nom}, ${etat === 'gagnee' ? 'remportée' : 'disponible'}`} onClick={()=>choisir(i)}><span className={styles.numero}>{etat==='gagnee'?'✓':etat==='verrouillee'?'🔒':i+1}</span>{(etat !== 'verrouillee' && i === active) && <span className={styles.nom}>{m.nom}</span>}{i===active&&<span className={styles.position}>▼</span>}</button>;})}
+      {mission && <section id="dossier-mission" className={styles.dossier} style={{left: `clamp(12px, calc(${ancre.x/9}% - 130px), calc(100% - 272px))`, top: ancre.y + 60}} aria-live="polite">
+        {etatActif === 'verrouillee' ? <p>Remportez l’étape précédente.</p> : <>
+          <h2>{mission.nom}</h2>
+          <p>{mission.objectif}</p>
+          <Link href={`/jeu/${mission.cle}`} {...GESTES_PRECHARGEMENT}>{etatActif === 'gagnee' ? rejouer : jouer} →</Link>
+        </>}
+      </section>}
     </div></div>
   </section>;
 }

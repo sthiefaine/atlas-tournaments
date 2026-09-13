@@ -452,3 +452,7 @@ Le départ conserve uniquement le choix de sauvegarde/nom/difficulté, centré s
 ### Atelier : toutes les unités par défaut
 
 Le sélecteur ouvre sur « Toutes les unités » (camp bleu). Un paramètre `unite` explicite conserve la sélection partagée ; revenir à Toutes retire ce paramètre et recentre le plateau. Aucun test/build lancé.
+
+### Lancement des missions sur la carte
+
+Le dossier de mission et son bouton sont ancrés directement sous l’étape sélectionnée sur la carte, plus dans un bloc en dessous. Les missions verrouillées restent sans bouton de lancement. Aucun test/build lancé.
