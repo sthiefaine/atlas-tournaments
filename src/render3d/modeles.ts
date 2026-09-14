@@ -49,6 +49,7 @@ import {
 } from '../assets/spec';
 import { chargerStyleNation } from '../assets/styles';
 import { paletteDe } from '../render/palettes';
+import { appareilTactile } from '../render/appareil';
 import type { CampId, CleUnite, CodePays, Couleur, Palette } from '../schemas/types';
 
 // ---------------------------------------------------------------------------
@@ -659,6 +660,54 @@ export function indexTextureMasque(document: DocumentGltfParseur | undefined): n
   });
 }
 
+const imagesTactiles = new WeakMap<object, Promise<ImageBitmap | null>>();
+
+/**
+ * Une carte RGBA 4K occupe 64 Mio avant les mipmaps, même dans un GLB compressé.
+ * Sur téléphone, préparer une image 1K avant son premier envoi au GPU conserve
+ * le LOD0 et ses UV, avec seize fois moins de texels. Les sources du dépôt et
+ * le rendu ordinateur restent intacts. Le masque conserve des bords nets.
+ */
+async function adapterTexturesTactiles(scene: THREE.Object3D): Promise<void> {
+  if (typeof window === 'undefined' || !appareilTactile(window) || typeof createImageBitmap !== 'function') return;
+  const textures = new Set<THREE.Texture>();
+  const masques = new Set<THREE.Texture>();
+  scene.traverse(o => {
+    if (!(o instanceof THREE.Mesh)) return;
+    for (const m of [o.material].flat()) {
+      for (const valeur of Object.values(m)) if (valeur instanceof THREE.Texture) textures.add(valeur);
+      const masque = masqueDe(m);
+      if (masque) { textures.add(masque); masques.add(masque); }
+    }
+  });
+  // Traiter les images successivement évite un pic de copies 4K en parallèle.
+  for (const texture of textures) {
+    const source: unknown = texture.source.data;
+    if (!(typeof ImageBitmap !== 'undefined' && source instanceof ImageBitmap)
+      && !(typeof HTMLImageElement !== 'undefined' && source instanceof HTMLImageElement)) continue;
+    const largeur = source instanceof HTMLImageElement ? source.naturalWidth : source.width;
+    const hauteur = source instanceof HTMLImageElement ? source.naturalHeight : source.height;
+    const cote = Math.max(largeur, hauteur);
+    if (cote <= 1024) continue;
+    let image = imagesTactiles.get(source);
+    if (!image) {
+      image = createImageBitmap(source, {
+        resizeWidth: Math.max(1, Math.round(largeur * 1024 / cote)),
+        resizeHeight: Math.max(1, Math.round(hauteur * 1024 / cote)),
+        resizeQuality: masques.has(texture) ? 'pixelated' : 'high',
+        imageOrientation: 'none', premultiplyAlpha: 'none', colorSpaceConversion: 'none',
+      }).catch(() => null);
+      imagesTactiles.set(source, image);
+    }
+    const reduite = await image;
+    if (reduite) {
+      // La Source et les textures sont partagées avec les figurines et le duel.
+      texture.source.data = reduite;
+      texture.needsUpdate = true;
+    }
+  }
+}
+
 /**
  * Tire d'un `GLTF` analysé la lecture qui nous sert : ses matériaux classiques
  * remplacés par leurs jumeaux à nœuds — une lecture est partagée par toutes
@@ -693,6 +742,7 @@ export async function lectureDepuisGltf(gltf: GLTF): Promise<LectureFichier> {
       // Le modèle vaut mieux sans son masque que pas du tout.
     }
   }
+  await adapterTexturesTactiles(gltf.scene);
   return { scene: gltf.scene, clips: gltf.animations };
 }
 

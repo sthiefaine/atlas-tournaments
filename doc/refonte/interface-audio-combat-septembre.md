@@ -25,6 +25,8 @@ Le contexte attend toujours un geste. Un onglet masqué suspend le son ; aucun �
 
 ## Combat rapproché
 
+Cette première version est remplacée par les [formations selon les PV et le budget mobile](mobile-formations-combat.md), à la demande du propriétaire le 14 septembre.
+
 `src/render3d/combat-rapproche.ts` monte deux copies des figurines déjà présentes dans le calque des unités. Les GLB chargés sont utilisés ; une unité sans GLB garde sa silhouette procédurale. Le duel n'effectue aucun chargement d'asset et ne crée aucun contexte graphique supplémentaire.
 
 Les géométries et textures sont partagées. Les matériaux et squelettes animés sont propres à la scène temporaire. Le socle de sélection du plateau ne fait pas partie de la figurine montrée. L'orientation prend en compte la conversion préalable des sources vers l'avant +X du rendu. Les matériaux standard à nœuds utilisent le clone complet du chargeur, et le brouillard du plateau n'est pas recopié.
@@ -40,7 +42,7 @@ La partition reste l'unique calendrier :
 - Cadence rapide prise en compte ; en animations réduites, présentation fixe de l'issue. Clic sur le duel ou son bouton pour passer, avec arrêt et libération idempotents.
 - Le jeu filtre les duels contre la visibilité avant/après l’action : une victime visible ne disparaît pas prématurément, un combat entièrement caché n’ouvre pas de fiche. Les règles de dégâts et de victoire restent celles du moteur.
 
-Les points de départ des effets sont encore estimés d'après le volume des figurines ; ils ne garantissent pas un raccord exact à chaque bouche de chaque GLB importé. Les infanteries sans squelette ne gagnent pas automatiquement une animation de bras. Les scènes restent donc à affiner artistiquement modèle par modèle. Les gros GLB ont également un coût de dessin supplémentaire pendant le duel ; les fichiers ne sont ni dupliqués ni simplifiés par cette passe.
+Les points de départ des effets sont encore estimés d'après le volume des figurines ; ils ne garantissent pas un raccord exact à chaque bouche de chaque GLB importé. Les infanteries sans squelette ne gagnent pas automatiquement une animation de bras. Les scènes restent donc à affiner artistiquement modèle par modèle. La représentation par formations décrite dans le document lié ci-dessus remplace ce premier rendu de deux GLB animés à chaque image.
 
 ## Vérifications
 

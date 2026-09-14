@@ -369,6 +369,8 @@ export interface Eclairage {
 export interface OptionsEclairage {
   /** Côté de la carte d'ombre, en texels : `tailleCarteOmbre()` sait le choisir. */
   tailleOmbre?: number;
+  ombres?: boolean;
+  particulesMax?: number;
 }
 
 /** Texture ronde et douce des flocons, poussières et nappes de brume. */
@@ -415,7 +417,7 @@ export function creerEclairage(
   groupe.name = 'eclairage';
 
   const soleil = new THREE.DirectionalLight(0xffffff, 1);
-  soleil.castShadow = true;
+  soleil.castShadow = options.ombres !== false;
   // La carte d'ombre ne couvre plus la carte entière mais le champ visible
   // (`cadrerOmbre`) : 2048² sur un ordinateur, 1024² au doigt. Ses biais sont
   // des multiples du texel et se posent avec le cadre, à la première image.
@@ -463,6 +465,7 @@ export function creerEclairage(
   geoImpacts.rotateX(-Math.PI / 2);
   const matImpacts = new THREE.MeshBasicNodeMaterial({ color: '#b5deeb', transparent: true, opacity: 0.26, depthWrite: false, side: THREE.DoubleSide });
   const impacts = new THREE.InstancedMesh(geoImpacts, matImpacts, 80);
+  impacts.count = options.particulesMax === undefined ? 80 : Math.min(80, Math.ceil(options.particulesMax / 12));
   impacts.name = 'impacts';
   impacts.frustumCulled = false; impacts.visible = false; groupe.add(impacts);
   const matriceImpact = new THREE.Object3D();
@@ -593,7 +596,7 @@ export function creerEclairage(
     soleil.updateMatrixWorld();
 
     const p = courant.particules;
-    const n = Math.min(PARTICULES_MAX, Math.round(p.nombre));
+    const n = Math.min(options.particulesMax ?? PARTICULES_MAX, PARTICULES_MAX, Math.round(p.nombre));
     if (n > 0) {
       encore = true;
       const dt = Math.min(0.1, ms / 1000);
@@ -602,7 +605,7 @@ export function creerEclairage(
       const flotte = p.calque === 'neige' || p.calque === 'brume' || p.calque === 'poussiere';
       if (pluie) {
         tempsImpacts += dt;
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < impacts.count; i++) {
           const x = centre.x + ((i * 7.731) % 18) - 9;
           const z = centre.z + ((i * 3.173) % 18) - 9;
           const h = hauteurSol(x, z);

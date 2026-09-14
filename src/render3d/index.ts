@@ -68,6 +68,7 @@ import { creerEffets, type Effets } from './effets';
 import { caseVersMonde, type GrilleTerrain } from './geometrie';
 import { tailleCarteOmbre, type CadreOmbre } from './ombres';
 import { creerScene3d, moteur3dDisponible, type Scene3d } from './scene';
+import { appareilTactile } from '../render/appareil';
 import { creerMarquesCases, type CalqueMarquesCases } from './marques-cases';
 import { creerSurbrillances, type CoucheSurbrillances } from './surbrillances';
 import { creerPlateau, grefferBrouillardSur, tranchesToilesPlateau, type Plateau } from './terrain';
@@ -108,12 +109,12 @@ const MS_REPOS = 1000;
  * cela se voit à peine ; sur un téléphone c'est tout le budget, et le jeu rame
  * « comme s'il y avait des boucles infinies » — le mot est du propriétaire.
  *
- * Un drapeau à trente images par seconde est un drapeau ; à vingt aussi. Ce qui
- * ne se bride **pas** : l'inertie de la caméra, une transition de lumière, une
- * marée, les effets, et toute animation de la file — là, un à-coup se voit.
+ * L'ambiance seule tourne à dix images par seconde au doigt. Caméra,
+ * transitions et combats réveillent la boucle active, plafonnée à trente
+ * images par seconde sur tactile sans changer le calendrier des actions.
  */
 const MS_AMBIANCE_SOURIS = 33;
-const MS_AMBIANCE_DOIGT = 50;
+const MS_AMBIANCE_DOIGT = 100;
 
 /** Durée d'une mutation de terrain : marée qui tourne, chantier du génie. */
 const MS_MUTATION = 1400;
@@ -227,7 +228,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   /** Un cadrage d'ouverture demandé avant que la caméra existe : il attend. */
   let cadrageEnAttente: Case | null = null;
   let mouvementReduit: MediaQueryList | undefined;
-  /** Vrai quand le pointeur principal est un doigt : la carte d'ombre passe à 1024². */
+  /** Vrai au doigt : pas de passe d'ombres et budget de rendu mobile. */
   let pointeurGrossier = false;
   /**
    * Ce qui **vaut une ombre**. La boucle ne dort jamais en partie — drapeaux,
@@ -410,7 +411,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       const eclairage = creerEclairage(
         s.scene, doc, depart,
         (x, z) => x >= 0 && z >= 0 && x < e.largeur && z < e.hauteur ? plateau.hauteurEn(x, z) : null,
-        { tailleOmbre: tailleCarteOmbre(pointeurGrossier) },
+        { tailleOmbre: tailleCarteOmbre(pointeurGrossier), ombres: !pointeurGrossier, particulesMax: pointeurGrossier ? 260 : undefined },
       );
       const vue3d = creerVue3d({ largeur: e.largeur, hauteur: e.hauteur });
       // Décor et unités se bâtissent au second temps : leurs groupes restent
@@ -568,12 +569,16 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const animations = boucle?.animations ?? 0;
     const ombre = ombreSale || mutation || cadre !== cadrePrecedent;
     // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
-    s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
-    if (combatRapproche) s.dessinerEncart(combatRapproche.scene, combatRapproche.camera, combatRapproche.hote);
+    if (combatRapproche) {
+      s.preparerCaptures(combatRapproche.captures);
+      s.dessinerEncart(combatRapproche.scene, combatRapproche.camera, combatRapproche.hote);
+    } else {
+      s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
+    }
     // La famille qui vient de paraître attendait celle-ci pour laisser la
     // suivante se compiler.
     imageDessinee();
-    ombreSale = false;
+    ombreSale = combatRapproche !== null;
     cadrePrecedent = cadre;
     continuSuivant = encore || animations > 0;
     // L'urgent redemande l'image suivante tout de suite ; l'ambiant la demande
@@ -681,17 +686,10 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
 
     monter(conteneur: HTMLElement): void {
       conteneurRef = conteneur;
-      // Au doigt, l'ambiance se contente de vingt images par seconde : c'est là
-      // que le budget est rare, et un drapeau n'y perd rien.
-      try {
-        msAmbiance = conteneur.ownerDocument.defaultView?.matchMedia?.('(pointer: coarse)')?.matches === true
-          ? MS_AMBIANCE_DOIGT : MS_AMBIANCE_SOURIS;
-      } catch {
-        msAmbiance = MS_AMBIANCE_SOURIS;
-      }
       const fenetre = conteneur.ownerDocument.defaultView;
       mouvementReduit = fenetre?.matchMedia('(prefers-reduced-motion: reduce)');
-      pointeurGrossier = fenetre?.matchMedia('(pointer: coarse)').matches ?? false;
+      pointeurGrossier = appareilTactile(fenetre);
+      msAmbiance = pointeurGrossier ? MS_AMBIANCE_DOIGT : MS_AMBIANCE_SOURIS;
       const s = creerScene3d(conteneur, {
         surRedimension: (l, h) => {
           monde?.vue3d.redimensionner(l, h);
@@ -709,7 +707,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
         console.error('Moteur 3D indisponible', cause);
         options.surEchec?.(cause);
       });
-      boucle = new Boucle(dessiner);
+      boucle = new Boucle(dessiner, undefined, pointeurGrossier ? 1000 / 30 : 0);
       repos = setInterval(() => salir(), MS_REPOS);
       ombreSale = true;
       cadrePrecedent = null;
@@ -747,7 +745,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       if (!monde || !vue || !scene3d?.pret) return null;
       // Le jeu filtre le duel avec la visibilité avant/après l'action ; la vue courante
       // seule exclurait à tort une victime qui vient de disparaître.
-      const combat = creerCombatRapproche(hote, geste, monde.unites, vue.catalogue, monde.grille.terrainDe(geste.cible.case.x, geste.cible.case.y), () => salir());
+      const combat = creerCombatRapproche(hote, geste, monde.unites, vue.catalogue, monde.plateau, scene3d.scene, () => salir());
       if (!combat) return null;
       combat.scene.environment = scene3d.scene.environment;
       combat.scene.environmentIntensity = .5;

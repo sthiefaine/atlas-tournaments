@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { moteur3dDisponible } from '@/render/rendu';
+import { appareilTactile } from '@/render/appareil';
 import { lirePreferences } from './preferences';
 
 /**
@@ -76,16 +77,15 @@ export function Vitrine({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Le réglage de l'appareil est maître ; celui du jeu ne peut qu'ajouter.
     const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduit || lirePreferences().animationsReduites || !moteur3dDisponible()) {
+    // Sur mobile, le menu n'alloue ni moteur 3D ni modèles avant la partie.
+    if (appareilTactile(window) || reduit || lirePreferences().animationsReduites || !moteur3dDisponible()) {
       setRenonce(true);
       return undefined;
     }
-    // Le téléchargement part maintenant ; le montage attend le délai. Sur un
-    // appareil tactile il est plus long : c'est là que le processeur est le plus
-    // lent, et un écran-titre doit être **appuyable avant d'être joli**.
+    // Sur ordinateur, télécharger maintenant mais laisser le menu répondre
+    // avant de monter la démonstration.
     void import('./attract').catch(() => undefined);
-    const tactile = window.matchMedia('(pointer: coarse)').matches;
-    const jeton = setTimeout(() => setMonte(true), tactile ? 700 : 400);
+    const jeton = setTimeout(() => setMonte(true), 400);
     return () => clearTimeout(jeton);
   }, []);
 

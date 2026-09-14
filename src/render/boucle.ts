@@ -95,11 +95,13 @@ export class Boucle {
 
   private dernier = 0;
 
+  private dernierePeinture: number | null = null;
+
   private sale = false;
 
   private vivante = true;
 
-  constructor(peintre: Peintre, horloge: Horloge = horlogeNavigateur()) {
+  constructor(peintre: Peintre, horloge: Horloge = horlogeNavigateur(), private readonly intervalleMin = 0) {
     this.peintre = peintre;
     this.horloge = horloge;
   }
@@ -147,6 +149,13 @@ export class Boucle {
   image(temps: number): void {
     this.jeton = null;
     if (!this.vivante) return;
+    // Les réveils du HUD et des gestes passent aussi par cette borne. Garder
+    // l'horloge du dernier dessin préserve la durée réelle des animations.
+    if (this.dernierePeinture !== null && temps - this.dernierePeinture < this.intervalleMin - 1) {
+      this.reveiller();
+      return;
+    }
+    this.dernierePeinture = temps;
     const ecoule = this.dernier === 0 ? 16 : Math.min(100, temps - this.dernier);
     this.dernier = temps;
     if (this.file.length > 0) {

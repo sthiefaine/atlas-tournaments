@@ -62,6 +62,8 @@
  */
 
 import * as THREE from 'three/webgpu';
+import Color4 from 'three/src/renderers/common/Color4.js';
+import { appareilTactile } from '../render/appareil';
 
 import {
   cadenceInsuffisante, decisionComposeur, IMAGES_CADENCE, mediane, msCadence,
@@ -72,6 +74,14 @@ import { creerEnvironnement, type Environnement } from './environnement';
 import { compterFamilles, depuisInfo } from './mesures';
 import { prechauffer, prechaufferOmbres } from './prechauffage';
 import type { Composeur, creerComposeur } from './postraitement';
+
+/** Une image de modèle ou de case, calculée une fois avec le renderer existant. */
+export interface Capture3d {
+  scene: THREE.Scene;
+  camera: THREE.Camera;
+  cible: THREE.RenderTarget;
+  prete: boolean;
+}
 
 /** Ce que `creerScene3d` rend à l'appelant. */
 export interface Scene3d {
@@ -95,6 +105,8 @@ export interface Scene3d {
    * d'envoi en millisecondes ; zéro, et rien, tant que le moteur n'est pas prêt.
    */
   dessiner(camera: THREE.Camera, options?: OptionsImage): number;
+  preparerCaptures(captures: readonly Capture3d[]): void;
+  /** Présente le duel seul ; la carte reste en mémoire sans être redessinée. */
   dessinerEncart(scene: THREE.Scene, camera: THREE.Camera, hote: HTMLElement): void;
   /**
    * Compile d'avance les programmes de la scène, lot par lot
@@ -187,23 +199,14 @@ export interface OptionsScene3d {
 }
 
 /**
- * La borne de densité par défaut : **2 à la souris, 1,4 au doigt**.
- *
- * Un téléphone annonce couramment 2,5 ou 3 : rendre à 2 sur un écran de 390 par
- * 844 fait 1,3 million de pixels par image, pour une dalle où l'œil ne distingue
- * plus rien au-delà de 1,4 — et la moitié des pixels coûte la moitié du temps
- * d'image. C'est le levier le moins cher sur un appareil qui rame, et il ne
- * touche pas la souris, où la finesse se voit.
+ * La borne de densité par défaut : 2 à la souris, 1 au doigt. Passer de 1,4
+ * à 1 réduit d'environ 49 % les pixels calculés, sans modifier les GLB.
  *
  * On lit le **pointeur**, pas la largeur : une tablette large au doigt a la même
  * dalle dense et le même processeur graphique modeste qu'un téléphone.
  */
 export function ratioMaxParDefaut(fenetre: Window | null): number {
-  try {
-    return fenetre?.matchMedia?.('(pointer: coarse)')?.matches === true ? 1.4 : 2;
-  } catch {
-    return 2;
-  }
+  return appareilTactile(fenetre) ? 1 : 2;
 }
 
 /** Le ratio de pixels courant, borné. */
@@ -280,6 +283,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   }
   const doc = conteneur.ownerDocument;
   const fenetre = doc.defaultView;
+  const tactile = appareilTactile(fenetre);
   const canvas = doc.createElement('canvas');
   canvas.className = 'atlas-toile';
   canvas.style.display = 'block';
@@ -337,9 +341,9 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
 
   const ratio = (): number => ratioPixels(fenetre, options.ratioMax ?? ratioMaxParDefaut(fenetre));
   const reduit = (): boolean => options.reduit?.() ?? false;
-  const voulu = (): boolean => !echec && decisionComposeur(qualite, msMesurees, reduit(), cadenceRefusee);
+  const voulu = (): boolean => !tactile && !echec && decisionComposeur(qualite, msMesurees, reduit(), cadenceRefusee);
   /** Mesure-t-on encore ? Seulement en `auto`, sans chaîne, tant que la médiane manque. */
-  const calibration = (): boolean => qualite === 'auto' && msMesurees === null && composeur === null && !reduit();
+  const calibration = (): boolean => !tactile && qualite === 'auto' && msMesurees === null && composeur === null && !reduit();
 
   function demonterComposeur(): void {
     if (!composeur) return;
@@ -453,14 +457,14 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     if (!vivante) throw new Error('Scène démontée avant que le moteur soit prêt.');
     const r = creerMoteurWebGPU({
       canvas,
-      antialias: true,
+      antialias: !tactile,
       alpha: false,
       powerPreference: 'high-performance',
     });
     r.outputColorSpace = THREE.SRGBColorSpace;
     r.toneMapping = THREE.ACESFilmicToneMapping;
     r.toneMappingExposure = exposition;
-    r.shadowMap.enabled = true;
+    r.shadowMap.enabled = !tactile;
     r.shadowMap.type = THREE.PCFSoftShadowMap;
     // Les compteurs ne se remettent pas à zéro à chaque passe : une image en
     // fait plusieurs — ombres, scène, quads —, et c'est l'image entière qu'on
@@ -497,21 +501,44 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     get composeurActif() { return composeur !== null; },
     get calibration() { return calibration(); },
 
+    preparerCaptures(captures): void {
+      const r = renderer;
+      if (!r || captures.every(c => c.prete)) return;
+      const cibleAvant = r.getRenderTarget(), effacer = r.autoClear;
+      const couleur = r.getClearColor(new Color4()), alpha = r.getClearAlpha();
+      try {
+        r.autoClear = true; r.setClearColor(new THREE.Color(0), 0);
+        for (const capture of captures) {
+          if (capture.prete) continue;
+          r.setRenderTarget(capture.cible); r.render(capture.scene, capture.camera);
+          capture.prete = true;
+        }
+      } finally {
+        r.setRenderTarget(cibleAvant); r.autoClear = effacer; r.setClearColor(couleur, alpha);
+      }
+    },
+
     dessinerEncart(contenu, camera, hote): void {
       const r = renderer;
       if (!r || !hote.isConnected) return;
       const cadre = hote.getBoundingClientRect(), fond = canvas.getBoundingClientRect();
       if (cadre.width < 1 || cadre.height < 1 || fond.width < 1 || fond.height < 1) return;
       if (!encart) {
-        const cible = new THREE.RenderTarget(1, 1);
-        encart = { cible, quad: new THREE.QuadMesh(new THREE.MeshBasicNodeMaterial({ map: cible.texture, depthTest: false, depthWrite: false, toneMapped: false })) };
+        const cible = new THREE.RenderTarget(1, 1, { type: THREE.HalfFloatType });
+        encart = { cible, quad: new THREE.QuadMesh(new THREE.MeshBasicNodeMaterial({ map: cible.texture, depthTest: false, depthWrite: false })) };
       }
       const ratio = Math.min(r.getPixelRatio(), 1.5);
       encart.cible.setSize(Math.min(1400, Math.round(cadre.width * ratio)), Math.min(700, Math.round(cadre.height * ratio)));
       const cibleAvant = r.getRenderTarget(), viewport = r.getViewport(new THREE.Vector4()), scissor = r.getScissor(new THREE.Vector4());
       const decoupe = r.getScissorTest(), effacer = r.autoClear;
       try {
-        // Le rendu hors écran a son propre tampon de profondeur ; la carte reste intacte.
+        r.info.reset();
+        derniereImage = null;
+        // Le combat occupe l'écran : aucun rendu du plateau sous la fenêtre.
+        // Effacer le fond évite de conserver des pixels de la carte précédente.
+        r.setRenderTarget(null); r.setViewport(0, 0, largeur, hauteur); r.setScissorTest(false);
+        r.clear();
+        // La fenêtre a son propre tampon de profondeur et sa résolution bornée.
         r.setRenderTarget(encart.cible); r.setScissorTest(false); r.autoClear = true;
         r.render(contenu, camera);
         r.setRenderTarget(cibleAvant); r.autoClear = false;
@@ -630,7 +657,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         // `ombresChaudes` traverse les appels : une forme d'ombre payée quand le
         // sol a paru ne se repaie pas quand le décor paraît. Un lot d'ombre
         // coûte un rendu entier — c'est le poste le plus cher du préchauffage.
-        if (encore()) {
+        if (encore() && r.shadowMap.enabled) {
           await prechaufferOmbres(r, scene, camera, { vivante: encore, cibles, connues: ombresChaudes });
         }
       } catch {

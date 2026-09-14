@@ -688,8 +688,10 @@ export function monterScenes(
         noeud.appendChild(cadre);
         noeud.addEventListener('click', surClic);
         jauges = { attaquant: a.jauge, cible: c.jauge };
-        peindre(a.canvas, a.type.silhouette, g.attaquant.camp, TAILLE_VIGNETTE_COMBAT);
-        peindre(c.canvas, c.type.silhouette, g.cible.camp, TAILLE_VIGNETTE_COMBAT);
+        if (!presentation) {
+          peindre(a.canvas, a.type.silhouette, g.attaquant.camp, TAILLE_VIGNETTE_COMBAT);
+          peindre(c.canvas, c.type.silhouette, g.cible.camp, TAILLE_VIGNETTE_COMBAT);
+        }
         // Sans durée, l'écran montre directement l'issue.
         poser(fixe ? 'fin' : 'avant');
         return noeud;
