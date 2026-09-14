@@ -1,3 +1,18 @@
+# unite_barge_base — LOD0 de jeu optimisé
+
+Actif après contrôle technique `ok`. 934,594 → **41,176 triangles**, lot de **4.87 Mio**. Un seul GLB LOD0, PNG externes de 2K maximum. Sources HD et leurs résolutions originales conservées sous SHA-256.
+
+- `maitre.json` : fichiers HD, empreintes et emplacements de récupération (données immuables ou historique Git).
+- `optimisation.json` : réduction bornée avec coutures verrouillées, structure/UV/normales/animations conservés ; normales texturées existantes réutilisées, aucun nouveau bake.
+- `textures-optimisation.json` : résolutions et poids par canal ; filtrage albedo en linéaire et renormalisation des normales.
+- `validation-lot.json` : verdict de ce lot, distinct d’une approbation artistique.
+
+Les anciens rapports de préparation ci-dessous décrivent le maître HD, pas le LOD0 actif. La mesure sur téléphone réel reste à réaliser avec `/jeu/premier_contact?mesure=1`.
+
+---
+
+## Historique de la préparation HD
+
 # Barge de transport Tripo
 
 Source fournie par le propriétaire : `tugboat 3d model.glb`, 934 558 triangles, 28,4 Mio. Copie HD conservée localement dans `assets/sources/unite_barge_base`, hors git. Affectation à la barge confirmée explicitement.

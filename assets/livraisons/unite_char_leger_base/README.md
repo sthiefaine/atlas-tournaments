@@ -1,3 +1,18 @@
+# unite_char_leger_base — LOD0 de jeu optimisé
+
+Actif après contrôle technique `ok`. 957,212 → **55,720 triangles**, lot de **9.83 Mio**. Un seul GLB LOD0, PNG externes de 2K maximum. Sources HD et leurs résolutions originales conservées sous SHA-256.
+
+- `maitre.json` : fichiers HD, empreintes et emplacements de récupération (données immuables ou historique Git).
+- `optimisation.json` : réduction bornée avec coutures verrouillées, structure/UV/normales/animations conservés ; normales texturées existantes réutilisées, aucun nouveau bake.
+- `textures-optimisation.json` : résolutions et poids par canal ; filtrage albedo en linéaire et renormalisation des normales.
+- `validation-lot.json` : verdict de ce lot, distinct d’une approbation artistique.
+
+Les anciens rapports de préparation ci-dessous décrivent le maître HD, pas le LOD0 actif. La mesure sur téléphone réel reste à réaliser avec `/jeu/premier_contact?mesure=1`.
+
+---
+
+## Historique de la préparation HD
+
 # Char léger — candidat issu du GLB uploadé
 
 Source : `tank 3d model.glb`, SHA-256 `82f0857a3f0074cbd2aca688ec81c2227f53fa1a1dcbba66d6579f399a513f99`.

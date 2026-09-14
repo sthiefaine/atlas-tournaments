@@ -1,0 +1,72 @@
+[
+  {
+    "nom": "unite_barge_base_albedo.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 8083395,
+    "octets": 2769408,
+    "sourceSha256": "d88e93fa74d8083671a502204a4a0b0e1b5b3e10a7d1468f1ae6cd93fa81ac26"
+  },
+  {
+    "nom": "unite_barge_base_masque_equipe.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 978,
+    "octets": 978,
+    "sourceSha256": "7e3b7654b57c8183eeb4d4edd9a64f00e6bde208fd266618d5b5ce038239090b"
+  },
+  {
+    "nom": "unite_barge_base_metal.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 222691,
+    "octets": 222691,
+    "sourceSha256": "700712ccbf0d9cd322b0b9849ac035a76bbf25c5de650e9be510b7a9a182ee8a"
+  },
+  {
+    "nom": "unite_barge_base_normale.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 3010793,
+    "octets": 981278,
+    "sourceSha256": "335e7a13dc68a35d5a2d60214680cba0dfd92323e5b8584c5320a39bd5a66a11"
+  },
+  {
+    "nom": "unite_barge_base_rugosite.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 135716,
+    "octets": 135716,
+    "sourceSha256": "ce2476293bf6c54f5a145f6a8b879eec6d475ef8c8f619b58497e4c2fa69f1e5"
+  }
+]

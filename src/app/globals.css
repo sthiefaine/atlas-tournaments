@@ -1,4 +1,13 @@
 @import "tailwindcss";
+
+/* Diagnostic local opt-in ; le bandeau se replie pendant la mesure. */
+.atlas-diagnostic { position: fixed; z-index: 100; top: max(8px, env(safe-area-inset-top)); left: 8px; width: min(350px, calc(100vw - 16px)); color: #eef5f8; background: #102632; border-radius: 10px; box-shadow: 0 8px 28px #0006; font-size: 13px; }
+.atlas-diagnostic-entete { width: 100%; padding: 10px 12px; text-align: left; font-weight: 700; color: #7ee7d7; }
+.atlas-diagnostic-contenu { padding: 0 12px 12px; max-height: 65vh; overflow: auto; }
+.atlas-diagnostic-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-block: 12px; }
+.atlas-diagnostic-actions button { padding: 10px 12px; background: #254a59; border-radius: 6px; }
+.atlas-diagnostic button:focus-visible { outline: 2px solid #7ee7d7; outline-offset: 2px; }
+.atlas-diagnostic textarea { width: 100%; height: 180px; margin-top: 8px; font: 11px monospace; color: #fff; background: #081b24; }
 /* Une feuille par écran (`styles/`). Les `@import` sont en tête : le CSS les
    ignore ailleurs, et PostCSS les refuse. */
 @import "./styles/commun.css";

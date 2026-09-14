@@ -5,6 +5,8 @@ playwright-report
 test-results
 apercus
 assets/livraisons
+assets/sources
+tmp
 assets/receptions/*/*
 *.tsbuildinfo
 .env

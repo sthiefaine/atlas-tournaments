@@ -16462,17 +16462,12 @@
       "fichiers": [
         "unite_barge_base_lod0.glb",
         "unite_barge_base_albedo.png",
-        "unite_barge_base_albedo_hiver.png",
         "unite_barge_base_normale.png",
-        "unite_barge_base_normale_hiver.png",
         "unite_barge_base_rugosite.png",
-        "unite_barge_base_rugosite_hiver.png",
         "unite_barge_base_metal.png",
-        "unite_barge_base_metal_hiver.png",
-        "unite_barge_base_masque_equipe.png",
-        "unite_barge_base_masque_equipe_hiver.png"
+        "unite_barge_base_masque_equipe.png"
       ],
-      "revision": "330542b6f118aa3bd0335aed6d925225eee83308e0dba4b8ad3785cd979eea42"
+      "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e"
     },
     {
       "id": "unite_bombardier_base",
@@ -16522,7 +16517,7 @@
         "unite_char_leger_base_metal.png",
         "unite_char_leger_base_masque_equipe.png"
       ],
-      "revision": "d1b2ef08309137aa44f1e788ca3b8eca919d02726b7050dcf0c50a793197cb0e"
+      "revision": "547d5774135bdd83600d9afd8c6d36deda5825e5fc6bfaa4fae818975ec31672"
     },
     {
       "id": "unite_char_lourd_base",
@@ -16731,7 +16726,7 @@
         "unite_infanterie_base_metal.png",
         "unite_infanterie_base_masque_equipe.png"
       ],
-      "revision": "f56da6d98938fd8e02609e32d6e65241072d18416953227c413b0f566d605b23"
+      "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44"
     },
     {
       "id": "unite_meca_base",
@@ -16933,14 +16928,14 @@
     {
       "id": "batiment_qg_base",
       "fichiers": [
-        "batiment_qg_base_albedo.png",
-        "batiment_qg_base_emission.png",
         "batiment_qg_base_lod0.glb",
-        "batiment_qg_base_masque_equipe.png",
+        "batiment_qg_base_albedo.png",
         "batiment_qg_base_normale.png",
-        "batiment_qg_base_rugosite.png"
+        "batiment_qg_base_rugosite.png",
+        "batiment_qg_base_emission.png",
+        "batiment_qg_base_masque_equipe.png"
       ],
-      "revision": "01b1fcc6bd97769cce2b0b7dc59359c4305cf8147f15be8392f663ba6fb54b68"
+      "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4"
     },
     {
       "id": "batiment_ville_base",

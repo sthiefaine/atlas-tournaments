@@ -1,0 +1,110 @@
+{
+  "id": "batiment_qg_base",
+  "version": 1,
+  "sourcePrepareeSha256": "3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977",
+  "sourceDossier": "assets/sources/batiment_qg_base/maitre-3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977",
+  "glbSha256": "11d173c359e4c0dddb5482e831e043f17fddec4fbc727f483892ed41a61aba09",
+  "trianglesAvant": 873843,
+  "triangles": 35009,
+  "glbOctetsAvant": 11309588,
+  "glbOctets": 888496,
+  "profil": {
+    "maximum": 40000,
+    "cible": 35000,
+    "erreur": 0.001
+  },
+  "mesures": [
+    {
+      "maille": "",
+      "avant": 730718,
+      "apres": 29266,
+      "erreurRelative": 0.0005979866837151349,
+      "erreurMetresEstimee": 0.0008222316901083104
+    },
+    {
+      "maille": "",
+      "avant": 143113,
+      "apres": 5731,
+      "erreurRelative": 0.0007506500696763396,
+      "erreurMetresEstimee": 0.0007589187023730043
+    },
+    {
+      "maille": "",
+      "avant": 12,
+      "apres": 12,
+      "erreurRelative": 0,
+      "erreurMetresEstimee": 0
+    }
+  ],
+  "methode": "Meshopt QEM LockBorder ; UV et normales des sommets conservés, normales texturées existantes réutilisées, aucun nouveau bake HD vers low-poly",
+  "animationsSourceSha256": "55b3f9e48cd96c2637db315c7266b33e0cc2bd2a51b058405c124cd5ea47824c",
+  "animationsSource": [
+    {
+      "name": "repos",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": 14,
+          "output": 15,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "capture",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 16,
+          "output": 17,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "touche",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 18,
+          "output": 19,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        }
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}

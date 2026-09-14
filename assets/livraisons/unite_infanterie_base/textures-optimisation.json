@@ -1,0 +1,72 @@
+[
+  {
+    "nom": "unite_infanterie_base_albedo.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 9030475,
+    "octets": 3199053,
+    "sourceSha256": "eb2cf26bdacfc4ee30779ccd607b32f3870158f5f3660db98273dbe190bf0e5f"
+  },
+  {
+    "nom": "unite_infanterie_base_masque_equipe.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 6116,
+    "octets": 6116,
+    "sourceSha256": "432f169d0ea18a28214d3499ae524e9c4058a504592bc6072804c4050e80d7c9"
+  },
+  {
+    "nom": "unite_infanterie_base_metal.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 4317273,
+    "octets": 1967362,
+    "sourceSha256": "65599bfa9626eabed93eeb2fef578dbf35113f6eac513f9759336326f585781c"
+  },
+  {
+    "nom": "unite_infanterie_base_normale.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 7822524,
+    "octets": 2265838,
+    "sourceSha256": "263d3f12fea0c252391d281bfd9dcd2995b4e66de92d23d03d8174319c9c9781"
+  },
+  {
+    "nom": "unite_infanterie_base_rugosite.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 10508519,
+    "octets": 3510934,
+    "sourceSha256": "8b60a8229e2666416f7d122bdfd67e6357f96a19e6cf7b2de20a09bc8213b0c7"
+  }
+]

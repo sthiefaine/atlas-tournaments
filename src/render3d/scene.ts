@@ -147,6 +147,7 @@ export interface Scene3d {
   readonly calibration: boolean;
   /** Le coût de la dernière image dessinée. */
   mesures(): MesuresRendu;
+  compteurs(): { triangles: number; appels: number };
   /** Change la qualité sans remonter : la chaîne se monte ou se démonte à l'image suivante. */
   reglerQualite(qualite: QualiteRendu): void;
   dispose(): void;
@@ -674,6 +675,8 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
         r.info.reset();
       }
     },
+
+    compteurs: () => depuisInfo(renderer?.info),
 
     mesures(): MesuresRendu {
       return {

@@ -1,6 +1,15 @@
 {
   "_note": "Chaînes d'interface SOURCE, en français (09-i18n.md §3.1). Le contexte et la longueur maximale sont écrits à la main : c'est le seul endroit où un humain dit « ce bouton fait 8 caractères de large ». Le sourceHash et les placeholders sont calculés par le serveur, jamais déclarés ici. Une clé n'est jamais réutilisée pour un autre texte.",
   "chaines": [
+    {"cle": "performance.titre", "texte": "Mesure des performances", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.consigne", "texte": "Lancez 60 secondes de mesure, faites pivoter la carte, déplacez une unité puis lancez un combat. Le rapport reste sur cet appareil ; transmettez-le pour ajuster le budget.", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.demarrer", "texte": "Mesurer 60 s", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.arreter", "texte": "Terminer le relevé", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.telecharger", "texte": "Télécharger", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.copie", "texte": "Copié", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.copier", "texte": "Copier", "contexte": {"ecran": "diagnostic performance"}},
+    {"cle": "performance.rapport", "texte": "Rapport local", "contexte": {"ecran": "diagnostic performance"}},
+
     {"cle": "reglages.audio", "texte": "Audio", "contexte": {"ecran": "reglages", "note": "Réglages audio et navigation des préférences."}, "longueurMax": 80},
     {"cle": "reglages.ambiance", "texte": "Environnement", "contexte": {"ecran": "reglages", "note": "Réglages audio et navigation des préférences."}, "longueurMax": 80},
     {"cle": "reglages.effets", "texte": "Combats et déplacements", "contexte": {"ecran": "reglages", "note": "Réglages audio et navigation des préférences."}, "longueurMax": 80},

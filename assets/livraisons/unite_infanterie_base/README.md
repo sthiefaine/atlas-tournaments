@@ -1,3 +1,18 @@
+# unite_infanterie_base — LOD0 de jeu optimisé
+
+Actif après contrôle technique `ok`. 951,858 → **50,682 triangles**, lot de **11.36 Mio**. Un seul GLB LOD0, PNG externes de 2K maximum. Sources HD et leurs résolutions originales conservées sous SHA-256.
+
+- `maitre.json` : fichiers HD, empreintes et emplacements de récupération (données immuables ou historique Git).
+- `optimisation.json` : réduction bornée avec coutures verrouillées, structure/UV/normales/animations conservés ; normales texturées existantes réutilisées, aucun nouveau bake.
+- `textures-optimisation.json` : résolutions et poids par canal ; filtrage albedo en linéaire et renormalisation des normales.
+- `validation-lot.json` : verdict de ce lot, distinct d’une approbation artistique.
+
+Les anciens rapports de préparation ci-dessous décrivent le maître HD, pas le LOD0 actif. La mesure sur téléphone réel reste à réaliser avec `/jeu/premier_contact?mesure=1`.
+
+---
+
+## Historique de la préparation HD
+
 # Infanterie — source uploadée du 13 septembre 2026
 
 Source : military soldier 3d model.glb. SHA-256 : 083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710. Copie locale des téléchargements, empreinte identique à la sélection uploadée ; stockage distant non configuré localement.

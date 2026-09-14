@@ -20,7 +20,7 @@
       "host-town architecture",
       "warm lived-in details",
       "emissive windows at night",
-      "regional building vernacular"
+      "national building vernacular"
     ],
     "aEviter": [
       "no readable text or numbers",
@@ -51,27 +51,27 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 875000,
+    "lod0": 40000,
     "materiauxMax": 3
   },
   "textures": [
     {
       "canal": "albedo",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre."
     },
     {
       "canal": "normale",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Joints de maçonnerie, bardages, tuiles, encadrements."
     },
     {
       "canal": "rugosite",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées."

@@ -1,6 +1,6 @@
 {
-  "revision": "f56da6d98938fd8e02609e32d6e65241072d18416953227c413b0f566d605b23",
-  "source": "source.json",
-  "compression": "compression.json",
+  "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44",
+  "source": "maitre.json",
+  "preparation": "optimisation.json",
   "approbationArtistique": false
 }

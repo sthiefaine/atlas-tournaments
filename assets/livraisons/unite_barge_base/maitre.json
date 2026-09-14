@@ -1,0 +1,61 @@
+{
+  "id": "unite_barge_base",
+  "sha256Glb": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab",
+  "fichiers": [
+    {
+      "nom": "unite_barge_base_albedo.png",
+      "sha256": "d88e93fa74d8083671a502204a4a0b0e1b5b3e10a7d1468f1ae6cd93fa81ac26",
+      "octets": 8083395,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_albedo.png"
+      }
+    },
+    {
+      "nom": "unite_barge_base_lod0.glb",
+      "sha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab",
+      "octets": 27604472,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_lod0.glb"
+      }
+    },
+    {
+      "nom": "unite_barge_base_masque_equipe.png",
+      "sha256": "7e3b7654b57c8183eeb4d4edd9a64f00e6bde208fd266618d5b5ce038239090b",
+      "octets": 978,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_masque_equipe.png"
+      }
+    },
+    {
+      "nom": "unite_barge_base_metal.png",
+      "sha256": "700712ccbf0d9cd322b0b9849ac035a76bbf25c5de650e9be510b7a9a182ee8a",
+      "octets": 222691,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_metal.png"
+      }
+    },
+    {
+      "nom": "unite_barge_base_normale.png",
+      "sha256": "335e7a13dc68a35d5a2d60214680cba0dfd92323e5b8584c5320a39bd5a66a11",
+      "octets": 3010793,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_normale.png"
+      }
+    },
+    {
+      "nom": "unite_barge_base_rugosite.png",
+      "sha256": "ce2476293bf6c54f5a145f6a8b879eec6d475ef8c8f619b58497e4c2fa69f1e5",
+      "octets": 135716,
+      "donneesGit": {
+        "revision": "7ac3ff3",
+        "chemin": "public/assets/modeles/unite_barge_base_rugosite.png"
+      }
+    }
+  ],
+  "sourceUpload": null
+}

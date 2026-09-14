@@ -1,3 +1,4 @@
+import type { ImageMesuree } from '../render/mesure-performance';
 import { sonEnvironnement } from '../audio/profils';
 import { creerCombatRapproche, type CombatRapproche } from './combat-rapproche';
 import { cleCase } from '../engine/index';
@@ -248,6 +249,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
   let combatRapproche: CombatRapproche | null = null;
+  let observateurImages: ((image: ImageMesuree) => void) | null = null;
   /**
    * Jusqu'où le monde est chaud, donc ce qu'une image a le droit de dessiner.
    * Le chantier la fait monter deux fois : `sol` à la fin de son premier temps,
@@ -516,6 +518,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // sur le fil principal, ce que le préchauffage est en train de faire hors
     // de lui. Il réveille la boucle à la fin de chacun de ses deux temps.
     if (phase === 'rien' || enPrechauffage) return;
+    const debutMesure = observateurImages ? performance.now() : 0;
     let encore = false;
     const calme = reduit();
     // La caméra d'abord : inertie, pas de zoom et recentrage se jouent dans
@@ -574,6 +577,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       s.dessinerEncart(combatRapproche.scene, combatRapproche.camera, combatRapproche.hote);
     } else {
       s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
+    }
+    if (observateurImages && s.pret) {
+      observateurImages({ instant: debutMesure, cpuMs: performance.now() - debutMesure,
+        phase: combatRapproche ? 'combat' : urgent || animations > 0 ? 'action' : 'repos',
+        ...s.compteurs() });
     }
     // La famille qui vient de paraître attendait celle-ci pour laisser la
     // suivante se compiler.
@@ -813,6 +821,11 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       return scene3d?.msParImage ?? 0;
     },
 
+    observerImages(observer) {
+      observateurImages = observer;
+      return () => { if (observateurImages === observer) observateurImages = null; };
+    },
+
     mesurer(): MesuresRendu {
       return scene3d?.mesures() ?? {
         triangles: 0, appels: 0, msParImage: 0, composeur: false, msCalibration: null, backend: null,
@@ -916,6 +929,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     demonter(): void {
+      observateurImages = null;
       combatRapproche?.fermer(); combatRapproche = null;
       options.audio?.annuler();
       if (repos !== null) clearInterval(repos);

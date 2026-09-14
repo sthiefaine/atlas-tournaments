@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+const DiagnosticPerformance = dynamic(() => import('./diagnostic-performance'), { ssr: false });
 const CarnetEnJeu = dynamic(() => import('../../campagne/journal/en-jeu'), { ssr: false });
 import { creerAudioJeu } from '@/audio/moteur';
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from 'react';
@@ -203,6 +204,8 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // La clé de sauvegarde dépend du profil actif de l'appareil ; c'est la page
   // qui la compose et la donne au rendu, qui ne connaît pas les profils.
   const [cleSauvegarde, setCleSauvegarde] = useState<string | null>(null);
+  const [diagnostic, setDiagnostic] = useState(false);
+  useEffect(() => { setDiagnostic(new URLSearchParams(window.location.search).get('mesure') === '1'); }, []);
   const [carnetOuvert, setCarnetOuvert] = useState(false);
   const [voirAide, setVoirAide] = useState(false);
   // Une scène de dialogue est ouverte sur la carte : aucune modale ne doit
@@ -499,6 +502,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   </section></div></main>;
 
   return <main className="atlas-jeu fixed inset-0 overflow-hidden bg-[#10131a]">
+    {diagnostic && etat && <DiagnosticPerformance key={`${scenario.code}:${tentative}:${depart}`} jeu={jeuRef} locale={locale} scenario={scenario.code} />}
     {carnetOuvert && etat && <CarnetEnJeu etat={etat} catalogueVersion={scenario.catalogueVersion} pays={scenarioEffectif.incarnation?.paysCode ?? scenario.paysCode} surProduire={(unite, batiment) => jeuRef.current?.produireDepuisCarnet(unite, batiment) ?? false} fermer={() => setCarnetOuvert(false)} />}
     <div ref={conteneurRef} aria-label={scenario.nom} className="relative h-full w-full touch-none outline-none" data-scenario={scenario.code} data-pret={etat ? '1' : '0'} inert={modal || erreur || bancEnAttente || commandantEnAttente || undefined} />
     {/* Le vestiaire, avant tout montage : seize cases, un banc à prendre. Le

@@ -1,0 +1,72 @@
+[
+  {
+    "nom": "batiment_qg_base_albedo.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 8857323,
+    "octets": 3009941,
+    "sourceSha256": "89abace4d132da5a000f89f3c74c103319823570bf48570fa732e4083de873d9"
+  },
+  {
+    "nom": "batiment_qg_base_emission.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 843,
+    "octets": 843,
+    "sourceSha256": "1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b"
+  },
+  {
+    "nom": "batiment_qg_base_masque_equipe.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 5310,
+    "octets": 5310,
+    "sourceSha256": "fbaceb1192f3af1508db7de677e987589e0c5a9d051fa78b918174257c9313d3"
+  },
+  {
+    "nom": "batiment_qg_base_normale.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 1229207,
+    "octets": 447087,
+    "sourceSha256": "59bd5180e54b267e144c9adeed09e6e5de3ade8e35228eb4c32bcbf05e9677a7"
+  },
+  {
+    "nom": "batiment_qg_base_rugosite.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 10090225,
+    "octets": 3373036,
+    "sourceSha256": "ff268b8e1be75596d2c8f80b8e71060187660e4a6f8730a336a8eaffd6e5f52b"
+  }
+]

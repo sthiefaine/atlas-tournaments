@@ -50,34 +50,34 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 1000000,
+    "lod0": 55000,
     "materiauxMax": 2
   },
   "textures": [
     {
       "canal": "albedo",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
     },
     {
       "canal": "normale",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."
     },
     {
       "canal": "rugosite",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Contraste métal poli / peinture mate / caoutchouc : c’est elle qui vend la matière."
     },
     {
       "canal": "metal",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": false,
       "note": "Seulement si des pièces nues subsistent ; une valeur uniforme sinon."

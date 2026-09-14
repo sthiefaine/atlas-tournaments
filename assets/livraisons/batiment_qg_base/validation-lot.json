@@ -1,13 +1,21 @@
 {
   "id": "batiment_qg_base",
-  "revision": "01b1fcc6bd97769cce2b0b7dc59359c4305cf8147f15be8392f663ba6fb54b68",
-  "octets": 31492496,
-  "triangles": 873843,
+  "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4",
+  "octets": 7724713,
   "verdict": {
     "ok": true,
-    "motifs": []
+    "motifs": [],
+    "acceptes": [
+      "batiment_qg_base_lod0.glb",
+      "batiment_qg_base_albedo.png",
+      "batiment_qg_base_normale.png",
+      "batiment_qg_base_rugosite.png",
+      "batiment_qg_base_emission.png",
+      "batiment_qg_base_masque_equipe.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
   },
   "approbationArtistique": false,
-  "integration": "actif",
-  "sourceSha256": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326"
+  "integration": "actif_lod0_optimise"
 }

@@ -17,6 +17,7 @@
  *    la promesse ne fait qu'attendre que l'image l'ait rejoint.
  */
 
+import type { ImageMesuree } from './mesure-performance';
 import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
 import type { CampId, Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
@@ -86,10 +87,9 @@ export interface MesuresRendu {
   msCalibration: number | null;
   /**
    * La médiane des intervalles entre les dernières images **consécutives**, en
-   * millisecondes ; `null` tant qu'il n'y en a pas assez. C'est la mesure qui
-   * compte le processeur graphique en jeu, sans barrière : le navigateur
-   * retient l'image suivante tant que la précédente n'est pas présentée. Seize
-   * millisecondes, c'est soixante images par seconde. Absente d'une peau qui
+   * millisecondes ; `null` tant qu'il n'y en a pas assez. Cette cadence inclut les attentes du navigateur et les pauses de la
+   * boucle ; elle ne mesure pas directement le temps GPU. Le diagnostic
+   * sépare repos, action et combat pour éviter de confondre repos et lenteur. Absente d'une peau qui
    * ne sait pas la dire.
    */
   msCadence?: number | null;
@@ -256,6 +256,8 @@ export interface Rendu {
   msParImage(): number;
   /** Le coût de la dernière image : triangles, appels, durée, chaîne active ou non. */
   mesurer?(): MesuresRendu;
+  /** Abonnement opt-in : aucun relevé ni envoi réseau en jeu normal. */
+  observerImages?(observer: (image: ImageMesuree) => void): () => void;
   /**
    * Le monde est-il **bâti**, et non seulement dessiné une première fois ?
    *

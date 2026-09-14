@@ -964,8 +964,11 @@ export function specUnite(u: UnitType): AssetSpec {
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
     echelle: echelleUnite(s),
     pivot: pivot(u.domaine !== 'air'),
-    budget: ['barge', 'artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) ? budget(1000000, u.cle === 'infanterie' ? 2 : 3) : budgetUnite(s),
-    textures: ['barge', 'artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) ? textures.map(t => (['albedo', 'normale'].includes(t.canal) || (['artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) && ['rugosite', 'metal'].includes(t.canal))) ? { ...t, resolution: 4096 as const } : t) : textures,
+    // Première enveloppe de jeu ; les maîtres HD ne sont pas soumis à ce budget.
+    budget: ['barge', 'infanterie', 'char_leger'].includes(u.cle)
+      ? budget(({ barge: 50000, infanterie: 55000, char_leger: 60000 } as Record<string, number>)[u.cle]!, u.cle === 'infanterie' ? 2 : 3)
+      : ['artillerie', 'antiair'].includes(u.cle) ? budget(60000, 3) : budgetUnite(s),
+    textures: ['barge', 'artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) ? textures.map(t => (['albedo', 'normale'].includes(t.canal) || (['artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) && ['rugosite', 'metal'].includes(t.canal))) ? { ...t, resolution: 2048 as const } : t) : textures,
     variantes: variantes(['hiver']),
     animations: animationsUnite(u),
     format: format(['corps', 'base', 'socle', ...modules], materiaux),
@@ -1127,7 +1130,7 @@ const GABARIT_BATIMENT: Record<string, { x: number; y: number; z: number; tris: 
   ville: { x: 0.85, y: 0.7, z: 0.85, tris: [5000, 1600, 450] },
   usine: { x: 0.9, y: 0.8, z: 0.9, tris: [5600, 1800, 500] },
   aeroport: { x: 0.92, y: 0.45, z: 0.92, tris: [4200, 1400, 400] },
-  qg: { x: 0.85, y: 0.95, z: 0.85, tris: [875000, 2100, 600] },
+  qg: { x: 0.85, y: 0.95, z: 0.85, tris: [40000, 2100, 600] },
 };
 
 /**
@@ -1224,9 +1227,9 @@ export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
     pivot: pivot(true),
     budget: budget(g.tris[0], 3),
     textures: [
-      tex('albedo', t.cle === 'qg' ? 4096 : 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
-      tex('normale', t.cle === 'qg' ? 4096 : 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
-      tex('rugosite', t.cle === 'qg' ? 4096 : 512, true, 'Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées.'),
+      tex('albedo', t.cle === 'qg' ? 2048 : 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
+      tex('normale', t.cle === 'qg' ? 2048 : 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
+      tex('rugosite', t.cle === 'qg' ? 2048 : 512, true, 'Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées.'),
       tex('emission', 512, true, 'Fenêtres et lanterneaux éclairés : c’est ce qui fait la nuit du jeu.'),
       tex('masque_equipe', 512, true, 'Stores, rives de toit, fanion : les surfaces qui prennent la nation.'),
     ],

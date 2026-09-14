@@ -1,3 +1,4 @@
+import type { ImageMesuree } from './mesure-performance';
 /**
  * `monterJeu()` — l'assemblage, désormais **indépendant du rendu**.
  *
@@ -196,6 +197,8 @@ export interface Jeu {
    * on ne retient pas un écran de chargement sur une ignorance.
    */
   etatChargement(): EtapeChargement;
+  mesurer(): MesuresRendu | null;
+  observerImages(observer: (image: ImageMesuree) => void): () => void;
   produireDepuisCarnet(unite: CleUnite, batiment: Case): boolean;
   /** Force une image. */
   salir(): void;
@@ -1193,6 +1196,8 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
      * pas un écran de chargement sur une ignorance.
      */
     etatChargement: (): EtapeChargement => etapeChargement(rendu.mesurer?.()),
+    mesurer: () => rendu.mesurer?.() ?? null,
+    observerImages: observer => rendu.observerImages?.(observer) ?? (() => undefined),
     produireDepuisCarnet: (unite, batiment) => {
       if (!vivant || attenteIa || partitionEnCours || dialogueActif()) return false;
       return controleur.produireDepuisCarnet(unite, batiment);

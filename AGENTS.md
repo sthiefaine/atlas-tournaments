@@ -1,5 +1,13 @@
 # AGENTS.md — passation
 
+## Sources HD et LOD0 mobile — décision en vigueur, 14 septembre 2026
+
+Le propriétaire confirme Three.js + WebGPU et autorise désormais un **seul LOD0 optimisé pour le jeu**, les maîtres HD restant immuables avec leurs textures originales. Cette décision remplace l’ancienne interdiction de décimation/réduction de texture « comme la barge ». Ne plus relever les budgets au million de triangles de la source. Préserver volumes, UV, nœuds et animations ; détails de matière dans les normales, provenance et pertes documentées. Remplacement direct après contrôle technique toujours autorisé, aucune approbation artistique automatique.
+
+Quatre actifs optimisés : infanterie 50 682, char léger 55 720, barge 41 176, QG 35 009 triangles ; lots 146,72 → 33,42 Mio. Normales existantes conservées, **pas de nouveau bake HD vers low-poly**. PNG externes 2K maximum, masques 512² inchangés. Maîtres privés ignorés par Git/Docker, récupération par `maitre.json` et historique/données SHA immuables. Prompts admin et catalogue alignés. Les actifs déjà légers restent inchangés. Scripts `scripts/production/{optimiser-lod0.ts,textures-lod0.py,integrer-lod0-optimise.ts}` ; portée initiale de l’intégrateur : les quatre bases ci-dessus.
+
+Diagnostic local dans Réglages → Affichage ou `/jeu/premier_contact?mesure=1` : relevé 60 s, repos/action/combat séparés, cadence/P95/pauses/CPU/appels, export JSON sans télémétrie réseau. Aucun téléphone connecté à la livraison : **mesure réelle et réglage final en attente**, ne pas inventer de gain FPS. Quatre contrôles de lot, typage et build ; aucune suite de tests ni inspection visuelle. Détails : `doc/refonte/lod0-mobile.md` et `assets/production/optimisation-lod0.json`.
+
 ## Bâtiments communs et suite française — 14 septembre 2026
 
 Cinq bases procédurales ville/usine/port/aéroport/radar sont activées en LOD0 après contrôle technique, avec PNG externes dédupliqués et sans toucher aux sources uploadées. `batiments-partages.ts` partage les lectures et ressources entre le jeu et le carnet avec matériaux privés ; libération seulement à la dernière fermeture, jamais lors d'une marée. Couleurs par masque, éclairage des vitrages selon l'ambiance, aucune parabole procédurale ajoutée au radar livré.

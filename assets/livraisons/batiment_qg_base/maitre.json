@@ -1,0 +1,63 @@
+{
+  "id": "batiment_qg_base",
+  "sha256Glb": "3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977",
+  "fichiers": [
+    {
+      "nom": "batiment_qg_base_albedo.png",
+      "sha256": "89abace4d132da5a000f89f3c74c103319823570bf48570fa732e4083de873d9",
+      "octets": 8857323,
+      "donnees": "public/assets/donnees/89abace4d132da5a000f89f3c74c103319823570bf48570fa732e4083de873d9.png"
+    },
+    {
+      "nom": "batiment_qg_base_emission.png",
+      "sha256": "1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b",
+      "octets": 843,
+      "donnees": "public/assets/donnees/1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b.png"
+    },
+    {
+      "nom": "batiment_qg_base_lod0.glb",
+      "sha256": "3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977",
+      "octets": 11309588,
+      "donnees": "public/assets/donnees/3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977.glb"
+    },
+    {
+      "nom": "batiment_qg_base_masque_equipe.png",
+      "sha256": "fbaceb1192f3af1508db7de677e987589e0c5a9d051fa78b918174257c9313d3",
+      "octets": 5310,
+      "donnees": "public/assets/donnees/fbaceb1192f3af1508db7de677e987589e0c5a9d051fa78b918174257c9313d3.png"
+    },
+    {
+      "nom": "batiment_qg_base_normale.png",
+      "sha256": "59bd5180e54b267e144c9adeed09e6e5de3ade8e35228eb4c32bcbf05e9677a7",
+      "octets": 1229207,
+      "donnees": "public/assets/donnees/59bd5180e54b267e144c9adeed09e6e5de3ade8e35228eb4c32bcbf05e9677a7.png"
+    },
+    {
+      "nom": "batiment_qg_base_rugosite.png",
+      "sha256": "ff268b8e1be75596d2c8f80b8e71060187660e4a6f8730a336a8eaffd6e5f52b",
+      "octets": 10090225,
+      "donnees": "public/assets/donnees/ff268b8e1be75596d2c8f80b8e71060187660e4a6f8730a336a8eaffd6e5f52b.png"
+    }
+  ],
+  "sourceUpload": {
+    "source": "modern wooden house 3d model.glb",
+    "sha256": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326",
+    "trianglesSource": 873807,
+    "trianglesLivres": 873843,
+    "trianglesAjoutes": 36,
+    "trianglesParAttache": [
+      730718,
+      143113,
+      12
+    ],
+    "pixelsEquipe": 16569,
+    "approbationArtistique": false,
+    "limites": [
+      "Segmentation g\u00e9om\u00e9trique des attaches \u00e0 v\u00e9rifier humainement",
+      "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+      "Orientation front \u00e0 confirmer dans inspecteur",
+      "\u00c9mission noire conservatrice : fen\u00eatres source non isol\u00e9es",
+      "Source mise \u00e0 \u00e9chelle uniforme ; parcelle et fanion ajout\u00e9s pour gabarit"
+    ]
+  }
+}

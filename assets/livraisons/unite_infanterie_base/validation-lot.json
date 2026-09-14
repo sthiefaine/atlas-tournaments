@@ -1,7 +1,7 @@
 {
   "id": "unite_infanterie_base",
-  "revision": "f56da6d98938fd8e02609e32d6e65241072d18416953227c413b0f566d605b23",
-  "octets": 44953155,
+  "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44",
+  "octets": 11914087,
   "verdict": {
     "ok": true,
     "motifs": [],
@@ -17,5 +17,5 @@
     "lodManquants": []
   },
   "approbationArtistique": false,
-  "integration": "modele_actif"
+  "integration": "actif_lod0_optimise"
 }

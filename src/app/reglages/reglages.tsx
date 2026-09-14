@@ -79,6 +79,7 @@ export interface LibellesReglages {
   qualiteNote: string;
   qualiteAuto: string;
   qualiteBasse: string;
+  diagnosticPerformance: string;
   actif: string;
   inactif: string;
   /** Titre du panneau des deux sauvegardes de l'appareil. */
@@ -332,6 +333,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
         </div>
       </div>
       {bascule('animationsReduites', libelles.animations, libelles.animationsNote)}
+      <Link href="/jeu/premier_contact?mesure=1" className="atlas-bouton">{libelles.diagnosticPerformance}</Link>
     </Groupe>
     </div>
     <div id="panneau-profils" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-profils" hidden={rubrique !== 'profils'} tabIndex={0}>

@@ -1,1 +1,6 @@
-{"version": 5, "source": "Tripo original — géométrie HD conservée, LOD0 seul", "validationArtistique": "non_effectuee"}
+{
+  "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
+  "source": "maitre.json",
+  "preparation": "optimisation.json",
+  "approbationArtistique": false
+}

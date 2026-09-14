@@ -62,6 +62,7 @@ export default function PageReglages(): React.ReactElement {
     qualiteNote: t(locale, 'reglages.qualite_note'),
     qualiteAuto: t(locale, 'reglages.qualite_auto'),
     qualiteBasse: t(locale, 'reglages.qualite_basse'),
+    diagnosticPerformance: t(locale, 'performance.titre'),
     actif: t(locale, 'reglages.actif'),
     inactif: t(locale, 'reglages.inactif'),
     sauvegardes: t(locale, 'reglages.sauvegardes'),

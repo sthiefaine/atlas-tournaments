@@ -1,0 +1,70 @@
+{
+  "id": "unite_infanterie_base",
+  "sha256Glb": "cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a",
+  "fichiers": [
+    {
+      "nom": "unite_infanterie_base_albedo.png",
+      "sha256": "eb2cf26bdacfc4ee30779ccd607b32f3870158f5f3660db98273dbe190bf0e5f",
+      "octets": 9030475,
+      "donnees": "public/assets/donnees/eb2cf26bdacfc4ee30779ccd607b32f3870158f5f3660db98273dbe190bf0e5f.png"
+    },
+    {
+      "nom": "unite_infanterie_base_lod0.glb",
+      "sha256": "cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a",
+      "octets": 13268248,
+      "donnees": "public/assets/donnees/cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a.glb"
+    },
+    {
+      "nom": "unite_infanterie_base_masque_equipe.png",
+      "sha256": "432f169d0ea18a28214d3499ae524e9c4058a504592bc6072804c4050e80d7c9",
+      "octets": 6116,
+      "donnees": "public/assets/donnees/432f169d0ea18a28214d3499ae524e9c4058a504592bc6072804c4050e80d7c9.png"
+    },
+    {
+      "nom": "unite_infanterie_base_metal.png",
+      "sha256": "65599bfa9626eabed93eeb2fef578dbf35113f6eac513f9759336326f585781c",
+      "octets": 4317273,
+      "donnees": "public/assets/donnees/65599bfa9626eabed93eeb2fef578dbf35113f6eac513f9759336326f585781c.png"
+    },
+    {
+      "nom": "unite_infanterie_base_normale.png",
+      "sha256": "263d3f12fea0c252391d281bfd9dcd2995b4e66de92d23d03d8174319c9c9781",
+      "octets": 7822524,
+      "donnees": "public/assets/donnees/263d3f12fea0c252391d281bfd9dcd2995b4e66de92d23d03d8174319c9c9781.png"
+    },
+    {
+      "nom": "unite_infanterie_base_rugosite.png",
+      "sha256": "8b60a8229e2666416f7d122bdfd67e6357f96a19e6cf7b2de20a09bc8213b0c7",
+      "octets": 10508519,
+      "donnees": "public/assets/donnees/8b60a8229e2666416f7d122bdfd67e6357f96a19e6cf7b2de20a09bc8213b0c7.png"
+    }
+  ],
+  "sourceUpload": {
+    "source": "military soldier 3d model.glb",
+    "sha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710",
+    "octetsSource": 30302800,
+    "dimensionsSource": [
+      0.979888916015625,
+      0.960662841796875,
+      0.630340576171875
+    ],
+    "facteursEchelle": [
+      0.4592357283004765,
+      0.6245687601257981,
+      0.7138997821350763
+    ],
+    "trianglesSource": 951858,
+    "trianglesLivres": 951858,
+    "trianglesParAttache": [
+      44313,
+      907545
+    ],
+    "pixelsEquipe": 22105,
+    "approbationArtistique": false,
+    "limites": [
+      "Geste rigide du groupe : pas de marche squelettique individuelle",
+      "Absence de lumi\u00e8re cuite non certifi\u00e9e",
+      "Orientation front \u00e0 confirmer dans inspecteur"
+    ]
+  }
+}

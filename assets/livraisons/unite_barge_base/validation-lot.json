@@ -1,0 +1,21 @@
+{
+  "id": "unite_barge_base",
+  "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
+  "octets": 5104819,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_barge_base_lod0.glb",
+      "unite_barge_base_albedo.png",
+      "unite_barge_base_normale.png",
+      "unite_barge_base_rugosite.png",
+      "unite_barge_base_metal.png",
+      "unite_barge_base_masque_equipe.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_lod0_optimise"
+}

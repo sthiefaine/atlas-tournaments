@@ -50,20 +50,20 @@
     "poseAuSol": true
   },
   "budget": {
-    "lod0": 1000000,
+    "lod0": 50000,
     "materiauxMax": 3
   },
   "textures": [
     {
       "canal": "albedo",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque."
     },
     {
       "canal": "normale",
-      "resolution": 4096,
+      "resolution": 2048,
       "format": "png",
       "obligatoire": true,
       "note": "Relief de tôlerie, rivets, tissus et grain de caoutchouc."

@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "date": "2026-09-14",
+  "mesuresTelephone": "en_attente_appareil_reel",
+  "assets": [
+    {
+      "id": "batiment_qg_base",
+      "trianglesAvant": 873843,
+      "triangles": 35009,
+      "glbOctetsAvant": 11309588,
+      "glbOctets": 888496,
+      "octetsLot": 7724713,
+      "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4",
+      "sourcePrepareeSha256": "3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977",
+      "actifSha256": "11d173c359e4c0dddb5482e831e043f17fddec4fbc727f483892ed41a61aba09",
+      "controle": "ok",
+      "octetsLotAvant": 31492496
+    },
+    {
+      "id": "unite_barge_base",
+      "trianglesAvant": 934594,
+      "triangles": 41176,
+      "glbOctetsAvant": 27604472,
+      "glbOctets": 994748,
+      "octetsLot": 5104819,
+      "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
+      "sourcePrepareeSha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab",
+      "actifSha256": "9d4912a72dbe5bc19f26b1b675d6d059bffeb068dad3e3346201082a98f7d121",
+      "controle": "ok",
+      "octetsLotAvant": 39058045
+    },
+    {
+      "id": "unite_char_leger_base",
+      "trianglesAvant": 957212,
+      "triangles": 55720,
+      "glbOctetsAvant": 14209732,
+      "glbOctets": 1499392,
+      "octetsLot": 10302277,
+      "revision": "547d5774135bdd83600d9afd8c6d36deda5825e5fc6bfaa4fae818975ec31672",
+      "sourcePrepareeSha256": "df8a0e83a4a06118742ae8f8b75d692eba6349f16f4fc10b4c709186daa3ff90",
+      "actifSha256": "c40b22c85a62978e961466ee6571566bdad2deb397b7ccda5a4ea95e66df3fc9",
+      "controle": "ok",
+      "octetsLotAvant": 38342542
+    },
+    {
+      "id": "unite_infanterie_base",
+      "trianglesAvant": 951858,
+      "triangles": 50682,
+      "glbOctetsAvant": 13268248,
+      "glbOctets": 964784,
+      "octetsLot": 11914087,
+      "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44",
+      "sourcePrepareeSha256": "cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a",
+      "actifSha256": "05849590ca44adf29ac5eea9116bbc2f022e2c40bb0a969ad5ab2e047967463b",
+      "controle": "ok",
+      "octetsLotAvant": 44953155
+    }
+  ]
+}

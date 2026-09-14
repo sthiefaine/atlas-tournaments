@@ -1,0 +1,180 @@
+{
+  "id": "unite_barge_base",
+  "version": 1,
+  "sourcePrepareeSha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab",
+  "sourceDossier": "assets/sources/unite_barge_base/maitre-fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab",
+  "glbSha256": "9d4912a72dbe5bc19f26b1b675d6d059bffeb068dad3e3346201082a98f7d121",
+  "trianglesAvant": 934594,
+  "triangles": 41176,
+  "glbOctetsAvant": 27604472,
+  "glbOctets": 994748,
+  "profil": {
+    "maximum": 50000,
+    "cible": 38000,
+    "erreur": 0.001
+  },
+  "mesures": [
+    {
+      "maille": "base",
+      "avant": 863166,
+      "apres": 36202,
+      "erreurRelative": 0.0009764669230207801,
+      "erreurMetresEstimee": 0.0009032319154346144
+    },
+    {
+      "maille": "base",
+      "avant": 36,
+      "apres": 36,
+      "erreurRelative": 0,
+      "erreurMetresEstimee": 0
+    },
+    {
+      "maille": "module_grue",
+      "avant": 71392,
+      "apres": 4938,
+      "erreurRelative": 0.0009716566419228911,
+      "erreurMetresEstimee": 0.0007104599114729354
+    }
+  ],
+  "methode": "Meshopt QEM LockBorder ; UV et normales des sommets conservés, normales texturées existantes réutilisées, aucun nouveau bake HD vers low-poly",
+  "animationsSourceSha256": "98ef281812092a8c9e1d8a4e4b48db7aa1b56c1b8d14554f299702f407316025",
+  "animationsSource": [
+    {
+      "name": "repos",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": 11,
+          "output": 12,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 11,
+          "output": 13,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 1,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 1,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "deplacement",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": 14,
+          "output": 15,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 14,
+          "output": 16,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 1,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 1,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "touche",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 17,
+          "output": 18,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 17,
+          "output": 19,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 1,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 1,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hors_jeu",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 20,
+          "output": 21,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 20,
+          "output": 22,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 1,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 1,
+            "path": "translation"
+          }
+        }
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}

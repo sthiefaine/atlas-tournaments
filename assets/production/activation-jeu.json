@@ -1,30 +1,52 @@
 {
-  "date": "2026-09-13",
-  "autorisation": "Demande du propri\u00e9taire de voir QG, infanterie et char import\u00e9s dans Premier contact.",
+  "date": "2026-09-14",
+  "autorisation": "Conserver les sources HD, remplacer les quatre modèles lourds par un seul LOD0 optimisé ; demande du propriétaire du 14 septembre 2026.",
   "approbationArtistique": false,
-  "controle": "non_execute_a_la_demande_du_proprietaire",
+  "controle": "controles_cibles_ok",
   "assets": [
     {
       "id": "unite_infanterie_base",
       "fichierActif": "public/assets/modeles/unite_infanterie_base_lod0.glb",
-      "donnees": "../donnees/cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a.glb",
-      "revision": "f56da6d98938fd8e02609e32d6e65241072d18416953227c413b0f566d605b23",
+      "donnees": "../donnees/05849590ca44adf29ac5eea9116bbc2f022e2c40bb0a969ad5ab2e047967463b.glb",
+      "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44",
       "controle": "ok",
-      "sourceSha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710"
+      "sourceSha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710",
+      "sourcePrepareeSha256": "cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a"
     },
     {
       "id": "unite_char_leger_base",
       "fichierActif": "public/assets/modeles/unite_char_leger_base_lod0.glb",
-      "donnees": "../donnees/df8a0e83a4a06118742ae8f8b75d692eba6349f16f4fc10b4c709186daa3ff90.glb"
+      "donnees": "../donnees/c40b22c85a62978e961466ee6571566bdad2deb397b7ccda5a4ea95e66df3fc9.glb",
+      "revision": "547d5774135bdd83600d9afd8c6d36deda5825e5fc6bfaa4fae818975ec31672",
+      "controle": "ok",
+      "sourcePrepareeSha256": "df8a0e83a4a06118742ae8f8b75d692eba6349f16f4fc10b4c709186daa3ff90"
     },
     {
       "id": "batiment_qg_fr",
       "fichierActif": "public/assets/modeles/batiment_qg_fr_lod0.glb",
       "donnees": "../donnees/3d6c31e61c2416faae174771006d9925cc71dd7798a03227aa24f00a9829d679.glb"
+    },
+    {
+      "id": "batiment_qg_base",
+      "fichierActif": "public/assets/modeles/batiment_qg_base_lod0.glb",
+      "donnees": "../donnees/11d173c359e4c0dddb5482e831e043f17fddec4fbc727f483892ed41a61aba09.glb",
+      "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4",
+      "controle": "ok",
+      "sourcePrepareeSha256": "3a98527fd1b71a910e92aeefa4d0f25555db1d2171931f9492f9c2fee1611977"
+    },
+    {
+      "id": "unite_barge_base",
+      "fichierActif": "public/assets/modeles/unite_barge_base_lod0.glb",
+      "donnees": "../donnees/9d4912a72dbe5bc19f26b1b675d6d059bffeb068dad3e3346201082a98f7d121.glb",
+      "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
+      "controle": "ok",
+      "sourcePrepareeSha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab"
     }
   ],
   "notes": [
-    "Les kits actifs des anciennes bases infanterie et char sont retir\u00e9s ; leurs candidats restent consultables.",
-    "Le QG est l\u2019ancien mod\u00e8le fran\u00e7ais remis sous une r\u00e9f\u00e9rence nationale, pas un nouveau GLB issu de Gemini."
+    "Les quatre bases optimisées sont actives ; les anciens fichiers immuables restent disponibles pour retrouver les maîtres.",
+    "Les modèles déjà légers restent en place ; aucune nouvelle variante nationale.",
+    "Le QG neutre importé est prioritaire sur le QG national historique.",
+    "Les mesures sur téléphone réel sont en attente ; aucun gain FPS affirmé."
   ]
 }

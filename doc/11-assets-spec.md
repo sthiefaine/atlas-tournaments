@@ -532,11 +532,15 @@ Après essai, le propriétaire demande plus de hauteur et autorise un budget sup
 Tous les assets du site utilisent désormais un seul modèle `*_lod0.glb` : unités, kits nationaux, bâtiments, terrains, décors et commandants. Les autres LOD sont supprimés des fichiers livrés et publics, des spécifications, des générateurs et des sélecteurs de l’administration. Les chargeurs du jeu, de l’accueil et des ateliers ne demandent que le LOD0, sans baisse de détail au zoom. Les PNG restent externes. Les budgets LOD0 existants sont conservés ; cette décision ne relève pas automatiquement leur nombre de triangles. Cette règle remplace les anciens passages prescrivant plusieurs LOD dans ce document.
 
 
-## Sources GLB détaillées — décision du propriétaire, 13 septembre 2026
+## Sources HD et LOD0 de jeu — décision en vigueur du 14 septembre 2026
 
-Pour chaque source GLB uploadée, appliquer systématiquement le traitement de la barge : conserver la géométrie détaillée, les normales, les UV et la résolution des textures. Aucune décimation, aucun remeshing ni réduction automatique des textures. Cette règle remplace les anciens budgets lorsqu’ils imposeraient une perte de détail : après mesure de la source, adapter le catalogue générateur et les spécifications versionnées de la base et de ses kits, avec une marge pour les attaches nécessaires. Cette adaptation est autorisée sans nouvelle confirmation. Les budgets des assets sans source mesurée ne sont pas augmentés arbitrairement.
+Conserver Three.js avec WebGPU et son repli WebGL 2. Les modèles ultra détaillés uploadés et leurs textures originales restent des maîtres immuables, identifiés par SHA-256. Produire **un seul LOD0 optimisé pour le jeu** à partir de chaque source, avec réduction de géométrie et de résolution autorisée sur ce dérivé. Cela remplace la décision du 13 septembre qui interdisait toute décimation et adaptait les budgets au million de triangles de la source.
 
-Conserver un seul LOD0, les PNG externes, la provenance SHA-256, et documenter les triangles et octets avant/après. Orientation, dimensions, pivots, matériaux, masque d’équipe et animations restent à préparer et contrôler. Une limite technique dépassée se traite par une optimisation sans perte ou un blocage expliqué, jamais par une simplification silencieuse. L’acceptation technique reste distincte de la validation artistique humaine ; cette règle n’active pas automatiquement un candidat.
+Préserver les volumes, les coutures UV, les pivots et les animations ; conserver les détails de matière dans les textures. Réutiliser les normales existantes ou effectuer un transfert HD vers le maillage simplifié si nécessaire ; ne pas prétendre avoir fait un nouveau transfert lorsqu’on a seulement conservé une carte existante. Les PNG restent externes et partagés, sans copie embarquée dans le GLB. Ne jamais augmenter le budget au poids de la source pour faire passer le contrôle.
+
+Première enveloppe : infanterie 55 000, char léger/anti-air/artillerie 60 000, barge 50 000, QG 40 000 triangles ; cartes issues de sources 4K dérivées en 2K. Les assets déjà légers restent en place. La cible tactile est de 30 images/s pendant les actions, avec repos volontaire moins fréquent. Le budget final dépend des relevés sur téléphone réel ; aucune simulation desktop ne vaut mesure sur téléphone. Le diagnostic local est accessible par `?mesure=1` sur une mission. Détails, fichiers et limites : `doc/refonte/lod0-mobile.md`.
+
+Après contrôle technique réussi, remplacer directement les fichiers actifs selon l’autorisation du propriétaire, sans réclamer d’approbation visuelle préalable ni prétendre approuver l’art automatiquement.
 
 ## Diffusion Meshopt sans perte — 13 septembre 2026
 
