@@ -1,0 +1,176 @@
+{
+  "cle": "opus1_fr_03",
+  "code": "opus1_fr_03",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "Saison 1 · La voie de service",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_03",
+  "date": "2026-09-14",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 4500,
+  "fondsDepartParCamp": {
+    "0": 4500,
+    "1": 1000,
+    "2": 1000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500,
+    "2": 500
+  },
+  "brouillard": false,
+  "limiteJournees": 22,
+  "victoire": [
+    {
+      "type": "proteger",
+      "uniteRef": "u1",
+      "destination": {
+        "x": 15,
+        "y": 2
+      }
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 22
+    },
+    {
+      "type": "unite_perdue",
+      "uniteRef": "u1"
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ces batteries sont attendues au dépôt. Amenez le transport signalé jusqu’à la sortie du nord-est avant la fin de J22. S’il est mis hors jeu, le convoi est perdu.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je ferme l’accès du nord. Solveig remonte par le sud-est : deux équipes, mais une seule destination à défendre.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "La grande route vous rapproche de mes véhicules. Le détour ouest est plus long. Choisissez avant de séparer votre escorte.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nous n’avons pas besoin de prendre leurs QG. Le chargement doit arriver, c’est tout.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le dépôt confirme la livraison. Tomas a perdu le match ; il nous propose pourtant son pont pour la prochaine liaison.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Les batteries sont bien arrivées. À présent, il faut raccorder nos deux rives. Demain je vous couvre.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le convoi n’est pas arrivé. On reprend avec une escorte resserrée et une route choisie dès le départ.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr03_route",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Regardez où se trouve le transport. Un détour encore couvert vaut mieux qu’une route libérée trop loin devant lui.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 4500,
+      "fondsDepartIa": 1000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 4500,
+      "fondsDepartIa": 2500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1,
+      2
+    ]
+  ]
+}

@@ -3,14 +3,15 @@ import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 import { extraireVegetation, type VegetationLivree } from './vegetation-plaine';
 import * as THREE from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { chargerInventaire, convertirMateriaux } from './modeles';
+import { acquerirBatiment, rendreBatiment } from './batiments-partages';
+import { chargerInventaire } from './modeles';
 import type { GrilleTerrain } from './geometrie';
 import type { CodePays, CampId } from '../schemas/types';
 import type { InventaireModeles } from '../assets/spec';
 
-/** Le QG français livré avant le nom national générique reste un repli explicite. */
+/** Les bases communes actives passent avant les anciens modèles nationaux. */
 export function candidatsBatiment(terrain:string,pays?:string):string[] {
-  if (terrain === 'qg') return ['batiment_qg_base', ...(pays ? [`batiment_qg_${pays}`] : [])];
+  if (['qg','ville','usine','port','aeroport','radar'].includes(terrain)) return [`batiment_${terrain}_base`, ...(pays ? [`batiment_${terrain}_${pays}`] : [])];
   return [...(pays?[`batiment_${terrain}_${pays}`]:[]),`batiment_${terrain}_base`];
 }
 export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>,inventaire:InventaireModeles):string[] {
@@ -39,11 +40,7 @@ export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Part
     if (!inventaire?.modeles[id]?.includes(0)) return;
     try {
       if (id.startsWith('batiment_')) {
-        const lu = await glb.loadAsync(`/assets/modeles/${id}_lod0.glb`);
-        convertirMateriaux(lu.scene);
-        lu.scene.name = id;
-        lu.scene.traverse(o => {if (o instanceof THREE.Mesh) {o.castShadow=true;o.receiveShadow=true;}});
-        resultat.batiments.set(id,lu.scene);
+        resultat.batiments.set(id,await acquerirBatiment(id));
       } else {
         const chargees = await Promise.allSettled(['albedo','normale','rugosite'].map(c => images.loadAsync(`/assets/modeles/${id}_${c}.png`)));
         if (chargees.some(r => r.status==='rejected')) {for (const r of chargees) if(r.status==='fulfilled')r.value.dispose();return;}
@@ -69,6 +66,6 @@ export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Part
 /** Les clones de scène partagent ces ressources jusqu'à la destruction du décor. */
 export function libererBatimentsLivres(modeles: Map<string,THREE.Object3D>): void {
   const geos=new Set<THREE.BufferGeometry>(), mats=new Set<THREE.Material>(), textures=new Set<THREE.Texture>();
-  for(const objet of modeles.values()) objet.traverse(o=>{if(o instanceof THREE.Mesh){geos.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){mats.add(m);for(const v of Object.values(m))if(v instanceof THREE.Texture)textures.add(v);}}});
+  for(const objet of modeles.values()) if(!rendreBatiment(objet)) objet.traverse(o=>{if(o instanceof THREE.Mesh){geos.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material]){mats.add(m);for(const v of Object.values(m))if(v instanceof THREE.Texture)textures.add(v);}}});
   for(const g of geos)g.dispose();for(const m of mats)m.dispose();for(const t of textures)t.dispose();
 }

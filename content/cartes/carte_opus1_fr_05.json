@@ -1,0 +1,118 @@
+{
+  "cle": "carte_opus1_fr_05",
+  "code": "carte_opus1_fr_05",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "Le devis orange",
+  "largeur": 16,
+  "hauteur": 14,
+  "camps": 2,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPP",
+    "PPPPPRCRRRRPPPPP",
+    "PPPPPRPPPPRPPPPP",
+    "PPPFFRPMMPRFFPPP",
+    "PPPPPRPMMPRPPPPP",
+    "PPPPPRFPPPRPPPPP",
+    "PHRRCRRRRRRCRRHP",
+    "PPPPPRPMMFRPPPPP",
+    "PPUFFRPMMPRFFUPP",
+    "PPPPPRPPPPRPPPPP",
+    "PPPPPRRRRCRPPPPP",
+    "PPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,7": 0,
+    "2,9": 0,
+    "14,7": 1,
+    "13,9": 1,
+    "4,7": 0,
+    "11,7": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 3,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 3,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "antiair",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "char_moyen",
+      "x": 12,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 13,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 11,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 11,
+      "y": 8
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "drone",
+      "x": 12,
+      "y": 9
+    }
+  ]
+}

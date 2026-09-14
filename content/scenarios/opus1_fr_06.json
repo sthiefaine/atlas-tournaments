@@ -1,0 +1,200 @@
+{
+  "cle": "opus1_fr_06",
+  "code": "opus1_fr_06",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "Saison 1 · La journée sans crédit",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_06",
+  "date": "2026-09-14",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_edran_sorel",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 0,
+  "fondsDepartParCamp": {
+    "0": 0,
+    "1": 0,
+    "2": 0
+  },
+  "revenusParBatiment": 0,
+  "revenusParBatimentParCamp": {
+    "0": 0,
+    "1": 0,
+    "2": 0
+  },
+  "brouillard": false,
+  "limiteJournees": 12,
+  "victoire": [
+    {
+      "type": "survivre",
+      "journees": 8
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 12
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le crédit est gelé. Pas de revenu aujourd’hui ni les jours suivants. La relève entre au sud au début de J9 : gardez le QG et au moins une unité jusque-là.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Edran Sorel, équipe Méridienne. Je peux faire accélérer votre dossier. Il faudrait me confier l’accès aux relevés.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ces relevés ne sont pas une caution. Nous tiendrons avec ce que nous avons.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Les règles sont publiées. Huit journées. Sorel par l’ouest, moi par l’est.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le choix fait après Deux rives, un réseau s’applique ici : une reconnaissance à J2 si vous avez partagé les relevés, ou 1 500 fonds si vous avez gardé la réserve.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La relève est là. Les ateliers ont accepté nos commandes sans la garantie de Sorel.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Une ligne de crédit ne dit pas tout sur une équipe. Je le reconnais.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Une patrouille rentre avec ses batteries vides. On va relever son parcours avant de repartir ; la suite de cette enquête reste à venir.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "La ligne n’a pas tenu jusqu’à la relève. Reprenons avec des positions plus proches : notre artillerie doit couvrir les deux accès.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr06_releve",
+      "declencheur": {
+        "type": "journee",
+        "journee": 7
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Encore deux journées avant l’entrée de la relève. Restez autour du QG ; inutile de poursuivre ceux qui reculent.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 12,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 0,
+      "fondsDepartIa": 1500,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 12,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "renforts": [
+    {
+      "journee": 9,
+      "unites": [
+        {
+          "camp": 0,
+          "type": "char_leger",
+          "x": 7,
+          "y": 13
+        },
+        {
+          "camp": 0,
+          "type": "infanterie",
+          "x": 9,
+          "y": 13
+        }
+      ]
+    }
+  ]
+}

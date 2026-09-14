@@ -1,0 +1,112 @@
+{
+  "cle": "carte_opus1_fr_03",
+  "code": "carte_opus1_fr_03",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "La voie de service",
+  "largeur": 18,
+  "hauteur": 14,
+  "camps": 3,
+  "biome": "foret",
+  "grille": [
+    "PPPPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPUPHP",
+    "PPRRRRRRRRRRRRRRPP",
+    "PPRPPFFPPPPFFPPRPP",
+    "PPRPPFFPPPPFFPPRPP",
+    "PPRPMPPPRRRRRCRRPP",
+    "PPRPMPPPRPPPPPPPPP",
+    "PPCPPFFPRPPFFPPPPP",
+    "PPRPPFFPCPPFFPMPPP",
+    "PPRPPFFPRPPFFPPPPP",
+    "PPRPPPPPRPMPMPUPPP",
+    "PPRURRRRRPPMPPPPHP",
+    "PHPPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "1,12": 0,
+    "3,11": 0,
+    "14,1": 1,
+    "16,1": 1,
+    "16,11": 2,
+    "14,10": 2
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 4,
+      "y": 11
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 2,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 3,
+      "y": 12
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 4,
+      "y": 12
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 12,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 13,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 14,
+      "y": 3
+    },
+    {
+      "camp": 2,
+      "type": "recon",
+      "x": 12,
+      "y": 9
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 13,
+      "y": 9
+    },
+    {
+      "camp": 2,
+      "type": "char_leger",
+      "x": 14,
+      "y": 9
+    }
+  ]
+}

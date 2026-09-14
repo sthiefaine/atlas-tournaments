@@ -1,0 +1,132 @@
+{
+  "cle": "carte_opus1_fr_06",
+  "code": "carte_opus1_fr_06",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "La journée sans crédit",
+  "largeur": 17,
+  "hauteur": 15,
+  "camps": 3,
+  "biome": "montagne",
+  "grille": [
+    "PPPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPPP",
+    "PPHPPPPPRPPPPPHPP",
+    "PPPRPPPPRPPPPRPPP",
+    "PPURPMMPRPMMPRUPP",
+    "PPPRPMMPRPMMPRPPP",
+    "PPPRPPFFRFFPPRPPP",
+    "PPPRRRRRRRRRRRPPP",
+    "PPPRPPFFRFFPPRPPP",
+    "PPPCPMMPCPMMPCPPP",
+    "PPPRPMMPRPMMPRPPP",
+    "PPPRPPPUHPPPPRPPP",
+    "PPPPFPPPRPPPFPPPP",
+    "PPPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPPP"
+  ],
+  "proprietaires": {
+    "8,11": 0,
+    "7,11": 0,
+    "8,9": 0,
+    "2,2": 1,
+    "2,4": 1,
+    "14,2": 2,
+    "14,4": 2
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 7,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 9,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 7,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 9,
+      "y": 9
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 8,
+      "y": 10
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 8,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "transport",
+      "x": 8,
+      "y": 12
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 3,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 3,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 2,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "recon",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "camp": 2,
+      "type": "char_leger",
+      "x": 13,
+      "y": 5
+    },
+    {
+      "camp": 2,
+      "type": "infanterie",
+      "x": 13,
+      "y": 4
+    },
+    {
+      "camp": 2,
+      "type": "artillerie",
+      "x": 14,
+      "y": 5
+    },
+    {
+      "camp": 2,
+      "type": "recon",
+      "x": 12,
+      "y": 6
+    }
+  ]
+}

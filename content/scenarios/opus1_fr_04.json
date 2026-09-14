@@ -1,0 +1,165 @@
+{
+  "cle": "opus1_fr_04",
+  "code": "opus1_fr_04",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "Saison 1 · Deux rives, un réseau",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_04",
+  "date": "2026-09-14",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3500,
+  "fondsDepartParCamp": {
+    "0": 3500,
+    "1": 3000,
+    "2": 3000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500,
+    "2": 500
+  },
+  "brouillard": true,
+  "limiteJournees": 26,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 26
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Tomas tient le nord, nous le sud. Notre objectif commun est le QG de Solveig à l’est. La victoire et la vision sont partagées ; chaque équipe garde ses fonds.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je prends le pont du nord. Laissez-moi de la place à sa sortie. Mon artillerie n’avancera pas aussi vite que les chars.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Deux ponts ne font pas deux victoires. Si vous vous pressez tous au même endroit, je prendrai l’autre rive.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Le réseau est relié. Je peux faire analyser nos relevés par l’équipe commune. Il faut payer le transport des capteurs : on ne pourra pas tout garder en caisse.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nous avons assez pour une seule option. Partager les relevés nous apportera une reconnaissance au prochain siège. Garder la réserve nous laissera 1 500 fonds pour le préparer.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nos deux colonnes se sont isolées. Reprenons avec un passage pour chacune et une réserve près du fleuve.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr04_liaison",
+      "declencheur": {
+        "type": "journee",
+        "journee": 4
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Mon secteur reste visible pour vous. Regardez-le avant de décider où envoyer votre drone.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3500,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 26,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 3500,
+      "fondsDepartIa": 4500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 26,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0,
+      1
+    ],
+    [
+      2
+    ]
+  ]
+}

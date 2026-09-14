@@ -25,7 +25,13 @@ export const CHOIX_AUBE = {
     { cle: 'fonds_immediats', titre: 'Préparer notre passage du col', effet: 'À la prochaine nouvelle partie du Pacte du col, votre camp reçoit 2 000 fonds pour ouvrir et protéger le passage.' },
   ],
 } as const;
-export type ScenarioDecision = keyof typeof CHOIX_AUBE;
+export const CHOIX_FRANCE = {
+  opus1_fr_04: [
+    { cle: 'partager_releves', titre: 'Partager les relevés', effet: 'Dans La journée sans crédit, une reconnaissance de votre camp arrive à J2 par le sud. Son arrivée est reportée si les cases proches sont occupées.' },
+    { cle: 'garder_reserve', titre: 'Garder la réserve financière', effet: 'Dans La journée sans crédit, votre camp commence avec 1 500 fonds supplémentaires.' },
+  ],
+} as const;
+export type ScenarioDecision = keyof typeof CHOIX_AUBE | keyof typeof CHOIX_FRANCE;
 /**
  * Toutes les sources de décision, dans l'ordre des chiffres de la graine : les
  * choix de fin de match, puis les bancs prêtés. **On n'y insère jamais au
@@ -34,6 +40,7 @@ export type ScenarioDecision = keyof typeof CHOIX_AUBE;
 export const SOURCES_DECISION: readonly string[] = [
   ...Object.keys(CHOIX_AUBE),
   ...Object.keys(BANCS_PRETES).map(cleSourceBanc),
+  ...Object.keys(CHOIX_FRANCE),
 ];
 /**
  * Les options d'une source. Pour un choix de fin de match, `titre` et `effet`
@@ -42,7 +49,7 @@ export const SOURCES_DECISION: readonly string[] = [
  */
 export function optionsDecision(code: string): readonly { cle: string; titre: string; effet: string }[] {
   if (estSourceBanc(code)) return optionsBanc(scenarioDeSource(code));
-  return CHOIX_AUBE[code as ScenarioDecision] ?? [];
+  return CHOIX_AUBE[code as keyof typeof CHOIX_AUBE] ?? CHOIX_FRANCE[code as keyof typeof CHOIX_FRANCE] ?? [];
 }
 export function cleDecision(scenario: string, version: number): string {
   return `${scenario}:${version}:${VERSION_CANON_AUBE}`;
@@ -130,6 +137,18 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
   const renfort = (journee: number, type: string, x: number, y: number): void => {
     copie.renforts = [...(copie.renforts ?? []), { journee, unites: [{ camp: 0, type, x, y }] }];
   };
+  if (scenario.code === 'opus1_fr_06') {
+    appliquer('opus1_fr_04', 'partager_releves', () => {
+      renfort(2, 'recon', 7, 13);
+      ouvrir({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'Tomas a fait analyser les relevés que vous avez partagés. Sa reconnaissance vous rejoint au sud à J2. C’est un renfort de notre camp, sous vos ordres.'});
+      rappels.push('Les relevés partagés permettent à une reconnaissance de rejoindre votre camp au sud à J2.');
+    });
+    appliquer('opus1_fr_04', 'garder_reserve', () => {
+      crediterDe(1500);
+      ouvrir({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'Vous avez gardé la réserve après le match des deux rives. Les 1 500 fonds sont disponibles malgré le gel du crédit. Choisissez à quoi ils serviront.'});
+      rappels.push('Votre réserve de 1 500 fonds est disponible ; aucun renfort de reconnaissance ne vient par ce choix.');
+    });
+  }
   if (scenario.code === 'aube_convoi_secondaire') appliquer('aube_batteries_2v1', 'mutualiser_reserves', () => {
     renfort(2, 'recon', 1, 1);
     rappels.push('Les réserves mutualisées permettent à une reconnaissance de rejoindre le convoi à J2.');
@@ -203,7 +222,7 @@ export function graineAube(scenario: Scenario, decisions: readonly DecisionLocal
   return `${scenario.code}:a${VERSION_CANON_AUBE}:${chiffres}`;
 }
 /** Chaque longueur qu'une graine a pu avoir : deux, quatre, puis cinq choix, puis les bancs. */
-const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, SOURCES_DECISION.length];
+const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, Object.keys(CHOIX_AUBE).length + Object.keys(BANCS_PRETES).length, SOURCES_DECISION.length];
 export function decisionsDeGraine(scenario: Scenario, graine: string): DecisionLocale[] {
   const prefixe = `${scenario.code}:a${VERSION_CANON_AUBE}:`;
   if (!graine.startsWith(prefixe)) return [];

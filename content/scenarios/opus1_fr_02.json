@@ -1,11 +1,11 @@
 {
   "cle": "opus1_fr_02",
   "code": "opus1_fr_02",
-  "version": 1,
+  "version": 2,
   "statut": "en_ligne",
   "source": "atlas_lore",
   "creeLe": "2026-09-13",
-  "majLe": "2026-09-13",
+  "majLe": "2026-09-14",
   "nom": "Saison 1 · Les villes du contrat",
   "acte": 1,
   "paysCode": "fr",
@@ -95,7 +95,7 @@
   "dialogueVictoire": [
     {
       "locuteur": "cmd_ariane_belloc",
-      "texte": "Deux villes approvisionnent les ateliers. Un bon de livraison mentionne une voie de service réservée. Ariane vous demande de préparer un convoi : la prochaine étape de la saison reste à venir.",
+      "texte": "Deux villes approvisionnent les ateliers. Préparez le convoi : nous passons par la voie de service pour livrer les batteries au dépôt des communes.",
       "emotion": "neutre"
     }
   ],

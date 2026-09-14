@@ -23,6 +23,10 @@ export function scenarioPourMode(base: Scenario, mode: Mode): Scenario {
     scenario.vitesseJaugeJoueur = parametres.vitesseJauge;
     scenario.previsionJournees = parametres.previsionJournees;
     scenario.commandants = base.commandants.map((c) => c.ia ? { ...c, ia: parametres.strategieIa } : c);
+    if (base.code === 'opus1_fr_04') scenario.fondsDepartParCamp[1] = base.fondsDepartParCamp?.[1] ?? 3000;
+    if (/^opus1_fr_0[3-6]$/.test(base.code) && mode === 'difficile') {
+      scenario.dialogueOuverture.push({locuteur:'cmd_ariane_belloc',emotion:'neutre',texte:'En difficile, chaque équipe adverse dispose de 1 500 fonds supplémentaires. Leurs dégâts restent identiques et le Bulletin montre une seule journée à l’avance.'});
+    }
     return scenario;
   }
   if (mode === 'normal') return scenario;

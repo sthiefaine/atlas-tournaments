@@ -1,0 +1,33 @@
+{
+  "id": "batiment_ville_base",
+  "triangles": 1036,
+  "octets": 1053265,
+  "source": "modélisation procédurale Atlas",
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_ville_base_albedo.png",
+      "batiment_ville_base_albedo_ete.png",
+      "batiment_ville_base_albedo_hiver.png",
+      "batiment_ville_base_normale.png",
+      "batiment_ville_base_normale_ete.png",
+      "batiment_ville_base_normale_hiver.png",
+      "batiment_ville_base_rugosite.png",
+      "batiment_ville_base_rugosite_ete.png",
+      "batiment_ville_base_rugosite_hiver.png",
+      "batiment_ville_base_emission.png",
+      "batiment_ville_base_emission_ete.png",
+      "batiment_ville_base_emission_hiver.png",
+      "batiment_ville_base_masque_equipe.png",
+      "batiment_ville_base_masque_equipe_ete.png",
+      "batiment_ville_base_masque_equipe_hiver.png",
+      "batiment_ville_base_lod0.glb"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "revision": "ea6a7f50e2ca668a034eee269a53b2ca05cff959dfd85e9b009c3da51b0751a1",
+  "actif": true,
+  "approbationArtistique": false
+}

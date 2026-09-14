@@ -4,7 +4,7 @@ import type { AssetSpec } from '../../src/assets/spec';
 import { ecrireCandidat, type Morceau } from './commun';
 
 function empreinte(s: string): number { let n=2166136261; for (const c of s) n=Math.imul(n^c.charCodeAt(0),16777619); return n>>>0; }
-function geometries(spec: AssetSpec, lod: number): Morceau[] {
+export function geometries(spec: AssetSpec, lod: number): Morceau[] {
   const pieces: Morceau[]=[];
   const graine=empreinte(spec.id), segments=lod===0?12:lod===1?8:5;
   const ajouter=(g:THREE.BufferGeometry,noeud:string,role:number,x:number,y:number,z:number,rx=0,ry=0,rz=0)=>{g.rotateX(rx);g.rotateY(ry);g.rotateZ(rz);g.translate(x,y,z);pieces.push({geometrie:g,noeud,role});};
@@ -110,6 +110,49 @@ function geometries(spec: AssetSpec, lod: number): Morceau[] {
     boite('corps',2,.31,.36,.2,.06,.59,.06);boite('toit',2,.12,.64,.2,.43,.055,.055);boite('toit',2,-.06,.47,.2,.022,.31,.022);
     boite('enseigne',0,.2,.29,-.04,.33,.06,.024);
     if(lod<2)for(let i=0;i<3;i++)boite('corps',7,.14,.095,.06+i*.11,.18,.08,.08);
+  }
+  // Détails des bases communes : architecture lisible à la case, sans signes nationaux.
+  if(spec.id.endsWith('_base') && lod===0 && fonction!=='qg') {
+    if(fonction==='ville') {
+      for(const [x,z,w,d,h] of [[-.24,-.2,.32,.36,.28+variation],[.22,-.24,.32,.32,.40+variation],[-.26,.22,.28,.28,.28+variation]]) {
+        boite('corps',7,x!,.15,z!+d!/2+.015,.07,.16,.025);
+        for(const dx of [-1,1])boite('corps',6,x!+dx*w!*.42,.06+h!/2,z!+d!/2+.025,.025,h!, .035);
+        for(const dz of [-1,1])boite('toit',0,x!,.07+h!,z!+dz*(d!+.055)/2,w!+.055,.02,.025);
+        for(let k=0;k<6;k++)boite('toit',2,x!-w!/2+k*w!/5,.09+h!,z!,.008,.012,d!);
+      }
+      for(const z of [.27,.31,.35])boite('corps',7,.08,.08,z,.20,.025,.023);
+      boite('corps',2,.08,.11,.36,.20,.04,.016);
+      for(const x of [-.01,.17])boite('corps',2,x,.055,.31,.018,.07,.10);
+      for(const x of [-.36,.38]) {boite('corps',2,x,.18,.37,.025,.28,.025);boite('corps',3,x,.33,.37,.065,.07,.065);}
+    } else if(fonction==='usine') {
+      // Portique, palan court, rideaux nervurés, vitrages des sheds et roues de rechange.
+      for(const x of [-.31,.24])boite('corps',2,x,.26,.30,.035,.44,.035);
+      boite('corps',0,-.035,.49,.30,.61,.05,.06);
+      boite('corps',2,.08,.41,.30,.05,.10,.05);
+      for(const x of [-.22,.05,.29])for(let k=0;k<7;k++)boite('corps',0,x,.10+k*.025,.145,.18,.012,.012);
+      for(let i=0;i<3;i++) {boite('toit',3,-.25+i*.25,.445,-.13,.19,.025,.43);for(const z of [-.31,-.13,.05])boite('toit',2,-.25+i*.25,.46,z,.21,.014,.012);}
+      for(let i=0;i<3;i++){const g=new THREE.TorusGeometry(.038,.014,6,14);ajouter(g,'corps',1,-.28+i*.09,.12,.40);}
+      for(let i=0;i<4;i++)boite('corps',7,-.19,.07,.34+i*.025,.31,.025,.018);
+    } else if(fonction==='port') {
+      for(let i=0;i<14;i++)boite('corps',7,-.24,.14,-.32+i*.055,.36,.018,.035);
+      for(const z of [-.28,.04,.34]) {cyl('corps',2,-.39,.20,z,.025,.025,.10,8);cyl('corps',2,-.39,.25,z,.04,.04,.018,8);}
+      for(const x of [.05,.16,.27])for(let j=0;j<4;j++)boite('corps',0,x,.115+j*.025,.35,.085,.018,.13);
+      for(const z of [.175,.225]) {boite('toit',2,.12,.68,z,.45,.025,.02);for(let i=0;i<4;i++)boite('toit',2,-.07+i*.12,.65,z,.012,.08,.012,.5);}
+      boite('corps',3,.18,.27,-.04,.28,.055,.022);
+    } else if(fonction==='aeroport') {
+      for(const x of [.10,.20,.30]) {boite('corps',3,x,.33,-.10,.07,.11,.02);boite('corps',2,x+.04,.33,-.085,.013,.12,.015);}
+      for(let i=0;i<12;i++) {const a=i*Math.PI/6;cyl('corps',3,-.06+Math.cos(a)*.32,.107,.14+Math.sin(a)*.32,.014,.014,.025,8);}
+      for(const x of [.07,.39])boite('toit',0,x,.455,-.26,.025,.03,.32);
+      boite('corps',0,.23,.19,-.10,.16,.035,.035);
+      for(const z of [-.37,-.31,-.25,-.19])boite('toit',2,.23,.477,z,.22,.025,.025);
+    } else if(fonction==='radar') {
+      for(const x of [-.15,0,.15])boite('corps',3,x,.23,.24,.105,.07,.022);
+      for(let i=0;i<7;i++)boite('corps',2,.397,.12+i*.028,-.2,.014,.012,.11);
+      const ring=new THREE.TorusGeometry(.25,.012,5,24);ajouter(ring,'toit',2,0,.61,0,Math.PI/2,0,.35);
+      for(const z of [-.16,.16])boite('toit',0,0,.335,z,.48,.025,.025);
+      for(const x of [-.20,.20])boite('corps',2,x,.10,.29,.026,.12,.026);
+      boite('corps',7,0,.065,.32,.43,.035,.18);
+    }
   }
   // Every contractual node carries geometry, including a blank team-colour sign on civic buildings.
   if(!pieces.some(p=>p.noeud==='enseigne'))boite('enseigne',0,.24,.16,.34,.18,.09,.02);

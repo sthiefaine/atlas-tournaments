@@ -1,0 +1,33 @@
+{
+  "id": "batiment_usine_base",
+  "triangles": 1164,
+  "octets": 1061633,
+  "source": "modélisation procédurale Atlas",
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_usine_base_albedo.png",
+      "batiment_usine_base_albedo_ete.png",
+      "batiment_usine_base_albedo_hiver.png",
+      "batiment_usine_base_normale.png",
+      "batiment_usine_base_normale_ete.png",
+      "batiment_usine_base_normale_hiver.png",
+      "batiment_usine_base_rugosite.png",
+      "batiment_usine_base_rugosite_ete.png",
+      "batiment_usine_base_rugosite_hiver.png",
+      "batiment_usine_base_emission.png",
+      "batiment_usine_base_emission_ete.png",
+      "batiment_usine_base_emission_hiver.png",
+      "batiment_usine_base_masque_equipe.png",
+      "batiment_usine_base_masque_equipe_ete.png",
+      "batiment_usine_base_masque_equipe_hiver.png",
+      "batiment_usine_base_lod0.glb"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "revision": "737f96c8e304c71029b152ca9dea708e4b3d15d1a9f2552d36b02c5b2bcdf2a9",
+  "actif": true,
+  "approbationArtistique": false
+}

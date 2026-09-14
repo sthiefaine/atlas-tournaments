@@ -1,0 +1,167 @@
+{
+  "cle": "opus1_fr_05",
+  "code": "opus1_fr_05",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-14",
+  "majLe": "2026-09-14",
+  "nom": "Saison 1 · Le devis orange",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_05",
+  "date": "2026-09-14",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 4500,
+  "fondsDepartParCamp": {
+    "0": 4500,
+    "1": 0
+  },
+  "revenusParBatiment": 0,
+  "revenusParBatimentParCamp": {
+    "0": 0,
+    "1": 0
+  },
+  "brouillard": false,
+  "limiteJournees": 22,
+  "victoire": [
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 22
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Content de vous retrouver. Le prêt arrive à son terme. Le matériel revient chez nous, avec les relevés produits pendant son utilisation.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le bon signé parle du matériel. Pas de nos relevés. Nous avons demandé l’arbitrage prévu au contrat.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Et je le respecte. Mettons nos équipes sur le terrain. Si vous gagnez, je vous laisse les équipements.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Mettez toutes les unités d’Ost hors jeu avant la fin de J22. Aucun revenu quotidien. Gardez vos fonds pour les pièces dont vous avez besoin.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Le résultat est net. Gardez le matériel. Le bureau devra seulement recalculer votre crédit ; cela prend parfois quelques jours.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Il sourit encore. Prévenez les ateliers : on garde le matériel, mais on suspend les commandes jusqu’à la réponse du bureau.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Je reprends les équipements prévus au contrat. Vos équipages quittent le terrain avec les leurs.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nous n’avons pas tenu. Reprenons la disposition : il faut contourner son char moyen, pas tout lui présenter de face.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr05_credit",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Toujours pas de réponse du bureau ? Gardez un peu de réserve. Les ateliers n’acceptent pas tous les promesses.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 4500,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 4500,
+      "fondsDepartIa": 1500,
+      "revenusParBatiment": 0,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1
+    ]
+  ]
+}

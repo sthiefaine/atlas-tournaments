@@ -1,5 +1,11 @@
 # AGENTS.md — passation
 
+## Bâtiments communs et suite française — 14 septembre 2026
+
+Cinq bases procédurales ville/usine/port/aéroport/radar sont activées en LOD0 après contrôle technique, avec PNG externes dédupliqués et sans toucher aux sources uploadées. `batiments-partages.ts` partage les lectures et ressources entre le jeu et le carnet avec matériaux privés ; libération seulement à la dernière fermeture, jamais lors d'une marée. Couleurs par masque, éclairage des vitrages selon l'ambiance, aucune parabole procédurale ajoutée au radar livré.
+
+FR03–06 portent le parcours à 18 missions (dix tutoriels, deux transitions, six françaises) : escorte 1v2, coopération 2v1, élimination à réserves finies, survie huit journées. Le choix de FR04 donne réellement une reconnaissance J2 ou 1 500 fonds dans FR06 ; ajouté à la fin des chiffres de graine pour préserver les anciennes reprises. Difficile : +1 500 fonds par camp adverse, allié inchangé. Les missions suivantes restent éditoriales. JSON, lots et build contrôlés ; aucune simulation ni validation visuelle. Voir `doc/refonte/saison1-suite-septembre.md`.
+
 ## Laboratoire de missions — 12 septembre 2026
 
 `/admin/cartes` compose des variantes privées avec contraintes, deux modes, branches de conséquences, corrections et rejeux. GET/POST `/api/routines/map/conception` offre le même contrat sans BDD ni publication. `src/content/difficulte.ts` est la résolution partagée ; le chemin app réexporte. Pilote et limites : `doc/refonte/conception-missions.md`. L’IEM renforcée optionnelle peut couvrir toute la carte (camp protégé obligatoire), J6 puis toutes les 6 journées, capture désactivante ; aucun tutoriel modifié.

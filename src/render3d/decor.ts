@@ -1,5 +1,6 @@
 import { couronneFeuillue, conifereBoise, troncRamifie } from './vegetation-boisee';
 import { candidatsBatiment, libererBatimentsLivres } from './assets-environnement';
+import { appliquerMasque, clonerMateriauNoeud, couleurMasquee, definirMasque, masqueDe } from './modeles';
 /**
  * Le décor : arbres, rochers et bâtiments.
  *
@@ -15,9 +16,8 @@ import { candidatsBatiment, libererBatimentsLivres } from './assets-environnemen
  * vert, doré, nu et enneigé, fleurs au printemps) plutôt que par des maillages
  * différents : c'est instantané au changement de journée.
  *
- * Chaque bâtiment porte un **mât**. C'est là, et nulle part ailleurs, que les
- * couleurs d'un camp se hissent et s'amènent : une capture se lit au drapeau,
- * jamais sur la ville elle-même, qui ne se déforme ni ne s'aplatit.
+ * Chaque bâtiment porte un **mât**. Une capture se lit au drapeau et dans
+ * les zones du masque d'équipe du GLB, sans déformer le bâtiment.
  *
  * Sous le **brouillard de guerre** (révision du 6 septembre 2026), une case hors
  * de vue est noire (`FACTEUR_BROUILLARD`, `terrain.ts`). Le décor n'en fait
@@ -177,17 +177,10 @@ export function cartographierToit(geo: THREE.BufferGeometry, repetitions = REPET
  * camp ne serait plus un jumeau ; on recopie donc ce que le décor règle.
  */
 export function clonerMateriau(source: THREE.MeshStandardNodeMaterial): THREE.MeshStandardNodeMaterial {
-  const jumeau = source.clone();
-  jumeau.color.copy(source.color);
-  jumeau.emissive.copy(source.emissive);
-  jumeau.emissiveIntensity = source.emissiveIntensity;
-  jumeau.roughness = source.roughness;
-  jumeau.metalness = source.metalness;
-  jumeau.map = source.map;
-  jumeau.normalMap = source.normalMap;
-  jumeau.normalScale.copy(source.normalScale);
-  jumeau.flatShading = source.flatShading;
-  jumeau.envMapIntensity = source.envMapIntensity;
+  const jumeau = clonerMateriauNoeud(source);
+  const masque = masqueDe(source), couleur = couleurMasquee(source);
+  if (masque && couleur) appliquerMasque(jumeau, masque, couleur);
+  else if (masque) definirMasque(jumeau, masque);
   return jumeau;
 }
 
@@ -207,7 +200,7 @@ const BALAYAGE_RADAR = 0.45;
 
 /** Une parabole de station : le pivot qu'on fait tourner, et si elle balaie. */
 interface Parabole {
-  pivot: THREE.Group;
+  pivot: THREE.Object3D;
   /** Une station tenue balaie ; neutre ou désaffectée, elle est à l'arrêt. */
   active: boolean;
 }
@@ -839,6 +832,22 @@ export function ouvrirChantierDecor(
   // la mer, parce qu'elle est à l'ombre des môles.
   const matBassin = new THREE.MeshStandardNodeMaterial({ color: 0x22434e, roughness: 0.28, metalness: 0.12 });
   const paraboles: Parabole[] = [];
+  // Une matière par source et par camp, partagée par toutes les cases de ce camp.
+  const matsLivres = new Map<THREE.Material, Map<CampId, THREE.MeshStandardNodeMaterial>>();
+  function materiauLivre(source: THREE.Material, camp: CampId | null): THREE.Material {
+    if (camp === null || !(source instanceof THREE.MeshStandardNodeMaterial)) return source;
+    const masque = masqueDe(source);
+    if (!masque) return source;
+    let camps = matsLivres.get(source);
+    if (!camps) { camps = new Map(); matsLivres.set(source, camps); }
+    let mat = camps.get(camp);
+    if (!mat) {
+      mat = clonerMateriau(source);
+      appliquerMasque(mat, masque, new THREE.Color(paletteDe(camp).main));
+      camps.set(camp, mat);
+    }
+    return mat;
+  }
   const matsCamp = new Map<string, THREE.MeshStandardNodeMaterial>();
 
   function matCamp(camp: CampId | null): THREE.MeshStandardNodeMaterial {
@@ -1248,11 +1257,6 @@ export function ouvrirChantierDecor(
     // Les deux hauteurs de maison d'une ville sont tout ce qu'une silhouette
     // doit à sa case : le reste ne dépend que du terrain et de l'état de service.
     const hauteurs = terrain === 'ville' ? [alea(x, y, 300), alea(x, y, 301)] : [];
-    if (terrain === 'radar') {
-      const pivot = construirePivot(x, y, desaffecte, proprio);
-      groupeCase.add(pivot);
-      paraboles.push({ pivot, active: proprio !== null && !desaffecte });
-    }
     const campInitial = etat.camps.find(c => c.qgCase === cleCase({x,y}))?.id;
     const campModele=terrain==='qg'?campInitial:proprio;
     const pays=campModele===undefined||campModele===null?undefined:paysParCamp[campModele];
@@ -1262,10 +1266,25 @@ export function ouvrirChantierDecor(
       const copie = modeleLivre.clone(true);
       // Object3D.clone sérialise userData : rétablir la référence matériau,
       // sans laquelle la transparence recevrait un simple objet JSON.
-      copie.traverse(o => {if(o instanceof THREE.Mesh)o.userData['opaque']=o.material;});
+      copie.traverse(o => {
+        if (!(o instanceof THREE.Mesh)) return;
+        o.material = Array.isArray(o.material) ? o.material.map(m => materiauLivre(m, proprio)) : materiauLivre(o.material, proprio);
+        o.userData['opaque'] = o.material;
+      });
       groupeCase.add(copie);
+      if (terrain === 'radar') {
+        const pivot = copie.getObjectByName('toit');
+        if (pivot) paraboles.push({ pivot, active: proprio !== null });
+      }
     }
-    else poserCase(groupeCase, formesDeCase(terrain, desaffecte, hauteurs), proprio);
+    else {
+      poserCase(groupeCase, formesDeCase(terrain, desaffecte, hauteurs), proprio);
+      if (terrain === 'radar') {
+        const pivot = construirePivot(x, y, desaffecte, proprio);
+        groupeCase.add(pivot);
+        paraboles.push({ pivot, active: proprio !== null && !desaffecte });
+      }
+    }
     batiments.add(groupeCase);
   }
 
@@ -1597,6 +1616,15 @@ export function ouvrirChantierDecor(
       // Un toit d'ardoise ou de tôle blanchit sous la neige comme le reste.
       matToit.color.set(couleurToit).lerp(BLANC, neige * 0.45);
       matFenetres.emissiveIntensity = p.fenetres;
+      for (const modele of modelesLivres.values()) modele.traverse(o => {
+        if (!(o instanceof THREE.Mesh)) return;
+        for (const mat of Array.isArray(o.material) ? o.material : [o.material]) {
+          if (mat instanceof THREE.MeshStandardNodeMaterial && mat.emissiveMap) mat.emissiveIntensity = p.fenetres;
+        }
+      });
+      for (const camps of matsLivres.values()) for (const mat of camps.values()) {
+        if (mat.emissiveMap) mat.emissiveIntensity = p.fenetres;
+      }
       // Le terni suit l'original, en plus gris : la neige le blanchit aussi.
       matBetonTerni.color.copy(matBeton.color).lerp(GRIS_BETON_TERNI, 0.5);
       matToitTerni.color.copy(matToit.color).lerp(GRIS_TOIT_TERNI, 0.5);
@@ -1638,7 +1666,7 @@ export function ouvrirChantierDecor(
       // l'ambiance en cours, sans quoi il repartirait en plein été à midi.
       groupe.remove(paysage.groupe);
       paysage.dispose();
-      libererBatimentsLivres(modelesLivres);
+      // La marée réutilise les mêmes modèles : le bail dure jusqu'à dispose().
       paysage = creerPaysage(grille, hauteurEn, biome);
       groupe.add(paysage.groupe);
       if (ambianceCourante) paysage.appliquerAmbiance(ambianceCourante.p, ambianceCourante.saison);
@@ -1730,6 +1758,7 @@ export function ouvrirChantierDecor(
       geoDrapeau.dispose();
       matDrapeau.dispose();
       for (const f of matsFantome.values()) f.dispose();
+      for (const camps of matsLivres.values()) for (const m of camps.values()) m.dispose();
       for (const l of matsLueur.values()) l.mat.dispose();
       matBetonTerni.dispose();
       matToitTerni.dispose();

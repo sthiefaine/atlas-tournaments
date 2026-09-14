@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 import { chargerCatalogue } from '@/engine';
 import { chargerStyleNation } from '@/assets/styles';
 import { chargerModele, monterModele, construirePlaceholder, materiauxPropresDe, Materiaux } from '@/render3d/unites';
-import { chargerInventaire, convertirMateriaux } from '@/render3d/modeles';
+import { acquerirBatiment } from '@/render3d/batiments-partages';
+import { appliquerMasque, chargerInventaire, masqueDe } from '@/render3d/modeles';
+import { paletteDe } from '@/render/palettes';
 import { candidatsBatiment, libererBatimentsLivres } from '@/render3d/assets-environnement';
 import { choisirBackend, creerMoteurWebGPU, type NavigateurGpu } from '@/render3d/scene';
 import { creerEnvironnement } from '@/render3d/environnement';
@@ -105,10 +105,17 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
         if (!vivant) return;
         const id = candidatsBatiment(batiment, pays ?? undefined).find(c => inventaire?.modeles[c]?.includes(0));
         if (!id) { setMessage('Modèle à venir'); return; }
-        const glb = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(`/assets/modeles/${id}_lod0.glb`);
-        batiments.set(id, glb.scene);
+        const objet = await acquerirBatiment(id);
+        batiments.set(id, objet);
         if (!vivant) { libererBatimentsLivres(batiments); batiments.clear(); return; }
-        convertirMateriaux(glb.scene); cadrer(glb.scene); setMessage('');
+        objet.traverse(o => {
+          if (!(o instanceof THREE.Mesh)) return;
+          for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+            const masque = masqueDe(m);
+            if (masque && m instanceof THREE.MeshStandardNodeMaterial) appliquerMasque(m, masque, new THREE.Color(paletteDe(camp).main));
+          }
+        });
+        cadrer(objet); setMessage('');
       }
     })().catch(() => { if (vivant) setMessage('Aperçu indisponible'); });
     return () => {

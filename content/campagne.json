@@ -215,12 +215,56 @@
       "objectif": "Possédez simultanément deux des trois villes marquées en or avant la fin de J24. La capture du QG ne remplace pas cet objectif.",
       "conseil": "Mode difficile : la réserve adverse passe de 3 000 à 6 000 fonds. Les revenus, objectifs et dégâts restent identiques. Mission en cours d’équilibrage, non simulée.",
       "recit": "Les ateliers gagnés ne peuvent pas redémarrer : leurs mécaniciens n’ont plus de quoi travailler. Ariane veut reprendre les villes qui les approvisionnent ; votre rival voudrait déjà pousser vers le QG. Une victoire ne sert à rien si personne ne peut la faire durer.",
-      "conclusion": "Deux villes approvisionnent les ateliers. Un bon de livraison mentionne une voie de service réservée. Ariane vous demande de préparer un convoi : la prochaine étape de la saison reste à venir.",
+      "conclusion": "Deux villes approvisionnent les ateliers. Les batteries partent maintenant vers le dépôt des communes : vous commandez le convoi de La voie de service.",
       "entrainement": false,
       "tutoriel": [
         "Possédez simultanément deux des trois villes marquées en or avant la fin de J24. La capture du QG ne remplace pas cet objectif.",
         "Normal : 3 000 fonds adverses. Difficile : 6 000. Même limite de 24 journées."
       ]
+    },
+    {
+      "scenarioCle": "opus1_fr_03",
+      "titre": "Saison 1 · La voie de service",
+      "biome": "foret",
+      "objectif": "Amener le transport désigné à la sortie nord-est (16:3) avant la fin de J22. Sa perte fait perdre la mission.",
+      "conseil": "Gardez un véhicule de couverture à portée du transport. Prendre les QG adverses ne remplace pas l’escorte.",
+      "recit": "Les batteries promises aux communes prennent la route. Tomas et Solveig disputent les deux accès au dépôt. Ariane vous confie le convoi.",
+      "conclusion": "Le convoi passe. Tomas propose de mettre ses moyens en commun pour rétablir la liaison entre les deux rives.",
+      "entrainement": false,
+      "tutoriel": []
+    },
+    {
+      "scenarioCle": "opus1_fr_04",
+      "titre": "Saison 1 · Deux rives, un réseau",
+      "biome": "foret",
+      "objectif": "Capturer le QG adverse avec votre coalition avant la fin de J26.",
+      "conseil": "Profitez de la vision alliée. Ne bloquez pas les sorties du pont de Tomas.",
+      "recit": "Tomas couvre la rive nord, vous la rive sud. Solveig défend les deux ponts. Les équipes doivent avancer ensemble sans se gêner.",
+      "conclusion": "Le QG est pris. Vous choisissez entre une reconnaissance commune à J2 et une réserve de 1 500 fonds pour La journée sans crédit.",
+      "entrainement": false,
+      "tutoriel": []
+    },
+    {
+      "scenarioCle": "opus1_fr_05",
+      "titre": "Saison 1 · Le devis orange",
+      "biome": "plaine",
+      "objectif": "Mettre toutes les unités adverses hors jeu avant la fin de J22. Aucun revenu quotidien.",
+      "conseil": "Le char moyen est lent à contourner. Préservez les deux chars légers et concentrez les tirs d’artillerie.",
+      "recit": "Ost réclame les relevés collectés avec son matériel prêté. Ariane conteste cette clause. Un arbitrage sur le terrain doit décider qui garde les équipements.",
+      "conclusion": "Ost respecte le résultat. Le matériel reste, mais votre ligne de crédit part en réexamen.",
+      "entrainement": false,
+      "tutoriel": []
+    },
+    {
+      "scenarioCle": "opus1_fr_06",
+      "titre": "Saison 1 · La journée sans crédit",
+      "biome": "montagne",
+      "objectif": "Survivre jusqu’au début de J9, avec le QG et au moins une unité. Aucun revenu quotidien.",
+      "conseil": "Le choix précédent est effectif ici. Couvrez les accès du QG sans disperser vos soutiens.",
+      "recit": "Le crédit est bloqué. Ost et Edran Sorel ferment les deux routes, tandis que votre relève approche. Les moyens conservés après le match des deux rives servent maintenant.",
+      "conclusion": "La relève arrive. Une patrouille rapporte des batteries anormalement vides : la prochaine enquête reste à préparer.",
+      "entrainement": false,
+      "tutoriel": []
     }
   ]
 }
