@@ -36,6 +36,9 @@ export type CleRendu = '3d';
 /** Un point en pixels logiques dans l'élément du rendu. */
 export interface PointVue { x: number; y: number }
 
+/** Présentation d'un duel : suit le temps de la partition, sans toucher au combat. */
+export interface VueCombat { avancer(progression: number): void; fermer(): void }
+
 /**
  * Le coût d'une **famille** de la scène — terrain, décor, unités, surbrillances,
  * effets — : ses triangles, et ce qu'elle demande à dessiner.
@@ -199,6 +202,7 @@ export interface Rendu {
   jouer?(partition: Partition): Promise<void>;
   /** Coupe la partition en cours : tout saute à l'état final, la promesse se résout. */
   couper?(): void;
+  ouvrirCombat?(hote: HTMLElement, geste: Extract<import('./partition').Geste, { genre: 'duel' }>): VueCombat | null;
   /** Point d'écran → case de la carte, ou `null` hors carte. */
   versMonde(x: number, y: number): Case | null;
   /** Case → point d'écran (centre de la case), ou `null` si hors champ. */

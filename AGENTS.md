@@ -515,3 +515,9 @@ Le bulletin affiche marée haute/basse selon les paramètres de la mécanique po
 
 ## QG uploadé — 13 septembre 2026
 Base QG activée sur source SHA 71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326 (copie locale identique, API sans session 403). 873807 triangles source conservés, 36 ajoutés (parcelle/mât/fanion), échelle uniforme, 3 textures 4K conservées. GLB Meshopt sans quantification 11309588 octets, lot 31492496 octets. Contrôle technique ok, aucune approbation artistique prétendue. Émission noire : fenêtres nocturnes non peintes. Le sélecteur QG préfère la base active à l’ancien kit national ; aucune variante générée.
+
+## Mise à jour — interface, mixage et combat rapproché (14 septembre 2026)
+
+L'accueil, le départ, la carte, les réglages, l'atelier, le HUD, le carnet et l'admin partagent une passe de surfaces/commandes sans liserés systématiques. Réglages à quatre onglets ; mixage environnement/effets/radio persistant. Bibliothèque de modèles en lignes avec filtres dans l'URL et disponibilité issue des candidats exposés. Carte de campagne glissable à la souris. `audio/ambiance.ts` joue des nappes stéréo continues avec fondu météo, sans samples externes.
+
+`render3d/combat-rapproche.ts` dessine les figurines déjà chargées dans une scène temporaire, via le renderer de la carte et une cible hors écran. Géométries/textures partagées, matériaux/squelettes propres ; aucun nouveau chargement GLB. Tir/riposte/impacts suivent la partition, PV à l'impact, riposte après 80 ms à cadence normale. Clic pour passer, mode réduit fixe. Bouches estimées et clips limités à ceux des modèles ; pas de validation artistique automatique. Typecheck et build final réussis, sans avertissement ; aucun test ni contrôle visuel/écoute exécuté. Détails : `doc/refonte/interface-audio-combat-septembre.md`.

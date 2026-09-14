@@ -33,7 +33,7 @@
  */
 
 import { campagneTermineeEnNormal } from './campagne/acces';
-import { volumeNormalise } from '../audio/types';
+import { volumeNormalise, normaliserMixage, type MixageAudio } from '../audio/types';
 import type { Mode } from '../schemas/types';
 import { normaliserVitesse, type VitesseAnimations } from '../render/cadence';
 import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
@@ -66,6 +66,7 @@ export interface Preferences {
   ecranCombat: boolean;
   sons: boolean;
   volumeSons: number;
+  mixageSons?: MixageAudio;
 }
 
 /** Les deux profils d'un appareil. La liste est fermée : deux, pas « n ». */
@@ -208,6 +209,7 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   ecranCombat: true,
   sons: true,
   volumeSons: .45,
+  mixageSons: normaliserMixage(),
 });
 
 /** Ramène n'importe quoi à des préférences valides. */
@@ -223,6 +225,7 @@ export function normaliserPreferences(brut: unknown): Preferences {
     qualite: normaliserQualite(p.qualite),
     sons: typeof p.sons === 'boolean' ? p.sons : true,
     volumeSons: volumeNormalise(p.volumeSons),
+    mixageSons: normaliserMixage(p.mixageSons && typeof p.mixageSons === 'object' ? p.mixageSons : undefined),
     ecranCombat: typeof p.ecranCombat === 'boolean' ? p.ecranCombat : PREFERENCES_PAR_DEFAUT.ecranCombat,
   };
 }

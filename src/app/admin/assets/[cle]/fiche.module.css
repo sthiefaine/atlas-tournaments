@@ -1,16 +1,16 @@
 /* Palette opaque propre à la fiche : indépendante du fond et du thème du jeu. */
 .fiche {
   --fiche-encre: #edf4fa;
-  --fiche-secondaire: #b2c3d3;
-  --fiche-papier: #142237;
-  --fiche-fond: #0b1422;
+  --fiche-secondaire: #b6c9cf;
+  --fiche-papier: #192e3b;
+  --fiche-fond: #0e1922;
   --fiche-accent: #68e1cf;
   --fiche-alerte: #f3ce86;
   color-scheme: dark;
   color: var(--fiche-encre);
   background: var(--fiche-fond);
-  border: 1px solid #30465e;
-  border-radius: 16px;
+  border: 0;
+  border-radius: 10px;
   padding: clamp(16px, 3vw, 32px);
   line-height: 1.6;
   overflow-wrap: anywhere;
@@ -18,7 +18,7 @@
 .fiche [class*='opacity-'] { opacity: 1; }
 .fiche :global(.text-xs) { font-size: .875rem; }
 .fiche > section, .fiche .specifications { scroll-margin-top: 20px; }
-.fiche > section { background: var(--fiche-papier); padding: 20px; border: 1px solid #30465e; border-radius: 16px; margin-bottom: 24px; }
+.fiche > section { background: var(--fiche-papier); padding: 20px; border: 0; border-radius: 10px; margin-bottom: 24px; }
 .fiche :is(h2,h3) { color: var(--fiche-encre); }
 .fiche p { max-width: 85ch; }
 .fiche :is(pre,textarea) { color: var(--fiche-encre); background: var(--fiche-papier); font-size: .875rem; max-width: 100%; }
@@ -50,7 +50,7 @@
 .present,.manquant { display: inline-block; padding: 2px 8px; border-radius: 8px; font-weight: 650; }
 .present { color: #68e1cf; background: #203e47; }
 .manquant { color: #f3ce86; background: #3a3024; }
-.specifications { padding: 16px; background: var(--fiche-papier); border: 1px solid #30465e; border-radius: 16px; }
+.specifications { padding: 16px; background: var(--fiche-papier); border: 0; border-radius: 10px; }
 .specifications > summary { font-size: 1rem; }
 @media(max-width:600px) {
   .jalons { grid-template-columns: 1fr; }

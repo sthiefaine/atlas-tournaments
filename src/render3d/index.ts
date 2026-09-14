@@ -1,4 +1,5 @@
 import { sonEnvironnement } from '../audio/profils';
+import { creerCombatRapproche, type CombatRapproche } from './combat-rapproche';
 import { cleCase } from '../engine/index';
 import type { SortieAudio } from '../audio/types';
 import { chargerEnvironnement, type EnvironnementLivre } from './assets-environnement';
@@ -245,6 +246,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let msAmbiance = MS_AMBIANCE_SOURIS;
   /** L'ambiance déjà passée aux matières : elles ne la reçoivent que quand elle change. */
   let ambianceAppliquee: { p: ParametresAmbiance; saison: Saison | undefined } | null = null;
+  let combatRapproche: CombatRapproche | null = null;
   /**
    * Jusqu'où le monde est chaud, donc ce qu'une image a le droit de dessiner.
    * Le chantier la fait monter deux fois : `sol` à la fin de son premier temps,
@@ -567,6 +569,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     const ombre = ombreSale || mutation || cadre !== cadrePrecedent;
     // L'éclat d'un pouvoir multiplie l'exposition de l'ambiance, le temps du geste.
     s.dessiner(m.vue3d.camera, { ombre, continu: continuSuivant, exposition: p.exposition * eclat });
+    if (combatRapproche) s.dessinerEncart(combatRapproche.scene, combatRapproche.camera, combatRapproche.hote);
     // La famille qui vient de paraître attendait celle-ci pour laisser la
     // suivante se compiler.
     imageDessinee();
@@ -739,6 +742,19 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       salir();
     },
 
+    ouvrirCombat(hote, geste) {
+      combatRapproche?.fermer(); combatRapproche = null;
+      if (!monde || !vue || !scene3d?.pret) return null;
+      // Le jeu filtre le duel avec la visibilité avant/après l'action ; la vue courante
+      // seule exclurait à tort une victime qui vient de disparaître.
+      const combat = creerCombatRapproche(hote, geste, monde.unites, vue.catalogue, monde.grille.terrainDe(geste.cible.case.x, geste.cible.case.y), () => salir());
+      if (!combat) return null;
+      combat.scene.environment = scene3d.scene.environment;
+      combat.scene.environmentIntensity = .5;
+      combatRapproche = combat;
+      return { avancer: p => combat.avancer(p), fermer: () => { combat.fermer(); if (combatRapproche === combat) combatRapproche = null; } };
+    },
+
     jouer(partition: Partition): Promise<void> {
       const m = monde;
       const s = scene3d;
@@ -753,6 +769,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     couper(): void {
+      combatRapproche?.fermer(); combatRapproche = null;
       options.audio?.annuler();
       // Tout saute à l'état final : chaque `terminer` pose le sien et libère
       // ses effets ; ce qui vivrait encore dans le pool est retiré avec.
@@ -901,6 +918,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     },
 
     demonter(): void {
+      combatRapproche?.fermer(); combatRapproche = null;
       options.audio?.annuler();
       if (repos !== null) clearInterval(repos);
       repos = null;

@@ -38,7 +38,7 @@ export default function Depart(): React.ReactElement {
     <header className={styles.barre}>
       <Link href="/" className={styles.marque} aria-label="Atlas Tournament — accueil">ATLAS<span>TOURNAMENT</span></Link>
       <span className={styles.rubrique}>CAMPAGNE</span>
-      <Link href="/" className={styles.quitter}>Quitter <span aria-hidden="true">×</span></Link>
+      <Link href="/" className={styles.quitter}><span aria-hidden="true">←</span> Accueil</Link>
     </header>
     <div className={styles.scene}>
 

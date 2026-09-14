@@ -16,6 +16,7 @@ export function CarteParcours({ epreuves, etats, active, choisir, jouer, rejouer
   const prefixe = useId().replace(/:/g, '');
   const viewport = useRef<HTMLDivElement>(null), carte = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
+  const glissement = useRef<{ x: number; y: number; gauche: number; haut: number; actif: boolean } | null>(null);
   const mission = epreuves[active], etat = etats[active] ?? 'verrouillee';
   const hauteur = Math.max(880, ...epreuves.map((_,i)=>point(i).y+160));
   const termine = etats.filter(e=>e==='gagnee').length;
@@ -32,7 +33,12 @@ export function CarteParcours({ epreuves, etats, active, choisir, jouer, rejouer
   return <section className={styles.cadre} aria-label="Carte des opérations">
     <div className={styles.barre}><div><span className={styles.surtitre}>ATLAS / OPÉRATIONS</span><strong>Votre campagne</strong></div><span className={styles.progression}>{termine}<span> / {epreuves.length} terminées</span></span></div>
     <div className={styles.theatre}>
-      <div ref={viewport} className={styles.defilement} tabIndex={0} aria-label="Carte défilante. Sélectionnez une mission ; utilisez les commandes pour zoomer.">
+      <div ref={viewport} className={styles.defilement} tabIndex={0} aria-label="Carte défilante. Glissez pour explorer ; sélectionnez une mission pour jouer."
+        onPointerDown={e => { if (e.pointerType !== 'mouse' || e.button !== 0 || (e.target as HTMLElement).closest('button,a')) return; const el = e.currentTarget; glissement.current = { x: e.clientX, y: e.clientY, gauche: el.scrollLeft, haut: el.scrollTop, actif: false }; el.setPointerCapture(e.pointerId); }}
+        onPointerMove={e => { const g = glissement.current; if (!g) return; const dx = e.clientX - g.x, dy = e.clientY - g.y; if (!g.actif && Math.hypot(dx, dy) < 5) return; g.actif = true; e.currentTarget.dataset.glisser = 'true'; e.currentTarget.scrollTo(g.gauche - dx, g.haut - dy); }}
+        onPointerUp={e => { glissement.current = null; delete e.currentTarget.dataset.glisser; if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId); }}
+        onPointerCancel={e => { glissement.current = null; delete e.currentTarget.dataset.glisser; }}
+        onLostPointerCapture={e => { glissement.current = null; delete e.currentTarget.dataset.glisser; }}>
         <div ref={carte} className={styles.carte} style={{width:`max(100%, ${1000*zoom}px)`, aspectRatio:`1200 / ${hauteur}`}}>
           <div className={styles.paysage}><PaysageCampagne prefixe={prefixe}/></div>
           <svg className={styles.routes} viewBox={`0 0 1200 ${hauteur}`} aria-hidden="true">

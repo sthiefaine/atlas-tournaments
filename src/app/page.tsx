@@ -1,3 +1,4 @@
+import { Signe } from './composants/signe';
 import Link from 'next/link';
 import { t } from '@/i18n/index';
 import campagne from '../../content/campagne.json';
@@ -112,11 +113,11 @@ export default function Accueil() {
         {/* « Banc d'essai » et non « Atelier des mondes » : la page ne compose
             aucun monde, elle les montre. */}
         <Link className="menu-bouton menu-petit" href="/atelier">
-          <span className="menu-libelle">{t(locale, 'accueil.menu_banc')}</span>
+          <Signe nom="cube" /><span className="menu-libelle">{t(locale, 'accueil.menu_banc')}</span>
         </Link>
 
         <Link className="menu-bouton menu-petit" href="/reglages">
-          <span className="menu-libelle">{t(locale, 'accueil.menu_reglages')}</span>
+          <Signe nom="reglages" /><span className="menu-libelle">{t(locale, 'accueil.menu_reglages')}</span>
         </Link>
       </div>
     </nav>

@@ -30,6 +30,11 @@ export const metadata = { title: 'Réglages · Atlas' };
 export default function PageReglages(): React.ReactElement {
   const locale = 'fr';
   return <Reglages libelles={{
+    audio: t(locale, 'reglages.audio'),
+    ambiance: t(locale, 'reglages.ambiance'),
+    effets: t(locale, 'reglages.effets'),
+    voix: t(locale, 'reglages.voix'),
+    sauvegardeAuto: t(locale, 'reglages.enregistrement'),
     sons: t(locale, 'reglages.sons'),
     sonsNote: t(locale, 'reglages.sons_note'),
     volumeSons: t(locale, 'reglages.volume_sons'),

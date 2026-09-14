@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Signe, type NomSigne } from '../composants/signe';
 import { redirect } from 'next/navigation';
 
 import { baseConfiguree } from '@/db/client';
@@ -11,15 +12,15 @@ import { BaseAbsente, Bloc, Etat, Ligne, Message, Vide } from './ui';
 
 export const dynamic = 'force-dynamic';
 function AccesCreation() {
-  return <><h2 className="admin-titre">Votre atelier</h2><p className="admin-intro">Produire les assets, vérifier les missions et garder le récit cohérent. Choisissez le chantier à reprendre.</p><div className="assets-grille">{[
-    ['/admin/assets?etat=manquants', 'Compléter les assets', 'Modèles de base, déclinaisons et prompts prêts à copier.'],
-    ['/admin/cartes', 'Composer une mission', 'Contraintes, variantes, simulations et conséquences.'],
-    ['/admin/personnages', 'Relire les personnages', 'Passé, motivations et révélations du programme Aube.'],
-    ['/admin/file', 'Valider les propositions', 'Missions et livraisons des routines avant publication.'],
-    ['/admin/prompts', 'Piloter les routines', 'Prompts versionnés et instructions de production.'],
-  ].map(([href, titre, aide]) => <Link key={href} href={href!} className="asset-carte"><h3>{titre}</h3><p>{aide}</p></Link>)}</div></>;
+  const acces: { href: string; nom: string; aide: string; signe: NomSigne }[] = [
+    { href: '/admin/assets', nom: 'Modèles 3D', aide: 'Choisir un asset, copier son prompt ou remplacer son GLB.', signe: 'cube' },
+    { href: '/admin/cartes', nom: 'Missions', aide: 'Ouvrir une carte et travailler ses objectifs.', signe: 'carte' },
+    { href: '/admin/personnages', nom: 'Personnages', aide: 'Histoires, pouvoirs et scènes de campagne.', signe: 'commandants' },
+  ];
+  return <><h2 className="admin-titre">Reprendre un chantier</h2><div className="admin-chantiers">{acces.map(a =>
+    <Link key={a.href} href={a.href}><Signe nom={a.signe} /><span><strong>{a.nom}</strong><small>{a.aide}</small></span><b aria-hidden="true">→</b></Link>
+  )}</div><div className="admin-actions"><Link className="admin-action" href="/admin/file">Propositions en attente</Link><Link className="admin-action" href="/admin/prompts">Routines</Link></div></>;
 }
-
 
 /** Tableau de bord : état des routines, dernières exécutions, profondeur de file. */
 export default async function TableauDeBord({
@@ -52,6 +53,7 @@ export default async function TableauDeBord({
 
       <ResumeAssets />
 
+      <details className="admin-diagnostic"><summary>Activité des routines</summary>
       <Bloc
         titre="Sonde des routines"
         aide="Le seuil de silence est trois fois la cadence nominale. Une routine qui n’a jamais tourné n’est pas en panne : elle n’est pas encore en service."
@@ -93,6 +95,7 @@ export default async function TableauDeBord({
           </Ligne>
         ))}
       </Bloc>
+      </details>
     </main>
   );
 }

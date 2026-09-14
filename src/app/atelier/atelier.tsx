@@ -304,7 +304,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     let debrancher: (() => void) | undefined;
     annoncer('Préparation du monde…', true);
     const preferences = lirePreferences();
-    const audio = conteneur.current ? creerAudioJeu(conteneur.current, preferences.sons, preferences.volumeSons) : undefined;
+    const audio = conteneur.current ? creerAudioJeu(conteneur.current, preferences.sons, preferences.volumeSons, preferences.mixageSons) : undefined;
 
     const poser = (fabrique: () => Rendu): void => {
       if (annule || !conteneur.current) return;
@@ -395,13 +395,14 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     window.history.replaceState(null, '', `${window.location.pathname}${requete ? `?${requete}` : ''}`);
   }, [vueBanc, simple, uniteChoisie]);
   useEffect(() => {
+    if (urlLue.current) return;
     const v = decoderVue(window.location.search.replace(/^\?/, ''), VUE_DEFAUT);
     const unite = new URLSearchParams(window.location.search).get('unite');
     if (unite && Object.hasOwn(catalogueCanon.unites, unite)) setUniteChoisie(unite);
     setIndex(simple ? 3 : v.monde); setBiome(v.biome); setSaison(v.saison); setPhase(v.phase); setMeteo(v.meteo);
     setPaysAllie(v.paysAllie); setPaysAdverse(v.paysAdverse); setBrouillard(v.brouillard); setGenres([...v.genres]);
     urlLue.current = true;
-  }, []);
+  }, [catalogueCanon.unites, simple]);
 
   // Les gestes lisent l'état du rendu courant ; le pont, posé une fois par
   // liste de mondes, passe par ces références pour ne jamais rejouer un état
@@ -626,11 +627,12 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   if (simple) return <main className={styles.atelier}>
     <div ref={conteneur} className={styles.monde} aria-label="Plateau 3D : glisser pour déplacer, Alt et glisser pour tourner, molette pour zoomer" />
     <div className={styles.toast} role="status" aria-live="polite">{toast ? <span>{toast.texte}</span> : null}</div>
+    <Link className={styles.retourSimple} href="/">← Accueil</Link>
     <label className={styles.selecteurUnite}>
       <span>Unité</span>
       <select value={uniteChoisie} onChange={e => setUniteChoisie(e.target.value)}>
         <option value="toutes">Toutes les unités</option>
-        {Object.values(catalogueCanon.unites).map(u => <option key={u.cle} value={u.cle}>{nomUnite('fr', catalogueCanon, u.cle)}</option>)}
+        {(['terre', 'air', 'mer'] as const).map(domaine => <optgroup key={domaine} label={domaine === 'terre' ? 'Terrestres' : domaine === 'air' ? 'Aériennes' : 'Navales'}>{Object.values(catalogueCanon.unites).filter(u => u.domaine === domaine).map(u => <option key={u.cle} value={u.cle}>{nomUnite('fr', catalogueCanon, u.cle)}</option>)}</optgroup>)}
       </select>
     </label>
   </main>;

@@ -160,6 +160,7 @@ export interface VueJeu {
 
 /** Ce que le HUD peut demander au jeu. Aucun de ces appels ne mute un état. */
 export interface ApiHud {
+  ouvrirCombat?: import('./rendu').Rendu['ouvrirCombat'];
   vue(): VueJeu;
   t(cle: string, params?: Record<string, string | number>): string;
   finTour(): void;
@@ -863,6 +864,18 @@ ${STYLE_ILLUSTRATIONS}
 .atlas-hud[data-rail='oui'] .hud-rail .inspect,.atlas-hud .inspect .fiche,
 .atlas-hud .fiche,.atlas-hud .pouvoir-effets{border:0}
 
+/* Commandes compactes et contrastes cohérents avec les menus de campagne. */
+.atlas-hud{--encre:#192e3b;--encre-clair:#294653;--encre-sombre:#0e1922;--signal:#78ddca}
+.atlas-hud .fiche h4 span{background:none;padding:0;color:#b9d0d5;letter-spacing:.06em;font-size:var(--t2)}
+.atlas-hud .fiche .stat{border:0;background:#ffffff08;border-radius:6px}
+.atlas-hud .jauge .pouvoir{border:0;background:#2a4553;border-radius:6px;text-align:left}
+.atlas-hud .jauge .pouvoir:disabled{background:#243742;color:#aebfc6;opacity:1}
+.atlas-hud .jauge .pouvoir:not(:disabled):hover{background:#395e68}
+.atlas-hud .fintour button{border:0;min-height:52px}
+.atlas-hud .bulletin button{border:0}.atlas-hud .fiche{background:#122833}
+.atlas-hud button[data-action]:disabled{opacity:1;color:#9dabb8;cursor:not-allowed!important}
+.atlas-hud .production-liste button{border:0;border-radius:6px;min-height:48px}
+
 `;
 
 /** Injecte la feuille de style du HUD si le document ne l'a pas encore. */
@@ -1190,6 +1203,7 @@ export function monterHudHtml(
     t: api.t,
     versEcran: (c) => api.versEcran(c),
     couper: api.couper ? () => api.couper?.() : undefined,
+    ouvrirCombat: api.ouvrirCombat,
   }, horloge);
 
   let vignettes: Vignette[] = [];

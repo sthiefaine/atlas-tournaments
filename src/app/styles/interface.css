@@ -1,0 +1,72 @@
+/* Commandes communes. Les couleurs d'équipe et les repères de carte restent locaux. */
+:root { color-scheme:dark; --atlas-fond:#0e1922; --atlas-surface-haute:#243b48; --atlas-texte-secondaire:#b6c9cf; --atlas-or:#e5c987; --atlas-rayon:10px; }
+:where(button,a,input,select,textarea) { touch-action:manipulation; }
+:where(input,select,textarea) { accent-color:var(--atlas-accent); }
+:where(button,a) { text-underline-offset:4px; }
+.atlas-retour { border:0; padding:8px 12px 8px 0; background:none; color:var(--atlas-texte-secondaire); }
+.atlas-retour:hover { color:var(--atlas-accent); }
+.atlas-bouton,.jeu-libre-bouton { border:0; border-radius:var(--atlas-rayon); min-height:48px; font-weight:750; letter-spacing:0; text-transform:none; box-shadow:none; }
+.atlas-bouton.secondaire,.jeu-libre-bouton.secondaire { background:#263c49; color:#e4edee; border:0; }
+.atlas-bouton.secondaire:hover,.jeu-libre-bouton.secondaire:hover { background:#345363; }
+:where(.atlas-reglages,.atlas-carnet,.atlas-jeu-libre) { background:var(--atlas-fond); }
+:is(.jeu-libre-partie,.carnet-journal,.vestiaire-case) { border:0; border-radius:var(--atlas-rayon); }
+.jeu-libre-partie[data-etat='en_cours'] { border:0; }
+.jeu-libre-details li { border:0; background:#ffffff09; }
+/* L'accueil garde le plateau comme décor, pas une succession de cartes. */
+.menu-bouton { border:0; border-radius:10px; background:#19303ee8; padding-inline:20px; gap:12px; min-height:58px; }
+.menu-bouton svg { flex:none; color:var(--atlas-accent); }
+.menu-bouton .menu-libelle { letter-spacing:0; text-transform:none; font-size:16px; font-weight:700; }
+.menu-bouton:not(.menu-principal)::before { display:none; }
+.menu-bouton:hover { background:#2a4859f2; }
+.menu-principal { padding-left:40px; min-height:88px; background:var(--atlas-accent); color:#102c2c; border:0; }
+.menu-principal:hover { background:#91ebd7; }
+.menu-principal .menu-libelle { font-size:23px; font-weight:800; }
+.menu-note { white-space:normal; line-height:1.4; }
+.marque-plaque { border:0; background:transparent; padding:4px 0; color:#bad2d7; }
+.accueil-tampon { border:0; background:#0e1922b3; border-radius:4px; letter-spacing:.03em; }
+/* Préférences : navigation fixe, un seul panneau à lire. */
+.atlas-reglages { --panneau:#192d39; --papier-doux:#b6c9cf; }
+.reglages-entete { justify-content:flex-start; align-items:center; gap:28px; margin-bottom:24px; }
+.reglages-entete h1 { font-size:30px; }
+.reglages-onglets { width:min(100%,760px); margin:0 auto 20px; padding:5px; background:#192d39; border-radius:10px; display:flex; gap:4px; }
+.reglages-onglets button { flex:1; min-width:0; min-height:44px; padding:10px; border:0; border-radius:7px; background:none; color:#b6c9cf; font-size:14px; font-weight:700; }
+.reglages-onglets button[aria-selected=true] { background:#345463; color:#f3f7f2; }
+.reglages-onglets button:hover { color:#fff; }
+.reglages-panneau[hidden] { display:none; }
+.reglages-panneau { width:min(100%,760px); margin:auto; outline-offset:4px; }
+.reglages-groupe { border:0; border-radius:12px; padding:24px; }
+.reglages-groupe h2 { font-size:18px; text-transform:none; letter-spacing:-.01em; color:#eef5f2; }
+.reglages-groupe h2::before { display:none; }
+.reglage-bascule,.reglage-rangee,.reglage-champ { background:none; border:0; border-radius:0; box-shadow:none; padding:16px 0; min-height:68px; }
+.reglage-bascule+.reglage-bascule,.reglage-rangee+.reglage-bascule { margin-top:0; }
+.reglage-libelle strong { font-size:15px; font-weight:650; }.reglage-note { color:#b6c9cf; font-size:13px; opacity:1; line-height:1.5; }
+.reglage-bascule[aria-checked=true] { background:none; border:0; }
+.reglage-bascule .reglage-etat { flex:none; min-width:62px; border:0; border-radius:6px; color:#c6d3d6; background:#314550; padding:7px 10px; font-size:12px; }
+.reglage-bascule[aria-checked=true] .reglage-etat { color:#102c2c; background:var(--atlas-accent); }
+.reglage-choix { gap:4px; flex-wrap:wrap; }.reglage-choix button { min-height:44px; border:0; background:#243d4a; border-radius:7px; text-transform:none; }
+.reglage-choix button.choisi { background:var(--atlas-accent); color:#102c2c; border:0; }
+.reglage-choix button:disabled { background:#24343f; color:#a4b5bd; opacity:1; }
+.reglage-cartouche { border:0; border-radius:8px; box-shadow:none; background:#243d4a; }
+.reglage-cartouche[aria-checked=true] { background:#315557; border:0; box-shadow:none; }
+.reglage-mixage>div { display:flex; align-items:center; gap:16px; flex:1; min-width:180px; max-width:310px; }
+.reglage-rangee input[type=range] { width:100%; max-width:300px; min-width:120px; min-height:32px; padding:0; cursor:pointer; }
+.reglage-mixage output { min-width:45px; text-align:right; font-size:13px; color:#d9e6e7; font-variant-numeric:tabular-nums; }
+.reglages-enregistrement { width:min(100%,760px); margin:16px auto; color:#a2bbc2; font-size:12px; }
+/* En partie : la carte et les figurines priment sur les contours des panneaux. */
+.atlas-mission-bar button,.atlas-objectifs { border:0; border-radius:8px; background:#172d3bf2; }
+.atlas-transmission .atlas-briefing { border:0; border-radius:12px; background:#172b37; }
+.atlas-transmission .atlas-briefing h1 { text-transform:none; letter-spacing:-.03em; }
+.atlas-transmission .atlas-but { border:0; border-radius:8px; background:#223e46; }
+.atlas-transmission .atlas-but h2 { color:#91dece; }
+.atlas-transmission .campagne-actions { border:0; background:#172b37; }
+.atlas-tuto-actions button { border:0; border-radius:8px; background:#2a404d; color:#eef4ef; }
+.atlas-tuto-actions button:disabled { background:#21333f; color:#9dafb9; opacity:1; }
+.atlas-fiche-portrait { border:0; border-radius:9px; overflow:hidden; }
+@media(max-width:520px) {
+  .reglages-onglets { gap:2px; padding:4px; }.reglages-onglets button { padding-inline:6px; font-size:12px; }
+  .reglages-entete { gap:18px; }.reglages-groupe { padding:18px; }
+  .reglage-mixage>div { max-width:none; flex-basis:100%; }.reglage-mixage input[type=range] { max-width:none; }
+  .reglage-bascule { flex-wrap:nowrap; }.reglage-bascule .reglage-etat { min-width:48px; }
+  .accueil-menu-rang .menu-bouton { padding:12px; }.menu-bouton .menu-libelle { font-size:14px; }.menu-principal .menu-libelle { font-size:22px; }
+}
+@media(forced-colors:active) { .reglages-onglets button[aria-selected=true],.reglage-bascule[aria-checked=true],.reglage-choix button.choisi { outline:2px solid Highlight; } }

@@ -301,7 +301,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     const ia = joue.commandants.find(c => c.ia)?.ia as StrategieIa | undefined;
     // Les commandants du scénario **effectif** : un banc prêté a pu en échanger deux.
     const commandants = commandantsDuScenario(joue);
-    const audio = creerAudioJeu(conteneur, preferences.sons, preferences.volumeSons);
+    const audio = creerAudioJeu(conteneur, preferences.sons, preferences.volumeSons, preferences.mixageSons);
     let jeu: Jeu | null = null;
     let victoireEnregistree = false;
     let dernierEtatJournal: EtatPartie | null = null;

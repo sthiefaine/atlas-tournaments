@@ -42,17 +42,17 @@ export default async function Assets({ searchParams }: { searchParams: Promise<P
   const manquants = [...receptions.values()].filter(r => ['a_produire', 'incomplet'].includes(r.etat)).length;
   return <main>
     <h2 className="admin-titre">Bibliothèque d’assets</h2>
-    <Modeles modeles={groupes.map(g => {
+    <Modeles initial={{ categorie: typeof params.categorie === 'string' && ['unites', 'batiments', 'commandants', 'decors'].includes(params.categorie) ? params.categorie : 'unites', groupe: typeof params.groupe === 'string' ? params.groupe : '', recherche: typeof params.rechercheModele === 'string' ? params.rechercheModele : '', disponibilite: typeof params.disponibilite === 'string' && ['disponibles', 'manquants'].includes(params.disponibilite) ? params.disponibilite : '' }} modeles={groupes.map(g => {
       const base = g.specs.find(s => s.id.endsWith('_base')) ?? g.specs[0]!;
       const unite = unites.get(base.cle.replace(/_base$/, ''));
       const categorie = base.type === 'unite' || base.type === 'kit' ? 'unites' : base.type === 'batiment' ? 'batiments' : base.type === 'commandant' ? 'commandants' : 'decors';
       const groupe = unite?.domaine === 'air' ? 'aeriennes' : unite?.domaine === 'mer' ? 'navales' : unite?.typeMouvement === 'pied' ? 'infanterie' : unite?.domaine === 'terre' ? 'mobiles' : 'autres';
-      return { id: base.id, nom: unite?.nom ?? g.libelle, type: LIBELLES_TYPE[base.type], categorie, groupe };
+      return { id: base.id, nom: unite?.nom ?? g.libelle, type: LIBELLES_TYPE[base.type], categorie, groupe, disponible: exposes.has(base.id) };
     })} />
     <details className="mt-8"><summary className="admin-action">Gestion avancée : variantes et suivi de production</summary>
     <p className="admin-intro">{specs.length} assets, regroupés par modèle et déclinaisons. Ouvrez une famille, choisissez sa version, puis copiez son prompt de production.</p>
     <div className="admin-actions"><Link className="admin-action" href="/atelier/assets">Carte de tous les assets</Link><Link className="admin-action admin-action-primaire" href="/admin/assets/creation">Créer avec Gemini / Tripo</Link><a className="admin-action" href="/admin/assets/export" download="plan-assets.json">Télécharger le plan JSON</a><Link className="admin-action" href="/admin/assets?q=meridien">Arsenal de la faction inconnue</Link><Link className="admin-action admin-action-primaire" href="/admin/assets/chantier">Quoi produire maintenant</Link><Link className="admin-action" href={url({ etat: 'manquants', page: '' })}>À compléter · {manquants}</Link></div>
-    <p className="text-sm admin-secondaire mb-4">Parcours : 1. Générer un candidat → 2. Contrôler le lot → 3. Faire valider artistiquement → 4. Tester en jeu. Un fichier présent ne vaut pas une approbation. Le plan JSON est un instantané de production ; les états ci-dessous sont ceux du serveur.</p>
+    <p className="text-sm admin-secondaire mb-4">Parcours : 1. Déposer le GLB source → 2. Préparer et contrôler le lot → 3. Remplacer le modèle en jeu. Un fichier présent ne vaut pas une approbation. Le plan JSON est un instantané de production ; les états ci-dessous sont ceux du serveur.</p>
     <p className="admin-intro">{exposes.size} candidats disponibles à inspecter et télécharger sur leurs fiches. {candidats.size} lots préparés dans l’instantané de production. La mise à disposition ne vaut ni approbation artistique ni intégration en jeu.</p>
     <form method="get" action="/admin/assets" className="assets-filtres">
       <label>Rechercher<input type="search" name="q" defaultValue={filtres.recherche} placeholder="Artillerie, montagne, France…" /></label>

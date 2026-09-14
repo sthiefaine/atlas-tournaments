@@ -1,4 +1,5 @@
-import { volumeNormalise, type Son, type SortieAudio } from './types';
+import { creerAmbiance, type Ambiance, type BruitsAmbiance } from './ambiance';
+import { normaliserMixage, type MixageAudio, volumeNormalise, type Son, type SortieAudio } from './types';
 
 /** Timbres synthétiques courts, sans téléchargement ni aléa du moteur de jeu. */
 interface Timbre {
@@ -27,76 +28,106 @@ export const TIMBRES: Record<Son, Timbre> = {
   pouvoir: { hz: 56, fin: 48, duree: .55, bruit: .8, niveau: .34, tonal: .25, filtre: 1200, attaque: .04 },
 };
 export const MAX_VOIX = 12;
-export interface AudioJeu extends SortieAudio { detruire(): void; regler(actif: boolean, volume: number): void }
+export interface AudioJeu extends SortieAudio {
+  detruire(): void;
+  regler(actif: boolean, volume: number, mixage?: Partial<MixageAudio>): void;
+}
 
-/** Un contexte par partie, créé seulement après un geste. Aucune file différée. */
-export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number): AudioJeu {
-  let contexte: AudioContext | null = null;
-  let sortie: GainNode | null = null;
-  let mort = false;
-  let niveau = volumeNormalise(volume);
-  const voix = new Set<() => void>();
+/** Un seul contexte, ouvert au premier geste, sans sons mis en attente. */
+export function creerAudioJeu(cible: HTMLElement, actif: boolean, volume: number, mixage?: Partial<MixageAudio>): AudioJeu {
+  const doc = cible.ownerDocument;
+  let contexte: AudioContext | null = null, sortie: GainNode | null = null;
+  let bus: Record<keyof MixageAudio, GainNode> | null = null, respiration: GainNode | null = null;
+  let mort = false, niveau = volumeNormalise(volume), mix = normaliserMixage(mixage);
+  let environnement: Son | null = null, nappe: Ambiance | null = null, sonNappe: Son | null = null;
+  let derniereParole = -1, variation = 0;
+  const voix = new Set<() => void>(), cacheAmbiance: BruitsAmbiance = new Map();
+  const cacheBruit = new Map<Son, AudioBuffer>();
   function annuler(): void { for (const arreter of [...voix]) arreter(); }
+  function arreterNappe(fondu = .2): void { nappe?.arreter(fondu); nappe = null; sonNappe = null; }
+  function actualiserAmbiance(): void {
+    if (!contexte || !respiration || !actif || !niveau || !mix.ambiance || doc.hidden || contexte.state !== 'running') { arreterNappe(); return; }
+    if (environnement === sonNappe) return;
+    arreterNappe(1.4);
+    if (environnement) { nappe = creerAmbiance(contexte, respiration, environnement, cacheAmbiance); sonNappe = environnement; }
+  }
   function debloquer(): void {
-    if (mort || !actif || document.hidden) return;
+    if (mort || !actif || doc.hidden) return;
     try {
       if (!contexte) {
-        contexte = new AudioContext();
-        sortie = contexte.createGain();
-        sortie.gain.value = niveau * .32;
-        const limiteur = contexte.createDynamicsCompressor();
-        limiteur.threshold.value = -12;
-        limiteur.ratio.value = 12;
+        contexte = new AudioContext(); sortie = contexte.createGain(); sortie.gain.value = niveau * .32;
+        const limiteur = contexte.createDynamicsCompressor(); limiteur.threshold.value = -12; limiteur.ratio.value = 12;
         sortie.connect(limiteur); limiteur.connect(contexte.destination);
+        bus = { ambiance: contexte.createGain(), effets: contexte.createGain(), dialogues: contexte.createGain() };
+        for (const cle of ['ambiance', 'effets', 'dialogues'] as const) { bus[cle].gain.value = mix[cle]; bus[cle].connect(sortie); }
+        respiration = contexte.createGain(); respiration.connect(bus.ambiance);
       }
-      void contexte.resume().catch(() => {});
-    } catch { /* Web Audio indisponible : partie silencieuse. */ }
+      void contexte.resume().then(() => { if (!mort) actualiserAmbiance(); }).catch(() => {});
+    } catch { /* Web Audio absent : le jeu reste jouable en silence. */ }
   }
   function visibilite(): void {
-    if (document.hidden) { annuler(); if (contexte) void contexte.suspend().catch(() => {}); }
-    // Retour silencieux jusqu'au prochain geste, jamais de sons rattrapés.
+    if (doc.hidden) { annuler(); arreterNappe(0); if (contexte) void contexte.suspend().catch(() => {}); }
+    // Après un retour, le prochain geste réactive le son ; aucun rattrapage.
   }
-  cible.addEventListener('pointerdown', debloquer, true);
-  cible.addEventListener('keydown', debloquer, true);
-  document.addEventListener('visibilitychange', visibilite);
-  let ambiance: Son | null = null;
-  let prochaineAmbiance = 0;
-  const minuterie = setInterval(() => {
-    if (ambiance && contexte?.state === 'running' && !document.hidden && contexte.currentTime >= prochaineAmbiance) {
-      prochaineAmbiance = contexte.currentTime + 4;
-      api.jouer(ambiance);
-    }
-  }, 1000);
-  const api: AudioJeu = {
-    environnement(son) { if (ambiance !== son) { ambiance = son; prochaineAmbiance = 0; } },
+  cible.addEventListener('pointerdown', debloquer, true); cible.addEventListener('keydown', debloquer, true);
+  doc.addEventListener('visibilitychange', visibilite);
+  return {
+    environnement(son) { environnement = son; actualiserAmbiance(); },
     annuler,
-    regler(a, v) { actif = a; niveau = volumeNormalise(v); if (!a || !niveau) annuler(); if (sortie && contexte) sortie.gain.setTargetAtTime(a ? niveau * .32 : 0, contexte.currentTime, .015); },
+    regler(a, v, m) {
+      actif = a; niveau = volumeNormalise(v); if (m) mix = normaliserMixage(m);
+      if (!a || !niveau) annuler();
+      if (sortie && contexte && bus) {
+        sortie.gain.setTargetAtTime(a ? niveau * .32 : 0, contexte.currentTime, .03);
+        for (const cle of ['ambiance', 'effets', 'dialogues'] as const) bus[cle].gain.setTargetAtTime(mix[cle], contexte.currentTime, .05);
+      }
+      actualiserAmbiance();
+    },
     jouer(son) {
-      if (mort || !actif || niveau === 0 || document.hidden || contexte?.state !== 'running' || !sortie) return;
+      if (mort || !actif || !niveau || doc.hidden || contexte?.state !== 'running' || !bus) return;
+      if (['vent', 'pluie', 'vagues', 'insectes'].includes(son)) { environnement = son; actualiserAmbiance(); return; }
+      const c = contexte, t = c.currentTime, p = TIMBRES[son], dialogue = son === 'parole';
+      if (!(dialogue ? mix.dialogues : mix.effets)) return;
+      if (dialogue && t - derniereParole < .075) return;
+      if (dialogue) derniereParole = t;
       if (voix.size >= MAX_VOIX) voix.values().next().value?.();
-      const c = contexte, t = c.currentTime, p = TIMBRES[son];
-      const gain = c.createGain(); gain.connect(sortie);
-      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(p.niveau, t + (p.attaque ?? .004));
-      gain.gain.exponentialRampToValueAtTime(.0001, t + p.duree);
-      const osc = c.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(p.hz, t);
-      osc.frequency.exponentialRampToValueAtTime(p.fin, t + p.duree); const tonal = c.createGain(); tonal.gain.value = p.tonal; osc.connect(tonal); tonal.connect(gain);
-      const buffer = c.createBuffer(1, Math.ceil(c.sampleRate * p.duree), c.sampleRate);
-      const donnees = buffer.getChannelData(0); let graine = (1977 + Math.floor(t * 1000)) >>> 0;
-      for (let i = 0; i < donnees.length; i++) { graine = (Math.imul(graine, 1664525) + 1013904223) >>> 0; const modulation = p.pulsation ? .55 + .45 * Math.sin(2 * Math.PI * p.pulsation * i / c.sampleRate) ** 2 : 1; donnees[i] = (graine / 2147483648 - 1) * p.bruit * modulation; }
-      const bruit = c.createBufferSource(); bruit.buffer = buffer;
-      const filtre = c.createBiquadFilter(); filtre.type = 'lowpass'; filtre.frequency.value = p.filtre;
+      // Les tirs et la radio passent devant le paysage, sans le couper.
+      if (respiration && (dialogue || ['canon', 'rafale', 'missile', 'impact', 'pouvoir'].includes(son))) {
+        const g = respiration.gain; g.cancelAndHoldAtTime(t); g.linearRampToValueAtTime(dialogue ? .7 : .5, t + .025); g.setTargetAtTime(1, t + p.duree, .35);
+      }
+      const gain = c.createGain(); gain.connect(dialogue ? bus.dialogues : bus.effets);
+      gain.gain.setValueAtTime(.0001, t); gain.gain.exponentialRampToValueAtTime(p.niveau, t + (p.attaque ?? .004)); gain.gain.exponentialRampToValueAtTime(.0001, t + p.duree);
+      const ecart = [1, .96, 1.035, .985, 1.018][variation++ % 5]!;
+      const osc = c.createOscillator(); osc.type = 'sine'; osc.frequency.setValueAtTime(p.hz * ecart, t); osc.frequency.exponentialRampToValueAtTime(p.fin * ecart, t + p.duree);
+      const tonal = c.createGain(); tonal.gain.value = p.tonal; osc.connect(tonal); tonal.connect(gain);
+      let buffer = cacheBruit.get(son);
+      if (!buffer) {
+        buffer = c.createBuffer(1, c.sampleRate, c.sampleRate);
+        const d = buffer.getChannelData(0); let graine = 1977;
+        for (let i = 0; i < d.length; i++) {
+          graine = (Math.imul(graine, 1664525) + 1013904223) >>> 0;
+          const modulation = p.pulsation ? .35 + .65 * Math.sin(Math.PI * p.pulsation * i / c.sampleRate) ** 4 : 1;
+          d[i] = (graine / 2147483648 - 1) * p.bruit * modulation;
+        }
+        cacheBruit.set(son, buffer);
+      }
+      const bruit = c.createBufferSource(); bruit.buffer = buffer; bruit.loop = true; bruit.playbackRate.value = ecart;
+      const filtre = c.createBiquadFilter(); filtre.type = dialogue ? 'bandpass' : 'lowpass'; filtre.frequency.value = (dialogue ? 850 : p.filtre) * ecart; filtre.Q.value = dialogue ? .8 : .7;
       bruit.connect(filtre); filtre.connect(gain);
       let fini = false;
-      const arreter = (): void => { if (fini) return; fini = true; voix.delete(arreter); osc.onended = null; try { osc.stop(); bruit.stop(); } catch {} osc.disconnect(); tonal.disconnect(); bruit.disconnect(); filtre.disconnect(); gain.disconnect(); };
+      const arreter = (): void => {
+        if (fini) return; fini = true; voix.delete(arreter); osc.onended = null;
+        try { osc.stop(); bruit.stop(); } catch { /* Déjà arrêtés par leur enveloppe. */ }
+        osc.disconnect(); tonal.disconnect(); bruit.disconnect(); filtre.disconnect(); gain.disconnect();
+      };
       voix.add(arreter); osc.onended = arreter;
-      osc.start(t); bruit.start(t); osc.stop(t + p.duree); bruit.stop(t + p.duree);
+      osc.start(t); bruit.start(t, (variation * .137) % .4); osc.stop(t + p.duree); bruit.stop(t + p.duree);
     },
     detruire() {
-      if (mort) return; mort = true; clearInterval(minuterie); annuler();
-      cible.removeEventListener('pointerdown', debloquer, true); cible.removeEventListener('keydown', debloquer, true);
-      document.removeEventListener('visibilitychange', visibilite);
-      if (contexte) void contexte.close().catch(() => {}); contexte = null; sortie = null;
+      if (mort) return; mort = true; annuler(); arreterNappe(0);
+      cible.removeEventListener('pointerdown', debloquer, true); cible.removeEventListener('keydown', debloquer, true); doc.removeEventListener('visibilitychange', visibilite);
+      if (contexte) void contexte.close().catch(() => {});
+      contexte = null; sortie = null; bus = null; respiration = null; cacheBruit.clear(); cacheAmbiance.clear();
     },
   };
-  return api;
 }

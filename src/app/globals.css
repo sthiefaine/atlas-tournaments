@@ -6,13 +6,14 @@
 @import "./styles/campagne.css";
 @import "./styles/accueil.css";
 @import "./styles/menus.css";
+@import "./styles/interface.css";
 
 :root {
-  --background: #0c1422;
+  --background: #0e1922;
   --foreground: #eef4fa;
-  --atlas-surface: #152237;
-  --atlas-border: #3e536c;
-  --atlas-accent: #72e4ce;
+  --atlas-surface: #192e3b;
+  --atlas-border: #6b8794;
+  --atlas-accent: #78ddca;
 }
 
 @theme inline {

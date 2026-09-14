@@ -1,9 +1,9 @@
 /* Interface Atlas — surfaces lisibles, commandes tactiles et accent menthe. */
 :root{
-  --atlas-encre:#0c1422;
-  --atlas-encre-claire:#182940;
+  --atlas-encre:#0e1922;
+  --atlas-encre-claire:#243b48;
   --atlas-papier:#f1f5fa;
-  --atlas-signal:#72e4ce;
+  --atlas-signal:#78ddca;
   --atlas-signal-haut:#a6f3e3;
   --atlas-signal-bas:#42af9b;
   --atlas-lisere:#3b4e66;

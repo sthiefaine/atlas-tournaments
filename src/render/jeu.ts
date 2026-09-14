@@ -703,6 +703,12 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       camp, reduit: reduit(), cadrer: attenteIa, ecranCombat: options.ecranCombat !== false,
       facteurDuree: facteurDuree(options.vitesseAnimations),
     });
+    if (brouillardActif(avant) || brouillardActif(apres)) {
+      // Une victime disparue après le coup reste montrable si elle était visible avant.
+      // Un combat entre deux unités cachées ne doit pas ouvrir leur fiche ni leur modèle.
+      const connues = new Set([...unitesVues(avant, cat, camp), ...unitesVues(apres, cat, camp)].map(u => u.id));
+      partition.gestes = partition.gestes.filter(g => g.genre !== 'duel' || (connues.has(g.attaquant.unite) && connues.has(g.cible.unite)));
+    }
     partitionEnCours = true;
     const peau = rendu.jouer ? rendu.jouer(partition) : rendu.animer(evenements, avant);
     return Promise.all([
@@ -1048,6 +1054,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
       if (c) (rendu.recentrer ?? rendu.cadrer).call(rendu, c);
     },
     versEcran: (c: Case) => rendu.versEcran(c),
+    ouvrirCombat: (hote, geste) => rendu.ouvrirCombat?.(hote, geste) ?? null,
     couper: () => { couperPartition(); },
     tactiqueActif: () => modeTactique,
     basculerTactique: () => {

@@ -773,6 +773,7 @@ export interface OptionsUnites {
 
 /** Ce que `creerUnites` rend au rendu. */
 export interface CalqueUnites {
+  sourceCombat(id: string): { objet: THREE.Object3D; clips: readonly THREE.AnimationClip[] } | null;
   readonly groupe: THREE.Group;
   /**
    * Avance les rotors, la respiration des figurines et les mixers des modèles
@@ -828,6 +829,7 @@ export interface CalqueUnites {
 }
 
 interface Entree {
+  clips: readonly THREE.AnimationClip[];
   id: string;
   type: CleUnite;
   camp: CampId;
@@ -1083,6 +1085,7 @@ export function creerUnites(
     g.add(corps);
     groupe.add(g);
     const entree: Entree = {
+      clips: [],
       id: u.id,
       type: u.type,
       camp: u.camp,
@@ -1138,6 +1141,7 @@ export function creerUnites(
     const figurine = corps.getObjectByName(NOM_FIGURINE);
     if (!figurine) return;
     entree.lecteur = creerLecteurClips(figurine, modele.clips);
+    entree.clips = modele.clips;
     // Le modèle arrive peut-être au milieu d'un geste : il reprend le clip
     // demandé, à sa durée naturelle — on ne sait plus où en est le geste.
     const v = visuels.get(entree.id);
@@ -1530,6 +1534,11 @@ export function creerUnites(
     positionDe(id: string): THREE.Vector3 | null {
       const e = entrees.get(id);
       return e ? e.groupe.position.clone() : null;
+    },
+
+    sourceCombat(id: string) {
+      const e = entrees.get(id);
+      return e ? { objet: e.corps.getObjectByName(NOM_FIGURINE) ?? e.corps, clips: e.clips } : null;
     },
 
     sommetDe(id: string): number {

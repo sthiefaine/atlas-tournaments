@@ -95,6 +95,7 @@ export interface Scene3d {
    * d'envoi en millisecondes ; zéro, et rien, tant que le moteur n'est pas prêt.
    */
   dessiner(camera: THREE.Camera, options?: OptionsImage): number;
+  dessinerEncart(scene: THREE.Scene, camera: THREE.Camera, hote: HTMLElement): void;
   /**
    * Compile d'avance les programmes de la scène, lot par lot
    * (`prechauffage.ts`) : c'est ce qui évite qu'une seconde de traduction TSL →
@@ -296,6 +297,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
   if (options.environnement !== false) scene.environmentIntensity = INTENSITE_ENVIRONNEMENT_DEPART;
 
   let renderer: THREE.WebGPURenderer | null = null;
+  let encart: { cible: THREE.RenderTarget; quad: THREE.QuadMesh } | null = null;
   let backend: BackendRendu | null = null;
   let environnement: Environnement | null = null;
   let largeur = 1;
@@ -495,6 +497,33 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
     get composeurActif() { return composeur !== null; },
     get calibration() { return calibration(); },
 
+    dessinerEncart(contenu, camera, hote): void {
+      const r = renderer;
+      if (!r || !hote.isConnected) return;
+      const cadre = hote.getBoundingClientRect(), fond = canvas.getBoundingClientRect();
+      if (cadre.width < 1 || cadre.height < 1 || fond.width < 1 || fond.height < 1) return;
+      if (!encart) {
+        const cible = new THREE.RenderTarget(1, 1);
+        encart = { cible, quad: new THREE.QuadMesh(new THREE.MeshBasicNodeMaterial({ map: cible.texture, depthTest: false, depthWrite: false, toneMapped: false })) };
+      }
+      const ratio = Math.min(r.getPixelRatio(), 1.5);
+      encart.cible.setSize(Math.min(1400, Math.round(cadre.width * ratio)), Math.min(700, Math.round(cadre.height * ratio)));
+      const cibleAvant = r.getRenderTarget(), viewport = r.getViewport(new THREE.Vector4()), scissor = r.getScissor(new THREE.Vector4());
+      const decoupe = r.getScissorTest(), effacer = r.autoClear;
+      try {
+        // Le rendu hors écran a son propre tampon de profondeur ; la carte reste intacte.
+        r.setRenderTarget(encart.cible); r.setScissorTest(false); r.autoClear = true;
+        r.render(contenu, camera);
+        r.setRenderTarget(cibleAvant); r.autoClear = false;
+        const x = (cadre.left - fond.left) * largeur / fond.width, y = (cadre.top - fond.top) * hauteur / fond.height;
+        const w = cadre.width * largeur / fond.width, h = cadre.height * hauteur / fond.height;
+        r.setViewport(x, y, w, h); r.setScissor(x, y, w, h); r.setScissorTest(true);
+        encart.quad.render(r);
+      } finally {
+        r.setRenderTarget(cibleAvant); r.setViewport(viewport); r.setScissor(scissor); r.setScissorTest(decoupe); r.autoClear = effacer;
+      }
+    },
+
     dessiner(camera: THREE.Camera, image: OptionsImage = {}): number {
       const r = renderer;
       const dos = backend;
@@ -643,6 +672,7 @@ export function creerScene3d(conteneur: HTMLElement, options: OptionsScene3d = {
 
     dispose(): void {
       vivante = false;
+      if (encart) { for (const mat of [encart.quad.material].flat()) mat.dispose(); encart.cible.dispose(); encart = null; }
       observateur?.disconnect();
       composeur?.dispose();
       composeur = null;

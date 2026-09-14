@@ -1,4 +1,5 @@
 'use client';
+import { normaliserMixage, type MixageAudio } from '@/audio/types';
 
 import Link from 'next/link';
 import { useEffect, useState, type KeyboardEvent } from 'react';
@@ -44,6 +45,11 @@ import {
  */
 
 export interface LibellesReglages {
+  audio?: string;
+  ambiance?: string;
+  effets?: string;
+  voix?: string;
+  sauvegardeAuto?: string;
   sons: string;
   sonsNote: string;
   volumeSons: string;
@@ -135,6 +141,7 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     const p = lireProgression(profil);
     setVictoiresModes({ normal: p.victoiresParMode?.normal?.length ?? (p.victoiresParMode ? 0 : p.victoires.length), difficile: p.victoiresParMode?.difficile?.length ?? 0 });
   };
+  const [rubrique, setRubrique] = useState('partie');
   const [difficulte, setDifficulte] = useState<Mode>('normal');
   const [preferences, setPreferences] = useState<Preferences>({ ...PREFERENCES_PAR_DEFAUT });
   const [profils, setProfils] = useState<EtatProfils>({ ...PROFILS_PAR_DEFAUT, noms: { ...PROFILS_PAR_DEFAUT.noms } });
@@ -252,12 +259,17 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
       <h1>{libelles.titre}</h1>
     </header>
 
+    <div className="reglages-onglets" role="tablist" aria-label={libelles.titre}>
+      {([['partie', libelles.enPartie], ['audio', libelles.audio ?? 'Audio'], ['affichage', libelles.affichage], ['profils', libelles.sauvegardes]] as const).map(([cle, nom], index) =>
+        <button key={cle} id={`onglet-${cle}`} type="button" role="tab" aria-selected={rubrique === cle} aria-controls={`panneau-${cle}`}
+          tabIndex={rubrique === cle ? 0 : -1} onClick={() => setRubrique(cle)} onKeyDown={event => {
+            const suivant = indexChoix(event.key, index, 4); if (suivant === null) return; event.preventDefault();
+            setRubrique(['partie', 'audio', 'affichage', 'profils'][suivant]!);
+            event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[suivant]?.focus();
+          }}>{nom}</button>)}
+    </div>
+    <div id="panneau-partie" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-partie" hidden={rubrique !== 'partie'} tabIndex={0}>
     <Groupe id="reglage-en-partie" titre={libelles.enPartie}>
-      {bascule('sons', libelles.sons, libelles.sonsNote)}
-      <label className="reglage-rangee"><span className="reglage-libelle"><strong>{libelles.volumeSons} : {Math.round(preferences.volumeSons * 100)} %</strong></span>
-        <input type="range" min={0} max={100} step={5} value={Math.round(preferences.volumeSons * 100)} disabled={!pret || !preferences.sons}
-          onChange={e => changer({ volumeSons: Number(e.target.value) / 100 })} />
-      </label>
       {bascule('dialogues', libelles.dialogues, libelles.dialoguesNote)}
       {bascule('ecranCombat', libelles.ecranCombat, libelles.ecranCombatNote)}
       <div className="reglage-rangee">
@@ -277,29 +289,26 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
         </div>
       </div>
     </Groupe>
-
-    <Groupe id="reglage-difficulte" titre={libelles.difficulte}>
-      <p className="reglage-note">Le mode difficile se débloque après la finale de la campagne en mode normal, pour ce profil.</p>
-      <p className="reglage-note">{nomDe(profils.actif)} · {libelles.difficulteNote}</p>
-      <p className="reglage-note">{remplir(libelles.victoiresModes, victoiresModes)}</p>
-      <div className="reglage-choix" role="radiogroup" aria-label={libelles.difficulte}>
-        {(['normal', 'difficile'] as const).map((mode, index) => {
-          const choisi = difficulte === mode;
-          const choisir = (valeur: Mode): void => {
-            const ok = ecrireDifficulte(profils.actif, valeur);
-            setStockage(ok);
-            if (ok) setDifficulte(valeur);
-          };
-          return <button key={mode} type="button" role="radio" aria-checked={choisi} tabIndex={choisi ? 0 : -1}
-            disabled={!pret || (mode === 'difficile' && !modeDifficileDebloque(profils.actif))} className={choisi ? 'choisi' : ''}
-            onClick={() => choisir(mode)}
-            onKeyDown={(event) => naviguer(event, index, 2, (i) => choisir(i === 0 ? 'normal' : 'difficile'))}>
-            {mode === 'normal' ? libelles.normal : libelles.difficile}
-          </button>;
-        })}
-      </div>
+    </div>
+    <div id="panneau-audio" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-audio" hidden={rubrique !== 'audio'} tabIndex={0}>
+    <Groupe id="reglage-audio" titre={libelles.audio ?? 'Audio'}>
+      {bascule('sons', libelles.sons, libelles.sonsNote)}
+      <label className="reglage-rangee"><span className="reglage-libelle"><strong>{libelles.volumeSons} : {Math.round(preferences.volumeSons * 100)} %</strong></span>
+        <input type="range" min={0} max={100} step={5} value={Math.round(preferences.volumeSons * 100)} disabled={!pret || !preferences.sons}
+          onChange={e => changer({ volumeSons: Number(e.target.value) / 100 })} />
+      </label>
+      {(['ambiance', 'effets', 'dialogues'] as const).map(cle => {
+        const mix = normaliserMixage(preferences.mixageSons);
+        const noms: Record<keyof MixageAudio, string> = { ambiance: libelles.ambiance ?? 'Environnement', effets: libelles.effets ?? 'Combats et déplacements', dialogues: libelles.voix ?? 'Radio des dialogues' };
+        return <label key={cle} className="reglage-rangee reglage-mixage"><span className="reglage-libelle"><strong>{noms[cle]}</strong></span>
+          <div><input aria-label={noms[cle]} type="range" min={0} max={100} step={5} value={Math.round(mix[cle] * 100)} disabled={!pret || !preferences.sons}
+            onChange={event => changer({ mixageSons: { ...mix, [cle]: Number(event.target.value) / 100 } })} />
+            <output>{Math.round(mix[cle] * 100)} %</output></div>
+        </label>;
+      })}
     </Groupe>
-
+    </div>
+    <div id="panneau-affichage" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-affichage" hidden={rubrique !== 'affichage'} tabIndex={0}>
     <Groupe id="reglage-affichage" titre={libelles.affichage}>
       {/* Deux choix, un rang : le réglage pilote réellement la chaîne de
           post-traitement du rendu, lue par la page de jeu au montage. */}
@@ -324,7 +333,8 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
       </div>
       {bascule('animationsReduites', libelles.animations, libelles.animationsNote)}
     </Groupe>
-
+    </div>
+    <div id="panneau-profils" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-profils" hidden={rubrique !== 'profils'} tabIndex={0}>
     <Groupe id="reglage-sauvegardes" titre={libelles.sauvegardes}>
       {/* L'écran-titre choisit **laquelle on joue** ; ici on les nomme, on voit
           ce qu'elles tiennent, et on en efface une. */}
@@ -386,6 +396,29 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
           {libelles.effacer}
         </button>}
     </Groupe>
+    <Groupe id="reglage-difficulte" titre={libelles.difficulte}>
+      <p className="reglage-note">Le mode difficile se débloque après la finale de la campagne en mode normal, pour ce profil.</p>
+      <p className="reglage-note">{nomDe(profils.actif)} · {libelles.difficulteNote}</p>
+      <p className="reglage-note">{remplir(libelles.victoiresModes, victoiresModes)}</p>
+      <div className="reglage-choix" role="radiogroup" aria-label={libelles.difficulte}>
+        {(['normal', 'difficile'] as const).map((mode, index) => {
+          const choisi = difficulte === mode;
+          const choisir = (valeur: Mode): void => {
+            const ok = ecrireDifficulte(profils.actif, valeur);
+            setStockage(ok);
+            if (ok) setDifficulte(valeur);
+          };
+          return <button key={mode} type="button" role="radio" aria-checked={choisi} tabIndex={choisi ? 0 : -1}
+            disabled={!pret || (mode === 'difficile' && !modeDifficileDebloque(profils.actif))} className={choisi ? 'choisi' : ''}
+            onClick={() => choisir(mode)}
+            onKeyDown={(event) => naviguer(event, index, 2, (i) => choisir(i === 0 ? 'normal' : 'difficile'))}>
+            {mode === 'normal' ? libelles.normal : libelles.difficile}
+          </button>;
+        })}
+      </div>
+    </Groupe>
+    </div>
+    <p className="reglages-enregistrement" role="status">{stockage ? libelles.sauvegardeAuto ?? 'Réglages enregistrés sur cet appareil.' : libelles.stockageKo}</p>
     {libelles.version ? <p className="reglages-version">{libelles.version}</p> : null}
   </main>;
 }

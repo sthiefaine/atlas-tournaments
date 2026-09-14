@@ -28,8 +28,8 @@ import type { CampId, Case, Silhouette, UnitType } from '../schemas/types';
 import { buste } from './buste';
 import { nomCommandant, nomUnite } from './libelles';
 import { paletteDe } from './palettes';
-import { type Geste, MISE_EN_SCENE, type Partition } from './partition';
-import type { PointVue } from './rendu';
+import { type Geste, DUREES, MISE_EN_SCENE, type Partition } from './partition';
+import type { PointVue, VueCombat } from './rendu';
 import { dessinerUnite } from './sprites/index';
 
 /** Ce que les scènes lisent du jeu : l'état, le catalogue, la langue, le camp, ce qui se voit. */
@@ -48,6 +48,7 @@ export interface VueScenes {
 
 /** Ce que les scènes peuvent demander au jeu. Aucun de ces appels ne mute un état. */
 export interface ApiScenes {
+  ouvrirCombat?: import('./rendu').Rendu['ouvrirCombat'];
   vue(): VueScenes;
   t(cle: string, params?: Record<string, string | number>): string;
   /** Position d'écran du centre d'une case, ou `null` hors champ. */
@@ -281,6 +282,24 @@ const STYLE = `
 .atlas-combat[data-etape='riposte'] .attaquant .coup,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant .coup,.atlas-combat[data-etape='riposte'] .attaquant .role,.atlas-combat[data-etape='fin'][data-riposte='oui'] .attaquant .role{opacity:1;transform:none}
 .atlas-combat[data-etape='coup'] .cible .chiffres b,.atlas-combat[data-etape='riposte'] .chiffres b,.atlas-combat[data-etape='fin'] .chiffres b{color:var(--papier)}
 .atlas-combat[data-etape='riposte'] .cible canvas{filter:none}
+
+/* La fenêtre transparente laisse voir le duel composé dans le canvas existant. */
+.atlas-combat[data-modele='3d']{padding:12px}
+.atlas-combat[data-modele='3d'] .bandes{display:none}
+.atlas-combat[data-modele='3d'] .cadre{width:min(880px,100%);background:transparent;border:0;box-shadow:none;clip-path:none;animation:none}
+.atlas-combat[data-modele='3d'] .titre{position:relative;z-index:1;background:#122431;color:#c8d8dc;clip-path:none;border-radius:12px 12px 0 0;justify-content:flex-start;font-size:12px;letter-spacing:.08em;min-height:38px}
+.atlas-combat .scene3d{height:clamp(170px,34svh,370px);background:transparent;pointer-events:none;box-shadow:0 0 0 100vmax #06101ab3}
+.atlas-combat[data-modele='3d'] .camps{position:relative;background:#122431;gap:10px;padding:12px 18px}
+.atlas-combat[data-modele='3d'] .camp{border:0;clip-path:none;background:none;display:grid;grid-template-columns:1fr auto;gap:5px 12px;padding:0;align-content:start}
+.atlas-combat[data-modele='3d'] .camp canvas{display:none}
+.atlas-combat[data-modele='3d'] .camp .nom{grid-column:1/-1;white-space:normal;font-size:15px;letter-spacing:0;text-transform:none;color:#f3f6f1}
+.atlas-combat[data-modele='3d'] .camp .nom::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:var(--teinte)}
+.atlas-combat[data-modele='3d'] .jauge{align-self:center}.atlas-combat[data-modele='3d'] .pv{width:100%;min-width:70px;border:0}
+.atlas-combat[data-modele='3d'] .coup{font-size:18px;min-height:0;text-align:right}.atlas-combat[data-modele='3d'] .role{align-self:center;font-size:11px;letter-spacing:0;text-transform:none}
+.atlas-combat .indice{display:block;width:100%;margin:0;border:0;border-radius:0 0 12px 12px;min-height:40px;background:#192f3d;color:#c9d9dc;font:600 12px/1.3 system-ui;letter-spacing:0;text-transform:none;cursor:pointer}
+.atlas-combat .indice:hover{background:#274555;color:white}.atlas-combat .indice:focus-visible{outline:3px solid #78ddca;outline-offset:-3px}
+@media(max-height:500px){.atlas-combat .scene3d{height:130px}.atlas-combat[data-modele='3d'] .titre{min-height:28px;padding:4px 12px}.atlas-combat[data-modele='3d'] .camps{padding:6px 12px}.atlas-combat[data-modele='3d'] .camp{gap:2px 8px}.atlas-combat .indice{min-height:30px}}
+
 /* Le splash de pouvoir : bandes, buste qui entre par son côté, nom du pouvoir, lueur. */
 .atlas-splash{position:absolute;inset:0;pointer-events:auto;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .atlas-splash .lueur{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,color-mix(in srgb,var(--teinte) 55%,transparent) 0%,transparent 62%);animation:atlas-lueur var(--duree) ease-in-out both}
@@ -362,6 +381,7 @@ interface Effet {
   noeud: HTMLElement | null;
   creer(): HTMLElement | null;
   avancer(p: number): void;
+  fermer?(): void;
 }
 
 /** Monte le conteneur des scènes dans le conteneur du jeu. */
@@ -408,7 +428,7 @@ export function monterScenes(
 
   function terminer(): void {
     deplanifier();
-    for (const ef of effets) ef.noeud?.remove();
+    for (const ef of effets) { ef.fermer?.(); ef.noeud?.remove(); }
     effets = [];
     const r = resoudreEnCours;
     resoudreEnCours = null;
@@ -436,6 +456,8 @@ export function monterScenes(
         }
       }
       if (t >= ef.fin) {
+        ef.avancer(1);
+        ef.fermer?.();
         ef.noeud?.remove();
         ef.noeud = null;
         ef.fini = true;
@@ -562,6 +584,7 @@ export function monterScenes(
     let noeud: HTMLElement | null = null;
     let jauges: { attaquant: HTMLElement; cible: HTMLElement } | null = null;
     let etape = '';
+    let presentation: VueCombat | null = null;
     /** Pose l'étape ; les jauges tombent quand l'étape le dit, une fois. */
     const poser = (suivante: 'avant' | 'coup' | 'riposte' | 'fin'): void => {
       if (!noeud || etape === suivante) return;
@@ -646,10 +669,18 @@ export function monterScenes(
         camps.appendChild(a.el);
         camps.appendChild(contre);
         camps.appendChild(c.el);
-        const indice = doc.createElement('div');
+        const indice = doc.createElement('button');
+        indice.type = 'button';
         indice.className = 'indice';
         indice.textContent = api.t('hud.passer_animation');
         cadre.appendChild(titre);
+        const fenetre3d = doc.createElement('div');
+        fenetre3d.className = 'scene3d';
+        fenetre3d.setAttribute('aria-hidden', 'true');
+        cadre.appendChild(fenetre3d);
+        presentation = api.ouvrirCombat?.(fenetre3d, g) ?? null;
+        if (presentation) noeud.dataset['modele'] = '3d';
+        else fenetre3d.remove();
         cadre.appendChild(camps);
         cadre.appendChild(indice);
         noeud.appendChild(bandesHaut);
@@ -664,10 +695,13 @@ export function monterScenes(
         return noeud;
       },
       avancer: (p) => {
+        presentation?.avancer(fixe ? 1 : p);
         if (fixe) return;
-        if (p >= MISE_EN_SCENE.partRiposte && g.riposte) poser('riposte');
-        else if (p >= MISE_EN_SCENE.partCoup) poser('coup');
+        const trajet = DUREES.tir / DUREES.duel;
+        if (p >= MISE_EN_SCENE.partRiposte + trajet && g.riposte) poser('riposte');
+        else if (p >= MISE_EN_SCENE.partCoup + trajet) poser('coup');
       },
+      fermer: () => { presentation?.fermer(); presentation = null; },
     };
   }
 
