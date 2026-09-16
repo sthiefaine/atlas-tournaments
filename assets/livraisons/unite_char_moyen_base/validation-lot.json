@@ -1,0 +1,21 @@
+{
+  "id": "unite_char_moyen_base",
+  "revision": "b51e921800a885c5ccba5cbc20b77d1d7286cdf38ecbdffd87d91146d969a98d",
+  "octets": 1659323,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_char_moyen_base_albedo.png",
+      "unite_char_moyen_base_lod0.glb",
+      "unite_char_moyen_base_masque_equipe.png",
+      "unite_char_moyen_base_metal.png",
+      "unite_char_moyen_base_normale.png",
+      "unite_char_moyen_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

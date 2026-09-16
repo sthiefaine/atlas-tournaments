@@ -16661,19 +16661,14 @@
     {
       "id": "unite_char_moyen_base",
       "fichiers": [
-        "unite_char_moyen_base_lod0.glb",
         "unite_char_moyen_base_albedo.png",
-        "unite_char_moyen_base_albedo_hiver.png",
-        "unite_char_moyen_base_normale.png",
-        "unite_char_moyen_base_normale_hiver.png",
-        "unite_char_moyen_base_rugosite.png",
-        "unite_char_moyen_base_rugosite_hiver.png",
-        "unite_char_moyen_base_metal.png",
-        "unite_char_moyen_base_metal_hiver.png",
+        "unite_char_moyen_base_lod0.glb",
         "unite_char_moyen_base_masque_equipe.png",
-        "unite_char_moyen_base_masque_equipe_hiver.png"
+        "unite_char_moyen_base_metal.png",
+        "unite_char_moyen_base_normale.png",
+        "unite_char_moyen_base_rugosite.png"
       ],
-      "revision": "44a81769ba52322b4d2faed7680174c4b1beb0721ddda50494743a7cfbd501a0"
+      "revision": "b51e921800a885c5ccba5cbc20b77d1d7286cdf38ecbdffd87d91146d969a98d"
     },
     {
       "id": "unite_chasseur_base",

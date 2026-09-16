@@ -1,0 +1,193 @@
+{
+  "id": "unite_char_moyen_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_char_moyen_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "7a7e5d4d28835ca702a861810b0e3f41089d3e02d2529137f41cc0c0c1c999bc",
+    "ancienCandidatTriangles": 996,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-16"
+  },
+  "triangles": 5944,
+  "budgetTriangles": 6000,
+  "octetsGlb": 489976,
+  "sha256Glb": "cf40a49fd8c81dad448e5d0225a146416fe22f2f6ae220e9ec0501392bc45b95",
+  "bornes": {
+    "min": [
+      -0.31200000643730164,
+      0,
+      -0.4333626627922058
+    ],
+    "max": [
+      0.31200000643730164,
+      0.5039999487176539,
+      0.4333626763820648
+    ],
+    "dimensions": [
+      0.6240000128746033,
+      0.5039999487176539,
+      0.8667253391742706
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        -0.0005000000819563866,
+        -0.0756373405456543
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.16949999991804363,
+        -0.0756373405456543
+      ]
+    },
+    "module_tourelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.14,
+        -0.045
+      ]
+    },
+    "module_canon_long": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.072,
+        0.178
+      ]
+    },
+    "socle": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0.112,
+        0.183,
+        -0.14
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "bandes_chenille_continues": 512,
+    "patins_caoutchouc": 576,
+    "nervures_liaison_patins": 288,
+    "galets_bandages": 672,
+    "galets_flasques": 672,
+    "galets_moyeux": 480,
+    "rouleaux_retour": 192,
+    "longerons_chassis": 24,
+    "caisse_joues_larges_equipe": 44,
+    "jupes_segmentees_equipe": 480,
+    "garde_boue_avant": 120,
+    "garde_boue_arriere": 120,
+    "grilles_moteur": 24,
+    "feux_marche_avant": 120,
+    "anneaux_remorquage_avant": 24,
+    "prises_remorquage_arriere": 24,
+    "trappe_conduite": 60,
+    "capot_periscope_conduite": 60,
+    "verre_periscope_conduite": 12,
+    "verrou_route_montants": 24,
+    "verrou_route_patins": 24,
+    "verrou_route_embase": 12,
+    "couronne_tourelle": 96,
+    "tourelle_prismatique_equipe": 60,
+    "coffre_tourelle_arriere": 60,
+    "joues_tourelle_equipe": 120,
+    "rails_accessibilite_tourelle": 120,
+    "mantelet_fixe": 60,
+    "joint_trappe_commandant": 80,
+    "trappe_commandant_equipe": 80,
+    "poignee_trappe": 12,
+    "trappe_service": 60,
+    "bloc_visee_protege": 60,
+    "optique_visee": 12,
+    "collier_recul": 64,
+    "chemise_thermique": 48,
+    "tube_marqueur": 64,
+    "collier_thermique": 64,
+    "bouche_creuse": 120,
+    "obturateur_interne": 80,
+    "support_temoin": 60,
+    "temoin_disponibilite": 60
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_tourelle.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_tourelle.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_canon_long.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_tourelle.quaternion",
+        "module_canon_long.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "Verrou de route fixe ; pointage limité dans les clips livrés.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

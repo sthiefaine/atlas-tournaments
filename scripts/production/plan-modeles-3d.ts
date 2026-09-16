@@ -36,6 +36,7 @@ const modeles = specs.map((s, index) => {
   const etat = deja || creationActive ? 'livre' : s.id === 'terrain_plaine' ? 'conserver_rendu_procedural' : provenance ? 'a_preparer_source_hd' : candidat ? 'a_retravailler' : 'a_creer';
   const requis = [nomModele(s, 0), ...s.textures.filter(t => t.obligatoire).map(t => nomTexture(s, t.canal))];
   const presents = requis.filter(n => existsSync(path.join(dossier, n)));
+  const kitsActifs = s.type === 'unite' ? readdirSync('public/assets/modeles').filter(n => n.startsWith('kit_') && n.endsWith(`_${s.cle.replace(/_base$/, '')}_lod0.glb`)) : [];
   return {
     ordre: index + 1, id: s.id, famille: s.type, description: s.description.fr,
     etat: suiviValide ? ancienModele.etat : etat,
@@ -45,6 +46,7 @@ const modeles = specs.map((s, index) => {
       ...(ancienModele?.source?.verificationDistante ? { verificationDistante: ancienModele.source.verificationDistante } : {}),
     },
     actuel: actif, candidat, budgetTriangles: s.budget.lod0, fichiersRequis: requis,
+    ...(kitsActifs.length ? { kitsActifsDependants: kitsActifs, consigneKits: 'Avant remplacement, vérifier la compatibilité de géométrie/UV/animations ; archiver les alias incompatibles pour que le jeu utilise la nouvelle base. Ne pas fabriquer de déclinaison hors commande.' } : {}),
     ordreDeTravail: ['lire_contrat_et_provenance', 'archiver_maitre', 'preparer_lod0_et_png', 'controler_lot', 'integrer', 'mettre_a_jour_plan', 'commit_et_push_main'],
     agent: { metier: 'Artiste technique 3D jeu vidéo', responsabilite: 'Une seule fiche à la fois ; modèle, UV, PBR, articulations et rapport honnête. Le coordinateur intègre et pousse après contrôle.' },
     suivi: suiviValide ? ancienModele.suivi : (deja || creationActive ? { commit: ['unite_infanterie_base', 'unite_char_leger_base', 'unite_barge_base', 'batiment_qg_base'].includes(s.id) ? 'ffbc057' : null, controle: 'ok', ...(deja ? { revision: deja.revision } : {}), approbationArtistique: false } : { commit: null, controle: 'non_effectue', approbationArtistique: false }),

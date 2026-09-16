@@ -153,7 +153,7 @@ cylindre('module_grue',.044,.029,[-.205,.253,.035],3,'couronne_grue',[0,0,0],16)
 panneau('module_grue',[.068,.112,.070],[-.205,.309,.035],5,'colonne_grue',[0,0,0],.008);
 poutre([-.205,.354,.035],[-.205,.412,-.262],.044,.051,5,'bras_principal_replie');
 poutre([-.205,.426,-.245],[-.205,.439,-.055],.035,.036,3,'avant_bras_replie');
-for(const [y,z] of [[.356,.026],[.418,-.255],[.438,-.057]])cylindre('module_grue',.026,.057,[-.205,y,z],3,'axes_grue',[0,0,Math.PI/2],12);
+for(const [y,z] of [[.356,.026],[.418,-.255],[.438,-.057]] as const)cylindre('module_grue',.026,.057,[-.205,y,z],3,'axes_grue',[0,0,Math.PI/2],12);
 // Vérin de levage rangé parallèlement au bras ; articulations bien séparées.
 poutre([-.173,.319,.027],[-.173,.375,-.143],.026,.026,3,'verin_hydraulique');
 poutre([-.173,.369,-.125],[-.173,.4,-.234],.016,.016,5,'tige_verin');

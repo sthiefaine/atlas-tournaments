@@ -1,0 +1,409 @@
+{
+  "id": "unite_char_moyen_base",
+  "version": 1,
+  "date": "2026-09-16",
+  "approbationArtistique": false,
+  "statut": "controle_technique_reussi",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_char_moyen_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "7a7e5d4d28835ca702a861810b0e3f41089d3e02d2529137f41cc0c0c1c999bc",
+    "ancienCandidatTriangles": 996,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-16",
+    "outilGeometrie": "Three.js avec GLTFExporter, TypeScript paramétrique local",
+    "outilTextures": "Python NumPy/Pillow, procédural analytique local",
+    "verificationDepots": {
+      "methode": "Inventaire next-upload vérifié par le coordinateur avant délégation",
+      "date": "2026-09-16",
+      "http": 200,
+      "sources": []
+    },
+    "ancienCandidat": {
+      "chemin": "assets/livraisons/unite_char_moyen_base/unite_char_moyen_base_lod0.glb",
+      "sha256": "7a7e5d4d28835ca702a861810b0e3f41089d3e02d2529137f41cc0c0c1c999bc",
+      "octetsGlb": 123180,
+      "triangles": 996,
+      "lecture": "Métadonnées GLB et contrat inspectés par code ; aucune géométrie ou texture importée."
+    },
+    "helpersLocauxCopies": [
+      "scripts/production/modeles/unite_transport_base/generer.ts — primitives, atlas, chenille et export",
+      "scripts/production/modeles/unite_meridien_automate_base/generer.ts — mathématiques du tube creux",
+      "scripts/production/modeles/unite_transport_base/textures.py — calcul analytique de pigments et normales",
+      "scripts/production/modeles/unite_transport_base/mesurer.py — lecture des attributs GLB"
+    ],
+    "geometrieAutreModeleCopiee": false,
+    "sourceHDModifiee": false,
+    "appelsExternes": 0
+  },
+  "conception": {
+    "silhouette": "Caisse large à joues inclinées ; tourelle prismatique centrée, coffre arrière intégré et long tube muni d’un verrou de route en U. Train ouvert à six galets de route par côté, rouleaux de retour et patins caoutchoutés.",
+    "details": "Panneaux de jupe séparés, trappes, périscopes et viseur protégés, grilles moteur, chemise thermique, bouche creuse et obturateur intérieur réel.",
+    "distinction": "Dessin original ; aucune géométrie du char léger uploadé, du porteur ou de l’automate importée. Aucun rack ni antenne méridienne.",
+    "interdits": "Aucun texte, numéro, drapeau, insigne, marque ou dommage violent."
+  },
+  "geometrie": {
+    "lod": [
+      0
+    ],
+    "triangles": 5944,
+    "budgetTriangles": 6000,
+    "primitives": 7,
+    "noeuds": [
+      "racine",
+      "base",
+      "corps",
+      "module_tourelle",
+      "module_canon_long",
+      "socle"
+    ],
+    "materiaux": [
+      "mat_corps",
+      "mat_details"
+    ],
+    "bornesMetres": {
+      "min": [
+        -0.31200000643730164,
+        0,
+        -0.4333626627922058
+      ],
+      "max": [
+        0.31200000643730164,
+        0.5039999487176539,
+        0.4333626763820648
+      ],
+      "dimensions": [
+        0.6240000128746033,
+        0.5039999487176539,
+        0.8667253391742706
+      ]
+    },
+    "pivotRacine": [
+      0,
+      0,
+      0
+    ],
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true,
+    "hierarchieEtPivotsLocaux": {
+      "racine": {
+        "parent": null,
+        "pivot": [
+          0,
+          0,
+          0
+        ]
+      },
+      "base": {
+        "parent": "racine",
+        "pivot": [
+          0,
+          -0.0005000000819563866,
+          -0.0756373405456543
+        ]
+      },
+      "corps": {
+        "parent": "racine",
+        "pivot": [
+          0,
+          0.16949999991804363,
+          -0.0756373405456543
+        ]
+      },
+      "module_tourelle": {
+        "parent": "corps",
+        "pivot": [
+          0,
+          0.14,
+          -0.045
+        ]
+      },
+      "module_canon_long": {
+        "parent": "module_tourelle",
+        "pivot": [
+          0,
+          0.072,
+          0.178
+        ]
+      },
+      "socle": {
+        "parent": "module_tourelle",
+        "pivot": [
+          0.112,
+          0.183,
+          -0.14
+        ]
+      }
+    },
+    "trianglesParEnsemble": {
+      "bandes_chenille_continues": 512,
+      "patins_caoutchouc": 576,
+      "nervures_liaison_patins": 288,
+      "galets_bandages": 672,
+      "galets_flasques": 672,
+      "galets_moyeux": 480,
+      "rouleaux_retour": 192,
+      "longerons_chassis": 24,
+      "caisse_joues_larges_equipe": 44,
+      "jupes_segmentees_equipe": 480,
+      "garde_boue_avant": 120,
+      "garde_boue_arriere": 120,
+      "grilles_moteur": 24,
+      "feux_marche_avant": 120,
+      "anneaux_remorquage_avant": 24,
+      "prises_remorquage_arriere": 24,
+      "trappe_conduite": 60,
+      "capot_periscope_conduite": 60,
+      "verre_periscope_conduite": 12,
+      "verrou_route_montants": 24,
+      "verrou_route_patins": 24,
+      "verrou_route_embase": 12,
+      "couronne_tourelle": 96,
+      "tourelle_prismatique_equipe": 60,
+      "coffre_tourelle_arriere": 60,
+      "joues_tourelle_equipe": 120,
+      "rails_accessibilite_tourelle": 120,
+      "mantelet_fixe": 60,
+      "joint_trappe_commandant": 80,
+      "trappe_commandant_equipe": 80,
+      "poignee_trappe": 12,
+      "trappe_service": 60,
+      "bloc_visee_protege": 60,
+      "optique_visee": 12,
+      "collier_recul": 64,
+      "chemise_thermique": 48,
+      "tube_marqueur": 64,
+      "collier_thermique": 64,
+      "bouche_creuse": 120,
+      "obturateur_interne": 80,
+      "support_temoin": 60,
+      "temoin_disponibilite": 60
+    }
+  },
+  "poids": {
+    "octetsGlb": 489976,
+    "octetsLotGlbPng": 1659323,
+    "fichiers": [
+      {
+        "fichier": "unite_char_moyen_base_albedo.png",
+        "octets": 456797,
+        "sha256": "fe7c23a36421ea1a5d5c5fa2d527c97a800584182177b769628d3cb1900aef02"
+      },
+      {
+        "fichier": "unite_char_moyen_base_lod0.glb",
+        "octets": 489976,
+        "sha256": "cf40a49fd8c81dad448e5d0225a146416fe22f2f6ae220e9ec0501392bc45b95"
+      },
+      {
+        "fichier": "unite_char_moyen_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "fichier": "unite_char_moyen_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "fichier": "unite_char_moyen_base_normale.png",
+        "octets": 584829,
+        "sha256": "3de10b23b30c713b087ad31c1a7285ef7669f6d59216018e9004642122cab14a"
+      },
+      {
+        "fichier": "unite_char_moyen_base_rugosite.png",
+        "octets": 126589,
+        "sha256": "38c6c516f208eb1a944effaa08f76c076bcdd6025dbb20456eedc8b60a7cf1b2"
+      }
+    ]
+  },
+  "uvEtMatieres": {
+    "uv0": "Atlas 4 × 4 ; îlots par face dans une tuile de matière, réutilisation volontaire entre pièces de même matière. Gouttières 16 px à 1024. Pas de promesse d’UV uniques par pièce.",
+    "tangentes": "Tangentes explicites calculées sur toutes les primitives ; contrôle de finitude, longueur et orthogonalité.",
+    "masque": "PNG L à valeurs 0/255 seulement ; blanc sur les grandes faces de caisse, jupes, tourelle et trappe ; albédo gris strict dans toutes les zones blanches.",
+    "cartes": [
+      {
+        "canal": "albedo",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 456797,
+        "sha256": "fe7c23a36421ea1a5d5c5fa2d527c97a800584182177b769628d3cb1900aef02"
+      },
+      {
+        "canal": "normale",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 584829,
+        "sha256": "3de10b23b30c713b087ad31c1a7285ef7669f6d59216018e9004642122cab14a"
+      },
+      {
+        "canal": "rugosite",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "RGB",
+        "octets": 126589,
+        "sha256": "38c6c516f208eb1a944effaa08f76c076bcdd6025dbb20456eedc8b60a7cf1b2"
+      },
+      {
+        "canal": "metal",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "canal": "masque_equipe",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      }
+    ],
+    "pngExternes": true,
+    "imagesEmbarquees": 0,
+    "rugosite": "G = rugosité ; B = métal, identique au PNG métal éditable ; R = 255.",
+    "normales": "Microrelief analytique de peinture, joints de tôle, fixations, brossage, caoutchouc et grilles ; glTF +Y tangent. Aucun bake HD.",
+    "albedo": "Pigments et faible variation de matière uniquement ; aucun calcul de lumière, reflet, ombre portée ou occlusion."
+  },
+  "animations": {
+    "duréesMs": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "tir": 700,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "racineFixe": true,
+    "bouclesFermees": {
+      "repos": true,
+      "deplacement": true
+    },
+    "tir": "Recul axial de 0,032 m puis retour au repos en 700 ms.",
+    "hors_jeu": "Affaissement de caisse 0,014 m, tourelle légèrement tassée, tube rentré et témoin socle escamoté. Les deux dernières clés sont identiques ; aucune explosion.",
+    "pistes": [
+      {
+        "nom": "repos",
+        "duree": 2.4,
+        "pistes": [
+          "module_tourelle.quaternion"
+        ]
+      },
+      {
+        "nom": "deplacement",
+        "duree": 1,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "module_tourelle.quaternion"
+        ]
+      },
+      {
+        "nom": "tir",
+        "duree": 0.7,
+        "pistes": [
+          "module_canon_long.position",
+          "corps.quaternion"
+        ]
+      },
+      {
+        "nom": "touche",
+        "duree": 0.5,
+        "pistes": [
+          "corps.quaternion"
+        ]
+      },
+      {
+        "nom": "hors_jeu",
+        "duree": 0.9,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "module_tourelle.quaternion",
+          "module_canon_long.position",
+          "socle.scale"
+        ]
+      }
+    ]
+  },
+  "controles": {
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_char_moyen_base.json --lot tmp/production-sequentielle/unite_char_moyen_base",
+    "resultat": {
+      "ok": true,
+      "motifs": [],
+      "acceptes": [
+        "unite_char_moyen_base_albedo.png",
+        "unite_char_moyen_base_lod0.glb",
+        "unite_char_moyen_base_masque_equipe.png",
+        "unite_char_moyen_base_metal.png",
+        "unite_char_moyen_base_normale.png",
+        "unite_char_moyen_base_rugosite.png"
+      ],
+      "inconnus": [],
+      "lodManquants": []
+    },
+    "mesuresBinaires": {
+      "triangles": 5944,
+      "primitives": 7,
+      "trianglesDegeneres": 0,
+      "uvTrianglesDegeneres": 0,
+      "normalesInversees": 0,
+      "normalesErreurMax": 4.370404926845595e-08,
+      "tangentesErreurMax": 3.97920517647421e-08,
+      "orthogonaliteErreurMax": 3.951130528312419e-08,
+      "valeursFinies": true,
+      "uvDansAtlas": true,
+      "imagesExternes": true,
+      "noeudsUniques": true,
+      "racineAnimee": false,
+      "boucles": {
+        "repos": true,
+        "deplacement": true
+      },
+      "dureesClipsMs": {
+        "repos": 2400,
+        "deplacement": 1000,
+        "tir": 700,
+        "touche": 500,
+        "hors_jeu": 900
+      },
+      "horsJeuTientPoseFinale": true,
+      "masqueValeurs": [
+        0,
+        255
+      ],
+      "albedoEquipeEcartMax": 0,
+      "metalCanalBIdentique": true
+    },
+    "testsGenerauxLances": false,
+    "buildLance": false,
+    "captureEffectuee": false,
+    "inspectionVisuelleEffectuee": false,
+    "fpsTelephoneMesures": false
+  },
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "Verrou de route fixe ; pointage limité dans les clips livrés.",
+    "Mesure réelle sur téléphone en attente.",
+    "Atlas de matière réutilisé : les futures livrées nationales devront respecter cette répartition UV.",
+    "L’intégration, l’archivage de l’ancien candidat et le commit/push sont réservés au coordinateur."
+  ]
+}

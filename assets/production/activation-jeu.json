@@ -73,6 +73,14 @@
       "revision": "ba49e31fc9c316e89049f1d3bc85fd27cf61f72cabbdb661b3e9a062b524d054",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_char_moyen_base",
+      "fichierActif": "public/assets/modeles/unite_char_moyen_base_lod0.glb",
+      "donnees": "../donnees/cf40a49fd8c81dad448e5d0225a146416fe22f2f6ae220e9ec0501392bc45b95.glb",
+      "revision": "b51e921800a885c5ccba5cbc20b77d1d7286cdf38ecbdffd87d91146d969a98d",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

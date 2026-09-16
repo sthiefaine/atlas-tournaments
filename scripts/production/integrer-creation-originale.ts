@@ -4,7 +4,9 @@ import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, symlinkSyn
 import path from 'node:path';
 import { lireSpec } from '../controler-asset';
 import { controlerDepot, nomsAttendus } from '../../src/serveur/depot-modeles';
+import { sourcesStockees } from '../../src/serveur/sources-assets-stockage';
 
+async function integrer() {
 const [id, preparation] = process.argv.slice(2);
 if (!id || !/^[a-z0-9_]+$/.test(id) || !preparation) throw new Error('Création originale explicitement commandée et dossier requis');
 const spec = lireSpec(`assets/specs/${id}.json`), nomGlb = `${id}_lod0.glb`;
@@ -19,6 +21,10 @@ const fiche = plan.modeles.find((m: { id: string }) => m.id === id);
 if (!fiche || fiche.etat !== 'en_cours' || fiche.suivi.etape !== 'creation_originale'
   || fiche.source.verificationDistante?.nombreDepots !== 0 || id === 'terrain_plaine'
   || spec.type === 'kit' || spec.variantes.nations.length) throw new Error('Modèle commun sans dépôt, en création dans la file, requis');
+// Un upload peut arriver pendant le travail de l'artiste : le relevé initial ne suffit pas.
+if (!process.env.ATLAS_UPLOAD_TOKEN) throw new Error('Configurer ATLAS_UPLOAD_TOKEN pour revérifier les sources avant remplacement');
+if ((await sourcesStockees(id)).length) throw new Error('Une source GLB est déposée : préparer cet upload avant toute création originale');
+fiche.source.verificationDistante = { date: new Date().toISOString(), nombreDepots: 0, revisionRecente: null };
 const attendus = nomsAttendus(spec);
 const fichiers = readdirSync(preparation).filter(n => /\.(png|glb)$/.test(n)).map(nom => ({ nom, octets: readFileSync(path.join(preparation, nom)) }));
 if (fichiers.some(f => !attendus.includes(f.nom))) throw new Error('Fichier de modèle ou texture hors contrat');
@@ -84,4 +90,7 @@ activation.date = '2026-09-16';
 activation.assets = activation.assets.filter((a: { id: string }) => a.id !== id);
 activation.assets.push({ id, fichierActif: `public/assets/modeles/${nomGlb}`, donnees: `../donnees/${manifestes.find(f => f.nom === nomGlb)!.sha256}.glb`, revision, controle: 'ok', provenance: 'creation_originale' });
 writeFileSync('assets/production/activation-jeu.json', JSON.stringify(activation, null, 2) + '\n');
+writeFileSync('assets/production/plan-modeles-3d.json', JSON.stringify(plan, null, 2) + '\n');
 console.log(JSON.stringify({ id, revision, octetsLot: rapport.octets, verdict: 'ok' }));
+}
+void integrer().catch(e => { console.error(e instanceof Error ? e.message : 'Intégration impossible'); process.exitCode = 1; });
