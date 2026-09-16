@@ -1,0 +1,180 @@
+{
+  "id": "unite_artillerie_base",
+  "date": "2026-09-16",
+  "etat": "integre",
+  "sourceBruteSha256": "38a5dbc65010bb45ec2424de7fa9c19b1e6d220ec0beb5339d2a5c35214fad5b",
+  "sourcePrepareeSha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112",
+  "actifAvantSha256": "fd8fa377c0a435db428fb18a789a501715a0642791185bb533e67444483b8e17",
+  "glbSha256": "e17b4911b0a8b92ed74bdbd8514777cbbc711c6cdb72a363ff0b041b02e02c26",
+  "trianglesSourceBrute": 941718,
+  "trianglesMaitre": 941718,
+  "trianglesLOD0": 54272,
+  "budgetTriangles": 60000,
+  "octetsMaitre": 48822478,
+  "octetsLot": 9352100,
+  "methode": "Meshopt QEM LockBorder ; UV et normales des sommets conservés, normales texturées existantes réutilisées, aucun nouveau bake HD vers low-poly",
+  "conservation": {
+    "structureNoeudsMateriauxImagesExacte": true,
+    "valeursEtCiblesAnimationsExactes": true,
+    "masqueEquipeExact": true,
+    "uvNormalesPositionsSommetsConservesOctetParOctet": true,
+    "sommetsVerifies": 50903,
+    "sourceHdImmuable": true
+  },
+  "masqueEquipe": {
+    "valeurs": [
+      0,
+      255
+    ],
+    "pixelsBlancs": 1256
+  },
+  "dimensionsMetres": [
+    0.61855748295784,
+    0.4997179993710597,
+    0.8498410880565643
+  ],
+  "aabb": {
+    "min": [
+      -0.30865907669067383,
+      0.00010254832886857912,
+      -0.4248940050601959
+    ],
+    "max": [
+      0.30989840626716614,
+      0.4998205476999283,
+      0.4249470829963684
+    ]
+  },
+  "textures": [
+    {
+      "nom": "unite_artillerie_base_albedo.png",
+      "avant": [
+        4096,
+        4096
+      ],
+      "apres": [
+        2048,
+        2048
+      ],
+      "octetsAvant": 7166543,
+      "octets": 2620053,
+      "sourceSha256": "76a384ca6b4e728f3cff6145057fb351cea5108a531ce64110d83809d69aab34"
+    },
+    {
+      "nom": "unite_artillerie_base_masque_equipe.png",
+      "avant": [
+        512,
+        512
+      ],
+      "apres": [
+        512,
+        512
+      ],
+      "octetsAvant": 2098,
+      "octets": 2098,
+      "sourceSha256": "8cfa31bb2f4c1187619417a1b995e7b459ace647b324c1e7680949708e7e6feb"
+    },
+    {
+      "nom": "unite_artillerie_base_metal.png",
+      "avant": [
+        4096,
+        4096
+      ],
+      "apres": [
+        2048,
+        2048
+      ],
+      "octetsAvant": 3957249,
+      "octets": 1947349,
+      "sourceSha256": "206288760f6ec04c5c4abfaa06f72128449d92ba58b9b066c8af5f6cfb21936f"
+    },
+    {
+      "nom": "unite_artillerie_base_normale.png",
+      "avant": [
+        4096,
+        4096
+      ],
+      "apres": [
+        2048,
+        2048
+      ],
+      "octetsAvant": 1386031,
+      "octets": 484925,
+      "sourceSha256": "6288965ed296fa19b98f75ba3d06d51f4731bf8cb7c502d723c76a8a1edaeff4"
+    },
+    {
+      "nom": "unite_artillerie_base_rugosite.png",
+      "avant": [
+        4096,
+        4096
+      ],
+      "apres": [
+        2048,
+        2048
+      ],
+      "octetsAvant": 8095973,
+      "octets": 2938911,
+      "sourceSha256": "aa15322d32bc99f1b103c10b944cb6451302fd93e32684c3376ab6e2c5eb990b"
+    }
+  ],
+  "fichiers": [
+    {
+      "nom": "unite_artillerie_base_albedo.png",
+      "sha256": "84f8ecb1787d26c001e285b9a39bfafd0566aaeb0747112d0f622953fb40120e",
+      "octets": 2620053
+    },
+    {
+      "nom": "unite_artillerie_base_lod0.glb",
+      "sha256": "e17b4911b0a8b92ed74bdbd8514777cbbc711c6cdb72a363ff0b041b02e02c26",
+      "octets": 1358764
+    },
+    {
+      "nom": "unite_artillerie_base_masque_equipe.png",
+      "sha256": "8cfa31bb2f4c1187619417a1b995e7b459ace647b324c1e7680949708e7e6feb",
+      "octets": 2098
+    },
+    {
+      "nom": "unite_artillerie_base_metal.png",
+      "sha256": "145dbb52dfb72f888c35ecda2fd51f6980b7a320af3934790246dbfc7ad5941c",
+      "octets": 1947349
+    },
+    {
+      "nom": "unite_artillerie_base_normale.png",
+      "sha256": "ed34f88b1087ab33c37584ac6361e96c42c447e1bff2a928455de95376fe92c1",
+      "octets": 484925
+    },
+    {
+      "nom": "unite_artillerie_base_rugosite.png",
+      "sha256": "80275c2eb04e1293187229662a8761cecf54f46dd41ef6ed37000a5412ddc7db",
+      "octets": 2938911
+    }
+  ],
+  "controle": {
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_artillerie_base.json --lot tmp/production-sequentielle/unite_artillerie_base",
+    "codeSortie": 0,
+    "verdict": {
+      "ok": true,
+      "motifs": [],
+      "acceptes": [
+        "unite_artillerie_base_albedo.png",
+        "unite_artillerie_base_lod0.glb",
+        "unite_artillerie_base_masque_equipe.png",
+        "unite_artillerie_base_metal.png",
+        "unite_artillerie_base_normale.png",
+        "unite_artillerie_base_rugosite.png"
+      ],
+      "inconnus": [],
+      "lodManquants": []
+    }
+  },
+  "limites": [
+    "Normales texturées existantes réutilisées et renormalisées à 2048² ; aucun nouveau bake HD vers low-poly.",
+    "Décimation QEM avec coutures verrouillées : petits reliefs géométriques réduits ; estimation interne maximale de 1,660 mm, pas une borne de distance de Hausdorff.",
+    "Textures 4K réduites en 2K : perte des plus petits texels ; maîtres originaux conservés.",
+    "Segmentation mobile, silhouette, orientation avant et absence de lumière peinte non vérifiées visuellement.",
+    "Révision brute connue vérifiée localement par SHA ; aucune dernière révision distante attestée faute de jeton distant configuré.",
+    "Aucune mesure FPS sur téléphone réel ; budget provisoire.",
+    "Aucune suite de tests, capture ni inspection visuelle ; réception technique du lot et contrôles ciblés des données uniquement."
+  ],
+  "approbationArtistique": false
+}

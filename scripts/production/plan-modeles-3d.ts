@@ -50,6 +50,10 @@ writeFileSync(fichier, JSON.stringify({
   version: 1, date: '2026-09-16', objectif: 'Préparer les modèles communs un par un avec un spécialiste 3D, puis pousser chaque livraison sur main.',
   execution: { simultaneiteModeles: 1, sourceHdImmuable: true, lod: [0], pngExternes: true, remplacementDirectApresControle: true, approbationArtistiqueAutomatique: false, testsAutomatiques: false, controleLotTechnique: true, branche: 'main' },
   perimetre: { mode: 'modeles_communs', variantesNationales: 'hors_lot', variantesRegionales: 'suspendues', nombreExclu: toutes.length - specs.length, herbePlaine: 'Rendu de sol par défaut conservé, conformément au choix du propriétaire.' },
+  verificationSources: ancien?.verificationSources ?? {
+    date: '2026-09-16', depotLocal: 'inspecte', stockageDistant: 'non_interroge_jeton_non_configure_localement',
+    regle: 'Ne jamais remplacer une source uploadée connue par un modèle procédural. Les modèles sans source HD identifiée restent explicitement à préparer/créer.',
+  },
   total: modeles.length, familles: Object.fromEntries(Object.keys(ordreFamille).map(f => [f, modeles.filter(m => m.famille === f).length])),
   mesuresTelephone: 'en_attente_appareil_reel', modeles,
 }, null, 2) + '\n');

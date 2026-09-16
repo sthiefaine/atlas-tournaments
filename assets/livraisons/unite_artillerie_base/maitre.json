@@ -1,0 +1,62 @@
+{
+  "id": "unite_artillerie_base",
+  "sha256Glb": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112",
+  "fichiers": [
+    {
+      "nom": "unite_artillerie_base_albedo.png",
+      "sha256": "76a384ca6b4e728f3cff6145057fb351cea5108a531ce64110d83809d69aab34",
+      "octets": 7166543,
+      "donnees": "public/assets/donnees/76a384ca6b4e728f3cff6145057fb351cea5108a531ce64110d83809d69aab34.png"
+    },
+    {
+      "nom": "unite_artillerie_base_lod0.glb",
+      "sha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112",
+      "octets": 28214584,
+      "donnees": "public/assets/donnees/a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112.glb"
+    },
+    {
+      "nom": "unite_artillerie_base_masque_equipe.png",
+      "sha256": "8cfa31bb2f4c1187619417a1b995e7b459ace647b324c1e7680949708e7e6feb",
+      "octets": 2098,
+      "donnees": "public/assets/donnees/8cfa31bb2f4c1187619417a1b995e7b459ace647b324c1e7680949708e7e6feb.png"
+    },
+    {
+      "nom": "unite_artillerie_base_metal.png",
+      "sha256": "206288760f6ec04c5c4abfaa06f72128449d92ba58b9b066c8af5f6cfb21936f",
+      "octets": 3957249,
+      "donnees": "public/assets/donnees/206288760f6ec04c5c4abfaa06f72128449d92ba58b9b066c8af5f6cfb21936f.png"
+    },
+    {
+      "nom": "unite_artillerie_base_normale.png",
+      "sha256": "6288965ed296fa19b98f75ba3d06d51f4731bf8cb7c502d723c76a8a1edaeff4",
+      "octets": 1386031,
+      "donnees": "public/assets/donnees/6288965ed296fa19b98f75ba3d06d51f4731bf8cb7c502d723c76a8a1edaeff4.png"
+    },
+    {
+      "nom": "unite_artillerie_base_rugosite.png",
+      "sha256": "aa15322d32bc99f1b103c10b944cb6451302fd93e32684c3376ab6e2c5eb990b",
+      "octets": 8095973,
+      "donnees": "public/assets/donnees/aa15322d32bc99f1b103c10b944cb6451302fd93e32684c3376ab6e2c5eb990b.png"
+    }
+  ],
+  "sourceUpload": {
+    "source": "military cannon vehicle 3d model.glb",
+    "sha256": "38a5dbc65010bb45ec2424de7fa9c19b1e6d220ec0beb5339d2a5c35214fad5b",
+    "trianglesSource": 941718,
+    "trianglesLivres": 941718,
+    "trianglesParAttache": [
+      650690,
+      218045,
+      44403,
+      28580
+    ],
+    "pixelsEquipe": 1256,
+    "approbationArtistique": false,
+    "limites": [
+      "Segmentation géométrique des attaches à vérifier humainement",
+      "Absence de lumière cuite non certifiée",
+      "Orientation front à confirmer dans inspecteur"
+    ]
+  },
+  "actifAvantSha256": "fd8fa377c0a435db428fb18a789a501715a0642791185bb533e67444483b8e17"
+}

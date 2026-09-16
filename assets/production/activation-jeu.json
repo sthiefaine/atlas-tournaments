@@ -49,6 +49,14 @@
       "revision": "f6046f80ecbaa7bafb3e76fa501dd24a25f218b666fe953ec8e3e0fc36563cef",
       "controle": "ok",
       "sourcePrepareeSha256": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899"
+    },
+    {
+      "id": "unite_artillerie_base",
+      "fichierActif": "public/assets/modeles/unite_artillerie_base_lod0.glb",
+      "donnees": "../donnees/e17b4911b0a8b92ed74bdbd8514777cbbc711c6cdb72a363ff0b041b02e02c26.glb",
+      "revision": "25fc09e7951428ccfd3e9c7321914b207d015da403558910eda40756919755ad",
+      "controle": "ok",
+      "sourcePrepareeSha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112"
     }
   ],
   "notes": [

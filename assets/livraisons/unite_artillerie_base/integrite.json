@@ -1,0 +1,180 @@
+{
+  "structureNoeudsMateriauxImagesExacte": true,
+  "valeursEtCiblesAnimationsExactes": true,
+  "masqueEquipeExact": true,
+  "uvNormalesPositionsSommetsConservesOctetParOctet": true,
+  "sommetsVerifies": 50903,
+  "sourceHdImmuable": true,
+  "empreintesAnimations": [
+    {
+      "name": "repos",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": "b5ab1d193ccf6aa54a5b77ad063cce728c845eed48c40f10f005c84ecc0f7c31",
+          "output": "2ec87bc737fa7d4423cb247358d4a2b5d91a33abc4be2c8b2048aec0056cdb20",
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "deplacement",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": "8c17b853da997047f788d2093283622d69e09390e3388c6af23631e2b2970fd8",
+          "output": "1fb5f3cdd5f52e5529a27c16310c181aa7506db87a71888c7132e1f8827b0150",
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": "8c17b853da997047f788d2093283622d69e09390e3388c6af23631e2b2970fd8",
+          "output": "c9e8c9ed0ac9cceffb92f4ac9451a556eb49015c3e621592480945188a53a743",
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": "8c17b853da997047f788d2093283622d69e09390e3388c6af23631e2b2970fd8",
+          "output": "6c6a509c170fc0a54de6e73d76be39c4dd2b3cc3dad5d02c2eb4b8ff2b208f09",
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 2,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tir",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": "af609d4ac6186fd31076500146d5b254346767c97e5d96a73124a891c45a4570",
+          "output": "fa45743396fd277210c97868c613dbb94e417f2a88e65b6f594968a28474a1db",
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": "af609d4ac6186fd31076500146d5b254346767c97e5d96a73124a891c45a4570",
+          "output": "596b256522cdaf0bc6e204ca2a3df3428600c8b1727d8e28ad0c45c3290864fd",
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "touche",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": "647d3bdfdde366fe84339e02b67187f79287e92de5b9e13198e5d90912a1db37",
+          "output": "ce384e4a83377054c05bba61a62611e908968b1c513f151a7c37c6bf27b3a09e",
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hors_jeu",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": "3693b5c031a16957bf1899b796af6d76b97898ae42740b8d83ab21262921ca81",
+          "output": "8a717a0e9ed2e8d0b0400ec11ef8823636abf595289740cabda80bd885c16fc4",
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": "3693b5c031a16957bf1899b796af6d76b97898ae42740b8d83ab21262921ca81",
+          "output": "7cd45c34a91ff7699d49779d75ca8c7ff0987373a26654baa615d4906ca140db",
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": "3693b5c031a16957bf1899b796af6d76b97898ae42740b8d83ab21262921ca81",
+          "output": "a051ad647e2515a449dd0ee1a7d2e8e1e676b130b4cb1d7068f42c5eae3d5920",
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 2,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        }
+      ]
+    }
+  ]
+}

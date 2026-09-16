@@ -1,0 +1,221 @@
+{
+  "id": "unite_artillerie_base",
+  "version": 1,
+  "sourcePrepareeSha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112",
+  "sourceDossier": "assets/sources/unite_artillerie_base/maitre-a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112",
+  "glbSha256": "e17b4911b0a8b92ed74bdbd8514777cbbc711c6cdb72a363ff0b041b02e02c26",
+  "trianglesAvant": 941718,
+  "triangles": 54272,
+  "glbOctetsAvant": 28214584,
+  "glbOctets": 1358764,
+  "profil": {
+    "maximum": 60000,
+    "cible": 45000,
+    "erreur": 0.002
+  },
+  "mesures": [
+    {
+      "maille": "",
+      "avant": 650690,
+      "apres": 33958,
+      "erreurRelative": 0.0019528805278241634,
+      "erreurMetresEstimee": 0.001659948495210839
+    },
+    {
+      "maille": "",
+      "avant": 218045,
+      "apres": 15499,
+      "erreurRelative": 0.0019530894933268428,
+      "erreurMetresEstimee": 0.0016531941751605217
+    },
+    {
+      "maille": "",
+      "avant": 44403,
+      "apres": 2121,
+      "erreurRelative": 0.0019417566945776343,
+      "erreurMetresEstimee": 0.001210366652761606
+    },
+    {
+      "maille": "",
+      "avant": 28580,
+      "apres": 2694,
+      "erreurRelative": 0.0019526005489751697,
+      "erreurMetresEstimee": 0.0011979174089485067
+    }
+  ],
+  "methode": "Meshopt QEM LockBorder ; UV et normales des sommets conservés, normales texturées existantes réutilisées, aucun nouveau bake HD vers low-poly",
+  "animationsSourceSha256": "cf3455eb3ce8c3eb856214d3dd2249a6d6dc152dab956d29d458c775c3810d1e",
+  "animationsSource": [
+    {
+      "name": "repos",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": 17,
+          "output": 18,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "deplacement",
+      "extras": {
+        "loop": true
+      },
+      "samplers": [
+        {
+          "input": 19,
+          "output": 20,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 19,
+          "output": 21,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 19,
+          "output": 22,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 2,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "tir",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 23,
+          "output": 24,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 23,
+          "output": 25,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "touche",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 26,
+          "output": 27,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        }
+      ]
+    },
+    {
+      "name": "hors_jeu",
+      "extras": {
+        "loop": false
+      },
+      "samplers": [
+        {
+          "input": 28,
+          "output": 29,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 28,
+          "output": 30,
+          "interpolation": "LINEAR"
+        },
+        {
+          "input": 28,
+          "output": 31,
+          "interpolation": "LINEAR"
+        }
+      ],
+      "channels": [
+        {
+          "sampler": 0,
+          "target": {
+            "node": 2,
+            "path": "translation"
+          }
+        },
+        {
+          "sampler": 1,
+          "target": {
+            "node": 3,
+            "path": "rotation"
+          }
+        },
+        {
+          "sampler": 2,
+          "target": {
+            "node": 4,
+            "path": "rotation"
+          }
+        }
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}
