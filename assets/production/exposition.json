@@ -48,6 +48,28 @@
       "revision": "d821d7ec0ad1e7a2eabab6e58daec70256aee51f52c5260207537e9616523289"
     },
     {
+      "id": "batiment_aeroport_base",
+      "fichiers": [
+        "batiment_aeroport_base_albedo.png",
+        "batiment_aeroport_base_albedo_ete.png",
+        "batiment_aeroport_base_albedo_hiver.png",
+        "batiment_aeroport_base_normale.png",
+        "batiment_aeroport_base_normale_ete.png",
+        "batiment_aeroport_base_normale_hiver.png",
+        "batiment_aeroport_base_rugosite.png",
+        "batiment_aeroport_base_rugosite_ete.png",
+        "batiment_aeroport_base_rugosite_hiver.png",
+        "batiment_aeroport_base_emission.png",
+        "batiment_aeroport_base_emission_ete.png",
+        "batiment_aeroport_base_emission_hiver.png",
+        "batiment_aeroport_base_masque_equipe.png",
+        "batiment_aeroport_base_masque_equipe_ete.png",
+        "batiment_aeroport_base_masque_equipe_hiver.png",
+        "batiment_aeroport_base_lod0.glb"
+      ],
+      "revision": "9de290ff58a7ba3af4eac7ee8e4fb8128e5c61de024ec4c41a69fbcfb174a819"
+    },
+    {
       "id": "batiment_aeroport_br",
       "fichiers": [
         "batiment_aeroport_br_lod0.glb",
@@ -552,6 +574,28 @@
         "batiment_port_au_masque_equipe_hiver.png"
       ],
       "revision": "36c98e9cf32394f47d3932c6ae085d73ad8c8c9ec57c1dc5295fdf702594b6f9"
+    },
+    {
+      "id": "batiment_port_base",
+      "fichiers": [
+        "batiment_port_base_albedo.png",
+        "batiment_port_base_albedo_ete.png",
+        "batiment_port_base_albedo_hiver.png",
+        "batiment_port_base_normale.png",
+        "batiment_port_base_normale_ete.png",
+        "batiment_port_base_normale_hiver.png",
+        "batiment_port_base_rugosite.png",
+        "batiment_port_base_rugosite_ete.png",
+        "batiment_port_base_rugosite_hiver.png",
+        "batiment_port_base_emission.png",
+        "batiment_port_base_emission_ete.png",
+        "batiment_port_base_emission_hiver.png",
+        "batiment_port_base_masque_equipe.png",
+        "batiment_port_base_masque_equipe_ete.png",
+        "batiment_port_base_masque_equipe_hiver.png",
+        "batiment_port_base_lod0.glb"
+      ],
+      "revision": "0526e53c9d7bcf3cf82fe22e3bdf17211339fab70b5419a34059b6b929dfcc01"
     },
     {
       "id": "batiment_port_br",
@@ -1060,6 +1104,18 @@
       "revision": "97a4e3688104fd887fd35fda0732435793970dccfac2f4458caf39278bed57b7"
     },
     {
+      "id": "batiment_qg_base",
+      "fichiers": [
+        "batiment_qg_base_lod0.glb",
+        "batiment_qg_base_albedo.png",
+        "batiment_qg_base_normale.png",
+        "batiment_qg_base_rugosite.png",
+        "batiment_qg_base_emission.png",
+        "batiment_qg_base_masque_equipe.png"
+      ],
+      "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4"
+    },
+    {
       "id": "batiment_qg_br",
       "fichiers": [
         "batiment_qg_br_lod0.glb",
@@ -1564,6 +1620,28 @@
         "batiment_radar_au_masque_equipe_hiver.png"
       ],
       "revision": "e2d28ba9bf97247a836f855fe055c1ec3faf7430b0efcff3b30c7528b9ba9ef9"
+    },
+    {
+      "id": "batiment_radar_base",
+      "fichiers": [
+        "batiment_radar_base_albedo.png",
+        "batiment_radar_base_albedo_ete.png",
+        "batiment_radar_base_albedo_hiver.png",
+        "batiment_radar_base_normale.png",
+        "batiment_radar_base_normale_ete.png",
+        "batiment_radar_base_normale_hiver.png",
+        "batiment_radar_base_rugosite.png",
+        "batiment_radar_base_rugosite_ete.png",
+        "batiment_radar_base_rugosite_hiver.png",
+        "batiment_radar_base_emission.png",
+        "batiment_radar_base_emission_ete.png",
+        "batiment_radar_base_emission_hiver.png",
+        "batiment_radar_base_masque_equipe.png",
+        "batiment_radar_base_masque_equipe_ete.png",
+        "batiment_radar_base_masque_equipe_hiver.png",
+        "batiment_radar_base_lod0.glb"
+      ],
+      "revision": "444ecc33d70f9e705b54a30da8bf0d3b0fb3805362615fed6b84d4d785ef8f8d"
     },
     {
       "id": "batiment_radar_br",
@@ -2072,6 +2150,28 @@
       "revision": "32082a1b8f42f9ce3ccbc23e6aed10e811106702382b5ff5491327cf86407f81"
     },
     {
+      "id": "batiment_usine_base",
+      "fichiers": [
+        "batiment_usine_base_albedo.png",
+        "batiment_usine_base_albedo_ete.png",
+        "batiment_usine_base_albedo_hiver.png",
+        "batiment_usine_base_normale.png",
+        "batiment_usine_base_normale_ete.png",
+        "batiment_usine_base_normale_hiver.png",
+        "batiment_usine_base_rugosite.png",
+        "batiment_usine_base_rugosite_ete.png",
+        "batiment_usine_base_rugosite_hiver.png",
+        "batiment_usine_base_emission.png",
+        "batiment_usine_base_emission_ete.png",
+        "batiment_usine_base_emission_hiver.png",
+        "batiment_usine_base_masque_equipe.png",
+        "batiment_usine_base_masque_equipe_ete.png",
+        "batiment_usine_base_masque_equipe_hiver.png",
+        "batiment_usine_base_lod0.glb"
+      ],
+      "revision": "737f96c8e304c71029b152ca9dea708e4b3d15d1a9f2552d36b02c5b2bcdf2a9"
+    },
+    {
       "id": "batiment_usine_br",
       "fichiers": [
         "batiment_usine_br_lod0.glb",
@@ -2576,6 +2676,28 @@
         "batiment_ville_au_masque_equipe_hiver.png"
       ],
       "revision": "a85a0acdc2b00e18f7b3a80f11fb8f1a21ed6ac4f8b04fbc4515e8eb15b0a271"
+    },
+    {
+      "id": "batiment_ville_base",
+      "fichiers": [
+        "batiment_ville_base_albedo.png",
+        "batiment_ville_base_albedo_ete.png",
+        "batiment_ville_base_albedo_hiver.png",
+        "batiment_ville_base_normale.png",
+        "batiment_ville_base_normale_ete.png",
+        "batiment_ville_base_normale_hiver.png",
+        "batiment_ville_base_rugosite.png",
+        "batiment_ville_base_rugosite_ete.png",
+        "batiment_ville_base_rugosite_hiver.png",
+        "batiment_ville_base_emission.png",
+        "batiment_ville_base_emission_ete.png",
+        "batiment_ville_base_emission_hiver.png",
+        "batiment_ville_base_masque_equipe.png",
+        "batiment_ville_base_masque_equipe_ete.png",
+        "batiment_ville_base_masque_equipe_hiver.png",
+        "batiment_ville_base_lod0.glb"
+      ],
+      "revision": "ea6a7f50e2ca668a034eee269a53b2ca05cff959dfd85e9b009c3da51b0751a1"
     },
     {
       "id": "batiment_ville_br",
@@ -16746,6 +16868,18 @@
       "revision": "ddf26063734eb951b932e9a876ee9006b4137606ea0b490a3c7d0984c360a85c"
     },
     {
+      "id": "unite_meridien_automate_base",
+      "fichiers": [
+        "unite_meridien_automate_base_albedo.png",
+        "unite_meridien_automate_base_lod0.glb",
+        "unite_meridien_automate_base_masque_equipe.png",
+        "unite_meridien_automate_base_metal.png",
+        "unite_meridien_automate_base_normale.png",
+        "unite_meridien_automate_base_rugosite.png"
+      ],
+      "revision": "020fb995928395d98d6ca344f5c7e73ebb71b0b518994f20ba6c369a54ab4a37"
+    },
+    {
       "id": "unite_meridien_bastion_base",
       "fichiers": [
         "unite_meridien_bastion_base_lod0.glb",
@@ -16924,128 +17058,6 @@
         "unite_transport_base_masque_equipe_hiver.png"
       ],
       "revision": "aa5dd4eb9f15aec535bded10ac59339f322015328dfdae3a705bff2865e07a38"
-    },
-    {
-      "id": "batiment_qg_base",
-      "fichiers": [
-        "batiment_qg_base_lod0.glb",
-        "batiment_qg_base_albedo.png",
-        "batiment_qg_base_normale.png",
-        "batiment_qg_base_rugosite.png",
-        "batiment_qg_base_emission.png",
-        "batiment_qg_base_masque_equipe.png"
-      ],
-      "revision": "f91ed6c9802a0701dee71ec1acf2ab58be36a915d709b4149cb1e2b9f28f81a4"
-    },
-    {
-      "id": "batiment_ville_base",
-      "fichiers": [
-        "batiment_ville_base_albedo.png",
-        "batiment_ville_base_albedo_ete.png",
-        "batiment_ville_base_albedo_hiver.png",
-        "batiment_ville_base_normale.png",
-        "batiment_ville_base_normale_ete.png",
-        "batiment_ville_base_normale_hiver.png",
-        "batiment_ville_base_rugosite.png",
-        "batiment_ville_base_rugosite_ete.png",
-        "batiment_ville_base_rugosite_hiver.png",
-        "batiment_ville_base_emission.png",
-        "batiment_ville_base_emission_ete.png",
-        "batiment_ville_base_emission_hiver.png",
-        "batiment_ville_base_masque_equipe.png",
-        "batiment_ville_base_masque_equipe_ete.png",
-        "batiment_ville_base_masque_equipe_hiver.png",
-        "batiment_ville_base_lod0.glb"
-      ],
-      "revision": "ea6a7f50e2ca668a034eee269a53b2ca05cff959dfd85e9b009c3da51b0751a1"
-    },
-    {
-      "id": "batiment_usine_base",
-      "fichiers": [
-        "batiment_usine_base_albedo.png",
-        "batiment_usine_base_albedo_ete.png",
-        "batiment_usine_base_albedo_hiver.png",
-        "batiment_usine_base_normale.png",
-        "batiment_usine_base_normale_ete.png",
-        "batiment_usine_base_normale_hiver.png",
-        "batiment_usine_base_rugosite.png",
-        "batiment_usine_base_rugosite_ete.png",
-        "batiment_usine_base_rugosite_hiver.png",
-        "batiment_usine_base_emission.png",
-        "batiment_usine_base_emission_ete.png",
-        "batiment_usine_base_emission_hiver.png",
-        "batiment_usine_base_masque_equipe.png",
-        "batiment_usine_base_masque_equipe_ete.png",
-        "batiment_usine_base_masque_equipe_hiver.png",
-        "batiment_usine_base_lod0.glb"
-      ],
-      "revision": "737f96c8e304c71029b152ca9dea708e4b3d15d1a9f2552d36b02c5b2bcdf2a9"
-    },
-    {
-      "id": "batiment_port_base",
-      "fichiers": [
-        "batiment_port_base_albedo.png",
-        "batiment_port_base_albedo_ete.png",
-        "batiment_port_base_albedo_hiver.png",
-        "batiment_port_base_normale.png",
-        "batiment_port_base_normale_ete.png",
-        "batiment_port_base_normale_hiver.png",
-        "batiment_port_base_rugosite.png",
-        "batiment_port_base_rugosite_ete.png",
-        "batiment_port_base_rugosite_hiver.png",
-        "batiment_port_base_emission.png",
-        "batiment_port_base_emission_ete.png",
-        "batiment_port_base_emission_hiver.png",
-        "batiment_port_base_masque_equipe.png",
-        "batiment_port_base_masque_equipe_ete.png",
-        "batiment_port_base_masque_equipe_hiver.png",
-        "batiment_port_base_lod0.glb"
-      ],
-      "revision": "0526e53c9d7bcf3cf82fe22e3bdf17211339fab70b5419a34059b6b929dfcc01"
-    },
-    {
-      "id": "batiment_aeroport_base",
-      "fichiers": [
-        "batiment_aeroport_base_albedo.png",
-        "batiment_aeroport_base_albedo_ete.png",
-        "batiment_aeroport_base_albedo_hiver.png",
-        "batiment_aeroport_base_normale.png",
-        "batiment_aeroport_base_normale_ete.png",
-        "batiment_aeroport_base_normale_hiver.png",
-        "batiment_aeroport_base_rugosite.png",
-        "batiment_aeroport_base_rugosite_ete.png",
-        "batiment_aeroport_base_rugosite_hiver.png",
-        "batiment_aeroport_base_emission.png",
-        "batiment_aeroport_base_emission_ete.png",
-        "batiment_aeroport_base_emission_hiver.png",
-        "batiment_aeroport_base_masque_equipe.png",
-        "batiment_aeroport_base_masque_equipe_ete.png",
-        "batiment_aeroport_base_masque_equipe_hiver.png",
-        "batiment_aeroport_base_lod0.glb"
-      ],
-      "revision": "9de290ff58a7ba3af4eac7ee8e4fb8128e5c61de024ec4c41a69fbcfb174a819"
-    },
-    {
-      "id": "batiment_radar_base",
-      "fichiers": [
-        "batiment_radar_base_albedo.png",
-        "batiment_radar_base_albedo_ete.png",
-        "batiment_radar_base_albedo_hiver.png",
-        "batiment_radar_base_normale.png",
-        "batiment_radar_base_normale_ete.png",
-        "batiment_radar_base_normale_hiver.png",
-        "batiment_radar_base_rugosite.png",
-        "batiment_radar_base_rugosite_ete.png",
-        "batiment_radar_base_rugosite_hiver.png",
-        "batiment_radar_base_emission.png",
-        "batiment_radar_base_emission_ete.png",
-        "batiment_radar_base_emission_hiver.png",
-        "batiment_radar_base_masque_equipe.png",
-        "batiment_radar_base_masque_equipe_ete.png",
-        "batiment_radar_base_masque_equipe_hiver.png",
-        "batiment_radar_base_lod0.glb"
-      ],
-      "revision": "444ecc33d70f9e705b54a30da8bf0d3b0fb3805362615fed6b84d4d785ef8f8d"
     }
   ]
 }

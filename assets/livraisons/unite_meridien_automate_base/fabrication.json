@@ -1,0 +1,189 @@
+{
+  "id": "unite_meridien_automate_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_meridien_automate_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false
+  },
+  "triangles": 5892,
+  "budgetTriangles": 6000,
+  "octetsGlb": 489356,
+  "sha256Glb": "67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc",
+  "bornes": {
+    "min": [
+      -0.3100000023841858,
+      0,
+      -0.4298681616783142
+    ],
+    "max": [
+      0.3100000023841858,
+      0.5040000146627426,
+      0.4298681664466858
+    ],
+    "dimensions": [
+      0.6200000047683716,
+      0.5040000146627426,
+      0.859736328125
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.16,
+        0
+      ]
+    },
+    "module_tourelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.1,
+        -0.095
+      ]
+    },
+    "module_canon_long": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.05,
+        0.1
+      ]
+    },
+    "module_antenne": {
+      "parent": "module_tourelle",
+      "pivot": [
+        -0.115,
+        0.075,
+        -0.08
+      ]
+    },
+    "socle": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.08,
+        0.08
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "bandes_chenille_continues": 736,
+    "patins_caoutchouc": 552,
+    "crampons_support": 552,
+    "bandages_galets": 672,
+    "flasques_galets": 672,
+    "moyeux_galets": 480,
+    "longerons": 24,
+    "caisse_inclinee": 60,
+    "plastron_equipe": 60,
+    "joues_equipe": 120,
+    "garde_boue_arriere": 120,
+    "garde_boue_avant": 120,
+    "attaches_frontales": 80,
+    "grilles_thermiques": 120,
+    "lamelles_thermiques": 96,
+    "capot_arriere": 60,
+    "couronne_tourelle": 96,
+    "tourelle_equipe": 60,
+    "joues_tourelle": 120,
+    "axes_tourelle": 96,
+    "trappe_technique": 60,
+    "capteur_optique": 60,
+    "berceau_tube": 60,
+    "enveloppe_tube": 64,
+    "bague_de_recul": 64,
+    "bague_de_bouche": 64,
+    "bouche_creuse": 96,
+    "verrou_de_route": 120,
+    "traverse_verrou": 12,
+    "pied_antenne": 48,
+    "soufflet_antenne": 192,
+    "antenne_epaisse": 48,
+    "capuchon_antenne": 48,
+    "temoin_disponibilite": 60
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_tourelle.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_canon_long.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_canon_long.quaternion",
+        "module_tourelle.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

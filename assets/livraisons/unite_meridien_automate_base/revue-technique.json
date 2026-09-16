@@ -1,0 +1,388 @@
+{
+  "id": "unite_meridien_automate_base",
+  "version": 1,
+  "date": "2026-09-16",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_meridien_automate_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "verificationSourcesDistantes": {
+      "date": "2026-09-16",
+      "resultat": "aucune_source_uploadee",
+      "preuve": "Le coordinateur a consulté la fiche next-upload : HTTP 200, sources []."
+    },
+    "outil": "Script TypeScript / Three.js 0.170, GLTFExporter ; génération PNG Python NumPy/Pillow. Blender non utilisé."
+  },
+  "approbationArtistique": false,
+  "controleTechnique": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_meridien_automate_base_albedo.png",
+      "unite_meridien_automate_base_lod0.glb",
+      "unite_meridien_automate_base_masque_equipe.png",
+      "unite_meridien_automate_base_metal.png",
+      "unite_meridien_automate_base_normale.png",
+      "unite_meridien_automate_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "triangles": 5892,
+  "budgetTriangles": 6000,
+  "octetsTotal": 1635455,
+  "sha256Glb": "67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc",
+  "dimensionsMetres": [
+    0.6200000047683716,
+    0.5040000146627426,
+    0.859736328125
+  ],
+  "bornes": {
+    "min": [
+      -0.3100000023841858,
+      0,
+      -0.4298681616783142
+    ],
+    "max": [
+      0.3100000023841858,
+      0.5040000146627426,
+      0.4298681664466858
+    ],
+    "dimensions": [
+      0.6200000047683716,
+      0.5040000146627426,
+      0.859736328125
+    ]
+  },
+  "geometrie": {
+    "triangles": 5892,
+    "primitives": 8,
+    "trianglesDegeneres": 0,
+    "normalesInversees": 0,
+    "normalesErreurMax": 4.122299701592169e-08,
+    "tangentesErreurMax": 3.998603514965282e-08,
+    "orthogonaliteErreurMax": 3.9102697080295457e-08,
+    "valeursFinies": true,
+    "uvDansAtlas": true,
+    "imagesExternes": true,
+    "noeudsUniques": true,
+    "racineAnimee": false,
+    "boucles": {
+      "repos": true,
+      "deplacement": true
+    },
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "albedoEquipeEcartMax": 0,
+    "metalCanalBIdentique": true
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.16,
+        0
+      ]
+    },
+    "module_tourelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.1,
+        -0.095
+      ]
+    },
+    "module_canon_long": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.05,
+        0.1
+      ]
+    },
+    "module_antenne": {
+      "parent": "module_tourelle",
+      "pivot": [
+        -0.115,
+        0.075,
+        -0.08
+      ]
+    },
+    "socle": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.08,
+        0.08
+      ]
+    }
+  },
+  "textures": {
+    "methode": "pigments et microreliefs analytiques déterministes ; aucun éclairage calculé ni peint",
+    "bakeHD": false,
+    "normale": "+Y tangent, vecteurs renormalisés",
+    "atlas": {
+      "grille": [
+        4,
+        4
+      ],
+      "gouttierePixels": 16,
+      "roles": [
+        [
+          160,
+          160,
+          160
+        ],
+        [
+          59,
+          65,
+          69
+        ],
+        [
+          36,
+          39,
+          40
+        ],
+        [
+          141,
+          148,
+          153
+        ],
+        [
+          22,
+          56,
+          65
+        ],
+        [
+          96,
+          104,
+          107
+        ],
+        [
+          49,
+          56,
+          59
+        ],
+        [
+          216,
+          155,
+          71
+        ],
+        [
+          160,
+          160,
+          160
+        ],
+        [
+          59,
+          65,
+          69
+        ],
+        [
+          36,
+          39,
+          40
+        ],
+        [
+          141,
+          148,
+          153
+        ],
+        [
+          22,
+          56,
+          65
+        ],
+        [
+          96,
+          104,
+          107
+        ],
+        [
+          49,
+          56,
+          59
+        ],
+        [
+          216,
+          155,
+          71
+        ]
+      ]
+    },
+    "cartes": [
+      {
+        "canal": "albedo",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 458977,
+        "sha256": "12e12dde0edd77ab696291422bf2a5f73b51a0b676036dc3e93b94531b151558"
+      },
+      {
+        "canal": "normale",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 559353,
+        "sha256": "f027ffd74b7af6309d05f309eeb5903c1710771c98768f824f2b1dab1e210f86"
+      },
+      {
+        "canal": "rugosite",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "RGB",
+        "octets": 126492,
+        "sha256": "28f55d1797f9b445ae486fa747a6a8283f72a66381a48c208e783e9ce72fc6ad"
+      },
+      {
+        "canal": "metal",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 640,
+        "sha256": "84457106a9e4399731dbfa8d1110940d6cbb7b5dde40178d120958d43910ed64"
+      },
+      {
+        "canal": "masque_equipe",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 637,
+        "sha256": "bde308145905b1ab5d8184c5cb0a09af38f30c0d7c0a2e325d72dcbf966d001f"
+      }
+    ],
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "metalEditableIdentiqueCanalB": true
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_tourelle.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_canon_long.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_canon_long.quaternion",
+        "module_tourelle.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "Mesure réelle sur téléphone en attente."
+  ],
+  "fichiers": [
+    {
+      "nom": "unite_meridien_automate_base_albedo.png",
+      "octets": 458977,
+      "sha256": "12e12dde0edd77ab696291422bf2a5f73b51a0b676036dc3e93b94531b151558"
+    },
+    {
+      "nom": "unite_meridien_automate_base_lod0.glb",
+      "octets": 489356,
+      "sha256": "67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc"
+    },
+    {
+      "nom": "unite_meridien_automate_base_masque_equipe.png",
+      "octets": 637,
+      "sha256": "bde308145905b1ab5d8184c5cb0a09af38f30c0d7c0a2e325d72dcbf966d001f"
+    },
+    {
+      "nom": "unite_meridien_automate_base_metal.png",
+      "octets": 640,
+      "sha256": "84457106a9e4399731dbfa8d1110940d6cbb7b5dde40178d120958d43910ed64"
+    },
+    {
+      "nom": "unite_meridien_automate_base_normale.png",
+      "octets": 559353,
+      "sha256": "f027ffd74b7af6309d05f309eeb5903c1710771c98768f824f2b1dab1e210f86"
+    },
+    {
+      "nom": "unite_meridien_automate_base_rugosite.png",
+      "octets": 126492,
+      "sha256": "28f55d1797f9b445ae486fa747a6a8283f72a66381a48c208e783e9ce72fc6ad"
+    }
+  ],
+  "performance": {
+    "primitives": 8,
+    "appelsDessinParPasseCouleurEstimes": 8,
+    "materiaux": 2,
+    "mesureFPSsurTelephone": null,
+    "note": "Estimation statique du GLB pour un exemplaire ; ombres, passes supplémentaires, effets, instanciation et culling peuvent modifier le coût réel."
+  },
+  "controlesExecution": {
+    "controleAsset": "ok",
+    "typecheck": "ok",
+    "suiteTestsExecutee": false,
+    "captureOuRevueVisuelle": false
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "unite_meridien_automate_base",
+  "nature": "creation_originale",
+  "date": "2026-09-16",
+  "scripts": "scripts/production/modeles/unite_meridien_automate_base",
+  "fichiers": [
+    {
+      "nom": "unite_meridien_automate_base_albedo.png",
+      "sha256": "12e12dde0edd77ab696291422bf2a5f73b51a0b676036dc3e93b94531b151558",
+      "octets": 458977
+    },
+    {
+      "nom": "unite_meridien_automate_base_lod0.glb",
+      "sha256": "67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc",
+      "octets": 489356
+    },
+    {
+      "nom": "unite_meridien_automate_base_masque_equipe.png",
+      "sha256": "bde308145905b1ab5d8184c5cb0a09af38f30c0d7c0a2e325d72dcbf966d001f",
+      "octets": 637
+    },
+    {
+      "nom": "unite_meridien_automate_base_metal.png",
+      "sha256": "84457106a9e4399731dbfa8d1110940d6cbb7b5dde40178d120958d43910ed64",
+      "octets": 640
+    },
+    {
+      "nom": "unite_meridien_automate_base_normale.png",
+      "sha256": "f027ffd74b7af6309d05f309eeb5903c1710771c98768f824f2b1dab1e210f86",
+      "octets": 559353
+    },
+    {
+      "nom": "unite_meridien_automate_base_rugosite.png",
+      "sha256": "28f55d1797f9b445ae486fa747a6a8283f72a66381a48c208e783e9ce72fc6ad",
+      "octets": 126492
+    }
+  ],
+  "derniereRevisionDistante": "non_attestee",
+  "approbationArtistique": false
+}

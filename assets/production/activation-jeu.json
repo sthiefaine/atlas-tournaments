@@ -1,6 +1,6 @@
 {
   "date": "2026-09-16",
-  "autorisation": "Conserver les sources HD, remplacer les quatre modèles lourds par un seul LOD0 optimisé ; demande du propriétaire du 14 septembre 2026.",
+  "autorisation": "Sources HD conservées et LOD0 optimisés (14 septembre), puis production séquentielle des modèles avec push individuel (16 septembre 2026).",
   "approbationArtistique": false,
   "controle": "controles_cibles_ok",
   "assets": [
@@ -57,10 +57,18 @@
       "revision": "25fc09e7951428ccfd3e9c7321914b207d015da403558910eda40756919755ad",
       "controle": "ok",
       "sourcePrepareeSha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112"
+    },
+    {
+      "id": "unite_meridien_automate_base",
+      "fichierActif": "public/assets/modeles/unite_meridien_automate_base_lod0.glb",
+      "donnees": "../donnees/67ae06df30f78f935ad53d5e14163d6b38fd08537406a4a5692c205ede0200bc.glb",
+      "revision": "020fb995928395d98d6ca344f5c7e73ebb71b0b518994f20ba6c369a54ab4a37",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [
-    "Les quatre bases optimisées sont actives ; les anciens fichiers immuables restent disponibles pour retrouver les maîtres.",
+    "Les six bases HD connues sont optimisées et actives ; les fichiers maîtres immuables restent récupérables.",
     "Les modèles déjà légers restent en place ; aucune nouvelle variante nationale.",
     "Le QG neutre importé est prioritaire sur le QG national historique.",
     "Les mesures sur téléphone réel sont en attente ; aucun gain FPS affirmé."
