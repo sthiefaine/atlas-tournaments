@@ -1,0 +1,169 @@
+{
+  "id": "unite_transport_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_transport_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false
+  },
+  "triangles": 5980,
+  "budgetTriangles": 6000,
+  "octetsGlb": 508236,
+  "sha256Glb": "5f7d678f92351d28dffb7d5eeedda7b0b13d6cff8179463286fa12ddcce7e3e3",
+  "bornes": {
+    "min": [
+      -0.3100000023841858,
+      0,
+      -0.4393128752708435
+    ],
+    "max": [
+      0.3100000023841858,
+      0.5000000001490116,
+      0.4393128752708435
+    ],
+    "dimensions": [
+      0.6200000047683716,
+      0.5000000001490116,
+      0.878625750541687
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.16,
+        0
+      ]
+    },
+    "module_grue": {
+      "parent": "corps",
+      "pivot": [
+        -0.202,
+        0.12,
+        0.028
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0.135,
+        0.305,
+        0.245
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "bandes_chenille_continues": 640,
+    "patins_caoutchouc": 576,
+    "crampons_support": 576,
+    "bandages_galets": 672,
+    "flasques_galets": 672,
+    "moyeux_galets": 480,
+    "longerons": 24,
+    "plateau_porteur": 44,
+    "plancher_antiderapant": 60,
+    "panneaux_soute_equipe": 120,
+    "assises_banquettes": 120,
+    "pieds_banquettes": 48,
+    "rails_arrimage": 24,
+    "supports_arrimage": 72,
+    "garde_boue_avant": 120,
+    "garde_boue_arriere": 120,
+    "cabine_equipe": 44,
+    "toit_cabine": 60,
+    "pare_brise": 120,
+    "vitres_laterales": 120,
+    "portes_cabine": 120,
+    "poignees_portes": 24,
+    "marchepieds": 120,
+    "feux_avant": 120,
+    "pare_chocs_souple": 60,
+    "ventilation_pavillon": 60,
+    "rampe_arriere_abaissee": 60,
+    "axe_rampe": 48,
+    "nervures_rampe": 60,
+    "couronne_grue": 64,
+    "colonne_grue": 60,
+    "bras_principal_replie": 28,
+    "avant_bras_replie": 28,
+    "axes_grue": 144,
+    "verin_hydraulique": 28,
+    "tige_verin": 28,
+    "manille_crochet": 12,
+    "crochet_captif": 144,
+    "temoin_disponibilite": 60
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_grue.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_grue.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_grue.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "La rampe reste abaissée dans cette version ; elle n’a pas de nœud distinct dans le contrat.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

@@ -65,6 +65,14 @@
       "revision": "020fb995928395d98d6ca344f5c7e73ebb71b0b518994f20ba6c369a54ab4a37",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_transport_base",
+      "fichierActif": "public/assets/modeles/unite_transport_base_lod0.glb",
+      "donnees": "../donnees/5f7d678f92351d28dffb7d5eeedda7b0b13d6cff8179463286fa12ddcce7e3e3.glb",
+      "revision": "ba49e31fc9c316e89049f1d3bc85fd27cf61f72cabbdb661b3e9a062b524d054",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

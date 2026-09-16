@@ -1,0 +1,24 @@
+{
+  "triangles": 5980,
+  "primitives": 5,
+  "trianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.934867831567601e-08,
+  "tangentesErreurMax": 3.967633777079982e-08,
+  "orthogonaliteErreurMax": 3.606463838679019e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true
+}

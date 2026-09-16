@@ -1,0 +1,21 @@
+{
+  "id": "unite_transport_base",
+  "revision": "ba49e31fc9c316e89049f1d3bc85fd27cf61f72cabbdb661b3e9a062b524d054",
+  "octets": 1676337,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_transport_base_albedo.png",
+      "unite_transport_base_lod0.glb",
+      "unite_transport_base_masque_equipe.png",
+      "unite_transport_base_metal.png",
+      "unite_transport_base_normale.png",
+      "unite_transport_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

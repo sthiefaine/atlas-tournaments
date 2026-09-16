@@ -1,0 +1,262 @@
+{
+  "id": "unite_transport_base",
+  "date": "2026-09-16",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceUpload": null,
+    "releveSourcesDistant": {
+      "effectuePar": "coordinateur",
+      "date": "2026-09-16",
+      "statutHttp": 200,
+      "revisions": []
+    },
+    "ancienneLivraison": {
+      "sha256Glb": "c782a277bc107f72f37a3d751bb81432d90e06b7c28463891ed9c5224d847c5b",
+      "triangles": 844,
+      "octetsGlb": 102336,
+      "geometrieImportee": false,
+      "inspection": "lecture du conteneur GLB, nœuds, matériaux et animations"
+    },
+    "scripts": "scripts/production/modeles/unite_transport_base",
+    "reutilisation": "Helpers mathématiques locaux de l’automate ; dessin propre au porteur, aucun maillage d’automate importé."
+  },
+  "controleTechnique": {
+    "ok": true,
+    "motifs": [],
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_transport_base.json --lot tmp/production-sequentielle/unite_transport_base"
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "triangles": 5980,
+  "budgetTriangles": 6000,
+  "primitives": 5,
+  "octetsGlb": 508236,
+  "octetsLot": 1676337,
+  "sha256Glb": "5f7d678f92351d28dffb7d5eeedda7b0b13d6cff8179463286fa12ddcce7e3e3",
+  "dimensions": {
+    "min": [
+      -0.3100000023841858,
+      0,
+      -0.4393128752708435
+    ],
+    "max": [
+      0.3100000023841858,
+      0.5000000001490116,
+      0.4393128752708435
+    ],
+    "dimensions": [
+      0.6200000047683716,
+      0.5000000001490116,
+      0.878625750541687
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.16,
+        0
+      ]
+    },
+    "module_grue": {
+      "parent": "corps",
+      "pivot": [
+        -0.202,
+        0.12,
+        0.028
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0.135,
+        0.305,
+        0.245
+      ]
+    }
+  },
+  "mesuresGeometrie": {
+    "triangles": 5980,
+    "primitives": 5,
+    "trianglesDegeneres": 0,
+    "normalesInversees": 0,
+    "normalesErreurMax": 3.934867831567601e-08,
+    "tangentesErreurMax": 3.967633777079982e-08,
+    "orthogonaliteErreurMax": 3.606463838679019e-08,
+    "valeursFinies": true,
+    "uvDansAtlas": true,
+    "imagesExternes": true,
+    "noeudsUniques": true,
+    "racineAnimee": false,
+    "boucles": {
+      "repos": true,
+      "deplacement": true
+    },
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "albedoEquipeEcartMax": 0,
+    "metalCanalBIdentique": true
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_grue.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_grue.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_grue.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "textures": {
+    "cartes": [
+      {
+        "canal": "albedo",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 456826,
+        "sha256": "614e0e8b88603f57c526c40aa290daaa96d637db225ea283e512f1cdff4c8258"
+      },
+      {
+        "canal": "normale",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 583645,
+        "sha256": "2d51e86c0ac7be88856137f2d5903825b7e5b113c875883b0afe2f855d17a443"
+      },
+      {
+        "canal": "rugosite",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "RGB",
+        "octets": 126498,
+        "sha256": "7d1967218075305e65a2cd6f479f80480c19f707949474467c66ffca9e4fe85c"
+      },
+      {
+        "canal": "metal",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "canal": "masque_equipe",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      }
+    ],
+    "eclairageAlbedo": "aucun calcul de lumière ; pigment et grain procéduraux seuls",
+    "normale": "+Y tangent analytique, pas de bake HD",
+    "canalRugosite": "G = rugosité ; B = métal",
+    "masqueEquipe": "cabine et panneaux latéraux de soute, 0/255 opaque, gris exact sous les blancs",
+    "soute": "plancher et assises sans couleur d’équipe"
+  },
+  "ancresSilhouette": [
+    "Chenilles à galets visibles et patins distincts",
+    "Soute ouverte, banquettes latérales, rampe arrière abaissée et cabine avancée",
+    "Grue à deux bras repliés sur le flanc gauche, sans tourelle ni armement"
+  ],
+  "fichiers": [
+    {
+      "nom": "unite_transport_base_albedo.png",
+      "octets": 456826,
+      "sha256": "614e0e8b88603f57c526c40aa290daaa96d637db225ea283e512f1cdff4c8258"
+    },
+    {
+      "nom": "unite_transport_base_lod0.glb",
+      "octets": 508236,
+      "sha256": "5f7d678f92351d28dffb7d5eeedda7b0b13d6cff8179463286fa12ddcce7e3e3"
+    },
+    {
+      "nom": "unite_transport_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_transport_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_transport_base_normale.png",
+      "octets": 583645,
+      "sha256": "2d51e86c0ac7be88856137f2d5903825b7e5b113c875883b0afe2f855d17a443"
+    },
+    {
+      "nom": "unite_transport_base_rugosite.png",
+      "octets": 126498,
+      "sha256": "7d1967218075305e65a2cd6f479f80480c19f707949474467c66ffca9e4fe85c"
+    }
+  ],
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "La rampe reste abaissée dans cette version ; elle n’a pas de nœud distinct dans le contrat.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}
