@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "date": "2026-09-14",
+  "date": "2026-09-16",
   "mesuresTelephone": "en_attente_appareil_reel",
   "assets": [
     {
@@ -15,6 +15,18 @@
       "actifSha256": "11d173c359e4c0dddb5482e831e043f17fddec4fbc727f483892ed41a61aba09",
       "controle": "ok",
       "octetsLotAvant": 31492496
+    },
+    {
+      "id": "unite_antiair_base",
+      "trianglesAvant": 950812,
+      "triangles": 47896,
+      "glbOctetsAvant": 28181828,
+      "glbOctets": 1170216,
+      "octetsLot": 11841950,
+      "revision": "f6046f80ecbaa7bafb3e76fa501dd24a25f218b666fe953ec8e3e0fc36563cef",
+      "sourcePrepareeSha256": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899",
+      "actifSha256": "e9279cc5eb5a31b5dce9131879811d106caec5b26e33ab46cae1c04456a698b4",
+      "controle": "ok"
     },
     {
       "id": "unite_barge_base",

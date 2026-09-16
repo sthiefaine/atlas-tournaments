@@ -1,11 +1,11 @@
-# unite_antiair_base — candidat source HD
+# Anti-air — LOD0 de jeu issu de la source uploadée
 
-Source uploadée : `military tank 3d model.glb`, SHA-256 `bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989`.
+Préparé le 16 septembre 2026 depuis `military tank 3d model.glb` (SHA-256 `bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989`). Cette source locale correspond à la révision uploadée connue ; la dernière révision du stockage distant n'a pas été interrogée. La source brute et le maître préparé avec ses PNG originaux sont conservés dans le stockage privé du dépôt. `maitre.json` donne les empreintes et les chemins de récupération Git/données immuables.
 
-950800 triangles de la source conservés ; 950812 triangles livrés. LOD0 uniquement. Normales et UV issus de la source ; mise aux dimensions et préparation des attaches, sans décimation. Cartes PBR 4096² conservées en PNG externes ; masque binaire 512², zones correspondantes neutralisées dans l’albédo.
+Le modèle comporte **47 896 triangles**, contre 950 812 dans le maître préparé, sous un budget de 60 000. Le GLB pèse 1 170 216 octets ; le lot GLB + six PNG externes pèse **11 841 950 octets (11,29 Mio)**, contre 59 157 037 octets (56,42 Mio), soit −79,98 %. Un seul LOD0 est livré.
 
-Poids des fichiers : 59157037 octets. Verdict technique `ok`. Exposition comme candidat dans l’inspecteur, aucune activation en jeu ni approbation artistique automatique.
+La réduction QEM préserve les frontières de maillage et les coutures UV. Les sommets conservés gardent leurs positions, UV et normales ; la compression Meshopt n'ajoute aucune quantification. Les six nœuds, deux matériaux, références de textures et valeurs/cibles des cinq animations sont conservés à l'identique. L'indicateur `socle` garde ses 12 triangles et son extinction par animation. Le masque d'équipe binaire 512² reste identique ; les quatre cartes 4K passent à 2K, avec rééchantillonnage linéaire de l'albédo et renormalisation des normales. L'émission 512² reste inchangée. **Aucun nouveau bake de détails HD vers low-poly n'a été effectué** : les cartes de normales existantes sont réutilisées.
 
-À vérifier humainement : orientation avant, silhouette, segmentation des pièces mobiles, zones d’équipe et absence d’éclairage déjà présent dans les textures source. Les animations sont rigides ; aucune nouvelle marche squelettique individuelle pour l’infanterie. Le contrôle technique ne démontre pas ces qualités visuelles.
+Contrôle `npm run controler:asset -- --spec assets/specs/unite_antiair_base.json --lot tmp/production-sequentielle/unite_antiair_base` : **ok**, aucun refus. Détails et empreintes : `revue-technique.json`, `optimisation.json`, `textures-optimisation.json`.
 
-Préparation : `python3 scripts/antiair/preparer-source.py <source.glb>` puis `npm run controler:asset -- --spec assets/specs/unite_antiair_base.json --lot assets/livraisons/unite_antiair_base`.
+Limites : les plus petits détails géométriques et texels sont réduits ; l'erreur interne maximale estimée de 1,661 mm n'est pas une preuve de distance de Hausdorff. La segmentation des articulations, la silhouette, l'orientation avant et l'absence de lumière peinte restent non vérifiées visuellement. Aucune capture, aucun examen visuel, aucune suite de tests ni mesure FPS sur téléphone réel. Le contrôle technique n'est pas une approbation artistique. Ce dossier est prêt pour l'intégration directe autorisée ; le coordinateur effectue le remplacement et le push.

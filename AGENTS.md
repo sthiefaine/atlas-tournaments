@@ -1,5 +1,11 @@
 # AGENTS.md — passation
 
+## Production séquentielle des modèles — 16 septembre 2026
+
+Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.
+
+Premier lot : anti-air source uploadée `bd7e4df5…`, 47 896 triangles, 11 841 950 octets, contrôle technique ok. Sources brute/préparée archivées immuables ; valeurs/cibles des cinq animations et masque conservés. Il remplace l'ancienne géométrie active de 2 704 triangles. L'artillerie uploadée vient ensuite. Jeton distant non configuré localement : seules les révisions connues vérifiées par SHA sont attestées, pas une dernière révision distante. Aucun test général, capture, contrôle visuel ni FPS téléphone. Intégrateur étendu à ces deux bases, avec garde de l'empreinte active avant préparation quand le maître HD n'a encore jamais été activé.
+
 ## Sources HD et LOD0 mobile — décision en vigueur, 14 septembre 2026
 
 Le propriétaire confirme Three.js + WebGPU et autorise désormais un **seul LOD0 optimisé pour le jeu**, les maîtres HD restant immuables avec leurs textures originales. Cette décision remplace l’ancienne interdiction de décimation/réduction de texture « comme la barge ». Ne plus relever les budgets au million de triangles de la source. Préserver volumes, UV, nœuds et animations ; détails de matière dans les normales, provenance et pertes documentées. Remplacement direct après contrôle technique toujours autorisé, aucune approbation artistique automatique.

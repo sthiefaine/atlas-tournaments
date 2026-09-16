@@ -30,18 +30,19 @@ const modeles = specs.map((s, index) => {
   const actif = lireGlb(`public/assets/modeles/${nomModele(s, 0)}`), candidat = lireGlb(`${dossier}/${nomModele(s, 0)}`);
   const deja = optimises.find(x => x.id === s.id && x.actifSha256 === actif?.sha256);
   const ancienModele = ancien?.modeles?.find((x: { id: string }) => x.id === s.id);
+  const suiviValide = ancienModele && ancienModele.actuel?.sha256 === actif?.sha256;
   const etat = deja ? 'livre' : s.id === 'terrain_plaine' ? 'conserver_rendu_procedural' : provenance ? 'a_preparer_source_hd' : candidat ? 'a_retravailler' : 'a_creer';
   const requis = [nomModele(s, 0), ...s.textures.filter(t => t.obligatoire).map(t => nomTexture(s, t.canal))];
   const presents = requis.filter(n => existsSync(path.join(dossier, n)));
   return {
     ordre: index + 1, id: s.id, famille: s.type, description: s.description.fr,
-    etat: ancienModele?.suivi?.commit ? ancienModele.etat : etat,
+    etat: suiviValide ? ancienModele.etat : etat,
     specification: `assets/specs/${s.id}.json`, destination: dossier,
     source: provenance ? { nature: 'glb_uploade', nom: provenance.source, sha256: provenance.sha256 } : deja ? { nature: 'maitre_hd_archive', manifeste: `${dossier}/maitre.json` } : { nature: 'aucune_source_hd_identifiee', action: 'Rechercher un dépôt avant création ; conserver tout upload existant.' },
     actuel: actif, candidat, budgetTriangles: s.budget.lod0, fichiersRequis: requis,
     ordreDeTravail: ['lire_contrat_et_provenance', 'archiver_maitre', 'preparer_lod0_et_png', 'controler_lot', 'integrer', 'mettre_a_jour_plan', 'commit_et_push_main'],
     agent: { metier: 'Artiste technique 3D jeu vidéo', responsabilite: 'Une seule fiche à la fois ; modèle, UV, PBR, articulations et rapport honnête. Le coordinateur intègre et pousse après contrôle.' },
-    suivi: ancienModele?.suivi ?? (deja ? { commit: 'ffbc057', controle: 'ok', revision: deja.revision, approbationArtistique: false } : { commit: null, controle: 'non_effectue', approbationArtistique: false }),
+    suivi: suiviValide ? ancienModele.suivi : (deja ? { commit: ['unite_infanterie_base', 'unite_char_leger_base', 'unite_barge_base', 'batiment_qg_base'].includes(s.id) ? 'ffbc057' : null, controle: 'ok', revision: deja.revision, approbationArtistique: false } : { commit: null, controle: 'non_effectue', approbationArtistique: false }),
     prompt: promptProduction(s, presents, provenance?.sha256 ? { revision: provenance.sha256 } : null),
   };
 });

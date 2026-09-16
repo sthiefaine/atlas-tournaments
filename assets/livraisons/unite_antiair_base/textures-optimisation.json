@@ -1,0 +1,86 @@
+[
+  {
+    "nom": "unite_antiair_base_albedo.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 7760985,
+    "octets": 2836432,
+    "sourceSha256": "b93d5ea94955cce6ffe536a6acdfb7a6b101fb04264b40a9141f361e8c8142ed"
+  },
+  {
+    "nom": "unite_antiair_base_emission.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 843,
+    "octets": 843,
+    "sourceSha256": "1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b"
+  },
+  {
+    "nom": "unite_antiair_base_masque_equipe.png",
+    "avant": [
+      512,
+      512
+    ],
+    "apres": [
+      512,
+      512
+    ],
+    "octetsAvant": 3127,
+    "octets": 3127,
+    "sourceSha256": "9442388e3009d646c42450d7fe13c0cedabcc8e7bd004ec84b64a3975c380541"
+  },
+  {
+    "nom": "unite_antiair_base_metal.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 5428504,
+    "octets": 2362423,
+    "sourceSha256": "e328810191c63dc7db561426b87f93be17726ddd15f1c2f64b575e6ee8ee8261"
+  },
+  {
+    "nom": "unite_antiair_base_normale.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 3662185,
+    "octets": 1059933,
+    "sourceSha256": "6a6bc10e76bb9cfdb39ef245c7f7cf421fba1b05bcba6be779c26ff230e1a3f0"
+  },
+  {
+    "nom": "unite_antiair_base_rugosite.png",
+    "avant": [
+      4096,
+      4096
+    ],
+    "apres": [
+      2048,
+      2048
+    ],
+    "octetsAvant": 14119565,
+    "octets": 4408976,
+    "sourceSha256": "a6b64f150ec3183ffc639198e23957891315f10709da0fe304afca202b2ff18e"
+  }
+]

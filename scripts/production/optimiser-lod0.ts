@@ -15,6 +15,8 @@ interface Document extends DocumentCompresse {
   skins?: unknown[];
 }
 const PROFILS: Record<string, { maximum: number; cible: number; erreur: number }> = {
+  unite_antiair_base: { maximum: 60000, cible: 45000, erreur: .002 },
+  unite_artillerie_base: { maximum: 60000, cible: 45000, erreur: .002 },
   unite_infanterie_base: { maximum: 55000, cible: 40000, erreur: .001 },
   unite_char_leger_base: { maximum: 60000, cible: 40000, erreur: .003 },
   unite_barge_base: { maximum: 50000, cible: 38000, erreur: .001 },

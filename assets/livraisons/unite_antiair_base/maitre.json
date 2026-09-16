@@ -1,0 +1,69 @@
+{
+  "id": "unite_antiair_base",
+  "sha256Glb": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899",
+  "fichiers": [
+    {
+      "nom": "unite_antiair_base_albedo.png",
+      "sha256": "b93d5ea94955cce6ffe536a6acdfb7a6b101fb04264b40a9141f361e8c8142ed",
+      "octets": 7760985,
+      "donnees": "public/assets/donnees/b93d5ea94955cce6ffe536a6acdfb7a6b101fb04264b40a9141f361e8c8142ed.png"
+    },
+    {
+      "nom": "unite_antiair_base_emission.png",
+      "sha256": "1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b",
+      "octets": 843,
+      "donnees": "public/assets/donnees/1707efe457307d0a5e2f5a1ec1cff55b2a44286f3c4d8dda32bf394be8963b8b.png"
+    },
+    {
+      "nom": "unite_antiair_base_lod0.glb",
+      "sha256": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899",
+      "octets": 28181828,
+      "donnees": "public/assets/donnees/46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899.glb"
+    },
+    {
+      "nom": "unite_antiair_base_masque_equipe.png",
+      "sha256": "9442388e3009d646c42450d7fe13c0cedabcc8e7bd004ec84b64a3975c380541",
+      "octets": 3127,
+      "donnees": "public/assets/donnees/9442388e3009d646c42450d7fe13c0cedabcc8e7bd004ec84b64a3975c380541.png"
+    },
+    {
+      "nom": "unite_antiair_base_metal.png",
+      "sha256": "e328810191c63dc7db561426b87f93be17726ddd15f1c2f64b575e6ee8ee8261",
+      "octets": 5428504,
+      "donnees": "public/assets/donnees/e328810191c63dc7db561426b87f93be17726ddd15f1c2f64b575e6ee8ee8261.png"
+    },
+    {
+      "nom": "unite_antiair_base_normale.png",
+      "sha256": "6a6bc10e76bb9cfdb39ef245c7f7cf421fba1b05bcba6be779c26ff230e1a3f0",
+      "octets": 3662185,
+      "donnees": "public/assets/donnees/6a6bc10e76bb9cfdb39ef245c7f7cf421fba1b05bcba6be779c26ff230e1a3f0.png"
+    },
+    {
+      "nom": "unite_antiair_base_rugosite.png",
+      "sha256": "a6b64f150ec3183ffc639198e23957891315f10709da0fe304afca202b2ff18e",
+      "octets": 14119565,
+      "donnees": "public/assets/donnees/a6b64f150ec3183ffc639198e23957891315f10709da0fe304afca202b2ff18e.png"
+    }
+  ],
+  "sourceUpload": {
+    "source": "military tank 3d model.glb",
+    "sha256": "bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989",
+    "trianglesSource": 950800,
+    "trianglesLivres": 950812,
+    "trianglesAjoutes": 12,
+    "trianglesParAttache": [
+      623620,
+      197572,
+      99150,
+      30458
+    ],
+    "pixelsEquipe": 4558,
+    "approbationArtistique": false,
+    "limites": [
+      "Segmentation géométrique des attaches à vérifier humainement",
+      "Absence de lumière cuite non certifiée",
+      "Orientation front à confirmer dans inspecteur"
+    ]
+  },
+  "actifAvantSha256": "ef38f9d2a64df9bc777e62392aa0fdb88c5537ede0c570720e4e60ed7f7bd7aa"
+}

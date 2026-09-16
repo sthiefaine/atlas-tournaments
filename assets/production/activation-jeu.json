@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-14",
+  "date": "2026-09-16",
   "autorisation": "Conserver les sources HD, remplacer les quatre modèles lourds par un seul LOD0 optimisé ; demande du propriétaire du 14 septembre 2026.",
   "approbationArtistique": false,
   "controle": "controles_cibles_ok",
@@ -41,6 +41,14 @@
       "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
       "controle": "ok",
       "sourcePrepareeSha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab"
+    },
+    {
+      "id": "unite_antiair_base",
+      "fichierActif": "public/assets/modeles/unite_antiair_base_lod0.glb",
+      "donnees": "../donnees/e9279cc5eb5a31b5dce9131879811d106caec5b26e33ab46cae1c04456a698b4.glb",
+      "revision": "f6046f80ecbaa7bafb3e76fa501dd24a25f218b666fe953ec8e3e0fc36563cef",
+      "controle": "ok",
+      "sourcePrepareeSha256": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899"
     }
   ],
   "notes": [

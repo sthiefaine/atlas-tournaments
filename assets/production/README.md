@@ -1,5 +1,15 @@
 # Production des assets
 
+## File de modèles un par un — 16 septembre 2026
+
+`plan-modeles-3d.json` est le plan de travail séquentiel demandé par le propriétaire : 65 modèles communs (30 unités, 6 bâtiments, 9 terrains, 10 décors sans variante nationale et 10 archétypes de commandants). Les déclinaisons nationales sont hors de ce lot ; les régionales restent suspendues. La plaine conserve son rendu procédural par décision antérieure.
+
+Un seul spécialiste 3D prépare un seul modèle à la fois. Le coordinateur contrôle les fichiers, intègre, actualise le plan, fait un commit de ce modèle et le pousse sur `main` avant de lancer le suivant. La présence d'un ancien candidat ne signifie ni travail terminé ni approbation artistique. Les quatre bases livrées le 14 septembre sont déjà identifiées ; l'anti-air et l'artillerie uploadés viennent ensuite. Le plan ne promet pas de source HD pour les modèles qui n'en ont pas.
+
+Régénération de l'inventaire : `node --import tsx scripts/production/plan-modeles-3d.ts`. Préserver le suivi des travaux déjà commencés et leurs commits. Les sources HD uploadées sont prioritaires et immuables ; le modèle de jeu est un seul LOD0 optimisé, PNG externes. Le spécialiste travaille dans `tmp/production-sequentielle/<id>` puis le coordinateur appelle l'intégrateur seulement après contrôle technique. Aucun test général ni vérification visuelle automatique, conformément aux consignes du propriétaire.
+
+Les rapports de performance sur téléphone restent distincts de cette production et ne sont pas inventés.
+
 `plan-assets.json` contient une commande complète par spécification, les fichiers attendus et un état de présence au moment de sa génération. Régénérer avec `npm run produire:manifest` après chaque lot. L’admin propose également le téléchargement du JSON et du prompt par asset.
 
 Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. Les PNG restent externes et partagés entre les niveaux de détail. Les bases déjà livrées sont conservées. Les kits reprennent la géométrie de leur base.

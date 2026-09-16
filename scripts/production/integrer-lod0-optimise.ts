@@ -6,11 +6,11 @@ import { lireSpec } from '../controler-asset';
 import { controlerDepot, nomsAttendus } from '../../src/serveur/depot-modeles';
 
 const [id, preparation] = process.argv.slice(2);
-if (!id || !preparation || !['unite_infanterie_base', 'unite_barge_base', 'unite_char_leger_base', 'batiment_qg_base'].includes(id)) throw new Error('Asset optimisé et dossier de préparation requis');
+if (!id || !preparation || !['unite_infanterie_base', 'unite_barge_base', 'unite_char_leger_base', 'batiment_qg_base', 'unite_antiair_base', 'unite_artillerie_base'].includes(id)) throw new Error('Asset optimisé et dossier de préparation requis');
 const hash = (b: Uint8Array) => createHash('sha256').update(b).digest('hex');
 const json = (p: string) => JSON.parse(readFileSync(p, 'utf8'));
 const optimisation = json(path.join(preparation, 'optimisation.json'));
-const maitre = json(path.join(preparation, 'maitre.json')) as { id: string; sha256Glb: string; fichiers: { nom: string; sha256: string }[] };
+const maitre = json(path.join(preparation, 'maitre.json')) as { id: string; sha256Glb: string; actifAvantSha256?: string; fichiers: { nom: string; sha256: string }[] };
 const spec = lireSpec(`assets/specs/${id}.json`), nomGlb = `${id}_lod0.glb`;
 if (maitre.id !== id || optimisation.id !== id || maitre.sha256Glb !== optimisation.sourcePrepareeSha256) throw new Error('Mauvaise provenance');
 for (const f of maitre.fichiers) {
@@ -18,7 +18,9 @@ for (const f of maitre.fichiers) {
   if (hash(readFileSync(source)) !== f.sha256) throw new Error('Maître HD absent ou altéré : ' + source);
 }
 const actif = hash(readFileSync(path.join('public/assets/modeles', nomGlb)));
-if (![maitre.sha256Glb, optimisation.glbSha256].includes(actif)) throw new Error('Le modèle actif a changé depuis la préparation');
+// Une source uploadée peut n'avoir encore jamais remplacé l'ancien modèle.
+// Le spécialiste fige alors l'empreinte active de départ dans sa provenance.
+if (![maitre.sha256Glb, optimisation.glbSha256, maitre.actifAvantSha256].includes(actif)) throw new Error('Le modèle actif a changé depuis la préparation');
 const fichiers = nomsAttendus(spec).filter(n => existsSync(path.join(preparation, n))).map(nom => ({ nom, octets: readFileSync(path.join(preparation, nom)) }));
 const avant = fichiers.map(f => hash(f.octets));
 const verdict = controlerDepot(spec, fichiers);
@@ -58,6 +60,9 @@ for (const f of maitre.fichiers.filter(f => f.nom.endsWith('_hiver.png'))) {
 const empreinte = revision.digest('hex');
 const rapport = { id, revision: empreinte, octets: fichiers.reduce((n, f) => n + f.octets.length, 0), verdict, approbationArtistique: false, integration: 'actif_lod0_optimise' };
 for (const nom of ['maitre.json', 'optimisation.json', 'textures-optimisation.json']) writeFileSync(path.join(lot, nom), readFileSync(path.join(preparation, nom)));
+for (const nom of ['revue-technique.json', 'README.md']) {
+  if (existsSync(path.join(preparation, nom))) writeFileSync(path.join(lot, nom), readFileSync(path.join(preparation, nom)));
+}
 writeFileSync(path.join(lot, 'validation-lot.json'), JSON.stringify(rapport, null, 2) + '\n');
 writeFileSync(path.join(lot, 'version-candidat.json'), JSON.stringify({ revision: empreinte, source: 'maitre.json', preparation: 'optimisation.json', approbationArtistique: false }, null, 2) + '\n');
 const exposition = json('assets/production/exposition.json');
@@ -71,4 +76,9 @@ bilan.assets = bilan.assets.filter((a: { id: string }) => a.id !== id);
 bilan.assets.push({ id, trianglesAvant: optimisation.trianglesAvant, triangles: optimisation.triangles, glbOctetsAvant: optimisation.glbOctetsAvant, glbOctets: optimisation.glbOctets, octetsLot: rapport.octets, revision: empreinte, sourcePrepareeSha256: maitre.sha256Glb, actifSha256: optimisation.glbSha256, controle: 'ok' });
 bilan.assets.sort((a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id));
 writeFileSync(registre, JSON.stringify(bilan, null, 2) + '\n');
+const registreActif = 'assets/production/activation-jeu.json';
+const activation = json(registreActif);
+activation.assets = activation.assets.filter((a: { id: string }) => a.id !== id);
+activation.assets.push({ id, fichierActif: `public/assets/modeles/${nomGlb}`, donnees: `../donnees/${optimisation.glbSha256}.glb`, revision: empreinte, controle: 'ok', sourcePrepareeSha256: maitre.sha256Glb });
+writeFileSync(registreActif, JSON.stringify(activation, null, 2) + '\n');
 console.log(JSON.stringify({ id, triangles: optimisation.triangles, octetsLot: rapport.octets, verdict: 'ok', revision: empreinte }));
