@@ -17,6 +17,8 @@
     "commande": "npm run typecheck",
     "codeSortie": 0
   },
-  "date": "2026-09-20T11:20:53.806822+00:00",
-  "sha256GlbControle": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d"
+  "date": "2026-09-20T11:47:52.520411+00:00",
+  "sha256GlbControle": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
+  "verificationBornesTemporelles": "Contrôle binaire partagé renforcé : sept inputs FLOAT SCALAR et min/max exacts.",
+  "correctionFormat": "correction-format.json"
 }

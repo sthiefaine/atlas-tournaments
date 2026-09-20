@@ -65,5 +65,7 @@
   "ressortPasMetres": 0.024,
   "ressortDiametreFilMetres": 0.0222,
   "paraboleConcaviteMesureeMetres": 0.049999992946833674,
-  "paraboleEpaisseurMesureeMetres": 0.012000012804436407
+  "paraboleEpaisseurMesureeMetres": 0.012000012804436407,
+  "sha256GlbMesure": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
+  "correctionFormat": "correction-format.json"
 }

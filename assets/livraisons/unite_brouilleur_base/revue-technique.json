@@ -18,9 +18,9 @@
       0.5164100467059761,
       0.8500000238418579
     ],
-    "octetsGlb": 422104,
-    "octetsGlbEtPng": 1592511,
-    "sha256Glb": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+    "octetsGlb": 422316,
+    "octetsGlbEtPng": 1592723,
+    "sha256Glb": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
     "fichiers": [
       {
         "nom": "unite_brouilleur_base_albedo.png",
@@ -34,8 +34,8 @@
       },
       {
         "nom": "unite_brouilleur_base_lod0.glb",
-        "octets": 422104,
-        "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d"
+        "octets": 422316,
+        "sha256": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77"
       },
       {
         "nom": "unite_brouilleur_base_masque_equipe.png",
@@ -81,12 +81,23 @@
     "balayageRadar360": 0.4957620294153135,
     "paraboleConcaviteMetres": 0.049999992946833674,
     "ressortPasMetres": 0.024,
-    "ressortFilDiametreMetres": 0.0222
+    "ressortFilDiametreMetres": 0.0222,
+    "correctionFormat": {
+      "rapport": "correction-format.json",
+      "septInputsFloatScalarBornesExactes": true,
+      "binEntierIdentiqueActif": true,
+      "sixPngIdentiquesActif": true,
+      "jsonIdentiqueHorsBornesInputs": true,
+      "controleLotRenforce": "ok",
+      "typecheckFinal": "ok",
+      "date": "2026-09-20T11:47:52.520411+00:00"
+    }
   },
   "corrections": [
     "Budget initial 6 712 triangles ramené à 5 992 par simplification des petites tôles, pneus et ressort.",
     "Ressort à trois tours et pas de 24 mm pour éviter les tours qui se recouvrent ; chapeau de liaison ajouté.",
-    "Supports et fouet épaissis, sans changement de budget."
+    "Supports et fouet épaissis, sans changement de budget.",
+    "Format glTF : alleger() préserve min/max des sept entrées temporelles ; quatorze champs JSON ajoutés, BIN entier et six PNG identiques à l’actif précédent. GLB +212 octets, aucun changement de contenu."
   ],
   "limites": [
     "Aucun test général, build, rendu, capture, inspection visuelle ni FPS téléphone. Lisibilité à 48 px/m non attestée.",
@@ -101,6 +112,7 @@
     "mesures-geometrie.json",
     "mesures-mouvements.json",
     "mesures-poses-glb.json",
-    "controle-technique.json"
+    "controle-technique.json",
+    "correction-format.json"
   ]
 }

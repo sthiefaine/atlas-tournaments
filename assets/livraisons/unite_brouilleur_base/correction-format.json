@@ -1,0 +1,170 @@
+{
+  "id": "unite_brouilleur_base",
+  "date": "2026-09-20T11:46:57.348108+00:00",
+  "approbationArtistique": false,
+  "objet": "Préserver les bornes min/max des sept accesseurs FLOAT SCALAR d’entrée temporelle des animations, requises par glTF 2.0. Aucun changement de forme, UV, noms, clips ou valeurs.",
+  "actifAvant": {
+    "chemin": "public/assets/modeles/unite_brouilleur_base_lod0.glb",
+    "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+    "octets": 422104
+  },
+  "stagingCorrige": {
+    "chemin": "tmp/production-sequentielle/unite_brouilleur_base/unite_brouilleur_base_lod0.glb",
+    "sha256": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
+    "octets": 422316,
+    "octetsGlbEtSixPng": 1592723,
+    "deltaOctets": 212
+  },
+  "comparaison": {
+    "binEntierIdentique": true,
+    "octetsBin": 410864,
+    "sha256Bin": "4f37ca5545e7f5c57e0dddbfaf75a9b549dfedce4c70905747d42709d9616bad",
+    "jsonIdentiqueHorsBornesInputs": true,
+    "seulsChangements": [
+      {
+        "chemin": "accessors[26].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[26].max",
+        "ajout": [
+          2.4000000953674316
+        ]
+      },
+      {
+        "chemin": "accessors[29].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[29].max",
+        "ajout": [
+          1
+        ]
+      },
+      {
+        "chemin": "accessors[34].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[34].max",
+        "ajout": [
+          0.5
+        ]
+      },
+      {
+        "chemin": "accessors[36].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[36].max",
+        "ajout": [
+          0.5
+        ]
+      },
+      {
+        "chemin": "accessors[39].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[39].max",
+        "ajout": [
+          0.8999999761581421
+        ]
+      },
+      {
+        "chemin": "accessors[42].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[42].max",
+        "ajout": [
+          0.8999999761581421
+        ]
+      },
+      {
+        "chemin": "accessors[45].min",
+        "ajout": [
+          0
+        ]
+      },
+      {
+        "chemin": "accessors[45].max",
+        "ajout": [
+          0.8999999761581421
+        ]
+      }
+    ],
+    "inputsCorriges": [
+      26,
+      29,
+      34,
+      36,
+      39,
+      42,
+      45
+    ],
+    "bornesReluesDansBinExactes": true,
+    "typeInputs": "FLOAT SCALAR",
+    "png": [
+      {
+        "nom": "unite_brouilleur_base_albedo.png",
+        "octets": 457274,
+        "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+        "identiqueActif": true
+      },
+      {
+        "nom": "unite_brouilleur_base_emission.png",
+        "octets": 1015,
+        "sha256": "e41de5fa9452633a4368e1ed75e95b67ba1e047e10ba6a21d35598b38da0932c",
+        "identiqueActif": true
+      },
+      {
+        "nom": "unite_brouilleur_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+        "identiqueActif": true
+      },
+      {
+        "nom": "unite_brouilleur_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+        "identiqueActif": true
+      },
+      {
+        "nom": "unite_brouilleur_base_normale.png",
+        "octets": 584876,
+        "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+        "identiqueActif": true
+      },
+      {
+        "nom": "unite_brouilleur_base_rugosite.png",
+        "octets": 126110,
+        "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+        "identiqueActif": true
+      }
+    ]
+  },
+  "limites": [
+    "Correction du format uniquement ; aucune validation artistique.",
+    "Aucune suite de tests, aucun rendu, aucune capture ni mesure de FPS."
+  ],
+  "controleFinal": {
+    "lot": "ok",
+    "fichiersAcceptes": 7,
+    "motifs": [],
+    "typecheck": "ok",
+    "date": "2026-09-20T11:47:52.520411+00:00"
+  }
+}

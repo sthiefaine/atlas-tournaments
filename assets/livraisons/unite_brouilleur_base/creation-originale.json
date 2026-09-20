@@ -16,8 +16,8 @@
     },
     {
       "nom": "unite_brouilleur_base_lod0.glb",
-      "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
-      "octets": 422104
+      "sha256": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
+      "octets": 422316
     },
     {
       "nom": "unite_brouilleur_base_masque_equipe.png",
@@ -41,146 +41,176 @@
     }
   ],
   "verificationDistante": {
-    "date": "2026-09-20T11:22:12.432Z",
+    "date": "2026-09-20T11:48:12.611Z",
     "nombreDepots": 0,
     "revisionRecente": null
   },
-  "archivePrecedente": "assets/receptions/unite_brouilleur_base/avant-ad807880142fa7768789d7c0361aee2088e09a4a4c91b08ebc4f1de38f144231",
+  "archivePrecedente": "assets/receptions/unite_brouilleur_base/avant-3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
   "precedents": [
     {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_albedo.png",
-      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
-      "octets": 288414
+      "chemin": "assets/livraisons/unite_brouilleur_base/README.md",
+      "sha256": "71c419456ce373fcfc65d824eefc02619a996764c29225cde3cd013c6deb3948",
+      "octets": 4005
     },
     {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_albedo_hiver.png",
-      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
-      "octets": 292605
+      "chemin": "assets/livraisons/unite_brouilleur_base/controle-technique.json",
+      "sha256": "0cf8d739a322837a8b71e8b52e9aa7c28071f53ea0b126898aaf5ccbc3c4f4ee",
+      "octets": 745
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/creation-originale.json",
+      "sha256": "14498e9054784902c1e43cc56197c6f206f2606d5f313303c142d2c519f9217e",
+      "octets": 7251
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/fabrication.json",
+      "sha256": "726e5454c277b57a61e33bd75874a7c173364b445591dc07498863aedc9c3576",
+      "octets": 4079
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/inspection-ancien-candidat.json",
+      "sha256": "761167575bff8a91484f5bae8aa4a72ce6c057079ea2d92f7334bf36b4a5768f",
+      "octets": 14085
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/mesures-geometrie.json",
+      "sha256": "15ee8145308e6d9dda85d79cd0daf9fdb392cf520b4fa046de3b93f89e7beb08",
+      "octets": 1691
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/mesures-mouvements.json",
+      "sha256": "ef2e3f3f7882c354b4dea7f670ea7137238c211ce5d02f265664d993f7f2c7c8",
+      "octets": 2084
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/mesures-poses-glb.json",
+      "sha256": "b3687cd2ce3a5ad0a425b0cbef59e81e751a0ac5616b14fb46292f8ff2b1f00c",
+      "octets": 3413
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/revue-technique.json",
+      "sha256": "ea3cedd5c9becc3938351d8c9a0c4b2361df1d7d1fd341ea7ca936bdf231a520",
+      "octets": 4359
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/textures-fabrication.json",
+      "sha256": "639176a0b6ac2691b505162962f5336cd6668cca4eb06415d59bf1ed54afbe0f",
+      "octets": 2567
+    },
+    {
+      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_albedo.png",
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_emission.png",
-      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
-      "octets": 842
-    },
-    {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_emission_hiver.png",
-      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
-      "octets": 842
+      "sha256": "e41de5fa9452633a4368e1ed75e95b67ba1e047e10ba6a21d35598b38da0932c",
+      "octets": 1015
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_lod0.glb",
-      "sha256": "ad807880142fa7768789d7c0361aee2088e09a4a4c91b08ebc4f1de38f144231",
-      "octets": 79508
+      "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+      "octets": 422104
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_masque_equipe.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
-    },
-    {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_masque_equipe_hiver.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_metal.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
-    },
-    {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_metal_hiver.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_normale.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
-    },
-    {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_normale_hiver.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_rugosite.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
     },
     {
-      "chemin": "assets/livraisons/unite_brouilleur_base/unite_brouilleur_base_rugosite_hiver.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "chemin": "assets/livraisons/unite_brouilleur_base/validation-lot.json",
+      "sha256": "53b974bb987082047d1f26547cbe9bcfd975bde834363486d9639cf40e3d6c31",
+      "octets": 642
     },
     {
       "chemin": "assets/livraisons/unite_brouilleur_base/version-candidat.json",
-      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
-      "octets": 53
+      "sha256": "af558862e4c8297ca3e2ab46f5fc1a7a0b9ffa22fea255f98bd12c9a7f3006bd",
+      "octets": 158
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_lod0.glb",
+      "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+      "octets": 422104
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_albedo.png",
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_normale.png",
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_rugosite.png",
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_metal.png",
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_masque_equipe.png",
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
+    },
+    {
+      "chemin": "public/assets/modeles/unite_brouilleur_base_emission.png",
+      "sha256": "e41de5fa9452633a4368e1ed75e95b67ba1e047e10ba6a21d35598b38da0932c",
+      "octets": 1015
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_lod0.glb",
-      "sha256": "ad807880142fa7768789d7c0361aee2088e09a4a4c91b08ebc4f1de38f144231",
-      "octets": 79508
+      "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+      "octets": 422104
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_albedo.png",
-      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
-      "octets": 288414
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_albedo_hiver.png",
-      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
-      "octets": 292605
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_normale.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_normale_hiver.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_rugosite.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_rugosite_hiver.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_metal.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_metal_hiver.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_masque_equipe.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_masque_equipe_hiver.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
     },
     {
       "chemin": "public/assets/candidats/unite_brouilleur_base_emission.png",
-      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
-      "octets": 842
-    },
-    {
-      "chemin": "public/assets/candidats/unite_brouilleur_base_emission_hiver.png",
-      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
-      "octets": 842
+      "sha256": "e41de5fa9452633a4368e1ed75e95b67ba1e047e10ba6a21d35598b38da0932c",
+      "octets": 1015
     }
   ],
   "approbationArtistique": false

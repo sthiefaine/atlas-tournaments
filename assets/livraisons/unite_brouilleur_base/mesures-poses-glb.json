@@ -109,5 +109,7 @@
     "Sol mesuré aux échantillons ; rayon majoré continûment.",
     "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
     "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe."
-  ]
+  ],
+  "sha256GlbMesure": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
+  "correctionFormat": "correction-format.json"
 }

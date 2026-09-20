@@ -104,7 +104,13 @@ export function controlerBinaire(octets: Uint8Array, spec: AssetSpec): MotifAsse
       for (const canal of clip.channels) {
         const s = clip.samplers[canal.sampler]; if (!s) throw new Error('sampler d’animation absent');
         const temps = valeurs(s.input), sortie = valeurs(s.output), a = d.accessors![s.output]!;
-        if (d.accessors![s.input]!.type !== 'SCALAR' || temps[0] !== 0 || temps.some((t, i) => i > 0 && t <= temps[i - 1]!)) refuser(`${attendu.nom} : temps croissants à partir de zéro requis`);
+        const entree = d.accessors![s.input]!;
+        if (entree.type !== 'SCALAR' || entree.componentType !== 5126 || temps[0] !== 0 || temps.some((t, i) => i > 0 && t <= temps[i - 1]!)) refuser(`${attendu.nom} : temps FLOAT croissants à partir de zéro requis`);
+        // glTF exige les bornes des entrées temporelles, même si le lecteur sait lire les clés sans elles.
+        if (![entree.min, entree.max].every(b => Array.isArray(b) && b.length === 1 && Number.isFinite(b[0]))
+          || Math.abs(entree.min![0]! - temps[0]!) > 1e-6 || Math.abs(entree.max![0]! - temps.at(-1)!) > 1e-6) {
+          refuser(`${attendu.nom} : bornes min/max des temps absentes ou différentes des clés`);
+        }
         fin = Math.max(fin, temps.at(-1)!);
         const n = d.nodes?.[canal.target.node];
         if (!n || n.name === 'racine' || !['translation', 'rotation', 'scale', 'weights'].includes(canal.target.path)) refuser(`${attendu.nom} : cible absente ou mouvement de racine`);

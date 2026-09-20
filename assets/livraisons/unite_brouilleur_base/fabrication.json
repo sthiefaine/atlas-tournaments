@@ -9,8 +9,8 @@
   },
   "triangles": 5992,
   "budgetTriangles": 6000,
-  "octetsGlb": 422104,
-  "sha256Glb": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+  "octetsGlb": 422316,
+  "sha256Glb": "16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77",
   "bornes": {
     "min": [
       -0.31599998474121094,
@@ -187,5 +187,11 @@
     "Pneus rigides ; suspension portée par corps sans rotation de roues.",
     "Fouet déformé statiquement et animé par rotation de son pied, sans peau souple.",
     "Aucun bake HD ni essai téléphone."
-  ]
+  ],
+  "correctionFormat": {
+    "rapport": "correction-format.json",
+    "sha256ActifAvant": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+    "bornesTemporellesPreservees": 7,
+    "binEtTexturesInchanges": true
+  }
 }
