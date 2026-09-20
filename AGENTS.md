@@ -1,5 +1,9 @@
 # AGENTS.md — passation
 
+Station radar intégrée : 4 852 triangles, cinq primitives, 1 677 244 octets. Parabole à coque épaisse, récepteur relié, balayage du berceau et indicateur de capture ; dalle et cabine fixes. Rampe monobloc et peinture du réflecteur corrigées. Quarante poses concordantes NumPy/GLTFLoader, 66 raccords ciblés, garde continue parabole/toit 45,667 mm et indicateur/butée 6 mm. Contrôle technique et typage réussis, aucun rendu. Trente-quatre modèles livrés ; usine suivante après push.
+
+Port poussé en `764e5bc`, GLB et cinq PNG confirmés en ligne par SHA, inventaire présent. Station radar en cours : `batiment_radar_base`, spécialiste `modele_30_radar`, lecture authentifiée sans upload le 20 septembre à 16:22 UTC. Ancien actif/candidat SHA `cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5`, 684 triangles. Attendre FINAL gelé. Runtime des bâtiments déjà raccordé ; aucun fichier TS partagé en modification actuellement.
+
 Port commun intégré : 4 668 triangles, cinq primitives, 1 756 631 octets. Quai ouvert de 49 cm, rampe courte, cabine et grue à treillis ; 264 poses, 69 raccords ciblés et séparation continue crochet/cabine ≥29,948 mm. Crochet fermé et flasques de tambour raccordés. Contrôle technique et typage réussis ; aucun rendu. Trente-trois modèles livrés, station radar suivante après push.
 
 Aéroport poussé en `9338ba6`, GLB et cinq PNG confirmés en ligne par SHA, inventaire présent. Port suivant en cours : `batiment_port_base`, spécialiste `modele_29_port`, aucun upload à la lecture authentifiée du 20 septembre à 16:09 UTC. Candidat et actif historiques SHA `d7b9b6463f022fb08576f8a2edd2f805162830e63cf3fecc09385bf64f98b59c` (900 triangles). Attendre FINAL gelé avant intégration ; les bâtiments opt-in n’animent que leurs équipements, jamais dalle/murs.

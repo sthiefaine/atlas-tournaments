@@ -1,0 +1,302 @@
+{
+  "id": "batiment_radar_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/batiment_radar_base",
+  "fichiers": [
+    {
+      "nom": "batiment_radar_base_albedo.png",
+      "sha256": "5dc90121a92a3cbde41d60c58d0d2bebdf08d828a24b91656bfd891c5bd47982",
+      "octets": 439407
+    },
+    {
+      "nom": "batiment_radar_base_emission.png",
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc",
+      "octets": 1202
+    },
+    {
+      "nom": "batiment_radar_base_lod0.glb",
+      "sha256": "f4405bd792fedc0203c8edcb51e72cbc0e03dffead1f9be8ad02e86d1ed1d20f",
+      "octets": 311644
+    },
+    {
+      "nom": "batiment_radar_base_masque_equipe.png",
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7",
+      "octets": 488
+    },
+    {
+      "nom": "batiment_radar_base_normale.png",
+      "sha256": "b95df9d08e3db65bc81c7bc37c38e950fd0bc855f19e4742df4a0254b7f30f87",
+      "octets": 829134
+    },
+    {
+      "nom": "batiment_radar_base_rugosite.png",
+      "sha256": "3b85fa7714f247402239499c94eadb8c1763140aa60f2b12a68e8f6fec6827d9",
+      "octets": 95369
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T16:43:55.582Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/batiment_radar_base/avant-cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/README.md",
+      "sha256": "af3e958605f1a36285b5979d31327cdcd45c87738bcf138ab290587d7f3b19cd",
+      "octets": 274
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_lod0.glb",
+      "sha256": "cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5",
+      "octets": 81260
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/batiment_radar_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/validation-lot.json",
+      "sha256": "659c1b3546077d254c70a43a2d818853eedd3cb2915df4d9dedcdbd37adc2e23",
+      "octets": 1101
+    },
+    {
+      "chemin": "assets/livraisons/batiment_radar_base/version-candidat.json",
+      "sha256": "ad316d3e1a5815d2061a9c633d4fade99e0506e4467d403f53dd1a2827ad9b82",
+      "octets": 76
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_lod0.glb",
+      "sha256": "cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5",
+      "octets": 81260
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_radar_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_lod0.glb",
+      "sha256": "cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5",
+      "octets": 81260
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_radar_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

@@ -1,0 +1,139 @@
+{
+  "id": "batiment_radar_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 4852,
+  "budgetTriangles": 5000,
+  "octetsGlb": 311644,
+  "sha256Glb": "f4405bd792fedc0203c8edcb51e72cbc0e03dffead1f9be8ad02e86d1ed1d20f",
+  "bornes": {
+    "min": [
+      -0.4300000071525574,
+      0,
+      -0.4300000071525574
+    ],
+    "max": [
+      0.4300000071525574,
+      0.7574600694179535,
+      0.4300000071525574
+    ],
+    "dimensions": [
+      0.8600000143051147,
+      0.7574600694179535,
+      0.8600000143051147
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "toit": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "enseigne": {
+      "parent": "toit",
+      "p": [
+        -0.238,
+        0.26,
+        -0.1
+      ]
+    },
+    "radar": {
+      "parent": "toit",
+      "p": [
+        0.015,
+        0.281,
+        -0.17
+      ]
+    }
+  },
+  "bilanTriangles": {
+    "dalle_rampee": 16,
+    "soubassement": 60,
+    "cabine": 28,
+    "cadre_vitrage": 60,
+    "meneau_avant": 12,
+    "cadre_porte": 60,
+    "porte": 60,
+    "poignee": 60,
+    "seuil": 60,
+    "coffret_ventilation": 60,
+    "fond_ventilation": 60,
+    "lame_ventilation_0": 12,
+    "lame_ventilation_1": 12,
+    "lame_ventilation_2": 12,
+    "lame_ventilation_3": 12,
+    "lame_ventilation_4": 12,
+    "trappe_service": 60,
+    "charniere_-0.345": 60,
+    "charniere_-0.225": 60,
+    "support_indicateur_-0.275": 60,
+    "support_indicateur_0.275": 60,
+    "vitrage_avant": 12,
+    "vitrage_porte": 12,
+    "lentille_-0.275": 48,
+    "lentille_0.275": 48,
+    "toiture": 60,
+    "rive_equipe": 60,
+    "fond_glissiere": 60,
+    "rail_-0.322": 60,
+    "rail_-0.154": 60,
+    "butée_-0.19": 60,
+    "butée_-0.004": 60,
+    "embase_moteur": 128,
+    "roulement_fixe": 128,
+    "indicateur_capture": 60,
+    "couronne_mobile": 128,
+    "traverse_berceau": 60,
+    "montant_berceau_-1": 60,
+    "palier_-1": 80,
+    "montant_berceau_1": 60,
+    "palier_1": 80,
+    "axe_elevation": 80,
+    "moyeu_parabole": 128,
+    "parabole_concave": 528,
+    "parabole_dos": 528,
+    "chant_parabole": 96,
+    "couronne_parabole": 576,
+    "nervure_0_0": 32,
+    "nervure_0_1": 32,
+    "nervure_1_0": 32,
+    "nervure_1_1": 32,
+    "nervure_2_0": 32,
+    "nervure_2_1": 32,
+    "nervure_3_0": 32,
+    "nervure_3_1": 32,
+    "nervure_4_0": 32,
+    "nervure_4_1": 32,
+    "nervure_5_0": 32,
+    "nervure_5_1": 32,
+    "bras_recepteur_0": 40,
+    "bras_recepteur_1": 40,
+    "bras_recepteur_2": 40,
+    "recepteur": 96,
+    "bouche_recepteur": 96
+  },
+  "approbationArtistique": false
+}

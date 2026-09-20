@@ -1,0 +1,153 @@
+{
+  "id": "batiment_radar_base",
+  "methode": "Atlas déterministe original ; pigment, joints sciés et microreliefs analytiques ; sans éclairage, reflet, ombre, occlusion cuits.",
+  "bakeHD": false,
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "gouttierePixels": 16,
+    "palette": [
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        203,
+        208,
+        205
+      ],
+      [
+        167,
+        167,
+        167
+      ],
+      [
+        143,
+        153,
+        157
+      ],
+      [
+        29,
+        68,
+        81
+      ],
+      [
+        193,
+        198,
+        196
+      ],
+      [
+        58,
+        63,
+        65
+      ],
+      [
+        36,
+        39,
+        39
+      ],
+      [
+        134,
+        149,
+        152
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        238,
+        191,
+        113
+      ],
+      [
+        29,
+        68,
+        81
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ]
+    ],
+    "equipe": [
+      2
+    ],
+    "emission": [
+      4,
+      10
+    ]
+  },
+  "cartes": [
+    {
+      "canal": "albedo",
+      "fichier": "batiment_radar_base_albedo.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 439407,
+      "sha256": "5dc90121a92a3cbde41d60c58d0d2bebdf08d828a24b91656bfd891c5bd47982"
+    },
+    {
+      "canal": "normale",
+      "fichier": "batiment_radar_base_normale.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 829134,
+      "sha256": "b95df9d08e3db65bc81c7bc37c38e950fd0bc855f19e4742df4a0254b7f30f87"
+    },
+    {
+      "canal": "rugosite",
+      "fichier": "batiment_radar_base_rugosite.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 95369,
+      "sha256": "3b85fa7714f247402239499c94eadb8c1763140aa60f2b12a68e8f6fec6827d9"
+    },
+    {
+      "canal": "emission",
+      "fichier": "batiment_radar_base_emission.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "canal": "masque_equipe",
+      "fichier": "batiment_radar_base_masque_equipe.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    }
+  ]
+}

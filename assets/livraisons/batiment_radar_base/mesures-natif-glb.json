@@ -1,0 +1,69 @@
+{
+  "id": "batiment_radar_base",
+  "methode": "GLTFLoader natif, objets clonés et AnimationMixer. Retrait des références de cartes en mémoire seulement, sans modifier le GLB. Parité avec interpolation et transformations NumPy à 2 micromètres.",
+  "clonesNoeudsIndependants": true,
+  "optInConserve": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 21,
+      "min": [
+        -0.4300000071525574,
+        0,
+        -0.4300000071525574
+      ],
+      "max": [
+        0.4300000071525574,
+        0.7574600694179535,
+        0.4300000071525574
+      ],
+      "mobile": {
+        "nom": "radar",
+        "min": [
+          -0.24812514899054772,
+          0.28450000290200117,
+          -0.2687536694204826
+        ],
+        "max": [
+          0.27812514899054774,
+          0.7574600694179535,
+          0.08744599103927611
+        ],
+        "matricesClesComparees": 9,
+        "erreurMatricesMax": 1.1362508933743243e-8
+      }
+    },
+    {
+      "nom": "capture",
+      "poses": 19,
+      "min": [
+        -0.4300000071525574,
+        0,
+        -0.4300000071525574
+      ],
+      "max": [
+        0.4300000071525574,
+        0.7574600694179535,
+        0.4300000071525574
+      ],
+      "mobile": {
+        "nom": "enseigne",
+        "min": [
+          -0.30900002270936966,
+          0.24999999068677425,
+          -0.1309999991208315
+        ],
+        "max": [
+          -0.16700000315904617,
+          0.2599999809265139,
+          -0.01899999938905239
+        ],
+        "matricesClesComparees": 5,
+        "erreurMatricesMax": 0
+      }
+    }
+  ],
+  "controleVisuel": false,
+  "approbationArtistique": false
+}

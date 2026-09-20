@@ -1,0 +1,144 @@
+{
+  "id": "batiment_radar_base",
+  "date": "2026-09-20T16:43:20.189718+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T16:22:21.046Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "cf3e5f30e142acbdc4019c1cc30d1317dff872ef25919e7ac571ed34607cf8c5",
+    "triangles": 684,
+    "octetsGlb": 81260,
+    "preserve": true,
+    "actifPreserve": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 4852,
+  "budgetTriangles": 5000,
+  "primitives": 5,
+  "materiaux": 2,
+  "octetsGlb": 311644,
+  "octetsLot": 1677244,
+  "dimensions": [
+    0.8600000143051147,
+    0.7574600694179535,
+    0.8600000143051147
+  ],
+  "sha256Glb": "f4405bd792fedc0203c8edcb51e72cbc0e03dffead1f9be8ad02e86d1ed1d20f",
+  "fichiers": [
+    {
+      "fichier": "batiment_radar_base_albedo.png",
+      "octets": 439407,
+      "sha256": "5dc90121a92a3cbde41d60c58d0d2bebdf08d828a24b91656bfd891c5bd47982"
+    },
+    {
+      "fichier": "batiment_radar_base_emission.png",
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "fichier": "batiment_radar_base_lod0.glb",
+      "octets": 311644,
+      "sha256": "f4405bd792fedc0203c8edcb51e72cbc0e03dffead1f9be8ad02e86d1ed1d20f"
+    },
+    {
+      "fichier": "batiment_radar_base_masque_equipe.png",
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    },
+    {
+      "fichier": "batiment_radar_base_normale.png",
+      "octets": 829134,
+      "sha256": "b95df9d08e3db65bc81c7bc37c38e950fd0bc855f19e4742df4a0254b7f30f87"
+    },
+    {
+      "fichier": "batiment_radar_base_rugosite.png",
+      "octets": 95369,
+      "sha256": "3b85fa7714f247402239499c94eadb8c1763140aa60f2b12a68e8f6fec6827d9"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/README.md",
+      "sha256": "fbee966441a30889ae1d67d6ad96c3ade9158382185589f397ebd6fc4f8c7cd4"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/assembler-revue.py",
+      "sha256": "7ef5737b922ac68709a54eaf76ad38b97fcff22b08d585279fdb11cc85ef055b"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/generer.ts",
+      "sha256": "306a0e90b0df06ceef1bc8a5e32617ffe0ce480fb4a728b3b8126eabc418408e"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/geometrie.py",
+      "sha256": "863ead39046508107a1acedcdab7e247e8a4a9a4cb0d61a90f32a68fae55913a"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/inspecter-ancien.py",
+      "sha256": "9c93aac99038b9cde815aed562e0870ed0eba9eb12ec9c272ba96297dde35b28"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/mesurer-natif.ts",
+      "sha256": "c796449fd08fed0d026aa59f421fd5704d711ebfa21bc586a6c05999756e508b"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/mesurer.py",
+      "sha256": "b604f41fabdaf24d22c7f6c8ff75e96da1db99b8994fe83b01220f2cbd4a20a3"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_radar_base/textures.py",
+      "sha256": "f559e08a856560d7a1dc135e3dedb5d03241c939e5142a4e71462772da11786a"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_radar_base_albedo.png",
+      "batiment_radar_base_emission.png",
+      "batiment_radar_base_lod0.glb",
+      "batiment_radar_base_masque_equipe.png",
+      "batiment_radar_base_normale.png",
+      "batiment_radar_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "poses": 40,
+    "pairesRaccordsListees": 66,
+    "controleExhaustifCollisions": false,
+    "pariteNumpyNatif": true,
+    "gardeContinueParaboleToit": 0.045666738919913796,
+    "rayonContinuRadar": 0.2631252364149566
+  },
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Mesures ciblées sur les pièces et sondes listées, pas de preuve exhaustive de non-intersection ou visibilité.",
+    "Textures retirées en mémoire pour charger sous Node ; cartes et UV contrôlés séparément.",
+    "Transitions entre animations non évaluées dans le jeu.",
+    "Aucune approbation artistique, capture ou mesure téléphone."
+  ]
+}

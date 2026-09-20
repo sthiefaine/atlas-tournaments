@@ -1605,23 +1605,13 @@
       "id": "batiment_radar_base",
       "fichiers": [
         "batiment_radar_base_albedo.png",
-        "batiment_radar_base_albedo_ete.png",
-        "batiment_radar_base_albedo_hiver.png",
-        "batiment_radar_base_normale.png",
-        "batiment_radar_base_normale_ete.png",
-        "batiment_radar_base_normale_hiver.png",
-        "batiment_radar_base_rugosite.png",
-        "batiment_radar_base_rugosite_ete.png",
-        "batiment_radar_base_rugosite_hiver.png",
         "batiment_radar_base_emission.png",
-        "batiment_radar_base_emission_ete.png",
-        "batiment_radar_base_emission_hiver.png",
+        "batiment_radar_base_lod0.glb",
         "batiment_radar_base_masque_equipe.png",
-        "batiment_radar_base_masque_equipe_ete.png",
-        "batiment_radar_base_masque_equipe_hiver.png",
-        "batiment_radar_base_lod0.glb"
+        "batiment_radar_base_normale.png",
+        "batiment_radar_base_rugosite.png"
       ],
-      "revision": "444ecc33d70f9e705b54a30da8bf0d3b0fb3805362615fed6b84d4d785ef8f8d"
+      "revision": "9a194c8ce6385bf5e359db2e43a9d379f76b0650b75a7781291c5c9e44ce86c5"
     },
     {
       "id": "batiment_radar_br",

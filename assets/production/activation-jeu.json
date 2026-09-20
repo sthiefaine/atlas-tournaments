@@ -273,6 +273,14 @@
       "revision": "97281a98555ff1412fc99f22c6b5ac0eea3094ec07f75fe432f4f76b9a396f3f",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "batiment_radar_base",
+      "fichierActif": "public/assets/modeles/batiment_radar_base_lod0.glb",
+      "donnees": "../donnees/f4405bd792fedc0203c8edcb51e72cbc0e03dffead1f9be8ad02e86d1ed1d20f.glb",
+      "revision": "9a194c8ce6385bf5e359db2e43a9d379f76b0650b75a7781291c5c9e44ce86c5",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [
