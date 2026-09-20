@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "dateUtc": "2026-09-20T15:28:10.475909+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_sous_marin_base/generer.ts": "463d84e7ab5479c124b48532c4175338409406d42f0a95aca411ad714b2b7443",
+    "scripts/production/modeles/unite_sous_marin_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_sous_marin_base/mesurer-natif.ts": "564ed723fc37a6dc441352074fead25f96461644458487d0e31881e4e6f9580a",
+    "scripts/production/modeles/unite_sous_marin_base/mesurer-poses.ts": "db2b1a8d1bbe4f66f02eceb0b8229f9c4627ec8282fb739a89cc9756010430da"
+  },
+  "suiteTestsExecutee": false,
+  "buildExecute": false
+}

@@ -1,0 +1,147 @@
+{
+  "id": "unite_sous_marin_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 5060,
+  "budgetTriangles": 6000,
+  "octetsGlb": 252820,
+  "sha256Glb": "8e9228111c21bb21f3e702f252af59d892d45c26db7e8fcb5aa89f862960e09c",
+  "bornes": {
+    "min": [
+      -0.3050000071525574,
+      5.960464066756543e-11,
+      -0.41999998688697815
+    ],
+    "max": [
+      0.3050000071525574,
+      0.5230000025033951,
+      0.41999998688697815
+    ],
+    "dimensions": [
+      0.6100000143051147,
+      0.5230000024437904,
+      0.8399999737739563
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.153,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.207,
+        -0.094
+      ]
+    },
+    "os_helice": {
+      "parent": "corps",
+      "p": [
+        0,
+        0,
+        -0.389
+      ]
+    },
+    "os_marqueur": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.172,
+        0.244
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "p": [
+        0.039,
+        0.202,
+        0.07
+      ]
+    }
+  },
+  "noeuds": [
+    "racine",
+    "corps",
+    "base",
+    "module_antenne",
+    "os_helice",
+    "os_marqueur",
+    "socle"
+  ],
+  "bilanTriangles": {
+    "coque_capsule": 1024,
+    "trappe_kiosque": 28,
+    "ceinture_flottaison": 768,
+    "kiosque": 60,
+    "capteur_kiosque": 24,
+    "charniere_trappe": 64,
+    "plan_lateral_g": 20,
+    "attache_plan_g": 28,
+    "plan_avant_g": 20,
+    "poignee_g": 144,
+    "plan_lateral_d": 20,
+    "attache_plan_d": 28,
+    "plan_avant_d": 20,
+    "poignee_d": 144,
+    "carter_poupe": 80,
+    "arbre_helice": 48,
+    "couronne_propulsion": 224,
+    "support_couronne_g": 12,
+    "support_couronne_d": 12,
+    "derive_superieure": 16,
+    "berceau_marqueur": 28,
+    "rail_marqueur": 12,
+    "support_antenne": 64,
+    "support_temoin": 28,
+    "joint_acces_-0.186": 96,
+    "trappe_acces_-0.186": 96,
+    "prise_acces_-0.186": 12,
+    "joint_acces_0.158": 96,
+    "trappe_acces_0.158": 96,
+    "prise_acces_0.158": 12,
+    "quille": 28,
+    "ame_ressort": 48,
+    "collerette_basse": 64,
+    "collerette_haute": 64,
+    "ressort_antenne": 864,
+    "fouet_antenne": 160,
+    "embout_fouet": 100,
+    "moyeu_helice": 80,
+    "pale_0": 16,
+    "pale_1": 16,
+    "pale_2": 16,
+    "pale_3": 16,
+    "pale_4": 16,
+    "culasse_marqueur": 28,
+    "tube_marqueur": 128,
+    "fond_marqueur": 64,
+    "temoin": 28
+  },
+  "approbationArtistique": false
+}

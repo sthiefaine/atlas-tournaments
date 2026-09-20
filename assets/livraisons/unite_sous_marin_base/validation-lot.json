@@ -1,0 +1,21 @@
+{
+  "id": "unite_sous_marin_base",
+  "revision": "ebd2d44c96d9208f5b8215cacb1f2c6389c90d4f8815c9bfd70fc779471d728a",
+  "octets": 1422071,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_sous_marin_base_albedo.png",
+      "unite_sous_marin_base_lod0.glb",
+      "unite_sous_marin_base_masque_equipe.png",
+      "unite_sous_marin_base_metal.png",
+      "unite_sous_marin_base_normale.png",
+      "unite_sous_marin_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

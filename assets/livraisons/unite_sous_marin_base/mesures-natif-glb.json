@@ -1,0 +1,90 @@
+{
+  "id": "unite_sous_marin_base",
+  "methode": "GLTFLoader natif, seules références de cartes retirées en mémoire ; SkeletonUtils.clone et AnimationMixer sans rendu. Géométrie et clips inchangés.",
+  "clonesNoeudsIndependants": true,
+  "pivotAntenneFixeDansCorps": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 194,
+      "min": [
+        -0.3050000071525574,
+        5.960464066756543e-11,
+        -0.41999998688697815
+      ],
+      "max": [
+        0.3050000071525574,
+        0.5230842643245794,
+        0.41999998688697815
+      ],
+      "rayon": 0.4279298883655101
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "min": [
+        -0.30517004279907767,
+        5.960464066756543e-11,
+        -0.41999998688697815
+      ],
+      "max": [
+        0.30517004279907767,
+        0.525062398998436,
+        0.41999998688697815
+      ],
+      "rayon": 0.4279298883655101
+    },
+    {
+      "nom": "tir",
+      "poses": 196,
+      "min": [
+        -0.3050000071525574,
+        5.960464066756543e-11,
+        -0.41999998688697815
+      ],
+      "max": [
+        0.3050000071525574,
+        0.52400000166893,
+        0.41999998688697815
+      ],
+      "rayon": 0.4279298883655101
+    },
+    {
+      "nom": "touche",
+      "poses": 195,
+      "min": [
+        -0.30519411031038607,
+        5.960464066756543e-11,
+        -0.41999998688697815
+      ],
+      "max": [
+        0.3053782640465916,
+        0.5232299607598855,
+        0.41999998688697815
+      ],
+      "rayon": 0.4279298883655101
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 195,
+      "min": [
+        -0.3050000071525574,
+        5.960464066756543e-11,
+        -0.41999998688697815
+      ],
+      "max": [
+        0.3050000071525574,
+        0.5229999996423721,
+        0.41999998688697815
+      ],
+      "rayon": 0.4279298883655101
+    }
+  ],
+  "limites": [
+    "Textures non chargées dans ce contrôle natif ; références contrôlées séparément.",
+    "Chaque clip isolé, transitions exclues.",
+    "Aucun rendu ni appréciation artistique."
+  ],
+  "approbationArtistique": false
+}

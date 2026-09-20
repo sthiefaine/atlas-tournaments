@@ -241,6 +241,14 @@
       "revision": "08ddc33d8270c870d6adbe9fd4d8c6b5cd707d4d7fdc1c74eb3fba8010039b54",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_sous_marin_base",
+      "fichierActif": "public/assets/modeles/unite_sous_marin_base_lod0.glb",
+      "donnees": "../donnees/8e9228111c21bb21f3e702f252af59d892d45c26db7e8fcb5aa89f862960e09c.glb",
+      "revision": "ebd2d44c96d9208f5b8215cacb1f2c6389c90d4f8815c9bfd70fc779471d728a",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

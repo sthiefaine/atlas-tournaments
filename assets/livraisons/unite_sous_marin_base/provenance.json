@@ -1,0 +1,30 @@
+{
+  "id": "unite_sous_marin_base",
+  "verificationLocale": [
+    {
+      "chemin": "assets/sources/unite_sous_marin_base",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/unite_sous_marin_base/maitre.json",
+      "existe": false
+    },
+    {
+      "chemin": "tmp/optimisation-lod0/unite_sous_marin_base/maitre.json",
+      "existe": false
+    },
+    {
+      "chemin": "tmp/production-sequentielle/unite_sous_marin_base/maitre.json",
+      "existe": false
+    }
+  ],
+  "maitreLocalIdentifie": false,
+  "lectureDistanteCommuniquee": {
+    "date": "2026-09-20T15:17:22.723Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "ancienCandidat": "inspection-ancien-candidat.json",
+  "candidatPreserve": true
+}

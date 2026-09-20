@@ -1,0 +1,92 @@
+{
+  "id": "unite_sous_marin_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.3050000071525574,
+          5.960464066756543e-11,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.3050000071525574,
+          0.5230842643245794,
+          0.41999998688697815
+        ]
+      },
+      "rayonHorizontalMax": 0.4279298883655101
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.30517004279907767,
+          5.960464066756543e-11,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.30517004279907767,
+          0.525062398998436,
+          0.41999998688697815
+        ]
+      },
+      "rayonHorizontalMax": 0.4279298883655101
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.3050000071525574,
+          5.960464066756543e-11,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.3050000071525574,
+          0.52400000166893,
+          0.41999998688697815
+        ]
+      },
+      "rayonHorizontalMax": 0.4279298883655101
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.30519411031038607,
+          5.960464066756543e-11,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.3053782640465916,
+          0.5232299607598855,
+          0.41999998688697815
+        ]
+      },
+      "rayonHorizontalMax": 0.4279298883655101
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.3050000071525574,
+          5.960464066756543e-11,
+          -0.41999998688697815
+        ],
+        "max": [
+          0.3050000071525574,
+          0.5229999996423721,
+          0.41999998688697815
+        ]
+      },
+      "rayonHorizontalMax": 0.4279298883655101
+    }
+  ],
+  "approbationArtistique": false
+}

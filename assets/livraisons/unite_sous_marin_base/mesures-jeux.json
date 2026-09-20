@@ -1,0 +1,685 @@
+{
+  "id": "unite_sous_marin_base",
+  "sha256Glb": "8e9228111c21bb21f3e702f252af59d892d45c26db7e8fcb5aa89f862960e09c",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB relus par extras.pieces ; raccords, distances localisées et sondes ponctuelles. Hélice : rayon circonscrit des pales comparé au rayon inscrit de couronne pour tout angle.",
+  "ressort": {
+    "tours": 3,
+    "segments": 72,
+    "diametreFil": 0.0084,
+    "diametreFouet": 0.022,
+    "couplesSegmentsSondes": 363,
+    "separationPortionsDistinctes": 0.008449050587027176,
+    "jeuAme": 0.00770983831676663
+  },
+  "helice": {
+    "rayonPales": 0.06239391438577317,
+    "rayonInterieurInscritCouronne": 0.06856614248263375,
+    "jeuContinuToutAngle": 0.006172228096860577,
+    "separationZSupports": 0.0065000057220458984
+  },
+  "distancesTriangles": [
+    {
+      "nom": "ressort_ame",
+      "minimumMetres": 0.00770983831676663,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 11913,
+      "traversees": 0
+    },
+    {
+      "nom": "pale_0_couronne",
+      "minimumMetres": 0.006172234398582298,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 96,
+      "traversees": 0
+    },
+    {
+      "nom": "pale_1_couronne",
+      "minimumMetres": 0.0064246816807491695,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 82,
+      "traversees": 0
+    },
+    {
+      "nom": "pale_2_couronne",
+      "minimumMetres": 0.006234425052004212,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 90,
+      "traversees": 0
+    },
+    {
+      "nom": "pale_3_couronne",
+      "minimumMetres": 0.006235697733737845,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 84,
+      "traversees": 0
+    },
+    {
+      "nom": "pale_4_couronne",
+      "minimumMetres": 0.006422136822635338,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 88,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_0_1",
+      "minimumMetres": 0.009256007797808725,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 120,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_0_2",
+      "minimumMetres": 0.02,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.02,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_0_3",
+      "minimumMetres": 0.02,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.02,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_0_4",
+      "minimumMetres": 0.009256013617016107,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 136,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_1_2",
+      "minimumMetres": 0.009256015514142632,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 120,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_1_3",
+      "minimumMetres": 0.02,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.02,
+      "pairesFaces": 28,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_1_4",
+      "minimumMetres": 0.02,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.02,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_2_3",
+      "minimumMetres": 0.009256018885030314,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 115,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_2_4",
+      "minimumMetres": 0.02,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.02,
+      "pairesFaces": 40,
+      "traversees": 0
+    },
+    {
+      "nom": "pales_3_4",
+      "minimumMetres": 0.00925601240375576,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 122,
+      "traversees": 0
+    }
+  ],
+  "raccords": [
+    {
+      "pieces": [
+        "coque_capsule",
+        "ceinture_flottaison"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 24668,
+      "traversees": 1044
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "quille"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002394606135386369,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 379,
+      "traversees": 61
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "kiosque"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00014488464709029827,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 495,
+      "traversees": 81
+    },
+    {
+      "pieces": [
+        "kiosque",
+        "support_antenne"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00011913030612041395,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 349,
+      "traversees": 51
+    },
+    {
+      "pieces": [
+        "support_antenne",
+        "collerette_basse"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1728,
+      "traversees": 98
+    },
+    {
+      "pieces": [
+        "ame_ressort",
+        "collerette_basse"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1824,
+      "traversees": 148
+    },
+    {
+      "pieces": [
+        "ame_ressort",
+        "collerette_haute"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1888,
+      "traversees": 71
+    },
+    {
+      "pieces": [
+        "collerette_basse",
+        "ressort_antenne"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.5247468267476426e-07,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 10413,
+      "traversees": 54
+    },
+    {
+      "pieces": [
+        "ressort_antenne",
+        "collerette_haute"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 5.5463714739645614e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 10669,
+      "traversees": 75
+    },
+    {
+      "pieces": [
+        "fouet_antenne",
+        "collerette_haute"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.622738138762483e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2818,
+      "traversees": 48
+    },
+    {
+      "pieces": [
+        "fouet_antenne",
+        "embout_fouet"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.032980474249417e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 4777,
+      "traversees": 85
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "derive_superieure"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 7.018273859954866e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 480,
+      "traversees": 58
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "carter_poupe"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.5680021591306784e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2110,
+      "traversees": 203
+    },
+    {
+      "pieces": [
+        "carter_poupe",
+        "arbre_helice"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 900,
+      "traversees": 67
+    },
+    {
+      "pieces": [
+        "arbre_helice",
+        "moyeu_helice"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2296,
+      "traversees": 166
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "berceau_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00021597801152208558,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 282,
+      "traversees": 52
+    },
+    {
+      "pieces": [
+        "berceau_marqueur",
+        "rail_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.488182747867786e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 210,
+      "traversees": 55
+    },
+    {
+      "pieces": [
+        "rail_marqueur",
+        "culasse_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 7.347858263658734e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 250,
+      "traversees": 36
+    },
+    {
+      "pieces": [
+        "culasse_marqueur",
+        "tube_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.7651814142287536e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1174,
+      "traversees": 165
+    },
+    {
+      "pieces": [
+        "support_temoin",
+        "temoin"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002732325732637624,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 666,
+      "traversees": 37
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "plan_lateral_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0005548332190448192,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 236,
+      "traversees": 39
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "plan_avant_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0003836692556648995,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 180,
+      "traversees": 38
+    },
+    {
+      "pieces": [
+        "kiosque",
+        "poignee_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.7558024817589854e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1180,
+      "traversees": 52
+    },
+    {
+      "pieces": [
+        "carter_poupe",
+        "support_couronne_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.3303441324538997e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 398,
+      "traversees": 27
+    },
+    {
+      "pieces": [
+        "couronne_propulsion",
+        "support_couronne_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0014285033371911238,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 208,
+      "traversees": 34
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "plan_lateral_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.937863691021088e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 238,
+      "traversees": 43
+    },
+    {
+      "pieces": [
+        "coque_capsule",
+        "plan_avant_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.7177961145149308e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 176,
+      "traversees": 32
+    },
+    {
+      "pieces": [
+        "kiosque",
+        "poignee_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002863392239593724,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 996,
+      "traversees": 6
+    },
+    {
+      "pieces": [
+        "carter_poupe",
+        "support_couronne_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.330347961924919e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 398,
+      "traversees": 23
+    },
+    {
+      "pieces": [
+        "couronne_propulsion",
+        "support_couronne_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0014285032357049812,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 208,
+      "traversees": 31
+    },
+    {
+      "pieces": [
+        "moyeu_helice",
+        "pale_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.4543418895792414e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 548,
+      "traversees": 27
+    },
+    {
+      "pieces": [
+        "moyeu_helice",
+        "pale_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.453427897733825e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 535,
+      "traversees": 27
+    },
+    {
+      "pieces": [
+        "moyeu_helice",
+        "pale_2"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.4545107120846815e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 543,
+      "traversees": 27
+    },
+    {
+      "pieces": [
+        "moyeu_helice",
+        "pale_3"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.4447046223403734e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 552,
+      "traversees": 27
+    },
+    {
+      "pieces": [
+        "moyeu_helice",
+        "pale_4"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.453824890792864e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 558,
+      "traversees": 27
+    }
+  ],
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 194,
+      "antenneHorsEmbaseKiosqueSeparationY": 0.02135728047465607,
+      "reculRailRecouvrementZ": 0.07799999317526818
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "antenneHorsEmbaseKiosqueSeparationY": 0.021350314113333185,
+      "reculRailRecouvrementZ": 0.07799999317526818
+    },
+    {
+      "clip": "tir",
+      "poses": 196,
+      "antenneHorsEmbaseKiosqueSeparationY": 0.021361407421529255,
+      "reculRailRecouvrementZ": 0.07699999585747719
+    },
+    {
+      "clip": "touche",
+      "poses": 195,
+      "antenneHorsEmbaseKiosqueSeparationY": 0.021318669179620386,
+      "reculRailRecouvrementZ": 0.07799999317526818
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 195,
+      "antenneHorsEmbaseKiosqueSeparationY": 0.02128107557088721,
+      "reculRailRecouvrementZ": 0.07799999043345451
+    }
+  ],
+  "sondesMarqueur": [
+    {
+      "profondeur": 0.04320963648431116,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.043501336353624506,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04438243384784948,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04493610166949387,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.045013984972873004,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.044595214989742546,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04384050847223753,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.0429455844349871,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04212141293111282,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04158883004950258,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04149054094318645,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.04185288209882664,
+      "avantLibre": 0.65
+    },
+    {
+      "profondeur": 0.042578764496384786,
+      "avantLibre": 0.65
+    }
+  ],
+  "sondesAppuiBerceau": [
+    {
+      "z": 0.198,
+      "hautCoque": 0.2918947352993193,
+      "basBerceau": 0.27100000071525576,
+      "recouvrementY": 0.020894734584063546
+    },
+    {
+      "z": 0.235,
+      "hautCoque": 0.28669491283525794,
+      "basBerceau": 0.27100000071525576,
+      "recouvrementY": 0.01569491212000218
+    },
+    {
+      "z": 0.272,
+      "hautCoque": 0.27728813982647027,
+      "basBerceau": 0.27100000071525576,
+      "recouvrementY": 0.006288139111214508
+    }
+  ],
+  "limites": [
+    "Raccords avec recouvrement intentionnel.",
+    "Mesures localisées, aucune certification globale des collisions.",
+    "Sondes ponctuelles, ne prouvent pas toute une section.",
+    "Aucun rendu, contrôle visuel, approbation artistique, téléphone ou FPS."
+  ]
+}

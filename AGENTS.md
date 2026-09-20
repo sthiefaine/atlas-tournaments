@@ -54,6 +54,10 @@ Reconnaissance poussée en `2af5a7e`, GLB et cinq PNG confirmés en ligne par SH
 
 Lance-roquettes intégré : 8 800 triangles, 21 primitives articulées, 1 657 795 octets. Douze cellules creuses, six roues et quatre appuis rétractables ; 973 poses concordantes NumPy/Three/GLTFLoader, rayons majorés a/b/c 0,448482 / 0,457854 / 0,498267 m. Vitrages et patins raccordés ; garde-boue 6,456 mm, appuis entre pneus 9,228 mm, caisson/cabine 7,153 mm. Marge étroite de 3,467 mm entre voisins en gabarit c documentée. Contrôle de lot et typage réussis ; aucun rendu, approbation artistique ou mesure FPS. Vingt-neuf modèles livrés.
 
+Lance-roquettes poussé en `c742d17`, GLB et cinq PNG confirmés en ligne par SHA, inventaire du jeu présent. Sous-marin suivant : `unite_sous_marin_base`, spécialiste `modele_26_sous_marin`, lecture distante sans upload le 20 septembre à 15:17 UTC, aucun actif ni kit. Ancien candidat SHA `1f0bd035995797145cd838eef9b20e8f64dbd5f5750a9c97eb137c11131afdde`, 596 triangles. Attendre FINAL gelé avant intégration ; trois gabarits a/b/c demandés.
+
+Sous-marin intégré : 5 060 triangles, sept primitives, 1 422 071 octets. Coque capsule, kiosque compact, quatre plans et propulseur caréné ; 973 poses concordantes NumPy/Three/GLTFLoader, rayon majoré maximal 0,485350 m en c. Âme du ressort raccordée et appui du lanceur prolongé ; 35 raccords mesurés, hélice/couronne 6,172 mm. Contrôle de lot et typage réussis, aucune image ni approbation artistique. Trente modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

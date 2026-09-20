@@ -1,0 +1,104 @@
+{
+  "triangles": 5060,
+  "primitives": 7,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 4.0933055167613475e-08,
+  "tangentesErreurMax": 4.12891504320001e-08,
+  "orthogonaliteErreurMax": 7.465981249898945e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_sous_marin_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "os_helice",
+    "os_marqueur",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "normalePngLongueurErreurMax": 0.002779681475911344,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    50,
+    233
+  ],
+  "continuitesBoucles": [
+    {
+      "clip": "repos",
+      "noeud": "module_antenne",
+      "canal": "rotation",
+      "erreurVitesseJointure": 3.973642012655709e-09,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_helice",
+      "canal": "rotation",
+      "erreurVitesseJointure": 3.552713678800501e-15,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "rotation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "module_antenne",
+      "canal": "rotation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    }
+  ]
+}
