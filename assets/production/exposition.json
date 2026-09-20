@@ -16668,19 +16668,14 @@
     {
       "id": "unite_chasseur_base",
       "fichiers": [
-        "unite_chasseur_base_lod0.glb",
         "unite_chasseur_base_albedo.png",
-        "unite_chasseur_base_albedo_hiver.png",
-        "unite_chasseur_base_normale.png",
-        "unite_chasseur_base_normale_hiver.png",
-        "unite_chasseur_base_rugosite.png",
-        "unite_chasseur_base_rugosite_hiver.png",
-        "unite_chasseur_base_metal.png",
-        "unite_chasseur_base_metal_hiver.png",
+        "unite_chasseur_base_lod0.glb",
         "unite_chasseur_base_masque_equipe.png",
-        "unite_chasseur_base_masque_equipe_hiver.png"
+        "unite_chasseur_base_metal.png",
+        "unite_chasseur_base_normale.png",
+        "unite_chasseur_base_rugosite.png"
       ],
-      "revision": "c7c624947952f95c65d622b278a3d60c426551bd86ce18f42e3110caf1bcaef7"
+      "revision": "d0fdd8d61fd5a2a91c3cea73f92b6789c551ef0e36c190711ac0a0c7a5f36f16"
     },
     {
       "id": "unite_cuirasse_base",

@@ -97,6 +97,14 @@
       "revision": "c9b9cfd1c98cde6360e3c247e8849b997a55c166ba213b51d721dcf6351acff2",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_chasseur_base",
+      "fichierActif": "public/assets/modeles/unite_chasseur_base_lod0.glb",
+      "donnees": "../donnees/ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1.glb",
+      "revision": "d0fdd8d61fd5a2a91c3cea73f92b6789c551ef0e36c190711ac0a0c7a5f36f16",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

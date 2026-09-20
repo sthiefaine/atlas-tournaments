@@ -1,0 +1,98 @@
+{
+  "id": "unite_chasseur_base",
+  "date": "2026-09-20T10:46:55.963803+00:00",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_chasseur_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+    "ancienCandidatTriangles": 820,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "triangles": 8944,
+  "budgetTriangles": 9000,
+  "primitives": 3,
+  "materiaux": [
+    "mat_corps"
+  ],
+  "octetsGlb": 410444,
+  "octetsGlbEtPng": 1579660,
+  "sha256Glb": "ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1",
+  "dimensionsMetres": [
+    0.9200000166893005,
+    0.4185000136494637,
+    0.8340000212192535
+  ],
+  "rayonHorizontalMaxMesure": 0.4890777325592495,
+  "rayonHorizontalMajoreContinu": 0.4900215304654822,
+  "margeDeuxVoisinsTousCaps": 0.019956939069035617,
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_chasseur_base.json --lot tmp/production-sequentielle/unite_chasseur_base"
+  },
+  "typecheck": {
+    "ok": true,
+    "apresDerniereModificationTypescript": true
+  },
+  "reproductionGlbShaIdentique": true,
+  "rapports": {
+    "ancien": "inspection-ancien-candidat.json",
+    "fabrication": "fabrication.json",
+    "geometrieClipsCanaux": "mesures-geometrie.json",
+    "animationsEncombrement": "mesures-mouvements.json",
+    "textures": "textures-fabrication.json"
+  },
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Voilure et gouvernes fixes, inclinaison animée du corps complet.",
+    "Verrière opaque teintée PBR sans intérieur modélisé.",
+    "Hors-jeu : descente et inclinaison contenues en vol, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente.",
+    "Les bornes continues couvrent chaque clip joué seul ; mélange entre clips non mesuré."
+  ],
+  "testsGeneraux": false,
+  "build": false,
+  "capture": false,
+  "inspectionVisuelle": false,
+  "mesureTelephone": false,
+  "fichiers": [
+    {
+      "nom": "unite_chasseur_base_albedo.png",
+      "octets": 456803,
+      "sha256": "e6fbf6c50c729746963f211ce4504db12fc8c64078983c5138b7cf643d754bf5"
+    },
+    {
+      "nom": "unite_chasseur_base_lod0.glb",
+      "octets": 410444,
+      "sha256": "ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1"
+    },
+    {
+      "nom": "unite_chasseur_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_chasseur_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_chasseur_base_normale.png",
+      "octets": 584752,
+      "sha256": "dbf0d91f25469aa0bb6e830ad646f0a59759e2d2e4e02fc22d4bb35f4075ffec"
+    },
+    {
+      "nom": "unite_chasseur_base_rugosite.png",
+      "octets": 126529,
+      "sha256": "48f32c216a5321439ffc617e58342a36db3d31bf30bafa477d54f5f272ac8d4a"
+    }
+  ]
+}

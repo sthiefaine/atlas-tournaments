@@ -14,6 +14,8 @@ Reprise du 20 septembre : les 65 fiches du stockage ont été relues ; les cinq 
 
 Pour une création originale, `integrer-creation-originale.ts <id> <dossier>` archive le lot précédent et vérifie que les empreintes actives n'ont pas changé depuis l'inventaire. Il refuse un upload présent ou un ancien kit national encore actif : le chargeur privilégierait ce kit et masquerait la nouvelle base. Aucun kit n'est régénéré dans cette commande. Après intégration, régénérer le plan puis appeler `finaliser-livraison.py <id> <agent>` ; vérifier le typage des nouveaux scripts avant commit. La finalisation ne publie rien : commit et push restent explicites, modèle par modèle.
 
+Après le déploiement, `node --import tsx scripts/production/verifier-publication.ts <id>` compare les SHA-256 du GLB et des PNG servis avec le lot actif. Il ne met à jour le suivi que si tous correspondent. Une absence temporaire pendant le build n'est pas une validation ; le code de sortie 2 signale une publication encore non conforme. Ce contrôle réseau n'effectue aucun rendu ni mesure FPS.
+
 `plan-assets.json` contient une commande complète par spécification, les fichiers attendus et un état de présence au moment de sa génération. Régénérer avec `npm run produire:manifest` après chaque lot. L’admin propose également le téléchargement du JSON et du prompt par asset.
 
 Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. Les PNG restent externes et partagés entre les niveaux de détail. Les bases déjà livrées sont conservées. Les kits reprennent la géométrie de leur base.

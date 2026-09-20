@@ -1,0 +1,162 @@
+{
+  "id": "unite_chasseur_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/unite_chasseur_base",
+  "fichiers": [
+    {
+      "nom": "unite_chasseur_base_albedo.png",
+      "sha256": "e6fbf6c50c729746963f211ce4504db12fc8c64078983c5138b7cf643d754bf5",
+      "octets": 456803
+    },
+    {
+      "nom": "unite_chasseur_base_lod0.glb",
+      "sha256": "ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1",
+      "octets": 410444
+    },
+    {
+      "nom": "unite_chasseur_base_masque_equipe.png",
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
+    },
+    {
+      "nom": "unite_chasseur_base_metal.png",
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
+    },
+    {
+      "nom": "unite_chasseur_base_normale.png",
+      "sha256": "dbf0d91f25469aa0bb6e830ad646f0a59759e2d2e4e02fc22d4bb35f4075ffec",
+      "octets": 584752
+    },
+    {
+      "nom": "unite_chasseur_base_rugosite.png",
+      "sha256": "48f32c216a5321439ffc617e58342a36db3d31bf30bafa477d54f5f272ac8d4a",
+      "octets": 126529
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T10:47:20.318Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/unite_chasseur_base/avant-b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_lod0.glb",
+      "sha256": "b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+      "octets": 93972
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/unite_chasseur_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_chasseur_base/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_lod0.glb",
+      "sha256": "b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+      "octets": 93972
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_chasseur_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

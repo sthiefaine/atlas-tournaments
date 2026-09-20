@@ -1,0 +1,167 @@
+{
+  "id": "unite_chasseur_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_chasseur_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+    "ancienCandidatTriangles": 820,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "triangles": 8944,
+  "budgetTriangles": 9000,
+  "octetsGlb": 410444,
+  "sha256Glb": "ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1",
+  "bornes": {
+    "min": [
+      -0.46000000834465027,
+      0.3264999982714653,
+      -0.41100001335144043
+    ],
+    "max": [
+      0.46000000834465027,
+      0.745000011920929,
+      0.4230000078678131
+    ],
+    "dimensions": [
+      0.9200000166893005,
+      0.4185000136494637,
+      0.8340000212192535
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.445,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.083,
+        0.245
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.132,
+        -0.062
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "fuselage_capsule_arrondi": 1224,
+    "joint_verriere": 528,
+    "verriere_goutte": 728,
+    "arceau_verriere": 240,
+    "montant_verriere": 240,
+    "voilure_fleche_epaisse": 672,
+    "ailerons_geometriques": 24,
+    "epaules_admission": 880,
+    "levres_admission_creuses": 288,
+    "tunnels_admission": 288,
+    "fond_admission": 192,
+    "lamelles_admission": 72,
+    "stabilisateurs_arriere": 320,
+    "panneaux_flancs_equipe": 120,
+    "trappes_maintenance": 120,
+    "derive_epaisse_equipe": 16,
+    "pied_derive": 60,
+    "tuyere_creuse": 192,
+    "conduit_tuyere": 192,
+    "fond_tuyere_recul": 96,
+    "petales_tuyere": 144,
+    "carene_ventrale": 528,
+    "trappe_train_fermee": 60,
+    "trappes_service_inferieures": 120,
+    "carters_marqueurs": 880,
+    "bouches_marqueurs_creuses": 240,
+    "fonds_marqueurs": 128,
+    "embase_temoin": 64,
+    "temoin_disponibilite": 288
+  },
+  "materiaux": [
+    "mat_corps"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "base.position",
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "base.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Voilure et gouvernes fixes, inclinaison animée du corps complet.",
+    "Verrière opaque teintée PBR sans intérieur modélisé.",
+    "Hors-jeu : descente et inclinaison contenues en vol, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

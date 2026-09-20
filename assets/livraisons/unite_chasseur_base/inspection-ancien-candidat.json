@@ -1,0 +1,593 @@
+{
+  "id": "unite_chasseur_base",
+  "sha256Glb": "b956f6fe3ad21928964039f98738a45889e245ab8ec745253b6361209d58e20b",
+  "octetsGlb": 93972,
+  "triangles": 820,
+  "noeuds": [
+    "corps",
+    "base",
+    "socle",
+    "racine"
+  ],
+  "materiaux": [
+    "mat_corps"
+  ],
+  "animations": [
+    "repos",
+    "deplacement",
+    "tir",
+    "touche",
+    "hors_jeu"
+  ],
+  "primitives": [
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.28040236234664917,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.16959761083126068,
+          0.738583505153656
+        ]
+      }
+    }
+  ],
+  "png": [
+    {
+      "nom": "unite_chasseur_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 41,
+      "valeurMax": 184
+    },
+    {
+      "nom": "unite_chasseur_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 92,
+      "valeurMax": 192
+    },
+    {
+      "nom": "unite_chasseur_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_chasseur_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_chasseur_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_chasseur_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_chasseur_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_chasseur_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_chasseur_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_chasseur_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    }
+  ],
+  "geometrieEtTexturesImportees": false,
+  "inspectionVisuelle": false
+}
