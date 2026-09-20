@@ -1,0 +1,840 @@
+{
+  "id": "batiment_usine_base",
+  "sha256Glb": "897ab4bfd4ea9eec439da367bb4d4f88d6a2d89ae875ce9296f63e1c65d33087",
+  "triangles": 5572,
+  "primitives": 6,
+  "noeuds": [
+    "chariot",
+    "corps",
+    "enseigne",
+    "toit",
+    "racine"
+  ],
+  "bornes": {
+    "min": [
+      -0.44999998807907104,
+      -2.6822088994293836e-10,
+      -0.44999998807907104
+    ],
+    "max": [
+      0.44999998807907104,
+      0.8090000152587891,
+      0.44999998807907104
+    ],
+    "dimensions": [
+      0.8999999761581421,
+      0.80900001552701,
+      0.8999999761581421
+    ]
+  },
+  "geometrie": {
+    "trianglesDegeneres": 0,
+    "trianglesUvDegeneres": 0,
+    "normalesSensFaceMin": 0.6322794709258475,
+    "erreurNormalesMax": 3.639176715530823e-08,
+    "erreurTangentesMax": 3.7243971906519846e-08,
+    "uvMin": 0.016249999403953552,
+    "uvMax": 0.9837499856948853
+  },
+  "raccords": [
+    {
+      "a": "dalle",
+      "b": "mur_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "mur_lateral_-0.302",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "mur_lateral_0.222",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_arriere",
+      "b": "mur_lateral_-0.302",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_arriere",
+      "b": "mur_lateral_0.222",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_-0.302",
+      "b": "jambage_-0.28",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_0.222",
+      "b": "jambage_0.2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "jambage_-0.28",
+      "b": "linteau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "jambage_0.2",
+      "b": "linteau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "linteau",
+      "b": "coffre_rideau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "coffre_rideau",
+      "b": "rideau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rideau",
+      "b": "poignee_rideau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "seuil",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "seuil",
+      "b": "rideau",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "linteau",
+      "b": "console_capture",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "console_capture",
+      "b": "fond_glissiere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "fond_glissiere",
+      "b": "indicateur_capture",
+      "distanceMetres": 1.8626433728741176e-11
+    },
+    {
+      "a": "poutre_semelle_basse",
+      "b": "poutre_ame",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_ame",
+      "b": "poutre_semelle_haute",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_chariot",
+      "b": "joue_chariot_0.31",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_chariot",
+      "b": "joue_chariot_0.406",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_chariot",
+      "b": "palan",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "palan",
+      "b": "axe_palan",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "palan",
+      "b": "maillon_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "maillon_10",
+      "b": "emergence_crochet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "emergence_crochet",
+      "b": "crochet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_-0.302",
+      "b": "râtelier",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "linteau",
+      "b": "support_lampe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_lampe",
+      "b": "lentille_lampe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pan_shed_0",
+      "b": "rive_haute_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_0",
+      "b": "traverse_verriere_0_0.588",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_0",
+      "b": "traverse_verriere_0_0.784",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_verriere_0_0.784",
+      "b": "rive_haute_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_-0.302",
+      "b": "joue_shed_0_-0.315",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_0_-0.315",
+      "b": "pan_shed_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_0.222",
+      "b": "joue_shed_0_0.235",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_0_0.235",
+      "b": "pan_shed_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pan_shed_1",
+      "b": "rive_haute_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_1",
+      "b": "traverse_verriere_1_0.588",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_1",
+      "b": "traverse_verriere_1_0.784",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_verriere_1_0.784",
+      "b": "rive_haute_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_-0.302",
+      "b": "joue_shed_1_-0.315",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_1_-0.315",
+      "b": "pan_shed_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_0.222",
+      "b": "joue_shed_1_0.235",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_1_0.235",
+      "b": "pan_shed_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pan_shed_2",
+      "b": "rive_haute_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_2",
+      "b": "traverse_verriere_2_0.588",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "verriere_2",
+      "b": "traverse_verriere_2_0.784",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "traverse_verriere_2_0.784",
+      "b": "rive_haute_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_-0.302",
+      "b": "joue_shed_2_-0.315",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_2_-0.315",
+      "b": "pan_shed_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_lateral_0.222",
+      "b": "joue_shed_2_0.235",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_shed_2_0.235",
+      "b": "pan_shed_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_portique_-0.33",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_portique_-0.33",
+      "b": "montant_portique_-0.33",
+      "distanceMetres": 3.725290298461914e-09
+    },
+    {
+      "a": "montant_portique_-0.33",
+      "b": "poutre_semelle_basse",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_portique_0.176",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_portique_0.176",
+      "b": "montant_portique_0.176",
+      "distanceMetres": 3.725290298461914e-09
+    },
+    {
+      "a": "montant_portique_0.176",
+      "b": "poutre_semelle_basse",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "caisse_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "caisse_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "caisse_0",
+      "b": "caisse_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3175_-0.097",
+      "b": "galet_chariot_0.333_-0.097",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3175_-0.097",
+      "b": "joue_chariot_0.31",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3175_-0.033",
+      "b": "galet_chariot_0.333_-0.033",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3175_-0.033",
+      "b": "joue_chariot_0.31",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3985_-0.097",
+      "b": "galet_chariot_0.383_-0.097",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3985_-0.097",
+      "b": "joue_chariot_0.406",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3985_-0.033",
+      "b": "galet_chariot_0.383_-0.033",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_galet_0.3985_-0.033",
+      "b": "joue_chariot_0.406",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_rechange_0",
+      "b": "jante_rechange_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "jante_rechange_0",
+      "b": "moyeu_rechange_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_rechange_1",
+      "b": "jante_rechange_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "jante_rechange_1",
+      "b": "moyeu_rechange_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_rechange_2",
+      "b": "jante_rechange_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "jante_rechange_2",
+      "b": "moyeu_rechange_2",
+      "distanceMetres": 0.0
+    }
+  ],
+  "halle": {
+    "creuse": true,
+    "sheds": 3,
+    "vitragesVers": "-Z",
+    "sondesInterieurEtVerrieres": 18,
+    "rideauFermeFixe": true
+  },
+  "aire": {
+    "approcheLibreXZ": {
+      "min": [
+        -0.43,
+        0.23
+      ],
+      "max": [
+        0.43,
+        0.44
+      ]
+    },
+    "hauteurPlateau": 0.026,
+    "limite": "Zone dégagée mesurée ; visibilité pour toutes les figurines non évaluée."
+  },
+  "animations": {
+    "poses": 40,
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 3.200000047683716,
+        "poses": 21,
+        "cibles": [
+          "chariot"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.44999998807907104,
+            -2.6822088994293836e-10,
+            -0.44999998807907104
+          ],
+          "max": [
+            0.44999998807907104,
+            0.8090000152587891,
+            0.44999998807907104
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "chariot",
+          "min": [
+            0.30250002071261406,
+            0.22316265106201172,
+            -0.1614999957382679
+          ],
+          "max": [
+            0.41350002214312553,
+            0.5780000202357769,
+            0.03149999864399433
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.06499999761581421,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.4000000059604645,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.03500000014901161,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.800000011920929,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.020999999716877937,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.2000000476837158,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.03500000014901161,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.600000023841858,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.06499999761581421,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.0949999988079071,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.4000000953674316,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.10899999737739563,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.799999952316284,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.0949999988079071,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 3.200000047683716,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.3580000102519989,
+                0.0,
+                1.0,
+                0.0,
+                0.5270000100135803,
+                0.0,
+                0.0,
+                1.0,
+                -0.06499999761581421,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nom": "capture",
+        "duree": 1.399999976158142,
+        "poses": 19,
+        "cibles": [
+          "enseigne"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.44999998807907104,
+            -2.6822088994293836e-10,
+            -0.44999998807907104
+          ],
+          "max": [
+            0.44999998807907104,
+            0.8090000152587891,
+            0.44999998807907104
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "enseigne",
+          "min": [
+            -0.12800000607967377,
+            0.6005000066943467,
+            0.04999999981373548
+          ],
+          "max": [
+            0.0530000040307641,
+            0.6135000176727772,
+            0.11599999666213989
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.03999999910593033,
+                0.0,
+                1.0,
+                0.0,
+                0.6050000190734863,
+                0.0,
+                0.0,
+                1.0,
+                0.05999999865889549,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.2800000011920929,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.012000000104308128,
+                0.0,
+                1.0,
+                0.0,
+                0.6050000190734863,
+                0.0,
+                0.0,
+                1.0,
+                0.05999999865889549,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.699999988079071,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.004999999888241291,
+                0.0,
+                1.0,
+                0.0,
+                0.6050000190734863,
+                0.0,
+                0.0,
+                1.0,
+                0.05999999865889549,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.0299999713897705,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.012000000104308128,
+                0.0,
+                1.0,
+                0.0,
+                0.6050000190734863,
+                0.0,
+                0.0,
+                1.0,
+                0.05999999865889549,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.399999976158142,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.03999999910593033,
+                0.0,
+                1.0,
+                0.0,
+                0.6050000190734863,
+                0.0,
+                0.0,
+                1.0,
+                0.05999999865889549,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "vitesseBoucleEcart": 7.450577155232452e-09,
+    "jeuIndicateurRailsMin": 0.00799999997019768,
+    "jeuIndicateurButeesMin": 0.03599999751895666,
+    "gardeContinueChariotHalle": 0.0455000214278698,
+    "gardeContinueChariotButees": 0.15450000576674938,
+    "gardeContinueCrochetSol": 0.19716264104843143,
+    "maillonsVoisinsDistanceSurfaceMin": 0.0013573146408235115,
+    "galetsSurSemelleEcart": -7.003545521300225e-10,
+    "crochetSectionFermee": true,
+    "crochetNormalesRadialesMin": 0.9601636362025802,
+    "crochetBouchonsSortantsMin": 0.9936021059282145,
+    "preuveContinue": "Translations LINEAR uniquement ; enveloppes et distances de séparation selon X/Y/Z atteignent leurs extrêmes aux clés. Dalle, murs et toit inchangés.",
+    "optIn": true
+  },
+  "textures": {
+    "masqueBinaire": true,
+    "grisNeutreSurMasque": true,
+    "emissionVitrageFeuSeulement": true,
+    "pngExternes": 5
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "limites": [
+    "Contacts et creux contrôlés sur pièces et sondes listées ; pas de certification exhaustive des collisions.",
+    "Deux clips isolés, aucun rendu ni mesure sur téléphone."
+  ]
+}

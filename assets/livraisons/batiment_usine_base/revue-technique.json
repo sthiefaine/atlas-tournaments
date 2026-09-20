@@ -1,0 +1,146 @@
+{
+  "id": "batiment_usine_base",
+  "date": "2026-09-20T16:58:52.351127+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T16:45:12.134Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "e0ef8956fdd8eb1fb1d45c7dd2ba422ad793536e147ed66be0f030c192a7ee9c",
+    "triangles": 1164,
+    "octetsGlb": 137868,
+    "preserve": true,
+    "actifPreserve": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 5572,
+  "budgetTriangles": 5600,
+  "primitives": 6,
+  "materiaux": 2,
+  "octetsGlb": 453348,
+  "octetsLot": 1820188,
+  "dimensions": [
+    0.8999999761581421,
+    0.80900001552701,
+    0.8999999761581421
+  ],
+  "sha256Glb": "897ab4bfd4ea9eec439da367bb4d4f88d6a2d89ae875ce9296f63e1c65d33087",
+  "fichiers": [
+    {
+      "fichier": "batiment_usine_base_albedo.png",
+      "octets": 439676,
+      "sha256": "81e4a13825329a0c4fe98de581f28adf13fdc1bee40ee3f1b14082c53dfe2052"
+    },
+    {
+      "fichier": "batiment_usine_base_emission.png",
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "fichier": "batiment_usine_base_lod0.glb",
+      "octets": 453348,
+      "sha256": "897ab4bfd4ea9eec439da367bb4d4f88d6a2d89ae875ce9296f63e1c65d33087"
+    },
+    {
+      "fichier": "batiment_usine_base_masque_equipe.png",
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    },
+    {
+      "fichier": "batiment_usine_base_normale.png",
+      "octets": 829782,
+      "sha256": "e29f1a2b2138484afd7034d70e6a032d2f2eb0deb6d984a42358b28bfe8b2ce8"
+    },
+    {
+      "fichier": "batiment_usine_base_rugosite.png",
+      "octets": 95692,
+      "sha256": "3eebae2567481671d3405c89b73ea7f47559cdc8fa85a89b3e4cfd61c7445bf6"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/README.md",
+      "sha256": "a17f36343173e5158de6bea7b0ef6f21f600a41091bb71a20921befc822076c9"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/assembler-revue.py",
+      "sha256": "76b076066f5dd5201a74a1e0de12eecfcbc9533c393899603c964fb3425bd9a3"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/generer.ts",
+      "sha256": "4b729a312c89639c460fce3514e151e87eee421a2a895a2795f0c543d87e344c"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/geometrie.py",
+      "sha256": "936c747795933dc965c02f539c6b8dbee1b9ecbd4e49a8eb21b2f1f0ac5eca67"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/inspecter-ancien.py",
+      "sha256": "574e9ed361e6159c4a3b3bc7ec744e6c323168f234303e59ddb4622391d70be6"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/mesurer-natif.ts",
+      "sha256": "5a00eeec1650249d15a582c08e9ace4a34ace064bcf349658bd26aa975357f4d"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/mesurer.py",
+      "sha256": "92e1420a77b093b377d66ca6dc3edef1be3602c636fe422e4bcafe4b5edcabf4"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/textures.py",
+      "sha256": "81a11375433146d67f421c8ea1f2c044ec7d366921cb82e94e3697e6fc527951"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_usine_base_albedo.png",
+      "batiment_usine_base_emission.png",
+      "batiment_usine_base_lod0.glb",
+      "batiment_usine_base_masque_equipe.png",
+      "batiment_usine_base_normale.png",
+      "batiment_usine_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "poses": 40,
+    "pairesRaccordsListees": 76,
+    "controleExhaustifCollisions": false,
+    "pariteNumpyNatif": true,
+    "gardeContinueChariotHalle": 0.0455000214278698,
+    "gardeContinueChariotButees": 0.15450000576674938,
+    "maillonsVoisinsDistanceSurfaceMin": 0.0013573146408235115,
+    "crochetSectionFermee": true
+  },
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Mesures ciblées sur les pièces et sondes listées, pas de preuve exhaustive de non-intersection ou visibilité.",
+    "Textures retirées en mémoire pour charger sous Node ; cartes et UV contrôlés séparément.",
+    "Transitions entre animations non évaluées dans le jeu.",
+    "Aucune approbation artistique, capture ou mesure téléphone."
+  ]
+}

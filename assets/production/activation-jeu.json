@@ -281,6 +281,14 @@
       "revision": "9a194c8ce6385bf5e359db2e43a9d379f76b0650b75a7781291c5c9e44ce86c5",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "batiment_usine_base",
+      "fichierActif": "public/assets/modeles/batiment_usine_base_lod0.glb",
+      "donnees": "../donnees/897ab4bfd4ea9eec439da367bb4d4f88d6a2d89ae875ce9296f63e1c65d33087.glb",
+      "revision": "7c191b861ca7ff73bc13f910bb79270a6a26eab2ef329386cea242f43094b4d6",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

@@ -1,0 +1,69 @@
+{
+  "id": "batiment_usine_base",
+  "methode": "GLTFLoader natif, objets clonés et AnimationMixer. Retrait des références de cartes en mémoire seulement, sans modifier le GLB. Parité avec interpolation et transformations NumPy à 2 micromètres.",
+  "clonesNoeudsIndependants": true,
+  "optInConserve": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 21,
+      "min": [
+        -0.44999998807907104,
+        -2.6822088994293836e-10,
+        -0.44999998807907104
+      ],
+      "max": [
+        0.44999998807907104,
+        0.8090000152587891,
+        0.44999998807907104
+      ],
+      "mobile": {
+        "nom": "chariot",
+        "min": [
+          0.30250002071261406,
+          0.22316265106201172,
+          -0.1614999957382679
+        ],
+        "max": [
+          0.41350002214312553,
+          0.5780000202357769,
+          0.03149999864399433
+        ],
+        "matricesClesComparees": 9,
+        "erreurMatricesMax": 0
+      }
+    },
+    {
+      "nom": "capture",
+      "poses": 19,
+      "min": [
+        -0.44999998807907104,
+        -2.6822088994293836e-10,
+        -0.44999998807907104
+      ],
+      "max": [
+        0.44999998807907104,
+        0.8090000152587891,
+        0.44999998807907104
+      ],
+      "mobile": {
+        "nom": "enseigne",
+        "min": [
+          -0.12800000607967377,
+          0.6005000066943467,
+          0.04999999981373548
+        ],
+        "max": [
+          0.0530000040307641,
+          0.6135000176727772,
+          0.11599999666213989
+        ],
+        "matricesClesComparees": 5,
+        "erreurMatricesMax": 0
+      }
+    }
+  ],
+  "controleVisuel": false,
+  "approbationArtistique": false
+}

@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-20T16:58:52.351127+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "journalSha256": "21220d5b953fa551f872f274dfec95a81ee2fbb11bd24440ba1ea1ec80fe56ae",
+  "sourcesTypescript": [
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/mesurer-natif.ts",
+      "sha256": "5a00eeec1650249d15a582c08e9ace4a34ace064bcf349658bd26aa975357f4d"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_usine_base/generer.ts",
+      "sha256": "4b729a312c89639c460fce3514e151e87eee421a2a895a2795f0c543d87e344c"
+    }
+  ],
+  "limite": "Contrôle de types, aucune suite de tests ni build."
+}

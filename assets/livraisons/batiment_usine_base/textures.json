@@ -1,0 +1,153 @@
+{
+  "id": "batiment_usine_base",
+  "methode": "Atlas déterministe original ; pigment, joints sciés et microreliefs analytiques ; sans éclairage, reflet, ombre, occlusion cuits.",
+  "bakeHD": false,
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "gouttierePixels": 16,
+    "palette": [
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        203,
+        208,
+        205
+      ],
+      [
+        167,
+        167,
+        167
+      ],
+      [
+        143,
+        153,
+        157
+      ],
+      [
+        29,
+        68,
+        81
+      ],
+      [
+        193,
+        198,
+        196
+      ],
+      [
+        58,
+        63,
+        65
+      ],
+      [
+        36,
+        39,
+        39
+      ],
+      [
+        134,
+        149,
+        152
+      ],
+      [
+        161,
+        119,
+        77
+      ],
+      [
+        238,
+        191,
+        113
+      ],
+      [
+        29,
+        68,
+        81
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ],
+      [
+        181,
+        183,
+        179
+      ]
+    ],
+    "equipe": [
+      2
+    ],
+    "emission": [
+      4,
+      10
+    ]
+  },
+  "cartes": [
+    {
+      "canal": "albedo",
+      "fichier": "batiment_usine_base_albedo.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 439676,
+      "sha256": "81e4a13825329a0c4fe98de581f28adf13fdc1bee40ee3f1b14082c53dfe2052"
+    },
+    {
+      "canal": "normale",
+      "fichier": "batiment_usine_base_normale.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 829782,
+      "sha256": "e29f1a2b2138484afd7034d70e6a032d2f2eb0deb6d984a42358b28bfe8b2ce8"
+    },
+    {
+      "canal": "rugosite",
+      "fichier": "batiment_usine_base_rugosite.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 95692,
+      "sha256": "3eebae2567481671d3405c89b73ea7f47559cdc8fa85a89b3e4cfd61c7445bf6"
+    },
+    {
+      "canal": "emission",
+      "fichier": "batiment_usine_base_emission.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "canal": "masque_equipe",
+      "fichier": "batiment_usine_base_masque_equipe.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    }
+  ]
+}
