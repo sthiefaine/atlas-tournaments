@@ -16691,21 +16691,14 @@
     {
       "id": "unite_drone_intercepteur_base",
       "fichiers": [
-        "unite_drone_intercepteur_base_lod0.glb",
         "unite_drone_intercepteur_base_albedo.png",
-        "unite_drone_intercepteur_base_albedo_hiver.png",
-        "unite_drone_intercepteur_base_normale.png",
-        "unite_drone_intercepteur_base_normale_hiver.png",
-        "unite_drone_intercepteur_base_rugosite.png",
-        "unite_drone_intercepteur_base_rugosite_hiver.png",
-        "unite_drone_intercepteur_base_metal.png",
-        "unite_drone_intercepteur_base_metal_hiver.png",
+        "unite_drone_intercepteur_base_lod0.glb",
         "unite_drone_intercepteur_base_masque_equipe.png",
-        "unite_drone_intercepteur_base_masque_equipe_hiver.png",
-        "unite_drone_intercepteur_base_emission.png",
-        "unite_drone_intercepteur_base_emission_hiver.png"
+        "unite_drone_intercepteur_base_metal.png",
+        "unite_drone_intercepteur_base_normale.png",
+        "unite_drone_intercepteur_base_rugosite.png"
       ],
-      "revision": "b8b8cca5b38b41e1f4668c5b60adc11b4ab73910f6ca3bbecba4d702e1a949c3"
+      "revision": "67db21336bbb5638b4e897912769c932a395abf42b332fef35a0b40ae309382e"
     },
     {
       "id": "unite_drone_marin_base",

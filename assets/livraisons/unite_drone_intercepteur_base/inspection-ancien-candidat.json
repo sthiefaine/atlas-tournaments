@@ -1,0 +1,657 @@
+{
+  "id": "unite_drone_intercepteur_base",
+  "sha256Glb": "996ffed9eb862b3e8240adb27fec8647d0330c7e844d8eec4b10d648a231e471",
+  "octetsGlb": 101976,
+  "triangles": 872,
+  "noeuds": [
+    "module_radar",
+    "corps",
+    "base",
+    "socle",
+    "racine"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "animations": [
+    "repos",
+    "deplacement",
+    "tir",
+    "touche",
+    "hors_jeu"
+  ],
+  "primitives": [
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.2006417214870453,
+          -0.11141649633646011
+        ],
+        "max": [
+          0.4749999940395355,
+          0.12135545164346695,
+          0.738583505153656
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1440231204032898,
+          -0.06173590198159218,
+          -0.0593532994389534
+        ],
+        "max": [
+          0.1440231204032898,
+          0.19276702404022217,
+          0.0593532957136631
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1440231204032898,
+          -0.06173590198159218,
+          -0.0593532994389534
+        ],
+        "max": [
+          0.1440231204032898,
+          0.19276702404022217,
+          0.0593532957136631
+        ]
+      }
+    }
+  ],
+  "png": [
+    {
+      "nom": "unite_drone_intercepteur_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 41,
+      "valeurMax": 184
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 92,
+      "valeurMax": 192
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    }
+  ],
+  "geometrieEtTexturesImportees": false,
+  "inspectionVisuelle": false
+}

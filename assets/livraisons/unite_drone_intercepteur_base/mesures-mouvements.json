@@ -1,0 +1,95 @@
+{
+  "id": "unite_drone_intercepteur_base",
+  "methode": "Sommets transformés Three.js, 193 instants par clip et clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 206,
+      "enveloppe": {
+        "min": [
+          -0.46299999952316284,
+          0.09300000965595245,
+          -0.42500001192092896
+        ],
+        "max": [
+          0.46299999952316284,
+          0.5789160155057907,
+          0.42500001192092896
+        ]
+      },
+      "rayonHorizontalMax": 0.47780016714861995
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.4636629559211598,
+          0.08876679747972094,
+          -0.4254686776599844
+        ],
+        "max": [
+          0.4636629559211598,
+          0.5785920238790947,
+          0.4249887497038366
+        ]
+      },
+      "rayonHorizontalMax": 0.4780173137548857
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 210,
+      "enveloppe": {
+        "min": [
+          -0.46299999952316284,
+          0.09174136781274292,
+          -0.4254283052212551
+        ],
+        "max": [
+          0.46299999952316284,
+          0.5705856184422541,
+          0.42548029937192694
+        ]
+      },
+      "rayonHorizontalMax": 0.4779447416805498
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.4641756895945498,
+          0.08754819558745183,
+          -0.42548585469648426
+        ],
+        "max": [
+          0.4635967089607848,
+          0.5714536021136484,
+          0.42531214054066646
+        ]
+      },
+      "rayonHorizontalMax": 0.47827395352731944
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 213,
+      "enveloppe": {
+        "min": [
+          -0.46299999952316284,
+          0.0029999988945953737,
+          -0.4254169909779567
+        ],
+        "max": [
+          0.46385056772835814,
+          0.5699160121679306,
+          0.42504234716782097
+        ]
+      },
+      "rayonHorizontalMax": 0.47814064835148623
+    }
+  ],
+  "limites": [
+    "Échantillonnage numérique, sans contrôle visuel.",
+    "Aucun certificat de collision interne ni de mélanges entre clips."
+  ]
+}

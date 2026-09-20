@@ -10,9 +10,13 @@ Régénération de l'inventaire : `node --import tsx scripts/production/plan-mod
 
 Les rapports de performance sur téléphone restent distincts de cette production et ne sont pas inventés.
 
+Raccordement à vérifier avant les familles suivantes : les unités et bâtiments actifs sont chargés automatiquement ; les terrains fournissent actuellement leurs textures au relief du moteur, sans chargement général de leur maillage. `assets-environnement.ts` ne sélectionne pas les rochers GLB, et les portraits de commandants sont encore vectoriels. Un alias publié pour ces deux dernières familles ne suffit donc pas à annoncer leur affichage en jeu : leur raccordement reste à traiter lors de leurs livraisons.
+
 Reprise du 20 septembre : les 65 fiches du stockage ont été relues ; les cinq fiches avec uploads portent les mêmes révisions que les sources déjà préparées. Le stockage est revérifié juste avant chaque intégration originale. Les secrets restent dans la configuration locale, jamais dans les manifestes.
 
 Pour une création originale, `integrer-creation-originale.ts <id> <dossier>` archive le lot précédent et vérifie que les empreintes actives n'ont pas changé depuis l'inventaire. Il refuse un upload présent ou un ancien kit national encore actif : le chargeur privilégierait ce kit et masquerait la nouvelle base. Aucun kit n'est régénéré dans cette commande. Après intégration, régénérer le plan puis appeler `finaliser-livraison.py <id> <agent>` ; vérifier le typage des nouveaux scripts avant commit. La finalisation ne publie rien : commit et push restent explicites, modèle par modèle.
+
+Pour les anciens kits actifs du génie, de la méca et de la reconnaissance, `retirer-kits-incompatibles.ts <base> <dossier préparé>` inspecte sans mutation. Il exige un remplacement conforme et documenté, compare géométrie/UV/nœuds/clips avec l'ancienne base et refuse un kit différent ou doté d'une source locale. Avec `--appliquer`, il archive puis retire les seuls alias actifs incompatibles ; candidats et données immuables restent conservés. Le rapport rejoint le staging et le lot final. Intégrer la nouvelle base et pousser ces retraits dans le même commit. Aucun retrait n'est fait à l'avance dans la file.
 
 Après le déploiement, `node --import tsx scripts/production/verifier-publication.ts <id>` compare les SHA-256 du GLB et des PNG servis avec le lot actif, puis vérifie sa présence dans `/api/modeles`, l'inventaire utilisé par le jeu. Il ne met à jour le suivi que si tout correspond. Une absence temporaire pendant le build n'est pas une validation ; le code de sortie 2 signale une publication encore non conforme. Ce contrôle réseau n'effectue aucun rendu ni mesure FPS.
 

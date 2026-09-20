@@ -1,0 +1,176 @@
+{
+  "id": "unite_drone_intercepteur_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_drone_intercepteur_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 3380,
+  "budgetTriangles": 3500,
+  "octetsGlb": 200868,
+  "sha256Glb": "87804e9cd1dab17d9c1882c55610e15e73634bb554bd34750700079a4d9a68c6",
+  "bornes": {
+    "min": [
+      -0.46299999952316284,
+      0.09800000250339508,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.46299999952316284,
+      0.5699160097837448,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.9259999990463257,
+      0.4719160072803497,
+      0.8500000238418579
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.31,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.022,
+        0.035
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.168,
+        -0.075
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0.072,
+        0.091,
+        0.13
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "capsule_losange": 576,
+    "ailes_fixes_epaisses": 480,
+    "volets_epais_encastres": 24,
+    "nacelles_propulsion": 192,
+    "admissions_creuses": 192,
+    "fonds_recesses_admission": 128,
+    "traverse_admission": 24,
+    "tuyeres_arriere": 144,
+    "fonds_recesses_tuyere": 96,
+    "assises_lanceurs": 120,
+    "lanceurs_vers_ciel": 192,
+    "fonds_lanceurs": 96,
+    "colliers_lanceurs": 128,
+    "jambes_train": 64,
+    "patins_train": 120,
+    "jambe_avant": 32,
+    "patin_avant": 60,
+    "trappe_dorsale": 60,
+    "grilles_hautes": 120,
+    "barrettes_grilles": 72,
+    "palier_radar": 64,
+    "axe_radar": 48,
+    "assiette_radar_concave": 288,
+    "moyeu_radar": 48,
+    "temoin_disponibilite": 12
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_radar.quaternion",
+        "base.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "base.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "radar": {
+    "noeud": "module_radar",
+    "axe": "+Y",
+    "animationGLB": true
+  },
+  "lanceurs": {
+    "noeud": "base",
+    "nombre": 2,
+    "axe": "+Y",
+    "reculMaxMetres": 0.022
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Train et volets rigides ; mouvement porté par corps.",
+    "Radar rigide concave ; rotation du pied, sans visée de cible.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "unite_drone_intercepteur_base",
+  "fichiers": [
+    {
+      "nom": "unite_drone_intercepteur_base_albedo.png",
+      "octets": 457788,
+      "sha256": "372288252c76fe8249d532bbda82e261f6ac5ebd1d8ef0b90b99e1d28c4f745a"
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_lod0.glb",
+      "octets": 200868,
+      "sha256": "87804e9cd1dab17d9c1882c55610e15e73634bb554bd34750700079a4d9a68c6"
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_normale.png",
+      "octets": 584586,
+      "sha256": "9cbd01d6febc7682b624090f9ee2c63980668cf66a623b03db556df477f699d4"
+    },
+    {
+      "nom": "unite_drone_intercepteur_base_rugosite.png",
+      "octets": 126275,
+      "sha256": "4e2f538d8012b988fa11441d54012aa7611f9f31ad24cf97b35eb3d44333a0a6"
+    }
+  ]
+}
