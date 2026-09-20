@@ -1,0 +1,21 @@
+{
+  "id": "unite_bombardier_base",
+  "revision": "e52406b527d0cce37bcb97f7c6048021aec30af6c99334f897c57ac92269ce71",
+  "octets": 1552728,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_bombardier_base_albedo.png",
+      "unite_bombardier_base_lod0.glb",
+      "unite_bombardier_base_masque_equipe.png",
+      "unite_bombardier_base_metal.png",
+      "unite_bombardier_base_normale.png",
+      "unite_bombardier_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

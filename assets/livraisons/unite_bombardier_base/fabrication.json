@@ -1,0 +1,180 @@
+{
+  "id": "unite_bombardier_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_bombardier_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "63e33e97b3c2493eeed94bd7f4cf55e0015333fed943254a74e614df917d4c84",
+    "ancienCandidatTriangles": 1208,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "triangles": 6188,
+  "budgetTriangles": 9000,
+  "octetsGlb": 383512,
+  "sha256Glb": "e26abe1dc41fbd2b818ba7923e2fa64701a6715563825baadad3f9027f4aa837",
+  "bornes": {
+    "min": [
+      -0.4699999988079071,
+      0.31999999448657035,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.4699999988079071,
+      0.7699999809265137,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.9399999976158142,
+      0.4499999864399433,
+      0.8500000238418579
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.5,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.135,
+        0.04
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.126,
+        -0.105
+      ]
+    },
+    "module_nacelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.055,
+        0.185
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "fuselage_octogonal_joues_inclinees": 156,
+    "joues_blindees_equipe": 40,
+    "ailes_larges_faible_fleche": 672,
+    "volets_bord_fuite": 120,
+    "axes_volets": 192,
+    "nacelles_moteurs_jumelees": 672,
+    "levres_admission": 336,
+    "conduits_admission": 336,
+    "fonds_admission": 192,
+    "stators_admission": 192,
+    "moyeux_admission": 448,
+    "echappements_creux": 336,
+    "fonds_echappement": 160,
+    "capots_moteurs_techniques": 120,
+    "ouies_moteur": 96,
+    "empennage_horizontal_biplan": 240,
+    "derives_jumelees_trapezoidales": 32,
+    "embases_derives": 120,
+    "trappes_train_fermees": 120,
+    "cadre_nacelle_angulaire": 76,
+    "vitrages_nacelle_facettes": 44,
+    "montants_nacelle": 160,
+    "traverses_nacelle": 80,
+    "longeron_nacelle": 40,
+    "rebord_soute_ventrale": 60,
+    "fond_soute_marqueur": 60,
+    "portes_laterales_soute": 120,
+    "charniere_porte_soute": 192,
+    "cassette_marquage_ventrale": 60,
+    "sorties_verticales_marquage": 240,
+    "fonds_sorties_marquage": 128,
+    "embase_temoin": 60,
+    "temoin_disponibilite": 288
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "base.position",
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "base.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Voilure et gouvernes fixes, inclinaison animée du corps complet.",
+    "Nacelle vitrée opaque teintée PBR sans intérieur modélisé.",
+    "Hors-jeu : descente et inclinaison contenues en vol, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

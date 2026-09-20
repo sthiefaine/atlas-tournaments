@@ -1,0 +1,107 @@
+{
+  "id": "unite_bombardier_base",
+  "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js avant export à 2 µm près.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.470152154858737,
+          0.3106933026703521,
+          -0.4252720676779337
+        ],
+        "max": [
+          0.470152154858742,
+          0.7840034500760936,
+          0.42543356466941107
+        ]
+      },
+      "rayonHorizontalMax": 0.47913880993988694,
+      "directionMarqueurBasMin": 0.9998875040515061,
+      "racineIdentite": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.47024059131831886,
+          0.31088591728363735,
+          -0.42543253478651893
+        ],
+        "max": [
+          0.4702405913223612,
+          0.7860895148931354,
+          0.42457437302955137
+        ]
+      },
+      "rayonHorizontalMax": 0.4791388043436563,
+      "directionMarqueurBasMin": 0.999175719962497,
+      "racineIdentite": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 198,
+      "enveloppe": {
+        "min": [
+          -0.4699999988079071,
+          0.31999998912215233,
+          -0.4313534031971952
+        ],
+        "max": [
+          0.4699999988079071,
+          0.7721431081244853,
+          0.42500001192092896
+        ]
+      },
+      "rayonHorizontalMax": 0.48032442794383007,
+      "directionMarqueurBasMin": 0.9999280008591934,
+      "racineIdentite": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.47025109968334294,
+          0.31674807392120663,
+          -0.42542110756228324
+        ],
+        "max": [
+          0.47020964880984195,
+          0.788156220614298,
+          0.4255709859055793
+        ]
+      },
+      "rayonHorizontalMax": 0.4791388084392136,
+      "directionMarqueurBasMin": 0.998068046729499,
+      "racineIdentite": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.47004437180965114,
+          0.1908118549573812,
+          -0.425501554565301
+        ],
+        "max": [
+          0.47024198288563374,
+          0.7699999809265137,
+          0.42500001192092896
+        ]
+      },
+      "rayonHorizontalMax": 0.4791388073371359,
+      "directionMarqueurBasMin": 0.9946967042115923,
+      "racineIdentite": true
+    }
+  ],
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon continu majoré séparément dans mesures-mouvements.json.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe."
+  ]
+}

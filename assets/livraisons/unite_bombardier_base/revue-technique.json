@@ -1,0 +1,181 @@
+{
+  "id": "unite_bombardier_base",
+  "dateProduction": "2026-09-20",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_bombardier_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "63e33e97b3c2493eeed94bd7f4cf55e0015333fed943254a74e614df917d4c84",
+    "ancienCandidatTriangles": 1208,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "ancienCandidat": {
+    "sha256Glb": "63e33e97b3c2493eeed94bd7f4cf55e0015333fed943254a74e614df917d4c84",
+    "triangles": 1208,
+    "octetsGlb": 136488,
+    "texturesInspectees": 12,
+    "donneesReutilisees": false
+  },
+  "creation": {
+    "silhouette": "Fuselage octogonal à joues inclinées, voilure large presque droite, nacelle vitrée facettée, deux nacelles moteurs indépendantes, empennage à doubles dérives et cassette ventrale de marquage.",
+    "helpers": "Copie locale des helpers Three.js, atlas PBR, export GLB et mesure des modèles précédents ; aucune de leurs données géométriques ou textures importée.",
+    "triangles": 6188,
+    "budget": 9000,
+    "primitives": 6,
+    "materiaux": [
+      "mat_corps",
+      "mat_details"
+    ],
+    "noeuds": [
+      "base",
+      "corps",
+      "module_nacelle",
+      "racine",
+      "socle"
+    ],
+    "bornes": {
+      "min": [
+        -0.4699999988079071,
+        0.31999999448657035,
+        -0.42500001192092896
+      ],
+      "max": [
+        0.4699999988079071,
+        0.7699999809265137,
+        0.42500001192092896
+      ],
+      "dimensions": [
+        0.9399999976158142,
+        0.4499999864399433,
+        0.8500000238418579
+      ]
+    },
+    "octetsGlb": 383512,
+    "octetsGlbEtPng": 1552728,
+    "sha256Glb": "e26abe1dc41fbd2b818ba7923e2fa64701a6715563825baadad3f9027f4aa837"
+  },
+  "textures": {
+    "albedo": [
+      1024,
+      1024
+    ],
+    "normale": [
+      1024,
+      1024
+    ],
+    "rugosite": [
+      512,
+      512
+    ],
+    "metal": [
+      512,
+      512
+    ],
+    "masque_equipe": [
+      512,
+      512
+    ],
+    "pngExternes": true,
+    "imagesEmbarquees": false,
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "ecartAlbedoGrisSousBlanc": 0,
+    "metalCopieDuCanalB": true,
+    "albedoSrgbDonneesLineaires": true,
+    "bakeHD": false,
+    "methode": "Pigments et hauteurs analytiques déterministes sans éclairage, ombre ou reflet peint."
+  },
+  "animation": {
+    "dureesMs": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "tir": 700,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "bouclesFermees": {
+      "repos": true,
+      "deplacement": true
+    },
+    "racineIdentiteSansPiste": true,
+    "reculCassetteY": [
+      0.0,
+      0.025000005960464478,
+      0.025000005960464478,
+      0.006000012159347534,
+      0.0
+    ],
+    "directionMarquage": "-Y local ; avant de l’appareil +Z",
+    "projectileDansGlb": false,
+    "horsJeu": "Descente du corps de 14 cm et inclinaison, cassette remontée, témoin escamoté ; pose tenue de 0,6 à 0,9 s.",
+    "poseFinaleTenue": true,
+    "temoinCache": true,
+    "posesReluesDansGlb": 975,
+    "pariteThreeNumpyMetres": 2e-06,
+    "rayonHorizontalEchantillons": 0.4803244279438157,
+    "rayonHorizontalMajoreContinu": 0.48160555203806954,
+    "ecartMinimalEntreDeuxVoisinsTousCaps": 0.03678889592386092,
+    "pointBasMinimalMesure": 0.19081185559690203
+  },
+  "controles": {
+    "lot": {
+      "ok": true,
+      "motifs": [],
+      "acceptes": [
+        "unite_bombardier_base_albedo.png",
+        "unite_bombardier_base_lod0.glb",
+        "unite_bombardier_base_masque_equipe.png",
+        "unite_bombardier_base_metal.png",
+        "unite_bombardier_base_normale.png",
+        "unite_bombardier_base_rugosite.png"
+      ],
+      "inconnus": [],
+      "lodManquants": []
+    },
+    "typage": "npm run typecheck : succès après dernières modifications TypeScript",
+    "trianglesDegeneres": 0,
+    "trianglesSuperposesExactement": 0,
+    "uvDegeneres": 0,
+    "normalesInversees": 0,
+    "erreurNormalesMax": 4.007676079886835e-08,
+    "erreurTangentesMax": 3.707849427492249e-08,
+    "erreurOrthogonaliteMax": 5.632516295595025e-07,
+    "testsGeneraux": false,
+    "build": false,
+    "capture": false,
+    "controleVisuel": false,
+    "mesureTelephone": false
+  },
+  "correctionsEffectuees": [
+    "Premier audit complémentaire : 96 triangles superposés dans les stators, dus à des barres diamétrales répétées. Remplacement par huit lamelles radiales courtes par moteur ; audit final : zéro superposition exacte."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-mouvements.json",
+    "mesures-poses-glb.json",
+    "controle-lot.json"
+  ],
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Voilure et gouvernes fixes, inclinaison animée du corps complet.",
+    "Nacelle vitrée opaque teintée PBR sans intérieur modélisé.",
+    "Hors-jeu : descente et inclinaison contenues en vol, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente.",
+    "Mesures d’enveloppe par clip séparé ; mélanges entre clips et intersections internes non certifiés.",
+    "Tenue au sol évaluée aux poses échantillonnées et borne cinématique générique ; pas d’essai en jeu.",
+    "Aucune appréciation artistique, qualité de lecture à 48 px/m non attestée.",
+    "Aucun gain FPS annoncé."
+  ]
+}

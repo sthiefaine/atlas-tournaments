@@ -1,0 +1,59 @@
+{
+  "triangles": 6188,
+  "primitives": 6,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 4.007676079886835e-08,
+  "tangentesErreurMax": 3.707849427492249e-08,
+  "orthogonaliteErreurMax": 5.632516295595025e-07,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_nacelle",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "indicateurCacheFinHorsJeu": true,
+  "reculMarqueursY": [
+    0.0,
+    0.025000005960464478,
+    0.025000005960464478,
+    0.006000012159347534,
+    0.0
+  ],
+  "octetsGlbEtPng": 1552728
+}

@@ -1,0 +1,714 @@
+{
+  "id": "unite_bombardier_base",
+  "sha256Glb": "63e33e97b3c2493eeed94bd7f4cf55e0015333fed943254a74e614df917d4c84",
+  "octetsGlb": 136488,
+  "triangles": 1208,
+  "noeuds": [
+    "module_nacelle",
+    "corps",
+    "base",
+    "socle",
+    "racine"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "animations": [
+    "repos",
+    "deplacement",
+    "tir",
+    "touche",
+    "hors_jeu"
+  ],
+  "primitives": [
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.4749999940395355,
+          -0.21062245965003967,
+          -0.16831684112548828
+        ],
+        "max": [
+          0.4749999940395355,
+          0.11717675626277924,
+          0.6816831827163696
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.09131608158349991,
+          -0.0993502214550972,
+          -0.1262376308441162
+        ],
+        "max": [
+          0.09131608158349991,
+          0.0993502214550972,
+          0.1599009931087494
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.09131608158349991,
+          -0.0993502214550972,
+          -0.1262376308441162
+        ],
+        "max": [
+          0.09131608158349991,
+          0.0993502214550972,
+          0.1599009931087494
+        ]
+      }
+    }
+  ],
+  "png": [
+    {
+      "nom": "unite_bombardier_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 41,
+      "valeurMax": 184
+    },
+    {
+      "nom": "unite_bombardier_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 92,
+      "valeurMax": 192
+    },
+    {
+      "nom": "unite_bombardier_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_bombardier_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_bombardier_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_bombardier_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_bombardier_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_bombardier_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_bombardier_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_bombardier_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_bombardier_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_bombardier_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    }
+  ],
+  "geometrieEtTexturesImportees": false,
+  "inspectionVisuelle": false
+}

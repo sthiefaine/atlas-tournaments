@@ -16594,21 +16594,14 @@
     {
       "id": "unite_bombardier_base",
       "fichiers": [
-        "unite_bombardier_base_lod0.glb",
         "unite_bombardier_base_albedo.png",
-        "unite_bombardier_base_albedo_hiver.png",
-        "unite_bombardier_base_normale.png",
-        "unite_bombardier_base_normale_hiver.png",
-        "unite_bombardier_base_rugosite.png",
-        "unite_bombardier_base_rugosite_hiver.png",
-        "unite_bombardier_base_metal.png",
-        "unite_bombardier_base_metal_hiver.png",
+        "unite_bombardier_base_lod0.glb",
         "unite_bombardier_base_masque_equipe.png",
-        "unite_bombardier_base_masque_equipe_hiver.png",
-        "unite_bombardier_base_emission.png",
-        "unite_bombardier_base_emission_hiver.png"
+        "unite_bombardier_base_metal.png",
+        "unite_bombardier_base_normale.png",
+        "unite_bombardier_base_rugosite.png"
       ],
-      "revision": "e2b77682157b579c5aa79c29740d478b91f1200057e4b988e02126088029a824"
+      "revision": "e52406b527d0cce37bcb97f7c6048021aec30af6c99334f897c57ac92269ce71"
     },
     {
       "id": "unite_brouilleur_base",

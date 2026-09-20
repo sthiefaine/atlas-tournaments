@@ -113,6 +113,14 @@
       "revision": "9d038186bf385998e4e66d806d888e7bfa765ca88e5c70e29c264de5e05d0375",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_bombardier_base",
+      "fichierActif": "public/assets/modeles/unite_bombardier_base_lod0.glb",
+      "donnees": "../donnees/e26abe1dc41fbd2b818ba7923e2fa64701a6715563825baadad3f9027f4aa837.glb",
+      "revision": "e52406b527d0cce37bcb97f7c6048021aec30af6c99334f897c57ac92269ce71",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [
