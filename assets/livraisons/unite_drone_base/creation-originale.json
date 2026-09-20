@@ -11,8 +11,8 @@
     },
     {
       "nom": "unite_drone_base_lod0.glb",
-      "sha256": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
-      "octets": 220500
+      "sha256": "5021056e090a915ede7fb817007f55438f12cdd0c84684bde279884b206a1d10",
+      "octets": 220772
     },
     {
       "nom": "unite_drone_base_masque_equipe.png",
@@ -36,126 +36,161 @@
     }
   ],
   "verificationDistante": {
-    "date": "2026-09-20T11:32:24.761Z",
+    "date": "2026-09-20T11:51:33.549Z",
     "nombreDepots": 0,
     "revisionRecente": null
   },
-  "archivePrecedente": "assets/receptions/unite_drone_base/avant-0fe3811f7ef306039c5b2fd96d4c8b13c7f95cbf331d20824a690275e3e5cdea",
+  "archivePrecedente": "assets/receptions/unite_drone_base/avant-706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
   "precedents": [
     {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_albedo.png",
-      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
-      "octets": 288414
+      "chemin": "assets/livraisons/unite_drone_base/README.md",
+      "sha256": "8da2f17037edf6acf890ae1886e1bd5ce8c8c5f4b00e5d4cab124f80448b813e",
+      "octets": 4590
     },
     {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_albedo_hiver.png",
-      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
-      "octets": 292605
+      "chemin": "assets/livraisons/unite_drone_base/controle-technique.json",
+      "sha256": "ba7e16d3b032a5b8c1e1defce673981e0e548a7554daa35606ed4505210b0d3a",
+      "octets": 310
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/creation-originale.json",
+      "sha256": "76dc01135a57ec597d60b94f5edec4c5c1172223bad4d0d558ca058e451c7a6b",
+      "octets": 6043
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/fabrication.json",
+      "sha256": "48d139cb2bb1e894489dd1481df12b074347c6d2fb718c713e524d143654b77b",
+      "octets": 3529
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/inspection-ancien-candidat.json",
+      "sha256": "fb832665c42b734d9ad1041b9c9c33f8bf397292c3bc3e82634961743687ca0b",
+      "octets": 10240
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/mesures-geometrie.json",
+      "sha256": "7dc9e70ec54d65f79436cd7d2446dee1bf5f1729d92ac7a4e4e741cd2c9e0ee1",
+      "octets": 1386
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/mesures-mouvements.json",
+      "sha256": "7533fa79d987c551fda72c03886f3f28a8988ace027c75b0912ef351997109c6",
+      "octets": 1832
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/mesures-poses-glb.json",
+      "sha256": "197b9c7d3ab40c1fd9441647176d7a7dab3b6dd3d3df9e247202f54b9fbc70ba",
+      "octets": 4592
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/revue-technique.json",
+      "sha256": "80cdf707f19a9648491dec0500c1d5185f1557e960370e6b27fd78f4ceb11b17",
+      "octets": 4318
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/textures-fabrication.json",
+      "sha256": "b2043d87aa08b02aaab51077329f9f1a409cd79d32d36d782e1291ac53725ff8",
+      "octets": 2345
+    },
+    {
+      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_albedo.png",
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_lod0.glb",
-      "sha256": "0fe3811f7ef306039c5b2fd96d4c8b13c7f95cbf331d20824a690275e3e5cdea",
-      "octets": 63048
+      "sha256": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+      "octets": 220500
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_masque_equipe.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
-    },
-    {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_masque_equipe_hiver.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_metal.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
-    },
-    {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_metal_hiver.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_normale.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
-    },
-    {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_normale_hiver.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_rugosite.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
     },
     {
-      "chemin": "assets/livraisons/unite_drone_base/unite_drone_base_rugosite_hiver.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "chemin": "assets/livraisons/unite_drone_base/validation-lot.json",
+      "sha256": "b3f1becc697636ed690ea2eecdd3166dd3efb5de83bed46e8ac80d5ccb9bda37",
+      "octets": 563
     },
     {
       "chemin": "assets/livraisons/unite_drone_base/version-candidat.json",
-      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
-      "octets": 53
+      "sha256": "6475d1003a8f47d18f7867b8d08d13ce13f5c3a204b0e5da0a7159006055cffa",
+      "octets": 158
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_lod0.glb",
+      "sha256": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+      "octets": 220500
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_albedo.png",
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_normale.png",
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_rugosite.png",
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_metal.png",
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
+    },
+    {
+      "chemin": "public/assets/modeles/unite_drone_base_masque_equipe.png",
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_lod0.glb",
-      "sha256": "0fe3811f7ef306039c5b2fd96d4c8b13c7f95cbf331d20824a690275e3e5cdea",
-      "octets": 63048
+      "sha256": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+      "octets": 220500
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_albedo.png",
-      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
-      "octets": 288414
-    },
-    {
-      "chemin": "public/assets/candidats/unite_drone_base_albedo_hiver.png",
-      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
-      "octets": 292605
+      "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+      "octets": 457274
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_normale.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
-    },
-    {
-      "chemin": "public/assets/candidats/unite_drone_base_normale_hiver.png",
-      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
-      "octets": 10638
+      "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+      "octets": 584876
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_rugosite.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
-    },
-    {
-      "chemin": "public/assets/candidats/unite_drone_base_rugosite_hiver.png",
-      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
-      "octets": 3029
+      "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+      "octets": 126110
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_metal.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
-    },
-    {
-      "chemin": "public/assets/candidats/unite_drone_base_metal_hiver.png",
-      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
-      "octets": 1964
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
     },
     {
       "chemin": "public/assets/candidats/unite_drone_base_masque_equipe.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
-    },
-    {
-      "chemin": "public/assets/candidats/unite_drone_base_masque_equipe_hiver.png",
-      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
-      "octets": 1968
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
     }
   ],
   "approbationArtistique": false

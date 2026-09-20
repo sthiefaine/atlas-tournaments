@@ -1,0 +1,153 @@
+{
+  "id": "unite_drone_base",
+  "date": "2026-09-20T13:50:33.331706+02:00",
+  "approbationArtistique": false,
+  "correction": "Conservation de min/max sur les neuf inputs temporels d’animation dans alleger(). Aucune modification de valeurs, géométrie, UV, noms, clips ou PNG.",
+  "avant": {
+    "source": "assets/livraisons/unite_drone_base/unite_drone_base_lod0.glb",
+    "sha256Glb": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+    "octetsGlb": 220500
+  },
+  "apres": {
+    "source": "tmp/production-sequentielle/unite_drone_base/unite_drone_base_lod0.glb",
+    "sha256Glb": "5021056e090a915ede7fb817007f55438f12cdd0c84684bde279884b206a1d10",
+    "octetsGlb": 220772
+  },
+  "deltaOctetsGlb": 272,
+  "preuve": {
+    "jsonIdentiqueHorsMinMaxInputs": true,
+    "attributsAjoutes": [
+      {
+        "accesseur": 21,
+        "min": [
+          0
+        ],
+        "max": [
+          2.4000000953674316
+        ],
+        "tempsBinVerifies": 65
+      },
+      {
+        "accesseur": 23,
+        "min": [
+          0
+        ],
+        "max": [
+          2.4000000953674316
+        ],
+        "tempsBinVerifies": 5
+      },
+      {
+        "accesseur": 26,
+        "min": [
+          0
+        ],
+        "max": [
+          1
+        ],
+        "tempsBinVerifies": 33
+      },
+      {
+        "accesseur": 28,
+        "min": [
+          0
+        ],
+        "max": [
+          1
+        ],
+        "tempsBinVerifies": 5
+      },
+      {
+        "accesseur": 32,
+        "min": [
+          0
+        ],
+        "max": [
+          0.5
+        ],
+        "tempsBinVerifies": 17
+      },
+      {
+        "accesseur": 34,
+        "min": [
+          0
+        ],
+        "max": [
+          0.5
+        ],
+        "tempsBinVerifies": 4
+      },
+      {
+        "accesseur": 37,
+        "min": [
+          0
+        ],
+        "max": [
+          0.8999999761581421
+        ],
+        "tempsBinVerifies": 18
+      },
+      {
+        "accesseur": 39,
+        "min": [
+          0
+        ],
+        "max": [
+          0.8999999761581421
+        ],
+        "tempsBinVerifies": 3
+      },
+      {
+        "accesseur": 43,
+        "min": [
+          0
+        ],
+        "max": [
+          0.8999999761581421
+        ],
+        "tempsBinVerifies": 4
+      }
+    ],
+    "nombreInputsCorriges": 9,
+    "nombreAttributsAjoutes": 18,
+    "binEntierOctetIdentique": true,
+    "octetsBin": 210124,
+    "sha256BinAvant": "db6b0e4f049d1f421482db740035f5f944f1674ebc8e29ecc89dad47fb081538",
+    "sha256BinApres": "db6b0e4f049d1f421482db740035f5f944f1674ebc8e29ecc89dad47fb081538",
+    "pngOctetIdentiques": [
+      {
+        "nom": "unite_drone_base_albedo.png",
+        "octets": 457274,
+        "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de",
+        "octetIdentique": true
+      },
+      {
+        "nom": "unite_drone_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+        "octetIdentique": true
+      },
+      {
+        "nom": "unite_drone_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+        "octetIdentique": true
+      },
+      {
+        "nom": "unite_drone_base_normale.png",
+        "octets": 584876,
+        "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e",
+        "octetIdentique": true
+      },
+      {
+        "nom": "unite_drone_base_rugosite.png",
+        "octets": 126110,
+        "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92",
+        "octetIdentique": true
+      }
+    ]
+  },
+  "limites": [
+    "Comparaison binaire et JSON uniquement ; aucun rendu ni validation artistique."
+  ]
+}

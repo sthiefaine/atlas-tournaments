@@ -19,7 +19,7 @@ Scripts autonomes dans `scripts/production/modeles/unite_drone_base/`, helpers l
 
 ## Résultat technique
 
-Un LOD0 à **3 188 / 3 500 triangles**, **cinq primitives**, deux matériaux exacts, cinq nœuds exacts. Dimensions **0,896 × 0,684365 × 0,896 m**, conformes aux tolérances ; le bas du train est à 0,072635 m au repos statique. GLB **220 500 octets**, GLB + cinq PNG **1,389,892 octets**. SHA-256 `706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219`.
+Un LOD0 à **3 188 / 3 500 triangles**, **cinq primitives**, deux matériaux exacts, cinq nœuds exacts. Dimensions **0,896 × 0,684365 × 0,896 m**, conformes aux tolérances ; le bas du train est à 0,072635 m au repos statique. GLB **220 772 octets**, GLB + cinq PNG **1 390 164 octets**. SHA-256 `5021056e090a915ede7fb817007f55438f12cdd0c84684bde279884b206a1d10`.
 
 Quatre clips exacts de 2 400 / 1 000 / 500 / 900 ms ; aucune animation `tir`. `base` anime les quatre pales dans le GLB, y compris repos ; le runtime n’a pas à relancer un rotor procédural. Repos/déplacement ferment leurs boucles. Hors-jeu abaisse le corps sur ses patins, arrête le rotor à 0,594 s, masque le seul indicateur `socle`, puis conserve sa pose après 0,6 s ; point bas final à 3 mm du sol. Racine jamais animée.
 
@@ -34,3 +34,9 @@ Contrôle du lot **ok**, six fichiers et aucun motif ; typage final **ok** aprè
 Aucun test général, build, rendu, capture, contrôle visuel, appréciation artistique ou FPS téléphone. Lisibilité à caméra de jeu non attestée. Verres opaques sans intérieur, atlas de matières répété. Mouvement rigide du fouet au pied et des patins ; arrêt de rotor sans simulation physique. Mélanges entre clips, intersections internes et gabarits nationaux non certifiés.
 
 Le coordinateur archive, intègre, commit et pousse. Aucune spécification, plan, actif public, lot final ou modification Git n’a été écrit par ce spécialiste hors sources/staging du drone. La suppression indépendante de `.vscode/settings.json` est laissée intacte.
+
+## Correction de format glTF — 20 septembre 2026
+
+`alleger()` conserve désormais `min/max` sur les neuf accesseurs d’entrée temporelle des animations. Ce sont les seules différences du JSON face à l’actif `706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219` : **272 octets** ajoutés au GLB. Le morceau BIN complet et les cinq PNG sont **octet-identiques**. Les bornes ajoutées correspondent aux minima/maxima des flottants temporels relus dans le BIN ; aucune valeur de forme, UV, nom, clip ou piste n’a changé. Preuve dans `correction-format.json`.
+
+GLB corrigé : **220 772 octets**, SHA-256 `5021056e090a915ede7fb817007f55438f12cdd0c84684bde279884b206a1d10`. Lot GLB + PNG : **1 390 164 octets**. Contrôle du lot et typage final relancés : **ok**. Aucun test général, build ou rendu. Les mesures antérieures restent applicables grâce à l’identité complète du BIN et des autres champs JSON.

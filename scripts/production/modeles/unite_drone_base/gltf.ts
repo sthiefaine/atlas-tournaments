@@ -191,11 +191,8 @@ export function dedoublonner(document: DocumentGltf, bin: Uint8Array): Uint8Arra
 }
 
 /**
- * Retire les bornes `min`/`max` des accesseurs qui ne portent pas de
- * positions : glTF ne les exige que sur `POSITION`, et l'exportateur les écrit
- * partout — quatre nombres à dix-sept chiffres par piste d'animation, vingt
- * kilo-octets de JSON par fichier. Les bornes des positions restent : c'est
- * sur elles que le validateur mesure l'emprise (`doc/11-assets-spec.md` §7.1).
+ * Retire seulement les bornes facultatives. Les positions et les temps
+ * d'entrée des animations conservent min/max, requis par glTF 2.0.
  */
 export function alleger(document: DocumentGltf): void {
   const positions = new Set<number>();
@@ -204,6 +201,9 @@ export function alleger(document: DocumentGltf): void {
       const i = p.attributes?.['POSITION'];
       if (i !== undefined) positions.add(i);
     }
+  }
+  for (const animation of (document['animations'] ?? []) as { samplers?: { input: number }[] }[]) {
+    for (const sampler of animation.samplers ?? []) positions.add(sampler.input);
   }
   ((document['accessors'] ?? []) as AccesseurGltf[]).forEach((a, i) => {
     if (positions.has(i)) return;

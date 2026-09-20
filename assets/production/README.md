@@ -20,6 +20,8 @@ Pour les anciens kits actifs du génie, de la méca et de la reconnaissance, `re
 
 Après le déploiement, `node --import tsx scripts/production/verifier-publication.ts <id>` compare les SHA-256 du GLB et des PNG servis avec le lot actif, puis vérifie sa présence dans `/api/modeles`, l'inventaire utilisé par le jeu. Il ne met à jour le suivi que si tout correspond. Une absence temporaire pendant le build n'est pas une validation ; le code de sortie 2 signale une publication encore non conforme. Ce contrôle réseau n'effectue aucun rendu ni mesure FPS.
 
+Export glTF : conserver `min` et `max` sur les positions **et sur les accesseurs FLOAT SCALAR d'entrée des animations**. L'ancien helper `alleger` des premiers générateurs ne les conservait que sur les positions ; ne pas en reprendre cette version. Le helper local de l'intercepteur corrige ce point et le contrôle binaire refuse désormais les bornes temporelles absentes ou incohérentes. Les copies utilisées par le brouilleur et le drone d'observation reçoivent la même correction, sans toucher aux données géométriques ni aux clés d'animation.
+
 `plan-assets.json` contient une commande complète par spécification, les fichiers attendus et un état de présence au moment de sa génération. Régénérer avec `npm run produire:manifest` après chaque lot. L’admin propose également le téléchargement du JSON et du prompt par asset.
 
 Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. Les PNG restent externes et partagés entre les niveaux de détail. Les bases déjà livrées sont conservées. Les kits reprennent la géométrie de leur base.
