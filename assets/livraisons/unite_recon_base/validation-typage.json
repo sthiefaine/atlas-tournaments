@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "dateUtc": "2026-09-20T14:51:42.271653+00:00",
+  "commande": "npm run typecheck",
+  "codeSortie": 0,
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_recon_base/generer.ts": "83aab879dbf1430e9ea918b6f91c8541530b726b67843ce4182e64f3ed3a56fd",
+    "scripts/production/modeles/unite_recon_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_recon_base/mesurer-natif.ts": "0fcf1fbdfe79590a15c6c1ab09244cb67510dba8836541419eb701da973039cf",
+    "scripts/production/modeles/unite_recon_base/mesurer-poses.ts": "7a4d6696b51e3e95ac33da3f1c4cc6761c659667e3c0852cbb8ca06881fa942d"
+  },
+  "suiteTestsExecutee": false,
+  "buildExecute": false
+}

@@ -1,0 +1,175 @@
+{
+  "id": "unite_recon_base",
+  "motif": "Les anciens kits partagent la géométrie précédente et masqueraient la nouvelle base commune.",
+  "basePrecedente": "0800c043edf22b57db7bd120e3274b0668e813e59678cffbeb1f4e794c8ad0df",
+  "nouvelleBase": "73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373",
+  "geometriePrecedente": "ba72a64cc16124c0cbafcac843893af0608287a6264849573f0e835c62aeb909",
+  "geometrieNouvelle": "016a96023371577966b5c855a8338c8fb443ad66d7f40bfce4890cd90c2ab915",
+  "archive": "assets/receptions/unite_recon_base/kits-avant-73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373",
+  "kits": [
+    "kit_fr_recon",
+    "kit_lu_recon"
+  ],
+  "fichiers": [
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_albedo.png",
+      "sha256": "7397df734e0346ab9f4d68176554c8a07cd099e5979f60d54fa16c0237adac02",
+      "octets": 262249,
+      "lien": "../donnees/7397df734e0346ab9f4d68176554c8a07cd099e5979f60d54fa16c0237adac02.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_albedo_hiver.png",
+      "sha256": "78bb416008a980b9026be9063236a8c60505a6d1bff62654a3b2ddb193fa173f",
+      "octets": 266518,
+      "lien": "../donnees/78bb416008a980b9026be9063236a8c60505a6d1bff62654a3b2ddb193fa173f.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "lien": "../donnees/57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "lien": "../donnees/57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_lod0.glb",
+      "sha256": "9e4199e5806456013e821e200d2d87c58b8c395a2662ff066d1aa04790232f51",
+      "octets": 83548,
+      "lien": "../donnees/9e4199e5806456013e821e200d2d87c58b8c395a2662ff066d1aa04790232f51.glb"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_masque_equipe.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_masque_equipe_hiver.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_recon_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_albedo.png",
+      "sha256": "747a610273b102a958cd786619e64e33113934d357d56eb3bd81b4e1a9613941",
+      "octets": 261993,
+      "lien": "../donnees/747a610273b102a958cd786619e64e33113934d357d56eb3bd81b4e1a9613941.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_albedo_hiver.png",
+      "sha256": "f75b306d867cb1382dcf84bc8dd11e931967eed108a7bae0c44ccd8852ae374d",
+      "octets": 266412,
+      "lien": "../donnees/f75b306d867cb1382dcf84bc8dd11e931967eed108a7bae0c44ccd8852ae374d.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "lien": "../donnees/57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "lien": "../donnees/57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_lod0.glb",
+      "sha256": "f7f86779468a69093f8c9edd59749615eb6a600314fcd30e45611dd7d66c1330",
+      "octets": 83548,
+      "lien": "../donnees/f7f86779468a69093f8c9edd59749615eb6a600314fcd30e45611dd7d66c1330.glb"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_masque_equipe.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_masque_equipe_hiver.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_recon_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    }
+  ],
+  "candidatsConserves": true,
+  "donneesImmuablesConservees": true,
+  "approbationArtistique": false,
+  "date": "2026-09-20T14:55:03.202Z"
+}

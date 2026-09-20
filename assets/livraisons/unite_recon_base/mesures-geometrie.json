@@ -1,0 +1,141 @@
+{
+  "triangles": 3468,
+  "primitives": 12,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.86947436314955e-08,
+  "tangentesErreurMax": 4.1981931708789944e-08,
+  "orthogonaliteErreurMax": 4.2628926888443885e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_recon_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_radar",
+    "os_marqueur",
+    "os_roue_d_0",
+    "os_roue_d_1",
+    "os_roue_d_2",
+    "os_roue_g_0",
+    "os_roue_g_1",
+    "os_roue_g_2",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "normalePngLongueurErreurMax": 0.0028410238841094504,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    51,
+    234
+  ],
+  "continuitesBoucles": [
+    {
+      "clip": "repos",
+      "noeud": "module_radar",
+      "canal": "rotation",
+      "erreurVitesseJointure": 5.201485060446487e-07,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "module_radar",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_0",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_1",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_2",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_0",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_1",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_2",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "translation",
+      "erreurVitesseJointure": 5.960464477539063e-08,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    }
+  ]
+}

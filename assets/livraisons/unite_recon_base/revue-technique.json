@@ -1,0 +1,280 @@
+{
+  "id": "unite_recon_base",
+  "dateRevueUtc": "2026-09-20T14:54:01.697509+00:00",
+  "statut": "pret_a_integrer_par_coordinateur",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "scripts": "scripts/production/modeles/unite_recon_base",
+    "sourceExterneUtilisee": false,
+    "ancienCandidatImporte": false,
+    "bakeHD": false,
+    "normales": "Microreliefs analytiques de matière ; pigments sans éclairage calculé.",
+    "ancienCandidat": {
+      "sha256Glb": "0800c043edf22b57db7bd120e3274b0668e813e59678cffbeb1f4e794c8ad0df",
+      "triangles": 692,
+      "octetsGlb": 83572,
+      "pngInspectes": 12,
+      "inchange": true
+    },
+    "verificationDistanteCommuniquee": {
+      "date": "2026-09-20T14:42:34.126Z",
+      "nombreDepots": 0,
+      "fiches": [
+        "unite_recon_base",
+        "kit_fr_recon",
+        "kit_lu_recon"
+      ],
+      "origine": "Coordinateur, lecture authentifiée réussie ; revalidation avant intégration à sa charge."
+    }
+  },
+  "sha256Glb": "73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373",
+  "triangles": 3468,
+  "budgetTriangles": 3500,
+  "primitives": 12,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "dimensionsMetres": [
+    0.4900000082552433,
+    0.4014999907016754,
+    0.6999999908804894
+  ],
+  "octetsGlb": 205424,
+  "octetsLot": 1375315,
+  "fichiers": [
+    {
+      "nom": "unite_recon_base_albedo.png",
+      "octets": 458264,
+      "sha256": "118dd8c722b7f7550af27f26063b2a8c33650759a819c0cf604ebe673780784d"
+    },
+    {
+      "nom": "unite_recon_base_lod0.glb",
+      "octets": 205424,
+      "sha256": "73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373"
+    },
+    {
+      "nom": "unite_recon_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_recon_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_recon_base_normale.png",
+      "octets": 584185,
+      "sha256": "159902088d4ecab96a76e611326d368c0d0aea3d8a2148b2ee7ac6a446a8d488"
+    },
+    {
+      "nom": "unite_recon_base_rugosite.png",
+      "octets": 126310,
+      "sha256": "0a6e33c0dfd0a6934a2714a763e73049d4cc15731e6f38cde783662e225a938b"
+    }
+  ],
+  "clips": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "controles": {
+    "lot": {
+      "ok": true,
+      "rapport": "validation-lot.json"
+    },
+    "typage": {
+      "ok": true,
+      "rapport": "validation-typage.json"
+    },
+    "geometrieEtPng": "mesures-geometrie.json",
+    "posesThree": "mesures-poses-three-glb.json",
+    "posesNumpy": "mesures-poses-glb.json",
+    "gabaritsABC": "mesures-gabarits.json",
+    "chargementNatif": "mesures-natif-glb.json",
+    "mecanique": "mesures-jeux.json"
+  },
+  "mesuresResume": {
+    "posesParGabarit": 975,
+    "pariteNumpyThreeNatifToleranceMetres": 2e-06,
+    "rayonsMajoresABC": {
+      "a": 0.4009061288357326,
+      "b": 0.41839418706240794,
+      "c": 0.45140798137965565
+    },
+    "espaceDeuxVoisinsABC": {
+      "a": 0.19818774232853476,
+      "b": 0.16321162587518412,
+      "c": 0.09718403724068869
+    },
+    "distancesLocales": 13,
+    "raccordsIntentionnels": 11,
+    "raccordsPneusJantes": 7,
+    "jeuGardeBoueMinimum": 0.00634751531683711,
+    "jeuSecoursRoue": 0.03199999474734065,
+    "jeuRadarCabine": 0.05127868306636807,
+    "sondesMarqueur": 13,
+    "racineNonAnimee": true,
+    "tempsAnimationsMinMaxConserves": true,
+    "bouclesPoseEtVitesse": true,
+    "horsJeuTientPoseEtMasqueTemoin": true
+  },
+  "correctionsAvantGel": [
+    "Jantes prolongées et élargies pour fermer les talons, marge polygonale comprise.",
+    "Winding des garde-boue orienté vers l’extérieur."
+  ],
+  "limites": [
+    "Aucun rendu, capture, contrôle visuel ni approbation artistique à 65 degrés ou 48 px/m.",
+    "Aucun test général, build, téléphone ou FPS.",
+    "Clips isolés ; transitions et mélanges exclus.",
+    "Sol et jeux mécaniques mesurés aux poses ; rayon majoré continûment pour a/b/c.",
+    "Distances locales et sondes ponctuelles ; aucune certification globale des collisions internes.",
+    "Vitrages opaques sans intérieur, atlas répété, suspension simplifiée à bras rigides.",
+    "PNG non chargés dans le contrôle natif ; données contrôlées séparément.",
+    "Aucun maître HD ou bake. Effets de bouche et lisibilité en jeu à apprécier.",
+    "Kits incompatibles à archiver par le coordinateur seulement avant intégration. Aucun fichier partagé ou Git modifié par le spécialiste."
+  ],
+  "rapports": [
+    {
+      "nom": "README.md",
+      "octets": 7610,
+      "sha256": "a3f2cad70fce1e09e0c1fd1b7e5c25880bb419893f8ba7b669d6718dae433d77"
+    },
+    {
+      "nom": "controle-lot.log",
+      "octets": 519,
+      "sha256": "c122317722aae86331cbc9dba72a9103016c05e8a57ba537b1608253ca5149d3"
+    },
+    {
+      "nom": "controle-typage.log",
+      "octets": 53,
+      "sha256": "3a0d5d509b197f846df6c72f7b6ad0e6bf7e737d9b6c9e53ada8ef604b22d4ee"
+    },
+    {
+      "nom": "fabrication.json",
+      "octets": 3926,
+      "sha256": "5de5c2d759fac7e61f247e7a835b9252a303a727f217b396a6a9537f6a8abca5"
+    },
+    {
+      "nom": "inspection-ancien-candidat.json",
+      "octets": 9352,
+      "sha256": "c18db626da8a177b8d7db076f1fbdb37924bf7f75e8187ec6f8d8fed871ecc14"
+    },
+    {
+      "nom": "mesures-gabarits.json",
+      "octets": 7902,
+      "sha256": "a127fff271e2dde40dc154c2b051d1fc9cff4d50aebfcabcb5eae0e39a34491c"
+    },
+    {
+      "nom": "mesures-geometrie.json",
+      "octets": 3471,
+      "sha256": "85c3a4acabbc32130228332c8a2e5b8c5ad329d3ac39f5ea691b3bc8ee72cabb"
+    },
+    {
+      "nom": "mesures-jeux.json",
+      "octets": 11432,
+      "sha256": "14dafe5ef4ddab2a4c4087f15c61b67094875f9fcb9c7636a2dd1f9c7eecd773"
+    },
+    {
+      "nom": "mesures-natif-glb.json",
+      "octets": 2143,
+      "sha256": "d29e9c1f7ac7896e246317d537fc96e6538ec7d452ad1dd3feba98ca0fcc5735"
+    },
+    {
+      "nom": "mesures-poses-glb.json",
+      "octets": 4349,
+      "sha256": "926dcd7a2984d054f9ee9cd7f66cdb1cb58aa612e7318c640980fef164ffadff"
+    },
+    {
+      "nom": "mesures-poses-three-glb.json",
+      "octets": 2167,
+      "sha256": "a4f7f17f865788b0cce1207ef6bdf7f9d618cf80032208b5ef999e1c7434a66b"
+    },
+    {
+      "nom": "textures-fabrication.json",
+      "octets": 2345,
+      "sha256": "c7e24422c9fecc23a73bdd753b05ab793a08117c431a50fd7f029ed28bb484c8"
+    },
+    {
+      "nom": "validation-lot.json",
+      "octets": 637,
+      "sha256": "b014d65fcd5c3cf92de5be82c4a93dca7ec7b55fe14da6a4e8d90b39f04505c4"
+    },
+    {
+      "nom": "validation-typage.json",
+      "octets": 732,
+      "sha256": "b9ebc2f465a0548cf9d084f5af6da270091125476987684481f1672ed549289c"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "octets": 7610,
+      "sha256": "a3f2cad70fce1e09e0c1fd1b7e5c25880bb419893f8ba7b669d6718dae433d77"
+    },
+    {
+      "nom": "assembler-revue.py",
+      "octets": 5335,
+      "sha256": "6ef159af3fca4a0a6ee8bc3403a28e07fb2f1bf3a33775cfc577b511b3d59830"
+    },
+    {
+      "nom": "generer.ts",
+      "octets": 16301,
+      "sha256": "83aab879dbf1430e9ea918b6f91c8541530b726b67843ce4182e64f3ed3a56fd"
+    },
+    {
+      "nom": "geometrie.py",
+      "octets": 4165,
+      "sha256": "b1598b16604efac1b451e62f951a98e44c5048294f12162791f7bde39f17a412"
+    },
+    {
+      "nom": "gltf.ts",
+      "octets": 10685,
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "octets": 2273,
+      "sha256": "1b2a5616a42224095a0c5fd29030f6bb06390412d15b5a7b9ac30891b7f2ad1a"
+    },
+    {
+      "nom": "mesurer-jeux.py",
+      "octets": 9263,
+      "sha256": "fdaa61110fffdabf5bf1cdc84f0474b321a164e2f09b123b7beb03a40d0a4a87"
+    },
+    {
+      "nom": "mesurer-natif.ts",
+      "octets": 4110,
+      "sha256": "0fcf1fbdfe79590a15c6c1ab09244cb67510dba8836541419eb701da973039cf"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "octets": 10751,
+      "sha256": "33c6c6c1097a349f639c5fea8c4df3e49f42ea02a54054f5832efae7f14182b8"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "octets": 5256,
+      "sha256": "7a4d6696b51e3e95ac33da3f1c4cc6761c659667e3c0852cbb8ca06881fa942d"
+    },
+    {
+      "nom": "mesurer.py",
+      "octets": 8993,
+      "sha256": "2453b79b1f2c476a99a7984146afe22752fcfb9e6cc9d9921e3efd31a06f7687"
+    },
+    {
+      "nom": "textures.py",
+      "octets": 5636,
+      "sha256": "08442355cf3a2b4cb9e22d69852912adee327ea1f5cbb6dda106fa6a4429078d"
+    },
+    {
+      "nom": "verifier.py",
+      "octets": 1684,
+      "sha256": "8bd0ed8da2f3d3ed0df58ff0f3d70afd3316641c9a849a67cd21b62eba4b853a"
+    }
+  ]
+}

@@ -1,0 +1,421 @@
+{
+  "id": "unite_recon_base",
+  "sha256Glb": "73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB relus par extras.pieces, distances localisées et raccords ; 975 poses de séparation des modules et projection YZ garde-boue/pneus. Aucun rendu.",
+  "distancesTriangles": [
+    {
+      "nom": "pneus_voisins_-1_0",
+      "minimumMetres": 0.08199999678134917,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 840,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_-1_1",
+      "minimumMetres": 0.08199999678134917,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 840,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_-1_0",
+      "minimumMetres": 0.021801336996457345,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 184,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_-1_1",
+      "minimumMetres": 0.022257965440113263,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 94,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_-1_2",
+      "minimumMetres": 0.025275208504980967,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 134,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_1_0",
+      "minimumMetres": 0.08199999678134917,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 840,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_1_1",
+      "minimumMetres": 0.08199999678134917,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 840,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_1_0",
+      "minimumMetres": 0.025275208504980967,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 134,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_1_1",
+      "minimumMetres": 0.022257965440113263,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 94,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_capsule_1_2",
+      "minimumMetres": 0.021801336996457345,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 184,
+      "traversees": 0
+    },
+    {
+      "nom": "secours_roue_centrale",
+      "minimumMetres": 0.06784568323737485,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1466,
+      "traversees": 0
+    },
+    {
+      "nom": "secours_garde_boue_central",
+      "minimumMetres": 0.046268404759998376,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 712,
+      "traversees": 0
+    },
+    {
+      "nom": "radar_cabine",
+      "minimumMetres": 0.07934513280273182,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 121,
+      "traversees": 0
+    }
+  ],
+  "raccords": [
+    {
+      "pieces": [
+        "bras_recepteur_1",
+        "bras_recepteur_2"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 576,
+      "traversees": 236
+    },
+    {
+      "pieces": [
+        "bras_recepteur_2",
+        "recepteur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1156,
+      "traversees": 67
+    },
+    {
+      "pieces": [
+        "bras_recepteur_1",
+        "parabole"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1340,
+      "traversees": 102
+    },
+    {
+      "pieces": [
+        "axe_radar",
+        "support_radar"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 8.673617379884043e-19,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1456,
+      "traversees": 74
+    },
+    {
+      "pieces": [
+        "axe_radar",
+        "parabole"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 9.75781955236954e-19,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3224,
+      "traversees": 80
+    },
+    {
+      "pieces": [
+        "support_radar",
+        "plateau_arriere"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 384,
+      "traversees": 61
+    },
+    {
+      "pieces": [
+        "console_secours",
+        "capsule"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0014999955892562866,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 42,
+      "traversees": 14
+    },
+    {
+      "pieces": [
+        "console_secours",
+        "pneu_secours_jante"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0001291774430552259,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 268,
+      "traversees": 37
+    },
+    {
+      "pieces": [
+        "toit_cabine",
+        "verriere"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00024947385824161634,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1484,
+      "traversees": 99
+    },
+    {
+      "pieces": [
+        "support_marqueur",
+        "carter_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00037623102816440883,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 104,
+      "traversees": 29
+    },
+    {
+      "pieces": [
+        "carter_marqueur",
+        "tube_marqueur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006734424654607083,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 604,
+      "traversees": 114
+    }
+  ],
+  "raccordsPneusJantes": [
+    {
+      "pneu": "pneu_-1_0",
+      "jeuRadialNegatifRecouvrement": 0.002553759238607206,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_-1_1",
+      "jeuRadialNegatifRecouvrement": 0.0025537673910179387,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_-1_2",
+      "jeuRadialNegatifRecouvrement": 0.002553759238607206,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_1_0",
+      "jeuRadialNegatifRecouvrement": 0.002553759238607206,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_1_1",
+      "jeuRadialNegatifRecouvrement": 0.0025537673910179387,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_1_2",
+      "jeuRadialNegatifRecouvrement": 0.002553759238607206,
+      "janteAuDelaTalon": 0.0007400065660476685
+    },
+    {
+      "pneu": "pneu_secours",
+      "jeuRadialNegatifRecouvrement": 0.0018007300633509984,
+      "janteAuDelaTalon": 0.00045999884605407715
+    }
+  ],
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 194,
+      "radarCabineSeparationZ": 0.05127868306636807,
+      "radarPlateauSeparationY": 0.08249997983127833,
+      "secoursRoueCentraleSeparationY": 0.03999999307841064,
+      "pneusGardesBoueJeux": {
+        "pneu_-1_0": 0.01419379538511878,
+        "pneu_-1_1": 0.014193811297099332,
+        "pneu_-1_2": 0.01419379538511878,
+        "pneu_1_0": 0.01419379538511878,
+        "pneu_1_1": 0.014193811297099332,
+        "pneu_1_2": 0.01419379538511878
+      }
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "radarCabineSeparationZ": 0.05127868306636807,
+      "radarPlateauSeparationY": 0.0824999798312783,
+      "secoursRoueCentraleSeparationY": 0.03699998997896908,
+      "pneusGardesBoueJeux": {
+        "pneu_-1_0": 0.011251437350282556,
+        "pneu_-1_1": 0.011251452265887876,
+        "pneu_-1_2": 0.011251437350282556,
+        "pneu_1_0": 0.011251437350282556,
+        "pneu_1_1": 0.011251452265887876,
+        "pneu_1_2": 0.011251437350282556
+      }
+    },
+    {
+      "clip": "tir",
+      "poses": 197,
+      "radarCabineSeparationZ": 0.051500010013580316,
+      "radarPlateauSeparationY": 0.0824999798312783,
+      "secoursRoueCentraleSeparationY": 0.039999996058642864,
+      "pneusGardesBoueJeux": {
+        "pneu_-1_0": 0.014193795966532557,
+        "pneu_-1_1": 0.01419381259224732,
+        "pneu_-1_2": 0.014193795966532557,
+        "pneu_1_0": 0.014193795966532557,
+        "pneu_1_1": 0.01419381259224732,
+        "pneu_1_2": 0.014193795966532557
+      }
+    },
+    {
+      "clip": "touche",
+      "poses": 195,
+      "radarCabineSeparationZ": 0.05150001001358026,
+      "radarPlateauSeparationY": 0.08249997983127824,
+      "secoursRoueCentraleSeparationY": 0.039999996058642864,
+      "pneusGardesBoueJeux": {
+        "pneu_-1_0": 0.013929449480526004,
+        "pneu_-1_1": 0.013655077646686303,
+        "pneu_-1_2": 0.0133807045468642,
+        "pneu_1_0": 0.01345742271648194,
+        "pneu_1_1": 0.0137698266314044,
+        "pneu_1_2": 0.013908067428565526
+      }
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 196,
+      "radarCabineSeparationZ": 0.051500010013580316,
+      "radarPlateauSeparationY": 0.0824999798312783,
+      "secoursRoueCentraleSeparationY": 0.03199999474734065,
+      "pneusGardesBoueJeux": {
+        "pneu_-1_0": 0.00634751531683711,
+        "pneu_-1_1": 0.006347530290429018,
+        "pneu_-1_2": 0.00634751531683711,
+        "pneu_1_0": 0.00634751531683711,
+        "pneu_1_1": 0.006347530290429018,
+        "pneu_1_2": 0.00634751531683711
+      }
+    }
+  ],
+  "sondesMarqueur": [
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.052500012367963755,
+      "avantLibreSur": 0.65
+    }
+  ],
+  "limites": [
+    "Mesures localisées, aucune certification globale des collisions internes.",
+    "Gardes-boue : rayon enveloppant les pneus projetés contre arêtes YZ des surfaces ; valeur à chaque pose échantillonnée, pas une preuve continue.",
+    "Sondes ponctuelles, aucune preuve de toute section continue.",
+    "Chaque clip isolé, transitions et mélanges exclus.",
+    "Aucun rendu, appréciation artistique ou FPS."
+  ]
+}

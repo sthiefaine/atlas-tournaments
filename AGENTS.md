@@ -46,6 +46,10 @@ Sol-sol poussé en `35e2405`, GLB et cinq PNG confirmés en ligne par SHA, prés
 
 Porte-avions intégré : 6 308 triangles, neuf primitives, 1 579 869 octets. Pont dégagé, ascenseur affleurant, îlot avancé, radar et fouet distincts ; 974 poses concordantes NumPy/Three/GLTFLoader natif, rayons majorés a/b 0,452854 / 0,482347 m. Récepteur raccordé et radar dégagé du toit de 4,5 mm. Contrôle de lot et typage réussis ; aucune image ni approbation artistique. Vingt-sept modèles livrés.
 
+Porte-avions poussé en `d29ac2a`, GLB et cinq PNG confirmés en ligne par SHA, inventaire présent. Reconnaissance en cours : `unite_recon_base`, spécialiste `modele_24_recon`. Lecture distante base/kit_fr_recon/kit_lu_recon sans upload le 20 septembre à 14:42 UTC. Ancien actif et candidat identiques : SHA `0800c043edf22b57db7bd120e3274b0668e813e59678cffbeb1f4e794c8ad0df`, 692 triangles. Attendre son FINAL gelé ; inspecter puis archiver les deux anciens kits seulement au moment d’intégrer son remplacement, dans le même commit. Trois gabarits a/b/c demandés pour cette unité.
+
+Reconnaissance intégrée : 3 468 triangles, douze primitives, 1 375 315 octets. Six roues animées et radar tournant ; 975 poses, rayons majorés a/b/c 0,400906 / 0,418394 / 0,451408 m. Jantes raccordées aux pneus et normales des garde-boue corrigées ; garde minimale 6,348 mm. Les 26 alias actifs des anciens kits FR/LU ont été archivés puis retirés, candidats et blobs immuables conservés. Contrôle de lot et typage réussis, sans rendu ni approbation artistique. Vingt-huit modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

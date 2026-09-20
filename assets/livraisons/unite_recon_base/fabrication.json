@@ -1,0 +1,211 @@
+{
+  "id": "unite_recon_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 3468,
+  "budgetTriangles": 3500,
+  "octetsGlb": 205424,
+  "sha256Glb": "73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373",
+  "bornes": {
+    "min": [
+      -0.24500000476837158,
+      -1.6093254090465692e-9,
+      -0.34950000047683716
+    ],
+    "max": [
+      0.24500000348687173,
+      0.40149998909235,
+      0.3504999904036522
+    ],
+    "dimensions": [
+      0.4900000082552433,
+      0.4014999907016754,
+      0.6999999908804894
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.126,
+        -0.212
+      ]
+    },
+    "os_marqueur": {
+      "parent": "corps",
+      "p": [
+        0.102,
+        0.065,
+        0.267
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "p": [
+        0.104,
+        0.139,
+        0.055
+      ]
+    },
+    "os_roue_g_0": {
+      "parent": "base",
+      "p": [
+        -0.201,
+        0.078,
+        -0.238
+      ]
+    },
+    "os_roue_g_1": {
+      "parent": "base",
+      "p": [
+        -0.201,
+        0.078,
+        0
+      ]
+    },
+    "os_roue_g_2": {
+      "parent": "base",
+      "p": [
+        -0.201,
+        0.078,
+        0.238
+      ]
+    },
+    "os_roue_d_0": {
+      "parent": "base",
+      "p": [
+        0.201,
+        0.078,
+        -0.238
+      ]
+    },
+    "os_roue_d_1": {
+      "parent": "base",
+      "p": [
+        0.201,
+        0.078,
+        0
+      ]
+    },
+    "os_roue_d_2": {
+      "parent": "base",
+      "p": [
+        0.201,
+        0.078,
+        0.238
+      ]
+    }
+  },
+  "noeuds": [
+    "racine",
+    "corps",
+    "base",
+    "module_radar",
+    "os_marqueur",
+    "socle",
+    "os_roue_g_0",
+    "os_roue_g_1",
+    "os_roue_g_2",
+    "os_roue_d_0",
+    "os_roue_d_1",
+    "os_roue_d_2"
+  ],
+  "bilanTriangles": {
+    "capot_equipe": 60,
+    "porte_equipe": 120,
+    "capsule": 124,
+    "poignee": 24,
+    "cadre_cabine": 60,
+    "verriere": 60,
+    "toit_cabine": 60,
+    "montants_parebrise": 48,
+    "plateau_arriere": 60,
+    "aeration_moteur": 60,
+    "garde_boue_-1_0": 68,
+    "garde_boue_-1_1": 68,
+    "garde_boue_-1_2": 68,
+    "garde_boue_1_0": 68,
+    "garde_boue_1_1": 68,
+    "garde_boue_1_2": 68,
+    "console_secours": 12,
+    "pneu_secours": 96,
+    "pneu_secours_jante": 48,
+    "ecrou_secours": 32,
+    "parechoc": 24,
+    "projecteur": 48,
+    "support_marqueur": 12,
+    "support_radar": 48,
+    "support_temoin": 32,
+    "bras_avant_-1_0": 24,
+    "bras_arriere_-1_0": 24,
+    "bras_avant_-1_1": 24,
+    "bras_arriere_-1_1": 24,
+    "bras_avant_-1_2": 24,
+    "bras_arriere_-1_2": 24,
+    "bras_avant_1_0": 24,
+    "bras_arriere_1_0": 24,
+    "bras_avant_1_1": 24,
+    "bras_arriere_1_1": 24,
+    "bras_avant_1_2": 24,
+    "bras_arriere_1_2": 24,
+    "longeron": 24,
+    "essieu": 96,
+    "axe_radar": 48,
+    "parabole": 240,
+    "bras_recepteur_1": 32,
+    "bras_recepteur_2": 32,
+    "recepteur": 48,
+    "carter_marqueur": 12,
+    "tube_marqueur": 96,
+    "fond_marqueur": 48,
+    "temoin": 12,
+    "pneu_-1_0": 96,
+    "pneu_-1_0_jante": 48,
+    "moyeu_-1_0": 32,
+    "pneu_-1_1": 96,
+    "pneu_-1_1_jante": 48,
+    "moyeu_-1_1": 32,
+    "pneu_-1_2": 96,
+    "pneu_-1_2_jante": 48,
+    "moyeu_-1_2": 32,
+    "pneu_1_0": 96,
+    "pneu_1_0_jante": 48,
+    "moyeu_1_0": 32,
+    "pneu_1_1": 96,
+    "pneu_1_1_jante": 48,
+    "moyeu_1_1": 32,
+    "pneu_1_2": 96,
+    "pneu_1_2_jante": 48,
+    "moyeu_1_2": 32
+  },
+  "approbationArtistique": false
+}

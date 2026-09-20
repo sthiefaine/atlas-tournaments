@@ -16859,21 +16859,14 @@
     {
       "id": "unite_recon_base",
       "fichiers": [
-        "unite_recon_base_lod0.glb",
         "unite_recon_base_albedo.png",
-        "unite_recon_base_albedo_hiver.png",
-        "unite_recon_base_normale.png",
-        "unite_recon_base_normale_hiver.png",
-        "unite_recon_base_rugosite.png",
-        "unite_recon_base_rugosite_hiver.png",
-        "unite_recon_base_metal.png",
-        "unite_recon_base_metal_hiver.png",
+        "unite_recon_base_lod0.glb",
         "unite_recon_base_masque_equipe.png",
-        "unite_recon_base_masque_equipe_hiver.png",
-        "unite_recon_base_emission.png",
-        "unite_recon_base_emission_hiver.png"
+        "unite_recon_base_metal.png",
+        "unite_recon_base_normale.png",
+        "unite_recon_base_rugosite.png"
       ],
-      "revision": "4f6a84031ca845d1999b1186e51e1d3b6f0c1221b4409e652f3e02aebd8c73a4"
+      "revision": "67709e8c52054473d10ba1b5e4d3f1d9400d0c9300f547aad5b56a63dc2a36bf"
     },
     {
       "id": "unite_roquettes_base",

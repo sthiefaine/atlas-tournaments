@@ -1,0 +1,92 @@
+{
+  "id": "unite_recon_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.24500000476837158,
+          -1.6093254090465692e-9,
+          -0.34950000047683716
+        ],
+        "max": [
+          0.24500000348687173,
+          0.40149998909235,
+          0.3504999904036522
+        ]
+      },
+      "rayonHorizontalMax": 0.41686928528696277
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.24500000476837158,
+          -1.3840659729424942e-8,
+          -0.34950000047683716
+        ],
+        "max": [
+          0.24500000348687173,
+          0.4044999832510948,
+          0.3504999904036522
+        ]
+      },
+      "rayonHorizontalMax": 0.41686928528696277
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 197,
+      "enveloppe": {
+        "min": [
+          -0.24500000476837158,
+          -1.6093254090465692e-9,
+          -0.34950000047683716
+        ],
+        "max": [
+          0.24500000348687173,
+          0.4044999832510948,
+          0.3504999801516533
+        ]
+      },
+      "rayonHorizontalMax": 0.41686928528696277
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.24562907365608427,
+          -1.6093254090465692e-9,
+          -0.3497190172113499
+        ],
+        "max": [
+          0.24508810598742234,
+          0.4071021793248794,
+          0.35107216273707653
+        ]
+      },
+      "rayonHorizontalMax": 0.4180842938363875
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.24500000476837158,
+          -1.6093254090465692e-9,
+          -0.34950000047683716
+        ],
+        "max": [
+          0.24500000348687173,
+          0.4044999832510948,
+          0.3504999904036522
+        ]
+      },
+      "rayonHorizontalMax": 0.41686928528696277
+    }
+  ],
+  "approbationArtistique": false
+}

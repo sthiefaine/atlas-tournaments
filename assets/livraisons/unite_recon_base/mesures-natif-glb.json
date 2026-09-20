@@ -1,0 +1,90 @@
+{
+  "id": "unite_recon_base",
+  "methode": "GLTFLoader natif, seules références de cartes retirées en mémoire ; SkeletonUtils.clone et AnimationMixer sans rendu. Géométrie et clips inchangés.",
+  "clonesNoeudsIndependants": true,
+  "pivotRadarFixeDansCorps": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 194,
+      "min": [
+        -0.24500000476837158,
+        -1.6093254090465692e-9,
+        -0.34950000047683716
+      ],
+      "max": [
+        0.24500000348687173,
+        0.40149998909235,
+        0.3504999904036522
+      ],
+      "rayon": 0.41686928528696277
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "min": [
+        -0.24500000476837158,
+        -1.3840659729424942e-8,
+        -0.34950000047683716
+      ],
+      "max": [
+        0.24500000348687173,
+        0.4044999832510948,
+        0.3504999904036522
+      ],
+      "rayon": 0.41686928528696277
+    },
+    {
+      "nom": "tir",
+      "poses": 197,
+      "min": [
+        -0.24500000476837158,
+        -1.6093254090465692e-9,
+        -0.34950000047683716
+      ],
+      "max": [
+        0.24500000348687173,
+        0.4044999832510948,
+        0.3504999801516533
+      ],
+      "rayon": 0.41686928528696277
+    },
+    {
+      "nom": "touche",
+      "poses": 195,
+      "min": [
+        -0.24562907365608427,
+        -1.6093254090465692e-9,
+        -0.3497190172113499
+      ],
+      "max": [
+        0.24508810598742234,
+        0.4071021793248794,
+        0.35107216273707653
+      ],
+      "rayon": 0.4180842938363875
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 196,
+      "min": [
+        -0.24500000476837158,
+        -1.6093254090465692e-9,
+        -0.34950000047683716
+      ],
+      "max": [
+        0.24500000348687173,
+        0.4044999832510948,
+        0.3504999904036522
+      ],
+      "rayon": 0.41686928528696277
+    }
+  ],
+  "limites": [
+    "Textures non chargées dans ce contrôle natif ; références contrôlées séparément.",
+    "Chaque clip isolé, transitions exclues.",
+    "Aucun rendu ni appréciation artistique."
+  ],
+  "approbationArtistique": false
+}
