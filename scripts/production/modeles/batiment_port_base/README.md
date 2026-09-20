@@ -1,7 +1,5 @@
 # Port commun — création originale
 
-Intégré dans le jeu après contrôle technique ; qualité artistique non vérifiée.
-
 Lot isolé `batiment_port_base`, sources dans ce dossier, staging dans `tmp/production-sequentielle/batiment_port_base/`. Aucun actif, lot officiel, registre ou fichier Git modifié par le spécialiste. Approbation artistique : **false**.
 
 ## Provenance et portée

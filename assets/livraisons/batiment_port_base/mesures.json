@@ -1,0 +1,812 @@
+{
+  "id": "batiment_port_base",
+  "sha256Glb": "965f78ef622ac64e40f73fc0526e18ba988dc27e55e3304f0c555ed59cb948f8",
+  "triangles": 4668,
+  "primitives": 5,
+  "noeuds": [
+    "corps",
+    "enseigne",
+    "toit",
+    "grue",
+    "racine"
+  ],
+  "bornes": {
+    "min": [
+      -0.45100000500679016,
+      0.0,
+      -0.4399999976158142
+    ],
+    "max": [
+      0.45100000500679016,
+      0.7139999938011169,
+      0.4399999976158142
+    ],
+    "dimensions": [
+      0.9020000100135803,
+      0.7139999938011169,
+      0.8799999952316284
+    ]
+  },
+  "geometrie": {
+    "trianglesDegeneres": 0,
+    "trianglesUvDegeneres": 0,
+    "normalesSensFaceMin": 0.9208002638927919,
+    "erreurNormalesMax": 3.639176715530823e-08,
+    "erreurTangentesMax": 3.889134192469612e-08,
+    "uvMin": 0.016249999403953552,
+    "uvMax": 0.9837499856948853
+  },
+  "raccords": [
+    {
+      "a": "dalle",
+      "b": "quai_-1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "quai_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "rampe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "semelle_cabine",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "semelle_cabine",
+      "b": "cabine_basse",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cabine_basse",
+      "b": "appui_vitrage",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "appui_vitrage",
+      "b": "vitrage_avant",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "vitrage_avant",
+      "b": "toiture",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "toiture",
+      "b": "fond_glissiere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "fond_glissiere",
+      "b": "indicateur_capture",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "semelle_grue",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "semelle_grue",
+      "b": "pied_grue",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_grue",
+      "b": "fut_grue",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "fut_grue",
+      "b": "roulement_fixe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "roulement_fixe",
+      "b": "couronne_mobile",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "couronne_mobile",
+      "b": "selle_grue",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "selle_grue",
+      "b": "poutre_basse",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "contrepoids",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "poulie_tete",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poulie_tete",
+      "b": "cable_levage",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cable_levage",
+      "b": "bloc_crochet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bloc_crochet",
+      "b": "tige_crochet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tige_crochet",
+      "b": "crochet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cable_tambour",
+      "b": "poulie_tete",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cable_tambour",
+      "b": "tambour_grue",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tambour_grue",
+      "b": "flasque_grue_-0.273",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tambour_grue",
+      "b": "flasque_grue_-0.197",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "crochet",
+      "b": "section_crochet_depart",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "crochet",
+      "b": "section_crochet_bout",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_grue",
+      "b": "coffret",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "socle_treuil",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tambour_treuil",
+      "b": "flasque_treuil_-0.078",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tambour_treuil",
+      "b": "flasque_treuil_0.024",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_-1",
+      "b": "platine_bollard_-1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_bollard_-1_0.112",
+      "b": "bollard_-1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bollard_-1_0.112",
+      "b": "chapeau_bollard_-1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_-1",
+      "b": "defense_-1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_-1",
+      "b": "platine_bollard_-1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_bollard_-1_0.337",
+      "b": "bollard_-1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bollard_-1_0.337",
+      "b": "chapeau_bollard_-1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_-1",
+      "b": "defense_-1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_1",
+      "b": "platine_bollard_1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_bollard_1_0.112",
+      "b": "bollard_1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bollard_1_0.112",
+      "b": "chapeau_bollard_1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_1",
+      "b": "defense_1_0.112",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_1",
+      "b": "platine_bollard_1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_bollard_1_0.337",
+      "b": "bollard_1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bollard_1_0.337",
+      "b": "chapeau_bollard_1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "quai_1",
+      "b": "defense_1_0.337",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "socle_treuil",
+      "b": "joue_treuil_-0.087",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_treuil_-0.087",
+      "b": "tambour_treuil",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "socle_treuil",
+      "b": "joue_treuil_0.033",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "joue_treuil_0.033",
+      "b": "tambour_treuil",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "tirant_avant_-0.263",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tirant_avant_-0.263",
+      "b": "traverse_sommet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "montant_fleche_-0.263",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "montant_fleche_-0.263",
+      "b": "traverse_sommet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "diagonale_-0.263",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "diagonale_-0.263",
+      "b": "tirant_avant_-0.263",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "tirant_avant_-0.207",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "tirant_avant_-0.207",
+      "b": "traverse_sommet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "montant_fleche_-0.207",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "montant_fleche_-0.207",
+      "b": "traverse_sommet",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "poutre_basse",
+      "b": "diagonale_-0.207",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "diagonale_-0.207",
+      "b": "tirant_avant_-0.207",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "vitrage_avant",
+      "b": "support_feu_-0.398",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_-0.398",
+      "b": "lentille_-0.398",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "vitrage_avant",
+      "b": "support_feu_-0.162",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_-0.162",
+      "b": "lentille_-0.162",
+      "distanceMetres": 0.0
+    }
+  ],
+  "aire": {
+    "ouvertureQuaiMetres": 0.49000000953674316,
+    "approcheLibreXZ": {
+      "min": [
+        -0.225,
+        0.075
+      ],
+      "max": [
+        0.225,
+        0.44
+      ]
+    },
+    "eauGeneree": false,
+    "rampe": {
+      "largeur": 0.42,
+      "zMin": -0.08,
+      "zMax": 0.07,
+      "hauteurArriere": 0.04,
+      "nezAvant": 0.002
+    },
+    "limiteApproche": "La zone ouverte expose le terrain du jeu ; pas de dalle ni eau ajoutée sous le bassin, ni garantie de place pour toute silhouette."
+  },
+  "animations": {
+    "poses": 264,
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 3.200000047683716,
+        "poses": 133,
+        "cibles": [
+          "grue"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.45100000500679016,
+            0.0,
+            -0.4399999976158142
+          ],
+          "max": [
+            0.45100000500679016,
+            0.7139999938011169,
+            0.4399999976158142
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "grue",
+          "min": [
+            -0.09559542692003675,
+            0.3550071489810943,
+            -0.3034103859572873
+          ],
+          "max": [
+            0.41524166603271145,
+            0.7139999938011169,
+            -0.16658961404271266
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.0,
+                0.0,
+                1.0,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.4000000059604645,
+              "matrice": [
+                0.9994880437269542,
+                0.0,
+                0.03199453776609587,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                -0.03199453776609587,
+                0.0,
+                0.9994880437269542,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.800000011920929,
+              "matrice": [
+                0.9989876708492659,
+                0.0,
+                0.04498481400605016,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                -0.04498481400605016,
+                0.0,
+                0.9989876708492659,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.2000000476837158,
+              "matrice": [
+                0.9994880437269542,
+                0.0,
+                0.03199453776609587,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                -0.03199453776609587,
+                0.0,
+                0.9994880437269542,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.600000023841858,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.0,
+                0.0,
+                1.0,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "matrice": [
+                0.9994880437269542,
+                0.0,
+                -0.03199453776609587,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.03199453776609587,
+                0.0,
+                0.9994880437269542,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.4000000953674316,
+              "matrice": [
+                0.9989876708492659,
+                0.0,
+                -0.04498481400605016,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.04498481400605016,
+                0.0,
+                0.9989876708492659,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.799999952316284,
+              "matrice": [
+                0.9994880437269542,
+                0.0,
+                -0.03199453776609587,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.03199453776609587,
+                0.0,
+                0.9994880437269542,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 3.200000047683716,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.25,
+                0.0,
+                1.0,
+                0.0,
+                0.57,
+                0.0,
+                0.0,
+                1.0,
+                -0.235,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nom": "capture",
+        "duree": 1.399999976158142,
+        "poses": 131,
+        "cibles": [
+          "enseigne"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.45100000500679016,
+            0.0,
+            -0.4399999976158142
+          ],
+          "max": [
+            0.45100000500679016,
+            0.7139999938011169,
+            0.4399999976158142
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "enseigne",
+          "min": [
+            -0.37000000476837164,
+            0.33000002056360245,
+            -0.32049997337162495
+          ],
+          "max": [
+            -0.18999999761581415,
+            0.33899999433197087,
+            -0.19250001199543476
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.2849999964237213,
+                0.0,
+                1.0,
+                0.0,
+                0.34200000762939453,
+                0.0,
+                0.0,
+                1.0,
+                -0.29499998688697815,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.2800000011920929,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.2849999964237213,
+                0.0,
+                1.0,
+                0.0,
+                0.34200000762939453,
+                0.0,
+                0.0,
+                1.0,
+                -0.257999986410141,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.699999988079071,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.2849999964237213,
+                0.0,
+                1.0,
+                0.0,
+                0.34200000762939453,
+                0.0,
+                0.0,
+                1.0,
+                -0.2199999988079071,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.0299999713897705,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.2849999964237213,
+                0.0,
+                1.0,
+                0.0,
+                0.34200000762939453,
+                0.0,
+                0.0,
+                1.0,
+                -0.257999986410141,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.399999976158142,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.2849999964237213,
+                0.0,
+                1.0,
+                0.0,
+                0.34200000762939453,
+                0.0,
+                0.0,
+                1.0,
+                -0.29499998688697815,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "vitesseBoucleEcart": 8.940312885841184e-09,
+    "jeuIndicateurRailsMin": 0.00399999320507044,
+    "separationCrochetCabineXMin": 0.0455000102519989,
+    "separationFlecheCabineYMin": 0.25099998682737346,
+    "separationContinueCrochetCabineX": 0.029947588305478473,
+    "enveloppeContinueGrue": {
+      "min": [
+        -0.11055242075442753,
+        0.3550071489810943,
+        -0.31205241991996246
+      ],
+      "max": [
+        0.4285524095487543,
+        0.7139999938011169,
+        -0.15794758008003748
+      ],
+      "methode": "Majoration horizontale 2r sin(.045/2), rotation Y ; Y exactement invariant."
+    },
+    "optIn": true
+  },
+  "textures": {
+    "masqueBinaire": true,
+    "grisNeutreSurMasque": true,
+    "emissionVitrageFeuxSeulement": true,
+    "pngExternes": 5
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "limites": [
+    "Mesures géométriques ciblées et poses échantillonnées ; pas de certification exhaustive de collisions.",
+    "Deux clips isolés, pas de rendu ni mesure sur téléphone."
+  ]
+}

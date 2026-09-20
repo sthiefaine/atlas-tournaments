@@ -1,5 +1,9 @@
 # AGENTS.md — passation
 
+Port commun intégré : 4 668 triangles, cinq primitives, 1 756 631 octets. Quai ouvert de 49 cm, rampe courte, cabine et grue à treillis ; 264 poses, 69 raccords ciblés et séparation continue crochet/cabine ≥29,948 mm. Crochet fermé et flasques de tambour raccordés. Contrôle technique et typage réussis ; aucun rendu. Trente-trois modèles livrés, station radar suivante après push.
+
+Aéroport poussé en `9338ba6`, GLB et cinq PNG confirmés en ligne par SHA, inventaire présent. Port suivant en cours : `batiment_port_base`, spécialiste `modele_29_port`, aucun upload à la lecture authentifiée du 20 septembre à 16:09 UTC. Candidat et actif historiques SHA `d7b9b6463f022fb08576f8a2edd2f805162830e63cf3fecc09385bf64f98b59c` (900 triangles). Attendre FINAL gelé avant intégration ; les bâtiments opt-in n’animent que leurs équipements, jamais dalle/murs.
+
 Aéroport commun intégré le 20 septembre : 4 116 triangles, cinq primitives, 1 688 620 octets. Dalle et cabine fixes, aire circulaire dégagée, manche animée et indicateur coulissant ; 264 poses et 42 raccords ciblés mesurés. Contrôle technique et typage réussis, sans rendu. Le cache de bâtiments conserve désormais les clips ; les livraisons opt-in `racine.extras.atlasAnimationsBatiment: true` jouent leur repos à 10 Hz et leur capture pendant le geste, avec lecteurs/squelettes privés libérés à la reconstruction. Anciennes livraisons sans marqueur inchangées. Trente-deux modèles livrés ; le port vient ensuite, après push de l’aéroport.
 
 ## Reprise séquentielle — 20 septembre 2026

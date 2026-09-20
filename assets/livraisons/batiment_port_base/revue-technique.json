@@ -1,0 +1,143 @@
+{
+  "id": "batiment_port_base",
+  "date": "2026-09-20T16:20:51.096805+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T16:09:40.005Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "d7b9b6463f022fb08576f8a2edd2f805162830e63cf3fecc09385bf64f98b59c",
+    "triangles": 900,
+    "octetsGlb": 111648,
+    "preserve": true,
+    "actifPreserve": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 4668,
+  "budgetTriangles": 5000,
+  "primitives": 5,
+  "materiaux": 2,
+  "octetsGlb": 353656,
+  "octetsLot": 1756631,
+  "dimensions": [
+    0.9020000100135803,
+    0.7139999938011169,
+    0.8799999952316284
+  ],
+  "sha256Glb": "965f78ef622ac64e40f73fc0526e18ba988dc27e55e3304f0c555ed59cb948f8",
+  "fichiers": [
+    {
+      "fichier": "batiment_port_base_albedo.png",
+      "octets": 438255,
+      "sha256": "3d1f462d497aef0e20c8cadca7b9d130a06ac80ee90e94381b71e0a98f425769"
+    },
+    {
+      "fichier": "batiment_port_base_emission.png",
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "fichier": "batiment_port_base_lod0.glb",
+      "octets": 353656,
+      "sha256": "965f78ef622ac64e40f73fc0526e18ba988dc27e55e3304f0c555ed59cb948f8"
+    },
+    {
+      "fichier": "batiment_port_base_masque_equipe.png",
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    },
+    {
+      "fichier": "batiment_port_base_normale.png",
+      "octets": 867736,
+      "sha256": "084cc19208e87bba567aaad2a8398500f27824f24f2fddc5375cf9022e99d34e"
+    },
+    {
+      "fichier": "batiment_port_base_rugosite.png",
+      "octets": 95294,
+      "sha256": "399aa964072b6db0e0455ede96422cfe638b71beb49bcf5bcec9c4a5625b3e8a"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/README.md",
+      "sha256": "c576baa3f3eda5aab0b232206fce971df54437d2e040e5db771a7b7a59aaa50b"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/assembler-revue.py",
+      "sha256": "d0cae19fec7888ca23c19db2d777ed817f1ee95fda5cfd2f89552fe37e385fa5"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/generer.ts",
+      "sha256": "363767090d37def351921c034f16f522da155ef32fe7157c7bb4658ceaca3b4f"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/geometrie.py",
+      "sha256": "8aea5d864161b067ff8fd7afe14bd1c0299787fd7821979684fd9c796bb03588"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/inspecter-ancien.py",
+      "sha256": "8eacd7acf19bdf06fdd68af44a1c85726d0eddbbe7ae42acd2d74a9c00de2999"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/mesurer-natif.ts",
+      "sha256": "0972011733d8c238a19fe95bc2c0e588f9d0284a624862527d02a576c5359f3f"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/mesurer.py",
+      "sha256": "879df358ee29a707da215478259993b718663644e7a1daef5d93c2cd1b916acc"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_port_base/textures.py",
+      "sha256": "f2090a81a49f263028f39d566177e1b0ea46c5c1f6e6a782cd38e543a9dc07d5"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_port_base_albedo.png",
+      "batiment_port_base_emission.png",
+      "batiment_port_base_lod0.glb",
+      "batiment_port_base_masque_equipe.png",
+      "batiment_port_base_normale.png",
+      "batiment_port_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "poses": 264,
+    "pairesRaccordsListees": 69,
+    "controleExhaustifCollisions": false,
+    "pariteNumpyNatif": true,
+    "reproduction": "reproduction.json"
+  },
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Mesures ciblées sur les pièces listées, pas de preuve exhaustive de non-intersection.",
+    "Textures retirées en mémoire pour charger sous Node ; cartes et UV contrôlés séparément.",
+    "Transitions entre animations non évaluées dans le jeu.",
+    "Aucune approbation artistique, capture ou mesure téléphone."
+  ]
+}

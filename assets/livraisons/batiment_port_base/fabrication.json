@@ -1,0 +1,157 @@
+{
+  "id": "batiment_port_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 4668,
+  "budgetTriangles": 5000,
+  "octetsGlb": 353656,
+  "sha256Glb": "965f78ef622ac64e40f73fc0526e18ba988dc27e55e3304f0c555ed59cb948f8",
+  "bornes": {
+    "min": [
+      -0.45100000500679016,
+      0,
+      -0.4399999976158142
+    ],
+    "max": [
+      0.45100000500679016,
+      0.7139999938011169,
+      0.4399999976158142
+    ],
+    "dimensions": [
+      0.9020000100135803,
+      0.7139999938011169,
+      0.8799999952316284
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "toit": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "enseigne": {
+      "parent": "toit",
+      "p": [
+        -0.285,
+        0.342,
+        -0.295
+      ]
+    },
+    "grue": {
+      "parent": "racine",
+      "p": [
+        0.25,
+        0.57,
+        -0.235
+      ]
+    }
+  },
+  "bilanTriangles": {
+    "dalle": 60,
+    "quai_-1": 60,
+    "quai_1": 60,
+    "rampe": 12,
+    "semelle_cabine": 60,
+    "cabine_basse": 28,
+    "appui_vitrage": 60,
+    "montant_-1_-0.388": 60,
+    "montant_-1_-0.114": 60,
+    "montant_1_-0.388": 60,
+    "montant_1_-0.114": 60,
+    "meneau_avant": 12,
+    "bande_cabine": 60,
+    "porte_service": 60,
+    "semelle_grue": 60,
+    "pied_grue": 60,
+    "fut_grue": 28,
+    "roulement_fixe": 96,
+    "coffret": 60,
+    "renfort_fut_-0.28": 32,
+    "renfort_fut_-0.19": 32,
+    "platine_bollard_-1_0.112": 60,
+    "bollard_-1_0.112": 64,
+    "chapeau_bollard_-1_0.112": 64,
+    "defense_-1_0.112": 64,
+    "platine_bollard_-1_0.337": 60,
+    "bollard_-1_0.337": 64,
+    "chapeau_bollard_-1_0.337": 64,
+    "defense_-1_0.337": 64,
+    "platine_bollard_1_0.112": 60,
+    "bollard_1_0.112": 64,
+    "chapeau_bollard_1_0.112": 64,
+    "defense_1_0.112": 64,
+    "platine_bollard_1_0.337": 60,
+    "bollard_1_0.337": 64,
+    "chapeau_bollard_1_0.337": 64,
+    "defense_1_0.337": 64,
+    "socle_treuil": 60,
+    "joue_treuil_-0.087": 60,
+    "joue_treuil_0.033": 60,
+    "tambour_treuil": 80,
+    "flasque_treuil_-0.078": 80,
+    "flasque_treuil_0.024": 80,
+    "support_feu_-0.398": 60,
+    "support_feu_-0.162": 60,
+    "vitrage_avant": 12,
+    "vitrage_arriere": 12,
+    "vitrage_cote_-1": 12,
+    "vitrage_cote_1": 12,
+    "lentille_-0.398": 48,
+    "lentille_-0.162": 48,
+    "toiture": 60,
+    "fond_glissiere": 60,
+    "rail_capture_-0.383": 60,
+    "rail_capture_-0.177": 60,
+    "rive_toit_-0.371": 60,
+    "rive_toit_-0.131": 60,
+    "indicateur_capture": 60,
+    "couronne_mobile": 96,
+    "poutre_basse": 60,
+    "contrepoids": 60,
+    "selle_grue": 60,
+    "tirant_avant_-0.263": 32,
+    "tirant_arriere_-0.263": 32,
+    "montant_fleche_-0.263": 32,
+    "diagonale_-0.263": 32,
+    "tirant_avant_-0.207": 32,
+    "tirant_arriere_-0.207": 32,
+    "montant_fleche_-0.207": 32,
+    "diagonale_-0.207": 32,
+    "traverse_sommet": 40,
+    "poulie_tete": 80,
+    "cable_tambour": 40,
+    "cable_levage": 40,
+    "bloc_crochet": 64,
+    "tige_crochet": 40,
+    "crochet": 384,
+    "section_crochet_depart": 8,
+    "section_crochet_bout": 8,
+    "tambour_grue": 80,
+    "flasque_grue_-0.273": 80,
+    "flasque_grue_-0.197": 80
+  },
+  "approbationArtistique": false
+}

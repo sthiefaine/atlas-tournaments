@@ -1,0 +1,11 @@
+{
+  "id": "batiment_port_base",
+  "methode": "Géométrie Three.js paramétrique déterministe, atlas NumPy/Pillow à graines fixes. Aucune source binaire importée.",
+  "sources": "scripts/production/modeles/batiment_port_base/",
+  "sortie": "tmp/production-sequentielle/batiment_port_base/",
+  "instructions": "README.md",
+  "atlasUV": "4x4, rôle matière stable, gouttière .065 de cellule, étendue .87 de cellule",
+  "seedTexturesBase": 295401,
+  "controleReproductionBinaireDeuxiemeSortie": false,
+  "limite": "Scripts conservés ; aucune seconde génération supplémentaire après les contrôles finaux pour simuler une certification de reproductibilité."
+}

@@ -1,33 +1,21 @@
 {
   "id": "batiment_port_base",
-  "triangles": 900,
-  "octets": 1035413,
-  "source": "modélisation procédurale Atlas",
+  "revision": "97281a98555ff1412fc99f22c6b5ac0eea3094ec07f75fe432f4f76b9a396f3f",
+  "octets": 1756631,
   "verdict": {
     "ok": true,
     "motifs": [],
     "acceptes": [
       "batiment_port_base_albedo.png",
-      "batiment_port_base_albedo_ete.png",
-      "batiment_port_base_albedo_hiver.png",
-      "batiment_port_base_normale.png",
-      "batiment_port_base_normale_ete.png",
-      "batiment_port_base_normale_hiver.png",
-      "batiment_port_base_rugosite.png",
-      "batiment_port_base_rugosite_ete.png",
-      "batiment_port_base_rugosite_hiver.png",
       "batiment_port_base_emission.png",
-      "batiment_port_base_emission_ete.png",
-      "batiment_port_base_emission_hiver.png",
+      "batiment_port_base_lod0.glb",
       "batiment_port_base_masque_equipe.png",
-      "batiment_port_base_masque_equipe_ete.png",
-      "batiment_port_base_masque_equipe_hiver.png",
-      "batiment_port_base_lod0.glb"
+      "batiment_port_base_normale.png",
+      "batiment_port_base_rugosite.png"
     ],
     "inconnus": [],
     "lodManquants": []
   },
-  "revision": "0526e53c9d7bcf3cf82fe22e3bdf17211339fab70b5419a34059b6b929dfcc01",
-  "actif": true,
-  "approbationArtistique": false
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
 }
