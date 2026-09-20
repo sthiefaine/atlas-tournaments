@@ -1,0 +1,147 @@
+{
+  "id": "decor_rocher_cotier",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/decor_rocher_cotier",
+  "fichiers": [
+    {
+      "nom": "decor_rocher_cotier_albedo.png",
+      "sha256": "d35f22b61195e40bdf9cb8352e9892e08bebc74fb89542d7e05f3f9cde9f642f",
+      "octets": 573692
+    },
+    {
+      "nom": "decor_rocher_cotier_lod0.glb",
+      "sha256": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+      "octets": 130392
+    },
+    {
+      "nom": "decor_rocher_cotier_normale.png",
+      "sha256": "55cbd534e1eea132caa43eb782af04e6f295d98a5a1c0542319d43f7f2de0634",
+      "octets": 112512
+    },
+    {
+      "nom": "decor_rocher_cotier_rugosite.png",
+      "sha256": "5475391a3760e4f85e35eb3e757ae86f978d7a99f205dc54d33416efe08ed6df",
+      "octets": 101639
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T17:38:53.204Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/decor_rocher_cotier/avant-1f877d6b7ae0a9493c414a9c7605ed3bd3572c22ff9e5fb61adc0aedf6de8374",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/candidat-production.json",
+      "sha256": "b832ecedf6861ddd130e7791e48e6d00a8f43048fe2a2441f5763bd2d7070e31",
+      "octets": 1112
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_albedo.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_albedo_ete.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_albedo_hiver.png",
+      "sha256": "bc0be9143ce5382dd854bd31a4ccad180e06571d22689325320d60b24336be87",
+      "octets": 293383
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_lod0.glb",
+      "sha256": "1f877d6b7ae0a9493c414a9c7605ed3bd3572c22ff9e5fb61adc0aedf6de8374",
+      "octets": 26860
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_normale.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_normale_ete.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_normale_hiver.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/decor_rocher_cotier_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_cotier/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_lod0.glb",
+      "sha256": "1f877d6b7ae0a9493c414a9c7605ed3bd3572c22ff9e5fb61adc0aedf6de8374",
+      "octets": 26860
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_albedo.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_albedo_ete.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_albedo_hiver.png",
+      "sha256": "bc0be9143ce5382dd854bd31a4ccad180e06571d22689325320d60b24336be87",
+      "octets": 293383
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_normale.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_normale_ete.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_normale_hiver.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_cotier_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    }
+  ],
+  "approbationArtistique": false
+}

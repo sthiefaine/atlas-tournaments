@@ -1,0 +1,466 @@
+{
+  "id": "decor_rocher_cotier",
+  "sha256Glb": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+  "triangles": 858,
+  "primitives": 1,
+  "materiaux": 1,
+  "animations": 0,
+  "noeuds": [
+    "racine",
+    "bloc"
+  ],
+  "bornes": {
+    "min": [
+      -0.228947713971138,
+      -0.0,
+      -0.2266598492860794
+    ],
+    "max": [
+      0.228947713971138,
+      0.3010985851287842,
+      0.2266598492860794
+    ],
+    "dimensions": [
+      0.457895427942276,
+      0.3010985851287842,
+      0.4533196985721588
+    ]
+  },
+  "rayonHorizontalMaxM": 0.25455432740134054,
+  "trianglesAireMinM2": 8.690727736345457e-06,
+  "normalesAccordFacesMin": 0.6822671391695554,
+  "tangentesOrthogonales": true,
+  "uv": {
+    "minimum": [
+      0.015625,
+      0.015625
+    ],
+    "maximum": [
+      0.984375,
+      0.984375
+    ],
+    "aireMin": 5.657134806824615e-06,
+    "margePixels512": 8,
+    "ilots": 14,
+    "balanesPartagentUnIlot": true
+  },
+  "fermeture": [
+    {
+      "nom": "bloc",
+      "triangles": 330,
+      "aretesSoudees": 495,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 0.03811632259451216,
+      "ferme": true
+    },
+    {
+      "nom": "balane_01",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 5.320184112408009e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_02",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 5.320185976397122e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_03",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 6.0284576366976265e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_04",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 5.32018580550741e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_05",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 5.320183932205992e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_06",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 4.763227863359469e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_07",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 4.763222961447806e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_08",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 6.733361195135146e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_09",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 6.02845747585657e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_10",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 6.733359248653046e-06,
+      "ferme": true
+    },
+    {
+      "nom": "balane_11",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 6.028454435565074e-06,
+      "ferme": true
+    }
+  ],
+  "plansDeFracture": [
+    {
+      "nom": "sol",
+      "ecartPlanMaxM": 0.0
+    },
+    {
+      "nom": "flanc_est",
+      "ecartPlanMaxM": 4.311329904194139e-09
+    },
+    {
+      "nom": "flanc_ouest",
+      "ecartPlanMaxM": 6.447553410875856e-09
+    },
+    {
+      "nom": "face_sud",
+      "ecartPlanMaxM": 6.342452288192468e-09
+    },
+    {
+      "nom": "face_nord",
+      "ecartPlanMaxM": 3.403221872713691e-09
+    },
+    {
+      "nom": "angle_sud_est",
+      "ecartPlanMaxM": 8.248099807317555e-09
+    },
+    {
+      "nom": "angle_sud_ouest",
+      "ecartPlanMaxM": 3.975010123439621e-09
+    },
+    {
+      "nom": "angle_nord_est",
+      "ecartPlanMaxM": 3.637835380154719e-09
+    },
+    {
+      "nom": "angle_nord_ouest",
+      "ecartPlanMaxM": 9.697619443582717e-11
+    },
+    {
+      "nom": "sommet_sec",
+      "ecartPlanMaxM": 1.03272671300337e-08
+    },
+    {
+      "nom": "fracture_est",
+      "ecartPlanMaxM": 8.401144310603292e-09
+    },
+    {
+      "nom": "fracture_sud",
+      "ecartPlanMaxM": 7.346827882170892e-09
+    },
+    {
+      "nom": "fracture_nord",
+      "ecartPlanMaxM": 9.52181894442461e-09
+    }
+  ],
+  "attachesBalanes": [
+    {
+      "normalesParoiExterieureRadialesMin": 0.8054215366019046,
+      "normalesParoiInterieureRadialesMax": -0.8710406862900366,
+      "nom": "balane_01",
+      "support": "flanc_est",
+      "enfoncementM": 0.0015000071219578414,
+      "saillieM": 0.012000007053286443,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.022333108559009912,
+      "gardeAutresPlansM": 0.02624951857930612,
+      "yMin": 0.031028352677822113,
+      "yMax": 0.06067313626408577
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.8054213256832458,
+      "normalesParoiInterieureRadialesMax": -0.8710404169196522,
+      "nom": "balane_02",
+      "support": "flanc_est",
+      "enfoncementM": 0.00150000563923686,
+      "saillieM": 0.012000007053286469,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.03724697424297427,
+      "gardeAutresPlansM": 0.02904760699005082,
+      "yMin": 0.06402835249900818,
+      "yMax": 0.09367313235998154
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.7340774684134148,
+      "normalesParoiInterieureRadialesMax": -0.8249643879815631,
+      "nom": "balane_03",
+      "support": "flanc_ouest",
+      "enfoncementM": 0.0015000061264627026,
+      "saillieM": 0.010500006559445493,
+      "retraitFondCoupeSousLeBordM": 0.007875,
+      "gardeBaseBordFaceM": 0.019505559893411906,
+      "gardeAutresPlansM": 0.028395088389515877,
+      "yMin": 0.028395088389515877,
+      "yMax": 0.06345509737730026
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.805421550601901,
+      "normalesParoiInterieureRadialesMax": -0.8710405274973942,
+      "nom": "balane_04",
+      "support": "face_sud",
+      "enfoncementM": 0.001500006842722764,
+      "saillieM": 0.01200000700350073,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.021080099072869375,
+      "gardeAutresPlansM": 0.0299961119890213,
+      "yMin": 0.0299961119890213,
+      "yMax": 0.06188398227095604
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.805421263141193,
+      "normalesParoiInterieureRadialesMax": -0.8710404966245598,
+      "nom": "balane_05",
+      "support": "face_sud",
+      "enfoncementM": 0.0015000068427227765,
+      "saillieM": 0.01200000462121999,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.04322817479045282,
+      "gardeAutresPlansM": 0.03267797718514236,
+      "yMin": 0.06299611181020737,
+      "yMax": 0.0948839858174324
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.7694998890291733,
+      "normalesParoiInterieureRadialesMax": -0.8485049182742608,
+      "nom": "balane_06",
+      "support": "face_nord",
+      "enfoncementM": 0.0015000070841175387,
+      "saillieM": 0.010500005650562071,
+      "retraitFondCoupeSousLeBordM": 0.007875,
+      "gardeBaseBordFaceM": 0.02137668998704308,
+      "gardeAutresPlansM": 0.030339030548930168,
+      "yMin": 0.030339030548930168,
+      "yMax": 0.06201840564608574
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.769499628256991,
+      "normalesParoiInterieureRadialesMax": -0.8485048534168611,
+      "nom": "balane_07",
+      "support": "face_nord",
+      "enfoncementM": 0.0015000024976620078,
+      "saillieM": 0.010500004171060298,
+      "retraitFondCoupeSousLeBordM": 0.007875,
+      "gardeBaseBordFaceM": 0.04358378521318754,
+      "gardeAutresPlansM": 0.03431506853401523,
+      "yMin": 0.06333903223276138,
+      "yMax": 0.0950184017419815
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.7739777371947925,
+      "normalesParoiInterieureRadialesMax": -0.8513860807682142,
+      "nom": "balane_08",
+      "support": "angle_sud_est",
+      "enfoncementM": 0.0015000040498903983,
+      "saillieM": 0.01200000031307343,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.019459349647164344,
+      "gardeAutresPlansM": 0.028459349647164345,
+      "yMin": 0.028459349647164345,
+      "yMax": 0.06354065239429474
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.7340775525544432,
+      "normalesParoiInterieureRadialesMax": -0.8249641654741651,
+      "nom": "balane_09",
+      "support": "angle_sud_ouest",
+      "enfoncementM": 0.001500005045156778,
+      "saillieM": 0.01050000351601646,
+      "retraitFondCoupeSousLeBordM": 0.007875,
+      "gardeBaseBordFaceM": 0.020260117560625072,
+      "gardeAutresPlansM": 0.029260117560625076,
+      "yMin": 0.029260117560625076,
+      "yMax": 0.06273987889289856
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.7739779451438461,
+      "normalesParoiInterieureRadialesMax": -0.8513860829236871,
+      "nom": "balane_10",
+      "support": "angle_nord_est",
+      "enfoncementM": 0.0015000079690234238,
+      "saillieM": 0.012000006930652531,
+      "retraitFondCoupeSousLeBordM": 0.009000000000000001,
+      "gardeBaseBordFaceM": 0.021386382713913916,
+      "gardeAutresPlansM": 0.030386382713913918,
+      "yMin": 0.030386382713913918,
+      "yMax": 0.061613619327545166
+    },
+    {
+      "normalesParoiExterieureRadialesMin": 0.734077173522034,
+      "normalesParoiInterieureRadialesMax": -0.8249642320651178,
+      "nom": "balane_11",
+      "support": "angle_nord_ouest",
+      "enfoncementM": 0.0015000064354789102,
+      "saillieM": 0.010500002125694328,
+      "retraitFondCoupeSousLeBordM": 0.007875,
+      "gardeBaseBordFaceM": 0.020223296791315078,
+      "gardeAutresPlansM": 0.024509695782828526,
+      "yMin": 0.02922329679131508,
+      "yMax": 0.06277670711278915
+    }
+  ],
+  "separationsBalanes": {
+    "paires": 55,
+    "minimumM": 0.03842323096453801,
+    "methode": "Distance entre centres moins deux sphères englobantes, toutes les paires."
+  },
+  "quartsTour": {
+    "profils": [
+      {
+        "quartTour": 0,
+        "hauteursM": [
+          0.24195646883488053,
+          0.21745646691077458,
+          0.24180636218421475,
+          0.23722853964578347,
+          0.27781528227778274
+        ]
+      },
+      {
+        "quartTour": 1,
+        "hauteursM": [
+          0.23322854019917016,
+          0.29222855331833913,
+          0.2279564671717065,
+          0.27781528227778274,
+          0.24180636218421475
+        ]
+      },
+      {
+        "quartTour": 2,
+        "hauteursM": [
+          0.27117736133085757,
+          0.2622285397974533,
+          0.23722853964578347,
+          0.24180636218421472,
+          0.2279564671717065
+        ]
+      },
+      {
+        "quartTour": 3,
+        "hauteursM": [
+          0.2532880963201679,
+          0.23130635751657744,
+          0.27781528227778274,
+          0.2279564671717065,
+          0.23722853964578347
+        ]
+      }
+    ],
+    "distances": [
+      {
+        "quarts": [
+          0,
+          1
+        ],
+        "ecartMaxM": 0.07477208640756455
+      },
+      {
+        "quarts": [
+          0,
+          2
+        ],
+        "ecartMaxM": 0.04985881510607623
+      },
+      {
+        "quarts": [
+          0,
+          3
+        ],
+        "ecartMaxM": 0.04058674263199927
+      },
+      {
+        "quarts": [
+          1,
+          2
+        ],
+        "ecartMaxM": 0.037948821131687405
+      },
+      {
+        "quarts": [
+          1,
+          3
+        ],
+        "ecartMaxM": 0.0609221958017617
+      },
+      {
+        "quarts": [
+          2,
+          3
+        ],
+        "ecartMaxM": 0.04058674263199927
+      }
+    ],
+    "limite": "Hauteurs de cinq sondes différentes pour chaque quart, pas de jugement de lisibilité."
+  },
+  "imagesEmbarquees": 0,
+  "textures": {
+    "metalliqueMax": 0,
+    "normalesLongueurMin": 0.9957000979818709,
+    "normalesLongueurMax": 1.0043121176610845,
+    "normaleZMin": 0.9921568627450981
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Contrôles ciblés de fermeture, orientation, plans et implantation des balanes ; aucune inspection visuelle.",
+    "La base de chaque balane traverse volontairement le pan de support de 1,5 mm.",
+    "Continuité artistique aux coutures UV non jugée.",
+    "Aucun rendu, FPS téléphone, test général ni build."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "decor_rocher_cotier",
+  "triangles": 858,
+  "meshes": 1,
+  "animations": 0,
+  "ecartBornesMaxM": 0,
+  "pariteNumpyDeuxMicrometres": true,
+  "sha256Glb": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+  "texturesRetireesEnMemoire": true,
+  "controleVisuel": false,
+  "fpsTelephone": null
+}

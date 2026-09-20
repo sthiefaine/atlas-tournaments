@@ -4994,18 +4994,12 @@
     {
       "id": "decor_rocher_cotier",
       "fichiers": [
-        "decor_rocher_cotier_lod0.glb",
         "decor_rocher_cotier_albedo.png",
-        "decor_rocher_cotier_albedo_ete.png",
-        "decor_rocher_cotier_albedo_hiver.png",
+        "decor_rocher_cotier_lod0.glb",
         "decor_rocher_cotier_normale.png",
-        "decor_rocher_cotier_normale_ete.png",
-        "decor_rocher_cotier_normale_hiver.png",
-        "decor_rocher_cotier_rugosite.png",
-        "decor_rocher_cotier_rugosite_ete.png",
-        "decor_rocher_cotier_rugosite_hiver.png"
+        "decor_rocher_cotier_rugosite.png"
       ],
-      "revision": "52f988a82f1ad6c3f13275540f1be5fe54362c69633e2a4b6912cc0bcfce3680"
+      "revision": "6555f618fb0770a5ce964c778d0789cf948e82ed453ed914da593f2b3a3a2515"
     },
     {
       "id": "decor_rocher_desert",

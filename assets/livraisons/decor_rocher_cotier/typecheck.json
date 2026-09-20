@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-20T17:38:19.738094+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "journalSha256": "21220d5b953fa551f872f274dfec95a81ee2fbb11bd24440ba1ea1ec80fe56ae",
+  "sourcesTypescript": [
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/mesurer-natif.ts",
+      "sha256": "8a955c3fef0481a5c248c67b5a2ba28eda480dd59cb60b61693cd948bf65c7a6"
+    }
+  ],
+  "limite": "Typage seulement, pas de suite de tests ou build."
+}

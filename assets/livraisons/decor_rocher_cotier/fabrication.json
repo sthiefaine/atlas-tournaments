@@ -1,0 +1,2851 @@
+{
+  "id": "decor_rocher_cotier",
+  "nature": "creation_originale_parametrique",
+  "triangles": 858,
+  "trianglesBloc": 330,
+  "trianglesBalanes": 528,
+  "primitives": 1,
+  "materiaux": 1,
+  "octetsGlb": 130392,
+  "sha256Glb": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+  "bornes": {
+    "min": [
+      -0.228947713971138,
+      -0.0,
+      -0.2266598492860794
+    ],
+    "max": [
+      0.228947713971138,
+      0.3010985851287842,
+      0.2266598492860794
+    ],
+    "dimensions": [
+      0.457895427942276,
+      0.3010985851287842,
+      0.4533196985721588
+    ]
+  },
+  "decalageCentrage": [
+    0.00625243763966124,
+    0.0,
+    0.00586046537719874
+  ],
+  "plans": [
+    {
+      "nom": "sol",
+      "normale": [
+        0,
+        -1,
+        0
+      ],
+      "distance": 0
+    },
+    {
+      "nom": "flanc_est",
+      "normale": [
+        1,
+        0.1,
+        0
+      ],
+      "distance": 0.227
+    },
+    {
+      "nom": "flanc_ouest",
+      "normale": [
+        -1,
+        0.05,
+        0
+      ],
+      "distance": 0.214
+    },
+    {
+      "nom": "face_sud",
+      "normale": [
+        0,
+        0.04,
+        1
+      ],
+      "distance": 0.222
+    },
+    {
+      "nom": "face_nord",
+      "normale": [
+        0,
+        -0.12,
+        -1
+      ],
+      "distance": 0.194
+    },
+    {
+      "nom": "angle_sud_est",
+      "normale": [
+        1,
+        0,
+        1
+      ],
+      "distance": 0.346
+    },
+    {
+      "nom": "angle_sud_ouest",
+      "normale": [
+        -1,
+        0,
+        1
+      ],
+      "distance": 0.301
+    },
+    {
+      "nom": "angle_nord_est",
+      "normale": [
+        1,
+        0,
+        -1
+      ],
+      "distance": 0.287
+    },
+    {
+      "nom": "angle_nord_ouest",
+      "normale": [
+        -1,
+        0,
+        -1
+      ],
+      "distance": 0.332
+    },
+    {
+      "nom": "sommet_sec",
+      "normale": [
+        0.12,
+        1,
+        0.04
+      ],
+      "distance": 0.286
+    },
+    {
+      "nom": "fracture_est",
+      "normale": [
+        0.85,
+        1,
+        0.15
+      ],
+      "distance": 0.365
+    },
+    {
+      "nom": "fracture_sud",
+      "normale": [
+        -0.15,
+        1,
+        0.85
+      ],
+      "distance": 0.349
+    },
+    {
+      "nom": "fracture_nord",
+      "normale": [
+        -0.5,
+        1,
+        -0.7
+      ],
+      "distance": 0.36
+    }
+  ],
+  "facesSupport": [
+    {
+      "nom": "sol",
+      "normale": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "contour": [
+        [
+          -0.205,
+          -0.0,
+          -0.11427207793864216
+        ],
+        [
+          -0.13427207793864218,
+          -0.0,
+          -0.185
+        ],
+        [
+          0.08927207793864211,
+          -0.0,
+          -0.185
+        ],
+        [
+          0.218,
+          -0.0,
+          -0.05627207793864212
+        ],
+        [
+          0.218,
+          -0.0,
+          0.1152720779386421
+        ],
+        [
+          0.12027207793864209,
+          -0.0,
+          0.213
+        ],
+        [
+          -0.07527207793864214,
+          -0.0,
+          0.213
+        ],
+        [
+          -0.205,
+          -0.0,
+          0.08327207793864215
+        ]
+      ]
+    },
+    {
+      "nom": "flanc_est",
+      "normale": [
+        0.9950371902099893,
+        0.09950371902099893,
+        0.0
+      ],
+      "contour": [
+        [
+          0.22610446652881105,
+          0.0089553347118899,
+          -0.05185108875644723
+        ],
+        [
+          0.20795680678286796,
+          0.19043193217132043,
+          -0.06999874850239024
+        ],
+        [
+          0.2111664438313322,
+          0.1583355616866784,
+          0.12578911145392607
+        ],
+        [
+          0.22610446652881105,
+          0.0089553347118899,
+          0.11085108875644722
+        ]
+      ]
+    },
+    {
+      "nom": "flanc_ouest",
+      "normale": [
+        -0.9987523388778446,
+        0.04993761694389223,
+        0.0
+      ],
+      "contour": [
+        [
+          -0.20578641591138191,
+          0.16427168177236176,
+          -0.11720236913099619
+        ],
+        [
+          -0.21355056144750498,
+          0.0089887710499006,
+          -0.10943822359487315
+        ],
+        [
+          -0.21355056144750498,
+          0.0089887710499006,
+          0.07843822359487312
+        ],
+        [
+          -0.20246099610728815,
+          0.2307800778542371,
+          0.08952778893508995
+        ],
+        [
+          -0.20023304695085667,
+          0.2753390609828666,
+          0.037498623340778435
+        ]
+      ]
+    },
+    {
+      "nom": "face_sud",
+      "normale": [
+        0.0,
+        0.039968038348871575,
+        0.9992009587217893
+      ],
+      "contour": [
+        [
+          -0.07035252671525268,
+          0.008992808628496104,
+          0.22164028765486016
+        ],
+        [
+          0.11535252671525265,
+          0.008992808628496104,
+          0.22164028765486016
+        ],
+        [
+          0.12202438092556553,
+          0.17578916388631868,
+          0.21496843344454727
+        ],
+        [
+          -0.0757956848647561,
+          0.14507176236608238,
+          0.2161971295053567
+        ]
+      ]
+    },
+    {
+      "nom": "face_nord",
+      "normale": [
+        0.0,
+        -0.11914522061843064,
+        -0.9928768384869221
+      ],
+      "contour": [
+        [
+          0.08286403799720769,
+          0.008935891546382291,
+          -0.1950723069855659
+        ],
+        [
+          -0.1278640379972077,
+          0.008935891546382291,
+          -0.1950723069855659
+        ],
+        [
+          -0.1114694217625014,
+          0.14555769350226855,
+          -0.21146692322027225
+        ],
+        [
+          0.05713696493426695,
+          0.22332816707088857,
+          -0.22079938004850666
+        ]
+      ]
+    },
+    {
+      "nom": "angle_sud_est",
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "contour": [
+        [
+          0.21967271441431147,
+          0.009,
+          0.1263272855856885
+        ],
+        [
+          0.2045880973403338,
+          0.1598461707397767,
+          0.1414119026596662
+        ],
+        [
+          0.15245914277678504,
+          0.1963364389342608,
+          0.19354085722321493
+        ],
+        [
+          0.13763461154350445,
+          0.18151190770098008,
+          0.20836538845649552
+        ],
+        [
+          0.13073413523546526,
+          0.009,
+          0.21526586476453471
+        ]
+      ]
+    },
+    {
+      "nom": "angle_sud_ouest",
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "contour": [
+        [
+          -0.1965843062421821,
+          0.22071685324753784,
+          0.10441569375781788
+        ],
+        [
+          -0.207170148904559,
+          0.009000000000000001,
+          0.09382985109544101
+        ],
+        [
+          -0.08573413523546526,
+          0.009000000000000001,
+          0.21526586476453474
+        ],
+        [
+          -0.09125354813846259,
+          0.14698532257493419,
+          0.20974645186153737
+        ]
+      ]
+    },
+    {
+      "nom": "angle_nord_est",
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "contour": [
+        [
+          0.09837495158773477,
+          0.009,
+          -0.1886250484122652
+        ],
+        [
+          0.07148545306729369,
+          0.23307915433700893,
+          -0.21551454693270627
+        ],
+        [
+          0.10376909742165369,
+          0.27181952756224087,
+          -0.1832309025783463
+        ],
+        [
+          0.1292913250092503,
+          0.2677359711482254,
+          -0.15770867499074967
+        ],
+        [
+          0.20096664977618206,
+          0.1960606463812935,
+          -0.08603335022381786
+        ],
+        [
+          0.21967271441431147,
+          0.009,
+          -0.06732728558568853
+        ]
+      ]
+    },
+    {
+      "nom": "angle_nord_ouest",
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "contour": [
+        [
+          -0.12718134582136517,
+          0.14394671471974713,
+          -0.20481865417863485
+        ],
+        [
+          -0.1433749515877348,
+          0.009000000000000001,
+          -0.1886250484122652
+        ],
+        [
+          -0.20717014890455895,
+          0.009000000000000001,
+          -0.12482985109544105
+        ],
+        [
+          -0.19969765012552995,
+          0.1584499755805801,
+          -0.13230234987447
+        ]
+      ]
+    },
+    {
+      "nom": "sommet_sec",
+      "normale": [
+        0.11905136851988174,
+        0.9920947376656812,
+        0.03968378950662725
+      ],
+      "contour": [
+        [
+          0.1221177865876643,
+          0.27743283965469173,
+          -0.15217435113028652
+        ],
+        [
+          0.10118752224979916,
+          0.2807816819487502,
+          -0.17310461546815162
+        ],
+        [
+          -0.13372667400177504,
+          0.3010985854083458,
+          0.0237153867966809
+        ],
+        [
+          0.08464539346560453,
+          0.27198230974602844,
+          0.09650607595247414
+        ]
+      ]
+    },
+    {
+      "nom": "fracture_est",
+      "normale": [
+        0.6434594894887948,
+        0.7570111641044646,
+        0.11355167461566967
+      ],
+      "contour": [
+        [
+          0.20005998194981556,
+          0.20621992262271455,
+          -0.07513938186705227
+        ],
+        [
+          0.1360747884795321,
+          0.2702051160929981,
+          -0.13912457533733572
+        ],
+        [
+          0.09928076984199513,
+          0.264853258836629,
+          0.10505391198450083
+        ],
+        [
+          0.1531867103548114,
+          0.2074819364337031,
+          0.18206239843138128
+        ],
+        [
+          0.20345237725148377,
+          0.17229596960603238,
+          0.13179673153470894
+        ]
+      ]
+    },
+    {
+      "nom": "fracture_sud",
+      "normale": [
+        -0.11355167461566967,
+        0.7570111641044646,
+        0.6434594894887948
+      ],
+      "contour": [
+        [
+          0.08578515327047533,
+          0.26529783439796867,
+          0.11361169246188554
+        ],
+        [
+          -0.15157302871919873,
+          0.2969455919965918,
+          0.03449229846532752
+        ],
+        [
+          -0.19091776439719546,
+          0.28349223076476066,
+          0.04337659361842357
+        ],
+        [
+          -0.19321542324526247,
+          0.23753905380341991,
+          0.09703368554093034
+        ],
+        [
+          -0.0812768437282751,
+          0.15918204814152867,
+          0.20897226505791766
+        ],
+        [
+          0.1265177483994953,
+          0.19144828915515769,
+          0.2076816154173725
+        ],
+        [
+          0.14129207248174291,
+          0.2062226132374053,
+          0.19290729133512494
+        ]
+      ]
+    },
+    {
+      "nom": "fracture_nord",
+      "normale": [
+        -0.3790490217894517,
+        0.7580980435789034,
+        -0.5306686305052324
+      ],
+      "contour": [
+        [
+          0.09001054815586669,
+          0.2759708509553389,
+          -0.18433489017513488
+        ],
+        [
+          0.059742658011968576,
+          0.23964938278266118,
+          -0.214602780319033
+        ],
+        [
+          -0.117460486559873,
+          0.1579136149912213,
+          -0.20479448818406024
+        ],
+        [
+          -0.19711505705773322,
+          0.17384452909079345,
+          -0.12513991768620006
+        ],
+        [
+          -0.19158930129756715,
+          0.2843596442941144,
+          0.028791849918425746
+        ],
+        [
+          -0.15432279924993758,
+          0.29710238370394904,
+          0.020376833327025484
+        ]
+      ]
+    }
+  ],
+  "pieces": [
+    {
+      "name": "sol",
+      "firstTriangle": 0,
+      "triangles": 8,
+      "patch": 0,
+      "type": "plan"
+    },
+    {
+      "name": "flanc_est",
+      "firstTriangle": 8,
+      "triangles": 4,
+      "patch": 1,
+      "type": "plan"
+    },
+    {
+      "name": "flanc_ouest",
+      "firstTriangle": 12,
+      "triangles": 5,
+      "patch": 2,
+      "type": "plan"
+    },
+    {
+      "name": "face_sud",
+      "firstTriangle": 17,
+      "triangles": 4,
+      "patch": 3,
+      "type": "plan"
+    },
+    {
+      "name": "face_nord",
+      "firstTriangle": 21,
+      "triangles": 4,
+      "patch": 4,
+      "type": "plan"
+    },
+    {
+      "name": "angle_sud_est",
+      "firstTriangle": 25,
+      "triangles": 5,
+      "patch": 5,
+      "type": "plan"
+    },
+    {
+      "name": "angle_sud_ouest",
+      "firstTriangle": 30,
+      "triangles": 4,
+      "patch": 6,
+      "type": "plan"
+    },
+    {
+      "name": "angle_nord_est",
+      "firstTriangle": 34,
+      "triangles": 6,
+      "patch": 7,
+      "type": "plan"
+    },
+    {
+      "name": "angle_nord_ouest",
+      "firstTriangle": 40,
+      "triangles": 4,
+      "patch": 8,
+      "type": "plan"
+    },
+    {
+      "name": "sommet_sec",
+      "firstTriangle": 44,
+      "triangles": 4,
+      "patch": 9,
+      "type": "plan"
+    },
+    {
+      "name": "fracture_est",
+      "firstTriangle": 48,
+      "triangles": 5,
+      "patch": 10,
+      "type": "plan"
+    },
+    {
+      "name": "fracture_sud",
+      "firstTriangle": 53,
+      "triangles": 7,
+      "patch": 11,
+      "type": "plan"
+    },
+    {
+      "name": "fracture_nord",
+      "firstTriangle": 60,
+      "triangles": 6,
+      "patch": 12,
+      "type": "plan"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 66,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 67,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 68,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 69,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 70,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 71,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 72,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 73,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 74,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 75,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 76,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 77,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 78,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 79,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 80,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 81,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 82,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 83,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 84,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 85,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 86,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 87,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 88,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 89,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 90,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 91,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 92,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 93,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 94,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 95,
+      "triangles": 1,
+      "patch": 0,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 96,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 97,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 98,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 99,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 100,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 101,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 102,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 103,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 104,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 105,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 106,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 107,
+      "triangles": 1,
+      "patch": 1,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 108,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 109,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 110,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 111,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 112,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 113,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 114,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 115,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 116,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 117,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 118,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 119,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 120,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 121,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 122,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 123,
+      "triangles": 1,
+      "patch": 2,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 124,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 125,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 126,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 127,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 128,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 129,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 130,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 131,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 132,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 133,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 134,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 135,
+      "triangles": 1,
+      "patch": 3,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 136,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 137,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 138,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 139,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 140,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 141,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 142,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 143,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 144,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 145,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 146,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 147,
+      "triangles": 1,
+      "patch": 4,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 148,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 149,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 150,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 151,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 152,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 153,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 154,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 155,
+      "triangles": 1,
+      "patch": 5,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 156,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 157,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 158,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 159,
+      "triangles": 1,
+      "patch": 6,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 160,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 161,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 162,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 163,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 164,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 165,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 166,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 167,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 168,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 169,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 170,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 171,
+      "triangles": 1,
+      "patch": 7,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 172,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 173,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 174,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 175,
+      "triangles": 1,
+      "patch": 8,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 176,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 177,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 178,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 179,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 180,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 181,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 182,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 183,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 184,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 185,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 186,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 187,
+      "triangles": 1,
+      "patch": 9,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 188,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 189,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 190,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 191,
+      "triangles": 1,
+      "patch": 10,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 192,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 193,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 194,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 195,
+      "triangles": 1,
+      "patch": 11,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 196,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "chanfrein",
+      "firstTriangle": 197,
+      "triangles": 1,
+      "patch": 12,
+      "type": "chanfrein"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 198,
+      "triangles": 6,
+      "patch": 8,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 204,
+      "triangles": 6,
+      "patch": 4,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 210,
+      "triangles": 6,
+      "patch": 4,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 216,
+      "triangles": 6,
+      "patch": 7,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 222,
+      "triangles": 6,
+      "patch": 5,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 228,
+      "triangles": 6,
+      "patch": 5,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 234,
+      "triangles": 6,
+      "patch": 6,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 240,
+      "triangles": 6,
+      "patch": 6,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 246,
+      "triangles": 6,
+      "patch": 1,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 252,
+      "triangles": 6,
+      "patch": 1,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 258,
+      "triangles": 6,
+      "patch": 8,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 264,
+      "triangles": 6,
+      "patch": 6,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 270,
+      "triangles": 6,
+      "patch": 12,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 276,
+      "triangles": 6,
+      "patch": 3,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 282,
+      "triangles": 6,
+      "patch": 3,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 288,
+      "triangles": 6,
+      "patch": 8,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 294,
+      "triangles": 6,
+      "patch": 4,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 300,
+      "triangles": 6,
+      "patch": 10,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 306,
+      "triangles": 6,
+      "patch": 12,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 312,
+      "triangles": 6,
+      "patch": 10,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 318,
+      "triangles": 6,
+      "patch": 9,
+      "type": "coin"
+    },
+    {
+      "name": "coin_emousse",
+      "firstTriangle": 324,
+      "triangles": 6,
+      "patch": 9,
+      "type": "coin"
+    },
+    {
+      "name": "balane_01",
+      "firstTriangle": 330,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.22240000000000004,
+        0.046,
+        0.06522333321980847
+      ],
+      "normale": [
+        0.9950371902099893,
+        0.09950371902099893,
+        0.0
+      ],
+      "u": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "v": [
+        -0.09950371902099893,
+        0.9950371902099893,
+        0.0
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 1
+    },
+    {
+      "name": "balane_02",
+      "firstTriangle": 378,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.21910000000000002,
+        0.079,
+        -0.00584222211410329
+      ],
+      "normale": [
+        0.9950371902099893,
+        0.09950371902099893,
+        0.0
+      ],
+      "u": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "v": [
+        -0.09950371902099893,
+        0.9950371902099893,
+        0.0
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 1
+    },
+    {
+      "name": "balane_03",
+      "firstTriangle": 426,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        -0.2117,
+        0.04599999999999999,
+        -0.015500000000000014
+      ],
+      "normale": [
+        -0.9987523388778446,
+        0.04993761694389223,
+        0.0
+      ],
+      "u": [
+        0.0,
+        -0.0,
+        1.0
+      ],
+      "v": [
+        0.04993761694389223,
+        0.9987523388778446,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 2
+    },
+    {
+      "name": "balane_04",
+      "firstTriangle": 474,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        -0.017119782035447395,
+        0.046,
+        0.22016
+      ],
+      "normale": [
+        0.0,
+        0.039968038348871575,
+        0.9992009587217893
+      ],
+      "u": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "v": [
+        0.0,
+        0.9992009587217893,
+        -0.039968038348871575
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 3
+    },
+    {
+      "name": "balane_05",
+      "firstTriangle": 522,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.0607611257480451,
+        0.079,
+        0.21884
+      ],
+      "normale": [
+        0.0,
+        0.039968038348871575,
+        0.9992009587217893
+      ],
+      "u": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "v": [
+        0.0,
+        0.9992009587217893,
+        -0.039968038348871575
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 3
+    },
+    {
+      "name": "balane_06",
+      "firstTriangle": 570,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.0198848648927649,
+        0.046000000000000006,
+        -0.19952000000000003
+      ],
+      "normale": [
+        0.0,
+        -0.11914522061843064,
+        -0.9928768384869221
+      ],
+      "u": [
+        -1.0,
+        0.0,
+        -0.0
+      ],
+      "v": [
+        0.0,
+        0.9928768384869221,
+        -0.11914522061843064
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.0105,
+      "faceSupport": 4
+    },
+    {
+      "name": "balane_07",
+      "firstTriangle": 618,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        -0.061282537993109454,
+        0.079,
+        -0.20348000000000002
+      ],
+      "normale": [
+        0.0,
+        -0.11914522061843064,
+        -0.9928768384869221
+      ],
+      "u": [
+        -1.0,
+        0.0,
+        -0.0
+      ],
+      "v": [
+        0.0,
+        0.9928768384869221,
+        -0.11914522061843064
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.0105,
+      "faceSupport": 4
+    },
+    {
+      "name": "balane_08",
+      "firstTriangle": 666,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.17409342482488838,
+        0.04599999999999999,
+        0.1719065751751116
+      ],
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "u": [
+        0.7071067811865476,
+        0.0,
+        -0.7071067811865476
+      ],
+      "v": [
+        -0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.012,
+      "faceSupport": 5
+    },
+    {
+      "name": "balane_09",
+      "firstTriangle": 714,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        -0.14626714207001212,
+        0.04600000000000002,
+        0.15473285792998787
+      ],
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "u": [
+        0.7071067811865476,
+        -0.0,
+        0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 6
+    },
+    {
+      "name": "balane_10",
+      "firstTriangle": 762,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        0.1549538330010231,
+        0.04599999999999999,
+        -0.13204616699897687
+      ],
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "u": [
+        -0.7071067811865476,
+        0.0,
+        -0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.012,
+      "faceSupport": 7
+    },
+    {
+      "name": "balane_11",
+      "firstTriangle": 810,
+      "triangles": 48,
+      "patch": 13,
+      "type": "balane",
+      "centre": [
+        -0.1721275502461469,
+        0.046,
+        -0.15987244975385312
+      ],
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "u": [
+        -0.7071067811865476,
+        0.0,
+        0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 8
+    }
+  ],
+  "balanes": [
+    {
+      "name": "balane_01",
+      "centre": [
+        0.22240000000000004,
+        0.046,
+        0.06522333321980847
+      ],
+      "normale": [
+        0.9950371902099893,
+        0.09950371902099893,
+        0.0
+      ],
+      "u": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "v": [
+        -0.09950371902099893,
+        0.9950371902099893,
+        0.0
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 1,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_02",
+      "centre": [
+        0.21910000000000002,
+        0.079,
+        -0.00584222211410329
+      ],
+      "normale": [
+        0.9950371902099893,
+        0.09950371902099893,
+        0.0
+      ],
+      "u": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "v": [
+        -0.09950371902099893,
+        0.9950371902099893,
+        0.0
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 1,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_03",
+      "centre": [
+        -0.2117,
+        0.04599999999999999,
+        -0.015500000000000014
+      ],
+      "normale": [
+        -0.9987523388778446,
+        0.04993761694389223,
+        0.0
+      ],
+      "u": [
+        0.0,
+        -0.0,
+        1.0
+      ],
+      "v": [
+        0.04993761694389223,
+        0.9987523388778446,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 2,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_04",
+      "centre": [
+        -0.017119782035447395,
+        0.046,
+        0.22016
+      ],
+      "normale": [
+        0.0,
+        0.039968038348871575,
+        0.9992009587217893
+      ],
+      "u": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "v": [
+        0.0,
+        0.9992009587217893,
+        -0.039968038348871575
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 3,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_05",
+      "centre": [
+        0.0607611257480451,
+        0.079,
+        0.21884
+      ],
+      "normale": [
+        0.0,
+        0.039968038348871575,
+        0.9992009587217893
+      ],
+      "u": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "v": [
+        0.0,
+        0.9992009587217893,
+        -0.039968038348871575
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.012,
+      "faceSupport": 3,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_06",
+      "centre": [
+        0.0198848648927649,
+        0.046000000000000006,
+        -0.19952000000000003
+      ],
+      "normale": [
+        0.0,
+        -0.11914522061843064,
+        -0.9928768384869221
+      ],
+      "u": [
+        -1.0,
+        0.0,
+        -0.0
+      ],
+      "v": [
+        0.0,
+        0.9928768384869221,
+        -0.11914522061843064
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.0105,
+      "faceSupport": 4,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_07",
+      "centre": [
+        -0.061282537993109454,
+        0.079,
+        -0.20348000000000002
+      ],
+      "normale": [
+        0.0,
+        -0.11914522061843064,
+        -0.9928768384869221
+      ],
+      "u": [
+        -1.0,
+        0.0,
+        -0.0
+      ],
+      "v": [
+        0.0,
+        0.9928768384869221,
+        -0.11914522061843064
+      ],
+      "rayon": 0.016,
+      "hauteur": 0.0105,
+      "faceSupport": 4,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_08",
+      "centre": [
+        0.17409342482488838,
+        0.04599999999999999,
+        0.1719065751751116
+      ],
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "u": [
+        0.7071067811865476,
+        0.0,
+        -0.7071067811865476
+      ],
+      "v": [
+        -0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.012,
+      "faceSupport": 5,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_09",
+      "centre": [
+        -0.14626714207001212,
+        0.04600000000000002,
+        0.15473285792998787
+      ],
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        0.7071067811865475
+      ],
+      "u": [
+        0.7071067811865476,
+        -0.0,
+        0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 6,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_10",
+      "centre": [
+        0.1549538330010231,
+        0.04599999999999999,
+        -0.13204616699897687
+      ],
+      "normale": [
+        0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "u": [
+        -0.7071067811865476,
+        0.0,
+        -0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.012,
+      "faceSupport": 7,
+      "enfoncementM": 0.0015
+    },
+    {
+      "name": "balane_11",
+      "centre": [
+        -0.1721275502461469,
+        0.046,
+        -0.15987244975385312
+      ],
+      "normale": [
+        -0.7071067811865475,
+        0.0,
+        -0.7071067811865475
+      ],
+      "u": [
+        -0.7071067811865476,
+        0.0,
+        0.7071067811865476
+      ],
+      "v": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "rayon": 0.018,
+      "hauteur": 0.0105,
+      "faceSupport": 8,
+      "enfoncementM": 0.0015
+    }
+  ],
+  "chanfreins": {
+    "retraitConstantM": 0.009,
+    "bombementM": 0.0014,
+    "aretes": 33,
+    "coins": 22
+  },
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "margePixels512": 8,
+    "patches": [
+      {
+        "name": "sol",
+        "kind": "granit",
+        "origin": [
+          0.003249999999999996,
+          0.0,
+          0.010499999999999995
+        ],
+        "u": [
+          1.0,
+          0.0,
+          -0.0
+        ],
+        "v": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "bounds": [
+          [
+            -0.2135396469616592,
+            -0.20146525934455334
+          ],
+          [
+            0.21984026681137817,
+            0.2078296826714484
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "flanc_est",
+        "kind": "granit",
+        "origin": [
+          0.21782567204301076,
+          0.09174327956989245,
+          0.028615994623655917
+        ],
+        "u": [
+          -0.09950371902099893,
+          0.9950371902099893,
+          0.0
+        ],
+        "v": [
+          0.0,
+          -0.0,
+          1.0000000000000002
+        ],
+        "bounds": [
+          [
+            -0.08829112168649218,
+            -0.1146493448474738
+          ],
+          [
+            0.11567626948319944,
+            0.1127959080360103
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "flanc_ouest",
+        "kind": "granit",
+        "origin": [
+          -0.2070979208091897,
+          0.13804158381620613,
+          -0.004142148697682526
+        ],
+        "u": [
+          -0.04993761694389224,
+          -0.9987523388778448,
+          0.0
+        ],
+        "v": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "bounds": [
+          [
+            -0.14280352880600142,
+            -0.12114610610310868
+          ],
+          [
+            0.13450367504724423,
+            0.10164978534219454
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "face_sud",
+        "kind": "granit",
+        "origin": [
+          0.02283627829218106,
+          0.08477012602880657,
+          0.21860919495884776
+        ],
+        "u": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "v": [
+          0.0,
+          0.9992009587217893,
+          -0.039968038348871575
+        ],
+        "bounds": [
+          [
+            -0.11408982643064365,
+            -0.08116759769631718
+          ],
+          [
+            0.1147983332513234,
+            0.10702967678870348
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "face_nord",
+        "kind": "granit",
+        "origin": [
+          -0.025051901223776242,
+          0.09704709353146852,
+          -0.2056456512237762
+        ],
+        "u": [
+          -1.0,
+          0.0,
+          -0.0
+        ],
+        "v": [
+          0.0,
+          0.9928768384869221,
+          -0.11914522061843064
+        ],
+        "bounds": [
+          [
+            -0.123426852811511,
+            -0.09881564207973709
+          ],
+          [
+            0.11832305036395857,
+            0.1426537092348839
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "angle_sud_est",
+        "kind": "granit",
+        "origin": [
+          0.16895117488931055,
+          0.11178859424414926,
+          0.17704882511068942
+        ],
+        "u": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "v": [
+          -0.7071067811865475,
+          0.0,
+          0.7071067811865475
+        ],
+        "bounds": [
+          [
+            -0.11178859424414926,
+            -0.08722234836070711
+          ],
+          [
+            0.09072540548669646,
+            0.06943089313431737
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "angle_sud_ouest",
+        "kind": "granit",
+        "origin": [
+          -0.14509308463052423,
+          0.09686515924136696,
+          0.15590691536947576
+        ],
+        "u": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "v": [
+          0.7071067811865475,
+          0.0,
+          0.7071067811865475
+        ],
+        "bounds": [
+          [
+            -0.14067389456205295,
+            -0.10318538336368
+          ],
+          [
+            0.09686515924136696,
+            0.09933006862480956
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "angle_nord_est",
+        "kind": "granit",
+        "origin": [
+          0.13747819680319678,
+          0.16590193140193138,
+          -0.1495218031968032
+        ],
+        "u": [
+          -0.0,
+          1.0,
+          0.0
+        ],
+        "v": [
+          0.7071067811865475,
+          0.0,
+          0.7071067811865475
+        ],
+        "bounds": [
+          [
+            -0.16590193140193138,
+            -0.10080198751749156
+          ],
+          [
+            0.11135434625619384,
+            0.1317318608183604
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "angle_nord_ouest",
+        "kind": "granit",
+        "origin": [
+          -0.16934421410891087,
+          0.08006884282178219,
+          -0.16265578589108912
+        ],
+        "u": [
+          -0.0,
+          -1.0,
+          0.0
+        ],
+        "v": [
+          -0.7071067811865475,
+          0.0,
+          0.7071067811865475
+        ],
+        "bounds": [
+          [
+            -0.09377568626901127,
+            -0.07543834433080265
+          ],
+          [
+            0.08006884282178219,
+            0.06888910715247962
+          ]
+        ],
+        "polissage": 0.92
+      },
+      {
+        "name": "sommet_sec",
+        "kind": "granit",
+        "origin": [
+          0.043367534639273786,
+          0.28284623347666826,
+          -0.051258440834527796
+        ],
+        "u": [
+          -0.992876838486922,
+          0.11914522061843064,
+          0.0
+        ],
+        "v": [
+          -0.004728133855742466,
+          -0.039401115464520554,
+          0.9992122881802413
+        ],
+        "bounds": [
+          [
+            -0.08659493396321535,
+            -0.12785742602203481
+          ],
+          [
+            0.19798070587534305,
+            0.16523113346327772
+          ]
+        ],
+        "polissage": 0.32
+      },
+      {
+        "name": "fracture_est",
+        "kind": "granit",
+        "origin": [
+          0.15854001029303727,
+          0.2241624399998428,
+          0.04052367500716976
+        ],
+        "u": [
+          -0.7619393177594594,
+          0.6476484200955405,
+          0.0
+        ],
+        "v": [
+          -0.07354156266404135,
+          -0.08651948548710749,
+          0.993532091676951
+        ],
+        "bounds": [
+          [
+            -0.07579558770418524,
+            -0.1985691668056464
+          ],
+          [
+            0.07979306408355263,
+            0.15559116721295876
+          ]
+        ],
+        "polissage": 0.32
+      },
+      {
+        "name": "fracture_sud",
+        "kind": "granit",
+        "origin": [
+          -0.037658370760608774,
+          0.23444625587684717,
+          0.12812351589301355
+        ],
+        "u": [
+          -0.9889363528682976,
+          -0.14834045293024464,
+          0.0
+        ],
+        "v": [
+          0.09545107211303182,
+          -0.6363404807535454,
+          0.7654801665535297
+        ],
+        "bounds": [
+          [
+            -0.1793497097872262,
+            -0.1287112903251675
+          ],
+          [
+            0.15935465850059427,
+            0.11370055473849777
+          ]
+        ],
+        "polissage": 0.32
+      },
+      {
+        "name": "fracture_nord",
+        "kind": "granit",
+        "origin": [
+          -0.08507979928529508,
+          0.2379983664697003,
+          -0.11351676269664596
+        ],
+        "u": [
+          -0.8944271909999159,
+          -0.4472135954999579,
+          0.0
+        ],
+        "v": [
+          -0.23732222626728364,
+          0.4746444525345673,
+          0.8475793795260129
+        ],
+        "bounds": [
+          [
+            -0.18602555467507945,
+            -0.12619638889788568
+          ],
+          [
+            0.13564082569564107,
+            0.1796906854132464
+          ]
+        ],
+        "polissage": 0.32
+      },
+      {
+        "name": "calcaire_balanes",
+        "kind": "balane",
+        "origin": [
+          0,
+          0,
+          0
+        ],
+        "u": [
+          1,
+          0,
+          0
+        ],
+        "v": [
+          0,
+          1,
+          0
+        ],
+        "bounds": [
+          [
+            -1,
+            -1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      }
+    ]
+  },
+  "animations": [],
+  "approbationArtistique": false,
+  "fpsTelephone": null
+}

@@ -305,6 +305,14 @@
       "revision": "b3677db95c2602fbb1aed0f7fd14481d33a68fe25e80353e2ab39610c1925870",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "decor_rocher_cotier",
+      "fichierActif": "public/assets/modeles/decor_rocher_cotier_lod0.glb",
+      "donnees": "../donnees/c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c.glb",
+      "revision": "6555f618fb0770a5ce964c778d0789cf948e82ed453ed914da593f2b3a3a2515",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

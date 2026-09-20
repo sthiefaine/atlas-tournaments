@@ -1,0 +1,82 @@
+{
+  "id": "decor_rocher_cotier",
+  "origine": "Champs minéraux analytiques originaux, NumPy/Pillow",
+  "pigments": [
+    "quartz gris clair",
+    "feldspath légèrement rosé",
+    "mica gris anthracite",
+    "patine marine basse",
+    "sel clair",
+    "calcaire des balanes"
+  ],
+  "bakeHD": false,
+  "eclairageCalcule": false,
+  "occlusionCalculee": false,
+  "ombrePeinte": false,
+  "normalesTangentes": "+Y",
+  "rugosite": "R=255 non utilisé, G=rugosité, B=0 métal",
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "margeTexelsNormale": 8,
+    "nombreIlots": 14,
+    "gouttieres": "Pigments prolongés, normales dilatées",
+    "balanesPartagentUnIlot": true
+  },
+  "textures": [
+    {
+      "fichier": "decor_rocher_cotier_albedo.png",
+      "resolution": 1024,
+      "canal": "albedo",
+      "sha256": "d35f22b61195e40bdf9cb8352e9892e08bebc74fb89542d7e05f3f9cde9f642f",
+      "octets": 573692,
+      "minRGB": [
+        62,
+        67,
+        67
+      ],
+      "maxRGB": [
+        215,
+        214,
+        205
+      ]
+    },
+    {
+      "fichier": "decor_rocher_cotier_normale.png",
+      "resolution": 512,
+      "canal": "normale",
+      "sha256": "55cbd534e1eea132caa43eb782af04e6f295d98a5a1c0542319d43f7f2de0634",
+      "octets": 112512,
+      "minRGB": [
+        110,
+        110,
+        254
+      ],
+      "maxRGB": [
+        145,
+        145,
+        255
+      ]
+    },
+    {
+      "fichier": "decor_rocher_cotier_rugosite.png",
+      "resolution": 512,
+      "canal": "rugosite",
+      "sha256": "5475391a3760e4f85e35eb3e757ae86f978d7a99f205dc54d33416efe08ed6df",
+      "octets": 101639,
+      "minRGB": [
+        255,
+        132,
+        0
+      ],
+      "maxRGB": [
+        255,
+        198,
+        0
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}

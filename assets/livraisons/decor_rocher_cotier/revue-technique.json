@@ -1,0 +1,133 @@
+{
+  "id": "decor_rocher_cotier",
+  "date": "2026-09-20T17:38:19.738094+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T17:28:24.848Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "1f877d6b7ae0a9493c414a9c7605ed3bd3572c22ff9e5fb61adc0aedf6de8374",
+    "triangles": 240,
+    "octetsGlb": 26860,
+    "preserve": true,
+    "actifAbsent": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 858,
+  "budgetTriangles": 900,
+  "primitives": 1,
+  "materiaux": 1,
+  "octetsGlb": 130392,
+  "octetsLot": 918235,
+  "dimensions": [
+    0.457895427942276,
+    0.3010985851287842,
+    0.4533196985721588
+  ],
+  "sha256Glb": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+  "fichiers": [
+    {
+      "fichier": "decor_rocher_cotier_albedo.png",
+      "octets": 573692,
+      "sha256": "d35f22b61195e40bdf9cb8352e9892e08bebc74fb89542d7e05f3f9cde9f642f"
+    },
+    {
+      "fichier": "decor_rocher_cotier_lod0.glb",
+      "octets": 130392,
+      "sha256": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c"
+    },
+    {
+      "fichier": "decor_rocher_cotier_normale.png",
+      "octets": 112512,
+      "sha256": "55cbd534e1eea132caa43eb782af04e6f295d98a5a1c0542319d43f7f2de0634"
+    },
+    {
+      "fichier": "decor_rocher_cotier_rugosite.png",
+      "octets": 101639,
+      "sha256": "5475391a3760e4f85e35eb3e757ae86f978d7a99f205dc54d33416efe08ed6df"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/README.md",
+      "sha256": "50aae8db194c4266334e8a6277d21420da5c29479f8869ad4c3df72d56173f04"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/assembler-revue.py",
+      "sha256": "1be8ecb3fd9e1a924bb0d5afac4ec19dfb7ba13e445d4279ca928a2f9df1ef62"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/generer.py",
+      "sha256": "10a044b0817a5c0a5f9bfbcb54c7e3a6f0ef3f95c8601c8f8d08746a53c3eb83"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/inspecter-ancien.py",
+      "sha256": "423edb71cd29e7ea51285e80a50cfc53936fb2f7246e030ebe150eeb91cde546"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/mesurer-natif.ts",
+      "sha256": "8a955c3fef0481a5c248c67b5a2ba28eda480dd59cb60b61693cd948bf65c7a6"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/mesurer.py",
+      "sha256": "a85913e98ed926f95cd9a37b0147d87204554ca9f00f6da5c22f56d300389c37"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_cotier/textures.py",
+      "sha256": "f9d8b3144a214c8c0622e7c35492b42eadc20128b3c080cf03da53ad66bdeb64"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "decor_rocher_cotier_albedo.png",
+      "decor_rocher_cotier_lod0.glb",
+      "decor_rocher_cotier_normale.png",
+      "decor_rocher_cotier_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "volumesFermes": 12,
+    "plansDeFracture": 13,
+    "balanesImplantees": 11,
+    "chanfreinsAretes": 33,
+    "coinsEmousses": 22,
+    "gardeBaseBordFaceMinM": 0.019459349647164344,
+    "gardeEntreBalanesMinM": 0.03842323096453801,
+    "pariteNumpyNatif": true,
+    "ecartBornesNatifMaxM": 0,
+    "controleExhaustifCollisions": false
+  },
+  "textures": "textures.json",
+  "provenance": "provenance.json",
+  "inspection": "inspection-ancien-candidat.json",
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Profils numériquement différents ; lisibilité et esthétique non jugées.",
+    "Coutures UV artistiquement non inspectées ; balanes et leurs dessous partagent un îlot commun.",
+    "Bases de balanes volontairement implantées de 1,5 mm dans le pan de support.",
+    "Aucune variante saisonnière dédiée, cartes communes.",
+    "Raccordement runtime et instanciation contrôlés séparément par le coordinateur.",
+    "Aucun rendu, capture, contrôle visuel, test général, build ni FPS téléphone."
+  ]
+}

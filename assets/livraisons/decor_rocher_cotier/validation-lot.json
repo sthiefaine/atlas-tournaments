@@ -1,0 +1,19 @@
+{
+  "id": "decor_rocher_cotier",
+  "revision": "6555f618fb0770a5ce964c778d0789cf948e82ed453ed914da593f2b3a3a2515",
+  "octets": 918235,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "decor_rocher_cotier_albedo.png",
+      "decor_rocher_cotier_lod0.glb",
+      "decor_rocher_cotier_normale.png",
+      "decor_rocher_cotier_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

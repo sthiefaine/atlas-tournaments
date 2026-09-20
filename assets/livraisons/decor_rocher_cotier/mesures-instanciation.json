@@ -1,0 +1,72 @@
+{
+  "id": "decor_rocher_cotier",
+  "date": "2026-09-20T17:38:38.336Z",
+  "sha256": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c",
+  "trianglesParInstance": 858,
+  "instances": 4,
+  "geometriePartagee": true,
+  "attributsSourceInchanges": true,
+  "normalesUvConservees": true,
+  "tangentesRetireesPourRepereDerive": true,
+  "echelleCarte": 0.7425276149358313,
+  "enveloppes": [
+    {
+      "angle": 0,
+      "min": [
+        -0.16999999751986827,
+        0,
+        -0.16830119483675965
+      ],
+      "max": [
+        0.16999999751986827,
+        0.2235740110145059,
+        0.16830119483675965
+      ]
+    },
+    {
+      "angle": 90,
+      "min": [
+        -0.16830119483675965,
+        0,
+        -0.16999999751986827
+      ],
+      "max": [
+        0.16830119483675965,
+        0.2235740110145059,
+        0.16999999751986827
+      ]
+    },
+    {
+      "angle": 180,
+      "min": [
+        -0.16999999751986827,
+        0,
+        -0.16830119483675965
+      ],
+      "max": [
+        0.16999999751986827,
+        0.2235740110145059,
+        0.16830119483675965
+      ]
+    },
+    {
+      "angle": 270,
+      "min": [
+        -0.16830119483675965,
+        0,
+        -0.16999999751986827
+      ],
+      "max": [
+        0.16830119483675965,
+        0.2235740110145059,
+        0.16999999751986827
+      ]
+    }
+  ],
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Chargement sans PNG en mémoire ; pas de compilation GPU ni de mesure de rendu."
+  ]
+}
