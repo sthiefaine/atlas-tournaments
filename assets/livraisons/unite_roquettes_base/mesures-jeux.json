@@ -1,0 +1,907 @@
+{
+  "id": "unite_roquettes_base",
+  "sha256Glb": "20a51a56f38647de207226cb922b9c7eca4d2f09713d89892b34f2e273a29daa",
+  "approbationArtistique": false,
+  "distancesTriangles": [
+    {
+      "nom": "pneus_voisins_g_0",
+      "minimumMetres": 0.08100001245737078,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3930,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_g_1",
+      "minimumMetres": 0.11100000500679018,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1152,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_g_0",
+      "minimumMetres": 0.03272800321120023,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 123,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_g_1",
+      "minimumMetres": 0.03272800321120023,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 96,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_g_2",
+      "minimumMetres": 0.03283241068039332,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 104,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_d_0",
+      "minimumMetres": 0.08100001245737078,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3930,
+      "traversees": 0
+    },
+    {
+      "nom": "pneus_voisins_d_1",
+      "minimumMetres": 0.11100000500679018,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1152,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_d_0",
+      "minimumMetres": 0.03287123728919773,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 114,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_d_1",
+      "minimumMetres": 0.03272800321120023,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 114,
+      "traversees": 0
+    },
+    {
+      "nom": "pneu_plateau_d_2",
+      "minimumMetres": 0.03272800321120023,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 155,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_0",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_1",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_2",
+      "minimumMetres": 0.024000002071261406,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_3",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_4",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_0",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_1",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_2",
+      "minimumMetres": 0.024000002071261406,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_3",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_4",
+      "minimumMetres": 0.024000003933906555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 306,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_0",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_0",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_1",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_1",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_2",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_2",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_3",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_3",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_4",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_4",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_5",
+      "minimumMetres": 0.009000014958971705,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1322,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_5",
+      "minimumMetres": 0.005000015675405902,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 315,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_horizontal_g_0",
+      "minimumMetres": 0.0038636958354453465,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 600,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_vertical_g_0",
+      "minimumMetres": 0.002897755014742381,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 448,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_horizontal_g_1",
+      "minimumMetres": 0.003863696049707066,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 600,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_vertical_g_1",
+      "minimumMetres": 0.0028977649517145277,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 448,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_horizontal_d_0",
+      "minimumMetres": 0.0038636958354453465,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 600,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_vertical_d_0",
+      "minimumMetres": 0.002897755014742381,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 448,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_horizontal_d_1",
+      "minimumMetres": 0.003863696049707066,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 600,
+      "traversees": 0
+    },
+    {
+      "nom": "alesage_vertical_d_1",
+      "minimumMetres": 0.0028977649517145277,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 448,
+      "traversees": 0
+    }
+  ],
+  "raccords": [
+    {
+      "pieces": [
+        "patins_recul",
+        "rails_recul"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0004889184106548214,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 256,
+      "traversees": 60
+    },
+    {
+      "pieces": [
+        "patins_recul",
+        "plancher_caisson"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.002499999405329721,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 186,
+      "traversees": 39
+    },
+    {
+      "pieces": [
+        "tourillons",
+        "axe_pivot"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.000907493098567846,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3264,
+      "traversees": 176
+    },
+    {
+      "pieces": [
+        "berceau_fixe",
+        "axe_pivot"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.869944557135001e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1016,
+      "traversees": 192
+    },
+    {
+      "pieces": [
+        "pavillon",
+        "cabine"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 7.937594186352885e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 410,
+      "traversees": 60
+    },
+    {
+      "pieces": [
+        "support_temoin",
+        "temoin"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 9.586617448998698e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 710,
+      "traversees": 40
+    },
+    {
+      "pieces": [
+        "glissiere_g_0",
+        "collier_g_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1376,
+      "traversees": 64
+    },
+    {
+      "pieces": [
+        "glissiere_g_1",
+        "collier_g_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1376,
+      "traversees": 64
+    },
+    {
+      "pieces": [
+        "glissiere_d_0",
+        "collier_d_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1376,
+      "traversees": 83
+    },
+    {
+      "pieces": [
+        "glissiere_d_1",
+        "collier_d_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1376,
+      "traversees": 83
+    },
+    {
+      "pieces": [
+        "fourreau_vertical_g_0",
+        "collier_g_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2340,
+      "traversees": 142
+    },
+    {
+      "pieces": [
+        "fourreau_vertical_g_1",
+        "collier_g_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2340,
+      "traversees": 143
+    },
+    {
+      "pieces": [
+        "fourreau_vertical_d_0",
+        "collier_d_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2340,
+      "traversees": 143
+    },
+    {
+      "pieces": [
+        "fourreau_vertical_d_1",
+        "collier_d_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2340,
+      "traversees": 143
+    },
+    {
+      "pieces": [
+        "tige_pied_g_0",
+        "rotule_pied_g_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1696,
+      "traversees": 114
+    },
+    {
+      "pieces": [
+        "tige_pied_g_1",
+        "rotule_pied_g_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1696,
+      "traversees": 114
+    },
+    {
+      "pieces": [
+        "tige_pied_d_0",
+        "rotule_pied_d_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1696,
+      "traversees": 113
+    },
+    {
+      "pieces": [
+        "tige_pied_d_1",
+        "rotule_pied_d_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1696,
+      "traversees": 113
+    },
+    {
+      "pieces": [
+        "rotule_pied_g_0",
+        "semelle_g_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002521188017114663,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 782,
+      "traversees": 38
+    },
+    {
+      "pieces": [
+        "rotule_pied_g_1",
+        "semelle_g_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002521193229248419,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 782,
+      "traversees": 38
+    },
+    {
+      "pieces": [
+        "rotule_pied_d_0",
+        "semelle_d_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002521188017114663,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 782,
+      "traversees": 38
+    },
+    {
+      "pieces": [
+        "rotule_pied_d_1",
+        "semelle_d_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002521192837041133,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 782,
+      "traversees": 38
+    }
+  ],
+  "pneusJantes": [
+    {
+      "pneu": "g_0",
+      "recouvrementRadialMin": 0.0038471142992178506,
+      "janteAuDelaTalon": 0.002500012516975375
+    },
+    {
+      "pneu": "g_1",
+      "recouvrementRadialMin": 0.0038471182542630933,
+      "janteAuDelaTalon": 0.002500012516975375
+    },
+    {
+      "pneu": "g_2",
+      "recouvrementRadialMin": 0.003847120351582467,
+      "janteAuDelaTalon": 0.002500012516975375
+    },
+    {
+      "pneu": "d_0",
+      "recouvrementRadialMin": 0.0038471142992178506,
+      "janteAuDelaTalon": 0.002500012516975375
+    },
+    {
+      "pneu": "d_1",
+      "recouvrementRadialMin": 0.0038471182542630933,
+      "janteAuDelaTalon": 0.002500012516975375
+    },
+    {
+      "pneu": "d_2",
+      "recouvrementRadialMin": 0.003847120351582467,
+      "janteAuDelaTalon": 0.002500012516975375
+    }
+  ],
+  "stabilisateurs": [
+    {
+      "id": "g_0",
+      "jeuRadialHorizontalMin": 0.0033866648732032278,
+      "jeuRadialVerticalMin": 0.0025229615680469573,
+      "recouvrementHorizontalAuRepos": 0.104,
+      "recouvrementVerticalAuRepos": 0.067,
+      "repliHorizontal": 0.037,
+      "relevePied": 0.064
+    },
+    {
+      "id": "g_1",
+      "jeuRadialHorizontalMin": 0.0033866648732032278,
+      "jeuRadialVerticalMin": 0.0025229615680469573,
+      "recouvrementHorizontalAuRepos": 0.104,
+      "recouvrementVerticalAuRepos": 0.067,
+      "repliHorizontal": 0.037,
+      "relevePied": 0.064
+    },
+    {
+      "id": "d_0",
+      "jeuRadialHorizontalMin": 0.0033866648732032278,
+      "jeuRadialVerticalMin": 0.0025229615680469573,
+      "recouvrementHorizontalAuRepos": 0.104,
+      "recouvrementVerticalAuRepos": 0.067,
+      "repliHorizontal": 0.037,
+      "relevePied": 0.064
+    },
+    {
+      "id": "d_1",
+      "jeuRadialHorizontalMin": 0.0033866648732032278,
+      "jeuRadialVerticalMin": 0.0025229615680469573,
+      "recouvrementHorizontalAuRepos": 0.104,
+      "recouvrementVerticalAuRepos": 0.067,
+      "repliHorizontal": 0.037,
+      "relevePied": 0.064
+    }
+  ],
+  "vitres": [
+    {
+      "nom": "pare_brise",
+      "indice": 0,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019785682975544255,
+        0.008021444178032647
+      ]
+    },
+    {
+      "nom": "pare_brise",
+      "indice": 1,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019785682975544255,
+        0.008021444178032647
+      ]
+    },
+    {
+      "nom": "vitres_laterales",
+      "indice": 0,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019200053453445332,
+        0.008079998230934152
+      ]
+    },
+    {
+      "nom": "vitres_laterales",
+      "indice": 1,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019200053453445332,
+        0.008079998230934152
+      ]
+    }
+  ],
+  "cavites": [
+    {
+      "id": "0_0",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999823851075,
+        0.41700000837251205
+      ]
+    },
+    {
+      "id": "0_1",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.4169999982385104,
+        0.417000008372512
+      ]
+    },
+    {
+      "id": "0_2",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999823851075,
+        0.41700000837251205
+      ]
+    },
+    {
+      "id": "0_3",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999823851064,
+        0.417000008372512
+      ]
+    },
+    {
+      "id": "0_4",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999823851036,
+        0.417000008372512
+      ]
+    },
+    {
+      "id": "0_5",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999823851064,
+        0.417000008372512
+      ]
+    },
+    {
+      "id": "1_0",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999426376794,
+        0.41700000346183513
+      ]
+    },
+    {
+      "id": "1_1",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.4169999942637683,
+        0.41700000346183547
+      ]
+    },
+    {
+      "id": "1_2",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.416999994263768,
+        0.4170000034618352
+      ]
+    },
+    {
+      "id": "1_3",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.416999994263768,
+        0.4170000034618351
+      ]
+    },
+    {
+      "id": "1_4",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.4169999942637682,
+        0.41700000346183547
+      ]
+    },
+    {
+      "id": "1_5",
+      "rayons": 13,
+      "rayonSonde": 0.022,
+      "profondeurMinMax": [
+        0.41699999426376794,
+        0.4170000034618352
+      ]
+    }
+  ],
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 194,
+      "gardeBoueJeuMinimum": 0.014456169809868386,
+      "stabilisateursEntreRouesJeuZ": 0.009228004202127438,
+      "stabilisateursPlateauJeuX": 0.03899998997151849,
+      "caissonAuDessusCabineJeuY": 0.037343120330387836,
+      "caissonPlancherJeuY": 0.07269527154787653,
+      "railsPatinsRecouvrementY": 0.0010000416262138621,
+      "semellesYMinMax": [
+        -7.033348070617507e-09,
+        -7.033348070617507e-09
+      ]
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "gardeBoueJeuMinimum": 0.011456166710426818,
+      "stabilisateursEntreRouesJeuZ": 0.009228000029802313,
+      "stabilisateursPlateauJeuX": 0.0019999947398900986,
+      "caissonAuDessusCabineJeuY": 0.014264841254402638,
+      "caissonPlancherJeuY": 0.07477989676305569,
+      "railsPatinsRecouvrementY": 0.0010000416262139072,
+      "semellesYMinMax": [
+        0.06400000303983683,
+        0.06400000303983694
+      ]
+    },
+    {
+      "clip": "tir",
+      "poses": 196,
+      "gardeBoueJeuMinimum": 0.011456166710426846,
+      "stabilisateursEntreRouesJeuZ": 0.009228004202127438,
+      "stabilisateursPlateauJeuX": 0.03899998997151849,
+      "caissonAuDessusCabineJeuY": 0.03872106075286863,
+      "caissonPlancherJeuY": 0.06587312199289924,
+      "railsPatinsRecouvrementY": 0.0007020823693643999,
+      "semellesYMinMax": [
+        -7.033348070617507e-09,
+        -7.033348070617507e-09
+      ]
+    },
+    {
+      "clip": "touche",
+      "poses": 195,
+      "gardeBoueJeuMinimum": 0.009456162657311001,
+      "stabilisateursEntreRouesJeuZ": 0.009228004202127438,
+      "stabilisateursPlateauJeuX": 0.03899998997151849,
+      "caissonAuDessusCabineJeuY": 0.03250090109502468,
+      "caissonPlancherJeuY": 0.07257988091401107,
+      "railsPatinsRecouvrementY": 0.0010000416262139072,
+      "semellesYMinMax": [
+        -7.033348070617507e-09,
+        -7.033348070617507e-09
+      ]
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 195,
+      "gardeBoueJeuMinimum": 0.0064561714787984,
+      "stabilisateursEntreRouesJeuZ": 0.009228004202127438,
+      "stabilisateursPlateauJeuX": 0.03899998997151849,
+      "caissonAuDessusCabineJeuY": 0.007153038039063975,
+      "caissonPlancherJeuY": 0.07281039506196973,
+      "railsPatinsRecouvrementY": 0.0010000416262138552,
+      "semellesYMinMax": [
+        -7.033348070617507e-09,
+        -7.033348070617507e-09
+      ]
+    }
+  ],
+  "passagesTir": [
+    {
+      "temps": 0.16,
+      "rayonsLibres": 156,
+      "distance": 0.65,
+      "direction": [
+        0.0,
+        0.4077604516000037,
+        0.9130889409641106
+      ]
+    },
+    {
+      "temps": 0.24,
+      "rayonsLibres": 156,
+      "distance": 0.65,
+      "direction": [
+        0.0,
+        0.40776045139591266,
+        0.9130889410552521
+      ]
+    }
+  ],
+  "limites": [
+    "Distances et plans localisés, aucune certification globale des collisions.",
+    "973 poses, chaque clip isolé ; mélanges exclus.",
+    "Sondes ponctuelles, aucune preuve de toute section continue.",
+    "Aucun rendu, contrôle artistique ou FPS."
+  ]
+}

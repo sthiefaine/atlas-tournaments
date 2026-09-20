@@ -50,6 +50,10 @@ Porte-avions poussé en `d29ac2a`, GLB et cinq PNG confirmés en ligne par SHA, 
 
 Reconnaissance intégrée : 3 468 triangles, douze primitives, 1 375 315 octets. Six roues animées et radar tournant ; 975 poses, rayons majorés a/b/c 0,400906 / 0,418394 / 0,451408 m. Jantes raccordées aux pneus et normales des garde-boue corrigées ; garde minimale 6,348 mm. Les 26 alias actifs des anciens kits FR/LU ont été archivés puis retirés, candidats et blobs immuables conservés. Contrôle de lot et typage réussis, sans rendu ni approbation artistique. Vingt-huit modèles livrés.
 
+Reconnaissance poussée en `2af5a7e`, GLB et cinq PNG confirmés en ligne par SHA ; inventaire présent et anciens kits FR/LU absents. Roquettes suivantes : `unite_roquettes_base`, spécialiste `modele_25_roquettes`, lecture distante sans upload le 20 septembre à 14:56 UTC, aucun actif ni kit. Ancien candidat SHA `013ca147811f5a53e3899552addff5aad681eaf8216f8517434665c30f3c9f04`, 832 triangles. Mesurer les trois gabarits a/b/c ; attendre FINAL gelé avant intégration.
+
+Lance-roquettes intégré : 8 800 triangles, 21 primitives articulées, 1 657 795 octets. Douze cellules creuses, six roues et quatre appuis rétractables ; 973 poses concordantes NumPy/Three/GLTFLoader, rayons majorés a/b/c 0,448482 / 0,457854 / 0,498267 m. Vitrages et patins raccordés ; garde-boue 6,456 mm, appuis entre pneus 9,228 mm, caisson/cabine 7,153 mm. Marge étroite de 3,467 mm entre voisins en gabarit c documentée. Contrôle de lot et typage réussis ; aucun rendu, approbation artistique ou mesure FPS. Vingt-neuf modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

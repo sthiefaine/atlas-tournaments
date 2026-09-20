@@ -1,0 +1,213 @@
+{
+  "triangles": 8800,
+  "primitives": 21,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.059692232909583e-08,
+  "tangentesErreurMax": 3.810089199696165e-08,
+  "orthogonaliteErreurMax": 4.1589132582231514e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_roquettes_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_lance_roquettes",
+    "os_glissiere_d_0",
+    "os_glissiere_d_1",
+    "os_glissiere_g_0",
+    "os_glissiere_g_1",
+    "os_pied_d_0",
+    "os_pied_d_1",
+    "os_pied_g_0",
+    "os_pied_g_1",
+    "os_recul",
+    "os_roue_d_0",
+    "os_roue_d_1",
+    "os_roue_d_2",
+    "os_roue_g_0",
+    "os_roue_g_1",
+    "os_roue_g_2",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "normalePngLongueurErreurMax": 0.0028410238841094504,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    51,
+    234
+  ],
+  "continuitesBoucles": [
+    {
+      "clip": "repos",
+      "noeud": "module_lance_roquettes",
+      "canal": "rotation",
+      "erreurVitesseJointure": 1.324547348538485e-09,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_0",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_1",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_g_2",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_0",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_1",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_roue_d_2",
+      "canal": "rotation",
+      "erreurVitesseJointure": 8.881784197001252e-16,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_glissiere_g_0",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_glissiere_g_1",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_glissiere_d_0",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_glissiere_d_1",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_pied_g_0",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_pied_g_1",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_pied_d_0",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_pied_d_1",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "module_lance_roquettes",
+      "canal": "rotation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "translation",
+      "erreurVitesseJointure": 5.960464477539063e-08,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    }
+  ]
+}

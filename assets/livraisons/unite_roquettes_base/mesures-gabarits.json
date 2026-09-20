@@ -1,0 +1,293 @@
+{
+  "id": "unite_roquettes_base",
+  "ordreTransformations": "RY(pi/2) puis S ; Xruntime=Zfichier*sx, Yruntime=Yfichier*sy, Zruntime=-Xfichier*sz",
+  "echelles": {
+    "a": [
+      0.9,
+      0.98,
+      1.06
+    ],
+    "b": [
+      1,
+      1,
+      1
+    ],
+    "c": [
+      1.14,
+      1.06,
+      0.95
+    ]
+  },
+  "clipsParGabarit": {
+    "a": [
+      {
+        "nom": "repos",
+        "poses": 194,
+        "min": [
+          -0.39150000214576725,
+          -6.892681109205156e-09,
+          -0.35403999090194704
+        ],
+        "max": [
+          0.39150000214576725,
+          0.6217616556444076,
+          0.35403999090194704
+        ],
+        "rayonEchantillonne": 0.4364148476800783,
+        "rayonMajoreContinu": 0.4364148476800783,
+        "jeuVoisinsTousCaps": 0.12717030463984336
+      },
+      {
+        "nom": "deplacement",
+        "poses": 193,
+        "min": [
+          -0.39150000214576725,
+          6.726647109442929e-06,
+          -0.35403999090194704
+        ],
+        "max": [
+          0.39150000214576725,
+          0.6031971416365306,
+          0.35403999090194704
+        ],
+        "rayonEchantillonne": 0.4364148476800783,
+        "rayonMajoreContinu": 0.43644797274720804,
+        "jeuVoisinsTousCaps": 0.12710405450558393
+      },
+      {
+        "nom": "tir",
+        "poses": 196,
+        "min": [
+          -0.39150000214576725,
+          -6.892681109205156e-09,
+          -0.35403999090194704
+        ],
+        "max": [
+          0.39150000214576725,
+          0.646969886623199,
+          0.35403999090194704
+        ],
+        "rayonEchantillonne": 0.44749542537943915,
+        "rayonMajoreContinu": 0.44848190242215047,
+        "jeuVoisinsTousCaps": 0.10303619515569906
+      },
+      {
+        "nom": "touche",
+        "poses": 195,
+        "min": [
+          -0.39150000214576725,
+          -6.892681109205156e-09,
+          -0.35403999090194704
+        ],
+        "max": [
+          0.39150000214576725,
+          0.6248339740095106,
+          0.35403999090194704
+        ],
+        "rayonEchantillonne": 0.4364148476800783,
+        "rayonMajoreContinu": 0.43649152607316505,
+        "jeuVoisinsTousCaps": 0.1270169478536699
+      },
+      {
+        "nom": "hors_jeu",
+        "poses": 195,
+        "min": [
+          -0.39150000214576725,
+          -6.892681109205156e-09,
+          -0.35403999090194704
+        ],
+        "max": [
+          0.39150000214576725,
+          0.6206441028714179,
+          0.35403999090194704
+        ],
+        "rayonEchantillonne": 0.4364148476800783,
+        "rayonMajoreContinu": 0.436450338756233,
+        "jeuVoisinsTousCaps": 0.12709932248753397
+      }
+    ],
+    "b": [
+      {
+        "nom": "repos",
+        "poses": 194,
+        "min": [
+          -0.4350000023841858,
+          -7.033348070617507e-09,
+          -0.33399999141693115
+        ],
+        "max": [
+          0.4350000023841858,
+          0.6344506690249057,
+          0.33399999141693115
+        ],
+        "rayonEchantillonne": 0.45577153964728223,
+        "rayonMajoreContinu": 0.45577153964728223,
+        "jeuVoisinsTousCaps": 0.08845692070543554
+      },
+      {
+        "nom": "deplacement",
+        "poses": 193,
+        "min": [
+          -0.4350000023841858,
+          6.86392562188054e-06,
+          -0.33399999141693115
+        ],
+        "max": [
+          0.4350000023841858,
+          0.6155072873842149,
+          0.33399999141693115
+        ],
+        "rayonEchantillonne": 0.45577153964728223,
+        "rayonMajoreContinu": 0.45580278971061217,
+        "jeuVoisinsTousCaps": 0.08839442057877567
+      },
+      {
+        "nom": "tir",
+        "poses": 196,
+        "min": [
+          -0.4350000023841858,
+          -7.033348070617507e-09,
+          -0.33399999141693115
+        ],
+        "max": [
+          0.4350000023841858,
+          0.6601733536971418,
+          0.33399999141693115
+        ],
+        "rayonEchantillonne": 0.45692294019682816,
+        "rayonMajoreContinu": 0.45785357891636713,
+        "jeuVoisinsTousCaps": 0.08429284216726574
+      },
+      {
+        "nom": "touche",
+        "poses": 195,
+        "min": [
+          -0.4350000023841858,
+          -7.033348070617507e-09,
+          -0.33399999141693115
+        ],
+        "max": [
+          0.4350000023841858,
+          0.6375856877648067,
+          0.33399999141693115
+        ],
+        "rayonEchantillonne": 0.45577153964728223,
+        "rayonMajoreContinu": 0.4558438777539678,
+        "jeuVoisinsTousCaps": 0.08831224449206443
+      },
+      {
+        "nom": "hors_jeu",
+        "poses": 195,
+        "min": [
+          -0.4350000023841858,
+          -7.033348070617507e-09,
+          -0.33399999141693115
+        ],
+        "max": [
+          0.4350000023841858,
+          0.6333103090524673,
+          0.33399999141693115
+        ],
+        "rayonEchantillonne": 0.45577153964728223,
+        "rayonMajoreContinu": 0.455805021794598,
+        "jeuVoisinsTousCaps": 0.08838995641080405
+      }
+    ],
+    "c": [
+      {
+        "nom": "repos",
+        "poses": 194,
+        "min": [
+          -0.49590000271797174,
+          -7.455348954854557e-09,
+          -0.3172999918460846
+        ],
+        "max": [
+          0.49590000271797174,
+          0.6725177091664001,
+          0.3172999918460846
+        ],
+        "rayonEchantillonne": 0.4981840475922784,
+        "rayonMajoreContinu": 0.4981840475922784,
+        "jeuVoisinsTousCaps": 0.0036319048154431766
+      },
+      {
+        "nom": "deplacement",
+        "poses": 193,
+        "min": [
+          -0.49590000271797174,
+          7.275761159193373e-06,
+          -0.3172999918460846
+        ],
+        "max": [
+          0.49590000271797174,
+          0.6524377246272678,
+          0.3172999918460846
+        ],
+        "rayonEchantillonne": 0.4981840475922784,
+        "rayonMajoreContinu": 0.49821967266447453,
+        "jeuVoisinsTousCaps": 0.0035606546710509335
+      },
+      {
+        "nom": "tir",
+        "poses": 196,
+        "min": [
+          -0.49590000271797174,
+          -7.455348954854557e-09,
+          -0.3172999918460846
+        ],
+        "max": [
+          0.49590000271797174,
+          0.6997837549189704,
+          0.3172999918460846
+        ],
+        "rayonEchantillonne": 0.4981840475922784,
+        "rayonMajoreContinu": 0.49826197743812217,
+        "jeuVoisinsTousCaps": 0.0034760451237556556
+      },
+      {
+        "nom": "touche",
+        "poses": 195,
+        "min": [
+          -0.49590000271797174,
+          -7.455348954854557e-09,
+          -0.3172999918460846
+        ],
+        "max": [
+          0.49590000271797174,
+          0.6758408290306952,
+          0.3172999918460846
+        ],
+        "rayonEchantillonne": 0.4981840475922784,
+        "rayonMajoreContinu": 0.49826651303389996,
+        "jeuVoisinsTousCaps": 0.003466973932200079
+      },
+      {
+        "nom": "hors_jeu",
+        "poses": 195,
+        "min": [
+          -0.49590000271797174,
+          -7.455348954854557e-09,
+          -0.3172999918460846
+        ],
+        "max": [
+          0.49590000271797174,
+          0.6713089275956154,
+          0.3172999918460846
+        ],
+        "rayonEchantillonne": 0.4981840475922784,
+        "rayonMajoreContinu": 0.49822221724021837,
+        "jeuVoisinsTousCaps": 0.003555565519563264
+      }
+    ]
+  },
+  "methode": "193 instants plus toutes clés ; majoration continue par nœud, vitesse LINEAR/slerp et demi-pas multipliée par la norme opérateur max(S). Témoin borné séparément par sphère de chaîne.",
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon majoré continûment.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+    "Les trois gabarits runtime sont contrôlés ; aucune affirmation FPS."
+  ],
+  "approbationArtistique": false
+}

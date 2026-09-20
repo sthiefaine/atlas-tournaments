@@ -1,0 +1,137 @@
+{
+  "id": "unite_roquettes_base",
+  "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près. Majoration continue de toute géométrie sauf témoin par nœud et sa vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour de la chaîne corps sans translation horizontale animée.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.33399999141693115,
+          -7.033348070617507e-09,
+          -0.4350000023841858
+        ],
+        "max": [
+          0.33399999141693115,
+          0.6344506690249057,
+          0.4350000023841858
+        ]
+      },
+      "rayonHorizontalMax": 0.45577153964728223,
+      "vitesseMajoreeMetresSeconde": 0.003653525106659673,
+      "rayonHorizontalMajorationContinue": 0.45577153964728223,
+      "espacementMinimumVoisinsTousCaps": 0.08845692070543554,
+      "racineIdentite": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.33399999141693115,
+          6.86392562188054e-06,
+          -0.4350000023841858
+        ],
+        "max": [
+          0.33399999141693115,
+          0.6155072873842149,
+          0.4350000023841858
+        ]
+      },
+      "rayonHorizontalMax": 0.45577153964728223,
+      "vitesseMajoreeMetresSeconde": 0.604991206889737,
+      "rayonHorizontalMajorationContinue": 0.45580278971061217,
+      "espacementMinimumVoisinsTousCaps": 0.08839442057877567,
+      "racineIdentite": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.33399999141693115,
+          -7.033348070617507e-09,
+          -0.4350000023841858
+        ],
+        "max": [
+          0.33399999141693115,
+          0.6601733536971418,
+          0.4350000023841858
+        ]
+      },
+      "rayonHorizontalMax": 0.45692294019682816,
+      "vitesseMajoreeMetresSeconde": 0.5105218205555075,
+      "rayonHorizontalMajorationContinue": 0.45785357891636713,
+      "espacementMinimumVoisinsTousCaps": 0.08429284216726574,
+      "racineIdentite": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.33399999141693115,
+          -7.033348070617507e-09,
+          -0.4350000023841858
+        ],
+        "max": [
+          0.33399999141693115,
+          0.6375856877648067,
+          0.4350000023841858
+        ]
+      },
+      "rayonHorizontalMax": 0.45577153964728223,
+      "vitesseMajoreeMetresSeconde": 0.1651614001032926,
+      "rayonHorizontalMajorationContinue": 0.4558438777539678,
+      "espacementMinimumVoisinsTousCaps": 0.08831224449206443,
+      "racineIdentite": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.33399999141693115,
+          -7.033348070617507e-09,
+          -0.4350000023841858
+        ],
+        "max": [
+          0.33399999141693115,
+          0.6333103090524673,
+          0.4350000023841858
+        ]
+      },
+      "rayonHorizontalMax": 0.45577153964728223,
+      "vitesseMajoreeMetresSeconde": 0.10236174930668503,
+      "rayonHorizontalMajorationContinue": 0.455805021794598,
+      "espacementMinimumVoisinsTousCaps": 0.08838995641080405,
+      "racineIdentite": true
+    }
+  ],
+  "borneAnalytiqueTemoin": 0.40539952655554107,
+  "bornesStatiques": {
+    "min": [
+      -0.33399999141693115,
+      -7.033348070617507e-09,
+      -0.4350000023841858
+    ],
+    "max": [
+      0.33399999141693115,
+      0.6333103060722352,
+      0.4350000023841858
+    ],
+    "dimensions": [
+      0.6679999828338623,
+      0.6333103131055833,
+      0.8700000047683716
+    ]
+  },
+  "portee": "GLB neutre, gabarits runtime a/b/c après RY(pi/2), tous caps grâce à la borne radiale.",
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon majoré continûment.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+    "Les trois gabarits runtime sont contrôlés ; aucune affirmation FPS."
+  ]
+}

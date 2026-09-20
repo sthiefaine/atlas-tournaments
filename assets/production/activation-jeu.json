@@ -233,6 +233,14 @@
       "revision": "67709e8c52054473d10ba1b5e4d3f1d9400d0c9300f547aad5b56a63dc2a36bf",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_roquettes_base",
+      "fichierActif": "public/assets/modeles/unite_roquettes_base_lod0.glb",
+      "donnees": "../donnees/20a51a56f38647de207226cb922b9c7eca4d2f09713d89892b34f2e273a29daa.glb",
+      "revision": "08ddc33d8270c870d6adbe9fd4d8c6b5cd707d4d7fdc1c74eb3fba8010039b54",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

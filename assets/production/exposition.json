@@ -16871,19 +16871,14 @@
     {
       "id": "unite_roquettes_base",
       "fichiers": [
-        "unite_roquettes_base_lod0.glb",
         "unite_roquettes_base_albedo.png",
-        "unite_roquettes_base_albedo_hiver.png",
-        "unite_roquettes_base_normale.png",
-        "unite_roquettes_base_normale_hiver.png",
-        "unite_roquettes_base_rugosite.png",
-        "unite_roquettes_base_rugosite_hiver.png",
-        "unite_roquettes_base_metal.png",
-        "unite_roquettes_base_metal_hiver.png",
+        "unite_roquettes_base_lod0.glb",
         "unite_roquettes_base_masque_equipe.png",
-        "unite_roquettes_base_masque_equipe_hiver.png"
+        "unite_roquettes_base_metal.png",
+        "unite_roquettes_base_normale.png",
+        "unite_roquettes_base_rugosite.png"
       ],
-      "revision": "414b19f811622286a50bf5fcc8c64c999629ab10bf5c4aab049c53b46edc8c90"
+      "revision": "08ddc33d8270c870d6adbe9fd4d8c6b5cd707d4d7fdc1c74eb3fba8010039b54"
     },
     {
       "id": "unite_sous_marin_base",

@@ -1,0 +1,362 @@
+{
+  "id": "unite_roquettes_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 8800,
+  "budgetTriangles": 9000,
+  "octetsGlb": 487904,
+  "sha256Glb": "20a51a56f38647de207226cb922b9c7eca4d2f09713d89892b34f2e273a29daa",
+  "bornes": {
+    "min": [
+      -0.33399999141693115,
+      -7.033348070617507e-9,
+      -0.4350000023841858
+    ],
+    "max": [
+      0.33399999141693115,
+      0.6333103060722352,
+      0.4350000023841858
+    ],
+    "dimensions": [
+      0.6679999828338623,
+      0.6333103131055833,
+      0.8700000047683716
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_lance_roquettes": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.1,
+        -0.19
+      ]
+    },
+    "os_recul": {
+      "parent": "module_lance_roquettes",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "p": [
+        -0.104,
+        0.226,
+        0.295
+      ]
+    },
+    "os_roue_g_0": {
+      "parent": "base",
+      "p": [
+        -0.214,
+        0.090272,
+        -0.275
+      ]
+    },
+    "os_roue_g_1": {
+      "parent": "base",
+      "p": [
+        -0.214,
+        0.090272,
+        -0.02
+      ]
+    },
+    "os_roue_g_2": {
+      "parent": "base",
+      "p": [
+        -0.214,
+        0.090272,
+        0.265
+      ]
+    },
+    "os_glissiere_g_0": {
+      "parent": "base",
+      "p": [
+        -0.282,
+        0.202,
+        -0.145
+      ]
+    },
+    "os_pied_g_0": {
+      "parent": "os_glissiere_g_0",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "os_glissiere_g_1": {
+      "parent": "base",
+      "p": [
+        -0.282,
+        0.202,
+        0.12
+      ]
+    },
+    "os_pied_g_1": {
+      "parent": "os_glissiere_g_1",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "os_roue_d_0": {
+      "parent": "base",
+      "p": [
+        0.214,
+        0.090272,
+        -0.275
+      ]
+    },
+    "os_roue_d_1": {
+      "parent": "base",
+      "p": [
+        0.214,
+        0.090272,
+        -0.02
+      ]
+    },
+    "os_roue_d_2": {
+      "parent": "base",
+      "p": [
+        0.214,
+        0.090272,
+        0.265
+      ]
+    },
+    "os_glissiere_d_0": {
+      "parent": "base",
+      "p": [
+        0.282,
+        0.202,
+        -0.145
+      ]
+    },
+    "os_pied_d_0": {
+      "parent": "os_glissiere_d_0",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "os_glissiere_d_1": {
+      "parent": "base",
+      "p": [
+        0.282,
+        0.202,
+        0.12
+      ]
+    },
+    "os_pied_d_1": {
+      "parent": "os_glissiere_d_1",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "noeuds": [
+    "racine",
+    "corps",
+    "base",
+    "module_lance_roquettes",
+    "os_recul",
+    "socle",
+    "os_roue_g_0",
+    "os_roue_g_1",
+    "os_roue_g_2",
+    "os_glissiere_g_0",
+    "os_pied_g_0",
+    "os_glissiere_g_1",
+    "os_pied_g_1",
+    "os_roue_d_0",
+    "os_roue_d_1",
+    "os_roue_d_2",
+    "os_glissiere_d_0",
+    "os_pied_d_0",
+    "os_glissiere_d_1",
+    "os_pied_d_1"
+  ],
+  "bilanTriangles": {
+    "porte_equipe": 56,
+    "garde_boue_g_0": 28,
+    "attaches_garde_boue": 72,
+    "garde_boue_g_1": 28,
+    "garde_boue_g_2": 28,
+    "garde_boue_d_0": 28,
+    "garde_boue_d_1": 28,
+    "garde_boue_d_2": 28,
+    "plateau": 28,
+    "plancher": 28,
+    "pare_chocs": 56,
+    "supports_pare_chocs": 128,
+    "cabine": 44,
+    "pavillon": 28,
+    "pare_brise": 24,
+    "vitres_laterales": 24,
+    "poignee": 24,
+    "marchepied": 56,
+    "support_feu": 24,
+    "lentille_feu": 24,
+    "feux_arriere": 24,
+    "essuie_glaces": 48,
+    "grille_avant": 12,
+    "lames_grille": 60,
+    "trappe_cabine": 28,
+    "support_temoin": 28,
+    "berceau_fixe": 56,
+    "axe_pivot": 64,
+    "bras_g_0": 32,
+    "bras_g_1": 32,
+    "bras_g_2": 32,
+    "essieu_0": 48,
+    "bras_d_0": 32,
+    "essieu_1": 48,
+    "bras_d_1": 32,
+    "essieu_2": 48,
+    "bras_d_2": 32,
+    "longerons": 24,
+    "traverses": 24,
+    "fourreau_horizontal_g_0": 96,
+    "fourreau_horizontal_g_1": 96,
+    "fourreau_horizontal_d_0": 96,
+    "fourreau_horizontal_d_1": 96,
+    "tourillons": 128,
+    "rails_recul": 24,
+    "joue_equipe": 56,
+    "patins_recul": 24,
+    "renfort_joue": 112,
+    "plancher_caisson": 28,
+    "toit_caisson": 28,
+    "fond_caisson": 28,
+    "cellule_0_0": 64,
+    "fond_cellule_0_0": 32,
+    "levre_0_0": 64,
+    "cellule_0_1": 64,
+    "fond_cellule_0_1": 32,
+    "levre_0_1": 64,
+    "cellule_0_2": 64,
+    "fond_cellule_0_2": 32,
+    "levre_0_2": 64,
+    "cellule_0_3": 64,
+    "fond_cellule_0_3": 32,
+    "levre_0_3": 64,
+    "cellule_0_4": 64,
+    "fond_cellule_0_4": 32,
+    "levre_0_4": 64,
+    "cellule_0_5": 64,
+    "fond_cellule_0_5": 32,
+    "levre_0_5": 64,
+    "cellule_1_0": 64,
+    "fond_cellule_1_0": 32,
+    "levre_1_0": 64,
+    "cellule_1_1": 64,
+    "fond_cellule_1_1": 32,
+    "levre_1_1": 64,
+    "cellule_1_2": 64,
+    "fond_cellule_1_2": 32,
+    "levre_1_2": 64,
+    "cellule_1_3": 64,
+    "fond_cellule_1_3": 32,
+    "levre_1_3": 64,
+    "cellule_1_4": 64,
+    "fond_cellule_1_4": 32,
+    "levre_1_4": 64,
+    "cellule_1_5": 64,
+    "fond_cellule_1_5": 32,
+    "levre_1_5": 64,
+    "montants_facade": 84,
+    "traverses_facade": 36,
+    "prises_manutention": 48,
+    "temoin": 28,
+    "pneu_g_0": 192,
+    "jante_g_0": 64,
+    "moyeu_g_0": 48,
+    "boulons_g_0": 72,
+    "crampons_g_0": 144,
+    "pneu_g_1": 192,
+    "jante_g_1": 64,
+    "moyeu_g_1": 48,
+    "boulons_g_1": 72,
+    "crampons_g_1": 144,
+    "pneu_g_2": 192,
+    "jante_g_2": 64,
+    "moyeu_g_2": 48,
+    "boulons_g_2": 72,
+    "crampons_g_2": 144,
+    "glissiere_g_0": 48,
+    "collier_g_0": 48,
+    "fourreau_vertical_g_0": 96,
+    "tige_pied_g_0": 48,
+    "rotule_pied_g_0": 48,
+    "semelle_g_0": 28,
+    "glissiere_g_1": 48,
+    "collier_g_1": 48,
+    "fourreau_vertical_g_1": 96,
+    "tige_pied_g_1": 48,
+    "rotule_pied_g_1": 48,
+    "semelle_g_1": 28,
+    "pneu_d_0": 192,
+    "jante_d_0": 64,
+    "moyeu_d_0": 48,
+    "boulons_d_0": 72,
+    "crampons_d_0": 144,
+    "pneu_d_1": 192,
+    "jante_d_1": 64,
+    "moyeu_d_1": 48,
+    "boulons_d_1": 72,
+    "crampons_d_1": 144,
+    "pneu_d_2": 192,
+    "jante_d_2": 64,
+    "moyeu_d_2": 48,
+    "boulons_d_2": 72,
+    "crampons_d_2": 144,
+    "glissiere_d_0": 48,
+    "collier_d_0": 48,
+    "fourreau_vertical_d_0": 96,
+    "tige_pied_d_0": 48,
+    "rotule_pied_d_0": 48,
+    "semelle_d_0": 28,
+    "glissiere_d_1": 48,
+    "collier_d_1": 48,
+    "fourreau_vertical_d_1": 96,
+    "tige_pied_d_1": 48,
+    "rotule_pied_d_1": 48,
+    "semelle_d_1": 28
+  },
+  "approbationArtistique": false
+}
