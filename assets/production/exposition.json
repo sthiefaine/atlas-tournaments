@@ -16739,21 +16739,14 @@
     {
       "id": "unite_genie_base",
       "fichiers": [
-        "unite_genie_base_lod0.glb",
         "unite_genie_base_albedo.png",
-        "unite_genie_base_albedo_hiver.png",
-        "unite_genie_base_normale.png",
-        "unite_genie_base_normale_hiver.png",
-        "unite_genie_base_rugosite.png",
-        "unite_genie_base_rugosite_hiver.png",
-        "unite_genie_base_metal.png",
-        "unite_genie_base_metal_hiver.png",
+        "unite_genie_base_lod0.glb",
         "unite_genie_base_masque_equipe.png",
-        "unite_genie_base_masque_equipe_hiver.png",
-        "unite_genie_base_emission.png",
-        "unite_genie_base_emission_hiver.png"
+        "unite_genie_base_metal.png",
+        "unite_genie_base_normale.png",
+        "unite_genie_base_rugosite.png"
       ],
-      "revision": "b62a7f5d681940a0b21bf3e98e9a6975f2237608e746fca18bbb010f9dbdd547"
+      "revision": "40e8a90886ef23331b9e44ed56974e869f8aafcc8e834582636e20218f8f2ee3"
     },
     {
       "id": "unite_helico_base",

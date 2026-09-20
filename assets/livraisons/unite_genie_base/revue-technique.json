@@ -1,0 +1,241 @@
+{
+  "id": "unite_genie_base",
+  "dateRevue": "2026-09-20T12:55:00.809485+00:00",
+  "approbationArtistique": false,
+  "statut": "pret_a_integrer_apres_garde_upload_et_retrait_anciens_kits_par_coordinateur",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "outils": [
+      "Three.js",
+      "GLTFExporter",
+      "Python NumPy Pillow"
+    ],
+    "sourcesExternes": [],
+    "geometrieAncienneImportee": false,
+    "texturesAnciennesImportees": false,
+    "ancienCandidat": {
+      "sha256Glb": "ce2760c103f02ad596052d8e74bffcc2311c08b0b648e5b7c0759989cdec5ed9",
+      "octetsGlb": 426904,
+      "triangles": 3964,
+      "pngInspectes": 12
+    },
+    "sourceDistante": "Le coordinateur vérifie les uploads avant activation ; aucun upload connu au lancement de ce spécialiste."
+  },
+  "fichiers": [
+    {
+      "nom": "unite_genie_base_albedo.png",
+      "octets": 450121,
+      "sha256": "23f2473c3b80173bc3f8d93a97ec993ae207e1bdfedef1c1eb45c5b7f4e5d429"
+    },
+    {
+      "nom": "unite_genie_base_lod0.glb",
+      "octets": 433332,
+      "sha256": "4e521a848f92acfa1d9214187d0ddbd80563dc26f0a722a49dc5e6c14284d812"
+    },
+    {
+      "nom": "unite_genie_base_masque_equipe.png",
+      "octets": 640,
+      "sha256": "e398808c4cc850e908c711033a640dcaf25e2479e39dc1d9170d5bd81fbb509a"
+    },
+    {
+      "nom": "unite_genie_base_metal.png",
+      "octets": 489,
+      "sha256": "12953c0b59ec8eafc9e9f9d1266499c461a068655c8a48be31ff7ebc5b2338c1"
+    },
+    {
+      "nom": "unite_genie_base_normale.png",
+      "octets": 688455,
+      "sha256": "f50208d20c306e4f3a1a44a7d89b0eebaa9b0f0d22e835681dc628d2c99c61b7"
+    },
+    {
+      "nom": "unite_genie_base_rugosite.png",
+      "octets": 126128,
+      "sha256": "4d634dc3edc28f51efc9486172a72c2e1972d66330f2b64c1ce2e303d50878ec"
+    }
+  ],
+  "poidsLotOctets": 1699165,
+  "octetsGlb": 433332,
+  "sha256Glb": "4e521a848f92acfa1d9214187d0ddbd80563dc26f0a722a49dc5e6c14284d812",
+  "triangles": 3728,
+  "budgetTriangles": 4000,
+  "primitives": 5,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "dimensionsMetres": [
+    0.44999998807907104,
+    0.6170546843782068,
+    0.4339999854564667
+  ],
+  "rig": {
+    "peaux": 1,
+    "os": 28,
+    "clonesIndependants": true,
+    "chargementNatifGLTFLoader": true,
+    "poids": "un os par pièce rigide, chaînes de membres distinctes",
+    "racine": "identité, non animée, centre du socle au sol",
+    "axes": {
+      "haut": "+Y",
+      "avant": "+Z"
+    }
+  },
+  "animations": {
+    "dureesMs": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "tir": 700,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "nombrePosesMesurees": 1131,
+    "bouclesExactes": {
+      "repos": true,
+      "deplacement": true
+    },
+    "horsJeuPoseFinaleTenue": true,
+    "horsJeuIndicateurCache": true,
+    "rayonHorizontalMaxEchantillonne": 0.2387336143265367,
+    "margeDeuxCasesVoisinesEchantillonneeMetres": 0.5225327713469266,
+    "jeuRadarCasqueMinEchantillonneMetres": 0.021216446358058694,
+    "plateauHauteurMetres": 0.018,
+    "ecartAppuiMaxEchantillonneMetres": 1.7271897345856602e-06,
+    "leveePiedMetres": 0.023,
+    "horsJeuSol": {
+      "minimumY": -2.1606683109354208e-10,
+      "toleranceNumeriqueMetres": 1e-08,
+      "semellesFinales": {
+        "os_pied_technicien_gauche": {
+          "min": [
+            -0.15350001251697543,
+            0.018000005424022636,
+            -0.04500000277161598
+          ],
+          "max": [
+            -0.10450001007318499,
+            0.06100000688433643,
+            0.04100000014901162
+          ]
+        },
+        "os_pied_technicien_droite": {
+          "min": [
+            -0.10149999761581421,
+            0.018000005424022636,
+            -0.04500000277161598
+          ],
+          "max": [
+            -0.052500002622604375,
+            0.06100000688433643,
+            0.04100000014901162
+          ]
+        },
+        "os_pied_technicienne_gauche": {
+          "min": [
+            0.052500002622604375,
+            0.017999989211559264,
+            0.006999997369945055
+          ],
+          "max": [
+            0.10149999761581421,
+            0.06099999067187306,
+            0.09300000122189522
+          ]
+        },
+        "os_pied_technicienne_droite": {
+          "min": [
+            0.10450001007318499,
+            0.017999989211559264,
+            0.006999997369945055
+          ],
+          "max": [
+            0.15350001251697543,
+            0.06099999067187306,
+            0.09300000122189522
+          ]
+        }
+      }
+    }
+  },
+  "textures": {
+    "albedoEtNormale": [
+      1024,
+      1024
+    ],
+    "rugositeMetalMasque": [
+      512,
+      512
+    ],
+    "externes": true,
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "ecartGrisEquipe": 0,
+    "masqueRolesNeutres": {
+      "caoutchouc": [
+        0
+      ],
+      "metal_nu": [
+        0
+      ],
+      "verre": [
+        0
+      ],
+      "peau_technicien": [
+        0
+      ],
+      "peau_technicienne": [
+        0
+      ],
+      "cheveux_bruns": [
+        0
+      ],
+      "cheveux_sombres": [
+        0
+      ]
+    },
+    "rugositeCanal": "G",
+    "metalCanal": "B",
+    "metalEditableIdentiqueCanalB": true,
+    "normale": "+Y tangent",
+    "bakeHD": false,
+    "albedo": "pigments et grain analytique, aucune lumière ou ombre calculée",
+    "emission": false
+  },
+  "controleTechnique": {
+    "lot": {
+      "ok": true,
+      "motifs": []
+    },
+    "typecheck": {
+      "commande": "npm run typecheck",
+      "ok": true,
+      "apresDerniereEditionTypeScript": true
+    },
+    "trianglesDegeneres": 0,
+    "uvTrianglesDegeneres": 0,
+    "trianglesSuperposes": 0,
+    "normalesInversees": 0,
+    "normalesEtTangentesUnitaires": true,
+    "tempsAnimationFloatScalarBornesConservees": true
+  },
+  "limites": [
+    "Aucun rendu, capture, contrôle visuel ou approbation artistique.",
+    "Aucun test général ni build.",
+    "Pas de bake HD ; géométrie et microreliefs originaux.",
+    "Aucun téléphone réel ni relevé FPS.",
+    "Mesures de poses échantillonnées, pas de certification continue ni de mélange de clips.",
+    "Skin à segments rigides, sans déformation organique continue.",
+    "Jeu radar/casque ciblé ; collisions internes complètes non certifiées.",
+    "Futurs kits nationaux non certifiés ; anciens kits incompatibles à archiver par le coordinateur.",
+    "Le respect artistique du ton et la lisibilité à la caméra de jeu restent à apprécier humainement."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-rig-glb.json",
+    "validation-lot.json"
+  ]
+}

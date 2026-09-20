@@ -169,6 +169,14 @@
       "revision": "c7e94a67aaeef289bf1d1aaa4507e8e60e6a7f87b1e6e5aff213b43367ad78f4",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_genie_base",
+      "fichierActif": "public/assets/modeles/unite_genie_base_lod0.glb",
+      "donnees": "../donnees/4e521a848f92acfa1d9214187d0ddbd80563dc26f0a722a49dc5e6c14284d812.glb",
+      "revision": "40e8a90886ef23331b9e44ed56974e869f8aafcc8e834582636e20218f8f2ee3",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

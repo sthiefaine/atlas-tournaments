@@ -1,0 +1,222 @@
+{
+  "id": "unite_genie_base",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourcesExternes": [],
+    "geometrieAncienneImportee": false
+  },
+  "triangles": 3728,
+  "budgetTriangles": 4000,
+  "primitives": 5,
+  "octetsGlb": 433332,
+  "sha256Glb": "4e521a848f92acfa1d9214187d0ddbd80563dc26f0a722a49dc5e6c14284d812",
+  "bornes": {
+    "min": [
+      -0.22499999403953552,
+      -2.1606683109354208e-10,
+      -0.21699999272823334
+    ],
+    "max": [
+      0.22499999403953552,
+      0.6170547008514404,
+      0.21699999272823334
+    ],
+    "dimensions": [
+      0.44999998807907104,
+      0.6170547010675073,
+      0.4339999854564667
+    ]
+  },
+  "trianglesParEnsemble": {
+    "plateau_ovale": 112,
+    "liseret_equipe": 112,
+    "pantalons_taille": 56,
+    "vestes_tissu_equipe": 120,
+    "ceintures": 24,
+    "bretelles_portage": 48,
+    "poche_outils": 120,
+    "cous": 64,
+    "visages": 240,
+    "chevelures": 96,
+    "casques": 168,
+    "bords_casques": 96,
+    "visieres_casques": 24,
+    "yeux": 48,
+    "nez": 24,
+    "levres": 24,
+    "jambes_haut": 128,
+    "articulations_genoux": 192,
+    "jambes_bas": 128,
+    "genouilleres": 240,
+    "bottes": 240,
+    "semelles": 48,
+    "epaules_vestes": 192,
+    "manches_haut": 128,
+    "manches_bas": 128,
+    "gants": 192,
+    "chignon": 48,
+    "capsule_scanner": 60,
+    "trappe_service_capsule": 60,
+    "rails_capsule": 24,
+    "support_radar_capsule": 12,
+    "mat_radar": 32,
+    "pivot_radar": 40,
+    "parabole_radar": 120,
+    "tablette_diagnostic": 60,
+    "ecran_sans_texte": 12,
+    "marqueur_court": 60,
+    "bouche_marqueur": 32,
+    "insert_bouche_marqueur": 32,
+    "manche_maillet": 24,
+    "tete_maillet": 60,
+    "cle_entretien": 12,
+    "machoire_cle": 12,
+    "attaches_outils": 24,
+    "temoin_disponibilite": 12
+  },
+  "os": [
+    "os_bassin_technicien",
+    "os_torse_technicien",
+    "os_tete_technicien",
+    "os_cuisse_technicien_gauche",
+    "os_mollet_technicien_gauche",
+    "os_pied_technicien_gauche",
+    "os_bras_technicien_gauche",
+    "os_avant_bras_technicien_gauche",
+    "os_cuisse_technicien_droite",
+    "os_mollet_technicien_droite",
+    "os_pied_technicien_droite",
+    "os_bras_technicien_droite",
+    "os_avant_bras_technicien_droite",
+    "os_bassin_technicienne",
+    "os_torse_technicienne",
+    "os_tete_technicienne",
+    "os_cuisse_technicienne_gauche",
+    "os_mollet_technicienne_gauche",
+    "os_pied_technicienne_gauche",
+    "os_bras_technicienne_gauche",
+    "os_avant_bras_technicienne_gauche",
+    "os_cuisse_technicienne_droite",
+    "os_mollet_technicienne_droite",
+    "os_pied_technicienne_droite",
+    "os_bras_technicienne_droite",
+    "os_avant_bras_technicienne_droite",
+    "module_radar",
+    "os_marqueur"
+  ],
+  "poids": "un os par pièce rigide ; membres articulés séparément",
+  "hauteurSocle": 0.018,
+  "personnages": [
+    {
+      "nom": "technicien",
+      "x": -0.103,
+      "z": -0.026,
+      "dy": 0.008,
+      "peau": 8,
+      "cheveux": 10
+    },
+    {
+      "nom": "technicienne",
+      "x": 0.103,
+      "z": 0.026,
+      "dy": 0,
+      "peau": 9,
+      "cheveux": 11
+    }
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_radar.quaternion",
+        "os_torse_technicien.quaternion",
+        "os_tete_technicien.quaternion",
+        "os_torse_technicienne.quaternion",
+        "os_tete_technicienne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "module_radar.quaternion",
+        "os_bassin_technicien.position",
+        "os_torse_technicien.quaternion",
+        "os_cuisse_technicien_gauche.quaternion",
+        "os_mollet_technicien_gauche.quaternion",
+        "os_pied_technicien_gauche.quaternion",
+        "os_bras_technicien_gauche.quaternion",
+        "os_cuisse_technicien_droite.quaternion",
+        "os_mollet_technicien_droite.quaternion",
+        "os_pied_technicien_droite.quaternion",
+        "os_bras_technicien_droite.quaternion",
+        "os_bassin_technicienne.position",
+        "os_torse_technicienne.quaternion",
+        "os_cuisse_technicienne_gauche.quaternion",
+        "os_mollet_technicienne_gauche.quaternion",
+        "os_pied_technicienne_gauche.quaternion",
+        "os_bras_technicienne_gauche.quaternion",
+        "os_cuisse_technicienne_droite.quaternion",
+        "os_mollet_technicienne_droite.quaternion",
+        "os_pied_technicienne_droite.quaternion",
+        "os_bras_technicienne_droite.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_radar.quaternion",
+        "os_marqueur.position",
+        "os_torse_technicien.quaternion",
+        "os_torse_technicienne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "module_radar.quaternion",
+        "os_torse_technicien.quaternion",
+        "os_torse_technicienne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "module_radar.quaternion",
+        "socle.scale",
+        "os_cuisse_technicien_gauche.quaternion",
+        "os_mollet_technicien_gauche.quaternion",
+        "os_pied_technicien_gauche.quaternion",
+        "os_bras_technicien_gauche.quaternion",
+        "os_cuisse_technicien_droite.quaternion",
+        "os_mollet_technicien_droite.quaternion",
+        "os_pied_technicien_droite.quaternion",
+        "os_bras_technicien_droite.quaternion",
+        "os_bassin_technicien.position",
+        "os_torse_technicien.quaternion",
+        "os_tete_technicien.quaternion",
+        "os_cuisse_technicienne_gauche.quaternion",
+        "os_mollet_technicienne_gauche.quaternion",
+        "os_pied_technicienne_gauche.quaternion",
+        "os_bras_technicienne_gauche.quaternion",
+        "os_cuisse_technicienne_droite.quaternion",
+        "os_mollet_technicienne_droite.quaternion",
+        "os_pied_technicienne_droite.quaternion",
+        "os_bras_technicienne_droite.quaternion",
+        "os_bassin_technicienne.position",
+        "os_torse_technicienne.quaternion",
+        "os_tete_technicienne.quaternion"
+      ]
+    }
+  ],
+  "limites": [
+    "Aucun rendu ni contrôle visuel.",
+    "Articulations rigides aux pièces de vêtement, pas de déformation organique continue.",
+    "Pas de collision complète entre accessoires, ni de kit national certifié."
+  ]
+}

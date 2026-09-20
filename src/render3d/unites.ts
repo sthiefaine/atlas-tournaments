@@ -58,7 +58,7 @@ import { symboleRole } from './tactique';
 import { EPSILON_UNIFORME } from './programmes';
 import {
   appliquerMasque, chargerModele, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips,
-  masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
+  libererSquelettesPrives, masqueDe, NOM_FIGURINE, PROPORTIONS, teinterModele, type LecteurClips, type ModeleCharge, type NomClip,
 } from './modeles';
 import {
   composerSilhouette, echelleTaille, hauteurSilhouette, type Piece, type RolePiece,
@@ -1355,6 +1355,7 @@ export function creerUnites(
     e.lecteur?.dispose();
     e.lecteur = null;
     libererFondu(e);
+    libererSquelettesPrives(e.corps);
     // Un modèle livré a des matériaux à lui — les clones teintés — et, s'il a
     // joué ou s'est caché, leurs doubles dans la table : on rend les deux. Un
     // placeholder ne possède rien, ses matériaux sont ceux du calque.

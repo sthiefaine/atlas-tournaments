@@ -1,0 +1,21 @@
+{
+  "id": "unite_genie_base",
+  "revision": "40e8a90886ef23331b9e44ed56974e869f8aafcc8e834582636e20218f8f2ee3",
+  "octets": 1699165,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_genie_base_albedo.png",
+      "unite_genie_base_lod0.glb",
+      "unite_genie_base_masque_equipe.png",
+      "unite_genie_base_metal.png",
+      "unite_genie_base_normale.png",
+      "unite_genie_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

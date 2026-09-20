@@ -7,7 +7,7 @@ import { chargerCatalogue } from '@/engine';
 import { chargerStyleNation } from '@/assets/styles';
 import { chargerModele, monterModele, construirePlaceholder, materiauxPropresDe, Materiaux } from '@/render3d/unites';
 import { acquerirBatiment } from '@/render3d/batiments-partages';
-import { appliquerMasque, chargerInventaire, masqueDe } from '@/render3d/modeles';
+import { appliquerMasque, chargerInventaire, libererSquelettesPrives, masqueDe } from '@/render3d/modeles';
 import { paletteDe } from '@/render/palettes';
 import { candidatsBatiment, libererBatimentsLivres } from '@/render3d/assets-environnement';
 import { choisirBackend, creerMoteurWebGPU, type NavigateurGpu } from '@/render3d/scene';
@@ -39,6 +39,7 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
     const materiaux = new Materiaux();
     const batiments = new Map<string, THREE.Object3D>();
     const propres = new Set<THREE.Material>();
+    let uniteMontee: THREE.Object3D | null = null;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(35, 1, .01, 100);
     scene.add(new THREE.HemisphereLight(0xeaf4ff, 0x46534a, 2));
@@ -97,6 +98,7 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
         const modele = await chargerModele(unite, pays);
         if (!vivant) return;
         if (modele) { scene.remove(silhouette); const monte = monterModele(modele, camp, materiaux, style);
+          uniteMontee = monte;
           for (const materiau of materiauxPropresDe(monte)) propres.add(materiau);
           cadrer(monte); }
         setMessage('');
@@ -124,6 +126,7 @@ export default function ApercuUnite({ unite, batiment, pays = null, camp = 0, no
       observer?.disconnect(); controls?.dispose();
       scene.environment = null;
       // Les unités partagent leurs géométries et textures avec le jeu : ne pas les libérer ici.
+      if (uniteMontee) libererSquelettesPrives(uniteMontee);
       for (const materiau of propres) materiau.dispose();
       materiaux.dispose(); libererBatimentsLivres(batiments); batiments.clear();
       environnement?.dispose();

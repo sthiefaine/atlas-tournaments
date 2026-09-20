@@ -428,6 +428,15 @@ export function clonerFigurine(objet: THREE.Object3D): THREE.Object3D {
   return clonerSquelette(objet);
 }
 
+/** Libère les squelettes d'un clone possédé par l'appelant, jamais ceux du modèle en cache. */
+export function libererSquelettesPrives(objet: THREE.Object3D): void {
+  const squelettes = new Set<THREE.Skeleton>();
+  objet.traverse((noeud) => {
+    if (noeud instanceof THREE.SkinnedMesh) squelettes.add(noeud.skeleton);
+  });
+  for (const squelette of squelettes) squelette.dispose();
+}
+
 // ---------------------------------------------------------------------------
 // 4 bis. Le lecteur de clips : un mixer, six noms, un fondu
 // ---------------------------------------------------------------------------

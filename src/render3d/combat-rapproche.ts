@@ -5,7 +5,7 @@ import type { Geste } from '../render/partition';
 import { DUREES, MISE_EN_SCENE } from '../render/partition';
 import type { VueCombat } from '../render/rendu';
 import { paletteDe } from '../render/palettes';
-import { appliquerMasque, clonerFigurine, clonerMateriauNoeud, couleurMasquee, masqueDe } from './modeles';
+import { appliquerMasque, clonerFigurine, clonerMateriauNoeud, couleurMasquee, libererSquelettesPrives, masqueDe } from './modeles';
 import { creerEffets, emettreImpact, emettreTir } from './effets';
 import { profilTir } from './animations';
 import { caseVersMonde } from './geometrie';
@@ -207,7 +207,7 @@ export function creerCombatRapproche(
       if (mort) return;
       mort = true; effets.dispose();
       for (const c of combattants) c.formation.dispose();
-      for (const objet of modelesPrives) objet.traverse(o => { if (o instanceof THREE.SkinnedMesh) o.skeleton.dispose(); });
+      for (const objet of modelesPrives) libererSquelettesPrives(objet);
       for (const m of materiaux) m.dispose();
       for (const g of geometries) g.dispose();
       for (const capture of captures) { capture.cible.dispose(); capture.scene.clear(); }

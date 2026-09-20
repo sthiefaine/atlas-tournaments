@@ -1,0 +1,117 @@
+{
+  "triangles": 3728,
+  "primitives": 5,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.9162393550284946e-08,
+  "tangentesErreurMax": 3.939119663787238e-08,
+  "orthogonaliteErreurMax": 4.1885457768842116e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_genie_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_radar",
+    "os_avant_bras_technicien_droite",
+    "os_avant_bras_technicien_gauche",
+    "os_avant_bras_technicienne_droite",
+    "os_avant_bras_technicienne_gauche",
+    "os_bassin_technicien",
+    "os_bassin_technicienne",
+    "os_bras_technicien_droite",
+    "os_bras_technicien_gauche",
+    "os_bras_technicienne_droite",
+    "os_bras_technicienne_gauche",
+    "os_cuisse_technicien_droite",
+    "os_cuisse_technicien_gauche",
+    "os_cuisse_technicienne_droite",
+    "os_cuisse_technicienne_gauche",
+    "os_marqueur",
+    "os_mollet_technicien_droite",
+    "os_mollet_technicien_gauche",
+    "os_mollet_technicienne_droite",
+    "os_mollet_technicienne_gauche",
+    "os_pied_technicien_droite",
+    "os_pied_technicien_gauche",
+    "os_pied_technicienne_droite",
+    "os_pied_technicienne_gauche",
+    "os_tete_technicien",
+    "os_tete_technicienne",
+    "os_torse_technicien",
+    "os_torse_technicienne",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "poidsRigidesNormalises": true,
+  "racineIdentite": true,
+  "normalePngLongueurErreurMax": 0.0022888070556024154,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    48,
+    237
+  ],
+  "osHumainsDansPeau": {
+    "peaux": 1,
+    "os": 28
+  },
+  "masqueRolesNeutres": {
+    "caoutchouc": [
+      0
+    ],
+    "metal_nu": [
+      0
+    ],
+    "verre": [
+      0
+    ],
+    "peau_technicien": [
+      0
+    ],
+    "peau_technicienne": [
+      0
+    ],
+    "cheveux_bruns": [
+      0
+    ],
+    "cheveux_sombres": [
+      0
+    ]
+  },
+  "semellesPoseNeutreCibleMetres": 0.018
+}

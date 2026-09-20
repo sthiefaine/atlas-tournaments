@@ -33,9 +33,10 @@ import { chargerStyleNation } from '@/assets/styles';
 import { creerEnvironnement } from '@/render3d/environnement';
 import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
 import {
-  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, monterModele,
+  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, materiauxPropresDe, monterModele,
   NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
 } from '@/render3d/unites';
+import { libererSquelettesPrives } from '@/render3d/modeles';
 import type { CampId, CleUnite, CodePays } from '@/schemas/types';
 import styles from './vitrine.module.css';
 import { rectangleTuile } from './tuiles';
@@ -463,8 +464,16 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
   const centre = new THREE.Vector3();
   const taille = new THREE.Vector3();
 
+  function retirerPieces(): void {
+    for (const ancien of [...support.children]) {
+      libererSquelettesPrives(ancien);
+      for (const materiau of materiauxPropresDe(ancien)) materiau.dispose();
+      support.remove(ancien);
+    }
+  }
+
   function poser(piece: THREE.Object3D): void {
-    for (const ancien of [...support.children]) support.remove(ancien);
+    retirerPieces();
     piece.traverse((o) => { if (o instanceof THREE.Mesh) { o.castShadow = true; o.receiveShadow = true; } });
     support.add(piece);
     boite.setFromObject(support);
@@ -568,15 +577,17 @@ function creerStudio(canvas: HTMLCanvasElement): Studio {
     dessiner,
     dispose: () => {
       vivant = false;
+      retirerPieces();
+      materiaux.dispose();
       scene.environment = null;
       environnement?.dispose();
       environnement = null;
-      // Un moteur non initialisé ne se libère pas ici : la chaîne
-      // d'initialisation le jette elle-même en trouvant le studio démonté.
-      renderer?.dispose();
-      renderer = null;
       sol.geometry.dispose();
       (sol.material as THREE.Material).dispose();
+      // Les événements dispose des matériaux utilisent encore les programmes du moteur.
+      // Un moteur non initialisé sera libéré par sa chaîne d'initialisation.
+      renderer?.dispose();
+      renderer = null;
     },
   };
 }

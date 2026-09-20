@@ -1,0 +1,700 @@
+{
+  "id": "unite_genie_base",
+  "approbationArtistique": false,
+  "methode": "GLTFLoader avec seules références PNG retirées en mémoire, SkeletonUtils.clone, AnimationMixer et positions skin réelles, sans rendu.",
+  "skinNatif": true,
+  "squelettesClonesIndependants": true,
+  "os": [
+    "os_bassin_technicien",
+    "os_torse_technicien",
+    "os_tete_technicien",
+    "os_cuisse_technicien_gauche",
+    "os_mollet_technicien_gauche",
+    "os_pied_technicien_gauche",
+    "os_bras_technicien_gauche",
+    "os_avant_bras_technicien_gauche",
+    "os_cuisse_technicien_droite",
+    "os_mollet_technicien_droite",
+    "os_pied_technicien_droite",
+    "os_bras_technicien_droite",
+    "os_avant_bras_technicien_droite",
+    "os_bassin_technicienne",
+    "os_torse_technicienne",
+    "os_tete_technicienne",
+    "os_cuisse_technicienne_gauche",
+    "os_mollet_technicienne_gauche",
+    "os_pied_technicienne_gauche",
+    "os_bras_technicienne_gauche",
+    "os_avant_bras_technicienne_gauche",
+    "os_cuisse_technicienne_droite",
+    "os_mollet_technicienne_droite",
+    "os_pied_technicienne_droite",
+    "os_bras_technicienne_droite",
+    "os_avant_bras_technicienne_droite",
+    "module_radar",
+    "os_marqueur"
+  ],
+  "neutre": {
+    "min": [
+      -0.22499999403953552,
+      -2.1606683109354208e-10,
+      -0.21699999272823334
+    ],
+    "max": [
+      0.22499999403953552,
+      0.6170546841621399,
+      0.21699999272823334
+    ],
+    "dimensions": [
+      0.44999998807907104,
+      0.6170546843782068,
+      0.4339999854564667
+    ],
+    "rayon": 0.22499999403953552,
+    "jeuRadarDerriereCasque": 0.040357750236988066,
+    "pieds": {
+      "os_pied_technicien_gauche": {
+        "min": [
+          -0.15350001239776612,
+          0.018000000178813924,
+          -0.045000002235174176
+        ],
+        "max": [
+          -0.10450000995397568,
+          0.06100000163912772,
+          0.04100000068545342
+        ]
+      },
+      "os_pied_technicien_droite": {
+        "min": [
+          -0.10149999749660492,
+          0.018000000178813924,
+          -0.045000002235174176
+        ],
+        "max": [
+          -0.05250000250339508,
+          0.06100000163912772,
+          0.04100000068545342
+        ]
+      },
+      "os_pied_technicienne_gauche": {
+        "min": [
+          0.05250000250339508,
+          0.018000000178813924,
+          0.006999996833503247
+        ],
+        "max": [
+          0.10149999749660492,
+          0.06100000163912772,
+          0.09300000068545342
+        ]
+      },
+      "os_pied_technicienne_droite": {
+        "min": [
+          0.10450000995397568,
+          0.018000000178813924,
+          0.006999996833503247
+        ],
+        "max": [
+          0.15350001239776612,
+          0.06100000163912772,
+          0.09300000068545342
+        ]
+      }
+    },
+    "personnes": {
+      "technicien": {
+        "min": [
+          -0.20178131580352782,
+          0.018000000178813924,
+          -0.16099999791383743
+        ],
+        "max": [
+          -0.004218689318746319,
+          0.5839999885559082,
+          0.061000000625848774
+        ]
+      },
+      "technicienne": {
+        "min": [
+          0.004218689318746319,
+          0.018000000178813924,
+          -0.0470000026524067
+        ],
+        "max": [
+          0.20178131580352782,
+          0.5759999885559082,
+          0.171000002682209
+        ]
+      }
+    }
+  },
+  "clips": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "poses": 204,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.21699999272823334
+        ],
+        "max": [
+          0.22499999403953552,
+          0.618483634014883,
+          0.21699999272823334
+        ]
+      },
+      "rayonHorizontalMax": 0.23436220286067755,
+      "semelles": {
+        "os_pied_technicien_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicien_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        }
+      },
+      "appuis": {
+        "technicien": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        },
+        "technicienne": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuRadarDerriereCasqueMin": 0.021702751787913283,
+      "final": {
+        "semelles": {
+          "os_pied_technicien_gauche": {
+            "min": [
+              -0.15350001239776612,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.10450000995397568,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicien_droite": {
+            "min": [
+              -0.10149999749660492,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.05250000250339508,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicienne_gauche": {
+            "min": [
+              0.05250000250339508,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.10149999749660492,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          },
+          "os_pied_technicienne_droite": {
+            "min": [
+              0.10450000995397568,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.15350001239776612,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_technicien_gauche": 0,
+          "os_pied_technicien_droite": 0,
+          "os_pied_technicienne_gauche": 0,
+          "os_pied_technicienne_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "radarDeplacementPivotMax": 0.0033963799363452636
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "poses": 257,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.21699999272823334
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6100845562037229,
+          0.21699999272823334
+        ]
+      },
+      "rayonHorizontalMax": 0.22912997242365646,
+      "semelles": {
+        "os_pied_technicien_gauche": {
+          "min": 0.01799832690854908,
+          "max": 0.04100000669413916
+        },
+        "os_pied_technicien_droite": {
+          "min": 0.017998326908549026,
+          "max": 0.04100000669413916
+        },
+        "os_pied_technicienne_gauche": {
+          "min": 0.017998272810265413,
+          "max": 0.04099999601240614
+        },
+        "os_pied_technicienne_droite": {
+          "min": 0.01799827281026542,
+          "max": 0.04099999601240614
+        }
+      },
+      "appuis": {
+        "technicien": {
+          "erreurSupportMax": 0.0000016730914509724415,
+          "anglePiedMax": 1.1151007970493858e-7
+        },
+        "technicienne": {
+          "erreurSupportMax": 0.0000017271897345856602,
+          "anglePiedMax": 1.032382731180714e-7
+        }
+      },
+      "rootError": 0,
+      "jeuRadarDerriereCasqueMin": 0.021216446358058694,
+      "final": {
+        "semelles": {
+          "os_pied_technicien_gauche": {
+            "min": [
+              -0.15350001251697543,
+              0.04100000669413916,
+              -0.044999994574857365
+            ],
+            "max": [
+              -0.10450001007318499,
+              0.08400001527251089,
+              0.04100000980040405
+            ]
+          },
+          "os_pied_technicien_droite": {
+            "min": [
+              -0.10149999761581421,
+              0.01800001181624116,
+              -0.04500000300953588
+            ],
+            "max": [
+              -0.052500002622604375,
+              0.061000013899757455,
+              0.04099999905408373
+            ]
+          },
+          "os_pied_technicienne_gauche": {
+            "min": [
+              0.052500002622604375,
+              0.017999995354673906,
+              0.006999998274376868
+            ],
+            "max": [
+              0.10149999761581421,
+              0.060999997084105556,
+              0.09300000153547106
+            ]
+          },
+          "os_pied_technicienne_droite": {
+            "min": [
+              0.10450001007318499,
+              0.04099999601240614,
+              0.007000000118345258
+            ],
+            "max": [
+              0.15350001251697543,
+              0.0839999988567468,
+              0.0930000036749669
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_technicien_gauche": 1.032382731180714e-7,
+          "os_pied_technicien_droite": 0,
+          "os_pied_technicienne_gauche": 4.2146848510894035e-8,
+          "os_pied_technicienne_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "radarDeplacementPivotMax": 0.002915483356124445
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "poses": 208,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.21699999272823334
+        ],
+        "max": [
+          0.22499999403953552,
+          0.618130251135643,
+          0.21699999272823334
+        ]
+      },
+      "rayonHorizontalMax": 0.2387336143265367,
+      "semelles": {
+        "os_pied_technicien_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicien_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        }
+      },
+      "appuis": {
+        "technicien": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        },
+        "technicienne": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuRadarDerriereCasqueMin": 0.021826230980933628,
+      "final": {
+        "semelles": {
+          "os_pied_technicien_gauche": {
+            "min": [
+              -0.15350001239776612,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.10450000995397568,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicien_droite": {
+            "min": [
+              -0.10149999749660492,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.05250000250339508,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicienne_gauche": {
+            "min": [
+              0.05250000250339508,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.10149999749660492,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          },
+          "os_pied_technicienne_droite": {
+            "min": [
+              0.10450000995397568,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.15350001239776612,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_technicien_gauche": 0,
+          "os_pied_technicien_droite": 0,
+          "os_pied_technicienne_gauche": 0,
+          "os_pied_technicienne_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "radarDeplacementPivotMax": 0.009577308958196062
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "poses": 195,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.21699999272823334
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6197519666198389,
+          0.21699999272823334
+        ]
+      },
+      "rayonHorizontalMax": 0.23444208364102745,
+      "semelles": {
+        "os_pied_technicien_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicien_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_gauche": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        },
+        "os_pied_technicienne_droite": {
+          "min": 0.018000000178813924,
+          "max": 0.018000000178813924
+        }
+      },
+      "appuis": {
+        "technicien": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        },
+        "technicienne": {
+          "erreurSupportMax": 1.7881392547214325e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuRadarDerriereCasqueMin": 0.021635095459420856,
+      "final": {
+        "semelles": {
+          "os_pied_technicien_gauche": {
+            "min": [
+              -0.15350001239776612,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.10450000995397568,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicien_droite": {
+            "min": [
+              -0.10149999749660492,
+              0.018000000178813924,
+              -0.045000002235174176
+            ],
+            "max": [
+              -0.05250000250339508,
+              0.06100000163912772,
+              0.04100000068545342
+            ]
+          },
+          "os_pied_technicienne_gauche": {
+            "min": [
+              0.05250000250339508,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.10149999749660492,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          },
+          "os_pied_technicienne_droite": {
+            "min": [
+              0.10450000995397568,
+              0.018000000178813924,
+              0.006999996833503247
+            ],
+            "max": [
+              0.15350001239776612,
+              0.06100000163912772,
+              0.09300000068545342
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_technicien_gauche": 0,
+          "os_pied_technicien_droite": 0,
+          "os_pied_technicienne_gauche": 0,
+          "os_pied_technicienne_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "radarDeplacementPivotMax": 0.015910473438319427
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "poses": 267,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.21699999272823334
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6251980148035291,
+          0.21699999272823334
+        ]
+      },
+      "rayonHorizontalMax": 0.22499999403953552,
+      "semelles": {
+        "os_pied_technicien_gauche": {
+          "min": 0.017999287499819622,
+          "max": 0.018000013927413055
+        },
+        "os_pied_technicien_droite": {
+          "min": 0.017999287499819622,
+          "max": 0.018000013927413055
+        },
+        "os_pied_technicienne_gauche": {
+          "min": 0.01799931498434501,
+          "max": 0.018000013642776036
+        },
+        "os_pied_technicienne_droite": {
+          "min": 0.01799931498434501,
+          "max": 0.018000013642776036
+        }
+      },
+      "appuis": {
+        "technicien": {
+          "erreurSupportMax": 7.125001803762188e-7,
+          "anglePiedMax": 5.960464477539063e-8
+        },
+        "technicienne": {
+          "erreurSupportMax": 6.850156549879916e-7,
+          "anglePiedMax": 5.960464477539063e-8
+        }
+      },
+      "rootError": 0,
+      "jeuRadarDerriereCasqueMin": 0.023110125447073387,
+      "final": {
+        "semelles": {
+          "os_pied_technicien_gauche": {
+            "min": [
+              -0.15350001251697543,
+              0.018000005424022636,
+              -0.04500000277161598
+            ],
+            "max": [
+              -0.10450001007318499,
+              0.06100000688433643,
+              0.04100000014901162
+            ]
+          },
+          "os_pied_technicien_droite": {
+            "min": [
+              -0.10149999761581421,
+              0.018000005424022636,
+              -0.04500000277161598
+            ],
+            "max": [
+              -0.052500002622604375,
+              0.06100000688433643,
+              0.04100000014901162
+            ]
+          },
+          "os_pied_technicienne_gauche": {
+            "min": [
+              0.052500002622604375,
+              0.017999989211559264,
+              0.006999997369945055
+            ],
+            "max": [
+              0.10149999761581421,
+              0.06099999067187306,
+              0.09300000122189522
+            ]
+          },
+          "os_pied_technicienne_droite": {
+            "min": [
+              0.10450001007318499,
+              0.017999989211559264,
+              0.006999997369945055
+            ],
+            "max": [
+              0.15350001251697543,
+              0.06099999067187306,
+              0.09300000122189522
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_technicien_gauche": 0,
+          "os_pied_technicien_droite": 0,
+          "os_pied_technicienne_gauche": 0,
+          "os_pied_technicienne_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "radarDeplacementPivotMax": 0.044056132298448805
+    }
+  ],
+  "limites": [
+    "Articulations par segments rigides ; pas de peau organique lissée.",
+    "Mesures échantillonnées dans le GLB, sans certification des mélanges entre clips.",
+    "Collisions internes et adaptations aux kits nationaux non certifiées.",
+    "Aucun rendu, aucune image et aucune mesure FPS téléphone."
+  ]
+}
