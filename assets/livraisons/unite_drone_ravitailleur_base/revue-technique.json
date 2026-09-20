@@ -1,0 +1,137 @@
+{
+  "id": "unite_drone_ravitailleur_base",
+  "approbationArtistique": false,
+  "date": "2026-09-20T14:22:04.363450+02:00",
+  "provenance": "Géométrie originale Three.js et textures analytiques NumPy/Pillow ; helpers copiés localement et adaptés. Aucun ancien GLB ni PNG importé. Aucun upload signalé dans le relevé distant communiqué ; dernière vérification réservée au coordinateur.",
+  "ancienCandidat": {
+    "sha256": "7bdf0646efe807002545e6864894cabd4d03bcf4577132ccdb1cba64e0374d08",
+    "triangles": 776,
+    "octetsGlb": 92732,
+    "nombrePngInspectes": 12,
+    "modifie": false
+  },
+  "livraison": {
+    "triangles": 3008,
+    "budgetTriangles": 3500,
+    "primitives": 7,
+    "materiaux": [
+      "mat_corps",
+      "mat_details"
+    ],
+    "noeuds": [
+      "base",
+      "corps",
+      "module_grue",
+      "module_nacelle",
+      "os_rotor_droit",
+      "os_rotor_gauche",
+      "racine",
+      "socle"
+    ],
+    "dimensionsMetres": [
+      0.8600000143051147,
+      0.6279999941587449,
+      0.8500000238418579
+    ],
+    "octetsGlb": 257576,
+    "octetsGlbEtPng": 1428392,
+    "sha256Glb": "1fe7fd97653953437e8425d6829afc3500478063489de6c945f62208e936e22c",
+    "fichiers": [
+      {
+        "nom": "unite_drone_ravitailleur_base_albedo.png",
+        "octets": 458593,
+        "sha256": "5c2da0ae7649df495e49a06166372027650db99bb8f6bf8cf578951ef144fc62"
+      },
+      {
+        "nom": "unite_drone_ravitailleur_base_lod0.glb",
+        "octets": 257576,
+        "sha256": "1fe7fd97653953437e8425d6829afc3500478063489de6c945f62208e936e22c"
+      },
+      {
+        "nom": "unite_drone_ravitailleur_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_drone_ravitailleur_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_drone_ravitailleur_base_normale.png",
+        "octets": 584871,
+        "sha256": "aa0cb8d78430e2a37542d4a7cb02ac10d4d2fedf468ea517c11839532ea0cd7b"
+      },
+      {
+        "nom": "unite_drone_ravitailleur_base_rugosite.png",
+        "octets": 126220,
+        "sha256": "9bf79b7b0eef44a0c4d63a6e06d9006c0f0a468c6c2eac235ee3efe91291af03"
+      }
+    ]
+  },
+  "verification": {
+    "controleLot": "ok",
+    "commandeControleLot": "npm run controler:asset -- --spec assets/specs/unite_drone_ravitailleur_base.json --lot tmp/production-sequentielle/unite_drone_ravitailleur_base",
+    "typecheck": "ok",
+    "commandeTypecheck": "npm run typecheck",
+    "typecheckApresDernierTS": true,
+    "geometrie": "UV0, normales et tangentes finies/unitaires/orthogonales ; zéro triangle géométrique/UV dégénéré, superposition exacte par primitive ou normale opposée au winding.",
+    "canaux": "Albédo et normale +Y 1024² ; rugosité G, métal B et masque 512² ; masque 0/255 et gris strict sous le blanc ; PNG externes.",
+    "clips": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "bouclesFermees": true,
+    "racineIdentite": true,
+    "tientPoseFinaleHorsJeu": true,
+    "indicateurCacheHorsJeu": true,
+    "rotorsAnimesDansTousClips": true,
+    "bornesTempsAnimationConservees": true,
+    "posesMesurees": 1650,
+    "rayonHorizontalMax": 0.4397100364845534,
+    "rayonHorizontalMajorationContinue": 0.4433351806294229,
+    "espacementMinimumVoisinsTousCaps": 0.1133296387411542,
+    "pointLePlusBasEchantillonne": 0.03280506546295031,
+    "methodeMesure": "Relecture GLB NumPy : skin rigide appliqué par jointWorld × inverseBindMatrix, sommets, translations LINEAR et rotations slerp ; 385 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près (elles-mêmes recoupées avec la scène source). Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour du pivot corps immobile horizontalement.",
+    "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+    "rig": {
+      "peauChargee": true,
+      "squelettesClonesIndependants": true,
+      "centresRotorsFixesDansCorps": true,
+      "axes": "+Y",
+      "rayonsRotors": [
+        0.16122190341028034,
+        0.1612219068466052
+      ],
+      "rayonInterieurGardeContinu": 0.1699247878917445,
+      "jeuxMinimauxRotorsGarde": [
+        0.008702884481464168,
+        0.008702881045139305
+      ],
+      "pariteNumpyDeuxMicrometres": true
+    }
+  },
+  "limites": [
+    "Aucun test général, build, rendu, capture, contrôle visuel ou FPS téléphone ; lisibilité en jeu non attestée.",
+    "Atlas de matières répété, surfaces optiques opaques, microreliefs analytiques sans bake HD.",
+    "Caisse fermée sans contenu ni personne, bras articulé en bloc et rotors rigides sans simulation physique.",
+    "GLB neutre et clips isolés ; mélanges, déformations nationales et collisions internes globales non certifiés.",
+    "Sol contrôlé aux poses ; enveloppe horizontale majorée continûment."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-mouvements.json",
+    "mesures-poses-three-glb.json",
+    "mesures-poses-glb.json",
+    "mesures-rig-glb.json",
+    "controle-technique.json"
+  ],
+  "corrections": [
+    "Traverses dédupliquées, montants raccordés aux articulations et pivot de grue aligné sur sa charnière avant contrôles finaux."
+  ]
+}

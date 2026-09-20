@@ -68,9 +68,10 @@ export function estNomClip(nom: string): nom is NomClip {
 }
 
 /**
- * `repos` et `deplacement` bouclent ; les quatre autres jouent une fois puis
- * rendent la main au repos. C'est la règle de `doc/11` §5.4 (« `repos` boucle
- * toujours, `hors_jeu` jamais »), tenue ici parce qu'un GLB ne porte pas de
+ * `repos` et `deplacement` bouclent ; les autres jouent une fois. `hors_jeu`
+ * conserve sa pose finale, les autres rendent la main au repos. C'est la règle
+ * de `doc/11` §5.4 (« `repos` boucle toujours, `hors_jeu` jamais »), tenue ici
+ * parce qu'un GLB ne porte pas de
  * drapeau de boucle : c'est le rendu qui décide.
  */
 export function clipEnBoucle(nom: NomClip): boolean {
@@ -530,8 +531,9 @@ export function creerLecteurClips(
     mixer.update(0);
   }
 
-  // Un clip qui ne boucle pas rend la main au repos de lui-même. L'événement
-  // part du milieu d'un `update` : on le note et on agit une fois sorti, parce
+  // Un clip qui ne boucle pas rend la main au repos, sauf hors_jeu qui reste
+  // arrêté dans sa dernière pose. L'événement part du milieu d'un `update` :
+  // on le note et on agit une fois sorti, parce
   // que `jouer` appelle lui-même le mixer et qu'un mixer ne se rentre pas. La
   // demande des animations, elle, n'est pas touchée : c'est à l'appelant de ne
   // pas relancer un tir déjà joué.
@@ -552,7 +554,7 @@ export function creerLecteurClips(
       if (termine !== null) {
         const fini = termine;
         termine = null;
-        if (fini === courant) jouer('repos');
+        if (fini === courant && fini !== 'hors_jeu') jouer('repos');
       }
       return clipEnBoucle(courant) || (actions.get(courant) ?? []).some((a) => a.isRunning());
     },

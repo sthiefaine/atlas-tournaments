@@ -1,0 +1,21 @@
+{
+  "id": "unite_drone_ravitailleur_base",
+  "revision": "03a17c270547ba508643986ece0023d01cc5ac953dcd0146113638d9a76ab852",
+  "octets": 1428392,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_drone_ravitailleur_base_albedo.png",
+      "unite_drone_ravitailleur_base_lod0.glb",
+      "unite_drone_ravitailleur_base_masque_equipe.png",
+      "unite_drone_ravitailleur_base_metal.png",
+      "unite_drone_ravitailleur_base_normale.png",
+      "unite_drone_ravitailleur_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

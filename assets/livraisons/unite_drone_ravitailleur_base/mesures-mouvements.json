@@ -1,0 +1,78 @@
+{
+  "id": "unite_drone_ravitailleur_base",
+  "methode": "Sommets transformés Three.js avec skin, 385 instants par clip et clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 437,
+      "enveloppe": {
+        "min": [
+          -0.43211894904268705,
+          0.05700001120567322,
+          -0.4256258741650228
+        ],
+        "max": [
+          0.43211894904268705,
+          0.6966735116221718,
+          0.4256258741650228
+        ]
+      },
+      "rayonHorizontalMax": 0.43691650436124035
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 417,
+      "enveloppe": {
+        "min": [
+          -0.43306483523237393,
+          0.05894541170037687,
+          -0.4282263091041343
+        ],
+        "max": [
+          0.43306483523237393,
+          0.7140566532522091,
+          0.4230381506425218
+        ]
+      },
+      "rayonHorizontalMax": 0.43929690564196056
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 387,
+      "enveloppe": {
+        "min": [
+          -0.4383367440172679,
+          0.05590144830891153,
+          -0.42729420445477007
+        ],
+        "max": [
+          0.4351076417107106,
+          0.7256000405519665,
+          0.42841328303988
+        ]
+      },
+      "rayonHorizontalMax": 0.4397100364547136
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 405,
+      "enveloppe": {
+        "min": [
+          -0.4300000071525574,
+          0.03280506551023504,
+          -0.42500001192092896
+        ],
+        "max": [
+          0.4370978008672628,
+          0.6850000023841858,
+          0.42613039898755173
+        ]
+      },
+      "rayonHorizontalMax": 0.4377288778019934
+    }
+  ],
+  "limites": [
+    "Échantillonnage numérique, sans contrôle visuel.",
+    "Aucun certificat de collisions internes ni de mélanges entre clips."
+  ]
+}

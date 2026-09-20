@@ -1,0 +1,86 @@
+{
+  "id": "unite_drone_ravitailleur_base",
+  "methode": "GLTFLoader natif avec seules références de cartes retirées en mémoire, SkeletonUtils.clone puis AnimationMixer et applyBoneTransform. Aucun rendu.",
+  "peauChargee": true,
+  "squelettesClonesIndependants": true,
+  "centresRotorsFixesDansCorps": true,
+  "axes": "+Y",
+  "rayonsRotors": [
+    0.16122190341028034,
+    0.1612219068466052
+  ],
+  "rayonInterieurGardeContinu": 0.1699247878917445,
+  "jeuxMinimauxRotorsGarde": [
+    0.008702884481464168,
+    0.008702881045139305
+  ],
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 442,
+      "min": [
+        -0.43211894904268705,
+        0.05700001120567322,
+        -0.4256258741650228
+      ],
+      "max": [
+        0.43211894904268705,
+        0.6966735146676641,
+        0.4256258741650228
+      ],
+      "rayon": 0.43691650436124035
+    },
+    {
+      "nom": "deplacement",
+      "poses": 417,
+      "min": [
+        -0.43306483523237393,
+        0.05894541170037687,
+        -0.4282263091041343
+      ],
+      "max": [
+        0.43306483523237393,
+        0.7140566564971736,
+        0.4230381506425218
+      ],
+      "rayon": 0.43929690564196056
+    },
+    {
+      "nom": "touche",
+      "poses": 387,
+      "min": [
+        -0.4383367440172679,
+        0.05590144830891153,
+        -0.42729420445477007
+      ],
+      "max": [
+        0.4351076417107106,
+        0.7256000433016149,
+        0.42841328303988
+      ],
+      "rayon": 0.4397100364547136
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 404,
+      "min": [
+        -0.4300000071525574,
+        0.03280506551023504,
+        -0.42500001192092896
+      ],
+      "max": [
+        0.4370978008672628,
+        0.6850000053644181,
+        0.42613039898755173
+      ],
+      "rayon": 0.4377288778019934
+    }
+  ],
+  "limites": [
+    "Géométrie neutre uniquement.",
+    "Jeu radial ciblé avec le carénage, pas de certification de toutes les collisions internes.",
+    "Textures non chargées et aucun rendu."
+  ],
+  "approbationArtistique": false
+}

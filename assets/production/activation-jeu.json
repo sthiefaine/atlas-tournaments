@@ -153,6 +153,14 @@
       "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_drone_ravitailleur_base",
+      "fichierActif": "public/assets/modeles/unite_drone_ravitailleur_base_lod0.glb",
+      "donnees": "../donnees/1fe7fd97653953437e8425d6829afc3500478063489de6c945f62208e936e22c.glb",
+      "revision": "03a17c270547ba508643986ece0023d01cc5ac953dcd0146113638d9a76ab852",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "motifs": [],
+  "acceptes": [
+    "unite_drone_ravitailleur_base_albedo.png",
+    "unite_drone_ravitailleur_base_lod0.glb",
+    "unite_drone_ravitailleur_base_masque_equipe.png",
+    "unite_drone_ravitailleur_base_metal.png",
+    "unite_drone_ravitailleur_base_normale.png",
+    "unite_drone_ravitailleur_base_rugosite.png"
+  ],
+  "inconnus": [],
+  "lodManquants": []
+}

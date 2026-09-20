@@ -16715,21 +16715,14 @@
     {
       "id": "unite_drone_ravitailleur_base",
       "fichiers": [
-        "unite_drone_ravitailleur_base_lod0.glb",
         "unite_drone_ravitailleur_base_albedo.png",
-        "unite_drone_ravitailleur_base_albedo_hiver.png",
-        "unite_drone_ravitailleur_base_normale.png",
-        "unite_drone_ravitailleur_base_normale_hiver.png",
-        "unite_drone_ravitailleur_base_rugosite.png",
-        "unite_drone_ravitailleur_base_rugosite_hiver.png",
-        "unite_drone_ravitailleur_base_metal.png",
-        "unite_drone_ravitailleur_base_metal_hiver.png",
+        "unite_drone_ravitailleur_base_lod0.glb",
         "unite_drone_ravitailleur_base_masque_equipe.png",
-        "unite_drone_ravitailleur_base_masque_equipe_hiver.png",
-        "unite_drone_ravitailleur_base_emission.png",
-        "unite_drone_ravitailleur_base_emission_hiver.png"
+        "unite_drone_ravitailleur_base_metal.png",
+        "unite_drone_ravitailleur_base_normale.png",
+        "unite_drone_ravitailleur_base_rugosite.png"
       ],
-      "revision": "d785fa68a9b5f7ce14186ce48a98a3d6fd093cbf3bd0df11fb93daa0c9783dc4"
+      "revision": "03a17c270547ba508643986ece0023d01cc5ac953dcd0146113638d9a76ab852"
     },
     {
       "id": "unite_furtif_base",

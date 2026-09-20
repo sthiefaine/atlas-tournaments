@@ -1,0 +1,209 @@
+{
+  "id": "unite_drone_ravitailleur_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_drone_ravitailleur_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 3008,
+  "budgetTriangles": 3500,
+  "octetsGlb": 257576,
+  "sha256Glb": "1fe7fd97653953437e8425d6829afc3500478063489de6c945f62208e936e22c",
+  "bornes": {
+    "min": [
+      -0.4300000071525574,
+      0.05700000405311584,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.4300000071525574,
+      0.6849999952316284,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.8600000143051147,
+      0.6279999911785126,
+      0.8500000238418579
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.43,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_grue": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.003,
+        -0.275
+      ]
+    },
+    "module_nacelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.025,
+        0
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.085,
+        -0.306
+      ]
+    },
+    "os_rotor_gauche": {
+      "parent": "corps",
+      "pivot": [
+        -0.225,
+        0.175,
+        0
+      ]
+    },
+    "os_rotor_droit": {
+      "parent": "corps",
+      "pivot": [
+        0.225,
+        0.175,
+        0
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "carenages_rotors": 672,
+    "croisillons_support_rotor": 48,
+    "moteurs_rotors": 128,
+    "moyeux_rotatifs": 128,
+    "capuchons_axes": 96,
+    "pales_composite": 224,
+    "bras_porteurs": 240,
+    "chassis_trapu": 60,
+    "capot_equipe_dessus": 60,
+    "pod_capteurs_avant": 60,
+    "cadre_vitrage_capteurs": 60,
+    "vitrage_capteurs_sans_passager": 60,
+    "bande_equipe_laterale": 120,
+    "grilles_service": 24,
+    "verrous_capot": 64,
+    "nacelle_logistique_fermee": 60,
+    "portes_equipe_nacelle": 120,
+    "verrous_verticaux_caisse": 48,
+    "poignees_caisse": 24,
+    "raidisseurs_caisse": 24,
+    "porte_frontale_nacelle": 60,
+    "boitier_connectique_ferme": 60,
+    "capuchons_connecteurs": 80,
+    "patins_atterrissage": 120,
+    "montants_train": 48,
+    "articulations_train": 128,
+    "charniere_grue": 48,
+    "bras_grue_replie": 60,
+    "retour_bras_grue": 60,
+    "pince_logistique_fermee": 12,
+    "temoin_disponibilite": 12
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_nacelle.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_nacelle.quaternion",
+        "module_grue.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_nacelle.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_nacelle.quaternion",
+        "module_grue.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "rotors": {
+    "noeuds": [
+      "os_rotor_gauche",
+      "os_rotor_droit"
+    ],
+    "axe": "+Y",
+    "maillage": "base",
+    "poidsRigides": true,
+    "rayonInterieurGarde": 0.171,
+    "animationGLB": true
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Deux rotors à poids rigides sur deux os, carénages fixes.",
+    "Nacelle fermée sans contenu ou personnage modélisé.",
+    "Bras logistique à articulation unique, sans simulation physique.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}
