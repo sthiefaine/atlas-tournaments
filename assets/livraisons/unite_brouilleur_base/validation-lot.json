@@ -1,0 +1,22 @@
+{
+  "id": "unite_brouilleur_base",
+  "revision": "7db4be306f1b2661e7234e8bbb467c488ac0664e217d5fecbdd8c680f28809b5",
+  "octets": 1592511,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_brouilleur_base_albedo.png",
+      "unite_brouilleur_base_emission.png",
+      "unite_brouilleur_base_lod0.glb",
+      "unite_brouilleur_base_masque_equipe.png",
+      "unite_brouilleur_base_metal.png",
+      "unite_brouilleur_base_normale.png",
+      "unite_brouilleur_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

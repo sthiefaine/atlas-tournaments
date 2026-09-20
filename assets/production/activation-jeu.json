@@ -121,6 +121,14 @@
       "revision": "e52406b527d0cce37bcb97f7c6048021aec30af6c99334f897c57ac92269ce71",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_brouilleur_base",
+      "fichierActif": "public/assets/modeles/unite_brouilleur_base_lod0.glb",
+      "donnees": "../donnees/3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d.glb",
+      "revision": "7db4be306f1b2661e7234e8bbb467c488ac0664e217d5fecbdd8c680f28809b5",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

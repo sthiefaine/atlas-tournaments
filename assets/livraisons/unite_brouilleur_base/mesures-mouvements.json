@@ -1,0 +1,92 @@
+{
+  "id": "unite_brouilleur_base",
+  "methode": "Sommets transformés Three.js, 193 instants par clip et clés exactes ; balayage radar 360° par pas de 1°.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 197,
+      "enveloppe": {
+        "min": [
+          -0.31599998474121094,
+          0,
+          -0.42500001192092896
+        ],
+        "max": [
+          0.31599998474121094,
+          0.5164100467059761,
+          0.42500001192092896
+        ]
+      },
+      "rayonHorizontalMax": 0.4957620294153135
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.3164338680155834,
+          0,
+          -0.4251177511885252
+        ],
+        "max": [
+          0.3164338680155834,
+          0.5253924948267036,
+          0.4251177511885252
+        ]
+      },
+      "rayonHorizontalMax": 0.4965443060827163
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.3180516282952826,
+          0,
+          -0.4252087171480661
+        ],
+        "max": [
+          0.3169973849487081,
+          0.5181284196070743,
+          0.42524468369707913
+        ]
+      },
+      "rayonHorizontalMax": 0.497608394808028
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 197,
+      "enveloppe": {
+        "min": [
+          -0.31599998474121094,
+          0,
+          -0.42512422077358525
+        ],
+        "max": [
+          0.31694774013047733,
+          0.5164100443124771,
+          0.42515421498977685
+        ]
+      },
+      "rayonHorizontalMax": 0.496908701278554
+    }
+  ],
+  "balayageRadar": {
+    "nombreEchantillons": 361,
+    "min": [
+      -0.31599998474121094,
+      0,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.31599998474121094,
+      0.5164100467059761,
+      0.42500001192092896
+    ],
+    "rayonHorizontalMax": 0.4957620294153135
+  },
+  "limites": [
+    "Échantillonnage numérique, sans contrôle visuel.",
+    "Aucun certificat de collision interne ni de mélanges entre clips."
+  ]
+}

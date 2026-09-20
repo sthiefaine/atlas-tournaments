@@ -43,6 +43,8 @@ const kitsActifs = spec.type === 'unite' ? readdirSync('public/assets/modeles').
 if (kitsActifs.length) throw new Error(`Vérifier puis archiver les alias des kits incompatibles avant intégration : ${kitsActifs.join(', ')}`);
 const revue = lireJson(path.join(preparation, 'revue-technique.json'));
 if (revue.id !== id || revue.approbationArtistique !== false) throw new Error('Compte rendu technique original requis, sans approbation artistique');
+// Lire aussi la documentation avant de toucher aux alias : un lot incomplet doit rester sans effet.
+const documents = ['README.md', 'revue-technique.json'].map(nom => ({ nom, octets: readFileSync(path.join(preparation, nom)) }));
 const exposition = lireJson('assets/production/exposition.json');
 const activation = lireJson('assets/production/activation-jeu.json');
 const hashRevision = createHash('sha256').update(JSON.stringify(spec));
@@ -80,7 +82,7 @@ for (const [i, f] of fichiers.entries()) {
 for (const dossier of [lot, 'public/assets/modeles', 'public/assets/candidats']) for (const nom of attendus) {
   if (!fichiers.some(f => f.nom === nom) && existeEntree(path.join(dossier, nom))) unlinkSync(path.join(dossier, nom));
 }
-for (const nom of ['README.md', 'revue-technique.json']) writeFileSync(path.join(lot, nom), readFileSync(path.join(preparation, nom)));
+for (const document of documents) writeFileSync(path.join(lot, document.nom), document.octets);
 const rapport = { id, revision, octets: fichiers.reduce((n, f) => n + f.octets.length, 0), verdict, approbationArtistique: false, integration: 'actif_creation_originale' };
 const date = new Date().toISOString().slice(0, 10);
 const source = { id, nature: 'creation_originale', date, scripts: `scripts/production/modeles/${id}`, fichiers: manifestes, verificationDistante: fiche.source.verificationDistante, archivePrecedente: precedents.length ? archive : null, precedents, approbationArtistique: false };

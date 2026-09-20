@@ -1,0 +1,106 @@
+{
+  "id": "unite_brouilleur_base",
+  "approbationArtistique": false,
+  "provenance": "Création originale paramétrique Three.js et NumPy/Pillow, aucun modèle ni PNG source importé, aucun service payant. Helpers locaux d’export/atlas/mesure réutilisés. Inventaire distant sans upload communiqué par le coordinateur, à revérifier avant intégration.",
+  "ancienCandidat": {
+    "sha256": "ad807880142fa7768789d7c0361aee2088e09a4a4c91b08ebc4f1de38f144231",
+    "triangles": 632,
+    "octetsGlb": 79508,
+    "nombrePngInspectes": 12,
+    "modifie": false
+  },
+  "livraison": {
+    "triangles": 5992,
+    "primitives": 6,
+    "materiaux": 2,
+    "dimensionsMetres": [
+      0.6319999694824219,
+      0.5164100467059761,
+      0.8500000238418579
+    ],
+    "octetsGlb": 422104,
+    "octetsGlbEtPng": 1592511,
+    "sha256Glb": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+    "fichiers": [
+      {
+        "nom": "unite_brouilleur_base_albedo.png",
+        "octets": 457274,
+        "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de"
+      },
+      {
+        "nom": "unite_brouilleur_base_emission.png",
+        "octets": 1015,
+        "sha256": "e41de5fa9452633a4368e1ed75e95b67ba1e047e10ba6a21d35598b38da0932c"
+      },
+      {
+        "nom": "unite_brouilleur_base_lod0.glb",
+        "octets": 422104,
+        "sha256": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d"
+      },
+      {
+        "nom": "unite_brouilleur_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_brouilleur_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_brouilleur_base_normale.png",
+        "octets": 584876,
+        "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e"
+      },
+      {
+        "nom": "unite_brouilleur_base_rugosite.png",
+        "octets": 126110,
+        "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92"
+      }
+    ]
+  },
+  "verification": {
+    "controleLot": "ok",
+    "typecheck": "ok",
+    "normalesUvTangentes": "Finies, unitaires/orthogonales ; aucun triangle géométrique ou UV dégénéré, aucune normale inversée, aucune superposition exacte dans une primitive.",
+    "canaux": "Albédo 1024², normale +Y 1024², rugosité G/métal B et canal métal éditable identiques 512², masque monochrome strict 0/255 et gris strict sous blanc, émission 512² exclusivement sur socle. PNG externes sans copie embarquée.",
+    "clips": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "bouclesFermees": true,
+    "racineIdentite": true,
+    "tientPoseFinaleHorsJeu": true,
+    "indicateurCacheHorsJeu": true,
+    "radarAnimeDansTousClips": true,
+    "posesMesurees": 779,
+    "rayonHorizontalMax": 0.4976083949042489,
+    "rayonHorizontalMajorationContinue": 0.4984273272979768,
+    "balayageRadar360": 0.4957620294153135,
+    "paraboleConcaviteMetres": 0.049999992946833674,
+    "ressortPasMetres": 0.024,
+    "ressortFilDiametreMetres": 0.0222
+  },
+  "corrections": [
+    "Budget initial 6 712 triangles ramené à 5 992 par simplification des petites tôles, pneus et ressort.",
+    "Ressort à trois tours et pas de 24 mm pour éviter les tours qui se recouvrent ; chapeau de liaison ajouté.",
+    "Supports et fouet épaissis, sans changement de budget."
+  ],
+  "limites": [
+    "Aucun test général, build, rendu, capture, inspection visuelle ni FPS téléphone. Lisibilité à 48 px/m non attestée.",
+    "Vitrages opaques sans intérieur ; atlas de matières répété. Pigments/microreliefs analytiques, aucun bake HD.",
+    "Pneus fixes : suspension du corps ; pas de rotation des roues. Fouet courbe animé par le pied, pas de déformation squelettique.",
+    "Les enveloppes majorent chaque clip isolé, sans mesurer les mélanges entre clips ni certifier les collisions internes."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-mouvements.json",
+    "mesures-poses-glb.json",
+    "controle-technique.json"
+  ]
+}

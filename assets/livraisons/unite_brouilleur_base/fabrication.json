@@ -1,0 +1,191 @@
+{
+  "id": "unite_brouilleur_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_brouilleur_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 5992,
+  "budgetTriangles": 6000,
+  "octetsGlb": 422104,
+  "sha256Glb": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d",
+  "bornes": {
+    "min": [
+      -0.31599998474121094,
+      0,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.31599998474121094,
+      0.5164100467059761,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.6319999694824219,
+      0.5164100467059761,
+      0.8500000238418579
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.003460297593846917,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.1834602975938469,
+        0
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.188,
+        -0.18
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "pivot": [
+        -0.215,
+        0.065,
+        -0.255
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0.11,
+        0.234,
+        0.27
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "pneus_tout_terrain": 1344,
+    "jantes_embouties": 384,
+    "moyeux": 240,
+    "crampons_moules": 864,
+    "garde_boue_individuels": 72,
+    "longerons": 24,
+    "essieux": 120,
+    "carters_differentiels": 180,
+    "plateau_porteur": 60,
+    "plancher_technique": 60,
+    "pare_chocs_souples": 120,
+    "cabine_avancee": 44,
+    "pavillon_cabine": 60,
+    "pare_brise_incline": 24,
+    "vitrages_lateraux": 24,
+    "portes": 120,
+    "poignees_portes": 24,
+    "marchepieds": 24,
+    "feux_avant": 24,
+    "nervures_pavillon": 24,
+    "grille_frontale": 12,
+    "coffrets_electroniques": 120,
+    "couvercles_coffrets": 24,
+    "ventilations_coffrets": 24,
+    "ailettes_refroidissement": 120,
+    "poignees_coffrets": 24,
+    "module_alimentation": 60,
+    "verrous_module": 24,
+    "couronne_radar": 80,
+    "colonne_radar": 48,
+    "etrier_radar": 24,
+    "axe_radar": 48,
+    "parabole_concave": 384,
+    "bord_parabole": 288,
+    "supports_recepteur": 96,
+    "recepteur_radar": 48,
+    "embase_antenne": 48,
+    "ressort_antenne": 460,
+    "chapeau_ressort": 12,
+    "fouet_epais": 120,
+    "embout_antenne": 32,
+    "temoin_disponibilite": 60
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe",
+    "emission"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_radar.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_radar.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion",
+        "module_radar.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_radar.quaternion",
+        "module_antenne.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "parabole": {
+    "rayon": 0.145,
+    "profondeur": 0.05,
+    "epaisseur": 0.012,
+    "angleVerticalDeg": 31.512678732,
+    "orientation": "+Z relevé vers +Y"
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Pneus rigides ; suspension portée par corps sans rotation de roues.",
+    "Fouet déformé statiquement et animé par rotation de son pied, sans peau souple.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}

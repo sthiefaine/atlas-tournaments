@@ -16606,21 +16606,15 @@
     {
       "id": "unite_brouilleur_base",
       "fichiers": [
-        "unite_brouilleur_base_lod0.glb",
         "unite_brouilleur_base_albedo.png",
-        "unite_brouilleur_base_albedo_hiver.png",
-        "unite_brouilleur_base_normale.png",
-        "unite_brouilleur_base_normale_hiver.png",
-        "unite_brouilleur_base_rugosite.png",
-        "unite_brouilleur_base_rugosite_hiver.png",
-        "unite_brouilleur_base_metal.png",
-        "unite_brouilleur_base_metal_hiver.png",
-        "unite_brouilleur_base_masque_equipe.png",
-        "unite_brouilleur_base_masque_equipe_hiver.png",
         "unite_brouilleur_base_emission.png",
-        "unite_brouilleur_base_emission_hiver.png"
+        "unite_brouilleur_base_lod0.glb",
+        "unite_brouilleur_base_masque_equipe.png",
+        "unite_brouilleur_base_metal.png",
+        "unite_brouilleur_base_normale.png",
+        "unite_brouilleur_base_rugosite.png"
       ],
-      "revision": "d0e58c53c988081f61d012dfb67f97192864d87ca2709faf65f1c5516d9c0fb7"
+      "revision": "7db4be306f1b2661e7234e8bbb467c488ac0664e217d5fecbdd8c680f28809b5"
     },
     {
       "id": "unite_char_leger_base",

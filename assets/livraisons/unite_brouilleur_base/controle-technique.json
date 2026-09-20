@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "motifs": [],
+  "acceptes": [
+    "unite_brouilleur_base_albedo.png",
+    "unite_brouilleur_base_emission.png",
+    "unite_brouilleur_base_lod0.glb",
+    "unite_brouilleur_base_masque_equipe.png",
+    "unite_brouilleur_base_metal.png",
+    "unite_brouilleur_base_normale.png",
+    "unite_brouilleur_base_rugosite.png"
+  ],
+  "inconnus": [],
+  "lodManquants": [],
+  "commande": "npm run controler:asset -- --spec assets/specs/unite_brouilleur_base.json --lot tmp/production-sequentielle/unite_brouilleur_base",
+  "typecheck": {
+    "commande": "npm run typecheck",
+    "codeSortie": 0
+  },
+  "date": "2026-09-20T11:20:53.806822+00:00",
+  "sha256GlbControle": "3ccb8934b954fe9d546e5112812958fb8e7b7b1a0d57f0326d48d9cae1daa82d"
+}

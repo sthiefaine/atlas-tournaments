@@ -1,0 +1,69 @@
+{
+  "triangles": 5992,
+  "primitives": 6,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 4.070630255093022e-08,
+  "tangentesErreurMax": 3.8374666333496066e-08,
+  "orthogonaliteErreurMax": 3.89915152387843e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_brouilleur_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "module_radar",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "indicateurCacheFinHorsJeu": true,
+  "radarAnimeDansTousClips": true,
+  "antenneAnimeeDansTousClips": true,
+  "emissionLimiteeAuSocle": true,
+  "normalePngLongueurErreurMax": 0.0022888070556024154,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    51,
+    233
+  ],
+  "paraboleConcaviteMetres": 0.05,
+  "paraboleMesure": "Sommets centre/bord/centre arrière du GLB, rotation de repos annulée.",
+  "ressortTours": 3,
+  "ressortPasMetres": 0.024,
+  "ressortDiametreFilMetres": 0.0222,
+  "paraboleConcaviteMesureeMetres": 0.049999992946833674,
+  "paraboleEpaisseurMesureeMetres": 0.012000012804436407
+}
