@@ -1,0 +1,101 @@
+{
+  "id": "unite_drone_base",
+  "approbationArtistique": false,
+  "date": "2026-09-20T13:31:40.237134+02:00",
+  "provenance": "Création originale de géométrie paramétrique Three.js, matériaux analytiques NumPy/Pillow ; helpers locaux d’export, atlas et mesure repris. Aucune géométrie ni PNG importé. Aucun upload signalé dans l’inventaire distant communiqué ; coordinateur chargé du dernier contrôle avant intégration.",
+  "ancienCandidat": {
+    "sha256": "0fe3811f7ef306039c5b2fd96d4c8b13c7f95cbf331d20824a690275e3e5cdea",
+    "triangles": 512,
+    "octetsGlb": 63048,
+    "nombrePngInspectes": 10,
+    "modifie": false
+  },
+  "livraison": {
+    "triangles": 3188,
+    "budgetTriangles": 3500,
+    "primitives": 5,
+    "materiaux": 2,
+    "dimensionsMetres": [
+      0.8960000276565552,
+      0.6843649861216545,
+      0.8960000276565552
+    ],
+    "octetsGlb": 220500,
+    "octetsGlbEtPng": 1389892,
+    "sha256Glb": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+    "fichiers": [
+      {
+        "nom": "unite_drone_base_albedo.png",
+        "octets": 457274,
+        "sha256": "f729889de4bb2f47e87f91e49a55fe90519b83663590abac89b6538afd57c8de"
+      },
+      {
+        "nom": "unite_drone_base_lod0.glb",
+        "octets": 220500,
+        "sha256": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219"
+      },
+      {
+        "nom": "unite_drone_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_drone_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_drone_base_normale.png",
+        "octets": 584876,
+        "sha256": "30a0496fc282fb2be55bb6affdc4773a666c22c1bd8e51ea569c4ee6b7a3855e"
+      },
+      {
+        "nom": "unite_drone_base_rugosite.png",
+        "octets": 126110,
+        "sha256": "ca9eb880924d6879c3ceac4212b52bc51356b247df9fb1ae256925a666a7fa92"
+      }
+    ]
+  },
+  "verification": {
+    "controleLot": "ok",
+    "typecheck": "ok",
+    "normalesUvTangentes": "UV0, normales et tangentes finies ; aucun triangle géométrique/UV dégénéré, aucune normale inversée, aucune superposition exacte dans une primitive.",
+    "canaux": "Albédo et normale +Y 1024² ; rugosité G/métal B, métal éditable et masque 512² ; noir/blanc strict 0/255, gris strict sous le blanc ; PNG externes.",
+    "clips": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "bouclesFermees": true,
+    "racineIdentite": true,
+    "tientPoseFinaleHorsJeu": true,
+    "indicateurCacheHorsJeu": true,
+    "rotorAnimeDansTousClips": true,
+    "posesMesurees": 849,
+    "rayonHorizontalMax": 0.46615914013437515,
+    "rayonHorizontalMajorationContinue": 0.46818282538776745,
+    "espacementMinimumVoisinsTousCaps": 0.06363434922446509,
+    "pointLePlusBasFinalHorsJeu": 0.003000007043418018,
+    "rotorMethodeMajoration": "Rayon horizontal invariant sous rotation de base ; roulis/tangage du corps borné analytiquement par rho + |y| sin(theta). Autres articulations : vitesse et demi-pas d’échantillonnage.",
+    "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici."
+  },
+  "corrections": [
+    "Abaissement hors jeu calculé sur les sommets après inclinaison finale pour maintenir une marge de 3 mm au sol."
+  ],
+  "limites": [
+    "Aucun test général, build, rendu, capture, contrôle visuel ni FPS téléphone ; lisibilité à caméra de jeu non attestée.",
+    "Verres opaques sans intérieur, atlas de matières répété ; microreliefs analytiques et aucun bake HD.",
+    "Rotations rigides ; rotor s’arrête sans simulation physique, fouet animé au pied et patins rigides.",
+    "Chaque clip isolé et GLB neutre seulement ; mélanges entre clips, déformations des gabarits nationaux runtime et intersections internes non certifiés."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-mouvements.json",
+    "mesures-poses-glb.json",
+    "controle-technique.json"
+  ]
+}

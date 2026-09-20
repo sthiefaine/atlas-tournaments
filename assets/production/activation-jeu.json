@@ -129,6 +129,14 @@
       "revision": "7db4be306f1b2661e7234e8bbb467c488ac0664e217d5fecbdd8c680f28809b5",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_drone_base",
+      "fichierActif": "public/assets/modeles/unite_drone_base_lod0.glb",
+      "donnees": "../donnees/706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219.glb",
+      "revision": "27a20d2e779b1d989221b9884f62548fe5d3196e1068648edc87e2699d6e20ef",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

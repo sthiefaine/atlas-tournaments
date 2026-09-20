@@ -1,0 +1,63 @@
+{
+  "triangles": 3188,
+  "primitives": 5,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 4.4215503258726585e-08,
+  "tangentesErreurMax": 4.119987284667559e-08,
+  "orthogonaliteErreurMax": 3.574637852388207e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_drone_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "indicateurCacheFinHorsJeu": true,
+  "rotorAnimeDansTousClips": true,
+  "antenneAnimeeDansTousClips": true,
+  "normalePngLongueurErreurMax": 0.0022888070556024154,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    51,
+    233
+  ],
+  "ressortTours": 2,
+  "ressortPasMetres": 0.024,
+  "ressortDiametreFilMetres": 0.021
+}

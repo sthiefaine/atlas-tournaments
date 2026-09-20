@@ -1,0 +1,132 @@
+{
+  "id": "unite_drone_base",
+  "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js avant export à 2 µm près. Majoration continue du corps/antenne par vitesse maximale et demi-pas ; rotor traité analytiquement par rho + |y| sin(theta) pour toute rotation des pales.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 250,
+      "enveloppe": {
+        "min": [
+          -0.4480000737460354,
+          0.06663504242897034,
+          -0.44800007374603545
+        ],
+        "max": [
+          0.4480000737460354,
+          0.7670000311732292,
+          0.44800007374603545
+        ]
+      },
+      "rayonHorizontalMax": 0.4482856370824922,
+      "vitesseMajoreeMetresSeconde": 0.026258233368282292,
+      "rayonHorizontalMajorationContinue": 0.44844975104756524,
+      "espacementMinimumVoisinsTousCaps": 0.10310049790486953,
+      "racineIdentite": true,
+      "rotorRayonLocal": 0.44828563708249186,
+      "rotorDistanceYMaxAuPivotCorps": 0.42700002759695055,
+      "corpsAngleRotationMaxRadians": 0.0,
+      "rotorMajorationAnalytiqueContinue": 0.44828563708249186
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.4541218832790447,
+          0.07206692076920751,
+          -0.4373394259248947
+        ],
+        "max": [
+          0.4541218832790446,
+          0.7655515952969916,
+          0.4585506489326588
+        ]
+      },
+      "rayonHorizontalMax": 0.46016647730955845,
+      "vitesseMajoreeMetresSeconde": 0.08033278153585667,
+      "rayonHorizontalMajorationContinue": 0.46110073744322294,
+      "espacementMinimumVoisinsTousCaps": 0.07779852511355412,
+      "racineIdentite": true,
+      "rotorRayonLocal": 0.44828563708249186,
+      "rotorDistanceYMaxAuPivotCorps": 0.42700002759695055,
+      "corpsAngleRotationMaxRadians": 0.030016449902511164,
+      "rotorMajorationAnalytiqueContinue": 0.46110073744322294
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.46002420608985517,
+          0.06468972178014898,
+          -0.452920424261345
+        ],
+        "max": [
+          0.45533403997658944,
+          0.7610461426079181,
+          0.456642806387569
+        ]
+      },
+      "rayonHorizontalMax": 0.46615914013437515,
+      "vitesseMajoreeMetresSeconde": 0.5121938318399273,
+      "rayonHorizontalMajorationContinue": 0.46818282538776745,
+      "espacementMinimumVoisinsTousCaps": 0.06363434922446509,
+      "racineIdentite": true,
+      "rotorRayonLocal": 0.44828563708249186,
+      "rotorDistanceYMaxAuPivotCorps": 0.42700002759695055,
+      "corpsAngleRotationMaxRadians": 0.04661450738530324,
+      "rotorMajorationAnalytiqueContinue": 0.46818282538776745
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 212,
+      "enveloppe": {
+        "min": [
+          -0.4480000138282776,
+          0.003000007043418018,
+          -0.4480000138282776
+        ],
+        "max": [
+          0.4553340404911185,
+          0.7570000407099724,
+          0.4549335933792759
+        ]
+      },
+      "rayonHorizontalMax": 0.4576552569135694,
+      "vitesseMajoreeMetresSeconde": 0.23787698254632417,
+      "rayonHorizontalMajorationContinue": 0.45885651413445305,
+      "espacementMinimumVoisinsTousCaps": 0.0822869717310939,
+      "racineIdentite": true,
+      "rotorRayonLocal": 0.44828563708249186,
+      "rotorDistanceYMaxAuPivotCorps": 0.42700002759695055,
+      "corpsAngleRotationMaxRadians": 0.024758680148812176,
+      "rotorMajorationAnalytiqueContinue": 0.45885651413445305
+    }
+  ],
+  "borneAnalytiqueTemoin": 0.2643921032443949,
+  "bornesStatiques": {
+    "min": [
+      -0.4480000138282776,
+      0.07263504147529604,
+      -0.4480000138282776
+    ],
+    "max": [
+      0.4480000138282776,
+      0.7570000275969506,
+      0.4480000138282776
+    ],
+    "dimensions": [
+      0.8960000276565552,
+      0.6843649861216545,
+      0.8960000276565552
+    ]
+  },
+  "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon majoré continûment.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+    "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+  ]
+}

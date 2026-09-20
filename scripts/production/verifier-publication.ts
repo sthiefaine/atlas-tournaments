@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { estInventaireModeles } from '../../src/assets/spec';
 
 async function verifier() {
   const id = process.argv[2];
@@ -33,7 +34,17 @@ async function verifier() {
       fichier: bloc[i]!.nom, conforme: false, erreur: r.reason instanceof Error ? r.reason.message : 'Lecture distante impossible',
     }));
   }
-  const conforme = resultats.every(r => r.conforme);
+  let inventaire: { conforme: boolean; status?: number; erreur?: string };
+  try {
+    const r = await fetch(`https://${domaine}/api/modeles`, {
+      cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000),
+    });
+    const contenu: unknown = r.ok ? await r.json() : null;
+    inventaire = { status: r.status, conforme: r.ok && estInventaireModeles(contenu) && contenu.modeles[id]?.includes(0) === true };
+  } catch (e) {
+    inventaire = { conforme: false, erreur: e instanceof Error ? e.message : 'Inventaire distant impossible' };
+  }
+  const conforme = resultats.every(r => r.conforme) && inventaire.conforme;
   if (conforme) {
     // Relire après le réseau pour conserver une éventuelle mise à jour du coordinateur.
     const chemin = 'assets/production/plan-modeles-3d.json';
@@ -42,11 +53,11 @@ async function verifier() {
     if (!modele || modele.actuel?.sha256 !== glb.sha256) throw new Error('Inventaire actif modifié ou périmé');
     modele.suivi.deploiement = {
       date: new Date().toISOString(), domaine, glbEtPngConformesSha256: true,
-      fichiersVerifies: fichiers.length, controleVisuel: false,
+      fichiersVerifies: fichiers.length, presentInventaireJeu: true, controleVisuel: false,
     };
     writeFileSync(chemin, JSON.stringify(plan, null, 2) + '\n');
   }
-  console.log(JSON.stringify({ id, conforme, resultats }));
+  console.log(JSON.stringify({ id, conforme, inventaire, resultats }));
   if (!conforme) process.exitCode = 2;
 }
 void verifier().catch(e => { console.error(e instanceof Error ? e.message : 'Vérification impossible'); process.exitCode = 1; });

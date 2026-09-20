@@ -1,0 +1,21 @@
+{
+  "id": "unite_drone_base",
+  "revision": "27a20d2e779b1d989221b9884f62548fe5d3196e1068648edc87e2699d6e20ef",
+  "octets": 1389892,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_drone_base_albedo.png",
+      "unite_drone_base_lod0.glb",
+      "unite_drone_base_masque_equipe.png",
+      "unite_drone_base_metal.png",
+      "unite_drone_base_normale.png",
+      "unite_drone_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

@@ -1,0 +1,173 @@
+{
+  "id": "unite_drone_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_drone_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 3188,
+  "budgetTriangles": 3500,
+  "octetsGlb": 220500,
+  "sha256Glb": "706f28c6f7bfba4e451b6961397e8f27483fbe9e9ecc39ef3864981ea469f219",
+  "bornes": {
+    "min": [
+      -0.4480000138282776,
+      0.07263504147529604,
+      -0.4480000138282776
+    ],
+    "max": [
+      0.4480000138282776,
+      0.7570000275969506,
+      0.4480000138282776
+    ],
+    "dimensions": [
+      0.8960000276565552,
+      0.6843649861216545,
+      0.8960000276565552
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.33,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.395,
+        0
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "pivot": [
+        -0.158,
+        0.082,
+        -0.176
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0.112,
+        0.104,
+        0.185
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "plateau_porteur": 60,
+    "capot_plateau": 60,
+    "batteries_laterales": 120,
+    "verrous_batteries": 48,
+    "grilles_laterales": 24,
+    "ailettes_echangeur": 96,
+    "prise_arriere": 60,
+    "nacelle_capteur": 60,
+    "couvercle_nacelle": 60,
+    "couronne_optique": 96,
+    "joint_optique": 96,
+    "lentille_optique": 96,
+    "capteurs_stereo": 80,
+    "verres_stereo": 80,
+    "patins_landing": 288,
+    "jambes_aterrissage": 128,
+    "traverses_train": 64,
+    "assise_moteur": 80,
+    "moteur_rotor": 80,
+    "ailettes_moteur": 320,
+    "mat_rotor": 64,
+    "palier_inferieur": 64,
+    "pales_composites": 304,
+    "attaches_pales": 160,
+    "moyeu_quadripale": 80,
+    "capuchon_moyeu": 64,
+    "embase_antenne": 48,
+    "ressort_deux_tours": 320,
+    "chapeau_ressort": 12,
+    "fouet_epais": 32,
+    "embout_fouet": 32,
+    "temoin_disponibilite": 12
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "base.quaternion",
+        "corps.position",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "base.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "base.quaternion",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "base.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "rotor": {
+    "pales": 4,
+    "rayonMax": 0.45,
+    "noeud": "base",
+    "axe": "+Y",
+    "animationGLB": true
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Patins rigides ; mouvement porté par corps.",
+    "Fouet animé par rotation de son pied, sans peau souple.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}
