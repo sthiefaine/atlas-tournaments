@@ -16835,19 +16835,14 @@
     {
       "id": "unite_missiles_sol_base",
       "fichiers": [
-        "unite_missiles_sol_base_lod0.glb",
         "unite_missiles_sol_base_albedo.png",
-        "unite_missiles_sol_base_albedo_hiver.png",
-        "unite_missiles_sol_base_normale.png",
-        "unite_missiles_sol_base_normale_hiver.png",
-        "unite_missiles_sol_base_rugosite.png",
-        "unite_missiles_sol_base_rugosite_hiver.png",
-        "unite_missiles_sol_base_metal.png",
-        "unite_missiles_sol_base_metal_hiver.png",
+        "unite_missiles_sol_base_lod0.glb",
         "unite_missiles_sol_base_masque_equipe.png",
-        "unite_missiles_sol_base_masque_equipe_hiver.png"
+        "unite_missiles_sol_base_metal.png",
+        "unite_missiles_sol_base_normale.png",
+        "unite_missiles_sol_base_rugosite.png"
       ],
-      "revision": "d527e79acc2d58283aff25778c37fd2922411ba95a7b8001f50e470719eb796d"
+      "revision": "6df5c1ad772cbd29b374e43a29b46abc7a5e72c896b02102d0efdf3ba8e912aa"
     },
     {
       "id": "unite_porte_avions_base",

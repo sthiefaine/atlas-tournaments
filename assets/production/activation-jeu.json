@@ -209,6 +209,14 @@
       "revision": "b6ababd445a76e3a15e24ff4dd4b0329fae138a1512800be181fd69e4e9154c1",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_missiles_sol_base",
+      "fichierActif": "public/assets/modeles/unite_missiles_sol_base_lod0.glb",
+      "donnees": "../donnees/5c34035746fd011133f0daa72e0734073aeb12de142401617055338842ae2980.glb",
+      "revision": "6df5c1ad772cbd29b374e43a29b46abc7a5e72c896b02102d0efdf3ba8e912aa",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

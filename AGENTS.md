@@ -38,6 +38,10 @@ Veilleur poussé en `078cb52` puis confirmé en ligne par SHA du GLB et des cinq
 
 Lance-missiles sol-air intégré : 8 868 triangles, huit primitives, 1 818 001 octets. Six pneus au sol, six logements creux et radar tournant ; 976 poses, rayon continu majoré 0,485402 m, 26 dégagements localisés et 102 sondes des ouvertures. Vitrages et supports corrigés avant livraison. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Vingt-cinq modèles livrés.
 
+Lance-missiles sol-air poussé en `211ef1e`, GLB et cinq PNG confirmés en ligne par SHA avec présence dans l’inventaire. Modèle suivant en cours : `unite_missiles_sol_base`, spécialiste `modele_22_missiles_sol`, création originale sans upload ni ancien actif/kit. Seuls ses scripts et staging peuvent changer ; attendre son FINAL gelé avant intégration. Ancien candidat SHA `d5560e1609dcbeb4fab3b7df545dcc81732985c9197c7c41223a3d63ed05a08e`. Aucun nouveau test général, rendu ou mesure téléphone.
+
+Lance-missiles sol-sol intégré : 8 980 triangles, huit primitives, 1 837 485 octets. Deux chenilles à dix galets et 92 patins, huit logements creux sur caisson inclinable, fouet sur ressort ; 976 poses par gabarit a/b, rayons continus majorés 0,478877 / 0,498268 m. Galets voisins et suspension corrigés ; 41 distances positives, 136 sondes internes et 272 sondes de tir libres devant la cabine. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Vingt-six modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

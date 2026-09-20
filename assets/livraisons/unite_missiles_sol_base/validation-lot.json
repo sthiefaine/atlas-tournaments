@@ -1,0 +1,21 @@
+{
+  "id": "unite_missiles_sol_base",
+  "revision": "6df5c1ad772cbd29b374e43a29b46abc7a5e72c896b02102d0efdf3ba8e912aa",
+  "octets": 1837485,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_missiles_sol_base_albedo.png",
+      "unite_missiles_sol_base_lod0.glb",
+      "unite_missiles_sol_base_masque_equipe.png",
+      "unite_missiles_sol_base_metal.png",
+      "unite_missiles_sol_base_normale.png",
+      "unite_missiles_sol_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

@@ -1,0 +1,101 @@
+{
+  "id": "unite_missiles_sol_base",
+  "sha256Glb": "5c34035746fd011133f0daa72e0734073aeb12de142401617055338842ae2980",
+  "gabarit": "a",
+  "methode": "Relecture NumPy du GLB, transformation S(.9,.98,1.06) @ RY(pi/2) après les animations, conformément à conformerModele ; majoration continue par vitesse bornée b × 1.06 et témoin local × 1.06.",
+  "origineRuntime": "src/render3d/modeles.ts PROPORTIONS et conformerModele ; src/assets/spec.ts gabaritDe utilise a si la clé manque au style.",
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 194,
+      "rayonHorizontalMax": 0.4773578952040435,
+      "rayonHorizontalMajorationContinue": 0.47742335188521723,
+      "ecartDeuxVoisinsTousCaps": 0.04515329622956554,
+      "min": [
+        -0.4063499987125397,
+        0.0,
+        -0.3455600053071976
+      ],
+      "max": [
+        0.4063499987125397,
+        0.6185966155724142,
+        0.3455600053071976
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "rayonHorizontalMax": 0.4773578952040435,
+      "rayonHorizontalMajorationContinue": 0.4775728443614795,
+      "ecartDeuxVoisinsTousCaps": 0.04485431127704098,
+      "min": [
+        -0.4063499987125397,
+        0.0,
+        -0.3455600053071976
+      ],
+      "max": [
+        0.4063499987125397,
+        0.6216560172533068,
+        0.3455600053071976
+      ]
+    },
+    {
+      "nom": "tir",
+      "poses": 198,
+      "rayonHorizontalMax": 0.4773578952040435,
+      "rayonHorizontalMajorationContinue": 0.4788769597158079,
+      "ecartDeuxVoisinsTousCaps": 0.04224608056838419,
+      "min": [
+        -0.41229969344251954,
+        0.0,
+        -0.3455600053071976
+      ],
+      "max": [
+        0.4063499987125397,
+        0.6283531948899589,
+        0.3455600053071976
+      ]
+    },
+    {
+      "nom": "touche",
+      "poses": 196,
+      "rayonHorizontalMax": 0.4773578952040435,
+      "rayonHorizontalMajorationContinue": 0.47782870918429765,
+      "ecartDeuxVoisinsTousCaps": 0.0443425816314047,
+      "min": [
+        -0.4063499987125397,
+        0.0,
+        -0.3455600053071976
+      ],
+      "max": [
+        0.4063499987125397,
+        0.6206109584799213,
+        0.3455600053071976
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 195,
+      "rayonHorizontalMax": 0.4773578952040435,
+      "rayonHorizontalMajorationContinue": 0.4775775893557226,
+      "ecartDeuxVoisinsTousCaps": 0.044844821288554826,
+      "min": [
+        -0.4063499987125397,
+        0.0,
+        -0.3455600053071976
+      ],
+      "max": [
+        0.4063499987125397,
+        0.6183842583918571,
+        0.3455600053071976
+      ]
+    }
+  ],
+  "limites": [
+    "Chaque clip isolé ; transitions entre clips exclues.",
+    "Contrôle numérique d’enveloppe, pas de rendu, FPS ou approbation artistique.",
+    "Les distances internes b restent positives après cette application affine inversible, mais leur valeur est transformée.",
+    "Gabarit c non certifié."
+  ],
+  "approbationArtistique": false
+}

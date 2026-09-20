@@ -1,0 +1,92 @@
+{
+  "id": "unite_missiles_sol_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.32600000500679016,
+          0,
+          -0.4514999985694885
+        ],
+        "max": [
+          0.32600000500679016,
+          0.631221036310591,
+          0.4514999985694885
+        ]
+      },
+      "rayonHorizontalMax": 0.49135351049779374
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.32600000500679016,
+          0,
+          -0.4514999985694885
+        ],
+        "max": [
+          0.32600000500679016,
+          0.6343428747324231,
+          0.4514999985694885
+        ]
+      },
+      "rayonHorizontalMax": 0.49135351049779374
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 198,
+      "enveloppe": {
+        "min": [
+          -0.32600000500679016,
+          0,
+          -0.45811077182275384
+        ],
+        "max": [
+          0.32600000500679016,
+          0.641176731222101,
+          0.4514999985694885
+        ]
+      },
+      "rayonHorizontalMax": 0.49683475306688235
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.32600000500679016,
+          0,
+          -0.4514999985694885
+        ],
+        "max": [
+          0.32600000500679016,
+          0.6332764882351787,
+          0.4514999985694885
+        ]
+      },
+      "rayonHorizontalMax": 0.49135351049779374
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.32600000500679016,
+          0,
+          -0.4514999985694885
+        ],
+        "max": [
+          0.32600000500679016,
+          0.6310043452978134,
+          0.4514999985694885
+        ]
+      },
+      "rayonHorizontalMax": 0.49135351049779374
+    }
+  ],
+  "approbationArtistique": false
+}

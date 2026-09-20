@@ -1,0 +1,88 @@
+{
+  "triangles": 8980,
+  "primitives": 8,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.2949351247424374e-08,
+  "tangentesErreurMax": 4.0239556353682815e-08,
+  "orthogonaliteErreurMax": 4.1868211647644316e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_missiles_sol_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "module_lance_roquettes",
+    "os_recul",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "normalePngLongueurErreurMax": 0.002779681475911344,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    50,
+    234
+  ],
+  "continuitesBoucles": [
+    {
+      "clip": "repos",
+      "noeud": "module_antenne",
+      "canal": "rotation",
+      "erreurVitesseJointure": 5.960462678977763e-09,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "translation",
+      "erreurVitesseJointure": 5.960464477539063e-08,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "module_antenne",
+      "canal": "rotation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    }
+  ]
+}
