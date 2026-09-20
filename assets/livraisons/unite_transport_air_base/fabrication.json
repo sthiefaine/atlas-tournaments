@@ -1,0 +1,173 @@
+{
+  "id": "unite_transport_air_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 4508,
+  "budgetTriangles": 6000,
+  "octetsGlb": 263556,
+  "sha256Glb": "2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322",
+  "bornes": {
+    "min": [
+      -0.4169999957084656,
+      0,
+      -0.4169999957084656
+    ],
+    "max": [
+      0.4169999957084656,
+      0.6439999936819076,
+      0.4169999957084656
+    ],
+    "dimensions": [
+      0.8339999914169312,
+      0.6439999936819076,
+      0.8339999914169312
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "p": [
+        0,
+        -0.2,
+        0
+      ]
+    },
+    "os_rotor": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.403,
+        0
+      ]
+    },
+    "module_grue": {
+      "parent": "corps",
+      "p": [
+        0.112,
+        0.042,
+        -0.102
+      ]
+    },
+    "os_grue_coude": {
+      "parent": "module_grue",
+      "p": [
+        0,
+        0.108,
+        -0.174
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "p": [
+        -0.097,
+        0.229,
+        0.13
+      ]
+    }
+  },
+  "noeuds": [
+    "racine",
+    "corps",
+    "base",
+    "os_rotor",
+    "module_grue",
+    "os_grue_coude",
+    "socle"
+  ],
+  "bilanTriangles": {
+    "plateau_chassis": 44,
+    "cabine": 24,
+    "pilier_arriere_g": 12,
+    "pilier_arriere_d": 12,
+    "pavillon_cabine": 28,
+    "pylone_g": 48,
+    "pylone_d": 48,
+    "plancher_cargo": 28,
+    "jambe_g_-0.203": 48,
+    "fourreau_g_-0.203": 64,
+    "jambe_g_0.158": 48,
+    "fourreau_g_0.158": 64,
+    "rebord_g": 28,
+    "anneau_arrimage_g_-0.266": 144,
+    "anneau_arrimage_g_-0.115": 144,
+    "marche_cabine_g": 28,
+    "jambe_d_-0.203": 48,
+    "fourreau_d_-0.203": 64,
+    "jambe_d_0.158": 48,
+    "fourreau_d_0.158": 64,
+    "rebord_d": 28,
+    "anneau_arrimage_d_-0.266": 144,
+    "anneau_arrimage_d_-0.115": 144,
+    "marche_cabine_d": 28,
+    "vitre_laterale_g": 16,
+    "montant_lateral_g": 12,
+    "porte_basse_g": 28,
+    "poignee_g": 32,
+    "vitre_laterale_d": 16,
+    "montant_lateral_d": 12,
+    "porte_basse_d": 28,
+    "poignee_d": 32,
+    "pare_brise": 28,
+    "montant_pare_brise": 12,
+    "bloc_moteur": 44,
+    "grille_moteur_g": 28,
+    "echappement_g": 96,
+    "grille_moteur_d": 28,
+    "echappement_d": 96,
+    "embase_mat": 96,
+    "mat_rotor": 96,
+    "palier_rotor": 96,
+    "platine_grue": 80,
+    "berceau_grue": 28,
+    "coffre_cargo": 28,
+    "couvercle_cargo": 28,
+    "sangle_haut_-0.271": 12,
+    "sangle_cote_-1_-0.271": 12,
+    "sangle_cote_1_-0.271": 12,
+    "sangle_haut_-0.203": 12,
+    "sangle_cote_-1_-0.203": 12,
+    "sangle_cote_1_-0.203": 12,
+    "support_temoin": 28,
+    "patin_g": 480,
+    "patin_d": 480,
+    "chapeau_rotor": 360,
+    "moyeu_rotor": 96,
+    "pale_0": 20,
+    "attache_pale_0": 12,
+    "pale_1": 20,
+    "attache_pale_1": 12,
+    "pale_2": 20,
+    "attache_pale_2": 12,
+    "pale_3": 20,
+    "attache_pale_3": 12,
+    "bras_grue": 12,
+    "axe_epaule": 80,
+    "axe_coude": 80,
+    "avant_bras_grue": 12,
+    "poulie_crochet": 80,
+    "suspente_crochet": 40,
+    "crochet": 192,
+    "temoin": 28
+  },
+  "approbationArtistique": false
+}

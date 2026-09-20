@@ -1,0 +1,162 @@
+{
+  "id": "unite_transport_air_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/unite_transport_air_base",
+  "fichiers": [
+    {
+      "nom": "unite_transport_air_base_albedo.png",
+      "sha256": "491d3eab81bd605a5cfa5f912e2d1001baa2da06a33b3efec5696d4635ed045a",
+      "octets": 457794
+    },
+    {
+      "nom": "unite_transport_air_base_lod0.glb",
+      "sha256": "2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322",
+      "octets": 263556
+    },
+    {
+      "nom": "unite_transport_air_base_masque_equipe.png",
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
+    },
+    {
+      "nom": "unite_transport_air_base_metal.png",
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
+    },
+    {
+      "nom": "unite_transport_air_base_normale.png",
+      "sha256": "6a7805c84b217a816ce9a5a1b80064e79dc92cb787003289c6dd7de63d03c8f8",
+      "octets": 584699
+    },
+    {
+      "nom": "unite_transport_air_base_rugosite.png",
+      "sha256": "0b99bc94edb1bef58641797ce03ecb434719a5bb7cc3431116bb62298abb0efb",
+      "octets": 126285
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T15:46:55.150Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/unite_transport_air_base/avant-379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_lod0.glb",
+      "sha256": "379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659",
+      "octets": 70316
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/unite_transport_air_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_lod0.glb",
+      "sha256": "379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659",
+      "octets": 70316
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_transport_air_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

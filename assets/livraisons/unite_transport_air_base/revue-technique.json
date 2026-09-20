@@ -1,0 +1,282 @@
+{
+  "id": "unite_transport_air_base",
+  "dateRevueUtc": "2026-09-20T15:46:27.560157+00:00",
+  "statut": "pret_a_integrer_par_coordinateur",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "scripts": "scripts/production/modeles/unite_transport_air_base",
+    "sourceExterneUtilisee": false,
+    "ancienCandidatImporte": false,
+    "bakeHD": false,
+    "ancienCandidat": {
+      "sha256Glb": "379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659",
+      "triangles": 576,
+      "octetsGlb": 70316,
+      "pngInspectes": 10,
+      "empreintesReverifieesAvantGel": true
+    },
+    "verificationDistanteCommuniquee": {
+      "date": "2026-09-20T15:32:10.512Z",
+      "nombreDepots": 0,
+      "origine": "Coordinateur, lecture authentifiée réussie ; revalidation avant intégration à sa charge."
+    },
+    "rapportLocal": "provenance.json"
+  },
+  "sha256Glb": "2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322",
+  "triangles": 4508,
+  "budgetTriangles": 6000,
+  "primitives": 9,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "dimensionsMetres": [
+    0.8339999914169312,
+    0.6439999936819076,
+    0.8339999914169312
+  ],
+  "octetsGlb": 263556,
+  "octetsLot": 1433466,
+  "fichiers": [
+    {
+      "nom": "unite_transport_air_base_albedo.png",
+      "octets": 457794,
+      "sha256": "491d3eab81bd605a5cfa5f912e2d1001baa2da06a33b3efec5696d4635ed045a"
+    },
+    {
+      "nom": "unite_transport_air_base_lod0.glb",
+      "octets": 263556,
+      "sha256": "2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322"
+    },
+    {
+      "nom": "unite_transport_air_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_transport_air_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_transport_air_base_normale.png",
+      "octets": 584699,
+      "sha256": "6a7805c84b217a816ce9a5a1b80064e79dc92cb787003289c6dd7de63d03c8f8"
+    },
+    {
+      "nom": "unite_transport_air_base_rugosite.png",
+      "octets": 126285,
+      "sha256": "0b99bc94edb1bef58641797ce03ecb434719a5bb7cc3431116bb62298abb0efb"
+    }
+  ],
+  "clips": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "controles": {
+    "lot": {
+      "ok": true,
+      "rapport": "validation-lot.json"
+    },
+    "typage": {
+      "ok": true,
+      "rapport": "validation-typage.json"
+    },
+    "geometrieEtPng": "mesures-geometrie.json",
+    "posesThree": "mesures-poses-three-glb.json",
+    "posesNumpy": "mesures-poses-glb.json",
+    "gabaritsABC": "mesures-gabarits.json",
+    "chargementNatif": "mesures-natif-glb.json",
+    "mecanique": "mesures-jeux.json"
+  },
+  "mesuresResume": {
+    "posesParGabarit": 805,
+    "pariteNumpyThreeNatifToleranceMetres": 2e-06,
+    "rayonsMajoresABC": {
+      "a": 0.45681405163647415,
+      "b": 0.4310158479903415,
+      "c": 0.49128418748100233
+    },
+    "espaceDeuxVoisinsABC": {
+      "a": 0.0863718967270517,
+      "b": 0.13796830401931703,
+      "c": 0.017431625037995335
+    },
+    "raccordsIntentionnels": 51,
+    "rotor": {
+      "rayonPales": 0.41723494152930196,
+      "palesPalierSeparationYContinue": 0.009999978423118616,
+      "palesMatSeparationYContinue": 0.004500019431114222,
+      "axe": "+Y",
+      "nombrePales": 4
+    },
+    "jeuMinimumCrochetBrasAuxPoses": 0.009721803704938673,
+    "palesGrueMinimumSeparationYAuxPoses": 0.1961125307305706,
+    "grueCabineMinimumSeparationZAuxPoses": 0.14780062354795992,
+    "sondesPlancherOuvert": 16,
+    "racineNonAnimee": true,
+    "tempsAnimationsMinMaxConserves": true,
+    "bouclesPoseEtVitesse": true,
+    "horsJeuTientPoseEtMasqueTemoin": true
+  },
+  "correctionsAvantGel": [
+    "Patins cintrés remontés du dépassement réel mesuré de leur courbe, pour un minimum Y exactement nul.",
+    "Coude de grue replié dans le sens qui conserve le crochet au-dessus du bras ; seuil de garde choisi de 3 mm, pas une exigence chiffrée de la spec."
+  ],
+  "limites": [
+    "Aucun rendu, capture, contrôle visuel ni approbation artistique.",
+    "Aucun test général, build, téléphone ou FPS.",
+    "Clips isolés ; transitions et mélanges exclus.",
+    "Sol et jeux aux poses, rayon majoré continûment pour a/b/c.",
+    "Distances locales et sondes ponctuelles ; aucune certification globale des collisions.",
+    "Capteurs opaques, quatre pales rigides et atlas répété.",
+    "Aucun HD ni bake ; lisibilité à apprécier humainement."
+  ],
+  "rapports": [
+    {
+      "nom": "README.md",
+      "octets": 6061,
+      "sha256": "ec43e0c9199920587940c774babf0293ccdc6b13dfe9693d32bceff2a32b7048"
+    },
+    {
+      "nom": "controle-lot.log",
+      "octets": 583,
+      "sha256": "fd01e7bb1370fab18eec236e81b0666a41dc14bd295afdcece861c919431dac0"
+    },
+    {
+      "nom": "controle-typage.log",
+      "octets": 73,
+      "sha256": "21220d5b953fa551f872f274dfec95a81ee2fbb11bd24440ba1ea1ec80fe56ae"
+    },
+    {
+      "nom": "fabrication.json",
+      "octets": 3482,
+      "sha256": "0d1d5c23443c8feca7c5eaf6e515fc5303fd15cac3c358ee695f4fbb642f33ee"
+    },
+    {
+      "nom": "inspection-ancien-candidat.json",
+      "octets": 8644,
+      "sha256": "d268584e4611b1e6695de5e28090b185613c926e5214141869a98753032456f8"
+    },
+    {
+      "nom": "mesures-gabarits.json",
+      "octets": 6407,
+      "sha256": "2fc2e4dabf697dd2ffd11d82460a4f56691157c3a697be1e94c8656dcbd33eac"
+    },
+    {
+      "nom": "mesures-geometrie.json",
+      "octets": 2413,
+      "sha256": "e9c2cd1739285e43136e4c73b344f976a6bcae317b28d83e6d555fb7eb092f03"
+    },
+    {
+      "nom": "mesures-jeux.json",
+      "octets": 20696,
+      "sha256": "ebb0967d228262b721917fc7471c6b291ec79ec7145ffb3269a86ec9a60b626b"
+    },
+    {
+      "nom": "mesures-natif-glb.json",
+      "octets": 1783,
+      "sha256": "212b9b97e3c8d877c75e135c12b6a7668e9981b33682fe2cc4cddeb763cb1927"
+    },
+    {
+      "nom": "mesures-poses-glb.json",
+      "octets": 3700,
+      "sha256": "433588c93ab28719f0cf002114eea7e9c9ee38e8b978f9bb0ee46ebec859c109"
+    },
+    {
+      "nom": "mesures-poses-three-glb.json",
+      "octets": 1732,
+      "sha256": "6ed7439f5f84e35e7791697f284d4161421988cdefe774aae0d9aeee75b98c20"
+    },
+    {
+      "nom": "provenance.json",
+      "octets": 895,
+      "sha256": "320da004cae9543a6a8e982bb6635da922952c2c0d8fa666e9357fcd541fae91"
+    },
+    {
+      "nom": "textures-fabrication.json",
+      "octets": 2345,
+      "sha256": "7ad05c0026cb6d651c304297ae63d7c46ec8457b56e7203e8097c7f5de35d8a9"
+    },
+    {
+      "nom": "validation-lot.json",
+      "octets": 701,
+      "sha256": "9466768efbf807ca5fb3d44b82b309fcf4222d2d0eff034d8999c2118b2f7f9b"
+    },
+    {
+      "nom": "validation-typage.json",
+      "octets": 787,
+      "sha256": "fbdcad03bf1f91114458689a158ec066a8ab1d0834d6452966caf58d44480954"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "octets": 6061,
+      "sha256": "ec43e0c9199920587940c774babf0293ccdc6b13dfe9693d32bceff2a32b7048"
+    },
+    {
+      "nom": "assembler-revue.py",
+      "octets": 5138,
+      "sha256": "f6941b657f6c13eec5ef143ef27b7558543d721f2e1828bee5a1b68da48a3090"
+    },
+    {
+      "nom": "generer.ts",
+      "octets": 20628,
+      "sha256": "c33421316a70337d6d377c68544ffd233897dfcac08775403d1eae2d87e5d1be"
+    },
+    {
+      "nom": "geometrie.py",
+      "octets": 4173,
+      "sha256": "cf8c2364a2be993340b9bad313e60ab3aff7bd3cb6b611a6a57915cd169d288e"
+    },
+    {
+      "nom": "gltf.ts",
+      "octets": 10685,
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "octets": 3118,
+      "sha256": "c51dcfee1956903981f757bfeaef62c987882bc52d3ddbbc77f4de3777ed5954"
+    },
+    {
+      "nom": "mesurer-jeux.py",
+      "octets": 8722,
+      "sha256": "86b38ae4d5813f89c5c0fc92022fb72a65b4bbcda33b2103e23ccfbb53be60b6"
+    },
+    {
+      "nom": "mesurer-natif.ts",
+      "octets": 4110,
+      "sha256": "e7cd906b6c3bfdb6d92ef50aec74f86c82b6810d6e37ac5648ad4d13f8610d82"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "octets": 11218,
+      "sha256": "06bb1d6f2fcef892894a031a4fbadae7aded311b6381f2e039d7c08ff5c7d51e"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "octets": 5264,
+      "sha256": "98a7f0a3ab1e2418150e25e9dfed3400faaf2a34b4edf2d35b10d9a38bfc17ab"
+    },
+    {
+      "nom": "mesurer.py",
+      "octets": 8990,
+      "sha256": "e1aa31682dc6c266f8f8e21480bd04c3b91666acb59b8fc66aa7756707271515"
+    },
+    {
+      "nom": "textures.py",
+      "octets": 5627,
+      "sha256": "863c047d253615f9a65b4b41eb521b1b510abda2de5dccde590ca4391f71faaa"
+    },
+    {
+      "nom": "verifier.py",
+      "octets": 1721,
+      "sha256": "f4a45d1047767fad0f2bea0e4b4a90e9b5ad2616a004f06a5b55ea2ca9a6ca6b"
+    }
+  ]
+}

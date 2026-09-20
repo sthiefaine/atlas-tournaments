@@ -1,0 +1,33 @@
+{
+  "id": "unite_transport_air_base",
+  "verificationLocale": [
+    {
+      "chemin": "assets/sources/unite_transport_air_base",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/unite_transport_air_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/optimisation-lod0/unite_transport_air_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/production-sequentielle/unite_transport_air_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    }
+  ],
+  "maitreLocalIdentifie": false,
+  "lectureDistanteCommuniquee": {
+    "date": "2026-09-20T15:32:10.512Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "ancienCandidat": "inspection-ancien-candidat.json",
+  "candidatPreserve": true
+}

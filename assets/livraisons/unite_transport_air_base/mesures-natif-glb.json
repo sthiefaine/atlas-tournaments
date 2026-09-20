@@ -1,0 +1,75 @@
+{
+  "id": "unite_transport_air_base",
+  "methode": "GLTFLoader natif, seules références de cartes retirées en mémoire ; SkeletonUtils.clone et AnimationMixer sans rendu. Géométrie et clips inchangés.",
+  "clonesNoeudsIndependants": true,
+  "pivotRotorFixeDansCorps": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 219,
+      "min": [
+        -0.41723479585529216,
+        0,
+        -0.41723479585529216
+      ],
+      "max": [
+        0.41723479585529216,
+        0.6439999936819076,
+        0.41723479585529216
+      ],
+      "rayon": 0.41723497698590983
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "min": [
+        -0.417022810535145,
+        2.980232227667301e-9,
+        -0.417022810535145
+      ],
+      "max": [
+        0.417022810535145,
+        0.6499999939203263,
+        0.417022810535145
+      ],
+      "rayon": 0.41723497698590983
+    },
+    {
+      "nom": "touche",
+      "poses": 196,
+      "min": [
+        -0.4210590778044516,
+        2.980232227667301e-9,
+        -0.4169999957084656
+      ],
+      "max": [
+        0.4274658621276631,
+        0.6508499323931418,
+        0.4169999957084656
+      ],
+      "rayon": 0.4276950587704352
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 197,
+      "min": [
+        -0.4169999957084656,
+        0,
+        -0.4169999957084656
+      ],
+      "max": [
+        0.4169999957084656,
+        0.6439999936819076,
+        0.4169999957084656
+      ],
+      "rayon": 0.4172349450145987
+    }
+  ],
+  "limites": [
+    "Textures non chargées dans ce contrôle natif ; références contrôlées séparément.",
+    "Chaque clip isolé, transitions exclues.",
+    "Aucun rendu ni appréciation artistique."
+  ],
+  "approbationArtistique": false
+}

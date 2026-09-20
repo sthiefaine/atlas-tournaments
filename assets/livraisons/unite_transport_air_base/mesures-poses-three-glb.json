@@ -1,0 +1,75 @@
+{
+  "id": "unite_transport_air_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 219,
+      "enveloppe": {
+        "min": [
+          -0.41723479585529216,
+          0,
+          -0.41723479585529216
+        ],
+        "max": [
+          0.41723479585529216,
+          0.6439999936819076,
+          0.41723479585529216
+        ]
+      },
+      "rayonHorizontalMax": 0.41723497698590983
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.417022810535145,
+          2.980232227667301e-9,
+          -0.417022810535145
+        ],
+        "max": [
+          0.417022810535145,
+          0.6499999939203263,
+          0.417022810535145
+        ]
+      },
+      "rayonHorizontalMax": 0.41723497698590983
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.4210590778044516,
+          2.980232227667301e-9,
+          -0.4169999957084656
+        ],
+        "max": [
+          0.4274658621276631,
+          0.6508499323931418,
+          0.4169999957084656
+        ]
+      },
+      "rayonHorizontalMax": 0.4276950587704352
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 197,
+      "enveloppe": {
+        "min": [
+          -0.4169999957084656,
+          0,
+          -0.4169999957084656
+        ],
+        "max": [
+          0.4169999957084656,
+          0.6439999936819076,
+          0.4169999957084656
+        ]
+      },
+      "rayonHorizontalMax": 0.4172349450145987
+    }
+  ],
+  "approbationArtistique": false
+}

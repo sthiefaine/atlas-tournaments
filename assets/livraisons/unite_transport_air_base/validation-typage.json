@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "dateUtc": "2026-09-20T15:44:03.994312+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_transport_air_base/generer.ts": "c33421316a70337d6d377c68544ffd233897dfcac08775403d1eae2d87e5d1be",
+    "scripts/production/modeles/unite_transport_air_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_transport_air_base/mesurer-natif.ts": "e7cd906b6c3bfdb6d92ef50aec74f86c82b6810d6e37ac5648ad4d13f8610d82",
+    "scripts/production/modeles/unite_transport_air_base/mesurer-poses.ts": "98a7f0a3ab1e2418150e25e9dfed3400faaf2a34b4edf2d35b10d9a38bfc17ab"
+  },
+  "suiteTestsExecutee": false,
+  "buildExecute": false
+}

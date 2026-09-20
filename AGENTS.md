@@ -58,6 +58,10 @@ Lance-roquettes poussé en `c742d17`, GLB et cinq PNG confirmés en ligne par SH
 
 Sous-marin intégré : 5 060 triangles, sept primitives, 1 422 071 octets. Coque capsule, kiosque compact, quatre plans et propulseur caréné ; 973 poses concordantes NumPy/Three/GLTFLoader, rayon majoré maximal 0,485350 m en c. Âme du ressort raccordée et appui du lanceur prolongé ; 35 raccords mesurés, hélice/couronne 6,172 mm. Contrôle de lot et typage réussis, aucune image ni approbation artistique. Trente modèles livrés.
 
+Sous-marin poussé en `ed41cd9`, GLB et cinq PNG confirmés en ligne par SHA, inventaire du jeu présent. Transport aérien suivant : `unite_transport_air_base`, spécialiste `modele_27_transport_air`, lecture distante sans upload le 20 septembre à 15:32 UTC, aucun actif ni kit. Ancien candidat SHA `379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659`, 576 triangles. Attendre FINAL gelé avant intégration ; quatre clips seulement, trois gabarits a/b/c.
+
+Transport aérien intégré : 4 508 triangles, neuf primitives, 1 433 466 octets. Cabine avancée, plateau cargo, rotor à quatre pales et grue articulée ; 805 poses concordantes NumPy/Three/GLTFLoader, rayon majoré maximal 0,491284 m en c. Patins au sol et repli du coude corrigés ; 51 raccords et jeu crochet/bras minimal 9,722 mm aux poses. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Les 30 unités du catalogue sont couvertes par les 30 bases du plan ; 31 modèles livrés avec le QG.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

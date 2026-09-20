@@ -1,0 +1,103 @@
+{
+  "triangles": 4508,
+  "primitives": 9,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.503303491747545e-08,
+  "tangentesErreurMax": 3.5561384059690226e-08,
+  "orthogonaliteErreurMax": 3.645363400028856e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_transport_air_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_grue",
+    "os_grue_coude",
+    "os_rotor",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "normalePngLongueurErreurMax": 0.002779681475911344,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    51,
+    233
+  ],
+  "continuitesBoucles": [
+    {
+      "clip": "repos",
+      "noeud": "os_rotor",
+      "canal": "rotation",
+      "erreurVitesseJointure": 1.560444925274851e-06,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "repos",
+      "noeud": "os_grue_coude",
+      "canal": "rotation",
+      "erreurVitesseJointure": 4.6359155854436285e-09,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "os_rotor",
+      "canal": "rotation",
+      "erreurVitesseJointure": 3.197442310920451e-14,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "corps",
+      "canal": "translation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "m/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    },
+    {
+      "clip": "deplacement",
+      "noeud": "module_grue",
+      "canal": "rotation",
+      "erreurVitesseJointure": 0.0,
+      "unite": "rad/s",
+      "poseRaccordeeModuloSigneQuaternion": true
+    }
+  ]
+}

@@ -1,0 +1,838 @@
+{
+  "id": "unite_transport_air_base",
+  "sha256Glb": "2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB et hiérarchie exportés : raccords par intersections des peaux, dégagements statiques exacts ou bornés, séparations d’axes mesurées sur tous clips isolés. Plan des pales invariant autour de Y.",
+  "raccords": [
+    {
+      "pieces": [
+        "plateau_chassis",
+        "plancher_cargo"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002339527023120993,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 442,
+      "traversees": 42
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "cabine"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0014632069577805774,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 174,
+      "traversees": 31
+    },
+    {
+      "pieces": [
+        "cabine",
+        "pavillon_cabine"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0008090089887909215,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 214,
+      "traversees": 34
+    },
+    {
+      "pieces": [
+        "cabine",
+        "pare_brise"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0003932100811852074,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 211,
+      "traversees": 24
+    },
+    {
+      "pieces": [
+        "pavillon_cabine",
+        "bloc_moteur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0017518118819013781,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 237,
+      "traversees": 48
+    },
+    {
+      "pieces": [
+        "bloc_moteur",
+        "embase_mat"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00015156729477972498,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 808,
+      "traversees": 102
+    },
+    {
+      "pieces": [
+        "embase_mat",
+        "mat_rotor"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2512,
+      "traversees": 153
+    },
+    {
+      "pieces": [
+        "mat_rotor",
+        "palier_rotor"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 4560,
+      "traversees": 275
+    },
+    {
+      "pieces": [
+        "mat_rotor",
+        "moyeu_rotor"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.4532694666933987e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 4364,
+      "traversees": 120
+    },
+    {
+      "pieces": [
+        "moyeu_rotor",
+        "chapeau_rotor"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.40805661069036e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 16364,
+      "traversees": 181
+    },
+    {
+      "pieces": [
+        "plancher_cargo",
+        "platine_grue"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0004533746141298964,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 610,
+      "traversees": 81
+    },
+    {
+      "pieces": [
+        "platine_grue",
+        "berceau_grue"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.2266894801981348e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1410,
+      "traversees": 151
+    },
+    {
+      "pieces": [
+        "berceau_grue",
+        "axe_epaule"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 8.086608589966307e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1334,
+      "traversees": 121
+    },
+    {
+      "pieces": [
+        "axe_epaule",
+        "bras_grue"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.729122957444782e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 660,
+      "traversees": 48
+    },
+    {
+      "pieces": [
+        "bras_grue",
+        "axe_coude"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0004174769227269071,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 660,
+      "traversees": 51
+    },
+    {
+      "pieces": [
+        "axe_coude",
+        "avant_bras_grue"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0005325376706878404,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 700,
+      "traversees": 41
+    },
+    {
+      "pieces": [
+        "avant_bras_grue",
+        "poulie_crochet"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00011393857730412418,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 800,
+      "traversees": 54
+    },
+    {
+      "pieces": [
+        "poulie_crochet",
+        "suspente_crochet"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.2543607660366688e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2492,
+      "traversees": 54
+    },
+    {
+      "pieces": [
+        "suspente_crochet",
+        "crochet"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 2.710505431213761e-20,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 5654,
+      "traversees": 39
+    },
+    {
+      "pieces": [
+        "plancher_cargo",
+        "coffre_cargo"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0009999871253967285,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 230,
+      "traversees": 32
+    },
+    {
+      "pieces": [
+        "coffre_cargo",
+        "couvercle_cargo"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00026782852477989273,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 430,
+      "traversees": 38
+    },
+    {
+      "pieces": [
+        "pavillon_cabine",
+        "support_temoin"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002021034092764475,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 336,
+      "traversees": 32
+    },
+    {
+      "pieces": [
+        "support_temoin",
+        "temoin"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.264405466317468e-10,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 740,
+      "traversees": 39
+    },
+    {
+      "pieces": [
+        "cabine",
+        "vitre_laterale_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0005051516289045519,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 158,
+      "traversees": 33
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "pylone_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006468594074249268,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 140,
+      "traversees": 28
+    },
+    {
+      "pieces": [
+        "bloc_moteur",
+        "pylone_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0001456724211429211,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 504,
+      "traversees": 58
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "rebord_g"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 9.461150367604104e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 288,
+      "traversees": 37
+    },
+    {
+      "pieces": [
+        "patin_g",
+        "jambe_g_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.4243804080736423e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2404,
+      "traversees": 65
+    },
+    {
+      "pieces": [
+        "jambe_g_-0.203",
+        "fourreau_g_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.878959614448864e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2162,
+      "traversees": 70
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "fourreau_g_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 6.0847940974910514e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 477,
+      "traversees": 67
+    },
+    {
+      "pieces": [
+        "patin_g",
+        "jambe_g_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 9.475826187506576e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2441,
+      "traversees": 68
+    },
+    {
+      "pieces": [
+        "jambe_g_0.158",
+        "fourreau_g_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.878959614448864e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2162,
+      "traversees": 70
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "fourreau_g_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.001398947285260435,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 477,
+      "traversees": 69
+    },
+    {
+      "pieces": [
+        "cabine",
+        "vitre_laterale_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.000522356900073335,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 146,
+      "traversees": 25
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "pylone_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006468594074249268,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 140,
+      "traversees": 28
+    },
+    {
+      "pieces": [
+        "bloc_moteur",
+        "pylone_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0001456724211429211,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 523,
+      "traversees": 55
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "rebord_d"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0010000020265579224,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 274,
+      "traversees": 36
+    },
+    {
+      "pieces": [
+        "patin_d",
+        "jambe_d_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 1.9024662996966287e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2405,
+      "traversees": 63
+    },
+    {
+      "pieces": [
+        "jambe_d_-0.203",
+        "fourreau_d_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.878959614448864e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2162,
+      "traversees": 69
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "fourreau_d_-0.203"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0005998091193538498,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 551,
+      "traversees": 72
+    },
+    {
+      "pieces": [
+        "patin_d",
+        "jambe_d_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 9.47590264311329e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2444,
+      "traversees": 62
+    },
+    {
+      "pieces": [
+        "jambe_d_0.158",
+        "fourreau_d_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 3.878959614448864e-18,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2162,
+      "traversees": 69
+    },
+    {
+      "pieces": [
+        "plateau_chassis",
+        "fourreau_d_0.158"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 4.5391699943182434e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 551,
+      "traversees": 70
+    },
+    {
+      "pieces": [
+        "moyeu_rotor",
+        "attache_pale_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006822947908076346,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 720,
+      "traversees": 43
+    },
+    {
+      "pieces": [
+        "attache_pale_0",
+        "pale_0"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00043308436183924376,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 164,
+      "traversees": 35
+    },
+    {
+      "pieces": [
+        "moyeu_rotor",
+        "attache_pale_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006822947908076355,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 720,
+      "traversees": 43
+    },
+    {
+      "pieces": [
+        "attache_pale_1",
+        "pale_1"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00043308436183924376,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 164,
+      "traversees": 35
+    },
+    {
+      "pieces": [
+        "moyeu_rotor",
+        "attache_pale_2"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006822947908076368,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 720,
+      "traversees": 43
+    },
+    {
+      "pieces": [
+        "attache_pale_2",
+        "pale_2"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00043308436183924376,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 164,
+      "traversees": 35
+    },
+    {
+      "pieces": [
+        "moyeu_rotor",
+        "attache_pale_3"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0006822947908076323,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 720,
+      "traversees": 43
+    },
+    {
+      "pieces": [
+        "attache_pale_3",
+        "pale_3"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00043308436183924376,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 164,
+      "traversees": 35
+    }
+  ],
+  "distancesTriangles": [
+    {
+      "pieces": [
+        "crochet",
+        "bras_grue"
+      ],
+      "minimumMetres": 0.012075780114624872,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1920,
+      "traversees": 0
+    },
+    {
+      "pieces": [
+        "avant_bras_grue",
+        "cabine"
+      ],
+      "minimumMetres": 0.07,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.07,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "pieces": [
+        "bras_grue",
+        "cabine"
+      ],
+      "minimumMetres": 0.07,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.07,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "pieces": [
+        "crochet",
+        "coffre_cargo"
+      ],
+      "minimumMetres": 0.07,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.07,
+      "pairesFaces": 0,
+      "traversees": 0
+    },
+    {
+      "pieces": [
+        "coffre_cargo",
+        "pylone_g"
+      ],
+      "minimumMetres": 0.07,
+      "minimumExact": false,
+      "borneInferieureSiNonExacte": 0.07,
+      "pairesFaces": 0,
+      "traversees": 0
+    }
+  ],
+  "rotor": {
+    "rayonPales": 0.41723494152930196,
+    "palesPalierSeparationYContinue": 0.009999978423118616,
+    "palesMatSeparationYContinue": 0.004500019431114222,
+    "axe": "+Y",
+    "nombrePales": 4
+  },
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 219,
+      "palesGrueSeparationY": 0.21353904043560648,
+      "palesCabineSeparationY": 0.14400002302229398,
+      "grueCabineSeparationZ": 0.14999999855458734,
+      "crochetPlancherSeparationY": 0.08723202565689188,
+      "crochetBrasSondeZoneZ": 0.025788129989100503,
+      "crochetBrasDistanceTrianglesMin": 0.009721803704938673,
+      "solMin": 0.0,
+      "erreurPivotRotor": 5.551115123125783e-17
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "palesGrueSeparationY": 0.2113093183045799,
+      "palesCabineSeparationY": 0.14400002302229398,
+      "grueCabineSeparationZ": 0.14999999855458734,
+      "crochetPlancherSeparationY": 0.08910429928062694,
+      "crochetBrasSondeZoneZ": 0.027271729244148363,
+      "crochetBrasDistanceTrianglesMin": 0.012075780114624762,
+      "solMin": 2.980232227667301e-09,
+      "erreurPivotRotor": 5.551115123125783e-17
+    },
+    {
+      "clip": "touche",
+      "poses": 196,
+      "palesGrueSeparationY": 0.20716057106777358,
+      "palesCabineSeparationY": 0.14400002302229387,
+      "grueCabineSeparationZ": 0.14780062354795992,
+      "crochetPlancherSeparationY": 0.08925888407972932,
+      "crochetBrasSondeZoneZ": 0.02755257303935104,
+      "crochetBrasDistanceTrianglesMin": 0.012075780114624757,
+      "solMin": 2.980232227667301e-09,
+      "erreurPivotRotor": 1.6654248846680028e-16
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 197,
+      "palesGrueSeparationY": 0.1961125307305706,
+      "palesCabineSeparationY": 0.14400002302229398,
+      "grueCabineSeparationZ": 0.14999999855458734,
+      "crochetPlancherSeparationY": 0.08953949678689244,
+      "crochetBrasSondeZoneZ": 0.02809560111910106,
+      "crochetBrasDistanceTrianglesMin": 0.012075780114624847,
+      "solMin": 0.0,
+      "erreurPivotRotor": 5.551115123125783e-17
+    }
+  ],
+  "sondesPlancherOuvert": [
+    {
+      "x": -0.015,
+      "z": -0.27,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": -0.015,
+      "z": -0.22,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": -0.015,
+      "z": -0.17,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": -0.015,
+      "z": -0.12,
+      "hauteurPlancher": 0.1949999926611785,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.01,
+      "z": -0.27,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.01,
+      "z": -0.22,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.01,
+      "z": -0.17,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.01,
+      "z": -0.12,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.035,
+      "z": -0.27,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.035,
+      "z": -0.22,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.035,
+      "z": -0.17,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.035,
+      "z": -0.12,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.06,
+      "z": -0.27,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.06,
+      "z": -0.22,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.06,
+      "z": -0.17,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    },
+    {
+      "x": 0.06,
+      "z": -0.12,
+      "hauteurPlancher": 0.19499999266117812,
+      "colonneLibreDepuisY": 0.3
+    }
+  ],
+  "limites": [
+    "Raccords avec recouvrement intentionnel.",
+    "Distances et sondes localisées ; aucune certification globale des collisions.",
+    "Dégagements animés aux poses sauf plan rotor/palier invariant.",
+    "Aucun rendu, contrôle visuel, approbation artistique, téléphone ou FPS."
+  ]
+}
