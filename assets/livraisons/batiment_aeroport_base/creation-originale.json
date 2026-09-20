@@ -1,0 +1,302 @@
+{
+  "id": "batiment_aeroport_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/batiment_aeroport_base",
+  "fichiers": [
+    {
+      "nom": "batiment_aeroport_base_albedo.png",
+      "sha256": "9d0d66f1145066e184ba345fe2d90d4f6dc6009b1ff186986e72d075356e56bb",
+      "octets": 439143
+    },
+    {
+      "nom": "batiment_aeroport_base_emission.png",
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc",
+      "octets": 1202
+    },
+    {
+      "nom": "batiment_aeroport_base_lod0.glb",
+      "sha256": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d",
+      "octets": 279880
+    },
+    {
+      "nom": "batiment_aeroport_base_masque_equipe.png",
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7",
+      "octets": 488
+    },
+    {
+      "nom": "batiment_aeroport_base_normale.png",
+      "sha256": "d0beee127389aa14f1ad88d31a612947085378bfc3c3693014a6d1c5104584fd",
+      "octets": 872440
+    },
+    {
+      "nom": "batiment_aeroport_base_rugosite.png",
+      "sha256": "d2a4c9e3b862d15ade0613aab78b63044bda5c336c8341c8904e15342e88b776",
+      "octets": 95467
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T16:08:18.029Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/batiment_aeroport_base/avant-51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/README.md",
+      "sha256": "e645f7157ef567b639427dd8df601077c439eb71cca3179c2cf485601031aafa",
+      "octets": 277
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_lod0.glb",
+      "sha256": "51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca",
+      "octets": 116108
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/batiment_aeroport_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/validation-lot.json",
+      "sha256": "0a040a709a9459007a9376b0bf20efd03573ab4fe1164c73de7a41623fffa4a9",
+      "octets": 1152
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/version-candidat.json",
+      "sha256": "ad316d3e1a5815d2061a9c633d4fade99e0506e4467d403f53dd1a2827ad9b82",
+      "octets": 76
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_lod0.glb",
+      "sha256": "51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca",
+      "octets": 116108
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_aeroport_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_lod0.glb",
+      "sha256": "51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca",
+      "octets": 116108
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_aeroport_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

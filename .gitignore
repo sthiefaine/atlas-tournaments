@@ -14,6 +14,8 @@ next-env.d.ts
 .DS_Store
 *.tsbuildinfo
 npm-debug.log*
+__pycache__/
+*.pyc
 
 # copies de sécurité avant migration
 .backups/

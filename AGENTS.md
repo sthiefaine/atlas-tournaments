@@ -1,5 +1,7 @@
 # AGENTS.md — passation
 
+Aéroport commun intégré le 20 septembre : 4 116 triangles, cinq primitives, 1 688 620 octets. Dalle et cabine fixes, aire circulaire dégagée, manche animée et indicateur coulissant ; 264 poses et 42 raccords ciblés mesurés. Contrôle technique et typage réussis, sans rendu. Le cache de bâtiments conserve désormais les clips ; les livraisons opt-in `racine.extras.atlasAnimationsBatiment: true` jouent leur repos à 10 Hz et leur capture pendant le geste, avec lecteurs/squelettes privés libérés à la reconstruction. Anciennes livraisons sans marqueur inchangées. Trente-deux modèles livrés ; le port vient ensuite, après push de l’aéroport.
+
 ## Reprise séquentielle — 20 septembre 2026
 
 Le char moyen a été poussé individuellement (`bcdc0ca`, 5 944 triangles). Reprise au char lourd après l'arrêt sur limite d'usage : création originale, 8 848 triangles, sept primitives, 1 849 551 octets pour GLB et PNG. Contrôle de lot et typage réussis ; positions des cinq clips et balayage de tourelle mesurés dans la case, sans contrôle visuel. Tube vers +Z en combat, vers l'arrière en déplacement. Sources sous `scripts/production/modeles/unite_char_lourd_base`, suivi des commits dans le plan JSON.
@@ -61,6 +63,8 @@ Sous-marin intégré : 5 060 triangles, sept primitives, 1 422 071 octets. Coque
 Sous-marin poussé en `ed41cd9`, GLB et cinq PNG confirmés en ligne par SHA, inventaire du jeu présent. Transport aérien suivant : `unite_transport_air_base`, spécialiste `modele_27_transport_air`, lecture distante sans upload le 20 septembre à 15:32 UTC, aucun actif ni kit. Ancien candidat SHA `379ea6aefb4b100e339860d638018e4494d140bcee285027d3aef77fd4191659`, 576 triangles. Attendre FINAL gelé avant intégration ; quatre clips seulement, trois gabarits a/b/c.
 
 Transport aérien intégré : 4 508 triangles, neuf primitives, 1 433 466 octets. Cabine avancée, plateau cargo, rotor à quatre pales et grue articulée ; 805 poses concordantes NumPy/Three/GLTFLoader, rayon majoré maximal 0,491284 m en c. Patins au sol et repli du coude corrigés ; 51 raccords et jeu crochet/bras minimal 9,722 mm aux poses. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Les 30 unités du catalogue sont couvertes par les 30 bases du plan ; 31 modèles livrés avec le QG.
+
+Transport aérien poussé en `5e39e2d`, GLB et cinq PNG confirmés en ligne par SHA, inventaire du jeu présent. Aéroport commun suivant : `batiment_aeroport_base`, spécialiste `modele_28_aeroport`, lecture distante sans upload le 20 septembre à 15:48 UTC. Ancien candidat/actif SHA `51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca`, 996 triangles. Attendre FINAL gelé. Root prépare le raccordement des clips de bâtiments dans batiments-partages/decor/animations ; opt-in extras racine `atlasAnimationsBatiment: true`, repos 10 Hz, capture avec le geste et pause hors vue/mode réduit. Typage final et intégration de ce raccordement attendent le lot aéroport.
 
 ## Production séquentielle des modèles — 16 septembre 2026
 

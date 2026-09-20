@@ -12,6 +12,8 @@ Régénération de l'inventaire : `node --import tsx scripts/production/plan-mod
 
 Les rapports de performance sur téléphone restent distincts de cette production et ne sont pas inventés.
 
+Les nouveaux bâtiments peuvent déclarer `atlasAnimationsBatiment: true` dans les extras du nœud `racine`. Le cache conserve alors leurs clips, et chaque case joue son propre repos/capture avec le lecteur commun. Le repos avance à 10 Hz, la capture suit le geste ; les animations se suspendent hors de vue et sous réduction des mouvements. Les murs et la parcelle doivent rester fixes : seuls les équipements et indicateurs s'animent. Les anciennes livraisons sans ce marqueur gardent leur comportement. Les lecteurs et squelettes privés sont libérés à la reconstruction, sans libérer les sources partagées.
+
 Raccordement à vérifier avant les familles suivantes : les unités et bâtiments actifs sont chargés automatiquement ; les terrains fournissent actuellement leurs textures au relief du moteur, sans chargement général de leur maillage. `assets-environnement.ts` ne sélectionne pas les rochers GLB, et les portraits de commandants sont encore vectoriels. Un alias publié pour ces deux dernières familles ne suffit donc pas à annoncer leur affichage en jeu : leur raccordement reste à traiter lors de leurs livraisons.
 
 Reprise du 20 septembre : les 65 fiches du stockage ont été relues ; les cinq fiches avec uploads portent les mêmes révisions que les sources déjà préparées. Le stockage est revérifié juste avant chaque intégration originale. Les secrets restent dans la configuration locale, jamais dans les manifestes.

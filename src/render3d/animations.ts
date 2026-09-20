@@ -468,6 +468,7 @@ function interpreterGeste(g: Geste, ctx: ContexteAnimation): AnimationDatee | nu
       if (!prise) return null;
       const vu = ctx.unites.visuel(g.unite);
       const capturer = (duree: number): void => {
+        prise.capturer?.(duree);
         vu.clip = 'capture';
         vu.clipDuree = duree;
       };

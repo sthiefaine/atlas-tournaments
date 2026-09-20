@@ -1,0 +1,153 @@
+{
+  "id": "batiment_aeroport_base",
+  "methode": "Atlas déterministe original ; pigment, joints sciés et microreliefs analytiques ; sans éclairage, reflet, ombre, occlusion cuits.",
+  "bakeHD": false,
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "gouttierePixels": 16,
+    "palette": [
+      [
+        185,
+        182,
+        174
+      ],
+      [
+        195,
+        193,
+        184
+      ],
+      [
+        170,
+        170,
+        170
+      ],
+      [
+        145,
+        152,
+        153
+      ],
+      [
+        33,
+        67,
+        76
+      ],
+      [
+        198,
+        198,
+        194
+      ],
+      [
+        62,
+        67,
+        68
+      ],
+      [
+        34,
+        36,
+        36
+      ],
+      [
+        129,
+        139,
+        140
+      ],
+      [
+        220,
+        116,
+        44
+      ],
+      [
+        231,
+        187,
+        112
+      ],
+      [
+        26,
+        48,
+        55
+      ],
+      [
+        185,
+        182,
+        174
+      ],
+      [
+        185,
+        182,
+        174
+      ],
+      [
+        185,
+        182,
+        174
+      ],
+      [
+        185,
+        182,
+        174
+      ]
+    ],
+    "equipe": [
+      2
+    ],
+    "emission": [
+      4,
+      10
+    ]
+  },
+  "cartes": [
+    {
+      "canal": "albedo",
+      "fichier": "batiment_aeroport_base_albedo.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 439143,
+      "sha256": "9d0d66f1145066e184ba345fe2d90d4f6dc6009b1ff186986e72d075356e56bb"
+    },
+    {
+      "canal": "normale",
+      "fichier": "batiment_aeroport_base_normale.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 872440,
+      "sha256": "d0beee127389aa14f1ad88d31a612947085378bfc3c3693014a6d1c5104584fd"
+    },
+    {
+      "canal": "rugosite",
+      "fichier": "batiment_aeroport_base_rugosite.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 95467,
+      "sha256": "d2a4c9e3b862d15ade0613aab78b63044bda5c336c8341c8904e15342e88b776"
+    },
+    {
+      "canal": "emission",
+      "fichier": "batiment_aeroport_base_emission.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "canal": "masque_equipe",
+      "fichier": "batiment_aeroport_base_masque_equipe.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    }
+  ]
+}

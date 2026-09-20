@@ -1,33 +1,21 @@
 {
   "id": "batiment_aeroport_base",
-  "triangles": 996,
-  "octets": 1039873,
-  "source": "modélisation procédurale Atlas",
+  "revision": "7d63341e262126470d4cfe715d5d468cb7d48ef85ccc6b33b0dfd25d9ef747c2",
+  "octets": 1688620,
   "verdict": {
     "ok": true,
     "motifs": [],
     "acceptes": [
       "batiment_aeroport_base_albedo.png",
-      "batiment_aeroport_base_albedo_ete.png",
-      "batiment_aeroport_base_albedo_hiver.png",
-      "batiment_aeroport_base_normale.png",
-      "batiment_aeroport_base_normale_ete.png",
-      "batiment_aeroport_base_normale_hiver.png",
-      "batiment_aeroport_base_rugosite.png",
-      "batiment_aeroport_base_rugosite_ete.png",
-      "batiment_aeroport_base_rugosite_hiver.png",
       "batiment_aeroport_base_emission.png",
-      "batiment_aeroport_base_emission_ete.png",
-      "batiment_aeroport_base_emission_hiver.png",
+      "batiment_aeroport_base_lod0.glb",
       "batiment_aeroport_base_masque_equipe.png",
-      "batiment_aeroport_base_masque_equipe_ete.png",
-      "batiment_aeroport_base_masque_equipe_hiver.png",
-      "batiment_aeroport_base_lod0.glb"
+      "batiment_aeroport_base_normale.png",
+      "batiment_aeroport_base_rugosite.png"
     ],
     "inconnus": [],
     "lodManquants": []
   },
-  "revision": "9de290ff58a7ba3af4eac7ee8e4fb8128e5c61de024ec4c41a69fbcfb174a819",
-  "actif": true,
-  "approbationArtistique": false
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
 }

@@ -1,0 +1,695 @@
+{
+  "id": "batiment_aeroport_base",
+  "sha256Glb": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d",
+  "triangles": 4116,
+  "primitives": 5,
+  "noeuds": [
+    "corps",
+    "enseigne",
+    "toit",
+    "manche_air",
+    "racine"
+  ],
+  "bornes": {
+    "min": [
+      -0.46000000834465027,
+      0.0,
+      -0.46000000834465027
+    ],
+    "max": [
+      0.46000000834465027,
+      0.41449999809265137,
+      0.46000000834465027
+    ],
+    "dimensions": [
+      0.9200000166893005,
+      0.41449999809265137,
+      0.9200000166893005
+    ]
+  },
+  "geometrie": {
+    "trianglesDegeneres": 0,
+    "trianglesUvDegeneres": 0,
+    "normalesSensFaceMin": 0.7212322478845163,
+    "erreurNormalesMax": 3.639176715530823e-08,
+    "erreurTangentesMax": 3.993807839997032e-08,
+    "uvMin": 0.016249999403953552,
+    "uvMax": 0.9837499856948853,
+    "mancheNormalesRadialesConformes": true
+  },
+  "raccords": [
+    {
+      "a": "dalle",
+      "b": "semelle_cabine",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "semelle_cabine",
+      "b": "cabine_basse",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cabine_basse",
+      "b": "appui_vitrage",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "appui_vitrage",
+      "b": "vitrage_avant",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "vitrage_avant",
+      "b": "toiture",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "toiture",
+      "b": "fond_glissiere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "fond_glissiere",
+      "b": "indicateur_capture",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "embase_mat",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "embase_mat",
+      "b": "mat",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mat",
+      "b": "rotule_manche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rotule_manche",
+      "b": "axe_manche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "axe_manche",
+      "b": "rayon_manche_-0.428",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rayon_manche_-0.428",
+      "b": "ourlet_manche_entree",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "manche_creuse",
+      "b": "ourlet_manche_entree",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "manche_creuse",
+      "b": "ourlet_manche_sortie",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "bloc_pompe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bloc_pompe",
+      "b": "raccord_pompe",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bloc_pompe",
+      "b": "cuve",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "raccord_pompe",
+      "b": "flexible_range",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "cabine_camion",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cabine_camion",
+      "b": "toit_camion",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "cuve",
+      "b": "bouchon_cuve",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pneu_-1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_-1_-0.323",
+      "b": "jante_-1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "jante_-1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pneu_-1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_-1_-0.175",
+      "b": "jante_-1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "jante_-1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pneu_1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_1_-0.323",
+      "b": "jante_1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "jante_1_-0.323",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pneu_1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pneu_1_-0.175",
+      "b": "jante_1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "chassis_camion",
+      "b": "jante_1_-0.175",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "support_feu_nord",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_nord",
+      "b": "lentille_nord",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "support_feu_est",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_est",
+      "b": "lentille_est",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "support_feu_sud",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_sud",
+      "b": "lentille_sud",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "support_feu_ouest",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "support_feu_ouest",
+      "b": "lentille_ouest",
+      "distanceMetres": 0.0
+    }
+  ],
+  "aire": {
+    "centreXZ": [
+      0.02,
+      0.075
+    ],
+    "rayonMetres": 0.3,
+    "obstacleLePlusProche": {
+      "piece": "support_feu_sud",
+      "rayonInterieur": 0.3009999871253967
+    },
+    "sixPlusProches": [
+      {
+        "piece": "support_feu_sud",
+        "rayonInterieur": 0.3009999871253967
+      },
+      {
+        "piece": "support_feu_ouest",
+        "rayonInterieur": 0.30099998831748964
+      },
+      {
+        "piece": "support_feu_nord",
+        "rayonInterieur": 0.30099999606609346
+      },
+      {
+        "piece": "support_feu_est",
+        "rayonInterieur": 0.3010000097751617
+      },
+      {
+        "piece": "lentille_est",
+        "rayonInterieur": 0.30600000500679014
+      },
+      {
+        "piece": "lentille_nord",
+        "rayonInterieur": 0.30600000619888307
+      }
+    ],
+    "approcheAvantLargeurMetres": 0.42,
+    "feuxAffleurantsHauteurMetres": 0.028,
+    "limiteApproche": "Feux encastrés culminant comme le disque à 28 mm. Pas de promesse que toute silhouette d’unité tient dans ce disque."
+  },
+  "animations": {
+    "poses": 264,
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 3.200000047683716,
+        "poses": 133,
+        "cibles": [
+          "manche_air"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.46000000834465027,
+            0.0,
+            -0.46000000834465027
+          ],
+          "max": [
+            0.46000000834465027,
+            0.41449999809265137,
+            0.46000000834465027
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "manche_air",
+          "min": [
+            0.03711953916425581,
+            0.28386504607340746,
+            -0.429132022224405
+          ],
+          "max": [
+            0.22637269677361355,
+            0.34704530013555074,
+            -0.366869490292429
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.225,
+                0.0,
+                1.0,
+                0.0,
+                0.316,
+                0.0,
+                0.0,
+                1.0,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.4000000059604645,
+              "matrice": [
+                0.9983398050664242,
+                -0.014549326627162108,
+                0.05573105700263051,
+                0.225,
+                0.01547776078408759,
+                0.9997479301291303,
+                -0.016263920918097897,
+                0.316,
+                -0.05548037978461268,
+                0.017099511607520657,
+                0.9983133446777818,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.800000011920929,
+              "matrice": [
+                0.9966690874586587,
+                -0.02032496066962418,
+                0.0789786431771451,
+                0.225,
+                0.022187713590517688,
+                0.9994942625620309,
+                -0.022779913766455755,
+                0.316,
+                -0.07847569986912976,
+                0.024456391380582584,
+                0.9966159989939405,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.2000000476837158,
+              "matrice": [
+                0.9983398050664242,
+                -0.014549326627162108,
+                0.05573105700263051,
+                0.225,
+                0.01547776078408759,
+                0.9997479301291303,
+                -0.016263920918097897,
+                0.316,
+                -0.05548037978461268,
+                0.017099511607520657,
+                0.9983133446777818,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.600000023841858,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.225,
+                0.0,
+                1.0,
+                0.0,
+                0.316,
+                0.0,
+                0.0,
+                1.0,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.0,
+              "matrice": [
+                0.9983398050664242,
+                0.01547776078408759,
+                -0.05548037978461268,
+                0.225,
+                -0.014549326627162108,
+                0.9997479301291303,
+                0.017099511607520657,
+                0.316,
+                0.05573105700263051,
+                -0.016263920918097897,
+                0.9983133446777818,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.4000000953674316,
+              "matrice": [
+                0.9966690874586587,
+                0.022187713590517688,
+                -0.07847569986912976,
+                0.225,
+                -0.02032496066962418,
+                0.9994942625620309,
+                0.024456391380582584,
+                0.316,
+                0.0789786431771451,
+                -0.022779913766455755,
+                0.9966159989939405,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.799999952316284,
+              "matrice": [
+                0.9983398050664242,
+                0.01547776078408759,
+                -0.05548037978461268,
+                0.225,
+                -0.014549326627162108,
+                0.9997479301291303,
+                0.017099511607520657,
+                0.316,
+                0.05573105700263051,
+                -0.016263920918097897,
+                0.9983133446777818,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 3.200000047683716,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.225,
+                0.0,
+                1.0,
+                0.0,
+                0.316,
+                0.0,
+                0.0,
+                1.0,
+                -0.398,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nom": "capture",
+        "duree": 1.399999976158142,
+        "poses": 131,
+        "cibles": [
+          "enseigne"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.46000000834465027,
+            0.0,
+            -0.46000000834465027
+          ],
+          "max": [
+            0.46000000834465027,
+            0.41449999809265137,
+            0.46000000834465027
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "enseigne",
+          "min": [
+            -0.40600002557039266,
+            0.3989999949699267,
+            -0.37649997137486935
+          ],
+          "max": [
+            -0.23600000888109202,
+            0.4090000148862601,
+            -0.2494999971240759
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.32100000977516174,
+                0.0,
+                1.0,
+                0.0,
+                0.4000000059604645,
+                0.0,
+                0.0,
+                1.0,
+                -0.3479999899864197,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.2800000011920929,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.32100000977516174,
+                0.0,
+                1.0,
+                0.0,
+                0.4000000059604645,
+                0.0,
+                0.0,
+                1.0,
+                -0.30799999833106995,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.699999988079071,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.32100000977516174,
+                0.0,
+                1.0,
+                0.0,
+                0.4000000059604645,
+                0.0,
+                0.0,
+                1.0,
+                -0.27799999713897705,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.0299999713897705,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.32100000977516174,
+                0.0,
+                1.0,
+                0.0,
+                0.4000000059604645,
+                0.0,
+                0.0,
+                1.0,
+                -0.30799999833106995,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.399999976158142,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.32100000977516174,
+                0.0,
+                1.0,
+                0.0,
+                0.4000000059604645,
+                0.0,
+                0.0,
+                1.0,
+                -0.3479999899864197,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "vitesseBoucleEcart": 1.6761287808711783e-08,
+    "mancheHauteurMax": 0.34704530013555074,
+    "jeuIndicateurRailsMin": 0.0019999668002128046,
+    "mancheRayonInterieurMin": 0.44414749374569334,
+    "enveloppeContinueManche": {
+      "min": [
+        0.0219326366770183,
+        0.2689326398956691,
+        -0.44506734706581486
+      ],
+      "max": [
+        0.24006736382310193,
+        0.3630673601043309,
+        -0.3509326566594755
+      ],
+      "methode": "Sphère de déplacement 2r sin(0,085/2) ; rotation bornée autour d’un axe fixe."
+    },
+    "optIn": true
+  },
+  "textures": {
+    "masqueBinaire": true,
+    "grisNeutreSurMasque": true,
+    "emissionCabineEt4FeuxUniquement": true,
+    "pngExternes": 5
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "limites": [
+    "Mesures géométriques ciblées et poses échantillonnées ; pas de certification exhaustive de collisions.",
+    "Deux clips isolés, pas de rendu ni de mesure de téléphone."
+  ]
+}

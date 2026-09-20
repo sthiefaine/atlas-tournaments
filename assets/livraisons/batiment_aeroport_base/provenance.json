@@ -1,0 +1,33 @@
+{
+  "id": "batiment_aeroport_base",
+  "verificationLocale": [
+    {
+      "chemin": "assets/sources/batiment_aeroport_base",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/batiment_aeroport_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/optimisation-lod0/batiment_aeroport_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/production-sequentielle/batiment_aeroport_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    }
+  ],
+  "maitreLocalIdentifie": false,
+  "lectureDistanteCommuniquee": {
+    "date": "2026-09-20T15:48:03.183Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "ancienCandidat": "inspection-ancien-candidat.json",
+  "candidatPreserve": true
+}

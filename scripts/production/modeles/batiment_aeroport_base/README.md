@@ -1,7 +1,5 @@
 # Aéroport commun — création originale
 
-Intégré dans le jeu après contrôle technique ; qualité artistique non vérifiée.
-
 Lot isolé `batiment_aeroport_base`, sans identité nationale, régionale ou saisonnière. Sources reproductibles dans ce dossier ; staging dans `tmp/production-sequentielle/batiment_aeroport_base/`. Aucune intégration ni opération Git par le spécialiste.
 
 ## Provenance

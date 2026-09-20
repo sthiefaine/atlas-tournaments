@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-20T16:07:52.919277+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "journalSha256": "21220d5b953fa551f872f274dfec95a81ee2fbb11bd24440ba1ea1ec80fe56ae",
+  "sourcesTypescript": [
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/mesurer-natif.ts",
+      "sha256": "ef69f091b8a1d47eed50fffa8a3c4c6deb27fc291f4513afc7f360afbb690561"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/generer.ts",
+      "sha256": "a5798dbbe675779b3fd5e1ddd2ff78a889b711b3527c321c4ef5b2c4c3133fef"
+    },
+    {
+      "fichier": "src/render3d/batiments-partages.ts",
+      "sha256": "b65a12629e940a3a80e43e83c1411f457dd49725c41937354f2dfeeebe82e913"
+    },
+    {
+      "fichier": "src/render3d/decor.ts",
+      "sha256": "51172934f3874df8a401428941744219e93dd674c24cc4b1220a4e70d0afdf33"
+    },
+    {
+      "fichier": "src/render3d/animations.ts",
+      "sha256": "0d443b3c7944340a94edfda4942750eef73d36e557eae5f09550486b05eee06b"
+    }
+  ],
+  "limite": "Contrôle de types, aucune suite de tests ni build."
+}

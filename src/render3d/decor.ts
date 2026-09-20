@@ -1,6 +1,6 @@
 import { couronneFeuillue, conifereBoise, troncRamifie } from './vegetation-boisee';
 import { candidatsBatiment, libererBatimentsLivres } from './assets-environnement';
-import { appliquerMasque, clonerMateriauNoeud, couleurMasquee, definirMasque, masqueDe } from './modeles';
+import { appliquerMasque, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips, definirMasque, libererSquelettesPrives, masqueDe, type LecteurClips } from './modeles';
 /**
  * Le décor : arbres, rochers et bâtiments.
  *
@@ -239,6 +239,8 @@ export interface PriseDrapeau {
   readonly pied: THREE.Vector3;
   /** Impose au drapeau un camp et une hauteur, par-dessus ce que dit l'état. */
   forcer(camp: CampId | null, niveau: number): void;
+  /** Lance une fois le clip du bâtiment pendant ce geste, s'il en possède un. */
+  capturer?(dureeMs: number): void;
   /** Rend le drapeau à ce que dit l'état. */
   relacher(): void;
 }
@@ -790,6 +792,13 @@ export function ouvrirChantierDecor(
   // --- Bâtiments
   const batiments = new THREE.Group();
   batiments.name = 'batiments';
+  const lecteursBatiments = new Map<string, { lecteur: LecteurClips; ecoule: number; reposActif: boolean }>();
+  let mouvementBatimentsReduit = false;
+  function libererLecteursBatiments(): void {
+    for (const { lecteur } of lecteursBatiments.values()) lecteur.dispose();
+    lecteursBatiments.clear();
+    for (const objet of batiments.children) libererSquelettesPrives(objet);
+  }
   const matFenetres = new THREE.MeshStandardNodeMaterial({
     color: 0x2a3242, emissive: 0xffd98a, emissiveIntensity: 0.05, roughness: 0.25, metalness: 0.1,
   });
@@ -1263,7 +1272,7 @@ export function ouvrirChantierDecor(
     const idLivre=candidatsBatiment(terrain,pays).find(id=>modelesLivres.has(id));
     const modeleLivre = !desaffecte && idLivre ? modelesLivres.get(idLivre) : undefined;
     if (modeleLivre) {
-      const copie = modeleLivre.clone(true);
+      const copie = clonerFigurine(modeleLivre);
       // Object3D.clone sérialise userData : rétablir la référence matériau,
       // sans laquelle la transparence recevrait un simple objet JSON.
       copie.traverse(o => {
@@ -1272,7 +1281,15 @@ export function ouvrirChantierDecor(
         o.userData['opaque'] = o.material;
       });
       groupeCase.add(copie);
-      if (terrain === 'radar') {
+      // Opt-in des nouvelles livraisons : les anciens clips pouvaient tasser
+      // les murs pendant la capture. Ils ne sont pas activés rétroactivement.
+      const anime = copie.getObjectByName('racine')?.userData['atlasAnimationsBatiment'] === true;
+      const lecteur = anime ? creerLecteurClips(copie, copie.animations) : null;
+      if (lecteur) {
+        lecteur.jouer('repos', 0, false);
+        lecteursBatiments.set(cleCase({ x, y }), { lecteur, ecoule: 0, reposActif: terrain !== 'radar' || proprio !== null });
+      }
+      if (terrain === 'radar' && !lecteur) {
         const pivot = copie.getObjectByName('toit');
         if (pivot) paraboles.push({ pivot, active: proprio !== null });
       }
@@ -1308,6 +1325,7 @@ export function ouvrirChantierDecor(
   function tranchesBatiments(e: EtatPartie): Array<() => void> {
     const cases = casesABatir();
     const tranches: Array<() => void> = [(): void => {
+      libererLecteursBatiments();
       batiments.clear();
       paraboles.length = 0;
     }];
@@ -1681,6 +1699,23 @@ export function ouvrirChantierDecor(
 
     avancer(ms: number, mouvementReduit = false): boolean {
       let encore = false;
+      mouvementBatimentsReduit = mouvementReduit;
+      for (const [cle, animation] of lecteursBatiments) {
+        if (mouvementReduit || (visiblesCourants && !visiblesCourants.has(cle))
+          || (!animation.reposActif && animation.lecteur.courant === 'repos')) {
+          animation.ecoule = 0;
+          if (mouvementReduit && animation.lecteur.courant !== 'repos') animation.lecteur.jouer('repos', 0, false);
+          continue;
+        }
+        animation.ecoule += ms;
+        // Le repos des petits équipements suffit à 10 Hz. Une capture suit
+        // la cadence du geste, sans ajouter de boucle de rendu indépendante.
+        if (animation.lecteur.courant !== 'repos' || animation.ecoule >= 100) {
+          animation.lecteur.avancer(animation.ecoule / 1000);
+          animation.ecoule = 0;
+        }
+        encore = true;
+      }
       if (oscillation >= 0.3) {
         souffle += ms / 320;
         poserArbres(souffle);
@@ -1726,6 +1761,7 @@ export function ouvrirChantierDecor(
     drapeau(cle: string): PriseDrapeau | null {
       const p = places.find((q) => q.cle === cle);
       if (!p) return null;
+      let captureLancee = false;
       return {
         seuil: p.seuil,
         get sommet(): THREE.Vector3 {
@@ -1738,7 +1774,21 @@ export function ouvrirChantierDecor(
           p.force = { camp, niveau };
           poserPavillons();
         },
+        capturer(dureeMs): void {
+          if (captureLancee || mouvementBatimentsReduit || dureeMs <= 0) return;
+          captureLancee = true;
+          const animation = lecteursBatiments.get(cle);
+          if (animation) {
+            animation.ecoule = 0;
+            animation.lecteur.jouer('capture', dureeMs, false);
+          }
+        },
         relacher(): void {
+          const animation = lecteursBatiments.get(cle);
+          if (animation && captureLancee) {
+            animation.ecoule = 0;
+            animation.lecteur.jouer('repos', 0, false);
+          }
           p.force = null;
           poserPavillons();
         },
@@ -1746,6 +1796,7 @@ export function ouvrirChantierDecor(
     },
 
     dispose(): void {
+      libererLecteursBatiments();
       // Les **formes** ne sont pas libérées : troncs, couronnes, pierres, mâts,
       // pommeaux, primitives et cases fondues sont partagés avec les autres
       // décors de la page, et ce décor n'en est pas propriétaire. Les libérer

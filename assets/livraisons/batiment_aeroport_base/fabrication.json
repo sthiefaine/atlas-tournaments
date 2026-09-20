@@ -1,0 +1,141 @@
+{
+  "id": "batiment_aeroport_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 4116,
+  "budgetTriangles": 4200,
+  "octetsGlb": 279880,
+  "sha256Glb": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d",
+  "bornes": {
+    "min": [
+      -0.46000000834465027,
+      0,
+      -0.46000000834465027
+    ],
+    "max": [
+      0.46000000834465027,
+      0.41449999809265137,
+      0.46000000834465027
+    ],
+    "dimensions": [
+      0.9200000166893005,
+      0.41449999809265137,
+      0.9200000166893005
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "toit": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "enseigne": {
+      "parent": "toit",
+      "p": [
+        -0.321,
+        0.4,
+        -0.348
+      ]
+    },
+    "manche_air": {
+      "parent": "racine",
+      "p": [
+        0.225,
+        0.316,
+        -0.398
+      ]
+    }
+  },
+  "bilanTriangles": {
+    "dalle": 60,
+    "chant_apron": 128,
+    "apron": 64,
+    "semelle_cabine": 60,
+    "cabine_basse": 28,
+    "appui_vitrage": 60,
+    "montant_-1_-0.416": 60,
+    "montant_-1_-0.146": 60,
+    "meneau_-1": 12,
+    "montant_1_-0.416": 60,
+    "montant_1_-0.146": 60,
+    "meneau_1": 12,
+    "porte_service": 60,
+    "bande_cabine": 60,
+    "chassis_camion": 60,
+    "pneu_-1_-0.323": 64,
+    "jante_-1_-0.323": 48,
+    "pneu_-1_-0.175": 64,
+    "jante_-1_-0.175": 48,
+    "pneu_1_-0.323": 64,
+    "jante_1_-0.323": 48,
+    "pneu_1_-0.175": 64,
+    "jante_1_-0.175": 48,
+    "cabine_camion": 44,
+    "toit_camion": 60,
+    "parechoc": 60,
+    "cuve": 96,
+    "berceau_-0.344": 12,
+    "sangle_cuve_-0.344": 192,
+    "berceau_-0.24": 12,
+    "sangle_cuve_-0.24": 192,
+    "bouchon_cuve": 64,
+    "bloc_pompe": 60,
+    "raccord_pompe": 48,
+    "flexible_range": 256,
+    "embase_mat": 64,
+    "mat": 48,
+    "rotule_manche": 168,
+    "support_feu_nord": 64,
+    "support_feu_est": 64,
+    "support_feu_sud": 64,
+    "support_feu_ouest": 64,
+    "vitrage_avant": 12,
+    "vitrage_arriere": 12,
+    "vitrage_cote_-1": 12,
+    "vitrage_cote_1": 12,
+    "parebrise_camion": 12,
+    "vitre_camion_-1": 12,
+    "vitre_camion_1": 12,
+    "lentille_nord": 64,
+    "lentille_est": 64,
+    "lentille_sud": 64,
+    "lentille_ouest": 64,
+    "toiture": 60,
+    "fond_glissiere": 60,
+    "rail_capture_-0.401": 60,
+    "rail_capture_-0.209": 60,
+    "rive_toit_-0.391": 60,
+    "rive_toit_-0.162": 60,
+    "indicateur_capture": 60,
+    "manche_creuse": 256,
+    "ourlet_manche_entree": 32,
+    "ourlet_manche_sortie": 32,
+    "axe_manche": 48,
+    "rayon_manche_-0.428": 32,
+    "rayon_manche_-0.368": 32
+  },
+  "approbationArtistique": false
+}

@@ -1,0 +1,143 @@
+{
+  "id": "batiment_aeroport_base",
+  "date": "2026-09-20T16:07:52.919277+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T15:48:03.183Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "51e17c267aef8476c47737348c6235a63e431a9915d46e5b977a6c92220fd2ca",
+    "triangles": 996,
+    "octetsGlb": 116108,
+    "preserve": true,
+    "actifPreserve": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 4116,
+  "budgetTriangles": 4200,
+  "primitives": 5,
+  "materiaux": 2,
+  "octetsGlb": 279880,
+  "octetsLot": 1688620,
+  "dimensions": [
+    0.9200000166893005,
+    0.41449999809265137,
+    0.9200000166893005
+  ],
+  "sha256Glb": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d",
+  "fichiers": [
+    {
+      "fichier": "batiment_aeroport_base_albedo.png",
+      "octets": 439143,
+      "sha256": "9d0d66f1145066e184ba345fe2d90d4f6dc6009b1ff186986e72d075356e56bb"
+    },
+    {
+      "fichier": "batiment_aeroport_base_emission.png",
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "fichier": "batiment_aeroport_base_lod0.glb",
+      "octets": 279880,
+      "sha256": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d"
+    },
+    {
+      "fichier": "batiment_aeroport_base_masque_equipe.png",
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    },
+    {
+      "fichier": "batiment_aeroport_base_normale.png",
+      "octets": 872440,
+      "sha256": "d0beee127389aa14f1ad88d31a612947085378bfc3c3693014a6d1c5104584fd"
+    },
+    {
+      "fichier": "batiment_aeroport_base_rugosite.png",
+      "octets": 95467,
+      "sha256": "d2a4c9e3b862d15ade0613aab78b63044bda5c336c8341c8904e15342e88b776"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/README.md",
+      "sha256": "420da3eff28db4966f59593f926e9033e2057192f89496505d6ad1fb3f962386"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/assembler-revue.py",
+      "sha256": "8311b58404999085415c393faefc72e5dad36a15cbef2db9c7519e0e1a4ee865"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/generer.ts",
+      "sha256": "a5798dbbe675779b3fd5e1ddd2ff78a889b711b3527c321c4ef5b2c4c3133fef"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/geometrie.py",
+      "sha256": "2f99649d84f550b3e8471e9a3eed872ca2701a086eedebb7fb6c33f7a1e0c761"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/inspecter-ancien.py",
+      "sha256": "f831915f4c2887d09f79b66bcd1b9931431b8bf7a35d308cfe5ec6da9fb5ffb8"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/mesurer-natif.ts",
+      "sha256": "ef69f091b8a1d47eed50fffa8a3c4c6deb27fc291f4513afc7f360afbb690561"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/mesurer.py",
+      "sha256": "638e8a21d1891f49a1c570b305f1d7b1dcea85123841a52fc2faf040fca16063"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_aeroport_base/textures.py",
+      "sha256": "607ac06b442528b0202b7e36905b9db9948bb7a8032e1bb3296a2d06dc267c8c"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_aeroport_base_albedo.png",
+      "batiment_aeroport_base_emission.png",
+      "batiment_aeroport_base_lod0.glb",
+      "batiment_aeroport_base_masque_equipe.png",
+      "batiment_aeroport_base_normale.png",
+      "batiment_aeroport_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "poses": 264,
+    "pairesRaccordsListees": 42,
+    "controleExhaustifCollisions": false,
+    "pariteNumpyNatif": true,
+    "reproduction": "reproduction.json"
+  },
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Mesures ciblées sur les pièces listées, pas de preuve exhaustive de non-intersection.",
+    "Textures retirées en mémoire pour charger sous Node ; cartes et UV contrôlés séparément.",
+    "Transitions entre animations non évaluées dans le jeu.",
+    "Aucune approbation artistique, capture ou mesure téléphone."
+  ]
+}

@@ -257,6 +257,14 @@
       "revision": "acc49a5c1d8a74833fe8ed6f0492908e2fb1b129e52e291d547dac4da4bb53e3",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "batiment_aeroport_base",
+      "fichierActif": "public/assets/modeles/batiment_aeroport_base_lod0.glb",
+      "donnees": "../donnees/0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d.glb",
+      "revision": "7d63341e262126470d4cfe715d5d468cb7d48ef85ccc6b33b0dfd25d9ef747c2",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [
