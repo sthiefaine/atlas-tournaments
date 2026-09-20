@@ -1,0 +1,137 @@
+{
+  "id": "unite_missiles_air_base",
+  "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près. Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour de la chaîne corps sans translation horizontale animée.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6306808009669185,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617,
+      "vitesseMajoreeMetresSeconde": 0.3072005316092375,
+      "rayonHorizontalMajorationContinue": 0.485370369244278,
+      "espacementMinimumVoisinsTousCaps": 0.02925926151144398,
+      "racineIdentite": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6336808063983917,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617,
+      "vitesseMajoreeMetresSeconde": 0.7492811829931622,
+      "rayonHorizontalMajorationContinue": 0.48540161892613753,
+      "espacementMinimumVoisinsTousCaps": 0.02919676214772493,
+      "racineIdentite": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 198,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6326808043718338,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617,
+      "vitesseMajoreeMetresSeconde": 0.7408559236437866,
+      "rayonHorizontalMajorationContinue": 0.484800884433236,
+      "espacementMinimumVoisinsTousCaps": 0.03039823113352802,
+      "racineIdentite": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6326808043718338,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617,
+      "vitesseMajoreeMetresSeconde": 0.2982057581436031,
+      "rayonHorizontalMajorationContinue": 0.483838654593009,
+      "espacementMinimumVoisinsTousCaps": 0.03232269081398198,
+      "racineIdentite": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.630680800318718,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617,
+      "vitesseMajoreeMetresSeconde": 0.10345851307464515,
+      "rayonHorizontalMajorationContinue": 0.4836928467290213,
+      "espacementMinimumVoisinsTousCaps": 0.032614306541957405,
+      "racineIdentite": true
+    }
+  ],
+  "borneAnalytiqueTemoin": 0.3901088804847988,
+  "bornesStatiques": {
+    "min": [
+      -0.32749998569488525,
+      0.0,
+      -0.4555000066757202
+    ],
+    "max": [
+      0.32749998569488525,
+      0.6306808009669185,
+      0.4555000066757202
+    ],
+    "dimensions": [
+      0.6549999713897705,
+      0.6306808009669185,
+      0.9110000133514404
+    ]
+  },
+  "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon majoré continûment.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+    "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+  ]
+}

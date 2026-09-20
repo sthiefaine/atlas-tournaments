@@ -1,0 +1,151 @@
+{
+  "methode": "pigments et microreliefs analytiques déterministes ; aucun éclairage calculé ni peint",
+  "bakeHD": false,
+  "normale": "+Y tangent, vecteurs renormalisés",
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "gouttierePixels": 16,
+    "roles": [
+      [
+        188,
+        188,
+        188
+      ],
+      [
+        62,
+        69,
+        72
+      ],
+      [
+        36,
+        39,
+        40
+      ],
+      [
+        149,
+        156,
+        160
+      ],
+      [
+        23,
+        53,
+        65
+      ],
+      [
+        127,
+        136,
+        141
+      ],
+      [
+        49,
+        56,
+        59
+      ],
+      [
+        216,
+        155,
+        71
+      ],
+      [
+        79,
+        84,
+        85
+      ],
+      [
+        59,
+        65,
+        69
+      ],
+      [
+        36,
+        39,
+        40
+      ],
+      [
+        149,
+        156,
+        160
+      ],
+      [
+        23,
+        53,
+        65
+      ],
+      [
+        96,
+        104,
+        107
+      ],
+      [
+        49,
+        56,
+        59
+      ],
+      [
+        216,
+        155,
+        71
+      ]
+    ]
+  },
+  "cartes": [
+    {
+      "canal": "albedo",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "octets": 458259,
+      "sha256": "7b8d7214d5a46917f1c531642452eb8e26bf06917a1004f48516ef855c53b36e"
+    },
+    {
+      "canal": "normale",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "octets": 584455,
+      "sha256": "80eb738952d4c5ac850703b45a1c6ecd777d1bd7a0ea7675166e19eec47b70a1"
+    },
+    {
+      "canal": "rugosite",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 126419,
+      "sha256": "dc089e0fe3a7597721013956aa05d0a8d0695f354c54003ffb56ce8391555efd"
+    },
+    {
+      "canal": "metal",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "L",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "canal": "masque_equipe",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "L",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    }
+  ],
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "metalEditableIdentiqueCanalB": true
+}

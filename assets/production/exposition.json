@@ -16823,21 +16823,14 @@
     {
       "id": "unite_missiles_air_base",
       "fichiers": [
-        "unite_missiles_air_base_lod0.glb",
         "unite_missiles_air_base_albedo.png",
-        "unite_missiles_air_base_albedo_hiver.png",
-        "unite_missiles_air_base_normale.png",
-        "unite_missiles_air_base_normale_hiver.png",
-        "unite_missiles_air_base_rugosite.png",
-        "unite_missiles_air_base_rugosite_hiver.png",
-        "unite_missiles_air_base_metal.png",
-        "unite_missiles_air_base_metal_hiver.png",
+        "unite_missiles_air_base_lod0.glb",
         "unite_missiles_air_base_masque_equipe.png",
-        "unite_missiles_air_base_masque_equipe_hiver.png",
-        "unite_missiles_air_base_emission.png",
-        "unite_missiles_air_base_emission_hiver.png"
+        "unite_missiles_air_base_metal.png",
+        "unite_missiles_air_base_normale.png",
+        "unite_missiles_air_base_rugosite.png"
       ],
-      "revision": "ef0004400b73c50e669bfc4441ef8c6498d404b57c5dbde060b28296e041b393"
+      "revision": "b6ababd445a76e3a15e24ff4dd4b0329fae138a1512800be181fd69e4e9154c1"
     },
     {
       "id": "unite_missiles_sol_base",

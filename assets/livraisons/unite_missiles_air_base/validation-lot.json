@@ -1,0 +1,21 @@
+{
+  "id": "unite_missiles_air_base",
+  "revision": "b6ababd445a76e3a15e24ff4dd4b0329fae138a1512800be181fd69e4e9154c1",
+  "octets": 1818001,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_missiles_air_base_albedo.png",
+      "unite_missiles_air_base_lod0.glb",
+      "unite_missiles_air_base_masque_equipe.png",
+      "unite_missiles_air_base_metal.png",
+      "unite_missiles_air_base_normale.png",
+      "unite_missiles_air_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

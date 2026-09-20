@@ -34,6 +34,10 @@ Bastion poussé en `f6c2f67` puis confirmé en ligne : SHA du GLB et des cinq PN
 
 Veilleur intégré : 5 428 triangles, sept primitives, 1 521 572 octets. Deux rotors diagonaux à quatre pales et squelettes privés, radar pliant, pose hors jeu sur les patins ; 6 258 poses mesurées et 76 dégagements locaux. Rayon continu majoré 0,498562 m en gabarit b. Contrôle technique et typage réussis, aucune image. Les prompts de la file JSON portent désormais explicitement l’autorisation de création originale après absence distante confirmée et absence de maître local, les dossiers réservés au spécialiste et l’exclusion de la plaine ; le prompt générique admin reste inchangé. Vingt-quatre modèles livrés.
 
+Veilleur poussé en `078cb52` puis confirmé en ligne par SHA du GLB et des cinq PNG, inventaire présent. Lance-missiles sol-air suivant : absence de dépôt vérifiée le 20 septembre à 13:51 UTC, ancien candidat 884 triangles, aucun actif ni kit.
+
+Lance-missiles sol-air intégré : 8 868 triangles, huit primitives, 1 818 001 octets. Six pneus au sol, six logements creux et radar tournant ; 976 poses, rayon continu majoré 0,485402 m, 26 dégagements localisés et 102 sondes des ouvertures. Vitrages et supports corrigés avant livraison. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Vingt-cinq modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

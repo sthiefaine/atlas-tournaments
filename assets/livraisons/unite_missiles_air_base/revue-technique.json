@@ -1,0 +1,967 @@
+{
+  "id": "unite_missiles_air_base",
+  "dateRevueUtc": "2026-09-20T14:09:54.215916+00:00",
+  "statut": "pret_a_integrer_par_coordinateur",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "dossierScripts": "scripts/production/modeles/unite_missiles_air_base",
+    "sourceExterneUtilisee": false,
+    "ancienCandidatImporte": false,
+    "bakeHD": false,
+    "helpersAdaptes": "Export, formes élémentaires, recette atlas de matières et mesures des modèles précédents. Aucune géométrie ou PNG de l’ancien candidat réutilisé.",
+    "ancienCandidat": {
+      "sha256Glb": "1241976e5a1980b8cbe56ec9b5f5c0772025d7013e1b7259b03646b486aa53e8",
+      "octetsGlb": 108020,
+      "triangles": 884,
+      "pngInspectes": 12,
+      "importe": false
+    },
+    "depotsDistants": {
+      "dateVerificationCommuniquee": "2026-09-20T13:51:44.465Z",
+      "nombreDepots": 0,
+      "sourceVerification": "Coordinateur ; lecture authentifiée réussie, revalidation avant intégration de son ressort."
+    }
+  },
+  "sha256Glb": "8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451",
+  "fichiers": [
+    {
+      "nom": "unite_missiles_air_base_albedo.png",
+      "octets": 458259,
+      "sha256": "7b8d7214d5a46917f1c531642452eb8e26bf06917a1004f48516ef855c53b36e"
+    },
+    {
+      "nom": "unite_missiles_air_base_lod0.glb",
+      "octets": 647736,
+      "sha256": "8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451"
+    },
+    {
+      "nom": "unite_missiles_air_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_missiles_air_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_missiles_air_base_normale.png",
+      "octets": 584455,
+      "sha256": "80eb738952d4c5ac850703b45a1c6ecd777d1bd7a0ea7675166e19eec47b70a1"
+    },
+    {
+      "nom": "unite_missiles_air_base_rugosite.png",
+      "octets": 126419,
+      "sha256": "dc089e0fe3a7597721013956aa05d0a8d0695f354c54003ffb56ce8391555efd"
+    }
+  ],
+  "octetsGlb": 647736,
+  "octetsLot": 1818001,
+  "triangles": 8868,
+  "budgetTriangles": 9000,
+  "primitives": 8,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "noeuds": [
+    "base",
+    "corps",
+    "module_lance_roquettes",
+    "module_radar",
+    "os_recul",
+    "racine",
+    "socle"
+  ],
+  "dimensionsMetres": [
+    0.6549999713897705,
+    0.6306808009669185,
+    0.9110000133514404
+  ],
+  "bornes": {
+    "min": [
+      -0.32749998569488525,
+      0.0,
+      -0.4555000066757202
+    ],
+    "max": [
+      0.32749998569488525,
+      0.6306808009669185,
+      0.4555000066757202
+    ],
+    "dimensions": [
+      0.6549999713897705,
+      0.6306808009669185,
+      0.9110000133514404
+    ]
+  },
+  "clips": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_missiles_air_base_albedo.png",
+      "unite_missiles_air_base_lod0.glb",
+      "unite_missiles_air_base_masque_equipe.png",
+      "unite_missiles_air_base_metal.png",
+      "unite_missiles_air_base_normale.png",
+      "unite_missiles_air_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": [],
+    "dateUtc": "2026-09-20T14:07:18.862212+00:00",
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_missiles_air_base.json --lot /Users/thief/projets/atlas-tournaments/tmp/production-sequentielle/unite_missiles_air_base",
+    "codeSortie": 0,
+    "sha256Glb": "8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451"
+  },
+  "controleTypage": {
+    "ok": true,
+    "dateUtc": "2026-09-20T14:07:22.115705+00:00",
+    "commande": "npm run typecheck",
+    "codeSortie": 0,
+    "sha256SourcesTs": {
+      "scripts/production/modeles/unite_missiles_air_base/generer.ts": "a149fa1eda2e43054a41a85503cc96216810ba5b68aa834bb869769025c9a9e1",
+      "scripts/production/modeles/unite_missiles_air_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+      "scripts/production/modeles/unite_missiles_air_base/mesurer-poses.ts": "55ed3d883329a4d0067d25da05608068c8d5e730608fb2e8b436e9d7feea4a35"
+    },
+    "suiteTestsExecutee": false,
+    "buildExecute": false
+  },
+  "mesuresResume": {
+    "roues": 6,
+    "posesGLBRelues": 976,
+    "rayonEchantillonneMetres": 0.48345036584542617,
+    "rayonHorizontalMajoreMetres": 0.48540161892613753,
+    "espaceMinimalDeuxVoisinsTousCapsMetres": 0.02919676214772493,
+    "mesuresDistancesTriangles": 26,
+    "rayonsOuverturesToutesGeometries": 102,
+    "gardeBouePneuAuPointBasMetres": 0.007000006625428767,
+    "suspensionEngagementMinimumMetres": 0.033499991364777104,
+    "suspensionJeuRadialMinimumMetres": 0.0038636844895621972,
+    "caissonCabineMinimumEchantillonneMetres": 0.06619541836640652,
+    "caissonRadarMinimumEchantillonneMetres": 0.08757051911032615,
+    "caissonPlancherMinimumEchantillonneMetres": 0.023756719520143132
+  },
+  "mesures": {
+    "geometrie": {
+      "triangles": 8868,
+      "primitives": 8,
+      "trianglesDegeneres": 0,
+      "trianglesSuperposes": 0,
+      "uvTrianglesDegeneres": 0,
+      "normalesInversees": 0,
+      "normalesErreurMax": 3.874213105881097e-08,
+      "tangentesErreurMax": 3.976524032278661e-08,
+      "orthogonaliteErreurMax": 4.1100389092108e-08,
+      "valeursFinies": true,
+      "uvDansAtlas": true,
+      "imagesExternes": true,
+      "noeudsUniques": true,
+      "racineAnimee": false,
+      "boucles": {
+        "repos": true,
+        "deplacement": true
+      },
+      "dureesClipsMs": {
+        "repos": 2400,
+        "deplacement": 1000,
+        "tir": 700,
+        "touche": 500,
+        "hors_jeu": 900
+      },
+      "horsJeuTientPoseFinale": true,
+      "masqueValeurs": [
+        0,
+        255
+      ],
+      "albedoEquipeEcartMax": 0,
+      "metalCanalBIdentique": true,
+      "id": "unite_missiles_air_base",
+      "approbationArtistique": false,
+      "noeuds": [
+        "base",
+        "corps",
+        "module_lance_roquettes",
+        "module_radar",
+        "os_recul",
+        "racine",
+        "socle"
+      ],
+      "materiaux": [
+        "mat_corps",
+        "mat_details"
+      ],
+      "interpolationClips": [
+        "LINEAR"
+      ],
+      "quaternionsUnitaires": true,
+      "tempsStrictementCroissants": true,
+      "bornesTempsAnimationConservees": true,
+      "indicateurCacheFinHorsJeu": true,
+      "normalePngLongueurErreurMax": 0.002779681475911344,
+      "normalePngZMinimum": 1.0,
+      "rugositeCanalGMinMax": [
+        50,
+        234
+      ],
+      "continuitesBoucles": [
+        {
+          "clip": "repos",
+          "noeud": "module_radar",
+          "canal": "rotation",
+          "erreurVitesseJointure": 5.201485060446487e-07,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "deplacement",
+          "noeud": "corps",
+          "canal": "translation",
+          "erreurVitesseJointure": 0.0,
+          "unite": "m/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "deplacement",
+          "noeud": "module_radar",
+          "canal": "rotation",
+          "erreurVitesseJointure": 8.881784197001252e-16,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        }
+      ]
+    },
+    "poses": {
+      "id": "unite_missiles_air_base",
+      "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près. Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour de la chaîne corps sans translation horizontale animée.",
+      "clips": [
+        {
+          "nom": "repos",
+          "nombreEchantillons": 194,
+          "enveloppe": {
+            "min": [
+              -0.32749998569488525,
+              0.0,
+              -0.4555000066757202
+            ],
+            "max": [
+              0.32749998569488525,
+              0.6306808009669185,
+              0.4555000066757202
+            ]
+          },
+          "rayonHorizontalMax": 0.48345036584542617,
+          "vitesseMajoreeMetresSeconde": 0.3072005316092375,
+          "rayonHorizontalMajorationContinue": 0.485370369244278,
+          "espacementMinimumVoisinsTousCaps": 0.02925926151144398,
+          "racineIdentite": true
+        },
+        {
+          "nom": "deplacement",
+          "nombreEchantillons": 193,
+          "enveloppe": {
+            "min": [
+              -0.32749998569488525,
+              0.0,
+              -0.4555000066757202
+            ],
+            "max": [
+              0.32749998569488525,
+              0.6336808063983917,
+              0.4555000066757202
+            ]
+          },
+          "rayonHorizontalMax": 0.48345036584542617,
+          "vitesseMajoreeMetresSeconde": 0.7492811829931622,
+          "rayonHorizontalMajorationContinue": 0.48540161892613753,
+          "espacementMinimumVoisinsTousCaps": 0.02919676214772493,
+          "racineIdentite": true
+        },
+        {
+          "nom": "tir",
+          "nombreEchantillons": 198,
+          "enveloppe": {
+            "min": [
+              -0.32749998569488525,
+              0.0,
+              -0.4555000066757202
+            ],
+            "max": [
+              0.32749998569488525,
+              0.6326808043718338,
+              0.4555000066757202
+            ]
+          },
+          "rayonHorizontalMax": 0.48345036584542617,
+          "vitesseMajoreeMetresSeconde": 0.7408559236437866,
+          "rayonHorizontalMajorationContinue": 0.484800884433236,
+          "espacementMinimumVoisinsTousCaps": 0.03039823113352802,
+          "racineIdentite": true
+        },
+        {
+          "nom": "touche",
+          "nombreEchantillons": 196,
+          "enveloppe": {
+            "min": [
+              -0.32749998569488525,
+              0.0,
+              -0.4555000066757202
+            ],
+            "max": [
+              0.32749998569488525,
+              0.6326808043718338,
+              0.4555000066757202
+            ]
+          },
+          "rayonHorizontalMax": 0.48345036584542617,
+          "vitesseMajoreeMetresSeconde": 0.2982057581436031,
+          "rayonHorizontalMajorationContinue": 0.483838654593009,
+          "espacementMinimumVoisinsTousCaps": 0.03232269081398198,
+          "racineIdentite": true
+        },
+        {
+          "nom": "hors_jeu",
+          "nombreEchantillons": 195,
+          "enveloppe": {
+            "min": [
+              -0.32749998569488525,
+              0.0,
+              -0.4555000066757202
+            ],
+            "max": [
+              0.32749998569488525,
+              0.630680800318718,
+              0.4555000066757202
+            ]
+          },
+          "rayonHorizontalMax": 0.48345036584542617,
+          "vitesseMajoreeMetresSeconde": 0.10345851307464515,
+          "rayonHorizontalMajorationContinue": 0.4836928467290213,
+          "espacementMinimumVoisinsTousCaps": 0.032614306541957405,
+          "racineIdentite": true
+        }
+      ],
+      "borneAnalytiqueTemoin": 0.3901088804847988,
+      "bornesStatiques": {
+        "min": [
+          -0.32749998569488525,
+          0.0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6306808009669185,
+          0.4555000066757202
+        ],
+        "dimensions": [
+          0.6549999713897705,
+          0.6306808009669185,
+          0.9110000133514404
+        ]
+      },
+      "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+      "limites": [
+        "Contrôle numérique sans rendu ni approbation artistique.",
+        "Sol mesuré aux échantillons ; rayon majoré continûment.",
+        "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+        "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+        "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+      ]
+    },
+    "jeuxMecaniques": {
+      "id": "unite_missiles_air_base",
+      "sha256Glb": "8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451",
+      "approbationArtistique": false,
+      "methode": "Triangles GLB relus par plages extras.pieces, distances exactes localisées, plans de cabine, rayons dans les ouvertures et matrices des poses. Aucun rendu.",
+      "nombreRoues": 6,
+      "roues": [
+        {
+          "id": "g0",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        },
+        {
+          "id": "g1",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        },
+        {
+          "id": "g2",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        },
+        {
+          "id": "d0",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        },
+        {
+          "id": "d1",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        },
+        {
+          "id": "d2",
+          "appuiMinimumY": 0.0,
+          "diametreAvecCrampons": 0.21799999475479126,
+          "largeurPneu": 0.10999998450279236,
+          "gardeBouePointBasJeuVertical": 0.007000006625428767
+        }
+      ],
+      "plateauPneusJeuVerticalAuPointBas": 0.006000004649162283,
+      "suspensions": [
+        {
+          "indice": 0,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.0038636844895621972
+        },
+        {
+          "indice": 1,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.003863684489562198
+        },
+        {
+          "indice": 2,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.003863691423446625
+        },
+        {
+          "indice": 3,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.003863691423446625
+        },
+        {
+          "indice": 4,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.003863684489562198
+        },
+        {
+          "indice": 5,
+          "engagementMinimal": 0.033499991364777104,
+          "jeuRadialMinimal": 0.0038636844895621972
+        }
+      ],
+      "vitres": [
+        {
+          "nom": "pare_brise",
+          "indice": 0,
+          "distanceSigneeMinMaxPlanCabine": [
+            -0.002200632139167963,
+            0.007802008166856587
+          ],
+          "dosEncastre": true,
+          "faceExterieure": true
+        },
+        {
+          "nom": "pare_brise",
+          "indice": 1,
+          "distanceSigneeMinMaxPlanCabine": [
+            -0.002200632139167963,
+            0.007802008166856587
+          ],
+          "dosEncastre": true,
+          "faceExterieure": true
+        },
+        {
+          "nom": "vitres_laterales",
+          "indice": 0,
+          "distanceSigneeMinMaxPlanCabine": [
+            -0.0019788742541182467,
+            0.008021349755292673
+          ],
+          "dosEncastre": true,
+          "faceExterieure": true
+        },
+        {
+          "nom": "vitres_laterales",
+          "indice": 1,
+          "distanceSigneeMinMaxPlanCabine": [
+            -0.0019788742541182467,
+            0.008021349755292673
+          ],
+          "dosEncastre": true,
+          "faceExterieure": true
+        }
+      ],
+      "cavites": [
+        {
+          "id": "0_0",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.4139999837132755,
+            0.4139999951830465
+          ]
+        },
+        {
+          "id": "0_1",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.41399998371327545,
+            0.4139999951830465
+          ]
+        },
+        {
+          "id": "0_2",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.4139999837132755,
+            0.4139999951830465
+          ]
+        },
+        {
+          "id": "1_0",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.41399998281268063,
+            0.4140000023251562
+          ]
+        },
+        {
+          "id": "1_1",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.41399998281268063,
+            0.41400000232515766
+          ]
+        },
+        {
+          "id": "1_2",
+          "rayonsVerifies": 17,
+          "rayonOuvertureSonde": 0.028,
+          "profondeurPremiereSurfaceMinMax": [
+            0.41399998281268063,
+            0.4140000023251562
+          ]
+        }
+      ],
+      "distancesTriangles": [
+        {
+          "nom": "roues_g0_1",
+          "minimumMetres": 0.027000010013580322,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 7250,
+          "traversees": 0
+        },
+        {
+          "nom": "roues_g1_2",
+          "minimumMetres": 0.027000010013580322,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 7250,
+          "traversees": 0
+        },
+        {
+          "nom": "roues_d0_1",
+          "minimumMetres": 0.027000010013580322,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 7250,
+          "traversees": 0
+        },
+        {
+          "nom": "roues_d1_2",
+          "minimumMetres": 0.027000010013580322,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 7250,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_0_-0.011",
+          "minimumMetres": 0.0038636844895621972,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_0_0.003",
+          "minimumMetres": 0.0038636844895621972,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_1_-0.011",
+          "minimumMetres": 0.003863684489562198,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_1_0.003",
+          "minimumMetres": 0.003863684489562198,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_2_-0.011",
+          "minimumMetres": 0.003863691423446625,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_2_0.003",
+          "minimumMetres": 0.003863691423446625,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_3_-0.011",
+          "minimumMetres": 0.003863691423446625,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_3_0.003",
+          "minimumMetres": 0.003863691423446625,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_4_-0.011",
+          "minimumMetres": 0.003863684489562198,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_4_0.003",
+          "minimumMetres": 0.003863684489562198,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_5_-0.011",
+          "minimumMetres": 0.0038636844895621972,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1260,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_5_0.003",
+          "minimumMetres": 0.0038636844895621972,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 872,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_verticales_0",
+          "minimumMetres": 0.002000018020526937,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 384,
+          "traversees": 0
+        },
+        {
+          "nom": "levres_verticales_0",
+          "minimumMetres": 0.0009999784338628873,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 274,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_verticales_1",
+          "minimumMetres": 0.002000018020526937,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 384,
+          "traversees": 0
+        },
+        {
+          "nom": "levres_verticales_1",
+          "minimumMetres": 0.0009999784338628873,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 274,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_verticales_2",
+          "minimumMetres": 0.002000018020526937,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 384,
+          "traversees": 0
+        },
+        {
+          "nom": "levres_verticales_2",
+          "minimumMetres": 0.0009999784338628873,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 274,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_horizontales_0_0",
+          "minimumMetres": 0.027000002562999725,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1074,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_horizontales_0_1",
+          "minimumMetres": 0.027000002562999725,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1074,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_horizontales_1_0",
+          "minimumMetres": 0.027000002562999725,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1074,
+          "traversees": 0
+        },
+        {
+          "nom": "cellules_horizontales_1_1",
+          "minimumMetres": 0.027000002562999725,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1074,
+          "traversees": 0
+        }
+      ],
+      "posesModules": [
+        {
+          "clip": "repos",
+          "poses": 194,
+          "caissonCabineSeparationZ": 0.0674567174911499,
+          "caissonRadarSeparationZ": 0.08757051911032615,
+          "caissonPlancherSeparationY": 0.04982787270098926
+        },
+        {
+          "clip": "deplacement",
+          "poses": 193,
+          "caissonCabineSeparationZ": 0.0674567174911499,
+          "caissonRadarSeparationZ": 0.08757051911032615,
+          "caissonPlancherSeparationY": 0.04982787270098926
+        },
+        {
+          "clip": "tir",
+          "poses": 198,
+          "caissonCabineSeparationZ": 0.0674567174911499,
+          "caissonRadarSeparationZ": 0.13745672462880612,
+          "caissonPlancherSeparationY": 0.023756719520143132
+        },
+        {
+          "clip": "touche",
+          "poses": 196,
+          "caissonCabineSeparationZ": 0.06681908625558575,
+          "caissonRadarSeparationZ": 0.13681909339324197,
+          "caissonPlancherSeparationY": 0.043936702163617
+        },
+        {
+          "clip": "hors_jeu",
+          "poses": 195,
+          "caissonCabineSeparationZ": 0.06619541836640652,
+          "caissonRadarSeparationZ": 0.13619625027369747,
+          "caissonPlancherSeparationY": 0.04982787270098926
+        }
+      ],
+      "raccordsIntentionnels": [
+        "Moyeux et axes dans les jantes ; essieux, bras et longerons reliés.",
+        "Tiges dans des fourreaux ouverts, avec jeu radial ; base des fourreaux prise dans les traverses du plateau.",
+        "Axe horizontal dans les tourillons et équerres ; rails de recul sous le plancher du caisson.",
+        "Parois de tubes, lèvres et traverses fixées à la caisse ; aucune ouverture couverte par une face pleine.",
+        "Vitres encastrées par leur dos sur les plans de cabine ; supports radar assemblés au pavillon."
+      ],
+      "limites": [
+        "Distances localisées, pas de certification globale des collisions internes.",
+        "Caisson/cabine/radar mesurés aux poses, pas de preuve analytique globale de séparation pour tout mélange de clips.",
+        "Rayons de sondage couvrent le centre et un cercle de chaque ouverture, pas toute la surface continue.",
+        "Six roues fixes ; seule la suspension verticale du corps est animée.",
+        "Gabarit b neutre uniquement ; a/c non certifiés."
+      ]
+    }
+  },
+  "porteeRuntime": "Gabarit neutre b=[1,1,1] seulement ; a/c nationaux, déformations et mélanges entre clips non certifiés.",
+  "correctionsAvantLivraison": [
+    "Budget initial réduit par les segments de roues, la quincaillerie et les doubles chanfreins.",
+    "Chanfreins bornés selon la largeur et la profondeur des plaques minces.",
+    "Deux coffrets latéraux conservés, axe unique sorti de leur boucle de fabrication.",
+    "Pare-brise et vitres latérales alignés sur les vrais pans de cabine.",
+    "Rails et axe transversal descendus sous les cellules, lèvres et tubes voisins séparés ; sondes des ouvertures sur tous les triangles du véhicule."
+  ],
+  "limites": [
+    "Aucun test général ni build.",
+    "Aucun rendu, capture, image, contrôle visuel ni approbation artistique.",
+    "Aucune mesure de FPS ou essai téléphone.",
+    "Six roues rigides, seule la suspension verticale du corps est animée.",
+    "Les cinq clips sont mesurés séparément ; transitions runtime non certifiées.",
+    "Rayon continu majoré par vitesse, dégagements mobiles échantillonnés ; aucune certification globale des collisions internes.",
+    "Sondes de six ouvertures au centre et sur un cercle de 28 mm : contrôle local et ponctuel, pas une preuve de toute la section continue.",
+    "Vitrages opaques, atlas de matières répété et microreliefs analytiques ; aucun bake ou transfert HD.",
+    "Pas de carte d’émission : témoin ambré non lumineux caché hors jeu.",
+    "Effets de tir du moteur, bouche et lisibilité en jeu à apprécier humainement.",
+    "Aucun lot officiel, alias, registre, plan ou fichier partagé modifié ; aucune opération Git par le spécialiste."
+  ],
+  "rapports": [
+    {
+      "nom": "README.md",
+      "octets": 6454,
+      "sha256": "a343a993f39ffd6a68827e462827360f57264692799bad77bf91f9accc37de3c"
+    },
+    {
+      "nom": "controle-lot.log",
+      "octets": 575,
+      "sha256": "34db86e7b85e9067546356b6da5ccb5d62b243f226162b2d18d6f20f8473a400"
+    },
+    {
+      "nom": "controle-typage.log",
+      "octets": 53,
+      "sha256": "3a0d5d509b197f846df6c72f7b6ad0e6bf7e737d9b6c9e53ada8ef604b22d4ee"
+    },
+    {
+      "nom": "fabrication.json",
+      "octets": 3766,
+      "sha256": "e6103a8ab1750b978ef2a248373f4f9e0d12554d643a89480d8b4a7a6237a820"
+    },
+    {
+      "nom": "inspection-ancien-candidat.json",
+      "octets": 12142,
+      "sha256": "d5dad0aa6394beb6f96bc22647a672f6e7193ab352b952d2c19c1235238b80ba"
+    },
+    {
+      "nom": "mesures-geometrie.json",
+      "octets": 2012,
+      "sha256": "a2d065edbd13d2b7a732b15011bdcc597f5b43a8a8113c5d5ec22ae018e01825"
+    },
+    {
+      "nom": "mesures-jeux.json",
+      "octets": 12356,
+      "sha256": "bdf1d4467e6d2d4f3b5b4e6cf8e014d00f5147b41df33218e27d2c170c0163d8"
+    },
+    {
+      "nom": "mesures-poses-glb.json",
+      "octets": 4275,
+      "sha256": "f4a51613c2e46dd4ecbe967845739cec1859be02645a9c1a3a5c625d22b838eb"
+    },
+    {
+      "nom": "mesures-poses-three-glb.json",
+      "octets": 2066,
+      "sha256": "da230549295139dfa49edda6c30f64a7ee151da799c290ae350c23e3867673a2"
+    },
+    {
+      "nom": "textures-fabrication.json",
+      "octets": 2345,
+      "sha256": "9f563d2f2bf0cf618d5e2e9cacb1657265109da04058673cb357668a7260bde6"
+    },
+    {
+      "nom": "validation-lot.json",
+      "octets": 693,
+      "sha256": "da44012bfb53b95a227dc7483523be0372e52f07995fa3da9fd1a675fda88d07"
+    },
+    {
+      "nom": "validation-typage.json",
+      "octets": 617,
+      "sha256": "4b715965eef7f02bd436a926d1cfa4cf375a8aa4c332ea956ac6cd35b6ee1f49"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "octets": 6454,
+      "sha256": "a343a993f39ffd6a68827e462827360f57264692799bad77bf91f9accc37de3c"
+    },
+    {
+      "nom": "assembler-revue.py",
+      "octets": 5851,
+      "sha256": "d962cba0172ff440366427a5454f23b94a8b60a297d750fd34bb1928fc93fcea"
+    },
+    {
+      "nom": "generer.ts",
+      "octets": 18914,
+      "sha256": "a149fa1eda2e43054a41a85503cc96216810ba5b68aa834bb869769025c9a9e1"
+    },
+    {
+      "nom": "geometrie.py",
+      "octets": 4172,
+      "sha256": "66f5ec71d15b72a81ef82344208118fa123b85da29859d6196314bf2232040bd"
+    },
+    {
+      "nom": "gltf.ts",
+      "octets": 10685,
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "octets": 2281,
+      "sha256": "c5fb8b12219e59e524970490755eb99fa598238a4c866382dcb12c15970bdcb8"
+    },
+    {
+      "nom": "mesurer-jeux.py",
+      "octets": 9492,
+      "sha256": "dea34dcfb8f33389a51ce69698aa00fd899065abb0368ad6fff766cb8ef2c84d"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "octets": 9123,
+      "sha256": "c20cd3a0e6a3788a136a0692da4982c6eb7b6d4cdc20385d9f18cecd90a35bbb"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "octets": 5263,
+      "sha256": "55ed3d883329a4d0067d25da05608068c8d5e730608fb2e8b436e9d7feea4a35"
+    },
+    {
+      "nom": "mesurer.py",
+      "octets": 9027,
+      "sha256": "068df1fc5222e53361086ec8214462b82d24208cad336a429156824f0e9958e5"
+    },
+    {
+      "nom": "textures.py",
+      "octets": 5632,
+      "sha256": "1864633e0fd1e045267f41fb553490479e5ab079e3dc62bde215266e85dd1f8f"
+    },
+    {
+      "nom": "verifier.py",
+      "octets": 1691,
+      "sha256": "563209b385f98c868ae357be3369fa1ff19344a9ed452a27092d3156fe975ef6"
+    }
+  ]
+}

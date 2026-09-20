@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "dateUtc": "2026-09-20T14:07:22.115705+00:00",
+  "commande": "npm run typecheck",
+  "codeSortie": 0,
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_missiles_air_base/generer.ts": "a149fa1eda2e43054a41a85503cc96216810ba5b68aa834bb869769025c9a9e1",
+    "scripts/production/modeles/unite_missiles_air_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_missiles_air_base/mesurer-poses.ts": "55ed3d883329a4d0067d25da05608068c8d5e730608fb2e8b436e9d7feea4a35"
+  },
+  "suiteTestsExecutee": false,
+  "buildExecute": false
+}

@@ -1,0 +1,92 @@
+{
+  "id": "unite_missiles_air_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6306808009669185,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6336808063983917,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 198,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6326808043718338,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.6326808043718338,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.32749998569488525,
+          0,
+          -0.4555000066757202
+        ],
+        "max": [
+          0.32749998569488525,
+          0.630680800318718,
+          0.4555000066757202
+        ]
+      },
+      "rayonHorizontalMax": 0.48345036584542617
+    }
+  ],
+  "approbationArtistique": false
+}

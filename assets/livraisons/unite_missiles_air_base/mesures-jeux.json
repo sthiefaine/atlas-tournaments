@@ -1,0 +1,443 @@
+{
+  "id": "unite_missiles_air_base",
+  "sha256Glb": "8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB relus par plages extras.pieces, distances exactes localisées, plans de cabine, rayons dans les ouvertures et matrices des poses. Aucun rendu.",
+  "nombreRoues": 6,
+  "roues": [
+    {
+      "id": "g0",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    },
+    {
+      "id": "g1",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    },
+    {
+      "id": "g2",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    },
+    {
+      "id": "d0",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    },
+    {
+      "id": "d1",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    },
+    {
+      "id": "d2",
+      "appuiMinimumY": 0.0,
+      "diametreAvecCrampons": 0.21799999475479126,
+      "largeurPneu": 0.10999998450279236,
+      "gardeBouePointBasJeuVertical": 0.007000006625428767
+    }
+  ],
+  "plateauPneusJeuVerticalAuPointBas": 0.006000004649162283,
+  "suspensions": [
+    {
+      "indice": 0,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.0038636844895621972
+    },
+    {
+      "indice": 1,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.003863684489562198
+    },
+    {
+      "indice": 2,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.003863691423446625
+    },
+    {
+      "indice": 3,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.003863691423446625
+    },
+    {
+      "indice": 4,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.003863684489562198
+    },
+    {
+      "indice": 5,
+      "engagementMinimal": 0.033499991364777104,
+      "jeuRadialMinimal": 0.0038636844895621972
+    }
+  ],
+  "vitres": [
+    {
+      "nom": "pare_brise",
+      "indice": 0,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.002200632139167963,
+        0.007802008166856587
+      ],
+      "dosEncastre": true,
+      "faceExterieure": true
+    },
+    {
+      "nom": "pare_brise",
+      "indice": 1,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.002200632139167963,
+        0.007802008166856587
+      ],
+      "dosEncastre": true,
+      "faceExterieure": true
+    },
+    {
+      "nom": "vitres_laterales",
+      "indice": 0,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019788742541182467,
+        0.008021349755292673
+      ],
+      "dosEncastre": true,
+      "faceExterieure": true
+    },
+    {
+      "nom": "vitres_laterales",
+      "indice": 1,
+      "distanceSigneeMinMaxPlanCabine": [
+        -0.0019788742541182467,
+        0.008021349755292673
+      ],
+      "dosEncastre": true,
+      "faceExterieure": true
+    }
+  ],
+  "cavites": [
+    {
+      "id": "0_0",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.4139999837132755,
+        0.4139999951830465
+      ]
+    },
+    {
+      "id": "0_1",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.41399998371327545,
+        0.4139999951830465
+      ]
+    },
+    {
+      "id": "0_2",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.4139999837132755,
+        0.4139999951830465
+      ]
+    },
+    {
+      "id": "1_0",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.41399998281268063,
+        0.4140000023251562
+      ]
+    },
+    {
+      "id": "1_1",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.41399998281268063,
+        0.41400000232515766
+      ]
+    },
+    {
+      "id": "1_2",
+      "rayonsVerifies": 17,
+      "rayonOuvertureSonde": 0.028,
+      "profondeurPremiereSurfaceMinMax": [
+        0.41399998281268063,
+        0.4140000023251562
+      ]
+    }
+  ],
+  "distancesTriangles": [
+    {
+      "nom": "roues_g0_1",
+      "minimumMetres": 0.027000010013580322,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 7250,
+      "traversees": 0
+    },
+    {
+      "nom": "roues_g1_2",
+      "minimumMetres": 0.027000010013580322,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 7250,
+      "traversees": 0
+    },
+    {
+      "nom": "roues_d0_1",
+      "minimumMetres": 0.027000010013580322,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 7250,
+      "traversees": 0
+    },
+    {
+      "nom": "roues_d1_2",
+      "minimumMetres": 0.027000010013580322,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 7250,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_0_-0.011",
+      "minimumMetres": 0.0038636844895621972,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_0_0.003",
+      "minimumMetres": 0.0038636844895621972,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_1_-0.011",
+      "minimumMetres": 0.003863684489562198,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_1_0.003",
+      "minimumMetres": 0.003863684489562198,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_2_-0.011",
+      "minimumMetres": 0.003863691423446625,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_2_0.003",
+      "minimumMetres": 0.003863691423446625,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_3_-0.011",
+      "minimumMetres": 0.003863691423446625,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_3_0.003",
+      "minimumMetres": 0.003863691423446625,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_4_-0.011",
+      "minimumMetres": 0.003863684489562198,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_4_0.003",
+      "minimumMetres": 0.003863684489562198,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_5_-0.011",
+      "minimumMetres": 0.0038636844895621972,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1260,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_5_0.003",
+      "minimumMetres": 0.0038636844895621972,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 872,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_0",
+      "minimumMetres": 0.002000018020526937,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 384,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_0",
+      "minimumMetres": 0.0009999784338628873,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 274,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_1",
+      "minimumMetres": 0.002000018020526937,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 384,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_1",
+      "minimumMetres": 0.0009999784338628873,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 274,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_verticales_2",
+      "minimumMetres": 0.002000018020526937,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 384,
+      "traversees": 0
+    },
+    {
+      "nom": "levres_verticales_2",
+      "minimumMetres": 0.0009999784338628873,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 274,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_0",
+      "minimumMetres": 0.027000002562999725,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1074,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_0_1",
+      "minimumMetres": 0.027000002562999725,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1074,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_0",
+      "minimumMetres": 0.027000002562999725,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1074,
+      "traversees": 0
+    },
+    {
+      "nom": "cellules_horizontales_1_1",
+      "minimumMetres": 0.027000002562999725,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1074,
+      "traversees": 0
+    }
+  ],
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 194,
+      "caissonCabineSeparationZ": 0.0674567174911499,
+      "caissonRadarSeparationZ": 0.08757051911032615,
+      "caissonPlancherSeparationY": 0.04982787270098926
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "caissonCabineSeparationZ": 0.0674567174911499,
+      "caissonRadarSeparationZ": 0.08757051911032615,
+      "caissonPlancherSeparationY": 0.04982787270098926
+    },
+    {
+      "clip": "tir",
+      "poses": 198,
+      "caissonCabineSeparationZ": 0.0674567174911499,
+      "caissonRadarSeparationZ": 0.13745672462880612,
+      "caissonPlancherSeparationY": 0.023756719520143132
+    },
+    {
+      "clip": "touche",
+      "poses": 196,
+      "caissonCabineSeparationZ": 0.06681908625558575,
+      "caissonRadarSeparationZ": 0.13681909339324197,
+      "caissonPlancherSeparationY": 0.043936702163617
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 195,
+      "caissonCabineSeparationZ": 0.06619541836640652,
+      "caissonRadarSeparationZ": 0.13619625027369747,
+      "caissonPlancherSeparationY": 0.04982787270098926
+    }
+  ],
+  "raccordsIntentionnels": [
+    "Moyeux et axes dans les jantes ; essieux, bras et longerons reliés.",
+    "Tiges dans des fourreaux ouverts, avec jeu radial ; base des fourreaux prise dans les traverses du plateau.",
+    "Axe horizontal dans les tourillons et équerres ; rails de recul sous le plancher du caisson.",
+    "Parois de tubes, lèvres et traverses fixées à la caisse ; aucune ouverture couverte par une face pleine.",
+    "Vitres encastrées par leur dos sur les plans de cabine ; supports radar assemblés au pavillon."
+  ],
+  "limites": [
+    "Distances localisées, pas de certification globale des collisions internes.",
+    "Caisson/cabine/radar mesurés aux poses, pas de preuve analytique globale de séparation pour tout mélange de clips.",
+    "Rayons de sondage couvrent le centre et un cercle de chaque ouverture, pas toute la surface continue.",
+    "Six roues fixes ; seule la suspension verticale du corps est animée.",
+    "Gabarit b neutre uniquement ; a/c non certifiés."
+  ]
+}
