@@ -1,0 +1,7 @@
+{
+  "commande": "npm run typecheck",
+  "codeSortie": 0,
+  "ok": true,
+  "sortie": "> atlas-tournaments@0.1.0 typecheck\n> tsc --noEmit",
+  "erreurs": ""
+}

@@ -16727,19 +16727,14 @@
     {
       "id": "unite_furtif_base",
       "fichiers": [
-        "unite_furtif_base_lod0.glb",
         "unite_furtif_base_albedo.png",
-        "unite_furtif_base_albedo_hiver.png",
-        "unite_furtif_base_normale.png",
-        "unite_furtif_base_normale_hiver.png",
-        "unite_furtif_base_rugosite.png",
-        "unite_furtif_base_rugosite_hiver.png",
-        "unite_furtif_base_metal.png",
-        "unite_furtif_base_metal_hiver.png",
+        "unite_furtif_base_lod0.glb",
         "unite_furtif_base_masque_equipe.png",
-        "unite_furtif_base_masque_equipe_hiver.png"
+        "unite_furtif_base_metal.png",
+        "unite_furtif_base_normale.png",
+        "unite_furtif_base_rugosite.png"
       ],
-      "revision": "2b2d710061bfe31a26756e68451ab33b59edfbd97f3119b4a2e106f17df55bae"
+      "revision": "c7e94a67aaeef289bf1d1aaa4507e8e60e6a7f87b1e6e5aff213b43367ad78f4"
     },
     {
       "id": "unite_genie_base",

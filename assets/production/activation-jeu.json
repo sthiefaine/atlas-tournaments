@@ -161,6 +161,14 @@
       "revision": "03a17c270547ba508643986ece0023d01cc5ac953dcd0146113638d9a76ab852",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_furtif_base",
+      "fichierActif": "public/assets/modeles/unite_furtif_base_lod0.glb",
+      "donnees": "../donnees/e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b.glb",
+      "revision": "c7e94a67aaeef289bf1d1aaa4507e8e60e6a7f87b1e6e5aff213b43367ad78f4",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

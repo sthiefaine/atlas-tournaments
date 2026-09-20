@@ -1,0 +1,193 @@
+{
+  "id": "unite_furtif_base",
+  "sha256Glb": "e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b",
+  "approbationArtistique": false,
+  "conduits": [
+    {
+      "cote": -1,
+      "volumeSansCoque": {
+        "min": [
+          -0.0599,
+          0.1431,
+          -0.4125
+        ],
+        "max": [
+          -0.0241,
+          0.1659,
+          -0.3581
+        ]
+      },
+      "facesCoqueEnConflit": 0,
+      "rayonsEntreDiffuseurs": [
+        {
+          "origine": [
+            -0.026,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.026,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.026,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.042,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.042,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.042,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.058,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.058,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            -0.058,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        }
+      ]
+    },
+    {
+      "cote": 1,
+      "volumeSansCoque": {
+        "min": [
+          0.0241,
+          0.1431,
+          -0.4125
+        ],
+        "max": [
+          0.0599,
+          0.1659,
+          -0.3581
+        ]
+      },
+      "facesCoqueEnConflit": 0,
+      "rayonsEntreDiffuseurs": [
+        {
+          "origine": [
+            0.026,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.026,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.026,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.042,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.042,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.042,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.058,
+            0.147,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.058,
+            0.1545,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        },
+        {
+          "origine": [
+            0.058,
+            0.162,
+            -0.414
+          ],
+          "premierContactMetres": 0.055999989748001085
+        }
+      ]
+    }
+  ],
+  "methode": "GLB exporté. Le volume ouvert de chaque conduit ne croise aucune AABB de triangle de la coque/voilure (cellule UV 0). Neuf rayons par sortie dans les trois passages entre diffuseurs ne rencontrent aucune géométrie du corps avant le fond reculé à 56 mm.",
+  "limites": [
+    "Mesure locale des sorties arrière ; aucune certification générale des intersections internes.",
+    "Les diffuseurs et le fond sont des obstacles intentionnels.",
+    "Pas de rendu ni contrôle visuel."
+  ]
+}

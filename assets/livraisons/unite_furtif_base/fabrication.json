@@ -1,0 +1,192 @@
+{
+  "id": "unite_furtif_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_furtif_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 5088,
+  "budgetTriangles": 9000,
+  "octetsGlb": 308892,
+  "sha256Glb": "e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b",
+  "bornes": {
+    "min": [
+      -0.4749999940395355,
+      0.07299999594688417,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.4749999940395355,
+      0.5350000202655792,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.949999988079071,
+      0.4620000243186951,
+      0.8500000238418579
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.2,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.069,
+        0.336
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.067,
+        -0.073
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.075,
+        -0.201
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "fuselage_facettes": 140,
+    "voilure_integree": 216,
+    "bords_attaque_composite": 184,
+    "gouvernes_affleurantes": 24,
+    "panneaux_acces_aile": 120,
+    "verrous_encastres": 192,
+    "portes_train_fermees": 120,
+    "pont_dorsal_bas": 60,
+    "joint_cabine_avancee": 60,
+    "verriere_anguleuse": 76,
+    "arceau_cabine": 32,
+    "nervure_cabine": 32,
+    "toits_entrees": 24,
+    "planchers_entrees": 24,
+    "parois_entrees": 48,
+    "fonds_recules_entrees": 24,
+    "aubes_entrees": 48,
+    "epaules_sorties_raccordees": 120,
+    "levres_superieures_sorties": 24,
+    "levres_inferieures_sorties": 24,
+    "joues_sorties": 48,
+    "fonds_sorties": 24,
+    "diffuseurs_sorties": 48,
+    "cassette_marquage": 60,
+    "bouches_marquage": 192,
+    "fonds_bouches": 128,
+    "embase_antenne": 80,
+    "soufflet_antenne": 64,
+    "coupelle_basse_ressort": 80,
+    "ame_ressort": 48,
+    "ressort_antenne": 2304,
+    "fouet_antenne": 48,
+    "capuchon_antenne": 168,
+    "coupelle_haute_ressort": 80,
+    "collier_antenne": 64,
+    "temoin_disponibilite": 60
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "base.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion",
+        "base.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "ressort": {
+    "axeAme": [
+      0,
+      -0.201
+    ],
+    "rayonHelice": 0.035,
+    "rayonFil": 0.0105,
+    "rayonAme": 0.01,
+    "hauteur": 0.09,
+    "tours": 3,
+    "pas": 0.03,
+    "jeuRadialNominal": 0.0145,
+    "jeuAxialNominal": 0.009
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Création originale ; aucun bake HD.",
+    "Pas de mesure FPS téléphone.",
+    "Gabarits nationaux et mélanges entre clips non certifiés."
+  ]
+}

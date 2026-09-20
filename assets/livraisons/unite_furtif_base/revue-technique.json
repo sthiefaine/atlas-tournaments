@@ -1,0 +1,547 @@
+{
+  "id": "unite_furtif_base",
+  "dateRevueUtc": "2026-09-20T12:38:20.797790+00:00",
+  "approbationArtistique": false,
+  "statut": "pret_a_integrer_apres_reverification_sources_par_coordinateur",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterneUtilisee": false,
+    "bakeHD": false,
+    "dossierScripts": "scripts/production/modeles/unite_furtif_base",
+    "ancienCandidat": {
+      "sha256Glb": "19de1007e96194fef9dddc1aa459a57b8025d82ea80df60cf4ed290b0006557b",
+      "triangles": 704,
+      "octetsGlb": 82952,
+      "importe": false
+    },
+    "sourceDistante": "Aucun upload de cette fiche signalé par le coordinateur dans l’inventaire du 20 septembre ; relecture obligatoire avant activation, hors de ce travail de spécialiste."
+  },
+  "fichiers": [
+    {
+      "nom": "unite_furtif_base_albedo.png",
+      "octets": 458289,
+      "sha256": "bd07516ea3a43f3bfb5c90135199b2a2718ce648c23511ef24e9b103ce388c88"
+    },
+    {
+      "nom": "unite_furtif_base_lod0.glb",
+      "octets": 308892,
+      "sha256": "e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b"
+    },
+    {
+      "nom": "unite_furtif_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_furtif_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_furtif_base_normale.png",
+      "octets": 584492,
+      "sha256": "15b7ca606a648681b880f560e4ea2df85d5b797725e5742dd88aed6037527627"
+    },
+    {
+      "nom": "unite_furtif_base_rugosite.png",
+      "octets": 126538,
+      "sha256": "cc8c28a4046d2668e3e2c6259efd2c6a6eda99bfbf6c7849d9c517558e8c6e87"
+    }
+  ],
+  "sha256Glb": "e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b",
+  "octetsGlb": 308892,
+  "octetsLot": 1479343,
+  "triangles": 5088,
+  "budgetTriangles": 9000,
+  "primitives": 5,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "racine",
+    "socle"
+  ],
+  "dimensionsMetres": [
+    0.949999988079071,
+    0.4620000243186951,
+    0.8500000238418579
+  ],
+  "bornes": {
+    "min": [
+      -0.4749999940395355,
+      0.07299999594688417,
+      -0.42500001192092896
+    ],
+    "max": [
+      0.4749999940395355,
+      0.5350000202655792,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.949999988079071,
+      0.4620000243186951,
+      0.8500000238418579
+    ]
+  },
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_furtif_base_albedo.png",
+      "unite_furtif_base_lod0.glb",
+      "unite_furtif_base_masque_equipe.png",
+      "unite_furtif_base_metal.png",
+      "unite_furtif_base_normale.png",
+      "unite_furtif_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "controleTypage": {
+    "commande": "npm run typecheck",
+    "codeSortie": 0,
+    "ok": true,
+    "sortie": "> atlas-tournaments@0.1.0 typecheck\n> tsc --noEmit",
+    "erreurs": ""
+  },
+  "mesures": {
+    "geometrie": {
+      "triangles": 5088,
+      "primitives": 5,
+      "trianglesDegeneres": 0,
+      "trianglesSuperposes": 0,
+      "uvTrianglesDegeneres": 0,
+      "normalesInversees": 0,
+      "normalesErreurMax": 3.82042830704421e-08,
+      "tangentesErreurMax": 4.050026336521739e-08,
+      "orthogonaliteErreurMax": 4.180499091344103e-08,
+      "valeursFinies": true,
+      "uvDansAtlas": true,
+      "imagesExternes": true,
+      "noeudsUniques": true,
+      "racineAnimee": false,
+      "boucles": {
+        "repos": true,
+        "deplacement": true
+      },
+      "dureesClipsMs": {
+        "repos": 2400,
+        "deplacement": 1000,
+        "tir": 700,
+        "touche": 500,
+        "hors_jeu": 900
+      },
+      "horsJeuTientPoseFinale": true,
+      "masqueValeurs": [
+        0,
+        255
+      ],
+      "albedoEquipeEcartMax": 0,
+      "metalCanalBIdentique": true,
+      "id": "unite_furtif_base",
+      "approbationArtistique": false,
+      "noeuds": [
+        "base",
+        "corps",
+        "module_antenne",
+        "racine",
+        "socle"
+      ],
+      "materiaux": [
+        "mat_corps",
+        "mat_details"
+      ],
+      "interpolationClips": [
+        "LINEAR"
+      ],
+      "quaternionsUnitaires": true,
+      "tempsStrictementCroissants": true,
+      "bornesTempsAnimationConservees": true,
+      "indicateurCacheFinHorsJeu": true,
+      "normalePngLongueurErreurMax": 0.002779681475911344,
+      "normalePngZMinimum": 1.0,
+      "rugositeCanalGMinMax": [
+        51,
+        234
+      ]
+    },
+    "poses": {
+      "id": "unite_furtif_base",
+      "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près. Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour du pivot corps immobile horizontalement.",
+      "clips": [
+        {
+          "nom": "repos",
+          "nombreEchantillons": 194,
+          "enveloppe": {
+            "min": [
+              -0.47537623753951963,
+              0.0729999989271164,
+              -0.42523504971897097
+            ],
+            "max": [
+              0.4753762375393892,
+              0.5419825532483353,
+              0.42528304678354084
+            ]
+          },
+          "rayonHorizontalMax": 0.486798318990315,
+          "vitesseMajoreeMetresSeconde": 0.03183983978555071,
+          "rayonHorizontalMajorationContinue": 0.48699731799688223,
+          "espacementMinimumVoisinsTousCaps": 0.026005364006235543,
+          "racineIdentite": true
+        },
+        {
+          "nom": "deplacement",
+          "nombreEchantillons": 193,
+          "enveloppe": {
+            "min": [
+              -0.47564300717226443,
+              0.08093111983917506,
+              -0.4247243579100704
+            ],
+            "max": [
+              0.47564300717226443,
+              0.5453092904964515,
+              0.42603446146084056
+            ]
+          },
+          "rayonHorizontalMax": 0.4870786360029751,
+          "vitesseMajoreeMetresSeconde": 0.07546773595642713,
+          "rayonHorizontalMajorationContinue": 0.48727516656536163,
+          "espacementMinimumVoisinsTousCaps": 0.025449666869276744,
+          "racineIdentite": true
+        },
+        {
+          "nom": "tir",
+          "nombreEchantillons": 196,
+          "enveloppe": {
+            "min": [
+              -0.4749999940395355,
+              0.07065555310441671,
+              -0.42528875694269147
+            ],
+            "max": [
+              0.4749999940395355,
+              0.5370732357612309,
+              0.42565496534442665
+            ]
+          },
+          "rayonHorizontalMax": 0.48659925726049824,
+          "vitesseMajoreeMetresSeconde": 0.31505938769834413,
+          "rayonHorizontalMajorationContinue": 0.4871735842595426,
+          "espacementMinimumVoisinsTousCaps": 0.025652831480914795,
+          "racineIdentite": true
+        },
+        {
+          "nom": "touche",
+          "nombreEchantillons": 195,
+          "enveloppe": {
+            "min": [
+              -0.47637216171897645,
+              0.0729999989271164,
+              -0.425884433399461
+            ],
+            "max": [
+              0.4758231083368475,
+              0.5603567243505443,
+              0.42571517362913436
+            ]
+          },
+          "rayonHorizontalMax": 0.48732676038167333,
+          "vitesseMajoreeMetresSeconde": 0.6548703811999762,
+          "rayonHorizontalMajorationContinue": 0.4881794561905275,
+          "espacementMinimumVoisinsTousCaps": 0.02364108761894501,
+          "racineIdentite": true
+        },
+        {
+          "nom": "hors_jeu",
+          "nombreEchantillons": 196,
+          "enveloppe": {
+            "min": [
+              -0.4749999940395355,
+              0.05347204706445341,
+              -0.42534451692379965
+            ],
+            "max": [
+              0.47608520834614354,
+              0.5350000232458114,
+              0.42500001192092896
+            ]
+          },
+          "rayonHorizontalMax": 0.4872074169114498,
+          "vitesseMajoreeMetresSeconde": 0.09067519571087354,
+          "rayonHorizontalMajorationContinue": 0.4874199368957673,
+          "espacementMinimumVoisinsTousCaps": 0.025160126208465416,
+          "racineIdentite": true
+        }
+      ],
+      "borneAnalytiqueTemoin": 0.1228048970007023,
+      "bornesStatiques": {
+        "min": [
+          -0.4749999940395355,
+          0.07299999594688417,
+          -0.42500001192092896
+        ],
+        "max": [
+          0.4749999940395355,
+          0.5350000202655792,
+          0.42500001192092896
+        ],
+        "dimensions": [
+          0.949999988079071,
+          0.4620000243186951,
+          0.8500000238418579
+        ]
+      },
+      "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+      "limites": [
+        "Contrôle numérique sans rendu ni approbation artistique.",
+        "Sol mesuré aux échantillons ; rayon majoré continûment.",
+        "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+        "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+        "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+      ]
+    },
+    "ressort": {
+      "id": "unite_furtif_base",
+      "approbationArtistique": false,
+      "parametresMetres": {
+        "rayonCentral": 0.035,
+        "diametreFil": 0.021,
+        "nombreTours": 3,
+        "hauteur": 0.09,
+        "pas": 0.03,
+        "diametreAme": 0.02
+      },
+      "glbRelu": true,
+      "trianglesRessort": 2304,
+      "pairesFacesMesurees": 63864,
+      "seuilEliminationParAabbMetres": 0.02,
+      "jeuAmeBorneInferieureMetres": 0.014447173408372526,
+      "jeuEntreSpiresMetres": 0.00873435884368354,
+      "intersectionsEntreSpires": 0,
+      "methode": "GLB exporté : fil identifié par sa cellule UV. Minimum radial continu sur les triangles projetés, moins le rayon de l’âme cylindrique pleine de 10 mm. Distance triangle-triangle (sommets/faces et arêtes/arêtes, avec détection de traversées) entre portions de fil éloignées d’au moins 32 des 144 segments de l’hélice.",
+      "limites": [
+        "Contrôle local du ressort, pas de certification complète des collisions internes.",
+        "Les portions contiguës du même fil sont raccordées intentionnellement.",
+        "Le module antenne est une articulation rigide ; ces jeux internes sont invariants dans ses cinq clips."
+      ]
+    },
+    "conduits": {
+      "id": "unite_furtif_base",
+      "sha256Glb": "e85a5b25fde204b5f8dd3aa26785c1e24f24f6c3ecdb81c58188ab1bb920f55b",
+      "approbationArtistique": false,
+      "conduits": [
+        {
+          "cote": -1,
+          "volumeSansCoque": {
+            "min": [
+              -0.0599,
+              0.1431,
+              -0.4125
+            ],
+            "max": [
+              -0.0241,
+              0.1659,
+              -0.3581
+            ]
+          },
+          "facesCoqueEnConflit": 0,
+          "rayonsEntreDiffuseurs": [
+            {
+              "origine": [
+                -0.026,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.026,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.026,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.042,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.042,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.042,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.058,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.058,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                -0.058,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            }
+          ]
+        },
+        {
+          "cote": 1,
+          "volumeSansCoque": {
+            "min": [
+              0.0241,
+              0.1431,
+              -0.4125
+            ],
+            "max": [
+              0.0599,
+              0.1659,
+              -0.3581
+            ]
+          },
+          "facesCoqueEnConflit": 0,
+          "rayonsEntreDiffuseurs": [
+            {
+              "origine": [
+                0.026,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.026,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.026,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.042,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.042,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.042,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.058,
+                0.147,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.058,
+                0.1545,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            },
+            {
+              "origine": [
+                0.058,
+                0.162,
+                -0.414
+              ],
+              "premierContactMetres": 0.055999989748001085
+            }
+          ]
+        }
+      ],
+      "methode": "GLB exporté. Le volume ouvert de chaque conduit ne croise aucune AABB de triangle de la coque/voilure (cellule UV 0). Neuf rayons par sortie dans les trois passages entre diffuseurs ne rencontrent aucune géométrie du corps avant le fond reculé à 56 mm.",
+      "limites": [
+        "Mesure locale des sorties arrière ; aucune certification générale des intersections internes.",
+        "Les diffuseurs et le fond sont des obstacles intentionnels.",
+        "Pas de rendu ni contrôle visuel."
+      ]
+    }
+  },
+  "mesuresResume": {
+    "posesRelues": 974,
+    "rayonHorizontalMax": 0.48732676038167333,
+    "rayonHorizontalMajorationContinue": 0.4881794561905275,
+    "espacementMinimumNeutreTousCaps": 0.02364108761894501,
+    "jeuAmeMinimum": 0.014447173408372526,
+    "jeuSpiresMinimum": 0.00873435884368354,
+    "conduitsArriereDegagesDeCoque": true
+  },
+  "limites": [
+    "Aucun test général ni build exécuté.",
+    "Aucun rendu, capture, contrôle visuel ou approbation artistique.",
+    "Aucun téléphone ni mesure de FPS.",
+    "Gabarit neutre runtime uniquement ; déformations nationales non certifiées.",
+    "Chaque clip mesuré séparément ; transitions et mélanges entre clips non certifiés.",
+    "Contrôles de collisions limités au ressort et aux conduits arrière ; pas de certificat global.",
+    "Le raccordement visuel des effets de tir reste à apprécier en jeu.",
+    "Les actifs, lots, registres, spécifications et plan n’ont pas été modifiés par le spécialiste ; intégration/publication déléguées au coordinateur."
+  ]
+}
