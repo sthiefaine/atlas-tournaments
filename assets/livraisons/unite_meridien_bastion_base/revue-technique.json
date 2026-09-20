@@ -1,0 +1,1041 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "dateRevueUtc": "2026-09-20T13:34:09.060246+00:00",
+  "statut": "pret_a_integrer_par_coordinateur",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "dossierScripts": "scripts/production/modeles/unite_meridien_bastion_base",
+    "sourceExterneUtilisee": false,
+    "bakeHD": false,
+    "ancienCandidat": {
+      "sha256Glb": "5d747baa4976b7ff6a65cac36bd015f519c82cabd4e98c2bd322d16e25916eb6",
+      "octetsGlb": 139112,
+      "triangles": 1132,
+      "pngInspectes": 12,
+      "importe": false
+    },
+    "depotsDistants": "Zéro upload du Bastion confirmé à nouveau par le coordinateur le 20 septembre 2026 pendant cette production ; revalidation éventuelle avant mutation relève du coordinateur. Aucun jeton copié."
+  },
+  "sha256Glb": "936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe",
+  "fichiers": [
+    {
+      "nom": "unite_meridien_bastion_base_albedo.png",
+      "octets": 458259,
+      "sha256": "7b8d7214d5a46917f1c531642452eb8e26bf06917a1004f48516ef855c53b36e"
+    },
+    {
+      "nom": "unite_meridien_bastion_base_lod0.glb",
+      "octets": 639292,
+      "sha256": "936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe"
+    },
+    {
+      "nom": "unite_meridien_bastion_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_meridien_bastion_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_meridien_bastion_base_normale.png",
+      "octets": 584455,
+      "sha256": "80eb738952d4c5ac850703b45a1c6ecd777d1bd7a0ea7675166e19eec47b70a1"
+    },
+    {
+      "nom": "unite_meridien_bastion_base_rugosite.png",
+      "octets": 126419,
+      "sha256": "dc089e0fe3a7597721013956aa05d0a8d0695f354c54003ffb56ce8391555efd"
+    }
+  ],
+  "octetsGlb": 639292,
+  "octetsLot": 1809557,
+  "triangles": 8996,
+  "budgetTriangles": 9000,
+  "primitives": 9,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "module_radar",
+    "module_tourelle",
+    "os_recul",
+    "racine",
+    "socle"
+  ],
+  "dimensionsMetres": [
+    0.6986382007598877,
+    0.615340047866106,
+    0.8924999833106995
+  ],
+  "bornes": {
+    "min": [
+      -0.34931910037994385,
+      0.0,
+      -0.44624999165534973
+    ],
+    "max": [
+      0.34931910037994385,
+      0.615340047866106,
+      0.44624999165534973
+    ],
+    "dimensions": [
+      0.6986382007598877,
+      0.615340047866106,
+      0.8924999833106995
+    ]
+  },
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_meridien_bastion_base_albedo.png",
+      "unite_meridien_bastion_base_lod0.glb",
+      "unite_meridien_bastion_base_masque_equipe.png",
+      "unite_meridien_bastion_base_metal.png",
+      "unite_meridien_bastion_base_normale.png",
+      "unite_meridien_bastion_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "controleTypage": {
+    "ok": true,
+    "codeSortie": 0,
+    "commande": "npm run typecheck -- --incremental false",
+    "dateUtc": "2026-09-20T13:31:28.536718+00:00",
+    "sortie": "\n> atlas-tournaments@0.1.0 typecheck\n> tsc --noEmit --incremental false\n\n",
+    "sha256SourcesTs": {
+      "scripts/production/modeles/unite_meridien_bastion_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+      "scripts/production/modeles/unite_meridien_bastion_base/generer.ts": "f105146f001132a577ae525d5a57fd6bab5e0b1199cd54f0f9cb127ea19b2b34",
+      "scripts/production/modeles/unite_meridien_bastion_base/mesurer-poses.ts": "004d5f26fab6b0070cf0e58732134fb4ede6124b3f884707fd182f87f0dea97a",
+      "scripts/production/verifier-publication.ts": "72ddef9dfd9be007997d9201c5c2f437b3501c25cbe23c6009338f8db9497bfe"
+    },
+    "portee": "Configuration TypeScript du dépôt entière, dont le contrôle de publication ; sans build incrémental ni suite de tests."
+  },
+  "mesures": {
+    "geometrie": {
+      "triangles": 8996,
+      "primitives": 9,
+      "trianglesDegeneres": 0,
+      "trianglesSuperposes": 0,
+      "uvTrianglesDegeneres": 0,
+      "normalesInversees": 0,
+      "normalesErreurMax": 3.9033264065402307e-08,
+      "tangentesErreurMax": 3.9669058149449654e-08,
+      "orthogonaliteErreurMax": 4.04331323977658e-08,
+      "valeursFinies": true,
+      "uvDansAtlas": true,
+      "imagesExternes": true,
+      "noeudsUniques": true,
+      "racineAnimee": false,
+      "boucles": {
+        "repos": true,
+        "deplacement": true
+      },
+      "dureesClipsMs": {
+        "repos": 2400,
+        "deplacement": 1000,
+        "tir": 700,
+        "touche": 500,
+        "hors_jeu": 900
+      },
+      "horsJeuTientPoseFinale": true,
+      "masqueValeurs": [
+        0,
+        255
+      ],
+      "albedoEquipeEcartMax": 0,
+      "metalCanalBIdentique": true,
+      "id": "unite_meridien_bastion_base",
+      "approbationArtistique": false,
+      "noeuds": [
+        "base",
+        "corps",
+        "module_antenne",
+        "module_radar",
+        "module_tourelle",
+        "os_recul",
+        "racine",
+        "socle"
+      ],
+      "materiaux": [
+        "mat_corps",
+        "mat_details"
+      ],
+      "interpolationClips": [
+        "LINEAR"
+      ],
+      "quaternionsUnitaires": true,
+      "tempsStrictementCroissants": true,
+      "bornesTempsAnimationConservees": true,
+      "indicateurCacheFinHorsJeu": true,
+      "normalePngLongueurErreurMax": 0.002779681475911344,
+      "normalePngZMinimum": 1.0,
+      "rugositeCanalGMinMax": [
+        50,
+        234
+      ],
+      "continuitesBoucles": [
+        {
+          "clip": "repos",
+          "noeud": "module_radar",
+          "canal": "rotation",
+          "erreurVitesseJointure": 5.201485060446487e-07,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "repos",
+          "noeud": "module_antenne",
+          "canal": "rotation",
+          "erreurVitesseJointure": 3.311368443337237e-09,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "deplacement",
+          "noeud": "corps",
+          "canal": "translation",
+          "erreurVitesseJointure": 0.0,
+          "unite": "m/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "deplacement",
+          "noeud": "module_antenne",
+          "canal": "rotation",
+          "erreurVitesseJointure": 0.0,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        },
+        {
+          "clip": "deplacement",
+          "noeud": "module_radar",
+          "canal": "rotation",
+          "erreurVitesseJointure": 8.881784197001252e-16,
+          "unite": "rad/s",
+          "poseRaccordeeModuloSigneQuaternion": true
+        }
+      ]
+    },
+    "poses": {
+      "id": "unite_meridien_bastion_base",
+      "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près. Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour de la chaîne tourelle-corps sans translation horizontale animée.",
+      "clips": [
+        {
+          "nom": "repos",
+          "nombreEchantillons": 194,
+          "enveloppe": {
+            "min": [
+              -0.34931910037994385,
+              0.0,
+              -0.44624999165534973
+            ],
+            "max": [
+              0.34931910037994385,
+              0.615340047866106,
+              0.44624999165534973
+            ]
+          },
+          "rayonHorizontalMax": 0.4901285115327034,
+          "vitesseMajoreeMetresSeconde": 0.4559295324888801,
+          "rayonHorizontalMajorationContinue": 0.4929780712239903,
+          "espacementMinimumVoisinsTousCaps": 0.014043857552019423,
+          "racineIdentite": true
+        },
+        {
+          "nom": "deplacement",
+          "nombreEchantillons": 193,
+          "enveloppe": {
+            "min": [
+              -0.34931910037994385,
+              0.0,
+              -0.44624999165534973
+            ],
+            "max": [
+              0.34931910037994385,
+              0.6182806181573305,
+              0.44624999165534973
+            ]
+          },
+          "rayonHorizontalMax": 0.4901285115327034,
+          "vitesseMajoreeMetresSeconde": 1.1062307283686932,
+          "rayonHorizontalMajorationContinue": 0.4930093207211636,
+          "espacementMinimumVoisinsTousCaps": 0.013981358557672796,
+          "racineIdentite": true
+        },
+        {
+          "nom": "tir",
+          "nombreEchantillons": 199,
+          "enveloppe": {
+            "min": [
+              -0.34931910037994385,
+              0.0,
+              -0.44624999165534973
+            ],
+            "max": [
+              0.34931910037994385,
+              0.6173400505781174,
+              0.44624999165534973
+            ]
+          },
+          "rayonHorizontalMax": 0.4901285115327034,
+          "vitesseMajoreeMetresSeconde": 0.35000022041301426,
+          "rayonHorizontalMajorationContinue": 0.4907665327569659,
+          "espacementMinimumVoisinsTousCaps": 0.018466934486068176,
+          "racineIdentite": true
+        },
+        {
+          "nom": "touche",
+          "nombreEchantillons": 196,
+          "enveloppe": {
+            "min": [
+              -0.34931910037994385,
+              0.0,
+              -0.44624999165534973
+            ],
+            "max": [
+              0.34931910037994385,
+              0.6173091446205737,
+              0.44624999165534973
+            ]
+          },
+          "rayonHorizontalMax": 0.4901285115327034,
+          "vitesseMajoreeMetresSeconde": 0.15860744072911043,
+          "rayonHorizontalMajorationContinue": 0.49033503163781944,
+          "espacementMinimumVoisinsTousCaps": 0.01932993672436112,
+          "racineIdentite": true
+        },
+        {
+          "nom": "hors_jeu",
+          "nombreEchantillons": 195,
+          "enveloppe": {
+            "min": [
+              -0.34931910037994385,
+              0.0,
+              -0.44624999165534973
+            ],
+            "max": [
+              0.34931910037994385,
+              0.6153400465250015,
+              0.44624999165534973
+            ]
+          },
+          "rayonHorizontalMax": 0.4901285115327034,
+          "vitesseMajoreeMetresSeconde": 0.18493581970570616,
+          "rayonHorizontalMajorationContinue": 0.49056195484865633,
+          "espacementMinimumVoisinsTousCaps": 0.01887609030268733,
+          "racineIdentite": true
+        }
+      ],
+      "borneAnalytiqueTemoin": 0.36010998354228707,
+      "bornesStatiques": {
+        "min": [
+          -0.34931910037994385,
+          0.0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.615340047866106,
+          0.44624999165534973
+        ],
+        "dimensions": [
+          0.6986382007598877,
+          0.615340047866106,
+          0.8924999833106995
+        ]
+      },
+      "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+      "limites": [
+        "Contrôle numérique sans rendu ni approbation artistique.",
+        "Sol mesuré aux échantillons ; rayon majoré continûment.",
+        "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+        "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+        "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+      ]
+    },
+    "jeuxMecaniques": {
+      "id": "unite_meridien_bastion_base",
+      "sha256Glb": "936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe",
+      "approbationArtistique": false,
+      "methode": "Triangles GLB par plages documentées dans extras.pieces : positions, indices et matrices relus. Distances triangle-triangle exactes lorsque le minimum est sous le seuil, sinon borne AABB. Les raccordements intentionnels ne sont pas considérés comme jeux mécaniques.",
+      "chenillesEtRoues": [
+        {
+          "nom": "galets_voisins_gauche_0",
+          "minimumMetres": 0.0025999993085861206,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_gauche_1",
+          "minimumMetres": 0.0026000067591667175,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_gauche_2",
+          "minimumMetres": 0.0026000022189691663,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_gauche_3",
+          "minimumMetres": 0.0026000067591667175,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_gauche_4",
+          "minimumMetres": 0.0025999993085861206,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_renvoi_arriere_gauche",
+          "minimumMetres": 0.007494670986964503,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 284,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_renvoi_avant_gauche",
+          "minimumMetres": 0.007494670986964503,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 284,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_0",
+          "minimumMetres": 0.002622788990827497,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 816,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_1",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 796,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_2",
+          "minimumMetres": 0.0024609983478170484,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 816,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_3",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 792,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_4",
+          "minimumMetres": 0.001727817787756434,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 792,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_gauche_5",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 812,
+          "traversees": 0
+        },
+        {
+          "nom": "renvoi_chenille_gauche_0",
+          "minimumMetres": 0.0020000040531158447,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 2543,
+          "traversees": 0
+        },
+        {
+          "nom": "renvoi_chenille_gauche_1",
+          "minimumMetres": 0.0020000021904706955,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 2543,
+          "traversees": 0
+        },
+        {
+          "nom": "retour_chenille_gauche_0",
+          "minimumMetres": 0.0020000040531158447,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1004,
+          "traversees": 0
+        },
+        {
+          "nom": "retour_chenille_gauche_1",
+          "minimumMetres": 0.0036396413426329263,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1004,
+          "traversees": 0
+        },
+        {
+          "nom": "coque_chenille_point_bas_gauche",
+          "minimumMetres": 0.013223562654059403,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 925,
+          "traversees": 0
+        },
+        {
+          "nom": "jupes_chenille_point_bas_gauche",
+          "minimumMetres": 0.0066426560051126,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 3099,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_droite_0",
+          "minimumMetres": 0.0025999993085861206,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_droite_1",
+          "minimumMetres": 0.0026000067591667175,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_droite_2",
+          "minimumMetres": 0.0026000022189691663,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_droite_3",
+          "minimumMetres": 0.0026000067591667175,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galets_voisins_droite_4",
+          "minimumMetres": 0.0025999993085861206,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 376,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_renvoi_arriere_droite",
+          "minimumMetres": 0.007494670986964503,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 284,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_renvoi_avant_droite",
+          "minimumMetres": 0.007494670986964503,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 284,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_0",
+          "minimumMetres": 0.0026227889908274973,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 816,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_1",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 796,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_2",
+          "minimumMetres": 0.0024609983478170484,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 816,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_3",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 792,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_4",
+          "minimumMetres": 0.0017278177877564339,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 792,
+          "traversees": 0
+        },
+        {
+          "nom": "galet_chenille_droite_5",
+          "minimumMetres": 0.0010000001639127731,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 812,
+          "traversees": 0
+        },
+        {
+          "nom": "renvoi_chenille_droite_0",
+          "minimumMetres": 0.0020000040531158447,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 2543,
+          "traversees": 0
+        },
+        {
+          "nom": "renvoi_chenille_droite_1",
+          "minimumMetres": 0.0020000021904706955,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 2543,
+          "traversees": 0
+        },
+        {
+          "nom": "retour_chenille_droite_0",
+          "minimumMetres": 0.0020000040531158447,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1004,
+          "traversees": 0
+        },
+        {
+          "nom": "retour_chenille_droite_1",
+          "minimumMetres": 0.0036396413426329263,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 1004,
+          "traversees": 0
+        },
+        {
+          "nom": "coque_chenille_point_bas_droite",
+          "minimumMetres": 0.013223562654059403,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 950,
+          "traversees": 0
+        },
+        {
+          "nom": "jupes_chenille_point_bas_droite",
+          "minimumMetres": 0.0066426560051126,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 3165,
+          "traversees": 0
+        },
+        {
+          "nom": "separation_tubes_jumeles",
+          "minimumMetres": 0.10999999940395355,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 63722,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_gauche_0_-0.012",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_gauche_0_0.003",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_gauche_1_-0.012",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_gauche_1_0.003",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_droite_0_-0.012",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_droite_0_0.003",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_droite_1_-0.012",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        },
+        {
+          "nom": "coulisseau_fourreau_droite_1_0.003",
+          "minimumMetres": 0.000901838350711903,
+          "minimumExact": true,
+          "borneInferieureSiNonExacte": null,
+          "pairesFaces": 672,
+          "traversees": 0
+        }
+      ],
+      "bouches": [
+        {
+          "longueurMetres": 0.15999998897314074,
+          "rayonInterieurSommetsMetres": 0.0189999895976004,
+          "rayonExterieurMaxMetres": 0.03000001982344949,
+          "directionAxe": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "longueurMetres": 0.15999998897314074,
+          "rayonInterieurSommetsMetres": 0.0189999895976004,
+          "rayonExterieurMaxMetres": 0.03000001982344949,
+          "directionAxe": [
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "jeuxContinuellementBornesMetres": {
+        "tourelleHorsCouronnesVersEquipementsCorps": 0.0009999858587980137,
+        "tubesVersCorps": 0.021999982759356496,
+        "paraboleVersTubes": 0.05000001287460326,
+        "paraboleVersAntenneTousAzimuts": 0.06183644061763957
+      },
+      "borneAntenne": {
+        "rotationMaxRadians": 0.06020558903374588,
+        "excursionMaxMetres": 0.011449372819129196
+      },
+      "rayonHorizontalTousCapsEtTourelleMetres": {
+        "base": 0.4901285115327034,
+        "corps": 0.4717499911785126,
+        "module_tourelle": 0.2365184598557061,
+        "os_recul": 0.3857813181977676,
+        "module_radar": 0.17597616296949675,
+        "module_antenne": 0.2329515227522454,
+        "socle": 0.19814948070478056
+      },
+      "rayonHorizontalMaximumContinu": 0.4901285115327034,
+      "espaceMinimumDeuxVoisinsTousCaps": 0.01974297693459315,
+      "suspension": {
+        "deplacementCorpsY": [
+          -0.012,
+          0.003
+        ],
+        "fourreauxCreux": true,
+        "mesuresGLB": [
+          {
+            "cote": "gauche",
+            "indice": 0,
+            "tigeY": [
+              0.12514005601406097,
+              0.17314006388187408
+            ],
+            "fourreauY": [
+              0.15864005632698536,
+              0.22364005580544472
+            ],
+            "engagementMinimalMetres": 0.011500007554888725,
+            "jeuRadialMinimalMetres": 0.000901838350711903
+          },
+          {
+            "cote": "gauche",
+            "indice": 1,
+            "tigeY": [
+              0.12514005601406097,
+              0.17314006388187408
+            ],
+            "fourreauY": [
+              0.15864005632698536,
+              0.22364005580544472
+            ],
+            "engagementMinimalMetres": 0.011500007554888725,
+            "jeuRadialMinimalMetres": 0.000901838350711903
+          },
+          {
+            "cote": "droite",
+            "indice": 0,
+            "tigeY": [
+              0.12514005601406097,
+              0.17314006388187408
+            ],
+            "fourreauY": [
+              0.15864005632698536,
+              0.22364005580544472
+            ],
+            "engagementMinimalMetres": 0.011500007554888725,
+            "jeuRadialMinimalMetres": 0.000901838350711903
+          },
+          {
+            "cote": "droite",
+            "indice": 1,
+            "tigeY": [
+              0.12514005601406097,
+              0.17314006388187408
+            ],
+            "fourreauY": [
+              0.15864005632698536,
+              0.22364005580544472
+            ],
+            "engagementMinimalMetres": 0.011500007554888725,
+            "jeuRadialMinimalMetres": 0.000901838350711903
+          }
+        ],
+        "engagementMinimalMetres": 0.011500007554888725,
+        "methode": "Intervalles Y et distances des triangles relus ; extrema de translation verticale LINEAR. Les tiges restent engagées dans des fourreaux creux et conservent un jeu radial positif."
+      },
+      "limites": [
+        "Aucun contrôle visuel ni approbation artistique.",
+        "Distances localisées ; pas de certification globale de non-intersection des éléments assemblés.",
+        "Patins et bandes restent rigides ; pas de défilement mécanique des chenilles.",
+        "La borne tous caps vaut pour le gabarit b sans déformation et les clips livrés ; pas pour des mélanges arbitraires ni un autre gabarit.",
+        "Les mesures des chenilles/coque au point bas sont complétées par la séparation verticale : corps au-dessus des bandes ; les fixations et coulisseaux se recouvrent intentionnellement."
+      ]
+    },
+    "ressort": {
+      "id": "unite_meridien_bastion_base",
+      "approbationArtistique": false,
+      "parametresMetres": {
+        "rayonCentral": 0.018,
+        "diametreFil": 0.008,
+        "nombreTours": 3,
+        "hauteur": 0.046,
+        "pas": 0.015333333333333332,
+        "diametreAme": 0.012
+      },
+      "glbRelu": true,
+      "trianglesRessort": 864,
+      "pairesFacesMesurees": 63160,
+      "seuilEliminationParAabbMetres": 0.02,
+      "jeuAmeBorneInferieureMetres": 0.007864444030768594,
+      "jeuEntreSpiresMetres": 0.007227346222400016,
+      "intersectionsEntreSpires": 0,
+      "methode": "GLB exporté : fil identifié par sa cellule UV. Minimum radial continu sur les triangles projetés, moins le rayon de l’âme cylindrique pleine de 6 mm. Distance triangle-triangle (sommets/faces et arêtes/arêtes, avec détection de traversées) entre portions de fil éloignées d’au moins 16 des 72 segments de l’hélice.",
+      "limites": [
+        "Contrôle local du ressort, pas de certification complète des collisions internes.",
+        "Les portions contiguës du même fil sont raccordées intentionnellement.",
+        "Le module antenne est une articulation rigide ; ces jeux internes sont invariants dans ses cinq clips."
+      ]
+    }
+  },
+  "mesuresResume": {
+    "posesGLBRelues": 977,
+    "rayonEchantillonneMetres": 0.4901285115327034,
+    "rayonMajoreParVitesseMetres": 0.4930093207211636,
+    "rayonTousCapsEtTourelleBorneAnalytiqueMetres": 0.4901285115327034,
+    "espaceMinimalDeuxVoisinsTousCapsMetres": 0.01974297693459315,
+    "mesuresMecaniquesLocalisees": 47,
+    "jeuAmeRessortMetres": 0.007864444030768594,
+    "jeuSpiresMetres": 0.007227346222400016,
+    "engagementMinimalSuspensionMetres": 0.011500007554888725
+  },
+  "porteeRuntime": "Faction atl sans style national : gabarit b [1,1,1], confirmé par le coordinateur. Autres gabarits et déformations non certifiés.",
+  "limites": [
+    "Aucun test général ni build exécuté.",
+    "Aucun rendu, capture, contrôle visuel ni approbation artistique.",
+    "Aucune mesure de FPS ni essai téléphone.",
+    "Articulations rigides et suspension verticale ; chenilles fixes sans défilement des patins et galets.",
+    "Les cinq clips sont mesurés séparément ; leurs mélanges et transitions runtime ne sont pas certifiés.",
+    "Les bornes radiales continues concernent les clips et azimuts spécifiés. Les jeux mécaniques sont localisés et ne certifient pas toutes les collisions internes.",
+    "Assemblages de support, têtes de moyeux et berceaux raccordés intentionnellement ; les coulisseaux disposent de vrais fourreaux creux.",
+    "Microreliefs analytiques en espace tangent, aucun transfert ni bake HD revendiqué.",
+    "Aucune émission livrée : le témoin ambré est une surface non lumineuse.",
+    "Les effets de tir du moteur et leur origine visuelle restent à apprécier en jeu.",
+    "Aucun actif, lot officiel, registre, plan ou fichier partagé modifié par le spécialiste ; intégration et publication restent au coordinateur."
+  ],
+  "rapports": [
+    {
+      "nom": "README.md",
+      "octets": 6593,
+      "sha256": "e844056ff047b3088eefc49e068e1e05d5a0895322a87743efdf3184fccde993"
+    },
+    {
+      "nom": "fabrication.json",
+      "octets": 4386,
+      "sha256": "163ae2bb8444755a64b0a6b09bc776cf28ece6481763b1844746a3d826970fab"
+    },
+    {
+      "nom": "inspection-ancien-candidat.json",
+      "octets": 15995,
+      "sha256": "9c2ed8ee2fc8a25975b914aeb06fb9cc0796c45056eb9c1dba24a187ab4b0b96"
+    },
+    {
+      "nom": "mesures-geometrie.json",
+      "octets": 2468,
+      "sha256": "cf5dd3b5c344dede14c32a0c4ef09cbfbf3b50014db0cb1d97dfd0bda4d8e370"
+    },
+    {
+      "nom": "mesures-jeux.json",
+      "octets": 14543,
+      "sha256": "459b1fbe97f85815a7eef421e4cd0652e63ed0b0d6970c0597e914ab8f184470"
+    },
+    {
+      "nom": "mesures-poses-glb.json",
+      "octets": 4302,
+      "sha256": "fc2092ab0ea0bdc615d73b6a7cdce42e76d1d39f30f0bbfb73adfbf4b62a5c6c"
+    },
+    {
+      "nom": "mesures-poses-three-glb.json",
+      "octets": 2075,
+      "sha256": "c0b78aa667d21228e9809a62bf2bbe06522c5de0cd6cb9558bb3d255c702fc60"
+    },
+    {
+      "nom": "mesures-ressort.json",
+      "octets": 1164,
+      "sha256": "63366592bcecbadc2bdec5470a7d4ad3a0db14992346eefc68da8683af7d9d69"
+    },
+    {
+      "nom": "textures-fabrication.json",
+      "octets": 2345,
+      "sha256": "9f563d2f2bf0cf618d5e2e9cacb1657265109da04058673cb357668a7260bde6"
+    },
+    {
+      "nom": "validation-lot.json",
+      "octets": 376,
+      "sha256": "7d433bdc2350b8ca7c681683d971114057ad1a117882bf8190f0b06e0705ea15"
+    },
+    {
+      "nom": "validation-typage.json",
+      "octets": 946,
+      "sha256": "df0243c2c65787b118eea049400c1243eeee12a66780a555a29132cf6fd7070c"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "octets": 6593,
+      "sha256": "e844056ff047b3088eefc49e068e1e05d5a0895322a87743efdf3184fccde993"
+    },
+    {
+      "nom": "assembler-revue.py",
+      "octets": 4781,
+      "sha256": "37979bf3d952cfe34e24464fdd49d9d2597c079e6b3ce89395ab8b4bba4f99d0"
+    },
+    {
+      "nom": "generer.ts",
+      "octets": 20387,
+      "sha256": "f105146f001132a577ae525d5a57fd6bab5e0b1199cd54f0f9cb127ea19b2b34"
+    },
+    {
+      "nom": "geometrie.py",
+      "octets": 4176,
+      "sha256": "34b8606766d126c14dbd893f12275e8fd35cf1add1e5b6de6ce0dff3398cffbf"
+    },
+    {
+      "nom": "gltf.ts",
+      "octets": 10685,
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "octets": 2197,
+      "sha256": "c0de8d94f017103510237ea5bed482920187edcab831e2a43fbf4f3ab704f365"
+    },
+    {
+      "nom": "mesurer-jeux.py",
+      "octets": 10121,
+      "sha256": "c56b22f3b10458a95a0f1a66eb887770a8aabb4e6ad93d654da4118221312d2e"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "octets": 9185,
+      "sha256": "0216b61328abba00099094e824f6cf55c8997fb0b0ac5a4cdd1db92dd182be5d"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "octets": 5267,
+      "sha256": "004d5f26fab6b0070cf0e58732134fb4ede6124b3f884707fd182f87f0dea97a"
+    },
+    {
+      "nom": "mesurer-ressort.py",
+      "octets": 6008,
+      "sha256": "ee1103ba36ea8f6a4c30ce5271dccd14160b3ca2e94531cb89b2154bcdfb8990"
+    },
+    {
+      "nom": "mesurer.py",
+      "octets": 8934,
+      "sha256": "76087fbe933e962f0e16b2075b67cb12edb50f1c9ce11a0563d54cdc46edb480"
+    },
+    {
+      "nom": "textures.py",
+      "octets": 5636,
+      "sha256": "9306eeeb235bddb952c67c7adf920a857f014c8a64208200eeb38e7d335015d9"
+    },
+    {
+      "nom": "verifier.py",
+      "octets": 2322,
+      "sha256": "0df0e9c596f566f29001d2acee17813b58de961c840c7426a1ef5d0e848716a1"
+    }
+  ]
+}

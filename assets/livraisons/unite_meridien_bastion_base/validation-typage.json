@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "codeSortie": 0,
+  "commande": "npm run typecheck -- --incremental false",
+  "dateUtc": "2026-09-20T13:31:28.536718+00:00",
+  "sortie": "\n> atlas-tournaments@0.1.0 typecheck\n> tsc --noEmit --incremental false\n\n",
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_meridien_bastion_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_meridien_bastion_base/generer.ts": "f105146f001132a577ae525d5a57fd6bab5e0b1199cd54f0f9cb127ea19b2b34",
+    "scripts/production/modeles/unite_meridien_bastion_base/mesurer-poses.ts": "004d5f26fab6b0070cf0e58732134fb4ede6124b3f884707fd182f87f0dea97a",
+    "scripts/production/verifier-publication.ts": "72ddef9dfd9be007997d9201c5c2f437b3501c25cbe23c6009338f8db9497bfe"
+  },
+  "portee": "Configuration TypeScript du dépôt entière, dont le contrôle de publication ; sans build incrémental ni suite de tests."
+}

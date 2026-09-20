@@ -16799,21 +16799,14 @@
     {
       "id": "unite_meridien_bastion_base",
       "fichiers": [
-        "unite_meridien_bastion_base_lod0.glb",
         "unite_meridien_bastion_base_albedo.png",
-        "unite_meridien_bastion_base_albedo_hiver.png",
-        "unite_meridien_bastion_base_normale.png",
-        "unite_meridien_bastion_base_normale_hiver.png",
-        "unite_meridien_bastion_base_rugosite.png",
-        "unite_meridien_bastion_base_rugosite_hiver.png",
-        "unite_meridien_bastion_base_metal.png",
-        "unite_meridien_bastion_base_metal_hiver.png",
+        "unite_meridien_bastion_base_lod0.glb",
         "unite_meridien_bastion_base_masque_equipe.png",
-        "unite_meridien_bastion_base_masque_equipe_hiver.png",
-        "unite_meridien_bastion_base_emission.png",
-        "unite_meridien_bastion_base_emission_hiver.png"
+        "unite_meridien_bastion_base_metal.png",
+        "unite_meridien_bastion_base_normale.png",
+        "unite_meridien_bastion_base_rugosite.png"
       ],
-      "revision": "d5655e4b142693a9731a48e1a9ac56ed092a70460f5007faf5485edd2f834fd9"
+      "revision": "28128f59adc2928da027646b23a58d9b4bbcbaab39f7883178665fdaea33f79e"
     },
     {
       "id": "unite_meridien_veilleur_base",

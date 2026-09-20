@@ -1,0 +1,92 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.34931910037994385,
+          0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.615340047866106,
+          0.44624999165534973
+        ]
+      },
+      "rayonHorizontalMax": 0.4901285115327035
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.34931910037994385,
+          0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.6182806181594355,
+          0.44624999165534973
+        ]
+      },
+      "rayonHorizontalMax": 0.4901285115327035
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 199,
+      "enveloppe": {
+        "min": [
+          -0.34931910037994385,
+          0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.6173400505781174,
+          0.44624999165534973
+        ]
+      },
+      "rayonHorizontalMax": 0.4901285115327035
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 196,
+      "enveloppe": {
+        "min": [
+          -0.34931910037994385,
+          0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.6173091446221731,
+          0.44624999165534973
+        ]
+      },
+      "rayonHorizontalMax": 0.4901285115327035
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.34931910037994385,
+          0,
+          -0.44624999165534973
+        ],
+        "max": [
+          0.34931910037994385,
+          0.6153400465250015,
+          0.44624999165534973
+        ]
+      },
+      "rayonHorizontalMax": 0.4901285115327035
+    }
+  ],
+  "approbationArtistique": false
+}

@@ -1,0 +1,21 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "revision": "28128f59adc2928da027646b23a58d9b4bbcbaab39f7883178665fdaea33f79e",
+  "octets": 1809557,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_meridien_bastion_base_albedo.png",
+      "unite_meridien_bastion_base_lod0.glb",
+      "unite_meridien_bastion_base_masque_equipe.png",
+      "unite_meridien_bastion_base_metal.png",
+      "unite_meridien_bastion_base_normale.png",
+      "unite_meridien_bastion_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

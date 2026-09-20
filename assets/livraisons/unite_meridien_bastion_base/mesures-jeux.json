@@ -1,0 +1,501 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "sha256Glb": "936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB par plages documentées dans extras.pieces : positions, indices et matrices relus. Distances triangle-triangle exactes lorsque le minimum est sous le seuil, sinon borne AABB. Les raccordements intentionnels ne sont pas considérés comme jeux mécaniques.",
+  "chenillesEtRoues": [
+    {
+      "nom": "galets_voisins_gauche_0",
+      "minimumMetres": 0.0025999993085861206,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_gauche_1",
+      "minimumMetres": 0.0026000067591667175,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_gauche_2",
+      "minimumMetres": 0.0026000022189691663,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_gauche_3",
+      "minimumMetres": 0.0026000067591667175,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_gauche_4",
+      "minimumMetres": 0.0025999993085861206,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_renvoi_arriere_gauche",
+      "minimumMetres": 0.007494670986964503,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 284,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_renvoi_avant_gauche",
+      "minimumMetres": 0.007494670986964503,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 284,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_0",
+      "minimumMetres": 0.002622788990827497,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 816,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_1",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 796,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_2",
+      "minimumMetres": 0.0024609983478170484,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 816,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_3",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 792,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_4",
+      "minimumMetres": 0.001727817787756434,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 792,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_gauche_5",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 812,
+      "traversees": 0
+    },
+    {
+      "nom": "renvoi_chenille_gauche_0",
+      "minimumMetres": 0.0020000040531158447,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2543,
+      "traversees": 0
+    },
+    {
+      "nom": "renvoi_chenille_gauche_1",
+      "minimumMetres": 0.0020000021904706955,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2543,
+      "traversees": 0
+    },
+    {
+      "nom": "retour_chenille_gauche_0",
+      "minimumMetres": 0.0020000040531158447,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1004,
+      "traversees": 0
+    },
+    {
+      "nom": "retour_chenille_gauche_1",
+      "minimumMetres": 0.0036396413426329263,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1004,
+      "traversees": 0
+    },
+    {
+      "nom": "coque_chenille_point_bas_gauche",
+      "minimumMetres": 0.013223562654059403,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 925,
+      "traversees": 0
+    },
+    {
+      "nom": "jupes_chenille_point_bas_gauche",
+      "minimumMetres": 0.0066426560051126,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3099,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_droite_0",
+      "minimumMetres": 0.0025999993085861206,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_droite_1",
+      "minimumMetres": 0.0026000067591667175,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_droite_2",
+      "minimumMetres": 0.0026000022189691663,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_droite_3",
+      "minimumMetres": 0.0026000067591667175,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galets_voisins_droite_4",
+      "minimumMetres": 0.0025999993085861206,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 376,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_renvoi_arriere_droite",
+      "minimumMetres": 0.007494670986964503,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 284,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_renvoi_avant_droite",
+      "minimumMetres": 0.007494670986964503,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 284,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_0",
+      "minimumMetres": 0.0026227889908274973,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 816,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_1",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 796,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_2",
+      "minimumMetres": 0.0024609983478170484,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 816,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_3",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 792,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_4",
+      "minimumMetres": 0.0017278177877564339,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 792,
+      "traversees": 0
+    },
+    {
+      "nom": "galet_chenille_droite_5",
+      "minimumMetres": 0.0010000001639127731,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 812,
+      "traversees": 0
+    },
+    {
+      "nom": "renvoi_chenille_droite_0",
+      "minimumMetres": 0.0020000040531158447,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2543,
+      "traversees": 0
+    },
+    {
+      "nom": "renvoi_chenille_droite_1",
+      "minimumMetres": 0.0020000021904706955,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2543,
+      "traversees": 0
+    },
+    {
+      "nom": "retour_chenille_droite_0",
+      "minimumMetres": 0.0020000040531158447,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1004,
+      "traversees": 0
+    },
+    {
+      "nom": "retour_chenille_droite_1",
+      "minimumMetres": 0.0036396413426329263,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1004,
+      "traversees": 0
+    },
+    {
+      "nom": "coque_chenille_point_bas_droite",
+      "minimumMetres": 0.013223562654059403,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 950,
+      "traversees": 0
+    },
+    {
+      "nom": "jupes_chenille_point_bas_droite",
+      "minimumMetres": 0.0066426560051126,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 3165,
+      "traversees": 0
+    },
+    {
+      "nom": "separation_tubes_jumeles",
+      "minimumMetres": 0.10999999940395355,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 63722,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_gauche_0_-0.012",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_gauche_0_0.003",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_gauche_1_-0.012",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_gauche_1_0.003",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_droite_0_-0.012",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_droite_0_0.003",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_droite_1_-0.012",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    },
+    {
+      "nom": "coulisseau_fourreau_droite_1_0.003",
+      "minimumMetres": 0.000901838350711903,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 672,
+      "traversees": 0
+    }
+  ],
+  "bouches": [
+    {
+      "longueurMetres": 0.15999998897314074,
+      "rayonInterieurSommetsMetres": 0.0189999895976004,
+      "rayonExterieurMaxMetres": 0.03000001982344949,
+      "directionAxe": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "longueurMetres": 0.15999998897314074,
+      "rayonInterieurSommetsMetres": 0.0189999895976004,
+      "rayonExterieurMaxMetres": 0.03000001982344949,
+      "directionAxe": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "jeuxContinuellementBornesMetres": {
+    "tourelleHorsCouronnesVersEquipementsCorps": 0.0009999858587980137,
+    "tubesVersCorps": 0.021999982759356496,
+    "paraboleVersTubes": 0.05000001287460326,
+    "paraboleVersAntenneTousAzimuts": 0.06183644061763957
+  },
+  "borneAntenne": {
+    "rotationMaxRadians": 0.06020558903374588,
+    "excursionMaxMetres": 0.011449372819129196
+  },
+  "rayonHorizontalTousCapsEtTourelleMetres": {
+    "base": 0.4901285115327034,
+    "corps": 0.4717499911785126,
+    "module_tourelle": 0.2365184598557061,
+    "os_recul": 0.3857813181977676,
+    "module_radar": 0.17597616296949675,
+    "module_antenne": 0.2329515227522454,
+    "socle": 0.19814948070478056
+  },
+  "rayonHorizontalMaximumContinu": 0.4901285115327034,
+  "espaceMinimumDeuxVoisinsTousCaps": 0.01974297693459315,
+  "suspension": {
+    "deplacementCorpsY": [
+      -0.012,
+      0.003
+    ],
+    "fourreauxCreux": true,
+    "mesuresGLB": [
+      {
+        "cote": "gauche",
+        "indice": 0,
+        "tigeY": [
+          0.12514005601406097,
+          0.17314006388187408
+        ],
+        "fourreauY": [
+          0.15864005632698536,
+          0.22364005580544472
+        ],
+        "engagementMinimalMetres": 0.011500007554888725,
+        "jeuRadialMinimalMetres": 0.000901838350711903
+      },
+      {
+        "cote": "gauche",
+        "indice": 1,
+        "tigeY": [
+          0.12514005601406097,
+          0.17314006388187408
+        ],
+        "fourreauY": [
+          0.15864005632698536,
+          0.22364005580544472
+        ],
+        "engagementMinimalMetres": 0.011500007554888725,
+        "jeuRadialMinimalMetres": 0.000901838350711903
+      },
+      {
+        "cote": "droite",
+        "indice": 0,
+        "tigeY": [
+          0.12514005601406097,
+          0.17314006388187408
+        ],
+        "fourreauY": [
+          0.15864005632698536,
+          0.22364005580544472
+        ],
+        "engagementMinimalMetres": 0.011500007554888725,
+        "jeuRadialMinimalMetres": 0.000901838350711903
+      },
+      {
+        "cote": "droite",
+        "indice": 1,
+        "tigeY": [
+          0.12514005601406097,
+          0.17314006388187408
+        ],
+        "fourreauY": [
+          0.15864005632698536,
+          0.22364005580544472
+        ],
+        "engagementMinimalMetres": 0.011500007554888725,
+        "jeuRadialMinimalMetres": 0.000901838350711903
+      }
+    ],
+    "engagementMinimalMetres": 0.011500007554888725,
+    "methode": "Intervalles Y et distances des triangles relus ; extrema de translation verticale LINEAR. Les tiges restent engagées dans des fourreaux creux et conservent un jeu radial positif."
+  },
+  "limites": [
+    "Aucun contrôle visuel ni approbation artistique.",
+    "Distances localisées ; pas de certification globale de non-intersection des éléments assemblés.",
+    "Patins et bandes restent rigides ; pas de défilement mécanique des chenilles.",
+    "La borne tous caps vaut pour le gabarit b sans déformation et les clips livrés ; pas pour des mélanges arbitraires ni un autre gabarit.",
+    "Les mesures des chenilles/coque au point bas sont complétées par la séparation verticale : corps au-dessus des bandes ; les fixations et coulisseaux se recouvrent intentionnellement."
+  ]
+}

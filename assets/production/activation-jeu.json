@@ -185,6 +185,14 @@
       "revision": "bc27cd99f19a410f6b71cbeecfa22498c5eeb60d7030dcd10d48b61e63a97233",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_meridien_bastion_base",
+      "fichierActif": "public/assets/modeles/unite_meridien_bastion_base_lod0.glb",
+      "donnees": "../donnees/936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe.glb",
+      "revision": "28128f59adc2928da027646b23a58d9b4bbcbaab39f7883178665fdaea33f79e",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

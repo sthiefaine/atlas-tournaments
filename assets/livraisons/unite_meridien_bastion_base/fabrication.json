@@ -1,0 +1,206 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 8996,
+  "budgetTriangles": 9000,
+  "octetsGlb": 639292,
+  "sha256Glb": "936487f23c3765d7a9737af33029ac3f31640d4c2a27e69f485e8c976e572efe",
+  "bornes": {
+    "min": [
+      -0.34931910037994385,
+      0,
+      -0.44624999165534973
+    ],
+    "max": [
+      0.34931910037994385,
+      0.615340047866106,
+      0.44624999165534973
+    ],
+    "dimensions": [
+      0.6986382007598877,
+      0.615340047866106,
+      0.8924999833106995
+    ]
+  },
+  "pivots": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "base": {
+      "parent": "racine",
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.1861400617659092,
+        -0.0012499988079071045
+      ]
+    },
+    "module_tourelle": {
+      "parent": "corps",
+      "p": [
+        0,
+        0.11,
+        0
+      ]
+    },
+    "os_recul": {
+      "parent": "module_tourelle",
+      "p": [
+        0,
+        0.074,
+        0.165
+      ]
+    },
+    "module_radar": {
+      "parent": "module_tourelle",
+      "p": [
+        0,
+        0.125,
+        -0.1
+      ]
+    },
+    "module_antenne": {
+      "parent": "module_tourelle",
+      "p": [
+        -0.17,
+        0.129,
+        -0.102
+      ]
+    },
+    "socle": {
+      "parent": "module_tourelle",
+      "p": [
+        0.157,
+        0.133,
+        -0.088
+      ]
+    }
+  },
+  "trianglesParPiece": {
+    "bande_gauche": 256,
+    "patins_gauche": 408,
+    "galets_bandages_gauche": 288,
+    "galets_flasques_gauche": 288,
+    "galets_moyeux_gauche": 240,
+    "bras_suspension_gauche": 192,
+    "renvois_bandages_gauche": 128,
+    "renvois_flasques_gauche": 128,
+    "renvois_moyeux_gauche": 96,
+    "rouleaux_retour_gauche": 96,
+    "longerons_gauche": 12,
+    "tiges_suspension_gauche": 96,
+    "bande_droite": 256,
+    "patins_droite": 408,
+    "galets_bandages_droite": 288,
+    "galets_flasques_droite": 288,
+    "galets_moyeux_droite": 240,
+    "bras_suspension_droite": 192,
+    "renvois_bandages_droite": 128,
+    "renvois_flasques_droite": 128,
+    "renvois_moyeux_droite": 96,
+    "rouleaux_retour_droite": 96,
+    "longerons_droite": 12,
+    "tiges_suspension_droite": 96,
+    "glacis_equipe": 44,
+    "fourreaux_suspension_gauche": 128,
+    "fourreaux_suspension_droite": 128,
+    "coque_joues_inclinees": 60,
+    "jupes_flancs": 352,
+    "cadres_grilles_moteur": 88,
+    "fonds_grilles_moteur": 24,
+    "lames_grilles_moteur": 96,
+    "capots_avant": 88,
+    "lentilles_avant": 24,
+    "anneaux_remorquage": 288,
+    "trappe_conduite": 44,
+    "capot_optique": 44,
+    "vitrage_optique": 12,
+    "couronne_fixe": 112,
+    "tourelle_panneaux_equipe": 44,
+    "couronne_mobile": 112,
+    "toit_technique": 44,
+    "berceaux_marqueurs": 88,
+    "axes_berceaux": 128,
+    "pied_radar_fixe": 64,
+    "embase_antenne": 64,
+    "support_temoin": 44,
+    "tubes_creux": 560,
+    "fond_optique_tubes": 160,
+    "axe_radar": 64,
+    "col_radar": 48,
+    "parabole_radar": 288,
+    "bras_capteur_radar": 64,
+    "capteur_radar": 48,
+    "ame_ressort": 48,
+    "ressort_antenne": 864,
+    "collier_fouet": 64,
+    "fouet_antenne": 48,
+    "bout_fouet": 120,
+    "temoin_disponibilite": 44
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "pistes": [
+        "module_radar.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "pistes": [
+        "corps.position",
+        "module_antenne.quaternion",
+        "module_radar.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "pistes": [
+        "os_recul.position",
+        "corps.position"
+      ]
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "pistes": [
+        "corps.position",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "pistes": [
+        "corps.position",
+        "module_tourelle.quaternion",
+        "os_recul.position",
+        "module_radar.quaternion",
+        "module_antenne.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}

@@ -1,0 +1,25 @@
+{
+  "id": "unite_meridien_bastion_base",
+  "approbationArtistique": false,
+  "parametresMetres": {
+    "rayonCentral": 0.018,
+    "diametreFil": 0.008,
+    "nombreTours": 3,
+    "hauteur": 0.046,
+    "pas": 0.015333333333333332,
+    "diametreAme": 0.012
+  },
+  "glbRelu": true,
+  "trianglesRessort": 864,
+  "pairesFacesMesurees": 63160,
+  "seuilEliminationParAabbMetres": 0.02,
+  "jeuAmeBorneInferieureMetres": 0.007864444030768594,
+  "jeuEntreSpiresMetres": 0.007227346222400016,
+  "intersectionsEntreSpires": 0,
+  "methode": "GLB exporté : fil identifié par sa cellule UV. Minimum radial continu sur les triangles projetés, moins le rayon de l’âme cylindrique pleine de 6 mm. Distance triangle-triangle (sommets/faces et arêtes/arêtes, avec détection de traversées) entre portions de fil éloignées d’au moins 16 des 72 segments de l’hélice.",
+  "limites": [
+    "Contrôle local du ressort, pas de certification complète des collisions internes.",
+    "Les portions contiguës du même fil sont raccordées intentionnellement.",
+    "Le module antenne est une articulation rigide ; ces jeux internes sont invariants dans ses cinq clips."
+  ]
+}

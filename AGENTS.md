@@ -26,6 +26,10 @@ Génie poussé en `d57b9bb` ; GLB et cinq PNG conformes en ligne par SHA, invent
 
 Méca intégré : 3 988 triangles, quatre primitives, 27 os et six clips dont capture, 1 757 448 octets. Binôme lourd original avec lanceur à l’épaule, 1 617 poses mesurées ; posture des bras intérieurs corrigée avant livraison. Les 22 alias des anciens kits FR/LU sont archivés puis retirés, candidats et données conservés. Contrôle de lot et typage réussis, aucune image ni approbation artistique.
 
+Méca poussé en `3dbd1f1` ; GLB et cinq PNG vérifiés en ligne par SHA, anciens kits absents de l’inventaire. Vingt-deux modèles livrés. Bastion méridien suivant, création originale sans ancien actif ni kit, sous budget de 9 000 triangles.
+
+Bastion méridien intégré : 8 996 triangles sur 9 000, neuf primitives, 1 809 557 octets. Plateforme antiaérienne originale à tubes courts jumelés et radar tournant, 977 poses mesurées. Trains de roulement corrigés et quatre suspensions à fourreaux creux ; 47 dégagements mécaniques localisés positifs. Rayon horizontal borné à 0,490129 m dans le gabarit de la faction. Contrôle de lot et typage réussis ; aucun rendu ni approbation artistique. Vingt-trois modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.
