@@ -1,0 +1,21 @@
+{
+  "id": "unite_helico_base",
+  "revision": "c9b9cfd1c98cde6360e3c247e8849b997a55c166ba213b51d721dcf6351acff2",
+  "octets": 1506364,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_helico_base_albedo.png",
+      "unite_helico_base_lod0.glb",
+      "unite_helico_base_masque_equipe.png",
+      "unite_helico_base_metal.png",
+      "unite_helico_base_normale.png",
+      "unite_helico_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

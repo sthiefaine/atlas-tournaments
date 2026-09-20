@@ -89,6 +89,14 @@
       "revision": "bf7a73d9fdb7596c5a1fbc5e13bc6b3000bd7215c4d8ae11d0f49204c8cc460a",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_helico_base",
+      "fichierActif": "public/assets/modeles/unite_helico_base_lod0.glb",
+      "donnees": "../donnees/ba4147ec3c3de431c58998a3c8fdd2a99a85364c8af6fd425b16b2f4466c2965.glb",
+      "revision": "c9b9cfd1c98cde6360e3c247e8849b997a55c166ba213b51d721dcf6351acff2",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

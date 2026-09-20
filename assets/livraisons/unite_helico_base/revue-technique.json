@@ -1,0 +1,214 @@
+{
+  "id": "unite_helico_base",
+  "date": "2026-09-20",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_helico_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "29c049ed9ad38800b207b4f3a730f780d13e0ddc98e4afa3b0113549e7513e1d",
+    "ancienCandidatTriangles": 796,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "ancienCandidatOctets": 92428,
+    "verificationSourceDistante": "Coordinateur : inventaire distant relu le 20 septembre 2026, aucun upload pour cette fiche ; nouvelle vérification avant intégration à sa charge.",
+    "modeleur": "Three.js / TypeScript ; textures Python NumPy/Pillow",
+    "blenderUtilise": false,
+    "helpersLocauxCopiesDepuis": [
+      "scripts/production/modeles/unite_char_lourd_base",
+      "scripts/infanterie/gltf.ts"
+    ],
+    "geometrieAncienCandidatImportee": false,
+    "texturesAncienCandidatImportees": false,
+    "ancienCandidatModifie": false,
+    "rapportInspectionAncien": "inspection-ancien.json"
+  },
+  "dessin": {
+    "silhouette": [
+      "Capsule vitrée arrondie, montants, portes d’équipe, transmission et marqueur sous le menton.",
+      "Quatre pales légèrement coniques sur moyeu, mât et plateau cyclique ; patins courbes à nez relevé.",
+      "Courte poutre montante, rotor anticouple à carénage réellement ouvert et huit pales, dérive d’équipe."
+    ],
+    "poseReference": "Vol : point bas à 0,170373 m, sommet à 0,861 m. Racine au sol ; +Y haut et +Z avant.",
+    "creationOriginale": "Nouvelle géométrie propre à cet appareil ; aucun ancien maillage ou texture importé."
+  },
+  "geometrie": {
+    "lods": [
+      0
+    ],
+    "triangles": 5988,
+    "budget": 6000,
+    "primitives": 5,
+    "materiaux": [
+      "mat_corps",
+      "mat_details"
+    ],
+    "noeuds": [
+      "base",
+      "corps",
+      "module_nacelle",
+      "racine",
+      "socle"
+    ],
+    "dimensionsMetres": [
+      0.8880000114440918,
+      0.6906271590292454,
+      0.8880000114440918
+    ],
+    "pivot": "racine identité, centre d’emprise au sol",
+    "rapportDetaille": "mesures-geometrie.json",
+    "hierarchieDetaillee": "fabrication.json"
+  },
+  "textures": {
+    "uv0": "Atlas de matières 4×4 répété, gouttières 16 px.",
+    "tangentes": "Calculées sur les géométries fusionnées indexées et exportées explicitement.",
+    "masque": "Noir/blanc 0/255 ; flancs et portes de nacelle, collier de queue et dérive ; albédo neutre gris.",
+    "normales": "+Y tangent, microreliefs analytiques déterministes ; aucun bake HD.",
+    "canaux": "Albédo sRGB ; normale, rugosité G, métal B et masque linéaires ; R=255 ; métal éditable identique à B.",
+    "eclairagePeint": false,
+    "imagesExternes": true,
+    "pngEmbarques": false,
+    "variantes": [],
+    "rapportDetaille": "textures-fabrication.json"
+  },
+  "animations": {
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 2.4,
+        "pistes": [
+          "corps.position",
+          "module_nacelle.quaternion",
+          "base.quaternion"
+        ]
+      },
+      {
+        "nom": "deplacement",
+        "duree": 1,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "base.quaternion"
+        ]
+      },
+      {
+        "nom": "tir",
+        "duree": 0.7,
+        "pistes": [
+          "module_nacelle.position",
+          "corps.quaternion",
+          "base.quaternion"
+        ]
+      },
+      {
+        "nom": "touche",
+        "duree": 0.5,
+        "pistes": [
+          "corps.quaternion",
+          "base.quaternion"
+        ]
+      },
+      {
+        "nom": "hors_jeu",
+        "duree": 0.9,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "module_nacelle.quaternion",
+          "base.quaternion",
+          "socle.scale"
+        ]
+      }
+    ],
+    "racineFixe": true,
+    "bouclesFermees": {
+      "repos": true,
+      "deplacement": true
+    },
+    "interpolation": [
+      "LINEAR"
+    ],
+    "compatibiliteRendu": "GLB : entree.rotor=null ; seules les pistes de base.quaternion tournent. Aucun ajout de runtime et aucune double rotation.",
+    "poseFinaleHorsJeuTenue": true,
+    "toucheSansDommage": true,
+    "horsJeu": "Descente de 11 cm, faible inclinaison, rotor principal ralenti puis arrêté, témoin escamoté ; point bas toujours positif.",
+    "rapportsDetailles": [
+      "mesures-geometrie.json",
+      "mesures-mouvements.json"
+    ],
+    "rotor": "Clés quaternion +Y espacées de 45° ; 8/4/2/2/2 tours ; pas de retour inverse ; hors-jeu arrêté à 0,6 s.",
+    "encombrement": "Rotor : rayon 0,444136 m et espace voisin 0,111728 m à plat. Rayon horizontal maximal des gestes 0,459573 m, espace entre deux voisins orientés librement au moins 0,080854 m parmi les poses mesurées. Point bas hors-jeu 0,052306 m."
+  },
+  "livraison": {
+    "fichiersRuntime": [
+      {
+        "nom": "unite_helico_base_albedo.png",
+        "octets": 456849,
+        "sha256": "8bbac286a827b3accf28638b52dd2713d371be00158999ad89939f339240c687"
+      },
+      {
+        "nom": "unite_helico_base_lod0.glb",
+        "octets": 337840,
+        "sha256": "ba4147ec3c3de431c58998a3c8fdd2a99a85364c8af6fd425b16b2f4466c2965"
+      },
+      {
+        "nom": "unite_helico_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_helico_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_helico_base_normale.png",
+        "octets": 584339,
+        "sha256": "679097e70fdfc444408a53ca2b7210b46147a169727184bd76dcebbcc617124c"
+      },
+      {
+        "nom": "unite_helico_base_rugosite.png",
+        "octets": 126204,
+        "sha256": "a9244ed360345f77c384eac8d6d580093b7a723717d23b00ff7d2eff254d6fe1"
+      }
+    ],
+    "octetsGlb": 337840,
+    "octetsRuntimeTotal": 1506364,
+    "poidsRapportsNonInclus": true
+  },
+  "controles": {
+    "controleAsset": {
+      "commande": "npm run controler:asset -- --spec assets/specs/unite_helico_base.json --lot tmp/production-sequentielle/unite_helico_base",
+      "codeSortie": 0,
+      "ok": true,
+      "motifs": [],
+      "revisionSha256": "ba4147ec3c3de431c58998a3c8fdd2a99a85364c8af6fd425b16b2f4466c2965"
+    },
+    "typecheck": {
+      "commande": "npm run typecheck",
+      "codeSortie": 0,
+      "apresDerniereModificationTypescript": true
+    },
+    "mesuresGeometrie": "mesurer.py : assertions passées, incluant rotations quaternion de 45° sans retour inverse.",
+    "mesuresMouvements": "generer.ts : clés + 97 instants uniformes par clip et balayage de 361 poses du rotor ; sommets transformés et rayon horizontal mesuré, toutes les enveloppes dans x/z ±0,5 m et au-dessus du sol.",
+    "testsGeneraux": false,
+    "build": false,
+    "captures": false,
+    "inspectionVisuelle": false,
+    "fpsTelephone": null
+  },
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Rotor principal animé par base.quaternion uniquement : le chargeur GLB désactive le rotor procédural.",
+    "Rotor anticouple caréné entièrement modélisé, pales fixes faute de nœud supplémentaire dans le contrat.",
+    "Vitrages opaques teintés PBR sans intérieur modélisé.",
+    "La pose hors-jeu abaisse le vol et parque le rotor sans toucher le terrain, sans débris.",
+    "Mesure réelle sur téléphone en attente.",
+    "Atlas de matières répété, non prévu pour un motif unique par panneau.",
+    "Régime du rotor principal différent entre clips ; les transitions du mélangeur ne sont pas vérifiées visuellement."
+  ],
+  "integration": "À réaliser par le coordinateur : vérification source distante, archivage ancien candidat, contrôle puis activation, commit et push individuel."
+}

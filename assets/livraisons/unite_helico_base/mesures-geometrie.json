@@ -1,0 +1,90 @@
+{
+  "triangles": 5988,
+  "primitives": 5,
+  "trianglesDegeneres": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.294948136556286e-08,
+  "tangentesErreurMax": 3.9654944328226804e-08,
+  "orthogonaliteErreurMax": 3.817110449944039e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_nacelle",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "rotor": {
+    "repos": {
+      "nombreCles": 65,
+      "tours": 8.0,
+      "angleMaxEntreClesDegres": 45.00000058248979,
+      "axeYSeulement": true,
+      "aucunRetourInverse": true,
+      "arretFinal": false
+    },
+    "deplacement": {
+      "nombreCles": 33,
+      "tours": 4.0,
+      "angleMaxEntreClesDegres": 45.00000058248969,
+      "axeYSeulement": true,
+      "aucunRetourInverse": true,
+      "arretFinal": false
+    },
+    "tir": {
+      "nombreCles": 17,
+      "tours": 2.0,
+      "angleMaxEntreClesDegres": 45.00000058248969,
+      "axeYSeulement": true,
+      "aucunRetourInverse": true,
+      "arretFinal": false
+    },
+    "touche": {
+      "nombreCles": 17,
+      "tours": 2.0,
+      "angleMaxEntreClesDegres": 45.00000058248969,
+      "axeYSeulement": true,
+      "aucunRetourInverse": true,
+      "arretFinal": false
+    },
+    "hors_jeu": {
+      "nombreCles": 18,
+      "tours": 2.0,
+      "angleMaxEntreClesDegres": 45.00000058248969,
+      "axeYSeulement": true,
+      "aucunRetourInverse": true,
+      "arretFinal": true
+    }
+  },
+  "octetsGlbEtPng": 1506364
+}

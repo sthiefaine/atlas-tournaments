@@ -1,0 +1,149 @@
+{
+  "methode": "AnimationMixer Three.js : toutes clés + 97 instants uniformes ; sommets transformés et interpolation quaternion sphérique",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 155,
+      "rayonHorizontalMax": 0.4441362467479051,
+      "margeDeuxVoisinsTousCaps": 0.11172750650418983,
+      "directionMarqueurZMin": 0.9992001066929782,
+      "dimensionsMax": [
+        0.8880000553843103,
+        0.6906271590292454,
+        0.8880000553843103
+      ],
+      "enveloppe": {
+        "min": [
+          -0.44400002769215513,
+          0.16637283563613892,
+          -0.44400002836270736
+        ],
+        "max": [
+          0.44400002769215513,
+          0.8669999851286412,
+          0.4440000270216029
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 97,
+      "rayonHorizontalMax": 0.45957320360476805,
+      "margeDeuxVoisinsTousCaps": 0.08085359279046389,
+      "directionMarqueurZMin": 0.9988957033629323,
+      "dimensionsMax": [
+        0.8880720464421152,
+        0.6965642281211116,
+        0.8935991373070884
+      ],
+      "enveloppe": {
+        "min": [
+          -0.44700598339210684,
+          0.16644265928760382,
+          -0.43645914964390975
+        ],
+        "max": [
+          0.44700598342019726,
+          0.8668855740844932,
+          0.4593330254414341
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 116,
+      "rayonHorizontalMax": 0.44873572235225795,
+      "margeDeuxVoisinsTousCaps": 0.1025285552954841,
+      "directionMarqueurZMin": 0.9999020015972123,
+      "dimensionsMax": [
+        0.888000020860176,
+        0.6912016137187151,
+        0.8880809892763204
+      ],
+      "enveloppe": {
+        "min": [
+          -0.444000010430088,
+          0.16934302534187834,
+          -0.4483666131458696
+        ],
+        "max": [
+          0.444000010430088,
+          0.8611735037220932,
+          0.4459529386726246
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 99,
+      "rayonHorizontalMax": 0.45893374958227284,
+      "margeDeuxVoisinsTousCaps": 0.08213250083545431,
+      "directionMarqueurZMin": 0.9996080256241721,
+      "dimensionsMax": [
+        0.8880805755613157,
+        0.6979967542525227,
+        0.8885260565977569
+      ],
+      "enveloppe": {
+        "min": [
+          -0.45351555460758863,
+          0.16353568138060864,
+          -0.4475255022437521
+        ],
+        "max": [
+          0.4481652611902594,
+          0.8615324356331313,
+          0.45096349292640064
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 114,
+      "rayonHorizontalMax": 0.459434836110735,
+      "margeDeuxVoisinsTousCaps": 0.08113032777853002,
+      "directionMarqueurZMin": 0.9859251145036061,
+      "dimensionsMax": [
+        0.8881772586147607,
+        0.6993382569071869,
+        0.889960153542229
+      ],
+      "enveloppe": {
+        "min": [
+          -0.4440000057220459,
+          0.05230571712417248,
+          -0.4440000063925982
+        ],
+        "max": [
+          0.45866543086674283,
+          0.861000002771616,
+          0.45324883018450046
+        ]
+      },
+      "resteDansCase": true
+    }
+  ],
+  "balayageRotor": {
+    "methode": "361 orientations + rayon analytique de chaque sommet",
+    "nombreEchantillons": 361,
+    "rayonMax": 0.44413624607755836,
+    "margeDeuxRotorsVoisins": 0.11172750784488328,
+    "enveloppe": {
+      "min": [
+        -0.444124358840382,
+        0.1703728437423706,
+        -0.444124358840382
+      ],
+      "max": [
+        0.444124358840382,
+        0.861000002771616,
+        0.444124358840382
+      ]
+    },
+    "resteDansCase": true
+  }
+}

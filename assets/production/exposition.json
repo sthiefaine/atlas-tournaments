@@ -16812,21 +16812,14 @@
     {
       "id": "unite_helico_base",
       "fichiers": [
-        "unite_helico_base_lod0.glb",
         "unite_helico_base_albedo.png",
-        "unite_helico_base_albedo_hiver.png",
-        "unite_helico_base_normale.png",
-        "unite_helico_base_normale_hiver.png",
-        "unite_helico_base_rugosite.png",
-        "unite_helico_base_rugosite_hiver.png",
-        "unite_helico_base_metal.png",
-        "unite_helico_base_metal_hiver.png",
+        "unite_helico_base_lod0.glb",
         "unite_helico_base_masque_equipe.png",
-        "unite_helico_base_masque_equipe_hiver.png",
-        "unite_helico_base_emission.png",
-        "unite_helico_base_emission_hiver.png"
+        "unite_helico_base_metal.png",
+        "unite_helico_base_normale.png",
+        "unite_helico_base_rugosite.png"
       ],
-      "revision": "a7fe342c46c1753219a9fe9122fc84c51cc560874efc88fd0cd2a616b335aade"
+      "revision": "c9b9cfd1c98cde6360e3c247e8849b997a55c166ba213b51d721dcf6351acff2"
     },
     {
       "id": "unite_infanterie_base",

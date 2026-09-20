@@ -1,0 +1,190 @@
+{
+  "id": "unite_helico_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_helico_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "29c049ed9ad38800b207b4f3a730f780d13e0ddc98e4afa3b0113549e7513e1d",
+    "ancienCandidatTriangles": 796,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20"
+  },
+  "triangles": 5988,
+  "budgetTriangles": 6000,
+  "octetsGlb": 337840,
+  "sha256Glb": "ba4147ec3c3de431c58998a3c8fdd2a99a85364c8af6fd425b16b2f4466c2965",
+  "bornes": {
+    "min": [
+      -0.4440000057220459,
+      0.1703728437423706,
+      -0.4440000057220459
+    ],
+    "max": [
+      0.4440000057220459,
+      0.861000002771616,
+      0.4440000057220459
+    ],
+    "dimensions": [
+      0.8880000114440918,
+      0.6906271590292454,
+      0.8880000114440918
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.5,
+        0.03
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.31,
+        -0.03
+      ]
+    },
+    "module_nacelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.095,
+        0.205
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        -0.104,
+        0.154,
+        -0.035
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "coque_arrondie": 626,
+    "vitrages_capsule": 122,
+    "flancs_equipe": 92,
+    "montant_parebrise": 144,
+    "montants_portes": 240,
+    "poignees_encastrees": 120,
+    "panneaux_portes_equipe": 120,
+    "admissions_moteur": 120,
+    "lamelles_admission": 96,
+    "capot_transmission": 360,
+    "echappements_creux": 144,
+    "brides_echappement": 96,
+    "embase_mat": 80,
+    "mat_rotor": 64,
+    "plateau_cyclique": 80,
+    "bielles_cycliques": 64,
+    "moyeu_rotor": 80,
+    "coiffe_moyeu": 224,
+    "quatre_pales_coniques": 48,
+    "reperes_neutres_bouts_pales": 48,
+    "poutre_queue_conique": 80,
+    "collier_queue_equipe": 80,
+    "carene_anticouple": 448,
+    "levre_anticouple": 288,
+    "moyeu_anticouple": 64,
+    "pales_anticouple": 96,
+    "derive_equipe": 16,
+    "stabilisateur_queue": 60,
+    "patins_courbes": 480,
+    "jambes_patins": 192,
+    "semelles_patins": 240,
+    "marchepieds": 120,
+    "supports_marchepieds": 64,
+    "entretoises_train": 96,
+    "nacelle_marqueur": 224,
+    "chemise_marqueur": 64,
+    "bouche_marqueur": 96,
+    "axes_nacelle": 96,
+    "embase_temoin": 48,
+    "temoin_disponibilite": 168
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "corps.position",
+        "module_nacelle.quaternion",
+        "base.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "base.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_nacelle.position",
+        "corps.quaternion",
+        "base.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.quaternion",
+        "base.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_nacelle.quaternion",
+        "base.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Rotor principal animé par base.quaternion uniquement : le chargeur GLB désactive le rotor procédural.",
+    "Rotor anticouple caréné entièrement modélisé, pales fixes faute de nœud supplémentaire dans le contrat.",
+    "Vitrages opaques teintés PBR sans intérieur modélisé.",
+    "La pose hors-jeu abaisse le vol et parque le rotor sans toucher le terrain, sans débris.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}
