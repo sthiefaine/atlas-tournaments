@@ -36,6 +36,8 @@ import type { Biome, CleTerrain, Saison } from '../schemas/types';
 import type { ParametresAmbiance } from './eclairage';
 import { alea, CASE, NIVEAU_EAU, type GrilleTerrain } from './geometrie';
 import { LotInstancie } from './lots';
+import { clonerMateriauNoeud } from './modeles';
+import type { RocherLivre } from './rochers-livres';
 
 /**
  * Vrai si deux ensembles de cases vues disent la même chose. La vue arrive à
@@ -916,6 +918,8 @@ interface Lot {
   geo: THREE.BufferGeometry;
   mat: THREE.MeshStandardNodeMaterial;
   instances: Accessoire[];
+  echelleModele?: number;
+  couleurInitiale?: THREE.Color;
 }
 
 /** Teinte de saison des végétaux caducs : la même famille que le feuillage de `decor.ts`. */
@@ -947,8 +951,9 @@ export interface ChantierPaysage {
 /** Monte le paysage d'un biome. `hauteurEn` est une fermeture vivante : on la relit à chaque pose. */
 export function creerPaysage(
   g: GrilleTerrain, hauteurEn: (x: number, z: number) => number, biome: Biome,
+  rocherLivre?: RocherLivre,
 ): Paysage {
-  const chantier = ouvrirChantierPaysage(g, hauteurEn, biome);
+  const chantier = ouvrirChantierPaysage(g, hauteurEn, biome, rocherLivre);
   for (const tranche of chantier.tranches) tranche();
   return chantier.paysage();
 }
@@ -956,6 +961,7 @@ export function creerPaysage(
 /** Le même montage, en tranches : c'est ce que `decor.ts` joue au chargement. */
 export function ouvrirChantierPaysage(
   g: GrilleTerrain, hauteurEn: (x: number, z: number) => number, biome: Biome,
+  rocherLivre?: RocherLivre,
 ): ChantierPaysage {
   const groupe = new THREE.Group();
   groupe.name = 'paysage';
@@ -1010,7 +1016,8 @@ export function ouvrirChantierPaysage(
       quat.setFromEuler(euler);
       pos.set(a.x + dx, y, a.z + dz);
       const largeur = espece.matiere === 'fumee' ? a.echelle * (0.6 + ((souffle * 0.25 + a.teinte) % 1) * 0.8) : a.echelle;
-      ech.set(largeur, echelleY, largeur);
+      const echelleModele = lot.echelleModele ?? 1;
+      ech.set(largeur * echelleModele, echelleY * echelleModele, largeur * echelleModele);
       mat4.compose(pos, quat, ech);
       mesh.setMatrixAt(i, mat4);
     });
@@ -1049,8 +1056,9 @@ export function ouvrirChantierPaysage(
     const espece = ESPECES[genre];
     // La forme est **partagée** avec les autres paysages de la page : elle ne
     // dépend que du couple (silhouette, teinte), jamais de la grille.
-    const geo = formeMemorisee(espece.forme, espece.couleur);
-    const mat = new THREE.MeshStandardNodeMaterial({
+    const roche = genre === 'rocher_greve' ? rocherLivre : undefined;
+    const geo = roche?.geometrie ?? formeMemorisee(espece.forme, espece.couleur);
+    const mat = roche ? clonerMateriauNoeud(roche.materiau) : new THREE.MeshStandardNodeMaterial({
       vertexColors: true,
       roughness: espece.matiere === 'glace' ? 0.25 : espece.matiere === 'mineral' ? 0.95 : 0.85,
       metalness: espece.matiere === 'glace' ? 0.1 : 0,
@@ -1073,7 +1081,9 @@ export function ouvrirChantierPaysage(
     mesh.frustumCulled = false;
     if (espece.matiere === 'fumee') mesh.renderOrder = 4;
     groupe.add(mesh);
-    lots.push({ genre, espece, mesh, geo, mat, instances });
+    // Les galets de grève sont un peu plus petits que les pierres des sommets.
+    lots.push({ genre, espece, mesh, geo, mat, instances,
+      echelleModele: roche ? roche.echelle * 0.82 : 1, couleurInitiale: mat.color.clone() });
   }
 
   for (const lot of lots) {
@@ -1201,7 +1211,7 @@ export function ouvrirChantierPaysage(
       teinteSol.set(p.teinteSol);
       for (const lot of lots) {
         const m = lot.espece.matiere;
-        lot.mat.color.set(blanc);
+        lot.mat.color.copy(lot.couleurInitiale ?? blanc);
         // Les caducs suivent la saison ; les persistants, les pierres et le bois, non.
         if (m === 'vegetal') {
           lot.mat.color.lerp(s.vers, s.part).lerp(teinteSol, 0.2);
@@ -1250,10 +1260,10 @@ export function ouvrirChantierPaysage(
       // de la page, et le paysage n'en est pas propriétaire. Les libérer ici
       // ferait payer à chaque montage la taille des cinquante-quatre volumes,
       // et blanchirait un paysage encore à l'écran (`formeMemorisee`).
-      for (const lot of lots) lot.mat.dispose();
+      for (const lot of lots) { lot.mesh.dispose(); lot.mat.dispose(); }
       // Le rivage, lui, est taillé sur la grille : il n'appartient qu'ici.
-      geoRivage.dispose();
-      matRivage.dispose();
+      geoRivage?.dispose();
+      matRivage?.dispose();
     },
   };
 

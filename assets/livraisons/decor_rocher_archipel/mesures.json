@@ -1,0 +1,260 @@
+{
+  "id": "decor_rocher_archipel",
+  "sha256Glb": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed",
+  "triangles": 576,
+  "primitives": 1,
+  "materiaux": 1,
+  "animations": 0,
+  "noeuds": [
+    "racine",
+    "bloc"
+  ],
+  "bornes": {
+    "min": [
+      -0.21387243270874023,
+      -0.0,
+      -0.22246186435222626
+    ],
+    "max": [
+      0.21387243270874023,
+      0.30000001192092896,
+      0.22246186435222626
+    ],
+    "dimensions": [
+      0.42774486541748047,
+      0.30000001192092896,
+      0.4449237287044525
+    ]
+  },
+  "rayonHorizontalMaxM": 0.2976956018184271,
+  "trianglesAireMinM2": 3.112295275482483e-05,
+  "normalesAccordFacesMin": 0.9999999576273446,
+  "tangentesOrthogonales": true,
+  "uv": {
+    "minimum": [
+      0.015625,
+      0.015625
+    ],
+    "maximum": [
+      0.984375,
+      0.784375011920929
+    ],
+    "aireMin": 6.982860213611275e-06,
+    "margePixels512": 8,
+    "ilotsParFace": true,
+    "dessousCoquillesPartageUvDessus": true
+  },
+  "fermeture": [
+    {
+      "nom": "bloc",
+      "triangles": 384,
+      "aretesSoudees": 576,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 0.03388295552248302,
+      "ferme": true
+    },
+    {
+      "nom": "coquille_avant_droite",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 2.2654798236031043e-05,
+      "ferme": true
+    },
+    {
+      "nom": "coquille_avant_gauche",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 2.018016164756633e-05,
+      "ferme": true
+    },
+    {
+      "nom": "coquille_arriere_droite",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 1.8345597221117996e-05,
+      "ferme": true
+    },
+    {
+      "nom": "coquille_arriere_gauche",
+      "triangles": 48,
+      "aretesSoudees": 72,
+      "incidenceAretes": 2,
+      "sensCoherent": true,
+      "volumeSigneM3": 1.1592000307984532e-05,
+      "ferme": true
+    }
+  ],
+  "alveoles": [
+    {
+      "nom": "flanc_gauche",
+      "profondeurM": 0.020000001650467614,
+      "distanceMinAutresPlansM": 0.05534289496280722,
+      "projectionNormaleSortanteMin": 0.7392625681984961
+    },
+    {
+      "nom": "face_arriere",
+      "profondeurM": 0.02000000724205034,
+      "distanceMinAutresPlansM": 0.06337760042164972,
+      "projectionNormaleSortanteMin": 0.7848902977225467
+    },
+    {
+      "nom": "cassure_sommet_avant",
+      "profondeurM": 0.01999999804629686,
+      "distanceMinAutresPlansM": 0.048659386447293375,
+      "projectionNormaleSortanteMin": 0.7264425206131998
+    },
+    {
+      "nom": "cassure_sommet_gauche",
+      "profondeurM": 0.019999999694137037,
+      "distanceMinAutresPlansM": 0.04733710289001464,
+      "projectionNormaleSortanteMin": 0.7201820544201456
+    },
+    {
+      "nom": "cassure_flanc",
+      "profondeurM": 0.020000002965097116,
+      "distanceMinAutresPlansM": 0.057381382771984,
+      "projectionNormaleSortanteMin": 0.7878631932020599
+    }
+  ],
+  "appuisCoquillages": [
+    {
+      "nom": "coquille_avant_droite",
+      "yMin": 0.0,
+      "sommetsAuSol": 72,
+      "planSeparateurBloc": "angle_avant_droit",
+      "gardeBlocM": 0.008628078993317098
+    },
+    {
+      "nom": "coquille_avant_gauche",
+      "yMin": 0.0,
+      "sommetsAuSol": 72,
+      "planSeparateurBloc": "angle_avant_gauche",
+      "gardeBlocM": 0.023688795681265053
+    },
+    {
+      "nom": "coquille_arriere_droite",
+      "yMin": 0.0,
+      "sommetsAuSol": 72,
+      "planSeparateurBloc": "angle_arriere_droit",
+      "gardeBlocM": 0.023500247639975803
+    },
+    {
+      "nom": "coquille_arriere_gauche",
+      "yMin": 0.0,
+      "sommetsAuSol": 72,
+      "planSeparateurBloc": "angle_arriere_gauche",
+      "gardeBlocM": 0.010848489680433998
+    }
+  ],
+  "quartsTour": {
+    "profils": [
+      {
+        "quartTour": 0,
+        "hauteursM": [
+          0.22480599657213157,
+          0.2113983317080257,
+          0.22791483138602472,
+          0.23190078156249377,
+          0.23037218537714693
+        ]
+      },
+      {
+        "quartTour": 1,
+        "hauteursM": [
+          0.2447049769721742,
+          0.2526984452411511,
+          0.21480599650535828,
+          0.23037218537714693,
+          0.22791483138602472
+        ]
+      },
+      {
+        "quartTour": 2,
+        "hauteursM": [
+          0.15854113791030477,
+          0.30000001192092896,
+          0.23190078156249377,
+          0.22791483138602472,
+          0.21480599650535828
+        ]
+      },
+      {
+        "quartTour": 3,
+        "hauteursM": [
+          0.2311148309155778,
+          0.18592774173015736,
+          0.230372185377147,
+          0.21480599650535828,
+          0.23190078156249377
+        ]
+      }
+    ],
+    "distances": [
+      {
+        "quarts": [
+          0,
+          1
+        ],
+        "ecartMaxM": 0.041300113533125404
+      },
+      {
+        "quarts": [
+          0,
+          2
+        ],
+        "ecartMaxM": 0.08860168021290327
+      },
+      {
+        "quarts": [
+          0,
+          3
+        ],
+        "ecartMaxM": 0.02547058997786833
+      },
+      {
+        "quarts": [
+          1,
+          2
+        ],
+        "ecartMaxM": 0.08616383906186942
+      },
+      {
+        "quarts": [
+          1,
+          3
+        ],
+        "ecartMaxM": 0.06677070351099373
+      },
+      {
+        "quarts": [
+          2,
+          3
+        ],
+        "ecartMaxM": 0.1140722701907716
+      }
+    ],
+    "limite": "Hauteurs de cinq sondes différentes pour chaque quart, pas de jugement de lisibilité."
+  },
+  "imagesEmbarquees": 0,
+  "textures": {
+    "metalliqueMax": 0,
+    "normalesLongueurMin": 0.9953911477912164,
+    "normalesLongueurMax": 1.0046183243903548,
+    "normaleZMin": 0.9607843137254901
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Contrôles ciblés de fermeture, orientation, cavités et séparation des coquillages ; aucune inspection visuelle.",
+    "Continuité artistique aux coutures UV non jugée.",
+    "Aucun rendu, FPS téléphone, test général ni build."
+  ]
+}

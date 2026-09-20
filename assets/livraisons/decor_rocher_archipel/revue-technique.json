@@ -1,0 +1,130 @@
+{
+  "id": "decor_rocher_archipel",
+  "date": "2026-09-20T17:23:57.243906+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T17:13:51.127Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "a8fbb7d8e0c7f190a6bbc1a9ae5b9f9a7382949f48ce8c49198eaa13f3ec60fa",
+    "triangles": 240,
+    "octetsGlb": 26868,
+    "preserve": true,
+    "actifAbsent": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 576,
+  "budgetTriangles": 900,
+  "primitives": 1,
+  "materiaux": 1,
+  "octetsGlb": 88108,
+  "octetsLot": 571274,
+  "dimensions": [
+    0.42774486541748047,
+    0.30000001192092896,
+    0.4449237287044525
+  ],
+  "sha256Glb": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed",
+  "fichiers": [
+    {
+      "fichier": "decor_rocher_archipel_albedo.png",
+      "octets": 268850,
+      "sha256": "cc0fff27f6898acf7c4d504e57e8d6f5c6f4924731e468a728cc30d3f9130d69"
+    },
+    {
+      "fichier": "decor_rocher_archipel_lod0.glb",
+      "octets": 88108,
+      "sha256": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed"
+    },
+    {
+      "fichier": "decor_rocher_archipel_normale.png",
+      "octets": 155673,
+      "sha256": "27694c53582cbd7faf6c6a651a5c19270ad6357ffd39141a3048e1b004512e9b"
+    },
+    {
+      "fichier": "decor_rocher_archipel_rugosite.png",
+      "octets": 58643,
+      "sha256": "1c91ca0cc2cac81eeeeb51d227f75f3a3b1c81807a45bcac70d9ddc702d1e95a"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/README.md",
+      "sha256": "c06150c8042d1fd65f7792e6e7b17ff08fae595609b6eb8bd1bad9aa1382ffbd"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/assembler-revue.py",
+      "sha256": "a74b168108272df4eb37a90ccfbbcc4903407fe19dbda616fc9d54082b0056b1"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/generer.py",
+      "sha256": "c59fd81152203d0d34c173b1dae561e82a5f72125419494d0795b43ed0dc31e4"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/inspecter-ancien.py",
+      "sha256": "ac54314d5542a1be9536f58c6c1e3fac966f824b10f07a8e39b850712bc67704"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/mesurer-natif.ts",
+      "sha256": "bab53f9131fa04c16502c8cd0b9afedfe97c34365fd7276acf13426200a887ef"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/mesurer.py",
+      "sha256": "2eb8310f85279740b5220bca9250432c939edf071ef87cedef53299d95aa6956"
+    },
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/textures.py",
+      "sha256": "560fe3c76e356e1f00faf7755d76fb5b8c74a9df208f07877ddf7b6e47f09121"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "decor_rocher_archipel_albedo.png",
+      "decor_rocher_archipel_lod0.glb",
+      "decor_rocher_archipel_normale.png",
+      "decor_rocher_archipel_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "volumesFermes": 5,
+    "plansDeFracture": 14,
+    "alveolesGeometriques": 5,
+    "appuisCoquillages": 4,
+    "gardeCoquillagesBlocMinM": 0.008628078993317098,
+    "pariteNumpyNatif": true,
+    "ecartBornesNatifMaxM": 0,
+    "controleExhaustifCollisions": false
+  },
+  "textures": "textures.json",
+  "provenance": "provenance.json",
+  "inspection": "inspection-ancien-candidat.json",
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Profils numériquement différents ; lisibilité et esthétique non jugées.",
+    "Coutures UV artistiquement non inspectées ; dessous des coquilles partage son îlot supérieur.",
+    "Aucune variante saisonnière dédiée, cartes communes.",
+    "Raccordement runtime et instanciation contrôlés séparément par le coordinateur.",
+    "Aucun rendu, capture, contrôle visuel, test général, build ni FPS téléphone."
+  ]
+}

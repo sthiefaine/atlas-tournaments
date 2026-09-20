@@ -4984,18 +4984,12 @@
     {
       "id": "decor_rocher_archipel",
       "fichiers": [
-        "decor_rocher_archipel_lod0.glb",
         "decor_rocher_archipel_albedo.png",
-        "decor_rocher_archipel_albedo_ete.png",
-        "decor_rocher_archipel_albedo_hiver.png",
+        "decor_rocher_archipel_lod0.glb",
         "decor_rocher_archipel_normale.png",
-        "decor_rocher_archipel_normale_ete.png",
-        "decor_rocher_archipel_normale_hiver.png",
-        "decor_rocher_archipel_rugosite.png",
-        "decor_rocher_archipel_rugosite_ete.png",
-        "decor_rocher_archipel_rugosite_hiver.png"
+        "decor_rocher_archipel_rugosite.png"
       ],
-      "revision": "89b0e3fee364a8f5f47fdb241221ed3d1f4fd65e1559f0244737aa01d2d0f77d"
+      "revision": "b3677db95c2602fbb1aed0f7fd14481d33a68fe25e80353e2ab39610c1925870"
     },
     {
       "id": "decor_rocher_cotier",

@@ -1,0 +1,12 @@
+{
+  "id": "decor_rocher_archipel",
+  "triangles": 576,
+  "meshes": 1,
+  "animations": 0,
+  "ecartBornesMaxM": 0,
+  "pariteNumpyDeuxMicrometres": true,
+  "sha256Glb": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed",
+  "texturesRetireesEnMemoire": true,
+  "controleVisuel": false,
+  "fpsTelephone": null
+}

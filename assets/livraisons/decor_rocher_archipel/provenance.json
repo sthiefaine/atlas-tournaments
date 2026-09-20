@@ -1,0 +1,49 @@
+{
+  "id": "decor_rocher_archipel",
+  "verificationLocale": [
+    {
+      "chemin": "assets/sources/decor_rocher_archipel",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/source.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/optimisation-lod0/decor_rocher_archipel/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/production-sequentielle/decor_rocher_archipel/maitre.json",
+      "existe": false,
+      "fichiers": []
+    }
+  ],
+  "maitreLocalIdentifie": false,
+  "rechercheDownloads": {
+    "fichiersRochers": [
+      "plaine_field_boulder.glb",
+      "plaine_field_boulder_detailed.glb",
+      "decor_rocher_plaine_lod0_fixed.glb",
+      "decor_rocher_plaine_complete",
+      "decor_rocher_plaine_fixed_complete"
+    ],
+    "conclusion": "Uniquement plaine, exclue de cette commande ; aucun fichier archipel.",
+    "portee": "Recherche des noms de fichiers 3D/archives dans Downloads et inventaire assets/sources, sans présumer le contenu des fichiers non identifiés."
+  },
+  "lectureDistanteCommuniquee": {
+    "date": "2026-09-20T17:13:51.127Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "ancienCandidat": "inspection-ancien-candidat.json",
+  "candidatPreserve": true
+}

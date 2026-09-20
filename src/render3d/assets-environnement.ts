@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { acquerirBatiment, rendreBatiment } from './batiments-partages';
 import { chargerInventaire } from './modeles';
 import type { GrilleTerrain } from './geometrie';
-import type { CodePays, CampId } from '../schemas/types';
+import type { Biome, CodePays, CampId } from '../schemas/types';
 import type { InventaireModeles } from '../assets/spec';
 
 /** Les bases communes actives passent avant les anciens modèles nationaux. */
@@ -14,11 +14,13 @@ export function candidatsBatiment(terrain:string,pays?:string):string[] {
   if (['qg','ville','usine','port','aeroport','radar'].includes(terrain)) return [`batiment_${terrain}_base`, ...(pays ? [`batiment_${terrain}_${pays}`] : [])];
   return [...(pays?[`batiment_${terrain}_${pays}`]:[]),`batiment_${terrain}_base`];
 }
-export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>,inventaire:InventaireModeles):string[] {
+export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>,inventaire:InventaireModeles,biome:Biome='plaine'):string[] {
   const terrains=new Set<string>();
   for(let y=0;y<grille.hauteur;y++)for(let x=0;x<grille.largeur;x++)terrains.add(grille.terrainDe(x,y));
   const selection=new Set<string>();
   const present=(id:string)=>inventaire.modeles[id]?.includes(0);
+  const rocher = `decor_rocher_${biome}`;
+  if (present(rocher)) selection.add(rocher);
   for(const terrain of terrains) {
     // La plaine conserve l'herbe procédurale de base ; ses décors sont indépendants.
     const sol=`terrain_${terrain}`;if(terrain!=='plaine'&&present(sol))selection.add(sol);
@@ -29,18 +31,21 @@ export function selectionEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<
   return [...selection];
 }
 export interface MatiereLivree { albedo: THREE.Texture; normale: THREE.Texture; rugosite: THREE.Texture; vegetation?:VegetationLivree }
-export interface EnvironnementLivre { batiments: Map<string, THREE.Object3D>; sols: Map<string,MatiereLivree> }
-export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>={}): Promise<EnvironnementLivre> {
+export interface EnvironnementLivre { batiments: Map<string, THREE.Object3D>; sols: Map<string,MatiereLivree>; rocher?: THREE.Object3D }
+export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Partial<Record<CampId,CodePays>>={},biome:Biome='plaine'): Promise<EnvironnementLivre> {
   const resultat: EnvironnementLivre = {batiments:new Map(),sols:new Map()};
   const inventaire = await chargerInventaire();
   if(!inventaire)return resultat;
-  const selection = selectionEnvironnement(grille,paysParCamp,inventaire);
+  const selection = selectionEnvironnement(grille,paysParCamp,inventaire,biome);
   const glb = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder), images = new THREE.TextureLoader();
   await Promise.all(selection.map(async id => {
     if (!inventaire?.modeles[id]?.includes(0)) return;
     try {
       if (id.startsWith('batiment_')) {
         resultat.batiments.set(id,await acquerirBatiment(id));
+      } else if (id.startsWith('decor_rocher_')) {
+        // Le même cache de GLB partage les textures entre les cartes ouvertes.
+        resultat.rocher = await acquerirBatiment(id);
       } else {
         const chargees = await Promise.allSettled(['albedo','normale','rugosite'].map(c => images.loadAsync(`/assets/modeles/${id}_${c}.png`)));
         if (chargees.some(r => r.status==='rejected')) {for (const r of chargees) if(r.status==='fulfilled')r.value.dispose();return;}
@@ -62,6 +67,20 @@ export async function chargerEnvironnement(grille:GrilleTerrain,paysParCamp:Part
     } catch { /* Le rendu procédural reste disponible si le fichier est inaccessible. */ }
   }));
   return resultat;
+}
+/** Libère seulement les ressources qui n'ont pas encore été transmises au monde. */
+export function libererEnvironnementEnAttente(livres: EnvironnementLivre): void {
+  libererBatimentsLivres(livres.batiments);
+  livres.batiments.clear();
+  if (livres.rocher) rendreBatiment(livres.rocher);
+  delete livres.rocher;
+  const textures = new Set<THREE.Texture>();
+  for (const sol of livres.sols.values()) {
+    for (const texture of [sol.albedo, sol.normale, sol.rugosite]) textures.add(texture);
+    sol.vegetation?.proche.dispose();
+  }
+  for (const texture of textures) texture.dispose();
+  livres.sols.clear();
 }
 /** Les clones de scène partagent ces ressources jusqu'à la destruction du décor. */
 export function libererBatimentsLivres(modeles: Map<string,THREE.Object3D>): void {

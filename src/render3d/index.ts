@@ -3,7 +3,7 @@ import { sonEnvironnement } from '../audio/profils';
 import { creerCombatRapproche, type CombatRapproche } from './combat-rapproche';
 import { cleCase } from '../engine/index';
 import type { SortieAudio } from '../audio/types';
-import { chargerEnvironnement, type EnvironnementLivre } from './assets-environnement';
+import { chargerEnvironnement, libererEnvironnementEnAttente, type EnvironnementLivre } from './assets-environnement';
 /**
  * # Rendu 3D d'Atlas Tournament — API publique
  *
@@ -226,6 +226,7 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
   let cadree = false;
   /** Le chantier en cours (`chantier.ts`), `null` quand le monde est bâti. */
   let chantier: Chantier | null = null;
+  let libererLivresEnAttente: (() => void) | null = null;
   /** Un cadrage d'ouverture demandé avant que la caméra existe : il attend. */
   let cadrageEnAttente: Case | null = null;
   let mouvementReduit: MediaQueryList | undefined;
@@ -402,10 +403,17 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
     // premier montage d'une page, et le seul qui soit gratuit au deuxième —
     // une matière ne dépend que du biome (`textures.ts`).
     let livres: EnvironnementLivre = {batiments:new Map(),sols:new Map()};
-    const tranches: Tranche[] = [async () => { livres = await chargerEnvironnement(grille,options.paysParCamp); }, ...tranchesToilesPlateau(doc, options.biome)];
+    const viderLivres = () => libererEnvironnementEnAttente(livres);
+    libererLivresEnAttente = viderLivres;
+    const tranches: Tranche[] = [async () => {
+      livres = await chargerEnvironnement(grille,options.paysParCamp,options.biome);
+      if (scene3d !== s) viderLivres();
+    }, ...tranchesToilesPlateau(doc, options.biome)];
 
     tranches.push(() => {
       const plateau = creerPlateau(grille, doc, options.biome, livres.sols);
+      // Le plateau possède maintenant ces textures, même si le décor attend.
+      livres.sols = new Map();
       const unites = creerUnites(doc, plateau.hauteurEn, options);
       const surbrillances = creerSurbrillances(plateau.hauteurEn);
       const marquesCases = creerMarquesCases(doc, plateau.hauteurEn);
@@ -464,13 +472,16 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // elle est passée, et il resterait semé sur la carte d'avant.
       const courant = etat ?? e;
       const c = ouvrirChantierDecor(
-        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome, livres.batiments, options.paysParCamp,
+        vue ? grilleDe(courant, vue) : grille, courant, m.plateau.hauteurEn, options.biome, livres.batiments, options.paysParCamp, livres.rocher,
       );
+      livres.batiments = new Map();
+      delete livres.rocher;
+      if (libererLivresEnAttente === viderLivres) libererLivresEnAttente = null;
       // Un chantier dans le chantier : c'est le décor qui décide de son
       // découpage — leur nombre dépend de la carte —, nous qui rendons la main
       // entre chacune, et cette tranche-ci qui attend qu'il ait fini.
       await jouerTranches(c.tranches, { vivant: () => scene3d === s && monde === m });
-      if (scene3d !== s || monde !== m) return;
+      if (scene3d !== s || monde !== m) { c.decor().dispose(); return; }
       const decor = c.decor();
       // Le brouillard s'applique au décor par le **nuanceur**, comme au sol :
       // teindre un matériau en noir lui laisse le reflet du studio et l'éclat du
@@ -945,6 +956,8 @@ export function creerRendu3d(options: OptionsRendu3d = {}): Rendu {
       // tranche de plus sur une scène morte.
       chantier?.arreter();
       chantier = null;
+      libererLivresEnAttente?.();
+      libererLivresEnAttente = null;
       cadrageEnAttente = null;
       boucle?.arreter();
       boucle = null;

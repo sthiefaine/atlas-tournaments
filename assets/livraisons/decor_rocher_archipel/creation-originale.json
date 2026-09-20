@@ -1,0 +1,147 @@
+{
+  "id": "decor_rocher_archipel",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/decor_rocher_archipel",
+  "fichiers": [
+    {
+      "nom": "decor_rocher_archipel_albedo.png",
+      "sha256": "cc0fff27f6898acf7c4d504e57e8d6f5c6f4924731e468a728cc30d3f9130d69",
+      "octets": 268850
+    },
+    {
+      "nom": "decor_rocher_archipel_lod0.glb",
+      "sha256": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed",
+      "octets": 88108
+    },
+    {
+      "nom": "decor_rocher_archipel_normale.png",
+      "sha256": "27694c53582cbd7faf6c6a651a5c19270ad6357ffd39141a3048e1b004512e9b",
+      "octets": 155673
+    },
+    {
+      "nom": "decor_rocher_archipel_rugosite.png",
+      "sha256": "1c91ca0cc2cac81eeeeb51d227f75f3a3b1c81807a45bcac70d9ddc702d1e95a",
+      "octets": 58643
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T17:26:47.817Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/decor_rocher_archipel/avant-a8fbb7d8e0c7f190a6bbc1a9ae5b9f9a7382949f48ce8c49198eaa13f3ec60fa",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/candidat-production.json",
+      "sha256": "81ab4ac708c74245a91957ac59048bc1ebb54f35bedfb45a93395cb76b3bbd87",
+      "octets": 1138
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_albedo.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_albedo_ete.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_albedo_hiver.png",
+      "sha256": "bc0be9143ce5382dd854bd31a4ccad180e06571d22689325320d60b24336be87",
+      "octets": 293383
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_lod0.glb",
+      "sha256": "a8fbb7d8e0c7f190a6bbc1a9ae5b9f9a7382949f48ce8c49198eaa13f3ec60fa",
+      "octets": 26868
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_normale.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_normale_ete.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_normale_hiver.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/decor_rocher_archipel_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/decor_rocher_archipel/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_lod0.glb",
+      "sha256": "a8fbb7d8e0c7f190a6bbc1a9ae5b9f9a7382949f48ce8c49198eaa13f3ec60fa",
+      "octets": 26868
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_albedo.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_albedo_ete.png",
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "octets": 288434
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_albedo_hiver.png",
+      "sha256": "bc0be9143ce5382dd854bd31a4ccad180e06571d22689325320d60b24336be87",
+      "octets": 293383
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_normale.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_normale_ete.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_normale_hiver.png",
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "octets": 2976
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/decor_rocher_archipel_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    }
+  ],
+  "approbationArtistique": false
+}

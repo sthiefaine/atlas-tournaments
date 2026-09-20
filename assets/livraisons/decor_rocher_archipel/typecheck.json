@@ -1,0 +1,13 @@
+{
+  "date": "2026-09-20T17:23:57.243906+00:00",
+  "commande": "npm run typecheck -- --incremental false",
+  "codeSortie": 0,
+  "journalSha256": "21220d5b953fa551f872f274dfec95a81ee2fbb11bd24440ba1ea1ec80fe56ae",
+  "sourcesTypescript": [
+    {
+      "fichier": "scripts/production/modeles/decor_rocher_archipel/mesurer-natif.ts",
+      "sha256": "bab53f9131fa04c16502c8cd0b9afedfe97c34365fd7276acf13426200a887ef"
+    }
+  ],
+  "limite": "Typage seulement, pas de suite de tests ou build."
+}

@@ -1,0 +1,72 @@
+{
+  "id": "decor_rocher_archipel",
+  "date": "2026-09-20T17:26:16.114Z",
+  "sha256": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed",
+  "trianglesParInstance": 576,
+  "instances": 4,
+  "geometriePartagee": true,
+  "attributsSourceInchanges": true,
+  "normalesUvConservees": true,
+  "tangentesRetireesPourRepereDerive": true,
+  "echelleCarte": 0.7641759206460537,
+  "enveloppes": [
+    {
+      "angle": 0,
+      "min": [
+        -0.16343615701293857,
+        0,
+        -0.16999999359980933
+      ],
+      "max": [
+        0.16343615701293857,
+        0.22925277667255273,
+        0.16999999359980933
+      ]
+    },
+    {
+      "angle": 90,
+      "min": [
+        -0.16999999359980933,
+        0,
+        -0.16343615701293857
+      ],
+      "max": [
+        0.16999999359980933,
+        0.22925277667255273,
+        0.16343615701293857
+      ]
+    },
+    {
+      "angle": 180,
+      "min": [
+        -0.16343615701293854,
+        0,
+        -0.16999999359980936
+      ],
+      "max": [
+        0.1634361570129386,
+        0.22925277667255273,
+        0.1699999935998093
+      ]
+    },
+    {
+      "angle": 270,
+      "min": [
+        -0.16999999359980936,
+        0,
+        -0.1634361570129386
+      ],
+      "max": [
+        0.1699999935998093,
+        0.22925277667255273,
+        0.16343615701293854
+      ]
+    }
+  ],
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Chargement sans PNG en mémoire ; pas de compilation GPU ni de mesure de rendu."
+  ]
+}

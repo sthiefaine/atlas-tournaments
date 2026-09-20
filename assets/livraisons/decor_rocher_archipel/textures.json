@@ -1,0 +1,73 @@
+{
+  "id": "decor_rocher_archipel",
+  "origine": "Champs analytiques originaux, NumPy/Pillow",
+  "bakeHD": false,
+  "eclairageCalcule": false,
+  "occlusionCalculee": false,
+  "ombrePeinte": false,
+  "normalesTangentes": "+Y",
+  "rugosite": "R=255 non utilisé, G=rugosité, B=0 métal",
+  "atlas": {
+    "grille": [
+      5,
+      5
+    ],
+    "margeTexelsNormale": 8,
+    "nombreIlots": 18,
+    "gouttieres": "Pigments et microreliefs prolongés au bord ; normales dilatées."
+  },
+  "textures": [
+    {
+      "fichier": "decor_rocher_archipel_albedo.png",
+      "resolution": 1024,
+      "canal": "albedo",
+      "sha256": "cc0fff27f6898acf7c4d504e57e8d6f5c6f4924731e468a728cc30d3f9130d69",
+      "octets": 268850,
+      "minRGB": [
+        203,
+        197,
+        174
+      ],
+      "maxRGB": [
+        237,
+        227,
+        209
+      ]
+    },
+    {
+      "fichier": "decor_rocher_archipel_normale.png",
+      "resolution": 512,
+      "canal": "normale",
+      "sha256": "27694c53582cbd7faf6c6a651a5c19270ad6357ffd39141a3048e1b004512e9b",
+      "octets": 155673,
+      "minRGB": [
+        93,
+        96,
+        250
+      ],
+      "maxRGB": [
+        161,
+        161,
+        255
+      ]
+    },
+    {
+      "fichier": "decor_rocher_archipel_rugosite.png",
+      "resolution": 512,
+      "canal": "rugosite",
+      "sha256": "1c91ca0cc2cac81eeeeb51d227f75f3a3b1c81807a45bcac70d9ddc702d1e95a",
+      "octets": 58643,
+      "minRGB": [
+        255,
+        171,
+        0
+      ],
+      "maxRGB": [
+        255,
+        226,
+        0
+      ]
+    }
+  ],
+  "approbationArtistique": false
+}

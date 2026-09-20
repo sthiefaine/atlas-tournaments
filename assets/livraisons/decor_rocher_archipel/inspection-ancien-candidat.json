@@ -1,0 +1,218 @@
+{
+  "id": "decor_rocher_archipel",
+  "sha256Glb": "a8fbb7d8e0c7f190a6bbc1a9ae5b9f9a7382949f48ce8c49198eaa13f3ec60fa",
+  "octetsGlb": 26868,
+  "triangles": 240,
+  "noeuds": [
+    "bloc",
+    "racine"
+  ],
+  "animations": [],
+  "textures": [
+    {
+      "fichier": "decor_rocher_archipel_albedo.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "octets": 288434,
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "minimum": 48,
+      "maximum": 190,
+      "valeursDistinctes": 84
+    },
+    {
+      "fichier": "decor_rocher_archipel_albedo_ete.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "octets": 288434,
+      "sha256": "32c5fc98ae0f76fcddeea7a03373589798397aa8c92a16a977457d0a782ebb54",
+      "minimum": 48,
+      "maximum": 190,
+      "valeursDistinctes": 84
+    },
+    {
+      "fichier": "decor_rocher_archipel_albedo_hiver.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "octets": 293383,
+      "sha256": "bc0be9143ce5382dd854bd31a4ccad180e06571d22689325320d60b24336be87",
+      "minimum": 97,
+      "maximum": 196,
+      "valeursDistinctes": 58
+    },
+    {
+      "fichier": "decor_rocher_archipel_normale.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 2976,
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "minimum": 128,
+      "maximum": 255,
+      "valeursDistinctes": 3
+    },
+    {
+      "fichier": "decor_rocher_archipel_normale_ete.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 2976,
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "minimum": 128,
+      "maximum": 255,
+      "valeursDistinctes": 3
+    },
+    {
+      "fichier": "decor_rocher_archipel_normale_hiver.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 2976,
+      "sha256": "52650e422602ea0feeb5535f6cc8b82b1b7c836a5e390a0f7fd62f4d3d737a39",
+      "minimum": 128,
+      "maximum": 255,
+      "valeursDistinctes": 3
+    },
+    {
+      "fichier": "decor_rocher_archipel_rugosite.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 3029,
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "minimum": 0,
+      "maximum": 255,
+      "valeursDistinctes": 6
+    },
+    {
+      "fichier": "decor_rocher_archipel_rugosite_ete.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 3029,
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "minimum": 0,
+      "maximum": 255,
+      "valeursDistinctes": 6
+    },
+    {
+      "fichier": "decor_rocher_archipel_rugosite_hiver.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "octets": 3029,
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "minimum": 0,
+      "maximum": 255,
+      "valeursDistinctes": 6
+    }
+  ],
+  "controleVisuel": false,
+  "importeDansCreation": false,
+  "uv": [
+    {
+      "minimum": [
+        0.7599999904632568,
+        0.019999999552965164
+      ],
+      "maximum": [
+        0.8710973262786865,
+        0.9800000190734863
+      ]
+    },
+    {
+      "minimum": [
+        0.7599999904632568,
+        0.019999999552965164
+      ],
+      "maximum": [
+        0.8710973262786865,
+        0.9800000190734863
+      ]
+    },
+    {
+      "minimum": [
+        0.7599999904632568,
+        0.019999999552965164
+      ],
+      "maximum": [
+        0.8710973262786865,
+        0.9800000190734863
+      ]
+    }
+  ],
+  "normales": [
+    {
+      "longueurMin": 0.9999999836672105,
+      "longueurMax": 1.0000000197279617
+    },
+    {
+      "longueurMin": 0.9999999836672105,
+      "longueurMax": 1.0000000197279617
+    },
+    {
+      "longueurMin": 0.9999999836672105,
+      "longueurMax": 1.0000000197279617
+    }
+  ],
+  "positionsLocalesFinies": true,
+  "bornesAccessoiresLocales": [
+    {
+      "min": [
+        -0.22499999403953552,
+        0.0,
+        -0.22499999403953552
+      ],
+      "max": [
+        0.22499999403953552,
+        0.30000001192092896,
+        0.22499999403953552
+      ]
+    },
+    {
+      "min": [
+        -0.22499999403953552,
+        0.0,
+        -0.22499999403953552
+      ],
+      "max": [
+        0.22499999403953552,
+        0.30000001192092896,
+        0.22499999403953552
+      ]
+    },
+    {
+      "min": [
+        -0.22499999403953552,
+        0.0,
+        -0.22499999403953552
+      ],
+      "max": [
+        0.22499999403953552,
+        0.30000001192092896,
+        0.22499999403953552
+      ]
+    }
+  ],
+  "actifAbsent": true
+}

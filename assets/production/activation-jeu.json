@@ -297,6 +297,14 @@
       "revision": "4a4b915f2a75696c2af1ad2d0b327195349c83e2dd50caa4ac6a554f071e5359",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "decor_rocher_archipel",
+      "fichierActif": "public/assets/modeles/decor_rocher_archipel_lod0.glb",
+      "donnees": "../donnees/56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed.glb",
+      "revision": "b3677db95c2602fbb1aed0f7fd14481d33a68fe25e80353e2ab39610c1925870",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

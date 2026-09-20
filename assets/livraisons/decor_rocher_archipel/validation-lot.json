@@ -1,0 +1,19 @@
+{
+  "id": "decor_rocher_archipel",
+  "revision": "b3677db95c2602fbb1aed0f7fd14481d33a68fe25e80353e2ab39610c1925870",
+  "octets": 571274,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "decor_rocher_archipel_albedo.png",
+      "decor_rocher_archipel_lod0.glb",
+      "decor_rocher_archipel_normale.png",
+      "decor_rocher_archipel_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

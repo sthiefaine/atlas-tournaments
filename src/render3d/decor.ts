@@ -1,5 +1,7 @@
 import { couronneFeuillue, conifereBoise, troncRamifie } from './vegetation-boisee';
 import { candidatsBatiment, libererBatimentsLivres } from './assets-environnement';
+import { rendreBatiment } from './batiments-partages';
+import { extraireRocherLivre } from './rochers-livres';
 import { appliquerMasque, clonerFigurine, clonerMateriauNoeud, couleurMasquee, creerLecteurClips, definirMasque, libererSquelettesPrives, masqueDe, type LecteurClips } from './modeles';
 /**
  * Le décor : arbres, rochers et bâtiments.
@@ -579,6 +581,7 @@ export function ouvrirChantierDecor(
   g: GrilleTerrain, etat: EtatPartie, hauteurEn: (x: number, z: number) => number,
   biome: Biome = 'plaine', modelesLivres = new Map<string, THREE.Object3D>(),
   paysParCamp: Partial<Record<number,string>> = {},
+  sourceRocher?: THREE.Object3D,
 ): ChantierDecor {
   const groupe = new THREE.Group();
   groupe.name = 'decor';
@@ -708,12 +711,14 @@ export function ouvrirChantierDecor(
   // --- Rochers
   let rochers: Rocher[] = [];
   // Trois lots : un appel de dessin par silhouette, et non un par pierre.
-  const geosRocher = [
+  const rocherLivre = sourceRocher ? extraireRocherLivre(sourceRocher) : null;
+  const geosRocher = rocherLivre ? Array.from({ length: 3 }, () => rocherLivre.geometrie) : [
     formeMemorisee('rocher-bloc', () => eroder(new THREE.IcosahedronGeometry(0.17, 0), 900, 0.085)),
     formeMemorisee('rocher-eclat', () => eroder(new THREE.IcosahedronGeometry(0.15, 0), 901, 0.06)),
     formeMemorisee('rocher-dalle', () => eroder(new THREE.IcosahedronGeometry(0.2, 0).scale(1, 0.42, 0.86), 902, 0.05)),
   ];
-  const matRocher = new THREE.MeshStandardNodeMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
+  const matRocher = rocherLivre?.materiau ?? new THREE.MeshStandardNodeMaterial({ color: 0x9c9a90, roughness: 0.96, flatShading: true });
+  const couleurRocher = matRocher.color.clone();
   let lotsRocher: LotInstancie[] = [];
 
   function batirRochers(): void {
@@ -746,9 +751,14 @@ export function ouvrirChantierDecor(
       // peine : une roche couchée sur le flanc se lit comme un débris tombé du
       // ciel. Et elle **s'enfonce** au lieu de se poser — sans quoi elle flotte
       // sur son unique facette d'appui, ce que faisait le dodécaèdre.
-      quat.setFromEuler(new THREE.Euler(r.penche, r.angle, r.penche * 0.7));
-      pos.set(r.x, hauteurEn(r.x, r.z) - 0.05 * r.echelle, r.z);
-      ech.set(r.echelle, r.echelle * (0.72 + r.teinte * 0.2), r.echelle);
+      // Le GLB a déjà un pied plat à Y=0 : le basculer ou l'enterrer comme
+      // l'ancienne forme centrée ferait disparaître les détails de son pied.
+      const penche = rocherLivre ? 0 : r.penche;
+      quat.setFromEuler(new THREE.Euler(penche, r.angle, penche * 0.7));
+      pos.set(r.x, hauteurEn(r.x, r.z) - (rocherLivre ? 0 : 0.05 * r.echelle), r.z);
+      const taille = r.echelle * (rocherLivre?.echelle ?? 1);
+      const aplati = rocherLivre && r.variante === 2 ? 0.62 : 1;
+      ech.set(taille, taille * (0.72 + r.teinte * 0.2) * aplati, taille);
       mat4.compose(pos, quat, ech);
       lot.setMatrixAt(i, mat4);
     }
@@ -776,7 +786,7 @@ export function ouvrirChantierDecor(
   // --- Paysage : les accessoires du biome et la ligne de rivage (`paysage.ts`).
   //     Il lit `hauteurEn` à chaque pose, comme les arbres : rien n'y est gelé.
   //     Son chantier a ses propres tranches, qu'on enfile dans les nôtres.
-  const chantierPaysage = ouvrirChantierPaysage(grille, hauteurEn, biome);
+  const chantierPaysage = ouvrirChantierPaysage(grille, hauteurEn, biome, rocherLivre ?? undefined);
   let paysage: Paysage = chantierPaysage.paysage();
   /** La dernière ambiance appliquée, pour la redonner à un paysage refait. */
   let ambianceCourante: { p: ParametresAmbiance; saison: Saison } | null = null;
@@ -1629,7 +1639,7 @@ export function ouvrirChantierDecor(
       // Au printemps, les feuillus fleurissent : un soupçon de rose sur le vert.
       if (saison === 'printemps') matFeuillu.color.lerp(ROSE_FLORAISON, 0.16);
       matTronc.color.set(0x6b4a2f).lerp(GIVRE_TRONC, neige * 0.25);
-      matRocher.color.set(0x8c929b).lerp(BLANC, neige * 0.5);
+      matRocher.color.copy(rocherLivre ? couleurRocher : teinteRocher.set(0x8c929b)).lerp(BLANC, neige * 0.5);
       matBeton.color.set(couleurMur).lerp(teinteSolAmbiance.set(p.teinteSol), 0.25);
       // Un toit d'ardoise ou de tôle blanchit sous la neige comme le reste.
       matToit.color.set(couleurToit).lerp(BLANC, neige * 0.45);
@@ -1685,7 +1695,7 @@ export function ouvrirChantierDecor(
       groupe.remove(paysage.groupe);
       paysage.dispose();
       // La marée réutilise les mêmes modèles : le bail dure jusqu'à dispose().
-      paysage = creerPaysage(grille, hauteurEn, biome);
+      paysage = creerPaysage(grille, hauteurEn, biome, rocherLivre ?? undefined);
       groupe.add(paysage.groupe);
       if (ambianceCourante) paysage.appliquerAmbiance(ambianceCourante.p, ambianceCourante.saison);
       // Les bâtiments se rebâtissent au prochain `majProprietaires` : on efface
@@ -1820,7 +1830,8 @@ export function ouvrirChantierDecor(
       matTronc.dispose();
       matConifere.dispose();
       matFeuillu.dispose();
-      matRocher.dispose();
+      for (const lot of lotsRocher) lot.dispose();
+      if (!rocherLivre) matRocher.dispose();
       matBeton.dispose();
       matToit.dispose();
       toitures.dispose();
@@ -1830,6 +1841,8 @@ export function ouvrirChantierDecor(
       matIvoire.dispose();
       for (const m of matsCamp.values()) m.dispose();
       paysage.dispose();
+      rocherLivre?.dispose();
+      if (sourceRocher) rendreBatiment(sourceRocher);
       libererBatimentsLivres(modelesLivres);
     },
   };
