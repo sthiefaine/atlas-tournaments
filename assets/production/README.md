@@ -18,7 +18,7 @@ Pour une création originale, `integrer-creation-originale.ts <id> <dossier>` ar
 
 Pour les anciens kits actifs du génie, de la méca et de la reconnaissance, `retirer-kits-incompatibles.ts <base> <dossier préparé>` inspecte sans mutation. Il exige un remplacement conforme et documenté, compare géométrie/UV/nœuds/clips avec l'ancienne base et refuse un kit différent ou doté d'une source locale. Avec `--appliquer`, il archive puis retire les seuls alias actifs incompatibles ; candidats et données immuables restent conservés. Le rapport rejoint le staging et le lot final. Intégrer la nouvelle base et pousser ces retraits dans le même commit. Aucun retrait n'est fait à l'avance dans la file.
 
-Après le déploiement, `node --import tsx scripts/production/verifier-publication.ts <id>` compare les SHA-256 du GLB et des PNG servis avec le lot actif, puis vérifie sa présence dans `/api/modeles`, l'inventaire utilisé par le jeu. Il ne met à jour le suivi que si tout correspond. Une absence temporaire pendant le build n'est pas une validation ; le code de sortie 2 signale une publication encore non conforme. Ce contrôle réseau n'effectue aucun rendu ni mesure FPS.
+Après le déploiement, `node --import tsx scripts/production/verifier-publication.ts <id>` compare les SHA-256 du GLB et des PNG servis avec le lot actif, puis vérifie sa présence dans `/api/modeles`, l'inventaire utilisé par le jeu. Lorsqu'un rapport de retrait des anciens kits accompagne le lot, leur absence dans cet inventaire est également requise. Il ne met à jour le suivi que si tout correspond. Une absence temporaire pendant le build n'est pas une validation ; le code de sortie 2 signale une publication encore non conforme. Ce contrôle réseau n'effectue aucun rendu ni mesure FPS.
 
 Export glTF : conserver `min` et `max` sur les positions **et sur les accesseurs FLOAT SCALAR d'entrée des animations**. L'ancien helper `alleger` des premiers générateurs ne les conservait que sur les positions ; ne pas en reprendre cette version. Le helper local de l'intercepteur corrige ce point et le contrôle binaire refuse désormais les bornes temporelles absentes ou incohérentes. Les copies utilisées par le brouilleur et le drone d'observation reçoivent la même correction, sans toucher aux données géométriques ni aux clés d'animation.
 
@@ -28,7 +28,7 @@ Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. 
 
 **Un candidat qui passe les contrôles techniques n’est pas un modèle définitif approuvé.** Les rapports de génération détaillent les refus. Les limites artistiques restent consignées dans chaque lot ; la présence de fichiers ne doit jamais être convertie automatiquement en approbation. La réception existante demeure le chemin d’intégration dans le jeu.
 
-Le catalogue comprend également dix archétypes de portraits de commandants, produits séparément des unités et des paysages. Comme les autres familles, leurs candidats demandent une revue artistique.
+Le catalogue comprend également dix archétypes de portraits de commandants, produits séparément des unités et des paysages. Comme les autres familles, ils sont activés après contrôle technique selon la décision du propriétaire ; leur qualité artistique ne reçoit aucune approbation automatique.
 
 ## Anciens générateurs par famille
 

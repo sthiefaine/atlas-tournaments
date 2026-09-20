@@ -22,6 +22,10 @@ Les squelettes privés des figurines sont maintenant libérés au retrait en jeu
 
 Génie intégré : 3 728 triangles, cinq primitives, 28 os, 1 699 165 octets. Binôme original, 1 131 poses échantillonnées, pieds au plateau et jeu radar/casque positif. Les 26 alias actifs des anciens kits FR/LU ont été archivés puis retirés pour que le jeu charge cette base ; candidats et données immuables conservés. Contrôle technique et typage réussis, aucun contrôle visuel.
 
+Génie poussé en `d57b9bb` ; GLB et cinq PNG conformes en ligne par SHA, inventaire du jeu présent et anciens kits FR/LU absents. Méca suivant : inspection distante du 20 septembre sans upload pour la base ni ses deux kits FR/LU ; ceux-ci partagent encore la même ancienne géométrie. Aucun alias méca retiré avant livraison. Le contrôle de publication refuse désormais aussi un inventaire distant qui conserverait les kits retirés décrits par le rapport du lot ; cette garde a été exercée sur le génie déployé.
+
+Méca intégré : 3 988 triangles, quatre primitives, 27 os et six clips dont capture, 1 757 448 octets. Binôme lourd original avec lanceur à l’épaule, 1 617 poses mesurées ; posture des bras intérieurs corrigée avant livraison. Les 22 alias des anciens kits FR/LU sont archivés puis retirés, candidats et données conservés. Contrôle de lot et typage réussis, aucune image ni approbation artistique.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

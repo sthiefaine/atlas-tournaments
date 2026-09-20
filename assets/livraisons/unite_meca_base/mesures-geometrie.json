@@ -1,0 +1,119 @@
+{
+  "triangles": 3988,
+  "primitives": 4,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.810560689210263e-08,
+  "tangentesErreurMax": 3.939120152285369e-08,
+  "orthogonaliteErreurMax": 4.323680435902588e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "uvTrianglesDansUneCellule": true,
+  "margeAtlasPixelsMinimum": 17.91998291015625,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900,
+    "capture": 1300
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_meca_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_lance_roquettes",
+    "os_avant_bras_equipier_droite",
+    "os_avant_bras_equipier_gauche",
+    "os_avant_bras_porteuse_droite",
+    "os_avant_bras_porteuse_gauche",
+    "os_bassin_equipier",
+    "os_bassin_porteuse",
+    "os_bras_equipier_droite",
+    "os_bras_equipier_gauche",
+    "os_bras_porteuse_droite",
+    "os_bras_porteuse_gauche",
+    "os_cuisse_equipier_droite",
+    "os_cuisse_equipier_gauche",
+    "os_cuisse_porteuse_droite",
+    "os_cuisse_porteuse_gauche",
+    "os_mollet_equipier_droite",
+    "os_mollet_equipier_gauche",
+    "os_mollet_porteuse_droite",
+    "os_mollet_porteuse_gauche",
+    "os_pied_equipier_droite",
+    "os_pied_equipier_gauche",
+    "os_pied_porteuse_droite",
+    "os_pied_porteuse_gauche",
+    "os_tete_equipier",
+    "os_tete_porteuse",
+    "os_torse_equipier",
+    "os_torse_porteuse",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "poidsRigidesNormalises": true,
+  "racineIdentite": true,
+  "normalePngLongueurErreurMax": 0.0022888070556024154,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    49,
+    237
+  ],
+  "osHumainsDansPeau": {
+    "peaux": 1,
+    "os": 27
+  },
+  "masqueRolesNeutres": {
+    "caoutchouc": [
+      0
+    ],
+    "metal_nu": [
+      0
+    ],
+    "verre": [
+      0
+    ],
+    "peau_porteuse": [
+      0
+    ],
+    "peau_equipier": [
+      0
+    ],
+    "cheveux_porteuse": [
+      0
+    ],
+    "cheveux_equipier": [
+      0
+    ]
+  },
+  "semellesPoseNeutreCibleMetres": 0.018
+}

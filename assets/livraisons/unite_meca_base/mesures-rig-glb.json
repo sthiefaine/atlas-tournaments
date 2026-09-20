@@ -1,0 +1,889 @@
+{
+  "id": "unite_meca_base",
+  "approbationArtistique": false,
+  "methode": "GLTFLoader avec seules références PNG retirées en mémoire, SkeletonUtils.clone, AnimationMixer et positions skin réelles, sans rendu.",
+  "skinNatif": true,
+  "squelettesClonesIndependants": true,
+  "os": [
+    "os_bassin_porteuse",
+    "os_torse_porteuse",
+    "os_tete_porteuse",
+    "os_cuisse_porteuse_gauche",
+    "os_mollet_porteuse_gauche",
+    "os_pied_porteuse_gauche",
+    "os_bras_porteuse_gauche",
+    "os_avant_bras_porteuse_gauche",
+    "os_cuisse_porteuse_droite",
+    "os_mollet_porteuse_droite",
+    "os_pied_porteuse_droite",
+    "os_bras_porteuse_droite",
+    "os_avant_bras_porteuse_droite",
+    "os_bassin_equipier",
+    "os_torse_equipier",
+    "os_tete_equipier",
+    "os_cuisse_equipier_gauche",
+    "os_mollet_equipier_gauche",
+    "os_pied_equipier_gauche",
+    "os_bras_equipier_gauche",
+    "os_avant_bras_equipier_gauche",
+    "os_cuisse_equipier_droite",
+    "os_mollet_equipier_droite",
+    "os_pied_equipier_droite",
+    "os_bras_equipier_droite",
+    "os_avant_bras_equipier_droite",
+    "module_lance_roquettes"
+  ],
+  "neutre": {
+    "min": [
+      -0.22499999403953552,
+      -2.1606683109354208e-10,
+      -0.2199999988079071
+    ],
+    "max": [
+      0.22499999403953552,
+      0.6010000176429748,
+      0.2199999988079071
+    ],
+    "dimensions": [
+      0.44999998807907104,
+      0.6010000178590417,
+      0.4399999976158142
+    ],
+    "rayon": 0.2689757168658211,
+    "pieds": {
+      "os_pied_porteuse_gauche": {
+        "min": [
+          -0.14200000256299972,
+          0.018000000178813938,
+          -0.04300000223517418
+        ],
+        "max": [
+          -0.08799999743700028,
+          0.06300000196695328,
+          0.047000001341104505
+        ]
+      },
+      "os_pied_porteuse_droite": {
+        "min": [
+          -0.07999999883770943,
+          0.018000000178813938,
+          -0.04300000223517418
+        ],
+        "max": [
+          -0.02599999929964543,
+          0.06300000196695328,
+          0.047000001341104505
+        ]
+      },
+      "os_pied_equipier_gauche": {
+        "min": [
+          0.04299999743700028,
+          0.018000000178813938,
+          0.009999997764825824
+        ],
+        "max": [
+          0.09700000256299973,
+          0.06300000196695328,
+          0.10000000134110451
+        ]
+      },
+      "os_pied_equipier_droite": {
+        "min": [
+          0.10499999743700028,
+          0.018000000178813938,
+          0.009999997764825824
+        ],
+        "max": [
+          0.15899999511241913,
+          0.06300000196695328,
+          0.10000000134110451
+        ]
+      }
+    },
+    "piedsEllipseMax": 0.7265647792811611,
+    "jeux": {
+      "lanceurCasque": 0.011999986231327031,
+      "lanceurEpaule": 0.015500020980834972,
+      "lanceurGant": 0.0005000410079956108,
+      "brasCaptureCasque": 0.013216705262660972,
+      "epaulesInterieuresSpheres": 0.00492249290598859,
+      "brasInterieursCapsules": 0.0033812254971488306,
+      "avantBrasCaptureTorse": 0.0007167022824287328
+    }
+  },
+  "clips": [
+    {
+      "nom": "repos",
+      "dureeMs": 2400,
+      "poses": 258,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6013374358709195,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.2706689513794382,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        },
+        "equipier": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999986231327031,
+        "lanceurEpaule": 0.015500020980834694,
+        "lanceurGant": 0.0005000410079953332,
+        "brasCaptureCasque": 0.013216705262660972,
+        "epaulesInterieuresSpheres": 0.004810603989469711,
+        "brasInterieursCapsules": 0.0032188343540646286,
+        "avantBrasCaptureTorse": 0.0007167022824286218
+      },
+      "piedsEllipseMax": 0.7265647792811611,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000256299972,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.08799999743700028,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999883770943,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.02599999929964543,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04299999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.09700000256299973,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10499999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.15899999511241913,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 0,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0,
+      "geste": {
+        "coudeDeplacementMax": 0.0005935189895377767,
+        "angleAvantBrasMax": 0,
+        "mainPoigneeDistanceMax": 0.0014142135623755514
+      }
+    },
+    {
+      "nom": "deplacement",
+      "dureeMs": 1000,
+      "poses": 257,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.22499999403953552,
+          0.5905587814103415,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.2721541353815699,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.017998806497777367,
+          "max": 0.03399998443727741
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.017998806497777367,
+          "max": 0.03399998443727741
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.017998872656725395,
+          "max": 0.034000017799895324
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.017998872656725395,
+          "max": 0.034000017799895324
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 0.000001193502222631565,
+          "anglePiedMax": 1.032382731180714e-7
+        },
+        "equipier": {
+          "erreurSupportMax": 0.0000011273432746032597,
+          "anglePiedMax": 7.300048299977715e-8
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999986231326948,
+        "lanceurEpaule": 0.01550002098083475,
+        "lanceurGant": 0.0005000410079953332,
+        "brasCaptureCasque": 0.013216705262660833,
+        "epaulesInterieuresSpheres": 0.0036895337249878424,
+        "brasInterieursCapsules": 0.0013515301379173547,
+        "avantBrasCaptureTorse": 0.0007167022824286495
+      },
+      "piedsEllipseMax": 0.857351822742263,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000143051147,
+              0.03399998443727741,
+              -0.04300001168740193
+            ],
+            "max": [
+              -0.08799999630451202,
+              0.07899999079359578,
+              0.04699999400765438
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999770522118,
+              0.01799998699561796,
+              -0.04300000045445066
+            ],
+            "max": [
+              -0.025999998167157173,
+              0.06299998902293948,
+              0.04700000205006585
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04300000095367432,
+              0.01800001227812424,
+              0.0099999942713042
+            ],
+            "max": [
+              0.09700000607967377,
+              0.06300001567620653,
+              0.09999999903115891
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10500000095367432,
+              0.034000017799895324,
+              0.0099999920803405
+            ],
+            "max": [
+              0.15899999862909317,
+              0.07900001933389995,
+              0.09999999412697333
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 5.960464477539063e-8,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0,
+      "geste": {
+        "coudeDeplacementMax": 0.015482532261687009,
+        "angleAvantBrasMax": 0,
+        "mainPoigneeDistanceMax": 0.0014142135623881542
+      }
+    },
+    {
+      "nom": "tir",
+      "dureeMs": 700,
+      "poses": 260,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6017756816921929,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.2689757178074614,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        },
+        "equipier": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999987065792056,
+        "lanceurEpaule": 0.015500015258788802,
+        "lanceurGant": 0.0005000352859494961,
+        "brasCaptureCasque": 0.013216705262660972,
+        "epaulesInterieuresSpheres": 0.004922492905988576,
+        "brasInterieursCapsules": 0.0033709444937615324,
+        "avantBrasCaptureTorse": 0.0007167022824287328
+      },
+      "piedsEllipseMax": 0.7265647792811611,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000256299972,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.08799999743700028,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999883770943,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.02599999929964543,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04299999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.09700000256299973,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10499999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.15899999511241913,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 0,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0.01600000028312206,
+      "geste": {
+        "coudeDeplacementMax": 0.0016256440438381077,
+        "angleAvantBrasMax": 0,
+        "mainPoigneeDistanceMax": 0.001414213562410883
+      }
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 500,
+      "poses": 259,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.22499999403953552,
+          0.602229433781341,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.2713011293322975,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        },
+        "equipier": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999986231326948,
+        "lanceurEpaule": 0.01550002098083475,
+        "lanceurGant": 0.0005000410079953332,
+        "brasCaptureCasque": 0.01321670526266086,
+        "epaulesInterieuresSpheres": 0.0020572727296073873,
+        "brasInterieursCapsules": 0.0020572727296073873,
+        "avantBrasCaptureTorse": 0.0007167022824286495
+      },
+      "piedsEllipseMax": 0.7265647792811611,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000256299972,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.08799999743700028,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999883770943,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.02599999929964543,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04299999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.09700000256299973,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10499999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.15899999511241913,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 0,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0,
+      "geste": {
+        "coudeDeplacementMax": 0.003618896917468775,
+        "angleAvantBrasMax": 0,
+        "mainPoigneeDistanceMax": 0.0014142135623731618
+      }
+    },
+    {
+      "nom": "hors_jeu",
+      "dureeMs": 900,
+      "poses": 318,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.22499999403953552,
+          0.6022446882978212,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.28798359352206904,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.017999304823784427,
+          "max": 0.018000014343191345
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.017999304823784427,
+          "max": 0.018000014343191345
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.01799926674065887,
+          "max": 0.018000014985947065
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.01799926674065887,
+          "max": 0.018000014985947065
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 6.951762155718577e-7,
+          "anglePiedMax": 5.960464477539063e-8
+        },
+        "equipier": {
+          "erreurSupportMax": 7.332593411277233e-7,
+          "anglePiedMax": 5.960464477539063e-8
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999986231327031,
+        "lanceurEpaule": 0.01550002098083475,
+        "lanceurGant": 0.0005000410079953888,
+        "brasCaptureCasque": 0.013216705262660972,
+        "epaulesInterieuresSpheres": 0.004785632097899159,
+        "brasInterieursCapsules": 0.0012429042276844576,
+        "avantBrasCaptureTorse": 0.0007167022824287328
+      },
+      "piedsEllipseMax": 0.7265873322098595,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000143051147,
+              0.017999997317790964,
+              -0.04300000244379044
+            ],
+            "max": [
+              -0.08799999630451202,
+              0.06299999910593031,
+              0.04700000113248825
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999770522118,
+              0.017999997317790964,
+              -0.04300000244379044
+            ],
+            "max": [
+              -0.025999998167157173,
+              0.06299999910593031,
+              0.04700000113248825
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04300000095367432,
+              0.017999995887279477,
+              0.0099999969303608
+            ],
+            "max": [
+              0.09700000607967377,
+              0.06299999767541882,
+              0.10000000050663949
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10500000095367432,
+              0.017999995887279477,
+              0.0099999969303608
+            ],
+            "max": [
+              0.15899999862909317,
+              0.06299999767541882,
+              0.10000000050663949
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 0,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0,
+      "geste": {
+        "coudeDeplacementMax": 0.013267995079165753,
+        "angleAvantBrasMax": 0,
+        "mainPoigneeDistanceMax": 0.0014142135633768386
+      }
+    },
+    {
+      "nom": "capture",
+      "dureeMs": 1300,
+      "poses": 265,
+      "enveloppe": {
+        "min": [
+          -0.22499999403953552,
+          -2.1606683109354208e-10,
+          -0.2199999988079071
+        ],
+        "max": [
+          0.23178741468978137,
+          0.6030568187192562,
+          0.2199999988079071
+        ]
+      },
+      "rayonHorizontalMax": 0.2689757168658211,
+      "semelles": {
+        "os_pied_porteuse_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_porteuse_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_gauche": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        },
+        "os_pied_equipier_droite": {
+          "min": 0.018000000178813938,
+          "max": 0.018000000178813938
+        }
+      },
+      "appuis": {
+        "porteuse": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        },
+        "equipier": {
+          "erreurSupportMax": 1.7881393934993106e-10,
+          "anglePiedMax": 0
+        }
+      },
+      "rootError": 0,
+      "jeuxMinimumMetres": {
+        "lanceurCasque": 0.011999986231327031,
+        "lanceurEpaule": 0.015500020980834972,
+        "lanceurGant": 0.0005000410079956108,
+        "brasCaptureCasque": 0.013216705262660972,
+        "epaulesInterieuresSpheres": 0.00492249290598859,
+        "brasInterieursCapsules": 0.0033812254971488306,
+        "avantBrasCaptureTorse": 0.0007167022824287328
+      },
+      "piedsEllipseMax": 0.7265647792811611,
+      "final": {
+        "semelles": {
+          "os_pied_porteuse_gauche": {
+            "min": [
+              -0.14200000256299972,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.08799999743700028,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_porteuse_droite": {
+            "min": [
+              -0.07999999883770943,
+              0.018000000178813938,
+              -0.04300000223517418
+            ],
+            "max": [
+              -0.02599999929964543,
+              0.06300000196695328,
+              0.047000001341104505
+            ]
+          },
+          "os_pied_equipier_gauche": {
+            "min": [
+              0.04299999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.09700000256299973,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          },
+          "os_pied_equipier_droite": {
+            "min": [
+              0.10499999743700028,
+              0.018000000178813938,
+              0.009999997764825824
+            ],
+            "max": [
+              0.15899999511241913,
+              0.06300000196695328,
+              0.10000000134110451
+            ]
+          }
+        },
+        "orientationPiedsRad": {
+          "os_pied_porteuse_gauche": 0,
+          "os_pied_porteuse_droite": 0,
+          "os_pied_equipier_gauche": 0,
+          "os_pied_equipier_droite": 0
+        },
+        "indicateur": [
+          1,
+          1,
+          1
+        ]
+      },
+      "reculLocalMetres": 0,
+      "geste": {
+        "coudeDeplacementMax": 0.06043399215612066,
+        "angleAvantBrasMax": 0.8435751374734933,
+        "mainPoigneeDistanceMax": 0.0014142135623730866
+      }
+    }
+  ],
+  "definitionJeux": {
+    "lanceurCasque": "Plan séparateur X dans le repère du torse de la porteuse, géométrie skinnée complète du caisson et de la tête.",
+    "lanceurEpaule": "Plan séparateur Y dans ce même repère, hors selle et pont de portage en contact voulu.",
+    "lanceurGant": "Plan séparateur Y avec le gant porteur ; la poignée attachée au torse assure le raccord.",
+    "brasCaptureCasque": "Plan séparateur X entre l’avant-bras de salut et la tête de l’équipier.",
+    "epaulesInterieuresSpheres": "Sphères conservatrices de rayon 33 mm englobant chacune des deux épaules intérieures.",
+    "brasInterieursCapsules": "Minimum entre capsules conservatrices des deux bras intérieurs : manches, avant-bras, gants et épaules.",
+    "avantBrasCaptureTorse": "Plan séparateur X entre avant-bras de salut et pièces liées au torse.",
+    "mainPoigneeDistanceMax": "Distance des centres du gant porteur et de la poignée ; ils sont en contact voulu.",
+    "piedsEllipseMax": "Maximum de (x/0.221)²+(z/0.216)² pour tous les sommets des pieds, valeur < 1 à l’intérieur du plateau."
+  },
+  "limites": [
+    "Articulations par segments rigides ; pas de peau organique lissée.",
+    "Mesures échantillonnées dans le GLB, sans certification continue ou des mélanges entre clips.",
+    "Jeux ciblés ; collisions internes complètes et adaptations aux kits nationaux non certifiées.",
+    "Aucun rendu, aucune image et aucune mesure FPS téléphone."
+  ]
+}

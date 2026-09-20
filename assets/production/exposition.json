@@ -16775,19 +16775,14 @@
     {
       "id": "unite_meca_base",
       "fichiers": [
-        "unite_meca_base_lod0.glb",
         "unite_meca_base_albedo.png",
-        "unite_meca_base_albedo_hiver.png",
-        "unite_meca_base_normale.png",
-        "unite_meca_base_normale_hiver.png",
-        "unite_meca_base_rugosite.png",
-        "unite_meca_base_rugosite_hiver.png",
-        "unite_meca_base_metal.png",
-        "unite_meca_base_metal_hiver.png",
+        "unite_meca_base_lod0.glb",
         "unite_meca_base_masque_equipe.png",
-        "unite_meca_base_masque_equipe_hiver.png"
+        "unite_meca_base_metal.png",
+        "unite_meca_base_normale.png",
+        "unite_meca_base_rugosite.png"
       ],
-      "revision": "ddf26063734eb951b932e9a876ee9006b4137606ea0b490a3c7d0984c360a85c"
+      "revision": "bc27cd99f19a410f6b71cbeecfa22498c5eeb60d7030dcd10d48b61e63a97233"
     },
     {
       "id": "unite_meridien_automate_base",

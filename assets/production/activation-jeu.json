@@ -177,6 +177,14 @@
       "revision": "40e8a90886ef23331b9e44ed56974e869f8aafcc8e834582636e20218f8f2ee3",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_meca_base",
+      "fichierActif": "public/assets/modeles/unite_meca_base_lod0.glb",
+      "donnees": "../donnees/9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2.glb",
+      "revision": "bc27cd99f19a410f6b71cbeecfa22498c5eeb60d7030dcd10d48b61e63a97233",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

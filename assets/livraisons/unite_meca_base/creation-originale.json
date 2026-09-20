@@ -1,0 +1,217 @@
+{
+  "id": "unite_meca_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/unite_meca_base",
+  "fichiers": [
+    {
+      "nom": "unite_meca_base_albedo.png",
+      "sha256": "3ed00e944ee487c2fa2c752fc0a79ab67aa6a4a38d4c4c0b733cd6441f0880c7",
+      "octets": 451203
+    },
+    {
+      "nom": "unite_meca_base_lod0.glb",
+      "sha256": "9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2",
+      "octets": 508252
+    },
+    {
+      "nom": "unite_meca_base_masque_equipe.png",
+      "sha256": "e398808c4cc850e908c711033a640dcaf25e2479e39dc1d9170d5bd81fbb509a",
+      "octets": 640
+    },
+    {
+      "nom": "unite_meca_base_metal.png",
+      "sha256": "12953c0b59ec8eafc9e9f9d1266499c461a068655c8a48be31ff7ebc5b2338c1",
+      "octets": 489
+    },
+    {
+      "nom": "unite_meca_base_normale.png",
+      "sha256": "45831679865cb83e2bc71267725c6a6009ad751e06364a59beb395f2cd603885",
+      "octets": 670615
+    },
+    {
+      "nom": "unite_meca_base_rugosite.png",
+      "sha256": "a3e3de6192391f9c936002d80a51a78df83e0ff9e67be7c7b2ce8632d5eb5ef2",
+      "octets": 126249
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T13:13:17.290Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/unite_meca_base/avant-3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_lod0.glb",
+      "sha256": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+      "octets": 411636
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/unite_meca_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_meca_base/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_lod0.glb",
+      "sha256": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+      "octets": 411636
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/unite_meca_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_lod0.glb",
+      "sha256": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+      "octets": 411636
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_meca_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

@@ -1,0 +1,151 @@
+{
+  "id": "unite_meca_base",
+  "motif": "Les anciens kits partagent la géométrie précédente et masqueraient la nouvelle base commune.",
+  "basePrecedente": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+  "nouvelleBase": "9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2",
+  "geometriePrecedente": "667796c6824718cfe0718e81bf6cff8d20afa811ce191f39c63529a37e26aae4",
+  "geometrieNouvelle": "e7ed21f0625ae68b7b6fb21cb47095591cbd950c649d10b8ec2122db9eb2403f",
+  "archive": "assets/receptions/unite_meca_base/kits-avant-9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2",
+  "kits": [
+    "kit_fr_meca",
+    "kit_lu_meca"
+  ],
+  "fichiers": [
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_albedo.png",
+      "sha256": "7397df734e0346ab9f4d68176554c8a07cd099e5979f60d54fa16c0237adac02",
+      "octets": 262249,
+      "lien": "../donnees/7397df734e0346ab9f4d68176554c8a07cd099e5979f60d54fa16c0237adac02.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_albedo_hiver.png",
+      "sha256": "78bb416008a980b9026be9063236a8c60505a6d1bff62654a3b2ddb193fa173f",
+      "octets": 266518,
+      "lien": "../donnees/78bb416008a980b9026be9063236a8c60505a6d1bff62654a3b2ddb193fa173f.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_lod0.glb",
+      "sha256": "3b2fd57cca4feb1f072f4f87f38b424d61d865617f70d38022799d36a19daa42",
+      "octets": 411616,
+      "lien": "../donnees/3b2fd57cca4feb1f072f4f87f38b424d61d865617f70d38022799d36a19daa42.glb"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_masque_equipe.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_masque_equipe_hiver.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_fr_meca_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_albedo.png",
+      "sha256": "747a610273b102a958cd786619e64e33113934d357d56eb3bd81b4e1a9613941",
+      "octets": 261993,
+      "lien": "../donnees/747a610273b102a958cd786619e64e33113934d357d56eb3bd81b4e1a9613941.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_albedo_hiver.png",
+      "sha256": "f75b306d867cb1382dcf84bc8dd11e931967eed108a7bae0c44ccd8852ae374d",
+      "octets": 266412,
+      "lien": "../donnees/f75b306d867cb1382dcf84bc8dd11e931967eed108a7bae0c44ccd8852ae374d.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_lod0.glb",
+      "sha256": "8da6e58fd32f5823a47dbcebb62738b63741a6a523959d510cea3770559fa0ae",
+      "octets": 411616,
+      "lien": "../donnees/8da6e58fd32f5823a47dbcebb62738b63741a6a523959d510cea3770559fa0ae.glb"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_masque_equipe.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_masque_equipe_hiver.png",
+      "sha256": "dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15",
+      "octets": 577,
+      "lien": "../donnees/dd10c388bac40eaecea07f16cbc0e6a977febabd4ec990dfd17b04d4953e1a15.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "lien": "../donnees/86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "lien": "../donnees/9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    },
+    {
+      "chemin": "public/assets/modeles/kit_lu_meca_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "lien": "../donnees/5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4.png"
+    }
+  ],
+  "candidatsConserves": true,
+  "donneesImmuablesConservees": true,
+  "approbationArtistique": false,
+  "date": "2026-09-20T13:13:15.835Z"
+}

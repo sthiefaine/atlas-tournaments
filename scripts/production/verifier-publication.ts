@@ -1,6 +1,6 @@
 /** Vérifie les octets servis après déploiement, sans rendre la scène ni approuver l'art. */
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { estInventaireModeles } from '../../src/assets/spec';
 
@@ -20,6 +20,16 @@ async function verifier() {
   if (!glb || empreinte(readFileSync(path.join('public/assets/modeles', glb.nom))) !== glb.sha256) {
     throw new Error('Le lot et le modèle actif diffèrent');
   }
+  const retrait = path.join(lot, 'retrait-kits-incompatibles.json');
+  let kitsRetires: string[] = [];
+  if (existsSync(retrait)) {
+    const rapport = JSON.parse(readFileSync(retrait, 'utf8'));
+    if (rapport.id !== id || rapport.nouvelleBase !== glb.sha256 || !Array.isArray(rapport.kits)
+      || rapport.kits.some((kit: unknown) => typeof kit !== 'string' || !/^kit_[a-z0-9_]+$/.test(kit))) {
+      throw new Error('Le rapport de retrait des kits ne correspond pas au lot actif');
+    }
+    kitsRetires = rapport.kits;
+  }
   const domaine = 'atlas-tournament.clairdev.com';
   const resultats: { fichier: string; conforme: boolean; status?: number; erreur?: string }[] = [];
   for (let debut = 0; debut < fichiers.length; debut += 4) {
@@ -34,13 +44,19 @@ async function verifier() {
       fichier: bloc[i]!.nom, conforme: false, erreur: r.reason instanceof Error ? r.reason.message : 'Lecture distante impossible',
     }));
   }
-  let inventaire: { conforme: boolean; status?: number; erreur?: string };
+  let inventaire: { conforme: boolean; status?: number; erreur?: string; kitsRetiresEncorePresents?: string[] };
   try {
     const r = await fetch(`https://${domaine}/api/modeles`, {
       cache: 'no-store', redirect: 'error', signal: AbortSignal.timeout(15000),
     });
     const contenu: unknown = r.ok ? await r.json() : null;
-    inventaire = { status: r.status, conforme: r.ok && estInventaireModeles(contenu) && contenu.modeles[id]?.includes(0) === true };
+    const valide = estInventaireModeles(contenu);
+    const kitsRetiresEncorePresents = valide ? kitsRetires.filter(kit => contenu.modeles[kit]?.length) : [];
+    inventaire = {
+      status: r.status,
+      conforme: r.ok && valide && contenu.modeles[id]?.includes(0) === true && kitsRetiresEncorePresents.length === 0,
+      kitsRetiresEncorePresents,
+    };
   } catch (e) {
     inventaire = { conforme: false, erreur: e instanceof Error ? e.message : 'Inventaire distant impossible' };
   }
@@ -54,6 +70,7 @@ async function verifier() {
     modele.suivi.deploiement = {
       date: new Date().toISOString(), domaine, glbEtPngConformesSha256: true,
       fichiersVerifies: fichiers.length, presentInventaireJeu: true, controleVisuel: false,
+      ...(kitsRetires.length ? { kitsRetiresAbsentsInventaire: kitsRetires } : {}),
     };
     writeFileSync(chemin, JSON.stringify(plan, null, 2) + '\n');
   }

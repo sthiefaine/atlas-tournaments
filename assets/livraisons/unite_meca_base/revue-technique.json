@@ -1,0 +1,292 @@
+{
+  "id": "unite_meca_base",
+  "dateRevue": "2026-09-20T13:11:52.638115+00:00",
+  "approbationArtistique": false,
+  "statut": "pret_a_integrer_apres_garde_upload_et_retrait_anciens_kits_par_coordinateur",
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "outils": [
+      "Three.js",
+      "GLTFExporter",
+      "Python NumPy Pillow"
+    ],
+    "sourcesExternes": [],
+    "geometrieAncienneImportee": false,
+    "texturesAnciennesImportees": false,
+    "ancienCandidat": {
+      "sha256Glb": "3b1965fe08bf49c2e9a254e34eb449c2c1e14173039d9750a2f3ec598a15c025",
+      "octetsGlb": 411636,
+      "triangles": 3792,
+      "pngInspectes": 10
+    },
+    "sourceDistante": "Le coordinateur a revérifié le 20 septembre 2026 : aucun upload pour unite_meca_base, kit_fr_meca et kit_lu_meca. Il conserve la garde au moment de l’activation."
+  },
+  "fichiers": [
+    {
+      "nom": "unite_meca_base_albedo.png",
+      "octets": 451203,
+      "sha256": "3ed00e944ee487c2fa2c752fc0a79ab67aa6a4a38d4c4c0b733cd6441f0880c7"
+    },
+    {
+      "nom": "unite_meca_base_lod0.glb",
+      "octets": 508252,
+      "sha256": "9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2"
+    },
+    {
+      "nom": "unite_meca_base_masque_equipe.png",
+      "octets": 640,
+      "sha256": "e398808c4cc850e908c711033a640dcaf25e2479e39dc1d9170d5bd81fbb509a"
+    },
+    {
+      "nom": "unite_meca_base_metal.png",
+      "octets": 489,
+      "sha256": "12953c0b59ec8eafc9e9f9d1266499c461a068655c8a48be31ff7ebc5b2338c1"
+    },
+    {
+      "nom": "unite_meca_base_normale.png",
+      "octets": 670615,
+      "sha256": "45831679865cb83e2bc71267725c6a6009ad751e06364a59beb395f2cd603885"
+    },
+    {
+      "nom": "unite_meca_base_rugosite.png",
+      "octets": 126249,
+      "sha256": "a3e3de6192391f9c936002d80a51a78df83e0ff9e67be7c7b2ce8632d5eb5ef2"
+    }
+  ],
+  "poidsLotOctets": 1757448,
+  "octetsGlb": 508252,
+  "sha256Glb": "9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2",
+  "triangles": 3988,
+  "budgetTriangles": 4000,
+  "primitives": 4,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "dimensionsMetres": [
+    0.44999998807907104,
+    0.6010000178590417,
+    0.4399999976158142
+  ],
+  "silhouette": {
+    "personnes": [
+      "porteuse à cheveux sombres, visière et lanceur à l’épaule gauche",
+      "équipier plus grand à cheveux châtains, cadre de recharges et geste de capture"
+    ],
+    "appuis": "quatre bottes à quatre crans, deux chaînes de jambes par personne",
+    "ancrages": [
+      "plaques de tibias épaisses",
+      "capsules et cadres dorsaux à trois panneaux",
+      "caisson horizontal de marqueurs-fusées, porté à l’épaule extérieure"
+    ],
+    "couleursEquipe": "panneaux dorsaux et crêtes des casques"
+  },
+  "rig": {
+    "peaux": 1,
+    "os": 27,
+    "clonesIndependants": true,
+    "chargementNatifGLTFLoader": true,
+    "poids": "un os par pièce rigide, chaînes de membres distinctes",
+    "racine": "identité, non animée, centre du socle au sol",
+    "axes": {
+      "haut": "+Y",
+      "avant": "+Z"
+    }
+  },
+  "animations": {
+    "dureesMs": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "tir": 700,
+      "touche": 500,
+      "hors_jeu": 900,
+      "capture": 1300
+    },
+    "nombrePosesMesurees": 1617,
+    "bouclesExactes": {
+      "repos": true,
+      "deplacement": true
+    },
+    "horsJeuPoseFinaleTenue": true,
+    "horsJeuIndicateurCache": true,
+    "rayonHorizontalMaxEchantillonne": 0.28798359352206904,
+    "margeDeuxCasesVoisinesEchantillonneeMetres": 0.4240328129558619,
+    "jeuxMinimumEchantillonnesMetres": {
+      "lanceurCasque": 0.011999986231326948,
+      "lanceurEpaule": 0.015500015258788802,
+      "lanceurGant": 0.0005000352859494961,
+      "brasCaptureCasque": 0.013216705262660833,
+      "epaulesInterieuresSpheres": 0.0020572727296073873,
+      "brasInterieursCapsules": 0.0012429042276844576,
+      "avantBrasCaptureTorse": 0.0007167022824286218
+    },
+    "definitionJeux": {
+      "lanceurCasque": "Plan séparateur X dans le repère du torse de la porteuse, géométrie skinnée complète du caisson et de la tête.",
+      "lanceurEpaule": "Plan séparateur Y dans ce même repère, hors selle et pont de portage en contact voulu.",
+      "lanceurGant": "Plan séparateur Y avec le gant porteur ; la poignée attachée au torse assure le raccord.",
+      "brasCaptureCasque": "Plan séparateur X entre l’avant-bras de salut et la tête de l’équipier.",
+      "epaulesInterieuresSpheres": "Sphères conservatrices de rayon 33 mm englobant chacune des deux épaules intérieures.",
+      "brasInterieursCapsules": "Minimum entre capsules conservatrices des deux bras intérieurs : manches, avant-bras, gants et épaules.",
+      "avantBrasCaptureTorse": "Plan séparateur X entre avant-bras de salut et pièces liées au torse.",
+      "mainPoigneeDistanceMax": "Distance des centres du gant porteur et de la poignée ; ils sont en contact voulu.",
+      "piedsEllipseMax": "Maximum de (x/0.221)²+(z/0.216)² pour tous les sommets des pieds, valeur < 1 à l’intérieur du plateau."
+    },
+    "mainPoigneeDistanceCentresMaxMetres": 0.0014142135633768386,
+    "capture": {
+      "coudeDeplacementMax": 0.06043399215612066,
+      "angleAvantBrasMax": 0.8435751374734933,
+      "mainPoigneeDistanceMax": 0.0014142135623730866
+    },
+    "reculMetres": 0.01600000028312206,
+    "plateauHauteurMetres": 0.018,
+    "ecartAppuiMaxEchantillonneMetres": 1.193502222631565e-06,
+    "leveePiedMetres": 0.016,
+    "piedsEllipsePlateauMaximum": 0.857351822742263,
+    "horsJeuSol": {
+      "minimumY": -2.1606683109354208e-10,
+      "toleranceNumeriqueMetres": 1e-08,
+      "semellesFinales": {
+        "os_pied_porteuse_gauche": {
+          "min": [
+            -0.14200000143051147,
+            0.017999997317790964,
+            -0.04300000244379044
+          ],
+          "max": [
+            -0.08799999630451202,
+            0.06299999910593031,
+            0.04700000113248825
+          ]
+        },
+        "os_pied_porteuse_droite": {
+          "min": [
+            -0.07999999770522118,
+            0.017999997317790964,
+            -0.04300000244379044
+          ],
+          "max": [
+            -0.025999998167157173,
+            0.06299999910593031,
+            0.04700000113248825
+          ]
+        },
+        "os_pied_equipier_gauche": {
+          "min": [
+            0.04300000095367432,
+            0.017999995887279477,
+            0.0099999969303608
+          ],
+          "max": [
+            0.09700000607967377,
+            0.06299999767541882,
+            0.10000000050663949
+          ]
+        },
+        "os_pied_equipier_droite": {
+          "min": [
+            0.10500000095367432,
+            0.017999995887279477,
+            0.0099999969303608
+          ],
+          "max": [
+            0.15899999862909317,
+            0.06299999767541882,
+            0.10000000050663949
+          ]
+        }
+      }
+    }
+  },
+  "textures": {
+    "albedoEtNormale": [
+      1024,
+      1024
+    ],
+    "rugositeMetalMasque": [
+      512,
+      512
+    ],
+    "externes": true,
+    "masqueValeurs": [
+      0,
+      255
+    ],
+    "ecartGrisEquipe": 0,
+    "masqueRolesNeutres": {
+      "caoutchouc": [
+        0
+      ],
+      "metal_nu": [
+        0
+      ],
+      "verre": [
+        0
+      ],
+      "peau_porteuse": [
+        0
+      ],
+      "peau_equipier": [
+        0
+      ],
+      "cheveux_porteuse": [
+        0
+      ],
+      "cheveux_equipier": [
+        0
+      ]
+    },
+    "rugositeCanal": "G",
+    "metalCanal": "B",
+    "metalEditableIdentiqueCanalB": true,
+    "normale": "+Y tangent",
+    "bakeHD": false,
+    "albedo": "pigments et grain analytique, aucune lumière ou ombre calculée",
+    "emission": false,
+    "margeUvAtlasPixels": 17.91998291015625
+  },
+  "controleTechnique": {
+    "lot": {
+      "ok": true,
+      "motifs": [],
+      "commande": "npm run controler:asset -- --spec assets/specs/unite_meca_base.json --lot tmp/production-sequentielle/unite_meca_base --json",
+      "codeSortie": 0,
+      "date": "2026-09-20T13:11:49.214299+00:00",
+      "journal": "controle-lot.log"
+    },
+    "typecheck": {
+      "ok": true,
+      "apresDerniereEditionTypeScript": true,
+      "commande": "npm run typecheck",
+      "codeSortie": 0,
+      "date": "2026-09-20T13:11:52.637631+00:00",
+      "journal": "typecheck.log"
+    },
+    "trianglesDegeneres": 0,
+    "uvTrianglesDegeneres": 0,
+    "trianglesSuperposes": 0,
+    "normalesInversees": 0,
+    "normalesEtTangentesUnitaires": true,
+    "tempsAnimationFloatScalarBornesConservees": true
+  },
+  "limites": [
+    "Aucun rendu, capture, contrôle visuel ou approbation artistique.",
+    "Aucun test général ni build.",
+    "Pas de bake HD ; géométrie et microreliefs originaux.",
+    "Aucun téléphone réel ni relevé FPS.",
+    "Mesures de poses échantillonnées, pas de certification continue ni de mélange de clips.",
+    "Skin à segments rigides, sans déformation organique continue.",
+    "Jeux ciblés et contacts voulus de portage ; collisions internes complètes non certifiées.",
+    "Futurs kits nationaux non certifiés ; anciens kits incompatibles à archiver par le coordinateur.",
+    "Le respect artistique du ton et la lisibilité à la caméra de jeu restent à apprécier humainement."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-rig-glb.json",
+    "validation-lot.json",
+    "controle-lot.log",
+    "typecheck.log"
+  ]
+}

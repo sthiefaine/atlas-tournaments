@@ -1,0 +1,226 @@
+{
+  "id": "unite_meca_base",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourcesExternes": [],
+    "geometrieAncienneImportee": false
+  },
+  "triangles": 3988,
+  "budgetTriangles": 4000,
+  "primitives": 4,
+  "octetsGlb": 508252,
+  "sha256Glb": "9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2",
+  "bornes": {
+    "min": [
+      -0.22499999403953552,
+      -2.1606683109354208e-10,
+      -0.2199999988079071
+    ],
+    "max": [
+      0.22499999403953552,
+      0.6010000109672546,
+      0.2199999988079071
+    ],
+    "dimensions": [
+      0.44999998807907104,
+      0.6010000111833215,
+      0.4399999976158142
+    ]
+  },
+  "trianglesParEnsemble": {
+    "plateau_ovale": 96,
+    "bord_plateau": 96,
+    "pantalons_renforces": 56,
+    "vestes_tissu_neutre": 120,
+    "ceintures_larges": 24,
+    "harnais_renforce": 48,
+    "plastrons_arrondis": 120,
+    "fermoirs_ceinture": 24,
+    "cous": 64,
+    "visages_fictifs": 200,
+    "chevelures": 64,
+    "chignon_bas": 32,
+    "casques_renforces": 168,
+    "bords_casques": 96,
+    "visieres_verre": 120,
+    "joues_casque": 48,
+    "cretes_equipe": 24,
+    "nez": 24,
+    "levres": 24,
+    "rails_cadre_dorsal": 48,
+    "ancrages_bas_cadre": 48,
+    "ancrages_haut_cadre": 48,
+    "capsules_dorsales": 120,
+    "panneaux_dorsaux_segmentes": 168,
+    "cuisses_tissu": 128,
+    "rotules_protection": 128,
+    "mollets_tissu": 128,
+    "plaques_tibias_epaisses": 240,
+    "sangles_tibias": 48,
+    "bottes_massives": 240,
+    "semelles_support": 48,
+    "crans_semelles": 192,
+    "epaules_souples": 128,
+    "manches_haut": 128,
+    "manches_bas": 128,
+    "gants": 128,
+    "pont_epaule_lanceur": 12,
+    "selle_lanceur": 60,
+    "caisson_lanceur_horizontal": 60,
+    "cerclages_caisson": 24,
+    "bagues_embouchures": 72,
+    "obturateurs_marqueurs": 72,
+    "poignee_avant_lanceur": 12,
+    "casier_recharges": 60,
+    "attaches_casier": 24,
+    "logements_recharges": 36,
+    "temoin_disponibilite": 12
+  },
+  "os": [
+    "os_bassin_porteuse",
+    "os_torse_porteuse",
+    "os_tete_porteuse",
+    "os_cuisse_porteuse_gauche",
+    "os_mollet_porteuse_gauche",
+    "os_pied_porteuse_gauche",
+    "os_bras_porteuse_gauche",
+    "os_avant_bras_porteuse_gauche",
+    "os_cuisse_porteuse_droite",
+    "os_mollet_porteuse_droite",
+    "os_pied_porteuse_droite",
+    "os_bras_porteuse_droite",
+    "os_avant_bras_porteuse_droite",
+    "os_bassin_equipier",
+    "os_torse_equipier",
+    "os_tete_equipier",
+    "os_cuisse_equipier_gauche",
+    "os_mollet_equipier_gauche",
+    "os_pied_equipier_gauche",
+    "os_bras_equipier_gauche",
+    "os_avant_bras_equipier_gauche",
+    "os_cuisse_equipier_droite",
+    "os_mollet_equipier_droite",
+    "os_pied_equipier_droite",
+    "os_bras_equipier_droite",
+    "os_avant_bras_equipier_droite",
+    "module_lance_roquettes"
+  ],
+  "poids": "un os par pièce rigide ; membres articulés séparément",
+  "hauteurSocle": 0.018,
+  "personnages": [
+    {
+      "nom": "porteuse",
+      "x": -0.084,
+      "z": -0.024,
+      "dy": 0.004,
+      "peau": 8,
+      "cheveux": 10
+    },
+    {
+      "nom": "equipier",
+      "x": 0.101,
+      "z": 0.029,
+      "dy": 0.018,
+      "peau": 9,
+      "cheveux": 11
+    }
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "os_torse_porteuse.quaternion",
+        "os_tete_porteuse.quaternion",
+        "os_torse_equipier.quaternion",
+        "os_tete_equipier.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "os_bassin_porteuse.position",
+        "os_torse_porteuse.quaternion",
+        "os_cuisse_porteuse_gauche.quaternion",
+        "os_mollet_porteuse_gauche.quaternion",
+        "os_pied_porteuse_gauche.quaternion",
+        "os_cuisse_porteuse_droite.quaternion",
+        "os_mollet_porteuse_droite.quaternion",
+        "os_pied_porteuse_droite.quaternion",
+        "os_bras_porteuse_droite.quaternion",
+        "os_bassin_equipier.position",
+        "os_torse_equipier.quaternion",
+        "os_cuisse_equipier_gauche.quaternion",
+        "os_mollet_equipier_gauche.quaternion",
+        "os_pied_equipier_gauche.quaternion",
+        "os_bras_equipier_gauche.quaternion",
+        "os_cuisse_equipier_droite.quaternion",
+        "os_mollet_equipier_droite.quaternion",
+        "os_pied_equipier_droite.quaternion",
+        "os_bras_equipier_droite.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_lance_roquettes.position",
+        "os_torse_porteuse.quaternion",
+        "os_torse_equipier.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "os_torse_porteuse.quaternion",
+        "os_torse_equipier.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "socle.scale",
+        "os_cuisse_porteuse_gauche.quaternion",
+        "os_mollet_porteuse_gauche.quaternion",
+        "os_pied_porteuse_gauche.quaternion",
+        "os_cuisse_porteuse_droite.quaternion",
+        "os_mollet_porteuse_droite.quaternion",
+        "os_pied_porteuse_droite.quaternion",
+        "os_bras_porteuse_droite.quaternion",
+        "os_bassin_porteuse.position",
+        "os_torse_porteuse.quaternion",
+        "os_tete_porteuse.quaternion",
+        "os_cuisse_equipier_gauche.quaternion",
+        "os_mollet_equipier_gauche.quaternion",
+        "os_pied_equipier_gauche.quaternion",
+        "os_bras_equipier_gauche.quaternion",
+        "os_cuisse_equipier_droite.quaternion",
+        "os_mollet_equipier_droite.quaternion",
+        "os_pied_equipier_droite.quaternion",
+        "os_bras_equipier_droite.quaternion",
+        "os_bassin_equipier.position",
+        "os_torse_equipier.quaternion",
+        "os_tete_equipier.quaternion"
+      ]
+    },
+    {
+      "nom": "capture",
+      "duree": 1.3,
+      "pistes": [
+        "os_bras_equipier_droite.quaternion",
+        "os_avant_bras_equipier_droite.quaternion",
+        "os_tete_porteuse.quaternion",
+        "os_tete_equipier.quaternion"
+      ]
+    }
+  ],
+  "limites": [
+    "Aucun rendu ni contrôle visuel.",
+    "Articulations rigides aux pièces de vêtement, pas de déformation organique continue.",
+    "Pas de collision complète entre accessoires, ni de kit national certifié."
+  ]
+}
