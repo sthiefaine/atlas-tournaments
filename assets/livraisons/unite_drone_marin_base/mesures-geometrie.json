@@ -1,0 +1,62 @@
+{
+  "triangles": 3488,
+  "primitives": 6,
+  "trianglesDegeneres": 0,
+  "trianglesSuperposes": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 3.936103276647174e-08,
+  "tangentesErreurMax": 4.0820768987259726e-08,
+  "orthogonaliteErreurMax": 1.2682390698737223e-07,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "id": "unite_drone_marin_base",
+  "approbationArtistique": false,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "module_radar",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "bornesTempsAnimationConservees": true,
+  "indicateurCacheFinHorsJeu": true,
+  "radarAnimeDansTousClips": true,
+  "antenneAnimeeDansTousClips": true,
+  "normalePngLongueurErreurMax": 0.002779681475911344,
+  "normalePngZMinimum": 1.0,
+  "rugositeCanalGMinMax": [
+    50,
+    233
+  ]
+}

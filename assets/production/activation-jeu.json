@@ -145,6 +145,14 @@
       "revision": "95ee512115d6cedce0b522b00eb3a2c19f3a7b1547d828490aa80dc7a187418f",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_drone_marin_base",
+      "fichierActif": "public/assets/modeles/unite_drone_marin_base_lod0.glb",
+      "donnees": "../donnees/f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af.glb",
+      "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

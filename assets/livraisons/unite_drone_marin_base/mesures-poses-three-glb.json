@@ -1,0 +1,76 @@
+{
+  "id": "unite_drone_marin_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 193 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 204,
+      "enveloppe": {
+        "min": [
+          -0.2534857632863426,
+          0,
+          -0.35059780367293125
+        ],
+        "max": [
+          0.2534857632863294,
+          0.4159241985565049,
+          0.3503818221372957
+        ]
+      },
+      "rayonHorizontalMax": 0.40161314685840577
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.2535631783761787,
+          0.008569855128791229,
+          -0.3498646182101568
+        ],
+        "max": [
+          0.2535631783761787,
+          0.4180421965902766,
+          0.3508392229191954
+        ]
+      },
+      "rayonHorizontalMax": 0.40087048210438
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.2537893368116935,
+          0,
+          -0.3523040046625172
+        ],
+        "max": [
+          0.25434773833772234,
+          0.4359552079398195,
+          0.35087471078445265
+        ]
+      },
+      "rayonHorizontalMax": 0.4024590278017856
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 212,
+      "enveloppe": {
+        "min": [
+          -0.254841028078732,
+          0,
+          -0.351285858800233
+        ],
+        "max": [
+          0.2529999911785126,
+          0.4205926592661571,
+          0.3499999940395355
+        ]
+      },
+      "rayonHorizontalMax": 0.4023262854845825
+    }
+  ],
+  "pariteAvantExport": true,
+  "approbationArtistique": false
+}

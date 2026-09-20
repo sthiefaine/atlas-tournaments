@@ -1,0 +1,128 @@
+{
+  "id": "unite_drone_marin_base",
+  "approbationArtistique": false,
+  "date": "2026-09-20T14:04:07.281601+02:00",
+  "provenance": "Géométrie originale paramétrique Three.js et textures analytiques NumPy/Pillow ; helpers de géométrie, export, atlas et mesure copiés localement et adaptés, aucune dépendance de génération entre modèles. Aucun GLB ni PNG importé. Aucun upload indiqué dans le relevé distant communiqué ; dernière vérification réservée au coordinateur.",
+  "ancienCandidat": {
+    "sha256": "7fc7ec57f421da9f69f878e7d54b6e2ed5e9e11625b8e840ec820faf0a95a750",
+    "triangles": 648,
+    "octetsGlb": 78900,
+    "nombrePngInspectes": 12,
+    "modifie": false
+  },
+  "livraison": {
+    "triangles": 3488,
+    "budgetTriangles": 3500,
+    "primitives": 6,
+    "materiaux": 2,
+    "dimensionsMetres": [
+      0.5059999823570251,
+      0.40299998968839645,
+      0.699999988079071
+    ],
+    "octetsGlb": 205484,
+    "octetsGlbEtPng": 1374735,
+    "sha256Glb": "f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af",
+    "fichiers": [
+      {
+        "nom": "unite_drone_marin_base_albedo.png",
+        "octets": 457780,
+        "sha256": "19d1e21c3bb80178658312bb810468fe13131fb58c92f8d2a70b14d0b1d735e5"
+      },
+      {
+        "nom": "unite_drone_marin_base_lod0.glb",
+        "octets": 205484,
+        "sha256": "f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af"
+      },
+      {
+        "nom": "unite_drone_marin_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_drone_marin_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_drone_marin_base_normale.png",
+        "octets": 584166,
+        "sha256": "0d78475bce7264d92127bba42a89fa9b2d103f062468addf639bfb05c7a03fe6"
+      },
+      {
+        "nom": "unite_drone_marin_base_rugosite.png",
+        "octets": 126173,
+        "sha256": "4fcc1e9cdd2dc78ad81aa0a80aa5b472da0a80295b2785c3a18321863cfa0839"
+      }
+    ]
+  },
+  "verification": {
+    "controleLot": "ok",
+    "commandeControleLot": "npm run controler:asset -- --spec assets/specs/unite_drone_marin_base.json --lot tmp/production-sequentielle/unite_drone_marin_base",
+    "typecheck": "ok",
+    "commandeTypecheck": "npm run typecheck",
+    "typecheckApresDernierTS": true,
+    "normalesUvTangentes": "UV0, normales et tangentes finies, unitaires et orthogonales ; zéro triangle géométrique/UV dégénéré, aucune superposition exacte par primitive, aucune normale opposée au winding des triangles.",
+    "canaux": "Albédo et normale tangentielle +Y 1024² ; rugosité G, métal B et masque 512² ; masque strict 0/255 et gris strict sous le blanc ; PNG externes.",
+    "clips": {
+      "repos": 2400,
+      "deplacement": 1000,
+      "touche": 500,
+      "hors_jeu": 900
+    },
+    "bouclesFermees": true,
+    "racineIdentite": true,
+    "tientPoseFinaleHorsJeu": true,
+    "indicateurCacheHorsJeu": true,
+    "radarAnimeDansTousClips": true,
+    "antenneAnimeeDansTousClips": true,
+    "bornesTempsAnimationConservees": true,
+    "posesMesurees": 804,
+    "rayonHorizontalMax": 0.4024590277444744,
+    "rayonHorizontalMajorationContinue": 0.4058318135501547,
+    "espacementMinimumVoisinsTousCaps": 0.18833637289969063,
+    "pointLePlusBasEchantillonne": 0.0,
+    "methodeMesure": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près (elles-mêmes recoupées avec la scène source). Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour du pivot corps immobile horizontalement.",
+    "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+    "ressort": {
+      "parametresMetres": {
+        "rayonCentral": 0.022,
+        "diametreFil": 0.02,
+        "nombreTours": 2,
+        "hauteur": 0.05,
+        "pas": 0.025,
+        "diametreAme": 0.022
+      },
+      "glbRelu": true,
+      "trianglesRessort": 288,
+      "pairesFacesMesurees": 19584,
+      "jeuAmeBorneInferieureMetres": 0.0004781234754027506,
+      "jeuEntreSpiresMetres": 0.004594539362239407,
+      "intersectionsEntreSpires": 0,
+      "methode": "GLB exporté : fil identifié par sa cellule UV. Minimum radial continu sur les triangles projetés, moins le rayon de l’âme cylindrique pleine de 11 mm. Distance triangle-triangle (sommets/faces et arêtes/arêtes, avec détection de traversées) entre portions de fil éloignées d’au moins 8 des 24 segments de l’hélice."
+    }
+  },
+  "limites": [
+    "Aucun test général, build, rendu, capture, contrôle visuel ou FPS téléphone ; lisibilité à caméra de jeu non attestée.",
+    "Atlas de matières répété, surfaces optiques opaques ; microreliefs analytiques sans bake HD.",
+    "Flotteurs et propulsion rigides, radar sans visée de cible, ressort géométrique sans simulation physique.",
+    "Hors-jeu immobilise la gîte ; il ne simule ni naufrage ni perte de flottabilité.",
+    "GLB neutre et clips isolés seulement ; mélanges, déformations nationales runtime et intersections internes non certifiés.",
+    "Sol contrôlé aux poses échantillonnées ; seule l’enveloppe horizontale est majorée continûment."
+  ],
+  "rapports": [
+    "inspection-ancien-candidat.json",
+    "fabrication.json",
+    "textures-fabrication.json",
+    "mesures-geometrie.json",
+    "mesures-mouvements.json",
+    "mesures-poses-three-glb.json",
+    "mesures-poses-glb.json",
+    "controle-technique.json",
+    "mesures-ressort.json"
+  ],
+  "corrections": [
+    "Ressort repris avant gel : rayon central 22 mm, deux tours sur 50 mm et fil de 20 mm ; âme et départ du fouet ajustés. Mesures localisées dans le GLB : spires séparées de 4,595 mm, jeu face–âme majoré inférieurement à 0,478 mm.",
+    "Contrôle de lot, géométrie, poses et typage repassés après la correction finale TypeScript."
+  ]
+}

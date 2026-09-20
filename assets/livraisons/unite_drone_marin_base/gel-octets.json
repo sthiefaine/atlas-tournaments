@@ -1,0 +1,75 @@
+{
+  "id": "unite_drone_marin_base",
+  "date": "2026-09-20T14:04:07.285142+02:00",
+  "approbationArtistique": false,
+  "fichiers": [
+    {
+      "nom": "unite_drone_marin_base_albedo.png",
+      "octets": 457780,
+      "sha256": "19d1e21c3bb80178658312bb810468fe13131fb58c92f8d2a70b14d0b1d735e5"
+    },
+    {
+      "nom": "unite_drone_marin_base_lod0.glb",
+      "octets": 205484,
+      "sha256": "f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af"
+    },
+    {
+      "nom": "unite_drone_marin_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_drone_marin_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_drone_marin_base_normale.png",
+      "octets": 584166,
+      "sha256": "0d78475bce7264d92127bba42a89fa9b2d103f062468addf639bfb05c7a03fe6"
+    },
+    {
+      "nom": "unite_drone_marin_base_rugosite.png",
+      "octets": 126173,
+      "sha256": "4fcc1e9cdd2dc78ad81aa0a80aa5b472da0a80295b2785c3a18321863cfa0839"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "sha256": "0b47d26b7598a286bbefb7544f009a77707480cd0f36c0f8eb678e77dbcfeb7f"
+    },
+    {
+      "nom": "generer.ts",
+      "sha256": "4eb76f59a432c1ca1ac9b6020e9cfe3285b520ec2db360cb24797da5271a8509"
+    },
+    {
+      "nom": "gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "sha256": "d0e59f4920edbaea324e83266ce7e3e5378d37118dbc5c0098d2a86b9832ab51"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "sha256": "4b57a9c7139c658a52901beded9058220f6fd35c0ffa0d59d0a2d5f5df19dd6a"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "sha256": "15b7d8a57a5173966f3167bc91b8cd2bd53367afe20f8841ddaf7f1afd7e768e"
+    },
+    {
+      "nom": "mesurer-ressort.py",
+      "sha256": "859a68f799fdf3da1771815726a3f336bf3aabc9a4590e74991758edabe437ec"
+    },
+    {
+      "nom": "mesurer.py",
+      "sha256": "0e34ce1a367106a3398d4ce9e2892309c9de2da05b5842e6bb5ffca17c8b0822"
+    },
+    {
+      "nom": "textures.py",
+      "sha256": "0fbbca0e354ac0bda07ec52e8b7ddcc4f0d4b5430481226b7505e408dae81900"
+    }
+  ]
+}

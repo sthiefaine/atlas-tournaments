@@ -1,1 +1,5 @@
-{"version":2,"validationArtistique":"non_effectuee"}
+{
+  "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023",
+  "source": "creation-originale.json",
+  "approbationArtistique": false
+}

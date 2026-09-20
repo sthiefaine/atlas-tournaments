@@ -16703,21 +16703,14 @@
     {
       "id": "unite_drone_marin_base",
       "fichiers": [
-        "unite_drone_marin_base_lod0.glb",
         "unite_drone_marin_base_albedo.png",
-        "unite_drone_marin_base_albedo_hiver.png",
-        "unite_drone_marin_base_normale.png",
-        "unite_drone_marin_base_normale_hiver.png",
-        "unite_drone_marin_base_rugosite.png",
-        "unite_drone_marin_base_rugosite_hiver.png",
-        "unite_drone_marin_base_metal.png",
-        "unite_drone_marin_base_metal_hiver.png",
+        "unite_drone_marin_base_lod0.glb",
         "unite_drone_marin_base_masque_equipe.png",
-        "unite_drone_marin_base_masque_equipe_hiver.png",
-        "unite_drone_marin_base_emission.png",
-        "unite_drone_marin_base_emission_hiver.png"
+        "unite_drone_marin_base_metal.png",
+        "unite_drone_marin_base_normale.png",
+        "unite_drone_marin_base_rugosite.png"
       ],
-      "revision": "65d1d0518afbdd022221f58d3cd52daf01422189cb47b8124fc2e28ec4e694e8"
+      "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023"
     },
     {
       "id": "unite_drone_ravitailleur_base",

@@ -1,0 +1,188 @@
+{
+  "id": "unite_drone_marin_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_drone_marin_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 3488,
+  "budgetTriangles": 3500,
+  "octetsGlb": 205484,
+  "sha256Glb": "f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af",
+  "bornes": {
+    "min": [
+      -0.2529999911785126,
+      3.2782554587607038e-9,
+      -0.3499999940395355
+    ],
+    "max": [
+      0.2529999911785126,
+      0.4029999929666519,
+      0.3499999940395355
+    ],
+    "dimensions": [
+      0.5059999823570251,
+      0.40299998968839645,
+      0.699999988079071
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.105,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.165,
+        -0.068
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "pivot": [
+        0.085,
+        0.125,
+        -0.19
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        -0.074,
+        0.128,
+        0.075
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "flotteurs_coque_etanche": 512,
+    "ceintures_flottaison": 256,
+    "panneaux_pont_flotteurs": 120,
+    "panneaux_nez_flotteurs": 120,
+    "embases_propulsion": 120,
+    "couronnes_propulsion": 144,
+    "fonds_propulsion": 96,
+    "barrettes_propulsion": 24,
+    "poignees_poupe": 160,
+    "traverses_structure": 120,
+    "pont_central": 60,
+    "capsule_arrondie": 336,
+    "trappe_equipe_superieure": 60,
+    "capot_nez": 60,
+    "cadre_capteur": 60,
+    "lentille_capteur": 120,
+    "coffret_service": 60,
+    "bouchons_service": 64,
+    "grilles_ventilation": 24,
+    "embase_radar": 64,
+    "axe_radar": 48,
+    "assiette_radar": 240,
+    "moyeu_radar": 48,
+    "support_antenne": 48,
+    "ame_ressort": 32,
+    "ressort_antenne": 288,
+    "fouet_antenne": 144,
+    "embout_fouet": 48,
+    "temoin_disponibilite": 12
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "module_radar.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "radar": {
+    "noeud": "module_radar",
+    "axe": "+Y",
+    "animationGLB": true
+  },
+  "antenne": {
+    "noeud": "module_antenne",
+    "diametreFouet": 0.022,
+    "diametreFilRessort": 0.02,
+    "rayonCentralRessort": 0.022,
+    "nombreToursRessort": 2,
+    "hauteurRessort": 0.05,
+    "pasRessort": 0.025
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Propulsion et flotteurs rigides ; mouvement porté par corps.",
+    "Radar rigide concave ; rotation du pied, sans visée de cible.",
+    "Ressort modélisé ; articulation rigide du module antenne, sans simulation physique.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "unite_drone_marin_base",
+  "approbationArtistique": false,
+  "parametresMetres": {
+    "rayonCentral": 0.022,
+    "diametreFil": 0.02,
+    "nombreTours": 2,
+    "hauteur": 0.05,
+    "pas": 0.025,
+    "diametreAme": 0.022
+  },
+  "glbRelu": true,
+  "trianglesRessort": 288,
+  "pairesFacesMesurees": 19584,
+  "jeuAmeBorneInferieureMetres": 0.0004781234754027506,
+  "jeuEntreSpiresMetres": 0.004594539362239407,
+  "intersectionsEntreSpires": 0,
+  "methode": "GLB exporté : fil identifié par sa cellule UV. Minimum radial continu sur les triangles projetés, moins le rayon de l’âme cylindrique pleine de 11 mm. Distance triangle-triangle (sommets/faces et arêtes/arêtes, avec détection de traversées) entre portions de fil éloignées d’au moins 8 des 24 segments de l’hélice.",
+  "limites": [
+    "Contrôle local du ressort, pas de certification complète des collisions internes.",
+    "Les portions contiguës du même fil sont raccordées intentionnellement.",
+    "Le module antenne est une articulation rigide ; ces jeux internes sont invariants dans ses quatre clips."
+  ]
+}

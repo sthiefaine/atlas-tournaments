@@ -1,0 +1,21 @@
+{
+  "id": "unite_drone_marin_base",
+  "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023",
+  "octets": 1374735,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_drone_marin_base_albedo.png",
+      "unite_drone_marin_base_lod0.glb",
+      "unite_drone_marin_base_masque_equipe.png",
+      "unite_drone_marin_base_metal.png",
+      "unite_drone_marin_base_normale.png",
+      "unite_drone_marin_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}

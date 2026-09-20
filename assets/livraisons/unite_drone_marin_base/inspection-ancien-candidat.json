@@ -1,0 +1,524 @@
+{
+  "id": "unite_drone_marin_base",
+  "sha256Glb": "7fc7ec57f421da9f69f878e7d54b6e2ed5e9e11625b8e840ec820faf0a95a750",
+  "octetsGlb": 78900,
+  "triangles": 648,
+  "noeuds": [
+    "module_radar",
+    "module_antenne",
+    "corps",
+    "base",
+    "socle",
+    "racine"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "animations": [
+    "repos",
+    "deplacement",
+    "touche",
+    "hors_jeu"
+  ],
+  "primitives": [
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.25,
+          -0.06133332848548889,
+          -0.6287168860435486
+        ],
+        "max": [
+          0.25,
+          0.1626666784286499,
+          0.07128308713436127
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.22058823704719543,
+          -0.03199999779462814,
+          -0.04668629169464111
+        ],
+        "max": [
+          0.22058823704719543,
+          0.09991828352212906,
+          0.04668629541993141
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.22058823704719543,
+          -0.03199999779462814,
+          -0.04668629169464111
+        ],
+        "max": [
+          0.22058823704719543,
+          0.09991828352212906,
+          0.04668629541993141
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.051470596343278885,
+          -0.08533332496881485,
+          -0.023727992549538612
+        ],
+        "max": [
+          0.051470596343278885,
+          0.08533333986997604,
+          0.023727988824248314
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.051470596343278885,
+          -0.08533332496881485,
+          -0.023727992549538612
+        ],
+        "max": [
+          0.051470596343278885,
+          0.08533333986997604,
+          0.023727988824248314
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1818196326494217,
+          0,
+          -0.33431771397590637
+        ],
+        "max": [
+          0.1818196326494217,
+          0.20799998939037323,
+          0.307230144739151
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1818196326494217,
+          0,
+          -0.33431771397590637
+        ],
+        "max": [
+          0.1818196326494217,
+          0.20799998939037323,
+          0.307230144739151
+        ]
+      }
+    }
+  ],
+  "png": [
+    {
+      "nom": "unite_drone_marin_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 41,
+      "valeurMax": 184
+    },
+    {
+      "nom": "unite_drone_marin_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 92,
+      "valeurMax": 192
+    },
+    {
+      "nom": "unite_drone_marin_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_drone_marin_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_drone_marin_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_drone_marin_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_drone_marin_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_drone_marin_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_drone_marin_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_marin_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_marin_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_drone_marin_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    }
+  ],
+  "geometrieEtTexturesImportees": false,
+  "inspectionVisuelle": false
+}
