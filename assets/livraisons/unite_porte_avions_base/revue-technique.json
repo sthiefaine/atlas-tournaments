@@ -1,0 +1,292 @@
+{
+  "id": "unite_porte_avions_base",
+  "dateRevueUtc": "2026-09-20T14:40:59.277319+00:00",
+  "statut": "pret_a_integrer_par_coordinateur",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "scripts": "scripts/production/modeles/unite_porte_avions_base",
+    "sourceExterneUtilisee": false,
+    "ancienCandidatImporte": false,
+    "bakeHD": false,
+    "normales": "Microreliefs de matière analytiques, aucun éclairage dans les pigments.",
+    "ancienCandidat": {
+      "sha256Glb": "92da0a6f5f10fc8d918db4b38152fdf69132c80435634cae2721b283edc19390",
+      "triangles": 996,
+      "octetsGlb": 123304,
+      "pngInspectes": 12,
+      "inchangé": true
+    },
+    "verificationDistanteCommuniquee": {
+      "date": "2026-09-20T14:27:43.312Z",
+      "nombreDepots": 0,
+      "origine": "Coordinateur, lecture authentifiée réussie. Revalidation avant intégration à sa charge."
+    }
+  },
+  "sha256Glb": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9",
+  "triangles": 6308,
+  "budgetTriangles": 9000,
+  "primitives": 9,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "noeuds": [
+    "base",
+    "corps",
+    "module_antenne",
+    "module_radar",
+    "os_marqueur",
+    "racine",
+    "socle"
+  ],
+  "dimensionsMetres": [
+    0.6499999761581421,
+    0.6199999992847443,
+    0.8899999856948853
+  ],
+  "octetsGlb": 409812,
+  "octetsLot": 1579869,
+  "fichiers": [
+    {
+      "nom": "unite_porte_avions_base_albedo.png",
+      "octets": 458112,
+      "sha256": "538d80ec41f12745851f4954f48a5e383626ee0bd4da7476870c973d4803c4e6"
+    },
+    {
+      "nom": "unite_porte_avions_base_lod0.glb",
+      "octets": 409812,
+      "sha256": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9"
+    },
+    {
+      "nom": "unite_porte_avions_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_porte_avions_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_porte_avions_base_normale.png",
+      "octets": 584442,
+      "sha256": "369e3b2a7950e4b09e0b4b28894221e8b2abd3cb97d22bb99a9dc6ee9fb6a477"
+    },
+    {
+      "nom": "unite_porte_avions_base_rugosite.png",
+      "octets": 126371,
+      "sha256": "518d0df5808c894ff013f4f62193f9af62f9af7253a243182b9d3fd4dae82ec5"
+    }
+  ],
+  "clips": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "controles": {
+    "lot": {
+      "ok": true,
+      "rapport": "validation-lot.json",
+      "dateUtc": "2026-09-20T14:38:21.667748+00:00"
+    },
+    "typage": {
+      "ok": true,
+      "rapport": "validation-typage.json",
+      "dateUtc": "2026-09-20T14:38:24.734316+00:00"
+    },
+    "geometrieEtPng": "mesures-geometrie.json",
+    "posesThree": "mesures-poses-three-glb.json",
+    "posesNumpyB": "mesures-poses-glb.json",
+    "posesNumpyA": "mesures-gabarit-a.json",
+    "chargementNatif": "mesures-natif-glb.json",
+    "mecanique": "mesures-jeux.json"
+  },
+  "mesuresResume": {
+    "posesParGabarit": 974,
+    "pariteNumpyThreeNatifToleranceMetres": 2e-06,
+    "rayonMajoreB": 0.48234731731181696,
+    "rayonMajoreA": 0.45285364572269415,
+    "espaceDeuxVoisinsB": 0.03530536537636608,
+    "espaceDeuxVoisinsA": 0.09429270855461169,
+    "raccordsIntentionnelsMesures": 10,
+    "jeuRadarToit": 0.0045000088661907856,
+    "jeuRadarAntenne": 0.11900000169873239,
+    "jeuAntenneToit": 0.07456142658393786,
+    "jeuRessortAme": 0.0055173789546038975,
+    "separationSpires": 0.011022216553240925,
+    "couplesSpiresSondes": 243,
+    "niveauAscenseurEtPont": 0.2099999937415123,
+    "sondesAscenseur": 9,
+    "sondesCatapultes": 6,
+    "sondesPontLibre": 20,
+    "sondesMarqueur": 13,
+    "racineNonAnimee": true,
+    "tempsAnimationsMinMaxConserves": true,
+    "bouclesPoseEtVitesse": true,
+    "horsJeuTientPoseEtMasqueTemoin": true
+  },
+  "correctionsAvantGel": [
+    "Récepteur radar raccordé à son bras prolongé.",
+    "Réservations réelles dans le pont pour plateforme affleurante et voies de lancement.",
+    "Radar relevé de 4 mm pour dégager son bras du toit.",
+    "Roulis de déplacement uniaxial pour raccordement de vitesse."
+  ],
+  "limites": [
+    "Aucun rendu, capture, contrôle visuel, appréciation artistique à 65 degrés ou 48 px/m.",
+    "Aucun test général, build, téléphone ou FPS.",
+    "Gabarits a/b et clips isolés uniquement ; c, transitions et mélanges exclus.",
+    "Sol mesuré aux poses ; rayon majoré continûment.",
+    "Distances localisées et sondes ponctuelles ; aucune certification globale des collisions internes.",
+    "Ascenseur et catapultes rigides, vitrages opaques, atlas de matières répété.",
+    "PNG non chargés dans le contrôle natif ; références et données contrôlées séparément.",
+    "Aucun maître HD ou bake, effets de bouche et lisibilité à apprécier en jeu.",
+    "Aucun lot officiel, actif, alias, registre, plan, fichier partagé ou opération Git par le spécialiste."
+  ],
+  "rapports": [
+    {
+      "nom": "README.md",
+      "octets": 8267,
+      "sha256": "daaf8363a2e846102a6d40710fcd0072a6497a89e732218ab20897fd2d26a82c"
+    },
+    {
+      "nom": "controle-lot.log",
+      "octets": 575,
+      "sha256": "e5a1f707bcbc5a77832a64c8fb6759e380bbceb5540a3a5f4b1d6dac0cd7656c"
+    },
+    {
+      "nom": "controle-typage.log",
+      "octets": 53,
+      "sha256": "3a0d5d509b197f846df6c72f7b6ad0e6bf7e737d9b6c9e53ada8ef604b22d4ee"
+    },
+    {
+      "nom": "fabrication.json",
+      "octets": 3180,
+      "sha256": "8bcbdc9d1744baf0e7cb956e95c9c9deddf3f9e2b537f95a93c827185fd1768b"
+    },
+    {
+      "nom": "inspection-ancien-candidat.json",
+      "octets": 16440,
+      "sha256": "79abe0b276e3d138c86e048ff6534f4d262db52404c5dc40635ce36706c20990"
+    },
+    {
+      "nom": "mesures-gabarit-a.json",
+      "octets": 3076,
+      "sha256": "296d9258db993e4bad571ef35ec6875f310d8c0ca607dd168c21d5a45d99b84b"
+    },
+    {
+      "nom": "mesures-geometrie.json",
+      "octets": 2665,
+      "sha256": "a9ef6fa369e25398a457cf0342d666f3e2dc71e00194a1a5bd5e4c4b4536d8e2"
+    },
+    {
+      "nom": "mesures-jeux.json",
+      "octets": 9782,
+      "sha256": "0f6de275d12c9476f222fd996e935e6e0ad5d690a7582fe0c98b6ffe51c432f8"
+    },
+    {
+      "nom": "mesures-natif-glb.json",
+      "octets": 2113,
+      "sha256": "b8e82c20a547e6f257d6f7f4c124f4dd5a4c1994568a69459d1fb2c934616c05"
+    },
+    {
+      "nom": "mesures-poses-glb.json",
+      "octets": 4365,
+      "sha256": "e9e2714dcf928332403cfcb6c7cc3987271d6d70f502c4aed250474d971e6093"
+    },
+    {
+      "nom": "mesures-poses-three-glb.json",
+      "octets": 2137,
+      "sha256": "321a71076196dfae3c6b9cfdf9a5110939323670a633f8298554d8d57682a21a"
+    },
+    {
+      "nom": "textures-fabrication.json",
+      "octets": 2345,
+      "sha256": "e6bcacb9ad2d95fbee966a47941c46966da62eb555876016b445a3c49466be8f"
+    },
+    {
+      "nom": "validation-lot.json",
+      "octets": 693,
+      "sha256": "b27ab5212fdfe19c6599022bc4356b7ae944c00bd8eb549d8e6d370dd927830c"
+    },
+    {
+      "nom": "validation-typage.json",
+      "octets": 760,
+      "sha256": "f51adfce41e4fee7d7db427a7dc388f40d83ae245d191de65a94f20aa64aba6b"
+    }
+  ],
+  "sources": [
+    {
+      "nom": "README.md",
+      "octets": 8267,
+      "sha256": "daaf8363a2e846102a6d40710fcd0072a6497a89e732218ab20897fd2d26a82c"
+    },
+    {
+      "nom": "assembler-revue.py",
+      "octets": 5789,
+      "sha256": "c2be0f956d0750f82ad0e936f3eeecc2ebeefce45a736ef1a9eb782bc643775a"
+    },
+    {
+      "nom": "generer.ts",
+      "octets": 20596,
+      "sha256": "72e143016214475a0ad82342c596476ef0c10cf09f7325e9ef8b71c4907dbbc9"
+    },
+    {
+      "nom": "geometrie.py",
+      "octets": 4172,
+      "sha256": "ddeb1d2de8521b9dffa1704c6f55a302a489457deb05f47fbe007155631b0eb1"
+    },
+    {
+      "nom": "gltf.ts",
+      "octets": 10685,
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "nom": "inspecter-ancien.py",
+      "octets": 2281,
+      "sha256": "fe8325f7c7f02e17a092888c7abd89814109e91367f39ead98d314c5121ea8c9"
+    },
+    {
+      "nom": "mesurer-gabarit-a.py",
+      "octets": 2703,
+      "sha256": "0f420be9bab18aa6c0050fb6d68a23bcfdcf62feaddf08c1e3a942e69cfcc8b8"
+    },
+    {
+      "nom": "mesurer-jeux.py",
+      "octets": 8172,
+      "sha256": "7b0de86cbd62117bc3a688cd9abf97745bc5a9ff01047b9440d56d5d64a9df75"
+    },
+    {
+      "nom": "mesurer-natif.ts",
+      "octets": 4117,
+      "sha256": "1f5dfd3e5f051323c5c66eb531c954cf8fa010630716f171516c36db780518cc"
+    },
+    {
+      "nom": "mesurer-poses.py",
+      "octets": 9138,
+      "sha256": "29070b6a829050462661efdc0609e6db008b680c9c8b4c2f0c2fd2d0c71959c3"
+    },
+    {
+      "nom": "mesurer-poses.ts",
+      "octets": 5263,
+      "sha256": "6980a5db4fa63e2dc25d1d8cf43f9c80c94d5579b6cf57c9dd9878e29fcbe703"
+    },
+    {
+      "nom": "mesurer.py",
+      "octets": 9022,
+      "sha256": "777aab7cb652f4376c6cddfc30929ef6cde621aaa73b41311c2de5c6446cfcf3"
+    },
+    {
+      "nom": "textures.py",
+      "octets": 5644,
+      "sha256": "60758df4efb5404b15f3744c347ba1d990fd369ab7a002dd29fdd4382c41e492"
+    },
+    {
+      "nom": "verifier.py",
+      "octets": 1691,
+      "sha256": "0218664297160be7217e18dc68a476edd9095d843ed4e47bb9d8ee0dd10aadb3"
+    }
+  ]
+}

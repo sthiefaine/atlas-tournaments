@@ -1,0 +1,90 @@
+{
+  "id": "unite_porte_avions_base",
+  "methode": "GLTFLoader natif, seules références de cartes retirées en mémoire ; SkeletonUtils.clone et AnimationMixer sans rendu. Géométrie et clips inchangés.",
+  "clonesNoeudsIndependants": true,
+  "pivotRadarFixeDansCorps": true,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 194,
+      "min": [
+        -0.32499998807907104,
+        0,
+        -0.4449999928474426
+      ],
+      "max": [
+        0.32499998807907104,
+        0.6202070936954718,
+        0.4449999928474426
+      ],
+      "rayon": 0.48002603701168617
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "min": [
+        -0.32528373315986003,
+        0.004481529746167045,
+        -0.4449999928474426
+      ],
+      "max": [
+        0.32528373315986003,
+        0.634641117338677,
+        0.4449999928474426
+      ],
+      "rayon": 0.48013523001196506
+    },
+    {
+      "nom": "tir",
+      "poses": 197,
+      "min": [
+        -0.32499998807907104,
+        7.152557379708213e-9,
+        -0.4451719817649805
+      ],
+      "max": [
+        0.32499998807907104,
+        0.624452084878959,
+        0.4450879901941525
+      ],
+      "rayon": 0.4801854807503876
+    },
+    {
+      "nom": "touche",
+      "poses": 195,
+      "min": [
+        -0.32602052527587455,
+        7.152557379708213e-9,
+        -0.4452810810568233
+      ],
+      "max": [
+        0.32603032630305734,
+        0.6506960344256516,
+        0.4457225504585318
+      ],
+      "rayon": 0.4804242563881401
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 195,
+      "min": [
+        -0.3253881248109506,
+        7.152557379708213e-9,
+        -0.4449999928474426
+      ],
+      "max": [
+        0.32499998807907104,
+        0.636390380777492,
+        0.4452369263070306
+      ],
+      "rayon": 0.48002603701168617
+    }
+  ],
+  "limites": [
+    "Textures non chargées dans ce contrôle natif ; références contrôlées séparément.",
+    "Chaque clip isolé, transitions exclues.",
+    "Aucun rendu ni appréciation artistique."
+  ],
+  "approbationArtistique": false
+}

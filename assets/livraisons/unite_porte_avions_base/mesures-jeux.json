@@ -1,0 +1,421 @@
+{
+  "id": "unite_porte_avions_base",
+  "sha256Glb": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9",
+  "approbationArtistique": false,
+  "methode": "Triangles GLB relus par extras.pieces, distances localisées, raccords et sondes ponctuelles ; enveloppes mobiles dans le repère corps commun. Aucun rendu.",
+  "ressort": {
+    "tours": 3,
+    "segments": 48,
+    "diametreFil": 0.0084,
+    "diametreFouet": 0.021,
+    "couplesSegmentsSondes": 243,
+    "separationPortionsDistinctes": 0.011022216553240925,
+    "jeuAme": 0.0055173789546038975
+  },
+  "distancesTriangles": [
+    {
+      "nom": "ressort_ame",
+      "minimumMetres": 0.0055173789546038975,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 5028,
+      "traversees": 0
+    }
+  ],
+  "raccords": [
+    {
+      "pieces": [
+        "bras_recepteur",
+        "recepteur"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 8.673617379884035e-19,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 2060,
+      "traversees": 84
+    },
+    {
+      "pieces": [
+        "dos_radar",
+        "axe_radar"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 8.220513283004997e-05,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1118,
+      "traversees": 129
+    },
+    {
+      "pieces": [
+        "dos_radar",
+        "parabole"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 8.267860286484177e-09,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 5573,
+      "traversees": 96
+    },
+    {
+      "pieces": [
+        "axe_radar",
+        "support_radar"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 4112,
+      "traversees": 150
+    },
+    {
+      "pieces": [
+        "console_antenne",
+        "jambe_console"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0005802658255835157,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 391,
+      "traversees": 49
+    },
+    {
+      "pieces": [
+        "console_antenne",
+        "embase_antenne"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0002501350840583667,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 866,
+      "traversees": 78
+    },
+    {
+      "pieces": [
+        "jambe_console",
+        "ilot_bas"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00019495708163288955,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 174,
+      "traversees": 50
+    },
+    {
+      "pieces": [
+        "guides_ascenseur",
+        "ascenseur_affleurant"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.0004063790775338801,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 350,
+      "traversees": 48
+    },
+    {
+      "pieces": [
+        "ceinture_flottaison",
+        "borde_evase"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 5.179296652691787e-06,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 594,
+      "traversees": 87
+    },
+    {
+      "pieces": [
+        "encorbellement_pont",
+        "pont_envol"
+      ],
+      "contactIntentionnel": true,
+      "minimumMetres": 0.00040816513492595555,
+      "minimumExact": true,
+      "borneInferieureSiNonExacte": null,
+      "pairesFaces": 1803,
+      "traversees": 198
+    }
+  ],
+  "posesModules": [
+    {
+      "clip": "repos",
+      "poses": 194,
+      "radarToitSeparationY": 0.004500008866190897,
+      "radarAntenneSeparationZ": 0.11900000169873239,
+      "antenneToitSeparationZ": 0.08107925894088874
+    },
+    {
+      "clip": "deplacement",
+      "poses": 193,
+      "radarToitSeparationY": 0.0045000088661907856,
+      "radarAntenneSeparationZ": 0.11900000169873239,
+      "antenneToitSeparationZ": 0.0787851439507285
+    },
+    {
+      "clip": "tir",
+      "poses": 197,
+      "radarToitSeparationY": 0.0045000088661907856,
+      "radarAntenneSeparationZ": 0.20099999651312822,
+      "antenneToitSeparationZ": 0.0814999961480498
+    },
+    {
+      "clip": "touche",
+      "poses": 195,
+      "radarToitSeparationY": 0.0045000088661907856,
+      "radarAntenneSeparationZ": 0.19406142694901635,
+      "antenneToitSeparationZ": 0.07456142658393786
+    },
+    {
+      "clip": "hors_jeu",
+      "poses": 195,
+      "radarToitSeparationY": 0.0045000088661907856,
+      "radarAntenneSeparationZ": 0.18855633389864462,
+      "antenneToitSeparationZ": 0.081495191875965
+    }
+  ],
+  "ascenseur": {
+    "niveauPontY": 0.2099999937415123,
+    "niveauPlateformeY": 0.2099999937415123,
+    "sondes": [
+      {
+        "x": -0.2,
+        "z": -0.25,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.2,
+        "z": -0.166,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.2,
+        "z": -0.08,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.119,
+        "z": -0.25,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.119,
+        "z": -0.166,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.119,
+        "z": -0.08,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.04,
+        "z": -0.25,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.04,
+        "z": -0.166,
+        "surfaceY": 0.2099999937415123
+      },
+      {
+        "x": -0.04,
+        "z": -0.08,
+        "surfaceY": 0.2099999937415123
+      }
+    ],
+    "ouvertureReelle": true
+  },
+  "catapultes": [
+    {
+      "x": -0.158,
+      "fondVoieY": [
+        0.1994999948143959,
+        0.1994999948143959,
+        0.1994999948143959
+      ],
+      "hautRailsY": 0.21199999779462814,
+      "saillieRailsSurPont": 0.0019999977946281444
+    },
+    {
+      "x": -0.09,
+      "fondVoieY": [
+        0.1994999948143959,
+        0.1994999948143959,
+        0.1994999948143959
+      ],
+      "hautRailsY": 0.21199999779462814,
+      "saillieRailsSurPont": 0.0019999977946281444
+    }
+  ],
+  "sondesPontLibre": [
+    {
+      "x": -0.25,
+      "z": 0.035,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.25,
+      "z": 0.11,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.25,
+      "z": 0.2,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.25,
+      "z": 0.27,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.205,
+      "z": 0.035,
+      "hauteurPremiereSurface": 0.20999999374151224
+    },
+    {
+      "x": -0.205,
+      "z": 0.11,
+      "hauteurPremiereSurface": 0.20999999374151224
+    },
+    {
+      "x": -0.205,
+      "z": 0.2,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.205,
+      "z": 0.27,
+      "hauteurPremiereSurface": 0.2099999937415123
+    },
+    {
+      "x": -0.045,
+      "z": 0.035,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": -0.045,
+      "z": 0.11,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": -0.045,
+      "z": 0.2,
+      "hauteurPremiereSurface": 0.20999999374151251
+    },
+    {
+      "x": -0.045,
+      "z": 0.27,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": 0,
+      "z": 0.035,
+      "hauteurPremiereSurface": 0.20999999374151251
+    },
+    {
+      "x": 0,
+      "z": 0.11,
+      "hauteurPremiereSurface": 0.20999999374151251
+    },
+    {
+      "x": 0,
+      "z": 0.2,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": 0,
+      "z": 0.27,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": 0.045,
+      "z": 0.035,
+      "hauteurPremiereSurface": 0.20999999374151251
+    },
+    {
+      "x": 0.045,
+      "z": 0.11,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": 0.045,
+      "z": 0.2,
+      "hauteurPremiereSurface": 0.20999999374151235
+    },
+    {
+      "x": 0.045,
+      "z": 0.27,
+      "hauteurPremiereSurface": 0.20999999374151235
+    }
+  ],
+  "sondesMarqueur": [
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.055499996587634104,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    },
+    {
+      "profondeur": 0.0554999965876341,
+      "avantLibreSur": 0.65
+    }
+  ],
+  "limites": [
+    "Mesures localisées, aucune certification globale des collisions internes.",
+    "Sondes ponctuelles, aucune preuve de toute section continue.",
+    "Équipements rigides, ascenseur immobile affleurant, catapultes fixes.",
+    "Chaque clip isolé, transitions et mélanges exclus.",
+    "Aucun rendu, appréciation artistique ou FPS."
+  ]
+}

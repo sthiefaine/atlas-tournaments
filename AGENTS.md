@@ -42,6 +42,10 @@ Lance-missiles sol-air poussé en `211ef1e`, GLB et cinq PNG confirmés en ligne
 
 Lance-missiles sol-sol intégré : 8 980 triangles, huit primitives, 1 837 485 octets. Deux chenilles à dix galets et 92 patins, huit logements creux sur caisson inclinable, fouet sur ressort ; 976 poses par gabarit a/b, rayons continus majorés 0,478877 / 0,498268 m. Galets voisins et suspension corrigés ; 41 distances positives, 136 sondes internes et 272 sondes de tir libres devant la cabine. Contrôle de lot et typage réussis, aucun rendu ni approbation artistique. Vingt-six modèles livrés.
 
+Sol-sol poussé en `35e2405`, GLB et cinq PNG confirmés en ligne par SHA, présence dans l’inventaire du jeu vérifiée. Porte-avions suivant : `unite_porte_avions_base`, spécialiste `modele_23_porte_avions`, lecture distante du 20 septembre à 14:27 UTC sans upload, aucun actif ni kit. Ancien candidat SHA `92da0a6f5f10fc8d918db4b38152fdf69132c80435634cae2721b283edc19390`. Gabarit par défaut des styles sans clé : a, mesuré explicitement avec b depuis le sol-sol. Attendre FINAL gelé avant intégration.
+
+Porte-avions intégré : 6 308 triangles, neuf primitives, 1 579 869 octets. Pont dégagé, ascenseur affleurant, îlot avancé, radar et fouet distincts ; 974 poses concordantes NumPy/Three/GLTFLoader natif, rayons majorés a/b 0,452854 / 0,482347 m. Récepteur raccordé et radar dégagé du toit de 4,5 mm. Contrôle de lot et typage réussis ; aucune image ni approbation artistique. Vingt-sept modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

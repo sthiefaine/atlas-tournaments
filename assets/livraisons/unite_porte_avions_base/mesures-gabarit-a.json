@@ -1,0 +1,101 @@
+{
+  "id": "unite_porte_avions_base",
+  "sha256Glb": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9",
+  "gabarit": "a",
+  "methode": "Relecture NumPy du GLB, transformation S(.9,.98,1.06) @ RY(pi/2) après les animations, conformément à conformerModele ; majoration continue par vitesse bornée b × 1.06 et témoin local × 1.06.",
+  "origineRuntime": "src/render3d/modeles.ts PROPORTIONS et conformerModele ; src/assets/spec.ts gabaritDe utilise a si la clé manque au style.",
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 194,
+      "rayonHorizontalMax": 0.4436269691271061,
+      "rayonHorizontalMajorationContinue": 0.45285364572269415,
+      "ecartDeuxVoisinsTousCaps": 0.09429270855461169,
+      "min": [
+        -0.4004999935626984,
+        0.0,
+        -0.3444999873638153
+      ],
+      "max": [
+        0.4004999935626984,
+        0.6078029518247546,
+        0.3444999873638153
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "poses": 193,
+      "rayonHorizontalMax": 0.44375972013190956,
+      "rayonHorizontalMajorationContinue": 0.45285364572269415,
+      "ecartDeuxVoisinsTousCaps": 0.09429270855461169,
+      "min": [
+        -0.4004999935626984,
+        0.004391899100647925,
+        -0.3448007571596779
+      ],
+      "max": [
+        0.4004999935626984,
+        0.6219482950551473,
+        0.3448007571596779
+      ]
+    },
+    {
+      "nom": "tir",
+      "poses": 197,
+      "rayonHorizontalMax": 0.44376671630278874,
+      "rayonHorizontalMajorationContinue": 0.45285364572269415,
+      "ecartDeuxVoisinsTousCaps": 0.09429270855461169,
+      "min": [
+        -0.40065478357930395,
+        7.009506232114049e-09,
+        -0.3444999873638153
+      ],
+      "max": [
+        0.40057919117592344,
+        0.6119630432132198,
+        0.3444999873638153
+      ]
+    },
+    {
+      "nom": "touche",
+      "poses": 195,
+      "rayonHorizontalMax": 0.444041032745653,
+      "rayonHorizontalMajorationContinue": 0.45285364572269415,
+      "ecartDeuxVoisinsTousCaps": 0.09429270855461169,
+      "min": [
+        -0.4007529729410455,
+        7.009506232114049e-09,
+        -0.3455921459174389
+      ],
+      "max": [
+        0.40115029541849057,
+        0.6376821138458132,
+        0.34558175680209513
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 195,
+      "rayonHorizontalMax": 0.4436269691271061,
+      "rayonHorizontalMajorationContinue": 0.45285364572269415,
+      "ecartDeuxVoisinsTousCaps": 0.09429270855461169,
+      "min": [
+        -0.4004999935626984,
+        7.009506232114049e-09,
+        -0.3444999873638153
+      ],
+      "max": [
+        0.40071323366986095,
+        0.6236625730381797,
+        0.3449114122871311
+      ]
+    }
+  ],
+  "limites": [
+    "Chaque clip isolé ; transitions entre clips exclues.",
+    "Contrôle numérique d’enveloppe, pas de rendu, FPS ou approbation artistique.",
+    "Les distances internes b restent positives après cette application affine inversible, mais leur valeur est transformée.",
+    "Gabarit c non certifié."
+  ],
+  "approbationArtistique": false
+}

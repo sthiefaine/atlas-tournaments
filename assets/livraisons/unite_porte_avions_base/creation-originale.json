@@ -1,0 +1,182 @@
+{
+  "id": "unite_porte_avions_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/unite_porte_avions_base",
+  "fichiers": [
+    {
+      "nom": "unite_porte_avions_base_albedo.png",
+      "sha256": "538d80ec41f12745851f4954f48a5e383626ee0bd4da7476870c973d4803c4e6",
+      "octets": 458112
+    },
+    {
+      "nom": "unite_porte_avions_base_lod0.glb",
+      "sha256": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9",
+      "octets": 409812
+    },
+    {
+      "nom": "unite_porte_avions_base_masque_equipe.png",
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549",
+      "octets": 487
+    },
+    {
+      "nom": "unite_porte_avions_base_metal.png",
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9",
+      "octets": 645
+    },
+    {
+      "nom": "unite_porte_avions_base_normale.png",
+      "sha256": "369e3b2a7950e4b09e0b4b28894221e8b2abd3cb97d22bb99a9dc6ee9fb6a477",
+      "octets": 584442
+    },
+    {
+      "nom": "unite_porte_avions_base_rugosite.png",
+      "sha256": "518d0df5808c894ff013f4f62193f9af62f9af7253a243182b9d3fd4dae82ec5",
+      "octets": 126371
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T14:41:32.913Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/unite_porte_avions_base/avant-92da0a6f5f10fc8d918db4b38152fdf69132c80435634cae2721b283edc19390",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_lod0.glb",
+      "sha256": "92da0a6f5f10fc8d918db4b38152fdf69132c80435634cae2721b283edc19390",
+      "octets": 123304
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/unite_porte_avions_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/unite_porte_avions_base/version-candidat.json",
+      "sha256": "fda7e86a0db7f83d56bfd01a4c756a197f310497312e5ad6566ab395d57df4ff",
+      "octets": 53
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_lod0.glb",
+      "sha256": "92da0a6f5f10fc8d918db4b38152fdf69132c80435634cae2721b283edc19390",
+      "octets": 123304
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842
+    },
+    {
+      "chemin": "public/assets/candidats/unite_porte_avions_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842
+    }
+  ],
+  "approbationArtistique": false
+}

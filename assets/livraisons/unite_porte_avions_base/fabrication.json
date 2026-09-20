@@ -1,0 +1,159 @@
+{
+  "id": "unite_porte_avions_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "sourceExterne": false,
+    "ancienCandidatImporte": false
+  },
+  "triangles": 6308,
+  "budgetTriangles": 9000,
+  "octetsGlb": 409812,
+  "sha256Glb": "5d19a909650aed2953ffa0c9a441b36eed989592c3ec42cd576ab395c20a81b9",
+  "bornes": {
+    "min": [
+      -0.32499998807907104,
+      0,
+      -0.4449999928474426
+    ],
+    "max": [
+      0.32499998807907104,
+      0.6199999992847443,
+      0.4449999928474426
+    ],
+    "dimensions": [
+      0.6499999761581421,
+      0.6199999992847443,
+      0.8899999856948853
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "p": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "p": [
+        0,
+        0.18,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "p": [
+        0,
+        -0.18,
+        0
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "p": [
+        0.195,
+        0.297,
+        0.14
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "p": [
+        0.226,
+        0.183,
+        -0.105
+      ]
+    },
+    "os_marqueur": {
+      "parent": "corps",
+      "p": [
+        0.224,
+        0.068,
+        0.295
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "p": [
+        0.258,
+        0.29,
+        0.1
+      ]
+    }
+  },
+  "noeuds": [
+    "racine",
+    "corps",
+    "base",
+    "module_radar",
+    "module_antenne",
+    "os_marqueur",
+    "socle"
+  ],
+  "bilanTriangles": {
+    "encorbellement_pont": 52,
+    "ilot_bas": 28,
+    "toit_passerelle": 28,
+    "pont_envol": 124,
+    "ascenseur_affleurant": 28,
+    "guides_ascenseur": 24,
+    "puits_catapulte": 24,
+    "rails_catapulte": 48,
+    "navettes_catapulte": 56,
+    "lisses_laterales": 96,
+    "supports_defenses": 168,
+    "defenses": 384,
+    "consoles_pont": 320,
+    "semelles_consoles": 96,
+    "semelles_amarrage": 112,
+    "bittes_amarrage": 384,
+    "chapeaux_bittes": 384,
+    "galerie_passerelle": 28,
+    "cabine_passerelle": 28,
+    "vitrage_passerelle": 28,
+    "montants_avant": 96,
+    "montants_cote": 192,
+    "porte_etanche": 28,
+    "poignee_porte": 12,
+    "marches_passerelle": 48,
+    "limon_escalier": 40,
+    "ventilation_ilot": 28,
+    "grille_ilot": 12,
+    "lames_ilot": 48,
+    "support_marqueur": 28,
+    "berceau_marqueur": 24,
+    "support_radar": 96,
+    "console_antenne": 28,
+    "jambe_console": 48,
+    "support_temoin": 64,
+    "borde_evase": 52,
+    "coffrets_borde": 112,
+    "quille": 52,
+    "carene_basse": 52,
+    "ceinture_flottaison": 52,
+    "grilles_borde": 48,
+    "lames_grilles": 192,
+    "axe_radar": 96,
+    "dos_radar": 28,
+    "parabole": 768,
+    "couronne_radar": 384,
+    "bras_recepteur": 48,
+    "recepteur": 64,
+    "embase_antenne": 64,
+    "ame_ressort": 48,
+    "ressort_antenne": 576,
+    "collerette_basse": 64,
+    "collerette_haute": 64,
+    "fouet_antenne": 48,
+    "embout_antenne": 48,
+    "carter_marqueur": 12,
+    "bouche_marqueur": 128,
+    "fond_marqueur": 48,
+    "temoin_disponibilite": 28
+  },
+  "approbationArtistique": false
+}

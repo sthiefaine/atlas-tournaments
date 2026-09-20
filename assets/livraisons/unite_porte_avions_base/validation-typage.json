@@ -1,0 +1,14 @@
+{
+  "ok": true,
+  "dateUtc": "2026-09-20T14:38:24.734316+00:00",
+  "commande": "npm run typecheck",
+  "codeSortie": 0,
+  "sha256SourcesTs": {
+    "scripts/production/modeles/unite_porte_avions_base/generer.ts": "72e143016214475a0ad82342c596476ef0c10cf09f7325e9ef8b71c4907dbbc9",
+    "scripts/production/modeles/unite_porte_avions_base/gltf.ts": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779",
+    "scripts/production/modeles/unite_porte_avions_base/mesurer-natif.ts": "1f5dfd3e5f051323c5c66eb531c954cf8fa010630716f171516c36db780518cc",
+    "scripts/production/modeles/unite_porte_avions_base/mesurer-poses.ts": "6980a5db4fa63e2dc25d1d8cf43f9c80c94d5579b6cf57c9dd9878e29fcbe703"
+  },
+  "suiteTestsExecutee": false,
+  "buildExecute": false
+}

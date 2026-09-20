@@ -16847,21 +16847,14 @@
     {
       "id": "unite_porte_avions_base",
       "fichiers": [
-        "unite_porte_avions_base_lod0.glb",
         "unite_porte_avions_base_albedo.png",
-        "unite_porte_avions_base_albedo_hiver.png",
-        "unite_porte_avions_base_normale.png",
-        "unite_porte_avions_base_normale_hiver.png",
-        "unite_porte_avions_base_rugosite.png",
-        "unite_porte_avions_base_rugosite_hiver.png",
-        "unite_porte_avions_base_metal.png",
-        "unite_porte_avions_base_metal_hiver.png",
+        "unite_porte_avions_base_lod0.glb",
         "unite_porte_avions_base_masque_equipe.png",
-        "unite_porte_avions_base_masque_equipe_hiver.png",
-        "unite_porte_avions_base_emission.png",
-        "unite_porte_avions_base_emission_hiver.png"
+        "unite_porte_avions_base_metal.png",
+        "unite_porte_avions_base_normale.png",
+        "unite_porte_avions_base_rugosite.png"
       ],
-      "revision": "1be97d5d3ab620e50db07afd582aca634e3fa4dd50c29d92fd3af3dcef30bde6"
+      "revision": "c764d54c17feae08fcd3fd3380ee20074a4b36a8c8861da7fb2389d27e760ea0"
     },
     {
       "id": "unite_recon_base",
