@@ -54,7 +54,7 @@ const modeles = specs.map((s, index) => {
   };
 });
 writeFileSync(fichier, JSON.stringify({
-  version: 1, date: '2026-09-16', objectif: 'Préparer les modèles communs un par un avec un spécialiste 3D, puis pousser chaque livraison sur main.',
+  version: 1, date: new Date().toISOString().slice(0, 10), objectif: 'Préparer les modèles communs un par un avec un spécialiste 3D, puis pousser chaque livraison sur main.',
   execution: { simultaneiteModeles: 1, sourceHdImmuable: true, lod: [0], pngExternes: true, remplacementDirectApresControle: true, approbationArtistiqueAutomatique: false, testsAutomatiques: false, controleLotTechnique: true, branche: 'main' },
   perimetre: { mode: 'modeles_communs', variantesNationales: 'hors_lot', variantesRegionales: 'suspendues', nombreExclu: toutes.length - specs.length, herbePlaine: 'Rendu de sol par défaut conservé, conformément au choix du propriétaire.' },
   verificationSources: ancien?.verificationSources ?? {

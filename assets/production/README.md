@@ -10,6 +10,10 @@ Régénération de l'inventaire : `node --import tsx scripts/production/plan-mod
 
 Les rapports de performance sur téléphone restent distincts de cette production et ne sont pas inventés.
 
+Reprise du 20 septembre : les 65 fiches du stockage ont été relues ; les cinq fiches avec uploads portent les mêmes révisions que les sources déjà préparées. Le stockage est revérifié juste avant chaque intégration originale. Les secrets restent dans la configuration locale, jamais dans les manifestes.
+
+Pour une création originale, `integrer-creation-originale.ts <id> <dossier>` archive le lot précédent et vérifie que les empreintes actives n'ont pas changé depuis l'inventaire. Il refuse un upload présent ou un ancien kit national encore actif : le chargeur privilégierait ce kit et masquerait la nouvelle base. Aucun kit n'est régénéré dans cette commande. Après intégration, régénérer le plan puis appeler `finaliser-livraison.py <id> <agent>` ; vérifier le typage des nouveaux scripts avant commit. La finalisation ne publie rien : commit et push restent explicites, modèle par modèle.
+
 `plan-assets.json` contient une commande complète par spécification, les fichiers attendus et un état de présence au moment de sa génération. Régénérer avec `npm run produire:manifest` après chaque lot. L’admin propose également le téléchargement du JSON et du prompt par asset.
 
 Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. Les PNG restent externes et partagés entre les niveaux de détail. Les bases déjà livrées sont conservées. Les kits reprennent la géométrie de leur base.
@@ -18,7 +22,9 @@ Les générateurs de `scripts/production/` écrivent dans `assets/livraisons/`. 
 
 Le catalogue comprend également dix archétypes de portraits de commandants, produits séparément des unités et des paysages. Comme les autres familles, leurs candidats demandent une revue artistique.
 
-## Reproduire la production
+## Anciens générateurs par famille
+
+Ces commandes historiques ne remplacent pas la file séquentielle ci-dessus. Ne pas les lancer globalement pendant la reprise modèle par modèle.
 
 Exécuter successivement `npm run produire:unites`, `npm run produire:kits`, `npm run produire:environnement`, `npm run produire:commandants`, puis `npm run produire:manifest` et `npm run produire:bilan`, puis `npm run produire:exposer`. Les lots existants sont contrôlés avant reprise. Un candidat issu d’une version ancienne du générateur doit être archivé avant régénération ; les modèles déjà publiés ne sont pas remplacés par ces commandes.
 

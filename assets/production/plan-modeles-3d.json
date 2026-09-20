@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "date": "2026-09-16",
+  "date": "2026-09-20",
   "objectif": "Préparer les modèles communs un par un avec un spécialiste 3D, puis pousser chaque livraison sur main.",
   "execution": {
     "simultaneiteModeles": 1,
@@ -23,10 +23,12 @@
     "herbePlaine": "Rendu de sol par défaut conservé, conformément au choix du propriétaire."
   },
   "verificationSources": {
-    "date": "2026-09-16",
+    "date": "2026-09-20T10:13:30.960Z",
     "depotLocal": "inspecte",
-    "stockageDistant": "65_fiches_consultees_200",
-    "regle": "Les sources uploadées sont prioritaires et immuables. Les 5 fiches distantes déposées correspondent aux révisions préparées ; la barge provient du fichier local connu. Aucun autre dépôt distant détecté à cette date."
+    "stockageDistant": "verifie",
+    "regle": "Les sources uploadées sont prioritaires et immuables. Les 5 fiches distantes déposées correspondent aux révisions préparées ; la barge provient du fichier local connu. Aucun autre dépôt distant détecté à cette date.",
+    "fichesConsultees": 65,
+    "fichesAvecDepots": 5
   },
   "total": 65,
   "familles": {
@@ -51,7 +53,7 @@
         "nom": "military tank 3d model.glb",
         "sha256": "bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 1,
           "revisionRecente": "bd7e4df51bf5a0cdc8b34a95b036f866ccf64d362cbd1580bf4ef55675ffc989"
         }
@@ -115,7 +117,7 @@
         "nom": "military cannon vehicle 3d model.glb",
         "sha256": "38a5dbc65010bb45ec2424de7fa9c19b1e6d220ec0beb5339d2a5c35214fad5b",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 1,
           "revisionRecente": "38a5dbc65010bb45ec2424de7fa9c19b1e6d220ec0beb5339d2a5c35214fad5b"
         }
@@ -178,7 +180,7 @@
         "nature": "creation_originale",
         "manifeste": "assets/livraisons/unite_meridien_automate_base/creation-originale.json",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -241,7 +243,7 @@
         "nature": "creation_originale",
         "manifeste": "assets/livraisons/unite_transport_base/creation-originale.json",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -304,7 +306,7 @@
         "nature": "creation_originale",
         "manifeste": "assets/livraisons/unite_char_moyen_base/creation-originale.json",
         "verificationDistante": {
-          "date": "2026-09-16T13:32:54.743Z",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -343,12 +345,12 @@
         "responsabilite": "Une seule fiche à la fois ; modèle, UV, PBR, articulations et rapport honnête. Le coordinateur intègre et pousse après contrôle."
       },
       "suivi": {
-        "commit": null,
+        "commit": "bcdc0ca",
         "controle": "ok",
         "approbationArtistique": false,
         "agent": "modele_05_char_moyen",
         "etape": "integre",
-        "publication": "pret_a_pousser",
+        "publication": "poussee",
         "triangles": 5944,
         "octetsLot": 1659323,
         "revision": "b51e921800a885c5ccba5cbc20b77d1d7286cdf38ecbdffd87d91146d969a98d"
@@ -360,24 +362,29 @@
       "id": "unite_char_lourd_base",
       "famille": "unite",
       "description": "La pièce la plus lourde du plateau : large caisse chenillée aux plaques épaisses et inclinées, grosse tourelle, tube de marquage long posé sur son verrou de route au-dessus du plateau arrière. Sept galets, jupes profondes, coupole de chef de bord, câbles de remorquage lovés sur les flancs. Il doit avoir l’air cher et lent — la raison pour laquelle on hésite à l’acheter. Couleur d’équipe sur les flancs de tourelle et les jupes. Contrat de silhouette (reconnaissable à 65° au-dessus de l’horizontale) : un train de chenilles à galets visibles et patins caoutchoutés, une caisse anguleuse aux joues larges et inclinées, une tourelle pivotante, un tube de marquage long sur son verrou de route, encombrement 3 sur 3. Rôle de jeu : 15000 fonds, 4 de mouvement en chenilles, portée 1-1, vision 1. C’est la GÉOMÉTRIE DE BASE PARTAGÉE : elle ne porte ni livrée nationale ni ornement. Une seule forme, un squelette, un dépliage, un jeu de noms de nœuds — tout kit national se peint sur ce maillage-là. L’encombrement reste d’environ la moitié aux deux tiers d’une case, pour que deux unités voisines ne se touchent jamais.",
-      "etat": "a_retravailler",
+      "etat": "livre",
       "specification": "assets/specs/unite_char_lourd_base.json",
       "destination": "assets/livraisons/unite_char_lourd_base",
       "source": {
-        "nature": "aucune_source_hd_identifiee",
-        "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
+        "nature": "creation_originale",
+        "manifeste": "assets/livraisons/unite_char_lourd_base/creation-originale.json",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:23:43.827Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
       },
-      "actuel": null,
+      "actuel": {
+        "chemin": "public/assets/modeles/unite_char_lourd_base_lod0.glb",
+        "sha256": "562e931e5a450875dd8d4b898de16fcc8577c3439bdb99bcab38cfe8c053376e",
+        "triangles": 8848,
+        "octetsGlb": 679976
+      },
       "candidat": {
         "chemin": "assets/livraisons/unite_char_lourd_base/unite_char_lourd_base_lod0.glb",
-        "sha256": "a0750ff6917d4e0f9b8e39163b14af0a74e9d35f64760f203de6f053d722a496",
-        "triangles": 996,
-        "octetsGlb": 123176
+        "sha256": "562e931e5a450875dd8d4b898de16fcc8577c3439bdb99bcab38cfe8c053376e",
+        "triangles": 8848,
+        "octetsGlb": 679976
       },
       "budgetTriangles": 9000,
       "fichiersRequis": [
@@ -402,8 +409,14 @@
       },
       "suivi": {
         "commit": null,
-        "controle": "non_effectue",
-        "approbationArtistique": false
+        "controle": "ok",
+        "approbationArtistique": false,
+        "agent": "modele_06_char_lourd",
+        "etape": "integre",
+        "publication": "pret_a_pousser",
+        "triangles": 8848,
+        "octetsLot": 1849551,
+        "revision": "bf7a73d9fdb7596c5a1fbc5e13bc6b3000bd7215c4d8ae11d0f49204c8cc460a"
       },
       "prompt": "Produis et intègre l’asset unite_char_lourd_base dans le dépôt Atlas Tournament.\nLis AGENTS.md, BRIEF.md, doc/11-assets-spec.md et assets/specs/unite_char_lourd_base.json avant de travailler. La spécification versionnée fait foi.\nSOURCE GLB PRIORITAIRE\nAvant toute modification, consulte GET /api/admin/assets/unite_char_lourd_base/sources avec la session administrateur ou le service de stockage configuré. Ne publie aucun jeton. Recherche la dernière source déposée ; fixe sa révision SHA-256 dans le compte rendu avant de travailler. Inspecte ce GLB et ses textures : c’est la source à préparer, même si un ancien lot existe dans le dépôt. Préserve son apparence ; ne le remplace jamais par une génération procédurale ou par un autre modèle. Si la source est inaccessible ou absente, demande le GLB au propriétaire et suspends sa préparation : aucun repli silencieux. DÉCISION DU PROPRIÉTAIRE DU 14 SEPTEMBRE 2026 : conserver Three.js et WebGPU. Archive le GLB HD et toutes ses textures à leur résolution originale, avec leur SHA-256 ; ne modifie jamais ce maître. Produis à partir de lui un seul LOD0 optimisé pour le jeu. La réduction de géométrie et le redimensionnement des textures sont désormais autorisés sur ce dérivé. Préserve les volumes, les articulations et les coutures UV ; conserve les détails de surface dans les cartes de normales, avec transfert HD vers le maillage optimisé si nécessaire. Respecte le budget de la spécification ; ne le relève pas au nombre de triangles de la source. Les budgets initiaux doivent être ajustés avec les relevés du diagnostic sur téléphone, jamais avec des FPS inventés. Documente méthode, limites, triangles, poids et résolutions avant/après ; distingue la réutilisation des normales existantes d’un nouveau transfert de détails réellement effectué. Les contraintes de dimensions, nommage, animations, PNG externes et validation restent applicables. Pour un kit, la géométrie et les UV de la base restent obligatoires ; signale une source incompatible. Indique la provenance et l’empreinte source dans la livraison.\n\nFichiers déjà présents : unite_char_lourd_base_lod0.glb, unite_char_lourd_base_albedo.png, unite_char_lourd_base_normale.png, unite_char_lourd_base_rugosite.png, unite_char_lourd_base_masque_equipe.png. Ils servent de référence technique, jamais de remplacement du GLB source uploadé.\nFichiers obligatoires manquants : aucun ; contrôler et améliorer le lot existant selon la demande.\nRéférence : unite_antiair_base. Lis sa fiche et les fichiers disponibles ; sa présence ne vaut pas approbation artistique.\nLivre uniquement le modèle LOD0. Aucun LOD supplémentaire. Conserve les PNG externes sans copie embarquée. Aucun nouvel asset régional ou national hors de cette commande. Pour un kit, conserve exactement la géométrie, les UV, les nœuds et les animations de la base.\nPrépare le lot dans assets/livraisons/unite_char_lourd_base/ puis lance npm run controler:asset -- --spec assets/specs/unite_char_lourd_base.json --lot assets/livraisons/unite_char_lourd_base. Corrige tous les refus avant intégration. Après contrôle technique réussi, remplace directement le modèle actif dans public/assets/modeles avec ce lot. Le propriétaire a supprimé l’étape d’approbation visuelle préalable : ne demande pas de confirmation. Respecte les consignes du dépôt sur les contrôles visuels et ne prétends pas avoir approuvé automatiquement la qualité artistique. Rends les fichiers, le verdict et le poids total.\n\nCONTRAT COMPLET\nYou are producing a game-ready 3D asset for a turn-based tactics game.\nFollow every constraint below literally: an automatic check reads them back on delivery and refuses the file.\n\n## What it is\n\nThe heaviest piece on the board: a wide tracked hull with thick sloped plates, a large turret and a long marker tube resting in a travel lock over the rear deck. Seven road wheels, deep skirts, a commander cupola, tow cables coiled on the flanks. It must look expensive and slow — the reason a player thinks twice before buying it. Team colour on turret sides and skirt panels. Silhouette contract (must be recognisable from a 65-degree top-down camera): a tracked chassis with visible road wheels and a rubber-padded track run, a blocky angular hull with wide sloped cheeks, a rotating turret, a long marker tube on a travel lock, bulk class 3 of 3. Game role: 15000 funds, 4 movement on chenilles, range 1-1, vision 1. This is the SHARED BASE GEOMETRY: it carries no national livery and no ornament. One shape, one skeleton, one UV layout, one node naming — every national kit is painted on this exact mesh. Bulk stays roughly one half to two thirds of a tile so that two adjacent units never touch.\n\n## Style\n\nStylised realism: real materials — painted sheet metal, matte technical fabric, washed concrete, worn wood, dusty rubber — on simple, readable volumes. Competition equipment kept in good repair, marked by use, never damaged by violence. Saturated colours, figurine proportions. The silhouette must stay recognisable from a 65° top-down camera at about 48 pixels per metre.\n\nArt direction: Réaliste dans les matières, léger dans l’esprit. Materials: Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.\nKeywords: stylised realism; clean readable silhouette; top-down tactics board; sports tournament equipment; physically based materials; tournament vehicle; crisp panel lines; neutral undressed base mesh. Avoid: no readable text or numbers; no real-world insignia or flags; no grime of battle, no damage, no blood; no thin spikes or antennas under 2 cm.\n\nForbidden, without exception: no symboles reels, no drapeaux reels, no texte lisible, no sang, no marques deposees, no personnes reelles, no violence explicite. These are tournament athletes with marker launchers, not soldiers.\n\n## Size and pivot\n\nBounding box 0.7 m (± 0.08) wide, 0.58 m (± 0.08) tall, 0.95 m (± 0.08) deep.\nOrigin: centre of the footprint, at ground level. Up axis **+Y**, front **+Z**, resting on the ground. 1 unit = 1 metre.\n\n## Geometry and naming\n\nglTF 2.0 binary (.glb), PBR metallic-roughness. One file per level of detail: `unite_char_lourd_base_lod0.glb` ≤ 9000 triangles.\nAt most 3 materials, named exactly: `mat_corps`, `mat_details`.\nRequired nodes (unique names; additional skeleton bones allowed): `racine`, `corps`, `base`, `socle`, `module_tourelle`, `module_canon_long`.\n\n## Textures\n\nOne file per channel, using the declared format: `unite_char_lourd_base_albedo.png` (albedo, 1024×1024, png, required; Couleurs de base ; les zones d’équipe restent neutres, la teinte vient du masque.), `unite_char_lourd_base_normale.png` (normale, 1024×1024, png, required; Relief de tôlerie, rivets, tissus et grain de caoutchouc.), `unite_char_lourd_base_rugosite.png` (rugosite, 512×512, png, required; Contraste métal poli / peinture mate / caoutchouc : c’est elle qui vend la matière.), `unite_char_lourd_base_metal.png` (metal, 512×512, png, optional; Seulement si des pièces nues subsistent ; une valeur uniforme sinon.), `unite_char_lourd_base_masque_equipe.png` (masque_equipe, 512×512, png, required; Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale.).\n**No lighting and no shadow baked into the albedo** — the game lights the scene itself, and a painted shadow becomes a permanent one that contradicts the sun at every hour and every season.\n\n## Assembly, UVs and acceptance\n\nUse three silhouette anchors from the description. Check top, three-quarter and 65 degrees above the ground at 48 CSS pixels per metre. Fine surface grain must not replace readable geometry.\nOne shared UV0 layout across LODs and all kits of this base. Preserve material assignments and named attachments. Provide vertex normals and UV0 on every triangle primitive; no negative scale or duplicate node names.\nAlbedo uses sRGB; normal, roughness, metalness, occlusion and team mask use linear data. Tangent-space normal map follows glTF (+Y/green up). glTF roughness reads G and metalness B; the rugosite PNG stores roughness in G and metalness in B (R may store occlusion). The separate metal PNG remains the editable metal channel.\nEach file must be at most 32 MiB; the complete delivery at most 96 MiB. Keep PNG textures external, shared by all LODs. Each GLB image URI must be the exact neighbouring filename, without a directory or data URI. Never embed duplicate PNG copies.\nAfter technical acceptance, replace the active game asset directly as authorized by the owner. Do not require prior human visual approval. Technical acceptance does not certify artistic quality or prove that lighting was not baked into albedo.\n\nThe **team mask** is a crisp black-and-white image: white where the team colour will be applied, black on tracks, glass, rubber, metal and skin. Paint those masked zones **neutral grey** in the albedo, never in a nation colour.\n\n## Animations\n\nClips named exactly: `repos` (2400 ms, looping), `deplacement` (1000 ms, looping), `tir` (700 ms), `touche` (500 ms), `hors_jeu` (900 ms).\nrepos: Subtle breathing or scanning; start and end transforms coincide. No root motion.\ndeplacement: Small suspension or gait motion. The game moves the root; this clip must stay in place and loop seamlessly.\ntir: Brief marker-launcher recoil followed by recovery to the working pose; no explosion or projectile mesh.\ntouche: Small readable tilt and immediate recovery; no damage or missing geometry.\nhors_jeu: Settle the hull, park the equipment and hide the readiness indicator. Hold the final slump; never explode. Rigid node transforms cannot animate PBR emission: hide or fold the indicator instead.\nFor a rigid model these are node-transform animations. `hors_jeu` is a slump and a switch-off, never an explosion.\n\n## What you will probably have to fix by hand afterwards\n\nnode names, material names, the single LOD0 model (no other LOD files), the team mask, the pivot, the animation clips. Verify every item before delivery. Technical conformance and human visual approval are separate decisions."
     },
@@ -419,7 +432,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -471,7 +484,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -523,7 +536,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -575,7 +588,7 @@
         "nature": "maitre_hd_archive",
         "manifeste": "assets/livraisons/unite_barge_base/maitre.json",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -633,7 +646,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -685,7 +698,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -738,7 +751,7 @@
         "nom": "tank 3d model.glb",
         "sha256": "82f0857a3f0074cbd2aca688ec81c2227f53fa1a1dcbba66d6579f399a513f99",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 1,
           "revisionRecente": "82f0857a3f0074cbd2aca688ec81c2227f53fa1a1dcbba66d6579f399a513f99"
         }
@@ -796,7 +809,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -848,7 +861,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -900,7 +913,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -952,7 +965,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1004,7 +1017,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1056,7 +1069,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1119,7 +1132,7 @@
         "nom": "military soldier 3d model.glb",
         "sha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 2,
           "revisionRecente": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710"
         }
@@ -1177,7 +1190,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1239,7 +1252,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1291,7 +1304,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1343,7 +1356,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1395,7 +1408,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1447,7 +1460,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1499,7 +1512,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1561,7 +1574,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1613,7 +1626,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1665,7 +1678,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1717,7 +1730,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1775,7 +1788,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1834,7 +1847,7 @@
         "nom": "modern wooden house 3d model.glb",
         "sha256": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 1,
           "revisionRecente": "71a2d4e7aeab754dfa8edc0e5708d5021e4f4bd88204654a8be20eeb168bb326"
         }
@@ -1893,7 +1906,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -1951,7 +1964,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2009,7 +2022,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2067,7 +2080,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2118,7 +2131,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2169,7 +2182,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2220,7 +2233,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2271,7 +2284,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2322,7 +2335,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2373,7 +2386,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2424,7 +2437,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2475,7 +2488,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2526,7 +2539,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2577,7 +2590,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2633,7 +2646,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2684,7 +2697,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2735,7 +2748,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2786,7 +2799,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2837,7 +2850,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2888,7 +2901,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -2944,7 +2957,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3000,7 +3013,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3056,7 +3069,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3108,7 +3121,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3160,7 +3173,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3212,7 +3225,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3264,7 +3277,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3316,7 +3329,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3368,7 +3381,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3420,7 +3433,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3472,7 +3485,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }
@@ -3524,7 +3537,7 @@
         "nature": "aucune_source_hd_identifiee",
         "action": "Rechercher un dépôt avant création ; conserver tout upload existant.",
         "verificationDistante": {
-          "date": "2026-09-16",
+          "date": "2026-09-20T10:13:30.960Z",
           "nombreDepots": 0,
           "revisionRecente": null
         }

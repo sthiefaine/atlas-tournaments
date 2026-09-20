@@ -1,5 +1,11 @@
 # AGENTS.md — passation
 
+## Reprise séquentielle — 20 septembre 2026
+
+Le char moyen a été poussé individuellement (`bcdc0ca`, 5 944 triangles). Reprise au char lourd après l'arrêt sur limite d'usage : création originale, 8 848 triangles, sept primitives, 1 849 551 octets pour GLB et PNG. Contrôle de lot et typage réussis ; positions des cinq clips et balayage de tourelle mesurés dans la case, sans contrôle visuel. Tube vers +Z en combat, vers l'arrière en déplacement. Sources sous `scripts/production/modeles/unite_char_lourd_base`, suivi des commits dans le plan JSON.
+
+Les 65 fiches distantes ont été relues le 20 septembre : mêmes cinq fiches avec uploads, aucun nouveau dépôt. L'intégrateur refuse toujours tout upload découvert avant remplacement ; il bloque aussi les anciens kits nationaux actifs qui masqueraient une nouvelle base. Avant génie/méca/recon, vérifier et archiver leurs anciens alias incompatibles, sans produire de nouveaux kits. Dates des intégrations calculées au moment du travail. Aucun test général, capture, approbation artistique ni relevé FPS téléphone.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

@@ -1,0 +1,443 @@
+{
+  "id": "unite_char_lourd_base",
+  "date": "2026-09-20",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_char_lourd_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "a0750ff6917d4e0f9b8e39163b14af0a74e9d35f64760f203de6f053d722a496",
+    "ancienCandidatTriangles": 996,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "ancienCandidatOctets": 123176,
+    "verificationSourceDistante": "Coordinateur : HTTP 200 et sources vides le 20 septembre 2026.",
+    "modeleur": "Three.js / TypeScript ; textures Python NumPy/Pillow",
+    "blenderUtilise": false,
+    "helpersLocauxCopiesDepuis": "scripts/production/modeles/unite_char_moyen_base",
+    "geometrieAncienCandidatImportee": false,
+    "ancienCandidatModifie": false
+  },
+  "dessin": {
+    "silhouette": [
+      "Caisse large aux joues inclinées, glacis en V et sept galets de route par côté.",
+      "Dix jupes profondes séparées, deux câbles lovés avec brides et refroidissement à lames.",
+      "Tourelle massive à coffre, coupole à six épiscopes, long tube chemisé à bouche creuse."
+    ],
+    "differenceCharMoyen": "Dessin des volumes et pièces propre au char lourd : nouvelle caisse à quatre sections, jupes profondes, sept galets, barbotins séparés, coupole haute, câbles et tourelle large ; aucune mise à l’échelle du maillage du char moyen.",
+    "poseReference": "Tube actif et tir orientés +Z.",
+    "poseTransport": "deplacement oriente la tourelle à 180° au-dessus du verrou arrière, racine fixe."
+  },
+  "geometrie": {
+    "lods": [
+      0
+    ],
+    "triangles": 8848,
+    "budget": 9000,
+    "primitives": 7,
+    "materiaux": [
+      "mat_corps",
+      "mat_details"
+    ],
+    "noeuds": [
+      "racine",
+      "base",
+      "corps",
+      "module_tourelle",
+      "module_canon_long",
+      "socle"
+    ],
+    "dimensionsMetres": [
+      0.7089999914169312,
+      0.5830000007413327,
+      0.9528609991073609
+    ],
+    "bornesMetres": {
+      "min": [
+        -0.3544999957084656,
+        0,
+        -0.4764305055141449
+      ],
+      "max": [
+        0.3544999957084656,
+        0.5830000007413327,
+        0.476430493593216
+      ],
+      "dimensions": [
+        0.7089999914169312,
+        0.5830000007413327,
+        0.9528609991073609
+      ]
+    },
+    "pivot": "centre de l’enveloppe de référence au sol ; racine identité",
+    "controleGeometrie": {
+      "triangles": 8848,
+      "primitives": 7,
+      "trianglesDegeneres": 0,
+      "uvTrianglesDegeneres": 0,
+      "normalesInversees": 0,
+      "normalesErreurMax": 3.657916525234839e-08,
+      "tangentesErreurMax": 3.742584198107579e-08,
+      "orthogonaliteErreurMax": 3.2718563563484664e-08,
+      "valeursFinies": true,
+      "uvDansAtlas": true,
+      "imagesExternes": true,
+      "noeudsUniques": true,
+      "racineAnimee": false,
+      "boucles": {
+        "repos": true,
+        "deplacement": true
+      },
+      "dureesClipsMs": {
+        "repos": 2400,
+        "deplacement": 1000,
+        "tir": 700,
+        "touche": 500,
+        "hors_jeu": 900
+      },
+      "horsJeuTientPoseFinale": true,
+      "masqueValeurs": [
+        0,
+        255
+      ],
+      "albedoEquipeEcartMax": 0,
+      "metalCanalBIdentique": true
+    }
+  },
+  "textures": {
+    "fichiers": [
+      {
+        "canal": "albedo",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 457074,
+        "sha256": "29aa6f8010d100e97d7127dc9133f2896b2ad87a0ceae85819730d6eabcecc1a"
+      },
+      {
+        "canal": "normale",
+        "dimensions": [
+          1024,
+          1024
+        ],
+        "mode": "RGB",
+        "octets": 584850,
+        "sha256": "3679931df127c7cae2c3b0fd78c030eef54f00df568714cfabb2ca672c6d13e9"
+      },
+      {
+        "canal": "rugosite",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "RGB",
+        "octets": 126519,
+        "sha256": "663c98fe96a7df262ea81a204b2f6f9cb677619a241fc583c9a72e8509d68e4a"
+      },
+      {
+        "canal": "metal",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "canal": "masque_equipe",
+        "dimensions": [
+          512,
+          512
+        ],
+        "mode": "L",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      }
+    ],
+    "uv0": "Atlas de matières 4×4 ; UV répétés entre pièces de même matière, gouttières de 16 px.",
+    "tangentes": "Calculées sur les maillages indexés fusionnés, explicitement exportées.",
+    "masque": "Noir/blanc 0/255, jupes et flancs de tourelle blancs, albédo strictement gris sous le masque.",
+    "normales": "+Y tangent, relief analytique de peinture, tôlerie et caoutchouc. Aucun bake HD.",
+    "canaux": "Albédo sRGB ; normale, rugosité G, métal B et masque linéaires. R=255 dans la carte rugosité. Métal éditable identique au canal B.",
+    "eclairagePeint": false,
+    "imagesExternes": true,
+    "pngEmbarques": false,
+    "variantes": []
+  },
+  "animations": {
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 2.4,
+        "pistes": [
+          "module_tourelle.quaternion"
+        ]
+      },
+      {
+        "nom": "deplacement",
+        "duree": 1,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "module_tourelle.quaternion"
+        ]
+      },
+      {
+        "nom": "tir",
+        "duree": 0.7,
+        "pistes": [
+          "module_tourelle.quaternion",
+          "module_canon_long.position",
+          "corps.quaternion"
+        ]
+      },
+      {
+        "nom": "touche",
+        "duree": 0.5,
+        "pistes": [
+          "corps.quaternion"
+        ]
+      },
+      {
+        "nom": "hors_jeu",
+        "duree": 0.9,
+        "pistes": [
+          "corps.position",
+          "corps.quaternion",
+          "module_tourelle.quaternion",
+          "module_canon_long.position",
+          "socle.scale"
+        ]
+      }
+    ],
+    "racineFixe": true,
+    "bouclesFermees": {
+      "repos": true,
+      "deplacement": true
+    },
+    "poseFinaleHorsJeuTenue": true,
+    "toucheSansDommage": true,
+    "horsJeu": "Tassement, faible inclinaison, tube rentré et témoin de disponibilité escamoté.",
+    "mesures": {
+      "methode": "AnimationMixer Three.js : clés + 21 instants uniformes, interpolation quaternion sphérique",
+      "clips": [
+        {
+          "nom": "repos",
+          "nombreEchantillons": 24,
+          "dimensionsMax": [
+            0.7089999914169312,
+            0.5830000007413327,
+            0.9531463573797471
+          ],
+          "enveloppe": {
+            "min": [
+              -0.3544999957084656,
+              0,
+              -0.4764305055141449
+            ],
+            "max": [
+              0.3544999957084656,
+              0.5830000007413327,
+              0.47671585186560217
+            ]
+          },
+          "directionTubeZ": {
+            "min": 0.9999820000517052,
+            "max": 1
+          }
+        },
+        {
+          "nom": "deplacement",
+          "nombreEchantillons": 21,
+          "dimensionsMax": [
+            0.7089999914169312,
+            0.5906052952999369,
+            0.8153829471623328
+          ],
+          "enveloppe": {
+            "min": [
+              -0.3544999957084656,
+              0,
+              -0.4860318498169807
+            ],
+            "max": [
+              0.3544999957084656,
+              0.5906052952999369,
+              0.3293510973453522
+            ]
+          },
+          "directionTubeZ": {
+            "min": -1,
+            "max": -0.9999819977460641
+          }
+        },
+        {
+          "nom": "tir",
+          "nombreEchantillons": 26,
+          "dimensionsMax": [
+            0.7089999914169312,
+            0.5868663317598429,
+            0.952861003279686
+          ],
+          "enveloppe": {
+            "min": [
+              -0.3544999957084656,
+              0,
+              -0.4764305055141449
+            ],
+            "max": [
+              0.3544999957084656,
+              0.5868663317598429,
+              0.4764304977655411
+            ]
+          },
+          "directionTubeZ": {
+            "min": 0.9999280008593824,
+            "max": 1
+          }
+        },
+        {
+          "nom": "touche",
+          "nombreEchantillons": 23,
+          "dimensionsMax": [
+            0.7091949309362668,
+            0.5954914900099431,
+            0.9587015067168896
+          ],
+          "enveloppe": {
+            "min": [
+              -0.35469493522780127,
+              0,
+              -0.4764305055141449
+            ],
+            "max": [
+              0.3544999957084656,
+              0.5954914900099431,
+              0.48227100120274474
+            ]
+          },
+          "directionTubeZ": {
+            "min": 0.9997580097814974,
+            "max": 1
+          }
+        },
+        {
+          "nom": "hors_jeu",
+          "nombreEchantillons": 24,
+          "dimensionsMax": [
+            0.7089999914169312,
+            0.583001421306252,
+            0.952861003279686
+          ],
+          "enveloppe": {
+            "min": [
+              -0.3544999957084656,
+              0,
+              -0.4764305055141449
+            ],
+            "max": [
+              0.3544999957084656,
+              0.583001421306252,
+              0.4764304977655411
+            ]
+          },
+          "directionTubeZ": {
+            "min": 0.9988991752696799,
+            "max": 1
+          }
+        }
+      ],
+      "balayageTourelle": {
+        "methode": "slerp des quaternions de 0 à π",
+        "nombreEchantillons": 41,
+        "enveloppe": {
+          "min": [
+            -0.3544999957084656,
+            0,
+            -0.4859343221888045
+          ],
+          "max": [
+            0.48236481578202045,
+            0.5830000007413327,
+            0.4787953093752365
+          ]
+        },
+        "resteDansCase": true
+      }
+    }
+  },
+  "livraison": {
+    "fichiersRuntime": [
+      {
+        "nom": "unite_char_lourd_base_albedo.png",
+        "octets": 457074,
+        "sha256": "29aa6f8010d100e97d7127dc9133f2896b2ad87a0ceae85819730d6eabcecc1a"
+      },
+      {
+        "nom": "unite_char_lourd_base_lod0.glb",
+        "octets": 679976,
+        "sha256": "562e931e5a450875dd8d4b898de16fcc8577c3439bdb99bcab38cfe8c053376e"
+      },
+      {
+        "nom": "unite_char_lourd_base_masque_equipe.png",
+        "octets": 487,
+        "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+      },
+      {
+        "nom": "unite_char_lourd_base_metal.png",
+        "octets": 645,
+        "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+      },
+      {
+        "nom": "unite_char_lourd_base_normale.png",
+        "octets": 584850,
+        "sha256": "3679931df127c7cae2c3b0fd78c030eef54f00df568714cfabb2ca672c6d13e9"
+      },
+      {
+        "nom": "unite_char_lourd_base_rugosite.png",
+        "octets": 126519,
+        "sha256": "663c98fe96a7df262ea81a204b2f6f9cb677619a241fc583c9a72e8509d68e4a"
+      }
+    ],
+    "octetsGlb": 679976,
+    "octetsRuntimeTotal": 1849551,
+    "poidsRapportsNonInclus": true
+  },
+  "controles": {
+    "controleAsset": {
+      "commande": "npm run controler:asset -- --spec assets/specs/unite_char_lourd_base.json --lot tmp/production-sequentielle/unite_char_lourd_base",
+      "codeSortie": 0,
+      "ok": true,
+      "motifs": [],
+      "revisionSha256": "562e931e5a450875dd8d4b898de16fcc8577c3439bdb99bcab38cfe8c053376e"
+    },
+    "typecheck": {
+      "commande": "npm run typecheck",
+      "codeSortie": 0,
+      "apresDerniereModificationTypescript": true
+    },
+    "mesuresGeometrie": "mesurer.py : assertions passées",
+    "mesuresMouvements": "generer.ts : clés + échantillons interpolés AnimationMixer et balayage slerp 41 poses ; toutes les enveloppes restent dans x/z ±0,5 m.",
+    "testsGeneraux": false,
+    "build": false,
+    "captures": false,
+    "inspectionVisuelle": false,
+    "fpsTelephone": null
+  },
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière créé analytiquement en espace tangent ; aucun bake HD vers low-poly.",
+    "Chenilles rigides : suspension animée sans défilement des patins.",
+    "Pose active et tir vers +Z ; deplacement tourne la tourelle à 180 degrés au-dessus du plateau arrière. Pas de clip autonome de mise en batterie, transition gérée par le mélangeur du jeu.",
+    "Verrou de route fixe ; pointage limité dans les clips livrés.",
+    "Mesure réelle sur téléphone en attente.",
+    "Atlas de matières répétées, non conçu pour peindre un numéro ou motif unique par panneau.",
+    "Les poses et le balayage sont échantillonnés par code ; ni le mélange des clips en jeu ni l’appréciation artistique n’ont été inspectés visuellement."
+  ],
+  "integration": "À réaliser par le coordinateur : archivage ancien candidat, contrôle puis activation, commit et push individuel."
+}

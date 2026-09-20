@@ -37,6 +37,10 @@ if (existsSync(`assets/sources/${id}`) || existeEntree(`${lot}/source.json`) || 
 for (const [p, reference] of [[`${lot}/${nomGlb}`, fiche.candidat], [`public/assets/modeles/${nomGlb}`, fiche.actuel]] as const) {
   if (existeEntree(p) ? empreinte(readFileSync(p)) !== reference?.sha256 : !!reference) throw new Error('Le modèle a changé depuis son inventaire');
 }
+// Le chargeur préfère un kit national à la base. Un ancien kit masquerait ce remplacement.
+const kitsActifs = spec.type === 'unite' ? readdirSync('public/assets/modeles').filter(n =>
+  n.startsWith('kit_') && n.endsWith(`_${spec.cle.replace(/_base$/, '')}_lod0.glb`)) : [];
+if (kitsActifs.length) throw new Error(`Vérifier puis archiver les alias des kits incompatibles avant intégration : ${kitsActifs.join(', ')}`);
 const revue = lireJson(path.join(preparation, 'revue-technique.json'));
 if (revue.id !== id || revue.approbationArtistique !== false) throw new Error('Compte rendu technique original requis, sans approbation artistique');
 const exposition = lireJson('assets/production/exposition.json');
@@ -78,7 +82,8 @@ for (const dossier of [lot, 'public/assets/modeles', 'public/assets/candidats'])
 }
 for (const nom of ['README.md', 'revue-technique.json']) writeFileSync(path.join(lot, nom), readFileSync(path.join(preparation, nom)));
 const rapport = { id, revision, octets: fichiers.reduce((n, f) => n + f.octets.length, 0), verdict, approbationArtistique: false, integration: 'actif_creation_originale' };
-const source = { id, nature: 'creation_originale', date: '2026-09-16', scripts: `scripts/production/modeles/${id}`, fichiers: manifestes, verificationDistante: fiche.source.verificationDistante, archivePrecedente: precedents.length ? archive : null, precedents, approbationArtistique: false };
+const date = new Date().toISOString().slice(0, 10);
+const source = { id, nature: 'creation_originale', date, scripts: `scripts/production/modeles/${id}`, fichiers: manifestes, verificationDistante: fiche.source.verificationDistante, archivePrecedente: precedents.length ? archive : null, precedents, approbationArtistique: false };
 writeFileSync(path.join(lot, 'creation-originale.json'), JSON.stringify(source, null, 2) + '\n');
 writeFileSync(path.join(lot, 'validation-lot.json'), JSON.stringify(rapport, null, 2) + '\n');
 writeFileSync(path.join(lot, 'version-candidat.json'), JSON.stringify({ revision, source: 'creation-originale.json', approbationArtistique: false }, null, 2) + '\n');
@@ -86,7 +91,7 @@ exposition.assets = exposition.assets.filter((a: { id: string }) => a.id !== id)
 exposition.assets.push({ id, fichiers: fichiers.map(f => f.nom), revision });
 exposition.assets.sort((a: { id: string }, b: { id: string }) => a.id.localeCompare(b.id));
 writeFileSync('assets/production/exposition.json', JSON.stringify(exposition, null, 2) + '\n');
-activation.date = '2026-09-16';
+activation.date = date;
 activation.assets = activation.assets.filter((a: { id: string }) => a.id !== id);
 activation.assets.push({ id, fichierActif: `public/assets/modeles/${nomGlb}`, donnees: `../donnees/${manifestes.find(f => f.nom === nomGlb)!.sha256}.glb`, revision, controle: 'ok', provenance: 'creation_originale' });
 writeFileSync('assets/production/activation-jeu.json', JSON.stringify(activation, null, 2) + '\n');
