@@ -1,0 +1,73 @@
+{
+  "id": "unite_cuirasse_base",
+  "date": "2026-09-20T10:58:01.628397+00:00",
+  "approbationArtistique": false,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_cuirasse_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "755e446ea2dcd7057c2c63cff8cc394f3029fc5c08b12999878f7e4ebfa70c60",
+    "ancienCandidatTriangles": 1124,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "triangles": 7216,
+  "budgetTriangles": 9000,
+  "primitives": 8,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "octetsGlb": 485048,
+  "octetsGlbEtPng": 1654610,
+  "sha256Glb": "a6dcc16f7ae883fc3ea8a6ad31fc4570d3713b646b9ad6ec30ec661dc15072f4",
+  "dimensionsMetres": [
+    0.7107853889465332,
+    0.5799999825060368,
+    0.949999988079071
+  ],
+  "rayonHorizontalMaxMesure": 0.49151601398675043,
+  "rayonHorizontalMajoreContinu": 0.492766144835296,
+  "margeDeuxVoisinsTousCaps": 0.014467710329407968,
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "commande": "npm run controler:asset -- --spec assets/specs/unite_cuirasse_base.json --lot tmp/production-sequentielle/unite_cuirasse_base"
+  },
+  "typecheck": {
+    "ok": true,
+    "apresDerniereModificationTypescript": true
+  },
+  "reproductionGlbShaIdentique": true,
+  "rapports": {
+    "ancien": "inspection-ancien-candidat.json",
+    "fabrication": "fabrication.json",
+    "geometrieClipsCanaux": "mesures-geometrie.json",
+    "animationsEncombrement": "mesures-mouvements.json",
+    "posesDepuisGlb": "mesures-poses-glb.json",
+    "textures": "textures-fabrication.json",
+    "controle": "validation-lot.json",
+    "reproduction": "reproduction.json"
+  },
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Coque et équipements rigides, roulis et pilonnement du corps complet.",
+    "Vitrages opaques teintés PBR sans intérieur modélisé.",
+    "Hors-jeu : pilonnement amorti, tube abaissé, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente.",
+    "Les bornes continues couvrent chaque clip joué seul ; mélange entre clips non mesuré.",
+    "Enveloppe du secteur avant de tourelle ±70 degrés mesurée ; balayage arrière et intersections internes non certifiés.",
+    "Sol vérifié aux échantillons ; aucune preuve continue verticale revendiquée."
+  ],
+  "testsGeneraux": false,
+  "build": false,
+  "rendu": false,
+  "capture": false,
+  "controleVisuel": false,
+  "mesureTelephone": false
+}

@@ -105,6 +105,14 @@
       "revision": "d0fdd8d61fd5a2a91c3cea73f92b6789c551ef0e36c190711ac0a0c7a5f36f16",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "unite_cuirasse_base",
+      "fichierActif": "public/assets/modeles/unite_cuirasse_base_lod0.glb",
+      "donnees": "../donnees/a6dcc16f7ae883fc3ea8a6ad31fc4570d3713b646b9ad6ec30ec661dc15072f4.glb",
+      "revision": "9d038186bf385998e4e66d806d888e7bfa765ca88e5c70e29c264de5e05d0375",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

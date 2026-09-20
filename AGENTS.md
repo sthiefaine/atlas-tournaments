@@ -6,6 +6,8 @@ Le char moyen a été poussé individuellement (`bcdc0ca`, 5 944 triangles). Rep
 
 Les 65 fiches distantes ont été relues le 20 septembre : mêmes cinq fiches avec uploads, aucun nouveau dépôt. L'intégrateur refuse toujours tout upload découvert avant remplacement ; il bloque aussi les anciens kits nationaux actifs qui masqueraient une nouvelle base. Avant génie/méca/recon, vérifier et archiver leurs anciens alias incompatibles, sans produire de nouveaux kits. Dates des intégrations calculées au moment du travail. Aucun test général, capture, approbation artistique ni relevé FPS téléphone.
 
+Suite de la reprise : hélicoptère original à 5 988 triangles (`c830705`), chasseur à 8 944 (`435ecc0`), cuirassé à 7 216 ; chacun conserve ses scripts et rapports dans son dossier de modèle. Clips et enveloppes mesurés par code, aucune appréciation artistique automatique. `scripts/production/verifier-publication.ts <id>` compare après déploiement les SHA du GLB et des PNG servis, et inscrit le résultat dans le suivi seulement si tout correspond. Char lourd, hélicoptère et chasseur vérifiés ainsi en ligne ; cette vérification n'est pas une mesure de rendu ou de FPS.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

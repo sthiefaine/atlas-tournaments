@@ -1,0 +1,140 @@
+{
+  "methode": "AnimationMixer Three.js : toutes clés + 193 instants uniformes ; sommets transformés et interpolation quaternion sphérique ; rayon horizontal bornant tous les changements de cap",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 197,
+      "rayonHorizontalMax": 0.48646684743066015,
+      "rayonHorizontalMajoreContinu": 0.4868014402003726,
+      "margeInterpolation": 0.0003345927697124223,
+      "margeDeuxVoisinsTousCaps": 0.026397119599254837,
+      "directionMarqueurZMin": 0.9975510001931275,
+      "dimensionsMax": [
+        0.7107853889465332,
+        0.5799999825060368,
+        0.949999988079071
+      ],
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-9,
+          -0.4749999940395355
+        ],
+        "max": [
+          0.3553926944732666,
+          0.5889999769032002,
+          0.4749999940395355
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "rayonHorizontalMax": 0.4866572218782769,
+      "rayonHorizontalMajoreContinu": 0.4868127090834728,
+      "margeInterpolation": 0.00015548720519588329,
+      "margeDeuxVoisinsTousCaps": 0.02637458183305441,
+      "directionMarqueurZMin": 0.9999755001005243,
+      "dimensionsMax": [
+        0.7107853889465332,
+        0.5852066965092952,
+        0.9500004848655802
+      ],
+      "enveloppe": {
+        "min": [
+          -0.35610637796420014,
+          0.006000003218650823,
+          -0.4751470959950928
+        ],
+        "max": [
+          0.35610637796408645,
+          0.5934560224223124,
+          0.4751353365936134
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 200,
+      "rayonHorizontalMax": 0.49151601398675043,
+      "rayonHorizontalMajoreContinu": 0.492766144835296,
+      "margeInterpolation": 0.0012501308485456067,
+      "margeDeuxVoisinsTousCaps": 0.014467710329407968,
+      "directionMarqueurZMin": 0.9999595002723397,
+      "dimensionsMax": [
+        0.7107853889465332,
+        0.5816099706577151,
+        0.949999988079071
+      ],
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-9,
+          -0.48016975403898265
+        ],
+        "max": [
+          0.3553926944732666,
+          0.5860299791032995,
+          0.4749999940395355
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "rayonHorizontalMax": 0.4867003621243734,
+      "rayonHorizontalMajoreContinu": 0.4874923655697183,
+      "margeInterpolation": 0.000792003445344898,
+      "margeDeuxVoisinsTousCaps": 0.025015268860563378,
+      "directionMarqueurZMin": 0.999758009746807,
+      "dimensionsMax": [
+        0.7107853889465332,
+        0.6015477307096296,
+        0.950032659553387
+      ],
+      "enveloppe": {
+        "min": [
+          -0.3562705615833937,
+          5.960464483090178e-9,
+          -0.4751886148384965
+        ],
+        "max": [
+          0.35772429157715635,
+          0.612174183493727,
+          0.4753460359417844
+        ]
+      },
+      "resteDansCase": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 196,
+      "rayonHorizontalMax": 0.48646684743066015,
+      "rayonHorizontalMajoreContinu": 0.4873344771467347,
+      "margeInterpolation": 0.0008676297160745624,
+      "margeDeuxVoisinsTousCaps": 0.025331045706530553,
+      "directionMarqueurZMin": 0.9968017064029685,
+      "dimensionsMax": [
+        0.7107853889465332,
+        0.5857867743763915,
+        0.9500003304473388
+      ],
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-9,
+          -0.4749999940395355
+        ],
+        "max": [
+          0.3560221494396328,
+          0.5947930117109466,
+          0.47516973562593123
+        ]
+      },
+      "resteDansCase": true
+    }
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "id": "unite_cuirasse_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_cuirasse_base/generer.ts",
+    "sourcesExternes": [],
+    "placeholderImporte": false,
+    "ancienCandidatSha256": "755e446ea2dcd7057c2c63cff8cc394f3029fc5c08b12999878f7e4ebfa70c60",
+    "ancienCandidatTriangles": 1124,
+    "depotsDistants": 0,
+    "dateVerificationSource": "2026-09-20",
+    "verificationAvantIntegration": "coordinateur"
+  },
+  "triangles": 7216,
+  "budgetTriangles": 9000,
+  "octetsGlb": 485048,
+  "sha256Glb": "a6dcc16f7ae883fc3ea8a6ad31fc4570d3713b646b9ad6ec30ec661dc15072f4",
+  "bornes": {
+    "min": [
+      -0.3553926944732666,
+      0,
+      -0.4749999940395355
+    ],
+    "max": [
+      0.3553926944732666,
+      0.5799999825060368,
+      0.4749999940395355
+    ],
+    "dimensions": [
+      0.7107853889465332,
+      0.5799999825060368,
+      0.949999988079071
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.15,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        -0.15,
+        0
+      ]
+    },
+    "module_tourelle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.095,
+        0.1
+      ]
+    },
+    "module_canon_long": {
+      "parent": "module_tourelle",
+      "pivot": [
+        0,
+        0.082,
+        0.075
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.389,
+        -0.17
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "quille_et_fonds": 56,
+    "carene_sous_flottaison": 56,
+    "liston_flottaison": 56,
+    "borde_superieur_evase": 56,
+    "pavois_incline": 56,
+    "pont_antiderapant": 56,
+    "lisses_pavois": 480,
+    "defenses_suspendues": 256,
+    "semelles_bittes": 240,
+    "bittes_amarrage": 384,
+    "chapeaux_bittes": 384,
+    "ecubiers_ouverts": 192,
+    "assis_guindeau": 60,
+    "tambour_guindeau": 80,
+    "joues_guindeau": 160,
+    "guides_amarrage": 64,
+    "embase_tourelle": 160,
+    "couronne_tourelle": 160,
+    "tourelle_joues_larges": 60,
+    "trappe_tourelle": 60,
+    "boitiers_lateraux_tourelle": 120,
+    "tourillons": 160,
+    "mantelet_marqueur": 60,
+    "jaquette_longue": 96,
+    "bagues_jaquette": 288,
+    "tube_bouche_creuse": 144,
+    "fond_chambre": 80,
+    "fourche_verrou": 120,
+    "pied_verrou": 60,
+    "chateau_premier_etage": 28,
+    "galerie_passerelle": 60,
+    "passerelle_corps": 28,
+    "vitrage_passerelle": 28,
+    "montants_face_passerelle": 128,
+    "montants_flanc_passerelle": 128,
+    "toit_passerelle": 60,
+    "encadrements_portes": 120,
+    "cadres_hublots_bas": 120,
+    "hublots_bas": 120,
+    "marchepieds": 72,
+    "cheminees": 160,
+    "sorties_cheminees": 240,
+    "fonds_cheminees": 128,
+    "caissons_de_pont": 120,
+    "nervures_caissons": 72,
+    "bouees_techniques": 640,
+    "mat_court": 60,
+    "radar_veille": 60,
+    "extremites_radar": 120,
+    "embase_temoin": 80,
+    "temoin_disponibilite": 440
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "corps.position",
+        "module_tourelle.quaternion"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "tir",
+      "duree": 0.7,
+      "pistes": [
+        "module_canon_long.position",
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "corps.position",
+        "corps.quaternion",
+        "module_canon_long.quaternion",
+        "module_canon_long.position",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "validationArtistique": "non_effectuee",
+  "limites": [
+    "Création paramétrique originale, pas un GLB HD uploadé.",
+    "Pas de capture ni contrôle visuel ; lisibilité et appréciation artistique non attestées.",
+    "Relief de matière analytique en espace tangent ; aucun bake HD vers low-poly.",
+    "Coque et équipements rigides, roulis et pilonnement du corps complet.",
+    "Vitrages opaques teintés PBR sans intérieur modélisé.",
+    "Hors-jeu : pilonnement amorti, tube abaissé, témoin escamoté, aucun débris.",
+    "Atlas de matières répété : pas de motif unique par panneau.",
+    "Mesure réelle sur téléphone en attente."
+  ]
+}

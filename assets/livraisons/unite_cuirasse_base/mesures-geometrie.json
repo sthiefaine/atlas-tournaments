@@ -1,0 +1,74 @@
+{
+  "triangles": 7216,
+  "primitives": 8,
+  "trianglesDegeneres": 0,
+  "uvTrianglesDegeneres": 0,
+  "normalesInversees": 0,
+  "normalesErreurMax": 4.1914337778337085e-08,
+  "tangentesErreurMax": 3.965579209452841e-08,
+  "orthogonaliteErreurMax": 4.13018961253897e-08,
+  "valeursFinies": true,
+  "uvDansAtlas": true,
+  "imagesExternes": true,
+  "noeudsUniques": true,
+  "racineAnimee": false,
+  "boucles": {
+    "repos": true,
+    "deplacement": true
+  },
+  "dureesClipsMs": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "tir": 700,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "horsJeuTientPoseFinale": true,
+  "masqueValeurs": [
+    0,
+    255
+  ],
+  "albedoEquipeEcartMax": 0,
+  "metalCanalBIdentique": true,
+  "noeuds": [
+    "base",
+    "corps",
+    "module_canon_long",
+    "module_tourelle",
+    "racine",
+    "socle"
+  ],
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "interpolationClips": [
+    "LINEAR"
+  ],
+  "quaternionsUnitaires": true,
+  "tempsStrictementCroissants": true,
+  "indicateurCacheFinHorsJeu": true,
+  "reculMarqueursZ": [
+    0.0,
+    -0.036000002175569534,
+    -0.036000002175569534,
+    -0.012000001966953278,
+    0.0
+  ],
+  "octetsGlbEtPng": 1654610,
+  "normalePngErreurNormeMax": 0.0022888070556024154,
+  "normalePngZMin": 1.0,
+  "rugositeCanalGMinMax": [
+    50,
+    233
+  ],
+  "masqueFractionBlanche": 0.0625,
+  "pbrCartesRaccordees": true,
+  "texturesCanaux": {
+    "albedo": "unite_cuirasse_base_albedo.png",
+    "normale": "unite_cuirasse_base_normale.png",
+    "rugosite": "unite_cuirasse_base_rugosite.png",
+    "metal": "unite_cuirasse_base_metal.png",
+    "masque_equipe": "unite_cuirasse_base_masque_equipe.png"
+  }
+}

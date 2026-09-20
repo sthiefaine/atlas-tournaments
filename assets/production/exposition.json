@@ -16680,19 +16680,14 @@
     {
       "id": "unite_cuirasse_base",
       "fichiers": [
-        "unite_cuirasse_base_lod0.glb",
         "unite_cuirasse_base_albedo.png",
-        "unite_cuirasse_base_albedo_hiver.png",
-        "unite_cuirasse_base_normale.png",
-        "unite_cuirasse_base_normale_hiver.png",
-        "unite_cuirasse_base_rugosite.png",
-        "unite_cuirasse_base_rugosite_hiver.png",
-        "unite_cuirasse_base_metal.png",
-        "unite_cuirasse_base_metal_hiver.png",
+        "unite_cuirasse_base_lod0.glb",
         "unite_cuirasse_base_masque_equipe.png",
-        "unite_cuirasse_base_masque_equipe_hiver.png"
+        "unite_cuirasse_base_metal.png",
+        "unite_cuirasse_base_normale.png",
+        "unite_cuirasse_base_rugosite.png"
       ],
-      "revision": "f35fffda48ce1d89cfd649cb99747146e3989894a6b44c598fad7c7a991a1f2e"
+      "revision": "9d038186bf385998e4e66d806d888e7bfa765ca88e5c70e29c264de5e05d0375"
     },
     {
       "id": "unite_drone_base",

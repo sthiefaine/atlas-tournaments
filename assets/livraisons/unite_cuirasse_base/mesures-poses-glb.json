@@ -1,0 +1,127 @@
+{
+  "id": "unite_cuirasse_base",
+  "methode": "Relecture GLB NumPy : sommets, translations LINEAR et rotations slerp ; 193 instants et toutes clés. Comparaison aux mesures Three.js avant export à 2 µm près.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 194,
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-09,
+          -0.4749999940395355
+        ],
+        "max": [
+          0.3553926944732666,
+          0.5889999769032002,
+          0.4749999940395355
+        ]
+      },
+      "rayonHorizontalMax": 0.4864668474306601,
+      "directionMarqueurZMin": 0.9975510001908469,
+      "racineIdentite": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 193,
+      "enveloppe": {
+        "min": [
+          -0.3561063779960978,
+          0.006000003218650823,
+          -0.47514709600166743
+        ],
+        "max": [
+          0.3561063779959841,
+          0.5934560225544315,
+          0.47513533659966245
+        ]
+      },
+      "rayonHorizontalMax": 0.48665722188678945,
+      "directionMarqueurZMin": 0.9999755000983341,
+      "racineIdentite": true
+    },
+    {
+      "nom": "tir",
+      "nombreEchantillons": 198,
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-09,
+          -0.48016975404163303
+        ],
+        "max": [
+          0.3553926944732666,
+          0.5860299802698953,
+          0.4749999940395355
+        ]
+      },
+      "rayonHorizontalMax": 0.49151601398933964,
+      "directionMarqueurZMin": 0.999959500271075,
+      "racineIdentite": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.35627056161327764,
+          5.960464483090178e-09,
+          -0.4751886148449174
+        ],
+        "max": [
+          0.35772429153189317,
+          0.6121741833059218,
+          0.47534603593506664
+        ]
+      },
+      "rayonHorizontalMax": 0.486700362132327,
+      "directionMarqueurZMin": 0.9997580097562012,
+      "racineIdentite": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 195,
+      "enveloppe": {
+        "min": [
+          -0.3553926944732666,
+          5.960464483090178e-09,
+          -0.4749999940395355
+        ],
+        "max": [
+          0.356022149446761,
+          0.594793011748239,
+          0.4751697356278535
+        ]
+      },
+      "rayonHorizontalMax": 0.4864668474306601,
+      "directionMarqueurZMin": 0.9968017063899846,
+      "racineIdentite": true
+    }
+  ],
+  "tourelle": {
+    "degres": [
+      -70,
+      70
+    ],
+    "nombreEchantillons": 141,
+    "rayonHorizontalMax": 0.4864668474306601,
+    "enveloppe": {
+      "min": [
+        -0.3553926944732666,
+        0.0,
+        -0.4749999940395355
+      ],
+      "max": [
+        0.3553926944732666,
+        0.5799999825060368,
+        0.4749999940395355
+      ]
+    }
+  },
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon continu majoré séparément dans mesures-mouvements.json.",
+    "Secteur avant de tourelle mesuré ; rotation arrière et collisions internes non certifiées.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés."
+  ]
+}

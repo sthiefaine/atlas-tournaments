@@ -1,0 +1,21 @@
+{
+  "id": "unite_cuirasse_base",
+  "revision": "9d038186bf385998e4e66d806d888e7bfa765ca88e5c70e29c264de5e05d0375",
+  "octets": 1654610,
+  "verdict": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "unite_cuirasse_base_albedo.png",
+      "unite_cuirasse_base_lod0.glb",
+      "unite_cuirasse_base_masque_equipe.png",
+      "unite_cuirasse_base_metal.png",
+      "unite_cuirasse_base_normale.png",
+      "unite_cuirasse_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "approbationArtistique": false,
+  "integration": "actif_creation_originale"
+}
