@@ -1,0 +1,76 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "methode": "Relecture des positions et pistes depuis le GLB exporté ; Three.js sans texture ni rendu, 1537 instants plus clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 1594,
+      "enveloppe": {
+        "min": [
+          -0.410686868074505,
+          0.034999996423721313,
+          -0.41068686929221926
+        ],
+        "max": [
+          0.41068686770856055,
+          0.6660000231266021,
+          0.41068686892629974
+        ]
+      },
+      "rayonHorizontalMax": 0.49352961693738323
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 1569,
+      "enveloppe": {
+        "min": [
+          -0.4131031157443449,
+          0.04893460544736164,
+          -0.4148990578254058
+        ],
+        "max": [
+          0.4131035066079488,
+          0.6927350154208267,
+          0.4077847586281522
+        ]
+      },
+      "rayonHorizontalMax": 0.49724510024934804
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 1539,
+      "enveloppe": {
+        "min": [
+          -0.41505331254269723,
+          0.034999996423721313,
+          -0.41304687769071935
+        ],
+        "max": [
+          0.4131804801159187,
+          0.6790709450320516,
+          0.41551135771824343
+        ]
+      },
+      "rayonHorizontalMax": 0.4941421584183587
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 1556,
+      "enveloppe": {
+        "min": [
+          -0.4106868379825572,
+          -2.7755575615628914e-17,
+          -0.4106868391676094
+        ],
+        "max": [
+          0.410686979505856,
+          0.665686214648853,
+          0.4106869807065388
+        ]
+      },
+      "rayonHorizontalMax": 0.4935296715620561
+    }
+  ],
+  "pariteAvantExport": true,
+  "approbationArtistique": false
+}

@@ -16811,21 +16811,14 @@
     {
       "id": "unite_meridien_veilleur_base",
       "fichiers": [
-        "unite_meridien_veilleur_base_lod0.glb",
         "unite_meridien_veilleur_base_albedo.png",
-        "unite_meridien_veilleur_base_albedo_hiver.png",
-        "unite_meridien_veilleur_base_normale.png",
-        "unite_meridien_veilleur_base_normale_hiver.png",
-        "unite_meridien_veilleur_base_rugosite.png",
-        "unite_meridien_veilleur_base_rugosite_hiver.png",
-        "unite_meridien_veilleur_base_metal.png",
-        "unite_meridien_veilleur_base_metal_hiver.png",
+        "unite_meridien_veilleur_base_lod0.glb",
         "unite_meridien_veilleur_base_masque_equipe.png",
-        "unite_meridien_veilleur_base_masque_equipe_hiver.png",
-        "unite_meridien_veilleur_base_emission.png",
-        "unite_meridien_veilleur_base_emission_hiver.png"
+        "unite_meridien_veilleur_base_metal.png",
+        "unite_meridien_veilleur_base_normale.png",
+        "unite_meridien_veilleur_base_rugosite.png"
       ],
-      "revision": "3368c0aff41400e08918e110b8bf1cb60bed0e8ab498a60edb18f76f551bdfe6"
+      "revision": "9bb83d845dfbed281805452ea6551b7a6ba96b6430244d990985860c5b727d0d"
     },
     {
       "id": "unite_missiles_air_base",

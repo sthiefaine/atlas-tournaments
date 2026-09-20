@@ -1,0 +1,78 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "methode": "Sommets transformés Three.js avec skin, 1537 instants par clip et clés exactes.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 1589,
+      "enveloppe": {
+        "min": [
+          -0.4106868651579378,
+          0.034999996423721313,
+          -0.4106868658885741
+        ],
+        "max": [
+          0.410686865009807,
+          0.6660000231266021,
+          0.4106868657404494
+        ]
+      },
+      "rayonHorizontalMax": 0.4935296141368533
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 1569,
+      "enveloppe": {
+        "min": [
+          -0.41310311264721494,
+          0.04893460544736164,
+          -0.4148990611817057
+        ],
+        "max": [
+          0.41310350351082414,
+          0.6927350154208267,
+          0.4077847612595724
+        ]
+      },
+      "rayonHorizontalMax": 0.49724510312090425
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 1539,
+      "enveloppe": {
+        "min": [
+          -0.4150533159747652,
+          0.034999996423721313,
+          -0.4130468804923122
+        ],
+        "max": [
+          0.4131804775429304,
+          0.6790709450320516,
+          0.4155113607029852
+        ]
+      },
+      "rayonHorizontalMax": 0.49414216116644566
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 1557,
+      "enveloppe": {
+        "min": [
+          -0.4106868352487748,
+          -2.7755575615628914e-17,
+          -0.41068683595980615
+        ],
+        "max": [
+          0.41068697677746724,
+          0.665686214648853,
+          0.41068697749787775
+        ]
+      },
+      "rayonHorizontalMax": 0.49352966834677875
+    }
+  ],
+  "limites": [
+    "Échantillonnage numérique, sans contrôle visuel.",
+    "Aucun certificat de collisions internes ni de mélanges entre clips."
+  ]
+}

@@ -30,6 +30,10 @@ Méca poussé en `3dbd1f1` ; GLB et cinq PNG vérifiés en ligne par SHA, ancien
 
 Bastion méridien intégré : 8 996 triangles sur 9 000, neuf primitives, 1 809 557 octets. Plateforme antiaérienne originale à tubes courts jumelés et radar tournant, 977 poses mesurées. Trains de roulement corrigés et quatre suspensions à fourreaux creux ; 47 dégagements mécaniques localisés positifs. Rayon horizontal borné à 0,490129 m dans le gabarit de la faction. Contrôle de lot et typage réussis ; aucun rendu ni approbation artistique. Vingt-trois modèles livrés.
 
+Bastion poussé en `f6c2f67` puis confirmé en ligne : SHA du GLB et des cinq PNG conformes, présent dans l’inventaire du jeu. Les quatre optimisés du 14 septembre (infanterie, char léger, barge, QG) ont aussi été confirmés en ligne le 20 septembre. Veilleur méridien en cours, sans source uploadée ni ancien actif.
+
+Veilleur intégré : 5 428 triangles, sept primitives, 1 521 572 octets. Deux rotors diagonaux à quatre pales et squelettes privés, radar pliant, pose hors jeu sur les patins ; 6 258 poses mesurées et 76 dégagements locaux. Rayon continu majoré 0,498562 m en gabarit b. Contrôle technique et typage réussis, aucune image. Les prompts de la file JSON portent désormais explicitement l’autorisation de création originale après absence distante confirmée et absence de maître local, les dossiers réservés au spécialiste et l’exclusion de la plaine ; le prompt générique admin reste inchangé. Vingt-quatre modèles livrés.
+
 ## Production séquentielle des modèles — 16 septembre 2026
 
 Le propriétaire demande un plan JSON puis un spécialiste 3D par modèle, **un modèle à la fois, commit et push avant le suivant**. `assets/production/plan-modeles-3d.json` inventorie 65 modèles communs ; variantes nationales hors du lot, régionales suspendues, plaine procédurale conservée. Les quatre bases optimisées du 14 septembre sont déjà livrées. Le script `scripts/production/plan-modeles-3d.ts` rafraîchit l'inventaire sans donner d'approbation artistique et conserve le suivi tant que le modèle actif n'a pas changé.

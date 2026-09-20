@@ -1,0 +1,108 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "commandes": [
+    {
+      "commande": [
+        "node",
+        "--import",
+        "tsx",
+        "scripts/production/modeles/unite_meridien_veilleur_base/generer.ts"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:10.761360+00:00",
+      "log": "generation.log"
+    },
+    {
+      "commande": [
+        "tmp/optimisation-lod0/python-env/bin/python",
+        "scripts/production/modeles/unite_meridien_veilleur_base/textures.py"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:13.196058+00:00",
+      "log": "textures.log"
+    },
+    {
+      "commande": [
+        "tmp/optimisation-lod0/python-env/bin/python",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer.py"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:13.388263+00:00",
+      "log": "geometrie.log"
+    },
+    {
+      "commande": [
+        "node",
+        "--import",
+        "tsx",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer-poses.ts"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:15.440116+00:00",
+      "log": "poses-three.log"
+    },
+    {
+      "commande": [
+        "tmp/optimisation-lod0/python-env/bin/python",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer-poses.py"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:18.528500+00:00",
+      "log": "poses-numpy.log"
+    },
+    {
+      "commande": [
+        "node",
+        "--import",
+        "tsx",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer-rig.ts"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:25.091162+00:00",
+      "log": "rig-natif.log"
+    },
+    {
+      "commande": [
+        "tmp/optimisation-lod0/python-env/bin/python",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer-ressort.py"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:25.560164+00:00",
+      "log": "ressort.log"
+    },
+    {
+      "commande": [
+        "tmp/optimisation-lod0/python-env/bin/python",
+        "scripts/production/modeles/unite_meridien_veilleur_base/mesurer-degagements.py"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:31.635186+00:00",
+      "log": "degagements.log"
+    },
+    {
+      "commande": [
+        "npm",
+        "run",
+        "controler:asset",
+        "--",
+        "--spec",
+        "assets/specs/unite_meridien_veilleur_base.json",
+        "--lot",
+        "tmp/production-sequentielle/unite_meridien_veilleur_base"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:32.322502+00:00",
+      "log": "controle-lot.log"
+    },
+    {
+      "commande": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exitCode": 0,
+      "finUtc": "2026-09-20T13:49:35.762220+00:00",
+      "log": "typecheck.log"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "methode": "GLTFLoader natif avec seules références de cartes retirées en mémoire, SkeletonUtils.clone puis AnimationMixer et applyBoneTransform. Aucun rendu.",
+  "peauChargee": true,
+  "squelettesClonesIndependants": true,
+  "centresRotorsFixesDansCorps": true,
+  "axes": "+Y",
+  "rayonsRotors": [
+    0.21068698307273567,
+    0.21068698307273567
+  ],
+  "distanceCentres": 0.5656854249492381,
+  "jeuEntreDisques": 0.14431145880376675,
+  "pariteNumpyDeuxMicrometres": true,
+  "clips": [
+    {
+      "nom": "repos",
+      "poses": 1594,
+      "min": [
+        -0.410686868074505,
+        0.034999996423721313,
+        -0.41068686929221926
+      ],
+      "max": [
+        0.41068686770856055,
+        0.6660000231266021,
+        0.41068686892629974
+      ],
+      "rayon": 0.49352961693738323
+    },
+    {
+      "nom": "deplacement",
+      "poses": 1569,
+      "min": [
+        -0.413103115744345,
+        0.04893460544736164,
+        -0.4148990578254058
+      ],
+      "max": [
+        0.41310350660794887,
+        0.6927350154208267,
+        0.4077847586281523
+      ],
+      "rayon": 0.49724510024934804
+    },
+    {
+      "nom": "touche",
+      "poses": 1539,
+      "min": [
+        -0.4150533125426973,
+        0.034999996423721313,
+        -0.4130468776907193
+      ],
+      "max": [
+        0.41318048011591874,
+        0.6790709450320516,
+        0.4155113577182437
+      ],
+      "rayon": 0.49414215841835873
+    },
+    {
+      "nom": "hors_jeu",
+      "poses": 1556,
+      "min": [
+        -0.4106868379825572,
+        -2.7755575615628914e-17,
+        -0.4106868391676094
+      ],
+      "max": [
+        0.410686979505856,
+        0.665686214648853,
+        0.41068698070653886
+      ],
+      "rayon": 0.4935296715620561
+    }
+  ],
+  "limites": [
+    "Géométrie neutre uniquement.",
+    "Séparation des deux disques balayés, pas de certification de toutes les collisions internes.",
+    "Textures non chargées et aucun rendu."
+  ],
+  "approbationArtistique": false
+}

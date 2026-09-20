@@ -1,0 +1,223 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "version": 1,
+  "provenance": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_meridien_veilleur_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "triangles": 5428,
+  "budgetTriangles": 6000,
+  "octetsGlb": 350756,
+  "sha256Glb": "70c4574a90d17a77ee0b879bf7b54f3dc7474fba37d138f3f23a411923575cfd",
+  "bornes": {
+    "min": [
+      -0.4099999964237213,
+      0.034999996423721313,
+      -0.4099999964237213
+    ],
+    "max": [
+      0.4099999964237213,
+      0.657000019788742,
+      0.4099999964237213
+    ],
+    "dimensions": [
+      0.8199999928474426,
+      0.6220000233650207,
+      0.8199999928474426
+    ]
+  },
+  "hierarchie": {
+    "racine": {
+      "parent": null,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "corps": {
+      "parent": "racine",
+      "pivot": [
+        0,
+        0.25,
+        0
+      ]
+    },
+    "base": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    "module_radar": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.245,
+        0
+      ]
+    },
+    "module_antenne": {
+      "parent": "corps",
+      "pivot": [
+        -0.2,
+        0.059,
+        0.23
+      ]
+    },
+    "socle": {
+      "parent": "corps",
+      "pivot": [
+        0,
+        0.026,
+        0.285
+      ]
+    },
+    "os_rotor_gauche": {
+      "parent": "corps",
+      "pivot": [
+        -0.2,
+        0.15,
+        -0.2
+      ]
+    },
+    "os_rotor_droit": {
+      "parent": "corps",
+      "pivot": [
+        0.2,
+        0.15,
+        0.2
+      ]
+    }
+  },
+  "trianglesParEnsemble": {
+    "capsule_arrondie": 728,
+    "capot_equipe": 60,
+    "flancs_equipe": 120,
+    "grilles_laterales": 120,
+    "lames_grilles": 96,
+    "loquets_capot": 64,
+    "cadre_optique": 60,
+    "verre_optique": 60,
+    "temoin_veille": 12,
+    "connectique_arriere": 60,
+    "prises_obturees": 80,
+    "bras_porteur_gauche": 48,
+    "hauban_gauche": 40,
+    "nacelle_moteur_gauche": 64,
+    "col_moteur_gauche": 64,
+    "axe_moteur_gauche": 48,
+    "moyeu_gauche": 64,
+    "chapeau_rotor_gauche": 48,
+    "pales_gauche": 112,
+    "embouts_gauche": 112,
+    "bras_porteur_droit": 48,
+    "hauban_droit": 40,
+    "nacelle_moteur_droit": 64,
+    "col_moteur_droit": 64,
+    "axe_moteur_droit": 48,
+    "moyeu_droit": 64,
+    "chapeau_rotor_droit": 48,
+    "pales_droit": 112,
+    "embouts_droit": 112,
+    "patins_atterrissage": 120,
+    "montants_patins": 160,
+    "manchons_train": 160,
+    "mat_radar": 64,
+    "embase_mat_radar": 64,
+    "palier_fixe_radar": 64,
+    "bras_pliant_radar": 48,
+    "moyeu_disque_radar": 64,
+    "radome": 320,
+    "jonc_radome": 384,
+    "panneaux_equipe_radar": 120,
+    "console_antenne": 40,
+    "embase_antenne": 48,
+    "ame_ressort": 40,
+    "ressort_antenne": 864,
+    "collier_fouet": 48,
+    "fouet": 40,
+    "embout_fouet": 120
+  },
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "texturesExternes": [
+    "albedo",
+    "normale",
+    "rugosite",
+    "metal",
+    "masque_equipe"
+  ],
+  "animations": [
+    {
+      "nom": "repos",
+      "duree": 2.4,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "module_radar.quaternion",
+        "corps.position"
+      ]
+    },
+    {
+      "nom": "deplacement",
+      "duree": 1,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_radar.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "touche",
+      "duree": 0.5,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "corps.quaternion",
+        "module_antenne.quaternion"
+      ]
+    },
+    {
+      "nom": "hors_jeu",
+      "duree": 0.9,
+      "pistes": [
+        "os_rotor_gauche.quaternion",
+        "os_rotor_droit.quaternion",
+        "corps.position",
+        "module_radar.quaternion",
+        "module_antenne.quaternion",
+        "socle.scale"
+      ]
+    }
+  ],
+  "approbationArtistique": false,
+  "rotors": {
+    "noeuds": [
+      "os_rotor_gauche",
+      "os_rotor_droit"
+    ],
+    "axe": "+Y",
+    "maillage": "base",
+    "poidsRigides": true,
+    "dispositionDiagonale": true,
+    "animationGLB": true
+  },
+  "limites": [
+    "Pas de rendu ni contrôle visuel.",
+    "Deux rotors à poids rigides sur deux os, pales découvertes.",
+    "Capsule sans arme, radôme fermé sur un bras articulé.",
+    "Un seul pivot commun de radar pour le scan et le repli ; pas de simulation physique.",
+    "Aucun bake HD ni essai téléphone."
+  ]
+}

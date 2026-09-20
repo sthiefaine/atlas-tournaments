@@ -1,0 +1,94 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "date": "2026-09-20T13:49:35.816646+00:00",
+  "approbationArtistique": false,
+  "source": {
+    "type": "creation_originale_parametrique",
+    "script": "scripts/production/modeles/unite_meridien_veilleur_base/generer.ts",
+    "sourcesExternes": [],
+    "candidatImporte": false
+  },
+  "inspectionPrealable": "inspection-ancien-candidat.json",
+  "sha256Glb": "70c4574a90d17a77ee0b879bf7b54f3dc7474fba37d138f3f23a411923575cfd",
+  "triangles": 5428,
+  "budgetTriangles": 6000,
+  "primitives": 7,
+  "materiaux": [
+    "mat_corps",
+    "mat_details"
+  ],
+  "octetsGlb": 350756,
+  "octetsLot": 1521572,
+  "fichiers": [
+    {
+      "nom": "unite_meridien_veilleur_base_lod0.glb",
+      "octets": 350756,
+      "sha256": "70c4574a90d17a77ee0b879bf7b54f3dc7474fba37d138f3f23a411923575cfd"
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_albedo.png",
+      "octets": 458593,
+      "sha256": "5c2da0ae7649df495e49a06166372027650db99bb8f6bf8cf578951ef144fc62"
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_masque_equipe.png",
+      "octets": 487,
+      "sha256": "cf4c97bfa29d9c5a19b72dab6a401a731758424cbbad2b72d080291b3b6c1549"
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_metal.png",
+      "octets": 645,
+      "sha256": "f0ba166d67f2aa5f977114be3159bd75c5b1ff479c3230612100bd91f77b22d9"
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_normale.png",
+      "octets": 584871,
+      "sha256": "aa0cb8d78430e2a37542d4a7cb02ac10d4d2fedf468ea517c11839532ea0cd7b"
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_rugosite.png",
+      "octets": 126220,
+      "sha256": "9bf79b7b0eef44a0c4d63a6e06d9006c0f0a468c6c2eac235ee3efe91291af03"
+    }
+  ],
+  "dimensionsMetres": [
+    0.8199999868869782,
+    0.6220000233650207,
+    0.8199999868869782
+  ],
+  "hauteurNeutrePatinsMetres": 0.034999996423721313,
+  "clips": {
+    "repos": 2400,
+    "deplacement": 1000,
+    "touche": 500,
+    "hors_jeu": 900
+  },
+  "controleTechnique": "ok",
+  "typage": "ok",
+  "posesExportees": 6258,
+  "rayonHorizontalMesureMetres": 0.49724510398147437,
+  "rayonHorizontalMajoreMetres": 0.4985613616995371,
+  "rotorsClonesIndependants": true,
+  "jeuEntreDisquesMetres": 0.14431145880376675,
+  "posesMecaniques": 882,
+  "nombreDegagementsMecaniques": 76,
+  "jeuMecaniqueMinimalMetres": 0.004000002145767151,
+  "jeuRadarAntenneMetres": 0.02575227078947334,
+  "jeuRadarCapsuleMetres": 0.1253936894983052,
+  "ressort": {
+    "jeuAmeMetres": 0.007864442902530385,
+    "jeuSpiresMetres": 0.00722737359659629,
+    "intersectionsSpires": 0
+  },
+  "integration": "À effectuer par le coordinateur ; aucune écriture du spécialiste dans les lots ou alias actifs.",
+  "limites": [
+    "Création originale paramétrique ; aucun master HD ou bake de transfert.",
+    "Gabarit neutre b utilisé par atl seulement.",
+    "Aucune inspection à l’œil, capture, image, scène rendue ou approbation artistique.",
+    "Aucune suite de tests ni build.",
+    "Aucun appareil, benchmark ou FPS téléphone.",
+    "Enveloppe de chaque clip majorée continûment ; transitions entre clips non mesurées.",
+    "Jeux mécaniques localisés et échantillonnés ; aucune certification complète des collisions internes.",
+    "Textes et logs de commande non inclus dans le poids des six fichiers GLB/PNG."
+  ]
+}

@@ -11,6 +11,16 @@ const ancien = existsSync(fichier) ? JSON.parse(readFileSync(fichier, 'utf8')) :
 const optimises = JSON.parse(readFileSync('assets/production/optimisation-lod0.json', 'utf8')).assets as { id: string; actifSha256: string; triangles: number; revision: string }[];
 const ordreFamille: Record<string, number> = { unite: 0, batiment: 1, decor: 2, terrain: 3, commandant: 4 };
 const premiers = ['unite_antiair_base', 'unite_artillerie_base', 'unite_meridien_automate_base', 'unite_transport_base', 'unite_char_moyen_base', 'unite_char_lourd_base', 'unite_helico_base', 'unite_chasseur_base', 'unite_cuirasse_base'];
+function consigneSequentielle(id: string): string {
+  if (id === 'terrain_plaine') return 'MODÈLE EXCLU DE LA PRODUCTION : conserver le rendu procédural de la plaine. Ne pas générer ni activer un nouveau GLB.\n\n';
+  return `CADRE DE CETTE FILE COMMANDÉE PAR LE PROPRIÉTAIRE
+Un seul spécialiste et un seul modèle à la fois. Le coordinateur doit avoir poussé le précédent avant de commencer celui-ci.
+Un GLB uploadé reste toujours prioritaire et immuable. Si la lecture authentifiée du stockage réussit et confirme l'absence de dépôt, et qu'aucun maître local n'existe, la création originale est autorisée dans cette commande globale. Cette autorisation remplace uniquement la demande générique de réclamer un GLB absent ci-dessous ; un stockage inaccessible n'est jamais une preuve d'absence et suspend la préparation.
+Inspecter aussi l'ancien candidat et ses PNG avant de travailler. Le spécialiste écrit seulement dans scripts/production/modeles/${id}/ et tmp/production-sequentielle/${id}/. Il livre un README dans chacun de ces dossiers, une revue technique et les fichiers gelés après contrôle ciblé ; il ne modifie ni lot officiel, ni actif, ni registre, ni plan et ne fait aucune opération Git. Le coordinateur recontrôle les sources avant intégration, actualise le plan, puis commit et push ce modèle sur main avant le suivant. Aucun test général, rendu, capture, approbation artistique automatique ni FPS inventé.
+
+CONTRAT GÉNÉRIQUE DE L'ASSET — appliquer avec le cadre de production ci-dessus
+`;
+}
 function lireGlb(p: string) {
   if (!existsSync(p)) return null;
   const b = readFileSync(p), d = JSON.parse(b.subarray(20, 20 + b.readUInt32LE(12)).toString());
@@ -50,7 +60,7 @@ const modeles = specs.map((s, index) => {
     ordreDeTravail: ['lire_contrat_et_provenance', 'archiver_maitre', 'preparer_lod0_et_png', 'controler_lot', 'integrer', 'mettre_a_jour_plan', 'commit_et_push_main'],
     agent: { metier: 'Artiste technique 3D jeu vidéo', responsabilite: 'Une seule fiche à la fois ; modèle, UV, PBR, articulations et rapport honnête. Le coordinateur intègre et pousse après contrôle.' },
     suivi: suiviValide ? ancienModele.suivi : (deja || creationActive ? { commit: ['unite_infanterie_base', 'unite_char_leger_base', 'unite_barge_base', 'batiment_qg_base'].includes(s.id) ? 'ffbc057' : null, controle: 'ok', ...(deja ? { revision: deja.revision } : {}), approbationArtistique: false } : { commit: null, controle: 'non_effectue', approbationArtistique: false }),
-    prompt: promptProduction(s, presents, provenance?.sha256 ? { revision: provenance.sha256 } : null),
+    prompt: consigneSequentielle(s.id) + promptProduction(s, presents, provenance?.sha256 ? { revision: provenance.sha256 } : null),
   };
 });
 writeFileSync(fichier, JSON.stringify({

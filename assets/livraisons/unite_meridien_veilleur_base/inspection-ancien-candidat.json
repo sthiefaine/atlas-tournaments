@@ -1,0 +1,543 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "sha256Glb": "c4f7b5e469fe4519e8591201a168518cc1fa04b14909ab9a2927db7ec574fc9b",
+  "octetsGlb": 87360,
+  "triangles": 728,
+  "noeuds": [
+    "module_radar",
+    "module_antenne",
+    "corps",
+    "base",
+    "socle",
+    "racine"
+  ],
+  "materiaux": [
+    "mat_details",
+    "mat_corps"
+  ],
+  "animations": [
+    "repos",
+    "deplacement",
+    "touche",
+    "hors_jeu"
+  ],
+  "primitives": [
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.5576086640357971,
+          -0.06979865580797195,
+          -0.46142131090164185
+        ],
+        "max": [
+          0.3423912823200226,
+          0.29010066390037537,
+          0.43857866525650024
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1467391401529312,
+          -0.05234898626804352,
+          -0.059842415153980255
+        ],
+        "max": [
+          0.1467391401529312,
+          0.16345690190792084,
+          0.059842415153980255
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.1467391401529312,
+          -0.05234898626804352,
+          -0.059842415153980255
+        ],
+        "max": [
+          0.1467391401529312,
+          0.16345690190792084,
+          0.059842415153980255
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.034239135682582855,
+          -0.1395973116159439,
+          -0.030414503067731857
+        ],
+        "max": [
+          0.034239135682582855,
+          0.13959728181362152,
+          0.03041449561715126
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.034239135682582855,
+          -0.1395973116159439,
+          -0.030414503067731857
+        ],
+        "max": [
+          0.034239135682582855,
+          0.13959728181362152,
+          0.03041449561715126
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.17608694732189178,
+          0,
+          -0.21700508892536163
+        ],
+        "max": [
+          0.17608694732189178,
+          0.026174496859312057,
+          0.23984770476818085
+        ]
+      }
+    },
+    {
+      "attributs": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "bornesLocales": {
+        "min": [
+          -0.17608694732189178,
+          0,
+          -0.21700508892536163
+        ],
+        "max": [
+          0.17608694732189178,
+          0.026174496859312057,
+          0.23984770476818085
+        ]
+      }
+    }
+  ],
+  "png": [
+    {
+      "nom": "unite_meridien_veilleur_base_albedo.png",
+      "sha256": "d1b858f178f694c50b38fe00dc29420a4f74b6a80158e6aa7e62569196a143a9",
+      "octets": 288414,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 41,
+      "valeurMax": 184
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_albedo_hiver.png",
+      "sha256": "57fac4cbf96027b94d49b75930e6b81b3615affc5c3d519946628a2598783456",
+      "octets": 292605,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 92,
+      "valeurMax": 192
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_emission.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_emission_hiver.png",
+      "sha256": "57b5e40e68e97c62837b9d0a5a8f7aac22471c1633897f9bcf4fa62864ecc974",
+      "octets": 842,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 0
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255,
+      "valeurs": [
+        0,
+        255
+      ]
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_metal.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_metal_hiver.png",
+      "sha256": "86051607a9d7b21db54bc9151216d57cee11935bc3c2a4a00c1c479cd46aa613",
+      "octets": 1964,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 210
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638,
+      "resolution": [
+        1024,
+        1024
+      ],
+      "mode": "RGB",
+      "valeurMin": 128,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    },
+    {
+      "nom": "unite_meridien_veilleur_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029,
+      "resolution": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "valeurMin": 0,
+      "valeurMax": 255
+    }
+  ],
+  "geometrieEtTexturesImportees": false,
+  "inspectionVisuelle": false
+}

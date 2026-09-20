@@ -1,0 +1,708 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "methode": "Ordre des triangles conservé par mergeGeometries/mergeVertices et GLTFExporter, avant déduplication sans changement des index.",
+  "reperes": [
+    {
+      "noeud": "corps",
+      "materiau": "mat_corps",
+      "etiquette": "capot_equipe",
+      "role": 0,
+      "os": 0,
+      "premierTriangle": 0,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_corps",
+      "etiquette": "flancs_equipe",
+      "role": 0,
+      "os": 0,
+      "premierTriangle": 60,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_corps",
+      "etiquette": "flancs_equipe",
+      "role": 0,
+      "os": 0,
+      "premierTriangle": 120,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "capsule_arrondie",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 0,
+      "nombreTriangles": 728
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "grilles_laterales",
+      "role": 6,
+      "os": 0,
+      "premierTriangle": 728,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 788,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 800,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 812,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 824,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "loquets_capot",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 836,
+      "nombreTriangles": 32
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "grilles_laterales",
+      "role": 6,
+      "os": 0,
+      "premierTriangle": 868,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 928,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 940,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 952,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "lames_grilles",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 964,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "loquets_capot",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 976,
+      "nombreTriangles": 32
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "cadre_optique",
+      "role": 1,
+      "os": 0,
+      "premierTriangle": 1008,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "verre_optique",
+      "role": 4,
+      "os": 0,
+      "premierTriangle": 1068,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "connectique_arriere",
+      "role": 1,
+      "os": 0,
+      "premierTriangle": 1128,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "prises_obturees",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1188,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "prises_obturees",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1228,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "bras_porteur_gauche",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 1268,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "hauban_gauche",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1316,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "nacelle_moteur_gauche",
+      "role": 1,
+      "os": 0,
+      "premierTriangle": 1356,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "col_moteur_gauche",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1420,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "axe_moteur_gauche",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1484,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "bras_porteur_droit",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 1532,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "hauban_droit",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1580,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "nacelle_moteur_droit",
+      "role": 1,
+      "os": 0,
+      "premierTriangle": 1620,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "col_moteur_droit",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1684,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "axe_moteur_droit",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 1748,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "patins_atterrissage",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 1796,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "montants_patins",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 1856,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "manchons_train",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 1896,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "montants_patins",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 1936,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "manchons_train",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 1976,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "patins_atterrissage",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 2016,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "montants_patins",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 2076,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "manchons_train",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 2116,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "montants_patins",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 2156,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "manchons_train",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 2196,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "mat_radar",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 2236,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "embase_mat_radar",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 2300,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "palier_fixe_radar",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 2364,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "console_antenne",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 2428,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "corps",
+      "materiau": "mat_details",
+      "etiquette": "embase_antenne",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 2468,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "socle",
+      "materiau": "mat_details",
+      "etiquette": "temoin_veille",
+      "role": 7,
+      "os": 0,
+      "premierTriangle": 0,
+      "nombreTriangles": 12
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "moyeu_gauche",
+      "role": 3,
+      "os": 0,
+      "premierTriangle": 0,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "chapeau_rotor_gauche",
+      "role": 1,
+      "os": 0,
+      "premierTriangle": 64,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_gauche",
+      "role": 2,
+      "os": 0,
+      "premierTriangle": 112,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_gauche",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 140,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_gauche",
+      "role": 2,
+      "os": 0,
+      "premierTriangle": 168,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_gauche",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 196,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_gauche",
+      "role": 2,
+      "os": 0,
+      "premierTriangle": 224,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_gauche",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 252,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_gauche",
+      "role": 2,
+      "os": 0,
+      "premierTriangle": 280,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_gauche",
+      "role": 5,
+      "os": 0,
+      "premierTriangle": 308,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "moyeu_droit",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 336,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "chapeau_rotor_droit",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 400,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_droit",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 448,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_droit",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 476,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_droit",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 504,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_droit",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 532,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_droit",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 560,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_droit",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 588,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "pales_droit",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 616,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "base",
+      "materiau": "mat_details",
+      "etiquette": "embouts_droit",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 644,
+      "nombreTriangles": 28
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_corps",
+      "etiquette": "panneaux_equipe_radar",
+      "role": 0,
+      "os": 1,
+      "premierTriangle": 0,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_corps",
+      "etiquette": "panneaux_equipe_radar",
+      "role": 0,
+      "os": 1,
+      "premierTriangle": 60,
+      "nombreTriangles": 60
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_details",
+      "etiquette": "bras_pliant_radar",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 0,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_details",
+      "etiquette": "moyeu_disque_radar",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 48,
+      "nombreTriangles": 64
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_details",
+      "etiquette": "radome",
+      "role": 5,
+      "os": 1,
+      "premierTriangle": 112,
+      "nombreTriangles": 320
+    },
+    {
+      "noeud": "module_radar",
+      "materiau": "mat_details",
+      "etiquette": "jonc_radome",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 432,
+      "nombreTriangles": 384
+    },
+    {
+      "noeud": "module_antenne",
+      "materiau": "mat_details",
+      "etiquette": "ame_ressort",
+      "role": 2,
+      "os": 1,
+      "premierTriangle": 0,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "module_antenne",
+      "materiau": "mat_details",
+      "etiquette": "ressort_antenne",
+      "role": 11,
+      "os": 1,
+      "premierTriangle": 40,
+      "nombreTriangles": 864
+    },
+    {
+      "noeud": "module_antenne",
+      "materiau": "mat_details",
+      "etiquette": "collier_fouet",
+      "role": 3,
+      "os": 1,
+      "premierTriangle": 904,
+      "nombreTriangles": 48
+    },
+    {
+      "noeud": "module_antenne",
+      "materiau": "mat_details",
+      "etiquette": "fouet",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 952,
+      "nombreTriangles": 40
+    },
+    {
+      "noeud": "module_antenne",
+      "materiau": "mat_details",
+      "etiquette": "embout_fouet",
+      "role": 1,
+      "os": 1,
+      "premierTriangle": 992,
+      "nombreTriangles": 120
+    }
+  ]
+}

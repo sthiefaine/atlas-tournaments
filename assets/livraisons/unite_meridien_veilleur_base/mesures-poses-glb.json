@@ -1,0 +1,116 @@
+{
+  "id": "unite_meridien_veilleur_base",
+  "methode": "Relecture GLB NumPy : skin rigide appliqué par jointWorld × inverseBindMatrix, sommets, translations LINEAR et rotations slerp ; 1537 instants et toutes clés. Comparaison aux mesures Three.js du GLB exporté à 2 µm près (elles-mêmes recoupées avec la scène source). Majoration continue de toute géométrie sauf témoin par vitesse maximale de translation/slerp et demi-pas. Le témoin rétractable est majoré par sa sphère locale autour du pivot corps immobile horizontalement.",
+  "clips": [
+    {
+      "nom": "repos",
+      "nombreEchantillons": 1594,
+      "enveloppe": {
+        "min": [
+          -0.41068687021315065,
+          0.034999996423721313,
+          -0.4106868703581481
+        ],
+        "max": [
+          0.4106868699946911,
+          0.6660000231266021,
+          0.4106868699922719
+        ]
+      },
+      "rayonHorizontalMax": 0.49352963089372576,
+      "vitesseMajoreeMetresSeconde": 2.2175321302670494,
+      "rayonHorizontalMajorationContinue": 0.49526207793933846,
+      "espacementMinimumVoisinsTousCaps": 0.009475844121323074,
+      "racineIdentite": true
+    },
+    {
+      "nom": "deplacement",
+      "nombreEchantillons": 1569,
+      "enveloppe": {
+        "min": [
+          -0.41310312159831414,
+          0.048934605548729276,
+          -0.41489905797616133
+        ],
+        "max": [
+          0.41310351245703836,
+          0.6927350157057008,
+          0.40778476406232944
+        ]
+      },
+      "rayonHorizontalMax": 0.49724510398147437,
+      "vitesseMajoreeMetresSeconde": 4.043543709888138,
+      "rayonHorizontalMajorationContinue": 0.4985613616995371,
+      "espacementMinimumVoisinsTousCaps": 0.002877276600925849,
+      "racineIdentite": true
+    },
+    {
+      "nom": "touche",
+      "nombreEchantillons": 1539,
+      "enveloppe": {
+        "min": [
+          -0.41505331665115397,
+          0.034999996423721313,
+          -0.41304689201268774
+        ],
+        "max": [
+          0.4131804817652589,
+          0.6790709455800473,
+          0.4155113636559514
+        ]
+      },
+      "rayonHorizontalMax": 0.4941421713001342,
+      "vitesseMajoreeMetresSeconde": 3.1793077463959305,
+      "rayonHorizontalMajorationContinue": 0.4946596367536492,
+      "espacementMinimumVoisinsTousCaps": 0.010680726492701575,
+      "racineIdentite": true
+    },
+    {
+      "nom": "hors_jeu",
+      "nombreEchantillons": 1556,
+      "enveloppe": {
+        "min": [
+          -0.4106868389926559,
+          -2.7755575615628914e-17,
+          -0.4106868401777082
+        ],
+        "max": [
+          0.4106869805424842,
+          0.665686213356969,
+          0.41068698174316703
+        ]
+      },
+      "rayonHorizontalMax": 0.49352968593240254,
+      "vitesseMajoreeMetresSeconde": 2.643305780588137,
+      "rayonHorizontalMajorationContinue": 0.4943040919022945,
+      "espacementMinimumVoisinsTousCaps": 0.011391816195410964,
+      "racineIdentite": true
+    }
+  ],
+  "borneAnalytiqueTemoin": 0.30740260599369656,
+  "bornesStatiques": {
+    "min": [
+      -0.4099999934434891,
+      0.034999996423721313,
+      -0.4099999934434891
+    ],
+    "max": [
+      0.4099999934434891,
+      0.657000019788742,
+      0.4099999934434891
+    ],
+    "dimensions": [
+      0.8199999868869782,
+      0.6220000233650207,
+      0.8199999868869782
+    ]
+  },
+  "portee": "GLB neutre, gabarit runtime b=[1,1,1] ; PROPORTIONS nationaux a=[.9,.98,1.06] et c=[1.14,1.06,.95] non certifiés ici.",
+  "limites": [
+    "Contrôle numérique sans rendu ni approbation artistique.",
+    "Sol mesuré aux échantillons ; rayon majoré continûment.",
+    "Chaque clip lu séparément ; mélanges entre clips non mesurés.",
+    "Les collisions internes ne sont pas certifiées par cette mesure d’enveloppe.",
+    "Les déformations nationales runtime ne sont pas comprises dans la borne .5 m."
+  ]
+}
