@@ -1,0 +1,830 @@
+{
+  "id": "batiment_ville_base",
+  "sha256Glb": "066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a",
+  "triangles": 4608,
+  "primitives": 5,
+  "noeuds": [
+    "enseigne",
+    "volet_mobile",
+    "corps",
+    "toit",
+    "racine"
+  ],
+  "bornes": {
+    "min": [
+      -0.42500001192092896,
+      -1.0430813157658037e-10,
+      -0.429500013589859
+    ],
+    "max": [
+      0.42500001192092896,
+      0.7008494138717651,
+      0.42500001192092896
+    ],
+    "dimensions": [
+      0.8500000238418579,
+      0.7008494139760733,
+      0.854500025510788
+    ]
+  },
+  "geometrie": {
+    "trianglesDegeneres": 0,
+    "trianglesUvDegeneres": 0,
+    "normalesSensFaceMin": 0.9238793820462553,
+    "erreurNormalesMax": 2.9338493856556624e-08,
+    "erreurTangentesMax": 3.8316051886866376e-08,
+    "uvMin": 0.016249999403953552,
+    "uvMax": 0.9837499856948853
+  },
+  "raccords": [
+    {
+      "a": "dalle",
+      "b": "mur_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "soubassement_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_arriere",
+      "b": "corniche_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "corniche_arriere",
+      "b": "toit_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "toit_arriere",
+      "b": "faitiere_arriere",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "mur_gauche",
+      "distanceMetres": 7.450580596923828e-09
+    },
+    {
+      "a": "dalle",
+      "b": "soubassement_gauche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_gauche",
+      "b": "corniche_gauche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "corniche_gauche",
+      "b": "toit_gauche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "toit_gauche",
+      "b": "faitiere_gauche",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "mur_droite",
+      "distanceMetres": 7.450580596923828e-09
+    },
+    {
+      "a": "dalle",
+      "b": "soubassement_droite",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_droite",
+      "b": "corniche_droite",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "corniche_droite",
+      "b": "toit_droite",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "toit_droite",
+      "b": "faitiere_droite",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_gauche",
+      "b": "platine_charniere_0.303",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_charniere_0.303",
+      "b": "charniere_0.303",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "charniere_0.303",
+      "b": "panneau_volet_mobile",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_gauche",
+      "b": "platine_charniere_0.357",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_charniere_0.357",
+      "b": "charniere_0.357",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "charniere_0.357",
+      "b": "panneau_volet_mobile",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_gauche",
+      "b": "platine_auvent_-0.398",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_auvent_-0.398",
+      "b": "console_auvent_-0.398",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "console_auvent_-0.398",
+      "b": "auvent",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_gauche",
+      "b": "platine_auvent_-0.208",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "platine_auvent_-0.208",
+      "b": "console_auvent_-0.208",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "console_auvent_-0.208",
+      "b": "auvent",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "auvent",
+      "b": "retombee_auvent",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "mur_arriere",
+      "b": "console_enseigne",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "embase_table",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "embase_table",
+      "b": "pied_table",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_table",
+      "b": "plateau_table",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "console_enseigne",
+      "b": "rail_enseigne_-0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rail_enseigne_-0.083",
+      "b": "patin_enseigne_-0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "patin_enseigne_-0.083",
+      "b": "banderole",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rail_enseigne_-0.083",
+      "b": "butee_enseigne_-0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "console_enseigne",
+      "b": "rail_enseigne_0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rail_enseigne_0.083",
+      "b": "patin_enseigne_0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "patin_enseigne_0.083",
+      "b": "banderole",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "rail_enseigne_0.083",
+      "b": "butee_enseigne_0.083",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.382_-0.01_-0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.382_-0.01_-0.01",
+      "b": "assise_-0.382",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.382_0.01_-0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.382_0.01_-0.01",
+      "b": "assise_-0.382",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.382_-0.01_0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.382_-0.01_0.01",
+      "b": "assise_-0.382",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.382_0.01_0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.382_0.01_0.01",
+      "b": "assise_-0.382",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.23_-0.01_-0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.23_-0.01_-0.01",
+      "b": "assise_-0.23",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.23_0.01_-0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.23_0.01_-0.01",
+      "b": "assise_-0.23",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.23_-0.01_0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.23_-0.01_0.01",
+      "b": "assise_-0.23",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "pied_tabouret_-0.23_0.01_0.01",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_tabouret_-0.23_0.01_0.01",
+      "b": "assise_-0.23",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "bac_0_fond",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bac_0_fond",
+      "b": "terre_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_0",
+      "b": "feuillage_0_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_0",
+      "b": "feuillage_0_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_0",
+      "b": "feuillage_0_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "bac_1_fond",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bac_1_fond",
+      "b": "terre_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_1",
+      "b": "feuillage_1_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_1",
+      "b": "feuillage_1_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_1",
+      "b": "feuillage_1_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "bac_2_fond",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "bac_2_fond",
+      "b": "terre_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_2",
+      "b": "feuillage_2_0",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_2",
+      "b": "feuillage_2_1",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "terre_2",
+      "b": "feuillage_2_2",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.286",
+      "b": "pied_ratelier_0.236_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.236_0.286",
+      "b": "arceau_ratelier_0.236",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.37",
+      "b": "pied_ratelier_0.236_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.236_0.37",
+      "b": "arceau_ratelier_0.236",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.286",
+      "b": "pied_ratelier_0.296_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.296_0.286",
+      "b": "arceau_ratelier_0.296",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.37",
+      "b": "pied_ratelier_0.296_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.296_0.37",
+      "b": "arceau_ratelier_0.296",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.286",
+      "b": "pied_ratelier_0.356_0.286",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.356_0.286",
+      "b": "arceau_ratelier_0.356",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "dalle",
+      "b": "longeron_ratelier_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "longeron_ratelier_0.37",
+      "b": "pied_ratelier_0.356_0.37",
+      "distanceMetres": 0.0
+    },
+    {
+      "a": "pied_ratelier_0.356_0.37",
+      "b": "arceau_ratelier_0.356",
+      "distanceMetres": 0.0
+    }
+  ],
+  "toits": [
+    {
+      "nom": "arriere",
+      "ferme": true,
+      "incidencesAretes": 2,
+      "normalesSortantesDistanceMin": 0.04466666777928674
+    },
+    {
+      "nom": "gauche",
+      "ferme": true,
+      "incidencesAretes": 2,
+      "normalesSortantesDistanceMin": 0.03766666849454242
+    },
+    {
+      "nom": "droite",
+      "ferme": true,
+      "incidencesAretes": 2,
+      "normalesSortantesDistanceMin": 0.03566667437553406
+    }
+  ],
+  "cour": {
+    "min": [
+      -0.13,
+      0.024001,
+      -0.1
+    ],
+    "max": [
+      0.13,
+      1.0,
+      0.425
+    ],
+    "hauteurPlateau": 0.024,
+    "accessoiresHorsCourToutesPoses": true,
+    "terrasseSousAuvent": true,
+    "jardinieresExterieures": true,
+    "limite": "Boîte libre mesurée ; visibilité de toutes les figurines non évaluée."
+  },
+  "animations": {
+    "poses": 36,
+    "clips": [
+      {
+        "nom": "repos",
+        "duree": 3.200000047683716,
+        "poses": 18,
+        "cibles": [
+          "volet_mobile"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.42500001192092896,
+            -1.0430813157658037e-10,
+            -0.429500013589859
+          ],
+          "max": [
+            0.42500001192092896,
+            0.7008494138717651,
+            0.42500001192092896
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "volet_mobile",
+          "min": [
+            -0.19162782247654572,
+            0.29049998700618745,
+            -0.1261055359266639
+          ],
+          "max": [
+            -0.13646574233637856,
+            0.3695000129938126,
+            -0.1023407988765587
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.19,
+                0.0,
+                1.0,
+                0.0,
+                0.33,
+                0.0,
+                0.0,
+                1.0,
+                -0.116,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.800000011920929,
+              "matrice": [
+                0.998200539873446,
+                0.0,
+                0.05996400750751062,
+                -0.19,
+                0.0,
+                1.0,
+                0.0,
+                0.33,
+                -0.05996400750751062,
+                0.0,
+                0.998200539873446,
+                -0.116,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.600000023841858,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.19,
+                0.0,
+                1.0,
+                0.0,
+                0.33,
+                0.0,
+                0.0,
+                1.0,
+                -0.116,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 2.4000000953674316,
+              "matrice": [
+                0.998200539873446,
+                0.0,
+                -0.05996400750751062,
+                -0.19,
+                0.0,
+                1.0,
+                0.0,
+                0.33,
+                0.05996400750751062,
+                0.0,
+                0.998200539873446,
+                -0.116,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 3.200000047683716,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                -0.19,
+                0.0,
+                1.0,
+                0.0,
+                0.33,
+                0.0,
+                0.0,
+                1.0,
+                -0.116,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "nom": "capture",
+        "duree": 1.399999976158142,
+        "poses": 18,
+        "cibles": [
+          "enseigne"
+        ],
+        "enveloppe": {
+          "min": [
+            -0.42500001192092896,
+            -1.0430813157658037e-10,
+            -0.429500013589859
+          ],
+          "max": [
+            0.42500001192092896,
+            0.7008494138717651,
+            0.42500001192092896
+          ]
+        },
+        "ecartDebutFin": 0.0,
+        "racineCorpsToitImmobiles": true,
+        "mobile": {
+          "nom": "enseigne",
+          "min": [
+            -0.09650000184774399,
+            0.5000000149011612,
+            -0.1545000094920397
+          ],
+          "max": [
+            0.09650000184774399,
+            0.5865000039339066,
+            -0.11550000496208668
+          ],
+          "probesCles": [
+            {
+              "t": 0.0,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.5220000147819519,
+                0.0,
+                0.0,
+                1.0,
+                -0.12600000202655792,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.3499999940395355,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.5379999876022339,
+                0.0,
+                0.0,
+                1.0,
+                -0.12600000202655792,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 0.699999988079071,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.5519999861717224,
+                0.0,
+                0.0,
+                1.0,
+                -0.12600000202655792,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.0499999523162842,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.5379999876022339,
+                0.0,
+                0.0,
+                1.0,
+                -0.12600000202655792,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            },
+            {
+              "t": 1.399999976158142,
+              "matrice": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.5220000147819519,
+                0.0,
+                0.0,
+                1.0,
+                -0.12600000202655792,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "gardeVoletMurAuxPoses": 0.012372173708757012,
+    "gardeContinueVoletCour": 0.0037581876899190347,
+    "gardeContinueEnseigneButees": 0.010499998927116394,
+    "gardeContinueEnseigneToit": 0.015232069417834254,
+    "preuveContinue": "Capture translation LINEAR : séparation suivant Y et Z bornée aux clés. Volet rotation ±0,06 rad : rayon maximal × angle majore tous les déplacements et préserve la cour. Autres contacts mesurés seulement aux poses.",
+    "optIn": true
+  },
+  "textures": {
+    "masqueBinaire": true,
+    "grisNeutreSurMasque": true,
+    "emissionVitrageFeuSeulement": true,
+    "pngExternes": 5
+  },
+  "controleVisuel": false,
+  "approbationArtistique": false,
+  "limites": [
+    "Contacts ciblés listés et cour mesurée ; aucune certification exhaustive des collisions.",
+    "Deux clips isolés, aucun rendu ni mesure sur téléphone."
+  ]
+}

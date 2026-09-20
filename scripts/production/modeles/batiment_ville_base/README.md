@@ -1,7 +1,5 @@
 # Ville commune — source originale
 
-Intégré dans le jeu après contrôle technique ; qualité artistique non vérifiée.
-
 Création paramétrique indépendante de `batiment_ville_base`. Le coordinateur a confirmé une lecture distante authentifiée réussie le 20 septembre 2026 à 17:00:55.074 UTC, sans dépôt. Aucun maître local pertinent identifié. Ancien actif et candidat SHA `18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5` : 1 036 triangles, 129 500 octets ; quinze PNG historiques inspectés numériquement. Aucune source ou géométrie précédente importée, modifiée ou supprimée.
 
 Trois maisons neutres entourent une cour ouverte vers +Z. La maison du fond a trois niveaux, les ailes deux. Toits fermés à deux pans, rangs de tuiles en relief, faîtières arrondies et rives grises ; fenêtres émissives séparées, encadrements, volets de bois et soubassements. Sur la marge avant gauche, l’auvent protège une table et deux tabourets. Trois jardinières à fond et quatre parois, terre et feuillage ; râtelier à trois arceaux sur la marge avant droite. Aucun emblème, texte ou silhouette humaine.

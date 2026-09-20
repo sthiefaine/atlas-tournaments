@@ -1,0 +1,182 @@
+{
+  "id": "batiment_ville_base",
+  "date": "2026-09-20T17:11:19.655159+00:00",
+  "etat": "controle_technique_reussi",
+  "source": "creation_originale_parametrique",
+  "verificationDistante": {
+    "date": "2026-09-20T17:00:55.074Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "maitreLocalIdentifie": false,
+  "ancienCandidat": {
+    "sha256": "18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5",
+    "triangles": 1036,
+    "octetsGlb": 129500,
+    "preserve": true,
+    "actifPreserve": true,
+    "geometrieReutilisee": false
+  },
+  "triangles": 4608,
+  "budgetTriangles": 5000,
+  "primitives": 5,
+  "materiaux": 2,
+  "octetsGlb": 487896,
+  "octetsLot": 1947859,
+  "dimensions": [
+    0.8500000238418579,
+    0.7008494139760733,
+    0.854500025510788
+  ],
+  "sha256Glb": "066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a",
+  "fichiers": [
+    {
+      "fichier": "batiment_ville_base_albedo.png",
+      "octets": 446321,
+      "sha256": "f052335b6cff0668761c6d2da489e6cca140f9c83065b881ff3e7be3ae8ab23a"
+    },
+    {
+      "fichier": "batiment_ville_base_emission.png",
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "fichier": "batiment_ville_base_lod0.glb",
+      "octets": 487896,
+      "sha256": "066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a"
+    },
+    {
+      "fichier": "batiment_ville_base_masque_equipe.png",
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    },
+    {
+      "fichier": "batiment_ville_base_normale.png",
+      "octets": 916267,
+      "sha256": "e980311c153f4f865569e8e4f6934cb98bda21d4843d5bfd7aea1ce50280264a"
+    },
+    {
+      "fichier": "batiment_ville_base_rugosite.png",
+      "octets": 95685,
+      "sha256": "c67e84537b181c456a171eda18f8dd6c50cad9857b18f4e905ab49bb6e56498a"
+    }
+  ],
+  "sources": [
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/README.md",
+      "sha256": "04d84131c565a1bf7a1458c332c070ec430090cd2059a7dbdf94c0d8a8e5dda2"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/assembler-revue.py",
+      "sha256": "5208baba2e5e83d5911e2db466b6da9c776ca8f3e4a951cd6d48db6b42da66ef"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/generer.ts",
+      "sha256": "6340f7433cd51396c925e9e6f6bdf0d17db8db910cd8c7b9235e116b7688d7fa"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/geometrie.py",
+      "sha256": "693c5deb1a0e7b9a06a2fa7907b8385fa110b9e324ccc30d26d9a9ca9b78e18b"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/gltf.ts",
+      "sha256": "4c026757fc081d97192d78c3688873c9e98e305da10522d3340efa626d5c0779"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/inspecter-ancien.py",
+      "sha256": "9f0ace7ee1809bdcaf180b16b484beef37246ad86fbacad10ba6870992c1e064"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/mesurer-natif.ts",
+      "sha256": "bb103bcec9d0c5ec8caab63fddc7fb7fd094751455e6a030aed0e72c9b75e861"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/mesurer.py",
+      "sha256": "6946ff2d69019d710e2ef110432b44537f6e17d74f6aac778b7c561cbe720c0b"
+    },
+    {
+      "fichier": "scripts/production/modeles/batiment_ville_base/textures.py",
+      "sha256": "81e25cfc1fa380c77a031cc9ed810c6fbb29ce93c9ed2f46b13107220507b6ba"
+    }
+  ],
+  "controleLot": {
+    "ok": true,
+    "motifs": [],
+    "acceptes": [
+      "batiment_ville_base_albedo.png",
+      "batiment_ville_base_emission.png",
+      "batiment_ville_base_lod0.glb",
+      "batiment_ville_base_masque_equipe.png",
+      "batiment_ville_base_normale.png",
+      "batiment_ville_base_rugosite.png"
+    ],
+    "inconnus": [],
+    "lodManquants": []
+  },
+  "typecheck": "typecheck.json",
+  "mesures": {
+    "rapport": "mesures.json",
+    "natif": "mesures-natif-glb.json",
+    "poses": 36,
+    "pairesRaccordsListees": 89,
+    "controleExhaustifCollisions": false,
+    "pariteNumpyNatif": true,
+    "cour": {
+      "min": [
+        -0.13,
+        0.024001,
+        -0.1
+      ],
+      "max": [
+        0.13,
+        1.0,
+        0.425
+      ],
+      "hauteurPlateau": 0.024,
+      "accessoiresHorsCourToutesPoses": true,
+      "terrasseSousAuvent": true,
+      "jardinieresExterieures": true,
+      "limite": "Boîte libre mesurée ; visibilité de toutes les figurines non évaluée."
+    },
+    "toits": [
+      {
+        "nom": "arriere",
+        "ferme": true,
+        "incidencesAretes": 2,
+        "normalesSortantesDistanceMin": 0.04466666777928674
+      },
+      {
+        "nom": "gauche",
+        "ferme": true,
+        "incidencesAretes": 2,
+        "normalesSortantesDistanceMin": 0.03766666849454242
+      },
+      {
+        "nom": "droite",
+        "ferme": true,
+        "incidencesAretes": 2,
+        "normalesSortantesDistanceMin": 0.03566667437553406
+      }
+    ],
+    "gardeContinueVoletCour": 0.0037581876899190347,
+    "gardeContinueEnseigneToit": 0.015232069417834254,
+    "gardeContinueEnseigneButees": 0.010499998927116394
+  },
+  "pertes": {
+    "decimation": false,
+    "reductionTexture": false,
+    "bakeHD": false,
+    "ancienModeleRemplaceParCreationIndependante": true
+  },
+  "approbationArtistique": false,
+  "controleVisuel": false,
+  "testsGeneraux": false,
+  "build": false,
+  "fpsTelephone": null,
+  "limites": [
+    "Mesures ciblées sur les pièces et sondes listées, pas de preuve exhaustive de non-intersection ou visibilité.",
+    "Textures retirées en mémoire pour charger sous Node ; cartes et UV contrôlés séparément.",
+    "Transitions entre animations non évaluées dans le jeu.",
+    "Aucune approbation artistique, capture ou mesure téléphone."
+  ]
+}

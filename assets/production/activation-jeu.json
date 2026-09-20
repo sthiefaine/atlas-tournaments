@@ -289,6 +289,14 @@
       "revision": "7c191b861ca7ff73bc13f910bb79270a6a26eab2ef329386cea242f43094b4d6",
       "controle": "ok",
       "provenance": "creation_originale"
+    },
+    {
+      "id": "batiment_ville_base",
+      "fichierActif": "public/assets/modeles/batiment_ville_base_lod0.glb",
+      "donnees": "../donnees/066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a.glb",
+      "revision": "4a4b915f2a75696c2af1ad2d0b327195349c83e2dd50caa4ac6a554f071e5359",
+      "controle": "ok",
+      "provenance": "creation_originale"
     }
   ],
   "notes": [

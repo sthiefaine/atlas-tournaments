@@ -1,0 +1,38 @@
+{
+  "id": "batiment_ville_base",
+  "verificationLocale": [
+    {
+      "chemin": "assets/sources/batiment_ville_base",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/source.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/optimisation-lod0/batiment_ville_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    },
+    {
+      "chemin": "tmp/production-sequentielle/batiment_ville_base/maitre.json",
+      "existe": false,
+      "fichiers": []
+    }
+  ],
+  "maitreLocalIdentifie": false,
+  "lectureDistanteCommuniquee": {
+    "date": "2026-09-20T17:00:55.074Z",
+    "nombreDepots": 0,
+    "origine": "Coordinateur, lecture authentifiée réussie ; aucun secret copié."
+  },
+  "ancienCandidat": "inspection-ancien-candidat.json",
+  "candidatPreserve": true
+}

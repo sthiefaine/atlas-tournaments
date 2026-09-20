@@ -1,0 +1,302 @@
+{
+  "id": "batiment_ville_base",
+  "nature": "creation_originale",
+  "date": "2026-09-20",
+  "scripts": "scripts/production/modeles/batiment_ville_base",
+  "fichiers": [
+    {
+      "nom": "batiment_ville_base_albedo.png",
+      "sha256": "f052335b6cff0668761c6d2da489e6cca140f9c83065b881ff3e7be3ae8ab23a",
+      "octets": 446321
+    },
+    {
+      "nom": "batiment_ville_base_emission.png",
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc",
+      "octets": 1202
+    },
+    {
+      "nom": "batiment_ville_base_lod0.glb",
+      "sha256": "066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a",
+      "octets": 487896
+    },
+    {
+      "nom": "batiment_ville_base_masque_equipe.png",
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7",
+      "octets": 488
+    },
+    {
+      "nom": "batiment_ville_base_normale.png",
+      "sha256": "e980311c153f4f865569e8e4f6934cb98bda21d4843d5bfd7aea1ce50280264a",
+      "octets": 916267
+    },
+    {
+      "nom": "batiment_ville_base_rugosite.png",
+      "sha256": "c67e84537b181c456a171eda18f8dd6c50cad9857b18f4e905ab49bb6e56498a",
+      "octets": 95685
+    }
+  ],
+  "verificationDistante": {
+    "date": "2026-09-20T17:12:02.888Z",
+    "nombreDepots": 0,
+    "revisionRecente": null
+  },
+  "archivePrecedente": "assets/receptions/batiment_ville_base/avant-18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5",
+  "precedents": [
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/README.md",
+      "sha256": "d1b0e75ef15f429ee46158a735957000efceaf23811e19b05392bd1d6b489cb8",
+      "octets": 275
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_lod0.glb",
+      "sha256": "18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5",
+      "octets": 129500
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/batiment_ville_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/validation-lot.json",
+      "sha256": "b8dbd86d1f336073cbd4aaf45705d4877867ce7b6192f82dc3c042c606e135be",
+      "octets": 1102
+    },
+    {
+      "chemin": "assets/livraisons/batiment_ville_base/version-candidat.json",
+      "sha256": "ad316d3e1a5815d2061a9c633d4fade99e0506e4467d403f53dd1a2827ad9b82",
+      "octets": 76
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_lod0.glb",
+      "sha256": "18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5",
+      "octets": 129500
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/modeles/batiment_ville_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_lod0.glb",
+      "sha256": "18daaaf44f866602c5a2f7eaed89b8789eeafa64dd1a987d0f30eb71442910e5",
+      "octets": 129500
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_albedo.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_albedo_ete.png",
+      "sha256": "e9a7154c23b3e2577a670681407b252e656f4fcff783786fb911ee6043a1b126",
+      "octets": 288459
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_albedo_hiver.png",
+      "sha256": "37f32ab5d1b12e3225a8d8e467a3f48201a17ca69eaee964a884b510b62546c8",
+      "octets": 294041
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_normale.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_normale_ete.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_normale_hiver.png",
+      "sha256": "9d6569c91c1a8f405a0e16e5d892743639f6a27adbb24269142e9fec4629db40",
+      "octets": 10638
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_rugosite.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_rugosite_ete.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_rugosite_hiver.png",
+      "sha256": "5751aee79e8226c188d3d3fbef3964deb1c870a5e2756b1aa2df98f30c741ba4",
+      "octets": 3029
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_emission.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_emission_ete.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_emission_hiver.png",
+      "sha256": "8a81f892bb949c4f3be18158d6a07f54b2a441272df5e1f92836e49589be46c5",
+      "octets": 1967
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_masque_equipe.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_masque_equipe_ete.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    },
+    {
+      "chemin": "public/assets/candidats/batiment_ville_base_masque_equipe_hiver.png",
+      "sha256": "2386cfecaff90215a8823d9aab5bc453433c3cf9dae92efb48fa339ab5ed98a2",
+      "octets": 1968
+    }
+  ],
+  "approbationArtistique": false
+}

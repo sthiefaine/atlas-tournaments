@@ -1,0 +1,153 @@
+{
+  "id": "batiment_ville_base",
+  "methode": "Atlas déterministe original ; pigments, enduits, joints de dallage, tuiles et bois analytiques ; sans éclairage, reflet, ombre, occlusion cuits.",
+  "bakeHD": false,
+  "atlas": {
+    "grille": [
+      4,
+      4
+    ],
+    "gouttierePixels": 16,
+    "palette": [
+      [
+        194,
+        190,
+        178
+      ],
+      [
+        211,
+        200,
+        169
+      ],
+      [
+        167,
+        167,
+        167
+      ],
+      [
+        121,
+        132,
+        128
+      ],
+      [
+        33,
+        76,
+        91
+      ],
+      [
+        174,
+        94,
+        61
+      ],
+      [
+        81,
+        129,
+        77
+      ],
+      [
+        41,
+        45,
+        43
+      ],
+      [
+        130,
+        148,
+        143
+      ],
+      [
+        104,
+        131,
+        117
+      ],
+      [
+        244,
+        205,
+        139
+      ],
+      [
+        85,
+        65,
+        46
+      ],
+      [
+        218,
+        212,
+        191
+      ],
+      [
+        194,
+        190,
+        178
+      ],
+      [
+        194,
+        190,
+        178
+      ],
+      [
+        194,
+        190,
+        178
+      ]
+    ],
+    "equipe": [
+      2
+    ],
+    "emission": [
+      4,
+      10
+    ]
+  },
+  "cartes": [
+    {
+      "canal": "albedo",
+      "fichier": "batiment_ville_base_albedo.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 446321,
+      "sha256": "f052335b6cff0668761c6d2da489e6cca140f9c83065b881ff3e7be3ae8ab23a"
+    },
+    {
+      "canal": "normale",
+      "fichier": "batiment_ville_base_normale.png",
+      "dimensions": [
+        1024,
+        1024
+      ],
+      "octets": 916267,
+      "sha256": "e980311c153f4f865569e8e4f6934cb98bda21d4843d5bfd7aea1ce50280264a"
+    },
+    {
+      "canal": "rugosite",
+      "fichier": "batiment_ville_base_rugosite.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 95685,
+      "sha256": "c67e84537b181c456a171eda18f8dd6c50cad9857b18f4e905ab49bb6e56498a"
+    },
+    {
+      "canal": "emission",
+      "fichier": "batiment_ville_base_emission.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 1202,
+      "sha256": "5e488f8059943eb9ca79cd4dfd7934745cd9f2d42749ce24872d4e4208aad9dc"
+    },
+    {
+      "canal": "masque_equipe",
+      "fichier": "batiment_ville_base_masque_equipe.png",
+      "dimensions": [
+        512,
+        512
+      ],
+      "octets": 488,
+      "sha256": "c3a1fcc3682cb09c49c84fa992426cabb6cf66d9d2febea8a3ca15c63e8db6b7"
+    }
+  ]
+}
