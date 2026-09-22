@@ -1,0 +1,665 @@
+{
+  "version": 1,
+  "entrees": [
+    {
+      "id": "decor_feuillu_printemps_1",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "printemps",
+      "fichier": "decor_feuillu_printemps_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_ete_1",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "ete",
+      "fichier": "decor_feuillu_ete_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_automne_1",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "automne",
+      "fichier": "decor_feuillu_automne_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_hiver_1",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "hiver",
+      "fichier": "decor_feuillu_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_printemps_2",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "printemps",
+      "fichier": "decor_feuillu_printemps_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_ete_2",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "ete",
+      "fichier": "decor_feuillu_ete_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_automne_2",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "automne",
+      "fichier": "decor_feuillu_automne_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_hiver_2",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "hiver",
+      "fichier": "decor_feuillu_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_printemps_3",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "printemps",
+      "fichier": "decor_feuillu_printemps_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_ete_3",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "ete",
+      "fichier": "decor_feuillu_ete_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_automne_3",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "automne",
+      "fichier": "decor_feuillu_automne_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_feuillu_hiver_3",
+      "famille": "decor",
+      "cle": "feuillu",
+      "variante": "hiver",
+      "fichier": "decor_feuillu_hiver_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_printemps_1",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "printemps",
+      "fichier": "decor_conifere_printemps_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_ete_1",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "ete",
+      "fichier": "decor_conifere_ete_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_automne_1",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "automne",
+      "fichier": "decor_conifere_automne_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_hiver_1",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "hiver",
+      "fichier": "decor_conifere_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_printemps_2",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "printemps",
+      "fichier": "decor_conifere_printemps_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_ete_2",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "ete",
+      "fichier": "decor_conifere_ete_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_automne_2",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "automne",
+      "fichier": "decor_conifere_automne_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_hiver_2",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "hiver",
+      "fichier": "decor_conifere_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_printemps_3",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "printemps",
+      "fichier": "decor_conifere_printemps_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_ete_3",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "ete",
+      "fichier": "decor_conifere_ete_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_automne_3",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "automne",
+      "fichier": "decor_conifere_automne_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_conifere_hiver_3",
+      "famille": "decor",
+      "cle": "conifere",
+      "variante": "hiver",
+      "fichier": "decor_conifere_hiver_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_palmier_toutes_1",
+      "famille": "decor",
+      "cle": "palmier",
+      "variante": "toutes",
+      "fichier": "decor_palmier_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_palmier_toutes_2",
+      "famille": "decor",
+      "cle": "palmier",
+      "variante": "toutes",
+      "fichier": "decor_palmier_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_palmier_toutes_3",
+      "famille": "decor",
+      "cle": "palmier",
+      "variante": "toutes",
+      "fichier": "decor_palmier_toutes_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_tropical_toutes_1",
+      "famille": "decor",
+      "cle": "tropical",
+      "variante": "toutes",
+      "fichier": "decor_tropical_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_tropical_toutes_2",
+      "famille": "decor",
+      "cle": "tropical",
+      "variante": "toutes",
+      "fichier": "decor_tropical_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_tropical_toutes_3",
+      "famille": "decor",
+      "cle": "tropical",
+      "variante": "toutes",
+      "fichier": "decor_tropical_toutes_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_printemps_1",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "printemps",
+      "fichier": "decor_buisson_printemps_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_ete_1",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "ete",
+      "fichier": "decor_buisson_ete_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_automne_1",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "automne",
+      "fichier": "decor_buisson_automne_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_hiver_1",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "hiver",
+      "fichier": "decor_buisson_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_printemps_2",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "printemps",
+      "fichier": "decor_buisson_printemps_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_ete_2",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "ete",
+      "fichier": "decor_buisson_ete_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_automne_2",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "automne",
+      "fichier": "decor_buisson_automne_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_buisson_hiver_2",
+      "famille": "decor",
+      "cle": "buisson",
+      "variante": "hiver",
+      "fichier": "decor_buisson_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_printemps_1",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "printemps",
+      "fichier": "decor_touffe_printemps_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_ete_1",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "ete",
+      "fichier": "decor_touffe_ete_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_automne_1",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "automne",
+      "fichier": "decor_touffe_automne_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_hiver_1",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "hiver",
+      "fichier": "decor_touffe_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_printemps_2",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "printemps",
+      "fichier": "decor_touffe_printemps_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_ete_2",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "ete",
+      "fichier": "decor_touffe_ete_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_automne_2",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "automne",
+      "fichier": "decor_touffe_automne_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_touffe_hiver_2",
+      "famille": "decor",
+      "cle": "touffe",
+      "variante": "hiver",
+      "fichier": "decor_touffe_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_roseau_toutes_1",
+      "famille": "decor",
+      "cle": "roseau",
+      "variante": "toutes",
+      "fichier": "decor_roseau_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_roseau_hiver_1",
+      "famille": "decor",
+      "cle": "roseau",
+      "variante": "hiver",
+      "fichier": "decor_roseau_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_roseau_toutes_2",
+      "famille": "decor",
+      "cle": "roseau",
+      "variante": "toutes",
+      "fichier": "decor_roseau_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_roseau_hiver_2",
+      "famille": "decor",
+      "cle": "roseau",
+      "variante": "hiver",
+      "fichier": "decor_roseau_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_toutes_1",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "toutes",
+      "fichier": "decor_montagne_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_hiver_1",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "hiver",
+      "fichier": "decor_montagne_hiver_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_toutes_2",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "toutes",
+      "fichier": "decor_montagne_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_hiver_2",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "hiver",
+      "fichier": "decor_montagne_hiver_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_toutes_3",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "toutes",
+      "fichier": "decor_montagne_toutes_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_hiver_3",
+      "famille": "decor",
+      "cle": "montagne",
+      "variante": "hiver",
+      "fichier": "decor_montagne_hiver_3.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_aride_toutes_1",
+      "famille": "decor",
+      "cle": "montagne_aride",
+      "variante": "toutes",
+      "fichier": "decor_montagne_aride_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_aride_toutes_2",
+      "famille": "decor",
+      "cle": "montagne_aride",
+      "variante": "toutes",
+      "fichier": "decor_montagne_aride_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_volcan_toutes_1",
+      "famille": "decor",
+      "cle": "montagne_volcan",
+      "variante": "toutes",
+      "fichier": "decor_montagne_volcan_toutes_1.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    },
+    {
+      "id": "decor_montagne_volcan_toutes_2",
+      "famille": "decor",
+      "cle": "montagne_volcan",
+      "variante": "toutes",
+      "fichier": "decor_montagne_volcan_toutes_2.glb",
+      "vues": [
+        "fixe"
+      ],
+      "ombre": true
+    }
+  ]
+}
