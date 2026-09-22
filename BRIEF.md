@@ -1,5 +1,13 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## Sprites précalculés — décision du 23 septembre 2026
+
+Le propriétaire (« go, mets plusieurs agents pour tout faire ») remplace le rendu 3D temps réel par des **sprites 2D lisses, précalculés depuis les modèles GLB**. La cuisson, hors ligne (Blender, `scripts/sprites/`, `npm run cuire:sprites`), photographie chaque modèle sous **une seule caméra orthographique fixe** (tangage 50°), à quatre fois la taille puis réduite, avec tous ses clips ; le jeu compose ces images en **WebGL 2** (`src/render2d/`). Le contrat entre les deux est `src/render2d/contrat.ts`, le document `doc/18-rendu-sprites.md`.
+
+Cette décision **annule** pour le jeu celle du 14 septembre (« conserver Three.js et WebGPU ») et celle du 5 septembre qui retirait la 2D. Conséquences acceptées : la vue devient fixe (ni rotation ni inclinaison, comme Advance Wars) ; l'éclairage par saison, phase et météo devient un étalonnage et des calques (neige, pluie, fenêtres allumées) ; une marée se voit par un fondu, plus par un relief qui monte ; **WebGPU n'est plus exigé**. Les GLB restent la **source** : la production de modèles continue, et chaque livraison se recuit. La 3D reste joignable par `?rendu=3d` jusqu'à ce que le propriétaire valide la 2D, puis `render3d/` sera retiré d'un seul commit — `render2d/` n'a pas le droit de l'importer, un test y veille.
+
+Le même jour : finir le chapitre français de la saison 1 (FR07 à FR12, conçus dans `doc/refonte/opus1-nations.json`) en missions jouables, cartes comprises. Plan d'exécution : `doc/refonte/plan-sprites-campagne.md`.
+
 ## Simplification et début de saison 1 — 13 septembre 2026
 
 Les variantes **régionales d’assets** sont suspendues à la demande du propriétaire ; les régions du récit et leurs cartes restent au canon. Conserver les bases et les déclinaisons nationales. L’entrée Jeu libre est retirée au profit de la campagne. Six premières missions nationales de saison 1 sont désormais accessibles, avec des cartes distinctes et les modes normal/difficile ; leur équilibrage n’est pas homologué. Le parcours contient 18 missions dont dix tutoriels et deux matchs officiels de transition. La carte de bibliothèque `/atelier/assets` présente séparément fichiers actifs, candidats et manquants. Les sons d’environnement, déplacements et dialogues sont fusionnés. Les cinq bases communes ville/usine/port/aéroport/radar sont activées en LOD0 depuis le 14 septembre ; les sources uploadées restent préservées. Détails : `doc/refonte/livraison-saison1-assets-sons.md` et `doc/refonte/saison1-suite-septembre.md`.
@@ -126,6 +134,8 @@ Nom du jeu : **Atlas Tournament**. Dépôt : `atlas-tournaments`. Langue des doc
 - Techniquement : un système de **flags** défini dans la bible, contre lequel toutes les routines écrivent. Fins multiples.
 
 ## Direction artistique (révisée le 5 septembre 2026 : 3D)
+
+> **Depuis le 23 septembre 2026, le jeu affiche des sprites précalculés** (voir « Sprites précalculés », en tête). Ce qui suit reste vrai des **modèles** — matières, silhouettes, proportions, interdits —, qui sont désormais la source des images ; ce qui y est dit de la caméra libre, de l'éclairage temps réel et de WebGPU ne l'est plus du jeu.
 
 - **3D avec three.js, vue de dessus à faible inclinaison** (caméra perspective, tangage entre 60° et 75° au-dessus de l'horizontale, lacet fixe avec rotation par quarts de tour optionnelle, zoom par paliers). La grille reste lisible en permanence : chaque case est une case, les unités se lisent d'un coup d'œil, comme en 2D.
 - **Textures de terrain détaillées et réalistes** (PBR : albédo, normales, rugosité), terrain en relief léger à partir de la carte (plaines, collines, montagnes, rivières encaissées, côtes), eau avec reflets, arbres et bâtiments en modèles 3D. Le ton du monde reste sérieux, les affrontements non sanglants : réalisme des matières, pas réalisme de la violence.

@@ -16,14 +16,19 @@ const autorise: Record<string, string[]> = {
   mapgen: ["engine", "schemas", "content"],
   render: ["engine", "schemas", "content", "i18n"],
   render3d: ["engine", "schemas", "content", "i18n", "render", "assets", "audio"],
-  audio: [],
+  // La peau 2D a les mêmes droits que la 3D, et jamais celui de l'importer :
+  // c'est ce qui permettra de retirer `render3d/` d'un seul commit.
+  render2d: ["engine", "schemas", "content", "i18n", "render", "assets", "audio"],
+  // Le son lit les types du canon (le type de mouvement d'une unité choisit son
+  // bruit) depuis le 13 septembre 2026 ; `schemas` n'importe rien, rien ne s'inverse.
+  audio: ["schemas"],
   assets: ["schemas", "content"],
   schemas: [],
   content: ["schemas"],
   i18n: ["schemas"],
   db: ["schemas"],
   serveur: ["engine", "ai", "mapgen", "schemas", "content", "db", "i18n", "assets"],
-  app: ["audio", "engine", "ai", "mapgen", "render", "render3d", "assets", "schemas", "content", "db", "serveur", "i18n"],
+  app: ["audio", "engine", "ai", "mapgen", "render", "render2d", "render3d", "assets", "schemas", "content", "db", "serveur", "i18n"],
 };
 
 // Modules du navigateur interdits dans les couches pures.

@@ -27,12 +27,13 @@ import type { BackendRendu, QualiteRendu } from './qualite';
 import type { Surbrillance } from './surbrillance';
 
 /**
- * La peau. Il n'y en a plus qu'une : le rendu vectoriel a été retiré, et un
- * appareil sans WebGL 2 n'affiche pas le jeu plutôt que d'en afficher une
- * version dégradée. Le type reste un littéral pour que `data-rendu` et les
- * tests de fumée continuent de nommer ce qu'ils regardent.
+ * La peau. `2d` compose des images cuites depuis les modèles (décision du
+ * 23 septembre 2026, `src/render2d/`) ; `3d` est le rendu temps réel, gardé le
+ * temps que le propriétaire valide la 2D, puis retiré d'un seul commit. Le type
+ * reste un littéral pour que `data-rendu` et les tests de fumée nomment ce
+ * qu'ils regardent.
  */
-export type CleRendu = '3d';
+export type CleRendu = '2d' | '3d';
 
 /** Un point en pixels logiques dans l'élément du rendu. */
 export interface PointVue { x: number; y: number }
