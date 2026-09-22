@@ -9,7 +9,7 @@ Demande du propriétaire : « tout refaire en sprite lisse, optimiser le jeu, am
 3. **Trois vues par unité** (`droite`, `bas`, `haut`), la gauche par retournement ; l'éclairage de cuisson vient de l'avant-gauche et **l'ombre d'une unité n'est pas cuite** — le rendu la pose, sous l'unité ou sous l'appareil en vol.
 4. **Masque d'équipe** : zones d'équipe cuites en blanc, masque dans une page à part, `couleur × mix(1, équipe, masque)` à l'écran. Même source de couleur que la 3D (`palette.main` du style de nation).
 5. **WebGL 2 maison**, sans dépendance : un lot de sprites instanciés, un nuanceur de sol, une caméra 2D. Pas de WebGPU, pas de three dans la route de jeu.
-6. **La 3D reste joignable par `?rendu=3d`** jusqu'à la validation du propriétaire ; `render2d/` n'a pas le droit d'importer `render3d/` (`tests/frontieres.test.ts`), le retrait sera un seul commit.
+6. **La 3D est retirée sans attendre de validation** (« retire-la », le propriétaire, même jour). Elle sert de référence de comportement aux agents des deux premières vagues, puis part en un seul commit (vague 3). `render2d/` n'a pas le droit d'importer `render3d/` (`tests/frontieres.test.ts`). Les scripts de production des GLB et l'inspection d'un modèle dans l'admin gardent ce qu'il leur faut de three.js, déplacé hors de `render3d/`.
 7. **Campagne** : FR07 à FR12 passent de la fiche de conception (`doc/refonte/opus1-nations.json`) à la mission jouable — carte, scénario, dialogues, choix et conséquences, entrée de parcours — et `npm run verifier:campagne` reste vert. Les 132 autres missions nationales, les 18 finales et les 28 hors-série ne sont **pas** dans ce plan.
 
 ## Vague 1 — sept agents en parallèle, fichiers disjoints
@@ -30,9 +30,13 @@ Demande du propriétaire : « tout refaire en sprite lisse, optimiser le jeu, am
 |---|---|---|
 | **H · animations** | mise en scène | les 25 gestes de la partition en 2D, effets, arrêt sur image, secousse, particules météo, sons calés |
 | **I · combat** | écran de combat | `ouvrirCombat` en 2D : vue de profil, une figurine par PV, décor de la case |
-| **J · bascule** | intégration, performance | 2D par défaut, vitrine de l'accueil en 2D (téléphone compris), aperçus du carnet en images cuites, poids de la route de jeu, specs Playwright mobile et WebKit |
+| **J · bascule** | intégration, performance | la 2D seule peau du jeu, vitrine de l'accueil en 2D (téléphone compris), banc et vitrine de l'atelier en images cuites, aperçus du carnet en images cuites, specs Playwright mobile et WebKit |
 
 La cuisson du décor (sources de B par la chaîne de A) et la régénération du fil (`npm run fil:opus1`) sont faites par le coordinateur entre les deux vagues.
+
+## Vague 3 — le retrait de la 3D, un seul commit
+
+Après H, I et J (qui lisent `render3d/` comme référence de comportement). Un agent **K · retrait** supprime `src/render3d/`, ses tests et la fumée 3D, retire `?rendu=3d` (`CleRendu` ne vaut plus que `'2d'`), sort de `render3d/` ce dont les scripts de production des GLB et l'inspection de l'admin ont besoin (vers `src/assets/` ou `scripts/production/`), décide du sort de la rustine de three et du préchargement de test selon ce qui importe encore `three/webgpu`, et met à jour les documents. Critère : la route de jeu et l'accueil n'embarquent plus three ; `typecheck`, `lint`, `npm test`, `build` et les scripts de production verts.
 
 ## Règles communes, recopiées dans chaque consigne
 
