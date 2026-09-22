@@ -35,6 +35,8 @@ __pycache__/
 
 # Construction lancée à côté du serveur de développement (next.config.ts)
 .next-build
+# Serveurs et constructions d'agents, chacun avec son NEXT_DIST_DIR
+/.next-*/
 
 # Les worktrees des agents (isolation des chantiers parallèles)
 .claude/worktrees/
