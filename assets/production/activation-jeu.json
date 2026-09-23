@@ -76,10 +76,10 @@
     {
       "id": "unite_antiair_base",
       "fichierActif": "public/assets/modeles/unite_antiair_base_lod0.glb",
-      "donnees": "../donnees/e9279cc5eb5a31b5dce9131879811d106caec5b26e33ab46cae1c04456a698b4.glb",
-      "revision": "f6046f80ecbaa7bafb3e76fa501dd24a25f218b666fe953ec8e3e0fc36563cef",
+      "donnees": "../donnees/4a88dd08e024974e6c3d18ff208342d1f045d2dce104da550d09de982f477618.glb",
+      "revision": "044790905bbfbf416bb6b2cf74bc468e0590bbf563af2e2e8a94bbd5250ddf90",
       "controle": "ok",
-      "sourcePrepareeSha256": "46eadefcc05c52760a5d45dd834762bf7e743bb4e3850a837052b7e95e561899"
+      "provenance": "figurine"
     },
     {
       "id": "unite_artillerie_base",
@@ -276,10 +276,10 @@
     {
       "id": "unite_recon_base",
       "fichierActif": "public/assets/modeles/unite_recon_base_lod0.glb",
-      "donnees": "../donnees/73b4eba1837c11d12dd09a5b5604d05e00a11de2ddb5011d8e929da2d94eb373.glb",
-      "revision": "67709e8c52054473d10ba1b5e4d3f1d9400d0c9300f547aad5b56a63dc2a36bf",
+      "donnees": "../donnees/c8bcbce718a0b31b5e64138ffbcb70341ec06e0104a551533c79b96976cd2f64.glb",
+      "revision": "cad7391aa36aef541d87ca1d555bbf976bfcb6222e73f24b081ff2932f5de017",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_roquettes_base",
@@ -308,10 +308,10 @@
     {
       "id": "unite_transport_base",
       "fichierActif": "public/assets/modeles/unite_transport_base_lod0.glb",
-      "donnees": "../donnees/5f7d678f92351d28dffb7d5eeedda7b0b13d6cff8179463286fa12ddcce7e3e3.glb",
-      "revision": "ba49e31fc9c316e89049f1d3bc85fd27cf61f72cabbdb661b3e9a062b524d054",
+      "donnees": "../donnees/873333a8c1e84441a0255574c013d6cf7785989c80d63a6c7defde56d2f52a9f.glb",
+      "revision": "ffd2dc1cc1f3b6a6ac9de3647412d7d1625d8db7ddcf7b5c487a1cdcc1048c38",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     }
   ],
   "notes": [
