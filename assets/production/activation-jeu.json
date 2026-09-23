@@ -164,10 +164,10 @@
     {
       "id": "unite_drone_intercepteur_base",
       "fichierActif": "public/assets/modeles/unite_drone_intercepteur_base_lod0.glb",
-      "donnees": "../donnees/87804e9cd1dab17d9c1882c55610e15e73634bb554bd34750700079a4d9a68c6.glb",
-      "revision": "67db21336bbb5638b4e897912769c932a395abf42b332fef35a0b40ae309382e",
+      "donnees": "../donnees/59fcc8e5882add6c91808ca3634d999f88d688ed3eafac9b98a73514bb2e0278.glb",
+      "revision": "2af2220bfe4db6c7b097cd5692fbd2bc4b52bd976f10f8bf44ac2d20227d4a4d",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_drone_marin_base",

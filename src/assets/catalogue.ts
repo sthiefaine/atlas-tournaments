@@ -899,6 +899,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   char_leger: [0.546, 0.517, 0.684],
   char_lourd: [0.72, 0.717, 0.772],
   char_moyen: [0.566, 0.63, 0.778],
+  drone_intercepteur: [0.667, 0.314, 0.688],
   genie: [0.569, 0.859, 0.349],
   helico: [0.446, 0.38, 0.818],
   infanterie: [0.48, 0.831, 0.487],
