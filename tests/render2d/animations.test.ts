@@ -87,7 +87,8 @@ test('un glissement suit le chemin du moteur, part du début de ce chemin, et se
   const v = e.visuels.visuel(id);
   // En attendant son départ, l'unité est au début de son chemin — l'état la dit déjà arrivée.
   assert.deepEqual([v.dx, v.dy], [-2, -1]);
-  e.avancer(16 * 10);
+  // Dix images : l'élan est pris, la marche est lancée.
+  for (let i = 0; i < 10; i++) e.avancer(16);
   assert.ok(v.dx > -2 && v.dx <= 0, `au milieu du chemin : ${v.dx}`);
   assert.equal(v.clip, 'deplacement');
   assert.equal(v.orientation, 'droite');
@@ -95,7 +96,7 @@ test('un glissement suit le chemin du moteur, part du début de ce chemin, et se
   await fin;
   assert.equal(fini, true);
   assert.deepEqual([v.dx, v.dy, v.orientation, v.clip], [0, 0, null, 'repos']);
-  assert.deepEqual(e.sons, ['pas'], 'le son de la marche part avec elle');
+  assert.deepEqual(e.sons, ['pas', 'pas'], 'le bruit de la marche, un pas toutes les 280 ms');
 });
 
 test('couper saute à l’état final exact et tient la promesse', async () => {
@@ -136,7 +137,8 @@ test('une unité mise hors jeu reste à l’écran le temps de sortir, puis est 
   const e = essai(avant, apres);
   const fin = e.jouer({ gestes: [{ genre: 'sortir', unite: id, case: { x: 4, y: 0 }, debut: 0, duree: 420 }], duree: 420 });
   assert.equal(e.visuels.estRetenue(id), true, 'retenue dès la construction du geste');
-  e.avancer(200);
+  // Elle chancelle d'abord, éclate au tiers, puis s'efface.
+  for (let i = 0; i < 19; i++) e.avancer(16);
   assert.ok(e.visuels.visuel(id).opacite < 1);
   for (let i = 0; i < 30; i++) e.avancer(16);
   await fin;
@@ -156,9 +158,10 @@ test('une unité qui glisse puis sort s’efface là où elle est arrivée', asy
     duree: 780,
   });
   for (let i = 0; i < 26; i++) e.avancer(16);
-  // Le glissement fini, l'unité retenue a été reposée à son arrivée, sans décalage.
+  // Le glissement fini, l'unité retenue a été reposée à son arrivée, sans décalage de
+  // marche : il ne reste que le tremblement de la sortie, qui ne dépasse pas deux centièmes.
   assert.equal(e.visuels.retenue(id)?.x, 3);
-  assert.equal(e.visuels.visuel(id).dx, 0);
+  assert.ok(Math.abs(e.visuels.visuel(id).dx) <= 0.02, `${e.visuels.visuel(id).dx}`);
   for (let i = 0; i < 40; i++) e.avancer(16);
   await fin;
 });
@@ -203,7 +206,12 @@ test('un genre sans exécutant ne joue rien et ne retient personne ; ceux du HUD
   const chiffre: Geste = { genre: 'chiffre', case: { x: 0, y: 0 }, valeur: 3, teinte: 'perte', debut: 0, duree: 900 };
   assert.equal(corpsDe(chiffre, e.ctx), null);
   assert.equal(EXECUTANTS.duel, undefined);
-  for (const genre of ['glisser', 'tirer', 'encaisser', 'sortir', 'apparaitre', 'hisser', 'cadrer'] as const) {
+  assert.equal(EXECUTANTS.chiffre, undefined);
+  for (const genre of [
+    'glisser', 'tirer', 'encaisser', 'sortir', 'hisser', 'remettre', 'batir', 'apparaitre', 'embarquer', 'debarquer',
+    'fusionner', 'ravitailler', 'reparer', 'repousser', 'pouvoir', 'cadrer', 'voiler', 'devoiler', 'surprise',
+    'reveiller', 'frapper', 'designer', 'sceller',
+  ] as const) {
     assert.equal(typeof EXECUTANTS[genre], 'function', genre);
   }
 });

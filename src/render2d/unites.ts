@@ -65,6 +65,14 @@ export interface EtatVisuel2d {
   clip: ClipSprite;
   /** Le temps de rendu où le clip a commencé : un clip qui ne boucle pas se lit depuis là. */
   clipDebut: number;
+  /**
+   * Le temps du clip imposé par le geste, en millisecondes, ou `null` pour le
+   * lire à l'horloge depuis `clipDebut`. Une marche se cale sur le chemin
+   * parcouru, un coup reçu tient sa première image pendant l'arrêt sur image.
+   */
+  clipTemps: number | null;
+  /** Une teinte imposée par un geste (le bleu d'une impulsion), `null` sinon. */
+  teinte: Rvb | null;
   /** Multiplicateur d'opacité : un geste qui fait apparaître ou sortir. */
   opacite: number;
   /** 0 rien, 1 blanc : l'éclat d'un coup reçu. */
@@ -80,8 +88,8 @@ export interface EtatVisuel2d {
 /** Un état visuel neutre : l'unité telle que l'état la dit. */
 export function etatVisuelNeutre(): EtatVisuel2d {
   return {
-    dx: 0, dy: 0, dh: 0, orientation: null, clip: 'repos', clipDebut: 0, opacite: 1, eclat: 0, echelle: 1,
-    pv: null, voile: null,
+    dx: 0, dy: 0, dh: 0, orientation: null, clip: 'repos', clipDebut: 0, clipTemps: null, teinte: null,
+    opacite: 1, eclat: 0, echelle: 1, pv: null, voile: null,
   };
 }
 
@@ -277,7 +285,7 @@ export function posesUnites(etat: EtatPartie, cat: Catalogue, visuels: Visuels, 
     let cadre = 0;
     if (anim) {
       if (v.clip !== 'repos') {
-        cadre = cadreDe(anim, o.tempsMs - v.clipDebut);
+        cadre = cadreDe(anim, v.clipTemps ?? o.tempsMs - v.clipDebut);
       } else if (!joue && !o.reduit && anim.cadres > 1 && anim.boucle) {
         // Le repos respire à sa cadence, chaque unité à sa phase.
         cadre = cadreDe(anim, o.tempsMs + phaseDe(u.id) * 10);
@@ -298,7 +306,7 @@ export function posesUnites(etat: EtatPartie, cat: Catalogue, visuels: Visuels, 
 
     const figurine: InstanceSprite = {
       entree, animation: anim?.index ?? -1, cadre, x: gx, y: gy, h, miroir, equipe, opacite,
-      eclat: v.eclat, echelle: v.echelle,
+      eclat: v.eclat, echelle: v.echelle, ...(v.teinte ? { teinte: v.teinte } : {}),
     };
     poses.push({ calque: 'unites', ligne: gy, colonne: gx, instance: figurine });
 

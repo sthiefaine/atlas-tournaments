@@ -11,14 +11,20 @@ import type { ImageMesuree } from '../render/mesure-performance';
  * Une image se compose dans l'ordre de `ORDRE_CALQUES` :
  *
  * 1. **sol** — un fond coloré par case (`surbrillances.ts`, `tracerFond`), puis
- *    le sol du lot du terrain (`./sol`, `CoucheSol`), qui le recouvre ;
- * 2. **surbrillances** — cases allumées, flèche, curseur, anneau (aplats) ;
- * 3. **volumes** — bâtiments, pavillons et décor du sol, triés par ligne ;
- * 4. le **voile** d'ambiance (nuit, brume), au-dessus des volumes et sous les
- *    unités : une unité se lit toujours ;
- * 5. **ombres des unités**, puis **unités** — toujours au-dessus des volumes :
- *    rien ne cache une unité —, avec leurs pastilles et leurs marques ;
- * 6. **effets**, **météo**, **étalonnage** — réservés à la seconde vague.
+ *    le sol du lot du terrain (`./sol`, `CoucheSol`), qui le recouvre — tous
+ *    deux dans la palette de **jour** ;
+ * 2. le **voile** d'ambiance (nuit, brume, tempête) sur le sol seul : les images
+ *    du monde reçoivent le même par instance (`meteo.ts`, `etalonnerPose`),
+ *    une seule fois — rien n'est assombri deux fois ;
+ * 3. **surbrillances** — cases allumées, flèche, curseur, anneau (aplats), au-
+ *    dessus du voile : elles se lisent de nuit comme de jour ;
+ * 4. **volumes** — bâtiments, pavillons et décor du sol, triés par ligne ;
+ * 5. **ombres des unités** (et les effets couchés au sol), puis **unités** —
+ *    toujours au-dessus des volumes : rien ne cache une unité —, avec leurs
+ *    pastilles et leurs marques, qui ne reçoivent pas la nuit ;
+ * 6. **effets** (`effets.ts`), **météo** en espace écran (`meteo.ts`), puis
+ *    l'éclat et la vague d'un pouvoir, par-dessus tout. La secousse d'un coup
+ *    ne déplace que l'image, jamais `versEcran`.
  *
  * Tout ce qui est une image passe par **un seul lot** (`lot.ts`) : un tampon
  * d'instances téléversé une fois par image, un appel de dessin par suite
@@ -39,7 +45,7 @@ import { cleCase, seuilCapture, signatureTerrain, terrainLogique, uniteParId } f
 import { chargerStyleNation } from '../assets/styles';
 import { sonEnvironnement } from '../audio/profils';
 import type { SortieAudio } from '../audio/types';
-import { lireCouleur } from '../render/ambiance';
+import { ambiance as ambianceDuClimat, lireCouleur } from '../render/ambiance';
 import { Boucle } from '../render/boucle';
 import { paletteDe } from '../render/palettes';
 import { ecrirePartition, type Partition } from '../render/partition';
@@ -55,13 +61,19 @@ import { estBatiment, poseDrapeau, posesBatiments, type PoseDrapeau } from './ba
 import {
   creerCamera2d, matricePlanVersDecoupe, planVersEcran, type Camera2d, type EtatCamera2d,
 } from './camera';
+import { ouvrirCombat2d } from './combat';
 import {
   CHEMIN_MANIFESTE, IMAGES_PAR_SECONDE, idBatiment, idUnite, niveauxBrouillard, ORDRE_CALQUES, versPlan,
   type ClipSprite, type ContexteImage, type CoucheSol, type InstanceSprite, type ManifesteSprites, type VueSprite,
 } from './contrat';
+import { monterPlanche, PoolEffets, Secousse, Superposition, type PlancheEffets } from './effets';
 import { brancherGestes2d } from './gestes';
 import { creerToile, type Toile } from './gl';
-import { LotSprites, ordonner, poser, type Pose } from './lot';
+import { LotSprites, ordonner, poser, type Pose, type ResolveurImages } from './lot';
+import {
+  ETALONNAGE_NEUTRE, etalonnageAmbiance, etalonnerPose, matriceEcran, Meteo2d, MS_METEO, MS_METEO_TACTILE,
+  PLAFOND_METEO, PLAFOND_METEO_TACTILE, type Etalonnage,
+} from './meteo';
 import { creerPeintreRepli, fabriqueToileDocument } from './replis';
 import { creerSol } from './sol';
 import {
@@ -145,6 +157,8 @@ interface Gpu {
   surbrillances: CoucheAplats;
   anneau: CoucheAplats;
   voile: CoucheAplats;
+  /** L'éclat et la vague de teinte d'un pouvoir, par-dessus tout. */
+  superposition: CoucheAplats;
 }
 
 function mediane(valeurs: readonly number[]): number {
@@ -216,6 +230,31 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   const toutes: Pose[] = [];
   const couleurs = new Map<string, Rvb>();
 
+  // --- Les effets (`effets.ts`) : le pool, la secousse, les superpositions d'un
+  //     pouvoir, la planche de leurs images ; la météo et l'étalonnage (`meteo.ts`).
+  const effets = new PoolEffets();
+  const secousse = new Secousse();
+  const superposition = new Superposition();
+  let planche: PlancheEffets | null = null;
+  let monterPlancheEffets: (() => PlancheEffets | null) | null = null;
+  let meteo: Meteo2d | null = null;
+  let msMeteo = MS_METEO;
+  const matriceMeteo = new Float32Array(9);
+  /** L'étalonnage de la nuit, de la brume : posé sur chaque image du monde, une fois. */
+  let etalonnage: Etalonnage = ETALONNAGE_NEUTRE;
+  let cleEtalonnageSol = '';
+  /** Une case vue : rien d'un effet ne se pose au-dessus du brouillard. */
+  const vuCase = (x: number, y: number): boolean => {
+    const e = etat;
+    if (!brouillard || !e) return true;
+    if (x < 0 || y < 0 || x >= e.largeur || y >= e.hauteur) return false;
+    return (brouillard[y * e.largeur + x] ?? 0) > 0;
+  };
+  /** Les images de la scène : la planche d'effets d'abord, l'atlas pour tout le reste. */
+  const resolveur: ResolveurImages = {
+    resoudre: (inst) => planche?.resoudre(inst) ?? atlas?.resoudre(inst) ?? null,
+  };
+
   // --- Les mesures.
   const durees: number[] = [];
   const intervalles: number[] = [];
@@ -234,13 +273,13 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     boucle?.salir();
   }
 
-  /** Réveille la boucle au pas de l'ambiance, une seule minuterie en vol. */
-  function planifierAmbiance(): void {
+  /** Réveille la boucle au pas de l'ambiance — ou plus tôt, pour la météo —, une seule minuterie en vol. */
+  function planifierAmbiance(delai = MS_AMBIANCE): void {
     if (minuterieAmbiance !== null) return;
     minuterieAmbiance = setTimeout(() => {
       minuterieAmbiance = null;
       salir();
-    }, MS_AMBIANCE);
+    }, delai);
   }
 
   /** La couleur d'équipe d'un camp : le style de sa nation, sa palette à défaut, le gris neutre sans camp. */
@@ -292,6 +331,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       surbrillances: aplats.couche(),
       anneau: aplats.couche(),
       voile: aplats.couche(),
+      superposition: aplats.couche(),
     };
   }
 
@@ -305,6 +345,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       g.surbrillances.dispose();
       g.anneau.dispose();
       g.voile.dispose();
+      g.superposition.dispose();
       g.aplats.dispose();
     } catch {
       // Un contexte perdu rend ses objets tout seul.
@@ -328,6 +369,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     try {
       sol = creerSol(t.gl, etat, { biome: options.biome ?? 'plaine', reduit: reduit(), manifeste });
       solAvecManifeste = manifeste !== null;
+      // Le mode tactique survit à la seconde naissance du sol, quand le manifeste arrive.
+      sol.tactique?.(tactique);
       if (vue && brouillard) sol.maj(etat, vue, brouillard);
     } catch (cause) {
       solEnPanne = true;
@@ -359,7 +402,9 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     cleFond = cle;
     trace.vider();
     const lire = terrainDe(e, v);
-    tracerFond(trace, e.largeur, e.hauteur, (x, y) => couleurTerrainFond(lire({ x, y }), v.ambiance.palette), brouillard);
+    // La palette de **jour**, comme le sol : la nuit est le voile, posé une seule fois par-dessus.
+    const jour = ambianceDuClimat(v.ambiance.saison, 'jour', v.ambiance.meteo).palette;
+    tracerFond(trace, e.largeur, e.hauteur, (x, y) => couleurTerrainFond(lire({ x, y }), jour), brouillard);
     g.fond.poser(trace);
   }
 
@@ -394,7 +439,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   // Une image
   // -------------------------------------------------------------------------
 
-  function collecterPoses(e: EtatPartie, v: VueInteraction, tempsMs: number, calme: boolean): { animees: boolean; selection: { x: number; y: number } | null } {
+  function collecterPoses(e: EtatPartie, v: VueInteraction, tempsMs: number, calme: boolean): { animees: boolean; selection: { x: number; y: number } | null; effetsPoses: number } {
     toutes.length = 0;
     if (batimentsSales || batimentsAnimes) {
       const b = posesBatiments(e, terrainDe(e, v), {
@@ -406,6 +451,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       posesBat = b.poses;
       batimentsAnimes = b.animees;
       batimentsSales = false;
+      // Des instances fraîches : on les étalonne une fois, ici, et jamais d'une image à l'autre.
+      for (const p of posesBat) etalonnerPose(p, etalonnage);
     }
     for (const p of posesBat) toutes.push(p);
     // Le décor du sol, trié avec les bâtiments ; enveloppé une fois par tableau reçu.
@@ -418,9 +465,15 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         console.error('Sol 2D en panne', cause);
       }
     }
-    if (volumes !== derniersVolumesSol) {
+    if (volumes !== derniersVolumesSol || cleEtalonnageSol !== etalonnage.cle) {
       derniersVolumesSol = volumes;
-      posesSol = (volumes ?? []).map((i) => poser('volumes', i));
+      cleEtalonnageSol = etalonnage.cle;
+      // Les instances du sol sont à lui : on étalonne une copie, jamais les siennes.
+      posesSol = (volumes ?? []).map((i) => {
+        const p = poser('volumes', etalonnage.neutre ? i : { ...i });
+        etalonnerPose(p, etalonnage);
+        return p;
+      });
     }
     for (const p of posesSol) {
       if (tactique && VEGETATION.test(p.instance.entree)) continue;
@@ -432,9 +485,18 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       tempsMs, reduit: calme,
     });
     positions = u.positions;
-    for (const p of u.poses) toutes.push(p);
+    for (const p of u.poses) {
+      // Fraîches à chaque image : la figurine reçoit la nuit, sa pastille et sa marque non.
+      etalonnerPose(p, etalonnage);
+      toutes.push(p);
+    }
+    // Les effets, au-dessus des unités (ou au sol, sous elles), jamais sur une case cachée.
+    const effetsPoses = effets.poses(toutes, vuCase);
+    // La météo, en espace écran : rien sous animations réduites.
+    const cam = camera;
+    if (meteo && cam) meteo.poses(v.ambiance.particules, v.ambiance.phase === 'nuit', tempsMs, cam.vue, calme, toutes);
     ordonner(toutes);
-    return { animees: u.animees || batimentsAnimes, selection: u.selection };
+    return { animees: u.animees || batimentsAnimes, selection: u.selection, effetsPoses };
   }
 
   /** Dessine une image entière. Rend vrai si la suivante doit venir tout de suite. */
@@ -451,6 +513,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     let urgent = cam.avancer(ecoule, calme);
     if (sol && !solEnPanne && sol.enMouvement()) urgent = true;
     for (const encart of encarts) if (encart.enMouvement()) urgent = true;
+    // L'étalonnage de l'ambiance (nuit, brume…) : quand il change, les images du monde se refont.
+    const etalonnageCourant = etalonnageAmbiance(v.ambiance);
+    if (etalonnageCourant !== etalonnage) {
+      etalonnage = etalonnageCourant;
+      batimentsSales = true;
+    }
 
     const gl = t.gl;
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -463,6 +531,17 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     gl.clearColor(FOND_TOILE.r / 255, FOND_TOILE.v / 255, FOND_TOILE.b / 255, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     matricePlanVersDecoupe(cam.etat, cam.vue, matrice);
+    // La secousse d'un coup : l'image seule bouge, jamais `versEcran` — un clic
+    // pendant une secousse vise la case qu'il vise.
+    const choc = secousse.decalage();
+    if (choc.x !== 0 || choc.y !== 0) {
+      matrice[6] = (matrice[6] ?? 0) + (2 * choc.x) / Math.max(1, cam.vue.largeur);
+      matrice[7] = (matrice[7] ?? 0) - (2 * choc.y) / Math.max(1, cam.vue.hauteur);
+    }
+    // Le champ, un rien élargi : une secousse ne découvre jamais un bord sans voile.
+    const champVu = cam.champ();
+    const marge = 8 / Math.max(1e-6, cam.etat.zoom);
+    const champ = { minX: champVu.minX - marge, minY: champVu.minY - marge, maxX: champVu.maxX + marge, maxY: champVu.maxY + marge };
 
     let appels = 0;
     const familles: Record<string, MesureFamille> = {};
@@ -498,9 +577,21 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     }
 
+    // --- Le voile d'ambiance (nuit, brume, tempête) sur le sol **seul**, juste
+    //     après lui et sous les surbrillances, qui restent lisibles. Le sol peint
+    //     la palette de jour ; les images du monde reçoivent le même voile par
+    //     instance (`etalonnerPose`) : rien n'est assombri deux fois.
+    const voile = v.ambiance.voile;
+    if (voile) {
+      trace.vider();
+      tracerVoile(trace, champ, voile.couleur, voile.alpha);
+      g.voile.poser(trace);
+      compter('etalonnage', g.voile.triangles, g.voile.dessiner(matrice));
+    }
+
     // --- Les images de la scène, rangées une fois pour toute l'image.
-    const { animees, selection } = collecterPoses(e, v, debut, calme);
-    const empaquetage = g.lot.preparer(toutes, a);
+    const { animees, selection, effetsPoses } = collecterPoses(e, v, debut, calme);
+    const empaquetage = g.lot.preparer(toutes, resolveur);
 
     // --- Surbrillances, puis l'anneau au pied de l'unité choisie. Leur trace
     // ne se refait que si leur clé change : un survol ne refait que le curseur.
@@ -514,21 +605,36 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     }
 
     const nuit = v.ambiance.villesEclairees ? 1 : 0;
-    const voile = v.ambiance.voile;
+    let superposee = false;
+    // La météo tombe devant la caméra : son calque a la matrice de l'écran.
+    matriceEcran(cam.vue.largeur, cam.vue.hauteur, matriceMeteo);
     for (const calque of ORDRE_CALQUES) {
       if (calque === 'sol' || calque === 'voies' || calque === 'surbrillances') continue;
-      if (calque === 'ombres_unites' && voile) {
+      if (calque === 'etalonnage') {
+        // L'éclat et la vague de teinte d'un pouvoir : par-dessus tout, la météo comprise.
         trace.vider();
-        tracerVoile(trace, cam.champ(), voile.couleur, voile.alpha);
-        g.voile.poser(trace);
-        compter('etalonnage', g.voile.triangles, g.voile.dessiner(matrice));
+        if (superposition.tracer(trace, champ) > 0) {
+          superposee = true;
+          g.superposition.poser(trace);
+          compter('etalonnage', g.superposition.triangles, g.superposition.dessiner(matrice));
+        }
       }
-      const s = g.lot.dessinerCalque(calque, matrice, nuit);
+      const s = g.lot.dessinerCalque(calque, calque === 'meteo' ? matriceMeteo : matrice, nuit);
       if (s.appels > 0) compter(calque, s.instances * 2, s.appels);
     }
 
     // --- Les encarts, chacun dans son rectangle.
     for (const encart of encarts) appels += dessinerEncart(t, g, a, encart, debut, nuit);
+
+    // Les effets ont été posés à leur âge ; ils vieillissent de l'image **après**,
+    // sur l'horloge de la boucle — celle des gestes qui les ont jetés.
+    effets.avancer(ecoule);
+    secousse.avancer(ecoule);
+    superposition.avancer(ecoule);
+    // Encore une image tant qu'ils vivent — et une de plus après le dernier,
+    // qui le retire de l'écran : sinon la dernière étincelle y resterait figée.
+    const secoue = choc.x !== 0 || choc.y !== 0;
+    if (effetsPoses > 0 || secoue || superposee || effets.actif() || secousse.active() || superposition.active()) urgent = true;
 
     const fin = performance.now();
     durees.push(fin - debut);
@@ -549,8 +655,10 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     // (`ambiant`, ajout proposé au contrat), il a droit au pas de l'ambiance.
     const solAmbiant = sol !== null && !solEnPanne && (sol as CoucheSol & { ambiant?(): boolean }).ambiant?.() === true;
     const ambiant = !calme && (animees || selection !== null || solAmbiant);
+    // La météo tombe au repos aussi, plus vite que le pas de l'ambiance ; jamais sous réduction.
+    const meteoActive = meteo !== null && !calme && v.ambiance.particules.type !== 'aucune';
     continuPrecedent = urgent || animations > 0;
-    if (!urgent && animations === 0 && ambiant) planifierAmbiance();
+    if (!urgent && animations === 0 && (ambiant || meteoActive)) planifierAmbiance(meteoActive ? msMeteo : MS_AMBIANCE);
     return urgent;
   }
 
@@ -576,7 +684,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     matricePlanVersDecoupe(encart.camera, { largeur: boite.width, hauteur: boite.height }, m);
     const poses = [...encart.poses(tempsMs)];
     ordonner(poses);
-    g.lot.preparer(poses, a);
+    // Le même résolveur que la carte : un encart peut poser des effets (`effet_*`).
+    g.lot.preparer(poses, a === atlas ? resolveur : a);
     let appels = 0;
     for (const calque of ORDRE_CALQUES) appels += g.lot.dessinerCalque(calque, m, nuit).appels;
     gl.disable(gl.SCISSOR_TEST);
@@ -623,6 +732,14 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       visible: (c) => !vue?.visibles || vue.visibles.has(cleCase(c)),
       temps: () => performance.now(),
       salir,
+      effets,
+      secouer: (amplitude, duree, retard) => {
+        secousse.lancer(amplitude, duree, retard);
+        salir();
+      },
+      superposition,
+      equipe: couleurEquipe,
+      reduit,
     };
   }
 
@@ -650,6 +767,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
           gpu = null;
           jeterSol();
           atlas?.perdre();
+          planche = null;
           cleFond = '';
           cleSurbrillances = '';
         },
@@ -658,6 +776,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
           if (!tt) return;
           try {
             gpu = monterGpu(tt.gl);
+            // La planche d'effets se repeint : sa texture est morte avec le contexte.
+            planche = monterPlancheEffets?.() ?? null;
             monterSol();
             batimentsSales = true;
             salir();
@@ -682,6 +802,13 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         peintre: creerPeintreRepli(fabriqueToileDocument(doc), () => vue?.catalogue ?? null),
         surArrivee: salir,
       });
+      // Les images d'effets et de météo : peintes par le code, une fois, sur une planche.
+      monterPlancheEffets = () => monterPlanche(televerseurWebGl(t.gl), fabriqueToileDocument(doc));
+      planche = monterPlancheEffets();
+      // Au doigt, la météo porte moins de particules et tombe moins souvent.
+      const tactile = fenetre?.matchMedia?.('(pointer: coarse)').matches === true;
+      meteo = new Meteo2d(tactile ? PLAFOND_METEO_TACTILE : PLAFOND_METEO);
+      msMeteo = tactile ? MS_METEO_TACTILE : MS_METEO;
       vivant = true;
       boucle = new Boucle(dessiner);
       // Le manifeste arrive quand il arrive : d'ici là, tout est en repli.
@@ -743,8 +870,11 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
 
     couper(): void {
       options.audio?.annuler();
-      // Tout saute à l'état final : chaque `terminer` pose le sien.
+      // Tout saute à l'état final : chaque `terminer` pose le sien, et rien ne traîne.
       boucle?.viderFile(true);
+      effets.couper();
+      secousse.couper();
+      superposition.couper();
       drapeauxForces.clear();
       batimentsSales = true;
       salir();
@@ -804,6 +934,15 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     modeTactique(actif: boolean): void {
       tactique = actif;
       if (toile) toile.canvas.dataset['modeTactique'] = String(actif);
+      // Le repli du sol (arbres, hautes herbes du nuanceur) ne l'apprend que par là.
+      if (sol && !solEnPanne) {
+        try {
+          sol.tactique?.(actif);
+        } catch (cause) {
+          solEnPanne = true;
+          console.error('Sol 2D en panne', cause);
+        }
+      }
       salir();
     },
 
@@ -879,6 +1018,29 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       };
     },
 
+    ouvrirCombat(hote, geste) {
+      // L'écran de combat (`combat.ts`) : des encarts posés au rectangle que le
+      // HUD fournit. Une peau qui n'est pas montée rend `null`, et le HUD garde
+      // alors ses plaques peintes.
+      const e = etat;
+      const v = vue;
+      if (!vivant || !e || !v || !atlas) return null;
+      return ouvrirCombat2d(hote, geste, {
+        ouvrirEncart: (encart) => rendu.ouvrirEncart(encart),
+        salir,
+        catalogue: v.catalogue,
+        terrain: (c) => terrainLogique(e, v.catalogue, c),
+        proprietaire: (c) => e.proprietaires[cleCase(c)] ?? null,
+        ambiance: v.ambiance,
+        biome: options.biome ?? 'plaine',
+        equipe: couleurEquipe,
+        entreeUnite,
+        entreeBatiment,
+        entree: (id) => atlas?.entree(id) ?? null,
+        reduit,
+      });
+    },
+
     demonter(): void {
       vivant = false;
       observateur = null;
@@ -890,6 +1052,13 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       encarts.clear();
       jeterSol();
       demonterGpu();
+      effets.couper();
+      secousse.couper();
+      superposition.couper();
+      planche?.dispose();
+      planche = null;
+      monterPlancheEffets = null;
+      meteo = null;
       atlas?.dispose();
       atlas = null;
       toile?.dispose();
