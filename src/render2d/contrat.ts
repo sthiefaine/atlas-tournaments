@@ -394,6 +394,14 @@ export interface CoucheSol extends CoucheGl {
    * et sous animations réduites il doit rendre faux.
    */
   ambiant?(): boolean;
+  /**
+   * Le mode tactique (`Rendu.modeTactique`) : le sol retire sa végétation de
+   * repli (arbres, hautes herbes dessinés par le nuanceur) comme le moteur
+   * retire la végétation cuite ; le relief, les rochers et les ponts restent.
+   * Le moteur le rappelle après chaque création du sol, pour que le mode
+   * survive au manifeste qui arrive.
+   */
+  tactique?(actif: boolean): void;
 }
 
 /** Ce que `render2d/sol/index.ts` exporte sous le nom `creerSol`. */
