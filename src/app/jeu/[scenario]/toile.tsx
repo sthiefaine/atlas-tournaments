@@ -33,7 +33,7 @@ import { lireProfilCommandant } from '@/content/profils-commandants';
 import { bilanDeFin, type Bilan } from './bilan';
 import type { EtapePage } from './etapes-chargement';
 import { PortraitCommandant } from './portrait-commandant';
-import { adversaireIa } from '../adversaire';
+import { creerAdversaireEnFond } from '../adversaire-fond';
 import { Gras } from '../../gras';
 import { texteNu } from '@/render/illustrations';
 import { scenarioPourMode } from '../difficulte';
@@ -364,11 +364,16 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     let victoireEnregistree = false;
     let dernierEtatJournal: EtatPartie | null = null;
     const catalogueJournal = chargerCatalogue(joue.catalogueVersion);
+    // L'IA réfléchit dans un Web Worker (`adversaire-fond.ts`) : le fil principal
+    // ne gèle plus pendant son tour, et elle calcule sur une copie de l'état.
+    // Un seul worker par partie, arrêté au démontage ; sans worker, elle joue
+    // sur le fil principal, avec les mêmes actions.
+    const enFond = creerAdversaireEnFond(ia, scenario.catalogueVersion, commandants, Object.fromEntries(joue.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!])));
     try {
       jeu = monterJeu(conteneur, {
         sonParole: () => audio.jouer('parole'),
         scenario: joue, carte, locale, commandants, graine,
-        adversaire: adversaireIa(ia, scenario.catalogueVersion, commandants, Object.fromEntries(joue.commandants.filter((c) => c.ia).map((c) => [c.camp, c.ia!]))),
+        adversaire: enFond.adversaire,
         reprendre: depart === 'reprise',
         cleSauvegarde,
         // La qualité d'affichage et la réduction des animations sont des
@@ -442,6 +447,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       console.error('Montage du jeu impossible', cause);
       conteneur.replaceChildren();
       audio.detruire();
+      enFond.fermer();
       setErreur(true);
       direChargement('pret');
       return undefined;
@@ -477,6 +483,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       audio.detruire();
       if (jeuRef.current === partie) jeuRef.current = null;
       partie.demonter();
+      enFond.fermer();
     };
   }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut, peau]);
 
