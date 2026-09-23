@@ -28,8 +28,11 @@ export const QUALITES_RENDU: readonly QualiteRendu[] = Object.freeze(['auto', 'b
 /** La qualité par défaut : le rendu mesure et décide. */
 export const QUALITE_PAR_DEFAUT: QualiteRendu = 'auto';
 
-/** WebGPU est le seul moteur autorisé. */
-export type BackendRendu = 'webgpu';
+/**
+ * Le dos qui dessine : `webgl2` pour la peau 2D (images cuites, décision du
+ * 23 septembre 2026), `webgpu` pour la 3D tant qu'elle n'est pas retirée.
+ */
+export type BackendRendu = 'webgl2' | 'webgpu';
 
 /** Ramène n'importe quoi à une qualité valide. */
 export function normaliserQualite(brut: unknown): QualiteRendu {
