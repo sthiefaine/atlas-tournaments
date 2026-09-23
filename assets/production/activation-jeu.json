@@ -260,10 +260,10 @@
     {
       "id": "unite_missiles_sol_base",
       "fichierActif": "public/assets/modeles/unite_missiles_sol_base_lod0.glb",
-      "donnees": "../donnees/5c34035746fd011133f0daa72e0734073aeb12de142401617055338842ae2980.glb",
-      "revision": "6df5c1ad772cbd29b374e43a29b46abc7a5e72c896b02102d0efdf3ba8e912aa",
+      "donnees": "../donnees/a9926d9a317748bb32f027ec001e321033b2346cbb59fcee8cf66aea798b7458.glb",
+      "revision": "7d1f37f67937ec199b346982c851f6b1a065f5f3c97b2620bd17bc418c9fe4bf",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_porte_avions_base",
@@ -284,10 +284,10 @@
     {
       "id": "unite_roquettes_base",
       "fichierActif": "public/assets/modeles/unite_roquettes_base_lod0.glb",
-      "donnees": "../donnees/20a51a56f38647de207226cb922b9c7eca4d2f09713d89892b34f2e273a29daa.glb",
-      "revision": "08ddc33d8270c870d6adbe9fd4d8c6b5cd707d4d7fdc1c74eb3fba8010039b54",
+      "donnees": "../donnees/b159dab78f3994de1a18bf2325b00bedf57e2f923e09adfc200d7c996ab79be9.glb",
+      "revision": "82555a1453e24706f853fbb5b0246f3708c3a5b0c6f2b611c3d6b3626a85fa5e",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_sous_marin_base",
