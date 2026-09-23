@@ -136,3 +136,16 @@ test('les PNG sont déterministes, et le contrôle des textures du dépôt les a
   assert.equal(fichiers.size, canaux.length * 2, 'chaque canal, et sa variante d’hiver');
   assert.deepEqual(controlerTextures(spec, fichiers), []);
 });
+
+test('la bibliothèque ne garde de la cuisson qu’un repli, égal à la source que `fabriquer.ts` lui passe', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { IMAGES_PAR_SECONDE } = await import('../../../src/render2d/contrat');
+  const { FLOU_DE_BOUGE, IMAGES_MAX_PAR_CLIP } = await import('../../../scripts/sprites/reglages');
+  const py = readFileSync('scripts/production/figurines/bibliotheque.py', 'utf8');
+  const repli = (nom: string): number => Number(new RegExp(`^${nom} = ([0-9.]+)$`, 'm').exec(py)?.[1]);
+  assert.equal(repli('IMAGES_PAR_SECONDE'), IMAGES_PAR_SECONDE);
+  assert.equal(repli('IMAGES_MAX_PAR_CLIP'), IMAGES_MAX_PAR_CLIP);
+  assert.equal(repli('FLOU_DE_BOUGE'), FLOU_DE_BOUGE);
+  const fabriquer = readFileSync('scripts/production/figurines/fabriquer.ts', 'utf8');
+  assert.match(fabriquer, /cuisson: \{ imagesParSeconde: IMAGES_PAR_SECONDE, imagesMaxParClip: IMAGES_MAX_PAR_CLIP, flouDeBouge: FLOU_DE_BOUGE \}/);
+});

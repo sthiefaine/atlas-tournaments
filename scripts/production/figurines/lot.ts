@@ -44,7 +44,7 @@ export interface RapportBlender {
   materiaux: string[];
 }
 
-interface NoeudDoc { name?: string; translation?: number[]; rotation?: number[]; scale?: number[] }
+interface NoeudDoc { name?: string; translation?: number[]; rotation?: number[]; scale?: number[]; extras?: Record<string, unknown> }
 interface AccesseurDoc { bufferView?: number; byteOffset?: number; componentType: number; count: number; type: string; min?: number[]; max?: number[] }
 interface VueDoc { buffer: number; byteOffset?: number; byteLength: number; target?: number }
 interface MateriauDoc {
@@ -138,6 +138,77 @@ export function verifierReposNoeuds(document: DocumentGltf, rapport: RapportBlen
     if ((d.rotation ?? [0, 0, 0, 1]).some((v, k) => Math.abs(v - (k === 3 ? 1 : 0)) > 1e-6)) problemes.push(`nœud ${n.nom} : une rotation au repos`);
   }
   return problemes;
+}
+
+/**
+ * Marque les pièces qui tournent sans fin — un nœud déclaré `tournant`, et
+ * tout ce qui y est accroché — d'un `extras.flouDeBouge: false` : la cuisson
+ * les photographie nettes (`scripts/sprites/glb.ts`, `sansFlou`). Un rotor
+ * flouté sur la moitié du pas entre deux images devient un disque ; net, il
+ * garde ses pales, et c'est son pas d'une image à l'autre qui dit qu'il tourne
+ * (`bibliotheque.py`, `rotor`). Rend les noms marqués.
+ */
+export function marquerTournants(document: DocumentGltf, rapport: RapportBlender): string[] {
+  const parent = new Map(rapport.noeuds.map((n) => [n.nom, n.parent]));
+  const tournants = new Set(rapport.noeuds.filter((n) => n.tournant).map((n) => n.nom));
+  const sousUnTournant = (nom: string): boolean => {
+    for (let p: string | null | undefined = nom; p; p = parent.get(p)) if (tournants.has(p)) return true;
+    return false;
+  };
+  const marques: string[] = [];
+  for (const d of (document['nodes'] ?? []) as NoeudDoc[]) {
+    if (!d.name || !sousUnTournant(d.name)) continue;
+    d.extras = { ...(d.extras ?? {}), flouDeBouge: false };
+    marques.push(d.name);
+  }
+  return marques;
+}
+
+/**
+ * Ce qui distingue deux GLB, lisible : rien s'ils sont identiques à l'octet ;
+ * sinon les clés du document qui diffèrent, puis, accesseur par accesseur —
+ * nommé par la maille ou le clip qui le lit —, combien de ses valeurs changent.
+ * Deux fabrications d'un même module doivent rendre le même GLB : la cuisson
+ * ne recuit que ce dont l'empreinte change.
+ */
+export function ecartsGlb(a: Uint8Array, b: Uint8Array): string[] {
+  if (a.length === b.length && a.every((v, i) => v === b[i])) return [];
+  const A = decouperGlb(a);
+  const B = decouperGlb(b);
+  const ecarts: string[] = [];
+  const cles = [...new Set([...Object.keys(A.document), ...Object.keys(B.document)])].sort();
+  const autres = cles.filter((k) => JSON.stringify(A.document[k]) !== JSON.stringify(B.document[k]));
+  if (autres.length) ecarts.push(`document : ${autres.join(', ')} diffèrent`);
+  const libelles = new Map<number, string>();
+  const maillages = (A.document['meshes'] ?? []) as { name?: string; primitives: { attributes: Record<string, number>; indices?: number }[] }[];
+  maillages.forEach((m, i) => m.primitives.forEach((p, k) => {
+    for (const [nom, acc] of Object.entries(p.attributes)) libelles.set(acc, `maille ${m.name ?? i}${k ? ` (${k})` : ''}, ${nom}`);
+    if (p.indices !== undefined) libelles.set(p.indices, `maille ${m.name ?? i}${k ? ` (${k})` : ''}, indices`);
+  }));
+  const clips = (A.document['animations'] ?? []) as { name?: string; samplers: { input: number; output: number }[] }[];
+  clips.forEach((c, i) => c.samplers.forEach((s, k) => {
+    libelles.set(s.input, `clip ${c.name ?? i}, temps ${k}`);
+    libelles.set(s.output, `clip ${c.name ?? i}, valeurs ${k}`);
+  }));
+  const octets = (g: typeof A, i: number): Uint8Array | null => {
+    const acc = ((g.document['accessors'] ?? []) as AccesseurDoc[])[i];
+    const vue = acc?.bufferView === undefined ? undefined : ((g.document['bufferViews'] ?? []) as VueDoc[])[acc.bufferView];
+    if (!acc || !vue) return null;
+    const debut = (vue.byteOffset ?? 0) + (acc.byteOffset ?? 0);
+    return g.bin.subarray(debut, debut + vue.byteLength - (acc.byteOffset ?? 0));
+  };
+  const n = Math.max(((A.document['accessors'] ?? []) as unknown[]).length, ((B.document['accessors'] ?? []) as unknown[]).length);
+  for (let i = 0; i < n; i++) {
+    const x = octets(A, i);
+    const y = octets(B, i);
+    if (!x || !y) { ecarts.push(`accesseur ${i} (${libelles.get(i) ?? '?'}) : absent d’un des deux`); continue; }
+    if (x.length !== y.length) { ecarts.push(`accesseur ${i} (${libelles.get(i) ?? '?'}) : ${x.length} octets contre ${y.length}`); continue; }
+    let differents = 0;
+    for (let k = 0; k < x.length; k += 4) if (x[k] !== y[k] || x[k + 1] !== y[k + 1] || x[k + 2] !== y[k + 2] || x[k + 3] !== y[k + 3]) differents++;
+    if (differents) ecarts.push(`accesseur ${i} (${libelles.get(i) ?? '?'}) : ${differents} mots de 4 octets sur ${Math.ceil(x.length / 4)} diffèrent`);
+  }
+  if (!ecarts.length) ecarts.push('les octets diffèrent hors du document et des accesseurs (remplissage, en-tête)');
+  return ecarts;
 }
 
 /** Les canaux que le lot livre : ceux de la fiche, l'émission seulement si une teinte émissive est portée. */
@@ -234,6 +305,7 @@ export function assemblerLot(glbBlender: Uint8Array, rapport: RapportBlender, sp
   const { document, bin } = decouperGlb(glbBlender);
   const problemes = verifierReposNoeuds(document, rapport);
   if (problemes.length) throw new Error(`le GLB de Blender ne dit pas ce que la bibliothèque a construit : ${problemes.join(' ; ')}`);
+  marquerTournants(document, rapport);
   const emissive = rapport.teintes.some((nom) => charte.teintes.find((t) => t.nom === nom)?.emission);
   const canaux = canauxLivres(spec, emissive);
   injecterCartes(document, spec, canaux);

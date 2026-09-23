@@ -21,6 +21,7 @@ export interface DocumentGltf {
   images?: { name?: string; uri?: string; bufferView?: number }[];
   materials?: { name?: string; emissiveFactor?: number[]; emissiveTexture?: unknown }[];
   animations?: { name?: string; samplers: { input: number }[] }[];
+  nodes?: { name?: string; extras?: Record<string, unknown> }[];
   accessors: { max?: number[] }[];
   [cle: string]: unknown;
 }
@@ -36,6 +37,12 @@ export interface LectureDocument {
   /** Vrai si un matériau émet : une texture d'émission, ou un facteur non nul. */
   emission: boolean;
   materiaux: string[];
+  /**
+   * Les nœuds à photographier nets, sans flou de bouge : ceux que le document
+   * marque `extras.flouDeBouge: false` — les pièces qui tournent sans fin d'une
+   * figurine (`scripts/production/figurines/lot.ts`, `marquerTournants`).
+   */
+  sansFlou: string[];
 }
 
 export interface InfosGlb extends LectureDocument {
@@ -80,6 +87,7 @@ export function lireDocument(document: DocumentGltf): LectureDocument {
       (m) => m.emissiveTexture !== undefined || (m.emissiveFactor ?? [0, 0, 0]).some((v) => v > 0),
     ),
     materiaux: (document.materials ?? []).map((m, i) => m.name ?? `materiau_${i}`),
+    sansFlou: (document.nodes ?? []).filter((n) => n.extras?.['flouDeBouge'] === false && n.name).map((n) => n.name!),
   };
 }
 

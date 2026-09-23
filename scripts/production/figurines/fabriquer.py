@@ -9,7 +9,10 @@ Lancé par `fabriquer.ts` (`npm run fabriquer:figurine -- --cle <cle>`), jamais
 
     Blender -b --factory-startup --python-exit-code 1 -P fabriquer.py -- <travail.json>
 
-`travail.json` : { cle, fiche, charte, module, sortie, unite, ids, vuesIds }.
+`travail.json` : { cle, fiche, charte, module, sortie, unite, ids, vuesIds,
+cuisson: { imagesParSeconde, imagesMaxParClip, flouDeBouge } } — la cadence et
+l'obturateur de la cuisson, lus à leur source par `fabriquer.ts` et posés sur
+la bibliothèque avant que le module de l'unité soit chargé.
 
 Ce qui sort, dans `sortie` :
 - `modele.glb` : géométrie, UV, normales, matériaux sans texture, nœuds ;
@@ -80,14 +83,8 @@ def emprise(f):
 
 
 def instants_cuisson(duree, boucle):
-    """Les instants que la cuisson photographie (`scripts/sprites/echantillonnage.ts`, recopié)."""
-    if duree <= 0:
-        return [0.0]
-    if boucle:
-        n = max(1, min(b.IMAGES_MAX_PAR_CLIP, round(duree * b.IMAGES_PAR_SECONDE)))
-        return [k * duree / n for k in range(n)]
-    n = max(2, min(b.IMAGES_MAX_PAR_CLIP, math.ceil(duree * b.IMAGES_PAR_SECONDE - 1e-9) + 1))
-    return [k * duree / (n - 1) for k in range(n)]
+    """Les instants que la cuisson photographie : la règle de la bibliothèque, une seule."""
+    return b._instants(duree, boucle)
 
 
 def poser_camera(scene, camera, tangage, canevas):
@@ -250,6 +247,10 @@ def main():
     with open(argv[0], encoding='utf-8') as fl:
         travail = json.load(fl)
     bpy.ops.wm.read_factory_settings(use_empty=True)
+    cuisson = travail.get('cuisson') or {}
+    b.IMAGES_PAR_SECONDE = cuisson.get('imagesParSeconde', b.IMAGES_PAR_SECONDE)
+    b.IMAGES_MAX_PAR_CLIP = cuisson.get('imagesMaxParClip', b.IMAGES_MAX_PAR_CLIP)
+    b.FLOU_DE_BOUGE = cuisson.get('flouDeBouge', b.FLOU_DE_BOUGE)
     charte = b.Charte(travail['charte'])
     with open(travail['fiche'], encoding='utf-8') as fl:
         fiche = json.load(fl)

@@ -7,8 +7,8 @@ import assert from 'node:assert/strict';
 
 import { CHARTE } from '../../../scripts/production/figurines/charte';
 import {
-  agitation, classeDe, composantes, composer, emprise, empriseIds, equipeConnexe, fondUni, genreDe, partEquipe, partEquipeEclairee, partsTeintes,
-  pixelsTournants, reduireCadre, regles, teinteDuPixel,
+  agitation, classeDe, composantes, composer, emprise, empriseIds, equipeConnexe, fondUni, genreDe, iou, masseSombreEnBas, partEquipe, partEquipeEclairee,
+  partsTeintes, pixelsTournants, reduireCadre, regles, silhouette, teinteDuPixel,
   type Cadre, type ImageIds, type Mesures,
 } from '../../../scripts/production/figurines/mesures';
 
@@ -130,6 +130,41 @@ test('les identifiants disent la teinte (R) et la pièce tournante (G), autour d
   assert.deepEqual(empriseIds(ids), { gauche: 2, droite: 1, dessus: 1, largeur: 3, hauteur: 2 });
 });
 
+test('la masse sombre tient le bas sans compter les pièces qui tournent : un rotor graphite, en haut, ne la tire pas', () => {
+  // 1 × 4, pivot en bas : en haut un rotor graphite (G = 255), puis deux pixels d'équipe, en bas un patin graphite.
+  const rgba = new Uint8Array([20, 255, 0, 255, 10, 0, 0, 255, 10, 0, 0, 255, 20, 0, 0, 255]);
+  const p = partsTeintes({ l: 1, h: 4, x0: 0, y0: -4, rgba }, CHARTE);
+  assert.deepEqual(p.parts, { graphite: 0.5, equipe: 0.5 }, 'la palette compte tout, rotor compris');
+  assert.deepEqual(p.partsFixes, { graphite: 1 / 3, equipe: 2 / 3 });
+  assert.equal(p.centreYFixe['graphite'], 3);
+  // Compté, le rotor mettait le centre sombre au milieu (1,5 contre 1,5) ; sans lui, le sombre est en bas.
+  assert.ok(masseSombreEnBas(p, ['graphite', 'caoutchouc']));
+  const sansTourner = partsTeintes({ l: 1, h: 4, x0: 0, y0: -4, rgba: rgba.map((v, i) => (i === 1 ? 0 : v)) }, CHARTE);
+  assert.ok(!masseSombreEnBas(sansTourner, ['graphite', 'caoutchouc']), 'un rotor fixe, lui, compte');
+});
+
+test('l’ombre chinoise à 48 pixels : la silhouette calée sur le pivot, et l’intersection sur l’union', () => {
+  // Un carré plein de 16 × 16 pixels cuits, pivot au milieu de son bas : 6 × 6 à 48 pixels par case.
+  const carre = (l: number, h: number, px: number, py: number, x0: number, y0: number, cote: number): Cadre =>
+    cadre(l, h, px, py, (x, y) => (x >= x0 && x < x0 + cote && y >= y0 && y < y0 + cote ? [0, 0, 0, 255, 0, 255] : [0, 0, 0, 0, 0, 0]));
+  const a = silhouette(carre(16, 16, 8, 16, 0, 0, 16), 48, 128);
+  assert.equal(a.size, 36);
+  // Le même carré sur un autre canevas, au même endroit depuis le pivot : la même silhouette.
+  const b = silhouette(carre(40, 30, 20, 26, 12, 10, 16), 48, 128);
+  assert.equal(iou(a, b), 1);
+  // Décalé d'une demi-largeur : un tiers en commun.
+  const c = silhouette(carre(40, 30, 20, 26, 20, 10, 16), 48, 128);
+  assert.ok(Math.abs(iou(a, c) - 1 / 3) < 0.05, String(iou(a, c)));
+  assert.equal(iou(a, new Set()), 0);
+  // La règle n'est qu'une information, et elle nomme la plus proche.
+  const r = regles({ ...bonnes(), recouvrement: { unite: 'char_moyen', vue: 'droite', valeur: 0.86, droite: 0.86, bas: 0.7 } }, CHARTE);
+  const regle = r.find((x) => x.id === 'recouvrement')!;
+  assert.equal(regle.verdict, 'info');
+  assert.match(String(regle.valeur), /0\.860 char_moyen \(droite\)/);
+  assert.match(regle.attendu, /0\.80/);
+  assert.ok(!regles(bonnes(), CHARTE).some((x) => x.id === 'recouvrement'), 'sans cuisson, pas de règle');
+});
+
 test('le genre et la classe se lisent dans le canon', () => {
   assert.equal(genreDe({ cle: 'infanterie', domaine: 'terre', silhouette: { base: 'pattes' } }), 'fantassin');
   assert.equal(genreDe({ cle: 'helico', domaine: 'air', silhouette: { base: 'rotor' } }), 'rotor');
@@ -158,7 +193,7 @@ test('des mesures dans la charte passent toutes ses règles', () => {
   const r = regles(bonnes(), CHARTE);
   assert.deepEqual(r.filter((x) => x.verdict === 'echec').map((x) => x.id), []);
   assert.ok(r.some((x) => x.id === 'largeur_visee'));
-  assert.ok(r.filter((x) => x.verdict === 'info').every((x) => ['equipe_profil', 'clarte_hors_equipe', 'debord_case'].includes(x.id)));
+  assert.ok(r.filter((x) => x.verdict === 'info').every((x) => ['equipe_profil', 'clarte_hors_equipe', 'debord_case', 'recouvrement'].includes(x.id)));
 });
 
 test('chaque écart à la charte tombe sur sa règle', () => {

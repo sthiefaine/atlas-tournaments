@@ -208,6 +208,9 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     marge: margeCanevas(contour, SURECHANTILLONNAGE),
     margeOcclusion: MARGE_OCCLUSION,
     vues: plan,
+    // Les pièces qui tournent sans fin, photographiées nettes : la clé
+    // n'apparaît que si le GLB en déclare, et l'empreinte des autres ne bouge pas.
+    ...(infos.sansFlou.length ? { sansFlou: infos.sansFlou } : {}),
   };
   const empreinteCuisson = empreinte(JSON.stringify({
     version: VERSION_CUISSON,

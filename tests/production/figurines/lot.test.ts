@@ -7,8 +7,9 @@ import assert from 'node:assert/strict';
 
 import { CHARTE } from '../../../scripts/production/figurines/charte';
 import {
-  assemblerLot, canauxLivres, ficheMesuree, injecterClips, verifierReposNoeuds, type ClipFigurine, type RapportBlender,
+  assemblerLot, canauxLivres, ecartsGlb, ficheMesuree, injecterClips, marquerTournants, verifierReposNoeuds, type ClipFigurine, type RapportBlender,
 } from '../../../scripts/production/figurines/lot';
+import { lireDocument, type DocumentGltf as DocumentCuisson } from '../../../scripts/sprites/glb';
 import { assemblerGlb, decouperGlb, type DocumentGltf } from '../../../scripts/infanterie/gltf';
 import { controlerDepot } from '../../../src/serveur/depot-modeles';
 import { nomTexture, type AssetSpec } from '../../../src/assets/spec';
@@ -152,4 +153,41 @@ test('un clip vers un nœud absent, ou hors de sa durée, est refusé ; un repos
   r.noeuds[1]!.translation = [0, -0.1, 0];
   assert.match(verifierReposNoeuds(document, r).join(' '), /corps : translation/);
   assert.deepEqual(verifierReposNoeuds(document, rapport()), []);
+});
+
+test('une pièce qui tourne sans fin, et ce qui y est accroché, est marquée pour être cuite nette ; le reste ne bouge pas', () => {
+  const r = rapport();
+  r.noeuds.push(
+    { nom: 'rotor', parent: 'corps', translation: [0, 0.2, 0], tournant: true },
+    { nom: 'pale', parent: 'rotor', translation: [0, 0, 0.1], tournant: false },
+  );
+  const document: DocumentGltf = {
+    nodes: [{ name: 'racine' }, { name: 'corps' }, { name: 'module_tourelle', extras: { autre: 1 } }, { name: 'rotor', extras: { autre: 2 } }, { name: 'pale' }],
+  };
+  assert.deepEqual(marquerTournants(document, r), ['rotor', 'pale']);
+  const noeuds = document['nodes'] as { name: string; extras?: Record<string, unknown> }[];
+  assert.deepEqual(noeuds.map((n) => n.extras ?? null), [null, null, { autre: 1 }, { autre: 2, flouDeBouge: false }, { flouDeBouge: false }]);
+  // La cuisson lit la marque : c'est elle qui éteint le flou de bouge de ces objets.
+  assert.deepEqual(lireDocument({ ...document, accessors: [] } as unknown as DocumentCuisson).sansFlou, ['rotor', 'pale']);
+  // Un lot sans pièce tournante n'en déclare aucune : son GLB et l'empreinte de sa cuisson ne changent pas.
+  const lot = assemblerLot(glbBrut(), rapport(), SPEC, CHARTE).get('unite_char_leger_base_lod0.glb')!;
+  const nodes = (decouperGlb(lot).document['nodes'] as { extras?: unknown }[]);
+  assert.ok(nodes.every((n) => n.extras === undefined));
+});
+
+test('deux GLB identiques ne se distinguent pas ; sinon l’écart est nommé, accesseur par accesseur', () => {
+  const a = assemblerLot(glbBrut(), rapport(), SPEC, CHARTE).get('unite_char_leger_base_lod0.glb')!;
+  const b = assemblerLot(glbBrut(), rapport(), SPEC, CHARTE).get('unite_char_leger_base_lod0.glb')!;
+  assert.deepEqual(ecartsGlb(a, b), [], 'le lot est une fonction de ses entrées, à l’octet');
+  // Deux triangles échangés : les mêmes faces, un autre ordre — c'est l'écart que la boule de Blender produisait.
+  const { document, bin } = decouperGlb(glbBrut());
+  const vue = (document['bufferViews'] as { byteOffset: number }[])[3]!;
+  const indices = new Uint16Array(bin.buffer.slice(bin.byteOffset + vue.byteOffset, bin.byteOffset + vue.byteOffset + 72));
+  const echange = new Uint16Array([...indices.slice(3, 6), ...indices.slice(0, 3), ...indices.slice(6)]);
+  const autre = bin.slice();
+  autre.set(new Uint8Array(echange.buffer), vue.byteOffset);
+  const c = assemblerLot(assemblerGlb(document, autre), rapport(), SPEC, CHARTE).get('unite_char_leger_base_lod0.glb')!;
+  const ecarts = ecartsGlb(a, c);
+  assert.equal(ecarts.length, 1, ecarts.join(' | '));
+  assert.match(ecarts[0]!, /\(maille corps, indices\) : 3 mots de 4 octets sur \d+ diffèrent/);
 });

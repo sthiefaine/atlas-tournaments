@@ -22,8 +22,13 @@
  * lot, contrôle et aperçu de la palette et de la silhouette sur les
  * identifiants : quelques secondes, pas de planche), `--echantillons <n>`
  * (Cycles ; 24 par défaut, 8 pour un essai rapide), `--module <fichier.py>`
- * (essayer une variante sans toucher `unites/<cle>.py`) et `--sortie <dossier>`
- * (ailleurs que `tmp/figurines/<cle>/`, pour ne pas écraser l'essai d'un autre).
+ * (essayer une variante sans toucher `unites/<cle>.py`), `--sortie <dossier>`
+ * (ailleurs que `tmp/figurines/<cle>/`, pour ne pas écraser l'essai d'un autre)
+ * et `--determinisme` / `--sans-determinisme` : Blender construit le module une
+ * seconde fois et les deux GLB — le brut, puis celui du lot — doivent être
+ * identiques à l'octet, sans quoi c'est un échec (la cuisson recuirait pour
+ * rien une figurine qui n'a pas changé). Fait par défaut avec la cuisson, pas
+ * avec `--sans-cuisson`.
  *
  * Sorties dans `tmp/figurines/<cle>/` : `lot/`, `fiche.json`, `sprites/`,
  * `planche.png`, `planche-clips.png`, `rapport.json`. Code de sortie : 0 si
@@ -36,16 +41,17 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node
 import { join, resolve } from 'node:path';
 
 import { validerAssetSpec, type AssetSpec } from '../../../src/assets/index';
-import { PIXELS_PAR_CASE, type VueSprite } from '../../../src/render2d/contrat';
+import { contratProduction } from '../../../src/assets/production';
+import { IMAGES_PAR_SECONDE, PIXELS_PAR_CASE, type ManifesteSprites, type VueSprite } from '../../../src/render2d/contrat';
 import { controlerDepot } from '../../../src/serveur/depot-modeles';
 import { decouperGlb } from '../../infanterie/gltf';
-import { BLENDER } from '../../sprites/reglages';
+import { BLENDER, FLOU_DE_BOUGE, IMAGES_MAX_PAR_CLIP } from '../../sprites/reglages';
 
 import { CHARTE } from './charte';
-import { lireCuisson, lireIds } from './lecture';
-import { assemblerLot, ficheMesuree, type RapportBlender } from './lot';
+import { lireCuisson, lireIds, type Cuisson } from './lecture';
+import { assemblerLot, ecartsGlb, ficheMesuree, type RapportBlender } from './lot';
 import {
-  agitation, clarteHorsEquipe, classeDe, emprise, empriseIds, equipeConnexe, genreDe, partEquipe, partEquipeEclairee, partsTeintes, pixelsTournants, regles, rvb01,
+  agitation, clarteHorsEquipe, classeDe, emprise, empriseIds, equipeConnexe, genreDe, iou, masseSombreEnBas, partEquipe, partEquipeEclairee, partsTeintes, pixelsTournants, regles, rvb01, silhouette,
   type Cadre, type Mesures, type Regle,
 } from './mesures';
 import { ecrirePlanche, ecrirePlancheClips } from './planche';
@@ -53,10 +59,14 @@ import { ecrirePlanche, ecrirePlancheClips } from './planche';
 const ICI = __dirname;
 const DEPOT = resolve(ICI, '..', '..', '..');
 
-interface Options { cle: string; fiche: string; cuisson: boolean; echantillons: number | null; module: string | null; sortie: string | null }
+interface Options {
+  cle: string; fiche: string; cuisson: boolean; echantillons: number | null; module: string | null; sortie: string | null;
+  /** Null : par défaut, avec la cuisson seulement. */
+  determinisme: boolean | null;
+}
 
 function lireOptions(argv: readonly string[]): Options {
-  const o: Options = { cle: '', fiche: 'mesuree', cuisson: true, echantillons: null, module: null, sortie: null };
+  const o: Options = { cle: '', fiche: 'mesuree', cuisson: true, echantillons: null, module: null, sortie: null, determinisme: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
     const valeur = (): string => {
@@ -70,9 +80,11 @@ function lireOptions(argv: readonly string[]): Options {
     else if (a === '--echantillons') o.echantillons = Number(valeur());
     else if (a === '--module') o.module = valeur();
     else if (a === '--sortie') o.sortie = valeur();
+    else if (a === '--determinisme') o.determinisme = true;
+    else if (a === '--sans-determinisme') o.determinisme = false;
     else throw new Error(`option inconnue : ${a}`);
   }
-  if (!/^[a-z0-9_]+$/.test(o.cle)) throw new Error('usage : npm run fabriquer:figurine -- --cle <cle> [--fiche mesuree|officielle|<chemin>] [--sans-cuisson] [--echantillons <n>]');
+  if (!/^[a-z0-9_]+$/.test(o.cle)) throw new Error('usage : npm run fabriquer:figurine -- --cle <cle> [--fiche mesuree|officielle|<chemin>] [--sans-cuisson] [--echantillons <n>] [--module <fichier.py>] [--sortie <dossier>] [--determinisme|--sans-determinisme]');
   return o;
 }
 
@@ -80,6 +92,43 @@ function lireSpec(chemin: string): AssetSpec {
   const r = validerAssetSpec(JSON.parse(readFileSync(chemin, 'utf8')));
   if (!r.ok) throw new Error(`fiche invalide : ${chemin}\n${r.erreurs.map((e) => `  · ${e.chemin} : ${e.message}`).join('\n')}`);
   return r.valeur;
+}
+
+/** Le premier cadre d'une vue, dans le premier des clips qui en a. */
+function premierCadre(cuisson: Cuisson, vue: VueSprite, clips: readonly string[]): Cadre | null {
+  for (const c of clips) {
+    const cadres = cuisson.cadres(vue, c);
+    if (cadres.length) return cadres[0]!;
+  }
+  return null;
+}
+
+/**
+ * L'ombre chinoise de la figurine contre les unités du même milieu déjà dans
+ * les images du jeu (`public/assets/sprites/`, manifeste courant), l'unité
+ * elle-même exceptée : la plus proche, vues « droite » et « bas » (charte,
+ * `recouvrement`).
+ */
+async function recouvrementInstallees(cle: string, domaine: string, droite: Cadre, bas: Cadre,
+  unites: readonly { cle: string; domaine: string }[]): Promise<NonNullable<Mesures['recouvrement']> | null> {
+  const racine = join('public', 'assets', 'sprites');
+  const manifeste = join(racine, 'manifeste.json');
+  if (!existsSync(manifeste)) return null;
+  const { pixelsParCase } = CHARTE.recouvrement;
+  const nous = { droite: silhouette(droite, pixelsParCase, PIXELS_PAR_CASE), bas: silhouette(bas, pixelsParCase, PIXELS_PAR_CASE) };
+  let plusProche: NonNullable<Mesures['recouvrement']> | null = null;
+  for (const e of Object.values((JSON.parse(readFileSync(manifeste, 'utf8')) as ManifesteSprites).entrees)) {
+    if (e.famille !== 'unite' || e.cle === cle || unites.find((u) => u.cle === e.cle)?.domaine !== domaine) continue;
+    const autre = await lireCuisson(racine, e.id);
+    const d = premierCadre(autre, 'droite', ['repos', 'deplacement']);
+    const b = premierCadre(autre, 'bas', ['deplacement', 'repos']);
+    if (!d || !b) continue;
+    const vd = iou(nous.droite, silhouette(d, pixelsParCase, PIXELS_PAR_CASE));
+    const vb = iou(nous.bas, silhouette(b, pixelsParCase, PIXELS_PAR_CASE));
+    const valeur = Math.max(vd, vb);
+    if (!plusProche || valeur > plusProche.valeur) plusProche = { unite: e.cle, vue: vd >= vb ? 'droite' : 'bas', valeur, droite: vd, bas: vb };
+  }
+  return plusProche;
 }
 
 /** Lance un processus ; relaie les lignes qui commencent par `prefixe` (toutes si vide), garde la fin pour l'erreur. */
@@ -116,17 +165,37 @@ async function main(): Promise<void> {
   if (!unite) throw new Error(`unité inconnue du canon : ${o.cle}`);
   mkdirSync(dossier, { recursive: true });
 
-  // 1. Blender.
+  // Le contrat d'assemblage de la fiche, s'il y en a un : le contrôle refuse un
+  // nœud dont le parent ou le pivot local diffère. `f.noeud(pivot=…)` prend un
+  // pivot absolu : on l'imprime tel qu'il faut l'écrire.
+  const contrat = contratProduction(officielle).assemblage;
+  if (contrat.some((a) => a.pivot)) {
+    const absolu = (nom: string | null): number[] => {
+      const a = contrat.find((x) => x.nom === nom);
+      if (!a) return [0, 0, 0];
+      const p = absolu(a.parent);
+      return (a.pivot ?? [0, 0, 0]).map((v, k) => Math.round((v + p[k]!) * 1000) / 1000);
+    };
+    console.log('  contrat d’assemblage de la fiche (src/assets/production.ts) : parent et pivot imposés, au millimètre');
+    for (const a of contrat.filter((x) => x.pivot && x.parent)) console.log(`    f.noeud('${a.nom}', parent='${a.parent}', pivot=(${absolu(a.nom).join(', ')}))`);
+  }
+
+  // 1. Blender. La cadence et l'obturateur de la cuisson sont lus ici, à leur
+  // source, et passés à la bibliothèque : elle n'en garde qu'un repli.
   console.log(`[1/6] Blender : ${moduleUnite}`);
   const blender = join(dossier, 'blender');
-  rmSync(blender, { recursive: true, force: true });
-  mkdirSync(blender, { recursive: true });
-  const travail = join(dossier, 'travail.json');
-  writeFileSync(travail, JSON.stringify({
-    cle: o.cle, fiche: resolve(cheminOfficielle), charte: resolve(ICI, 'charte.json'), module: resolve(moduleUnite),
-    sortie: resolve(blender), unite, ids: true,
-  }, null, 1));
-  await lancer(BLENDER, ['-b', '--factory-startup', '--python-exit-code', '1', '-P', join(ICI, 'fabriquer.py'), '--', resolve(travail)], '[figurine]');
+  const construire = async (sortie: string, ids: boolean, prefixe: string): Promise<void> => {
+    rmSync(sortie, { recursive: true, force: true });
+    mkdirSync(sortie, { recursive: true });
+    const travail = join(dossier, ids ? 'travail.json' : `travail-${prefixe}.json`);
+    writeFileSync(travail, JSON.stringify({
+      cle: o.cle, fiche: resolve(cheminOfficielle), charte: resolve(ICI, 'charte.json'), module: resolve(moduleUnite),
+      sortie: resolve(sortie), unite, ids,
+      cuisson: { imagesParSeconde: IMAGES_PAR_SECONDE, imagesMaxParClip: IMAGES_MAX_PAR_CLIP, flouDeBouge: FLOU_DE_BOUGE },
+    }, null, 1));
+    await lancer(BLENDER, ['-b', '--factory-startup', '--python-exit-code', '1', '-P', join(ICI, 'fabriquer.py'), '--', resolve(travail)], ids ? '[figurine]' : `[${prefixe}]`);
+  };
+  await construire(blender, true, 'figurine');
   const rapportBlender = JSON.parse(readFileSync(join(blender, 'figurine.json'), 'utf8')) as RapportBlender & {
     pieces: { nom: string; epaisseurMin: number; fin: boolean }[]; triangles: number; rotationRepos: Record<string, number>;
     emprise: { min: number[]; max: number[] }; declarations?: { largeurVisee?: [number, number] | null; genre?: string | null };
@@ -171,6 +240,24 @@ async function main(): Promise<void> {
     controle: verdict, controleOfficiel: verdictOfficiel, blender: { triangles: rapportBlender.triangles, teintes: rapportBlender.teintes, avertissements: rapportBlender.avertissements },
   };
   let echecs = verdict.ok ? 0 : 1;
+
+  // Le déterminisme : le même module, construit une seconde fois (sans les
+  // identifiants), doit rendre le même GLB, à l'octet — le brut, et le lot.
+  if (o.determinisme ?? o.cuisson) {
+    const second = join(dossier, 'blender-2');
+    await construire(second, false, 'determinisme');
+    const brut2 = new Uint8Array(readFileSync(join(second, 'modele.glb')));
+    const rapport2 = JSON.parse(readFileSync(join(second, 'figurine.json'), 'utf8')) as RapportBlender;
+    const lot2 = assemblerLot(brut2, rapport2, officielle, CHARTE).get(`${id}_lod0.glb`)!;
+    const ecartsBrut = ecartsGlb(new Uint8Array(readFileSync(join(blender, 'modele.glb'))), brut2);
+    const ecartsLot = ecartsGlb(glb, lot2);
+    const identique = ecartsBrut.length === 0 && ecartsLot.length === 0;
+    console.log(`  déterminisme : ${identique ? `deux constructions, le même GLB à l'octet (${glb.length} octets)` : 'DEUX GLB DIFFÉRENTS'}`);
+    for (const e of [...ecartsBrut.map((x) => `brut — ${x}`), ...ecartsLot.map((x) => `lot — ${x}`)]) console.log(`    ${e}`);
+    rapport.determinisme = { identique, octets: glb.length, ecartsBrut, ecartsLot };
+    if (!identique) echecs++;
+    rmSync(second, { recursive: true, force: true });
+  }
 
   // L'aperçu de la palette et de la silhouette, sur les identifiants seuls :
   // quelques secondes, avant toute cuisson. La silhouette y est sans contour :
@@ -229,12 +316,8 @@ async function main(): Promise<void> {
     const reposCadres = cuisson.cadres('droite', 'repos');
     const palette = imagesIds.length ? partsTeintes(imagesIds[0]!, CHARTE) : null;
     const sombres = CHARTE.teintes.filter((t) => t.sombre).map((t) => t.nom);
-    let sombreEnBas = false;
-    if (palette) {
-      const poids = sombres.reduce((s, n) => s + (palette.parts[n] ?? 0), 0);
-      const y = poids ? sombres.reduce((s, n) => s + (palette.parts[n] ?? 0) * (palette.centreY[n] ?? 0), 0) / poids : 0;
-      sombreEnBas = poids > 0 && y > palette.centreYTotal;
-    }
+    // Sans les pièces tournantes : un rotor n'assoit pas l'unité.
+    const sombreEnBas = palette ? masseSombreEnBas(palette, sombres) : false;
     const materiaux = ((document['materials'] ?? []) as { name?: string }[]).map((m) => m.name ?? '');
     const genre = (rapportBlender.declarations?.genre as Mesures['genre'] | undefined) ?? genreDe(unite);
     const visee = rapportBlender.declarations?.largeurVisee;
@@ -261,6 +344,7 @@ async function main(): Promise<void> {
       tournants: rapportBlender.noeuds.filter((n) => n.tournant).map((n) => n.nom),
       basAuRepos: rapportBlender.emprise.min[1]!,
       controle: { ok: verdict.ok, motifs: verdict.motifs.length },
+      recouvrement: await recouvrementInstallees(o.cle, unite.domaine, droite, bas, unites),
     };
     const liste: Regle[] = regles(mesures, CHARTE);
     echecs += liste.filter((r) => r.verdict === 'echec').length;

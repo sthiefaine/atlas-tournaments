@@ -233,6 +233,31 @@ export function partEquipeEclairee(c: Cadre, seuil: number): number {
   return equipe ? eclaires / equipe : 0;
 }
 
+/**
+ * La silhouette d'un cadre en ombre chinoise, ramenée à `pixelsParCase`
+ * pixels par case (48 : la carte vue de loin) depuis `pixelsSource` (ceux de
+ * la cuisson) par `reduireCadre` — la grille calée sur le pivot, comme les
+ * mipmaps du jeu —, un pixel plein si l'alpha, contour compris, le couvre à
+ * moitié. Rend les pixels pleins, « x,y » depuis le pivot : deux silhouettes
+ * se comparent sans se recadrer.
+ */
+export function silhouette(c: Cadre, pixelsParCase: number, pixelsSource: number): Set<string> {
+  const r = reduireCadre(c, pixelsParCase / pixelsSource);
+  const pleins = new Set<string>();
+  for (let y = 0; y < r.h; y++) {
+    for (let x = 0; x < r.l; x++) if (r.rgba[(y * r.l + x) * 4 + 3]! >= 128) pleins.add(`${x - r.px},${y - r.py}`);
+  }
+  return pleins;
+}
+
+/** L'intersection sur l'union de deux silhouettes : 0 disjointes, 1 confondues. */
+export function iou(a: ReadonlySet<string>, b: ReadonlySet<string>): number {
+  let commun = 0;
+  for (const cle of a) if (b.has(cle)) commun++;
+  const union = a.size + b.size - commun;
+  return union ? commun / union : 0;
+}
+
 /** La clarté L* moyenne des pixels du modèle hors équipe, telle que cuite : une information. */
 export function clarteHorsEquipe(c: Cadre): number {
   if (!c.couverture) return 0;
@@ -360,11 +385,27 @@ export function teinteDuPixel(r: number, a: number): number {
   return a < 128 ? -1 : Math.round(r / 10) - 1;
 }
 
+/** Ce que `partsTeintes` rend. */
+export interface PaletteIds {
+  total: number;
+  parts: Record<string, number>;
+  /** Le centre vertical de chaque teinte (px, vers le bas). */
+  centreY: Record<string, number>;
+  centreYTotal: number;
+  /** Les mêmes, sans les pièces qui tournent sans fin (G ≥ 128 dans l'identifiant) : un rotor sombre ne dit rien de l'assise. */
+  partsFixes: Record<string, number>;
+  centreYFixe: Record<string, number>;
+  centreYTotalFixe: number;
+}
+
 /** Les parts de chaque teinte dans une image d'identifiants, et le centre vertical de chacune (px, vers le bas). */
-export function partsTeintes(ids: ImageIds, charte: Charte): { total: number; parts: Record<string, number>; centreY: Record<string, number>; centreYTotal: number } {
+export function partsTeintes(ids: ImageIds, charte: Charte): PaletteIds {
   const comptes = new Map<number, { n: number; y: number }>();
+  const fixes = new Map<number, { n: number; y: number }>();
   let total = 0;
   let sy = 0;
+  let totalFixe = 0;
+  let syFixe = 0;
   for (let p = 0; p < ids.l * ids.h; p++) {
     const t = teinteDuPixel(ids.rgba[p * 4]!, ids.rgba[p * 4 + 3]!);
     if (t < 0) continue;
@@ -375,15 +416,42 @@ export function partsTeintes(ids: ImageIds, charte: Charte): { total: number; pa
     c.n++;
     c.y += y;
     comptes.set(t, c);
+    if (ids.rgba[p * 4 + 1]! >= 128) continue;
+    totalFixe++;
+    syFixe += y;
+    const f = fixes.get(t) ?? { n: 0, y: 0 };
+    f.n++;
+    f.y += y;
+    fixes.set(t, f);
   }
+  const nomDe = (i: number): string => charte.teintes[i]?.nom ?? `inconnue_${i}`;
   const parts: Record<string, number> = {};
   const centreY: Record<string, number> = {};
   for (const [i, c] of comptes) {
-    const nom = charte.teintes[i]?.nom ?? `inconnue_${i}`;
-    parts[nom] = c.n / total;
-    centreY[nom] = c.y / c.n;
+    parts[nomDe(i)] = c.n / total;
+    centreY[nomDe(i)] = c.y / c.n;
   }
-  return { total, parts, centreY, centreYTotal: total ? sy / total : 0 };
+  const partsFixes: Record<string, number> = {};
+  const centreYFixe: Record<string, number> = {};
+  for (const [i, c] of fixes) {
+    partsFixes[nomDe(i)] = c.n / totalFixe;
+    centreYFixe[nomDe(i)] = c.y / c.n;
+  }
+  return { total, parts, centreY, centreYTotal: total ? sy / total : 0, partsFixes, centreYFixe, centreYTotalFixe: totalFixe ? syFixe / totalFixe : 0 };
+}
+
+/**
+ * La masse sombre tient-elle le bas de la silhouette ? Son centre vertical
+ * doit tomber sous celui du modèle. Les pièces tournantes n'y comptent pas :
+ * un rotor graphite, tout en haut, n'est pas une masse qui assoit l'unité —
+ * compté, il tire le centre sombre vers le haut et oblige un appareil à
+ * rotors à charger son bas de graphite pour compenser.
+ */
+export function masseSombreEnBas(palette: PaletteIds, sombres: readonly string[]): boolean {
+  const poids = sombres.reduce((s, n) => s + (palette.partsFixes[n] ?? 0), 0);
+  if (!(poids > 0)) return false;
+  const y = sombres.reduce((s, n) => s + (palette.partsFixes[n] ?? 0) * (palette.centreYFixe[n] ?? 0), 0) / poids;
+  return y > palette.centreYTotalFixe;
 }
 
 /** L'emprise du modèle dans une image d'identifiants, en pixels depuis le pivot (sans contour). */
@@ -479,6 +547,12 @@ export interface Mesures {
   tournants: string[];
   basAuRepos: number;
   controle: { ok: boolean; motifs: number };
+  /**
+   * L'ombre chinoise la plus proche parmi les unités du même milieu déjà
+   * installées (charte, `recouvrement`) : null s'il n'y en a aucune ; absent
+   * sans cuisson.
+   */
+  recouvrement?: { unite: string; vue: 'droite' | 'bas'; valeur: number; droite: number; bas: number } | null;
 }
 
 const pct = (v: number): string => `${(v * 100).toFixed(1)} %`;
@@ -515,7 +589,9 @@ export function regles(m: Mesures, charte: Charte): Regle[] {
   regle('equipe_connexe', `Plus grande zone d’équipe d’un seul tenant à ${charte.equipe.pixelsParCaseConnexe} px, part de l’équipe`, Number(m.equipeConnexe.toFixed(4)), texteBornes(bConnexe, pct), dans(m.equipeConnexe, bConnexe));
   // Proposée par le panel, non arrêtée ; et hors de portée d'une figurine debout,
   // dont le torse est vertical : une information pour les fantassins.
-  regle('equipe_eclairee', `Équipe portée par les dessus : part des pixels d’équipe qui reçoivent ≥ ${charte.equipe.eclairee.lumiereMin} de lumière (seuil proposé, non arrêté)`,
+  // La laque plafonne vers 0,86–0,88 sur un dessus plat (mesuré, `charte.json`) :
+  // le seuil laisse peu de marge, et une pente d'équipe raide passe dessous.
+  regle('equipe_eclairee', `Équipe portée par les dessus : part des pixels d’équipe qui reçoivent ≥ ${charte.equipe.eclairee.lumiereMin} de lumière — la laque plafonne vers 0,9 (seuil proposé, non arrêté)`,
     Number(m.equipeEclairee.toFixed(4)), fantassin ? 'information (fantassin)' : `≥ ${pct(charte.equipe.eclairee.partMin)}`,
     fantassin ? null : m.equipeEclairee >= charte.equipe.eclairee.partMin);
   if (m.equipeIds !== null) {
@@ -568,5 +644,11 @@ export function regles(m: Mesures, charte: Charte): Regle[] {
   const fines = m.piecesFines.filter((p) => p.epaisseur < (p.fin ? charte.formes.epaisseurMinAntenne : charte.formes.epaisseurMin) - 1e-9);
   regle('epaisseur', `Pièces sous ${charte.formes.epaisseurMin} m (antennes : ${charte.formes.epaisseurMinAntenne} m)`, fines.map((p) => `${p.nom} ${p.epaisseur}`).join(', ') || 'aucune', 'aucune', fines.length === 0);
   regle('clarte_hors_equipe', 'Clarté L* moyenne hors équipe, cuite (information)', Number(m.clarteHorsEquipe.toFixed(1)), 'information', null);
+  if (m.recouvrement !== undefined) {
+    const rc = m.recouvrement;
+    // D'information d'abord : la valeur dit la plus proche, le seuil est à côté.
+    regle('recouvrement', `Ombre chinoise à ${charte.recouvrement.pixelsParCase} px : IoU la plus forte contre une unité installée du même milieu (vues droite et bas)`,
+      rc ? `${rc.valeur.toFixed(3)} ${rc.unite} (${rc.vue})` : 'aucune à comparer', `≤ ${charte.recouvrement.max.toFixed(2)} (information)`, null);
+  }
   return r;
 }

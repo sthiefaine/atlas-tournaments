@@ -56,6 +56,7 @@ export interface Charte {
   formes: { chanfreinMin: number; chanfreinPart: number; epaisseurMin: number; epaisseurMinAntenne: number; piecesLisiblesMax: number };
   poses: { tirIndirectDegres: Bornes; antiAerienDegres: Bornes; flottaisonMetres: Bornes };
   contour: { hex: string; epaisseurEchelle4: number; seuilCouverture: number; opacite: Record<string, number> };
+  recouvrement: { pixelsParCase: number; max: number };
   budget: { triangles: number };
   planche: { herbe: string; grille: string; camps: { nom: string; hex: string }[] };
 }

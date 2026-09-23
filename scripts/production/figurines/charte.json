@@ -62,7 +62,7 @@
     "basEtHautMin": 0.40,
     "connexeMin": 0.60,
     "pixelsParCaseConnexe": 48,
-    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "proposée par le panel (avis de l'artiste technique, règle 3) pour « portée par les dessus » ; seuil non arrêté par le coordinateur" }
+    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "proposée par le panel (avis de l'artiste technique, règle 3) pour « portée par les dessus » ; seuil non arrêté par le coordinateur. La laque plafonne vers 0,9, pas 1,0 : mesuré sur les dix unités cuites le 23 septembre, un dessus plat sort à 0,86–0,88 et seules les faces tournées vers le joueur saturent ; le calcul lambertien (clarteFace) fait passer une pente d'équipe sous 0,8 vers 55° vers le côté ou l'arrière, et l'image cuite plus tôt." }
   },
 
   "tailles": {
@@ -114,6 +114,12 @@
     "epaisseurEchelle4": 12,
     "seuilCouverture": 0.5,
     "opacite": { "unite": 1, "batiment": 0.85, "terrain": 0.85, "decor": 0.6 }
+  },
+
+  "recouvrement": {
+    "note": "Deux unités d'un même milieu ne se recouvrent pas en ombre chinoise à plus de 75–80 % à 48 px (§3.5). Mesuré sur l'image cuite : l'alpha (contour compris) ramené à 48 px par case sur une grille calée sur le pivot, une cellule pleine si l'alpha la couvre à moitié ; l'intersection sur l'union (IoU) des vues « droite » et « bas », contre chaque unité du même domaine déjà dans les images du jeu (public/assets/sprites/, manifeste courant), l'unité elle-même exceptée. Règle d'information d'abord.",
+    "pixelsParCase": 48,
+    "max": 0.80
   },
 
   "budget": { "triangles": 60000 },

@@ -555,6 +555,18 @@ def main():
     scene = preparer_scene()
     objets, pivot = importer(scene, travail['glb'])
     journal(f'import {time.time() - debut:.2f} s, {len(objets)} objets')
+    # Les pièces qui tournent sans fin (un rotor, une parabole) sont
+    # photographiées nettes : floutées sur la moitié du pas, leurs pales
+    # deviennent un disque. Le GLB les déclare (`extras.flouDeBouge: false`),
+    # `glb.ts` en passe les noms ; l'importeur nomme les objets comme les nœuds.
+    # Pas de `VERSION_CUISSON` à monter : la clé `sansFlou` n'entre dans
+    # l'empreinte que d'une entrée qui en déclare.
+    sans_flou = set(travail.get('sansFlou', []))
+    for o in objets:
+        if o.name in sans_flou:
+            o.cycles.use_motion_blur = False
+    if sans_flou:
+        journal(f'sans flou de bouge : {", ".join(sorted(o.name for o in objets if o.name in sans_flou))}')
     repos = capturer_repos(objets)
     table = table_des_clips(objets)
     journal('clips ' + ', '.join(f'{k}:{len(v)}' for k, v in sorted(table.items())))
