@@ -1956,17 +1956,20 @@ export function monterHudHtml(
     const bouton = (action: string, cle: string, contenu: string): string => `<button type="button" data-action="${action}" aria-label="${ech(api.t(cle))}" title="${ech(api.t(cle))}"><span aria-hidden="true">${contenu}</span></button>`;
     const tactique = api.basculerTactique ? `<button type="button" data-action="mode_tactique" aria-pressed="${api.tactiqueActif?.() ?? false}" aria-label="${ech(api.t('hud.mode_tactique'))}" title="${ech(api.t('hud.mode_tactique'))}"><span aria-hidden="true">▦</span></button>` : '';
     const legende = api.tactiqueActif?.() ? `<details class="legende-tactique"><summary>${ech(api.t('hud.mode_tactique'))}</summary><p>${ech(api.t('hud.legende_tactique'))}</p></details>` : '';
+    // Une peau qui ne tourne pas — la 2D, à vue fixe — n'a ni Alt ni Maj à
+    // expliquer : l'aide ne promet que les gestes que la carte comprend.
+    const aide = ech(api.t(api.tourner ? 'hud.aide_camera' : 'hud.aide_camera_2d'));
     if (racine.clientWidth <= 600) {
       const outils = tactique
         + (api.zoomer ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
           + bouton('zoom_moins', 'hud.zoom_moins', iconeOrdre('zoom_moins')) : '');
       return '<div class="camera camera-mobile">' + legende
         + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
-        + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}<p class="camera-aide">${ech(api.t('hud.aide_camera'))}</p></div></details>`
+        + `<details class="outils-vue"><summary>${ech(api.t('hud.vue_camera'))}</summary><div class="outils-vue-boutons">${outils}<p class="camera-aide">${aide}</p></div></details>`
         + (api.recentrer ? bouton('recentrer', 'hud.recentrer', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="6"/><path d="M12 2v5m0 10v5M2 12h5m10 0h5"/></svg>') : '')
         + '</div>';
     }
-    return `<div class="camera" title="${ech(api.t('hud.aide_camera'))}">` + legende + tactique
+    return `<div class="camera" title="${aide}">` + legende + tactique
       + (api.uniteSuivante ? bouton('unite_suivante', 'hud.unite_suivante', iconeOrdre('unite_suivante')) : '')
       + (api.zoomer
         ? bouton('zoom_plus', 'hud.zoom_plus', iconeOrdre('zoom_plus'))
