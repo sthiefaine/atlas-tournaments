@@ -270,7 +270,13 @@ function executerSuite(
     if (porte(tu, 'transport')) return refus('transport_impossible', 'pas de transport dans un transport') as Verdict;
     if (transport.cargo.length >= tt.transport.places) return refus('transport_plein') as Verdict;
     if (manhattan(transport, u) > 1) return refus('transport_impossible', 'transport hors de portée') as Verdict;
-    transport.cargo.push(u.id);
+    // Un tableau neuf, jamais `push` : `copierEtat` partage la cale **vide**
+    // d'un transport avec l'état d'avant (une copie en moins par unité, à
+    // chaque ordre et à chaque essai de l'IA). Écrire dedans en place écrivait
+    // aussi dans l'état d'avant — l'IA qui essayait un embarquement sur l'état
+    // de la page y posait le passager avant que l'ordre soit joué, et la
+    // partie s'écartait de son propre rejeu (trouvé le 23 septembre 2026).
+    transport.cargo = [...transport.cargo, u.id];
     u.dansTransport = transport.id;
     u.x = transport.x;
     u.y = transport.y;

@@ -53,10 +53,12 @@ import {
 
 /**
  * L'adversaire, vu du rendu : une fonction qui rend la suite d'actions du camp
- * courant. Le rendu **n'importe pas `ai/`** — la règle d'import de
+ * courant — tout de suite, ou **plus tard** quand elle se calcule ailleurs que
+ * sur le fil principal (un Web Worker, `app/jeu/adversaire-fond.ts`, 23
+ * septembre 2026). Le rendu **n'importe pas `ai/`** — la règle d'import de
  * `02-architecture.md` §5 ne l'y autorise pas. C'est la page de jeu qui branche.
  */
-export type Adversaire = (etat: EtatPartie) => Action[];
+export type Adversaire = (etat: EtatPartie) => Action[] | Promise<Action[]>;
 
 /** L'adversaire par défaut : il passe son tour. Le rendu reste jouable sans IA. */
 export const ADVERSAIRE_PASSIF: Adversaire = () => [{ type: 'finTour' }];
@@ -749,6 +751,26 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
   // L'adversaire : le même moteur, action par action, regardable
   // -------------------------------------------------------------------------
 
+  /**
+   * La suite de l'adversaire pour l'état courant. Elle peut arriver **plus
+   * tard**, calculée dans un Web Worker pendant que le fil principal continue
+   * de dessiner ; entre-temps la partie a pu être recommencée : une suite
+   * calculée pour un autre état n'est jamais jouée, on la redemande pour
+   * l'état courant tant que c'est encore à l'adversaire. Un adversaire
+   * synchrone répond comme avant, sans détour par une promesse — le premier
+   * ordre part dans le même tour d'horloge.
+   */
+  function suiteAdversaire(): Action[] | Promise<Action[]> {
+    const demande = etat;
+    const reponse = adversaire(demande);
+    if (Array.isArray(reponse)) return reponse;
+    return reponse.then((suite) => {
+      if (!vivant || etat === demande) return suite;
+      if (etat.partie.terminee || etat.campCourant === camp) return [];
+      return suiteAdversaire();
+    });
+  }
+
   async function tourAdversaire(): Promise<void> {
     if (!vivant || etat.partie.terminee || etat.campCourant === camp) return;
     attenteIa = true;
@@ -757,7 +779,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     // la partition) : on retient d'où le joueur regardait pour l'y ramener.
     rendu.retenirVue?.();
     rafraichir();
-    let suite = adversaire(etat);
+    const premiere = suiteAdversaire();
+    let suite = Array.isArray(premiere) ? premiere : await premiere;
+    if (!vivant) return;
     let garde = 0;
     while (vivant && !etat.partie.terminee && etat.campCourant !== camp && garde < 400) {
       garde += 1;
@@ -783,7 +807,9 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
         if (!vivant) return;
       }
       if (suite.length === 0 && !etat.partie.terminee && etat.campCourant !== camp) {
-        suite = adversaire(etat);
+        const suivante = suiteAdversaire();
+        suite = Array.isArray(suivante) ? suivante : await suivante;
+        if (!vivant) return;
       }
     }
     if (!vivant) return;
