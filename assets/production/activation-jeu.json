@@ -108,10 +108,10 @@
     {
       "id": "unite_brouilleur_base",
       "fichierActif": "public/assets/modeles/unite_brouilleur_base_lod0.glb",
-      "donnees": "../donnees/16c9253c23c61c1d09507f94b5f682d5ffc588a323f153e9c552450dbf337c77.glb",
-      "revision": "a01204a5cd179db0bb71307a9636bc9c348bdd57b7a273a05656511d3fef73b5",
+      "donnees": "../donnees/6cd7da53b062016c0224bc995507ceacefa6f19e6ea11a2347af768e2ac06dee.glb",
+      "revision": "0258db17b5484030522530d26dc246e9949d6700b912797497add6f39e0b0b66",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_char_leger_base",

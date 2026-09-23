@@ -895,6 +895,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   antiair: [0.556, 0.799, 0.62],
   artillerie: [0.516, 0.662, 0.801],
   barge: [0.36, 0.397, 0.7],
+  brouilleur: [0.461, 0.83, 0.689],
   char_leger: [0.546, 0.517, 0.684],
   char_lourd: [0.72, 0.717, 0.772],
   char_moyen: [0.566, 0.63, 0.778],
