@@ -164,6 +164,15 @@ export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0.06, decal
  */
 export const COULEUR_ZONE_EQUIPE_CUISSON = [1, 1, 1] as const;
 
+/**
+ * La page d'émission (fenêtres, feux) s'**ajoute** à la couleur, pondérée :
+ * presque rien le jour — une lampe allumée ne se voit pas au soleil —, pleine
+ * la nuit, quand `ambiance.villesEclairees` est vrai. Valeurs de la cuisson,
+ * qui a retiré l'émission de la couleur pour la mettre dans sa page.
+ */
+export const EMISSION_JOUR = 0.06;
+export const EMISSION_NUIT = 1;
+
 // ---------------------------------------------------------------------------
 // 3. Le manifeste des images cuites
 // ---------------------------------------------------------------------------
