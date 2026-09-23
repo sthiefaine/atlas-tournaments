@@ -884,13 +884,33 @@ function echelleUnite(s: Silhouette): Echelle {
   return echelle(0.7, 0.58, 0.95, 0.08);
 }
 
-/** Budget de triangles d'une unité : l'encombrement paie la géométrie. */
+/**
+ * Les dimensions des figurines refaites selon la charte du 23 septembre 2026
+ * (`doc/refonte/charte-figurines.md`, §3.4) : longueur `x`, hauteur `y`,
+ * profondeur `z` en mètres, relevées sur le modèle livré par
+ * `npm run fabriquer:figurine` et reportées ici à son installation. Une unité
+ * absente garde le gabarit de sa silhouette (`echelleUnite`) jusqu'à la sienne.
+ */
+const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, number]>> = {};
+
+/** La tolérance d'une figurine : la charte se juge sur l'image cuite, la fiche tient la forme livrée. */
+const TOLERANCE_FIGURINE = 0.05;
+
+/** Dimensions d'une unité : celles de sa figurine livrée, sinon le gabarit de sa silhouette. */
+function echelleFigurine(u: UnitType): Echelle {
+  const d = DIMENSIONS_FIGURINES[u.cle];
+  return d ? echelle(d[0], d[1], d[2], TOLERANCE_FIGURINE) : echelleUnite(u.silhouette);
+}
+
+/**
+ * Budget de triangles d'une unité. Depuis que le jeu montre des images cuites
+ * (23 septembre 2026), un triangle ne coûte plus rien en partie : le GLB n'est
+ * que la source de la cuisson, et ce qui compte à l'écran est la silhouette,
+ * lissée et chanfreinée (charte des figurines, §3.2). Un seul plafond pour
+ * toutes, qui laisse aux arrondis la place de ne pas montrer leurs facettes.
+ */
 function budgetUnite(s: Silhouette): Budget {
-  const materiaux = s.modules.length > 0 ? 3 : 2;
-  if (s.base === 'pattes') return budget(4000, materiaux);
-  if (s.taille === 1) return budget(3500, materiaux);
-  if (s.taille === 2) return budget(6000, materiaux);
-  return budget(9000, materiaux);
+  return budget(60000, s.modules.length > 0 ? 3 : 2);
 }
 
 /** Les clips attendus d'une unité : ce qu'elle sait faire, et rien d'autre. */
@@ -962,12 +982,9 @@ export function specUnite(u: UnitType): AssetSpec {
         + 'pour que deux unités voisines ne se touchent jamais.',
     },
     style: style(['tournament vehicle', 'crisp panel lines', 'neutral undressed base mesh']),
-    echelle: echelleUnite(s),
+    echelle: echelleFigurine(u),
     pivot: pivot(u.domaine !== 'air'),
-    // Première enveloppe de jeu ; les maîtres HD ne sont pas soumis à ce budget.
-    budget: ['barge', 'infanterie', 'char_leger'].includes(u.cle)
-      ? budget(({ barge: 50000, infanterie: 55000, char_leger: 60000 } as Record<string, number>)[u.cle]!, u.cle === 'infanterie' ? 2 : 3)
-      : ['artillerie', 'antiair'].includes(u.cle) ? budget(60000, 3) : budgetUnite(s),
+    budget: budgetUnite(s),
     textures: ['barge', 'artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) ? textures.map(t => (['albedo', 'normale'].includes(t.canal) || (['artillerie', 'infanterie', 'antiair', 'char_leger'].includes(u.cle) && ['rugosite', 'metal'].includes(t.canal))) ? { ...t, resolution: 2048 as const } : t) : textures,
     variantes: variantes(['hiver']),
     animations: animationsUnite(u),
