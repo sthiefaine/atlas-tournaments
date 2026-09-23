@@ -140,10 +140,10 @@
     {
       "id": "unite_chasseur_base",
       "fichierActif": "public/assets/modeles/unite_chasseur_base_lod0.glb",
-      "donnees": "../donnees/ac3f52dc8af4bae34104bea6334f851c9c7d1ebb0804fc559f3ff346e22851d1.glb",
-      "revision": "d0fdd8d61fd5a2a91c3cea73f92b6789c551ef0e36c190711ac0a0c7a5f36f16",
+      "donnees": "../donnees/a5791e2aa7f34ab1a1a061a327c71bc25ad294698d6b631d26a2beb06c04b01e.glb",
+      "revision": "b5511530f9f29c603e54ececd042fbde11e94b3d8fbbc48dac9bd00772489b3d",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_cuirasse_base",
@@ -180,10 +180,10 @@
     {
       "id": "unite_drone_ravitailleur_base",
       "fichierActif": "public/assets/modeles/unite_drone_ravitailleur_base_lod0.glb",
-      "donnees": "../donnees/1fe7fd97653953437e8425d6829afc3500478063489de6c945f62208e936e22c.glb",
-      "revision": "03a17c270547ba508643986ece0023d01cc5ac953dcd0146113638d9a76ab852",
+      "donnees": "../donnees/2da02ac0a80ff10bf48590aca3c0877be71cea148d3f1cc9653c92e31dae65a4.glb",
+      "revision": "42a1f303639c5fca882dec62c001a17c50deb5750ea9075d33d4ee2c3963755b",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_furtif_base",
