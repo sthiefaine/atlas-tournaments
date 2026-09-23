@@ -893,6 +893,7 @@ function echelleUnite(s: Silhouette): Echelle {
  */
 const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, number]>> = {
   char_leger: [0.546, 0.517, 0.684],
+  helico: [0.446, 0.38, 0.818],
 };
 
 /** La tolérance d'une figurine : la charte se juge sur l'image cuite, la fiche tient la forme livrée. */

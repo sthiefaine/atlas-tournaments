@@ -204,10 +204,10 @@
     {
       "id": "unite_helico_base",
       "fichierActif": "public/assets/modeles/unite_helico_base_lod0.glb",
-      "donnees": "../donnees/ba4147ec3c3de431c58998a3c8fdd2a99a85364c8af6fd425b16b2f4466c2965.glb",
-      "revision": "c9b9cfd1c98cde6360e3c247e8849b997a55c166ba213b51d721dcf6351acff2",
+      "donnees": "../donnees/bf613b4594793504df9cbb1292274edf7fa3c340c4901d348eb6ef3ab112930b.glb",
+      "revision": "7b33bb0f8f4c24101b37f88895648bb972810c1643009f39705739cc0700d50c",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_infanterie_base",
