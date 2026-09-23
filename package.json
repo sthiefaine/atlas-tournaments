@@ -20,6 +20,7 @@
     "verifier:campagne": "tsx scripts/verifier-campagne.ts",
     "cuire:sprites": "tsx scripts/sprites/cuire.ts",
     "fabriquer:figurine": "tsx scripts/production/figurines/fabriquer.ts",
+    "installer:figurine": "tsx scripts/production/figurines/installer.ts",
     "generer:decor-sprites": "${BLENDER:-/Applications/Blender.app/Contents/MacOS/Blender} -b --factory-startup --python-exit-code 1 -P scripts/decor-sprites/generer.py --",
     "fil:opus1": "node scripts/fil-opus1.mjs --json",
     "roster:heros": "node scripts/roster-heros.mjs",

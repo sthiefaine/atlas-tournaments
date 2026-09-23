@@ -114,9 +114,10 @@ test('une entrée à masque a une page de masque non vide, une entrée sans masq
 });
 
 test('le masque n’est pas la couverture : le char léger et l’infanterie ne sont teints qu’en partie', async () => {
-  // Échantillonné aux UV de leurs maillages, leur masque couvre 8 et 9 % de
-  // `mat_corps` : une page de masque pleine dirait que la passe lue n'est pas
-  // la bonne (c'est arrivé : la combinée relue sous le nom du masque).
+  // Une page de masque pleine dirait que la passe lue n'est pas la bonne
+  // (c'est arrivé : la combinée relue sous le nom du masque). Depuis la charte
+  // des figurines (23 septembre 2026), la couleur d'équipe couvre 40 à 60 %
+  // d'une unité, jamais toute sa silhouette — ni le contour, ni le graphite.
   for (const cle of ['char_leger', 'infanterie']) {
     const e = manifeste.entrees[idUnite(cle)]!;
     const c = e.animations.find((a) => a.vue === 'droite' && a.clip === 'repos')!.cadres[0]!;
@@ -133,7 +134,7 @@ test('le masque n’est pas la couverture : le char léger et l’infanterie ne 
         if (masque[i]! > 127) teints++;
       }
     }
-    assert.ok(teints > 0.01 * visibles && teints < 0.4 * visibles, `${cle} : ${teints} pixels teints sur ${visibles}`);
+    assert.ok(teints > 0.01 * visibles && teints < 0.8 * visibles, `${cle} : ${teints} pixels teints sur ${visibles}`);
   }
 });
 

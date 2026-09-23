@@ -891,7 +891,9 @@ function echelleUnite(s: Silhouette): Echelle {
  * `npm run fabriquer:figurine` et reportées ici à son installation. Une unité
  * absente garde le gabarit de sa silhouette (`echelleUnite`) jusqu'à la sienne.
  */
-const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, number]>> = {};
+const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, number]>> = {
+  char_leger: [0.546, 0.517, 0.684],
+};
 
 /** La tolérance d'une figurine : la charte se juge sur l'image cuite, la fiche tient la forme livrée. */
 const TOLERANCE_FIGURINE = 0.05;
