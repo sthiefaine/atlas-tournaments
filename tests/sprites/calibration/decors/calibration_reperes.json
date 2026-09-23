@@ -1,0 +1,173 @@
+{
+ "entree": {
+  "id": "calibration_reperes",
+  "famille": "decor",
+  "cle": "calibration",
+  "variante": "reperes",
+  "source": {
+   "fichier": "scripts/sprites/calibration/calibration_reperes.glb",
+   "sha256": "ad8447540c00217e33d323665ebaac819ddd7f408d99058da05eceec2a411719"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/calibration_reperes_0.webp",
+    "largeur": 440,
+    "hauteur": 112
+   }
+  ],
+  "animations": [
+   {
+    "vue": "droite",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 292,
+      "y": 0,
+      "l": 82,
+      "h": 108,
+      "px": 33,
+      "py": 70
+     }
+    ]
+   },
+   {
+    "vue": "bas",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 77,
+      "h": 109,
+      "px": 52,
+      "py": 69
+     }
+    ]
+   },
+   {
+    "vue": "haut",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 378,
+      "y": 0,
+      "l": 62,
+      "h": 90,
+      "px": 10,
+      "py": 70
+     }
+    ]
+   },
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 162,
+      "y": 0,
+      "l": 61,
+      "h": 109,
+      "px": 53,
+      "py": 68
+     }
+    ]
+   },
+   {
+    "vue": "travers",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 227,
+      "y": 0,
+      "l": 61,
+      "h": 109,
+      "px": 8,
+      "py": 68
+     }
+    ]
+   },
+   {
+    "vue": "profil",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 81,
+      "y": 0,
+      "l": 77,
+      "h": 109,
+      "px": 25,
+      "py": 97
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "48f4aa1010d86c8918231aaa87e4fe36187442852e96645de34b9e31e8ef9e87",
+  "date": "2026-09-23T01:01:40.540Z",
+  "secondes": 12.2,
+  "secondesRendu": 4.2,
+  "images": 6,
+  "imagesUniques": 6,
+  "octets": 8644,
+  "canevas": {
+   "droite": {
+    "x0": -35,
+    "y0": -72,
+    "largeur": 86,
+    "hauteur": 112
+   },
+   "bas": {
+    "x0": -54,
+    "y0": -71,
+    "largeur": 81,
+    "hauteur": 113
+   },
+   "haut": {
+    "x0": -12,
+    "y0": -71,
+    "largeur": 66,
+    "hauteur": 93
+   },
+   "fixe": {
+    "x0": -55,
+    "y0": -70,
+    "largeur": 65,
+    "hauteur": 113
+   },
+   "travers": {
+    "x0": -10,
+    "y0": -70,
+    "largeur": 65,
+    "hauteur": 113
+   },
+   "profil": {
+    "x0": -27,
+    "y0": -99,
+    "largeur": 81,
+    "hauteur": 113
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

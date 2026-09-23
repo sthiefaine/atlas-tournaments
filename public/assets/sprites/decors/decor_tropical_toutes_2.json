@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_tropical_toutes_2",
+  "famille": "decor",
+  "cle": "tropical",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_tropical_toutes_2.glb",
+   "sha256": "00352a746a6f589687a2eea1cc5b03ff0ea70b2ec8d7ee72a7d0edefe54a5ee3"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_tropical_toutes_2_0.webp",
+    "largeur": 140,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 137,
+      "h": 120,
+      "px": 68,
+      "py": 69
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "f18fab405007a98df9181dd04e7ffa47250fd94eff1d9d36fe587d1e10383d05",
+  "date": "2026-09-23T00:07:28.727Z",
+  "secondes": 18.1,
+  "secondesRendu": 5.9,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4612,
+  "canevas": {
+   "fixe": {
+    "x0": -76,
+    "y0": -79,
+    "largeur": 152,
+    "hauteur": 138
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

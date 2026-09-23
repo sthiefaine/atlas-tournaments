@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_feuillu_ete_2",
+  "famille": "decor",
+  "cle": "feuillu",
+  "variante": "ete",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_feuillu_ete_2.glb",
+   "sha256": "c9c6635ba3537f397a55ba99b08009c2b5fff4076e101e170ac20c307b8fa918"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_feuillu_ete_2_0.webp",
+    "largeur": 124,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 124,
+      "h": 120,
+      "px": 59,
+      "py": 75
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "7830fdddc81ac89812c57fa5d1b5100299f1786f13efdeabbf61fe6391218a13",
+  "date": "2026-09-23T00:01:57.791Z",
+  "secondes": 19.7,
+  "secondesRendu": 6,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 3890,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -86,
+    "largeur": 138,
+    "hauteur": 137
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

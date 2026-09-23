@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_roseau_toutes_2",
+  "famille": "decor",
+  "cle": "roseau",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_roseau_toutes_2.glb",
+   "sha256": "79569a01121bb5c24651053a478e69889431bc433cd50d06084a39d680de7e9d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_roseau_toutes_2_0.webp",
+    "largeur": 48,
+    "hauteur": 48
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 48,
+      "h": 46,
+      "px": 24,
+      "py": 27
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "2d70dcb55eb1ed18db246ed8fb0b86fc26da84a6cb8624c5054af17f958f785c",
+  "date": "2026-09-23T00:06:36.777Z",
+  "secondes": 8.5,
+  "secondesRendu": 3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1392,
+  "canevas": {
+   "fixe": {
+    "x0": -58,
+    "y0": -48,
+    "largeur": 116,
+    "hauteur": 96
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

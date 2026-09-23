@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_montagne_hiver_3",
+  "famille": "decor",
+  "cle": "montagne",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_montagne_hiver_3.glb",
+   "sha256": "643dd4d5bcaccf4cccd3eed3580fa1faa19d813462821c24d69eea2f729d91db"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_montagne_hiver_3_0.webp",
+    "largeur": 124,
+    "hauteur": 112
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 124,
+      "h": 111,
+      "px": 62,
+      "py": 63
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "5fb44c83810843ad64f509deff8dd3f1437b92627c36bd12828629faa1e26fe9",
+  "date": "2026-09-23T00:04:17.732Z",
+  "secondes": 29.8,
+  "secondesRendu": 13.1,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 3130,
+  "canevas": {
+   "fixe": {
+    "x0": -109,
+    "y0": -104,
+    "largeur": 218,
+    "hauteur": 188
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_conifere_automne_1",
+  "famille": "decor",
+  "cle": "conifere",
+  "variante": "automne",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_conifere_automne_1.glb",
+   "sha256": "ec8e6c757e86efc1e11bfd96562ba7b7366e2c8cf5a69100f5a9558ea15471ff"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_conifere_automne_1_0.webp",
+    "largeur": 132,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 130,
+      "h": 120,
+      "px": 65,
+      "py": 71
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "677820f4529f4a3bbd9ae82185e9e15d98e16a87e23a86f3a599b770933e1210",
+  "date": "2026-09-22T23:59:31.842Z",
+  "secondes": 18,
+  "secondesRendu": 4.5,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4346,
+  "canevas": {
+   "fixe": {
+    "x0": -72,
+    "y0": -86,
+    "largeur": 145,
+    "hauteur": 142
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

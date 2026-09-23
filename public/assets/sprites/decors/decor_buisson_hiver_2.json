@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_buisson_hiver_2",
+  "famille": "decor",
+  "cle": "buisson",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_buisson_hiver_2.glb",
+   "sha256": "54a21492ecebb67961e0dcfe11628536893a25486215bb9b3a2c7d40abc06dea"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_buisson_hiver_2_0.webp",
+    "largeur": 64,
+    "hauteur": 52
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 62,
+      "h": 51,
+      "px": 29,
+      "py": 27
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "4550d0344800e699c6c9ce14b7ff5ef7985866f7b8c38f1f1dbcd997705e81a0",
+  "date": "2026-09-22T23:59:10.033Z",
+  "secondes": 26.5,
+  "secondesRendu": 8.1,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1428,
+  "canevas": {
+   "fixe": {
+    "x0": -66,
+    "y0": -48,
+    "largeur": 132,
+    "hauteur": 97
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

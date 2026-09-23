@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_feuillu_automne_3",
+  "famille": "decor",
+  "cle": "feuillu",
+  "variante": "automne",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_feuillu_automne_3.glb",
+   "sha256": "408c4855eec5ca65971d7f616c80b7daed31a0d3c1e768b483f31f1491335a1d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_feuillu_automne_3_0.webp",
+    "largeur": 132,
+    "hauteur": 112
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 130,
+      "h": 112,
+      "px": 65,
+      "py": 62
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "21fc4ac54cf44cebe7949652df1dd581900e6d2ccfcd8d1813063ee3d2603c5a",
+  "date": "2026-09-23T00:01:38.085Z",
+  "secondes": 19.1,
+  "secondesRendu": 5.4,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4046,
+  "canevas": {
+   "fixe": {
+    "x0": -73,
+    "y0": -76,
+    "largeur": 146,
+    "hauteur": 134
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

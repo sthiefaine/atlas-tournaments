@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_palmier_toutes_1",
+  "famille": "decor",
+  "cle": "palmier",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_palmier_toutes_1.glb",
+   "sha256": "2b567fa85bb18b8edd57f3445f0bc4668800f5e4ce7a282c7015a8de8c8671b9"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_palmier_toutes_1_0.webp",
+    "largeur": 108,
+    "hauteur": 112
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 108,
+      "h": 111,
+      "px": 44,
+      "py": 75
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "a39528df58e0a6ded14673ca209aead6224775f2584832a641fe9fb86c4dcea9",
+  "date": "2026-09-23T00:05:49.902Z",
+  "secondes": 13.2,
+  "secondesRendu": 4,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4440,
+  "canevas": {
+   "fixe": {
+    "x0": -71,
+    "y0": -79,
+    "largeur": 142,
+    "hauteur": 136
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

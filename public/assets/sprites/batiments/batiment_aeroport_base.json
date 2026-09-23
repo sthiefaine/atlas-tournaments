@@ -1,0 +1,277 @@
+{
+ "entree": {
+  "id": "batiment_aeroport_base",
+  "famille": "batiment",
+  "cle": "aeroport",
+  "source": {
+   "fichier": "public/assets/modeles/batiment_aeroport_base_lod0.glb",
+   "sha256": "0c50a9336a53824d0f87039258fda4d0738c18c173cc616764847aee9288b20d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/batiments/batiment_aeroport_base_0.webp",
+    "largeur": 384,
+    "hauteur": 1568,
+    "masque": "assets/sprites/batiments/batiment_aeroport_base_0_masque.png",
+    "emission": "assets/sprites/batiments/batiment_aeroport_base_0_emission.webp"
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 3.75,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 190,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 194,
+      "y": 262,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 393,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 393,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 194,
+      "y": 0,
+      "l": 190,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 524,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 524,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 655,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 655,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 786,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 131,
+      "l": 190,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 786,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     }
+    ]
+   },
+   {
+    "vue": "fixe",
+    "clip": "capture",
+    "boucle": false,
+    "ips": 7.857143,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 917,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 917,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1048,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 1048,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1179,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 1179,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1310,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 1310,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 194,
+      "y": 131,
+      "l": 190,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1441,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 192,
+      "y": 1441,
+      "l": 188,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 262,
+      "l": 190,
+      "h": 127,
+      "px": 99,
+      "py": 78
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "cfea6bfa36b5abf20d56b49aac5c4826b7d96adb7f02f009d51baa304c0f8f58",
+  "date": "2026-09-22T23:43:44.821Z",
+  "secondes": 281,
+  "secondesRendu": 199,
+  "images": 24,
+  "imagesUniques": 24,
+  "octets": 91818,
+  "canevas": {
+   "fixe": {
+    "x0": -107,
+    "y0": -83,
+    "largeur": 214,
+    "hauteur": 166
+   }
+  },
+  "materiauxTeints": [
+   "mat_corps",
+   "mat_vitrage"
+  ],
+  "avertissements": []
+ }
+}

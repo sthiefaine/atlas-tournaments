@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_conifere_hiver_2",
+  "famille": "decor",
+  "cle": "conifere",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_conifere_hiver_2.glb",
+   "sha256": "7c2afec5c365597d245e2fe4c0e1c6dc935530c18bad7dd0150f8d943d1ccffb"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_conifere_hiver_2_0.webp",
+    "largeur": 128,
+    "hauteur": 108
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 128,
+      "h": 107,
+      "px": 64,
+      "py": 58
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "dae99b57ab8cb0adb50a4b0c23808bb7a543afef37bb37966aad23e06bfc8ba3",
+  "date": "2026-09-23T00:00:26.982Z",
+  "secondes": 17.1,
+  "secondesRendu": 5.3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4428,
+  "canevas": {
+   "fixe": {
+    "x0": -72,
+    "y0": -75,
+    "largeur": 144,
+    "hauteur": 132
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

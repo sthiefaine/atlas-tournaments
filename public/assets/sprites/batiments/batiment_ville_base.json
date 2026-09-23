@@ -1,0 +1,277 @@
+{
+ "entree": {
+  "id": "batiment_ville_base",
+  "famille": "batiment",
+  "cle": "ville",
+  "source": {
+   "fichier": "public/assets/modeles/batiment_ville_base_lod0.glb",
+   "sha256": "066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/batiments/batiment_ville_base_0.webp",
+    "largeur": 392,
+    "hauteur": 1972,
+    "masque": "assets/sprites/batiments/batiment_ville_base_0_masque.png",
+    "emission": "assets/sprites/batiments/batiment_ville_base_0_emission.webp"
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 3.75,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 198,
+      "y": 660,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 825,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 825,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 0,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 989,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 989,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1153,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 165,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 1153,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1317,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 1317,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     }
+    ]
+   },
+   {
+    "vue": "fixe",
+    "clip": "capture",
+    "boucle": false,
+    "ips": 7.857143,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1481,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 1481,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1645,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 165,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 330,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 330,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 1645,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 495,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 495,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 1809,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 660,
+      "l": 194,
+      "h": 161,
+      "px": 95,
+      "py": 90
+     },
+     {
+      "page": 0,
+      "x": 198,
+      "y": 1809,
+      "l": 194,
+      "h": 160,
+      "px": 95,
+      "py": 89
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "0093f010c6786e35db000171e6bf2393b403bf420f3ba657145bda4eead745c7",
+  "date": "2026-09-22T23:58:16.080Z",
+  "secondes": 234.5,
+  "secondesRendu": 184.7,
+  "images": 24,
+  "imagesUniques": 24,
+  "octets": 135966,
+  "canevas": {
+   "fixe": {
+    "x0": -103,
+    "y0": -103,
+    "largeur": 206,
+    "hauteur": 182
+   }
+  },
+  "materiauxTeints": [
+   "mat_corps",
+   "mat_vitrage"
+  ],
+  "avertissements": []
+ }
+}

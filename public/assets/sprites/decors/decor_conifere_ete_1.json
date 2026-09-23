@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_conifere_ete_1",
+  "famille": "decor",
+  "cle": "conifere",
+  "variante": "ete",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_conifere_ete_1.glb",
+   "sha256": "3fa00a67699ec06082419b67624b255b16a5aeb23da5316ebf8223a0a8eafeac"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_conifere_ete_1_0.webp",
+    "largeur": 132,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 130,
+      "h": 119,
+      "px": 65,
+      "py": 71
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "932fb41b0c46927e9ef039775b5fac50cfa80cdab456491b08342113232e4667",
+  "date": "2026-09-22T23:59:54.066Z",
+  "secondes": 16.1,
+  "secondesRendu": 4.5,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4456,
+  "canevas": {
+   "fixe": {
+    "x0": -72,
+    "y0": -86,
+    "largeur": 145,
+    "hauteur": 142
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

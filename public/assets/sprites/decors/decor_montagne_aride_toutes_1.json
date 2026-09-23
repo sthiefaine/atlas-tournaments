@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_montagne_aride_toutes_1",
+  "famille": "decor",
+  "cle": "montagne_aride",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_montagne_aride_toutes_1.glb",
+   "sha256": "423c17966af2c0490a983953853f94218ead4e7f82561a07d34619c4f934101b"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_montagne_aride_toutes_1_0.webp",
+    "largeur": 156,
+    "hauteur": 116
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 154,
+      "h": 116,
+      "px": 62,
+      "py": 68
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "2f307ff8ec5270ce3a93c5193a5f0fe3457693f23b98f385166d08a30746ffe6",
+  "date": "2026-09-23T00:03:18.868Z",
+  "secondes": 25.5,
+  "secondesRendu": 8.6,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4632,
+  "canevas": {
+   "fixe": {
+    "x0": -108,
+    "y0": -96,
+    "largeur": 216,
+    "hauteur": 180
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

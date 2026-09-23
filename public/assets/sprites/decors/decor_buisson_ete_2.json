@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_buisson_ete_2",
+  "famille": "decor",
+  "cle": "buisson",
+  "variante": "ete",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_buisson_ete_2.glb",
+   "sha256": "99a5710b9049f1d688a243dea67f1d42c89d39b10ae7ebaf8012f95ef7c6945d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_buisson_ete_2_0.webp",
+    "largeur": 76,
+    "hauteur": 64
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 76,
+      "h": 61,
+      "px": 37,
+      "py": 31
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "06bf4c60eae65a8268d3ebc45fd6869906ddd2c698cca4dac779428aa5b6ea0f",
+  "date": "2026-09-22T23:58:43.509Z",
+  "secondes": 12.4,
+  "secondesRendu": 3.2,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1566,
+  "canevas": {
+   "fixe": {
+    "x0": -66,
+    "y0": -48,
+    "largeur": 132,
+    "hauteur": 96
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

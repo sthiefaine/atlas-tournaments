@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_rocher_archipel",
+  "famille": "decor",
+  "cle": "rocher",
+  "variante": "archipel",
+  "source": {
+   "fichier": "public/assets/modeles/decor_rocher_archipel_lod0.glb",
+   "sha256": "56b4fadac5caf54cd52631f73fe60a88c99e95a8a1b4d523d7df85e7852cdeed"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_rocher_archipel_0.webp",
+    "largeur": 80,
+    "hauteur": 76
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 78,
+      "h": 73,
+      "px": 29,
+      "py": 47
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "d3a7ab5bfbe21568ea0ed34a283939ac2217401559ec3b9e99fed72ac680ed4d",
+  "date": "2026-09-23T00:06:16.919Z",
+  "secondes": 12.9,
+  "secondesRendu": 3.8,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 2124,
+  "canevas": {
+   "fixe": {
+    "x0": -76,
+    "y0": -60,
+    "largeur": 152,
+    "hauteur": 120
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

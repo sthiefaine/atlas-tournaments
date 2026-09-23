@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_montagne_toutes_1",
+  "famille": "decor",
+  "cle": "montagne",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_montagne_toutes_1.glb",
+   "sha256": "b2be548bf58dd7c33da09335946ebe360528f5b6b4f8e58f968c72caec8614b6"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_montagne_toutes_1_0.webp",
+    "largeur": 168,
+    "hauteur": 128
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 165,
+      "h": 128,
+      "px": 64,
+      "py": 76
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "787f44c6dd554414c74c4838f02404bcf9a767e97f3e3735fc78c0dc523d57f7",
+  "date": "2026-09-23T00:04:42.675Z",
+  "secondes": 36.4,
+  "secondesRendu": 10.2,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4454,
+  "canevas": {
+   "fixe": {
+    "x0": -108,
+    "y0": -114,
+    "largeur": 217,
+    "hauteur": 198
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

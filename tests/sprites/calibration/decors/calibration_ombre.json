@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "calibration_ombre",
+  "famille": "decor",
+  "cle": "calibration",
+  "variante": "ombre",
+  "source": {
+   "fichier": "scripts/sprites/calibration/calibration_ombre.glb",
+   "sha256": "089ee42397d0f9bd277c726877c998da39de324a17eebe6f028949455d0a92d7"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/calibration_ombre_0.webp",
+    "largeur": 80,
+    "hauteur": 72
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 80,
+      "h": 69,
+      "px": 27,
+      "py": 44
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "52d2e84e02e4e3fe9abb801bb153b5c4f02db598a9da4e9ed8635904af258e60",
+  "date": "2026-09-23T01:01:28.339Z",
+  "secondes": 8,
+  "secondesRendu": 4.3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1144,
+  "canevas": {
+   "fixe": {
+    "x0": -61,
+    "y0": -48,
+    "largeur": 122,
+    "hauteur": 96
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

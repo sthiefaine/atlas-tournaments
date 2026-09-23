@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_montagne_volcan_toutes_2",
+  "famille": "decor",
+  "cle": "montagne_volcan",
+  "variante": "toutes",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_montagne_volcan_toutes_2.glb",
+   "sha256": "e509a7c191d086673eb6fd4133767c80243e761234bcfa7acac1dcf41debbf8e"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_montagne_volcan_toutes_2_0.webp",
+    "largeur": 208,
+    "hauteur": 172
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 206,
+      "h": 170,
+      "px": 103,
+      "py": 93
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "3a566b1917fbeae2bae0b9e4c899394e6765fd0a8275fdf3df851c1e5e968e2a",
+  "date": "2026-09-23T00:05:48.480Z",
+  "secondes": 24,
+  "secondesRendu": 7.5,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 5812,
+  "canevas": {
+   "fixe": {
+    "x0": -109,
+    "y0": -101,
+    "largeur": 218,
+    "hauteur": 185
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

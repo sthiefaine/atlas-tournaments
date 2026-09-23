@@ -1,0 +1,277 @@
+{
+ "entree": {
+  "id": "batiment_usine_base",
+  "famille": "batiment",
+  "cle": "usine",
+  "source": {
+   "fichier": "public/assets/modeles/batiment_usine_base_lod0.glb",
+   "sha256": "897ab4bfd4ea9eec439da367bb4d4f88d6a2d89ae875ce9296f63e1c65d33087"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/batiments/batiment_usine_base_0.webp",
+    "largeur": 824,
+    "hauteur": 1096,
+    "masque": "assets/sprites/batiments/batiment_usine_base_0_masque.png",
+    "emission": "assets/sprites/batiments/batiment_usine_base_0_emission.webp"
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 3.75,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 621,
+      "y": 0,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 618,
+      "y": 740,
+      "l": 203,
+      "h": 170,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 924,
+      "l": 203,
+      "h": 170,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 207,
+      "y": 924,
+      "l": 203,
+      "h": 170,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 414,
+      "y": 924,
+      "l": 203,
+      "h": 170,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 621,
+      "y": 924,
+      "l": 203,
+      "h": 170,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 185,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 203,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 740,
+      "l": 202,
+      "h": 180,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 206,
+      "y": 740,
+      "l": 202,
+      "h": 180,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 412,
+      "y": 740,
+      "l": 202,
+      "h": 180,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 207,
+      "y": 0,
+      "l": 203,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     }
+    ]
+   },
+   {
+    "vue": "fixe",
+    "clip": "capture",
+    "boucle": false,
+    "ips": 7.857143,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 206,
+      "y": 185,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 412,
+      "y": 185,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 618,
+      "y": 185,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 370,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 206,
+      "y": 370,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 412,
+      "y": 370,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 618,
+      "y": 370,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 555,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 206,
+      "y": 555,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 412,
+      "y": 555,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 618,
+      "y": 555,
+      "l": 202,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     },
+     {
+      "page": 0,
+      "x": 414,
+      "y": 0,
+      "l": 203,
+      "h": 181,
+      "px": 100,
+      "py": 108
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "b25e372185453a42ba1b1698f46f795e16a1bc373dbbf67b57caee1babe65cfd",
+  "date": "2026-09-22T23:58:23.571Z",
+  "secondes": 243.3,
+  "secondesRendu": 182.3,
+  "images": 24,
+  "imagesUniques": 24,
+  "octets": 111552,
+  "canevas": {
+   "fixe": {
+    "x0": -106,
+    "y0": -110,
+    "largeur": 212,
+    "hauteur": 192
+   }
+  },
+  "materiauxTeints": [
+   "mat_corps",
+   "mat_vitrage"
+  ],
+  "avertissements": []
+ }
+}

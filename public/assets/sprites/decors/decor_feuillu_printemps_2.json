@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_feuillu_printemps_2",
+  "famille": "decor",
+  "cle": "feuillu",
+  "variante": "printemps",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_feuillu_printemps_2.glb",
+   "sha256": "1c29b4f4a2938dd75a3381919ae5ddbbca0bdb189d392cd8fb82e743e03fee0a"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_feuillu_printemps_2_0.webp",
+    "largeur": 124,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 122,
+      "h": 119,
+      "px": 59,
+      "py": 75
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "32b8d329b723f2699f67b2614a71bbdb6c16a21e6ed2b91e885f63a13d29690d",
+  "date": "2026-09-23T00:02:53.367Z",
+  "secondes": 22.5,
+  "secondesRendu": 7.3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4024,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -86,
+    "largeur": 138,
+    "hauteur": 138
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

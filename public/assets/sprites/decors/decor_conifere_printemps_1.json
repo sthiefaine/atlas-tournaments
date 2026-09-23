@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_conifere_printemps_1",
+  "famille": "decor",
+  "cle": "conifere",
+  "variante": "printemps",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_conifere_printemps_1.glb",
+   "sha256": "41599c7a292e058b6402969338428ebb1dbdc46869b323dc987465cf9db57fe5"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_conifere_printemps_1_0.webp",
+    "largeur": 132,
+    "hauteur": 120
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 129,
+      "h": 119,
+      "px": 64,
+      "py": 71
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "88420388bc29a989fb940872317d11b8762ad6455dac06e65d7dff35833b6eac",
+  "date": "2026-09-23T00:00:47.224Z",
+  "secondes": 20.2,
+  "secondesRendu": 5.4,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 4668,
+  "canevas": {
+   "fixe": {
+    "x0": -72,
+    "y0": -86,
+    "largeur": 145,
+    "hauteur": 142
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

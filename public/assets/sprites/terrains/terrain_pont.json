@@ -1,0 +1,80 @@
+{
+ "entree": {
+  "id": "terrain_pont",
+  "famille": "terrain",
+  "cle": "pont",
+  "source": {
+   "fichier": "public/assets/modeles/terrain_pont_lod0.glb",
+   "sha256": "5025db67beb32bbbee894f802250be3f64944db52c4a678edf23dd2fabc262a7"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/terrains/terrain_pont_0.webp",
+    "largeur": 440,
+    "hauteur": 168
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 220,
+      "y": 0,
+      "l": 217,
+      "h": 166,
+      "px": 108,
+      "py": 83
+     }
+    ]
+   },
+   {
+    "vue": "travers",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 216,
+      "h": 168,
+      "px": 108,
+      "py": 84
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "9d0268288b315cbd5a9f93941558dc0dff41564c6bdd00b27014bb249289cd9d",
+  "date": "2026-09-23T00:08:17.851Z",
+  "secondes": 49.1,
+  "secondesRendu": 13.6,
+  "images": 2,
+  "imagesUniques": 2,
+  "octets": 11068,
+  "canevas": {
+   "fixe": {
+    "x0": -112,
+    "y0": -87,
+    "largeur": 224,
+    "hauteur": 174
+   },
+   "travers": {
+    "x0": -112,
+    "y0": -87,
+    "largeur": 224,
+    "hauteur": 174
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

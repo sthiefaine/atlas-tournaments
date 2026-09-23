@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_touffe_automne_2",
+  "famille": "decor",
+  "cle": "touffe",
+  "variante": "automne",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_touffe_automne_2.glb",
+   "sha256": "ad5c0eb997e4f5fc9421610c1fa6db465b0d24d882e0301e04299392b56394ec"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_touffe_automne_2_0.webp",
+    "largeur": 44,
+    "hauteur": 40
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 44,
+      "h": 37,
+      "px": 22,
+      "py": 19
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "16f83d559448dd9a69f97764e77734753623da852cfbb3ec3d56a3ee6d45ab31",
+  "date": "2026-09-23T00:06:43.916Z",
+  "secondes": 7.1,
+  "secondesRendu": 2.8,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1486,
+  "canevas": {
+   "fixe": {
+    "x0": -62,
+    "y0": -45,
+    "largeur": 125,
+    "hauteur": 94
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

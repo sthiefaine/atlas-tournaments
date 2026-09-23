@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "calibration_carre",
+  "famille": "decor",
+  "cle": "calibration",
+  "variante": "carre",
+  "source": {
+   "fichier": "scripts/sprites/calibration/calibration_carre.glb",
+   "sha256": "96a7175cb595e42ad304ab51d684aa87f6f6611f47816cd9a9ed21e8604edccf"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/calibration_carre_0.webp",
+    "largeur": 132,
+    "hauteur": 104
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 132,
+      "h": 102,
+      "px": 66,
+      "py": 51
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "93e58792feeb797224430d9d2386e184f45da077429bf3b9e6fbb809f271c6fc",
+  "date": "2026-09-23T01:01:28.320Z",
+  "secondes": 7.9,
+  "secondesRendu": 3.6,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 698,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -53,
+    "largeur": 134,
+    "hauteur": 106
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

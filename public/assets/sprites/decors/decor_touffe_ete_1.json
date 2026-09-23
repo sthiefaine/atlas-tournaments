@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_touffe_ete_1",
+  "famille": "decor",
+  "cle": "touffe",
+  "variante": "ete",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_touffe_ete_1.glb",
+   "sha256": "db39080c0cff9b68d685a9836ab00a6176173850481490c13b27a76e34aef898"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_touffe_ete_1_0.webp",
+    "largeur": 44,
+    "hauteur": 40
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 43,
+      "h": 40,
+      "px": 21,
+      "py": 22
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "4cf092e26b4818eab374a4358907e03f083cdafc703e7f7422adb3345809bcc0",
+  "date": "2026-09-23T00:06:50.203Z",
+  "secondes": 8.2,
+  "secondesRendu": 2.7,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1252,
+  "canevas": {
+   "fixe": {
+    "x0": -59,
+    "y0": -47,
+    "largeur": 118,
+    "hauteur": 94
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

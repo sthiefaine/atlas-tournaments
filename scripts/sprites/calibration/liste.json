@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "entrees": [
+    { "id": "calibration_carre", "famille": "decor", "cle": "calibration", "variante": "carre", "fichier": "calibration_carre.glb", "vues": ["fixe"], "ombre": false },
+    { "id": "calibration_reperes", "famille": "decor", "cle": "calibration", "variante": "reperes", "fichier": "calibration_reperes.glb", "vues": ["droite", "bas", "haut", "fixe", "travers", "profil"], "ombre": false },
+    { "id": "calibration_ombre", "famille": "decor", "cle": "calibration", "variante": "ombre", "fichier": "calibration_ombre.glb", "vues": ["fixe"], "ombre": true }
+  ]
+}

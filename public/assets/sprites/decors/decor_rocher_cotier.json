@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_rocher_cotier",
+  "famille": "decor",
+  "cle": "rocher",
+  "variante": "cotier",
+  "source": {
+   "fichier": "public/assets/modeles/decor_rocher_cotier_lod0.glb",
+   "sha256": "c7a31905fd9b0247ec48a393fe0a54126c5cece873dabbd85e8909ba3547d36c"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_rocher_cotier_0.webp",
+    "largeur": 116,
+    "hauteur": 88
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 115,
+      "h": 88,
+      "px": 52,
+      "py": 47
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "4859b11c1f59ee28bacd874e20a9dee388e3a991465af8555af993ad6a763cd3",
+  "date": "2026-09-23T00:06:19.694Z",
+  "secondes": 14.9,
+  "secondesRendu": 4.9,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 3154,
+  "canevas": {
+   "fixe": {
+    "x0": -78,
+    "y0": -60,
+    "largeur": 156,
+    "hauteur": 120
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

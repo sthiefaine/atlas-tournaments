@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_feuillu_hiver_2",
+  "famille": "decor",
+  "cle": "feuillu",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_feuillu_hiver_2.glb",
+   "sha256": "ceecabb7207f21d729bce15335f39b24212455a8125bf0fca631a8545e442dbc"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_feuillu_hiver_2_0.webp",
+    "largeur": 100,
+    "hauteur": 108
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 98,
+      "h": 108,
+      "px": 41,
+      "py": 73
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "bdf3c34b8cf889478b86f68919bf275eb7181aaee6f4cacf789e30d8a9946b25",
+  "date": "2026-09-23T00:02:23.501Z",
+  "secondes": 18.2,
+  "secondesRendu": 6.3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 3680,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -89,
+    "largeur": 135,
+    "hauteur": 140
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

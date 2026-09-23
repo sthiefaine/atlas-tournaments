@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_touffe_hiver_1",
+  "famille": "decor",
+  "cle": "touffe",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_touffe_hiver_1.glb",
+   "sha256": "f7f2a229cdf24daa2f3335cfde25b8fd202edc15a4a895d8b7a8ed6ed2f3ea8d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_touffe_hiver_1_0.webp",
+    "largeur": 32,
+    "hauteur": 32
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 31,
+      "h": 31,
+      "px": 16,
+      "py": 19
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "c703df9f50d8ea855bdf5ac39cc07669f269d61c72990842234da2c64dfd9aa2",
+  "date": "2026-09-23T00:06:58.819Z",
+  "secondes": 8.6,
+  "secondesRendu": 2.2,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 814,
+  "canevas": {
+   "fixe": {
+    "x0": -59,
+    "y0": -45,
+    "largeur": 112,
+    "hauteur": 92
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_roseau_hiver_2",
+  "famille": "decor",
+  "cle": "roseau",
+  "variante": "hiver",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_roseau_hiver_2.glb",
+   "sha256": "b6df5576bf033a0b2c79a63a7b91253e9e932491c8413b427fad1cd92a4d5103"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_roseau_hiver_2_0.webp",
+    "largeur": 44,
+    "hauteur": 44
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 42,
+      "h": 41,
+      "px": 18,
+      "py": 26
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "5644036e33d80d94cc29a3aafb7bf235cd962f14282dceb6b7a6f0fe54672f59",
+  "date": "2026-09-23T00:06:28.279Z",
+  "secondes": 8.6,
+  "secondesRendu": 3.2,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1358,
+  "canevas": {
+   "fixe": {
+    "x0": -59,
+    "y0": -50,
+    "largeur": 117,
+    "hauteur": 98
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

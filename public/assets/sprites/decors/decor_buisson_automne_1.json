@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_buisson_automne_1",
+  "famille": "decor",
+  "cle": "buisson",
+  "variante": "automne",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_buisson_automne_1.glb",
+   "sha256": "9bd99731db965372cb093333231bafcda7ea60a45cc1e2082ed82cd814c8517d"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_buisson_automne_1_0.webp",
+    "largeur": 76,
+    "hauteur": 60
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 76,
+      "h": 57,
+      "px": 37,
+      "py": 27
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "3bef55c23bcf41879b89d29f6584f0a4bcabf6ce03eed2998f5e2ddc46bbdc78",
+  "date": "2026-09-22T23:58:27.638Z",
+  "secondes": 11.2,
+  "secondesRendu": 3.3,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1622,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -51,
+    "largeur": 134,
+    "hauteur": 102
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

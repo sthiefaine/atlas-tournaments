@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "decor_buisson_printemps_1",
+  "famille": "decor",
+  "cle": "buisson",
+  "variante": "printemps",
+  "source": {
+   "fichier": "assets/sources-sprites/decor/decor_buisson_printemps_1.glb",
+   "sha256": "92608401556680e9b3b58f5152fc08a244e87ea6611c70473b46f036f612f56f"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/decor_buisson_printemps_1_0.webp",
+    "largeur": 76,
+    "hauteur": 56
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 73,
+      "h": 53,
+      "px": 34,
+      "py": 25
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 1,
+  "empreinte": "1ac72681e8457460d025c493046632b8da21b777f27289e68bc57896f24f2e22",
+  "date": "2026-09-22T23:59:13.882Z",
+  "secondes": 16.8,
+  "secondesRendu": 6.4,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1602,
+  "canevas": {
+   "fixe": {
+    "x0": -67,
+    "y0": -51,
+    "largeur": 134,
+    "hauteur": 103
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}
