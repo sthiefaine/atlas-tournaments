@@ -1,5 +1,17 @@
 # Atlas Tournament — brief canon (décisions prises avec Thief, 4 septembre 2026)
 
+## La charte des figurines — décision du 23 septembre 2026 (soir)
+
+« Il n'y a pas de cohésion graphique, et c'est moche » ; « on voit encore les triangles des modèles ratés, il faut refaire de zéro, un agent sur chaque unité ». Le propriétaire a délégué la décision à un panel de cinq personas (un joueur d'Advance Wars, un ado, une joueuse, une designeuse graphique, un artiste technique des sprites précalculés). Leur charte, dans `doc/refonte/charte-figurines.md`, **remplace ce que la direction artistique ci-dessous disait des matières et des couleurs des modèles** :
+
+- **Le jouet peint** plutôt que la maquette réaliste : volumes simples chanfreinés et lissés, une couleur unie par pièce, aucune texture de salissure, de grain ni de camouflage, aucun détail peint.
+- **Une palette fermée** pour toutes les unités : graphite, caoutchouc, os, acier clair, verre, trois peaux, feux ; **le gris moyen et l'orange appartiennent aux Gris**.
+- **La couleur d'équipe est la carrosserie** : 45 à 60 % d'une unité (40 à 55 % d'un fantassin), sur les dessus, d'un seul tenant, par un masque binaire.
+- **Trois classes de taille**, et une unité tient dans sa case. **Un seul fantassin avec un visage**. **Un contour sombre** cuit autour de la silhouette. **Une lumière de face**, symétrique, parce que la moitié de l'armée est dessinée en miroir.
+- **Les bâtiments** portent la couleur de leur propriétaire sur tout le toit et le drapeau du jeu ; neutre, toit gris et mât nu.
+
+Les trente unités sont refaites **de zéro** sur une chaîne commune (`scripts/production/figurines/`, Blender), un agent par unité ; plus aucun modèle image-vers-3D. Les GLB restent la source des images.
+
 ## Sprites précalculés — décision du 23 septembre 2026
 
 Le propriétaire (« go, mets plusieurs agents pour tout faire ») remplace le rendu 3D temps réel par des **sprites 2D lisses, précalculés depuis les modèles GLB**. La cuisson, hors ligne (Blender, `scripts/sprites/`, `npm run cuire:sprites`), photographie chaque modèle sous **une seule caméra orthographique fixe** (tangage 50°), à quatre fois la taille puis réduite, avec tous ses clips ; le jeu compose ces images en **WebGL 2** (`src/render2d/`). Le contrat entre les deux est `src/render2d/contrat.ts`, le document `doc/18-rendu-sprites.md`.
