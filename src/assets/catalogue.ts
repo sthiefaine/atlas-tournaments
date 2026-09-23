@@ -897,6 +897,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   char_leger: [0.546, 0.517, 0.684],
   genie: [0.569, 0.859, 0.349],
   helico: [0.446, 0.38, 0.818],
+  infanterie: [0.48, 0.831, 0.487],
   meca: [0.571, 0.824, 0.475],
 };
 

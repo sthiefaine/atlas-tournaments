@@ -212,11 +212,10 @@
     {
       "id": "unite_infanterie_base",
       "fichierActif": "public/assets/modeles/unite_infanterie_base_lod0.glb",
-      "donnees": "../donnees/05849590ca44adf29ac5eea9116bbc2f022e2c40bb0a969ad5ab2e047967463b.glb",
-      "revision": "59b3e0bde6e808afb4f690bb4bea0db870ad0127d4a6dbe341d306e98c44af44",
+      "donnees": "../donnees/0afd4d3e4404b3cc40360dc89f19c592df42e2b3652c8c07c8b9b6ef1b98a407.glb",
+      "revision": "05f8ba609b3ea6ec8d9d67b4c629fa7c6c3092aa364455c923441eb577dcd01e",
       "controle": "ok",
-      "sourceSha256": "083b0e217128b3d7a4a627bde7e44b15fe2aa0bd59f5cab97324c25c70952710",
-      "sourcePrepareeSha256": "cd14267bd9245dad0ed385d8c71888399bd4a249c963ee9507c91914d08e117a"
+      "provenance": "figurine"
     },
     {
       "id": "unite_meca_base",

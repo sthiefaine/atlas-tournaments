@@ -627,7 +627,8 @@ apercus/          Les PNG de relecture produits par apercu-carte.ts. Ignoré par
 | `npm run fil:opus1` | compose `doc/refonte/opus1-fil.md` et `.json` — le tableau chapitres / épisodes / hors-série depuis les registres de `doc/refonte/` ; ne jamais éditer la sortie |
 | `npm run roster:heros` | compose `doc/refonte/roster-heros.md` — les 37 personnages, leurs pouvoirs, et la liste des manques que le code constate |
 | `npm run lore:html` | compose `doc/refonte/atlas-lore.html` — l'atlas du lore cliquable, depuis `lore-v2.json` posé sur les registres |
-| `npm run generer:infanterie [-- --sec] [-- --sortie <dossier>]` | produit l'infanterie de base (trois GLB riggés et animés, quatre PNG) de façon déterministe, la contrôle comme `controler:asset`, et la dépose dans `public/assets/modeles/` si les trois niveaux sont acceptés ; `--sec` ne dépose rien |
+| `npm run fabriquer:figurine -- --cle <cle> [--sans-cuisson] [--echantillons 8]` | fabrique une unité selon la charte des figurines (`scripts/production/figurines/`, Blender) : lot conforme à la fiche, cuisson d'essai, planche et mesures de la charte dans `tmp/figurines/<cle>/`, rien sous `public/` |
+| `npm run installer:figurine -- --cle <cle>` | installe un lot fabriqué dans le jeu (fichiers par empreinte dans `public/assets/donnees/`, liens dans `public/assets/modeles/`, registre `activation-jeu.json`) après contrôle contre la fiche officielle ; puis `npm run cuire:sprites -- --id unite_<cle>_base` |
 | `npm run apercu -- --params '{"largeur":16,"hauteur":12}' --graine 7 --sortie apercus/c.png` | une carte en PNG et en texte |
 | `npx tsx scripts/generer-specs-assets.ts --verifier` | vérifie que `assets/specs/` n'a pas dérivé du canon |
 | `npm run extraire-chaines` | extrait les chaînes ; marche à blanc sans `DATABASE_URL` |
