@@ -106,11 +106,15 @@ test('la peau 2D se monte, dessine, et une unité s’y sélectionne puis glisse
   await expect(toile).toHaveAttribute('data-rendu', '2d');
   await expect(toile).toHaveAttribute('data-scenario', 'premier_contact');
 
-  // La première mission ouvre sur son briefing : on le passe.
+  // La première mission ouvre sur son briefing, et une scène peut en suivre
+  // une autre : on les passe **toutes**, en attendant chacune. `isVisible` ne
+  // patiente pas — sous WebKit la scène paraissait après la question, restait
+  // ouverte et avalait le clic de sélection (même boucle qu'atelier-vitrine).
   const scene = page.locator('.atlas-scene');
-  if (await scene.isVisible({ timeout: 20_000 }).catch(() => false)) {
-    await scene.getByRole('button', { name: /Passer/ }).click();
-    await expect(scene).toBeHidden();
+  for (let n = 0; n < 8; n += 1) {
+    if (!await scene.waitFor({ state: 'visible', timeout: n === 0 ? 20_000 : 4000 }).then(() => true, () => false)) break;
+    await scene.getByRole('button', { name: /Passer/ }).click().catch(() => undefined);
+    await scene.waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => undefined);
   }
 
   await expect.poll(() => positionCase(page, 2, 3), { timeout: 60_000 }).not.toBeNull();
