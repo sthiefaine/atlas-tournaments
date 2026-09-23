@@ -27,11 +27,14 @@
  * Pur : ni DOM, ni WebGL (`tests/render2d/unites.test.ts`).
  */
 
+import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches, sontAllies } from '../engine/index';
+import { lireCouleur } from '../render/ambiance';
+import { paletteDe } from '../render/palettes';
 import type { MarqueUnite } from '../render/rendu';
 import { echelleTaille } from '../render/sprites/silhouettes';
-import type { CampId, CleUnite } from '../schemas/types';
+import type { CampId, CleUnite, CodePays } from '../schemas/types';
 import { cadreAuTemps } from './atlas';
 import { OMBRE_UNITE, type ClipSprite, type InstanceSprite, type VueSprite } from './contrat';
 import type { Pose } from './lot';
@@ -41,7 +44,13 @@ import { FORMES } from './replis';
 export const OPACITE_JOUEE = 0.6;
 /** L'opacité d'une unité furtive, pour son camp : celle de la 3D. */
 export const OPACITE_FURTIVE = 0.45;
-/** La hauteur de vol d'un appareil, en cases : de quoi poser son ombre sur la case, sous lui. */
+/**
+ * La hauteur de vol d'un appareil **peint en repli**, en cases : de quoi poser
+ * son ombre sur la case, sous lui. Une image cuite ne la reçoit pas : le GLB
+ * est modélisé à sa propre hauteur de vol — du transport aérien posé (0 m) au
+ * chasseur (0,33 m) —, et l'image est déjà au-dessus de son pivot, qui reste
+ * le pied (`doc/refonte/sprites-cuisson.md`). La lui ajouter la lèverait deux fois.
+ */
 export const HAUTEUR_VOL = 0.34;
 /** Ce que devient l'ombre d'un appareil en vol : plus petite, plus claire. */
 const OMBRE_VOL = { echelle: 0.8, opacite: 0.7 };
@@ -51,6 +60,20 @@ export type Orientation = 'droite' | 'gauche' | 'bas' | 'haut';
 
 /** Une couleur d'équipe, sRGB de 0 à 1. */
 export type Rvb = readonly [number, number, number];
+
+/**
+ * La couleur d'équipe d'un camp : `palette.main` du style de sa nation (la
+ * couleur de la 3D), la palette du camp à défaut, et **le gris neutre**
+ * (`#b9bec7`, `render/palettes.ts`) sans propriétaire. Jamais le blanc : les
+ * zones d'équipe d'une image cuite sont peintes en blanc et ne se teignent que
+ * par cette couleur — un bâtiment neutre laissé sans elle les montrerait
+ * blanches, là où la 3D le laissait gris.
+ */
+export function couleurEquipeDe(camp: CampId | null, pays: CodePays | null | undefined): Rvb {
+  const style = camp !== null && pays ? chargerStyleNation(pays) : null;
+  const c = lireCouleur(style?.palette.main ?? paletteDe(camp).main);
+  return [c.r / 255, c.v / 255, c.b / 255];
+}
 
 /** L'état visuel d'une unité : ce que les animations poussent, image par image. */
 export interface EtatVisuel2d {
@@ -164,6 +187,12 @@ export interface AnimationChoisie {
   cadres: number;
   ips: number;
   boucle: boolean;
+  /**
+   * La vue que l'atlas a réellement trouvée, quand elle diffère de celle
+   * demandée : `bas` et `haut` n'ont que la marche, et tout le reste y retombe
+   * sur `droite` — que l'unité doit alors regarder du bon côté.
+   */
+  vue?: VueSprite;
 }
 
 /** Ce que les poses d'unités doivent savoir, hors de l'état. */
@@ -184,6 +213,13 @@ export interface OptionsPosesUnites {
   entree(type: CleUnite, camp: CampId): string;
   /** L'animation cuite d'une entrée pour une vue et un clip, `null` : repli. */
   animation(entree: string, vue: VueSprite, clip: ClipSprite): AnimationChoisie | null;
+  /**
+   * Vrai si cette image se dessinera **cuite** maintenant — sa page est
+   * arrivée (`Atlas.estCuite`). Absent : une animation trouvée vaut une image
+   * cuite. C'est ce qui décide de lever un appareil : son repli, oui ; son
+   * image cuite, jamais.
+   */
+  cuite?(entree: string, animation: number, cadre: number): boolean;
   /** L'horloge de rendu, en millisecondes. */
   tempsMs: number;
   /** Animations réduites : rien ne respire. */
@@ -224,6 +260,19 @@ export function vueDe(o: Orientation): { vue: VueSprite; miroir: boolean } {
 /** L'orientation de repos d'un camp : les deux armées se font face. */
 export function orientationRepos(camp: CampId): Orientation {
   return camp === 0 ? 'droite' : 'gauche';
+}
+
+/**
+ * Le miroir de l'image que l'atlas a **trouvée**. La cuisson ne photographie de
+ * face et de dos que la marche : tout autre clip demandé dans ces vues retombe
+ * sur `droite` (`choisirAnimation`), et l'unité regarde alors de son côté de
+ * repos — le camp 0 vers la droite, les autres vers la gauche — plutôt que de
+ * se retourner d'un coup, le temps d'un clip, parce qu'une image manque.
+ */
+export function miroirTrouve(orientation: Orientation, camp: CampId, vueTrouvee: VueSprite | undefined): boolean {
+  const { vue, miroir } = vueDe(orientation);
+  if (vueTrouvee === undefined || vueTrouvee === vue) return miroir;
+  return vueTrouvee === 'droite' ? orientationRepos(camp) === 'gauche' : false;
 }
 
 /** L'orientation d'un pas de `de` vers `vers` : la plus longue composante l'emporte. */
@@ -275,13 +324,11 @@ export function posesUnites(etat: EtatPartie, cat: Catalogue, visuels: Visuels, 
     const air = type.domaine === 'air';
     const gx = u.x + 0.5 + v.dx;
     const gy = u.y + 0.5 + v.dy;
-    const h = (air ? HAUTEUR_VOL : 0) + v.dh;
-    positions.set(u.id, { x: gx, y: gy, h });
-    if (u.id === o.selection) selection = { x: gx, y: gy };
 
-    const { vue, miroir } = vueDe(v.orientation ?? orientationRepos(u.camp));
+    const orientation = v.orientation ?? orientationRepos(u.camp);
     const entree = o.entree(u.type, u.camp);
-    const anim = o.animation(entree, vue, v.clip);
+    const anim = o.animation(entree, vueDe(orientation).vue, v.clip);
+    const miroir = miroirTrouve(orientation, u.camp, anim?.vue);
     let cadre = 0;
     if (anim) {
       if (v.clip !== 'repos') {
@@ -292,6 +339,12 @@ export function posesUnites(etat: EtatPartie, cat: Catalogue, visuels: Visuels, 
         animees = true;
       }
     }
+    // Un appareil **cuit** vole déjà dans son image ; seul son repli se soulève.
+    // La pastille et la marque suivent le pivot de la figurine dessinée.
+    const cuite = anim !== null && (o.cuite ? o.cuite(entree, anim.index, cadre) : true);
+    const h = (air && !cuite ? HAUTEUR_VOL : 0) + v.dh;
+    positions.set(u.id, { x: gx, y: gy, h });
+    if (u.id === o.selection) selection = { x: gx, y: gy };
     const opacite = opaciteUnite(u, etat, v, o.camp);
     const equipe = o.equipe(u.camp);
     const taille = echelleTaille(type.silhouette.taille);

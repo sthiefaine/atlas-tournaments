@@ -34,7 +34,7 @@
 
 import type { Pinceau } from '../render/sprites/formes';
 import type { Rvba, Trace } from './aplats';
-import { Etageres, type CadreResolu, type SourceImage, type Televerseur, type TexturesPage } from './atlas';
+import { ECART_PAGES, Etageres, type CadreResolu, type SourceImage, type Televerseur, type TexturesPage } from './atlas';
 import type { Emprise } from './camera';
 import { COS_TANGAGE, PIXELS_PAR_CASE, SIN_TANGAGE, versPlan, type InstanceSprite } from './contrat';
 import type { Pose } from './lot';
@@ -413,8 +413,11 @@ export const DESSINS_EFFETS: readonly DessinEffet[] = [
 
 /** Le côté de la planche, en pixels : tout y tient, et un seul téléversement. */
 export const COTE_PLANCHE = 512;
-/** La marge entre deux dessins : les niveaux de détail ne bavent pas d'un dessin sur l'autre. */
-const MARGE_PLANCHE = 4;
+/**
+ * La marge entre deux dessins : les niveaux de détail ne bavent pas d'un dessin
+ * sur l'autre jusqu'au dernier que la page garde (`ECART_PAGES`, `atlas.ts`).
+ */
+const MARGE_PLANCHE = ECART_PAGES;
 
 /** Où un dessin est rangé sur la planche. */
 export interface PlacementEffet {
@@ -541,6 +544,21 @@ const DEFAUTS: Readonly<Record<GenreEffet, { taille: number; couleur: Rvb; opaci
 };
 
 /**
+ * La part **additive** de chaque genre (`Pose.additif`, `lot.ts`) : ce qui est
+ * de la lumière s'ajoute à ce qu'il couvre — un éclair de bouche, une étoile
+ * d'impact, une étincelle, un scintillement brillent la nuit au lieu de s'y
+ * poser comme une tache claire. À moitié pour les lueurs qui doivent encore se
+ * lire sur un sol clair (halo, rayon, traçante) ; jamais pour ce qui est de la
+ * matière (fumée, poussière, caisse, obus, missile) ni pour ce qui se lit comme
+ * un signe (anneau, réticule).
+ */
+export const ADDITIF: Readonly<Record<GenreEffet, number>> = {
+  eclair: 1, etoile: 1, etincelle: 1, scintille: 1,
+  halo: 0.5, rayon: 0.5, trait: 0.5,
+  fumee: 0, poussiere: 0, anneau: 0, caisse: 0, obus: 0, missile: 0, reticule: 0,
+};
+
+/**
  * Ce qu'on demande au pool. Tout est en cases (`x`, `y` au sol, `h` en
  * hauteur) et en millisecondes. Une particule suit **soit** un trajet (`vers`,
  * interpolé, `arc` en cloche : un projectile arrive exactement à l'heure),
@@ -620,7 +638,7 @@ class Particule {
 
   constructor() {
     this.instance = { entree: ID_EFFET.eclair, animation: -1, cadre: 0, x: 0, y: 0, h: 0, teinte: this.teinte, opacite: 1, echelle: 1 };
-    this.pose = { calque: 'effets', ligne: 0, colonne: 0, instance: this.instance };
+    this.pose = { calque: 'effets', ligne: 0, colonne: 0, instance: this.instance, additif: 0 };
   }
 }
 
@@ -718,6 +736,7 @@ export class PoolEffets {
     p.teinte[1] = c[1];
     p.teinte[2] = c[2];
     p.pose.calque = plat ? 'ombres_unites' : 'effets';
+    p.pose.additif = ADDITIF[s.genre];
     return p.generation * PLACES_MAX + i;
   }
 

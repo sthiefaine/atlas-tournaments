@@ -3,9 +3,9 @@
 // La météo : rien sous animations réduites, un nombre de particules qui suit la
 // densité et l'écran sous un plafond (plus bas au doigt), des particules qui
 // sont des fonctions du temps. L'étalonnage : **la règle de la nuit** — le sol
-// reçoit le voile, les images du monde reçoivent une teinte qui rend la même
-// couleur à moins de 0,05 près, une seule fois ; les pastilles, les marques, les
-// ombres, les effets et la météo n'en reçoivent pas.
+// reçoit le voile, les images du monde reçoivent le même dans le lot, exactement
+// et une seule fois (un réglage de l'appel de calque, un drapeau par pose) ; les
+// pastilles, les marques, les ombres, les effets et la météo n'en reçoivent pas.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ambiance, type Particules } from '../../src/render/ambiance';
@@ -13,9 +13,10 @@ import { METEOS, PHASES_JOUR, SAISONS } from '../../src/schemas/types';
 import { PIXELS_PAR_CASE, SIN_TANGAGE, versPlan, type InstanceSprite } from '../../src/render2d/contrat';
 import { ID_EFFET, IDS_GOUTTE } from '../../src/render2d/effets';
 import type { Pose } from '../../src/render2d/lot';
+import { EMISSION_JOUR, EMISSION_NUIT } from '../../src/render2d/contrat';
 import {
-  doitEtalonner, ETALONNAGE_NEUTRE, etalonnageAmbiance, etalonnageSurCanal, etalonnerPose, goutteDe, matriceEcran,
-  Meteo2d, nombreParticules, PLAFOND_METEO, PLAFOND_METEO_TACTILE, voileSurCanal,
+  doitEtalonner, etalonnerPose, goutteDe, matriceEcran, Meteo2d, nombreParticules, PLAFOND_METEO,
+  PLAFOND_METEO_TACTILE, poidsEmission, voileDuLot, voileImageSurCanal, voileSurCanal,
 } from '../../src/render2d/meteo';
 import { FORMES } from '../../src/render2d/replis';
 import { posesUnites, Visuels } from '../../src/render2d/unites';
@@ -109,41 +110,50 @@ test('les poses de la météo sont créées une fois et réécrites', () => {
 
 // --- L'étalonnage : la règle de la nuit ------------------------------------------
 
-test('de jour par temps clair, rien ne change', () => {
-  assert.equal(etalonnageAmbiance(ambiance('ete', 'jour', 'clair')), ETALONNAGE_NEUTRE);
+test('de jour par temps clair, rien ne change : un voile de part nulle, et aucune instance touchée', () => {
+  const v = voileDuLot(ambiance('ete', 'jour', 'clair'));
+  assert.equal(v[3], 0);
   const pose: Pose = { calque: 'unites', ligne: 0, colonne: 0, instance: { entree: 'unite_char_leger_base', animation: -1, cadre: 0, x: 0, y: 0 } };
-  etalonnerPose(pose, ETALONNAGE_NEUTRE);
-  assert.equal(pose.instance.teinte, undefined);
+  etalonnerPose(pose);
+  assert.equal(pose.voilee, true, 'la figurine est du monde');
+  assert.equal(pose.instance.teinte, undefined, 'l’instance n’est jamais touchée');
   assert.equal(pose.instance.eclat, undefined);
+  for (const canal of [0, 1, 2] as const) assert.equal(voileImageSurCanal(0.37, 1, canal, v), 0.37);
 });
 
-test('le sol voilé et une image étalonnée rendent la même couleur, à 0,05 près, sous toutes les ambiances', () => {
+test('le sol voilé et une image voilée rendent la même couleur, exactement, sous toutes les ambiances', () => {
   let pire = 0;
+  const reglage = new Float32Array(4);
   for (const saison of SAISONS) {
     for (const phase of PHASES_JOUR) {
       for (const m of METEOS) {
         const a = ambiance(saison, phase, m);
-        const e = etalonnageAmbiance(a);
+        voileDuLot(a, reglage);
         for (const c of [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1]) {
           for (const canal of [0, 1, 2] as const) {
             const sol = voileSurCanal(c, canal, a.voile);
-            const image = etalonnageSurCanal(c, canal, e);
+            const image = voileImageSurCanal(c, 1, canal, reglage);
             pire = Math.max(pire, Math.abs(sol - image));
-          }
-          // Le blanc tombe juste : c'est sur lui que l'œil juge une teinte.
-          if (a.voile) {
-            for (const canal of [0, 1, 2] as const) {
-              assert.ok(Math.abs(voileSurCanal(1, canal, a.voile) - etalonnageSurCanal(1, canal, e)) < 1e-9, a.cle);
-            }
+            // Prémultiplié : un pixel à demi couvert reçoit la moitié du voile, et le composé est juste.
+            const demi = voileImageSurCanal(c * 0.5, 0.5, canal, reglage);
+            assert.ok(Math.abs(demi - sol * 0.5) < 1e-6, a.cle);
           }
         }
       }
     }
   }
-  assert.ok(pire <= 0.05, `écart maximal ${pire}`);
+  // Le réglage est en flottants 32 bits : exact au millionième, là où la teinte
+  // et l'éclat par instance s'écartaient jusqu'à 0,042.
+  assert.ok(pire < 1e-6, `écart maximal ${pire}`);
   // Et la nuit assombrit vraiment : le blanc d'une image n'est plus blanc.
-  const nuit = etalonnageAmbiance(ambiance('printemps', 'nuit', 'clair'));
-  assert.ok(etalonnageSurCanal(1, 0, nuit) < 0.75);
+  assert.ok(voileImageSurCanal(1, 1, 0, voileDuLot(ambiance('printemps', 'nuit', 'clair'))) < 0.75);
+});
+
+test('les fenêtres : 0,06 le jour, 1 quand les villes s’éclairent — les valeurs du contrat', () => {
+  assert.equal(poidsEmission(ambiance('ete', 'jour', 'clair')), EMISSION_JOUR);
+  assert.equal(poidsEmission(ambiance('ete', 'nuit', 'clair')), EMISSION_NUIT);
+  assert.equal(EMISSION_JOUR, 0.06);
+  assert.equal(EMISSION_NUIT, 1);
 });
 
 /** Une pose de ce calque et de cette entrée. */
@@ -164,31 +174,32 @@ test('ce qui reçoit l’étalonnage : le monde, jamais ce qui se lit, ni les om
   assert.equal(doitEtalonner(pose('meteo', IDS_GOUTTE[0]!)), false);
 });
 
-test('étalonner une pose ne touche pas une teinte partagée, et compose les éclats', () => {
-  const e = etalonnageAmbiance(ambiance('hiver', 'nuit', 'neige'));
+test('marquer une pose ne touche ni sa teinte partagée ni son éclat, et deux marques n’assombrissent pas deux fois', () => {
   const partagee = [0.6, 0.6, 0.58] as const;
   const p = pose('volumes', 'batiment_ville_base', { teinte: partagee, eclat: 0.5 });
-  etalonnerPose(p, e);
-  assert.deepEqual([...partagee], [0.6, 0.6, 0.58], 'la constante du désaffecté est intacte');
-  assert.ok(Math.abs(p.instance.teinte![0] - 0.6 * e.teinte[0]) < 1e-12);
-  assert.ok(Math.abs(p.instance.eclat! - (1 - 0.5 * (1 - e.eclat))) < 1e-12, 'deux mélanges vers le blanc font un mélange');
+  etalonnerPose(p);
+  etalonnerPose(p);
+  assert.equal(p.voilee, true);
+  assert.equal(p.instance.teinte, partagee, 'la constante du désaffecté est la même, intacte');
+  assert.deepEqual([...partagee], [0.6, 0.6, 0.58]);
+  assert.equal(p.instance.eclat, 0.5, 'l’éclat d’un coup reste celui du coup');
   const lisible = pose('unites', FORMES.pv(3, true));
-  etalonnerPose(lisible, e);
-  assert.equal(lisible.instance.teinte, undefined);
+  etalonnerPose(lisible);
+  assert.equal(lisible.voilee, false);
 });
 
-test('la nuit sur les unités : la figurine est étalonnée une fois, sa pastille et son ombre non', () => {
+test('la nuit sur les unités : la figurine est du monde, sa pastille et son ombre non', () => {
   const etat = partiePersonnalisee(['PPP'], {}, [{ camp: 0, type: 'infanterie', x: 1, y: 0, pv: 50 }]);
-  const e = etalonnageAmbiance(ambiance('printemps', 'nuit', 'clair'));
   const r = posesUnites(etat, CAT, new Visuels(), {
     camp: 0, visibles: null, selection: null, equipe: () => [0, 0, 1], entree: (t) => `unite_${t}_base`,
     animation: () => null, tempsMs: 0, reduit: false,
   });
-  for (const p of r.poses) etalonnerPose(p, e);
+  for (const p of r.poses) etalonnerPose(p);
   const figurine = r.poses.find((p) => p.instance.entree === 'unite_infanterie_base')!;
   const pastille = r.poses.find((p) => p.instance.entree.startsWith('forme_pv_'))!;
   const ombre = r.poses.find((p) => p.calque === 'ombres_unites')!;
-  assert.deepEqual(figurine.instance.teinte, e.teinte);
-  assert.equal(pastille.instance.teinte, undefined);
-  assert.equal(ombre.instance.teinte, undefined);
+  assert.equal(figurine.voilee, true);
+  assert.equal(pastille.voilee, false);
+  assert.equal(ombre.voilee, false);
+  assert.equal(figurine.instance.teinte, undefined, 'la nuit n’est plus dans l’instance');
 });

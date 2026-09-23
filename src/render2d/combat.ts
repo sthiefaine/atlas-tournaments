@@ -31,13 +31,14 @@
  * partage le lot, l'atlas et les replis de la carte. Rien ne se charge ici :
  * l'atlas rend l'image cuite qu'il a, ou le repli qu'il sait peindre.
  *
- * Un encart ne sait peindre qu'un **fond uni** par rectangle. Le décor d'une
- * case est donc fait de rectangles : l'hôte reçoit une petite grille
- * d'éléments vides — le ciel, le lointain et le sol de chaque moitié, et le
- * filet qui les sépare —, un encart au fond uni chacun, et la scène des
- * figurines est un dernier encart posé par-dessus, sans fond. Des bandes, comme
- * les fonds de combat d'Advance Wars ; l'horizon tombe à `PART_HORIZON` de la
- * hauteur, et la disposition des figurines le sait.
+ * Le décor d'une case est fait de **bandes** peintes sous les figurines, dans
+ * le même encart (`EncartSprites.aplats`, `tracerBandes`) : le ciel, le
+ * lointain et le sol de chaque moitié, et le filet qui les sépare. Des aplats,
+ * comme les fonds de combat d'Advance Wars ; l'horizon tombe à `PART_HORIZON`
+ * de la hauteur, et la disposition des figurines le sait. Un duel tient donc
+ * en un seul encart — il en a demandé sept, un par bande, jusqu'au 23
+ * septembre 2026 —, et ses bandes ne sont retracées que si l'hôte change de
+ * taille.
  *
  * Les effets — éclair de bouche, projectile, traînée, éclat et poussière d'un
  * impact — sont la forme d'ombre du rendu (`FORMES.ombre`) poussée vers le
@@ -59,17 +60,18 @@ import { DUREES, MISE_EN_SCENE, type Geste } from '../render/partition';
 import type { VueCombat } from '../render/rendu';
 import { echelleTaille } from '../render/sprites/silhouettes';
 import type { Biome, CampId, Case, CleTerrain, CleUnite, UnitType } from '../schemas/types';
+import type { Trace } from './aplats';
 import { cadreAuTemps, choisirAnimation } from './atlas';
 import type { EtatCamera2d } from './camera';
 import {
   COS_TANGAGE, idDecor, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE,
   type CalqueRendu, type ClipSprite, type EntreeSprite, type EssenceDecor,
 } from './contrat';
-import type { EncartSprites } from './index';
+import type { AplatsEncart, EncartSprites } from './index';
 import type { Pose } from './lot';
 import { FORMES } from './replis';
 import { couleursSol, DISPOSITION } from './sol/couleurs';
-import { essenceMontagne, rocherDe } from './sol/decor';
+import { ARBRES, essenceMontagne, rocherDe } from './sol/decor';
 import { MATIERES, poidsDe, type MatiereSol } from './sol/terrains';
 import type { AnimationChoisie, Rvb } from './unites';
 
@@ -427,13 +429,12 @@ export function estBati(t: CleTerrain | null): t is CleTerrain {
 
 /**
  * L'arbre d'une forêt, par biome : la première essence du tirage du placement
- * (`sol/decor.ts`, `ARBRES`), que le placement n'exporte pas. Le jour où il
- * l'exporte, ce tableau s'en va — deux listes finissent toujours par diverger.
+ * (`sol/decor.ts`, `ARBRES`) — lue là, jamais recopiée : deux listes finissent
+ * toujours par diverger.
  */
-const ARBRE: Readonly<Record<Biome, EssenceDecor>> = {
-  plaine: 'feuillu', foret: 'feuillu', montagne: 'conifere', neige: 'conifere', desert: 'palmier',
-  jungle: 'tropical', volcanique: 'conifere', cotier: 'conifere', archipel: 'palmier', marais: 'feuillu',
-};
+export function arbreDuBiome(biome: Biome): EssenceDecor {
+  return ARBRES[biome]?.[0]?.[0] ?? 'feuillu';
+}
 
 /**
  * Le décor d'une case. Le sol est le mélange de matières du terrain
@@ -498,7 +499,7 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
     elements.push({ entree, position, echelle, equipe });
   };
   if (t === 'foret') {
-    const arbre = ARBRE[biome] ?? 'feuillu';
+    const arbre = arbreDuBiome(biome);
     poser(decor(arbre, 1), 0.14, 1.35);
     poser(decor(arbre, 2), 0.47, 1.55);
     poser(decor(arbre, 1), 0.8, 1.25);
@@ -523,6 +524,41 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
     else if (rocher) poser(rocher, 0.24, 1.1);
   }
   return { lointain: voiler(lointain, ambiance), sol: voiler(sol, ambiance), elements };
+}
+
+/** Les couleurs des bandes du décor : le ciel commun, le lointain et le sol de chaque case. */
+export interface CouleursBandes {
+  ciel: Rvb;
+  gauche: DecorCase;
+  droite: DecorCase;
+}
+
+/**
+ * Peint les bandes du décor dans `trace`, en pixels du plan de l'encart
+ * (centre du rectangle à l'origine, `zoom` pixels CSS par pixel de plan) : le
+ * ciel sur toute la largeur, le lointain puis le sol de chaque moitié sous
+ * l'horizon, et le filet qui sépare les deux cases, peint en dernier — il
+ * coupe le ciel aussi. Ce sont les fonds d'Advance Wars : des aplats, et une
+ * seule scène pour tout le duel. Rend le nombre de rectangles.
+ */
+export function tracerBandes(trace: Trace, d: Pick<DispositionCombat, 'largeur' | 'hauteur' | 'demi'>, zoom: number, c: CouleursBandes): number {
+  const z = Math.max(1e-6, zoom);
+  const W = d.largeur;
+  const H = d.hauteur;
+  const X = (u: number): number => (u - W / 2) / z;
+  const Y = (v: number): number => (v - H / 2) / z;
+  const ciel = PART_CIEL * H;
+  const horizon = PART_HORIZON * H;
+  const rectangle = (u0: number, v0: number, u1: number, v1: number, couleur: Rvb): void => {
+    trace.rectangle(X(u0), Y(v0), X(u1), Y(v1), [couleur[0], couleur[1], couleur[2], 1]);
+  };
+  rectangle(0, 0, W, ciel, c.ciel);
+  rectangle(0, ciel, d.demi, horizon, c.gauche.lointain);
+  rectangle(W - d.demi, ciel, W, horizon, c.droite.lointain);
+  rectangle(0, horizon, d.demi, H, c.gauche.sol);
+  rectangle(W - d.demi, horizon, W, H, c.droite.sol);
+  rectangle(d.demi, 0, W - d.demi, H, COULEUR_SEPARATION);
+  return 6;
 }
 
 // ---------------------------------------------------------------------------
@@ -720,35 +756,23 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
     poses.push(...c.ombres, ...c.corps, ...c.eclairs, ...c.trainees, ...c.projectiles, ...c.eclats, ...c.poussieres);
   }
 
-  // --- Les bandes du décor : des éléments vides dans l'hôte, un encart au fond uni chacun.
+  // --- La racine de l'écran dans l'hôte : un élément vide, qui porte ce que
+  //     les tests de fumée lisent (`data-combat2d`, `data-effectifs`). Le décor,
+  //     lui, est peint dans la toile, sous les figurines (`tracerBandes`).
   const racine = doc.createElement('div');
   racine.dataset['combat2d'] = 'ouvert';
   racine.setAttribute('aria-hidden', 'true');
-  racine.style.cssText = 'display:grid;width:100%;height:100%;pointer-events:none;'
-    + `grid-template-columns:1fr ${SEPARATION}px 1fr;`
-    + `grid-template-rows:${PART_CIEL * 100}% ${PART_LOINTAIN * 100}% 1fr`;
-  const bande = (colonne: string, rang: string): HTMLElement => {
-    const el = doc.createElement('div');
-    el.style.cssText = `grid-column:${colonne};grid-row:${rang};min-width:0;min-height:0`;
-    racine.appendChild(el);
-    return el;
-  };
-  const bandes: readonly { el: HTMLElement; fond: Rvb }[] = [
-    { el: bande('1 / 4', '1'), fond: couleurCiel(deps.ambiance) },
-    { el: bande('1', '2'), fond: decorA.lointain },
-    { el: bande('3', '2'), fond: decorC.lointain },
-    { el: bande('1', '3'), fond: decorA.sol },
-    { el: bande('3', '3'), fond: decorC.sol },
-    // Le filet, en dernier : il coupe le ciel aussi.
-    { el: bande('2', '1 / 4'), fond: COULEUR_SEPARATION },
-  ];
+  racine.style.cssText = 'width:100%;height:100%;pointer-events:none';
   hote.appendChild(racine);
+  const couleursBandes: CouleursBandes = { ciel: couleurCiel(deps.ambiance), gauche: decorA, droite: decorC };
 
   // --- L'état : l'instant du duel, et la disposition du rectangle.
   let t = fixe ? chrono.duree : 0;
   let passe = fixe;
   let vivant = true;
   let disposition: DispositionCombat | null = null;
+  /** Change avec la disposition : le décor peint n'est retracé qu'alors. */
+  let versionDisposition = 0;
   let largeurVue = 0;
   let hauteurVue = 0;
   const camera: EtatCamera2d = { cx: 0, cy: 0, zoom: 1 };
@@ -791,6 +815,7 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
     hauteurVue = h;
     const d = disposerCombat(l, h, gabarit(A), gabarit(C));
     disposition = d;
+    versionDisposition += 1;
     // Le centre du plan est celui du rectangle ; une case y vaut `taille` pixels.
     camera.cx = 0;
     camera.cy = 0;
@@ -1055,21 +1080,24 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
     racine.dataset['effectifs'] = `${a}:${c}`;
   }
 
-  // --- Les encarts : les bandes d'abord, la scène par-dessus.
+  // --- Un seul encart : le décor peint en aplats, les figurines par-dessus.
   const fermetures: (() => void)[] = [];
-  const immobile = (): boolean => false;
-  const sansPoses = (): readonly Pose[] => aucune;
-  for (const b of bandes) {
-    fermetures.push(deps.ouvrirEncart({ hote: b.el, camera, fond: b.fond, poses: sansPoses, enMouvement: immobile }));
-  }
+  const aplats: AplatsEncart = {
+    version: () => versionDisposition,
+    tracer: (trace) => {
+      const d = majDisposition();
+      if (d) tracerBandes(trace, d, camera.zoom, couleursBandes);
+    },
+  };
   const scene: EncartSprites = {
     hote,
-    // Lue par le moteur avant les poses : c'est là qu'une nouvelle taille se voit.
+    // Lue par le moteur avant le décor et les poses : c'est là qu'une nouvelle taille se voit.
     get camera(): EtatCamera2d {
       majDisposition();
       return camera;
     },
     fond: null,
+    aplats,
     poses: () => {
       const d = majDisposition();
       if (!d) return aucune;

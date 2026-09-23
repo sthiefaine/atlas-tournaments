@@ -152,14 +152,19 @@ export function lireManifeste(brut: unknown): LectureManifeste {
 /**
  * L'animation d'une entrée pour une vue et un clip, ou `-1` si l'entrée n'en a
  * aucune. La cuisson ne rend que ce que le GLB porte (`CLIPS`, « aucun clip
- * n'est inventé ») : un clip absent retombe sur le repos de la même vue, une vue
- * absente sur la droite, et un bâtiment n'a que sa vue fixe.
+ * n'est inventé »), et elle ne photographie de face (`bas`) et de dos (`haut`)
+ * que la marche : **le clip passe avant la vue**. Un clip absent de la vue
+ * demandée se cherche d'abord à droite — un fantassin qui encaisse face au
+ * joueur encaisse de trois quarts, il ne se fige pas dans un repos de face —,
+ * puis le repos de la vue, puis celui de la droite ; un bâtiment n'a que sa vue
+ * fixe. Le moteur retourne alors l'image du côté de repos de l'unité
+ * (`unites.ts`, `miroirTrouve`).
  */
 export function choisirAnimation(entree: EntreeSprite, vue: VueSprite, clip: ClipSprite): number {
   const a = entree.animations;
   const chercher = (v: VueSprite, c: ClipSprite | null): number =>
     a.findIndex((x) => x.vue === v && (c === null || x.clip === c));
-  for (const [v, c] of [[vue, clip], [vue, 'repos'], ['droite', clip], ['droite', 'repos'], ['fixe', clip], ['fixe', 'repos']] as const) {
+  for (const [v, c] of [[vue, clip], ['droite', clip], [vue, 'repos'], ['droite', 'repos'], ['fixe', clip], ['fixe', 'repos']] as const) {
     const i = chercher(v, c);
     if (i >= 0) return i;
   }
@@ -182,8 +187,43 @@ export function cadreAuTemps(nombre: number, ips: number, boucle: boolean, ms: n
 }
 
 // ---------------------------------------------------------------------------
-// 3. Le rangement des replis
+// 3. Les niveaux de détail, et le rangement des replis
 // ---------------------------------------------------------------------------
+
+/**
+ * Le plus petit écart, en texels, entre le bord du rectangle qu'on dessine et
+ * le premier pixel non transparent de sa voisine, pour qu'aucune lecture au
+ * niveau de détail `niveau` ne la touche. Un texel du niveau `k` moyenne un
+ * bloc de `2^k` texels, et le filtre bilinéaire y lit la case d'à côté : d'où
+ * `1,5 × 2^k − 1` (1, 2, 5, 11, 23…) — la formule que
+ * `tests/render2d/mipmaps.test.ts` retrouve texel par texel, à tout alignement.
+ */
+export function ecartSansBavure(niveau: number): number {
+  const k = Math.max(0, Math.floor(niveau));
+  return k === 0 ? 1 : Math.ceil(1.5 * 2 ** k - 1);
+}
+
+/** Le plus haut niveau de détail qu'un écart protège : l'inverse de `ecartSansBavure`. */
+export function niveauSansBavure(ecart: number): number {
+  let k = -1;
+  while (k < 30 && ecartSansBavure(k + 1) <= ecart) k += 1;
+  return k;
+}
+
+/**
+ * Le dernier niveau de détail d'une page (`TEXTURE_MAX_LEVEL`). Une page cuite
+ * sépare deux images de quatre pixels vides plus la bordure transparente de la
+ * voisine : cinq texels depuis le bord d'un rectangle, mesurés sur les 101
+ * pages livrées — de quoi protéger le niveau 2 (une image au quart de sa
+ * taille), pas le 3, qui en demande onze. Au-delà du quart, l'image se lit au
+ * niveau 2, un peu plus nerveuse, jamais tachée de sa voisine. Le jeu ne
+ * descend guère sous ce quart : 48 pixels d'écran par case (le zoom le plus
+ * lointain) sur un écran de densité 1, c'est une image aux 3/8.
+ */
+export const NIVEAU_MIPMAP_MAX = 2;
+
+/** L'écart des pages qu'on range soi-même (replis, planche d'effets) : celui que le dernier niveau demande. */
+export const ECART_PAGES = ecartSansBavure(NIVEAU_MIPMAP_MAX);
 
 /**
  * Un rangement par **étagères** : chaque image se pose à droite de la
@@ -191,13 +231,15 @@ export function cadreAuTemps(nombre: number, ips: number, boucle: boolean, ms: n
  * quand la place manque. Pas optimal, mais sans retour arrière ni tri, ce qui
  * convient à des replis qui arrivent un par un au fil des images. Une marge
  * sépare deux images : sans elle, les mipmaps de l'une baveraient sur l'autre.
+ * Un repli peut toucher le bord de son rectangle : la marge par défaut est donc
+ * l'écart entier que le dernier niveau demande (`ECART_PAGES`).
  */
 export class Etageres {
   private x = 0;
   private y = 0;
   private hauteurEtagere = 0;
 
-  constructor(readonly largeur: number, readonly hauteur: number, readonly marge = 4) {}
+  constructor(readonly largeur: number, readonly hauteur: number, readonly marge = ECART_PAGES) {}
 
   /** La place d'une image de `l × h`, ou `null` si la page est pleine. */
   placer(l: number, h: number): { x: number; y: number } | null {
@@ -265,6 +307,13 @@ export interface Televerseur {
 /** Comment téléverser : prémultiplier l'alpha (couleur, émission) ou non (masque). */
 export interface OptionsTexture {
   premultiplier: boolean;
+  /**
+   * Les canaux gardés : les quatre (par défaut), ou le **rouge** seul — un
+   * masque d'équipe est un niveau de gris, et le nuanceur n'en lit que `.r`.
+   * Un octet par texel au lieu de quatre : sur `premier_contact`, un tiers de
+   * la mémoire graphique des pages.
+   */
+  canal?: 'rgba' | 'rouge';
 }
 
 /** Va chercher une image sous `public/`, déjà décodée. */
@@ -302,11 +351,54 @@ export const COTE_PAGE_REPLI = 1024;
 /** Ce que le chargement d'une page sait d'elle. */
 type EtatPage =
   | { etat: 'attente' }
-  | { etat: 'prete'; textures: TexturesPage }
+  | { etat: 'prete'; textures: TexturesPage; octets: number }
   | { etat: 'echec' };
 
 /** Une page de replis : sa texture et son rangement. */
 interface PageRepli { texture: WebGLTexture; etageres: Etageres; textures: TexturesPage }
+
+/**
+ * La mémoire graphique d'une texture de `largeur × hauteur`, à `octetsParTexel`
+ * (4 en RGBA8, 1 pour un masque en R8), ses niveaux de détail compris :
+ * `1 + 1/4 + 1/16` jusqu'à `NIVEAU_MIPMAP_MAX`. Une estimation — le pilote
+ * arrondit et aligne à sa guise —, pas une mesure.
+ */
+export function octetsTexture(largeur: number, hauteur: number, octetsParTexel = 4): number {
+  let total = 0;
+  for (let k = 0; k <= NIVEAU_MIPMAP_MAX; k++) {
+    total += Math.max(1, Math.floor(largeur / 2 ** k)) * Math.max(1, Math.floor(hauteur / 2 ** k)) * octetsParTexel;
+  }
+  return total;
+}
+
+/**
+ * Ce que l'atlas a résolu depuis la dernière remise à zéro : des images cuites,
+ * des replis, et parmi eux ceux d'une entrée **que le manifeste connaît** — sa
+ * page n'est pas encore là, ou elle a échoué. Une fois tout chargé, ce dernier
+ * compte doit être nul : c'est ce que vérifie `e2e/images-cuites-2d.spec.ts`.
+ */
+export interface CompteursResolution {
+  cuites: number;
+  replis: number;
+  replisAvecEntree: number;
+}
+
+/** Ce que l'atlas tient en mémoire graphique, et ce qu'il attend du réseau. */
+export interface StatistiquesAtlas {
+  /** Pages cuites prêtes, en attente, introuvables. */
+  pages: number;
+  enVol: number;
+  echecs: number;
+  /** Les chemins des pages prêtes (la couleur) : ce que la partie a vraiment demandé. */
+  cheminsPages: string[];
+  /** Textures vivantes : couleur, masque, émission des pages, et pages de replis. */
+  textures: number;
+  /** Leur mémoire graphique estimée (`octetsTexture`). */
+  octetsGpu: number;
+  /** Replis peints, et pages de replis. */
+  replis: number;
+  pagesRepli: number;
+}
 
 /** L'hexadécimal d'une couleur d'équipe : la clé d'un repli. */
 export function hexEquipe(c: readonly [number, number, number] | null | undefined): string {
@@ -377,6 +469,55 @@ export class Atlas {
     return this.replis.size;
   }
 
+  /** Ce qui a été résolu depuis `remettreCompteurs` : le moteur les lit après chaque image. */
+  readonly compteurs: CompteursResolution = { cuites: 0, replis: 0, replisAvecEntree: 0 };
+
+  remettreCompteurs(): void {
+    this.compteurs.cuites = 0;
+    this.compteurs.replis = 0;
+    this.compteurs.replisAvecEntree = 0;
+  }
+
+  /**
+   * Vrai si l'instance se dessinerait **maintenant** avec son image cuite : son
+   * entrée est au manifeste, l'animation existe, et sa page est arrivée. Ne
+   * demande rien au réseau. C'est ce qui décide, par exemple, qu'un appareil
+   * cuit ne se soulève pas — son image porte déjà sa hauteur de vol — quand
+   * son repli, lui, doit l'être (`unites.ts`).
+   */
+  estCuite(entree: string, animation: number, cadre: number): boolean {
+    const e = this.manifeste?.entrees[entree];
+    if (!e || animation < 0) return false;
+    const anim = e.animations[animation];
+    const c = anim ? (anim.cadres[cadre] ?? anim.cadres[0]) : undefined;
+    const page = c ? e.pages[c.page] : undefined;
+    return page !== undefined && this.pages.get(page.couleur)?.etat === 'prete';
+  }
+
+  /** Ce que l'atlas tient et attend : pages, textures, mémoire graphique estimée. */
+  statistiques(): StatistiquesAtlas {
+    let pages = 0;
+    let echecs = 0;
+    let textures = 0;
+    let octetsGpu = 0;
+    const cheminsPages: string[] = [];
+    for (const [chemin, p] of this.pages) {
+      if (p.etat === 'echec') echecs += 1;
+      if (p.etat !== 'prete') continue;
+      pages += 1;
+      cheminsPages.push(chemin);
+      textures += 1 + (p.textures.masque ? 1 : 0) + (p.textures.emission ? 1 : 0);
+      octetsGpu += p.octets;
+    }
+    const cote = this.deps.coteRepli ?? COTE_PAGE_REPLI;
+    textures += this.pagesRepli.length;
+    octetsGpu += this.pagesRepli.length * octetsTexture(cote, cote);
+    return {
+      pages, enVol: this.enVol, echecs, cheminsPages: cheminsPages.sort(), textures, octetsGpu,
+      replis: this.replis.size, pagesRepli: this.pagesRepli.length,
+    };
+  }
+
   /**
    * L'image à poser pour une instance : le cadre cuit si sa page est là, sinon
    * — et la page est alors demandée, une seule fois — le repli de l'entrée.
@@ -392,6 +533,7 @@ export class Atlas {
       if (c && page) {
         const textures = this.page(page);
         if (textures) {
+          this.compteurs.cuites += 1;
           return {
             textures,
             u0: c.x / page.largeur,
@@ -410,7 +552,12 @@ export class Atlas {
         }
       }
     }
-    return this.repli(inst.entree, inst.equipe ?? null);
+    const repli = this.repli(inst.entree, inst.equipe ?? null);
+    if (repli) {
+      this.compteurs.replis += 1;
+      if (e) this.compteurs.replisAvecEntree += 1;
+    }
+    return repli;
   }
 
   /** Les textures d'une page si elle est là ; sinon elle est demandée, et c'est `null`. */
@@ -446,14 +593,16 @@ export class Atlas {
       return;
     }
     try {
-      const creer = (s: SourceImage, premultiplier: boolean): WebGLTexture =>
-        televerseur.creer(s, page.largeur, page.hauteur, { premultiplier });
+      const creer = (s: SourceImage, premultiplier: boolean, canal: OptionsTexture['canal'] = 'rgba'): WebGLTexture =>
+        televerseur.creer(s, page.largeur, page.hauteur, { premultiplier, canal });
       const textures: TexturesPage = {
         couleur: creer(couleur, true),
-        masque: masque ? creer(masque, false) : null,
+        masque: masque ? creer(masque, false, 'rouge') : null,
         emission: emission ? creer(emission, true) : null,
       };
-      this.pages.set(page.couleur, { etat: 'prete', textures });
+      const rgba = octetsTexture(page.largeur, page.hauteur);
+      const octets = rgba * (textures.emission ? 2 : 1) + (textures.masque ? octetsTexture(page.largeur, page.hauteur, 1) : 0);
+      this.pages.set(page.couleur, { etat: 'prete', textures, octets });
     } catch {
       this.pages.set(page.couleur, { etat: 'echec' });
     } finally {
@@ -607,8 +756,13 @@ export function televerseurWebGl(gl: WebGL2RenderingContext): Televerseur {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    // Des mipmaps : une carte vue de loin scintillerait à chaque glisser.
+    // Des mipmaps : une carte vue de loin scintillerait à chaque glisser. Mais
+    // pas au-delà du niveau que l'écart entre deux images protège : plus bas,
+    // un texel mêle deux silhouettes voisines (`NIVEAU_MIPMAP_MAX`). Posé
+    // **avant** `generateMipmap`, qui s'arrête alors à ce niveau.
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_BASE_LEVEL, 0);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAX_LEVEL, NIVEAU_MIPMAP_MAX);
   };
   return {
     creer(source, largeur, hauteur, options): WebGLTexture {
@@ -617,8 +771,12 @@ export function televerseurWebGl(gl: WebGL2RenderingContext): Televerseur {
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, t);
       reglerDepot(options);
-      if (source) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source);
-      else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, largeur, hauteur, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      // Un masque ne garde que son rouge : le navigateur convertit l'image au dépôt.
+      const rouge = options.canal === 'rouge';
+      const interne = rouge ? gl.R8 : gl.RGBA;
+      const format = rouge ? gl.RED : gl.RGBA;
+      if (source) gl.texImage2D(gl.TEXTURE_2D, 0, interne, format, gl.UNSIGNED_BYTE, source);
+      else gl.texImage2D(gl.TEXTURE_2D, 0, interne, largeur, hauteur, 0, format, gl.UNSIGNED_BYTE, null);
       regler();
       gl.generateMipmap(gl.TEXTURE_2D);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);

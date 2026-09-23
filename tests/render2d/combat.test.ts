@@ -7,12 +7,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { ambiance } from '../../src/render/ambiance';
 import { DUREES, MISE_EN_SCENE } from '../../src/render/partition';
+import { FLOTTANTS_SOMMET, Trace } from '../../src/render2d/aplats';
 import {
-  chronologieDuel, clipsProfil, couleurCiel, COULEUR_SEPARATION, decorDeCase, disposerCombat, ecartTireurs,
+  arbreDuBiome, chronologieDuel, clipsProfil, couleurCiel, COULEUR_SEPARATION, decorDeCase, disposerCombat, ecartTireurs,
   effectifsAu, figurines, HAUTEUR_FIGURE, LARGEUR_FIGURE, MAX_FIGURINES, ouvrirCombat2d, PART_HORIZON,
   PIED_FIGURE, profilTir2d, SEPARATION,
   type Combat2d, type DependancesCombat2d, type Duel, type GabaritFormation,
 } from '../../src/render2d/combat';
+import { ARBRES } from '../../src/render2d/sol/decor';
 import { COS_TANGAGE, PIXELS_PAR_CASE, SIN_TANGAGE, type EntreeSprite } from '../../src/render2d/contrat';
 import type { EncartSprites } from '../../src/render2d/index';
 import type { Pose } from '../../src/render2d/lot';
@@ -417,14 +419,14 @@ test('passer saute à l’issue : les effectifs d’après, plus rien en l’air
   assert.equal(e.scene.enMouvement(), false);
 });
 
-test('fermer rend tout — encarts, bandes — et deux fois sans dommage', () => {
+test('fermer rend tout — l’encart, la racine — et deux fois sans dommage', () => {
   const e = essai(unDuel());
-  assert.equal(e.ouverts.size, 7, 'six bandes et la scène');
+  assert.equal(e.ouverts.size, 1, 'un seul encart : le décor est peint dessous');
   assert.equal(e.hote.children.length, 1);
   e.a(500);
   e.combat.fermer();
-  assert.equal(e.ouverts.size, 0, 'tous les encarts sont fermés');
-  assert.equal(e.hote.children.length, 0, 'les bandes quittent l’hôte');
+  assert.equal(e.ouverts.size, 0, 'l’encart est fermé');
+  assert.equal(e.hote.children.length, 0, 'la racine quitte l’hôte');
   assert.equal(e.combat.ouvert, false);
   const salis = e.salis();
   e.combat.fermer();
@@ -438,30 +440,79 @@ test('fermer rend tout — encarts, bandes — et deux fois sans dommage', () =>
 // Les encarts, et l'image qui ne coûte rien
 // ---------------------------------------------------------------------------
 
-test('les bandes du décor s’ouvrent d’abord, au fond uni ; la scène par-dessus, sans fond', () => {
+/** Les rectangles d'une trace d'aplats, ramenés en pixels CSS du rectangle de l'hôte, avec leur couleur. */
+function rectanglesDe(trace: Trace, e: Essai): { u0: number; v0: number; u1: number; v1: number; c: number[] }[] {
+  const z = e.scene.camera.zoom;
+  const W = e.hote.clientWidth;
+  const H = e.hote.clientHeight;
+  const d = trace.donnees;
+  const sortie: { u0: number; v0: number; u1: number; v1: number; c: number[] }[] = [];
+  // Deux triangles par rectangle, six sommets de six flottants : on lit les coins du premier.
+  for (let s = 0; s < trace.sommets; s += 6) {
+    const xs = [0, 1, 2, 3, 4, 5].map((k) => d[(s + k) * FLOTTANTS_SOMMET]!);
+    const ys = [0, 1, 2, 3, 4, 5].map((k) => d[(s + k) * FLOTTANTS_SOMMET + 1]!);
+    const o = s * FLOTTANTS_SOMMET;
+    sortie.push({
+      u0: Math.min(...xs) * z + W / 2, v0: Math.min(...ys) * z + H / 2,
+      u1: Math.max(...xs) * z + W / 2, v1: Math.max(...ys) * z + H / 2,
+      c: [d[o + 2]!, d[o + 3]!, d[o + 4]!, d[o + 5]!],
+    });
+  }
+  return sortie;
+}
+
+test('un seul encart : les bandes du décor sont peintes sous la scène, au rectangle de l’hôte', () => {
   const e = essai(unDuel(), { terrains: { '2,3': 'foret', '3,3': 'mer' } });
-  const fonds = e.ordre.map((x) => x.fond);
-  assert.equal(fonds.length, 7);
-  assert.ok(fonds.slice(0, 6).every((f) => f !== null), 'six bandes peintes');
-  assert.equal(fonds[6], null, 'la scène est la dernière, et laisse voir les bandes');
+  assert.equal(e.ordre.length, 1, 'un duel tient en un encart');
+  assert.equal(e.scene.fond, null);
+  assert.equal(e.scene.hote, e.hote as unknown as HTMLElement, 'la scène peint le rectangle de l’hôte');
+  const aplats = e.scene.aplats;
+  assert.ok(aplats, 'le décor est peint en aplats');
+  void e.scene.camera;
+  const trace = new Trace();
+  aplats.tracer(trace);
+  const r = rectanglesDe(trace, e);
+  assert.equal(r.length, 6);
   const ciel = couleurCiel(ambiance('printemps', 'jour', 'clair'));
   const foret = decorDeCase({ terrain: 'foret', biome: 'plaine', ambiance: ambiance('printemps', 'jour', 'clair') });
   const mer = decorDeCase({ terrain: 'mer', biome: 'plaine', ambiance: ambiance('printemps', 'jour', 'clair') });
-  assert.deepEqual(fonds[0], ciel);
-  assert.deepEqual(fonds[1], foret.lointain);
-  assert.deepEqual(fonds[2], mer.lointain);
-  assert.deepEqual(fonds[3], foret.sol);
-  assert.deepEqual(fonds[4], mer.sol);
-  assert.deepEqual(fonds[5], COULEUR_SEPARATION);
-  // Les bandes sont des éléments de l'hôte : leurs rectangles sont ceux que les encarts peignent.
-  const racine = e.hote.children[0]!;
-  assert.equal(racine.children.length, 6);
-  assert.deepEqual(e.ordre.slice(0, 6).map((x) => x.hote), racine.children);
-  assert.equal(e.scene.hote, e.hote as unknown as HTMLElement, 'la scène peint le rectangle de l’hôte');
+  const opaque = (c: readonly number[]) => [c[0]!, c[1]!, c[2]!, 1];
+  const proche = (a: number[], b: number[]) => a.every((x, i) => Math.abs(x - (b[i] ?? NaN)) < 1e-6);
+  assert.ok(proche(r[0]!.c, opaque(ciel)), 'le ciel');
+  assert.ok(proche(r[1]!.c, opaque(foret.lointain)) && proche(r[2]!.c, opaque(mer.lointain)), 'les lointains');
+  assert.ok(proche(r[3]!.c, opaque(foret.sol)) && proche(r[4]!.c, opaque(mer.sol)), 'les sols');
+  assert.ok(proche(r[5]!.c, opaque(COULEUR_SEPARATION)), 'le filet, en dernier : il coupe le ciel');
+  // Les bandes pavent l'hôte : le ciel de bord à bord, l'horizon à sa part, le filet au milieu.
+  const W = e.hote.clientWidth;
+  const H = e.hote.clientHeight;
+  const pres = (a: number, b: number) => Math.abs(a - b) < 1e-3;
+  assert.ok(pres(r[0]!.u0, 0) && pres(r[0]!.u1, W) && pres(r[0]!.v0, 0));
+  assert.ok(pres(r[3]!.v0, H * PART_HORIZON) && pres(r[3]!.v1, H) && pres(r[4]!.u1, W));
+  assert.ok(pres(r[5]!.u1 - r[5]!.u0, SEPARATION) && pres((r[5]!.u0 + r[5]!.u1) / 2, W / 2));
   // La forêt dresse ses arbres derrière la formation de gauche.
   const decor = e.poses().filter((p) => p.calque === 'volumes');
   assert.equal(decor.length, 3);
   assert.ok(decor.every((p) => p.instance.x < 0 && /^decor_feuillu_printemps_\d$/.test(p.instance.entree)));
+});
+
+test('le décor peint ne se retrace que si l’hôte change de taille', () => {
+  const e = essai(unDuel());
+  void e.scene.camera;
+  const v1 = e.scene.aplats!.version();
+  e.a(400);
+  void e.scene.camera;
+  assert.equal(e.scene.aplats!.version(), v1, 'un duel qui avance ne retrace rien');
+  e.hote.clientWidth = 600;
+  void e.scene.camera;
+  assert.notEqual(e.scene.aplats!.version(), v1, 'une nouvelle taille, un nouveau tracé');
+});
+
+test('l’arbre d’une forêt est celui du placement : la première essence du biome', () => {
+  for (const biome of Object.keys(ARBRES) as (keyof typeof ARBRES)[]) {
+    assert.equal(arbreDuBiome(biome), ARBRES[biome][0]![0]);
+  }
+  assert.equal(arbreDuBiome('desert'), 'palmier');
+  assert.equal(arbreDuBiome('jungle'), 'tropical');
 });
 
 test('aucune allocation par image : les mêmes poses et la même caméra, réécrites en place', () => {

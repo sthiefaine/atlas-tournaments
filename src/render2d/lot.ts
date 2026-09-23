@@ -32,7 +32,42 @@ export interface Pose {
   ligne: number;
   colonne: number;
   instance: InstanceSprite;
+  /**
+   * L'image est **du monde** — bâtiment, drapeau, décor, figurine — et reçoit
+   * le voile d'ambiance que le calque porte (`ReglagesCalque.voile`) : la nuit,
+   * la brume, la tempête, exactement comme le sol. Ce qui se lit (pastilles,
+   * marques), les ombres, les effets et la météo ne le reçoivent pas
+   * (`meteo.ts`, `doitEtalonner`). Le drapeau vit sur la pose, pas sur
+   * l'instance : une instance prêtée par le sol n'est jamais modifiée.
+   */
+  voilee?: boolean;
+  /**
+   * La part **additive** de l'image, de 0 à 1 : la lumière d'un éclair ou d'une
+   * étincelle s'ajoute à ce qu'elle couvre au lieu de le recouvrir. En alpha
+   * prémultiplié, c'est de l'alpha qu'on retire : le mélange du lot
+   * (`ONE, ONE_MINUS_SRC_ALPHA`) devient une addition, sans changer d'appel.
+   * Une image voilée n'est jamais additive.
+   */
+  additif?: number;
 }
+
+/**
+ * Ce qu'un appel de calque reçoit de l'ambiance : le poids de la page
+ * d'émission (`EMISSION_JOUR` ou `EMISSION_NUIT`, du contrat) et le voile —
+ * sa couleur sRGB et sa part, `[r, g, b, part]`, part nulle quand rien ne voile.
+ */
+export interface ReglagesCalque {
+  emission: number;
+  voile: Float32Array;
+}
+
+/** Un calque sans ambiance : aucune lumière propre, aucun voile. */
+export function reglagesNeutres(): ReglagesCalque {
+  return { emission: 0, voile: new Float32Array(4) };
+}
+
+/** Le quatrième flottant « divers » d'une instance voilée : négatif, pour ne pas se confondre avec une part additive. */
+export const MODE_VOILEE = -1;
 
 /** Une pose dont les clés de tri sont celles de l'instance. */
 export function poser(calque: CalqueRendu, instance: InstanceSprite): Pose {
@@ -141,7 +176,8 @@ export function empaqueter(
     d[o + 16] = Math.max(0, Math.min(1, inst.eclat ?? 0));
     d[o + 17] = Math.max(0, Math.min(1, inst.vue ?? 1));
     d[o + 18] = cadre.emission ? 1 : 0;
-    d[o + 19] = 0;
+    // Le mode de l'image : voilée (du monde), ou sa part additive (de la lumière).
+    d[o + 19] = pose.voilee === true ? MODE_VOILEE : Math.max(0, Math.min(1, pose.additif ?? 0));
     if (courant && courant.textures === cadre.textures && courant.calque === pose.calque) {
       courant.nombre += 1;
     } else {
@@ -180,17 +216,27 @@ void main() {
 }`;
 
 /**
- * Le nuanceur d'une image, en alpha prémultiplié :
- * `couleur × mix(1, équipe, masque) × teinte`, puis l'éclat d'un coup vers le
- * blanc, les lumières propres la nuit, le brouillard vers le noir, l'opacité.
- * L'éclat se mêle **avant** le brouillard : une unité hors de vue ne clignote pas.
+ * Le nuanceur d'une image, en alpha prémultiplié, dans cet ordre :
+ *
+ * 1. `couleur × mix(1, équipe, masque) × teinte` — les zones d'équipe, cuites
+ *    en blanc, prennent la couleur du camp (le gris neutre sans propriétaire) ;
+ * 2. le **voile** d'ambiance, pour une image du monde : `c·(1 − a) + V·a`, la
+ *    formule exacte du sol (`tracerVoile`), écrite en prémultiplié — un pixel
+ *    à demi couvert reçoit le voile de sa part, et le composé est exact ;
+ * 3. l'éclat d'un coup, vers le blanc : la lumière d'un choc ne se voile pas ;
+ * 4. les lumières propres (page d'émission), **ajoutées** après la nuit :
+ *    une fenêtre ressort sur un mur assombri ;
+ * 5. le brouillard vers le noir — après l'éclat et les fenêtres : rien de ce
+ *    qu'on ne voit pas ne clignote ni ne luit ;
+ * 6. l'opacité, et la part additive retirée de l'alpha.
  */
 const FRAGMENTS = `#version 300 es
 precision highp float;
 uniform sampler2D uCouleur;
 uniform sampler2D uMasque;
 uniform sampler2D uEmission;
-uniform float uNuit;
+uniform float uPoidsEmission;
+uniform vec4 uVoile;
 in vec2 vUv;
 in vec4 vEquipe;
 in vec4 vTeinte;
@@ -200,10 +246,13 @@ void main() {
   vec4 c = texture(uCouleur, vUv);
   float m = texture(uMasque, vUv).r * vEquipe.a;
   vec3 rvb = c.rgb * mix(vec3(1.0), vEquipe.rgb, m) * vTeinte.rgb;
+  float voilee = step(vDivers.w, -0.5);
+  rvb = mix(rvb, uVoile.rgb * c.a, uVoile.a * voilee);
   rvb = mix(rvb, vec3(c.a), vDivers.x);
-  rvb += texture(uEmission, vUv).rgb * (uNuit * vDivers.z);
+  rvb += texture(uEmission, vUv).rgb * (uPoidsEmission * vDivers.z);
   rvb *= vDivers.y;
-  sortie = vec4(rvb, c.a) * vTeinte.a;
+  float additif = max(vDivers.w, 0.0);
+  sortie = vec4(rvb, c.a * (1.0 - additif)) * vTeinte.a;
 }`;
 
 /** Ce qu'un dessin de lot a coûté. */
@@ -269,8 +318,12 @@ export class LotSprites {
     return e;
   }
 
-  /** Dessine les groupes d'un calque ; rend ce que cela a coûté. */
-  dessinerCalque(calque: CalqueRendu, matrice: Float32Array, nuit: number): StatsLot {
+  /**
+   * Dessine les groupes d'un calque ; rend ce que cela a coûté. Les réglages
+   * d'ambiance valent pour tout l'appel : le poids des fenêtres, et le voile,
+   * que seules les images marquées du monde reçoivent.
+   */
+  dessinerCalque(calque: CalqueRendu, matrice: Float32Array, reglages: ReglagesCalque): StatsLot {
     const gl = this.gl;
     let appels = 0;
     let instances = 0;
@@ -280,7 +333,8 @@ export class LotSprites {
       if (!pret) {
         gl.useProgram(this.programme.programme);
         gl.uniformMatrix3fv(this.programme.uniforme('uPlanVersDecoupe'), false, matrice);
-        gl.uniform1f(this.programme.uniforme('uNuit'), nuit);
+        gl.uniform1f(this.programme.uniforme('uPoidsEmission'), reglages.emission);
+        gl.uniform4fv(this.programme.uniforme('uVoile'), reglages.voile);
         gl.bindVertexArray(this.vao);
         pret = true;
       }

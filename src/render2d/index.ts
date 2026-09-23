@@ -14,8 +14,9 @@ import type { ImageMesuree } from '../render/mesure-performance';
  *    le sol du lot du terrain (`./sol`, `CoucheSol`), qui le recouvre — tous
  *    deux dans la palette de **jour** ;
  * 2. le **voile** d'ambiance (nuit, brume, tempête) sur le sol seul : les images
- *    du monde reçoivent le même par instance (`meteo.ts`, `etalonnerPose`),
- *    une seule fois — rien n'est assombri deux fois ;
+ *    du monde reçoivent le même dans le nuanceur du lot, exactement — un
+ *    réglage de l'appel de calque, et un drapeau par pose (`meteo.ts`,
+ *    `etalonnerPose`) —, une seule fois : rien n'est assombri deux fois ;
  * 3. **surbrillances** — cases allumées, flèche, curseur, anneau (aplats), au-
  *    dessus du voile : elles se lisent de nuit comme de jour ;
  * 4. **volumes** — bâtiments, pavillons et décor du sol, triés par ligne ;
@@ -42,12 +43,10 @@ import type { ImageMesuree } from '../render/mesure-performance';
 
 import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
 import { cleCase, seuilCapture, signatureTerrain, terrainLogique, uniteParId } from '../engine/index';
-import { chargerStyleNation } from '../assets/styles';
 import { sonEnvironnement } from '../audio/profils';
 import type { SortieAudio } from '../audio/types';
 import { ambiance as ambianceDuClimat, lireCouleur } from '../render/ambiance';
 import { Boucle } from '../render/boucle';
-import { paletteDe } from '../render/palettes';
 import { ecrirePartition, type Partition } from '../render/partition';
 import type { BackendRendu } from '../render/qualite';
 import type { GestesRendu, MesureFamille, MesuresRendu, PointVue, Rendu, VueInteraction } from '../render/rendu';
@@ -56,6 +55,7 @@ import { animationsDePartition, type ContexteAnimation2d, type PriseDrapeau2d } 
 import { Trace, type CoucheAplats, ProgrammeAplats } from './aplats';
 import {
   Atlas, chargerImageNavigateur, chargerManifeste, choisirAnimation, televerseurWebGl,
+  type CompteursResolution, type StatistiquesAtlas,
 } from './atlas';
 import { estBatiment, poseDrapeau, posesBatiments, type PoseDrapeau } from './batiments';
 import {
@@ -69,17 +69,19 @@ import {
 import { monterPlanche, PoolEffets, Secousse, Superposition, type PlancheEffets } from './effets';
 import { brancherGestes2d } from './gestes';
 import { creerToile, type Toile } from './gl';
-import { LotSprites, ordonner, poser, type Pose, type ResolveurImages } from './lot';
 import {
-  ETALONNAGE_NEUTRE, etalonnageAmbiance, etalonnerPose, matriceEcran, Meteo2d, MS_METEO, MS_METEO_TACTILE,
-  PLAFOND_METEO, PLAFOND_METEO_TACTILE, type Etalonnage,
+  LotSprites, ordonner, poser, reglagesNeutres, type Pose, type ReglagesCalque, type ResolveurImages,
+} from './lot';
+import {
+  etalonnerPose, matriceEcran, Meteo2d, MS_METEO, MS_METEO_TACTILE, PLAFOND_METEO, PLAFOND_METEO_TACTILE,
+  poidsEmission, voileDuLot,
 } from './meteo';
 import { creerPeintreRepli, fabriqueToileDocument } from './replis';
 import { creerSol } from './sol';
 import {
   couleurTerrainFond, tracerAnneau, tracerCurseur, tracerFleche, tracerFond, tracerSurbrillances, tracerVoile,
 } from './surbrillances';
-import { posesUnites, Visuels, type AnimationChoisie, type Rvb } from './unites';
+import { couleurEquipeDe, posesUnites, Visuels, type AnimationChoisie, type Rvb } from './unites';
 
 export { moteur2dDisponible } from './gl';
 
@@ -117,10 +119,37 @@ export interface EncartSprites {
   camera: EtatCamera2d;
   /** Le fond du rectangle, sRGB de 0 à 1, ou `null` pour laisser la carte dessous. */
   fond: readonly [number, number, number] | null;
+  /**
+   * Un décor **peint** sous les poses, en aplats dans le plan de l'encart —
+   * des bandes de ciel et de sol, un filet —, facultatif. C'est ce qui fait
+   * tenir un duel en un seul encart au lieu d'un encart par bande.
+   */
+  aplats?: AplatsEncart;
   /** Les poses à peindre, dans l'ordre des calques ; relues à chaque image. */
   poses(tempsMs: number): readonly Pose[];
   /** Vrai tant que l'encart s'anime : la boucle reste à 60 images par seconde. */
   enMouvement(): boolean;
+}
+
+/**
+ * Le décor peint d'un encart. `tracer` ne court que quand `version` change —
+ * une nouvelle taille d'hôte, un autre décor — : la géométrie reste sur le
+ * processeur graphique d'une image à l'autre, et un duel ne retrace rien.
+ */
+export interface AplatsEncart {
+  version(): number;
+  tracer(trace: Trace): void;
+}
+
+/** Ce que la peau garde d'un encart ouvert : de quoi le dessiner sans rien allouer d'une image à l'autre. */
+interface EtatEncart {
+  encart: EncartSprites;
+  matrice: Float32Array;
+  taille: { largeur: number; hauteur: number };
+  poses: Pose[];
+  /** Sa couche d'aplats, créée au premier dessin — et oubliée avec le contexte. */
+  couche: CoucheAplats | null;
+  version: number;
 }
 
 /** La peau 2D : l'interface `Rendu`, plus l'hôte des encarts. */
@@ -209,7 +238,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   let vivant = false;
   const visuels = new Visuels();
   const drapeauxForces = new Map<string, PoseDrapeau>();
-  const encarts = new Set<EncartSprites>();
+  /** Les encarts ouverts, dans l'ordre d'ouverture : parcourus par index, sans itérateur à chaque image. */
+  const encarts: EtatEncart[] = [];
 
   // --- Le brouillard, par case : recalculé quand l'ensemble vu change.
   let brouillard: Uint8Array | null = null;
@@ -240,9 +270,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   let meteo: Meteo2d | null = null;
   let msMeteo = MS_METEO;
   const matriceMeteo = new Float32Array(9);
-  /** L'étalonnage de la nuit, de la brume : posé sur chaque image du monde, une fois. */
-  let etalonnage: Etalonnage = ETALONNAGE_NEUTRE;
-  let cleEtalonnageSol = '';
+  /**
+   * Ce que chaque appel de calque reçoit de l'ambiance : le poids des fenêtres
+   * et le voile de la nuit, de la brume. Réécrit en place à chaque image ; les
+   * poses ne portent que le drapeau « du monde » (`etalonnerPose`).
+   */
+  const reglages: ReglagesCalque = reglagesNeutres();
   /** Une case vue : rien d'un effet ne se pose au-dessus du brouillard. */
   const vuCase = (x: number, y: number): boolean => {
     const e = etat;
@@ -262,6 +295,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   let continuPrecedent = false;
   let imagesDessinees = 0;
   let derniere = { appels: 0, instances: 0, triangles: 0, familles: {} as Record<string, MesureFamille> };
+  /** Ce que l'atlas a résolu à la dernière image de la carte, encarts exclus. */
+  const resolues: CompteursResolution = { cuites: 0, replis: 0, replisAvecEntree: 0 };
   let observateur: ((image: ImageMesuree) => void) | null = null;
   let positions = new Map<string, { x: number; y: number; h: number }>();
 
@@ -282,15 +317,16 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     }, delai);
   }
 
-  /** La couleur d'équipe d'un camp : le style de sa nation, sa palette à défaut, le gris neutre sans camp. */
+  /**
+   * La couleur d'équipe d'un camp : le style de sa nation, sa palette à défaut,
+   * le gris neutre sans camp — jamais le blanc des zones d'équipe cuites
+   * (`couleurEquipeDe`). Mémorisée : c'est la même à chaque image.
+   */
   function couleurEquipe(camp: CampId | null): Rvb {
     const cle = camp === null ? 'neutre' : String(camp);
     const memo = couleurs.get(cle);
     if (memo) return memo;
-    const code = camp === null ? undefined : options.paysParCamp?.[camp];
-    const style = code ? chargerStyleNation(code) : null;
-    const c = lireCouleur(style?.palette.main ?? paletteDe(camp).main);
-    const rvb: Rvb = [c.r / 255, c.v / 255, c.b / 255];
+    const rvb = couleurEquipeDe(camp, camp === null ? null : options.paysParCamp?.[camp]);
     couleurs.set(cle, rvb);
     return rvb;
   }
@@ -300,7 +336,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     if (!e) return null;
     const i = choisirAnimation(e, v, clip);
     const a = e.animations[i];
-    return a ? { index: i, cadres: a.cadres.length, ips: a.ips, boucle: a.boucle } : null;
+    return a ? { index: i, cadres: a.cadres.length, ips: a.ips, boucle: a.boucle, vue: a.vue } : null;
+  }
+
+  /** Vrai si l'image se dessine cuite maintenant : sa page est là (`Atlas.estCuite`). */
+  function imageCuite(id: string, animation: number, cadre: number): boolean {
+    return atlas?.estCuite(id, animation, cadre) ?? false;
   }
 
   function entreeUnite(type: CleUnite, camp: CampId): string {
@@ -335,8 +376,20 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     };
   }
 
+  /** Les couches d'aplats des encarts : mortes avec le contexte, refaites au premier dessin qui suit. */
+  function oublierCouchesEncarts(detruire: boolean): void {
+    for (const e of encarts) {
+      if (detruire) {
+        try { e.couche?.dispose(); } catch { /* le contexte les a emportées */ }
+      }
+      e.couche = null;
+      e.version = Number.NaN;
+    }
+  }
+
   function demonterGpu(): void {
     const g = gpu;
+    oublierCouchesEncarts(g !== null);
     gpu = null;
     if (!g) return;
     try {
@@ -451,8 +504,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       posesBat = b.poses;
       batimentsAnimes = b.animees;
       batimentsSales = false;
-      // Des instances fraîches : on les étalonne une fois, ici, et jamais d'une image à l'autre.
-      for (const p of posesBat) etalonnerPose(p, etalonnage);
+      // Du monde : le lot leur posera le voile de l'ambiance, quelle qu'elle soit.
+      for (const p of posesBat) etalonnerPose(p);
     }
     for (const p of posesBat) toutes.push(p);
     // Le décor du sol, trié avec les bâtiments ; enveloppé une fois par tableau reçu.
@@ -465,15 +518,11 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         console.error('Sol 2D en panne', cause);
       }
     }
-    if (volumes !== derniersVolumesSol || cleEtalonnageSol !== etalonnage.cle) {
+    if (volumes !== derniersVolumesSol) {
       derniersVolumesSol = volumes;
-      cleEtalonnageSol = etalonnage.cle;
-      // Les instances du sol sont à lui : on étalonne une copie, jamais les siennes.
-      posesSol = (volumes ?? []).map((i) => {
-        const p = poser('volumes', etalonnage.neutre ? i : { ...i });
-        etalonnerPose(p, etalonnage);
-        return p;
-      });
+      // Les instances du sol sont à lui : la pose porte le drapeau du monde, et
+      // l'instance reste intacte — aucune copie, même la nuit.
+      posesSol = (volumes ?? []).map((i) => etalonnerPose(poser('volumes', i)));
     }
     for (const p of posesSol) {
       if (tactique && VEGETATION.test(p.instance.entree)) continue;
@@ -482,12 +531,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     const u = posesUnites(e, v.catalogue, visuels, {
       camp: v.camp ?? null, visibles: v.visibles, unitesVues: v.unitesVues ?? null, marques: v.marques ?? null,
       selection: v.selection, equipe: couleurEquipe, entree: entreeUnite, animation: animationChoisie,
-      tempsMs, reduit: calme,
+      cuite: imageCuite, tempsMs, reduit: calme,
     });
     positions = u.positions;
     for (const p of u.poses) {
-      // Fraîches à chaque image : la figurine reçoit la nuit, sa pastille et sa marque non.
-      etalonnerPose(p, etalonnage);
+      // La figurine est du monde et reçoit la nuit ; sa pastille et sa marque se lisent.
+      etalonnerPose(p);
       toutes.push(p);
     }
     // Les effets, au-dessus des unités (ou au sol, sous elles), jamais sur une case cachée.
@@ -512,13 +561,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     const calme = reduit();
     let urgent = cam.avancer(ecoule, calme);
     if (sol && !solEnPanne && sol.enMouvement()) urgent = true;
-    for (const encart of encarts) if (encart.enMouvement()) urgent = true;
-    // L'étalonnage de l'ambiance (nuit, brume…) : quand il change, les images du monde se refont.
-    const etalonnageCourant = etalonnageAmbiance(v.ambiance);
-    if (etalonnageCourant !== etalonnage) {
-      etalonnage = etalonnageCourant;
-      batimentsSales = true;
-    }
+    for (let i = 0; i < encarts.length; i++) if (encarts[i]!.encart.enMouvement()) urgent = true;
+    // L'ambiance de l'image, pour chaque appel de calque : le poids des fenêtres
+    // (0,06 le jour, 1 la nuit), et le voile — la nuit, la brume — que le lot
+    // pose exactement sur les images du monde. Rien à refaire quand elle change.
+    reglages.emission = poidsEmission(v.ambiance);
+    voileDuLot(v.ambiance, reglages.voile);
 
     const gl = t.gl;
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -579,8 +627,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
 
     // --- Le voile d'ambiance (nuit, brume, tempête) sur le sol **seul**, juste
     //     après lui et sous les surbrillances, qui restent lisibles. Le sol peint
-    //     la palette de jour ; les images du monde reçoivent le même voile par
-    //     instance (`etalonnerPose`) : rien n'est assombri deux fois.
+    //     la palette de jour ; les images du monde reçoivent le même voile dans
+    //     le lot (`reglages.voile`, `etalonnerPose`) : rien n'est assombri deux fois.
     const voile = v.ambiance.voile;
     if (voile) {
       trace.vider();
@@ -591,7 +639,11 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
 
     // --- Les images de la scène, rangées une fois pour toute l'image.
     const { animees, selection, effetsPoses } = collecterPoses(e, v, debut, calme);
+    a.remettreCompteurs();
     const empaquetage = g.lot.preparer(toutes, resolveur);
+    resolues.cuites = a.compteurs.cuites;
+    resolues.replis = a.compteurs.replis;
+    resolues.replisAvecEntree = a.compteurs.replisAvecEntree;
 
     // --- Surbrillances, puis l'anneau au pied de l'unité choisie. Leur trace
     // ne se refait que si leur clé change : un survol ne refait que le curseur.
@@ -604,7 +656,6 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       compter('surbrillances', g.anneau.triangles, g.anneau.dessiner(matrice));
     }
 
-    const nuit = v.ambiance.villesEclairees ? 1 : 0;
     let superposee = false;
     // La météo tombe devant la caméra : son calque a la matrice de l'écran.
     matriceEcran(cam.vue.largeur, cam.vue.hauteur, matriceMeteo);
@@ -619,12 +670,15 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
           compter('etalonnage', g.superposition.triangles, g.superposition.dessiner(matrice));
         }
       }
-      const s = g.lot.dessinerCalque(calque, calque === 'meteo' ? matriceMeteo : matrice, nuit);
+      const s = g.lot.dessinerCalque(calque, calque === 'meteo' ? matriceMeteo : matrice, reglages);
       if (s.appels > 0) compter(calque, s.instances * 2, s.appels);
     }
 
-    // --- Les encarts, chacun dans son rectangle.
-    for (const encart of encarts) appels += dessinerEncart(t, g, a, encart, debut, nuit);
+    // --- Les encarts, chacun dans son rectangle ; la toile ne se mesure qu'une fois.
+    if (encarts.length > 0) {
+      const boiteToile = t.canvas.getBoundingClientRect();
+      for (let i = 0; i < encarts.length; i++) appels += dessinerEncart(t, g, encarts[i]!, boiteToile, debut);
+    }
 
     // Les effets ont été posés à leur âge ; ils vieillissent de l'image **après**,
     // sur l'horloge de la boucle — celle des gestes qui les ont jetés.
@@ -662,9 +716,14 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     return urgent;
   }
 
-  /** Dessine un encart dans le rectangle de son hôte. Rend le nombre d'appels. */
-  function dessinerEncart(t: Toile, g: Gpu, a: Atlas, encart: EncartSprites, tempsMs: number, nuit: number): number {
-    const boiteToile = t.canvas.getBoundingClientRect();
+  /**
+   * Dessine un encart dans le rectangle de son hôte : son fond uni, son décor
+   * peint (retracé seulement quand sa version change), puis ses poses. Rien n'y
+   * est alloué d'une image à l'autre — la matrice, la taille et le tableau des
+   * poses vivent avec l'encart. Rend le nombre d'appels.
+   */
+  function dessinerEncart(t: Toile, g: Gpu, e: EtatEncart, boiteToile: DOMRect, tempsMs: number): number {
+    const encart = e.encart;
     const boite = encart.hote.getBoundingClientRect();
     if (boite.width < 1 || boite.height < 1 || boiteToile.width < 1) return 0;
     const k = t.canvas.width / boiteToile.width;
@@ -680,14 +739,30 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       gl.clearColor(encart.fond[0], encart.fond[1], encart.fond[2], 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
     }
-    const m = new Float32Array(9);
-    matricePlanVersDecoupe(encart.camera, { largeur: boite.width, hauteur: boite.height }, m);
-    const poses = [...encart.poses(tempsMs)];
-    ordonner(poses);
-    // Le même résolveur que la carte : un encart peut poser des effets (`effet_*`).
-    g.lot.preparer(poses, a === atlas ? resolveur : a);
+    e.taille.largeur = boite.width;
+    e.taille.hauteur = boite.height;
+    // La caméra d'abord : c'est en la lisant qu'un encart voit sa nouvelle taille.
+    matricePlanVersDecoupe(encart.camera, e.taille, e.matrice);
     let appels = 0;
-    for (const calque of ORDRE_CALQUES) appels += g.lot.dessinerCalque(calque, m, nuit).appels;
+    const aplats = encart.aplats;
+    if (aplats) {
+      e.couche ??= g.aplats.couche();
+      const version = aplats.version();
+      if (version !== e.version) {
+        trace.vider();
+        aplats.tracer(trace);
+        e.couche.poser(trace);
+        e.version = version;
+      }
+      appels += e.couche.dessiner(e.matrice);
+    }
+    const source = encart.poses(tempsMs);
+    e.poses.length = 0;
+    for (let i = 0; i < source.length; i++) e.poses.push(source[i]!);
+    ordonner(e.poses);
+    // Le même résolveur que la carte : un encart peut poser des effets (`effet_*`).
+    g.lot.preparer(e.poses, resolveur);
+    for (const calque of ORDRE_CALQUES) appels += g.lot.dessinerCalque(calque, e.matrice, reglages).appels;
     gl.disable(gl.SCISSOR_TEST);
     gl.viewport(0, 0, t.canvas.width, t.canvas.height);
     return appels;
@@ -765,6 +840,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         surPerte: () => {
           // Tout objet WebGL est mort : on oublie, sans rien détruire.
           gpu = null;
+          oublierCouchesEncarts(false);
           jeterSol();
           atlas?.perdre();
           planche = null;
@@ -987,7 +1063,10 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     },
 
     mesurer(): MesuresRendu {
-      const m: MesuresRendu & { instances: number } = {
+      // Au-delà de `MesuresRendu` : ce que l'atlas tient (pages, textures,
+      // mémoire graphique estimée) et ce que la dernière image de la carte a
+      // résolu — cuites, replis, et replis d'une entrée pourtant au manifeste.
+      const m: MesuresRendu & { instances: number; images: (StatistiquesAtlas & CompteursResolution) | null } = {
         triangles: derniere.triangles,
         appels: derniere.appels,
         msParImage: mediane(durees),
@@ -997,6 +1076,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         backend: toile && gpu ? DOS_2D : null,
         familles: derniere.familles,
         instances: derniere.instances,
+        images: atlas ? { ...atlas.statistiques(), ...resolues } : null,
       };
       return m;
     },
@@ -1011,10 +1091,20 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     },
 
     ouvrirEncart(encart: EncartSprites): () => void {
-      encarts.add(encart);
+      const e: EtatEncart = {
+        encart, matrice: new Float32Array(9), taille: { largeur: 1, hauteur: 1 }, poses: [], couche: null, version: Number.NaN,
+      };
+      encarts.push(e);
       salir();
       return () => {
-        if (encarts.delete(encart)) salir();
+        const i = encarts.indexOf(e);
+        if (i < 0) return;
+        encarts.splice(i, 1);
+        if (e.couche && gpu) {
+          try { e.couche.dispose(); } catch { /* le contexte l'a emportée */ }
+        }
+        e.couche = null;
+        salir();
       };
     },
 
@@ -1049,9 +1139,9 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       minuterieAmbiance = null;
       boucle?.arreter();
       boucle = null;
-      encarts.clear();
       jeterSol();
       demonterGpu();
+      encarts.length = 0;
       effets.couper();
       secousse.couper();
       superposition.couper();

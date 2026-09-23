@@ -18,7 +18,7 @@
  * - **rien** sous animations réduites : la météo se lit alors au Bulletin et
  *   dans l'étalonnage, pas dans une pluie qui tombe.
  *
- * ## L'étalonnage (`etalonnageAmbiance`, `etalonnerPose`)
+ * ## L'étalonnage (`voileDuLot`, `etalonnerPose`)
  *
  * Le sol peint la palette de **jour** (`render2d/sol/`, `doc/refonte/sprites-terrain.md`
  * §4) : la nuit, la brume, la tempête sont l'affaire du moteur, **une seule
@@ -27,22 +27,23 @@
  *
  * - **le sol** le reçoit tel quel : un aplat de voile peint juste après lui, et
  *   **sous** les surbrillances, qui restent lisibles ;
- * - **les images du monde** — bâtiments, mâts et drapeaux, décor, figurines — le
- *   reçoivent par instance : une teinte `T` et un éclat `e` (vers le blanc) tels
- *   que `c·T·(1 − e) + e` rende exactement le blanc voilé et, à moins de 0,05
- *   près, toute autre couleur voilée (`e` ne peut être qu'un gris, `V·a` est une
- *   couleur) ;
+ * - **les images du monde** — bâtiments, mâts et drapeaux, décor, figurines —
+ *   le reçoivent dans le nuanceur du lot, **exactement** : le voile est un
+ *   réglage de l'appel de calque (`voileDuLot`), la pose ne porte que le
+ *   drapeau qui dit qu'elle est du monde (`etalonnerPose`). Cela remplace, le
+ *   23 septembre 2026, une teinte et un éclat par instance, justes sur le blanc
+ *   et à 0,05 près ailleurs (`doc/refonte/sprites-reglages.md`) ;
  * - **ne le reçoivent pas** : les pastilles de PV, les marques du télégraphage,
  *   les ombres (posées sur un sol déjà voilé), les effets (ils sont de la
  *   lumière), la météo (elle a sa propre nuit). Les fenêtres des villes
- *   éclairées (pages d'émission) s'ajoutent **après** la teinte, dans le lot :
+ *   éclairées (pages d'émission) s'ajoutent **après** le voile, dans le lot :
  *   elles ressortent sur le monde assombri.
  *
  * Pur (`tests/render2d/meteo.test.ts`).
  */
 
 import { lireCouleur, type Ambiance, type Particules } from '../render/ambiance';
-import { PIXELS_PAR_CASE, SIN_TANGAGE, type InstanceSprite } from './contrat';
+import { EMISSION_JOUR, EMISSION_NUIT, PIXELS_PAR_CASE, SIN_TANGAGE, type InstanceSprite } from './contrat';
 import { ANGLES_GOUTTE, ID_EFFET, IDS_GOUTTE, type Rvb } from './effets';
 import type { Pose } from './lot';
 
@@ -264,41 +265,37 @@ export function matriceEcran(largeur: number, hauteur: number, sortie: Float32Ar
 // ---------------------------------------------------------------------------
 
 /**
- * Ce qu'une image du monde reçoit de l'ambiance : une teinte qui multiplie, un
- * éclat qui mêle vers le blanc (`lot.ts`). Neutre de jour par temps clair.
+ * Le voile d'une ambiance tel que le lot le reçoit, **par appel de calque** :
+ * sa couleur sRGB et sa part, `[r, g, b, part]`, écrits dans `sortie` sans
+ * rien allouer ; une part nulle de jour par temps clair. Le nuanceur en tire
+ * exactement ce que le sol reçoit, `c·(1 − a) + V·a` (`lot.ts`) : la nuit est
+ * juste sur toute couleur, et plus seulement sur le blanc — l'ancienne
+ * approximation par instance (une teinte et un éclat) s'écartait jusqu'à 0,042,
+ * dans les noirs d'une nuit de brouillard. Et comme elle ne vit plus dans les
+ * instances, un changement d'ambiance ne refait plus aucune image.
  */
-export interface Etalonnage {
-  teinte: Rvb;
-  eclat: number;
-  neutre: boolean;
-  /** Ce qui distingue deux étalonnages : quand elle change, les images se refont. */
-  cle: string;
+export function voileDuLot(a: Pick<Ambiance, 'voile'>, sortie: Float32Array = new Float32Array(4)): Float32Array {
+  const voile = a.voile;
+  if (!voile || !(voile.alpha > 0)) {
+    sortie.fill(0);
+    return sortie;
+  }
+  const c = lireCouleur(voile.couleur);
+  sortie[0] = c.r / 255;
+  sortie[1] = c.v / 255;
+  sortie[2] = c.b / 255;
+  sortie[3] = Math.min(1, voile.alpha);
+  return sortie;
 }
 
-export const ETALONNAGE_NEUTRE: Etalonnage = Object.freeze({ teinte: [1, 1, 1] as Rvb, eclat: 0, neutre: true, cle: 'neutre' });
-
-const MEMOIRE = new Map<string, Etalonnage>();
-
 /**
- * L'étalonnage qui donne à une image ce que le voile donne au sol. Pour chaque
- * canal, le voile rend `c·(1 − a) + V·a` ; l'instance rend `c·T·(1 − e) + e`.
- * On prend pour `e` la moyenne des `V·a` — le seul gris dont les trois canaux
- * s'écartent le moins — et `T` tel que le blanc tombe juste : l'écart ne dépend
- * que de la couleur du voile, pas de celle de l'image, et reste sous 0,05.
+ * Le poids de la page d'émission (fenêtres, feux) : presque rien le jour —
+ * une lampe allumée ne se voit pas au soleil —, pleine quand les villes
+ * s'éclairent (`ambiance.villesEclairees`). Les valeurs sont celles du contrat,
+ * c'est-à-dire de la cuisson, qui a retiré cette lumière de la couleur.
  */
-export function etalonnageAmbiance(a: Pick<Ambiance, 'cle' | 'voile'>): Etalonnage {
-  const voile = a.voile;
-  if (!voile || voile.alpha <= 0) return ETALONNAGE_NEUTRE;
-  const memo = MEMOIRE.get(a.cle);
-  if (memo) return memo;
-  const c = lireCouleur(voile.couleur);
-  const k = Math.max(0, Math.min(1, voile.alpha));
-  const va = [(c.r / 255) * k, (c.v / 255) * k, (c.b / 255) * k] as const;
-  const e = (va[0] + va[1] + va[2]) / 3;
-  const t = (i: 0 | 1 | 2): number => (1 - k + va[i] - e) / Math.max(1e-6, 1 - e);
-  const valeur: Etalonnage = { teinte: [t(0), t(1), t(2)], eclat: e, neutre: false, cle: a.cle };
-  MEMOIRE.set(a.cle, valeur);
-  return valeur;
+export function poidsEmission(a: Pick<Ambiance, 'villesEclairees'>): number {
+  return a.villesEclairees ? EMISSION_NUIT : EMISSION_JOUR;
 }
 
 /** Ce que le voile donne à un canal opaque `c` du sol. */
@@ -309,15 +306,20 @@ export function voileSurCanal(c: number, canal: 0 | 1 | 2, voile: { couleur: str
   return c * (1 - voile.alpha) + composante * voile.alpha;
 }
 
-/** Ce que le lot donne à un canal opaque `c` d'une image étalonnée (`lot.ts` : teinte, puis mélange vers le blanc). */
-export function etalonnageSurCanal(c: number, canal: 0 | 1 | 2, e: Etalonnage): number {
-  return c * e.teinte[canal] * (1 - e.eclat) + e.eclat;
+/**
+ * Ce que le lot donne à un canal `c` d'une image voilée de couverture `alpha`
+ * — le mélange du nuanceur, `mix(c, V·alpha, part)`, sur une couleur
+ * prémultipliée. Opaque, c'est `voileSurCanal` au bit près.
+ */
+export function voileImageSurCanal(c: number, alpha: number, canal: 0 | 1 | 2, voile: Float32Array): number {
+  const part = voile[3] ?? 0;
+  return c * (1 - part) + (voile[canal] ?? 0) * alpha * part;
 }
 
 /**
- * Vrai si une pose est du **monde** et reçoit l'étalonnage : ce qui est dans
- * les volumes ou dans le calque des unités, sauf ce qui se lit — pastilles de
- * PV, marques du télégraphage. Les ombres, les effets et la météo n'y sont pas.
+ * Vrai si une pose est du **monde** et reçoit le voile : ce qui est dans les
+ * volumes ou dans le calque des unités, sauf ce qui se lit — pastilles de PV,
+ * marques du télégraphage. Les ombres, les effets et la météo n'y sont pas.
  */
 export function doitEtalonner(p: Pose): boolean {
   if (p.calque !== 'volumes' && p.calque !== 'unites') return false;
@@ -326,16 +328,12 @@ export function doitEtalonner(p: Pose): boolean {
 }
 
 /**
- * Étalonne une pose **en place** si elle doit l'être. À n'appeler qu'une fois
- * par instance fraîche : une instance qu'on relirait d'une image à l'autre
- * s'assombrirait à chaque passage. La teinte d'origine n'est jamais modifiée
- * (celle d'un désaffecté est une constante partagée) : on en pose une neuve.
+ * Marque une pose du monde : le lot lui posera le voile du calque. Rien n'est
+ * écrit dans l'instance — ni teinte, ni éclat —, si bien qu'une instance prêtée
+ * par le sol se pose telle quelle, et qu'on peut marquer deux fois sans rien
+ * assombrir deux fois.
  */
-export function etalonnerPose(p: Pose, e: Etalonnage): void {
-  if (e.neutre || !doitEtalonner(p)) return;
-  const inst = p.instance;
-  const t = inst.teinte;
-  inst.teinte = t ? [t[0] * e.teinte[0], t[1] * e.teinte[1], t[2] * e.teinte[2]] : e.teinte;
-  // Deux mélanges vers le blanc font un mélange : 1 − (1 − a)(1 − b).
-  inst.eclat = 1 - (1 - (inst.eclat ?? 0)) * (1 - e.eclat);
+export function etalonnerPose(p: Pose): Pose {
+  p.voilee = doitEtalonner(p);
+  return p;
 }

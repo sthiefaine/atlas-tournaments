@@ -228,6 +228,13 @@ const LARGEUR_ANCRE = 190;
 /** Écart entre le centre de la case et le bord du panneau. */
 const ECART_ANCRE = 36;
 /**
+ * La largeur d'une prévision ancrée (duel, pouvoir visé), en pixels : la
+ * feuille de style la lit, et l'ancrage aussi. Il la prenait pour
+ * `LARGEUR_ANCRE` (190) : posé à gauche de sa cible, le panneau de 230 pixels
+ * débordait de 40 sur elle et recevait le clic qui devait confirmer l'attaque.
+ */
+const LARGEUR_PREVISION = 230;
+/**
  * En deçà de cette largeur d'**image**, l'écran est trop étroit pour poser un
  * panneau à côté d'une case : le menu de production redevient une feuille basse.
  * La feuille de style lit ce nombre — c'est au même seuil qu'elle empile ses
@@ -386,7 +393,9 @@ const STYLE = `
    (attribut data-ancre, position calculée par la fonction ancrer). */
 .atlas-hud .ordres{left:50%;bottom:calc(var(--bas) + var(--dock) + 10px);transform:translateX(-50%);width:340px;max-width:calc(100% - 24px);padding:0 0 8px;z-index:3;max-height:calc(100% - 160px);overflow-y:auto;background:var(--encre);color:var(--papier);border:1px solid #839798;border-top:4px solid var(--signal);animation:atlas-ordres .16s ease-out}
 .atlas-hud .ordres[data-ancre='oui'],.atlas-hud .p.duel[data-ancre='oui']{bottom:auto;right:auto;transform:none;width:190px;max-width:190px}
-.atlas-hud .p.duel[data-ancre='oui']{width:230px;max-width:230px}
+/* Une prévision ancrée ne reçoit pas le clic : elle n'a rien à presser, et elle
+   est posée contre la case que ce clic doit confirmer. */
+.atlas-hud .p.duel[data-ancre='oui']{width:${LARGEUR_PREVISION}px;max-width:${LARGEUR_PREVISION}px;pointer-events:none}
 .atlas-hud .ordres-entete{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:5px 6px 5px 12px;background:#ffffff0a;border-bottom:1px solid #ffffff14;margin-bottom:8px}
 .atlas-hud .ordres .retour{min-width:34px;min-height:34px;background:#ffffff10;border-color:#ffffff26}
 .atlas-hud .ordres-grille{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;padding:0 8px}
@@ -1814,11 +1823,25 @@ export function monterHudHtml(
       if (abattues > 0) lignes.push(api.t(abattues === 1 ? 'hud.visee_pouvoir_abattues_une' : 'hud.visee_pouvoir_abattues', { n: abattues }));
       if (lignes.length === 0) lignes.push(api.t('hud.visee_pouvoir_rien'));
     }
-    return `<div class="p duel visee-pouvoir"${ancrer(visee.centre, 120)} role="group" aria-label="${ech(api.t('hud.visee_pouvoir'))}">`
+    return `<div class="p duel visee-pouvoir"${ancrerPrevision(visee.centre, 120)} role="group" aria-label="${ech(api.t('hud.visee_pouvoir'))}">`
       + `<div class="duel-entete">${iconeOrdre(visee.niveau === 'super' ? 'super_pouvoir' : 'pouvoir')}<span>${ech(titre)}</span>`
       + `<span class="issue">${ech(api.t('hud.visee_pouvoir_rayon', { n: visee.rayon }))}</span></div>`
       + `<div class="visee-lignes">${lignes.map((l) => `<span class="puce">${ech(l)}</span>`).join('')}`
       + `<span class="aide">${ech(api.t('hud.visee_pouvoir_confirmer'))}</span></div></div>`;
+  }
+
+  /**
+   * L'ancre d'une prévision (duel, pouvoir visé) : sa vraie largeur, et un écart
+   * qui laisse **toute** la case visée hors du panneau — sa demi-largeur à
+   * l'écran plus une marge, jamais moins que l'écart ordinaire. La case se
+   * clique pour confirmer : rien ne doit la couvrir, même au plus près.
+   */
+  function ancrerPrevision(c: Case | null | undefined, hauteur: number): string {
+    if (!c) return '';
+    const p = api.versEcran(c);
+    const q = api.versEcran({ x: c.x + 1, y: c.y });
+    const ecart = p && q ? Math.max(ECART_ANCRE, Math.abs(q.x - p.x) / 2 + 10) : ECART_ANCRE;
+    return ancrer(c, hauteur, LARGEUR_PREVISION, ecart);
   }
 
   function panneauDuel(v: VueJeu): string {
@@ -1839,7 +1862,7 @@ export function monterHudHtml(
     const issue = p.cibleHorsJeu
       ? api.t('hud.duel_hors_jeu')
       : (p.riposte > 0 ? '' : api.t('hud.duel_sans_riposte'));
-    return `<div class="p duel"${ancrer(c, 152)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
+    return `<div class="p duel"${ancrerPrevision(c, 152)} role="group" aria-label="${ech(api.t('hud.duel'))}">`
       + `<div class="duel-entete">${iconeOrdre('attaquer')}<span>${ech(api.t('hud.duel'))}</span>`
       + (issue === '' ? '' : `<span class="issue">${ech(issue)}</span>`) + `</div>`
       + ligneDuel(v, cible, p.pvCible)
@@ -1886,7 +1909,7 @@ export function monterHudHtml(
    */
   let ancreProduction: number | null = null;
 
-  function ancrer(c: Case | null | undefined, hauteur: number, largeur = LARGEUR_ANCRE): string {
+  function ancrer(c: Case | null | undefined, hauteur: number, largeur = LARGEUR_ANCRE, ecart = ECART_ANCRE): string {
     // La largeur de **l'image**, pas celle du HUD : la racine couvre aussi la
     // colonne de droite, et un panneau ancré qui s'autoriserait cette largeur
     // se poserait sous le rail, là où la case qu'il commente n'est pas.
@@ -1895,8 +1918,8 @@ export function monterHudHtml(
     if (!c || L < LARGEUR_MINIMALE_ANCRE) return '';
     const p = api.versEcran(c);
     if (!p) return '';
-    const droite = p.x + ECART_ANCRE + largeur <= L - 12;
-    const x = droite ? p.x + ECART_ANCRE : p.x - ECART_ANCRE - largeur;
+    const droite = p.x + ecart + largeur <= L - 12;
+    const x = droite ? p.x + ecart : p.x - ecart - largeur;
     const y = p.y - hauteur / 2;
     const cx = Math.round(Math.max(12, Math.min(L - largeur - 12, x)));
     const cy = Math.round(Math.max(12, Math.min(Math.max(12, H - hauteur - 12), y)));

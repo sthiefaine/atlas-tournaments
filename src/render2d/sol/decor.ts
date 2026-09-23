@@ -64,7 +64,7 @@ type Tirage = readonly (readonly [EssenceDecor, number])[];
  * en montagne, sous la neige et sur la côte, des feuillus mêlés ailleurs ; des
  * palmiers au désert et en archipel, de la forêt tropicale en jungle.
  */
-const ARBRES: Readonly<Record<Biome, Tirage>> = {
+export const ARBRES: Readonly<Record<Biome, Tirage>> = {
   plaine: [['feuillu', 0.7], ['conifere', 0.3]],
   foret: [['feuillu', 0.6], ['conifere', 0.4]],
   montagne: [['conifere', 1]],
