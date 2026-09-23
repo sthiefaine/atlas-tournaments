@@ -6,7 +6,6 @@ import { useEffect, useState, type KeyboardEvent } from 'react';
 import type { Mode } from '../../schemas/types';
 import { lireProgression } from '../campagne/progression';
 import { indexChoix } from '../navigation-choix';
-import { QUALITES_RENDU, type QualiteRendu } from '../../render/qualite';
 import { VITESSES_ANIMATIONS } from '../../render/cadence';
 import {
   modeDifficileDebloque, ecrireDifficulte, lireDifficulte, NOM_PROFIL_MAX, PREFERENCES_PAR_DEFAUT, PROFILS, PROFILS_PAR_DEFAUT, changerProfilActif,
@@ -75,10 +74,6 @@ export interface LibellesReglages {
   ecranCombatNote: string;
   /** Titre du panneau d'affichage. */
   affichage: string;
-  qualite: string;
-  qualiteNote: string;
-  qualiteAuto: string;
-  qualiteBasse: string;
   diagnosticPerformance: string;
   actif: string;
   inactif: string;
@@ -184,9 +179,6 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
   };
 
   const nomDe = (profil: Profil): string => profils.noms[profil] || (profil === 'a' ? libelles.profilA : libelles.profilB);
-  const libelleQualite: Record<QualiteRendu, string> = {
-    auto: libelles.qualiteAuto, basse: libelles.qualiteBasse,
-  };
   /** Ce que tient une sauvegarde, en une ligne ; vide tant qu'on ne l'a pas lue. */
   const bilanDe = (profil: Profil): string => {
     const b = bilans?.[profil];
@@ -311,27 +303,10 @@ export default function Reglages({ libelles }: { libelles: LibellesReglages }): 
     </div>
     <div id="panneau-affichage" className="reglages-panneau" role="tabpanel" aria-labelledby="onglet-affichage" hidden={rubrique !== 'affichage'} tabIndex={0}>
     <Groupe id="reglage-affichage" titre={libelles.affichage}>
-      {/* Deux choix, un rang : le réglage pilote réellement la chaîne de
-          post-traitement du rendu, lue par la page de jeu au montage. */}
-      <div className="reglage-rangee">
-        <span className="reglage-libelle">
-          <strong>{libelles.qualite}</strong>
-          <span className="reglage-note">{libelles.qualiteNote}</span>
-        </span>
-        <div className="reglage-choix" role="radiogroup" aria-label={libelles.qualite}>
-          {QUALITES_RENDU.map((q, index) => {
-            const choisi = preferences.qualite === q;
-            return <button
-              key={q} type="button" role="radio" aria-checked={choisi}
-              tabIndex={choisi ? 0 : -1}
-              onKeyDown={(event) => naviguer(event, index, QUALITES_RENDU.length, (i) => changer({ qualite: QUALITES_RENDU[i]! }))}
-              className={choisi ? 'choisi' : ''} disabled={!pret} onClick={() => changer({ qualite: q })}
-            >
-              {libelleQualite[q]}
-            </button>;
-          })}
-        </div>
-      </div>
+      {/* La « Qualité d'affichage » vivait ici : elle pilotait la chaîne de
+          post-traitement de la 3D, retirée le 23 septembre 2026. La peau des
+          images cuites n'en a pas ; un réglage sans effet serait un
+          interrupteur inerte. */}
       {bascule('animationsReduites', libelles.animations, libelles.animationsNote)}
       <Link href="/jeu/premier_contact?mesure=1" className="atlas-bouton">{libelles.diagnosticPerformance}</Link>
     </Groupe>

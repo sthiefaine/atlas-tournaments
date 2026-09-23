@@ -5,7 +5,8 @@
  * téléphone » : sur WebKit, le moteur WebGPU se montait, puis **la première
  * image levait** (`RangeError: Maximum call stack size exceeded`, une faute
  * d'amont de three r170 dans `NodeUtils.getCacheKey`, que
- * `scripts/rustine-three.mjs` corrige à l'installation). Le voile d'erreur
+ * `scripts/rustine-three.mjs` corrigeait à l'installation, jusqu'au retrait de
+ * la 3D). Le voile d'erreur
  * rendait alors le conteneur `inert` : le jeu était là, dessous, et plus rien
  * n'était touchable.
  *

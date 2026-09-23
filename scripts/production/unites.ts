@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import path from 'node:path';
 import { writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { composerSilhouette, type Piece } from '../../src/render3d/pieces';
+import { composerSilhouette, type Piece } from '../../src/assets/pieces';
 import { chargerUnites } from '../../src/content';
 import { genererSpecs } from '../../src/assets/catalogue';
 import type { AssetSpec } from '../../src/assets/spec';

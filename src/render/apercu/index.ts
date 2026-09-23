@@ -1,7 +1,7 @@
 /**
  * `render/apercu/` — rendu d'aperçu d'une carte en PNG, sans dépendance native
  * et sans DOM. Réservé à la relecture (scripts, routines, tests) : ce n'est pas
- * le rendu du jeu, qui est la peau 3D de `render3d/`.
+ * le rendu du jeu, qui est la peau des images cuites de `render2d/`.
  *
  * ```ts
  * import { rasteriserCarte, encoderPng } from '@/render/apercu';

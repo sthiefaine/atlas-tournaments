@@ -2,10 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 
-import { jouerTour, strategie } from '@/ai/index';
 import {
   appliquer, arriveeLibre, casesAtteignables, chargerCatalogue, cleCase, creerPartie,
-  depuisCle, portee, restaurerRng, sceneDepuis, uniteParId,
+  depuisCle, portee, sceneDepuis, uniteParId,
   type Catalogue, type CommandantMoteur, type EtatPartie,
 } from '@/engine/index';
 import { t } from '@/i18n/index';
@@ -17,6 +16,7 @@ import { creerRendu2d } from '@/render2d/index';
 import { moteur2dDisponible } from '@/render2d/gl';
 import { validerMapDef, validerScenario, type Biome } from '@/schemas/index';
 
+import { adversaireExhibition } from './adversaire-exhibition';
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
 import scenarioDemo from '../../content/scenarios/demo.json';
 
@@ -48,7 +48,10 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  * Trois économies, parce qu'une page d'accueil n'a pas le droit de chauffer un
  * appareil : la boucle de la peau dort quand rien ne bouge, aucune IA ne tourne
  * tant que l'onglet est en arrière-plan, et rien ne se monte sans WebGL 2 ni
- * sous animations réduites — celles de l'appareil ou celles du joueur.
+ * sous animations réduites — celles de l'appareil ou celles du joueur. Et l'IA
+ * réfléchit **hors du fil principal**, dans le Web Worker de la page de jeu
+ * (`adversaire-exhibition.ts`) : l'écran-titre ne s'arrête plus le temps d'un
+ * tour.
  *
  * On montre en plus la **grammaire du jeu** : avant chaque déplacement, la
  * portée de l'unité s'allume en vert et la flèche trace son chemin. C'est
@@ -83,7 +86,7 @@ const ACTIONS_MAX = 900;
 
 /** Le scénario d'exhibition et sa carte, validés comme tout contenu du canon. */
 function chargerExhibition(): {
-  catalogue: Catalogue; etatNeuf: () => EtatPartie;
+  catalogue: Catalogue; catalogueVersion: number; etatNeuf: () => EtatPartie;
   commandants: (CommandantMoteur | null)[]; biome: Biome;
 } | null {
   const s = validerScenario(scenarioDemo);
@@ -93,7 +96,7 @@ function chargerExhibition(): {
   const commandants = commandantsDuScenario(s.valeur);
   const scene = sceneDepuis(s.valeur, c.valeur, commandants);
   return {
-    catalogue, commandants, biome: c.valeur.biome,
+    catalogue, catalogueVersion: s.valeur.catalogueVersion, commandants, biome: c.valeur.biome,
     etatNeuf: (): EtatPartie => creerPartie(
       scene, catalogue, GRAINES[Math.floor(Math.random() * GRAINES.length)] ?? GRAINES[0],
     ),
@@ -146,7 +149,7 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
     // Un canon illisible n'est pas une raison de casser l'accueil : le plateau
     // SVG reste à l'écran et personne ne voit la différence.
     if (!conteneur || !exhibition) return undefined;
-    const { catalogue: cat, commandants, etatNeuf } = exhibition;
+    const { catalogue: cat, catalogueVersion, commandants, etatNeuf } = exhibition;
 
     // L'attract se joue sur la peau du jeu, la 2D, et ne se monte pas sans
     // WebGL 2 : le plateau SVG du serveur paraît alors, ce qui est très bien.
@@ -176,6 +179,9 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
     // jeu, où c'est elle qu'on commande.
     rendu.canvas?.setAttribute('tabindex', '-1');
     conteneur.dataset['rendu'] = rendu.cle;
+    // Un seul worker pour toute la visite, lancé une fois la peau montée : il
+    // charge son paquet pendant que la première image se dessine.
+    const enFond = adversaireExhibition(catalogueVersion, commandants);
 
     function afficher(surbrillances: Surbrillance[] = [], chemin: readonly { x: number; y: number }[] = [], selection: string | null = null): void {
       const vue: VueInteraction = {
@@ -282,10 +288,10 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
           continue;
         }
 
-        const suite = jouerTour(
-          etat, strategie(etat.campCourant === 0 ? 'ponderee' : 'agressive'),
-          restaurerRng(etat.graine, etat.flux), cat, commandants,
-        ).actions;
+        // Le tour se calcule dans le worker, sur une copie de l'état ; rien ne
+        // change `etat` pendant l'attente, la boucle étant la seule à le faire.
+        const suite = await enFond.adversaire(etat);
+        if (!vivant) return;
         if (suite.length === 0) {
           const r = appliquer(etat, { type: 'finTour' }, cat, commandants);
           if (!r.ok) return;
@@ -332,6 +338,7 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
       if (minuterie !== null) clearTimeout(minuterie);
       delete conteneur.dataset['attract'];
       delete conteneur.dataset['rendu'];
+      enFond.fermer();
       rendu.demonter();
     };
   }, []);

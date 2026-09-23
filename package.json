@@ -23,7 +23,6 @@
     "fil:opus1": "node scripts/fil-opus1.mjs --json",
     "roster:heros": "node scripts/roster-heros.mjs",
     "lore:html": "node scripts/lore-html.mjs doc/refonte/atlas-lore.html",
-    "postinstall": "node scripts/rustine-three.mjs",
     "commander": "tsx scripts/commander-assets.ts",
     "produire:manifest": "tsx scripts/production/manifeste.ts",
     "produire:unites": "tsx scripts/production/unites.ts",
@@ -36,12 +35,12 @@
   "dependencies": {
     "@types/three": "^0.170.0",
     "drizzle-orm": "^0.45.2",
+    "meshoptimizer": "0.18.1",
     "next": "15.5.25",
     "pg": "^8.23.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "three": "^0.170.0",
-    "meshoptimizer": "0.18.1"
+    "three": "^0.170.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -53,6 +52,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.25",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "tsx": "^4.23.0",
     "typescript": "^5"

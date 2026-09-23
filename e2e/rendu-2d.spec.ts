@@ -4,8 +4,9 @@
  *
  * Ce que le spec vérifie, et rien d'autre :
  *
- * - la page choisit la peau par l'adresse (`?rendu=2d`) : la toile porte
- *   `data-rendu="2d"` ;
+ * - la toile porte `data-rendu="2d"` — la seule peau depuis le retrait de la
+ *   3D (23 septembre 2026) ; l'adresse garde son `?rendu=2d` d'origine, que la
+ *   page ne lit plus ;
  * - l'image n'est pas un aplat : on la lit par `window.__atlas.capturer()`,
  *   qui redessine de façon synchrone avant de lire (un tampon WebGL non
  *   préservé serait vide autrement) ;
@@ -16,10 +17,10 @@
  *   images cuites **quand il n'existe pas** sur le disque : le jeu se joue
  *   alors tout en replis, c'est un état normal, pas une panne.
  *
- * **Le témoin** : `E2E_TEMOIN=3d` ouvre la même page sans `?rendu=2d` (la
- * peau 3D, qui ne démarre pas sans WebGPU) ; `E2E_TEMOIN=mouvement` réduit les
- * animations, et le glissement ne passe plus par aucun point intermédiaire. Les
- * deux doivent faire tomber ce spec — sinon il ne prouve rien.
+ * **Le témoin** : `E2E_TEMOIN=mouvement` réduit les animations, et le
+ * glissement ne passe plus par aucun point intermédiaire : il doit faire tomber
+ * ce spec — sinon il ne prouve rien. Il y avait un second témoin, `3d`, qui
+ * ouvrait la peau 3D ; elle est retirée.
  *
  * Lancer contre un serveur à soi :
  * `NEXT_DIST_DIR=.next-2d npx next dev --turbopack -p 3411`, puis
@@ -44,7 +45,7 @@ test.use({
 });
 
 const TEMOIN = process.env['E2E_TEMOIN'] ?? '';
-const ADRESSE = TEMOIN === '3d' ? '/jeu/premier_contact' : '/jeu/premier_contact?rendu=2d';
+const ADRESSE = '/jeu/premier_contact?rendu=2d';
 const MANIFESTE_ABSENT = !existsSync(path.resolve(process.cwd(), 'public/assets/sprites/manifeste.json'));
 
 /** Le pont de développement (`render/jeu.ts`), lu par une conversion locale. */

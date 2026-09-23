@@ -11,11 +11,7 @@ import { chargerCatalogue, VERSION_MOTEUR, sontAllies, unitesVues, type EtatPart
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
 import { lignesPouvoir, nomTerrain, nomUnite } from '@/render/libelles';
 import { textesObjectifs } from '@/render/objectifs';
-import type { CleRendu, Rendu } from '@/render/rendu';
 import { creerRendu2d, moteur2dDisponible } from '@/render2d/index';
-// La 3D ne s'importe qu'**à la demande** (`import()` plus bas) : la route 2D
-// n'embarque ni three ni le moteur WebGPU. Un import de type s'efface au build.
-import type { OptionsRendu3d } from '@/render3d/index';
 import type { CleIllustration, MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
@@ -45,8 +41,8 @@ export interface ProprietesToile {
   /**
    * L'avancement du chargement, rendu au relais qui porte l'écran
    * (`toile-client.tsx`). Chaque étape est un **fait**, jamais une estimation :
-   * le module est là, le plateau est bâti, le moteur a démarré, une image a été
-   * dessinée. C'est ce dernier point qui manquait — l'écran s'effaçait dès que
+   * le module est là, le plateau est bâti, une image a été dessinée. C'est ce
+   * dernier point qui manquait — l'écran s'effaçait dès que
    * `monterJeu` rendait la main, soit trois secondes avant la première image.
    */
   surChargement?: (etape: EtapePage) => void;
@@ -76,36 +72,21 @@ const MS_PAS_MAXIMAL = 200;
 const CAMP_JOUEUR = 0;
 
 /**
- * La peau demandée par l'adresse. La 2D — les images cuites (`render2d/`,
- * décision du 23 septembre 2026) — est la peau du jeu ; `?rendu=3d` garde la
- * 3D joignable, pour comparer, jusqu'à son retrait d'un seul commit. Toute
- * autre valeur, ou aucune, donne la 2D.
- */
-function peauDemandee(recherche: string): CleRendu {
-  return new URLSearchParams(recherche).get('rendu') === '3d' ? '3d' : '2d';
-}
-
-/**
  * Ce que dit l'écran d'échec : ce qui manque **vraiment**. Il disait « WebGPU
  * est indisponible » à tout échec, y compris à un appareil qui l'avait
- * (`CLAUDE.md`, 8 septembre : « le libellé reste à corriger »). La 2D ne
- * demande que WebGL 2 : elle ne le nomme que s'il manque, et dit sinon que le
- * jeu n'a pas démarré, sans accuser l'appareil. La page de jeu n'est jamais
- * rendue par le serveur (`toile-client.tsx`) : la sonde lit un vrai navigateur.
+ * (`CLAUDE.md`, 8 septembre : « le libellé reste à corriger »). La peau — les
+ * images cuites en WebGL 2 (`render2d/`), la seule depuis le retrait de la 3D
+ * le 23 septembre 2026 — ne demande que WebGL 2 : elle ne le nomme que s'il
+ * manque, et dit sinon que le jeu n'a pas démarré, sans accuser l'appareil.
+ * Une adresse qui porte encore `?rendu=3d` ouvre la même peau : le paramètre
+ * n'est plus lu. La page de jeu n'est jamais rendue par le serveur
+ * (`toile-client.tsx`) : la sonde lit un vrai navigateur.
  */
 function messageEchec(): { titre: string; aide: string } {
-  if (peauDemandee(window.location.search) === '3d') return { titre: 'campagne.sans_webgl', aide: 'campagne.sans_webgl_aide' };
   return moteur2dDisponible()
     ? { titre: 'campagne.echec_demarrage', aide: 'campagne.echec_demarrage_aide' }
     : { titre: 'campagne.sans_webgl2', aide: 'campagne.sans_webgl_aide' };
 }
-
-/**
- * La fabrique de la peau, une fois son module arrivé. La fabrique de
- * `monterJeu` est synchrone : le module 3D, importé à la demande, doit être là
- * **avant** le montage, d'où cet état qui le retient.
- */
-type FabriquePeau = { cle: '2d' } | { cle: '3d'; creer: (options: OptionsRendu3d) => Rendu };
 
 /** Le nombre, écrit comme la langue l'écrit. Aucun texte, seulement du format. */
 function nombre(locale: string, n: number): string {
@@ -265,25 +246,6 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // pour que le changement parte avec la même image que le montage.
   useLayoutEffect(() => { rappelChargement.current?.('plateau'); }, []);
 
-  // La peau : la 2D est déjà dans ce module, la 3D se télécharge seulement si
-  // l'adresse la demande (`?rendu=3d`) — la route par défaut ne tire ni three
-  // ni `render3d/`. Rien ne se monte avant que la peau soit là.
-  const [peau, setPeau] = useState<FabriquePeau | null>(null);
-  useEffect(() => {
-    if (peauDemandee(window.location.search) === '2d') {
-      setPeau({ cle: '2d' });
-      return undefined;
-    }
-    let vivante = true;
-    import('@/render3d/index')
-      .then((m) => { if (vivante) setPeau({ cle: '3d', creer: m.creerRendu3d }); })
-      .catch((cause: unknown) => {
-        console.error('Rendu 3D introuvable', cause);
-        if (vivante) { setErreur(true); rappelChargement.current?.('pret'); }
-      });
-    return () => { vivante = false; };
-  }, []);
-
   // On entre **directement** en jeu : cliquer « jouer » sur l'accueil doit ouvrir
   // un plateau, pas une seconde fiche à valider. Une partie en cours se reprend
   // d'elle-même ; l'objectif, le tutoriel et « recommencer » restent à un clic,
@@ -333,7 +295,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
-    if (!conteneur || depart === null || cleSauvegarde === null || peau === null) return undefined;
+    if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
     // Le banc choisi à l'instant passe en dernier : `graineAube` lit la dernière
     // décision d'une source, et c'est lui qui doit gagner sur une entrée plus
     // ancienne du stockage.
@@ -376,11 +338,10 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         adversaire: enFond.adversaire,
         reprendre: depart === 'reprise',
         cleSauvegarde,
-        // La qualité d'affichage et la réduction des animations sont des
-        // réglages du joueur : la page les lit et les donne à la peau, qui ne
-        // connaît pas `localStorage`.
-        // La peau choisie par l'adresse (`peauDemandee`) ; `jeu.ts` ne sait pas
-        // laquelle il pilote, et la clé qu'il passe n'est qu'un nom.
+        // La réduction des animations est un réglage du joueur : la page la lit
+        // et la donne à la peau, qui ne connaît pas `localStorage`. `render/`
+        // n'a pas le droit d'importer `render2d/` : c'est la page qui fabrique
+        // la peau, comme elle fournit l'adversaire.
         fabriqueRendu: () => {
           const commun = {
             audio,
@@ -394,13 +355,12 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
             animationsReduites: preferences.animationsReduites,
             // Une peau qui cesse de pouvoir dessiner une fois montée — un
-            // contexte perdu qu'on ne sait pas rebâtir, un WebGPU qui refuse
-            // le canevas en 3D — tombe sur le même écran qu'un montage qui
-            // lève, au lieu d'un plateau noir. L'écran de chargement se retire
-            // alors : il n'y a plus rien à attendre.
+            // contexte WebGL perdu qu'on ne sait pas rebâtir — tombe sur le même
+            // écran qu'un montage qui lève, au lieu d'un plateau noir. L'écran
+            // de chargement se retire alors : il n'y a plus rien à attendre.
             surEchec: () => { setErreur(true); direChargement('pret'); },
           };
-          return peau.cle === '2d' ? creerRendu2d(commun) : peau.creer({ ...commun, qualite: preferences.qualite });
+          return creerRendu2d(commun);
         },
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
@@ -453,11 +413,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       return undefined;
     }
 
-    // Le plateau est bâti ; reste ce que seule la peau sait dire — le moteur
-    // graphique a-t-il démarré, une image a-t-elle été dessinée. On le lui
-    // demande d'image en image : la réponse ne change que deux fois, et la
-    // question ne coûte qu'une lecture de compteurs. Sans cette boucle, l'écran
-    // s'effaçait ici, alors que la première image était encore à venir.
+    // Le plateau est bâti ; reste ce que seule la peau sait dire — une image
+    // a-t-elle été dessinée. On le lui demande d'image en image : la réponse ne
+    // change qu'une fois, et la question ne coûte qu'une lecture de compteurs.
+    // Sans cette boucle, l'écran s'effaçait ici, alors que la première image
+    // était encore à venir.
     const partie = jeu;
     jeuRef.current = partie;
     let image: number | null = null;
@@ -485,7 +445,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       partie.demonter();
       enFond.fermer();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut, peau]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   // Une nouvelle partie d'une épreuve à bancs repasse par le choix : démonter

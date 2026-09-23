@@ -19,7 +19,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { budgetDe, lireGlb, mesurerGltf, nomModele, nomTexture } from '../../src/assets/index';
 import { crc32, SIGNATURE_PNG } from '../../src/render/apercu/png';
-import { analyserGlb, conformerModele, creerLecteurClips, masqueDe, nomsClips } from '../../src/render3d/modeles';
+import { analyserGlb, conformerModele, creerLecteurClips, masqueDe, nomsClips } from '../../scripts/production/lecture-glb';
 import { inventaireModeles } from '../../src/serveur/modeles';
 import {
   controlerLivraison, DOSSIER_DEPOT, genererInfanterie, ID_INFANTERIE, racineDepot, type Livraison,

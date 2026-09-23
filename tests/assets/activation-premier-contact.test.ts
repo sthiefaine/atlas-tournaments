@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, readlinkSync, rmSync, symlinkSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { activerPremierContact } from '../../scripts/production/activer-premier-contact';
 import { lireInventaireModeles } from '../../src/serveur/modeles';
-import { analyserGlb, creerChargeurModeles } from '../../src/render3d/modeles';
+import { analyserGlb, creerChargeurModeles } from '../../scripts/production/lecture-glb';
 
 test('activation dédupliquée, inventaire des alias, rejeu et conservation des fichiers ordinaires', () => {
   const racine = mkdtempSync(path.join(os.tmpdir(), 'atlas-activer-'));

@@ -65,7 +65,7 @@ test('des préférences absentes, illisibles ou corrompues restent jouables', ()
     assert.equal(typeof p.dialogues, 'boolean');
     assert.equal(typeof p.animationsReduites, 'boolean');
     assert.equal(typeof p.ecranCombat, 'boolean');
-    assert.equal(p.qualite, 'auto');
+    assert.equal('qualite' in p, false);
     assert.equal(p.version, 1);
   }
   // Une valeur douteuse retombe sur la valeur par défaut, jamais sur elle-même.
@@ -75,21 +75,33 @@ test('des préférences absentes, illisibles ou corrompues restent jouables', ()
   assert.equal(normaliserPreferences({ ecranCombat: 'non' }).ecranCombat, true);
   assert.equal(normaliserPreferences({ version: 1, dialogues: true }).ecranCombat, true);
   assert.equal(normaliserPreferences({ ecranCombat: false }).ecranCombat, false);
-  // La qualité d'affichage : les deux valeurs passent, tout le reste redevient
-  // `auto` — dont `haute`, retirée, qu'un stockage ancien peut encore porter.
-  for (const q of ['auto', 'basse'] as const) assert.equal(normaliserPreferences({ qualite: q }).qualite, q);
-  for (const q of ['haute', 'HAUTE', 'moyenne', 1, true, null, undefined]) assert.equal(normaliserPreferences({ qualite: q }).qualite, 'auto');
+  // La qualité d'affichage est partie avec la 3D (23 septembre 2026) : une
+  // valeur qu'un stockage ancien porte encore est ignorée, quelle qu'elle soit,
+  // et ne dérange aucun autre réglage.
+  for (const q of ['auto', 'basse', 'haute', 'moyenne', 1, true, null, undefined]) {
+    const p = normaliserPreferences({ qualite: q, dialogues: false });
+    assert.equal('qualite' in p, false);
+    assert.equal(p.dialogues, false);
+  }
   // Les dialogues sont joués par défaut : c'est ce que raconte une mission.
   assert.equal(PREFERENCES_PAR_DEFAUT.dialogues, true);
   assert.equal(PREFERENCES_PAR_DEFAUT.animationsReduites, false);
   assert.equal(PREFERENCES_PAR_DEFAUT.ecranCombat, true);
-  // Et le rendu mesure avant de décider : c'est ce que `auto` veut dire.
-  assert.equal(PREFERENCES_PAR_DEFAUT.qualite, 'auto');
+  assert.equal('qualite' in PREFERENCES_PAR_DEFAUT, false);
+});
+
+test('une qualité d’affichage encore enregistrée se lit sans erreur, et la prochaine écriture l’efface', () => {
+  const donnees = poserStockage();
+  donnees.set('atlas:reglages:v1', JSON.stringify({ version: 1, dialogues: false, qualite: 'basse', ecranCombat: false }));
+  const lues = lirePreferences();
+  assert.deepEqual(lues, { ...PREFERENCES_PAR_DEFAUT, dialogues: false, ecranCombat: false });
+  assert.equal(ecrirePreferences(lues), true);
+  assert.equal('qualite' in JSON.parse(donnees.get('atlas:reglages:v1') ?? '{}'), false);
 });
 
 test('un aller-retour par le stockage rend exactement ce qu’on a écrit', () => {
   poserStockage();
-  const voulu = { ...PREFERENCES_PAR_DEFAUT, dialogues: false, animationsReduites: true, qualite: 'basse' as const, ecranCombat: false };
+  const voulu = { ...PREFERENCES_PAR_DEFAUT, dialogues: false, animationsReduites: true, ecranCombat: false };
   assert.equal(ecrirePreferences(voulu), true);
   assert.deepEqual(lirePreferences(), voulu);
   assert.equal(stockageDisponible(), true);

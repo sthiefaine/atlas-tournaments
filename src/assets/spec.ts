@@ -547,14 +547,15 @@ export function decomposerNomModele(nom: string): { id: Cle; lod: NiveauLod } | 
 /**
  * L'inventaire des modèles livrés : l'identifiant sans suffixe vers la liste
  * triée des niveaux de détail présents. C'est ce que la route `/api/modeles`
- * sert et ce que le rendu consulte avant de demander un fichier, pour ne
- * jamais sonder ce qui n'existe pas.
+ * sert. La peau 3D le consultait avant de demander un fichier ; depuis qu'elle
+ * est retirée (23 septembre 2026), c'est la vérification de publication
+ * (`scripts/production/verifier-publication.ts`) qui le relit sur le site.
  */
 export interface InventaireModeles {
   modeles: Record<Cle, NiveauLod[]>;
 }
 
-/** Vrai si `valeur` a la forme d'un inventaire : ce que le rendu vérifie d'une réponse réseau. */
+/** Vrai si `valeur` a la forme d'un inventaire : ce qu'on exige d'une réponse de `/api/modeles`. */
 export function estInventaireModeles(valeur: unknown): valeur is InventaireModeles {
   if (valeur === null || typeof valeur !== 'object' || Array.isArray(valeur)) return false;
   const modeles = (valeur as { modeles?: unknown }).modeles;

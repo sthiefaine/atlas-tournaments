@@ -93,7 +93,7 @@ function cliquerHud(conteneur: FauxElement, action: string): void {
 function peauMuette(): { rendu: Rendu; gestes: () => GestesRendu } {
   let gestes: GestesRendu | null = null;
   const rendu = {
-    cle: '3d' as const,
+    cle: '2d' as const,
     canvas: null,
     monter: () => undefined,
     afficher: () => undefined,

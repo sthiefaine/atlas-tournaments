@@ -36,7 +36,6 @@ import { campagneTermineeEnNormal } from './campagne/acces';
 import { volumeNormalise, normaliserMixage, type MixageAudio } from '../audio/types';
 import type { Mode } from '../schemas/types';
 import { normaliserVitesse, type VitesseAnimations } from '../render/cadence';
-import { normaliserQualite, QUALITE_PAR_DEFAUT, type QualiteRendu } from '../render/qualite';
 
 /** Ce que le joueur peut régler aujourd'hui. */
 export interface Preferences {
@@ -51,13 +50,13 @@ export interface Preferences {
   animationsReduites: boolean;
   vitesseAnimations: VitesseAnimations;
   modeTactique: boolean;
-  /**
-   * La qualité d'affichage (`render/qualite.ts`) : `auto` mesure et décide,
-   * `basse` n'allume jamais la chaîne de post-traitement. Il y avait un troisième
-   * rang, `haute`, retiré le 6 septembre 2026 — il forçait ce que la mesure
-   * aurait refusé ; `normaliserQualite` ramène un `haute` enregistré à `auto`.
+  /*
+   * Il y avait ici `qualite`, la « Qualité d'affichage » : elle allumait ou non
+   * la chaîne de post-traitement de la 3D. La peau des images cuites n'en a pas,
+   * et le réglage est parti avec la 3D (23 septembre 2026). Une valeur encore
+   * enregistrée est **ignorée** : `normaliserPreferences` ne recopie que les
+   * champs qu'il connaît, et la prochaine écriture l'efface.
    */
-  qualite: QualiteRendu;
   /**
    * L'écran de combat : à chaque attaque, un panneau par-dessus la carte montre
    * les deux unités, leurs jauges et les dégâts. Allumé par défaut — c'est la
@@ -205,7 +204,6 @@ export const PREFERENCES_PAR_DEFAUT: Readonly<Preferences> = Object.freeze({
   animationsReduites: false,
   vitesseAnimations: 'normale',
   modeTactique: false,
-  qualite: QUALITE_PAR_DEFAUT,
   ecranCombat: true,
   sons: true,
   volumeSons: .45,
@@ -222,7 +220,6 @@ export function normaliserPreferences(brut: unknown): Preferences {
     animationsReduites: p.animationsReduites === true,
     vitesseAnimations: normaliserVitesse(p.vitesseAnimations),
     modeTactique: p.modeTactique === true,
-    qualite: normaliserQualite(p.qualite),
     sons: typeof p.sons === 'boolean' ? p.sons : true,
     volumeSons: volumeNormalise(p.volumeSons),
     mixageSons: normaliserMixage(p.mixageSons && typeof p.mixageSons === 'object' ? p.mixageSons : undefined),

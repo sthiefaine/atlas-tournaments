@@ -2,12 +2,13 @@
  * La géométrie d'un déplacement : longueur d'un chemin et position le long de
  * ce chemin.
  *
- * Ces fonctions vivent dans la couche commune plutôt que dans `render3d/` : une
+ * Ces fonctions vivent dans la couche commune plutôt que dans une peau : une
  * figurine doit suivre le trajet que le **moteur** a validé, et cette règle
  * appartient au jeu, pas à la peau qui la dessine. Quand elles étaient rangées
- * du côté three.js, le rendu vectoriel — qui existait alors — ne pouvait pas y
- * accéder (`02-architecture.md` §5) et se contentait d'un glissement en ligne
- * droite, à travers les montagnes et les unités adverses.
+ * du côté three.js (`render3d/`, retiré depuis), le rendu vectoriel — qui
+ * existait alors — ne pouvait pas y accéder (`02-architecture.md` §5) et se
+ * contentait d'un glissement en ligne droite, à travers les montagnes et les
+ * unités adverses. La peau 2D les lit aujourd'hui (`render2d/animations.ts`).
  *
  * Pures et sans dépendance : elles se vérifient comme du moteur.
  */
@@ -36,7 +37,7 @@ export function longueurChemin(pas: readonly Case[]): number {
 
 /**
  * Position et cap le long d'un chemin, à la progression `p` (0 à 1). Fonction
- * pure : c'est elle que teste `tests/render3d/animations.test.ts`.
+ * pure : c'est elle que teste `tests/render/chemin.test.ts`.
  */
 export function surChemin(
   pas: readonly Case[], p: number,

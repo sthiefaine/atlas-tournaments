@@ -10,6 +10,8 @@
  * - il se monte **aussi sur téléphone**, que la 3D laissait immobile ;
  * - la page ne télécharge ni three ni `render3d/` ;
  * - sa toile ne prend pas le focus du clavier : c'est un fond ;
+ * - son IA réfléchit dans le Web Worker de la page de jeu (`atlas-ia`), et les
+ *   tours en reviennent (23 septembre 2026) ;
  * - sous animations réduites — celles de l'appareil, ou le réglage du joueur —,
  *   ou quand l'appareil demande d'économiser ses données, aucune partie ne se
  *   monte et le plateau SVG paraît.
@@ -113,4 +115,33 @@ test('le réglage du joueur suffit, même quand l’appareil ne demande rien', a
   await expect(page.locator('.accueil-vitrine')).toHaveAttribute('data-fond', 'repli', { timeout: 60_000 });
   await page.waitForTimeout(1500);
   await expect(page.locator('.accueil-attract')).toHaveCount(0);
+});
+
+test('l’exhibition réfléchit dans le Web Worker de l’IA, et ses tours en reviennent', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  // Le worker de la page de jeu porte ce nom (`adversaire-fond.ts`) ; son URL,
+  // elle, dépend de l'empaqueteur (une `blob:` sous Turbopack).
+  const ia = page.waitForEvent('worker', {
+    predicate: async (w) => (await w.evaluate(() => (self as unknown as { name: string }).name)) === 'atlas-ia',
+    timeout: 120_000,
+  });
+  const releve = await ouvrir(page);
+  await verifierAttract(page, releve);
+  const worker = await ia;
+  // On compte les suites qu'il rend désormais : l'attract joue sans fin, un
+  // tour finit toujours par arriver.
+  await worker.evaluate(() => {
+    const g = self as unknown as { postMessage(m: unknown): void; toursRendus?: number };
+    const envoyer = g.postMessage.bind(g);
+    g.toursRendus = 0;
+    g.postMessage = (m: unknown): void => {
+      if ((m as { type?: string } | null)?.type === 'tour') g.toursRendus = (g.toursRendus ?? 0) + 1;
+      envoyer(m);
+    };
+  });
+  await expect.poll(
+    () => worker.evaluate(() => (self as unknown as { toursRendus?: number }).toursRendus ?? 0),
+    { timeout: 90_000 },
+  ).toBeGreaterThan(0);
+  expect(releve.erreurs, 'aucune erreur de page').toEqual([]);
 });

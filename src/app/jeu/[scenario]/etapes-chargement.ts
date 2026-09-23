@@ -17,9 +17,9 @@ import type { EtapeChargement } from '@/render/jeu';
  * ne le demande : l'étape n'aurait jamais paru qu'à l'état « faite », une case
  * cochée pour dire qu'on a attendu ce qu'on n'a pas attendu.
  *
- * `Jeu.etatChargement` peut encore répondre `moteur` : la 3D reste joignable
- * (`?rendu=3d`) jusqu'à son retrait. L'écran le lit alors comme le plateau qui
- * se monte — ce qu'il est —, sans rouvrir une quatrième case.
+ * La 3D temps réel est retirée depuis (même jour) : `Jeu.etatChargement` ne
+ * connaît plus que `image` et `pret`, et chaque étape de la page est sa propre
+ * case.
  *
  * Les deux premières étapes sont celles que seule la page peut connaître — ses
  * propres modules, son propre montage ; la dernière est celle que la peau dit
@@ -32,19 +32,11 @@ export type EtapePage =
   | 'plateau'
   | EtapeChargement;
 
-/** Les étapes que l'écran montre, une case chacune. */
-export type EtapeAffichee = 'modules' | 'plateau' | 'image';
+/** Les étapes que l'écran montre, une case chacune : toutes, sauf la fin. */
+export type EtapeAffichee = Exclude<EtapePage, 'pret'>;
 
 /** L'ordre des étapes : c'est lui qui dit ce qui est fait et ce qui reste. */
 export const ETAPES_CHARGEMENT: readonly EtapeAffichee[] = ['modules', 'plateau', 'image'];
-
-/**
- * La case d'une étape de la page. Le démarrage d'un moteur — que seule la 3D
- * annonce encore — fait partie de la mise en place du plateau.
- */
-export function etapeAffichee(etape: Exclude<EtapePage, 'pret'>): EtapeAffichee {
-  return etape === 'moteur' ? 'plateau' : etape;
-}
 
 /** La clé de libellé d'une étape. Aucun texte en dur : tout passe par `t()`. */
 export const CLE_ETAPE: Readonly<Record<EtapeAffichee, string>> = {

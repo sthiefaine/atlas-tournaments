@@ -5,7 +5,7 @@
  * distingue les trois membres de l'escouade) et d'une **finesse** (ce que le
  * niveau de détail s'autorise).
  *
- * Les proportions sont celles du placeholder (`src/render3d/pieces.ts`, « La
+ * Les proportions sont celles du composeur de silhouettes (`src/assets/pieces.ts`, « La
  * troupe à pied ») : cinq têtes et demie, épaules larges, membres courts, un
  * casque **repoussé sur l'arrière** de la tête pour que le visage dépasse
  * devant lui sous une caméra qui regarde d'en haut. Le visage lui-même est

@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  CLE_ETAPE, CLE_LISTE_ETAPES, ETAPES_CHARGEMENT, etapeAffichee,
+  CLE_ETAPE, CLE_LISTE_ETAPES, ETAPES_CHARGEMENT,
 } from '../../src/app/jeu/[scenario]/etapes-chargement';
 import { chaineSource, SOURCE_FR } from '../../src/i18n/source';
 import { t } from '../../src/i18n/index';
@@ -36,9 +36,4 @@ test('les trois étapes sont dans l’ordre où elles surviennent, sans doublon'
   // peau ouvre son contexte en quelques millisecondes.
   assert.deepEqual([...ETAPES_CHARGEMENT], ['modules', 'plateau', 'image']);
   assert.equal(new Set(ETAPES_CHARGEMENT).size, ETAPES_CHARGEMENT.length);
-});
-
-test('le démarrage d’un moteur — que seule la 3D annonce encore — se lit comme le plateau qui se monte', () => {
-  assert.equal(etapeAffichee('moteur'), 'plateau');
-  for (const e of ETAPES_CHARGEMENT) assert.equal(etapeAffichee(e), e, `${e} est sa propre case`);
 });

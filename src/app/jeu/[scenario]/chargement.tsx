@@ -1,6 +1,6 @@
 'use client';
 
-import { ETAPES_CHARGEMENT, etapeAffichee, type EtapePage } from './etapes-chargement';
+import { ETAPES_CHARGEMENT, type EtapePage } from './etapes-chargement';
 
 /**
  * L'**écran de chargement** d'une mission.
@@ -60,7 +60,7 @@ export function EcranChargement(
   },
 ): React.ReactElement | null {
   if (etape === 'pret') return null;
-  const rang = ETAPES_CHARGEMENT.indexOf(etapeAffichee(etape));
+  const rang = ETAPES_CHARGEMENT.indexOf(etape);
   return <div className="atlas-chargement" role="status" aria-live="polite" data-etape={etape}>
     <div className="chargement-carte">
       {/* La balise de liaison : trois traits qui battent, comme le filet de

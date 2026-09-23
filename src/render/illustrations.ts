@@ -44,7 +44,8 @@ import { PinceauSvg } from './sprites/pinceau-svg';
 
 /**
  * Les couleurs des cinq genres de surbrillance, reprises **au chiffre près** de
- * la peau 3D (`render3d/surbrillances.ts`). Une vignette qui montre une case
+ * la peau (`render2d/surbrillances.ts`, qui les a gardées de la 3D retirée).
+ * `render/` n'a pas le droit de l'importer, d'où la copie. Une vignette qui montre une case
  * verte doit montrer *ce* vert-là, sinon elle enseigne une couleur que le jeu
  * n'emploie pas.
  */

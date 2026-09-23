@@ -1,7 +1,7 @@
 /**
  * Rasteriseur d'aperçu : une `MapDef` en tuiles colorées de 16 px.
  *
- * Ce n'est **pas** le rendu du jeu, qui est la peau 3D de `render3d/` ; ici, on
+ * Ce n'est **pas** le rendu du jeu, qui est la peau des images cuites de `render2d/` ; ici, on
  * veut une image qu'un humain ouvre en deux secondes pour dire « oui, ça
  * ressemble à une carte jouable ».
  * Les couleurs sont celles de la démo `doc/assets/atlas-render-vector.html`,

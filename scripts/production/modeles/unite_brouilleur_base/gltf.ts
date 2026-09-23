@@ -232,7 +232,7 @@ interface MateriauGltf {
  * références dans chaque matériau : albédo, métal-rugosité, normales. Le masque
  * d'équipe n'est référencé par aucun matériau — il n'a rien à faire dans un
  * matériau PBR — mais il est bien une texture du document, nommée : c'est par
- * ce nom que le chargeur (`render3d/modeles.ts`, `indexTextureMasque`) et le
+ * ce nom que la lecture des tests (`scripts/production/lecture-glb.ts`, `indexTextureMasque`) et le
  * validateur le retrouvent.
  */
 export function injecterCartes(document: DocumentGltf, cartes: CartesVoisines): void {

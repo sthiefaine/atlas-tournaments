@@ -5,8 +5,10 @@
  * Le jeu ne connaît qu'un `Rendu` : une peau qui sait se monter dans un élément,
  * afficher un `EtatPartie` accompagné de la vue d'interaction, rejouer une file
  * d'événements en animations, convertir un point d'écran en case, et se démonter.
- * Le rendu 3D (`render3d/`) l'implémente
- * tous les deux, et `controleur.ts` comme `jeu.ts` ne dépendent d'aucun des deux.
+ * La peau est celle des images cuites (`render2d/`, décision du 23 septembre
+ * 2026) ; la 3D temps réel, qui l'implémentait aussi, est retirée. L'interface
+ * reste la couture : `render/` n'a pas le droit d'importer `render2d/`, et
+ * `controleur.ts` comme `jeu.ts` ne dépendent pas de la peau.
  *
  * Trois règles tiennent l'ensemble :
  *
@@ -23,17 +25,16 @@ import type { CampId, Case } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
 import type { Partition } from './partition';
-import type { BackendRendu, QualiteRendu } from './qualite';
+import type { BackendRendu } from './qualite';
 import type { Surbrillance } from './surbrillance';
 
 /**
- * La peau. `2d` compose des images cuites depuis les modèles (décision du
- * 23 septembre 2026, `src/render2d/`) ; `3d` est le rendu temps réel, gardé le
- * temps que le propriétaire valide la 2D, puis retiré d'un seul commit. Le type
- * reste un littéral pour que `data-rendu` et les tests de fumée nomment ce
- * qu'ils regardent.
+ * La peau : `2d`, les images cuites depuis les modèles (décision du
+ * 23 septembre 2026, `src/render2d/`). Il n'y en a plus d'autre — la 3D temps
+ * réel, `3d`, a été retirée le même jour —, mais le type reste un littéral pour
+ * que `data-rendu` et les specs nomment ce qu'ils regardent.
  */
-export type CleRendu = '2d' | '3d';
+export type CleRendu = '2d';
 
 /** Un point en pixels logiques dans l'élément du rendu. */
 export interface PointVue { x: number; y: number }
@@ -48,42 +49,37 @@ export interface VueCombat { avancer(progression: number): void; fermer(): void 
 export interface MesureFamille {
   triangles: number;
   /**
-   * Le nombre d'objets dessinés — mailles, une maille instanciée comptée une
-   * fois, sprites, nuages de points. C'est une **approximation des appels de
-   * dessin** de la famille sur la seule passe de couleur : la passe d'ombres
-   * redemande chacun de ceux qui portent ombre, et la chaîne de post-traitement
-   * les redessine une seconde fois pour les normales.
+   * Ce que la famille demande à dessiner : ses appels de dessin — pour la peau
+   * 2D, un par suite d'images d'un calque qui partagent une page. Le nom vient
+   * de la 3D retirée, qui y comptait ses mailles.
    */
   mailles: number;
 }
 
 /**
  * Ce qu'une image a coûté (`16-realisme.md` A6). Les compteurs portent sur la
- * **dernière image dessinée, en entier** : la passe d'ombres est comptée, et,
- * quand la chaîne de post-traitement est active, la seconde passe de scène
- * (normales et profondeur) et les passes plein écran le sont aussi — c'est le
- * coût réel de l'image, pas celui de la seule géométrie. `composeur` dit
- * laquelle des deux on a mesurée.
+ * **dernière image dessinée, en entier**. Certains champs — `composeur`,
+ * `msCalibration` — ne servaient qu'à la 3D retirée ; la peau 2D les remplit
+ * de leur valeur neutre, et la forme reste pour que l'atelier et le diagnostic
+ * de performance lisent le même relevé.
  */
 export interface MesuresRendu {
-  /**
-   * Les triangles de la dernière image, tels que le moteur les a comptés.
-   * **Ne se compare pas d'un dos à l'autre** : le dos WebGL de three r170
-   * appelle `Info.update` avec le mode de dessin là où la signature attend le
-   * nombre d'instances (`mesures.ts`), et son compte est faux. `familles` dit
-   * la vérité de la scène sur les deux dos.
-   */
+  /** Les triangles de la dernière image, tels que la peau les a comptés. */
   triangles: number;
   /** Appels de dessin (*draw calls*). */
   appels: number;
   /** Durée **médiane** d'envoi des dernières images, en millisecondes. */
   msParImage: number;
-  /** Vrai si l'image passe par la chaîne de post-traitement. */
+  /**
+   * Vrai si l'image passe par une chaîne de post-traitement. Celle de la 3D
+   * retirée (occlusion, vignettage, grain) n'a pas d'équivalent en 2D : la peau
+   * répond faux.
+   */
   composeur: boolean;
   /**
-   * La médiane des images de calibration, processeur graphique compris, en
-   * millisecondes ; `null` tant qu'elle n'est pas mesurée ou hors qualité
-   * `auto`. C'est la seule durée ici qui attende vraiment le dessin.
+   * La médiane d'images de calibration, processeur graphique compris, en
+   * millisecondes, ou `null`. La 3D retirée la mesurait pour décider de sa
+   * chaîne de post-traitement ; la peau 2D ne calibre rien et répond `null`.
    */
   msCalibration: number | null;
   /**
@@ -94,7 +90,7 @@ export interface MesuresRendu {
    * ne sait pas la dire.
    */
   msCadence?: number | null;
-  /** Le dos du moteur qui dessine — WebGPU, ou son repli WebGL 2 — ; `null` tant qu'il n'est pas initialisé. */
+  /** Le dos qui dessine — WebGL 2 — ; `null` tant que la peau n'a pas de contexte. */
   backend: BackendRendu | null;
   /**
    * Le détail par famille, sous le nom du groupe de premier niveau de la
@@ -248,8 +244,8 @@ export interface Rendu {
   retenirVue?(): void;
   revenirVue?(): void;
   /**
-   * Une image PNG en `data:` de l'état courant, ou `null`. Le rendu 3D **redessine
-   * de façon synchrone** avant de lire : sans cela, un tampon WebGL non préservé
+   * Une image PNG en `data:` de l'état courant, ou `null`. La peau **redessine de
+   * façon synchrone** avant de lire : sans cela, un tampon WebGL non préservé
    * rendrait une image vide. Sert aux tests de fumée et aux aperçus.
    */
   capturer(): string | null;
@@ -273,23 +269,6 @@ export interface Rendu {
    * alors personne.
    */
   mondeBati?(): boolean;
-  /**
-   * Change la qualité d'affichage sans remonter : la chaîne de post-traitement
-   * se monte ou se démonte à l'image suivante, la caméra ne bouge pas. C'est
-   * ce qui permet de comparer avec et sans occlusion sur la même vue.
-   */
-  qualite?(qualite: QualiteRendu): void;
   /** Retire tout : écouteurs, boucle, contextes, mémoire graphique. */
   demonter(): void;
-}
-
-/** Sonde synchrone ; l'initialisation vérifie ensuite l'adaptateur WebGPU. */
-export function moteur3dDisponible(): boolean {
-  try {
-    const g = globalThis as { navigator?: { gpu?: unknown } };
-    if (g.navigator?.gpu) return true;
-  } catch {
-    // Un `navigator` qui refuse de se laisser lire n'a pas de WebGPU.
-  }
-  return false;
 }

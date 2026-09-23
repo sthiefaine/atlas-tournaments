@@ -5,7 +5,7 @@ import { genererSpecs } from '../../src/assets/catalogue';
 import { contratProduction } from '../../src/assets/production';
 import { sceneCandidate, animationsCandidates } from '../../scripts/production/commun';
 import { noeudPiece } from '../../scripts/production/unites';
-import type { Piece } from '../../src/render3d/pieces';
+import type { Piece } from '../../src/assets/pieces';
 const specs=genererSpecs();
 function morceau(nom:string){return {noeud:nom,role:0,geometrie:new THREE.BoxGeometry(.2,.2,.2).translate(0,.2,.1)};}
 test('candidat : pivots contractuels et parentages préservent le modèle au repos',()=>{

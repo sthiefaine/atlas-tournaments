@@ -5,10 +5,10 @@ import type { ImageMesuree } from './mesure-performance';
  * Il tient cinq promesses :
  *
  * - le rendu est une **peau interchangeable** : `Rendu` (`rendu.ts`) est la seule
- *   chose que ce fichier connaisse ; la peau three.js s'y branche
- *   sans que rien ici ne change. `render/` n'a pas le droit d'importer
- *   `render3d/` (`02-architecture.md` §5), c'est donc la page de jeu qui fournit
- *   la fabrique 3D, exactement comme elle fournit l'adversaire ;
+ *   chose que ce fichier connaisse ; la peau des images cuites (`render2d/`) s'y
+ *   branche sans que rien ici ne change. `render/` n'a pas le droit d'importer
+ *   `render2d/` (`02-architecture.md` §5), c'est donc la page de jeu qui fournit
+ *   la fabrique de la peau, exactement comme elle fournit l'adversaire ;
  * - l'**état logique est toujours en avance** sur l'animation : une animation
  *   n'est qu'un rattrapage visuel. Les événements d'une action passent par le
  *   réalisateur (`partition.ts`), qui écrit une **partition** jouée par deux
@@ -17,7 +17,7 @@ import type { ImageMesuree } from './mesure-performance';
  * - l'**adversaire joue par le même moteur** que le joueur, action par action ;
  * - la **sauvegarde est une liste d'actions** (`03-schemas.md` §14), dans
  *   `localStorage`, sous `try`/`catch` ;
- * - le **HUD est en HTML** (`hud-html.ts`), partagé par les deux peaux.
+ * - le **HUD est en HTML** (`hud-html.ts`), posé par-dessus la peau.
  */
 
 import type {
@@ -85,8 +85,8 @@ export interface OptionsJeu {
   cleSauvegarde?: string;
   /** Camp du joueur humain. Toujours 0 dans un scénario canon. */
   camp?: CampId;
-  /** Fabrique des peaux que `render/` ne peut pas importer (la 3D). */
-  fabriqueRendu?: (cle: CleRendu) => Rendu;
+  /** Fabrique la peau, que `render/` n'a pas le droit d'importer (`render2d/`). */
+  fabriqueRendu?: () => Rendu;
   /** Pose le HUD HTML par-dessus le canvas. Vrai par défaut. */
   hud?: boolean;
   /**
@@ -121,14 +121,18 @@ export interface OptionsJeu {
 /**
  * Où en est le chargement, tel que la peau le dit d'elle-même. Aucun de ces
  * états n'est deviné : ils sortent de `Rendu.mesurer()`, qui rend `backend`
- * nul tant que le moteur n'a pas démarré et zéro appel de dessin tant qu'aucune
- * image n'a été envoyée. Une barre qui avancerait toute seule mentirait ; ces
- * quatre mots, non.
+ * nul tant que la peau n'a pas de contexte et zéro appel de dessin tant
+ * qu'aucune image n'a été envoyée. Une barre qui avancerait toute seule
+ * mentirait ; ces mots, non.
+ *
+ * Il y avait un troisième état, `moteur` — le démarrage de `WebGPURenderer`,
+ * qu'on attendait des secondes. La peau 2D ouvre son contexte WebGL 2 en
+ * quelques millisecondes, dans `monter()` : l'étape est partie avec la 3D
+ * (23 septembre 2026), et un contexte encore absent se lit comme une image
+ * encore à venir.
  */
 export type EtapeChargement =
-  /** Le monde est bâti, le moteur graphique démarre (`renderer.init()`). */
-  | 'moteur'
-  /** Le moteur est là, la première image n'est pas encore dessinée. */
+  /** La première image n'est pas encore dessinée. */
   | 'image'
   /** Une image est passée : le plateau est réellement à l'écran. */
   | 'pret';
@@ -140,9 +144,9 @@ export type EtapeChargement =
  *
  * - pas de mesure du tout — une peau qui ne sait pas répondre : `pret`. On ne
  *   retient jamais un écran de chargement sur une ignorance ;
- * - `backend` nul : le moteur graphique n'a pas démarré ;
- * - zéro appel de dessin : il a démarré, la première image est à venir ;
- * - au moins un appel : une image est passée, le plateau est réellement là.
+ * - `backend` nul, ou zéro appel de dessin : la première image est à venir ;
+ * - au moins un appel, sur un contexte ouvert : une image est passée, le
+ *   plateau est réellement là.
  */
 /**
  * Le pas de sondage du monde bâti, et le budget au bout duquel on n'attend plus.
@@ -182,8 +186,7 @@ export function attendreMonde(
 
 export function etapeChargement(mesures: MesuresRendu | null | undefined): EtapeChargement {
   if (!mesures) return 'pret';
-  if (mesures.backend === null) return 'moteur';
-  return mesures.appels > 0 ? 'pret' : 'image';
+  return mesures.backend !== null && mesures.appels > 0 ? 'pret' : 'image';
 }
 
 /** Ce que rend `monterJeu` : de quoi observer, piloter et démonter. */
@@ -317,23 +320,21 @@ export interface PontDebug {
  * de vie est ici : peau, contrôleur, HUD HTML, adversaire, sauvegarde.
  */
 export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
-  // --- La peau **d'abord**. Il n'y en a plus qu'une, et `render/` n'a pas le
-  //     droit d'importer `render3d/` (`02-architecture.md` §5) : c'est donc
-  //     l'appelant qui la fabrique. S'il n'en fournit pas, ou si elle refuse de
-  //     se monter, on **lève** — un appareil sans moteur doit l'apprendre par un
-  //     écran qui le dit, pas par un plateau vide.
+  // --- La peau **d'abord**. Il n'y en a qu'une, et `render/` n'a pas le droit
+  //     d'importer `render2d/` (`02-architecture.md` §5) : c'est donc l'appelant
+  //     qui la fabrique. S'il n'en fournit pas, ou si elle refuse de se monter,
+  //     on **lève** — un appareil sans WebGL 2 doit l'apprendre par un écran qui
+  //     le dit, pas par un plateau vide.
   //
   //     Elle est montée **avant** que le moteur de règles ne travaille, et c'est
-  //     délibéré : depuis le portage WebGPU, `monter()` lance une initialisation
-  //     asynchrone (`renderer.init()`, adaptateur et périphérique graphiques) qui
-  //     ne coûte presque rien au fil principal mais met du temps à revenir. La
-  //     lancer d'abord, c'est laisser la mise en place de la partie — catalogue,
-  //     scène, création, et surtout le **rejeu** d'une sauvegarde, qui peut faire
-  //     des centaines d'actions — se dérouler pendant cette attente au lieu de
-  //     s'y ajouter. Rien ici ne dépend de la peau, et la peau ne dépend de rien
-  //     ici : c'est la seule mise en parallèle que le fil principal permette.
+  //     délibéré : ce qu'elle demande au réseau dès `monter()` — le manifeste de
+  //     ses images — arrive pendant la mise en place de la partie — catalogue,
+  //     scène, création, et surtout le **rejeu** d'une sauvegarde, qui peut
+  //     faire des centaines d'actions — au lieu de s'y ajouter. L'ordre date du
+  //     moteur WebGPU, dont l'initialisation asynchrone mettait des secondes à
+  //     revenir. Rien ici ne dépend de la peau, et la peau ne dépend de rien ici.
   if (!options.fabriqueRendu) throw new Error('aucune fabrique de rendu fournie');
-  const rendu: Rendu = options.fabriqueRendu('3d');
+  const rendu: Rendu = options.fabriqueRendu();
   rendu.monter(conteneur);
   let modeTactique = options.modeTactique === true;
   rendu.modeTactique?.(modeTactique);
@@ -1216,7 +1217,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     rendu: rendu.cle,
     /**
      * L'avancement du chargement, lu sur les compteurs de la peau et sur rien
-     * d'autre : `backend` reste nul tant que le moteur n'a pas démarré, et
+     * d'autre : `backend` reste nul tant qu'elle n'a pas de contexte, et
      * `appels` vaut zéro tant qu'aucune image n'a été envoyée au processeur
      * graphique. Une peau qui ne sait pas mesurer répond `pret` : on ne retient
      * pas un écran de chargement sur une ignorance.

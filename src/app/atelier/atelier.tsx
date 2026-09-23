@@ -599,7 +599,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
       <span className={styles.etiquette}>Dernière image</span>
       <p className={styles.note} data-mesures="oui">
         {mesures
-          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.backend === 'webgl2' ? 'WebGL 2' : mesures.backend === 'webgpu' ? 'WebGPU' : 'moteur en attente'}`
+          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.backend === 'webgl2' ? 'WebGL 2' : 'moteur en attente'}`
           : 'Pas encore d’image.'}
       </p>
       {/* Par famille, sur la scène entière : les appels sont approchés par les

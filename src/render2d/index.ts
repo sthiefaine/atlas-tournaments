@@ -159,12 +159,11 @@ export interface Rendu2d extends Rendu {
 }
 
 /**
- * Le dos déclaré par la peau 2D. `BackendRendu` ne connaît encore que
- * `webgpu` (`render/qualite.ts`, hors de ce lot) : l'ajout de `webgl2` est
- * demandé. La valeur est la vraie, seul son type attend — et l'écran de
- * chargement (`etapeChargement`) n'en lit que la nullité.
+ * Le dos déclaré par la peau 2D : WebGL 2, le seul depuis le retrait de la 3D
+ * (`render/qualite.ts`). L'écran de chargement (`etapeChargement`) n'en lit
+ * que la nullité ; le diagnostic de performance le recopie dans son relevé.
  */
-const DOS_2D = 'webgl2' as unknown as BackendRendu;
+const DOS_2D: BackendRendu = 'webgl2';
 
 /** Le fond de la toile hors de la carte : celui de la page de jeu. */
 const FOND_TOILE = lireCouleur('#10131a');

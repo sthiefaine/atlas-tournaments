@@ -26,7 +26,7 @@ export const runtime = 'nodejs';
  * campagne, les réglages —, ce sont des textes, et on doit pouvoir les
  * agrandir. C'est aussi pourquoi elle ne suffit pas à elle seule : iOS ignore
  * `user-scalable` depuis longtemps, et c'est `touch-action` sur la toile plus
- * les événements `gesture*` de Safari qui font le travail (`render3d/gestes.ts`).
+ * les événements `gesture*` de Safari qui font le travail (`render2d/gestes.ts`).
  */
 export const viewport: Viewport = {
   width: 'device-width',
@@ -72,9 +72,11 @@ async function charger(code: string): Promise<{ scenario: Scenario; carte: MapDe
 }
 
 /**
- * La page d'une mission. Il n'y a plus qu'une peau — le rendu vectoriel a été
- * retiré —, donc plus de `?rendu=` : un appareil sans WebGL 2 voit un écran qui
- * le lui dit, ce qui vaut mieux qu'une version dégradée du jeu.
+ * La page d'une mission. Il n'y a qu'une peau, les images cuites (`render2d/`) —
+ * la 3D temps réel a été retirée le 23 septembre 2026 —, donc plus de
+ * `?rendu=` : une adresse qui en porte un ouvre la même peau, et un appareil
+ * sans WebGL 2 voit un écran qui le lui dit, ce qui vaut mieux qu'une version
+ * dégradée du jeu.
  */
 export default async function PageJeu(
   { params }: { params: Promise<{ scenario: string }> },

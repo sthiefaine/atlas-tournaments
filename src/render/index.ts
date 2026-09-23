@@ -51,14 +51,10 @@ export {
 } from './controleur';
 
 export {
-  moteur3dDisponible,
   type CleRendu, type GestesRendu, type MesuresRendu, type PointVue, type Rendu, type VueInteraction,
 } from './rendu';
 
-export {
-  decisionComposeur, IMAGES_CALIBRATION, msCalibration, normaliserQualite, QUALITE_PAR_DEFAUT,
-  QUALITES_RENDU, SEUIL_MS_COMPOSEUR, type QualiteRendu,
-} from './qualite';
+export type { BackendRendu } from './qualite';
 
 export {
   monterHudHtml, type ApiHud, type HudHtml, type VueJeu,

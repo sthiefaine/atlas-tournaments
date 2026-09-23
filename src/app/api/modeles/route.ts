@@ -2,12 +2,13 @@
  * `GET /api/modeles` — l'inventaire des modèles 3D livrés dans
  * `public/assets/modeles/` (`doc/10-rendu-3d.md` §7.1).
  *
- * Le rendu le lit une fois par page et ne demande ensuite que les fichiers qui
- * existent, au lieu de sonder chaque candidat en 404. Dynamique et sans cache :
- * en développement, un `.glb` déposé est vu au prochain chargement de page,
- * sans redémarrage — le remplacement d'un placeholder reste un changement de
- * fichier. Le dossier n'existe pas tant que rien n'est livré : l'inventaire
- * est alors vide, ce qui est une réponse, pas une erreur.
+ * La peau 3D le lisait une fois par page pour ne demander que les fichiers qui
+ * existaient ; elle est retirée depuis le 23 septembre 2026, et le jeu affiche
+ * des images cuites depuis ces fichiers. La route reste : c'est sur elle que
+ * `scripts/production/verifier-publication.ts` vérifie, après un déploiement,
+ * qu'un lot est bien publié. Dynamique et sans cache ; le dossier n'existe pas
+ * tant que rien n'est livré, et l'inventaire est alors vide, ce qui est une
+ * réponse, pas une erreur.
  */
 
 import path from 'node:path';

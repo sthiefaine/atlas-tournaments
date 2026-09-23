@@ -6,45 +6,14 @@ import styles from './carte.module.css';
 
 interface Asset { id: string; famille: string; url: string | null; candidat: boolean }
 
-type Three = typeof import('three/webgpu');
-
 /**
- * Le moteur de la carte. Three r170 installe de lui-même un repli WebGL qui
- * **lève** au lieu de retomber : on le retire avant `init()`, pour que l'échec
- * se dise par le message de la page et non par une exception au milieu du
- * rendu. C'était `creerMoteurWebGPU` de `render3d/scene.ts` ; la carte n'importe
- * plus rien de `render3d/`, que la bascule en 2D retire (23 septembre 2026).
+ * La carte montre les **GLB sources**, pas le jeu : three et un
+ * `WebGLRenderer`, importés à la demande, et rien d'autre. Elle tournait sous
+ * `WebGPURenderer`, le moteur de la peau 3D, qui refusait les attributs
+ * quantifiés des GLB compressés (un sommet sur un multiple de quatre octets) et
+ * qu'il fallait réaligner en mémoire ; WebGL 2 les lit tels quels. La 3D temps
+ * réel est retirée depuis le 23 septembre 2026 (`doc/18-rendu-sprites.md`).
  */
-function creerMoteur(T: Three): InstanceType<Three['WebGPURenderer']> {
-  const moteur = new T.WebGPURenderer({ antialias: true });
-  moteur._getFallback = null;
-  return moteur;
-}
-
-/**
- * Les attributs quantifiés d'un GLB compressé (8 ou 16 bits normalisés) ont un
- * pas que WebGPU refuse — un sommet doit tenir sur un multiple de quatre
- * octets — et three r170 ne les réaligne pas. On les décompacte en flottants,
- * en mémoire, sans toucher au fichier : c'est la moitié utile de
- * `convertirMateriaux` (`render3d/modeles.ts`) ; l'autre, les matériaux à
- * nœuds, le moteur la fait seul (`NodeLibrary.fromMaterial`).
- */
-function alignerAttributs(T: Three, objet: import('three').Object3D): void {
-  objet.traverse((n) => {
-    if (!(n instanceof T.Mesh)) return;
-    const geometrie: import('three').BufferGeometry = n.geometry;
-    for (const [nom, attribut] of Object.entries(geometrie.attributes)) {
-      if (!attribut.normalized || attribut.array.BYTES_PER_ELEMENT >= 4) continue;
-      const valeurs = new Float32Array(attribut.count * attribut.itemSize);
-      for (let i = 0; i < attribut.count; i++) {
-        for (let c = 0; c < attribut.itemSize; c++) valeurs[i * attribut.itemSize + c] = attribut.getComponent(i, c);
-      }
-      const aligne = new T.BufferAttribute(valeurs, attribut.itemSize);
-      aligne.name = attribut.name;
-      geometrie.setAttribute(nom, aligne);
-    }
-  });
-}
 
 /** Carte de bibliothèque : les modèles voisins sont chargés progressivement, pas les 900 kits à la fois. */
 export default function CarteAssets({ assets }: { assets: Asset[] }): React.ReactElement {
@@ -61,11 +30,10 @@ export default function CarteAssets({ assets }: { assets: Asset[] }): React.Reac
     if (!conteneur) return;
     let fini = false, nettoyer = () => {};
     setErreur(''); setCharges(0); setSelection(null);
-    void Promise.all([import('three/webgpu'), import('three/addons/controls/OrbitControls.js'), import('three/addons/loaders/GLTFLoader.js'), import('meshoptimizer/meshopt_decoder.module.js')]).then(async ([T, { OrbitControls }, { GLTFLoader }, { MeshoptDecoder }]) => {
+    void Promise.all([import('three'), import('three/addons/controls/OrbitControls.js'), import('three/addons/loaders/GLTFLoader.js'), import('meshoptimizer/meshopt_decoder.module.js')]).then(([T, { OrbitControls }, { GLTFLoader }, { MeshoptDecoder }]) => {
       if (fini) return;
-      const renderer = creerMoteur(T);
-      try { await renderer.init(); } catch (e) { renderer.dispose(); throw e; }
-      if (fini) { renderer.dispose(); return; }
+      // Sans WebGL, le constructeur lève, et la page le dit.
+      const renderer = new T.WebGLRenderer({ antialias: true });
       renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
       conteneur.appendChild(renderer.domElement);
       renderer.domElement.tabIndex = 0;
@@ -122,7 +90,6 @@ export default function CarteAssets({ assets }: { assets: Asset[] }): React.Reac
           enCours.add(i);
           void loader.loadAsync(a.url!).then(gltf => {
             if (fini || position(i).distanceTo(controle.target) >= 10) { liberer(gltf.scene); return; }
-            alignerAttributs(T, gltf.scene);
             const boite = new T.Box3().setFromObject(gltf.scene), taille = boite.getSize(new T.Vector3()), centre = boite.getCenter(new T.Vector3());
             const facteur = 1.35 / Math.max(taille.x, taille.y, taille.z, .001);
             const groupe = new T.Group(); gltf.scene.position.sub(new T.Vector3(centre.x, boite.min.y, centre.z));
@@ -150,7 +117,7 @@ export default function CarteAssets({ assets }: { assets: Asset[] }): React.Reac
       const dessiner = () => { if (fini) return; const mouvement = controle.update(); if (!document.hidden && (mouvement || sale)) { renderer.render(scene, camera); sale = false; } frame = requestAnimationFrame(dessiner); };
       const intervalle = setInterval(actualiser, 600); actualiser(); dessiner();
       nettoyer = () => { aller.current = () => {}; clearInterval(intervalle); cancelAnimationFrame(frame); resize.disconnect(); controle.dispose(); renderer.domElement.removeEventListener('pointerdown', bas); renderer.domElement.removeEventListener('pointerup', haut); presents.forEach(liberer); cases.geometry.dispose(); (cases.material as import('three').Material).dispose(); renderer.dispose(); renderer.domElement.remove(); };
-    }).catch(() => { if (!fini) setErreur('La carte exige WebGPU. Son démarrage a échoué sur cet appareil.'); });
+    }).catch(() => { if (!fini) setErreur('La carte exige WebGL 2. Son démarrage a échoué sur cet appareil.'); });
     return () => { fini = true; nettoyer(); };
   }, [visibles]);
   return <main className={styles.page}>

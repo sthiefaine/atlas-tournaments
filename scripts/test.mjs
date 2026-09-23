@@ -8,15 +8,13 @@ function trouver(dossier) {
     return e.isDirectory() ? trouver(fichier) : e.name.endsWith('.test.ts') ? [fichier] : [];
   });
 }
-// Le moteur WebGPU de three a besoin de deux globales de navigateur au
-// chargement, et `three` doit désigner ce moteur-là : `tests/aides/webgpu-en-node.mjs`.
-// Ce crochet est enregistré **après** celui de tsx, sinon tsx court-circuite la
-// résolution et le crochet ne voit jamais passer `three` — d'où le lancement
-// direct de Node, sans passer par la ligne de commande de tsx.
-const prechargement = new URL('../tests/aides/webgpu-en-node.mjs', import.meta.url).href;
+// Rien à précharger d'autre que tsx : `tests/aides/webgpu-en-node.mjs` alignait
+// les imports de three sur le moteur WebGPU, parti avec la peau 3D le
+// 23 septembre 2026 ; il reste, vide, pour la commande de test ciblé des
+// documents.
 const resultat = spawnSync(
   process.execPath,
-  ['--import', 'tsx', '--import', prechargement, '--test', ...trouver('tests').sort()],
+  ['--import', 'tsx', '--test', ...trouver('tests').sort()],
   { stdio: 'inherit' },
 );
 if (resultat.error) console.error(resultat.error.message);

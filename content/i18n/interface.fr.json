@@ -1876,15 +1876,6 @@
       "pluriel": false
     },
     {
-      "cle": "campagne.sans_webgl",
-      "texte": "Le jeu n’a pas pu démarrer : WebGPU est indisponible.",
-      "contexte": {
-        "ecran": "jeu",
-        "note": "Écran d'échec de montage. Le rendu vectoriel de repli n'existe plus : on le dit franchement plutôt que de laisser un plateau vide."
-      },
-      "longueurMax": 80
-    },
-    {
       "cle": "campagne.sans_webgl_aide",
       "texte": "Essayez un autre navigateur, ou vérifiez que l’accélération matérielle est activée.",
       "contexte": {
@@ -2027,16 +2018,6 @@
       "contexte": {
         "ecran": "jeu",
         "note": "Étape de chargement : les modules du jeu descendent encore."
-      },
-      "longueurMax": 32,
-      "pluriel": false
-    },
-    {
-      "cle": "chargement.moteur",
-      "texte": "Démarrage du rendu",
-      "contexte": {
-        "ecran": "jeu",
-        "note": "Étape de chargement : le moteur graphique s’initialise."
       },
       "longueurMax": 32,
       "pluriel": false
@@ -3820,42 +3801,6 @@
         "note": "Aide sous le choix des profils."
       },
       "longueurMax": 100
-    },
-    {
-      "cle": "reglages.qualite",
-      "texte": "Qualité d’affichage",
-      "contexte": {
-        "ecran": "reglages",
-        "note": "Titre du groupe : la chaîne de post-traitement du rendu (occlusion ambiante, vignettage, grain)."
-      },
-      "longueurMax": 24
-    },
-    {
-      "cle": "reglages.qualite_auto",
-      "texte": "Automatique",
-      "contexte": {
-        "ecran": "reglages",
-        "note": "Choix de qualité : le rendu mesure ses premières images et allume le post-traitement si l’appareil suit."
-      },
-      "longueurMax": 18
-    },
-    {
-      "cle": "reglages.qualite_basse",
-      "texte": "Basse",
-      "contexte": {
-        "ecran": "reglages",
-        "note": "Choix de qualité : post-traitement jamais allumé. Le rendu 3D reste le même."
-      },
-      "longueurMax": 16
-    },
-    {
-      "cle": "reglages.qualite_note",
-      "texte": "Automatique n’allume l’occlusion ambiante et le grain de photo que si l’appareil suit ; basse ne les allume jamais.",
-      "contexte": {
-        "ecran": "reglages",
-        "note": "Aide sous le choix de qualité."
-      },
-      "longueurMax": 120
     },
     {
       "cle": "reglages.retour",

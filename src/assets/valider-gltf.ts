@@ -7,7 +7,7 @@
  * n'avons besoin que du JSON : nombres de triangles, bornes de position, noms de
  * nœuds, de matériaux, d'images et d'animations y sont tous déclarés. Charger
  * `three/examples/GLTFLoader` pour cela reviendrait à démarrer un moteur de rendu
- * dans un test, et cette couche n'a pas le droit d'importer `render3d/`.
+ * dans un test, et cette couche reste sans dépendance.
  *
  * ```
  * octets 0..3   magie 'glTF'

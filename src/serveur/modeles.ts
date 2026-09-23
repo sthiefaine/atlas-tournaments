@@ -2,14 +2,14 @@
  * L'inventaire des modèles livrés : ce que `public/assets/modeles/` contient,
  * dressé d'après les **noms** de fichiers et servi par `GET /api/modeles`.
  *
- * Pourquoi un inventaire, et pas des sondes : le rendu essaie, pour chaque
+ * Pourquoi un inventaire, et pas des sondes : la peau 3D essayait, pour chaque
  * couple (unité, nation), un kit puis une géométrie de base, en trois niveaux
  * de détail — une quarantaine de requêtes par page, toutes en 404 tant que
- * rien n'est livré, et chaque 404 coûte jusqu'à deux secondes au serveur de
- * développement. Une liste, lue une fois, dit d'avance ce qui existe. La
- * règle du brief ne bouge pas : **le remplacement d'un placeholder reste un
- * changement de fichier** — on dépose le `.glb`, l'inventaire le voit au
- * prochain chargement de page, et pas une ligne de code ne change.
+ * rien n'est livré, et chaque 404 coûtait jusqu'à deux secondes au serveur de
+ * développement. Une liste, lue une fois, disait d'avance ce qui existe. La
+ * peau 3D est retirée depuis le 23 septembre 2026 ; l'inventaire reste la
+ * preuve de publication (`scripts/production/verifier-publication.ts`) et
+ * l'appui des tests de livraison (`tests/assets/`).
  *
  * La fonction qui dresse l'inventaire est pure et testée ; la lecture du
  * disque est une ligne, et un dossier absent est l'état normal du projet.

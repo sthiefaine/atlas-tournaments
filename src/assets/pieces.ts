@@ -1,16 +1,23 @@
 /**
- * Le composeur des figurines 3D, en pièces déclaratives.
+ * Le composeur des figurines, en pièces déclaratives.
  *
- * Même règle qu'en 2D et même raison : **aucune unité n'est modélisée par son
- * nom**. Une unité apporte une `Silhouette` — une `base`, un `corps`, trois
- * `modules` au plus, une `taille` — et ce fichier la traduit en une liste de
- * pièces élémentaires (boîtes biseautées, cylindres, capsules, plaques). C'est
- * `unites.ts` qui en fait des maillages three.js, et l'arrivée d'un vrai modèle
- * `.glb` remplacera le tout sans toucher à une ligne de ce fichier.
+ * **Aucune unité n'est modélisée par son nom** : une unité apporte une
+ * `Silhouette` — une `base`, un `corps`, trois `modules` au plus, une `taille`
+ * — et ce fichier la traduit en une liste de pièces élémentaires (boîtes
+ * biseautées, cylindres, capsules, plaques).
+ *
+ * Il habitait `render3d/`, où il faisait les placeholders du rendu temps réel.
+ * Depuis le retrait de la 3D (23 septembre 2026), le jeu affiche des images
+ * cuites depuis les GLB (`doc/18-rendu-sprites.md`) ; le composeur ne sert plus
+ * qu'à **fabriquer** des sources : `scripts/production/unites.ts` en tire les
+ * candidats GLB d'une unité, que la cuisson photographie ensuite. D'où sa place
+ * dans `assets/`, à côté du catalogue des spécifications.
  *
  * Le module est **pur** : ni three.js, ni DOM. Les tailles sont en unités de
  * scène, une case valant 1 — un char occupe environ 70 % de sa case et monte à
- * un tiers de case, ce qui reste lisible sous une caméra à 68°.
+ * un tiers de case. Les « caméras à 68° » que citent les commentaires plus bas
+ * sont celle de la 3D retirée : c'est pour elle que ces proportions ont été
+ * réglées.
  */
 
 import type { ModuleSilhouette, Silhouette, TailleSilhouette } from '../schemas/types';

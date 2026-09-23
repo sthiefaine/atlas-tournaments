@@ -1,17 +1,59 @@
 'use client';
 import { MeshoptDecoder } from 'meshoptimizer/meshopt_decoder.module.js';
 import { useEffect, useRef, useState } from 'react';
-import * as T from 'three/webgpu';
+import * as T from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
-import { creerMoteurWebGPU } from '@/render3d/scene';
-import { creerEnvironnement, type Environnement } from '@/render3d/environnement';
-import { parametresAmbiance } from '@/render3d/eclairage';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import type { NiveauLod } from '@/assets/spec';
+import { TANGAGE_CARTE } from '@/render2d/contrat';
 
 import type { PropsInspection } from './types-inspection';
 import { cheminInspection, PREFIXE_MODELES } from './chemins-inspection';
+/**
+ * Le banc de réception d'un modèle : un **visionneur GLB**, three et
+ * `WebGLRenderer`, chargé à la demande par `inspection-client.tsx` et nulle part
+ * ailleurs. Il montrait le modèle avec le moteur de la peau 3D — son
+ * `WebGPURenderer` sans repli, sa pièce d'environnement, ses ambiances — ; la 3D
+ * temps réel est retirée depuis le 23 septembre 2026 (le jeu photographie ses
+ * modèles, `doc/18-rendu-sprites.md`), et le banc ne garde que ce qu'il faut
+ * pour juger un fichier : trois vues, les cartes, le masque, les clips.
+ */
 type Vue = 'jeu' | 'dessus' | 'trois_quarts';
+
+/**
+ * Ce que le modèle réfléchit : la pièce de studio de three, préfiltrée une fois
+ * par moteur. C'est celle que la peau 3D posait sous tous ses matériaux.
+ */
+interface Environnement { readonly texture: T.Texture; dispose(): void }
+function creerEnvironnement(moteur: T.WebGLRenderer): Environnement {
+  const generateur = new T.PMREMGenerator(moteur);
+  const piece = new RoomEnvironment();
+  const cible = generateur.fromScene(piece, 0.04);
+  piece.dispose();
+  generateur.dispose();
+  return { texture: cible.texture, dispose: () => cible.dispose() };
+}
+
+/**
+ * Les deux ambiances d'été de la peau 3D retirée — ciel et sol de l'hémisphère,
+ * soleil, part de l'environnement, exposition —, relevées le 23 septembre 2026
+ * et figées ici : elles servent à lire un modèle sous un soleil franc et sous la
+ * lune. Ce ne sont plus celles du jeu, qui photographie ses modèles sous
+ * l'éclairage de cuisson (`ECLAIRAGE_CUISSON`, `render2d/contrat.ts`).
+ */
+const AMBIANCES = {
+  jour: {
+    hemisphere: { ciel: '#d6ecff', sol: '#5f6b33', intensite: 0.95 },
+    soleil: { couleur: '#fff4c4', intensite: 3.15, elevation: 67, azimut: 132 },
+    environnement: 0.315, exposition: 1,
+  },
+  nuit: {
+    hemisphere: { ciel: '#a4bddc', sol: '#4c5629', intensite: 1.1 },
+    soleil: { couleur: '#acc5f0', intensite: 1.6, elevation: 44.5, azimut: 302 },
+    environnement: 0.084, exposition: 1.2,
+  },
+} as const;
 interface Reglages { vue: Vue; reel: boolean; mosaique: boolean; lumiere: string; canal: string; clip: string; lecture: boolean; instant: number; equipe: string }
 function liberation(objet: T.Object3D) {
   const materiaux = new Set<T.Material>(), geometries = new Set<T.BufferGeometry>(), cartes = new Set<T.Texture>();
@@ -21,11 +63,11 @@ function liberation(objet: T.Object3D) {
 }
 function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string; id: string; reglages: Reglages }) {
   const conteneur = useRef<HTMLDivElement>(null), [etat, changerEtat] = useState('Chargement…');
-  // Un adaptateur par panneau, conservé entre tous les réglages.
-  const ressource = useRef<Promise<{ moteur: T.WebGPURenderer; environnement: Environnement }> | null>(null);
+  // Un moteur par panneau, conservé entre tous les réglages.
+  const ressource = useRef<{ moteur: T.WebGLRenderer; environnement: Environnement } | null>(null);
   useEffect(() => () => {
     const ancienne = ressource.current; ressource.current = null;
-    void ancienne?.then(({ moteur, environnement }) => { environnement.dispose(); moteur.dispose(); }, () => {});
+    if (ancienne) { ancienne.environnement.dispose(); ancienne.moteur.dispose(); }
   }, []);
   useEffect(() => {
     const hote = conteneur.current; if (!hote) return;
@@ -39,13 +81,13 @@ function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string;
       gestion.setURLModifier((adresse) => revision && !adresse.startsWith('blob:') && !adresse.includes('?') ? `${adresse}?v=${revision}` : adresse);
       const gltf = await new GLTFLoader(gestion).setMeshoptDecoder(MeshoptDecoder).loadAsync(url); modele = gltf.scene;
       if (ferme) { liberation(modele); return; }
-      ressource.current ??= (async () => {
-        const moteur = creerMoteurWebGPU({ antialias: true, alpha: false });
-        try { await moteur.init(); return { moteur, environnement: creerEnvironnement(moteur) }; }
+      // Sans WebGL, le constructeur lève : le panneau le dit, rien d'autre ne casse.
+      if (!ressource.current) {
+        const moteur = new T.WebGLRenderer({ antialias: true, alpha: false });
+        try { ressource.current = { moteur, environnement: creerEnvironnement(moteur) }; }
         catch (e) { moteur.dispose(); throw e; }
-      })();
-      const { moteur: r, environnement } = await ressource.current;
-      if (ferme) return;
+      }
+      const { moteur: r, environnement } = ressource.current;
       r.setPixelRatio(Math.min(devicePixelRatio, 2)); r.outputColorSpace = T.SRGBColorSpace;
       r.toneMapping = T.ACESFilmicToneMapping;
       hote!.append(r.domElement); r.domElement.setAttribute('aria-label', `Aperçu de ${id}`);
@@ -53,13 +95,13 @@ function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string;
       scene = new T.Scene(); scene.background = new T.Color('#283237');
       scene.environment = environnement.texture;
       const neutre = reglages.lumiere === 'neutre', nuit = reglages.lumiere === 'nuit';
-      const ambiance = parametresAmbiance('ete', nuit ? 'nuit' : 'jour', 'clair');
+      const ambiance = AMBIANCES[nuit ? 'nuit' : 'jour'];
       const hemi = ambiance.hemisphere, soleil = ambiance.soleil;
       scene.add(new T.HemisphereLight(neutre ? '#ffffff' : hemi.ciel, neutre ? '#777777' : hemi.sol, neutre ? 1.5 : hemi.intensite));
       const lampe = new T.DirectionalLight(neutre ? '#ffffff' : soleil.couleur, neutre ? 2 : soleil.intensite);
       const el = T.MathUtils.degToRad(soleil.elevation), az = T.MathUtils.degToRad(soleil.azimut);
       lampe.position.set(Math.sin(az) * Math.cos(el) * 5, Math.sin(el) * 5, Math.cos(az) * Math.cos(el) * 5); scene.add(lampe);
-      scene.environmentIntensity = neutre ? .7 : ambiance.environnement.intensite; r.toneMappingExposure = neutre ? 1 : ambiance.exposition;
+      scene.environmentIntensity = neutre ? .7 : ambiance.environnement; r.toneMappingExposure = neutre ? 1 : ambiance.exposition;
       const chargeur = new T.TextureLoader(gestion);
       if (reglages.canal !== 'pbr') {
         const carte = await chargeur.loadAsync(`${prefixe}/${id}_${reglages.canal}.png`);
@@ -98,7 +140,8 @@ function Plateau({ url, prefixe, id, reglages }: { url: string; prefixe: string;
       else groupe.add(modele);
       const boite = new T.Box3().setFromObject(groupe), centre = boite.getCenter(new T.Vector3()), taille = boite.getSize(new T.Vector3());
       const camera = new T.OrthographicCamera(-1, 1, 1, -1, .01, 100);
-      const elevation = T.MathUtils.degToRad(reglages.vue === 'dessus' ? 89.99 : reglages.vue === 'jeu' ? 65 : 30);
+      // La vue de jeu est celle de la cuisson des images : tangage de la carte, lacet nul.
+      const elevation = T.MathUtils.degToRad(reglages.vue === 'dessus' ? 89.99 : reglages.vue === 'jeu' ? TANGAGE_CARTE : 30);
       const azimut = reglages.vue === 'trois_quarts' ? Math.PI / 4 : 0;
       camera.position.copy(centre).add(new T.Vector3(Math.sin(azimut) * Math.cos(elevation) * 10, Math.sin(elevation) * 10, Math.cos(azimut) * Math.cos(elevation) * 10)); camera.lookAt(centre);
       const mixer = new T.AnimationMixer(modele), clip = gltf.animations.find((a) => a.name === reglages.clip);
@@ -141,11 +184,11 @@ export default function Inspection({ spec, fichiers, revision, precedente, refer
   const cote = comparaison === 'precedente' && precedente ? { id: spec.id, prefixe: `/api/admin/assets/${spec.id}/historique/${precedente}`, revision: precedente }
     : comparaison === 'reference' && reference ? { id: reference.id, prefixe: reference.prefixe ?? prefixe, revision: reference.revision } : null;
   return <div className="mt-4 space-y-3 text-sm">
-    <p className="text-xs admin-secondaire">La conformité technique ne juge ni la silhouette ni l’absence d’ombre peinte. Comparer les trois vues avant d’approuver. L’éclairage de jeu reprend le soleil, l’hémisphère et l’environnement ; météo et post-traitement se vérifient dans l’atelier.</p>
+    <p className="text-xs admin-secondaire">La conformité technique ne juge ni la silhouette ni l’absence d’ombre peinte. Comparer les trois vues avant d’approuver. Le jeu n’affiche pas ce modèle en direct : il le photographie à la cuisson des images, et la vitrine de l’atelier montre ce qui en sort.</p>
     <div className="flex flex-wrap gap-3">
-      <label>Vue <select aria-label="Vue" value={reglages.vue} onChange={(e) => modifier('vue', e.target.value as Vue)}><option value="jeu">Jeu 65°</option><option value="dessus">Dessus</option><option value="trois_quarts">Trois-quarts</option></select></label>
+      <label>Vue <select aria-label="Vue" value={reglages.vue} onChange={(e) => modifier('vue', e.target.value as Vue)}><option value="jeu">Jeu {TANGAGE_CARTE}°</option><option value="dessus">Dessus</option><option value="trois_quarts">Trois-quarts</option></select></label>
       <span>Modèle LOD0</span>
-      <label>Éclairage <select aria-label="Éclairage" value={reglages.lumiere} onChange={(e) => modifier('lumiere', e.target.value)}><option value="neutre">Studio neutre</option><option value="jour">Jeu — été, jour</option><option value="nuit">Jeu — été, nuit</option></select></label>
+      <label>Éclairage <select aria-label="Éclairage" value={reglages.lumiere} onChange={(e) => modifier('lumiere', e.target.value)}><option value="neutre">Studio neutre</option><option value="jour">Été, jour</option><option value="nuit">Été, nuit</option></select></label>
       <label>Carte <select aria-label="Carte" value={reglages.canal} onChange={(e) => modifier('canal', e.target.value)}><option value="pbr">Matériau PBR</option>{spec.textures.filter((t) => fichiers.includes(`${spec.id}_${t.canal}.png`)).map((t) => <option key={t.canal}>{t.canal}</option>)}</select></label>
       <label><input type="checkbox" checked={reglages.reel} onChange={(e) => modifier('reel', e.target.checked)} /> Taille réelle : 48 px/m</label>
       {spec.type === 'terrain' ? <label><input type="checkbox" checked={reglages.mosaique} onChange={(e) => modifier('mosaique', e.target.checked)} /> Mosaïque 4×4, quarts de tour</label> : null}

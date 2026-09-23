@@ -3,8 +3,10 @@
  *
  * Le flux entier tient en une page : la fiche compose la commande, un
  * générateur rend un `.glb` et ses textures, on les dépose ici, le contrôle du
- * dépôt les relit, et le jeu les prend au prochain chargement — sans une ligne
- * de code (`doc/10-rendu-3d.md` §7.1, l'inventaire de `/api/modeles`).
+ * dépôt les relit, et la cuisson des images (`npm run cuire:sprites`) les
+ * photographie pour le jeu — sans une ligne de code. (Du temps de la peau 3D,
+ * retirée le 23 septembre 2026, le jeu les lisait lui-même au prochain
+ * chargement.)
  *
  * **Le dépôt est local, et c'est dit.** `public/` est cuit dans l'image Docker :
  * un fichier écrit ici sur le site déployé vivrait jusqu'au déploiement suivant,

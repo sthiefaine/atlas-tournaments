@@ -1,29 +1,16 @@
-// Préchargé avant tous les tests (`scripts/test.mjs`) : le moteur WebGPU de
-// three suppose un navigateur — `self.GPUShaderStage`, `navigator.userAgent` —
-// dès son chargement. On lui donne le strict minimum, et rien qui ressemble à
-// une carte graphique : un test qui créerait un `WebGPURenderer` doit échouer.
+// Aide de test **vide**, gardée pour que la commande de test ciblé écrite partout
+// dans le dépôt continue de marcher :
 //
-// Et `three` désigne le moteur WebGPU, comme dans le navigateur (`next.config.ts`).
-// Les tests sont du CommonJS aux yeux de tsx (pas de `"type": "module"`) : leurs
-// `import` deviennent des `require`, qui ne passent pas par les crochets ESM.
-// On corrige donc **les deux** résolutions, celle de `require` et celle d'`import`.
-import Module, { register } from 'node:module';
-
-if (typeof globalThis.self === 'undefined') globalThis.self = globalThis;
-if (typeof globalThis.navigator === 'undefined') {
-  Object.defineProperty(globalThis, 'navigator', { value: { userAgent: 'node' }, configurable: true, writable: true });
-}
-
-const CLASSIQUES = [/[\\/]three[\\/]build[\\/]three\.cjs$/, /[\\/]three[\\/]build[\\/]three\.module\.js$/];
-export function versWebgpu(chemin) {
-  return CLASSIQUES.some((r) => r.test(chemin))
-    ? chemin.replace(/three\.(cjs|module\.js)$/, 'three.webgpu.js')
-    : chemin;
-}
-
-const resoudreOrigine = Module._resolveFilename;
-Module._resolveFilename = function resoudreThree(demande, ...reste) {
-  return versWebgpu(resoudreOrigine.call(this, demande === 'three' ? 'three/webgpu' : demande, ...reste));
-};
-
-register('./resoudre-three.mjs', import.meta.url);
+//     node --import tsx --import ./tests/aides/webgpu-en-node.mjs --test <fichiers>
+//
+// Elle préchargeait ce que le moteur WebGPU de three exigeait sous Node — deux
+// globales de navigateur (`self`, `navigator`) — et faisait désigner à `three`
+// le fichier `three/webgpu`, pour que la peau 3D et les compléments de three
+// partagent une seule copie du cœur (`instanceof`). La peau 3D a été retirée le
+// 23 septembre 2026, et plus rien n'importe `three/webgpu` ni `three/tsl` : les
+// tests, comme les scripts de production, prennent `three` tel qu'il se publie.
+// `npm test` (`scripts/test.mjs`) ne la précharge plus.
+//
+// Un test qui aurait besoin d'une globale de navigateur la pose lui-même, là où
+// on la voit (`analyserGlb` pose `self`, par exemple).
+export {};

@@ -15,20 +15,24 @@ const autorise: Record<string, string[]> = {
   ai: ["engine", "schemas", "content"],
   mapgen: ["engine", "schemas", "content"],
   render: ["engine", "schemas", "content", "i18n"],
-  render3d: ["engine", "schemas", "content", "i18n", "render", "assets", "audio"],
-  // La peau 2D a les mêmes droits que la 3D, et jamais celui de l'importer :
-  // c'est ce qui permettra de retirer `render3d/` d'un seul commit.
+  // La peau des images cuites. Elle avait les droits de la peau 3D, et jamais
+  // celui de l'importer : c'est ce qui a permis de retirer `render3d/` d'un seul
+  // commit (23 septembre 2026). La couche n'existe plus ; un dossier qui
+  // reprendrait son nom serait une couche inconnue, qu'aucune autre n'a le
+  // droit d'importer.
   render2d: ["engine", "schemas", "content", "i18n", "render", "assets", "audio"],
   // Le son lit les types du canon (le type de mouvement d'une unité choisit son
   // bruit) depuis le 13 septembre 2026 ; `schemas` n'importe rien, rien ne s'inverse.
   audio: ["schemas"],
+  // Le composeur de silhouettes (`pieces.ts`, venu de `render3d/`) y est entré
+  // sans droit nouveau : il ne lit que les types du canon.
   assets: ["schemas", "content"],
   schemas: [],
   content: ["schemas"],
   i18n: ["schemas"],
   db: ["schemas"],
   serveur: ["engine", "ai", "mapgen", "schemas", "content", "db", "i18n", "assets"],
-  app: ["audio", "engine", "ai", "mapgen", "render", "render2d", "render3d", "assets", "schemas", "content", "db", "serveur", "i18n"],
+  app: ["audio", "engine", "ai", "mapgen", "render", "render2d", "assets", "schemas", "content", "db", "serveur", "i18n"],
 };
 
 // Modules du navigateur interdits dans les couches pures.

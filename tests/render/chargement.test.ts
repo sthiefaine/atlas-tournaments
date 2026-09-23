@@ -22,13 +22,15 @@ function mesures(partiel: Partial<MesuresRendu>): MesuresRendu {
 }
 
 test('l’étape de chargement ne se lit que sur les compteurs de la peau', () => {
-  // Pas de moteur démarré : on attend le moteur.
-  assert.equal(etapeChargement(mesures({ backend: null })), 'moteur');
-  // Le moteur est là, aucune image envoyée : on attend la première image.
-  assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 0 })), 'image');
+  // Pas encore de contexte : la première image est à venir. L'étape `moteur`
+  // — le démarrage de `WebGPURenderer` — est partie avec la 3D.
+  assert.equal(etapeChargement(mesures({ backend: null })), 'image');
+  assert.equal(etapeChargement(mesures({ backend: null, appels: 3 })), 'image', 'des appels sans contexte ne prouvent rien');
+  // Le contexte est là, aucune image envoyée : on attend la première image.
+  assert.equal(etapeChargement(mesures({ backend: 'webgl2', appels: 0 })), 'image');
   // Une image est passée : le plateau est réellement à l'écran.
-  assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 94 })), 'pret');
-  assert.equal(etapeChargement(mesures({ backend: 'webgpu', appels: 1 })), 'pret');
+  assert.equal(etapeChargement(mesures({ backend: 'webgl2', appels: 94 })), 'pret');
+  assert.equal(etapeChargement(mesures({ backend: 'webgl2', appels: 1 })), 'pret');
 });
 
 test('une peau qui ne sait pas mesurer est déclarée prête, jamais retenue', () => {
@@ -42,7 +44,7 @@ test('une peau qui ne sait pas mesurer est déclarée prête, jamais retenue', (
 function peauMuette(): { rendu: Rendu; journal: string[] } {
   const journal: string[] = [];
   const rendu = {
-    cle: '3d' as const,
+    cle: '2d' as const,
     canvas: null,
     monter: () => { journal.push('monter'); },
     afficher: () => undefined,

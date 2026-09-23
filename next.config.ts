@@ -39,21 +39,14 @@ const nextConfig: NextConfig = {
    * `Dockerfile` ne changent pas.
    */
   distDir: process.env['NEXT_DIST_DIR'] || '.next',
-  /**
-   * Un seul three, le moteur WebGPU (7 septembre 2026). Le rendu importe
-   * `three/webgpu` ; les compléments de three (`three/addons/*`) importent
-   * `three`, qui désignerait sinon le moteur WebGL et une **seconde copie** du
-   * cœur — deux classes `Mesh`, et `instanceof` qui ment. Les deux chemins
-   * pointent donc vers le même fichier, pour webpack (`next build`) comme pour
-   * Turbopack (`next dev`). Les tests font pareil : `tests/aides/resoudre-three.mjs`.
+  /*
+   * Il n'y a plus d'alias de three : la peau 3D, qui imposait `three/webgpu` à
+   * tout le paquet (compléments compris, pour n'avoir qu'une copie du cœur), est
+   * retirée depuis le 23 septembre 2026. Ce qui reste de three dans le site —
+   * l'inspection d'un modèle dans l'admin, la carte des assets de l'atelier,
+   * tous deux chargés à la demande — prend `three` tel qu'il se publie, avec
+   * `WebGLRenderer`, et ses compléments le même fichier.
    */
-  turbopack: {
-    resolveAlias: { three: 'three/webgpu' },
-  },
-  webpack: (config) => {
-    config.resolve.alias = { ...(config.resolve.alias ?? {}), three$: 'three/webgpu' };
-    return config;
-  },
   /**
    * La mention de version (`src/app/version.ts`) : l'instant du build et le
    * commit, inscrits dans les bundles. Elle change à chaque `next build`, donc à

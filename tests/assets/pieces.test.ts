@@ -1,17 +1,22 @@
-// Le composeur de placeholders 3D. La règle du brief est absolue : **aucune
-// unité n'est modélisée par son nom**. Ce test l'exerce sur toutes les unités
-// du dernier catalogue, puis sur des silhouettes construites à la main, et
-// vérifie que chaque brique déclarée se retrouve bien dans la liste de pièces.
+// Le composeur de silhouettes (`src/assets/pieces.ts`), dont la production tire
+// les candidats GLB d'une unité. La règle du brief est absolue : **aucune unité
+// n'est modélisée par son nom**. Ce test l'exerce sur toutes les unités du
+// dernier catalogue, puis sur des silhouettes construites à la main, et vérifie
+// que chaque brique déclarée se retrouve bien dans la liste de pièces.
+//
+// Il accompagnait le composeur dans la peau 3D ; il l'a suivi quand le rendu
+// temps réel a été retiré (23 septembre 2026). Un seul test est resté en
+// arrière, parce qu'il mesurait les maillages de la 3D et non les pièces : le
+// budget de matériaux et de triangles des placeholders (`geometriesSilhouette`).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Euler, Vector3 } from 'three/webgpu';
+import { Euler, Vector3 } from 'three';
 
 import { chargerCatalogueUnites } from '../../src/content/index';
 import { chargerCatalogue } from '../../src/engine/index';
 import {
   composerSilhouette, echelleTaille, hauteurSilhouette, nomsPieces,
-} from '../../src/render3d/pieces';
-import { geometriesSilhouette } from '../../src/render3d/unites';
+} from '../../src/assets/pieces';
 import {
   BASES_SILHOUETTE, CORPS_SILHOUETTE, MODULES_SILHOUETTE, TAILLES_SILHOUETTE,
   type ModuleSilhouette, type Silhouette,
@@ -171,19 +176,6 @@ test('des ailes à corps de plateau font une aile volante : un chevron sans dér
   const dosBosse = bosse.position[1] + (bosse.taille[1] / 2) * Math.sqrt(Math.max(0, 1 - dx * dx - dz * dz));
   const basEmbase = embase.position[1] - embase.taille[1] / 2;
   assert.ok(basEmbase >= dosBosse - 0.01 && basEmbase <= dosBosse + 0.02, `embase à ${basEmbase}, dos de la bosse à ${dosBosse}`);
-});
-
-test('chaque unité du dernier catalogue tient dans sept matériaux et sous six mille triangles', () => {
-  // `tests/render3d/unites.test.ts` fait la même mesure sur le catalogue 2 ;
-  // ici, c'est le dernier catalogue, donc les silhouettes que ce test-là ne
-  // voit pas — coques, ailes, aile volante.
-  for (const cle of CAT.cles) {
-    const geometries = geometriesSilhouette(CAT.unites[cle]!.silhouette);
-    assert.ok(geometries.size <= 7 && geometries.size >= 3, `${cle} : ${geometries.size} matériaux`);
-    let triangles = 0;
-    for (const geo of geometries.values()) triangles += geo.getAttribute('position').count / 3;
-    assert.ok(triangles < 6000, `${cle} : ${triangles} triangles dépassent le budget mobile`);
-  }
 });
 
 test('chaque base, chaque corps et chaque module produit des pièces', () => {
