@@ -72,7 +72,9 @@ async function cliquerCase(page: Page, x: number, y: number): Promise<void> {
 async function passerScenes(page: Page, attente = 2_000): Promise<void> {
   const scene = page.locator('.atlas-scene');
   for (let i = 0; i < 6; i++) {
-    if (!(await scene.isVisible({ timeout: attente }).catch(() => false))) return;
+    // `waitFor`, pas `isVisible` : le second ne patiente pas, et une scène qui
+    // paraît après la question restait ouverte et avalait le clic suivant.
+    if (!await scene.waitFor({ state: 'visible', timeout: attente }).then(() => true, () => false)) return;
     await scene.getByRole('button', { name: /Passer/ }).click().catch(() => undefined);
     await expect(scene).toBeHidden({ timeout: 10_000 }).catch(() => undefined);
   }
