@@ -8,7 +8,6 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { chargerCatalogue, creerPartie, sceneDepuis, type EtatPartie } from '@/engine/index';
 import { resoudreCommandantsScenario } from '@/content/commandants-jeu';
 import { ambiance } from '@/render/ambiance';
-import { normaliserQualite, type QualiteRendu } from '@/render/qualite';
 import type { MesuresRendu, Rendu, VueInteraction } from '@/render/rendu';
 import {
   BIOMES, type Biome, type CodePays, type MapDef, type Meteo, type PhaseJour,
@@ -37,6 +36,13 @@ import styles from './atelier.module.css';
  * chemin, le brouillard, les **silhouettes jamais vues**, et les **gestes**
  * rejouables à la demande.
  *
+ * **Depuis le 23 septembre 2026, le banc monte la peau 2D** (`creerRendu2d`,
+ * les images cuites), la peau du jeu : c'est elle qu'on juge ici. La vue est
+ * fixe — ni rotation ni inclinaison —, la qualité d'affichage n'a plus d'objet
+ * (il n'y a ni occlusion ni post-traitement à allumer), et le banc ne tire plus
+ * ni three ni `render3d/`. Chaque image cuite, vue par vue et clip par clip, se
+ * regarde dans la vitrine (`/atelier/unites`).
+ *
  * Deux agencements, un seul état. Sur un écran large, la toile prend tout le
  * cadre et un **dock** descend le long du bord gauche, en sections repliables,
  * lui-même repliable en une colonne d'icônes. Sur un téléphone, le même
@@ -64,16 +70,11 @@ interface PontBanc {
   choisirMonde(n: number): void;
   recentrer(x: number, y: number): void;
   zoomer(sens: number): void;
-  tourner(sens: number): void;
-  /** Incline la caméra d'un pas : +1 redresse vers la vue de dessus, −1 penche vers l'horizon. */
-  incliner(sens: number): void;
   silhouettes(v: boolean): void;
   replier(v: boolean): void;
   /** La hauteur de la feuille mobile : 0 poignée seule, 1 un tiers, 2 deux tiers. Sans effet sur PC. */
   feuille(niveau: 0 | 1 | 2): void;
   pret(): boolean;
-  /** Change la qualité d'affichage sans recharger ni remonter : la chaîne bascule à l'image suivante, caméra immobile. */
-  qualite(v: QualiteRendu): void;
   /** Le coût de la dernière image (`16-realisme.md` A6), ou `null` avant la première. */
   mesurer(): MesuresRendu | null;
   /**
@@ -95,8 +96,6 @@ function memesMesures(a: MesuresRendu, b: MesuresRendu): boolean {
     && a.msCalibration === b.msCalibration && Math.abs(a.msParImage - b.msParImage) < 0.05
     && JSON.stringify(a.familles ?? null) === JSON.stringify(b.familles ?? null);
 }
-
-const QUALITES: readonly (readonly [QualiteRendu, string])[] = [['auto', 'Auto'], ['basse', 'Basse']];
 
 const NOMS_BIOMES: Record<Biome, string> = { plaine: 'Bocage', foret: 'Forêt', montagne: 'Montagne', desert: 'Désert', jungle: 'Jungle', neige: 'Terres gelées', volcanique: 'Volcanique', cotier: 'Littoral', archipel: 'Archipel', marais: 'Marais' };
 const SAISONS: readonly (readonly [Saison, string])[] = [['printemps', 'Printemps'], ['ete', 'Été'], ['automne', 'Automne'], ['hiver', 'Hiver']];
@@ -198,14 +197,6 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   const [flecheVisible, setFleche] = useState(false);
   const [brouillard, setBrouillard] = useState(VUE_DEFAUT.brouillard);
   const [silhouettes, setSilhouettes] = useState(false);
-  // La qualité d'affichage du banc, `auto` par défaut comme en jeu. En changer
-  // ne remonte pas la peau : `Rendu.qualite()` monte ou démonte la chaîne à
-  // l'image suivante, caméra immobile — c'est ce qui rend la comparaison
-  // « avec et sans occlusion » équitable. La référence sert au montage, qui
-  // ne doit pas dépendre de la qualité.
-  const [qualite, setQualite] = useState<QualiteRendu>('auto');
-  const qualiteCourante = useRef(qualite);
-  qualiteCourante.current = qualite;
   // Le coût de la dernière image, relevé une fois par seconde pour A6.
   const [mesures, setMesures] = useState<MesuresRendu | null>(null);
   // Le statut est un toast en haut de la toile. Il est **fixe** tant que la peau
@@ -308,31 +299,50 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
 
     const poser = (fabrique: () => Rendu): void => {
       if (annule || !conteneur.current) return;
-      courant = fabrique();
-      courant.monter(conteneur.current);
+      const peau = fabrique();
+      try {
+        peau.monter(conteneur.current);
+      } catch {
+        peau.demonter();
+        annoncer('Le banc n’a pas pu démarrer : la peau 2D a refusé de se monter.', true);
+        return;
+      }
+      courant = peau;
+      // La peau est nommée sur le conteneur, comme en jeu (`data-rendu`) : c'est
+      // ce que lisent les specs, sans regarder l'image.
+      conteneur.current.dataset['rendu'] = peau.cle;
       const v = vueCourante.current;
-      courant.afficher(habille(etatCourant.current, v), v);
-      debrancher = courant.brancher({});
-      rendu.current = courant;
+      peau.afficher(habille(etatCourant.current, v), v);
+      debrancher = peau.brancher({});
+      rendu.current = peau;
       // On cadre la carte entière : un banc s'ouvre sur tout ce qu'il montre,
-      // pas sur le coin où la caméra s'était arrêtée.
+      // pas sur le coin où la caméra s'était arrêtée. La caméra 2D ne recule
+      // jamais sous 48 pixels par case : les quatre pas de recul s'y arrêtent.
       const e = etatCourant.current;
-      courant.recentrer?.({ x: Math.floor(e.largeur / 2), y: Math.floor(e.hauteur / 2) });
-      for (let i = 0; i < 4; i += 1) courant.zoomer?.(-1);
+      peau.recentrer?.({ x: Math.floor(e.largeur / 2), y: Math.floor(e.hauteur / 2) });
+      for (let i = 0; i < 4; i += 1) peau.zoomer?.(-1);
       annoncer('');
     };
 
-    void import('@/render3d/index').then(({ creerRendu3d }) => {
-      poser(() => creerRendu3d({
+    // La peau du jeu, chargée à la demande : la page du banc ne pèse que son
+    // interface tant que la peau n'est pas là.
+    void import('@/render2d/index').then(({ creerRendu2d, moteur2dDisponible }) => {
+      if (annule) return;
+      if (!moteur2dDisponible()) {
+        annoncer('Le banc n’a pas pu démarrer : WebGL 2 est indisponible sur cet appareil.', true);
+        return;
+      }
+      poser(() => creerRendu2d({
         audio,
-        biome, paysParCamp: { 0: paysAllie, 1: paysAdverse }, qualite: qualiteCourante.current,
-        // Le moteur s'initialise après le montage : un échec là se dit aussi.
-        surEchec: () => { if (!annule) annoncer('La 3D n’a pas pu démarrer : WebGPU n’a pas pu initialiser le canevas.', true); },
+        biome, paysParCamp: { 0: paysAllie, 1: paysAdverse },
+        animationsReduites: preferences.animationsReduites,
+        // Un contexte perdu qu'on ne sait pas rebâtir se dit aussi.
+        surEchec: () => { if (!annule) annoncer('La peau 2D a cessé de dessiner : son contexte WebGL 2 est perdu.', true); },
       }));
     }).catch(() => {
       if (annule) return;
       courant?.demonter();
-      annoncer('La 3D n’a pas pu démarrer : WebGPU est indisponible sur cet appareil.', true);
+      annoncer('Le banc n’a pas pu démarrer : la peau 2D ne s’est pas chargée.', true);
     });
     return () => { annule = true; debrancher?.(); courant?.demonter(); audio?.detruire(); rendu.current = null; };
     // `etat` n'est pas une dépendance, et c'est voulu : la peau lit le dernier
@@ -340,12 +350,6 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     // donc rejouerait le cadrage de caméra et effacerait l'animation qu'on vient
     // tout juste de déclencher.
   }, [biome, paysAllie, paysAdverse, monde, habille, annoncer]);
-
-  // La qualité change sans remonter : la peau monte ou démonte sa chaîne à
-  // l'image suivante. Avant que la peau soit là, c'est le montage qui la lit.
-  useEffect(() => {
-    rendu.current?.qualite?.(qualite);
-  }, [qualite]);
 
   // Le relevé de performance : une lecture par seconde, et seulement si elle
   // a changé, pour ne pas faire repeindre le dock à chaque image immobile.
@@ -423,13 +427,10 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
       choisirMonde: (n) => setIndex(Math.max(0, Math.min(tous.length - 1, n))),
       recentrer: (x, y) => rendu.current?.recentrer?.({ x, y }),
       zoomer: (sens) => rendu.current?.zoomer?.(sens),
-      tourner: (sens) => rendu.current?.tourner?.(sens),
-      incliner: (sens) => rendu.current?.incliner?.(sens),
       silhouettes: (v) => setSilhouettes(v),
       replier: (v) => setDockReplie(v),
       feuille: (n) => setNiveau(n),
       pret: () => rendu.current !== null,
-      qualite: (v) => setQualite(normaliserQualite(v)),
       mesurer: () => rendu.current?.mesurer?.() ?? null,
       jouer: (cle) => jouerRef.current(cle),
       neuf: () => neufRef.current(),
@@ -575,40 +576,34 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     <button type="button" className={styles.bascule} aria-pressed={silhouettes} onClick={() => setSilhouettes((v) => !v)}>Silhouettes inédites</button>
   </div>;
 
+  // La vue est fixe, comme en jeu : ni rotation ni inclinaison, seulement le
+  // zoom et le recentrage.
   const blocCamera = <div className={styles.camera}>
-    <button type="button" aria-label="Tourner la caméra vers la gauche" onClick={() => rendu.current?.tourner?.(-1)}>↺</button>
     <button type="button" aria-label="Éloigner la caméra" onClick={() => rendu.current?.zoomer?.(-1)}>−</button>
     <button type="button" aria-label="Rapprocher la caméra" onClick={() => rendu.current?.zoomer?.(1)}>+</button>
-    <button type="button" aria-label="Tourner la caméra vers la droite" onClick={() => rendu.current?.tourner?.(1)}>↻</button>
-    {/* Le banc a la place de deux boutons ; le HUD du jeu n'en a qu'un, qui fait le tour des trois inclinaisons. */}
-    <button type="button" aria-label="Pencher la caméra vers l’horizon" onClick={() => rendu.current?.incliner?.(-1)}>⌄</button>
-    <button type="button" aria-label="Redresser la caméra vers la vue de dessus" onClick={() => rendu.current?.incliner?.(1)}>⌃</button>
     <button type="button" onClick={recentrer}>Recentrer</button>
   </div>;
 
   const note = <p className={styles.note}>
-    Glissez la carte · Pincez pour zoomer · Q et E pour tourner · R et F pour incliner (ou deux doigts
-    de haut en bas, ou Maj + molette). Le banc rejoue des <strong>événements</strong>,
-    pas des règles : rien ici n’est une partie légale, et rien n’est enregistré.
+    Glissez la carte · Molette ou pincement pour zoomer · Double-tap pour rapprocher. La vue est fixe,
+    comme en jeu. Le banc rejoue des <strong>événements</strong>, pas des règles : rien ici n’est une
+    partie légale, et rien n’est enregistré. Chaque image cuite se regarde dans la{' '}
+    <Link href="/atelier/unites">vitrine des images</Link>.
   </p>;
 
-  // La qualité et le relevé de la dernière image : c'est ici qu'on compare
-  // « avec » et « sans » post-traitement (`16-realisme.md` A6). Les compteurs
-  // couvrent l'image entière, ombres comprises ; avec le post-traitement, la
-  // scène n'y est dessinée qu'une fois (couleur et normales par cibles
-  // multiples), plus les quads d'occlusion et de sortie. Le dos — WebGPU ou
-  // son repli WebGL 2 — est celui que le moteur a réellement pris.
+  // Le relevé de la dernière image (`16-realisme.md` A6) : les compteurs de la
+  // peau 2D — deux triangles par image posée, un appel par suite d'images qui
+  // partagent une page —, et le dos qu'elle a réellement ouvert.
   const blocRendu = <>
-    <Segmente nom="Qualité" valeur={qualite} options={QUALITES} surChoix={setQualite} colonnes={3} />
     <div className={styles.champ}>
       <span className={styles.etiquette}>Dernière image</span>
       <p className={styles.note} data-mesures="oui">
         {mesures
-          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.composeur ? 'avec' : 'sans'} post-traitement · ${mesures.backend === 'webgpu' ? 'WebGPU' : 'moteur en attente'}`
+          ? `${mesures.triangles.toLocaleString('fr-FR')} triangles · ${mesures.appels} appels · ${mesures.msParImage.toFixed(1)} ms · ${mesures.backend === 'webgl2' ? 'WebGL 2' : mesures.backend === 'webgpu' ? 'WebGPU' : 'moteur en attente'}`
           : 'Pas encore d’image.'}
       </p>
       {/* Par famille, sur la scène entière : les appels sont approchés par les
-          mailles, la passe d'ombres n'y est pas. */}
+          suites d'images d'un calque. */}
       {mesures?.familles
         ? <p className={styles.note} data-familles="oui">
           {Object.entries(mesures.familles)
@@ -625,9 +620,12 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   };
 
   if (simple) return <main className={styles.atelier}>
-    <div ref={conteneur} className={styles.monde} aria-label="Plateau 3D : glisser pour déplacer, Alt et glisser pour tourner, molette pour zoomer" />
+    <div ref={conteneur} className={styles.monde} aria-label="Plateau : glisser pour déplacer, molette ou pincement pour zoomer" />
     <div className={styles.toast} role="status" aria-live="polite">{toast ? <span>{toast.texte}</span> : null}</div>
     <Link className={styles.retourSimple} href="/">← Accueil</Link>
+    {/* Le plateau montre les pièces à leur place ; la vitrine, chaque image cuite
+        une à une — toutes ses vues, tous ses clips, chaque couleur de camp. */}
+    <Link className={styles.vitrineSimple} href="/atelier/unites">Vitrine des images →</Link>
     <label className={styles.selecteurUnite}>
       <span>Unité</span>
       <select value={uniteChoisie} onChange={e => setUniteChoisie(e.target.value)}>

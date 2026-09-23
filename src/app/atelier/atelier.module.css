@@ -169,6 +169,8 @@
 /* Le retour reste à gauche ; le sélecteur libère le centre de la carte. */
 .retourSimple{position:absolute;z-index:10;top:max(18px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));display:flex;align-items:center;min-height:48px;padding:10px 14px;border-radius:8px;background:#192e3bf2;color:#e4efed;text-decoration:none;font-size:13px;font-weight:650}
 .retourSimple:hover{background:#2a4858}
+.vitrineSimple{position:absolute;z-index:10;bottom:max(18px,env(safe-area-inset-bottom));left:max(16px,env(safe-area-inset-left));display:flex;align-items:center;min-height:48px;padding:10px 14px;border-radius:8px;background:#192e3bf2;color:#e4efed;text-decoration:none;font-size:13px;font-weight:650}
+.vitrineSimple:hover{background:#2a4858}
 .selecteurUnite{position:absolute;z-index:10;top:max(18px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right));display:flex;align-items:center;gap:12px;width:min(360px,calc(100% - 136px));padding:4px 4px 4px 14px;border:0;border-radius:9px;background:#192e3bf2;color:#dbe8e8;font-size:13px}
 .selecteurUnite select{flex:1;min-width:0;min-height:40px;padding:8px;border:0;border-radius:6px;background:#294754;color:#eef5f2;font:inherit}
 .selecteurUnite select:focus-visible{outline:3px solid #78ddca;outline-offset:-3px}

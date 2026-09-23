@@ -8,7 +8,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  CLE_ETAPE, CLE_LISTE_ETAPES, ETAPES_CHARGEMENT,
+  CLE_ETAPE, CLE_LISTE_ETAPES, ETAPES_CHARGEMENT, etapeAffichee,
 } from '../../src/app/jeu/[scenario]/etapes-chargement';
 import { chaineSource, SOURCE_FR } from '../../src/i18n/source';
 import { t } from '../../src/i18n/index';
@@ -29,9 +29,16 @@ test('chaque étape de chargement a un libellé français, et il tient sur la li
   assert.notEqual(t('fr', CLE_LISTE_ETAPES), '');
 });
 
-test('les quatre étapes sont dans l’ordre où elles surviennent, sans doublon', () => {
+test('les trois étapes sont dans l’ordre où elles surviennent, sans doublon', () => {
   // L'écran coche les étapes précédentes en comparant les rangs : un doublon ou
-  // un ordre inversé cocherait une étape qui n'a pas eu lieu.
-  assert.deepEqual([...ETAPES_CHARGEMENT], ['modules', 'plateau', 'moteur', 'image']);
+  // un ordre inversé cocherait une étape qui n'a pas eu lieu. Depuis la bascule
+  // en 2D (23 septembre 2026), « le moteur démarre » n'est plus une case : la
+  // peau ouvre son contexte en quelques millisecondes.
+  assert.deepEqual([...ETAPES_CHARGEMENT], ['modules', 'plateau', 'image']);
   assert.equal(new Set(ETAPES_CHARGEMENT).size, ETAPES_CHARGEMENT.length);
+});
+
+test('le démarrage d’un moteur — que seule la 3D annonce encore — se lit comme le plateau qui se monte', () => {
+  assert.equal(etapeAffichee('moteur'), 'plateau');
+  for (const e of ETAPES_CHARGEMENT) assert.equal(etapeAffichee(e), e, `${e} est sa propre case`);
 });

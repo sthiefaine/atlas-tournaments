@@ -12,7 +12,7 @@ import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/re
 import { lignesPouvoir, nomTerrain, nomUnite } from '@/render/libelles';
 import { textesObjectifs } from '@/render/objectifs';
 import type { CleRendu, Rendu } from '@/render/rendu';
-import { creerRendu2d } from '@/render2d/index';
+import { creerRendu2d, moteur2dDisponible } from '@/render2d/index';
 // La 3D ne s'importe qu'**à la demande** (`import()` plus bas) : la route 2D
 // n'embarque ni three ni le moteur WebGPU. Un import de type s'efface au build.
 import type { OptionsRendu3d } from '@/render3d/index';
@@ -76,12 +76,28 @@ const MS_PAS_MAXIMAL = 200;
 const CAMP_JOUEUR = 0;
 
 /**
- * La peau demandée par l'adresse : `?rendu=2d` compose les images cuites
- * (`render2d/`, décision du 23 septembre 2026), toute autre valeur garde la 3D,
- * peau par défaut jusqu'à la bascule de la seconde vague.
+ * La peau demandée par l'adresse. La 2D — les images cuites (`render2d/`,
+ * décision du 23 septembre 2026) — est la peau du jeu ; `?rendu=3d` garde la
+ * 3D joignable, pour comparer, jusqu'à son retrait d'un seul commit. Toute
+ * autre valeur, ou aucune, donne la 2D.
  */
 function peauDemandee(recherche: string): CleRendu {
-  return new URLSearchParams(recherche).get('rendu') === '2d' ? '2d' : '3d';
+  return new URLSearchParams(recherche).get('rendu') === '3d' ? '3d' : '2d';
+}
+
+/**
+ * Ce que dit l'écran d'échec : ce qui manque **vraiment**. Il disait « WebGPU
+ * est indisponible » à tout échec, y compris à un appareil qui l'avait
+ * (`CLAUDE.md`, 8 septembre : « le libellé reste à corriger »). La 2D ne
+ * demande que WebGL 2 : elle ne le nomme que s'il manque, et dit sinon que le
+ * jeu n'a pas démarré, sans accuser l'appareil. La page de jeu n'est jamais
+ * rendue par le serveur (`toile-client.tsx`) : la sonde lit un vrai navigateur.
+ */
+function messageEchec(): { titre: string; aide: string } {
+  if (peauDemandee(window.location.search) === '3d') return { titre: 'campagne.sans_webgl', aide: 'campagne.sans_webgl_aide' };
+  return moteur2dDisponible()
+    ? { titre: 'campagne.echec_demarrage', aide: 'campagne.echec_demarrage_aide' }
+    : { titre: 'campagne.sans_webgl2', aide: 'campagne.sans_webgl_aide' };
 }
 
 /**
@@ -250,7 +266,8 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   useLayoutEffect(() => { rappelChargement.current?.('plateau'); }, []);
 
   // La peau : la 2D est déjà dans ce module, la 3D se télécharge seulement si
-  // l'adresse la demande. Rien ne se monte avant qu'elle soit là.
+  // l'adresse la demande (`?rendu=3d`) — la route par défaut ne tire ni three
+  // ni `render3d/`. Rien ne se monte avant que la peau soit là.
   const [peau, setPeau] = useState<FabriquePeau | null>(null);
   useEffect(() => {
     if (peauDemandee(window.location.search) === '2d') {
@@ -371,10 +388,11 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
             // quand le joueur le lui prend.
             paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
             animationsReduites: preferences.animationsReduites,
-            // Le moteur s'initialise après le montage : s'il ne démarre pas —
-            // ni WebGPU ni WebGL 2 n'ont voulu du canevas —, c'est le même écran
-            // que pour un montage qui lève, au lieu d'un plateau noir. L'écran de
-            // chargement se retire alors : il n'y a plus rien à attendre.
+            // Une peau qui cesse de pouvoir dessiner une fois montée — un
+            // contexte perdu qu'on ne sait pas rebâtir, un WebGPU qui refuse
+            // le canevas en 3D — tombe sur le même écran qu'un montage qui
+            // lève, au lieu d'un plateau noir. L'écran de chargement se retire
+            // alors : il n'y a plus rien à attendre.
             surEchec: () => { setErreur(true); direChargement('pret'); },
           };
           return peau.cle === '2d' ? creerRendu2d(commun) : peau.creer({ ...commun, qualite: preferences.qualite });
@@ -533,6 +551,8 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
     kit: t(locale, 'vestiaire.kit'),
   };
 
+  // Ce que dit l'écran d'échec, lu une fois par rendu et seulement quand il paraît.
+  const echec = erreur ? messageEchec() : null;
   const plateauPret = Boolean(etat);
   useEffect(() => {
     if (modal || bancEnAttente) dialogueRef.current?.focus();
@@ -604,7 +624,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         <div className="campagne-actions"><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div>
       </section>
     </div> : null}
-    {erreur ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, 'campagne.sans_webgl')}</h1><p>{t(locale, 'campagne.sans_webgl_aide')}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
+    {echec ? <div className="atlas-voile"><section className="atlas-briefing" role="alert"><h1>{t(locale, echec.titre)}</h1><p>{t(locale, echec.aide)}</p><div className="campagne-actions"><button className="atlas-bouton" onClick={rejouer}>{t(locale, 'campagne.rejouer')}</button><Link href="/campagne">{t(locale, 'campagne.retour')}</Link></div></section></div> : null}
     {/* L'objectif ne s'écrit plus sur la carte : un fanion, et la modale le dit.
         Deux lignes de texte posées en permanence sur le plateau prenaient la
         place du jeu — sur un téléphone c'était le quart de la largeur, sur PC

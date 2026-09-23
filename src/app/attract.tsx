@@ -13,7 +13,8 @@ import {
   ambianceDe, casesObjectifs, commandantsDuScenario,
   type Surbrillance, type VueInteraction,
 } from '@/render/index';
-import { creerRendu3d, rendu3dDisponible } from '@/render3d/index';
+import { creerRendu2d } from '@/render2d/index';
+import { moteur2dDisponible } from '@/render2d/gl';
 import { validerMapDef, validerScenario, type Biome } from '@/schemas/index';
 
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
@@ -28,23 +29,26 @@ import scenarioDemo from '../../content/scenarios/demo.json';
  * rendu existent déjà, et chaque partie est **déterministe** — c'est le moteur,
  * on n'y touche pas ; seule la graine change d'une visite à l'autre.
  *
- * Ce que ça coûte est assumé : ce module tire le moteur, l'IA et le rendu, soit
+ * Ce que ça coûte est assumé : ce module tire le moteur, l'IA et la peau, soit
  * une bonne part du bundle de jeu. Il est donc **chargé après l'hydratation**
  * (`vitrine.tsx`, `next/dynamic` avec `ssr: false`), jamais dans le rendu
- * initial — le plateau SVG du serveur tient la place en attendant, et reste seul
- * si le visiteur demande à ne pas voir d'animation.
+ * initial ; le fond de l'attente est la nappe sombre de l'écran-titre, et le
+ * plateau SVG du serveur ne paraît qu'en repli.
  *
- * Et il tient la place **jusqu'au bout** : depuis le 8 septembre 2026, cet
- * attract ne se déclare `pret` qu'une fois une image réellement dessinée, pas
- * une fois monté. Le drapeau `data-attract='pret'` mentait de plusieurs secondes
- * — sur le serveur de développement, cinq —, et la vitrine retirait le SVG à ce
- * signal : le visiteur regardait un fond vide pendant que le moteur WebGPU
- * traduisait ses nuanceurs. `surPret` et `surEchec` sont ce contrat.
+ * **Depuis le 23 septembre 2026, il joue sur la peau 2D** (`creerRendu2d`, les
+ * images cuites) comme le jeu. Elle ouvre un contexte WebGL 2 en quelques
+ * millisecondes et ne tire ni three ni le moteur WebGPU : c'est ce qui lui
+ * rend le **téléphone**, où l'accueil était resté immobile pour épargner la 3D.
+ *
+ * Il ne se déclare `pret` qu'une fois une image réellement dessinée, pas une
+ * fois monté (8 septembre 2026) : la vitrine attend ce signal pour le montrer,
+ * et un canevas vide annoncé comme prêt, c'est un trou noir derrière le titre.
+ * `surPret` et `surEchec` sont ce contrat.
  *
  * Trois économies, parce qu'une page d'accueil n'a pas le droit de chauffer un
- * appareil : la boucle s'arrête quand l'onglet passe en arrière-plan, aucune IA
- * ne tourne tant qu'on ne la regarde pas, et rien ne se monte sans moteur —
- * WebGPU ou WebGL 2 — ni sous `prefers-reduced-motion`.
+ * appareil : la boucle de la peau dort quand rien ne bouge, aucune IA ne tourne
+ * tant que l'onglet est en arrière-plan, et rien ne se monte sans WebGL 2 ni
+ * sous animations réduites — celles de l'appareil ou celles du joueur.
  *
  * On montre en plus la **grammaire du jeu** : avant chaque déplacement, la
  * portée de l'unité s'allume en vert et la flèche trace son chemin. C'est
@@ -64,26 +68,12 @@ const GRAINES = ['accueil:1', 'accueil:2', 'accueil:3', 'accueil:4', 'accueil:5'
 const MS_ENTRE_ACTIONS = 190;
 /** Durée d'affichage de la portée avant qu'une unité ne s'élance. */
 const MS_INTENTION = 330;
-/**
- * Crans de dézoom au cadrage, depuis le cadrage de la carte entière que le rendu
- * fait à son montage — qui borne déjà les cases à 64 px, donc ne montre qu'un
- * tiers de la carte sur un téléphone. Quatre crans sur un écran étroit ramènent
- * la case à 48 px, la limite de lisibilité du rendu, et l'écran voit huit
- * colonnes : l'île, ses deux ponts et une rive. Jamais six : la carte entière
- * tenue dans la largeur d'un téléphone donne des cases de vingt pixels, où l'on
- * ne distingue ni une unité, ni le vert, ni le rouge. Sur un grand écran, la
- * carte entière tient à 80 px la case : dézoomer ne ferait que la rétrécir dans
- * le vide. On montre une **manœuvre**, pas un plan.
- */
-function cransDezoom(): number {
-  return window.innerWidth < 720 ? 4 : 0;
-}
 /** Pause sur l'écran de fin avant de relancer la partie. */
 const MS_AVANT_REPRISE = 2600;
 /**
- * Au-delà, on renonce : le moteur n'a pas dessiné. La vitrine garde son plateau
- * SVG et démonte l'attract. Large exprès — un moteur WebGPU sur pilote froid met
- * plus d'une seconde à sortir sa première image (`doc/10` §9.4) —, mais fini.
+ * Au-delà, on renonce : la peau n'a pas dessiné. La vitrine montre alors son
+ * plateau SVG et démonte l'attract. La 2D dessine en une image ; le budget ne
+ * sert qu'à un onglet qui ne reçoit plus d'images, ou à un contexte perdu.
  */
 const MS_BUDGET_PREMIERE_IMAGE = 12_000;
 /** Ce qu'une seule image peut retirer de ce budget (voir `toile.tsx`). */
@@ -158,19 +148,17 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
     if (!conteneur || !exhibition) return undefined;
     const { catalogue: cat, commandants, etatNeuf } = exhibition;
 
-    // Le rendu vectoriel n'existe plus : l'attract se joue en 3D comme le jeu,
-    // et ne se monte pas du tout sans moteur — WebGPU, ou son repli WebGL 2 :
-    // le plateau SVG du serveur reste alors seul à l'écran, ce qui est très bien.
-    if (!rendu3dDisponible()) {
+    // L'attract se joue sur la peau du jeu, la 2D, et ne se monte pas sans
+    // WebGL 2 : le plateau SVG du serveur paraît alors, ce qui est très bien.
+    // La vitrine a déjà posé la question ; la reposer ici ne coûte rien — la
+    // sonde est mémorisée — et garde ce module sûr s'il est monté seul.
+    if (!moteur2dDisponible()) {
       rappels.current.surEchec?.();
       return undefined;
     }
-    const rendu = creerRendu3d({
+    const rendu = creerRendu2d({
       biome: exhibition.biome,
       paysParCamp: { 0: 'fr', 1: 'lu' },
-      // Un écran-titre n'a pas besoin d'occlusion ni de grain, et `basse` lui
-      // épargne le téléchargement des modules de post-traitement.
-      qualite: 'basse',
       surEchec: () => rappels.current.surEchec?.(),
     });
     let vivant = true;
@@ -183,6 +171,11 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
       rappels.current.surEchec?.();
       return () => undefined;
     }
+    // Le plateau est un fond : il ne prend pas le focus du clavier, qui doit
+    // aller droit au menu. La toile de la peau se déclare focalisable pour le
+    // jeu, où c'est elle qu'on commande.
+    rendu.canvas?.setAttribute('tabindex', '-1');
+    conteneur.dataset['rendu'] = rendu.cle;
 
     function afficher(surbrillances: Surbrillance[] = [], chemin: readonly { x: number; y: number }[] = [], selection: string | null = null): void {
       const vue: VueInteraction = {
@@ -220,27 +213,26 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
 
     /**
      * Cadre le centre de la carte — sur la carte d'exhibition, l'île, ses villes
-     * neutres et ses ponts : là où les deux camps vont se rencontrer. Le monde 3D
-     * n'existe qu'après le premier `afficher()` : appelé avant, ce cadrage ne
-     * faisait rien, et la caméra restait sur la carte entière jusqu'à la
-     * première reprise. On passe par `cadrer` et non `recentrer`, parce que le
-     * rendu réserve son premier `cadrer` à un centrage franc : le consommer ici
-     * garantit que l'action suivante ne recadre que si elle sort du champ.
+     * neutres et ses ponts : là où les deux camps vont se rencontrer. On passe
+     * par `cadrer` et non `recentrer`, parce que la peau réserve son premier
+     * `cadrer` à un cadrage d'ouverture : le consommer ici garantit que l'action
+     * suivante ne recadre que si elle sort du champ.
+     *
+     * Aucun cran de dézoom, contrairement à la 3D : la caméra 2D cadre déjà la
+     * carte entière quand elle tient, et sinon s'arrête à 48 pixels par case en
+     * portrait (`PIXELS_LISIBLES`) — sur un téléphone, huit colonnes : l'île,
+     * ses deux ponts et une rive. On montre une **manœuvre**, pas un plan.
      */
     function cadrerCarte(): void {
-      rendu.cadrer?.({ x: Math.floor(etat.largeur / 2), y: Math.floor(etat.hauteur / 2) });
-      // `limiter()` borne le dézoom à la distance qui garde une case lisible :
-      // on ne peut pas reculer trop loin, quelle que soit la taille de l'écran.
-      const crans = cransDezoom();
-      for (let i = 0; i < crans; i += 1) rendu.zoomer?.(-1);
+      rendu.cadrer({ x: Math.floor(etat.largeur / 2), y: Math.floor(etat.hauteur / 2) });
     }
 
     /**
      * Attend qu'une image ait **réellement** été dessinée. Le seul témoin est
-     * celui du moteur lui-même : `mesurer()` rend un dos nul tant qu'il n'a pas
-     * démarré, et zéro appel de dessin tant qu'aucune image n'est passée. On le
-     * regarde d'image en image, ce qui ne coûte qu'une lecture de compteurs, et
-     * on abandonne au budget plutôt que d'attendre pour toujours.
+     * celui de la peau elle-même : `mesurer()` rend zéro appel de dessin tant
+     * qu'aucune image n'est passée. On le regarde d'image en image, ce qui ne
+     * coûte qu'une lecture de compteurs, et on abandonne au budget plutôt que
+     * d'attendre pour toujours.
      */
     function attendrePremiereImage(): Promise<boolean> {
       return new Promise((resoudre) => {
@@ -339,6 +331,7 @@ export default function Attract({ surPret, surEchec }: ProprietesAttract = {}) {
       vivant = false;
       if (minuterie !== null) clearTimeout(minuterie);
       delete conteneur.dataset['attract'];
+      delete conteneur.dataset['rendu'];
       rendu.demonter();
     };
   }, []);

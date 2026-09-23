@@ -1,83 +1,56 @@
 /* La vitrine reprend les couleurs de l'atelier : encre, papier, signal. Une
-   planche de six tuiles sur un seul canevas ; les tuiles sont des cadres vides
-   au-dessus du canevas, qui dessine dans leur rectangle. */
+   planche de toiles, une rangée par animation, une toile par couleur d'équipe ;
+   chaque toile a la taille de l'entrée à l'échelle choisie, et la page défile. */
 .vitrine { --encre: #152237; --encre-haute: #0c1422; --encre-douce: #20334d; --papier: #eef4fa; --sourdine: #b1c2d5; --signal: #72e4ce;
-  display: flex; flex-direction: column; min-height: 100svh; background: var(--encre-haute); color: var(--papier); font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  display: flex; flex-direction: column; min-height: 100svh; padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  background: var(--encre-haute); color: var(--papier); font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 .vitrine * { box-sizing: border-box; }
 
 .barre { display: flex; align-items: center; gap: 12px; padding: max(8px, env(safe-area-inset-top, 0px)) 16px 8px; }
 .titre { flex: 1; min-width: 0; }
-.ariane { display: flex; gap: 6px; font-size: 10px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; color: var(--sourdine); }
+.ariane { display: flex; flex-wrap: wrap; gap: 6px; font-size: 10px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; color: var(--sourdine); }
 .ariane a { color: inherit; text-decoration: none; }
 .ariane a:hover { color: var(--papier); }
 .titre h1 { margin: 2px 0 0; font-size: 18px; font-weight: 900; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lien { display: flex; align-items: center; min-height: 40px; padding: 6px 14px; background: var(--encre); color: var(--papier); border: 1px solid #839798; box-shadow: 0 8px 24px #03091626; text-decoration: none; font-size: 13px; font-weight: 800; }
+.lien { display: flex; align-items: center; min-height: 44px; padding: 6px 14px; border-radius: 10px; background: var(--encre); color: var(--papier); border: 1px solid #839798; text-decoration: none; font-size: 13px; font-weight: 800; }
 .lien:hover { background: var(--encre-douce); }
 
-.commandes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; padding: 6px 16px 10px; font-size: 12px; font-weight: 700; color: var(--sourdine); }
-.commandes label { display: flex; flex-direction: column; gap: 4px; }
-.commandes select { min-height: 36px; padding: 4px 8px; background: var(--encre); color: var(--papier); border: 1px solid #839798; font: inherit; font-weight: 700; }
-.camp { display: flex; gap: 10px; margin: 0; padding: 0 0 6px; border: 0; }
-.camp legend { padding: 0 0 4px; }
-.camp label { flex-direction: row; align-items: center; gap: 6px; color: var(--papier); }
-.legende { flex-basis: 100%; margin: 0; font-weight: 600; }
-/* L'écran d'échec prend la place de la planche : il ne se glisse pas entre des
-   contrôles morts, où personne ne le lisait. */
-.sansWebgl { margin: 16px; padding: 20px 24px; background: var(--encre); border-left: 4px solid var(--signal); }
-.sansWebgl h2 { margin: 0 0 10px; font-size: 18px; font-weight: 700; }
-.sansWebgl p { margin: 0 0 12px; max-width: 62ch; line-height: 1.5; }
-.sansWebgl ul { margin: 0; padding-left: 20px; max-width: 62ch; line-height: 1.6; font-size: 14px; }
-.sansWebgl code { padding: 1px 5px; background: #ffffff14; font-family: ui-monospace, monospace; font-size: 13px; }
+/* L'état du manifeste : c'est la première chose à savoir — un manifeste refusé
+   se voit ici au lieu de se taire dans la console. */
+.etat { margin: 0 16px 8px; padding: 10px 14px; border-radius: 12px; background: var(--encre); border-left: 4px solid var(--sourdine); font-size: 13px; line-height: 1.45; }
+.etat[data-etat='lu'] { border-left-color: var(--signal); }
+.etat[data-etat='refuse'] { border-left-color: #ff7a6b; }
 
-/* Ce que la vitrine montre : le badge dit d'abord si c'est un modèle livré ou
-   le placeholder ; le niveau de détail et les clips ne s'ouvrent qu'avec un
-   modèle, et un bouton grisé dit qu'un clip manque au fichier. */
-.modele { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; margin: 0 16px 10px; padding: 8px 12px; background: var(--encre); border-left: 4px solid var(--sourdine); font-size: 12px; font-weight: 700; color: var(--sourdine); }
-.modele[data-livre='oui'] { border-left-color: var(--signal); }
-.modele label { display: flex; flex-direction: column; gap: 4px; }
-.modele select { min-height: 36px; padding: 4px 8px; background: var(--encre-haute); color: var(--papier); border: 1px solid #839798; font: inherit; font-weight: 700; }
-.modele select:disabled { opacity: .45; }
-.badge { align-self: center; padding: 6px 10px; background: var(--encre-douce); color: var(--papier); border: 1px solid #839798; letter-spacing: .12em; text-transform: uppercase; font-size: 11px; font-weight: 850; }
-.modele[data-livre='oui'] .badge { background: var(--signal); color: var(--encre-haute); border-color: var(--signal); }
-.clips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0 0 2px; border: 0; }
-.clips legend { padding: 0 0 4px; }
-.clips button { min-height: 32px; padding: 4px 10px; background: var(--encre-haute); color: var(--papier); border: 1px solid #839798; font: inherit; font-weight: 800; cursor: pointer; }
-.clips button:hover:enabled { background: var(--encre-douce); }
-.clips button[aria-pressed='true'] { background: var(--signal); color: var(--encre-haute); border-color: var(--signal); }
-.clips button:disabled { opacity: .4; cursor: default; }
+.commandes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; padding: 8px 16px 12px; font-size: 12px; font-weight: 700; color: var(--sourdine); }
+.commandes label { display: flex; flex-direction: column; gap: 4px; max-width: 100%; }
+.commandes select { min-height: 44px; max-width: 100%; padding: 4px 8px; border-radius: 10px; background: var(--encre); color: var(--papier); border: 1px solid #839798; font: inherit; font-weight: 700; }
+.commandes select:disabled { opacity: .45; }
+.groupe { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; border: 0; }
+.groupe legend { padding: 0 0 4px; }
+.groupe button { min-height: 44px; padding: 4px 12px; border-radius: 10px; background: var(--encre); color: var(--papier); border: 1px solid #839798; font: inherit; font-weight: 800; cursor: pointer; }
+.groupe button:hover:enabled { background: var(--encre-douce); }
+.groupe button[aria-pressed='true'] { background: var(--signal); color: var(--encre-haute); border-color: var(--signal); }
+.groupe button:disabled, .groupe:disabled button { opacity: .45; cursor: default; }
+.commandes button:focus-visible, .commandes select:focus-visible, .lien:focus-visible { outline: 3px solid var(--signal); outline-offset: 2px; }
 
-.planche { position: relative; flex: 1; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(400px, 65svh); gap: 8px; margin: 0 16px 16px; min-height: 480px; }
-.canevas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.tuile { position: relative; z-index: 1; border: 1px solid #4d6a78; pointer-events: none; }
-.tuile span { position: absolute; left: 0; top: 0; padding: 4px 8px; background: var(--encre); color: var(--papier); font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
-.tuile[data-vue='jeu'] { border-color: var(--signal); }
-.tuile[data-vue='jeu'] span { background: var(--signal); color: var(--encre-haute); }
+/* La fiche : ce qu'est l'entrée, d'où elle vient, ce qu'elle pèse. Un repli le
+   dit franchement. */
+.fiche { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 16px 12px; padding: 10px 14px; border-radius: 12px; background: var(--encre); border-left: 4px solid var(--sourdine); font-size: 12px; color: var(--sourdine); }
+.fiche[data-cuite='oui'] { border-left-color: var(--signal); }
+.fiche strong { flex-basis: 100%; color: var(--papier); font-size: 14px; }
 
-@media (max-width: 720px) {
-  .planche { grid-template-columns: minmax(0, 1fr); }
-}
+.planche { display: flex; flex-direction: column; gap: 12px; margin: 0 16px; padding: 12px; border-radius: 16px; background: #10131a; overflow-x: auto; }
+.planche[data-fond='herbe'] { background: #5f8f45; }
+.planche[data-fond='damier'] { background-color: #d9dde3; background-image: linear-gradient(45deg, #aeb4bd 25%, transparent 25%, transparent 75%, #aeb4bd 75%), linear-gradient(45deg, #aeb4bd 25%, transparent 25%, transparent 75%, #aeb4bd 75%); background-size: 16px 16px; background-position: 0 0, 8px 8px; }
+.rangee { display: flex; flex-wrap: wrap; gap: 12px; }
+.tuile { display: flex; flex-direction: column; gap: 4px; margin: 0; }
+.toile { display: block; border: 1px solid #ffffff26; border-radius: 6px; }
+.tuile figcaption { display: flex; flex-wrap: wrap; gap: 4px 8px; max-width: 34ch; font-size: 11px; font-weight: 700; color: var(--papier); text-shadow: 0 1px 2px #000c; }
+.tuile figcaption b { color: var(--signal); font-weight: 850; }
+.planche[data-fond='damier'] .tuile figcaption { color: var(--encre-haute); text-shadow: none; }
+.planche[data-fond='damier'] .tuile figcaption b { color: #0b6b58; }
 
-.navigationCamera { display:flex; flex-wrap:wrap; gap:8px; padding:0 16px 12px; }
-.navigationCamera button { min-height:44px; border:1px solid #839798; padding:8px 12px; background:var(--encre); color:var(--papier); cursor:pointer; font:inherit; font-size:13px; font-weight:700; }
-.navigationCamera button[aria-pressed='true'] { background:var(--signal); color:var(--encre-haute); }
-.navigationCamera p { flex-basis:100%; margin:0; font-size:13px; line-height:1.5; }
-.navigationCamera button:focus-visible,.tuile[data-vue='jeu']:focus-visible { outline:3px solid var(--signal); outline-offset:3px; }
-.tuile[data-vue='jeu'] { pointer-events:auto; touch-action:none; cursor:grab; user-select:none; }
-.tuile[data-vue='jeu'][data-glisser='true'] { cursor:grabbing; }
-.tuile[data-vue='jeu'] span { pointer-events:none; }
-
-.planche[hidden], .navigationCamera[hidden] { display: none; }
-
-/* Même famille de cartes et de commandes que les menus du jeu. */
-.vitrine button, .vitrine select, .lien { border-radius: 10px; min-height: 44px; }
-.modele, .sansWebgl, .tuile { border-radius: 16px; }
-.modele { padding: 14px 16px; }
-.badge { border-radius: 8px; letter-spacing: .04em; }
-.lien { box-shadow: none; }
-.commandes { padding-top: 12px; padding-bottom: 16px; }
 @media (max-width: 480px) {
   .barre { flex-wrap: wrap; }
   .titre { flex-basis: 100%; }
-  .commandes label { max-width: 100%; }
-  .commandes select { max-width: 100%; }
 }

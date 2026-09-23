@@ -1,593 +1,360 @@
 'use client';
 
 /**
- * La vitrine des unités : une seule grande vue orbitale interactive.
+ * La **vitrine des images cuites** : pour une unité, un bâtiment ou un décor,
+ * toutes ses vues et tous ses clips, tels que le jeu les pose. C'est ici que le
+ * propriétaire juge les sprites (décision du 23 septembre 2026, `BRIEF.md`,
+ * « Sprites précalculés ») ; elle remplace les six angles 3D d'un modèle, qui
+ * montraient une source, pas ce que le joueur voit.
  *
- * Le banc d'essai montre tout le catalogue dans une scène complète, ce qui est
- * ce qu'il faut pour juger un plateau et bien trop lent pour juger une figurine :
- * on y tourne autour d'une unité à coups de zoom, sans jamais la voir de face.
- * Ici, pas de terrain, pas de décor, pas de boucle d'animation : un socle, trois
- * lumières de studio, et un rendu **à la demande** — la scène ne se redessine
- * que lorsqu'un choix change ou que la fenêtre bouge.
+ * Elle lit **le manifeste du jeu** (`CHEMIN_MANIFESTE`) par le lecteur de la
+ * peau (`lireManifeste`) : un manifeste refusé l'est ici comme en jeu, et la
+ * vitrine dit pourquoi au lieu de se taire dans la console. Chaque animation se
+ * joue dans sa toile — une vignette 2D, sans WebGL (`render2d/vignette.ts`) —
+ * à la couleur d'équipe choisie, par la formule du nuanceur du jeu ; une entrée
+ * absente du manifeste montre son **repli**, le dessin que le jeu poserait à sa
+ * place. Un clip qui ne boucle pas — un tir, une capture — se rejoue après une
+ * pause : en jeu il ne passe qu'une fois, ici on le manquerait.
  *
- * Une vue, un seul canevas : la surface de rendu est un rectangle de
- * ciseaux du même moteur. Le moteur est celui du jeu —
- * `WebGPURenderer`, WebGPU ou son dos WebGL 2, décidé avant de le construire
- * (`render3d/scene.ts`, `choisirBackend`) — et il s'initialise de façon
- * asynchrone : le studio expose `prete`, ne dessine rien avant, et redessine
- * de lui-même dès que le moteur est là.
+ * Toutes les toiles d'une entrée partagent une même enveloppe : le pivot — le
+ * pied, au centre de la case — tombe au même endroit d'une vue à l'autre, et
+ * l'échelle est commune. L'échelle se choisit en pixels par case, de 48 — le
+ * plus petit que le jeu montre — à 256, la loupe : ce qu'on regarde se compare.
  *
- * Depuis le préalable B0 de `doc/16-realisme.md` §3.1, la vitrine dit aussi
- * **ce qu'elle montre** — un modèle livré au LOD0 ou le placeholder —,
- * et joue les clips d'un modèle livré dans le même lecteur
- * que le jeu. La seule boucle est celle du lecteur : un
- * `requestAnimationFrame` tant qu'un clip joue, plus rien dès qu'on le fige.
+ * Instrument d'auteur : ses libellés sont écrits en clair, comme ceux du banc
+ * (`atelier.tsx`) ; il n'est pas traduit et n'a pas à l'être.
  */
 
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as THREE from 'three/webgpu';
-import { chargerCatalogue } from '@/engine/index';
-import { chargerPays } from '@/content/index';
-import { chargerStyleNation } from '@/assets/styles';
-import { creerEnvironnement } from '@/render3d/environnement';
-import { choisirBackend, creerMoteurWebGPU, moteur3dDisponible, type NavigateurGpu } from '@/render3d/scene';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { chargerStylesNations } from '@/assets/styles';
+import { chargerCatalogue, type Catalogue } from '@/engine/index';
+import { nomTerrain, nomUnite } from '@/render/libelles';
+import { echelleTaille } from '@/render/sprites/silhouettes';
+import { chargerImageNavigateur, lireManifeste } from '@/render2d/atlas';
 import {
-  Materiaux, chargerModele, construirePlaceholder, creerLecteurClips, materiauxPropresDe, monterModele,
-  NOM_FIGURINE, NOMS_CLIPS, type LecteurClips, type NomClip,
-} from '@/render3d/unites';
-import { libererSquelettesPrives } from '@/render3d/modeles';
-import type { CampId, CleUnite, CodePays } from '@/schemas/types';
+  CHEMIN_MANIFESTE, ESSENCES_DECOR, idBatiment, idDecor, idUnite, PIXELS_PAR_CASE,
+  type AnimationSprite, type EntreeSprite, type FamilleSprite, type ManifesteSprites,
+} from '@/render2d/contrat';
+import { creerPeintreRepli, fabriqueToileDocument } from '@/render2d/replis';
+import {
+  animationsOrdonnees, couleurEquipe, enveloppeEntree, enveloppeImage, LecteurVignettes, Vignettes,
+  type Enveloppe, type ImagePrete,
+} from '@/render2d/vignette';
+import type { Rvb } from '@/render2d/unites';
+import { TERRAINS_CAPTURABLES, type CampId, type CleTerrain, type CleUnite, type CodePays } from '@/schemas/types';
+
+import { lirePreferences } from '../../preferences';
 import styles from './vitrine.module.css';
-import { rectangleTuile } from './tuiles';
-import { ORBITE_INITIALE, reglerOrbite, type Orbite } from './orbite';
 
-/** Vue orbitale unique. */
-const VUES = [
-  { cle: 'jeu', titre: 'Vue libre', ortho: false, direction: [0, Math.sin((68 * Math.PI) / 180), Math.cos((68 * Math.PI) / 180)], haut: [0, 1, 0] },
-] as const;
+/** Ce qu'on sait du manifeste : lu, absent, refusé — et pourquoi. */
+type EtatManifeste =
+  | { etat: 'lecture' }
+  | { etat: 'absent' }
+  | { etat: 'refuse'; motif: string }
+  | { etat: 'lu'; manifeste: ManifesteSprites; ecartees: readonly string[] };
 
-type CleVue = (typeof VUES)[number]['cle'];
-
-/** Ce que la vitrine sait de la pièce posée : livrée ou non, combien de niveaux, quels clips. */
-interface EtatModele {
-  livre: boolean;
-  lods: number;
-  /** Les clips connus que le fichier porte. */
-  clips: NomClip[];
-  /** Tous les noms de clips du fichier, connus ou non : on veut voir ce qu'on a reçu. */
-  nomsFichier: string[];
+/** Une pièce qu'on peut regarder : une entrée cuite, ou le nom qu'elle aurait. */
+interface Piece {
+  id: string;
+  libelle: string;
+  cuite: boolean;
+  /** Pour une unité : sa taille de silhouette et si elle vole — son ombre en dépend. */
+  ombre?: { taille: number; air: boolean };
 }
 
-const PLACEHOLDER: EtatModele = { livre: false, lods: 0, clips: [], nomsFichier: [] };
+const FAMILLES: readonly (readonly [FamilleSprite, string])[] = [
+  ['unite', 'Unités'], ['batiment', 'Bâtiments'], ['decor', 'Décor'], ['terrain', 'Terrain'],
+];
 
-/** Ce que `window.__atlasVitrine` expose en développement, pour un pilotage Playwright. */
-interface PontVitrine {
-  choisir(unite: string, pays: string | null, camp: number): void;
-  pret(): boolean;
-  /** Ce qui est posé : un modèle livré ou le placeholder, ses niveaux, ses clips. */
-  modele(): { livre: boolean; lods: number; clips: string[] };
+/** Les échelles proposées, en pixels d'écran par case. */
+const ECHELLES: readonly (readonly [number, string])[] = [
+  [48, '48 px — le plus petit en jeu'], [64, '64 px — l’ouverture'], [96, '96 px — le double-tap'],
+  [128, '128 px — un pour un'], [256, '256 px — la loupe'],
+];
+
+/** Les fonds : celui du jeu, une herbe, un damier qui montre les bords transparents. */
+const FONDS: readonly (readonly [string, string])[] = [['sombre', 'Sombre'], ['herbe', 'Herbe'], ['damier', 'Damier']];
+
+/** Les couleurs d'équipe qu'on peut poser : neutre, puis les quatre camps. */
+const CAMPS: readonly (readonly [CampId | null, string])[] = [
+  [null, 'Neutre'], [0, 'Camp 1'], [1, 'Camp 2'], [2, 'Camp 3'], [3, 'Camp 4'],
+];
+
+/** La marge autour de l'enveloppe d'une toile, en pixels CSS. */
+const MARGE = 10;
+
+/** Le manifeste du jeu, lu comme le jeu le lit — mais en disant ce qu'on en a fait. */
+async function lireManifesteDuJeu(): Promise<EtatManifeste> {
+  try {
+    const reponse = await fetch(CHEMIN_MANIFESTE, { cache: 'no-cache' });
+    if (!reponse.ok) return { etat: 'absent' };
+    const lu = lireManifeste(await reponse.json());
+    return lu.ok ? { etat: 'lu', manifeste: lu.manifeste, ecartees: lu.ecartees } : { etat: 'refuse', motif: lu.motif };
+  } catch {
+    return { etat: 'absent' };
+  }
 }
 
-export default function Vitrine(): React.ReactElement {
-  const orbite = useRef<Orbite>({ ...ORBITE_INITIALE });
-  const [unite, setUnite] = useState<string>('infanterie');
-  const [pays, setPays] = useState<string>('fr');
-  const [camp, setCamp] = useState<CampId>(0);
-  const [moteur, setMoteur] = useState<boolean | null>(null);
-  const [rendues, setRendues] = useState(0);
-  const [etatModele, setEtatModele] = useState<EtatModele>(PLACEHOLDER);
-  const [clip, setClip] = useState<NomClip | null>(null);
-  const [fige, setFige] = useState(false);
-  const grille = useRef<HTMLDivElement | null>(null);
-  const canevas = useRef<HTMLCanvasElement | null>(null);
-  const tuiles = useRef<Map<CleVue, HTMLDivElement>>(new Map());
-  const studio = useRef<Studio | null>(null);
-  const piece = useRef<THREE.Object3D | null>(null);
-  const lecteur = useRef<LecteurClips | null>(null);
-  const image = useRef<number | null>(null);
-  const dernier = useRef(0);
-  const figeRef = useRef(false);
+/** Les pièces d'une famille : ce que le jeu peut demander, cuit ou non, et ce que la cuisson a produit en plus. */
+function piecesDe(famille: FamilleSprite, m: ManifesteSprites | null, cat: Catalogue): Piece[] {
+  const entrees = Object.values(m?.entrees ?? {}).filter((e) => e.famille === famille);
+  const cuites = new Set(entrees.map((e) => e.id));
+  const variante = (e: EntreeSprite): string => (e.variante ? ` · ${e.variante.toUpperCase()}` : '');
+  switch (famille) {
+    case 'unite': {
+      const unites = Object.values(cat.unites);
+      const ombre = (cle: string): { taille: number; air: boolean } | undefined => {
+        const u = cat.unites[cle as CleUnite];
+        return u ? { taille: echelleTaille(u.silhouette.taille), air: u.domaine === 'air' } : undefined;
+      };
+      const bases = unites.map((u): Piece => ({
+        id: idUnite(u.cle), libelle: nomUnite('fr', cat, u.cle), cuite: cuites.has(idUnite(u.cle)), ...(ombre(u.cle) ? { ombre: ombre(u.cle)! } : {}),
+      }));
+      const kits = entrees.filter((e) => !bases.some((b) => b.id === e.id)).map((e): Piece => ({
+        id: e.id, libelle: `${nomUnite('fr', cat, e.cle as CleUnite) || e.cle}${variante(e)}`, cuite: true,
+        ...(ombre(e.cle) ? { ombre: ombre(e.cle)! } : {}),
+      }));
+      return [...bases, ...kits];
+    }
+    case 'batiment': {
+      const bases = TERRAINS_CAPTURABLES.map((cle): Piece => ({
+        id: idBatiment(cle), libelle: nomTerrain('fr', cat, cle as CleTerrain) || cle, cuite: cuites.has(idBatiment(cle)),
+      }));
+      const nationaux = entrees.filter((e) => !bases.some((b) => b.id === e.id)).map((e): Piece => ({
+        id: e.id, libelle: `${nomTerrain('fr', cat, e.cle as CleTerrain) || e.cle}${variante(e)}`, cuite: true,
+      }));
+      return [...bases, ...nationaux];
+    }
+    case 'decor': {
+      const presentes = entrees.map((e): Piece => ({ id: e.id, libelle: e.id.replace(/^decor_/, '').replaceAll('_', ' '), cuite: true }));
+      // Une essence que la cuisson n'a pas encore produite se montre en repli :
+      // c'est ce que le sol posera à sa place.
+      const manquantes = ESSENCES_DECOR.filter((essence) => !entrees.some((e) => e.cle === essence))
+        .map((essence): Piece => ({ id: idDecor(essence, 'ete', 1), libelle: `${essence.replaceAll('_', ' ')} (attendue)`, cuite: false }));
+      return [...presentes.sort((a, b) => a.id.localeCompare(b.id)), ...manquantes];
+    }
+    default:
+      return entrees.map((e): Piece => ({ id: e.id, libelle: e.id.replaceAll('_', ' '), cuite: true }));
+  }
+}
 
-  const catalogue = useMemo(() => chargerCatalogue(), []);
-  const nations = useMemo(() => chargerPays().map((p) => ({ code: p.code, nom: p.nom })), []);
-  const uniteSure: CleUnite = catalogue.cles.includes(unite as CleUnite) ? (unite as CleUnite) : catalogue.cles[0]!;
-
-  useEffect(() => { setMoteur(moteur3dDisponible()); }, []);
-
-  // Le studio vit aussi longtemps que le canevas ; la pièce, elle, change. Le
-  // moteur arrive après : la première planche se dessine quand il est prêt,
-  // et c'est cette image-là que `pret()` compte.
+/** Une toile animée : une animation d'une entrée (ou son repli), à une couleur. */
+function Toile({ lecteur, id, animation, miroir, equipe, echelle, enveloppe, ombre, titre }: {
+  lecteur: LecteurVignettes;
+  id: string;
+  animation: number;
+  miroir: boolean;
+  equipe: Rvb | null;
+  /** Pixels CSS par pixel de plan. */
+  echelle: number;
+  enveloppe: Enveloppe | null;
+  ombre: { taille: number; air: boolean } | null;
+  titre: string;
+}): React.ReactElement {
+  const toile = useRef<HTMLCanvasElement>(null);
+  const compteur = useRef<HTMLSpanElement>(null);
+  const tuile = useRef<HTMLElement>(null);
   useEffect(() => {
-    const c = canevas.current;
-    if (!c || moteur !== true) return undefined;
-    const s = creerStudio(c);
-    studio.current = s;
-    s.prete.then(() => {
-      if (studio.current !== s) return;
-      if (s.dessiner(tuiles.current, grille.current)) setRendues((n) => n + 1);
-    }).catch((cause: unknown) => {
-      if (studio.current !== s) return;
-      console.error('Moteur 3D indisponible', cause);
-      setMoteur(false);
+    const c = toile.current;
+    if (!c) return undefined;
+    return lecteur.ajouter({
+      toile: c, id, animation, equipe, miroir, zoom: echelle, marge: MARGE, enveloppe, ombre,
+      // Le compteur et la source s'écrivent dans le DOM, pas dans l'état de
+      // React : une douzaine de toiles à douze images par seconde ne doivent
+      // pas refaire la page.
+      surImage: (image: number, peinte: ImagePrete | null) => {
+        if (compteur.current) compteur.current.textContent = String(image + 1);
+        if (tuile.current) {
+          tuile.current.dataset['image'] = String(image);
+          tuile.current.dataset['source'] = peinte ? (peinte.repli ? 'repli' : 'cuite') : 'aucune';
+        }
+      },
     });
-    return () => { s.dispose(); studio.current = null; };
-  }, [moteur]);
+  }, [lecteur, id, animation, equipe, miroir, echelle, enveloppe, ombre]);
+  // La toile a la taille de l'enveloppe à l'échelle choisie : toutes les toiles
+  // d'une entrée ont donc la même, et le pivot au même endroit.
+  const l = enveloppe ? Math.ceil((enveloppe.droite - enveloppe.gauche) * echelle + 2 * MARGE) : 160;
+  const h = enveloppe ? Math.ceil((enveloppe.bas - enveloppe.haut) * echelle + 2 * MARGE) : 140;
+  return <figure ref={tuile} className={styles.tuile} data-image="0" data-source="aucune">
+    <canvas ref={toile} className={styles.toile} style={{ width: `${l}px`, height: `${h}px` }} role="img" aria-label={titre} />
+    <figcaption><span>{titre}</span> <b>image <span ref={compteur}>1</span></b></figcaption>
+  </figure>;
+}
 
-  const arreterBoucle = useCallback((): void => {
-    if (image.current !== null) cancelAnimationFrame(image.current);
-    image.current = null;
-    dernier.current = 0;
-  }, []);
+/** La légende d'une animation : sa vue, son clip, son nombre d'images et sa cadence. */
+function legende(a: AnimationSprite, miroir: boolean): string {
+  const vue = miroir ? 'gauche (droite retournée)' : a.vue;
+  const cadence = Math.round(a.ips * 10) / 10;
+  return `${vue} · ${a.clip} — ${a.cadres.length} image${a.cadres.length > 1 ? 's' : ''}, ${cadence} i/s, ${a.boucle ? 'en boucle' : 'une fois'}`;
+}
 
-  /** Fait tourner le lecteur tant qu'un clip joue, et plus une image au-delà. */
-  const lancerBoucle = useCallback((): void => {
-    if (image.current !== null) return;
-    const pas = (t: number): void => {
-      image.current = null;
-      const l = lecteur.current;
-      const s = studio.current;
-      if (!l || !s) return;
-      const dt = dernier.current === 0 ? 1 / 60 : Math.min(0.1, (t - dernier.current) / 1000);
-      dernier.current = t;
-      const encore = l.avancer(dt);
-      s.dessiner(tuiles.current, grille.current);
-      setClip((c) => (c === l.courant ? c : l.courant));
-      if (encore && !figeRef.current) image.current = requestAnimationFrame(pas);
-      else dernier.current = 0;
-    };
-    image.current = requestAnimationFrame(pas);
-  }, []);
+export default function VitrineImages(): React.ReactElement {
+  const catalogue = useMemo(() => chargerCatalogue(), []);
+  const nations = useMemo(() => chargerStylesNations().map((s) => s.code), []);
+  const [manifeste, setManifeste] = useState<EtatManifeste>({ etat: 'lecture' });
+  const [outils, setOutils] = useState<{ reserve: Vignettes; lecteur: LecteurVignettes } | null>(null);
+  const [famille, setFamille] = useState<FamilleSprite>('unite');
+  const [choix, setChoix] = useState<string>(idUnite('infanterie'));
+  const [camp, setCamp] = useState<CampId | null>(0);
+  const [pays, setPays] = useState<CodePays | ''>('');
+  const [comparer, setComparer] = useState(false);
+  const [gauche, setGauche] = useState(false);
+  const [ombre, setOmbre] = useState(true);
+  const [pixels, setPixels] = useState(128);
+  const [fond, setFond] = useState('sombre');
+  const [lecture, setLecture] = useState(true);
 
+  // La réserve et le lecteur naissent avec la page et meurent avec elle. Une
+  // vitrine montre une entrée entière, toutes couleurs comprises : son plafond
+  // est plus haut que celui d'un carnet.
   useEffect(() => {
-    const s = studio.current;
-    if (!s) return undefined;
+    const fabrique = fabriqueToileDocument(document);
+    const reserve = new Vignettes({
+      charger: chargerImageNavigateur, fabrique,
+      peintre: creerPeintreRepli(fabrique, () => catalogue),
+      plafondPixels: 12_000_000,
+    });
+    const lecteur = new LecteurVignettes(reserve);
+    // Le réglage de l'appareil ou du joueur arrête la lecture au départ ; le
+    // bouton la relance, puisqu'on vient ici pour regarder bouger.
+    const reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches || lirePreferences().animationsReduites;
+    setLecture(!reduit);
+    lecteur.lire(!reduit);
+    setOutils({ reserve, lecteur });
     let vivant = true;
-    const style = pays === '' ? null : chargerStyleNation(pays as CodePays);
-    const silhouette = catalogue.unites[uniteSure]!.silhouette;
-    const placeholder = construirePlaceholder(silhouette, camp, s.materiaux, style, uniteSure);
-    s.poser(placeholder);
-    piece.current = placeholder;
-    setEtatModele(PLACEHOLDER);
-    setClip(null);
-    if (s.dessiner(tuiles.current, grille.current)) setRendues((n) => n + 1);
-    // Un modèle livré remplace le placeholder, monté comme en jeu — même socle,
-    // même teinte, même lecteur de clips ; un 404 laisse tout en place.
-    void chargerModele(uniteSure, pays === '' ? null : (pays as CodePays)).then((modele) => {
-      if (!vivant || !modele) return;
-      const monte = monterModele(modele, camp, s.materiaux, style);
-      s.poser(monte);
-      piece.current = monte;
-      const figurine = monte.getObjectByName(NOM_FIGURINE);
-      const l = figurine ? creerLecteurClips(figurine, modele.clips) : null;
-      lecteur.current = l;
-      setEtatModele({
-        livre: true, lods: modele.lods, clips: l ? [...l.clips] : [], nomsFichier: modele.clips.map((c) => c.name),
-      });
-      s.dessiner(tuiles.current, grille.current);
-      if (l) {
-        l.jouer('repos');
-        setClip(l.courant);
-        figeRef.current = false;
-        setFige(false);
-        lancerBoucle();
-      }
+    void lireManifesteDuJeu().then((m) => {
+      if (!vivant) return;
+      if (m.etat === 'lu') reserve.poserManifeste(m.manifeste);
+      setManifeste(m);
     });
     return () => {
       vivant = false;
-      arreterBoucle();
-      lecteur.current?.dispose();
-      lecteur.current = null;
+      lecteur.dispose();
+      reserve.dispose();
+      setOutils(null);
     };
-    // `moteur` est dans les dépendances parce que le studio n'existe qu'une fois
-    // le moteur détecté, dans un effet qui court après celui-ci au premier rendu.
-  }, [catalogue, uniteSure, pays, camp, moteur, arreterBoucle, lancerBoucle]);
+  }, [catalogue]);
 
+  useEffect(() => { outils?.lecteur.lire(lecture); }, [outils, lecture]);
 
+  const m = manifeste.etat === 'lu' ? manifeste.manifeste : null;
+  const pieces = useMemo(() => piecesDe(famille, m, catalogue), [famille, m, catalogue]);
+  const piece = pieces.find((p) => p.id === choix) ?? pieces[0] ?? null;
+  const entree = piece && m ? m.entrees[piece.id] ?? null : null;
+
+  // Une entrée entière se prépare d'un coup : toutes ses pages, lues une fois.
   useEffect(() => {
-    const g = grille.current;
-    if (!g || typeof ResizeObserver === 'undefined') return undefined;
-    const obs = new ResizeObserver(() => studio.current?.dessiner(tuiles.current, g));
-    obs.observe(g);
-    return () => obs.disconnect();
-  }, [moteur]);
+    if (outils && entree) void outils.reserve.preparer(entree.id);
+  }, [outils, entree]);
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production') return undefined;
-    const g = globalThis as unknown as { __atlasVitrine?: PontVitrine };
-    g.__atlasVitrine = {
-      choisir: (u, p, c) => { setUnite(u); setPays(p ?? ''); setCamp((c === 1 ? 1 : 0) as CampId); },
-      pret: () => rendues > 0,
-      modele: () => ({ livre: etatModele.livre, lods: etatModele.lods, clips: [...etatModele.clips] }),
-    };
-    return () => { delete g.__atlasVitrine; };
-  }, [rendues, etatModele]);
+  const couleurs = useMemo<readonly { libelle: string; equipe: Rvb }[]>(() => (comparer
+    ? CAMPS.map(([c, nom]) => ({ libelle: nom, equipe: couleurEquipe(c) }))
+    : [{ libelle: CAMPS.find(([c]) => c === camp)?.[1] ?? '', equipe: couleurEquipe(camp, pays || null) }]), [comparer, camp, pays]);
 
-  const changerOrbite = useCallback((dx = 0, dy = 0, facteur = 1, reset = false): void => {
-    orbite.current = reset ? { ...ORBITE_INITIALE } : reglerOrbite(orbite.current, dx, dy, facteur);
-    const s = studio.current;
-    s?.orienter(orbite.current);
-    const tuile = tuiles.current.get('jeu');
-    if (tuile) {
-      tuile.dataset.bearing = String(orbite.current.bearing);
-      tuile.dataset.inclinaison = String(orbite.current.inclinaison);
-      tuile.dataset.zoom = String(orbite.current.zoom);
+  // Les toiles de l'entrée : chaque animation dans l'ordre des vues et des
+  // clips, la gauche en plus si on la demande ; une entrée absente, son repli.
+  const echelle = pixels / PIXELS_PAR_CASE;
+  const rangees = useMemo(() => {
+    if (!entree) return [];
+    const liste: { cle: string; animation: number; miroir: boolean; titre: string }[] = [];
+    for (const { index, animation } of animationsOrdonnees(entree)) {
+      liste.push({ cle: `${index}`, animation: index, miroir: false, titre: legende(animation, false) });
+      if (gauche && animation.vue === 'droite') liste.push({ cle: `${index}g`, animation: index, miroir: true, titre: legende(animation, true) });
     }
-  }, []);
+    return liste;
+  }, [entree, gauche]);
+  const echelleImages = m ? PIXELS_PAR_CASE / m.pixelsParCase : 1;
+  const enveloppe = useMemo(() => (entree ? enveloppeEntree(entree, echelleImages, false) : null), [entree, echelleImages]);
+  const enveloppeGauche = useMemo(() => (entree ? enveloppeEntree(entree, echelleImages, true) : null), [entree, echelleImages]);
+  // Le repli se cadre sur lui-même : on le peint une fois pour connaître sa taille.
+  const repli = useMemo(() => (outils && piece && !entree ? outils.reserve.repli(piece.id, couleurs[0]?.equipe ?? null) : null), [outils, piece, entree, couleurs]);
+  const enveloppeRepli = repli ? enveloppeImage(repli, repli.echelle) : null;
+  const ombreDe = ombre ? piece?.ombre ?? null : null;
 
-  useEffect(() => {
-    const tuile = tuiles.current.get('jeu');
-    if (!tuile || moteur !== true) return;
-    const doigts = new Map<number, {x:number;y:number}>();
-    let raf: number | null = null;
-    const dessiner = () => {
-      if (raf !== null) return;
-      raf = requestAnimationFrame(() => { raf = null; studio.current?.dessiner(tuiles.current, grille.current); });
-    };
-    const appliquer = (dx=0,dy=0,facteur=1,reset=false) => { changerOrbite(dx,dy,facteur,reset); dessiner(); };
-    const down = (e:PointerEvent) => {
-      if (e.button !== 0) return;
-      tuile.focus({preventScroll:true}); tuile.setPointerCapture(e.pointerId);
-      doigts.set(e.pointerId,{x:e.clientX,y:e.clientY}); tuile.dataset.glisser='true';
-    };
-    const move = (e:PointerEvent) => {
-      const precedent=doigts.get(e.pointerId); if(!precedent)return;
-      const autre=[...doigts.entries()].find(([id])=>id!==e.pointerId)?.[1];
-      doigts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-      if(autre) {
-        const avant=Math.hypot(precedent.x-autre.x,precedent.y-autre.y);
-        const apres=Math.hypot(e.clientX-autre.x,e.clientY-autre.y);
-        if(avant>5&&apres>5)appliquer(0,0,apres/avant);
-      } else appliquer(-(e.clientX-precedent.x)*.4,(e.clientY-precedent.y)*.3);
-    };
-    const up=(e:PointerEvent)=>{doigts.delete(e.pointerId);if(tuile.hasPointerCapture(e.pointerId))tuile.releasePointerCapture(e.pointerId);tuile.dataset.glisser=String(doigts.size>0);};
-    const wheel=(e:WheelEvent)=>{e.preventDefault();const dy=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?tuile.clientHeight:1);appliquer(0,0,Math.exp(-Math.max(-500,Math.min(500,dy))*.001));};
-    const key=(e:KeyboardEvent)=>{
-      const actions:Record<string,()=>void>={ArrowLeft:()=>appliquer(-10),ArrowRight:()=>appliquer(10),ArrowUp:()=>appliquer(0,5),ArrowDown:()=>appliquer(0,-5),'+':()=>appliquer(0,0,1.15),'=':()=>appliquer(0,0,1.15),'-':()=>appliquer(0,0,1/1.15),Home:()=>appliquer(0,0,1,true)};
-      if(actions[e.key]){e.preventDefault();actions[e.key]!();}
-    };
-    tuile.addEventListener('pointerdown',down);tuile.addEventListener('pointermove',move);
-    for(const event of ['pointerup','pointercancel','lostpointercapture'])tuile.addEventListener(event,up as EventListener);
-    tuile.addEventListener('wheel',wheel,{passive:false});tuile.addEventListener('keydown',key);
-    return()=>{if(raf!==null)cancelAnimationFrame(raf);tuile.removeEventListener('pointerdown',down);tuile.removeEventListener('pointermove',move);for(const event of ['pointerup','pointercancel','lostpointercapture'])tuile.removeEventListener(event,up as EventListener);tuile.removeEventListener('wheel',wheel);tuile.removeEventListener('keydown',key);doigts.clear();};
-  }, [moteur, changerOrbite]);
+  const etatManifeste = manifeste.etat === 'lecture' ? 'Lecture du manifeste…'
+    : manifeste.etat === 'absent' ? 'Aucun manifeste : le jeu se joue tout en replis, et la vitrine les montre.'
+      : manifeste.etat === 'refuse' ? `Manifeste refusé par le jeu : ${manifeste.motif}. Tout se joue en replis.`
+        : `Manifeste lu : ${Object.keys(manifeste.manifeste.entrees).length} entrées cuites${manifeste.ecartees.length > 0 ? ` — écartées par le jeu : ${manifeste.ecartees.join(', ')}` : ''}.`;
 
-  function commandeCamera(dx=0,dy=0,facteur=1,reset=false) {
-    changerOrbite(dx,dy,facteur,reset); studio.current?.dessiner(tuiles.current,grille.current);
-  }
-
-  function jouerClip(nom: NomClip): void {
-    const l = lecteur.current;
-    if (!l) return;
-    l.jouer(nom);
-    setClip(l.courant);
-    figeRef.current = false;
-    setFige(false);
-    lancerBoucle();
-  }
-
-  function basculerFige(): void {
-    const prochain = !figeRef.current;
-    figeRef.current = prochain;
-    setFige(prochain);
-    if (!prochain) lancerBoucle();
-  }
-
-  const fiche = catalogue.unites[uniteSure]!;
-  const nation = nations.find((n) => n.code === pays);
-  const sansClips = !etatModele.livre || etatModele.clips.length === 0;
-
-  return <div className={styles.vitrine}>
+  return <main className={styles.vitrine} data-vitrine="cuite" data-manifeste={manifeste.etat}>
     <header className={styles.barre}>
       <div className={styles.titre}>
-        <div className={styles.ariane}><Link href="/">Atlas</Link><span>/</span><Link href="/atelier">Atelier</Link><span>/</span><span>Vitrine</span></div>
-        <h1>{fiche.nom}{nation ? ` · ${nation.nom}` : ' · sans nation'}</h1>
+        <nav aria-label="Fil d’Ariane" className={styles.ariane}><Link href="/">Atlas</Link><span aria-hidden="true">/</span><Link href="/atelier">Banc d’essai</Link><span aria-hidden="true">/</span><span>Images cuites</span></nav>
+        <h1>Vitrine des images cuites</h1>
       </div>
-      <Link href="/atelier" className={styles.lien}>Banc d’essai</Link>
+      <Link href="/atelier" className={styles.lien}>← Le banc</Link>
     </header>
 
+    <p className={styles.etat} role="status" data-etat={manifeste.etat}>{etatManifeste}</p>
+
     <div className={styles.commandes}>
-      <label>Unité
-        <select value={uniteSure} onChange={(e) => setUnite(e.target.value)}>
-          {catalogue.cles.map((cle) => <option key={cle} value={cle}>{catalogue.unites[cle]!.nom}</option>)}
+      <label>Famille
+        <select value={famille} onChange={(e) => { const f = e.target.value as FamilleSprite; setFamille(f); setChoix(piecesDe(f, m, catalogue)[0]?.id ?? ''); }}>
+          {FAMILLES.map(([cle, nom]) => <option key={cle} value={cle}>{nom}</option>)}
         </select>
       </label>
+      <label>Pièce
+        <select value={piece?.id ?? ''} onChange={(e) => setChoix(e.target.value)} data-choix="piece">
+          {pieces.map((p) => <option key={p.id} value={p.id}>{p.libelle}{p.cuite ? '' : ' — repli'}</option>)}
+        </select>
+      </label>
+      <fieldset className={styles.groupe} disabled={comparer}>
+        <legend>Couleur d’équipe</legend>
+        {CAMPS.map(([c, nom]) => <button key={nom} type="button" aria-pressed={camp === c} onClick={() => setCamp(c)}>{nom}</button>)}
+      </fieldset>
       <label>Nation
-        <select value={pays} onChange={(e) => setPays(e.target.value)}>
+        <select value={pays} onChange={(e) => setPays(e.target.value as CodePays | '')} disabled={comparer || camp === null}>
           <option value="">Aucune (palette du camp)</option>
-          {nations.map((n) => <option key={n.code} value={n.code}>{n.nom}</option>)}
+          {nations.map((code) => <option key={code} value={code}>{code.toUpperCase()}</option>)}
         </select>
       </label>
-      <fieldset className={styles.camp}>
-        <legend>Camp</legend>
-        <label><input type="radio" name="camp" checked={camp === 0} onChange={() => setCamp(0)} /> Bleu</label>
-        <label><input type="radio" name="camp" checked={camp === 1} onChange={() => setCamp(1)} /> Rouge</label>
+      <label>Échelle
+        <select value={pixels} onChange={(e) => setPixels(Number(e.target.value))}>
+          {ECHELLES.map(([px, nom]) => <option key={px} value={px}>{nom}</option>)}
+        </select>
+      </label>
+      <fieldset className={styles.groupe}>
+        <legend>Fond</legend>
+        {FONDS.map(([cle, nom]) => <button key={cle} type="button" aria-pressed={fond === cle} onClick={() => setFond(cle)}>{nom}</button>)}
       </fieldset>
-      <span>Catalogue actuel · {catalogue.cles.length} unités</span>
-      <p className={styles.legende}>
-        Silhouette : {fiche.silhouette.base} · {fiche.silhouette.corps}
-        {fiche.silhouette.modules.length > 0 ? ` · ${fiche.silhouette.modules.join(', ')}` : ''} · taille {fiche.silhouette.taille}
-      </p>
-    </div>
-
-    <div className={styles.modele} data-livre={etatModele.livre ? 'oui' : 'non'}>
-      <span className={styles.badge}>{etatModele.livre ? 'Modèle livré' : 'Placeholder'}</span>
-      <fieldset className={styles.clips} disabled={sansClips}>
-        <legend>Clips{etatModele.livre && etatModele.nomsFichier.length > 0 ? ` · fichier : ${etatModele.nomsFichier.join(', ')}` : ''}</legend>
-        {NOMS_CLIPS.map((nom) => <button
-          key={nom}
-          type="button"
-          disabled={!etatModele.clips.includes(nom)}
-          aria-pressed={clip === nom}
-          onClick={() => jouerClip(nom)}
-        >{nom}</button>)}
-        <button type="button" aria-pressed={fige} onClick={basculerFige}>{fige ? 'Figé' : 'Figer'}</button>
+      <fieldset className={styles.groupe}>
+        <legend>Montrer</legend>
+        <button type="button" aria-pressed={lecture} onClick={() => setLecture((v) => !v)}>{lecture ? 'Pause' : 'Lire'}</button>
+        <button type="button" aria-pressed={comparer} onClick={() => setComparer((v) => !v)}>Tous les camps</button>
+        <button type="button" aria-pressed={gauche} onClick={() => setGauche((v) => !v)}>La gauche</button>
+        <button type="button" aria-pressed={ombre} onClick={() => setOmbre((v) => !v)} disabled={!piece?.ombre}>Ombre du jeu</button>
       </fieldset>
     </div>
 
-    {/* Le moteur exige WebGPU depuis le 9 septembre 2026 : le repli WebGL 2 a été
-        retiré (`doc/10`, « Correction du jeu WebGPU »). Sans adaptateur, la
-        vitrine ne montrait qu'une ligne perdue au milieu d'une planche vide et
-        de contrôles qui ne répondaient plus — le lecteur croyait à une panne du
-        site. Elle prend maintenant la place de la planche, nomme ce qui manque,
-        et dit quoi faire : un écran d'échec qui n'indique pas la sortie n'en est
-        pas un. */}
-    {moteur === false ? <div className={styles.sansWebgl} role="alert">
-      <h2>Cette page a besoin de WebGPU</h2>
-      <p>
-        Le navigateur n’expose aucun adaptateur WebGPU, et le moteur n’a plus de repli WebGL 2 :
-        il ne peut pas se monter. Le reste du site fonctionne ; c’est la 3D qui s’arrête ici.
-      </p>
-      <ul>
-        <li><strong>Chrome</strong> ou <strong>Edge</strong> à jour, sur ordinateur : WebGPU y est actif par défaut.</li>
-        <li><strong>Safari 26</strong> ou plus récent, sur macOS et iOS.</li>
-        <li><strong>Firefox</strong> : WebGPU n’est pas encore actif par défaut, il faut passer <code>dom.webgpu.enabled</code> à vrai dans <code>about:config</code>.</li>
-        <li>Sur une machine sans carte graphique — machine virtuelle, rendu logiciel —, aucun adaptateur n’est proposé, quel que soit le navigateur.</li>
-      </ul>
-    </div> : null}
+    {piece ? <section className={styles.fiche} data-cuite={entree ? 'oui' : 'non'} aria-label="Fiche de l’entrée">
+      <strong>{piece.id}</strong>
+      {entree ? <>
+        <span>{entree.famille} · {entree.cle}{entree.variante ? ` · ${entree.variante}` : ''}</span>
+        <span>source {entree.source.fichier} · {entree.source.sha256.slice(0, 12)}</span>
+        <span>{entree.pages.map((p) => `${p.largeur}×${p.hauteur}${p.masque ? ' + masque' : ''}${p.emission ? ' + émission' : ''}`).join(' · ')}</span>
+        <span>{entree.animations.length} animations · {entree.animations.reduce((n, a) => n + a.cadres.length, 0)} images</span>
+      </> : <span>Aucune image cuite : le jeu pose ce repli à sa place, peint par le code.</span>}
+    </section> : null}
 
-    <div className={styles.navigationCamera} hidden={moteur === false}>
-      <button type="button" aria-label="Tourner à gauche" onClick={()=>commandeCamera(-15)}>↶</button>
-      <button type="button" aria-label="Tourner à droite" onClick={()=>commandeCamera(15)}>↷</button>
-      <button type="button" aria-label="Augmenter l’inclinaison" onClick={()=>commandeCamera(0,10)}>Incliner +</button>
-      <button type="button" aria-label="Diminuer l’inclinaison" onClick={()=>commandeCamera(0,-10)}>Incliner −</button>
-      <button type="button" aria-label="Zoomer" onClick={()=>commandeCamera(0,0,1.2)}>Zoom +</button>
-      <button type="button" aria-label="Dézoomer" onClick={()=>commandeCamera(0,0,1/1.2)}>Zoom −</button>
-      <button type="button" onClick={()=>commandeCamera(0,0,1,true)}>Réinitialiser la vue</button>
-      <p id="aide-camera-vitrine">Glissez sur la vue libre pour tourner et incliner. Molette ou pincement pour zoomer. Au clavier : flèches, +/− et touche Début pour réinitialiser.</p>
-    </div>
-    <div className={styles.planche} ref={grille} hidden={moteur === false}>
-      <canvas ref={canevas} className={styles.canevas} aria-hidden="true" />
-      {VUES.map((v) => <div
-        key={v.cle}
-        className={styles.tuile}
-        ref={(el) => { if (el) tuiles.current.set(v.cle, el); else tuiles.current.delete(v.cle); }}
-        data-vue={v.cle}
-        tabIndex={v.cle === 'jeu' ? 0 : undefined}
-        role={v.cle === 'jeu' ? 'region' : undefined}
-        aria-label={v.cle === 'jeu' ? 'Vue 3D interactive de l’unité' : undefined}
-        aria-describedby={v.cle === 'jeu' ? 'aide-camera-vitrine' : undefined}
-      >
-        <span>{v.cle === 'jeu' ? 'Vue libre · glisser pour tourner' : v.titre}</span>
-      </div>)}
-    </div>
-  </div>;
-}
-
-// ---------------------------------------------------------------------------
-// Le studio : un canevas, une scène, six caméras
-// ---------------------------------------------------------------------------
-
-interface Studio {
-  readonly materiaux: Materiaux;
-  /** Tenue quand le moteur est initialisé ; rejetée s'il ne démarre pas. */
-  readonly prete: Promise<void>;
-  poser(piece: THREE.Object3D): void;
-  orienter(vue: Orbite): void;
-  /** Dessine la planche ; rend faux — et ne fait rien — tant que le moteur n'est pas prêt. */
-  dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean;
-  dispose(): void;
-}
-
-/** Marge autour de la pièce dans chaque vue, en fraction de sa plus grande cote. */
-const MARGE = 1.18;
-
-function creerStudio(canvas: HTMLCanvasElement): Studio {
-  let renderer: THREE.WebGPURenderer | null = null;
-  let environnement: ReturnType<typeof creerEnvironnement> | null = null;
-  let vivant = true;
-
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x1e3f52);
-  // La même pièce de studio que le jeu (`render3d/environnement.ts`), à
-  // intensité fixe : c'est elle que la tôle et le verre d'une figurine
-  // reflètent, et la vitrine doit montrer ce que le plateau montrera. La carte
-  // se cuit avec le moteur, plus bas ; l'intensité est une propriété de la scène.
-  scene.environmentIntensity = 0.35;
-
-  // Le moteur, comme en jeu : le dos décidé avant de construire, `init()`
-  // attendu, l'environnement cuit après. Le test de ciseaux ne se pose
-  // qu'ensuite : sur le dos WebGL, il touche un contexte qui n'existe pas avant.
-  const prete: Promise<void> = (async () => {
-    await choisirBackend(globalThis.navigator as NavigateurGpu | undefined);
-    if (!vivant) throw new Error('Studio démonté avant que le moteur soit prêt.');
-    const r = creerMoteurWebGPU({
-      canvas, antialias: true, alpha: false, powerPreference: 'high-performance',
-    });
-    r.outputColorSpace = THREE.SRGBColorSpace;
-    r.toneMapping = THREE.ACESFilmicToneMapping;
-    r.toneMappingExposure = 1;
-    r.shadowMap.enabled = true;
-    r.shadowMap.type = THREE.PCFSoftShadowMap;
-    await r.init();
-    if (!vivant) {
-      r.dispose();
-      throw new Error('Studio démonté avant que le moteur soit prêt.');
-    }
-    r.setScissorTest(true);
-    environnement = creerEnvironnement(r);
-    scene.environment = environnement.texture;
-    renderer = r;
-  })();
-  prete.catch(() => undefined);
-
-  // Trois lumières de studio : le ciel, une clé qui porte l'ombre, un débouchage froid.
-  scene.add(new THREE.HemisphereLight(0xe8f0f8, 0x55643f, 0.85));
-  const cle = new THREE.DirectionalLight(0xfff2dc, 1.7);
-  cle.position.set(2.4, 4.2, 1.6);
-  cle.castShadow = true;
-  cle.shadow.mapSize.set(1024, 1024);
-  cle.shadow.bias = -0.0006;
-  cle.shadow.normalBias = 0.02;
-  const cam = cle.shadow.camera;
-  cam.left = -1.2; cam.right = 1.2; cam.top = 1.2; cam.bottom = -1.2; cam.near = 0.5; cam.far = 12;
-  scene.add(cle);
-  const debouchage = new THREE.DirectionalLight(0xcfe0ff, 0.45);
-  debouchage.position.set(-2.5, 1.5, -2);
-  scene.add(debouchage);
-
-  // Un disque d'herbe rase pour porter l'ombre : sans sol, une pièce flotte.
-  const sol = new THREE.Mesh(
-    new THREE.CircleGeometry(0.85, 48),
-    new THREE.MeshStandardMaterial({ color: 0x7d9457, roughness: 0.95, metalness: 0 }),
-  );
-  sol.rotation.x = -Math.PI / 2;
-  sol.receiveShadow = true;
-  scene.add(sol);
-
-  const support = new THREE.Group();
-  scene.add(support);
-  const materiaux = new Materiaux();
-  // Le fond entre les tuiles : le moteur veut une `Color`, pas un entier.
-  const fond = new THREE.Color(0x0c1b21);
-  const boite = new THREE.Box3();
-  const centre = new THREE.Vector3();
-  const taille = new THREE.Vector3();
-
-  function retirerPieces(): void {
-    for (const ancien of [...support.children]) {
-      libererSquelettesPrives(ancien);
-      for (const materiau of materiauxPropresDe(ancien)) materiau.dispose();
-      support.remove(ancien);
-    }
-  }
-
-  function poser(piece: THREE.Object3D): void {
-    retirerPieces();
-    piece.traverse((o) => { if (o instanceof THREE.Mesh) { o.castShadow = true; o.receiveShadow = true; } });
-    support.add(piece);
-    boite.setFromObject(support);
-    boite.getCenter(centre);
-    boite.getSize(taille);
-  }
-
-  /** Une caméra par vue, gardée d'une image à l'autre : voir `dessiner`. */
-  const cameras = new Map<CleVue, THREE.Camera>();
-  let vueLibre: Orbite = { ...ORBITE_INITIALE };
-
-  /** La dernière taille réellement posée sur le moteur : voir `dessiner`. */
-  const tailleRendue = { l: 0, h: 0, ratio: 0 };
-
-  function dessiner(tuiles: ReadonlyMap<CleVue, HTMLElement>, cadre: HTMLElement | null): boolean {
-    if (!renderer || !cadre || support.children.length === 0) return false;
-    const rectCadre = cadre.getBoundingClientRect();
-    const largeur = Math.max(1, Math.round(rectCadre.width));
-    const hauteur = Math.max(1, Math.round(rectCadre.height));
-    // **Ne redimensionner que si la taille a bougé.** `setSize` et
-    // `setPixelRatio` reconfigurent le contexte WebGPU et refont la chaîne de
-    // cibles de rendu ; appelés à chaque image — ce que fait un clip qui
-    // tourne —, ils coûtaient plus de deux secondes par image, mesurées sur le
-    // déployé : deux images en quatre secondes et demie. Sous WebGL, la même
-    // écriture ne coûtait presque rien, et le défaut est resté invisible
-    // jusqu'au portage.
-    const ratio = Math.min(2, globalThis.devicePixelRatio || 1);
-    if (largeur !== tailleRendue.l || hauteur !== tailleRendue.h || ratio !== tailleRendue.ratio) {
-      renderer.setPixelRatio(ratio);
-      renderer.setSize(largeur, hauteur, false);
-      tailleRendue.l = largeur;
-      tailleRendue.h = hauteur;
-      tailleRendue.ratio = ratio;
-    }
-    renderer.setScissorTest(false);
-    renderer.setClearColor(fond, 1);
-    renderer.clear();
-    renderer.setScissorTest(true);
-    const rayon = Math.max(taille.x, taille.y, taille.z) / 2 * MARGE;
-    for (const vue of VUES) {
-      const tuile = tuiles.get(vue.cle);
-      if (!tuile || tuile.getBoundingClientRect().width === 0) continue;
-      const rect = rectangleTuile(rectCadre, tuile.getBoundingClientRect(), largeur, hauteur);
-      // Une tuile qui ne tient pas entièrement dans le cadre est **sautée**, pas
-      // rognée : sous WebGPU, `setScissorRect` prend des entiers non signés et
-      // lève « Value is outside the unsigned long value range » sur un `y`
-      // négatif, là où WebGL s'en accommodait. Le cas arrive pendant un
-      // redimensionnement — le `ResizeObserver` appelle `dessiner` quand le
-      // cadre est déjà mesuré et les tuiles pas encore —, et l'exception faisait
-      // tomber toute la page derrière la limite d'erreur de React.
-      if (!rect) continue;
-      const { x, y, l, h } = rect;
-      renderer.setViewport(x, y, l, h);
-      renderer.setScissor(x, y, l, h);
-      const aspect = l / h;
-      // **La caméra d'une vue est gardée, jamais refaite.** Six caméras neuves
-      // par image, c'était six objets que le moteur n'avait jamais vus : sous
-      // WebGPU, chacun refait ses tampons d'uniformes et ses groupes de liaison,
-      // et rien du travail de l'image précédente ne se réutilise. On la crée une
-      // fois par vue et on ne met à jour que ce qui bouge — le cadrage dépend du
-      // rayon de la pièce et du rapport de la tuile, tous deux stables.
-      const direction = new THREE.Vector3(vue.direction[0], vue.direction[1], vue.direction[2]).normalize();
-      if (vue.cle === 'jeu') {
-        const a=vueLibre.bearing*Math.PI/180, p=vueLibre.inclinaison*Math.PI/180;
-        direction.set(Math.sin(a)*Math.cos(p),Math.sin(p),Math.cos(a)*Math.cos(p));
-      }
-      let camera: THREE.Camera;
-      if (vue.ortho) {
-        const o = (cameras.get(vue.cle) as THREE.OrthographicCamera | undefined)
-          ?? new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 20);
-        cameras.set(vue.cle, o);
-        o.left = -rayon * aspect; o.right = rayon * aspect; o.top = rayon; o.bottom = -rayon;
-        o.updateProjectionMatrix();
-        o.position.copy(centre).addScaledVector(direction, 6);
-        o.up.set(vue.haut[0], vue.haut[1], vue.haut[2]);
-        o.lookAt(centre);
-        camera = o;
-      } else {
-        const p = (cameras.get(vue.cle) as THREE.PerspectiveCamera | undefined)
-          ?? new THREE.PerspectiveCamera(40, 1, 0.05, 40);
-        cameras.set(vue.cle, p);
-        p.aspect = aspect;
-        p.updateProjectionMatrix();
-        // La distance qui fait tenir la sphère englobante dans le champ vertical.
-        const distance = rayon / Math.sin((20 * Math.PI) / 180) * (aspect < 1 ? 1 / aspect : 1);
-        p.position.copy(centre).addScaledVector(direction, distance / vueLibre.zoom);
-        p.up.set(0, 1, 0);
-        p.lookAt(centre);
-        camera = p;
-      }
-      renderer.render(scene, camera);
-    }
-    return true;
-  }
-
-  return {
-    materiaux,
-    prete,
-    poser,
-    orienter: (v) => { vueLibre = { ...v }; },
-    dessiner,
-    dispose: () => {
-      vivant = false;
-      retirerPieces();
-      materiaux.dispose();
-      scene.environment = null;
-      environnement?.dispose();
-      environnement = null;
-      sol.geometry.dispose();
-      (sol.material as THREE.Material).dispose();
-      // Les événements dispose des matériaux utilisent encore les programmes du moteur.
-      // Un moteur non initialisé sera libéré par sa chaîne d'initialisation.
-      renderer?.dispose();
-      renderer = null;
-    },
-  };
+    {outils && piece ? <section className={styles.planche} data-fond={fond} aria-label="Les images de l’entrée">
+      {(entree ? rangees : [{ cle: 'repli', animation: -1, miroir: false, titre: 'repli — dessiné par le code' }]).map((r) => (
+        <div key={`${piece.id}:${r.cle}`} className={styles.rangee}>
+          {couleurs.map((c) => <Toile
+            key={c.libelle}
+            lecteur={outils.lecteur}
+            id={piece.id}
+            animation={r.animation}
+            miroir={r.miroir}
+            equipe={c.equipe}
+            echelle={echelle}
+            enveloppe={entree ? (r.miroir ? enveloppeGauche : enveloppe) : enveloppeRepli}
+            ombre={ombreDe}
+            titre={comparer ? `${r.titre} · ${c.libelle}` : r.titre}
+          />)}
+        </div>
+      ))}
+    </section> : null}
+  </main>;
 }

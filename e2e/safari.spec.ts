@@ -1,36 +1,20 @@
 /**
- * Ce que Safari fait du plateau — et il en fait un écran d'erreur.
+ * Ce que Safari fait du plateau.
  *
- * Trouvé le 8 septembre 2026 en cherchant pourquoi le jeu est « impossible à
- * jouer sur téléphone ». Sur WebKit, le moteur se monte, puis **la première
- * image lève** :
+ * Écrit le 8 septembre 2026, quand le jeu était « impossible à jouer sur
+ * téléphone » : sur WebKit, le moteur WebGPU se montait, puis **la première
+ * image levait** (`RangeError: Maximum call stack size exceeded`, une faute
+ * d'amont de three r170 dans `NodeUtils.getCacheKey`, que
+ * `scripts/rustine-three.mjs` corrige à l'installation). Le voile d'erreur
+ * rendait alors le conteneur `inert` : le jeu était là, dessous, et plus rien
+ * n'était touchable.
  *
- *     RangeError: Maximum call stack size exceeded.
- *       at cyrb53 … at getCacheKey … at getCacheKey$1 … at getCacheKey
- *       at getDynamicCacheKey … at RenderObject … at createRenderObject
- *       at _renderObjectDirect … at _renderScene … at render … at dessiner
- *
- * C'est la clé de programme d'un matériau à nœuds, que three calcule en
- * **descendant récursivement** le graphe. La pile de JavaScriptCore est plus
- * courte que celle de V8 : le même graphe passe sur Chromium et déborde ici.
- * Trois faits mesurés qui cadrent le défaut :
- *
- * - ce n'est **pas** une affaire de dos. En retirant `navigator.gpu` pour forcer
- *   le repli WebGL 2, l'écran d'erreur est le même : le système de nœuds est
- *   commun aux deux, un repli ne sauverait rien ;
- * - WebGL 2 **est** disponible (`getContext('webgl2')` rend un contexte) et
- *   `requestAdapter()` rend un adaptateur : le message « cet appareil n'a pas de
- *   WebGL 2 » est faux, et c'est ce qu'on montre au joueur ;
- * - le voile d'erreur rend le conteneur `inert`. Le jeu est là, dessous, et plus
- *   rien n'est touchable : c'est le « impossible de toucher » du rapport.
- *
- * **Corrigé le 8 septembre 2026.** La cause n'était ni la profondeur du graphe —
- * mesurée à 23 nœuds quand WebKit tolère 73 000 appels — ni le dos WebGPU. C'est
- * une faute d'amont dans `NodeUtils.getCacheKey` de r170, qui pousse le tableau
- * de la clé **dans lui-même** ; `cyrb53` le convertit ensuite en nombre, ce qui
- * appelle `Array.prototype.join` sur un tableau auto-référent — V8 s'en tire par
- * sa détection de cycle, JavaScriptCore lève. `scripts/rustine-three.mjs` corrige
- * la ligne à l'installation ; three l'a corrigée de son côté en 0.186.
+ * **Depuis le 23 septembre 2026, la route du jeu monte la peau 2D** — les
+ * images cuites, en WebGL 2 — et n'importe plus three du tout. Ce spec vérifie
+ * désormais que Safari démarre **cette** peau, à l'adresse nue, sans voile
+ * d'erreur, qu'elle dessine réellement, et qu'aucun morceau de three ni de
+ * `render3d/` n'est téléchargé. Il tombe si la route revient à la 3D : la toile
+ * `data-rendu="2d"` ne paraît plus.
  */
 import { expect, test } from '@playwright/test';
 
@@ -38,14 +22,31 @@ test.use({
   viewport: { width: 390, height: 844 },
   hasTouch: true,
   isMobile: true,
+  trace: 'off',
 });
 test.setTimeout(240_000);
 
-test('sur Safari, le plateau démarre au lieu de montrer un écran d’erreur', async ({ page, browserName }) => {
+test('sur Safari, le plateau 2D démarre au lieu de montrer un écran d’erreur', async ({ page, browserName }) => {
   test.skip(browserName !== 'webkit', 'ce défaut est propre au moteur de Safari');
+  const morceaux: string[] = [];
+  const erreurs: string[] = [];
+  page.on('response', (r) => { if (/\.js(\?|$)/.test(r.url())) morceaux.push(r.url()); });
+  page.on('pageerror', (e) => erreurs.push(String(e)));
+
   await page.goto('/jeu/demo');
-  await expect(page.locator('canvas[data-rendu="3d"]')).toBeVisible({ timeout: 120_000 });
+  const toile = page.locator('canvas[data-rendu="2d"]');
+  await expect(toile).toBeVisible({ timeout: 120_000 });
+  // Une image est réellement passée, sur un contexte WebGL 2.
+  await expect.poll(() => page.evaluate(() => {
+    const w = window as unknown as { __atlas?: { mesurer(): { appels: number; backend: string | null } | null } };
+    const m = w.__atlas?.mesurer();
+    return m && m.appels > 0 ? m.backend : null;
+  }), { timeout: 60_000 }).toBe('webgl2');
+
   // Le voile d'erreur ne doit pas paraître, et la page ne doit pas devenir inerte.
-  await page.waitForTimeout(6000);
+  await page.waitForTimeout(3000);
   await expect(page.locator('.atlas-voile')).toHaveCount(0);
+  expect(await page.locator('[data-scenario="demo"][inert]').count(), 'le plateau reste touchable').toBe(0);
+  expect(morceaux.filter((u) => /three|render3d/i.test(u)), 'aucun morceau de three ni de render3d').toEqual([]);
+  expect(erreurs, 'aucune erreur de page').toEqual([]);
 });

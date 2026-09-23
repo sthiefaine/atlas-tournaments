@@ -1,6 +1,6 @@
 'use client';
 
-import { ETAPES_CHARGEMENT, type EtapePage } from './etapes-chargement';
+import { ETAPES_CHARGEMENT, etapeAffichee, type EtapePage } from './etapes-chargement';
 
 /**
  * L'**écran de chargement** d'une mission.
@@ -23,9 +23,12 @@ import { ETAPES_CHARGEMENT, type EtapePage } from './etapes-chargement';
  *    téléchargée. C'est lui qui porte le fond sombre du jeu.
  * 2. **Il ne ment pas.** Aucune jauge qui avance seule, aucune durée devinée :
  *    chaque étape est cochée par un fait — le module est arrivé, le plateau est
- *    bâti, le moteur graphique a démarré (`Rendu.mesurer().backend`), une image
- *    a été dessinée (`appels > 0`). Une jauge qui progresse toute seule est pire
- *    que rien : elle promet une fin qu'elle ne connaît pas.
+ *    monté, une image a été dessinée (`appels > 0`). Une jauge qui progresse
+ *    toute seule est pire que rien : elle promet une fin qu'elle ne connaît pas.
+ *    C'est aussi pourquoi « le moteur démarre » a disparu avec WebGPU : la peau
+ *    2D ouvre son contexte en quelques millisecondes, et une case qu'on ne voit
+ *    jamais qu'à l'état « faite » dit qu'on a attendu ce qu'on n'a pas attendu
+ *    (`etapes-chargement.ts`).
  * 3. **Il ne traduit pas.** Ses libellés arrivent traduits, de la page serveur,
  *    comme ceux du bouton Campagne et de la liste des parties libres. Appeler
  *    `t()` ici ferait entrer les trois cent soixante-dix-neuf chaînes
@@ -37,10 +40,10 @@ import { ETAPES_CHARGEMENT, type EtapePage } from './etapes-chargement';
  * installeur ». Il l'était — une pastille par étape, une coche quand c'est fait,
  * un ruban qui va et vient au-dessus. La liste **reste** (c'est l'honnêteté du
  * point 2), mais elle prend la forme que le jeu donne déjà à toute progression :
- * les quatre segments biseautés de la jauge de campagne, dont celui en cours
- * porte le ruban. Un seul mot est écrit en grand — l'étape courante ; les trois
- * autres restent lisibles par un lecteur d'écran, où ils servent encore, et
- * cessent d'encombrer un écran qu'on regarde deux secondes.
+ * les segments biseautés de la jauge de campagne, dont celui en cours porte le
+ * ruban. Un seul mot est écrit en grand — l'étape courante ; les autres restent
+ * lisibles par un lecteur d'écran, où ils servent encore, et cessent
+ * d'encombrer un écran qu'on regarde deux secondes.
  */
 
 /** Les cinq mots de l'écran, déjà traduits par la page. */
@@ -57,7 +60,7 @@ export function EcranChargement(
   },
 ): React.ReactElement | null {
   if (etape === 'pret') return null;
-  const rang = ETAPES_CHARGEMENT.indexOf(etape);
+  const rang = ETAPES_CHARGEMENT.indexOf(etapeAffichee(etape));
   return <div className="atlas-chargement" role="status" aria-live="polite" data-etape={etape}>
     <div className="chargement-carte">
       {/* La balise de liaison : trois traits qui battent, comme le filet de

@@ -409,6 +409,7 @@
     {"cle":"hud.reactivation_adverse","texte":"Les unités adverses rejouent","contexte":{"ecran":"hud","note":"Annonce éphémère : l’adversaire a réactivé ses unités. Jamais un compte : sous brouillard, il dirait ce que la carte cache."},"longueurMax":36},
     {"cle":"hud.meteo_imposee","texte":"Météo imposée par {commandant}","contexte":{"ecran":"hud","note":"Le Bulletin, quand un pouvoir dicte le temps : dit qui l’impose, sous les trois cases."},"longueurMax":40},
     {"cle":"hud.aide_camera","texte":"Alt + glisser : tourner et incliner. Maj + molette : incliner. Au tactile : tourner deux doigts, les glisser verticalement pour incliner, pincer pour zoomer.","contexte":{"ecran":"jeu"},"longueurMax":200},
+    {"cle":"hud.aide_camera_2d","texte":"Glisser : déplacer la carte. Molette ou pincement : zoomer. Double-tap : rapprocher.","contexte":{"ecran":"jeu","note":"L'aide du panneau caméra quand la vue est fixe (peau 2D) : ni rotation ni inclinaison, donc ni Alt ni Maj."},"longueurMax":200},
     {"cle":"commandant.cmd_ariane_belloc.pouvoir_v3","texte":"Tempo commun","contexte":{"ecran":"partie"},"longueurMax":40},
     {"cle":"commandant.cmd_ariane_belloc.super_v3","texte":"Tous les relais","contexte":{"ecran":"partie"},"longueurMax":40},
     {"cle":"commandant.cmd_tomas_reiner.pouvoir_v3","texte":"Tenue des accès","contexte":{"ecran":"partie"},"longueurMax":40},
@@ -1889,6 +1890,33 @@
       "contexte": {
         "ecran": "jeu",
         "note": "Seule piste utile qu'on puisse donner au joueur."
+      },
+      "longueurMax": 110
+    },
+    {
+      "cle": "campagne.sans_webgl2",
+      "texte": "Le jeu n’a pas pu démarrer : WebGL 2 est indisponible.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Écran d'échec de la peau 2D (images cuites), quand le navigateur n'ouvre aucun contexte WebGL 2. Ne nommer WebGPU nulle part : la 2D ne l'exige pas."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "campagne.echec_demarrage",
+      "texte": "Le jeu n’a pas pu démarrer.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "Écran d'échec quand WebGL 2 est présent mais que le montage a échoué : on ne dit pas à l'appareil qu'il lui manque ce qu'il a."
+      },
+      "longueurMax": 80
+    },
+    {
+      "cle": "campagne.echec_demarrage_aide",
+      "texte": "Rechargez la page. Si l’échec se répète, essayez un autre navigateur.",
+      "contexte": {
+        "ecran": "jeu",
+        "note": "La piste qui suit un échec de démarrage sans cause connue."
       },
       "longueurMax": 110
     },

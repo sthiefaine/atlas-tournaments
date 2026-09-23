@@ -1,5 +1,8 @@
 import { t } from '@/i18n/index';
 import { paletteDe } from '@/render/palettes';
+import type { Rvba } from '@/render2d/aplats';
+import { APPARENCES_VOIE } from '@/render2d/sol/couleurs';
+import { COULEURS_SURBRILLANCE, FLECHE } from '@/render2d/surbrillances';
 import { CARACTERES_CAPTURABLES } from '@/schemas/types';
 
 import carteDemo from '../../content/cartes/carte_plaine_symetrique.json';
@@ -16,9 +19,10 @@ import terrainsJson from '../../content/terrains.json';
  *
  * Ce n'est pas un décor inventé : c'est **la carte d'exhibition elle-même**
  * (`content/cartes/carte_plaine_symetrique.json`), la fenêtre de douze cases sur
- * huit qui entoure l'île — celle que l'attract mode cadre quand il se monte
- * par-dessus. Le fondu de l'un vers l'autre passe donc d'une vue de la carte à
- * une autre vue de la même carte, pas d'une image à un jeu qui ne lui
+ * huit qui entoure l'île — celle que l'attract mode cadre. Il n'en est que le
+ * **repli** (`vitrine.tsx`) : il paraît quand l'attract est refusé — animations
+ * réduites, WebGL 2 absent — ou a renoncé, jamais pendant qu'on l'attend. Même
+ * alors, c'est la même carte qui paraît, à plat, pas une image qui ne lui
  * ressemble pas. Si la carte change, le plateau suit ; seule la manœuvre
  * (unités, chemin) est posée à la main, en coordonnées de fenêtre.
  *
@@ -27,10 +31,13 @@ import terrainsJson from '../../content/terrains.json';
  * - terrains, eau, forêt, montagne : la palette de chaque terrain dans
  *   `content/terrains.json`, lue ici directement ;
  * - unités et bâtiments : `render/palettes.ts`, importé ;
- * - chaussée, tirets et tablier de pont : l'apparence `BITUME` de la plaine dans
- *   `render3d/textures-voies.ts` (recopiée : ce module tire three.js) ;
- * - vert de déplacement, rouge de tir, flèche à liseré sombre :
- *   `render3d/surbrillances.ts` (même raison).
+ * - chaussée, tirets et tablier de pont : l'apparence des voies de la plaine
+ *   dans le sol de la peau 2D (`render2d/sol/couleurs.ts`), importée ;
+ * - vert de déplacement, rouge de tir, flèche à liseré sombre : les couleurs
+ *   des surbrillances de la peau (`render2d/surbrillances.ts`), importées.
+ * Ce composant est rendu par le serveur : ces imports n'ajoutent rien au
+ * JavaScript de la page. Ils étaient recopiés du temps de la 3D, dont les
+ * modules tiraient three.js — la faute des « quatre copies » (`CLAUDE.md`).
  * Vert émeraude pour les cases où l'on peut aller, rouge carmin pour celles que
  * l'on peut frapper : quelqu'un qui a joué reconnaît son écran ; quelqu'un qui
  * arrive apprend la grammaire avant même d'avoir cliqué.
@@ -99,12 +106,21 @@ const VOIES = new Set(['R', 'N']);
 const BATIS = new Set(CARACTERES_CAPTURABLES);
 const EAU = new Set(['V', 'W']);
 
-/** L'apparence des voies en plaine : `textures-voies.ts`, `BITUME`. */
-const CHAUSSEE = 'rgb(104,110,114)';
-const TIRETS = 'rgb(214,208,178)';
-const TABLIER = '#8f8d86';
-/** L'encre des ombres et du liseré de flèche : `surbrillances.ts`. */
-const ENCRE = '#0d2419';
+/** Une couleur de la peau en `#rrggbb` : l'opacité, elle, reste celle du dessin. */
+function hex(c: Rvba): string {
+  return `#${[c[0], c[1], c[2]].map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('')}`;
+}
+
+/** L'apparence des voies en plaine : celle du sol de la peau. */
+const VOIE = APPARENCES_VOIE.plaine;
+const CHAUSSEE = VOIE.clair;
+const TIRETS = VOIE.couleurMotif;
+const TABLIER = VOIE.pont;
+/** L'encre des ombres et du liseré de flèche, le cœur de la flèche : ceux des surbrillances. */
+const ENCRE = hex(FLECHE.couleurLisere);
+const FLECHE_COEUR = hex(FLECHE.couleur);
+const VERT = hex(COULEURS_SURBRILLANCE.deplacement);
+const ROUGE = hex(COULEURS_SURBRILLANCE.attaque);
 
 /** Cases d'herbe plus claire : la trame irrégulière évite l'effet damier. */
 const CLAIRES = [2, 6, 9, 14, 19, 23, 27, 34, 38, 43, 49, 55, 60, 64, 70, 74, 81, 87, 93];
@@ -388,8 +404,8 @@ export function PlateauAccueil({ locale }: { locale: string }) {
           couleur, en un tracé par couche — et ce qui se dresse sur le sol,
           arbres, montagnes, bâtiments, vient par-dessus. */}
       <path d={carres([...DEPLACEMENT, ...ATTAQUE], 2)} fill="#08161d" opacity=".42" />
-      <path d={carres(DEPLACEMENT, 2)} fill="#28ec96" opacity=".64" />
-      <path d={carres(ATTAQUE, 2)} fill="#ff2e48" opacity=".76" />
+      <path d={carres(DEPLACEMENT, 2)} fill={VERT} opacity=".64" />
+      <path d={carres(ATTAQUE, 2)} fill={ROUGE} opacity=".76" />
 
       {casesOu((c) => c === 'F').map((c) => <use key={`f${c[0]}-${c[1]}`} href="#f" {...centre(c)} />)}
       {casesOu((c) => c === 'M').map((c) => <use key={`m${c[0]}-${c[1]}`} href="#m" {...centre(c)} />)}
@@ -406,8 +422,8 @@ export function PlateauAccueil({ locale }: { locale: string }) {
       {/* La flèche, liseré sombre puis cœur clair : elle doit tenir sur le vert. */}
       <path d={cheminEnD()} fill="none" stroke={ENCRE} strokeOpacity=".72" strokeWidth={17} strokeLinecap="round" strokeLinejoin="round" />
       <path d={pointeEnD()} fill={ENCRE} fillOpacity=".72" stroke={ENCRE} strokeOpacity=".72" strokeWidth={6} strokeLinejoin="round" />
-      <path d={cheminEnD()} fill="none" stroke="#f4fff6" strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={pointeEnD()} fill="#f4fff6" />
+      <path d={cheminEnD()} fill="none" stroke={FLECHE_COEUR} strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={pointeEnD()} fill={FLECHE_COEUR} />
 
       <Infanterie x={ORIGINE.x} y={ORIGINE.y} camp={0} />
       {ALLIES.map(([x, y]) => <Char key={`a${x}-${y}`} x={x} y={y} camp={0} />)}

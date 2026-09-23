@@ -8,6 +8,11 @@
  * ensuite tout ce que le lancer de rayon calcule, ce qui rend le toucher faux
  * autant que le zoom impossible.
  *
+ * **Depuis le 23 septembre 2026, le plateau est la peau 2D** — les images
+ * cuites, en WebGL 2 — et c'est elle qu'on commande ici, à l'adresse nue :
+ * aucun `?rendu=`. Le spec tombe si la route revient à la 3D (`TOILE` ne paraît
+ * plus), et il vérifie en plus que la route ne tire ni three ni `render3d/`.
+ *
  * Trois précautions de méthode :
  *
  * - le pincement passe par **CDP** (`Input.dispatchTouchEvent`) et non par des
@@ -25,13 +30,23 @@ test.use({
   viewport: { width: 390, height: 844 },
   hasTouch: true,
   isMobile: true,
-  channel: 'chrome',
-  launchOptions: { args: ['--enable-unsafe-webgpu'] },
+  // D'autres specs écrivent dans `test-results/` en même temps : pas de trace.
+  trace: 'off',
+  // Sous Chromium sur macOS, le dessin passe par Metal : le rasteriseur
+  // logiciel par défaut coûte une seconde par image sur une machine chargée,
+  // et le spec mesurerait la machine (`e2e/rendu-2d.spec.ts`).
+  launchOptions: [async ({ browserName }, use) => {
+    await use(browserName === 'chromium' && process.platform === 'darwin' ? { args: ['--use-angle=metal'] } : {});
+  }, { scope: 'worker' }],
 });
 
 test.setTimeout(240_000);
 
-const TOILE = 'canvas[data-rendu="3d"]';
+/** La toile de la peau 2D : la route du jeu la monte sans qu'on la demande. */
+const TOILE = 'canvas[data-rendu="2d"]';
+
+/** Les morceaux de JavaScript qui trahiraient la 3D : three, ou la peau 3D. */
+const MORCEAUX_3D = /three|render3d/i;
 
 /** L'écart en pixels entre deux cases voisines : il grandit avec le zoom. */
 async function ecartCases(page: Page): Promise<number> {
@@ -55,13 +70,34 @@ async function positionCase(page: Page, x: number, y: number): Promise<{ x: numb
   }, [x, y] as [number, number]);
 }
 
-/** Attend que le plateau soit monté et que le pont réponde. */
-async function ouvrirPlateau(page: Page): Promise<void> {
+/**
+ * Attend que le plateau soit monté et que le pont réponde. Rend les morceaux
+ * de JavaScript que la page a téléchargés, pour qui veut les compter.
+ */
+async function ouvrirPlateau(page: Page): Promise<string[]> {
+  const morceaux: string[] = [];
+  page.on('response', (r) => {
+    const url = r.url();
+    if (/\.js(\?|$)/.test(url)) morceaux.push(url);
+  });
   await page.goto('/jeu/demo');
   await expect(page.locator(TOILE)).toBeVisible({ timeout: 120_000 });
   await expect.poll(async () => (await positionCase(page, 4, 3)) !== null,
     { timeout: 120_000, message: 'le pont de développement projette une case' }).toBe(true);
+  return morceaux;
 }
+
+test('la route du jeu monte la 2D sans demander la 3D, et ne télécharge ni three ni render3d', async ({ page }) => {
+  const morceaux = await ouvrirPlateau(page);
+  // La peau a réellement dessiné, et c'est un contexte WebGL 2 — pas WebGPU.
+  await expect.poll(() => page.evaluate(() => {
+    const w = window as unknown as { __atlas?: { mesurer(): { appels: number; backend: string | null } | null } };
+    const m = w.__atlas?.mesurer();
+    return m && m.appels > 0 ? m.backend : null;
+  }), { timeout: 60_000 }).toBe('webgl2');
+  expect(morceaux.length, 'des morceaux ont été relevés').toBeGreaterThan(0);
+  expect(morceaux.filter((u) => MORCEAUX_3D.test(u)), 'aucun morceau de three ni de render3d').toEqual([]);
+});
 
 test('la route du jeu refuse le zoom de page : il volait le pincement de la carte', async ({ page }) => {
   await ouvrirPlateau(page);
@@ -101,8 +137,8 @@ test('deux doigts zooment la carte, et non la page', async ({ page, browserName 
   const cdp = await page.context().newCDPSession(page);
   const cx = 195;
   const cy = 420;
-  // Deux doigts sur la **même ordonnée** : l'écart zoome, et la composante
-  // verticale — qui incline la caméra — reste nulle.
+  // Deux doigts sur la **même ordonnée**, écartés autour d'un milieu fixe :
+  // l'écart zoome, et la carte ne glisse pas sous eux.
   const doigts = (ecart: number) => [
     { x: cx - ecart, y: cy, id: 1 },
     { x: cx + ecart, y: cy, id: 2 },
@@ -142,13 +178,13 @@ test('un plateau immobile laisse respirer le fil principal', async ({ page, brow
   const apres = await lire();
   const occupe = ((apres['TaskDuration'] ?? 0) - (avant['TaskDuration'] ?? 0)) * 1000;
 
-  // Drapeaux, respiration, rotors et eau ne s'arrêtent jamais, et la boucle se
-  // rappelait pour eux **à chaque image** : le fil principal était saturé sur un
-  // plateau où rien ne se passe — 5 178 ms sur 5 000 au témoin, mesuré le
-  // 9 septembre 2026. L'ambiance a désormais son pas (50 ms au doigt), et
-  // l'urgent — inertie de caméra, marée, effets, animations — garde l'image
-  // suivante. Le seuil est large parce que le rendu logiciel du banc gonfle tout :
-  // ce qu'il attrape, c'est le retour d'une boucle qui ne dort plus.
+  // Drapeaux, respiration, rotors et eau ne s'arrêtaient jamais en 3D, et la
+  // boucle se rappelait pour eux **à chaque image** : le fil principal était
+  // saturé sur un plateau où rien ne se passe — 5 178 ms sur 5 000 au témoin,
+  // mesuré le 9 septembre 2026. La peau 2D dort quand rien ne bouge et ne
+  // revient qu'au pas de l'ambiance (douze images par seconde) pour un repos
+  // cuit ou l'eau. Le seuil est large parce qu'une machine chargée gonfle
+  // tout : ce qu'il attrape, c'est le retour d'une boucle qui ne dort plus.
   expect(occupe, `${Math.round(occupe)} ms de fil principal sur 5 000 au repos`)
     .toBeLessThan(5000 * 0.75);
 });
@@ -216,6 +252,9 @@ for (const taille of [{ width: 390, height: 844 }, { width: 320, height: 568 }])
     await expect(outils).not.toHaveAttribute('open');
     await outils.locator('summary').tap();
     await expect(outils).toHaveAttribute('open', '');
+    // La vue est fixe : l'aide ne promet que les gestes que la carte comprend.
+    await expect(outils.locator('.camera-aide')).toContainText('pincement');
+    await expect(outils.locator('.camera-aide')).not.toContainText('Alt');
     const zoom = outils.getByRole('button', { name: 'Rapprocher', exact: true });
     // Le bouton garde sa cible tactile, même sur le plus petit écran.
     const boutons = outils.locator('button');
@@ -229,7 +268,8 @@ for (const taille of [{ width: 390, height: 844 }, { width: 320, height: 568 }])
     await zoom.tap();
     await expect(outils).toHaveAttribute('open', '');
     await outils.locator('summary').tap();
-    await page.locator('.atlas-mission-fanion').tap();
+    // Deux fanions depuis que le carnet a le sien : on vise celui de l'objectif.
+    await page.locator('.atlas-mission-fanion', { has: page.locator('.atlas-mission-libelle') }).tap();
     const aide = page.getByRole('dialog', { name: 'Objectif et aide' });
     await expect(aide).toBeVisible();
     await aide.getByRole('button', { name: 'Reprendre', exact: true }).tap();

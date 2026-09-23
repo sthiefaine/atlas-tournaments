@@ -165,13 +165,15 @@ export const PORTS_BANC: readonly Case[] = [
 /**
  * Les bases de silhouette **qu'aucune unité du canon n'utilise**.
  *
- * Elles étaient trois — `rail`, `ailes` et `coque` — écrites dans
- * `render3d/pieces.ts` depuis le début et jamais vues à l'écran. Le catalogue 5
- * a donné des porteurs à `ailes` (chasseur, bombardier, puis le furtif du 6 en
- * aile volante) et à `coque` (barge, porte-avions, cuirassé, sous-marin) ; il
- * ne reste que `rail`, qu'on fait
- * apparaître en échangeant la base d'une unité dans une **copie** du catalogue
- * — jamais dans le canon, qui reste la vérité.
+ * Elles étaient trois — `rail`, `ailes` et `coque` — écrites depuis le début
+ * dans le vocabulaire fermé des silhouettes et jamais vues à l'écran. Le
+ * catalogue 5 a donné des porteurs à `ailes` (chasseur, bombardier, puis le
+ * furtif du 6 en aile volante) et à `coque` (barge, porte-avions, cuirassé,
+ * sous-marin) ; il ne reste que `rail`, qu'on fait apparaître en échangeant la
+ * base d'une unité dans une **copie** du catalogue — jamais dans le canon, qui
+ * reste la vérité. Sur la peau 2D, une silhouette ne se voit que dans un
+ * **repli** (`render2d/replis.ts`, qui dessine celles du HUD) : une image cuite
+ * est la photographie d'un modèle, pas d'une silhouette.
  */
 export const BASES_JAMAIS_VUES: Readonly<Record<string, BaseSilhouette>> = Object.freeze({
   roquettes: 'rail',
