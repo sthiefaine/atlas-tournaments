@@ -892,8 +892,12 @@ function echelleUnite(s: Silhouette): Echelle {
  * absente garde le gabarit de sa silhouette (`echelleUnite`) jusqu'à la sienne.
  */
 const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, number]>> = {
+  artillerie: [0.516, 0.662, 0.801],
+  barge: [0.36, 0.397, 0.7],
   char_leger: [0.546, 0.517, 0.684],
+  genie: [0.569, 0.859, 0.349],
   helico: [0.446, 0.38, 0.818],
+  meca: [0.571, 0.824, 0.475],
 };
 
 /** La tolérance d'une figurine : la charte se juge sur l'image cuite, la fiche tient la forme livrée. */

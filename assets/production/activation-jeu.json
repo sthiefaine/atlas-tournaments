@@ -84,18 +84,18 @@
     {
       "id": "unite_artillerie_base",
       "fichierActif": "public/assets/modeles/unite_artillerie_base_lod0.glb",
-      "donnees": "../donnees/e17b4911b0a8b92ed74bdbd8514777cbbc711c6cdb72a363ff0b041b02e02c26.glb",
-      "revision": "25fc09e7951428ccfd3e9c7321914b207d015da403558910eda40756919755ad",
+      "donnees": "../donnees/b86fcde9492890aa44a8980804045ef1cf6dd2e7753538c075b715b99ca15eae.glb",
+      "revision": "2bb73ca413bbc59aa55141e401571b1da458f67a51a2815e6d5d8dc2737a8a0c",
       "controle": "ok",
-      "sourcePrepareeSha256": "a1805db53896c9b982def37b101ab3388c4406a67071d76e08f24eb148ab5112"
+      "provenance": "figurine"
     },
     {
       "id": "unite_barge_base",
       "fichierActif": "public/assets/modeles/unite_barge_base_lod0.glb",
-      "donnees": "../donnees/9d4912a72dbe5bc19f26b1b675d6d059bffeb068dad3e3346201082a98f7d121.glb",
-      "revision": "8e86f90992e2aedafc10895de6e6c243ca830ad09e6fcc15c53c2d7770993c1e",
+      "donnees": "../donnees/9a36db7cfb073d3cb76e8fd6c40870c7db042863a501d9b86b424c6354803472.glb",
+      "revision": "3356685144fa1aec773d20405ac161b003453233f6fe6889220c08d58ed3f455",
       "controle": "ok",
-      "sourcePrepareeSha256": "fb0df1f75d04ada2c3d52ba541bdbd89bf404544c17b9c3e744ce4a525c965ab"
+      "provenance": "figurine"
     },
     {
       "id": "unite_bombardier_base",
@@ -196,10 +196,10 @@
     {
       "id": "unite_genie_base",
       "fichierActif": "public/assets/modeles/unite_genie_base_lod0.glb",
-      "donnees": "../donnees/4e521a848f92acfa1d9214187d0ddbd80563dc26f0a722a49dc5e6c14284d812.glb",
-      "revision": "40e8a90886ef23331b9e44ed56974e869f8aafcc8e834582636e20218f8f2ee3",
+      "donnees": "../donnees/a4286e05f91a350547f27f19827a8bb10c7831f16494b3174b569ffe3457ba01.glb",
+      "revision": "8e61646a6729d1a1d01c8900c3578f0c0d7ad9a13c6fcbe5ebc07275f000ffae",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_helico_base",
@@ -221,10 +221,10 @@
     {
       "id": "unite_meca_base",
       "fichierActif": "public/assets/modeles/unite_meca_base_lod0.glb",
-      "donnees": "../donnees/9b2bd92c89f3dccd1ce1f0855ecaf6d6d202edda827a86cb8026d5160a0ef6f2.glb",
-      "revision": "bc27cd99f19a410f6b71cbeecfa22498c5eeb60d7030dcd10d48b61e63a97233",
+      "donnees": "../donnees/180bf3f5125722bf54e88406d60a53f617d580c4ec77a4b0fa6063ad86c03835.glb",
+      "revision": "50e7066bb8ba35b4ad9c60df48bc7254e4ad2c255c830efc9e444a6668c1acfa",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_meridien_automate_base",
