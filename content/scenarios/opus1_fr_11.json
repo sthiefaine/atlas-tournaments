@@ -1,0 +1,249 @@
+{
+  "cle": "opus1_fr_11",
+  "code": "opus1_fr_11",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · Le contrat rendu public",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_11",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_mael_orven",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 3,
+      "commandantCle": "cmd_lise_orven",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 2000,
+  "fondsDepartParCamp": {
+    "0": 2000,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "revenusParBatiment": 300,
+  "revenusParBatimentParCamp": {
+    "0": 300,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "brouillard": false,
+  "limiteJournees": 24,
+  "victoire": [
+    {
+      "type": "hors_jeu_total"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 24
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nous avons remis la ligne de trop à Atlas. Méridien veut faire appliquer son contrat avant qu’il soit lu partout : la Sélection vient aux Haies. Et Ost ne vient pas seul.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Content de vous revoir. Je vous présente ma colonne : **les chenilles**, avec moi, par la route de l’est.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_mael_orven",
+      "texte": "Maël Orven. **Le ciel**, par le nord. Je passe, je frappe, je repars : une colonne à découvert, je la vois d’en haut.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Lise Varen. **Les pièces lourdes**, au sud. Elles tirent de loin et bougent peu. Ce qui entre dans ma zone y reste.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Trois colonnes pour un seul contrat. Mettez **toutes leurs unités hors jeu** avant la fin de J24. Ils n’ont ni usine ni caisse ici : ce qu’ils amènent est tout ce qu’ils ont.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous vous souvenez du devis orange ? Ost souriait déjà. Cette fois, ne marchez pas en bloc : une colonne couvre l’autre, un anti-air suit chaque groupe.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nos trois postes de relève sont derrière nous. Les fermes du centre sont libres : prises, elles financent vos renforts.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_lise_orven",
+      "texte": "Mes pièces sont hors jeu, et mes équipes rentrent entières. C’était la seule clause que j’avais demandée.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_mael_orven",
+      "texte": "Plus un appareil en l’air. Je choisirai mieux mon prochain ciel.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "La Sélection perd une manche, pas la saison. Publiez votre contrat : il dira que nous l’avons signé, pas que nous avions tort.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Trois commandants pour une seule offre. Ce n’est pas une équipe d’essai : **c’est une armée**. Ce soir, le contrat part au Registre, et tout le monde pourra le lire.",
+      "emotion": "triomphe"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Leurs colonnes tiennent encore. Reprenons avec un anti-air dans chaque groupe, et l’artillerie derrière les haies.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Le contrat s’appliquera. Revenez quand vos colonnes sauront se couvrir.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr11_premier_tir",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_lise_orven",
+          "texte": "Premier tir. La zone est posée : ce qui s’y trouve est marqué avant d’avoir vu qui tire.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr11_ciel",
+      "declencheur": {
+        "type": "perte",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_mael_orven",
+          "texte": "Un appareil de moins. Je ne me pose pas pour autant : je n’ai pas de piste ici.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr11_bloc",
+      "declencheur": {
+        "type": "perte",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Vous visez juste. La Sélection ne contourne pas : elle avance quand même.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr11_reserve",
+      "declencheur": {
+        "type": "journee",
+        "journee": 8
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ils n’ont aucune réserve. Chaque unité qu’ils perdent manque pour de bon ; les nôtres, gardez-les en vie.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 2000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 300,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 24,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 17
+    },
+    "difficile": {
+      "fondsDepart": 2000,
+      "fondsDepartIa": 0,
+      "revenusParBatiment": 300,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 24,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 17
+    }
+  },
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1,
+      2,
+      3
+    ]
+  ]
+}

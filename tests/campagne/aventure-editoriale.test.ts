@@ -1,7 +1,7 @@
 /** Le plan reste un graphe cohérent, distinct du parcours jouable. */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 const lire = (f: string) => JSON.parse(readFileSync(f, 'utf8'));
 const lore = lire('doc/refonte/lore-v2.json');
 const nations = lire('doc/refonte/opus1-nations.json');
@@ -37,5 +37,9 @@ test('les choix, ouvertures et retours pointent vers des épisodes existants', (
   }
   assert.equal(decisions, 79);
   assert.equal(lore.fins.length, 4);
-  assert.equal(lire('content/campagne.json').missions.length, 12, 'ne pas présenter le plan comme des missions intégrées');
+  // Le parcours ne présente que ce qui se joue : dix exercices, deux matchs et
+  // le chapitre français (23 septembre 2026). Le reste du plan reste un plan.
+  const parcours = lire('content/campagne.json').missions as { scenarioCle: string }[];
+  assert.equal(parcours.length, 24, 'ne pas présenter le plan comme des missions intégrées');
+  for (const m of parcours) assert.ok(existsSync(`content/scenarios/${m.scenarioCle}.json`), `${m.scenarioCle} doit être jouable`);
 });

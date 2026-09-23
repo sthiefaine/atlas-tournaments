@@ -28,7 +28,7 @@ import {
 import { chargerCommandantsJouables, clesDuRoster, entreeDuRoster } from '../../src/content/commandants-jouables';
 import { listerProfilsCommandants } from '../../src/content/profils-commandants';
 import { resoudreCommandantsScenario } from '../../src/content/commandants-jeu';
-import { validerRosterJouables, validerScenario, validerMapDef, type RosterJouables, type Scenario } from '../../src/schemas/index';
+import { LONGUEUR_MAX_GRAINE, validerRosterJouables, validerSauvegarde, validerScenario, validerMapDef, type RosterJouables, type Scenario } from '../../src/schemas/index';
 import { chargerCatalogue, creerPartie, sceneDepuis, appliquer, enregistrerPartie, rejouer, empreinte } from '../../src/engine/index';
 
 function stockage(): Map<string, string> {
@@ -280,12 +280,15 @@ test('graine : le commandant y est figé, s’en relit, et n’efface pas les d�
   const decisions = decisionsDeGraine(pacte, graineAube(pacte, []));
   const marquee = graineAvecCommandant(graineAube(pacte, decisions), 'cmd_ren_mizuno');
   assert.deepEqual(decisionsDeGraine(pacte, marquee), decisionsDeGraine(pacte, graineAube(pacte, decisions)));
-  // Une graine tient en 64 caractères (`validerSauvegarde`), quel que soit le couple.
+  // Une graine tient dans la borne de `validerSauvegarde`, quel que soit le
+  // couple — et c'est `validerSauvegarde` qui le dit, pas une copie du nombre.
   const cles = clesDuRoster();
   for (const code of codesScenarios) {
     for (const cle of cles) {
       const g = graineAvecCommandant(graineAube({ ...base, code } as Scenario, []), cle);
-      assert.ok(g.length <= 64, `${g} : ${g.length} caractères`);
+      assert.ok(g.length <= LONGUEUR_MAX_GRAINE, `${g} : ${g.length} caractères`);
+      const s = validerSauvegarde({ scenarioCle: code, graine: g, catalogueVersion: 0, engineVersion: 1, mapgenVersion: 1, contentVersion: 1, actions: [] });
+      assert.ok(s.ok, `${g} : ${JSON.stringify(s)}`);
     }
   }
 });
@@ -331,7 +334,7 @@ test('moteur : la partie se joue sous le commandant choisi, et son rejeu est ide
   const avance = appliquer(depart, { type: 'finTour' }, cat);
   assert.ok(avance.ok);
   const sauvegarde = enregistrerPartie(avance.etat, [{ type: 'finTour' }]);
-  assert.ok(sauvegarde.graine.length <= 64);
+  assert.ok(sauvegarde.graine.length <= LONGUEUR_MAX_GRAINE);
   // La reprise ne relit que la graine : le joueur a pu rechoisir entre-temps.
   const retrouve = appliquerChoixCommandant(
     appliquerConsequences(base, decisionsDeGraine(base, sauvegarde.graine)).scenario,

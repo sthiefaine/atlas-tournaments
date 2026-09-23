@@ -1,10 +1,11 @@
 /** Les branches sont calculées par le même code que le jeu, après le mode. */
-import { appliquerConsequences, CHOIX_AUBE, VERSION_CANON_AUBE } from '../../campagne/consequences';
+import { appliquerConsequences, CHOIX_AUBE, CHOIX_FRANCE, VERSION_CANON_AUBE } from '../../campagne/consequences';
 import { scenarioPourMode } from '@/content/difficulte';
 import type { DemandeConception } from '@/schemas/conception';
 export function avecConsequences(d:DemandeConception):DemandeConception{
   const branches:DemandeConception['branches']=[];
-  for(const [origine,choix] of Object.entries(CHOIX_AUBE))for(const option of choix){
+  // Les deux registres : l'essai Aube et le chapitre français (FR04, FR08, FR10, FR12).
+  for(const [origine,choix] of [...Object.entries(CHOIX_AUBE),...Object.entries(CHOIX_FRANCE)])for(const option of choix){
     const decisions=[{scenario:origine,scenarioVersion:1,canonVersion:VERSION_CANON_AUBE,choix:option.cle}];
     const normal=appliquerConsequences(scenarioPourMode(d.scenario,'normal'),decisions);
     if(!normal.rappels.length)continue;

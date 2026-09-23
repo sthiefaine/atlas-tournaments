@@ -1,0 +1,244 @@
+{
+  "cle": "opus1_fr_12",
+  "code": "opus1_fr_12",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · Une victoire à partager",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_12",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 3,
+      "commandantCle": "cmd_edran_sorel",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "defensive"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 1000,
+    "2": 1000,
+    "3": 3000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 300,
+    "2": 300,
+    "3": 0
+  },
+  "brouillard": true,
+  "limiteJournees": 22,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 22
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Dernier QG de Méridien en France. Edran le tient sur le plateau, derrière trois portes. Trois colonnes, trois portes : la nôtre est à l’ouest.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Ma colonne prend la route du nord. J’ai promis ces batteries au Luxembourg : je veux voir la dernière caisse arriver.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Mes camions reprennent la route du sud, et mon escorte les suit jusqu’au plateau. Je compte ce qui passe.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Vous êtes nombreux. Mes réserves sont faites pour ça : chaque porte a sa relève.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**Prenez le QG d’Edran** avant la fin de J22. Seul, personne ne passe : pressez quand les deux autres colonnes pressent aussi.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous vous souvenez des deux rives ? Tomas tenait le nord, nous le sud. Aujourd’hui trois portes, et la même règle : ne bloquez pas la sortie des autres.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le QG est à nous. Je ne ferai pas de discours : les équipages attendent **votre voix**, pas la mienne.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Les batteries partent demain pour le Luxembourg. Je vérifierai la dernière caisse moi-même, et je me souviendrai de qui les a gagnées.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "La route est rouverte. Au Registre, la concession française est inscrite **à votre nom**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Dites à qui va la réserve. **La coalition** : Tomas nous rendra des éclaireurs au Luxembourg. **La préparation locale** : 1 500 fonds pour le prochain front.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Vous avez gagné un QG. Méridien a d’autres routes.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les trois portes ont tenu. Reprenons en même temps : une colonne qui attaque seule laisse le temps à la relève d’Edran.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr12_porte_nord",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_tomas_reiner",
+          "texte": "Ma colonne approche de la porte nord. Je n’entre pas seul : dites-moi quand vous serez devant la vôtre.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr12_releve",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_edran_sorel",
+          "texte": "Première porte touchée. La relève est déjà en route.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr12_route",
+      "declencheur": {
+        "type": "perte",
+        "camp": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_solveig_tamm",
+          "texte": "Une pièce d’Edran de moins. La route se dégage.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr12_assaut",
+      "declencheur": {
+        "type": "journee",
+        "journee": 8
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Si une porte cède, envoyez l’infanterie sur le QG : **quatre tours de capture**, couverts de bout en bout.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 16
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 4500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "defensive",
+      "reprises": 0,
+      "dureeVisee": 16
+    }
+  },
+  "equipes": [
+    [
+      0,
+      1,
+      2
+    ],
+    [
+      3
+    ]
+  ]
+}

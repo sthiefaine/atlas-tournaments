@@ -1,0 +1,232 @@
+{
+  "cle": "opus1_fr_10",
+  "code": "opus1_fr_10",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · Une signature de trop",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_10",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_edran_sorel",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_yuna_serrat",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 2000,
+    "2": 2000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 200,
+    "2": 200
+  },
+  "brouillard": true,
+  "limiteJournees": 22,
+  "victoire": [
+    {
+      "type": "capturer",
+      "cases": [
+        {
+          "x": 9,
+          "y": 1
+        },
+        {
+          "x": 12,
+          "y": 12
+        },
+        {
+          "x": 16,
+          "y": 6
+        }
+      ],
+      "combien": 2
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 22
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le contrat de l’équipe de l’Est avec Méridien cache **une ligne de trop** : sur les routes que nous avons gagnées, seul Méridien aurait le droit de transporter.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Une clause signée se respecte, commandant. Mes convois passent ; les autres attendent leur tour.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_yuna_serrat",
+      "texte": "Yuna Serrat. J’ai le mandat de l’équipe de l’Est : c’est moi qui signe pour elle, et je reste neutre. Le relais du nord est sous ma garde.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Reprenez **deux de leurs trois centres** avant la fin de J22 : le relais du nord, le quai du sud, le centre de tri de l’est. Deux en même temps, et leur route n’est plus à eux seuls.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous vous souvenez de la journée sans crédit ? Edran offrait d’accélérer notre dossier contre nos relevés. Voilà ce que son aide voulait dire.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le brouillard couvre la côte. Leurs équipes de capture vont vite : **gardez une unité près de notre QG**.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux centres repris. Méridien n’a plus la route à lui seul, et l’équipe de l’Est peut de nouveau choisir qui transporte son courant.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_yuna_serrat",
+      "texte": "Mon mandat court encore. L’équipe de l’Est peut revenir vers vous ; elle reste liée au Consortium tant que ses comptes ne sont pas vérifiés.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Deux façons de lui faire confiance. **Son retour, comptes vérifiés** : elle revient tout de suite, Atlas vérifie ses comptes, et son éclaireur nous suivra au dernier QG.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**La fin du mandat d’abord** : elle rompt avec Méridien avant de revenir, et sa caisse nous verse 1 500 fonds. Ses équipages attendront. À vous de choisir.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Ils tiennent encore deux centres. Reprenons : un groupe pour le quai, un pour le centre de tri, et une unité qui ne quitte pas notre QG.",
+      "emotion": "neutre"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr10_premier_tir",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_edran_sorel",
+          "texte": "Vous tirez sur un convoi autorisé. Le Bulletin l’écrira ; moi, je compterai ce que cela vous coûte.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr10_centre",
+      "declencheur": {
+        "type": "capture",
+        "camp": 0
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Bien repris. Il en faut **deux en même temps** : gardez ce que vous tenez pendant que le reste avance.",
+          "emotion": "joie"
+        }
+      ]
+    },
+    {
+      "cle": "fr10_mandat",
+      "declencheur": {
+        "type": "journee",
+        "journee": 5
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_yuna_serrat",
+          "texte": "Mes équipes capturent vite, et un mandat se signe partout. Même sur un QG qu’on ne surveille pas.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 2000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 200,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 16
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 200,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 22,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 16
+    }
+  },
+  "equipes": [
+    [
+      0
+    ],
+    [
+      1,
+      2
+    ]
+  ]
+}

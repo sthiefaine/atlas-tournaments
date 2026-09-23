@@ -1,0 +1,241 @@
+{
+  "cle": "opus1_fr_09",
+  "code": "opus1_fr_09",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · La réserve commune",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_09",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_edran_sorel",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 2000,
+    "2": 2000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500,
+    "2": 500
+  },
+  "brouillard": false,
+  "limiteJournees": 14,
+  "victoire": [
+    {
+      "type": "tenir",
+      "cases": [
+        {
+          "x": 8,
+          "y": 2
+        },
+        {
+          "x": 8,
+          "y": 11
+        }
+      ],
+      "journees": 10
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 14
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Comme promis, j’ai livré la réserve à l’équipe commune. Elle remplit deux dépôts, au nord et au sud. Ils seront pleins le soir de **J10**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Edran vient les reprendre avant. **Vous vous souvenez de la ligne de partage ?** Méridien n’a pas accepté le résultat : il dit que la réserve a été payée deux fois.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Je préférerais garder ces réserves pleines plutôt que les prendre. Personne ne m’a demandé mon avis. Alors je viens les prendre.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Solveig garde le dépôt du nord. Le nôtre, au sud, n’a qu’une infanterie. Ma colonne attend au carrefour.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "reserve",
+        "legende": "Les deux dépôts de la réserve commune"
+      }
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Pour la première fois, je ne vous dis pas où la placer. **Je vous le demande.** Au nord, au sud, ou entre les deux : j’attends votre décision.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Il faut **les deux dépôts à nous** à la fin de J10. Si l’un tombe, reprenez-le avant la fin de J14. Prendre le QG d’Edran ne suffit pas.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Les deux dépôts sont pleins. Je les inscris ce soir au nom de l’équipe commune. Ce qui est inscrit ne se revend plus.",
+      "emotion": "joie"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Vous avez tenu. Gardez ces réserves pleines : quelqu’un d’autre viendra les réclamer, et il sera moins patient que moi.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Vous avez décidé où allait ma colonne, et elle a tenu. Je vous le demanderai encore. Maintenant, allons voir ce fournisseur.",
+      "emotion": "joie"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les deux dépôts ne sont pas à nous à l’échéance. Reprenons : décidez d’abord où va la colonne, puis gardez une pièce rapide pour l’autre dépôt.",
+      "emotion": "doute"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr09_decision",
+      "declencheur": {
+        "type": "journee",
+        "journee": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Hier, je ne vous ai pas dit où aller, et je ne le dirai pas aujourd’hui. Vous avez placé la colonne : je la tiendrai où vous l’avez mise.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr09_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_solveig_tamm",
+          "texte": "Ils arrivent. Mes camions ne sont pas faits pour ça, et mon escorte tiendra ce qu’elle peut. Ne me laissez pas seule au nord trop longtemps.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr09_releve",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_edran_sorel",
+          "texte": "La relève arrive, commandant. Mes colonnes repartent le plein fait. Les vôtres ?",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr09_trois_journees",
+      "declencheur": {
+        "type": "journee",
+        "journee": 8
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "**Plus que trois journées** : la huitième, la neuvième, la dixième. Tenez les deux dépôts jusqu’au soir de J10.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 2000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 14,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 14,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0,
+      2
+    ],
+    [
+      1
+    ]
+  ]
+}

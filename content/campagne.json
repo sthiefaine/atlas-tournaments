@@ -248,7 +248,7 @@
       "scenarioCle": "opus1_fr_05",
       "titre": "Saison 1 · Le devis orange",
       "biome": "plaine",
-      "objectif": "Mettre toutes les unités adverses hors jeu avant la fin de J22. Aucun revenu quotidien.",
+      "objectif": "Mettre toute l’armée d’Ost hors jeu et lui prendre son QG et son usine avant la fin de J22 : tant qu’il garde de quoi produire, il reste en jeu. Aucun revenu quotidien.",
       "conseil": "Le char moyen est lent à contourner. Préservez les deux chars légers et concentrez les tirs d’artillerie.",
       "recit": "Ost réclame les relevés collectés avec son matériel prêté. Ariane conteste cette clause. Un arbitrage sur le terrain doit décider qui garde les équipements.",
       "conclusion": "Ost respecte le résultat. Le matériel reste, mais votre ligne de crédit part en réexamen.",
@@ -262,9 +262,105 @@
       "objectif": "Survivre jusqu’au début de J9, avec le QG et au moins une unité. Aucun revenu quotidien.",
       "conseil": "Le choix précédent est effectif ici. Couvrez les accès du QG sans disperser vos soutiens.",
       "recit": "Le crédit est bloqué. Ost et Edran Sorel ferment les deux routes, tandis que votre relève approche. Les moyens conservés après le match des deux rives servent maintenant.",
-      "conclusion": "La relève arrive. Une patrouille rapporte des batteries anormalement vides : la prochaine enquête reste à préparer.",
+      "conclusion": "La relève arrive. Une patrouille rentre à sec sans comprendre pourquoi : Ariane veut refaire son parcours, relais après relais.",
       "entrainement": false,
       "tutoriel": []
+    },
+    {
+      "scenarioCle": "opus1_fr_07",
+      "titre": "Saison 1 · Les clairières témoins",
+      "biome": "foret",
+      "objectif": "Passez une unité sur les trois relais de mesure, dans l’ordre, avant la fin de J18. Le prochain relais est marqué en or. Prendre le QG d’Ost ne remplace pas les relevés.",
+      "conseil": "Brouillard de guerre. Les véhicules ne franchissent le ruisseau qu’au pont du nord ; l’infanterie passe partout.",
+      "recit": "Une patrouille est rentrée à sec après la journée sans crédit, sans comprendre pourquoi. Son équipage est épuisé, mais il connaît le chemin. Ariane vous demande de refaire son parcours à travers le bois que gardent les Gris d’Ost, relais après relais.",
+      "conclusion": "Les trois relevés concordent : une part du courant des Haies quitte le réseau sans être inscrite au **Registre**, le grand livre d’Atlas. C’est la première anomalie, et personne n’est encore accusé. Au retour, deux équipes françaises réclament la même réserve.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Relais** : amenez une unité sur le relais marqué en or, puis sur le suivant. N’importe quelle unité compte, et elle peut repartir aussitôt.",
+        "Le brouillard limite la vue de chaque unité ; la reconnaissance voit à cinq cases. En automne, le bois ne cache personne : seules les hautes herbes cachent encore les fantassins.",
+        "Le ruisseau ne laisse passer les véhicules qu’au pont du nord, près d’Ost. L’infanterie le traverse partout, deux fois plus lentement.",
+        "Mode difficile : Ost commence avec plus de fonds et le Bulletin ne voit qu’une journée. Les dégâts et les relais ne changent pas."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_08",
+      "titre": "Saison 1 · Ligne de partage",
+      "biome": "volcanique",
+      "objectif": "Prenez les deux QG adverses, le dépôt de Solveig et le QG de l’équipe de l’Est, avant la fin de J26. Un QG pris par Tomas compte pour la coalition.",
+      "conseil": "Les équipes adverses n’ont aucun revenu : chaque pièce perdue ne revient pas. Les véhicules ne franchissent la crête qu’aux trois cols.",
+      "recit": "Méridien a promis la même réserve à deux équipes françaises : la vôtre, et celle de l’Est, qui a signé avec lui pour finir son année. Solveig livre le premier contrat inscrit. Ariane veut réunir les deux équipes, mais le front doit d’abord trancher.",
+      "conclusion": "La réserve revient à l’équipe commune. L’équipe de l’Est signera l’accord si quelqu’un garantit sa livraison : payer sa dette, ou garder 1 500 fonds. Votre choix comptera dans « Une signature de trop ».",
+      "entrainement": false,
+      "tutoriel": [
+        "**Deux contre deux** : vous et Tomas contre l’équipe de l’Est et le convoi de Solveig. Les fonds restent séparés ; la victoire est commune.",
+        "Les deux QG adverses doivent être à la coalition en même temps. Un QG se prend en quarante points : quatre tours d’une infanterie intacte, couverte tout du long.",
+        "La crête se franchit à pied partout, deux fois plus lentement. Les véhicules passent par les trois cols.",
+        "Mode difficile : Méridien avance 1 500 fonds à chaque équipe adverse. Les dégâts ne changent pas et le Bulletin ne voit qu’une journée."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_09",
+      "titre": "Saison 1 · La réserve commune",
+      "biome": "marais",
+      "objectif": "Tenez les deux réserves communes, au nord et au sud, à la fin de J10. Si l’une tombe, reprenez-la avant la fin de J14. Prendre le QG d’Edran ne suffit pas.",
+      "conseil": "Solveig tient le dépôt du nord, votre infanterie celui du sud. La colonne d’Ariane part du carrefour : c’est vous qui décidez où elle va.",
+      "recit": "Solveig a livré la réserve à l’équipe commune : elle remplit deux dépôts. Edran vient les reprendre avant qu’ils soient pleins. Pour la première fois, Ariane ne vous dit pas où placer sa colonne : elle vous le demande.",
+      "conclusion": "Les deux dépôts sont pleins et inscrits au nom de l’équipe commune. Ariane vous a laissé décider, et sa colonne a tenu. Reste le fournisseur : il veut devenir le seul transporteur des routes gagnées.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Tenir** : à la fin de J10, les deux réserves doivent être à la coalition. Un dépôt tenu par Solveig compte pour vous.",
+        "Un dépôt perdu se reprend : une infanterie intacte le capture en deux tours. Vous avez jusqu’à la fin de J14.",
+        "Les véhicules ne franchissent le canal qu’aux trois ponts ; l’infanterie le traverse partout, plus lentement.",
+        "Mode difficile : Edran commence avec plus de fonds et le Bulletin ne voit qu’une journée. Les dégâts et les dépôts ne changent pas."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_10",
+      "titre": "Saison 1 · Une signature de trop",
+      "biome": "cotier",
+      "objectif": "Possédez en même temps deux des trois centres du fournisseur, marqués en or, avant la fin de J22 : le relais du nord, le quai du sud ou le centre de tri de l’est.",
+      "conseil": "Brouillard de guerre. Les équipes de capture de Yuna visent aussi votre QG : laissez-y une unité. Les véhicules ne passent la rivière qu’aux trois ponts.",
+      "recit": "Le contrat de l’équipe de l’Est avec Méridien cache une ligne de trop : sur les routes gagnées, seul Méridien aurait le droit de transporter. Edran tient le quai et le centre de tri, Yuna le relais du nord. Reprendre deux centres rend la route à tout le monde.",
+      "conclusion": "Les centres repris, l’équipe de l’Est peut choisir son transporteur. Elle demande à revenir : tout de suite, comptes vérifiés, ou après la fin de son mandat. Votre choix comptera dans « Une victoire à partager ».",
+      "entrainement": false,
+      "tutoriel": [
+        "**Capturer** : il faut deux centres à vous **au même moment**. Un centre repris par l’adversaire ne compte plus.",
+        "Les véhicules ne franchissent la rivière qu’aux trois ponts ; l’infanterie la traverse partout, plus lentement.",
+        "Yuna capture vite, et son pouvoir double la capture de ses fantassins : un QG sans garde peut tomber en deux tours.",
+        "Mode difficile : chaque équipe adverse a 1 500 fonds de plus, et une infanterie couvre l’artillerie d’Edran au sud dès J2. Le Bulletin ne voit qu’une journée."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_11",
+      "titre": "Saison 1 · Le contrat rendu public",
+      "biome": "plaine",
+      "objectif": "Mettez hors jeu toutes les unités des trois colonnes des Gris avant la fin de J24. Elles n’ont ni QG ni usine ici : les éliminer est la seule façon de gagner.",
+      "conseil": "Un anti-air avec chaque groupe contre les appareils de Maël. Approchez les pièces de Lise par le côté, et ne présentez pas vos chars de face à la colonne d’Ost.",
+      "recit": "Ariane a remis à Atlas la ligne de trop du contrat de Méridien. Avant qu’elle soit lue partout, Ost revient aux Haies avec deux commandants : Maël Orven et ses appareils, Lise Varen et ses pièces lourdes. Trois colonnes contre la vôtre : il faudra vous couvrir sans marcher en bloc.",
+      "conclusion": "Les trois colonnes sont hors jeu, et le contrat part au Registre : tout le monde pourra le lire. Trois commandants défendaient la même offre : la Sélection n’est pas une équipe d’essai, c’est une armée. Il reste à Méridien un dernier QG en France.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Mise hors jeu totale** : chaque unité des trois colonnes doit sortir du terrain. Elles n’ont ni fonds ni usine : ce qu’elles perdent ne revient pas.",
+        "Les appareils de Maël ne craignent que l’anti-air, l’infanterie et les autres appareils. Sans piste ici, ils finissent par manquer de carburant.",
+        "Les pièces de Lise tirent de loin mais ne ripostent pas au contact : allez les chercher par le côté.",
+        "Mode difficile : un char léger rejoint Ost à J3 par la route de l’est. Le Bulletin ne voit qu’une journée."
+      ]
+    },
+    {
+      "scenarioCle": "opus1_fr_12",
+      "titre": "Saison 1 · Une victoire à partager",
+      "biome": "montagne",
+      "objectif": "Prenez le QG d’Edran, sur le plateau, avant la fin de J22. Un QG pris par Tomas ou par Solveig compte pour vous.",
+      "conseil": "Trois portes mènent au plateau : la vôtre à l’ouest, celle de Tomas au nord, celle de Solveig au sud. Les véhicules n’entrent que par les portes ; l’infanterie passe la montagne, plus lentement.",
+      "recit": "Il reste à Méridien un dernier QG en France, tenu par Edran derrière trois portes. Trois colonnes montent ensemble : la vôtre, celle de Tomas et l’escorte de Solveig. Ariane vous laisse mener l’assaut.",
+      "conclusion": "Le QG tombe, et c’est vous qui annoncez la victoire aux équipages. La concession française est inscrite à votre nom : versez la réserve à la coalition, ou financez le prochain front. Tomas repart vers le Luxembourg avec les batteries.",
+      "entrainement": false,
+      "tutoriel": [
+        "**Trois contre un** : les fonds restent séparés, la victoire est commune. Un QG se prend en quatre tours d’une infanterie intacte, couverte tout du long.",
+        "Brouillard de guerre : ce que voit une colonne, les deux autres le voient aussi. Une porte qui cède ouvre le plateau à tout le monde.",
+        "Edran n’a plus de revenu : ses routes sont coupées, et chaque pièce qu’il perd ne revient pas.",
+        "Mode difficile : Edran a 1 500 fonds de plus et tient ses portes ; sa réserve entre par la porte sud à J4. Le Bulletin ne voit qu’une journée."
+      ]
     }
   ]
 }

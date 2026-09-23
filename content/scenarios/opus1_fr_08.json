@@ -1,0 +1,244 @@
+{
+  "cle": "opus1_fr_08",
+  "code": "opus1_fr_08",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · Ligne de partage",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_08",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 2,
+      "commandantCle": "cmd_edran_sorel",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 3,
+      "commandantCle": "cmd_solveig_tamm",
+      "ia": "ponderee"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_tomas_reiner",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 5000,
+  "fondsDepartParCamp": {
+    "0": 5000,
+    "1": 1000,
+    "2": 1000,
+    "3": 1000
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "brouillard": false,
+  "limiteJournees": 26,
+  "victoire": [
+    {
+      "type": "capture_qg"
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 26
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Méridien a promis **la même réserve** à deux équipes françaises : la nôtre, et l’équipe de l’Est. Une réserve, deux contrats. Le front va décider à qui elle revient.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "En face, ce ne sont pas des Gris. Ce sont des Français à court d’argent : ils ont signé avec Méridien pour finir l’année. Edran Sorel dirige leurs réserves.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "Leur contrat me demande de tenir leurs réserves quand leur caisse est vide. C’est ce que je fais. Rien de plus, commandant.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Mes camions livrent le premier contrat inscrit : le leur. Vous le contestez ? Alors le terrain tranchera. La réserve est dans mon dépôt, au sud-est.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Je prends le nord et le QG de l’Est. Vous, le dépôt de Solveig, puis rejoignez-moi. Eux n’ont plus de revenu : **ce qu’ils perdent ne revient pas**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Il faut **les deux QG adverses**, le dépôt et le QG de l’Est, avant la fin de J26. Un QG pris par Tomas compte pour nous. Ensuite, on essaiera de réunir les deux équipes.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_solveig_tamm",
+      "texte": "Le terrain a tranché : la réserve revient à l’équipe commune. Mes camions la livreront demain. Et je garde une copie des deux contrats.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_edran_sorel",
+      "texte": "L’équipe de l’Est signera votre accord commun. À une condition : que quelqu’un garantisse la livraison qu’elle a déjà payée à Méridien.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**Garantir leur livraison**, c’est payer leur dette : leur éclaireur nous rejoindra à la deuxième journée, quand nous irons chercher le fournisseur.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**Refuser**, c’est garder 1 500 fonds pour ce front-là. La dette reste chez eux : ils finiront l’année sans courant. Aucun des deux choix n’est gratuit.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_tomas_reiner",
+      "texte": "Une livraison promise compte pour ceux qui l’attendent. Vos équipages attendent aussi. À vous de choisir : je ne vous en voudrai pas.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les deux équipes restent face à face, et Méridien garde la main. Reprenons : le dépôt de Solveig d’abord, avant que l’Est ne se regroupe.",
+      "emotion": "doute"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr08_contact",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Ils se battent bien, et pour leur année. Visez leurs pièces, pas leur colère : **chaque unité qu’ils perdent ne revient pas**.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr08_rappel",
+      "declencheur": {
+        "type": "journee",
+        "journee": 3
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "**Vous vous souvenez de la forêt ?** Le courant quittait les Haies sans être inscrit. Ici, c’est une réserve inscrite deux fois. Le même trou dans les comptes.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr08_releve",
+      "declencheur": {
+        "type": "pouvoir",
+        "camp": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_edran_sorel",
+          "texte": "Colonne de relève. Leurs réserves tiennent encore une journée. C’est tout ce que je leur ai promis.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr08_camions",
+      "declencheur": {
+        "type": "journee",
+        "journee": 8
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_solveig_tamm",
+          "texte": "Deux contrats pour une seule réserve, et ce sont mes camions qui roulent pour les deux. Je le note, commandant. Ça ne change rien à ce match.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 5000,
+      "fondsDepartIa": 1000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 26,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 5000,
+      "fondsDepartIa": 2500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 0,
+      "brouillard": false,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 26,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  },
+  "equipes": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ]
+  ]
+}

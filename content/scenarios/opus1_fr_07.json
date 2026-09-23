@@ -1,0 +1,238 @@
+{
+  "cle": "opus1_fr_07",
+  "code": "opus1_fr_07",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_lore",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Saison 1 · Les clairières témoins",
+  "acte": 1,
+  "paysCode": "fr",
+  "carteCle": "carte_opus1_fr_07",
+  "date": "2026-09-23",
+  "climatFixe": {
+    "meteo": "clair"
+  },
+  "cycleJourNuit": {
+    "jour": 1,
+    "nuit": 0
+  },
+  "catalogueVersion": 0,
+  "commandantsVersion": 4,
+  "commandants": [
+    {
+      "camp": 0,
+      "commandantCle": "cmd_ariane_belloc"
+    },
+    {
+      "camp": 1,
+      "commandantCle": "cmd_hadran_ost",
+      "ia": "ponderee"
+    }
+  ],
+  "fondsDepart": 3000,
+  "fondsDepartParCamp": {
+    "0": 3000,
+    "1": 1500
+  },
+  "revenusParBatiment": 500,
+  "revenusParBatimentParCamp": {
+    "0": 500,
+    "1": 500
+  },
+  "brouillard": true,
+  "limiteJournees": 18,
+  "victoire": [
+    {
+      "type": "relais",
+      "cases": [
+        {
+          "x": 6,
+          "y": 11
+        },
+        {
+          "x": 10,
+          "y": 3
+        },
+        {
+          "x": 19,
+          "y": 12
+        }
+      ]
+    }
+  ],
+  "defaite": [
+    {
+      "type": "qg_perdu"
+    },
+    {
+      "type": "toutes_unites_hors_jeu"
+    },
+    {
+      "type": "limite_journees",
+      "journees": 18
+    }
+  ],
+  "dialogueOuverture": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "**Vous vous souvenez de la patrouille** rentrée à sec après la journée sans crédit ? Ses batteries étaient pleines en quittant les Haies. Elle a traversé ce bois, et elle est revenue vide.",
+      "emotion": "doute"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "L’équipage est épuisé, mais il connaît le chemin. Refaites son parcours : une unité sur chacun des **trois relais de mesure**, dans l’ordre. Le prochain est en or.",
+      "emotion": "neutre",
+      "illustration": {
+        "cle": "case_or",
+        "legende": "Le prochain relais à atteindre"
+      }
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Un relais de mesure compte le courant qui entre dans le poste voisin. Il suffit qu’une unité s’y arrête : elle peut repartir aussitôt.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Mes équipes gardent ce bois pour le Consortium. Venez lire vos compteurs, commandant. Je ne vous ouvrirai pas le chemin pour autant.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Inutile de prendre son QG : il nous faut les trois relevés avant la fin de **J18**. Le brouillard limite la vue : gardez la reconnaissance devant vous.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Les arbres ont perdu leurs feuilles : le bois ne cache plus personne. Les hautes herbes des clairières, elles, cachent encore les fantassins.",
+      "emotion": "neutre"
+    }
+  ],
+  "dialogueVictoire": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Troisième relevé. Entre la deuxième et la troisième clairière, la patrouille a perdu la moitié de sa charge. Et ce courant-là n’est inscrit nulle part.",
+      "emotion": "surprise"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Le **Registre**, c’est le grand livre d’Atlas : chaque site y est inscrit au nom de celui qui l’exploite. Une part du courant des Haies en sort **sans y figurer**.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_hadran_ost",
+      "texte": "Je garde des chemins, commandant, pas des câbles. Demandez au Registre qui a signé.",
+      "emotion": "neutre"
+    },
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Nous le demanderons. Ce soir, nous avons un relevé, pas un nom : personne n’est accusé. L’équipage, lui, peut enfin dormir.",
+      "emotion": "doute"
+    }
+  ],
+  "dialogueDefaite": [
+    {
+      "locuteur": "cmd_ariane_belloc",
+      "texte": "Il nous manque des relevés. Reprenons : un coureur vers le relais en or, et le reste de la colonne entre lui et les canons d’Ost.",
+      "emotion": "doute"
+    }
+  ],
+  "scenesDialogue": [
+    {
+      "cle": "fr07_premier_releve",
+      "declencheur": {
+        "type": "etape",
+        "etape": 1
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Premier relevé. Au matin, la patrouille passait ici avec des batteries pleines, et le compteur du poste dit la même chose. Direction la clairière du nord.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr07_deuxieme_releve",
+      "declencheur": {
+        "type": "etape",
+        "etape": 2
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Deuxième relevé : un tiers de la charge a disparu depuis la première clairière, et ce compteur-là ne le voit pas. Il reste la clairière derrière le ruisseau.",
+          "emotion": "doute"
+        },
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "Les véhicules ne passent le ruisseau qu’au pont du nord, sous le nez d’Ost. **L’infanterie le traverse partout**, deux fois plus lentement.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr07_canons",
+      "declencheur": {
+        "type": "premier_combat"
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_ariane_belloc",
+          "texte": "**Ses canons couvrent les clairières.** Ce qui tire de loin ne riposte pas au contact : allez les chercher par la forêt, ou passez quand ils ont déjà tiré.",
+          "emotion": "neutre"
+        }
+      ]
+    },
+    {
+      "cle": "fr07_ost",
+      "declencheur": {
+        "type": "journee",
+        "journee": 6
+      },
+      "repliques": [
+        {
+          "locuteur": "cmd_hadran_ost",
+          "texte": "Vous traversez mon bois à pied pour lire un compteur. Je respecte l’effort. Pas au point de vous laisser passer.",
+          "emotion": "neutre"
+        }
+      ]
+    }
+  ],
+  "choix": [],
+  "flagsRequis": [],
+  "flagsInterdits": [],
+  "recompenses": {
+    "flags": []
+  },
+  "modes": {
+    "normal": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 1500,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 2,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    },
+    "difficile": {
+      "fondsDepart": 3000,
+      "fondsDepartIa": 3000,
+      "revenusParBatiment": 500,
+      "revenusIaParBatiment": 500,
+      "brouillard": true,
+      "previsionJournees": 1,
+      "vitesseJauge": 1,
+      "limiteJournees": 18,
+      "strategieIa": "ponderee",
+      "reprises": 0,
+      "dureeVisee": 25
+    }
+  }
+}

@@ -2251,6 +2251,21 @@ export function validerMissionDuJour(valeur: unknown): Resultat<MissionDuJour> {
   return conclure(ctx, o as unknown as MissionDuJour);
 }
 
+/**
+ * Longueur maximale d'une graine de sauvegarde. Elle valait 64 jusqu'au
+ * 23 septembre 2026 ; une graine de campagne est faite du code du scénario
+ * (48 caractères au plus), de `:a1:`, d'**un chiffre par source de décision**
+ * (`SOURCES_DECISION` : douze ce jour-là, soixante-dix-neuf décisions au plan de
+ * l'opus, plus les bancs) et de la marque du commandant choisi (`:@` et une clé
+ * de roster, trente caractères au plus). Chaque choix ajouté allonge donc la
+ * graine d'un chiffre — on n'en insère jamais au milieu, c'est ce qui permet à
+ * une sauvegarde d'avant de relire ses décisions —, et 64 ne tenait plus dès
+ * les douze sources. 256 couvre le plan entier avec de la marge, et reste une
+ * borne : une valeur plus longue n'est pas une graine, c'est une donnée abîmée.
+ * Une graine d'avant, plus courte, est toujours acceptée telle quelle.
+ */
+export const LONGUEUR_MAX_GRAINE = 256;
+
 /** Valide une sauvegarde (`03-schemas.md` §14). */
 export function validerSauvegarde(valeur: unknown): Resultat<Sauvegarde> {
   const ctx = new Contexte();
@@ -2261,7 +2276,7 @@ export function validerSauvegarde(valeur: unknown): Resultat<Sauvegarde> {
   requis(ctx, o, '', cles);
   cle(ctx, o['scenarioCle'], 'scenarioCle');
   if (o['scenarioVersion'] !== undefined) entier(ctx, o['scenarioVersion'], 'scenarioVersion', { min: 1 });
-  chaine(ctx, o['graine'], 'graine', { max: 64 });
+  chaine(ctx, o['graine'], 'graine', { max: LONGUEUR_MAX_GRAINE });
   for (const champ of ['catalogueVersion', 'engineVersion', 'mapgenVersion', 'contentVersion'] as const) {
     entier(ctx, o[champ], champ, { min: champ === 'catalogueVersion' ? 0 : 1 });
   }

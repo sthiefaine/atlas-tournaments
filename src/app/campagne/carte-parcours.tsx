@@ -4,10 +4,9 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { GESTES_PRECHARGEMENT } from '../jeu/precharger';
 import type { EpreuveCarnet } from './carnet';
 import type { EtatStation } from './itineraire';
-import { PaysageCampagne } from './paysage-campagne';
+import { PaysageCampagne, POSITIONS_PARCOURS as POSITIONS } from './paysage-campagne';
 import styles from './carte-parcours.module.css';
 
-const POSITIONS = [[205,185],[325,275],[435,225],[542,290],[478,411],[594,482],[721,431],[798,334],[903,262],[1050,340],[1054,460],[945,565],[813,636],[1000,690],[710,747],[552,671],[403,735],[251,641]] as const;
 function point(i: number) { const p = POSITIONS[i]; return p ? { x:p[0], y:p[1] } : { x:200+(i%6)*150, y:800+Math.floor((i-POSITIONS.length)/6)*120 }; }
 function Repere({ gagnee, verrouillee }: { gagnee: boolean; verrouillee: boolean }) {
   return <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 43 14V35L24 46 5 35V14Z" fill="currentColor"/><path d="M24 7 39 16V33L24 42 9 33V16Z" fill="none" stroke="currentColor"/>{gagnee ? <path d="m15 24 6 6 13-14" fill="none" stroke="var(--repere-encre)" strokeWidth="3"/> : verrouillee ? <><path d="M18 22v-4a6 6 0 0 1 12 0v4" fill="none" stroke="var(--repere-encre)" strokeWidth="2"/><rect x="16" y="22" width="16" height="12" rx="2" fill="var(--repere-encre)"/></> : <path d="M16 34V14h18l-4 6 4 6H18" fill="none" stroke="var(--repere-encre)" strokeWidth="2.5"/>}</svg>;

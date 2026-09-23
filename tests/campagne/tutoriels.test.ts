@@ -8,7 +8,11 @@ const lire = (p: string) => JSON.parse(readFileSync(p, 'utf8'));
 const manifeste = lire('content/campagne.json') as { missions: { scenarioCle: string; entrainement: boolean; tutoriel: string[] }[] };
 
 test('dix tutoriels distincts précèdent les deux matchs officiels et sont valides dans les deux modes', () => {
-  assert.equal(manifeste.missions.length, 12);
+  // Dix exercices, les deux matchs officiels, puis le chapitre français dans
+  // l'ordre de ses fiches, FR01 à FR12 : le parcours ne compte que des
+  // épreuves jouables (23 septembre 2026).
+  assert.deepEqual(manifeste.missions.slice(10).map(m => m.scenarioCle),
+    ['pacte_du_col', 'couleurs_alliees', ...Array.from({ length: 12 }, (_, i) => `opus1_fr_${String(i + 1).padStart(2, '0')}`)]);
   const tutoriels = manifeste.missions.filter(m => m.entrainement);
   assert.equal(tutoriels.length, 10);
   assert.deepEqual(manifeste.missions.slice(0, 10), tutoriels);

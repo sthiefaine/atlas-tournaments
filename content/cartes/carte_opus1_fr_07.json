@@ -1,0 +1,117 @@
+{
+  "cle": "carte_opus1_fr_07",
+  "code": "carte_opus1_fr_07",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Les clairières témoins",
+  "largeur": 24,
+  "hauteur": 16,
+  "camps": 2,
+  "biome": "foret",
+  "grille": [
+    "PPPPFFFFFFFFFFVFFFFFPPPP",
+    "PPPPFFFFPPPPFFVFFFFFPUPP",
+    "PPPPFFFFPPCPFFVFFFFFPRPP",
+    "PPPFFFFFPPPRRRNRRRRRRRHP",
+    "PPPFFFFFPGPPFFVFFFFFFPRP",
+    "PPPFFFFFFFFFFFVFFFFFFPRP",
+    "PPPFFFFFMMFFFFVFMMFFFPCP",
+    "PPPFFFFFMFFFFFVFFMFFFPPP",
+    "PCPFFFFFFFFFFFVFFFFFFPPP",
+    "PRPFFFFFFFFFFFVFFMMFFPPP",
+    "PRPFPPCPPFFFFFVFFPPPPPPP",
+    "PRPFGPPPPFFFFFVFFPPCPGPP",
+    "PRPFPPPPGFFFFFVFFPPPPPPP",
+    "PHRRRRRRRRRRRRVFMPGPPPPP",
+    "PPPUFFFFFFFFFFVFMFFFFPPP",
+    "PPPFFFFFFFFFFFVFFFFFFPPP"
+  ],
+  "proprietaires": {
+    "1,13": 0,
+    "3,14": 0,
+    "1,8": 0,
+    "22,3": 1,
+    "21,1": 1,
+    "22,6": 1
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 4,
+      "y": 12,
+      "pv": 70
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 3,
+      "y": 11,
+      "pv": 60
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 5,
+      "y": 13,
+      "pv": 60
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 4,
+      "y": 13
+    },
+    {
+      "camp": 0,
+      "type": "meca",
+      "x": 2,
+      "y": 11
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 2,
+      "y": 14
+    },
+    {
+      "camp": 1,
+      "type": "char_moyen",
+      "x": 17,
+      "y": 3
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 15,
+      "y": 5
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 12,
+      "y": 4
+    },
+    {
+      "camp": 1,
+      "type": "artillerie",
+      "x": 21,
+      "y": 12
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 11,
+      "y": 2
+    },
+    {
+      "camp": 1,
+      "type": "infanterie",
+      "x": 20,
+      "y": 11
+    }
+  ]
+}

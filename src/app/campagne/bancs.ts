@@ -92,9 +92,10 @@ export function estSourceCommandant(source: string): boolean {
  * d'insertion au milieu ; un roster qui s'allonge ou se réordonne casserait ce
  * comptage, et une graine enregistrée relirait un autre général que celui qui a
  * été joué. Le commandant est donc écrit **par son nom**, en clair, à la fin.
- * Le `cmd_` est retiré parce que la graine tient en 64 caractères
- * (`validerSauvegarde`) et qu'il n'apporte rien : un test le vérifie sur tous
- * les couples scénario × roster.
+ * Le `cmd_` est retiré parce qu'il n'apporte rien et que la graine a une
+ * longueur bornée (`LONGUEUR_MAX_GRAINE`, `validerSauvegarde` — 64 jusqu'au
+ * 23 septembre 2026, 256 depuis que le chapitre français ajoute trois choix) :
+ * un test le vérifie sur tous les couples scénario × roster.
  */
 export const MARQUE_COMMANDANT_GRAINE = '@';
 const PREFIXE_COMMANDANT = 'cmd_';

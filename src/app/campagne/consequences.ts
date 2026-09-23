@@ -25,10 +25,29 @@ export const CHOIX_AUBE = {
     { cle: 'fonds_immediats', titre: 'Préparer notre passage du col', effet: 'À la prochaine nouvelle partie du Pacte du col, votre camp reçoit 2 000 fonds pour ouvrir et protéger le passage.' },
   ],
 } as const;
+/**
+ * Les choix du chapitre français. **L'ordre des clés est celui des chiffres de
+ * la graine** (`SOURCES_DECISION`) : on n'ajoute qu'à la fin. FR04 est entré
+ * seul le 14 septembre ; FR08, FR10 et FR12 le 23, ensemble.
+ */
 export const CHOIX_FRANCE = {
   opus1_fr_04: [
     { cle: 'partager_releves', titre: 'Partager les relevés', effet: 'Dans La journée sans crédit, une reconnaissance de votre camp arrive à J2 par le sud. Son arrivée est reportée si les cases proches sont occupées.' },
     { cle: 'garder_reserve', titre: 'Garder la réserve financière', effet: 'Dans La journée sans crédit, votre camp commence avec 1 500 fonds supplémentaires.' },
+  ],
+  opus1_fr_08: [
+    { cle: 'garantir_livraison', titre: 'Garantir la livraison au signataire', effet: 'Dans Une signature de trop, une reconnaissance de l’équipe de l’Est rejoint votre camp à J2, par l’ouest. Son arrivée est reportée si les cases proches sont occupées.' },
+    { cle: 'refuser_garantie', titre: 'Refuser de garantir son crédit', effet: 'Dans Une signature de trop, votre camp commence avec 1 500 fonds supplémentaires. La dette reste à l’équipe de l’Est.' },
+  ],
+  opus1_fr_10: [
+    { cle: 'retour_sous_audit', titre: 'Accepter son retour, comptes vérifiés', effet: 'Dans Une victoire à partager, une reconnaissance de l’équipe de l’Est rejoint votre camp à J2, par l’ouest. Son arrivée est reportée si les cases proches sont occupées.' },
+    { cle: 'fin_du_mandat', titre: 'Exiger d’abord la fin de son mandat', effet: 'Dans Une victoire à partager, votre camp commence avec 1 500 fonds supplémentaires. Les équipages de l’Est attendront.' },
+  ],
+  // Sa cible, Le relais de Tomas (`opus1_lu_01`), n'est pas encore jouable : le
+  // choix s'enregistre et se fige dans la graine, l'effet attend la mission.
+  opus1_fr_12: [
+    { cle: 'verser_reserve', titre: 'Verser une réserve à la coalition', effet: 'Au Luxembourg, dans Le relais de Tomas (mission à venir), une reconnaissance de la coalition rejoindra votre camp à J2.' },
+    { cle: 'preparation_locale', titre: 'Financer la préparation locale', effet: 'Au Luxembourg, dans Le relais de Tomas (mission à venir), votre camp commencera avec 1 500 fonds supplémentaires.' },
   ],
 } as const;
 export type ScenarioDecision = keyof typeof CHOIX_AUBE | keyof typeof CHOIX_FRANCE;
@@ -149,6 +168,36 @@ export function appliquerConsequences(scenario: Scenario, decisions: readonly De
       rappels.push('Votre réserve de 1 500 fonds est disponible ; aucun renfort de reconnaissance ne vient par ce choix.');
     });
   }
+  // --- La fin du chapitre français (23 septembre 2026). Chaque choix n'agit
+  // que sur l'épreuve qu'il annonce, avec l'effet de sa fiche
+  // (`opus1-nations.json`) : une reconnaissance à J2 ou 1 500 fonds, jamais les
+  // deux. La réplique est d'Ariane, présente dans les deux épreuves ; la
+  // reconnaissance entre par l'ouest, du côté du joueur, et le moteur reporte
+  // son arrivée si la case est prise.
+  if (scenario.code === 'opus1_fr_10') {
+    appliquer('opus1_fr_08', 'garantir_livraison', () => {
+      renfort(2, 'recon', 2, 10);
+      ouvrir({ locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Vous aviez garanti la livraison de l’équipe de l’Est. Elle s’en souvient : son éclaireur nous rejoint à J2 par l’ouest, sous vos ordres.' });
+      rappels.push('L’équipe de l’Est, dont vous avez garanti la livraison, envoie une reconnaissance à votre camp à J2, par l’ouest.');
+    });
+    appliquer('opus1_fr_08', 'refuser_garantie', () => {
+      crediterDe(1500);
+      ouvrir({ locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'Vous aviez refusé de payer la dette de l’équipe de l’Est. Les 1 500 fonds sont restés chez nous ; elle finit l’année sans courant.' });
+      rappels.push('Vos 1 500 fonds sont disponibles ; l’équipe de l’Est n’envoie pas d’éclaireur par ce choix.');
+    });
+  }
+  if (scenario.code === 'opus1_fr_12') {
+    appliquer('opus1_fr_10', 'retour_sous_audit', () => {
+      renfort(2, 'recon', 2, 5);
+      ouvrir({ locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'L’équipe de l’Est est revenue et tient parole : son éclaireur nous rejoint à J2 par l’ouest. Atlas vérifie ses comptes pendant ce temps.' });
+      rappels.push('L’équipe de l’Est, revenue avec ses comptes vérifiés, envoie une reconnaissance à votre camp à J2, par l’ouest.');
+    });
+    appliquer('opus1_fr_10', 'fin_du_mandat', () => {
+      crediterDe(1500);
+      ouvrir({ locuteur: 'cmd_ariane_belloc', emotion: 'neutre', texte: 'L’équipe de l’Est a rompu son mandat avec Méridien. Sa caisse nous verse 1 500 fonds ; ses équipages attendront la fin de la vérification.' });
+      rappels.push('La caisse de l’équipe de l’Est vous verse 1 500 fonds ; ses équipages ne viennent pas par ce choix.');
+    });
+  }
   if (scenario.code === 'aube_convoi_secondaire') appliquer('aube_batteries_2v1', 'mutualiser_reserves', () => {
     renfort(2, 'recon', 1, 1);
     rappels.push('Les réserves mutualisées permettent à une reconnaissance de rejoindre le convoi à J2.');
@@ -221,8 +270,14 @@ export function graineAube(scenario: Scenario, decisions: readonly DecisionLocal
   }).join('');
   return `${scenario.code}:a${VERSION_CANON_AUBE}:${chiffres}`;
 }
-/** Chaque longueur qu'une graine a pu avoir : deux, quatre, puis cinq choix, puis les bancs. */
-const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, Object.keys(CHOIX_AUBE).length + Object.keys(BANCS_PRETES).length, SOURCES_DECISION.length];
+/**
+ * Chaque longueur qu'une graine a pu avoir : deux, quatre, puis cinq choix,
+ * puis les bancs, puis le seul choix de FR04 (14 septembre 2026), puis les
+ * quatre choix français. Une longueur passée ne se retire jamais : c'est elle
+ * qui permet à une partie enregistrée de relire ses décisions.
+ */
+const LONGUEUR_FR04_SEUL = Object.keys(CHOIX_AUBE).length + Object.keys(BANCS_PRETES).length + 1;
+const LONGUEURS_GRAINE = [2, 4, Object.keys(CHOIX_AUBE).length, Object.keys(CHOIX_AUBE).length + Object.keys(BANCS_PRETES).length, LONGUEUR_FR04_SEUL, SOURCES_DECISION.length];
 export function decisionsDeGraine(scenario: Scenario, graine: string): DecisionLocale[] {
   const prefixe = `${scenario.code}:a${VERSION_CANON_AUBE}:`;
   if (!graine.startsWith(prefixe)) return [];

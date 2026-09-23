@@ -1,3 +1,23 @@
+/**
+ * Où chaque étape du parcours se pose sur ce dessin, dans l'ordre de
+ * `content/campagne.json`, en coordonnées du repère 1200 × 880.
+ *
+ * Les dix-huit premières sont celles que `carte-parcours.tsx` tenait jusqu'au
+ * 23 septembre 2026, recopiées à l'identique : un joueur retrouve ses étapes où
+ * il les a laissées. FR07 à FR12 continuent l'itinéraire français depuis la
+ * journée sans crédit, à l'ouest : les clairières, la ligne de partage, la
+ * réserve commune, puis la côte du fournisseur, les Haies et le plateau du
+ * dernier QG, vers le nord-est — du côté où l'on part pour le Luxembourg.
+ * Géographie illustrative, aucune frontière réelle. Aucune ne descend sous
+ * y = 747, la plus basse d'avant : la carte garde sa hauteur.
+ */
+export const POSITIONS_PARCOURS: readonly (readonly [number, number])[] = [
+  [205, 185], [325, 275], [435, 225], [542, 290], [478, 411], [594, 482], [721, 431], [798, 334], [903, 262],
+  [1050, 340], [1054, 460], [945, 565], [813, 636], [1000, 690], [710, 747], [552, 671], [403, 735], [251, 641],
+  // FR07 à FR12.
+  [455, 560], [660, 590], [880, 740], [1130, 730], [1150, 440], [1130, 200],
+];
+
 /** Carte originale, géographie illustrative du parcours et non frontières réelles. */
 export function PaysageCampagne({ prefixe }: { prefixe: string }): React.ReactElement {
   const cote = 'M-40 56 Q75 10 166 62L215 40 263 83 338 66 393 103 451 64 519 88 573 42 659 69 714 43 781 91 867 75 932 118 1064 73 1240 131V900H683L706 807 654 759 611 746 590 690 537 656 496 606 439 590 420 545 376 521 368 463 312 433 298 394 238 369 208 303 135 287 127 232 63 224 31 165-40 149Z';
@@ -28,6 +48,9 @@ export function PaysageCampagne({ prefixe }: { prefixe: string }): React.ReactEl
       <path d="M162 353Q280 310 391 395T665 430T920 615T1170 700" fill="none" stroke="#424f45" strokeWidth="8" opacity=".5"/><path d="M162 353Q280 310 391 395T665 430T920 615T1170 700" fill="none" stroke="#beb899" strokeWidth="3"/>
       <path d="M150 286L213 295M155 298L210 307M158 310L205 319" stroke="#d2cbb1" strokeWidth="5"/>
       <g fill="#d2cbb2" stroke="#526456" strokeWidth="2">{[[260,136],[277,132],[266,155],[854,307],[872,315],[849,329],[884,333],[1038,711],[1055,724],[1069,708]].map(([x,y],i)=><path key={i} d={`M${x} ${y}l12-4 4 15-12 4Z`}/>)}</g>
+      {/* La fin du chapitre français : les haies autour de l'étape des Haies, et le plateau du dernier QG au nord-est. */}
+      <path d="M1098 404h38M1104 416v30M1166 402h30M1188 408v34M1100 474h40M1170 476h32" fill="none" stroke="#3f5e48" strokeWidth="4" strokeLinecap="round" opacity=".7"/>
+      {[[1086,170],[1176,168],[1132,142]].map(([x,y],i)=><use key={`plateau${i}`} href={`#${prefixe}-sommet`} transform={`translate(${x} ${y}) scale(${i===2?.75:.85})`}/>)}
     </g>
     <rect width="1200" height="880" fill={`url(#${prefixe}-grille)`}/>
     <g fill="#d2ded7" fontFamily="system-ui, sans-serif" fontSize="12" letterSpacing="5" opacity=".65"><text x="370" y="97">HAUTS PLATEAUX</text><text x="665" y="760">VALLÉE CENTRALE</text><text x="72" y="510" transform="rotate(-25 72 510)">CÔTE OCCIDENTALE</text></g>

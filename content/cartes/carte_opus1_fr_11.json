@@ -1,0 +1,132 @@
+{
+  "cle": "carte_opus1_fr_11",
+  "code": "carte_opus1_fr_11",
+  "version": 1,
+  "statut": "en_ligne",
+  "source": "atlas_map",
+  "creeLe": "2026-09-23",
+  "majLe": "2026-09-23",
+  "nom": "Le contrat rendu public",
+  "largeur": 20,
+  "hauteur": 15,
+  "camps": 4,
+  "biome": "plaine",
+  "grille": [
+    "PPPPPPPFPPPPFPPPPPPP",
+    "PPHGPPPFPPPPFPPGGPPP",
+    "PPGGPPPFPPRPFPPGGPPP",
+    "PFFFPFFFPCRPFFFPFFFP",
+    "PPPPPPPPPPRPPPPPPPPP",
+    "PPPPPCPPPPRPPPPPPPPP",
+    "PPPPPFFPPPRPPPPFFPPP",
+    "HPPHRRRRRRRRCRRRRRRR",
+    "PPPPPFFPPPRPPPPFFPPP",
+    "PPPUPCPPPPRPPPPPPPPP",
+    "PPPPPPPPPPRPPPPPPPPP",
+    "PFFFPFFFPCRPFFFPFFFP",
+    "PPGGPPPFPPRPFPPMMMPP",
+    "PPHGPPPFPPRPFPPPGGPP",
+    "PPPPPPPFPPPPFPPPPPPP"
+  ],
+  "proprietaires": {
+    "3,7": 0,
+    "3,9": 0,
+    "5,5": 0,
+    "5,9": 0,
+    "2,1": 0,
+    "0,7": 0,
+    "2,13": 0
+  },
+  "unitesDepart": [
+    {
+      "camp": 0,
+      "type": "char_moyen",
+      "x": 5,
+      "y": 7
+    },
+    {
+      "camp": 0,
+      "type": "char_leger",
+      "x": 6,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "antiair",
+      "x": 4,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 4,
+      "y": 8
+    },
+    {
+      "camp": 0,
+      "type": "artillerie",
+      "x": 4,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 6,
+      "y": 6
+    },
+    {
+      "camp": 0,
+      "type": "infanterie",
+      "x": 6,
+      "y": 5
+    },
+    {
+      "camp": 0,
+      "type": "recon",
+      "x": 7,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "char_moyen",
+      "x": 18,
+      "y": 7
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 18,
+      "y": 6
+    },
+    {
+      "camp": 1,
+      "type": "char_leger",
+      "x": 19,
+      "y": 8
+    },
+    {
+      "camp": 2,
+      "type": "helico",
+      "x": 16,
+      "y": 1
+    },
+    {
+      "camp": 2,
+      "type": "helico",
+      "x": 18,
+      "y": 2
+    },
+    {
+      "camp": 3,
+      "type": "artillerie",
+      "x": 15,
+      "y": 13
+    },
+    {
+      "camp": 3,
+      "type": "roquettes",
+      "x": 14,
+      "y": 14
+    }
+  ]
+}
