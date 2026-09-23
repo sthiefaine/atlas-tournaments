@@ -2,7 +2,7 @@
 // correspondance avec les noms du contrat, et la peinture sur une toile factice.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { idBatiment, idDecor, idUnite } from '../../src/render2d/contrat';
+import { ECUME_NAVIRE, idBatiment, idDecor, idUnite, OMBRE_UNITE } from '../../src/render2d/contrat';
 import {
   creerPeintreRepli, DENSITE_REPLI, FORMES, identiteRepli, paletteEquipe, sansOmbresInternes,
   type FabriqueToile,
@@ -18,6 +18,8 @@ test('les identifiants du contrat se lisent par les bouts', () => {
   assert.deepEqual(identiteRepli('decor_rocher_cotier'), { famille: 'decor', essence: 'rocher', saison: 'toutes' });
   assert.deepEqual(identiteRepli(FORMES.pv(7, true)), { famille: 'pv', pv: 7, agie: true });
   assert.deepEqual(identiteRepli(FORMES.marque('menacee')), { famille: 'marque', genre: 'menacee' });
+  assert.deepEqual(identiteRepli(FORMES.ombre), { famille: 'forme', forme: 'ombre' });
+  assert.deepEqual(identiteRepli(FORMES.ecume), { famille: 'forme', forme: 'ecume' });
   assert.equal(identiteRepli('decor_inconnue_ete_1'), null);
   assert.equal(identiteRepli('n_importe_quoi'), null);
 });
@@ -76,7 +78,38 @@ test('le peintre mesure, peint à sa densité, et place le pivot au sol', () => 
   assert.ok(u!.py > u!.h / 2, 'le pivot, au sol, est dans la moitié basse');
   assert.ok(Math.abs(u!.px - u!.l / 2) < 1, 'une unité est centrée sur sa case');
   assert.equal(peintre.peindre(idUnite('unite_inconnue'), null), null, 'une clé absente du catalogue n’a pas de repli');
-  for (const id of [idBatiment('ville'), idBatiment('port'), idDecor('conifere', 'hiver', 1), FORMES.ombre, FORMES.drapeau, FORMES.pv(3, false)]) {
+  for (const id of [idBatiment('ville'), idBatiment('port'), idDecor('conifere', 'hiver', 1), FORMES.ombre, FORMES.ecume, FORMES.drapeau, FORMES.pv(3, false)]) {
     assert.ok(peintre.peindre(id, [1, 0, 0]), id);
   }
+});
+
+test('l’écume d’un navire est une ellipse claire, plus claire au bord qu’au cœur ; l’ombre, elle, est noire', () => {
+  /** Les arrêts de dégradé de ce qu'on peint, dans l'ordre. */
+  const arrets = (id: string): { l: number; h: number; stops: [number, string][] } => {
+    const stops: [number, string][] = [];
+    const g = new Proxy({} as Record<string, unknown>, {
+      get: (_c, nom) => {
+        if (nom === 'createRadialGradient') return () => ({ addColorStop: (t: number, c: string) => { stops.push([t, c]); } });
+        return () => undefined;
+      },
+      set: () => true,
+    }) as unknown as Pinceau;
+    const peintre = creerPeintreRepli(() => ({ toile: {} as never, g }), () => CAT);
+    const p = peintre.peindre(id, null);
+    assert.ok(p, id);
+    return { l: p.l, h: p.h, stops };
+  };
+  const alpha = (c: string): number => Number(/,([\d.]+)\)$/.exec(c)?.[1] ?? Number.NaN);
+  const ecume = arrets(FORMES.ecume);
+  const n = Number.parseInt(ECUME_NAVIRE.couleur.slice(1), 16);
+  const teinte = `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},`;
+  assert.ok(ecume.stops.length >= 3);
+  assert.ok(ecume.stops.every(([, c]) => c.startsWith(teinte)), 'la couleur de l’écume, jamais du noir');
+  const [coeur, , , bord] = ecume.stops.map(([, c]) => alpha(c));
+  assert.ok(ecume.stops.some(([t, c]) => t > 0 && t < 1 && alpha(c) > (coeur ?? 1)), 'le bord est plus clair que le cœur, caché sous la coque');
+  assert.equal(bord, 0, 'et il s’efface dans l’eau');
+  // Plus large que l'ombre : elle déborde de la coque à l'étrave et à la poupe.
+  assert.ok(ECUME_NAVIRE.largeur > OMBRE_UNITE.largeur);
+  assert.ok(ecume.l > arrets(FORMES.ombre).l);
+  assert.ok(arrets(FORMES.ombre).stops.every(([, c]) => c.startsWith('rgba(0,0,0,')), 'l’ombre reste noire');
 });

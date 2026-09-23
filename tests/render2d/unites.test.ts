@@ -4,10 +4,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import type { EtatPartie } from '../../src/engine/index';
-import { versPlan } from '../../src/render2d/contrat';
+import { ECUME_NAVIRE, OMBRE_UNITE, versPlan } from '../../src/render2d/contrat';
 import { FORMES } from '../../src/render2d/replis';
 import {
-  HAUTEUR_VOL, OPACITE_FURTIVE, OPACITE_JOUEE, orientationVers, posesUnites, Visuels,
+  HAUTEUR_VOL, OPACITE_FURTIVE, OPACITE_JOUEE, orientationVers, posesUnites, solSousUnite, Visuels,
   type OptionsPosesUnites,
 } from '../../src/render2d/unites';
 import { CAT, partiePersonnalisee } from '../engine/aides';
@@ -172,4 +172,51 @@ test('l’orientation d’un pas : la plus longue composante l’emporte', () =>
   assert.equal(orientationVers(0, 1, 'droite'), 'bas');
   assert.equal(orientationVers(0.1, -1, 'droite'), 'haut');
   assert.equal(orientationVers(0, 0, 'haut'), 'haut');
+});
+
+test('sous un navire, l’écume et non l’ombre : une ellipse claire, centrée sur la coque, qui pâlit avec lui', () => {
+  // Une ombre sombre sur la mer noyait le graphite sous le pont (règle 13 de
+  // l'artiste technique, charte §3.8) : sous ce qui flotte, le rendu pose l'écume.
+  const e = partiePersonnalisee(
+    ['WWWPP', 'WWWPP'],
+    {},
+    [
+      { camp: 0, type: 'barge', x: 0, y: 0 },
+      { camp: 0, type: 'cuirasse', x: 2, y: 1 },
+      { camp: 1, type: 'infanterie', x: 4, y: 0 },
+    ],
+  );
+  const [barge, cuirasse, fantassin] = e.unites as [typeof e.unites[0], typeof e.unites[0], typeof e.unites[0]];
+  /** Ce que la pose d'une unité met sous elle : la pose se range à son pied, quel que soit son décalage. */
+  const sous = (u: typeof barge) => {
+    const r = posesUnites(e, CAT, new Visuels(), options());
+    const trouvee = r.poses.find((q) => q.calque === 'ombres_unites' && q.colonne === u.x + 0.5 && q.ligne === u.y + 0.5);
+    assert.ok(trouvee, `rien sous ${u.type}`);
+    return trouvee.instance;
+  };
+  const b = sous(barge);
+  assert.equal(b.entree, FORMES.ecume);
+  assert.equal(b.x, barge.x + 0.5 + ECUME_NAVIRE.decalageX);
+  assert.equal(b.y, barge.y + 0.5 + ECUME_NAVIRE.decalageY, 'centrée sur le pied : l’eau entoure la coque, elle ne dépend pas de la lumière');
+  assert.equal(b.opacite, ECUME_NAVIRE.opacite);
+  assert.equal(b.h ?? 0, 0, 'sur l’eau, jamais levée');
+  // Un grand navire la pose plus large, à la taille de sa silhouette.
+  assert.ok((sous(cuirasse).echelle ?? 1) > (b.echelle ?? 1));
+  // Sur terre, l'ombre, décalée derrière l'unité comme avant.
+  const f = sous(fantassin);
+  assert.equal(f.entree, FORMES.ombre);
+  assert.equal(f.y, fantassin.y + 0.5 + OMBRE_UNITE.decalageY);
+  assert.equal(f.opacite, OMBRE_UNITE.opacite);
+  // Un navire qui a joué pâlit, son écume avec lui.
+  barge.etat = 'agi';
+  assert.ok(Math.abs((sous(barge).opacite ?? 0) - ECUME_NAVIRE.opacite * OPACITE_JOUEE) < 1e-12);
+});
+
+test('solSousUnite : l’écume pour ce qui flotte, l’ombre pour tout le reste — un appareil n’est jamais en mer', () => {
+  assert.deepEqual(solSousUnite({ domaine: 'mer' }), { entree: FORMES.ecume, forme: ECUME_NAVIRE });
+  assert.deepEqual(solSousUnite({ domaine: 'terre' }), { entree: FORMES.ombre, forme: OMBRE_UNITE });
+  assert.deepEqual(solSousUnite({ domaine: 'air' }), { entree: FORMES.ombre, forme: OMBRE_UNITE });
+  // Les cinq navires du catalogue, et eux seuls.
+  const navires = Object.values(CAT.unites).filter((t) => solSousUnite(t).entree === FORMES.ecume).map((t) => t.cle).sort();
+  assert.deepEqual(navires, ['barge', 'cuirasse', 'drone_marin', 'porte_avions', 'sous_marin']);
 });

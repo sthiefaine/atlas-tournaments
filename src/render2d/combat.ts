@@ -73,7 +73,7 @@ import { FORMES } from './replis';
 import { couleursSol, DISPOSITION } from './sol/couleurs';
 import { ARBRES, essenceMontagne, rocherDe } from './sol/decor';
 import { MATIERES, poidsDe, type MatiereSol } from './sol/terrains';
-import type { AnimationChoisie, Rvb } from './unites';
+import { solSousUnite, type AnimationChoisie, type Rvb } from './unites';
 
 /** Le geste que le HUD passe à `ouvrirCombat`. */
 export type Duel = Extract<Geste, { genre: 'duel' }>;
@@ -663,6 +663,8 @@ interface Cote {
   /** Les places visées chez l'adversaire, dans l'ordre du feu. */
   visees: number[];
   profil: ProfilTir2d;
+  /** Ce qu'il pose sous chaque figurine : l'ombre, ou l'écume d'un navire (`solSousUnite`). */
+  sous: ReturnType<typeof solSousUnite>['forme'];
   corps: Pose[];
   ombres: Pose[];
   eclairs: Pose[];
@@ -696,14 +698,17 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
     const apres = figurines(d.pvApres);
     const salve = cote === 'attaquant' ? chrono.tir : chrono.riposte;
     const impact = cote === 'cible' ? chrono.impactCible : chrono.impactAttaquant;
+    // Sous un navire, l'écume et non l'ombre : la règle de la carte.
+    const sous = solSousUnite(type);
     const c: Cote = {
       cote, duel: d, type, equipe: deps.equipe(d.camp), clips: clipsProfil(deps.entree(entree)),
       avant, apres, salve, impact,
       nTireurs: salve === null ? 0 : impact !== null && salve >= impact ? apres : avant,
       tireurs: [], rangTir: new Array<number>(MAX_FIGURINES).fill(-1), visees: [],
       profil: profilTir2d(type, adverse),
+      sous: sous.forme,
       corps: nouvelles(MAX_FIGURINES, 'unites', entree),
-      ombres: nouvelles(MAX_FIGURINES, 'ombres_unites', FORMES.ombre),
+      ombres: nouvelles(MAX_FIGURINES, 'ombres_unites', sous.entree),
       eclairs: nouvelles(MAX_FIGURINES, 'effets', FORMES.ombre),
       projectiles: nouvelles(MAX_FIGURINES, 'effets', FORMES.ombre),
       trainees: nouvelles(MAX_FIGURINES * 2, 'effets', FORMES.ombre),
@@ -944,9 +949,9 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
       inst.animation = -1;
       inst.cadre = 0;
     }
-    placer(ombre, d, place.u + dx + OMBRE_UNITE.decalageX * s, place.v, 0);
+    placer(ombre, d, place.u + dx + c.sous.decalageX * s, place.v, 0);
     ombre.instance.echelle = tailleUnite * (leve > 0 ? 0.8 : 1);
-    ombre.instance.opacite = OMBRE_UNITE.opacite * inst.opacite * (leve > 0 ? 0.7 : 1);
+    ombre.instance.opacite = c.sous.opacite * inst.opacite * (leve > 0 ? 0.7 : 1);
   }
 
   /** Le point d'une trajectoire à la part `p` : droite, en cloche ou à peine arquée. */

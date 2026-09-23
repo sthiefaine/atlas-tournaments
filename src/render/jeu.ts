@@ -30,7 +30,7 @@ import {
 } from '../engine/index';
 import { resoudre, traducteur } from '../i18n/index';
 import type {
-  CampId, Case, CleUnite, Dialogue, MapDef, Meteo, PhaseJour, Saison, Sauvegarde,
+  CampId, Case, CleUnite, Dialogue, MapDef, Meteo, Palette, PhaseJour, Saison, Sauvegarde,
   Scenario,
 } from '../schemas/types';
 import { estEffetFaction } from '../schemas/types';
@@ -40,6 +40,7 @@ import { monterDialogue, type ApiDialogue, type DialogueHtml } from './dialogue-
 import {
   dialogueFin, filerRepliques, scenesDeclenchees, sceneOuverture, type RepliqueEnAttente,
 } from './dialogues';
+import { paletteArmeeParDefaut } from './couleur-equipe';
 import { casesObjectifs } from './objectifs';
 import { casesUsinesIem } from './iem';
 import { effetInstantane, libelleMeteo, nomCommandant, nomCourtUnite } from './libelles';
@@ -1053,9 +1054,17 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
     rafraichir();
   }
 
+  // Une armée a la même couleur sur la carte et dans l'interface : c'est la
+  // peau qui la choisit — la nation de son camp, projetée dans la fenêtre
+  // lisible et séparée des autres camps (`couleur-equipe.ts`) —, et le HUD,
+  // les scènes et les dialogues la reprennent. Sans peau qui le dise : la
+  // palette du camp, projetée.
+  const paletteArmee = (c: CampId | null): Palette => rendu.paletteArmee?.(c) ?? paletteArmeeParDefaut(c);
+
   const api: ApiHud = {
     vue: vueJeu,
     t,
+    paletteArmee,
     finTour: () => {
       if (!attenteIa) controleur.finTour();
     },
@@ -1099,6 +1108,7 @@ export function monterJeu(conteneur: HTMLElement, options: OptionsJeu): Jeu {
 
   const apiDialogue: ApiDialogue = {
     replique: () => fileRepliques[0] ?? null,
+    paletteArmee,
     nomLocuteur: (cle) => t(`commandant.${cle}.nom`) || t('hud.commandant'),
     t,
     suivante: () => {

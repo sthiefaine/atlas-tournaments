@@ -12,7 +12,7 @@ import { ambiance } from '@/render/ambiance';
 import type { ApiHud, HudHtml } from '@/render/hud-html';
 import type { MesuresRendu, Rendu, VueInteraction } from '@/render/rendu';
 import {
-  BIOMES, type Biome, type Case, type CodePays, type MapDef, type Meteo, type PhaseJour,
+  BIOMES, type Biome, type CampId, type Case, type CodePays, type MapDef, type Meteo, type PhaseJour,
   type Saison, type Scenario,
 } from '@/schemas/types';
 import {
@@ -362,6 +362,9 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
         seulement: ['inspection'],
         annuler: () => setSelection(null),
         versEcran: (c) => peau.versEcran(c),
+        // La couleur d'une armée telle que la carte la peint, projetée et
+        // séparée des autres camps : le panneau et la pièce disent la même.
+        ...(peau.paletteArmee ? { paletteArmee: (c: CampId | null) => peau.paletteArmee!(c) } : {}),
         finTour: RIEN, choisirSuite: RIEN, choisirProduction: RIEN, jouerPouvoir: RIEN, recommencer: RIEN,
       });
       hud.current = hudCourant;

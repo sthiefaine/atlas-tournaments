@@ -24,10 +24,10 @@
  */
 
 import type { Catalogue, EtatPartie } from '../engine/index';
-import type { CampId, Case, Silhouette, UnitType } from '../schemas/types';
+import type { CampId, Case, Palette, Silhouette, UnitType } from '../schemas/types';
 import { buste } from './buste';
 import { nomCommandant, nomUnite } from './libelles';
-import { paletteDe } from './palettes';
+import { paletteArmeeParDefaut } from './couleur-equipe';
 import { type Geste, DUREES, MISE_EN_SCENE, type Partition } from './partition';
 import type { PointVue, VueCombat } from './rendu';
 import { dessinerUnite } from './sprites/index';
@@ -55,6 +55,12 @@ export interface ApiScenes {
   versEcran(c: Case): PointVue | null;
   /** Coupe **toute** la partition en cours, peau 3D comprise. Absent : la scène ne coupe qu'elle-même. */
   couper?(): void;
+  /**
+   * La palette d'une armée telle que la carte la peint (`Rendu.paletteArmee`) :
+   * les plaques du duel, leurs figurines et le splash d'un pouvoir la
+   * reprennent. Absente : la palette du camp, projetée.
+   */
+  paletteArmee?(camp: CampId | null): Palette;
 }
 
 /**
@@ -411,6 +417,8 @@ export function monterScenes(
   conteneur.appendChild(racine);
   const fenetre = doc.defaultView;
   const temps = horloge ?? horlogeDe(fenetre);
+  /** La palette d'une armée : celle que la carte peint, sinon celle de son camp, projetée. */
+  const armee = (camp: CampId | null): Palette => api.paletteArmee?.(camp) ?? paletteArmeeParDefaut(camp);
 
   let effets: Effet[] = [];
   let annuler: (() => void) | null = null;
@@ -492,7 +500,7 @@ export function monterScenes(
     g.translate(taille / 2, taille / 2 + taille * 0.1);
     const echelle = (taille / 64) * 0.92;
     g.scale(echelle, echelle);
-    dessinerUnite(g, silhouette, paletteDe(camp));
+    dessinerUnite(g, silhouette, armee(camp));
     g.restore();
   }
 
@@ -607,7 +615,7 @@ export function monterScenes(
           if (!type) return null;
           const el = doc.createElement('div');
           el.className = `camp ${role}`;
-          el.style.setProperty('--teinte', paletteDe(u.camp).main);
+          el.style.setProperty('--teinte', armee(u.camp).main);
           const canvas = doc.createElement('canvas');
           canvas.setAttribute('width', String(TAILLE_VIGNETTE_COMBAT));
           canvas.setAttribute('height', String(TAILLE_VIGNETTE_COMBAT));
@@ -713,7 +721,7 @@ export function monterScenes(
       debut: g.debut, fin: g.debut + (fixe ? MS_FIXE : g.duree), tente: false, fini: false, noeud: null,
       creer: () => {
         const v = api.vue();
-        const pal = paletteDe(g.camp);
+        const pal = armee(g.camp);
         const commandantCle = v.etat.camps.find((c) => c.id === g.camp)?.commandantCle ?? null;
         const commandant = nomCommandant(v.locale, commandantCle) || api.t('hud.commandant');
         // Le nom d'un pouvoir arrive comme une **clé** (`commandant.<cle>.pouvoir`) ;
@@ -735,7 +743,7 @@ export function monterScenes(
         if (fixe) noeud.dataset['fixe'] = 'oui';
         noeud.innerHTML = '<div class="bandes haut"></div><div class="bandes bas"></div>'
           + '<div class="lueur"></div><div class="eclat"></div>'
-          + `<div class="plateau"><div class="buste">${buste(g.camp, 'triomphe')}</div>`
+          + `<div class="plateau"><div class="buste">${buste(g.camp, 'triomphe', pal)}</div>`
           + `<div class="carte"><span class="kicker">${ech(api.t(g.niveau === 'super' ? 'hud.super_pouvoir' : 'hud.jauge_pouvoir'))}</span>`
           + `<strong class="nom">${ech(nom)}</strong>`
           + (replique ? `<em class="replique">${ech(api.t(replique))}</em>` : '')

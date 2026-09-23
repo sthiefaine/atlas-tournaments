@@ -46,6 +46,7 @@ import { lireCouleur, type Ambiance, type Particules } from '../render/ambiance'
 import { EMISSION_JOUR, EMISSION_NUIT, PIXELS_PAR_CASE, SIN_TANGAGE, type InstanceSprite } from './contrat';
 import { ANGLES_GOUTTE, ID_EFFET, IDS_GOUTTE, type Rvb } from './effets';
 import type { Pose } from './lot';
+import { FORMES } from './replis';
 
 // ---------------------------------------------------------------------------
 // 1. La météo
@@ -319,9 +320,12 @@ export function voileImageSurCanal(c: number, alpha: number, canal: 0 | 1 | 2, v
 /**
  * Vrai si une pose est du **monde** et reçoit le voile : ce qui est dans les
  * volumes ou dans le calque des unités, sauf ce qui se lit — pastilles de PV,
- * marques du télégraphage. Les ombres, les effets et la météo n'y sont pas.
+ * marques du télégraphage. Les ombres, les effets et la météo n'y sont pas ;
+ * l'**écume** d'un navire, si : elle est de l'eau, claire, et la nuit la
+ * laisserait briller seule sur une mer éteinte.
  */
 export function doitEtalonner(p: Pose): boolean {
+  if (p.calque === 'ombres_unites') return p.instance.entree === FORMES.ecume;
   if (p.calque !== 'volumes' && p.calque !== 'unites') return false;
   const id = p.instance.entree;
   return !id.startsWith('forme_pv_') && !id.startsWith('forme_marque_');

@@ -19,7 +19,10 @@
  *   ailleurs : les deux armées se font face, comme dans Advance Wars ;
  * - la pastille de PV paraît sous 10 PV affichés, et porte le cadenas d'une
  *   unité qui a joué ; les PV **retenus** par un geste en cours l'emportent sur
- *   ceux de l'état, qui est en avance sur l'image.
+ *   ceux de l'état, qui est en avance sur l'image ;
+ * - sous un **navire**, pas d'ombre mais une écume claire (`ECUME_NAVIRE`) :
+ *   une ombre sombre sur la mer y noyait la coque, graphite sur bleu profond ;
+ *   l'écume la détache de l'eau (règle 13 de l'artiste technique, charte §3.8).
  *
  * L'**état visuel** (`EtatVisuel2d`) est la prise des animations : elles y
  * poussent décalages, vue, clip, opacité, éclat, et ce module les lit.
@@ -27,18 +30,18 @@
  * Pur : ni DOM, ni WebGL (`tests/render2d/unites.test.ts`).
  */
 
-import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue, EtatPartie, Unite } from '../engine/index';
 import { cleCase, pvAffiches, sontAllies } from '../engine/index';
-import { lireCouleur } from '../render/ambiance';
-import { paletteDe } from '../render/palettes';
 import type { MarqueUnite } from '../render/rendu';
 import { echelleTaille } from '../render/sprites/silhouettes';
-import type { CampId, CleUnite, CodePays } from '../schemas/types';
+import type { CampId, CleUnite, CodePays, UnitType } from '../schemas/types';
 import { cadreAuTemps } from './atlas';
-import { OMBRE_UNITE, type ClipSprite, type InstanceSprite, type VueSprite } from './contrat';
+import { ECUME_NAVIRE, OMBRE_UNITE, type ClipSprite, type InstanceSprite, type VueSprite } from './contrat';
+import { couleurEquipeSeule, type Rvb } from './equipes';
 import type { Pose } from './lot';
 import { FORMES } from './replis';
+
+export type { Rvb } from './equipes';
 
 /** L'opacité d'une unité qui a joué : celle de la 3D. */
 export const OPACITE_JOUEE = 0.6;
@@ -58,21 +61,27 @@ const OMBRE_VOL = { echelle: 0.8, opacite: 0.7 };
 /** Où regarde une unité : trois vues cuites, la gauche est la droite retournée. */
 export type Orientation = 'droite' | 'gauche' | 'bas' | 'haut';
 
-/** Une couleur d'équipe, sRGB de 0 à 1. */
-export type Rvb = readonly [number, number, number];
-
 /**
- * La couleur d'équipe d'un camp : `palette.main` du style de sa nation (la
- * couleur de la 3D), la palette du camp à défaut, et **le gris neutre**
- * (`#b9bec7`, `render/palettes.ts`) sans propriétaire. Jamais le blanc : les
- * zones d'équipe d'une image cuite sont peintes en blanc et ne se teignent que
- * par cette couleur — un bâtiment neutre laissé sans elle les montrerait
- * blanches, là où la 3D le laissait gris.
+ * La couleur d'équipe d'un camp seul : la règle de l'écran (`equipes.ts`,
+ * `render/couleur-equipe.ts`) — sa nation **projetée** dans la fenêtre lisible,
+ * la couleur de son camp à défaut, et **le gris neutre** (`#b9bec7`) sans
+ * propriétaire. Elle ne la recopie pas, elle l'appelle. Sur une carte, la peau
+ * sépare en plus les camps trop proches (`palettesDeLaCarte`) : c'est cette
+ * couleur-là qu'elle donne aux poses.
  */
 export function couleurEquipeDe(camp: CampId | null, pays: CodePays | null | undefined): Rvb {
-  const style = camp !== null && pays ? chargerStyleNation(pays) : null;
-  const c = lireCouleur(style?.palette.main ?? paletteDe(camp).main);
-  return [c.r / 255, c.v / 255, c.b / 255];
+  return couleurEquipeSeule(camp, pays);
+}
+
+/**
+ * Ce qu'une unité pose sous elle, sur sa case : l'ombre sombre, ou l'**écume**
+ * claire d'un navire — la forme, sa place et son opacité. La vignette et
+ * l'écran de combat suivent la même règle.
+ */
+export function solSousUnite(type: Pick<UnitType, 'domaine'>): { entree: string; forme: typeof OMBRE_UNITE | typeof ECUME_NAVIRE } {
+  return type.domaine === 'mer'
+    ? { entree: FORMES.ecume, forme: ECUME_NAVIRE }
+    : { entree: FORMES.ombre, forme: OMBRE_UNITE };
 }
 
 /** L'état visuel d'une unité : ce que les animations poussent, image par image. */
@@ -349,10 +358,12 @@ export function posesUnites(etat: EtatPartie, cat: Catalogue, visuels: Visuels, 
     const equipe = o.equipe(u.camp);
     const taille = echelleTaille(type.silhouette.taille);
 
+    // L'ombre sur la case, ou l'écume d'un navire : un appareil n'est jamais en mer.
+    const sous = solSousUnite(type);
     const ombre: InstanceSprite = {
-      entree: FORMES.ombre, animation: -1, cadre: 0,
-      x: gx + OMBRE_UNITE.decalageX, y: gy + OMBRE_UNITE.decalageY,
-      opacite: OMBRE_UNITE.opacite * opacite * (air ? OMBRE_VOL.opacite : 1),
+      entree: sous.entree, animation: -1, cadre: 0,
+      x: gx + sous.forme.decalageX, y: gy + sous.forme.decalageY,
+      opacite: sous.forme.opacite * opacite * (air ? OMBRE_VOL.opacite : 1),
       echelle: taille * (air ? OMBRE_VOL.echelle : 1),
     };
     poses.push({ calque: 'ombres_unites', ligne: gy, colonne: gx, instance: ombre });

@@ -50,7 +50,7 @@ import { Boucle } from '../render/boucle';
 import { ecrirePartition, type Partition } from '../render/partition';
 import type { BackendRendu } from '../render/qualite';
 import type { GestesRendu, MesureFamille, MesuresRendu, PointVue, Rendu, VueInteraction } from '../render/rendu';
-import type { Biome, CampId, Case, CleTerrain, CleUnite, CodePays } from '../schemas/types';
+import { CAMPS, type Biome, type CampId, type Case, type CleTerrain, type CleUnite, type CodePays, type Palette } from '../schemas/types';
 import { animationsDePartition, type ContexteAnimation2d, type PriseDrapeau2d } from './animations';
 import { Trace, type CoucheAplats, ProgrammeAplats } from './aplats';
 import {
@@ -81,7 +81,8 @@ import { creerSol } from './sol';
 import {
   couleurTerrainFond, tracerAnneau, tracerCurseur, tracerFleche, tracerFond, tracerSurbrillances, tracerVoile,
 } from './surbrillances';
-import { couleurEquipeDe, posesUnites, Visuels, type AnimationChoisie, type Rvb } from './unites';
+import { paletteArmee as paletteArmeeSeule, palettesDeLaCarte, rvbDe } from './equipes';
+import { posesUnites, Visuels, type AnimationChoisie, type Rvb } from './unites';
 
 export { moteur2dDisponible } from './gl';
 
@@ -91,7 +92,12 @@ export interface OptionsRendu2d {
   audio?: SortieAudio;
   /** Le biome de la carte : le sol en tire ses matières et son décor. */
   biome?: Biome;
-  /** La nation de chaque camp : la couleur d'équipe est celle de son style (`palette.main`). */
+  /**
+   * La nation de chaque camp : la couleur d'équipe est celle de son style
+   * (`palette.main`), projetée dans la fenêtre lisible, et le camp qui joue
+   * après reprend la couleur de son camp s'il tombe trop près d'un autre
+   * (`equipes.ts`, `palettesDeLaCarte`).
+   */
   paysParCamp?: Partial<Record<CampId, CodePays>>;
   /**
    * La préférence « animations réduites » du joueur. Le réglage de l'appareil
@@ -258,6 +264,12 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   let derniereVueBat: { visibles: ReadonlySet<string> | null; unitesVues: ReadonlySet<string> | null | undefined; marques: ReadonlyMap<string, string> | null | undefined } | null = null;
   const toutes: Pose[] = [];
   const couleurs = new Map<string, Rvb>();
+  /**
+   * Les palettes d'armée de la carte, pour la liste de ses camps (`cle`) : la
+   * nation de chacun projetée, et séparée des camps qui jouent avant lui.
+   * Calculées une fois — une carte ne change pas de camps en cours de partie.
+   */
+  let armees: { cle: string; palettes: ReadonlyMap<CampId, Palette> } | null = null;
 
   // --- Les effets (`effets.ts`) : le pool, la secousse, les superpositions d'un
   //     pouvoir, la planche de leurs images ; la météo et l'étalonnage (`meteo.ts`).
@@ -317,15 +329,48 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   }
 
   /**
-   * La couleur d'équipe d'un camp : le style de sa nation, sa palette à défaut,
-   * le gris neutre sans camp — jamais le blanc des zones d'équipe cuites
-   * (`couleurEquipeDe`). Mémorisée : c'est la même à chaque image.
+   * Pose la liste des camps de la carte : les palettes d'armée se recalculent
+   * si elle a changé, et les couleurs mémorisées avec elles. La séparation se
+   * fait entre les camps de **cette** carte : sur quatre camps, le camp 1 peut
+   * céder sa nation pour laisser de la place au camp 3, ce qu'il ne ferait pas
+   * sur deux.
+   */
+  function poserCamps(camps: readonly CampId[]): ReadonlyMap<CampId, Palette> {
+    const cle = camps.join(',');
+    if (armees?.cle !== cle) {
+      armees = { cle, palettes: palettesDeLaCarte(camps, options.paysParCamp) };
+      couleurs.clear();
+      // Les bâtiments gardent leurs poses d'une image à l'autre : leur couleur a pu changer.
+      batimentsSales = true;
+    }
+    return armees.palettes;
+  }
+
+  /**
+   * La palette d'armée d'un camp telle que la carte la peint : sa nation
+   * projetée, séparée des autres camps ; le gris neutre sans camp. C'est elle
+   * que l'interface reprend (`Rendu.paletteArmee`).
+   */
+  function paletteArmee(camp: CampId | null): Palette {
+    if (camp === null) return paletteArmeeSeule(null);
+    // Avant le premier état — le HUD se compose au montage, avant que la carte
+    // ait été montrée —, les camps d'une carte ordinaire : les deux premiers,
+    // et ceux dont on connaît la nation. Le premier état les remplace.
+    const palettes = armees?.palettes
+      ?? poserCamps(CAMPS.filter((c) => c <= 1 || options.paysParCamp?.[c] !== undefined));
+    return palettes.get(camp) ?? paletteArmeeSeule(camp, options.paysParCamp?.[camp]);
+  }
+
+  /**
+   * La couleur d'équipe d'un camp, sRGB de 0 à 1 : la couleur principale de sa
+   * palette d'armée — jamais le blanc des zones d'équipe cuites. Mémorisée :
+   * c'est la même à chaque image.
    */
   function couleurEquipe(camp: CampId | null): Rvb {
     const cle = camp === null ? 'neutre' : String(camp);
     const memo = couleurs.get(cle);
     if (memo) return memo;
-    const rvb = couleurEquipeDe(camp, camp === null ? null : options.paysParCamp?.[camp]);
+    const rvb = rvbDe(paletteArmee(camp).main);
     couleurs.set(cle, rvb);
     return rvb;
   }
@@ -824,6 +869,10 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
   const rendu: Rendu2d = {
     cle: '2d',
 
+    // Une armée a la même couleur sur la carte et dans l'interface : le HUD,
+    // l'écran de combat, les dialogues reprennent celle que la carte peint.
+    paletteArmee,
+
     get canvas(): HTMLCanvasElement | null {
       return toile?.canvas ?? null;
     },
@@ -903,6 +952,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       if (e !== etat) {
         etatPrecedent = etat;
         options.audio?.environnement?.(sonEnvironnement(e.climat.meteo, e.climat.phase, options.biome ?? ''));
+        // Les couleurs d'armée se séparent entre les camps de **cette** carte.
+        poserCamps(e.camps.map((c) => c.id));
       }
       marquerBatiments(e, v);
       const premiere = etat === null;
@@ -1163,6 +1214,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
       visuels.vider();
       drapeauxForces.clear();
       couleurs.clear();
+      armees = null;
       cleFond = '';
       cleSurbrillances = '';
       posesBat = [];

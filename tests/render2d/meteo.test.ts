@@ -170,6 +170,7 @@ test('ce qui reçoit l’étalonnage : le monde, jamais ce qui se lit, ni les om
   assert.equal(doitEtalonner(pose('unites', FORMES.marque('designee'))), false);
   assert.equal(doitEtalonner(pose('volumes', FORMES.marque('menacee'))), false, 'la marque d’une usine aussi');
   assert.equal(doitEtalonner(pose('ombres_unites', FORMES.ombre)), false);
+  assert.equal(doitEtalonner(pose('ombres_unites', FORMES.ecume)), true, 'l’écume d’un navire est de l’eau : elle reçoit la nuit');
   assert.equal(doitEtalonner(pose('effets', ID_EFFET.eclair)), false, 'un effet est de la lumière');
   assert.equal(doitEtalonner(pose('meteo', IDS_GOUTTE[0]!)), false);
 });
@@ -202,4 +203,16 @@ test('la nuit sur les unités : la figurine est du monde, sa pastille et son omb
   assert.equal(pastille.voilee, false);
   assert.equal(ombre.voilee, false);
   assert.equal(figurine.instance.teinte, undefined, 'la nuit n’est plus dans l’instance');
+});
+
+test('la nuit sur un navire : l’écume s’éteint avec la mer, sans quoi elle brillerait seule', () => {
+  const etat = partiePersonnalisee(['WWW'], {}, [{ camp: 0, type: 'barge', x: 1, y: 0 }]);
+  const r = posesUnites(etat, CAT, new Visuels(), {
+    camp: 0, visibles: null, selection: null, equipe: () => [0, 0, 1], entree: (t) => `unite_${t}_base`,
+    animation: () => null, tempsMs: 0, reduit: false,
+  });
+  for (const p of r.poses) etalonnerPose(p);
+  const ecume = r.poses.find((p) => p.calque === 'ombres_unites')!;
+  assert.equal(ecume.instance.entree, FORMES.ecume);
+  assert.equal(ecume.voilee, true);
 });

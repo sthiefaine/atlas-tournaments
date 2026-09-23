@@ -21,7 +21,7 @@
 
 import type { ImageMesuree } from './mesure-performance';
 import type { Catalogue, EtatPartie, EvenementJeu } from '../engine/index';
-import type { CampId, Case } from '../schemas/types';
+import type { CampId, Case, Palette } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { ToucheJeu } from './entrees';
 import type { Partition } from './partition';
@@ -200,6 +200,15 @@ export interface Rendu {
   /** Coupe la partition en cours : tout saute à l'état final, la promesse se résout. */
   couper?(): void;
   ouvrirCombat?(hote: HTMLElement, geste: Extract<import('./partition').Geste, { genre: 'duel' }>): VueCombat | null;
+  /**
+   * La palette d'une armée **telle que la peau la peint** : la nation de son
+   * camp projetée dans la fenêtre lisible, séparée des autres camps de la carte
+   * (`couleur-equipe.ts`) ; le gris neutre pour `null`. L'interface la reprend
+   * — HUD, scènes, dialogues —, et une armée a la même couleur sur la carte et
+   * dans le HUD. Absente : chacun prend la palette de son camp, projetée
+   * (`paletteArmeeParDefaut`).
+   */
+  paletteArmee?(camp: CampId | null): Palette;
   /** Point d'écran → case de la carte, ou `null` hors carte. */
   versMonde(x: number, y: number): Case | null;
   /** Case → point d'écran (centre de la case), ou `null` si hors champ. */

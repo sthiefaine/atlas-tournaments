@@ -24,7 +24,7 @@ import { mareeBasse, type ParametresMarees } from '../engine/mecaniques/marees';
 import { nombre as nombreIntl } from '../i18n/index';
 import type {
   CampId, Case, CleIllustration, CleTerrain, CleUnite, DureePouvoir, EffetModificateur,
-  EffetPouvoir, Meteo, Silhouette,
+  EffetPouvoir, Meteo, Palette, Silhouette,
 } from '../schemas/types';
 import type { Ambiance } from './ambiance';
 import type { Phase } from './controleur';
@@ -37,7 +37,7 @@ import {
 } from './fiche-unite';
 import { CLASSE_PICTOGRAMME, htmlRiche, STYLE_ILLUSTRATIONS } from './illustrations';
 import { usineSousIem } from './iem';
-import { paletteDe } from './palettes';
+import { paletteArmeeParDefaut } from './couleur-equipe';
 import type { Partition } from './partition';
 import type { PointVue } from './rendu';
 import { jaugePv, monterScenes, type HorlogeScenes } from './scenes-html';
@@ -161,6 +161,14 @@ export interface VueJeu {
 /** Ce que le HUD peut demander au jeu. Aucun de ces appels ne mute un état. */
 export interface ApiHud {
   ouvrirCombat?: import('./rendu').Rendu['ouvrirCombat'];
+  /**
+   * La palette d'une armée telle que la carte la peint (`Rendu.paletteArmee`) :
+   * les jetons de couleur du HUD — la tête de colonne, le panneau d'unité, la
+   * jauge, le bilan, les vignettes — la reprennent, et une armée a la même
+   * couleur sur la carte et dans le HUD. Absente : la palette du camp,
+   * projetée (`paletteArmeeParDefaut`).
+   */
+  paletteArmee?(camp: CampId | null): Palette;
   vue(): VueJeu;
   t(cle: string, params?: Record<string, string | number>): string;
   finTour(): void;
@@ -1212,6 +1220,13 @@ export function monterHudHtml(
     : null;
   observateurRail?.observe(conteneur);
 
+  /**
+   * La palette d'une armée : celle que la carte peint, sinon celle de son camp,
+   * projetée. Un seul appel pour tout le HUD — la couleur d'une armée n'a
+   * qu'une source, et ce n'est pas le HUD qui la choisit.
+   */
+  const armee = (camp: CampId | null): Palette => api.paletteArmee?.(camp) ?? paletteArmeeParDefaut(camp);
+
   // Les scènes transitoires — chiffres, écran de combat, splash — vivent dans
   // un conteneur frère : le HUD remplace le DOM de ses emplacements, et une
   // scène qui y vivrait serait réécrite en plein vol.
@@ -1221,6 +1236,7 @@ export function monterHudHtml(
     versEcran: (c) => api.versEcran(c),
     couper: api.couper ? () => api.couper?.() : undefined,
     ouvrirCombat: api.ouvrirCombat,
+    paletteArmee: armee,
   }, horloge);
 
   let vignettes: Vignette[] = [];
@@ -1479,7 +1495,7 @@ export function monterHudHtml(
   function panneauJauge(v: VueJeu): string {
     const camp = v.etat.camps.find((c) => c.id === v.camp);
     if (!camp) return '';
-    const pal = paletteDe(v.camp);
+    const pal = armee(v.camp);
     const nom = nomCommandant(v.locale, camp.commandantCle) || api.t('hud.commandant');
     const part = camp.jaugeMax > 0 ? Math.min(1, camp.jauge / camp.jaugeMax) : 0;
     const monTour = !v.attenteIa && !v.etat.partie.terminee && v.etat.campCourant === v.camp;
@@ -1725,7 +1741,7 @@ export function monterHudHtml(
       ? `<span class="radar-aide">${ech(api.t('hud.radar_aide', { vision: VISION_STATION_RADAR, brouillage: RAYON_STATION_RADAR }))}</span>`
       : '';
     const icone = unite && type ? vignette(type.silhouette, unite.camp, 46) : '';
-    const bord = unite ? paletteDe(unite.camp).main : paletteDe(null).main;
+    const bord = armee(unite ? unite.camp : null).main;
     // Le bouton n'apparaît que sur une unité : un terrain n'a pas de fiche, et
     // une case vide ne doit pas offrir une commande qui ne ferait rien. Une
     // loupe, et un chevron une fois ouverte : le « i » en italique était l'icône
@@ -2034,7 +2050,7 @@ export function monterHudHtml(
 
   function panneauAttente(v: VueJeu): string {
     if (!v.attenteIa) return '';
-    const pal = paletteDe(v.etat.campCourant);
+    const pal = armee(v.etat.campCourant);
     return `<div class="p attente" style="--camp:${pal.main}">`
       + `<div class="in">${iconeOrdre('attendre')}<div class="tt">${ech(api.t(sontAllies(v.etat, v.etat.campCourant, v.camp) ? 'hud.tour_allie' : 'hud.tour_adverse'))}</div></div></div>`;
   }
@@ -2399,7 +2415,7 @@ export function monterHudHtml(
     if (!fin.terminee || v.masquerFin || v.sceneOuverte || v.finEnAttente) return '';
     const cle = fin.nul ? 'hud.match_nul'
       : sontAllies(v.etat, fin.vainqueur, v.camp) ? 'combat.manche_gagnee' : 'combat.manche_perdue';
-    const pal = paletteDe(fin.vainqueur ?? null);
+    const pal = armee(fin.vainqueur ?? null);
     const titre = api.t(cle);
     // Mon camp d'abord : on lit son propre bilan avant celui d'en face.
     const camps = [...v.etat.camps].sort((a, b) => (a.id === v.camp ? -1 : b.id === v.camp ? 1 : 0));
@@ -2409,7 +2425,7 @@ export function monterHudHtml(
     // préfixe plutôt que de tenir un second compte qui finirait par diverger.
     const recrutees = (camp: CampId): number => Object.entries(v.etat.produites)
       .reduce((n, [k, x]) => (k.startsWith(`${camp}:`) ? n + x : n), 0);
-    const teinte = (camp: CampId): string => paletteDe(camp).main;
+    const teinte = (camp: CampId): string => armee(camp).main;
     const ligne = (cleTexte: string, valeur: (c: CampId) => number): string =>
       `<div class="bilan-ligne"><span class="quoi">${ech(api.t(cleTexte))}</span>`
       + camps.map((c) => `<b style="--teinte:${teinte(c.id)}">${ech(nombreIntl(v.locale, valeur(c.id)))}</b>`).join('')
@@ -2452,7 +2468,7 @@ export function monterHudHtml(
       g.translate(vg.taille / 2, vg.taille / 2 + vg.taille * 0.1);
       const echelle = (vg.taille / 64) * 0.92;
       g.scale(echelle, echelle);
-      dessinerUnite(g, vg.silhouette, paletteDe(vg.camp));
+      dessinerUnite(g, vg.silhouette, armee(vg.camp));
       g.restore();
     }
   }
@@ -2473,7 +2489,7 @@ export function monterHudHtml(
     // celui qui parle d'une unité précise la remplace par celle de son camp.
     // Ce sont deux propriétés de style, pas du HTML : aucun emplacement n'est
     // réécrit pour un changement de tour.
-    const palTour = paletteDe(v.etat.campCourant);
+    const palTour = armee(v.etat.campCourant);
     racine.style.setProperty('--camp', palTour.main);
     racine.style.setProperty('--camp-voile', `${palTour.main}24`);
     const selectionNeuve = v.selection !== derniereSelection;

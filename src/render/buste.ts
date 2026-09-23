@@ -13,10 +13,16 @@
  * embarquer le jeu.
  *
  * Quatre écrans le posent : la scène de dialogue, le splash de pouvoir
- * (`scenes-html.ts`), la grille du briefing et la collection du carnet.
+ * (`scenes-html.ts`), la grille du briefing et la collection du carnet. Les deux
+ * premiers lui donnent la palette que la carte peint pour cette armée
+ * (`Rendu.paletteArmee`). Hors partie, il prend la palette **brute** du camp,
+ * et c'est encore une décision de poids : la règle de l'écran
+ * (`couleur-equipe.ts`) coûte près d'un kilo-octet compressé — le buste passait
+ * de 951 à 1 935 octets, mesuré —, pour ne changer que l'or du camp 3, que ni le
+ * vestiaire ni le carnet ne montrent (ils teignent au camp du joueur).
  */
 
-import type { CampId, Emotion } from '../schemas/types';
+import type { CampId, Emotion, Palette } from '../schemas/types';
 import { paletteDe } from './palettes';
 
 /** Traits du visage par émotion : sourcils et bouche, rien de plus. */
@@ -31,13 +37,14 @@ export const VISAGES: Readonly<Record<Emotion, { sourcils: string; bouche: strin
 
 /**
  * Le buste d'un commandant, en SVG vectoriel : net à toute taille, sans une
- * seule requête réseau, et teinté par la palette de son camp. Les modèles réels
+ * seule requête réseau, et teinté par la palette de son armée — celle que la
+ * carte peint quand on la donne, celle de son camp sinon. Les modèles réels
  * sont des `AssetSpec` de type `buste` non encore livrées (`11-assets-spec.md`
  * §10.3) ; celui-ci tient la place, et il la tient debout. Exporté pour le
  * splash de pouvoir (`scenes-html.ts`), qui montre le même visage en triomphe.
  */
-export function buste(camp: CampId | null, emotion: Emotion): string {
-  const pal = paletteDe(camp);
+export function buste(camp: CampId | null, emotion: Emotion, palette?: Palette): string {
+  const pal = palette ?? paletteDe(camp);
   const visage = VISAGES[emotion] ?? VISAGES.neutre;
   return `<svg viewBox="0 0 160 190" aria-hidden="true">`
     + `<path fill="${pal.dark}" d="M0 0h160v190H0z"/>`

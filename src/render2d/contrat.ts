@@ -159,12 +159,29 @@ export const ECLAIRAGE_CUISSON = {
 export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0, decalageY: -0.06, opacite: 0.34 } as const;
 
 /**
+ * Ce qu'un rendu pose sous un **navire**, à la place de l'ombre : une écume
+ * claire, douce, discrète, qui détache la coque de l'eau (règle 13 de l'artiste
+ * technique, charte des figurines §3.8). Une ombre sombre sur la mer noyait le
+ * graphite sous le pont dans le bleu profond ; l'écume dessine la ligne de
+ * flottaison. Centrée sur le pied — l'eau entoure la coque, elle ne dépend pas
+ * de la lumière —, un peu plus large que la coque pour en déborder à l'étrave
+ * et à la poupe : 0,84 case pour un navire moyen, 0,99 pour un grand, dont le
+ * bord est déjà transparent. Plus claire au bord qu'au cœur : le cœur est sous
+ * la coque, et une pièce qui a joué, translucide, n'y montre pas un blanc.
+ * Elle reçoit la nuit, comme la mer qu'elle borde (`meteo.ts`, `doitEtalonner`).
+ */
+export const ECUME_NAVIRE = {
+  largeur: 0.84, hauteur: 0.34, decalageX: 0, decalageY: 0, opacite: 0.5, couleur: '#eef5f2',
+} as const;
+
+/**
  * Le masque d'équipe : la cuisson peint les zones d'équipe en **blanc** et
  * écrit le masque (0 à 255) dans une page à part, aux mêmes coordonnées. Le
  * rendu multiplie : `couleur = cuite × mix(1, équipe, masque)`. C'est exact sur
  * un masque binaire — la règle du validateur de GLB —, approché sur ses bords
- * lissés, où personne ne le voit. La couleur d'équipe est celle que la 3D
- * utilise (`palette.main` du style de la nation, `assets/styles`).
+ * lissés, où personne ne le voit. La couleur d'équipe est celle de la nation
+ * (`palette.main` de son style, `assets/styles`), **projetée** dans la fenêtre
+ * lisible et séparée des autres camps de la carte (`render/couleur-equipe.ts`).
  */
 export const COULEUR_ZONE_EQUIPE_CUISSON = [1, 1, 1] as const;
 

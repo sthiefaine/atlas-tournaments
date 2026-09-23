@@ -214,6 +214,8 @@ export default function VitrineImages(): React.ReactElement {
     const reserve = new Vignettes({
       charger: chargerImageNavigateur, fabrique,
       peintre: creerPeintreRepli(fabrique, () => catalogue),
+      // Le catalogue dit ce qui flotte : l'écume sous un navire, comme en jeu.
+      domaine: (cle) => catalogue.unites[cle]?.domaine ?? null,
       plafondPixels: 12_000_000,
     });
     const lecteur = new LecteurVignettes(reserve);

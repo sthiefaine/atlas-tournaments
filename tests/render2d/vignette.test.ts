@@ -7,19 +7,21 @@ import assert from 'node:assert/strict';
 
 import type { ChargeurImage, PeintreRepli, SourceImage } from '../../src/render2d/atlas';
 import {
-  OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, TANGAGE_CARTE, VERSION_SPRITES,
+  ECUME_NAVIRE, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, TANGAGE_CARTE, VERSION_SPRITES,
   type EntreeSprite, type ManifesteSprites,
 } from '../../src/render2d/contrat';
 import type { FabriqueToile } from '../../src/render2d/replis';
 import { FORMES } from '../../src/render2d/replis';
 import {
   animationsOrdonnees, couleurEquipe, enveloppeAnimation, enveloppeImage, idPour, imageRejouee,
-  PAUSE_REJEU, peindreImage, peindreOmbre, placer, teindre, unirEnveloppes, Vignettes,
+  PAUSE_REJEU, peindreEcume, peindreImage, peindreOmbre, placer, teindre, unirEnveloppes, Vignettes,
   type ImagePrete,
 } from '../../src/render2d/vignette';
 import { chargerStyleNation } from '../../src/assets/styles';
+import { projeterCouleurEquipe } from '../../src/render/couleur-equipe';
 import { paletteDe } from '../../src/render/palettes';
 import type { Pinceau } from '../../src/render/sprites/formes';
+import { CAT } from '../engine/aides';
 
 // ---------------------------------------------------------------------------
 // Des toiles et des pages de papier
@@ -153,7 +155,9 @@ test('sans masque ou sans couleur, les pixels passent tels quels', () => {
 
 test('la couleur d’équipe est celle de la peau : la nation, sinon le camp, sinon le gris neutre', () => {
   const hex = (c: readonly number[]): string => `#${c.map((v) => Math.round(v * 255).toString(16).padStart(2, '0')).join('')}`;
-  assert.equal(hex(couleurEquipe(0, 'fr')), chargerStyleNation('fr')!.palette.main.toLowerCase());
+  // La nation, projetée dans la fenêtre lisible : la règle de l'écran, pas une copie.
+  assert.equal(hex(couleurEquipe(0, 'fr')), projeterCouleurEquipe(chargerStyleNation('fr')!.palette.main));
+  assert.equal(hex(couleurEquipe(0, 'fr')), '#4578ec');
   assert.equal(hex(couleurEquipe(1, null)), paletteDe(1).main.toLowerCase());
   assert.equal(hex(couleurEquipe(null, 'fr')), paletteDe(null).main.toLowerCase(), 'un bâtiment neutre n’a pas de nation');
 });
@@ -327,6 +331,34 @@ test('l’ombre d’une unité est une forme du rendu, jamais une image cuite', 
   assert.deepEqual(journal.peints, [`${FORMES.ombre}|-`]);
 });
 
+test('l’écume d’un navire aussi, et la réserve sait d’elle-même ce qui flotte — le catalogue le lui dit', () => {
+  const { reserve, journal } = reserveEssai({});
+  reserve.ecume();
+  assert.deepEqual(journal.peints, [`${FORMES.ecume}|-`]);
+  // Sans catalogue, rien ne flotte : une piste peut encore le déclarer (`ombre.mer`).
+  assert.equal(reserve.flotte('unite_barge_base'), false);
+
+  const peintre: PeintreRepli = { peindre: () => null };
+  const avecCatalogue = new Vignettes({
+    charger: () => Promise.reject(new Error('hors ligne')), fabrique: () => null, peintre,
+    domaine: (cle) => CAT.unites[cle]?.domaine ?? null,
+  });
+  // Une entrée cuite : sa clé d'unité, lue au manifeste — le kit national comme la base.
+  avecCatalogue.poserManifeste(manifeste(
+    { ...entreeUnite('unite_barge_base'), cle: 'barge' },
+    { ...entreeUnite('unite_barge_fr'), cle: 'barge', variante: 'fr' },
+    entreeUnite(),
+  ));
+  assert.equal(avecCatalogue.flotte('unite_barge_base'), true);
+  assert.equal(avecCatalogue.flotte('unite_barge_fr'), true);
+  assert.equal(avecCatalogue.flotte('unite_char_leger_base'), false);
+  // Un repli, lu à l'identifiant : le sous-marin attendu, pas encore cuit.
+  assert.equal(avecCatalogue.flotte('unite_sous_marin_base'), true);
+  assert.equal(avecCatalogue.flotte('unite_helico_base'), false, 'un appareil au-dessus de la mer n’est pas un navire');
+  assert.equal(avecCatalogue.flotte('batiment_port_base'), false);
+  assert.equal(avecCatalogue.flotte(''), false);
+});
+
 // ---------------------------------------------------------------------------
 // Peindre
 // ---------------------------------------------------------------------------
@@ -366,4 +398,17 @@ test('l’ombre d’une unité se pose décalée comme celle de la lumière prin
   const air = pinceauNotant();
   peindreOmbre(air.g, ombre, 100, 100, 1, 1, true);
   assert.match(air.notes[2]!, /^draw -4 -4 8 8 /, 'plus petite sous un appareil');
+});
+
+test('l’écume d’un navire se pose centrée sur son pied, à la taille de sa silhouette et à son opacité', () => {
+  const ecume: ImagePrete = { source: {} as CanvasImageSource, l: 10, h: 10, px: 5, py: 5, echelle: 1, repli: true };
+  const mer = pinceauNotant();
+  peindreEcume(mer.g, ecume, 100, 100, 1);
+  const dx = ECUME_NAVIRE.decalageX * PIXELS_PAR_CASE;
+  const dy = ECUME_NAVIRE.decalageY * PIXELS_PAR_CASE * SIN_TANGAGE;
+  assert.equal(mer.notes[1], `translate ${100 + dx} ${100 + dy}`);
+  assert.equal(mer.notes[2], `draw -5 -5 10 10 alpha ${ECUME_NAVIRE.opacite}`);
+  const grand = pinceauNotant();
+  peindreEcume(grand.g, ecume, 100, 100, 1, 1.2);
+  assert.equal(grand.notes[2], `draw -6 -6 12 12 alpha ${ECUME_NAVIRE.opacite}`, 'un grand navire, une écume plus large');
 });

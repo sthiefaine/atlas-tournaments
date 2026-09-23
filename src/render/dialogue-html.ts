@@ -17,13 +17,13 @@
  * `jeu.ts` lui donne, et n'appelle jamais `t()` sur autre chose qu'une clé.
  */
 
-import type { CleIllustration } from '../schemas/types';
+import type { CampId, CleIllustration, Palette } from '../schemas/types';
 import type { RepliqueEnAttente } from './dialogues';
 import {
   CLASSE_VIGNETTE, pictogramme, segmenterRiche, STYLE_ILLUSTRATIONS, vignetteIllustration,
 } from './illustrations';
 import { buste } from './buste';
-import { paletteDe } from './palettes';
+import { paletteArmeeParDefaut } from './couleur-equipe';
 
 /** Ce que la scène peut demander au jeu. Aucun de ces appels ne mute un état. */
 export interface ApiDialogue {
@@ -37,6 +37,12 @@ export interface ApiDialogue {
   suivante(): void;
   /** Saute le reste de la file : le joueur a compris, il veut jouer. */
   passer(): void;
+  /**
+   * La palette d'une armée telle que la carte la peint (`Rendu.paletteArmee`) :
+   * la boîte et le buste d'un commandant prennent la couleur de son armée.
+   * Absente : la palette du camp, projetée.
+   */
+  paletteArmee?(camp: CampId | null): Palette;
 }
 
 /** Ce que `monterDialogue` rend à son hôte. */
@@ -270,7 +276,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
   }
 
   function batir(r: RepliqueEnAttente): void {
-    const pal = paletteDe(r.camp);
+    const pal = api.paletteArmee?.(r.camp) ?? paletteArmeeParDefaut(r.camp);
     racine.style.setProperty('--teinte', pal.main);
     racine.dataset['cote'] = r.camp !== null && r.camp !== 0 ? 'droite' : 'gauche';
     // Un `role="dialog"` sans nom accessible s'annonce « dialogue », et rien de
@@ -293,7 +299,7 @@ export function monterDialogue(conteneur: HTMLElement, api: ApiDialogue): Dialog
     racine.innerHTML = '<div class="bandes haut"></div><div class="bandes bas"></div>'
       + `<button type="button" class="passer" data-action="passer">${ech(api.t('dialogue.passer'))} <span aria-hidden="true">»</span></button>`
       + '<div class="plateau">'
-      + `<div class="buste">${buste(r.camp, r.emotion)}</div>`
+      + `<div class="buste">${buste(r.camp, r.emotion, pal)}</div>`
       + '<div class="boite">'
       + `<div class="nom">${ech(api.nomLocuteur(r.locuteur))}`
       + `<span class="humeur">${ech(api.t(`emotion.${r.emotion}`))}</span></div>`

@@ -15,14 +15,16 @@
  *
  * On ne sait l'image d'un repli que par son **identifiant**, qui suit celui des
  * entrées du manifeste (`idUnite`, `idBatiment`, `idDecor`), plus quelques
- * formes du rendu lui-même (`FORMES`) : ombre, mât, drapeau, badges.
+ * formes du rendu lui-même (`FORMES`) : ombre, écume, mât, drapeau, badges.
  */
 
 import type { Catalogue } from '../engine/index';
 import type { Palette, Silhouette } from '../schemas/types';
 import type { Pinceau } from '../render/sprites/formes';
 import { dessinerUnite, echelleTaille } from '../render/sprites/silhouettes';
-import { COS_TANGAGE, ESSENCES_DECOR, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, type EssenceDecor } from './contrat';
+import {
+  COS_TANGAGE, ECUME_NAVIRE, ESSENCES_DECOR, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, type EssenceDecor,
+} from './contrat';
 import type { PeintreRepli, ReplisPeint, SourceImage } from './atlas';
 
 /** Pixels d'image par pixel de plan : de quoi rester net jusqu'au zoom d'un double-tap. */
@@ -31,6 +33,8 @@ export const DENSITE_REPLI = 1.5;
 /** Les formes que le rendu pose lui-même, par identifiant. */
 export const FORMES = Object.freeze({
   ombre: 'forme_ombre',
+  /** L'écume sous un navire, à la place de l'ombre (`ECUME_NAVIRE`). */
+  ecume: 'forme_ecume',
   mat: 'forme_mat',
   drapeau: 'forme_drapeau',
   pv: (pv: number, agie: boolean): string => `forme_pv_${Math.max(0, Math.min(9, Math.round(pv)))}${agie ? '_a' : ''}`,
@@ -71,13 +75,14 @@ export type IdentiteRepli =
   | { famille: 'unite'; cle: string }
   | { famille: 'batiment'; cle: string }
   | { famille: 'decor'; essence: EssenceDecor | 'rocher'; saison: string }
-  | { famille: 'forme'; forme: 'ombre' | 'mat' | 'drapeau' }
+  | { famille: 'forme'; forme: 'ombre' | 'ecume' | 'mat' | 'drapeau' }
   | { famille: 'pv'; pv: number; agie: boolean }
   | { famille: 'marque'; genre: 'designee' | 'menacee' };
 
 /** Lit un identifiant de repli ; `null` pour ce qu'on ne sait pas dessiner. */
 export function identiteRepli(id: string): IdentiteRepli | null {
   if (id === FORMES.ombre) return { famille: 'forme', forme: 'ombre' };
+  if (id === FORMES.ecume) return { famille: 'forme', forme: 'ecume' };
   if (id === FORMES.mat) return { famille: 'forme', forme: 'mat' };
   if (id === FORMES.drapeau) return { famille: 'forme', forme: 'drapeau' };
   const pv = /^forme_pv_(\d)(_a)?$/.exec(id);
@@ -468,7 +473,38 @@ function dessinDecor(essence: EssenceDecor | 'rocher', saison: string): Dessin {
 /** L'orange du matériel à l'essai : le badge des Gris, et la couleur de ce qu'ils visent. */
 const ORANGE_MARQUE = '#ff9a2e';
 
+/** Une couleur `#rrggbb` du contrat en `rgba()` CSS, à une opacité donnée. */
+function rgba(hex: string, alpha: number): string {
+  const n = Number.parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${alpha})`;
+}
+
 function dessinForme(identite: Extract<IdentiteRepli, { famille: 'forme' | 'pv' | 'marque' }>, e: readonly [number, number, number] | null): Dessin {
+  if (identite.famille === 'forme' && identite.forme === 'ecume') {
+    const rx = (ECUME_NAVIRE.largeur * L) / 2;
+    const ry = (ECUME_NAVIRE.hauteur * P) / 2;
+    const c = ECUME_NAVIRE.couleur;
+    return {
+      gauche: rx + 2, droite: rx + 2, haut: ry + 2, bas: ry + 2,
+      peindre(g) {
+        // Un anneau doux plus qu'un disque : le cœur est sous la coque, le bord
+        // dessine la ligne de flottaison et s'efface dans l'eau. L'opacité de
+        // l'écume est celle de l'instance (`ECUME_NAVIRE.opacite`).
+        g.save();
+        g.scale(1, ry / rx);
+        const d = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+        d.addColorStop(0, rgba(c, 0.3));
+        d.addColorStop(0.62, rgba(c, 0.85));
+        d.addColorStop(0.82, rgba(c, 0.45));
+        d.addColorStop(1, rgba(c, 0));
+        g.fillStyle = d;
+        g.beginPath();
+        g.arc(0, 0, rx, 0, Math.PI * 2);
+        g.fill();
+        g.restore();
+      },
+    };
+  }
   if (identite.famille === 'forme' && identite.forme === 'ombre') {
     const rx = (OMBRE_UNITE.largeur * L) / 2;
     const ry = (OMBRE_UNITE.hauteur * P) / 2;

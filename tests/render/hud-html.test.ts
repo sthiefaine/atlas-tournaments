@@ -12,7 +12,10 @@ import {
 } from '../../src/engine/index';
 import { nombre } from '../../src/i18n/index';
 import { ambiance } from '../../src/render/ambiance';
+import { paletteArmeeParDefaut } from '../../src/render/couleur-equipe';
+import { monterJeu } from '../../src/render/jeu';
 import { PALETTES } from '../../src/render/palettes';
+import type { Rendu } from '../../src/render/rendu';
 import {
   HAUTEUR_MINIMALE_RAIL, LARGEUR_MINIMALE_RAIL, monterHudHtml, poserEmplacements, railTient,
   type ApiHud, type VueJeu,
@@ -21,7 +24,8 @@ import { nomTerrain, nomUnite } from '../../src/render/libelles';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
 import { DUREES, MISE_EN_SCENE, ecrirePartition, type Partition } from '../../src/render/partition';
 import { chiffreSigne, MS_FIXE, rolesDesChiffres } from '../../src/render/scenes-html';
-import { validerMapDef, type CleUnite } from '../../src/schemas/index';
+import { resoudreCommandantsScenario } from '../../src/content/commandants-jeu';
+import { validerMapDef, validerScenario, type CampId, type CleUnite, type Palette } from '../../src/schemas/index';
 import { partiePersonnalisee, scenePersonnalisee } from '../engine/aides';
 
 class FauxElement {
@@ -367,7 +371,10 @@ function horlogeFactice(): HorlogeScenes & { avancer(ms: number): void } {
 /** De quoi mener n'importe quelle scène à son terme en une image. */
 const FIN_DES_SCENES = 10_000;
 
-function hudAvecScenes(etat: EtatPartie, versEcran: () => { x: number; y: number } | null, couper?: () => void) {
+function hudAvecScenes(
+  etat: EtatPartie, versEcran: () => { x: number; y: number } | null, couper?: () => void,
+  paletteArmee?: ApiHud['paletteArmee'],
+) {
   const { conteneur } = document();
   const horloge = horlogeFactice();
   const hud = monterHudHtml(conteneur as unknown as HTMLElement, {
@@ -375,7 +382,7 @@ function hudAvecScenes(etat: EtatPartie, versEcran: () => { x: number; y: number
     t: (cle) => cle,
     finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
     jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
-    versEcran, couper,
+    versEcran, couper, ...(paletteArmee ? { paletteArmee } : {}),
   }, horloge);
   return { hud, conteneur, horloge };
 }
@@ -608,7 +615,7 @@ test('une partition sans geste pour le HUD se résout aussitôt, sans rien crée
 /** Monte un HUD sur cette vue et rend ses emplacements, avec de quoi démonter. */
 function hudSur(
   vue: () => VueJeu, taille?: { largeur: number; hauteur: number },
-  restreint: Pick<ApiHud, 'seulement'> = {},
+  restreint: Pick<ApiHud, 'seulement' | 'paletteArmee'> = {},
 ): {
   slots: Map<string, FauxElement>;
   /** La classe de la zone qui porte cet emplacement : hud-carte, hud-rail, ou la racine. */
@@ -2027,4 +2034,103 @@ test('le radar dit ce qu’il apporte — sa vue et son brouillage — et rien d
   assert.doesNotMatch(station.slots.get('partie')!.innerHTML, /radar/);
   station.demonter();
   assert.doesNotMatch(monter(vueDe(etat, { x: 1, y: 0 })).slots.get('inspection')!.innerHTML, /radar-aide/, 'une usine n’a pas d’aide radar');
+});
+
+// ---------------------------------------------------------------------------
+// La couleur d'une armée : celle que la carte peint
+// ---------------------------------------------------------------------------
+
+/**
+ * Des palettes d'armée comme la peau en pose : la France projetée au camp 0, et
+ * au camp 1 un rouge qui n'est pas celui de la palette du camp — de quoi voir
+ * que le HUD lit la peau et non `palettes.ts`.
+ */
+const ARMEES: Readonly<Record<CampId, Palette>> = {
+  0: { main: '#4578ec', dark: '#1b3a86', light: '#8fb2f2' },
+  1: { main: '#d44c40', dark: '#742019', light: '#f4d2ce' },
+  2: PALETTES.vert,
+  3: { ...PALETTES.or, main: '#d9aa23' },
+};
+const paletteArmee = (camp: CampId | null): Palette => (camp === null ? PALETTES.neutre : ARMEES[camp]);
+
+test('une armée a la même couleur sur la carte et dans le HUD : les jetons viennent de la peau', () => {
+  const etat = partie();
+  const sienne = etat.unites.find((u) => u.camp === 1);
+  assert.ok(sienne);
+  const h = hudSur(() => vueDe(etat, { x: sienne.x, y: sienne.y }), { largeur: 1400, hauteur: 900 }, { paletteArmee });
+  const racine = h.conteneur.children.find((e) => e.className === 'atlas-hud')!;
+  assert.equal(racine.style['--camp'], ARMEES[0].main, 'le camp 0 joue : le bleu de la France, pas celui du camp');
+  assert.equal(racine.style['--camp-voile'], `${ARMEES[0].main}24`);
+  // Le panneau d'unité porte la couleur de l'armée de la pièce regardée.
+  assert.match(h.slots.get('inspection')!.innerHTML, new RegExp(`class="p inspect"[^>]*style="--camp:${ARMEES[1].main}"`));
+  etat.campCourant = 1;
+  h.rafraichir();
+  assert.equal(racine.style['--camp'], ARMEES[1].main, 'le camp 1 joue : son rouge à lui');
+  h.demonter();
+
+  // Le bilan de fin : chaque colonne dans la couleur de son armée.
+  const fin = partie();
+  fin.partie = { ...fin.partie, terminee: true, vainqueur: 0, nul: false };
+  const b = hudSur(() => ({ ...vueDe(fin, { x: 0, y: 0 }), phase: 'fin' }), { largeur: 1400, hauteur: 900 }, { paletteArmee });
+  const teintes = [...b.slots.get('fin')!.innerHTML.matchAll(/--teinte:([^";]+)/g)].map((m) => m[1]);
+  assert.ok(teintes.length > 0);
+  assert.deepEqual([...new Set(teintes)].sort(), [ARMEES[0].main, ARMEES[1].main].sort());
+  b.demonter();
+});
+
+test('sans peau qui la dise, le HUD prend la palette du camp, projetée — jamais la brute', () => {
+  const etat = partie();
+  const h = hudSur(() => vueDe(etat, { x: 0, y: 0 }), { largeur: 1400, hauteur: 900 });
+  const racine = h.conteneur.children.find((e) => e.className === 'atlas-hud')!;
+  assert.equal(racine.style['--camp'], paletteArmeeParDefaut(0).main);
+  h.demonter();
+});
+
+test('le splash d’un pouvoir et son buste prennent la couleur de l’armée, comme la carte', async () => {
+  const etat = partie();
+  const { hud, conteneur, horloge } = hudAvecScenes(etat, () => ({ x: 5, y: 5 }), undefined, paletteArmee);
+  const fin = hud.jouer({
+    gestes: [{ genre: 'pouvoir', camp: 1, niveau: 'normal', nom: 'commandant.cmd_test.pouvoir', debut: 0, duree: DUREES.pouvoir }],
+    duree: DUREES.pouvoir,
+  });
+  horloge.avancer(10);
+  const splash = scenes(conteneur).children.find((e) => e.className === 'atlas-splash');
+  assert.ok(splash);
+  assert.equal(splash.style['--teinte'], ARMEES[1].main);
+  assert.match(splash.innerHTML, new RegExp(`fill="${ARMEES[1].main}"`), 'le buste porte la couleur de son armée');
+  assert.match(splash.innerHTML, new RegExp(`fill="${ARMEES[1].dark}"`), 'et son sombre');
+  horloge.avancer(FIN_DES_SCENES);
+  await fin;
+  hud.demonter();
+});
+
+test('monterJeu donne au HUD la palette que la peau peint', () => {
+  // La partie de démonstration, montée pour de bon sur une peau muette qui
+  // déclare ses couleurs d'armée : c'est ce que fait la peau 2D.
+  const vs = validerScenario(JSON.parse(readFileSync(path.resolve('content/scenarios/demo.json'), 'utf8')) as unknown);
+  assert.ok(vs.ok);
+  const vc = validerMapDef(JSON.parse(readFileSync(path.resolve(`content/cartes/${vs.valeur.carteCle}.json`), 'utf8')) as unknown);
+  assert.ok(vc.ok);
+  const peau = (avecPalette: boolean): Rendu => ({
+    cle: '2d', canvas: null,
+    monter: () => undefined, afficher: () => undefined, animer: () => Promise.resolve(),
+    versMonde: () => null, versEcran: () => null, brancher: () => () => undefined,
+    msParImage: () => 0, capturer: () => null, cadrer: () => undefined, demonter: () => undefined,
+    ...(avecPalette ? { paletteArmee } : {}),
+  });
+  const monter = (avecPalette: boolean): string => {
+    const { conteneur } = document();
+    const jeu = monterJeu(conteneur as unknown as HTMLElement, {
+      scenario: vs.valeur, carte: vc.valeur, catalogue: chargerCatalogue(vs.valeur.catalogueVersion),
+      commandants: resoudreCommandantsScenario(vs.valeur), graine: 'demo:1', adversaire: () => [],
+      fabriqueRendu: () => peau(avecPalette), hud: true, dialogues: false, debug: false,
+      vitesseAnimations: 'instantanee', animationsReduites: true,
+    });
+    const racine = conteneur.children.find((e) => e.className === 'atlas-hud');
+    const camp = String(racine?.style['--camp'] ?? '');
+    jeu.demonter();
+    return camp;
+  };
+  assert.equal(monter(true), ARMEES[0].main, 'la couleur de la peau');
+  assert.equal(monter(false), paletteArmeeParDefaut(0).main, 'sans peau qui la dise : celle du camp, projetée');
 });

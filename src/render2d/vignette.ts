@@ -14,7 +14,8 @@
  *
  * - la couleur d'équipe : `couleur × mix(1, équipe, masque)`, la formule du
  *   nuanceur du lot (`lot.ts`), sur les mêmes octets sRGB ; la couleur est celle
- *   que la peau choisit (`couleurEquipe`, la règle de `creerRendu2d`) ;
+ *   que la peau choisit pour un camp seul (`couleurEquipe`, qui appelle la règle
+ *   d'`equipes.ts` : la nation projetée dans la fenêtre lisible) ;
  * - le pivot : le point de contact au sol tombe où on le pose, à `echelle`
  *   pixels de plan par pixel d'image, et la gauche est la droite retournée
  *   autour de lui — le calcul d'`empaqueter` ;
@@ -23,7 +24,8 @@
  * - le repli : quand l'entrée manque, ou tant que sa page n'est pas arrivée, le
  *   dessin de `replis.ts`, peint à la couleur d'équipe — la règle de l'atlas,
  *   « tout se joue sans aucune image cuite » ;
- * - l'ombre d'une unité, que la cuisson ne cuit pas (`OMBRE_UNITE`).
+ * - l'ombre d'une unité, que la cuisson ne cuit pas (`OMBRE_UNITE`), et l'écume
+ *   d'un navire à sa place (`ECUME_NAVIRE`) — la règle de `solSousUnite`.
  *
  * Ce qu'elle ne reproduit pas : la nuit (l'émission des fenêtres), le
  * brouillard, l'éclat d'un coup. Une vignette montre une pièce au grand jour.
@@ -40,39 +42,35 @@
  * toiles d'une page, parle au DOM.
  */
 
-import { chargerStyleNation } from '../assets/styles';
 import type { Catalogue } from '../engine/index';
-import { lireCouleur } from '../render/ambiance';
-import { paletteDe } from '../render/palettes';
 import type { Pinceau } from '../render/sprites/formes';
-import type { CampId, CodePays } from '../schemas/types';
+import type { CampId, CleUnite, CodePays, Domaine } from '../schemas/types';
 import {
   cadreAuTemps, chargerImageNavigateur, chargerManifeste, hexEquipe,
   type ChargeurImage, type PeintreRepli, type SourceImage,
 } from './atlas';
 import {
-  CHEMIN_MANIFESTE, CLIPS, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, VUES,
+  CHEMIN_MANIFESTE, CLIPS, ECUME_NAVIRE, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, VUES,
   type AnimationSprite, type CadreSprite, type EntreeSprite, type FamilleSprite, type ManifesteSprites,
   type PageSprite,
 } from './contrat';
-import { creerPeintreRepli, fabriqueToileDocument, FORMES, type FabriqueToile } from './replis';
-import type { Rvb } from './unites';
+import { couleurEquipeSeule, type Rvb } from './equipes';
+import { creerPeintreRepli, fabriqueToileDocument, FORMES, identiteRepli, type FabriqueToile } from './replis';
 
 // ---------------------------------------------------------------------------
 // 1. La couleur, et la teinte
 // ---------------------------------------------------------------------------
 
 /**
- * La couleur d'équipe d'un camp, sRGB de 0 à 1 : la règle de la peau
- * (`creerRendu2d`) — le style de la nation (`palette.main`), la palette du camp
- * sans nation, le gris neutre sans camp. Un bâtiment neutre reçoit ce gris et
+ * La couleur d'équipe d'un camp, sRGB de 0 à 1 : la règle de la peau pour un
+ * camp seul (`equipes.ts`, `couleurEquipeSeule`) — la nation projetée dans la
+ * fenêtre lisible, la couleur du camp sans nation, le gris neutre sans camp.
+ * Elle l'appelle, elle ne la recopie plus. Un bâtiment neutre reçoit ce gris et
  * non « aucune couleur » : cuites en blanc, ses zones d'équipe se liraient
  * blanches, là où la 3D laissait un albédo gris (`sprites-cuisson.md`).
  */
 export function couleurEquipe(camp: CampId | null, pays?: CodePays | null): Rvb {
-  const style = camp !== null && pays ? chargerStyleNation(pays) : null;
-  const c = lireCouleur(style?.palette.main ?? paletteDe(camp).main);
-  return [c.r / 255, c.v / 255, c.b / 255];
+  return couleurEquipeSeule(camp, pays);
 }
 
 /**
@@ -289,6 +287,13 @@ export interface DependancesVignettes {
   peintre: PeintreRepli;
   /** Le plafond de pixels gardés, compté à part pour les images extraites et pour leurs teintes. */
   plafondPixels?: number;
+  /**
+   * Le domaine d'une unité du catalogue, `null` si on ne la connaît pas : un
+   * navire reçoit l'écume et non l'ombre, et la vignette le sait d'elle-même
+   * (`Vignettes.flotte`) sans que chaque page ait à le lui dire. Absent : rien
+   * ne flotte, sauf une piste qui le déclare (`PisteVignette.ombre.mer`).
+   */
+  domaine?(cle: CleUnite): Domaine | null;
 }
 
 /**
@@ -534,6 +539,24 @@ export class Vignettes {
     return this.repli(FORMES.ombre, null);
   }
 
+  /** L'écume qu'un rendu pose sous un navire, à la place de l'ombre : une forme du rendu, elle aussi. */
+  ecume(): ImagePrete | null {
+    return this.repli(FORMES.ecume, null);
+  }
+
+  /**
+   * Vrai si l'entrée — ou l'identifiant attendu, pour un repli — est une unité
+   * qui **flotte** : le catalogue le dit (`DependancesVignettes.domaine`), la
+   * vignette pose alors l'écume là où le jeu la pose.
+   */
+  flotte(id: string): boolean {
+    if (!this.deps.domaine) return false;
+    const e = this.entree(id);
+    const identite = e ? null : identiteRepli(id);
+    const cle = e ? (e.famille === 'unite' ? e.cle : null) : identite?.famille === 'unite' ? identite.cle : null;
+    return cle !== null && this.deps.domaine(cle as CleUnite) === 'mer';
+  }
+
   /** Oublie tout ce qui a été lu, extrait, teint ou peint. */
   vider(): void {
     this.extraites.clear();
@@ -592,6 +615,17 @@ export function peindreOmbre(g: Pinceau, ombre: ImagePrete, x: number, y: number
   peindreImage(g, ombre, x + dx, y + dy, k * echelle, false, OMBRE_UNITE.opacite * (air ? OMBRE_VOL.opacite : 1));
 }
 
+/**
+ * Peint l'écume d'un navire sous son pivot (`ECUME_NAVIRE`), comme la peau la
+ * pose à la place de l'ombre : centrée sur le pied, à la taille de la
+ * silhouette. Une vignette montre une pièce au grand jour : pas de nuit ici.
+ */
+export function peindreEcume(g: Pinceau, ecume: ImagePrete, x: number, y: number, k: number, taille = 1): void {
+  const dx = ECUME_NAVIRE.decalageX * PIXELS_PAR_CASE * k;
+  const dy = ECUME_NAVIRE.decalageY * PIXELS_PAR_CASE * SIN_TANGAGE * k;
+  peindreImage(g, ecume, x + dx, y + dy, k * taille, false, ECUME_NAVIRE.opacite);
+}
+
 // ---------------------------------------------------------------------------
 // 6. Dans un navigateur : la réserve de la page, et le lecteur de ses toiles
 // ---------------------------------------------------------------------------
@@ -607,7 +641,12 @@ let reserve: Vignettes | null = null;
 export function reserveNavigateur(doc: Document, catalogue: () => Catalogue | null): Vignettes {
   if (reserve) return reserve;
   const fabrique = fabriqueToileDocument(doc);
-  const r = new Vignettes({ charger: chargerImageNavigateur, fabrique, peintre: creerPeintreRepli(fabrique, catalogue) });
+  const r = new Vignettes({
+    charger: chargerImageNavigateur, fabrique, peintre: creerPeintreRepli(fabrique, catalogue),
+    // Le catalogue de la page dit ce qui flotte : l'écume sous un navire, sans
+    // que le carnet ni la vitrine aient à le déclarer piste par piste.
+    domaine: (cle) => catalogue()?.unites[cle]?.domaine ?? null,
+  });
   reserve = r;
   void chargerManifeste(CHEMIN_MANIFESTE).then((m) => { if (m) r.poserManifeste(m); });
   return r;
@@ -622,8 +661,12 @@ export interface PisteVignette {
   animation: number;
   equipe: Rvb | null;
   miroir?: boolean;
-  /** L'ombre d'unité à poser sous le pivot ; absente : aucune. */
-  ombre?: { taille: number; air: boolean } | null;
+  /**
+   * L'ombre d'unité à poser sous le pivot ; absente : aucune. Sous un navire,
+   * c'est l'écume qui se pose (`mer`, ou à défaut ce que la réserve sait de
+   * l'entrée : `Vignettes.flotte`).
+   */
+  ombre?: { taille: number; air: boolean; mer?: boolean } | null;
   /** Pixels CSS par pixel de plan imposés ; absent : l'image remplit la toile. */
   zoom?: number;
   /**
@@ -739,8 +782,16 @@ export class LecteurVignettes {
             marge: (p.marge ?? 8) * ratio,
             ...(p.zoom !== undefined ? { zoom: p.zoom * ratio } : {}),
           });
-          const ombre = p.ombre ? this.reserve.ombre() : null;
-          if (p.ombre && ombre) peindreOmbre(g, ombre, place.x, place.y, place.k, p.ombre.taille, p.ombre.air);
+          if (p.ombre) {
+            // L'ombre sur la case, ou l'écume sous un navire : la règle de la peau.
+            if (p.ombre.mer ?? this.reserve.flotte(p.id)) {
+              const ecume = this.reserve.ecume();
+              if (ecume) peindreEcume(g, ecume, place.x, place.y, place.k, p.ombre.taille);
+            } else {
+              const ombre = this.reserve.ombre();
+              if (ombre) peindreOmbre(g, ombre, place.x, place.y, place.k, p.ombre.taille, p.ombre.air);
+            }
+          }
           peindreImage(g, peinte, place.x, place.y, place.k, p.miroir === true);
         }
       }

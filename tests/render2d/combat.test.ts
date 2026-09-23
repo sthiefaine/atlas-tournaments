@@ -15,7 +15,8 @@ import {
   type Combat2d, type DependancesCombat2d, type Duel, type GabaritFormation,
 } from '../../src/render2d/combat';
 import { ARBRES } from '../../src/render2d/sol/decor';
-import { COS_TANGAGE, PIXELS_PAR_CASE, SIN_TANGAGE, type EntreeSprite } from '../../src/render2d/contrat';
+import { COS_TANGAGE, ECUME_NAVIRE, PIXELS_PAR_CASE, SIN_TANGAGE, type EntreeSprite } from '../../src/render2d/contrat';
+import { FORMES } from '../../src/render2d/replis';
 import type { EncartSprites } from '../../src/render2d/index';
 import type { Pose } from '../../src/render2d/lot';
 import type { Rvb } from '../../src/render2d/unites';
@@ -683,4 +684,19 @@ test('les clips de profil d’une entrée : leurs index, et un clip absent retom
   assert.equal(tous?.tir.boucle, false);
   const seul = clipsProfil(entreeCuite(id, 'repos_seul'));
   assert.deepEqual([seul?.tir.index, seul?.hors_jeu.index], [PROFIL.repos, PROFIL.repos], 'jamais la vue de trois quarts');
+});
+
+test('un duel en mer : l’écume sous chaque navire, l’ombre sous ce qui n’en est pas un', () => {
+  // La règle de la carte (`solSousUnite`) : une ombre sombre sur la mer noyait
+  // la coque, l'écume la détache de l'eau — sur l'écran de combat aussi.
+  const e = essai(unDuel({ typeA: 'helico', typeC: 'barge' }), { terrains: { '2,3': 'mer', '3,3': 'mer' } });
+  e.a(0);
+  const sous = (cote: 'gauche' | 'droite'): Pose[] => e.poses().filter((p) => p.calque === 'ombres_unites'
+    && (p.instance.opacite ?? 1) > 0 && (cote === 'gauche' ? p.instance.x < 0 : p.instance.x > 0));
+  const helico = sous('gauche');
+  const barge = sous('droite');
+  assert.ok(helico.length > 0 && barge.length > 0);
+  assert.ok(helico.every((p) => p.instance.entree === FORMES.ombre), 'l’hélicoptère, au-dessus de la mer, porte une ombre');
+  assert.ok(barge.every((p) => p.instance.entree === FORMES.ecume), 'la barge, l’écume');
+  assert.ok(barge.every((p) => Math.abs((p.instance.opacite ?? 0) - ECUME_NAVIRE.opacite) < 1e-9));
 });

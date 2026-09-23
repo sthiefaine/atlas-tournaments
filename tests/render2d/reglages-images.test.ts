@@ -147,8 +147,10 @@ const GRIS_NEUTRE = [0xb9 / 255, 0xbe / 255, 0xc7 / 255];
 test('la couleur d’équipe : la nation d’un camp, le gris neutre sans propriétaire — jamais le blanc', () => {
   assert.deepEqual([...couleurEquipeDe(null, null)], GRIS_NEUTRE);
   assert.deepEqual([...couleurEquipeDe(null, 'fr')], GRIS_NEUTRE, 'un pays ne colore pas un bâtiment sans propriétaire');
-  assert.deepEqual([...couleurEquipeDe(0, 'fr')], [0x2f / 255, 0x5f / 255, 0xd0 / 255], 'palette.main du style français');
-  assert.deepEqual([...couleurEquipeDe(1, 'lu')], [0x3a / 255, 0xa0 / 255, 0xc8 / 255]);
+  // Le bleu français (#2f5fd0) noircissait à l'ombre : l'écran le projette
+  // dans la fenêtre lisible (charte des figurines §3.11, `couleur-equipe.ts`).
+  assert.deepEqual([...couleurEquipeDe(0, 'fr')], [0x45 / 255, 0x78 / 255, 0xec / 255], 'palette.main du style français, projetée');
+  assert.deepEqual([...couleurEquipeDe(1, 'lu')], [0x3a / 255, 0xa0 / 255, 0xc8 / 255], 'déjà lisible : telle quelle');
   // Sans nation, la palette du camp.
   assert.deepEqual([...couleurEquipeDe(1, null)], [0xe0 / 255, 0x4b / 255, 0x45 / 255]);
 });
