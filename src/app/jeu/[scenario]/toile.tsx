@@ -11,7 +11,11 @@ import { chargerCatalogue, VERSION_MOTEUR, sontAllies, unitesVues, type EtatPart
 import { commandantsDuScenario, lireSauvegarde, monterJeu, type Jeu } from '@/render/index';
 import { lignesPouvoir, nomTerrain, nomUnite } from '@/render/libelles';
 import { textesObjectifs } from '@/render/objectifs';
-import { creerRendu3d } from '@/render3d/index';
+import type { CleRendu, Rendu } from '@/render/rendu';
+import { creerRendu2d } from '@/render2d/index';
+// La 3D ne s'importe qu'**à la demande** (`import()` plus bas) : la route 2D
+// n'embarque ni three ni le moteur WebGPU. Un import de type s'efface au build.
+import type { OptionsRendu3d } from '@/render3d/index';
 import type { CleIllustration, MapDef, Mode, Scenario, StrategieIa } from '@/schemas/index';
 import campagne from '../../../../content/campagne.json';
 import { PREFERENCES_PAR_DEFAUT, cleSauvegardeDe, lireDifficulte, lirePreferences, ecrirePreferences, profilActif, type Preferences, type Profil } from '../../preferences';
@@ -70,6 +74,22 @@ const MS_PAS_MAXIMAL = 200;
  * pour que le bilan n'écrive pas un zéro nu qu'on ne saurait plus relire.
  */
 const CAMP_JOUEUR = 0;
+
+/**
+ * La peau demandée par l'adresse : `?rendu=2d` compose les images cuites
+ * (`render2d/`, décision du 23 septembre 2026), toute autre valeur garde la 3D,
+ * peau par défaut jusqu'à la bascule de la seconde vague.
+ */
+function peauDemandee(recherche: string): CleRendu {
+  return new URLSearchParams(recherche).get('rendu') === '2d' ? '2d' : '3d';
+}
+
+/**
+ * La fabrique de la peau, une fois son module arrivé. La fabrique de
+ * `monterJeu` est synchrone : le module 3D, importé à la demande, doit être là
+ * **avant** le montage, d'où cet état qui le retient.
+ */
+type FabriquePeau = { cle: '2d' } | { cle: '3d'; creer: (options: OptionsRendu3d) => Rendu };
 
 /** Le nombre, écrit comme la langue l'écrit. Aucun texte, seulement du format. */
 function nombre(locale: string, n: number): string {
@@ -229,6 +249,24 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
   // pour que le changement parte avec la même image que le montage.
   useLayoutEffect(() => { rappelChargement.current?.('plateau'); }, []);
 
+  // La peau : la 2D est déjà dans ce module, la 3D se télécharge seulement si
+  // l'adresse la demande. Rien ne se monte avant qu'elle soit là.
+  const [peau, setPeau] = useState<FabriquePeau | null>(null);
+  useEffect(() => {
+    if (peauDemandee(window.location.search) === '2d') {
+      setPeau({ cle: '2d' });
+      return undefined;
+    }
+    let vivante = true;
+    import('@/render3d/index')
+      .then((m) => { if (vivante) setPeau({ cle: '3d', creer: m.creerRendu3d }); })
+      .catch((cause: unknown) => {
+        console.error('Rendu 3D introuvable', cause);
+        if (vivante) { setErreur(true); rappelChargement.current?.('pret'); }
+      });
+    return () => { vivante = false; };
+  }, []);
+
   // On entre **directement** en jeu : cliquer « jouer » sur l'accueil doit ouvrir
   // un plateau, pas une seconde fiche à valider. Une partie en cours se reprend
   // d'elle-même ; l'objectif, le tutoriel et « recommencer » restent à un clic,
@@ -278,7 +316,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
 
   useEffect(() => {
     const conteneur = conteneurRef.current;
-    if (!conteneur || depart === null || cleSauvegarde === null) return undefined;
+    if (!conteneur || depart === null || cleSauvegarde === null || peau === null) return undefined;
     // Le banc choisi à l'instant passe en dernier : `graineAube` lit la dernière
     // décision d'une source, et c'est lui qui doit gagner sur une entrée plus
     // ancienne du stockage.
@@ -319,24 +357,28 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
         // La qualité d'affichage et la réduction des animations sont des
         // réglages du joueur : la page les lit et les donne à la peau, qui ne
         // connaît pas `localStorage`.
-        fabriqueRendu: () => creerRendu3d({
-          audio,
-          biome: carte.biome,
-          // La nation d'en face ne suit **pas** celle du joueur : elle le
-          // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
-          // était rare et toujours luxembourgeoise ; avec le vestiaire elle
-          // devient l'ordinaire, et l'adversaire changeait de couleurs chaque
-          // fois qu'on changeait d'entraîneur. Il garde le Luxembourg, sauf
-          // quand le joueur le lui prend.
-          paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
-          qualite: preferences.qualite,
-          animationsReduites: preferences.animationsReduites,
-          // Le moteur s'initialise après le montage : s'il ne démarre pas —
-          // ni WebGPU ni WebGL 2 n'ont voulu du canevas —, c'est le même écran
-          // que pour un montage qui lève, au lieu d'un plateau noir. L'écran de
-          // chargement se retire alors : il n'y a plus rien à attendre.
-          surEchec: () => { setErreur(true); direChargement('pret'); },
-        }),
+        // La peau choisie par l'adresse (`peauDemandee`) ; `jeu.ts` ne sait pas
+        // laquelle il pilote, et la clé qu'il passe n'est qu'un nom.
+        fabriqueRendu: () => {
+          const commun = {
+            audio,
+            biome: carte.biome,
+            // La nation d'en face ne suit **pas** celle du joueur : elle le
+            // faisait — `incarnation ? 'fr' : 'lu'` — parce que l'incarnation
+            // était rare et toujours luxembourgeoise ; avec le vestiaire elle
+            // devient l'ordinaire, et l'adversaire changeait de couleurs chaque
+            // fois qu'on changeait d'entraîneur. Il garde le Luxembourg, sauf
+            // quand le joueur le lui prend.
+            paysParCamp: { 0: paysJoueur, 1: paysJoueur === 'lu' ? 'fr' : 'lu' },
+            animationsReduites: preferences.animationsReduites,
+            // Le moteur s'initialise après le montage : s'il ne démarre pas —
+            // ni WebGPU ni WebGL 2 n'ont voulu du canevas —, c'est le même écran
+            // que pour un montage qui lève, au lieu d'un plateau noir. L'écran de
+            // chargement se retire alors : il n'y a plus rien à attendre.
+            surEchec: () => { setErreur(true); direChargement('pret'); },
+          };
+          return peau.cle === '2d' ? creerRendu2d(commun) : peau.creer({ ...commun, qualite: preferences.qualite });
+        },
         finPersonnalisee: Boolean(mission),
         // Les commandants parlent sur la carte, pas dans une modale : c'est la
         // grammaire d'Advance Wars, et elle ne vaut que pour une mission — et
@@ -418,7 +460,7 @@ export default function Toile({ scenario, carte, locale, surChargement }: Propri
       if (jeuRef.current === partie) jeuRef.current = null;
       partie.demonter();
     };
-  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut]);
+  }, [depart, scenario, carte, locale, tentative, mission, preferences, cleSauvegarde, essaiAube, mode, index, bancChoix, commandantChoix, commandantDefaut, peau]);
 
   const reprendre = (choix: Depart) => { setErreur(false); setEtat(null); setDepart(choix); setVoirBriefing(false); setVoirAide(false); };
   // Une nouvelle partie d'une épreuve à bancs repasse par le choix : démonter

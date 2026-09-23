@@ -387,6 +387,13 @@ export interface CoucheSol extends CoucheGl {
   volumes(): readonly InstanceSprite[];
   /** Vrai tant qu'une transition (marée, saison) se joue : la boucle continue. */
   enMouvement(): boolean;
+  /**
+   * Vrai si le sol porte une animation d'ambiance — l'eau qui ondule — qui
+   * mérite une image au pas d'ambiance du moteur (12 par seconde), même quand
+   * rien d'autre ne bouge. Facultatif : absent ou faux, le sol ne réclame rien,
+   * et sous animations réduites il doit rendre faux.
+   */
+  ambiant?(): boolean;
 }
 
 /** Ce que `render2d/sol/index.ts` exporte sous le nom `creerSol`. */
