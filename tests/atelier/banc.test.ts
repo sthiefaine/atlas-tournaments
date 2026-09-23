@@ -16,8 +16,10 @@ import {
   HAUTEUR_GRANDE, LARGEUR_GRANDE, PARAMETRES_GRANDE, PORTS_BANC, PRESETS_AMBIANCE, STATION_ADVERSE_BANC,
   UNITES_GRANDE, UNITES_NAVALES_BANC, VILLE_DESAFFECTEE_BANC,
   LARGEUR_BANC, RANGS, UNITES_BANC, VERSION_CATALOGUE_BANC, carteBanc, carteGrande, catalogueSilhouettes, decoderVue,
-  encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc, type VueBanc,
+  encoderVue, rejouer, scenarioBanc, surbrillancesBanc, uniteSousCase, visiblesBanc, vueInspectionBanc, type VueBanc,
 } from '../../src/app/atelier/banc';
+import { ambiance } from '../../src/render/ambiance';
+import type { VueInteraction } from '../../src/render/rendu';
 import { genererCarte } from '../../src/mapgen/index';
 import { chargerCatalogueUnites } from '../../src/content/index';
 import scenarioDemo from '../../content/scenarios/demo.json';
@@ -526,4 +528,49 @@ test('elle porte trente unités, quinze par camp, un mélange de partie, sur de 
   const etat = creerPartie(sceneDepuis(scenarioBanc(s.valeur), carte, []), CAT, 'banc:1');
   assert.ok(rejouer(etat, 'deplacement'), 'Déplacer joue sur la grande carte');
   assert.ok(rejouer(etat, 'attaque'), 'Tirer joue sur la grande carte');
+});
+
+test('un clic désigne l’unité de la case, jamais une passagère, et rien sur une case vide', () => {
+  const e = etatBanc();
+  const [porteur, passagere] = e.unites.filter((u) => u.camp === 0);
+  assert.ok(porteur && passagere);
+  assert.equal(uniteSousCase(e, { x: porteur.x, y: porteur.y })?.id, porteur.id);
+  // Le rang des surbrillances basses ne porte aucune pièce : un clic y referme.
+  assert.equal(uniteSousCase(e, { x: 0, y: RANGS.surbrillancesBasses }), null);
+  // Une passagère partage la case de son transport et vient **avant** lui dans
+  // le tableau : c'est pourtant le transport qu'on clique.
+  const embarquee = { ...passagere, x: porteur.x, y: porteur.y, dansTransport: porteur.id };
+  const avecCale: EtatPartie = { ...e, unites: [embarquee, ...e.unites.filter((u) => u.id !== passagere.id)] };
+  assert.equal(uniteSousCase(avecCale, { x: porteur.x, y: porteur.y })?.id, porteur.id);
+});
+
+test('le panneau d’unité lit chaque pièce depuis son propre camp, le curseur avant la sélection', () => {
+  const e = etatBanc();
+  const bleue = e.unites.find((u) => u.camp === 0);
+  const rouge = e.unites.find((u) => u.camp === 1);
+  assert.ok(bleue && rouge);
+  const vide: Case = { x: 0, y: RANGS.surbrillancesBasses };
+  const base: VueInteraction = {
+    catalogue: CAT, ambiance: ambiance('printemps', 'jour', 'clair'), surbrillances: [], chemin: [],
+    curseur: null, selection: null, visibles: null, attenteIa: false, etiquetteQg: 'QG',
+  };
+  const lire = (curseur: Case | null, selection: string | null) => vueInspectionBanc(e, { ...base, curseur, selection }, 'fr');
+
+  assert.equal(lire(null, null).camp, 0);
+  assert.equal(lire(vide, rouge.id).camp, 1, 'sélectionnée, une pièce rouge se lit depuis le rouge');
+  assert.equal(lire({ x: rouge.x, y: rouge.y }, null).camp, 1, 'survolée aussi');
+  assert.equal(lire({ x: bleue.x, y: bleue.y }, rouge.id).camp, 0, 'le curseur passe avant la sélection, comme dans le panneau');
+
+  const v = lire(vide, bleue.id);
+  assert.equal(v.etat, e);
+  assert.equal(v.catalogue, CAT);
+  assert.equal(v.locale, 'fr');
+  assert.equal(v.selection, bleue.id);
+  assert.deepEqual(v.curseur, vide);
+  assert.equal(v.unitesVues, null, 'tout ce que le banc dessine, le panneau le nomme');
+  // Aucune commande de partie : ni menu, ni production, ni visée, ni tour adverse.
+  assert.equal(v.menu, null);
+  assert.equal(v.production, null);
+  assert.equal(v.visee, null);
+  assert.equal(v.attenteIa, false);
 });

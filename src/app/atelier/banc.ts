@@ -23,9 +23,9 @@
  */
 
 import { chargerPays } from '@/content/index';
-import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu } from '@/engine/index';
+import { cleCase, SEUIL_CAPTURE, type Catalogue, type EtatPartie, type EvenementJeu, type Unite } from '@/engine/index';
 import { genererCarte } from '@/mapgen/index';
-import type { Surbrillance } from '@/render/index';
+import type { Surbrillance, VueInteraction, VueJeu } from '@/render/index';
 import {
   BIOMES, CARACTERE_PAR_TERRAIN, METEOS, PHASES_JOUR, SAISONS,
   type BaseSilhouette, type Biome, type Case, type CampId, type CleTerrain, type CleUnite, type CodePays,
@@ -449,6 +449,41 @@ export function visiblesBanc(): Set<string> {
     for (let x = 0; x < LARGEUR_BANC / 2; x += 1) vues.add(cleCase({ x, y }));
   }
   return vues;
+}
+
+/**
+ * L'unité qu'un clic désigne sur le banc : celle qui se tient sur la case, hors
+ * cale — une unité embarquée n'est pas sur la carte, on ne la clique pas.
+ * `null` sur une case vide : cliquer à côté referme le panneau, comme en jeu.
+ */
+export function uniteSousCase(etat: EtatPartie, c: Case): Unite | null {
+  return etat.unites.find((u) => !u.dansTransport && u.x === c.x && u.y === c.y) ?? null;
+}
+
+/**
+ * La vue que lit le **HUD du jeu** pour composer son panneau d'unité
+ * (`render/hud-html.ts`). L'atelier ne récrit pas ce panneau : il le monte,
+ * restreint à lui seul (`ApiHud.seulement`). C'est donc la fiche de la partie —
+ * nom, points de vie, mouvement, munitions, carburant, ce que l'unité démolit et
+ * ce qui la démolit —, et une seconde fiche finirait par dire autre chose que
+ * la première.
+ *
+ * Le banc n'a pas de joueur : chaque unité se lit **depuis son propre camp**. Le
+ * camp de la vue est celui de l'unité montrée — sous le curseur d'abord, puis la
+ * sélectionnée, l'ordre même du panneau —, sans quoi une pièce rouge porterait
+ * l'astuce de la zone de danger, un geste que le banc ne connaît pas. Et toutes
+ * les unités posées se dessinent, brouillard ou non : le panneau les nomme
+ * toutes (`unitesVues` nul).
+ */
+export function vueInspectionBanc(etat: EtatPartie, vue: VueInteraction, locale: string): VueJeu {
+  const montree = (vue.curseur ? uniteSousCase(etat, vue.curseur) : null)
+    ?? (vue.selection ? etat.unites.find((u) => u.id === vue.selection) ?? null : null);
+  return {
+    etat, catalogue: vue.catalogue, ambiance: vue.ambiance, locale,
+    camp: montree?.camp ?? 0, phase: 'inactif',
+    curseur: vue.curseur, selection: vue.selection, unitesVues: null,
+    menu: null, production: null, visee: null, attenteIa: false, pouvoirs: null, annonce: null,
+  };
 }
 
 /** Les gestes que le banc sait rejouer. */

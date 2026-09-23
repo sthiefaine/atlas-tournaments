@@ -15,9 +15,9 @@ import { ambiance } from '../../src/render/ambiance';
 import { PALETTES } from '../../src/render/palettes';
 import {
   HAUTEUR_MINIMALE_RAIL, LARGEUR_MINIMALE_RAIL, monterHudHtml, poserEmplacements, railTient,
-  type VueJeu,
+  type ApiHud, type VueJeu,
 } from '../../src/render/hud-html';
-import { nomTerrain } from '../../src/render/libelles';
+import { nomTerrain, nomUnite } from '../../src/render/libelles';
 import type { HorlogeScenes } from '../../src/render/scenes-html';
 import { DUREES, MISE_EN_SCENE, ecrirePartition, type Partition } from '../../src/render/partition';
 import { chiffreSigne, MS_FIXE, rolesDesChiffres } from '../../src/render/scenes-html';
@@ -606,7 +606,10 @@ test('une partition sans geste pour le HUD se résout aussitôt, sans rien crée
 // ---------------------------------------------------------------------------
 
 /** Monte un HUD sur cette vue et rend ses emplacements, avec de quoi démonter. */
-function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }): {
+function hudSur(
+  vue: () => VueJeu, taille?: { largeur: number; hauteur: number },
+  restreint: Pick<ApiHud, 'seulement'> = {},
+): {
   slots: Map<string, FauxElement>;
   /** La classe de la zone qui porte cet emplacement : hud-carte, hud-rail, ou la racine. */
   zone(nom: string): string;
@@ -625,6 +628,7 @@ function hudSur(vue: () => VueJeu, taille?: { largeur: number; hauteur: number }
     finTour: () => undefined, choisirSuite: () => undefined, choisirProduction: () => undefined,
     jouerPouvoir: () => undefined, annuler: () => undefined, recommencer: () => undefined,
     versEcran: () => null,
+    ...restreint,
   });
   const slots = emplacements(conteneur);
   return {
@@ -1215,6 +1219,50 @@ test('cliquer une unité seule ouvre son détail ; un transport chargé ne déci
   petit.rafraichir();
   assert.doesNotMatch(petit.slots.get('inspection')!.innerHTML, /class="fiche"/);
   petit.demonter();
+});
+
+test('un HUD restreint ne compose que ses panneaux, sans bandeau de tour, et la colonne déplie la fiche au clic', () => {
+  // C'est le HUD que monte l'atelier (`seulement: ['inspection']`) : cliquer une
+  // pièce du banc doit la nommer et déplier sa fiche, comme en partie.
+  const etat = partie();
+  const seule = etat.unites.find((u) => u.camp === 0 && u.cargo.length === 0);
+  assert.ok(seule);
+  let selection: string | null = null;
+  const vue = (): VueJeu => ({ ...vueDe(etat, { x: seule.x, y: seule.y }), selection });
+  const taille = { largeur: 1400, hauteur: 900 };
+  const bandeau = (c: FauxElement): boolean => c.children.some((e) => e.className === 'atlas-tour');
+
+  // Le témoin : le HUD du jeu compose la partie et annonce le tour.
+  const jeu = hudSur(vue, taille);
+  assert.notEqual(jeu.slots.get('partie')!.innerHTML, '');
+  assert.ok(bandeau(jeu.conteneur), 'le HUD du jeu annonce le tour');
+  jeu.demonter();
+
+  const h = hudSur(vue, taille, { seulement: ['inspection'] });
+  assert.equal(bandeau(h.conteneur), false, 'qui ne compose pas la partie n’annonce pas le tour');
+  for (const [nom, slot] of h.slots) {
+    if (nom !== 'inspection') assert.equal(slot.innerHTML, '', `l’emplacement ${nom} reste vide`);
+  }
+  // La colonne s'ouvre comme en jeu : le panneau d'unité y a sa place, et le
+  // plateau se resserre au lieu d'être recouvert par la fiche.
+  assert.equal(h.conteneur.dataset['atlasRail'], 'oui');
+  assert.equal(h.zone('inspection'), 'hud-rail');
+  const panneau = (): string => h.slots.get('inspection')!.innerHTML;
+  const nom = nomUnite('fr', CAT, seule.type).replace(/&/g, '&amp;').replace(/'/g, '&#39;');
+  assert.match(panneau(), /class="p inspect"/);
+  assert.ok(panneau().includes(`<div class="tt">${nom}</div>`), 'le panneau nomme l’unité');
+  assert.doesNotMatch(panneau(), /class="fiche"/, 'survolée seulement, elle ne déplie rien');
+
+  // Un clic : la fiche se déplie sans qu'on cherche la loupe.
+  selection = seule.id;
+  h.rafraichir();
+  assert.match(panneau(), /class="fiche"/, 'cliquée, elle déplie sa fiche');
+
+  // Un clic à côté : la fiche se replie avec la sélection.
+  selection = null;
+  h.rafraichir();
+  assert.doesNotMatch(panneau(), /class="fiche"/);
+  h.demonter();
 });
 
 test('la fiche montre une tuile par terrain, peinte avec la palette du canon', () => {

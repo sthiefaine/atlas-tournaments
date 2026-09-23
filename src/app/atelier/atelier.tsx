@@ -7,15 +7,17 @@ import { lirePreferences } from '../preferences';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { chargerCatalogue, creerPartie, sceneDepuis, type EtatPartie } from '@/engine/index';
 import { resoudreCommandantsScenario } from '@/content/commandants-jeu';
+import { traducteur } from '@/i18n/index';
 import { ambiance } from '@/render/ambiance';
+import type { ApiHud, HudHtml } from '@/render/hud-html';
 import type { MesuresRendu, Rendu, VueInteraction } from '@/render/rendu';
 import {
-  BIOMES, type Biome, type CodePays, type MapDef, type Meteo, type PhaseJour,
+  BIOMES, type Biome, type Case, type CodePays, type MapDef, type Meteo, type PhaseJour,
   type Saison, type Scenario,
 } from '@/schemas/types';
 import {
   CHEMIN_BANC, DESCRIPTIONS_GESTES, PAYS_BANC, PRESETS_AMBIANCE, carteBanc, carteGrande, catalogueSilhouettes,
-  decoderVue, encoderVue, rejouer, scenarioBanc, surbrillancesBanc, visiblesBanc,
+  decoderVue, encoderVue, rejouer, scenarioBanc, surbrillancesBanc, uniteSousCase, visiblesBanc, vueInspectionBanc,
   type DescriptionGeste, type GenreBanc, type GesteBanc, type VueBanc,
 } from './banc';
 import styles from './atelier.module.css';
@@ -58,6 +60,15 @@ import styles from './atelier.module.css';
  * montage et écrits par `history.replaceState` sans navigation : une vue qui a
  * montré un défaut se colle dans un message et se retrouve au rechargement.
  *
+ * **Cliquer une unité l'inspecte, comme en jeu** (23 septembre 2026, demande du
+ * propriétaire). Le panneau n'est pas refait ici : c'est celui du HUD du jeu
+ * (`monterHudHtml`), restreint au seul panneau d'unité (`seulement`) — nom,
+ * points de vie, munitions, carburant, ce que l'unité démolit et ce qui la
+ * démolit. Il se range comme en partie : dans la colonne de droite sur un écran
+ * large, où la fiche se déplie au clic et où le plateau se resserre au lieu
+ * d'être recouvert ; posé sur l'image en dessous, fiche à la loupe. Le survol le
+ * fait suivre le curseur ; un clic à côté, le bouton droit ou Échap referment.
+ *
  * Les libellés sont écrits en clair ici, contrairement au reste du site : c'est
  * un instrument d'auteur, il n'est pas traduit et n'a pas à l'être.
  */
@@ -87,7 +98,12 @@ interface PontBanc {
   neuf(): void;
   /** Une image PNG en `data:` de la toile seule — ni dock, ni barre — : les captures de référence. */
   capturer(): string | null;
+  /** Case → point de la toile (centre de la case), ou `null` hors champ : de quoi cliquer une unité. */
+  versEcran(x: number, y: number): { x: number; y: number } | null;
 }
+
+/** Les commandes de partie que le panneau d'unité ne peut pas émettre : le banc n'en a aucune. */
+const RIEN = (): void => undefined;
 
 /** Deux relevés identiques à l'affichage près : on ne repeint pas le dock pour rien. */
 function memesMesures(a: MesuresRendu, b: MesuresRendu): boolean {
@@ -197,6 +213,10 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   const [flecheVisible, setFleche] = useState(false);
   const [brouillard, setBrouillard] = useState(VUE_DEFAUT.brouillard);
   const [silhouettes, setSilhouettes] = useState(false);
+  // L'unité inspectée et la case sous la souris : c'est ce que lit le panneau
+  // d'unité du HUD, et ce que la peau peint — l'anneau, le cadre du curseur.
+  const [selection, setSelection] = useState<string | null>(null);
+  const [curseur, setCurseur] = useState<Case | null>(null);
   // Le coût de la dernière image, relevé une fois par seconde pour A6.
   const [mesures, setMesures] = useState<MesuresRendu | null>(null);
   // Le statut est un toast en haut de la toile. Il est **fixe** tant que la peau
@@ -212,6 +232,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   const [onglet, setOnglet] = useState<CleOnglet>('monde');
   const conteneur = useRef<HTMLDivElement>(null);
   const rendu = useRef<Rendu | null>(null);
+  const hud = useRef<HudHtml | null>(null);
   const sections = useRef<Partial<Record<CleSection, HTMLElement | null>>>({});
 
   const annoncer = useCallback((texte: string, fixe = false): void => {
@@ -261,21 +282,27 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   // fait monter la marée, prend une ville. On repart du neuf à chaque changement
   // de monde, sans quoi une marée resterait haute d'une carte à l'autre.
   const [etat, setEtat] = useState<EtatPartie>(etatNeuf);
-  useEffect(() => { setEtat(etatNeuf); }, [etatNeuf]);
+  // Un autre monde, d'autres unités : l'inspection repart de rien, sans quoi un
+  // identifiant réutilisé d'une carte à l'autre désignerait une autre pièce.
+  useEffect(() => { setEtat(etatNeuf); setSelection(null); }, [etatNeuf]);
 
   const etatAffiche = useMemo(() => simple ? { ...etat, unites: etat.unites.filter(u => u.camp === 0 && (uniteChoisie === 'toutes' || u.type === uniteChoisie)) } : etat, [etat, simple, uniteChoisie]);
+  // Une sélection que l'état n'affiche plus — une autre unité choisie dans la
+  // liste, une pièce mise hors jeu par un geste — ne désigne plus rien.
+  const selectionVue = selection !== null && etatAffiche.unites.some((u) => u.id === selection && !u.dansTransport)
+    ? selection : null;
 
   const vue = useMemo<VueInteraction>(() => ({
     catalogue,
     ambiance: ambiance(saison, phase, meteo),
     surbrillances: surbrillancesBanc(genres),
     chemin: flecheVisible ? CHEMIN_BANC : [],
-    curseur: null,
-    selection: null,
+    curseur,
+    selection: selectionVue,
     visibles: brouillard ? visiblesBanc() : null,
     attenteIa: false,
     etiquetteQg: 'QG',
-  }), [catalogue, saison, phase, meteo, genres, flecheVisible, brouillard]);
+  }), [catalogue, saison, phase, meteo, genres, flecheVisible, brouillard, curseur, selectionVue]);
   const vueCourante = useRef(vue);
   const etatCourant = useRef(etat);
   // Tenus à jour **au rendu**, pas dans un effet : l'effet de montage s'exécute
@@ -292,12 +319,13 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   useEffect(() => {
     let annule = false;
     let courant: Rendu | null = null;
+    let hudCourant: HudHtml | null = null;
     let debrancher: (() => void) | undefined;
     annoncer('Préparation du monde…', true);
     const preferences = lirePreferences();
     const audio = conteneur.current ? creerAudioJeu(conteneur.current, preferences.sons, preferences.volumeSons, preferences.mixageSons) : undefined;
 
-    const poser = (fabrique: () => Rendu): void => {
+    const poser = (fabrique: () => Rendu, monterHud: (hote: HTMLElement, api: ApiHud) => HudHtml): void => {
       if (annule || !conteneur.current) return;
       const peau = fabrique();
       try {
@@ -313,8 +341,30 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
       conteneur.current.dataset['rendu'] = peau.cle;
       const v = vueCourante.current;
       peau.afficher(habille(etatCourant.current, v), v);
-      debrancher = peau.brancher({});
+      // Les gestes de la carte : un clic inspecte l'unité de la case — ou
+      // referme le panneau sur une case vide —, le survol fait suivre le
+      // curseur comme en partie, le bouton droit et Échap referment.
+      debrancher = peau.brancher({
+        surClicCase: (c) => setSelection(uniteSousCase(etatCourant.current, c)?.id ?? null),
+        // La peau signale la case sous la souris à chaque image : on ne pose
+        // qu'une case **nouvelle**, sans quoi chaque mouvement repeindrait la page.
+        surSurvolCase: (c) => setCurseur((avant) => (avant && c && avant.x === c.x && avant.y === c.y ? avant : c)),
+        surAnnuler: () => setSelection(null),
+        surTouche: (touche) => { if (touche === 'annuler') setSelection(null); },
+      });
       rendu.current = peau;
+      // Le panneau d'unité **du jeu**, et lui seul : ni journée, ni fonds, ni
+      // fin de tour — un banc n'a que des pièces à montrer. Aucune commande de
+      // partie n'en sort ; « retour » referme l'inspection.
+      hudCourant = monterHud(conteneur.current, {
+        vue: () => vueInspectionBanc(habille(etatCourant.current, vueCourante.current), vueCourante.current, 'fr'),
+        t: traducteur('fr'),
+        seulement: ['inspection'],
+        annuler: () => setSelection(null),
+        versEcran: (c) => peau.versEcran(c),
+        finTour: RIEN, choisirSuite: RIEN, choisirProduction: RIEN, jouerPouvoir: RIEN, recommencer: RIEN,
+      });
+      hud.current = hudCourant;
       // On cadre la carte entière : un banc s'ouvre sur tout ce qu'il montre,
       // pas sur le coin où la caméra s'était arrêtée. La caméra 2D ne recule
       // jamais sous 48 pixels par case : les quatre pas de recul s'y arrêtent.
@@ -324,9 +374,9 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
       annoncer('');
     };
 
-    // La peau du jeu, chargée à la demande : la page du banc ne pèse que son
-    // interface tant que la peau n'est pas là.
-    void import('@/render2d/index').then(({ creerRendu2d, moteur2dDisponible }) => {
+    // La peau du jeu et le HUD, chargés à la demande et ensemble : la page du
+    // banc ne pèse que son interface tant qu'ils ne sont pas là.
+    void Promise.all([import('@/render2d/index'), import('@/render/hud-html')]).then(([{ creerRendu2d, moteur2dDisponible }, { monterHudHtml }]) => {
       if (annule) return;
       if (!moteur2dDisponible()) {
         annoncer('Le banc n’a pas pu démarrer : WebGL 2 est indisponible sur cet appareil.', true);
@@ -338,13 +388,18 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
         animationsReduites: preferences.animationsReduites,
         // Un contexte perdu qu'on ne sait pas rebâtir se dit aussi.
         surEchec: () => { if (!annule) annoncer('La peau 2D a cessé de dessiner : son contexte WebGL 2 est perdu.', true); },
-      }));
+      }), monterHudHtml);
     }).catch(() => {
       if (annule) return;
-      courant?.demonter();
-      annoncer('Le banc n’a pas pu démarrer : la peau 2D ne s’est pas chargée.', true);
+      // Démontés une fois : le nettoyage de l'effet passera derrière.
+      hudCourant?.demonter(); hudCourant = null;
+      courant?.demonter(); courant = null;
+      annoncer('Le banc n’a pas pu démarrer : la peau 2D ou son panneau d’unité ne se sont pas chargés.', true);
     });
-    return () => { annule = true; debrancher?.(); courant?.demonter(); audio?.detruire(); rendu.current = null; };
+    return () => {
+      annule = true; debrancher?.(); hudCourant?.demonter(); courant?.demonter(); audio?.detruire();
+      rendu.current = null; hud.current = null;
+    };
     // `etat` n'est pas une dépendance, et c'est voulu : la peau lit le dernier
     // état par `etatCourant`. Le mettre ici rebâtirait la scène à chaque geste,
     // donc rejouerait le cadrage de caméra et effacerait l'animation qu'on vient
@@ -371,6 +426,9 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
     vueCourante.current = vue;
     etatCourant.current = etatAffiche;
     rendu.current?.afficher(habille(etatAffiche, vue), vue);
+    // Le panneau d'unité relit la même vue : un clic, un survol, un geste
+    // rejoué qui déplace ou met hors jeu la pièce inspectée.
+    hud.current?.rafraichir();
   }, [etatAffiche, vue, habille]);
 
   useEffect(() => {
@@ -435,6 +493,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
       jouer: (cle) => jouerRef.current(cle),
       neuf: () => neufRef.current(),
       capturer: () => rendu.current?.capturer() ?? null,
+      versEcran: (x, y) => rendu.current?.versEcran({ x, y }) ?? null,
     };
     return () => { delete g.__atlasBanc; };
   }, [tous]);
@@ -585,7 +644,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   </div>;
 
   const note = <p className={styles.note}>
-    Glissez la carte · Molette ou pincement pour zoomer · Double-tap pour rapprocher. La vue est fixe,
+    Cliquez une unité pour lire sa fiche · Glissez la carte · Molette ou pincement pour zoomer · Double-tap pour rapprocher. La vue est fixe,
     comme en jeu. Le banc rejoue des <strong>événements</strong>, pas des règles : rien ici n’est une
     partie légale, et rien n’est enregistré. Chaque image cuite se regarde dans la{' '}
     <Link href="/atelier/unites">vitrine des images</Link>.
@@ -620,7 +679,7 @@ export default function Atelier({ mondes, simple = true }: { mondes: Monde[]; si
   };
 
   if (simple) return <main className={styles.atelier}>
-    <div ref={conteneur} className={styles.monde} aria-label="Plateau : glisser pour déplacer, molette ou pincement pour zoomer" />
+    <div ref={conteneur} className={styles.monde} aria-label="Plateau : cliquer une unité pour l’inspecter, glisser pour déplacer, molette ou pincement pour zoomer" />
     <div className={styles.toast} role="status" aria-live="polite">{toast ? <span>{toast.texte}</span> : null}</div>
     <Link className={styles.retourSimple} href="/">← Accueil</Link>
     {/* Le plateau montre les pièces à leur place ; la vitrine, chaque image cuite

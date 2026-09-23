@@ -199,6 +199,14 @@ export interface ApiHud {
    * propres scènes.
    */
   couper?(): void;
+  /**
+   * Les emplacements que ce HUD compose, et eux seuls ; absent : tous — c'est
+   * le jeu. L'atelier ne compose que le panneau d'unité : un banc d'essai n'a
+   * ni journée, ni fonds, ni fin de tour à montrer. Le bandeau de tour suit la
+   * partie : il dit qui joue, comme la tête de colonne, et un HUD qui ne
+   * compose pas l'une n'annonce pas l'autre.
+   */
+  seulement?: readonly Emplacement[];
 }
 
 /** Ce que `monterHudHtml` rend à son hôte. */
@@ -997,7 +1005,7 @@ interface Vignette { id: string; emplacement: string; silhouette: Silhouette; ca
 const EMPLACEMENTS = [
   'partie', 'bulletin', 'dock', 'duel', 'inspection', 'ordres', 'camera', 'attente', 'annonce', 'production', 'fin',
 ] as const;
-type Emplacement = typeof EMPLACEMENTS[number];
+export type Emplacement = typeof EMPLACEMENTS[number];
 
 /**
  * Les trois zones du HUD lorsque la colonne de droite est ouverte.
@@ -2452,7 +2460,10 @@ export function monterHudHtml(
   function rafraichir(): void {
     const v = api.vue();
     vignettes = [];
-    annoncerTour(v);
+    // Un HUD restreint (`seulement`) ne compose que ses emplacements : les
+    // autres restent vides, et leurs panneaux ne se calculent même pas.
+    const compose = (nom: Emplacement): boolean => !api.seulement || api.seulement.includes(nom);
+    if (compose('partie')) annoncerTour(v);
     racine.dataset['ordres'] = v.menu ? 'oui' : 'non';
     racine.dataset['scene'] = v.sceneOuverte ? 'ouverte' : 'fermee';
     // **Le HUD prend la couleur de l'armée en main.** C'est la grammaire
@@ -2491,7 +2502,7 @@ export function monterHudHtml(
     const html = new Map<Emplacement, string>();
     const composer = (nom: Emplacement, contenu: () => string): void => {
       emplacementCourant = nom;
-      html.set(nom, contenu());
+      html.set(nom, compose(nom) ? contenu() : '');
     };
     composer('partie', () => panneauPartie(v) + alerteSuper(v));
     composer('bulletin', () => panneauBulletin(v));
