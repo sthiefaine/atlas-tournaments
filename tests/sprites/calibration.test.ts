@@ -1,7 +1,8 @@
-// La preuve par la mesure que la caméra de cuisson est celle du contrat :
-// des modèles de calibration cuits par la vraie chaîne
-// (`scripts/sprites/calibration/`), dont on mesure les images. Ce test lit les
-// fichiers produits, il n'exige pas Blender ; pour les refaire :
+// La preuve par la mesure que la caméra de cuisson est celle du contrat, que
+// la lumière rend les clartés visées et qu'elle est symétrique, et que le
+// contour cerne sans déplacer : des modèles de calibration cuits par la vraie
+// chaîne (`scripts/sprites/calibration/`), dont on mesure les images. Ce test
+// lit les fichiers produits, il n'exige pas Blender ; pour les refaire :
 //   npx tsx scripts/sprites/calibration/generer.ts
 //   npm run cuire:sprites -- --liste scripts/sprites/calibration/liste.json --sortie tests/sprites/calibration --force
 import { test } from 'node:test';
@@ -12,11 +13,13 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 import {
-  LACET_VUE, PIXELS_PAR_CASE, TANGAGE_CARTE, TANGAGE_PROFIL, VERSION_SPRITES,
+  ECLAIRAGE_CUISSON, LACET_VUE, PIXELS_PAR_CASE, TANGAGE_CARTE, TANGAGE_PROFIL, VERSION_SPRITES,
   type AnimationSprite, type EntreeSprite, type ManifesteSprites,
 } from '../../src/render2d/contrat';
-import { REPERES } from '../../scripts/sprites/calibration/generer';
+import { ARETE_LUMIERE, HAUTEUR_BARRE, REPERES } from '../../scripts/sprites/calibration/generer';
 import { cheminPage, problemesManifeste, type FichierEntree } from '../../scripts/sprites/manifeste';
+import { CLARTES_VISEES, clarteFace } from '../../scripts/sprites/reglages';
+import charte from '../../scripts/production/figurines/charte.json';
 
 const RACINE = join(__dirname, 'calibration');
 const manifeste = JSON.parse(readFileSync(join(RACINE, 'manifeste.json'), 'utf8')) as ManifesteSprites;
@@ -65,7 +68,9 @@ function attendu(p: readonly [number, number, number], lacet: number, tangage: n
 test('le manifeste de calibration est bien formé et ses cuissons sans avertissement', () => {
   assert.equal(manifeste.version, VERSION_SPRITES);
   assert.deepEqual(problemesManifeste(manifeste), []);
-  for (const id of ['calibration_carre', 'calibration_reperes', 'calibration_ombre']) {
+  const ids = ['calibration_carre', 'calibration_carre_contour', 'calibration_reperes', 'calibration_ombre', 'calibration_lumiere_face', 'calibration_lumiere_biais'];
+  assert.deepEqual(Object.keys(manifeste.entrees).sort(), [...ids].sort());
+  for (const id of ids) {
     assert.ok(manifeste.entrees[id], id);
     const f = JSON.parse(readFileSync(join(RACINE, 'decors', `${id}.json`), 'utf8')) as FichierEntree;
     assert.deepEqual(f.cuisson.avertissements, [], id);
@@ -151,7 +156,7 @@ test('« droite » regarde la droite de l’écran, « haut » s’éloigne, « 
   assert.ok((await enHaut('profil')).Y < (await enHaut('fixe')).Y);
 });
 
-test('l’ombre cuite part à l’opposé de la lumière principale : vers le haut et la droite', async () => {
+test('l’ombre cuite part à l’opposé de la lumière principale, qui vient du joueur : droit vers le haut', async () => {
   const e = manifeste.entrees['calibration_ombre']!;
   const { l, h, px, py, lire } = await pixelsDe(e, e.animations[0]!);
   let poids = 0;
@@ -160,7 +165,7 @@ test('l’ombre cuite part à l’opposé de la lumière principale : vers le ha
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < l; x++) {
       const [r, g, b, a] = lire(x, y);
-      // L'ombre est noire et translucide ; le pilier, gris et opaque.
+      // L'ombre est noire et translucide ; la barre, grise et opaque.
       if (a === 0 || a > 240 || Math.max(r, g, b) > 24) continue;
       poids += a / 255;
       sx += (a / 255) * (x + 0.5);
@@ -168,6 +173,87 @@ test('l’ombre cuite part à l’opposé de la lumière principale : vers le ha
     }
   }
   assert.ok(poids > 50, `ombre de ${poids.toFixed(0)} pixels`);
-  assert.ok(sx / poids - px > 5, `ombre centrée à ${(sx / poids - px).toFixed(1)} px du pivot`);
-  assert.ok(sy / poids - py < 0, `ombre centrée à ${(sy / poids - py).toFixed(1)} px sous le pivot`);
+  // La lumière est symétrique : l'ombre ne dérive ni à gauche ni à droite.
+  assert.ok(Math.abs(sx / poids - px) < 1, `ombre centrée à ${(sx / poids - px).toFixed(1)} px du pivot`);
+  // Elle tombe derrière le point du sol sous la barre, à h / tan(élévation) :
+  // droit vers le haut de l'écran.
+  const recul = HAUTEUR_BARRE / Math.tan((ECLAIRAGE_CUISSON.principale.elevation * Math.PI) / 180);
+  const attenduY = -recul * Math.sin((TANGAGE_CARTE * Math.PI) / 180) * PIXELS_PAR_CASE;
+  assert.ok(Math.abs(sy / poids - py - attenduY) < 3, `ombre centrée à ${(sy / poids - py).toFixed(1)} px du pivot, attendue à ${attenduY.toFixed(1)}`);
+});
+
+/** La couleur moyenne, sRGB de 0 à 255, d'une fenêtre de 5 × 5 pixels autour du point `p` (glTF) de la vue `fixe`. */
+async function fenetre(id: string, p: readonly [number, number, number]): Promise<number[]> {
+  const e = manifeste.entrees[id]!;
+  const { px, py, lire } = await pixelsDe(e, e.animations[0]!);
+  const t = attendu(p, LACET_VUE.fixe, TANGAGE_CARTE);
+  const x0 = Math.floor(px + t.X);
+  const y0 = Math.floor(py + t.Y);
+  const somme = [0, 0, 0, 0];
+  for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) lire(x0 + dx, y0 + dy).forEach((v, k) => { somme[k]! += v; });
+  return somme.map((v) => v / 25);
+}
+
+/** L'inverse de la fonction sRGB, sur un niveau de 0 à 255. */
+const lineaire = (s: number): number => (s / 255 <= 0.04045 ? s / 255 / 12.92 : ((s / 255 + 0.055) / 1.055) ** 2.4);
+
+test('la lumière rend un blanc horizontal à 1, la face tournée vers le joueur à 0,68', async () => {
+  const a = ARETE_LUMIERE;
+  const dessus = await fenetre('calibration_lumiere_face', [0, a, 0]);
+  const joueur = await fenetre('calibration_lumiere_face', [0, a / 2, a / 2]);
+  assert.ok(dessus.slice(0, 3).every((v) => v >= 253), `dessus ${dessus.map((v) => v.toFixed(0))}`);
+  assert.ok(Math.abs(lineaire(joueur[0]!) - CLARTES_VISEES.joueur) < 0.015, `face au joueur ${lineaire(joueur[0]!).toFixed(3)}`);
+  assert.equal(joueur[3], 255);
+});
+
+test('la lumière est symétrique : les deux faces d’un cube tourné de 45° ont la même clarté', async () => {
+  const a = ARETE_LUMIERE;
+  const d = (a / 2) * Math.SQRT1_2;
+  const gauche = await fenetre('calibration_lumiere_biais', [-d, a / 2, d]);
+  const droite = await fenetre('calibration_lumiere_biais', [d, a / 2, d]);
+  for (let k = 0; k < 3; k++) assert.ok(Math.abs(gauche[k]! - droite[k]!) <= 2, `gauche ${gauche.map((v) => v.toFixed(1))}, droite ${droite.map((v) => v.toFixed(1))}`);
+  // Prévu 0,613 pour un blanc lambertien (`clarteFace`) ; le reflet spéculaire du matériau glTF y ajoute un peu.
+  const attendue = clarteFace([Math.SQRT1_2, -Math.SQRT1_2, 0]);
+  assert.ok(Math.abs(lineaire(gauche[0]!) - attendue) < 0.02, `${lineaire(gauche[0]!).toFixed(3)} pour ${attendue.toFixed(3)}`);
+});
+
+test('le contour cerne le carré sur trois pixels, sans le toucher ni déplacer le pivot', async () => {
+  const sans = manifeste.entrees['calibration_carre']!;
+  const avec = manifeste.entrees['calibration_carre_contour']!;
+  const s = await pixelsDe(sans, sans.animations[0]!);
+  const c = await pixelsDe(avec, avec.animations[0]!);
+  const opacite = charte.contour.opacite.decor;
+  // Le carré se retrouve tel quel, au même endroit par rapport au pivot : deux
+  // rendus différents ne diffèrent que du bruit de Cycles, quelques niveaux.
+  let compares = 0;
+  let ecart = 0;
+  for (let y = 0; y < s.h; y++) {
+    for (let x = 0; x < s.l; x++) {
+      const v = s.lire(x, y);
+      if (v[3] < 255) continue;
+      const w = c.lire(x - s.px + c.px, y - s.py + c.py);
+      assert.equal(w[3], 255, `(${x}, ${y})`);
+      for (let k = 0; k < 3; k++) {
+        assert.ok(Math.abs(v[k]! - w[k]!) <= 10, `(${x}, ${y}) : ${v} contre ${w}`);
+        ecart += Math.abs(v[k]! - w[k]!);
+      }
+      compares++;
+    }
+  }
+  assert.ok(compares > 12000, `${compares} pixels comparés`);
+  assert.ok(ecart / (3 * compares) < 1, `écart moyen ${(ecart / (3 * compares)).toFixed(2)} niveau`);
+  // Autour, l'anneau : sombre, à l'opacité de sa famille, trois pixels d'épaisseur au plus.
+  const colonne = Math.round(c.px);
+  const anneau: number[] = [];
+  for (let y = 0; y < c.h; y++) {
+    const [r, g, b, a] = c.lire(colonne, y);
+    if (a > 0 && Math.max(r, g, b) < 60) anneau.push(a);
+  }
+  assert.equal(anneau.length, 4, `pixels d'anneau purs dans la colonne du pivot : ${anneau}`);
+  for (const a of anneau) assert.ok(Math.abs(a - opacite * 255) <= 3, `alpha d'anneau ${a}`);
+  // Le rectangle rogné grandit de l'anneau, et le pivot le suit : il n'a pas bougé sur le modèle.
+  assert.equal(c.l - s.l, c.h - s.h);
+  assert.equal(c.px - s.px, (c.l - s.l) / 2);
+  assert.equal(c.py - s.py, (c.h - s.h) / 2);
+  assert.ok(c.l - s.l >= 4 && c.l - s.l <= 6, `le rectangle grandit de ${c.l - s.l}`);
 });

@@ -88,6 +88,13 @@
       "format": "png",
       "obligatoire": true,
       "note": "Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale."
+    },
+    {
+      "canal": "emission",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": false,
+      "note": "Écrans et veilleuses, pour la phase de nuit."
     }
   ],
   "variantes": {

@@ -59,18 +59,20 @@ test('aucune lecture de texture à dérivées implicites dans le nuanceur de fra
   assert.equal(main.match(/dFd[xy]\(/g)?.length, 4);
 });
 
-test('la lumière du sol est celle de la cuisson : de l’avant-gauche, au-dessus de l’horizon', () => {
+test('la lumière du sol est celle de la cuisson : du joueur, symétrique, au-dessus de l’horizon', () => {
   const [x, y, z] = lumiereSol();
-  assert.ok(x < 0, 'elle vient de la gauche');
+  // Symétrique (charte du 23 septembre 2026) : la moitié de l'armée est
+  // dessinée en miroir, une lumière de côté l'éclairerait à l'envers.
+  assert.ok(Math.abs(x) < 1e-9, 'elle ne vient d’aucun côté');
   assert.ok(y > 0, 'elle vient du joueur');
   assert.ok(z > 0.7, 'elle est haute');
   assert.ok(Math.abs(Math.hypot(x, y, z) - 1) < 1e-9);
   const e = lumiereEcran();
   assert.ok(Math.abs(Math.hypot(...e) - 1) < 1e-9, 'un changement de repère garde la norme');
   assert.ok(e[2] > 0, 'elle éclaire ce que la caméra voit');
-  // Les ombres tombent vers la droite et vers le haut de l'écran, d'autant plus
-  // loin que ce qui les porte est haut.
+  // Les ombres tombent droit vers le haut de l'écran, d'autant plus loin que
+  // ce qui les porte est haut.
   const o = decalageOmbre(HAUT_FRONDAISON);
-  assert.ok(o.x > 0 && o.y < 0);
+  assert.ok(Math.abs(o.x) < 1e-9 && o.y < 0);
   assert.ok(Math.hypot(o.x, o.y) < HAUT_FRONDAISON);
 });

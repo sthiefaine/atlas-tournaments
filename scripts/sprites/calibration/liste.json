@@ -1,8 +1,11 @@
 {
   "version": 1,
   "entrees": [
-    { "id": "calibration_carre", "famille": "decor", "cle": "calibration", "variante": "carre", "fichier": "calibration_carre.glb", "vues": ["fixe"], "ombre": false },
-    { "id": "calibration_reperes", "famille": "decor", "cle": "calibration", "variante": "reperes", "fichier": "calibration_reperes.glb", "vues": ["droite", "bas", "haut", "fixe", "travers", "profil"], "ombre": false },
-    { "id": "calibration_ombre", "famille": "decor", "cle": "calibration", "variante": "ombre", "fichier": "calibration_ombre.glb", "vues": ["fixe"], "ombre": true }
+    { "id": "calibration_carre", "famille": "decor", "cle": "calibration", "variante": "carre", "fichier": "calibration_carre.glb", "vues": ["fixe"], "ombre": false, "contour": false },
+    { "id": "calibration_carre_contour", "famille": "decor", "cle": "calibration", "variante": "carre_contour", "fichier": "calibration_carre.glb", "vues": ["fixe"], "ombre": false },
+    { "id": "calibration_reperes", "famille": "decor", "cle": "calibration", "variante": "reperes", "fichier": "calibration_reperes.glb", "vues": ["droite", "bas", "haut", "fixe", "travers", "profil"], "ombre": false, "contour": false },
+    { "id": "calibration_ombre", "famille": "decor", "cle": "calibration", "variante": "ombre", "fichier": "calibration_ombre.glb", "vues": ["fixe"], "ombre": true, "contour": false },
+    { "id": "calibration_lumiere_face", "famille": "decor", "cle": "calibration", "variante": "lumiere_face", "fichier": "calibration_lumiere_face.glb", "vues": ["fixe"], "ombre": false, "contour": false },
+    { "id": "calibration_lumiere_biais", "famille": "decor", "cle": "calibration", "variante": "lumiere_biais", "fichier": "calibration_lumiere_biais.glb", "vues": ["fixe"], "ombre": false, "contour": false }
   ]
 }

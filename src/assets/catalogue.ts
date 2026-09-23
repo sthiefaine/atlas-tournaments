@@ -963,7 +963,9 @@ export function specUnite(u: UnitType): AssetSpec {
     tex('metal', 512, false, 'Seulement si des pièces nues subsistent ; une valeur uniforme sinon.'),
     tex('masque_equipe', 512, true, 'Blanc = couleur de nation, noir = neutre. Un seul canal, sans dégradé sale.'),
   ];
-  if (s.modules.includes('radar') || s.modules.includes('nacelle')) {
+  // Les prototypes des Gris portent un œil orange qui brille (charte des
+  // figurines, §3.9) : il leur faut une carte d'émission, capteurs ou non.
+  if (s.modules.includes('radar') || s.modules.includes('nacelle') || u.factionExclusive) {
     textures.push(tex('emission', 512, false, 'Écrans et veilleuses, pour la phase de nuit.'));
   }
   return {

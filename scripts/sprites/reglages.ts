@@ -3,18 +3,27 @@
  * le contrat (`src/render2d/contrat.ts`) ne dit rien. La projection, les vues,
  * les clips, la cadence et la direction des lumières sont au contrat et ne se
  * recopient pas ici ; ce fichier ne porte que des forces, des marges, des
- * qualités et des chemins.
+ * qualités et des chemins. Le contour (couleur, épaisseur, opacité par
+ * famille) est lu dans la charte des figurines, qui en fait foi.
  *
- * Toute valeur de ce fichier entre dans l'empreinte de cuisson d'une entrée :
- * en changer une recuit tout au prochain `npm run cuire:sprites -- --tout`.
+ * Toute valeur de ce fichier entre dans l'empreinte de cuisson d'une entrée,
+ * le contour compris : en changer une recuit tout au prochain
+ * `npm run cuire:sprites -- --tout`.
  * Changer le script Blender, lui, n'est pas vu : c'est `VERSION_CUISSON` qu'on
  * incrémente alors.
  */
 
-import { ECLAIRAGE_CUISSON, type FamilleSprite } from '../../src/render2d/contrat';
+import { ECLAIRAGE_CUISSON, FAMILLES_SPRITE, type FamilleSprite } from '../../src/render2d/contrat';
+import charte from '../production/figurines/charte.json';
 
-/** Incrémentée quand la chaîne change de comportement sans qu'un réglage change. */
-export const VERSION_CUISSON = 1;
+import { srgbVersLineaire } from './image';
+
+/**
+ * Incrémentée quand la chaîne change de comportement sans qu'un réglage change.
+ * 2 (23 septembre 2026, soir) : lumière symétrique et contour cuit, la charte
+ * des figurines (`scripts/production/figurines/charte.json`).
+ */
+export const VERSION_CUISSON = 2;
 
 /** Le Blender qui cuit : 5.1 en ligne de commande. */
 export const BLENDER = process.env.BLENDER ?? '/Applications/Blender.app/Contents/MacOS/Blender';
@@ -68,19 +77,117 @@ export const IMAGES_MAX_PAR_CLIP = 12;
 export const MARGE_CANEVAS = 3;
 
 /**
- * L'éclairage, en unités de Cycles. Le contrat donne les directions ; les
- * forces sont réglées pour qu'une face **horizontale** blanche sorte à 1,0
- * exactement — principale `2,2/π · sin 55°` + contour `0,8/π · sin 30°` + ciel
- * `0,3` —, de sorte qu'un albédo sRGB s'y lise tel quel et qu'une zone
- * d'équipe cuite en blanc, multipliée par la couleur d'équipe, rende cette
- * couleur, pas plus claire. Lumières blanches : l'étalonnage de saison, de
- * phase et de météo est au rendu.
+ * Ce que l'éclairage doit rendre sur une face blanche mate d'une unité (le ciel
+ * uniforme la voit de partout : une unité n'a pas de sol) : la face
+ * **horizontale** à 1,0 exactement — un albédo sRGB s'y lit tel quel, et une
+ * zone d'équipe cuite en blanc, multipliée par la couleur d'équipe, rend cette
+ * couleur, pas plus claire —, la face tournée **vers le joueur** à 0,68, et les
+ * **flancs** à 0,45. Charte du 23 septembre 2026 : la moitié de l'armée est
+ * dessinée en miroir, la lumière est donc symétrique (principale depuis le
+ * joueur, contour depuis le haut de l'écran), et les deux flancs reçoivent la
+ * même lumière, celle du ciel seul.
+ */
+export const CLARTES_VISEES = { horizontale: 1, joueur: 0.68, flanc: 0.45 } as const;
+
+const RAD = Math.PI / 180;
+
+/**
+ * Les forces qui rendent `CLARTES_VISEES` sous les directions du contrat. Une
+ * face blanche lambertienne de normale `n` renvoie `ciel + Σ force/π · max(0, n·d)` :
+ * - un flanc (normale ±X) ne voit ni la principale, qui vient du joueur, ni le
+ *   contour, qui vient du haut de l'écran : il ne reçoit que le ciel ;
+ * - la face tournée vers le joueur voit la principale sous `cos(élévation)` ;
+ * - la face horizontale voit les deux sous le sinus de leur élévation.
+ */
+function forcesEclairage(): { principale: number; contour: number; ciel: number } {
+  const p = ECLAIRAGE_CUISSON.principale;
+  const c = ECLAIRAGE_CUISSON.contour;
+  const ciel = CLARTES_VISEES.flanc;
+  const kP = (CLARTES_VISEES.joueur - ciel) / (Math.cos(p.azimut * RAD) * Math.cos(p.elevation * RAD));
+  const kC = (CLARTES_VISEES.horizontale - ciel - kP * Math.sin(p.elevation * RAD)) / Math.sin(c.elevation * RAD);
+  return { principale: kP * Math.PI, contour: kC * Math.PI, ciel };
+}
+
+const FORCES = forcesEclairage();
+
+/**
+ * L'éclairage, en unités de Cycles. Le contrat donne les directions, les forces
+ * sortent de `CLARTES_VISEES` (principale ≈ 1,445, contour ≈ 0,953, ciel 0,45 ;
+ * `tests/sprites/eclairage.test.ts` les recalcule, `calibration_lumiere` les
+ * mesure). Lumières blanches : l'étalonnage de saison, de phase et de météo est
+ * au rendu.
  */
 export const ECLAIRAGE = {
-  principale: { ...ECLAIRAGE_CUISSON.principale, force: 2.2, angle: 3, ombre: true },
-  contour: { ...ECLAIRAGE_CUISSON.contour, force: 0.8, angle: 5, ombre: false },
-  ciel: 0.3,
+  principale: { ...ECLAIRAGE_CUISSON.principale, force: FORCES.principale, angle: 3, ombre: true },
+  contour: { ...ECLAIRAGE_CUISSON.contour, force: FORCES.contour, angle: 5, ombre: false },
+  ciel: FORCES.ciel,
 } as const;
+
+/** Un vecteur de direction, dans le repère de Blender (x droite, y haut de l'écran, z en l'air). */
+type Direction = readonly [number, number, number];
+
+/** La direction **vers** une lumière du contrat (la règle de `cuire_entree.py`, `vers_la_source`). */
+export function versLaSource(azimut: number, elevation: number): Direction {
+  const a = azimut * RAD;
+  const e = elevation * RAD;
+  return [Math.cos(e) * Math.sin(a), -Math.cos(e) * Math.cos(a), Math.sin(e)];
+}
+
+/**
+ * La clarté d'une face blanche mate de normale `n` (repère de Blender), sans
+ * rien qui l'occulte : ce que la calibration mesure. Pur, pour le test.
+ */
+export function clarteFace(n: Direction, e: typeof ECLAIRAGE = ECLAIRAGE): number {
+  let total = e.ciel;
+  for (const l of [e.principale, e.contour]) {
+    const d = versLaSource(l.azimut, l.elevation);
+    total += (l.force / Math.PI) * Math.max(0, n[0] * d[0] + n[1] * d[1] + n[2] * d[2]);
+  }
+  return total;
+}
+
+/**
+ * Le contour cuit d'une famille : un anneau autour de la couverture du modèle,
+ * posé **sous** lui à l'échelle 4 (`image.ts`, `contourner`). Couleur en
+ * lumière linéaire.
+ */
+export interface ReglageContour {
+  couleur: readonly [number, number, number];
+  opacite: number;
+  /** Épaisseur de l'anneau, en pixels de l'échelle 4. */
+  epaisseur: number;
+  /** La couverture à partir de laquelle un pixel rendu est du modèle. */
+  seuil: number;
+}
+
+function hexVersLineaire(hex: string): [number, number, number] {
+  const n = Number.parseInt(hex.replace('#', ''), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => srgbVersLineaire(v / 255)) as [number, number, number];
+}
+
+/**
+ * Le contour de chaque famille, lu dans la charte des figurines : c'est elle
+ * qui en fait foi (couleur, épaisseur, opacité par famille). Une opacité nulle
+ * ou absente : pas de contour.
+ */
+export const CONTOUR_PAR_FAMILLE: Readonly<Record<FamilleSprite, ReglageContour | null>> = Object.fromEntries(
+  FAMILLES_SPRITE.map((f) => {
+    const opacite = (charte.contour.opacite as Partial<Record<FamilleSprite, number>>)[f] ?? 0;
+    const reglage: ReglageContour | null = opacite > 0
+      ? { couleur: hexVersLineaire(charte.contour.hex), opacite, epaisseur: charte.contour.epaisseurEchelle4, seuil: charte.contour.seuilCouverture }
+      : null;
+    return [f, reglage];
+  }),
+) as Record<FamilleSprite, ReglageContour | null>;
+
+/**
+ * La marge du canevas d'une entrée, en pixels livrés : `MARGE_CANEVAS`, plus
+ * l'épaisseur du contour quand il y en a un — sans quoi l'anneau toucherait le
+ * bord et serait coupé.
+ */
+export function margeCanevas(contour: ReglageContour | null, surechantillonnage: number): number {
+  return MARGE_CANEVAS + (contour ? Math.ceil(contour.epaisseur / surechantillonnage) + 1 : 0);
+}
 
 /** Qualité WebP de la couleur et de l'émission ; l'alpha est sans perte. */
 export const QUALITE_WEBP = 90;

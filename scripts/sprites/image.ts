@@ -77,6 +77,132 @@ export function reduire(brute: ImageBrute, facteur: number): ImageReduite {
   return { largeur: l, hauteur: h, canaux, donnees };
 }
 
+// ---------------------------------------------------------------------------
+// Le contour cuit
+// ---------------------------------------------------------------------------
+
+/** Ce qui est « loin » pour la transformée de distance : aucun pixel dedans. */
+const LOIN = 1e20;
+
+/**
+ * Une passe à une dimension de la transformée de Felzenszwalb et Huttenlocher :
+ * `d[q] = min_p (q − p)² + f[p]`, par l'enveloppe basse des paraboles, en temps
+ * linéaire. `v` et `z` sont des tableaux de travail.
+ */
+function passeDistance(f: Float64Array, n: number, d: Float64Array, v: Int32Array, z: Float64Array): void {
+  let k = 0;
+  v[0] = 0;
+  z[0] = -Infinity;
+  z[1] = Infinity;
+  for (let q = 1; q < n; q++) {
+    let s = (f[q]! + q * q - (f[v[k]!]! + v[k]! * v[k]!)) / (2 * q - 2 * v[k]!);
+    while (s <= z[k]!) {
+      k--;
+      s = (f[q]! + q * q - (f[v[k]!]! + v[k]! * v[k]!)) / (2 * q - 2 * v[k]!);
+    }
+    k++;
+    v[k] = q;
+    z[k] = s;
+    z[k + 1] = Infinity;
+  }
+  k = 0;
+  for (let q = 0; q < n; q++) {
+    while (z[k + 1]! < q) k++;
+    const e = q - v[k]!;
+    d[q] = e * e + f[v[k]!]!;
+  }
+}
+
+/**
+ * La distance euclidienne **au carré** de chaque pixel au pixel « dedans » le
+ * plus proche, de centre à centre : exacte, par deux passes de paraboles
+ * (colonnes puis lignes). Un pixel dedans vaut 0 ; sans aucun pixel dedans,
+ * tout vaut au moins 10²⁰.
+ */
+export function distancesCarrees(dedans: Uint8Array, l: number, h: number): Float64Array {
+  const d = new Float64Array(l * h);
+  for (let p = 0; p < l * h; p++) d[p] = dedans[p] ? 0 : LOIN;
+  const n = Math.max(l, h);
+  const f = new Float64Array(n);
+  const sortie = new Float64Array(n);
+  const v = new Int32Array(n);
+  const z = new Float64Array(n + 1);
+  for (let x = 0; x < l; x++) {
+    for (let y = 0; y < h; y++) f[y] = d[y * l + x]!;
+    passeDistance(f, h, sortie, v, z);
+    for (let y = 0; y < h; y++) d[y * l + x] = sortie[y]!;
+  }
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < l; x++) f[x] = d[y * l + x]!;
+    passeDistance(f, l, sortie, v, z);
+    for (let x = 0; x < l; x++) d[y * l + x] = sortie[x]!;
+  }
+  return d;
+}
+
+/** Le contour à poser, tel que l'image le lit : couleur en lumière linéaire, épaisseur en pixels **rendus**. */
+export interface ContourImage {
+  couleur: readonly [number, number, number];
+  opacite: number;
+  epaisseur: number;
+  /** Couverture (0 à 1) à partir de laquelle un pixel rendu est du modèle. */
+  seuil: number;
+}
+
+/**
+ * Pose le contour **sous** le modèle, dans l'image rendue à l'échelle 4 — avant
+ * la réduction, qui l'adoucit comme elle adoucit le reste.
+ *
+ * L'anneau part de la **couverture** du modèle, jamais de l'alpha : l'alpha
+ * compte aussi l'ombre cuite au sol, que le contour ne doit pas cerner. Un
+ * pixel rendu est du modèle quand sa couverture atteint `seuil` ; l'anneau est
+ * l'ensemble des autres pixels à `epaisseur` pixels au plus (distance exacte,
+ * de centre à centre). Sur l'anneau, dans l'ordre de la composition : le
+ * modèle (sa part du pixel, `couverture`), par-dessus l'anneau, par-dessus
+ * l'ombre — la couleur prémultipliée gagne `couleur × opacité × (1 − couverture)`,
+ * l'alpha `(opacité + ombre × (1 − opacité)) × (1 − couverture)`. La couleur de
+ * l'ombre, noire, n'est pas recomptée.
+ *
+ * Le masque et la couverture ne changent pas : l'anneau n'entre jamais dans la
+ * page de masque. L'image rendue gagne un canal `contour` — la part de chaque
+ * pixel que l'anneau peint —, que `versCalques` lit pour ne pas le traiter
+ * comme une ombre (ni fondu au bord du canevas, ni seuil d'effacement).
+ */
+export function contourner(brute: ImageBrute, contour: ContourImage): ImageBrute {
+  const { largeur: L, hauteur: H, canaux, donnees } = brute;
+  if (canaux.includes('contour')) throw new Error('image déjà contournée');
+  const c = canaux.length;
+  const [iR, iG, iB, iA, iC] = ['r', 'g', 'b', 'a', 'couverture'].map((nom) => canaux.indexOf(nom)) as [number, number, number, number, number];
+  if ([iR, iG, iB, iA, iC].some((i) => i < 0)) throw new Error('canaux de couleur ou de couverture absents');
+  const n = L * H;
+  const seuil = contour.seuil * 65535;
+  const dedans = new Uint8Array(n);
+  for (let p = 0; p < n; p++) dedans[p] = donnees[p * c + iC]! >= seuil ? 1 : 0;
+  const d2 = distancesCarrees(dedans, L, H);
+  const limite = contour.epaisseur * contour.epaisseur;
+  const c2 = c + 1;
+  const sortie = new Uint16Array(n * c2);
+  const o = contour.opacite;
+  const borne = (x: number): number => Math.max(0, Math.min(65535, Math.round(x)));
+  for (let p = 0; p < n; p++) {
+    const s = p * c;
+    const t = p * c2;
+    for (let k = 0; k < c; k++) sortie[t + k] = donnees[s + k]!;
+    if (dedans[p] || d2[p]! > limite) continue;
+    const couverture = donnees[s + iC]! / 65535;
+    const alpha = donnees[s + iA]! / 65535;
+    const libre = 1 - couverture;
+    const ombre = libre > 1e-6 ? Math.min(1, Math.max(0, (alpha - couverture) / libre)) : 0;
+    const peinture = o * libre;
+    sortie[t + iR] = borne(donnees[s + iR]! + contour.couleur[0] * peinture * 65535);
+    sortie[t + iG] = borne(donnees[s + iG]! + contour.couleur[1] * peinture * 65535);
+    sortie[t + iB] = borne(donnees[s + iB]! + contour.couleur[2] * peinture * 65535);
+    sortie[t + iA] = borne((couverture + (o + ombre * (1 - o)) * libre) * 65535);
+    sortie[t + c] = borne(peinture * 65535);
+  }
+  return { largeur: L, hauteur: H, canaux: [...canaux, 'contour'], donnees: sortie };
+}
+
 /** Les calques livrés, à l'échelle 1, sur tout le canevas. */
 export interface Calques {
   largeur: number;
@@ -112,6 +238,9 @@ export function versCalques(
   const [iR, iG, iB, iA] = ['r', 'g', 'b', 'a'].map((n) => index(canaux, n));
   const iM = index(canaux, 'masque');
   const iC = index(canaux, 'couverture');
+  // La part peinte par le contour (`contourner`) : là où il y en a, l'alpha
+  // n'est pas une ombre, et ni le fondu ni le seuil ne s'y appliquent.
+  const iK = index(canaux, 'contour');
   const iE = ['er', 'eg', 'eb'].map((n) => index(canaux, n));
   if ([iR, iG, iB, iA, iC].some((i) => i === undefined || i < 0)) throw new Error('canaux de couleur ou de couverture absents');
   const avecMasque = options.masque && iM >= 0;
@@ -128,13 +257,14 @@ export function versCalques(
     const cov = donnees[o + iC!]!;
     let a8 = Math.round(Math.min(1, a) * 255);
     const cov8 = Math.round(Math.min(1, cov) * 255);
-    if (cov8 === 0 && fondu > 0 && a8 > 0) {
+    const ombre = cov8 === 0 && !(iK >= 0 && donnees[o + iK]! > 0);
+    if (ombre && fondu > 0 && a8 > 0) {
       const x = p % largeur;
       const y = (p - x) / largeur;
       const bord = Math.min(x, y, largeur - 1 - x, hauteur - 1 - y);
       if (bord < fondu) a8 = Math.round((a8 * bord) / fondu);
     }
-    if (cov8 === 0 && a8 < options.seuilOmbre) a8 = 0;
+    if (ombre && a8 < options.seuilOmbre) a8 = 0;
     couverture[p] = cov8;
     if (a8 > 0) {
       couleur[p * 4] = Math.round(lineaireVersSrgb(donnees[o + iR!]! / a) * 255);
@@ -190,21 +320,29 @@ export interface Decoupe {
   couleur: Uint8Array;
   masque: Uint8Array | null;
   emission: Uint8Array | null;
+  /**
+   * La couverture du modèle, sur demande seulement (`--couverture`) : une page
+   * de diagnostic, hors du manifeste, pour les mesures des figurines — elle
+   * sépare le modèle de son contour et de son ombre.
+   */
+  couverture?: Uint8Array | null;
 }
 
-/** Découpe `rect` dans des calques. */
-export function decouper(c: Calques, rect: Rectangle): Decoupe {
+/** Découpe `rect` dans des calques ; `avecCouverture` y ajoute la couverture. */
+export function decouper(c: Calques, rect: Rectangle, avecCouverture = false): Decoupe {
   const { l, h } = rect;
   const couleur = new Uint8Array(l * h * 4);
   const masque = c.masque ? new Uint8Array(l * h) : null;
   const emission = c.emission ? new Uint8Array(l * h * 3) : null;
+  const couverture = avecCouverture ? new Uint8Array(l * h) : null;
   for (let y = 0; y < h; y++) {
     const source = (rect.y + y) * c.largeur + rect.x;
     couleur.set(c.couleur.subarray(source * 4, (source + l) * 4), y * l * 4);
     if (masque) masque.set(c.masque!.subarray(source, source + l), y * l);
     if (emission) emission.set(c.emission!.subarray(source * 3, (source + l) * 3), y * l * 3);
+    if (couverture) couverture.set(c.couverture.subarray(source, source + l), y * l);
   }
-  return { l, h, couleur, masque, emission };
+  return couverture ? { l, h, couleur, masque, emission, couverture } : { l, h, couleur, masque, emission };
 }
 
 /**
@@ -265,7 +403,7 @@ export function signature(d: Decoupe): string {
     h1 = Math.imul(h1, 0x01000193);
   }
   let h2 = 0x811c9dc5;
-  for (const t of [d.masque, d.emission]) {
+  for (const t of [d.masque, d.emission, d.couverture ?? null]) {
     if (!t) continue;
     for (let i = 0; i < t.length; i++) {
       h2 ^= t[i]!;
@@ -283,5 +421,6 @@ export function memesDecoupes(a: Decoupe, b: Decoupe): boolean {
     for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return false;
     return true;
   };
-  return a.l === b.l && a.h === b.h && egaux(a.couleur, b.couleur) && egaux(a.masque, b.masque) && egaux(a.emission, b.emission);
+  return a.l === b.l && a.h === b.h && egaux(a.couleur, b.couleur) && egaux(a.masque, b.masque) && egaux(a.emission, b.emission)
+    && egaux(a.couverture ?? null, b.couverture ?? null);
 }

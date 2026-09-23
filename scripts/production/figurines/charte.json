@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "arretee": "2026-09-23",
+  "source": "Charte arrêtée par le coordinateur le 23 septembre 2026, sur les cinq avis du panel (scratchpad/panel/avis-*.md ; chiffres : section G de l'avis de la designeuse, fabrication : section G de l'avis de l'artiste technique).",
+  "style": "Jouet peint, photographié sous une belle lumière : une couleur unie par pièce, métallicité nulle (c'est de la peinture), toutes les arêtes adoucies, aucun détail peint (ni texte, ni chiffre, ni insigne, ni camouflage, ni salissure, ni grain).",
+
+  "atlas": {
+    "note": "Chaque teinte a une case d'un atlas commun, dans l'ordre de la liste « teintes » (ligne par ligne, depuis le haut à gauche). Ajouter une teinte se fait EN FIN de liste : déplacer une teinte déplacerait sa case dans tous les modèles déjà faits.",
+    "colonnes": 8,
+    "lignes": 8,
+    "remplissage": 0.7,
+    "caseInutilisee": "#ff00ff"
+  },
+
+  "teintes": [
+    { "nom": "equipe", "hex": "#ffffff", "equipe": true, "rugosite": 0.35, "metal": 0, "materiau": "corps", "role": "zone d'équipe : blanc sous masque binaire, laque ; le jeu la multiplie par la couleur du camp" },
+    { "nom": "graphite", "hex": "#30343b", "rugosite": 0.6, "metal": 0, "materiau": "details", "sombre": true, "role": "châssis, dessous, armes, tubes, rotors, patins" },
+    { "nom": "caoutchouc", "hex": "#222428", "rugosite": 0.9, "metal": 0, "materiau": "details", "sombre": true, "role": "chenilles, pneus" },
+    { "nom": "os", "hex": "#d8d0bf", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "clair chaud : moyeux, caisses, bidons, missiles, bâches, lignes de piste, bande de flottaison" },
+    { "nom": "acier_clair", "hex": "#aab0b7", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "bouches de canon, rails, charnières" },
+    { "nom": "verre", "hex": "#22313b", "reflet": { "hex": "#cfe2ec", "part": 0.3333 }, "rugosite": 0.08, "metal": 0, "materiau": "details", "role": "verrières, vitres ; bande de reflet peinte sur le tiers haut de la pièce" },
+    { "nom": "peau_infanterie", "hex": "#c48f65", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["infanterie"], "role": "visage et mains du fantassin" },
+    { "nom": "peau_meca", "hex": "#8d5a3b", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["meca"], "role": "visage et mains du méca" },
+    { "nom": "peau_genie", "hex": "#e3b48f", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["genie"], "role": "visage et mains du génie" },
+    { "nom": "feux", "hex": "#f3ead2", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "phares et feux, jamais d'ambre ni d'orange" },
+    { "nom": "appret", "hex": "#8b9097", "rugosite": 0.6, "metal": 0, "materiau": "corps", "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate"], "role": "les Gris : apprêt de leurs superstructures, au lieu du graphite" },
+    { "nom": "orange", "hex": "#f0761e", "rugosite": 0.6, "metal": 0, "materiau": "details", "emission": true, "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate"], "role": "les Gris : l'œil émissif et le chevron" },
+    { "nom": "enduit", "hex": "#e2dbcb", "rugosite": 0.6, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : murs" },
+    { "nom": "pave", "hex": "#8e8778", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : socles, quais" },
+    { "nom": "bois", "hex": "#8a6a4a", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : pont, planches" }
+  ],
+
+  "saisons": {
+    "note": "Surcharges de couleur par saison (nom de teinte → hexadécimal). La cuisson ne lit que l'albédo de base ; les variantes existent parce que la fiche les attend. Vide : la variante est l'atlas de base.",
+    "hiver": {}
+  },
+
+  "materiaux": {
+    "note": "Les deux matériaux que les fiches exigent. Ils lisent le même atlas ; la teinte dit dans lequel une pièce tombe.",
+    "corps": "mat_corps",
+    "details": "mat_details"
+  },
+
+  "palette": {
+    "teintesMax": 6,
+    "note": "Parts des pixels du modèle en vue « droite » (image 0 du repos), mesurées sur un rendu d'identifiants à 128 px par case. « sombre » : graphite et caoutchouc, la masse sombre, qui doit tenir le bas de la silhouette.",
+    "parts": {
+      "sombre": { "min": 0.20, "max": 0.35 },
+      "os": { "max": 0.12 },
+      "acier_clair": { "max": 0.03 },
+      "verre": { "max": 0.08 },
+      "feux": { "max": 0.01 },
+      "orange": { "min": 0.04, "max": 0.06, "seulementPour": "gris" },
+      "appret": { "max": 0.25, "seulementPour": "gris" }
+    }
+  },
+
+  "equipe": {
+    "note": "Part des pixels du modèle (contour exclu) dont le masque vaut au moins 0,5, sur l'image cuite. Portée par les dessus, d'un seul tenant.",
+    "droite": { "min": 0.45, "max": 0.60 },
+    "droiteFantassin": { "min": 0.40, "max": 0.55 },
+    "basEtHautMin": 0.40,
+    "connexeMin": 0.60,
+    "pixelsParCaseConnexe": 48,
+    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "proposée par le panel (avis de l'artiste technique, règle 3) pour « portée par les dessus » ; seuil non arrêté par le coordinateur" }
+  },
+
+  "tailles": {
+    "note": "Mesurées sur l'image cuite, contour compris, en cases de 128 px (PIXELS_PAR_CASE), vue « droite ». La classe est la taille de silhouette du canon (content/unites.json, silhouette.taille : 1 petite, 2 moyenne, 3 grande).",
+    "classes": {
+      "petite": { "min": 0.60, "max": 0.68 },
+      "moyenne": { "min": 0.76, "max": 0.84 },
+      "grande": { "min": 0.88, "max": 0.94 }
+    },
+    "fantassin": { "largeur": { "min": 0.36, "max": 0.50 }, "hauteur": { "min": 0.68, "max": 0.75 } },
+    "debordLateralMax": 0.47,
+    "hauteurAuDessusDuPivotMax": { "sol": 0.70, "vol": 0.85 }
+  },
+
+  "altitudes": {
+    "note": "Bas de la silhouette au repos, en mètres au-dessus du sol, pour ce qui vole.",
+    "rotor": 0.20,
+    "avion": 0.30,
+    "drone": 0.25,
+    "tolerance": 0.02
+  },
+
+  "repos": {
+    "agitationMax": { "sol": 0.03, "vol": 0.15 },
+    "seuilNiveaux": 24,
+    "rotationMaxDegres": 2,
+    "note": "Part des pixels de la silhouette qui changent de plus de 24 niveaux entre deux images consécutives du repos (vue « droite », composée sur l'herbe en bleu). Les pièces tournantes déclarées (rotors, parabole radar) sont exclues de la mesure et de la limite de rotation."
+  },
+
+  "formes": {
+    "chanfreinMin": 0.015,
+    "chanfreinPart": 0.03,
+    "epaisseurMin": 0.05,
+    "epaisseurMinAntenne": 0.03,
+    "piecesLisiblesMax": 7,
+    "note": "Chanfrein d'au moins 0,015 m (et 3 % de la plus grande dimension de la pièce) sur toute arête, lissage partout. Aucune pièce porteuse de sens sous 0,05 m dans sa plus petite dimension (antennes : 0,03 m). Au plus sept pièces lisibles ; le signe distinctif est la plus grosse après le corps."
+  },
+
+  "poses": {
+    "note": "En vue « droite » : nez, étrave et bouche vers la droite. Tir direct horizontal ; tir indirect relevé de 30 à 45° ; anti-aérien dressé de 60 à 70° ; une unité de soutien ne montre pas d'arme. Signes communs : vision = boule-caméra claire (sur mât ou dessous) ; ravitaillement = caisses os ; brouillage = mât d'antennes en arête de poisson (pas de parabole) ; Gris = œil orange et chevron. Navires : coque graphite sous le pont, bande de flottaison os de 3 à 5 cm, l'équipe ne touche jamais l'eau.",
+    "tirIndirectDegres": { "min": 30, "max": 45 },
+    "antiAerienDegres": { "min": 60, "max": 70 },
+    "flottaisonMetres": { "min": 0.03, "max": 0.05 }
+  },
+
+  "contour": {
+    "note": "Posé à la cuisson (scripts/sprites/image.ts, contourner) : un anneau de 12 px à l'échelle 4 (≈ 3 px à 128 px par case, 1,1 px à 48) autour de la couche « couverture » (jamais de l'alpha, qui compte l'ombre au sol), sous le modèle, masque 0 sur l'anneau.",
+    "hex": "#15181d",
+    "epaisseurEchelle4": 12,
+    "seuilCouverture": 0.5,
+    "opacite": { "unite": 1, "batiment": 0.85, "terrain": 0.85, "decor": 0.6 }
+  },
+
+  "budget": { "triangles": 60000 },
+
+  "planche": {
+    "herbe": "#8ca868",
+    "grille": "#7a965a",
+    "camps": [
+      { "nom": "bleu", "hex": "#3f86e0" },
+      { "nom": "rouge", "hex": "#e04b45" },
+      { "nom": "islande", "hex": "#5b6f86" },
+      { "nom": "nouvelle_zelande", "hex": "#2f5f4f" }
+    ]
+  }
+}

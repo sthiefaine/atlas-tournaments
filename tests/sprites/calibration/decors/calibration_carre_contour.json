@@ -1,18 +1,18 @@
 {
  "entree": {
-  "id": "calibration_carre",
+  "id": "calibration_carre_contour",
   "famille": "decor",
   "cle": "calibration",
-  "variante": "carre",
+  "variante": "carre_contour",
   "source": {
    "fichier": "scripts/sprites/calibration/calibration_carre.glb",
    "sha256": "96a7175cb595e42ad304ab51d684aa87f6f6611f47816cd9a9ed21e8604edccf"
   },
   "pages": [
    {
-    "couleur": "assets/sprites/decors/calibration_carre_0.webp",
-    "largeur": 132,
-    "hauteur": 104
+    "couleur": "assets/sprites/decors/calibration_carre_contour_0.webp",
+    "largeur": 136,
+    "hauteur": 108
    }
   ],
   "animations": [
@@ -26,10 +26,10 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 132,
-      "h": 102,
-      "px": 66,
-      "py": 51
+      "l": 136,
+      "h": 106,
+      "px": 68,
+      "py": 53
      }
     ]
    }
@@ -37,19 +37,19 @@
  },
  "cuisson": {
   "version": 2,
-  "empreinte": "6ef6fab12d9265b783e3cd47fe11e9464de235e462c1df71996feecf7fa53b0e",
-  "date": "2026-09-23T18:39:49.768Z",
-  "secondes": 8.2,
+  "empreinte": "aa36936be7d678f8590f9f745917498c762b7f6730bfdb3d48ea754e92a32b31",
+  "date": "2026-09-23T18:39:50.965Z",
+  "secondes": 9.4,
   "secondesRendu": 4.8,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 702,
+  "octets": 690,
   "canevas": {
    "fixe": {
-    "x0": -67,
-    "y0": -53,
-    "largeur": 134,
-    "hauteur": 106
+    "x0": -71,
+    "y0": -57,
+    "largeur": 142,
+    "hauteur": 114
    }
   },
   "materiauxTeints": [],

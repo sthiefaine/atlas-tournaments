@@ -15,15 +15,30 @@
  *   doit tomber là où `versPlan` et `LACET_VUE` le mettent : c'est ce qui
  *   prouve que `droite` regarde la droite de l'écran, que la hauteur monte et
  *   que le profil a son tangage.
- * - `calibration_ombre` : un pilier gris, ombre cuite. Son ombre doit partir
- *   vers le haut et la droite de l'écran, à l'opposé de la principale.
+ * - `calibration_ombre` : une barre grise en l'air, à `HAUTEUR_BARRE`, ombre
+ *   cuite. Son ombre doit tomber droit vers le haut de l'écran, à l'opposé de
+ *   la principale qui vient du joueur, à `h / tan(élévation)` derrière le point
+ *   du sol sous la barre. Pas un pilier : la lumière vient presque de la
+ *   caméra, un pilier cache toute son ombre derrière lui.
+ * - `calibration_lumiere_face` et `calibration_lumiere_biais` : un cube blanc
+ *   mat, droit puis tourné de 45°. Le dessus doit sortir à 1, la face tournée
+ *   vers le joueur à 0,68, les deux faces du cube tourné à la même clarté
+ *   (0,61) : la lumière est symétrique (`reglages.ts`, `CLARTES_VISEES`). Deux
+ *   modèles et non un : deux cubes voisins se prendraient un peu de ciel.
+ *
+ * La liste cuit aussi le carré **avec** son contour (`calibration_carre_contour`) :
+ * les autres entrées le refusent (`"contour": false`), elles mesurent la
+ * caméra au pixel près.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-/** Un parallélépipède, en coordonnées glTF (Y en haut, avant en +Z). */
-interface Boite { min: [number, number, number]; max: [number, number, number]; materiau: number }
+/**
+ * Un parallélépipède, en coordonnées glTF (Y en haut, avant en +Z), tourné de
+ * `lacet` degrés autour de la verticale qui passe par son centre.
+ */
+interface Boite { min: [number, number, number]; max: [number, number, number]; materiau: number; lacet?: number }
 
 interface Materiau { nom: string; couleur: [number, number, number] }
 
@@ -44,11 +59,23 @@ function geometrieBoite(b: Boite): { positions: number[]; normales: number[]; in
   const positions: number[] = [];
   const normales: number[] = [];
   const indices: number[] = [];
+  // Le lacet, autour de la verticale du centre : x' = x cos + z sin, z' = −x sin + z cos.
+  const a = ((b.lacet ?? 0) * Math.PI) / 180;
+  const [cx, cz] = [(x0 + x1) / 2, (z0 + z1) / 2];
+  const tourner = (x: number, z: number): [number, number] => [x * Math.cos(a) + z * Math.sin(a), -x * Math.sin(a) + z * Math.cos(a)];
   for (const [coins, n] of faces) {
     const base = positions.length / 3;
     for (const c of coins) {
-      positions.push(...c);
-      normales.push(...n);
+      if (a === 0) {
+        // Sans lacet, les sommets tels quels, au bit près : les modèles d'avant ne changent pas.
+        positions.push(...c);
+        normales.push(...n);
+        continue;
+      }
+      const [x, z] = tourner(c[0]! - cx, c[2]! - cz);
+      positions.push(x + cx, c[1]!, z + cz);
+      const [nx, nz] = tourner(n[0]!, n[2]!);
+      normales.push(nx, n[1]!, nz);
     }
     indices.push(base, base + 1, base + 2, base, base + 2, base + 3);
   }
@@ -155,6 +182,12 @@ export const REPERES = {
 /** L'arête des cubes repères, en mètres. */
 export const ARETE_REPERE = 0.1;
 
+/** L'arête des cubes de lumière, en mètres : centrés sur l'origine, posés au sol. */
+export const ARETE_LUMIERE = 0.4;
+
+/** La hauteur de la barre d'ombre, en mètres : son ombre tombe à `HAUTEUR_BARRE / tan(élévation)` derrière. */
+export const HAUTEUR_BARRE = 0.4;
+
 export function modelesCalibration(): Record<string, Modele> {
   return {
     calibration_carre: {
@@ -178,7 +211,15 @@ export function modelesCalibration(): Record<string, Modele> {
     },
     calibration_ombre: {
       materiaux: [{ nom: 'mat_gris', couleur: [0.5, 0.5, 0.5] }],
-      boites: [{ min: [-0.1, 0, -0.1], max: [0.1, 0.4, 0.1], materiau: 0 }],
+      boites: [{ min: [-0.3, HAUTEUR_BARRE - 0.02, -0.02], max: [0.3, HAUTEUR_BARRE + 0.02, 0.02], materiau: 0 }],
+    },
+    calibration_lumiere_face: {
+      materiaux: [{ nom: 'mat_blanc', couleur: [1, 1, 1] }],
+      boites: [{ min: [-ARETE_LUMIERE / 2, 0, -ARETE_LUMIERE / 2], max: [ARETE_LUMIERE / 2, ARETE_LUMIERE, ARETE_LUMIERE / 2], materiau: 0 }],
+    },
+    calibration_lumiere_biais: {
+      materiaux: [{ nom: 'mat_blanc', couleur: [1, 1, 1] }],
+      boites: [{ min: [-ARETE_LUMIERE / 2, 0, -ARETE_LUMIERE / 2], max: [ARETE_LUMIERE / 2, ARETE_LUMIERE, ARETE_LUMIERE / 2], materiau: 0, lacet: 45 }],
     },
   };
 }

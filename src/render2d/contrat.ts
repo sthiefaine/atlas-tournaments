@@ -137,22 +137,26 @@ export const IMAGES_PAR_SECONDE = 12;
  * L'éclairage de cuisson, commun à toutes les images. Les angles disent d'où
  * **vient** la lumière dans le plan du sol : azimut 0 depuis le joueur (le bas
  * de l'écran), −90 depuis la gauche, 180 depuis le haut ; élévation au-dessus
- * de l'horizon. La lumière principale vient de l'avant-gauche : elle éclaire
- * les faces que la caméra voit. L'ombre d'un bâtiment ou d'un décor est cuite
- * dans son image (attrapeur d'ombre) ; celle d'une **unité ne l'est pas** — une
- * unité se retourne, son ombre ne doit pas changer de côté, et une unité en vol
- * pose la sienne sur la case, sous elle : le rendu la dessine (`OMBRE_UNITE`).
+ * de l'horizon. La lumière principale vient **du joueur** : elle éclaire les
+ * faces que la caméra voit, et elle est **symétrique** — la moitié de l'armée
+ * est dessinée en miroir (la gauche est la droite retournée), une lumière de
+ * côté la ferait éclairer à l'envers (charte des figurines, 23 septembre 2026).
+ * L'ombre d'un bâtiment ou d'un décor est cuite dans son image (attrapeur
+ * d'ombre) ; celle d'une **unité ne l'est pas** — une unité se retourne, son
+ * ombre ne doit pas changer de côté, et une unité en vol pose la sienne sur la
+ * case, sous elle : le rendu la dessine (`OMBRE_UNITE`).
  */
 export const ECLAIRAGE_CUISSON = {
-  principale: { azimut: -40, elevation: 55 },
+  principale: { azimut: 0, elevation: 60 },
   contour: { azimut: 180, elevation: 30 },
 } as const;
 
 /**
  * L'ombre qu'un rendu pose sous une unité : une ellipse douce, décalée comme
- * le serait l'ombre de la lumière principale, en fraction de case.
+ * le serait l'ombre de la lumière principale — qui vient du joueur : droit
+ * derrière l'unité, vers le haut de l'écran —, en fraction de case.
  */
-export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0.06, decalageY: -0.04, opacite: 0.34 } as const;
+export const OMBRE_UNITE = { largeur: 0.62, hauteur: 0.3, decalageX: 0, decalageY: -0.06, opacite: 0.34 } as const;
 
 /**
  * Le masque d'équipe : la cuisson peint les zones d'équipe en **blanc** et

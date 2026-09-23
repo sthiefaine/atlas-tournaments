@@ -6,13 +6,13 @@
   "variante": "ombre",
   "source": {
    "fichier": "scripts/sprites/calibration/calibration_ombre.glb",
-   "sha256": "089ee42397d0f9bd277c726877c998da39de324a17eebe6f028949455d0a92d7"
+   "sha256": "477c55de3bc94e03b65fb43602e16cef2129265ce7acaaf4f0b94faf21e47461"
   },
   "pages": [
    {
     "couleur": "assets/sprites/decors/calibration_ombre_0.webp",
-    "largeur": 80,
-    "hauteur": 72
+    "largeur": 96,
+    "hauteur": 68
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 80,
-      "h": 69,
-      "px": 27,
-      "py": 44
+      "l": 95,
+      "h": 68,
+      "px": 43,
+      "py": 38
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "52d2e84e02e4e3fe9abb801bb153b5c4f02db598a9da4e9ed8635904af258e60",
-  "date": "2026-09-23T01:01:28.339Z",
-  "secondes": 8,
-  "secondesRendu": 4.3,
+  "version": 2,
+  "empreinte": "285466ef1bca7beaeba14608b4b3e44fa2572024f246d472e461ee39106911c1",
+  "date": "2026-09-23T18:43:38.735Z",
+  "secondes": 7.7,
+  "secondesRendu": 3.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1144,
+  "octets": 1312,
   "canevas": {
    "fixe": {
-    "x0": -61,
-    "y0": -48,
-    "largeur": 122,
-    "hauteur": 96
+    "x0": -87,
+    "y0": -40,
+    "largeur": 174,
+    "hauteur": 80
    }
   },
   "materiauxTeints": [],

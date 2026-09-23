@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "calibration_lumiere_biais",
+  "famille": "decor",
+  "cle": "calibration",
+  "variante": "lumiere_biais",
+  "source": {
+   "fichier": "scripts/sprites/calibration/calibration_lumiere_biais.glb",
+   "sha256": "d5b32442b12bcbfb1b6da74e4d0b8ca7baefb428837cf09d54c0f1bb124e05df"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/calibration_lumiere_biais_0.webp",
+    "largeur": 76,
+    "hauteur": 92
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 76,
+      "h": 91,
+      "px": 38,
+      "py": 62
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 2,
+  "empreinte": "e5d2357ca7e525d4268fb14aca46bb7533cc2b53db7e82223f300c7e9c4bb3fc",
+  "date": "2026-09-23T18:39:55.864Z",
+  "secondes": 6,
+  "secondesRendu": 2.1,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 1568,
+  "canevas": {
+   "fixe": {
+    "x0": -40,
+    "y0": -64,
+    "largeur": 80,
+    "hauteur": 95
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

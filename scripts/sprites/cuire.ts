@@ -13,10 +13,15 @@
  * `--sortie <dossier>` écrit ailleurs que `public/assets/sprites` (la
  * calibration) ; `--garder-brut` garde les rendus à l'échelle 4 dans
  * `tmp/sprites/brut/` ; `--echantillons <n>` change les échantillons Cycles ;
- * `--paralleles <n>` le nombre de cuissons menées de front.
+ * `--paralleles <n>` le nombre de cuissons menées de front ;
+ * `--temporaire <dossier>` range les brouillons ailleurs que `tmp/sprites` (une
+ * cuisson d'essai ne doit pas partager les siens avec une cuisson du
+ * catalogue qui tournerait en même temps) ; `--couverture` écrit en plus, à
+ * côté de chaque page, une page `…_couverture.png` — la couverture du modèle,
+ * hors du manifeste, que les mesures des figurines lisent.
  *
- * Blender rend (`blender/cuire_entree.py`) ; tout le reste — réduction,
- * rognage, pivots, pages, manifeste — se fait ici.
+ * Blender rend (`blender/cuire_entree.py`) ; tout le reste — contour,
+ * réduction, rognage, pivots, pages, manifeste — se fait ici.
  */
 
 import { spawn } from 'node:child_process';
@@ -34,13 +39,15 @@ import { planVues, sourcesCatalogue, sourcesListe, type SourceSprite } from './c
 import { emballer } from './emballage';
 import { empreinte, preparerGlb } from './glb';
 import {
-  decouper, emprise, etendreCouleur, memesDecoupes, reduire, signature, versCalques, type Decoupe,
+  contourner, decouper, emprise, etendreCouleur, memesDecoupes, reduire, signature, versCalques, type Decoupe,
 } from './image';
-import { cheminEntree, cheminPage, ecrireManifeste, lireEntrees, problemesManifeste, type FichierEntree, type MetaCuisson } from './manifeste';
 import {
-  BLENDER, BORDURE, CUISSONS_PARALLELES, DEBRUITAGE, DOSSIER_FAMILLE, ECHANTILLONS, ECLAIRAGE, ESPACEMENT, FLOU_DE_BOUGE, FONDU_OMBRE,
-  MARGE_CANEVAS, MARGE_OCCLUSION, PAGE_MAX, PREFILTRE_DEBRUITAGE, PREFIXE_PAGES, QUALITE_WEBP, RACINE_SORTIE, SEUIL_ADAPTATIF, SEUIL_OMBRE, TEMPORAIRE,
-  VERSION_CUISSON,
+  cheminCouverture, cheminEntree, cheminPage, ecrireManifeste, lireEntrees, problemesManifeste, type FichierEntree, type MetaCuisson,
+} from './manifeste';
+import {
+  BLENDER, BORDURE, CONTOUR_PAR_FAMILLE, CUISSONS_PARALLELES, DEBRUITAGE, DOSSIER_FAMILLE, ECHANTILLONS, ECLAIRAGE, ESPACEMENT, FLOU_DE_BOUGE, FONDU_OMBRE,
+  MARGE_OCCLUSION, PAGE_MAX, PREFILTRE_DEBRUITAGE, PREFIXE_PAGES, QUALITE_WEBP, RACINE_SORTIE, SEUIL_ADAPTATIF, SEUIL_OMBRE, TEMPORAIRE,
+  VERSION_CUISSON, margeCanevas,
 } from './reglages';
 
 const SCRIPT_BLENDER = resolve(__dirname, 'blender', 'cuire_entree.py');
@@ -55,10 +62,15 @@ interface Options {
   garderBrut: boolean;
   echantillons: number;
   paralleles: number;
+  temporaire: string;
+  couverture: boolean;
 }
 
 function lireOptions(argv: readonly string[]): Options {
-  const o: Options = { ids: [], familles: [], tout: false, listes: [], force: false, sortie: RACINE_SORTIE, garderBrut: false, echantillons: ECHANTILLONS, paralleles: CUISSONS_PARALLELES };
+  const o: Options = {
+    ids: [], familles: [], tout: false, listes: [], force: false, sortie: RACINE_SORTIE, garderBrut: false, echantillons: ECHANTILLONS,
+    paralleles: CUISSONS_PARALLELES, temporaire: TEMPORAIRE, couverture: false,
+  };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i]!;
     const valeur = (): string => {
@@ -72,6 +84,8 @@ function lireOptions(argv: readonly string[]): Options {
     else if (a === '--id') o.ids.push(valeur());
     else if (a === '--liste') o.listes.push(valeur());
     else if (a === '--sortie') o.sortie = valeur();
+    else if (a === '--temporaire') o.temporaire = valeur();
+    else if (a === '--couverture') o.couverture = true;
     else if (a === '--echantillons') o.echantillons = Number(valeur());
     else if (a === '--paralleles') o.paralleles = Number(valeur());
     else if (a === '--famille') {
@@ -154,7 +168,7 @@ function lireImage(fd: number, octetsParImage: number, k: number): Uint16Array {
 /** Les fichiers de page d'une entrée : ceux qu'on remplace à chaque cuisson. */
 function pagesExistantes(dossier: string, id: string): string[] {
   if (!existsSync(dossier)) return [];
-  const motif = new RegExp(`^${id}_\\d+(_masque|_emission)?\\.(webp|png)$`);
+  const motif = new RegExp(`^${id}_\\d+(_masque|_emission|_couverture)?\\.(webp|png)$`);
   return readdirSync(dossier).filter((n) => motif.test(n)).map((n) => join(dossier, n));
 }
 
@@ -164,7 +178,9 @@ function dejaCuite(o: Options, source: SourceSprite, empreinteCuisson: string): 
   if (!existsSync(chemin)) return false;
   const f = JSON.parse(readFileSync(chemin, 'utf8')) as FichierEntree;
   if (f.cuisson?.empreinte !== empreinteCuisson) return false;
-  return f.entree.pages.every((p) => [p.couleur, p.masque, p.emission].every((c) => c === undefined || existsSync(cheminPage(o.sortie, c))));
+  const couvertures = o.couverture ? f.entree.pages.map((p) => cheminCouverture(p.couleur)) : [];
+  return f.entree.pages.every((p) => [p.couleur, p.masque, p.emission].every((c) => c === undefined || existsSync(cheminPage(o.sortie, c))))
+    && couvertures.every((c) => existsSync(cheminPage(o.sortie, c)));
 }
 
 interface Bilan { id: string; famille: FamilleSprite; statut: 'cuite' | 'inchangee' | 'echec'; octets: number; secondes: number; message?: string }
@@ -172,9 +188,11 @@ interface Bilan { id: string; famille: FamilleSprite; statut: 'cuite' | 'inchang
 async function cuireSource(source: SourceSprite, o: Options, rang: string): Promise<Bilan> {
   const debut = Date.now();
   const id = source.id;
-  const prep = resolve(TEMPORAIRE, 'prep', `${id}.glb`);
+  const prep = resolve(o.temporaire, 'prep', `${id}.glb`);
   const infos = preparerGlb(source.fichier, prep);
   const plan = planVues(source, infos.clips);
+  // Le contour de la famille, sauf pour une source qui le refuse (la calibration de la caméra).
+  const contour = source.contour === false ? null : CONTOUR_PAR_FAMILLE[source.famille];
   const reglagesTravail = {
     regleMasque: source.regleMasque,
     emissionSeparee: source.emissionSeparee,
@@ -187,7 +205,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     eclairage: ECLAIRAGE,
     pixelsParCase: PIXELS_PAR_CASE,
     surechantillonnage: SURECHANTILLONNAGE,
-    marge: MARGE_CANEVAS,
+    marge: margeCanevas(contour, SURECHANTILLONNAGE),
     margeOcclusion: MARGE_OCCLUSION,
     vues: plan,
   };
@@ -196,7 +214,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     source: { famille: source.famille, cle: source.cle, variante: source.variante ?? null, sha256: infos.sha256 },
     images: infos.images.map((i) => empreinte(readFileSync(i))),
     masque: infos.masque ? empreinte(readFileSync(infos.masque)) : null,
-    reglages: { ...reglagesTravail, bordure: BORDURE, espacement: ESPACEMENT, page: PAGE_MAX, webp: QUALITE_WEBP, ombre: SEUIL_OMBRE, fondu: FONDU_OMBRE },
+    reglages: { ...reglagesTravail, bordure: BORDURE, espacement: ESPACEMENT, page: PAGE_MAX, webp: QUALITE_WEBP, ombre: SEUIL_OMBRE, fondu: FONDU_OMBRE, contour },
   }));
   if (!o.force && dejaCuite(o, source, empreinteCuisson)) {
     rmSync(prep, { force: true });
@@ -204,11 +222,11 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     return { id, famille: source.famille, statut: 'inchangee', octets: 0, secondes: 0 };
   }
 
-  const brut = resolve(TEMPORAIRE, 'brut', id);
+  const brut = resolve(o.temporaire, 'brut', id);
   rmSync(brut, { recursive: true, force: true });
   mkdirSync(brut, { recursive: true });
-  const cheminTravail = resolve(TEMPORAIRE, 'travaux', `${id}.json`);
-  mkdirSync(resolve(TEMPORAIRE, 'travaux'), { recursive: true });
+  const cheminTravail = resolve(o.temporaire, 'travaux', `${id}.json`);
+  mkdirSync(resolve(o.temporaire, 'travaux'), { recursive: true });
   writeFileSync(cheminTravail, JSON.stringify({ ...reglagesTravail, glb: prep, masque: infos.masque, sortie: brut }, null, 1));
   console.log(`${rang} ${id} : ${plan.reduce((n, v) => n + v.animations.reduce((m, a) => m + a.temps.length, 0), 0)} images à rendre${infos.compresse ? ' (source décompressée)' : ''}`);
   await lancerBlender(cheminTravail, id);
@@ -233,7 +251,9 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
       const fd = openSync(join(brut, anim.fichier), 'r');
       try {
         for (let k = 0; k < anim.images; k++) {
-          const brute = { largeur: largeur * SURECHANTILLONNAGE, hauteur: hauteur * SURECHANTILLONNAGE, canaux: resultat.canaux, donnees: lireImage(fd, octetsParImage, k) };
+          const rendue = { largeur: largeur * SURECHANTILLONNAGE, hauteur: hauteur * SURECHANTILLONNAGE, canaux: resultat.canaux, donnees: lireImage(fd, octetsParImage, k) };
+          // Le contour se pose à l'échelle du rendu, sous le modèle : la réduction l'adoucit.
+          const brute = contour ? contourner(rendue, contour) : rendue;
           const calques = versCalques(reduire(brute, SURECHANTILLONNAGE), { masque: avecMasque, emission: resultat.emission, seuilOmbre: SEUIL_OMBRE, fonduOmbre: FONDU_OMBRE });
           let e = emprise(calques, BORDURE);
           if (!e) {
@@ -242,7 +262,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
             e = { rect: { x: Math.min(largeur - 1, Math.max(0, -x0)), y: Math.min(hauteur - 1, Math.max(0, -y0)), l: 1, h: 1 }, touche: false };
           }
           if (e.touche) avertissements.push(`${vue.vue}/${anim.clip}[${k}] touche le bord du canevas`);
-          const d = decouper(calques, e.rect);
+          const d = decouper(calques, e.rect, o.couverture);
           etendreCouleur(d, 2);
           const sig = signature(d);
           const candidats = parSignature.get(sig) ?? [];
@@ -279,6 +299,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     const couleur = new Uint8Array(largeur * hauteur * 4);
     const masque = avecMasque ? new Uint8Array(largeur * hauteur) : null;
     const emission = resultat.emission ? new Uint8Array(largeur * hauteur * 3) : null;
+    const couverture = o.couverture ? new Uint8Array(largeur * hauteur) : null;
     uniques.forEach((d, i) => {
       const pl = emb.placements[i]!;
       if (pl.page !== n) return;
@@ -287,6 +308,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
         couleur.set(d.couleur.subarray(y * d.l * 4, (y + 1) * d.l * 4), cible * 4);
         if (masque && d.masque) masque.set(d.masque.subarray(y * d.l, (y + 1) * d.l), cible);
         if (emission && d.emission) emission.set(d.emission.subarray(y * d.l * 3, (y + 1) * d.l * 3), cible * 3);
+        if (couverture && d.couverture) couverture.set(d.couverture.subarray(y * d.l, (y + 1) * d.l), cible);
       }
     });
     const nomCouleur = `${id}_${n}.webp`;
@@ -306,6 +328,11 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
       await sharp(emission, { raw: { width: largeur, height: hauteur, channels: 3 } }).webp({ quality: QUALITE_WEBP, effort: 6 }).toFile(join(dossier, nom));
       page.emission = `${PREFIXE_PAGES}/${dossierRel}/${nom}`;
       octets += statSync(join(dossier, nom)).size;
+    }
+    if (couverture) {
+      // Un diagnostic, pas une page du contrat : ni dans le manifeste, ni dans le poids.
+      await sharp(couverture, { raw: { width: largeur, height: hauteur, channels: 1 } }).png({ compressionLevel: 9 })
+        .toFile(cheminPage(o.sortie, cheminCouverture(page.couleur)));
     }
     pages.push(page);
   }

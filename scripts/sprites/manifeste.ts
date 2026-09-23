@@ -53,6 +53,15 @@ export function cheminPage(racine: string, page: string): string {
   return join(racine, page.slice(prefixe.length));
 }
 
+/**
+ * La page de couverture d'une page de couleur (`cuire.ts --couverture`) : à
+ * côté d'elle, en PNG, **hors du manifeste** — le rendu ne la lit jamais ; les
+ * mesures des figurines y séparent le modèle de son contour et de son ombre.
+ */
+export function cheminCouverture(couleur: string): string {
+  return couleur.replace(/\.webp$/, '_couverture.png');
+}
+
 /** Tous les fichiers d'entrée d'une racine de sortie, triés par identifiant. */
 export function lireEntrees(racine: string): FichierEntree[] {
   const fichiers: FichierEntree[] = [];

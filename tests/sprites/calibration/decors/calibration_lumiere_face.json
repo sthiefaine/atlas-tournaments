@@ -1,0 +1,58 @@
+{
+ "entree": {
+  "id": "calibration_lumiere_face",
+  "famille": "decor",
+  "cle": "calibration",
+  "variante": "lumiere_face",
+  "source": {
+   "fichier": "scripts/sprites/calibration/calibration_lumiere_face.glb",
+   "sha256": "a36d8d25f36b9052eb4fb178b004ae2333230064b41bfe891fac9e02c9f8a89f"
+  },
+  "pages": [
+   {
+    "couleur": "assets/sprites/decors/calibration_lumiere_face_0.webp",
+    "largeur": 56,
+    "hauteur": 76
+   }
+  ],
+  "animations": [
+   {
+    "vue": "fixe",
+    "clip": "repos",
+    "boucle": true,
+    "ips": 12,
+    "cadres": [
+     {
+      "page": 0,
+      "x": 0,
+      "y": 0,
+      "l": 54,
+      "h": 75,
+      "px": 27,
+      "py": 54
+     }
+    ]
+   }
+  ]
+ },
+ "cuisson": {
+  "version": 2,
+  "empreinte": "c1d1e6b1c6ea243ee744268b1c7c648816389cbfe3ef2e2c9528c0ee4cb3ec48",
+  "date": "2026-09-23T18:39:55.777Z",
+  "secondes": 4.8,
+  "secondesRendu": 2.2,
+  "images": 1,
+  "imagesUniques": 1,
+  "octets": 388,
+  "canevas": {
+   "fixe": {
+    "x0": -29,
+    "y0": -56,
+    "largeur": 58,
+    "hauteur": 79
+   }
+  },
+  "materiauxTeints": [],
+  "avertissements": []
+ }
+}

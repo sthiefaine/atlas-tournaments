@@ -56,6 +56,29 @@ test('un modèle sans clip reçoit une image fixe par vue', () => {
   for (const v of plan) assert.deepEqual(v.animations, [{ clip: 'repos', anime: false, boucle: true, temps: [0], ips: IMAGES_PAR_SECONDE }]);
 });
 
+test('une unité venue d’une liste se cuit comme une unité du catalogue, et une source peut refuser le contour', () => {
+  // La cuisson d'essai d'une figurine (`scripts/production/figurines/`) donne sa
+  // source par une liste : même plan de vues, pas d'ombre cuite, masque d'une base.
+  const dossier = mkdtempSync(join(tmpdir(), 'liste-unite-'));
+  writeFileSync(join(dossier, 'char.glb'), '');
+  const liste = join(dossier, 'liste.json');
+  writeFileSync(liste, JSON.stringify({ version: 1, entrees: [
+    { id: 'unite_char_leger_base', famille: 'unite', cle: 'char_leger', fichier: 'char.glb' },
+    { id: 'calibration_x', famille: 'decor', cle: 'x', fichier: 'char.glb', contour: false },
+  ] }));
+  const [u, d] = sourcesListe(liste, dossier);
+  const catalogue = classer('unite_char_leger_base')!;
+  assert.deepEqual(
+    { vues: u!.vues, ombre: u!.ombre, regleMasque: u!.regleMasque, emissionSeparee: u!.emissionSeparee, contour: u!.contour },
+    { vues: catalogue.vues, ombre: catalogue.ombre, regleMasque: catalogue.regleMasque, emissionSeparee: catalogue.emissionSeparee, contour: undefined },
+  );
+  const resume = planVues(u!, clips(['repos', 'deplacement', 'tir'])).map((v) => `${v.vue}:${v.animations.map((a) => a.clip).join(',')}`);
+  assert.deepEqual(resume, ['droite:repos,deplacement,tir', 'bas:deplacement', 'haut:deplacement', 'profil:repos,tir']);
+  assert.equal(d!.contour, false);
+  writeFileSync(liste, JSON.stringify({ version: 1, entrees: [{ id: 'x', famille: 'decor', cle: 'x', fichier: 'char.glb', contour: 'non' }] }));
+  assert.throws(() => sourcesListe(liste, dossier));
+});
+
 test('une liste de sources se lit, et une liste fausse est refusée', () => {
   const dossier = mkdtempSync(join(tmpdir(), 'liste-sprites-'));
   writeFileSync(join(dossier, 'arbre.glb'), '');

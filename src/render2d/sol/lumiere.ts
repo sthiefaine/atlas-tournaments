@@ -2,10 +2,12 @@
  * La lumière du sol : **celle de la cuisson** (`ECLAIRAGE_CUISSON` du contrat).
  *
  * Les images d'unités, de bâtiments et de décor sont photographiées sous une
- * lumière qui vient de l'avant-gauche. Un sol éclairé d'ailleurs ferait flotter
- * tout ce qui est posé dessus : les bosses du gazon, les galets et les arbres
- * du décor de repli s'éclairent donc du même côté, et leurs ombres tombent du
- * même côté que celles cuites dans les images.
+ * lumière qui vient de face, du joueur, à 60° au-dessus de l'horizon — symétrique
+ * depuis le 23 septembre 2026, parce que la moitié de l'armée est dessinée en
+ * miroir (`doc/refonte/charte-figurines.md` §3.10). Un sol éclairé d'ailleurs
+ * ferait flotter tout ce qui est posé dessus : les bosses du gazon, les galets et les arbres
+ * du décor de repli s'éclairent donc de la même façon, et leurs ombres tombent
+ * du même côté que celles cuites dans les images : derrière les objets.
  *
  * Deux repères. Le **sol** : `x` vers la droite de l'écran, `y` vers le bas de
  * l'écran (le joueur), `z` vers le haut. L'**écran** : `x` à droite, `y` vers

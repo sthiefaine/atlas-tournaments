@@ -40,6 +40,12 @@ export interface SourceSprite {
   regleMasque: RegleMasque;
   /** L'émission part dans sa page, hors de la couleur : les fenêtres d'un bâtiment, allumées la nuit. */
   emissionSeparee: boolean;
+  /**
+   * Faux pour une source cuite **sans** le contour de sa famille
+   * (`CONTOUR_PAR_FAMILLE`) : la calibration de la caméra, qui mesure des
+   * emprises au pixel près. Absent : le contour de la famille.
+   */
+  contour?: boolean;
 }
 
 /** Un clip à photographier dans une vue. */
@@ -98,9 +104,18 @@ interface EntreeListe {
   fichier: string;
   vues?: string[];
   ombre?: boolean;
+  contour?: boolean;
 }
 
-/** Les sources d'une liste. Lève sur tout champ faux : une liste se corrige, elle ne se devine pas. */
+/**
+ * Les sources d'une liste. Lève sur tout champ faux : une liste se corrige, elle ne se devine pas.
+ *
+ * Une entrée de la famille `unite` se cuit comme une unité du catalogue (la
+ * cuisson d'essai d'une figurine, `scripts/production/figurines/`) : sans
+ * `vues`, le plan des unités — la marche dans trois vues, tous les clips à
+ * droite, le combat de profil —, pas d'ombre cuite, et le masque sur les
+ * matériaux d'une base commune.
+ */
 export function sourcesListe(chemin: string, racineDepot = process.cwd()): SourceSprite[] {
   const brut: unknown = JSON.parse(readFileSync(chemin, 'utf8'));
   const liste = brut as { version?: unknown; entrees?: unknown };
@@ -114,8 +129,10 @@ export function sourcesListe(chemin: string, racineDepot = process.cwd()): Sourc
     vus.add(e.id);
     if (!(FAMILLES_SPRITE as readonly string[]).includes(e.famille)) throw new Error(`${ou} : famille ${e.famille} inconnue`);
     if (typeof e.cle !== 'string' || e.cle.length === 0) throw new Error(`${ou} : clé absente`);
-    const vues = e.vues ?? ['fixe'];
-    for (const v of vues) if (!(VUES as readonly string[]).includes(v)) throw new Error(`${ou} : vue ${v} inconnue`);
+    const unite = e.famille === 'unite';
+    const vues = e.vues ?? (unite ? undefined : ['fixe']);
+    for (const v of vues ?? []) if (!(VUES as readonly string[]).includes(v)) throw new Error(`${ou} : vue ${v} inconnue`);
+    if (e.contour !== undefined && typeof e.contour !== 'boolean') throw new Error(`${ou} : « contour » vrai ou faux`);
     const fichier = resolve(dossier, e.fichier);
     if (!existsSync(fichier)) throw new Error(`${ou} : fichier ${e.fichier} introuvable`);
     return {
@@ -124,10 +141,11 @@ export function sourcesListe(chemin: string, racineDepot = process.cwd()): Sourc
       cle: e.cle,
       ...(e.variante ? { variante: e.variante } : {}),
       fichier: relative(racineDepot, fichier),
-      vues: vues as VueSprite[],
-      ombre: e.ombre ?? true,
-      regleMasque: 'tous',
+      ...(vues ? { vues: vues as VueSprite[] } : {}),
+      ombre: e.ombre ?? !unite,
+      regleMasque: unite ? 'base' : 'tous',
       emissionSeparee: e.famille === 'batiment',
+      ...(e.contour === false ? { contour: false } : {}),
     };
   });
 }
