@@ -1,5 +1,7 @@
 # L'écran de combat de la peau 2D — notes (23 septembre 2026)
 
+> **Revu par le lot des réglages, même jour** (`sprites-reglages.md`) : un duel tient désormais en **un seul** encart au fond peint (champ `aplats`), sans allocation d'une image à l'autre, et la table des arbres n'est plus recopiée (`ARBRES` est exporté de `sol/decor.ts`). Ce qui suit sur les sept encarts et sur la copie décrit la première version.
+
 Le lot « écran de combat » du chantier des sprites lisses (`doc/refonte/plan-sprites-campagne.md`, `sprites-moteur.md`) : `ouvrirCombat(hote, geste)` sur la peau 2D, la vue de côté où deux formations se tirent dessus. Ce que le propriétaire avait demandé est dans `mobile-formations-combat.md` et `bataille-animation.md` ; ce document dit comment c'est fait, ce qui est vérifié, et ce qui ne l'est pas.
 
 ## Les fichiers

@@ -1,5 +1,7 @@
 # La peau 2D — animations, effets, météo, nuit (23 septembre 2026)
 
+> **Revu par le lot des réglages, même jour** (`sprites-reglages.md`) : la nuit n'est plus une teinte posée par image, approchée à 0,05 près ; le voile est un réglage de l'appel de chaque calque et la pose ne porte qu'un drapeau « du monde », exact au niveau près. Les éclairs, étincelles et halos ont une part additive. Ce qui suit sur la nuit décrit la première version.
+
 Lot H du plan `doc/refonte/plan-sprites-campagne.md` (seconde vague) : « améliorer les animations », « du jeu, fun comme Advance Wars, pas un diaporama ». Le contrat de partition (`render/partition.ts`) et le réalisateur n'ont **pas** bougé : ce lot est un exécutant. Le contrat des sprites (`render2d/contrat.ts`) non plus. **Rien n'a été regardé à l'écran** (consigne) : tout ce qui suit est vérifié par du code, sauf ce que la dernière section dit non vérifié.
 
 ## Les fichiers

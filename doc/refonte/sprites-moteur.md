@@ -1,5 +1,7 @@
 # La peau 2D — notes du moteur (23 septembre 2026)
 
+> **Complété par les lots suivants, même jour** : la bascule a fait de la 2D la seule peau (`sprites-bascule.md`) ; les réglages ont ajouté `aplats?` aux encarts, chargé les masques d'équipe en un canal, borné les mipmaps au niveau 2, pondéré l'émission et exposé `images` dans `mesurer()` (`sprites-reglages.md`). `?rendu=2d` n'est plus nécessaire.
+
 Lot C du plan `doc/refonte/plan-sprites-campagne.md` : `creerRendu2d` tient toute l'interface `Rendu` derrière `?rendu=2d`. Le contrat partagé avec la cuisson et le terrain est `src/render2d/contrat.ts` ; la conception, `doc/18-rendu-sprites.md`. Ce document dit **comment le moteur est fait** et **ce que la seconde vague doit savoir** ; il ne remplace aucun des deux.
 
 ## Les fichiers
