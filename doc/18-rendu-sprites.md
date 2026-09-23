@@ -1,6 +1,6 @@
 # 18 — Le rendu en sprites précalculés
 
-Décision du propriétaire du 23 septembre 2026 (`BRIEF.md`, « Sprites précalculés »). Ce document est **propriétaire du rendu 2D** ; `doc/10-rendu-3d.md` reste celui des modèles (matières, silhouettes, gabarits) et de la 3D tant qu'elle est gardée derrière `?rendu=3d`. Le contrat exécutable est `src/render2d/contrat.ts` : quand ce document et lui divergent, c'est le contrat qui a raison, et ce document qui se corrige.
+Décision du propriétaire du 23 septembre 2026 (`BRIEF.md`, « Sprites précalculés »). Ce document est **propriétaire du rendu du jeu** ; `doc/10-rendu-3d.md` n'est plus que celui des modèles (matières, silhouettes, gabarits), source des images — la 3D temps réel a été retirée le même jour (`afc34691`), et `?rendu=3d` n'est plus lu. Le contrat exécutable est `src/render2d/contrat.ts` : quand ce document et lui divergent, c'est le contrat qui a raison, et ce document qui se corrige.
 
 ## 1. Pourquoi
 
@@ -33,3 +33,7 @@ WebGL 2, sans dépendance. Les calques se peignent dans l'ordre de `ORDRE_CALQUE
 ## 5. Ce qui n'est pas vérifié par ce document
 
 Tout ce qui relève du goût : la lisibilité d'une unité à 48 pixels CSS par case, l'harmonie des sources de modèles une fois photographiées, la force de l'étalonnage de nuit. Le propriétaire regarde ; le code ne vérifie que ce qui se mesure.
+
+## 6. État au soir du 23 septembre 2026
+
+Tout ce qui précède est en place et poussé : cuisson (101 entrées, 17,9 Mo), peau 2D seule peau du jeu, de l'écran-titre, de l'atelier et du carnet, 23 gestes animés, écran de combat, météo, réglages sur les vraies images. Le détail par lot est dans `doc/refonte/sprites-*.md` (cuisson, décor, moteur, terrain, animations, combat, bascule, réglages) et `doc/refonte/retrait-3d.md`. Mesuré : `/jeu` télécharge 415 ko de JavaScript (gzip) au lieu de 713, sans three ; `premier_contact` charge 16 entrées d'images sur 101 (1,7 Mo) et coûte 0,2 à 1 ms de processeur par image. Deux chantiers ouverts : sortir la vue `profil` des pages de carte (l'écran-titre télécharge 2,2 Mo d'images) et regrouper le décor sur des pages communes.

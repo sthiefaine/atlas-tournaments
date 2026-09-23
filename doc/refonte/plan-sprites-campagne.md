@@ -51,3 +51,7 @@ Après H, I et J (qui lisent `render3d/` comme référence de comportement). Un 
 - `typecheck`, `lint`, `npm test` (hors le rouge préexistant `decor.test.ts`), `build`, `verifier:campagne` verts.
 - En 2D : la partie démarre sans WebGPU, sous Chromium **et** WebKit ; une unité se sélectionne et se déplace par `versEcran` ; aucune erreur de console ; la route de jeu n'embarque plus three.
 - Chaque lot poussé sur `main` dès qu'il est vérifié.
+
+## Bilan — soir du 23 septembre 2026
+
+Fait et poussé, dans cet ordre : le contrat (`5c18d79c`), les sources du décor (`825536a5`), la peau 2D (`d2c42d28`), le sol (`d29b20d1`), le chapitre français FR07–FR12 (`cb7e7df3`), les images cuites (`579e404d`), l'IA en Web Worker et le correctif du moteur sur la cale des transports (`bf749b3a`), les animations et l'écran de combat (`a059d1fa`), la bascule en 2D et le worker branché (`21fa9d13` à `ff4996c6`), les réglages sur les vraies images (`0a7443da`), le retrait de la 3D (`afc34691`). Douze agents au total (sept, puis quatre, puis un). Critères de fin : `typecheck` à zéro, `npm test` sans aucun rouge nouveau par rapport à la référence prise sur `169da18b` (42 rouges d'avant, 34 restants), `verifier:campagne` 46/48 (FR03, déjà rouge), `build` vert, dix specs 2D verts sous Chromium et WebKit. `npm run lint` reste rouge sur des erreurs anciennes des scripts de production.
