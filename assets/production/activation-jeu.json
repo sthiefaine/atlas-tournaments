@@ -300,10 +300,10 @@
     {
       "id": "unite_transport_air_base",
       "fichierActif": "public/assets/modeles/unite_transport_air_base_lod0.glb",
-      "donnees": "../donnees/2934c2dcb3742d4c3c9147f74bcc31586825a259c102d549fbea316c7ed6f322.glb",
-      "revision": "acc49a5c1d8a74833fe8ed6f0492908e2fb1b129e52e291d547dac4da4bb53e3",
+      "donnees": "../donnees/ba7ae44cee7c8f2451dea75a87c6e3bdc3affab8ac3fd09405fdde5b9dad569d.glb",
+      "revision": "80fc2ad15b2d7befe0582a5a699a8e49c95d3390fab34b76a5be1ba4919ed428",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_transport_base",

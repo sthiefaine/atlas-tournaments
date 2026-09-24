@@ -912,6 +912,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   recon: [0.426, 0.546, 0.539],
   roquettes: [0.54, 0.703, 0.79],
   transport: [0.466, 0.44, 0.681],
+  transport_air: [0.281, 0.495, 0.785],
 };
 
 /** La tolérance d'une figurine : la charte se juge sur l'image cuite, la fiche tient la forme livrée. */
