@@ -46,6 +46,14 @@ test('un bâtiment dans un état garde sa clé et porte son état à part ; un �
   assert.deepEqual(plan.map((v) => `${v.vue}:${v.animations.map((a) => a.clip).join(',')}`), ['fixe:repos,capture']);
 });
 
+test('un clip où rien ne bouge se photographie en une image, les autres à leur cadence', () => {
+  const ville = classer('batiment_ville_base') as SourceSprite;
+  const plan = planVues(ville, [{ nom: 'repos', duree: 3.2, fixe: true }, { nom: 'capture', duree: 1.4, fixe: false }]);
+  const [repos, capture] = plan[0]!.animations;
+  assert.deepEqual([repos!.clip, repos!.temps, repos!.anime, repos!.boucle], ['repos', [0], true, true]);
+  assert.ok(capture!.temps.length > 1, 'la capture bouge : plusieurs images');
+});
+
 test('chaque fiche de bâtiment commun se cuit sous l’identifiant que le rendu demande', () => {
   // La fiche fait le GLB, le GLB fait l'entrée, et le rendu la cherche par
   // `idBatiment` ou `idBatimentEtat` : les trois noms doivent être le même.

@@ -1,19 +1,19 @@
 {
  "entree": {
-  "id": "batiment_ville_base",
+  "id": "batiment_ville_desaffecte",
   "famille": "batiment",
   "cle": "ville",
+  "etat": "desaffecte",
   "source": {
-   "fichier": "public/assets/modeles/batiment_ville_base_lod0.glb",
-   "sha256": "2069e0153deb552daa25120ef1440e64ea3861db426ee3bf186e5b3c818b97f3"
+   "fichier": "public/assets/modeles/batiment_ville_desaffecte_lod0.glb",
+   "sha256": "8d7f20f7984f2378bc769f0ebecfacff8790addd6984086162ffe7bc23441ee6"
   },
   "pages": [
    {
-    "couleur": "assets/sprites/batiments/batiment_ville_base_0.webp",
-    "largeur": 404,
-    "hauteur": 1304,
-    "masque": "assets/sprites/batiments/batiment_ville_base_0_masque.png",
-    "emission": "assets/sprites/batiments/batiment_ville_base_0_emission.webp"
+    "couleur": "assets/sprites/batiments/batiment_ville_desaffecte_0.webp",
+    "largeur": 408,
+    "hauteur": 1324,
+    "masque": "assets/sprites/batiments/batiment_ville_desaffecte_0_masque.png"
    }
   ],
   "animations": [
@@ -26,9 +26,9 @@
      {
       "page": 0,
       "x": 204,
-      "y": 377,
+      "y": 382,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      }
@@ -43,27 +43,27 @@
      {
       "page": 0,
       "x": 0,
-      "y": 564,
+      "y": 572,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
       "x": 204,
-      "y": 564,
+      "y": 572,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
-      "x": 0,
-      "y": 377,
-      "l": 200,
-      "h": 183,
+      "x": 204,
+      "y": 191,
+      "l": 201,
+      "h": 186,
       "px": 102,
       "py": 104
      },
@@ -71,80 +71,80 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 200,
-      "h": 185,
-      "px": 102,
-      "py": 105
-     },
-     {
-      "page": 0,
-      "x": 204,
-      "y": 0,
-      "l": 200,
-      "h": 185,
+      "l": 201,
+      "h": 187,
       "px": 102,
       "py": 105
      },
      {
       "page": 0,
       "x": 0,
-      "y": 189,
+      "y": 191,
       "l": 200,
-      "h": 184,
+      "h": 187,
       "px": 102,
       "py": 105
      },
      {
       "page": 0,
-      "x": 204,
-      "y": 189,
+      "x": 205,
+      "y": 0,
+      "l": 201,
+      "h": 187,
+      "px": 102,
+      "py": 105
+     },
+     {
+      "page": 0,
+      "x": 0,
+      "y": 382,
       "l": 200,
-      "h": 184,
+      "h": 186,
       "px": 102,
       "py": 104
      },
      {
       "page": 0,
       "x": 0,
-      "y": 750,
+      "y": 761,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
       "x": 204,
-      "y": 750,
+      "y": 761,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
       "x": 0,
-      "y": 936,
+      "y": 950,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
       "x": 204,
-      "y": 936,
+      "y": 950,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      },
      {
       "page": 0,
       "x": 0,
-      "y": 1122,
+      "y": 1139,
       "l": 200,
-      "h": 182,
+      "h": 185,
       "px": 102,
       "py": 103
      }
@@ -154,24 +154,23 @@
  },
  "cuisson": {
   "version": 4,
-  "empreinte": "08a448ada3f0282efaff54ec77e302d0a11a40046868c3769f924ffd1679741f",
-  "date": "2026-09-24T03:26:16.537Z",
-  "secondes": 76.1,
+  "empreinte": "0ab29245b492397a1fe92eb01b26c2206c04ca282442ba9f2237dbf7f9f78585",
+  "date": "2026-09-24T03:26:16.284Z",
+  "secondes": 75.8,
   "secondesRendu": 64.7,
   "images": 13,
   "imagesUniques": 13,
-  "octets": 111430,
+  "octets": 116565,
   "canevas": {
    "fixe": {
     "x0": -106,
     "y0": -108,
     "largeur": 212,
-    "hauteur": 191
+    "hauteur": 193
    }
   },
   "materiauxTeints": [
-   "mat_corps",
-   "mat_vitrage"
+   "mat_corps"
   ],
   "avertissements": []
  }

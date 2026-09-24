@@ -163,11 +163,11 @@ export function sourcesListe(chemin: string, racineDepot = process.cwd()): Sourc
 }
 
 /** Les clips connus d'un GLB, dans l'ordre du contrat. */
-function clipsConnus(clips: readonly ClipGlb[]): Map<ClipSprite, number> {
-  const m = new Map<ClipSprite, number>();
+function clipsConnus(clips: readonly ClipGlb[]): Map<ClipSprite, ClipGlb> {
+  const m = new Map<ClipSprite, ClipGlb>();
   for (const nom of CLIPS) {
     const c = clips.find((x) => x.nom === nom);
-    if (c) m.set(nom, c.duree);
+    if (c) m.set(nom, c);
   }
   return m;
 }
@@ -177,9 +177,12 @@ export function clipEnBoucle(clip: ClipSprite): boolean {
   return clip === 'repos' || clip === 'deplacement';
 }
 
-function animation(clip: ClipSprite, duree: number): AnimationPlan {
+function animation(clip: ClipSprite, c: ClipGlb): AnimationPlan {
   const boucle = clipEnBoucle(clip);
-  const e = echantillonner(duree, boucle);
+  // Un clip où rien ne bouge : une image, posée à son début, sans flou de
+  // bouge (un seul instant, pas de pas entre deux images).
+  if (c.fixe) return { clip, anime: true, boucle, temps: [0], ips: IMAGES_PAR_SECONDE };
+  const e = echantillonner(c.duree, boucle);
   return { clip, anime: true, boucle, temps: e.temps, ips: e.ips };
 }
 
@@ -197,7 +200,8 @@ function fixe(): AnimationPlan {
  * - unité : `deplacement` en `droite`, `bas`, `haut` ; tous ses clips en
  *   `droite` ; `repos`, `tir`, `touche`, `hors_jeu` en `profil` ;
  * - bâtiment, terrain, décor : tous leurs clips dans chacune de leurs vues
- *   (`fixe` ; le pont, `fixe` et `travers`).
+ *   (`fixe` ; le pont, `fixe` et `travers`) ;
+ * - un clip dont aucune piste ne bouge (`ClipGlb.fixe`) : une seule image.
  */
 export function planVues(source: SourceSprite, clips: readonly ClipGlb[]): VuePlan[] {
   const connus = clipsConnus(clips);

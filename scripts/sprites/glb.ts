@@ -20,13 +20,50 @@ import { assemblerCompression, decompresserGlb, morceauxGlb } from '../../src/as
 export interface DocumentGltf {
   images?: { name?: string; uri?: string; bufferView?: number }[];
   materials?: { name?: string; emissiveFactor?: number[]; emissiveTexture?: unknown }[];
-  animations?: { name?: string; samplers: { input: number }[] }[];
+  animations?: { name?: string; samplers: { input: number; output?: number }[] }[];
   nodes?: { name?: string; extras?: Record<string, unknown> }[];
-  accessors: { max?: number[] }[];
+  accessors: { max?: number[]; bufferView?: number; byteOffset?: number; componentType?: number; count?: number; type?: string }[];
+  bufferViews?: { byteOffset?: number; byteLength: number; byteStride?: number }[];
   [cle: string]: unknown;
 }
 
-export interface ClipGlb { nom: string; duree: number }
+export interface ClipGlb {
+  nom: string;
+  duree: number;
+  /**
+   * Vrai quand aucune piste du clip ne bouge : toutes ses valeurs sont celles
+   * de sa première clé. Un tel clip se photographie en **une** image : douze
+   * images d'un bâtiment immobile ne différaient que par le bruit du rendu,
+   * donc ne se fusionnaient pas, et pesaient douze fois (la ville pilote,
+   * 24 septembre 2026). Absent quand les données binaires n'ont pas été lues.
+   */
+  fixe?: boolean;
+}
+
+const COMPOSANTES: Readonly<Record<string, number>> = { SCALAR: 1, VEC2: 2, VEC3: 3, VEC4: 4 };
+
+/**
+ * Vrai si toutes les valeurs d'un accesseur de flottants sont celles de son
+ * premier élément, au millionième près ; faux pour tout ce qui ne se lit pas
+ * ainsi (entiers normalisés, vue absente) — dans le doute, un clip bouge.
+ */
+export function accesseurConstant(document: DocumentGltf, bin: Uint8Array, index: number): boolean {
+  const a = document.accessors[index];
+  const n = a?.type ? COMPOSANTES[a.type] : undefined;
+  if (!a || !n || a.componentType !== 5126 || a.bufferView === undefined || !a.count) return false;
+  const vue = document.bufferViews?.[a.bufferView];
+  if (!vue) return false;
+  const pas = vue.byteStride ?? n * 4;
+  const debut = (vue.byteOffset ?? 0) + (a.byteOffset ?? 0);
+  if (debut + (a.count - 1) * pas + n * 4 > bin.byteLength) return false;
+  const v = new DataView(bin.buffer, bin.byteOffset + debut);
+  for (let i = 1; i < a.count; i++) {
+    for (let k = 0; k < n; k++) {
+      if (Math.abs(v.getFloat32(i * pas + k * 4, true) - v.getFloat32(k * 4, true)) > 1e-6) return false;
+    }
+  }
+  return true;
+}
 
 /** Ce qui se lit dans le document seul, sans décompresser ni résoudre de fichier. */
 export interface LectureDocument {
@@ -74,13 +111,17 @@ export function documentGlb(octets: Uint8Array): DocumentGltf {
   return JSON.parse(new TextDecoder().decode(octets.subarray(20, 20 + v.getUint32(12, true)))) as DocumentGltf;
 }
 
-/** Clips, masque, émission et matériaux d'un document. */
-export function lireDocument(document: DocumentGltf): LectureDocument {
+/**
+ * Clips, masque, émission et matériaux d'un document. Avec les données
+ * binaires (`bin`), chaque clip dit aussi s'il est **fixe** (voir `ClipGlb`).
+ */
+export function lireDocument(document: DocumentGltf, bin?: Uint8Array): LectureDocument {
   const image = (document.images ?? []).find((i) => estNomDeMasque(`${i.name ?? ''} ${i.uri ?? ''}`));
   return {
     clips: (document.animations ?? []).map((a, i) => ({
       nom: a.name ?? `clip_${i}`,
       duree: Math.max(0, ...a.samplers.map((s) => document.accessors[s.input]?.max?.[0] ?? 0)),
+      ...(bin ? { fixe: a.samplers.every((s) => s.output !== undefined && accesseurConstant(document, bin, s.output)) } : {}),
     })),
     uriMasque: image?.uri ?? null,
     emission: (document.materials ?? []).some(
@@ -101,7 +142,7 @@ export function preparerGlb(source: string, destination: string): InfosGlb {
   const decompresse = decompresserGlb(octets);
   const { document: brut, bin } = morceauxGlb(decompresse);
   const document = brut as unknown as DocumentGltf;
-  const lecture = lireDocument(document);
+  const lecture = lireDocument(document, bin);
   const dossier = dirname(resolve(source));
   const images: string[] = [];
   let masque: string | null = null;

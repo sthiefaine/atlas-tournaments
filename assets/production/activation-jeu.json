@@ -52,10 +52,18 @@
     {
       "id": "batiment_ville_base",
       "fichierActif": "public/assets/modeles/batiment_ville_base_lod0.glb",
-      "donnees": "../donnees/066f53e4578567c9d766dd7a1e9aef2e49db6c3600aa2d19f6a15d1fc6b4847a.glb",
-      "revision": "4a4b915f2a75696c2af1ad2d0b327195349c83e2dd50caa4ac6a554f071e5359",
+      "donnees": "../donnees/2069e0153deb552daa25120ef1440e64ea3861db426ee3bf186e5b3c818b97f3.glb",
+      "revision": "0c8af0d68362011fc33cf43c1cacc89ea32efc4bd7c6d1b447592ee70e1f5dce",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
+    },
+    {
+      "id": "batiment_ville_desaffecte",
+      "fichierActif": "public/assets/modeles/batiment_ville_desaffecte_lod0.glb",
+      "donnees": "../donnees/8d7f20f7984f2378bc769f0ebecfacff8790addd6984086162ffe7bc23441ee6.glb",
+      "revision": "377389e14679410377890c6b0f1e6a0be2a07f60ba986d8a1d6169bd3e6fc9a8",
+      "controle": "ok",
+      "provenance": "figurine"
     },
     {
       "id": "decor_rocher_archipel",
