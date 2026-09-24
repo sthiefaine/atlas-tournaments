@@ -26,6 +26,7 @@
  * teste sans navigateur (`tests/render2d/atlas.test.ts`).
  */
 
+import { ETATS_BATIMENT, type EtatBatiment } from '../assets/spec';
 import {
   CLIPS, FAMILLES_SPRITE, PIXELS_PAR_CASE, TANGAGE_CARTE, VERSION_SPRITES, VUES,
   type AnimationSprite, type CadreSprite, type ClipSprite, type EntreeSprite, type InstanceSprite,
@@ -91,9 +92,11 @@ function lireAnimation(brut: unknown, pages: readonly PageSprite[]): AnimationSp
 
 function lireEntree(cle: string, brut: unknown): EntreeSprite | null {
   if (!estObjet(brut)) return null;
-  const { id, famille, cle: cleJeu, variante, source, pages, animations } = brut;
+  const { id, famille, cle: cleJeu, variante, etat, source, pages, animations } = brut;
   if (id !== cle || !(FAMILLES_SPRITE as readonly unknown[]).includes(famille) || !estChaine(cleJeu)) return null;
   if (variante !== undefined && !estChaine(variante)) return null;
+  // Un état que le rendu ne connaît pas se montrerait à la place d'un autre : l'entrée est écartée.
+  if (etat !== undefined && (famille !== 'batiment' || !(ETATS_BATIMENT as readonly unknown[]).includes(etat))) return null;
   if (!estObjet(source) || !estChaine(source['fichier']) || !estChaine(source['sha256'])) return null;
   if (!Array.isArray(pages) || pages.length === 0 || !Array.isArray(animations) || animations.length === 0) return null;
   const lues: PageSprite[] = [];
@@ -111,6 +114,7 @@ function lireEntree(cle: string, brut: unknown): EntreeSprite | null {
   return {
     id: cle, famille: famille as EntreeSprite['famille'], cle: cleJeu,
     ...(variante !== undefined ? { variante: variante as string } : {}),
+    ...(etat !== undefined ? { etat: etat as EtatBatiment } : {}),
     source: { fichier: source['fichier'] as string, sha256: source['sha256'] as string },
     pages: lues, animations: anims,
   };
@@ -426,6 +430,9 @@ export class Atlas {
     this.manifeste = m;
     this.index.clear();
     for (const e of Object.values(m?.entrees ?? {})) {
+      // Une image d'état se demande par son identifiant (`idBatimentEtat`) :
+      // indexée, un désaffecté pourrait tenir lieu du bâtiment en service.
+      if (e.etat !== undefined) continue;
       const cle = `${e.famille}|${e.cle}|${e.variante ?? ''}`;
       if (!this.index.has(cle)) this.index.set(cle, e.id);
     }
@@ -434,7 +441,8 @@ export class Atlas {
   /**
    * L'entrée d'une clé de jeu pour une variante — le kit national d'une unité,
    * le QG d'un pays : la variante si elle est cuite, sinon la base commune,
-   * sinon `parDefaut`, le nom attendu, qui donnera un repli.
+   * sinon `parDefaut`, le nom attendu, qui donnera un repli. Jamais une image
+   * d'état : un bâtiment en service ne se montre pas désaffecté.
    */
   idPour(famille: EntreeSprite['famille'], cle: string, variante: string | null, parDefaut: string): string {
     if (variante) {

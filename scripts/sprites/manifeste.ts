@@ -12,6 +12,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { ETATS_BATIMENT } from '../../src/assets/spec';
 import {
   CLIPS, FAMILLES_SPRITE, PIXELS_PAR_CASE, TANGAGE_CARTE, TANGAGE_PROFIL, VERSION_SPRITES, VUES,
   type EntreeSprite, type ManifesteSprites,
@@ -114,6 +115,10 @@ export function problemesManifeste(
     const ou = `entrée ${cle}`;
     if (e.id !== cle) p.push(`${ou} : id ${e.id}`);
     if (!(FAMILLES_SPRITE as readonly string[]).includes(e.famille)) p.push(`${ou} : famille ${e.famille}`);
+    // Le rendu écarte une entrée d'état qu'il ne connaît pas : la cuisson le dit avant lui.
+    if (e.etat !== undefined && (e.famille !== 'batiment' || !(ETATS_BATIMENT as readonly string[]).includes(e.etat))) {
+      p.push(`${ou} : état ${String(e.etat)} hors des états de bâtiment`);
+    }
     if (!/^[0-9a-f]{64}$/.test(e.source?.sha256 ?? '')) p.push(`${ou} : empreinte de source invalide`);
     if (e.pages.length === 0) p.push(`${ou} : aucune page`);
     if (e.animations.length === 0) p.push(`${ou} : aucune animation`);

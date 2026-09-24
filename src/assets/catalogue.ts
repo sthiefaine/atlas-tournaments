@@ -23,8 +23,8 @@ import {
   type Silhouette, type Terrain, type UnitType,
 } from '../schemas/types';
 import {
-  cleUniteBase, idAsset, idBatiment, idDecor, idKit, INTERDITS, slugRegion,
-  type AnimationSpec, type AssetSpec, type Bilingue, type Budget, type Echelle,
+  CLE_SUPERUSINE, cleUniteBase, etatsBatiment, idAsset, idBatiment, idDecor, idKit, INTERDITS, slugRegion,
+  type AnimationSpec, type AssetSpec, type Bilingue, type Budget, type Echelle, type EtatBatiment,
   type ElementDecorRegion, type FinitionStyle, type FormatAsset, type FormeToit,
   type Interdit, type MatiereStyle, type MotifDaltonien, type Nommage,
   type OrnementStyle, type Pivot, type Priorite, type StyleAsset, type StyleNation,
@@ -1300,6 +1300,133 @@ export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
 }
 
 /**
+ * Ce qu'un état change au bâtiment en service, dit **après** sa description :
+ * c'est le même bâtiment, et là où la description parle de lumière, l'état
+ * l'emporte (`doc/refonte/plan-batiments.md` §2 ; charte des figurines §6).
+ */
+const TEXTES_ETAT: Record<EtatBatiment, Bilingue> = {
+  desaffecte: {
+    en: 'DISUSED STATE: this file is the same building asleep — same geometry, same volumes, same UV layout, same '
+      + 'node names —, never a ruin. A light bone-coloured canvas tarpaulin is stretched over part of the roof, '
+      + 'wooden planks are nailed crosswise over the openings, and the flagpole lies on the ground, starting from '
+      + 'its foot at the back-right corner of the plot (x = +0.36 m, z = -0.20 m). Where the description above '
+      + 'speaks of lit windows, this state wins: every window is dark, with no emission at all. Nothing is broken, '
+      + 'burnt or blackened: it is put back into service in a few turns, and must read as "to be reopened", never '
+      + 'as "lost". The roof stays under the team mask: a disused building is neutral, and the game paints it grey.',
+    fr: 'ÉTAT DÉSAFFECTÉ : ce fichier est le même bâtiment endormi — même géométrie, mêmes volumes, même dépliage, '
+      + 'mêmes noms de nœuds —, jamais une ruine. Une bâche claire couleur os tendue sur une partie du toit, des '
+      + 'planches de bois clouées en croix sur les ouvertures, et le mât du drapeau couché au sol, partant de son '
+      + 'pied au coin arrière droit de la parcelle (x = +0,36 m, z = −0,20 m). Là où la description ci-dessus parle '
+      + 'de fenêtres éclairées, cet état l’emporte : toutes les fenêtres sont éteintes, sans aucune émission. Rien '
+      + 'n’est cassé, brûlé ni noirci : on le remet en service en quelques tours, et il doit se lire « à rouvrir », '
+      + 'jamais « perdu ». Le toit reste sous le masque d’équipe : un bâtiment désaffecté est neutre, et le jeu le '
+      + 'peint en gris.',
+  },
+  inerte: {
+    en: 'TAKEN STATE: this file is the same building stopped — same geometry, same UV layout, same node names. '
+      + 'The orange eye is switched off (graphite, no emission), the assembly arms are folded against the facade, '
+      + 'and every window is dark. Where the description above speaks of glowing, this state wins: no emission at '
+      + 'all. Nothing is broken or blackened: it has simply stopped. The roof stays under the team mask: it takes '
+      + 'the colour of whoever captured it.',
+    fr: 'ÉTAT PRIS : ce fichier est le même bâtiment arrêté — même géométrie, même dépliage, mêmes noms de nœuds. '
+      + 'L’œil orange est éteint (graphite, aucune émission), les bras de montage sont repliés contre la façade, et '
+      + 'toutes les fenêtres sont éteintes. Là où la description ci-dessus parle de lumière, cet état l’emporte : '
+      + 'aucune émission. Rien n’est cassé ni noirci : elle s’est arrêtée. Le toit reste sous le masque d’équipe : '
+      + 'il prend la couleur de qui l’a prise.',
+  },
+};
+
+/**
+ * La fiche d'un état, **dérivée** de la fiche en service : même forme, mêmes
+ * clips, mêmes nœuds, même contrôle — le même module construit les deux —,
+ * l'état dit en plus, et la carte d'émission en moins. Un bâtiment endormi ou
+ * arrêté n'a aucune lumière : sans canal d'émission, le lot n'en porte pas, et
+ * la règle « aucune émission » de la chaîne tient par construction.
+ */
+function ficheEtat(enService: AssetSpec, cle: Cle, etat: EtatBatiment, motsCles: string[], aEviter: string[] = []): AssetSpec {
+  const id = idAsset('batiment', cle);
+  const texte = TEXTES_ETAT[etat];
+  return {
+    ...enService,
+    id,
+    cle,
+    description: { en: `${enService.description.en} ${texte.en}`, fr: `${enService.description.fr} ${texte.fr}` },
+    style: style(motsCles, aEviter),
+    textures: enService.textures.filter((x) => x.canal !== 'emission'),
+    nommage: nommage(id, 'albedo', 'hiver'),
+  };
+}
+
+/**
+ * La fiche d'un bâtiment commun **dans un état** (`batiment_ville_desaffecte`) :
+ * une par état, partagée par toutes les nations — un désaffecté est neutre, il
+ * n'a ni propriétaire ni kit national.
+ */
+export function specBatimentEtat(t: Terrain, etat: EtatBatiment): AssetSpec {
+  return ficheEtat(specBatiment(t), `${t.cle}_${etat}`, etat, [
+    'host-town architecture', 'dormant boarded-up building', 'light canvas tarpaulin', 'dark unlit windows',
+    'neutral shared base architecture',
+  ], ['no ruin, no rubble, no scorch marks']);
+}
+
+/**
+ * Les dimensions de la superusine : une usine plus grande, jusqu'à 1,2 case
+ * (plan des bâtiments §2), un peu moins profonde que large pour ne pas mordre
+ * la case de derrière, et plus basse que le QG, qui reste le plus haut du jeu.
+ */
+const GABARIT_SUPERUSINE = { x: 1.15, y: 0.8, z: 1.1 } as const;
+
+/** La superusine en service, telle qu'on la commande. */
+const TEXTE_SUPERUSINE: Bilingue = {
+  en: 'The Grey super-factory (the Meridian Selection): an equipment works larger than any other building, up to '
+    + '1.2 tiles wide, that turns out a combat automaton every day without being ordered to. The grammar of the '
+    + 'works — a single hall, a sawtooth roof, a chimney, a wide roller door — enlarged and clad in faceted plates '
+    + 'in grey primer, with articulated assembly arms on the facade and, above the door, the single glowing orange '
+    + 'eye of the Greys. The whole roof takes the team colour (30 to 45 % of the image); the orange of the eye is '
+    + 'the only orange on any building of the game. Windows and the eye glow at night. Keep the flag corner free: '
+    + 'nothing rises above 5 cm within 8 cm of the flagpole foot, at the back-right of the plot (x = +0.36 m, '
+    + 'z = -0.20 m). It is a capturable point: it changes owner during a match, so the roof must read from directly '
+    + 'above as well as from the default camera angle.',
+  fr: 'La superusine des Gris (la Sélection Méridienne) : un atelier de matériel plus grand que tout autre bâtiment, '
+    + 'jusqu’à 1,2 case de large, qui sort chaque jour un automate de combat sans qu’on le lui commande. La grammaire '
+    + 'de l’usine — une halle, un toit en dents de scie, une cheminée, une grande porte roulante —, agrandie et '
+    + 'revêtue de plaques à facettes en apprêt gris, avec des bras de montage articulés sur la façade et, au-dessus '
+    + 'de la porte, l’œil orange des Gris, lumineux. Le toit entier prend la couleur d’équipe (30 à 45 % de '
+    + 'l’image) ; l’orange de l’œil est le seul orange de tous les bâtiments du jeu. Les fenêtres et l’œil '
+    + 's’allument la nuit. Laisser libre le coin du mât : rien au-dessus de 5 cm à moins de 8 cm de son pied, à '
+    + 'l’arrière droit de la parcelle (x = +0,36 m, z = −0,20 m). C’est un point capturable : il change de '
+    + 'propriétaire pendant un match, et le toit doit se lire aussi bien à la verticale que sous l’angle de caméra '
+    + 'par défaut.',
+};
+
+/**
+ * La fiche de la **superusine** des Gris, en service (`etat` nul) ou prise
+ * (`inerte`). Elle part de la fiche de l'usine qu'elle agrandit — un bâtiment
+ * de scénario posé sur un producteur, pas un terrain du canon —, dont elle garde
+ * les nœuds, les matériaux, les clips et le contrôle.
+ */
+export function specSuperusine(usine: Terrain, etat: EtatBatiment | null): AssetSpec {
+  const cle: Cle = `${CLE_SUPERUSINE}_base`;
+  const id = idAsset('batiment', cle);
+  const g = GABARIT_SUPERUSINE;
+  const enService: AssetSpec = {
+    ...specBatiment(usine),
+    id,
+    cle,
+    description: TEXTE_SUPERUSINE,
+    style: style(['oversized equipment works', 'faceted grey primer plates', 'articulated assembly arms',
+      'single glowing orange eye', 'neutral shared base architecture']),
+    echelle: echelle(g.x, g.y, g.z, 0.07),
+    nommage: nommage(id, 'emission', 'hiver'),
+  };
+  if (etat === null) return enService;
+  return ficheEtat(enService, `${CLE_SUPERUSINE}_${etat}`, etat, [
+    'oversized equipment works', 'faceted grey primer plates', 'assembly arms folded away',
+    'orange eye switched off, graphite', 'neutral shared base architecture',
+  ]);
+}
+
+/**
  * Une spécification d'arbre, pour un biome **dans un territoire donné** : la
  * végétation d'une région de France ou d'un pays. C'est là que passe le « style
  * régional du décor » du brief — les ajoncs bretons ne sont pas les balisiers
@@ -1472,8 +1599,9 @@ export function territoires(): Territoire[] {
  *
  * Cinq familles y entrent, dans l'ordre du brief : les **géométries de base**
  * d'unité (partagées), les **kits nationaux** (24 × 10), les **terrains**
- * (neutres), les **bâtiments et le décor par territoire**, et les **bustes de
- * commandant** par archétype.
+ * (neutres), les **bâtiments** — communs, avec leurs états et la superusine,
+ * puis par territoire — **et le décor**, et les **bustes de commandant** par
+ * archétype.
  */
 export function genererSpecs(): AssetSpec[] {
   const specs: AssetSpec[] = [];
@@ -1488,7 +1616,17 @@ export function genererSpecs(): AssetSpec[] {
   const terrains = chargerTerrains();
   for (const t of terrains) {
     if (!capturables.has(t.cle)) specs.push(specTerrain(t));
-    else specs.push(specBatiment(t));
+    else {
+      specs.push(specBatiment(t));
+      // Ses états — le même bâtiment, endormi —, une fiche chacun, communs à toutes les nations.
+      for (const etat of etatsBatiment(t.cle)) specs.push(specBatimentEtat(t, etat));
+    }
+  }
+  // La superusine des Gris agrandit l'usine : sans usine au canon, pas de superusine.
+  const usine = terrains.find((t) => t.cle === 'usine');
+  if (usine) {
+    specs.push(specSuperusine(usine, null));
+    for (const etat of etatsBatiment(CLE_SUPERUSINE)) specs.push(specSuperusine(usine, etat));
   }
 
   for (const territoire of territoires()) {

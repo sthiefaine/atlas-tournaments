@@ -1,0 +1,167 @@
+{
+  "id": "batiment_superusine_inerte",
+  "type": "batiment",
+  "cle": "superusine_inerte",
+  "priorite": 1,
+  "description": {
+    "en": "The Grey super-factory (the Meridian Selection): an equipment works larger than any other building, up to 1.2 tiles wide, that turns out a combat automaton every day without being ordered to. The grammar of the works — a single hall, a sawtooth roof, a chimney, a wide roller door — enlarged and clad in faceted plates in grey primer, with articulated assembly arms on the facade and, above the door, the single glowing orange eye of the Greys. The whole roof takes the team colour (30 to 45 % of the image); the orange of the eye is the only orange on any building of the game. Windows and the eye glow at night. Keep the flag corner free: nothing rises above 5 cm within 8 cm of the flagpole foot, at the back-right of the plot (x = +0.36 m, z = -0.20 m). It is a capturable point: it changes owner during a match, so the roof must read from directly above as well as from the default camera angle. TAKEN STATE: this file is the same building stopped — same geometry, same UV layout, same node names. The orange eye is switched off (graphite, no emission), the assembly arms are folded against the facade, and every window is dark. Where the description above speaks of glowing, this state wins: no emission at all. Nothing is broken or blackened: it has simply stopped. The roof stays under the team mask: it takes the colour of whoever captured it.",
+    "fr": "La superusine des Gris (la Sélection Méridienne) : un atelier de matériel plus grand que tout autre bâtiment, jusqu’à 1,2 case de large, qui sort chaque jour un automate de combat sans qu’on le lui commande. La grammaire de l’usine — une halle, un toit en dents de scie, une cheminée, une grande porte roulante —, agrandie et revêtue de plaques à facettes en apprêt gris, avec des bras de montage articulés sur la façade et, au-dessus de la porte, l’œil orange des Gris, lumineux. Le toit entier prend la couleur d’équipe (30 à 45 % de l’image) ; l’orange de l’œil est le seul orange de tous les bâtiments du jeu. Les fenêtres et l’œil s’allument la nuit. Laisser libre le coin du mât : rien au-dessus de 5 cm à moins de 8 cm de son pied, à l’arrière droit de la parcelle (x = +0,36 m, z = −0,20 m). C’est un point capturable : il change de propriétaire pendant un match, et le toit doit se lire aussi bien à la verticale que sous l’angle de caméra par défaut. ÉTAT PRIS : ce fichier est le même bâtiment arrêté — même géométrie, même dépliage, mêmes noms de nœuds. L’œil orange est éteint (graphite, aucune émission), les bras de montage sont repliés contre la façade, et toutes les fenêtres sont éteintes. Là où la description ci-dessus parle de lumière, cet état l’emporte : aucune émission. Rien n’est cassé ni noirci : elle s’est arrêtée. Le toit reste sous le masque d’équipe : il prend la couleur de qui l’a prise."
+  },
+  "style": {
+    "reference": "doc/01-bible.md §5 (guide de ton) et doc/10-rendu-3d.md §2",
+    "devise": "Réaliste dans les matières, léger dans l’esprit.",
+    "matieres": "Matières crédibles et travaillées — tôle peinte griffée, tissu technique mat, béton lavé, bois usé, caoutchouc poussiéreux — sur des formes simples et lisibles. On sculpte du matériel de compétition bien entretenu, pas du matériel de guerre : propre, marqué par l’usage, jamais abîmé par la violence.",
+    "motsCles": [
+      "stylised realism",
+      "clean readable silhouette",
+      "top-down tactics board",
+      "sports tournament equipment",
+      "physically based materials",
+      "oversized equipment works",
+      "faceted grey primer plates",
+      "assembly arms folded away",
+      "orange eye switched off, graphite",
+      "neutral shared base architecture"
+    ],
+    "aEviter": [
+      "no readable text or numbers",
+      "no real-world insignia or flags",
+      "no grime of battle, no damage, no blood",
+      "no thin spikes or antennas under 2 cm"
+    ]
+  },
+  "echelle": {
+    "caseEnMetres": 1,
+    "x": {
+      "cible": 1.15,
+      "tolerance": 0.07
+    },
+    "y": {
+      "cible": 0.8,
+      "tolerance": 0.07
+    },
+    "z": {
+      "cible": 1.1,
+      "tolerance": 0.07
+    }
+  },
+  "pivot": {
+    "origine": "centre_au_sol",
+    "avant": "+z",
+    "haut": "+y",
+    "poseAuSol": true
+  },
+  "budget": {
+    "lod0": 60000,
+    "materiauxMax": 3
+  },
+  "textures": [
+    {
+      "canal": "albedo",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre."
+    },
+    {
+      "canal": "normale",
+      "resolution": 1024,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Joints de maçonnerie, bardages, tuiles, encadrements."
+    },
+    {
+      "canal": "rugosite",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Verre lisse, enduit mat, tuile poreuse : trois familles bien séparées."
+    },
+    {
+      "canal": "masque_equipe",
+      "resolution": 512,
+      "format": "png",
+      "obligatoire": true,
+      "note": "Stores, rives de toit, fanion : les surfaces qui prennent la nation."
+    }
+  ],
+  "variantes": {
+    "saisons": [
+      "ete",
+      "hiver"
+    ],
+    "biomes": [],
+    "nations": []
+  },
+  "animations": [
+    {
+      "nom": "repos",
+      "dureeMs": 3200,
+      "boucle": true,
+      "obligatoire": true
+    },
+    {
+      "nom": "capture",
+      "dureeMs": 1400,
+      "boucle": false,
+      "obligatoire": true
+    },
+    {
+      "nom": "touche",
+      "dureeMs": 400,
+      "boucle": false,
+      "obligatoire": false
+    }
+  ],
+  "format": {
+    "conteneur": "glb",
+    "versionGltf": "2.0",
+    "axeHaut": "y",
+    "unite": "metre",
+    "materiaux": "pbr_metallic_roughness",
+    "noeudRacine": "racine",
+    "noeuds": [
+      "racine",
+      "corps",
+      "toit",
+      "enseigne"
+    ],
+    "materiauxAttendus": [
+      "mat_corps",
+      "mat_vitrage"
+    ]
+  },
+  "nommage": {
+    "modele": "{id}_lod{lod}.glb",
+    "texture": "{id}_{canal}_{variante}.{ext}",
+    "exemples": [
+      "batiment_superusine_inerte_lod0.glb",
+      "batiment_superusine_inerte_albedo.png",
+      "batiment_superusine_inerte_albedo_hiver.png"
+    ]
+  },
+  "interdits": [
+    "symboles_reels",
+    "drapeaux_reels",
+    "texte_lisible",
+    "sang",
+    "marques_deposees",
+    "personnes_reelles",
+    "violence_explicite"
+  ],
+  "verification": {
+    "controles": [
+      "format",
+      "noeuds",
+      "materiaux",
+      "echelle",
+      "budget",
+      "masque_equipe",
+      "animations"
+    ],
+    "toleranceAabb": 0.08,
+    "lodRequis": [
+      0
+    ]
+  }
+}

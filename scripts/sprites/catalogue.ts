@@ -2,10 +2,11 @@
  * Ce qui se cuit, et comment : les sources et leur plan de vues et de clips.
  *
  * Deux origines. Le **catalogue** est ce que le jeu a livré dans
- * `public/assets/modeles/` : les unités communes, les bâtiments (bases et QG
- * nationaux), les rochers et le pont. Les autres terrains livrés (plaine,
- * forêt, rivière, route) ne se cuisent pas : le sol est un nuanceur
- * (`render2d/sol/`), et la forêt vient des essences de décor. Une **liste**
+ * `public/assets/modeles/` : les unités communes, les bâtiments (bases, QG
+ * nationaux, désaffectés, superusine active et inerte), les rochers et le
+ * pont. Les autres terrains livrés (plaine, forêt, rivière, route) ne se
+ * cuisent pas : le sol est un nuanceur (`render2d/sol/`), et la forêt vient
+ * des essences de décor. Une **liste**
  * (`--liste`) apporte des sources d'ailleurs — le décor procédural,
  * la calibration —, au format de `assets/sources-sprites/decor/liste.json`.
  */
@@ -13,6 +14,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 
+import { etatsBatiment, type EtatBatiment } from '../../src/assets/spec';
 import {
   CLIPS, FAMILLES_SPRITE, IMAGES_PAR_SECONDE, LACET_VUE, TANGAGE_CARTE, TANGAGE_PROFIL, VUES,
   type ClipSprite, type FamilleSprite, type VueSprite,
@@ -31,6 +33,8 @@ export interface SourceSprite {
   famille: FamilleSprite;
   cle: string;
   variante?: string;
+  /** L'état d'un bâtiment (`EntreeSprite.etat`) : son image d'endormi ou de pris. */
+  etat?: EtatBatiment;
   /** Le GLB, relatif à la racine du dépôt. */
   fichier: string;
   /** Les vues imposées par une liste ; sinon, celles de la famille. */
@@ -65,12 +69,20 @@ export interface VuePlan {
   animations: AnimationPlan[];
 }
 
-/** Classe un identifiant livré ; `null` pour ce qui ne se cuit pas. */
+/**
+ * Classe un identifiant livré ; `null` pour ce qui ne se cuit pas. Un bâtiment
+ * dans un état (`batiment_ville_desaffecte`, `batiment_superusine_inerte`) garde
+ * la clé de son bâtiment et porte son état à part : seuls les états que ce
+ * bâtiment sait montrer (`etatsBatiment`) passent — un QG désaffecté n'existe pas.
+ */
 export function classer(id: string): Omit<SourceSprite, 'fichier'> | null {
   let m = /^unite_([a-z0-9_]+)_base$/.exec(id);
   if (m) return { id, famille: 'unite', cle: m[1]!, ombre: false, regleMasque: 'base', emissionSeparee: false };
   m = /^batiment_([a-z]+)_base$/.exec(id);
   if (m) return { id, famille: 'batiment', cle: m[1]!, ombre: true, regleMasque: 'tous', emissionSeparee: true };
+  const enEtat = /^batiment_([a-z]+)_([a-z]+)$/.exec(id);
+  const etat = enEtat ? etatsBatiment(enEtat[1]!).find((e) => e === enEtat[2]) : undefined;
+  if (enEtat && etat) return { id, famille: 'batiment', cle: enEtat[1]!, etat, ombre: true, regleMasque: 'tous', emissionSeparee: true };
   m = /^batiment_([a-z]+)_([a-z]{2,3})$/.exec(id);
   if (m) return { id, famille: 'batiment', cle: m[1]!, variante: m[2]!, ombre: true, regleMasque: 'tous', emissionSeparee: true };
   m = /^decor_rocher_([a-z0-9_]+)$/.exec(id);

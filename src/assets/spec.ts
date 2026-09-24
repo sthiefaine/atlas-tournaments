@@ -22,7 +22,9 @@
  *    n'applique.
  */
 
-import { REGEX_CLE, type Biome, type Cle, type CodePays, type Couleur, type Palette, type Saison } from '../schemas/types';
+import {
+  REGEX_CLE, TERRAINS_CAPTURABLES, type Biome, type Cle, type CodePays, type Couleur, type Palette, type Saison,
+} from '../schemas/types';
 
 // ---------------------------------------------------------------------------
 // 1. Énumérations
@@ -203,6 +205,34 @@ export const ELEMENTS_DECOR_REGION = [
 ] as const;
 /** Un élément de décor régional. */
 export type ElementDecorRegion = typeof ELEMENTS_DECOR_REGION[number];
+
+/**
+ * Les **états** d'un bâtiment qui ont leur image, en plus du bâtiment en
+ * service (`doc/refonte/plan-batiments.md` §1, 24 septembre 2026) :
+ * `desaffecte`, le même bâtiment endormi ; `inerte`, la superusine prise. Le
+ * même module les construit tous — un état n'est jamais un autre dessin. La
+ * fiche, la cuisson et le rendu lisent cette liste ici, et nulle part ailleurs.
+ */
+export const ETATS_BATIMENT = ['desaffecte', 'inerte'] as const;
+/** Un état de bâtiment qui a son image ; son absence dit « en service ». */
+export type EtatBatiment = typeof ETATS_BATIMENT[number];
+
+/**
+ * La **superusine** des Gris : un bâtiment de scénario (`Scenario.superusines`)
+ * posé sur un producteur de son camp. Ce n'est pas un terrain du canon, mais
+ * elle a son image et sa fiche, en service comme prise.
+ */
+export const CLE_SUPERUSINE = 'superusine';
+
+/**
+ * Les états qu'un bâtiment sait montrer en plus d'être en service. Tout
+ * capturable se désaffecte, sauf le QG — le validateur des cartes le refuse :
+ * un camp partirait sans base —, et la superusine, prise, devient inerte.
+ */
+export function etatsBatiment(cle: string): readonly EtatBatiment[] {
+  if (cle === CLE_SUPERUSINE) return ['inerte'];
+  return cle !== 'qg' && (TERRAINS_CAPTURABLES as readonly string[]).includes(cle) ? ['desaffecte'] : [];
+}
 
 // ---------------------------------------------------------------------------
 // 2. Sous-structures

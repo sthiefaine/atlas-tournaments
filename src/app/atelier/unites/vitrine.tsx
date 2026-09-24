@@ -101,7 +101,9 @@ async function lireManifesteDuJeu(): Promise<EtatManifeste> {
 function piecesDe(famille: FamilleSprite, m: ManifesteSprites | null, cat: Catalogue): Piece[] {
   const entrees = Object.values(m?.entrees ?? {}).filter((e) => e.famille === famille);
   const cuites = new Set(entrees.map((e) => e.id));
-  const variante = (e: EntreeSprite): string => (e.variante ? ` · ${e.variante.toUpperCase()}` : '');
+  // L'état se lit à côté de la nation : sans lui, la ville désaffectée s'appellerait « Ville » comme l'autre.
+  const variante = (e: EntreeSprite): string =>
+    `${e.variante ? ` · ${e.variante.toUpperCase()}` : ''}${e.etat ? ` · ${e.etat}` : ''}`;
   switch (famille) {
     case 'unite': {
       const unites = Object.values(cat.unites);

@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   CLIPS, COS_TANGAGE, ESSENCES_DECOR, LACET_VUE, ORDRE_CALQUES, PIXELS_PAR_CASE, SIN_TANGAGE,
-  TANGAGE_CARTE, VUES, caseDepuisPlan, centreCase, idBatiment, idDecor, idUnite,
+  TANGAGE_CARTE, VUES, caseDepuisPlan, centreCase, idBatiment, idBatimentEtat, idDecor, idUnite,
   niveauxBrouillard, solDepuisPlan, taillePlan, versPlan,
 } from '../../src/render2d/contrat';
 
@@ -53,6 +53,8 @@ test('les identifiants suivent ceux des GLB', () => {
   assert.equal(idUnite('char_leger'), 'unite_char_leger_base');
   assert.equal(idBatiment('ville'), 'batiment_ville_base');
   assert.equal(idBatiment('qg', 'fr'), 'batiment_qg_fr');
+  assert.equal(idBatimentEtat('ville', 'desaffecte'), 'batiment_ville_desaffecte');
+  assert.equal(idBatimentEtat('superusine', 'inerte'), 'batiment_superusine_inerte');
   assert.equal(idDecor('feuillu', 'automne', 2), 'decor_feuillu_automne_2');
   assert.match(idDecor('montagne_aride', 'toutes', 1), /^decor_[a-z_]+_[a-z]+_\d+$/);
 });

@@ -6,7 +6,8 @@ import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { IMAGES_PAR_SECONDE, LACET_VUE, TANGAGE_CARTE, TANGAGE_PROFIL } from '../../src/render2d/contrat';
+import { genererSpecs } from '../../src/assets/catalogue';
+import { IMAGES_PAR_SECONDE, LACET_VUE, TANGAGE_CARTE, TANGAGE_PROFIL, idBatiment, idBatimentEtat } from '../../src/render2d/contrat';
 import { classer, planVues, sourcesCatalogue, sourcesListe, type SourceSprite } from '../../scripts/sprites/catalogue';
 
 const clips = (noms: string[]) => noms.map((nom) => ({ nom, duree: nom === 'repos' ? 2.4 : 0.7 }));
@@ -26,6 +27,35 @@ test('les fichiers livrés se classent en familles, les terrains de sol sont éc
   assert.ok(ecartes.includes('terrain_plaine'));
   // Ombre au sol cuite pour tout ce qui ne bouge pas, jamais pour une unité.
   for (const s of sources) assert.equal(s.ombre, s.famille !== 'unite', s.id);
+});
+
+test('un bâtiment dans un état garde sa clé et porte son état à part ; un état qu’il ne sait pas montrer ne se cuit pas', () => {
+  const ville = classer('batiment_ville_desaffecte');
+  assert.deepEqual(
+    { famille: ville?.famille, cle: ville?.cle, etat: ville?.etat, variante: ville?.variante, ombre: ville?.ombre, emission: ville?.emissionSeparee },
+    { famille: 'batiment', cle: 'ville', etat: 'desaffecte', variante: undefined, ombre: true, emission: true },
+  );
+  assert.deepEqual([classer('batiment_superusine_base')?.cle, classer('batiment_superusine_base')?.etat], ['superusine', undefined]);
+  assert.deepEqual([classer('batiment_superusine_inerte')?.cle, classer('batiment_superusine_inerte')?.etat], ['superusine', 'inerte']);
+  // Un QG ne se désaffecte pas, une ville ne se fige pas : rien de tel ne se cuit.
+  assert.equal(classer('batiment_qg_desaffecte'), null);
+  assert.equal(classer('batiment_ville_inerte'), null);
+  assert.equal(classer('batiment_qg_fr')?.etat, undefined, 'une nation n’est pas un état');
+  // Le plan d'un bâtiment dans un état est celui d'un bâtiment : sa vue fixe, tous ses clips.
+  const plan = planVues(ville as SourceSprite, clips(['repos', 'capture']));
+  assert.deepEqual(plan.map((v) => `${v.vue}:${v.animations.map((a) => a.clip).join(',')}`), ['fixe:repos,capture']);
+});
+
+test('chaque fiche de bâtiment commun se cuit sous l’identifiant que le rendu demande', () => {
+  // La fiche fait le GLB, le GLB fait l'entrée, et le rendu la cherche par
+  // `idBatiment` ou `idBatimentEtat` : les trois noms doivent être le même.
+  const communes = genererSpecs().filter((s) => s.type === 'batiment' && s.variantes.nations.length === 0);
+  assert.ok(communes.length >= 13, 'six bases, cinq désaffectés, la superusine et son état pris');
+  for (const s of communes) {
+    const c = classer(s.id);
+    assert.ok(c, `${s.id} : la cuisson doit la reconnaître`);
+    assert.equal(c.etat ? idBatimentEtat(c.cle, c.etat) : idBatiment(c.cle), s.id);
+  }
 });
 
 test('une unité : la marche dans trois vues, tous ses clips à droite, le combat de profil', () => {

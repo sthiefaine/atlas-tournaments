@@ -212,7 +212,7 @@ export function placer(env: Enveloppe, largeur: number, hauteur: number, options
  * L'entrée d'une clé de jeu pour une variante — le kit national d'une unité, le
  * QG d'un pays, le rocher d'un biome : la variante si elle est cuite, sinon la
  * base commune, sinon `parDefaut`, le nom attendu, qui donnera un repli. C'est
- * la règle d'`Atlas.idPour`, que le jeu applique.
+ * la règle d'`Atlas.idPour`, que le jeu applique : jamais une image d'état.
  */
 export function idPour(
   m: ManifesteSprites | null, famille: FamilleSprite, cle: string, variante: string | null | undefined, parDefaut: string,
@@ -220,7 +220,7 @@ export function idPour(
   if (!m) return parDefaut;
   let base: string | null = null;
   for (const e of Object.values(m.entrees)) {
-    if (e.famille !== famille || e.cle !== cle) continue;
+    if (e.famille !== famille || e.cle !== cle || e.etat !== undefined) continue;
     if (variante && e.variante === variante) return e.id;
     if (e.variante === undefined && base === null) base = e.id;
   }

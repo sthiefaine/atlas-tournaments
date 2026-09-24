@@ -69,10 +69,14 @@ test('chaque territoire déduit existe dans le canon', () => {
     }
     if (s.id.includes('_fr_')) assert.equal(t.pays, 'fr', s.id);
   }
-  // Le partagé, c'est exactement : géométries de base, terrains, rochers, bustes.
+  // Le partagé, c'est exactement : géométries de base, terrains, rochers, bustes,
+  // et les bâtiments communs — leurs bases, leurs états (désaffecté, superusine
+  // prise) et la superusine —, qui ne déclarent aucune nation. Le compte les
+  // oubliait : il était faux de six bases avant qu'arrivent les sept fiches d'état.
   const bilan = bilanSpecs(specs);
   const rochers = specs.filter((s) => s.id.startsWith('decor_rocher_')).length;
-  assert.equal(sansNation, bilan.unite + bilan.terrain + bilan.commandant + rochers);
+  const batimentsCommuns = specs.filter((s) => s.type === 'batiment' && s.variantes.nations.length === 0).length;
+  assert.equal(sansNation, bilan.unite + bilan.terrain + bilan.commandant + rochers + batimentsCommuns);
 });
 
 test('filtrerSpecs combine les filtres et ne réordonne pas', () => {

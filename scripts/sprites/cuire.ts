@@ -214,7 +214,11 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
   };
   const empreinteCuisson = empreinte(JSON.stringify({
     version: VERSION_CUISSON,
-    source: { famille: source.famille, cle: source.cle, variante: source.variante ?? null, sha256: infos.sha256 },
+    // L'état n'entre que s'il y en a un : l'empreinte des entrées d'avant ne bouge pas.
+    source: {
+      famille: source.famille, cle: source.cle, variante: source.variante ?? null,
+      ...(source.etat ? { etat: source.etat } : {}), sha256: infos.sha256,
+    },
     images: infos.images.map((i) => empreinte(readFileSync(i))),
     masque: infos.masque ? empreinte(readFileSync(infos.masque)) : null,
     reglages: { ...reglagesTravail, bordure: BORDURE, espacement: ESPACEMENT, page: PAGE_MAX, webp: QUALITE_WEBP, ombre: SEUIL_OMBRE, fondu: FONDU_OMBRE, contour },
@@ -345,6 +349,7 @@ async function cuireSource(source: SourceSprite, o: Options, rang: string): Prom
     famille: source.famille,
     cle: source.cle,
     ...(source.variante ? { variante: source.variante } : {}),
+    ...(source.etat ? { etat: source.etat } : {}),
     source: { fichier: source.fichier, sha256: infos.sha256 },
     pages,
     animations: animations.map((a): AnimationSprite => ({

@@ -10,7 +10,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  bilanPriorites, bilanSpecs, genererSpecs, nomModele, nomTexture, specUnite, territoires,
+  bilanPriorites, bilanSpecs, ETATS_BATIMENT, genererSpecs, nomModele, nomTexture, specUnite, territoires,
   validerAssetSpec, validerLotAssetSpec,
 } from '../../src/assets/index';
 import {
@@ -124,7 +124,9 @@ test('les bâtiments sont par région pour la France et par pays sinon', () => {
 test('un bâtiment porte le masque d’équipe, une carte d’émission et son style local', () => {
   for (const spec of specs.filter((s) => s.type === 'batiment')) {
     assert.ok(spec.textures.some((t) => t.canal === 'masque_equipe' && t.obligatoire), spec.id);
-    assert.ok(spec.textures.some((t) => t.canal === 'emission' && t.obligatoire), spec.id);
+    // Un bâtiment endormi ou arrêté est éteint (24 septembre 2026) : ses fiches d'état n'ont pas d'émission.
+    const eteint = ETATS_BATIMENT.some((e) => spec.cle.endsWith(`_${e}`));
+    assert.equal(spec.textures.some((t) => t.canal === 'emission' && t.obligatoire), !eteint, spec.id);
     assert.ok(spec.animations.some((a) => a.nom === 'capture'), spec.id);
   }
   // La Bretagne a des toits d'ardoise, la Provence des tuiles rondes : deux
@@ -134,6 +136,43 @@ test('un bâtiment porte le masque d’équipe, une carte d’émission et son s
   assert.ok(bretagne && provence);
   assert.notEqual(bretagne.description.fr, provence.description.fr);
   assert.match(bretagne.description.fr, /ardoise/);
+});
+
+test('les états des bâtiments ont chacun leur fiche : cinq désaffectés, la superusine et son état pris', () => {
+  // Plan des bâtiments, 24 septembre 2026 : une fiche par entrée, communes à
+  // toutes les nations — un désaffecté est neutre, la superusine n'a pas de kit.
+  const etats = specs.filter((s) => s.type === 'batiment' && ETATS_BATIMENT.some((e) => s.cle.endsWith(`_${e}`)));
+  assert.deepEqual(etats.map((s) => s.id), [
+    'batiment_aeroport_desaffecte', 'batiment_port_desaffecte', 'batiment_radar_desaffecte',
+    'batiment_superusine_inerte', 'batiment_usine_desaffecte', 'batiment_ville_desaffecte',
+  ]);
+  assert.equal(specs.some((s) => s.id === 'batiment_qg_desaffecte'), false, 'un QG ne se désaffecte pas');
+  const superusine = specs.find((s) => s.id === 'batiment_superusine_base');
+  assert.ok(superusine, 'la superusine en service a sa fiche');
+  for (const s of [...etats, superusine]) {
+    assert.deepEqual(s.variantes.nations, [], s.id);
+    assert.equal(s.priorite, 1, s.id);
+    assert.equal(validerAssetSpec(s).ok, true, s.id);
+  }
+  // Un état est le même bâtiment : même forme, mêmes clips, même contrôle, la même taille.
+  for (const cle of ['ville', 'usine', 'aeroport', 'port', 'radar']) {
+    const base = specs.find((s) => s.id === `batiment_${cle}_base`)!;
+    const endormi = specs.find((s) => s.id === `batiment_${cle}_desaffecte`)!;
+    assert.deepEqual([endormi.format, endormi.animations, endormi.verification, endormi.echelle, endormi.budget],
+      [base.format, base.animations, base.verification, base.echelle, base.budget], cle);
+    assert.match(endormi.description.fr, /ÉTAT DÉSAFFECTÉ/, cle);
+    assert.match(endormi.description.en, /never a ruin/, cle);
+  }
+  // La superusine agrandit l'usine — jusqu'à 1,2 case —, plus basse que le QG ; prise, elle s'éteint.
+  const usine = specs.find((s) => s.id === 'batiment_usine_base')!;
+  const qg = specs.find((s) => s.id === 'batiment_qg_base')!;
+  const inerte = specs.find((s) => s.id === 'batiment_superusine_inerte')!;
+  assert.ok(superusine.echelle.x.cible > usine.echelle.x.cible && superusine.echelle.x.cible <= 1.2);
+  assert.ok(superusine.echelle.z.cible <= 1.2 && superusine.echelle.y.cible < qg.echelle.y.cible);
+  assert.ok(superusine.textures.some((t) => t.canal === 'emission' && t.obligatoire), 'l’œil et les fenêtres brillent');
+  assert.equal(inerte.textures.some((t) => t.canal === 'emission'), false, 'prise, elle ne brille plus');
+  assert.deepEqual(inerte.echelle, superusine.echelle);
+  assert.deepEqual(superusine.format, usine.format);
 });
 
 test('le décor est régional pour la France, national ailleurs, et minéral partout', () => {

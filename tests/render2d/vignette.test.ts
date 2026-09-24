@@ -223,6 +223,13 @@ test('le kit national l’emporte sur la base, qui l’emporte sur le nom attend
   assert.equal(idPour(null, 'unite', 'char_leger', 'fr', 'unite_char_leger_base'), 'unite_char_leger_base');
 });
 
+test('une image d’état n’est jamais la base de sa clé, qu’elle vienne avant ou sans elle', () => {
+  const endormie: EntreeSprite = { ...entreeUnite('batiment_ville_desaffecte'), famille: 'batiment', cle: 'ville', etat: 'desaffecte' };
+  const base: EntreeSprite = { ...entreeUnite('batiment_ville_base'), famille: 'batiment', cle: 'ville' };
+  assert.equal(idPour(manifeste(endormie), 'batiment', 'ville', null, 'batiment_ville_base'), 'batiment_ville_base');
+  assert.equal(idPour(manifeste(endormie, base), 'batiment', 'ville', null, 'x'), 'batiment_ville_base');
+});
+
 // ---------------------------------------------------------------------------
 // La réserve
 // ---------------------------------------------------------------------------

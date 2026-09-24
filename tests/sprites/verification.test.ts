@@ -66,3 +66,13 @@ test('la vérification voit un chemin absolu, un doublon, un clip inconnu, une c
   const autreVersion = { ...manifeste(entree()), version: 2 } as unknown as ManifesteSprites;
   assert.ok(problemesManifeste(autreVersion).some((p) => p.includes('version')));
 });
+
+test('un état de bâtiment connu passe ; un état inconnu, ou posé sur une unité, est dit avant que le rendu l’écarte', () => {
+  const batiment = (etat: string): EntreeSprite => ({
+    ...entree(), id: `batiment_ville_${etat}`, famille: 'batiment', cle: 'ville', etat: etat as EntreeSprite['etat'],
+  });
+  assert.deepEqual(problemesManifeste(manifeste(batiment('desaffecte'))), []);
+  assert.ok(problemesManifeste(manifeste(batiment('ruine'))).some((p) => p.includes('état ruine')));
+  const unite = { ...entree(), etat: 'desaffecte' } as EntreeSprite;
+  assert.ok(problemesManifeste(manifeste(unite)).some((p) => p.includes('état desaffecte')));
+});

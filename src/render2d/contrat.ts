@@ -15,6 +15,7 @@
  * on y ajoute, on ne renomme ni ne retire, deux côtés le lisent sans se voir.
  */
 
+import type { EtatBatiment } from '../assets/spec';
 import { cleCase, type EtatPartie } from '../engine/types';
 import type { VueInteraction } from '../render/rendu';
 import type { Biome, Case, Saison } from '../schemas/types';
@@ -257,6 +258,15 @@ export interface EntreeSprite {
   cle: string;
   /** Pays d'un kit national (`fr`), saison d'un décor… ; absent pour une base commune. */
   variante?: string;
+  /**
+   * L'état d'un bâtiment que l'image montre, quand ce n'est pas le bâtiment en
+   * service (`ETATS_BATIMENT`) : `desaffecte`, le même bâtiment endormi ;
+   * `inerte`, la superusine prise. Absent : en service. Un champ à part, et non
+   * une variante — qui est la nation — : une image d'état n'est jamais la base
+   * de sa clé, on ne l'obtient qu'en la demandant par son identifiant
+   * (`idBatimentEtat`), et l'atlas ne la rend jamais à la place d'une autre.
+   */
+  etat?: EtatBatiment;
   /** Le fichier cuit et son empreinte : une source qui change se recuit. */
   source: { fichier: string; sha256: string };
   pages: PageSprite[];
@@ -280,6 +290,15 @@ export function idUnite(cle: string): string {
 /** L'identifiant de l'entrée d'un bâtiment commun ; un pays donne son kit (`batiment_qg_fr`). */
 export function idBatiment(cle: string, pays?: string): string {
   return pays ? `batiment_${cle}_${pays}` : `batiment_${cle}_base`;
+}
+
+/**
+ * L'identifiant de l'image d'un bâtiment dans un état : `batiment_ville_desaffecte`,
+ * `batiment_superusine_inerte`. Commune à toutes les nations : un désaffecté
+ * est neutre, et la superusine n'a pas de kit.
+ */
+export function idBatimentEtat(cle: string, etat: EtatBatiment): string {
+  return `batiment_${cle}_${etat}`;
 }
 
 // ---------------------------------------------------------------------------

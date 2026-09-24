@@ -176,6 +176,43 @@ test('le kit national d’une variante l’emporte sur la base, qui l’emporte 
   assert.equal(atlas.idPour('unite', 'recon', 'fr', 'unite_recon_base'), 'unite_recon_base');
 });
 
+/** Une entrée de bâtiment, dans un état ou en service. */
+function entreeBatiment(id: string, cle: string, etat?: string): Record<string, unknown> {
+  return {
+    ...entreeUnite(id), id, famille: 'batiment', cle, ...(etat !== undefined ? { etat } : {}),
+    animations: [{ vue: 'fixe', clip: 'repos', boucle: true, ips: 12, cadres: [{ page: 0, x: 0, y: 0, l: 64, h: 64, px: 32, py: 56 }] }],
+  };
+}
+
+test('une image d’état se lit, et un état inconnu — ou posé hors d’un bâtiment — écarte l’entrée', () => {
+  const lu = lireManifeste(manifesteBrut({
+    batiment_ville_desaffecte: entreeBatiment('batiment_ville_desaffecte', 'ville', 'desaffecte'),
+    batiment_superusine_inerte: entreeBatiment('batiment_superusine_inerte', 'superusine', 'inerte'),
+    batiment_ville_ruine: entreeBatiment('batiment_ville_ruine', 'ville', 'ruine'),
+    unite_char_leger_base: { ...entreeUnite(), etat: 'desaffecte' },
+  }));
+  assert.ok(lu.ok);
+  if (!lu.ok) return;
+  assert.equal(lu.manifeste.entrees['batiment_ville_desaffecte']?.etat, 'desaffecte');
+  assert.equal(lu.manifeste.entrees['batiment_superusine_inerte']?.etat, 'inerte');
+  assert.deepEqual([...lu.ecartees].sort(), ['batiment_ville_ruine', 'unite_char_leger_base']);
+});
+
+test('une image d’état ne tient jamais lieu du bâtiment en service, même sans lui ; elle se demande par son nom', () => {
+  const { atlas } = atlasEssai();
+  const lu = lireManifeste(manifesteBrut({
+    batiment_ville_desaffecte: entreeBatiment('batiment_ville_desaffecte', 'ville', 'desaffecte'),
+    batiment_usine_desaffecte: entreeBatiment('batiment_usine_desaffecte', 'usine', 'desaffecte'),
+    batiment_usine_base: entreeBatiment('batiment_usine_base', 'usine'),
+  }));
+  if (!lu.ok) throw new Error('manifeste');
+  atlas.poserManifeste(lu.manifeste);
+  // La ville n'a que son image endormie : en service, c'est le nom attendu (un repli), jamais elle.
+  assert.equal(atlas.idPour('batiment', 'ville', null, 'batiment_ville_base'), 'batiment_ville_base');
+  assert.equal(atlas.idPour('batiment', 'usine', 'fr', 'batiment_usine_base'), 'batiment_usine_base');
+  assert.equal(atlas.entree('batiment_ville_desaffecte')?.etat, 'desaffecte');
+});
+
 test('perdre le contexte oublie pages et replis, qui se refont à la demande', () => {
   const { atlas, journal } = atlasEssai();
   atlas.resoudre(instance('unite_char_leger_base', { animation: -1 }));
