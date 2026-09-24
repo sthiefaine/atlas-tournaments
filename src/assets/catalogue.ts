@@ -911,6 +911,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   helico: [0.446, 0.38, 0.818],
   infanterie: [0.48, 0.831, 0.487],
   meca: [0.571, 0.824, 0.475],
+  meridien_veilleur: [0.657, 0.686, 0.663],
   missiles_air: [0.476, 0.644, 0.781],
   missiles_sol: [0.506, 0.726, 0.77],
   porte_avions: [0.279, 0.562, 0.918],
