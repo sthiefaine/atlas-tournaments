@@ -148,10 +148,10 @@
     {
       "id": "unite_cuirasse_base",
       "fichierActif": "public/assets/modeles/unite_cuirasse_base_lod0.glb",
-      "donnees": "../donnees/a6dcc16f7ae883fc3ea8a6ad31fc4570d3713b646b9ad6ec30ec661dc15072f4.glb",
-      "revision": "9d038186bf385998e4e66d806d888e7bfa765ca88e5c70e29c264de5e05d0375",
+      "donnees": "../donnees/1137f2b42019c80f784c1fc4233a3048fed0a8635bff9d132de163407c42e7cc.glb",
+      "revision": "abc662f1be942a45c7ec590d7452ed0d636fbc5a07c672d52ea7ee71ef579f0b",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_drone_base",
