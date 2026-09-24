@@ -100,10 +100,10 @@
     {
       "id": "unite_bombardier_base",
       "fichierActif": "public/assets/modeles/unite_bombardier_base_lod0.glb",
-      "donnees": "../donnees/e26abe1dc41fbd2b818ba7923e2fa64701a6715563825baadad3f9027f4aa837.glb",
-      "revision": "e52406b527d0cce37bcb97f7c6048021aec30af6c99334f897c57ac92269ce71",
+      "donnees": "../donnees/31e4b5453e6e157ba6633430aa61bc9a2b3dbc7a9f059049bd3832cdf5b6dea8.glb",
+      "revision": "8f456e9f6e8a14a5bc60078c33228244bbd32b1407dd99ceb88b65744c1e7b72",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_brouilleur_base",
