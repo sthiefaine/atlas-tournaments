@@ -177,9 +177,10 @@ DEBORD_TOURNANTS = 4
 
 def rendre_tournants(f, scene, dossier, racine):
     """
-    Le masque de ce que balaient les pièces tournantes (rotors, parabole
-    radar) pendant le repos, en vue « droite ». Chaque pièce qui tourne par
-    `tourner` est posée sur un tour entier, par pas de 5°, autour de son axe —
+    Le masque de ce que balaient les pièces qui ont le droit de bouger au
+    repos — tournantes (rotors) et mobiles (une boule-caméra qui balaie, une
+    parabole) —, en vue « droite ». Chaque pièce qui tourne par `tourner` est
+    posée sur un tour entier, par pas de 5°, autour de son axe —
     échantillonner le clip ne suffit pas : à trois tours en 2,4 s, même
     quarante-huit instants laissent des trous entre les pales ; les autres
     suivent leur clip. L'union est ensuite élargie de l'anneau du contour, qui
@@ -188,7 +189,7 @@ def rendre_tournants(f, scene, dossier, racine):
     """
     import numpy as np
     from mathutils import Quaternion
-    noms = [nom for nom, n in f.noeuds.items() if n.tournant]
+    noms = [nom for nom, n in f.noeuds.items() if n.tournant or n.mobile]
     if not noms or 'repos' not in f.clips:
         return None
     caches = [ob for nom, ob in f.objets.items() if ob.type == 'MESH' and nom not in noms]

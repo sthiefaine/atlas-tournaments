@@ -544,6 +544,7 @@ export interface Mesures {
   teintes: string[];
   piecesFines: { nom: string; epaisseur: number; fin: boolean }[];
   rotationRepos: Record<string, number>;
+  /** Les nœuds qui ont le droit de bouger au repos : tournants (rotors) et mobiles (caméra qui balaie, parabole). */
   tournants: string[];
   basAuRepos: number;
   controle: { ok: boolean; motifs: number };
@@ -553,6 +554,12 @@ export interface Mesures {
    * sans cuisson.
    */
   recouvrement?: { unite: string; vue: 'droite' | 'bas'; valeur: number; droite: number; bas: number } | null;
+  /**
+   * Les images de la cuisson d'essai qui ont perdu des faces
+   * (`scripts/sprites/anomalies.ts` : silhouette, masque, clarté), une ligne
+   * chacune ; absent sans cuisson.
+   */
+  anomaliesCuisson?: string[];
 }
 
 const pct = (v: number): string => `${(v * 100).toFixed(1)} %`;
@@ -621,11 +628,11 @@ export function regles(m: Mesures, charte: Charte): Regle[] {
   }
 
   const aMax = vol ? charte.repos.agitationMax.vol : charte.repos.agitationMax.sol;
-  regle('repos_agitation', `Repos : pixels qui changent de plus de ${charte.repos.seuilNiveaux} niveaux d’une image à l’autre (pire paire)${m.tournants.length ? ', pièces tournantes exclues' : ''}`,
+  regle('repos_agitation', `Repos : pixels qui changent de plus de ${charte.repos.seuilNiveaux} niveaux d’une image à l’autre (pire paire)${m.tournants.length ? ', pièces tournantes et mobiles exclues' : ''}`,
     Number(m.agitation.pire.toFixed(4)), `≤ ${pct(aMax)}`, m.agitation.pire <= aMax + 1e-9);
   const rotations = Object.entries(m.rotationRepos).filter(([n]) => !m.tournants.includes(n));
   const pireRotation = rotations.reduce((s, [, v]) => Math.max(s, v), 0);
-  regle('repos_rotation', 'Repos : plus grande rotation d’une pièce (hors pièces tournantes), degrés', Number(pireRotation.toFixed(3)), `≤ ${charte.repos.rotationMaxDegres}°`, pireRotation <= charte.repos.rotationMaxDegres + 1e-9);
+  regle('repos_rotation', 'Repos : plus grande rotation d’une pièce (hors pièces tournantes et mobiles), degrés', Number(pireRotation.toFixed(3)), `≤ ${charte.repos.rotationMaxDegres}°`, pireRotation <= charte.repos.rotationMaxDegres + 1e-9);
 
   if (m.palette) {
     for (const [nom, b] of Object.entries(charte.palette.parts)) {
@@ -644,6 +651,10 @@ export function regles(m: Mesures, charte: Charte): Regle[] {
   const fines = m.piecesFines.filter((p) => p.epaisseur < (p.fin ? charte.formes.epaisseurMinAntenne : charte.formes.epaisseurMin) - 1e-9);
   regle('epaisseur', `Pièces sous ${charte.formes.epaisseurMin} m (antennes : ${charte.formes.epaisseurMinAntenne} m)`, fines.map((p) => `${p.nom} ${p.epaisseur}`).join(', ') || 'aucune', 'aucune', fines.length === 0);
   regle('clarte_hors_equipe', 'Clarté L* moyenne hors équipe, cuite (information)', Number(m.clarteHorsEquipe.toFixed(1)), 'information', null);
+  if (m.anomaliesCuisson !== undefined) {
+    regle('cuisson_entiere', 'Aucune image cuite n’a perdu de faces : silhouette, masque et clarté de chaque image contre son animation, de chaque animation contre l’entrée',
+      m.anomaliesCuisson.length ? `${m.anomaliesCuisson.length} : ${m.anomaliesCuisson.slice(0, 3).join(' ; ')}` : 'aucune', 'aucune', m.anomaliesCuisson.length === 0);
+  }
   if (m.recouvrement !== undefined) {
     const rc = m.recouvrement;
     // D'information d'abord : la valeur dit la plus proche, le seuil est à côté.

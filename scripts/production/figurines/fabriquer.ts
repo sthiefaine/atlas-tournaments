@@ -45,6 +45,7 @@ import { contratProduction } from '../../../src/assets/production';
 import { IMAGES_PAR_SECONDE, PIXELS_PAR_CASE, type ManifesteSprites, type VueSprite } from '../../../src/render2d/contrat';
 import { controlerDepot } from '../../../src/serveur/depot-modeles';
 import { decouperGlb } from '../../infanterie/gltf';
+import { anomaliesEntree, decrireAnomalie } from '../../sprites/anomalies';
 import { BLENDER, FLOU_DE_BOUGE, IMAGES_MAX_PAR_CLIP } from '../../sprites/reglages';
 
 import { CHARTE } from './charte';
@@ -341,10 +342,13 @@ async function main(): Promise<void> {
       teintes: rapportBlender.teintes,
       piecesFines: rapportBlender.pieces.map((p) => ({ nom: p.nom, epaisseur: p.epaisseurMin, fin: p.fin })),
       rotationRepos: rapportBlender.rotationRepos,
-      tournants: rapportBlender.noeuds.filter((n) => n.tournant).map((n) => n.nom),
+      // Ce qui a le droit de bouger au repos : les tournants et les mobiles.
+      tournants: rapportBlender.noeuds.filter((n) => n.tournant || n.mobile).map((n) => n.nom),
       basAuRepos: rapportBlender.emprise.min[1]!,
       controle: { ok: verdict.ok, motifs: verdict.motifs.length },
       recouvrement: await recouvrementInstallees(o.cle, unite.domaine, droite, bas, unites),
+      // Une cuisson qui a perdu des faces (un état de Cycles gardé d'une image à l'autre) échoue ici, avant la planche.
+      anomaliesCuisson: (await anomaliesEntree(sprites, 'unite', id)).map(decrireAnomalie),
     };
     const liste: Regle[] = regles(mesures, CHARTE);
     echecs += liste.filter((r) => r.verdict === 'echec').length;

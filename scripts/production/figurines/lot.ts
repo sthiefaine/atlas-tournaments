@@ -40,7 +40,8 @@ export interface RapportBlender {
   id: string;
   teintes: string[];
   clips: ClipFigurine[];
-  noeuds: { nom: string; parent: string | null; translation: number[]; tournant: boolean }[];
+  /** `mobile` : a le droit de bouger au repos ; `tournant` : tourne sans fin, cuit net (un tournant est mobile). */
+  noeuds: { nom: string; parent: string | null; translation: number[]; tournant: boolean; mobile?: boolean }[];
   materiaux: string[];
 }
 

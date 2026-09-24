@@ -22,8 +22,12 @@ import { srgbVersLineaire } from './image';
  * Incrémentée quand la chaîne change de comportement sans qu'un réglage change.
  * 2 (23 septembre 2026, soir) : lumière symétrique et contour cuit, la charte
  * des figurines (`scripts/production/figurines/charte.json`).
+ * 3 (24 septembre 2026) : chaque objet est repris par Cycles avant chaque image
+ * (`cuire_entree.py`, `resynchroniser`) ; avec les données persistantes et le
+ * flou de bouge, certaines images immobiles sortaient ombrées de travers
+ * (l'image 8 du tir des unités cuites jusque-là) : tout est à recuire.
  */
-export const VERSION_CUISSON = 2;
+export const VERSION_CUISSON = 3;
 
 /** Le Blender qui cuit : 5.1 en ligne de commande. */
 export const BLENDER = process.env.BLENDER ?? '/Applications/Blender.app/Contents/MacOS/Blender';

@@ -108,13 +108,25 @@ repos : rotors 0,20 m, avions 0,30 m, drones 0,25 m).
 
 Les nœuds de la fiche (`racine`, `corps`, `base`, `socle`, `module_*`…) existent
 d'office, sous `racine` (les `module_*` sous `corps`) ; un nœud peut rester vide.
-`f.noeud(nom, parent=..., pivot=..., tournant=...)` règle un nœud de la fiche
-ou en crée un : **une pièce qui doit bouger seule a son nœud** (un canon qui
-recule, un galet qui tourne, une antenne), et son pivot est le point autour
-duquel elle tourne (le tourillon, l'axe). `tournant=True` : une pièce qui tourne
-sans fin (rotor, parabole radar) — `rotor()` le pose lui-même. Un nœud n'a
-jamais de rotation au repos : tout se modèle en place. La `racine` ne s'anime
-jamais.
+`f.noeud(nom, parent=..., pivot=..., tournant=..., mobile=...)` règle un nœud
+de la fiche ou en crée un : **une pièce qui doit bouger seule a son nœud** (un
+canon qui recule, un galet qui tourne, une antenne), et son pivot est le point
+autour duquel elle tourne (le tourillon, l'axe). Un nœud n'a jamais de
+rotation au repos : tout se modèle en place. La `racine` ne s'anime jamais.
+
+Deux déclarations pour ce qui bouge **au repos**, à ne pas confondre :
+
+| | `mobile=True` | `tournant=True` |
+|---|---|---|
+| Pour | une pièce qui a le droit de bouger au repos : une boule-caméra qui balaie, une parabole qui tourne lentement | une pièce qui tourne **sans fin** : un rotor (`rotor()` le pose lui-même) |
+| Limite de rotation du repos (2°) | exemptée | exemptée |
+| Agitation du repos | exclue, sur tout ce qu'elle balaie pendant le repos | exclue, sur un tour entier autour de son axe |
+| Cuisson | comme le reste, flou de bouge compris | **nette**, sans flou de bouge |
+| Palette (masse sombre en bas) | comptée | ôtée |
+| Vérifiée | — | le pas d'une image cuite à l'autre (`rotor`) |
+
+Un nœud tournant est mobile. Ne déclarez pas `tournant` pour passer la limite
+de rotation d'une pièce qui balaie : elle perdrait son flou de bouge.
 
 ### La palette
 
@@ -150,23 +162,23 @@ haut — c'est le défaut de toute teinte à reflet, rien à demander : une
 | `boite(noeud, centre, taille, teinte, chanfrein=None, rotation=None, fin=False, nom=None)` | `taille` = (x, y, z) ; `rotation` = liste de (axe, degrés) | caisses, cabines, plaques |
 | `cylindre(noeud, centre, rayon, longueur, teinte, axe='y', rayon2=None, chanfrein=None, ellipse=1.0, fin=False, nom=None)` | tronc de cône si `rayon2` ; `ellipse` étire la section | fûts, anneaux, moyeux |
 | `capsule(noeud, centre, rayon, longueur, teinte, axe='z', nom=None)` | longueur totale, bouts ronds | membres, patins, missiles |
-| `boule(noeud, centre, rayon, teinte, etirement=(1,1,1), nom=None)` | | têtes, boules-caméras, bérets |
+| `boule(noeud, centre, rayon, teinte, etirement=(1,1,1), nom=None, rotation=None)` | `rotation` : liste de (axe, degrés) autour du centre, après l'étirement : un ellipsoïde incliné | têtes, boules-caméras, bérets, verrières |
 | `prisme(noeud, profil, largeur, teinte, centre_x=0, chanfrein=None, nom=None, rotation=None, origine=None)` | `profil` : points (z, y) du côté, l'avant à droite ; `rotation` : liste de (axe, degrés), autour du milieu de l'emprise ; avec `origine`, le profil est donné depuis ce point et tourne autour de lui ; un profil concave (une clé fendue, une marche) est bien fermé | toute forme vue de côté ; une plaque tenue au poing |
 | `extrusion(noeud, bas, haut, y0, y1, teinte, chanfrein=None, nom=None)` | deux contours (x, z) vus de dessus, de même nombre de points ; `haut` rentre (une épaule qui prend la lumière) ou vaut None ; concave permis (un U) | coques, châteaux, toits, rebords |
 | `b.contour_rectangle(cx, cz, lx, lz, rayon=0, n_coin=6)` | un rectangle (x, z) aux coins arrondis, dans le sens qu'`extrusion` attend ; deux contours au même `n_coin` se répondent point à point | le bas et le haut d'une extrusion |
 | `solide(noeud, anneaux, teinte, origine=None, rotation=None, chanfrein=None, fin=False, nom=None)` | des anneaux de points (x, y, z), de même nombre, reliés l'un au suivant, les deux bouts bouchés ; avec `origine`, points donnés depuis elle et rotation autour d'elle | **tout solide à section donnée** : tourelle libre, bac ouvert (dehors puis dedans), dalle, casque à arête |
-| `fuseau(noeud, profil, z0, z1, teinte, sections=64, exposants=(2,2), nom='fuseau')` | `profil(z)` → (demi-largeur, ligne la plus large, hauteur dessus, hauteur dessous) ; `exposants` : le dessus puis le dessous, 2 une ellipse, 1 un V | un fuselage que `fuselage` ne sait pas dire, sans chanfrein |
+| `fuseau(noeud, profil, z0, z1, teinte, sections=64, exposants=(2,2), nom='fuseau', resserrement=0)` | `profil(z)` → (demi-largeur, ligne la plus large, hauteur dessus, hauteur dessous) ; `exposants` : le dessus puis le dessous, 2 une ellipse, 1 un V ; `resserrement` de 0 (pas régulier) à 1 (pas en cosinus) serre les sections vers les deux bouts : un bout arrondi ne montre plus ses facettes | un fuselage que `fuselage` ne sait pas dire, une caisse aux bouts ronds, sans chanfrein |
 | `membre(noeud, a, b, rayon, teinte, nom=None)` | une capsule d'une articulation à l'autre, bouts centrés sur elles : deux membres qui se suivent font un coude rond | bras et jambes remodelés, un fusil tenu d'une main à l'autre |
 | `revolution(noeud, centre, profil, teinte, axe='y', chanfrein=None, nom=None)` | `profil` : (rayon, position le long de l'axe), du bas vers le haut | bols, dômes, casques |
-| `roue(noeud, centre, rayon, largeur, teinte_pneu='caoutchouc', teinte_moyeu='os', axe='x', part_moyeu=0.5)` | pneu arrondi et moyeu qui dépasse | véhicules à roues |
+| `roue(noeud, centre, rayon, largeur, teinte_pneu='caoutchouc', teinte_moyeu='os', axe='x', part_moyeu=0.5, meplat=False)` | pneu arrondi et moyeu qui dépasse ; `meplat` : le moyeu en « D », comme les galets | véhicules à roues |
 | `chenille(noeud, x, longueur, hauteur, largeur, y_bas=0, z_centre=0, teinte='caoutchouc')` | un stade vu de côté, centré en `x` | trains de chenilles |
-| `galets(noeuds, x, zs, y, rayon, epaisseur, teinte='graphite', teinte_moyeu=None, part_moyeu=0.45, meplat=False)` | un galet à ±x par `z` ; `noeuds` : un nom, ou un nœud par essieu (pivot posé sur l'axe) ; `part_moyeu` : le rayon du moyeu en part du galet (0,62 : les six galets du char lourd se comptent à 48 px) ; `meplat` : le moyeu en « D », qui montre que le galet roule en `deplacement` — un moyeu rond et centré ne le montre pas | galets qui tournent |
+| `galets(noeuds, x, zs, y, rayon, epaisseur, teinte='graphite', teinte_moyeu=None, part_moyeu=0.45, meplat=False)` | un galet à ±x par `z` ; `noeuds` : un nom, ou un nœud par essieu (pivot posé sur l'axe) ; `part_moyeu` : le rayon du moyeu en part du galet (0,62 : les six galets du char lourd se comptent à 48 px) ; `meplat` : le moyeu en « D », qui montre que le galet roule en `deplacement` — un moyeu rond et centré ne le montre pas. `True` coupe la corde à 0,62 rayon du centre (`Figurine.MEPLAT`) : le moyeu reste rond au repos, là où 0,4 fait une demi-lune ; un nombre règle la corde | galets qui tournent |
 | `caisse_char(noeud, longueur, largeur, y_bas, hauteur, teinte='equipe', glacis=0.45, arriere=0.25, z_centre=0)` | glacis avant incliné, arrière fuyant | caisses de blindés |
 | `tourelle(noeud, centre, largeur, longueur, hauteur, teinte='equipe', forme='ronde'\|'carree', inclinaison=0.18, chanfrein=None)` | `centre` = milieu de sa base ; `carree` : un tronc de pyramide symétrique | tourelles |
 | `tourelle_profil(noeud, centre, contour, hauteur, teinte='equipe', retraits=(0,0,0), biseau=0, part_biseau=0.45, chanfrein=None)` | `contour` : la base vue de dessus, points (x, z) depuis le centre (coins coupés, masque en pointe) ; les flancs rentrent de `retraits` = (avant, arrière, côtés) en montant ; `biseau` rentre encore le haut sur `part_biseau` de la hauteur : un pan qui prend la lumière | tourelles au contour libre |
 | `tube(noeud, depart, direction_tube, longueur, rayon, teinte='graphite', bouche=True, teinte_bouche='acier_clair', rayon_bouche=None, longueur_bouche=None)` | le manchon de bouche au bout ; la bouche est **jugée avec son tube** (épaisseur) : un manchon de 4 cm ne fait plus échouer la règle | canons, tubes |
 | `bac_tubes(noeud, centre, colonnes, lignes, rayon_tube, longueur, direction_tubes='z', teinte_bac='equipe', teinte_tubes='os', ecart=None)` | une boîte et ses bouts de tubes | lance-roquettes, lance-missiles |
-| `parabole(noeud, centre, rayon, profondeur, direction_parabole, teinte='os', epaisseur=0.02)` | un bol épais et son cornet | radars (pas le brouillage : arête de poisson) |
+| `parabole(noeud, centre, rayon, profondeur, direction_parabole, teinte='os', epaisseur=0.02)` | un bol épais et son cornet ; le cornet (4,4 cm) est jugé avec son bol, mais le bol, lui, doit faire 5 cm de `profondeur + epaisseur` | radars (pas le brouillage : arête de poisson) |
 | `antenne(noeud, base, hauteur, rayon=0.015, teinte='graphite', inclinaison=None, boule=True)` | la seule pièce admise à 0,03 m | antennes, mâts |
 | `rotor(noeud, centre, rayon, pales=2, largeur_pale=0.07, epaisseur=0.03, teinte='graphite', axe='y', angle=0)` | 2 à 4 pales opaques ; marque le nœud tournant, retient son axe et son nombre de pales ; `angle` : les pales au repos, tournées dans le sens de `tourner` (à 0, la première pale d'un rotor d'axe y pointe vers l'arrière ; une barre à deux pales est horizontale à l'écran à 30° en vue droite) ; **cuit net**, voir les clips | hélicoptères, drones |
 | `fuselage(noeud, longueur, largeur, hauteur, teinte, y_centre, z_centre=0, nez=0.35, queue=0.45, queue_haute=0.3, nez_forme='rond', nez_y=None, exposants=(2,2), dessous=0.5)` | section ovale, queue effilée qui remonte ; `nez_forme='pointu'` : une ogive (chasseur, missile) ; `nez_y` : la pointe plus bas que l'axe (un museau qui tombe) ; `exposants` : le dos puis la carène (1 : un V, 3 : un dos plat) ; `dessous` : la part de la hauteur sous la ligne la plus large | avions, hélicoptères |
@@ -179,7 +191,8 @@ flottaison) est la seule exception à l'épaisseur minimale de 0,05 m : elle
 descend alors à 0,03 m. Une pièce qui fait corps avec une autre se **juge avec
 elle** : `p.avec = hote.nom` (sur la pièce que rend une primitive), et son
 épaisseur est celle des deux ensemble, mesurée dans le repère de l'hôte — la
-bouche d'un tube et le moyeu en « D » d'un galet le sont d'office.
+bouche d'un tube, le cornet d'une parabole et le moyeu en « D » d'un galet ou
+d'une roue le sont d'office.
 
 **Le fantassin.** Ce que les trois premiers agents ont remodelé à la main se
 règle désormais par ses paramètres (tous facultatifs, le défaut rend la
@@ -241,6 +254,12 @@ dix-millième de millimètre).
 `b.instants_cuisson(clip)` rend les instants que la cuisson photographie : pour
 caler une pose sur une image cuite (un éclair sur l'image du coup).
 
+**Une échelle nulle ou quasi nulle est permise** (`clip.echelle`, une pièce qui
+disparaît : un missile tiré) : le lot du chasseur à l'échelle 0,02, cuit sept
+fois par quatre variantes de la cuisson, et une démonstration à l'échelle 0,
+sortent entiers. La vue de profil noire qu'on lui prêtait venait de la cuisson
+du 24 septembre entre 1 h 01 et 1 h 22 (voir plus bas).
+
 **Les pièces qui tournent sans fin sont cuites nettes.** Un nœud `tournant`
 (`rotor()`, `f.noeud(…, tournant=True)`) et tout ce qui y est accroché sont
 marqués dans le GLB (`extras.flouDeBouge: false`) et la cuisson leur ôte le
@@ -278,6 +297,7 @@ verdict (`ok`, `ÉCHEC`, `info`) :
 | `repos_agitation`, `repos_rotation` | au plus 3 % de pixels qui changent entre deux images du repos (15 % en vol), aucune pièce qui pivote de plus de 2° — les pièces tournantes déclarées exclues |
 | `palette_*` | sur les identifiants, vue droite : la masse sombre (graphite et caoutchouc) 20–35 % et **en bas** de la silhouette — ce « en bas » ne compte pas les pièces tournantes : un rotor graphite, en haut, n'assoit pas l'unité —, os ≤ 12 %, acier clair ≤ 3 %, verre ≤ 8 %, feux ≤ 1 % ; orange 4–6 % et apprêt ≤ 25 % pour les Gris |
 | `teintes`, `budget`, `materiaux`, `epaisseur` | six teintes au plus, 60 000 triangles, les matériaux de la fiche, aucune pièce sous 0,05 m (antennes, pales, flottaison : 0,03 m ; une pièce jugée avec une autre, avec elle) |
+| `cuisson_entiere` | aucune image cuite n'a perdu de faces (`scripts/sprites/anomalies.ts`) : dans chaque animation, aucune image sous 80 % de la silhouette opaque médiane, ni sous 60 % de la part de masque médiane (quand elle dépasse 0,2) ; entre animations, aucune dont la part de masque médiane tombe sous le quart de la plus haute, ni dont la clarté médiane tombe sous 60 % de la médiane de l'entrée. Le même contrôle tient les unités installées (`tests/sprites/anomalies.test.ts`) |
 | `recouvrement` | **information** : l'ombre chinoise à 48 px — l'alpha de l'image cuite, contour compris, ramené à 48 px par case et calé sur le pivot — contre chaque unité du **même milieu** déjà dans les images du jeu (`public/assets/sprites/`, manifeste courant, l'unité elle-même exceptée) ; la valeur est l'intersection sur l'union (IoU) la plus forte des vues droite et bas, avec le nom de l'unité. Seuil de la charte : 0,80 (§3.5) |
 
 La classe de taille est la taille de silhouette du canon (`content/unites.json`,
@@ -344,6 +364,22 @@ rapport au lieu de la contourner. Ne laissez pas de `.ts` dans `tmp/` :
   couvercle convexe reste un polygone ; trois points alignés ne font pas un
   creux (les sommets de Blender sont en simple précision : le seuil est un
   sinus de 10⁻⁴).
+- **La cuisson reprend la transformation de chaque objet avant chaque image**
+  (`cuire_entree.py`, `resynchroniser` ; `VERSION_CUISSON` 3, 24 septembre
+  2026). Avec les données persistantes et le flou de bouge, Cycles gardait
+  d'une image à l'autre un état d'objet périmé : l'image 8 du `tir` (0,622 s,
+  une pose immobile) du char léger et de l'artillerie sortait, à chaque
+  cuisson, ombrée comme si ses normales avaient tourné — même silhouette au
+  pixel près, luminance 0,521 au lieu de 0,555, en vue droite comme de profil.
+  Le défaut dépend de l'histoire : la même image rendue la première sort
+  juste. La géométrie, elle, n'est pas reprise : une première version, en
+  place le 24 septembre de 1 h 01 à 1 h 22, la faisait reprendre à chaque image
+  (`'DATA'`), et Cycles rendait alors, par intermittence, des faces noires sans
+  couverture ni masque à partir d'une image — trois cuissons sur quatre d'une
+  démonstration à rotors, et très probablement le drone intercepteur, le
+  drone ravitailleur et le chasseur, cuits dans cette fenêtre. Toute cuisson
+  faite ce jour-là entre ces deux heures est à refaire ; toutes les entrées
+  déjà cuites sont de toute façon à recuire (`VERSION_CUISSON` 3).
 - `lot.ts` pose les cartes (PNG voisins aux noms de la fiche, le masque en
   image que nul matériau ne lit) et les clips (échantillonnés à 60 images par
   seconde, linéaires, temps bornés), et assemble le lot.

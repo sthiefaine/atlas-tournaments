@@ -165,6 +165,16 @@ test('l’ombre chinoise à 48 pixels : la silhouette calée sur le pivot, et l�
   assert.ok(!regles(bonnes(), CHARTE).some((x) => x.id === 'recouvrement'), 'sans cuisson, pas de règle');
 });
 
+test('une cuisson qui a perdu des faces fait échouer la fabrication', () => {
+  const regle = (anomaliesCuisson: string[] | undefined) => regles({ ...bonnes(), ...(anomaliesCuisson ? { anomaliesCuisson } : {}) }, CHARTE)
+    .find((x) => x.id === 'cuisson_entiere');
+  assert.equal(regle(undefined), undefined, 'sans cuisson, pas de règle');
+  assert.equal(regle([])!.verdict, 'ok');
+  const r = regle(['bas/deplacement, toute l\'animation : masque médian 0.00 pour 0.45 dans l\'animation la plus équipée'])!;
+  assert.equal(r.verdict, 'echec');
+  assert.match(String(r.valeur), /^1 : bas\/deplacement/);
+});
+
 test('le genre et la classe se lisent dans le canon', () => {
   assert.equal(genreDe({ cle: 'infanterie', domaine: 'terre', silhouette: { base: 'pattes' } }), 'fantassin');
   assert.equal(genreDe({ cle: 'helico', domaine: 'air', silhouette: { base: 'rotor' } }), 'rotor');

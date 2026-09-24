@@ -421,6 +421,7 @@ class Noeud:
         self.parent = parent
         self.pivot = tuple(float(v) for v in pivot)
         self.tournant = False
+        self.mobile = False
         self.axe_tour = None
         self.pales = None
         self.pieces = []
@@ -481,14 +482,23 @@ class Figurine:
         self.noeuds[nom] = Noeud(nom, parent, pivot)
         self.ordre.append(nom)
 
-    def noeud(self, nom, parent=None, pivot=None, tournant=None):
+    def noeud(self, nom, parent=None, pivot=None, tournant=None, mobile=None):
         """
         Règle un nœud de la fiche, ou en crée un (une pièce qui doit bouger
         seule : un canon qui recule, un galet qui tourne, une antenne). `pivot`
         est le point du modèle autour duquel il tourne : l'axe d'un galet, le
-        tourillon d'un canon. `tournant` : une pièce qui tourne sans fin
-        (rotor, parabole radar), exclue de la limite de rotation et de
-        l'agitation du repos.
+        tourillon d'un canon. Deux déclarations, pour ce qui bouge au repos :
+
+        - `mobile` : une pièce qui a le droit de bouger au repos — une
+          boule-caméra qui balaie, une parabole qui tourne lentement. Exemptée
+          de la limite de rotation du repos (2°), exclue de la mesure
+          d'agitation sur tout ce qu'elle balaie pendant le repos ; photographiée
+          comme le reste (flou de bouge compris), comptée dans la palette ;
+        - `tournant` : une pièce qui tourne **sans fin**, un rotor. Tout ce que
+          `mobile` accorde, et de plus : cuite **nette**, sans flou de bouge (ses
+          pales resteraient sinon un disque), balayée sur un tour entier autour
+          de son axe, ôtée de la masse sombre, et son pas d'une image cuite à
+          l'autre vérifié (`rotor`). Un nœud tournant est mobile.
         """
         if not REGEX_NOM.match(nom):
             raise ValueError(f'nom de nœud invalide : {nom} (minuscules, chiffres, tirets bas)')
@@ -510,6 +520,8 @@ class Figurine:
             n.pivot = tuple(float(v) for v in pivot)
         if tournant is not None:
             n.tournant = bool(tournant)
+        if mobile is not None:
+            n.mobile = bool(mobile)
         return nom
 
     # --- teintes et matériaux --------------------------------------------------
@@ -644,14 +656,17 @@ class Figurine:
         return self._piece(bm, noeud, teinte, self._placement(centre, rot), (2 * rayon, 2 * rayon, longueur), arrondir=False,
                            uv=self._mode_uv(teinte, uv), nom=nom)
 
-    def boule(self, noeud, centre, rayon, teinte, etirement=(1, 1, 1), nom=None, uv=None):
+    def boule(self, noeud, centre, rayon, teinte, etirement=(1, 1, 1), nom=None, uv=None, rotation=None):
         """
         Une sphère, étirée par `etirement` (x, y, z du modèle) : une tête, une
         boule-caméra, une bulle de verre (son reflet sur le tiers haut).
+        `rotation` : liste de (axe, degrés) autour du centre, appliquée après
+        l'étirement — un ellipsoïde incliné, une verrière qui plonge vers le nez.
         """
         ex, ey, ez = etirement
         bm = bm_boule(rayon, (ex, ez, ey))
-        return self._piece(bm, noeud, teinte, self._placement(centre), (2 * rayon * ex, 2 * rayon * ey, 2 * rayon * ez), arrondir=False,
+        placement = self._placement(centre, self._rotation_modele(rotation)) if rotation else self._placement(centre)
+        return self._piece(bm, noeud, teinte, placement, (2 * rayon * ex, 2 * rayon * ey, 2 * rayon * ez), arrondir=False,
                            uv=self._mode_uv(teinte, uv), nom=nom)
 
     def prisme(self, noeud, profil, largeur, teinte, centre_x=0.0, chanfrein=None, nom=None, rotation=None, origine=None, uv=None):
@@ -716,7 +731,7 @@ class Figurine:
         dims = (max(xs) - min(xs), y1 - y0, max(zs) - min(zs))
         return self._piece(bm, noeud, teinte, Matrix.Identity(4), dims, chanfrein, uv=self._mode_uv(teinte, uv), nom=nom)
 
-    def fuseau(self, noeud, profil, z0, z1, teinte, sections=64, exposants=(2.0, 2.0), nom='fuseau', uv=None):
+    def fuseau(self, noeud, profil, z0, z1, teinte, sections=64, exposants=(2.0, 2.0), nom='fuseau', uv=None, resserrement=0.0):
         """
         Un fuseau lissé le long de z, de `z0` à `z1` : à chaque abscisse, une
         section faite de deux demi-superellipses — `exposants` : le dessus, le
@@ -725,15 +740,29 @@ class Figurine:
         hauteur au-dessus, hauteur au-dessous). Tout ce que `fuselage` ne sait
         pas dire : un nez de requin qui tombe, une poutre de queue qui remonte,
         un dos plat sur une carène en V. Sans chanfrein : une surface lisse.
+
+        `resserrement` (0 à 1) serre les sections vers les deux bouts : 0, un
+        pas régulier ; 1, un pas en cosinus — un bout arrondi en quart
+        d'ellipse y reçoit autant de sections que le reste, et ne montre plus
+        ses facettes.
         """
-        profils = [profil(z0 + (z1 - z0) * k / sections) for k in range(sections + 1)]
+        if not 0.0 <= resserrement <= 1.0:
+            raise ValueError('fuseau : resserrement de 0 (régulier) à 1 (cosinus)')
+
+        def z_de(k):
+            if not resserrement:
+                return z0 + (z1 - z0) * k / sections  # l'expression d'avant, au bit près
+            u = k / sections
+            return z0 + (z1 - z0) * ((1 - resserrement) * u + resserrement * (1 - math.cos(math.pi * u)) / 2)
+
+        zs = [z_de(k) for k in range(sections + 1)]
+        profils = [profil(z) for z in zs]
         amax = max(p[0] for p in profils)
         hmax = max(p[2] + p[3] for p in profils) / 2
         n = segments_cercle(max(amax, hmax))
         unite = _section_unite(n, exposants)
         ss = []
-        for k, (a, ym, hh, hb) in enumerate(profils):
-            z = z0 + (z1 - z0) * k / sections
+        for z, (a, ym, hh, hb) in zip(zs, profils):
             ss.append((-z, [(a * ux, ym + (hh if uy >= 0 else hb) * uy) for ux, uy in unite]))
         bm = bm_loft(ss)
         ys = [ym + hh for _, ym, hh, _ in profils] + [ym - hb for _, ym, _, hb in profils]
@@ -776,14 +805,47 @@ class Figurine:
 
     # --- les primitives composées ----------------------------------------------
 
-    def roue(self, noeud, centre, rayon, largeur, teinte_pneu='caoutchouc', teinte_moyeu='os', axe='x', part_moyeu=0.5, nom=None):
+    #: La corde d'un moyeu en « D », en part de son rayon, quand `meplat=True` :
+    #: à 0,4 le moyeu fait une demi-lune au repos, à 0,62 il reste rond et
+    #: montre pourtant qu'il tourne (l'agent du recon, 23 septembre 2026).
+    MEPLAT = 0.62
+
+    def _moyeu_d(self, noeud, centre, rayon, longueur, axe, meplat, teinte, nom):
+        """
+        Un moyeu en « D » : le cercle de `rayon` autour de l'axe, coupé par une
+        corde à `meplat` rayon du centre (True : `MEPLAT`), le plat vers le
+        haut au repos (vers l'avant sur un axe vertical), sur `longueur`.
+        """
+        corde = self.MEPLAT if meplat is True else float(meplat)
+        if not 0.0 < corde < 1.0:
+            raise ValueError('meplat : une corde entre 0 et 1 rayon du centre (True : 0,62)')
+        # En flottants de Python, pas en `Vector` (simple précision) : les sommets
+        # sont ceux qu'un module calculait lui-même, au bit près.
+        va = direction(axe)
+        vu = Vector((0.0, 1.0, 0.0)) - va * va.y
+        if vu.length < 1e-6:
+            vu = Vector((0.0, 0.0, 1.0)) - va * va.z
+        vu.normalize()
+        a, u, w = tuple(va), tuple(vu), tuple(va.cross(vu))
+        k = segments_cercle(rayon)
+        anneau = [(min(rayon * math.sin(2 * math.pi * j / k), corde * rayon), rayon * math.cos(2 * math.pi * j / k)) for j in range(k)]
+        anneaux = [[tuple(centre[i] + a[i] * (s * longueur / 2) + u[i] * m + w[i] * n for i in range(3)) for m, n in anneau] for s in (-1, 1)]
+        return self.solide(noeud, anneaux, teinte, nom=nom)
+
+    def roue(self, noeud, centre, rayon, largeur, teinte_pneu='caoutchouc', teinte_moyeu='os', axe='x', part_moyeu=0.5, nom=None, meplat=False):
         """
         Une roue : un pneu arrondi (généreusement chanfreiné) et un moyeu qui
-        dépasse des deux flancs. Rend les deux pièces.
+        dépasse des deux flancs. Rend les deux pièces. `meplat` : le moyeu en
+        « D », qui montre que la roue roule (True : corde à `MEPLAT` rayon du
+        centre ; un nombre la règle) ; il est jugé avec son pneu.
         """
         nom = nom or f'roue_{self._compteur + 1}'
         pneu = self.cylindre(noeud, centre, rayon, largeur, teinte_pneu, axe=axe, chanfrein=0.3 * largeur, nom=f'{nom}_pneu')
-        moyeu = self.cylindre(noeud, centre, rayon * part_moyeu, largeur + 0.016, teinte_moyeu, axe=axe, nom=f'{nom}_moyeu')
+        if meplat:
+            moyeu = self._moyeu_d(noeud, centre, rayon * part_moyeu, largeur + 0.016, axe, meplat, teinte_moyeu, f'{nom}_moyeu')
+            moyeu.avec = pneu.nom
+        else:
+            moyeu = self.cylindre(noeud, centre, rayon * part_moyeu, largeur + 0.016, teinte_moyeu, axe=axe, nom=f'{nom}_moyeu')
         return [pneu, moyeu]
 
     def chenille(self, noeud, x, longueur, hauteur, largeur, y_bas=0.0, z_centre=0.0, teinte='caoutchouc', nom=None):
@@ -815,8 +877,9 @@ class Figurine:
         `part_moyeu` : le rayon du moyeu (`teinte_moyeu`), en part de celui du
         galet — plus gros, les galets se comptent encore à 48 pixels (le char
         lourd : 0,62). `meplat` : le moyeu est coupé d'un méplat, un « D » qui
-        tourne avec l'essieu — un galet rond, centré, ne montre pas qu'il roule.
-        Aucune pièce de plus, donc rien sous l'épaisseur minimale.
+        tourne avec l'essieu — un galet rond, centré, ne montre pas qu'il roule
+        (True : corde à `MEPLAT` rayon du centre ; un nombre la règle). Aucune
+        pièce de plus ; le moyeu est jugé avec son galet.
         """
         if isinstance(noeuds, str):
             noeuds = [noeuds] * len(zs)
@@ -836,19 +899,9 @@ class Figurine:
                     if not meplat:
                         pieces.append(self.cylindre(n, (xm, y, z), r, e, teinte_moyeu, axe='x', nom=nom_moyeu))
                         continue
-                    # Le « D » : le cercle du moyeu, coupé par une corde à 0,4 rayon
-                    # du centre, vers le haut au repos ; les points au-delà sont
-                    # ramenés sur la corde (alignés : le couvercle reste convexe).
-                    # Plus bas que large, le moyeu est jugé avec son galet : il en
-                    # est la face, pas une pièce qui se lit seule.
-                    k = segments_cercle(r)
-                    anneau = []
-                    for j in range(k):
-                        a = 2 * math.pi * j / k
-                        py, pz = r * math.sin(a), r * math.cos(a)
-                        anneau.append((min(py, 0.4 * r), pz))
-                    anneaux = [[(xm + s * e / 2, y + py, z + pz) for py, pz in anneau] for s in (-1, 1)]
-                    moyeu = self.solide(n, anneaux, teinte_moyeu, nom=nom_moyeu)
+                    # Le « D » : plus bas que large, le moyeu est jugé avec son
+                    # galet — il en est la face, pas une pièce qui se lit seule.
+                    moyeu = self._moyeu_d(n, (xm, y, z), r, e, 'x', meplat, teinte_moyeu, nom_moyeu)
                     moyeu.avec = pieces[-1].nom
                     pieces.append(moyeu)
         return pieces
@@ -977,7 +1030,10 @@ class Figurine:
         return passage @ rot_modele @ passage.inverted()
 
     def parabole(self, noeud, centre, rayon, profondeur, direction_parabole, teinte='os', epaisseur=0.02, nom='parabole'):
-        """Une parabole : un bol épais, ouvert vers `direction_parabole`, et son cornet au centre."""
+        """
+        Une parabole : un bol épais, ouvert vers `direction_parabole`, et son
+        cornet au centre — 4,4 cm de diamètre, jugé avec son bol (épaisseur).
+        """
         n = 8
         profil = []
         for k in range(n + 1):  # face arrière (convexe), du centre vers le bord
@@ -991,6 +1047,7 @@ class Figurine:
         piece = self._piece(bm, noeud, teinte, self._placement(centre, rot), (2 * rayon, 2 * rayon, profondeur + epaisseur), chanfrein=0.4 * epaisseur, nom=nom)
         d = direction(direction_parabole)
         cornet = self.cylindre(noeud, tuple(Vector(centre) + d * (profondeur * 0.9)), 0.022, profondeur * 1.4, 'graphite', axe=tuple(d), nom=f'{nom}_cornet')
+        cornet.avec = piece.nom
         return [piece, cornet]
 
     def antenne(self, noeud, base, hauteur, rayon=0.015, teinte='graphite', inclinaison=None, boule=True, nom='antenne'):
@@ -1531,7 +1588,8 @@ class Figurine:
             n = self.noeuds[nom]
             parent_pivot = self.noeuds[n.parent].pivot if n.parent else (0, 0, 0)
             noeuds.append({'nom': nom, 'parent': n.parent, 'pivot': list(n.pivot),
-                           'translation': [a - b for a, b in zip(n.pivot, parent_pivot)], 'tournant': n.tournant, 'pieces': len(n.pieces)})
+                           'translation': [a - b for a, b in zip(n.pivot, parent_pivot)], 'tournant': n.tournant,
+                           'mobile': n.mobile or n.tournant, 'pieces': len(n.pieces)})
         clips = [c.echantillonner() for c in self.clips.values()]
         rotation_repos = {}
         if 'repos' in self.clips:

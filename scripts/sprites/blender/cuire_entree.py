@@ -168,6 +168,33 @@ def image_de(t):
     return int(round(t * IPS_IMPORT))
 
 
+def resynchroniser(scene):
+    """
+    Marque la transformation de chaque objet de la scène comme changée : Cycles
+    reprend tous les objets au rendu suivant, sans jeter ses noyaux, ses
+    textures ni ses géométries.
+
+    Pourquoi (24 septembre 2026, mesuré) : avec les données persistantes et le
+    flou de bouge, Cycles gardait d'une image à l'autre un état d'objet périmé.
+    Le tir du char léger et de l'artillerie sortait son image 8 (0,622 s, une
+    pose immobile) ombrée comme si ses normales avaient tourné — même
+    silhouette, au pixel près, mais les pans tournés vers le joueur plus
+    sombres et les ombres propres déplacées : luminance 0,521 au lieu de
+    0,5545, en vue droite comme de profil, à chaque cuisson. Le défaut dépend
+    de l'histoire : la même image rendue la première sort juste, rendue après
+    l'image 7 elle sort fausse. Sans données persistantes, tout est juste mais
+    la cuisson prend deux fois plus de temps ; avec ce marquage, les images
+    sont identiques à celles sans persistance, au prix d'avant.
+
+    La transformation seulement, jamais la géométrie (`'DATA'`) : faire
+    reprendre les maillages à chaque image a rendu, par intermittence, un
+    fuselage entier noir et sans couverture (trois cuissons sur quatre d'un
+    appareil à rotors, 9 à 83 images fausses sur 98).
+    """
+    for o in scene.objects:
+        o.update_tag(refresh={'OBJECT'})
+
+
 # ---------------------------------------------------------------------------
 # 3. Les matériaux : blanc sous le masque, AOV, émission à part
 # ---------------------------------------------------------------------------
@@ -630,6 +657,7 @@ def main():
             with open(os.path.join(travail['sortie'], nom_fichier), 'wb') as fichier:
                 for t in anim['temps']:
                     scene.frame_set(image_de(t))
+                    resynchroniser(scene)
                     scene.render.filepath = exr
                     t0 = time.time()
                     bpy.ops.render.render(write_still=True)

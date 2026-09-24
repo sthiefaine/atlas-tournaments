@@ -158,15 +158,18 @@ test('un clip vers un nœud absent, ou hors de sa durée, est refusé ; un repos
 test('une pièce qui tourne sans fin, et ce qui y est accroché, est marquée pour être cuite nette ; le reste ne bouge pas', () => {
   const r = rapport();
   r.noeuds.push(
-    { nom: 'rotor', parent: 'corps', translation: [0, 0.2, 0], tournant: true },
+    { nom: 'rotor', parent: 'corps', translation: [0, 0.2, 0], tournant: true, mobile: true },
     { nom: 'pale', parent: 'rotor', translation: [0, 0, 0.1], tournant: false },
+    // Une boule-caméra qui balaie : elle a le droit de bouger au repos, mais elle n'est pas cuite nette.
+    { nom: 'camera', parent: 'corps', translation: [0, 0.3, 0], tournant: false, mobile: true },
   );
   const document: DocumentGltf = {
-    nodes: [{ name: 'racine' }, { name: 'corps' }, { name: 'module_tourelle', extras: { autre: 1 } }, { name: 'rotor', extras: { autre: 2 } }, { name: 'pale' }],
+    nodes: [{ name: 'racine' }, { name: 'corps' }, { name: 'module_tourelle', extras: { autre: 1 } }, { name: 'rotor', extras: { autre: 2 } }, { name: 'pale' },
+      { name: 'camera' }],
   };
   assert.deepEqual(marquerTournants(document, r), ['rotor', 'pale']);
   const noeuds = document['nodes'] as { name: string; extras?: Record<string, unknown> }[];
-  assert.deepEqual(noeuds.map((n) => n.extras ?? null), [null, null, { autre: 1 }, { autre: 2, flouDeBouge: false }, { flouDeBouge: false }]);
+  assert.deepEqual(noeuds.map((n) => n.extras ?? null), [null, null, { autre: 1 }, { autre: 2, flouDeBouge: false }, { flouDeBouge: false }, null]);
   // La cuisson lit la marque : c'est elle qui éteint le flou de bouge de ces objets.
   assert.deepEqual(lireDocument({ ...document, accessors: [] } as unknown as DocumentCuisson).sansFlou, ['rotor', 'pale']);
   // Un lot sans pièce tournante n'en déclare aucune : son GLB et l'empreinte de sa cuisson ne changent pas.
