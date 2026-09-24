@@ -14,10 +14,12 @@
  * jamais de masque, et c'est voulu : il est exact sans nuanceur.
  *
  * On ne sait l'image d'un repli que par son **identifiant**, qui suit celui des
- * entrées du manifeste (`idUnite`, `idBatiment`, `idDecor`), plus quelques
- * formes du rendu lui-même (`FORMES`) : ombre, écume, mât, drapeau, badges.
+ * entrées du manifeste (`idUnite`, `idBatiment`, `idBatimentEtat`, `idDecor`),
+ * plus quelques formes du rendu lui-même (`FORMES`) : ombre, écume, mât,
+ * drapeau, badges.
  */
 
+import { CLE_SUPERUSINE, ETATS_BATIMENT, type EtatBatiment } from '../assets/spec';
 import type { Catalogue } from '../engine/index';
 import type { Palette, Silhouette } from '../schemas/types';
 import type { Pinceau } from '../render/sprites/formes';
@@ -73,7 +75,7 @@ export function paletteEquipe(c: readonly [number, number, number] | null): Pale
  */
 export type IdentiteRepli =
   | { famille: 'unite'; cle: string }
-  | { famille: 'batiment'; cle: string }
+  | { famille: 'batiment'; cle: string; etat?: EtatBatiment }
   | { famille: 'decor'; essence: EssenceDecor | 'rocher'; saison: string }
   | { famille: 'forme'; forme: 'ombre' | 'ecume' | 'mat' | 'drapeau' }
   | { famille: 'pv'; pv: number; agie: boolean }
@@ -92,6 +94,9 @@ export function identiteRepli(id: string): IdentiteRepli | null {
   }
   const unite = /^unite_([a-z0-9_]+)_[a-z0-9]+$/.exec(id);
   if (unite?.[1]) return { famille: 'unite', cle: unite[1] };
+  const enEtat = /^batiment_([a-z0-9_]+)_([a-z]+)$/.exec(id);
+  const etat = ETATS_BATIMENT.find((e) => e === enEtat?.[2]);
+  if (enEtat?.[1] && etat) return { famille: 'batiment', cle: enEtat[1], etat };
   const batiment = /^batiment_([a-z0-9_]+)_[a-z0-9]+$/.exec(id);
   if (batiment?.[1]) return { famille: 'batiment', cle: batiment[1] };
   if (/^decor_rocher(_|$)/.test(id)) return { famille: 'decor', essence: 'rocher', saison: 'toutes' };
@@ -201,6 +206,72 @@ function fenetres(g: Pinceau, bx: number, by: number, l: number, p: number, h: n
       g.fillRect(x0 + pasX * (i + 0.3), bas - pasY * (j + 1.05), pasX * 0.4, pasY * 0.5);
     }
   }
+}
+
+/**
+ * Le terni d'un bâtiment **désaffecté** qui n'a pas d'image à lui : le rendu
+ * le pose sur l'image du bâtiment en service (`batiments.ts`), et le repli
+ * d'une image de désaffecté le peint lui-même (`ternir`) — tant que sa page
+ * n'est pas arrivée, ou si elle n'arrive jamais, un désaffecté reste lisible.
+ */
+export const TEINTE_DESAFFECTE: readonly [number, number, number] = [0.6, 0.6, 0.58];
+
+/** Une couleur CSS (`#rrggbb`, `rgb()`, `rgba()`) multipliée par une teinte ; ce qui ne se lit pas passe tel quel. */
+export function multiplierCouleur(couleur: string, t: readonly [number, number, number]): string {
+  let r: number;
+  let v: number;
+  let b: number;
+  let alpha: string | null = null;
+  const hex = /^#([0-9a-f]{6})$/i.exec(couleur);
+  const fonction = /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*([\d.]+)\s*)?\)$/i.exec(couleur);
+  if (hex) {
+    const n = Number.parseInt(hex[1]!, 16);
+    r = (n >> 16) & 255;
+    v = (n >> 8) & 255;
+    b = n & 255;
+  } else if (fonction) {
+    r = Number(fonction[1]);
+    v = Number(fonction[2]);
+    b = Number(fonction[3]);
+    alpha = fonction[4] ?? null;
+  } else {
+    return couleur;
+  }
+  const o = (x: number, k: number): number => Math.round(Math.max(0, Math.min(255, x * k)));
+  const rvb = `${o(r, t[0])},${o(v, t[1])},${o(b, t[2])}`;
+  return alpha === null ? `rgb(${rvb})` : `rgba(${rvb},${alpha})`;
+}
+
+/**
+ * Le pinceau d'un dessin **terni** : chaque couleur posée est multipliée par la
+ * teinte — ce que le nuanceur du lot fait d'une instance teinte
+ * (`InstanceSprite.teinte`), sur les mêmes octets —, et le fond transparent le
+ * reste.
+ */
+export function ternir(g: Pinceau, teinte: readonly [number, number, number]): Pinceau {
+  return new Proxy(g, {
+    get(cible, nom) {
+      const valeur = Reflect.get(cible, nom, cible) as unknown;
+      return typeof valeur === 'function' ? (valeur as (...a: unknown[]) => unknown).bind(cible) : valeur;
+    },
+    set(cible, nom, valeur) {
+      const couleur = (nom === 'fillStyle' || nom === 'strokeStyle') && typeof valeur === 'string'
+        ? multiplierCouleur(valeur, teinte) : valeur;
+      return Reflect.set(cible, nom, couleur, cible);
+    },
+  });
+}
+
+/**
+ * Le repli d'une image de bâtiment, **état compris** : la superusine, à défaut
+ * de son image, est l'usine — la règle de la carte —, en service comme prise ;
+ * un désaffecté est son bâtiment terni, exactement ce que la carte montre
+ * quand l'image du désaffecté n'est pas cuite.
+ */
+function dessinBatimentEtat(cle: string, etat: EtatBatiment | undefined, e: readonly [number, number, number] | null): Dessin | null {
+  const d = dessinBatiment(cle === CLE_SUPERUSINE ? 'usine' : cle, e);
+  if (!d || etat !== 'desaffecte') return d;
+  return { ...d, peindre: (g) => d.peindre(ternir(g, TEINTE_DESAFFECTE)) };
 }
 
 function dessinBatiment(cle: string, e: readonly [number, number, number] | null): Dessin | null {
@@ -647,7 +718,7 @@ export function dessinRepli(
       return type ? dessinUnite(type.silhouette, paletteEquipe(equipe)) : null;
     }
     case 'batiment':
-      return dessinBatiment(identite.cle, equipe);
+      return dessinBatimentEtat(identite.cle, identite.etat, equipe);
     case 'decor':
       return dessinDecor(identite.essence, identite.saison);
     default:

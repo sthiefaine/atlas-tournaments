@@ -62,6 +62,7 @@ import { echelleTaille } from '../render/sprites/silhouettes';
 import type { Biome, CampId, Case, CleTerrain, CleUnite, UnitType } from '../schemas/types';
 import type { Trace } from './aplats';
 import { cadreAuTemps, choisirAnimation } from './atlas';
+import type { AspectBatiment } from './batiments';
 import type { EtatCamera2d } from './camera';
 import {
   COS_TANGAGE, idDecor, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE,
@@ -362,6 +363,8 @@ export interface ElementDecor {
   echelle: number;
   /** La couleur du propriétaire d'un bâtiment ; `null` : aucune teinte. */
   equipe: Rvb | null;
+  /** Le terni d'un bâtiment désaffecté sans image à lui (`aspectBatiment`) ; absent : aucun. */
+  teinte?: Rvb | null;
 }
 
 /** Le décor d'une case : le lointain au-dessus de l'horizon, le sol au-dessous, et ce qui s'y dresse. */
@@ -376,8 +379,12 @@ export interface ContexteDecor {
   terrain: CleTerrain | null;
   biome: Biome;
   ambiance: Ambiance;
-  /** L'entrée du bâtiment de la case, et la couleur de son propriétaire (gris neutre sans propriétaire). */
-  batiment?: { entree: string; equipe: Rvb } | null;
+  /**
+   * L'entrée du bâtiment de la case, la couleur de son propriétaire (gris
+   * neutre sans propriétaire), et le terni d'un désaffecté sans image à lui :
+   * ce que la carte pose sur la même case.
+   */
+  batiment?: { entree: string; equipe: Rvb; teinte?: Rvb | null } | null;
   /** Vrai si l'entrée est cuite : une saison absente retombe sur `toutes`, sinon sur le repli. */
   existe?(id: string): boolean;
 }
@@ -495,8 +502,8 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
     return ctx.existe(toutes) ? toutes : id;
   };
   const elements: ElementDecor[] = [];
-  const poser = (entree: string, position: number, echelle: number, equipe: Rvb | null = null): void => {
-    elements.push({ entree, position, echelle, equipe });
+  const poser = (entree: string, position: number, echelle: number, equipe: Rvb | null = null, teinte: Rvb | null = null): void => {
+    elements.push({ entree, position, echelle, equipe, ...(teinte ? { teinte } : {}) });
   };
   if (t === 'foret') {
     const arbre = arbreDuBiome(biome);
@@ -508,7 +515,7 @@ export function decorDeCase(ctx: ContexteDecor): DecorCase {
     poser(decor(montagne, 1), 0.3, 1.3);
     poser(decor(montagne, 2), 0.74, 0.9);
   } else if (BATIS.has(t)) {
-    if (ctx.batiment) poser(ctx.batiment.entree, 0.5, 1.2, ctx.batiment.equipe);
+    if (ctx.batiment) poser(ctx.batiment.entree, 0.5, 1.2, ctx.batiment.equipe, ctx.batiment.teinte ?? null);
   } else if (t === 'herbe_haute') {
     poser(decor('touffe', 1), 0.18, 1.2);
     poser(decor('touffe', 2), 0.5, 1.3);
@@ -582,8 +589,12 @@ export interface DependancesCombat2d {
   equipe(camp: CampId | null): Rvb;
   /** L'entrée du manifeste d'une unité de ce camp (kit national ou base). */
   entreeUnite(type: CleUnite, camp: CampId): string;
-  /** L'entrée d'un bâtiment pour son propriétaire. */
-  entreeBatiment(terrain: CleTerrain, proprietaire: CampId | null): string;
+  /**
+   * Ce que la carte pose sur une case bâtie (`aspectBatiment`) : l'écran de
+   * combat montre le même bâtiment — kit national, désaffecté endormi ou terni,
+   * superusine active ou inerte.
+   */
+  aspectBatiment(c: Case, terrain: CleTerrain): AspectBatiment;
   /** L'entrée du manifeste, si elle est cuite. */
   entree(id: string): EntreeSprite | null;
   /** Animations réduites : l'issue paraît d'emblée. */
@@ -732,10 +743,11 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
   // --- Le décor de chaque case, et ce qui se dresse sur son horizon.
   const decorDe = (c: Cote): DecorCase => {
     const terrain = deps.terrain(c.duel.case);
-    const proprio = estBati(terrain) ? deps.proprietaire(c.duel.case) : null;
+    const aspect = estBati(terrain) ? deps.aspectBatiment(c.duel.case, terrain) : null;
+    const proprio = aspect ? deps.proprietaire(c.duel.case) : null;
     return decorDeCase({
       terrain, biome: deps.biome, ambiance: deps.ambiance,
-      batiment: estBati(terrain) ? { entree: deps.entreeBatiment(terrain, proprio), equipe: deps.equipe(proprio) } : null,
+      batiment: aspect ? { entree: aspect.entree, equipe: deps.equipe(proprio), teinte: aspect.teinte } : null,
       existe: (id) => deps.entree(id) !== null,
     });
   };
@@ -752,6 +764,7 @@ export function ouvrirCombat2d(hote: HTMLElement, duel: Duel, deps: DependancesC
     pose.instance.animation = entree ? choisirAnimation(entree, 'fixe', 'repos') : -1;
     pose.instance.equipe = e.equipe;
     pose.instance.echelle = e.echelle;
+    if (e.teinte) pose.instance.teinte = e.teinte;
     return pose;
   });
 

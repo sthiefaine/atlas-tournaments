@@ -57,7 +57,9 @@ import {
   Atlas, chargerImageNavigateur, chargerManifeste, choisirAnimation, televerseurWebGl,
   type CompteursResolution, type StatistiquesAtlas,
 } from './atlas';
-import { estBatiment, poseDrapeau, posesBatiments, type PoseDrapeau } from './batiments';
+import {
+  aspectBatiment, estBatiment, poseDrapeauCase, posesBatiments, type ImagesBatiments, type PoseDrapeau,
+} from './batiments';
 import {
   creerCamera2d, matricePlanVersDecoupe, planVersEcran, type Camera2d, type EtatCamera2d,
 } from './camera';
@@ -399,6 +401,16 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     return atlas?.idPour('batiment', terrain, pays, idBatiment(terrain)) ?? idBatiment(terrain);
   }
 
+  /**
+   * Ce que la règle des bâtiments (`aspectBatiment`) demande à l'atlas : la
+   * carte et l'écran de combat la lisent toutes deux, et posent donc le même
+   * bâtiment. Une image d'état n'est prise que si le manifeste la porte.
+   */
+  const imagesBatiments: ImagesBatiments = {
+    entree: entreeBatiment,
+    existe: (id) => (atlas?.entree(id) ?? null) !== null,
+  };
+
   function terrainDe(e: EtatPartie, v: VueInteraction) {
     return (c: Case): CleTerrain | null => terrainLogique(e, v.catalogue, c);
   }
@@ -540,8 +552,8 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
     toutes.length = 0;
     if (batimentsSales || batimentsAnimes) {
       const b = posesBatiments(e, terrainDe(e, v), {
-        visibles: v.visibles, unitesVues: v.unitesVues, brouillard,
-        equipe: couleurEquipe, entree: entreeBatiment, animation: animationChoisie,
+        ...imagesBatiments, visibles: v.visibles, unitesVues: v.unitesVues, brouillard,
+        equipe: couleurEquipe, animation: animationChoisie,
         seuil: (c) => seuilCapture(e, v.catalogue, c),
         forces: drapeauxForces, marquesCases: v.marquesCases ?? null, tempsMs, reduit: calme,
       });
@@ -835,14 +847,10 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         const c = { x: x ?? -1, y: y ?? -1 };
         if (!estBatiment(terrainLogique(e, v.catalogue, c))) return null;
         return {
-          poseDans: (s) => {
-            const u = s.unites.find((w) => w.x === c.x && w.y === c.y && !w.dansTransport);
-            return poseDrapeau(
-              s.proprietaires[cle] ?? null,
-              u && u.pointsCapture > 0 ? { camp: u.camp, points: u.pointsCapture } : null,
-              seuilCapture(s, v.catalogue, c),
-            );
-          },
+          // Rien n'est hissé sur un désaffecté : une remise en service lève les couleurs de zéro.
+          poseDans: (s) => poseDrapeauCase(
+            s, c, s.unites.find((w) => w.x === c.x && w.y === c.y && !w.dansTransport), seuilCapture(s, v.catalogue, c),
+          ),
           forcer: (pose) => { drapeauxForces.set(cle, pose); batimentsSales = true; },
           relacher: () => { if (drapeauxForces.delete(cle)) batimentsSales = true; },
         };
@@ -1175,7 +1183,7 @@ export function creerRendu2d(options: OptionsRendu2d = {}): Rendu2d {
         biome: options.biome ?? 'plaine',
         equipe: couleurEquipe,
         entreeUnite,
-        entreeBatiment,
+        aspectBatiment: (c, terrain) => aspectBatiment(e, c, terrain, imagesBatiments),
         entree: (id) => atlas?.entree(id) ?? null,
         reduit,
       });

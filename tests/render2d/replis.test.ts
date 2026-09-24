@@ -2,10 +2,10 @@
 // correspondance avec les noms du contrat, et la peinture sur une toile factice.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ECUME_NAVIRE, idBatiment, idDecor, idUnite, OMBRE_UNITE } from '../../src/render2d/contrat';
+import { ECUME_NAVIRE, idBatiment, idBatimentEtat, idDecor, idUnite, OMBRE_UNITE } from '../../src/render2d/contrat';
 import {
-  creerPeintreRepli, DENSITE_REPLI, FORMES, identiteRepli, paletteEquipe, sansOmbresInternes,
-  type FabriqueToile,
+  creerPeintreRepli, DENSITE_REPLI, FORMES, identiteRepli, multiplierCouleur, paletteEquipe, sansOmbresInternes,
+  TEINTE_DESAFFECTE, type FabriqueToile,
 } from '../../src/render2d/replis';
 import type { Pinceau } from '../../src/render/sprites/formes';
 import { CAT } from '../engine/aides';
@@ -112,4 +112,60 @@ test('l’écume d’un navire est une ellipse claire, plus claire au bord qu’
   assert.ok(ECUME_NAVIRE.largeur > OMBRE_UNITE.largeur);
   assert.ok(ecume.l > arrets(FORMES.ombre).l);
   assert.ok(arrets(FORMES.ombre).stops.every(([, c]) => c.startsWith('rgba(0,0,0,')), 'l’ombre reste noire');
+});
+
+// ---------------------------------------------------------------------------
+// Les images d'état des bâtiments : désaffecté et superusine
+// ---------------------------------------------------------------------------
+
+/** Ce qu'une peinture pose, couleur par couleur, dans l'ordre : remplissages et traits. */
+function peinture(id: string, equipe: readonly [number, number, number] | null): string[] {
+  const posees: string[] = [];
+  let remplissage = '';
+  let trait = '';
+  const g = new Proxy({} as Record<string, unknown>, {
+    get: (_c, nom) => {
+      if (nom === 'fill' || nom === 'fillRect') return () => { posees.push(`f:${remplissage}`); };
+      if (nom === 'stroke' || nom === 'strokeRect') return () => { posees.push(`t:${trait}`); };
+      return () => undefined;
+    },
+    set: (_c, nom, v) => {
+      if (nom === 'fillStyle') remplissage = String(v);
+      if (nom === 'strokeStyle') trait = String(v);
+      return true;
+    },
+  }) as unknown as Pinceau;
+  const p = creerPeintreRepli(() => ({ toile: {} as never, g }), () => CAT).peindre(id, equipe);
+  assert.ok(p, id);
+  return posees;
+}
+
+test('une image d’état se lit par son identifiant : le bâtiment, et l’état à part', () => {
+  assert.deepEqual(identiteRepli(idBatimentEtat('ville', 'desaffecte')), { famille: 'batiment', cle: 'ville', etat: 'desaffecte' });
+  assert.deepEqual(identiteRepli(idBatimentEtat('superusine', 'inerte')), { famille: 'batiment', cle: 'superusine', etat: 'inerte' });
+  assert.deepEqual(identiteRepli(idBatiment('superusine')), { famille: 'batiment', cle: 'superusine' });
+  assert.deepEqual(identiteRepli(idBatiment('qg', 'lu')), { famille: 'batiment', cle: 'qg' }, 'une nation n’est pas un état');
+});
+
+test('une couleur se ternit canal par canal, son opacité intacte ; ce qui ne se lit pas passe', () => {
+  assert.equal(multiplierCouleur('#ff8000', [0.5, 0.5, 0.5]), 'rgb(128,64,0)');
+  assert.equal(multiplierCouleur('rgb(200, 100, 50)', [0.6, 0.6, 0.58]), 'rgb(120,60,29)');
+  assert.equal(multiplierCouleur('rgba(20,24,30,0.55)', [0.5, 1, 1]), 'rgba(10,24,30,0.55)');
+  assert.equal(multiplierCouleur('transparent', [0.5, 0.5, 0.5]), 'transparent');
+});
+
+test('le repli d’un désaffecté est son bâtiment terni, exactement ce que la carte montre sans son image', () => {
+  for (const cle of ['ville', 'usine', 'aeroport', 'port', 'radar']) {
+    const enService = peinture(idBatiment(cle), null);
+    const endormi = peinture(idBatimentEtat(cle, 'desaffecte'), null);
+    assert.equal(endormi.length, enService.length, cle);
+    assert.deepEqual(endormi, enService.map((c) => `${c.slice(0, 2)}${multiplierCouleur(c.slice(2), TEINTE_DESAFFECTE)}`), cle);
+    assert.notDeepEqual(endormi, enService, `${cle} : terni pour de bon`);
+  }
+});
+
+test('la superusine a un repli, l’usine, en service comme prise : sa case n’est jamais vide', () => {
+  const usine = peinture(idBatiment('usine'), [1, 0, 0]);
+  assert.deepEqual(peinture(idBatiment('superusine'), [1, 0, 0]), usine);
+  assert.deepEqual(peinture(idBatimentEtat('superusine', 'inerte'), [1, 0, 0]), usine);
 });

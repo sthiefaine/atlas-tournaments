@@ -15,14 +15,16 @@ import {
   type Combat2d, type DependancesCombat2d, type Duel, type GabaritFormation,
 } from '../../src/render2d/combat';
 import { ARBRES } from '../../src/render2d/sol/decor';
+import { aspectBatiment, posesBatiments, TEINTE_DESAFFECTE } from '../../src/render2d/batiments';
 import { COS_TANGAGE, ECUME_NAVIRE, PIXELS_PAR_CASE, SIN_TANGAGE, type EntreeSprite } from '../../src/render2d/contrat';
+import { terrainLogique } from '../../src/engine/index';
 import { FORMES } from '../../src/render2d/replis';
 import type { EncartSprites } from '../../src/render2d/index';
 import type { Pose } from '../../src/render2d/lot';
 import type { Rvb } from '../../src/render2d/unites';
 import type { Ambiance } from '../../src/render/ambiance';
 import type { CampId, CleTerrain, CleUnite } from '../../src/schemas/types';
-import { CAT } from '../engine/aides';
+import { CAT, partiePersonnalisee } from '../engine/aides';
 
 // ---------------------------------------------------------------------------
 // Le banc du test
@@ -119,6 +121,8 @@ const GRIS: Rvb = [0.72, 0.74, 0.78];
 function essai(duel: Duel, o: {
   largeur?: number; hauteur?: number; reduit?: boolean; entrees?: Record<string, EntreeSprite>;
   terrains?: Record<string, CleTerrain>; proprietaires?: Record<string, CampId>; ambiance?: Ambiance;
+  /** La règle des bâtiments de la carte ; à défaut, la base de chaque terrain, sans terni. */
+  aspect?: DependancesCombat2d['aspectBatiment'];
 } = {}): Essai {
   const doc = new FauxDocument();
   const hote = doc.createElement();
@@ -141,7 +145,7 @@ function essai(duel: Duel, o: {
     biome: 'plaine',
     equipe: (camp) => (camp === 0 ? BLEU : camp === 1 ? ROUGE : GRIS),
     entreeUnite: (type) => `unite_${type}_base`,
-    entreeBatiment: (terrain) => `batiment_${terrain}_base`,
+    aspectBatiment: o.aspect ?? ((_c, terrain) => ({ entree: `batiment_${terrain}_base`, teinte: null, mat: true })),
     entree: (id) => o.entrees?.[id] ?? null,
     reduit: () => o.reduit ?? false,
   };
@@ -655,6 +659,47 @@ test('le bâtiment de la case se dresse dans la scène, à la couleur de son pro
   const neutre = essai(unDuel(), { terrains: { '3,3': 'ville' } });
   const grise = neutre.poses().find((p) => p.instance.entree === 'batiment_ville_base');
   assert.deepEqual(grise?.instance.equipe, GRIS);
+});
+
+test('le décor d’une case bâtie garde le terni que la carte lui donne', () => {
+  const jour = ambiance('printemps', 'jour', 'clair');
+  const terni = decorDeCase({
+    terrain: 'ville', biome: 'plaine', ambiance: jour,
+    batiment: { entree: 'batiment_ville_base', equipe: GRIS, teinte: TEINTE_DESAFFECTE },
+  });
+  assert.deepEqual(terni.elements.map((x) => [x.entree, x.teinte]), [['batiment_ville_base', TEINTE_DESAFFECTE]]);
+  const net = decorDeCase({ terrain: 'ville', biome: 'plaine', ambiance: jour, batiment: { entree: 'batiment_ville_base', equipe: GRIS } });
+  assert.equal(net.elements[0]!.teinte, undefined, 'aucune teinte là où la carte n’en pose pas');
+});
+
+test('l’écran de combat pose le bâtiment de la carte : désaffecté endormi, ou terni sans son image', () => {
+  // La cible se tient sur une ville désaffectée, en (3, 3).
+  const etat = partiePersonnalisee(
+    ['HPPPPH', 'PPPPPP', 'PPPPPP', 'PPPCPP'],
+    { '0,0': 0, '5,0': 1 },
+    [{ camp: 0, type: 'infanterie', x: 2, y: 3 }, { camp: 1, type: 'infanterie', x: 3, y: 3 }],
+  );
+  etat.desaffectes = ['3,3'];
+  const terrainDe = (c: { x: number; y: number }) => terrainLogique(etat, CAT, c);
+  for (const cuites of [[], ['batiment_ville_desaffecte']] as string[][]) {
+    const images = { entree: (t: CleTerrain) => `batiment_${t}_base`, existe: (id: string) => cuites.includes(id) };
+    const e = essai(unDuel(), {
+      terrains: { '3,3': 'ville' },
+      aspect: (c, terrain) => aspectBatiment(etat, c, terrain, images),
+    });
+    const scene = e.poses().find((p) => p.calque === 'volumes' && p.instance.entree.startsWith('batiment_'));
+    // La même case, sur la carte.
+    const carte = posesBatiments(etat, terrainDe, {
+      ...images, visibles: null, brouillard: null, equipe: () => GRIS, animation: () => null,
+      seuil: () => 40, tempsMs: 0, reduit: false,
+    }).poses.find((p) => p.colonne === 3.5 && p.ligne === 3.5 && p.instance.entree.startsWith('batiment_'));
+    assert.ok(scene && carte);
+    assert.equal(scene.instance.entree, carte.instance.entree);
+    assert.deepEqual(scene.instance.teinte, carte.instance.teinte);
+    assert.deepEqual(scene.instance.equipe, GRIS, 'un désaffecté est neutre');
+    const attendu = cuites.length > 0 ? ['batiment_ville_desaffecte', undefined] : ['batiment_ville_base', TEINTE_DESAFFECTE];
+    assert.deepEqual([scene.instance.entree, scene.instance.teinte], attendu);
+  }
 });
 
 // ---------------------------------------------------------------------------
