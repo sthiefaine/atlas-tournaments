@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_roseau_hiver_1_0.webp",
-    "largeur": 44,
-    "hauteur": 44
+    "largeur": 52,
+    "hauteur": 52
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 42,
-      "h": 43,
-      "px": 21,
-      "py": 27
+      "l": 51,
+      "h": 50,
+      "px": 27,
+      "py": 30
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "b51364ffce6d1d8adc4bd1da8b8c8b14ad7ce5d69d949d3e7c3193081882d220",
-  "date": "2026-09-23T00:06:25.246Z",
-  "secondes": 8.3,
-  "secondesRendu": 3,
+  "version": 4,
+  "empreinte": "78f48cda1fabe529b120c16359666d45647690a2c87b5e17e55d36c364ef7f72",
+  "date": "2026-09-24T02:59:22.742Z",
+  "secondes": 5.2,
+  "secondesRendu": 3.1,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1302,
+  "octets": 1472,
   "canevas": {
    "fixe": {
-    "x0": -60,
-    "y0": -46,
-    "largeur": 119,
-    "hauteur": 91
+    "x0": -64,
+    "y0": -50,
+    "largeur": 127,
+    "hauteur": 99
    }
   },
   "materiauxTeints": [],

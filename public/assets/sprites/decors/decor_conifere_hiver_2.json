@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_conifere_hiver_2_0.webp",
-    "largeur": 128,
-    "hauteur": 108
+    "largeur": 140,
+    "hauteur": 116
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 128,
-      "h": 107,
-      "px": 64,
-      "py": 58
+      "l": 139,
+      "h": 114,
+      "px": 70,
+      "py": 60
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "dae99b57ab8cb0adb50a4b0c23808bb7a543afef37bb37966aad23e06bfc8ba3",
-  "date": "2026-09-23T00:00:26.982Z",
-  "secondes": 17.1,
-  "secondesRendu": 5.3,
+  "version": 4,
+  "empreinte": "01be6c591ed40eb28ca3ee2f055e01f6a5ad723a46f3f736e13b74d61dbf8e82",
+  "date": "2026-09-24T02:56:51.538Z",
+  "secondes": 11.2,
+  "secondesRendu": 6.3,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4428,
+  "octets": 4946,
   "canevas": {
    "fixe": {
-    "x0": -72,
-    "y0": -75,
-    "largeur": 144,
-    "hauteur": 132
+    "x0": -76,
+    "y0": -79,
+    "largeur": 152,
+    "hauteur": 140
    }
   },
   "materiauxTeints": [],

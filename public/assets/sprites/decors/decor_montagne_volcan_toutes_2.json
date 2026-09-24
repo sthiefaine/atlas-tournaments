@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_montagne_volcan_toutes_2_0.webp",
-    "largeur": 208,
-    "hauteur": 172
+    "largeur": 220,
+    "hauteur": 184
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 206,
-      "h": 170,
-      "px": 103,
-      "py": 93
+      "l": 218,
+      "h": 183,
+      "px": 109,
+      "py": 99
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "3a566b1917fbeae2bae0b9e4c899394e6765fd0a8275fdf3df851c1e5e968e2a",
-  "date": "2026-09-23T00:05:48.480Z",
-  "secondes": 24,
-  "secondesRendu": 7.5,
+  "version": 4,
+  "empreinte": "4add2f0e3352ae63921c92030a97fe280046ba302626704d46cef8590a842b37",
+  "date": "2026-09-24T02:59:10.070Z",
+  "secondes": 12,
+  "secondesRendu": 6.7,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 5812,
+  "octets": 7482,
   "canevas": {
    "fixe": {
-    "x0": -109,
-    "y0": -101,
-    "largeur": 218,
-    "hauteur": 185
+    "x0": -113,
+    "y0": -105,
+    "largeur": 226,
+    "hauteur": 193
    }
   },
   "materiauxTeints": [],

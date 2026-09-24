@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_montagne_hiver_3_0.webp",
-    "largeur": 124,
-    "hauteur": 112
+    "largeur": 164,
+    "hauteur": 120
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 124,
-      "h": 111,
-      "px": 62,
-      "py": 63
+      "l": 164,
+      "h": 120,
+      "px": 99,
+      "py": 69
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "5fb44c83810843ad64f509deff8dd3f1437b92627c36bd12828629faa1e26fe9",
-  "date": "2026-09-23T00:04:17.732Z",
-  "secondes": 29.8,
-  "secondesRendu": 13.1,
+  "version": 4,
+  "empreinte": "f83cbb4e0139c84e9c432c6b04c2bc7d4c23ea780ed6d19a871211eeb865e3e9",
+  "date": "2026-09-24T02:58:45.649Z",
+  "secondes": 11.5,
+  "secondesRendu": 7.6,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 3130,
+  "octets": 3966,
   "canevas": {
    "fixe": {
-    "x0": -109,
-    "y0": -104,
-    "largeur": 218,
-    "hauteur": 188
+    "x0": -113,
+    "y0": -108,
+    "largeur": 226,
+    "hauteur": 196
    }
   },
   "materiauxTeints": [],

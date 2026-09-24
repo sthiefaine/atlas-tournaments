@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_buisson_automne_1_0.webp",
-    "largeur": 76,
-    "hauteur": 60
+    "largeur": 92,
+    "hauteur": 72
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 76,
-      "h": 57,
-      "px": 37,
-      "py": 27
+      "l": 90,
+      "h": 72,
+      "px": 45,
+      "py": 34
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "3bef55c23bcf41879b89d29f6584f0a4bcabf6ce03eed2998f5e2ddc46bbdc78",
-  "date": "2026-09-22T23:58:27.638Z",
-  "secondes": 11.2,
-  "secondesRendu": 3.3,
+  "version": 4,
+  "empreinte": "1ba8d6426ecd3a20c1569813ff9218d11182c28b988fa6957a4e61c960de78bd",
+  "date": "2026-09-24T02:55:41.183Z",
+  "secondes": 5.7,
+  "secondesRendu": 3.9,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1622,
+  "octets": 2026,
   "canevas": {
    "fixe": {
-    "x0": -67,
-    "y0": -51,
-    "largeur": 134,
-    "hauteur": 102
+    "x0": -71,
+    "y0": -55,
+    "largeur": 142,
+    "hauteur": 110
    }
   },
   "materiauxTeints": [],

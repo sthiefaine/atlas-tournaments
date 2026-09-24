@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_feuillu_hiver_3_0.webp",
-    "largeur": 92,
-    "hauteur": 96
+    "largeur": 120,
+    "hauteur": 112
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 92,
-      "h": 93,
-      "px": 38,
-      "py": 61
+      "l": 120,
+      "h": 112,
+      "px": 62,
+      "py": 64
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "d03593176a09b1e226967f205cf65be7e465d4616240bc8a5eb6bc86035510fd",
-  "date": "2026-09-23T00:02:30.836Z",
-  "secondes": 16.5,
-  "secondesRendu": 4.9,
+  "version": 4,
+  "empreinte": "948baf9a47afaef3c458baa5b0299ecc2622360479c5ed1bea9b320be38cbfbd",
+  "date": "2026-09-24T02:58:01.294Z",
+  "secondes": 8.7,
+  "secondesRendu": 4.7,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 3482,
+  "octets": 3746,
   "canevas": {
    "fixe": {
-    "x0": -67,
-    "y0": -76,
-    "largeur": 138,
-    "hauteur": 132
+    "x0": -71,
+    "y0": -80,
+    "largeur": 146,
+    "hauteur": 140
    }
   },
   "materiauxTeints": [],

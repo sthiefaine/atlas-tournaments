@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_buisson_ete_1_0.webp",
-    "largeur": 84,
-    "hauteur": 64
+    "largeur": 104,
+    "hauteur": 76
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 83,
-      "h": 64,
-      "px": 41,
-      "py": 30
+      "l": 103,
+      "h": 75,
+      "px": 54,
+      "py": 34
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "6fe554a8804dbd51b02495774621c0436340e8ab2f9d74c147c129d9f71cd27f",
-  "date": "2026-09-22T23:58:37.843Z",
-  "secondes": 10.2,
+  "version": 4,
+  "empreinte": "618a600971360f72d6d1489c56669e694192fc45c571a6f77e7cc7079329b825",
+  "date": "2026-09-24T02:55:48.796Z",
+  "secondes": 7.6,
   "secondesRendu": 4.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1718,
+  "octets": 2038,
   "canevas": {
    "fixe": {
-    "x0": -67,
-    "y0": -51,
-    "largeur": 134,
-    "hauteur": 102
+    "x0": -71,
+    "y0": -55,
+    "largeur": 142,
+    "hauteur": 110
    }
   },
   "materiauxTeints": [],

@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_touffe_printemps_1_0.webp",
-    "largeur": 28,
-    "hauteur": 32
+    "largeur": 36,
+    "hauteur": 40
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 28,
-      "h": 31,
-      "px": 15,
-      "py": 18
+      "l": 36,
+      "h": 38,
+      "px": 21,
+      "py": 20
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "1145c82807620d23ed350f120bbce4af42fa550b6a14ab70b89fb44702da0144",
-  "date": "2026-09-23T00:07:08.683Z",
-  "secondes": 9.9,
-  "secondesRendu": 3.7,
+  "version": 4,
+  "empreinte": "c8c094ec47a6fd13f3892ffa1e26b0138b1d2db16c8b4c92be8ed845596aebbc",
+  "date": "2026-09-24T02:59:52.422Z",
+  "secondes": 5.9,
+  "secondesRendu": 3.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 796,
+  "octets": 896,
   "canevas": {
    "fixe": {
-    "x0": -58,
-    "y0": -44,
-    "largeur": 110,
-    "hauteur": 89
+    "x0": -62,
+    "y0": -48,
+    "largeur": 118,
+    "hauteur": 97
    }
   },
   "materiauxTeints": [],

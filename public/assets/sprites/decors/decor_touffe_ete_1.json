@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_touffe_ete_1_0.webp",
-    "largeur": 44,
-    "hauteur": 40
+    "largeur": 56,
+    "hauteur": 48
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 43,
-      "h": 40,
-      "px": 21,
-      "py": 22
+      "l": 53,
+      "h": 45,
+      "px": 28,
+      "py": 24
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "4cf092e26b4818eab374a4358907e03f083cdafc703e7f7422adb3345809bcc0",
-  "date": "2026-09-23T00:06:50.203Z",
-  "secondes": 8.2,
-  "secondesRendu": 2.7,
+  "version": 4,
+  "empreinte": "86052e86a15a1aa4b60054f8683be5a8628e8c4fa04ddb99add69885c243d8a8",
+  "date": "2026-09-24T02:59:38.288Z",
+  "secondes": 4.7,
+  "secondesRendu": 2.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1252,
+  "octets": 1328,
   "canevas": {
    "fixe": {
-    "x0": -59,
-    "y0": -47,
-    "largeur": 118,
-    "hauteur": 94
+    "x0": -63,
+    "y0": -51,
+    "largeur": 126,
+    "hauteur": 102
    }
   },
   "materiauxTeints": [],

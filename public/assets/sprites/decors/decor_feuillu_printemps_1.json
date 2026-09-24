@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_feuillu_printemps_1_0.webp",
-    "largeur": 132,
-    "hauteur": 116
+    "largeur": 148,
+    "hauteur": 136
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 130,
-      "h": 115,
-      "px": 65,
-      "py": 65
+      "l": 146,
+      "h": 133,
+      "px": 73,
+      "py": 78
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "f50a04b04d70d4eae374f57761f0d529a27f225a04abc7711fced49e95b388ec",
-  "date": "2026-09-23T00:02:42.660Z",
-  "secondes": 19.2,
-  "secondesRendu": 4.5,
+  "version": 4,
+  "empreinte": "770aecb9cc461c059c756422ab3429988f16edf04e0159e292405fe1706ab95d",
+  "date": "2026-09-24T02:58:02.352Z",
+  "secondes": 9.7,
+  "secondesRendu": 4.7,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4148,
+  "octets": 4890,
   "canevas": {
    "fixe": {
-    "x0": -73,
-    "y0": -83,
-    "largeur": 146,
-    "hauteur": 139
+    "x0": -77,
+    "y0": -87,
+    "largeur": 154,
+    "hauteur": 147
    }
   },
   "materiauxTeints": [],

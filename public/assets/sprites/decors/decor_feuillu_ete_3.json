@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_feuillu_ete_3_0.webp",
-    "largeur": 136,
-    "hauteur": 120
+    "largeur": 148,
+    "hauteur": 132
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 134,
-      "h": 120,
-      "px": 67,
-      "py": 68
+      "l": 146,
+      "h": 132,
+      "px": 73,
+      "py": 74
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "e07e5f5ce0e2fbed14f4cc618e9c3f274179b63e789088b610fcd8a168664078",
-  "date": "2026-09-23T00:02:05.287Z",
-  "secondes": 20,
-  "secondesRendu": 5.9,
+  "version": 4,
+  "empreinte": "15a124a11a8e76219004b1d321a7f48990d8a582a4ac8018ecc684af8db2dc06",
+  "date": "2026-09-24T02:57:44.064Z",
+  "secondes": 8.8,
+  "secondesRendu": 4.4,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4104,
+  "octets": 4734,
   "canevas": {
    "fixe": {
-    "x0": -73,
-    "y0": -76,
-    "largeur": 146,
-    "hauteur": 134
+    "x0": -77,
+    "y0": -80,
+    "largeur": 154,
+    "hauteur": 142
    }
   },
   "materiauxTeints": [],

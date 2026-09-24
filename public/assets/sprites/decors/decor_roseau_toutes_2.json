@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_roseau_toutes_2_0.webp",
-    "largeur": 48,
-    "hauteur": 48
+    "largeur": 60,
+    "hauteur": 56
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 48,
-      "h": 46,
-      "px": 24,
-      "py": 27
+      "l": 57,
+      "h": 55,
+      "px": 31,
+      "py": 29
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "2d70dcb55eb1ed18db246ed8fb0b86fc26da84a6cb8624c5054af17f958f785c",
-  "date": "2026-09-23T00:06:36.777Z",
-  "secondes": 8.5,
-  "secondesRendu": 3,
+  "version": 4,
+  "empreinte": "886485ee59b1a4559a562be047b5e6713eb252512b1680f97af67ed0c4eb1706",
+  "date": "2026-09-24T02:59:32.352Z",
+  "secondes": 4.9,
+  "secondesRendu": 2.3,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1392,
+  "octets": 1478,
   "canevas": {
    "fixe": {
-    "x0": -58,
-    "y0": -48,
-    "largeur": 116,
-    "hauteur": 96
+    "x0": -62,
+    "y0": -52,
+    "largeur": 124,
+    "hauteur": 104
    }
   },
   "materiauxTeints": [],

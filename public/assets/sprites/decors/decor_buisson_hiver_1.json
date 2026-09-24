@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_buisson_hiver_1_0.webp",
-    "largeur": 68,
-    "hauteur": 56
+    "largeur": 84,
+    "hauteur": 64
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 68,
-      "h": 54,
-      "px": 31,
-      "py": 25
+      "l": 81,
+      "h": 64,
+      "px": 41,
+      "py": 30
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "1b81212172128bb85b6b17ab150c3ac2730469eb81ea9e6bf9ea4613ae0f070a",
-  "date": "2026-09-22T23:58:57.087Z",
-  "secondes": 19.2,
-  "secondesRendu": 8,
+  "version": 4,
+  "empreinte": "fa7a363e1e8c535cbe0a034662f75b8e7c64153cae9c0719c6462cdb0d2a0f26",
+  "date": "2026-09-24T02:55:55.548Z",
+  "secondes": 6.8,
+  "secondesRendu": 4,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1582,
+  "octets": 1896,
   "canevas": {
    "fixe": {
-    "x0": -67,
-    "y0": -51,
-    "largeur": 134,
-    "hauteur": 102
+    "x0": -71,
+    "y0": -55,
+    "largeur": 142,
+    "hauteur": 110
    }
   },
   "materiauxTeints": [],

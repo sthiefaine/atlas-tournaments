@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_conifere_ete_1_0.webp",
-    "largeur": 132,
-    "hauteur": 120
+    "largeur": 140,
+    "hauteur": 132
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 130,
-      "h": 119,
-      "px": 65,
-      "py": 71
+      "l": 140,
+      "h": 130,
+      "px": 70,
+      "py": 75
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "932fb41b0c46927e9ef039775b5fac50cfa80cdab456491b08342113232e4667",
-  "date": "2026-09-22T23:59:54.066Z",
-  "secondes": 16.1,
-  "secondesRendu": 4.5,
+  "version": 4,
+  "empreinte": "8324be7bde79b12f4cacb2b49f7a7cbdf968603b30df169c4901cb8ee598b3a3",
+  "date": "2026-09-24T02:56:28.882Z",
+  "secondes": 12.1,
+  "secondesRendu": 6.7,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4456,
+  "octets": 5070,
   "canevas": {
    "fixe": {
-    "x0": -72,
-    "y0": -86,
-    "largeur": 145,
-    "hauteur": 142
+    "x0": -76,
+    "y0": -90,
+    "largeur": 152,
+    "hauteur": 150
    }
   },
   "materiauxTeints": [],

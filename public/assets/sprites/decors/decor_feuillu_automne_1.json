@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_feuillu_automne_1_0.webp",
-    "largeur": 132,
-    "hauteur": 116
+    "largeur": 148,
+    "hauteur": 136
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 130,
-      "h": 115,
-      "px": 65,
-      "py": 65
+      "l": 145,
+      "h": 133,
+      "px": 73,
+      "py": 78
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "c21147706f5a38a088a68d55c19c04dc65827445ed93254986f9d985d65796ed",
-  "date": "2026-09-23T00:01:18.955Z",
-  "secondes": 19.8,
-  "secondesRendu": 4.9,
+  "version": 4,
+  "empreinte": "c2df32a832da53452bc1f6a3a1e04d826967019cf511f6411a9b418a003d14fe",
+  "date": "2026-09-24T02:57:25.454Z",
+  "secondes": 10.4,
+  "secondesRendu": 4.8,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4054,
+  "octets": 4814,
   "canevas": {
    "fixe": {
-    "x0": -73,
-    "y0": -83,
-    "largeur": 146,
-    "hauteur": 139
+    "x0": -77,
+    "y0": -87,
+    "largeur": 154,
+    "hauteur": 147
    }
   },
   "materiauxTeints": [],

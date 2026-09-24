@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_buisson_printemps_2_0.webp",
-    "largeur": 68,
-    "hauteur": 52
+    "largeur": 80,
+    "hauteur": 64
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 65,
-      "h": 50,
-      "px": 32,
-      "py": 26
+      "l": 79,
+      "h": 61,
+      "px": 41,
+      "py": 30
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "2e99c773dc8c86c5e7133cea9fc96b87abc38a399fdcb51ed47b52e2bcf9b355",
-  "date": "2026-09-22T23:59:20.618Z",
-  "secondes": 10.6,
-  "secondesRendu": 3.7,
+  "version": 4,
+  "empreinte": "6359de571d1d020ad0daca5bf25891f75386b1dc144cf253727cfe75c1431a88",
+  "date": "2026-09-24T02:56:03.720Z",
+  "secondes": 8.2,
+  "secondesRendu": 4.6,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1550,
+  "octets": 1910,
   "canevas": {
    "fixe": {
-    "x0": -66,
-    "y0": -48,
-    "largeur": 132,
-    "hauteur": 97
+    "x0": -70,
+    "y0": -52,
+    "largeur": 140,
+    "hauteur": 105
    }
   },
   "materiauxTeints": [],

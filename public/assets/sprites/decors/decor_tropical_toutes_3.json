@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_tropical_toutes_3_0.webp",
-    "largeur": 140,
-    "hauteur": 132
+    "largeur": 148,
+    "hauteur": 148
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 140,
-      "h": 132,
-      "px": 68,
-      "py": 80
+      "l": 148,
+      "h": 147,
+      "px": 74,
+      "py": 89
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "f3c2a43dd08ceb93c5f36fdb27c4abab78dd86ee49d2395970d6fafee96bd7b6",
-  "date": "2026-09-23T00:07:49.404Z",
-  "secondes": 21.9,
-  "secondesRendu": 7.2,
+  "version": 4,
+  "empreinte": "f37d1896be1da8fcece81008b96dd1d4dab86698c8537bdc7ec9b42137528292",
+  "date": "2026-09-24T03:00:16.198Z",
+  "secondes": 11.7,
+  "secondesRendu": 5.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 5076,
+  "octets": 5648,
   "canevas": {
    "fixe": {
-    "x0": -74,
-    "y0": -93,
-    "largeur": 152,
-    "hauteur": 151
+    "x0": -78,
+    "y0": -97,
+    "largeur": 156,
+    "hauteur": 159
    }
   },
   "materiauxTeints": [],

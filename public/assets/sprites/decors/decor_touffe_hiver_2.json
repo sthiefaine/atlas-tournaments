@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_touffe_hiver_2_0.webp",
-    "largeur": 44,
-    "hauteur": 36
+    "largeur": 48,
+    "hauteur": 44
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 41,
-      "h": 34,
-      "px": 19,
-      "py": 18
+      "l": 45,
+      "h": 43,
+      "px": 23,
+      "py": 21
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "ab52b93f9b315203174c28d2ba9f7cad688ca4e704997cb97ac78a552967cd0b",
-  "date": "2026-09-23T00:07:00.690Z",
-  "secondes": 8.8,
-  "secondesRendu": 3.3,
+  "version": 4,
+  "empreinte": "dd41f2b81f83701c498c231153b47f4939a319d6e4daab376edab2d28c359765",
+  "date": "2026-09-24T02:59:52.600Z",
+  "secondes": 7.5,
+  "secondesRendu": 4.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1242,
+  "octets": 1408,
   "canevas": {
    "fixe": {
-    "x0": -61,
-    "y0": -45,
-    "largeur": 124,
-    "hauteur": 94
+    "x0": -65,
+    "y0": -49,
+    "largeur": 132,
+    "hauteur": 102
    }
   },
   "materiauxTeints": [],

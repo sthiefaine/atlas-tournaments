@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_touffe_automne_2_0.webp",
-    "largeur": 44,
-    "hauteur": 40
+    "largeur": 52,
+    "hauteur": 44
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 44,
-      "h": 37,
-      "px": 22,
-      "py": 19
+      "l": 50,
+      "h": 44,
+      "px": 26,
+      "py": 22
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "16f83d559448dd9a69f97764e77734753623da852cfbb3ec3d56a3ee6d45ab31",
-  "date": "2026-09-23T00:06:43.916Z",
-  "secondes": 7.1,
-  "secondesRendu": 2.8,
+  "version": 4,
+  "empreinte": "41da74ae7e6ed2d48ee1fe341e99ad163722a8066dc7f130789cc8c692cf0d47",
+  "date": "2026-09-24T02:59:37.271Z",
+  "secondes": 4.9,
+  "secondesRendu": 2.4,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 1486,
+  "octets": 1572,
   "canevas": {
    "fixe": {
-    "x0": -62,
-    "y0": -45,
-    "largeur": 125,
-    "hauteur": 94
+    "x0": -66,
+    "y0": -49,
+    "largeur": 133,
+    "hauteur": 102
    }
   },
   "materiauxTeints": [],

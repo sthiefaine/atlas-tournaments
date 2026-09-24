@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_palmier_toutes_3_0.webp",
-    "largeur": 108,
-    "hauteur": 108
+    "largeur": 140,
+    "hauteur": 116
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 107,
-      "h": 105,
-      "px": 55,
-      "py": 62
+      "l": 139,
+      "h": 113,
+      "px": 70,
+      "py": 65
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "a69bfced9facc151df380ca6f0f2ab2889ca59be6556c75d65ecbd337c830106",
-  "date": "2026-09-23T00:06:04.789Z",
-  "secondes": 14.9,
-  "secondesRendu": 6.7,
+  "version": 4,
+  "empreinte": "614798d57b543440bd8e9da5f209b753fbfddd8f07aed6f903ca41b3e525b518",
+  "date": "2026-09-24T02:59:24.464Z",
+  "secondes": 7.2,
+  "secondesRendu": 3.8,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4450,
+  "octets": 5040,
   "canevas": {
    "fixe": {
-    "x0": -74,
-    "y0": -71,
-    "largeur": 148,
-    "hauteur": 123
+    "x0": -78,
+    "y0": -75,
+    "largeur": 156,
+    "hauteur": 131
    }
   },
   "materiauxTeints": [],

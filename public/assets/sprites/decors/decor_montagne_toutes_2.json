@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_montagne_toutes_2_0.webp",
-    "largeur": 172,
-    "hauteur": 132
+    "largeur": 212,
+    "hauteur": 184
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 172,
-      "h": 129,
-      "px": 74,
-      "py": 76
+      "l": 212,
+      "h": 181,
+      "px": 107,
+      "py": 101
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "2d685405de6a73f83713697af221633030aa151322c563b6306e76f864187941",
-  "date": "2026-09-23T00:04:56.197Z",
-  "secondes": 38.5,
-  "secondesRendu": 12.1,
+  "version": 4,
+  "empreinte": "fbfd7249a0ad0b8bba7590f2e13ef01c3c4e82c27fda7ee94309016c3e54d708",
+  "date": "2026-09-24T02:58:56.941Z",
+  "secondes": 11.3,
+  "secondesRendu": 6.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4374,
+  "octets": 6954,
   "canevas": {
    "fixe": {
-    "x0": -109,
-    "y0": -109,
-    "largeur": 218,
-    "hauteur": 193
+    "x0": -113,
+    "y0": -113,
+    "largeur": 226,
+    "hauteur": 201
    }
   },
   "materiauxTeints": [],

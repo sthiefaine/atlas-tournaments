@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_montagne_aride_toutes_1_0.webp",
-    "largeur": 156,
-    "hauteur": 116
+    "largeur": 208,
+    "hauteur": 172
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 154,
-      "h": 116,
-      "px": 62,
-      "py": 68
+      "l": 208,
+      "h": 170,
+      "px": 104,
+      "py": 90
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "2f307ff8ec5270ce3a93c5193a5f0fe3457693f23b98f385166d08a30746ffe6",
-  "date": "2026-09-23T00:03:18.868Z",
-  "secondes": 25.5,
-  "secondesRendu": 8.6,
+  "version": 4,
+  "empreinte": "9d865130ae99adea780ba4603e5d4544c367d00813db78437fb303f85bc1e49d",
+  "date": "2026-09-24T02:58:22.805Z",
+  "secondes": 12.5,
+  "secondesRendu": 7.4,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4632,
+  "octets": 6654,
   "canevas": {
    "fixe": {
-    "x0": -108,
-    "y0": -96,
-    "largeur": 216,
-    "hauteur": 180
+    "x0": -112,
+    "y0": -100,
+    "largeur": 224,
+    "hauteur": 188
    }
   },
   "materiauxTeints": [],

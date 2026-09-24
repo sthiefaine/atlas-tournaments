@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_conifere_automne_1_0.webp",
-    "largeur": 132,
-    "hauteur": 120
+    "largeur": 140,
+    "hauteur": 132
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 130,
-      "h": 120,
-      "px": 65,
-      "py": 71
+      "l": 140,
+      "h": 131,
+      "px": 70,
+      "py": 76
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "677820f4529f4a3bbd9ae82185e9e15d98e16a87e23a86f3a599b770933e1210",
-  "date": "2026-09-22T23:59:31.842Z",
-  "secondes": 18,
-  "secondesRendu": 4.5,
+  "version": 4,
+  "empreinte": "32e9f5d3e56d42e6f89de1e648e1d63805b30b5bb9caaf31472b70007723bea3",
+  "date": "2026-09-24T02:56:16.644Z",
+  "secondes": 12.9,
+  "secondesRendu": 6.2,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4346,
+  "octets": 5012,
   "canevas": {
    "fixe": {
-    "x0": -72,
-    "y0": -86,
-    "largeur": 145,
-    "hauteur": 142
+    "x0": -76,
+    "y0": -90,
+    "largeur": 152,
+    "hauteur": 150
    }
   },
   "materiauxTeints": [],

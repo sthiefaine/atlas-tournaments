@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_conifere_printemps_2_0.webp",
-    "largeur": 128,
-    "hauteur": 108
+    "largeur": 140,
+    "hauteur": 128
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 128,
-      "h": 107,
-      "px": 64,
-      "py": 58
+      "l": 140,
+      "h": 125,
+      "px": 70,
+      "py": 70
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "4397c526bc499b4a0ec45756230566aeb6c0762437e8df9f43a3ac0fbdc8449b",
-  "date": "2026-09-23T00:00:59.116Z",
-  "secondes": 19.3,
-  "secondesRendu": 5.1,
+  "version": 4,
+  "empreinte": "db3bb6321b0f4e250a748647123c23fae093587a8f0c8bc67861f6827f8cd38d",
+  "date": "2026-09-24T02:57:15.041Z",
+  "secondes": 11.5,
+  "secondesRendu": 5.6,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 4388,
+  "octets": 5084,
   "canevas": {
    "fixe": {
-    "x0": -72,
-    "y0": -75,
-    "largeur": 144,
-    "hauteur": 132
+    "x0": -76,
+    "y0": -79,
+    "largeur": 152,
+    "hauteur": 140
    }
   },
   "materiauxTeints": [],
