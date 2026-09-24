@@ -82,11 +82,23 @@ export function poseDrapeauCase(
   return poseDrapeau(s.proprietaires[k] ?? null, capture, seuil);
 }
 
-/** La hauteur du bas du drapeau sur le mât, en cases, pour un niveau de 0 à 1. */
-export function hauteurDrapeau(niveau: number): number {
-  const drapeau = TAILLE_DRAPEAU.h / (PIXELS_PAR_CASE * COS_TANGAGE);
+/**
+ * Le mât et le drapeau du QG, agrandis : la charte des figurines (§6) lui donne
+ * « le plus grand drapeau » du jeu, et le QG est déjà le plus haut bâtiment.
+ * Les autres gardent la taille des formes (`HAUTEUR_MAT`, `TAILLE_DRAPEAU`).
+ */
+export const ECHELLE_MAT_QG = 1.25;
+export const ECHELLE_DRAPEAU_QG = 1.4;
+
+/**
+ * La hauteur du bas du drapeau sur le mât, en cases, pour un niveau de 0 à 1 ;
+ * `mat` et `drapeau` sont leurs agrandissements (le QG), et le drapeau hissé
+ * au plus haut s'arrête toujours sous la pomme du mât.
+ */
+export function hauteurDrapeau(niveau: number, mat = 1, drapeau = 1): number {
+  const hauteur = (TAILLE_DRAPEAU.h * drapeau) / (PIXELS_PAR_CASE * COS_TANGAGE);
   const bas = 0.12;
-  const haut = HAUTEUR_MAT - drapeau - 0.02;
+  const haut = HAUTEUR_MAT * mat - hauteur - 0.02;
   return bas + (haut - bas) * Math.max(0, Math.min(1, niveau));
 }
 
@@ -228,16 +240,19 @@ export function posesBatiments(
         const pose = o.forces?.get(k) ?? poseDrapeauCase(etat, c, occupants.get(k), o.seuil(c));
         const mx = x + PIED_MAT.x;
         const my = y + PIED_MAT.y;
+        const qg = terrain === 'qg';
+        const echelleMat = qg ? ECHELLE_MAT_QG : 1;
+        const echelleDrapeau = qg ? ECHELLE_DRAPEAU_QG : 1;
         poses.push({
           calque: 'volumes', ligne: gy, colonne: gx,
-          instance: { entree: FORMES.mat, animation: -1, cadre: 0, x: mx, y: my, vue },
+          instance: { entree: FORMES.mat, animation: -1, cadre: 0, x: mx, y: my, vue, ...(qg ? { echelle: echelleMat } : {}) },
         });
         if (pose.camp !== null) {
           poses.push({
             calque: 'volumes', ligne: gy, colonne: gx,
             instance: {
-              entree: FORMES.drapeau, animation: -1, cadre: 0, x: mx, y: my, h: hauteurDrapeau(pose.niveau),
-              equipe: o.equipe(pose.camp), vue,
+              entree: FORMES.drapeau, animation: -1, cadre: 0, x: mx, y: my, h: hauteurDrapeau(pose.niveau, echelleMat, echelleDrapeau),
+              equipe: o.equipe(pose.camp), vue, ...(qg ? { echelle: echelleDrapeau } : {}),
             },
           });
         }

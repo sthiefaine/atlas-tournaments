@@ -7,11 +7,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { cleCase, seuilCapture, SEUIL_CAPTURE, terrainLogique, type EtatPartie } from '../../src/engine/index';
 import {
-  aspectBatiment, hauteurDrapeau, poseDrapeau, poseDrapeauCase, posesBatiments, TEINTE_DESAFFECTE,
+  aspectBatiment, ECHELLE_DRAPEAU_QG, ECHELLE_MAT_QG, hauteurDrapeau, poseDrapeau, poseDrapeauCase, posesBatiments, TEINTE_DESAFFECTE,
   type OptionsPosesBatiments,
 } from '../../src/render2d/batiments';
-import { niveauxBrouillard } from '../../src/render2d/contrat';
-import { FORMES, HAUTEUR_MAT } from '../../src/render2d/replis';
+import { COS_TANGAGE, niveauxBrouillard, PIXELS_PAR_CASE } from '../../src/render2d/contrat';
+import { FORMES, HAUTEUR_MAT, TAILLE_DRAPEAU } from '../../src/render2d/replis';
 import type { Pose } from '../../src/render2d/lot';
 import { CAT, partiePersonnalisee } from '../engine/aides';
 
@@ -135,7 +135,23 @@ test('un QG demande le double : ses couleurs descendent deux fois moins vite', (
   const drapeau = surColonne(posesBatiments(e, terrainDe(e), options(e)).poses, 4)
     .find((p) => p.instance.entree === FORMES.drapeau)!;
   assert.deepEqual(drapeau.instance.equipe, ROUGE);
-  assert.equal(drapeau.instance.h, hauteurDrapeau(0.5));
+  assert.equal(drapeau.instance.h, hauteurDrapeau(0.5, ECHELLE_MAT_QG, ECHELLE_DRAPEAU_QG));
+});
+
+test('le QG porte le plus grand drapeau du jeu, sur un mât plus haut ; hissé, il reste sous la pomme', () => {
+  const e = etatEssai();
+  const poses = posesBatiments(e, terrainDe(e), options(e)).poses;
+  const [matQg, drapeauQg] = [FORMES.mat, FORMES.drapeau].map((f) => surColonne(poses, 4).find((p) => p.instance.entree === f)!);
+  assert.equal(matQg!.instance.echelle, ECHELLE_MAT_QG);
+  assert.equal(drapeauQg!.instance.echelle, ECHELLE_DRAPEAU_QG);
+  assert.ok(ECHELLE_DRAPEAU_QG > 1 && ECHELLE_MAT_QG > 1);
+  // Hissé au plus haut, le haut du drapeau agrandi s'arrête sous la pomme du mât agrandi.
+  const hauteur = (TAILLE_DRAPEAU.h * ECHELLE_DRAPEAU_QG) / (PIXELS_PAR_CASE * COS_TANGAGE);
+  assert.ok(hauteurDrapeau(1, ECHELLE_MAT_QG, ECHELLE_DRAPEAU_QG) + hauteur < HAUTEUR_MAT * ECHELLE_MAT_QG);
+  // La ville bleue garde les formes à leur taille.
+  const [matVille, drapeauVille] = [FORMES.mat, FORMES.drapeau].map((f) => surColonne(poses, 0).find((p) => p.instance.entree === f)!);
+  assert.equal(matVille!.instance.echelle, undefined);
+  assert.equal(drapeauVille!.instance.echelle, undefined);
 });
 
 test('un désaffecté n’a jamais de mât, même pendant sa remise en service : terni sans image à lui', () => {

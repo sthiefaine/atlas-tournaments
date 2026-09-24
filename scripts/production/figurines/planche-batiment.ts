@@ -21,7 +21,7 @@ import sharp from 'sharp';
 
 import { ambiance } from '../../../src/render/ambiance';
 import { COULEUR_NEUTRE } from '../../../src/render/couleur-equipe';
-import { hauteurDrapeau, PIED_MAT } from '../../../src/render2d/batiments';
+import { ECHELLE_DRAPEAU_QG, ECHELLE_MAT_QG, hauteurDrapeau, PIED_MAT } from '../../../src/render2d/batiments';
 import { COS_TANGAGE, EMISSION_NUIT, OMBRE_UNITE, PIXELS_PAR_CASE, SIN_TANGAGE, type VueSprite } from '../../../src/render2d/contrat';
 import { voileDuLot } from '../../../src/render2d/meteo';
 import { HAUTEUR_MAT, TAILLE_DRAPEAU } from '../../../src/render2d/replis';
@@ -98,39 +98,45 @@ function remplir(fond: Fond, x0: number, y0: number, x1: number, y1: number, ded
  * coin arrière droit de la case (`PIED_MAT`), la hampe de `HAUTEUR_MAT`, et
  * s'il y a un camp le drapeau hissé en haut (`hauteurDrapeau(1)`). Sans camp,
  * un mât nu (un bâtiment neutre, plan §4). `x, y` : le pivot du bâtiment dans
- * le fond ; `k` l'échelle (1 : 128 pixels par case).
+ * le fond ; `k` l'échelle (1 : 128 pixels par case) ; `echelleMat` et
+ * `echelleDrapeau`, l'agrandissement que le rendu donne au QG
+ * (`ECHELLE_MAT_QG`, `ECHELLE_DRAPEAU_QG`).
  */
-export function dessinerMat(fond: Fond, x: number, y: number, k: number, camp: Rvb01 | null, voile: Ambiance2d['voile'] | null = null): void {
+export function dessinerMat(fond: Fond, x: number, y: number, k: number, camp: Rvb01 | null, voile: Ambiance2d['voile'] | null = null,
+  echelleMat = 1, echelleDrapeau = 1): void {
   const px = x + (PIED_MAT.x - 0.5) * PIXELS_PAR_CASE * k;
   const py = y + (PIED_MAT.y - 0.5) * PIXELS_PAR_CASE * SIN_TANGAGE * k;
   const H = PIXELS_PAR_CASE * COS_TANGAGE * k;
-  const haut = HAUTEUR_MAT * H;
+  // Le rendu agrandit la forme entière autour de son pivot : la hampe s'épaissit avec elle.
+  const km = k * echelleMat;
+  const haut = HAUTEUR_MAT * H * echelleMat;
   // La hampe : sombre, un filet clair, une boule dorée au sommet (`replis.ts`, `dessinForme`).
-  remplir(fond, px - 2 * k, py - haut, px + 2 * k, py, (u, v) => u >= px - 2 * k && u <= px + 2 * k && v >= py - haut && v <= py, rvb01('#3a3f47'), voile);
-  remplir(fond, px - 1 * k, py - haut, px + 0.5 * k, py, (u, v) => u >= px - 1 * k && u <= px + 0.5 * k && v >= py - haut && v <= py, rvb01('#c9ced6'), voile);
-  const r = 3 * k;
+  remplir(fond, px - 2 * km, py - haut, px + 2 * km, py, (u, v) => u >= px - 2 * km && u <= px + 2 * km && v >= py - haut && v <= py, rvb01('#3a3f47'), voile);
+  remplir(fond, px - 1 * km, py - haut, px + 0.5 * km, py, (u, v) => u >= px - 1 * km && u <= px + 0.5 * km && v >= py - haut && v <= py, rvb01('#c9ced6'), voile);
+  const r = 3 * km;
   remplir(fond, px - r, py - haut - r, px + r, py - haut + r, (u, v) => (u - px) ** 2 + (v - py + haut) ** 2 <= r * r, rvb01('#d8c27a'), voile);
   if (!camp) return;
   // Le drapeau : le pivot au pied de sa hampe, à gauche ; il flotte vers la droite. Ses bords sont les deux courbes du rendu.
-  const l = TAILLE_DRAPEAU.l * k;
-  const h = TAILLE_DRAPEAU.h * k;
+  const kd = k * echelleDrapeau;
+  const l = TAILLE_DRAPEAU.l * kd;
+  const h = TAILLE_DRAPEAU.h * kd;
   const bx = px;
-  const by = py - hauteurDrapeau(1) * H;
+  const by = py - hauteurDrapeau(1, echelleMat, echelleDrapeau) * H;
   const haut_ = (u: number): number => {
     const t = u / l;
-    return (1 - t) ** 2 * -h + 2 * t * (1 - t) * (-h - 3 * k) + t * t * (-h + 2 * k);
+    return (1 - t) ** 2 * -h + 2 * t * (1 - t) * (-h - 3 * kd) + t * t * (-h + 2 * kd);
   };
   const bas = (u: number): number => {
     const t = 1 - u / l;
-    return (1 - t) ** 2 * (2 * k) + 2 * t * (1 - t) * (-3 * k);
+    return (1 - t) ** 2 * (2 * kd) + 2 * t * (1 - t) * (-3 * kd);
   };
-  remplir(fond, bx, by - h - 3 * k, bx + l, by + 2 * k, (u, v) => {
+  remplir(fond, bx, by - h - 3 * kd, bx + l, by + 2 * kd, (u, v) => {
     const du = u - bx;
     return du >= 0 && du <= l && v - by >= haut_(du) && v - by <= bas(du);
   }, camp, voile);
   const clair = nuance(camp, 1, 0.45);
-  remplir(fond, bx + 2 * k, by - h + 2 * k, bx + 2 * k + l * 0.45, by - h + 5 * k,
-    (u, v) => u >= bx + 2 * k && u <= bx + 2 * k + l * 0.45 && v >= by - h + 2 * k && v <= by - h + 5 * k, clair, voile);
+  remplir(fond, bx + 2 * kd, by - h + 2 * kd, bx + 2 * kd + l * 0.45, by - h + 5 * kd,
+    (u, v) => u >= bx + 2 * kd && u <= bx + 2 * kd + l * 0.45 && v >= by - h + 2 * kd && v <= by - h + 5 * kd, clair, voile);
 }
 
 /** Peint la case d'un bâtiment (le pavé que le rendu pose sous lui) autour d'un pivot, à l'échelle `k`, et son liseré. */
@@ -155,6 +161,8 @@ interface Montre {
   /** Le mât dessiné : avec drapeau (camp), nu, ou aucun (le désaffecté a le sien, couché). */
   mat: 'drapeau' | 'nu' | 'aucun';
   nuit: boolean;
+  /** Le QG : son mât et son drapeau agrandis, comme le rendu les pose. */
+  qg?: boolean;
 }
 
 /** Pose un bâtiment dans une cellule : le pavé, l'image, puis le mât et le drapeau ; la nuit, tout sous le voile et les fenêtres par-dessus. */
@@ -163,7 +171,10 @@ function poserBatiment(fond: Fond, cadre: Cadre, x: number, y: number, k: number
   poserCase(fond, x, y, k, sol, grille);
   if (m.nuit) voilerFond(fond, nuit.voile, cellule.x0, cellule.y0, cellule.x1, cellule.y1);
   composer(fond, k === 1 ? cadre : reduireCadre(cadre, k), x, y, m.camp ?? rvb01(COULEUR_NEUTRE), false, 1, m.nuit ? nuit : null);
-  if (m.mat !== 'aucun') dessinerMat(fond, x, y, k, m.mat === 'drapeau' ? m.camp : null, m.nuit ? nuit.voile : null);
+  if (m.mat !== 'aucun') {
+    dessinerMat(fond, x, y, k, m.mat === 'drapeau' ? m.camp : null, m.nuit ? nuit.voile : null,
+      m.qg ? ECHELLE_MAT_QG : 1, m.qg ? ECHELLE_DRAPEAU_QG : 1);
+  }
 }
 
 interface Etiquette { x: number; y: number; texte: string; taille: number; gras?: boolean; ancre?: 'start' | 'middle'; couleur?: string }
@@ -219,11 +230,12 @@ function colonnesDe(e: EtatPlanche, camps: readonly { nom: string; hex: string }
       { titre: 'désaffecté, nuit', montre: { camp: null, mat: 'aucun', nuit: true }, vue: 'fixe' },
     ];
   }
+  const qg = e.id.startsWith('batiment_qg_') ? { qg: true } : {};
   return [
-    ...camps.map((c) => ({ titre: c.nom.replace('_', ' '), montre: { camp: rvb01(c.hex), mat: 'drapeau' as const, nuit: false }, vue: 'fixe' as const })),
-    { titre: 'neutre (mât nu)', montre: { camp: null, mat: 'nu', nuit: false }, vue: 'fixe' },
-    { titre: `${camps[0]!.nom}, nuit`, montre: { camp: rvb01(camps[0]!.hex), mat: 'drapeau', nuit: true }, vue: 'fixe' },
-    { titre: 'neutre, nuit', montre: { camp: null, mat: 'nu', nuit: true }, vue: 'fixe' },
+    ...camps.map((c) => ({ titre: c.nom.replace('_', ' '), montre: { camp: rvb01(c.hex), mat: 'drapeau' as const, nuit: false, ...qg }, vue: 'fixe' as const })),
+    { titre: 'neutre (mât nu)', montre: { camp: null, mat: 'nu', nuit: false, ...qg }, vue: 'fixe' },
+    { titre: `${camps[0]!.nom}, nuit`, montre: { camp: rvb01(camps[0]!.hex), mat: 'drapeau', nuit: true, ...qg }, vue: 'fixe' },
+    { titre: 'neutre, nuit', montre: { camp: null, mat: 'nu', nuit: true, ...qg }, vue: 'fixe' },
   ];
 }
 
