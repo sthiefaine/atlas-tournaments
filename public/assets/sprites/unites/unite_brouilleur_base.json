@@ -973,14 +973,14 @@
   ]
  },
  "cuisson": {
-  "version": 2,
-  "empreinte": "57e1257c9f29524ab4dd1731134834c83c5aaf7fa16b1603aa56a8d512885e64",
-  "date": "2026-09-23T22:49:46.941Z",
-  "secondes": 109.7,
-  "secondesRendu": 83.8,
+  "version": 4,
+  "empreinte": "044ed2366a0de5eb0400a2ff98b3252c8b4ef2ea2b119aca9eeaeea02f42857a",
+  "date": "2026-09-24T02:10:30.011Z",
+  "secondes": 230.3,
+  "secondesRendu": 181.7,
   "images": 98,
   "imagesUniques": 98,
-  "octets": 413646,
+  "octets": 413630,
   "canevas": {
    "droite": {
     "x0": -65,

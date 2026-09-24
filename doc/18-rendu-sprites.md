@@ -17,7 +17,10 @@ Une case fait donc 128 × 98 pixels de plan : plus large que haute, et le visage
 - Blender 5.1 en ligne de commande importe chaque GLB avec ses PNG, le met à l'échelle du jeu, et le rend au **suréchantillonnage 4** puis réduit.
 - **Vues** (`VUES`, `LACET_VUE`) : une unité en `droite`, `bas`, `haut` (la gauche est `droite` retournée) et `profil` pour l'écran de combat ; un bâtiment ou un décor en `fixe`, un pont aussi en `travers`.
 - **Clips** : ceux du GLB, échantillonnés à 12 images par seconde. Aucun clip n'est inventé.
-- **Éclairage** (`ECLAIRAGE_CUISSON`) : principale depuis l'avant-gauche, contour depuis l'arrière, ciel. L'ombre d'un bâtiment ou d'un décor est dans son image ; celle d'une unité **ne l'est pas** (`OMBRE_UNITE`, posée par le rendu).
+- **Éclairage** (`ECLAIRAGE_CUISSON`) : principale **de face** (azimut 0, élévation 60°), contour depuis l'arrière, ciel — symétrique depuis la charte des figurines (23 septembre au soir, `doc/refonte/charte-figurines.md` §3.10) : la vue `gauche` est la `droite` retournée, et une lumière venue d'un côté y serait passée de l'autre. L'ombre d'un bâtiment ou d'un décor est dans son image ; celle d'une unité **ne l'est pas** (`OMBRE_UNITE`, posée par le rendu).
+- **Contour** : un trait `#15181d` cuit autour de la couverture du modèle (12 px à l'échelle 4), par famille (`CONTOUR_PAR_FAMILLE`, lu dans `scripts/production/figurines/charte.json`).
+- **Chaque image dans une scène neuve** (`VERSION_CUISSON` 4, 24 septembre 2026) : avec les données persistantes de Cycles, la première image immobile après un mouvement sortait parfois 6 à 12 % plus sombre selon l'historique des rendus ; la règle « image isolée plus sombre » de `scripts/sprites/anomalies.ts` la guette depuis.
+- **Les modèles des unités** sortent de la chaîne des figurines (`scripts/production/figurines/`, un module Blender par unité, mesuré contre la charte) ; ceux des bâtiments suivent (`doc/refonte/plan-batiments.md`).
 - **Masque d'équipe** : zones d'équipe cuites en blanc, masque dans une page à part ; à l'écran, `couleur × mix(1, équipe, masque)`.
 - Sortie : des pages d'atlas sous `public/assets/sprites/`, et `manifeste.json` (`ManifesteSprites`) qui porte, pour chaque entrée, l'empreinte de sa source. Une source qui change se recuit.
 

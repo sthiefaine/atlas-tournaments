@@ -9,7 +9,8 @@ import { existsSync, readFileSync } from 'node:fs';
 
 import type { ManifesteSprites } from '../../src/render2d/contrat';
 import {
-  SEUILS_ANOMALIE, anomaliesAnimation, anomaliesAnimations, anomaliesEntree, decrireAnomalie, mediane, mesurerImage, type MesureImage,
+  SEUILS_ANOMALIE, anomaliesAnimation, anomaliesAnimations, anomaliesEntree, decrireAnomalie, iouSilhouettes, mediane, mesurerImage,
+  type MesureImage, type Silhouette,
 } from '../../scripts/sprites/anomalies';
 
 const image = (opaques: number, partMasque: number, clarte = 150): MesureImage => ({ opaques, partMasque, clarte });
@@ -39,6 +40,31 @@ test('dans une animation, une image qui perd un cinquième de sa silhouette ou l
   assert.deepEqual(anomaliesAnimation('droite', 'tir', deteinte).map((a) => [a.image, a.motif]), [[4, 'masque']]);
   // Sous 0,2 de masque médian, la part de masque ne dit rien : une unité presque sans équipe varie beaucoup.
   assert.deepEqual(anomaliesAnimation('droite', 'tir', [image(1000, 0.15), image(1000, 0.05), image(1000, 0.14)]), []);
+});
+
+test('une image isolée plus sombre, à la silhouette de sa voisine, est l’état périmé de Cycles ; un roulis ne l’est pas', () => {
+  // Un carré plein de `cote` pixels, posé sur le pivot, décalé de `dx`.
+  const carre = (cote: number, dx = 0): Silhouette => ({ x0: dx - cote / 2, y0: -cote, l: cote, h: cote, bits: new Uint8Array(cote * cote).fill(1) });
+  assert.equal(iouSilhouettes(carre(20), carre(20)), 1);
+  assert.equal(iouSilhouettes(carre(20), carre(20, 4)), (16 * 20) / (24 * 20));
+  const tir = (clartes: readonly number[], formes: readonly Silhouette[] = clartes.map(() => carre(20))): MesureImage[] =>
+    clartes.map((c, i) => ({ ...image(400, 0.45, c), silhouette: formes[i]! }));
+  // L'image 8 du tir du char moyen, cuite avec les données persistantes : 10 % plus sombre, même silhouette que la 9.
+  const perimee = tir([150, 151, 150, 152, 150, 151, 150, 150, 135, 150]);
+  const a = anomaliesAnimation('profil', 'tir', perimee);
+  assert.deepEqual(a.map((x) => [x.image, x.motif]), [[8, 'sombre']]);
+  assert.match(decrireAnomalie(a[0]!), /image 8 : clarté 135 pour 150 au moins chez ses deux voisines, la silhouette de l'une d'elles/);
+  // La dernière image se juge sur les deux qui la précèdent, la première sur les deux qui la suivent.
+  assert.deepEqual(anomaliesAnimation('droite', 'tir', tir([150, 150, 150, 150, 138])).map((x) => x.image), [4]);
+  assert.deepEqual(anomaliesAnimation('droite', 'tir', tir([138, 150, 150, 150, 150])).map((x) => x.image), [0]);
+  // Le drone ravitailleur touché : 4 % sous ses voisines, mais il a roulé — sa silhouette n'est celle d'aucune des deux.
+  const roulis = tir([117.5, 112.6, 119.4], [carre(20, -3), carre(20), carre(20, 3)]);
+  assert.deepEqual(anomaliesAnimation('profil', 'touche', roulis), []);
+  // 3 % de moins, c'est une ombre qui passe ; sans silhouette, la règle ne juge pas ; sous trois images, rien ne se juge.
+  assert.deepEqual(anomaliesAnimation('droite', 'tir', tir([150, 150, 146, 150, 150])), []);
+  assert.deepEqual(anomaliesAnimation('droite', 'tir', [150, 150, 130, 150].map((c) => image(400, 0.45, c))), []);
+  assert.deepEqual(anomaliesAnimation('droite', 'tir', tir([150, 120])), []);
+  assert.equal(SEUILS_ANOMALIE.sombre, 0.04);
 });
 
 test('une animation entière qui perd son équipe, ou sa lumière, se voit contre les autres animations de l’entrée', () => {

@@ -10,8 +10,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/terrains/terrain_pont_0.webp",
-    "largeur": 440,
-    "hauteur": 168
+    "largeur": 228,
+    "hauteur": 356
    }
   ],
   "animations": [
@@ -23,12 +23,12 @@
     "cadres": [
      {
       "page": 0,
-      "x": 220,
-      "y": 0,
-      "l": 217,
-      "h": 166,
-      "px": 108,
-      "py": 83
+      "x": 0,
+      "y": 181,
+      "l": 228,
+      "h": 174,
+      "px": 114,
+      "py": 87
      }
     ]
    },
@@ -42,36 +42,36 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 216,
-      "h": 168,
-      "px": 108,
-      "py": 84
+      "l": 226,
+      "h": 177,
+      "px": 113,
+      "py": 88
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "9d0268288b315cbd5a9f93941558dc0dff41564c6bdd00b27014bb249289cd9d",
-  "date": "2026-09-23T00:08:17.851Z",
-  "secondes": 49.1,
-  "secondesRendu": 13.6,
+  "version": 4,
+  "empreinte": "5e6336cd65bea535d2b22a6c5a8af074023315e1fe653d7be6ab4643cdb331c8",
+  "date": "2026-09-24T02:03:12.580Z",
+  "secondes": 24.5,
+  "secondesRendu": 13.3,
   "images": 2,
   "imagesUniques": 2,
-  "octets": 11068,
+  "octets": 11936,
   "canevas": {
    "fixe": {
-    "x0": -112,
-    "y0": -87,
-    "largeur": 224,
-    "hauteur": 174
+    "x0": -116,
+    "y0": -91,
+    "largeur": 232,
+    "hauteur": 182
    },
    "travers": {
-    "x0": -112,
-    "y0": -87,
-    "largeur": 224,
-    "hauteur": 174
+    "x0": -116,
+    "y0": -91,
+    "largeur": 232,
+    "hauteur": 182
    }
   },
   "materiauxTeints": [],

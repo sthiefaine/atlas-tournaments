@@ -11,8 +11,8 @@
   "pages": [
    {
     "couleur": "assets/sprites/decors/decor_rocher_cotier_0.webp",
-    "largeur": 116,
-    "hauteur": 88
+    "largeur": 148,
+    "hauteur": 112
    }
   ],
   "animations": [
@@ -26,30 +26,30 @@
       "page": 0,
       "x": 0,
       "y": 0,
-      "l": 115,
-      "h": 88,
-      "px": 52,
-      "py": 47
+      "l": 147,
+      "h": 109,
+      "px": 74,
+      "py": 56
      }
     ]
    }
   ]
  },
  "cuisson": {
-  "version": 1,
-  "empreinte": "4859b11c1f59ee28bacd874e20a9dee388e3a991465af8555af993ad6a763cd3",
-  "date": "2026-09-23T00:06:19.694Z",
-  "secondes": 14.9,
-  "secondesRendu": 4.9,
+  "version": 4,
+  "empreinte": "50b0c8cecd10d8457ba0b55d7712fee9fbfdeae398932b4bb83c4ce7e1058314",
+  "date": "2026-09-24T02:02:48.115Z",
+  "secondes": 10,
+  "secondesRendu": 4.1,
   "images": 1,
   "imagesUniques": 1,
-  "octets": 3154,
+  "octets": 4028,
   "canevas": {
    "fixe": {
-    "x0": -78,
-    "y0": -60,
-    "largeur": 156,
-    "hauteur": 120
+    "x0": -82,
+    "y0": -64,
+    "largeur": 164,
+    "hauteur": 128
    }
   },
   "materiauxTeints": [],

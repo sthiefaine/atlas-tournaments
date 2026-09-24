@@ -23,6 +23,21 @@
  * ne tombe pas sous 60 % de la médiane des animations de l'entrée : une
  * échelle quasi nulle, dans un seul clip, a rendu noire toute une vue de
  * profil, silhouette intacte (l'agent du chasseur, 24 septembre).
+ *
+ * Et une image **isolée plus sombre** : plus de 4 % sous chacune de ses deux
+ * voisines, avec **la silhouette de l'une d'elles** (intersection sur l'union
+ * d'au moins 0,95, alignées sur le pivot). C'est la signature de l'état
+ * périmé de Cycles (`VERSION_CUISSON` 4) : la première image immobile après
+ * un mouvement sortait 6 à 12 % plus sombre, au pixel près de la même
+ * silhouette que l'image suivante — l'image 8 du tir de profil de huit
+ * unités, que les trois règles précédentes ne voyaient pas ; l'image 8 du
+ * hors-jeu du méca, pose presque posée, recouvrait sa voisine à 0,97. Un geste
+ * légitime peut assombrir une image autant (le roulis du drone ravitailleur
+ * touché, 4 % sous ses voisines), mais il change de pose : ses silhouettes ne
+ * se recouvrent qu'à 0,82 et 0,89. Compter les pixels ne suffisait pas à les
+ * séparer ; la forme, si. Une unité à rotors échappe à la règle (ses pales
+ * changent la silhouette d'une image à l'autre) : c'est la cuisson sans
+ * persistance qui la protège.
  */
 
 import { readFileSync } from 'node:fs';
@@ -40,7 +55,47 @@ import { cheminEntree, cheminPage, type FichierEntree } from './manifeste';
  * haute de l'entrée, quand celle-ci dépasse 0,2 ; une animation dont la
  * clarté médiane tombe sous 60 % de la médiane des animations de l'entrée.
  */
-export const SEUILS_ANOMALIE = { silhouette: 0.8, masque: 0.6, masqueMin: 0.2, animation: 0.25, clarte: 0.6 } as const;
+export const SEUILS_ANOMALIE = {
+  silhouette: 0.8, masque: 0.6, masqueMin: 0.2, animation: 0.25, clarte: 0.6,
+  /** Une image isolée : plus sombre que ses deux voisines de plus de cette part… */
+  sombre: 0.04,
+  /** … avec la silhouette de l'une d'elles, à cette intersection sur l'union près. */
+  silhouetteVoisine: 0.95,
+} as const;
+
+/** La silhouette d'une image : ses pixels opaques dans son cadre, placé par rapport au pivot. */
+export interface Silhouette {
+  x0: number;
+  y0: number;
+  l: number;
+  h: number;
+  /** 1 par pixel dont l'alpha dépasse 128, ligne par ligne. */
+  bits: Uint8Array;
+}
+
+/** L'intersection sur l'union de deux silhouettes, alignées sur leur pivot ; 1 pour deux vides. */
+export function iouSilhouettes(a: Silhouette, b: Silhouette): number {
+  const x0 = Math.min(a.x0, b.x0);
+  const y0 = Math.min(a.y0, b.y0);
+  const x1 = Math.max(a.x0 + a.l, b.x0 + b.l);
+  const y1 = Math.max(a.y0 + a.h, b.y0 + b.h);
+  const allume = (s: Silhouette, x: number, y: number): boolean => {
+    const u = x - s.x0;
+    const v = y - s.y0;
+    return u >= 0 && v >= 0 && u < s.l && v < s.h && s.bits[v * s.l + u] === 1;
+  };
+  let inter = 0;
+  let union = 0;
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const p = allume(a, x, y);
+      const q = allume(b, x, y);
+      if (p && q) inter++;
+      if (p || q) union++;
+    }
+  }
+  return union ? inter / union : 1;
+}
 
 /** Ce qu'une image d'une animation dit d'elle-même. */
 export interface MesureImage {
@@ -50,6 +105,8 @@ export interface MesureImage {
   partMasque: number;
   /** La luminance moyenne des pixels opaques, 0 à 255 (celle de PIL : 0,299 R + 0,587 G + 0,114 B). */
   clarte: number;
+  /** La silhouette, pour comparer une image à ses voisines ; absente, la règle de l'image sombre ne juge pas. */
+  silhouette?: Silhouette;
 }
 
 export interface Anomalie {
@@ -57,7 +114,7 @@ export interface Anomalie {
   clip: string;
   /** L'image, ou null quand c'est l'animation entière qui tombe. */
   image: number | null;
-  motif: 'silhouette' | 'masque' | 'animation' | 'clarte';
+  motif: 'silhouette' | 'masque' | 'animation' | 'clarte' | 'sombre';
   opaques: number;
   medianeOpaques: number;
   partMasque: number;
@@ -65,6 +122,8 @@ export interface Anomalie {
   /** Pour une anomalie de clarté : la clarté médiane de l'animation, et celle de l'entrée. */
   clarte?: number;
   medianeClarte?: number;
+  /** Pour une image isolée plus sombre : la clarté de la plus sombre de ses deux voisines. */
+  clarteVoisine?: number;
 }
 
 /** La médiane, comme `statistics.median` : la moyenne des deux du milieu pour un compte pair. */
@@ -94,6 +153,34 @@ export function mesurerImage(pixels: number, page: Uint8Array, rvba: (i: number)
   return { opaques, partMasque: equipe / Math.max(1, opaques), clarte: opaques ? clarte / opaques : 0 };
 }
 
+/**
+ * Les deux voisines qui jugent l'image `i` d'une animation de `n` images : la
+ * précédente et la suivante, ou les deux qui suivent la première, ou les deux
+ * qui précèdent la dernière.
+ */
+export function voisines(i: number, n: number): readonly [number, number] {
+  return i === 0 ? [1, 2] : i === n - 1 ? [n - 2, n - 3] : [i - 1, i + 1];
+}
+
+/**
+ * L'image `i` est-elle isolée plus sombre (voir `SEUILS_ANOMALIE`) : plus
+ * sombre que chacune de ses deux voisines de plus de 4 %, avec la silhouette
+ * de l'une d'elles ? Rend la clarté de la plus sombre des deux et le meilleur
+ * recouvrement, null sinon.
+ */
+export function imageSombre(mesures: readonly MesureImage[], i: number): { voisine: number; iou: number } | null {
+  if (mesures.length < 3) return null;
+  const [j, k] = voisines(i, mesures.length);
+  const a = mesures[j]!;
+  const b = mesures[k]!;
+  const m = mesures[i]!;
+  const voisine = Math.min(a.clarte, b.clarte);
+  if (!(m.clarte < (1 - SEUILS_ANOMALIE.sombre) * voisine)) return null;
+  if (!m.silhouette || !a.silhouette || !b.silhouette) return null;
+  const iou = Math.max(iouSilhouettes(m.silhouette, a.silhouette), iouSilhouettes(m.silhouette, b.silhouette));
+  return iou >= SEUILS_ANOMALIE.silhouetteVoisine ? { voisine, iou } : null;
+}
+
 /** Les images d'une animation qui s'écartent de sa médiane (voir `SEUILS_ANOMALIE`). */
 export function anomaliesAnimation(vue: string, clip: string, mesures: readonly MesureImage[]): Anomalie[] {
   const medO = mediane(mesures.map((m) => m.opaques));
@@ -103,6 +190,10 @@ export function anomaliesAnimation(vue: string, clip: string, mesures: readonly 
     const base = { vue, clip, image, opaques: m.opaques, medianeOpaques: medO, partMasque: m.partMasque, medianeMasque: medM };
     if (m.opaques < SEUILS_ANOMALIE.silhouette * medO) sortie.push({ ...base, motif: 'silhouette' });
     else if (medM > SEUILS_ANOMALIE.masqueMin && m.partMasque < SEUILS_ANOMALIE.masque * medM) sortie.push({ ...base, motif: 'masque' });
+    else {
+      const sombre = imageSombre(mesures, image);
+      if (sombre) sortie.push({ ...base, motif: 'sombre', clarte: m.clarte, clarteVoisine: sombre.voisine });
+    }
   });
   return sortie;
 }
@@ -146,6 +237,9 @@ export function decrireAnomalie(a: Anomalie): string {
   if (a.motif === 'clarte') {
     return `${a.vue}/${a.clip}, toute l'animation : clarté médiane ${Math.round(a.clarte!)} pour une médiane de ${Math.round(a.medianeClarte!)} dans l'entrée`;
   }
+  if (a.motif === 'sombre') {
+    return `${a.vue}/${a.clip} image ${a.image} : clarté ${Math.round(a.clarte!)} pour ${Math.round(a.clarteVoisine!)} au moins chez ses deux voisines, la silhouette de l'une d'elles`;
+  }
   return `${a.vue}/${a.clip} image ${a.image} : ${a.motif === 'silhouette'
     ? `${a.opaques} pixels opaques pour une médiane de ${Math.round(a.medianeOpaques)}`
     : `masque ${a.partMasque.toFixed(2)} pour une médiane de ${a.medianeMasque.toFixed(2)}`}`;
@@ -165,7 +259,12 @@ export async function mesuresEntree(racine: string, famille: EntreeSprite['famil
     mesures: a.cadres.map((c) => {
       const page = pages[c.page]!;
       const indice = (i: number): number => (c.y + Math.floor(i / c.l)) * page.largeur + c.x + (i % c.l);
-      return mesurerImage(c.l * c.h, page.rgba, (i) => indice(i) * 4, page.masque ? (i) => page.masque![indice(i)]! : null);
+      const bits = new Uint8Array(c.l * c.h);
+      for (let i = 0; i < bits.length; i++) bits[i] = page.rgba[indice(i) * 4 + 3]! > 128 ? 1 : 0;
+      return {
+        ...mesurerImage(c.l * c.h, page.rgba, (i) => indice(i) * 4, page.masque ? (i) => page.masque![indice(i)]! : null),
+        silhouette: { x0: -c.px, y0: -c.py, l: c.l, h: c.h, bits },
+      };
     }),
   }));
 }
