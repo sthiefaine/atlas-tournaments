@@ -25,6 +25,11 @@ export interface Cadre {
   rgba: Uint8Array;
   masque: Uint8Array | null;
   couverture: Uint8Array | null;
+  /**
+   * La lumière propre (page d'émission : les fenêtres d'un bâtiment), RVB
+   * encodé sRGB, déjà prémultipliée par la couverture ; absente sans page.
+   */
+  emission?: Uint8Array | null;
 }
 
 /** Une image de fond, RVB en valeurs sRGB de 0 à 1. */
@@ -65,13 +70,28 @@ export function clarte(r: number, g: number, b: number): number {
 // ---------------------------------------------------------------------------
 
 /**
+ * L'ambiance qu'un rendu pose sur une image du monde (`src/render2d/lot.ts`) :
+ * le **voile** `[r, g, b, part]` en sRGB de 0 à 1 (celui de la nuit,
+ * `voileDuLot`), et le **poids** de la page d'émission (`EMISSION_JOUR`,
+ * `EMISSION_NUIT`), ajoutée après le voile — une fenêtre ressort sur un mur
+ * assombri.
+ */
+export interface Ambiance2d {
+  voile: readonly [number, number, number, number];
+  emission: number;
+}
+
+/**
  * Pose un cadre sur un fond, son pivot au pixel entier (`x`, `y`) du fond,
  * teint par `equipe` (null : blanc, aucune teinte), retourné si `miroir` — la
  * gauche est la droite retournée autour du pivot (`empaqueter`, `lot.ts`).
+ * Avec `ambiance`, l'ordre du nuanceur : l'équipe, le voile, puis l'émission.
  */
-export function composer(fond: Fond, c: Cadre, x: number, y: number, equipe: Rvb01 | null, miroir = false, opacite = 1): void {
+export function composer(fond: Fond, c: Cadre, x: number, y: number, equipe: Rvb01 | null, miroir = false, opacite = 1,
+  ambiance: Ambiance2d | null = null): void {
   const gauche = miroir ? x - (c.l - c.px) : x - c.px;
   const haut = y - c.py;
+  const part = ambiance ? ambiance.voile[3] : 0;
   for (let j = 0; j < c.h; j++) {
     const fy = Math.round(haut + j);
     if (fy < 0 || fy >= fond.h) continue;
@@ -86,8 +106,24 @@ export function composer(fond: Fond, c: Cadre, x: number, y: number, equipe: Rvb
       const o = (fy * fond.l + fx) * 3;
       for (let k = 0; k < 3; k++) {
         const teinte = equipe ? 1 - m + m * equipe[k]! : 1;
-        fond.rvb[o + k] = (c.rgba[s * 4 + k]! / 255) * a * teinte + fond.rvb[o + k]! * (1 - a);
+        let v = (c.rgba[s * 4 + k]! / 255) * a * teinte;
+        if (ambiance) {
+          v = v * (1 - part) + ambiance.voile[k]! * a * part;
+          if (c.emission) v += (c.emission[s * 3 + k]! / 255) * ambiance.emission * opacite;
+        }
+        fond.rvb[o + k] = v + fond.rvb[o + k]! * (1 - a);
       }
+    }
+  }
+}
+
+/** Le voile d'une ambiance sur un rectangle de fond opaque : `c·(1 − part) + V·part`, la formule du sol. */
+export function voilerFond(fond: Fond, voile: readonly [number, number, number, number], x0 = 0, y0 = 0, x1 = fond.l, y1 = fond.h): void {
+  const part = voile[3];
+  for (let y = Math.max(0, y0); y < Math.min(fond.h, y1); y++) {
+    for (let x = Math.max(0, x0); x < Math.min(fond.l, x1); x++) {
+      const o = (y * fond.l + x) * 3;
+      for (let k = 0; k < 3; k++) fond.rvb[o + k] = fond.rvb[o + k]! * (1 - part) + voile[k]! * part;
     }
   }
 }
@@ -125,6 +161,9 @@ export function reduireCadre(c: Cadre, f: number): Cadre {
   const rgba = new Uint8Array(l * h * 4);
   const masque = c.masque ? new Uint8Array(l * h) : null;
   const couverture = c.couverture ? new Uint8Array(l * h) : null;
+  // L'émission est une lumière qu'on ajoute, déjà prémultipliée : elle se moyenne telle quelle, comme le masque.
+  const emission = c.emission ? new Uint8Array(l * h * 3) : null;
+  const se = [0, 0, 0];
   for (let j = 0; j < h; j++) {
     const sy0 = c.py + (j - Q) / f;
     const sy1 = c.py + (j + 1 - Q) / f;
@@ -138,6 +177,7 @@ export function reduireCadre(c: Cadre, f: number): Cadre {
       let sm = 0;
       let sc = 0;
       let aire = 0;
+      se[0] = se[1] = se[2] = 0;
       for (let y = Math.max(0, Math.floor(sy0)); y < Math.min(c.h, Math.ceil(sy1)); y++) {
         const wy = Math.min(sy1, y + 1) - Math.max(sy0, y);
         if (wy <= 0) continue;
@@ -153,6 +193,7 @@ export function reduireCadre(c: Cadre, f: number): Cadre {
           sa += w * a;
           if (c.masque) sm += w * c.masque[s]!;
           if (c.couverture) sc += w * c.couverture[s]!;
+          if (c.emission) for (let k = 0; k < 3; k++) se[k]! += w * c.emission[s * 3 + k]!;
           aire += w;
         }
       }
@@ -168,9 +209,10 @@ export function reduireCadre(c: Cadre, f: number): Cadre {
       }
       if (masque) masque[o] = Math.round(sm / norme);
       if (couverture) couverture[o] = Math.round(sc / norme);
+      if (emission) for (let k = 0; k < 3; k++) emission[o * 3 + k] = Math.round(se[k]! / norme);
     }
   }
-  return { l, h, px: P, py: Q, rgba, masque, couverture };
+  return { l, h, px: P, py: Q, rgba, masque, couverture, ...(emission ? { emission } : {}) };
 }
 
 // ---------------------------------------------------------------------------
@@ -239,13 +281,15 @@ export function partEquipeEclairee(c: Cadre, seuil: number): number {
  * la cuisson) par `reduireCadre` — la grille calée sur le pivot, comme les
  * mipmaps du jeu —, un pixel plein si l'alpha, contour compris, le couvre à
  * moitié. Rend les pixels pleins, « x,y » depuis le pivot : deux silhouettes
- * se comparent sans se recadrer.
+ * se comparent sans se recadrer. `seuilAlpha` : 128 pour une unité ; plus haut
+ * pour un bâtiment, dont l'ombre cuite au sol reste dessous
+ * (`charte.json`, `batiments.silhouetteAlphaMin`).
  */
-export function silhouette(c: Cadre, pixelsParCase: number, pixelsSource: number): Set<string> {
+export function silhouette(c: Cadre, pixelsParCase: number, pixelsSource: number, seuilAlpha = 128): Set<string> {
   const r = reduireCadre(c, pixelsParCase / pixelsSource);
   const pleins = new Set<string>();
   for (let y = 0; y < r.h; y++) {
-    for (let x = 0; x < r.l; x++) if (r.rgba[(y * r.l + x) * 4 + 3]! >= 128) pleins.add(`${x - r.px},${y - r.py}`);
+    for (let x = 0; x < r.l; x++) if (r.rgba[(y * r.l + x) * 4 + 3]! >= seuilAlpha) pleins.add(`${x - r.px},${y - r.py}`);
   }
   return pleins;
 }

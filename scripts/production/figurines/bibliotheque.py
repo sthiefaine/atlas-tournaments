@@ -458,15 +458,28 @@ class Piece:
         self.epaisseur_jugee = None
 
 
+#: Ce qu'une figurine peut être : une unité, un bâtiment, un terrain (le pont).
+FAMILLES = ('unite', 'batiment', 'terrain')
+
+
 class Figurine:
     """
     Le constructeur d'une figurine. Les primitives prennent un **nœud** (où la
     pièce s'accroche, et donc avec quoi elle bouge), des positions et des
     tailles dans le repère du modèle, et une **teinte** de la charte.
+
+    `famille` : une unité (le défaut), un bâtiment ou un terrain. Un bâtiment et
+    un terrain ont droit aux teintes de bâtiment (enduit, pavé, bois, fenêtre) ;
+    une teinte réservée l'est à un **sujet** — la clé d'une unité, ou
+    `batiment_<cle>` : l'orange et l'apprêt des Gris vont à leur superusine.
     """
 
-    def __init__(self, cle, fiche, charte, unite=None):
+    def __init__(self, cle, fiche, charte, unite=None, famille='unite'):
+        if famille not in FAMILLES:
+            raise ValueError(f'famille inconnue : {famille} ({", ".join(FAMILLES)})')
         self.cle = cle
+        self.famille = famille
+        self.sujet = cle if famille == 'unite' else f'{famille}_{cle}'
         self.id = fiche['id']
         self.fiche = fiche
         self.charte = charte
@@ -539,10 +552,10 @@ class Figurine:
 
     def _verifier_teinte(self, teinte):
         t = self.charte.teinte(teinte)
-        if t.get('batiment'):
+        if t.get('batiment') and self.famille == 'unite':
             raise ValueError(f'la teinte {teinte} est réservée aux bâtiments')
         reservee = t.get('reserveeA')
-        if reservee and self.cle not in reservee:
+        if reservee and self.sujet not in reservee:
             raise ValueError(f'la teinte {teinte} est réservée à {", ".join(reservee)}')
         return t
 
@@ -558,8 +571,16 @@ class Figurine:
         return self._materiaux[nom]
 
     def _indice_materiau(self, teinte):
-        """L'indice, dans les matériaux de la fiche, de celui qui porte cette teinte."""
-        voulu = self.charte.donnees['materiaux'][self.charte.teinte(teinte)['materiau']]
+        """
+        L'indice, dans les matériaux de la fiche, de celui qui porte cette
+        teinte. Le verre et la fenêtre vont au vitrage quand la fiche en a un
+        (`mat_vitrage`, celle d'un bâtiment) ; aucune fiche d'unité n'en a.
+        """
+        t = self.charte.teinte(teinte)
+        vitrage = self.charte.donnees['materiaux'].get('vitrage')
+        if t.get('vitrage') and vitrage in self.materiaux_fiche:
+            return self.materiaux_fiche.index(vitrage)
+        voulu = self.charte.donnees['materiaux'][t['materiau']]
         return self.materiaux_fiche.index(voulu) if voulu in self.materiaux_fiche else 0
 
     # --- la pièce : chanfrein, lissage, placement ------------------------------
@@ -1431,6 +1452,173 @@ class Figurine:
         for p in n.pieces:
             p.objet.matrix_world = t @ p.objet.matrix_world
         n.pivot = (n.pivot[0] + dx, n.pivot[1] + dy, n.pivot[2] + dz)
+
+    # --- les bâtiments --------------------------------------------------------
+    #
+    # Ce que les sept bâtiments ont en commun : des toits (la couleur d'équipe),
+    # les pignons sous eux (le mur), des ouvertures sur les façades (fenêtres,
+    # portes, planches en croix), et le coin du mât, où le rendu plante le
+    # drapeau et où le désaffecté couche le sien. Aucun nom de bâtiment ici.
+
+    #: Les faces d'un mur, par leur normale sortante : l'axe de la normale, son
+    #: signe, et l'axe horizontal de la façade.
+    FACES = {'z': ('z', 1, 'x'), '-z': ('z', -1, 'x'), 'x': ('x', 1, 'z'), '-x': ('x', -1, 'z')}
+
+    def pied_mat(self):
+        """Le pied du mât, (x, z) du modèle : là où le rendu plante le drapeau (`charte.json`, `batiments.mat`)."""
+        m = self.charte.donnees['batiments']['mat']
+        return (m['x'], m['z'])
+
+    @staticmethod
+    def _section_toit(forme, demi, hauteur, debord, epaisseur, haut):
+        """
+        La section d'un toit perpendiculaire à son faîtage, points (u, v) : `u`
+        le long de la pente, depuis l'axe du faîtage (−demi à +demi au droit des
+        murs), `v` la hauteur depuis l'égout (le haut des murs). Le dessous suit
+        les pentes du pignon, le dessus en est décalé de `epaisseur` ; l'égout
+        déborde de `debord`, coupé d'aplomb.
+        """
+        if forme == 'deux_pans':
+            t = hauteur / demi
+            e = epaisseur * math.sqrt(1 + t * t)  # l'épaisseur, mesurée d'aplomb
+            bout = demi + debord
+            return [(bout, -t * debord), (0.0, hauteur), (-bout, -t * debord),
+                    (-bout, -t * debord + e), (0.0, hauteur + e), (bout, -t * debord + e)]
+        if forme == 'appentis':
+            # Haut du côté `haut` (u = −demi si haut est négatif), bas de l'autre.
+            s = -1.0 if haut < 0 else 1.0
+            t = hauteur / (2 * demi)
+            e = epaisseur * math.sqrt(1 + t * t)
+            bas_u, haut_u = -s * (demi + debord), s * demi
+            bas_v = -t * debord
+            return [(bas_u, bas_v), (haut_u, hauteur), (haut_u, hauteur + e), (bas_u, bas_v + e)]
+        raise ValueError(f'toit : forme {forme} inconnue (deux_pans, appentis)')
+
+    def toit(self, noeud, centre, largeur, longueur, hauteur, teinte='equipe', faitage='x', debord=0.03, epaisseur=0.045,
+             forme='deux_pans', haut='-z', chanfrein=None, nom='toit'):
+        """
+        Un toit posé sur des murs : `centre` est le milieu de leur dessus (le
+        bas du toit, à l'égout), `largeur` × `longueur` leur emprise en x × z,
+        `hauteur` de l'égout au faîtage. Un solide d'un seul tenant, épais de
+        `epaisseur`, qui déborde de `debord` tout autour et dont le faîtage suit
+        `faitage` (`'x'` : les pans regardent l'avant et l'arrière ; `'z'` : ils
+        regardent les côtés). `deux_pans` ou `appentis` (un seul pan, haut du
+        côté `haut` : `'-z'`, `'z'`, `'-x'` ou `'x'` — des appentis côte à côte
+        font des dents de scie). Le triangle sous le toit est un mur : `pignon`,
+        aux mêmes mesures. Rend la pièce.
+
+        La lumière du joueur (60°) lit un pan tourné vers lui jusqu'à 70° de
+        pente, un pan tourné sur le côté jusqu'à 50° (`charte.json`,
+        `batiments.eclairee`).
+        """
+        if faitage not in ('x', 'z'):
+            raise ValueError('toit : faîtage selon x ou z')
+        if forme == 'appentis' and haut.lstrip('-') == faitage:
+            raise ValueError(f'toit : un appentis au faîtage selon {faitage} monte vers l’autre axe (haut = ±{"z" if faitage == "x" else "x"})')
+        cx, cy, cz = centre
+        demi = (longueur if faitage == 'x' else largeur) / 2
+        long_faitage = (largeur if faitage == 'x' else longueur) + 2 * debord
+        sens_haut = -1 if haut.startswith('-') else 1
+        section = self._section_toit(forme, demi, hauteur, debord, epaisseur, sens_haut)
+
+        def point(u, v, w):
+            # u le long de la pente, v la hauteur, w le long du faîtage.
+            if faitage == 'x':
+                return (cx + w, cy + v, cz + u)
+            return (cx + u, cy + v, cz + w)
+
+        anneaux = [[point(u, v, w) for u, v in section] for w in (-long_faitage / 2, long_faitage / 2)]
+        return self.solide(noeud, anneaux, teinte, chanfrein=chanfrein, nom=nom)
+
+    def pignon(self, noeud, centre, largeur, longueur, hauteur, teinte='enduit', faitage='x', forme='deux_pans', haut='-z', nom='pignon'):
+        """
+        Le mur sous un toit, aux mesures du `toit` qui le couvre (mêmes
+        `centre`, `largeur`, `longueur`, `hauteur`, `faitage`, `forme`, `haut`) :
+        un prisme dont les pentes sont le dessous du toit, et dont les bouts —
+        les pignons — continuent les murs. Sans lui, le toit flotte sur un vide.
+        """
+        cx, cy, cz = centre
+        demi = (longueur if faitage == 'x' else largeur) / 2
+        long_faitage = largeur if faitage == 'x' else longueur
+        # Un demi-millimètre sous le toit : les deux surfaces ne se disputent pas le rendu.
+        if forme == 'deux_pans':
+            section = [(demi, -0.001), (0.0, hauteur - 0.0015), (-demi, -0.001)]
+        elif forme == 'appentis':
+            s = -1.0 if haut.startswith('-') else 1.0
+            section = [(-s * demi, -0.001), (s * demi, -0.001), (s * demi, hauteur - 0.0015)]
+        else:
+            raise ValueError(f'pignon : forme {forme} inconnue (deux_pans, appentis)')
+
+        def point(u, v, w):
+            if faitage == 'x':
+                return (cx + w, cy + v, cz + u)
+            return (cx + u, cy + v, cz + w)
+
+        anneaux = [[point(u, v, w) for u, v in section] for w in (-long_faitage / 2, long_faitage / 2)]
+        return self.solide(noeud, anneaux, teinte, nom=nom)
+
+    def plaque(self, noeud, centre, largeur, hauteur, teinte='fenetre', face='z', saillie=0.012, profondeur=0.04, hote=None, nom=None):
+        """
+        Une plaque sur une façade — une fenêtre, une porte, un volet : `centre`
+        est un point du plan de la façade, `face` sa normale sortante (`'z'`
+        l'avant, `'-z'`, `'x'` la gauche du modèle, `'-x'`) ; la plaque fait
+        `largeur` le long de la façade, `hauteur` d'aplomb, et dépasse du mur de
+        `saillie` (le reste de sa `profondeur` est dans le mur). `hote` : le mur
+        qui la porte, sur le même nœud — la plaque est jugée avec lui
+        (épaisseur). Une vitre en `fenetre` s'allume la nuit, et va au vitrage.
+        """
+        axe, signe, _ = self.FACES[face]
+        cx, cy, cz = centre
+        decal = signe * (saillie - profondeur / 2)
+        if axe == 'z':
+            c, taille = (cx, cy, cz + decal), (largeur, hauteur, profondeur)
+        else:
+            c, taille = (cx + decal, cy, cz), (profondeur, hauteur, largeur)
+        p = self.boite(noeud, c, taille, teinte, nom=nom)
+        if hote is not None:
+            p.avec = hote.nom
+        return p
+
+    def croix(self, noeud, centre, largeur, hauteur, teinte='bois', face='z', section=0.034, saillie=0.04, hote=None, nom='croix'):
+        """
+        Deux planches clouées en croix sur une ouverture de `largeur` ×
+        `hauteur` (une fenêtre, une porte) : la marque d'un bâtiment endormi.
+        Mêmes conventions que `plaque` ; rend les deux planches, jugées avec
+        `hote` s'il est donné.
+        """
+        axe, signe, _ = self.FACES[face]
+        cx, cy, cz = centre
+        angle = math.degrees(math.atan2(hauteur, largeur))
+        longueur = math.hypot(largeur, hauteur) + 0.02
+        decal = signe * (saillie - section / 2)
+        pieces = []
+        for k, a in enumerate((angle, -angle)):
+            if axe == 'z':
+                p = self.boite(noeud, (cx, cy, cz + decal), (longueur, section, section), teinte, rotation=[('z', a)], nom=f'{nom}_{k + 1}')
+            else:
+                p = self.boite(noeud, (cx + decal, cy, cz), (section, section, longueur), teinte, rotation=[('x', a)], nom=f'{nom}_{k + 1}')
+            if hote is not None:
+                p.avec = hote.nom
+            pieces.append(p)
+        return pieces
+
+    def mat_couche(self, noeud, vers=(0.0, 1.0), longueur=0.5, rayon=0.018, teinte='graphite', teinte_bout='os', nom='mat_couche'):
+        """
+        Le mât d'un bâtiment désaffecté, couché au sol : il part du pied du mât
+        (`pied_mat`, là où le rendu plante le drapeau d'un bâtiment en service)
+        et s'allonge vers `vers` (dx, dz), une boule claire au bout. Posé sur le
+        sol, il reste sous les 5 cm du coin du mât. Rend les pièces.
+        """
+        x0, z0 = self.pied_mat()
+        n = math.hypot(vers[0], vers[1])
+        if n < 1e-9:
+            raise ValueError('mat_couche : une direction au sol')
+        dx, dz = vers[0] / n, vers[1] / n
+        centre = (x0 + dx * longueur / 2, rayon, z0 + dz * longueur / 2)
+        mat = self.cylindre(noeud, centre, rayon, longueur, teinte, axe=(dx, 0.0, dz), fin=True, nom=nom)
+        r_bout = max(0.028, self.charte.formes['epaisseurMin'] / 2 + 0.002)
+        bout = self.boule(noeud, (x0 + dx * (longueur + r_bout * 0.6), r_bout, z0 + dz * (longueur + r_bout * 0.6)), r_bout, teinte_bout, nom=f'{nom}_bout')
+        return [mat, bout]
 
     # --- les clips --------------------------------------------------------------
 

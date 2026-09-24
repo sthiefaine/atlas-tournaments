@@ -18,16 +18,17 @@
     { "nom": "caoutchouc", "hex": "#222428", "rugosite": 0.9, "metal": 0, "materiau": "details", "sombre": true, "role": "chenilles, pneus" },
     { "nom": "os", "hex": "#d8d0bf", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "clair chaud : moyeux, caisses, bidons, missiles, bâches, lignes de piste, bande de flottaison" },
     { "nom": "acier_clair", "hex": "#aab0b7", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "bouches de canon, rails, charnières" },
-    { "nom": "verre", "hex": "#22313b", "reflet": { "hex": "#cfe2ec", "part": 0.3333 }, "rugosite": 0.08, "metal": 0, "materiau": "details", "role": "verrières, vitres ; bande de reflet peinte sur le tiers haut de la pièce" },
+    { "nom": "verre", "hex": "#22313b", "reflet": { "hex": "#cfe2ec", "part": 0.3333 }, "rugosite": 0.08, "metal": 0, "materiau": "details", "vitrage": true, "role": "verrières, vitres ; bande de reflet peinte sur le tiers haut de la pièce" },
     { "nom": "peau_infanterie", "hex": "#c48f65", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["infanterie"], "role": "visage et mains du fantassin" },
     { "nom": "peau_meca", "hex": "#8d5a3b", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["meca"], "role": "visage et mains du méca" },
     { "nom": "peau_genie", "hex": "#e3b48f", "rugosite": 0.6, "metal": 0, "materiau": "details", "reserveeA": ["genie"], "role": "visage et mains du génie" },
     { "nom": "feux", "hex": "#f3ead2", "rugosite": 0.6, "metal": 0, "materiau": "details", "role": "phares et feux, jamais d'ambre ni d'orange" },
-    { "nom": "appret", "hex": "#8b9097", "rugosite": 0.6, "metal": 0, "materiau": "corps", "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate"], "role": "les Gris : apprêt de leurs superstructures, au lieu du graphite" },
-    { "nom": "orange", "hex": "#f0761e", "rugosite": 0.6, "metal": 0, "materiau": "details", "emission": true, "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate"], "role": "les Gris : l'œil émissif et le chevron" },
-    { "nom": "enduit", "hex": "#e2dbcb", "rugosite": 0.6, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : murs" },
-    { "nom": "pave", "hex": "#8e8778", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : socles, quais" },
-    { "nom": "bois", "hex": "#8a6a4a", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments (plus tard) : pont, planches" }
+    { "nom": "appret", "hex": "#8b9097", "rugosite": 0.6, "metal": 0, "materiau": "corps", "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate", "batiment_superusine"], "role": "les Gris : apprêt de leurs superstructures, au lieu du graphite ; les plaques de leur superusine" },
+    { "nom": "orange", "hex": "#f0761e", "rugosite": 0.6, "metal": 0, "materiau": "details", "emission": true, "reserveeA": ["meridien_veilleur", "meridien_bastion", "meridien_automate", "batiment_superusine"], "role": "les Gris : l'œil émissif et le chevron ; l'œil de leur superusine" },
+    { "nom": "enduit", "hex": "#e2dbcb", "rugosite": 0.6, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments : murs" },
+    { "nom": "pave", "hex": "#8e8778", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments : socles, quais, cheminées" },
+    { "nom": "bois", "hex": "#8a6a4a", "rugosite": 0.9, "metal": 0, "materiau": "details", "batiment": true, "role": "bâtiments : pont, portes, planches" },
+    { "nom": "fenetre", "hex": "#22313b", "reflet": { "hex": "#cfe2ec", "part": 0.3333 }, "emissionHex": "#f3ead2", "rugosite": 0.08, "metal": 0, "materiau": "details", "vitrage": true, "emission": true, "batiment": true, "role": "bâtiments : une vitre qui s'allume — le verre le jour (reflet compris), la lumière des feux la nuit (émission, dans sa page)" }
   ],
 
   "saisons": {
@@ -36,9 +37,10 @@
   },
 
   "materiaux": {
-    "note": "Les deux matériaux que les fiches exigent. Ils lisent le même atlas ; la teinte dit dans lequel une pièce tombe.",
+    "note": "Les matériaux que les fiches exigent. Ils lisent le même atlas ; la teinte dit dans lequel une pièce tombe. Une teinte « vitrage » (le verre, la fenêtre) va dans `vitrage` quand la fiche le demande — celle d'un bâtiment, `mat_vitrage` ; une fiche qui n'a pas le matériau d'une teinte la range dans son premier.",
     "corps": "mat_corps",
-    "details": "mat_details"
+    "details": "mat_details",
+    "vitrage": "mat_vitrage"
   },
 
   "palette": {
@@ -120,6 +122,42 @@
     "note": "Deux unités d'un même milieu ne se recouvrent pas en ombre chinoise à plus de 75–80 % à 48 px (§3.5). Mesuré sur l'image cuite : l'alpha (contour compris) ramené à 48 px par case sur une grille calée sur le pivot, une cellule pleine si l'alpha la couvre à moitié ; l'intersection sur l'union (IoU) des vues « droite » et « bas », contre chaque unité du même domaine déjà dans les images du jeu (public/assets/sprites/, manifeste courant), l'unité elle-même exceptée. Règle d'information d'abord.",
     "pixelsParCase": 48,
     "max": 0.80
+  },
+
+  "batiments": {
+    "note": "Les règles des bâtiments (doc/refonte/plan-batiments.md §5, arrêtées le 24 septembre 2026), mesurées sur la cuisson d'essai en vue « fixe » — le bâtiment regarde le joueur, son ombre est cuite au sol — et, pour ce qui est de la forme, sur le modèle lui-même. Les règles des unités qui tiennent à leur genre (classes de taille, masse sombre en bas, altitude, vues droite, bas et haut) ne s'y appliquent pas ; la palette, le chanfrein, l'épaisseur, le budget et la cuisson entière, si.",
+    "equipe": { "min": 0.30, "max": 0.45, "note": "Part des pixels du bâtiment (couverture ≥ 0,5 : ni contour ni ombre) sous le masque, vue fixe : le toit entier, ou ce qui en tient lieu." },
+    "eclairee": { "lumiereMin": 0.80, "partMin": 0.60, "note": "Les toits se lisent de haut : 60 % de l'équipe reçoit au moins 0,8 de lumière (le calcul des unités, `partEquipeEclairee`). Un pan de toit tourné vers le joueur passe jusqu'à 70° de pente ; tourné sur le côté, jusqu'à 50° (clarteFace : 0,45 + 0,55 cos θ)." },
+    "debordLateralMax": 0.47,
+    "empriseMax": 0.47,
+    "superusine": { "debordLateralMax": 0.60, "empriseMax": 0.60, "note": "Une usine plus grande, jusqu'à 1,2 case (plan §2)." },
+    "hauteurAuDessusDuPivotMax": 0.85,
+    "mat": {
+      "note": "Le coin du mât (plan §3) : le rendu plante le mât et le drapeau à `PIED_MAT` (src/render2d/batiments.ts, x 0,86 et y 0,3 de la case), soit x = +0,36 m et z = −0,20 m dans le repère du modèle ; rien ne dépasse 5 cm dans le cercle de 8 cm autour du pied, dans aucune pose que la cuisson photographie. Mesuré sur la géométrie : l'image ne sépare pas ce qui est au coin de ce qui est devant lui.",
+      "x": 0.36,
+      "z": -0.20,
+      "rayon": 0.08,
+      "hauteurMax": 0.05
+    },
+    "emission": {
+      "note": "En service, des fenêtres allumées : au moins 1 % des pixels du bâtiment ont une émission d'au moins 128 sur 255 (la page d'émission cuite). Désaffecté, ou superusine prise : aucun pixel au-dessus de 16.",
+      "partMin": 0.01,
+      "seuilAllume": 128,
+      "seuilEteint": 16,
+      "eteints": ["desaffecte", "inerte"]
+    },
+    "repos": {
+      "note": "Un bâtiment ne bouge pas au repos, hors une pièce déclarée mobile ou tournante (une parabole, une grue lente) : aucun nœud d'une autre sorte ne s'écarte de sa pose de repos dans le clip `repos`, et au plus 1 % des pixels change d'une image cuite à la suivante (le bruit du rendu).",
+      "agitationMax": 0.01,
+      "translationMax": 0.0005,
+      "rotationMaxDegres": 0.05,
+      "echelleMax": 0.001
+    },
+    "teintesMax": 6,
+    "orange": { "seulementPour": "superusine", "note": "Pas d'orange hors de la superusine des Gris (plan §5) : la teinte y est réservée, et la mesure le redit. La superusine en service montre son œil ; prise (`inerte`), elle l'éteint." },
+    "silhouetteAlphaMin": 204,
+    "noteSilhouette": "L'ombre chinoise d'un bâtiment (règle d'information `recouvrement`, contre les autres bâtiments installés) se lit sur l'alpha comme celle d'une unité, mais au-dessus de 204 sur 255 : l'ombre cuite au sol, que les pages installées ne séparent pas du modèle, reste dessous (0,4 à 0,6), le contour à 85 % et le modèle dessus.",
+    "notePlanche": "Sur la planche, la case d'un bâtiment est peinte du pavé que le rendu pose sous lui (src/render2d/sol/terrains.ts, couleursSol : le ton moyen du pavé), le reste de l'herbe de la planche ; le neutre est COULEUR_NEUTRE (src/render/couleur-equipe.ts) ; la nuit reçoit le voile de l'ambiance de nuit et l'émission pleine (src/render/ambiance.ts, EMISSION_NUIT), et le mât et le drapeau sont dessinés comme le rendu les dessine (src/render2d/replis.ts, batiments.ts)."
   },
 
   "budget": { "triangles": 60000 },

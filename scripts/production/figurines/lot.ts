@@ -212,9 +212,14 @@ export function ecartsGlb(a: Uint8Array, b: Uint8Array): string[] {
   return ecarts;
 }
 
-/** Les canaux que le lot livre : ceux de la fiche, l'émission seulement si une teinte émissive est portée. */
+/**
+ * Les canaux que le lot livre : ceux de la fiche, l'émission seulement si une
+ * teinte émissive est portée — ou si la fiche l'exige : un bâtiment désaffecté
+ * n'allume rien, mais sa fiche, celle du bâtiment, attend sa carte (noire là
+ * où il a des pièces).
+ */
 export function canauxLivres(spec: AssetSpec, emissive: boolean): CanalTexture[] {
-  return spec.textures.map((t) => t.canal).filter((c) => c !== 'emission' || emissive);
+  return spec.textures.filter((t) => t.canal !== 'emission' || emissive || t.obligatoire).map((t) => t.canal);
 }
 
 /**

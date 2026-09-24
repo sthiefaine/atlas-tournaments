@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
-  CHARTE, caseAtlas, couleurTeinte, indiceTeinte, limiteReflet, peindreAtlas, pngAtlas, teintePermise, type Charte,
+  CHARTE, caseAtlas, couleurEmission, couleurTeinte, indiceTeinte, limiteReflet, peindreAtlas, pngAtlas, teintePermise, type Charte,
 } from '../../../scripts/production/figurines/charte';
 import { pngsDuLot } from '../../../scripts/production/figurines/lot';
 import { controlerTextures } from '../../../src/serveur/controle-textures';
@@ -112,8 +112,39 @@ test('rugosité en G, métal en B, normale plate, émission des seules teintes q
     const y = c.y1 - 2;
     assert.deepEqual(pixel(rug, x, y), [255, Math.round(t.rugosite * 255), 0], t.nom);
     assert.deepEqual(pixel(nor, x, y), [128, 128, 255]);
-    assert.deepEqual(pixel(emi, x, y), t.emission ? [...couleurTeinte(CHARTE, t)] : [0, 0, 0], t.nom);
+    assert.deepEqual(pixel(emi, x, y), t.emission ? [...couleurEmission(CHARTE, t)] : [0, 0, 0], t.nom);
   });
+  // L'œil des Gris émet sa couleur ; la fenêtre, sombre le jour, émet la lumière des feux.
+  const orange = CHARTE.teintes.find((t) => t.nom === 'orange')!;
+  assert.deepEqual(couleurEmission(CHARTE, orange), couleurTeinte(CHARTE, orange));
+  const fenetre = CHARTE.teintes.find((t) => t.nom === 'fenetre')!;
+  const feux = CHARTE.teintes.find((t) => t.nom === 'feux')!;
+  assert.deepEqual(couleurEmission(CHARTE, fenetre), couleurTeinte(CHARTE, feux));
+  assert.deepEqual(couleurTeinte(CHARTE, fenetre), couleurTeinte(CHARTE, CHARTE.teintes.find((t) => t.nom === 'verre')!), 'le jour, une fenêtre est du verre');
+  assert.deepEqual(couleurEmission(CHARTE, feux), [0, 0, 0], 'les feux d’une unité n’émettent pas');
+});
+
+test('les bâtiments : leurs teintes, la fenêtre au vitrage, l’orange des Gris à leur superusine seulement', () => {
+  const t = (nom: string) => CHARTE.teintes.find((x) => x.nom === nom)!;
+  for (const nom of ['enduit', 'pave', 'bois', 'fenetre']) {
+    assert.ok(teintePermise(t(nom), 'ville', 'batiment'), `${nom} va à un bâtiment`);
+    assert.ok(teintePermise(t(nom), 'pont', 'terrain'), `${nom} va au pont`);
+    assert.ok(!teintePermise(t(nom), 'char_leger'), `${nom} ne va à aucune unité`);
+  }
+  assert.ok(teintePermise(t('orange'), 'superusine', 'batiment'));
+  assert.ok(teintePermise(t('appret'), 'superusine', 'batiment'));
+  assert.ok(!teintePermise(t('orange'), 'usine', 'batiment'), 'pas d’orange hors de la superusine');
+  assert.ok(!teintePermise(t('orange'), 'superusine'), 'la réservation nomme le bâtiment, pas une unité de même clé');
+  assert.ok(!teintePermise(t('peau_infanterie'), 'ville', 'batiment'));
+  // Le verre et la fenêtre vont au vitrage d'une fiche de bâtiment ; aucune fiche d'unité n'en a.
+  assert.equal(CHARTE.materiaux.vitrage, 'mat_vitrage');
+  assert.deepEqual(CHARTE.teintes.filter((x) => x.vitrage).map((x) => x.nom), ['verre', 'fenetre']);
+  // La fenêtre est la dernière case : ajoutée en fin de liste, elle ne déplace aucun modèle.
+  assert.equal(indiceTeinte(CHARTE, 'fenetre'), CHARTE.teintes.length - 1);
+  // Le coin du mât est celui où le rendu plante le drapeau (`PIED_MAT`, en fraction de case).
+  assert.equal(CHARTE.batiments.mat.x, 0.36);
+  assert.equal(CHARTE.batiments.mat.z, -0.2);
+  assert.deepEqual([CHARTE.batiments.equipe.min, CHARTE.batiments.equipe.max], [0.3, 0.45]);
 });
 
 test('une saison surcharge ses teintes, et rien d’autre', () => {

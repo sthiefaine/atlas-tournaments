@@ -14,10 +14,19 @@ import { cheminCouverture, cheminEntree, cheminPage, type FichierEntree } from '
 
 import type { Cadre, ImageIds } from './mesures';
 
-interface Page { largeur: number; hauteur: number; rgba: Uint8Array; masque: Uint8Array | null; couverture: Uint8Array | null }
+interface Page {
+  largeur: number; hauteur: number; rgba: Uint8Array; masque: Uint8Array | null; couverture: Uint8Array | null;
+  /** La page d'émission (fenêtres), RVB, quand l'entrée en a une. */
+  emission: Uint8Array | null;
+}
 
 async function gris(chemin: string): Promise<Uint8Array> {
   const { data } = await sharp(chemin).greyscale().raw().toBuffer({ resolveWithObject: true });
+  return new Uint8Array(data);
+}
+
+async function rvb(chemin: string): Promise<Uint8Array> {
+  const { data } = await sharp(chemin).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   return new Uint8Array(data);
 }
 
@@ -29,9 +38,12 @@ export interface Cuisson {
   cadres(vue: VueSprite, clip: string): Cadre[];
 }
 
-/** Lit l'entrée `id` d'une racine de cuisson (`--sortie`), pages de couverture comprises. */
-export async function lireCuisson(racine: string, id: string): Promise<Cuisson> {
-  const f = JSON.parse(readFileSync(cheminEntree(racine, 'unite', id), 'utf8')) as FichierEntree;
+/**
+ * Lit l'entrée `id` d'une racine de cuisson (`--sortie`), pages de couverture
+ * comprises, et pages d'émission quand elle en a (un bâtiment : ses fenêtres).
+ */
+export async function lireCuisson(racine: string, id: string, famille: EntreeSprite['famille'] = 'unite'): Promise<Cuisson> {
+  const f = JSON.parse(readFileSync(cheminEntree(racine, famille, id), 'utf8')) as FichierEntree;
   const pages: Page[] = [];
   for (const p of f.entree.pages) {
     const { data, info } = await sharp(cheminPage(racine, p.couleur)).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
@@ -40,6 +52,7 @@ export async function lireCuisson(racine: string, id: string): Promise<Cuisson> 
       largeur: info.width, hauteur: info.height, rgba: new Uint8Array(data),
       masque: p.masque ? await gris(cheminPage(racine, p.masque)) : null,
       couverture: existsSync(couverture) ? await gris(couverture) : null,
+      emission: p.emission ? await rvb(cheminPage(racine, p.emission)) : null,
     });
   }
   const animation = (vue: VueSprite, clip: string) => f.entree.animations.find((a) => a.vue === vue && a.clip === clip);
@@ -55,13 +68,15 @@ export async function lireCuisson(racine: string, id: string): Promise<Cuisson> 
         const rgba = new Uint8Array(c.l * c.h * 4);
         const masque = page.masque ? new Uint8Array(c.l * c.h) : null;
         const couverture = page.couverture ? new Uint8Array(c.l * c.h) : null;
+        const emission = page.emission ? new Uint8Array(c.l * c.h * 3) : null;
         for (let y = 0; y < c.h; y++) {
           const s = (c.y + y) * page.largeur + c.x;
           rgba.set(page.rgba.subarray(s * 4, (s + c.l) * 4), y * c.l * 4);
           if (masque) masque.set(page.masque!.subarray(s, s + c.l), y * c.l);
           if (couverture) couverture.set(page.couverture!.subarray(s, s + c.l), y * c.l);
+          if (emission) emission.set(page.emission!.subarray(s * 3, (s + c.l) * 3), y * c.l * 3);
         }
-        return { l: c.l, h: c.h, px: c.px, py: c.py, rgba, masque, couverture };
+        return { l: c.l, h: c.h, px: c.px, py: c.py, rgba, masque, couverture, ...(emission ? { emission } : {}) };
       });
     },
   };

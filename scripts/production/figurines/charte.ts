@@ -29,9 +29,29 @@ export interface Teinte {
   sombre?: boolean;
   reflet?: { hex: string; part: number };
   emission?: boolean;
+  /** La lumière qu'émet la teinte, quand elle n'est pas sa couleur : la fenêtre, sombre le jour, claire la nuit. */
+  emissionHex?: string;
+  /** Va dans le matériau de vitrage d'une fiche qui en a un (`materiaux.vitrage`) : le verre, la fenêtre. */
+  vitrage?: boolean;
   reserveeA?: string[];
   batiment?: boolean;
   role: string;
+}
+
+/** Les règles des bâtiments (`charte.json`, `batiments` ; `doc/refonte/plan-batiments.md` §5). */
+export interface CharteBatiments {
+  equipe: Bornes;
+  eclairee: { lumiereMin: number; partMin: number };
+  debordLateralMax: number;
+  empriseMax: number;
+  superusine: { debordLateralMax: number; empriseMax: number };
+  hauteurAuDessusDuPivotMax: number;
+  mat: { x: number; z: number; rayon: number; hauteurMax: number };
+  emission: { partMin: number; seuilAllume: number; seuilEteint: number; eteints: string[] };
+  repos: { agitationMax: number; translationMax: number; rotationMaxDegres: number; echelleMax: number };
+  teintesMax: number;
+  orange: { seulementPour: string };
+  silhouetteAlphaMin: number;
 }
 
 export interface Charte {
@@ -39,7 +59,8 @@ export interface Charte {
   atlas: { colonnes: number; lignes: number; remplissage: number; caseInutilisee: string };
   teintes: Teinte[];
   saisons: Record<string, Record<string, string> | string>;
-  materiaux: { corps: string; details: string };
+  materiaux: { corps: string; details: string; vitrage?: string };
+  batiments: CharteBatiments;
   palette: { teintesMax: number; parts: Record<string, Bornes & { seulementPour?: string }> };
   equipe: {
     droite: Bornes; droiteFantassin: Bornes; basEtHautMin: number; connexeMin: number; pixelsParCaseConnexe: number;
@@ -74,6 +95,16 @@ export function couleurTeinte(charte: Charte, t: Teinte, saison?: string): Rvb {
   const surcharges = saison ? charte.saisons[saison] : undefined;
   const hex = surcharges && typeof surcharges === 'object' ? surcharges[t.nom] ?? t.hex : t.hex;
   return couleurHex(hex);
+}
+
+/**
+ * La lumière qu'émet une teinte qui émet, en sRGB 0–255 : sa couleur (l'œil
+ * orange des Gris), ou sa lumière propre quand elle en a une (`emissionHex` :
+ * la fenêtre, sombre le jour, qui s'allume la nuit). Noire sinon.
+ */
+export function couleurEmission(charte: Charte, t: Teinte, saison?: string): Rvb {
+  if (!t.emission) return [0, 0, 0];
+  return t.emissionHex ? couleurHex(t.emissionHex) : couleurTeinte(charte, t, saison);
 }
 
 /** Le rectangle d'une case, en pixels d'une image de `n × n` : colonnes et lignes à partir du haut à gauche. */
@@ -141,7 +172,7 @@ function couleurCase(charte: Charte, t: Teinte, canal: CanalTexture, saison?: st
     case 'rugosite': return [255, Math.round(t.rugosite * 255), Math.round(t.metal * 255)];
     case 'metal': { const m = Math.round(t.metal * 255); return [m, m, m]; }
     case 'normale': return [128, 128, 255];
-    case 'emission': return t.emission ? couleurTeinte(charte, t, saison) : [0, 0, 0];
+    case 'emission': return couleurEmission(charte, t, saison);
     case 'occlusion': return [255, 255, 255];
     default: throw new Error(`canal sans atlas : ${canal}`);
   }
@@ -152,8 +183,15 @@ export function pngAtlas(charte: Charte, canal: CanalTexture, n: number, saison?
   return encoderPng(peindreAtlas(charte, canal, n, saison));
 }
 
-/** Vrai si une teinte a le droit d'aller sur l'unité `cle` : ni réservée à d'autres, ni de bâtiment. */
-export function teintePermise(t: Teinte, cle: string): boolean {
-  if (t.batiment) return false;
-  return !t.reserveeA || t.reserveeA.includes(cle);
+/**
+ * Vrai si une teinte a le droit d'aller sur un sujet : l'unité `cle`, le
+ * bâtiment `cle` (réservé sous le nom `batiment_<cle>`) ou le terrain `cle`
+ * (`terrain_<cle>` : le pont). Une teinte de bâtiment ne va jamais à une
+ * unité ; une teinte réservée ne va qu'à ceux qu'elle nomme — la règle de
+ * `bibliotheque.py` (`_verifier_teinte`).
+ */
+export function teintePermise(t: Teinte, cle: string, famille: 'unite' | 'batiment' | 'terrain' = 'unite'): boolean {
+  if (t.batiment && famille === 'unite') return false;
+  const sujet = famille === 'unite' ? cle : `${famille}_${cle}`;
+  return !t.reserveeA || t.reserveeA.includes(sujet);
 }

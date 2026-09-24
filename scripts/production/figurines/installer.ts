@@ -1,24 +1,34 @@
 /**
  * L'installation d'une figurine dans le jeu — par le coordinateur, jamais par
- * un agent d'unité (`README.md`, « Ce que vous ne touchez pas »).
+ * un agent d'unité ou de bâtiment (`README.md`, « Ce que vous ne touchez pas »).
  *
- *   npm run installer:figurine -- --cle <cle> [--lot <dossier>]
+ *   npm run installer:figurine -- --id <identifiant> [--lot <dossier>]
+ *   npm run installer:figurine -- --cle <cle> [--lot <dossier>]      (une unité)
  *
- * Le lot de `tmp/figurines/<cle>/lot/` est contrôlé contre la fiche
- * **officielle** (`assets/specs/unite_<cle>_base.json`) : ses dimensions ont
- * été reportées d'abord de la fiche mesurée dans `src/assets/catalogue.ts`
- * (`DIMENSIONS_FIGURINES`), puis les fiches régénérées. Un lot refusé n'est pas
- * installé, et l'ancien modèle reste.
+ * `--id` vaut pour tout ce que la chaîne fabrique : une unité
+ * (`unite_<cle>_base`), un état ou une variante de bâtiment
+ * (`batiment_ville_desaffecte`, `batiment_qg_fr`), le pont (`terrain_pont`) ;
+ * `--cle <cle>` reste le raccourci d'une unité. Le lot par défaut est celui que
+ * `fabriquer.ts` laisse (`batiments.ts`, `dossierLot`).
+ *
+ * Le lot est contrôlé contre la fiche **officielle** (`assets/specs/<id>.json`) :
+ * ses dimensions ont été reportées d'abord de la fiche mesurée dans
+ * `src/assets/catalogue.ts` (`DIMENSIONS_FIGURINES` pour une unité,
+ * `GABARIT_BATIMENT` pour un bâtiment), puis les fiches régénérées. Une entrée
+ * que le catalogue n'a pas encore (un désaffecté, la superusine) ne s'installe
+ * pas : sa fiche vient du catalogue d'abord. Un lot refusé n'est pas installé,
+ * et l'ancien modèle reste.
  *
  * Puis il est rangé comme tout modèle du dépôt : chaque fichier **une fois**,
  * sous son empreinte, dans `public/assets/donnees/`, et `public/assets/modeles/`
  * n'en porte que des liens relatifs — deux PNG identiques (une variante d'hiver
- * qui ne change rien) ne coûtent qu'un fichier. Un nom de l'unité que le lot ne
+ * qui ne change rien) ne coûtent qu'un fichier. Un nom de l'entrée que le lot ne
  * livre plus est retiré, et le registre `assets/production/activation-jeu.json`
  * suit. Le plan de production (`assets/production/plan-modeles-3d.json`) n'est
  * pas touché : il décrit la chaîne d'avant les figurines.
  *
- * Reste à recuire l'image : `npm run cuire:sprites -- --id unite_<cle>_base`.
+ * Reste à recuire l'image : `npm run cuire:sprites -- --id <identifiant>` (un
+ * identifiant que `scripts/sprites/catalogue.ts`, `classer`, reconnaît).
  */
 
 import { createHash } from 'node:crypto';
@@ -29,6 +39,8 @@ import path from 'node:path';
 
 import type { AssetSpec } from '../../../src/assets/spec';
 import { controlerDepot } from '../../../src/serveur/depot-modeles';
+
+import { dossierLot } from './batiments';
 
 const MODELES = 'public/assets/modeles';
 const DONNEES = 'public/assets/donnees';
@@ -51,9 +63,9 @@ export function revisionLot(fichiers: readonly { nom: string; sha256: string }[]
 }
 
 /**
- * Les noms d'une unité déjà installés que le lot ne livre plus : un ancien
+ * Les noms d'une entrée déjà installés que le lot ne livre plus : un ancien
  * modèle avait peut-être une carte que le nouveau n'a pas. Seuls les noms de
- * **cette** unité sont regardés (`<id>_…`), jamais ceux d'une autre.
+ * **cette** entrée sont regardés (`<id>_…`), jamais ceux d'une autre.
  */
 export function nomsObsoletes(id: string, installes: readonly string[], livres: readonly string[]): string[] {
   const garde = new Set(livres);
@@ -65,17 +77,35 @@ export function cibleLien(sha256: string, nom: string): string {
   return path.posix.join('..', 'donnees', sha256 + path.extname(nom));
 }
 
+/**
+ * L'identifiant qu'une commande installe : `--id` tel quel, ou l'unité de
+ * `--cle`. Un identifiant sans figurine (ni unité, ni bâtiment, ni pont) est
+ * refusé avant de toucher un fichier.
+ */
+export function identifiantInstallation(options: { id?: string; cle?: string }): string {
+  if (options.id && options.cle) throw new Error('--id ou --cle, pas les deux');
+  if (options.cle) {
+    if (!/^[a-z0-9_]+$/.test(options.cle)) throw new Error(`clé invalide : ${options.cle}`);
+    return `unite_${options.cle}_base`;
+  }
+  if (!options.id) throw new Error('--id <identifiant> (ou --cle <cle> pour une unité) attendu');
+  dossierLot(options.id);
+  return options.id;
+}
+
 function argument(nom: string): string | undefined {
   const i = process.argv.indexOf(`--${nom}`);
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
 function installer(): void {
-  const cle = argument('cle');
-  if (!cle || !/^[a-z0-9_]+$/.test(cle)) throw new Error('--cle <cle> attendue');
-  const id = `unite_${cle}_base`;
-  const lot = argument('lot') ?? path.join('tmp/figurines', cle, 'lot');
-  const spec = JSON.parse(readFileSync(path.join('assets/specs', `${id}.json`), 'utf8')) as AssetSpec;
+  const id = identifiantInstallation({ id: argument('id'), cle: argument('cle') });
+  const lot = argument('lot') ?? dossierLot(id);
+  const cheminSpec = path.join('assets/specs', `${id}.json`);
+  if (!existsSync(cheminSpec)) {
+    throw new Error(`${id} : pas de fiche officielle (${cheminSpec}) — elle vient du catalogue (src/assets/catalogue.ts) avant toute installation`);
+  }
+  const spec = JSON.parse(readFileSync(cheminSpec, 'utf8')) as AssetSpec;
 
   const noms = readdirSync(lot).filter((n) => n.startsWith(`${id}_`)).sort();
   const fichiers = noms.map((nom) => ({ nom, octets: new Uint8Array(readFileSync(path.join(lot, nom))) }));
