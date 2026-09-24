@@ -252,10 +252,10 @@
     {
       "id": "unite_missiles_air_base",
       "fichierActif": "public/assets/modeles/unite_missiles_air_base_lod0.glb",
-      "donnees": "../donnees/8c6bbd12e3e7664e58048417dea508eec2667a70e686fed6f1f7b0ab03072451.glb",
-      "revision": "b6ababd445a76e3a15e24ff4dd4b0329fae138a1512800be181fd69e4e9154c1",
+      "donnees": "../donnees/29c6c459f5b031c045706e7279acdb629baac027358e2f1be1cd9883dab2a4c6.glb",
+      "revision": "b3dba58a2393fdf5a6550278adee933bcdbde54d56c695d7b232a7ad4189a3f1",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_missiles_sol_base",
