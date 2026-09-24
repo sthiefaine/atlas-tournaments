@@ -1175,12 +1175,12 @@ export function specTerrain(t: Terrain): AssetSpec {
   };
 }
 
-/** Hauteur et budget des quatre bâtiments. */
-const GABARIT_BATIMENT: Record<string, { x: number; y: number; z: number; tris: [number, number, number] }> = {
-  ville: { x: 0.85, y: 0.7, z: 0.85, tris: [5000, 1600, 450] },
-  usine: { x: 0.9, y: 0.8, z: 0.9, tris: [5600, 1800, 500] },
-  aeroport: { x: 0.92, y: 0.45, z: 0.92, tris: [4200, 1400, 400] },
-  qg: { x: 0.85, y: 0.95, z: 0.85, tris: [40000, 2100, 600] },
+/** Les dimensions des quatre bâtiments qui en ont une à eux ; les autres prennent celles de la ville. */
+const GABARIT_BATIMENT: Record<string, { x: number; y: number; z: number }> = {
+  ville: { x: 0.85, y: 0.7, z: 0.85 },
+  usine: { x: 0.9, y: 0.8, z: 0.9 },
+  aeroport: { x: 0.92, y: 0.45, z: 0.92 },
+  qg: { x: 0.85, y: 0.95, z: 0.85 },
 };
 
 /**
@@ -1250,7 +1250,7 @@ function consigneTerritoire(t: Territoire): Bilingue {
 export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
   const cle: Cle = `${t.cle}_${territoire ? cleTerritoire(territoire) : 'base'}`;
   const id = territoire ? idBatiment(t.cle, territoire.pays.code, territoire.region ? slugRegion(territoire.region.code) : undefined) : `batiment_${t.cle}_base`;
-  const g = GABARIT_BATIMENT[t.cle] ?? { x: 0.85, y: 0.7, z: 0.85, tris: [5000, 1600, 450] as [number, number, number] };
+  const g = GABARIT_BATIMENT[t.cle] ?? { x: 0.85, y: 0.7, z: 0.85 };
   const texte = TEXTES_TERRAIN[t.cle];
   const revenus = t.revenus > 0 ? `Il rapporte ${t.revenus} fonds par journée.` : '';
   const revenusEn = t.revenus > 0 ? `It yields ${t.revenus} funds per day.` : '';
@@ -1275,7 +1275,10 @@ export function specBatiment(t: Terrain, territoire?: Territoire): AssetSpec {
       territoire ? 'national building vernacular' : 'neutral shared base architecture']),
     echelle: echelle(g.x, g.y, g.z, 0.07),
     pivot: pivot(true),
-    budget: budget(g.tris[0], 3),
+    // Comme une unité (`budgetUnite`) : le GLB n'est que la source de la
+    // cuisson, et les bâtiments refaits selon la charte des figurines
+    // (`doc/refonte/plan-batiments.md`) sont chanfreinés et lissés.
+    budget: budget(60000, 3),
     textures: [
       tex('albedo', t.cle === 'qg' ? 2048 : 1024, true, 'Enduits, tuiles, bois et béton ; aucune enseigne lisible, aucun chiffre.'),
       tex('normale', t.cle === 'qg' ? 2048 : 1024, true, 'Joints de maçonnerie, bardages, tuiles, encadrements.'),
