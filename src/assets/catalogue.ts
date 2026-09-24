@@ -914,6 +914,7 @@ const DIMENSIONS_FIGURINES: Partial<Record<string, readonly [number, number, num
   porte_avions: [0.279, 0.562, 0.918],
   recon: [0.426, 0.546, 0.539],
   roquettes: [0.54, 0.703, 0.79],
+  sous_marin: [0.224, 0.508, 0.835],
   transport: [0.466, 0.44, 0.681],
   transport_air: [0.281, 0.495, 0.785],
 };

@@ -292,10 +292,10 @@
     {
       "id": "unite_sous_marin_base",
       "fichierActif": "public/assets/modeles/unite_sous_marin_base_lod0.glb",
-      "donnees": "../donnees/8e9228111c21bb21f3e702f252af59d892d45c26db7e8fcb5aa89f862960e09c.glb",
-      "revision": "ebd2d44c96d9208f5b8215cacb1f2c6389c90d4f8815c9bfd70fc779471d728a",
+      "donnees": "../donnees/f45eec2fb39ae9a7e33dabaf8cac9c71714cafd462ab53b0cb50fb5fcfa3d241.glb",
+      "revision": "1bd8f084e35b14208486eff9181c46df58fc571bff8f49f48253eeaefb0ac92a",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_transport_air_base",
