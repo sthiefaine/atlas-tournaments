@@ -168,33 +168,6 @@ def image_de(t):
     return int(round(t * IPS_IMPORT))
 
 
-def resynchroniser(scene):
-    """
-    Marque la transformation de chaque objet de la scène comme changée : Cycles
-    reprend tous les objets au rendu suivant, sans jeter ses noyaux, ses
-    textures ni ses géométries.
-
-    Pourquoi (24 septembre 2026, mesuré) : avec les données persistantes et le
-    flou de bouge, Cycles gardait d'une image à l'autre un état d'objet périmé.
-    Le tir du char léger et de l'artillerie sortait son image 8 (0,622 s, une
-    pose immobile) ombrée comme si ses normales avaient tourné — même
-    silhouette, au pixel près, mais les pans tournés vers le joueur plus
-    sombres et les ombres propres déplacées : luminance 0,521 au lieu de
-    0,5545, en vue droite comme de profil, à chaque cuisson. Le défaut dépend
-    de l'histoire : la même image rendue la première sort juste, rendue après
-    l'image 7 elle sort fausse. Sans données persistantes, tout est juste mais
-    la cuisson prend deux fois plus de temps ; avec ce marquage, les images
-    sont identiques à celles sans persistance, au prix d'avant.
-
-    La transformation seulement, jamais la géométrie (`'DATA'`) : faire
-    reprendre les maillages à chaque image a rendu, par intermittence, un
-    fuselage entier noir et sans couverture (trois cuissons sur quatre d'un
-    appareil à rotors, 9 à 83 images fausses sur 98).
-    """
-    for o in scene.objects:
-        o.update_tag(refresh={'OBJECT'})
-
-
 # ---------------------------------------------------------------------------
 # 3. Les matériaux : blanc sous le masque, AOV, émission à part
 # ---------------------------------------------------------------------------
@@ -422,7 +395,20 @@ def regler_rendu(scene, travail, emission):
     c.use_camera_cull = False
     r = scene.render
     r.film_transparent = True
-    r.use_persistent_data = True
+    # Pas de données persistantes (`VERSION_CUISSON` 4, 24 septembre 2026) :
+    # avec elles et le flou de bouge, Cycles gardait d'une image à l'autre un
+    # état périmé, et la première image immobile après un mouvement sortait
+    # ombrée de travers — silhouette identique au pixel, 6 à 12 % plus sombre,
+    # la lumière comme venue d'ailleurs. L'image 8 du tir de profil du char
+    # léger, du char moyen, du char lourd, de l'artillerie, du méca, du génie,
+    # de l'hélicoptère et du chasseur, l'image 8 du hors-jeu de quatre navires.
+    # Reprendre la transformation de chaque objet avant chaque image (la
+    # version 3) ne suffisait pas : le chasseur, cuit ainsi, l'avait encore, et
+    # le défaut dépend de l'historique — la même image rendue la première sort
+    # juste. Reprendre aussi la géométrie rendait des faces noires. Sans
+    # persistance, chaque image part d'une scène neuve : mesuré sur le char
+    # léger, 126 s au lieu de 99, et aucune image isolée plus sombre.
+    r.use_persistent_data = False
     # Sans composition, le fichier reçoit toutes les passes du rendu ; avec,
     # il ne reçoit que la combinée.
     r.use_compositing = False
@@ -556,6 +542,25 @@ def lire_exr(chemin):
     return canaux
 
 
+def rendre(exr):
+    """
+    Rend l'image courante dans `exr` et la relit. Une lecture qui échoue rend
+    l'image une seconde fois : sous une forte charge (quatre cuissons de front,
+    24 septembre 2026), un EXR est sorti deux fois illisible (« Unable to
+    query scanline information ») et la même cuisson, relancée, passait.
+    """
+    for essai in (1, 2):
+        bpy.ops.render.render(write_still=True)
+        try:
+            return lire_exr(exr)
+        except RuntimeError as erreur:
+            if essai == 2:
+                raise
+            journal(f'{erreur} ; image rendue une seconde fois')
+            if os.path.exists(exr):
+                os.remove(exr)
+
+
 def canal(canaux, passe, composante, forme):
     v = canaux.get(f'{VUE_LAYER}.{passe}.{composante}')
     return np.zeros(forme, dtype=np.float32) if v is None else v
@@ -657,12 +662,11 @@ def main():
             with open(os.path.join(travail['sortie'], nom_fichier), 'wb') as fichier:
                 for t in anim['temps']:
                     scene.frame_set(image_de(t))
-                    resynchroniser(scene)
                     scene.render.filepath = exr
                     t0 = time.time()
-                    bpy.ops.render.render(write_still=True)
+                    canaux = rendre(exr)
                     temps_rendu += time.time() - t0
-                    ecrire_image(fichier, lire_exr(exr), noms, emission)
+                    ecrire_image(fichier, canaux, noms, emission)
                     images += 1
             os.remove(exr)
             sortie_vue['animations'].append({'clip': anim['clip'], 'fichier': nom_fichier, 'images': len(anim['temps'])})

@@ -65,7 +65,7 @@ Les directions sont celles de `ECLAIRAGE_CUISSON` (principale azimut −40°, é
 
 ### Le rendu Cycles, mesuré
 
-Cycles sur le processeur graphique Metal du M1 (8 cœurs), lancer de chemins avec ciel, rebonds limités (6 au total), échantillonnage adaptatif (seuil 0,01), données persistantes entre images. EEVEE n'a pas été retenu : il n'a pas d'attrapeur d'ombre, et l'ombre cuite des bâtiments en dépend.
+Cycles sur le processeur graphique Metal du M1 (8 cœurs), lancer de chemins avec ciel, rebonds limités (6 au total), échantillonnage adaptatif (seuil 0,01), chaque image dans une scène neuve. Les données persistantes entre images ont été retirées le 24 septembre 2026 (`VERSION_CUISSON` 4) : avec le flou de bouge, la première image immobile après un mouvement sortait parfois ombrée de travers, 6 à 12 % plus sombre, selon l'historique des rendus ; sans elles, une cuisson prend 30 % de plus (char léger : 126 s au lieu de 99). EEVEE n'a pas été retenu : il n'a pas d'attrapeur d'ombre, et l'ombre cuite des bâtiments en dépend.
 
 Le nombre d'échantillons et le débruitage ont été **choisis par la mesure** (`tmp/sprites/etude.ts`, non versionné) : le char léger, vue `droite`, trois images de `repos`, comparées à une référence de 1 024 échantillons sans débruitage, écart quadratique moyen en niveaux sur 255 de la couleur prémultipliée livrée :
 

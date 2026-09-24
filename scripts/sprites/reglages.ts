@@ -26,8 +26,12 @@ import { srgbVersLineaire } from './image';
  * (`cuire_entree.py`, `resynchroniser`) ; avec les données persistantes et le
  * flou de bouge, certaines images immobiles sortaient ombrées de travers
  * (l'image 8 du tir des unités cuites jusque-là) : tout est à recuire.
+ * 4 (24 septembre 2026, nuit) : plus de données persistantes du tout. La
+ * version 3 ne suffisait pas — le chasseur, cuit ainsi, gardait son image 8
+ * plus sombre, et le défaut dépend de l'historique des rendus. Chaque image part
+ * d'une scène neuve, pour 30 % de temps en plus (mesuré sur le char léger).
  */
-export const VERSION_CUISSON = 3;
+export const VERSION_CUISSON = 4;
 
 /** Le Blender qui cuit : 5.1 en ligne de commande. */
 export const BLENDER = process.env.BLENDER ?? '/Applications/Blender.app/Contents/MacOS/Blender';

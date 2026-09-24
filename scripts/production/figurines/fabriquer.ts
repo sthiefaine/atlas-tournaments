@@ -120,7 +120,16 @@ async function recouvrementInstallees(cle: string, domaine: string, droite: Cadr
   let plusProche: NonNullable<Mesures['recouvrement']> | null = null;
   for (const e of Object.values((JSON.parse(readFileSync(manifeste, 'utf8')) as ManifesteSprites).entrees)) {
     if (e.famille !== 'unite' || e.cle === cle || unites.find((u) => u.cle === e.cle)?.domaine !== domaine) continue;
-    const autre = await lireCuisson(racine, e.id);
+    // Une unité qu'on réinstalle pendant la mesure a ses pages un instant
+    // absentes : elle est sautée, pas la mesure entière (vu le 24 septembre,
+    // le cuirassé mesuré pendant la réinstallation du drone marin).
+    let autre: Awaited<ReturnType<typeof lireCuisson>>;
+    try {
+      autre = await lireCuisson(racine, e.id);
+    } catch (erreur) {
+      console.warn(`  recouvrement : ${e.id} illisible, sautée (${erreur instanceof Error ? erreur.message : String(erreur)})`);
+      continue;
+    }
     const d = premierCadre(autre, 'droite', ['repos', 'deplacement']);
     const b = premierCadre(autre, 'bas', ['deplacement', 'repos']);
     if (!d || !b) continue;

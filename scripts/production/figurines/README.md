@@ -364,22 +364,23 @@ rapport au lieu de la contourner. Ne laissez pas de `.ts` dans `tmp/` :
   couvercle convexe reste un polygone ; trois points alignés ne font pas un
   creux (les sommets de Blender sont en simple précision : le seuil est un
   sinus de 10⁻⁴).
-- **La cuisson reprend la transformation de chaque objet avant chaque image**
-  (`cuire_entree.py`, `resynchroniser` ; `VERSION_CUISSON` 3, 24 septembre
-  2026). Avec les données persistantes et le flou de bouge, Cycles gardait
-  d'une image à l'autre un état d'objet périmé : l'image 8 du `tir` (0,622 s,
-  une pose immobile) du char léger et de l'artillerie sortait, à chaque
-  cuisson, ombrée comme si ses normales avaient tourné — même silhouette au
-  pixel près, luminance 0,521 au lieu de 0,555, en vue droite comme de profil.
-  Le défaut dépend de l'histoire : la même image rendue la première sort
-  juste. La géométrie, elle, n'est pas reprise : une première version, en
-  place le 24 septembre de 1 h 01 à 1 h 22, la faisait reprendre à chaque image
-  (`'DATA'`), et Cycles rendait alors, par intermittence, des faces noires sans
-  couverture ni masque à partir d'une image — trois cuissons sur quatre d'une
-  démonstration à rotors, et très probablement le drone intercepteur, le
-  drone ravitailleur et le chasseur, cuits dans cette fenêtre. Toute cuisson
-  faite ce jour-là entre ces deux heures est à refaire ; toutes les entrées
-  déjà cuites sont de toute façon à recuire (`VERSION_CUISSON` 3).
+- **La cuisson rend chaque image dans une scène neuve** (`cuire_entree.py`,
+  `use_persistent_data = False` ; `VERSION_CUISSON` 4, 24 septembre 2026,
+  nuit). Avec les données persistantes et le flou de bouge, Cycles gardait
+  d'une image à l'autre un état d'objet périmé : la première image immobile
+  après un mouvement — l'image 8 du `tir` (0,622 s) ou du `hors_jeu` —
+  sortait ombrée comme si ses normales avaient tourné, même silhouette au
+  pixel près, 6 à 12 % plus sombre. Le défaut dépend de l'histoire : la même
+  image rendue la première sort juste. Deux parades ont échoué avant
+  celle-ci : reprendre la transformation de chaque objet avant chaque image
+  (version 3 ; le chasseur, cuit ainsi, avait encore son image 8 sombre, et le
+  porte-avions l'a reproduite), et reprendre aussi la géométrie (`'DATA'`),
+  qui rendait par intermittence des faces noires sans couverture ni masque à
+  partir d'une image — très probablement le drone intercepteur, le drone
+  ravitailleur et le chasseur, cuits entre 1 h 01 et 1 h 22 le 24 septembre.
+  Sans persistance, le char léger se cuit en 126 s au lieu de 99, sans une
+  image isolée plus sombre. Un EXR illisible (vu deux fois sous une charge de
+  90) est rendu une seconde fois avant d'échouer.
 - `lot.ts` pose les cartes (PNG voisins aux noms de la fiche, le masque en
   image que nul matériau ne lit) et les clips (échantillonnés à 60 images par
   seconde, linéaires, temps bornés), et assemble le lot.
