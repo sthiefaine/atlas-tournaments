@@ -172,10 +172,10 @@
     {
       "id": "unite_drone_marin_base",
       "fichierActif": "public/assets/modeles/unite_drone_marin_base_lod0.glb",
-      "donnees": "../donnees/f19380b28b782d2aa3e1f46a90dbbab976c098dd084f6218510e8682350e61af.glb",
-      "revision": "a767954c62845e904591108dcbe915c1eb2b64615404fc29c8d299612236d023",
+      "donnees": "../donnees/710fd0c6f8ae7c32791f7e099e8e84d4642d1aea3b17896f4c1f39ea2dfb792f.glb",
+      "revision": "87d89f360e4319f5208892d1f60e1a1e40f19755d9484a6f7fe22cd61682ff45",
       "controle": "ok",
-      "provenance": "creation_originale"
+      "provenance": "figurine"
     },
     {
       "id": "unite_drone_ravitailleur_base",
